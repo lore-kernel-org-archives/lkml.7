@@ -2,116 +2,193 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F53C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCF1C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:33:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A831217D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:33:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JgPH4XvQ"
+	by mail.kernel.org (Postfix) with ESMTP id E6903217D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:33:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568932431;
+	bh=g76naGs97Ybb8HLkSTNdZwBrQayN+tkzV82EWo/D3AQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=YnW3nj5rZ0YYEAopeVJPxTNVyXB4viTmm88IRGR9pkrYEcIiZ5di+LMteaNuY5h2N
+	 9vL8xQhjuRkARq1Dx9MvMHjQPmLoWQAv4qp6Vdls3proqyMSUYk9fRFm4kWSwArzRB
+	 b7Z7y6hYXqHyqa3ardgoyzr0xOM+bkVXJJCvxtfU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407213AbfISWdm (ORCPT
+        id S2407351AbfISWdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:33:42 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41050 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404825AbfISWdk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:33:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Cc:To:Subject:From:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=xaPPCBpHFn6E3y15/I1TAkDmHfh5VJrl2w9v/EFwOJs=; b=JgPH4XvQFoE8IDwkzEoSdglu0
-        RG2TySyubNqvimDsN/U4anXK+YsHzlp0uUETElDj+++k3fphga8nwSJn/7rirsBlTcqD8xTATYZ7Q
-        W5QBtLhTAodzT8fEs/B6lDQV3YzktwWNTdPkmyswLHxcVUKSLbCq6w/0eUT90atazxpU92z7Q0fUk
-        XQqtLCwyoZfvSC65V73dvrNYXv7gHhW4Xzgoa3Zj0PkoqU1IU67nkcdoo7qImi8VGw8VS8dke/gYh
-        nlJK9npn2oEiVMbuHQbV/JfV/S/ZIbfxNDLUM6vnM/jXLD8+vaLW4zPX/CP+4xa0ArXW842qIQPsK
-        59FkffzHA==;
-Received: from [2601:1c0:6280:3f0::9a1f]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iB4zZ-0006j5-V0; Thu, 19 Sep 2019 22:33:38 +0000
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH 2/2] soc: ti: move 2 driver config options into the TI SOC
- drivers menu
-To:     LKML <linux-kernel@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>
-Cc:     Olof Johansson <olof@lixom.net>, Nishanth Menon <nm@ti.com>,
-        Benjamin Fair <b-fair@ti.com>,
-        Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>
-Message-ID: <ae4b494c-9723-1bc2-e471-e0e9f7df6e8f@infradead.org>
-Date:   Thu, 19 Sep 2019 15:33:37 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 19 Sep 2019 18:33:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49730 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405841AbfISWLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:11:07 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9AB521920;
+        Thu, 19 Sep 2019 22:11:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568931066;
+        bh=g76naGs97Ybb8HLkSTNdZwBrQayN+tkzV82EWo/D3AQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OmDQCDesxvoUXdJKYOdE4xUHWQIdzxvFCVtJDbBgfVpXi00MzmPlrYeNReQDWY7mx
+         lZ27nXk+YihsamzZ4toQ6K9yvdkoz5D/JvBMaiQil9yG9LlbsLdyNtlX2GuTB6GHti
+         16Js3+zja3+OChHeM7LSUnzpMpTMfzhbM/H33FZY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 116/124] dmaengine: rcar-dmac: Fix DMACHCLR handling if iommu is mapped
+Date:   Fri, 20 Sep 2019 00:03:24 +0200
+Message-Id: <20190919214823.402195765@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
+References: <20190919214819.198419517@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-Move the AM654 and J721E SOC config options inside the "TI SOC drivers"
-menu with the other TI SOC drivers.
+[ Upstream commit cf24aac38698bfa1d021afd3883df3c4c65143a4 ]
 
-Fixes: a869b7b30dac ("soc: ti: Add Support for AM654 SoC config option")
-Fixes: cff377f7897a ("soc: ti: Add Support for J721E SoC config option")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Olof Johansson <olof@lixom.net>
-Cc: Nishanth Menon <nm@ti.com>
-Cc: Benjamin Fair <b-fair@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>
-Cc: Tero Kristo <t-kristo@ti.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
+The commit 20c169aceb45 ("dmaengine: rcar-dmac: clear pertinence
+number of channels") forgets to clear the last channel by
+DMACHCLR in rcar_dmac_init() (and doesn't need to clear the first
+channel) if iommu is mapped to the device. So, this patch fixes it
+by using "channels_mask" bitfield.
+
+Note that the hardware and driver don't support more than 32 bits
+in DMACHCLR register anyway, so this patch should reject more than
+32 channels in rcar_dmac_parse_of().
+
+Fixes: 20c169aceb459575 ("dmaengine: rcar-dmac: clear pertinence number of channels")
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/1567424643-26629-1-git-send-email-yoshihiro.shimoda.uh@renesas.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/ti/Kconfig |   20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ drivers/dma/sh/rcar-dmac.c | 28 +++++++++++++++++++---------
+ 1 file changed, 19 insertions(+), 9 deletions(-)
 
---- lnx-53.orig/drivers/soc/ti/Kconfig
-+++ lnx-53/drivers/soc/ti/Kconfig
-@@ -1,4 +1,12 @@
- # SPDX-License-Identifier: GPL-2.0-only
+diff --git a/drivers/dma/sh/rcar-dmac.c b/drivers/dma/sh/rcar-dmac.c
+index 54de669c38b84..f1d89bdebddab 100644
+--- a/drivers/dma/sh/rcar-dmac.c
++++ b/drivers/dma/sh/rcar-dmac.c
+@@ -192,6 +192,7 @@ struct rcar_dmac_chan {
+  * @iomem: remapped I/O memory base
+  * @n_channels: number of available channels
+  * @channels: array of DMAC channels
++ * @channels_mask: bitfield of which DMA channels are managed by this driver
+  * @modules: bitmask of client modules in use
+  */
+ struct rcar_dmac {
+@@ -202,6 +203,7 @@ struct rcar_dmac {
+ 
+ 	unsigned int n_channels;
+ 	struct rcar_dmac_chan *channels;
++	unsigned int channels_mask;
+ 
+ 	DECLARE_BITMAP(modules, 256);
+ };
+@@ -438,7 +440,7 @@ static int rcar_dmac_init(struct rcar_dmac *dmac)
+ 	u16 dmaor;
+ 
+ 	/* Clear all channels and enable the DMAC globally. */
+-	rcar_dmac_write(dmac, RCAR_DMACHCLR, GENMASK(dmac->n_channels - 1, 0));
++	rcar_dmac_write(dmac, RCAR_DMACHCLR, dmac->channels_mask);
+ 	rcar_dmac_write(dmac, RCAR_DMAOR,
+ 			RCAR_DMAOR_PRI_FIXED | RCAR_DMAOR_DME);
+ 
+@@ -814,6 +816,9 @@ static void rcar_dmac_stop_all_chan(struct rcar_dmac *dmac)
+ 	for (i = 0; i < dmac->n_channels; ++i) {
+ 		struct rcar_dmac_chan *chan = &dmac->channels[i];
+ 
++		if (!(dmac->channels_mask & BIT(i)))
++			continue;
 +
-+# TI SOC drivers
-+#
-+menuconfig SOC_TI
-+	bool "TI SOC drivers support"
+ 		/* Stop and reinitialize the channel. */
+ 		spin_lock_irq(&chan->lock);
+ 		rcar_dmac_chan_halt(chan);
+@@ -1776,6 +1781,8 @@ static int rcar_dmac_chan_probe(struct rcar_dmac *dmac,
+ 	return 0;
+ }
+ 
++#define RCAR_DMAC_MAX_CHANNELS	32
 +
-+if SOC_TI
+ static int rcar_dmac_parse_of(struct device *dev, struct rcar_dmac *dmac)
+ {
+ 	struct device_node *np = dev->of_node;
+@@ -1787,12 +1794,16 @@ static int rcar_dmac_parse_of(struct device *dev, struct rcar_dmac *dmac)
+ 		return ret;
+ 	}
+ 
+-	if (dmac->n_channels <= 0 || dmac->n_channels >= 100) {
++	/* The hardware and driver don't support more than 32 bits in CHCLR */
++	if (dmac->n_channels <= 0 ||
++	    dmac->n_channels >= RCAR_DMAC_MAX_CHANNELS) {
+ 		dev_err(dev, "invalid number of channels %u\n",
+ 			dmac->n_channels);
+ 		return -EINVAL;
+ 	}
+ 
++	dmac->channels_mask = GENMASK(dmac->n_channels - 1, 0);
 +
- # 64-bit ARM SoCs from TI
- if ARM64
+ 	return 0;
+ }
  
-@@ -14,17 +22,9 @@ config ARCH_K3_J721E_SOC
- 	help
- 	  Enable support for TI's J721E SoC Family.
+@@ -1802,7 +1813,6 @@ static int rcar_dmac_probe(struct platform_device *pdev)
+ 		DMA_SLAVE_BUSWIDTH_2_BYTES | DMA_SLAVE_BUSWIDTH_4_BYTES |
+ 		DMA_SLAVE_BUSWIDTH_8_BYTES | DMA_SLAVE_BUSWIDTH_16_BYTES |
+ 		DMA_SLAVE_BUSWIDTH_32_BYTES | DMA_SLAVE_BUSWIDTH_64_BYTES;
+-	unsigned int channels_offset = 0;
+ 	struct dma_device *engine;
+ 	struct rcar_dmac *dmac;
+ 	struct resource *mem;
+@@ -1831,10 +1841,8 @@ static int rcar_dmac_probe(struct platform_device *pdev)
+ 	 * level we can't disable it selectively, so ignore channel 0 for now if
+ 	 * the device is part of an IOMMU group.
+ 	 */
+-	if (device_iommu_mapped(&pdev->dev)) {
+-		dmac->n_channels--;
+-		channels_offset = 1;
+-	}
++	if (device_iommu_mapped(&pdev->dev))
++		dmac->channels_mask &= ~BIT(0);
  
--endif
-+endif # ARCH_K3
+ 	dmac->channels = devm_kcalloc(&pdev->dev, dmac->n_channels,
+ 				      sizeof(*dmac->channels), GFP_KERNEL);
+@@ -1892,8 +1900,10 @@ static int rcar_dmac_probe(struct platform_device *pdev)
+ 	INIT_LIST_HEAD(&engine->channels);
  
--endif
--
--#
--# TI SOC drivers
--#
--menuconfig SOC_TI
--	bool "TI SOC drivers support"
--
--if SOC_TI
-+endif # ARM64
- 
- config KEYSTONE_NAVIGATOR_QMSS
- 	tristate "Keystone Queue Manager Subsystem"
+ 	for (i = 0; i < dmac->n_channels; ++i) {
+-		ret = rcar_dmac_chan_probe(dmac, &dmac->channels[i],
+-					   i + channels_offset);
++		if (!(dmac->channels_mask & BIT(i)))
++			continue;
++
++		ret = rcar_dmac_chan_probe(dmac, &dmac->channels[i], i);
+ 		if (ret < 0)
+ 			goto error;
+ 	}
+-- 
+2.20.1
+
 
 
