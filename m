@@ -2,42 +2,49 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 534BEC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B01C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B8AE21924
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:04:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB05E21907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:05:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732196AbfISNEc (ORCPT
+        id S1732209AbfISNFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 09:04:32 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:40256 "EHLO
+        Thu, 19 Sep 2019 09:05:46 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:40266 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731958AbfISNEb (ORCPT
+        with ESMTP id S1729629AbfISNFq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 09:04:31 -0400
+        Thu, 19 Sep 2019 09:05:46 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: eballetbo)
-        with ESMTPSA id B787728E9D2
-Subject: Re: [PATCH] platform/chrome: cros_ec_rpmsg: Fix race with host
- command when probe failed.
-To:     Pi-Hsun Shih <pihsun@chromium.org>
-Cc:     Benson Leung <bleung@chromium.org>,
+        with ESMTPSA id 173E628E9D3
+Subject: Re: [PATCH v2] platform/chrome: cros_ec_chardev: Add a poll handler
+ to receive MKBP events
+To:     Gwendal Grignou <gwendal@chromium.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Vincent Palatin <vpalatin@chromium.org>,
         Guenter Roeck <groeck@chromium.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190904062613.86401-1-pihsun@chromium.org>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Benson Leung <bleung@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>
+References: <20190902160848.4738-1-enric.balletbo@collabora.com>
+ <20190902162420.GU2680@smile.fi.intel.com>
+ <CAPUE2utLqOGhPXFO1w8Fhu_use7nbu+Q+A+jL5vL_9ROJjnQKQ@mail.gmail.com>
 From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <2c8e467f-fb78-4a2c-f6e4-c04336591bb9@collabora.com>
-Date:   Thu, 19 Sep 2019 15:04:26 +0200
+Message-ID: <10c30679-6542-2a35-0d68-bb569881dc26@collabora.com>
+Date:   Thu, 19 Sep 2019 15:05:38 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20190904062613.86401-1-pihsun@chromium.org>
+In-Reply-To: <CAPUE2utLqOGhPXFO1w8Fhu_use7nbu+Q+A+jL5vL_9ROJjnQKQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
@@ -48,124 +55,349 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi,
 
-On 4/9/19 8:26, Pi-Hsun Shih wrote:
-> Since the rpmsg_endpoint is created before probe is called, it's
-> possible that a host event is received during cros_ec_register, and
-> there would be some pending work in the host_event_work workqueue while
-> cros_ec_register is called.
-> 
-> If cros_ec_register fails, when the leftover work in host_event_work
-> run, the ec_dev from the drvdata of the rpdev could be already set to
-> NULL, causing kernel crash when trying to run cros_ec_get_next_event.
-> 
-> Fix this by creating the rpmsg_endpoint by ourself, and when
-> cros_ec_register fails (or on remove), destroy the endpoint first (to
-> make sure there's no more new calls to cros_ec_rpmsg_callback), and then
-> cancel all works in the host_event_work workqueue.
-> 
-> Fixes: 2de89fd98958 ("platform/chrome: cros_ec: Add EC host command support using rpmsg")
-> Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-> ---
+On 5/9/19 23:25, Gwendal Grignou wrote:
+> On Mon, Sep 2, 2019 at 9:24 AM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+>>
+>> On Mon, Sep 02, 2019 at 06:08:48PM +0200, Enric Balletbo i Serra wrote:
+>>> Allow to poll on the cros_ec device to receive the MKBP events.
+>>>
+>>> The /dev/cros_[ec|fp|..] file operations now implements the poll
+>>> operation. The userspace can now receive specific MKBP events by doing
+>>> the
+>>> following:
+>>> - Open the /dev/cros_XX file.
+>>> - Call the CROS_EC_DEV_IOCEVENTMASK ioctl with the bitmap of the MKBP
+>>>   events it wishes to receive as argument.
+>>> - Poll on the file descriptor.
+>>> - When it gets POLLIN, do a read on the file descriptor, the first
+>>>   queued event will be returned (using the struct
+>>>   ec_response_get_next_event format: one byte of event type, then
+>>>   the payload).
+>>>
+>>> The read() operation returns at most one event even if there are several
+>>> queued, and it might be truncated if the buffer is smaller than the
+>>> event (but the caller should know the maximum size of the events it is
+>>> reading).
+>>>
+>>> read() used to return the EC version string, it still does it when no
+>>> event mask or an empty event is set for backward compatibility (despite
+>>> nobody really using this feature).
+>>>
+>>> This will be used, for example, by the userspace daemon to receive and
+>>> treat the EC_MKBP_EVENT_FINGERPRINT sent by the FP MCU.
+>>>
+>>
+>> Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
 
-Added the stable tag and applied for 5.4, the patches went to linux-next some
-time ago, so sorry for late notice.
+I modified the patch with Gwendal nits and applied for 5.4, the patches went to
+linux-next some time ago, so sorry for late notice.
 
 Thanks,
  Enric
 
 
->  drivers/platform/chrome/cros_ec_rpmsg.c | 33 +++++++++++++++++++++----
->  1 file changed, 28 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/platform/chrome/cros_ec_rpmsg.c b/drivers/platform/chrome/cros_ec_rpmsg.c
-> index 8b6bd775cc9a..0c3738c3244d 100644
-> --- a/drivers/platform/chrome/cros_ec_rpmsg.c
-> +++ b/drivers/platform/chrome/cros_ec_rpmsg.c
-> @@ -41,6 +41,7 @@ struct cros_ec_rpmsg {
->  	struct rpmsg_device *rpdev;
->  	struct completion xfer_ack;
->  	struct work_struct host_event_work;
-> +	struct rpmsg_endpoint *ept;
->  };
->  
->  /**
-> @@ -72,7 +73,6 @@ static int cros_ec_pkt_xfer_rpmsg(struct cros_ec_device *ec_dev,
->  				  struct cros_ec_command *ec_msg)
->  {
->  	struct cros_ec_rpmsg *ec_rpmsg = ec_dev->priv;
-> -	struct rpmsg_device *rpdev = ec_rpmsg->rpdev;
->  	struct ec_host_response *response;
->  	unsigned long timeout;
->  	int len;
-> @@ -85,7 +85,7 @@ static int cros_ec_pkt_xfer_rpmsg(struct cros_ec_device *ec_dev,
->  	dev_dbg(ec_dev->dev, "prepared, len=%d\n", len);
->  
->  	reinit_completion(&ec_rpmsg->xfer_ack);
-> -	ret = rpmsg_send(rpdev->ept, ec_dev->dout, len);
-> +	ret = rpmsg_send(ec_rpmsg->ept, ec_dev->dout, len);
->  	if (ret) {
->  		dev_err(ec_dev->dev, "rpmsg send failed\n");
->  		return ret;
-> @@ -196,11 +196,24 @@ static int cros_ec_rpmsg_callback(struct rpmsg_device *rpdev, void *data,
->  	return 0;
->  }
->  
-> +static struct rpmsg_endpoint *
-> +cros_ec_rpmsg_create_ept(struct rpmsg_device *rpdev)
-> +{
-> +	struct rpmsg_channel_info chinfo = {};
-> +
-> +	strscpy(chinfo.name, rpdev->id.name, RPMSG_NAME_SIZE);
-> +	chinfo.src = rpdev->src;
-> +	chinfo.dst = RPMSG_ADDR_ANY;
-> +
-> +	return rpmsg_create_ept(rpdev, cros_ec_rpmsg_callback, NULL, chinfo);
-> +}
-> +
->  static int cros_ec_rpmsg_probe(struct rpmsg_device *rpdev)
->  {
->  	struct device *dev = &rpdev->dev;
->  	struct cros_ec_rpmsg *ec_rpmsg;
->  	struct cros_ec_device *ec_dev;
-> +	int ret;
->  
->  	ec_dev = devm_kzalloc(dev, sizeof(*ec_dev), GFP_KERNEL);
->  	if (!ec_dev)
-> @@ -225,7 +238,18 @@ static int cros_ec_rpmsg_probe(struct rpmsg_device *rpdev)
->  	INIT_WORK(&ec_rpmsg->host_event_work,
->  		  cros_ec_rpmsg_host_event_function);
->  
-> -	return cros_ec_register(ec_dev);
-> +	ec_rpmsg->ept = cros_ec_rpmsg_create_ept(rpdev);
-> +	if (!ec_rpmsg->ept)
-> +		return -ENOMEM;
-> +
-> +	ret = cros_ec_register(ec_dev);
-> +	if (ret < 0) {
-> +		rpmsg_destroy_ept(ec_rpmsg->ept);
-> +		cancel_work_sync(&ec_rpmsg->host_event_work);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
->  }
->  
->  static void cros_ec_rpmsg_remove(struct rpmsg_device *rpdev)
-> @@ -234,7 +258,7 @@ static void cros_ec_rpmsg_remove(struct rpmsg_device *rpdev)
->  	struct cros_ec_rpmsg *ec_rpmsg = ec_dev->priv;
->  
->  	cros_ec_unregister(ec_dev);
-> -
-> +	rpmsg_destroy_ept(ec_rpmsg->ept);
->  	cancel_work_sync(&ec_rpmsg->host_event_work);
->  }
->  
-> @@ -271,7 +295,6 @@ static struct rpmsg_driver cros_ec_driver_rpmsg = {
->  	},
->  	.probe		= cros_ec_rpmsg_probe,
->  	.remove		= cros_ec_rpmsg_remove,
-> -	.callback	= cros_ec_rpmsg_callback,
->  };
->  
->  module_rpmsg_driver(cros_ec_driver_rpmsg);
+>>
+>>> Signed-off-by: Vincent Palatin <vpalatin@chromium.org>
+>>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>>> ---
+>>> Note that this patch depends on the immutable branch [1] to apply
+>>> cleanly.
+>>>
+>>> [1] https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git/log/?h=ib-mfd-extcon-hid-i2c-iio-input-media-chrome-power-pwm-rtc-sound-5.4
+>>>
+>>>
+>>> Changes in v2:
+>>> - Moved the code to the cros_ec_chardev driver.
+>>>
+>>>  drivers/platform/chrome/cros_ec_chardev.c     | 177 +++++++++++++++++-
+>>>  include/linux/platform_data/cros_ec_chardev.h |   1 +
+>>>  2 files changed, 173 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/drivers/platform/chrome/cros_ec_chardev.c b/drivers/platform/chrome/cros_ec_chardev.c
+>>> index 08abd7e5c7bf..eabb1fe85688 100644
+>>> --- a/drivers/platform/chrome/cros_ec_chardev.c
+>>> +++ b/drivers/platform/chrome/cros_ec_chardev.c
+>>> @@ -16,21 +16,42 @@
+>>>  #include <linux/mfd/cros_ec.h>
+>>>  #include <linux/miscdevice.h>
+>>>  #include <linux/module.h>
+>>> +#include <linux/notifier.h>
+>>>  #include <linux/platform_data/cros_ec_chardev.h>
+>>>  #include <linux/platform_data/cros_ec_commands.h>
+>>>  #include <linux/platform_data/cros_ec_proto.h>
+>>>  #include <linux/platform_device.h>
+>>> +#include <linux/poll.h>
+>>>  #include <linux/slab.h>
+>>>  #include <linux/types.h>
+>>>  #include <linux/uaccess.h>
+>>>
+>>>  #define DRV_NAME             "cros-ec-chardev"
+>>>
+>>> +/* Arbitrary bounded size for the event queue */
+>>> +#define CROS_MAX_EVENT_LEN   PAGE_SIZE
+>>> +
+>>>  struct chardev_data {
+>>>       struct cros_ec_dev *ec_dev;
+>>>       struct miscdevice misc;
+>>>  };
+>>>
+>>> +struct chardev_priv {
+>>> +     struct cros_ec_dev *ec_dev;
+>>> +     struct notifier_block notifier;
+>>> +     wait_queue_head_t wait_event;
+>>> +     unsigned long event_mask;
+>>> +     struct list_head events;
+>>> +     size_t event_len;
+>>> +};
+>>> +
+>>> +struct ec_event {
+>>> +     struct list_head node;
+>>> +     size_t size;
+>>> +     u8 event_type;
+>>> +     u8 data[0];
+>>> +};
+>>> +
+>>>  static int ec_get_version(struct cros_ec_dev *ec, char *str, int maxlen)
+>>>  {
+>>>       static const char * const current_image_name[] = {
+>>> @@ -69,6 +90,71 @@ static int ec_get_version(struct cros_ec_dev *ec, char *str, int maxlen)
+>>>       return ret;
+>>>  }
+>>>
+>>> +static int ec_mkbp_event(struct notifier_block *nb,
+>>> +                      unsigned long queued_during_suspend,
+>>> +                      void *_notify)
+> nit: call it cros_ec_chardev_mkbp_event()  to fit other functions
+> naming convention. Change only if a v3 is needed.
+>>> +{
+>>> +     struct chardev_priv *priv = container_of(nb, struct chardev_priv,
+>>> +                                              notifier);
+>>> +     struct cros_ec_device *ec_dev = priv->ec_dev->ec_dev;
+>>> +     struct ec_event *event;
+>>> +     unsigned long event_bit = 1 << ec_dev->event_data.event_type;
+>>> +     int total_size = sizeof(*event) + ec_dev->event_size;
+>>> +
+>>> +     if (!(event_bit & priv->event_mask) ||
+>>> +         (priv->event_len + total_size) > CROS_MAX_EVENT_LEN)
+>>> +             return NOTIFY_DONE;
+>>> +
+>>> +     event = kzalloc(total_size, GFP_KERNEL);
+>>> +     if (!event)
+>>> +             return NOTIFY_DONE;
+>>> +
+>>> +     event->size = ec_dev->event_size;
+>>> +     event->event_type = ec_dev->event_data.event_type;
+>>> +     memcpy(event->data, &ec_dev->event_data.data, ec_dev->event_size);
+>>> +
+>>> +     spin_lock(&priv->wait_event.lock);
+>>> +     list_add_tail(&event->node, &priv->events);
+>>> +     priv->event_len += total_size;
+>>> +     wake_up_locked(&priv->wait_event);
+>>> +     spin_unlock(&priv->wait_event.lock);
+>>> +
+>>> +     return NOTIFY_OK;
+>>> +}
+>>> +
+>>> +static struct ec_event *ec_fetch_event(struct chardev_priv *priv, bool fetch,
+>>> +                                    bool block)
+> nit: cros_ec_chardev_fetch_event()
+>>> +{
+>>> +     struct ec_event *event;
+>>> +     int err;
+>>> +
+>>> +     spin_lock(&priv->wait_event.lock);
+>>> +     if (!block && list_empty(&priv->events)) {
+>>> +             event = ERR_PTR(-EWOULDBLOCK);
+>>> +             goto out;
+>>> +     }
+>>> +
+>>> +     if (!fetch) {
+>>> +             event = NULL;
+>>> +             goto out;
+>>> +     }
+>>> +
+>>> +     err = wait_event_interruptible_locked(priv->wait_event,
+>>> +                                           !list_empty(&priv->events));
+>>> +     if (err) {
+>>> +             event = ERR_PTR(err);
+>>> +             goto out;
+>>> +     }
+>>> +
+>>> +     event = list_first_entry(&priv->events, struct ec_event, node);
+>>> +     list_del(&event->node);
+>>> +     priv->event_len -= sizeof(*event) + event->size;
+>>> +
+>>> +out:
+>>> +     spin_unlock(&priv->wait_event.lock);
+>>> +     return event;
+>>> +}
+>>> +
+>>>  /*
+>>>   * Device file ops
+>>>   */
+>>> @@ -76,11 +162,40 @@ static int cros_ec_chardev_open(struct inode *inode, struct file *filp)
+>>>  {
+>>>       struct miscdevice *mdev = filp->private_data;
+>>>       struct cros_ec_dev *ec_dev = dev_get_drvdata(mdev->parent);
+>>> +     struct chardev_priv *priv;
+>>> +     int ret;
+>>> +
+>>> +     priv = kzalloc(sizeof(*priv), GFP_KERNEL);
+>>> +     if (!priv)
+>>> +             return -ENOMEM;
+>>>
+>>> -     filp->private_data = ec_dev;
+>>> +     priv->ec_dev = ec_dev;
+>>> +     filp->private_data = priv;
+>>> +     INIT_LIST_HEAD(&priv->events);
+>>> +     init_waitqueue_head(&priv->wait_event);
+>>>       nonseekable_open(inode, filp);
+>>>
+>>> -     return 0;
+>>> +     priv->notifier.notifier_call = ec_mkbp_event;
+>>> +     ret = blocking_notifier_chain_register(&ec_dev->ec_dev->event_notifier,
+>>> +                                            &priv->notifier);
+>>> +     if (ret) {
+>>> +             dev_err(ec_dev->dev, "failed to register event notifier\n");
+>>> +             kfree(priv);
+>>> +     }
+>>> +
+>>> +     return ret;
+>>> +}
+>>> +
+>>> +static __poll_t cros_ec_chardev_poll(struct file *filp, poll_table *wait)
+>>> +{
+>>> +     struct chardev_priv *priv = filp->private_data;
+>>> +
+>>> +     poll_wait(filp, &priv->wait_event, wait);
+>>> +
+>>> +     if (list_empty(&priv->events))
+>>> +             return 0;
+>>> +
+>>> +     return EPOLLIN | EPOLLRDNORM;
+>>>  }
+>>>
+>>>  static ssize_t cros_ec_chardev_read(struct file *filp, char __user *buffer,
+>>> @@ -88,14 +203,42 @@ static ssize_t cros_ec_chardev_read(struct file *filp, char __user *buffer,
+>>>  {
+>>>       char msg[sizeof(struct ec_response_get_version) +
+>>>                sizeof(CROS_EC_DEV_VERSION)];
+>>> -     struct cros_ec_dev *ec = filp->private_data;
+>>> +     struct chardev_priv *priv = filp->private_data;
+>>> +     struct cros_ec_dev *ec_dev = priv->ec_dev;
+>>>       size_t count;
+>>>       int ret;
+>>>
+>>> +     if (priv->event_mask) { /* queued MKBP event */
+>>> +             struct ec_event *event;
+>>> +
+>>> +             event = ec_fetch_event(priv, length != 0,
+>>> +                                    !(filp->f_flags & O_NONBLOCK));
+>>> +             if (IS_ERR(event))
+>>> +                     return PTR_ERR(event);
+>>> +             /*
+>>> +              * length == 0 is special - no IO is done but we check
+>>> +              * for error conditions.
+>>> +              */
+>>> +             if (length == 0)
+>>> +                     return 0;
+>>> +
+>>> +             /* The event is 1 byte of type plus the payload */
+>>> +             count = min(length, event->size + 1);
+>>> +             ret = copy_to_user(buffer, &event->event_type, count);
+>>> +             kfree(event);
+>>> +             if (ret) /* the copy failed */
+>>> +                     return -EFAULT;
+>>> +             *offset = count;
+>>> +             return count;
+>>> +     }
+>>> +
+>>> +     /*
+>>> +      * Legacy behavior if no event mask is defined
+>>> +      */
+>>>       if (*offset != 0)
+>>>               return 0;
+>>>
+>>> -     ret = ec_get_version(ec, msg, sizeof(msg));
+>>> +     ret = ec_get_version(ec_dev, msg, sizeof(msg));
+>>>       if (ret)
+>>>               return ret;
+>>>
+>>> @@ -108,6 +251,24 @@ static ssize_t cros_ec_chardev_read(struct file *filp, char __user *buffer,
+>>>       return count;
+>>>  }
+>>>
+>>> +static int cros_ec_chardev_release(struct inode *inode, struct file *filp)
+>>> +{
+>>> +     struct chardev_priv *priv = filp->private_data;
+>>> +     struct cros_ec_dev *ec_dev = priv->ec_dev;
+>>> +     struct ec_event *event, *e;
+>>> +
+>>> +     blocking_notifier_chain_unregister(&ec_dev->ec_dev->event_notifier,
+>>> +                                        &priv->notifier);
+>>> +
+>>> +     list_for_each_entry_safe(event, e, &priv->events, node) {
+>>> +             list_del(&event->node);
+>>> +             kfree(event);
+>>> +     }
+>>> +     kfree(priv);
+>>> +
+>>> +     return 0;
+>>> +}
+>>> +
+>>>  /*
+>>>   * Ioctls
+>>>   */
+>>> @@ -181,7 +342,8 @@ static long cros_ec_chardev_ioctl_readmem(struct cros_ec_dev *ec,
+>>>  static long cros_ec_chardev_ioctl(struct file *filp, unsigned int cmd,
+>>>                                  unsigned long arg)
+>>>  {
+>>> -     struct cros_ec_dev *ec = filp->private_data;
+>>> +     struct chardev_priv *priv = filp->private_data;
+>>> +     struct cros_ec_dev *ec = priv->ec_dev;
+>>>
+>>>       if (_IOC_TYPE(cmd) != CROS_EC_DEV_IOC)
+>>>               return -ENOTTY;
+>>> @@ -191,6 +353,9 @@ static long cros_ec_chardev_ioctl(struct file *filp, unsigned int cmd,
+>>>               return cros_ec_chardev_ioctl_xcmd(ec, (void __user *)arg);
+>>>       case CROS_EC_DEV_IOCRDMEM:
+>>>               return cros_ec_chardev_ioctl_readmem(ec, (void __user *)arg);
+>>> +     case CROS_EC_DEV_IOCEVENTMASK:
+>>> +             priv->event_mask = arg;
+>>> +             return 0;
+>>>       }
+>>>
+>>>       return -ENOTTY;
+>>> @@ -198,7 +363,9 @@ static long cros_ec_chardev_ioctl(struct file *filp, unsigned int cmd,
+>>>
+>>>  static const struct file_operations chardev_fops = {
+>>>       .open           = cros_ec_chardev_open,
+>>> +     .poll           = cros_ec_chardev_poll,
+>>>       .read           = cros_ec_chardev_read,
+>>> +     .release        = cros_ec_chardev_release,
+>>>       .unlocked_ioctl = cros_ec_chardev_ioctl,
+>>>  #ifdef CONFIG_COMPAT
+>>>       .compat_ioctl   = cros_ec_chardev_ioctl,
+>>> diff --git a/include/linux/platform_data/cros_ec_chardev.h b/include/linux/platform_data/cros_ec_chardev.h
+>>> index 973b2615aa02..7de8faaf77df 100644
+>>> --- a/include/linux/platform_data/cros_ec_chardev.h
+>>> +++ b/include/linux/platform_data/cros_ec_chardev.h
+>>> @@ -33,5 +33,6 @@ struct cros_ec_readmem {
+>>>  #define CROS_EC_DEV_IOC       0xEC
+>>>  #define CROS_EC_DEV_IOCXCMD   _IOWR(CROS_EC_DEV_IOC, 0, struct cros_ec_command)
+>>>  #define CROS_EC_DEV_IOCRDMEM  _IOWR(CROS_EC_DEV_IOC, 1, struct cros_ec_readmem)
+>>> +#define CROS_EC_DEV_IOCEVENTMASK _IO(CROS_EC_DEV_IOC, 2)
+>>>
+>>>  #endif /* _CROS_EC_DEV_H_ */
+>>> --
+>>> 2.20.1
+>>>
+>>
+>> --
+>> With Best Regards,
+>> Andy Shevchenko
+>>
+>>
 > 
