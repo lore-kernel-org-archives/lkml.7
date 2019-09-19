@@ -2,129 +2,183 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F9AC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 12:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A3C7C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 12:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96FE221929
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 12:13:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Uoos2eUm"
+	by mail.kernel.org (Postfix) with ESMTP id D657421929
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 12:13:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390265AbfISMN2 (ORCPT
+        id S2390256AbfISMN0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 08:13:28 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27381 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2390227AbfISMNV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 08:13:26 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:45830 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390226AbfISMNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 19 Sep 2019 08:13:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1568895200;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=8upZbcqH4fXkVaLOW2dy/iZBybRVQ5oETpjiRcdE6KE=;
-        b=Uoos2eUmdiKzuQlXofjnhJ3p1Nwl4lVhuWcraNySJQ9Fpnp7iV8TrTcjMxZgrhJ8FW/iQg
-        qmCr1g3ZwdqZfsKwbbFuIGoPYSZ73Vw1mUsR0mc+m+79Y9uqU76+/hg6BlyRPz+qY1gC8Z
-        IFTWZqCdNGHCbFXvTreHZvd6SyWyY9o=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-93-o4gALb9vM5GWynNYnhGTnA-1; Thu, 19 Sep 2019 08:13:18 -0400
-Received: by mail-wr1-f71.google.com with SMTP id f11so931948wrt.18
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 05:13:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8upZbcqH4fXkVaLOW2dy/iZBybRVQ5oETpjiRcdE6KE=;
-        b=tIBR9SjRrbOiaXpt4GF8rhYATIXWlUPqNjr1NyphPuIQifT5IUAyq+IDy2T1LlReX3
-         VtHpB/KsCed2v4etC7ikefFwEaNddPIgjxBgGDvJLMZxgGsKJRwp2mTzZOo0V9ahZQLy
-         isIE6ZSlqqPsQ383ccy0XUUEb8W30d8kbwuLm45l72UUu95QeIMPxxUDw5zyZ9iJeCS0
-         O5nleRFAgurA7GJMNgXJhYUgOxA7h+TUscYaB+ERH47ZwKJQFRx5M3cSXyRNGBv8Jhrd
-         LcvTdnqZ2K3D1avlGbUy/SxOY0oETuQBBCKIuXyNRE6qs09ld8e3AoNUcjgOJVj211JF
-         jN8g==
-X-Gm-Message-State: APjAAAWIUaWSlG61ARCGr3vIrEpBTmtzy041gJ3gJdwhgGXT5p8znSP/
-        V1DKoqEeUb67XOCjTFqsv3lJhUX95Yp64t1XmN9+c2CPy4Ymtm5Xt05ftYOxRnTdv4ebdh5Fmwo
-        SHuHsf9CP0xXX7oZphjMKmR/j
-X-Received: by 2002:a5d:6088:: with SMTP id w8mr6995242wrt.31.1568895197142;
-        Thu, 19 Sep 2019 05:13:17 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyoqc728vUxzk+PlHiWZtsz6cgGkTTAs+KWHYRvgq+doGCowWOVSB7hkXrBEQJmElppYJsNwA==
-X-Received: by 2002:a5d:6088:: with SMTP id w8mr6995221wrt.31.1568895196846;
-        Thu, 19 Sep 2019 05:13:16 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:c46c:2acb:d8d2:21d8? ([2001:b07:6468:f312:c46c:2acb:d8d2:21d8])
-        by smtp.gmail.com with ESMTPSA id x6sm7878924wmf.38.2019.09.19.05.13.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Sep 2019 05:13:16 -0700 (PDT)
-Subject: Re: [RFC PATCH v3 4/6] psci: Add hvc call service for ptp_kvm.
-To:     Marc Zyngier <maz@kernel.org>,
-        "Jianyong Wu (Arm Technology China)" <Jianyong.Wu@arm.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "yangbo.lu@nxp.com" <yangbo.lu@nxp.com>,
-        "john.stultz@linaro.org" <john.stultz@linaro.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "richardcochran@gmail.com" <richardcochran@gmail.com>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Will Deacon <Will.Deacon@arm.com>,
-        Suzuki Poulose <Suzuki.Poulose@arm.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Steve Capper <Steve.Capper@arm.com>,
-        "Kaly Xin (Arm Technology China)" <Kaly.Xin@arm.com>,
-        "Justin He (Arm Technology China)" <Justin.He@arm.com>,
-        nd <nd@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190918080716.64242-1-jianyong.wu@arm.com>
- <20190918080716.64242-5-jianyong.wu@arm.com>
- <83ed7fac-277f-a31e-af37-8ec134f39d26@redhat.com>
- <HE1PR0801MB1676F57B317AE85E3B934B32F48E0@HE1PR0801MB1676.eurprd08.prod.outlook.com>
- <629538ea-13fb-e666-8df6-8ad23f114755@redhat.com>
- <HE1PR0801MB167639E2F025998058A77F86F4890@HE1PR0801MB1676.eurprd08.prod.outlook.com>
- <ef6ab8bd-41ad-88f8-9cfd-dc749ca65310@redhat.com>
- <a1b554b8-4417-5305-3419-fe71a8c50842@kernel.org>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <56a5b885-62c8-c4ef-e2f8-e945c0eb700e@redhat.com>
-Date:   Thu, 19 Sep 2019 14:13:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <a1b554b8-4417-5305-3419-fe71a8c50842@kernel.org>
-Content-Language: en-US
-X-MC-Unique: o4gALb9vM5GWynNYnhGTnA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 33D291A0084;
+        Thu, 19 Sep 2019 14:13:20 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 08B9A1A01CD;
+        Thu, 19 Sep 2019 14:13:13 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 5A9DC40309;
+        Thu, 19 Sep 2019 20:13:04 +0800 (SGT)
+From:   Shengjiu Wang <shengjiu.wang@nxp.com>
+To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
+        festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
+        perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, lars@metafoo.de
+Subject: [PATCH V3 4/4] ASoC: fsl_asrc: Fix error with S24_3LE format bitstream in i.MX8
+Date:   Thu, 19 Sep 2019 20:11:42 +0800
+Message-Id: <0fe619f4c8f0898cf51c7324c9a0784c5782ed91.1568861098.git.shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1568861098.git.shengjiu.wang@nxp.com>
+References: <cover.1568861098.git.shengjiu.wang@nxp.com>
+In-Reply-To: <cover.1568861098.git.shengjiu.wang@nxp.com>
+References: <cover.1568861098.git.shengjiu.wang@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/09/19 13:39, Marc Zyngier wrote:
->> I don't think it's ugly but more important, using tk->tkr_mono.clock is
->> incorrect.  See how the x86 code hardcodes &kvm_clock, it's the same for
->> ARM.
-> Not really. The guest kernel is free to use any clocksource it wishes.
+There is error "aplay: pcm_write:2023: write error: Input/output error"
+on i.MX8QM/i.MX8QXP platform for S24_3LE format.
 
-Understood, in fact it's the same on x86.
+In i.MX8QM/i.MX8QXP, the DMA is EDMA, which don't support 24bit
+sample, but we didn't add any constraint, that cause issues.
 
-However, for PTP to work, the cycles value returned by the clocksource
-must match the one returned by the hypercall.  So for ARM
-get_device_system_crosststamp must receive the arch timer clocksource,
-so that it will return -ENODEV if the active clocksource is anything else.
+So we need to query the caps of dma, then update the hw parameters
+according to the caps.
 
-Paolo
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+---
+ sound/soc/fsl/fsl_asrc.c     |  4 +--
+ sound/soc/fsl/fsl_asrc.h     |  3 +++
+ sound/soc/fsl/fsl_asrc_dma.c | 52 +++++++++++++++++++++++++++++++-----
+ 3 files changed, 50 insertions(+), 9 deletions(-)
 
-> In some cases, it is actually desirable (like these broken systems that
-> cannot use an in-kernel irqchip...). Maybe it is that on x86 the guest
-> only uses the kvm_clock, but that's a much harder sell on ARM. The fact
-> that ptp_kvm assumes that the clocksource is fixed doesn't seem correct
-> in that case.
+diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
+index 584badf956d2..0bf91a6f54b9 100644
+--- a/sound/soc/fsl/fsl_asrc.c
++++ b/sound/soc/fsl/fsl_asrc.c
+@@ -115,7 +115,7 @@ static void fsl_asrc_sel_proc(int inrate, int outrate,
+  * within range [ANCA, ANCA+ANCB-1], depends on the channels of pair A
+  * while pair A and pair C are comparatively independent.
+  */
+-static int fsl_asrc_request_pair(int channels, struct fsl_asrc_pair *pair)
++int fsl_asrc_request_pair(int channels, struct fsl_asrc_pair *pair)
+ {
+ 	enum asrc_pair_index index = ASRC_INVALID_PAIR;
+ 	struct fsl_asrc *asrc_priv = pair->asrc_priv;
+@@ -158,7 +158,7 @@ static int fsl_asrc_request_pair(int channels, struct fsl_asrc_pair *pair)
+  *
+  * It clears the resource from asrc_priv and releases the occupied channels.
+  */
+-static void fsl_asrc_release_pair(struct fsl_asrc_pair *pair)
++void fsl_asrc_release_pair(struct fsl_asrc_pair *pair)
+ {
+ 	struct fsl_asrc *asrc_priv = pair->asrc_priv;
+ 	enum asrc_pair_index index = pair->index;
+diff --git a/sound/soc/fsl/fsl_asrc.h b/sound/soc/fsl/fsl_asrc.h
+index 38af485bdd22..2b57e8c53728 100644
+--- a/sound/soc/fsl/fsl_asrc.h
++++ b/sound/soc/fsl/fsl_asrc.h
+@@ -462,4 +462,7 @@ struct fsl_asrc {
+ #define DRV_NAME "fsl-asrc-dai"
+ extern struct snd_soc_component_driver fsl_asrc_component;
+ struct dma_chan *fsl_asrc_get_dma_channel(struct fsl_asrc_pair *pair, bool dir);
++int fsl_asrc_request_pair(int channels, struct fsl_asrc_pair *pair);
++void fsl_asrc_release_pair(struct fsl_asrc_pair *pair);
++
+ #endif /* _FSL_ASRC_H */
+diff --git a/sound/soc/fsl/fsl_asrc_dma.c b/sound/soc/fsl/fsl_asrc_dma.c
+index 01052a0808b0..c1c8ee4aca54 100644
+--- a/sound/soc/fsl/fsl_asrc_dma.c
++++ b/sound/soc/fsl/fsl_asrc_dma.c
+@@ -16,13 +16,11 @@
+ 
+ #define FSL_ASRC_DMABUF_SIZE	(256 * 1024)
+ 
+-static const struct snd_pcm_hardware snd_imx_hardware = {
++static struct snd_pcm_hardware snd_imx_hardware = {
+ 	.info = SNDRV_PCM_INFO_INTERLEAVED |
+ 		SNDRV_PCM_INFO_BLOCK_TRANSFER |
+ 		SNDRV_PCM_INFO_MMAP |
+-		SNDRV_PCM_INFO_MMAP_VALID |
+-		SNDRV_PCM_INFO_PAUSE |
+-		SNDRV_PCM_INFO_RESUME,
++		SNDRV_PCM_INFO_MMAP_VALID,
+ 	.buffer_bytes_max = FSL_ASRC_DMABUF_SIZE,
+ 	.period_bytes_min = 128,
+ 	.period_bytes_max = 65535, /* Limited by SDMA engine */
+@@ -276,6 +274,11 @@ static int fsl_asrc_dma_startup(struct snd_pcm_substream *substream)
+ 	struct device *dev = component->dev;
+ 	struct fsl_asrc *asrc_priv = dev_get_drvdata(dev);
+ 	struct fsl_asrc_pair *pair;
++	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
++	u8 dir = tx ? OUT : IN;
++	struct dma_chan *tmp_chan;
++	struct snd_dmaengine_dai_dma_data *dma_data;
++	int ret;
+ 
+ 	pair = kzalloc(sizeof(struct fsl_asrc_pair), GFP_KERNEL);
+ 	if (!pair)
+@@ -285,9 +288,44 @@ static int fsl_asrc_dma_startup(struct snd_pcm_substream *substream)
+ 
+ 	runtime->private_data = pair;
+ 
+-	snd_pcm_hw_constraint_integer(substream->runtime,
+-				      SNDRV_PCM_HW_PARAM_PERIODS);
+-	snd_soc_set_runtime_hwparams(substream, &snd_imx_hardware);
++	ret = snd_pcm_hw_constraint_integer(substream->runtime,
++					    SNDRV_PCM_HW_PARAM_PERIODS);
++	if (ret < 0) {
++		dev_err(dev, "failed to set pcm hw params periods\n");
++		return ret;
++	}
++
++	/* Request a temp pair, which is release in the end */
++	ret = fsl_asrc_request_pair(1, pair);
++	if (ret < 0) {
++		dev_err(dev, "failed to request asrc pair\n");
++		return ret;
++	}
++
++	tmp_chan = fsl_asrc_get_dma_channel(pair, dir);
++	if (!tmp_chan) {
++		dev_err(dev, "can't get dma channel\n");
++		return -EINVAL;
++	}
++
++	dma_data = snd_soc_dai_get_dma_data(rtd->cpu_dai, substream);
++
++	ret = snd_dmaengine_pcm_refine_runtime_hwparams(substream,
++							dma_data,
++							&snd_imx_hardware,
++							tmp_chan);
++	if (ret < 0) {
++		dev_err(dev, "failed to set runtime hwparams\n");
++		return ret;
++	}
++
++	ret = snd_soc_set_runtime_hwparams(substream, &snd_imx_hardware);
++	if (ret)
++		return ret;
++
++	dma_release_channel(tmp_chan);
++	fsl_asrc_release_pair(pair);
++
+ 
+ 	return 0;
+ }
+-- 
+2.21.0
 
