@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A3EC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4DDAC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48FAD208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:36:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81348208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:36:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932564;
-	bh=hFYo/74gVn52eg42PNmX0qBZBecS71x9smF8rN55b5I=;
+	s=default; t=1568932578;
+	bh=A96tY/4sS9HYUt1WTbvdvzg4QevFECvNRTBIpnu+yPA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gJ+S4PXaB3kQ8v/lWjI5n0kjIvQyRMNJaYOExuJcmwkONwqI5XC4RdeNq17kw4Q5+
-	 zokSfFoVCvpg1qnlQeSRSqrit3D1zkHqlDFeZCipsuqDZWj5l6s/a0iQHuNpfY/qgU
-	 nh6bEmpK6G185c/OFebM+SDgH3nPNgsZij9xsJtg=
+	b=D6RSPbxOdsKK/p4vPXPez19hNYJsU95axUjEkknu+j6occQSrtK4Z2Wov/SGiP7qv
+	 CmnDOZS7u0SAQx4Z/cCJHBsO0TIKE7NyGsmOAFf+CUmPOqd4kdSLA+PkL7dhB5XdWf
+	 nrtXlH5woIJ4EOCVI49oiND96tGndlNvQO/4Uvko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393132AbfISWHE (ORCPT
+        id S2392690AbfISWgR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:07:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44588 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:36:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393117AbfISWHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:07:00 -0400
+        id S2404008AbfISWGo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:06:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1952821907;
-        Thu, 19 Sep 2019 22:06:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEFB721907;
+        Thu, 19 Sep 2019 22:06:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568930819;
-        bh=hFYo/74gVn52eg42PNmX0qBZBecS71x9smF8rN55b5I=;
+        s=default; t=1568930803;
+        bh=A96tY/4sS9HYUt1WTbvdvzg4QevFECvNRTBIpnu+yPA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w6zT5l6VLhTz9AzQfWSgRQOnJoN9FywNRHruMIZfQ3/74s+D1zxoDLMA6mPlTMwJw
-         TbxfSyLut8r5cjD5tjqUkzXDJW39+9XhN4/9xa1ku77D1LGdCKuPaRMNHWHTevmaOH
-         fA/xhnoB7wYpDpntOYQ6ZPcgsur/BbP4RuBDkRpI=
+        b=B7y2YE4aSgnVM5o4q5zkqVixKPpxHsEJIjxwq+r003UgHcqZ82MF8ljbhZNfaE/4t
+         8EORPLnHEcvYo2IdOfASscn+a/av9jdzihGSDjE9jrfcXhgwVX6nw+xGlaEmrqlMSx
+         fXbRC9npwvX+e7voLVyTGUAalXu0agu2edtnrsvs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Huang <huangwenabc@gmail.com>,
-        Ganapathi Bhat <gbhat@marvell.comg>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.2 025/124] mwifiex: Fix three heap overflow at parsing element in cfg80211_ap_settings
-Date:   Fri, 20 Sep 2019 00:01:53 +0200
-Message-Id: <20190919214819.972597811@linuxfoundation.org>
+        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.2 020/124] net: dsa: Fix load order between DSA drivers and taggers
+Date:   Fri, 20 Sep 2019 00:01:48 +0200
+Message-Id: <20190919214819.826331215@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -60,73 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Huang <huangwenabc@gmail.com>
+From: Andrew Lunn <andrew@lunn.ch>
 
-commit 7caac62ed598a196d6ddf8d9c121e12e082cac3a upstream.
+[ Upstream commit 23426a25e55a417dc104df08781b6eff95e65f3f ]
 
-mwifiex_update_vs_ie(),mwifiex_set_uap_rates() and
-mwifiex_set_wmm_params() call memcpy() without checking
-the destination size.Since the source is given from
-user-space, this may trigger a heap buffer overflow.
+The DSA core, DSA taggers and DSA drivers all make use of
+module_init(). Hence they get initialised at device_initcall() time.
+The ordering is non-deterministic. It can be a DSA driver is bound to
+a device before the needed tag driver has been initialised, resulting
+in the message:
 
-Fix them by putting the length check before performing memcpy().
+No tagger for this switch
 
-This fix addresses CVE-2019-14814,CVE-2019-14815,CVE-2019-14816.
+Rather than have this be fatal, return -EPROBE_DEFER so that it is
+tried again later once all the needed drivers have been loaded.
 
-Signed-off-by: Wen Huang <huangwenabc@gmail.com>
-Acked-by: Ganapathi Bhat <gbhat@marvell.comg>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: d3b8c04988ca ("dsa: Add boilerplate helper to register DSA tag driver modules")
+Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/net/wireless/marvell/mwifiex/ie.c      |    3 +++
- drivers/net/wireless/marvell/mwifiex/uap_cmd.c |    9 ++++++++-
- 2 files changed, 11 insertions(+), 1 deletion(-)
+ net/dsa/dsa2.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/net/wireless/marvell/mwifiex/ie.c
-+++ b/drivers/net/wireless/marvell/mwifiex/ie.c
-@@ -241,6 +241,9 @@ static int mwifiex_update_vs_ie(const u8
- 		}
- 
- 		vs_ie = (struct ieee_types_header *)vendor_ie;
-+		if (le16_to_cpu(ie->ie_length) + vs_ie->len + 2 >
-+			IEEE_MAX_IE_SIZE)
-+			return -EINVAL;
- 		memcpy(ie->ie_buffer + le16_to_cpu(ie->ie_length),
- 		       vs_ie, vs_ie->len + 2);
- 		le16_unaligned_add_cpu(&ie->ie_length, vs_ie->len + 2);
---- a/drivers/net/wireless/marvell/mwifiex/uap_cmd.c
-+++ b/drivers/net/wireless/marvell/mwifiex/uap_cmd.c
-@@ -265,6 +265,8 @@ mwifiex_set_uap_rates(struct mwifiex_uap
- 
- 	rate_ie = (void *)cfg80211_find_ie(WLAN_EID_SUPP_RATES, var_pos, len);
- 	if (rate_ie) {
-+		if (rate_ie->len > MWIFIEX_SUPPORTED_RATES)
-+			return;
- 		memcpy(bss_cfg->rates, rate_ie + 1, rate_ie->len);
- 		rate_len = rate_ie->len;
+--- a/net/dsa/dsa2.c
++++ b/net/dsa/dsa2.c
+@@ -577,6 +577,8 @@ static int dsa_port_parse_cpu(struct dsa
+ 	tag_protocol = ds->ops->get_tag_protocol(ds, dp->index);
+ 	tag_ops = dsa_tag_driver_get(tag_protocol);
+ 	if (IS_ERR(tag_ops)) {
++		if (PTR_ERR(tag_ops) == -ENOPROTOOPT)
++			return -EPROBE_DEFER;
+ 		dev_warn(ds->dev, "No tagger for this switch\n");
+ 		return PTR_ERR(tag_ops);
  	}
-@@ -272,8 +274,11 @@ mwifiex_set_uap_rates(struct mwifiex_uap
- 	rate_ie = (void *)cfg80211_find_ie(WLAN_EID_EXT_SUPP_RATES,
- 					   params->beacon.tail,
- 					   params->beacon.tail_len);
--	if (rate_ie)
-+	if (rate_ie) {
-+		if (rate_ie->len > MWIFIEX_SUPPORTED_RATES - rate_len)
-+			return;
- 		memcpy(bss_cfg->rates + rate_len, rate_ie + 1, rate_ie->len);
-+	}
- 
- 	return;
- }
-@@ -391,6 +396,8 @@ mwifiex_set_wmm_params(struct mwifiex_pr
- 					    params->beacon.tail_len);
- 	if (vendor_ie) {
- 		wmm_ie = vendor_ie;
-+		if (*(wmm_ie + 1) > sizeof(struct mwifiex_types_wmm_info))
-+			return;
- 		memcpy(&bss_cfg->wmm_info, wmm_ie +
- 		       sizeof(struct ieee_types_header), *(wmm_ie + 1));
- 		priv->wmm_enabled = 1;
 
 
