@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C634C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21912C4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:31:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26F20208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:31:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBC3F208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:31:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932269;
-	bh=/4xlBmnfudmSTjpsJDyCd9N7vW70SiiLx4tcx9LYl+I=;
+	s=default; t=1568932272;
+	bh=DePtoH0g5oRyEKgg/e/21m31LEGE3uN55cqb/WCUfxQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=15umt5Mq8i4VtRULEsCgv74sNyapU1XnO8fpzs/6hyhukQw6kPRqW9jYPlHJezvxZ
-	 FxykH20cX8F8yqN603iPdLq6KDV4h83FitJV370KNUN11F9dW6wcI4sBHe7DzyQ1JI
-	 GanRlcFSB6mSQVot+MuQfoEg2wWrdO56NLgnXVk4=
+	b=GmO+KfGFSGFxbLHHbvrQqVztY+VFJ/f6quzOsyMbIIqdrqfyfQiaWzqDiOSE46VpA
+	 I7vcgQG0ezFFO54HM9pe2ugFumh/teigagROF89rwx7hYdaqVBzMsmX6famfTVfbOx
+	 /sBOsC2sWMvFmrgr4+0BCJO2TN0TSzaxkLm7+peM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406409AbfISWbI (ORCPT
+        id S2390687AbfISWPH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:31:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55092 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:15:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404088AbfISWPN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:15:13 -0400
+        id S2391149AbfISWPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:15:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 185B92196F;
-        Thu, 19 Sep 2019 22:15:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2EFE218AF;
+        Thu, 19 Sep 2019 22:15:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931312;
-        bh=/4xlBmnfudmSTjpsJDyCd9N7vW70SiiLx4tcx9LYl+I=;
+        s=default; t=1568931301;
+        bh=DePtoH0g5oRyEKgg/e/21m31LEGE3uN55cqb/WCUfxQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vn2LTWs8ASLorXAkTcwTzy1H9v5gLLXLaKtCeNF6P1xLnZb7MJdbGzxTSBSnd5sUx
-         z89TNmgl87Efvux5TzR/QhyTytbNpWhpG1tV7utxXYhMJXOEyto9OahAznPKMp1wmZ
-         9QywChfD27RwKEchJb6JfSQSfTQYj/zDrv5LUOqg=
+        b=AllzCYpDpfOYclJfumuDrnwNEKXxGgt5hNTFdr9rhPuGqpqC4lCdbf+jAmbaSdFti
+         biRhV0ZvfM+fVhfdbFZvFTb6Jui81wH3MgYZbR54Y+ckVP4kXza+MNUtV8Xy3hvtyx
+         OtWddjjS/B2ptxLgrunpJIwKJnhjlKR6mrV8tn5U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        stable@vger.kernel.org, Ilya Leoshkevich <iii@linux.ibm.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 38/79] NFS: Fix initialisation of I/O result struct in nfs_pgio_rpcsetup
-Date:   Fri, 20 Sep 2019 00:03:23 +0200
-Message-Id: <20190919214811.136697798@linuxfoundation.org>
+Subject: [PATCH 4.19 44/79] bpf: allow narrow loads of some sk_reuseport_md fields with offset > 0
+Date:   Fri, 20 Sep 2019 00:03:29 +0200
+Message-Id: <20190919214811.535877836@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214807.612593061@linuxfoundation.org>
 References: <20190919214807.612593061@linuxfoundation.org>
@@ -60,34 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Ilya Leoshkevich <iii@linux.ibm.com>
 
-[ Upstream commit 17d8c5d145000070c581f2a8aa01edc7998582ab ]
+[ Upstream commit 2c238177bd7f4b14bdf7447cc1cd9bb791f147e6 ]
 
-Initialise the result count to 0 rather than initialising it to the
-argument count. The reason is that we want to ensure we record the
-I/O stats correctly in the case where an error is returned (for
-instance in the layoutstats).
+test_select_reuseport fails on s390 due to verifier rejecting
+test_select_reuseport_kern.o with the following message:
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+	; data_check.eth_protocol = reuse_md->eth_protocol;
+	18: (69) r1 = *(u16 *)(r6 +22)
+	invalid bpf_context access off=22 size=2
+
+This is because on big-endian machines casts from __u32 to __u16 are
+generated by referencing the respective variable as __u16 with an offset
+of 2 (as opposed to 0 on little-endian machines).
+
+The verifier already has all the infrastructure in place to allow such
+accesses, it's just that they are not explicitly enabled for
+eth_protocol field. Enable them for eth_protocol field by using
+bpf_ctx_range instead of offsetof.
+
+Ditto for ip_protocol, bind_inany and len, since they already allow
+narrowing, and the same problem can arise when working with them.
+
+Fixes: 2dbb9b9e6df6 ("bpf: Introduce BPF_PROG_TYPE_SK_REUSEPORT")
+Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/pagelist.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/core/filter.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/fs/nfs/pagelist.c b/fs/nfs/pagelist.c
-index d23ea74b5d203..9cf59e2622f8e 100644
---- a/fs/nfs/pagelist.c
-+++ b/fs/nfs/pagelist.c
-@@ -567,7 +567,7 @@ static void nfs_pgio_rpcsetup(struct nfs_pgio_header *hdr,
- 	}
+diff --git a/net/core/filter.c b/net/core/filter.c
+index c996380f29597..e6fa88506c00d 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -7234,13 +7234,13 @@ sk_reuseport_is_valid_access(int off, int size,
+ 		return size == size_default;
  
- 	hdr->res.fattr   = &hdr->fattr;
--	hdr->res.count   = count;
-+	hdr->res.count   = 0;
- 	hdr->res.eof     = 0;
- 	hdr->res.verf    = &hdr->verf;
- 	nfs_fattr_init(&hdr->fattr);
+ 	/* Fields that allow narrowing */
+-	case offsetof(struct sk_reuseport_md, eth_protocol):
++	case bpf_ctx_range(struct sk_reuseport_md, eth_protocol):
+ 		if (size < FIELD_SIZEOF(struct sk_buff, protocol))
+ 			return false;
+ 		/* fall through */
+-	case offsetof(struct sk_reuseport_md, ip_protocol):
+-	case offsetof(struct sk_reuseport_md, bind_inany):
+-	case offsetof(struct sk_reuseport_md, len):
++	case bpf_ctx_range(struct sk_reuseport_md, ip_protocol):
++	case bpf_ctx_range(struct sk_reuseport_md, bind_inany):
++	case bpf_ctx_range(struct sk_reuseport_md, len):
+ 		bpf_ctx_record_field_size(info, size_default);
+ 		return bpf_ctx_narrow_access_ok(off, size, size_default);
+ 
 -- 
 2.20.1
 
