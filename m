@@ -2,124 +2,99 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1BD8C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B39C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 758432196E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:29:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9938D21927
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:31:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568892581;
-	bh=Pvq/7D6S/KPNrlEap1DoFVldgRv5WRFeFozeTaFRDHg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=L8EvGfFFYrDhg+hGteGl2k5L5AmLzBmTkeD4H6SgfkVxIopnjiAkcearixAHQKl1W
-	 4LWkx8OjKpXJqCyAXWI6oJcBvtRlXZYEPpY2QvHMn1HttE5dzfO9WqDJzBj0R0jRQM
-	 PP4znA+622eSzT5ylGvh880ZCl3vUwR7+y2dz7jo=
+	s=default; t=1568892670;
+	bh=LLaHVIMVAnVyIcv6P5OJ4ErPwMhqDflcAncirLoJaik=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=mqXoeQKAPE2F/eUUpP3KXJmVNYQEM+eKXhSUXuPVugKgIcXeDl65LSGuFRwmJ2apz
+	 8DiMIgM3Etw76nyY5AKOpfbsQFgcLW36qJRws0+bEb8bFALwGSH8f8CaMZUYrTczJu
+	 Cw5VXKu/KK7GYpUz2XKOlfReVKNOHoB/dx8up+Ls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389866AbfISL3k (ORCPT
+        id S2389887AbfISLbK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 07:29:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39914 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727273AbfISL3k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 07:29:40 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E35AE21929;
-        Thu, 19 Sep 2019 11:29:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568892579;
-        bh=Pvq/7D6S/KPNrlEap1DoFVldgRv5WRFeFozeTaFRDHg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qBpLSsbreLZ8P7ObI0vUafC3Zi7RQxY9OwwkzxVCH6pRiEhOqYM0Bw7QuQ4DlIleH
-         HCmekc88h+oZPkodYg6IGelzTBbrrwYjQ9WL7VJeENOO5X+CCLu0bE7z6+pXroPBUb
-         9VQgNh+QcHatnpADmavENZ/htUjNf/TCH8cDzj04=
-Date:   Thu, 19 Sep 2019 13:29:37 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Markus Elfring <Markus.Elfring@web.de>,
-        linux-mtd@lists.infradead.org,
-        Allison Randal <allison@lohutok.net>,
-        Armijn Hemel <armijn@tjaldur.nl>,
-        Brian Norris <computersforpeace@gmail.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Himanshu Jha <himanshujha199640@gmail.com>
-Subject: Re: [PATCH] mtd: st_spi_fsm: Use devm_platform_ioremap_resource() in
- stfsm_probe()
-Message-ID: <20190919112937.GA3072241@kroah.com>
-References: <e1d32aa4-7c82-64e0-b7c4-33c94d9a2769@web.de>
- <20190919111014.6c569cf3@xps13>
+        Thu, 19 Sep 2019 07:31:10 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59188 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389849AbfISLbJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 07:31:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
+        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=WtXZHsJGvu4bWl1ePQybzvrW/OfxAqdqaHQn3V7Ss8U=; b=pJkaZmASbMIUAxrxZG2kscwAC
+        Yy+rCJ6GAxAL60xSAmmBGmxnzENXIpUtuDexzqb38IUcfwzoS5vjIX6eI3atYJfN7yrXSbY0lFXRN
+        q01ZwqJeYb08eDVREhWrqPwwuyhaeLOWvA0zBYQaMG411FAGHYY5z/JxqjRPZybjBjN90=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iAueR-0002Is-7Z; Thu, 19 Sep 2019 11:31:07 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 448552742939; Thu, 19 Sep 2019 12:31:06 +0100 (BST)
+Date:   Thu, 19 Sep 2019 12:31:06 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     David Sterba <dsterba@suse.cz>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the btrfs-kdave tree with Linus' tree
+Message-ID: <20190919113106.GC3642@sirena.co.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="hQiwHBbRI9kgIhsi"
 Content-Disposition: inline
-In-Reply-To: <20190919111014.6c569cf3@xps13>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Cookie: I'll be Grateful when they're Dead.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 11:10:14AM +0200, Miquel Raynal wrote:
-> Hi Markus,
-> 
-> Markus Elfring <Markus.Elfring@web.de> wrote on Wed, 18 Sep 2019
-> 14:50:27 +0200:
-> 
-> > From: Markus Elfring <elfring@users.sourceforge.net>
-> > Date: Wed, 18 Sep 2019 14:37:34 +0200
-> > 
-> > Simplify this function implementation by using a known wrapper function.
-> > 
-> > This issue was detected by using the Coccinelle software.
-> > 
-> > Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-> > ---
-> >  drivers/mtd/devices/st_spi_fsm.c | 8 +-------
-> >  1 file changed, 1 insertion(+), 7 deletions(-)
-> > 
-> > diff --git a/drivers/mtd/devices/st_spi_fsm.c b/drivers/mtd/devices/st_spi_fsm.c
-> > index f4d1667daaf9..5bd1c44ae529 100644
-> > --- a/drivers/mtd/devices/st_spi_fsm.c
-> > +++ b/drivers/mtd/devices/st_spi_fsm.c
-> > @@ -2034,13 +2034,7 @@ static int stfsm_probe(struct platform_device *pdev)
-> > 
-> >  	platform_set_drvdata(pdev, fsm);
-> > 
-> > -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > -	if (!res) {
-> > -		dev_err(&pdev->dev, "Resource not found\n");
-> > -		return -ENODEV;
-> > -	}
-> > -
-> > -	fsm->base = devm_ioremap_resource(&pdev->dev, res);
-> > +	fsm->base = devm_platform_ioremap_resource(pdev, 0);
-> >  	if (IS_ERR(fsm->base)) {
-> >  		dev_err(&pdev->dev,
-> >  			"Failed to reserve memory region %pR\n", res);
-> > --
-> > 2.23.0
-> > 
-> 
-> 
-> Is this even compiled tested? 'res' is not initialized anymore so you
-> can't use it in the error trace. I suppose you should even drop it from
-> the stack parameters.
 
-You are responding to a email address/bot that is on a number of kernel
-developers "black list" as something to just totally ignore.  I
-recommend you do the same if possible...
+--hQiwHBbRI9kgIhsi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-greg k-h
+Hi all,
+
+Today's linux-next merge of the btrfs-kdave tree got conflicts in:
+
+  fs/btrfs/block-group.c
+  fs/btrfs/ctree.h
+  fs/btrfs/extent-tree.c
+  fs/btrfs/send.c
+  fs/btrfs/space-info.c
+  include/uapi/linux/btrfs_tree.h
+
+between a number of commits in Linus' tree and a number of commits in
+the btrfs-kdave tree.  I don't feel comfortable that I can resolve these
+safely and the btrfs-kdave tree hasn't changed since August with the
+last non-merge commit in June so I've dropped the tree for today.
+
+--hQiwHBbRI9kgIhsi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2DZvkACgkQJNaLcl1U
+h9BuHgf8D4zhKRg3HIRAc0Az3qB+CGTRrROkYlLwVXKk24lMbV6I+cjI0gQhBQ5o
+4YEtdG+skW5LUHYqVH9UmRhjk7UVpaeURhqWXpMlpcEckdHkt4sPVkCW2bFJ7PHo
+uBKjYskRRBjaBiOmbV2+0dTpRlXp3LlZZR3jIKVp7Hh03pblYY8zcvgUM3+eaYXJ
+O+9J4A1GlVgeIqxEkzfeS/HrQwZOTkAY1HFb0YEn//TclR2NcxHHmuSjh3FQKFz1
+VWzv0GAqMIXgHBEYKMrZHrgFLumPO9Rn9HdJ090XUWMxy3vFK+fm+Ed7tZMzxdte
+CNIy+Ovqi42BQMgsHxHmEAbwDjCW3Q==
+=kYTH
+-----END PGP SIGNATURE-----
+
+--hQiwHBbRI9kgIhsi--
