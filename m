@@ -2,107 +2,67 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=BODY_QUOTE_MALF_MSGID,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A422BC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE6CC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7101D21907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:27:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WLLAVHKM"
+	by mail.kernel.org (Postfix) with ESMTP id D0F2F218AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:30:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568928605;
+	bh=45Lr8LBm98DdUKUxhU3x6irlERmIGCrtOWZQy/FY2oQ=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=uGnwS5wL3OrBy5Gn/A+3LKDEQmNgki8s3H74ITAoap471PxHCKwXDbTa0uriCwTrG
+	 TVtJg2ygvsFE5pcds6cJPU66Qypfuu515cu9QEWUpTESNt/QZWOgd9mH3TS/3eYOM4
+	 gOePFYxa0zhy23mmQm0gDFvRYeCV7JnSWQxX0O+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392785AbfISV1d (ORCPT
+        id S2404787AbfISVaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 17:27:33 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:39982 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390655AbfISV1d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 17:27:33 -0400
-Received: by mail-pl1-f196.google.com with SMTP id d22so2188839pll.7
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 14:27:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1eFwN6VQoIVgZTWyIrMDT1Z2HKm27mGWj9Z/avCv2WM=;
-        b=WLLAVHKMkEqkBrDpAUPZfZ4ytCC0Dlr6FMIuwsZ9AN8V0mNiNaW0jkxD95BnZiHMxi
-         qarYueI8ei+IBtKxRMpotJ2s/Mu7DyoZMkUqsJ9CNz7GgdKrLBlOwiDogELObnn2UHpR
-         CGFCDa9DSeEbBcsNPanhYfWmTWJjwgz29GAMU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1eFwN6VQoIVgZTWyIrMDT1Z2HKm27mGWj9Z/avCv2WM=;
-        b=h+8mgNm6QgcGkFYGis4ieVFyMHSMmCQTEKdWJckvYApvnAcLuH3TvehdzguQfT68Z0
-         R3n4Jh4xPbpbKTY3ifbx4pulOTyrruebxwDQ+cHpiFvn6uFtGQ92gjmlCYEZh7LOZf1a
-         r00MQ4T89c2OFfmFez4gIYATyI/hAinULJifUFobuvDd9sEINqoJ9gyM58cPnbUqSscq
-         87ZI42sfwscJYWRtwSWZHCydMT92n/smID4+YmqYrNOEWfdVKYFfT73hjXt6dS5JUnpv
-         6R+rmn0rO5T8L5+9aH6Xgmr1uMzQVxvXuQK+lV62WQaSCr7gyg+kRGlI38sy/GSdif+C
-         G36A==
-X-Gm-Message-State: APjAAAWUk6HS7j+FN/RcMkXeEEEBUSZUOi/MXpRqWCulA9MoYXs0zMR3
-        vBFU7tLWWSNo4rQFioCo9znFww==
-X-Google-Smtp-Source: APXvYqzUrqDmlhSeuD997w0UB8kD5+ZRkrKOf7RYGruGWm+SZRArLf5CFPjvg0kYdcqo1SOAwcQ1sQ==
-X-Received: by 2002:a17:902:b20a:: with SMTP id t10mr12318381plr.277.1568928451427;
-        Thu, 19 Sep 2019 14:27:31 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id 197sm28584015pge.39.2019.09.19.14.27.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2019 14:27:30 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     mka@chromium.org, Douglas Anderson <dianders@chromium.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] ARM: dts: rockchip: Add cpu id to rk3288 efuse node
-Date:   Thu, 19 Sep 2019 14:26:41 -0700
-Message-Id: <20190919142611.1.I309434f00a2a9be71e4437991fe08abc12f06e2e@changeid>
-X-Mailer: git-send-email 2.23.0.351.gc4317032e6-goog
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 19 Sep 2019 17:30:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59898 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404772AbfISVaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 17:30:04 -0400
+Subject: Re: [git pull] more mount API conversions
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568928604;
+        bh=45Lr8LBm98DdUKUxhU3x6irlERmIGCrtOWZQy/FY2oQ=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=St8+m3WOaB2mpB11vusN1NKehSJQoo0VH4rdqNN23dqXmzMKzV6aZNg2yDxjW++eD
+         x2ZK+yUXNP1lg1wEzkZvEMgN+g/KarY86s7xbSxJ/WoZg8L8FeM8C823sgpddzq2fE
+         9yYok1peTW1tRf6fIDU4tKFs9V2eugdWQcLacAbY=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190919015701.GJ1131@ZenIV.linux.org.uk>
+References: <20190919015701.GJ1131@ZenIV.linux.org.uk>
+X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190919015701.GJ1131@ZenIV.linux.org.uk>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git work.mount2
+X-PR-Tracked-Commit-Id: 74983ac20aeafc88d9ceed64a8bf2a9024c488d5
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: bc7d9aee3f3ce0c0633c20ea55b81efb3ca7984d
+Message-Id: <156892860422.30913.594428232156892216.pr-tracker-bot@kernel.org>
+Date:   Thu, 19 Sep 2019 21:30:04 +0000
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This just adds in another field of what's stored in the e-fuse on
-rk3288.  Though I can't personally promise that every rk3288 out there
-has the CPU ID stored in the eFuse at this location, there is some
-evidence that it is correct:
-- This matches what was in the Chrome OS 3.14 branch (see
-  EFUSE_CHIP_UID_OFFSET and EFUSE_CHIP_UID_LEN) for rk3288.
-- The upstream rk3399 dts file has this same data at the same offset
-  and with the same length, indiciating that this is likely common for
-  several modern Rockchip SoCs.
+The pull request you sent on Thu, 19 Sep 2019 02:57:01 +0100:
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
+> git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git work.mount2
 
- arch/arm/boot/dts/rk3288.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/bc7d9aee3f3ce0c0633c20ea55b81efb3ca7984d
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index cc893e154fe5..415b48fc3ce8 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -1391,6 +1391,9 @@
- 		clocks = <&cru PCLK_EFUSE256>;
- 		clock-names = "pclk_efuse";
- 
-+		cpu_id: cpu-id@7 {
-+			reg = <0x07 0x10>;
-+		};
- 		cpu_leakage: cpu_leakage@17 {
- 			reg = <0x17 0x1>;
- 		};
+Thank you!
+
 -- 
-2.23.0.351.gc4317032e6-goog
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
