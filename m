@@ -2,139 +2,192 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AA5C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 03:43:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EFF2C4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 03:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F44D21928
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 03:43:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 552DE218AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 03:45:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="elRlfrs0"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="T8vYfqz+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731669AbfISDnv (ORCPT
+        id S2387767AbfISDp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 23:43:51 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:37727 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728423AbfISDnv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 23:43:51 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46YjPY2D8wz9sN1;
-        Thu, 19 Sep 2019 13:43:45 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1568864627;
-        bh=X2OjbWzwZ8jv6a5RO8CrQHGjc8Or6aTsn3lrs6r0Dm0=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=elRlfrs0Ai2wqswZUvqd/1Xr+WYCir0HLFUlZldQmN4x+eNwI/S0zSfQhQBdfcqVt
-         +V6LQokT0J+LSCpuJTtMUSJ0diZ3uskMGH+rb3Nn0080y0wcVIyzdU93RMP5WmCW8Z
-         GJQgCCIASGoe86PhBqMaBwwpxj+uqrxq4Wvra1PKskBjXAxpc6zps6aTFGOHSRUe/S
-         T0JO5GfHUCcQmeMuNmZAe55y7azFbpuVB6GigiEQ+oGUCWwEiEnnwE3Bej/mCUbeNk
-         cMmak92yME5O0xvFnTw/pQfQYdMyBNB8HvjGH+xCSCazn+z6NP6+imE4A5aPThO2GM
-         jQLH2eCdIHUzw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Alastair D'Silva <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     stable@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Qian Cai <cai@lca.pw>, Thomas Gleixner <tglx@linutronix.de>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Allison Randal <allison@lohutok.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        David Hildenbrand <david@redhat.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/5] powerpc: Allow flush_icache_range to work across ranges >4GB
-In-Reply-To: <20190918052106.14113-2-alastair@au1.ibm.com>
-References: <20190918052106.14113-1-alastair@au1.ibm.com> <20190918052106.14113-2-alastair@au1.ibm.com>
-Date:   Thu, 19 Sep 2019 13:43:43 +1000
-Message-ID: <87imppuf0w.fsf@mpe.ellerman.id.au>
+        Wed, 18 Sep 2019 23:45:29 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:53118 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728423AbfISDp3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 23:45:29 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8J3j64n134891;
+        Thu, 19 Sep 2019 03:45:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=RQE4bMXuARGk/t/4ZdmiK5ZD0ABEJdWhi9nMJhOr3LQ=;
+ b=T8vYfqz+LMr5VBMRnBUDER83vzLJRDKVt2V/HAzNQN0OFgnFORPijInRf4ecpPEDGlAg
+ uEHVRdoTp2UywXtNbqFALSNGcHLotInHJMHMXcp572hso74eLu9Zl2rFiPG146tKsXvj
+ yRbwjPC84QyRDIRqgRNgSO58QaL1fW0YsVzI3Z6tQs/IZ85dY+R4FbJBOYTwfXsuVeVP
+ wnLDp2oemLBL0IPhynkgnqkSVPHoSwMFmhCCP9Xs9YPTNa3utCiVkpLE7UzQSct8KzRP
+ Xgkgqjdqni3stb2EnDRUZB7+fo2NsFwtbA2LKigeg0JDcHgaXZE85Otim+0Hl3fPseml MQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2v3vb4s1rg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 19 Sep 2019 03:45:06 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8J3hsBZ140517;
+        Thu, 19 Sep 2019 03:45:05 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2v3vbr6kj6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 19 Sep 2019 03:45:05 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8J3j3wY001681;
+        Thu, 19 Sep 2019 03:45:03 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 18 Sep 2019 20:45:03 -0700
+Date:   Wed, 18 Sep 2019 20:45:02 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Eric Sandeen <sandeen@sandeen.net>,
+        Christoph Hellwig <hch@lst.de>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Bob Peterson <rpeterso@redhat.com>,
+        cluster-devel <cluster-devel@redhat.com>
+Subject: Re: [GIT PULL] iomap: new code for 5.4
+Message-ID: <20190919034502.GJ2229799@magnolia>
+References: <20190917152140.GU2229799@magnolia>
+ <CAHk-=wj9Zjb=NENJ6SViNiYiYi4LFX9WYqskZh4E_OzjijK1VA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wj9Zjb=NENJ6SViNiYiYi4LFX9WYqskZh4E_OzjijK1VA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9384 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909190031
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9384 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909190032
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Alastair D'Silva" <alastair@au1.ibm.com> writes:
-> From: Alastair D'Silva <alastair@d-silva.org>
->
-> When calling flush_icache_range with a size >4GB, we were masking
-> off the upper 32 bits, so we would incorrectly flush a range smaller
-> than intended.
->
-> __kernel_sync_dicache in the 64 bit VDSO has the same bug.
+On Wed, Sep 18, 2019 at 06:31:29PM -0700, Linus Torvalds wrote:
+> On Tue, Sep 17, 2019 at 8:21 AM Darrick J. Wong <djwong@kernel.org> wrote:
+> >
+> > Please pull this series containing all the new iomap code for 5.4.
+> 
+> So looking at the non-iomap parts of it, I react to the new "list_pop() code.
+> 
+> In particular, this:
+> 
+>         struct list_head *pos = READ_ONCE(list->next);
+> 
+> is crazy to begin with..
+> 
+> It seems to have come from "list_empty()", but the difference is that
+> it actually makes sense to check for emptiness of a list outside
+> whatever lock that protects the list. It can be one of those very
+> useful optimizations where you don't even bother taking the lock if
+> you can optimistically check that the list is empty.
+> 
+> But the same is _not_ true of an operation like "list_pop()". By
+> definition, the list you pop something off has to be stable, so the
+> READ_ONCE() makes no sense here.
+> 
+> Anyway, if that was the only issue, I wouldn't care. But looking
+> closer, the whole thing is just completely wrong.
+> 
+> All the users seem to do some version of this:
+> 
+>         struct list_head tmp;
+> 
+>         list_replace_init(&ioend->io_list, &tmp);
+>         iomap_finish_ioend(ioend, error);
+>         while ((ioend = list_pop_entry(&tmp, struct iomap_ioend, io_list)))
+>                 iomap_finish_ioend(ioend, error);
+> 
+> which is completely wrong and pointless.
+> 
+> Why would anybody use that odd "list_pop()" thing in a loop, when what
+> it really seems to just want is that bog-standard
+> "list_for_each_entry_safe()"
+> 
+>         struct list_head tmp;
+>         struct iomap_ioend *next;
+> 
+>         list_replace_init(&ioend->io_list, &tmp);
+>         iomap_finish_ioend(ioend, error);
+>         list_for_each_entry_safe(struct iomap_ioend, next, &tmp, io_list)
+>                 iomap_finish_ioend(ioend, error);
+> 
+> which is not only the common pattern, it's more efficient and doesn't
+> pointlessly re-write the list for each entry, it just walks it (and
+> the "_safe()" part is because it looks up the next entry early, so
+> that the entry that it's walking can be deleted).
+> 
+> So I pulled it. But then after looking at it, I unpulled it again
+> because I don't want to see this kind of insanity in one of THE MOST
+> CORE header files we have in the whole kernel.
+> 
+> If xfs and iomap want to think they are "popping" a list, they can do
+> so. In the privacy of your own home, you can do stupid and pointless
+> things.
+> 
+> But no, we don't pollute core kernel code with those stupid and
+> pointless things.
 
-Please fix that in a separate patch.
+Ok, thanks for the feedback.  TBH I'd wondered if list_pop was really
+necessary, but as it didn't seem to harm anything I let it go.
 
-Your subject doesn't mention __kernel_sync_dicache(), and also the two
-changes backport differently, so it's better if they're done as separate
-patches.
+Anyway, how should I proceed now?  Christoph? :D
 
-cheers
+I propose the following (assuming Linus isn't cranky enough to refuse
+the entire iomap patchpile forever):
 
-> This patch replaces the 32 bit shifts with 64 bit ones, so that
-> the full size is accounted for.
->
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> Cc: stable@vger.kernel.org
-> ---
->  arch/powerpc/kernel/misc_64.S           | 4 ++--
->  arch/powerpc/kernel/vdso64/cacheflush.S | 4 ++--
->  2 files changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/powerpc/kernel/misc_64.S b/arch/powerpc/kernel/misc_64.S
-> index b55a7b4cb543..9bc0aa9aeb65 100644
-> --- a/arch/powerpc/kernel/misc_64.S
-> +++ b/arch/powerpc/kernel/misc_64.S
-> @@ -82,7 +82,7 @@ END_FTR_SECTION_IFSET(CPU_FTR_COHERENT_ICACHE)
->  	subf	r8,r6,r4		/* compute length */
->  	add	r8,r8,r5		/* ensure we get enough */
->  	lwz	r9,DCACHEL1LOGBLOCKSIZE(r10)	/* Get log-2 of cache block size */
-> -	srw.	r8,r8,r9		/* compute line count */
-> +	srd.	r8,r8,r9		/* compute line count */
->  	beqlr				/* nothing to do? */
->  	mtctr	r8
->  1:	dcbst	0,r6
-> @@ -98,7 +98,7 @@ END_FTR_SECTION_IFSET(CPU_FTR_COHERENT_ICACHE)
->  	subf	r8,r6,r4		/* compute length */
->  	add	r8,r8,r5
->  	lwz	r9,ICACHEL1LOGBLOCKSIZE(r10)	/* Get log-2 of Icache block size */
-> -	srw.	r8,r8,r9		/* compute line count */
-> +	srd.	r8,r8,r9		/* compute line count */
->  	beqlr				/* nothing to do? */
->  	mtctr	r8
->  2:	icbi	0,r6
-> diff --git a/arch/powerpc/kernel/vdso64/cacheflush.S b/arch/powerpc/kernel/vdso64/cacheflush.S
-> index 3f92561a64c4..526f5ba2593e 100644
-> --- a/arch/powerpc/kernel/vdso64/cacheflush.S
-> +++ b/arch/powerpc/kernel/vdso64/cacheflush.S
-> @@ -35,7 +35,7 @@ V_FUNCTION_BEGIN(__kernel_sync_dicache)
->  	subf	r8,r6,r4		/* compute length */
->  	add	r8,r8,r5		/* ensure we get enough */
->  	lwz	r9,CFG_DCACHE_LOGBLOCKSZ(r10)
-> -	srw.	r8,r8,r9		/* compute line count */
-> +	srd.	r8,r8,r9		/* compute line count */
->  	crclr	cr0*4+so
->  	beqlr				/* nothing to do? */
->  	mtctr	r8
-> @@ -52,7 +52,7 @@ V_FUNCTION_BEGIN(__kernel_sync_dicache)
->  	subf	r8,r6,r4		/* compute length */
->  	add	r8,r8,r5
->  	lwz	r9,CFG_ICACHE_LOGBLOCKSZ(r10)
-> -	srw.	r8,r8,r9		/* compute line count */
-> +	srd.	r8,r8,r9		/* compute line count */
->  	crclr	cr0*4+so
->  	beqlr				/* nothing to do? */
->  	mtctr	r8
-> -- 
-> 2.21.0
+Delete patch 1 and 9 from the series, and amend patch 2 as such:
+
+diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+index 051b8ec326ba..558d09bc5024 100644
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@ -1156,10 +1156,11 @@ void
+ iomap_finish_ioends(struct iomap_ioend *ioend, int error)
+ {
+ 	struct list_head tmp;
++	struct iomap_ioend *next;
+ 
+ 	list_replace_init(&ioend->io_list, &tmp);
+ 	iomap_finish_ioend(ioend, error);
+-	while ((ioend = list_pop_entry(&tmp, struct iomap_ioend, io_list)))
++	list_for_each_entry_safe(ioend, next, &tmp, io_list)
+ 		iomap_finish_ioend(ioend, error);
+ }
+ EXPORT_SYMBOL_GPL(iomap_finish_ioends);
+
+Does that sound ok?  It's been running through xfstests for a couple of
+hours now and hasn't let any smoke out...
+
+--D
+
+> 
+>               Linus
+> 
