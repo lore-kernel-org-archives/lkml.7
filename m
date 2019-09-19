@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C99C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F32A5C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ADE920640
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFD5C20678
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:27:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932056;
-	bh=WTkBljxolxbt6IIdUyLpknTO5H3oWViPH4OupxZfFBM=;
+	s=default; t=1568932059;
+	bh=bP67rUnQuQQMO/vk4mRw7dPx0htZlKaooFSF+6uvFV8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gLnef+xhs0WBNdwOKnXyHCRAXpULO76hVaPxRWFMeXxC6TXD3tuftQPFCvj39+v+3
-	 H4zAl/FA3za4eTjSZGHqQ6EuYiBPzIjTGxLZ6yiHKuZR7Wab2Kh1UbQ3wBaAc41dyj
-	 UFEz8INz7atSjfqTLcxEmiHuZPaPfTibL8Xi9Kg8=
+	b=HKdn3V72qoTG/2cPc7fFlqilALzsW1zNC/2ujNpCbQNiCWL6O00oUqD5hUVOJYYU9
+	 Tbv1cxc69eAuT2x+0vOfLtpBQ3D7/G0ZcKDZMlDW+RIiurCB51aUq2rjM4SBIK4TM8
+	 rYgWgSfnY1wu+93xjf3EB+8bslYdUXNXt5Bikp3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392719AbfISWUn (ORCPT
+        id S2407274AbfISW1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:20:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34748 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:27:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733207AbfISWUi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:20:38 -0400
+        id S1732787AbfISWUo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:20:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D0B421907;
-        Thu, 19 Sep 2019 22:20:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1627C217D6;
+        Thu, 19 Sep 2019 22:20:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931638;
-        bh=WTkBljxolxbt6IIdUyLpknTO5H3oWViPH4OupxZfFBM=;
+        s=default; t=1568931643;
+        bh=bP67rUnQuQQMO/vk4mRw7dPx0htZlKaooFSF+6uvFV8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q9sADBMz4oabWR2axti4RtKWaEv7LMR2FwAvCluv3CmbOEoHl+3sq2nikxsLCcA1f
-         0775FIWyEIG27suXor5n1nUemEyGCaG7252oZQDS4fNRj5wS9ZtyaejvM1rXARuIyl
-         p2IoYAF0oFoyPWWWzzjuOfjO/tJ9oAaU4/pHGnNE=
+        b=EXrAdIQEsDTnPrsZuFUsiOuU925sP43nYL9ZrNUCVhSuTZVV3+gyTZfNeEwaFA2uR
+         wBsQQLz7brRqVlsj4HI7r/pYKfGMBc6vzneL1DRLqAuKYinck8/020pk/r9xgrmCXF
+         Am6AwyuENwVjK+5tTpjm64jNeG87VMM9Ni8+Lcsc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
-        Steve French <stfrench@microsoft.com>,
+        stable@vger.kernel.org, Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 59/74] cifs: set domainName when a domain-key is used in multiuser
-Date:   Fri, 20 Sep 2019 00:04:12 +0200
-Message-Id: <20190919214810.350127916@linuxfoundation.org>
+Subject: [PATCH 4.9 61/74] ARM: 8901/1: add a criteria for pfn_valid of arm
+Date:   Fri, 20 Sep 2019 00:04:14 +0200
+Message-Id: <20190919214810.492813939@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214800.519074117@linuxfoundation.org>
 References: <20190919214800.519074117@linuxfoundation.org>
@@ -60,70 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronnie Sahlberg <lsahlber@redhat.com>
+From: zhaoyang <huangzhaoyang@gmail.com>
 
-[ Upstream commit f2aee329a68f5a907bcff11a109dfe17c0b41aeb ]
+[ Upstream commit 5b3efa4f1479c91cb8361acef55f9c6662feba57 ]
 
-RHBZ: 1710429
+pfn_valid can be wrong when parsing a invalid pfn whose phys address
+exceeds BITS_PER_LONG as the MSB will be trimed when shifted.
 
-When we use a domain-key to authenticate using multiuser we must also set
-the domainnmame for the new volume as it will be used and passed to the server
-in the NTLMSSP Domain-name.
+The issue originally arise from bellowing call stack, which corresponding to
+an access of the /proc/kpageflags from userspace with a invalid pfn parameter
+and leads to kernel panic.
 
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+[46886.723249] c7 [<c031ff98>] (stable_page_flags) from [<c03203f8>]
+[46886.723264] c7 [<c0320368>] (kpageflags_read) from [<c0312030>]
+[46886.723280] c7 [<c0311fb0>] (proc_reg_read) from [<c02a6e6c>]
+[46886.723290] c7 [<c02a6e24>] (__vfs_read) from [<c02a7018>]
+[46886.723301] c7 [<c02a6f74>] (vfs_read) from [<c02a778c>]
+[46886.723315] c7 [<c02a770c>] (SyS_pread64) from [<c0108620>]
+(ret_fast_syscall+0x0/0x28)
+
+Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/connect.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ arch/arm/mm/init.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index f291ed0c155db..2a199f4b663bf 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -2447,6 +2447,7 @@ static int
- cifs_set_cifscreds(struct smb_vol *vol, struct cifs_ses *ses)
+diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
+index 4fb1474141a61..0fe4a7025e467 100644
+--- a/arch/arm/mm/init.c
++++ b/arch/arm/mm/init.c
+@@ -192,6 +192,11 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max_low,
+ #ifdef CONFIG_HAVE_ARCH_PFN_VALID
+ int pfn_valid(unsigned long pfn)
  {
- 	int rc = 0;
-+	int is_domain = 0;
- 	const char *delim, *payload;
- 	char *desc;
- 	ssize_t len;
-@@ -2494,6 +2495,7 @@ cifs_set_cifscreds(struct smb_vol *vol, struct cifs_ses *ses)
- 			rc = PTR_ERR(key);
- 			goto out_err;
- 		}
-+		is_domain = 1;
- 	}
- 
- 	down_read(&key->sem);
-@@ -2551,6 +2553,26 @@ cifs_set_cifscreds(struct smb_vol *vol, struct cifs_ses *ses)
- 		goto out_key_put;
- 	}
- 
-+	/*
-+	 * If we have a domain key then we must set the domainName in the
-+	 * for the request.
-+	 */
-+	if (is_domain && ses->domainName) {
-+		vol->domainname = kstrndup(ses->domainName,
-+					   strlen(ses->domainName),
-+					   GFP_KERNEL);
-+		if (!vol->domainname) {
-+			cifs_dbg(FYI, "Unable to allocate %zd bytes for "
-+				 "domain\n", len);
-+			rc = -ENOMEM;
-+			kfree(vol->username);
-+			vol->username = NULL;
-+			kfree(vol->password);
-+			vol->password = NULL;
-+			goto out_key_put;
-+		}
-+	}
++	phys_addr_t addr = __pfn_to_phys(pfn);
 +
- out_key_put:
- 	up_read(&key->sem);
- 	key_put(key);
++	if (__phys_to_pfn(addr) != pfn)
++		return 0;
++
+ 	return memblock_is_map_memory(__pfn_to_phys(pfn));
+ }
+ EXPORT_SYMBOL(pfn_valid);
 -- 
 2.20.1
 
