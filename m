@@ -2,110 +2,152 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09309C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA13DC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D412F21928
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:23:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568906619;
-	bh=DQtndKmWGXe+T5kGCDoQAWmHVgrGBkRdXl82qUMKqWc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Em/m39QYiiJo+1MxU+ZenAWAgPISTlQmG4BWlFBapXQRDAuyh1a6AEz+ue9HRcHoT
-	 ZZ1N7cC7ywAn4eMaqkTEGKEOeeS3Z476WzFUz4aPD4ycEU5OyUTTl1mcUW3CBHNINR
-	 hsfTrToA0Ir5D9Bq8EZn02pzdLObaiIGXjmomtck=
+	by mail.kernel.org (Postfix) with ESMTP id C491F21BE5
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:25:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391236AbfISPXj (ORCPT
+        id S2391121AbfISPZS convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 11:23:39 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54608 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389443AbfISPXi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 11:23:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=SVYXT/EUvY8dsNgMnbFhrjkCQ4V6Kbd9kNWc6esVgRU=; b=P/SxVrHRBzkUF7IyXXh+4tRhz
-        Df5UYyJaVhO1+/XcArPgAVWIzBOG/mnMqSoB2D+KXbEmVbgyFmbGXSauFKhSVWB4d+rQLu9fQhURD
-        Cud4yOT6xQvt6pRsAACKAR4yiZjYxyNkjTCb2d6KPJOWX5qFvsK0Qm3ip0bWs2VvPaC4s=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iAyHO-0004Fg-Bt; Thu, 19 Sep 2019 15:23:34 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 729AB2742939; Thu, 19 Sep 2019 16:23:33 +0100 (BST)
-Date:   Thu, 19 Sep 2019 16:23:33 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Gareth Williams <gareth.williams.jx@renesas.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/4] spi: dw: Add basic runtime PM support
-Message-ID: <20190919152326.GP3642@sirena.co.uk>
-References: <1568793876-9009-1-git-send-email-gareth.williams.jx@renesas.com>
- <20190919133113.GK3642@sirena.co.uk>
- <TYAPR01MB292515FE4C74044CA53321C5DF890@TYAPR01MB2925.jpnprd01.prod.outlook.com>
+        Thu, 19 Sep 2019 11:25:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42200 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388084AbfISPZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 11:25:18 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 82AB181DE7;
+        Thu, 19 Sep 2019 15:25:17 +0000 (UTC)
+Received: from gondolin (dhcp-192-230.str.redhat.com [10.33.192.230])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CBCE860C18;
+        Thu, 19 Sep 2019 15:25:07 +0000 (UTC)
+Date:   Thu, 19 Sep 2019 17:25:05 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Matthew Rosato <mjrosato@linux.ibm.com>
+Cc:     sebott@linux.ibm.com, gerald.schaefer@de.ibm.com,
+        pasic@linux.ibm.com, borntraeger@de.ibm.com, walling@linux.ibm.com,
+        linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org,
+        joro@8bytes.org, linux-kernel@vger.kernel.org,
+        alex.williamson@redhat.com, kvm@vger.kernel.org,
+        heiko.carstens@de.ibm.com, robin.murphy@arm.com, gor@linux.ibm.com,
+        pmorel@linux.ibm.com
+Subject: Re: [PATCH v4 4/4] vfio: pci: Using a device region to retrieve
+ zPCI information
+Message-ID: <20190919172505.2eb075f8.cohuck@redhat.com>
+In-Reply-To: <1567815231-17940-5-git-send-email-mjrosato@linux.ibm.com>
+References: <1567815231-17940-1-git-send-email-mjrosato@linux.ibm.com>
+        <1567815231-17940-5-git-send-email-mjrosato@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="dzI2QqkSBOAresgT"
-Content-Disposition: inline
-In-Reply-To: <TYAPR01MB292515FE4C74044CA53321C5DF890@TYAPR01MB2925.jpnprd01.prod.outlook.com>
-X-Cookie: I'll be Grateful when they're Dead.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8BIT
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 19 Sep 2019 15:25:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri,  6 Sep 2019 20:13:51 -0400
+Matthew Rosato <mjrosato@linux.ibm.com> wrote:
 
---dzI2QqkSBOAresgT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> From: Pierre Morel <pmorel@linux.ibm.com>
+> 
+> We define a new configuration entry for VFIO/PCI, VFIO_PCI_ZDEV
+> 
+> When the VFIO_PCI_ZDEV feature is configured we initialize
+> a new device region, VFIO_REGION_SUBTYPE_ZDEV_CLP, to hold
+> the information from the ZPCI device the use
+> 
+> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
+> ---
+>  drivers/vfio/pci/Kconfig            |  7 +++
+>  drivers/vfio/pci/Makefile           |  1 +
+>  drivers/vfio/pci/vfio_pci.c         |  9 ++++
+>  drivers/vfio/pci/vfio_pci_private.h | 10 +++++
+>  drivers/vfio/pci/vfio_pci_zdev.c    | 85 +++++++++++++++++++++++++++++++++++++
+>  5 files changed, 112 insertions(+)
+>  create mode 100644 drivers/vfio/pci/vfio_pci_zdev.c
+> 
+> diff --git a/drivers/vfio/pci/Kconfig b/drivers/vfio/pci/Kconfig
+> index ac3c1dd..d4562a8 100644
+> --- a/drivers/vfio/pci/Kconfig
+> +++ b/drivers/vfio/pci/Kconfig
+> @@ -45,3 +45,10 @@ config VFIO_PCI_NVLINK2
+>  	depends on VFIO_PCI && PPC_POWERNV
+>  	help
+>  	  VFIO PCI support for P9 Witherspoon machine with NVIDIA V100 GPUs
+> +
+> +config VFIO_PCI_ZDEV
+> +	bool "VFIO PCI Generic for ZPCI devices"
+> +	depends on VFIO_PCI && S390
+> +	default y
+> +	help
+> +	  VFIO PCI support for S390 Z-PCI devices
 
-On Thu, Sep 19, 2019 at 03:14:54PM +0000, Gareth Williams wrote:
-> On Wed, Sep 19, 2019 at 14:31:32AM +0100, Mark Brown wrote:
+From that description, I'd have no idea whether I'd want that or not.
+Is there any downside to enabling it?
 
-> > Please use subject lines matching the style for the subsystem.  This makes it
-> > easier for people to identify relevant patches.  This isn't even consistent
-> > within the series :(
+> diff --git a/drivers/vfio/pci/Makefile b/drivers/vfio/pci/Makefile
+> index f027f8a..781e080 100644
+> --- a/drivers/vfio/pci/Makefile
+> +++ b/drivers/vfio/pci/Makefile
+> @@ -3,5 +3,6 @@
+>  vfio-pci-y := vfio_pci.o vfio_pci_intrs.o vfio_pci_rdwr.o vfio_pci_config.o
+>  vfio-pci-$(CONFIG_VFIO_PCI_IGD) += vfio_pci_igd.o
+>  vfio-pci-$(CONFIG_VFIO_PCI_NVLINK2) += vfio_pci_nvlink2.o
+> +vfio-pci-$(CONFIG_VFIO_PCI_ZDEV) += vfio_pci_zdev.o
+>  
+>  obj-$(CONFIG_VFIO_PCI) += vfio-pci.o
+> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+> index 703948c..b40544a 100644
+> --- a/drivers/vfio/pci/vfio_pci.c
+> +++ b/drivers/vfio/pci/vfio_pci.c
+> @@ -356,6 +356,15 @@ static int vfio_pci_enable(struct vfio_pci_device *vdev)
+>  		}
+>  	}
+>  
+> +	if (IS_ENABLED(CONFIG_VFIO_PCI_ZDEV)) {
+> +		ret = vfio_pci_zdev_init(vdev);
+> +		if (ret) {
+> +			dev_warn(&vdev->pdev->dev,
+> +				 "Failed to setup ZDEV regions\n");
+> +			goto disable_exit;
+> +		}
+> +	}
+> +
+>  	vfio_pci_probe_mmaps(vdev);
+>  
+>  	return 0;
+> diff --git a/drivers/vfio/pci/vfio_pci_private.h b/drivers/vfio/pci/vfio_pci_private.h
+> index ee6ee91..08e02f5 100644
+> --- a/drivers/vfio/pci/vfio_pci_private.h
+> +++ b/drivers/vfio/pci/vfio_pci_private.h
+> @@ -186,4 +186,14 @@ static inline int vfio_pci_ibm_npu2_init(struct vfio_pci_device *vdev)
+>  	return -ENODEV;
+>  }
+>  #endif
+> +
+> +#ifdef CONFIG_VFIO_PCI_ZDEV
+> +extern int vfio_pci_zdev_init(struct vfio_pci_device *vdev);
+> +#else
+> +static inline int vfio_pci_zdev_init(struct vfio_pci_device *vdev)
+> +{
+> +	return -ENODEV;
 
-> Sorry about that, I will correct the subject lines for V3.
+If you really want to have this configurable, why not just return 0
+here and skip the IS_ENABLED check above?
 
-Don't worry about it unless you need to send a v3 for some other reason.
+> +}
+> +#endif
+> +
+>  #endif /* VFIO_PCI_PRIVATE_H */
 
-> Is there a set convention for the subsystem I should follow in future?
-> Or should I follow the style of the individual files I work on?
-
-Following the style for the file/directory is generally a good guide,
-for SPI I tend to prefer spi: but I just moan about it rather than block
-anything for it (unless I do end up missing the patch in my inbox).
-
---dzI2QqkSBOAresgT
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2DnW0ACgkQJNaLcl1U
-h9CozAf+KonuKSEWtCRvLPNHth5I6Dmv/rgmgnQLAcqXOvyYP4XKeVynEQWjP1VT
-fRBeU1NL7gDivqKMWGOTDW7t+h8jULzY2zdyLJcARZ/dTByWuGk7u31qcYPUpVlW
-wSiWGaAJm8d9vDeoj5dWwz9Ijg0VP7EmwQStss7hUjOTzFSOXV52mZuxOI2TQfXQ
-6fm1dqVJ0f85TWNHTBBeV70W445kutx7yrF/Ed614cuCff5+SoKevGlC88PdTPV2
-we5TlLr1J2/i4gISCWpWpbf6ddcjZrOaQZhoHQQfF4/3KvcWqmrgrr+wa+cTZWyI
-YeEM6rjUhOpH1U3ABtzoZv8mBEQ5Gg==
-=xyoB
------END PGP SIGNATURE-----
-
---dzI2QqkSBOAresgT--
+(...)
