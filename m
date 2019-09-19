@@ -2,55 +2,57 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B003C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06825C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 211A2217D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C24C2217D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:33:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932388;
-	bh=hFYo/74gVn52eg42PNmX0qBZBecS71x9smF8rN55b5I=;
+	s=default; t=1568932395;
+	bh=vaGfJQtgEX20SkVdECVKbd9a+wVF0Ps8/spkJNFEFtc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eRYhZHNKph5ZLQwKCAKoxK2Uln6t8mbUJiw9o+oGex98mgMdYEXx0SObgzwb63Fsx
-	 VrW/UQ3kwgSKnBq0PKxyJpvvA64/g81b3CgmZ5fcdd/JR2VSrg4nHA8xU5X+P2LkgM
-	 hva3LfkUNtGKp4wyQI7zmaHLfJrIN+Yf5xpqnx58=
+	b=Upd/EjXjr9tt/wCD9QaCpvb1AaepgdFR39KSf5ABWG0RmKgn4CRtSn8+D72zNwFZ3
+	 fR9Z6UxIhHVuQ4JTmjvycaZe8j0hOOxqENCW/Gs/Aw0WI+k9LJ6qDOW2SppYOoedhI
+	 Xan5j7BEacSBqNiPz8VHqo+zt9i8sdUx3t25rSfo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406926AbfISWdG (ORCPT
+        id S2406964AbfISWdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:33:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51136 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:33:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405952AbfISWMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:12:18 -0400
+        id S2405883AbfISWLx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:11:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CB9321920;
-        Thu, 19 Sep 2019 22:12:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 319E6218AF;
+        Thu, 19 Sep 2019 22:11:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931137;
-        bh=hFYo/74gVn52eg42PNmX0qBZBecS71x9smF8rN55b5I=;
+        s=default; t=1568931112;
+        bh=vaGfJQtgEX20SkVdECVKbd9a+wVF0Ps8/spkJNFEFtc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JpFzz1uxt2N2mQv/Ux8+jlr4+pi5fTqM8yWptNlXcSrH1PG0Fp6t0D0V1rZ24SNjv
-         PuqWUbhpIpBPQKJdoQA3/3kkoT985KDKoUOM2i4tC5+QK8qCHtzt8iWhIqYNrLL/1H
-         oyfQ7q3pXEvnl8leRjJYGz9ZdVPt1O8tR9S7dpPA=
+        b=R1jlu80HpkLtWC6Z4jz8NDPcu4ptgBslJdh/w/4pqOf3GugfYK2W7OeoeopYFfvPz
+         4fmiff28EBxiA+YRgSXABzPrh2jRd4CT1p4vtGBOxPwiaOEpjko4SO1ntLXmNjnAiK
+         RWus/8GYOwUtOoHhFx8/7blBDs49axC8LK/Kqe+I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Huang <huangwenabc@gmail.com>,
-        Ganapathi Bhat <gbhat@marvell.comg>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.19 17/79] mwifiex: Fix three heap overflow at parsing element in cfg80211_ap_settings
-Date:   Fri, 20 Sep 2019 00:03:02 +0200
-Message-Id: <20190919214809.317382787@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>,
+        Igor Russkikh <igor.russkikh@aquantia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 103/124] net: aquantia: reapply vlan filters on up
+Date:   Fri, 20 Sep 2019 00:03:11 +0200
+Message-Id: <20190919214822.949275123@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190919214807.612593061@linuxfoundation.org>
-References: <20190919214807.612593061@linuxfoundation.org>
+In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
+References: <20190919214819.198419517@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,73 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Huang <huangwenabc@gmail.com>
+From: Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>
 
-commit 7caac62ed598a196d6ddf8d9c121e12e082cac3a upstream.
+[ Upstream commit c2ef057ee775e229d3138add59f937d93a3a59d8 ]
 
-mwifiex_update_vs_ie(),mwifiex_set_uap_rates() and
-mwifiex_set_wmm_params() call memcpy() without checking
-the destination size.Since the source is given from
-user-space, this may trigger a heap buffer overflow.
+In case of device reconfiguration the driver may reset the device invisible
+for other modules, vlan module in particular. So vlans will not be
+removed&created and vlan filters will not be configured in the device.
+The patch reapplies the vlan filters at device start.
 
-Fix them by putting the length check before performing memcpy().
-
-This fix addresses CVE-2019-14814,CVE-2019-14815,CVE-2019-14816.
-
-Signed-off-by: Wen Huang <huangwenabc@gmail.com>
-Acked-by: Ganapathi Bhat <gbhat@marvell.comg>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 7975d2aff5afb ("net: aquantia: add support of rx-vlan-filter offload")
+Signed-off-by: Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>
+Signed-off-by: Igor Russkikh <igor.russkikh@aquantia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/mwifiex/ie.c      |    3 +++
- drivers/net/wireless/marvell/mwifiex/uap_cmd.c |    9 ++++++++-
- 2 files changed, 11 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/aquantia/atlantic/aq_main.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/net/wireless/marvell/mwifiex/ie.c
-+++ b/drivers/net/wireless/marvell/mwifiex/ie.c
-@@ -241,6 +241,9 @@ static int mwifiex_update_vs_ie(const u8
- 		}
+diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_main.c b/drivers/net/ethernet/aquantia/atlantic/aq_main.c
+index 5315df5ff6f83..4ebf083c51c5f 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_main.c
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_main.c
+@@ -61,6 +61,10 @@ static int aq_ndev_open(struct net_device *ndev)
+ 	if (err < 0)
+ 		goto err_exit;
  
- 		vs_ie = (struct ieee_types_header *)vendor_ie;
-+		if (le16_to_cpu(ie->ie_length) + vs_ie->len + 2 >
-+			IEEE_MAX_IE_SIZE)
-+			return -EINVAL;
- 		memcpy(ie->ie_buffer + le16_to_cpu(ie->ie_length),
- 		       vs_ie, vs_ie->len + 2);
- 		le16_unaligned_add_cpu(&ie->ie_length, vs_ie->len + 2);
---- a/drivers/net/wireless/marvell/mwifiex/uap_cmd.c
-+++ b/drivers/net/wireless/marvell/mwifiex/uap_cmd.c
-@@ -265,6 +265,8 @@ mwifiex_set_uap_rates(struct mwifiex_uap
- 
- 	rate_ie = (void *)cfg80211_find_ie(WLAN_EID_SUPP_RATES, var_pos, len);
- 	if (rate_ie) {
-+		if (rate_ie->len > MWIFIEX_SUPPORTED_RATES)
-+			return;
- 		memcpy(bss_cfg->rates, rate_ie + 1, rate_ie->len);
- 		rate_len = rate_ie->len;
- 	}
-@@ -272,8 +274,11 @@ mwifiex_set_uap_rates(struct mwifiex_uap
- 	rate_ie = (void *)cfg80211_find_ie(WLAN_EID_EXT_SUPP_RATES,
- 					   params->beacon.tail,
- 					   params->beacon.tail_len);
--	if (rate_ie)
-+	if (rate_ie) {
-+		if (rate_ie->len > MWIFIEX_SUPPORTED_RATES - rate_len)
-+			return;
- 		memcpy(bss_cfg->rates + rate_len, rate_ie + 1, rate_ie->len);
-+	}
- 
- 	return;
- }
-@@ -391,6 +396,8 @@ mwifiex_set_wmm_params(struct mwifiex_pr
- 					    params->beacon.tail_len);
- 	if (vendor_ie) {
- 		wmm_ie = vendor_ie;
-+		if (*(wmm_ie + 1) > sizeof(struct mwifiex_types_wmm_info))
-+			return;
- 		memcpy(&bss_cfg->wmm_info, wmm_ie +
- 		       sizeof(struct ieee_types_header), *(wmm_ie + 1));
- 		priv->wmm_enabled = 1;
++	err = aq_filters_vlans_update(aq_nic);
++	if (err < 0)
++		goto err_exit;
++
+ 	err = aq_nic_start(aq_nic);
+ 	if (err < 0)
+ 		goto err_exit;
+-- 
+2.20.1
+
 
 
