@@ -2,93 +2,131 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A24EC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A441C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:19:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11F2921907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:11:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF1FF21924
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:19:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="fzX/uU6y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389530AbfISLLZ (ORCPT
+        id S2389691AbfISLTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 07:11:25 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:43157 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387690AbfISLLY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 07:11:24 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iAuLF-0001IP-5b; Thu, 19 Sep 2019 13:11:17 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iAuLD-0002qQ-8O; Thu, 19 Sep 2019 13:11:15 +0200
-Date:   Thu, 19 Sep 2019 13:11:15 +0200
-From:   oUwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        David Wu <david.wu@rock-chips.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pwm: rockchip: simplify rockchip_pwm_get_state()
-Message-ID: <20190919111115.5oraof2bdl4627xv@pengutronix.de>
-References: <20190919091728.24756-1-linux@rasmusvillemoes.dk>
+        Thu, 19 Sep 2019 07:19:25 -0400
+Received: from mail-eopbgr80058.outbound.protection.outlook.com ([40.107.8.58]:61254
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388922AbfISLTZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 07:19:25 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Gz9NVHeoQSA5u6uNi6mhF27kIbLxMN90vkXsCZscYm3RebTmfdL+4QcbT34jr/2/phPvoD+AJNRgsEPnPIDGgo0YPrwVrzQ68jkqyLueZE9Q2x9yswAZ7No99LUvohnGfRo9+NWdQLIk/a8hq1I5+nAimK9jdimBXmIMsRXxescq13k896NOGMiYjenqaFk5SgbBEPW5eXilgM6JLaFRSiN7waHt7eDuDVQ4arXnjEYAd3K26o3NCQhyLZWCv7VO5Mi8jSKucSiXIA+F9hVC8669hf3sabiTDPoCoOL6wyUoYWfSChdsqXd9olg9sLU7Hc4fGXcU3C2PEl5cpQOePQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tJG9rC6q1jEMRBVxmnUazzHiFj21KU6Ar+gL/kjV86I=;
+ b=KPz06XdrWyC2IkBdHDPed8BCRQFCHgPfCagjCiyFmFpaY9Sacp/Ggv1KUMsj/ROeIe7jJCN+c58dK121sGQDY4Y1yWOYjh++n737P8zWEYHefFBVNspdnAmit5S3wWBgm9gH6yXBL8A8EpYWS/WmPJ/QQCQzMNZX/adm2ZTdlRyENo9FY6kum8BT/KID7XcS/R9tVg/w0f61hNnZFT7cPhnQsjG3bExxldSmDMg5LLQiRMAa4TirUU/N5YWoPNVXNa52nLDFBLqv7NjnO5seZ2JN0znEoEooNg6fR0Tl46oo5VexNxYBpMh5K4Go23kYoSBweUQIzl3PzeJTjUAvAA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tJG9rC6q1jEMRBVxmnUazzHiFj21KU6Ar+gL/kjV86I=;
+ b=fzX/uU6yl+eFFdUWNQvmKRG2f+91VTO3yvYkyblOus5CprW3GMtBii+Vtpcmc//+B5o7ABf3gXQn/gIjhB9i0E+aOqfPL+LJqzxr/2CggWlLCoe4tVRuZENt/Ndecborpo0KzBXUtST6nnM0iXxXGftgp55t6x41gpQvfFGRVKI=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB3871.eurprd04.prod.outlook.com (52.134.16.159) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.18; Thu, 19 Sep 2019 11:19:22 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::70b4:7829:2e8e:1196]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::70b4:7829:2e8e:1196%7]) with mapi id 15.20.2263.023; Thu, 19 Sep 2019
+ 11:19:22 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+CC:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Abel Vesa <abel.vesa@nxp.com>
+Subject: Re: [PATCH 12/12] crypto: caam - change JR device ownership scheme
+Thread-Topic: [PATCH 12/12] crypto: caam - change JR device ownership scheme
+Thread-Index: AQHVYsl3Q5EXd/LaakqIGGHztQ1o4g==
+Date:   Thu, 19 Sep 2019 11:19:22 +0000
+Message-ID: <VI1PR0402MB3485F8B3E4F73EB62A70DBDF98890@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <20190904023515.7107-1-andrew.smirnov@gmail.com>
+ <20190904023515.7107-13-andrew.smirnov@gmail.com>
+ <VI1PR04MB7023A7EC91599A537CB6A487EEB30@VI1PR04MB7023.eurprd04.prod.outlook.com>
+ <CAHQ1cqEkdUJGxUnRQbJSG9L32yC0HVmddzi4GyOkVfq2uvJOMQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d9c1f23d-4360-47e0-2ffc-08d73cf338e1
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3871;
+x-ms-traffictypediagnostic: VI1PR0402MB3871:|VI1PR0402MB3871:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB38711AEAA03CF35663AA900398890@VI1PR0402MB3871.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 016572D96D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(366004)(376002)(136003)(396003)(199004)(189003)(53546011)(52536014)(305945005)(6506007)(6246003)(26005)(186003)(102836004)(4744005)(66476007)(66446008)(71200400001)(446003)(7696005)(5660300002)(91956017)(76116006)(86362001)(14454004)(6116002)(99286004)(256004)(66556008)(64756008)(71190400001)(9686003)(6436002)(476003)(81166006)(54906003)(33656002)(110136005)(316002)(55016002)(25786009)(7736002)(74316002)(8936002)(66066001)(478600001)(8676002)(66946007)(76176011)(81156014)(2906002)(44832011)(486006)(229853002)(4326008)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3871;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 9UvbIGEBe8LtQyFxwFhmf4ylrIH3XKEoaHbHO0OuuaAcbqMkNuyvFmeN/VIB70Ed/PsNBymJN6OM/qB/gqbyIiz7vg3hVPrcU6HC/Rf72/2YiuEtgpifO11/qL3KHiMHJNwyjZv+8dzqHgf2Y7gD522NY8d5h8nLprykVgjZtW43X45UGlkuxKvk3zo5hWboo/mr8bVQEr1Lpi3NLEmPUtabW0+RqLtdieyOd1k6aqUinUuYbf2bKQbbw4cKNL9WRrFTVZscnWeQSoCyxcxJ8IhiFcqCzfbdm0tIsjQDvp1bAd/Bc2FOUGHWfPtm6ETV+XbXcaRROX9JYxm5V8wgFEUx3HzD4fpzrDNayztXIYI9VrbG64yZ7RAuoRBuz15+sigp9whM9KAmUvKZZ/y6q9V2XeDGGken5mpupErW3EQ=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190919091728.24756-1-linux@rasmusvillemoes.dk>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d9c1f23d-4360-47e0-2ffc-08d73cf338e1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Sep 2019 11:19:22.4126
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: gu6T9DETEFeL7rgaohBFDfgUp0vaGZB2zjkc5y1rQZDhxWgHnb/Z6iIi2gtG4Q4getmkvGrwjDjtH4HOQLOs7Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3871
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 11:17:27AM +0200, Rasmus Villemoes wrote:
-> The way state->enabled is computed is rather convoluted and hard to
-> read - both branches of the if() actually do the exact same thing. So
-> remove the if(), and further simplify "<boolean condition> ? true :
-> false" to "<boolean condition>".
-> 
-> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> ---
-> I stumbled on this while trying to understand how the pwm subsystem
-> works. This patch is a semantic no-op, but it's also possible that,
-> say, the first branch simply contains a "double negative" so either
-> the != should be == or the "false : true" should be "true : false".
-
-The change looks obviously right, it's a noop.
-
-I share your doubts however. The construct was introduced in commit 
-831b2790507b ("pwm: rockchip: Use same PWM ops for each IP") by David
-Wu.
-
-Before there were rockchip_pwm_get_state_v1 for the supports_polarity =
-false case and rockchip_pwm_get_state_v2 for supports_polarity = true.
-
-In both state->enabled was assigned true if ((val & enable_conf) ==
-enable_conf). So I assume everything is fine.
-
-A confirmation by David would be great though.
-
-As a side note: Is there publicly available documentation for this IP?
-If a link were added to the driver's header we could check easily
-ourselves.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+On 9/18/2019 6:13 AM, Andrey Smirnov wrote:=0A=
+>> I think you need to do some form of slow wait loop in jrpriv until=0A=
+>> jrpriv->tfm_count reaches zero.=0A=
+> Hmm, what do we do if it never does? Why do you think it would be=0A=
+> better than cancelling all outstanding jobs and resetting the HW?=0A=
+> =0A=
+Herbert,=0A=
+=0A=
+What should a driver do when:=0A=
+-user tries to unbind it AND=0A=
+-there are tfms referencing algorithms registered by this driver=0A=
+=0A=
+1. If driver tries to unregister the algorithms during its .remove()=0A=
+callback, then this BUG_ON is hit:=0A=
+=0A=
+int crypto_unregister_alg(struct crypto_alg *alg)=0A=
+{=0A=
+[...]=0A=
+        BUG_ON(refcount_read(&alg->cra_refcnt) !=3D 1);=0A=
+=0A=
+2. If driver exits without unregistering the algorithms,=0A=
+next time one of the tfms referencing those algorithms will be used=0A=
+bad things will happen.=0A=
+=0A=
+3. There is no mechanism in crypto core for notifying users=0A=
+to stop using a tfm.=0A=
+=0A=
+Thanks,=0A=
+Horia=0A=
