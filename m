@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 687BEC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC0ADC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B2C721929
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:23:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8166A21929
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:23:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931805;
-	bh=K8B7Wh6y9l9FoIrhqj54BavdltGdVVE0/GiOLd8E3Jc=;
+	s=default; t=1568931808;
+	bh=s3X8KYhopGYFylN09akusJr4NOztZXLrmbfsb8R3yHg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L8CmnE01dqYKajUH7HxPbNLC7qG/MlO3NXTlC8UJPIs2Nrj4GMaMSufXPFJgQgAAp
-	 6GljUGktreLb+8BTXyylWYaH+WKZLnfn30jgs/o3WiWvHhReT9wG5b6NuNcbUn4/YK
-	 dQ5bHqB7onCGp+w/4PAaWovd5Fp84Z5ft0vWdVNU=
+	b=X5UCpn0/5292wr2r/36XkV4rpSf6LZxr7/DnE6TM8t/fGx/moUW3lN6L0+HVi/eMz
+	 uy7A2Ye7tlH852Y40FW0L8Zc6m4nWdaX/zlYoOYDfRA3PwrIqlmu7hv3Fgj/8D3YzV
+	 rbByAiqAz1ONSItncxfy+kAC1UsrjOSWjb56v9jY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406967AbfISWXW (ORCPT
+        id S2404756AbfISWX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:23:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38940 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:23:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394154AbfISWXT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:23:19 -0400
+        id S2394176AbfISWXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:23:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F175620678;
-        Thu, 19 Sep 2019 22:23:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B034520678;
+        Thu, 19 Sep 2019 22:23:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931798;
-        bh=K8B7Wh6y9l9FoIrhqj54BavdltGdVVE0/GiOLd8E3Jc=;
+        s=default; t=1568931804;
+        bh=s3X8KYhopGYFylN09akusJr4NOztZXLrmbfsb8R3yHg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u+kwuJhUGi6U7j99k/c8LYQCZdZ1PLpVaU3ZeA0fhKLHonL/2HzYA46CU+dAx/Zy+
-         /z9dSMbqBQ3moPOhZVJ5Ify7e6SfAIUk+uc1z5E/7gswutTPxGPesiun2dN5GW0iyu
-         wa3pf2odiXENvXlh7FqJYOpHrmfMiUlTSB8b7UlI=
+        b=h+/ZYrdb+jhFzmOusHXiNU6Pk6k4RgXG7kIg4O9sOOhevU25RGFLYOAJeJIhdbZEN
+         Q4KfCf7RbJDwONweRmnTLg9hCBehY/Btb/q7agTucIlObirmSZCzT66vXUZa9kF2bi
+         0xXMW809AGEt18Nbjx0Y+iRGrOe6sROSaJcuzhfk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Thomas Jarosch <thomas.jarosch@intra2net.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Jan Stancek <jstancek@redhat.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 44/56] netfilter: nf_conntrack_ftp: Fix debug output
-Date:   Fri, 20 Sep 2019 00:04:25 +0200
-Message-Id: <20190919214801.018589850@linuxfoundation.org>
+Subject: [PATCH 4.4 46/56] NFSv2: Fix write regression
+Date:   Fri, 20 Sep 2019 00:04:27 +0200
+Message-Id: <20190919214801.282028438@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214742.483643642@linuxfoundation.org>
 References: <20190919214742.483643642@linuxfoundation.org>
@@ -61,45 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Jarosch <thomas.jarosch@intra2net.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 3a069024d371125227de3ac8fa74223fcf473520 ]
+[ Upstream commit d33d4beb522987d1c305c12500796f9be3687dee ]
 
-The find_pattern() debug output was printing the 'skip' character.
-This can be a NULL-byte and messes up further pr_debug() output.
+Ensure we update the write result count on success, since the
+RPC call itself does not do so.
 
-Output without the fix:
-kernel: nf_conntrack_ftp: Pattern matches!
-kernel: nf_conntrack_ftp: Skipped up to `<7>nf_conntrack_ftp: find_pattern `PORT': dlen = 8
-kernel: nf_conntrack_ftp: find_pattern `EPRT': dlen = 8
-
-Output with the fix:
-kernel: nf_conntrack_ftp: Pattern matches!
-kernel: nf_conntrack_ftp: Skipped up to 0x0 delimiter!
-kernel: nf_conntrack_ftp: Match succeeded!
-kernel: nf_conntrack_ftp: conntrack_ftp: match `172,17,0,100,200,207' (20 bytes at 4150681645)
-kernel: nf_conntrack_ftp: find_pattern `PORT': dlen = 8
-
-Signed-off-by: Thomas Jarosch <thomas.jarosch@intra2net.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Reported-by: Jan Stancek <jstancek@redhat.com>
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Tested-by: Jan Stancek <jstancek@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_conntrack_ftp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/proc.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nf_conntrack_ftp.c b/net/netfilter/nf_conntrack_ftp.c
-index b666959f17c08..b7c13179fa40a 100644
---- a/net/netfilter/nf_conntrack_ftp.c
-+++ b/net/netfilter/nf_conntrack_ftp.c
-@@ -334,7 +334,7 @@ static int find_pattern(const char *data, size_t dlen,
- 		i++;
- 	}
+diff --git a/fs/nfs/proc.c b/fs/nfs/proc.c
+index 80ecdf2ec8b6a..b83e14ad13c45 100644
+--- a/fs/nfs/proc.c
++++ b/fs/nfs/proc.c
+@@ -610,8 +610,10 @@ static int nfs_proc_pgio_rpc_prepare(struct rpc_task *task,
  
--	pr_debug("Skipped up to `%c'!\n", skip);
-+	pr_debug("Skipped up to 0x%hhx delimiter!\n", skip);
+ static int nfs_write_done(struct rpc_task *task, struct nfs_pgio_header *hdr)
+ {
+-	if (task->tk_status >= 0)
++	if (task->tk_status >= 0) {
++		hdr->res.count = hdr->args.count;
+ 		nfs_writeback_update_inode(hdr);
++	}
+ 	return 0;
+ }
  
- 	*numoff = i;
- 	*numlen = getnum(data + i, dlen - i, cmd, term, numoff);
 -- 
 2.20.1
 
