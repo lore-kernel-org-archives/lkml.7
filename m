@@ -2,113 +2,136 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B927EC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 06:25:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27ADCC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 06:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 797FE21907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 06:25:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EECCD21907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 06:27:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cRfye87F"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L4XqqS3n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388015AbfISGZf (ORCPT
+        id S2388084AbfISG11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 02:25:35 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:40371 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387468AbfISGZf (ORCPT
+        Thu, 19 Sep 2019 02:27:27 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33847 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387929AbfISG10 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 02:25:35 -0400
-Received: by mail-ed1-f65.google.com with SMTP id v38so2091229edm.7;
-        Wed, 18 Sep 2019 23:25:34 -0700 (PDT)
+        Thu, 19 Sep 2019 02:27:26 -0400
+Received: by mail-pl1-f196.google.com with SMTP id d3so1130903plr.1;
+        Wed, 18 Sep 2019 23:27:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=S/WyB4Tpel1GrWYeNWYAfgXloXn7pKmm9y9Bb7H6LV4=;
-        b=cRfye87FPU+e4SZKUDwKUGB/xc5Y0V42ErhTBXH1lfLFad5X81iwkAEAcJiUbQkWE4
-         kOHgcA7DnUXzcrN92MQbAaSolCYJs8t94d1eWTs8V2fE1l/NMzhcMN7wh76fpcSiAU+8
-         n2tckXxWP7oRquemvr/mcw6jhW4toMfcDZfQfoaE8qSgIPZW2XpEajSSWRxMq8JX7BGB
-         n8sxbzfm0d/9VLnL93eQ/8fXHDiqRI2lk/jolv1xOA+IZ5lkXNRzDbAKOOjd6Yl5PpJY
-         nioxvTL8APpiRYqDme/VXgxB1khOKNJk4W3BNvw9pfZ5zzFF4lak1icNaOKOMvOdgZx0
-         Md3Q==
+        bh=zYC9c0xzUXu9+1JCCZ/6grej11cpKjpeT/pQEN2qRIM=;
+        b=L4XqqS3n1K8UuyE00P2dcioyr7f2tslP+5gokPZOLa18lUOudGiu7ALFKe15xvlfUo
+         7vjfPuTuRyxc1/7y6sQSdrxfnIwkjzl/YYHWQX6V+CyxEXY46YqKUO2kjkbmHjkvXTVq
+         7tUPBr8X3Sa2LFFNwpbdbPWtfM22lzEFRdvGaZAB69HTMk5Dm0q1WYnKoZtlPgHiEk0e
+         KqffXAPAXw5JJCO0AMNRepTrcA8IxeJHpDz8Z7zok2jwhu/Dt3Ur2QnLFcUVJ3lzRpQW
+         KmzfJqTPjj9fcUAXsDCxwYnVUYc7Vro8fQAyiGoN5XpP0sZsiuqi9qR1/B1ymX1VKGvM
+         2Y9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=S/WyB4Tpel1GrWYeNWYAfgXloXn7pKmm9y9Bb7H6LV4=;
-        b=rAox6GABW1JLT5IM9RUuq5sk5hBTTUEFSvit6X9Io02ZngpfL5sttmO57RdRUgeu2r
-         p0SrRX2reHa5Kd3LKhKA4zTciCJ0uqcchG7pPQrUb4swdfuDN000LJqkO2hOTsuTOw3N
-         PVdTn0UUeHuy2w59FuVXvvmqy9yeKl9l5vKAA+HfpfgCoPLa0yB6x4JV68Aw69gkVFCP
-         cLC+V/Hhfs+Ufkyb3LvL5I25GZIsBsrexxfw3xE23WSKsQ2T08PkdOoZl8UyRzgIA+Fg
-         Kz4cbxkOVDyGYA69ybjEIU12GlH68VN2m0Ho+tFROfBOYKEzJt3ge6b5lxBQR+Zy4AVx
-         8v3A==
-X-Gm-Message-State: APjAAAXRXvcDjaQvn8iB/QsZRHFzt+qXC1YWbl8VfSA73rErevuAoqm9
-        0zTJcGBHgxIaa2kaU2BJJaG2z4zOGcMY8z3ZB3rI9g==
-X-Google-Smtp-Source: APXvYqx88dInn36xM937T9Viz2kB510FhkQcsRnIG1Q+fdbQflufzSanL39M0wFu8j8RG1EUvn89yzUcVWST1l1bVhk=
-X-Received: by 2002:a50:d552:: with SMTP id f18mr14653706edj.36.1568874333270;
- Wed, 18 Sep 2019 23:25:33 -0700 (PDT)
+        bh=zYC9c0xzUXu9+1JCCZ/6grej11cpKjpeT/pQEN2qRIM=;
+        b=Ne36q+C1wjSjhQbgu9Qf+xAx8Yrm3Xai6FUYs5nTfG6GMxP582+Q+fFV1MCmA+iYTx
+         rORv+bVFu9R8/h85edCIrN6QlakkvfaQAn2L2qsWXm1n+PclTl72qHHvLDf29cYJFX+e
+         PDIRpVpQugdb0L6+T+fDYZOyFm5ny8e6gNn90wDdmcpIjCkB2axERkYLEel4UVi6EZvn
+         mZIr16OSS0BoQjjnmL657Cg2TG8ihSy11z47yrbzLXgvF65MofANcXeJeP9DcMHu8HDB
+         p45DZwXshLYAy3UnLcenM/p73jSfY4dIttmIUgJuudOnm/NlOlWbV5egTiu+CYFWvJAz
+         yy3A==
+X-Gm-Message-State: APjAAAX6O+WbWn7JSjeqBWZMWFm0h0fgD8udE6bS340EXhCMp2d0sd5J
+        dw/XanWgb2Etj2u1d5gRIqyDlhQeo2hd6HMurU0=
+X-Google-Smtp-Source: APXvYqxqc5vMu+781v0PNAPt9FTbqLzUtIJNkufAV5+W4y8Md/hvxxXV5jBa5HhjvMAAvilAX5BBhy0UNuW0xh+HNoA=
+X-Received: by 2002:a17:902:b208:: with SMTP id t8mr8179629plr.262.1568874445884;
+ Wed, 18 Sep 2019 23:27:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190919063819.164826-1-maowenan@huawei.com>
-In-Reply-To: <20190919063819.164826-1-maowenan@huawei.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Thu, 19 Sep 2019 09:25:21 +0300
-Message-ID: <CA+h21hqjrt2qcCAFosOC61QcsiHS1TYaR6u=SjMMFH8W+ZZYug@mail.gmail.com>
-Subject: Re: [PATCH net] net: dsa: sja1105: Add dependency for NET_DSA_SJA1105_TAS
-To:     Mao Wenan <maowenan@huawei.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>, kernel-janitors@vger.kernel.org
+References: <20190918225337.9860-1-jekhor@gmail.com> <20190918225337.9860-2-jekhor@gmail.com>
+In-Reply-To: <20190918225337.9860-2-jekhor@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 19 Sep 2019 09:27:14 +0300
+Message-ID: <CAHp75Ve1mifO9iJJUo=zdFYi3X20ye=w1p0Z+-GmjQEpnmiS4Q@mail.gmail.com>
+Subject: Re: [PATCH v4 1/1] platform/x86/intel_cht_int33fe: Split code to USB
+ Micro-B and Type-C variants
+To:     Yauhen Kharuzhy <jekhor@gmail.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andy@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 19 Sep 2019 at 09:22, Mao Wenan <maowenan@huawei.com> wrote:
->
-> If CONFIG_NET_DSA_SJA1105_TAS=y and CONFIG_NET_SCH_TAPRIO=n,
-> below error can be found:
-> drivers/net/dsa/sja1105/sja1105_tas.o: In function `sja1105_setup_tc_taprio':
-> sja1105_tas.c:(.text+0x318): undefined reference to `taprio_offload_free'
-> sja1105_tas.c:(.text+0x590): undefined reference to `taprio_offload_get'
-> drivers/net/dsa/sja1105/sja1105_tas.o: In function `sja1105_tas_teardown':
-> sja1105_tas.c:(.text+0x610): undefined reference to `taprio_offload_free'
-> make: *** [vmlinux] Error 1
->
-> sja1105_tas needs tc-taprio, so this patch add the dependency for it.
->
-> Fixes: 317ab5b86c8e ("net: dsa: sja1105: Configure the Time-Aware Scheduler via tc-taprio offload")
-> Signed-off-by: Mao Wenan <maowenan@huawei.com>
-> ---
-
-Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
-
->  drivers/net/dsa/sja1105/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/net/dsa/sja1105/Kconfig b/drivers/net/dsa/sja1105/Kconfig
-> index 55424f3..f40b248 100644
-> --- a/drivers/net/dsa/sja1105/Kconfig
-> +++ b/drivers/net/dsa/sja1105/Kconfig
-> @@ -27,6 +27,7 @@ config NET_DSA_SJA1105_PTP
->  config NET_DSA_SJA1105_TAS
->         bool "Support for the Time-Aware Scheduler on NXP SJA1105"
->         depends on NET_DSA_SJA1105
-> +       depends on NET_SCH_TAPRIO
->         help
->           This enables support for the TTEthernet-based egress scheduling
->           engine in the SJA1105 DSA driver, which is controlled using a
-> --
-> 2.7.4
+On Thu, Sep 19, 2019 at 1:53 AM Yauhen Kharuzhy <jekhor@gmail.com> wrote:
 >
 
-Thanks!
--Vladimir
+You so fast with new versions that I had no chance to comment on.
+Finally here mine.
+
+> Existing intel_cht_int33fe ACPI pseudo-device driver assumes that
+> hardware has Type-C connector and register related devices described as
+> I2C connections in the _CRS resource.
+>
+> There is at least one hardware (Lenovo Yoga Book YB1-91L/F) with Micro-B
+> USB connector exists. It has INT33FE device in the DSDT table but
+> there are only two I2C connection described: PMIC and BQ27452 battery
+> fuel gauge.
+>
+> Splitting existing INT33FE driver allow to maintain code for USB Micro-B
+> (AB) connector variant separately and make it simpler.
+
+I didn't get what (AB) means in this context?
+Did you mean "(or AB)"?
+
+> Split driver to intel_cht_int33fe_common.c and
+> intel_cht_int33fe_{typeb,typec}.c. Compile all this sources to one .ko
+> module to make user experience easier.
+
+You forgot to replace typeb here.
+
+> -       ---help---
+> +       help
+
+This is unneeded churn
+
+
+
+> +         CONFIG_BATTERY_BQ27XXX=m and CONFIG_BATTERY_BQ27XXX_I2C=m for Micro-B
+> +         device and CONFIG_TYPEC_FUSB302=m and CONFIG_BATTERY_MAX17042=m
+
+First s/and/or/.
+
+> +         for Type-C device.
+
+> + * 1. The Whiskey Cove pmic, which is also described by the INT34D3 ACPI device
+
+pmic -> PMIC
+
+> +       if (IS_ERR(data->battery_fg)) {
+> +               int err = PTR_ERR(data->battery_fg);
+> +
+> +               if (err != -EPROBE_DEFER)
+> +                       dev_err(dev,
+> +                               "Failed to register battery fuel gauge: %d\n",
+> +                               err);
+> +               return err;
+> +       }
+> +
+> +       return 0;
+
+I would rather replace this altogether by return PTR_ERR_OR_ZERO()
+like it's done in the other function in the original driver.
+
+-- 
+With Best Regards,
+Andy Shevchenko
