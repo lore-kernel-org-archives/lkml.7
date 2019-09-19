@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10035C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 00:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD50C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 00:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D981221925
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 00:56:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 577DB21925
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 00:56:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DmOPaKBR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ERNEoENv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731309AbfISA4Y (ORCPT
+        id S1731373AbfISA4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 20:56:24 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:39443 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730468AbfISA4X (ORCPT
+        Wed, 18 Sep 2019 20:56:32 -0400
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:37910 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730468AbfISA4c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 20:56:23 -0400
-Received: by mail-yw1-f66.google.com with SMTP id n11so653187ywn.6;
-        Wed, 18 Sep 2019 17:56:23 -0700 (PDT)
+        Wed, 18 Sep 2019 20:56:32 -0400
+Received: by mail-yb1-f195.google.com with SMTP id o18so709779ybp.5;
+        Wed, 18 Sep 2019 17:56:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=JJH+9aYvC39hzPNn9AdnGxRyUmbShCql0tZe9p98y0I=;
-        b=DmOPaKBRGzPfptToMr2LY5C4co7NtJWOaynkWxs5iJINrwzuSgcteChheXtFyrwVlx
-         Ez7S/Fx7293pqCQQuU6Q+sqsm04PDOdEIkWMJI6eSSB7p1yovEuq43M7xIFTDFS9CkQH
-         dLP7ZyP7mkACiynY27L09JvwnL1CA4tfIgyXJBedyPWwTBtbx//Is/Fat6l2PBKJlADS
-         hzITHuX6+25rSTZjsYn2KIeoKIjefU3qRBwE3Oss9lFQzQNAvn0+OARuFEKLFahQhOAx
-         rz4L6YkNxTysNGVuaaeAvOALvdXzTZf7t50Y5hTMijh7LxWWxhJHwzrGyabXGpK9picx
-         veSA==
+        bh=gliQnWiLZy4GHcRR9eFMi5rKboC47gniTTdsujj6gQg=;
+        b=ERNEoENvC6ogVHDHS3uhuhKkMts29PZ9pIvOqPrKZNl80bS3J9O1JJR6iy8O1dVtm0
+         zKuDYvA6cCAXC3JTVuP7GTr34wbQA7FI7ZLUFzUW3q6Aama44MURIeL6P36cE7PFB995
+         BAaI28MHB7aIcWLVrphgZhwMwP9GyBbzwCjsEi3ztb+PUm5p6+DcUliR0IV/RyE11SpB
+         HklU+wJ84uTiks5me6WQ+sKgfDjeOkqCCKFbFsTvmSMJxYnNxGVpSttZpmO4jPEIrBcG
+         Bo2yT8kQYiPYe4+O9+7GsxMAdi3fXJWbU1nDMiUB1HeDq1IU2mls3jXvf+FWTzK5ayLW
+         l+4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=JJH+9aYvC39hzPNn9AdnGxRyUmbShCql0tZe9p98y0I=;
-        b=R2A8j1LKYyC734F7IgdK6u7HQvOm2hqPqJ4WeBrsBNkOL/0vqXlzZbCF5kCE7itI3O
-         xlxidiyRRA68rRUDNAMA2uMIASLd8JtkAZNhft7R8OUYGBAO0/BXsHjL1d4180t6TzrH
-         zNhMVREr8+d9ZoEt0Ww0kohTpWpiuGMCEwHklocFWGmrwqLgr3FEy2Do3PP4rXo+7s1m
-         uBDrq0UhDOadjFtg/tyQjUzmwbqX08/huFuNsHM2UZTytUzdKgIqLZ94gbCyRMJFbVN0
-         kVHlWc1g6M+lCwhPb/U8zPYeA0AZP7bxFOR/HdQD7DLLUZr37K+J9Tst3mCxYmQDeFb4
-         4HXg==
-X-Gm-Message-State: APjAAAUDlkpRVa4prKcL2rKxKAUOZtOrCBkyzLBuVnt+XSihwDfuRilC
-        FxmrYfJmF8XkA/4Ob2brxw==
-X-Google-Smtp-Source: APXvYqy5kn3aIjrfw8Ody69S/41PeLalsZrWDGl2UViLfEnCGgWpcj3ModlIUMABbyHX4yR5mhKv+w==
-X-Received: by 2002:a81:6387:: with SMTP id x129mr5701215ywb.242.1568854582835;
-        Wed, 18 Sep 2019 17:56:22 -0700 (PDT)
+        bh=gliQnWiLZy4GHcRR9eFMi5rKboC47gniTTdsujj6gQg=;
+        b=LbWF8CjxrfJnqF7ImuGsVkmH2gfUWkSu+t7mljq75EX5TFlzSYIFmjN15cVZiaqCkq
+         Q6xYECaRIJmAcVfy6iYFclpIAQ8yjN99zcozR52HsgUPgyxuWzLqtem/Unrg4//Za+EC
+         O3WOyHNup58kBcKkwnVib9PEuSafXqxOneOYm7C0LQpkwURDuS6hSpNLL0+0KTIvHHpw
+         KWQgkBfoH8P5fR0t8wwxguQE1iLoTsdnwJqJgHMQeb+T6Sv5MhcKFoQWQ6oKoUQPe2hl
+         knSFd5avoS4WitDOr/PxrHHJjGYYZisEvzoIflXfsZQUqtJNcR4iUUrgbpOpLrIYZjH7
+         V7fg==
+X-Gm-Message-State: APjAAAWEWLCzvNIWXkeMz06HG2H38oD/yFELyYlh361LrlWxEfl4LwdZ
+        kpQAuzCz0r07Pq8Uqm0GZw==
+X-Google-Smtp-Source: APXvYqxAx64eSzE5DVKwNqUd80ksiqv2l+7EpBqq2Z+U4c+9qjyAFI75IvmWfQqc5KHM6ct1jUl/Tg==
+X-Received: by 2002:a25:b9cd:: with SMTP id y13mr4601577ybj.499.1568854590986;
+        Wed, 18 Sep 2019 17:56:30 -0700 (PDT)
 Received: from 960.localdomain ([64.192.53.12])
-        by smtp.gmail.com with ESMTPSA id u69sm1692475ywu.93.2019.09.18.17.56.22
+        by smtp.gmail.com with ESMTPSA id u69sm1692475ywu.93.2019.09.18.17.56.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Sep 2019 17:56:22 -0700 (PDT)
+        Wed, 18 Sep 2019 17:56:30 -0700 (PDT)
 From:   Ayman Bagabas <ayman.bagabas@gmail.com>
 To:     Darren Hart <dvhart@infradead.org>,
         Andy Shevchenko <andy@infradead.org>,
         Ayman Bagabas <ayman.bagabas@gmail.com>,
         Takashi Iwai <tiwai@suse.de>, Mattias Jacobsson <2pi@mok.nu>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/6] platform/x86: huawei-wmi: Add fn-lock support
-Date:   Wed, 18 Sep 2019 20:54:57 -0400
-Message-Id: <20190919005505.23822-6-ayman.bagabas@gmail.com>
+Subject: [PATCH v2 6/6] platform/x86: huawei-wmi: Add debugfs support
+Date:   Wed, 18 Sep 2019 20:54:58 -0400
+Message-Id: <20190919005505.23822-7-ayman.bagabas@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190919005505.23822-1-ayman.bagabas@gmail.com>
 References: <20190919005505.23822-1-ayman.bagabas@gmail.com>
@@ -76,132 +76,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Huawei Matebook laptops uses Fn key and toggle to access F1-F12 keys.
-Along with that, there is this feature called fn-lock that inverts the
-behavior of this Fn key and the F1-F12 row.
+Add a debugfs interface that can be used to call the WMI management
+interface function if available.
 
 Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
 ---
- drivers/platform/x86/huawei-wmi.c | 85 +++++++++++++++++++++++++++++++
- 1 file changed, 85 insertions(+)
+ drivers/platform/x86/huawei-wmi.c | 91 +++++++++++++++++++++++++++++++
+ 1 file changed, 91 insertions(+)
 
 diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
-index 231b5cce00db..48be55c6027e 100644
+index 48be55c6027e..9ae2ecadeb10 100644
 --- a/drivers/platform/x86/huawei-wmi.c
 +++ b/drivers/platform/x86/huawei-wmi.c
-@@ -59,6 +59,7 @@ struct huawei_wmi_debug {
+@@ -6,6 +6,7 @@
+  */
  
- struct huawei_wmi {
- 	bool battery_available;
-+	bool fn_lock_available;
- 
- 	struct huawei_wmi_debug debug;
- 	struct input_dev *idev[2];
-@@ -515,6 +516,88 @@ static void huawei_wmi_battery_exit(struct device *dev)
- 	}
+ #include <linux/acpi.h>
++#include <linux/debugfs.h>
+ #include <linux/delay.h>
+ #include <linux/dmi.h>
+ #include <linux/input.h>
+@@ -598,6 +599,94 @@ static void huawei_wmi_fn_lock_exit(struct device *dev)
+ 		device_remove_file(dev, &dev_attr_fn_lock_state);
  }
  
-+/* Fn lock */
++/* debugfs */
 +
-+static int huawei_wmi_fn_lock_get(int *on)
++static void huawei_wmi_debugfs_call_dump(struct seq_file *m, void *data,
++		union acpi_object *obj)
 +{
-+	u8 ret[0x100] = { 0 };
-+	int err, i;
++	struct huawei_wmi *huawei = m->private;
++	int i;
 +
-+	err = huawei_wmi_cmd(FN_LOCK_GET, ret, 0x100);
++	switch (obj->type) {
++	case ACPI_TYPE_INTEGER:
++		seq_printf(m, "0x%llx", obj->integer.value);
++		break;
++	case ACPI_TYPE_STRING:
++		seq_printf(m, "\"%*s\"", obj->string.length, obj->string.pointer);
++		break;
++	case ACPI_TYPE_BUFFER:
++		seq_puts(m, "{");
++		for (i = 0; i < obj->buffer.length; i++) {
++			seq_printf(m, "0x%02x", obj->buffer.pointer[i]);
++			if (i < obj->buffer.length - 1)
++				seq_puts(m, ",");
++		}
++		seq_puts(m, "}");
++		break;
++	case ACPI_TYPE_PACKAGE:
++		seq_puts(m, "[");
++		for (i = 0; i < obj->package.count; i++) {
++			huawei_wmi_debugfs_call_dump(m, huawei, &obj->package.elements[i]);
++			if (i < obj->package.count - 1)
++				seq_puts(m, ",");
++		}
++		seq_puts(m, "]");
++		break;
++	default:
++		dev_err(&huawei->pdev->dev, "Unexpected obj type, got %d\n", obj->type);
++		return;
++	}
++}
++
++static int huawei_wmi_debugfs_call_show(struct seq_file *m, void *data)
++{
++	struct huawei_wmi *huawei = m->private;
++	struct acpi_buffer out = { ACPI_ALLOCATE_BUFFER, NULL };
++	struct acpi_buffer in;
++	union acpi_object *obj;
++	int err;
++
++	in.length = sizeof(u64);
++	in.pointer = &huawei->debug.arg;
++
++	err = huawei_wmi_call(&in, &out);
 +	if (err)
 +		return err;
 +
-+	/* Find the first non-zero value. Return status is ignored. */
-+	i = 1;
-+	do {
-+		if (on)
-+			*on = ret[i] - 1; // -1 undefined, 0 off, 1 on.
-+	} while (i < 0x100 && !ret[i++]);
++	obj = out.pointer;
++	if (!obj) {
++		err = -EIO;
++		goto fail_debugfs_call;
++	}
 +
-+	return 0;
++	huawei_wmi_debugfs_call_dump(m, huawei, obj);
++
++fail_debugfs_call:
++	kfree(out.pointer);
++	return err;
 +}
 +
-+static int huawei_wmi_fn_lock_set(int on)
-+{
-+	union hwmi_arg arg;
++DEFINE_SHOW_ATTRIBUTE(huawei_wmi_debugfs_call);
 +
-+	arg.cmd = FN_LOCK_SET;
-+	arg.args[2] = on + 1; // 0 undefined, 1 off, 2 on.
-+
-+	return huawei_wmi_cmd(arg.cmd, NULL, NULL);
-+}
-+
-+static ssize_t fn_lock_state_show(struct device *dev,
-+		struct device_attribute *attr,
-+		char *buf)
-+{
-+	int err, on;
-+
-+	err = huawei_wmi_fn_lock_get(&on);
-+	if (err)
-+		return err;
-+
-+	return sprintf(buf, "%d\n", on);
-+}
-+
-+static ssize_t fn_lock_state_store(struct device *dev,
-+		struct device_attribute *attr,
-+		const char *buf, size_t size)
-+{
-+	int on, err;
-+
-+	if (kstrtoint(buf, 10, &on) ||
-+			on < 0 || on > 1)
-+		return -EINVAL;
-+
-+	err = huawei_wmi_fn_lock_set(on);
-+	if (err)
-+		return err;
-+
-+	return size;
-+}
-+
-+static DEVICE_ATTR_RW(fn_lock_state);
-+
-+static void huawei_wmi_fn_lock_setup(struct device *dev)
++static void huawei_wmi_debugfs_setup(struct device *dev)
 +{
 +	struct huawei_wmi *huawei = dev_get_drvdata(dev);
 +
-+	huawei->fn_lock_available = true;
-+	if (huawei_wmi_fn_lock_get(NULL)) {
-+		huawei->fn_lock_available = false;
-+		return;
-+	}
++	huawei->debug.root = debugfs_create_dir("huawei-wmi", NULL);
 +
-+	device_create_file(dev, &dev_attr_fn_lock_state);
++	debugfs_create_x64("arg", 0644, huawei->debug.root,
++		&huawei->debug.arg);
++	debugfs_create_file("call", 0400,
++		huawei->debug.root, huawei, &huawei_wmi_debugfs_call_fops);
 +}
 +
-+static void huawei_wmi_fn_lock_exit(struct device *dev)
++static void huawei_wmi_debugfs_exit(struct device *dev)
 +{
-+	if (huawei_wmi->fn_lock_available)
-+		device_remove_file(dev, &dev_attr_fn_lock_state);
++	struct huawei_wmi *huawei = dev_get_drvdata(dev);
++
++	debugfs_remove_recursive(huawei->debug.root);
 +}
 +
  /* Input */
  
  static void huawei_wmi_process_key(struct input_dev *idev, int code)
-@@ -638,6 +721,7 @@ static int huawei_wmi_probe(struct platform_device *pdev)
- 		mutex_init(&huawei_wmi->battery_lock);
- 
+@@ -723,6 +812,7 @@ static int huawei_wmi_probe(struct platform_device *pdev)
  		huawei_wmi_leds_setup(&pdev->dev);
-+		huawei_wmi_fn_lock_setup(&pdev->dev);
+ 		huawei_wmi_fn_lock_setup(&pdev->dev);
  		huawei_wmi_battery_setup(&pdev->dev);
- 	}
- 
-@@ -657,6 +741,7 @@ static int huawei_wmi_remove(struct platform_device *pdev)
- 
- 	if (wmi_has_guid(HWMI_METHOD_GUID)) {
- 		huawei_wmi_battery_exit(&pdev->dev);
-+		huawei_wmi_fn_lock_exit(&pdev->dev);
++		huawei_wmi_debugfs_setup(&pdev->dev);
  	}
  
  	return 0;
+@@ -740,6 +830,7 @@ static int huawei_wmi_remove(struct platform_device *pdev)
+ 	}
+ 
+ 	if (wmi_has_guid(HWMI_METHOD_GUID)) {
++		huawei_wmi_debugfs_exit(&pdev->dev);
+ 		huawei_wmi_battery_exit(&pdev->dev);
+ 		huawei_wmi_fn_lock_exit(&pdev->dev);
+ 	}
 -- 
 2.21.0
 
