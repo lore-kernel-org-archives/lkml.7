@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 072B7C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1074BC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF2C621907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D891E21907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931038;
-	bh=D8BjZR/3dK83sXzD9E06btJTybonkgJLwdB8DhwSuVA=;
+	s=default; t=1568931043;
+	bh=kIUj63N086jo5gW8T5PEHX5HflmQK9Y16vh87LQ3F2Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pIchV8QXZ3FD5Zm5Jlb67FX2aiQx1zLrvXyCW/PQXO9Eehl7B+zpLmEXhwxSwLaqm
-	 6SngW8W8Z9suR+6Y79bbcqjH/VQRy3u10SDShavkkjbap84dbUAmwnjR0S5yimxS8L
-	 SeOVkn+IU2V0VfwKAsvL3ckQ53PGBoBHP/yGEXsU=
+	b=didJ8sMYJ451HGAJNS1SHVWcI0Q+SxHnpajD3ymDL55uBUOghs7/5E05/5qpF05Iw
+	 n4W+OrkCtaulSWcod+0n/PizU+uwUXtYEDpxWsnoSK6JAJ0+aK5oABMaqsRL1Fd476
+	 //Xc95DzW1HYeqEeeNetIzDZEfCdVTFZvnco177M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405717AbfISWKi (ORCPT
+        id S2405741AbfISWKm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:10:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48988 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:10:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405693AbfISWKe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:10:34 -0400
+        id S2405721AbfISWKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:10:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AF6821907;
-        Thu, 19 Sep 2019 22:10:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 004E52196E;
+        Thu, 19 Sep 2019 22:10:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931033;
-        bh=D8BjZR/3dK83sXzD9E06btJTybonkgJLwdB8DhwSuVA=;
+        s=default; t=1568931039;
+        bh=kIUj63N086jo5gW8T5PEHX5HflmQK9Y16vh87LQ3F2Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yTdylbTfretBRUU2McgPM9KPFf3S75bhByPKuvSNdyvPaMesafkOwqSQ5196q/eAA
-         pCFlwGoi2l5+waHA1oOk/ooiirJ9eGlHKPZVBWJEaQQUnEK/poONWkqHqTfF1hpHdl
-         DY0AxZ9LmAzwhjhzLD5iUnNIC9PSYPfTNF/TSqME=
+        b=aVJBGBtB+6IrInGqYuu2Qy+X2Ze0AqFqRRc16UXnB32wwRpm4DHDr7HXWq0qfCtSr
+         45ulk/JwNkaxwb1gNtFlLn9REQRWJobOZ/i6IPNol06KxkTSYphZ+b92WsdXOOqeej
+         Y2Ok5PI7XhXt1CeVIhM5+AH+CCjRhQD38gb546+A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>,
-        Igor Russkikh <igor.russkikh@aquantia.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 102/124] net: aquantia: fix removal of vlan 0
-Date:   Fri, 20 Sep 2019 00:03:10 +0200
-Message-Id: <20190919214822.916609969@linuxfoundation.org>
+Subject: [PATCH 5.2 073/124] NFSv2: Fix eof handling
+Date:   Fri, 20 Sep 2019 00:02:41 +0200
+Message-Id: <20190919214821.655959119@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -62,36 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 6fdc060d7476ef73c8029b652d252c1a7b4de948 ]
+[ Upstream commit 71affe9be45a5c60b9772e1b2701710712637274 ]
 
-Due to absence of checking against the rx flow rule when vlan 0 is being
-removed, the other rule could be removed instead of the rule with vlan 0
+If we received a reply from the server with a zero length read and
+no error, then that implies we are at eof.
 
-Fixes: 7975d2aff5afb ("net: aquantia: add support of rx-vlan-filter offload")
-Signed-off-by: Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>
-Signed-off-by: Igor Russkikh <igor.russkikh@aquantia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/aquantia/atlantic/aq_filters.c | 3 ++-
+ fs/nfs/proc.c | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_filters.c b/drivers/net/ethernet/aquantia/atlantic/aq_filters.c
-index 2c1111a7fc435..3dbf3ff1c4506 100644
---- a/drivers/net/ethernet/aquantia/atlantic/aq_filters.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_filters.c
-@@ -431,7 +431,8 @@ int aq_del_fvlan_by_vlan(struct aq_nic_s *aq_nic, u16 vlan_id)
- 		if (be16_to_cpu(rule->aq_fsp.h_ext.vlan_tci) == vlan_id)
- 			break;
+diff --git a/fs/nfs/proc.c b/fs/nfs/proc.c
+index 5552fa8b6e128..ec79d2214a78c 100644
+--- a/fs/nfs/proc.c
++++ b/fs/nfs/proc.c
+@@ -594,7 +594,8 @@ static int nfs_read_done(struct rpc_task *task, struct nfs_pgio_header *hdr)
+ 		/* Emulate the eof flag, which isn't normally needed in NFSv2
+ 		 * as it is guaranteed to always return the file attributes
+ 		 */
+-		if (hdr->args.offset + hdr->res.count >= hdr->res.fattr->size)
++		if ((hdr->res.count == 0 && hdr->args.count > 0) ||
++		    hdr->args.offset + hdr->res.count >= hdr->res.fattr->size)
+ 			hdr->res.eof = 1;
  	}
--	if (rule && be16_to_cpu(rule->aq_fsp.h_ext.vlan_tci) == vlan_id) {
-+	if (rule && rule->type == aq_rx_filter_vlan &&
-+	    be16_to_cpu(rule->aq_fsp.h_ext.vlan_tci) == vlan_id) {
- 		struct ethtool_rxnfc cmd;
- 
- 		cmd.fs.location = rule->aq_fsp.location;
+ 	return 0;
 -- 
 2.20.1
 
