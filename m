@@ -2,127 +2,132 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 783FCC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 23:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8331C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 23:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F21D207FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 23:49:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kNWSnXv4"
+	by mail.kernel.org (Postfix) with ESMTP id 8038820C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 23:55:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407691AbfISXtw (ORCPT
+        id S2436862AbfISXzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 19:49:52 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33292 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407674AbfISXtv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 19:49:51 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q10so3326773pfl.0;
-        Thu, 19 Sep 2019 16:49:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DO8lDkgH/09igYhmGE97oh8+8ahZBIflCShVrR9OrmU=;
-        b=kNWSnXv4Q9H2UbWOSwbkFDyDYqrw5V5FmU8EqdV7tUgMVaqW5UnRoGaPbLRxAC+hEd
-         3daoRlbwjVz6K32Az6qna8OmyjDaxJuCA2WvshtxpT7DkMnbifHYEJ0BsKiMtLFSyUv3
-         xDtTO+b/VsYw08fNK30ntWhKO+BaL7AAi/8AlX1aHtOMrqbJ8T1WEIQpq9f5s4SWLwhz
-         bMbeKs2DUZAbkByeqfxDZXfHVfm4ozWqy8uoRaFUJ9B0hw9MOXly7hJRc2nommYb7OBW
-         jiKWP5+nLvTY4Ez/l9sDmXVwjP0y2WNKAAcZZMFAx8o/6PkqGygW6BcO7SHlaOPWr9Vk
-         I92g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DO8lDkgH/09igYhmGE97oh8+8ahZBIflCShVrR9OrmU=;
-        b=ps7EeR6n6mMphZjjx426PeLztXGOhHT4Fy23OtGMIYX27yfTgpMe/Q2XGyeHIjh/EQ
-         kmGSgBIq3cCNVNuuny+9vxqRsHkqgOcD2+3LjuGlDm/k+NHEJf8O4BzzDzr9bmzOkChT
-         uqzTBX9/qaVmyrkP52CHfTsJ7BdK5oqv5dODnQYXHzvXPydzNhTJfJndOnMmFhngoP6b
-         lqHuASoQw0z3FbBvxYt1fnRmYgoa1aYAKlA9Q0bH3gZR+cW3CkHkpDb4PpZ1gSohaDjI
-         IaapHhH8BTIQPJOxy8O0ZRz3EMK7o43SyZEZlTtPWtNRyNXnHwcgA6zt0PIjEH7z3mYX
-         VcBA==
-X-Gm-Message-State: APjAAAWSmAvcszbkCp1840yV2HZfX0+sU06DFuCAkH+m81NLAG6MFOe5
-        cz5amJoqcPP4WZNTYBVqN44=
-X-Google-Smtp-Source: APXvYqxicFF4tS7Mcj+VMjT1qOkc2frSVMWmjKYUyhpoVLCZd7f7tLUEHubAzMDOxlG+EHV+svcZtA==
-X-Received: by 2002:a62:1c16:: with SMTP id c22mr13829974pfc.10.1568936990878;
-        Thu, 19 Sep 2019 16:49:50 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id e21sm30169pgr.43.2019.09.19.16.49.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 19 Sep 2019 16:49:50 -0700 (PDT)
-Date:   Thu, 19 Sep 2019 16:48:58 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
-        lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, lars@metafoo.de
-Subject: Re: [PATCH V3 2/4] ASoC: fsl_asrc: update supported sample format
-Message-ID: <20190919234857.GA14287@Asurada-Nvidia.nvidia.com>
-References: <cover.1568861098.git.shengjiu.wang@nxp.com>
- <5811f393692a7668564fd4b9ef5708c1e3db8dc0.1568861098.git.shengjiu.wang@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5811f393692a7668564fd4b9ef5708c1e3db8dc0.1568861098.git.shengjiu.wang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Thu, 19 Sep 2019 19:55:25 -0400
+Received: from mga18.intel.com ([134.134.136.126]:22723 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2436849AbfISXzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 19:55:25 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Sep 2019 16:55:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,526,1559545200"; 
+   d="scan'208";a="338820974"
+Received: from spandruv-mobl3.jf.intel.com ([10.255.93.177])
+  by orsmga004.jf.intel.com with ESMTP; 19 Sep 2019 16:55:22 -0700
+Message-ID: <f5fde2bc758cc15fdb575f52c2138bb67aa514b7.camel@linux.intel.com>
+Subject: Re: [PATCH 1/2] x86,sched: Add support for frequency invariance
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Giovanni Gherdovich <ggherdovich@suse.cz>, tglx@linutronix.de,
+        mingo@redhat.com, peterz@infradead.org, bp@suse.de,
+        lenb@kernel.org, rjw@rjwysocki.net
+Cc:     x86@kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mgorman@techsingularity.net,
+        matt@codeblueprint.co.uk, viresh.kumar@linaro.org,
+        juri.lelli@redhat.com, pjt@google.com, vincent.guittot@linaro.org,
+        qperret@qperret.net, dietmar.eggemann@arm.com
+Date:   Thu, 19 Sep 2019 16:55:22 -0700
+In-Reply-To: <1568730426.3329.3.camel@suse.cz>
+References: <20190909024216.5942-1-ggherdovich@suse.cz>
+         <20190909024216.5942-2-ggherdovich@suse.cz>
+         <4226d5f460604a8130f8079b74ef3fb1d60009d7.camel@linux.intel.com>
+         <1568730426.3329.3.camel@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-3.fc28) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 08:11:40PM +0800, Shengjiu Wang wrote:
-> The ASRC support 24bit/16bit/8bit input width, which is
-> data width, not slot width.
+On Tue, 2019-09-17 at 16:27 +0200, Giovanni Gherdovich wrote:
+> Hello Srinivas,
 > 
-> For the S20_3LE format, the data with is 20bit, slot width
-> is 24bit, if we set ASRMCR1n.IWD to be 24bits, the result
-> is the volume is lower than expected, it likes 24bit data
-> right shift 4 bits
+> On Fri, 2019-09-13 at 15:52 -0700, Srinivas Pandruvada wrote:
+> > On Mon, 2019-09-09 at 04:42 +0200, Giovanni Gherdovich wrote:
+> > 
+> > ...
+> > 
+> > > +
+> > > +/*
+> > > + * APERF/MPERF frequency ratio computation.
+> > > + *
+> > > + * The scheduler wants to do frequency invariant accounting and
+> > > needs a <1
+> > > + * ratio to account for the 'current' frequency, corresponding
+> > > to
+> > > + * freq_curr / freq_max.
+> > 
+> > I thought this is no longer the restriction and Vincent did some
+> > work
+> > to remove this restriction. 
 > 
-> So replace S20_3LE with S24_3LE in supported list and add S8
-> format in TX supported list
+> If you're referring to the patch
 > 
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+>   23127296889f "sched/fair: Update scale invariance of PELT"
+> 
+> merged in v5.2, I'm familiar with that and from my understanding you
+> still
+> want a <1 scaling factor. This is my recalling of the patch:
+> 
+> Vincent was studying some synthetic traces and realized that util_avg
+> reported
+> by PELT didn't quite match the result you'd get computing the formula
+> with pen
+> and paper (theoretical value). To address this he changed where the
+> scaling
+> factor is applied in the PELT formula.
+> 
+> At some point when accumulating the PELT sums, you'll have to measure
+> the time
+> 'delta' since you last updated PELT. What we have after Vincent's
+> change is
+> that this time length 'delta' gets itself scaled by the
+> freq_curr/freq_max
+> ratio:
+> 
+>     delta = time since last PELT update
+>     delta *= freq_percent
+> 
+> In this way time goes at "wall clock speed" only when you're running
+> at max
+> capacitiy, and goes "slower" (from the PELT point of view) if we're
+> running at
+> a lower frequency. I don't think Vincent had in mind a faster-than-
+> wall-clock
+> PELT time (which you'd get w/ freq_percent>1).
+> 
+> Speaking of which, Srinivas, do you have any opinion and/or
+> requirement about
+> this? I confusely remember Peter Zijlstra saying (more than a year
+> ago, now)
+> that you would like an unclipped freq_curr/freq_max ratio, and may
+> not be
+> happy with this patch clipping it to 1 when freq_curr >
+> 4_cores_turbo. If
+> that's the case, could you elaborate on this?
+> Ignore that if it doesn't make sense, I may be mis-remembering.
+I was thinking of power efficiency use case particularly for Atom like
+platforms, 1C max as you observed is more efficient.
 
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+But now sched deadline code is using  arch_scale_freq_capacity(() to
+calculate dl_se->runtime, where closer to deterministic value with all
+cores, may be better, which will be scaled with base_freq. 
 
-> ---
->  sound/soc/fsl/fsl_asrc.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
-> index 4d3804a1ea55..584badf956d2 100644
-> --- a/sound/soc/fsl/fsl_asrc.c
-> +++ b/sound/soc/fsl/fsl_asrc.c
-> @@ -624,7 +624,7 @@ static int fsl_asrc_dai_probe(struct snd_soc_dai *dai)
->  
->  #define FSL_ASRC_FORMATS	(SNDRV_PCM_FMTBIT_S24_LE | \
->  				 SNDRV_PCM_FMTBIT_S16_LE | \
-> -				 SNDRV_PCM_FMTBIT_S20_3LE)
-> +				 SNDRV_PCM_FMTBIT_S24_3LE)
->  
->  static struct snd_soc_dai_driver fsl_asrc_dai = {
->  	.probe = fsl_asrc_dai_probe,
-> @@ -635,7 +635,8 @@ static struct snd_soc_dai_driver fsl_asrc_dai = {
->  		.rate_min = 5512,
->  		.rate_max = 192000,
->  		.rates = SNDRV_PCM_RATE_KNOT,
-> -		.formats = FSL_ASRC_FORMATS,
-> +		.formats = FSL_ASRC_FORMATS |
-> +			   SNDRV_PCM_FMTBIT_S8,
->  	},
->  	.capture = {
->  		.stream_name = "ASRC-Capture",
-> -- 
-> 2.21.0
-> 
+Thanks,
+Srinivas
+
