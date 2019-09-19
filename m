@@ -2,97 +2,107 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4C8C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B81AC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72C8A21924
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:18:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDCCD21929
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:20:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388854AbfISJSb (ORCPT
+        id S1731539AbfISJUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 05:18:31 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:55016 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387757AbfISJSb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 05:18:31 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id AC69EA8542200CA7C669;
-        Thu, 19 Sep 2019 17:18:29 +0800 (CST)
-Received: from use12-sp2.huawei.com (10.67.189.174) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 19 Sep 2019 17:18:20 +0800
-From:   Xiaoming Ni <nixiaoming@huawei.com>
-To:     <penberg@cs.helsinki.fi>, <gregkh@linuxfoundation.org>,
-        <jslaby@suse.com>
-CC:     <nico@fluxnic.net>, <textshell@uchuujin.de>, <sam@ravnborg.org>,
-        <daniel.vetter@ffwll.ch>, <mpatocka@redhat.com>,
-        <ghalat@redhat.com>, <linux-kernel@vger.kernel.org>,
-        <yangyingliang@huawei.com>, <yuehaibing@huawei.com>,
-        <zengweilin@huawei.com>
-Subject: [PATCH] tty:vt: Add check the return value of kzalloc to avoid oops
-Date:   Thu, 19 Sep 2019 17:18:15 +0800
-Message-ID: <1568884695-56789-1-git-send-email-nixiaoming@huawei.com>
-X-Mailer: git-send-email 1.8.5.6
+        Thu, 19 Sep 2019 05:20:20 -0400
+Received: from mx1.emlix.com ([188.40.240.192]:57352 "EHLO mx1.emlix.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730839AbfISJUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 05:20:20 -0400
+Received: from mailer.emlix.com (unknown [81.20.119.6])
+        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx1.emlix.com (Postfix) with ESMTPS id 3D96C603BE;
+        Thu, 19 Sep 2019 11:20:17 +0200 (CEST)
+Subject: Re: [PATCH 1/4] dmaengine: imx-sdma: fix buffer ownership
+To:     Lucas Stach <l.stach@pengutronix.de>, linux-kernel@vger.kernel.org
+Cc:     linux-serial@vger.kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, jslaby@suse.com, vkoul@kernel.org,
+        linux-imx@nxp.com, kernel@pengutronix.de,
+        gregkh@linuxfoundation.org, dmaengine@vger.kernel.org,
+        dan.j.williams@intel.com, festevam@gmail.com,
+        linux-arm-kernel@lists.infradead.org
+References: <20190911144943.21554-1-philipp.puschmann@emlix.com>
+ <20190911144943.21554-2-philipp.puschmann@emlix.com>
+ <9bcf315369449a025828410396935b679aae14bf.camel@pengutronix.de>
+From:   Philipp Puschmann <philipp.puschmann@emlix.com>
+Openpgp: preference=signencrypt
+Message-ID: <bd6ff4fb-0cbd-675e-a4f2-d311cfe2c62d@emlix.com>
+Date:   Thu, 19 Sep 2019 11:20:16 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.189.174]
-X-CFilter-Loop: Reflected
+In-Reply-To: <9bcf315369449a025828410396935b679aae14bf.camel@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using kzalloc() to allocate memory in function con_init(), but not
-checking the return value, there is a risk of null pointer references
-oops.
+Am 16.09.19 um 16:17 schrieb Lucas Stach:
+> On Mi, 2019-09-11 at 16:49 +0200, Philipp Puschmann wrote:
+>> BD_DONE flag marks ownership of the buffer. When 1 SDMA owns the buffer,
+>> when 0 ARM owns it. When processing the buffers in
+>> sdma_update_channel_loop the ownership of the currently processed buffer
+>> was set to SDMA again before running the callback function of the the
+>> buffer and while the sdma script may be running in parallel. So there was
+>> the possibility to get the buffer overwritten by SDMA before it has been
+>> processed by kernel leading to kind of random errors in the upper layers,
+>> e.g. bluetooth.
+>>
+>> It may be further a good idea to make the status struct member volatile or
+>> access it using writel or similar to rule out that the compiler sets the
+>> BD_DONE flag before the callback routine has finished.
+>>
+>> Signed-off-by: Philipp Puschmann <philipp.puschmann@emlix.com>
+>> ---
+>>  drivers/dma/imx-sdma.c | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+>> index a01f4b5d793c..1abb14ff394d 100644
+>> --- a/drivers/dma/imx-sdma.c
+>> +++ b/drivers/dma/imx-sdma.c
+>> @@ -802,7 +802,6 @@ static void sdma_update_channel_loop(struct sdma_channel *sdmac)
+>>  		*/
+>>  
+>>  		desc->chn_real_count = bd->mode.count;
+>> -		bd->mode.status |= BD_DONE;
+>>  		bd->mode.count = desc->period_len;
+>>  		desc->buf_ptail = desc->buf_tail;
+>>  		desc->buf_tail = (desc->buf_tail + 1) % desc->num_bd;
+>> @@ -817,6 +816,8 @@ static void sdma_update_channel_loop(struct sdma_channel *sdmac)
+>>  		dmaengine_desc_get_callback_invoke(&desc->vd.tx, NULL);
+>>  		spin_lock(&sdmac->vc.lock);
+> 
+> To address your comment from the second paragraph of the commit message
+> there should be a dma_wmb() here before changing the status flag.
+> 
+> Regards,
+> Lucas
 
-Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
----
- drivers/tty/vt/vt.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+Hi Lucas,
 
-diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-index 34aa39d..db83e52 100644
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -3357,15 +3357,33 @@ static int __init con_init(void)
- 
- 	for (currcons = 0; currcons < MIN_NR_CONSOLES; currcons++) {
- 		vc_cons[currcons].d = vc = kzalloc(sizeof(struct vc_data), GFP_NOWAIT);
-+		if (unlikely(!vc)) {
-+			pr_warn("%s:failed to allocate memory for the %u vc\n",
-+					__func__, currcons);
-+			break;
-+		}
- 		INIT_WORK(&vc_cons[currcons].SAK_work, vc_SAK);
- 		tty_port_init(&vc->port);
- 		visual_init(vc, currcons, 1);
- 		vc->vc_screenbuf = kzalloc(vc->vc_screenbuf_size, GFP_NOWAIT);
-+		if (unlikely(!vc->vc_screenbuf)) {
-+			pr_warn("%s:failed to allocate memory for the %u vc_screenbuf\n",
-+					__func__, currcons);
-+			visual_deinit(vc);
-+			tty_port_destroy(&vc->port);
-+			kfree(vc);
-+			vc_cons[currcons].d = NULL;
-+			break;
-+		}
- 		vc_init(vc, vc->vc_rows, vc->vc_cols,
- 			currcons || !vc->vc_sw->con_save_screen);
- 	}
- 	currcons = fg_console = 0;
- 	master_display_fg = vc = vc_cons[currcons].d;
-+	if (unlikely(!vc)) {
-+		console_unlock();
-+		return 0;
-+	}
- 	set_origin(vc);
- 	save_screen(vc);
- 	gotoxy(vc, vc->vc_x, vc->vc_y);
--- 
-1.8.5.6
+thanks for your feedback. I will apply the hints to v2 of the patches.
 
+Regards,
+Philipp
+> 
+>> +		bd->mode.status |= BD_DONE;
+>> +
+>>  		if (error)
+>>  			sdmac->status = old_status;
+>>  	}
+> 
