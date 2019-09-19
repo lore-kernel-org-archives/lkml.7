@@ -2,116 +2,93 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92984C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 16:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A68C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 16:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AA092067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 16:36:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C4DD218AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 16:36:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391843AbfISQgC (ORCPT
+        id S1732299AbfISQgu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 12:36:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37574 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 12:36:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:33858 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388442AbfISQgC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 12:36:02 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1863420640;
-        Thu, 19 Sep 2019 16:36:01 +0000 (UTC)
-Date:   Thu, 19 Sep 2019 12:35:59 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] devfreq: Add tracepoint for frequency changes
-Message-ID: <20190919123559.2931e0ef@gandalf.local.home>
-In-Reply-To: <20190918191537.48837-1-mka@chromium.org>
-References: <20190918191537.48837-1-mka@chromium.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1729629AbfISQgt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 12:36:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 683B228;
+        Thu, 19 Sep 2019 09:36:49 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D0C8F3F575;
+        Thu, 19 Sep 2019 09:36:46 -0700 (PDT)
+Date:   Thu, 19 Sep 2019 17:36:44 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Jia He <justin.he@arm.com>
+Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Suzuki Poulose <Suzuki.Poulose@arm.com>,
+        Punit Agrawal <punitagrawal@gmail.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Alex Van Brunt <avanbrunt@nvidia.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Ralph Campbell <rcampbell@nvidia.com>, hejianet@gmail.com,
+        Kaly Xin <Kaly.Xin@arm.com>
+Subject: Re: [PATCH v5 1/3] arm64: cpufeature: introduce helper
+ cpu_has_hw_af()
+Message-ID: <20190919163644.GD6472@arrakis.emea.arm.com>
+References: <20190919161204.142796-1-justin.he@arm.com>
+ <20190919161204.142796-2-justin.he@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190919161204.142796-2-justin.he@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Sep 2019 12:15:37 -0700
-Matthias Kaehlcke <mka@chromium.org> wrote:
-
-> Add a tracepoint for frequency changes of devfreq devices and
-> use it.
-> 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
->  drivers/devfreq/devfreq.c      |  3 +++
->  include/trace/events/devfreq.h | 18 ++++++++++++++++++
->  2 files changed, 21 insertions(+)
-> 
-> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-> index ab22bf8a12d6..32de1f6ac776 100644
-> --- a/drivers/devfreq/devfreq.c
-> +++ b/drivers/devfreq/devfreq.c
-> @@ -317,6 +317,9 @@ static int devfreq_set_target(struct devfreq *devfreq, unsigned long new_freq,
+On Fri, Sep 20, 2019 at 12:12:02AM +0800, Jia He wrote:
+> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> index b1fdc486aed8..fb0e9425d286 100644
+> --- a/arch/arm64/kernel/cpufeature.c
+> +++ b/arch/arm64/kernel/cpufeature.c
+> @@ -1141,6 +1141,16 @@ static bool has_hw_dbm(const struct arm64_cpu_capabilities *cap,
+>  	return true;
+>  }
 >  
->  	devfreq->previous_freq = new_freq;
->  
-> +	if (new_freq != cur_freq)
+> +/* Decouple AF from AFDBM. */
+> +bool cpu_has_hw_af(void)
+> +{
+> +	return (read_cpuid(ID_AA64MMFR1_EL1) & 0xf);
+> +}
+> +#else /* CONFIG_ARM64_HW_AFDBM */
+> +bool cpu_has_hw_af(void)
+> +{
+> +	return false;
+> +}
+>  #endif
 
-I would make this:
+Please place this function in cpufeature.h directly, no need for an
+additional function call. Something like:
 
-	if (trace_devfreq_frequency_enabled() && new_freq != cur_freq)
+static inline bool cpu_has_hw_af(void)
+{
+	if (IS_ENABLED(CONFIG_ARM64_HW_AFDBM))
+		return read_cpuid(ID_AA64MMFR1_EL1) & 0xf;
+	return false;
+}
 
-Because this would place the second check into the "nop" portion of the
-code, keeping the test from being performed if the devfreq_frequency
-trace point is not enabled. Slight micro optimization, but still enough
-to add it.
-
--- Steve
-
-
-> +		trace_devfreq_frequency(devfreq, new_freq);
-> +
->  	if (devfreq->suspend_freq)
->  		devfreq->resume_freq = cur_freq;
->  
-> diff --git a/include/trace/events/devfreq.h b/include/trace/events/devfreq.h
-> index cf5b8772175d..a62d32fe3c33 100644
-> --- a/include/trace/events/devfreq.h
-> +++ b/include/trace/events/devfreq.h
-> @@ -8,6 +8,24 @@
->  #include <linux/devfreq.h>
->  #include <linux/tracepoint.h>
->  
-> +TRACE_EVENT(devfreq_frequency,
-> +	TP_PROTO(struct devfreq *devfreq, unsigned long freq),
-> +
-> +	TP_ARGS(devfreq, freq),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(dev_name, dev_name(&devfreq->dev))
-> +		__field(unsigned long, freq)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(dev_name, dev_name(&devfreq->dev));
-> +		__entry->freq = freq;
-> +	),
-> +
-> +	TP_printk("dev_name=%s freq=%lu", __get_str(dev_name), __entry->freq)
-> +);
-> +
->  TRACE_EVENT(devfreq_monitor,
->  	TP_PROTO(struct devfreq *devfreq),
->  
-
+-- 
+Catalin
