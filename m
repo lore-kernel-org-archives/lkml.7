@@ -2,51 +2,51 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E56C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB169C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:33:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 693B8208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:33:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CF7B208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:33:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932418;
-	bh=6nwFTGM40OJf3SA3mcvKK+YqV+J1assoWr1tet+7zfI=;
+	s=default; t=1568932424;
+	bh=M8QDHlclBiqqcG4kczDfCX8BbuxFzi0ECb4PydXMguo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vFsYwv7gN6YyAqX4mUw4VwPtmMsY1hvgxNauntR9ubFQ5xghfUlc7/hSnNq9J3zmh
-	 ZNOGnHgV2vUBDtb1uw85ycxQp4BOjZinIaoAS/T7/KWdG0n7yerMTLa9TmvE0Z/YVV
-	 8J0gBBkdo2+MD93cxZYC5HNrhVKsHH14eioavvRE=
+	b=x6CAnqyYxYsNmAuqEe1okP1WrA9fpWAmVv9ABcpzvgn7exhOxa4RlGLqqYxLNWfxL
+	 G8P1ivlyHc2iZeZ6t9uhp7UkCo71i5BhwTh1X04YyY/+RcNYnh/oBvoF84FsRiITjR
+	 Ujhd2urcBLMG4vi5GiMjHjFXcCbuCMvXEuLidREE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393571AbfISWLW (ORCPT
+        id S2407298AbfISWdn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:11:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49958 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:33:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393226AbfISWLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:11:17 -0400
+        id S2393549AbfISWLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:11:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A3D7218AF;
-        Thu, 19 Sep 2019 22:11:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B74F7218AF;
+        Thu, 19 Sep 2019 22:11:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931076;
-        bh=6nwFTGM40OJf3SA3mcvKK+YqV+J1assoWr1tet+7zfI=;
+        s=default; t=1568931074;
+        bh=M8QDHlclBiqqcG4kczDfCX8BbuxFzi0ECb4PydXMguo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gd47OST5nvU6KJLm35NgCH8MWhUYtir5pnpZ19dLJP5fMjovpI0h2KHGN8/X85ygE
-         r5zEcbozDrOD5Xyh5ZUrs8+Spj4DGAbfaXO9ZBLqLa77a1WV+YwfY2rvj0EGEKt9zN
-         fqXNx6fnp+hXaJw9Y4/mhVeuBw8NgRvagZ/ZwS04=
+        b=LHkd+9i1cDpkMZKg2D2AvyqxwLMUBaaERLTyE52WzUg6oN+4dG9JZZTzguIIyynxz
+         lMXt0YmOTXZk9EfQtSa5v7UvLZYj1wOJLovPy8iF8DCrvQd/ikC+dKDi+3kEXO/g1S
+         8zBS3Cz8NGKPPs03pWS1l5LXQiN4ac39EkLLZHvo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH 5.2 120/124] Revert "arm64: Remove unnecessary ISBs from set_{pte,pmd,pud}"
-Date:   Fri, 20 Sep 2019 00:03:28 +0200
-Message-Id: <20190919214823.541658650@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 119/124] iommu/amd: Fix race in increase_address_space()
+Date:   Fri, 20 Sep 2019 00:03:27 +0200
+Message-Id: <20190919214823.506454697@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -59,103 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Joerg Roedel <jroedel@suse.de>
 
-commit d0b7a302d58abe24ed0f32a0672dd4c356bb73db upstream.
+[ Upstream commit 754265bcab78a9014f0f99cd35e0d610fcd7dfa7 ]
 
-This reverts commit 24fe1b0efad4fcdd32ce46cffeab297f22581707.
+After the conversion to lock-less dma-api call the
+increase_address_space() function can be called without any
+locking. Multiple CPUs could potentially race for increasing
+the address space, leading to invalid domain->mode settings
+and invalid page-tables. This has been happening in the wild
+under high IO load and memory pressure.
 
-Commit 24fe1b0efad4fcdd ("arm64: Remove unnecessary ISBs from
-set_{pte,pmd,pud}") removed ISB instructions immediately following updates
-to the page table, on the grounds that they are not required by the
-architecture and a DSB alone is sufficient to ensure that subsequent data
-accesses use the new translation:
+Fix the race by locking this operation. The function is
+called infrequently so that this does not introduce
+a performance regression in the dma-api path again.
 
-  DDI0487E_a, B2-128:
-
-  | ... no instruction that appears in program order after the DSB
-  | instruction can alter any state of the system or perform any part of
-  | its functionality until the DSB completes other than:
-  |
-  | * Being fetched from memory and decoded
-  | * Reading the general-purpose, SIMD and floating-point,
-  |   Special-purpose, or System registers that are directly or indirectly
-  |   read without causing side-effects.
-
-However, the same document also states the following:
-
-  DDI0487E_a, B2-125:
-
-  | DMB and DSB instructions affect reads and writes to the memory system
-  | generated by Load/Store instructions and data or unified cache
-  | maintenance instructions being executed by the PE. Instruction fetches
-  | or accesses caused by a hardware translation table access are not
-  | explicit accesses.
-
-which appears to claim that the DSB alone is insufficient.  Unfortunately,
-some CPU designers have followed the second clause above, whereas in Linux
-we've been relying on the first. This means that our mapping sequence:
-
-	MOV	X0, <valid pte>
-	STR	X0, [Xptep]	// Store new PTE to page table
-	DSB	ISHST
-	LDR	X1, [X2]	// Translates using the new PTE
-
-can actually raise a translation fault on the load instruction because the
-translation can be performed speculatively before the page table update and
-then marked as "faulting" by the CPU. For user PTEs, this is ok because we
-can handle the spurious fault, but for kernel PTEs and intermediate table
-entries this results in a panic().
-
-Revert the offending commit to reintroduce the missing barriers.
-
-Cc: <stable@vger.kernel.org>
-Fixes: 24fe1b0efad4fcdd ("arm64: Remove unnecessary ISBs from set_{pte,pmd,pud}")
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: Qian Cai <cai@lca.pw>
+Fixes: 256e4621c21a ('iommu/amd: Make use of the generic IOVA allocator')
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/pgtable.h |   12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/iommu/amd_iommu.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -214,8 +214,10 @@ static inline void set_pte(pte_t *ptep,
- 	 * Only if the new pte is valid and kernel, otherwise TLB maintenance
- 	 * or update_mmu_cache() have the necessary barriers.
- 	 */
--	if (pte_valid_not_user(pte))
-+	if (pte_valid_not_user(pte)) {
- 		dsb(ishst);
-+		isb();
-+	}
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index b265062edf6c8..3e687f18b203a 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -1425,18 +1425,21 @@ static void free_pagetable(struct protection_domain *domain)
+  * another level increases the size of the address space by 9 bits to a size up
+  * to 64 bits.
+  */
+-static bool increase_address_space(struct protection_domain *domain,
++static void increase_address_space(struct protection_domain *domain,
+ 				   gfp_t gfp)
+ {
++	unsigned long flags;
+ 	u64 *pte;
+ 
+-	if (domain->mode == PAGE_MODE_6_LEVEL)
++	spin_lock_irqsave(&domain->lock, flags);
++
++	if (WARN_ON_ONCE(domain->mode == PAGE_MODE_6_LEVEL))
+ 		/* address space already 64 bit large */
+-		return false;
++		goto out;
+ 
+ 	pte = (void *)get_zeroed_page(gfp);
+ 	if (!pte)
+-		return false;
++		goto out;
+ 
+ 	*pte             = PM_LEVEL_PDE(domain->mode,
+ 					iommu_virt_to_phys(domain->pt_root));
+@@ -1444,7 +1447,10 @@ static bool increase_address_space(struct protection_domain *domain,
+ 	domain->mode    += 1;
+ 	domain->updated  = true;
+ 
+-	return true;
++out:
++	spin_unlock_irqrestore(&domain->lock, flags);
++
++	return;
  }
  
- extern void __sync_icache_dcache(pte_t pteval);
-@@ -453,8 +455,10 @@ static inline void set_pmd(pmd_t *pmdp,
- 
- 	WRITE_ONCE(*pmdp, pmd);
- 
--	if (pmd_valid(pmd))
-+	if (pmd_valid(pmd)) {
- 		dsb(ishst);
-+		isb();
-+	}
- }
- 
- static inline void pmd_clear(pmd_t *pmdp)
-@@ -512,8 +516,10 @@ static inline void set_pud(pud_t *pudp,
- 
- 	WRITE_ONCE(*pudp, pud);
- 
--	if (pud_valid(pud))
-+	if (pud_valid(pud)) {
- 		dsb(ishst);
-+		isb();
-+	}
- }
- 
- static inline void pud_clear(pud_t *pudp)
+ static u64 *alloc_pte(struct protection_domain *domain,
+-- 
+2.20.1
+
 
 
