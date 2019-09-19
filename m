@@ -4,56 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD2AC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A1D4C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20E9921920
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:15:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38B3820678
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:15:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931345;
-	bh=69sBRoNT7nFijGlVbMH7vzVAV5DSTj7/uo3LODtHMRg=;
+	s=default; t=1568931353;
+	bh=hFYo/74gVn52eg42PNmX0qBZBecS71x9smF8rN55b5I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2ce1ahZYhWeZJY1/+Dkcvxhy3fQvo0ri3dcX+y6Wn3RG88bPHt4SI55ptvNdGDdQw
-	 zySHcxnpQOJA7Y06SjrjssnC6n0Ce73B3QnShV3oz3fC9CqNZnlC6DOeQoriuKRP9C
-	 1amgngsn6Xdw0s8ePBBI0URBCvHBb9EdtBHkUUT8=
+	b=DihKVzz5nT6zakeFX/ci+Y2cIBkYRBxsaDVCjzwW8JOyf9qwy+YU+meYgoZqYWV5M
+	 KjZaToB6dO+curlAY082YQ1CiZmJwqMAwpP4HNookhiPqGsfsha+sLF0q0KzfRrEjb
+	 8z65J7LcrpqdQH1Sp14SoWz9tvfqbFIjF+FaGAhc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406183AbfISWPo (ORCPT
+        id S2390329AbfISWPv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:15:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55538 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:15:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406152AbfISWPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:15:35 -0400
+        id S2406192AbfISWPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:15:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CF5F21907;
-        Thu, 19 Sep 2019 22:15:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AFC721907;
+        Thu, 19 Sep 2019 22:15:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931334;
-        bh=69sBRoNT7nFijGlVbMH7vzVAV5DSTj7/uo3LODtHMRg=;
+        s=default; t=1568931345;
+        bh=hFYo/74gVn52eg42PNmX0qBZBecS71x9smF8rN55b5I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mn6SZqEqacp4Xub930xBgQqXKZ3AxvRL4kS0SNZ/J0Sj08+Ny1DCSArjE/c0yirun
-         kyTA+8u7ijH8QBYhrGezkkMG9VWZo9YQTn2V9Juomf3WRr2CId826/tR1Fjk0Z+6Ca
-         DIo37FMV5PGzEWRHsS/wAIcHtKlkOuD6BVWah0Rc=
+        b=VTuHtbOKzeS/MkdDV3ck+Y0+iqc4uKshKrFMmkTNQpVJ4Ih68p7ODrAtNFrTpxVzg
+         dwe8kwaB65vwM5PRZpTSjDLpMKsLyRgjStxPHV42UZYMgiyAT+eGULqmV78lql8Ypu
+         2zcrOwEmKuUaFalima+tjMTSYPgTOPy4JOaDM7Tc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Aaron Armstrong Skomra <aaron.skomra@wacom.com>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 4.14 01/59] HID: wacom: generic: read HID_DG_CONTACTMAX from any feature report
-Date:   Fri, 20 Sep 2019 00:03:16 +0200
-Message-Id: <20190919214756.170216569@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Huang <huangwenabc@gmail.com>,
+        Ganapathi Bhat <gbhat@marvell.comg>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.14 13/59] mwifiex: Fix three heap overflow at parsing element in cfg80211_ap_settings
+Date:   Fri, 20 Sep 2019 00:03:28 +0200
+Message-Id: <20190919214759.440150411@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214755.852282682@linuxfoundation.org>
 References: <20190919214755.852282682@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,74 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaron Armstrong Skomra <skomra@gmail.com>
+From: Wen Huang <huangwenabc@gmail.com>
 
-commit 184eccd40389df29abefab88092c4ff33191fd0c upstream.
+commit 7caac62ed598a196d6ddf8d9c121e12e082cac3a upstream.
 
-In the generic code path, HID_DG_CONTACTMAX was previously
-only read from the second byte of report 0x23.
+mwifiex_update_vs_ie(),mwifiex_set_uap_rates() and
+mwifiex_set_wmm_params() call memcpy() without checking
+the destination size.Since the source is given from
+user-space, this may trigger a heap buffer overflow.
 
-Another report (0x82) has the HID_DG_CONTACTMAX in the
-higher nibble of the third byte. We should support reading the
-value of HID_DG_CONTACTMAX no matter what report we are reading
-or which position that value is in.
+Fix them by putting the length check before performing memcpy().
 
-To do this we submit the feature report as a event report
-using hid_report_raw_event(). Our modified finger event path
-records the value of HID_DG_CONTACTMAX when it sees that usage.
+This fix addresses CVE-2019-14814,CVE-2019-14815,CVE-2019-14816.
 
-Fixes: 8ffffd5212846 ("HID: wacom: fix timeout on probe for some wacoms")
-Signed-off-by: Aaron Armstrong Skomra <aaron.skomra@wacom.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Wen Huang <huangwenabc@gmail.com>
+Acked-by: Ganapathi Bhat <gbhat@marvell.comg>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/wacom_sys.c |   10 ++++++----
- drivers/hid/wacom_wac.c |    4 ++++
- 2 files changed, 10 insertions(+), 4 deletions(-)
+ drivers/net/wireless/marvell/mwifiex/ie.c      |    3 +++
+ drivers/net/wireless/marvell/mwifiex/uap_cmd.c |    9 ++++++++-
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
---- a/drivers/hid/wacom_sys.c
-+++ b/drivers/hid/wacom_sys.c
-@@ -125,14 +125,16 @@ static void wacom_feature_mapping(struct
- 		/* leave touch_max as is if predefined */
- 		if (!features->touch_max) {
- 			/* read manually */
--			data = kzalloc(2, GFP_KERNEL);
-+			n = hid_report_len(field->report);
-+			data = hid_alloc_report_buf(field->report, GFP_KERNEL);
- 			if (!data)
- 				break;
- 			data[0] = field->report->id;
- 			ret = wacom_get_report(hdev, HID_FEATURE_REPORT,
--						data, 2, WAC_CMD_RETRIES);
--			if (ret == 2) {
--				features->touch_max = data[1];
-+					       data, n, WAC_CMD_RETRIES);
-+			if (ret == n) {
-+				ret = hid_report_raw_event(hdev,
-+					HID_FEATURE_REPORT, data, n, 0);
- 			} else {
- 				features->touch_max = 16;
- 				hid_warn(hdev, "wacom_feature_mapping: "
---- a/drivers/hid/wacom_wac.c
-+++ b/drivers/hid/wacom_wac.c
-@@ -2428,6 +2428,7 @@ static void wacom_wac_finger_event(struc
- 	struct wacom *wacom = hid_get_drvdata(hdev);
- 	struct wacom_wac *wacom_wac = &wacom->wacom_wac;
- 	unsigned equivalent_usage = wacom_equivalent_usage(usage->hid);
-+	struct wacom_features *features = &wacom->wacom_wac.features;
+--- a/drivers/net/wireless/marvell/mwifiex/ie.c
++++ b/drivers/net/wireless/marvell/mwifiex/ie.c
+@@ -241,6 +241,9 @@ static int mwifiex_update_vs_ie(const u8
+ 		}
  
- 	switch (equivalent_usage) {
- 	case HID_GD_X:
-@@ -2448,6 +2449,9 @@ static void wacom_wac_finger_event(struc
- 	case HID_DG_TIPSWITCH:
- 		wacom_wac->hid_data.tipswitch = value;
- 		break;
-+	case HID_DG_CONTACTMAX:
-+		features->touch_max = value;
-+		return;
+ 		vs_ie = (struct ieee_types_header *)vendor_ie;
++		if (le16_to_cpu(ie->ie_length) + vs_ie->len + 2 >
++			IEEE_MAX_IE_SIZE)
++			return -EINVAL;
+ 		memcpy(ie->ie_buffer + le16_to_cpu(ie->ie_length),
+ 		       vs_ie, vs_ie->len + 2);
+ 		le16_unaligned_add_cpu(&ie->ie_length, vs_ie->len + 2);
+--- a/drivers/net/wireless/marvell/mwifiex/uap_cmd.c
++++ b/drivers/net/wireless/marvell/mwifiex/uap_cmd.c
+@@ -265,6 +265,8 @@ mwifiex_set_uap_rates(struct mwifiex_uap
+ 
+ 	rate_ie = (void *)cfg80211_find_ie(WLAN_EID_SUPP_RATES, var_pos, len);
+ 	if (rate_ie) {
++		if (rate_ie->len > MWIFIEX_SUPPORTED_RATES)
++			return;
+ 		memcpy(bss_cfg->rates, rate_ie + 1, rate_ie->len);
+ 		rate_len = rate_ie->len;
  	}
+@@ -272,8 +274,11 @@ mwifiex_set_uap_rates(struct mwifiex_uap
+ 	rate_ie = (void *)cfg80211_find_ie(WLAN_EID_EXT_SUPP_RATES,
+ 					   params->beacon.tail,
+ 					   params->beacon.tail_len);
+-	if (rate_ie)
++	if (rate_ie) {
++		if (rate_ie->len > MWIFIEX_SUPPORTED_RATES - rate_len)
++			return;
+ 		memcpy(bss_cfg->rates + rate_len, rate_ie + 1, rate_ie->len);
++	}
  
- 
+ 	return;
+ }
+@@ -391,6 +396,8 @@ mwifiex_set_wmm_params(struct mwifiex_pr
+ 					    params->beacon.tail_len);
+ 	if (vendor_ie) {
+ 		wmm_ie = vendor_ie;
++		if (*(wmm_ie + 1) > sizeof(struct mwifiex_types_wmm_info))
++			return;
+ 		memcpy(&bss_cfg->wmm_info, wmm_ie +
+ 		       sizeof(struct ieee_types_header), *(wmm_ie + 1));
+ 		priv->wmm_enabled = 1;
 
 
