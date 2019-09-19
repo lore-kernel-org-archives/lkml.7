@@ -2,110 +2,145 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D1FC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:07:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64D53C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E10F2067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:07:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3606C2067B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:07:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qZLq+3h2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389917AbfISOHR (ORCPT
+        id S2390025AbfISOHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 10:07:17 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:42117 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387729AbfISOHQ (ORCPT
+        Thu, 19 Sep 2019 10:07:22 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:53892 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387729AbfISOHV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 10:07:16 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MORIm-1iZmOB2Z3e-00PuQo; Thu, 19 Sep 2019 16:06:53 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Zhou Wang <wangzhou1@hisilicon.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Kenneth Lee <liguozhu@hisilicon.com>,
-        Shiju Jose <shiju.jose@huawei.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] [v2] crypto: hisilicon - avoid unused function warning
-Date:   Thu, 19 Sep 2019 16:05:52 +0200
-Message-Id: <20190919140650.1289963-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Thu, 19 Sep 2019 10:07:21 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8JE4LSn029434;
+        Thu, 19 Sep 2019 14:07:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=/YOWrbzA7kJtkI9FFDm8sH5YeE3VoVARbcy1fM1cXRE=;
+ b=qZLq+3h2EvEkLjvIyHKLJDAHQ32KYiaJdh0PBfakYyRHY5KW78HK8ieinAblp2oEFach
+ sLKV0aYEnAfvOOE66nEEtzEaWzwnYZeAeyk91KR2PYSnIPI3rNsAk1/q7e9LoWo013TP
+ qz3VMa4mtgybbXJfIVTvbLgML3oQkejaEyzF3u+jsy7/RZujEsiXXF3/GdTXA7HkcfMP
+ tcTTT3bfLh9VaCD8/mDwywpLwSdIl+mF5tSEyqXcd+y2jBBuOdn0sX+w27DicfOGhCrm
+ 7d99D8QKK0XUJLzVxppypl1TFcfjYxuNkQ0Wk3bYj4KO+++/ooKJNT0ytF0nDocv2gv/ Kg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2v3vb4m7fx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 19 Sep 2019 14:07:09 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8JDwbWd176998;
+        Thu, 19 Sep 2019 14:07:08 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2v3vbs5jb4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 19 Sep 2019 14:07:08 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8JE76Ts016960;
+        Thu, 19 Sep 2019 14:07:06 GMT
+Received: from [192.168.0.106] (/183.82.16.154)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 19 Sep 2019 07:07:06 -0700
+Subject: Re: [PATCH] iwlwifi: fix a potential NULL pointer dereference
+To:     Johannes Berg <johannes@sipsolutions.net>, kvalo@codeaurora.org
+Cc:     davem@davemloft.net, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1568830262-5529-1-git-send-email-allen.pais@oracle.com>
+ <fd8813c1c3c02734d60f494a3c8081d95550ec85.camel@sipsolutions.net>
+From:   Allen <allen.pais@oracle.com>
+Message-ID: <2380f108-54a6-0110-4e2b-e66dd54ae800@oracle.com>
+Date:   Thu, 19 Sep 2019 19:37:01 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:ZwJdmyrwyvAI76lZVS7F1Q8hQNWt/yXcQvcpDiKbJDFJbDM1PnS
- SCGltrDG4/QulNus1EXaz8kBZEpEXCtB/frd0rciuFNCTO+cYNMAVjrPCi28ANd2PY7Fe1X
- mrNE0r9FQQKm8SiQPru/4aPaWmLIi7nqLg6p1e4IHPRuWHA5TTFJ+CVXZrkq9+XWmCSvmac
- 0k0J8et2IJZT/RVHuUh1A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:AyJRZaop9Qw=:JWNvO9GCfOBjZv2Q7mViev
- bp0qwy3iPUvTA+bEAXvfHqIFUOhkyk3yd01jpqubGOzLzGZh9jtJa/kMjpisnGrQyBaKBOwQQ
- NfvzbxBRpoB33nXZxA1jnKmkPMpxvEJpjWOFr56tp2z8TUQI7KX42wiqLcX28gssl8u3s+PJy
- kBBx2LXL6kTT9Zxhg3eqg88VXYWPnN51k+jHHeLu4MFz6zbJJMEE6+40fwA0CowRW1TmaQCoi
- WA9e8++HhDftI4+uEel42ouL6ZtBgX2EAERrk627wJiLXrye0THl2lCWOxYNHyoZu+lIisajA
- Pe9li7AS35xA8zSwJmvFBX0PD+VN8VKfMWyPxglV834ktXL4Yhdmt8c5cxZB/Q5H61L+aLgsl
- XJZUyWO5EOuZrzz9u8S5V7QR5uz1bhBafL6fKmlwPfIiSDNkjLCKA9mfXngr8qUggIp235+6n
- 1DkM/7QNxNHd1qt78yeCq5/zUJkG+XNRHhHwecXvEzvmZKrvR5HSdLeDWdalK7edXxgs2hBtm
- DJn7SWVGrkpIV7jOIAcCjftXcJULc6Gc28qQe+9GuC2xOWNl4sWLkftBVP8BuAEFx2rxleujp
- ED1fiYdZP0GLnYjZ128Je1y2RBhgbY5f81PqTpLqLg/JcbYMfejIErIOWghJhhTq9jeYYUggI
- hx62hXGvs8LdNFVaRAKQbDIXoH5vJDiZ5+FhgAvk7XO2d3MiGTe1pkB8T+xc3TpfkGdgfKwJW
- OU3HQ9Q89XVo1BiyHszCTpvUGYttRbWO4S7FweB3SGLYTEFPEzh2yQSjqZmHfCmDVIM/Krspb
- th2eOzGKRS9MwIUWcdVdRBbG5G5nHRY4MPFf04IO5O0Sgt5+WWiCwWdg1tYC5Csg7eY+ISUMP
- gswxLundN5wmNmm4jHiA==
+In-Reply-To: <fd8813c1c3c02734d60f494a3c8081d95550ec85.camel@sipsolutions.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9384 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=914
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909190132
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9384 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=985 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909190133
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The only caller of hisi_zip_vf_q_assign() is hidden in an #ifdef,
-so the function causes a warning when CONFIG_PCI_IOV is disabled:
 
-drivers/crypto/hisilicon/zip/zip_main.c:740:12: error: unused function 'hisi_zip_vf_q_assign' [-Werror,-Wunused-function]
 
-Replace the #ifdef with an IS_ENABLED() check that leads to the
-function being dropped based on the configuration.
+> 
+> Anyway, as 0-day bot pointed out, this isn't really right. The cleanup
+> paths here are also tricky, so I arrived at this patch a few days ago:
 
-Fixes: 79e09f30eeba ("crypto: hisilicon - add SRIOV support for ZIP")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/crypto/hisilicon/zip/zip_main.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+  My bad, I should have looked at the cleanup path.
 
-diff --git a/drivers/crypto/hisilicon/zip/zip_main.c b/drivers/crypto/hisilicon/zip/zip_main.c
-index 6e0ca75585d4..1b2ee96c888d 100644
---- a/drivers/crypto/hisilicon/zip/zip_main.c
-+++ b/drivers/crypto/hisilicon/zip/zip_main.c
-@@ -785,7 +785,6 @@ static int hisi_zip_clear_vft_config(struct hisi_zip *hisi_zip)
- 
- static int hisi_zip_sriov_enable(struct pci_dev *pdev, int max_vfs)
- {
--#ifdef CONFIG_PCI_IOV
- 	struct hisi_zip *hisi_zip = pci_get_drvdata(pdev);
- 	int pre_existing_vfs, num_vfs, ret;
- 
-@@ -815,9 +814,6 @@ static int hisi_zip_sriov_enable(struct pci_dev *pdev, int max_vfs)
- 	}
- 
- 	return num_vfs;
--#else
--	return 0;
--#endif
- }
- 
- static int hisi_zip_sriov_disable(struct pci_dev *pdev)
-@@ -948,7 +944,8 @@ static struct pci_driver hisi_zip_pci_driver = {
- 	.id_table		= hisi_zip_dev_ids,
- 	.probe			= hisi_zip_probe,
- 	.remove			= hisi_zip_remove,
--	.sriov_configure	= hisi_zip_sriov_configure,
-+	.sriov_configure	= IS_ENABLED(CONFIG_PCI_IOV) ?
-+					hisi_zip_sriov_configure : 0,
- 	.err_handler		= &hisi_zip_err_handler,
- };
- 
--- 
-2.20.0
+> 
+> diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
+> index eb544811759d..882fdf7e5e7b 100644
+> --- a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
+> +++ b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
+> @@ -3530,6 +3530,15 @@ struct iwl_trans *iwl_trans_pcie_alloc(struct pci_dev *pdev,
+>   	spin_lock_init(&trans_pcie->reg_lock);
+>   	mutex_init(&trans_pcie->mutex);
+>   	init_waitqueue_head(&trans_pcie->ucode_write_waitq);
+> +
+> +	trans_pcie->rba.alloc_wq = alloc_workqueue("rb_allocator",
+> +						   WQ_HIGHPRI | WQ_UNBOUND, 1);
+> +	if (!trans_pcie->rba.alloc_wq) {
+
+   I would like to stick to if(unlikely(!trans_pcie->rba.alloc_wq) just 
+for consistency.
+
+   Let me know if I could add your SOB and send out V2.
+
+- Allen
+
+> +		ret = -ENOMEM;
+> +		goto out_free_trans;
+> +	}
+> +	INIT_WORK(&trans_pcie->rba.rx_alloc, iwl_pcie_rx_allocator_work);
+> +
+>   	trans_pcie->tso_hdr_page = alloc_percpu(struct iwl_tso_hdr_page);
+>   	if (!trans_pcie->tso_hdr_page) {
+>   		ret = -ENOMEM;
+> @@ -3664,10 +3673,6 @@ struct iwl_trans *iwl_trans_pcie_alloc(struct pci_dev *pdev,
+>   		trans_pcie->inta_mask = CSR_INI_SET_MASK;
+>   	 }
+>   
+> -	trans_pcie->rba.alloc_wq = alloc_workqueue("rb_allocator",
+> -						   WQ_HIGHPRI | WQ_UNBOUND, 1);
+> -	INIT_WORK(&trans_pcie->rba.rx_alloc, iwl_pcie_rx_allocator_work);
+> -
+>   #ifdef CPTCFG_IWLWIFI_DEBUGFS
+>   	trans_pcie->fw_mon_data.state = IWL_FW_MON_DBGFS_STATE_CLOSED;
+>   	mutex_init(&trans_pcie->fw_mon_data.mutex);
+> @@ -3681,6 +3686,8 @@ out_free_ict:
+>   	iwl_pcie_free_ict(trans);
+>   out_no_pci:
+>   	free_percpu(trans_pcie->tso_hdr_page);
+> +	destroy_workqueue(trans_pcie->rba.alloc_wq);
+> +out_free_trans:
+>   	iwl_trans_free(trans);
+>   	return ERR_PTR(ret);
+>   }
+> 
+
 
