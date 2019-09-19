@@ -2,212 +2,454 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C20EC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1B1C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1273A217D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:07:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EE64217D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:08:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ye+v9U5A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732926AbfISVHf (ORCPT
+        id S1732940AbfISVIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 17:07:35 -0400
-Received: from antares.kleine-koenig.org ([94.130.110.236]:53208 "EHLO
-        antares.kleine-koenig.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730064AbfISVHe (ORCPT
+        Thu, 19 Sep 2019 17:08:06 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:43933 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730064AbfISVIF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 17:07:34 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by antares.kleine-koenig.org (Postfix) with ESMTP id 962B07BC26B;
-        Thu, 19 Sep 2019 23:07:31 +0200 (CEST)
-Received: from antares.kleine-koenig.org ([127.0.0.1])
-        by localhost (antares.kleine-koenig.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id JXdxPU-P3mkv; Thu, 19 Sep 2019 23:07:31 +0200 (CEST)
-Received: from [IPv6:2a02:8071:b5c2:53f8:3192:99d7:1d59:986] (unknown [IPv6:2a02:8071:b5c2:53f8:3192:99d7:1d59:986])
-        by antares.kleine-koenig.org (Postfix) with ESMTPSA;
-        Thu, 19 Sep 2019 23:07:31 +0200 (CEST)
-Subject: dimlib: should it really be enabled by default? [Was: [PATCH]
- trivial: lib/Kconfig: typo modertion -> moderation]
-From:   =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>
-To:     Tal Gilboa <talgi@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Cc:     linux-kernel@vger.kernel.org
-References: <20190919210314.22110-1-uwe@kleine-koenig.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=uwe@kleine-koenig.org; prefer-encrypt=mutual; keydata=
- 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
- kC8vBDJg
-Message-ID: <7acc93c7-d689-1fb2-e237-931560dfd8cb@kleine-koenig.org>
-Date:   Thu, 19 Sep 2019 23:07:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 19 Sep 2019 17:08:05 -0400
+Received: by mail-lj1-f194.google.com with SMTP id k21so689409ljh.10
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 14:08:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=wLOdMD04PoIJHuLLb6G8gZRdReRHCyb9c1kE1b+TsH8=;
+        b=ye+v9U5AVq8bISDFvIAMRNCCPKQ6Y9OcCyugPj8wfS6NdsPdPDtP8uHewXUNMZCbiQ
+         qKxCpj2xJZFEjGmCUKRkApWSSZQfJt0NOXa2p4lJpCygwKNztDQH+1jqiFhZYsQCjek7
+         84UFH0f/4hV99J1U6Ld+aH0HeckBZx/5mg0pFIPOmtK4w5xNfKc65MyI8Npk/hfmrlT+
+         KjnUcw8oQvyMug4Bz/7CveUaOGjMmq0swP6Z5a40BTzF0OSIvKAlwlsFh74aFL9dcRjy
+         ppStjzd12xBcKH8ukec4oFGbVIjz+I4CdF/CjeV0nU50w49v/tNBGD8Z7d7PRY4QhO95
+         GSVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=wLOdMD04PoIJHuLLb6G8gZRdReRHCyb9c1kE1b+TsH8=;
+        b=pboA1pXpORblc0NjRatbmDG5S6O91P/3TyHYWRZgDLF6TF2+zd9AqSMrzUhrtOM89o
+         S8qV032a+g2SwORTBGoo6zJ/g1CED6RqKgUMkafHBxMAvUR6NZcR4nui3Pa8gbwZ9eCZ
+         Hu6oDgkwCaXPqS2g0n8l8AaH1sDX/RUS8uwIviqzSpXhXr/b4PJMzqawb/gjDFlorlrk
+         3rKO1uGkQgPZemlAiwuAJp9YSJsCYN7QdAm8c4FSmeESBeEuuoqKT+iAdOMJ7qiK/nt7
+         OtAW1us6WDwhfI25xxDiuJ0n2U7FfdHHFkdzZOfO4G8Z2eW5YfzU+TX5SSpxlU0hR7Dr
+         TNqQ==
+X-Gm-Message-State: APjAAAU1ltsIMpS7hm7YOQoUr20B0KoDCrh6sp7IENkXyjakBd6gk9Bf
+        LCTzPtFOWsk+hW2pjW2Lra89soZS2gjPuP8vcautKR7l+lRN2A==
+X-Google-Smtp-Source: APXvYqwmG9FIRVQxvELI/NBBY15RF3r4fPPrgkxn4kQ6f/hsP865O9oVwiv0cdfgTevIWctSM2C+ZLgKbckMbKOSsgs=
+X-Received: by 2002:a2e:b4c4:: with SMTP id r4mr6660272ljm.69.1568927282645;
+ Thu, 19 Sep 2019 14:08:02 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190919210314.22110-1-uwe@kleine-koenig.org>
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="B1CEI0FYQzLKRGmFLlIbVxnk9AASQHnNs"
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 19 Sep 2019 23:07:51 +0200
+Message-ID: <CACRpkdaHfhNjR-3GJOO-47rqopmO1SE9dLAU+AiCaWTuLje=8w@mail.gmail.com>
+Subject: [GIT PULL] pin control bulk changes for v5.4
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---B1CEI0FYQzLKRGmFLlIbVxnk9AASQHnNs
-Content-Type: multipart/mixed; boundary="sC1wwEQuWrXG1L3HX09Pvz2wimyzoz0rC";
- protected-headers="v1"
-From: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>
-To: Tal Gilboa <talgi@mellanox.com>, Saeed Mahameed <saeedm@mellanox.com>
-Cc: linux-kernel@vger.kernel.org
-Message-ID: <7acc93c7-d689-1fb2-e237-931560dfd8cb@kleine-koenig.org>
-Subject: dimlib: should it really be enabled by default? [Was: [PATCH]
- trivial: lib/Kconfig: typo modertion -> moderation]
-References: <20190919210314.22110-1-uwe@kleine-koenig.org>
-In-Reply-To: <20190919210314.22110-1-uwe@kleine-koenig.org>
+Hi Linus,
 
---sC1wwEQuWrXG1L3HX09Pvz2wimyzoz0rC
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+these are the pin control bulk changes for v5.4, all boiled nicely
+in linux-next for a while.
 
-On 9/19/19 11:03 PM, Uwe Kleine-K=C3=B6nig wrote:
-> Fixes: 4f75da3666c0 ("linux/dim: Move implementation to .c files")
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <uwe@kleine-koenig.org>
-> ---
->  lib/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/lib/Kconfig b/lib/Kconfig
-> index 4e6b1c3e4c98..cc04124ed8f7 100644
-> --- a/lib/Kconfig
-> +++ b/lib/Kconfig
-> @@ -559,7 +559,7 @@ config DIMLIB
->  	default y
+There is one caveat: m68k Atari autobuilder with allmodconfig complains
+about a namespace collision like this:
 
-BTW, I wonder about this "default y". I see there are some drivers that
-select DIMLIB, so I wonder if I benefit from it at all if I don't use
-such a driver?!
+arch/m68k/include/asm/atarihw.h:172:17: error: expected ')' before '(' token
+arch/m68k/include/asm/atarihw.h:190:22: error: expected identifier or
+'(' before 'volatile'
+drivers/pinctrl/bcm/pinctrl-bcm2835.c:994:10: error: incompatible
+types when assigning to type 'volatile struct SHIFTER' from type
+'unsigned int'
+drivers/pinctrl/bcm/pinctrl-bcm2835.c:997:27: error: invalid operands
+to binary << (have 'int' and 'volatile struct SHIFTER')
+drivers/pinctrl/bcm/pinctrl-bcm2835.c:998:16: error: invalid operands
+to binary << (have 'unsigned int' and 'volatile struct SHIFTER')
 
-Best regards
-Uwe
->  	help
->  	  Dynamic Interrupt Moderation library.
-> -	  Implements an algorithm for dynamically change CQ modertion values
-> +	  Implements an algorithm for dynamically change CQ moderation values=
+This is fixed in the m68k tree (commit 053b514295694f3336e97f56d5f41c0d4972c109
+"m68k: atari: Rename shifter to shifter_st to avoid conflict"), so if
+you merge this before
+and the build server complains at the tree, it will fix itself.
 
->  	  according to run time performance.
-> =20
->  #
->=20
+Alernatively you can wait for the m68k tree to come in first. Or we nudge Geert
+to send the changes ASAP. The usage of a wildly different pin
+controller on Atari hardware is only a compile testing artifact so
+we didn't drill deeper into this.
 
+In hindsight, maybe I should have had that patch applied to the pin control
+tree so we build cleanly also under esoteric configurations. Mea culpa.
 
+Please pull it in!
+Yours,
+Linus Walleij
 
---sC1wwEQuWrXG1L3HX09Pvz2wimyzoz0rC--
+The following changes since commit d1abaeb3be7b5fa6d7a1fbbd2e14e3310005c4c1:
 
---B1CEI0FYQzLKRGmFLlIbVxnk9AASQHnNs
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+  Linux 5.3-rc5 (2019-08-18 14:31:08 -0700)
 
------BEGIN PGP SIGNATURE-----
+are available in the Git repository at:
 
-iQEzBAEBCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl2D7g8ACgkQwfwUeK3K
-7AkGGwgAiuTvbVvh1LqkFyFeyTl56x4j0HKkpsfZEilI8zOST2e/Mq6W+cvXz/Z8
-OkVG053d+4otypghvPmcaqVFwpmAjkXBh5GpBMKcXSayGClVIT2DoB9tfQH0nrsB
-s14wfhN5xVMXTfuQkpB+tp0qdZazbP0GIpgO0fVM6D3flfHPpGKadEnUhsSOdvzp
-/NlhPiTGiOC1UPqXtEh3iGkF3h+6IFeRM8EfG/kMJKmRR0azK9bat5nBAiP8VlTq
-WG2Ma+d28rpQ6AaSsOHwyEGkIYtrnQXhaeQmv9XMOALaZC6a7k7qsVK8xrZ/gCA+
-Ec0KsRiHEPhFWbXfk/elrjFxAQckKw==
-=pfoC
------END PGP SIGNATURE-----
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+tags/pinctrl-v5.4-1
 
---B1CEI0FYQzLKRGmFLlIbVxnk9AASQHnNs--
+for you to fetch changes up to cb0438e4436085d89706b5ccfce4d5da531253de:
+
+  pinctrl: meson-gxbb: Fix wrong pinning definition for uart_c
+(2019-09-13 14:40:41 +0200)
+
+----------------------------------------------------------------
+This is the bulk of pin control changes for the v5.4 kernel
+cycle:
+
+Core changes:
+
+- Fix errors in example code in the documentation.
+
+New drivers:
+
+- Add support for JZ4760, JZ4760B, X1000, X1000E and X1500 to
+  the Ingenic driver.
+
+- Support Cirrus Logic Madera CS47L92 and CS47L15.
+
+- Support Allwinner Sunxi V3S.
+
+- Support Aspeed 2600 BMC.
+
+- Support Qualcomm SC7180.
+
+- Support Marvell MVEBU CS115.
+
+Driver improvements:
+
+- Clean up a few drivers to use the devm_platform_ioremap_resource()
+  helper.
+
+- Pass the irqchip when registering the gpio_chip in some pin
+  controllers that are also GPIO controllers.
+
+- Support suspend/resume in the Tegra driver.
+
+- Support pull-up on the Broadcom BCM2711.
+
+- The Intel driver can now request locked pads.
+
+- Fix the UFS reset pin in the Qualcomm SDM845 driver.
+
+----------------------------------------------------------------
+Alexandre Torgue (1):
+      pinctrl: stmfx: update pinconf settings
+
+Anders Roxell (2):
+      pinctrl: rockchip: Mark expected switch fall-through
+      pinctrl: qcom: spmi-gpio: Mark expected switch fall-through
+
+Andrew Jeffery (9):
+      dt-bindings: pinctrl: aspeed: Strip unnecessary quotes
+      dt-bindings: pinctrl: aspeed: Document AST2600 pinmux
+      pinctrl: aspeed: Rename pin declaration macros
+      pinctrl: aspeed: Add PIN_DECL_3() helper
+      pinctrl: aspeed: Add multiple pin group support for functions
+      pinctrl: aspeed: Add SIG_DESC_CLEAR() helper
+      pinctrl: aspeed: Add AST2600 pinmux support
+      pinctrl: aspeed: Document existence of deprecated compatibles
+      dt-bindings: aspeed: Remove mention of deprecated compatibles
+
+Andy Shevchenko (20):
+      pinctrl: baytrail: Use devm_platform_ioremap_resource()
+      pinctrl: cherryview: Use devm_platform_ioremap_resource()
+      pinctrl: intel: Use devm_platform_ioremap_resource()
+      pinctrl: merrifield: Use devm_platform_ioremap_resource()
+      pinctrl: intel: Drop double check for data in intel_pinctrl_probe_by_uid()
+      pinctrl: msm: Switch to use device_property_count_uXX()
+      pinctrl: qdf2xxx: Switch to use device_property_count_uXX()
+      pinctrl: intel: Simplify offset validation in intel_get_padcfg()
+      pinctrl: broxton: Provide Interrupt Status register offset
+      pinctrl: cannonlake: Provide Interrupt Status register offset
+      pinctrl: geminilake: Provide Interrupt Status register offset
+      pinctrl: icelake: Provide Interrupt Status register offset
+      pinctrl: sunrisepoint: Provide Interrupt Status register offset
+      pinctrl: denverton: Provide Interrupt Status register offset
+      pinctrl: lewisburg: Provide Interrupt Status register offset
+      pinctrl: intel: Remove default Interrupt Status offset
+      pinctrl: baytrail: Re-use data structures from pinctrl-intel.h (part 2)
+      pinctrl: intel: Use NSEC_PER_USEC for debounce calculus
+      pinctrl: denverton: Update pin names according to v1.08
+      pinctrl: intel: Allow to request locked pads
+
+Arnd Bergmann (1):
+      pinctrl: intel: mark intel_pin_to_gpio __maybe_unused
+
+Baolin Wang (2):
+      pinctrl: sprd: Change to use devm_platform_ioremap_resource()
+      pinctrl: sprd: Combine the condition of MISC_PIN and COMMON_PIN
+
+Charles Keepax (2):
+      pinctrl: madera: Use local copy of pdata
+      pinctrl: madera: Add configuration for Cirrus Logic CS47L92
+
+Chris Chiu (1):
+      pinctrl: intel: remap the pin number to gpio offset for irq enabled pin
+
+Colin Ian King (1):
+      pinctrl: bcm: remove redundant assignment to pointer log
+
+Dan Carpenter (1):
+      pinctrl: sh-pfc: Unlock on error in sh_pfc_func_set_mux()
+
+Daniel Drake (1):
+      pinctrl: amd: disable spurious-firing GPIO IRQs
+
+Geert Uytterhoeven (5):
+      pinctrl: devicetree: Use strlen() instead of hardcoded number
+      pinctrl: lantiq: Use kasprintf() instead of fixed buffer formatting
+      pinctrl: xway: Use devm_kasprintf() instead of fixed buffer formatting
+      pinctrl: sh-pfc: Use dev_notice_once() instead of open-coding
+      pinctrl: rza1: Use devm_platform_ioremap_resource() helper
+
+Grzegorz Jaszczyk (2):
+      dt-bindings: cp110: document the new CP115 pinctrl compatible
+      pinctrl: mvebu: add additional variant for standalone CP115
+
+Icenowy Zheng (1):
+      pinctrl: sunxi: v3s: introduce support for V3
+
+Jitendra Sharma (2):
+      dt-bindings: pinctrl: qcom: Add SC7180 pinctrl binding
+      pinctrl: qcom: Add SC7180 pinctrl driver
+
+Konstantin Porotchkin (1):
+      pinctrl: mvebu: Add CP110 missing pin functionality
+
+Kunihiko Hayashi (5):
+      pinctrl: uniphier: Separate modem group from UART ctsrts group
+      pinctrl: uniphier: Add another audio I/O pin-mux settings for LD20
+      pinctrl: uniphier: Add 5th LD20 MPEG2-TS input pin-mux setting
+      pinctrl: uniphier: Add Pro5 PCIe pin-mux settings
+      pinctrl: uniphier: Fix Pro5 SD pin-mux setting
+
+Li Jin (1):
+      pinctrl: iproc-gpio: Fix incorrect pinconf configurations
+
+Linus Walleij (12):
+      pinctrl: qcom: Pass irqchip when adding gpiochip
+      Merge tag 'sh-pfc-for-v5.4-tag1' of
+git://git.kernel.org/.../geert/renesas-drivers into devel
+      pinctrl: bcm-iproc: Pass irqchip when adding gpiochip
+      pinctrl: st: Include the right header
+      Merge tag 'v5.3-rc5' into devel
+      pinctrl: sh-pfc: Include the right header
+      pinctrl: rza2: Drop driver use of consumer flags
+      pinctrl: rza2: Include the appropriate headers
+      Merge tag 'sh-pfc-for-v5.4-tag2' of
+https://git.kernel.org/.../geert/renesas-drivers into devel
+      pinctrl: bcm2835: Pass irqchip when adding gpiochip
+      Merge tag 'intel-pinctrl-v5.4' of
+git://git.kernel.org/.../pinctrl/intel into devel
+      Merge tag 'intel-pinctrl-v5.4-2' of
+git://git.kernel.org/.../pinctrl/intel into devel
+
+Luca Ceresoli (1):
+      docs/pinctrl: fix compile errors in example code
+
+Marc Gonzalez (1):
+      pinctrl: msm8998: Squash TSIF pins together
+
+Masahiro Yamada (1):
+      pinctrl: pinctrl-single: add header include guard
+
+Nathan Chancellor (1):
+      pinctrl: aspeed: g6: Remove const specifier from
+aspeed_g6_sig_expr_set's ctx parameter
+
+Neil Armstrong (1):
+      pinctrl: meson-g12a: add pwm_a on GPIOE_2 pinmux
+
+Nishka Dasgupta (13):
+      pinctrl: rzn1: Add of_node_put() before return
+      pinctrl: falcon: Add of_node_put() before return
+      pinctrl: nomadik: nomadik: Add of_node_put() before return
+      pinctrl: nomadik: abx500: Add of_node_put() before return
+      pinctrl: freescale: mxs: Add of_node_put() before return
+      pinctrl: spear: spear: Add of_node_put() before return
+      pinctrl: stm32: stm32: Add of_node_put() before return
+      pinctrl: sprd: Add of_node_put() before return to prevent memory leak
+      pinctrl: freescale: imx: Add of_node_put() before return
+      pinctrl: rk805: Make structures constant
+      pinctrl: st: Add of_node_put() before return
+      pinctrl: rza1: Add of_node_put() before return
+      pinctrl: meson: meson: Add of_node_put() before return
+
+Otto Meier (1):
+      pinctrl: meson-gxbb: Fix wrong pinning definition for uart_c
+
+Rayagonda Kokatanur (2):
+      pinctrl: iproc-gpio: Handle interrupts for multiple instances
+      pinctrl: iproc: Add 'get_direction' support
+
+Richard Fitzgerald (1):
+      pinctrl: madera: Add configuration for Cirrus Logic CS47L15
+
+Sowjanya Komatineni (4):
+      pinctrl: tegra: Add suspend and resume support
+      pinctrl: tegra210: Add Tegra210 pinctrl pm ops
+      pinctrl: tegra: Fix write barrier placement in pmx_writel
+      pinctrl: tegra: Flush pinctrl writes during resume
+
+Stefan Wahren (3):
+      pinctrl: bcm2835: Add brcm,bcm2711 compatible
+      pinctrl: bcm2835: Add support for BCM2711 pull-up functionality
+      pinctrl/gpio: Take MUX usage into account
+
+Stephen Boyd (4):
+      pinctrl: Remove dev_err() usage after platform_get_irq()
+      pinctrl: intel: Remove dev_err() usage after platform_get_irq()
+      pinctrl: cherryview: Remove dev_err() usage after platform_get_irq()
+      pinctrl: qcom: sdm845: Fix UFS_RESET pin
+
+Vinod Koul (3):
+      dt-bindings: pinctrl: qcom-pmic-gpio: Add pm8150 support
+      dt-bindings: pinctrl: qcom-pmic-gpio: Add pm8150b support
+      dt-bindings: pinctrl: qcom-pmic-gpio: Add pm8150l support
+
+Yoshihiro Shimoda (3):
+      pinctrl: sh-pfc: Add new flags into struct sh_pfc_pin_config
+      pinctrl: sh-pfc: Remove incomplete flag "cfg->type"
+      pinctrl: sh-pfc: Rollback to mux if required when the gpio is freed
+
+YueHaibing (2):
+      pinctrl: sprd: Fix platform_no_drv_owner.cocci warnings
+      pinctrl: oxnas: remove set but not used variable 'arg'
+
+Zhou Yanjie (6):
+      dt-bindings: pinctrl: Add JZ4760 and JZ4760B bindings.
+      pinctrl: Ingenic: Add pinctrl driver for JZ4760 and JZ4760B.
+      dt-bindings: pinctrl: Add X1000 and X1000E bindings.
+      pinctrl: Ingenic: Add pinctrl driver for X1000 and X1000E.
+      dt-bindings: pinctrl: Add X1500 bindings.
+      pinctrl: Ingenic: Add pinctrl driver for X1500.
+
+ .../arm/marvell/cp110-system-controller.txt        |    4 +-
+ .../devicetree/bindings/mfd/aspeed-scu.txt         |    2 -
+ .../devicetree/bindings/misc/aspeed-p2a-ctrl.txt   |    2 -
+ .../bindings/pinctrl/aspeed,ast2400-pinctrl.yaml   |   45 +-
+ .../bindings/pinctrl/aspeed,ast2500-pinctrl.yaml   |   49 +-
+ .../bindings/pinctrl/aspeed,ast2600-pinctrl.yaml   |  115 +
+ .../bindings/pinctrl/brcm,bcm2835-gpio.txt         |    1 +
+ .../bindings/pinctrl/ingenic,pinctrl.txt           |   17 +-
+ .../bindings/pinctrl/qcom,msm8998-pinctrl.txt      |    5 +-
+ .../devicetree/bindings/pinctrl/qcom,pmic-gpio.txt |    6 +
+ .../bindings/pinctrl/qcom,sc7180-pinctrl.txt       |  186 ++
+ Documentation/driver-api/pinctl.rst                |    6 +-
+ drivers/gpio/gpiolib.c                             |    3 +-
+ drivers/pinctrl/aspeed/Kconfig                     |    8 +
+ drivers/pinctrl/aspeed/Makefile                    |    1 +
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c         | 1825 ++++++++-------
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c         | 1869 ++++++++-------
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c         | 2395 ++++++++++++++++++++
+ drivers/pinctrl/aspeed/pinmux-aspeed.h             |  227 +-
+ drivers/pinctrl/bcm/pinctrl-bcm2835.c              |  156 +-
+ drivers/pinctrl/bcm/pinctrl-cygnus-mux.c           |    1 -
+ drivers/pinctrl/bcm/pinctrl-iproc-gpio.c           |  158 +-
+ drivers/pinctrl/cirrus/Kconfig                     |    6 +
+ drivers/pinctrl/cirrus/Makefile                    |    6 +
+ drivers/pinctrl/cirrus/pinctrl-cs47l15.c           |   40 +
+ drivers/pinctrl/cirrus/pinctrl-cs47l92.c           |   40 +
+ drivers/pinctrl/cirrus/pinctrl-madera-core.c       |   24 +-
+ drivers/pinctrl/cirrus/pinctrl-madera.h            |    2 +
+ drivers/pinctrl/core.c                             |   28 +
+ drivers/pinctrl/devicetree.c                       |    6 +-
+ drivers/pinctrl/freescale/pinctrl-imx.c            |   13 +-
+ drivers/pinctrl/freescale/pinctrl-mxs.c            |   12 +-
+ drivers/pinctrl/intel/pinctrl-baytrail.c           |   67 +-
+ drivers/pinctrl/intel/pinctrl-broxton.c            |    4 +-
+ drivers/pinctrl/intel/pinctrl-cannonlake.c         |    2 +
+ drivers/pinctrl/intel/pinctrl-cherryview.c         |    8 +-
+ drivers/pinctrl/intel/pinctrl-denverton.c          |   53 +-
+ drivers/pinctrl/intel/pinctrl-geminilake.c         |    2 +
+ drivers/pinctrl/intel/pinctrl-icelake.c            |    2 +
+ drivers/pinctrl/intel/pinctrl-intel.c              |  120 +-
+ drivers/pinctrl/intel/pinctrl-intel.h              |    9 +-
+ drivers/pinctrl/intel/pinctrl-lewisburg.c          |    2 +
+ drivers/pinctrl/intel/pinctrl-merrifield.c         |    4 +-
+ drivers/pinctrl/intel/pinctrl-sunrisepoint.c       |    2 +
+ drivers/pinctrl/meson/pinctrl-meson-g12a.c         |    9 +
+ drivers/pinctrl/meson/pinctrl-meson-gxbb.c         |   12 +-
+ drivers/pinctrl/meson/pinctrl-meson.c              |    1 +
+ drivers/pinctrl/mvebu/pinctrl-armada-cp110.c       |   20 +-
+ drivers/pinctrl/nomadik/pinctrl-abx500.c           |    1 +
+ drivers/pinctrl/nomadik/pinctrl-nomadik.c          |    1 +
+ drivers/pinctrl/pinctrl-amd.c                      |   16 +-
+ drivers/pinctrl/pinctrl-falcon.c                   |   11 +-
+ drivers/pinctrl/pinctrl-ingenic.c                  |  755 +++++-
+ drivers/pinctrl/pinctrl-oxnas.c                    |    8 +-
+ drivers/pinctrl/pinctrl-pic32.c                    |    4 +-
+ drivers/pinctrl/pinctrl-rk805.c                    |    4 +-
+ drivers/pinctrl/pinctrl-rockchip.c                 |    1 +
+ drivers/pinctrl/pinctrl-rza1.c                     |   16 +-
+ drivers/pinctrl/pinctrl-rza2.c                     |   17 +-
+ drivers/pinctrl/pinctrl-rzn1.c                     |   12 +-
+ drivers/pinctrl/pinctrl-st.c                       |   12 +-
+ drivers/pinctrl/pinctrl-stmfx.c                    |   28 +-
+ drivers/pinctrl/pinctrl-xway.c                     |    4 +-
+ drivers/pinctrl/pinmux.c                           |   24 +
+ drivers/pinctrl/pinmux.h                           |    8 +
+ drivers/pinctrl/qcom/Kconfig                       |    9 +
+ drivers/pinctrl/qcom/Makefile                      |    1 +
+ drivers/pinctrl/qcom/pinctrl-msm.c                 |   36 +-
+ drivers/pinctrl/qcom/pinctrl-msm8998.c             |   76 +-
+ drivers/pinctrl/qcom/pinctrl-qdf2xxx.c             |    2 +-
+ drivers/pinctrl/qcom/pinctrl-sc7180.c              | 1146 ++++++++++
+ drivers/pinctrl/qcom/pinctrl-sdm845.c              |    8 +-
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           |    8 +
+ drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c            |    5 +-
+ drivers/pinctrl/sh-pfc/gpio.c                      |   11 +-
+ drivers/pinctrl/sh-pfc/pinctrl.c                   |   43 +-
+ drivers/pinctrl/spear/pinctrl-spear.c              |    8 +-
+ drivers/pinctrl/sprd/pinctrl-sprd-sc9860.c         |    1 -
+ drivers/pinctrl/sprd/pinctrl-sprd.c                |   32 +-
+ drivers/pinctrl/stm32/pinctrl-stm32.c              |    5 +-
+ drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c          |  265 ++-
+ drivers/pinctrl/sunxi/pinctrl-sunxi.h              |    2 +
+ drivers/pinctrl/tegra/pinctrl-tegra.c              |   67 +-
+ drivers/pinctrl/tegra/pinctrl-tegra.h              |    3 +
+ drivers/pinctrl/tegra/pinctrl-tegra210.c           |    1 +
+ drivers/pinctrl/uniphier/pinctrl-uniphier-ld11.c   |   10 +-
+ drivers/pinctrl/uniphier/pinctrl-uniphier-ld20.c   |   20 +-
+ drivers/pinctrl/uniphier/pinctrl-uniphier-ld4.c    |   10 +-
+ drivers/pinctrl/uniphier/pinctrl-uniphier-ld6b.c   |   10 +-
+ drivers/pinctrl/uniphier/pinctrl-uniphier-pro4.c   |   10 +-
+ drivers/pinctrl/uniphier/pinctrl-uniphier-pro5.c   |   17 +-
+ drivers/pinctrl/uniphier/pinctrl-uniphier-pxs2.c   |   10 +-
+ drivers/pinctrl/uniphier/pinctrl-uniphier-pxs3.c   |   10 +-
+ drivers/pinctrl/uniphier/pinctrl-uniphier-sld8.c   |   10 +-
+ include/linux/pinctrl/consumer.h                   |    6 +
+ include/linux/platform_data/pinctrl-single.h       |    6 +
+ 96 files changed, 7978 insertions(+), 2367 deletions(-)
+ create mode 100644
+Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml
+ create mode 100644
+Documentation/devicetree/bindings/pinctrl/qcom,sc7180-pinctrl.txt
+ create mode 100644 drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
+ create mode 100644 drivers/pinctrl/cirrus/pinctrl-cs47l15.c
+ create mode 100644 drivers/pinctrl/cirrus/pinctrl-cs47l92.c
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-sc7180.c
