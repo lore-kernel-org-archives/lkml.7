@@ -2,195 +2,142 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 742DDC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E031EC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4689D21D6C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:44:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568893464;
-	bh=GCGFxhvfLQo4eF/yGCl938RPSALxA8fzemkSmnsYqyE=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=SHVKH0lYf6JTKrNteanmks5jf60qNbGQRgTUISKunRjWM0sVuUudf5MVd7bevL3rH
-	 7+giKSn8StKLJFoNcFaqEdn+kRudHCXy7TXkKqRByZJiJfBl5KwEZSFCUbC65MV2V1
-	 qMhO7B1n7wz620sfB0bj2QcklSbgknA27hV6lWKw=
+	by mail.kernel.org (Postfix) with ESMTP id BC98921924
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:56:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390063AbfISLoX (ORCPT
+        id S2390008AbfISL4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 07:44:23 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53142 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388482AbfISLoX (ORCPT
+        Thu, 19 Sep 2019 07:56:25 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:42663 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388771AbfISL4Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 07:44:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
-        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Da5FiItdeCzmu3cyfuKDHkOkHNCwW6x89LvMmSWMsX4=; b=RQPNYeWa17Wsbv3uvrG373jNu
-        ZpW2//okLjNXnA/s68m01EmYSUYvgUptyBaDQkpbnc62kKO/yLl9c0cT7o7YvqvfUDEpTBTfCM0Uo
-        7PJRe+40zuhuza98IEsbFlA7tCnsBHoXZdi9T3NLIu4PuR9L/Nl517QAiRNJyyQq3ZnmA=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iAurC-0002LO-54; Thu, 19 Sep 2019 11:44:18 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 6D9F62742939; Thu, 19 Sep 2019 12:44:17 +0100 (BST)
-Date:   Thu, 19 Sep 2019 12:44:17 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Theodore Ts'o <tytso@mit.edu>, Eric Biggers <ebiggers@google.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: manual merge of the ext4 tree with Linus' tree
-Message-ID: <20190919114417.GD3642@sirena.co.uk>
+        Thu, 19 Sep 2019 07:56:25 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MPrXf-1iW2n605kR-00MvcF; Thu, 19 Sep 2019 13:56:15 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] iwlwifi: fix building without CONFIG_THERMAL
+Date:   Thu, 19 Sep 2019 13:55:37 +0200
+Message-Id: <20190919115612.1924937-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5QAgd0e35j3NYeGe"
-Content-Disposition: inline
-X-Cookie: I'll be Grateful when they're Dead.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:SwXOiiSORYDXDfMCe6gQdCAdzGv8MKZxAwL4gFDJXNzLzWDJd6G
+ nd7yqPX2JzfvLwnSU8PjMQsOE1gXih85tdA2ZiU/DtvFK1TFt1y9Ev15H195hBNiyGAh/LE
+ fsKSn+7Y0/ckNVK8WMe6xO0utp37F59mwrmO+VTwAdaTvMlmg2pdGlDExgJ2H0VUo+0bJuT
+ z7lj3k4LOws0CUSw9jVEg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:xu/YVaCDX5s=:+COHs1HoImMhOZL9Giql69
+ /lGJyi8Et1LJees5kkadiNbWUN4Gy9/VcYpjpSmRy/cbkQbySMO7FLfucQM9Wf/TJpEmAHoKL
+ V230KV2tDAHnlj7SYqTtWvdK4BGwO+I5hCF+dy8fHsMfehBukV7iDyRCoBtJZS38cf733FZOf
+ hNE9ASksiNl8fChFWxSuU5+xg0BNWyimC5kbTBxdxXqaOW2zRMPdmjUMXo4/Orw5KMRvWXo8k
+ N9KdLCrA2mxm04sx0gi4L28+684nIXi2qBuSdsu7zlI/HQJM157/oslbRtLblRVkp2bSnEU//
+ NDxleYG+onV2PjGm+ZMsvIO4biz+YgMoze55FBxyK1Oc9YuyFSE7kNFW8UPSL0IR9dfggd22F
+ kGAVg90FxgzCtffShS4swVTaKKu/OjXwYpjBNRD8j9dj4j+suxae1Yy+m2TeX3bRaAnjnVfv9
+ NnDApVtMO2fN+9CTin8Dh23Zu2zYzvopZEMCIyG6BxxgkPgczjKXEIXku9RCdad6m4IjVxCdm
+ bbkXyNzI8POMhHxHKGBAK3DHF3RM3ypG5P1+pMvVqrzeUa1GAgqc7fVsBj3HCpA9v/eCJG/ZC
+ KYv5eWqz7egk1giR8ORBiK7koXmzq7yxDA49qDJBCnyZdScNN+li0mxLOXQu1DoxaIuuiQXJ1
+ M6kco3+wsq+0mX1TDMDfUX2/q88Y+9tKnOgwk0CHI9yRlOAqI8fKIKS/Iv0SLtEPOaPTRpWLH
+ TBBUqVnUb7awDjt4r6W+M6cwYSVYMcPsWr5kHpl6+EYQezcr/oeVME5UMRIQPh3T6hjKzR1Jb
+ vrvQwabwsH+qwkf0e6moXM8ye3y+unt+tKI09oFHDJNhNqFXd5mnS7u8a7d+o1hDc3j8HWvgY
+ eePNO36zdg6pBqdJm4mA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The iwl_mvm_send_temp_report_ths_cmd() function is now called without
+CONFIG_THERMAL, but not defined:
 
---5QAgd0e35j3NYeGe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+ERROR: "iwl_mvm_send_temp_report_ths_cmd" [drivers/net/wireless/intel/iwlwifi/mvm/iwlmvm.ko] undefined!
 
-Hi all,
+Move that function out of the #ifdef as well and change it so
+that empty data gets sent even if no thermal device was
+registered.
 
-Today's linux-next merge of the ext4 tree got a conflict in:
+Fixes: 242d9c8b9a93 ("iwlwifi: mvm: use FW thermal monitoring regardless of CONFIG_THERMAL")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+No idea if this does what was intended in the commit that introduced
+the link failure, please see for youself.
+---
+ drivers/net/wireless/intel/iwlwifi/mvm/mvm.h | 4 ++--
+ drivers/net/wireless/intel/iwlwifi/mvm/tt.c  | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-  fs/ext4/ioctl.c
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h b/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
+index 843d00bf2bd5..1b4139372e57 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
+@@ -542,7 +542,6 @@ struct iwl_mvm_tt_mgmt {
+ 	bool throttle;
+ };
+ 
+-#ifdef CONFIG_THERMAL
+ /**
+  *struct iwl_mvm_thermal_device - thermal zone related data
+  * @temp_trips: temperature thresholds for report
+@@ -555,6 +554,7 @@ struct iwl_mvm_thermal_device {
+ 	struct thermal_zone_device *tzone;
+ };
+ 
++#ifdef CONFIG_THERMAL
+ /*
+  * struct iwl_mvm_cooling_device
+  * @cur_state: current state
+@@ -1034,8 +1034,8 @@ struct iwl_mvm {
+ 
+ 	/* Thermal Throttling and CTkill */
+ 	struct iwl_mvm_tt_mgmt thermal_throttle;
+-#ifdef CONFIG_THERMAL
+ 	struct iwl_mvm_thermal_device tz_device;
++#ifdef CONFIG_THERMAL
+ 	struct iwl_mvm_cooling_device cooling_dev;
+ #endif
+ 
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tt.c b/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
+index 32a708301cfc..6d717bb65ab7 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
+@@ -549,7 +549,6 @@ int iwl_mvm_ctdp_command(struct iwl_mvm *mvm, u32 op, u32 state)
+ 	return 0;
+ }
+ 
+-#ifdef CONFIG_THERMAL
+ static int compare_temps(const void *a, const void *b)
+ {
+ 	return ((s16)le16_to_cpu(*(__le16 *)a) -
+@@ -564,7 +563,7 @@ int iwl_mvm_send_temp_report_ths_cmd(struct iwl_mvm *mvm)
+ 	lockdep_assert_held(&mvm->mutex);
+ 
+ 	if (!mvm->tz_device.tzone)
+-		return -EINVAL;
++		goto send;
+ 
+ 	/* The driver holds array of temperature trips that are unsorted
+ 	 * and uncompressed, the FW should get it compressed and sorted
+@@ -607,6 +606,7 @@ int iwl_mvm_send_temp_report_ths_cmd(struct iwl_mvm *mvm)
+ 	return ret;
+ }
+ 
++#ifdef CONFIG_THERMAL
+ static int iwl_mvm_tzone_get_temp(struct thermal_zone_device *device,
+ 				  int *temperature)
+ {
+-- 
+2.20.0
 
-between commit:
-
-  29b3692e6dbf8226 ("ext4: wire up new fscrypt ioctls")
-
-=66rom Linus' tree and commits:
-
-  bb5835edcdf8bf7 ("ext4: add new ioctl EXT4_IOC_GET_ES_CACHE")
-  1ad3ea6e0a694b0 ("ext4: add a new ioctl EXT4_IOC_GETSTATE")
-
-=66rom the ext4 tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
-diff --cc fs/ext4/ioctl.c
-index 5444d49cbf09d,d6242b7b87182..0000000000000
---- a/fs/ext4/ioctl.c
-+++ b/fs/ext4/ioctl.c
-@@@ -1113,35 -1181,35 +1181,62 @@@ resizefs_out
-  #endif
-  	}
-  	case EXT4_IOC_GET_ENCRYPTION_POLICY:
- +		if (!ext4_has_feature_encrypt(sb))
- +			return -EOPNOTSUPP;
-  		return fscrypt_ioctl_get_policy(filp, (void __user *)arg);
- =20
- +	case FS_IOC_GET_ENCRYPTION_POLICY_EX:
- +		if (!ext4_has_feature_encrypt(sb))
- +			return -EOPNOTSUPP;
- +		return fscrypt_ioctl_get_policy_ex(filp, (void __user *)arg);
- +
- +	case FS_IOC_ADD_ENCRYPTION_KEY:
- +		if (!ext4_has_feature_encrypt(sb))
- +			return -EOPNOTSUPP;
- +		return fscrypt_ioctl_add_key(filp, (void __user *)arg);
- +
- +	case FS_IOC_REMOVE_ENCRYPTION_KEY:
- +		if (!ext4_has_feature_encrypt(sb))
- +			return -EOPNOTSUPP;
- +		return fscrypt_ioctl_remove_key(filp, (void __user *)arg);
- +
- +	case FS_IOC_REMOVE_ENCRYPTION_KEY_ALL_USERS:
- +		if (!ext4_has_feature_encrypt(sb))
- +			return -EOPNOTSUPP;
- +		return fscrypt_ioctl_remove_key_all_users(filp,
- +							  (void __user *)arg);
- +	case FS_IOC_GET_ENCRYPTION_KEY_STATUS:
- +		if (!ext4_has_feature_encrypt(sb))
- +			return -EOPNOTSUPP;
- +		return fscrypt_ioctl_get_key_status(filp, (void __user *)arg);
- +
-+ 	case EXT4_IOC_CLEAR_ES_CACHE:
-+ 	{
-+ 		if (!inode_owner_or_capable(inode))
-+ 			return -EACCES;
-+ 		ext4_clear_inode_es(inode);
-+ 		return 0;
-+ 	}
-+=20
-+ 	case EXT4_IOC_GETSTATE:
-+ 	{
-+ 		__u32	state =3D 0;
-+=20
-+ 		if (ext4_test_inode_state(inode, EXT4_STATE_EXT_PRECACHED))
-+ 			state |=3D EXT4_STATE_FLAG_EXT_PRECACHED;
-+ 		if (ext4_test_inode_state(inode, EXT4_STATE_NEW))
-+ 			state |=3D EXT4_STATE_FLAG_NEW;
-+ 		if (ext4_test_inode_state(inode, EXT4_STATE_NEWENTRY))
-+ 			state |=3D EXT4_STATE_FLAG_NEWENTRY;
-+ 		if (ext4_test_inode_state(inode, EXT4_STATE_DA_ALLOC_CLOSE))
-+ 			state |=3D EXT4_STATE_FLAG_DA_ALLOC_CLOSE;
-+=20
-+ 		return put_user(state, (__u32 __user *) arg);
-+ 	}
-+=20
-+ 	case EXT4_IOC_GET_ES_CACHE:
-+ 		return ext4_ioctl_get_es_cache(filp, arg);
-+=20
-  	case EXT4_IOC_FSGETXATTR:
-  	{
-  		struct fsxattr fa;
-@@@ -1269,15 -1326,11 +1364,18 @@@ long ext4_compat_ioctl(struct file *fil
-  	case EXT4_IOC_SET_ENCRYPTION_POLICY:
-  	case EXT4_IOC_GET_ENCRYPTION_PWSALT:
-  	case EXT4_IOC_GET_ENCRYPTION_POLICY:
- +	case FS_IOC_GET_ENCRYPTION_POLICY_EX:
- +	case FS_IOC_ADD_ENCRYPTION_KEY:
- +	case FS_IOC_REMOVE_ENCRYPTION_KEY:
- +	case FS_IOC_REMOVE_ENCRYPTION_KEY_ALL_USERS:
- +	case FS_IOC_GET_ENCRYPTION_KEY_STATUS:
-  	case EXT4_IOC_SHUTDOWN:
-  	case FS_IOC_GETFSMAP:
- +	case FS_IOC_ENABLE_VERITY:
- +	case FS_IOC_MEASURE_VERITY:
-+ 	case EXT4_IOC_CLEAR_ES_CACHE:
-+ 	case EXT4_IOC_GETSTATE:
-+ 	case EXT4_IOC_GET_ES_CACHE:
-  		break;
-  	default:
-  		return -ENOIOCTLCMD;
-
---5QAgd0e35j3NYeGe
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2DahAACgkQJNaLcl1U
-h9DkmAf/YXj+0ZN5JQVw5MxOcVgNUi/zYDpAoK1rKxDl/Kj1WTPLS2XP7U/ntXXF
-oemCiIQ7RJ2UJHVPNKjojvzwdHzHx1jR4+F3fNQ37G0PR+bz9ptN9lr+xXzLltki
-WRBamc1M+9fJq/wyTjBqqQhfE1Fu7uwu1Bxr+g1cy3jKnQyKfOIKyuEh/hztWFpM
-zw3bgxG3k1L1uFB9u+SLX27vV4ejTE9kewuoRvgNtsP7J2LPYWbi5rFAnbSTeNbL
-7NJpirLodjz1sNJ2Rv/G045kAge2U6Zg/t0soSFQZa0/mo530g91jvYhec9JvAnj
-ZhSPG/sXqKr5fllOnWwG6UkX5FYJbg==
-=Ns1H
------END PGP SIGNATURE-----
-
---5QAgd0e35j3NYeGe--
