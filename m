@@ -2,114 +2,86 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C94E2C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 08:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C78AC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 08:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C29E21848
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 08:24:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568881445;
-	bh=hWc+t6nq3i7mONrIipZxHhpBOrpFsJGWZn/etnKMVMc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2UPckZDkRmIAgqfdsNXsOu8m2BPKzL0loh1Lj7bQkRkvTe+8vZPXFqU8bXA+c+Ca4
-	 LvEkJhM+wVPoWz1C5YkB+mcfN/Wuo/SJMDm1CoqiaR+71ydgOIGKzzY3NiirfPzYXu
-	 yg+3P4k6Qjyd8SnrKPOZaouqWRMNgxyYxx6mrdgc=
+	by mail.kernel.org (Postfix) with ESMTP id 2B7B320578
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 08:26:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731984AbfISIYE (ORCPT
+        id S2388143AbfISI0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 04:24:04 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37163 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730886AbfISIYE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 04:24:04 -0400
-Received: by mail-lj1-f196.google.com with SMTP id l21so2670074lje.4;
-        Thu, 19 Sep 2019 01:24:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iN+TLWF8p09S714aWtfN4Hu69Xi2AvWDJuLstvjUtUw=;
-        b=P6mB0lqYWn8TjqAuwSnIeTYKGdlcO+9j7aay16wdGpWK/6k/BOaUNHv3fzKTfd+rMZ
-         gvOzBjzn0KfkMGPFAS2kh1WSNntClB7KVJ6uGrBYeA99lIPIsoJZ/1XcGmEAGt5Nbe/E
-         pwpcafNP4yjU21pwXGxzgBNnuO34TovtEYDOGKY0gUzBb5n4VThElKL1dPFWbI2LbZzJ
-         cJ/Ud81BxFZzlcoRT2e95JlerPpYTxXBI7piCz3AYxOGexmyt2L/fxeazzOWhR6goO+y
-         TmOMaqBLI0z2lhaCBOaPsPTgALS4pOJo8JicrQmAjKcONbX2hI0Aj8uQKSGA1KdNqW2Q
-         s5zw==
-X-Gm-Message-State: APjAAAUP+p4KngBKHcG4I9241mQRac/dyqOdLvrRJMLjIJj+jehFD0Bz
-        La4bzKD9PINUHw3Xi3xJck2rGuwT
-X-Google-Smtp-Source: APXvYqy2XbfUzHTPO9pDYLdielNGRUvJLhSPJXh0+BSVs7kHFo4azrsSXfq0yC35UxvtjWk58iiK9w==
-X-Received: by 2002:a2e:5c09:: with SMTP id q9mr4836970ljb.4.1568881440489;
-        Thu, 19 Sep 2019 01:24:00 -0700 (PDT)
-Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
-        by smtp.gmail.com with ESMTPSA id l23sm1472197lje.106.2019.09.19.01.23.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 19 Sep 2019 01:23:59 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.92.2)
-        (envelope-from <johan@kernel.org>)
-        id 1iArjL-0007yl-BQ; Thu, 19 Sep 2019 10:23:59 +0200
-Date:   Thu, 19 Sep 2019 10:23:59 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     syzbot <syzbot+66935bec147fbf68d9f8@syzkaller.appspotmail.com>
-Cc:     andreyknvl@google.com, gregkh@linuxfoundation.org,
-        legousb-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, starblue@users.sourceforge.net,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: possible deadlock in tower_open
-Message-ID: <20190919082359.GA30545@localhost>
-References: <000000000000e669b80592ab96fc@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000e669b80592ab96fc@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Thu, 19 Sep 2019 04:26:12 -0400
+Received: from mga11.intel.com ([192.55.52.93]:11561 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387637AbfISI0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 04:26:12 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Sep 2019 01:26:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,522,1559545200"; 
+   d="scan'208";a="388213508"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga006.fm.intel.com with ESMTP; 19 Sep 2019 01:26:10 -0700
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Wei Yang <richardw.yang@linux.intel.com>
+Subject: [PATCH] x86/mm: fix return value of p[um]dp_set_access_flags
+Date:   Thu, 19 Sep 2019 16:25:49 +0800
+Message-Id: <20190919082549.3895-1-richardw.yang@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 06:29:12AM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    f0df5c1b usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=13c8d14e600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6633fa4ed00be5
-> dashboard link: https://syzkaller.appspot.com/bug?extid=66935bec147fbf68d9f8
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> 
-> Unfortunately, I don't have any reproducer for this crash yet.
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+66935bec147fbf68d9f8@syzkaller.appspotmail.com
-> 
-> ======================================================
-> WARNING: possible circular locking dependency detected
-> 5.3.0-rc7+ #0 Not tainted
-> ------------------------------------------------------
-> syz-executor.1/8155 is trying to acquire lock:
-> 0000000086c1bdfc (open_disc_mutex){+.+.}, at: tower_open+0xce/0x9b0  
-> drivers/usb/misc/legousbtower.c:335
-> 
-> but task is already holding lock:
-> 000000000f520f73 (minor_rwsem){++++}, at: usb_open+0x23/0x270  
-> drivers/usb/core/file.c:39
-> 
-> which lock already depends on the new lock.
+Function p[um]dp_set_access_flags is used with update_mmu_cache_p[um]d
+and the return value from p[um]dp_set_access_flags indicates whether it
+is necessary to do the cache update.
 
-This looks like a duplicate of
+From current code logic, only when changed && dirty, related page table
+entry would be updated. It is not necessary to update cache when the
+real page table entry is not changed.
 
-https://lkml.kernel.org/r/000000000000d58eb90592add24e@google.com
+Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+---
+ arch/x86/mm/pgtable.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Not sure if this is the right way to report this (quoting needed?):
+diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
+index 44816ff6411f..ba910f8ab43a 100644
+--- a/arch/x86/mm/pgtable.c
++++ b/arch/x86/mm/pgtable.c
+@@ -509,9 +509,10 @@ int pmdp_set_access_flags(struct vm_area_struct *vma,
+ 		 * #PF is architecturally guaranteed to do that and in the
+ 		 * worst-case we'll generate a spurious fault.
+ 		 */
++		return true;
+ 	}
+ 
+-	return changed;
++	return false;
+ }
+ 
+ int pudp_set_access_flags(struct vm_area_struct *vma, unsigned long address,
+@@ -529,9 +530,10 @@ int pudp_set_access_flags(struct vm_area_struct *vma, unsigned long address,
+ 		 * #PF is architecturally guaranteed to do that and in the
+ 		 * worst-case we'll generate a spurious fault.
+ 		 */
++		return true;
+ 	}
+ 
+-	return changed;
++	return false;
+ }
+ #endif
+ 
+-- 
+2.17.1
 
-#syz dup: possible deadlock in usb_deregister_dev (2)
-
-Johan
