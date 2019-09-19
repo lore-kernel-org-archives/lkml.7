@@ -2,52 +2,52 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9640CC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B100DC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C0DA21920
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88578208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:35:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932539;
-	bh=HG04MnMtyHZXAlO8F+WuIQp+1U7sG5+8U7kCHEbHDaI=;
+	s=default; t=1568932540;
+	bh=TBM/g7fLh8WR9QTERgiZC7qPfWyjzVeCnZnE5JZBrvQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zgRUsP41K7n7X8FfPip7rIj8I5tUPoZX2EnAGRIomN9rBPvvP1ImcptIiDvT3h9Kc
-	 /lDiwL0rRkevovinGMEQIYLFVpz++/gBvUUK8MSP+TK93Qz9hacZXZgU0MxA/V4Cgg
-	 bB5GCq6NgC1kL+CPb4r3xVEp9NQUr+sioi38k3Ho=
+	b=uZQfyrFg0k9sFjMyVPStn/k3BjU3dS2m86O/bR5j6KjnH/l58tdrdIGq0O+u768yX
+	 x26zywXrT7DTAxTf+m7WFLDP3SODRz107YzLNOC/hjOBbPbQjMMBuQnFS9Njr3ZgTD
+	 uUTG6trLj9besSeCfR3wS/cWFvXJWkV0soBdc9p0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405375AbfISWJO (ORCPT
+        id S2405297AbfISWHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:09:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47330 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:07:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393524AbfISWJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:09:12 -0400
+        id S2393278AbfISWHn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:07:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0A6B218AF;
-        Thu, 19 Sep 2019 22:09:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 166DF21924;
+        Thu, 19 Sep 2019 22:07:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568930950;
-        bh=HG04MnMtyHZXAlO8F+WuIQp+1U7sG5+8U7kCHEbHDaI=;
+        s=default; t=1568930862;
+        bh=TBM/g7fLh8WR9QTERgiZC7qPfWyjzVeCnZnE5JZBrvQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kaMqPJCLPTVk7hH9NpA2sEVwHdMBoU8qJXH7K3wSaI9iGLoryZiypCSyGkqX5TbwE
-         thKwCdmXSzW7BKpyFssL/APlSuXsP4ItmQ/jJRkuXrft2sv8P2sHtPj6X4VUncDpZl
-         fGh4lgaLBFHniJ6ht3ReRGQZ9gvhBgqvvuGNdX50=
+        b=xEcE9H8WKppXhuqr3f4X7rTZANJGODGV+kNziWWWnykHn9g3lfneGhWxkiOFZsM8y
+         fvPz6rGe7+JdxLxq2V1gVr8j9utNJRuUYSH5/cA/q/efUEsknW6Gvq1gdpIGVKPCkc
+         9WGyN3a449HdS/eJcOdhI0CUDk1uhQ4HM+q0a3JY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Lechner <david@lechnology.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 042/124] ARM: dts: Fix incomplete dts data for am3 and am4 mmc
-Date:   Fri, 20 Sep 2019 00:02:10 +0200
-Message-Id: <20190919214820.535413518@linuxfoundation.org>
+        stable@vger.kernel.org, Huazhong Tan <tanhuazhong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.2 004/124] net: hns3: adjust hns3_uninit_phy()s location in the hns3_client_uninit()
+Date:   Fri, 20 Sep 2019 00:01:32 +0200
+Message-Id: <20190919214819.348401191@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -60,125 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Huazhong Tan <tanhuazhong@huawei.com>
 
-[ Upstream commit 5b63fb90adb95a178ad403e1703f59bf1ff2c16b ]
+commit 0d2f68c7bcf4c7bbdd6f810f7b6e658f43d4461e upstream.
 
-Commit 4e27f752ab8c ("ARM: OMAP2+: Drop mmc platform data for am330x and
-am43xx") dropped legacy mmc platform data for am3 and am4, but missed the
-fact that we never updated the dts files for mmc3 that is directly on l3
-interconnect instead of l4 interconnect. This leads to a situation with
-no legacy platform data and incomplete dts data.
+hns3_uninit_phy() should be called before checking
+HNS3_NIC_STATE_INITED flags, otherwise when this checking fails,
+there is nobody to call hns3_uninit_phy().
 
-Let's update the mmc instances on l3 interconnect to probe properly with
-ti-sysc interconnect target module driver to make mmc3 work again. Let's
-still keep legacy "ti,hwmods" property around for v5.2 kernel and only
-drop it later on.
+Fixes: c8a8045b2d0a ("net: hns3: Fix NULL deref when unloading driver")
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Note that there is no need to use property status = "disabled" for mmc3.
-The default for dts is enabled, and runtime PM will idle unused instances
-just fine.
-
-Fixes: 4e27f752ab8c ("ARM: OMAP2+: Drop mmc platform data for am330x and am43xx")
-Reported-by: David Lechner <david@lechnology.com>
-Tested-by: David Lechner <david@lechnology.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/am33xx.dtsi | 32 ++++++++++++++++++++++++++------
- arch/arm/boot/dts/am4372.dtsi | 32 ++++++++++++++++++++++++++------
- 2 files changed, 52 insertions(+), 12 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-index e5c2f71a7c77d..fb6b8aa12cc56 100644
---- a/arch/arm/boot/dts/am33xx.dtsi
-+++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -234,13 +234,33 @@
- 			interrupt-names = "edma3_tcerrint";
- 		};
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -3896,6 +3896,8 @@ static void hns3_client_uninit(struct hn
  
--		mmc3: mmc@47810000 {
--			compatible = "ti,omap4-hsmmc";
-+		target-module@47810000 {
-+			compatible = "ti,sysc-omap2", "ti,sysc";
- 			ti,hwmods = "mmc3";
--			ti,needs-special-reset;
--			interrupts = <29>;
--			reg = <0x47810000 0x1000>;
--			status = "disabled";
-+			reg = <0x478102fc 0x4>,
-+			      <0x47810110 0x4>,
-+			      <0x47810114 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
-+					 SYSC_OMAP2_ENAWAKEUP |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			ti,syss-mask = <1>;
-+			clocks = <&l3s_clkctrl AM3_L3S_MMC3_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x47810000 0x1000>;
+ 	hns3_client_stop(handle);
+ 
++	hns3_uninit_phy(netdev);
 +
-+			mmc3: mmc@0 {
-+				compatible = "ti,omap4-hsmmc";
-+				ti,needs-special-reset;
-+				interrupts = <29>;
-+				reg = <0x0 0x1000>;
-+			};
- 		};
+ 	if (!test_and_clear_bit(HNS3_NIC_STATE_INITED, &priv->state)) {
+ 		netdev_warn(netdev, "already uninitialized\n");
+ 		goto out_netdev_free;
+@@ -3905,8 +3907,6 @@ static void hns3_client_uninit(struct hn
  
- 		usb: usb@47400000 {
-diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-index 55aff4db9c7c2..848e2a8884e2c 100644
---- a/arch/arm/boot/dts/am4372.dtsi
-+++ b/arch/arm/boot/dts/am4372.dtsi
-@@ -228,13 +228,33 @@
- 			interrupt-names = "edma3_tcerrint";
- 		};
+ 	hns3_clear_all_ring(handle, true);
  
--		mmc3: mmc@47810000 {
--			compatible = "ti,omap4-hsmmc";
--			reg = <0x47810000 0x1000>;
-+		target-module@47810000 {
-+			compatible = "ti,sysc-omap2", "ti,sysc";
- 			ti,hwmods = "mmc3";
--			ti,needs-special-reset;
--			interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
--			status = "disabled";
-+			reg = <0x478102fc 0x4>,
-+			      <0x47810110 0x4>,
-+			      <0x47810114 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
-+					 SYSC_OMAP2_ENAWAKEUP |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			ti,syss-mask = <1>;
-+			clocks = <&l3s_clkctrl AM4_L3S_MMC3_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x47810000 0x1000>;
-+
-+			mmc3: mmc@0 {
-+				compatible = "ti,omap4-hsmmc";
-+				ti,needs-special-reset;
-+				interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
-+				reg = <0x0 0x1000>;
-+			};
- 		};
+-	hns3_uninit_phy(netdev);
+-
+ 	hns3_nic_uninit_vector_data(priv);
  
- 		sham: sham@53100000 {
--- 
-2.20.1
-
+ 	ret = hns3_nic_dealloc_vector_data(priv);
 
 
