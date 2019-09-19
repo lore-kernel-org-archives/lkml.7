@@ -6,62 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB08EC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FAAC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F60A21928
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:30:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89266218AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:30:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568928635;
-	bh=NsvKasoijQo3C138eYiB2uWLdScMpV+4dU4hDsG60VE=;
+	s=default; t=1568928638;
+	bh=4MnoG/BKHITPvEBxROAt2KBSPTK1LsMVqyRz44QC8II=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=hvo5rc4MTpIW/T79oNYoV+zbtlZ3VU5vWYhvVR8q2Qo3Vq1xW6ywcYXT75pWfitOc
-	 WsYy/+t8c3xdGp4N9AKDLtGatzTysAkad5EdCQCVqA/NTlfQju9FD2UrHpf2x+CfX6
-	 pARDy2MpqeKhP+KDgWinGMm1i+azS+3CRdLlLUNU=
+	b=QNnpYmulAdOZcQ+GTpFv9T2claWdpAYCdHzJJYq4KnJjNkQCy9ikUMRtpT4BqpWbS
+	 1vL5VlAYz6Y1KAYkSVgwPHIJ7l+14lpc0ttcO3zsdWNuONI0gPZx6AGNHNxBBw0nn/
+	 4exk4ELPr0RUM7jYBiWan4qkdu0HYRA67rgvb20M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404863AbfISVae (ORCPT
+        id S2404878AbfISVah (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 17:30:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60456 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 17:30:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404843AbfISVac (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 17:30:32 -0400
-Subject: Re: [GIT PULL] Devicetree updates for v5.4
+        id S2404843AbfISVaf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 17:30:35 -0400
+Subject: Re: [GIT PULL] chrome-platform changes for v5.4
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568928631;
-        bh=NsvKasoijQo3C138eYiB2uWLdScMpV+4dU4hDsG60VE=;
+        s=default; t=1568928634;
+        bh=4MnoG/BKHITPvEBxROAt2KBSPTK1LsMVqyRz44QC8II=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=yrSSyrWczCSYL2T3EzzJPHHN6pTo1wzCxi8frj2pSByNK2ObNY8v9y49gxbSNU0ll
-         LMOn2gT9p1SKm91b+zBUw+gF6WwuO/PFEbrWqPrsm5jJ8INQl8Jk1dShFWD8clT+UC
-         i4HGtboyPVHGq0CR2RhXDg86GdCuwtFWUNhYODxE=
+        b=WNiG6SUSjA3fDpx7xzRgHMSQh6HKnY6gwqojalRnXclQFLPtJpDaRUQ2ECXs+E/Ry
+         E2RpkYMuNspjzlGW3afr4YzzAx4BdfnKYOMV0f7Ipg1CnJ7p5+hD+S+AomgaDl30pv
+         AlAeTTvfJhCflsH7HJm76TvMW9Kzh/AFqWHN03og=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190919155354.GA8880@bogus>
-References: <20190919155354.GA8880@bogus>
+In-Reply-To: <20190919174641.GA172744@google.com>
+References: <20190919174641.GA172744@google.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190919155354.GA8880@bogus>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
- tags/devicetree-for-5.4
-X-PR-Tracked-Commit-Id: 59e9fcf8772bd97b6d681706fb8c9a972500c524
+X-PR-Tracked-Message-Id: <20190919174641.GA172744@google.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git
+ tags/tag-chrome-platform-for-v5.4
+X-PR-Tracked-Commit-Id: 4c1fde5077dcad1a2a10a6a0883c8f94326c4971
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: e3a008ac1213d99f5f1210adc9d2a1f60da10c3b
-Message-Id: <156892863173.30913.14275484183569471881.pr-tracker-bot@kernel.org>
-Date:   Thu, 19 Sep 2019 21:30:31 +0000
-To:     Rob Herring <robh@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Frank Rowand <frowand.list@gmail.com>
+X-PR-Merge-Commit-Id: 32b90daf5cafdda62b1ce62d0b7445fa9107babf
+Message-Id: <156892863488.30913.17670198651332075462.pr-tracker-bot@kernel.org>
+Date:   Thu, 19 Sep 2019 21:30:34 +0000
+To:     Benson Leung <bleung@google.com>
+Cc:     torvalds@linux-foundation.org, bleung@kernel.org,
+        gwendal@chromium.org, bleung@chromium.org, bleung@google.com,
+        enric.balletbo@collabora.com, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 19 Sep 2019 10:53:54 -0500:
+The pull request you sent on Thu, 19 Sep 2019 10:46:41 -0700:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-for-5.4
+> git://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git tags/tag-chrome-platform-for-v5.4
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/e3a008ac1213d99f5f1210adc9d2a1f60da10c3b
+https://git.kernel.org/torvalds/c/32b90daf5cafdda62b1ce62d0b7445fa9107babf
 
 Thank you!
 
