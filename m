@@ -2,68 +2,221 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 279F8C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 01:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7FAC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 01:55:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F034E2196E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 01:55:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568858131;
-	bh=QJrX8XXLkog0ID2O3CpD1VX61kiER/lSY4sEvp/C8Rg=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=xWXT8OrBuJIqp655NN97IKxxv66aB3Ga+ka6sm2h+0XxzznqZfJ+NJYosh1HRHpwT
-	 fmh5wTy1IEXbccvhhRA4R7O9slDHBnK2HDT5ashup/Fz1FLTOds17cvQUq3UhvDtBE
-	 eKNALgfxFCIR9BqLGiuK5EKMJf1wCuZ+pP7dcQ1I=
+	by mail.kernel.org (Postfix) with ESMTP id ECE4D21927
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 01:55:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="AK0++a8R";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="EZEiZwXj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388350AbfISBza (ORCPT
+        id S2388357AbfISBzf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 21:55:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56426 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387630AbfISBza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 21:55:30 -0400
-Subject: Re: [GIT PULL] Btrfs updates for 5.4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568858129;
-        bh=QJrX8XXLkog0ID2O3CpD1VX61kiER/lSY4sEvp/C8Rg=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=HOWehXWDbUgaTDwziPHUHFIBGLtnKGY9K+y+nNcxr5SMwJgmsiElw2eY2JqDkAZZe
-         pPN8p8RO01gcK6jAXNDFD66Q8/UYJyuSmeKN3InC8XrhdW8AodTZaKOjMa5YS++n4u
-         WeMFCVBbS2/GLwXuIeWIoqhqL70APUijx3KGOKSM=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <cover.1568631647.git.dsterba@suse.com>
-References: <cover.1568631647.git.dsterba@suse.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <cover.1568631647.git.dsterba@suse.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.4
-X-PR-Tracked-Commit-Id: 6af112b11a4bc1b560f60a618ac9c1dcefe9836e
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 7d14df2d280fb7411eba2eb96682da0683ad97f6
-Message-Id: <156885812946.31089.18026209226835825429.pr-tracker-bot@kernel.org>
-Date:   Thu, 19 Sep 2019 01:55:29 +0000
-To:     David Sterba <dsterba@suse.com>
-Cc:     torvalds@linux-foundation.org, David Sterba <dsterba@suse.com>,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+        Wed, 18 Sep 2019 21:55:35 -0400
+Received: from mail-eopbgr130043.outbound.protection.outlook.com ([40.107.13.43]:8909
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387690AbfISBzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 21:55:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KLl2dYUqqb+uWUSdCthuXUo4Y5KKkOAqXYoX7+1aDVQ=;
+ b=AK0++a8RMSkJkBDpPjWv3Hhu2qkC6s9KQ8Wa1CZ92C08HMA+8t+LIJeqe+qTIHYNP+s/r3xa0EqW3Ow7D7CHdvNgr1N28oUJMVqA5faMKw+vgFQ0uyLjr+a3Yv6qVCYe14KzzYw9FT7ZAsa937ok5HwwdI7iRZAd9c6Ipo4ZO2c=
+Received: from DB6PR0801CA0059.eurprd08.prod.outlook.com (2603:10a6:4:2b::27)
+ by DBBPR08MB4744.eurprd08.prod.outlook.com (2603:10a6:10:f6::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2263.14; Thu, 19 Sep
+ 2019 01:55:25 +0000
+Received: from DB5EUR03FT009.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e0a::203) by DB6PR0801CA0059.outlook.office365.com
+ (2603:10a6:4:2b::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2284.20 via Frontend
+ Transport; Thu, 19 Sep 2019 01:55:25 +0000
+Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
+ header.from=arm.com;
+Received-SPF: TempError (protection.outlook.com: error in processing during
+ lookup of arm.com: DNS Timeout)
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ DB5EUR03FT009.mail.protection.outlook.com (10.152.20.117) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.20 via Frontend Transport; Thu, 19 Sep 2019 01:55:24 +0000
+Received: ("Tessian outbound 0d576b67b9f5:v31"); Thu, 19 Sep 2019 01:55:19 +0000
+X-CR-MTA-TID: 64aa7808
+Received: from a5b2040cd570.3 (ip-172-16-0-2.eu-west-1.compute.internal [104.47.1.58])
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id C618FD25-8A4E-4880-9A49-26968ABAFBF9.1;
+        Thu, 19 Sep 2019 01:55:14 +0000
+Received: from EUR01-VE1-obe.outbound.protection.outlook.com (mail-ve1eur01lp2058.outbound.protection.outlook.com [104.47.1.58])
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id a5b2040cd570.3
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Thu, 19 Sep 2019 01:55:14 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Oha41wjD9pJYayM8WePZPtL+c0OKwwmumCukYadOHJpJc/dJCemReatHNxzVWSoD7OtFpQV4h0W9wWkVR7Wiujz3za+SO+T89kuC3pSXIeDNScXx29ZucXgpcIMc9GrxP9fO3DjkRlzb+z6ZejWmLYds1pB1lkfS37O61fg8FzuOvIQduQylttwfXFc44RK32c51pixPxVKDv/RWkabfEz/Jy2mXG1uy9tqmuUjam0EadxBWoOSYeoPHxgUdWnfbPucNuRTte7HL0OSIAnJFLTSRZzBmcJddWx9sHFUMTCGiUBSqYlJsMnxqhyryOZ3btZhrPaMCnTJBf1HC+Zu/ww==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xVRNmnvXPvRsHb1RvbPlgt3JdDv8vsWkMWKyDH6t0Ps=;
+ b=iwCi9vYL4/oZUjb/T3H0T8oYTSwx3M187denuL6nW9df6ROvkR4mhC55qnF8FK2O2051ZhQDo9K2MyELbZ/7Vwoo0d2sruNJfELQJqEwwJTUMfk42vnLpT1NQt04CPjJPb70ymZBSLUMtElpqUtZ0bl4B8h23auQBwOHEQb9MTdNX1b/RFLwMVtTsGBonRHxgTGD0iT1t88RHEk1TiHE/WD9BBQn3qse1nbXncW0wlXr1NJs5VV3PzddkvJ0wUPR1aYmEjrDAo/5abcuQRikkMibNgkhOHX7oW1S2ty9e0KVqN/oGix1A6SdRW/EKzKmCPcG+IGn/eEK/oNfGyEfJw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xVRNmnvXPvRsHb1RvbPlgt3JdDv8vsWkMWKyDH6t0Ps=;
+ b=EZEiZwXjh1I/5GIWeUKXXIVoBsYZpcazbRjPmt9uUYK47SlsD4laVu2NxiAhXp31xaFjRfmYA1jPAGLwQjjbrOEVfJXYyqii/CuEzZHkIITJ2PVR0FNoP0WtG7N3wTWGYTD7EvY4tSxAtra+Cjj0fBHWpOloY5cyTeQeF6p4WBI=
+Received: from DB7PR08MB3082.eurprd08.prod.outlook.com (52.134.110.24) by
+ DB7PR08MB2988.eurprd08.prod.outlook.com (52.134.107.153) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.21; Thu, 19 Sep 2019 01:55:10 +0000
+Received: from DB7PR08MB3082.eurprd08.prod.outlook.com
+ ([fe80::2121:ca3a:3068:734]) by DB7PR08MB3082.eurprd08.prod.outlook.com
+ ([fe80::2121:ca3a:3068:734%3]) with mapi id 15.20.2263.023; Thu, 19 Sep 2019
+ 01:55:10 +0000
+From:   "Justin He (Arm Technology China)" <Justin.He@arm.com>
+To:     Catalin Marinas <Catalin.Marinas@arm.com>,
+        Suzuki Poulose <Suzuki.Poulose@arm.com>
+CC:     Will Deacon <will@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>,
+        James Morse <James.Morse@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Punit Agrawal <punitagrawal@gmail.com>,
+        Anshuman Khandual <Anshuman.Khandual@arm.com>,
+        Jun Yao <yaojun8558363@gmail.com>,
+        Alex Van Brunt <avanbrunt@nvidia.com>,
+        Robin Murphy <Robin.Murphy@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?utf-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        "hejianet@gmail.com" <hejianet@gmail.com>,
+        "Kaly Xin (Arm Technology China)" <Kaly.Xin@arm.com>
+Subject: RE: [PATCH v4 1/3] arm64: cpufeature: introduce helper
+ cpu_has_hw_af()
+Thread-Topic: [PATCH v4 1/3] arm64: cpufeature: introduce helper
+ cpu_has_hw_af()
+Thread-Index: AQHVbiPCArKkzco6w0S1SPIowJk4TacxfDiAgAAoi4CAAJkFsA==
+Date:   Thu, 19 Sep 2019 01:55:10 +0000
+Message-ID: <DB7PR08MB30827C81CD6CDB03B17A1BDEF7890@DB7PR08MB3082.eurprd08.prod.outlook.com>
+References: <20190918131914.38081-1-justin.he@arm.com>
+ <20190918131914.38081-2-justin.he@arm.com>
+ <78881acb-5871-9534-c8cc-6f54937be3fd@arm.com>
+ <20190918164546.GA41588@arrakis.emea.arm.com>
+In-Reply-To: <20190918164546.GA41588@arrakis.emea.arm.com>
+Accept-Language: en-US, zh-CN
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ts-tracking-id: f2a493a6-b947-4e32-9238-6e92fbabfcea.1
+x-checkrecipientchecked: true
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=Justin.He@arm.com; 
+x-originating-ip: [113.29.88.7]
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-Correlation-Id: faecd0a3-efba-4b15-2db2-08d73ca46fbb
+X-MS-Office365-Filtering-HT: Tenant
+X-Microsoft-Antispam-Untrusted: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DB7PR08MB2988;
+X-MS-TrafficTypeDiagnostic: DB7PR08MB2988:|DB7PR08MB2988:|DBBPR08MB4744:
+x-ms-exchange-transport-forked: True
+X-Microsoft-Antispam-PRVS: <DBBPR08MB47441C51AAC0F0B9813786F5F7890@DBBPR08MB4744.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+x-ms-oob-tlc-oobclassifiers: OLM:7691;OLM:7691;
+x-forefront-prvs: 016572D96D
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(136003)(366004)(376002)(346002)(13464003)(189003)(199004)(86362001)(99286004)(76176011)(7696005)(476003)(446003)(11346002)(102836004)(6246003)(6506007)(26005)(186003)(53546011)(55236004)(3846002)(6116002)(33656002)(2906002)(7416002)(81166006)(81156014)(8676002)(8936002)(7736002)(305945005)(4326008)(74316002)(110136005)(25786009)(66556008)(66476007)(66446008)(64756008)(52536014)(14454004)(66946007)(6436002)(229853002)(54906003)(66066001)(5660300002)(55016002)(9686003)(76116006)(486006)(256004)(6636002)(478600001)(71190400001)(71200400001)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR08MB2988;H:DB7PR08MB3082.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info-Original: jgAO8dUFyWirEHW0+6y7hMqkAi0npZz4i5E5cC7zoWeMJX0rt7rVZTE9raOPZ3L/0aRHV/Tq36J0Ii9NH9sS4rbYCWP4TEP39WvjSZTuRX660p8g9AayNptgQzyOoRPcl2WThcys7cqCzrLQpGT05hnLRayJX14HPRCDFNhrtFeCx4RfcGNwuUTSh34MF/hFDYZwUH4Xr7PSel9qlcSSlldvUuUbGySzAliHNyLBBj239sUpSDREtYkQ/qDTrep/j054u30VikW+wRKbzs9S4qcZjo+N/FNMiTcdVy4XObhfOaydTjbleZGbsRfBsUZ2Oq/hhgOZmqi/zL/6JsQBBUmIXfPNrEJA/xzTFLAoimzi3rCrdH69qiD0kfuccq/zDuBLrj4pMZ/Rf5eqGJxAoTGOEAhISZ1czFZpDA84XbY=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB2988
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Justin.He@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT009.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(396003)(376002)(346002)(40434004)(199004)(189003)(13464003)(5660300002)(6636002)(478600001)(66574012)(9686003)(86362001)(26826003)(54906003)(305945005)(33656002)(66066001)(74316002)(47776003)(476003)(70206006)(2486003)(4326008)(316002)(186003)(76130400001)(70586007)(3846002)(7696005)(23676004)(6116002)(5024004)(7736002)(486006)(53546011)(110136005)(446003)(2906002)(436003)(55016002)(336012)(76176011)(52536014)(26005)(50466002)(81156014)(81166006)(25786009)(14454004)(63350400001)(8676002)(8936002)(99286004)(356004)(14444005)(22756006)(6506007)(229853002)(102836004)(126002)(6246003)(11346002);DIR:OUT;SFP:1101;SCL:1;SRVR:DBBPR08MB4744;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:TempError;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;MX:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 50ad4b83-9f1e-441c-5519-08d73ca467b0
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(710020)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DBBPR08MB4744;
+X-Forefront-PRVS: 016572D96D
+X-Microsoft-Antispam-Message-Info: wbPTgG0TI41VqhfuPvlyulXYXFHWh7KV8oLXEPobyWuWRgXU/vkCqbfLtYiz5he6suYjaW7pPFPKYv2HNRl6C9MDKDGRSFq/QVTd+/jFMqn6Y3htO7/HpJUw/pXrMWyVNQg/uLNVzNsOHJswbkCy3kVkP7e4ZYkrj3dKKd3ac3xRBXOwlhOE/1YiB2jK4hTWs8tFT3fJoTlQJgfuEGxQr68KOXf2CeWarx9JHKufTjXtJXNGzfgbFWl7I54mDJUgXMz2NJ8gYEhJDhzLd4PAAyoC6dp4fIV6Gn8d9u7A4artJb3/3kUtCn76bPWZFo7da+vZkstFvMN5z/oEes8PYJC/xd2yCYlu0HvLTU1YSzXx3+17RLWJr7oCQBIPJItTwSehGbzNn4uVyUavrZ8yBoZEg/OJ35pW+5d/njfm26M=
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Sep 2019 01:55:24.2545
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: faecd0a3-efba-4b15-2db2-08d73ca46fbb
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB4744
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 16 Sep 2019 13:55:05 +0200:
-
-> git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.4
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/7d14df2d280fb7411eba2eb96682da0683ad97f6
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+SGkgU3V6dWtpDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQ2F0YWxp
+biBNYXJpbmFzIDxjYXRhbGluLm1hcmluYXNAYXJtLmNvbT4NCj4gU2VudDogMjAxOeW5tDnmnIgx
+OeaXpSAwOjQ2DQo+IFRvOiBTdXp1a2kgUG91bG9zZSA8U3V6dWtpLlBvdWxvc2VAYXJtLmNvbT4N
+Cj4gQ2M6IEp1c3RpbiBIZSAoQXJtIFRlY2hub2xvZ3kgQ2hpbmEpIDxKdXN0aW4uSGVAYXJtLmNv
+bT47IFdpbGwgRGVhY29uDQo+IDx3aWxsQGtlcm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQgPE1hcmsu
+UnV0bGFuZEBhcm0uY29tPjsgSmFtZXMgTW9yc2UNCj4gPEphbWVzLk1vcnNlQGFybS5jb20+OyBN
+YXJjIFp5bmdpZXIgPG1hekBrZXJuZWwub3JnPjsgTWF0dGhldw0KPiBXaWxjb3ggPHdpbGx5QGlu
+ZnJhZGVhZC5vcmc+OyBLaXJpbGwgQS4gU2h1dGVtb3YNCj4gPGtpcmlsbC5zaHV0ZW1vdkBsaW51
+eC5pbnRlbC5jb20+OyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGxp
+bnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LW1tQGt2YWNrLm9yZzsgUHVuaXQgQWdy
+YXdhbA0KPiA8cHVuaXRhZ3Jhd2FsQGdtYWlsLmNvbT47IEFuc2h1bWFuIEtoYW5kdWFsDQo+IDxB
+bnNodW1hbi5LaGFuZHVhbEBhcm0uY29tPjsgSnVuIFlhbyA8eWFvanVuODU1ODM2M0BnbWFpbC5j
+b20+Ow0KPiBBbGV4IFZhbiBCcnVudCA8YXZhbmJydW50QG52aWRpYS5jb20+OyBSb2JpbiBNdXJw
+aHkNCj4gPFJvYmluLk11cnBoeUBhcm0uY29tPjsgVGhvbWFzIEdsZWl4bmVyIDx0Z2x4QGxpbnV0
+cm9uaXguZGU+Ow0KPiBBbmRyZXcgTW9ydG9uIDxha3BtQGxpbnV4LWZvdW5kYXRpb24ub3JnPjsg
+SsOpcsO0bWUgR2xpc3NlDQo+IDxqZ2xpc3NlQHJlZGhhdC5jb20+OyBSYWxwaCBDYW1wYmVsbCA8
+cmNhbXBiZWxsQG52aWRpYS5jb20+Ow0KPiBoZWppYW5ldEBnbWFpbC5jb207IEthbHkgWGluIChB
+cm0gVGVjaG5vbG9neSBDaGluYSkgPEthbHkuWGluQGFybS5jb20+DQo+IFN1YmplY3Q6IFJlOiBb
+UEFUQ0ggdjQgMS8zXSBhcm02NDogY3B1ZmVhdHVyZTogaW50cm9kdWNlIGhlbHBlcg0KPiBjcHVf
+aGFzX2h3X2FmKCkNCj4NCj4gT24gV2VkLCBTZXAgMTgsIDIwMTkgYXQgMDM6MjA6NDFQTSArMDEw
+MCwgU3V6dWtpIEsgUG91bG9zZSB3cm90ZToNCj4gPiBPbiAxOC8wOS8yMDE5IDE0OjE5LCBKaWEg
+SGUgd3JvdGU6DQo+ID4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9pbmNsdWRlL2FzbS9jcHVm
+ZWF0dXJlLmgNCj4gYi9hcmNoL2FybTY0L2luY2x1ZGUvYXNtL2NwdWZlYXR1cmUuaA0KPiA+ID4g
+aW5kZXggYzk2ZmZhNDcyMmQzLi4yMDZiNmUzOTU0Y2YgMTAwNjQ0DQo+ID4gPiAtLS0gYS9hcmNo
+L2FybTY0L2luY2x1ZGUvYXNtL2NwdWZlYXR1cmUuaA0KPiA+ID4gKysrIGIvYXJjaC9hcm02NC9p
+bmNsdWRlL2FzbS9jcHVmZWF0dXJlLmgNCj4gPiA+IEBAIC0zOTAsNiArMzkwLDcgQEAgZXh0ZXJu
+IERFQ0xBUkVfQklUTUFQKGJvb3RfY2FwYWJpbGl0aWVzLA0KPiBBUk02NF9OUEFUQ0hBQkxFKTsN
+Cj4gPiA+ICAgICAgICAgICBmb3JfZWFjaF9zZXRfYml0KGNhcCwgY3B1X2h3Y2FwcywgQVJNNjRf
+TkNBUFMpDQo+ID4gPiAgIGJvb2wgdGhpc19jcHVfaGFzX2NhcCh1bnNpZ25lZCBpbnQgY2FwKTsN
+Cj4gPiA+ICtib29sIGNwdV9oYXNfaHdfYWYodm9pZCk7DQo+ID4gPiAgIHZvaWQgY3B1X3NldF9m
+ZWF0dXJlKHVuc2lnbmVkIGludCBudW0pOw0KPiA+ID4gICBib29sIGNwdV9oYXZlX2ZlYXR1cmUo
+dW5zaWduZWQgaW50IG51bSk7DQo+ID4gPiAgIHVuc2lnbmVkIGxvbmcgY3B1X2dldF9lbGZfaHdj
+YXAodm9pZCk7DQo+ID4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9rZXJuZWwvY3B1ZmVhdHVy
+ZS5jDQo+IGIvYXJjaC9hcm02NC9rZXJuZWwvY3B1ZmVhdHVyZS5jDQo+ID4gPiBpbmRleCBiMWZk
+YzQ4NmFlZDguLmM1MDk3ZjU4NjQ5ZCAxMDA2NDQNCj4gPiA+IC0tLSBhL2FyY2gvYXJtNjQva2Vy
+bmVsL2NwdWZlYXR1cmUuYw0KPiA+ID4gKysrIGIvYXJjaC9hcm02NC9rZXJuZWwvY3B1ZmVhdHVy
+ZS5jDQo+ID4gPiBAQCAtMTE0MSw2ICsxMTQxLDEyIEBAIHN0YXRpYyBib29sIGhhc19od19kYm0o
+Y29uc3Qgc3RydWN0DQo+IGFybTY0X2NwdV9jYXBhYmlsaXRpZXMgKmNhcCwNCj4gPiA+ICAgICAg
+ICAgICByZXR1cm4gdHJ1ZTsNCj4gPiA+ICAgfQ0KPiA+ID4gKy8qIERlY291cGxlIEFGIGZyb20g
+QUZEQk0uICovDQo+ID4gPiArYm9vbCBjcHVfaGFzX2h3X2FmKHZvaWQpDQo+ID4gPiArew0KPiA+
+IFNvcnJ5IGZvciBub3QgaGF2aW5nIGFza2VkIHRoaXMgZWFybGllci4gQXJlIHdlIGludGVyZXN0
+ZWQgaW4sDQo+ID4NCj4gPiAid2hldGhlciAqdGhpcyogQ1BVIGhhcyBBRiBzdXBwb3J0ID8iIG9y
+ICJ3aGV0aGVyICphdCBsZWFzdCBvbmUqDQo+ID4gQ1BVIGhhcyB0aGUgQUYgc3VwcG9ydCIgPyBU
+aGUgZm9sbG93aW5nIGNvZGUgZG9lcyB0aGUgZm9ybWVyLg0KPiA+DQo+ID4gPiArIHJldHVybiAo
+cmVhZF9jcHVpZChJRF9BQTY0TU1GUjFfRUwxKSAmIDB4Zik7DQo+DQo+IEluIGEgbm9uLXByZWVt
+cHRpYmxlIGNvbnRleHQsIHRoZSBmb3JtZXIgaXMgb2sgKHBlci1DUFUpLg0KDQpZZXMsIGp1c3Qg
+YXMgd2hhdCBDYXRhbGluIGV4cGxhaW5lZCwgd2UgbmVlZCB0aGUgZm9ybWVyIGJlY2F1c2UgdGhl
+DQpwYWdlZmF1bHQgb2NjdXJyZWQgaW4gZXZlcnkgY3B1cw0KDQotLQ0KQ2hlZXJzLA0KSnVzdGlu
+IChKaWEgSGUpDQoNCg0KPg0KPiAtLQ0KPiBDYXRhbGluDQpJTVBPUlRBTlQgTk9USUNFOiBUaGUg
+Y29udGVudHMgb2YgdGhpcyBlbWFpbCBhbmQgYW55IGF0dGFjaG1lbnRzIGFyZSBjb25maWRlbnRp
+YWwgYW5kIG1heSBhbHNvIGJlIHByaXZpbGVnZWQuIElmIHlvdSBhcmUgbm90IHRoZSBpbnRlbmRl
+ZCByZWNpcGllbnQsIHBsZWFzZSBub3RpZnkgdGhlIHNlbmRlciBpbW1lZGlhdGVseSBhbmQgZG8g
+bm90IGRpc2Nsb3NlIHRoZSBjb250ZW50cyB0byBhbnkgb3RoZXIgcGVyc29uLCB1c2UgaXQgZm9y
+IGFueSBwdXJwb3NlLCBvciBzdG9yZSBvciBjb3B5IHRoZSBpbmZvcm1hdGlvbiBpbiBhbnkgbWVk
+aXVtLiBUaGFuayB5b3UuDQo=
