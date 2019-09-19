@@ -2,222 +2,123 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB799C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 19:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F07C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A4ED21924
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 19:56:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B4152053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:00:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EgziUIEC"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G1NZg1so"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404539AbfIST4q (ORCPT
+        id S2404550AbfISUAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 15:56:46 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40753 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387854AbfIST4q (ORCPT
+        Thu, 19 Sep 2019 16:00:55 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:32980 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392351AbfISUAz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 15:56:46 -0400
-Received: by mail-wr1-f66.google.com with SMTP id l3so4384440wru.7;
-        Thu, 19 Sep 2019 12:56:44 -0700 (PDT)
+        Thu, 19 Sep 2019 16:00:55 -0400
+Received: by mail-pg1-f195.google.com with SMTP id n190so2510344pgn.0
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 13:00:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KrhHWVyRHuQgUbyMmguMXRSYml5yBV9Jt6pBfOObHPo=;
-        b=EgziUIECg9S5aRxVwIEHUQnmDkMIbeSwGZ+d8k1yqttlnKcQcB8980x4AZ02t+GPW2
-         b4XEvPBepb0wGdJkppcF3lZn2aLBtI+sGAiEwn9P6ARdwmHFRTBEfw5EJ4oIR55poIIl
-         HjUs2F0o33/r2Ohgr3JeZgInr5W9i87fspSHrWfYXw8VOqOL2PYx+7wj765jyP8HPKlh
-         msNGb/yi7vJQMnpbq5vLKgJZypkZbyN+eBB1I4x2Y4QlshsJBgCsBJx22UhttVk+fHCq
-         1GPLt7r7hoQEa3B8d5Oi9A1IjbEVG6N0KgwwsV+feFjQ9jtAV+tleh/mUandVGuWkqsN
-         aDbw==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:to:from:subject:user-agent:date;
+        bh=9iE/fQwbEI86AAV9fsy+eA8BJHdmoZczt8XRdjCLHVg=;
+        b=G1NZg1so9GgzKFvCHvGKBM6Uc4u9SKeSlJSkKxRygJVib/OfcZHo2nZFnsvMQCGhKs
+         zycvLxKiQtN/TrkUGZwgdntuLhr6vO5k3GEAD9K3Xfru0BX8RkKNsO9BFGf35dgqR5FN
+         Z6pEiyu730ZfZOy9JH94iiwYN4KD5MkuQb92I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KrhHWVyRHuQgUbyMmguMXRSYml5yBV9Jt6pBfOObHPo=;
-        b=K8UiDsEiLta76995f+7IrfiVmm/qFaTAuS7iFt2wAix2ynK3igwrMSI+KsjLh1fvYQ
-         5zq206+X9xzihqerDuJTkRzSJ73yNH9reJC6YbnrTkdiR9Bb1rg3AYH9gG94WVKu90ns
-         c9HZoV2YRN1vHaiTVIsEYpge2bobMn6govMzrYcVrEfLLmOfthxawjorzCkF4IBkeXTG
-         4R/jNSPXDgdlbnhga6jM3sfOdSa0u08BJNYN6EIc4FDbwv8QyOQ9RArLtzHdsLTntGuM
-         30aGJZTN+pJoFnQnGuMJlPmM4p30R8kuqlnoMoqti65CKmnlIfV5qpU/zLeDl1Qzxnsc
-         KyJA==
-X-Gm-Message-State: APjAAAVpQwLV8j6px2LB8wajfKmequPRSAk+wyJYNRxxa7G6Z7yhTxg5
-        DrnAEbT/4GiDFtDVl6mHy3g=
-X-Google-Smtp-Source: APXvYqys2In+Oqd9HfyjYuY9xLlWMZng1jIJEYABpKBowJXuIUF91l5q4lModrLVq/MPIt/bpfUCFQ==
-X-Received: by 2002:a5d:66cb:: with SMTP id k11mr7967835wrw.174.1568923003769;
-        Thu, 19 Sep 2019 12:56:43 -0700 (PDT)
-Received: from xws.fritz.box (pD9E5AB20.dip0.t-ipconnect.de. [217.229.171.32])
-        by smtp.gmail.com with ESMTPSA id f143sm12311104wme.40.2019.09.19.12.56.42
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:to:from:subject
+         :user-agent:date;
+        bh=9iE/fQwbEI86AAV9fsy+eA8BJHdmoZczt8XRdjCLHVg=;
+        b=Bweszi68FivpkcW8NVBZBRDBV7u23KlMKFhpJYXg8MQL6lWFEPvb2T9BoarixgdVcQ
+         U3CfKv6K5ESUazThyaiOB++ZdH9RLHQnJTWCWUynSpz5JFJdu8kBpzpzRlCMLfNL60/U
+         D3p19lxI2+ekdHWGA/rWpKv9DZtmSsV6Aeo/qufOBzWL+ukoXFeW89li3VCtaYpqs8JO
+         xCg4oRJQsn/PP3Om9bvJZYaLwNxhUZbkz2RnPkYjROiPeCp2iKbKqSNmE/L7PcR/uSNM
+         LVqWNl10U8EzzlHg0kSPmy3w+eft7+HmElzAXH+BGD5uNTPzBPFUbwrnVjGP9EW6mi2L
+         2J9w==
+X-Gm-Message-State: APjAAAUQMoRF0igSZdY/6MUfaf6PZe1MiY7GehOvcnI0Hm8xUXtJ1C2U
+        JLk1h0nKw+8j3zhZLxjL9M5fwg==
+X-Google-Smtp-Source: APXvYqwblG8awSx8tqE4wTapKOkBur/6RwrbMVL74XUWHvi/ehVchoyA2iAuuT8W5diexnCOtr3PpQ==
+X-Received: by 2002:a62:cf82:: with SMTP id b124mr12123966pfg.159.1568923252840;
+        Thu, 19 Sep 2019 13:00:52 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id r28sm13572503pfg.62.2019.09.19.13.00.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2019 12:56:43 -0700 (PDT)
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Johan Hovold <johan@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-serial@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Maximilian Luz <luzmaximilian@gmail.com>
-Subject: [PATCH] serdev: Add ACPI devices by ResourceSource field
-Date:   Thu, 19 Sep 2019 21:56:24 +0200
-Message-Id: <20190919195624.1140941-1-luzmaximilian@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Thu, 19 Sep 2019 13:00:52 -0700 (PDT)
+Message-ID: <5d83de74.1c69fb81.71c0f.f162@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <081fff2f5dacfa7b6f5df6364f088045@codeaurora.org>
+References: <cover.1568712606.git.saiprakash.ranjan@codeaurora.org> <1513424ecec891d19c1aa3c599ec67db7964b6b2.1568712606.git.saiprakash.ranjan@codeaurora.org> <20190919002501.GA20859@builder> <a45e8fb6fe1a8cc914fedbfac65af009@codeaurora.org> <081fff2f5dacfa7b6f5df6364f088045@codeaurora.org>
+Cc:     Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm-owner@vger.kernel.org
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCHv6 3/3] iommu: arm-smmu-impl: Add sdm845 implementation hook
+User-Agent: alot/0.8.1
+Date:   Thu, 19 Sep 2019 13:00:51 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When registering a serdev controller, ACPI needs to be checked for
-devices attached to it. Currently, all immediate children of the ACPI
-node of the controller are assumed to be UART client devices for this
-controller. Furthermore, these devices are not searched elsewhere.
+Quoting Sai Prakash Ranjan (2019-09-19 11:54:27)
+> On 2019-09-19 08:48, Sai Prakash Ranjan wrote:
+> > On 2019-09-19 05:55, Bjorn Andersson wrote:
+> >> In the transition to this new design we lost the ability to
+> >> enable/disable the safe toggle per board, which according to Vivek
+> >> would result in some issue with Cheza.
+> >>=20
+> >> Can you confirm that this is okay? (Or introduce the DT property for
+> >> enabling the safe_toggle logic?)
+> >>=20
+> >=20
+> > Hmm, I don't remember Vivek telling about any issue on Cheza because
+> > of this logic.
+> > But I will test this on Cheza and let you know.
+> >=20
+>=20
+> I tested this on Cheza and no perf degradation nor any other issue is=20
+> seen
+> atleast openly, although I see this below stack dump always with=20
+> cant_sleep change added.
 
-This is incorrect: Similar to SPI and I2C devices, the UART client
-device definition (via UARTSerialBusV2) can reside anywhere in the ACPI
-namespace as resource definition inside the _CRS method and points to
-the controller via its ResourceSource field. This field may either
-contain a fully qualified or relative path, indicating the controller
-device. To address this, we need to walk over the whole ACPI namespace,
-looking at each resource definition, and match the client device to the
-controller via this field.
+The usage of cant_sleep() here is wrong then, and the comment should be
+removed from the scm API as well because it looks like it's perfectly OK
+to call the function from a context that can sleep.
 
-Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
----
-This patch is similar to the the implementations in drivers/spi/spi.c
-(see commit 4c3c59544f33e97cf8557f27e05a9904ead16363) and
-drivers/i2c/i2c-core-acpi.c. However, I think that there may be an
-issues with these two implementations: Both walk over the whole ACPI
-namespace, but only match the first SPI or I2C resource (respectively),
-so I think there may be problems when multiple SPI or I2C resources are
-defined under the same ACPI device node (as in second or third SPI/I2C
-resource definitions being ignored). Please note, however, that I am by
-no means qualified with regards to this, and this might be totally fine.
-Nevertheless I'd appreciate if anyone with more knowledge on the subject
-could have a look at it. This patch would avoid this problem (for UART)
-by simply walking all resource definitions via acpi_walk_resources.
-
-There is a further issue in the serdev ACPI implementation that this
-patch does not address: ACPI UART resource definitions contain things
-like the initial baud-rate, parity, flow-control, etc. As far as I know,
-these things can currently only be set once the device is opened.
-Furthermore, some option values, such as ParityTypeMark, are not (yet)
-supported. I'd be willing to try and implement setting the currently
-supported values based on ACPI for a future patch, if anyone can provide
-me with some pointers on how to do that.
-
-I have personally tested this patch on a Microsoft Surface Book 2, which
-like all newer MS Surface devices has a UART EC, and it has been in use
-(in some form or another) for a couple of months on other Surface
-devices via a patched kernel [1, 2, 3]. I can, however, not speak for
-any non-Microsoft devices or potential Apple ACPI quirks.
-
-[1]: https://github.com/jakeday/linux-surface/
-[2]: https://github.com/qzed/linux-surface/
-[3]: https://github.com/qzed/linux-surfacegen5-acpi/
-
- drivers/tty/serdev/core.c | 64 ++++++++++++++++++++++++++++++++++-----
- 1 file changed, 56 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
-index a0ac16ee6575..1c8360deea77 100644
---- a/drivers/tty/serdev/core.c
-+++ b/drivers/tty/serdev/core.c
-@@ -582,18 +582,64 @@ static acpi_status acpi_serdev_register_device(struct serdev_controller *ctrl,
- 	return AE_OK;
- }
- 
--static acpi_status acpi_serdev_add_device(acpi_handle handle, u32 level,
--				       void *data, void **return_value)
-+struct acpi_serdev_resource_context {
-+	struct serdev_controller *controller;
-+	struct acpi_device *device;
-+};
-+
-+static acpi_status
-+acpi_serdev_add_device_from_resource(struct acpi_resource *resource, void *data)
- {
--	struct serdev_controller *ctrl = data;
--	struct acpi_device *adev;
-+	struct acpi_serdev_resource_context *ctx
-+		= (struct acpi_serdev_resource_context *)data;
-+	struct acpi_resource_source *ctrl_name;
-+	acpi_handle ctrl_handle;
-+
-+	if (resource->type != ACPI_RESOURCE_TYPE_SERIAL_BUS)
-+		return AE_OK;
- 
--	if (acpi_bus_get_device(handle, &adev))
-+	if (resource->data.common_serial_bus.type
-+	    != ACPI_RESOURCE_SERIAL_TYPE_UART)
- 		return AE_OK;
- 
--	return acpi_serdev_register_device(ctrl, adev);
-+	ctrl_name = &resource->data.common_serial_bus.resource_source;
-+	if (ctrl_name->string_length == 0 || !ctrl_name->string_ptr)
-+		return AE_OK;
-+
-+	if (acpi_get_handle(ctx->device->handle, ctrl_name->string_ptr,
-+			    &ctrl_handle))
-+		return AE_OK;
-+
-+	if (ctrl_handle == ACPI_HANDLE(ctx->controller->dev.parent))
-+		return acpi_serdev_register_device(ctx->controller,
-+						   ctx->device);
-+
-+	return AE_OK;
- }
- 
-+static acpi_status
-+acpi_serdev_add_devices_from_resources(acpi_handle handle, u32 level,
-+				       void *data, void **return_value)
-+{
-+	struct acpi_serdev_resource_context ctx;
-+	acpi_status status;
-+
-+	ctx.controller = (struct serdev_controller *)data;
-+	status = acpi_bus_get_device(handle, &ctx.device);
-+	if (status)
-+		return AE_OK;		// ignore device if not present
-+
-+	status = acpi_walk_resources(handle, METHOD_NAME__CRS,
-+				     acpi_serdev_add_device_from_resource,
-+				     &ctx);
-+	if (status == AE_NOT_FOUND)
-+		return AE_OK;		// ignore if _CRS is not found
-+	else
-+		return status;
-+}
-+
-+#define SERDEV_ACPI_ENUMERATE_MAX_DEPTH		32
-+
- static int acpi_serdev_register_devices(struct serdev_controller *ctrl)
- {
- 	acpi_status status;
-@@ -603,8 +649,10 @@ static int acpi_serdev_register_devices(struct serdev_controller *ctrl)
- 	if (!handle)
- 		return -ENODEV;
- 
--	status = acpi_walk_namespace(ACPI_TYPE_DEVICE, handle, 1,
--				     acpi_serdev_add_device, NULL, ctrl, NULL);
-+	status = acpi_walk_namespace(ACPI_TYPE_DEVICE, ACPI_ROOT_OBJECT,
-+				     SERDEV_ACPI_ENUMERATE_MAX_DEPTH,
-+				     acpi_serdev_add_devices_from_resources,
-+				     NULL, ctrl, NULL);
- 	if (ACPI_FAILURE(status))
- 		dev_dbg(&ctrl->dev, "failed to enumerate serdev slaves\n");
- 
--- 
-2.23.0
-
+>=20
+> [    5.048860] BUG: assuming atomic context at=20
+> /mnt/host/source/src/third_party/kernel/v5.3/drivers/firmware/qcom_scm-64=
+.c:206
+> [    5.060303] in_atomic(): 0, irqs_disabled(): 0, pid: 1, name:=20
+> swapper/0
+> [    5.067118] CPU: 4 PID: 1 Comm: swapper/0 Not tainted 5.3.0 #102
+> [    5.073299] Hardware name: Google Cheza (rev3+) (DT)
+> [    5.078416] Call trace:
+> [    5.080953]  dump_backtrace+0x0/0x16c
+> [    5.084727]  show_stack+0x20/0x2c
+> [    5.088156]  dump_stack+0x90/0xcc
+> [    5.091585]  __cant_sleep+0xb4/0xc4
+> [    5.095192]  __qcom_scm_qsmmu500_wait_safe_toggle+0x5c/0xa0
+> [    5.100929]  qcom_scm_qsmmu500_wait_safe_toggle+0x28/0x34
+> [    5.106491]  qcom_sdm845_smmu500_reset+0x24/0x50
+> [    5.111249]  arm_smmu_device_reset+0x1a4/0x25c
+> [    5.115827]  arm_smmu_device_probe+0x418/0x50c
+> [    5.120406]  platform_drv_probe+0x90/0xb0
