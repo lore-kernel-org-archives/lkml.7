@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2B1C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:28:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 313CAC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:28:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EE1320640
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:28:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0C0820640
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:28:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932122;
-	bh=U9KKBQNOAwHAt0frMmHN8BQcjILp52lI9xWt6dpTVio=;
+	s=default; t=1568932127;
+	bh=zE1iJSEMK9YZIgnP80T4/msrDHV/DtZhxS52pqkEUoo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DtJt7sulQuz89mmml165zaEBZozxi+b98mMGPZ1DAfOTiAluzzmTwve3IgHdH+kg8
-	 O67G+0mcJKfupASvAGypL0nT8Y9QEfow6vDltm/zu6Q8IwAvQZbaKGNLeV2cJR5jaP
-	 qaSHKvCFR/ZHh0IWqDxeptEMr2a78/cUcs7yGWe8=
+	b=ktQfhVd4oxfEQGxQE1rOrRxmXU0O03SoYecyWLKt6fpdUfXc1fjg7bmTEMVI4Sc7H
+	 9xXXiJvWEt+c7WB4dxD9gqc9RzBpgUPY8Vb0EdzcuMDLXv1GMhYBVdOKWzN51FJa7e
+	 TCXbfdgFXp6cOhA0Z4G0PNFLF2+sYtz/LuJS2Dkk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407324AbfISW2l (ORCPT
+        id S2436578AbfISW2q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:28:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60574 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:28:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406595AbfISWSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:18:53 -0400
+        id S2393956AbfISWSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:18:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72C2B217D6;
-        Thu, 19 Sep 2019 22:18:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C06FB20678;
+        Thu, 19 Sep 2019 22:18:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931532;
-        bh=U9KKBQNOAwHAt0frMmHN8BQcjILp52lI9xWt6dpTVio=;
+        s=default; t=1568931529;
+        bh=zE1iJSEMK9YZIgnP80T4/msrDHV/DtZhxS52pqkEUoo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b3htAd7lgsKBSQvPgNK1igQjd2TATuzn3sqAN66Sf2/69ZUqWC4wOSgYOZwRNdODP
-         BGZZp6hCYWdHyQTL7tE4/Vm52H0FMprhp7KYGvQSAFxG5wCFJJRlFIYjZUEDyA36YF
-         yYCXEkJPtqgQwFdiqdnm3M1xoiPtNWKlcTy83kgU=
+        b=a3b0z0p8z1w2Y4zK22XfuJ65Nx5IqMsL9JBUr9/rGayDQ1QVks4J3HWyn3teXtXYP
+         tfXZyHHTDzbeVGeRbBpZPXSIt2mXc7QvDHIq6FPW9cTLOEhrPRt4zfMUZy3BdOhTr+
+         7VLkVwtI++LufLUvygsmzUMbTWOmwEyDMxpVdQZI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.9 20/74] KVM: nVMX: handle page fault in vmread
-Date:   Fri, 20 Sep 2019 00:03:33 +0200
-Message-Id: <20190919214806.593882437@linuxfoundation.org>
+        stable@vger.kernel.org, Lars Melin <larsm17@gmail.com>,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 02/74] cdc_ether: fix rndis support for Mediatek based smartphones
+Date:   Fri, 20 Sep 2019 00:03:15 +0200
+Message-Id: <20190919214801.121784686@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214800.519074117@linuxfoundation.org>
 References: <20190919214800.519074117@linuxfoundation.org>
@@ -58,43 +60,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: "Bjørn Mork" <bjorn@mork.no>
 
-commit f7eea636c3d505fe6f1d1066234f1aaf7171b681 upstream.
+[ Upstream commit 4d7ffcf3bf1be98d876c570cab8fc31d9fa92725 ]
 
-The implementation of vmread to memory is still incomplete, as it
-lacks the ability to do vmread to I/O memory just like vmptrst.
+A Mediatek based smartphone owner reports problems with USB
+tethering in Linux.  The verbose USB listing shows a rndis_host
+interface pair (e0/01/03 + 10/00/00), but the driver fails to
+bind with
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+[  355.960428] usb 1-4: bad CDC descriptors
+
+The problem is a failsafe test intended to filter out ACM serial
+functions using the same 02/02/ff class/subclass/protocol as RNDIS.
+The serial functions are recognized by their non-zero bmCapabilities.
+
+No RNDIS function with non-zero bmCapabilities were known at the time
+this failsafe was added. But it turns out that some Wireless class
+RNDIS functions are using the bmCapabilities field. These functions
+are uniquely identified as RNDIS by their class/subclass/protocol, so
+the failing test can safely be disabled.  The same applies to the two
+types of Misc class RNDIS functions.
+
+Applying the failsafe to Communication class functions only retains
+the original functionality, and fixes the problem for the Mediatek based
+smartphone.
+
+Tow examples of CDC functional descriptors with non-zero bmCapabilities
+from Wireless class RNDIS functions are:
+
+0e8d:000a  Mediatek Crosscall Spider X5 3G Phone
+
+      CDC Header:
+        bcdCDC               1.10
+      CDC ACM:
+        bmCapabilities       0x0f
+          connection notifications
+          sends break
+          line coding and serial state
+          get/set/clear comm features
+      CDC Union:
+        bMasterInterface        0
+        bSlaveInterface         1
+      CDC Call Management:
+        bmCapabilities       0x03
+          call management
+          use DataInterface
+        bDataInterface          1
+
+and
+
+19d2:1023  ZTE K4201-z
+
+      CDC Header:
+        bcdCDC               1.10
+      CDC ACM:
+        bmCapabilities       0x02
+          line coding and serial state
+      CDC Call Management:
+        bmCapabilities       0x03
+          call management
+          use DataInterface
+        bDataInterface          1
+      CDC Union:
+        bMasterInterface        0
+        bSlaveInterface         1
+
+The Mediatek example is believed to apply to most smartphones with
+Mediatek firmware.  The ZTE example is most likely also part of a larger
+family of devices/firmwares.
+
+Suggested-by: Lars Melin <larsm17@gmail.com>
+Signed-off-by: Bjørn Mork <bjorn@mork.no>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/x86/kvm/vmx.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/net/usb/cdc_ether.c |   13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -7639,6 +7639,7 @@ static int handle_vmread(struct kvm_vcpu
- 	unsigned long exit_qualification = vmcs_readl(EXIT_QUALIFICATION);
- 	u32 vmx_instruction_info = vmcs_read32(VMX_INSTRUCTION_INFO);
- 	gva_t gva = 0;
-+	struct x86_exception e;
- 
- 	if (!nested_vmx_check_permission(vcpu) ||
- 	    !nested_vmx_check_vmcs12(vcpu))
-@@ -7665,8 +7666,10 @@ static int handle_vmread(struct kvm_vcpu
- 				vmx_instruction_info, true, &gva))
- 			return 1;
- 		/* _system ok, as nested_vmx_check_permission verified cpl=0 */
--		kvm_write_guest_virt_system(vcpu, gva, &field_value,
--					    (is_long_mode(vcpu) ? 8 : 4), NULL);
-+		if (kvm_write_guest_virt_system(vcpu, gva, &field_value,
-+						(is_long_mode(vcpu) ? 8 : 4),
-+						NULL))
-+			kvm_inject_page_fault(vcpu, &e);
+--- a/drivers/net/usb/cdc_ether.c
++++ b/drivers/net/usb/cdc_ether.c
+@@ -212,9 +212,16 @@ int usbnet_generic_cdc_bind(struct usbne
+ 		goto bad_desc;
  	}
- 
- 	nested_vmx_succeed(vcpu);
+ skip:
+-	if (	rndis &&
+-		header.usb_cdc_acm_descriptor &&
+-		header.usb_cdc_acm_descriptor->bmCapabilities) {
++	/* Communcation class functions with bmCapabilities are not
++	 * RNDIS.  But some Wireless class RNDIS functions use
++	 * bmCapabilities for their own purpose. The failsafe is
++	 * therefore applied only to Communication class RNDIS
++	 * functions.  The rndis test is redundant, but a cheap
++	 * optimization.
++	 */
++	if (rndis && is_rndis(&intf->cur_altsetting->desc) &&
++	    header.usb_cdc_acm_descriptor &&
++	    header.usb_cdc_acm_descriptor->bmCapabilities) {
+ 			dev_dbg(&intf->dev,
+ 				"ACM capabilities %02x, not really RNDIS?\n",
+ 				header.usb_cdc_acm_descriptor->bmCapabilities);
 
 
