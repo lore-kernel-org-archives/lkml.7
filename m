@@ -2,227 +2,276 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D939C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7974C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC69218AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:23:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="KOINmmmK"
+	by mail.kernel.org (Postfix) with ESMTP id 9788520882
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:23:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403844AbfISOXk (ORCPT
+        id S2403882AbfISOXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 10:23:40 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:53479 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390576AbfISOXc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 10:23:32 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190919142330euoutp029152e334205aeb1f81e1e15f389cc387~F3PncZIYz1740117401euoutp02b
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 14:23:30 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190919142330euoutp029152e334205aeb1f81e1e15f389cc387~F3PncZIYz1740117401euoutp02b
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1568903010;
-        bh=4kG6qE0VCmH9gQI7bgdBe+khJWWomB1XqLRfnIX4VG8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KOINmmmKaPK8aJILecaUTQWIITuNNeEWgbhCu7FUqXien5IZQybeJaViYUzuYVSIH
-         +QcEdf3tdIP73znI6kvqkMFkt8wUZfj2DVUlvm+PAF5/5RTLPeP6jIXfk8vTKqGSmM
-         xkaRTqJW0lC4QoxDDXSz/Zj2hqjPrywEiCi65vS0=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190919142330eucas1p1f715b753b2134f8715c31ad53ceeba37~F3PmtgJcX1885218852eucas1p1c;
-        Thu, 19 Sep 2019 14:23:30 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id AB.0C.04469.16F838D5; Thu, 19
-        Sep 2019 15:23:29 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190919142329eucas1p299762f99dd55a5d625633ceec84219f9~F3PlxHo1y3081230812eucas1p2m;
-        Thu, 19 Sep 2019 14:23:29 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190919142328eusmtrp1e7e9e485ce2ebd973b537efbd222d550~F3Plimzbc0555105551eusmtrp1g;
-        Thu, 19 Sep 2019 14:23:28 +0000 (GMT)
-X-AuditID: cbfec7f2-54fff70000001175-17-5d838f6124d1
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 25.65.04117.06F838D5; Thu, 19
-        Sep 2019 15:23:28 +0100 (BST)
-Received: from AMDC3555.digital.local (unknown [106.120.51.67]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190919142328eusmtip15930d3c33f56712647f28e35c4242502~F3Pkv2Ktx3032330323eusmtip14;
-        Thu, 19 Sep 2019 14:23:27 +0000 (GMT)
-From:   =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@samsung.com>
-To:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc:     =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@partner.samsung.com>,
-        cw00.choi@samsung.com, myungjoo.ham@samsung.com,
-        inki.dae@samsung.com, sw0312.kim@samsung.com,
-        georgi.djakov@linaro.org, leonard.crestez@nxp.com,
-        m.szyprowski@samsung.com, b.zolnierkie@samsung.com, krzk@kernel.org
-Subject: [RFC PATCH v2 08/11] arm: dts: exynos: Add parents and
- #interconnect-cells to Exynos4412
-Date:   Thu, 19 Sep 2019 16:22:33 +0200
-Message-Id: <20190919142236.4071-9-a.swigon@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190919142236.4071-1-a.swigon@samsung.com>
+        Thu, 19 Sep 2019 10:23:45 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44444 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403815AbfISOXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 10:23:36 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 65B6C18C4275;
+        Thu, 19 Sep 2019 14:23:36 +0000 (UTC)
+Received: from t460s.redhat.com (unknown [10.36.118.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 338E860920;
+        Thu, 19 Sep 2019 14:23:28 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, virtualization@lists.linux-foundation.org,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@kernel.org>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Dave Young <dyoung@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>
+Subject: [PATCH RFC v3 7/9] virtio-mem: Allow to offline partially unplugged memory blocks
+Date:   Thu, 19 Sep 2019 16:22:26 +0200
+Message-Id: <20190919142228.5483-8-david@redhat.com>
+In-Reply-To: <20190919142228.5483-1-david@redhat.com>
+References: <20190919142228.5483-1-david@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTcRTH+93X7qTJdQqeTHqsgl66yoJfGJYUcaF/gkohk1p609JZ7frI
-        +qOlGFnOTPOtKWW2pqJOywdWtoZLfAwrLUib9CAUUktFBZWc1x7/fc453+95wGFJpYP2Ys/G
-        xAq6GE20inGhnrbN2H00t5NDt7V3qrGl7YkMO+6lIFybV03j9xPfaVxi7abxu8lRBuc+MzM4
-        05FBYbu9RoaNAz9pbP7SR+O3zUUMHjdYEc6zPydwlXVAhj9eMzI4L2uI2efGm02pDN/f18Lw
-        jls2gq8ru8rXjjQS/MuRFoJPrzchfty86jB73GVPuBB9Nl7QqQNOuUSO9HfTF6wrLjVM3af1
-        KMPjJpKzwO2ENP0UcRO5sErOiOBB5iAjBRMIXtytJaVgHIHeYif+WHobDUuWRwgMhiryr2Wk
-        q5xyqhguEDKzB2XOggdnRZBVOko5A5IrIyC90E46Ve5cGJjSpheZ4jaAqb+cdrKCw1Az1stI
-        81ZDRU3rokbO7YaJ5yWUpHGD9vyvi0wuaJKfFJKSPpWF8mfnJD4AX/p7lvq4w7CtXiaxN3Rk
-        pVESi/CtyUE7lwNOj8Bcbl1q5A+vbD0LBXZhwCaoblZL6UC4Xpkrc6aBc4UPP9ykFVwh82ku
-        KaUVcOO6UkIVNOe7SkaApIq+pd48TKZ2EhlobcF/txT8d0vBv7GliDQhTyFO1EYI4vYYIcFX
-        1GjFuJgI37DzWjNaeLuOeduvRjT55rQFcSxSLVesSUgOVdKaeDFRa0HAkioPRdGupFClIlyT
-        eFnQnT+pi4sWRAtayVIqT8WVZYMhSi5CEytECcIFQfenSrByLz3au784I33w4Py6uxWd3Kr0
-        1zNbPx36uT4o6chQ8MYmuJiDWw5u3nKsWjtXeWf2RMq09Y1vXXjrXPFD/6MB96YbgoN2B+Z/
-        19oeljxOaugzqtunBD+f4AfyyrYzMKYO0WUb5DrTax+Pz+0nc2aj56NWdyHuQN1n7wSvmTJj
-        4LDfjmAVJUZqtm8mdaLmN5oPPI9yAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrCIsWRmVeSWpSXmKPExsVy+t/xu7oJ/c2xBj82G1ocOraV3eL+vFZG
-        i40z1rNaXP/ynNVi/pFzrBZXvr5ns5i+dxObxaT7E1gszp/fwG6x4u5HVotNj6+xWlzeNYfN
-        4nPvEUaLGef3MVmsPXKX3eJ24wo2ixmTX7I5CHpsWtXJ5nHn2h42j/vdx5k8Ni+p99j4bgeT
-        x8F3e5g8+rasYvT4vEkugCNKz6Yov7QkVSEjv7jEVina0MJIz9DSQs/IxFLP0Ng81srIVEnf
-        ziYlNSezLLVI3y5BL+PdnXOsBUckK7Z/X8TawDhBpIuRk0NCwETi6o5epi5GLg4hgaWMEqde
-        vmaHSEhIfFx/gxXCFpb4c62LDaLoE6PE7UnPWUASbAKOEpOmPmAHSYgInGKU2Lr8HFgVs8AG
-        JonlT18CtXNwCAskStw/4QDSwCKgKrHqzjKwqbwCFhIbPlxlg9ggL7F6wwFmEJtTwFLiy775
-        YAuEgGrmPp7LCFEvKHFy5hMWkJHMAuoS6+cJgYSZgVqbt85mnsAoOAtJ1SyEqllIqhYwMq9i
-        FEktLc5Nzy020itOzC0uzUvXS87P3cQIjOFtx35u2cHY9S74EKMAB6MSD69CeXOsEGtiWXFl
-        7iFGCQ5mJRHeOaZNsUK8KYmVValF+fFFpTmpxYcYTYFem8gsJZqcD0wveSXxhqaG5haWhubG
-        5sZmFkrivB0CB2OEBNITS1KzU1MLUotg+pg4OKUaGDl1WDT+Rb83zPa1cft/o/25Z94rkxOP
-        Vlgz2l/Xyjb8vnYK+7nzd3lF1ifM33SisXpWyXP9d7kz+f/JBxoyT41ZdcDRWmJq0Ztg2W1F
-        vy+es5tted1I4Fqw5kzRe5N12qLf5CaGODvwTwpYFX63kXv6pk8HdX48CDi29VhqhJtJ7sLd
-        BzM+qyuxFGckGmoxFxUnAgAbkcaK9wIAAA==
-X-CMS-MailID: 20190919142329eucas1p299762f99dd55a5d625633ceec84219f9
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190919142329eucas1p299762f99dd55a5d625633ceec84219f9
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190919142329eucas1p299762f99dd55a5d625633ceec84219f9
-References: <20190919142236.4071-1-a.swigon@samsung.com>
-        <CGME20190919142329eucas1p299762f99dd55a5d625633ceec84219f9@eucas1p2.samsung.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Thu, 19 Sep 2019 14:23:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Artur Świgoń <a.swigon@partner.samsung.com>
+Dropping the reference count of PageOffline() pages allows offlining
+code to skip them. However, we also have to convert PG_reserved to
+another flag - let's use PG_dirty - so has_unmovable_pages() will
+properly handle them. PG_reserved pages get detected as unmovable right
+away.
 
-This patch adds two fields to the Exynos4412 DTS:
-  - parent: to declare connections between nodes that are not in a
-    parent-child relation in devfreq;
-  - #interconnect-cells: required by the interconnect framework.
+We need the flag to see if we are onlining pages the first time, or if
+we allocated them via alloc_contig_range().
 
-Please note that #interconnect-cells is always zero and node IDs are not
-hardcoded anywhere. The above-mentioned parent-child relation in devfreq
-means that there is a shared power line ('devfreq' property). The 'parent'
-property only signifies an interconnect connection.
+Properly take care of offlining code also modifying the stats and
+special handling in case the driver gets unloaded.
 
-Signed-off-by: Artur Świgoń <a.swigon@partner.samsung.com>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Igor Mammedov <imammedo@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Stefan Hajnoczi <stefanha@redhat.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 1 +
- arch/arm/boot/dts/exynos4412.dtsi               | 9 +++++++++
- 2 files changed, 10 insertions(+)
+ drivers/virtio/virtio_mem.c | 102 ++++++++++++++++++++++++++++++++----
+ 1 file changed, 92 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-index ea55f377d17c..bdd61ae86103 100644
---- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-+++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-@@ -106,6 +106,7 @@
- &bus_leftbus {
- 	devfreq-events = <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
- 	vdd-supply = <&buck3_reg>;
-+	parent = <&bus_dmc>;
- 	status = "okay";
- };
+diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
+index 91052a37d10d..9cb31459b211 100644
+--- a/drivers/virtio/virtio_mem.c
++++ b/drivers/virtio/virtio_mem.c
+@@ -561,6 +561,30 @@ static void virtio_mem_notify_online(struct virtio_mem *vm, unsigned long mb_id,
+ 		virtio_mem_retry(vm);
+ }
  
-diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
-index d20db2dfe8e2..a70a671acacd 100644
---- a/arch/arm/boot/dts/exynos4412.dtsi
-+++ b/arch/arm/boot/dts/exynos4412.dtsi
-@@ -390,6 +390,7 @@
- 			clocks = <&clock CLK_DIV_DMC>;
- 			clock-names = "bus";
- 			operating-points-v2 = <&bus_dmc_opp_table>;
-+			#interconnect-cells = <0>;
- 			status = "disabled";
- 		};
++/*
++ * When we unplug subblocks, we already modify stats (e.g., subtract them
++ * from totalram_pages). Offlining code will modify the stats, too. So
++ * properly fixup the stats when GOING_OFFLINE and revert that when
++ * CANCEL_OFFLINE.
++ */
++static void virtio_mem_mb_going_offline_fixup_stats(struct virtio_mem *vm,
++						    unsigned long mb_id,
++						    bool cancel)
++{
++	const unsigned long nr_pages = PFN_DOWN(vm->subblock_size);
++	int sb_id;
++
++	for (sb_id = 0; sb_id < vm->nb_sb_per_mb; sb_id++) {
++		if (virtio_mem_mb_test_sb_plugged(vm, mb_id, sb_id, 1))
++			continue;
++
++		if (cancel)
++			totalram_pages_add(-nr_pages);
++		else
++			totalram_pages_add(nr_pages);
++	}
++}
++
+ /*
+  * This callback will either be called synchonously from add_memory() or
+  * asynchronously (e.g., triggered via user space). We have to be careful
+@@ -608,6 +632,7 @@ static int virtio_mem_memory_notifier_cb(struct notifier_block *nb,
+ 			mutex_lock(&vm->hotplug_mutex);
+ 			vm->hotplug_active = true;
+ 		}
++		virtio_mem_mb_going_offline_fixup_stats(vm, mb_id, false);
+ 		break;
+ 	case MEM_GOING_ONLINE:
+ 		spin_lock_irq(&vm->removal_lock);
+@@ -633,6 +658,8 @@ static int virtio_mem_memory_notifier_cb(struct notifier_block *nb,
+ 		mutex_unlock(&vm->hotplug_mutex);
+ 		break;
+ 	case MEM_CANCEL_OFFLINE:
++		virtio_mem_mb_going_offline_fixup_stats(vm, mb_id, true);
++		/* fall through */
+ 	case MEM_CANCEL_ONLINE:
+ 		/* We might not get a MEM_GOING* if somebody else canceled */
+ 		if (vm->hotplug_active) {
+@@ -648,23 +675,55 @@ static int virtio_mem_memory_notifier_cb(struct notifier_block *nb,
+ }
  
-@@ -398,6 +399,7 @@
- 			clocks = <&clock CLK_DIV_ACP>;
- 			clock-names = "bus";
- 			operating-points-v2 = <&bus_acp_opp_table>;
-+			#interconnect-cells = <0>;
- 			status = "disabled";
- 		};
+ /*
+- * Set a range of pages PG_offline.
++ * Convert PG_reserved to PG_dirty. Needed to allow isolation code to
++ * not immediately consider them as unmovable.
++ */
++static void virtio_mem_reserved_to_dirty(unsigned long pfn,
++					 unsigned int nr_pages)
++{
++	for (; nr_pages--; pfn++) {
++		SetPageDirty(pfn_to_page(pfn));
++		ClearPageReserved(pfn_to_page(pfn));
++	}
++}
++
++/*
++ * Convert PG_dirty to PG_reserved. Needed so generic_online_page()
++ * works correctly.
++ */
++static void virtio_mem_dirty_to_reserved(unsigned long pfn,
++					 unsigned int nr_pages)
++{
++	for (; nr_pages--; pfn++) {
++		SetPageReserved(pfn_to_page(pfn));
++		ClearPageDirty(pfn_to_page(pfn));
++	}
++}
++
++/*
++ * Set a range of pages PG_offline and drop the reference. The dropped
++ * reference (0) and the flag allows isolation code to isolate this range
++ * and offline code to offline it.
+  */
+ static void virtio_mem_set_fake_offline(unsigned long pfn,
+ 					unsigned int nr_pages)
+ {
+-	for (; nr_pages--; pfn++)
++	for (; nr_pages--; pfn++) {
+ 		__SetPageOffline(pfn_to_page(pfn));
++		page_ref_dec(pfn_to_page(pfn));
++	}
+ }
  
-@@ -406,6 +408,7 @@
- 			clocks = <&clock CLK_DIV_C2C>;
- 			clock-names = "bus";
- 			operating-points-v2 = <&bus_dmc_opp_table>;
-+			#interconnect-cells = <0>;
- 			status = "disabled";
- 		};
+ /*
+- * Clear PG_offline from a range of pages.
++ * Get a reference and clear PG_offline from a range of pages.
+  */
+ static void virtio_mem_clear_fake_offline(unsigned long pfn,
+ 					  unsigned int nr_pages)
+ {
+-	for (; nr_pages--; pfn++)
++	for (; nr_pages--; pfn++) {
++		page_ref_inc(pfn_to_page(pfn));
+ 		__ClearPageOffline(pfn_to_page(pfn));
++	}
+ }
  
-@@ -459,6 +462,7 @@
- 			clocks = <&clock CLK_DIV_GDL>;
- 			clock-names = "bus";
- 			operating-points-v2 = <&bus_leftbus_opp_table>;
-+			#interconnect-cells = <0>;
- 			status = "disabled";
- 		};
+ /*
+@@ -679,7 +738,7 @@ static void virtio_mem_fake_online(unsigned long pfn, unsigned int nr_pages)
+ 	/*
+ 	 * We are always called with subblock granularity, which is at least
+ 	 * aligned to MAX_ORDER - 1. All pages in a subblock are either
+-	 * reserved or not.
++	 * PG_dirty (converted PG_reserved) or not.
+ 	 */
+ 	BUG_ON(!IS_ALIGNED(pfn, 1 << order));
+ 	BUG_ON(!IS_ALIGNED(nr_pages, 1 << order));
+@@ -690,13 +749,14 @@ static void virtio_mem_fake_online(unsigned long pfn, unsigned int nr_pages)
+ 		struct page *page = pfn_to_page(pfn + i);
  
-@@ -467,6 +471,7 @@
- 			clocks = <&clock CLK_DIV_GDR>;
- 			clock-names = "bus";
- 			operating-points-v2 = <&bus_leftbus_opp_table>;
-+			#interconnect-cells = <0>;
- 			status = "disabled";
- 		};
+ 		/*
+-		 * If the page is reserved, it was kept fake-offline when
++		 * If the page is PG_dirty, it was kept fake-offline when
+ 		 * onlining the memory block. Otherwise, it was allocated
+ 		 * using alloc_contig_range().
+ 		 */
+-		if (PageReserved(page))
++		if (PageDirty(page)) {
++			virtio_mem_dirty_to_reserved(pfn + i, 1 << order);
+ 			generic_online_page(page, order);
+-		else {
++		} else {
+ 			free_contig_range(pfn + i, 1 << order);
+ 			totalram_pages_add(1 << order);
+ 		}
+@@ -728,8 +788,10 @@ static void virtio_mem_online_page_cb(struct page *page, unsigned int order)
+ 		 */
+ 		if (virtio_mem_mb_test_sb_plugged(vm, mb_id, sb_id, 1))
+ 			generic_online_page(page, order);
+-		else
++		else {
+ 			virtio_mem_set_fake_offline(PFN_DOWN(addr), 1 << order);
++			virtio_mem_reserved_to_dirty(PFN_DOWN(addr), 1 << order);
++		}
+ 		rcu_read_unlock();
+ 		return;
+ 	}
+@@ -1674,7 +1736,8 @@ static int virtio_mem_probe(struct virtio_device *vdev)
+ static void virtio_mem_remove(struct virtio_device *vdev)
+ {
+ 	struct virtio_mem *vm = vdev->priv;
+-	unsigned long mb_id;
++	unsigned long nr_pages = PFN_DOWN(vm->subblock_size);
++	unsigned long pfn, mb_id, sb_id;
+ 	int rc;
  
-@@ -475,6 +480,7 @@
- 			clocks = <&clock CLK_ACLK160>;
- 			clock-names = "bus";
- 			operating-points-v2 = <&bus_display_opp_table>;
-+			#interconnect-cells = <0>;
- 			status = "disabled";
- 		};
+ 	/*
+@@ -1701,6 +1764,25 @@ static void virtio_mem_remove(struct virtio_device *vdev)
+ 		BUG_ON(rc);
+ 		mutex_lock(&vm->hotplug_mutex);
+ 	}
++	/*
++	 * After we unregistered our callbacks, user space can offline +
++	 * re-online partially plugged online blocks. Make sure they can't
++	 * get offlined by getting a reference. Also, restore PG_reserved.
++	 */
++	virtio_mem_for_each_mb_state(vm, mb_id,
++				     VIRTIO_MEM_MB_STATE_ONLINE_PARTIAL) {
++		for (sb_id = 0; sb_id < vm->nb_sb_per_mb; sb_id++) {
++			if (virtio_mem_mb_test_sb_plugged(vm, mb_id, sb_id, 1))
++				continue;
++			pfn = PFN_DOWN(virtio_mem_mb_id_to_phys(mb_id) +
++			      sb_id * vm->subblock_size);
++
++			if (PageDirty(pfn_to_page(pfn)))
++				virtio_mem_dirty_to_reserved(pfn, nr_pages);
++			for (; nr_pages--; pfn++)
++				page_ref_inc(pfn_to_page(pfn));
++		}
++	}
+ 	mutex_unlock(&vm->hotplug_mutex);
  
-@@ -483,6 +489,7 @@
- 			clocks = <&clock CLK_ACLK133>;
- 			clock-names = "bus";
- 			operating-points-v2 = <&bus_fsys_opp_table>;
-+			#interconnect-cells = <0>;
- 			status = "disabled";
- 		};
- 
-@@ -491,6 +498,7 @@
- 			clocks = <&clock CLK_ACLK100>;
- 			clock-names = "bus";
- 			operating-points-v2 = <&bus_peri_opp_table>;
-+			#interconnect-cells = <0>;
- 			status = "disabled";
- 		};
- 
-@@ -499,6 +507,7 @@
- 			clocks = <&clock CLK_SCLK_MFC>;
- 			clock-names = "bus";
- 			operating-points-v2 = <&bus_leftbus_opp_table>;
-+			#interconnect-cells = <0>;
- 			status = "disabled";
- 		};
- 
+ 	/* unregister callbacks */
 -- 
-2.17.1
+2.21.0
 
