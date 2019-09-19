@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8270BC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:22:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69020C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5761121920
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:22:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D1A421D71
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:22:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931728;
-	bh=FTHGqCkAkH8jNAZlObvzCTNpF4r0k02QCXEPoVf6+Pg=;
+	s=default; t=1568931732;
+	bh=yS15S4ft0wc0riRxiATHhmn5nzjFhfv4vQg+5N7czZI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lhOBhimB8pbseJ0sMHZVpji+hPfXZ/je/FMyBtlCbnxOLiFrQq408ookNpVPzttTI
-	 dEYajF+oMefUNeBUez2owsJ09TqOULeYhBDAFTnKk1QQdnYNUEl6J1kkMLVXFs/6Bd
-	 bCjIzm4EYF2UHGwaS8HmfPbYN30MNn1MGNC8N78Q=
+	b=C52DZPZBC9wjKA2fGIsA45RfEgrzX4uOESoSqaCkOpkVrpVzRHkrT/fg8lcSER6Mt
+	 qcyee+w1VSHFBmNCN2AZAUX8uOzSeXxvYrp45wUuQIHspefSnas0Qt3hOjnJ1cArcv
+	 B7ARKl1kbbNc+xhWp3Bhx5prF7CMQV2mcxI/U1K4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406762AbfISWWH (ORCPT
+        id S2406785AbfISWWL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:22:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36874 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:22:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404758AbfISWWC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:22:02 -0400
+        id S2404758AbfISWWH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:22:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 514B021927;
-        Thu, 19 Sep 2019 22:22:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B487721924;
+        Thu, 19 Sep 2019 22:22:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931721;
-        bh=FTHGqCkAkH8jNAZlObvzCTNpF4r0k02QCXEPoVf6+Pg=;
+        s=default; t=1568931727;
+        bh=yS15S4ft0wc0riRxiATHhmn5nzjFhfv4vQg+5N7czZI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DIaROK1c4v9JIh3bbuL3GTn1sOF1IIGo4zGKTEIIpx6r7bKWsUyqw2t+0QuL1a/SE
-         xm/i2XAmziccb7+QRTVCTnUPl+WLL95csWMVqt35BrhPBLt154RPBon1r8HZePq4Pt
-         hlWf2WU6VwQ7tRBnk//l9N3mVHjmxqNyxUzjaAhE=
+        b=jZy4+Rzio2YFRTax7RWQkdHt4FijROxh/PSmcfduNFu6uv94uJnp60GLWcESKtC7M
+         BOuoMcCQM9bpHFZttiuuJ9kQdRiSDyezaV3Z04ITnrIsJ0qO5SkKe4Ez6xn0Va7fv6
+         PasEC/ZuM44Vg8/Wh7ReKfXjuTZeDlW3GkM30+V0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fuqian Huang <huangfq.daxian@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.4 16/56] KVM: x86: work around leak of uninitialized stack contents
-Date:   Fri, 20 Sep 2019 00:03:57 +0200
-Message-Id: <20190919214752.638662940@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
+        Matt Redfearn <matt.redfearn@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@linux-mips.org,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.4 18/56] MIPS: VDSO: Prevent use of smp_processor_id()
+Date:   Fri, 20 Sep 2019 00:03:59 +0200
+Message-Id: <20190919214753.303821133@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214742.483643642@linuxfoundation.org>
 References: <20190919214742.483643642@linuxfoundation.org>
@@ -59,44 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fuqian Huang <huangfq.daxian@gmail.com>
+From: Paul Burton <paul.burton@mips.com>
 
-commit 541ab2aeb28251bf7135c7961f3a6080eebcc705 upstream.
+commit 351fdddd366245c0fb4636f32edfb4198c8d6b8c upstream.
 
-Emulation of VMPTRST can incorrectly inject a page fault
-when passed an operand that points to an MMIO address.
-The page fault will use uninitialized kernel stack memory
-as the CR2 and error code.
+VDSO code should not be using smp_processor_id(), since it is executed
+in user mode.
+Introduce a VDSO-specific path which will cause a compile-time
+or link-time error (depending upon support for __compiletime_error) if
+the VDSO ever incorrectly attempts to use smp_processor_id().
 
-The right behavior would be to abort the VM with a KVM_EXIT_INTERNAL_ERROR
-exit to userspace; however, it is not an easy fix, so for now just ensure
-that the error code and CR2 are zero.
+[Matt Redfearn <matt.redfearn@imgtec.com>: Move before change to
+smp_processor_id in series]
 
-Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
-Cc: stable@vger.kernel.org
-[add comment]
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Signed-off-by: Matt Redfearn <matt.redfearn@mips.com>
+Patchwork: https://patchwork.linux-mips.org/patch/17932/
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-mips@linux-mips.org
+Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/mips/include/asm/smp.h |   12 +++++++++++-
+ arch/mips/vdso/Makefile     |    3 ++-
+ 2 files changed, 13 insertions(+), 2 deletions(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -4337,6 +4337,13 @@ static int emulator_write_std(struct x86
- 	if (!system && kvm_x86_ops->get_cpl(vcpu) == 3)
- 		access |= PFERR_USER_MASK;
+--- a/arch/mips/include/asm/smp.h
++++ b/arch/mips/include/asm/smp.h
+@@ -25,7 +25,17 @@ extern cpumask_t cpu_sibling_map[];
+ extern cpumask_t cpu_core_map[];
+ extern cpumask_t cpu_foreign_map;
  
-+	/*
-+	 * FIXME: this should call handle_emulation_failure if X86EMUL_IO_NEEDED
-+	 * is returned, but our callers are not ready for that and they blindly
-+	 * call kvm_inject_page_fault.  Ensure that they at least do not leak
-+	 * uninitialized kernel stack memory into cr2 and error code.
-+	 */
-+	memset(exception, 0, sizeof(*exception));
- 	return kvm_write_guest_virt_helper(addr, val, bytes, vcpu,
- 					   access, exception);
- }
+-#define raw_smp_processor_id() (current_thread_info()->cpu)
++static inline int raw_smp_processor_id(void)
++{
++#if defined(__VDSO__)
++	extern int vdso_smp_processor_id(void)
++		__compiletime_error("VDSO should not call smp_processor_id()");
++	return vdso_smp_processor_id();
++#else
++	return current_thread_info()->cpu;
++#endif
++}
++#define raw_smp_processor_id raw_smp_processor_id
+ 
+ /* Map from cpu id to sequential logical cpu number.  This will only
+    not be idempotent when cpus failed to come on-line.	*/
+--- a/arch/mips/vdso/Makefile
++++ b/arch/mips/vdso/Makefile
+@@ -6,7 +6,8 @@ ccflags-vdso := \
+ 	$(filter -I%,$(KBUILD_CFLAGS)) \
+ 	$(filter -E%,$(KBUILD_CFLAGS)) \
+ 	$(filter -mmicromips,$(KBUILD_CFLAGS)) \
+-	$(filter -march=%,$(KBUILD_CFLAGS))
++	$(filter -march=%,$(KBUILD_CFLAGS)) \
++	-D__VDSO__
+ cflags-vdso := $(ccflags-vdso) \
+ 	$(filter -W%,$(filter-out -Wa$(comma)%,$(KBUILD_CFLAGS))) \
+ 	-O2 -g -fPIC -fno-strict-aliasing -fno-common -fno-builtin -G 0 \
 
 
