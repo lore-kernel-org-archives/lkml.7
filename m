@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F71C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0862C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE16221927
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:21:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 751842196E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:22:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931717;
-	bh=bRsAxFnPqRa/ULryThKuGPhEruKmIEKhenR1lgj5BM4=;
+	s=default; t=1568931721;
+	bh=gooiVDH5g9HpvZWBNFw92O16E/DOwxjMhDd3ub3cRFU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O21ATimyX//MHnQXFvKCTw/EGMwSm3T05tZpOYyL/b0xdOyBh1F8GqcVK/7vGFcCx
-	 9EPClx7GSldvqJwCzUZZ13w1ICeM3QzH8zel8dK3LUS26GC5DZMfcrItPKwao5PIaq
-	 MLVRaAK7PlyaIHcglIajvHCSMKaERRa3FWu7sZ3I=
+	b=LbD1MQzNmcLu7N+GCapY85IA/ADFO7QZUnOjUs88G0hFXnvoMXDhVUUoa8HhUaP/f
+	 LemgQn2UxT9zSFAxHTjDqrFtXJzIJ+SNH6YHO5hBMvPZ3VROSNbUx1H/lfH3LbgQQI
+	 vpU5LD7ttz6wAEq4D4FdWOZEkcyd5k6tBxEF9AZ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394111AbfISWV5 (ORCPT
+        id S2394123AbfISWWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:21:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36568 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:22:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394093AbfISWVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:21:52 -0400
+        id S2394108AbfISWV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:21:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9502E21929;
-        Thu, 19 Sep 2019 22:21:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05C0321920;
+        Thu, 19 Sep 2019 22:21:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931710;
-        bh=bRsAxFnPqRa/ULryThKuGPhEruKmIEKhenR1lgj5BM4=;
+        s=default; t=1568931716;
+        bh=gooiVDH5g9HpvZWBNFw92O16E/DOwxjMhDd3ub3cRFU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uVLxWenULCxvlcCo5GvKokJp7bwm/vtrjcghlzbXmADekdCMGMnhWEK+r5hv+oUIU
-         BDNYllNd/7aQY9IgsfkmBIH9YLr5QqoQJZUd1ZKDhb3gr7tyjC7+EteZn+ruMHEF9P
-         05TRkVJ4smQO9M9R4ZgDMKgKZ/hBetHtny6wZSr0=
+        b=qjeTSiEvkwPZ4lxcQ8pKRIdyqsenkvB1TWx2jIWQtX765iM4plIneWssVT/10T2lE
+         pCQktEj07+jfdWZMUy6UBcc3i9GuQRkQ6DgTZP5otsolRX1YDiiBPqY1bK6Z7bylqL
+         Kzk+uMHKl9KK+/CyPnWiMqb0h+zMw7KVkMhBEW7w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        "Maciej W. Rozycki" <macro@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 12/56] Revert "MIPS: SiByte: Enable swiotlb for SWARM, LittleSur and BigSur"
-Date:   Fri, 20 Sep 2019 00:03:53 +0200
-Message-Id: <20190919214750.343452262@linuxfoundation.org>
+        stable@vger.kernel.org, Yunfeng Ye <yeyunfeng@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Subject: [PATCH 4.4 14/56] genirq: Prevent NULL pointer dereference in resend_irqs()
+Date:   Fri, 20 Sep 2019 00:03:55 +0200
+Message-Id: <20190919214751.955935516@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214742.483643642@linuxfoundation.org>
 References: <20190919214742.483643642@linuxfoundation.org>
@@ -63,92 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Yunfeng Ye <yeyunfeng@huawei.com>
 
-This reverts commit c890a458e27210d1a749a18941047a9e4209fa93 which is
-commit e4849aff1e169b86c561738daf8ff020e9de1011 upstream
+commit eddf3e9c7c7e4d0707c68d1bb22cc6ec8aef7d4a upstream.
 
-Guenter writes:
-	Upstream commit e4849aff1e16 ("MIPS: SiByte: Enable swiotlb for SWARM,
-	LittleSur and BigSur") results in build failures in v4.4.y and v4.14.y.
+The following crash was observed:
 
-	make bigsur_defconfig:
+  Unable to handle kernel NULL pointer dereference at 0000000000000158
+  Internal error: Oops: 96000004 [#1] SMP
+  pc : resend_irqs+0x68/0xb0
+  lr : resend_irqs+0x64/0xb0
+  ...
+  Call trace:
+   resend_irqs+0x68/0xb0
+   tasklet_action_common.isra.6+0x84/0x138
+   tasklet_action+0x2c/0x38
+   __do_softirq+0x120/0x324
+   run_ksoftirqd+0x44/0x60
+   smpboot_thread_fn+0x1ac/0x1e8
+   kthread+0x134/0x138
+   ret_from_fork+0x10/0x18
 
-	warning: (SIBYTE_SWARM && SIBYTE_SENTOSA && SIBYTE_BIGSUR && SWIOTLB_XEN && AMD_IOMMU) selects SWIOTLB which has unmet direct dependencies (CAVIUM_OCTEON_SOC || MACH_LOONGSON64 && CPU_LOONGSON3 || NLM_XLP_BOARD || NLM_XLR_BOARD)
-	warning: (SIBYTE_SWARM && SIBYTE_SENTOSA && SIBYTE_BIGSUR && SWIOTLB_XEN && AMD_IOMMU) selects SWIOTLB which has unmet direct dependencies (CAVIUM_OCTEON_SOC || MACH_LOONGSON64 && CPU_LOONGSON3 || NLM_XLP_BOARD || NLM_XLR_BOARD)
+The reason for this is that the interrupt resend mechanism happens in soft
+interrupt context, which is a asynchronous mechanism versus other
+operations on interrupts. free_irq() does not take resend handling into
+account. Thus, the irq descriptor might be already freed before the resend
+tasklet is executed. resend_irqs() does not check the return value of the
+interrupt descriptor lookup and derefences the return value
+unconditionally.
 
-	and the actual build:
+  1):
+  __setup_irq
+    irq_startup
+      check_irq_resend  // activate softirq to handle resend irq
+  2):
+  irq_domain_free_irqs
+    irq_free_descs
+      free_desc
+        call_rcu(&desc->rcu, delayed_free_desc)
+  3):
+  __do_softirq
+    tasklet_action
+      resend_irqs
+        desc = irq_to_desc(irq)
+        desc->handle_irq(desc)  // desc is NULL --> Ooops
 
-	lib/swiotlb.o: In function `swiotlb_tbl_map_single':
-	(.text+0x1c0): undefined reference to `iommu_is_span_boundary'
-	Makefile:1021: recipe for target 'vmlinux' failed
+Fix this by adding a NULL pointer check in resend_irqs() before derefencing
+the irq descriptor.
 
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Cc: Maciej W. Rozycki <macro@linux-mips.org>
-Cc: Paul Burton <paul.burton@mips.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: linux-mips@linux-mips.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Sasha Levin <sashal@kernel.org>
+Fixes: a4633adcdbc1 ("[PATCH] genirq: add genirq sw IRQ-retrigger")
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/1630ae13-5c8e-901e-de09-e740b6a426a7@huawei.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/mips/Kconfig                |    3 ---
- arch/mips/sibyte/common/Makefile |    1 -
- arch/mips/sibyte/common/dma.c    |   14 --------------
- 3 files changed, 18 deletions(-)
- delete mode 100644 arch/mips/sibyte/common/dma.c
 
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -761,7 +761,6 @@ config SIBYTE_SWARM
- 	select SYS_SUPPORTS_HIGHMEM
- 	select SYS_SUPPORTS_LITTLE_ENDIAN
- 	select ZONE_DMA32 if 64BIT
--	select SWIOTLB if ARCH_DMA_ADDR_T_64BIT && PCI
- 
- config SIBYTE_LITTLESUR
- 	bool "Sibyte BCM91250C2-LittleSur"
-@@ -784,7 +783,6 @@ config SIBYTE_SENTOSA
- 	select SYS_HAS_CPU_SB1
- 	select SYS_SUPPORTS_BIG_ENDIAN
- 	select SYS_SUPPORTS_LITTLE_ENDIAN
--	select SWIOTLB if ARCH_DMA_ADDR_T_64BIT && PCI
- 
- config SIBYTE_BIGSUR
- 	bool "Sibyte BCM91480B-BigSur"
-@@ -798,7 +796,6 @@ config SIBYTE_BIGSUR
- 	select SYS_SUPPORTS_HIGHMEM
- 	select SYS_SUPPORTS_LITTLE_ENDIAN
- 	select ZONE_DMA32 if 64BIT
--	select SWIOTLB if ARCH_DMA_ADDR_T_64BIT && PCI
- 
- config SNI_RM
- 	bool "SNI RM200/300/400"
---- a/arch/mips/sibyte/common/Makefile
-+++ b/arch/mips/sibyte/common/Makefile
-@@ -1,5 +1,4 @@
- obj-y := cfe.o
--obj-$(CONFIG_SWIOTLB)			+= dma.o
- obj-$(CONFIG_SIBYTE_BUS_WATCHER)	+= bus_watcher.o
- obj-$(CONFIG_SIBYTE_CFE_CONSOLE)	+= cfe_console.o
- obj-$(CONFIG_SIBYTE_TBPROF)		+= sb_tbprof.o
---- a/arch/mips/sibyte/common/dma.c
-+++ /dev/null
-@@ -1,14 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0+
--/*
-- *	DMA support for Broadcom SiByte platforms.
-- *
-- *	Copyright (c) 2018  Maciej W. Rozycki
-- */
--
--#include <linux/swiotlb.h>
--#include <asm/bootinfo.h>
--
--void __init plat_swiotlb_setup(void)
--{
--	swiotlb_init(1);
--}
+---
+ kernel/irq/resend.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/kernel/irq/resend.c
++++ b/kernel/irq/resend.c
+@@ -37,6 +37,8 @@ static void resend_irqs(unsigned long ar
+ 		irq = find_first_bit(irqs_resend, nr_irqs);
+ 		clear_bit(irq, irqs_resend);
+ 		desc = irq_to_desc(irq);
++		if (!desc)
++			continue;
+ 		local_irq_disable();
+ 		desc->handle_irq(desc);
+ 		local_irq_enable();
 
 
