@@ -2,59 +2,52 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0291C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 735C0C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70F6221D56
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:15:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48A0E21927
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:15:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931318;
-	bh=h3bcOGtPLUCBSlVlXbcseSnPv5QaAVKpkn0I2pFFNnw=;
+	s=default; t=1568931321;
+	bh=m/1Ui7lAw5nP6U+SoRc1jCytiCdOOcqC8BgRxhVGmxE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M9XlQn8m5Zc6IsI6eza3LioHbB4b6mHupnuKrSpJAaeGEE7oMF9Z0AQMfexd63k6i
-	 Rq+7SmVF4PWfy3LALw7Ntf9Mpm1+eziH3gNn21xno1gD14247nilIKUUvsvaJ3LZVM
-	 4rAmlc/QU92CRgCX6U86UCZXqkyxBvGjI6lVaVpA=
+	b=J0MTj3Ov8PUUqV//VhDO4ljmS8iErhuEDydPOhK+pdWdRDbMItBMdHWD3OkVWmxRd
+	 9LtvadMCqjqqGxSW9RZX3abu4XMUinm//Yn7NT1AS1M1s+Bv8t+q0COrucmhfiG2VN
+	 pkh2g7DbWStLc83GAv2PXIBgy8vkIUZ7S/eSGXnk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406093AbfISWPR (ORCPT
+        id S2406106AbfISWPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:15:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54982 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:15:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406064AbfISWPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:15:08 -0400
+        id S2406086AbfISWPQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:15:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76A6821927;
-        Thu, 19 Sep 2019 22:15:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E930121928;
+        Thu, 19 Sep 2019 22:15:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931307;
-        bh=h3bcOGtPLUCBSlVlXbcseSnPv5QaAVKpkn0I2pFFNnw=;
+        s=default; t=1568931315;
+        bh=m/1Ui7lAw5nP6U+SoRc1jCytiCdOOcqC8BgRxhVGmxE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y60t3lzEqmyh7RPeWOD9e9s9O/tJFHIpJJkRFQRQZlTuotLBX5W7z8xkyLWparWEd
-         FYriKQh2hSO4ynuSMx13mu6hS7RdvSjtWHoG2n0lYdLztrO6gyDyaEbg8+ryk/vqHY
-         wCAU//Zvthp6/OCZBOVRiSscR0Ft74BA4sIcxvL0=
+        b=HuaQQzL8WJP486rtmsbKcEQh2yRiV/Egd3+E6OYEsn7fyyVFvIKP4Ur3z1Jlw6wVK
+         uNhVJm041mm9mmcjMflQTnrlAovHHHGYZphW8IEobLze/BzV4k8kQocJj01Kv5U+3R
+         Ve/kOIyJGysUlMUstOk/Z9ckwuq4ICB8vPXFFbg4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>, alan@linux.intel.com,
-        bp@alien8.de, cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        rahul.tanwar@intel.com, rppt@linux.ibm.com, tony.luck@intel.com,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 46/79] x86/apic: Fix arch_dynirq_lower_bound() bug for DT enabled machines
-Date:   Fri, 20 Sep 2019 00:03:31 +0200
-Message-Id: <20190919214811.667982823@linuxfoundation.org>
+        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [PATCH 4.19 74/79] PCI: kirin: Fix section mismatch warning
+Date:   Fri, 20 Sep 2019 00:03:59 +0200
+Message-Id: <20190919214814.234695061@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214807.612593061@linuxfoundation.org>
 References: <20190919214807.612593061@linuxfoundation.org>
@@ -67,71 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 3e5bedc2c258341702ddffbd7688c5e6eb01eafa ]
+commit 6870b673509779195cab300aedc844b352d9cfbc upstream.
 
-Rahul Tanwar reported the following bug on DT systems:
+The PCI kirin driver compilation produces the following section mismatch
+warning:
 
-> 'ioapic_dynirq_base' contains the virtual IRQ base number. Presently, it is
-> updated to the end of hardware IRQ numbers but this is done only when IOAPIC
-> configuration type is IOAPIC_DOMAIN_LEGACY or IOAPIC_DOMAIN_STRICT. There is
-> a third type IOAPIC_DOMAIN_DYNAMIC which applies when IOAPIC configuration
-> comes from devicetree.
->
-> See dtb_add_ioapic() in arch/x86/kernel/devicetree.c
->
-> In case of IOAPIC_DOMAIN_DYNAMIC (DT/OF based system), 'ioapic_dynirq_base'
-> remains to zero initialized value. This means that for OF based systems,
-> virtual IRQ base will get set to zero.
+WARNING: vmlinux.o(.text+0x4758cc): Section mismatch in reference from
+the function kirin_pcie_probe() to the function
+.init.text:kirin_add_pcie_port()
+The function kirin_pcie_probe() references
+the function __init kirin_add_pcie_port().
+This is often because kirin_pcie_probe lacks a __init
+annotation or the annotation of kirin_add_pcie_port is wrong.
 
-Such systems will very likely not even boot.
+Remove '__init' from kirin_add_pcie_port() to fix it.
 
-For DT enabled machines ioapic_dynirq_base is irrelevant and not
-updated, so simply map the IRQ base 1:1 instead.
+Fixes: fc5165db245a ("PCI: kirin: Add HiSilicon Kirin SoC PCIe controller driver")
+Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+[lorenzo.pieralisi@arm.com: updated commit log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Reported-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Tested-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Tested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: alan@linux.intel.com
-Cc: bp@alien8.de
-Cc: cheol.yong.kim@intel.com
-Cc: qi-ming.wu@intel.com
-Cc: rahul.tanwar@intel.com
-Cc: rppt@linux.ibm.com
-Cc: tony.luck@intel.com
-Link: http://lkml.kernel.org/r/20190821081330.1187-1-rahul.tanwar@linux.intel.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/apic/io_apic.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/pci/controller/dwc/pcie-kirin.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
-index 4077e309e5c4c..ab22eded61d25 100644
---- a/arch/x86/kernel/apic/io_apic.c
-+++ b/arch/x86/kernel/apic/io_apic.c
-@@ -2432,7 +2432,13 @@ unsigned int arch_dynirq_lower_bound(unsigned int from)
- 	 * dmar_alloc_hwirq() may be called before setup_IO_APIC(), so use
- 	 * gsi_top if ioapic_dynirq_base hasn't been initialized yet.
- 	 */
--	return ioapic_initialized ? ioapic_dynirq_base : gsi_top;
-+	if (!ioapic_initialized)
-+		return gsi_top;
-+	/*
-+	 * For DT enabled machines ioapic_dynirq_base is irrelevant and not
-+	 * updated. So simply return @from if ioapic_dynirq_base == 0.
-+	 */
-+	return ioapic_dynirq_base ? : from;
+--- a/drivers/pci/controller/dwc/pcie-kirin.c
++++ b/drivers/pci/controller/dwc/pcie-kirin.c
+@@ -467,8 +467,8 @@ static int kirin_pcie_add_msi(struct dw_
+ 	return 0;
  }
  
- #ifdef CONFIG_X86_32
--- 
-2.20.1
-
+-static int __init kirin_add_pcie_port(struct dw_pcie *pci,
+-				      struct platform_device *pdev)
++static int kirin_add_pcie_port(struct dw_pcie *pci,
++			       struct platform_device *pdev)
+ {
+ 	int ret;
+ 
 
 
