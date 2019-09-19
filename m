@@ -2,105 +2,77 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD167C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A118C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FBCB21929
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:50:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="USvraGNP";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Qm5yKpp8"
+	by mail.kernel.org (Postfix) with ESMTP id 27F1F21929
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:53:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389043AbfISJu6 (ORCPT
+        id S2389053AbfISJxB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 05:50:58 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:40884 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388872AbfISJu6 (ORCPT
+        Thu, 19 Sep 2019 05:53:01 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:36789 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388980AbfISJxB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 05:50:58 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 31E4961359; Thu, 19 Sep 2019 09:50:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568886657;
-        bh=I55K3nBeZJfFZkk97+0qM6fkrU2I6GrKyjKmHvHvsRM=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=USvraGNPIkGV+y6ZnillN/Jqmt7xWr0MSkBqQ+J8bTMRugpVudA5OpxgdaYKnieQP
-         VYbgSeOQA66x/9P2YlY57AO6vDjFKwSYI0KjaGRU086aH2Z7ZLH3XRLWzsCUMVpVzD
-         r20Uvys4jqWRAFo83Hvu96Hll23T+l/OORUfDZ/k=
-Received: from x230.qca.qualcomm.com (37-136-106-186.rev.dnainternet.fi [37.136.106.186])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4D53D602F8;
-        Thu, 19 Sep 2019 09:50:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568886656;
-        bh=I55K3nBeZJfFZkk97+0qM6fkrU2I6GrKyjKmHvHvsRM=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=Qm5yKpp8jxl67lbOId5ADtKAS27CuOw4wb/J51a5wf1fKA5ytEx1ItRh7aoEusgWd
-         gYoVwE7gJ2HXk5vgHkAawHZkmBGkzlNI7cJ9Oye7TCCVMxZGs5pPqZULz66BntiayL
-         zjDXNj+bhRr8Pfn2+A/NW5h6AGUx2bqIyop5VXKI=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4D53D602F8
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Daniel Drake <dsd@gentoo.org>,
-        Ulrich Kunitz <kune@deine-taler.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -net] zd1211rw: zd_usb: Use "%zu" to format size_t
-References: <20190919091532.24951-1-geert@linux-m68k.org>
-Date:   Thu, 19 Sep 2019 12:50:50 +0300
-In-Reply-To: <20190919091532.24951-1-geert@linux-m68k.org> (Geert
-        Uytterhoeven's message of "Thu, 19 Sep 2019 11:15:32 +0200")
-Message-ID: <87h858ehs5.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Thu, 19 Sep 2019 05:53:01 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iAt7J-0000zd-E3; Thu, 19 Sep 2019 11:52:49 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iAt7H-0008DW-N1; Thu, 19 Sep 2019 11:52:47 +0200
+Date:   Thu, 19 Sep 2019 11:52:47 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Sam Shih <sam.shih@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v8 03/11] pwm: mediatek: remove a property "has-clks"
+Message-ID: <20190919095247.6buliwxgrrrjjvdm@pengutronix.de>
+References: <1568798939-16038-1-git-send-email-sam.shih@mediatek.com>
+ <1568798939-16038-4-git-send-email-sam.shih@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1568798939-16038-4-git-send-email-sam.shih@mediatek.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Geert Uytterhoeven <geert@linux-m68k.org> writes:
+On Wed, Sep 18, 2019 at 05:28:51PM +0800, Sam Shih wrote:
+> We can use fixed-clock to repair mt7628 pwm during configure from
+> userspace. The SoC is legacy MIPS and has no complex clock tree.
+> Due to we can get clock frequency for period calculation from DT
+> fixed-clock, so we can remove has-clock property, and directly
+> use devm_clk_get and clk_get_rate.
+> 
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-> On 32-bit:
->
->     drivers/net/wireless/zydas/zd1211rw/zd_usb.c: In function =E2=80=98ch=
-eck_read_regs=E2=80=99:
->     drivers/net/wireless/zydas/zd1211rw/zd_def.h:18:25: warning: format =
-=E2=80=98%ld=E2=80=99 expects argument of type =E2=80=98long int=E2=80=99, =
-but argument 6 has type =E2=80=98size_t=E2=80=99 {aka =E2=80=98unsigned int=
-=E2=80=99} [-Wformat=3D]
->       dev_printk(level, dev, "%s() " fmt, __func__, ##args)
-> 			     ^~~~~~~
->     drivers/net/wireless/zydas/zd1211rw/zd_def.h:22:4: note: in expansion=
- of macro =E2=80=98dev_printk_f=E2=80=99
-> 	dev_printk_f(KERN_DEBUG, dev, fmt, ## args)
-> 	^~~~~~~~~~~~
->     drivers/net/wireless/zydas/zd1211rw/zd_usb.c:1635:3: note: in expansi=
-on of macro =E2=80=98dev_dbg_f=E2=80=99
->        dev_dbg_f(zd_usb_dev(usb),
->        ^~~~~~~~~
->     drivers/net/wireless/zydas/zd1211rw/zd_usb.c:1636:51: note: format st=
-ring is defined here
-> 	 "error: actual length %d less than expected %ld\n",
-> 						     ~~^
-> 						     %d
->
-> Fixes: 84b0b66352470e64 ("zd1211rw: zd_usb: Use struct_size() helper")
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Thanks
+Uwe
 
-I'll queue this for v5.4.
-
---=20
-Kalle Valo
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
