@@ -6,128 +6,205 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58086C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 10:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD06C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 10:02:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 398AF21927
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 10:02:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0D6821929
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 10:02:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389168AbfISKCb (ORCPT
+        id S2389208AbfISKCe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 06:02:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40342 "EHLO mx1.redhat.com"
+        Thu, 19 Sep 2019 06:02:34 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54298 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389147AbfISKC2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 06:02:28 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        id S2389179AbfISKCb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 06:02:31 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7AE6D18CB8EA;
-        Thu, 19 Sep 2019 10:02:28 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2EA82C049E36;
+        Thu, 19 Sep 2019 10:02:30 +0000 (UTC)
 Received: from sirius.home.kraxel.org (ovpn-116-47.ams2.redhat.com [10.36.116.47])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2B63A60872;
-        Thu, 19 Sep 2019 10:02:28 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CBFBE6012C;
+        Thu, 19 Sep 2019 10:02:24 +0000 (UTC)
 Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 9A45C9D3C; Thu, 19 Sep 2019 12:02:24 +0200 (CEST)
+        id D221717538; Thu, 19 Sep 2019 12:02:23 +0200 (CEST)
 From:   Gerd Hoffmann <kraxel@redhat.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     Thomas Zimmermann <tzimmermann@suse.de>,
         Daniel Vetter <daniel.vetter@ffwll.ch>,
         Gerd Hoffmann <kraxel@redhat.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Huang Rui <ray.huang@amd.com>,
-        amd-gfx@lists.freedesktop.org (open list:RADEON and AMDGPU DRM DRIVERS),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 07/11] drm/ttm: rename ttm_fbdev_mmap
-Date:   Thu, 19 Sep 2019 12:02:19 +0200
-Message-Id: <20190919100223.13309-8-kraxel@redhat.com>
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Eric Anholt <eric@anholt.net>,
+        linux-kernel@vger.kernel.org (open list),
+        virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER)
+Subject: [PATCH v3 02/11] drm/shmem: switch shmem helper to &drm_gem_object_funcs.mmap
+Date:   Thu, 19 Sep 2019 12:02:14 +0200
+Message-Id: <20190919100223.13309-3-kraxel@redhat.com>
 In-Reply-To: <20190919100223.13309-1-kraxel@redhat.com>
 References: <20190919100223.13309-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.63]); Thu, 19 Sep 2019 10:02:28 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 19 Sep 2019 10:02:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename ttm_fbdev_mmap to ttm_bo_mmap_obj.  Move the vm_pgoff sanity
-check to amdgpu_bo_fbdev_mmap (only ttm_fbdev_mmap user in tree).
+Switch gem shmem helper to the new mmap() workflow,
+from &gem_driver.fops.mmap to &drm_gem_object_funcs.mmap.
 
-The ttm_bo_mmap_obj function can now be used to map any buffer object.
-This allows to implement &drm_gem_object_funcs.mmap in gem ttm helpers.
+v2: Fix vm_flags and vm_page_prot handling.
 
 Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 ---
- include/drm/ttm/ttm_bo_api.h               | 10 ++++------
- drivers/gpu/drm/amd/amdgpu/amdgpu_object.c |  5 ++++-
- drivers/gpu/drm/ttm/ttm_bo_vm.c            |  8 ++------
- 3 files changed, 10 insertions(+), 13 deletions(-)
+ include/drm/drm_gem_shmem_helper.h      |  6 ++----
+ drivers/gpu/drm/drm_gem_shmem_helper.c  | 28 +++++++++----------------
+ drivers/gpu/drm/panfrost/panfrost_gem.c |  2 +-
+ drivers/gpu/drm/v3d/v3d_bo.c            |  2 +-
+ drivers/gpu/drm/virtio/virtgpu_object.c |  2 +-
+ 5 files changed, 15 insertions(+), 25 deletions(-)
 
-diff --git a/include/drm/ttm/ttm_bo_api.h b/include/drm/ttm/ttm_bo_api.h
-index 43c4929a2171..d2277e06316d 100644
---- a/include/drm/ttm/ttm_bo_api.h
-+++ b/include/drm/ttm/ttm_bo_api.h
-@@ -710,16 +710,14 @@ int ttm_bo_kmap(struct ttm_buffer_object *bo, unsigned long start_page,
- void ttm_bo_kunmap(struct ttm_bo_kmap_obj *map);
+diff --git a/include/drm/drm_gem_shmem_helper.h b/include/drm/drm_gem_shmem_helper.h
+index 01f514521687..d89f2116c8ab 100644
+--- a/include/drm/drm_gem_shmem_helper.h
++++ b/include/drm/drm_gem_shmem_helper.h
+@@ -111,7 +111,7 @@ struct drm_gem_shmem_object {
+ 		.poll		= drm_poll,\
+ 		.read		= drm_read,\
+ 		.llseek		= noop_llseek,\
+-		.mmap		= drm_gem_shmem_mmap, \
++		.mmap		= drm_gem_mmap, \
+ 	}
+ 
+ struct drm_gem_shmem_object *drm_gem_shmem_create(struct drm_device *dev, size_t size);
+@@ -143,9 +143,7 @@ drm_gem_shmem_create_with_handle(struct drm_file *file_priv,
+ int drm_gem_shmem_dumb_create(struct drm_file *file, struct drm_device *dev,
+ 			      struct drm_mode_create_dumb *args);
+ 
+-int drm_gem_shmem_mmap(struct file *filp, struct vm_area_struct *vma);
+-
+-extern const struct vm_operations_struct drm_gem_shmem_vm_ops;
++int drm_gem_shmem_mmap(struct drm_gem_object *obj, struct vm_area_struct *vma);
+ 
+ void drm_gem_shmem_print_info(struct drm_printer *p, unsigned int indent,
+ 			      const struct drm_gem_object *obj);
+diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
+index f5918707672f..a9a586630517 100644
+--- a/drivers/gpu/drm/drm_gem_shmem_helper.c
++++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
+@@ -32,7 +32,7 @@ static const struct drm_gem_object_funcs drm_gem_shmem_funcs = {
+ 	.get_sg_table = drm_gem_shmem_get_sg_table,
+ 	.vmap = drm_gem_shmem_vmap,
+ 	.vunmap = drm_gem_shmem_vunmap,
+-	.vm_ops = &drm_gem_shmem_vm_ops,
++	.mmap = drm_gem_shmem_mmap,
+ };
  
  /**
-- * ttm_fbdev_mmap - mmap fbdev memory backed by a ttm buffer object.
-+ * ttm_bo_mmap_obj - mmap memory backed by a ttm buffer object.
+@@ -505,39 +505,30 @@ static void drm_gem_shmem_vm_close(struct vm_area_struct *vma)
+ 	drm_gem_vm_close(vma);
+ }
+ 
+-const struct vm_operations_struct drm_gem_shmem_vm_ops = {
++static const struct vm_operations_struct drm_gem_shmem_vm_ops = {
+ 	.fault = drm_gem_shmem_fault,
+ 	.open = drm_gem_shmem_vm_open,
+ 	.close = drm_gem_shmem_vm_close,
+ };
+-EXPORT_SYMBOL_GPL(drm_gem_shmem_vm_ops);
+ 
+ /**
+  * drm_gem_shmem_mmap - Memory-map a shmem GEM object
+- * @filp: File object
++ * @obj: gem object
+  * @vma: VMA for the area to be mapped
   *
-  * @vma:       vma as input from the fbdev mmap method.
-- * @bo:        The bo backing the address space. The address space will
-- * have the same size as the bo, and start at offset 0.
-+ * @bo:        The bo backing the address space.
+  * This function implements an augmented version of the GEM DRM file mmap
+  * operation for shmem objects. Drivers which employ the shmem helpers should
+- * use this function as their &file_operations.mmap handler in the DRM device file's
+- * file_operations structure.
+- *
+- * Instead of directly referencing this function, drivers should use the
+- * DEFINE_DRM_GEM_SHMEM_FOPS() macro.
++ * use this function as their &drm_gem_object_funcs.mmap handler.
   *
-- * This function is intended to be called by the fbdev mmap method
-- * if the fbdev address space is to be backed by a bo.
-+ * Maps a buffer object.
+  * Returns:
+  * 0 on success or a negative error code on failure.
   */
--int ttm_fbdev_mmap(struct vm_area_struct *vma, struct ttm_buffer_object *bo);
-+int ttm_bo_mmap_obj(struct vm_area_struct *vma, struct ttm_buffer_object *bo);
+-int drm_gem_shmem_mmap(struct file *filp, struct vm_area_struct *vma)
++int drm_gem_shmem_mmap(struct drm_gem_object *obj, struct vm_area_struct *vma)
+ {
+ 	struct drm_gem_shmem_object *shmem;
+ 	int ret;
+ 
+-	ret = drm_gem_mmap(filp, vma);
+-	if (ret)
+-		return ret;
+-
+-	shmem = to_drm_gem_shmem_obj(vma->vm_private_data);
++	shmem = to_drm_gem_shmem_obj(obj);
+ 
+ 	ret = drm_gem_shmem_get_pages(shmem);
+ 	if (ret) {
+@@ -545,9 +536,10 @@ int drm_gem_shmem_mmap(struct file *filp, struct vm_area_struct *vma)
+ 		return ret;
+ 	}
+ 
+-	/* VM_PFNMAP was set by drm_gem_mmap() */
+-	vma->vm_flags &= ~VM_PFNMAP;
+-	vma->vm_flags |= VM_MIXEDMAP;
++	vma->vm_flags |= VM_IO | VM_MIXEDMAP | VM_DONTEXPAND | VM_DONTDUMP;
++	vma->vm_page_prot = pgprot_writecombine(vm_get_page_prot(vma->vm_flags));
++	vma->vm_page_prot = pgprot_decrypted(vma->vm_page_prot);
++	vma->vm_ops = &drm_gem_shmem_vm_ops;
+ 
+ 	/* Remove the fake offset */
+ 	vma->vm_pgoff -= drm_vma_node_start(&shmem->base.vma_node);
+diff --git a/drivers/gpu/drm/panfrost/panfrost_gem.c b/drivers/gpu/drm/panfrost/panfrost_gem.c
+index acb07fe06580..deca0c30bbd4 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_gem.c
++++ b/drivers/gpu/drm/panfrost/panfrost_gem.c
+@@ -112,7 +112,7 @@ static const struct drm_gem_object_funcs panfrost_gem_funcs = {
+ 	.get_sg_table = drm_gem_shmem_get_sg_table,
+ 	.vmap = drm_gem_shmem_vmap,
+ 	.vunmap = drm_gem_shmem_vunmap,
+-	.vm_ops = &drm_gem_shmem_vm_ops,
++	.mmap = drm_gem_shmem_mmap,
+ };
  
  /**
-  * ttm_bo_mmap - mmap out of the ttm device address space.
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
-index 2f11ebd95528..e5447e0d8b88 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
-@@ -1051,7 +1051,10 @@ void amdgpu_bo_fini(struct amdgpu_device *adev)
- int amdgpu_bo_fbdev_mmap(struct amdgpu_bo *bo,
- 			     struct vm_area_struct *vma)
- {
--	return ttm_fbdev_mmap(vma, &bo->tbo);
-+	if (vma->vm_pgoff != 0)
-+		return -EACCES;
-+
-+	return ttm_bo_mmap_obj(vma, &bo->tbo);
- }
+diff --git a/drivers/gpu/drm/v3d/v3d_bo.c b/drivers/gpu/drm/v3d/v3d_bo.c
+index a22b75a3a533..edd299ab53d8 100644
+--- a/drivers/gpu/drm/v3d/v3d_bo.c
++++ b/drivers/gpu/drm/v3d/v3d_bo.c
+@@ -58,7 +58,7 @@ static const struct drm_gem_object_funcs v3d_gem_funcs = {
+ 	.get_sg_table = drm_gem_shmem_get_sg_table,
+ 	.vmap = drm_gem_shmem_vmap,
+ 	.vunmap = drm_gem_shmem_vunmap,
+-	.vm_ops = &drm_gem_shmem_vm_ops,
++	.mmap = drm_gem_shmem_mmap,
+ };
  
- /**
-diff --git a/drivers/gpu/drm/ttm/ttm_bo_vm.c b/drivers/gpu/drm/ttm/ttm_bo_vm.c
-index b5314ef85a3d..6688d7893161 100644
---- a/drivers/gpu/drm/ttm/ttm_bo_vm.c
-+++ b/drivers/gpu/drm/ttm/ttm_bo_vm.c
-@@ -479,14 +479,10 @@ int ttm_bo_mmap(struct file *filp, struct vm_area_struct *vma,
- }
- EXPORT_SYMBOL(ttm_bo_mmap);
+ /* gem_create_object function for allocating a BO struct and doing
+diff --git a/drivers/gpu/drm/virtio/virtgpu_object.c b/drivers/gpu/drm/virtio/virtgpu_object.c
+index 69a3d310ff70..017a9e0fc3bb 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_object.c
++++ b/drivers/gpu/drm/virtio/virtgpu_object.c
+@@ -86,7 +86,7 @@ static const struct drm_gem_object_funcs virtio_gpu_gem_funcs = {
+ 	.get_sg_table = drm_gem_shmem_get_sg_table,
+ 	.vmap = drm_gem_shmem_vmap,
+ 	.vunmap = drm_gem_shmem_vunmap,
+-	.vm_ops = &drm_gem_shmem_vm_ops,
++	.mmap = &drm_gem_shmem_mmap,
+ };
  
--int ttm_fbdev_mmap(struct vm_area_struct *vma, struct ttm_buffer_object *bo)
-+int ttm_bo_mmap_obj(struct vm_area_struct *vma, struct ttm_buffer_object *bo)
- {
--	if (vma->vm_pgoff != 0)
--		return -EACCES;
--
- 	ttm_bo_get(bo);
--
- 	ttm_bo_mmap_vma_setup(bo, vma);
- 	return 0;
- }
--EXPORT_SYMBOL(ttm_fbdev_mmap);
-+EXPORT_SYMBOL(ttm_bo_mmap_obj);
+ struct drm_gem_object *virtio_gpu_create_object(struct drm_device *dev,
 -- 
 2.18.1
 
