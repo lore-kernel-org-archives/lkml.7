@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8ADCC4CED0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35303C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8518020640
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:28:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0153620640
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:28:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932104;
-	bh=ZkLdxNAd1JjyAr7Z/1lwo1NdnKy3RKQR5Pu43SOeOzc=;
+	s=default; t=1568932111;
+	bh=dds7yyew+Q7DthIfAXV2F78bppU+YezfeIJzAnwPfVE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e3PJxh5vaqQlbwvBQa91jSiEFUu1ze537z0BcOH35qp+2Obd5Z2CWleiFZPT7Pso3
-	 4FwMWizik+A3oqBsMGMN35gCiNQINuPybXZ65VPPA6kAQEosCBPk21rv8Ekg3Gb3/k
-	 O+a1Np/z8AZVTue5mmMwfKJBB56li6SAr1d5fehw=
+	b=tFiTUaJ3t6KCUcYkcolUv3wVKSU6YZOj9FMGhhgEc/UvBobtMiW4aFyqAgfDKMSZf
+	 sbMEVlNwUOxGd9YwJcMXVnGuepmP5/zFuRIBZhy9W2eJVbPAzUD8VyeQ3aR8dc16PK
+	 0ZVV2slEnEuBorASjBIpS7LGheRs8DPuu7hSkjok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392791AbfISWTb (ORCPT
+        id S2406648AbfISWTM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:19:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33098 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:19:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389568AbfISWTZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:19:25 -0400
+        id S2404569AbfISWTJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:19:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CCAF20678;
-        Thu, 19 Sep 2019 22:19:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C065D20678;
+        Thu, 19 Sep 2019 22:19:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931564;
-        bh=ZkLdxNAd1JjyAr7Z/1lwo1NdnKy3RKQR5Pu43SOeOzc=;
+        s=default; t=1568931548;
+        bh=dds7yyew+Q7DthIfAXV2F78bppU+YezfeIJzAnwPfVE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2bXLxADlL5unoqOb0C3mVrwM/1sKxz/FnFU8/P9MmvO32XNnaBJZak3tntGwBaeRT
-         boaxPn8VqTMXg5iRU8N6qORLSCCH7WBV1QMIEVgGL2hecfiQa6kDR/v9l7ijMHB1j5
-         Od01ajioyDDX8n78Z/NOwevOIWRs2rrAaVnDeRWI=
+        b=ahA3G1TInNGoSiiTYOU1lAml3jlqu3AXeDIbEulZqDxo6lDP/CG346NdUlBeLmMpk
+         eGikHE1Pcoranb/K7OnnXopJPCrb5MigxrJgt8a2Bcnv2F3YQJhmySulJp/nDRwt+f
+         xvbYXCey8/gOujdKRSiRd8T/D/gh5HtrfsiYtM+I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.9 31/74] crypto: talitos - HMAC SNOOP NO AFEU mode requires SW icv checking.
-Date:   Fri, 20 Sep 2019 00:03:44 +0200
-Message-Id: <20190919214808.108690266@linuxfoundation.org>
+Subject: [PATCH 4.9 26/74] crypto: talitos - check AES key size
+Date:   Fri, 20 Sep 2019 00:03:39 +0200
+Message-Id: <20190919214807.377976288@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214800.519074117@linuxfoundation.org>
 References: <20190919214800.519074117@linuxfoundation.org>
@@ -61,30 +61,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit 4bbfb839259a9c96a0be872e16f7471b7136aee5 upstream.
+commit 1ba34e71e9e56ac29a52e0d42b6290f3dc5bfd90 upstream.
 
-In that mode, hardware ICV verification is not supported.
+Although the HW accepts any size and silently truncates
+it to the correct length, the extra tests expects EINVAL
+to be returned when the key size is not valid.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Fixes: 7405c8d7ff97 ("crypto: talitos - templates for AEAD using HMAC_SNOOP_NO_AFEU")
+Fixes: 4de9d0b547b9 ("crypto: talitos - Add ablkcipher algorithms")
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/talitos.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/crypto/talitos.c |   14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
 --- a/drivers/crypto/talitos.c
 +++ b/drivers/crypto/talitos.c
-@@ -1475,7 +1475,8 @@ static int aead_decrypt(struct aead_requ
- 	if (IS_ERR(edesc))
- 		return PTR_ERR(edesc);
+@@ -1528,6 +1528,18 @@ static int ablkcipher_setkey(struct cryp
+ 	return 0;
+ }
  
--	if ((priv->features & TALITOS_FTR_HW_AUTH_CHECK) &&
-+	if ((edesc->desc.hdr & DESC_HDR_TYPE_IPSEC_ESP) &&
-+	    (priv->features & TALITOS_FTR_HW_AUTH_CHECK) &&
- 	    ((!edesc->src_nents && !edesc->dst_nents) ||
- 	     priv->features & TALITOS_FTR_SRC_LINK_TBL_LEN_INCLUDES_EXTENT)) {
- 
++static int ablkcipher_aes_setkey(struct crypto_ablkcipher *cipher,
++				  const u8 *key, unsigned int keylen)
++{
++	if (keylen == AES_KEYSIZE_128 || keylen == AES_KEYSIZE_192 ||
++	    keylen == AES_KEYSIZE_256)
++		return ablkcipher_setkey(cipher, key, keylen);
++
++	crypto_ablkcipher_set_flags(cipher, CRYPTO_TFM_RES_BAD_KEY_LEN);
++
++	return -EINVAL;
++}
++
+ static void common_nonsnoop_unmap(struct device *dev,
+ 				  struct talitos_edesc *edesc,
+ 				  struct ablkcipher_request *areq)
+@@ -2621,6 +2633,7 @@ static struct talitos_alg_template drive
+ 				.min_keysize = AES_MIN_KEY_SIZE,
+ 				.max_keysize = AES_MAX_KEY_SIZE,
+ 				.ivsize = AES_BLOCK_SIZE,
++				.setkey = ablkcipher_aes_setkey,
+ 			}
+ 		},
+ 		.desc_hdr_template = DESC_HDR_TYPE_COMMON_NONSNOOP_NO_AFEU |
+@@ -2638,6 +2651,7 @@ static struct talitos_alg_template drive
+ 				.min_keysize = AES_MIN_KEY_SIZE,
+ 				.max_keysize = AES_MAX_KEY_SIZE,
+ 				.ivsize = AES_BLOCK_SIZE,
++				.setkey = ablkcipher_aes_setkey,
+ 			}
+ 		},
+ 		.desc_hdr_template = DESC_HDR_TYPE_AESU_CTR_NONSNOOP |
 
 
