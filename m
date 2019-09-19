@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB22C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C834C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 510DE21A49
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:13:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 023B521A49
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:13:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931236;
-	bh=BGuyzmox+sYq/XPQbOvPmCqn5Y4KACHteLBcyR9H7kA=;
+	s=default; t=1568931239;
+	bh=/cJb+htfQAkNd+2fIa/5w62fEqY+y7eBmbzaphFs5TM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hTEn6JWZBhnPV3XSQu9Q4zo3eCxTNTTJOFqKMjGgm7CWlxc3kgun39zcMHF7aX5EW
-	 4REbQtN4w6/7g6qyz4iluRoMddBOWd/5dvkbRBt6rJNEVwcJXGI8MTSmryBPzj99g9
-	 3F2vilt6zIs9GyDYWqfdMb+V8P8VC9bQeQbTFUwQ=
+	b=13VctZay0c1IlA/SL82DtLK/zLTTSmvyrNHdEQ+/W/0ulZROHnFoQm0fATRUierDj
+	 GJwbzjZBG0bnsm+1FtUsvFUdb9mAsYTC6hd9ynws+mWMvJz+jK6etDcTus/ImZ4htu
+	 lO9C4R/g+XBbSjAGeVBuNR9qGjs01Jx4+hJ1fIdc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392076AbfISWNz (ORCPT
+        id S2391903AbfISWNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:13:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53166 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732567AbfISWNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 19 Sep 2019 18:13:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53098 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732518AbfISWNw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:13:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D33192196F;
-        Thu, 19 Sep 2019 22:13:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12A7F21928;
+        Thu, 19 Sep 2019 22:13:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931233;
-        bh=BGuyzmox+sYq/XPQbOvPmCqn5Y4KACHteLBcyR9H7kA=;
+        s=default; t=1568931230;
+        bh=/cJb+htfQAkNd+2fIa/5w62fEqY+y7eBmbzaphFs5TM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aB/h6qADLgKiiYEEl2KZoonl4eeGVsvpOZl1FrS9aaE0L1DtsMrAw/mMCumm+m1rS
-         VBCm9pmkBHLHhK7B/EUPh9H0z73wky+OooAhyX15twAycrKOQuFKnJ8F3+68E5V41C
-         g/SgbTCleo7cFxzhmYL5KzrVRfAt63IlsortSADM=
+        b=xSYLAtWrP3HnOPrXZBKjZS0yN2EwWsjC++t0ecyxJQSTVczllOld55iSHifDGPZms
+         DOt3w1f2hhb7qTv0nH2JifaZWkpSSbSE2TyKeJIcb4/bEhMgvGj/osxJZJWx3ceoyj
+         K5sNIqS6jnZDhjhlb8j/MnySGUJb1r7lMVAhd1Bs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 52/79] cifs: set domainName when a domain-key is used in multiuser
-Date:   Fri, 20 Sep 2019 00:03:37 +0200
-Message-Id: <20190919214812.082014578@linuxfoundation.org>
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 51/79] kallsyms: Dont let kallsyms_lookup_size_offset() fail on retrieving the first symbol
+Date:   Fri, 20 Sep 2019 00:03:36 +0200
+Message-Id: <20190919214811.975668286@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214807.612593061@linuxfoundation.org>
 References: <20190919214807.612593061@linuxfoundation.org>
@@ -60,70 +63,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronnie Sahlberg <lsahlber@redhat.com>
+From: Marc Zyngier <maz@kernel.org>
 
-[ Upstream commit f2aee329a68f5a907bcff11a109dfe17c0b41aeb ]
+[ Upstream commit 2a1a3fa0f29270583f0e6e3100d609e09697add1 ]
 
-RHBZ: 1710429
+An arm64 kernel configured with
 
-When we use a domain-key to authenticate using multiuser we must also set
-the domainnmame for the new volume as it will be used and passed to the server
-in the NTLMSSP Domain-name.
+  CONFIG_KPROBES=y
+  CONFIG_KALLSYMS=y
+  # CONFIG_KALLSYMS_ALL is not set
+  CONFIG_KALLSYMS_BASE_RELATIVE=y
 
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+reports the following kprobe failure:
+
+  [    0.032677] kprobes: failed to populate blacklist: -22
+  [    0.033376] Please take care of using kprobes.
+
+It appears that kprobe fails to retrieve the symbol at address
+0xffff000010081000, despite this symbol being in System.map:
+
+  ffff000010081000 T __exception_text_start
+
+This symbol is part of the first group of aliases in the
+kallsyms_offsets array (symbol names generated using ugly hacks in
+scripts/kallsyms.c):
+
+  kallsyms_offsets:
+          .long   0x1000 // do_undefinstr
+          .long   0x1000 // efi_header_end
+          .long   0x1000 // _stext
+          .long   0x1000 // __exception_text_start
+          .long   0x12b0 // do_cp15instr
+
+Looking at the implementation of get_symbol_pos(), it returns the
+lowest index for aliasing symbols. In this case, it return 0.
+
+But kallsyms_lookup_size_offset() considers 0 as a failure, which
+is obviously wrong (there is definitely a valid symbol living there).
+In turn, the kprobe blacklisting stops abruptly, hence the original
+error.
+
+A CONFIG_KALLSYMS_ALL kernel wouldn't fail as there is always
+some random symbols at the beginning of this array, which are never
+looked up via kallsyms_lookup_size_offset.
+
+Fix it by considering that get_symbol_pos() is always successful
+(which is consistent with the other uses of this function).
+
+Fixes: ffc5089196446 ("[PATCH] Create kallsyms_lookup_size_offset()")
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Will Deacon <will@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/connect.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ kernel/kallsyms.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 208430bb66fc6..75727518b272a 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -2756,6 +2756,7 @@ static int
- cifs_set_cifscreds(struct smb_vol *vol, struct cifs_ses *ses)
+diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
+index 02a0b01380d8e..ed87dac8378cc 100644
+--- a/kernel/kallsyms.c
++++ b/kernel/kallsyms.c
+@@ -262,8 +262,10 @@ int kallsyms_lookup_size_offset(unsigned long addr, unsigned long *symbolsize,
  {
- 	int rc = 0;
-+	int is_domain = 0;
- 	const char *delim, *payload;
- 	char *desc;
- 	ssize_t len;
-@@ -2803,6 +2804,7 @@ cifs_set_cifscreds(struct smb_vol *vol, struct cifs_ses *ses)
- 			rc = PTR_ERR(key);
- 			goto out_err;
- 		}
-+		is_domain = 1;
- 	}
+ 	char namebuf[KSYM_NAME_LEN];
  
- 	down_read(&key->sem);
-@@ -2860,6 +2862,26 @@ cifs_set_cifscreds(struct smb_vol *vol, struct cifs_ses *ses)
- 		goto out_key_put;
- 	}
- 
-+	/*
-+	 * If we have a domain key then we must set the domainName in the
-+	 * for the request.
-+	 */
-+	if (is_domain && ses->domainName) {
-+		vol->domainname = kstrndup(ses->domainName,
-+					   strlen(ses->domainName),
-+					   GFP_KERNEL);
-+		if (!vol->domainname) {
-+			cifs_dbg(FYI, "Unable to allocate %zd bytes for "
-+				 "domain\n", len);
-+			rc = -ENOMEM;
-+			kfree(vol->username);
-+			vol->username = NULL;
-+			kfree(vol->password);
-+			vol->password = NULL;
-+			goto out_key_put;
-+		}
+-	if (is_ksym_addr(addr))
+-		return !!get_symbol_pos(addr, symbolsize, offset);
++	if (is_ksym_addr(addr)) {
++		get_symbol_pos(addr, symbolsize, offset);
++		return 1;
 +	}
-+
- out_key_put:
- 	up_read(&key->sem);
- 	key_put(key);
+ 	return !!module_address_lookup(addr, symbolsize, offset, NULL, namebuf) ||
+ 	       !!__bpf_address_lookup(addr, symbolsize, offset, namebuf);
+ }
 -- 
 2.20.1
 
