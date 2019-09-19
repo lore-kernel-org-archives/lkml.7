@@ -2,52 +2,53 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BCDC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8273C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:30:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D80D20640
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2D6920640
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:30:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932208;
-	bh=o3tP0NE4bLjkO/y323hJ12h+vGP22dZK+e8WsLUikco=;
+	s=default; t=1568932216;
+	bh=IvU46ufIgJ4CzMSuwftImTGxs1s1RzZcG7u/afqd5Yg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dJmm4A+DIRxNPSi5zfyQVdires2pBk4g17GDhyUxqnjE3ZLxnDzfwWvFAdd/UNzcq
-	 Srpju+Ytey9HfL8rJ4WMrcQ5946F5GlHis4h1B9eGqvkTRb9/j6GbNTWW7HqvlrXa/
-	 rzWsGvKt3eN1Y9vb5RKVTn08OQrn0ATo1ut1Tnf0=
+	b=F5aGTmHggz5/6ydrdazAkZzdfQT5xPkPqOqU2uVJM6f88+i2ykI6Wq96OBfg2brc8
+	 JRh6sEcUzVo7Eev6j/OtAQFzSirF30e7EzTqBk/ycxFPhLuDa18v4urAaUIPvjqNYj
+	 Nd90xZmTiQwAcEuqeHjA8Ra/vGUNQ+VbRptWigKo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406133AbfISWaH (ORCPT
+        id S2406191AbfISWaP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:30:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57612 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:30:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406360AbfISWQr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:16:47 -0400
+        id S2404454AbfISWQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:16:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B4B121927;
-        Thu, 19 Sep 2019 22:16:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F16D21924;
+        Thu, 19 Sep 2019 22:16:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931406;
-        bh=o3tP0NE4bLjkO/y323hJ12h+vGP22dZK+e8WsLUikco=;
+        s=default; t=1568931393;
+        bh=IvU46ufIgJ4CzMSuwftImTGxs1s1RzZcG7u/afqd5Yg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tSjnkzZAJHo0y4tOtoK0v484upam4wOIR9vAV5EkYGFEaGBSvyU/FZdE71/1j6oi7
-         5euhXGvBiyzBEx5wlErDTn1FWPwul2hEL5SomaRmfyhQ5TPPEttGg7qkC2n6gv1fbx
-         M1NHiYRZXcP+L4u+znEh+GSIRp3ThQyB9AoOxrq4=
+        b=EZ4/UezjocxDpnG7H3fFJYuIN419fva7E2T/jZ1n91YOUFDNPB/0nnOTj07E61bZt
+         KUZJcp6fzLWDQRvgbb+/6Lg+w3qbvaMl+kc1KlL/6soXi756ok9SFS3y/OxJmqlY24
+         NUREHytfQVvcQa6EIGFCGB+P3xWUqg5KtX3tJUXk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 4.14 05/59] phy: renesas: rcar-gen3-usb2: Disable clearing VBUS in over-current
-Date:   Fri, 20 Sep 2019 00:03:20 +0200
-Message-Id: <20190919214757.399176052@linuxfoundation.org>
+        stable@vger.kernel.org, Prashant Malani <pmalani@chromium.org>,
+        Hayes Wang <hayeswang@realtek.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 29/59] r8152: Set memory to all 0xFFs on failed reg reads
+Date:   Fri, 20 Sep 2019 00:03:44 +0200
+Message-Id: <20190919214805.598788860@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214755.852282682@linuxfoundation.org>
 References: <20190919214755.852282682@linuxfoundation.org>
@@ -60,54 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+From: Prashant Malani <pmalani@chromium.org>
 
-commit e6839c31a608e79f2057fab987dd814f5d3477e6 upstream.
+[ Upstream commit f53a7ad189594a112167efaf17ea8d0242b5ac00 ]
 
-The hardware manual should be revised, but the initial value of
-VBCTRL.OCCLREN is set to 1 actually. If the bit is set, the hardware
-clears VBCTRL.VBOUT and ADPCTRL.DRVVBUS registers automatically
-when the hardware detects over-current signal from a USB power switch.
-However, since the hardware doesn't have any registers which
-indicates over-current, the driver cannot handle it at all. So, if
-"is_otg_channel" hardware detects over-current, since ADPCTRL.DRVVBUS
-register is cleared automatically, the channel cannot be used after
-that.
+get_registers() blindly copies the memory written to by the
+usb_control_msg() call even if the underlying urb failed.
 
-To resolve this behavior, this patch sets the VBCTRL.OCCLREN to 0
-to keep ADPCTRL.DRVVBUS even if the "is_otg_channel" hardware
-detects over-current. (We assume a USB power switch itself protects
-over-current and turns the VBUS off.)
+This could lead to junk register values being read by the driver, since
+some indirect callers of get_registers() ignore the return values. One
+example is:
+  ocp_read_dword() ignores the return value of generic_ocp_read(), which
+  calls get_registers().
 
-This patch is inspired by a BSP patch from Kazuya Mizuguchi.
+So, emulate PCI "Master Abort" behavior by setting the buffer to all
+0xFFs when usb_control_msg() fails.
 
-Fixes: 1114e2d31731 ("phy: rcar-gen3-usb2: change the mode to OTG on the combined channel")
-Cc: <stable@vger.kernel.org> # v4.5+
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This patch is copied from the r8152 driver (v2.12.0) published by
+Realtek (www.realtek.com).
 
+Signed-off-by: Prashant Malani <pmalani@chromium.org>
+Acked-by: Hayes Wang <hayeswang@realtek.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/phy/renesas/phy-rcar-gen3-usb2.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/usb/r8152.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-+++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-@@ -64,6 +64,7 @@
- 					 USB2_OBINT_IDDIGCHG)
+diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
+index 66beff4d76467..455eec3c46942 100644
+--- a/drivers/net/usb/r8152.c
++++ b/drivers/net/usb/r8152.c
+@@ -787,8 +787,11 @@ int get_registers(struct r8152 *tp, u16 value, u16 index, u16 size, void *data)
+ 	ret = usb_control_msg(tp->udev, usb_rcvctrlpipe(tp->udev, 0),
+ 			      RTL8152_REQ_GET_REGS, RTL8152_REQT_READ,
+ 			      value, index, tmp, size, 500);
++	if (ret < 0)
++		memset(data, 0xff, size);
++	else
++		memcpy(data, tmp, size);
  
- /* VBCTRL */
-+#define USB2_VBCTRL_OCCLREN		BIT(16)
- #define USB2_VBCTRL_DRVVBUSSEL		BIT(8)
+-	memcpy(data, tmp, size);
+ 	kfree(tmp);
  
- /* LINECTRL1 */
-@@ -278,6 +279,7 @@ static void rcar_gen3_init_otg(struct rc
- 	u32 val;
- 
- 	val = readl(usb2_base + USB2_VBCTRL);
-+	val &= ~USB2_VBCTRL_OCCLREN;
- 	writel(val | USB2_VBCTRL_DRVVBUSSEL, usb2_base + USB2_VBCTRL);
- 	writel(USB2_OBINT_BITS, usb2_base + USB2_OBINTSTA);
- 	val = readl(usb2_base + USB2_OBINTEN);
+ 	return ret;
+-- 
+2.20.1
+
 
 
