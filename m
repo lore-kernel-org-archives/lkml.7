@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 313CAC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 347CFC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0C0820640
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:28:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03743217D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:28:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932127;
-	bh=zE1iJSEMK9YZIgnP80T4/msrDHV/DtZhxS52pqkEUoo=;
+	s=default; t=1568932138;
+	bh=fDYcZPPzfvjGgFnr+/KHdBDZQ9dq4E+3voYFJ0gq6vM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ktQfhVd4oxfEQGxQE1rOrRxmXU0O03SoYecyWLKt6fpdUfXc1fjg7bmTEMVI4Sc7H
-	 9xXXiJvWEt+c7WB4dxD9gqc9RzBpgUPY8Vb0EdzcuMDLXv1GMhYBVdOKWzN51FJa7e
-	 TCXbfdgFXp6cOhA0Z4G0PNFLF2+sYtz/LuJS2Dkk=
+	b=ilYKagrVeapVjtMtluXSEO0tU4zkZ5yFHnno/Tz7xP8EFU8Dy5FFTBYX+pvZ+dHSC
+	 SzZT1d7UFCSrh2BwKu5d7iVwpgOgv8lkSMC+Ghr41utzlIgRY2Kf4nSueQhy/yyZ4g
+	 xyiyhKq6CPK07NxlFLZ417txtLkUauST7or9rlkw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436578AbfISW2q (ORCPT
+        id S2393724AbfISW25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:28:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60514 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:28:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393956AbfISWSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:18:50 -0400
+        id S2393932AbfISWSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:18:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C06FB20678;
-        Thu, 19 Sep 2019 22:18:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F184D21A49;
+        Thu, 19 Sep 2019 22:18:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931529;
-        bh=zE1iJSEMK9YZIgnP80T4/msrDHV/DtZhxS52pqkEUoo=;
+        s=default; t=1568931509;
+        bh=fDYcZPPzfvjGgFnr+/KHdBDZQ9dq4E+3voYFJ0gq6vM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a3b0z0p8z1w2Y4zK22XfuJ65Nx5IqMsL9JBUr9/rGayDQ1QVks4J3HWyn3teXtXYP
-         tfXZyHHTDzbeVGeRbBpZPXSIt2mXc7QvDHIq6FPW9cTLOEhrPRt4zfMUZy3BdOhTr+
-         7VLkVwtI++LufLUvygsmzUMbTWOmwEyDMxpVdQZI=
+        b=UNAfAMsxnciPTTGupJOOplve/gPM6dTGh3J1kHL9nnGgNXzM0TlYcDT+gd9B5lGj9
+         GU5VSsjNMCbqBgfWnPZJ1LtqU6vHh6mSAR/UAQxJd3rycJoqMFleutWnzgi2eCIFbr
+         Gfq+ytQxNwPoZDWEm2Tm2RKkT1oCn1V1rS7+qAp0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lars Melin <larsm17@gmail.com>,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 02/74] cdc_ether: fix rndis support for Mediatek based smartphones
-Date:   Fri, 20 Sep 2019 00:03:15 +0200
-Message-Id: <20190919214801.121784686@linuxfoundation.org>
+        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 13/74] Revert "MIPS: SiByte: Enable swiotlb for SWARM, LittleSur and BigSur"
+Date:   Fri, 20 Sep 2019 00:03:26 +0200
+Message-Id: <20190919214805.607513669@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214800.519074117@linuxfoundation.org>
 References: <20190919214800.519074117@linuxfoundation.org>
@@ -60,105 +63,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Bjørn Mork" <bjorn@mork.no>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[ Upstream commit 4d7ffcf3bf1be98d876c570cab8fc31d9fa92725 ]
+This reverts commit 8ac4ad063e1a32e321a7a0e6ea9fd305a6ecd033 which is
+commit e4849aff1e169b86c561738daf8ff020e9de1011 upstream
 
-A Mediatek based smartphone owner reports problems with USB
-tethering in Linux.  The verbose USB listing shows a rndis_host
-interface pair (e0/01/03 + 10/00/00), but the driver fails to
-bind with
+Guenter writes:
+	Upstream commit e4849aff1e16 ("MIPS: SiByte: Enable swiotlb for SWARM,
+	LittleSur and BigSur") results in build failures in v4.4.y and v4.14.y.
 
-[  355.960428] usb 1-4: bad CDC descriptors
+	make bigsur_defconfig:
 
-The problem is a failsafe test intended to filter out ACM serial
-functions using the same 02/02/ff class/subclass/protocol as RNDIS.
-The serial functions are recognized by their non-zero bmCapabilities.
+	warning: (SIBYTE_SWARM && SIBYTE_SENTOSA && SIBYTE_BIGSUR && SWIOTLB_XEN && AMD_IOMMU) selects SWIOTLB which has unmet direct dependencies (CAVIUM_OCTEON_SOC || MACH_LOONGSON64 && CPU_LOONGSON3 || NLM_XLP_BOARD || NLM_XLR_BOARD)
+	warning: (SIBYTE_SWARM && SIBYTE_SENTOSA && SIBYTE_BIGSUR && SWIOTLB_XEN && AMD_IOMMU) selects SWIOTLB which has unmet direct dependencies (CAVIUM_OCTEON_SOC || MACH_LOONGSON64 && CPU_LOONGSON3 || NLM_XLP_BOARD || NLM_XLR_BOARD)
 
-No RNDIS function with non-zero bmCapabilities were known at the time
-this failsafe was added. But it turns out that some Wireless class
-RNDIS functions are using the bmCapabilities field. These functions
-are uniquely identified as RNDIS by their class/subclass/protocol, so
-the failing test can safely be disabled.  The same applies to the two
-types of Misc class RNDIS functions.
+	and the actual build:
 
-Applying the failsafe to Communication class functions only retains
-the original functionality, and fixes the problem for the Mediatek based
-smartphone.
+	lib/swiotlb.o: In function `swiotlb_tbl_map_single':
+	(.text+0x1c0): undefined reference to `iommu_is_span_boundary'
+	Makefile:1021: recipe for target 'vmlinux' failed
 
-Tow examples of CDC functional descriptors with non-zero bmCapabilities
-from Wireless class RNDIS functions are:
-
-0e8d:000a  Mediatek Crosscall Spider X5 3G Phone
-
-      CDC Header:
-        bcdCDC               1.10
-      CDC ACM:
-        bmCapabilities       0x0f
-          connection notifications
-          sends break
-          line coding and serial state
-          get/set/clear comm features
-      CDC Union:
-        bMasterInterface        0
-        bSlaveInterface         1
-      CDC Call Management:
-        bmCapabilities       0x03
-          call management
-          use DataInterface
-        bDataInterface          1
-
-and
-
-19d2:1023  ZTE K4201-z
-
-      CDC Header:
-        bcdCDC               1.10
-      CDC ACM:
-        bmCapabilities       0x02
-          line coding and serial state
-      CDC Call Management:
-        bmCapabilities       0x03
-          call management
-          use DataInterface
-        bDataInterface          1
-      CDC Union:
-        bMasterInterface        0
-        bSlaveInterface         1
-
-The Mediatek example is believed to apply to most smartphones with
-Mediatek firmware.  The ZTE example is most likely also part of a larger
-family of devices/firmwares.
-
-Suggested-by: Lars Melin <larsm17@gmail.com>
-Signed-off-by: Bjørn Mork <bjorn@mork.no>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Cc: Maciej W. Rozycki <macro@linux-mips.org>
+Cc: Paul Burton <paul.burton@mips.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: linux-mips@linux-mips.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Sasha Levin <sashal@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/cdc_ether.c |   13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ arch/mips/Kconfig                |    3 ---
+ arch/mips/sibyte/common/Makefile |    1 -
+ arch/mips/sibyte/common/dma.c    |   14 --------------
+ 3 files changed, 18 deletions(-)
+ delete mode 100644 arch/mips/sibyte/common/dma.c
 
---- a/drivers/net/usb/cdc_ether.c
-+++ b/drivers/net/usb/cdc_ether.c
-@@ -212,9 +212,16 @@ int usbnet_generic_cdc_bind(struct usbne
- 		goto bad_desc;
- 	}
- skip:
--	if (	rndis &&
--		header.usb_cdc_acm_descriptor &&
--		header.usb_cdc_acm_descriptor->bmCapabilities) {
-+	/* Communcation class functions with bmCapabilities are not
-+	 * RNDIS.  But some Wireless class RNDIS functions use
-+	 * bmCapabilities for their own purpose. The failsafe is
-+	 * therefore applied only to Communication class RNDIS
-+	 * functions.  The rndis test is redundant, but a cheap
-+	 * optimization.
-+	 */
-+	if (rndis && is_rndis(&intf->cur_altsetting->desc) &&
-+	    header.usb_cdc_acm_descriptor &&
-+	    header.usb_cdc_acm_descriptor->bmCapabilities) {
- 			dev_dbg(&intf->dev,
- 				"ACM capabilities %02x, not really RNDIS?\n",
- 				header.usb_cdc_acm_descriptor->bmCapabilities);
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -792,7 +792,6 @@ config SIBYTE_SWARM
+ 	select SYS_SUPPORTS_HIGHMEM
+ 	select SYS_SUPPORTS_LITTLE_ENDIAN
+ 	select ZONE_DMA32 if 64BIT
+-	select SWIOTLB if ARCH_DMA_ADDR_T_64BIT && PCI
+ 
+ config SIBYTE_LITTLESUR
+ 	bool "Sibyte BCM91250C2-LittleSur"
+@@ -815,7 +814,6 @@ config SIBYTE_SENTOSA
+ 	select SYS_HAS_CPU_SB1
+ 	select SYS_SUPPORTS_BIG_ENDIAN
+ 	select SYS_SUPPORTS_LITTLE_ENDIAN
+-	select SWIOTLB if ARCH_DMA_ADDR_T_64BIT && PCI
+ 
+ config SIBYTE_BIGSUR
+ 	bool "Sibyte BCM91480B-BigSur"
+@@ -829,7 +827,6 @@ config SIBYTE_BIGSUR
+ 	select SYS_SUPPORTS_HIGHMEM
+ 	select SYS_SUPPORTS_LITTLE_ENDIAN
+ 	select ZONE_DMA32 if 64BIT
+-	select SWIOTLB if ARCH_DMA_ADDR_T_64BIT && PCI
+ 
+ config SNI_RM
+ 	bool "SNI RM200/300/400"
+--- a/arch/mips/sibyte/common/Makefile
++++ b/arch/mips/sibyte/common/Makefile
+@@ -1,5 +1,4 @@
+ obj-y := cfe.o
+-obj-$(CONFIG_SWIOTLB)			+= dma.o
+ obj-$(CONFIG_SIBYTE_BUS_WATCHER)	+= bus_watcher.o
+ obj-$(CONFIG_SIBYTE_CFE_CONSOLE)	+= cfe_console.o
+ obj-$(CONFIG_SIBYTE_TBPROF)		+= sb_tbprof.o
+--- a/arch/mips/sibyte/common/dma.c
++++ /dev/null
+@@ -1,14 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0+
+-/*
+- *	DMA support for Broadcom SiByte platforms.
+- *
+- *	Copyright (c) 2018  Maciej W. Rozycki
+- */
+-
+-#include <linux/swiotlb.h>
+-#include <asm/bootinfo.h>
+-
+-void __init plat_swiotlb_setup(void)
+-{
+-	swiotlb_init(1);
+-}
 
 
