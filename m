@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A5BFC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A7DC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B08C21907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:16:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BED9821907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:16:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931363;
-	bh=a8PcxwkH/yhBpP/Uv+e/tOJ3RH9mLDf+5boZSmLhLN8=;
+	s=default; t=1568931365;
+	bh=9msoC85KjAkTZ+3NyTfzwtqHQ+ihqnOm2jDZUcXZ8B4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tdlJKVpXoWYYaRNfVKmLmKzDWOPiNFP+JCckvtZ/AHvfo9W0oNDsgmzKK9gs5RUOF
-	 9OODu2wdzI/t+NN+FMJK0hBS9v2Z58v/W70duoxKzJCnsfFi/poIuZCMVghH/MprqI
-	 M5uZQIf5ReYsO4KK9fNm4o/oInp6LFn/6RbRkxi8=
+	b=ahZr5SLeA13XgeM26lvo3l68xCJZRA08ijLTnVbxFjqmaDMQgFyT0Oab1cV79oacG
+	 2+Y31h9ud1jfhCWh6AFswctrDQUKEl79OzgE/CUBwmp3ZKzJ4ZgopRDdSJfRMKJmDP
+	 EBBLIVjloAc4ZPmPxYO6rGEt64uiT5UEZx3allw4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406247AbfISWQC (ORCPT
+        id S2406258AbfISWQE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:16:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55968 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:16:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406216AbfISWPy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:15:54 -0400
+        id S2406225AbfISWP5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:15:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F0E420678;
-        Thu, 19 Sep 2019 22:15:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A8F1217D6;
+        Thu, 19 Sep 2019 22:15:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931354;
-        bh=a8PcxwkH/yhBpP/Uv+e/tOJ3RH9mLDf+5boZSmLhLN8=;
+        s=default; t=1568931356;
+        bh=9msoC85KjAkTZ+3NyTfzwtqHQ+ihqnOm2jDZUcXZ8B4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EHz/9uIwBwoEKzGBJWCoRmL/F7YpoyPnDYNpWbfdAwO4Rfp7WPQCR95YJDn9k0A5S
-         17iBupqZ0cqis8dTH6qLTy1yrsRmVQf8k8c0SXHG555R9ocvoghYAh+M9GqA4CDgxk
-         eJFVeOtQCmXDR/Vf5bOXYhRxIMXcGl0fQnYxkoIc=
+        b=RU6k9RtDnYDp6hnwd/ZQXjTHN0yJgZgx8G9HsN6y8b0QC6BKSP3ukOQaAqn9jbsep
+         L/Bl3jFSletAnzvRIsbsgKXb5uJm59QS7gve5aUpq5ulVxh5amdaSkwTscALLtRX8u
+         uob3kmytgAgyUBehlhDJI6h3zDgYLiISgImleUXg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilya Leoshkevich <iii@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 16/59] s390/bpf: fix lcgr instruction encoding
-Date:   Fri, 20 Sep 2019 00:03:31 +0200
-Message-Id: <20190919214800.852584636@linuxfoundation.org>
+Subject: [PATCH 4.14 17/59] ARM: OMAP2+: Fix omap4 errata warning on other SoCs
+Date:   Fri, 20 Sep 2019 00:03:32 +0200
+Message-Id: <20190919214801.116031978@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214755.852282682@linuxfoundation.org>
 References: <20190919214755.852282682@linuxfoundation.org>
@@ -61,41 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Leoshkevich <iii@linux.ibm.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit bb2d267c448f4bc3a3389d97c56391cb779178ae ]
+[ Upstream commit 45da5e09dd32fa98c32eaafe2513db6bd75e2f4f ]
 
-"masking, test in bounds 3" fails on s390, because
-BPF_ALU64_IMM(BPF_NEG, BPF_REG_2, 0) ignores the top 32 bits of
-BPF_REG_2. The reason is that JIT emits lcgfr instead of lcgr.
-The associated comment indicates that the code was intended to
-emit lcgr in the first place, it's just that the wrong opcode
-was used.
+We have errata i688 workaround produce warnings on SoCs other than
+omap4 and omap5:
 
-Fix by using the correct opcode.
+omap4_sram_init:Unable to allocate sram needed to handle errata I688
+omap4_sram_init:Unable to get sram pool needed to handle errata I688
 
-Fixes: 054623105728 ("s390/bpf: Add s390x eBPF JIT compiler backend")
-Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Acked-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+This is happening because there is no ti,omap4-mpu node, or no SRAM
+to configure for the other SoCs, so let's remove the warning based
+on the SoC revision checks.
+
+As nobody has complained it seems that the other SoC variants do not
+need this workaround.
+
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/net/bpf_jit_comp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/mach-omap2/omap4-common.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/s390/net/bpf_jit_comp.c b/arch/s390/net/bpf_jit_comp.c
-index bc9431aace05d..fcb9e840727cd 100644
---- a/arch/s390/net/bpf_jit_comp.c
-+++ b/arch/s390/net/bpf_jit_comp.c
-@@ -882,7 +882,7 @@ static noinline int bpf_jit_insn(struct bpf_jit *jit, struct bpf_prog *fp, int i
- 		break;
- 	case BPF_ALU64 | BPF_NEG: /* dst = -dst */
- 		/* lcgr %dst,%dst */
--		EMIT4(0xb9130000, dst_reg, dst_reg);
-+		EMIT4(0xb9030000, dst_reg, dst_reg);
- 		break;
- 	/*
- 	 * BPF_FROM_BE/LE
+diff --git a/arch/arm/mach-omap2/omap4-common.c b/arch/arm/mach-omap2/omap4-common.c
+index cf65ab8bb0046..e5dcbda20129d 100644
+--- a/arch/arm/mach-omap2/omap4-common.c
++++ b/arch/arm/mach-omap2/omap4-common.c
+@@ -131,6 +131,9 @@ static int __init omap4_sram_init(void)
+ 	struct device_node *np;
+ 	struct gen_pool *sram_pool;
+ 
++	if (!soc_is_omap44xx() && !soc_is_omap54xx())
++		return 0;
++
+ 	np = of_find_compatible_node(NULL, NULL, "ti,omap4-mpu");
+ 	if (!np)
+ 		pr_warn("%s:Unable to allocate sram needed to handle errata I688\n",
 -- 
 2.20.1
 
