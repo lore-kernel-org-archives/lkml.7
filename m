@@ -2,53 +2,53 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3371DC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD651C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 089B221920
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:29:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF4C720678
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:29:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932194;
-	bh=ouKyXAVyj6EMO2IS6VD8fdjtqEOD8VGdbxLgDFJDtEY=;
+	s=default; t=1568932196;
+	bh=mj3U4sRDS8aeanAqrXJcjO6Wq6Bt5NxJ+ZBR9ABdTa0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DfcDrNlrxkL42JqcRk8znIGTB+amZBo830E9F4WASAfqnCBimtpnhioaonrauW3ol
-	 gru0ZoCzvGfOSVJTIGQlbNYLUb/J2HD5T35Sloyrmi79hPfOCPQehSJcrOll7Oyd3X
-	 wo736LcZ0qUtuw40pOdPJKlP+8QtN/7o7Ikt0plA=
+	b=dhYf4GZ6tE5XLtdTFRAyKf3o6AfyT6+Am4bqgeoJBDpew2S0P8TYlkbsRW0Rzo0b0
+	 kLlWoQs3Ah7InRg1e0/yS3f90BHnrTb5itCeJaHUV02ykYqql/Qi3sstjsVps0gq4k
+	 m1JYiEIOciAyF2ARyRB9LM6H2GG3yF9I40p3Xc9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404580AbfISWRF (ORCPT
+        id S2436592AbfISW3z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:17:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57958 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:29:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406399AbfISWQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:16:59 -0400
+        id S2406417AbfISWRD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:17:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21B9D21907;
-        Thu, 19 Sep 2019 22:16:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6576217D6;
+        Thu, 19 Sep 2019 22:17:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931417;
-        bh=ouKyXAVyj6EMO2IS6VD8fdjtqEOD8VGdbxLgDFJDtEY=;
+        s=default; t=1568931423;
+        bh=mj3U4sRDS8aeanAqrXJcjO6Wq6Bt5NxJ+ZBR9ABdTa0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SOZLAXI/4kQ/6YkzUkcXJ9XWj6E2dUVNiEMWsc619/hwajYfKBroJwZRiE7Z5lkB2
-         TAeLmTwmTh5MjDr6k+BUomm84N7l/f1xrsM8DFl5i0/zdrWYYavKPnmXkfP9sLzWVt
-         GoB+Rku1gqe8Vbsy1MWQIDpEpHDJIc7vDKb2DNjI=
+        b=CfnnxvUnwtZcuLZ5E4QQ6RBCr2GEBQCEE1FQqm5lZJkiB4dtLNDmFMJviKedou2qo
+         0BMeveSZhn/0k88uLP4guGuW7oqeVYIHblVo2wBZ/AUVbXMdFepFB1AjKvUXpmRYrQ
+         uG1zUw8jctgtSYCsgvSV6qqtiXK1ZWILLPxKjcjw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matt Delco <delco@chromium.org>,
-        Jim Mattson <jmattson@google.com>,
-        syzbot+983c866c3dd6efa3662a@syzkaller.appspotmail.com,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.14 09/59] KVM: coalesced_mmio: add bounds checking
-Date:   Fri, 20 Sep 2019 00:03:24 +0200
-Message-Id: <20190919214758.026112574@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Stancek <jstancek@redhat.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 33/59] NFSv2: Fix write regression
+Date:   Fri, 20 Sep 2019 00:03:48 +0200
+Message-Id: <20190919214805.896609158@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214755.852282682@linuxfoundation.org>
 References: <20190919214755.852282682@linuxfoundation.org>
@@ -61,82 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Delco <delco@chromium.org>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-commit b60fe990c6b07ef6d4df67bc0530c7c90a62623a upstream.
+[ Upstream commit d33d4beb522987d1c305c12500796f9be3687dee ]
 
-The first/last indexes are typically shared with a user app.
-The app can change the 'last' index that the kernel uses
-to store the next result.  This change sanity checks the index
-before using it for writing to a potentially arbitrary address.
+Ensure we update the write result count on success, since the
+RPC call itself does not do so.
 
-This fixes CVE-2019-14821.
-
-Cc: stable@vger.kernel.org
-Fixes: 5f94c1741bdc ("KVM: Add coalesced MMIO support (common part)")
-Signed-off-by: Matt Delco <delco@chromium.org>
-Signed-off-by: Jim Mattson <jmattson@google.com>
-Reported-by: syzbot+983c866c3dd6efa3662a@syzkaller.appspotmail.com
-[Use READ_ONCE. - Paolo]
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: Jan Stancek <jstancek@redhat.com>
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Tested-by: Jan Stancek <jstancek@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- virt/kvm/coalesced_mmio.c |   17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ fs/nfs/proc.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/virt/kvm/coalesced_mmio.c
-+++ b/virt/kvm/coalesced_mmio.c
-@@ -40,7 +40,7 @@ static int coalesced_mmio_in_range(struc
- 	return 1;
- }
+diff --git a/fs/nfs/proc.c b/fs/nfs/proc.c
+index 73d1f7277e482..eff93315572e7 100644
+--- a/fs/nfs/proc.c
++++ b/fs/nfs/proc.c
+@@ -611,8 +611,10 @@ static int nfs_proc_pgio_rpc_prepare(struct rpc_task *task,
  
--static int coalesced_mmio_has_room(struct kvm_coalesced_mmio_dev *dev)
-+static int coalesced_mmio_has_room(struct kvm_coalesced_mmio_dev *dev, u32 last)
+ static int nfs_write_done(struct rpc_task *task, struct nfs_pgio_header *hdr)
  {
- 	struct kvm_coalesced_mmio_ring *ring;
- 	unsigned avail;
-@@ -52,7 +52,7 @@ static int coalesced_mmio_has_room(struc
- 	 * there is always one unused entry in the buffer
- 	 */
- 	ring = dev->kvm->coalesced_mmio_ring;
--	avail = (ring->first - ring->last - 1) % KVM_COALESCED_MMIO_MAX;
-+	avail = (ring->first - last - 1) % KVM_COALESCED_MMIO_MAX;
- 	if (avail == 0) {
- 		/* full */
- 		return 0;
-@@ -67,24 +67,27 @@ static int coalesced_mmio_write(struct k
- {
- 	struct kvm_coalesced_mmio_dev *dev = to_mmio(this);
- 	struct kvm_coalesced_mmio_ring *ring = dev->kvm->coalesced_mmio_ring;
-+	__u32 insert;
- 
- 	if (!coalesced_mmio_in_range(dev, addr, len))
- 		return -EOPNOTSUPP;
- 
- 	spin_lock(&dev->kvm->ring_lock);
- 
--	if (!coalesced_mmio_has_room(dev)) {
-+	insert = READ_ONCE(ring->last);
-+	if (!coalesced_mmio_has_room(dev, insert) ||
-+	    insert >= KVM_COALESCED_MMIO_MAX) {
- 		spin_unlock(&dev->kvm->ring_lock);
- 		return -EOPNOTSUPP;
- 	}
- 
- 	/* copy data in first free entry of the ring */
- 
--	ring->coalesced_mmio[ring->last].phys_addr = addr;
--	ring->coalesced_mmio[ring->last].len = len;
--	memcpy(ring->coalesced_mmio[ring->last].data, val, len);
-+	ring->coalesced_mmio[insert].phys_addr = addr;
-+	ring->coalesced_mmio[insert].len = len;
-+	memcpy(ring->coalesced_mmio[insert].data, val, len);
- 	smp_wmb();
--	ring->last = (ring->last + 1) % KVM_COALESCED_MMIO_MAX;
-+	ring->last = (insert + 1) % KVM_COALESCED_MMIO_MAX;
- 	spin_unlock(&dev->kvm->ring_lock);
+-	if (task->tk_status >= 0)
++	if (task->tk_status >= 0) {
++		hdr->res.count = hdr->args.count;
+ 		nfs_writeback_update_inode(hdr);
++	}
  	return 0;
  }
+ 
+-- 
+2.20.1
+
 
 
