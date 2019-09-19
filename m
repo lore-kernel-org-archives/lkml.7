@@ -2,356 +2,140 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE347C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EAFCC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ABBD214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:23:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="UK/iL0mu"
+	by mail.kernel.org (Postfix) with ESMTP id 58523214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:23:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403868AbfISOXn (ORCPT
+        id S2390621AbfISOX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 10:23:43 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:53488 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390591AbfISOXd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 10:23:33 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190919142331euoutp0253054216c1f8f8c70c05f1001c1a1111~F3PoRnaId1641716417euoutp02b
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 14:23:31 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190919142331euoutp0253054216c1f8f8c70c05f1001c1a1111~F3PoRnaId1641716417euoutp02b
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1568903011;
-        bh=D6O2vi1XFTzvAfXi4lZNJ+jX68pC4swcd5xtePoIdpw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UK/iL0muiGT+GRxdvdSeBGK/rRNfLRMhby1to/QFm3AiipSoWizmRDmOAf9k5HDW9
-         UAjJ8n7DgqAO+FprFTuCN6QaKXiEVlrnOzMD50bAl/xdWi/Ow8H0uRv8GZ9/pwfiD6
-         LSYmprmm75cRuhen9t0HD0BpuHz1iH9K4JBkYxg4=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190919142330eucas1p1dce149e7c648e6ce551fa74f9cb03431~F3PnZ6T9K1889418894eucas1p1S;
-        Thu, 19 Sep 2019 14:23:30 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 5C.1B.04309.26F838D5; Thu, 19
-        Sep 2019 15:23:30 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190919142329eucas1p2e53992eab9ec6b404f716f955b3c228e~F3Pml-I3T3084730847eucas1p2z;
-        Thu, 19 Sep 2019 14:23:29 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190919142329eusmtrp10fc1c968997d1254489c18d3c5a2e802~F3PmXol0x0562505625eusmtrp1L;
-        Thu, 19 Sep 2019 14:23:29 +0000 (GMT)
-X-AuditID: cbfec7f4-ae1ff700000010d5-61-5d838f62dfa0
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 85.1F.04166.16F838D5; Thu, 19
-        Sep 2019 15:23:29 +0100 (BST)
-Received: from AMDC3555.digital.local (unknown [106.120.51.67]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190919142328eusmtip1da3ae3dff76a6d3af6177c4e689bea6f~F3Plh4up63272632726eusmtip1m;
-        Thu, 19 Sep 2019 14:23:28 +0000 (GMT)
-From:   =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@samsung.com>
-To:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc:     =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@partner.samsung.com>,
-        cw00.choi@samsung.com, myungjoo.ham@samsung.com,
-        inki.dae@samsung.com, sw0312.kim@samsung.com,
-        georgi.djakov@linaro.org, leonard.crestez@nxp.com,
-        m.szyprowski@samsung.com, b.zolnierkie@samsung.com, krzk@kernel.org
-Subject: [RFC PATCH v2 09/11] devfreq: exynos-bus: Add interconnect
- functionality to exynos-bus
-Date:   Thu, 19 Sep 2019 16:22:34 +0200
-Message-Id: <20190919142236.4071-10-a.swigon@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190919142236.4071-1-a.swigon@samsung.com>
+        Thu, 19 Sep 2019 10:23:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35742 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403836AbfISOXj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 10:23:39 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0D5DE18C891B;
+        Thu, 19 Sep 2019 14:23:39 +0000 (UTC)
+Received: from t460s.redhat.com (unknown [10.36.118.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BE9CB60920;
+        Thu, 19 Sep 2019 14:23:36 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, virtualization@lists.linux-foundation.org,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>, Qian Cai <cai@lca.pw>
+Subject: [PATCH RFC v3 8/9] mm/memory_hotplug: Introduce offline_and_remove_memory()
+Date:   Thu, 19 Sep 2019 16:22:27 +0200
+Message-Id: <20190919142228.5483-9-david@redhat.com>
+In-Reply-To: <20190919142228.5483-1-david@redhat.com>
+References: <20190919142228.5483-1-david@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRj2O+fs7CjNzqbVm0Xlwh9JTYuCT4pICDo/utFPQ2rmQSU3Zcdl
-        V5qX7GKlboTXUlPTlHIuFRtqOkciiWLWKjUmZGlZWm1RQlTbzqz+Pd9zeZ/3hY8hFU5JGJOi
-        zeB1WnWqkg6i2h8vDG1KKMiJj3ZZI7DtcZsUO29dQLilpFmCX7inJbjSPiTBz77N07i4y0Jj
-        o7OQwsPDZilueP1Fgi1vHBI8aq2gseuaHeGS4W4C37O/luLxrAYal5je07vknKXxMs1NODpp
-        zpnfT3APas9zLXMdBNc710lw11sbEeeyrDnIxAXtSORTU07wuqidR4OSn5qmiPSarSdv5zYT
-        BvQu8goKZIDdCu9HDdIrKIhRsA0I6htnKPHhRjDT9NWvuBDkjU9LFyPT1yr9rnoElfX30d/I
-        QP53n4tmY8F4Y9IXD2XtCExV874IydYScL18mPS6Qlg1DNb+8GGKjYDcgs+EF8vYGKi2mWmx
-        by00mXt8nkAP7+72dns9chgonfJh0uPJaSsnRf8FBozGdBHvhlGTmRBxCHzob/XfsBqemK5S
-        Ihbg7UOnxLscsAYEljt2/6Dt0Nc/4hEYT8EGaLZGiXQsDGaPUV4a2GB4+UkurhAMxvZiUqRl
-        cClPIUIlWEuDxSBAdpPDP5uD1pwKqhCFl/13S9l/t5T9q61CZCNawesFTRIvbNHymSpBrRH0
-        2iTVsTSNBXm+3ZNf/e4OZP2ZYEMsg5RLZOsyc+IVEvUJ4ZTGhoAhlaGyim3Z8QpZovrUaV6X
-        dkSnT+UFG1rFUMoVsjMBk4cVbJI6gz/O8+m8blElmMAwA9qT61DVXbRoY6L7ZtwLqubZep2F
-        eS4vnTijH3JVVe+19m6eNZ0Pt2bcdaxsmNVkE4bPh1r2ZZ1Lq6mz69fnTvQYlquCl+pf5Y01
-        7T+5NGZmID4gYsF4wxXwSRX2O/nm2eeqor6P8/kBGZquZUkbR+LMVw90h7yMrnSF7i2aeCQf
-        UVJCsnpzJKkT1H8AkIukJXIDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrKIsWRmVeSWpSXmKPExsVy+t/xu7qJ/c2xBocbNSwOHdvKbnF/Xiuj
-        xcYZ61ktrn95zmox/8g5VosrX9+zWUzfu4nNYtL9CSwW589vYLdYcfcjq8Wmx9dYLS7vmsNm
-        8bn3CKPFjPP7mCzWHrnLbnG7cQWbxYzJL9kcBD02repk87hzbQ+bx/3u40wem5fUe2x8t4PJ
-        4+C7PUwefVtWMXp83iQXwBGlZ1OUX1qSqpCRX1xiqxRtaGGkZ2hpoWdkYqlnaGwea2VkqqRv
-        Z5OSmpNZllqkb5egl3Fp8hOmgsUmFYta1jM1MD7T6mLk5JAQMJF43jufpYuRi0NIYCmjxI62
-        K+wQCQmJj+tvsELYwhJ/rnWxQRR9YpR4/GgqC0iCTcBRYtLUB+wgCRGBU4wSW5efA6tiFtjA
-        JLH86UuwdmGBeIm3v3+CjWURUJVo6f/ABGLzClhKLDy0gQ1ihbzE6g0HmEFsTqD4l33zwTYI
-        CVhIzH08lxGiXlDi5MwnQHEOoAXqEuvnCYGEmYFam7fOZp7AKDgLSdUshKpZSKoWMDKvYhRJ
-        LS3OTc8tNtQrTswtLs1L10vOz93ECIzibcd+bt7BeGlj8CFGAQ5GJR5ehfLmWCHWxLLiytxD
-        jBIczEoivHNMm2KFeFMSK6tSi/Lji0pzUosPMZoCvTaRWUo0OR+YYPJK4g1NDc0tLA3Njc2N
-        zSyUxHk7BA7GCAmkJ5akZqemFqQWwfQxcXBKNTAGsU/t97jS78Z25YSqY8CKJiOrbrZ7byac
-        mjV/xb6KF2fifrl6Hb/ry7T2+sz3618uMf1y9xLjaxlrCVYxvfY5TwWvfVLbZZW3/WduouNf
-        w7jFC01CjjQtCGzeL7Yh8o3cGg5XRksxjlgfpdXvOBPfNT16PNNjry/j4XtsRcuubYiZXx/O
-        1TFHiaU4I9FQi7moOBEAjZlCuPgCAAA=
-X-CMS-MailID: 20190919142329eucas1p2e53992eab9ec6b404f716f955b3c228e
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190919142329eucas1p2e53992eab9ec6b404f716f955b3c228e
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190919142329eucas1p2e53992eab9ec6b404f716f955b3c228e
-References: <20190919142236.4071-1-a.swigon@samsung.com>
-        <CGME20190919142329eucas1p2e53992eab9ec6b404f716f955b3c228e@eucas1p2.samsung.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Thu, 19 Sep 2019 14:23:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Artur Świgoń <a.swigon@partner.samsung.com>
+virtio-mem wants to offline and remove a memory block once it unplugged
+all subblocks (e.g., using alloc_contig_range()). Let's provide
+an interface to do that from a driver. virtio-mem already supports to
+offline partially unplugged memory blocks. Offlining a fully unplugged
+memory block will not require to migrate any pages. All unplugged
+subblocks are PageOffline() and have a reference count of 0 - so
+offlining code will simply skip them.
 
-This patch adds interconnect functionality to the exynos-bus devfreq
-driver.
+All we need an interface to trigger the "offlining" and the removing in a
+single operation - to make sure the memory block cannot get onlined by
+user space again before it gets removed.
 
-The SoC topology is a graph (or, more specifically, a tree) and most of
-its edges are taken from the devfreq parent-child hierarchy (cf.
-Documentation/devicetree/bindings/devfreq/exynos-bus.txt). Due to
-unspecified relative probing order, -EPROBE_DEFER may be propagated to
-guarantee that a child is probed before its parent.
+To keep things simple, allow to only work on a single memory block.
 
-Each bus is now an interconnect provider and an interconnect node as well
-(cf. Documentation/interconnect/interconnect.rst), i.e. every bus registers
-itself as a node. Node IDs are not hardcoded but rather assigned at
-runtime, in probing order (subject to the above-mentioned exception
-regarding relative order). This approach allows for using this driver with
-various Exynos SoCs.
-
-Frequencies requested via the interconnect API for a given node are
-propagated to devfreq using dev_pm_qos_update_request(). Please note that
-it is not an error when CONFIG_INTERCONNECT is 'n', in which case all
-interconnect API functions are no-op.
-
-Signed-off-by: Artur Świgoń <a.swigon@partner.samsung.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Oscar Salvador <osalvador@suse.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Wei Yang <richard.weiyang@gmail.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Qian Cai <cai@lca.pw>
+Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- drivers/devfreq/exynos-bus.c | 153 +++++++++++++++++++++++++++++++++++
- 1 file changed, 153 insertions(+)
+ include/linux/memory_hotplug.h |  1 +
+ mm/memory_hotplug.c            | 35 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 36 insertions(+)
 
-diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
-index 8d44810cac69..e0232202720d 100644
---- a/drivers/devfreq/exynos-bus.c
-+++ b/drivers/devfreq/exynos-bus.c
-@@ -14,14 +14,19 @@
- #include <linux/devfreq-event.h>
- #include <linux/device.h>
- #include <linux/export.h>
-+#include <linux/idr.h>
-+#include <linux/interconnect-provider.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/pm_opp.h>
-+#include <linux/pm_qos.h>
- #include <linux/platform_device.h>
- #include <linux/regulator/consumer.h>
+diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+index 384ffb3d69ab..a1bf868aaeba 100644
+--- a/include/linux/memory_hotplug.h
++++ b/include/linux/memory_hotplug.h
+@@ -313,6 +313,7 @@ extern void try_offline_node(int nid);
+ extern int offline_pages(unsigned long start_pfn, unsigned long nr_pages);
+ extern int remove_memory(int nid, u64 start, u64 size);
+ extern void __remove_memory(int nid, u64 start, u64 size);
++extern int offline_and_remove_memory(int nid, u64 start, u64 size);
  
- #define DEFAULT_SATURATION_RATIO	40
- 
-+#define icc_units_to_khz(x) ((x) / 8)
-+
- struct exynos_bus {
- 	struct device *dev;
- 
-@@ -35,6 +40,12 @@ struct exynos_bus {
- 	struct opp_table *opp_table;
- 	struct clk *clk;
- 	unsigned int ratio;
-+
-+	/* One provider per bus, one node per provider */
-+	struct icc_provider provider;
-+	struct icc_node *node;
-+
-+	struct dev_pm_qos_request qos_req;
- };
- 
- /*
-@@ -59,6 +70,13 @@ exynos_bus_ops_edev(enable_edev);
- exynos_bus_ops_edev(disable_edev);
- exynos_bus_ops_edev(set_event);
- 
-+static int exynos_bus_next_id(void)
-+{
-+	static DEFINE_IDA(exynos_bus_icc_ida);
-+
-+	return ida_alloc(&exynos_bus_icc_ida, GFP_KERNEL);
-+}
-+
- static int exynos_bus_get_event(struct exynos_bus *bus,
- 				struct devfreq_event_data *edata)
- {
-@@ -171,6 +189,38 @@ static void exynos_bus_passive_exit(struct device *dev)
- 	clk_disable_unprepare(bus->clk);
+ #else
+ static inline bool is_mem_section_removable(unsigned long pfn,
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index d23ff7c5c96b..caf3c93f5f7c 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1742,4 +1742,39 @@ int remove_memory(int nid, u64 start, u64 size)
+ 	return rc;
  }
- 
-+static int exynos_bus_icc_set(struct icc_node *src, struct icc_node *dst)
+ EXPORT_SYMBOL_GPL(remove_memory);
++
++/*
++ * Try to offline and remove a memory block. Might take a long time to
++ * finish in case memory is still in use. Primarily useful for memory devices
++ * that logically unplugged all memory (so it's no longer in use) and want to
++ * offline + remove the memory block.
++ */
++int offline_and_remove_memory(int nid, u64 start, u64 size)
 +{
-+	struct exynos_bus *src_bus = src->data, *dst_bus = dst->data;
-+	s32 src_freq = icc_units_to_khz(src->avg_bw);
-+	s32 dst_freq = icc_units_to_khz(dst->avg_bw);
++	struct memory_block *mem;
++	int rc = -EINVAL;
 +
-+	dev_pm_qos_update_request(&src_bus->qos_req, src_freq);
-+	dev_pm_qos_update_request(&dst_bus->qos_req, dst_freq);
++	if (!IS_ALIGNED(start, memory_block_size_bytes()) ||
++	    size != memory_block_size_bytes())
++		return rc;
 +
-+	return 0;
-+}
++	lock_device_hotplug();
++	mem = find_memory_block(__pfn_to_section(PFN_DOWN(start)));
++	if (mem)
++		rc = device_offline(&mem->dev);
++	/* Ignore if the device is already offline. */
++	if (rc > 0)
++		rc = 0;
 +
-+static int exynos_bus_icc_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
-+				    u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
-+{
-+	*agg_avg += avg_bw;
-+	*agg_peak = max(*agg_peak, peak_bw);
-+
-+	return 0;
-+}
-+
-+static struct icc_node *exynos_bus_icc_xlate(struct of_phandle_args *spec,
-+					     void *data)
-+{
-+	struct exynos_bus *bus = data;
-+
-+	if (spec->np != bus->dev->of_node)
-+		return ERR_PTR(-EINVAL);
-+
-+	return bus->node;
-+}
-+
- static int exynos_bus_parent_parse_of(struct device_node *np,
- 					struct exynos_bus *bus)
- {
-@@ -366,6 +416,101 @@ static int exynos_bus_profile_init_passive(struct exynos_bus *bus,
- 	return 0;
- }
- 
-+static int exynos_bus_icc_connect(struct exynos_bus *bus)
-+{
-+	struct device_node *np = bus->dev->of_node;
-+	struct devfreq *parent_devfreq;
-+	struct icc_node *parent_node = NULL;
-+	struct of_phandle_args args;
-+	int ret = 0;
-+
-+	parent_devfreq = devfreq_get_devfreq_by_phandle(bus->dev, 0);
-+	if (!IS_ERR(parent_devfreq)) {
-+		struct exynos_bus *parent_bus;
-+
-+		parent_bus = dev_get_drvdata(parent_devfreq->dev.parent);
-+		parent_node = parent_bus->node;
-+	} else {
-+		/* Look for parent in DT */
-+		int num = of_count_phandle_with_args(np, "parent",
-+						     "#interconnect-cells");
-+		if (num != 1)
-+			goto out; /* 'parent' is optional */
-+
-+		ret = of_parse_phandle_with_args(np, "parent",
-+						 "#interconnect-cells",
-+						 0, &args);
-+		if (ret < 0)
-+			goto out;
-+
-+		of_node_put(args.np);
-+
-+		parent_node = of_icc_get_from_provider(&args);
-+		if (IS_ERR(parent_node)) {
-+			/* May be -EPROBE_DEFER */
-+			ret = PTR_ERR(parent_node);
-+			goto out;
-+		}
-+	}
-+
-+	ret = icc_link_create(bus->node, parent_node->id);
-+
-+out:
-+	return ret;
-+}
-+
-+static int exynos_bus_icc_init(struct exynos_bus *bus)
-+{
-+	struct device *dev = bus->dev;
-+	struct icc_provider *provider = &bus->provider;
-+	struct icc_node *node;
-+	int id, ret;
-+
-+	/* Initialize the interconnect provider */
-+	provider->set = exynos_bus_icc_set;
-+	provider->aggregate = exynos_bus_icc_aggregate;
-+	provider->xlate = exynos_bus_icc_xlate;
-+	provider->dev = dev;
-+	provider->data = bus;
-+
-+	ret = icc_provider_add(provider);
-+	if (ret < 0)
-+		goto out;
-+
-+	ret = id = exynos_bus_next_id();
-+	if (ret < 0)
-+		goto err_node;
-+
-+	node = icc_node_create(id);
-+	if (IS_ERR(node)) {
-+		ret = PTR_ERR(node);
-+		goto err_node;
-+	}
-+
-+	bus->node = node;
-+	node->name = dev->of_node->name;
-+	node->data = bus;
-+	icc_node_add(node, provider);
-+
-+	ret = exynos_bus_icc_connect(bus);
-+	if (ret < 0)
-+		goto err_connect;
-+
-+	ret = dev_pm_qos_add_request(bus->devfreq->dev.parent, &bus->qos_req,
-+				     DEV_PM_QOS_MIN_FREQUENCY, 0);
-+
-+out:
-+	return ret;
-+
-+err_connect:
-+	icc_node_del(node);
-+	icc_node_destroy(id);
-+err_node:
-+	icc_provider_del(provider);
-+
-+	return ret;
-+}
-+
- static int exynos_bus_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -415,6 +560,14 @@ static int exynos_bus_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		goto err;
- 
 +	/*
-+	 * Initialize interconnect provider. A return value of -ENOTSUPP means
-+	 * that CONFIG_INTERCONNECT is disabled.
++	 * In case we succeeded to offline the memory block, remove it.
++	 * This cannot fail as it cannot get onlined in the meantime.
 +	 */
-+	ret = exynos_bus_icc_init(bus);
-+	if (ret < 0 && ret != -ENOTSUPP)
-+		goto err;
++	if (!rc && try_remove_memory(nid, start, size))
++		BUG();
++	unlock_device_hotplug();
 +
- 	max_state = bus->devfreq->profile->max_state;
- 	min_freq = (bus->devfreq->profile->freq_table[0] / 1000);
- 	max_freq = (bus->devfreq->profile->freq_table[max_state - 1] / 1000);
++	return rc;
++}
++EXPORT_SYMBOL_GPL(offline_and_remove_memory);
+ #endif /* CONFIG_MEMORY_HOTREMOVE */
 -- 
-2.17.1
+2.21.0
 
