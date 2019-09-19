@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 215DEC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:35:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2E9C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECADC21907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:35:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ADB0208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:35:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932547;
-	bh=8+INYItTilmh3es4jWep5jCA9gWHpE6Zhh3TUkxqR0M=;
+	s=default; t=1568932549;
+	bh=UXVo+pU6qQRSRGMlASXtc2PBgkdgS/CgDw6gXYTmWk8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J+7Hasnw8f+uvhCuTF/Y/x3aLG6EUt+Z1PQ4dMsE6HsV5nF2VYDlpVrCyryLonBxb
-	 gAQf1LOdjM4UN0X50+ufVrXRpENG+sPeTu/00rPKes42c/z9HJg9jeeBzZc1QAdOCF
-	 nO78kbMwMJU2D6Pq2HKtDbRWdBoyMPNhSV61TIP0=
+	b=wg+KAGzuI9Iv5z1h1xpe8Pu4+hLYLcfixrpDhZeRgGITg9pArGCDeRR8/QGDZxZB3
+	 NCRE8ji7HrnDS+J9KsYY8loX3p2mPhCgBRJwXWDhjiZtd6uGnpq2LxicYj4NVkslCq
+	 Jt1C98s05xmxsQJLJnC0rO1tdxDJH978/U0utD/U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393239AbfISWHd (ORCPT
+        id S2393228AbfISWHb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:07:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45184 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:07:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391364AbfISWH3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:07:29 -0400
+        id S2393204AbfISWH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:07:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AB89218AF;
-        Thu, 19 Sep 2019 22:07:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCADA218AF;
+        Thu, 19 Sep 2019 22:07:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568930849;
-        bh=8+INYItTilmh3es4jWep5jCA9gWHpE6Zhh3TUkxqR0M=;
+        s=default; t=1568930846;
+        bh=UXVo+pU6qQRSRGMlASXtc2PBgkdgS/CgDw6gXYTmWk8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jmLGskLf7HlhzLzlLK8q+2kR7iQHQAC+6uhW5f3O7n+8lP6+CsmtVQbZuG3gMrjQF
-         H1iVNmW7nwYUjPOb8Bxae5pdoIKym08MG4oSk8kLuEEsJQAUh/YdY6F6y7pY7qbC9B
-         wnuyPk8ENoXo6cw+enygAS9xvGF+JjTLq8GgGxeQ=
+        b=p4nlPGb+66Ilu/qcJbN+uOKj1VfTgb3Fkxa8AfE321E3lc7pDriYPYsEHEZ5WbOCb
+         2Ts14vhQv+NXlt2dCxJ4vjb1QV6EjFHR/PYjdB/nl6gg+GskInTPCBwPZ0SVfg/eOW
+         hnOuT0g3A7hScg2U2zkhEaStSJlQQIxkfWXT3oZg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabien Dessenne <fabien.dessenne@st.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 5.2 009/124] media: stm32-dcmi: fix irq = 0 case
-Date:   Fri, 20 Sep 2019 00:01:37 +0200
-Message-Id: <20190919214819.509846815@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Subject: [PATCH 5.2 008/124] SUNRPC: Handle connection breakages correctly in call_status()
+Date:   Fri, 20 Sep 2019 00:01:36 +0200
+Message-Id: <20190919214819.482284980@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -61,35 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabien Dessenne <fabien.dessenne@st.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-commit dbb9fcc8c2d8d4ea1104f51d4947a8a8199a2cb5 upstream.
+commit c82e5472c9980e0e483f4b689044150eefaca408 upstream.
 
-Manage the irq = 0 case, where we shall return an error.
+If the connection breaks while we're waiting for a reply from the
+server, then we want to immediately try to reconnect.
 
-Fixes: b5b5a27bee58 ("media: stm32-dcmi: return appropriate error codes during probe")
-
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
-Reported-by: Pavel Machek <pavel@ucw.cz>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: ec6017d90359 ("SUNRPC fix regression in umount of a secure mount")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/platform/stm32/stm32-dcmi.c |    2 +-
+ net/sunrpc/clnt.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/media/platform/stm32/stm32-dcmi.c
-+++ b/drivers/media/platform/stm32/stm32-dcmi.c
-@@ -1702,7 +1702,7 @@ static int dcmi_probe(struct platform_de
- 	if (irq <= 0) {
- 		if (irq != -EPROBE_DEFER)
- 			dev_err(&pdev->dev, "Could not get irq\n");
--		return irq;
-+		return irq ? irq : -ENXIO;
- 	}
- 
- 	dcmi->res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -2301,7 +2301,7 @@ call_status(struct rpc_task *task)
+ 	case -ECONNABORTED:
+ 	case -ENOTCONN:
+ 		rpc_force_rebind(clnt);
+-		/* fall through */
++		break;
+ 	case -EADDRINUSE:
+ 		rpc_delay(task, 3*HZ);
+ 		/* fall through */
 
 
