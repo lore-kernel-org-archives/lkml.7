@@ -2,113 +2,96 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AEC3C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 00:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8EB4C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 00:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 362FC21907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 00:40:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8627A218AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 00:50:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XFNu2t5B"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dsvU98HY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730182AbfISAkh (ORCPT
+        id S2387438AbfISAuK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 20:40:37 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:39472 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727634AbfISAkh (ORCPT
+        Wed, 18 Sep 2019 20:50:10 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40401 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730302AbfISAuK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 20:40:37 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8J0dX9T024573;
-        Thu, 19 Sep 2019 00:40:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=IiS8L7N9j19Ktt7jiprEMiAHt8Lso8e0fWbUgEUG5V8=;
- b=XFNu2t5BvRu7qGRCCJQS1sWozs+CA4hh3L0XGMClLM2Cm3YnguEM8kkMdZ/FeoJTBnPR
- fjqurUlG/LDbpdST7E+qHopb8FFOZaYmlfDwkIDM8NZBWAMqDJTyIfh0nZuPlBk2WW83
- /tnT5kacddQ8RpYRr2XsY/gkGZs0j4nTPYqyiaE5/C1hd+24H4Rg/Ue7NREL9OvhxUr3
- csEkHfR5rt8rWtXOVYxuiByruFiOSDyMp8m6FMWLoNSOFpebRy5QhlE2xspTRU6bZbp2
- SXI6b5cGophHGNpOZtJU6ZfoqMRUKV9Hnj7+GxpIBk0iijootjmPzXcD859YbGSSRpB1 hw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2v3vb50jge-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Sep 2019 00:40:11 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8J0cKii096214;
-        Thu, 19 Sep 2019 00:40:11 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2v3vb926j5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Sep 2019 00:40:11 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8J0e80I029874;
-        Thu, 19 Sep 2019 00:40:08 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 18 Sep 2019 17:40:07 -0700
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Keith Busch <kbusch@kernel.org>,
-        "sagi\@grimberg.me" <sagi@grimberg.me>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nvme\@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "Rakowski\, Michal" <michal.rakowski@intel.com>,
-        "axboe\@fb.com" <axboe@fb.com>,
-        "Baldyga\, Robert" <robert.baldyga@intel.com>
-Subject: Re: [PATCH 0/2] nvme: Add kernel API for admin command
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190913111610.9958-1-robert.baldyga@intel.com>
-        <20190913143709.GA8525@lst.de>
-        <850977D77E4B5C41926C0A7E2DAC5E234F2C9C09@IRSMSX104.ger.corp.intel.com>
-        <20190916073455.GA25515@lst.de>
-        <850977D77E4B5C41926C0A7E2DAC5E234F2C9D03@IRSMSX104.ger.corp.intel.com>
-        <20190917163909.GB34045@C02WT3WMHTD6.wdl.wdc.com>
-        <20190918132611.GA16232@lst.de> <20190918170807.GA50966@C02WT3WMHTD6>
-        <20190918170956.GA19639@lst.de>
-Date:   Wed, 18 Sep 2019 20:40:05 -0400
-In-Reply-To: <20190918170956.GA19639@lst.de> (Christoph Hellwig's message of
-        "Wed, 18 Sep 2019 19:09:56 +0200")
-Message-ID: <yq1h85986fu.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Wed, 18 Sep 2019 20:50:10 -0400
+Received: by mail-pg1-f195.google.com with SMTP id w10so832061pgj.7
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 17:50:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:to:from:subject:user-agent:date;
+        bh=szuMCQn4rttr5Elca80oSLyqr8pMoCySJeOydbql8kI=;
+        b=dsvU98HYe8f100cpwvVJP1d+QcBb4ryTBqN+tS63dnQ1/1mYOoJ6yKvM1fPJh88Dex
+         wo8LxZ6m00muwQXYfkNdonytuwDzOKosfum4GptdYiB3AnKRoMzlbGlRBE1LOKdYYxhP
+         mz3HfCUIosQA6JLRHOfkf6HzfPbVxXBatTlWM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:to:from:subject
+         :user-agent:date;
+        bh=szuMCQn4rttr5Elca80oSLyqr8pMoCySJeOydbql8kI=;
+        b=gFpvGDP6Uz2vNKe5OrVbGGWeI+71KjfsYJqxVPZWnPro4qdh4vEYdZ8ktJwhlRK6IF
+         4jlZLqetE0pwpDeVHXCSvqKvn3x7FTDEtk/wwrENEz1XEYeNrbUg0z4RB8mMz4p2ZGx8
+         4MVPmbJU6LUUUmdrmdvJaLDgPyOpckxgesq6bT5wURGajIyvACI4Nafq9rPF02VSOKbd
+         q06XhVjkhFYE11x6cc5o0vFjnfYjrpx7Z+Nzk9p6k5zigowVhJ1n36sqXI8V36nB0ijv
+         qMCaLh8UIeIarfC++AmxvgLDtHdnGdZsG0y54nOhFAL+LTfLi5l7UVP0BwxKn9ZjWmHU
+         JOKw==
+X-Gm-Message-State: APjAAAVmfDS7reQeANB2eqYChHA2Yf/mv4V8+qOIcpKV/iw6K+Veaevg
+        qqE27/lWCz2E06BZGn/Ws3x/9g==
+X-Google-Smtp-Source: APXvYqwwUE/+1mBEfp4DK/H8YE+W8UmNVfqmsjbBZwaUdEjDPGEWhaG6E7Bk1StoTVGsI6Wj88GrmA==
+X-Received: by 2002:a65:57ca:: with SMTP id q10mr6781384pgr.52.1568854209372;
+        Wed, 18 Sep 2019 17:50:09 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id f6sm6663996pga.50.2019.09.18.17.50.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Sep 2019 17:50:08 -0700 (PDT)
+Message-ID: <5d82d0c0.1c69fb81.93841.042e@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9384 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=721
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1909190003
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9384 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=797 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1909190003
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <f30070e7acdd463dec0e1305b47cdd8f1cc7c11c.1568712606.git.saiprakash.ranjan@codeaurora.org>
+References: <cover.1568712606.git.saiprakash.ranjan@codeaurora.org> <f30070e7acdd463dec0e1305b47cdd8f1cc7c11c.1568712606.git.saiprakash.ranjan@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Will Deacon <will@kernel.org>, bjorn.andersson@linaro.org,
+        iommu@lists.linux-foundation.org
+From:   Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCHv6 1/3] firmware: qcom_scm-64: Add atomic version of qcom_scm_call
+User-Agent: alot/0.8.1
+Date:   Wed, 18 Sep 2019 17:50:07 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Quoting Sai Prakash Ranjan (2019-09-17 02:45:02)
+> From: Vivek Gautam <vivek.gautam@codeaurora.org>
+>=20
+> There are scnenarios where drivers are required to make a
+> scm call in atomic context, such as in one of the qcom's
+> arm-smmu-500 errata [1].
+>=20
+> [1] ("https://source.codeaurora.org/quic/la/kernel/msm-4.9/
+>       tree/drivers/iommu/arm-smmu.c?h=3Dmsm-4.9#n4842")
+>=20
+> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> ---
 
-Christoph,
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
-> On Wed, Sep 18, 2019 at 11:08:07AM -0600, Keith Busch wrote:
->> And yes, that bouncing is really nasty, but it's really only needed for
->> PRP, so maybe let's just not ignore that transfer mode and support
->> extended metadata iff the controller supports SGLs. We just need a
->> special SGL setup routine to weave the data and metadata.
->
-> Well, what is the point?  If people really want to use metadata they
-> should just buy a drive supporting the separate metadata pointer.  In
-> fact I haven't had to deal with a drive that only supports interleaved
-> metadata so far given how awkward that is to deal with.
-
-Yep. There's a reason we did DIX...
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
