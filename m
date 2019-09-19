@@ -2,52 +2,52 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F33A1C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 933B9C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE01B21929
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:07:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EBD521907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:07:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568930827;
-	bh=xHZeo9vhS2BI1Gc35dfmKtmJEAlCNthIPihqclJ5Xwo=;
+	s=default; t=1568930835;
+	bh=x4pvz7O8pF8aUNF3Co/a77ewOodvm2ER0JvB/S8Lq5A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A9l/1Y1X9KoNAjbm9ETpA/eQSJ1vYYEFdoTTj41GmM6I9RV3VkT1h2IJmvt6ux8k1
-	 SWkiTufyFLRtVq63f9LPqoUO/9nBB/E0mRMdqt2h16Pf5eSIXWtjNPLa7esmnCxczL
-	 Lzi9YrnTyTFHj4VGV4c/g5zDvQWz1oqnkSg8pzV8=
+	b=O0nf34v6D0+5wgmbPxcJ0Igm2mxc+yH7/eaIQwxFK2pcSu48FwlpZVLlVFaq8f+a+
+	 IQ/3fYaxjOX352cwNDHMN9tqEfjUB9ScxKEFNIM9e/Y1StM6/96pTQkkh6mcaYPx/N
+	 siwB+ws1qJwRpqiJ9sU+CKLDfEf0DJMw5BFZUGVY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393142AbfISWHG (ORCPT
+        id S2390883AbfISWHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:07:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44642 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:07:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393123AbfISWHC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:07:02 -0400
+        id S2393160AbfISWHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:07:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE1A721907;
-        Thu, 19 Sep 2019 22:07:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D03FC2196E;
+        Thu, 19 Sep 2019 22:07:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568930822;
-        bh=xHZeo9vhS2BI1Gc35dfmKtmJEAlCNthIPihqclJ5Xwo=;
+        s=default; t=1568930830;
+        bh=x4pvz7O8pF8aUNF3Co/a77ewOodvm2ER0JvB/S8Lq5A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fZFi5lqR7Glmh/wXtXWSOcYmzHsu0oQnouDcseXrBtcgjmdQrnP906DfjAHGE61/i
-         gPDH90hKdWNVgiCJ5ERUBhg+q4HJ8lG9eeufurcPGB6Dev+3OzGXgep8vu/Vg6NIOS
-         nCWqtySjGtx5iJXd5GV/MJLx3aepp8qvZDZuDTvo=
+        b=k9WU+IicbO+n+q6NWI92UMrPMr0QopLzbWW5eCMd0qkP+0C2Exd/Lnbl2UdWNGY8R
+         F1+vY58B76LpOmGRVmpYb82Lf4FDURciUJV5ScSPSVv55dVnVLdLla5+EuJxBrQMpd
+         LBonZ2gqN/zQlO8X1CW/QgQIgW2O+sz5irgvfIwU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Masashi Honma <masashi.honma@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 5.2 026/124] nl80211: Fix possible Spectre-v1 for CQM RSSI thresholds
-Date:   Fri, 20 Sep 2019 00:01:54 +0200
-Message-Id: <20190919214820.003228381@linuxfoundation.org>
+        stable@vger.kernel.org, Faiz Abbas <faiz_abbas@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 029/124] ARM: dts: am57xx: Disable voltage switching for SD card
+Date:   Fri, 20 Sep 2019 00:01:57 +0200
+Message-Id: <20190919214820.098315363@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -60,42 +60,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masashi Honma <masashi.honma@gmail.com>
+From: Faiz Abbas <faiz_abbas@ti.com>
 
-commit 4b2c5a14cd8005a900075f7dfec87473c6ee66fb upstream.
+[ Upstream commit fb59ee37cfe20d10d19568899d1458a58361246c ]
 
-commit 1222a1601488 ("nl80211: Fix possible Spectre-v1 for CQM
-RSSI thresholds") was incomplete and requires one more fix to
-prevent accessing to rssi_thresholds[n] because user can control
-rssi_thresholds[i] values to make i reach to n. For example,
-rssi_thresholds = {-400, -300, -200, -100} when last is -34.
+If UHS speed modes are enabled, a compatible SD card switches down to
+1.8V during enumeration. If after this a software reboot/crash takes
+place and on-chip ROM tries to enumerate the SD card, the difference in
+IO voltages (host @ 3.3V and card @ 1.8V) may end up damaging the card.
 
-Cc: stable@vger.kernel.org
-Fixes: 1222a1601488 ("nl80211: Fix possible Spectre-v1 for CQM RSSI thresholds")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Masashi Honma <masashi.honma@gmail.com>
-Link: https://lore.kernel.org/r/20190908005653.17433-1-masashi.honma@gmail.com
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The fix for this is to have support for power cycling the card in
+hardware (with a PORz/soft-reset line causing a power cycle of the
+card). Because the beaglebone X15 (rev A,B and C), am57xx-idks and
+am57xx-evms don't have this capability, disable voltage switching for
+these boards.
 
+The major effect of this is that the maximum supported speed
+mode is now high speed(50 MHz) down from SDR104(200 MHz).
+
+commit 88a748419b84 ("ARM: dts: am57xx-idk: Remove support for voltage
+switching for SD card") did this only for idk boards. Do it for all
+affected boards.
+
+Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/nl80211.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/am571x-idk.dts                | 7 +------
+ arch/arm/boot/dts/am572x-idk.dts                | 7 +------
+ arch/arm/boot/dts/am574x-idk.dts                | 7 +------
+ arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi | 1 +
+ arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts   | 7 +------
+ arch/arm/boot/dts/am57xx-beagle-x15-revc.dts    | 7 +------
+ 6 files changed, 6 insertions(+), 30 deletions(-)
 
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -10640,9 +10640,11 @@ static int cfg80211_cqm_rssi_update(stru
- 	hyst = wdev->cqm_config->rssi_hyst;
- 	n = wdev->cqm_config->n_rssi_thresholds;
+diff --git a/arch/arm/boot/dts/am571x-idk.dts b/arch/arm/boot/dts/am571x-idk.dts
+index 1d5e99964bbf8..0aaacea1d887b 100644
+--- a/arch/arm/boot/dts/am571x-idk.dts
++++ b/arch/arm/boot/dts/am571x-idk.dts
+@@ -175,14 +175,9 @@
+ };
  
--	for (i = 0; i < n; i++)
-+	for (i = 0; i < n; i++) {
-+		i = array_index_nospec(i, n);
- 		if (last < wdev->cqm_config->rssi_thresholds[i])
- 			break;
-+	}
+ &mmc1 {
+-	pinctrl-names = "default", "hs", "sdr12", "sdr25", "sdr50", "ddr50", "sdr104";
++	pinctrl-names = "default", "hs";
+ 	pinctrl-0 = <&mmc1_pins_default_no_clk_pu>;
+ 	pinctrl-1 = <&mmc1_pins_hs>;
+-	pinctrl-2 = <&mmc1_pins_sdr12>;
+-	pinctrl-3 = <&mmc1_pins_sdr25>;
+-	pinctrl-4 = <&mmc1_pins_sdr50>;
+-	pinctrl-5 = <&mmc1_pins_ddr50_rev20 &mmc1_iodelay_ddr50_conf>;
+-	pinctrl-6 = <&mmc1_pins_sdr104 &mmc1_iodelay_sdr104_rev20_conf>;
+ };
  
- 	low_index = i - 1;
- 	if (low_index >= 0) {
+ &mmc2 {
+diff --git a/arch/arm/boot/dts/am572x-idk.dts b/arch/arm/boot/dts/am572x-idk.dts
+index c65d7f6d3b5a6..ea1c119feaa57 100644
+--- a/arch/arm/boot/dts/am572x-idk.dts
++++ b/arch/arm/boot/dts/am572x-idk.dts
+@@ -16,14 +16,9 @@
+ };
+ 
+ &mmc1 {
+-	pinctrl-names = "default", "hs", "sdr12", "sdr25", "sdr50", "ddr50", "sdr104";
++	pinctrl-names = "default", "hs";
+ 	pinctrl-0 = <&mmc1_pins_default_no_clk_pu>;
+ 	pinctrl-1 = <&mmc1_pins_hs>;
+-	pinctrl-2 = <&mmc1_pins_sdr12>;
+-	pinctrl-3 = <&mmc1_pins_sdr25>;
+-	pinctrl-4 = <&mmc1_pins_sdr50>;
+-	pinctrl-5 = <&mmc1_pins_ddr50 &mmc1_iodelay_ddr_rev20_conf>;
+-	pinctrl-6 = <&mmc1_pins_sdr104 &mmc1_iodelay_sdr104_rev20_conf>;
+ };
+ 
+ &mmc2 {
+diff --git a/arch/arm/boot/dts/am574x-idk.dts b/arch/arm/boot/dts/am574x-idk.dts
+index dc5141c35610e..7935d70874ce2 100644
+--- a/arch/arm/boot/dts/am574x-idk.dts
++++ b/arch/arm/boot/dts/am574x-idk.dts
+@@ -24,14 +24,9 @@
+ };
+ 
+ &mmc1 {
+-	pinctrl-names = "default", "hs", "sdr12", "sdr25", "sdr50", "ddr50", "sdr104";
++	pinctrl-names = "default", "hs";
+ 	pinctrl-0 = <&mmc1_pins_default_no_clk_pu>;
+ 	pinctrl-1 = <&mmc1_pins_hs>;
+-	pinctrl-2 = <&mmc1_pins_default>;
+-	pinctrl-3 = <&mmc1_pins_hs>;
+-	pinctrl-4 = <&mmc1_pins_sdr50>;
+-	pinctrl-5 = <&mmc1_pins_ddr50 &mmc1_iodelay_ddr_conf>;
+-	pinctrl-6 = <&mmc1_pins_ddr50 &mmc1_iodelay_sdr104_conf>;
+ };
+ 
+ &mmc2 {
+diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
+index d02f5fa61e5f5..d50de7a6ea6c5 100644
+--- a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
++++ b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
+@@ -430,6 +430,7 @@
+ 
+ 	bus-width = <4>;
+ 	cd-gpios = <&gpio6 27 GPIO_ACTIVE_LOW>; /* gpio 219 */
++	no-1-8-v;
+ };
+ 
+ &mmc2 {
+diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts b/arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts
+index a374b5cd6db0e..7b113b52c3fb6 100644
+--- a/arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts
++++ b/arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts
+@@ -16,14 +16,9 @@
+ };
+ 
+ &mmc1 {
+-	pinctrl-names = "default", "hs", "sdr12", "sdr25", "sdr50", "ddr50", "sdr104";
++	pinctrl-names = "default", "hs";
+ 	pinctrl-0 = <&mmc1_pins_default>;
+ 	pinctrl-1 = <&mmc1_pins_hs>;
+-	pinctrl-2 = <&mmc1_pins_sdr12>;
+-	pinctrl-3 = <&mmc1_pins_sdr25>;
+-	pinctrl-4 = <&mmc1_pins_sdr50>;
+-	pinctrl-5 = <&mmc1_pins_ddr50 &mmc1_iodelay_ddr_rev11_conf>;
+-	pinctrl-6 = <&mmc1_pins_sdr104 &mmc1_iodelay_sdr104_rev11_conf>;
+ 	vmmc-supply = <&vdd_3v3>;
+ 	vqmmc-supply = <&ldo1_reg>;
+ };
+diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-revc.dts b/arch/arm/boot/dts/am57xx-beagle-x15-revc.dts
+index 4badd2144db9a..30c500b15b219 100644
+--- a/arch/arm/boot/dts/am57xx-beagle-x15-revc.dts
++++ b/arch/arm/boot/dts/am57xx-beagle-x15-revc.dts
+@@ -16,14 +16,9 @@
+ };
+ 
+ &mmc1 {
+-	pinctrl-names = "default", "hs", "sdr12", "sdr25", "sdr50", "ddr50", "sdr104";
++	pinctrl-names = "default", "hs";
+ 	pinctrl-0 = <&mmc1_pins_default>;
+ 	pinctrl-1 = <&mmc1_pins_hs>;
+-	pinctrl-2 = <&mmc1_pins_sdr12>;
+-	pinctrl-3 = <&mmc1_pins_sdr25>;
+-	pinctrl-4 = <&mmc1_pins_sdr50>;
+-	pinctrl-5 = <&mmc1_pins_ddr50 &mmc1_iodelay_ddr_rev20_conf>;
+-	pinctrl-6 = <&mmc1_pins_sdr104 &mmc1_iodelay_sdr104_rev20_conf>;
+ 	vmmc-supply = <&vdd_3v3>;
+ 	vqmmc-supply = <&ldo1_reg>;
+ };
+-- 
+2.20.1
+
 
 
