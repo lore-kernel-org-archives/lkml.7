@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BECE9C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E072EC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 902792196E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:17:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B015321907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:17:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931453;
-	bh=dHaNzdX8RhfYNR3G9kvpasvBZPNiOdCFP+q6x9pJ5Pw=;
+	s=default; t=1568931457;
+	bh=74nf5UnRKvBiWWXFw3xnxICQuYxH0BWLfryXXrsDYPc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JzjA4FzoTqnwwMLMNR4OSn6PR51b7fGWD1AiVtXBOx/T3KW4Tm2EH1ndCii3SXEGM
-	 0WWtvwTaxNo6geZglnuXgQeGcmp9a797a6XuHqfFRyRgmLcpg0w7GcKgsk+6J+Fwjt
-	 Zh7/Tdc52bknl1MN213C1wW6QwO6r99OeqDGQaQ4=
+	b=NdlxqJulkAUIXFvDDFthV5Rzd8P/CuiFXRjspOtSAauznZnchgq5K2N4Yz93CuZlE
+	 liNQilULgju0UhY4G2KJCVFXu7mYFd4OJ9oxydHsZERMAEd9kVuRFlz3KcoRcuHTCV
+	 UnTWXI8GXnOijPtXx5T1eDybLo9O2odHIgCUde8U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406483AbfISWRc (ORCPT
+        id S2404631AbfISWRg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:17:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58680 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:17:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406465AbfISWRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:17:30 -0400
+        id S2406465AbfISWRe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:17:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55C0420678;
-        Thu, 19 Sep 2019 22:17:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 298B621920;
+        Thu, 19 Sep 2019 22:17:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931449;
-        bh=dHaNzdX8RhfYNR3G9kvpasvBZPNiOdCFP+q6x9pJ5Pw=;
+        s=default; t=1568931452;
+        bh=74nf5UnRKvBiWWXFw3xnxICQuYxH0BWLfryXXrsDYPc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tdSojR/Og12xQNgrI6KDcVsiY7oepRQMyw8OXpXS2jh7/zAJ1CE5FQfoJGfpADLfy
-         ODvU8u6ogUwKvSKMHV95rDP4LLjp/VchBRXKs3VaESzHuvF4/qzpXJ39C7LKOyQy0H
-         2bNhvdaQCFF31utGqxulcUbRStnyDyuZF78eLXoY=
+        b=wIWaTN6WubEgiSqpZCT2ADr2mk78+YpLI3hFTx0ZmcWCbN0SoGRnCZJsD86hQe2rf
+         HwYnfSaAQr7M6UlJoHfTMpeSSl/G2yCKd3yFXzSkuagbkdjSf7NfZQKaoAYf6L5is5
+         i2yBJnk+GKz/Jh48CVut/kwp5T3MjZhp3vp2JQE4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        Hillf Danton <hdanton@sina.com>,
-        David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 51/59] keys: Fix missing null pointer check in request_key_auth_describe()
-Date:   Fri, 20 Sep 2019 00:04:06 +0200
-Message-Id: <20190919214807.790861796@linuxfoundation.org>
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 34/59] kallsyms: Dont let kallsyms_lookup_size_offset() fail on retrieving the first symbol
+Date:   Fri, 20 Sep 2019 00:03:49 +0200
+Message-Id: <20190919214806.003059718@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214755.852282682@linuxfoundation.org>
 References: <20190919214755.852282682@linuxfoundation.org>
@@ -62,72 +63,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hillf Danton <hdanton@sina.com>
+From: Marc Zyngier <maz@kernel.org>
 
-[ Upstream commit d41a3effbb53b1bcea41e328d16a4d046a508381 ]
+[ Upstream commit 2a1a3fa0f29270583f0e6e3100d609e09697add1 ]
 
-If a request_key authentication token key gets revoked, there's a window in
-which request_key_auth_describe() can see it with a NULL payload - but it
-makes no check for this and something like the following oops may occur:
+An arm64 kernel configured with
 
-	BUG: Kernel NULL pointer dereference at 0x00000038
-	Faulting instruction address: 0xc0000000004ddf30
-	Oops: Kernel access of bad area, sig: 11 [#1]
-	...
-	NIP [...] request_key_auth_describe+0x90/0xd0
-	LR [...] request_key_auth_describe+0x54/0xd0
-	Call Trace:
-	[...] request_key_auth_describe+0x54/0xd0 (unreliable)
-	[...] proc_keys_show+0x308/0x4c0
-	[...] seq_read+0x3d0/0x540
-	[...] proc_reg_read+0x90/0x110
-	[...] __vfs_read+0x3c/0x70
-	[...] vfs_read+0xb4/0x1b0
-	[...] ksys_read+0x7c/0x130
-	[...] system_call+0x5c/0x70
+  CONFIG_KPROBES=y
+  CONFIG_KALLSYMS=y
+  # CONFIG_KALLSYMS_ALL is not set
+  CONFIG_KALLSYMS_BASE_RELATIVE=y
 
-Fix this by checking for a NULL pointer when describing such a key.
+reports the following kprobe failure:
 
-Also make the read routine check for a NULL pointer to be on the safe side.
+  [    0.032677] kprobes: failed to populate blacklist: -22
+  [    0.033376] Please take care of using kprobes.
 
-[DH: Modified to not take already-held rcu lock and modified to also check
- in the read routine]
+It appears that kprobe fails to retrieve the symbol at address
+0xffff000010081000, despite this symbol being in System.map:
 
-Fixes: 04c567d9313e ("[PATCH] Keys: Fix race between two instantiators of a key")
-Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Signed-off-by: Hillf Danton <hdanton@sina.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+  ffff000010081000 T __exception_text_start
+
+This symbol is part of the first group of aliases in the
+kallsyms_offsets array (symbol names generated using ugly hacks in
+scripts/kallsyms.c):
+
+  kallsyms_offsets:
+          .long   0x1000 // do_undefinstr
+          .long   0x1000 // efi_header_end
+          .long   0x1000 // _stext
+          .long   0x1000 // __exception_text_start
+          .long   0x12b0 // do_cp15instr
+
+Looking at the implementation of get_symbol_pos(), it returns the
+lowest index for aliasing symbols. In this case, it return 0.
+
+But kallsyms_lookup_size_offset() considers 0 as a failure, which
+is obviously wrong (there is definitely a valid symbol living there).
+In turn, the kprobe blacklisting stops abruptly, hence the original
+error.
+
+A CONFIG_KALLSYMS_ALL kernel wouldn't fail as there is always
+some random symbols at the beginning of this array, which are never
+looked up via kallsyms_lookup_size_offset.
+
+Fix it by considering that get_symbol_pos() is always successful
+(which is consistent with the other uses of this function).
+
+Fixes: ffc5089196446 ("[PATCH] Create kallsyms_lookup_size_offset()")
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Will Deacon <will@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/keys/request_key_auth.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ kernel/kallsyms.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/security/keys/request_key_auth.c b/security/keys/request_key_auth.c
-index 5e515791ccd11..1d34b2a5f485e 100644
---- a/security/keys/request_key_auth.c
-+++ b/security/keys/request_key_auth.c
-@@ -71,6 +71,9 @@ static void request_key_auth_describe(const struct key *key,
+diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
+index 127e7cfafa552..3e1b66366ac23 100644
+--- a/kernel/kallsyms.c
++++ b/kernel/kallsyms.c
+@@ -296,8 +296,10 @@ int kallsyms_lookup_size_offset(unsigned long addr, unsigned long *symbolsize,
  {
- 	struct request_key_auth *rka = get_request_key_auth(key);
+ 	char namebuf[KSYM_NAME_LEN];
  
-+	if (!rka)
-+		return;
-+
- 	seq_puts(m, "key:");
- 	seq_puts(m, key->description);
- 	if (key_is_positive(key))
-@@ -88,6 +91,9 @@ static long request_key_auth_read(const struct key *key,
- 	size_t datalen;
- 	long ret;
- 
-+	if (!rka)
-+		return -EKEYREVOKED;
-+
- 	datalen = rka->callout_len;
- 	ret = datalen;
- 
+-	if (is_ksym_addr(addr))
+-		return !!get_symbol_pos(addr, symbolsize, offset);
++	if (is_ksym_addr(addr)) {
++		get_symbol_pos(addr, symbolsize, offset);
++		return 1;
++	}
+ 	return !!module_address_lookup(addr, symbolsize, offset, NULL, namebuf) ||
+ 	       !!__bpf_address_lookup(addr, symbolsize, offset, namebuf);
+ }
 -- 
 2.20.1
 
