@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64AF4C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD78DC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A8D7217D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:29:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72680217D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:29:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932172;
-	bh=jiWQb9vIJcyuQQYnH8FA+Q2/8IDnSEMWoxN1zIuW1pQ=;
+	s=default; t=1568932175;
+	bh=dMmQ/8eCsAFOvBzLqKSRTPtQzG0tXkumYwZ1Un/PvgQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jY4PJKqbr5J5qCODwYRG7wi6QiFBWCiSmcN/PY0bXD+33iZQxVR3GOuTroLs1BgJt
-	 jm+0r0uKoj1RBR7yNgA6FIB812nHqvV+MciDkdfzIr3n2OkJTjvMjfnfjLmaLPK7H0
-	 7G6UhgMVi6g0dyC0wsRJqaoEsqxhsPfKPUw1Ncy0=
+	b=dVlY3Wm8ytAZZNgoXrS14SgIhc4/iEYt2fYwihkrqIODkEKCEAnhc5dgUb6MKGhmp
+	 xUpbOGH19+r5bXQoGxxKG9R6afj44Qj2JSvAdBQg7IBXEj2b/gG7/MsA7rEKwIdedW
+	 Pi7PB4E2vlF7wZKlwKis6DosPkzbNBSZogmFAgdQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407327AbfISW3b (ORCPT
+        id S2406471AbfISWRb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:29:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58870 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:17:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406496AbfISWRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:17:38 -0400
+        id S2406460AbfISWRW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:17:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7176D20678;
-        Thu, 19 Sep 2019 22:17:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8ECD620678;
+        Thu, 19 Sep 2019 22:17:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931457;
-        bh=jiWQb9vIJcyuQQYnH8FA+Q2/8IDnSEMWoxN1zIuW1pQ=;
+        s=default; t=1568931442;
+        bh=dMmQ/8eCsAFOvBzLqKSRTPtQzG0tXkumYwZ1Un/PvgQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OzQQ+wxEuthAyvifT2k9MGaeR4xr+y/b+bR9lIaDFuxEPlcO63zdpTI4+q075tkxS
-         Mn8ts7CJhG5bqpCbbyC65xq7nQYar+R1A+bG6nQCq+05fMlA9g43iy9uYyOcRA+MIv
-         eRTRw75kARO4xvdcjgUEO/l2a47Qj+mlzVNwOju8=
+        b=g0qhiJkjaU0MXXcDGkwYg8ykJcZ/fwktqKJ+3159J6aGawvsFbMWk8zLBzqaekmt/
+         1fuP4HaZvVd2gLIkhcNmIBa6xevRICvwT4rNQC8dlU381cFwqhXIZHM7Il7eR9Ran/
+         oPz5OaDO1fc+R0d2MdFmM6g8is8Xrwu8BPHEbTn0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 53/59] iommu/amd: Fix race in increase_address_space()
-Date:   Fri, 20 Sep 2019 00:04:08 +0200
-Message-Id: <20190919214808.119566137@linuxfoundation.org>
+        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 48/59] dmaengine: ti: omap-dma: Add cleanup in omap_dma_probe()
+Date:   Fri, 20 Sep 2019 00:04:03 +0200
+Message-Id: <20190919214807.534286029@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214755.852282682@linuxfoundation.org>
 References: <20190919214755.852282682@linuxfoundation.org>
@@ -59,71 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit 754265bcab78a9014f0f99cd35e0d610fcd7dfa7 ]
+[ Upstream commit 962411b05a6d3342aa649e39cda1704c1fc042c6 ]
 
-After the conversion to lock-less dma-api call the
-increase_address_space() function can be called without any
-locking. Multiple CPUs could potentially race for increasing
-the address space, leading to invalid domain->mode settings
-and invalid page-tables. This has been happening in the wild
-under high IO load and memory pressure.
+If devm_request_irq() fails to disable all interrupts, no cleanup is
+performed before retuning the error. To fix this issue, invoke
+omap_dma_free() to do the cleanup.
 
-Fix the race by locking this operation. The function is
-called infrequently so that this does not introduce
-a performance regression in the dma-api path again.
-
-Reported-by: Qian Cai <cai@lca.pw>
-Fixes: 256e4621c21a ('iommu/amd: Make use of the generic IOVA allocator')
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Link: https://lore.kernel.org/r/1565938570-7528-1-git-send-email-wenwen@cs.uga.edu
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ drivers/dma/omap-dma.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index 822c85226a29f..a1174e61daf4e 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -1337,18 +1337,21 @@ static void domain_flush_devices(struct protection_domain *domain)
-  * another level increases the size of the address space by 9 bits to a size up
-  * to 64 bits.
-  */
--static bool increase_address_space(struct protection_domain *domain,
-+static void increase_address_space(struct protection_domain *domain,
- 				   gfp_t gfp)
- {
-+	unsigned long flags;
- 	u64 *pte;
+diff --git a/drivers/dma/omap-dma.c b/drivers/dma/omap-dma.c
+index 8c1665c8fe33a..14b560facf779 100644
+--- a/drivers/dma/omap-dma.c
++++ b/drivers/dma/omap-dma.c
+@@ -1534,8 +1534,10 @@ static int omap_dma_probe(struct platform_device *pdev)
  
--	if (domain->mode == PAGE_MODE_6_LEVEL)
-+	spin_lock_irqsave(&domain->lock, flags);
-+
-+	if (WARN_ON_ONCE(domain->mode == PAGE_MODE_6_LEVEL))
- 		/* address space already 64 bit large */
--		return false;
-+		goto out;
+ 		rc = devm_request_irq(&pdev->dev, irq, omap_dma_irq,
+ 				      IRQF_SHARED, "omap-dma-engine", od);
+-		if (rc)
++		if (rc) {
++			omap_dma_free(od);
+ 			return rc;
++		}
+ 	}
  
- 	pte = (void *)get_zeroed_page(gfp);
- 	if (!pte)
--		return false;
-+		goto out;
- 
- 	*pte             = PM_LEVEL_PDE(domain->mode,
- 					iommu_virt_to_phys(domain->pt_root));
-@@ -1356,7 +1359,10 @@ static bool increase_address_space(struct protection_domain *domain,
- 	domain->mode    += 1;
- 	domain->updated  = true;
- 
--	return true;
-+out:
-+	spin_unlock_irqrestore(&domain->lock, flags);
-+
-+	return;
- }
- 
- static u64 *alloc_pte(struct protection_domain *domain,
+ 	if (omap_dma_glbl_read(od, CAPS_0) & CAPS_0_SUPPORT_LL123)
 -- 
 2.20.1
 
