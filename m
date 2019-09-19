@@ -2,144 +2,155 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEBEC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E24C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0545A21928
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 158E921907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:00:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LAwSAOYh"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="02D+wngb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390839AbfISO6A (ORCPT
+        id S2389795AbfISPAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 10:58:00 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:46300 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387407AbfISO57 (ORCPT
+        Thu, 19 Sep 2019 11:00:11 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:41275 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387407AbfISPAL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 10:57:59 -0400
-Received: by mail-ed1-f66.google.com with SMTP id t3so3438261edw.13
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 07:57:58 -0700 (PDT)
+        Thu, 19 Sep 2019 11:00:11 -0400
+Received: by mail-ed1-f68.google.com with SMTP id f20so3477370edv.8
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 08:00:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=eEK3lLhQaGb6Uf5dm+fgmb2DX85yl5wvHqgPEcR4Tns=;
-        b=LAwSAOYhenFH3sp+/nJqQR/xEhMF07jQ0LzJnulzYtxXyS6jo42nxoXy0LJ7ZQOdQ0
-         k4zJxD4gKB3toDN/TXFgQAVO9NSFVRiN7KtT9M+2g/5WmVGHnsY7t+cB21TQGs6f9ygX
-         uMDn/eVqzoP7f2yfdGe4KtjcdoZ2aYJtKvmYVTQJQGv9x+oyGVcKnkwukDs1WhzKLbN9
-         2+X6nk+uTZY14iW7DQz1hJ6vVP8zUHPrHUKf5DVh8wCbVmSxfReX9wCreMqNT0/cr579
-         2ce/53jovih8tAQyzGGbyrEbwO8/Ju7DWwFOEeQWhonRepegb/JHdn2h0fQh872/fFK7
-         tgjA==
+        bh=rsy153zpl4yxoGCSq5N5IH86opdKnCHpMC3JulF2khA=;
+        b=02D+wngbGXHZGUTd/OI3S4I3/pW/FS6cieICZCCkmbioDgm+zgBjOiH57lPnSWirfN
+         +B4Feg8AmGwk7F+utHKC7GrdfJzUHKCJ4ajtySG8KxAouv6EvlG1yoqerF06hXnVcWwX
+         TrHOQhOgYP9grvwP04SfPFkRbIDxj+NuVLs1X1zXVqDtLbxDjQS4pC2SXJhJs7ObyuVM
+         84MyFS80tqrbS4agYsvbwWVXwVHM/klMaBAKH+F+n4o1l5/a6xCmwxBcLGRO6bLWNKLD
+         CeK3wIOS9gOxliCa8/h+Ka9CNuPH34azA0jVtIpCsVsr6Jne05lWZg1kpU+YucTZKd7W
+         LCvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eEK3lLhQaGb6Uf5dm+fgmb2DX85yl5wvHqgPEcR4Tns=;
-        b=Mh398njBSU9EHmV94rQVW+kkn2V0U+ZFaAfg3SIvSUtRHAjRc+/vgmAv8oEJE6LZwO
-         poNsnQWzKNcbVfKgFoM8X81ubKeP7ulHYwSS66oPwCUCtPSHuZz4mDCJv0EISytoyGAF
-         YjAA/8HPvN1hdfPDKyFIo4F2P/cd565v3L+pCnqk7YYfCFJLakTV0m2oAaiF5e5J3th8
-         b9YXRWMU5UUou+JVOnYpQUWmtFp1yMBkHVkPOitMP/L4f/yM+geT6ZaEpBKChW4xD4mt
-         OKGbQfa2uRfKOZ9gf3WTrm3Zjxs+aIcBInKqa8eDmuiKsfVaWbX4c3EPhgKnCb1Br+ow
-         atFQ==
-X-Gm-Message-State: APjAAAX6xM+i6MLSIcHlRl9Ktc7WcRWlfXrWrsINePPfCM1hHCgMik/m
-        3/fTAtyxphGm/j5ipNEAU7b4bDo36r2/7Q==
-X-Google-Smtp-Source: APXvYqwk1K+MGMggp+/l3DiL4j0oR3ZGy4qRdCDJYY4eyD0SE8qOKY+ATrvkN66cEC/bhZ+wwLlWaQ==
-X-Received: by 2002:a50:d718:: with SMTP id t24mr1264594edi.168.1568905078372;
-        Thu, 19 Sep 2019 07:57:58 -0700 (PDT)
-Received: from lophozonia ([85.195.192.192])
-        by smtp.gmail.com with ESMTPSA id a22sm1038936ejs.17.2019.09.19.07.57.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2019 07:57:57 -0700 (PDT)
-Date:   Thu, 19 Sep 2019 16:57:55 +0200
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        robin.murphy@arm.com, jacob.jun.pan@linux.intel.com,
-        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        eric.auger@redhat.com
-Subject: Re: [PATCH 4/8] iommu/arm-smmu-v3: Add support for Substream IDs
-Message-ID: <20190919145755.GB1013538@lophozonia>
-References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
- <20190610184714.6786-5-jean-philippe.brucker@arm.com>
- <20190626180025.g4clm6qnbbna65de@willie-the-truck>
+        bh=rsy153zpl4yxoGCSq5N5IH86opdKnCHpMC3JulF2khA=;
+        b=XC4GcBcfXhN/QTd7tkz6nKPfqVzri+58us2Eo1IrKWJwK/hos7tleCfkvFCO16LuaM
+         ZqAxMthhOjvzFLm3P8+0ETN9PWLXDrNlbCiz+u5Gwt/5cedkCHkZ7LNipPOdtGUcBMaF
+         U+9f+EAmNRmjZxhu15wQJraiWADo5EaUp7+3QXmTZPP9KAT9ho4v8UDoLoXwMmdBxkMw
+         uCCzukljKKijZ8OnbHYKrurAqwvtkLWT5DT7Yb+kz+TAqG7enTsSg7+27LXAKblMW5kG
+         27ePhKtYR6ZWTYARoPSmpzeWBP5z3xTMaEFfuD3snQOEqBnuR88POp86iVRY4d6s/7dD
+         kbuQ==
+X-Gm-Message-State: APjAAAXDuUpeG9xujfoTQqvbciNB5WCTJirgiE86yPxIIN8TqxT8DnXG
+        wV15oCO5H78HcbWOiZHtdajHmw==
+X-Google-Smtp-Source: APXvYqyx/AckV5APDHiZafOBx5pGNPnvX1/IDqUdyyu9pyklLZREADmTvqxKDNf7fmed54UHx0fVzA==
+X-Received: by 2002:a05:6402:1688:: with SMTP id a8mr7542905edv.225.1568905209039;
+        Thu, 19 Sep 2019 08:00:09 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id a22sm1039452ejs.17.2019.09.19.08.00.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 19 Sep 2019 08:00:08 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 8BBF3101F17; Thu, 19 Sep 2019 18:00:07 +0300 (+03)
+Date:   Thu, 19 Sep 2019 18:00:07 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Jia He <justin.he@arm.com>, Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Suzuki Poulose <Suzuki.Poulose@arm.com>,
+        Punit Agrawal <punitagrawal@gmail.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Jun Yao <yaojun8558363@gmail.com>,
+        Alex Van Brunt <avanbrunt@nvidia.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Ralph Campbell <rcampbell@nvidia.com>, hejianet@gmail.com,
+        Kaly Xin <Kaly.Xin@arm.com>
+Subject: Re: [PATCH v4 3/3] mm: fix double page fault on arm64 if PTE_AF is
+ cleared
+Message-ID: <20190919150007.k7scjplcya53j7r4@box>
+References: <20190918131914.38081-1-justin.he@arm.com>
+ <20190918131914.38081-4-justin.he@arm.com>
+ <20190918140027.ckj32xnryyyesc23@box>
+ <20190918180029.GB20601@iMac.local>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190626180025.g4clm6qnbbna65de@willie-the-truck>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190918180029.GB20601@iMac.local>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 07:00:26PM +0100, Will Deacon wrote:
-> On Mon, Jun 10, 2019 at 07:47:10PM +0100, Jean-Philippe Brucker wrote:
-> > In all stream table entries, we set S1DSS=SSID0 mode, making translations
-> > without an SSID use context descriptor 0. Although it would be possible by
-> > setting S1DSS=BYPASS, we don't currently support SSID when user selects
-> > iommu.passthrough.
+On Wed, Sep 18, 2019 at 07:00:30PM +0100, Catalin Marinas wrote:
+> On Wed, Sep 18, 2019 at 05:00:27PM +0300, Kirill A. Shutemov wrote:
+> > On Wed, Sep 18, 2019 at 09:19:14PM +0800, Jia He wrote:
+> > > @@ -2152,20 +2163,34 @@ static inline void cow_user_page(struct page *dst, struct page *src, unsigned lo
+> > >  	 */
+> > >  	if (unlikely(!src)) {
+> > >  		void *kaddr = kmap_atomic(dst);
+> > > -		void __user *uaddr = (void __user *)(va & PAGE_MASK);
+> > > +		void __user *uaddr = (void __user *)(addr & PAGE_MASK);
+> > > +		pte_t entry;
+> > >  
+> > >  		/*
+> > >  		 * This really shouldn't fail, because the page is there
+> > >  		 * in the page tables. But it might just be unreadable,
+> > >  		 * in which case we just give up and fill the result with
+> > > -		 * zeroes.
+> > > +		 * zeroes. On architectures with software "accessed" bits,
+> > > +		 * we would take a double page fault here, so mark it
+> > > +		 * accessed here.
+> > >  		 */
+> > > +		if (arch_faults_on_old_pte() && !pte_young(vmf->orig_pte)) {
+> > > +			spin_lock(vmf->ptl);
+> > > +			if (likely(pte_same(*vmf->pte, vmf->orig_pte))) {
+> > > +				entry = pte_mkyoung(vmf->orig_pte);
+> > > +				if (ptep_set_access_flags(vma, addr,
+> > > +							  vmf->pte, entry, 0))
+> > > +					update_mmu_cache(vma, addr, vmf->pte);
+> > > +			}
+> > 
+> > I don't follow.
+> > 
+> > So if pte has changed under you, you don't set the accessed bit, but never
+> > the less copy from the user.
+> > 
+> > What makes you think it will not trigger the same problem?
+> > 
+> > I think we need to make cow_user_page() fail in this case and caller --
+> > wp_page_copy() -- return zero. If the fault was solved by other thread, we
+> > are fine. If not userspace would re-fault on the same address and we will
+> > handle the fault from the second attempt.
 > 
-> I don't understand your comment here: iommu.passthrough works just as it did
-> before, right, since we set bypass in the STE config field so S1DSS is not
-> relevant?
-
-What isn't supported is bypassing translation *only* for transactions
-without SSID, and using context descriptors for anything with SSID. I
-don't know if such a mode would be useful, but I can drop that sentence
-to avoid confusion.
-
-> I also notice that SSID0 causes transactions with SSID==0 to
-> abort. Is a PASID of 0 reserved, so this doesn't matter?
-
-Yes, we never allocate PASID 0.
-
+> It would be nice to clarify the semantics of this function and do as
+> you suggest but the current comment is slightly confusing:
 > 
-> > @@ -1062,33 +1143,90 @@ static u64 arm_smmu_cpu_tcr_to_cd(u64 tcr)
-> >  	return val;
-> >  }
-> >  
-> > -static void arm_smmu_write_ctx_desc(struct arm_smmu_device *smmu,
-> > -				    struct arm_smmu_s1_cfg *cfg)
-> > +static int arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
-> > +				   int ssid, struct arm_smmu_ctx_desc *cd)
-> >  {
-> >  	u64 val;
-> > +	bool cd_live;
-> > +	struct arm_smmu_device *smmu = smmu_domain->smmu;
-> > +	__le64 *cdptr = arm_smmu_get_cd_ptr(&smmu_domain->s1_cfg, ssid);
-> >  
-> >  	/*
-> > -	 * We don't need to issue any invalidation here, as we'll invalidate
-> > -	 * the STE when installing the new entry anyway.
-> > +	 * This function handles the following cases:
-> > +	 *
-> > +	 * (1) Install primary CD, for normal DMA traffic (SSID = 0).
-> > +	 * (2) Install a secondary CD, for SID+SSID traffic.
-> > +	 * (3) Update ASID of a CD. Atomically write the first 64 bits of the
-> > +	 *     CD, then invalidate the old entry and mappings.
-> > +	 * (4) Remove a secondary CD.
-> >  	 */
-> > -	val = arm_smmu_cpu_tcr_to_cd(cfg->cd.tcr) |
-> > +
-> > +	if (!cdptr)
-> > +		return -ENOMEM;
-> > +
-> > +	val = le64_to_cpu(cdptr[0]);
-> > +	cd_live = !!(val & CTXDESC_CD_0_V);
-> > +
-> > +	if (!cd) { /* (4) */
-> > +		cdptr[0] = 0;
+> 	/*
+> 	 * If the source page was a PFN mapping, we don't have
+> 	 * a "struct page" for it. We do a best-effort copy by
+> 	 * just copying from the original user address. If that
+> 	 * fails, we just zero-fill it. Live with it.
+> 	 */
 > 
-> Should we be using WRITE_ONCE here? (although I notice we don't seem to
-> bother for STEs either...)
+> Would any user-space rely on getting a zero-filled page here instead of
+> a recursive fault?
 
-Yes, I think it makes sense
+I don't see the point in zero-filled page in this case. SIGBUS sounds like
+more appropriate response, no?
 
-Thanks,
-Jean
+-- 
+ Kirill A. Shutemov
