@@ -2,93 +2,98 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C40C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 00:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 450F6C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 00:09:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A290218AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 00:05:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11A36218AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 00:09:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F7fu/kCd"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AHzxOc1w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730500AbfISAFi (ORCPT
+        id S1730613AbfISAJx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 20:05:38 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:39852 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727273AbfISAFi (ORCPT
+        Wed, 18 Sep 2019 20:09:53 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40056 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726714AbfISAJw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 20:05:38 -0400
-Received: by mail-qt1-f196.google.com with SMTP id n7so1991752qtb.6
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 17:05:36 -0700 (PDT)
+        Wed, 18 Sep 2019 20:09:52 -0400
+Received: by mail-pf1-f194.google.com with SMTP id x127so1033616pfb.7
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 17:09:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=NBGDkciQM96PlADwiS6Ecn8jjQWg9GBn83vtaVwDbH4=;
-        b=F7fu/kCdJpx4U0F7B82qRuisn7vshNg319dix7xkITNkq8ZJUHoY78k/2wG8bc5a0p
-         2rsBNZ2L2VcRGViAUVMaIlCWStcCG+MSZtQBmMnix7zq0P3NbDWk++QjZsGwLmWnSMdU
-         hiaI0toddG/o78kORuJVD07nhuKEctHF7MhFajLYZykQUfzz4Pq+aFVRUPPKab5deUYR
-         JYyd9VBoIhk1GHu3Gz/h2/HH7yZV2ItCpEp+M4HHH/SLlM8V9vrNeNI2Eg7fb8lN+54Y
-         WqAqVHRDXBIhcR0pHOuxJSSvdQIkEnuL/8+PzmsmxP1Ih8LEeKDDFMmj7LH8O5Cq7mKM
-         InQA==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4jFcf9iaa7Tt4QrvMrWEeq0CzGPxx9DksNwganDUQw0=;
+        b=AHzxOc1w8Ea6pHo+1TvR/i0feaAwaavrGAD9fcT7m8YnFkOJx3p43rpMLW2m/wHb0C
+         c/cxBpUKn5fQNkhvjHMXRO+SDzjOurEm+Ge47N94fybQ6OHOH7/eDiQcIB3Fjmb/FIrY
+         d0jlclUlTAsDoP/XloLOW3tg2nHBY8nSbSrmg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NBGDkciQM96PlADwiS6Ecn8jjQWg9GBn83vtaVwDbH4=;
-        b=mZOe4VJQZkPwU78+wZJJGTnhnhYIOCzRivmVBP7FtSSDAktO6bGSsS4u0+4/5aDZfS
-         ORKnP6wmA4s4eKi0OH1CPve0Mrbor8DPUW09D4dCbrVo9BiB2o58euUjtJvjJV4dZ/dP
-         PGnxojfh+nzPapKW935f78FFV2ypj4qBKHz1NM83ZpGy7vlPgltnRyNiHaOXk07kciq5
-         grlcufu+QlGcigVo4hjm2ekbzjVY4yPrKRt6UiAuSSrNdmddSEVxMuLrF0KxzJifJt/i
-         wGwSZnz3vouAlFbctyR7Fua67qbmThlVOn39Fb02ABNC3hTH04w95ImpvEOytD873cDz
-         yNpw==
-X-Gm-Message-State: APjAAAU97LJxdYQhqOj78qrzUbYL7r2JGKf5hwclCIYRKqDTRQXkdYj6
-        odGt4ljpVTGeT/uEcAnV39wbfw0o
-X-Google-Smtp-Source: APXvYqwwvzYOGL92W3RbDuk2kMUHSwL/Jadn9bIMbGiMngW0Upv5wZjaWKRWMI3xC8w2fPTrEQy11g==
-X-Received: by 2002:aed:3f7d:: with SMTP id q58mr433021qtf.347.1568851536003;
-        Wed, 18 Sep 2019 17:05:36 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id g3sm3655700qkb.117.2019.09.18.17.05.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Sep 2019 17:05:35 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 8A55C40340; Wed, 18 Sep 2019 21:05:32 -0300 (-03)
-Date:   Wed, 18 Sep 2019 21:05:32 -0300
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc:     Anju T Sudhakar <anju@linux.vnet.ibm.com>, mpe@ellerman.id.au,
-        jolsa@redhat.com, namhyung@kernel.org, peterz@infradead.org,
-        alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, maddy@linux.vnet.ibm.com
-Subject: Re: [PATCH v2 1/3] tools/perf: Move kvm-stat header file from
- conditional inclusion to common include section
-Message-ID: <20190919000532.GE32051@kernel.org>
-References: <20190718181749.30612-1-anju@linux.vnet.ibm.com>
- <1afefd12-b9c5-77b6-c371-bef9fd6f788b@linux.ibm.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4jFcf9iaa7Tt4QrvMrWEeq0CzGPxx9DksNwganDUQw0=;
+        b=deNQk27T/360Wye7RciLAnoC2W79dbrrGk/NcfnFycIvvuuF1RxRCb2P1qnfPQT/w8
+         O64MsXnhg0MsHHIlNilhiG4ujRFHPrq5zj63P/EEfSIOQ3KhI6RJs/cY+BtoUMiyx3Xf
+         JBDOgq3JkOBwSeKqygCIYfgWprtDl0jmJ9D/izMUvVmfn/rmu0UvFpm67foxFI9YPGVu
+         crRZJp8qJmT3SHYqotfGMAnUNf3j6TNm9G9n0cVP1LeJ4/Nult16TbOIco/hSe9ViTpr
+         2/w0UhDJIV6wNkFIoKVR+3mhTBCOcjGi/XCnK4ZjHxC1BO6oK+woLRZ2LZ1nnsISGBZD
+         Zn1g==
+X-Gm-Message-State: APjAAAXcfImBGHY54MCuoybzDZf5uk/7uG0ADjSBpOD4PTn90uaAezT/
+        rNhDvpYV+xsBpCa03tWnT2eyUmb5w8o=
+X-Google-Smtp-Source: APXvYqyGzlz4fGaEnyzkA0gV1KKoYGKOWF3MNf0NuTCha9rCY0aacX7jNyH0uw9hH/t+v16yZw7TZQ==
+X-Received: by 2002:a17:90a:d791:: with SMTP id z17mr603695pju.41.1568851792121;
+        Wed, 18 Sep 2019 17:09:52 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id k31sm3890132pjb.14.2019.09.18.17.09.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Sep 2019 17:09:51 -0700 (PDT)
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH] devfreq: Make log message more explicit when devfreq device already exists
+Date:   Wed, 18 Sep 2019 17:09:46 -0700
+Message-Id: <20190919000946.158454-1-mka@chromium.org>
+X-Mailer: git-send-email 2.23.0.237.gc6a4ce50a0-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1afefd12-b9c5-77b6-c371-bef9fd6f788b@linux.ibm.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Jul 19, 2019 at 10:58:37AM +0530, Ravi Bangoria escreveu:
-> 
-> LGTM. For the series,
-> 
-> Reviewed-By: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Before creating a new devfreq device devfreq_add_device() checks
+if there is already a devfreq dev associated with the requesting
+device (parent). If that's the case the function rejects to create
+another devfreq dev for that parent and logs an error. The error
+message is very unspecific, make it a bit more explicit.
 
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+---
+ drivers/devfreq/devfreq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks, applied.
+diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+index ab22bf8a12d6..0e2dd734ab58 100644
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -625,7 +625,7 @@ struct devfreq *devfreq_add_device(struct device *dev,
+ 	devfreq = find_device_devfreq(dev);
+ 	mutex_unlock(&devfreq_list_lock);
+ 	if (!IS_ERR(devfreq)) {
+-		dev_err(dev, "%s: Unable to create devfreq for the device.\n",
++		dev_err(dev, "%s: devfreq device already exists!\n",
+ 			__func__);
+ 		err = -EINVAL;
+ 		goto err_out;
+-- 
+2.23.0.237.gc6a4ce50a0-goog
 
-- Arnaldo
