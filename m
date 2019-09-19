@@ -2,93 +2,102 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FAA6C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 02:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A32C7C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 02:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55530218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 02:41:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=uber.com header.i=@uber.com header.b="ELpEwWid"
+	by mail.kernel.org (Postfix) with ESMTP id 7BB92218AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 02:43:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388223AbfISClm (ORCPT
+        id S2388392AbfISCnf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 22:41:42 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:35037 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727324AbfISClm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 22:41:42 -0400
-Received: by mail-oi1-f194.google.com with SMTP id x3so1462210oig.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 19:41:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=uber.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=zF2qMJhxuQ7amM744y+ks2XfHt5ik/9ezksZyHoMiSU=;
-        b=ELpEwWid+4qlSD34uVmhArCa/CyRJZ2W/ET6T6iEapIjYfvkOQegVRurqSJWsY4yx7
-         4eTyl+ojM6L/nV6sWwIpX+g3xFpwHDLM+2wMJzIMnABiDk6SLSydfNiVEvCn5feRLsUD
-         BWOSvWTK6JQ1jq+zFr0I4iLUGFYdKNQyL/bRE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zF2qMJhxuQ7amM744y+ks2XfHt5ik/9ezksZyHoMiSU=;
-        b=tDMH5Vbw63nBs9J+J1KwBFkH6cioThgF3CACHNZ0ogYZKN9drpfDqID4xQB/toubm2
-         eBWUKhbdFhirbHBxfkubMHX8g+tntxeFCLTGJ9wy3cYKeOfPWLbiHX8cY5bGoRWEWRpX
-         LI/y1hbl5mmyvhkYB8l+FJAIoQ6utKsf9Jdkb2jrR3jCrgbq//YQ7HVx8TvkducI38E7
-         u5rU+pIYOOO1qIcU/T/ovK3OD6XKa1z7gWazp1RSo2+RmfJqKJc8/QM0dQ5NOo721XmT
-         8e6klpVuVPpehwc/RjtrsLs/kbfTusfSPIjEcpp43pJWkhky08apl2BSGKmpx4wn5QEv
-         aJsA==
-X-Gm-Message-State: APjAAAUPtU0wemgTCBCPjvt+iIznSEIsiHylz7DnwEaINWPELfRBkmB6
-        5vDXthCPtAxqRRp/bpxYkTJ5O6oFJzt82VEekp1new==
-X-Google-Smtp-Source: APXvYqwdY67w0gNkFtbnj1bH3iAl2vo2pajLL/nDexd1Q7O0s3eRABmc/mRXydNW0s4t7KX8nU8wmQkZ08j2NeirkBc=
-X-Received: by 2002:aca:d708:: with SMTP id o8mr701338oig.68.1568860900916;
- Wed, 18 Sep 2019 19:41:40 -0700 (PDT)
+        Wed, 18 Sep 2019 22:43:35 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2676 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388339AbfISCnf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 22:43:35 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 49F46466824EFB1C211D;
+        Thu, 19 Sep 2019 10:43:33 +0800 (CST)
+Received: from huawei.com (10.175.104.232) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Thu, 19 Sep 2019
+ 10:43:27 +0800
+From:   KeMeng Shi <shikemeng@huawei.com>
+To:     <will@kernel.org>
+CC:     <akpm@linux-foundation.org>, <james.morris@microsoft.com>,
+        <gregkh@linuxfoundation.org>, <mortonm@chromium.org>,
+        <will.deacon@arm.com>, <kristina.martsenko@arm.com>,
+        <yuehaibing@huawei.com>, <malat@debian.org>,
+        <j.neuschaefer@gmx.net>, <linux-kernel@vger.kernel.org>
+Subject: Re: Re: Re: [PATCH] connector: report comm change event when modifying /proc/pid/task/tid/comm
+Date:   Wed, 18 Sep 2019 22:43:21 -0400
+Message-ID: <20190919024321.2675-1-shikemeng@huawei.com>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190917170737.dpchgliux4qi2qef@willie-the-truck>
+References: <20190917170737.dpchgliux4qi2qef@willie-the-truck>
 MIME-Version: 1.0
-References: <20190918052406.21385-1-jinshan.xiong@gmail.com>
- <5302836c-a6a1-c160-2de2-6a5b3d2c4828@fb.com> <20190918143235.kpclo45eo7qye7fs@ast-mbp.dhcp.thefacebook.com>
- <CA+-8EHRk6aAuDQ=S9O7h6T2fhyz2z+zQduN2yiDNWMOWt2-t_A@mail.gmail.com> <CAADnVQLsnFaFS+ZhRoL0QfDVcGiR2OSrqSqRsd5dci=rQ+Pb9A@mail.gmail.com>
-In-Reply-To: <CAADnVQLsnFaFS+ZhRoL0QfDVcGiR2OSrqSqRsd5dci=rQ+Pb9A@mail.gmail.com>
-From:   Jinshan Xiong <jinshan.xiong@uber.com>
-Date:   Wed, 18 Sep 2019 19:41:29 -0700
-Message-ID: <CA+-8EHRHTUPNJEwT_wb+O-CStvCoT2=U4h=0JqB6mXfzBArbvQ@mail.gmail.com>
-Subject: Re: [PATCH] staging: tracing/kprobe: filter kprobe based perf event
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Yonghong Song <yhs@fb.com>,
-        "jinshan.xiong@gmail.com" <jinshan.xiong@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.104.232]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-That's bloody true. Thanks for your insights.
-
-I will make an example program and commit into bcc repository.
-
-Jinshan
-
-
-On Wed, Sep 18, 2019 at 1:22 PM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
+On 2019/9/18 at 1:08, Will Deacon wrote:
+>On Tue, Sep 17, 2019 at 09:56:28AM -0400, KeMeng Shi wrote:
+>>on 2019/9/17 at 5:10, Will Deacon wrote:
+>>>The rough idea looks ok to me but I have two concerns:
+>>>
+>>>  (1) This looks like it will be visible to userspace, and this changes
+>>>      the behaviour after ~8 years of not reporting this event.
+>>This do bother for users who only care the comm change via prctl, but 
+>>it also benefits users who want all comm changes. Maybe the best way 
+>>is add something like config or switch to meet the both conditions 
+>>above. In my opinion, users cares comm change event rather than how it
+>>change.
 >
-> On Wed, Sep 18, 2019 at 8:13 AM Jinshan Xiong <jinshan.xiong@uber.com> wr=
-ote:
-> >
-> > The problem with the current approach is that it would be difficult to =
-filter cgroup, especially the cgroup in question has descendents, and also =
-it would spawn new descendents after BPF program is installed. it's hard to=
- filter it inside a BPF program.
+>I was really just looking for some intuition as to how this event is currently
+>used and why extending it like this is unlikely to break those existing users.
+
+By listening these comm change events, user is able to monitor and control
+specific threads that they are interested. For instance, a process control
+daemon listening to proc connector and following comm value policies can
+place specific threads to assigned cgroup partitions (quota from commit
+ f786ecba415888 ("connector: add comm change event report to proc
+ connector")).  It's harmless as user ignore the threads with names that
+they are not interested.
+
+>>>(2) What prevents proc_comm_connector(p) running concurrently with 
+>>>itself  via the prctl()? The locking seems to be confined to set_task_comm().
+>>To be honest, I did not consider the concurrence problem at beginning. 
+>>And some comm change events may lost or are reported repeatly as follows:
+>>set name via procfs	set name via prctl
+>>set_task_comm
+>>			set_task_comm
+>>proc_comm_connector
+>>			proc_comm_connector
+>>Comm change event belong to procfs losts and the fresh comm change 
+>>belong to prctl is reported twice. Actually, there is also concurrence 
+>>problem without this update as follows:
+>>set name via procfs	set name via prctl
+>>			set_task_comm
+>>set_task_comm
+>>			proc_comm_connector
+>>Comm change event from procfs is reported instead of prctl, this may 
+>>bothers user who only care the comm change via prctl.
 >
-> Why is that?
-> bpf_current_task_under_cgroup() fits exactly that purpose.
+>Perhaps, although given that proc_comm_connector() is currently only
+>called on the prctl() path, then it does at least provide the comm
+>from the most recent prctl() invocation. With your path, the calls
+>can go out of order, so I think that probably needs fixing.
+
+It's indeed necessary to fix the concurrence problem. I will submit
+a v2 patch when I fix this.
+
+Thanks for your review and advise.
+KeMeng Shi
