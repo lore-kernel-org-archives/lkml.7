@@ -2,108 +2,235 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3970FC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 17:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02BF8C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 17:13:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEE01214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 17:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6FC7214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 17:13:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568913231;
+	bh=C6c2YEvibdNoNZWf7eWMbtcC3kWsBLMtr7qv9n5HX54=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=nIwAi1whEzjvKwDANQwx8WoJeux8Aw0U6GrIkLMOcXP/ygRyLB0goa0GoS3uSn39n
+	 QJygWef0xcg1OX9WSvG0XGbcek5CFhJspaRKGen3Sv6jB5U82bz5Diq4SA3duOXDP7
+	 EFrBPqBNSXCzgVH6bEJZEMBwHBJvVd1x4y45P96Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391892AbfISRLs (ORCPT
+        id S2391921AbfISRNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 13:11:48 -0400
-Received: from mail.netline.ch ([148.251.143.178]:43747 "EHLO
-        netline-mail3.netline.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389131AbfISRLr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 13:11:47 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by netline-mail3.netline.ch (Postfix) with ESMTP id 3ADAB2AA0FB;
-        Thu, 19 Sep 2019 19:11:44 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at netline-mail3.netline.ch
-Received: from netline-mail3.netline.ch ([127.0.0.1])
-        by localhost (netline-mail3.netline.ch [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id x1F0UOtU4EPY; Thu, 19 Sep 2019 19:11:42 +0200 (CEST)
-Received: from thor (116.245.63.188.dynamic.wline.res.cust.swisscom.ch [188.63.245.116])
-        by netline-mail3.netline.ch (Postfix) with ESMTPSA id C1D592AA0C6;
-        Thu, 19 Sep 2019 19:11:42 +0200 (CEST)
-Received: from localhost ([::1])
-        by thor with esmtp (Exim 4.92.2)
-        (envelope-from <michel@daenzer.net>)
-        id 1iAzy2-00041o-Fl; Thu, 19 Sep 2019 19:11:42 +0200
-Subject: Re: [PATCH] drm/radeon: fix a potential NULL pointer dereference
-To:     Allen Pais <allen.pais@oracle.com>
-Cc:     dri-devel@lists.freedesktop.org, airlied@linux.ie,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org
-References: <1568824282-4081-1-git-send-email-allen.pais@oracle.com>
-From:   =?UTF-8?Q?Michel_D=c3=a4nzer?= <michel@daenzer.net>
-Openpgp: preference=signencrypt
-Autocrypt: addr=michel@daenzer.net; prefer-encrypt=mutual; keydata=
- mQGiBDsehS8RBACbsIQEX31aYSIuEKxEnEX82ezMR8z3LG8ktv1KjyNErUX9Pt7AUC7W3W0b
- LUhu8Le8S2va6hi7GfSAifl0ih3k6Bv1Itzgnd+7ZmSrvCN8yGJaHNQfAevAuEboIb+MaVHo
- 9EMJj4ikOcRZCmQWw7evu/D9uQdtkCnRY9iJiAGxbwCguBHtpoGMxDOINCr5UU6qt+m4O+UD
- /355ohBBzzyh49lTj0kTFKr0Ozd20G2FbcqHgfFL1dc1MPyigej2gLga2osu2QY0ObvAGkOu
- WBi3LTY8Zs8uqFGDC4ZAwMPoFy3yzu3ne6T7d/68rJil0QcdQjzzHi6ekqHuhst4a+/+D23h
- Za8MJBEcdOhRhsaDVGAJSFEQB1qLBACOs0xN+XblejO35gsDSVVk8s+FUUw3TSWJBfZa3Imp
- V2U2tBO4qck+wqbHNfdnU/crrsHahjzBjvk8Up7VoY8oT+z03sal2vXEonS279xN2B92Tttr
- AgwosujguFO/7tvzymWC76rDEwue8TsADE11ErjwaBTs8ZXfnN/uAANgPLQjTWljaGVsIERh
- ZW56ZXIgPG1pY2hlbEBkYWVuemVyLm5ldD6IXgQTEQIAHgUCQFXxJgIbAwYLCQgHAwIDFQID
- AxYCAQIeAQIXgAAKCRBaga+OatuyAIrPAJ9ykonXI3oQcX83N2qzCEStLNW47gCeLWm/QiPY
- jqtGUnnSbyuTQfIySkK5AQ0EOx6FRRAEAJZkcvklPwJCgNiw37p0GShKmFGGqf/a3xZZEpjI
- qNxzshFRFneZze4f5LhzbX1/vIm5+ZXsEWympJfZzyCmYPw86QcFxyZflkAxHx9LeD+89Elx
- bw6wT0CcLvSv8ROfU1m8YhGbV6g2zWyLD0/naQGVb8e4FhVKGNY2EEbHgFBrAAMGA/0VktFO
- CxFBdzLQ17RCTwCJ3xpyP4qsLJH0yCoA26rH2zE2RzByhrTFTYZzbFEid3ddGiHOBEL+bO+2
- GNtfiYKmbTkj1tMZJ8L6huKONaVrASFzLvZa2dlc2zja9ZSksKmge5BOTKWgbyepEc5qxSju
- YsYrX5xfLgTZC5abhhztpYhGBBgRAgAGBQI7HoVFAAoJEFqBr45q27IAlscAn2Ufk2d6/3p4
- Cuyz/NX7KpL2dQ8WAJ9UD5JEakhfofed8PSqOM7jOO3LCA==
-Message-ID: <5603dddb-8ae3-e145-69af-c6ccea68ca1b@daenzer.net>
-Date:   Thu, 19 Sep 2019 19:11:42 +0200
+        Thu, 19 Sep 2019 13:13:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43078 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389036AbfISRNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 13:13:50 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBC8920644;
+        Thu, 19 Sep 2019 17:13:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568913229;
+        bh=C6c2YEvibdNoNZWf7eWMbtcC3kWsBLMtr7qv9n5HX54=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=LejHyarjxv6foUiqT/iaweRXMyAKc4MrbnjqLEg2nnurVkyhwKcDkK3JVf2yhJYja
+         Z5Kvoa0iWl4DR+8KnhgjPli9uFV2SD9iAv5pUbgS/7da52hED+gtALndkivj4Yn6bA
+         NSUqH6AXWqwF1hy4H7z6sIg3aSZXQYOx63anetpo=
+Subject: Re: [PATCH v1 3/3] seccomp: test SECCOMP_USER_NOTIF_FLAG_CONTINUE
+To:     Christian Brauner <christian.brauner@ubuntu.com>,
+        keescook@chromium.org, luto@amacapital.net
+Cc:     jannh@google.com, wad@chromium.org, ast@kernel.org,
+        daniel@iogearbox.net, kafai@fb.com, songliubraving@fb.com,
+        yhs@fb.com, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Tycho Andersen <tycho@tycho.ws>,
+        Tyler Hicks <tyhicks@canonical.com>, stable@vger.kernel.org,
+        shuah <shuah@kernel.org>
+References: <20190919095903.19370-1-christian.brauner@ubuntu.com>
+ <20190919095903.19370-4-christian.brauner@ubuntu.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <ad7d2901-6639-3684-b71c-bdc1a6a020cc@kernel.org>
+Date:   Thu, 19 Sep 2019 11:13:46 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1568824282-4081-1-git-send-email-allen.pais@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190919095903.19370-4-christian.brauner@ubuntu.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-09-18 6:31 p.m., Allen Pais wrote:
-> alloc_workqueue is not checked for errors and as a result,
-> a potential NULL dereference could occur.
+On 9/19/19 3:59 AM, Christian Brauner wrote:
+> Test whether a syscall can be performed after having been intercepted by
+> the seccomp notifier. The test uses dup() and kcmp() since it allows us to
+> nicely test whether the dup() syscall actually succeeded by comparing whether
+> the fds refer to the same underlying struct file.
 > 
-> Signed-off-by: Allen Pais <allen.pais@oracle.com>
+> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Andy Lutomirski <luto@amacapital.net>
+> Cc: Will Drewry <wad@chromium.org>
+> Cc: Shuah Khan <shuah@kernel.org>
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Daniel Borkmann <daniel@iogearbox.net>
+> Cc: Martin KaFai Lau <kafai@fb.com>
+> Cc: Song Liu <songliubraving@fb.com>
+> Cc: Yonghong Song <yhs@fb.com>
+> Cc: Tycho Andersen <tycho@tycho.ws>
+> CC: Tyler Hicks <tyhicks@canonical.com>
+> Cc: stable@vger.kernel.org
+> Cc: linux-kselftest@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Cc: bpf@vger.kernel.org
 > ---
->  drivers/gpu/drm/radeon/radeon_display.c | 4 ++++
->  1 file changed, 4 insertions(+)
+> /* v1 */
+> - Christian Brauner <christian.brauner@ubuntu.com>:
+>    - adapt to new flag name SECCOMP_USER_NOTIF_FLAG_CONTINUE
 > 
-> diff --git a/drivers/gpu/drm/radeon/radeon_display.c b/drivers/gpu/drm/radeon/radeon_display.c
-> index bd52f15..1a41764 100644
-> --- a/drivers/gpu/drm/radeon/radeon_display.c
-> +++ b/drivers/gpu/drm/radeon/radeon_display.c
-> @@ -683,6 +683,10 @@ static void radeon_crtc_init(struct drm_device *dev, int index)
->  	drm_mode_crtc_set_gamma_size(&radeon_crtc->base, 256);
->  	radeon_crtc->crtc_id = index;
->  	radeon_crtc->flip_queue = alloc_workqueue("radeon-crtc", WQ_HIGHPRI, 0);
-> +	if (unlikely(!radeon_crtc->flip_queue)) {
-> +		kfree(radeon_crtc);
-> +		return;
+> /* v0 */
+> Link: https://lore.kernel.org/r/20190918084833.9369-5-christian.brauner@ubuntu.com
+> ---
+>   tools/testing/selftests/seccomp/seccomp_bpf.c | 102 ++++++++++++++++++
+>   1 file changed, 102 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
+> index e996d7b7fd6e..b0966599acb5 100644
+> --- a/tools/testing/selftests/seccomp/seccomp_bpf.c
+> +++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
+> @@ -44,6 +44,7 @@
+>   #include <sys/times.h>
+>   #include <sys/socket.h>
+>   #include <sys/ioctl.h>
+> +#include <linux/kcmp.h>
+>   
+>   #include <unistd.h>
+>   #include <sys/syscall.h>
+> @@ -167,6 +168,10 @@ struct seccomp_metadata {
+>   
+>   #define SECCOMP_RET_USER_NOTIF 0x7fc00000U
+>   
+> +#ifndef SECCOMP_USER_NOTIF_FLAG_CONTINUE
+> +#define SECCOMP_USER_NOTIF_FLAG_CONTINUE 0x00000001
+> +#endif
+> +
+>   #define SECCOMP_IOC_MAGIC		'!'
+>   #define SECCOMP_IO(nr)			_IO(SECCOMP_IOC_MAGIC, nr)
+>   #define SECCOMP_IOR(nr, type)		_IOR(SECCOMP_IOC_MAGIC, nr, type)
+> @@ -3481,6 +3486,103 @@ TEST(seccomp_get_notif_sizes)
+>   	EXPECT_EQ(sizes.seccomp_notif_resp, sizeof(struct seccomp_notif_resp));
+>   }
+>   
+> +static int filecmp(pid_t pid1, pid_t pid2, int fd1, int fd2)
+> +{
+> +#ifdef __NR_kcmp
+> +	return syscall(__NR_kcmp, pid1, pid2, KCMP_FILE, fd1, fd2);
+> +#else
+> +	errno = ENOSYS;
+> +	return -1;
+
+This should be SKIP for kselftest so this isn't counted a failure.
+In this case test can't be run because of a missing dependency.
+
+> +#endif
+> +}
+> +
+> +TEST(user_notification_continue)
+> +{
+> +	pid_t pid;
+> +	long ret;
+> +	int status, listener;
+> +	struct seccomp_notif req = {};
+> +	struct seccomp_notif_resp resp = {};
+> +	struct pollfd pollfd;
+> +
+> +	ret = prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
+> +	ASSERT_EQ(0, ret) {
+> +		TH_LOG("Kernel does not support PR_SET_NO_NEW_PRIVS!");
 > +	}
->  	rdev->mode_info.crtcs[index] = radeon_crtc;
->  
->  	if (rdev->family >= CHIP_BONAIRE) {
+> +
+> +	listener = user_trap_syscall(__NR_dup, SECCOMP_FILTER_FLAG_NEW_LISTENER);
+> +	ASSERT_GE(listener, 0);
+> +
+> +	pid = fork();
+> +	ASSERT_GE(pid, 0);
+> +
+> +	if (pid == 0) {
+> +		int dup_fd, pipe_fds[2];
+> +		pid_t self;
+> +
+> +		ret = pipe(pipe_fds);
+> +		if (ret < 0)
+> +			exit(EXIT_FAILURE);
+> +
+> +		dup_fd = dup(pipe_fds[0]);
+> +		if (dup_fd < 0)
+> +			exit(EXIT_FAILURE);
+> +
+> +		self = getpid();
+> +
+> +		ret = filecmp(self, self, pipe_fds[0], dup_fd);
+> +		if (ret)
+> +			exit(EXIT_FAILURE);
+> +
+> +		exit(EXIT_SUCCESS);
+> +	}
+> +
+> +	pollfd.fd = listener;
+> +	pollfd.events = POLLIN | POLLOUT;
+> +
+> +	EXPECT_GT(poll(&pollfd, 1, -1), 0);
+> +	EXPECT_EQ(pollfd.revents, POLLIN);
+> +
+> +	EXPECT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_RECV, &req), 0);
+> +
+> +	pollfd.fd = listener;
+> +	pollfd.events = POLLIN | POLLOUT;
+> +
+> +	EXPECT_GT(poll(&pollfd, 1, -1), 0);
+> +	EXPECT_EQ(pollfd.revents, POLLOUT);
+> +
+> +	EXPECT_EQ(req.data.nr, __NR_dup);
+> +
+> +	resp.id = req.id;
+> +	resp.flags = SECCOMP_USER_NOTIF_FLAG_CONTINUE;
+> +
+> +	/*
+> +	 * Verify that setting SECCOMP_USER_NOTIF_FLAG_CONTINUE enforces other
+> +	 * args be set to 0.
+> +	 */
+> +	resp.error = 0;
+> +	resp.val = USER_NOTIF_MAGIC;
+> +	EXPECT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_SEND, &resp), -1);
+> +	EXPECT_EQ(errno, EINVAL);
+> +
+> +	resp.error = USER_NOTIF_MAGIC;
+> +	resp.val = 0;
+> +	EXPECT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_SEND, &resp), -1);
+> +	EXPECT_EQ(errno, EINVAL);
+> +
+> +	resp.error = 0;
+> +	resp.val = 0;
+> +	EXPECT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_SEND, &resp), 0) {
+> +		if (errno == EINVAL)
+> +			XFAIL(goto skip, "Kernel does not support SECCOMP_USER_NOTIF_FLAG_CONTINUE");
+> +	}
+> +
+> +skip:
+> +	EXPECT_EQ(waitpid(pid, &status, 0), pid);
+> +	EXPECT_EQ(true, WIFEXITED(status));
+> +	EXPECT_EQ(0, WEXITSTATUS(status));
+> +}
+> +
+>   /*
+>    * TODO:
+>    * - add microbenchmarks
 > 
 
-I'm afraid just silently leaving the CRTC uninitialized isn't a good way
-to handle this. The failure would need to be propagated, probably
-resulting in the driver aborting its initialization altogether.
-
-
--- 
-Earthling Michel Dänzer               |               https://redhat.com
-Libre software enthusiast             |             Mesa and X developer
+thanks,
+-- Shuah
