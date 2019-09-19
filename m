@@ -2,52 +2,57 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 570B2C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A4CC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23C582196F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:22:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96D9A2196E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:22:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931775;
-	bh=JZD1Aid+y/Gpw+xCYHlRE+v2aDotVsNhARNQaLCm6K8=;
+	s=default; t=1568931778;
+	bh=obZJGybuOGuvb7rE0KaEn9xYdYJYnDET0Af657/SRr0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gOat6fr/F7e9q6LzioThkrWeVQsVO/xx1wuzd+mFhiFbhf5khLKlnI+ioRGSo/cZe
-	 0y5esn5FjieAwHTjyk0M82ZTZiNqDwK51wTgCpEGd11Sp8xGEy2db51xkKaEzS/5e+
-	 xHTSGh+d/ukps9ZOOst8Z2E7g0F7lpxOrJN3Wrqo=
+	b=x5e6e4gS51Sq+axMwr+cuT7mD4CINKMPzXItIZE5zIunE+H07Z/z4QZVF4xE+H3Ry
+	 uBdTZw7Y0/p/a2AZNCr81VEYFnNScsR/1ZTNLFOgGFfJ9vRa1ATrbC6T9LiT9LNuxV
+	 GjVWlc+y4aWVFDz9IYYI5nliPG6bBorqgAKMoAA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406940AbfISWWy (ORCPT
+        id S2394129AbfISWW5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:22:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38114 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:22:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406910AbfISWWv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:22:51 -0400
+        id S2406935AbfISWWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:22:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0882A21920;
-        Thu, 19 Sep 2019 22:22:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8706E21920;
+        Thu, 19 Sep 2019 22:22:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931770;
-        bh=JZD1Aid+y/Gpw+xCYHlRE+v2aDotVsNhARNQaLCm6K8=;
+        s=default; t=1568931773;
+        bh=obZJGybuOGuvb7rE0KaEn9xYdYJYnDET0Af657/SRr0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bB2ioGJ8nZpXKHPbjVSrcFeoObL2n68AX/8KRU1Q/E+74gPdWunq4Dg8dsvgXw92G
-         AnKOy7fh1s90dcI/MvAZSBjwtKMhceVG7A5VA22IknktVbinhZl1ojZB8ypQZUF/jB
-         QBoR+M0zRexgIB50P5ZkpS+E8DZZvLRlUCbl9UXs=
+        b=ncrW4Jc+3+RnAdeo/qgJVWWu3uh102UK3ZEcPKITX7WwJEzbGn2ZMyRN6CAQ8qZcY
+         ziXmIiFmMLJRcCDSbHaZBkbhQDKF27XaUrU4O5VCERGdRuiz5j/8/66ODMmEq+c6WX
+         9TCXQSW+eSnwBWvH9E6ODngknxeT2G9vcrgvG/ZE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sean Tranchetti <stranche@codeaurora.org>,
-        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
+        stable@vger.kernel.org,
+        syzbot+bc6297c11f19ee807dc2@syzkaller.appspotmail.com,
+        syzbot+041483004a7f45f1f20a@syzkaller.appspotmail.com,
+        syzbot+55be5f513bed37fc4367@syzkaller.appspotmail.com,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>, Terry Lam <vtlam@google.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 05/56] net: Fix null de-reference of device refcount
-Date:   Fri, 20 Sep 2019 00:03:46 +0200
-Message-Id: <20190919214746.405086721@linuxfoundation.org>
+Subject: [PATCH 4.4 06/56] sch_hhf: ensure quantum and hhf_non_hh_weight are non-zero
+Date:   Fri, 20 Sep 2019 00:03:47 +0200
+Message-Id: <20190919214747.024056988@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214742.483643642@linuxfoundation.org>
 References: <20190919214742.483643642@linuxfoundation.org>
@@ -60,54 +65,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit 10cc514f451a0f239aa34f91bc9dc954a9397840 ]
+[ Upstream commit d4d6ec6dac07f263f06d847d6f732d6855522845 ]
 
-In event of failure during register_netdevice, free_netdev is
-invoked immediately. free_netdev assumes that all the netdevice
-refcounts have been dropped prior to it being called and as a
-result frees and clears out the refcount pointer.
+In case of TCA_HHF_NON_HH_WEIGHT or TCA_HHF_QUANTUM is zero,
+it would make no progress inside the loop in hhf_dequeue() thus
+kernel would get stuck.
 
-However, this is not necessarily true as some of the operations
-in the NETDEV_UNREGISTER notifier handlers queue RCU callbacks for
-invocation after a grace period. The IPv4 callback in_dev_rcu_put
-tries to access the refcount after free_netdev is called which
-leads to a null de-reference-
+Fix this by checking this corner case in hhf_change().
 
-44837.761523:   <6> Unable to handle kernel paging request at
-                    virtual address 0000004a88287000
-44837.761651:   <2> pc : in_dev_finish_destroy+0x4c/0xc8
-44837.761654:   <2> lr : in_dev_finish_destroy+0x2c/0xc8
-44837.762393:   <2> Call trace:
-44837.762398:   <2>  in_dev_finish_destroy+0x4c/0xc8
-44837.762404:   <2>  in_dev_rcu_put+0x24/0x30
-44837.762412:   <2>  rcu_nocb_kthread+0x43c/0x468
-44837.762418:   <2>  kthread+0x118/0x128
-44837.762424:   <2>  ret_from_fork+0x10/0x1c
-
-Fix this by waiting for the completion of the call_rcu() in
-case of register_netdevice errors.
-
-Fixes: 93ee31f14f6f ("[NET]: Fix free_netdev on register_netdev failure.")
-Cc: Sean Tranchetti <stranche@codeaurora.org>
-Signed-off-by: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
+Fixes: 10239edf86f1 ("net-qdisc-hhf: Heavy-Hitter Filter (HHF) qdisc")
+Reported-by: syzbot+bc6297c11f19ee807dc2@syzkaller.appspotmail.com
+Reported-by: syzbot+041483004a7f45f1f20a@syzkaller.appspotmail.com
+Reported-by: syzbot+55be5f513bed37fc4367@syzkaller.appspotmail.com
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>
+Cc: Jiri Pirko <jiri@resnulli.us>
+Cc: Terry Lam <vtlam@google.com>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/dev.c |    2 ++
- 1 file changed, 2 insertions(+)
+ net/sched/sch_hhf.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -6837,6 +6837,8 @@ int register_netdevice(struct net_device
- 	ret = notifier_to_errno(ret);
- 	if (ret) {
- 		rollback_registered(dev);
-+		rcu_barrier();
-+
- 		dev->reg_state = NETREG_UNREGISTERED;
- 	}
- 	/*
+--- a/net/sched/sch_hhf.c
++++ b/net/sched/sch_hhf.c
+@@ -552,7 +552,7 @@ static int hhf_change(struct Qdisc *sch,
+ 		new_hhf_non_hh_weight = nla_get_u32(tb[TCA_HHF_NON_HH_WEIGHT]);
+ 
+ 	non_hh_quantum = (u64)new_quantum * new_hhf_non_hh_weight;
+-	if (non_hh_quantum > INT_MAX)
++	if (non_hh_quantum == 0 || non_hh_quantum > INT_MAX)
+ 		return -EINVAL;
+ 
+ 	sch_tree_lock(sch);
 
 
