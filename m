@@ -2,52 +2,54 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90433C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D97E3C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59D0321920
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7AE021907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:12:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931150;
-	bh=C352ig95Cnl2hNPEuIRDkw7hNqy6LmYCVfFPyHgPzfM=;
+	s=default; t=1568931153;
+	bh=OWnVuFGQtNxK4edV8WWlxrCODApxNE/4x30tpYdErYQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OhjDqP1nvy/1hoLOizvnN1qFL+rq2cob9g5GZ2LyL8i1UwkKHHhXUvf/G7vCDw4yk
-	 UT8PcJyZI5bFoUfcvsXXAuBcn+mNHV4sdgSkdzAsSHj4tQYjl7B028LGlQVZ2zXsLW
-	 3YZA5HQrt29RHjNGqW4N9RoUrtsal8N7zGhjLXGs=
+	b=HuTKAW8fTyxGJEXPPJrf47Mm+meI/mZ+H/BIRQBZDLbetoc0pcNGB665edaPnNcME
+	 rFEp7UP3a+F8XwtUHjpmGJ/sIxaKxI9Ud6u1pI1mz7fJjyFZOVcIE70o+5jbnf+prn
+	 IdJ/x6kRsfVvUzOQiBr4oBloMRNinFbqCrjLcdYo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405993AbfISWM3 (ORCPT
+        id S2393639AbfISWMc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:12:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51368 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:12:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391973AbfISWM1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:12:27 -0400
+        id S2405990AbfISWMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:12:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1757521924;
-        Thu, 19 Sep 2019 22:12:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDD2C218AF;
+        Thu, 19 Sep 2019 22:12:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931146;
-        bh=C352ig95Cnl2hNPEuIRDkw7hNqy6LmYCVfFPyHgPzfM=;
+        s=default; t=1568931149;
+        bh=OWnVuFGQtNxK4edV8WWlxrCODApxNE/4x30tpYdErYQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1ZaMRAGhAFybzbIZv7wq/as8L0P0yBrR+2I9a7lLrr/U1t96MgoUChj22uUYjH3eZ
-         QR3ICCNzZdnMsJj//Qs052qAJ7OYTEX+oUX7UFiFDic7eDTqwUEFMEOBojWOD4niER
-         gWjtue6ylEfvbwIzHYFMjgQr1SAaJJCUlm5AhYwM=
+        b=yz9OCIjT/9vP9Ux9rWuS1Qaa1itM00HOXCjT4z5uD8ZeJOmLCSlxNzJGW0Zm74ph6
+         eRtjrqadK9ZkvSep1R3ztauO82x9C7Q/1rO8WqRGgHYbfbmJM2BsR3CvmmwB7JWEV0
+         VFgTd6ulxz2kKC0ArWsb/OpVP7Tzgdlj7OCsbFNk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Aaron Armstrong Skomra <aaron.skomra@wacom.com>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 4.19 02/79] HID: wacom: generic: read HID_DG_CONTACTMAX from any feature report
-Date:   Fri, 20 Sep 2019 00:02:47 +0200
-Message-Id: <20190919214807.959879649@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Alexander Aring <aring@mojatatu.com>,
+        Stefan Schmidt <stefan@datenfreihafen.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 20/79] ieee802154: hwsim: unregister hw while hwsim_subscribe_all_others fails
+Date:   Fri, 20 Sep 2019 00:03:05 +0200
+Message-Id: <20190919214809.644409859@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214807.612593061@linuxfoundation.org>
 References: <20190919214807.612593061@linuxfoundation.org>
@@ -60,74 +62,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaron Armstrong Skomra <skomra@gmail.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-commit 184eccd40389df29abefab88092c4ff33191fd0c upstream.
+[ Upstream commit de166bbe861738c8bc3e5dad5b03f45d7d6ef914 ]
 
-In the generic code path, HID_DG_CONTACTMAX was previously
-only read from the second byte of report 0x23.
+KASAN report this:
 
-Another report (0x82) has the HID_DG_CONTACTMAX in the
-higher nibble of the third byte. We should support reading the
-value of HID_DG_CONTACTMAX no matter what report we are reading
-or which position that value is in.
+kernel BUG at net/mac802154/main.c:130!
+invalid opcode: 0000 [#1] PREEMPT SMP
+CPU: 0 PID: 19932 Comm: modprobe Not tainted 5.1.0-rc6+ #22
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
+RIP: 0010:ieee802154_free_hw+0x2a/0x30 [mac802154]
+Code: 55 48 8d 57 38 48 89 e5 53 48 89 fb 48 8b 47 38 48 39 c2 75 15 48 8d 7f 48 e8 82 85 16 e1 48 8b 7b 28 e8 f9 ef 83 e2 5b 5d c3 <0f> 0b 0f 1f 40 00 55 48 89 e5 53 48 89 fb 0f b6 86 80 00 00 00 88
+RSP: 0018:ffffc90001c7b9f0 EFLAGS: 00010206
+RAX: ffff88822df3aa80 RBX: ffff88823143d5c0 RCX: 0000000000000002
+RDX: ffff88823143d5f8 RSI: ffff88822b1fabc0 RDI: ffff88823143d5c0
+RBP: ffffc90001c7b9f8 R08: 0000000000000000 R09: 0000000000000001
+R10: 0000000000000000 R11: 0000000000000000 R12: 00000000fffffff4
+R13: ffff88822dea4f50 R14: ffff88823143d7c0 R15: 00000000fffffff4
+FS: 00007ff52e999540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
+CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fdc06dba768 CR3: 000000023160a000 CR4: 00000000000006f0
+Call Trace:
+ hwsim_add_one+0x2dd/0x540 [mac802154_hwsim]
+ hwsim_probe+0x2f/0xb0 [mac802154_hwsim]
+ platform_drv_probe+0x3a/0x90
+ ? driver_sysfs_add+0x79/0xb0
+ really_probe+0x1d4/0x2d0
+ driver_probe_device+0x50/0xf0
+ device_driver_attach+0x54/0x60
+ __driver_attach+0x7e/0xd0
+ ? device_driver_attach+0x60/0x60
+ bus_for_each_dev+0x68/0xc0
+ driver_attach+0x19/0x20
+ bus_add_driver+0x15e/0x200
+ driver_register+0x5b/0xf0
+ __platform_driver_register+0x31/0x40
+ hwsim_init_module+0x74/0x1000 [mac802154_hwsim]
+ ? 0xffffffffa00e9000
+ do_one_initcall+0x6c/0x3cc
+ ? kmem_cache_alloc_trace+0x248/0x3b0
+ do_init_module+0x5b/0x1f1
+ load_module+0x1db1/0x2690
+ ? m_show+0x1d0/0x1d0
+ __do_sys_finit_module+0xc5/0xd0
+ __x64_sys_finit_module+0x15/0x20
+ do_syscall_64+0x6b/0x1d0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x7ff52e4a2839
+Code: 00 f3 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 1f f6 2c 00 f7 d8 64 89 01 48
+RSP: 002b:00007ffffa7b3c08 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+RAX: ffffffffffffffda RBX: 00005647560a2a00 RCX: 00007ff52e4a2839
+RDX: 0000000000000000 RSI: 00005647547f3c2e RDI: 0000000000000003
+RBP: 00005647547f3c2e R08: 0000000000000000 R09: 00005647560a2a00
+R10: 0000000000000003 R11: 0000000000000246 R12: 0000000000000000
+R13: 00005647560a2c10 R14: 0000000000040000 R15: 00005647560a2a00
+Modules linked in: mac802154_hwsim(+) mac802154 [last unloaded: mac802154_hwsim]
 
-To do this we submit the feature report as a event report
-using hid_report_raw_event(). Our modified finger event path
-records the value of HID_DG_CONTACTMAX when it sees that usage.
+In hwsim_add_one, if hwsim_subscribe_all_others fails, we
+should call ieee802154_unregister_hw to free resources.
 
-Fixes: 8ffffd5212846 ("HID: wacom: fix timeout on probe for some wacoms")
-Signed-off-by: Aaron Armstrong Skomra <aaron.skomra@wacom.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: f25da51fdc38 ("ieee802154: hwsim: add replacement for fakelb")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Alexander Aring <aring@mojatatu.com>
+Signed-off-by: Stefan Schmidt <stefan@datenfreihafen.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/wacom_sys.c |   10 ++++++----
- drivers/hid/wacom_wac.c |    4 ++++
- 2 files changed, 10 insertions(+), 4 deletions(-)
+ drivers/net/ieee802154/mac802154_hwsim.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/hid/wacom_sys.c
-+++ b/drivers/hid/wacom_sys.c
-@@ -282,14 +282,16 @@ static void wacom_feature_mapping(struct
- 		/* leave touch_max as is if predefined */
- 		if (!features->touch_max) {
- 			/* read manually */
--			data = kzalloc(2, GFP_KERNEL);
-+			n = hid_report_len(field->report);
-+			data = hid_alloc_report_buf(field->report, GFP_KERNEL);
- 			if (!data)
- 				break;
- 			data[0] = field->report->id;
- 			ret = wacom_get_report(hdev, HID_FEATURE_REPORT,
--						data, 2, WAC_CMD_RETRIES);
--			if (ret == 2) {
--				features->touch_max = data[1];
-+					       data, n, WAC_CMD_RETRIES);
-+			if (ret == n) {
-+				ret = hid_report_raw_event(hdev,
-+					HID_FEATURE_REPORT, data, n, 0);
- 			} else {
- 				features->touch_max = 16;
- 				hid_warn(hdev, "wacom_feature_mapping: "
---- a/drivers/hid/wacom_wac.c
-+++ b/drivers/hid/wacom_wac.c
-@@ -2533,6 +2533,7 @@ static void wacom_wac_finger_event(struc
- 	struct wacom *wacom = hid_get_drvdata(hdev);
- 	struct wacom_wac *wacom_wac = &wacom->wacom_wac;
- 	unsigned equivalent_usage = wacom_equivalent_usage(usage->hid);
-+	struct wacom_features *features = &wacom->wacom_wac.features;
- 
- 	switch (equivalent_usage) {
- 	case HID_GD_X:
-@@ -2553,6 +2554,9 @@ static void wacom_wac_finger_event(struc
- 	case HID_DG_TIPSWITCH:
- 		wacom_wac->hid_data.tipswitch = value;
- 		break;
-+	case HID_DG_CONTACTMAX:
-+		features->touch_max = value;
-+		return;
+diff --git a/drivers/net/ieee802154/mac802154_hwsim.c b/drivers/net/ieee802154/mac802154_hwsim.c
+index 20b4c0c21e36a..be1f1a86bcd61 100644
+--- a/drivers/net/ieee802154/mac802154_hwsim.c
++++ b/drivers/net/ieee802154/mac802154_hwsim.c
+@@ -821,7 +821,7 @@ static int hwsim_add_one(struct genl_info *info, struct device *dev,
+ 		err = hwsim_subscribe_all_others(phy);
+ 		if (err < 0) {
+ 			mutex_unlock(&hwsim_phys_lock);
+-			goto err_reg;
++			goto err_subscribe;
+ 		}
  	}
+ 	list_add_tail(&phy->list, &hwsim_phys);
+@@ -831,6 +831,8 @@ static int hwsim_add_one(struct genl_info *info, struct device *dev,
  
+ 	return idx;
  
++err_subscribe:
++	ieee802154_unregister_hw(phy->hw);
+ err_reg:
+ 	kfree(pib);
+ err_pib:
+-- 
+2.20.1
+
 
 
