@@ -2,121 +2,170 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E51A0C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 10:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E00C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 10:02:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5B3B21A49
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 10:02:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="SWZhd7j6"
+	by mail.kernel.org (Postfix) with ESMTP id 73DFC21924
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 10:02:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389169AbfISKCB (ORCPT
+        id S2389139AbfISKC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 06:02:01 -0400
-Received: from mail-eopbgr80071.outbound.protection.outlook.com ([40.107.8.71]:2286
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388966AbfISKCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 06:02:01 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Uum/bUwjIjrkIqrAEskZ0F1pK8d3ZB5x00BpYreNs3xXHuafkBS4dEBew+z7JmYY0p96fgPoj381UQHafbPsePKkxVzqMQbD7Ce2eTEN9qkM9If4wdK4hB+AeXO759LSh1bY9y/dHPiNfpOnsXMeE3aK6rt18TLL4gX71NWObyGNmmmTz54u96KMM6BfZPYtSslSmOzT1l0GO2fJcZFOaikDAJN4mVVVzlsbPkL40VltUSVkzhMK364H+/0d+wghkXFpk1Y9inEARSHG6A8LD9WcGYDF/jMJsSGh6Alw8MPV78gLpTnpXmPsRb5PJgheZI3qlixWZutVKUallNcDvA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wC/ip0vaqmRjLlxfup04aMPvWEi804Vf624fec5JaZs=;
- b=Wd8HAU3+LIlAnC+55znTarrZu30v5viRqy1beVHxzT8rFp3CgqATaBOX6FAj7wBr5B7sd4naa3+5C3tJPOBmUEDUxDW885VyY5h1ITLz5ETRHH5nPdb74AoELWYxClXq0x4d4fTcQfvdq8u8AYmiUd0IATXU/ghGdQyKUIJPj15kfrqZAu3FBErEvyUy0dHeY+DwF9+1DzjzY7FJ6+GPzWkoD+tYvqsp1fTs3jYa1/+g3B9RxsNVTjmyHTu/rtUn3OKziHofNV965FGgbgJrpUz7z+YfMXFOrDba0/qLOxwP+yOiHRucEtFeMZ56toU6UUugKM70E1RLLI+hsUtlDw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wC/ip0vaqmRjLlxfup04aMPvWEi804Vf624fec5JaZs=;
- b=SWZhd7j6ca2HdyPzxbFcR3213DKKiWPBVNkYgZXhL4CVh66c39gJmIc7CGJGgOIlkM7UVLoqbIUW/FdpUxaAAxfkxrbpLNFkSiopdjSWK7prLFJPwLoEMw+wTYY7zms/gJSZofp+6GwfprpZwWk7fApAremuetxX+n2yyZ3INqA=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3705.eurprd04.prod.outlook.com (52.134.70.30) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.20; Thu, 19 Sep 2019 10:01:57 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::8958:299c:bc54:2a38]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::8958:299c:bc54:2a38%7]) with mapi id 15.20.2284.009; Thu, 19 Sep 2019
- 10:01:57 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Schrempf Frieder <frieder.schrempf@kontron.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        Jacky Bai <ping.bai@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>, Jun Li <jun.li@nxp.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
-        "angus@akkea.ca" <angus@akkea.ca>,
-        "ccaione@baylibre.com" <ccaione@baylibre.com>,
-        "agx@sigxcpu.org" <agx@sigxcpu.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: Missing 'assigned-clocks' in usdhc node of i.MX8MQ/MM/MN dtsi?
-Thread-Topic: Missing 'assigned-clocks' in usdhc node of i.MX8MQ/MM/MN dtsi?
-Thread-Index: AQHVbtCPIpmeLD1Wgkq8yfUNmKVWtacyxFuA
-Date:   Thu, 19 Sep 2019 10:01:57 +0000
-Message-ID: <DB3PR0402MB39167149796B0DD51442FD07F5890@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <e6ce599e-597a-6f67-d5d1-5487f50c7d0d@kontron.de>
-In-Reply-To: <e6ce599e-597a-6f67-d5d1-5487f50c7d0d@kontron.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8acf25c6-e1d6-42e7-3535-08d73ce86851
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3705;
-x-ms-traffictypediagnostic: DB3PR0402MB3705:|DB3PR0402MB3705:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB3705CCBEB870B481BDFDD3A4F5890@DB3PR0402MB3705.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 016572D96D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(376002)(39860400002)(366004)(136003)(199004)(189003)(81166006)(81156014)(2201001)(2501003)(33656002)(76176011)(14454004)(14444005)(316002)(7696005)(256004)(52536014)(9686003)(7416002)(55016002)(5660300002)(110136005)(99286004)(6246003)(6436002)(6506007)(86362001)(66476007)(6636002)(71190400001)(66556008)(66066001)(66446008)(74316002)(64756008)(4744005)(76116006)(229853002)(71200400001)(305945005)(66946007)(2906002)(7736002)(26005)(44832011)(11346002)(102836004)(186003)(6116002)(8676002)(8936002)(446003)(3846002)(486006)(478600001)(476003)(25786009)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3705;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ar7+9Vqt7zsfVtXKe6+7oVKOPf70oxJ6sGvNNwjhjuZTFT9Tg2eu0xKzlb8p03FM1j5DeeVijccpTR7jAwgaHJn0hV8TDKMVPzztEhWhmHDPL0CJQIsc4zoylVXZHkeAJR6kurfAaPMDBCBNfJGYa4Wbw+g+L6Ch4Erkfu+jTWOb+xEUvfFOD6dXX8ig+pAtiI2RzzlyaBCTUD2cuyYzqPBX3E2e46fS5OlF7dlRlZoBn4PyDdMk1WHU/tniMAr8r2ImXdAjQKLfqFSOu0+P0HUIn8SWqdB6/XXUOHS956/qaUPSPncx8NOqgerg/WQ3nQnvOtcDm9UXEifS7qwni7zb9GwQEGJ7H/JfD6ET73DRB8IXJLfljQu/ldpx4eLO+huBex8z2Vj1ADMO2oMw9MRKM4BmJJECQvJjCD2w4bE=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8acf25c6-e1d6-42e7-3535-08d73ce86851
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Sep 2019 10:01:57.4577
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: GxUGQUYdVZFihaoGkoEiJuSPPoKqKIPcavs/qrZsRMYyoESQzg3pp8GeXwah6OytvGdiQfV/9BPbUEp8lNjrGA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3705
+        Thu, 19 Sep 2019 06:02:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42690 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388966AbfISKC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 06:02:27 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7A41B2A09A1;
+        Thu, 19 Sep 2019 10:02:27 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-47.ams2.redhat.com [10.36.116.47])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 763801001281;
+        Thu, 19 Sep 2019 10:02:24 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 97A5017536; Thu, 19 Sep 2019 12:02:23 +0200 (CEST)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Thomas Zimmermann <tzimmermann@suse.de>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v3 01/11] drm: add mmap() to drm_gem_object_funcs
+Date:   Thu, 19 Sep 2019 12:02:13 +0200
+Message-Id: <20190919100223.13309-2-kraxel@redhat.com>
+In-Reply-To: <20190919100223.13309-1-kraxel@redhat.com>
+References: <20190919100223.13309-1-kraxel@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 19 Sep 2019 10:02:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFNjaHJlbXBmDQoNCj4gSGksDQo+IA0KPiBJIHdvbmRlciB3aHkgaW14OG1xLmR0c2ksIGlt
-eDhtbS5kdHNpIGFuZCBpbXg4bW4uZHRzaSBoYXZlICdhc3NpZ25lZC0NCj4gY2xvY2tzJyBhbmQg
-J2Fzc2lnbmVkLWNsb2NrLXJhdGVzJyBzZXQgZm9yIGFsbCB1c2RoYyBub2RlcywgZXhjZXB0IGZv
-ciB1c2RoYzIuDQo+IA0KPiBJcyB0aGlzIG9uIHB1cnBvc2U/IElzIGl0IGEgZmxhdz8NCg0KSSBk
-b24ndCB0aGluayBpdCBpcyBvbiBwdXJwb3NlLCBpdCBzaG91bGQgYmUgYSBmbGF3LCBJIHdpbGwg
-ZG91YmxlIGNoZWNrIHdpdGggb3VyIHVzZGhjIG93bmVyLA0KaWYgaXQgaXMgaW5kZWVkIGEgZmxh
-dywgd2Ugd2lsbCBzdW1taXQgYSBwYXRjaCB0byBmaXggaXQsIHRoYW5rcyBmb3IgcmVtaW5kZXIu
-DQoNClRoYW5rcywNCkFuc29uDQoNCg==
+drm_gem_object_funcs->vm_ops alone can't handle everything which needs
+to be done for mmap(), tweaking vm_flags for example.  So add a new
+mmap() callback to drm_gem_object_funcs where this code can go to.
+
+Note that the vm_ops field is not used in case the mmap callback is
+present, it is expected that the callback sets vma->vm_ops instead.
+
+Also setting vm_flags and vm_page_prot is the job of the new callback.
+so drivers have more control over these flags.
+
+drm_gem_mmap_obj() will use the new callback for object specific mmap
+setup.  With this in place the need for driver-speific fops->mmap
+callbacks goes away, drm_gem_mmap can be hooked instead.
+
+drm_gem_prime_mmap() will use the new callback too to just mmap gem
+objects directly instead of jumping though loops to make
+drm_gem_object_lookup() and fops->mmap work.
+
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+---
+ include/drm/drm_gem.h       | 14 ++++++++++++++
+ drivers/gpu/drm/drm_gem.c   | 27 ++++++++++++++++++---------
+ drivers/gpu/drm/drm_prime.c |  9 +++++++++
+ 3 files changed, 41 insertions(+), 9 deletions(-)
+
+diff --git a/include/drm/drm_gem.h b/include/drm/drm_gem.h
+index 6aaba14f5972..e71f75a2ab57 100644
+--- a/include/drm/drm_gem.h
++++ b/include/drm/drm_gem.h
+@@ -150,6 +150,20 @@ struct drm_gem_object_funcs {
+ 	 */
+ 	void (*vunmap)(struct drm_gem_object *obj, void *vaddr);
+ 
++	/**
++	 * @mmap:
++	 *
++	 * Handle mmap() of the gem object, setup vma accordingly.
++	 *
++	 * This callback is optional.
++	 *
++	 * The callback is used by by both drm_gem_mmap_obj() and
++	 * drm_gem_prime_mmap().  When @mmap is present @vm_ops is not
++	 * used, the @mmap callback must set vma->vm_ops instead.
++	 *
++	 */
++	int (*mmap)(struct drm_gem_object *obj, struct vm_area_struct *vma);
++
+ 	/**
+ 	 * @vm_ops:
+ 	 *
+diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
+index 6854f5867d51..56f42e0f2584 100644
+--- a/drivers/gpu/drm/drm_gem.c
++++ b/drivers/gpu/drm/drm_gem.c
+@@ -1099,22 +1099,31 @@ int drm_gem_mmap_obj(struct drm_gem_object *obj, unsigned long obj_size,
+ 		     struct vm_area_struct *vma)
+ {
+ 	struct drm_device *dev = obj->dev;
++	int ret;
+ 
+ 	/* Check for valid size. */
+ 	if (obj_size < vma->vm_end - vma->vm_start)
+ 		return -EINVAL;
+ 
+-	if (obj->funcs && obj->funcs->vm_ops)
+-		vma->vm_ops = obj->funcs->vm_ops;
+-	else if (dev->driver->gem_vm_ops)
+-		vma->vm_ops = dev->driver->gem_vm_ops;
+-	else
+-		return -EINVAL;
++	if (obj->funcs && obj->funcs->mmap) {
++		ret = obj->funcs->mmap(obj, vma);
++		if (ret)
++			return ret;
++		WARN_ON(!(vma->vm_flags & VM_DONTEXPAND));
++	} else {
++		if (obj->funcs && obj->funcs->vm_ops)
++			vma->vm_ops = obj->funcs->vm_ops;
++		else if (dev->driver->gem_vm_ops)
++			vma->vm_ops = dev->driver->gem_vm_ops;
++		else
++			return -EINVAL;
++
++		vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP;
++		vma->vm_page_prot = pgprot_writecombine(vm_get_page_prot(vma->vm_flags));
++		vma->vm_page_prot = pgprot_decrypted(vma->vm_page_prot);
++	}
+ 
+-	vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP;
+ 	vma->vm_private_data = obj;
+-	vma->vm_page_prot = pgprot_writecombine(vm_get_page_prot(vma->vm_flags));
+-	vma->vm_page_prot = pgprot_decrypted(vma->vm_page_prot);
+ 
+ 	/* Take a ref for this mapping of the object, so that the fault
+ 	 * handler can dereference the mmap offset's pointer to the object.
+diff --git a/drivers/gpu/drm/drm_prime.c b/drivers/gpu/drm/drm_prime.c
+index 0a2316e0e812..0814211b0f3f 100644
+--- a/drivers/gpu/drm/drm_prime.c
++++ b/drivers/gpu/drm/drm_prime.c
+@@ -713,6 +713,15 @@ int drm_gem_prime_mmap(struct drm_gem_object *obj, struct vm_area_struct *vma)
+ 	struct file *fil;
+ 	int ret;
+ 
++	if (obj->funcs && obj->funcs->mmap) {
++		ret = obj->funcs->mmap(obj, vma);
++		if (ret)
++			return ret;
++		vma->vm_private_data = obj;
++		drm_gem_object_get(obj);
++		return 0;
++	}
++
+ 	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
+ 	fil = kzalloc(sizeof(*fil), GFP_KERNEL);
+ 	if (!priv || !fil) {
+-- 
+2.18.1
+
