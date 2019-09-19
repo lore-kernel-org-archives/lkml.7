@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E494C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A97DAC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28B5021927
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:08:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7506921A49
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:08:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568930902;
-	bh=XFNuF7uzs1Qn5arkiQ4mGqElYb+I6FDtsCAORgQUYos=;
+	s=default; t=1568930905;
+	bh=BJV4xn+dCqPEYrNnYRxOCtNh4EYW7nfGMGy0JjAm954=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q/WzCIYkpHQKnGSI/XVnaVFsfiQDSn6HmHeEyC9rhAp9aAc9SKxV0sDjoknXSAiqc
-	 8nWVza67g+0JvoztMzlOHk5kTV2VmcQ5s1X8Bdfx9C6fNq6PHkgnyQMS+s2+Pp2vx0
-	 gtAwaaY8ydyuGEg85sbXoeNfUqGPOJsUG97qJ8OI=
+	b=GaepqzqsSI+6fKMpSHVPBK1CrHjgkHt9tx3DLiOxLIeUw0axRNJk/MKl4lsQET3p7
+	 HaVcUgaaXleY21ECo14ZDihlGxSUUP2SRCA1lRPbwCbPcCKdahNH+AY1WsBXx0J0dX
+	 0zPz8leBqec8o+LN0biRGLfw7hgryyPGFuFDXx8A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393404AbfISWIV (ORCPT
+        id S2393416AbfISWIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:08:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46214 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:08:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393384AbfISWIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:08:17 -0400
+        id S2393402AbfISWIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:08:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10AC121920;
-        Thu, 19 Sep 2019 22:08:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C258821928;
+        Thu, 19 Sep 2019 22:08:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568930897;
-        bh=XFNuF7uzs1Qn5arkiQ4mGqElYb+I6FDtsCAORgQUYos=;
+        s=default; t=1568930900;
+        bh=BJV4xn+dCqPEYrNnYRxOCtNh4EYW7nfGMGy0JjAm954=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mA/IP40YV4+SXWTkd4c83uZKFTNzmorDY7pdsWEAsFafQrvuozBOrWFCNMPQU8wuO
-         esTIEL/WaU0+P7CdyhLFGxKdtITSfUdkmdriDe8qQunLtTYUBu7vrUjYYv7FHKcDwj
-         BSehO1ZvVSI4OlW55iOnLGG5eqmNmceSCGDYeeas=
+        b=FpicqyFAD+P8riHC88Y8TizX8prVdJoBWcL/qoTtMgunuKSc6h9YEoGc2Ne7OsImf
+         +YZ1Dv7/TuHP9McA05U7JTLR6iRDl0VaApRMWnbJoErf/CcI+rdAnNJFnt0XybkcI4
+         iV1SN/QJL8LG3ArQSb2LcUkgxjks5+RrZMl+6lBE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        "David S. Miller" <davem@davemloft.net>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 054/124] Kconfig: Fix the reference to the IDT77105 Phy driver in the description of ATM_NICSTAR_USE_IDT77105
-Date:   Fri, 20 Sep 2019 00:02:22 +0200
-Message-Id: <20190919214820.967577050@linuxfoundation.org>
+Subject: [PATCH 5.2 055/124] xdp: unpin xdp umem pages in error path
+Date:   Fri, 20 Sep 2019 00:02:23 +0200
+Message-Id: <20190919214821.003628809@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -61,32 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 
-[ Upstream commit cd9d4ff9b78fcd0fc4708900ba3e52e71e1a7690 ]
+[ Upstream commit fb89c39455e4b49881c5a42761bd71f03d3ef888 ]
 
-This should be IDT77105, not IDT77015.
+Fix mem leak caused by missed unpin routine for umem pages.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 8aef7340ae9695 ("xsk: introduce xdp_umem_page")
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Acked-by: Jonathan Lemon <jonathan.lemon@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/atm/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/xdp/xdp_umem.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/atm/Kconfig b/drivers/atm/Kconfig
-index 2e2efa577437e..8c37294f1d1ee 100644
---- a/drivers/atm/Kconfig
-+++ b/drivers/atm/Kconfig
-@@ -200,7 +200,7 @@ config ATM_NICSTAR_USE_SUNI
- 	  make the card work).
+diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
+index 9c6de4f114f84..9bd7b96027c12 100644
+--- a/net/xdp/xdp_umem.c
++++ b/net/xdp/xdp_umem.c
+@@ -368,7 +368,7 @@ static int xdp_umem_reg(struct xdp_umem *umem, struct xdp_umem_reg *mr)
+ 	umem->pages = kcalloc(umem->npgs, sizeof(*umem->pages), GFP_KERNEL);
+ 	if (!umem->pages) {
+ 		err = -ENOMEM;
+-		goto out_account;
++		goto out_pin;
+ 	}
  
- config ATM_NICSTAR_USE_IDT77105
--	bool "Use IDT77015 PHY driver (25Mbps)"
-+	bool "Use IDT77105 PHY driver (25Mbps)"
- 	depends on ATM_NICSTAR
- 	help
- 	  Support for the PHYsical layer chip in ForeRunner LE25 cards. In
+ 	for (i = 0; i < umem->npgs; i++)
+@@ -376,6 +376,8 @@ static int xdp_umem_reg(struct xdp_umem *umem, struct xdp_umem_reg *mr)
+ 
+ 	return 0;
+ 
++out_pin:
++	xdp_umem_unpin_pages(umem);
+ out_account:
+ 	xdp_umem_unaccount_pages(umem);
+ 	return err;
 -- 
 2.20.1
 
