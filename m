@@ -2,87 +2,103 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB61C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5187C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98F0521D56
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86DDF21D6C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:39:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ieeib4Ap"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fw9B1HpS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390482AbfISNjb (ORCPT
+        id S2390493AbfISNjs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 09:39:31 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:39512 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389222AbfISNjb (ORCPT
+        Thu, 19 Sep 2019 09:39:48 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46978 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389222AbfISNjs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 09:39:31 -0400
-Received: by mail-yb1-f194.google.com with SMTP id o80so1334139ybc.6
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 06:39:31 -0700 (PDT)
+        Thu, 19 Sep 2019 09:39:48 -0400
+Received: by mail-lj1-f195.google.com with SMTP id e17so3585355ljf.13
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 06:39:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gh9epQbPDXS45t0vdSz30/htyHlI6NEZom/dNuM2sGs=;
-        b=ieeib4ApNmoMaWTclSUxdRd2KtnX6idLkHzrhFUwAyBClrQ4kku9aL9aTofkCcrasC
-         ZVdU1AM4T84Jn4WW5X+mUslTzGyn2RP3kRs453/UtfKoxf7aAByCAWxuuthh01LEZ6XZ
-         pa2A5qr/JT3myBWj7qNoSPvwZce6BFFBGJUfVmzcG83Ee9lzDFFcaYitb65MhoXKye0u
-         jaDkWCeVgEXo2LZ293ZeUnm5tbaDTCqcwbCIsnX7gWIC6hBFMQZsGviDyV18ukHdh5dN
-         1EvTQ5Aa67fcKxfzhixaPaBbmhZqa+B9X7+YgvKmNFY5gywNqog/UzNZug8NUfp+5eGc
-         C1Kg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=ljddPlLbugzgQnvA3trD4zHMH/BICWFfII8G370j0MY=;
+        b=Fw9B1HpSbGNYHCU5OzIy+QofrJE+uWtt0F4VJpA/g+9lujIV60Wy+x8sKiCtgFnu1w
+         8hxaOb4w5415jl9aMpEHjHCtlOPBN5EzhBwfXTNBv+NJBZfDGamcSpfT3g9Q4qkqy1Gh
+         LJWmlw9DJqn2iHiF0gEO8E65RR9VWobwdDK9fsaq0vbCI4XItUuHVLDQo28HFHzR20wS
+         CrvER5n/oa5TcIyVjFMsblbzeiPmPtW+9w+i10PHK7Ukxd3AcXWi1FvRNLTtPP235w8/
+         9cC/t+NOSgQZwHfgnFSVurSvd5mPy+4pfwzYgTKVCNoCz/fhNMXsrLk0cVbzXdYVvzLm
+         gFYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gh9epQbPDXS45t0vdSz30/htyHlI6NEZom/dNuM2sGs=;
-        b=X8Lweb1o2laQeLZr1UPX9iCGddOTpfahheO067BoNrxUNnlQOFsp5RHwX6+sBHZb3B
-         vvBciiFRCl8oQMTRpyRTipUfLlngloS/+BnrkC6d1VGKdTFVbSKfwr1vPT75VRqBGvwQ
-         4wEyiCpyDOdzmUv4y5GUG1t31a+BPyWZlneLm9nUAZyBolfuKua0vBfv7TBvvoOiXfyd
-         Y2vppkBAhizWMs+chOxIoQwHhGuQVHAen7Q7tc7dpdyDiEVJA4KjE8BNqF06PyCc+QSt
-         h84AFJEzTkG/mbeQKQW03JASBiBIvtCRhcRq9aXV8h6m1KOWYa9Eu1ruga2c07iRQ3eG
-         CrJg==
-X-Gm-Message-State: APjAAAVaFWabIaeT6tCXZ3sy0kuS4UdW66U/Y7TlHLqA2sjYjrjUOylq
-        ocdbNQgPSTt7mtgLpzxM5KcCKPCbVk6KdRz2Z/knqw==
-X-Google-Smtp-Source: APXvYqyTTjYSC4/xvE4YiMCj3MA7ZD4bi7SRQ4CDsCuRNHidPBrDbCC1madTD9IMdduZjh/1UXDKHeEVxOBAWhjVCFA=
-X-Received: by 2002:a25:ba8d:: with SMTP id s13mr6638491ybg.332.1568900370326;
- Thu, 19 Sep 2019 06:39:30 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=ljddPlLbugzgQnvA3trD4zHMH/BICWFfII8G370j0MY=;
+        b=kp9QNOJ8Rw6CQdd+3DsrsIDYkCo+LlFSuJrysDmVES8U0Ud5tfLgSaTQSo/FpE0DJh
+         Z8BaPWwNZO2OACY6Vb5dK8PD5UkJUgH3XmNkh0HC5zKZ9917qVxBawcKQ14LwTw4OCVI
+         H9+YBxnQGxl/pHCbh+6yRMbZD290YMsc74rViqO0HOrtn5FRacrQuF6Zlq/CWaNsas57
+         dMF2Revhp13uGOc1dhkRL88mrYTY9R4B6QpCFTQe0bAw38+9bvPgnfGg/mMKkKsSBFsV
+         nVGBzuYtZXuNqTHlN9LR729wVTTzlnvOBdheh399XwGwwhYDIVEtGluI4/y4/dUwMLhT
+         NR6Q==
+X-Gm-Message-State: APjAAAUGUqAh+dyXcpqJFdhHJHsyFxCU3fgXHjXDXK0jqZPiA9zoAvuk
+        jF+g9OwpZlf2ru8x3uTbHJM=
+X-Google-Smtp-Source: APXvYqxqDzTP+yc5q65qxkOlEx+r7EGFXQaNg56YX5BKSVlxvdU9OZnVvEnylS7QvcDTCc7YmM6l9w==
+X-Received: by 2002:a2e:b0c2:: with SMTP id g2mr5324803ljl.217.1568900386154;
+        Thu, 19 Sep 2019 06:39:46 -0700 (PDT)
+Received: from uranus.localdomain ([5.18.103.226])
+        by smtp.gmail.com with ESMTPSA id 81sm1669121lje.70.2019.09.19.06.39.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Sep 2019 06:39:44 -0700 (PDT)
+Received: by uranus.localdomain (Postfix, from userid 1000)
+        id 599274614AD; Thu, 19 Sep 2019 16:39:44 +0300 (MSK)
+Date:   Thu, 19 Sep 2019 16:39:44 +0300
+From:   Cyrill Gorcunov <gorcunov@gmail.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH -tip] x86/boot: Reserve enough space for any cpu level string
+Message-ID: <20190919133944.GB2507@uranus.lan>
 MIME-Version: 1.0
-References: <20190905214553.1643060-1-guro@fb.com>
-In-Reply-To: <20190905214553.1643060-1-guro@fb.com>
-From:   Suleiman Souhlal <suleiman@google.com>
-Date:   Thu, 19 Sep 2019 22:39:18 +0900
-Message-ID: <CABCjUKByipk2e1Hh1_PwC+p2Fig=6RMfd0zBeVQtyn5Y48gYXQ@mail.gmail.com>
-Subject: Re: [PATCH RFC 00/14] The new slab memory controller
-To:     Roman Gushchin <guro@fb.com>
-Cc:     linux-mm@kvack.org, Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        kernel-team@fb.com, Shakeel Butt <shakeelb@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Waiman Long <longman@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 6, 2019 at 6:57 AM Roman Gushchin <guro@fb.com> wrote:
-> The patchset has been tested on a number of different workloads in our
-> production. In all cases, it saved hefty amounts of memory:
-> 1) web frontend, 650-700 Mb, ~42% of slab memory
-> 2) database cache, 750-800 Mb, ~35% of slab memory
-> 3) dns server, 700 Mb, ~36% of slab memory
+Currently when we're validating cpu on boot stage we assume that cpu level
+won't ever be greater than two digits. In particular the check_cpu() helper
+ensures to be so. Still the cpu_name() helper is a way too far from
+check_cpu() routine internals so I think better to be on a safe side
+and prevent any possible overrun errors when printing cpu name.
+For this sake just increase the buffer up to be able to keep any level.
 
-Do these workloads cycle through a lot of different memcgs?
+CC: Ingo Molnar <mingo@kernel.org>
+CC: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Cyrill Gorcunov <gorcunov@gmail.com>
+---
+ arch/x86/boot/cpu.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-For workloads that don't, wouldn't this approach potentially use more
-memory? For example, a workload where everything is in one or two
-memcgs, and those memcgs last forever.
-
--- Suleiman
+Index: linux-tip.git/arch/x86/boot/cpu.c
+===================================================================
+--- linux-tip.git.orig/arch/x86/boot/cpu.c
++++ linux-tip.git/arch/x86/boot/cpu.c
+@@ -20,7 +20,7 @@
+ 
+ static char *cpu_name(int level)
+ {
+-	static char buf[6];
++	static char buf[16];
+ 
+ 	if (level == 64) {
+ 		return "x86-64";
