@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF0EC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E47C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60C852196E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:22:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84FEA2196F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:22:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931754;
-	bh=4pzk7W34Hwiym1j70wpXjtgVm/YZFf5dNu8qSh4DBXg=;
+	s=default; t=1568931757;
+	bh=baReVMH+d8hTxywRiG3exURrnZ/d6SLknoE6lUTdu7U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xDgRVkayHWfcHOJBUCKqbeA9L9p5elarVVC/Ow/m/xaT7xquLv7NOg6TjKAiR9EU/
-	 ggmeM5MfOzYZ6B9ZrUiLaGgqYLQ1yphzW86F6mJYxnZf5vRgWNiqqzUQ0S4kIeZvqL
-	 jz8zO0j1o8A+D6Ur7yW9OmYrsMVE7358GjudHtHQ=
+	b=I/mPin9wFCQMZVHQtKsMAQtH3Oc2q/IqTQzHQpoJRD0avfQowEk9KVyYoob7BHsSR
+	 rS8JgY0mxs4Z4UwxAiSKFk3/SlId2J/wzwslNj5E6qv1f1QkPJ2L64A2AcDPvA8OgC
+	 +sd8sszAv/4uYjj1gyp6yXxXqtaJbii9ZWsaJMqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406870AbfISWWd (ORCPT
+        id S2406881AbfISWWg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:22:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37582 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:22:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406853AbfISWW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:22:29 -0400
+        id S2406847AbfISWWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:22:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69BA121927;
-        Thu, 19 Sep 2019 22:22:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0542021929;
+        Thu, 19 Sep 2019 22:22:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931748;
-        bh=4pzk7W34Hwiym1j70wpXjtgVm/YZFf5dNu8qSh4DBXg=;
+        s=default; t=1568931751;
+        bh=baReVMH+d8hTxywRiG3exURrnZ/d6SLknoE6lUTdu7U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OqomM5ShHsZ5G6UDpdAWEfxs6rcf+aLxfX40qJRXrvRy2FqNX8WuUdbl7CtkJdsaE
-         KtZpknYtXntzKcmUeLEgUAPw1uIFQrrY0ESMBJoC5QSgDNp54JBbSzrOkY1VudgLEI
-         aysrsw65M1B6auDsiyLacJOk/0SuLpPy+MSNt2UE=
+        b=HrqDNp33hI9lJr9ZgF6mSU3EUP5HLhY9E0ogX2MVv0Vgr94aUKgefsenM2AqDVx93
+         Ni1SSz9+ULrnPFZED0NyUpuodHwiR85US+j3JFVGqINm8jU+cO6jFFWIvUsgR0crzs
+         vVpvgzgiDg6MyOuG5u4l0g4ck6O2FMulxerxqDNE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
-        Ganesan Ramalingam <ganesanr@broadcom.com>,
-        James Hogan <jhogan@kernel.org>,
-        Jayachandran C <jnair@caviumnetworks.com>,
-        John Crispin <john@phrozen.org>,
-        Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org,
+        stable@vger.kernel.org, Alexey Brodkin <abrodkin@synopsys.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
         Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.4 25/56] MIPS: netlogic: xlr: Remove erroneous check in nlm_fmn_send()
-Date:   Fri, 20 Sep 2019 00:04:06 +0200
-Message-Id: <20190919214755.209045371@linuxfoundation.org>
+Subject: [PATCH 4.4 26/56] ARC: configs: Remove CONFIG_INITRAMFS_SOURCE from defconfigs
+Date:   Fri, 20 Sep 2019 00:04:07 +0200
+Message-Id: <20190919214755.347842797@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214742.483643642@linuxfoundation.org>
 References: <20190919214742.483643642@linuxfoundation.org>
@@ -64,54 +61,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Burton <paul.burton@mips.com>
+From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
 
-commit 02eec6c9fc0cb13169cc97a6139771768791f92b upstream.
+commit 64234961c145606b36eaa82c47b11be842b21049 upstream.
 
-In nlm_fmn_send() we have a loop which attempts to send a message
-multiple times in order to handle the transient failure condition of a
-lack of available credit. When examining the status register to detect
-the failure we check for a condition that can never be true, which falls
-foul of gcc 8's -Wtautological-compare:
+We used to have pre-set CONFIG_INITRAMFS_SOURCE with local path
+to intramfs in ARC defconfigs. This was quite convenient for
+in-house development but not that convenient for newcomers
+who obviusly don't have folders like "arc_initramfs" next to
+the Linux source tree. Which leads to quite surprising failure
+of defconfig building:
+------------------------------->8-----------------------------
+  ../scripts/gen_initramfs_list.sh: Cannot open '../../arc_initramfs_hs/'
+../usr/Makefile:57: recipe for target 'usr/initramfs_data.cpio.gz' failed
+make[2]: *** [usr/initramfs_data.cpio.gz] Error 1
+------------------------------->8-----------------------------
 
-  In file included from arch/mips/netlogic/common/irq.c:65:
-  ./arch/mips/include/asm/netlogic/xlr/fmn.h: In function 'nlm_fmn_send':
-  ./arch/mips/include/asm/netlogic/xlr/fmn.h:304:22: error: bitwise
-    comparison always evaluates to false [-Werror=tautological-compare]
-     if ((status & 0x2) == 1)
-                        ^~
+So now when more and more people start to deal with our defconfigs
+let's make their life easier with removal of CONFIG_INITRAMFS_SOURCE.
 
-If the path taken if this condition were true all we do is print a
-message to the kernel console. Since failures seem somewhat expected
-here (making the console message questionable anyway) and the condition
-has clearly never evaluated true we simply remove it, rather than
-attempting to fix it to check status correctly.
-
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Patchwork: https://patchwork.linux-mips.org/patch/20174/
-Cc: Ganesan Ramalingam <ganesanr@broadcom.com>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: Jayachandran C <jnair@caviumnetworks.com>
-Cc: John Crispin <john@phrozen.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: linux-mips@linux-mips.org
-Cc: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
+Cc: Kevin Hilman <khilman@baylibre.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+[backport: Fix context conflicts, drop non-existing configuration files]
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/include/asm/netlogic/xlr/fmn.h |    2 --
- 1 file changed, 2 deletions(-)
+ arch/arc/configs/axs101_defconfig          |    1 -
+ arch/arc/configs/axs103_defconfig          |    1 -
+ arch/arc/configs/axs103_smp_defconfig      |    1 -
+ arch/arc/configs/nsim_700_defconfig        |    1 -
+ arch/arc/configs/nsim_hs_defconfig         |    1 -
+ arch/arc/configs/nsim_hs_smp_defconfig     |    1 -
+ arch/arc/configs/nsimosci_defconfig        |    1 -
+ arch/arc/configs/nsimosci_hs_defconfig     |    1 -
+ arch/arc/configs/nsimosci_hs_smp_defconfig |    1 -
+ 9 files changed, 9 deletions(-)
 
---- a/arch/mips/include/asm/netlogic/xlr/fmn.h
-+++ b/arch/mips/include/asm/netlogic/xlr/fmn.h
-@@ -301,8 +301,6 @@ static inline int nlm_fmn_send(unsigned
- 	for (i = 0; i < 8; i++) {
- 		nlm_msgsnd(dest);
- 		status = nlm_read_c2_status0();
--		if ((status & 0x2) == 1)
--			pr_info("Send pending fail!\n");
- 		if ((status & 0x4) == 0)
- 			return 0;
- 	}
+--- a/arch/arc/configs/axs101_defconfig
++++ b/arch/arc/configs/axs101_defconfig
+@@ -11,7 +11,6 @@ CONFIG_NAMESPACES=y
+ # CONFIG_UTS_NS is not set
+ # CONFIG_PID_NS is not set
+ CONFIG_BLK_DEV_INITRD=y
+-CONFIG_INITRAMFS_SOURCE="../arc_initramfs/"
+ CONFIG_EMBEDDED=y
+ CONFIG_PERF_EVENTS=y
+ # CONFIG_VM_EVENT_COUNTERS is not set
+--- a/arch/arc/configs/axs103_defconfig
++++ b/arch/arc/configs/axs103_defconfig
+@@ -11,7 +11,6 @@ CONFIG_NAMESPACES=y
+ # CONFIG_UTS_NS is not set
+ # CONFIG_PID_NS is not set
+ CONFIG_BLK_DEV_INITRD=y
+-CONFIG_INITRAMFS_SOURCE="../../arc_initramfs_hs/"
+ CONFIG_EMBEDDED=y
+ CONFIG_PERF_EVENTS=y
+ # CONFIG_VM_EVENT_COUNTERS is not set
+--- a/arch/arc/configs/axs103_smp_defconfig
++++ b/arch/arc/configs/axs103_smp_defconfig
+@@ -11,7 +11,6 @@ CONFIG_NAMESPACES=y
+ # CONFIG_UTS_NS is not set
+ # CONFIG_PID_NS is not set
+ CONFIG_BLK_DEV_INITRD=y
+-CONFIG_INITRAMFS_SOURCE="../../arc_initramfs_hs/"
+ CONFIG_EMBEDDED=y
+ CONFIG_PERF_EVENTS=y
+ # CONFIG_VM_EVENT_COUNTERS is not set
+--- a/arch/arc/configs/nsim_700_defconfig
++++ b/arch/arc/configs/nsim_700_defconfig
+@@ -11,7 +11,6 @@ CONFIG_NAMESPACES=y
+ # CONFIG_UTS_NS is not set
+ # CONFIG_PID_NS is not set
+ CONFIG_BLK_DEV_INITRD=y
+-CONFIG_INITRAMFS_SOURCE="../arc_initramfs/"
+ CONFIG_KALLSYMS_ALL=y
+ CONFIG_EMBEDDED=y
+ # CONFIG_SLUB_DEBUG is not set
+--- a/arch/arc/configs/nsim_hs_defconfig
++++ b/arch/arc/configs/nsim_hs_defconfig
+@@ -12,7 +12,6 @@ CONFIG_NAMESPACES=y
+ # CONFIG_UTS_NS is not set
+ # CONFIG_PID_NS is not set
+ CONFIG_BLK_DEV_INITRD=y
+-CONFIG_INITRAMFS_SOURCE="../arc_initramfs_hs/"
+ CONFIG_KALLSYMS_ALL=y
+ CONFIG_EMBEDDED=y
+ # CONFIG_SLUB_DEBUG is not set
+--- a/arch/arc/configs/nsim_hs_smp_defconfig
++++ b/arch/arc/configs/nsim_hs_smp_defconfig
+@@ -9,7 +9,6 @@ CONFIG_NAMESPACES=y
+ # CONFIG_UTS_NS is not set
+ # CONFIG_PID_NS is not set
+ CONFIG_BLK_DEV_INITRD=y
+-CONFIG_INITRAMFS_SOURCE="../arc_initramfs_hs/"
+ CONFIG_KALLSYMS_ALL=y
+ CONFIG_EMBEDDED=y
+ # CONFIG_SLUB_DEBUG is not set
+--- a/arch/arc/configs/nsimosci_defconfig
++++ b/arch/arc/configs/nsimosci_defconfig
+@@ -12,7 +12,6 @@ CONFIG_NAMESPACES=y
+ # CONFIG_UTS_NS is not set
+ # CONFIG_PID_NS is not set
+ CONFIG_BLK_DEV_INITRD=y
+-CONFIG_INITRAMFS_SOURCE="../arc_initramfs/"
+ CONFIG_KALLSYMS_ALL=y
+ CONFIG_EMBEDDED=y
+ # CONFIG_SLUB_DEBUG is not set
+--- a/arch/arc/configs/nsimosci_hs_defconfig
++++ b/arch/arc/configs/nsimosci_hs_defconfig
+@@ -12,7 +12,6 @@ CONFIG_NAMESPACES=y
+ # CONFIG_UTS_NS is not set
+ # CONFIG_PID_NS is not set
+ CONFIG_BLK_DEV_INITRD=y
+-CONFIG_INITRAMFS_SOURCE="../arc_initramfs_hs/"
+ CONFIG_KALLSYMS_ALL=y
+ CONFIG_EMBEDDED=y
+ # CONFIG_SLUB_DEBUG is not set
+--- a/arch/arc/configs/nsimosci_hs_smp_defconfig
++++ b/arch/arc/configs/nsimosci_hs_smp_defconfig
+@@ -9,7 +9,6 @@ CONFIG_IKCONFIG_PROC=y
+ # CONFIG_UTS_NS is not set
+ # CONFIG_PID_NS is not set
+ CONFIG_BLK_DEV_INITRD=y
+-CONFIG_INITRAMFS_SOURCE="../arc_initramfs_hs/"
+ # CONFIG_COMPAT_BRK is not set
+ CONFIG_KPROBES=y
+ CONFIG_MODULES=y
 
 
