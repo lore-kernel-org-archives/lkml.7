@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01841C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB92C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4EDA21920
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 334C821927
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931005;
-	bh=fyQekP0mArh+zpjTNqJQ4onGKRm1HDxeaza/MX5kIQc=;
+	s=default; t=1568931009;
+	bh=d4SIohXQNvARrAc4/XY4cpPn0pLAAyDtVryElAjLMhM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FuRb1GgkodGkZ3NArr/KeWfEjC/p6HOPKYy9XxEHePe8API83nX/OUIYQR1JOHIZO
-	 gU5Que7yO54MgDOsZCkwBiWNxJGHOSWGanWJ8kORd5EgPGCjQNgjeg2Ejy0S7T2vuX
-	 B1jg+74oavy0i7sD4YrSHq32/UInt/8mXctTs6SU=
+	b=Hv/6CopzqribWuhlTf5k1mAspVtrPrLK5AGsIkScU6TuRC8ohaz5bZDq46ObOF98c
+	 6jXKyXfCWH0viKdsiq+gpy9fNhYoCm/OzkKoWSkq3PfDuZH1b1kH8PSDlpmAm6ldpj
+	 xdb+E+9wVz52bA6j7VMP6KxjfGprxYyeYUqZDt80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405597AbfISWKF (ORCPT
+        id S2405608AbfISWKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:10:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48400 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:10:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405583AbfISWKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:10:03 -0400
+        id S2405583AbfISWKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:10:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 620E121924;
-        Thu, 19 Sep 2019 22:10:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DAB5218AF;
+        Thu, 19 Sep 2019 22:10:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931003;
-        bh=fyQekP0mArh+zpjTNqJQ4onGKRm1HDxeaza/MX5kIQc=;
+        s=default; t=1568931005;
+        bh=d4SIohXQNvARrAc4/XY4cpPn0pLAAyDtVryElAjLMhM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uDMaLNNzJLR1JKeNKkgU84UTvie1H0a4U+HnoHahjlIIPdwXRM1SMGbP1cgKrJmea
-         1BgQxX990asbTbAgh+A18zdhDi5w+ZT4QBa6Vg+bk5GCb7ZV5MzGKBsxPqJnkfWsYU
-         RNGN9IjWUX2RE2KFDGFWHUcculM3WY7tib8LjmSY=
+        b=MZIh+lzHc42eraaFwnPZaup5o6oo6Vp1R+Wpz+MpuvXbV1Q7BDl821CLdt5v8F/U4
+         3FAizNkv13ToYYRlCeNcOsO8VEiyPuuAgHJ58yxW4ShtRqSRz7d6UIxydMQr1gUiPx
+         J+P7EBXoTLkU0h74Fh76nfBfviMVcQLdFIhcm6+k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 092/124] amd-xgbe: Fix error path in xgbe_mod_init()
-Date:   Fri, 20 Sep 2019 00:03:00 +0200
-Message-Id: <20190919214822.397814587@linuxfoundation.org>
+Subject: [PATCH 5.2 093/124] netfilter: nf_flow_table: clear skb tstamp before xmit
+Date:   Fri, 20 Sep 2019 00:03:01 +0200
+Message-Id: <20190919214822.436912552@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -61,48 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Florian Westphal <fw@strlen.de>
 
-[ Upstream commit b6b4dc4c1fa7f1c99398e7dc85758049645e9588 ]
+[ Upstream commit de20900fbe1c4fd36de25a7a5a43223254ecf0d0 ]
 
-In xgbe_mod_init(), we should do cleanup if some error occurs
+If 'fq' qdisc is used and a program has requested timestamps,
+skb->tstamp needs to be cleared, else fq will treat these as
+'transmit time'.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: efbaa828330a ("amd-xgbe: Add support to handle device renaming")
-Fixes: 47f164deab22 ("amd-xgbe: Add PCI device support")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amd/xgbe/xgbe-main.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ net/netfilter/nf_flow_table_ip.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/amd/xgbe/xgbe-main.c b/drivers/net/ethernet/amd/xgbe/xgbe-main.c
-index b41f23679a087..7ce9c69e9c44f 100644
---- a/drivers/net/ethernet/amd/xgbe/xgbe-main.c
-+++ b/drivers/net/ethernet/amd/xgbe/xgbe-main.c
-@@ -469,13 +469,19 @@ static int __init xgbe_mod_init(void)
- 
- 	ret = xgbe_platform_init();
- 	if (ret)
--		return ret;
-+		goto err_platform_init;
- 
- 	ret = xgbe_pci_init();
- 	if (ret)
--		return ret;
-+		goto err_pci_init;
- 
- 	return 0;
-+
-+err_pci_init:
-+	xgbe_platform_exit();
-+err_platform_init:
-+	unregister_netdevice_notifier(&xgbe_netdev_notifier);
-+	return ret;
+diff --git a/net/netfilter/nf_flow_table_ip.c b/net/netfilter/nf_flow_table_ip.c
+index d68c801dd614b..b9e7dd6e60ce2 100644
+--- a/net/netfilter/nf_flow_table_ip.c
++++ b/net/netfilter/nf_flow_table_ip.c
+@@ -228,7 +228,6 @@ static unsigned int nf_flow_xmit_xfrm(struct sk_buff *skb,
+ {
+ 	skb_orphan(skb);
+ 	skb_dst_set_noref(skb, dst);
+-	skb->tstamp = 0;
+ 	dst_output(state->net, state->sk, skb);
+ 	return NF_STOLEN;
  }
+@@ -284,6 +283,7 @@ nf_flow_offload_ip_hook(void *priv, struct sk_buff *skb,
+ 	flow->timeout = (u32)jiffies + NF_FLOW_TIMEOUT;
+ 	iph = ip_hdr(skb);
+ 	ip_decrease_ttl(iph);
++	skb->tstamp = 0;
  
- static void __exit xgbe_mod_exit(void)
+ 	if (unlikely(dst_xfrm(&rt->dst))) {
+ 		memset(skb->cb, 0, sizeof(struct inet_skb_parm));
+@@ -512,6 +512,7 @@ nf_flow_offload_ipv6_hook(void *priv, struct sk_buff *skb,
+ 	flow->timeout = (u32)jiffies + NF_FLOW_TIMEOUT;
+ 	ip6h = ipv6_hdr(skb);
+ 	ip6h->hop_limit--;
++	skb->tstamp = 0;
+ 
+ 	if (unlikely(dst_xfrm(&rt->dst))) {
+ 		memset(skb->cb, 0, sizeof(struct inet6_skb_parm));
 -- 
 2.20.1
 
