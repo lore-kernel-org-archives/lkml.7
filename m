@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3D0C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DCE9C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CAA921929
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6386621929
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:12:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931143;
-	bh=7DQABrK4MLrfjFn0Sqnu+KV9mVdn2QBeKchHdVhAiY4=;
+	s=default; t=1568931145;
+	bh=wyklw6h7uu0PQ35u5IY/6t8dIFe54hrKDbD3NZ7d8xk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x6RRN6nVgpZWvaXIR29UVjPAdHZfDJiuvXW2+77Q2Ktar5oRA3E5IWle6ya4DHxTX
-	 +CWN6Hklf2+uM5kLagLexkrmsj+KBZI/+1J7cAkn+DmsSHul9OKsuOHucqTbAmH2vq
-	 V6AULWTn8onFWB3F5oQdbA3DOXK15JROC9ccm9ps=
+	b=Ht4ksgZmKgwemPkupCJ9hhXeKwD/oTYE7WAb0ItOQh3v2gGoj8te5Aq5xU+++tmM4
+	 OG2BfxGj0juG+fgS1pSCbsHdV7m7npxybRIgJahNOZprq+lx6KcLN9JYoHugR/N6zg
+	 ZxKDnJn3MVPSxfLevFAIIMDDdJSucsEPAtm7LUxo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405974AbfISWMW (ORCPT
+        id S2405985AbfISWMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:12:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51072 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:12:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405933AbfISWMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:12:12 -0400
+        id S2405944AbfISWMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:12:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC2AC21924;
-        Thu, 19 Sep 2019 22:12:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0C1D21920;
+        Thu, 19 Sep 2019 22:12:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931132;
-        bh=7DQABrK4MLrfjFn0Sqnu+KV9mVdn2QBeKchHdVhAiY4=;
+        s=default; t=1568931135;
+        bh=wyklw6h7uu0PQ35u5IY/6t8dIFe54hrKDbD3NZ7d8xk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pjEysxt/3GMLOC+8/73O2k/aQdfqnE48E8M8clTucXqBbgom+XO145jeUE8JelSNu
-         1UsrpVn2Kmcqvn7nm0NGWeCdVaha6gd68A5mecISjFqF94RIhjv24dEQJ4KoLWg9e5
-         Vy2oAiS4RATy0HMuTDlM6fj/F5AXrwkzSObQglXo=
+        b=ulEqGzQsdQXzrGPBOL/dCzxRcRy4DYJrQs7LptGSJtyiwKowabn/9xUMq3ZgB176J
+         420JznClrJaLeyJF0ftQijjRDTkzawGFWhl5JLnv6Vin5KLDWlemqEGs2fRQAuTrZ3
+         Z5+q3htdFDC2n+tMU8X4jJMZspp2q01vcU6MHXB8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>
-Subject: [PATCH 4.19 15/79] serial: sprd: correct the wrong sequence of arguments
-Date:   Fri, 20 Sep 2019 00:03:00 +0200
-Message-Id: <20190919214809.178684927@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Razvan Stefanescu <razvan.stefanescu@microchip.com>
+Subject: [PATCH 4.19 16/79] tty/serial: atmel: reschedule TX after RX was started
+Date:   Fri, 20 Sep 2019 00:03:01 +0200
+Message-Id: <20190919214809.242105899@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214807.612593061@linuxfoundation.org>
 References: <20190919214807.612593061@linuxfoundation.org>
@@ -59,35 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+From: Razvan Stefanescu <razvan.stefanescu@microchip.com>
 
-commit 9c801e313195addaf11c16e155f50789d6ebfd19 upstream.
+commit d2ace81bf902a9f11d52e59e5d232d2255a0e353 upstream.
 
-The sequence of arguments which was passed to handle_lsr_errors() didn't
-match the parameters defined in that function, &lsr was passed to flag
-and &flag was passed to lsr, this patch fixed that.
+When half-duplex RS485 communication is used, after RX is started, TX
+tasklet still needs to be  scheduled tasklet. This avoids console freezing
+when more data is to be transmitted, if the serial communication is not
+closed.
 
-Fixes: b7396a38fb28 ("tty/serial: Add Spreadtrum sc9836-uart driver support")
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-Signed-off-by: Chunyan Zhang <zhang.lyra@gmail.com>
+Fixes: 69646d7a3689 ("tty/serial: atmel: RS485 HD w/DMA: enable RX after TX is stopped")
+Signed-off-by: Razvan Stefanescu <razvan.stefanescu@microchip.com>
 Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20190905074151.5268-1-zhang.lyra@gmail.com
+Link: https://lore.kernel.org/r/20190813074025.16218-1-razvan.stefanescu@microchip.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/sprd_serial.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/serial/atmel_serial.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/drivers/tty/serial/sprd_serial.c
-+++ b/drivers/tty/serial/sprd_serial.c
-@@ -232,7 +232,7 @@ static inline void sprd_rx(struct uart_p
+--- a/drivers/tty/serial/atmel_serial.c
++++ b/drivers/tty/serial/atmel_serial.c
+@@ -1270,7 +1270,6 @@ atmel_handle_transmit(struct uart_port *
  
- 		if (lsr & (SPRD_LSR_BI | SPRD_LSR_PE |
- 			SPRD_LSR_FE | SPRD_LSR_OE))
--			if (handle_lsr_errors(port, &lsr, &flag))
-+			if (handle_lsr_errors(port, &flag, &lsr))
- 				continue;
- 		if (uart_handle_sysrq_char(port, ch))
- 			continue;
+ 			atmel_port->hd_start_rx = false;
+ 			atmel_start_rx(port);
+-			return;
+ 		}
+ 
+ 		atmel_tasklet_schedule(atmel_port, &atmel_port->tasklet_tx);
 
 
