@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3743C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5678C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F0C121928
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8FF821907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931025;
-	bh=WxaMEKrG7MelREYobpfsgDzwoREu3G2l4m4/3rQ6iUc=;
+	s=default; t=1568931029;
+	bh=Ov6xLFQ1v2QQcBXiK649r5jt25ebyAzDbX3CZoFlSEY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S8Vz/TQIGAYwwvBFV6SDaeuEnZ0cHHLdewFJZTRDU1kONuELyJb2FWcUTKgqvLde0
-	 sFP09FBYTrh3uQNadaNPRE3H4yL5XtZ4tvahRXpBpTjBN1vyWouDoJuLdQbxH5vPRw
-	 3UnAmjebA06As5j7uwttFgiHDqRLVC5CYyA4Ge/o=
+	b=F7y1oXsyb6VPIFi+I4C24gO3SaBiRvL3FSDPomIEeae21FIyju4txSGrnZeZzRhyY
+	 8/8H2fSqbDkUSFmy873pDdePDpig/ieT253SIUZ6ctzJAqdKhV59382ffuhzA4CjK5
+	 j7VR5t1MXtYikyr3G/ezqEjuemXAUEMGg48kPZZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393534AbfISWKY (ORCPT
+        id S2405680AbfISWK3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:10:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48760 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:10:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405665AbfISWKW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:10:22 -0400
+        id S2393535AbfISWK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:10:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9F9721907;
-        Thu, 19 Sep 2019 22:10:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E47C21920;
+        Thu, 19 Sep 2019 22:10:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931022;
-        bh=WxaMEKrG7MelREYobpfsgDzwoREu3G2l4m4/3rQ6iUc=;
+        s=default; t=1568931025;
+        bh=Ov6xLFQ1v2QQcBXiK649r5jt25ebyAzDbX3CZoFlSEY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rw4mjvxoHRwir47thhV5Z5wAI7Gr9sj+RGOMXxQI2b8us+n7aDMfp4nX/FkV9Y6Vx
-         0XmAJXJSJCp/qoWD06cG5c3iDsiq4Njlc+XFZCyxcAFCuQyeqNvz0LxfQMciUyR1XM
-         k26wvatE2P9nTyi3YYoPQhjHDDJrP6YbJSK1FYiA=
+        b=Wsi4SpWiEIdsvJaYi7IKe6+reg1ogseHy7i29Gakcy/C/W9zdxLV2TUq6aSia9gD6
+         X3UHJYCoayvaNHqagmoImr4jBkojGmI86qUp+GYoLJmlOQk5Enuay+dd1kD+mX3MjR
+         wlgs3zIR4l6B3KDSBE6ZlPIgqHWO7JnAI8eo+CxI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        stable@vger.kernel.org, Prarit Bhargava <prarit@redhat.com>,
+        Kosuke Tatsukawa <tatsu@ab.jp.nec.com>,
         Len Brown <len.brown@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 098/124] tools/power turbostat: fix buffer overrun
-Date:   Fri, 20 Sep 2019 00:03:06 +0200
-Message-Id: <20190919214822.627247848@linuxfoundation.org>
+Subject: [PATCH 5.2 099/124] tools/power turbostat: Fix Haswell Core systems
+Date:   Fri, 20 Sep 2019 00:03:07 +0200
+Message-Id: <20190919214822.682987329@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -61,35 +61,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+From: Len Brown <len.brown@intel.com>
 
-[ Upstream commit eeb71c950bc6eee460f2070643ce137e067b234c ]
+[ Upstream commit cd188af5282d9f9e65f63915b13239bafc746f8d ]
 
-turbostat could be terminated by general protection fault on some latest
-hardwares which (for example) support 9 levels of C-states and show 18
-"tADDED" lines. That bloats the total output and finally causes buffer
-overrun.  So let's extend the buffer to avoid this.
+turbostat: cpu0: msr offset 0x630 read failed: Input/output error
 
-Signed-off-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+because Haswell Core does not have C8-C10.
+
+Output C8-C10 only on Haswell ULT.
+
+Fixes: f5a4c76ad7de ("tools/power turbostat: consolidate duplicate model numbers")
+
+Reported-by: Prarit Bhargava <prarit@redhat.com>
+Suggested-by: Kosuke Tatsukawa <tatsu@ab.jp.nec.com>
 Signed-off-by: Len Brown <len.brown@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/power/x86/turbostat/turbostat.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/power/x86/turbostat/turbostat.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
 diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
-index 0ffbbcac4d19d..752cb4c0fde6b 100644
+index 752cb4c0fde6b..56c3e041d4f93 100644
 --- a/tools/power/x86/turbostat/turbostat.c
 +++ b/tools/power/x86/turbostat/turbostat.c
-@@ -5125,7 +5125,7 @@ int initialize_counters(int cpu_id)
+@@ -3211,6 +3211,7 @@ int probe_nhm_msrs(unsigned int family, unsigned int model)
+ 		break;
+ 	case INTEL_FAM6_HASWELL_CORE:	/* HSW */
+ 	case INTEL_FAM6_HASWELL_X:	/* HSX */
++	case INTEL_FAM6_HASWELL_ULT:	/* HSW */
+ 	case INTEL_FAM6_HASWELL_GT3E:	/* HSW */
+ 	case INTEL_FAM6_BROADWELL_CORE:	/* BDW */
+ 	case INTEL_FAM6_BROADWELL_GT3E:	/* BDW */
+@@ -3407,6 +3408,7 @@ int has_config_tdp(unsigned int family, unsigned int model)
+ 	case INTEL_FAM6_IVYBRIDGE:	/* IVB */
+ 	case INTEL_FAM6_HASWELL_CORE:	/* HSW */
+ 	case INTEL_FAM6_HASWELL_X:	/* HSX */
++	case INTEL_FAM6_HASWELL_ULT:	/* HSW */
+ 	case INTEL_FAM6_HASWELL_GT3E:	/* HSW */
+ 	case INTEL_FAM6_BROADWELL_CORE:	/* BDW */
+ 	case INTEL_FAM6_BROADWELL_GT3E:	/* BDW */
+@@ -3843,6 +3845,7 @@ void rapl_probe_intel(unsigned int family, unsigned int model)
+ 	case INTEL_FAM6_SANDYBRIDGE:
+ 	case INTEL_FAM6_IVYBRIDGE:
+ 	case INTEL_FAM6_HASWELL_CORE:	/* HSW */
++	case INTEL_FAM6_HASWELL_ULT:	/* HSW */
+ 	case INTEL_FAM6_HASWELL_GT3E:	/* HSW */
+ 	case INTEL_FAM6_BROADWELL_CORE:	/* BDW */
+ 	case INTEL_FAM6_BROADWELL_GT3E:	/* BDW */
+@@ -4034,6 +4037,7 @@ void perf_limit_reasons_probe(unsigned int family, unsigned int model)
  
- void allocate_output_buffer()
- {
--	output_buffer = calloc(1, (1 + topo.num_cpus) * 1024);
-+	output_buffer = calloc(1, (1 + topo.num_cpus) * 2048);
- 	outp = output_buffer;
- 	if (outp == NULL)
- 		err(-1, "calloc output buffer");
+ 	switch (model) {
+ 	case INTEL_FAM6_HASWELL_CORE:	/* HSW */
++	case INTEL_FAM6_HASWELL_ULT:	/* HSW */
+ 	case INTEL_FAM6_HASWELL_GT3E:	/* HSW */
+ 		do_gfx_perf_limit_reasons = 1;
+ 	case INTEL_FAM6_HASWELL_X:	/* HSX */
+@@ -4253,6 +4257,7 @@ int has_snb_msrs(unsigned int family, unsigned int model)
+ 	case INTEL_FAM6_IVYBRIDGE_X:	/* IVB Xeon */
+ 	case INTEL_FAM6_HASWELL_CORE:	/* HSW */
+ 	case INTEL_FAM6_HASWELL_X:	/* HSW */
++	case INTEL_FAM6_HASWELL_ULT:	/* HSW */
+ 	case INTEL_FAM6_HASWELL_GT3E:	/* HSW */
+ 	case INTEL_FAM6_BROADWELL_CORE:	/* BDW */
+ 	case INTEL_FAM6_BROADWELL_GT3E:	/* BDW */
+@@ -4286,7 +4291,7 @@ int has_hsw_msrs(unsigned int family, unsigned int model)
+ 		return 0;
+ 
+ 	switch (model) {
+-	case INTEL_FAM6_HASWELL_CORE:
++	case INTEL_FAM6_HASWELL_ULT:	/* HSW */
+ 	case INTEL_FAM6_BROADWELL_CORE:	/* BDW */
+ 	case INTEL_FAM6_SKYLAKE_MOBILE:	/* SKL */
+ 	case INTEL_FAM6_CANNONLAKE_MOBILE:	/* CNL */
+@@ -4570,9 +4575,6 @@ unsigned int intel_model_duplicates(unsigned int model)
+ 	case INTEL_FAM6_XEON_PHI_KNM:
+ 		return INTEL_FAM6_XEON_PHI_KNL;
+ 
+-	case INTEL_FAM6_HASWELL_ULT:
+-		return INTEL_FAM6_HASWELL_CORE;
+-
+ 	case INTEL_FAM6_BROADWELL_X:
+ 	case INTEL_FAM6_BROADWELL_XEON_D:	/* BDX-DE */
+ 		return INTEL_FAM6_BROADWELL_X;
 -- 
 2.20.1
 
