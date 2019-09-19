@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE189C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 844B1C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF88E208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:11:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 605EC21924
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:11:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388744AbfISJL2 (ORCPT
+        id S2388758AbfISJLd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 05:11:28 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:40869 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731017AbfISJK7 (ORCPT
+        Thu, 19 Sep 2019 05:11:33 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:58014 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730959AbfISJK6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 05:10:59 -0400
-X-UUID: 1f381fadc5b142b8863f8df22de9e9df-20190919
-X-UUID: 1f381fadc5b142b8863f8df22de9e9df-20190919
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        Thu, 19 Sep 2019 05:10:58 -0400
+X-UUID: 47e153dde12c4f598b72fcf69042c1bf-20190919
+X-UUID: 47e153dde12c4f598b72fcf69042c1bf-20190919
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
         (envelope-from <chunfeng.yun@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1276548295; Thu, 19 Sep 2019 17:10:48 +0800
+        with ESMTP id 63006226; Thu, 19 Sep 2019 17:10:47 +0800
 Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 19 Sep 2019 17:10:47 +0800
+ MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 19 Sep 2019 17:10:46 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 19 Sep 2019 17:10:46 +0800
+ Transport; Thu, 19 Sep 2019 17:10:45 +0800
 From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
 To:     Kishon Vijay Abraham I <kishon@ti.com>,
         Rob Herring <robh+dt@kernel.org>
@@ -42,55 +42,56 @@ CC:     Mark Rutland <mark.rutland@arm.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH v3 05/11] dt-bindings: phy-mtk-tphy: add the properties about address mapping
-Date:   Thu, 19 Sep 2019 17:10:36 +0800
-Message-ID: <1568884242-22775-5-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH v3 04/11] dt-bindings: phy-mtk-tphy: add a new reference clock
+Date:   Thu, 19 Sep 2019 17:10:35 +0800
+Message-ID: <1568884242-22775-4-git-send-email-chunfeng.yun@mediatek.com>
 X-Mailer: git-send-email 1.8.1.1.dirty
 In-Reply-To: <1568884242-22775-1-git-send-email-chunfeng.yun@mediatek.com>
 References: <1568884242-22775-1-git-send-email-chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: 2649A99F3D8D4B5AB2ADA0136F4747B411A2AEC301A41F1B0B517E28A678AC962000:8
+X-TM-SNTS-SMTP: 1076D48297F3B1D1C748536A194407105791CEF3C454A3BB42181519E9D1DD2E2000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add three required properties about the address mapping, including
-'#address-cells', '#size-cells' and 'ranges'
+Usually the digital and analog phys use the same reference clock,
+but on some platforms, they are separated, so add another optional
+clock to support it.
+In order to keep the clock names consistent with PHY IP's, use
+the da_ref for analog phy and ref clock for digital phy.
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
-v3: no changes
+v3: add acked-by Rob
 
-v2: add Reviewed-by Rob
+v2: fix typo of analog and needed
 ---
- Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-index a859b0db4051..dd75b676b71d 100644
+index 48bc1a2e9299..a859b0db4051 100644
 --- a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
 +++ b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-@@ -14,6 +14,16 @@ Required properties (controller (parent) node):
- 		  make use of "mediatek,generic-tphy-v1" on mt2701 instead and
- 		  "mediatek,generic-tphy-v2" on mt2712 instead.
+@@ -41,9 +41,12 @@ Optional properties (PHY_TYPE_USB2 port (child) node):
+ - clocks	: a list of phandle + clock-specifier pairs, one for each
+ 		  entry in clock-names
+ - clock-names	: may contain
+-		  "ref": 48M reference clock for HighSpeed anolog phy; and 26M
+-			reference clock for SuperSpeed anolog phy, sometimes is
++		  "ref": 48M reference clock for HighSpeed (digital) phy; and 26M
++			reference clock for SuperSpeed (digital) phy, sometimes is
+ 			24M, 25M or 27M, depended on platform.
++		  "da_ref": the reference clock of analog phy, used if the clocks
++			of analog and digital phys are separated, otherwise uses
++			"ref" clock only if needed.
  
-+- #address-cells:	the number of cells used to represent physical
-+		base addresses.
-+- #size-cells:	the number of cells used to represent the size of an address.
-+- ranges:	the address mapping relationship to the parent, defined with
-+		- empty value: if optional 'reg' is used.
-+		- non-empty value: if optional 'reg' is not used. should set
-+			the child's base address to 0, the physical address
-+			within parent's address space, and the length of
-+			the address map.
-+
- Required nodes	: a sub-node is required for each port the controller
- 		  provides. Address range information including the usual
- 		  'reg' property is used inside these nodes to describe
+ - mediatek,eye-src	: u32, the value of slew rate calibrate
+ - mediatek,eye-vrt	: u32, the selection of VRT reference voltage
 -- 
 2.23.0
 
