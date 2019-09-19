@@ -2,119 +2,156 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D463C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 10:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A62F3C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 10:35:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50D4C207FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 10:35:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 798E1207FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 10:35:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568889310;
+	bh=4yjYD4sSON3lVp1yUgk6iUWOIh19GtCuuk5N9TnpycI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CNREJMHHOJ1yB+llSLbY1dfmgfEQBgygdz1hbNzj8DjFiPK8q+OiJWU4nlDPAuQGN
+	 vCVfhhccl0WdTfrd1OabAUoq5kqVJcC8VRM58uaZCrVxEoIcUE1k2vKBrAh8emqSSC
+	 UE2W9OxhjvZlluqKu1XhbHQdiamWCj2fsgRtkqHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387792AbfISKfA (ORCPT
+        id S2388006AbfISKfJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 06:35:00 -0400
-Received: from mx1.emlix.com ([188.40.240.192]:57656 "EHLO mx1.emlix.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387575AbfISKfA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 06:35:00 -0400
-Received: from mailer.emlix.com (unknown [81.20.119.6])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx1.emlix.com (Postfix) with ESMTPS id 3132A603CA;
-        Thu, 19 Sep 2019 12:34:58 +0200 (CEST)
-Subject: Re: [PATCH v2 1/3] dmaengine: imx-sdma: fix buffer ownership
-To:     Lucas Stach <l.stach@pengutronix.de>, linux-kernel@vger.kernel.org
-Cc:     yibin.gong@nxp.com, fugang.duan@nxp.com, dan.j.williams@intel.com,
-        vkoul@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20190911144943.21554-1-philipp.puschmann@emlix.com>
- <20190919102319.23368-1-philipp.puschmann@emlix.com>
- <20190919102319.23368-2-philipp.puschmann@emlix.com>
- <7d694da8ffe098c6c8f6fe9c3a2306fda55eb655.camel@pengutronix.de>
-From:   Philipp Puschmann <philipp.puschmann@emlix.com>
-Openpgp: preference=signencrypt
-Message-ID: <1b821b38-2206-07b3-eb0a-47b02bced95c@emlix.com>
-Date:   Thu, 19 Sep 2019 12:34:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 19 Sep 2019 06:35:09 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:43300 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731984AbfISKfJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 06:35:09 -0400
+Received: by mail-lj1-f194.google.com with SMTP id d5so3017367lja.10;
+        Thu, 19 Sep 2019 03:35:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zB6hhM5dOT16xAMCgKxfwhFed+JeGZVRU5QH/jK8Ikw=;
+        b=Ctx1bCW02ImVNjYpRSrdfivp9GsTO3agXwCd79pdvZYV083cbqsxfHkS+4VdNNGzol
+         PDq81rNYlFO7lTFzqNPoEeqUJCPZO9gQ/KClo70W1RYmzRPlnCr9HCfL/Sxpe0NExRmL
+         QKd1Ss/GqEsY68g9FXIccnqLhliXKHMgfnsOn+I+mSM5VGyCp55eXkDprIg/XguK/3Fu
+         MTPFiRRtGtz5ux9FDilcSFBhmAbYeV8pmqbJfjK608bGh11Ru6SylgAMwLpWx4X7UBFY
+         s/sUk34ST4ZELQHK5xwFe8uMu4IIv9515bDm8NWiyBowbOy3/fLrzG33yfdJlTx8/84z
+         2Hbw==
+X-Gm-Message-State: APjAAAXL3AwonrsnziGhXsokPbDK/JAlDBYRURu8IuHO2frVpnZEtwRq
+        XfBiusPBE5p01PJlfhNqFvE=
+X-Google-Smtp-Source: APXvYqybiEprBoqwnl5AxCQaaczRTlcLAZFm2wLt3EViUehapyMEnyP9ajawvgOKGO3hUtR+Ch+OeQ==
+X-Received: by 2002:a2e:50b:: with SMTP id 11mr5145565ljf.11.1568889305460;
+        Thu, 19 Sep 2019 03:35:05 -0700 (PDT)
+Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
+        by smtp.gmail.com with ESMTPSA id o15sm1484728lff.22.2019.09.19.03.35.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 19 Sep 2019 03:35:04 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.92.2)
+        (envelope-from <johan@kernel.org>)
+        id 1iAtmC-00082K-Kj; Thu, 19 Sep 2019 12:35:04 +0200
+Date:   Thu, 19 Sep 2019 12:35:04 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     syzbot <syzbot+0243cb250a51eeefb8cc@syzkaller.appspotmail.com>
+Cc:     andreyknvl@google.com, dmg@turingmachine.org,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: KASAN: use-after-free Read in adu_disconnect
+Message-ID: <20190919103504.GC30545@localhost>
+References: <000000000000d12d24058f5d6b65@google.com>
+ <000000000000a12822058fb4f408@google.com>
 MIME-Version: 1.0
-In-Reply-To: <7d694da8ffe098c6c8f6fe9c3a2306fda55eb655.camel@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000000000000a12822058fb4f408@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lucas,
+On Fri, Aug 09, 2019 at 01:24:04PM -0700, syzbot wrote:
+> syzbot has found a reproducer for the following crash on:
+> 
+> HEAD commit:    e96407b4 usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13871a4a600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=cfa2c18fb6a8068e
+> dashboard link: https://syzkaller.appspot.com/bug?extid=0243cb250a51eeefb8cc
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11c4c8e2600000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11d80d2c600000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+0243cb250a51eeefb8cc@syzkaller.appspotmail.com
+> 
+> usb 1-1: USB disconnect, device number 4
+> ==================================================================
+> BUG: KASAN: use-after-free in atomic64_read  
+> include/asm-generic/atomic-instrumented.h:836 [inline]
+> BUG: KASAN: use-after-free in atomic_long_read  
+> include/asm-generic/atomic-long.h:28 [inline]
+> BUG: KASAN: use-after-free in __mutex_unlock_slowpath+0x96/0x670  
+> kernel/locking/mutex.c:1211
+> Read of size 8 at addr ffff8881d1d0aa00 by task kworker/0:1/12
+
+Should be fixed by the below patch.
+
+#syz test: https://github.com/google/kasan.git f0df5c1b
+
+Johan
 
 
-Am 19.09.19 um 12:27 schrieb Lucas Stach:
-> Hi Philipp,
-> 
-> On Do, 2019-09-19 at 12:23 +0200, Philipp Puschmann wrote:
->> BD_DONE flag marks ownership of the buffer. When 1 SDMA owns the
->> buffer, when 0 ARM owns it. When processing the buffers in
->> sdma_update_channel_loop the ownership of the currently processed
->> buffer was set to SDMA again before running the callback function of
->> the buffer and while the sdma script may be running in parallel. So
->> there was the possibility to get the buffer overwritten by SDMA
->> before
->> it has been processed by kernel leading to kind of random errors in
->> the
->> upper layers, e.g. bluetooth.
->>
->> Signed-off-by: Philipp Puschmann <philipp.puschmann@emlix.com>
->>
->> ---
->>
->> Changelog v2:
->>  - add dma_wb()
->>
->>  drivers/dma/imx-sdma.c | 4 +++-
->>  1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
->> index 9ba74ab7e912..e029a2443cfc 100644
->> --- a/drivers/dma/imx-sdma.c
->> +++ b/drivers/dma/imx-sdma.c
->> @@ -802,7 +802,6 @@ static void sdma_update_channel_loop(struct
->> sdma_channel *sdmac)
->>  		*/
->>  
->>  		desc->chn_real_count = bd->mode.count;
->> -		bd->mode.status |= BD_DONE;
->>  		bd->mode.count = desc->period_len;
->>  		desc->buf_ptail = desc->buf_tail;
->>  		desc->buf_tail = (desc->buf_tail + 1) % desc->num_bd;
->> @@ -817,6 +816,9 @@ static void sdma_update_channel_loop(struct
->> sdma_channel *sdmac)
->>  		dmaengine_desc_get_callback_invoke(&desc->vd.tx, NULL);
->>  		spin_lock(&sdmac->vc.lock);
->>  
->> +		dma_wb();
-> 
-> Has this change been tested? The function you want here is called
-> dma_wmb().
-embarrassingly you are right. c&p error and even have not tried to build it :/
-V3 comes soon..
+From 6f09430ae18085a1552fc641e53d3a3e678db6f3 Mon Sep 17 00:00:00 2001
+From: Johan Hovold <johan@kernel.org>
+Date: Thu, 19 Sep 2019 11:48:38 +0200
+Subject: [PATCH] USB: adutux: fix use-after-free on disconnect
 
-Regards,
-Philipp
+The driver was clearing its struct usb_device pointer, which it uses as
+an inverted disconnected flag, before deregistering the character device
+and without serialising against racing release().
 
-> 
-> Regards,
-> Lucas
-> 
->> +		bd->mode.status |= BD_DONE;
->> +
->>  		if (error)
->>  			sdmac->status = old_status;
->>  	}
-> 
+This could lead to a use-after-free if a racing release() callback
+observes the cleared pointer and frees the driver data before
+disconnect() is finished with it.
+
+This could also lead to NULL-pointer dereferences in a racing open().
+
+Fixes: f08812d5eb8f ("USB: FIx locks and urb->status in adutux (updated)")
+Reported-by: syzbot+0243cb250a51eeefb8cc@syzkaller.appspotmail.com
+Cc: stable <stable@vger.kernel.org>     # 2.6.24
+Signed-off-by: Johan Hovold <johan@kernel.org>
+---
+
+ drivers/usb/misc/adutux.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/usb/misc/adutux.c b/drivers/usb/misc/adutux.c
+index 344d523b0502..bcc138990e2f 100644
+--- a/drivers/usb/misc/adutux.c
++++ b/drivers/usb/misc/adutux.c
+@@ -762,14 +762,15 @@ static void adu_disconnect(struct usb_interface *interface)
+ 
+ 	dev = usb_get_intfdata(interface);
+ 
+-	mutex_lock(&dev->mtx);	/* not interruptible */
+-	dev->udev = NULL;	/* poison */
+ 	usb_deregister_dev(interface, &adu_class);
+-	mutex_unlock(&dev->mtx);
+ 
+ 	mutex_lock(&adutux_mutex);
+ 	usb_set_intfdata(interface, NULL);
+ 
++	mutex_lock(&dev->mtx);	/* not interruptible */
++	dev->udev = NULL;	/* poison */
++	mutex_unlock(&dev->mtx);
++
+ 	/* if the device is not opened, then we clean up right now */
+ 	if (!dev->open_count)
+ 		adu_delete(dev);
+-- 
+2.23.0
 
