@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F6FAC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00EFEC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:06:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F2E621924
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:05:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0AC221927
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:06:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568930758;
-	bh=uXApcOOq8pqdlMRIhJGKNROJNJSxxs2fvJOtJZSJMgY=;
+	s=default; t=1568930760;
+	bh=8NBCg4bn+YAcGGwPshiT26t1NXX+A+bvQ5yC6Q+ZwUo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OGztUDQEMnZUE1HrsYXiSP03zlkbnOpK6wglw0xBhvf0mYxIGPnYdgieSIze+/+4+
-	 T0kt0SvUKLtOZQx3/hsZE+r/3l4+nT1aq18LCWcmq//eYQ/2KcIzS/8BKZK1sykY8J
-	 edcLQHp+mvfyZ+AIBpdxgeKCJTK7WICJFXsnaR9Y=
+	b=Lnlzv0lxJSFpvUUDJBbWpB6wdsGE+VZHhppzKhoGIMPB4XT6fo1+hW3LO+aflI7m9
+	 DXke6DSgiVpX8x6RjV2m97AMmYmX36z8Zwac3kSJkZ6ghIIgc8Yn/Z9sV2B2TQU4FY
+	 z4NePXgo8RoUY8IwmlOpyq9x+TLCSTL/6npjbvxQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405073AbfISWF5 (ORCPT
+        id S2405083AbfISWGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:05:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42976 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:06:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405021AbfISWFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:05:44 -0400
+        id S2405034AbfISWFr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:05:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0670D21920;
-        Thu, 19 Sep 2019 22:05:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6C8821927;
+        Thu, 19 Sep 2019 22:05:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568930743;
-        bh=uXApcOOq8pqdlMRIhJGKNROJNJSxxs2fvJOtJZSJMgY=;
+        s=default; t=1568930746;
+        bh=8NBCg4bn+YAcGGwPshiT26t1NXX+A+bvQ5yC6Q+ZwUo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PBC7QZiIZl6b6VMQM30+177Dsvk//n0o5/oX3ImH5csWJeI2qFsesIBDNXkl+cV4y
-         g3bEPyKqWHCEjEIzgejb6VurWt1xO0osF9ze1ulGcfP9ByflDuz53MDuQFhVNkC/R+
-         0BSyIrQDURdqwrjMeR7ymJygfdOY8XkHXK2AIHpo=
+        b=O7mjpKkkF8w/E+SVmrnecFUlV1iVoUYzn96sq2CQQ4azAzXxRzHoeTFTHicvjpdT2
+         mCx9qlvsGqoHeR8qXuoAVWbHsmeqEcZ+7hm7WQMzPI2JK/0F9Ve+JWo0N4VRXszWfO
+         ahtWoJsndHQRoyMefSeePI9YoFp3hgy479Bn2H4w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 5.3 02/21] media: tm6000: double free if usb disconnect while streaming
-Date:   Fri, 20 Sep 2019 00:03:03 +0200
-Message-Id: <20190919214659.093752887@linuxfoundation.org>
+        stable@vger.kernel.org, Alexander Popov <alex.popov@linux.com>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Jann Horn <jannh@google.com>, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.3 20/21] floppy: fix usercopy direction
+Date:   Fri, 20 Sep 2019 00:03:21 +0200
+Message-Id: <20190919214713.501711955@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214657.842130855@linuxfoundation.org>
 References: <20190919214657.842130855@linuxfoundation.org>
@@ -59,135 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Young <sean@mess.org>
+From: Jann Horn <jannh@google.com>
 
-commit 699bf94114151aae4dceb2d9dbf1a6312839dcae upstream.
+commit 52f6f9d74f31078964ca1574f7bb612da7877ac8 upstream.
 
-The usb_bulk_urb will kfree'd on disconnect, so ensure the pointer is set
-to NULL after each free.
+As sparse points out, these two copy_from_user() should actually be
+copy_to_user().
 
-stop stream
-urb killing
-urb buffer free
-tm6000: got start feed request tm6000_start_feed
-tm6000: got start stream request tm6000_start_stream
-tm6000: pipe reset
-tm6000: got start feed request tm6000_start_feed
-tm6000: got start feed request tm6000_start_feed
-tm6000: got start feed request tm6000_start_feed
-tm6000: got start feed request tm6000_start_feed
-tm6000: IR URB failure: status: -71, length 0
-xhci_hcd 0000:00:14.0: ERROR unknown event type 37
-xhci_hcd 0000:00:14.0: ERROR unknown event type 37
-tm6000:  error tm6000_urb_received
-usb 1-2: USB disconnect, device number 5
-tm6000: disconnecting tm6000 #0
-==================================================================
-BUG: KASAN: use-after-free in dvb_fini+0x75/0x140 [tm6000_dvb]
-Read of size 8 at addr ffff888241044060 by task kworker/2:0/22
-
-CPU: 2 PID: 22 Comm: kworker/2:0 Tainted: G        W         5.3.0-rc4+ #1
-Hardware name: LENOVO 20KHCTO1WW/20KHCTO1WW, BIOS N23ET65W (1.40 ) 07/02/2019
-Workqueue: usb_hub_wq hub_event
-Call Trace:
- dump_stack+0x9a/0xf0
- print_address_description.cold+0xae/0x34f
- __kasan_report.cold+0x75/0x93
- ? tm6000_fillbuf+0x390/0x3c0 [tm6000_alsa]
- ? dvb_fini+0x75/0x140 [tm6000_dvb]
- kasan_report+0xe/0x12
- dvb_fini+0x75/0x140 [tm6000_dvb]
- tm6000_close_extension+0x51/0x80 [tm6000]
- tm6000_usb_disconnect.cold+0xd4/0x105 [tm6000]
- usb_unbind_interface+0xe4/0x390
- device_release_driver_internal+0x121/0x250
- bus_remove_device+0x197/0x260
- device_del+0x268/0x550
- ? __device_links_no_driver+0xd0/0xd0
- ? usb_remove_ep_devs+0x30/0x3b
- usb_disable_device+0x122/0x400
- usb_disconnect+0x153/0x430
- hub_event+0x800/0x1e40
- ? trace_hardirqs_on_thunk+0x1a/0x20
- ? hub_port_debounce+0x1f0/0x1f0
- ? retint_kernel+0x10/0x10
- ? lock_is_held_type+0xf1/0x130
- ? hub_port_debounce+0x1f0/0x1f0
- ? process_one_work+0x4ae/0xa00
- process_one_work+0x4ba/0xa00
- ? pwq_dec_nr_in_flight+0x160/0x160
- ? do_raw_spin_lock+0x10a/0x1d0
- worker_thread+0x7a/0x5c0
- ? process_one_work+0xa00/0xa00
- kthread+0x1d5/0x200
- ? kthread_create_worker_on_cpu+0xd0/0xd0
- ret_from_fork+0x3a/0x50
-
-Allocated by task 2682:
- save_stack+0x1b/0x80
- __kasan_kmalloc.constprop.0+0xc2/0xd0
- usb_alloc_urb+0x28/0x60
- tm6000_start_feed+0x10a/0x300 [tm6000_dvb]
- dmx_ts_feed_start_filtering+0x86/0x120 [dvb_core]
- dvb_dmxdev_start_feed+0x121/0x180 [dvb_core]
- dvb_dmxdev_filter_start+0xcb/0x540 [dvb_core]
- dvb_demux_do_ioctl+0x7ed/0x890 [dvb_core]
- dvb_usercopy+0x97/0x1f0 [dvb_core]
- dvb_demux_ioctl+0x11/0x20 [dvb_core]
- do_vfs_ioctl+0x5d8/0x9d0
- ksys_ioctl+0x5e/0x90
- __x64_sys_ioctl+0x3d/0x50
- do_syscall_64+0x74/0xe0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 22:
- save_stack+0x1b/0x80
- __kasan_slab_free+0x12c/0x170
- kfree+0xfd/0x3a0
- xhci_giveback_urb_in_irq+0xfe/0x230
- xhci_td_cleanup+0x276/0x340
- xhci_irq+0x1129/0x3720
- __handle_irq_event_percpu+0x6e/0x420
- handle_irq_event_percpu+0x6f/0x100
- handle_irq_event+0x55/0x84
- handle_edge_irq+0x108/0x3b0
- handle_irq+0x2e/0x40
- do_IRQ+0x83/0x1a0
-
+Fixes: 229b53c9bf4e ("take floppy compat ioctls to sodding floppy.c")
 Cc: stable@vger.kernel.org
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Acked-by: Alexander Popov <alex.popov@linux.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/tm6000/tm6000-dvb.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/block/floppy.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/media/usb/tm6000/tm6000-dvb.c
-+++ b/drivers/media/usb/tm6000/tm6000-dvb.c
-@@ -97,6 +97,7 @@ static void tm6000_urb_received(struct u
- 			printk(KERN_ERR "tm6000:  error %s\n", __func__);
- 			kfree(urb->transfer_buffer);
- 			usb_free_urb(urb);
-+			dev->dvb->bulk_urb = NULL;
- 		}
- 	}
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -3780,7 +3780,7 @@ static int compat_getdrvprm(int drive,
+ 	v.native_format = UDP->native_format;
+ 	mutex_unlock(&floppy_mutex);
+ 
+-	if (copy_from_user(arg, &v, sizeof(struct compat_floppy_drive_params)))
++	if (copy_to_user(arg, &v, sizeof(struct compat_floppy_drive_params)))
+ 		return -EFAULT;
+ 	return 0;
  }
-@@ -127,6 +128,7 @@ static int tm6000_start_stream(struct tm
- 	dvb->bulk_urb->transfer_buffer = kzalloc(size, GFP_KERNEL);
- 	if (!dvb->bulk_urb->transfer_buffer) {
- 		usb_free_urb(dvb->bulk_urb);
-+		dvb->bulk_urb = NULL;
- 		return -ENOMEM;
- 	}
+@@ -3816,7 +3816,7 @@ static int compat_getdrvstat(int drive,
+ 	v.bufblocks = UDRS->bufblocks;
+ 	mutex_unlock(&floppy_mutex);
  
-@@ -153,6 +155,7 @@ static int tm6000_start_stream(struct tm
- 
- 		kfree(dvb->bulk_urb->transfer_buffer);
- 		usb_free_urb(dvb->bulk_urb);
-+		dvb->bulk_urb = NULL;
- 		return ret;
- 	}
- 
+-	if (copy_from_user(arg, &v, sizeof(struct compat_floppy_drive_struct)))
++	if (copy_to_user(arg, &v, sizeof(struct compat_floppy_drive_struct)))
+ 		return -EFAULT;
+ 	return 0;
+ Eintr:
 
 
