@@ -2,131 +2,201 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 826D8C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFDAC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F9D0217D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60DBF21907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:11:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="O/uuFLrh"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jJ8Z1Bl9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733012AbfISVKd (ORCPT
+        id S1733016AbfISVLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 17:10:33 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:51684 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732968AbfISVKd (ORCPT
+        Thu, 19 Sep 2019 17:11:05 -0400
+Received: from mail-pg1-f181.google.com ([209.85.215.181]:36814 "EHLO
+        mail-pg1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732889AbfISVLF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 17:10:33 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8JL8v1o045702;
-        Thu, 19 Sep 2019 21:10:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2019-08-05;
- bh=OGR/I9WESsuN9yWQ4O+Q+JeJro/YOmh4dCPBKi2YaII=;
- b=O/uuFLrhZ2Q9y8HDQqakHYzyD+MsMAWkA5IysYUJh+ZaOZ4S1e4XUHuD2euzfn37fN1E
- MCLDuN01BSD1357zgU84C552TXULfA10BnsGHTyA56mMpmPvcT1Wk9RnZVtUu4Cwsz4Z
- pV6akRzgRUP5lLNhI5oZfjYcl3v9uZ8Kuq4I9seex9nfmEhFR+d/zYkSgxE8yIoiJ7Q9
- muf+LRdcqIjfaZqgB1mjqmQ3/pVAJl4RigmEPOz5Q6FmY50vo5FWJraZbI/OUwX9qDo/
- MJEns8bz0eGD7Aa8va712HbTfrWyT0Vyb9DaafgRrvG2LrJXP1iiMTfutEOkGxw8jVh/ 2w== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2v3vb4xmc1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Sep 2019 21:10:18 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8JL8tMP023121;
-        Thu, 19 Sep 2019 21:10:17 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2v3vbguxbu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Sep 2019 21:10:17 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8JLAEZP003095;
-        Thu, 19 Sep 2019 21:10:15 GMT
-Received: from localhost (/10.145.179.91)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 19 Sep 2019 14:10:14 -0700
-Date:   Thu, 19 Sep 2019 14:10:13 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     syzbot <syzbot+3c01db6025f26530cf8d@syzkaller.appspotmail.com>,
-        agruenba@redhat.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        viro@zeniv.linux.org.uk
-Subject: Re: INFO: task hung in pipe_write (2)
-Message-ID: <20190919211013.GN5340@magnolia>
-References: <000000000000ac6a360592eb26c1@google.com>
- <d9a957b3-9f0a-20b5-588a-64ca4722d433@rasmusvillemoes.dk>
+        Thu, 19 Sep 2019 17:11:05 -0400
+Received: by mail-pg1-f181.google.com with SMTP id h17so36028pgb.3
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 14:11:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=6chP0Jk8rLCzBcCjbBKcXglY2CnF5xku1bIcPvrJsbc=;
+        b=jJ8Z1Bl9H1HgKSPzujWtNiq7i2pPe6C4eggOZI92o3+wyC3PPSNAISgV6gbelsBH08
+         Or/lhiLaLN0eaqGyPBNy+Ii6lNHLJHrjBpkrTaGCiF+6/oqHv9lyAzQkurUDj7pD+VL8
+         Rszo+VR3XoSxgjmzeLBRi+3N73rCUTVdwVa38=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6chP0Jk8rLCzBcCjbBKcXglY2CnF5xku1bIcPvrJsbc=;
+        b=itgoSa8hyC2A4Sh2tObTodMOCd/HVL2dyljkBBGVo9ox3+ImKJ+PcN02/0RdTOe0wE
+         EOXaH6cMV+TsZIm/zSLfLg9ky0JXiw6XXXn79K+74dLMsBrtA1uQuSuHkYIehxrBLp1r
+         jaOvXv3Vq//f3rYMrEE65TKYoadTQkmhT62WlAopILcSaK/rN6rY+JpmSU5k7SHQOCeH
+         klejjx5wEvOi0LdtVCaByqE0cRnxyqwKrd1NcxHh6t8QzUYstrjdDarkczEywO6985Y0
+         WZVm/dfzeHXMcfCfgQhmnoeU2UhxXUIUE2KDSSAWJJLrM1xk1GR1jQIvhtlCPRnMwq+a
+         4x8g==
+X-Gm-Message-State: APjAAAWIZeZvPF/v8ldbvIvH9OW0bNjVoFdL17eB9k6n41EpG3z6qnP7
+        HNSRkQj/dJBztTV1fPoXW24ZlA==
+X-Google-Smtp-Source: APXvYqxm6La4+LFVHtAEPcA6FPlj/HQFIZbg6xz7EZzCBQIR9Bmoodg06gPea30OEy5hF6Z0iMXelA==
+X-Received: by 2002:a65:6550:: with SMTP id a16mr9064325pgw.115.1568927462921;
+        Thu, 19 Sep 2019 14:11:02 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id x125sm11492420pfb.93.2019.09.19.14.11.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Sep 2019 14:11:02 -0700 (PDT)
+Date:   Thu, 19 Sep 2019 14:11:01 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Tim.Bird@sony.com
+Cc:     shuah@kernel.org, anders.roxell@linaro.org,
+        alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH] selftests/kselftest/runner.sh: Add 45 second timeout per
+ test
+Message-ID: <201909191359.1BFD926842@keescook>
+References: <201909191102.97FA56072@keescook>
+ <ECADFF3FD767C149AD96A924E7EA6EAF977BA636@USCULXMSG01.am.sony.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d9a957b3-9f0a-20b5-588a-64ca4722d433@rasmusvillemoes.dk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9385 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1909190176
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9385 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1909190176
+In-Reply-To: <ECADFF3FD767C149AD96A924E7EA6EAF977BA636@USCULXMSG01.am.sony.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 10:55:44PM +0200, Rasmus Villemoes wrote:
-> On 19/09/2019 19.19, syzbot wrote:
-> > Hello,
+On Thu, Sep 19, 2019 at 08:41:42PM +0000, Tim.Bird@sony.com wrote:
+> > -----Original Message-----
+> > From: Kees Cook
 > > 
-> > syzbot found the following crash on:
+> > Commit a745f7af3cbd ("selftests/harness: Add 30 second timeout per
+> > test") solves the problem of kselftest_harness.h-using binary tests
+> > possibly hanging forever. However, scripts and other binaries can still
+> > hang forever. This adds a global timeout to each test script run.
 > > 
-> > HEAD commit:    288b9117 Add linux-next specific files for 20190918
-> > git tree:       linux-next
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=17e86645600000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=f6126e51304ef1c3
-> > dashboard link:
-> > https://syzkaller.appspot.com/bug?extid=3c01db6025f26530cf8d
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11855769600000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=143580a1600000
-> > 
-> > The bug was bisected to:
-> > 
-> > commit cfb864757d8690631aadf1c4b80022c18ae865b3
-> > Author: Darrick J. Wong <darrick.wong@oracle.com>
-> > Date:   Tue Sep 17 16:05:22 2019 +0000
-> > 
-> >     splice: only read in as much information as there is pipe buffer space
+> > To make this configurable (e.g. as needed in the "rtc" test case),
+> > include a new per-test-directory "settings" file (similar to "config")
+> > that can contain kselftest-specific settings. The first recognized field
+> > is "timeout".
 > 
-> The middle hunk (the one before splice_pipe_to_pipe()) accesses
-> opipe->{buffers, nrbufs}, but opipe is not locked at that point. So
-> maybe we end up passing len==0, which seems (once there's room in opipe)
-> it would put a zero-length pipe_buffer in opipe - and that probably
-> violates an invariant somewhere.
->
-> But does the splice_pipe_to_pipe() case even need that extra logic?
-> Doesn't it handle short writes correctly already?
+> OK - this is quite interesting.  I have had on my to-do list an action
+> item to propose the creation of a file (or a standard kerneldoc string)
+> to hold CI-related meta-data (of which timeout is one example).
 
-Yep.  I missed the part where splice_pipe_to_pipe is already perfectly
-capable of detecting insufficient space in opipe and kicking opipe's
-readers to clear out the buffer.  So that hunk isn't needed, and now I'm
-wondering how in the other clause we return 0 from wait_for_space yet
-still don't have buffer space...
+FWIW, I opt for a "per directory settings" file here because per-test
+seemed like overkill.
 
-Oh well, back to the drawing board.  Good catch, though now it's become
-painfully clear that xfstests lacks rigorous testing of splice()...
+> What other meta-data did you have in mind?
 
---D
+I figured in the future it could hold details about expected environmental
+states (user, namespace, rlimits, etc). For example, I'd like to
+indicate that the seccomp tests should be run twice both as root and as
+a regular user.
 
-> Rasmus
+> I would like (that Fuego, and probably other CI systems would like) to have
+>  access to data like test dependencies, descriptions, and results interpretation
+> that would be beneficial for both CI systems (using them to control test invocations and scheduling), as
+> well as users who are trying to interpret and handle the test results.
+> So this concept is a very welcome addition to kselftest.
+
+I think this stuff may still be very per-test specific, but regardless,
+having it in a single place makes it easy to scrape. :)
+
+> LTP is in the process of adopting a new system for expressing and handling their test meta-data.
+> See the discussion at: 
+> https://lists.yoctoproject.org/pipermail/automated-testing/2019-August/000471.html
+> and the prototype implementation at:
+> https://github.com/metan-ucw/ltp/tree/master/docparse
+
+This looks like similar framework details: _how_ to run a test in a
+given environment.
+
+> One example of a specific field that would be handy is 'need_root'.
+
+I think describing (possibly multiple) expected environments would be
+more useful, but perhaps just user alone would be a nice start.
+
+> It would be nice to avoid proliferation of such meta-data schemas (that is
+> field names), so maybe we can have a discussion about this before adopting
+> something?
+> 
+> Just FYI, I'm OK with the name 'timeout'.  I think that's pretty much universally
+> used by all CI runners I'm aware of to indicate the test timeout value.  But
+> before adopting other fields it would be good to start comparing notes
+> and not invent a bunch of new field names for concepts that are already in
+> other systems.
+
+Yeah, I figure "timeout" could stand and other things would need more
+infrastructure.
+
+> > +		if [ $rc -eq $skip_rc ]; then	\
+> >  			echo "not ok $test_num $TEST_HDR_MSG # SKIP"
+> > +		elif [ $rc -eq $timeout_rc ]; then \
+> > +			echo "not ok $test_num $TEST_HDR_MSG # TIMEOUT"
+> This is an extension to the TAP protocol (well, not strictly, since it is in a comment),
+> but it should be documented.
+
+Right -- this is a "weird" corner of TAP-14. It says there can be "#"
+with everything after it semantically ignored, but that "# SKIP" is
+special. I think clarification of the spec here would be to have the
+format be:
+
+not ok name name name # DETAIL ignored ignored ignored
+
+Where the meaningful DETAIL words could be SKIP, TIMEOUT, FAIL.
+
+> I took an action item at the CKI hackfest to rigorously document the
+> details of how kselftest has extended (or augmented) TAP.  For example
+> our indentation mechanism for sub-tests.  You and I talked about this
+> a bit at Plumbers, but I'd like to follow up and add something
+> to Documentation/dev-tools/kselftest.rst so users and CI systems
+> can know how to appropriately parse and manage kselftest TAP output.
+> 
+> I'll start a separate thread on that when I get to documenting it,
+> but this would definitely be an addition to that documentation.
+> 
+> >  		else
+> > -			echo "not ok $test_num $TEST_HDR_MSG"
+> > +			echo "not ok $test_num $TEST_HDR_MSG #
+> > exit=$rc"
+> Is this also something new to kselftest's TAP output that should be documented?
+
+Right, if we made more the "SKIP" meaningful and required a specific
+detail here, this could just be "... # FAIL exit=$rc" unless we _wanted_
+to make the exit code be parsed. Then maybe "... # EXIT=$rc" ?
+
+> 
+> >  		fi)
+> >  		cd - >/dev/null
+> >  	fi
+> > diff --git a/tools/testing/selftests/rtc/settings
+> > b/tools/testing/selftests/rtc/settings
+> > new file mode 100644
+> > index 000000000000..ba4d85f74cd6
+> > --- /dev/null
+> > +++ b/tools/testing/selftests/rtc/settings
+> > @@ -0,0 +1 @@
+> > +timeout=90
+> 
+> This is introducing a schema for meta-data naming, and a first field name.
+> I have no problem with this one, but it might be worth comparing it with
+> names expected by various kselftest-calling  CI systems.  I'll try to work
+> on this shortly and report back any issues.
+> 
+> Thanks for this.  I think this points us in an interesting new direction.
+
+Cool; I'm glad you like it! I really do want to get timeouts nailed down
+since Shuah mentioned that was a pain point. While I solved it for
+seccomp via the kselftest_harness.h timeout, there have been other
+cases of stalls that aren't handled by that change.
+
+-- 
+Kees Cook
