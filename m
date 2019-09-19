@@ -2,62 +2,74 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B8E6C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 08:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E39CC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 08:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BB6121907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 08:54:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=redchan.it header.i=@redchan.it header.b="vyK7BvaY"
+	by mail.kernel.org (Postfix) with ESMTP id E937121924
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 08:56:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731819AbfISIyj (ORCPT
+        id S1731957AbfISI4C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 04:54:39 -0400
-Received: from mx1.cock.li ([185.10.68.5]:40559 "EHLO cock.li"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725887AbfISIyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 04:54:39 -0400
+        Thu, 19 Sep 2019 04:56:02 -0400
+Received: from relay-b03.edpnet.be ([212.71.1.220]:55229 "EHLO
+        relay-b03.edpnet.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725887AbfISI4B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 04:56:01 -0400
+X-Greylist: delayed 899 seconds by postgrey-1.27 at vger.kernel.org; Thu, 19 Sep 2019 04:56:00 EDT
+X-ASG-Debug-ID: 1568882456-0a88186e203bfccb0001-xx1T2L
+Received: from zotac.vandijck-laurijssen.be (77.109.114.181.adsl.dyn.edpnet.net [77.109.114.181]) by relay-b03.edpnet.be with ESMTP id zku8b7QnzezzfzdY for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 10:40:56 +0200 (CEST)
+X-Barracuda-Envelope-From: dev.kurt@vandijck-laurijssen.be
+X-Barracuda-Effective-Source-IP: 77.109.114.181.adsl.dyn.edpnet.net[77.109.114.181]
+X-Barracuda-Apparent-Source-IP: 77.109.114.181
+Received: from x1.vandijck-laurijssen.be (x1.vandijck-laurijssen.be [IPv6:fd01::1a1d:eaff:fe02:d339])
+        by zotac.vandijck-laurijssen.be (Postfix) with ESMTPSA id BA9E89DD3E5
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 10:40:56 +0200 (CEST)
+Date:   Thu, 19 Sep 2019 10:40:53 +0200
+From:   Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
+To:     linux-kernel@vger.kernel.org
+Subject: Question on priorities with CAN
+Message-ID: <20190919084053.GB1446@x1.vandijck-laurijssen.be>
+X-ASG-Orig-Subj: Question on priorities with CAN
+Mail-Followup-To: linux-kernel@vger.kernel.org
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=redchan.it; s=mail;
-        t=1568883276; bh=nrWE2z1zxkv4ktbKox6LePIy0W0cUPbJ+/8gRGZ1zi8=;
-        h=Date:From:To:Subject:From;
-        b=vyK7BvaYZmpGpKyHb4XTTrGdms2S02y+NqGEDNHnATWPmWl8fv7oRe/FGEM6y2TQs
-         mchtzGqVVtbf4UXbku54jP1cB+k+fJF265FohK/zL/zTHtctj88BUF0Ts2R76SC9jh
-         FFPLiUxvpc1uGPJJ+lJkhuCX1aBiLi2CUBU6HySXyqPHi2ATgxltPxJMiolrzmZjP+
-         k5s+O4qjbHIagly6IdhikRfPhboSXkP1KQd//0uTt23CW7EdDJ1P9bZnRe1WOwOzDg
-         8nZvEQVQYay10IrprAj/NYkd0w8GqiwTaTBg+x5SSR9PRj2h/Kd2gAE/rAPKdTj6Tl
-         rJvquvw1rwd7w==
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 19 Sep 2019 08:54:36 +0000
-From:   gameonlinux@redchan.it
-To:     ipru_feedback@ea.epson.com, linux-kernel@vger.kernel.org
-Subject: I am going to sue you for your ink pad replacement racket.
-Message-ID: <a1eb9322b26cedfb687dd883ae7af261@redchan.it>
-X-Sender: gameonlinux@redchan.it
-User-Agent: Roundcube Webmail/1.3.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+User-Agent: Mutt/1.5.22 (2013-10-16)
+X-Barracuda-Connect: 77.109.114.181.adsl.dyn.edpnet.net[77.109.114.181]
+X-Barracuda-Start-Time: 1568882456
+X-Barracuda-URL: https://212.71.1.220:443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at edpnet.be
+X-Barracuda-Scan-Msg-Size: 424
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Bayes: INNOCENT GLOBAL 0.8881 1.0000 3.0996
+X-Barracuda-Spam-Score: 3.10
+X-Barracuda-Spam-Status: No, SCORE=3.10 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=7.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.76587
+        Rule breakdown below
+         pts rule name              description
+        ---- ---------------------- --------------------------------------------------
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear ipru_feedback@ea.epson.com;
+Hey,
 
-Hi, I'm a licensed attorney, I am going to sue you for this bullshit:
-https://epson.com/Support/wa00369
+I work on a beaglebone-like board using the AM335x can chip, with an RT
+kernel.
 
-> The Maintenance Reset Utility was already used on your product. The 
-> Maintenance Reset Utility cannot be used again in order to ensure the 
-> proper operation of our devices to
+The can irq task is by default rt prio 50.
+I have a process running on rt prio 10 using CAN_RAW socket.
 
-It is not your device, it is mine. I own the title to said personal 
-property. You have engaged in a conspiracy to deprive me of the use of 
-said property.
+I see that softirqd runs on regular timeslicing.
+Do CAN frames need to pass through the softirqd in order to arrive
+on my process?
+I would need to elevate the softirqd's rt prio also in that case?
 
-I will be filing suit soon.
-Go and fuck yourselves.
+Kind regards,
+Kurt
