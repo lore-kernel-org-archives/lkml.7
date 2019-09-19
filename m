@@ -2,55 +2,52 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 512E2C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74FA3C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FEB02196F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:09:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47C572196F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:09:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568930958;
-	bh=jHeOX+JGSjeo8/ClvRymMzd+5AAANs5t135kcyVXqk8=;
+	s=default; t=1568930960;
+	bh=FyVssxbu35YOSuSBsVhZcdxlN4l730ukFePFxHMR+LE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XmZWZzCRQ6YO4kJ5sNiFOAb59bo5S4UZVoGLEmIBRrbTa9i5LpKW9sxiaw+uOgjjQ
-	 qCZpDNkwhIyiE3WzwUY+ojlitK3CaQMEW9DJLZequLcSRCFJl6KovGZ7eNsc/ilXOf
-	 Bbc07nB3hGVC1CFIW5JCvhPQXaqZ8sChwAr337o0=
+	b=ndP//2NOL5hEDIt71JGN0LTC/xlzkcpqCQp67dW/gyh0rdY8UwpgjvHQvzo69RyEo
+	 6bB184asYpfnYOavEaf0SFF5EL/pK5zGHn6x8vq35zf31lq4Q2BZ2TKb6XPjmxBDCt
+	 Opi1d1G9H5Xue+Lr2sk45DWE9CeGVbLmnWokCuS8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405385AbfISWJR (ORCPT
+        id S2405395AbfISWJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:09:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47360 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:09:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405365AbfISWJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:09:13 -0400
+        id S2405379AbfISWJR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:09:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8402121907;
-        Thu, 19 Sep 2019 22:09:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DA1021928;
+        Thu, 19 Sep 2019 22:09:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568930953;
-        bh=jHeOX+JGSjeo8/ClvRymMzd+5AAANs5t135kcyVXqk8=;
+        s=default; t=1568930955;
+        bh=FyVssxbu35YOSuSBsVhZcdxlN4l730ukFePFxHMR+LE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vGcRxIpncc/9/fYrWZ5vbDwv2mEu8X/5hHsx4Wb+0+utDhQeNWGD7X51a64ECRMVk
-         bVONfkDpCZEfY64Js8p+FHWXuGjU4NgCj0fr7ltkYxClNFivwb9N0iE+zGNkq9pOqn
-         rcV6dG8X4E8wkCi+LQC6bALb6KHBBytaRPVUOzmg=
+        b=wAquTO2P47U2XZo7JXrfxLmrg53juX9DHwMR5hto/DKd2OpY28N3qzydJX52fRMnA
+         f7lLRdDnqe0NwmfjjJ+7HSkuclcGbxPVaS8/dUm366sRPuq/23CVLHgXVji96dqPhT
+         N/b8grkLnCkGnzedeziIDtqK7yZELKGdYIKGNu9w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org, Keerthy <j-keerthy@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 043/124] s390/bpf: use 32-bit index for tail calls
-Date:   Fri, 20 Sep 2019 00:02:11 +0200
-Message-Id: <20190919214820.572419274@linuxfoundation.org>
+Subject: [PATCH 5.2 034/124] ARM: dts: Fix incorrect dcan register mapping for am3, am4 and dra7
+Date:   Fri, 20 Sep 2019 00:02:02 +0200
+Message-Id: <20190919214820.262275206@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -63,60 +60,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Leoshkevich <iii@linux.ibm.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 91b4db5313a2c793aabc2143efb8ed0cf0fdd097 ]
+[ Upstream commit 89bbc6f1eb90809b1538b3a9c54030c558180e3b ]
 
-"p runtime/jit: pass > 32bit index to tail_call" fails when
-bpf_jit_enable=1, because the tail call is not executed.
+We are currently using a wrong register for dcan revision. Although
+this is currently only used for detecting the dcan module, let's
+fix it to avoid confusion.
 
-This in turn is because the generated code assumes index is 64-bit,
-while it must be 32-bit, and as a result prog array bounds check fails,
-while it should pass. Even if bounds check would have passed, the code
-that follows uses 64-bit index to compute prog array offset.
-
-Fix by using clrj instead of clgrj for comparing index with array size,
-and also by using llgfr for truncating index to 32 bits before using it
-to compute prog array offset.
-
-Fixes: 6651ee070b31 ("s390/bpf: implement bpf_tail_call() helper")
-Reported-by: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
-Acked-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Tested-by: Keerthy <j-keerthy@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/net/bpf_jit_comp.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/am33xx-l4.dtsi | 4 ++++
+ arch/arm/boot/dts/am437x-l4.dtsi | 4 ++++
+ arch/arm/boot/dts/dra7-l4.dtsi   | 4 ++--
+ drivers/bus/ti-sysc.c            | 3 ++-
+ 4 files changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/arch/s390/net/bpf_jit_comp.c b/arch/s390/net/bpf_jit_comp.c
-index 9a711472cbdc0..fd9844f947f79 100644
---- a/arch/s390/net/bpf_jit_comp.c
-+++ b/arch/s390/net/bpf_jit_comp.c
-@@ -1027,8 +1027,8 @@ static noinline int bpf_jit_insn(struct bpf_jit *jit, struct bpf_prog *fp, int i
- 		/* llgf %w1,map.max_entries(%b2) */
- 		EMIT6_DISP_LH(0xe3000000, 0x0016, REG_W1, REG_0, BPF_REG_2,
- 			      offsetof(struct bpf_array, map.max_entries));
--		/* clgrj %b3,%w1,0xa,label0: if %b3 >= %w1 goto out */
--		EMIT6_PCREL_LABEL(0xec000000, 0x0065, BPF_REG_3,
-+		/* clrj %b3,%w1,0xa,label0: if (u32)%b3 >= (u32)%w1 goto out */
-+		EMIT6_PCREL_LABEL(0xec000000, 0x0077, BPF_REG_3,
- 				  REG_W1, 0, 0xa);
+diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
+index ced1a19d5f898..4bd22c1edf963 100644
+--- a/arch/arm/boot/dts/am33xx-l4.dtsi
++++ b/arch/arm/boot/dts/am33xx-l4.dtsi
+@@ -1758,6 +1758,8 @@
  
- 		/*
-@@ -1054,8 +1054,10 @@ static noinline int bpf_jit_insn(struct bpf_jit *jit, struct bpf_prog *fp, int i
- 		 *         goto out;
- 		 */
+ 		target-module@cc000 {			/* 0x481cc000, ap 60 46.0 */
+ 			compatible = "ti,sysc-omap4", "ti,sysc";
++			reg = <0xcc020 0x4>;
++			reg-names = "rev";
+ 			ti,hwmods = "d_can0";
+ 			/* Domains (P, C): per_pwrdm, l4ls_clkdm */
+ 			clocks = <&l4ls_clkctrl AM3_L4LS_D_CAN0_CLKCTRL 0>,
+@@ -1780,6 +1782,8 @@
  
--		/* sllg %r1,%b3,3: %r1 = index * 8 */
--		EMIT6_DISP_LH(0xeb000000, 0x000d, REG_1, BPF_REG_3, REG_0, 3);
-+		/* llgfr %r1,%b3: %r1 = (u32) index */
-+		EMIT4(0xb9160000, REG_1, BPF_REG_3);
-+		/* sllg %r1,%r1,3: %r1 *= 8 */
-+		EMIT6_DISP_LH(0xeb000000, 0x000d, REG_1, REG_1, REG_0, 3);
- 		/* lg %r1,prog(%b2,%r1) */
- 		EMIT6_DISP_LH(0xe3000000, 0x0004, REG_1, BPF_REG_2,
- 			      REG_1, offsetof(struct bpf_array, ptrs));
+ 		target-module@d0000 {			/* 0x481d0000, ap 62 42.0 */
+ 			compatible = "ti,sysc-omap4", "ti,sysc";
++			reg = <0xd0020 0x4>;
++			reg-names = "rev";
+ 			ti,hwmods = "d_can1";
+ 			/* Domains (P, C): per_pwrdm, l4ls_clkdm */
+ 			clocks = <&l4ls_clkctrl AM3_L4LS_D_CAN1_CLKCTRL 0>,
+diff --git a/arch/arm/boot/dts/am437x-l4.dtsi b/arch/arm/boot/dts/am437x-l4.dtsi
+index 989cb60b90295..04bee4ff9dcb8 100644
+--- a/arch/arm/boot/dts/am437x-l4.dtsi
++++ b/arch/arm/boot/dts/am437x-l4.dtsi
+@@ -1574,6 +1574,8 @@
+ 
+ 		target-module@cc000 {			/* 0x481cc000, ap 50 46.0 */
+ 			compatible = "ti,sysc-omap4", "ti,sysc";
++			reg = <0xcc020 0x4>;
++			reg-names = "rev";
+ 			ti,hwmods = "d_can0";
+ 			/* Domains (P, C): per_pwrdm, l4ls_clkdm */
+ 			clocks = <&l4ls_clkctrl AM4_L4LS_D_CAN0_CLKCTRL 0>;
+@@ -1593,6 +1595,8 @@
+ 
+ 		target-module@d0000 {			/* 0x481d0000, ap 52 3a.0 */
+ 			compatible = "ti,sysc-omap4", "ti,sysc";
++			reg = <0xd0020 0x4>;
++			reg-names = "rev";
+ 			ti,hwmods = "d_can1";
+ 			/* Domains (P, C): per_pwrdm, l4ls_clkdm */
+ 			clocks = <&l4ls_clkctrl AM4_L4LS_D_CAN1_CLKCTRL 0>;
+diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
+index 63628e166c0cd..21e5914fdd620 100644
+--- a/arch/arm/boot/dts/dra7-l4.dtsi
++++ b/arch/arm/boot/dts/dra7-l4.dtsi
+@@ -3025,7 +3025,7 @@
+ 
+ 		target-module@80000 {			/* 0x48480000, ap 31 16.0 */
+ 			compatible = "ti,sysc-omap4", "ti,sysc";
+-			reg = <0x80000 0x4>;
++			reg = <0x80020 0x4>;
+ 			reg-names = "rev";
+ 			clocks = <&l4per2_clkctrl DRA7_L4PER2_DCAN2_CLKCTRL 0>;
+ 			clock-names = "fck";
+@@ -4577,7 +4577,7 @@
+ 
+ 		target-module@c000 {			/* 0x4ae3c000, ap 30 04.0 */
+ 			compatible = "ti,sysc-omap4", "ti,sysc";
+-			reg = <0xc000 0x4>;
++			reg = <0xc020 0x4>;
+ 			reg-names = "rev";
+ 			clocks = <&wkupaon_clkctrl DRA7_WKUPAON_DCAN1_CLKCTRL 0>;
+ 			clock-names = "fck";
+diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+index 56a2399f341e8..58b38630171ff 100644
+--- a/drivers/bus/ti-sysc.c
++++ b/drivers/bus/ti-sysc.c
+@@ -1127,7 +1127,8 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
+ 	SYSC_QUIRK("control", 0, 0, 0x10, -1, 0x40000900, 0xffffffff, 0),
+ 	SYSC_QUIRK("cpgmac", 0, 0x1200, 0x1208, 0x1204, 0x4edb1902,
+ 		   0xffff00f0, 0),
+-	SYSC_QUIRK("dcan", 0, 0, -1, -1, 0xffffffff, 0xffffffff, 0),
++	SYSC_QUIRK("dcan", 0, 0x20, -1, -1, 0xa3170504, 0xffffffff, 0),
++	SYSC_QUIRK("dcan", 0, 0x20, -1, -1, 0x4edb1902, 0xffffffff, 0),
+ 	SYSC_QUIRK("dmic", 0, 0, 0x10, -1, 0x50010000, 0xffffffff, 0),
+ 	SYSC_QUIRK("dwc3", 0, 0, 0x10, -1, 0x500a0200, 0xffffffff, 0),
+ 	SYSC_QUIRK("epwmss", 0, 0, 0x4, -1, 0x47400001, 0xffffffff, 0),
 -- 
 2.20.1
 
