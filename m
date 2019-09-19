@@ -2,221 +2,110 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B157CC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:21:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09309C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7452420665
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:21:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D412F21928
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:23:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568906480;
-	bh=Bd9B7BGXVUcaqMDZqTbNukVCpHnjzhWC99H569tw3vE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=AvUwYEYpwCCx/DzicaI0i7090eIJpJj8fi8CzeCpO3hqju+EksSyFjxA1t2bLnZIi
-	 kbqiPUiYH924TuM8ZqiKYUlb2w26SZ6SsY5eruHw4oV5orrzSOK75uNfyXoa6rfHUF
-	 wjj1fXI6FWbqAghR6rHhMs1bJtte/mduPkm9no0o=
+	s=default; t=1568906619;
+	bh=DQtndKmWGXe+T5kGCDoQAWmHVgrGBkRdXl82qUMKqWc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Em/m39QYiiJo+1MxU+ZenAWAgPISTlQmG4BWlFBapXQRDAuyh1a6AEz+ue9HRcHoT
+	 ZZ1N7cC7ywAn4eMaqkTEGKEOeeS3Z476WzFUz4aPD4ycEU5OyUTTl1mcUW3CBHNINR
+	 hsfTrToA0Ir5D9Bq8EZn02pzdLObaiIGXjmomtck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391206AbfISPVT (ORCPT
+        id S2391236AbfISPXj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 11:21:19 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39897 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388097AbfISPVT (ORCPT
+        Thu, 19 Sep 2019 11:23:39 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54608 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389443AbfISPXi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 11:21:19 -0400
-Received: by mail-lj1-f194.google.com with SMTP id y3so2615317ljj.6
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 08:21:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zfEuPJ641YJQeJkTLfoZf15jmx/xg/Ot7RIxF8XZrnA=;
-        b=IeBlACCv1tdF6ZOzyEP8OJsAwJslYvvpUJkXNzHb4jX+yNNAS3BZmLItZivVoYM1Rs
-         VowQP+P9MXEx89V5iLrrCYHL5VwW6G8+q7N0l1WKXVBSnpkmBwKuOyhhfpFxBZfThAv0
-         0JhTD0cT+wVcdXd64K9wjv9SZYXH5dnmZ6l+I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zfEuPJ641YJQeJkTLfoZf15jmx/xg/Ot7RIxF8XZrnA=;
-        b=q3UtcLcICoW1imdQ7/R+DF+IuMHtAfWmkjeisviNbHiBBYuHMq8zM7veaDmA86lB3I
-         C4zJPijpllvQRP8mN7sYaH971eCRiILBftZKn+ijBr9kZmBt6RHGoRsa1pJajcWfiegB
-         JrhHcmxHD4vgoZKQY/yuI2CP0j+SkjFyeMTnU/VsHu6Ee7DJqsSjU4Cja6wQevYsO7G1
-         FDn8g6aaDPDXKLGKQLQ7IEPijFrvWxR2HhngGsQlf1oftv+SeEzOaBBCiZzpQlI8+Ymk
-         9eXQWHJrljmSaEAoW44UEsYY8c+YNT1cBsuH7kWX0eYQm4D9/CJaQQsHVRUHTHrtWyui
-         gcsg==
-X-Gm-Message-State: APjAAAVcCXa3QiQgP9E6CUaIYnpB34S7n+JcnYK1eHefO+9o6yDN/tpG
-        vEMkQdxzYEbtNMOlJrZb64MttgBcpLM=
-X-Google-Smtp-Source: APXvYqzoA+OsC5EkIbm2K3BZTQMjQY6WxrJk+qLP+BWSD+oHQSUhzuUgakKHDkptofC7qcBGvpBkMw==
-X-Received: by 2002:a2e:984e:: with SMTP id e14mr5976362ljj.167.1568906475280;
-        Thu, 19 Sep 2019 08:21:15 -0700 (PDT)
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
-        by smtp.gmail.com with ESMTPSA id y3sm1644877lfh.97.2019.09.19.08.21.13
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Sep 2019 08:21:14 -0700 (PDT)
-Received: by mail-lf1-f50.google.com with SMTP id d17so2671176lfa.7
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 08:21:13 -0700 (PDT)
-X-Received: by 2002:ac2:47f8:: with SMTP id b24mr5372959lfp.134.1568906473541;
- Thu, 19 Sep 2019 08:21:13 -0700 (PDT)
+        Thu, 19 Sep 2019 11:23:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=SVYXT/EUvY8dsNgMnbFhrjkCQ4V6Kbd9kNWc6esVgRU=; b=P/SxVrHRBzkUF7IyXXh+4tRhz
+        Df5UYyJaVhO1+/XcArPgAVWIzBOG/mnMqSoB2D+KXbEmVbgyFmbGXSauFKhSVWB4d+rQLu9fQhURD
+        Cud4yOT6xQvt6pRsAACKAR4yiZjYxyNkjTCb2d6KPJOWX5qFvsK0Qm3ip0bWs2VvPaC4s=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iAyHO-0004Fg-Bt; Thu, 19 Sep 2019 15:23:34 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 729AB2742939; Thu, 19 Sep 2019 16:23:33 +0100 (BST)
+Date:   Thu, 19 Sep 2019 16:23:33 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Gareth Williams <gareth.williams.jx@renesas.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 0/4] spi: dw: Add basic runtime PM support
+Message-ID: <20190919152326.GP3642@sirena.co.uk>
+References: <1568793876-9009-1-git-send-email-gareth.williams.jx@renesas.com>
+ <20190919133113.GK3642@sirena.co.uk>
+ <TYAPR01MB292515FE4C74044CA53321C5DF890@TYAPR01MB2925.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-References: <20190912034421.GA2085@darwi-home-pc> <20190912082530.GA27365@mit.edu>
- <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
- <20190914122500.GA1425@darwi-home-pc> <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
- <20190915052242.GG19710@mit.edu> <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
- <20190918211503.GA1808@darwi-home-pc> <20190918211713.GA2225@darwi-home-pc>
- <CAHk-=wiCqDiU7SE3FLn2W26MS_voUAuqj5XFa1V_tiGTrrW-zQ@mail.gmail.com> <20190919143427.GQ6762@mit.edu>
-In-Reply-To: <20190919143427.GQ6762@mit.edu>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 19 Sep 2019 08:20:57 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgqbBy84ovtr8wPFqRo6U8jvp59rvQ8a6TvXuoyb-4L-Q@mail.gmail.com>
-Message-ID: <CAHk-=wgqbBy84ovtr8wPFqRo6U8jvp59rvQ8a6TvXuoyb-4L-Q@mail.gmail.com>
-Subject: Re: [PATCH RFC v4 1/1] random: WARN on large getrandom() waits and
- introduce getrandom2()
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>, linux-ext4@vger.kernel.org,
-        linux-man@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="dzI2QqkSBOAresgT"
+Content-Disposition: inline
+In-Reply-To: <TYAPR01MB292515FE4C74044CA53321C5DF890@TYAPR01MB2925.jpnprd01.prod.outlook.com>
+X-Cookie: I'll be Grateful when they're Dead.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 7:34 AM Theodore Y. Ts'o <tytso@mit.edu> wrote:
->
-> > It's basically a "we used up entropy" thing, which is very
-> > questionable to begin with as the whole discussion has shown, but
-> > since it stops doing it after 10 cases, it's not even good security
-> > assuming the "use up entropy" case makes sense in the first place.
->
-> It was a bug that it stopped doing it after 10 tries, and there's a
-> really good reason for it.
 
-I really doubt that.
+--dzI2QqkSBOAresgT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> The reason for zeroing it after we expose state is because otherwise
-> if the pool starts in a known state (the attacker knows the starting
-> configuration, knows the DMI table that we're mixing into the pool
-> since that's a constant, etc.),
+On Thu, Sep 19, 2019 at 03:14:54PM +0000, Gareth Williams wrote:
+> On Wed, Sep 19, 2019 at 14:31:32AM +0100, Mark Brown wrote:
 
-That's at least partly because our pool hashing has what looks a
-fairly sad property.
+> > Please use subject lines matching the style for the subsystem.  This makes it
+> > easier for people to identify relevant patches.  This isn't even consistent
+> > within the series :(
 
-Yes, it hashes it using a good hash, but it does so in a way that
-makes it largely possible to follow the hashing and repeat it and
-analyze it.
+> Sorry about that, I will correct the subject lines for V3.
 
-That breaks if we have hw randomness, because it does the
+Don't worry about it unless you need to send a v3 for some other reason.
 
-        if (arch_get_random_long(&v))
-                crng->state[14] ^= v;
+> Is there a set convention for the subsystem I should follow in future?
+> Or should I follow the style of the individual files I work on?
 
-so it always mixes in hardware randomness as part of the extraction,
-but we don't mix anything else unpredictable - or even
-process-specific - state in. So without hw randomness, you can try to
-get a lot of data over a lot of boots - and for long times during
-boots - and maybe find the pattern.
+Following the style for the file/directory is generally a good guide,
+for SPI I tend to prefer spi: but I just moan about it rather than block
+anything for it (unless I do end up missing the patch in my inbox).
 
-But honestly, this isn't realistic. I can point to emails where *you*
-are  arguing against other hashing algorithms because the whole state
-extension attack simply isn't realistic.
+--dzI2QqkSBOAresgT
+Content-Type: application/pgp-signature; name="signature.asc"
 
-And I think it's also pretty questionable how we don't try to mix in
-anything timing/process-specific when extracting, which is what makes
-that "do lots of boots" possible.
+-----BEGIN PGP SIGNATURE-----
 
-The silly "reset crng_init_cnt" does absolutely nothing to help that,
-but in fact what it does is to basically give the attacker a way to
-get an infinite stream of data without any reseeding (because that
-only happens after crng_read()), and able to extend that "block at
-boot" time indefinitely while doing so.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2DnW0ACgkQJNaLcl1U
+h9CozAf+KonuKSEWtCRvLPNHth5I6Dmv/rgmgnQLAcqXOvyYP4XKeVynEQWjP1VT
+fRBeU1NL7gDivqKMWGOTDW7t+h8jULzY2zdyLJcARZ/dTByWuGk7u31qcYPUpVlW
+wSiWGaAJm8d9vDeoj5dWwz9Ijg0VP7EmwQStss7hUjOTzFSOXV52mZuxOI2TQfXQ
+6fm1dqVJ0f85TWNHTBBeV70W445kutx7yrF/Ed614cuCff5+SoKevGlC88PdTPV2
+we5TlLr1J2/i4gISCWpWpbf6ddcjZrOaQZhoHQQfF4/3KvcWqmrgrr+wa+cTZWyI
+YeEM6rjUhOpH1U3ABtzoZv8mBEQ5Gg==
+=xyoB
+-----END PGP SIGNATURE-----
 
-Also honestly, if the attacker already has access to the system at
-boot, you have some fairly big problems to begin with.
-
-So a much bigger issue than the state extension attack (pretty much
-purely theoretical, given any entropy at all, which we _will_ have
-even without the crng_init_cnt clearing) is the fact that right now we
-really are predictable if there are no hardware interrupts, and people
-have used /dev/urandom because other sources weren't useful.
-
-And the fact is, we *know* people use /dev/urandom exactly because
-other sources haven't been useful.
-
-And unlike your theoretical state extension attack, I can point you to
-black hat presentations that literally talk about using the fact that
-we delay m,ixing in the input pull hash to know what's going on:
-
-  https://www.blackhat.com/docs/eu-14/materials/eu-14-Kedmi-Attacking-The-Linux-PRNG-On-Android-Weaknesses-In-Seeding-Of-Entropic-Pools-And-Low-Boot-Time-Entropy.pdf
-
-That's a real attack. Based on the REAL fact that we currently have to
-use the urandom logic because the entropy-waiting one is useless, and
-in fact depends on the re-seeding happening too late.
-
-Yes, yes, our urandom has changed since that attack, and we use chacha
-instead of sha1 these days. We have other changes too. But I don't see
-anything fundamentally different.
-
-And all your arguments seem to make that _real_ security issue just
-worse, exactly because we also avoid reseeding while crng_init is
-zero.
-
-> I'm happy this proposed is not changing the behavior of getrandom(0).
-> Why not just remap 0 to GRND_EXPLICIT | GRND_WAIT_ENTROPY, though?  It
-> will have the same effect, and it's make it clear what we're doing.
-
-Have you you not followed the whole discussion? Didn't you read the comment?
-
-People use "getrandom(0)" not because they want secure randomness, but
-because that's the default.
-
-And we *will* do something about it. This patch didn't, because I want
-to be able to backport it to stable, so that everybody is happier with
-saying "ok, I'll use the new getrandom(GRND_INSECURE)".
-
-Because getrandom(0) will NOT be the the same as GRND_EXPLICIT |
-GRND_WAIT_ENTROPY.
-
-getrandom(0) is the "I don't know what I am doing" thing. It could be
-somebody that wants real secure random numbers. Or it could *not* be
-one of those, and need the timeout.
-
-> Later on, when we rip out /dev/random pool code (and make reading from
-> /dev/random the equivalent of getrandom(GRND_SECURE)), we'll need to
-> similarly map the legacy combination of flags for GRND_RANDOM and
-> GRND_RANDOM | GRND_NONBLOCK.
-
-And that is completely immaterial, because the "I'm confused" case
-isn't about GRND_RANDOM. Nobody uses that anyway, and more importantly
-it's not the case that has caused bugs. That one blocks even during
-normal execution, so that one - despite being completely useless -
-actually has the one good thing going for it that it's testable.
-People will see the "oh, that took a long time" during testing. And
-then they'll stop using it.
-
-Ted - you really don't seem to be making any distinction between
-"these are real problems that should be fixed" vs "this is theory that
-isn't relevant".
-
-The "getrandom(0)" is a real problem that needs to be fixed.
-
-The warnings from /dev/urandom are real problems that people
-apparently have worked around by (incorrectly) using getrandom(0).
-
-The "hashing the random pool still leaves identities in place" is a
-real problem that had a real attack.
-
-The state extension attack? Complete theory (again, I can point to you
-saying the same thing in other threads), and the "fix" of resetting
-the counter and not reseeding seems to be anything but.
-
-            Linus
+--dzI2QqkSBOAresgT--
