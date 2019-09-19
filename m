@@ -7,35 +7,37 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 068BEC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 534BEC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:04:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7E2521929
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:03:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B8AE21924
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:04:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732057AbfISNDU (ORCPT
+        id S1732196AbfISNEc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 09:03:20 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:40206 "EHLO
+        Thu, 19 Sep 2019 09:04:32 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:40256 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387465AbfISNDT (ORCPT
+        with ESMTP id S1731958AbfISNEb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 09:03:19 -0400
+        Thu, 19 Sep 2019 09:04:31 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: eballetbo)
-        with ESMTPSA id 595B228A9C6
-Subject: Re: [PATCH] platform/chrome: chromeos_tbmc : Report wake events.
-To:     Ravi Chandra Sadineni <ravisadineni@chromium.org>,
-        bleung@chromium.org, swboyd@chromium.org, tbroch@chromium.org,
-        linux-kernel@vger.kernel.org
-References: <20190830231404.60005-1-ravisadineni@chromium.org>
+        with ESMTPSA id B787728E9D2
+Subject: Re: [PATCH] platform/chrome: cros_ec_rpmsg: Fix race with host
+ command when probe failed.
+To:     Pi-Hsun Shih <pihsun@chromium.org>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190904062613.86401-1-pihsun@chromium.org>
 From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <37bb8176-34c8-c711-b6be-d64d6aec68e6@collabora.com>
-Date:   Thu, 19 Sep 2019 15:03:15 +0200
+Message-ID: <2c8e467f-fb78-4a2c-f6e4-c04336591bb9@collabora.com>
+Date:   Thu, 19 Sep 2019 15:04:26 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20190830231404.60005-1-ravisadineni@chromium.org>
+In-Reply-To: <20190904062613.86401-1-pihsun@chromium.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
@@ -46,42 +48,124 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi,
 
-On 31/8/19 1:14, Ravi Chandra Sadineni wrote:
-> Mark chromeos_tbmc as wake capable and report wake events. This helps to
-> abort suspend on seeing a tablet mode switch event when kernel is
-> suspending. This also helps identifying if chroemos_tbmc is the wake
-> source.
+On 4/9/19 8:26, Pi-Hsun Shih wrote:
+> Since the rpmsg_endpoint is created before probe is called, it's
+> possible that a host event is received during cros_ec_register, and
+> there would be some pending work in the host_event_work workqueue while
+> cros_ec_register is called.
 > 
-> Signed-off-by: Ravi Chandra Sadineni <ravisadineni@chromium.org>
+> If cros_ec_register fails, when the leftover work in host_event_work
+> run, the ec_dev from the drvdata of the rpdev could be already set to
+> NULL, causing kernel crash when trying to run cros_ec_get_next_event.
+> 
+> Fix this by creating the rpmsg_endpoint by ourself, and when
+> cros_ec_register fails (or on remove), destroy the endpoint first (to
+> make sure there's no more new calls to cros_ec_rpmsg_callback), and then
+> cancel all works in the host_event_work workqueue.
+> 
+> Fixes: 2de89fd98958 ("platform/chrome: cros_ec: Add EC host command support using rpmsg")
+> Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+> ---
 
-Applied for 5.4, the patches went to linux-next some time ago but sorry for late
-reply.
+Added the stable tag and applied for 5.4, the patches went to linux-next some
+time ago, so sorry for late notice.
 
 Thanks,
  Enric
 
-> ---
->  drivers/platform/chrome/chromeos_tbmc.c | 2 ++
->  1 file changed, 2 insertions(+)
+
+>  drivers/platform/chrome/cros_ec_rpmsg.c | 33 +++++++++++++++++++++----
+>  1 file changed, 28 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/platform/chrome/chromeos_tbmc.c b/drivers/platform/chrome/chromeos_tbmc.c
-> index ce259ec9f990..d1cf8f3463ce 100644
-> --- a/drivers/platform/chrome/chromeos_tbmc.c
-> +++ b/drivers/platform/chrome/chromeos_tbmc.c
-> @@ -47,6 +47,7 @@ static __maybe_unused int chromeos_tbmc_resume(struct device *dev)
+> diff --git a/drivers/platform/chrome/cros_ec_rpmsg.c b/drivers/platform/chrome/cros_ec_rpmsg.c
+> index 8b6bd775cc9a..0c3738c3244d 100644
+> --- a/drivers/platform/chrome/cros_ec_rpmsg.c
+> +++ b/drivers/platform/chrome/cros_ec_rpmsg.c
+> @@ -41,6 +41,7 @@ struct cros_ec_rpmsg {
+>  	struct rpmsg_device *rpdev;
+>  	struct completion xfer_ack;
+>  	struct work_struct host_event_work;
+> +	struct rpmsg_endpoint *ept;
+>  };
 >  
->  static void chromeos_tbmc_notify(struct acpi_device *adev, u32 event)
+>  /**
+> @@ -72,7 +73,6 @@ static int cros_ec_pkt_xfer_rpmsg(struct cros_ec_device *ec_dev,
+>  				  struct cros_ec_command *ec_msg)
 >  {
-> +	acpi_pm_wakeup_event(&adev->dev);
->  	switch (event) {
->  	case 0x80:
->  		chromeos_tbmc_query_switch(adev, adev->driver_data);
-> @@ -90,6 +91,7 @@ static int chromeos_tbmc_add(struct acpi_device *adev)
->  		dev_err(dev, "cannot register input device\n");
+>  	struct cros_ec_rpmsg *ec_rpmsg = ec_dev->priv;
+> -	struct rpmsg_device *rpdev = ec_rpmsg->rpdev;
+>  	struct ec_host_response *response;
+>  	unsigned long timeout;
+>  	int len;
+> @@ -85,7 +85,7 @@ static int cros_ec_pkt_xfer_rpmsg(struct cros_ec_device *ec_dev,
+>  	dev_dbg(ec_dev->dev, "prepared, len=%d\n", len);
+>  
+>  	reinit_completion(&ec_rpmsg->xfer_ack);
+> -	ret = rpmsg_send(rpdev->ept, ec_dev->dout, len);
+> +	ret = rpmsg_send(ec_rpmsg->ept, ec_dev->dout, len);
+>  	if (ret) {
+>  		dev_err(ec_dev->dev, "rpmsg send failed\n");
 >  		return ret;
->  	}
-> +	device_init_wakeup(dev, true);
+> @@ -196,11 +196,24 @@ static int cros_ec_rpmsg_callback(struct rpmsg_device *rpdev, void *data,
 >  	return 0;
 >  }
 >  
+> +static struct rpmsg_endpoint *
+> +cros_ec_rpmsg_create_ept(struct rpmsg_device *rpdev)
+> +{
+> +	struct rpmsg_channel_info chinfo = {};
+> +
+> +	strscpy(chinfo.name, rpdev->id.name, RPMSG_NAME_SIZE);
+> +	chinfo.src = rpdev->src;
+> +	chinfo.dst = RPMSG_ADDR_ANY;
+> +
+> +	return rpmsg_create_ept(rpdev, cros_ec_rpmsg_callback, NULL, chinfo);
+> +}
+> +
+>  static int cros_ec_rpmsg_probe(struct rpmsg_device *rpdev)
+>  {
+>  	struct device *dev = &rpdev->dev;
+>  	struct cros_ec_rpmsg *ec_rpmsg;
+>  	struct cros_ec_device *ec_dev;
+> +	int ret;
+>  
+>  	ec_dev = devm_kzalloc(dev, sizeof(*ec_dev), GFP_KERNEL);
+>  	if (!ec_dev)
+> @@ -225,7 +238,18 @@ static int cros_ec_rpmsg_probe(struct rpmsg_device *rpdev)
+>  	INIT_WORK(&ec_rpmsg->host_event_work,
+>  		  cros_ec_rpmsg_host_event_function);
+>  
+> -	return cros_ec_register(ec_dev);
+> +	ec_rpmsg->ept = cros_ec_rpmsg_create_ept(rpdev);
+> +	if (!ec_rpmsg->ept)
+> +		return -ENOMEM;
+> +
+> +	ret = cros_ec_register(ec_dev);
+> +	if (ret < 0) {
+> +		rpmsg_destroy_ept(ec_rpmsg->ept);
+> +		cancel_work_sync(&ec_rpmsg->host_event_work);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+>  }
+>  
+>  static void cros_ec_rpmsg_remove(struct rpmsg_device *rpdev)
+> @@ -234,7 +258,7 @@ static void cros_ec_rpmsg_remove(struct rpmsg_device *rpdev)
+>  	struct cros_ec_rpmsg *ec_rpmsg = ec_dev->priv;
+>  
+>  	cros_ec_unregister(ec_dev);
+> -
+> +	rpmsg_destroy_ept(ec_rpmsg->ept);
+>  	cancel_work_sync(&ec_rpmsg->host_event_work);
+>  }
+>  
+> @@ -271,7 +295,6 @@ static struct rpmsg_driver cros_ec_driver_rpmsg = {
+>  	},
+>  	.probe		= cros_ec_rpmsg_probe,
+>  	.remove		= cros_ec_rpmsg_remove,
+> -	.callback	= cros_ec_rpmsg_callback,
+>  };
+>  
+>  module_rpmsg_driver(cros_ec_driver_rpmsg);
 > 
