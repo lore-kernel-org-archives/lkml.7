@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AACB5C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF29C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80EBB217D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 705ED21907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:34:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932464;
-	bh=48NONwleXv7yulCxjWwTzPAFeGowSucCtbVQ7QAI4IA=;
+	s=default; t=1568932466;
+	bh=0dd297o4/giydwwbHGYujD6FY22aEiS50RVYkQurEz0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wAySUldUOlNM66cfecrYEye4ooJTr86/t7Wm3eV8Fa/kkPtSunqbtxUZ732Xv0auZ
-	 KgkeHV0oXzGJEws32B07xtBGRE4U4yHZkkpTcPesyewMQ0qMvOgotqdr98Vttwep9D
-	 1KKFgWOZFoh2+DReVZK9j6sEDJUkFUyJmFH4gjwc=
+	b=WkBiSLVgHaGCQVRgikK+57Hd5eApZAMm4WriM42DbHkvcfKPoVjauK/ni56yzuB20
+	 09n8pqKSGOV1uheWltZ+hp5A0CZVap7l3xex9BJIuEeqQhYYMGWVyXxF7xgyRCZJMj
+	 xVK499ZDYR8GdFRCxeHBlaHcvC2QVBHNpJec9MrY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405556AbfISWJ4 (ORCPT
+        id S2405545AbfISWJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:09:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48184 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:09:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405505AbfISWJw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:09:52 -0400
+        id S2405493AbfISWJt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:09:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 330AF21924;
-        Thu, 19 Sep 2019 22:09:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D8B221920;
+        Thu, 19 Sep 2019 22:09:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568930991;
-        bh=48NONwleXv7yulCxjWwTzPAFeGowSucCtbVQ7QAI4IA=;
+        s=default; t=1568930989;
+        bh=0dd297o4/giydwwbHGYujD6FY22aEiS50RVYkQurEz0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qvYkM2fQgxreh/LAesjwnixLztADdYdbNRTcSnpJhhfE11uvced1pSfFxqwjoObga
-         oojeLF+drjCoBnAmnt8JEaTOtr42ToljFispc/cxRBOxl5K/PdBMTx8cXCLKFHwnk/
-         j90uPbTsN6DhkWKrWfWIRgXlMkYml/q+PG019rcA=
+        b=cvKeejTT6lrGGyaGwh7J//EflkC81YARduYZo4E1NlndZPda8uXrcauoQRWs+EQUs
+         DUliRSa5AkBpQIEWUsev3u3cI+BskwBKohDPxVL8dL11YS9DMSgMFHIDwrEHr+WwrX
+         dmPVcGyUfPSOVHuFpaXYoGgPogbDhlrwGv7pMf3Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>, acme@kernel.org,
-        Josh Hunt <johunt@akamai.com>, bpuranda@akamai.com,
-        mingo@redhat.com, jolsa@redhat.com, tglx@linutronix.de,
-        namhyung@kernel.org, alexander.shishkin@linux.intel.com,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Chunming Zhou <david1.zhou@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 088/124] perf/x86/intel: Restrict period on Nehalem
-Date:   Fri, 20 Sep 2019 00:02:56 +0200
-Message-Id: <20190919214822.235807874@linuxfoundation.org>
+Subject: [PATCH 5.2 070/124] drm/amdgpu: fix dma_fence_wait without reference
+Date:   Fri, 20 Sep 2019 00:02:38 +0200
+Message-Id: <20190919214821.543026211@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -63,92 +62,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Hunt <johunt@akamai.com>
+From: Christian König <christian.koenig@amd.com>
 
-[ Upstream commit 44d3bbb6f5e501b873218142fe08cdf62a4ac1f3 ]
+[ Upstream commit 42068e1ef961c719f967dbbb4ddcb394a0ba7917 ]
 
-We see our Nehalem machines reporting 'perfevents: irq loop stuck!' in
-some cases when using perf:
+We need to grab a reference to the fence we wait for.
 
-perfevents: irq loop stuck!
-WARNING: CPU: 0 PID: 3485 at arch/x86/events/intel/core.c:2282 intel_pmu_handle_irq+0x37b/0x530
-...
-RIP: 0010:intel_pmu_handle_irq+0x37b/0x530
-...
-Call Trace:
-<NMI>
-? perf_event_nmi_handler+0x2e/0x50
-? intel_pmu_save_and_restart+0x50/0x50
-perf_event_nmi_handler+0x2e/0x50
-nmi_handle+0x6e/0x120
-default_do_nmi+0x3e/0x100
-do_nmi+0x102/0x160
-end_repeat_nmi+0x16/0x50
-...
-? native_write_msr+0x6/0x20
-? native_write_msr+0x6/0x20
-</NMI>
-intel_pmu_enable_event+0x1ce/0x1f0
-x86_pmu_start+0x78/0xa0
-x86_pmu_enable+0x252/0x310
-__perf_event_task_sched_in+0x181/0x190
-? __switch_to_asm+0x41/0x70
-? __switch_to_asm+0x35/0x70
-? __switch_to_asm+0x41/0x70
-? __switch_to_asm+0x35/0x70
-finish_task_switch+0x158/0x260
-__schedule+0x2f6/0x840
-? hrtimer_start_range_ns+0x153/0x210
-schedule+0x32/0x80
-schedule_hrtimeout_range_clock+0x8a/0x100
-? hrtimer_init+0x120/0x120
-ep_poll+0x2f7/0x3a0
-? wake_up_q+0x60/0x60
-do_epoll_wait+0xa9/0xc0
-__x64_sys_epoll_wait+0x1a/0x20
-do_syscall_64+0x4e/0x110
-entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x7fdeb1e96c03
-...
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: acme@kernel.org
-Cc: Josh Hunt <johunt@akamai.com>
-Cc: bpuranda@akamai.com
-Cc: mingo@redhat.com
-Cc: jolsa@redhat.com
-Cc: tglx@linutronix.de
-Cc: namhyung@kernel.org
-Cc: alexander.shishkin@linux.intel.com
-Link: https://lkml.kernel.org/r/1566256411-18820-1-git-send-email-johunt@akamai.com
+Signed-off-by: Christian König <christian.koenig@amd.com>
+Reviewed-by: Chunming Zhou <david1.zhou@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/intel/core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ctx.c | 27 ++++++++++++++-----------
+ 1 file changed, 15 insertions(+), 12 deletions(-)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 6179be624f357..2369ea1a1db79 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3572,6 +3572,11 @@ static u64 bdw_limit_period(struct perf_event *event, u64 left)
- 	return left;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ctx.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ctx.c
+index a28a3d722ba29..62298ae5c81c0 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ctx.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ctx.c
+@@ -535,21 +535,24 @@ int amdgpu_ctx_wait_prev_fence(struct amdgpu_ctx *ctx,
+ 			       struct drm_sched_entity *entity)
+ {
+ 	struct amdgpu_ctx_entity *centity = to_amdgpu_ctx_entity(entity);
+-	unsigned idx = centity->sequence & (amdgpu_sched_jobs - 1);
+-	struct dma_fence *other = centity->fences[idx];
++	struct dma_fence *other;
++	unsigned idx;
++	long r;
+ 
+-	if (other) {
+-		signed long r;
+-		r = dma_fence_wait(other, true);
+-		if (r < 0) {
+-			if (r != -ERESTARTSYS)
+-				DRM_ERROR("Error (%ld) waiting for fence!\n", r);
++	spin_lock(&ctx->ring_lock);
++	idx = centity->sequence & (amdgpu_sched_jobs - 1);
++	other = dma_fence_get(centity->fences[idx]);
++	spin_unlock(&ctx->ring_lock);
+ 
+-			return r;
+-		}
+-	}
++	if (!other)
++		return 0;
+ 
+-	return 0;
++	r = dma_fence_wait(other, true);
++	if (r < 0 && r != -ERESTARTSYS)
++		DRM_ERROR("Error (%ld) waiting for fence!\n", r);
++
++	dma_fence_put(other);
++	return r;
  }
  
-+static u64 nhm_limit_period(struct perf_event *event, u64 left)
-+{
-+	return max(left, 32ULL);
-+}
-+
- PMU_FORMAT_ATTR(event,	"config:0-7"	);
- PMU_FORMAT_ATTR(umask,	"config:8-15"	);
- PMU_FORMAT_ATTR(edge,	"config:18"	);
-@@ -4550,6 +4555,7 @@ __init int intel_pmu_init(void)
- 		x86_pmu.pebs_constraints = intel_nehalem_pebs_event_constraints;
- 		x86_pmu.enable_all = intel_pmu_nhm_enable_all;
- 		x86_pmu.extra_regs = intel_nehalem_extra_regs;
-+		x86_pmu.limit_period = nhm_limit_period;
- 
- 		mem_attr = nhm_mem_events_attrs;
- 
+ void amdgpu_ctx_mgr_init(struct amdgpu_ctx_mgr *mgr)
 -- 
 2.20.1
 
