@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 278D8C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D43DC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0EE721907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CFF221929
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:08:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568930880;
-	bh=N4MYkCZeAaRWbGU+XS159qwzXvVn4ucbFYUepXXL2ac=;
+	s=default; t=1568930882;
+	bh=5Gw7uWbkjG4eU9AQngmmoe93HSJtU1VEZC9Nxv8XPAU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xuzngbHkx3+gVeasYMszAwrq3IQwjZ7LoYBEMrsHkna9+feR0+SzvgpTR2CnLAhfS
-	 QRNlcjHa5zqinAlDzhOQmEx+1wDMpvRc5HNwnG5C2OtL63br27PLslkxNNXmZ8WtB+
-	 rvsuNdzxfaHV5qqHTYGspaENjA5T0Dp9wl+UFXcY=
+	b=y6dkB0w+TwCqeDiERMo2JVG2wNbN4aZqHplGfQkk42rYbZADMeD0YDLPkRrpdRep1
+	 G6d9W14ycP/sHjBkJqt5RDhFkezNbSPw6qr1nPWD8JrXK9MidWX9iARktmOdRThgg/
+	 0Y3U3Xh5fV6dfL5R7mIbPjF03w4AEfJKNT8cwK4Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393314AbfISWH7 (ORCPT
+        id S2393324AbfISWIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:07:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45682 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:08:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393303AbfISWH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:07:56 -0400
+        id S2393310AbfISWH7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:07:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82F0021920;
-        Thu, 19 Sep 2019 22:07:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2060821929;
+        Thu, 19 Sep 2019 22:07:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568930876;
-        bh=N4MYkCZeAaRWbGU+XS159qwzXvVn4ucbFYUepXXL2ac=;
+        s=default; t=1568930878;
+        bh=5Gw7uWbkjG4eU9AQngmmoe93HSJtU1VEZC9Nxv8XPAU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QJXA1N+VQL9x8/tyPLXM4DxwcexsyKlctNhzo+H+W6czHtR96kUu050vN6tNKLXCi
-         NqP4uW8yh5rKJ0qb7oMp+vOV7PUNrDe+GYIyl/48l7NoCQZAABDwU6s/swMlzLPoCd
-         hZUEI2WHbddDioQWmaNr18U7L+hV+d7vFHpTHde4=
+        b=nG/K5VTPj5WxmGGvWHvgLkzT2ebWVam3iORFOLiEoALCSXjkOaMp2Degep585xHM6
+         Y/vKxLKNYyqQTB2+tUzcH4wPphvbnBRXlXPPIY/64mEkiwGak+agemAAB9r9DJwtZg
+         VR7iF83hgifAgxcuvyta/kc0L6tu60+n2A9KPi+w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Todd Seidelmann <tseidelmann@linode.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 047/124] netfilter: ebtables: Fix argument order to ADD_COUNTER
-Date:   Fri, 20 Sep 2019 00:02:15 +0200
-Message-Id: <20190919214820.714652168@linuxfoundation.org>
+Subject: [PATCH 5.2 048/124] netfilter: nft_flow_offload: missing netlink attribute policy
+Date:   Fri, 20 Sep 2019 00:02:16 +0200
+Message-Id: <20190919214820.749911965@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -60,58 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Todd Seidelmann <tseidelmann@linode.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit f20faa06d83de440bec8e200870784c3458793c4 ]
+[ Upstream commit 14c415862c0630e01712a4eeaf6159a2b1b6d2a4 ]
 
-The ordering of arguments to the x_tables ADD_COUNTER macro
-appears to be wrong in ebtables (cf. ip_tables.c, ip6_tables.c,
-and arp_tables.c).
+The netlink attribute policy for NFTA_FLOW_TABLE_NAME is missing.
 
-This causes data corruption in the ebtables userspace tools
-because they get incorrect packet & byte counts from the kernel.
-
-Fixes: d72133e628803 ("netfilter: ebtables: use ADD_COUNTER macro")
-Signed-off-by: Todd Seidelmann <tseidelmann@linode.com>
+Fixes: a3c90f7a2323 ("netfilter: nf_tables: flow offload expression")
 Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bridge/netfilter/ebtables.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ net/netfilter/nft_flow_offload.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/net/bridge/netfilter/ebtables.c b/net/bridge/netfilter/ebtables.c
-index c8177a89f52c3..4096d8a74a2bd 100644
---- a/net/bridge/netfilter/ebtables.c
-+++ b/net/bridge/netfilter/ebtables.c
-@@ -221,7 +221,7 @@ unsigned int ebt_do_table(struct sk_buff *skb,
- 			return NF_DROP;
- 		}
- 
--		ADD_COUNTER(*(counter_base + i), 1, skb->len);
-+		ADD_COUNTER(*(counter_base + i), skb->len, 1);
- 
- 		/* these should only watch: not modify, nor tell us
- 		 * what to do with the packet
-@@ -959,8 +959,8 @@ static void get_counters(const struct ebt_counter *oldcounters,
- 			continue;
- 		counter_base = COUNTER_BASE(oldcounters, nentries, cpu);
- 		for (i = 0; i < nentries; i++)
--			ADD_COUNTER(counters[i], counter_base[i].pcnt,
--				    counter_base[i].bcnt);
-+			ADD_COUNTER(counters[i], counter_base[i].bcnt,
-+				    counter_base[i].pcnt);
- 	}
+diff --git a/net/netfilter/nft_flow_offload.c b/net/netfilter/nft_flow_offload.c
+index 060a4ed46d5e6..01705ad74a9aa 100644
+--- a/net/netfilter/nft_flow_offload.c
++++ b/net/netfilter/nft_flow_offload.c
+@@ -149,6 +149,11 @@ static int nft_flow_offload_validate(const struct nft_ctx *ctx,
+ 	return nft_chain_validate_hooks(ctx->chain, hook_mask);
  }
  
-@@ -1280,7 +1280,7 @@ static int do_update_counters(struct net *net, const char *name,
- 
- 	/* we add to the counters of the first cpu */
- 	for (i = 0; i < num_counters; i++)
--		ADD_COUNTER(t->private->counters[i], tmp[i].pcnt, tmp[i].bcnt);
-+		ADD_COUNTER(t->private->counters[i], tmp[i].bcnt, tmp[i].pcnt);
- 
- 	write_unlock_bh(&t->lock);
- 	ret = 0;
++static const struct nla_policy nft_flow_offload_policy[NFTA_FLOW_MAX + 1] = {
++	[NFTA_FLOW_TABLE_NAME]	= { .type = NLA_STRING,
++				    .len = NFT_NAME_MAXLEN - 1 },
++};
++
+ static int nft_flow_offload_init(const struct nft_ctx *ctx,
+ 				 const struct nft_expr *expr,
+ 				 const struct nlattr * const tb[])
+@@ -207,6 +212,7 @@ static const struct nft_expr_ops nft_flow_offload_ops = {
+ static struct nft_expr_type nft_flow_offload_type __read_mostly = {
+ 	.name		= "flow_offload",
+ 	.ops		= &nft_flow_offload_ops,
++	.policy		= nft_flow_offload_policy,
+ 	.maxattr	= NFTA_FLOW_MAX,
+ 	.owner		= THIS_MODULE,
+ };
 -- 
 2.20.1
 
