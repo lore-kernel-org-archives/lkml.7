@@ -2,201 +2,90 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFDAC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD00C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60DBF21907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D66A421907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:14:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jJ8Z1Bl9"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Oq3rc5DM";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XO6KFt2N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733016AbfISVLF (ORCPT
+        id S2389206AbfISVOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 17:11:05 -0400
-Received: from mail-pg1-f181.google.com ([209.85.215.181]:36814 "EHLO
-        mail-pg1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732889AbfISVLF (ORCPT
+        Thu, 19 Sep 2019 17:14:04 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:46872 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733012AbfISVOE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 17:11:05 -0400
-Received: by mail-pg1-f181.google.com with SMTP id h17so36028pgb.3
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 14:11:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=6chP0Jk8rLCzBcCjbBKcXglY2CnF5xku1bIcPvrJsbc=;
-        b=jJ8Z1Bl9H1HgKSPzujWtNiq7i2pPe6C4eggOZI92o3+wyC3PPSNAISgV6gbelsBH08
-         Or/lhiLaLN0eaqGyPBNy+Ii6lNHLJHrjBpkrTaGCiF+6/oqHv9lyAzQkurUDj7pD+VL8
-         Rszo+VR3XoSxgjmzeLBRi+3N73rCUTVdwVa38=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6chP0Jk8rLCzBcCjbBKcXglY2CnF5xku1bIcPvrJsbc=;
-        b=itgoSa8hyC2A4Sh2tObTodMOCd/HVL2dyljkBBGVo9ox3+ImKJ+PcN02/0RdTOe0wE
-         EOXaH6cMV+TsZIm/zSLfLg9ky0JXiw6XXXn79K+74dLMsBrtA1uQuSuHkYIehxrBLp1r
-         jaOvXv3Vq//f3rYMrEE65TKYoadTQkmhT62WlAopILcSaK/rN6rY+JpmSU5k7SHQOCeH
-         klejjx5wEvOi0LdtVCaByqE0cRnxyqwKrd1NcxHh6t8QzUYstrjdDarkczEywO6985Y0
-         WZVm/dfzeHXMcfCfgQhmnoeU2UhxXUIUE2KDSSAWJJLrM1xk1GR1jQIvhtlCPRnMwq+a
-         4x8g==
-X-Gm-Message-State: APjAAAWIZeZvPF/v8ldbvIvH9OW0bNjVoFdL17eB9k6n41EpG3z6qnP7
-        HNSRkQj/dJBztTV1fPoXW24ZlA==
-X-Google-Smtp-Source: APXvYqxm6La4+LFVHtAEPcA6FPlj/HQFIZbg6xz7EZzCBQIR9Bmoodg06gPea30OEy5hF6Z0iMXelA==
-X-Received: by 2002:a65:6550:: with SMTP id a16mr9064325pgw.115.1568927462921;
-        Thu, 19 Sep 2019 14:11:02 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id x125sm11492420pfb.93.2019.09.19.14.11.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2019 14:11:02 -0700 (PDT)
-Date:   Thu, 19 Sep 2019 14:11:01 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Tim.Bird@sony.com
-Cc:     shuah@kernel.org, anders.roxell@linaro.org,
-        alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH] selftests/kselftest/runner.sh: Add 45 second timeout per
- test
-Message-ID: <201909191359.1BFD926842@keescook>
-References: <201909191102.97FA56072@keescook>
- <ECADFF3FD767C149AD96A924E7EA6EAF977BA636@USCULXMSG01.am.sony.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ECADFF3FD767C149AD96A924E7EA6EAF977BA636@USCULXMSG01.am.sony.com>
+        Thu, 19 Sep 2019 17:14:04 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 915E0614DB; Thu, 19 Sep 2019 21:14:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568927643;
+        bh=KRNk2S5gZA412W14oKRxzMDd/ncyEhN7XLY9M5tqf9U=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Oq3rc5DMYudDuG9XsGRkOGjKOyfb6Uo6qrGwVTPTxzAOK7sMDs5rLwYG1VQM+GCT9
+         56W6QRZ9noFnWewOJ2Owrh3u4GnPH33pK76JpxRaLKBuVNLIHvXfbPdSaHJg7DeTBh
+         0g0jZJfbywPvBqrzsBw4LJXdeg5yFo/NTHzNXUaQ=
+Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mnalajal@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 32728611DC;
+        Thu, 19 Sep 2019 21:13:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568927638;
+        bh=KRNk2S5gZA412W14oKRxzMDd/ncyEhN7XLY9M5tqf9U=;
+        h=From:To:Cc:Subject:Date:From;
+        b=XO6KFt2NWij/To1WWwPASCUg8IM8Y+Gemu6RIt8JVDXq81vMzClXisT3/YhirFPKj
+         L8UwCDafkC5udKcLCv6e3b2KMc9rJ9j7vmcjIRl3gN9XK/olEFWlR/W55xZZ8BgxFx
+         7/wJQMmpYE0mwnM3lc8ewg0M/YLSQLoElT9eNh5Y=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 32728611DC
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mnalajal@codeaurora.org
+From:   Murali Nalajala <mnalajal@codeaurora.org>
+To:     gregkh@linuxfoundation.org, rafael@kernel.org
+Cc:     mnalajal@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org
+Subject: [PATCH] base: soc: Export soc_device_to_device API
+Date:   Thu, 19 Sep 2019 14:13:44 -0700
+Message-Id: <1568927624-13682-1-git-send-email-mnalajal@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 08:41:42PM +0000, Tim.Bird@sony.com wrote:
-> > -----Original Message-----
-> > From: Kees Cook
-> > 
-> > Commit a745f7af3cbd ("selftests/harness: Add 30 second timeout per
-> > test") solves the problem of kselftest_harness.h-using binary tests
-> > possibly hanging forever. However, scripts and other binaries can still
-> > hang forever. This adds a global timeout to each test script run.
-> > 
-> > To make this configurable (e.g. as needed in the "rtc" test case),
-> > include a new per-test-directory "settings" file (similar to "config")
-> > that can contain kselftest-specific settings. The first recognized field
-> > is "timeout".
-> 
-> OK - this is quite interesting.  I have had on my to-do list an action
-> item to propose the creation of a file (or a standard kerneldoc string)
-> to hold CI-related meta-data (of which timeout is one example).
+If the soc drivers want to add custom sysfs entries it needs to
+access "dev" field in "struct soc_device". This can be achieved
+by "soc_device_to_device" API. Soc drivers which are built as a
+module they need above API to be exported. Otherwise one can
+observe compilation issues.
 
-FWIW, I opt for a "per directory settings" file here because per-test
-seemed like overkill.
+Signed-off-by: Murali Nalajala <mnalajal@codeaurora.org>
+---
+ drivers/base/soc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> What other meta-data did you have in mind?
-
-I figured in the future it could hold details about expected environmental
-states (user, namespace, rlimits, etc). For example, I'd like to
-indicate that the seccomp tests should be run twice both as root and as
-a regular user.
-
-> I would like (that Fuego, and probably other CI systems would like) to have
->  access to data like test dependencies, descriptions, and results interpretation
-> that would be beneficial for both CI systems (using them to control test invocations and scheduling), as
-> well as users who are trying to interpret and handle the test results.
-> So this concept is a very welcome addition to kselftest.
-
-I think this stuff may still be very per-test specific, but regardless,
-having it in a single place makes it easy to scrape. :)
-
-> LTP is in the process of adopting a new system for expressing and handling their test meta-data.
-> See the discussion at: 
-> https://lists.yoctoproject.org/pipermail/automated-testing/2019-August/000471.html
-> and the prototype implementation at:
-> https://github.com/metan-ucw/ltp/tree/master/docparse
-
-This looks like similar framework details: _how_ to run a test in a
-given environment.
-
-> One example of a specific field that would be handy is 'need_root'.
-
-I think describing (possibly multiple) expected environments would be
-more useful, but perhaps just user alone would be a nice start.
-
-> It would be nice to avoid proliferation of such meta-data schemas (that is
-> field names), so maybe we can have a discussion about this before adopting
-> something?
-> 
-> Just FYI, I'm OK with the name 'timeout'.  I think that's pretty much universally
-> used by all CI runners I'm aware of to indicate the test timeout value.  But
-> before adopting other fields it would be good to start comparing notes
-> and not invent a bunch of new field names for concepts that are already in
-> other systems.
-
-Yeah, I figure "timeout" could stand and other things would need more
-infrastructure.
-
-> > +		if [ $rc -eq $skip_rc ]; then	\
-> >  			echo "not ok $test_num $TEST_HDR_MSG # SKIP"
-> > +		elif [ $rc -eq $timeout_rc ]; then \
-> > +			echo "not ok $test_num $TEST_HDR_MSG # TIMEOUT"
-> This is an extension to the TAP protocol (well, not strictly, since it is in a comment),
-> but it should be documented.
-
-Right -- this is a "weird" corner of TAP-14. It says there can be "#"
-with everything after it semantically ignored, but that "# SKIP" is
-special. I think clarification of the spec here would be to have the
-format be:
-
-not ok name name name # DETAIL ignored ignored ignored
-
-Where the meaningful DETAIL words could be SKIP, TIMEOUT, FAIL.
-
-> I took an action item at the CKI hackfest to rigorously document the
-> details of how kselftest has extended (or augmented) TAP.  For example
-> our indentation mechanism for sub-tests.  You and I talked about this
-> a bit at Plumbers, but I'd like to follow up and add something
-> to Documentation/dev-tools/kselftest.rst so users and CI systems
-> can know how to appropriately parse and manage kselftest TAP output.
-> 
-> I'll start a separate thread on that when I get to documenting it,
-> but this would definitely be an addition to that documentation.
-> 
-> >  		else
-> > -			echo "not ok $test_num $TEST_HDR_MSG"
-> > +			echo "not ok $test_num $TEST_HDR_MSG #
-> > exit=$rc"
-> Is this also something new to kselftest's TAP output that should be documented?
-
-Right, if we made more the "SKIP" meaningful and required a specific
-detail here, this could just be "... # FAIL exit=$rc" unless we _wanted_
-to make the exit code be parsed. Then maybe "... # EXIT=$rc" ?
-
-> 
-> >  		fi)
-> >  		cd - >/dev/null
-> >  	fi
-> > diff --git a/tools/testing/selftests/rtc/settings
-> > b/tools/testing/selftests/rtc/settings
-> > new file mode 100644
-> > index 000000000000..ba4d85f74cd6
-> > --- /dev/null
-> > +++ b/tools/testing/selftests/rtc/settings
-> > @@ -0,0 +1 @@
-> > +timeout=90
-> 
-> This is introducing a schema for meta-data naming, and a first field name.
-> I have no problem with this one, but it might be worth comparing it with
-> names expected by various kselftest-calling  CI systems.  I'll try to work
-> on this shortly and report back any issues.
-> 
-> Thanks for this.  I think this points us in an interesting new direction.
-
-Cool; I'm glad you like it! I really do want to get timeouts nailed down
-since Shuah mentioned that was a pain point. While I solved it for
-seccomp via the kselftest_harness.h timeout, there have been other
-cases of stalls that aren't handled by that change.
-
+diff --git a/drivers/base/soc.c b/drivers/base/soc.c
+index 7c0c5ca..4ad52f6 100644
+--- a/drivers/base/soc.c
++++ b/drivers/base/soc.c
+@@ -41,6 +41,7 @@ struct device *soc_device_to_device(struct soc_device *soc_dev)
+ {
+ 	return &soc_dev->dev;
+ }
++EXPORT_SYMBOL_GPL(soc_device_to_device);
+ 
+ static umode_t soc_attribute_mode(struct kobject *kobj,
+ 				struct attribute *attr,
 -- 
-Kees Cook
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
