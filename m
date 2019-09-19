@@ -2,166 +2,104 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F405DC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 07:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 569AEC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 07:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8F2E217D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 07:28:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568878112;
-	bh=4pZybG6ie1wq7kPEzXnAIhWrkHP0YAIy7EvNqXIs0nk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Em8Pz/H9V1NF8Yvr6s+Fzmfi8GGI1gnX2ykJRWVH9VSGr424gLEErD7kTuRsaRq6Q
-	 08c7Zcrf61EJ9e3WUnH1PtkxVYqKk8C2Z11oqdTIploD0eetJlHi5BJHBV3EKLDAnE
-	 fGJkNKLQfQSDZyQI00rxJXYzztYIp8+odKihiqG0=
+	by mail.kernel.org (Postfix) with ESMTP id 24B00217D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 07:29:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="WT2Pxo9+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388564AbfISH2c (ORCPT
+        id S2388583AbfISH3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 03:28:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41150 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728850AbfISH2b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 03:28:31 -0400
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35E3121A49;
-        Thu, 19 Sep 2019 07:28:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568878110;
-        bh=4pZybG6ie1wq7kPEzXnAIhWrkHP0YAIy7EvNqXIs0nk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Hpi/Z6J0YAAbOxVs8ZaWgVSCqvrnR8B7P+/GUdLyupwWwixlPgAcGD61FvCiaJp8C
-         al+551ZPFPd3WOzm1y60AcTOlN8g0hc+qUf41kMC2I+ez+w5cUzQJhwDK2kKA3L993
-         YZahqK7xDgB73pcopGFoZRnJm9SuxVvlD7F/bxOA=
-Received: by mail-oi1-f182.google.com with SMTP id w6so1832859oie.11;
-        Thu, 19 Sep 2019 00:28:30 -0700 (PDT)
-X-Gm-Message-State: APjAAAVGMTNa52RjONtZZXyXp0fHnuYltVR83OxsBDG2TwOWhqcfNYRf
-        JMiUck6PtypxEMyQyI76VTK4LhKhbMmpuDorg8s=
-X-Google-Smtp-Source: APXvYqxcWCabkIkAYweLFABw3mTwh5ueZcYmaLJriDnmtFR+Tcfb38WjBVsL3eNPszwXlF4vNOXyKPu8g8TjuXaQDIc=
-X-Received: by 2002:aca:cf51:: with SMTP id f78mr1302933oig.8.1568878109494;
- Thu, 19 Sep 2019 00:28:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <CGME20190916100719eucas1p206fe95982b774840b5d6e62ba9c42c79@eucas1p2.samsung.com>
- <20190916100704.26692-1-l.luba@partner.samsung.com> <20190916100704.26692-4-l.luba@partner.samsung.com>
- <CAJKOXPcxG-mMKy5u-b0+xj_sOmrq5yq5-LYJx0Ds6_+yo_=JbA@mail.gmail.com> <4a0d1d2c-cd1d-5df4-d4b1-f2dd1ef3bb72@partner.samsung.com>
-In-Reply-To: <4a0d1d2c-cd1d-5df4-d4b1-f2dd1ef3bb72@partner.samsung.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Thu, 19 Sep 2019 09:28:18 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPfBueaf2UVik8x2L_D_PTxdkvRukuWL3xh_jDiLKtt7pQ@mail.gmail.com>
-Message-ID: <CAJKOXPfBueaf2UVik8x2L_D_PTxdkvRukuWL3xh_jDiLKtt7pQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] dt-bindings: ddr: Add bindings for Samsung LPDDR3 memories
-To:     Lukasz Luba <l.luba@partner.samsung.com>
-Cc:     devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
-        <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com,
-        robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
-        kyungmin.park@samsung.com,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
-        willy.mh.wolff.ml@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 19 Sep 2019 03:29:21 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:39462 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388567AbfISH3U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 03:29:20 -0400
+Received: by mail-pl1-f195.google.com with SMTP id x6so1189388plv.6
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 00:29:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=OFOaylH6u5pbrPHCYuJfQmib6XY1jyUZj3KgxSUlnf8=;
+        b=WT2Pxo9+vdqo+cFeBngcdvpi/70AZ90ZQaQMGg5JQjt+rxT2ODU+n9g4ZmXKtXKH82
+         PhGmkNWBY/WNJICfL3iDv1Rq9a1KHX0HSP804LwIiZN5fotqQQnQM/TkebS5E7x40fl/
+         Sh33Iwz4ftxRxh+Lzb9q/nSa985dmZDZ9nj2rtEJ4emyA+OT6csvZJQATB9i83PMrHFi
+         eFv2O9xdHjfmbAA6yQtsPDWgi2KfduxhvnSaaHkA975eaknOLaprO3aHEIjBre3eW3yF
+         nEKHrIsLWEdXM4Rm9tGK+f4jdFQ3DzWjU46mKBh/DDKZRuBeYDkuknAOvdg3912sQwtf
+         sFdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=OFOaylH6u5pbrPHCYuJfQmib6XY1jyUZj3KgxSUlnf8=;
+        b=A0TvIKMCweG3RKkhuwH3wZ9Wwc5YcQfRc711nGbtLpknDBpmNeZMw574Q74tOvcJ3+
+         yjyOUVfSjPiic7kCx3rTrXSEp+3e5QPks2b9ccDyAbw2Ek1ugBr3T4ZYx8nCZWSUpKxq
+         5GbnPfmYx0Z37ts7AB3GhJEalshCM6rOZhwiMEBEFbtGnxzOp5JzDduVV+VMWV5lcL5T
+         gi2SHL3t1nUFnH3EsAp2odZSkK4cusBDB3HDMAKuUjGlQBfb0Mh3xUMWGkIkHcPhFbv0
+         eZU9wTdx7bvhAL5mJNOHDp9IpCjrEl/7tJVRpos9CHjgv1R8eSKBOff3J74MWWz6Eyfo
+         HNbg==
+X-Gm-Message-State: APjAAAWtpxHvLFM+ygQidmD4FQOj83q/7PAX+jfNvrAn+ObN9TspezGn
+        KnRKkumAQBuGTYVwNi/tHjg+HA==
+X-Google-Smtp-Source: APXvYqwsapyHm6wAGVWo7hnSXqyZwiK5M1XVWSUnIBQGDny0XMJWzBKktws1pfvK6npX5ze1JEqclw==
+X-Received: by 2002:a17:902:14b:: with SMTP id 69mr8386982plb.286.1568878160122;
+        Thu, 19 Sep 2019 00:29:20 -0700 (PDT)
+Received: from localhost.localdomain (36-228-113-219.dynamic-ip.hinet.net. [36.228.113.219])
+        by smtp.gmail.com with ESMTPSA id d20sm13029211pfq.88.2019.09.19.00.29.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Sep 2019 00:29:19 -0700 (PDT)
+From:   Green Wan <green.wan@sifive.com>
+Cc:     linux-hackers@sifive.com, Green Wan <green.wan@sifive.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Yash Shah <yash.shah@sifive.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        Bin Meng <bmeng.cn@gmail.com>, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/3] riscv: dts: add support for PDMA device of HiFive Unleashed Rev A00
+Date:   Thu, 19 Sep 2019 15:28:59 +0800
+Message-Id: <20190919072903.2083-1-green.wan@sifive.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 19 Sep 2019 at 08:49, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->
-> Hi Krzysztof,
->
-> On 9/18/19 8:51 PM, Krzysztof Kozlowski wrote:
-> > On Mon, 16 Sep 2019 at 12:07, Lukasz Luba <l.luba@partner.samsung.com> wrote:
-> >>
-> >> Add compatible for Samsung k3qf2f20db LPDDR3 memory bindings.
-> >> Introduce minor fixes in the old documentation.
-> >>
-> >> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> >> ---
-> >>   Documentation/devicetree/bindings/ddr/lpddr3.txt | 9 ++++++---
-> >>   1 file changed, 6 insertions(+), 3 deletions(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/ddr/lpddr3.txt b/Documentation/devicetree/bindings/ddr/lpddr3.txt
-> >> index 3b2485b84b3f..49afe794daaa 100644
-> >> --- a/Documentation/devicetree/bindings/ddr/lpddr3.txt
-> >> +++ b/Documentation/devicetree/bindings/ddr/lpddr3.txt
-> >> @@ -1,7 +1,9 @@
-> >>   * LPDDR3 SDRAM memories compliant to JEDEC JESD209-3C
-> >>
-> >>   Required properties:
-> >> -- compatible : Should be  - "jedec,lpddr3"
-> >> +- compatible : should be one of the following:
-> >> +       Generic default - "jedec,lpddr3".
-> >
-> > The convention is first compatible, then description. I gave you the
-> > example to base on - at25. Why making it different?
->
-> I have checked at25 that you pointed me to and also checked at24, which
-> has a bit longer "compatible" section.
->
-> I found that there are many "jedec,spi-nor" compatible devices, which I
-> thought would be a better example for my "jedec,lpddr3".
-> For example, two configurations, where you have a single labels or dual
-> (with specific device)
-> arch/arm/boot/dts/imx6dl-rex-basic.dts:
-> compatible = "sst,sst25vf016b", "jedec,spi-nor";
-> arch/arm/boot/dts/imx6q-ba16.dtsi:
-> compatible = "jedec,spi-nor";
->
-> The 'compatible' in documentation for the "jedec,spi-nor" is slightly
-> different (similar to at24).
-> Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-> It has a long explanation, which is also OK. So I thought that it is
-> quite flexible what you put in there.
+Add PDMA support to (arch/riscv/boot/dts/sifive/fu540-c000.dtsi)
 
-It is flexible but I see clear pattern in existing sources:
-  jedec,spi-nor.txt
-  compatible : May include a device-specific ..
-  ...
-  Supported chip names:
-    at25df321a
-    ...
+Signed-off-by: Green Wan <green.wan@sifive.com>
+---
+ arch/riscv/boot/dts/sifive/fu540-c000.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-  at25.txt:
-  - compatible : Should be "<vendor>,<type>", and generic value "atmel,at25".
-    Example "<vendor>,<type>" values:
-      "anvo,anv32e61w"
-      "microchip,25lc040"
+diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+index 42b5ec223100..d3030d7fb45c 100644
+--- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
++++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+@@ -164,6 +164,13 @@
+ 			clocks = <&prci PRCI_CLK_TLCLK>;
+ 			status = "disabled";
+ 		};
++		dma: dma@3000000 {
++			compatible = "sifive,fu540-c000-pdma";
++			reg = <0x0 0x3000000 0x0 0x8000>;
++			interrupt-parent = <&plic0>;
++			interrupts = <23 24 25 26 27 28 29 30>;
++			#dma-cells = <1>;
++		};
+ 		uart1: serial@10011000 {
+ 			compatible = "sifive,fu540-c000-uart", "sifive,uart0";
+ 			reg = <0x0 0x10011000 0x0 0x1000>;
+-- 
+2.17.1
 
-In these cases the doc says that "compatible should be" and then you
-have the list of values. Your example says that the compatible should
-be "Generic default" or "For Samsung 542x SoC"... :) The difference is
-slight but putting the value first is a simple and elegant solution.
-In your case one has to go to the end of sentence to find the most
-important information - the compatible value.
-
-> I have also checked Cadance QSPI controller.
-> Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
-> The controller might be built-in into different vendor SoC's
-> and the "compatible" is ready to reflect it in similar fashion but
-> with a short explanation in this section.
-
-I see. I do not find this pattern as much readable as jedec-spi-nor or
-at25 therefore I mentioned them as an example to base on ("Exactly the
-same as AT24 or AT25 EEPROM bindings."). We can avoid also this entire
-discussion with YAML (which also follows approach of at25 - value
-first).
-
-> Therefore, what you see in the patch draw heavily on Cadence's qspi,
-> with a bit of inspiration from jedec,spi-nor usage.
->
-> Should I change it to at25 "compatible" style and send next patch?
-
-Yes, please. Or go to YAML and make entire discussion obsolete.
-
-Best regards,
-Krzysztof
