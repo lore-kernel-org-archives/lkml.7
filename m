@@ -2,151 +2,148 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08EFDC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82798C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:51:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4AE7208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:50:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568908237;
-	bh=gHpFEkI178fQCRZzrth3+bxiC/9n0jzI7jpCsEwuFWo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=hKREiyGG8tO2muf3ydHeL2n1nCXZYoMMHoP1J5ge0JIymHf3M4n2LjkN1JllnxzlH
-	 WYSPBJ0oyH0rhy9ukJjQjgZQOXiTH2VFzzdqrW2XFkXxHXH0rppnw/BECParOtZBdh
-	 slvrpnhYB7lnZnHJvbmuqfRiymT/tUhUQcEAyZdw=
+	by mail.kernel.org (Postfix) with ESMTP id 5C8A5208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:51:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391432AbfISPug (ORCPT
+        id S2391447AbfISPvc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 11:50:36 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:33315 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390134AbfISPug (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 11:50:36 -0400
-Received: by mail-lf1-f67.google.com with SMTP id y127so2772999lfc.0
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 08:50:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6pbGb1qoXXUDgxhVKE46Fq3Mij1h8IprRiLVN+K9eok=;
-        b=RlYVElkzZxzmaoHRiNt/mc8G0VCjQqhg85mVNX+abH6kPsJUyGjCV2fpFK0cYkiX1w
-         eedA4nwrCbMa8ACbnmzOQncnPZirXX9cbUiShwZYI0vFKdBEzSeauRcMTqo/szlQ72dD
-         bTkOFWTCzcNeLfaUSnLnWZyg/DB9Dumog6Okg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6pbGb1qoXXUDgxhVKE46Fq3Mij1h8IprRiLVN+K9eok=;
-        b=Ixz9XL7sNsee1fjCnRwHGReE3nMJrYhJ7zIZjIT3HqyZ0TqIM6NOOl6B5xKTztH4jR
-         JFpDDGK+7UBN/T5pzb1IGwbrQZrC3BDRZUCd7T6vWSiOjccEYrrryxU+2KO3ajJDFYNV
-         up8ZxoRfGpBtSUJ02ibsW/6TwZiqejpwVOMg11ah025DQ3GkuuVQKUMih9rtdwAUx13F
-         NWpBEFeavJ1KykLgtbo5psHPNk6qe0lFmLpS2SrEQ2LhUTczKTShUGk54UxeZFkcgD8Z
-         mp0UMNZ7noFS02C+VwQMhSGKel5jioR4bBPHph0IJK4NK2+vpKvVhRktTOQbd1bSN97e
-         UAmQ==
-X-Gm-Message-State: APjAAAX+XGINfw61gglBhKKkSkMr6xYC63gAej5h59JUQr9Ci5Uqe3bD
-        KOCGEcTHGM2cLwfSSGOCyJ/Vsm+T+as=
-X-Google-Smtp-Source: APXvYqx9nuk4eTc7bfncHhFxct5TjQKKwzZpkuj+30TWTu4PVeyBA6nrs5eyiWOtz+pup1konjLs8A==
-X-Received: by 2002:ac2:5451:: with SMTP id d17mr5275008lfn.77.1568908234344;
-        Thu, 19 Sep 2019 08:50:34 -0700 (PDT)
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
-        by smtp.gmail.com with ESMTPSA id j5sm1637716lfj.77.2019.09.19.08.50.32
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Sep 2019 08:50:33 -0700 (PDT)
-Received: by mail-lf1-f54.google.com with SMTP id w6so2755279lfl.2
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 08:50:32 -0700 (PDT)
-X-Received: by 2002:ac2:5a4c:: with SMTP id r12mr5291896lfn.52.1568908232463;
- Thu, 19 Sep 2019 08:50:32 -0700 (PDT)
+        Thu, 19 Sep 2019 11:51:32 -0400
+Received: from mga01.intel.com ([192.55.52.88]:60486 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390134AbfISPvc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 11:51:32 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Sep 2019 08:51:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,524,1559545200"; 
+   d="scan'208";a="178091248"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga007.jf.intel.com with ESMTP; 19 Sep 2019 08:51:25 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+        id 61703BD; Thu, 19 Sep 2019 18:51:24 +0300 (EEST)
+Date:   Thu, 19 Sep 2019 18:51:24 +0300
+From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Jia He <justin.he@arm.com>, Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Suzuki Poulose <Suzuki.Poulose@arm.com>,
+        Punit Agrawal <punitagrawal@gmail.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Jun Yao <yaojun8558363@gmail.com>,
+        Alex Van Brunt <avanbrunt@nvidia.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Ralph Campbell <rcampbell@nvidia.com>, hejianet@gmail.com,
+        Kaly Xin <Kaly.Xin@arm.com>
+Subject: Re: [PATCH v4 3/3] mm: fix double page fault on arm64 if PTE_AF is
+ cleared
+Message-ID: <20190919155124.56ps5vsd5al6g7hm@black.fi.intel.com>
+References: <20190918131914.38081-1-justin.he@arm.com>
+ <20190918131914.38081-4-justin.he@arm.com>
+ <20190918140027.ckj32xnryyyesc23@box>
+ <20190918180029.GB20601@iMac.local>
+ <20190919150007.k7scjplcya53j7r4@box>
+ <20190919154143.GA6472@arrakis.emea.arm.com>
 MIME-Version: 1.0
-References: <20190912034421.GA2085@darwi-home-pc> <20190912082530.GA27365@mit.edu>
- <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
- <20190914122500.GA1425@darwi-home-pc> <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
- <20190915052242.GG19710@mit.edu> <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
- <20190918211503.GA1808@darwi-home-pc> <20190918211713.GA2225@darwi-home-pc>
- <CAHk-=wiCqDiU7SE3FLn2W26MS_voUAuqj5XFa1V_tiGTrrW-zQ@mail.gmail.com>
- <20190919143427.GQ6762@mit.edu> <CAHk-=wgqbBy84ovtr8wPFqRo6U8jvp59rvQ8a6TvXuoyb-4L-Q@mail.gmail.com>
-In-Reply-To: <CAHk-=wgqbBy84ovtr8wPFqRo6U8jvp59rvQ8a6TvXuoyb-4L-Q@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 19 Sep 2019 08:50:15 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiRUqH1dch2VCaYqNT+_vPj6LXGHcP4oW9-M3zdSfXrTg@mail.gmail.com>
-Message-ID: <CAHk-=wiRUqH1dch2VCaYqNT+_vPj6LXGHcP4oW9-M3zdSfXrTg@mail.gmail.com>
-Subject: Re: [PATCH RFC v4 1/1] random: WARN on large getrandom() waits and
- introduce getrandom2()
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>, linux-ext4@vger.kernel.org,
-        linux-man@vger.kernel.org
-Content-Type: multipart/mixed; boundary="000000000000e1bcec0592e9e9e6"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190919154143.GA6472@arrakis.emea.arm.com>
+User-Agent: NeoMutt/20170714-126-deb55f (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---000000000000e1bcec0592e9e9e6
-Content-Type: text/plain; charset="UTF-8"
+On Thu, Sep 19, 2019 at 03:41:43PM +0000, Catalin Marinas wrote:
+> On Thu, Sep 19, 2019 at 06:00:07PM +0300, Kirill A. Shutemov wrote:
+> > On Wed, Sep 18, 2019 at 07:00:30PM +0100, Catalin Marinas wrote:
+> > > On Wed, Sep 18, 2019 at 05:00:27PM +0300, Kirill A. Shutemov wrote:
+> > > > On Wed, Sep 18, 2019 at 09:19:14PM +0800, Jia He wrote:
+> > > > > @@ -2152,20 +2163,34 @@ static inline void cow_user_page(struct page *dst, struct page *src, unsigned lo
+> > > > >  	 */
+> > > > >  	if (unlikely(!src)) {
+> > > > >  		void *kaddr = kmap_atomic(dst);
+> > > > > -		void __user *uaddr = (void __user *)(va & PAGE_MASK);
+> > > > > +		void __user *uaddr = (void __user *)(addr & PAGE_MASK);
+> > > > > +		pte_t entry;
+> > > > >  
+> > > > >  		/*
+> > > > >  		 * This really shouldn't fail, because the page is there
+> > > > >  		 * in the page tables. But it might just be unreadable,
+> > > > >  		 * in which case we just give up and fill the result with
+> > > > > -		 * zeroes.
+> > > > > +		 * zeroes. On architectures with software "accessed" bits,
+> > > > > +		 * we would take a double page fault here, so mark it
+> > > > > +		 * accessed here.
+> > > > >  		 */
+> > > > > +		if (arch_faults_on_old_pte() && !pte_young(vmf->orig_pte)) {
+> > > > > +			spin_lock(vmf->ptl);
+> > > > > +			if (likely(pte_same(*vmf->pte, vmf->orig_pte))) {
+> > > > > +				entry = pte_mkyoung(vmf->orig_pte);
+> > > > > +				if (ptep_set_access_flags(vma, addr,
+> > > > > +							  vmf->pte, entry, 0))
+> > > > > +					update_mmu_cache(vma, addr, vmf->pte);
+> > > > > +			}
+> > > > 
+> > > > I don't follow.
+> > > > 
+> > > > So if pte has changed under you, you don't set the accessed bit, but never
+> > > > the less copy from the user.
+> > > > 
+> > > > What makes you think it will not trigger the same problem?
+> > > > 
+> > > > I think we need to make cow_user_page() fail in this case and caller --
+> > > > wp_page_copy() -- return zero. If the fault was solved by other thread, we
+> > > > are fine. If not userspace would re-fault on the same address and we will
+> > > > handle the fault from the second attempt.
+> > > 
+> > > It would be nice to clarify the semantics of this function and do as
+> > > you suggest but the current comment is slightly confusing:
+> > > 
+> > > 	/*
+> > > 	 * If the source page was a PFN mapping, we don't have
+> > > 	 * a "struct page" for it. We do a best-effort copy by
+> > > 	 * just copying from the original user address. If that
+> > > 	 * fails, we just zero-fill it. Live with it.
+> > > 	 */
+> > > 
+> > > Would any user-space rely on getting a zero-filled page here instead of
+> > > a recursive fault?
+> > 
+> > I don't see the point in zero-filled page in this case. SIGBUS sounds like
+> > more appropriate response, no?
+> 
+> I think misunderstood your comment. So, if !pte_same(), we should let
+> userspace re-fault. This wouldn't be a user ABI change and it is
+> bounded, can't end up in an infinite re-fault loop.
 
-On Thu, Sep 19, 2019 at 8:20 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> The silly "reset crng_init_cnt" does absolutely nothing to help that,
-> but in fact what it does is to basically give the attacker a way to
-> get an infinite stream of data without any reseeding (because that
-> only happens after crng_read()), and able to extend that "block at
-> boot" time indefinitely while doing so.
+Right. !pte_same() can only happen if we raced with somebody else.
+I cannot imagine situation when the race will happen more than few times
+in a row.
 
-.. btw, instead of bad workarounds for a theoretical attack, here's
-something that should add actual *practical* real value: use the time
-of day (whether from an RTC device, or from ntp) to add noise to the
-random pool.
+> In case of a __copy_from_user_inatomic() error, SIGBUS would make more
+> sense but it changes the current behaviour (zero-filling the page). This
+> can be left for a separate patch, doesn't affect the arm64 case here.
 
-If you let attackers in before you've set the clock on the device,
-you're doing something seriously wrong.
+I think it's safer to leave it as is. Maybe put WARN_ON_ONCE() or
+something. There can be some obscure use-case that I don't see.
 
-And while this doesn't add much "serious" entropy, it does mean that
-the whole "let's look for identical state" which is a _real_ attack,
-goes out the window.
-
-In other words, this is about real security, not academic papers.
-
-Of course, attackers can still see possible bad random values from
-before the clock was set (possibly from things like TCP sequence
-numbers etc, orfrom  that AT_RANDOM of a very early process, which was
-part of the Android the attack). But doing things like delaying
-reseeding sure isn't helping, which is what the crng_count reset does.
-
-                 Linus
-
---000000000000e1bcec0592e9e9e6
-Content-Type: text/x-patch; charset="US-ASCII"; name="patch.diff"
-Content-Disposition: attachment; filename="patch.diff"
-Content-Transfer-Encoding: base64
-Content-ID: <f_k0qv4jl10>
-X-Attachment-Id: f_k0qv4jl10
-
-IGtlcm5lbC90aW1lL3RpbWVrZWVwaW5nLmMgfCAzICsrKwogMSBmaWxlIGNoYW5nZWQsIDMgaW5z
-ZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2tlcm5lbC90aW1lL3RpbWVrZWVwaW5nLmMgYi9rZXJu
-ZWwvdGltZS90aW1la2VlcGluZy5jCmluZGV4IGNhNjkyOTBiZWUyYS4uNjdlNzRmN2Y0MTk4IDEw
-MDY0NAotLS0gYS9rZXJuZWwvdGltZS90aW1la2VlcGluZy5jCisrKyBiL2tlcm5lbC90aW1lL3Rp
-bWVrZWVwaW5nLmMKQEAgLTIyLDYgKzIyLDcgQEAKICNpbmNsdWRlIDxsaW51eC9wdmNsb2NrX2d0
-b2QuaD4KICNpbmNsdWRlIDxsaW51eC9jb21waWxlci5oPgogI2luY2x1ZGUgPGxpbnV4L2F1ZGl0
-Lmg+CisjaW5jbHVkZSA8bGludXgvcmFuZG9tLmg+CiAKICNpbmNsdWRlICJ0aWNrLWludGVybmFs
-LmgiCiAjaW5jbHVkZSAibnRwX2ludGVybmFsLmgiCkBAIC0xMjU2LDYgKzEyNTcsNyBAQCBpbnQg
-ZG9fc2V0dGltZW9mZGF5NjQoY29uc3Qgc3RydWN0IHRpbWVzcGVjNjQgKnRzKQogCiAJLyogc2ln
-bmFsIGhydGltZXJzIGFib3V0IHRpbWUgY2hhbmdlICovCiAJY2xvY2tfd2FzX3NldCgpOworCWFk
-ZF9kZXZpY2VfcmFuZG9tbmVzcyh0cywgc2l6ZW9mKCp0cykpOwogCiAJaWYgKCFyZXQpCiAJCWF1
-ZGl0X3RrX2luam9mZnNldCh0c19kZWx0YSk7CkBAIC0xMzA0LDYgKzEzMDYsNyBAQCBzdGF0aWMg
-aW50IHRpbWVrZWVwaW5nX2luamVjdF9vZmZzZXQoY29uc3Qgc3RydWN0IHRpbWVzcGVjNjQgKnRz
-KQogCiAJLyogc2lnbmFsIGhydGltZXJzIGFib3V0IHRpbWUgY2hhbmdlICovCiAJY2xvY2tfd2Fz
-X3NldCgpOworCWFkZF9kZXZpY2VfcmFuZG9tbmVzcyh0cywgc2l6ZW9mKCp0cykpOwogCiAJcmV0
-dXJuIHJldDsKIH0K
---000000000000e1bcec0592e9e9e6--
+-- 
+ Kirill A. Shutemov
