@@ -2,240 +2,224 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C783C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 17:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D61C6C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 17:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED3A121907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 17:17:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="dp8I0SBx"
+	by mail.kernel.org (Postfix) with ESMTP id AB20621928
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 17:18:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568913481;
+	bh=yFCy4+MpB1fuov38bUgmcauo0/reXN7yqVfN2hTHm3A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JzM7fy5EbqrCwa/D/yFrs0YlXMuGZ2yVY66IkR9qkac+kpACU+49LWqwVMjddDEaf
+	 yuStISTm3uQOcA/lefeXxSaU7oRgG0JeYKwVXrQN986TIJl6HOeAPvoEfYyzCa9M87
+	 eJjRzKQnnfHIHnGeG2V12X8t2CVSQXg9i9nzk/oM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403932AbfISRRz (ORCPT
+        id S2391960AbfISRSA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 13:17:55 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:37576 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391937AbfISRRx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 13:17:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1568913473; x=1600449473;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=loeOa3WFH7vmFHgR6vpCfr/3FKy/37GuGu18rh4N9I0=;
-  b=dp8I0SBxUi5+2QrJicTxeCG8nOo7kPpokZlUMtKPcseeEqDLa3t2mw3c
-   MyZtrgXMtr9hMuALTYgEtRWK2YE7Cg8zj2DLQeUGhH8ej3yi7vgG4Lcjx
-   4wveRkiEGeKBDUH0AhIm/bDtJf+3UHWwzeeZZZwgA+6cUunMCoER2MgQD
-   U=;
-X-IronPort-AV: E=Sophos;i="5.64,524,1559520000"; 
-   d="scan'208";a="751654705"
-Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1d-474bcd9f.us-east-1.amazon.com) ([10.124.125.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 19 Sep 2019 17:17:43 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-474bcd9f.us-east-1.amazon.com (Postfix) with ESMTPS id 919BEA21B6;
-        Thu, 19 Sep 2019 17:17:41 +0000 (UTC)
-Received: from EX13D19EUB003.ant.amazon.com (10.43.166.69) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 19 Sep 2019 17:17:40 +0000
-Received: from ua9e4f3715fbc5f.ant.amazon.com (10.43.160.5) by
- EX13D19EUB003.ant.amazon.com (10.43.166.69) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 19 Sep 2019 17:17:34 +0000
-From:   Hanna Hawa <hhhawa@amazon.com>
-To:     <bp@alien8.de>, <mchehab@kernel.org>, <james.morse@arm.com>,
-        <rrichter@marvell.com>
-CC:     <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dwmw@amazon.co.uk>, <benh@amazon.com>, <ronenk@amazon.com>,
-        <talel@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
-        <hhhawa@amazon.com>
-Subject: [PATCH v3 1/2] edac: Add an API for edac device to report for multiple errors
-Date:   Thu, 19 Sep 2019 18:17:12 +0100
-Message-ID: <20190919171713.8060-2-hhhawa@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190919171713.8060-1-hhhawa@amazon.com>
-References: <20190919171713.8060-1-hhhawa@amazon.com>
+        Thu, 19 Sep 2019 13:18:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45738 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390073AbfISRR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 13:17:58 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B41C021928;
+        Thu, 19 Sep 2019 17:17:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568913477;
+        bh=yFCy4+MpB1fuov38bUgmcauo0/reXN7yqVfN2hTHm3A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1BHIg98sQU3RSKO5g6gKuadHx+gZTwc4PvbsYJlU5PDLAsU+nnEkskfkxWwJSEIl4
+         3QsZ4iQa7QmLNILjU1Cn3HaCTFre3NJhVL2wkSK7uKGnbw4YnqXhtTath1ebCQgKyY
+         DT5WC5o4gYOsrt/++Dq71vwkm+ofxCbsCdnOEeg4=
+Date:   Thu, 19 Sep 2019 19:17:54 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     roman.stratiienko@globallogic.com,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH] drm/sun4i: Use vi plane as primary
+Message-ID: <20190919171754.x6lq73cctnqsjr4v@gilmour>
+References: <20190919123703.8545-1-roman.stratiienko@globallogic.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.5]
-X-ClientProxiedBy: EX13D06UWC002.ant.amazon.com (10.43.162.205) To
- EX13D19EUB003.ant.amazon.com (10.43.166.69)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="2rnnscmg2kp6rchv"
+Content-Disposition: inline
+In-Reply-To: <20190919123703.8545-1-roman.stratiienko@globallogic.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add an API for EDAC device to report multiple errors with same type.
 
-Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
----
- drivers/edac/edac_device.c | 62 ++++++++++++++++++++++++++------------
- drivers/edac/edac_device.h | 40 ++++++++++++++++++++++++
- 2 files changed, 82 insertions(+), 20 deletions(-)
+--2rnnscmg2kp6rchv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/edac/edac_device.c b/drivers/edac/edac_device.c
-index 65cf2b9355c4..866934f2bcb0 100644
---- a/drivers/edac/edac_device.c
-+++ b/drivers/edac/edac_device.c
-@@ -555,12 +555,16 @@ static inline int edac_device_get_panic_on_ue(struct edac_device_ctl_info
- 	return edac_dev->panic_on_ue;
- }
- 
--void edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
--			int inst_nr, int block_nr, const char *msg)
-+void __edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
-+			     unsigned int count, int inst_nr, int block_nr,
-+			     const char *msg)
- {
- 	struct edac_device_instance *instance;
- 	struct edac_device_block *block = NULL;
- 
-+	if (!count)
-+		return;
-+
- 	if ((inst_nr >= edac_dev->nr_instances) || (inst_nr < 0)) {
- 		edac_device_printk(edac_dev, KERN_ERR,
- 				"INTERNAL ERROR: 'instance' out of range "
-@@ -582,27 +586,31 @@ void edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
- 
- 	if (instance->nr_blocks > 0) {
- 		block = instance->blocks + block_nr;
--		block->counters.ce_count++;
-+		block->counters.ce_count += count;
- 	}
- 
- 	/* Propagate the count up the 'totals' tree */
--	instance->counters.ce_count++;
--	edac_dev->counters.ce_count++;
-+	instance->counters.ce_count += count;
-+	edac_dev->counters.ce_count += count;
- 
- 	if (edac_device_get_log_ce(edac_dev))
- 		edac_device_printk(edac_dev, KERN_WARNING,
--				"CE: %s instance: %s block: %s '%s'\n",
--				edac_dev->ctl_name, instance->name,
--				block ? block->name : "N/A", msg);
-+				   "CE: %s instance: %s block: %s count: %d '%s'\n",
-+				   edac_dev->ctl_name, instance->name,
-+				   block ? block->name : "N/A", count, msg);
- }
--EXPORT_SYMBOL_GPL(edac_device_handle_ce);
-+EXPORT_SYMBOL_GPL(__edac_device_handle_ce);
- 
--void edac_device_handle_ue(struct edac_device_ctl_info *edac_dev,
--			int inst_nr, int block_nr, const char *msg)
-+void __edac_device_handle_ue(struct edac_device_ctl_info *edac_dev,
-+			     unsigned int count, int inst_nr, int block_nr,
-+			     const char *msg)
- {
- 	struct edac_device_instance *instance;
- 	struct edac_device_block *block = NULL;
- 
-+	if (!count)
-+		return;
-+
- 	if ((inst_nr >= edac_dev->nr_instances) || (inst_nr < 0)) {
- 		edac_device_printk(edac_dev, KERN_ERR,
- 				"INTERNAL ERROR: 'instance' out of range "
-@@ -624,22 +632,36 @@ void edac_device_handle_ue(struct edac_device_ctl_info *edac_dev,
- 
- 	if (instance->nr_blocks > 0) {
- 		block = instance->blocks + block_nr;
--		block->counters.ue_count++;
-+		block->counters.ue_count += count;
- 	}
- 
- 	/* Propagate the count up the 'totals' tree */
--	instance->counters.ue_count++;
--	edac_dev->counters.ue_count++;
-+	instance->counters.ue_count += count;
-+	edac_dev->counters.ue_count += count;
- 
- 	if (edac_device_get_log_ue(edac_dev))
- 		edac_device_printk(edac_dev, KERN_EMERG,
--				"UE: %s instance: %s block: %s '%s'\n",
--				edac_dev->ctl_name, instance->name,
--				block ? block->name : "N/A", msg);
-+				   "UE: %s instance: %s block: %s count: %d '%s'\n",
-+				   edac_dev->ctl_name, instance->name,
-+				   block ? block->name : "N/A", count, msg);
- 
- 	if (edac_device_get_panic_on_ue(edac_dev))
--		panic("EDAC %s: UE instance: %s block %s '%s'\n",
--			edac_dev->ctl_name, instance->name,
--			block ? block->name : "N/A", msg);
-+		panic("EDAC %s: UE instance: %s block %s count: %d '%s'\n",
-+		      edac_dev->ctl_name, instance->name,
-+		      block ? block->name : "N/A", count, msg);
-+}
-+EXPORT_SYMBOL_GPL(__edac_device_handle_ue);
-+
-+void edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
-+			int inst_nr, int block_nr, const char *msg)
-+{
-+	__edac_device_handle_ce(edac_dev, 1, inst_nr, block_nr, msg);
-+}
-+EXPORT_SYMBOL_GPL(edac_device_handle_ce);
-+
-+void edac_device_handle_ue(struct edac_device_ctl_info *edac_dev,
-+			int inst_nr, int block_nr, const char *msg)
-+{
-+	__edac_device_handle_ue(edac_dev, 1, inst_nr, block_nr, msg);
- }
- EXPORT_SYMBOL_GPL(edac_device_handle_ue);
-diff --git a/drivers/edac/edac_device.h b/drivers/edac/edac_device.h
-index 1aaba74ae411..30dc5f5979c8 100644
---- a/drivers/edac/edac_device.h
-+++ b/drivers/edac/edac_device.h
-@@ -317,4 +317,44 @@ extern void edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
- extern int edac_device_alloc_index(void);
- extern const char *edac_layer_name[];
- 
-+/**
-+ * __edac_device_handle_ue():
-+ *	perform a common output and handling of an 'edac_dev' UE event
-+ *
-+ * @edac_dev: pointer to struct &edac_device_ctl_info
-+ * @error_count: number of errors of the same type
-+ * @inst_nr: number of the instance where the UE error happened
-+ * @block_nr: number of the block where the UE error happened
-+ * @msg: message to be printed
-+ */
-+void __edac_device_handle_ue(struct edac_device_ctl_info *edac_dev,
-+				    unsigned int count, int inst_nr,
-+				    int block_nr, const char *msg);
-+/**
-+ * __edac_device_handle_ce():
-+ *	perform a common output and handling of an 'edac_dev' CE event
-+ *
-+ * @edac_dev: pointer to struct &edac_device_ctl_info
-+ * @error_count: number of errors of the same type
-+ * @inst_nr: number of the instance where the CE error happened
-+ * @block_nr: number of the block where the CE error happened
-+ * @msg: message to be printed
-+ */
-+void __edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
-+				    unsigned int count, int inst_nr,
-+				    int block_nr, const char *msg);
-+
-+static inline void edac_device_handle_ce_count(struct edac_device_ctl_info *edac_dev,
-+					       unsigned int count, int inst_nr,
-+					       int block_nr, const char *msg)
-+{
-+	__edac_device_handle_ce(edac_dev, count, inst_nr, block_nr, msg);
-+}
-+
-+static inline void edac_device_handle_ue_count(struct edac_device_ctl_info *edac_dev,
-+					       unsigned int count, int inst_nr,
-+					       int block_nr, const char *msg)
-+{
-+	__edac_device_handle_ue(edac_dev, count, inst_nr, block_nr, msg);
-+}
- #endif
--- 
-2.17.1
+Hi,
 
+On Thu, Sep 19, 2019 at 03:37:03PM +0300, roman.stratiienko@globallogic.com wrote:
+> From: Roman Stratiienko <roman.stratiienko@globallogic.com>
+>
+> DE2.0 blender does not take into the account alpha channel of vi layer.
+> Thus makes overlaying of this layer totally opaque.
+> Using vi layer as bottom solves this issue.
+>
+> Tested on Android.
+>
+> Signed-off-by: Roman Stratiienko <roman.stratiienko@globallogic.com>
+
+It sounds like a workaround more than an actual fix.
+
+If the VI planes can't use the alpha, then we should just stop
+reporting that format.
+
+Jernej, what do you think?
+
+Maxime
+
+> ---
+>  drivers/gpu/drm/sun4i/sun8i_ui_layer.c | 33 -----------------------
+>  drivers/gpu/drm/sun4i/sun8i_vi_layer.c | 36 +++++++++++++++++++++++++-
+>  2 files changed, 35 insertions(+), 34 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/sun4i/sun8i_ui_layer.c b/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
+> index dd2a1c851939..25183badc85f 100644
+> --- a/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
+> +++ b/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
+> @@ -99,36 +99,6 @@ static int sun8i_ui_layer_update_coord(struct sun8i_mixer *mixer, int channel,
+>  	insize = SUN8I_MIXER_SIZE(src_w, src_h);
+>  	outsize = SUN8I_MIXER_SIZE(dst_w, dst_h);
+>
+> -	if (plane->type == DRM_PLANE_TYPE_PRIMARY) {
+> -		bool interlaced = false;
+> -		u32 val;
+> -
+> -		DRM_DEBUG_DRIVER("Primary layer, updating global size W: %u H: %u\n",
+> -				 dst_w, dst_h);
+> -		regmap_write(mixer->engine.regs,
+> -			     SUN8I_MIXER_GLOBAL_SIZE,
+> -			     outsize);
+> -		regmap_write(mixer->engine.regs,
+> -			     SUN8I_MIXER_BLEND_OUTSIZE(bld_base), outsize);
+> -
+> -		if (state->crtc)
+> -			interlaced = state->crtc->state->adjusted_mode.flags
+> -				& DRM_MODE_FLAG_INTERLACE;
+> -
+> -		if (interlaced)
+> -			val = SUN8I_MIXER_BLEND_OUTCTL_INTERLACED;
+> -		else
+> -			val = 0;
+> -
+> -		regmap_update_bits(mixer->engine.regs,
+> -				   SUN8I_MIXER_BLEND_OUTCTL(bld_base),
+> -				   SUN8I_MIXER_BLEND_OUTCTL_INTERLACED,
+> -				   val);
+> -
+> -		DRM_DEBUG_DRIVER("Switching display mixer interlaced mode %s\n",
+> -				 interlaced ? "on" : "off");
+> -	}
+> -
+>  	/* Set height and width */
+>  	DRM_DEBUG_DRIVER("Layer source offset X: %d Y: %d\n",
+>  			 state->src.x1 >> 16, state->src.y1 >> 16);
+> @@ -349,9 +319,6 @@ struct sun8i_ui_layer *sun8i_ui_layer_init_one(struct drm_device *drm,
+>  	if (!layer)
+>  		return ERR_PTR(-ENOMEM);
+>
+> -	if (index == 0)
+> -		type = DRM_PLANE_TYPE_PRIMARY;
+> -
+>  	/* possible crtcs are set later */
+>  	ret = drm_universal_plane_init(drm, &layer->plane, 0,
+>  				       &sun8i_ui_layer_funcs,
+> diff --git a/drivers/gpu/drm/sun4i/sun8i_vi_layer.c b/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
+> index 07c27e6a4b77..49c4074e164f 100644
+> --- a/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
+> +++ b/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
+> @@ -116,6 +116,36 @@ static int sun8i_vi_layer_update_coord(struct sun8i_mixer *mixer, int channel,
+>  	insize = SUN8I_MIXER_SIZE(src_w, src_h);
+>  	outsize = SUN8I_MIXER_SIZE(dst_w, dst_h);
+>
+> +	if (plane->type == DRM_PLANE_TYPE_PRIMARY) {
+> +		bool interlaced = false;
+> +		u32 val;
+> +
+> +		DRM_DEBUG_DRIVER("Primary layer, updating global size W: %u H: %u\n",
+> +				 dst_w, dst_h);
+> +		regmap_write(mixer->engine.regs,
+> +			     SUN8I_MIXER_GLOBAL_SIZE,
+> +			     outsize);
+> +		regmap_write(mixer->engine.regs,
+> +			     SUN8I_MIXER_BLEND_OUTSIZE(bld_base), outsize);
+> +
+> +		if (state->crtc)
+> +			interlaced = state->crtc->state->adjusted_mode.flags
+> +				& DRM_MODE_FLAG_INTERLACE;
+> +
+> +		if (interlaced)
+> +			val = SUN8I_MIXER_BLEND_OUTCTL_INTERLACED;
+> +		else
+> +			val = 0;
+> +
+> +		regmap_update_bits(mixer->engine.regs,
+> +				   SUN8I_MIXER_BLEND_OUTCTL(bld_base),
+> +				   SUN8I_MIXER_BLEND_OUTCTL_INTERLACED,
+> +				   val);
+> +
+> +		DRM_DEBUG_DRIVER("Switching display mixer interlaced mode %s\n",
+> +				 interlaced ? "on" : "off");
+> +	}
+> +
+>  	/* Set height and width */
+>  	DRM_DEBUG_DRIVER("Layer source offset X: %d Y: %d\n",
+>  			 (state->src.x1 >> 16) & ~(format->hsub - 1),
+> @@ -445,6 +475,7 @@ struct sun8i_vi_layer *sun8i_vi_layer_init_one(struct drm_device *drm,
+>  					       struct sun8i_mixer *mixer,
+>  					       int index)
+>  {
+> +	enum drm_plane_type type = DRM_PLANE_TYPE_OVERLAY;
+>  	struct sun8i_vi_layer *layer;
+>  	unsigned int plane_cnt;
+>  	int ret;
+> @@ -453,12 +484,15 @@ struct sun8i_vi_layer *sun8i_vi_layer_init_one(struct drm_device *drm,
+>  	if (!layer)
+>  		return ERR_PTR(-ENOMEM);
+>
+> +	if (index == 0)
+> +		type = DRM_PLANE_TYPE_PRIMARY;
+> +
+>  	/* possible crtcs are set later */
+>  	ret = drm_universal_plane_init(drm, &layer->plane, 0,
+>  				       &sun8i_vi_layer_funcs,
+>  				       sun8i_vi_layer_formats,
+>  				       ARRAY_SIZE(sun8i_vi_layer_formats),
+> -				       NULL, DRM_PLANE_TYPE_OVERLAY, NULL);
+> +				       NULL, type, NULL);
+>  	if (ret) {
+>  		dev_err(drm->dev, "Couldn't initialize layer\n");
+>  		return ERR_PTR(ret);
+> --
+> 2.17.1
+>
+
+--2rnnscmg2kp6rchv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXYO4QgAKCRDj7w1vZxhR
+xTy3AQCFKpFFunsqQpH5S3NlmWIGIAVm1V7QMGnmSYwKpmq2AAD9HuR+fErdd4gi
+hWcnK9n6BG95SzVHYdPnJwAevIKEQgQ=
+=2o4M
+-----END PGP SIGNATURE-----
+
+--2rnnscmg2kp6rchv--
