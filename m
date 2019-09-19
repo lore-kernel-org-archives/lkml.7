@@ -5,52 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E072EC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF2FC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B015321907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91D35217D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:17:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931457;
-	bh=74nf5UnRKvBiWWXFw3xnxICQuYxH0BWLfryXXrsDYPc=;
+	s=default; t=1568931461;
+	bh=wOfno92071SM8Zoy2bQQhGzk30UPTtn44awh7U17Mu0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NdlxqJulkAUIXFvDDFthV5Rzd8P/CuiFXRjspOtSAauznZnchgq5K2N4Yz93CuZlE
-	 liNQilULgju0UhY4G2KJCVFXu7mYFd4OJ9oxydHsZERMAEd9kVuRFlz3KcoRcuHTCV
-	 UnTWXI8GXnOijPtXx5T1eDybLo9O2odHIgCUde8U=
+	b=Of/ikHqwaK92r8uuu9F1nGrvQacSic9hwGewaLKJrrmEH9Di4XX4X8neydFML6tGD
+	 BJ5k2YvkO0npL2uigWqeYTymw23bqSrAqEpP1YCpDtTvD4MMbJqDIcFOgyDassQPiY
+	 kutFmORhgknQUqtpy05uy1DyaFVC6dl5qrgyuNWM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404631AbfISWRg (ORCPT
+        id S2406506AbfISWRk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:17:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58736 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:17:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406465AbfISWRe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:17:34 -0400
+        id S2406488AbfISWRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:17:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 298B621920;
-        Thu, 19 Sep 2019 22:17:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEE3B20678;
+        Thu, 19 Sep 2019 22:17:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931452;
-        bh=74nf5UnRKvBiWWXFw3xnxICQuYxH0BWLfryXXrsDYPc=;
+        s=default; t=1568931455;
+        bh=wOfno92071SM8Zoy2bQQhGzk30UPTtn44awh7U17Mu0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wIWaTN6WubEgiSqpZCT2ADr2mk78+YpLI3hFTx0ZmcWCbN0SoGRnCZJsD86hQe2rf
-         HwYnfSaAQr7M6UlJoHfTMpeSSl/G2yCKd3yFXzSkuagbkdjSf7NfZQKaoAYf6L5is5
-         i2yBJnk+GKz/Jh48CVut/kwp5T3MjZhp3vp2JQE4=
+        b=iAQ+8fB+fNFDqiCVnoqrmiFHFYB/EXIiioGmv+QBR3SnwyIneFB1Sy4sDBCZAR5KV
+         czZqi1wm6ZCfapuv8KNZyfq9i9IMHQd3i5nKLoULyKG1tR1YNMr+GGBusWa4HZU4pL
+         1gJJtTZdJ5oSV8imIY7MK52I6IfNJtROkuGX2Exk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 34/59] kallsyms: Dont let kallsyms_lookup_size_offset() fail on retrieving the first symbol
-Date:   Fri, 20 Sep 2019 00:03:49 +0200
-Message-Id: <20190919214806.003059718@linuxfoundation.org>
+        stable@vger.kernel.org, Stuart Hayes <stuart.w.hayes@gmail.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 52/59] iommu/amd: Flush old domains in kdump kernel
+Date:   Fri, 20 Sep 2019 00:04:07 +0200
+Message-Id: <20190919214808.023865468@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214755.852282682@linuxfoundation.org>
 References: <20190919214755.852282682@linuxfoundation.org>
@@ -63,83 +59,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Stuart Hayes <stuart.w.hayes@gmail.com>
 
-[ Upstream commit 2a1a3fa0f29270583f0e6e3100d609e09697add1 ]
+[ Upstream commit 36b7200f67dfe75b416b5281ed4ace9927b513bc ]
 
-An arm64 kernel configured with
+When devices are attached to the amd_iommu in a kdump kernel, the old device
+table entries (DTEs), which were copied from the crashed kernel, will be
+overwritten with a new domain number.  When the new DTE is written, the IOMMU
+is told to flush the DTE from its internal cache--but it is not told to flush
+the translation cache entries for the old domain number.
 
-  CONFIG_KPROBES=y
-  CONFIG_KALLSYMS=y
-  # CONFIG_KALLSYMS_ALL is not set
-  CONFIG_KALLSYMS_BASE_RELATIVE=y
+Without this patch, AMD systems using the tg3 network driver fail when kdump
+tries to save the vmcore to a network system, showing network timeouts and
+(sometimes) IOMMU errors in the kernel log.
 
-reports the following kprobe failure:
+This patch will flush IOMMU translation cache entries for the old domain when
+a DTE gets overwritten with a new domain number.
 
-  [    0.032677] kprobes: failed to populate blacklist: -22
-  [    0.033376] Please take care of using kprobes.
-
-It appears that kprobe fails to retrieve the symbol at address
-0xffff000010081000, despite this symbol being in System.map:
-
-  ffff000010081000 T __exception_text_start
-
-This symbol is part of the first group of aliases in the
-kallsyms_offsets array (symbol names generated using ugly hacks in
-scripts/kallsyms.c):
-
-  kallsyms_offsets:
-          .long   0x1000 // do_undefinstr
-          .long   0x1000 // efi_header_end
-          .long   0x1000 // _stext
-          .long   0x1000 // __exception_text_start
-          .long   0x12b0 // do_cp15instr
-
-Looking at the implementation of get_symbol_pos(), it returns the
-lowest index for aliasing symbols. In this case, it return 0.
-
-But kallsyms_lookup_size_offset() considers 0 as a failure, which
-is obviously wrong (there is definitely a valid symbol living there).
-In turn, the kprobe blacklisting stops abruptly, hence the original
-error.
-
-A CONFIG_KALLSYMS_ALL kernel wouldn't fail as there is always
-some random symbols at the beginning of this array, which are never
-looked up via kallsyms_lookup_size_offset.
-
-Fix it by considering that get_symbol_pos() is always successful
-(which is consistent with the other uses of this function).
-
-Fixes: ffc5089196446 ("[PATCH] Create kallsyms_lookup_size_offset()")
-Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Will Deacon <will@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+Fixes: 3ac3e5ee5ed5 ('iommu/amd: Copy old trans table from old kernel')
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/kallsyms.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/iommu/amd_iommu.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
-index 127e7cfafa552..3e1b66366ac23 100644
---- a/kernel/kallsyms.c
-+++ b/kernel/kallsyms.c
-@@ -296,8 +296,10 @@ int kallsyms_lookup_size_offset(unsigned long addr, unsigned long *symbolsize,
- {
- 	char namebuf[KSYM_NAME_LEN];
- 
--	if (is_ksym_addr(addr))
--		return !!get_symbol_pos(addr, symbolsize, offset);
-+	if (is_ksym_addr(addr)) {
-+		get_symbol_pos(addr, symbolsize, offset);
-+		return 1;
-+	}
- 	return !!module_address_lookup(addr, symbolsize, offset, NULL, namebuf) ||
- 	       !!__bpf_address_lookup(addr, symbolsize, offset, namebuf);
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index 684f7cdd814b6..822c85226a29f 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -1150,6 +1150,17 @@ static void amd_iommu_flush_tlb_all(struct amd_iommu *iommu)
+ 	iommu_completion_wait(iommu);
  }
+ 
++static void amd_iommu_flush_tlb_domid(struct amd_iommu *iommu, u32 dom_id)
++{
++	struct iommu_cmd cmd;
++
++	build_inv_iommu_pages(&cmd, 0, CMD_INV_IOMMU_ALL_PAGES_ADDRESS,
++			      dom_id, 1);
++	iommu_queue_command(iommu, &cmd);
++
++	iommu_completion_wait(iommu);
++}
++
+ static void amd_iommu_flush_all(struct amd_iommu *iommu)
+ {
+ 	struct iommu_cmd cmd;
+@@ -1835,6 +1846,7 @@ static void set_dte_entry(u16 devid, struct protection_domain *domain, bool ats)
+ {
+ 	u64 pte_root = 0;
+ 	u64 flags = 0;
++	u32 old_domid;
+ 
+ 	if (domain->mode != PAGE_MODE_NONE)
+ 		pte_root = iommu_virt_to_phys(domain->pt_root);
+@@ -1877,8 +1889,20 @@ static void set_dte_entry(u16 devid, struct protection_domain *domain, bool ats)
+ 	flags &= ~DEV_DOMID_MASK;
+ 	flags |= domain->id;
+ 
++	old_domid = amd_iommu_dev_table[devid].data[1] & DEV_DOMID_MASK;
+ 	amd_iommu_dev_table[devid].data[1]  = flags;
+ 	amd_iommu_dev_table[devid].data[0]  = pte_root;
++
++	/*
++	 * A kdump kernel might be replacing a domain ID that was copied from
++	 * the previous kernel--if so, it needs to flush the translation cache
++	 * entries for the old domain ID that is being overwritten
++	 */
++	if (old_domid) {
++		struct amd_iommu *iommu = amd_iommu_rlookup_table[devid];
++
++		amd_iommu_flush_tlb_domid(iommu, old_domid);
++	}
+ }
+ 
+ static void clear_dte_entry(u16 devid)
 -- 
 2.20.1
 
