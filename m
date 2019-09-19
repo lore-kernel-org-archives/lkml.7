@@ -4,108 +4,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19277C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 02:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE81C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 03:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D929E218AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 02:58:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 563C6217D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 03:02:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388540AbfISC6p (ORCPT
+        id S2388545AbfISDCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 22:58:45 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2679 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388438AbfISC6W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 22:58:22 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B9C7F296988817DA22CA;
-        Thu, 19 Sep 2019 10:58:19 +0800 (CST)
-Received: from use12-sp2.huawei.com (10.67.189.174) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 19 Sep 2019 10:58:10 +0800
-From:   Xiaoming Ni <nixiaoming@huawei.com>
-To:     <gregkh@linuxfoundation.org>, <akpm@linux-foundation.org>,
-        <vvs@virtuozzo.com>, <torvalds@linux-foundation.org>,
-        <adobriyan@gmail.com>, <anna.schumaker@netapp.com>,
-        <arjan@linux.intel.com>, <bfields@fieldses.org>,
-        <chuck.lever@oracle.com>, <davem@davemloft.net>,
-        <jlayton@kernel.org>, <luto@kernel.org>, <mingo@kernel.org>,
-        <Nadia.Derbey@bull.net>, <paulmck@linux.vnet.ibm.com>,
-        <semen.protsenko@linaro.org>, <stern@rowland.harvard.edu>,
-        <tglx@linutronix.de>, <trond.myklebust@hammerspace.com>,
-        <viresh.kumar@linaro.org>
-CC:     <stable@kernel.org>, <dylix.dailei@huawei.com>,
-        <nixiaoming@huawei.com>, <yuehaibing@huawei.com>,
-        <linux-kernel@vger.kernel.org>, <linux-nfs@vger.kernel.org>,
-        <netdev@vger.kernel.org>
-Subject: [PATCH v4 1/3] kernel/notifier.c: intercepting duplicate registrations to avoid infinite loops
-Date:   Thu, 19 Sep 2019 10:58:06 +0800
-Message-ID: <1568861888-34045-2-git-send-email-nixiaoming@huawei.com>
-X-Mailer: git-send-email 1.8.5.6
-In-Reply-To: <1568861888-34045-1-git-send-email-nixiaoming@huawei.com>
-References: <1568861888-34045-1-git-send-email-nixiaoming@huawei.com>
+        Wed, 18 Sep 2019 23:02:43 -0400
+Received: from aclms3.advantech.com.tw ([125.252.70.86]:46280 "EHLO
+        ACLMS3.advantech.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727165AbfISDCn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 23:02:43 -0400
+Received: from taipei08.ADVANTECH.CORP (unverified [172.20.0.235]) by ACLMS3.advantech.com.tw
+ (Clearswift SMTPRS 5.6.0) with ESMTP id <Tda5598ff72ac1401c8e70@ACLMS3.advantech.com.tw>;
+ Thu, 19 Sep 2019 11:02:40 +0800
+From:   <Amy.Shih@advantech.com.tw>
+To:     <she90122@gmail.com>
+CC:     <amy.shih@advantech.com.tw>, <oakley.ding@advantech.com.tw>,
+        <bichan.lu@advantech.com.tw>, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [v1,1/1] hwmon: (nct7904) Add array fan_alarm and vsen_alarm to store the alarms in nct7904_data struct.
+Date:   Thu, 19 Sep 2019 11:02:05 +0800
+Message-ID: <20190919030205.11440-1-Amy.Shih@advantech.com.tw>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.67.189.174]
-X-CFilter-Loop: Reflected
+X-Originating-IP: [172.17.10.114]
+X-ClientProxiedBy: ACLDAG.ADVANTECH.CORP (172.20.2.88) To
+ taipei08.ADVANTECH.CORP (172.20.0.235)
+X-StopIT: No
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Registering the same notifier to a hook repeatedly can cause the hook
-list to form a ring or lose other members of the list.
+From: "amy.shih" <amy.shih@advantech.com.tw>
 
-case1: An infinite loop in notifier_chain_register() can cause soft lockup
-        atomic_notifier_chain_register(&test_notifier_list, &test1);
-        atomic_notifier_chain_register(&test_notifier_list, &test1);
-        atomic_notifier_chain_register(&test_notifier_list, &test2);
+SMI# interrupt for fan and voltage is Two-Times Interrupt Mode.
+Fan or voltage exceeds high limit or going below low limit,
+it will causes an interrupt if the previous interrupt has been
+reset by reading all the interrupt Status Register. Thus, add the
+array fan_alarm and vsen_alarm to store the alarms for all of the
+fan and voltage sensors.
 
-case2: An infinite loop in notifier_chain_register() can cause soft lockup
-        atomic_notifier_chain_register(&test_notifier_list, &test1);
-        atomic_notifier_chain_register(&test_notifier_list, &test1);
-        atomic_notifier_call_chain(&test_notifier_list, 0, NULL);
-
-case3: lose other hook test2
-        atomic_notifier_chain_register(&test_notifier_list, &test1);
-        atomic_notifier_chain_register(&test_notifier_list, &test2);
-        atomic_notifier_chain_register(&test_notifier_list, &test1);
-
-case4: Unregister returns 0, but the hook is still in the linked list,
-        and it is not really registered. If you call notifier_call_chain
-        after ko is unloaded, it will trigger oops.
-
-If the system is configured with softlockup_panic and the same
-hook is repeatedly registered on the panic_notifier_list, it
-will cause a loop panic.
-
-Add a check in notifier_chain_register(),
-Intercepting duplicate registrations to avoid infinite loops
-
-Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
-Reviewed-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: amy.shih <amy.shih@advantech.com.tw>
 ---
- kernel/notifier.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/hwmon/nct7904.c | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/notifier.c b/kernel/notifier.c
-index d9f5081..30bedb8 100644
---- a/kernel/notifier.c
-+++ b/kernel/notifier.c
-@@ -23,7 +23,10 @@ static int notifier_chain_register(struct notifier_block **nl,
- 		struct notifier_block *n)
- {
- 	while ((*nl) != NULL) {
--		WARN_ONCE(((*nl) == n), "double register detected");
-+		if (unlikely((*nl) == n)) {
-+			WARN(1, "double register detected");
-+			return 0;
-+		}
- 		if (n->priority > (*nl)->priority)
- 			break;
- 		nl = &((*nl)->next);
+diff --git a/drivers/hwmon/nct7904.c b/drivers/hwmon/nct7904.c
+index f62dd1882451..b26419dbe840 100644
+--- a/drivers/hwmon/nct7904.c
++++ b/drivers/hwmon/nct7904.c
+@@ -99,6 +99,8 @@ struct nct7904_data {
+ 	u8 enable_dts;
+ 	u8 has_dts;
+ 	u8 temp_mode; /* 0: TR mode, 1: TD mode */
++	u8 fan_alarm[2];
++	u8 vsen_alarm[3];
+ };
+ 
+ /* Access functions */
+@@ -214,7 +216,15 @@ static int nct7904_read_fan(struct device *dev, u32 attr, int channel,
+ 				       SMI_STS5_REG + (channel >> 3));
+ 		if (ret < 0)
+ 			return ret;
+-		*val = (ret >> (channel & 0x07)) & 1;
++		if (!data->fan_alarm[channel >> 3])
++			data->fan_alarm[channel >> 3] = ret & 0xff;
++		else
++			/* If there is new alarm showing up */
++			data->fan_alarm[channel >> 3] |= (ret & 0xff);
++		*val = (data->fan_alarm[channel >> 3] >> (channel & 0x07)) & 1;
++		/* Needs to clean the alarm if alarm existing */
++		if (*val)
++			data->fan_alarm[channel >> 3] ^= 1 << (channel & 0x07);
+ 		return 0;
+ 	default:
+ 		return -EOPNOTSUPP;
+@@ -298,7 +308,15 @@ static int nct7904_read_in(struct device *dev, u32 attr, int channel,
+ 				       SMI_STS1_REG + (index >> 3));
+ 		if (ret < 0)
+ 			return ret;
+-		*val = (ret >> (index & 0x07)) & 1;
++		if (!data->vsen_alarm[index >> 3])
++			data->vsen_alarm[index >> 3] = ret & 0xff;
++		else
++			/* If there is new alarm showing up */
++			data->vsen_alarm[index >> 3] |= (ret & 0xff);
++		*val = (data->vsen_alarm[index >> 3] >> (index & 0x07)) & 1;
++		/* Needs to clean the alarm if alarm existing */
++		if (*val)
++			data->vsen_alarm[index >> 3] ^= 1 << (index & 0x07);
+ 		return 0;
+ 	default:
+ 		return -EOPNOTSUPP;
 -- 
-1.8.5.6
+2.17.1
 
