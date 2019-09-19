@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC45C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E90C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B401421929
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E052321924
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:11:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931067;
-	bh=AeTtAhhO3ekmXdN1I9ysSjm8aV2vHCTIt/9tWFksyFU=;
+	s=default; t=1568931072;
+	bh=sjobayxK8BQV7kAzsBZ5thsoTl6H6cbirtCozGkDE30=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dWxB4KNpPFsGdGTCuFKH339jTH+ESDI08Opfmk23Tc8QSkjwWkNc96lc3dMlfSPVp
-	 m6fL7/1JjdA/eEnCZpY0kedsZIQE310L6rRwEVshn1xBSGs5O0Qsok/BPH333P3Ifs
-	 obg6g+Q0ixrg+3yjDvjawFFGhu8nYywfmgnbYucw=
+	b=EpIkqlcMbcvLps6ogb5HZ5hpFopGUQNqiw9qpfNNXG71ymd5muPrrGTfNu4G8tVXb
+	 IXixxLflQiANGQJSAVVczjjjIRT7xcozYDM+OV30wpMqkxrVdNfqRYj7+nOnMFQBfO
+	 /8w2Mpwhr+Fj9esmu2Q8rJxenoRT34I8zZfcaGrI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405836AbfISWLF (ORCPT
+        id S2393182AbfISWLK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:11:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49632 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:11:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405816AbfISWLC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:11:02 -0400
+        id S2405830AbfISWLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:11:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63D4D21927;
-        Thu, 19 Sep 2019 22:11:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 082EB21920;
+        Thu, 19 Sep 2019 22:11:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931060;
-        bh=AeTtAhhO3ekmXdN1I9ysSjm8aV2vHCTIt/9tWFksyFU=;
+        s=default; t=1568931063;
+        bh=sjobayxK8BQV7kAzsBZ5thsoTl6H6cbirtCozGkDE30=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1BiLwJ3uK6mB/oHnwHh4nTXWyAb3qQTYbzGoV50gwSc/6bY2MPgS1xG1i346Opxod
-         ixME/Jq0UlawGQqpqqdvrCTRV3Cd/0uwIpozttZRfvPLuTinnf+grQdwI7kRbxvn00
-         rRCBK22mNmDJ0v2gpRRC5Mg7DN5kri/7UpCey/F0=
+        b=TTvvfKOZ0ylUnD5G4TN/8oKr3zVDpD8/Zj9KjRAXkIp+b/V3SjWMAkCbUtGhQ3UCD
+         leV2U38QxZry5l776hMM/Mpw7IciJvTOO4f5viBJ2HturQHrg7gZgEpVYwLOqcRqyl
+         UiQZLrH535tYKWRQ3voW5XPs6k2ZT1rIE3SxAilE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sanjay K Kumar <sanjay.k.kumar@intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 114/124] iommu/vt-d: Remove global page flush support
-Date:   Fri, 20 Sep 2019 00:03:22 +0200
-Message-Id: <20190919214823.332746659@linuxfoundation.org>
+        stable@vger.kernel.org, Baolin Wang <baolin.wang@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 115/124] dmaengine: sprd: Fix the DMA link-list configuration
+Date:   Fri, 20 Sep 2019 00:03:23 +0200
+Message-Id: <20190919214823.367143978@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -60,142 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+From: Baolin Wang <baolin.wang@linaro.org>
 
-[ Upstream commit 8744daf4b0699b724ee0a56b313a6c0c4ea289e3 ]
+[ Upstream commit 689379c2f383b1fdfdff03e84cf659daf62f2088 ]
 
-Global pages support is removed from VT-d spec 3.0. Since global pages G
-flag only affects first-level paging structures and because DMA request
-with PASID are only supported by VT-d spec. 3.0 and onward, we can
-safely remove global pages support.
+For the Spreadtrum DMA link-list mode, when the DMA engine got a slave
+hardware request, which will trigger the DMA engine to load the DMA
+configuration from the link-list memory automatically. But before the
+slave hardware request, the slave will get an incorrect residue due
+to the first node used to trigger the link-list was configured as the
+last source address and destination address.
 
-For kernel shared virtual address IOTLB invalidation, PASID
-granularity and page selective within PASID will be used. There is
-no global granularity supported. Without this fix, IOTLB invalidation
-will cause invalid descriptor error in the queued invalidation (QI)
-interface.
+Thus we should make sure the first node was configured the start source
+address and destination address, which can fix this issue.
 
-Fixes: 1c4f88b7f1f9 ("iommu/vt-d: Shared virtual address in scalable mode")
-Reported-by: Sanjay K Kumar <sanjay.k.kumar@intel.com>
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fixes: 4ac695464763 ("dmaengine: sprd: Support DMA link-list mode")
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Link: https://lore.kernel.org/r/77868edb7aff9d5cb12ac3af8827ef2e244441a6.1567150471.git.baolin.wang@linaro.org
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/intel-svm.c   | 36 +++++++++++++++---------------------
- include/linux/intel-iommu.h |  3 ---
- 2 files changed, 15 insertions(+), 24 deletions(-)
+ drivers/dma/sprd-dma.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-index eceaa7e968ae8..641dc223c97b8 100644
---- a/drivers/iommu/intel-svm.c
-+++ b/drivers/iommu/intel-svm.c
-@@ -100,24 +100,19 @@ int intel_svm_finish_prq(struct intel_iommu *iommu)
- }
+diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
+index baac476c86224..525dc7338fe3b 100644
+--- a/drivers/dma/sprd-dma.c
++++ b/drivers/dma/sprd-dma.c
+@@ -908,6 +908,7 @@ sprd_dma_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
+ 	struct sprd_dma_chn *schan = to_sprd_dma_chan(chan);
+ 	struct dma_slave_config *slave_cfg = &schan->slave_cfg;
+ 	dma_addr_t src = 0, dst = 0;
++	dma_addr_t start_src = 0, start_dst = 0;
+ 	struct sprd_dma_desc *sdesc;
+ 	struct scatterlist *sg;
+ 	u32 len = 0;
+@@ -954,6 +955,11 @@ sprd_dma_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
+ 			dst = sg_dma_address(sg);
+ 		}
  
- static void intel_flush_svm_range_dev (struct intel_svm *svm, struct intel_svm_dev *sdev,
--				       unsigned long address, unsigned long pages, int ih, int gl)
-+				unsigned long address, unsigned long pages, int ih)
- {
- 	struct qi_desc desc;
- 
--	if (pages == -1) {
--		/* For global kernel pages we have to flush them in *all* PASIDs
--		 * because that's the only option the hardware gives us. Despite
--		 * the fact that they are actually only accessible through one. */
--		if (gl)
--			desc.qw0 = QI_EIOTLB_PASID(svm->pasid) |
--					QI_EIOTLB_DID(sdev->did) |
--					QI_EIOTLB_GRAN(QI_GRAN_ALL_ALL) |
--					QI_EIOTLB_TYPE;
--		else
--			desc.qw0 = QI_EIOTLB_PASID(svm->pasid) |
--					QI_EIOTLB_DID(sdev->did) |
--					QI_EIOTLB_GRAN(QI_GRAN_NONG_PASID) |
--					QI_EIOTLB_TYPE;
-+	/*
-+	 * Do PASID granu IOTLB invalidation if page selective capability is
-+	 * not available.
-+	 */
-+	if (pages == -1 || !cap_pgsel_inv(svm->iommu->cap)) {
-+		desc.qw0 = QI_EIOTLB_PASID(svm->pasid) |
-+			QI_EIOTLB_DID(sdev->did) |
-+			QI_EIOTLB_GRAN(QI_GRAN_NONG_PASID) |
-+			QI_EIOTLB_TYPE;
- 		desc.qw1 = 0;
- 	} else {
- 		int mask = ilog2(__roundup_pow_of_two(pages));
-@@ -127,7 +122,6 @@ static void intel_flush_svm_range_dev (struct intel_svm *svm, struct intel_svm_d
- 				QI_EIOTLB_GRAN(QI_GRAN_PSI_PASID) |
- 				QI_EIOTLB_TYPE;
- 		desc.qw1 = QI_EIOTLB_ADDR(address) |
--				QI_EIOTLB_GL(gl) |
- 				QI_EIOTLB_IH(ih) |
- 				QI_EIOTLB_AM(mask);
++		if (!i) {
++			start_src = src;
++			start_dst = dst;
++		}
++
+ 		/*
+ 		 * The link-list mode needs at least 2 link-list
+ 		 * configurations. If there is only one sg, it doesn't
+@@ -970,8 +976,8 @@ sprd_dma_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
+ 		}
  	}
-@@ -162,13 +156,13 @@ static void intel_flush_svm_range_dev (struct intel_svm *svm, struct intel_svm_d
- }
  
- static void intel_flush_svm_range(struct intel_svm *svm, unsigned long address,
--				  unsigned long pages, int ih, int gl)
-+				unsigned long pages, int ih)
- {
- 	struct intel_svm_dev *sdev;
- 
- 	rcu_read_lock();
- 	list_for_each_entry_rcu(sdev, &svm->devs, list)
--		intel_flush_svm_range_dev(svm, sdev, address, pages, ih, gl);
-+		intel_flush_svm_range_dev(svm, sdev, address, pages, ih);
- 	rcu_read_unlock();
- }
- 
-@@ -180,7 +174,7 @@ static void intel_invalidate_range(struct mmu_notifier *mn,
- 	struct intel_svm *svm = container_of(mn, struct intel_svm, notifier);
- 
- 	intel_flush_svm_range(svm, start,
--			      (end - start + PAGE_SIZE - 1) >> VTD_PAGE_SHIFT, 0, 0);
-+			      (end - start + PAGE_SIZE - 1) >> VTD_PAGE_SHIFT, 0);
- }
- 
- static void intel_mm_release(struct mmu_notifier *mn, struct mm_struct *mm)
-@@ -203,7 +197,7 @@ static void intel_mm_release(struct mmu_notifier *mn, struct mm_struct *mm)
- 	rcu_read_lock();
- 	list_for_each_entry_rcu(sdev, &svm->devs, list) {
- 		intel_pasid_tear_down_entry(svm->iommu, sdev->dev, svm->pasid);
--		intel_flush_svm_range_dev(svm, sdev, 0, -1, 0, !svm->mm);
-+		intel_flush_svm_range_dev(svm, sdev, 0, -1, 0);
- 	}
- 	rcu_read_unlock();
- 
-@@ -410,7 +404,7 @@ int intel_svm_unbind_mm(struct device *dev, int pasid)
- 				 * large and has to be physically contiguous. So it's
- 				 * hard to be as defensive as we might like. */
- 				intel_pasid_tear_down_entry(iommu, dev, svm->pasid);
--				intel_flush_svm_range_dev(svm, sdev, 0, -1, 0, !svm->mm);
-+				intel_flush_svm_range_dev(svm, sdev, 0, -1, 0);
- 				kfree_rcu(sdev, rcu);
- 
- 				if (list_empty(&svm->devs)) {
-diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-index 6a8dd4af01472..ba8dc520cc79a 100644
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -346,7 +346,6 @@ enum {
- #define QI_PC_PASID_SEL		(QI_PC_TYPE | QI_PC_GRAN(1))
- 
- #define QI_EIOTLB_ADDR(addr)	((u64)(addr) & VTD_PAGE_MASK)
--#define QI_EIOTLB_GL(gl)	(((u64)gl) << 7)
- #define QI_EIOTLB_IH(ih)	(((u64)ih) << 6)
- #define QI_EIOTLB_AM(am)	(((u64)am))
- #define QI_EIOTLB_PASID(pasid) 	(((u64)pasid) << 32)
-@@ -378,8 +377,6 @@ enum {
- #define QI_RESP_INVALID		0x1
- #define QI_RESP_FAILURE		0xf
- 
--#define QI_GRAN_ALL_ALL			0
--#define QI_GRAN_NONG_ALL		1
- #define QI_GRAN_NONG_PASID		2
- #define QI_GRAN_PSI_PASID		3
- 
+-	ret = sprd_dma_fill_desc(chan, &sdesc->chn_hw, 0, 0, src, dst, len,
+-				 dir, flags, slave_cfg);
++	ret = sprd_dma_fill_desc(chan, &sdesc->chn_hw, 0, 0, start_src,
++				 start_dst, len, dir, flags, slave_cfg);
+ 	if (ret) {
+ 		kfree(sdesc);
+ 		return NULL;
 -- 
 2.20.1
 
