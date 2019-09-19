@@ -2,108 +2,122 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1709C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:08:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5282EC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:09:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F05721907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:08:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25A9221907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:09:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gh1PJb4k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388935AbfISNIf (ORCPT
+        id S1732283AbfISNJN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 09:08:35 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39868 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732271AbfISNIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 09:08:35 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2765189810C;
-        Thu, 19 Sep 2019 13:08:35 +0000 (UTC)
-Received: from [10.72.12.81] (ovpn-12-81.pek2.redhat.com [10.72.12.81])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id ABF825D9CC;
-        Thu, 19 Sep 2019 13:08:22 +0000 (UTC)
-Subject: Re: [RFC v4 0/3] vhost: introduce mdev based hardware backend
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Tiwei Bie <tiwei.bie@intel.com>, alex.williamson@redhat.com,
-        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, dan.daly@intel.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        lingshan.zhu@intel.com
-References: <20190917010204.30376-1-tiwei.bie@intel.com>
- <993841ed-942e-c90b-8016-8e7dc76bf13a@redhat.com>
- <20190917105801.GA24855@___>
- <fa6957f3-19ad-f351-8c43-65bc8342b82e@redhat.com>
- <20190918102923-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <d2efe7e4-cf13-437d-e2dc-e2779fac7d2f@redhat.com>
-Date:   Thu, 19 Sep 2019 21:08:11 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 19 Sep 2019 09:09:13 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35777 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731819AbfISNJN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 09:09:13 -0400
+Received: by mail-pg1-f193.google.com with SMTP id a24so1907309pgj.2
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 06:09:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=b7eB2Zj0HMh+W1nUIU3X2oj3xDi67z7zqFrF3NQgu6w=;
+        b=Gh1PJb4k9dC4So0WrZHGTSEMtfNWz5B6hV9FfAhQayjN0gLcUsyUQm7U4dAX7PtgFT
+         aGSZT0ghnsD/5OmmtSGnd88iM7mzyiwug9j2/7yXfaeV1/7innuJpEpvvBWB4ngmqjQA
+         g2iWLxc3fscHGG+zXZ/VvAUlQ2iHtpT2WKCBQmuCks1UHkFfHyOOicvxjtBNJpAnpwXX
+         SEVCOYy9z/5KcFTw84Tk01h0fKbv66Y97XEs3RpJa6x1QimcGrFefUeWd2ENdNaN4+G0
+         AogBoa29Ofd2Et4opfLNeHj2w6XO5PK29CD0aupFPA/yo4SWSYWqNLi+cprrspErsk3t
+         Z6Mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b7eB2Zj0HMh+W1nUIU3X2oj3xDi67z7zqFrF3NQgu6w=;
+        b=plmojXGfkum6xDLQl1jaT//nKAgg2sPqnR//NLBZwa9twOHbR3DQvDIIWAytJ3ufcK
+         Hj8hB/m9347Tb22wFvwKvOE3c3IbGEbwnByrbV6mek90QuVf/OMtx9Ob2TTT5+dBX5Ou
+         R9ChaB05tDALaVSKl3eTmj2l4ECSB+wugmJTXLp5hG6AtvWctbCyKnF6igpUp9+apv0h
+         ipfvD3PsZYz/jXzdUscxSTb7o6zZNuXv0GguQPFD5XxibVR1Rn16yoXKosWOZnu5Z0Yc
+         Qn0t0HBBXpzPX8no6xiaD5xgOxx32pmNJqjWigoGDP/Za/y+NKb0NURNir7UMo4ZgP8b
+         nXPg==
+X-Gm-Message-State: APjAAAV3WOMnzUMmeqFBl8G9U1yAFlUGNsMXiWnzboNOXZXuRaDiek7r
+        zq0SQ6LWZftWPdsZ4zE802csxdK/bZaCJKxd86Eq2g==
+X-Google-Smtp-Source: APXvYqy9CZ28RW2zKXiUC9d6EbgNnSdWP2+JzbdmSoIMlTI53bhmKqSgfp9RMosERJQCBAbFi870wx+/J0sJND9jXEA=
+X-Received: by 2002:a63:3006:: with SMTP id w6mr9148267pgw.440.1568898551847;
+ Thu, 19 Sep 2019 06:09:11 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190918102923-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Thu, 19 Sep 2019 13:08:35 +0000 (UTC)
+References: <000000000000e669b80592ab96fc@google.com> <20190919082359.GA30545@localhost>
+In-Reply-To: <20190919082359.GA30545@localhost>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Thu, 19 Sep 2019 15:09:00 +0200
+Message-ID: <CAAeHK+zspPwm9vRHz3JNNzD5W+B-d4o7-br65Jcn1KCDJtBzZQ@mail.gmail.com>
+Subject: Re: possible deadlock in tower_open
+To:     Johan Hovold <johan@kernel.org>
+Cc:     syzbot <syzbot+66935bec147fbf68d9f8@syzkaller.appspotmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        legousb-devel@lists.sourceforge.net,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        starblue@users.sourceforge.net,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2019/9/18 下午10:32, Michael S. Tsirkin wrote:
->>>> So I have some questions:
->>>>
->>>> 1) Compared to method 2, what's the advantage of creating a new vhost char
->>>> device? I guess it's for keep the API compatibility?
->>> One benefit is that we can avoid doing vhost ioctls on
->>> VFIO device fd.
->> Yes, but any benefit from doing this?
-> It does seem a bit more modular, but it's certainly not a big deal.
-
-
-Ok, if we go this way, it could be as simple as provide some callback to 
-vhost, then vhost can just forward the ioctl through parent_ops.
-
-
+On Thu, Sep 19, 2019 at 10:24 AM Johan Hovold <johan@kernel.org> wrote:
 >
->>>> 2) For method 2, is there any easy way for user/admin to distinguish e.g
->>>> ordinary vfio-mdev for vhost from ordinary vfio-mdev?
->>> I think device-api could be a choice.
->> Ok.
->>
->>
->>>> I saw you introduce
->>>> ops matching helper but it's not friendly to management.
->>> The ops matching helper is just to check whether a given
->>> vfio-device is based on a mdev device.
->>>
->>>> 3) A drawback of 1) and 2) is that it must follow vfio_device_ops that
->>>> assumes the parameter comes from userspace, it prevents support kernel
->>>> virtio drivers.
->>>>
->>>> 4) So comes the idea of method 3, since it register a new vhost-mdev driver,
->>>> we can use device specific ops instead of VFIO ones, then we can have a
->>>> common API between vDPA parent and vhost-mdev/virtio-mdev drivers.
->>> As the above draft shows, this requires introducing a new
->>> VFIO device driver. I think Alex's opinion matters here.
+> On Mon, Sep 16, 2019 at 06:29:12AM -0700, syzbot wrote:
+> > Hello,
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    f0df5c1b usb-fuzzer: main usb gadget fuzzer driver
+> > git tree:       https://github.com/google/kasan.git usb-fuzzer
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=13c8d14e600000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6633fa4ed00be5
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=66935bec147fbf68d9f8
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> >
+> > Unfortunately, I don't have any reproducer for this crash yet.
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+66935bec147fbf68d9f8@syzkaller.appspotmail.com
+> >
+> > ======================================================
+> > WARNING: possible circular locking dependency detected
+> > 5.3.0-rc7+ #0 Not tainted
+> > ------------------------------------------------------
+> > syz-executor.1/8155 is trying to acquire lock:
+> > 0000000086c1bdfc (open_disc_mutex){+.+.}, at: tower_open+0xce/0x9b0
+> > drivers/usb/misc/legousbtower.c:335
+> >
+> > but task is already holding lock:
+> > 000000000f520f73 (minor_rwsem){++++}, at: usb_open+0x23/0x270
+> > drivers/usb/core/file.c:39
+> >
+> > which lock already depends on the new lock.
+>
+> This looks like a duplicate of
+>
+> https://lkml.kernel.org/r/000000000000d58eb90592add24e@google.com
+>
+> Not sure if this is the right way to report this (quoting needed?):
+>
+> #syz dup: possible deadlock in usb_deregister_dev (2)
 
+Hi Johan,
 
-Just to clarify, a new type of mdev driver but provides dummy 
-vfio_device_ops for VFIO to make container DMA ioctl work.
+You did it right, now the status is changed to "closed as dup":
 
-Thanks
+https://syzkaller.appspot.com/bug?extid=66935bec147fbf68d9f8
 
-
->> Yes, it is.
->>
->> Thanks
->>
->>
+Thanks!
