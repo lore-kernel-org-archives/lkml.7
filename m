@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F77CC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8270BC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:22:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6220821D71
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:22:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5761121920
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:22:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931724;
-	bh=zS88fknN9hqoENYg4m15wDa1+WkRqX/iwRPtcD5drys=;
+	s=default; t=1568931728;
+	bh=FTHGqCkAkH8jNAZlObvzCTNpF4r0k02QCXEPoVf6+Pg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CJJJucBkpXys2jDbEmhfyjekY9lE52qMJCFCLpR8cgCZGe7LEkOfoL9mW3afA0jzG
-	 lHTe4JzGy8A1qoDoInkTRJW+hjwxLW1WIltHHhtPmXVctJXHSNcP0FFahcoBhFrZ8T
-	 mc7oxDvue4PNy2052cvXhU8JmimIa4PCo6DEoivM=
+	b=lhOBhimB8pbseJ0sMHZVpji+hPfXZ/je/FMyBtlCbnxOLiFrQq408ookNpVPzttTI
+	 dEYajF+oMefUNeBUez2owsJ09TqOULeYhBDAFTnKk1QQdnYNUEl6J1kkMLVXFs/6Bd
+	 bCjIzm4EYF2UHGwaS8HmfPbYN30MNn1MGNC8N78Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404916AbfISWWD (ORCPT
+        id S2406762AbfISWWH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:22:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36802 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:22:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393086AbfISWWA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:22:00 -0400
+        id S2404758AbfISWWC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:22:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A615721927;
-        Thu, 19 Sep 2019 22:21:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 514B021927;
+        Thu, 19 Sep 2019 22:22:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931719;
-        bh=zS88fknN9hqoENYg4m15wDa1+WkRqX/iwRPtcD5drys=;
+        s=default; t=1568931721;
+        bh=FTHGqCkAkH8jNAZlObvzCTNpF4r0k02QCXEPoVf6+Pg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2CXnMnqbSavThLgUpEnt5Bnyu3edRCyIGNiYsaQLK4r0MSmPhF2/QGwRMZiqfwMxs
-         rQzaDo8d8rSDnjom17XsqfeNhVNFAlsuI+PjFZnx0J1ovS+1wxWbo6VxgXFrI4W+5u
-         3ddZo00TEFkNpvuyx8cgRtK0l0foa+TrVhGaKrBc=
+        b=DIaROK1c4v9JIh3bbuL3GTn1sOF1IIGo4zGKTEIIpx6r7bKWsUyqw2t+0QuL1a/SE
+         xm/i2XAmziccb7+QRTVCTnUPl+WLL95csWMVqt35BrhPBLt154RPBon1r8HZePq4Pt
+         hlWf2WU6VwQ7tRBnk//l9N3mVHjmxqNyxUzjaAhE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Thomas Huth <thuth@redhat.com>
-Subject: [PATCH 4.4 15/56] KVM: s390: Do not leak kernel stack data in the KVM_S390_INTERRUPT ioctl
-Date:   Fri, 20 Sep 2019 00:03:56 +0200
-Message-Id: <20190919214752.316585029@linuxfoundation.org>
+        stable@vger.kernel.org, Fuqian Huang <huangfq.daxian@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.4 16/56] KVM: x86: work around leak of uninitialized stack contents
+Date:   Fri, 20 Sep 2019 00:03:57 +0200
+Message-Id: <20190919214752.638662940@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214742.483643642@linuxfoundation.org>
 References: <20190919214742.483643642@linuxfoundation.org>
@@ -61,77 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Huth <thuth@redhat.com>
+From: Fuqian Huang <huangfq.daxian@gmail.com>
 
-commit 53936b5bf35e140ae27e4bbf0447a61063f400da upstream.
+commit 541ab2aeb28251bf7135c7961f3a6080eebcc705 upstream.
 
-When the userspace program runs the KVM_S390_INTERRUPT ioctl to inject
-an interrupt, we convert them from the legacy struct kvm_s390_interrupt
-to the new struct kvm_s390_irq via the s390int_to_s390irq() function.
-However, this function does not take care of all types of interrupts
-that we can inject into the guest later (see do_inject_vcpu()). Since we
-do not clear out the s390irq values before calling s390int_to_s390irq(),
-there is a chance that we copy random data from the kernel stack which
-could be leaked to the userspace later.
+Emulation of VMPTRST can incorrectly inject a page fault
+when passed an operand that points to an MMIO address.
+The page fault will use uninitialized kernel stack memory
+as the CR2 and error code.
 
-Specifically, the problem exists with the KVM_S390_INT_PFAULT_INIT
-interrupt: s390int_to_s390irq() does not handle it, and the function
-__inject_pfault_init() later copies irq->u.ext which contains the
-random kernel stack data. This data can then be leaked either to
-the guest memory in __deliver_pfault_init(), or the userspace might
-retrieve it directly with the KVM_S390_GET_IRQ_STATE ioctl.
+The right behavior would be to abort the VM with a KVM_EXIT_INTERNAL_ERROR
+exit to userspace; however, it is not an easy fix, so for now just ensure
+that the error code and CR2 are zero.
 
-Fix it by handling that interrupt type in s390int_to_s390irq(), too,
-and by making sure that the s390irq struct is properly pre-initialized.
-And while we're at it, make sure that s390int_to_s390irq() now
-directly returns -EINVAL for unknown interrupt types, so that we
-immediately get a proper error code in case we add more interrupt
-types to do_inject_vcpu() without updating s390int_to_s390irq()
-sometime in the future.
-
+Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 Cc: stable@vger.kernel.org
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
-Signed-off-by: Thomas Huth <thuth@redhat.com>
-Link: https://lore.kernel.org/kvm/20190912115438.25761-1-thuth@redhat.com
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+[add comment]
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/kvm/interrupt.c |   10 ++++++++++
- arch/s390/kvm/kvm-s390.c  |    2 +-
- 2 files changed, 11 insertions(+), 1 deletion(-)
+ arch/x86/kvm/x86.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/arch/s390/kvm/interrupt.c
-+++ b/arch/s390/kvm/interrupt.c
-@@ -1487,6 +1487,16 @@ int s390int_to_s390irq(struct kvm_s390_i
- 	case KVM_S390_MCHK:
- 		irq->u.mchk.mcic = s390int->parm64;
- 		break;
-+	case KVM_S390_INT_PFAULT_INIT:
-+		irq->u.ext.ext_params = s390int->parm;
-+		irq->u.ext.ext_params2 = s390int->parm64;
-+		break;
-+	case KVM_S390_RESTART:
-+	case KVM_S390_INT_CLOCK_COMP:
-+	case KVM_S390_INT_CPU_TIMER:
-+		break;
-+	default:
-+		return -EINVAL;
- 	}
- 	return 0;
- }
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -2541,7 +2541,7 @@ long kvm_arch_vcpu_ioctl(struct file *fi
- 	}
- 	case KVM_S390_INTERRUPT: {
- 		struct kvm_s390_interrupt s390int;
--		struct kvm_s390_irq s390irq;
-+		struct kvm_s390_irq s390irq = {};
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -4337,6 +4337,13 @@ static int emulator_write_std(struct x86
+ 	if (!system && kvm_x86_ops->get_cpl(vcpu) == 3)
+ 		access |= PFERR_USER_MASK;
  
- 		r = -EFAULT;
- 		if (copy_from_user(&s390int, argp, sizeof(s390int)))
++	/*
++	 * FIXME: this should call handle_emulation_failure if X86EMUL_IO_NEEDED
++	 * is returned, but our callers are not ready for that and they blindly
++	 * call kvm_inject_page_fault.  Ensure that they at least do not leak
++	 * uninitialized kernel stack memory into cr2 and error code.
++	 */
++	memset(exception, 0, sizeof(*exception));
+ 	return kvm_write_guest_virt_helper(addr, val, bytes, vcpu,
+ 					   access, exception);
+ }
 
 
