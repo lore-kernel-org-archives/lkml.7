@@ -2,166 +2,217 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E713AC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89022C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C06712067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:42:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4973620882
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:42:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="U5DwomJr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732706AbfISOm3 (ORCPT
+        id S1732718AbfISOmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 10:42:29 -0400
-Received: from foss.arm.com ([217.140.110.172]:59920 "EHLO foss.arm.com"
+        Thu, 19 Sep 2019 10:42:40 -0400
+Received: from cmta20.telus.net ([209.171.16.93]:38498 "EHLO cmta20.telus.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732606AbfISOm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 10:42:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 02528337;
-        Thu, 19 Sep 2019 07:42:28 -0700 (PDT)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EFF463F575;
-        Thu, 19 Sep 2019 07:42:25 -0700 (PDT)
-Subject: Re: [UNVERIFIED SENDER] Re: [UNVERIFIED SENDER] Re: [PATCH v2 2/3]
- soc: amazon: al-pos: Introduce Amazon's Annapurna Labs POS driver
-To:     "Shenhar, Talel" <talel@amazon.com>
-Cc:     Marc Zyngier <maz@kernel.org>, robh+dt@kernel.org,
-        tglx@linutronix.de, jason@lakedaemon.net, mark.rutland@arm.com,
-        nicolas.ferre@microchip.com, mchehab+samsung@kernel.org,
-        shawn.lin@rock-chips.com, gregkh@linuxfoundation.org,
-        dwmw@amazon.co.uk, benh@kernel.crashing.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <1568142310-17622-1-git-send-email-talel@amazon.com>
- <1568142310-17622-3-git-send-email-talel@amazon.com>
- <86d0g6syva.wl-maz@kernel.org>
- <3205f7ae-5568-c064-23ac-ea726246173b@amazon.com>
- <865zlxsxtd.wl-maz@kernel.org>
- <36f19b3f-46d3-f6d0-3681-71e3a9bb52ce@amazon.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <93e5ac72-13e1-4672-16f0-62ee6b8a8390@arm.com>
-Date:   Thu, 19 Sep 2019 15:42:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1732450AbfISOmj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 10:42:39 -0400
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id AxdeijQG0N5I9AxdfiCpdK; Thu, 19 Sep 2019 08:42:37 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1568904157; bh=qsEsOn4V0sECDsIsTqqpcyZaf3W8tl4yw4sCR0WiVTk=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=U5DwomJrh3bRYkhcLiR/2vupWKfKc85b06kE3tTiXuarJBCZ/529Zba2rCcr9KX74
+         diyUsc+4Z+qmtp5TvLa8isjhPLfysrBszid0wmE6WRVKUu/ILEw5U8Yy2hMQmTIoAy
+         63xpovk0IsqUslEwufgghgoHPCPZkmJfg4hWCH1GYwDa7jrUGhAwpUyRGeTxcpvAg+
+         xJ7sZ9cit+9NAsBlj3TX0ukxXz6B7Zbqtu4OEx+M2J2Fi76oEc8HNAar29i/uUnIaY
+         UntclzIKmPAzts6mxBurTh9NBOfm5vGbH0MqWW8j5luLCTWgLWqUL1iOVtsLimC4ad
+         4iU2KXtJzZ3AA==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=K/Fc4BeI c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
+ a=IkcTkHD0fZMA:10 a=FGbulvE0AAAA:8 a=3yQbRBO75ofR69lJigcA:9
+ a=Hy-bYUk0Tl6sZ_2g:21 a=H4s1P0xrksXhmr0C:21 a=QEXdDO2ut3YA:10
+ a=svzTaB3SJmTkU8mK-ULk:22 a=pHzHmUro8NiASowvMSCR:22 a=Ew2E2A-JSTLzCXPT_086:22
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Giovanni Gherdovich'" <ggherdovich@suse.cz>
+Cc:     <x86@kernel.org>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <mgorman@techsingularity.net>,
+        <matt@codeblueprint.co.uk>, <viresh.kumar@linaro.org>,
+        <juri.lelli@redhat.com>, <pjt@google.com>,
+        <vincent.guittot@linaro.org>, <qperret@qperret.net>,
+        <dietmar.eggemann@arm.com>, <srinivas.pandruvada@linux.intel.com>,
+        <tglx@linutronix.de>, <mingo@redhat.com>, <peterz@infradead.org>,
+        <bp@suse.de>, <lenb@kernel.org>, <rjw@rjwysocki.net>
+References: <20190909024216.5942-1-ggherdovich@suse.cz>         <20190909024216.5942-2-ggherdovich@suse.cz>         <000e01d568b5$87de9be0$979bd3a0$@net> <000301d56a76$0022e630$0068b290$@net> <1568730313.3329.1.camel@suse.cz>
+In-Reply-To: <1568730313.3329.1.camel@suse.cz>
+Subject: RE: [PATCH 1/2] x86,sched: Add support for frequency invariance
+Date:   Thu, 19 Sep 2019 07:42:29 -0700
+Message-ID: <001a01d56ef8$7abb07c0$70311740$@net>
 MIME-Version: 1.0
-In-Reply-To: <36f19b3f-46d3-f6d0-3681-71e3a9bb52ce@amazon.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Content-Language: en-ca
+Thread-Index: AdVtYwA14mVTiFQ5RZGnWAIKW2qj0gBjRDQA
+X-CMAE-Envelope: MS4wfGGRscLOybzzEQVsuwc2K7T+I2qYlMg0Yx7F0a/GExLEpT67nJ0viAdCunam85Px1X/zoNw893WHez3CBiivEb0VCJnptiLQe5h7sXCHNTe5y8Qc30MI
+ CZRqd5Zjt7J3a1gXpZCmIvqS+yHP9KmQ+szxWkz0VZBwRJTLxr8I6Nmlw/544Nkep2RK3c1cCpL9NSdBIbfAQvs+UUv6fiCFnwoiQXugeysnOR1fcuuRCQPl
+ oN2RZqhY8YRQGplzm8o6rtfWFgp5XmOnpHEFx2ZI1dAB3fZqISkqlWbEvGjO9265YuOBC8B1nPbBPTOEsIbTS9UuIfxC+cwJU7mj0X1ml5Huuo3JVGjE7Q4Y
+ hLgbjVtZq+thd9QWRHq1cH5XuStbtYpbhJiShJtX97Yzhfn4niKAQFUeeX37vNT6f/vjfmqX/yXXWFeAkOpC513R4qwoO1TLI6JyaruMkcM1Nz+8yOx+LUoz
+ +Z59WniWjlWjb+6Rb9/OPK0R+FrOhLa/vUoeFekTHVIIwbgiOIqKOnzdaePYISnglYC58P6zF+syllhzXbZtxqqncNrR7uIIs9EKS3YIPi4Y9g2VpSF+ACkd
+ n0CD+5CgNPux3aVzw8WzXJZtJtRbXwAe9kEjk1neZcFN/JMV049sowkKVDeYrVwaYfZxacVqQudJ+Yfhr/XXyORHyF+hemAhxdHAES76L9Cwx4w4ZiAsktxK
+ 0pGmTpCK7Jw9/1tKtIfJREx1mZnhnrJ5JtmTFEuYrHgVD/LwH55pIA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi guys,
+Hi Giovanni,
 
-On 12/09/2019 10:19, Shenhar, Talel wrote:
-> On 9/12/2019 11:50 AM, Marc Zyngier wrote:
->> On Thu, 12 Sep 2019 07:50:03 +0100,
->> "Shenhar, Talel" <talel@amazon.com> wrote:
->>> On 9/11/2019 5:15 PM, Marc Zyngier wrote:
->>>> On Tue, 10 Sep 2019 20:05:09 +0100,
->>>> Talel Shenhar <talel@amazon.com> wrote:
->>>>> +    if (!FIELD_GET(AL_POS_ERROR_LOG_1_VALID, log1))
->>>>> +        return IRQ_NONE;
->>>>> +
->>>>> +    log0 = readl(pos->mmio_base + AL_POS_ERROR_LOG_0);
->>>>> +    writel(0, pos->mmio_base + AL_POS_ERROR_LOG_1);
->>>>> +
->>>>> +    addr = FIELD_GET(AL_POS_ERROR_LOG_0_ADDR_LOW, log0);
->>>>> +    addr |= (FIELD_GET(AL_POS_ERROR_LOG_1_ADDR_HIGH, log1) << 32);
->>>>> +    request_id = FIELD_GET(AL_POS_ERROR_LOG_1_REQUEST_ID, log1);
->>>>> +    bresp = FIELD_GET(AL_POS_ERROR_LOG_1_BRESP, log1);
->>>>> +
->>>>> +    dev_err(&pdev->dev, "addr=0x%llx request_id=0x%x bresp=0x%x\n",
->>>>> +        addr, request_id, bresp);
+Thank you for your detailed reply.
 
->>>> What is this information? How do we make use of it? Given that this is
->>>> asynchronous, how do we correlate it to the offending software?
+On 2019.09.17 07:25 Giovanni Gherdovich wrote:
+>On Wed, 2019-09-11 at 08:28 -0700, Doug Smythies wrote:
+> [...]
 
->>> Indeed this information arriving from the HW is asynchronous.
->>>
->>> There is no direct method to get the offending software.
->>>
->>> There are all kinds of hacks we do to find the offending software once
->>> we find this error. most of the time its a new patch introduced but
->>> some of the time is just digging.
+>> The problem with the test is its run to run variability, which was from
+>> all the disk I/O, as far as I could determine. At the time,
+>> I studied this to death [2], and made a more repeatable test, without
+>> any disk I/O.
+>> 
+>> While the challenges with this work flow have tended to be focused
+>> on the CPU frequency scaling driver, I have always considered
+>> the root issue here to be a scheduling issue. Excerpt from my notes
+>> [2]:
+>> 
+>>> The issue is that performance is much much better if the system is
+>>> forced to use only 1 CPU rather than relying on the defaults where
+>>> the CPU scheduler decides what to do.
+>>> The scheduler seems to not realize that the current CPU has just
+>>> become free, and assigns the new task to a new CPU. Thus the load
+>>> on any one CPU is so low that it doesn't ramp up the CPU frequency.
+>>> It would be better if somehow the scheduler knew that the current
+>>> active CPU was now able to take on the new task, overall resulting
+>>> on one fully loaded CPU at the highest CPU frequency.
+>> 
+>> I do not know if such is practical, and I didn't re-visit the issue.
+>>
+>
+> You're absolutely right, pinning a serialized, fork-intensive workload such as
+> gitsource gives you as good of a performance as you can get, because it removes
+> the scheduler out of the picture.
+>
+> So one might be tempted to flag this test as non-representative of a
+> real-world scenario;
 
->> OK, so that the moment, this is more of a debug tool than anything
->> else, right?
+Disagree. I consider this test to be very representative of real-world
+scenarios. However, and I do not know for certain, the relatively high
+average fork rate of the gitsource "make test" is less common.
 
-> Not sure what do you mean by debug tool. this is used to capture iliigle access and allow
-> panic() based on them or simple logging.
+> the reasons we keep looking at it are:
+> 1. pinning may not always practical, as you mention
+> 2. it's an adversary, worst-case sort of test for some scheduler code paths
 
-Plumbing this into edac as a 'device' gives you the existing/standard interface for
-user-space. For example the 'panic_on_ue' that is exposed via sysfs, this saves you having
-another interface to toggle it for your driver. You can then use the existing distro tools
-to drive/monitor/sample it.
+Agree.
+
+>> For reference against which all other results are compared
+>> is the forced CPU affinity test run. i.e.:
+>> 
+>> taskset -c 3 test_script.
+>> 
+>> Mode          Governor                degradation     Power           Bzy_MHz
+>> Reference     perf 1 CPU              1.00            reference       3798
+>> -             performance             1.2             6% worse        3618
+>> passive       ondemand                2.3
+>> active        powersave               2.6
+>> passive       schedutil               2.7                             1600
+>> passive       schedutil-4C            1.68                            2515
+>> 
+>> Where degradation ratio is the time to execute / the reference time for
+>> the same conditions. The test runs over a wide range of processes per
+>> second, and the worst ratio has been selected for the above table.
+>> I have yet to write up this experiment, but the graphs that will
+>> eventually be used are at [4] and [5] (same data presented two
+>> different ways).
+>
+> Your table is interesting; I'd say that the one to beat there (from the
+> schedutil point of view) is intel_pstate(active)/performance. I'm slightly
+> surprised that intel_pstate(passive)/ondemand is worse than
+> intel_pstate(active)/powersave, I'd have guessed the other way around but it's
+> also true that the latter lost some grip on iowait_boost in of the recent
+> dev cycles.
+
+??
+intel_pstate(passive)/ondemand is better than intel_pstate(active)/powersave,
+not worse, over the entire range of PIDs (forks) per second and by quite a lot.
+
+>> I did the "make test" method and, presenting the numbers your way,
+>> got that 4C took 0.69 times as long as the unpatched schedutil.
+>> Your numbers were same or better (copied below, lower is better):
+>> 80x-BROADWELL-NUMA:   0.49
+>> 8x-SKYLAKE-UMA:               0.55
+>> 48x-HASWELL-NUMA:             0.69
+
+> I think your 0.69 and my three values tell the same story: schedutil really
+> needs to use the frequency invariant formula otherwise it's out of the
+> race. Enabling scale-invariance gives multple tens of percent point in
+> advantage.
+
+Agreed. This frequency invariant addition is great. However, if
+schedutil is "out of the race" without it, as you say, then isn't
+intel_pstate(passive)/ondemand out of the race also? It performs
+just as poorly for this test, until very low PIDs per second.
+
+> Now, is it 0.69 or 0.49? There are many factors to it; that's why I'm happy I
+> can test on multiple machines and get a somehow more varied picture.
+>
+> Also, didn't you mention you made several runs and selected the worst one for
+> the final score? I was less adventurous and took the average of 5 runs for my
+> gitsource executions :) that might contribute to a slightly higher final mark.
+
+No, I did the exact same as you for the gitsource "make test" method, except
+that I do 6 runs and throw out the first one and average the next 5.
+
+Yes, I said I picked the worse ratio, but that was for my version of this test,
+with the disk I/O and its related non-repeatability eliminated, only to provide
+something for readers that did not want to go to my web site to look at the
+related graph [1]. I'll send you the graph in a separate e-mail, in case you didn't
+go to the web site.
+
+>>>> 
+>>>> Compare it to the update formula of intel_pstate/powersave:
+>>> 
+>>>    freq_next = 1.25 * freq_max * Busy%
+>>> 
+>>> where again freq_max is 1C turbo and Busy% is the percentage of time not spent
+>>> idling (calculated with delta_MPERF / delta_TSC);
+>> 
+>> Note that the delta_MPERF / delta_TSC method includes idle state 0 and the old
+>> method of utilization does not (at least not last time I investigated, which was
+>> awhile ago (and I can not find my notes)).
+>
+> I think that depends on whether or not TSC stops at idle. As understand from
+> the Intel Software Developer manual (SDM) a TSC that stops at idle is called
+> "invariant TSC", and makes delta_MPERF / delta_TSC interesting. Otherwise the
+> two counters behaves exactly the same and the ratio is always 1, modulo the
+> delays in actually reading the two values. But all I know comes from
+> turbostat's man page and the SDM, so don't quote me on that :)
+
+I was only talking about idle state 0 (polling), where TSC does not stop.
+
+By the way, I have now done some tests with this patch set and multi-threaded
+stuff. Nothing to report, it all looks great.
+
+[1] http://www.smythies.com/~doug/linux/single-threaded/gg-pidps2.png
+
+... Doug
 
 
->>>> The whole think looks to me like a poor man's EDAC handling, and I'd
->>>> expect to be plugged in that subsystem instead. Any reason why this
->>>> isn't the case? It would certainly make the handling uniform for the
->>>> user.
-
->>> This logic was not plugged into EDAC as there is no "Correctable"
->>> error here. its just error event. Not all errors are EDAC in the sense
->>> of Error Detection And *Correction*. There are no correctable errors
->>> for this driver.
-
->> I'd argue the opposite! Because you obviously don't let a read-only
->> register being written to, the error has been corrected, and you
->> signal the correction status.
-
-> Not the meaning of corrected from my point of view - the system as a whole (sw&hw) are not
-> working state. a driver thinks it configured the system to do A while the system doesn't
-> really do that. and the critical part is that the driver that did operation A doesn't even
-> have a way to know it.
-> 
-> So I would not call this corrected.
-
-I don't think corrected/uncorrected helps here. If the register is read-only, and software
-writes to it, its a software bug.
-
-(from the v8.2's RAS extensions view, its somewhere between unrecoverable and uncontained)
-
-
->>> So plugging it  under EDAC seems like abusing the EDAC system.
-
-If EDAC doesn't do what you need, it can always be extended.
-
-
->>> Now that I've emphasize the reason for not putting this under EDAC,
->>> what do you think? should this "only uncorrectable event" driver
->>> should be part of EDAC?
-
-Sure, (its for memory controllers, but:) enum edac_type has a EDAC_EC: "Error Checking, no
-correction". This wouldn't be the only device that only reports uncorrectable errors.
-
-
->> My choice would be to plug it into the EDAC subsystem, and report all
->> interrupts as "Corrected" events. Optionally, and only if you are
->> debugging something that requires it, report the error as
->> "Uncorrectable", in which case the EDAC subsystem should trigger a
->> panic.
-
->> At least you'd get the infrastructure, logging and tooling that the
->> EDAC subsystem offers (parsing the kernel log doesn't really count).
-
-> I see what you say. However, I don't see too much added value in plugging this to EDAC and
-> feel like it would abuse EDAC framework.
-
-> James, will love your input from EDAC point of view, does it make sense to plug
-> un-correctable only event to EDAC?
-
-I think this device is an example of something like a "Fabric switch units" in
-Documentation/driver-api/edac.rst. It makes sense that it should be described as a
-'device' to edac. You can then use the existing user-space tools to control/report/monitor
-the values.
-
-
-Thanks,
-
-James
