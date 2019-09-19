@@ -2,145 +2,138 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64D53C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D47F6C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:07:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3606C2067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:07:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qZLq+3h2"
+	by mail.kernel.org (Postfix) with ESMTP id B68102067B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:07:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390025AbfISOHW (ORCPT
+        id S2390154AbfISOHd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 10:07:22 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:53892 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387729AbfISOHV (ORCPT
+        Thu, 19 Sep 2019 10:07:33 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:36263 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387729AbfISOHc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 10:07:21 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8JE4LSn029434;
-        Thu, 19 Sep 2019 14:07:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=/YOWrbzA7kJtkI9FFDm8sH5YeE3VoVARbcy1fM1cXRE=;
- b=qZLq+3h2EvEkLjvIyHKLJDAHQ32KYiaJdh0PBfakYyRHY5KW78HK8ieinAblp2oEFach
- sLKV0aYEnAfvOOE66nEEtzEaWzwnYZeAeyk91KR2PYSnIPI3rNsAk1/q7e9LoWo013TP
- qz3VMa4mtgybbXJfIVTvbLgML3oQkejaEyzF3u+jsy7/RZujEsiXXF3/GdTXA7HkcfMP
- tcTTT3bfLh9VaCD8/mDwywpLwSdIl+mF5tSEyqXcd+y2jBBuOdn0sX+w27DicfOGhCrm
- 7d99D8QKK0XUJLzVxppypl1TFcfjYxuNkQ0Wk3bYj4KO+++/ooKJNT0ytF0nDocv2gv/ Kg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2v3vb4m7fx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Sep 2019 14:07:09 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8JDwbWd176998;
-        Thu, 19 Sep 2019 14:07:08 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2v3vbs5jb4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Sep 2019 14:07:08 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8JE76Ts016960;
-        Thu, 19 Sep 2019 14:07:06 GMT
-Received: from [192.168.0.106] (/183.82.16.154)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 19 Sep 2019 07:07:06 -0700
-Subject: Re: [PATCH] iwlwifi: fix a potential NULL pointer dereference
-To:     Johannes Berg <johannes@sipsolutions.net>, kvalo@codeaurora.org
-Cc:     davem@davemloft.net, linux-wireless@vger.kernel.org,
+        Thu, 19 Sep 2019 10:07:32 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MoNu2-1hr3gK0pC4-00opsW; Thu, 19 Sep 2019 16:07:08 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Zhou Wang <wangzhou1@hisilicon.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Kenneth Lee <liguozhu@hisilicon.com>,
+        Shiju Jose <shiju.jose@huawei.com>,
+        Mao Wenan <maowenan@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        Hao Fang <fanghao11@huawei.com>, linux-crypto@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <1568830262-5529-1-git-send-email-allen.pais@oracle.com>
- <fd8813c1c3c02734d60f494a3c8081d95550ec85.camel@sipsolutions.net>
-From:   Allen <allen.pais@oracle.com>
-Message-ID: <2380f108-54a6-0110-4e2b-e66dd54ae800@oracle.com>
-Date:   Thu, 19 Sep 2019 19:37:01 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+Subject: [PATCH 2/2] crypto: hisilicon - allow compile-testing on x86
+Date:   Thu, 19 Sep 2019 16:05:53 +0200
+Message-Id: <20190919140650.1289963-2-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20190919140650.1289963-1-arnd@arndb.de>
+References: <20190919140650.1289963-1-arnd@arndb.de>
 MIME-Version: 1.0
-In-Reply-To: <fd8813c1c3c02734d60f494a3c8081d95550ec85.camel@sipsolutions.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9384 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=914
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1909190132
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9384 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=985 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1909190133
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:L7yFWwAi2zf3EJZdDKTARe8DorH4eKw0qZyaUsxtBx/h0sffIYB
+ e8Yw7mJLacGWfYTjz4p2DANakmc5fVkH/g00PMf2e9O1XYMlOk1l9xJxm4dQs8vPVJ16+rW
+ csMCYx6e//nqUPpv7OHqtkaKee/me8uL0b+EsluvjkwWo59IhiAorJzdzcYzqgrqZYmJkLU
+ R978hgPWrh33xNCwQgCiw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:U87jcL4Z/TM=:4pPibzFIUuSk1FSlna8JIa
+ T2nINl/0ftlVxAFJw5TvQotaV3QAxh0CEfYUye6n2JfiDGNokKz57ptxjUrBf2vz2TdIUdMxi
+ AhTKxNm8XdNCKKd81fyVb7CNYtTl77RahdYc6lfTsI2N+olkAmsz7q1uvFVQ2d3p6plPKFEOM
+ n/Y4EZE7uxkU6kFJWcLYM5/bhVCBtCda/xUfd/70kENzzBfaFMVPTmoCO4GD85ulqxNzt3wTk
+ e4RMXRAsi83Gng7ye+j/vEK0e5ahzw2MMDN2ASZJ3GzylxmnV815NK+q/h1tIwIjtd/ABIMQA
+ tRvfoYBJaboNV1RNI26EzaVSxaSG85OivNGNV6juW6X4uZR7JHxJYYhHYuHt1Hm9sqvZLz2eC
+ qwpKUSlhOtr/hE/RSYoRdAa/EvqBGkaETpZyeLvk4N/3RouOegrAijQLaZ+lTav7Z8+watKLa
+ T5y+1PjoUtPrLNbvxHCe/zlVe+lzpJATYgKTLfKiMA2yQyEi/+MFBkqOR4OIMT9RqwDaNJzxD
+ 2JqpLbStGTmNK7QQlu2+f/DkjPxF7fHsD6Mgg+EURLmd9Ar+KzxQcLlENUCWTGp5gahqSnKil
+ QBA7ziFNzoG26Xywr0RAefqpr/yvU2PZnd7OCjp6Vd1YRt8N0kAgJsuoLMbCKspn1O4+3ZMpH
+ lI1hkLH5r58vCzA4O+DniOTR3Kv/GT+44//nJRw46TP6aixs4lcHVN6g2Jo2f8xWU3CPR+Rpq
+ v6DRTcTki+eJMLpitaEagg+eFsRLj0HPqr6JPFssFVdhMOnANGyNHT8SG2W2KrnXnLJ0ldhCw
+ djVMui3MN2gphpYoSiMRZJZaAXqbBS0fIUj3RRc3WuR4K7QiL37OkujZGndeS1NUTFsmtkP1T
+ RxTer+YX4QlPFeijdx6Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+To avoid missing arm64 specific warnings that get introduced
+in this driver, allow compile-testing on all 64-bit architectures.
 
+The only actual arm64 specific code in this driver is an open-
+coded 128 bit MMIO write. On non-arm64 the same can be done
+using memcpy_toio. What I also noticed is that the mmio store
+(either one) is not endian-safe, this will only work on little-
+endian configurations, so I also add a Kconfig dependency on
+that, regardless of the architecture.
+Finally, a depenndecy on CONFIG_64BIT is needed because of the
+writeq().
 
-> 
-> Anyway, as 0-day bot pointed out, this isn't really right. The cleanup
-> paths here are also tricky, so I arrived at this patch a few days ago:
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/crypto/hisilicon/Kconfig | 8 +++++---
+ drivers/crypto/hisilicon/qm.c    | 6 ++++++
+ 2 files changed, 11 insertions(+), 3 deletions(-)
 
-  My bad, I should have looked at the cleanup path.
-
-> 
-> diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-> index eb544811759d..882fdf7e5e7b 100644
-> --- a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-> +++ b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-> @@ -3530,6 +3530,15 @@ struct iwl_trans *iwl_trans_pcie_alloc(struct pci_dev *pdev,
->   	spin_lock_init(&trans_pcie->reg_lock);
->   	mutex_init(&trans_pcie->mutex);
->   	init_waitqueue_head(&trans_pcie->ucode_write_waitq);
-> +
-> +	trans_pcie->rba.alloc_wq = alloc_workqueue("rb_allocator",
-> +						   WQ_HIGHPRI | WQ_UNBOUND, 1);
-> +	if (!trans_pcie->rba.alloc_wq) {
-
-   I would like to stick to if(unlikely(!trans_pcie->rba.alloc_wq) just 
-for consistency.
-
-   Let me know if I could add your SOB and send out V2.
-
-- Allen
-
-> +		ret = -ENOMEM;
-> +		goto out_free_trans;
-> +	}
-> +	INIT_WORK(&trans_pcie->rba.rx_alloc, iwl_pcie_rx_allocator_work);
-> +
->   	trans_pcie->tso_hdr_page = alloc_percpu(struct iwl_tso_hdr_page);
->   	if (!trans_pcie->tso_hdr_page) {
->   		ret = -ENOMEM;
-> @@ -3664,10 +3673,6 @@ struct iwl_trans *iwl_trans_pcie_alloc(struct pci_dev *pdev,
->   		trans_pcie->inta_mask = CSR_INI_SET_MASK;
->   	 }
->   
-> -	trans_pcie->rba.alloc_wq = alloc_workqueue("rb_allocator",
-> -						   WQ_HIGHPRI | WQ_UNBOUND, 1);
-> -	INIT_WORK(&trans_pcie->rba.rx_alloc, iwl_pcie_rx_allocator_work);
-> -
->   #ifdef CPTCFG_IWLWIFI_DEBUGFS
->   	trans_pcie->fw_mon_data.state = IWL_FW_MON_DBGFS_STATE_CLOSED;
->   	mutex_init(&trans_pcie->fw_mon_data.mutex);
-> @@ -3681,6 +3686,8 @@ out_free_ict:
->   	iwl_pcie_free_ict(trans);
->   out_no_pci:
->   	free_percpu(trans_pcie->tso_hdr_page);
-> +	destroy_workqueue(trans_pcie->rba.alloc_wq);
-> +out_free_trans:
->   	iwl_trans_free(trans);
->   	return ERR_PTR(ret);
->   }
-> 
-
+diff --git a/drivers/crypto/hisilicon/Kconfig b/drivers/crypto/hisilicon/Kconfig
+index ebaf91e0146d..dfbd668a431e 100644
+--- a/drivers/crypto/hisilicon/Kconfig
++++ b/drivers/crypto/hisilicon/Kconfig
+@@ -16,14 +16,15 @@ config CRYPTO_DEV_HISI_SEC
+ 
+ config CRYPTO_DEV_HISI_QM
+ 	tristate
+-	depends on ARM64 && PCI && PCI_MSI
++	depends on ARM64 || COMPILE_TEST
++	depends on PCI && PCI_MSI
+ 	help
+ 	  HiSilicon accelerator engines use a common queue management
+ 	  interface. Specific engine driver may use this module.
+ 
+ config CRYPTO_HISI_SGL
+ 	tristate
+-	depends on ARM64
++	depends on ARM64 || COMPILE_TEST
+ 	help
+ 	  HiSilicon accelerator engines use a common hardware scatterlist
+ 	  interface for data format. Specific engine driver may use this
+@@ -31,7 +32,8 @@ config CRYPTO_HISI_SGL
+ 
+ config CRYPTO_DEV_HISI_ZIP
+ 	tristate "Support for HiSilicon ZIP accelerator"
+-	depends on ARM64 && PCI && PCI_MSI
++	depends on PCI && PCI_MSI
++	depends on ARM64 || (COMPILE_TEST && 64BIT)
+ 	select CRYPTO_DEV_HISI_QM
+ 	select CRYPTO_HISI_SGL
+ 	select SG_SPLIT
+diff --git a/drivers/crypto/hisilicon/qm.c b/drivers/crypto/hisilicon/qm.c
+index f975c393a603..a8ed699081b7 100644
+--- a/drivers/crypto/hisilicon/qm.c
++++ b/drivers/crypto/hisilicon/qm.c
+@@ -331,6 +331,12 @@ static void qm_mb_write(struct hisi_qm *qm, const void *src)
+ 	void __iomem *fun_base = qm->io_base + QM_MB_CMD_SEND_BASE;
+ 	unsigned long tmp0 = 0, tmp1 = 0;
+ 
++	if (!IS_ENABLED(CONFIG_ARM64)) {
++		memcpy_toio(fun_base, src, 16);
++		wmb();
++		return;
++	}
++
+ 	asm volatile("ldp %0, %1, %3\n"
+ 		     "stp %0, %1, %2\n"
+ 		     "dsb sy\n"
+-- 
+2.20.0
 
