@@ -2,207 +2,109 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65854C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03EABC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31494208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:56:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF9D8208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:56:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="S6pbH9hT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n/02eVYQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391509AbfISP4n (ORCPT
+        id S2391523AbfISP4u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 11:56:43 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:55194 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391497AbfISP4m (ORCPT
+        Thu, 19 Sep 2019 11:56:50 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:37827 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391497AbfISP4t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 11:56:42 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8JFsSrQ133684;
-        Thu, 19 Sep 2019 15:55:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=sriX7NN5BqHD0GlF4Xbuu366jfCsxHPqzJ2QnT7Ovus=;
- b=S6pbH9hTSxhfomU3TV/MckQLOUPdlCJwvNRI6Fu6RgTl7g09tUKygAhAaFdzzISp/bHd
- Z7+lAivQO8/FFGqtqpSYiJA6Pf740MYUvPY/EesxutP/gf0zWlbfjjbsjhYTTxckMKLA
- ZW+G6ZXPnLI9RBKlBF0Jvl4keSGN9RyFX1VjQsBR3q8p2oshbIfooj58706ydhuuEVkm
- QEQnDzimw+QAHbno70KOmXkMbTTGJPBTnZA4Zyjvv1p9qhwGSNGw2NQvEaDumfCUSAXj
- 7VHRdev+w9in4qmvzblANfgNF8tOJs8uAde4zc8O3o+6L+o9liPcNOoqGfbJHg8H2vyI VQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2v3vb4n06e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Sep 2019 15:55:31 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8JFsCYG126243;
-        Thu, 19 Sep 2019 15:55:30 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2v3vbaqfqu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Sep 2019 15:55:30 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8JFtL16021238;
-        Thu, 19 Sep 2019 15:55:21 GMT
-Received: from [10.11.111.157] (/10.11.111.157)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 19 Sep 2019 08:55:20 -0700
-Content-Type: text/plain; charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 10.2 \(3259\))
-Subject: Re: [PATCH v4 3/5] locking/qspinlock: Introduce CNA into the slow
- path of qspinlock
-From:   Alex Kogan <alex.kogan@oracle.com>
-In-Reply-To: <3ae2b6a2-ffe6-2ca1-e5bf-2292db50e26f@redhat.com>
-Date:   Thu, 19 Sep 2019 11:55:21 -0400
-Cc:     linux@armlinux.org.uk, peterz@infradead.org, mingo@redhat.com,
-        will.deacon@arm.com, arnd@arndb.de, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        guohanjun@huawei.com, jglauber@marvell.com,
-        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        dave.dice@oracle.com, rahul.x.yadav@oracle.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <87B87982-670F-4F12-9EE0-DC89A059FAEC@oracle.com>
-References: <20190906142541.34061-1-alex.kogan@oracle.com>
- <20190906142541.34061-4-alex.kogan@oracle.com>
- <3ae2b6a2-ffe6-2ca1-e5bf-2292db50e26f@redhat.com>
-To:     Waiman Long <longman@redhat.com>
-X-Mailer: Apple Mail (2.3259)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9385 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1909190145
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9385 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1909190145
+        Thu, 19 Sep 2019 11:56:49 -0400
+Received: by mail-io1-f66.google.com with SMTP id b19so8963104iob.4;
+        Thu, 19 Sep 2019 08:56:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=xCZU3ZuGDFmyKvSHiIjw6ozCsgcZDsXDyKFpwiyTyY0=;
+        b=n/02eVYQoElD5Gs42q5VHvsODAgwkQY/wIOOftJZdGoPLqcm1rMTemcsfYzbgaj7ne
+         SE5sJ75dmR5fIVOOO6k6PM4ZJeI1BVGcVI3BIW0G8ZH1SuLYaY5CFkJaXslvwdDCmjTe
+         saPoeXP2qrSuKrkD8UCkbQreeQoRWkFMVMeN4G5mczImDX+5BEcRQ3sk5P3OEj0WGfIf
+         oD0k65ng7+8smTyRPTZGzgXfA7NvLUlmZWy9yX+zstcfU49MgDm21RUVXPColcm9t2Hj
+         gzjgwi9gsBxqxW63hOOavGhN78cL0HQN65f89WxugRtwRHLRw7H8h6BgEjMyoITX0u5a
+         Ql4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=xCZU3ZuGDFmyKvSHiIjw6ozCsgcZDsXDyKFpwiyTyY0=;
+        b=Roav8gxsTA66CKS6waH51PY4Tnx50nKZAC7vZcLXmZMKaZNTKvz7jADaolnfnkXkIt
+         kY3GKrSuvBY3BEf9+Ka36SMLgxNbXeEHYRLW5bsuOjDzCrcrpifiUqm/eKj2EXb7FYOG
+         PGCrpq7BcUQZCzfOGEpFjYvY7boBxPyhq75M+H6G13i6f1zFXJM3/+Pbkuwg9CDrSORU
+         89o1XyYzr7vidqcUlRU/MVhtOzfOAqp3bnxTJMYXNqyp9CGPZryrI4btuH0GDg1pnWTP
+         LfjITRQwBsqLcvj/Vv3fHec05kNtVhRy3WMktmuTXOFv60qyLI0Cu1CLrWdsrLA0GsH5
+         a5dA==
+X-Gm-Message-State: APjAAAXGTEwHP85IWbYaM4cKI6TX32J0hH1zlPH297+cnw3VI/Ih9WUv
+        a16tmCazLsy8GkbgZ2vnCLA=
+X-Google-Smtp-Source: APXvYqwwgeeYhL6iBLquX4X/HQvDP9CavDcgzxnpZxJl+JsRLMmrQwu2M1HQlCfxZt3L+ymkGRGs1g==
+X-Received: by 2002:a6b:ec0c:: with SMTP id c12mr10949354ioh.138.1568908606751;
+        Thu, 19 Sep 2019 08:56:46 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id n17sm1625774ioj.73.2019.09.19.08.56.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Sep 2019 08:56:45 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+To:     alexandru.Ardelean@analog.com
+Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] iio: imu: adis16400: fix memory leak
+Date:   Thu, 19 Sep 2019 10:56:35 -0500
+Message-Id: <20190919155636.3241-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <76a7c8d43f8c03a0549d157bbf278b515cfbc047.camel@analog.com>
+References: <76a7c8d43f8c03a0549d157bbf278b515cfbc047.camel@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> +/*
->> + * cna_try_find_next - scan the main waiting queue looking for the =
-first
->> + * thread running on the same NUMA node as the lock holder. If found =
-(call it
->> + * thread T), move all threads in the main queue between the lock =
-holder and
->> + * T to the end of the secondary queue and return T; otherwise, =
-return NULL.
->> + *
->> + * Schematically, this may look like the following (nn stands for =
-numa_node and
->> + * et stands for encoded_tail).
->> + *
->> + *     when cna_try_find_next() is called (the secondary queue is =
-empty):
->> + *
->> + *  A+------------+   B+--------+   C+--------+   T+--------+
->> + *   |mcs:next    | -> |mcs:next| -> |mcs:next| -> |mcs:next| -> =
-NULL
->> + *   |mcs:locked=3D1|    |cna:nn=3D0|    |cna:nn=3D2|    |cna:nn=3D1|
->> + *   |cna:nn=3D1    |    +--------+    +--------+    +--------+
->> + *   +----------- +
->> + *
->> + *     when cna_try_find_next() returns (the secondary queue =
-contains B and C):
->> + *
->> + *  A+----------------+    T+--------+
->> + *   |mcs:next        | ->  |mcs:next| -> NULL
->> + *   |mcs:locked=3DB.et | -+  |cna:nn=3D1|
->> + *   |cna:nn=3D1        |  |  +--------+
->> + *   +--------------- +  |
->> + *                       |
->> + *                       +->  B+--------+   C+--------+
->> + *                             |mcs:next| -> |mcs:next|
->> + *                             |cna:nn=3D0|    |cna:nn=3D2|
->> + *                             |cna:tail| -> +--------+
->> + *                             +--------+
->> + *
->> + * The worst case complexity of the scan is O(n), where n is the =
-number
->> + * of current waiters. However, the fast path, which is expected to =
-be the
->> + * common case, is O(1).
->> + */
->> +static struct mcs_spinlock *cna_try_find_next(struct mcs_spinlock =
-*node,
->> +					      struct mcs_spinlock *next)
->> +{
->> +	struct cna_node *cn =3D (struct cna_node *)node;
->> +	struct cna_node *cni =3D (struct cna_node *)next;
->> +	struct cna_node *first, *last =3D NULL;
->> +	int my_numa_node =3D cn->numa_node;
->> +
->> +	/* fast path: immediate successor is on the same NUMA node */
->> +	if (cni->numa_node =3D=3D my_numa_node)
->> +		return next;
->> +
->> +	/* find any next waiter on 'our' NUMA node */
->> +	for (first =3D cni;
->> +	     cni && cni->numa_node !=3D my_numa_node;
->> +	     last =3D cni, cni =3D (struct cna_node =
-*)READ_ONCE(cni->mcs.next))
->> +		;
->> +
->> +	/* if found, splice any skipped waiters onto the secondary queue =
-*/
->> +	if (cni && last)
->> +		cna_splice_tail(cn, first, last);
->> +
->> +	return (struct mcs_spinlock *)cni;
->> +}
->=20
-> At the Linux Plumbers Conference last week, Will has raised the =
-concern
-> about the latency of the O(1) cna_try_find_next() operation that will
-> add to the lock hold time.
-While the worst case complexity of the scan is O(n), I _think it can be =
-proven
-that the amortized complexity is O(1). For intuition, consider a =
-two-node=20
-system with N threads total. In the worst case scenario, the scan will =
-go=20
-over N/2 threads running on a different node. If the scan ultimately =
-=E2=80=9Cfails=E2=80=9D
-(no thread from the lock holder=E2=80=99s node is found), the lock will =
-be passed
-to the first thread from a different node and then between all those N/2 =
-threads,
-with a scan of just one node for the next N/2 - 1 passes. Otherwise, =
-those=20
-N/2 threads will be moved to the secondary queue. On the next lock =
-handover,=20
-we pass the lock either to the next thread in the main queue (as it has =
-to be=20
-from our node) or to the first node in the secondary queue. In both =
-cases, we=20
-scan just one node, and in the latter case, we have again N/2 - 1 passes =
-with=20
-a scan of just one node each.
+In adis_update_scan_mode_burst, if adis->buffer allocation fails release
+the adis->xfer.
 
-> One way to hide some of the latency is to do
-> a pre-scan before acquiring the lock. The CNA code could override the
-> pv_wait_head_or_lock() function to call cna_try_find_next() as a
-> pre-scan and return 0. What do you think?
-This is certainly possible, but I do not think it would completely =
-eliminate=20
-the worst case scenario. It will probably make it even less likely, but =
-at=20
-the same time, we will reduce the chance of actually finding a thread =
-from the
-same node (that may enter the main queue while we wait for the owner & =
-pending=20
-to go away).
+v2: set adis->xfer = NULL to avoid any potential double free.
 
-Regards,
-=E2=80=94 Alex=
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ drivers/iio/imu/adis_buffer.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/iio/imu/adis_buffer.c b/drivers/iio/imu/adis_buffer.c
+index 9ac8356d9a95..78fe83c1f4fe 100644
+--- a/drivers/iio/imu/adis_buffer.c
++++ b/drivers/iio/imu/adis_buffer.c
+@@ -35,8 +35,11 @@ static int adis_update_scan_mode_burst(struct iio_dev *indio_dev,
+ 		return -ENOMEM;
+ 
+ 	adis->buffer = kzalloc(burst_length + sizeof(u16), GFP_KERNEL);
+-	if (!adis->buffer)
++	if (!adis->buffer) {
++		kfree(adis->xfer);
++		adis->xfer = NULL;
+ 		return -ENOMEM;
++	}
+ 
+ 	tx = adis->buffer + burst_length;
+ 	tx[0] = ADIS_READ_REG(adis->burst->reg_cmd);
+-- 
+2.17.1
+
