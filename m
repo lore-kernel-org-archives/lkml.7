@@ -2,169 +2,117 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D37DC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFE1C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:08:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 383F921848
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:06:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC07321907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:08:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sm1kYe9P"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="JLYIJh7U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403808AbfISPGi (ORCPT
+        id S2403873AbfISPIN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 11:06:38 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:42340 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390897AbfISPGi (ORCPT
+        Thu, 19 Sep 2019 11:08:13 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35774 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388808AbfISPIM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 11:06:38 -0400
-Received: by mail-ed1-f68.google.com with SMTP id y91so3495788ede.9
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 08:06:37 -0700 (PDT)
+        Thu, 19 Sep 2019 11:08:12 -0400
+Received: by mail-lj1-f196.google.com with SMTP id m7so3988327lji.2
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 08:08:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=oUQUKfGGLyoufGiv0FoEyuW3RCfv5lyXYP4LRA9yUnI=;
-        b=sm1kYe9P5pTViCKFjNk/d6ebqMWyJNooZxf91TSUePYb/5i7/VaEYPsMPIc2wfZVi8
-         P/ooqN0dZaXdOGopagPyYfk47lN5uurdLwK5TuwLmyhYW1FITstvFCYOZDjE+2XBbEGs
-         DVxBofb6ZPhP/lrm+qE4xpNtlFMAcMZAd1Ca6mP8mwuQVxEQi5Rsqjk+fTKinMoccU00
-         yhhDKLGlRrtw55fnv6F+DBvplwGlSB8NUvnA7oH0UD9rik/SsDa/qisHAdtFxMcNHJ5E
-         poqcqtsjOyIKhSbiF+IAS/z0wbnfXeBUqDE1jU6R7i186QYsRgMIkQLl1pqPo1r1IhhB
-         MT4Q==
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bRiBZLWOEHbZzElzw6qYdz9cEfrj56jePR8fFrLJB6Q=;
+        b=JLYIJh7UlR3hPvwmVneFgqbEqVHl3GPDE4Vc3SIHWnj9E9cQIqKU7szXckxtR23sN3
+         oTuVimlSKjgMuZEFNXkZuVDJVntY8q41D8yhkSP1/uZ3tu+1sf66QXLA6bfL5z0gRkbx
+         +Qxv4PduCuVdsA6Ci9kdkEixWeLqO8BT13SggpjvDkwm5PgSR3ja6rHxiFfSCo+aN7m2
+         Y4ixYplF9xezHbCdsePOT5gq40iCvDhU+0JE9xg6W8p1UDID8do6oPtwv0c5LRgeuyqA
+         b8Y6dzE97J3nNW7oBIAle0WNL3dUGgnS4ZGbpNmalc8hAy4grTbAiAdF64y+gkNtQTgz
+         umXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oUQUKfGGLyoufGiv0FoEyuW3RCfv5lyXYP4LRA9yUnI=;
-        b=rdptH/W3iAaHWIFG/Js+UN6s4Rv7Xc2oCkBUFltexMaVSAYNEl0UwGYyJ2eUuXlQUQ
-         7duPu8L8Cef7YGadlM6J2GiAssLRxJ2K8xK5bxmoFb7Jdvnv2aSgZK7JyWmHXrol0+5N
-         eWtl7OikbN3zsHVTgTf1KJcjNyEgALWg7FbrSdZ6Yg4XhnVZkzLPdc4myk9BsW1aSOqY
-         Cj+wuGuFRjSIMlOua/70fVFv1Vxcy1bPs2SLxYyXGXp3E9UEf1B1dFuLuMU6Yzc532S0
-         8XoftKtnmcQektcTCw7DqKRa8RNWhcGR12ljBevMNAIF3WG3zG13zLl4+KbHpeYV8ZAe
-         fjtA==
-X-Gm-Message-State: APjAAAUgCIkoKRYXuGlbaPXPJJ/DSsmnGotdL0ktpFlsv/1oitxNOuMS
-        5dcuNH0NnnpidvjQMYMoIxFbcA==
-X-Google-Smtp-Source: APXvYqyS7bkpasvboOin36PhpvvHG70FNN59FYjP0q8duVqRlwWW9FcPkvkPkK/8rnvVy/QAXxBLOw==
-X-Received: by 2002:aa7:d295:: with SMTP id w21mr9488517edq.302.1568905596363;
-        Thu, 19 Sep 2019 08:06:36 -0700 (PDT)
-Received: from lophozonia ([85.195.192.192])
-        by smtp.gmail.com with ESMTPSA id a19sm1374424edy.37.2019.09.19.08.06.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2019 08:06:35 -0700 (PDT)
-Date:   Thu, 19 Sep 2019 17:06:34 +0200
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        robin.murphy@arm.com, jacob.jun.pan@linux.intel.com,
-        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        eric.auger@redhat.com
-Subject: Re: [PATCH 6/8] iommu/arm-smmu-v3: Support auxiliary domains
-Message-ID: <20190919150634.GE1013538@lophozonia>
-References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
- <20190610184714.6786-7-jean-philippe.brucker@arm.com>
- <20190626175959.ubxvb2qn4taclact@willie-the-truck>
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=bRiBZLWOEHbZzElzw6qYdz9cEfrj56jePR8fFrLJB6Q=;
+        b=VUt3iQI884MHoOo/ERcv/S85+CJX9rcjP+nGPgQA5/znVNxiIBxVUZy39SGfUmOftc
+         OSWsJSqAnZx90wRj/gy11b4SEnfLAYbtDt/m92j4GUagXb1en88avt3to6Gj1C3RyDnK
+         jiAub7JUiqhtpLZBaS7yeuO6iJQ9i7+hQikfTnqKPpPfPLcDYeBuxPVVFYnaZkUY1Jot
+         s7yOG5MYY4nQCZdfRCDeGPmZTYiobY6FDK5L419vCkn+K6p2TsLISKm/9bFD6bWxgeVu
+         gWLhDh4xXAU057q2CSy7AdMBlo66ZZTShAIIiFmvll8XyowSmwZydDFZCJ5X5DZB9ntF
+         WeuA==
+X-Gm-Message-State: APjAAAXYE5xyOuzlgW5dZusmITtif+WrQq9/VmWo+WXf+OS0QdG8FEBP
+        XUOCGD74deKfNpFU1OPFbe9aVmjPjMbh9g==
+X-Google-Smtp-Source: APXvYqxZR0gHbcpd6pV7XpkEj1tjQ3U/96VZ+XgTMaXBqjUvXXsnTnVXeCYzl/257fe3o9eXJFj40Q==
+X-Received: by 2002:a05:651c:20a:: with SMTP id y10mr4731466ljn.163.1568905690384;
+        Thu, 19 Sep 2019 08:08:10 -0700 (PDT)
+Received: from wasted.cogentembedded.com ([2a00:1fa0:42ab:49bb:193e:bfb0:9713:18c9])
+        by smtp.gmail.com with ESMTPSA id 77sm1697616ljj.84.2019.09.19.08.08.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 19 Sep 2019 08:08:09 -0700 (PDT)
+Subject: Re: [PATCH] mtd: st_spi_fsm: remove unused variable
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190919122937.29850-1-brgl@bgdev.pl>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <e062df64-1e13-f88d-5bef-cbc3a1a7fdf0@cogentembedded.com>
+Date:   Thu, 19 Sep 2019 18:08:08 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190626175959.ubxvb2qn4taclact@willie-the-truck>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190919122937.29850-1-brgl@bgdev.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 06:59:59PM +0100, Will Deacon wrote:
-> > @@ -666,8 +668,14 @@ struct arm_smmu_domain {
-> >  
-> >  	struct iommu_domain		domain;
-> >  
-> > +	/* Unused in aux domains */
-> >  	struct list_head		devices;
-> >  	spinlock_t			devices_lock;
-> > +
-> > +	/* Auxiliary domain stuff */
-> > +	struct arm_smmu_domain		*parent;
-> > +	ioasid_t			ssid;
-> > +	unsigned long			aux_nr_devs;
+Hello!
+
+On 09/19/2019 03:29 PM, Bartosz Golaszewski wrote:
+
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> Maybe use a union to avoid comments about what is used/unused?
+> The region resource in struct stfsm is unused and can be removed.
 
-OK
+   OK, except it's not a variable (as the subject says), it's a structure field.
+"region resource" also seems strange...
 
-> > +static void arm_smmu_aux_detach_dev(struct iommu_domain *domain, struct device *dev)
-> > +{
-> > +	struct iommu_domain *parent_domain;
-> > +	struct arm_smmu_domain *parent_smmu_domain;
-> > +	struct arm_smmu_master *master = dev_to_master(dev);
-> > +	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
-> > +
-> > +	if (!arm_smmu_dev_feature_enabled(dev, IOMMU_DEV_FEAT_AUX))
-> > +		return;
-> > +
-> > +	parent_domain = iommu_get_domain_for_dev(dev);
-> > +	if (!parent_domain)
-> > +		return;
-> > +	parent_smmu_domain = to_smmu_domain(parent_domain);
-> > +
-> > +	mutex_lock(&smmu_domain->init_mutex);
-> > +	if (!smmu_domain->aux_nr_devs)
-> > +		goto out_unlock;
-> > +
-> > +	if (!--smmu_domain->aux_nr_devs) {
-> > +		arm_smmu_write_ctx_desc(parent_smmu_domain, smmu_domain->ssid,
-> > +					NULL);
-> > +		/*
-> > +		 * TLB doesn't need invalidation since accesses from the device
-> > +		 * can't use this domain's ASID once the CD is clear.
-> > +		 *
-> > +		 * Sadly that doesn't apply to ATCs, which are PASID tagged.
-> > +		 * Invalidate all other devices as well, because even though
-> > +		 * they weren't 'officially' attached to the auxiliary domain,
-> > +		 * they could have formed ATC entries.
-> > +		 */
-> > +		arm_smmu_atc_inv_domain(smmu_domain, 0, 0);
 > 
-> I've been struggling to understand the locking here, since both
-> arm_smmu_write_ctx_desc and arm_smmu_atc_inv_domain take and release the
-> devices_lock for the domain. Is there not a problem with devices coming and
-> going in-between the two calls?
-
-Yes, I need to think about this more. I bet there are plenty more issues
-like this. For example I don't think I currently prevent the parent
-domain from disappearing while auxiliary domains are attached.
-
-> >  static struct iommu_ops arm_smmu_ops = {
-> >  	.capable		= arm_smmu_capable,
-> >  	.domain_alloc		= arm_smmu_domain_alloc,
-> > @@ -2539,6 +2772,13 @@ static struct iommu_ops arm_smmu_ops = {
-> >  	.of_xlate		= arm_smmu_of_xlate,
-> >  	.get_resv_regions	= arm_smmu_get_resv_regions,
-> >  	.put_resv_regions	= arm_smmu_put_resv_regions,
-> > +	.dev_has_feat		= arm_smmu_dev_has_feature,
-> > +	.dev_feat_enabled	= arm_smmu_dev_feature_enabled,
-> > +	.dev_enable_feat	= arm_smmu_dev_enable_feature,
-> > +	.dev_disable_feat	= arm_smmu_dev_disable_feature,
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  drivers/mtd/devices/st_spi_fsm.c | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> Why can't we use the existing ->capable and ->dev_{get,set}_attr callbacks
-> for this?
+> diff --git a/drivers/mtd/devices/st_spi_fsm.c b/drivers/mtd/devices/st_spi_fsm.c
+> index f4d1667daaf9..1888523d9745 100644
+> --- a/drivers/mtd/devices/st_spi_fsm.c
+> +++ b/drivers/mtd/devices/st_spi_fsm.c
+> @@ -255,7 +255,6 @@ struct stfsm_seq {
+>  struct stfsm {
+>  	struct device		*dev;
+>  	void __iomem		*base;
+> -	struct resource		*region;
+>  	struct mtd_info		mtd;
+>  	struct mutex		lock;
+>  	struct flash_info       *info;
 
-->capable isn't very useful because it applies to all SMMUs in the
-system. The existing ->{get,set}_attr callbacks apply to an
-iommu_domain. I think the main reason for doing it on endpoints was that
-it would be tedious to keep track of capabilities when attaching and
-detaching devices to a domain, especially for drivers that allow
-multiple IOMMUs per domain [1]. There were more discussions, and in the
-end we agreed on this API for device attributes [2].
-
-Thanks,
-Jean
-
-[1] https://lore.kernel.org/lkml/aa1ff748-c2ec-acc0-f1d9-cdff2b131e58@linux.intel.com/
-[2] https://lore.kernel.org/linux-iommu/20181207102926.GM16835@8bytes.org/
-
+MBR, Sergei
