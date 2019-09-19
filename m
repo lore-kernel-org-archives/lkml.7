@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 782E5C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BCDC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:30:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B45020640
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:30:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D80D20640
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:30:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932200;
-	bh=eVr15m5kKJnEZ0cFWr1VeiANpGOhDU/iAn14qgtCilw=;
+	s=default; t=1568932208;
+	bh=o3tP0NE4bLjkO/y323hJ12h+vGP22dZK+e8WsLUikco=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hGpNT1/rCfcigWg0xOH1Ernei2P51Rtjb673MDTfp3xWeDNChZYGZYWUzEXYCZXhP
-	 Panp9S941XEAF/YGlKgDAG29Qcv5xUvgNCQWRiCgH5WaekHF0efewKwfdokOB+UoTq
-	 GWOmE7s89rg+GDaIlXwImgdlZKAOp0148B99vu4E=
+	b=dJmm4A+DIRxNPSi5zfyQVdires2pBk4g17GDhyUxqnjE3ZLxnDzfwWvFAdd/UNzcq
+	 Srpju+Ytey9HfL8rJ4WMrcQ5946F5GlHis4h1B9eGqvkTRb9/j6GbNTWW7HqvlrXa/
+	 rzWsGvKt3eN1Y9vb5RKVTn08OQrn0ATo1ut1Tnf0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406401AbfISWQ7 (ORCPT
+        id S2406133AbfISWaH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:16:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57770 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:30:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406384AbfISWQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:16:53 -0400
+        id S2406360AbfISWQr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:16:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7D9F20678;
-        Thu, 19 Sep 2019 22:16:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B4B121927;
+        Thu, 19 Sep 2019 22:16:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931412;
-        bh=eVr15m5kKJnEZ0cFWr1VeiANpGOhDU/iAn14qgtCilw=;
+        s=default; t=1568931406;
+        bh=o3tP0NE4bLjkO/y323hJ12h+vGP22dZK+e8WsLUikco=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=baxLAfguN1OtZhbbnc9a3EsRcYCZZeLyct2KNFSca6S2VXDiaMSMZDQfqACIyu2SR
-         oyq9b3CeHYQ9jy6JVUYBvxLEfId6TNAvI6JZ1DDBy9cTridvqAYtDl0SbwYAN4UXi0
-         NsIXtmYPrxxW4jfoHsq3nBiM7AcuZDusVMXm2RuU=
+        b=tSjnkzZAJHo0y4tOtoK0v484upam4wOIR9vAV5EkYGFEaGBSvyU/FZdE71/1j6oi7
+         5euhXGvBiyzBEx5wlErDTn1FWPwul2hEL5SomaRmfyhQ5TPPEttGg7qkC2n6gv1fbx
+         M1NHiYRZXcP+L4u+znEh+GSIRp3ThQyB9AoOxrq4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dongli Zhang <dongli.zhang@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 07/59] xen-netfront: do not assume sk_buff_head list is empty in error handling
-Date:   Fri, 20 Sep 2019 00:03:22 +0200
-Message-Id: <20190919214757.744689312@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 4.14 05/59] phy: renesas: rcar-gen3-usb2: Disable clearing VBUS in over-current
+Date:   Fri, 20 Sep 2019 00:03:20 +0200
+Message-Id: <20190919214757.399176052@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214755.852282682@linuxfoundation.org>
 References: <20190919214755.852282682@linuxfoundation.org>
@@ -59,53 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dongli Zhang <dongli.zhang@oracle.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-[ Upstream commit 00b368502d18f790ab715e055869fd4bb7484a9b ]
+commit e6839c31a608e79f2057fab987dd814f5d3477e6 upstream.
 
-When skb_shinfo(skb) is not able to cache extra fragment (that is,
-skb_shinfo(skb)->nr_frags >= MAX_SKB_FRAGS), xennet_fill_frags() assumes
-the sk_buff_head list is already empty. As a result, cons is increased only
-by 1 and returns to error handling path in xennet_poll().
+The hardware manual should be revised, but the initial value of
+VBCTRL.OCCLREN is set to 1 actually. If the bit is set, the hardware
+clears VBCTRL.VBOUT and ADPCTRL.DRVVBUS registers automatically
+when the hardware detects over-current signal from a USB power switch.
+However, since the hardware doesn't have any registers which
+indicates over-current, the driver cannot handle it at all. So, if
+"is_otg_channel" hardware detects over-current, since ADPCTRL.DRVVBUS
+register is cleared automatically, the channel cannot be used after
+that.
 
-However, if the sk_buff_head list is not empty, queue->rx.rsp_cons may be
-set incorrectly. That is, queue->rx.rsp_cons would point to the rx ring
-buffer entries whose queue->rx_skbs[i] and queue->grant_rx_ref[i] are
-already cleared to NULL. This leads to NULL pointer access in the next
-iteration to process rx ring buffer entries.
+To resolve this behavior, this patch sets the VBCTRL.OCCLREN to 0
+to keep ADPCTRL.DRVVBUS even if the "is_otg_channel" hardware
+detects over-current. (We assume a USB power switch itself protects
+over-current and turns the VBUS off.)
 
-Below is how xennet_poll() does error handling. All remaining entries in
-tmpq are accounted to queue->rx.rsp_cons without assuming how many
-outstanding skbs are remained in the list.
+This patch is inspired by a BSP patch from Kazuya Mizuguchi.
 
- 985 static int xennet_poll(struct napi_struct *napi, int budget)
-... ...
-1032           if (unlikely(xennet_set_skb_gso(skb, gso))) {
-1033                   __skb_queue_head(&tmpq, skb);
-1034                   queue->rx.rsp_cons += skb_queue_len(&tmpq);
-1035                   goto err;
-1036           }
-
-It is better to always have the error handling in the same way.
-
-Fixes: ad4f15dc2c70 ("xen/netfront: don't bug in case of too many frags")
-Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 1114e2d31731 ("phy: rcar-gen3-usb2: change the mode to OTG on the combined channel")
+Cc: <stable@vger.kernel.org> # v4.5+
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/xen-netfront.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/xen-netfront.c
-+++ b/drivers/net/xen-netfront.c
-@@ -908,7 +908,7 @@ static RING_IDX xennet_fill_frags(struct
- 			__pskb_pull_tail(skb, pull_to - skb_headlen(skb));
- 		}
- 		if (unlikely(skb_shinfo(skb)->nr_frags >= MAX_SKB_FRAGS)) {
--			queue->rx.rsp_cons = ++cons;
-+			queue->rx.rsp_cons = ++cons + skb_queue_len(list);
- 			kfree_skb(nskb);
- 			return ~0U;
- 		}
+---
+ drivers/phy/renesas/phy-rcar-gen3-usb2.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
++++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+@@ -64,6 +64,7 @@
+ 					 USB2_OBINT_IDDIGCHG)
+ 
+ /* VBCTRL */
++#define USB2_VBCTRL_OCCLREN		BIT(16)
+ #define USB2_VBCTRL_DRVVBUSSEL		BIT(8)
+ 
+ /* LINECTRL1 */
+@@ -278,6 +279,7 @@ static void rcar_gen3_init_otg(struct rc
+ 	u32 val;
+ 
+ 	val = readl(usb2_base + USB2_VBCTRL);
++	val &= ~USB2_VBCTRL_OCCLREN;
+ 	writel(val | USB2_VBCTRL_DRVVBUSSEL, usb2_base + USB2_VBCTRL);
+ 	writel(USB2_OBINT_BITS, usb2_base + USB2_OBINTSTA);
+ 	val = readl(usb2_base + USB2_OBINTEN);
 
 
