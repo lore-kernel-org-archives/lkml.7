@@ -2,208 +2,200 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 519FFC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C14B8C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B218208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:49:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A78C208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:51:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Sony.onmicrosoft.com header.i=@Sony.onmicrosoft.com header.b="rxQpuOKN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lpu8xzeq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732595AbfISUtY (ORCPT
+        id S1732640AbfISUvH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 16:49:24 -0400
-Received: from mail-eopbgr800127.outbound.protection.outlook.com ([40.107.80.127]:21472
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727273AbfISUtY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 16:49:24 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RwlKEvnkiZwHsdxbz3ZRm4+eHFvtP/VUZ5OmWOlucQ5bP7uDMU/7EMzsXcApMEbnFDKTIunuCV6/coPhNqiDMOPu5LXv+frf3wTFZjFbthIsLICZW+jF9t4pGR9Gaw8OJCGFLdsUx5mdfhBhXdPqu1EYr/9YkD1f4oSmK2tmcsLlvfRrV6fpkVtmaaywaMero9E1qPgllcnIbY0jhqSsKUhX+SAlbnofZwGXMMSl58JS0deF/1OiB9nmpHeUHCTBkb4JjdkjU1PtIvJ0PF5pMf4RtVDrudbin5GxAYrrbYQRwXjbNFeEtFQbcdnLiK7ZjRi1AwNYPvUxdtZW2aWQJw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=u3sDGI9etxWwJF5cScGkxR8pWvdswFoExU97VO12/Bw=;
- b=Ht5OD37gSxGu6CYjy3VeTpmxF6H2SQbodiim02Lv45pt+pLw9Zk/NkBPypwLkxGVn5kULBfnfi0LjclAyhLRufsQwhBjU7nHQPG7zu2IhXJOemmxBASR5gmKRyi+dbxWLwrBrPIH70nlQPWHFm9sEHg3IDocafxOShaS3i5HilGdZLWH6orBipMStNVgVTrlZMrE3cy2roFOsWXyE2OqOHbI54X2W/FrfnWf7x8e/OC0FLlIzAe6HzWp7OR891nD9HXk/cFrFUDrA4NafTj9qe3RgQfsCp2HEtV/wmKLr/6C31Io8JKe9W4t7gQi7gBcbkC1lx21ZvLfzLI4AgtLIg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 160.33.194.228) smtp.rcpttodomain=chromium.org smtp.mailfrom=sony.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=sony.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Sony.onmicrosoft.com;
- s=selector2-Sony-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=u3sDGI9etxWwJF5cScGkxR8pWvdswFoExU97VO12/Bw=;
- b=rxQpuOKNjmkt7aCrOGlHXjRBX5O2adIaXsjUgRNJCvXqJGKkVqAoUls+F7Ofm8CvtYcml/WusjTiRRpdwBFnf907sbOx3V3JQgbjyYD1dpe5xYKV+nYExv4A7bf/ArgwztzJnjLN3m1mMXgYVq0KXX/qZrNFBp6xr/8qydfkxhI=
-Received: from MWHPR13CA0018.namprd13.prod.outlook.com (2603:10b6:300:16::28)
- by BY5PR13MB3288.namprd13.prod.outlook.com (2603:10b6:a03:186::28) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2284.10; Thu, 19 Sep
- 2019 20:49:20 +0000
-Received: from BL2NAM02FT033.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::202) by MWHPR13CA0018.outlook.office365.com
- (2603:10b6:300:16::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2305.10 via Frontend
- Transport; Thu, 19 Sep 2019 20:49:20 +0000
-Authentication-Results: spf=pass (sender IP is 160.33.194.228)
- smtp.mailfrom=sony.com; chromium.org; dkim=none (message not signed)
- header.d=none;chromium.org; dmarc=pass action=none header.from=sony.com;
-Received-SPF: Pass (protection.outlook.com: domain of sony.com designates
- 160.33.194.228 as permitted sender) receiver=protection.outlook.com;
- client-ip=160.33.194.228; helo=usculsndmail01v.am.sony.com;
-Received: from usculsndmail01v.am.sony.com (160.33.194.228) by
- BL2NAM02FT033.mail.protection.outlook.com (10.152.77.163) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2263.17 via Frontend Transport; Thu, 19 Sep 2019 20:49:19 +0000
-Received: from usculsndmail13v.am.sony.com (usculsndmail13v.am.sony.com [146.215.230.104])
-        by usculsndmail01v.am.sony.com (Sentrion-MTA-4.3.2/Sentrion-MTA-4.3.2) with ESMTP id x8JKnImw028313;
-        Thu, 19 Sep 2019 20:49:18 GMT
-Received: from USCULXHUB04V.am.sony.com (hub.bc.in.sel.sony.com [146.215.231.18])
-        by usculsndmail13v.am.sony.com (Sentrion-MTA-4.3.2/Sentrion-MTA-4.3.2) with ESMTP id x8JKnI4T007382;
-        Thu, 19 Sep 2019 20:49:18 GMT
-Received: from USCULXMSG01.am.sony.com ([fe80::b09d:6cb6:665e:d1b5]) by
- USCULXHUB04V.am.sony.com ([146.215.231.18]) with mapi id 14.03.0439.000; Thu,
- 19 Sep 2019 16:49:17 -0400
-From:   <Tim.Bird@sony.com>
-To:     <Tim.Bird@sony.com>, <keescook@chromium.org>, <shuah@kernel.org>
-CC:     <anders.roxell@linaro.org>, <alexandre.belloni@bootlin.com>,
-        <linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
-Subject: RE: [PATCH] selftests/kselftest/runner.sh: Add 45 second timeout
- per test
-Thread-Topic: [PATCH] selftests/kselftest/runner.sh: Add 45 second timeout
- per test
-Thread-Index: AQHVbxUXsNEjsnpJkUeVTYYfiT5hwaczb7LQgAAJVtA=
-Date:   Thu, 19 Sep 2019 20:49:14 +0000
-Message-ID: <ECADFF3FD767C149AD96A924E7EA6EAF977BA66E@USCULXMSG01.am.sony.com>
-References: <201909191102.97FA56072@keescook>
- <ECADFF3FD767C149AD96A924E7EA6EAF977BA636@USCULXMSG01.am.sony.com>
-In-Reply-To: <ECADFF3FD767C149AD96A924E7EA6EAF977BA636@USCULXMSG01.am.sony.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [146.215.228.6]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 19 Sep 2019 16:51:07 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36233 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727273AbfISUvG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 16:51:06 -0400
+Received: by mail-wr1-f66.google.com with SMTP id y19so4559034wrd.3;
+        Thu, 19 Sep 2019 13:51:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PCN06HDhMLRY6dWZM/Gh0fuWh+++p5i62hJglrfWPiw=;
+        b=lpu8xzeq41toSriH5epaua2Fig+bPZOfJq02lKkxcerCQlVEY5DvS4B5/4/DOMWh7I
+         llNbHTLSbpZQhcNiv5Z0ebQayExB1YoY4PQJxNdNMGVahHm/2sLyGennaDuDFqZ2VCro
+         me5EeYPA9Tl77K+AAcK4p2Co9H3ya8Jj1Qb4mDv8KrSZV/K86ZmF9UItNCQk0sEsxyq1
+         oMSwAfJ2J/ceSkQHc8aFsZImm3ePhalioqw/tvqOvrv+YyjPuocyg2plK8KG+u5CKOTm
+         sP1Loof3iu2fHGbf8oNzy2649iyF7GxAZAdubzPu6oqJ0OfPgQV6LFxJ1xPcsKUTcF56
+         P8hA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=PCN06HDhMLRY6dWZM/Gh0fuWh+++p5i62hJglrfWPiw=;
+        b=nCnio5xWdfCBcvpLbLj6bXqnhKlccZZlIZhGk9ltnqMLzfy6zanbdxQdcumE/tQxlg
+         NxNRLvLxVAJ/IZ3c0OqOjXa6PuHPDjEJIvKOTAUhnQ0wMFdokkf0wk/3/Na9TUahXCFD
+         5DSoRmFw9FdYQeosGWNXyPTf8uTJWpJcW8dBFpjT7gCbN76VR3ziX9idmYyja7iHzBHW
+         YSboSHLJIEkOfw+o3xRKPElFrRAJxcLpXJJIcgMrr48R5Sc4qz9dmJrSSmWPjEHiXjfg
+         rc78tViy9dI6I7VaT3inmkH9wTXoXzpfx1hzOqieDDZBUnVv42qjjTX6yyqK01gHOfOc
+         7tMw==
+X-Gm-Message-State: APjAAAVEa1GK/M0eam/rpoNBqHO6msqE4LnfuTlUVU+rStHlGbaDkGLR
+        CyQ3z1dazPv0dXPRN1pIGPRvHzLX
+X-Google-Smtp-Source: APXvYqzIsvTgSX5LyAVNoQWs3ZRw+atnCHUyC/ivxztmzvLRU4eMndkt9t/dW10lTfssWO9BFdAb7w==
+X-Received: by 2002:a5d:4708:: with SMTP id y8mr8636604wrq.318.1568926263055;
+        Thu, 19 Sep 2019 13:51:03 -0700 (PDT)
+Received: from [192.168.1.19] (bgr130.neoplus.adsl.tpnet.pl. [83.28.81.130])
+        by smtp.gmail.com with ESMTPSA id t14sm8158681wrs.6.2019.09.19.13.51.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 19 Sep 2019 13:51:02 -0700 (PDT)
+Subject: Re: [PATCH v3 1/2] leds: tlc591xx: simplify driver by using the
+ managed led API
+To:     Jean-Jacques Hiblot <jjhiblot@ti.com>, pavel@ucw.cz, dmurphy@ti.com
+Cc:     tomi.valkeinen@ti.com, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190918152556.9925-1-jjhiblot@ti.com>
+ <20190918152556.9925-2-jjhiblot@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <35676405-613b-d650-b7e1-4fc7d9269a35@gmail.com>
+Date:   Thu, 19 Sep 2019 22:51:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:160.33.194.228;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10019020)(39860400002)(376002)(136003)(396003)(346002)(199004)(189003)(13464003)(51444003)(476003)(8936002)(8746002)(66066001)(47776003)(6666004)(336012)(97756001)(37786003)(5660300002)(246002)(356004)(70586007)(11346002)(50466002)(4326008)(86362001)(446003)(70206006)(426003)(14444005)(8676002)(305945005)(46406003)(6306002)(102836004)(33656002)(6246003)(2201001)(7736002)(106002)(7696005)(54906003)(110136005)(966005)(229853002)(316002)(126002)(478600001)(55016002)(55846006)(486006)(26005)(23726003)(186003)(6116002)(2906002)(3846002)(2876002)(76176011)(5001870100001);DIR:OUT;SFP:1102;SCL:1;SRVR:BY5PR13MB3288;H:usculsndmail01v.am.sony.com;FPR:;SPF:Pass;LANG:en;PTR:mail.sonyusa.com,mail01.sonyusa.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 6abddc12-62e6-40b7-819b-08d73d42d7f4
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(4709080)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BY5PR13MB3288;
-X-MS-TrafficTypeDiagnostic: BY5PR13MB3288:
-X-MS-Exchange-PUrlCount: 2
-X-Microsoft-Antispam-PRVS: <BY5PR13MB328808F46F14FE0C0FED18A8FD890@BY5PR13MB3288.namprd13.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-Forefront-PRVS: 016572D96D
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: r1SlwfFP3Ig95qMOMg/+F8TSXwMIOh3eIVFQBbZ1VF7JCYBLSfIRxsH0J78IyKhbQXXELIdPGHrTBYTszhYx7vULgT3+ZyjpRjLkKMq6L0qlttyv2Vv5G1ZsYaDGXQVD6p/+QAkvf4dociIQeXNoucmT2EstPBs4Sw3+5zt0ddWCBP12XTnVTRl8wR1v8+D0jDiL3DpRSBV4azQ5NxeFo9Y3P5llK9sxvj7u1oUkkHoBA1E4oHrawmna+ZtHW1UsR9EjMfWZrrNz4Iy3POTL01NdB9nmYRh/3UBJdrm+ABYAi9HtNtufRwMeakJGpIkP2n1JLuGwU7aFOtQftV+VDQ6nZhUW32fVUp7w4y4xmg6C/R6r+rXfFilPl/WZ6y94Hr7BmlFIPt4Inb4L2Dj5wpxhFFm41EJVhzxtiDv2pyU=
-X-OriginatorOrg: sony.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Sep 2019 20:49:19.6305
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6abddc12-62e6-40b7-819b-08d73d42d7f4
-X-MS-Exchange-CrossTenant-Id: 66c65d8a-9158-4521-a2d8-664963db48e4
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=66c65d8a-9158-4521-a2d8-664963db48e4;Ip=[160.33.194.228];Helo=[usculsndmail01v.am.sony.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR13MB3288
+In-Reply-To: <20190918152556.9925-2-jjhiblot@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jean,
+
+Thank you for the updated set.
+
+We will need one more iteration. Please refer below.
+
+On 9/18/19 5:25 PM, Jean-Jacques Hiblot wrote:
+> Use the managed API of the LED class (devm_led_classdev_register()
+> instead of led_classdev_register()).
+> This allows us to remove the code used to track-and-destroy the LED devices
+> 
+> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+> Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> ---
+>  drivers/leds/leds-tlc591xx.c | 79 +++++++++---------------------------
+>  1 file changed, 20 insertions(+), 59 deletions(-)
+> 
+> diff --git a/drivers/leds/leds-tlc591xx.c b/drivers/leds/leds-tlc591xx.c
+> index 59ff088c7d75..3d5a4b92f016 100644
+> --- a/drivers/leds/leds-tlc591xx.c
+> +++ b/drivers/leds/leds-tlc591xx.c
+> @@ -128,51 +128,6 @@ tlc591xx_brightness_set(struct led_classdev *led_cdev,
+>  	return err;
+>  }
+>  
+[...]
+> +		led->ldev.max_brightness = LED_FULL;
+
+This is redundant since initially zeroed by kzalloc and LED core sets it
+to LED_FULL in this case, so we can remove it by this occasion.
+
+We have also one fix to this driver, preceding this patch, so your set
+will need a rebase onto for-5.5 branch [0].
 
 
-> -----Original Message-----
-> From Tim.Bird@sony.com
->=20
-> > -----Original Message-----
-> > From: Kees Cook
-> >
-> > Commit a745f7af3cbd ("selftests/harness: Add 30 second timeout per
-> > test") solves the problem of kselftest_harness.h-using binary tests
-> > possibly hanging forever. However, scripts and other binaries can still
-> > hang forever. This adds a global timeout to each test script run.
-> >
-> > To make this configurable (e.g. as needed in the "rtc" test case),
-> > include a new per-test-directory "settings" file (similar to "config")
-> > that can contain kselftest-specific settings. The first recognized fiel=
-d
-> > is "timeout".
->=20
-> OK - this is quite interesting.  I have had on my to-do list an action
-> item to propose the creation of a file (or a standard kerneldoc string)
-> to hold CI-related meta-data (of which timeout is one example).
->=20
-> What other meta-data did you have in mind?
->=20
-> I would like (that Fuego, and probably other CI systems would like) to ha=
-ve
->  access to data like test dependencies, descriptions, and results
-> interpretation
-> that would be beneficial for both CI systems (using them to control test
-> invocations and scheduling), as
-> well as users who are trying to interpret and handle the test results.
-> So this concept is a very welcome addition to kselftest.
->=20
-> LTP is in the process of adopting a new system for expressing and handlin=
-g
-> their test meta-data.
-> See the discussion at:
-> https://lists.yoctoproject.org/pipermail/automated-testing/2019-
-> August/000471.html
-> and the prototype implementation at:
-> https://github.com/metan-ucw/ltp/tree/master/docparse
->=20
-> I realize that that system is coupled pretty tightly to LTP, but conceptu=
-ally
-> some of the same type of information would be valuable for kselftest test=
-s.
-> One example of a specific field that would be handy is 'need_root'.
->=20
-> It would be nice to avoid proliferation of such meta-data schemas (that i=
-s
-> field names), so maybe we can have a discussion about this before adoptin=
-g
-> something?
->=20
-> Just FYI, I'm OK with the name 'timeout'.  I think that's pretty much
-> universally
-> used by all CI runners I'm aware of to indicate the test timeout value.  =
-But
-> before adopting other fields it would be good to start comparing notes
-> and not invent a bunch of new field names for concepts that are already i=
-n
-> other systems.
->=20
-> >
-> > Additionally, this splits the reporting for timeouts into a specific
-> > "TIMEOUT" not-ok (and adds exit code reporting in the remaining case).
-> >
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  tools/testing/selftests/kselftest/runner.sh | 36 +++++++++++++++++++--
-> >  tools/testing/selftests/rtc/settings        |  1 +
-> >  2 files changed, 34 insertions(+), 3 deletions(-)
-> >  create mode 100644 tools/testing/selftests/rtc/settings
-> >
-> > diff --git a/tools/testing/selftests/kselftest/runner.sh
-> > b/tools/testing/selftests/kselftest/runner.sh
-> > index 00c9020bdda8..84de7bc74f2c 100644
-> > --- a/tools/testing/selftests/kselftest/runner.sh
-> > +++ b/tools/testing/selftests/kselftest/runner.sh
-> > @@ -3,9 +3,14 @@
-> >  #
-> >  # Runs a set of tests in a given subdirectory.
-> >  export skip_rc=3D4
-> > +export timeout_rc=3D124
-> what are the units here?  I presume seconds?
+> +		err = devm_led_classdev_register(dev, &led->ldev);
+> +		if (err < 0) {
+> +			dev_err(dev, "couldn't register LED %s\n",
+> +				led->ldev.name);
+> +			return err;
+> +		}
+> +	}
+>  	return 0;
+>  }
+>  
+> @@ -268,7 +230,6 @@ static struct i2c_driver tlc591xx_driver = {
+>  		.of_match_table = of_match_ptr(of_tlc591xx_leds_match),
+>  	},
+>  	.probe = tlc591xx_probe,
+> -	.remove = tlc591xx_remove,
+>  	.id_table = tlc591xx_id,
+>  };
+>  
+> 
 
-Nevermind.  I misread this.  This is the return code from the 'timeout' pro=
-gram, right?
- -- Tim
+[0]
+https://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git/log/?h=for-5.5
 
+-- 
+Best regards,
+Jacek Anaszewski
