@@ -3,41 +3,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D4DC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 23:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B71B1C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 23:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C7D421D6C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 23:24:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98AD321920
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 23:24:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406268AbfISXYD (ORCPT
+        id S2406657AbfISXYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 19:24:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35622 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 19:24:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405474AbfISXYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2405566AbfISXYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 19 Sep 2019 19:24:01 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0FF6217D6;
+        by mail.kernel.org (Postfix) with ESMTPSA id E47C92196F;
         Thu, 19 Sep 2019 23:24:00 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92)
         (envelope-from <rostedt@goodmis.org>)
-        id 1iB5mJ-0000g7-UD; Thu, 19 Sep 2019 19:23:59 -0400
-Message-Id: <20190919232359.825502403@goodmis.org>
+        id 1iB5mK-0000gb-3D; Thu, 19 Sep 2019 19:24:00 -0400
+Message-Id: <20190919232359.982094231@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Thu, 19 Sep 2019 19:23:16 -0400
+Date:   Thu, 19 Sep 2019 19:23:17 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        stable@vger.kernel.org, Tom Zanussi <zanussi@kernel.org>
-Subject: [for-next][PATCH 3/8] tracing: Make sure variable reference alias has correct var_ref_idx
+        syzbot+2f807f4d3a2a4e87f18f@syzkaller.appspotmail.com,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [for-next][PATCH 4/8] tracing/kprobe: Fix NULL pointer access in trace_porbe_unlink()
 References: <20190919232313.198902049@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -46,95 +45,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Zanussi <zanussi@kernel.org>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-Original changelog from Steve Rostedt (except last sentence which
-explains the problem, and the Fixes: tag):
+Fix NULL pointer access in trace_probe_unlink() by initializing
+trace_probe.list correctly in trace_probe_init().
 
-I performed a three way histogram with the following commands:
+In the error case of trace_probe_init(), it can call trace_probe_unlink()
+before initializing trace_probe.list member. This causes NULL pointer
+dereference at list_del_init() in trace_probe_unlink().
 
-echo 'irq_lat u64 lat pid_t pid' > synthetic_events
-echo 'wake_lat u64 lat u64 irqlat pid_t pid' >> synthetic_events
-echo 'hist:keys=common_pid:irqts=common_timestamp.usecs if function == 0xffffffff81200580' > events/timer/hrtimer_start/trigger
-echo 'hist:keys=common_pid:lat=common_timestamp.usecs-$irqts:onmatch(timer.hrtimer_start).irq_lat($lat,pid) if common_flags & 1' > events/sched/sched_waking/trigger
-echo 'hist:keys=pid:wakets=common_timestamp.usecs,irqlat=lat' > events/synthetic/irq_lat/trigger
-echo 'hist:keys=next_pid:lat=common_timestamp.usecs-$wakets,irqlat=$irqlat:onmatch(synthetic.irq_lat).wake_lat($lat,$irqlat,next_pid)' > events/sched/sched_switch/trigger
-echo 1 > events/synthetic/wake_lat/enable
+Syzbot reported :
 
-Basically I wanted to see:
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 8633 Comm: syz-executor797 Not tainted 5.3.0-rc8-next-20190915
+#0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+Google 01/01/2011
+RIP: 0010:__list_del_entry_valid+0x85/0xf5 lib/list_debug.c:51
+Code: 0f 84 e1 00 00 00 48 b8 22 01 00 00 00 00 ad de 49 39 c4 0f 84 e2 00
+00 00 48 b8 00 00 00 00 00 fc ff df 4c 89 e2 48 c1 ea 03 <80> 3c 02 00 75
+53 49 8b 14 24 4c 39 f2 0f 85 99 00 00 00 49 8d 7d
+RSP: 0018:ffff888090a7f9d8 EFLAGS: 00010246
+RAX: dffffc0000000000 RBX: ffff88809b6f90c0 RCX: ffffffff817c0ca9
+RDX: 0000000000000000 RSI: ffffffff817c0a73 RDI: ffff88809b6f90c8
+RBP: ffff888090a7f9f0 R08: ffff88809a04e600 R09: ffffed1015d26aed
+R10: ffffed1015d26aec R11: ffff8880ae935763 R12: 0000000000000000
+R13: 0000000000000000 R14: ffff88809b6f90c0 R15: ffff88809b6f90d0
+FS:  0000555556f99880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000006cc090 CR3: 00000000962b2000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  __list_del_entry include/linux/list.h:131 [inline]
+  list_del_init include/linux/list.h:190 [inline]
+  trace_probe_unlink+0x1f/0x200 kernel/trace/trace_probe.c:959
+  trace_probe_cleanup+0xd3/0x110 kernel/trace/trace_probe.c:973
+  trace_probe_init+0x3f2/0x510 kernel/trace/trace_probe.c:1011
+  alloc_trace_uprobe+0x5e/0x250 kernel/trace/trace_uprobe.c:353
+  create_local_trace_uprobe+0x109/0x4a0 kernel/trace/trace_uprobe.c:1508
+  perf_uprobe_init+0x131/0x210 kernel/trace/trace_event_perf.c:314
+  perf_uprobe_event_init+0x106/0x1a0 kernel/events/core.c:8898
+  perf_try_init_event+0x135/0x590 kernel/events/core.c:10184
+  perf_init_event kernel/events/core.c:10228 [inline]
+  perf_event_alloc.part.0+0x1b89/0x33d0 kernel/events/core.c:10505
+  perf_event_alloc kernel/events/core.c:10887 [inline]
+  __do_sys_perf_event_open+0xa2d/0x2d00 kernel/events/core.c:10989
+  __se_sys_perf_event_open kernel/events/core.c:10871 [inline]
+  __x64_sys_perf_event_open+0xbe/0x150 kernel/events/core.c:10871
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
- hrtimer_start (calling function tick_sched_timer)
+Link: http://lkml.kernel.org/r/156869709721.22406.5153754822203046939.stgit@devnote2
 
-Note:
-
-  # grep tick_sched_timer /proc/kallsyms
-ffffffff81200580 t tick_sched_timer
-
-And save the time of that, and then record sched_waking if it is called
-in interrupt context and with the same pid as the hrtimer_start, it
-will record the latency between that and the waking event.
-
-I then look at when the task that is woken is scheduled in, and record
-the latency between the wakeup and the task running.
-
-At the end, the wake_lat synthetic event will show the wakeup to
-scheduled latency, as well as the irq latency in from hritmer_start to
-the wakeup. The problem is that I found this:
-
-          <idle>-0     [007] d...   190.485261: wake_lat: lat=27 irqlat=190485230 pid=698
-          <idle>-0     [005] d...   190.485283: wake_lat: lat=40 irqlat=190485239 pid=10
-          <idle>-0     [002] d...   190.488327: wake_lat: lat=56 irqlat=190488266 pid=335
-          <idle>-0     [005] d...   190.489330: wake_lat: lat=64 irqlat=190489262 pid=10
-          <idle>-0     [003] d...   190.490312: wake_lat: lat=43 irqlat=190490265 pid=77
-          <idle>-0     [005] d...   190.493322: wake_lat: lat=54 irqlat=190493262 pid=10
-          <idle>-0     [005] d...   190.497305: wake_lat: lat=35 irqlat=190497267 pid=10
-          <idle>-0     [005] d...   190.501319: wake_lat: lat=50 irqlat=190501264 pid=10
-
-The irqlat seemed quite large! Investigating this further, if I had
-enabled the irq_lat synthetic event, I noticed this:
-
-          <idle>-0     [002] d.s.   249.429308: irq_lat: lat=164968 pid=335
-          <idle>-0     [002] d...   249.429369: wake_lat: lat=55 irqlat=249429308 pid=335
-
-Notice that the timestamp of the irq_lat "249.429308" is awfully
-similar to the reported irqlat variable. In fact, all instances were
-like this. It appeared that:
-
-  irqlat=$irqlat
-
-Wasn't assigning the old $irqlat to the new irqlat variable, but
-instead was assigning the $irqts to it.
-
-The issue is that assigning the old $irqlat to the new irqlat variable
-creates a variable reference alias, but the alias creation code
-forgets to make sure the alias uses the same var_ref_idx to access the
-reference.
-
-Link: http://lkml.kernel.org/r/1567375321.5282.12.camel@kernel.org
-
-Cc: Linux Trace Devel <linux-trace-devel@vger.kernel.org>
-Cc: linux-rt-users <linux-rt-users@vger.kernel.org>
-Cc: stable@vger.kernel.org
-Fixes: 7e8b88a30b085 ("tracing: Add hist trigger support for variable reference aliases")
-Reported-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+Reported-by: syzbot+2f807f4d3a2a4e87f18f@syzkaller.appspotmail.com
+Fixes: ca89bc071d5e ("tracing/kprobe: Add multi-probe per event support")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/trace/trace_events_hist.c | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/trace/trace_probe.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 3a6e42aa08e6..9468bd8d44a2 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -2804,6 +2804,8 @@ static struct hist_field *create_alias(struct hist_trigger_data *hist_data,
- 		return NULL;
- 	}
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index 1e67fef06e53..baf58a3612c0 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -986,6 +986,12 @@ int trace_probe_init(struct trace_probe *tp, const char *event,
+ 	if (!tp->event)
+ 		return -ENOMEM;
  
-+	alias->var_ref_idx = var_ref->var_ref_idx;
++	INIT_LIST_HEAD(&tp->event->files);
++	INIT_LIST_HEAD(&tp->event->class.fields);
++	INIT_LIST_HEAD(&tp->event->probes);
++	INIT_LIST_HEAD(&tp->list);
++	list_add(&tp->event->probes, &tp->list);
 +
- 	return alias;
- }
+ 	call = trace_probe_event_call(tp);
+ 	call->class = &tp->event->class;
+ 	call->name = kstrdup(event, GFP_KERNEL);
+@@ -999,11 +1005,6 @@ int trace_probe_init(struct trace_probe *tp, const char *event,
+ 		ret = -ENOMEM;
+ 		goto error;
+ 	}
+-	INIT_LIST_HEAD(&tp->event->files);
+-	INIT_LIST_HEAD(&tp->event->class.fields);
+-	INIT_LIST_HEAD(&tp->event->probes);
+-	INIT_LIST_HEAD(&tp->list);
+-	list_add(&tp->event->probes, &tp->list);
+ 
+ 	return 0;
  
 -- 
 2.20.1
