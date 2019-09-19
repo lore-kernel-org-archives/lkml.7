@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C84C3C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 502E0C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:40:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C76221907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:40:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15321207FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:40:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HgIxctv7"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WATaNXIX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404746AbfISUkG (ORCPT
+        id S2392690AbfISUj0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 16:40:06 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:54262 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392709AbfISUj3 (ORCPT
+        Thu, 19 Sep 2019 16:39:26 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:42654 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392660AbfISUjY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 16:39:29 -0400
+        Thu, 19 Sep 2019 16:39:24 -0400
 Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8JKdSKV073295;
-        Thu, 19 Sep 2019 15:39:28 -0500
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8JKdNw1117028;
+        Thu, 19 Sep 2019 15:39:23 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568925568;
-        bh=OLs9Fx+GP/vAxHao2KgOcZ0fVrXqa+C7LZLUsbdEznM=;
+        s=ti-com-17Q1; t=1568925563;
+        bh=tw7xWF/ip7oe70vB98LKNhq5o/rHR1kJYf2G7ANIOAc=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=HgIxctv7bhvlqgAO7Rrf0OEgTUtApplYwLjlo4CsrLdz6DWtpDW7qBwQSBYFTE3Cx
-         2W497K8tmdC8/7fo/dA5wabqUs5sUsSNJgZSjZ8nSWvtws5fQ2n5MBkukMJyWsNrx6
-         YnSJQeU1DcupVWNHc07weYjoJaNHpxI7HNpS1SYU=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8JKdSZ3001856
+        b=WATaNXIXu8Q3lERAgEkvS7JlL3ocDfSCM3O/2wcK0hj+OdRHLtLmxs6zp8BuilIvo
+         bSMw4Qy3k9j8plQLDDtEHqSmc/oUwXTsYhO7nA9NrEpie6sAYAiS7dr813DTKp9E6d
+         JTfcl5suLzjmFitGx0SO1vIjvCwOYOHWT9FniUww=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8JKdNX2001779
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 19 Sep 2019 15:39:28 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 19 Sep 2019 15:39:23 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 19
- Sep 2019 15:39:24 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ Sep 2019 15:39:19 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 19 Sep 2019 15:39:24 -0500
+ Frontend Transport; Thu, 19 Sep 2019 15:39:19 -0500
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8JKdKIa014276;
-        Thu, 19 Sep 2019 15:39:27 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8JKdKIW014276;
+        Thu, 19 Sep 2019 15:39:23 -0500
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>
 CC:     Prabhakar Lad <prabhakar.csengg@gmail.com>,
         <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v2 07/13] media: am437x-vpfe: Setting STD to current value is not an error
-Date:   Thu, 19 Sep 2019 15:41:19 -0500
-Message-ID: <20190919204125.15254-8-bparrot@ti.com>
+Subject: [Patch v2 03/13] media: am437x-vpfe: Rework ISR routine for clarity
+Date:   Thu, 19 Sep 2019 15:41:15 -0500
+Message-ID: <20190919204125.15254-4-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190919204125.15254-1-bparrot@ti.com>
 References: <20190919204125.15254-1-bparrot@ti.com>
@@ -67,30 +67,191 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VIDIOC_S_STD should not return an error if the value is identical
-to the current one.
-This error was highlighted by the v4l2-compliance test.
+Make the ISR code simpler to follow by removing goto and
+relocating/eliminating duplicate spinlock accesses.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
- drivers/media/platform/am437x/am437x-vpfe.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/media/platform/am437x/am437x-vpfe.c | 128 ++++++++++----------
+ 1 file changed, 66 insertions(+), 62 deletions(-)
 
 diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
-index 03415c179c85..8b218f48428f 100644
+index 1521c072f3e3..13bf4b32b40b 100644
 --- a/drivers/media/platform/am437x/am437x-vpfe.c
 +++ b/drivers/media/platform/am437x/am437x-vpfe.c
-@@ -1822,6 +1822,10 @@ static int vpfe_s_std(struct file *file, void *priv, v4l2_std_id std_id)
- 	if (!(sdinfo->inputs[0].capabilities & V4L2_IN_CAP_STD))
- 		return -ENODATA;
- 
-+	/* if trying to set the same std then nothing to do */
-+	if (vpfe_standards[vpfe->std_index].std_id == std_id)
-+		return 0;
+@@ -1233,22 +1233,29 @@ static int vpfe_open(struct file *file)
+  * This function will get next buffer from the dma queue and
+  * set the buffer address in the vpfe register for capture.
+  * the buffer is marked active
+- *
+- * Assumes caller is holding vpfe->dma_queue_lock already
+  */
+-static inline void vpfe_schedule_next_buffer(struct vpfe_device *vpfe)
++static void vpfe_schedule_next_buffer(struct vpfe_device *vpfe)
+ {
++	dma_addr_t addr;
 +
- 	/* If streaming is started, return error */
- 	if (vb2_is_busy(&vpfe->buffer_queue)) {
- 		vpfe_err(vpfe, "%s device busy\n", __func__);
++	spin_lock(&vpfe->dma_queue_lock);
++	if (list_empty(&vpfe->dma_queue)) {
++		spin_unlock(&vpfe->dma_queue_lock);
++		return;
++	}
++
+ 	vpfe->next_frm = list_entry(vpfe->dma_queue.next,
+ 				    struct vpfe_cap_buffer, list);
+ 	list_del(&vpfe->next_frm->list);
++	spin_unlock(&vpfe->dma_queue_lock);
+ 
+-	vpfe_set_sdr_addr(&vpfe->ccdc,
+-	       vb2_dma_contig_plane_dma_addr(&vpfe->next_frm->vb.vb2_buf, 0));
++	addr = vb2_dma_contig_plane_dma_addr(&vpfe->next_frm->vb.vb2_buf, 0);
++	vpfe_set_sdr_addr(&vpfe->ccdc, addr);
+ }
+ 
+ static inline void vpfe_schedule_bottom_field(struct vpfe_device *vpfe)
+ {
+-	unsigned long addr;
++	dma_addr_t addr;
+ 
+ 	addr = vb2_dma_contig_plane_dma_addr(&vpfe->next_frm->vb.vb2_buf, 0) +
+ 					vpfe->field_off;
+@@ -1273,6 +1280,55 @@ static inline void vpfe_process_buffer_complete(struct vpfe_device *vpfe)
+ 	vpfe->cur_frm = vpfe->next_frm;
+ }
+ 
++static void vpfe_handle_interlaced_irq(struct vpfe_device *vpfe,
++				       enum v4l2_field field)
++{
++	int fid;
++
++	/* interlaced or TB capture check which field
++	 * we are in hardware
++	 */
++	fid = vpfe_ccdc_getfid(&vpfe->ccdc);
++
++	/* switch the software maintained field id */
++	vpfe->field ^= 1;
++	if (fid == vpfe->field) {
++		/* we are in-sync here,continue */
++		if (fid == 0) {
++			/*
++			 * One frame is just being captured. If the
++			 * next frame is available, release the
++			 * current frame and move on
++			 */
++			if (vpfe->cur_frm != vpfe->next_frm)
++				vpfe_process_buffer_complete(vpfe);
++
++			/*
++			 * based on whether the two fields are stored
++			 * interleave or separately in memory,
++			 * reconfigure the CCDC memory address
++			 */
++			if (field == V4L2_FIELD_SEQ_TB)
++				vpfe_schedule_bottom_field(vpfe);
++		} else {
++			/*
++			 * if one field is just being captured configure
++			 * the next frame get the next frame from the empty
++			 * queue if no frame is available hold on to the
++			 * current buffer
++			 */
++			if (vpfe->cur_frm == vpfe->next_frm)
++				vpfe_schedule_next_buffer(vpfe);
++		}
++	} else if (fid == 0) {
++		/*
++		 * out of sync. Recover from any hardware out-of-sync.
++		 * May loose one frame
++		 */
++		vpfe->field = fid;
++	}
++}
++
+ /*
+  * vpfe_isr : ISR handler for vpfe capture (VINT0)
+  * @irq: irq number
+@@ -1284,76 +1340,24 @@ static inline void vpfe_process_buffer_complete(struct vpfe_device *vpfe)
+ static irqreturn_t vpfe_isr(int irq, void *dev)
+ {
+ 	struct vpfe_device *vpfe = (struct vpfe_device *)dev;
+-	enum v4l2_field field;
++	enum v4l2_field field = vpfe->fmt.fmt.pix.field;
+ 	int intr_status;
+-	int fid;
+ 
+ 	intr_status = vpfe_reg_read(&vpfe->ccdc, VPFE_IRQ_STS);
+ 
+ 	if (intr_status & VPFE_VDINT0) {
+-		field = vpfe->fmt.fmt.pix.field;
+-
+ 		if (field == V4L2_FIELD_NONE) {
+-			/* handle progressive frame capture */
+ 			if (vpfe->cur_frm != vpfe->next_frm)
+ 				vpfe_process_buffer_complete(vpfe);
+-			goto next_intr;
+-		}
+-
+-		/* interlaced or TB capture check which field
+-		   we are in hardware */
+-		fid = vpfe_ccdc_getfid(&vpfe->ccdc);
+-
+-		/* switch the software maintained field id */
+-		vpfe->field ^= 1;
+-		if (fid == vpfe->field) {
+-			/* we are in-sync here,continue */
+-			if (fid == 0) {
+-				/*
+-				 * One frame is just being captured. If the
+-				 * next frame is available, release the
+-				 * current frame and move on
+-				 */
+-				if (vpfe->cur_frm != vpfe->next_frm)
+-					vpfe_process_buffer_complete(vpfe);
+-				/*
+-				 * based on whether the two fields are stored
+-				 * interleave or separately in memory,
+-				 * reconfigure the CCDC memory address
+-				 */
+-				if (field == V4L2_FIELD_SEQ_TB)
+-					vpfe_schedule_bottom_field(vpfe);
+-
+-				goto next_intr;
+-			}
+-			/*
+-			 * if one field is just being captured configure
+-			 * the next frame get the next frame from the empty
+-			 * queue if no frame is available hold on to the
+-			 * current buffer
+-			 */
+-			spin_lock(&vpfe->dma_queue_lock);
+-			if (!list_empty(&vpfe->dma_queue) &&
+-			    vpfe->cur_frm == vpfe->next_frm)
+-				vpfe_schedule_next_buffer(vpfe);
+-			spin_unlock(&vpfe->dma_queue_lock);
+-		} else if (fid == 0) {
+-			/*
+-			 * out of sync. Recover from any hardware out-of-sync.
+-			 * May loose one frame
+-			 */
+-			vpfe->field = fid;
++		} else {
++			vpfe_handle_interlaced_irq(vpfe, field);
+ 		}
+ 	}
+ 
+-next_intr:
+ 	if (intr_status & VPFE_VDINT1) {
+-		spin_lock(&vpfe->dma_queue_lock);
+-		if (vpfe->fmt.fmt.pix.field == V4L2_FIELD_NONE &&
+-		    !list_empty(&vpfe->dma_queue) &&
++		if (field == V4L2_FIELD_NONE &&
+ 		    vpfe->cur_frm == vpfe->next_frm)
+ 			vpfe_schedule_next_buffer(vpfe);
+-		spin_unlock(&vpfe->dma_queue_lock);
+ 	}
+ 
+ 	vpfe_clear_intr(&vpfe->ccdc, intr_status);
 -- 
 2.17.1
 
