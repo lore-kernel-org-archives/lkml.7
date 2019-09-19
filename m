@@ -2,130 +2,116 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB169C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F53C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:33:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CF7B208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:33:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932424;
-	bh=M8QDHlclBiqqcG4kczDfCX8BbuxFzi0ECb4PydXMguo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x6CAnqyYxYsNmAuqEe1okP1WrA9fpWAmVv9ABcpzvgn7exhOxa4RlGLqqYxLNWfxL
-	 G8P1ivlyHc2iZeZ6t9uhp7UkCo71i5BhwTh1X04YyY/+RcNYnh/oBvoF84FsRiITjR
-	 Ujhd2urcBLMG4vi5GiMjHjFXcCbuCMvXEuLidREE=
+	by mail.kernel.org (Postfix) with ESMTP id 2A831217D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:33:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JgPH4XvQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407298AbfISWdn (ORCPT
+        id S2407213AbfISWdm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:33:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49892 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393549AbfISWLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:11:14 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B74F7218AF;
-        Thu, 19 Sep 2019 22:11:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931074;
-        bh=M8QDHlclBiqqcG4kczDfCX8BbuxFzi0ECb4PydXMguo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LHkd+9i1cDpkMZKg2D2AvyqxwLMUBaaERLTyE52WzUg6oN+4dG9JZZTzguIIyynxz
-         lMXt0YmOTXZk9EfQtSa5v7UvLZYj1wOJLovPy8iF8DCrvQd/ikC+dKDi+3kEXO/g1S
-         8zBS3Cz8NGKPPs03pWS1l5LXQiN4ac39EkLLZHvo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 119/124] iommu/amd: Fix race in increase_address_space()
-Date:   Fri, 20 Sep 2019 00:03:27 +0200
-Message-Id: <20190919214823.506454697@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
-References: <20190919214819.198419517@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 19 Sep 2019 18:33:42 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41050 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404825AbfISWdk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:33:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Date:Message-ID:Cc:To:Subject:From:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=xaPPCBpHFn6E3y15/I1TAkDmHfh5VJrl2w9v/EFwOJs=; b=JgPH4XvQFoE8IDwkzEoSdglu0
+        RG2TySyubNqvimDsN/U4anXK+YsHzlp0uUETElDj+++k3fphga8nwSJn/7rirsBlTcqD8xTATYZ7Q
+        W5QBtLhTAodzT8fEs/B6lDQV3YzktwWNTdPkmyswLHxcVUKSLbCq6w/0eUT90atazxpU92z7Q0fUk
+        XQqtLCwyoZfvSC65V73dvrNYXv7gHhW4Xzgoa3Zj0PkoqU1IU67nkcdoo7qImi8VGw8VS8dke/gYh
+        nlJK9npn2oEiVMbuHQbV/JfV/S/ZIbfxNDLUM6vnM/jXLD8+vaLW4zPX/CP+4xa0ArXW842qIQPsK
+        59FkffzHA==;
+Received: from [2601:1c0:6280:3f0::9a1f]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iB4zZ-0006j5-V0; Thu, 19 Sep 2019 22:33:38 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH 2/2] soc: ti: move 2 driver config options into the TI SOC
+ drivers menu
+To:     LKML <linux-kernel@vger.kernel.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>
+Cc:     Olof Johansson <olof@lixom.net>, Nishanth Menon <nm@ti.com>,
+        Benjamin Fair <b-fair@ti.com>,
+        Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>
+Message-ID: <ae4b494c-9723-1bc2-e471-e0e9f7df6e8f@infradead.org>
+Date:   Thu, 19 Sep 2019 15:33:37 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Randy Dunlap <rdunlap@infradead.org>
 
-[ Upstream commit 754265bcab78a9014f0f99cd35e0d610fcd7dfa7 ]
+Move the AM654 and J721E SOC config options inside the "TI SOC drivers"
+menu with the other TI SOC drivers.
 
-After the conversion to lock-less dma-api call the
-increase_address_space() function can be called without any
-locking. Multiple CPUs could potentially race for increasing
-the address space, leading to invalid domain->mode settings
-and invalid page-tables. This has been happening in the wild
-under high IO load and memory pressure.
-
-Fix the race by locking this operation. The function is
-called infrequently so that this does not introduce
-a performance regression in the dma-api path again.
-
-Reported-by: Qian Cai <cai@lca.pw>
-Fixes: 256e4621c21a ('iommu/amd: Make use of the generic IOVA allocator')
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: a869b7b30dac ("soc: ti: Add Support for AM654 SoC config option")
+Fixes: cff377f7897a ("soc: ti: Add Support for J721E SoC config option")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Olof Johansson <olof@lixom.net>
+Cc: Nishanth Menon <nm@ti.com>
+Cc: Benjamin Fair <b-fair@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Tero Kristo <t-kristo@ti.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
 ---
- drivers/iommu/amd_iommu.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ drivers/soc/ti/Kconfig |   20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index b265062edf6c8..3e687f18b203a 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -1425,18 +1425,21 @@ static void free_pagetable(struct protection_domain *domain)
-  * another level increases the size of the address space by 9 bits to a size up
-  * to 64 bits.
-  */
--static bool increase_address_space(struct protection_domain *domain,
-+static void increase_address_space(struct protection_domain *domain,
- 				   gfp_t gfp)
- {
-+	unsigned long flags;
- 	u64 *pte;
- 
--	if (domain->mode == PAGE_MODE_6_LEVEL)
-+	spin_lock_irqsave(&domain->lock, flags);
+--- lnx-53.orig/drivers/soc/ti/Kconfig
++++ lnx-53/drivers/soc/ti/Kconfig
+@@ -1,4 +1,12 @@
+ # SPDX-License-Identifier: GPL-2.0-only
 +
-+	if (WARN_ON_ONCE(domain->mode == PAGE_MODE_6_LEVEL))
- 		/* address space already 64 bit large */
--		return false;
-+		goto out;
- 
- 	pte = (void *)get_zeroed_page(gfp);
- 	if (!pte)
--		return false;
-+		goto out;
- 
- 	*pte             = PM_LEVEL_PDE(domain->mode,
- 					iommu_virt_to_phys(domain->pt_root));
-@@ -1444,7 +1447,10 @@ static bool increase_address_space(struct protection_domain *domain,
- 	domain->mode    += 1;
- 	domain->updated  = true;
- 
--	return true;
-+out:
-+	spin_unlock_irqrestore(&domain->lock, flags);
++# TI SOC drivers
++#
++menuconfig SOC_TI
++	bool "TI SOC drivers support"
 +
-+	return;
- }
++if SOC_TI
++
+ # 64-bit ARM SoCs from TI
+ if ARM64
  
- static u64 *alloc_pte(struct protection_domain *domain,
--- 
-2.20.1
-
+@@ -14,17 +22,9 @@ config ARCH_K3_J721E_SOC
+ 	help
+ 	  Enable support for TI's J721E SoC Family.
+ 
+-endif
++endif # ARCH_K3
+ 
+-endif
+-
+-#
+-# TI SOC drivers
+-#
+-menuconfig SOC_TI
+-	bool "TI SOC drivers support"
+-
+-if SOC_TI
++endif # ARM64
+ 
+ config KEYSTONE_NAVIGATOR_QMSS
+ 	tristate "Keystone Queue Manager Subsystem"
 
 
