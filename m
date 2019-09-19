@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD73C4CEC4
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9640CC3A5A6
 	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40756208C0
+	by mail.kernel.org (Postfix) with ESMTP id 6C0DA21920
 	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:35:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1568932539;
-	bh=mwSawzqvGepzHhzYcW+mOuWO/xbS9HzV7XVFuIbeqYQ=;
+	bh=HG04MnMtyHZXAlO8F+WuIQp+1U7sG5+8U7kCHEbHDaI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rTdNOYcVCVcqEkVDwqi09MtrjMFwfFnsYNKaBN1y3WP38gkkV3FAt3cNOb/CD4Sfq
-	 kfBHWSsvX1Wp58yKKAm1f3Lp6s7hssP/8mhJgsELGjUGRGvN/+N2uNJVSxMSrzIbNx
-	 8zjSbZgLdRPPb4XQf2i8nqpX/yq91ABzRgNOuhaY=
+	b=zgRUsP41K7n7X8FfPip7rIj8I5tUPoZX2EnAGRIomN9rBPvvP1ImcptIiDvT3h9Kc
+	 /lDiwL0rRkevovinGMEQIYLFVpz++/gBvUUK8MSP+TK93Qz9hacZXZgU0MxA/V4Cgg
+	 bB5GCq6NgC1kL+CPb4r3xVEp9NQUr+sioi38k3Ho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389852AbfISWJX (ORCPT
+        id S2405375AbfISWJO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:09:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47492 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:09:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405379AbfISWJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:09:20 -0400
+        id S2393524AbfISWJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:09:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4C4321928;
-        Thu, 19 Sep 2019 22:09:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0A6B218AF;
+        Thu, 19 Sep 2019 22:09:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568930958;
-        bh=mwSawzqvGepzHhzYcW+mOuWO/xbS9HzV7XVFuIbeqYQ=;
+        s=default; t=1568930950;
+        bh=HG04MnMtyHZXAlO8F+WuIQp+1U7sG5+8U7kCHEbHDaI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=03rHlmI5zdQ7GLrnz/CWwkxVaZ1Ve+m2M0M9hIVhKuPN4gQF9IyithcXvwrC3/8wk
-         KGWHx+Kz5VGTvKyq+bdU0Ds2UI/pqSklp8eeea0euoMvBv9J9i3n4I+bsMS9oq59IJ
-         E4ypuxiE2k/8864ONtpt8/INBk6o24FjdGF5iIU8=
+        b=kaMqPJCLPTVk7hH9NpA2sEVwHdMBoU8qJXH7K3wSaI9iGLoryZiypCSyGkqX5TbwE
+         thKwCdmXSzW7BKpyFssL/APlSuXsP4ItmQ/jJRkuXrft2sv8P2sHtPj6X4VUncDpZl
+         fGh4lgaLBFHniJ6ht3ReRGQZ9gvhBgqvvuGNdX50=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        stable@vger.kernel.org, David Lechner <david@lechnology.com>,
+        Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 069/124] NFS: Fix writepage(s) error handling to not report errors twice
-Date:   Fri, 20 Sep 2019 00:02:37 +0200
-Message-Id: <20190919214821.507334926@linuxfoundation.org>
+Subject: [PATCH 5.2 042/124] ARM: dts: Fix incomplete dts data for am3 and am4 mmc
+Date:   Fri, 20 Sep 2019 00:02:10 +0200
+Message-Id: <20190919214820.535413518@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -60,106 +60,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 96c4145599b30c0eb6cbeaa24207802452dd1872 ]
+[ Upstream commit 5b63fb90adb95a178ad403e1703f59bf1ff2c16b ]
 
-If writepage()/writepages() saw an error, but handled it without
-reporting it, we should not be re-reporting that error on exit.
+Commit 4e27f752ab8c ("ARM: OMAP2+: Drop mmc platform data for am330x and
+am43xx") dropped legacy mmc platform data for am3 and am4, but missed the
+fact that we never updated the dts files for mmc3 that is directly on l3
+interconnect instead of l4 interconnect. This leads to a situation with
+no legacy platform data and incomplete dts data.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Let's update the mmc instances on l3 interconnect to probe properly with
+ti-sysc interconnect target module driver to make mmc3 work again. Let's
+still keep legacy "ti,hwmods" property around for v5.2 kernel and only
+drop it later on.
+
+Note that there is no need to use property status = "disabled" for mmc3.
+The default for dts is enabled, and runtime PM will idle unused instances
+just fine.
+
+Fixes: 4e27f752ab8c ("ARM: OMAP2+: Drop mmc platform data for am330x and am43xx")
+Reported-by: David Lechner <david@lechnology.com>
+Tested-by: David Lechner <david@lechnology.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/write.c | 21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+ arch/arm/boot/dts/am33xx.dtsi | 32 ++++++++++++++++++++++++++------
+ arch/arm/boot/dts/am4372.dtsi | 32 ++++++++++++++++++++++++++------
+ 2 files changed, 52 insertions(+), 12 deletions(-)
 
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index f15dda5efb741..0d6d7beb85053 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -621,12 +621,12 @@ static int nfs_page_async_flush(struct nfs_pageio_descriptor *pgio,
- 	WARN_ON_ONCE(test_bit(PG_CLEAN, &req->wb_flags));
+diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+index e5c2f71a7c77d..fb6b8aa12cc56 100644
+--- a/arch/arm/boot/dts/am33xx.dtsi
++++ b/arch/arm/boot/dts/am33xx.dtsi
+@@ -234,13 +234,33 @@
+ 			interrupt-names = "edma3_tcerrint";
+ 		};
  
- 	/* If there is a fatal error that covers this write, just exit */
--	ret = 0;
- 	mapping = page_file_mapping(page);
--	if (test_bit(AS_ENOSPC, &mapping->flags) ||
--	    test_bit(AS_EIO, &mapping->flags))
-+	ret = pgio->pg_error;
-+	if (nfs_error_is_fatal_on_server(ret))
- 		goto out_launder;
+-		mmc3: mmc@47810000 {
+-			compatible = "ti,omap4-hsmmc";
++		target-module@47810000 {
++			compatible = "ti,sysc-omap2", "ti,sysc";
+ 			ti,hwmods = "mmc3";
+-			ti,needs-special-reset;
+-			interrupts = <29>;
+-			reg = <0x47810000 0x1000>;
+-			status = "disabled";
++			reg = <0x478102fc 0x4>,
++			      <0x47810110 0x4>,
++			      <0x47810114 0x4>;
++			reg-names = "rev", "sysc", "syss";
++			ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
++					 SYSC_OMAP2_ENAWAKEUP |
++					 SYSC_OMAP2_SOFTRESET |
++					 SYSC_OMAP2_AUTOIDLE)>;
++			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>;
++			ti,syss-mask = <1>;
++			clocks = <&l3s_clkctrl AM3_L3S_MMC3_CLKCTRL 0>;
++			clock-names = "fck";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0x0 0x47810000 0x1000>;
++
++			mmc3: mmc@0 {
++				compatible = "ti,omap4-hsmmc";
++				ti,needs-special-reset;
++				interrupts = <29>;
++				reg = <0x0 0x1000>;
++			};
+ 		};
  
-+	ret = 0;
- 	if (!nfs_pageio_add_request(pgio, req)) {
- 		ret = pgio->pg_error;
- 		/*
-@@ -638,6 +638,7 @@ static int nfs_page_async_flush(struct nfs_pageio_descriptor *pgio,
- 		} else
- 			ret = -EAGAIN;
- 		nfs_redirty_request(req);
-+		pgio->pg_error = 0;
- 	} else
- 		nfs_add_stats(page_file_mapping(page)->host,
- 				NFSIOS_WRITEPAGES, 1);
-@@ -657,7 +658,7 @@ static int nfs_do_writepage(struct page *page, struct writeback_control *wbc,
- 	ret = nfs_page_async_flush(pgio, page);
- 	if (ret == -EAGAIN) {
- 		redirty_page_for_writepage(wbc, page);
--		ret = 0;
-+		ret = AOP_WRITEPAGE_ACTIVATE;
- 	}
- 	return ret;
- }
-@@ -676,10 +677,11 @@ static int nfs_writepage_locked(struct page *page,
- 	nfs_pageio_init_write(&pgio, inode, 0,
- 				false, &nfs_async_write_completion_ops);
- 	err = nfs_do_writepage(page, wbc, &pgio);
-+	pgio.pg_error = 0;
- 	nfs_pageio_complete(&pgio);
- 	if (err < 0)
- 		return err;
--	if (pgio.pg_error < 0)
-+	if (nfs_error_is_fatal(pgio.pg_error))
- 		return pgio.pg_error;
- 	return 0;
- }
-@@ -689,7 +691,8 @@ int nfs_writepage(struct page *page, struct writeback_control *wbc)
- 	int ret;
+ 		usb: usb@47400000 {
+diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
+index 55aff4db9c7c2..848e2a8884e2c 100644
+--- a/arch/arm/boot/dts/am4372.dtsi
++++ b/arch/arm/boot/dts/am4372.dtsi
+@@ -228,13 +228,33 @@
+ 			interrupt-names = "edma3_tcerrint";
+ 		};
  
- 	ret = nfs_writepage_locked(page, wbc);
--	unlock_page(page);
-+	if (ret != AOP_WRITEPAGE_ACTIVATE)
-+		unlock_page(page);
- 	return ret;
- }
+-		mmc3: mmc@47810000 {
+-			compatible = "ti,omap4-hsmmc";
+-			reg = <0x47810000 0x1000>;
++		target-module@47810000 {
++			compatible = "ti,sysc-omap2", "ti,sysc";
+ 			ti,hwmods = "mmc3";
+-			ti,needs-special-reset;
+-			interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
+-			status = "disabled";
++			reg = <0x478102fc 0x4>,
++			      <0x47810110 0x4>,
++			      <0x47810114 0x4>;
++			reg-names = "rev", "sysc", "syss";
++			ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
++					 SYSC_OMAP2_ENAWAKEUP |
++					 SYSC_OMAP2_SOFTRESET |
++					 SYSC_OMAP2_AUTOIDLE)>;
++			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>;
++			ti,syss-mask = <1>;
++			clocks = <&l3s_clkctrl AM4_L3S_MMC3_CLKCTRL 0>;
++			clock-names = "fck";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0x0 0x47810000 0x1000>;
++
++			mmc3: mmc@0 {
++				compatible = "ti,omap4-hsmmc";
++				ti,needs-special-reset;
++				interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0x0 0x1000>;
++			};
+ 		};
  
-@@ -698,7 +701,8 @@ static int nfs_writepages_callback(struct page *page, struct writeback_control *
- 	int ret;
- 
- 	ret = nfs_do_writepage(page, wbc, data);
--	unlock_page(page);
-+	if (ret != AOP_WRITEPAGE_ACTIVATE)
-+		unlock_page(page);
- 	return ret;
- }
- 
-@@ -725,6 +729,7 @@ int nfs_writepages(struct address_space *mapping, struct writeback_control *wbc)
- 				&nfs_async_write_completion_ops);
- 	pgio.pg_io_completion = ioc;
- 	err = write_cache_pages(mapping, wbc, nfs_writepages_callback, &pgio);
-+	pgio.pg_error = 0;
- 	nfs_pageio_complete(&pgio);
- 	nfs_io_completion_put(ioc);
- 
-@@ -733,7 +738,7 @@ int nfs_writepages(struct address_space *mapping, struct writeback_control *wbc)
- 	if (err < 0)
- 		goto out_err;
- 	err = pgio.pg_error;
--	if (err < 0)
-+	if (nfs_error_is_fatal(err))
- 		goto out_err;
- 	return 0;
- out_err:
+ 		sham: sham@53100000 {
 -- 
 2.20.1
 
