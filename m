@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79CA3C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA443C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42C6E217D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:20:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F905217D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:20:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931648;
-	bh=tzPSHXoVYrM17REt73DsfUFl6A91aQSGj8oWbHWsNXM=;
+	s=default; t=1568931651;
+	bh=g/ydxlUsCuG4kg0oFB4HZlFFa3Ik6DRsFehImxU9jHk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YvIfWPWb5LI2MsWr0x1OJwwyOdM1hS1pnm6Z5A+8KGNKNrkJIKKnEvaaXISbNb6IR
-	 092uxpxEu8U0y0y7I44R7P9PfMfrqzFPbf7s88SePhvxR4U50hsnGxHeCM16ucm7S2
-	 CR7GolM2Dcjxa+A/lJRQQoUJafN0JbNxJLmGjz9I=
+	b=Y9DCu2gqSE2XeZpvUKJ4guhD5TBD/7Lh8jgC9m17cOlKq7d1xocWGNSLaanW/URTC
+	 a1M/NNDEKhaSN5uzLjarrvcdoUuyHhqNOIy6t09EpT9kYcDAC70r7fg0TmAC/PipX+
+	 oKcm8MVtAKr0dThgGbWZ3fmQZYC1Ew472mnMLi60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394037AbfISWUr (ORCPT
+        id S2394046AbfISWUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:20:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34794 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:20:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733248AbfISWUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:20:41 -0400
+        id S2394032AbfISWUq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:20:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C47A20678;
-        Thu, 19 Sep 2019 22:20:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8C8320678;
+        Thu, 19 Sep 2019 22:20:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931640;
-        bh=tzPSHXoVYrM17REt73DsfUFl6A91aQSGj8oWbHWsNXM=;
+        s=default; t=1568931646;
+        bh=g/ydxlUsCuG4kg0oFB4HZlFFa3Ik6DRsFehImxU9jHk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zZC7ADbK1fQxvRa/2bntUVAwuuXmxIzvCCws4WM7GNsmNbCvpNC4G8IE2vQSS8M86
-         hBFNekZZI3F9noZ2Lp4I00aOwqZNaOeKn9xfHtOPUsmh6v8rZs/I2m2gzlfbj9rfPO
-         tM7sJwDz259h12qVUP/VNw+/kHaT7dDapjSJ4+AA=
+        b=zXBSPCthlwKBo0Zs6narWoqjWoEWBVbIjX8oXkDAg8PEXVlzaW6FfarCBfN8+NIxU
+         bMy7PAhbDrghZyeQinOJ7a1k/aC2PbnAZiFpwIVGdS+CzLF0REHWzS+pm4dqus8kld
+         04xCDslti+MuUfO3yU3L1dLsrOfuWgnTf8zo0FyU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 60/74] cifs: Use kzfree() to zero out the password
-Date:   Fri, 20 Sep 2019 00:04:13 +0200
-Message-Id: <20190919214810.410180508@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, SteveM <swm@swm1.com>
+Subject: [PATCH 4.9 62/74] sky2: Disable MSI on yet another ASUS boards (P6Xxxx)
+Date:   Fri, 20 Sep 2019 00:04:15 +0200
+Message-Id: <20190919214810.612462919@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214800.519074117@linuxfoundation.org>
 References: <20190919214800.519074117@linuxfoundation.org>
@@ -60,33 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 478228e57f81f6cb60798d54fc02a74ea7dd267e ]
+[ Upstream commit 189308d5823a089b56e2299cd96589507dac7319 ]
 
-It's safer to zero out the password so that it can never be disclosed.
+A similar workaround for the suspend/resume problem is needed for yet
+another ASUS machines, P6X models.  Like the previous fix, the BIOS
+doesn't provide the standard DMI_SYS_* entry, so again DMI_BOARD_*
+entries are used instead.
 
-Fixes: 0c219f5799c7 ("cifs: set domainName when a domain-key is used in multiuser")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Reported-and-tested-by: SteveM <swm@swm1.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/connect.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/marvell/sky2.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 2a199f4b663bf..e43ba6db2bdd6 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -2567,7 +2567,7 @@ cifs_set_cifscreds(struct smb_vol *vol, struct cifs_ses *ses)
- 			rc = -ENOMEM;
- 			kfree(vol->username);
- 			vol->username = NULL;
--			kfree(vol->password);
-+			kzfree(vol->password);
- 			vol->password = NULL;
- 			goto out_key_put;
- 		}
+diff --git a/drivers/net/ethernet/marvell/sky2.c b/drivers/net/ethernet/marvell/sky2.c
+index 59dbecd19c93f..49f692907a30b 100644
+--- a/drivers/net/ethernet/marvell/sky2.c
++++ b/drivers/net/ethernet/marvell/sky2.c
+@@ -4946,6 +4946,13 @@ static const struct dmi_system_id msi_blacklist[] = {
+ 			DMI_MATCH(DMI_BOARD_NAME, "P6T"),
+ 		},
+ 	},
++	{
++		.ident = "ASUS P6X",
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "ASUSTeK Computer INC."),
++			DMI_MATCH(DMI_BOARD_NAME, "P6X"),
++		},
++	},
+ 	{}
+ };
+ 
 -- 
 2.20.1
 
