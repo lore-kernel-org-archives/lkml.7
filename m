@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A13DAC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA8FBC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EBA821907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:51:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8AFE206C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:51:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406598AbfISWvQ (ORCPT
+        id S2406818AbfISWvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:51:16 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:15517 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2406177AbfISWvB (ORCPT
+        Thu, 19 Sep 2019 18:51:22 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:12767 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2406075AbfISWu7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:51:01 -0400
-X-UUID: 41df464585794c1ebfb81b625b9259eb-20190920
-X-UUID: 41df464585794c1ebfb81b625b9259eb-20190920
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        Thu, 19 Sep 2019 18:50:59 -0400
+X-UUID: 61b3eb89278d451eb412534b51df986a-20190920
+X-UUID: 61b3eb89278d451eb412534b51df986a-20190920
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
         (envelope-from <sam.shih@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1281557907; Fri, 20 Sep 2019 06:50:58 +0800
+        with ESMTP id 656096571; Fri, 20 Sep 2019 06:50:53 +0800
 Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 20 Sep 2019 06:50:52 +0800
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 20 Sep 2019 06:50:48 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 20 Sep 2019 06:50:52 +0800
+ Transport; Fri, 20 Sep 2019 06:50:48 +0800
 From:   Sam Shih <sam.shih@mediatek.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -43,42 +43,64 @@ CC:     Ryder Lee <ryder.lee@mediatek.com>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-mediatek@lists.infradead.org>,
         Sam Shih <sam.shih@mediatek.com>
-Subject: [PATCH v9 09/11] arm: dts: mt7623: add a property "num-pwms" for PWM
-Date:   Fri, 20 Sep 2019 06:49:09 +0800
-Message-ID: <1568933351-8584-10-git-send-email-sam.shih@mediatek.com>
+Subject: [PATCH v9 06/11] pwm: mediatek: update license and switch to SPDX tag
+Date:   Fri, 20 Sep 2019 06:49:06 +0800
+Message-ID: <1568933351-8584-7-git-send-email-sam.shih@mediatek.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1568933351-8584-1-git-send-email-sam.shih@mediatek.com>
 References: <1568933351-8584-1-git-send-email-sam.shih@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ryder Lee <ryder.lee@mediatek.com>
-
-This adds a property "num-pwms" for PWM controller.
+Add SPDX identifiers to pwm-mediatek.c
+Update license to GNU General Public License v2.0
 
 Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
 Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- arch/arm/boot/dts/mt7623.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+Changes since v6:
+Add a Reviewed-by tag
 
-diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
-index a79f0b6c3429..208e0d19a575 100644
---- a/arch/arm/boot/dts/mt7623.dtsi
-+++ b/arch/arm/boot/dts/mt7623.dtsi
-@@ -452,6 +452,7 @@
- 			 <&pericfg CLK_PERI_PWM5>;
- 		clock-names = "top", "main", "pwm1", "pwm2",
- 			      "pwm3", "pwm4", "pwm5";
-+		num-pwms = <5>;
- 		status = "disabled";
- 	};
+Changes since v5:
+- Follow reviewers's comments
+The license stuff is a separate change
+
+---
+ drivers/pwm/pwm-mediatek.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
+index 11f9cc446f14..9a61829766fc 100644
+--- a/drivers/pwm/pwm-mediatek.c
++++ b/drivers/pwm/pwm-mediatek.c
+@@ -1,12 +1,10 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+- * Mediatek Pulse Width Modulator driver
++ * MediaTek Pulse Width Modulator driver
+  *
+  * Copyright (C) 2015 John Crispin <blogic@openwrt.org>
+  * Copyright (C) 2017 Zhi Mao <zhi.mao@mediatek.com>
+  *
+- * This file is licensed under the terms of the GNU General Public
+- * License version 2. This program is licensed "as is" without any
+- * warranty of any kind, whether express or implied.
+  */
  
+ #include <linux/err.h>
+@@ -331,4 +329,4 @@ static struct platform_driver pwm_mediatek_driver = {
+ module_platform_driver(pwm_mediatek_driver);
+ 
+ MODULE_AUTHOR("John Crispin <blogic@openwrt.org>");
+-MODULE_LICENSE("GPL");
++MODULE_LICENSE("GPL v2");
 -- 
 2.17.1
 
