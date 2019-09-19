@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB32C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D413CC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:14:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A484621907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:14:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A58921D7B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:14:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931253;
-	bh=Ts8e8Hns3t4/ykTZIfN892InRBKDgKoLX54YAaNvoyM=;
+	s=default; t=1568931257;
+	bh=RBiB+nszUOZlllJwJQPDLHwFxoOujyJoImu0eDIhmHY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0XWpcOxjcI3ojTauT8Krzlq7IsySFMmyBTpKqwb0F3dwSQdRRISgyEECCuTaMNjnR
-	 u2aY//1A6XP2mXpJUXGD6ZsyJ6c4YwcQT9scqsoe+6hF8JN4tUcPtYaeRaCgjG4FB4
-	 zAMSbgacMXxL/U1VlEmIg5nsK7BAaB+VY03cYQZw=
+	b=eMroVF7cQvb5SCeTXfsemc9a0JpPSBxKZyzeHHwYFZx2lz+pDRVSJLD2b6MmUMGFV
+	 RHTBv4W6jo3/dkByVcoF4zx/YJDjHy/KAAQJ+epAj0VrO42IkfhPeLth6STFkhMZZh
+	 QqxQDjlS7EgKmBXs0En6BfyeqEKXNePNEcMKOTzw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392204AbfISWOM (ORCPT
+        id S2392230AbfISWOP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:14:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53560 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:14:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392166AbfISWOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:14:10 -0400
+        id S2392166AbfISWOO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:14:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0233621920;
-        Thu, 19 Sep 2019 22:14:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A38F7218AF;
+        Thu, 19 Sep 2019 22:14:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931249;
-        bh=Ts8e8Hns3t4/ykTZIfN892InRBKDgKoLX54YAaNvoyM=;
+        s=default; t=1568931252;
+        bh=RBiB+nszUOZlllJwJQPDLHwFxoOujyJoImu0eDIhmHY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q0kEbRSXD4wtRzFPMqixUeU3Av2pguI+/hInbjRAgtw2zQi3uQsjUXDlKFmaJIb0d
-         KrokxpH+X+0vT7z3WZNxy4YXCEV48Kzw0E7XZ1I+63gOGpE/+bA0NwJXopgJ103ASK
-         cFvbpntyZL8N91L8Vz+Zq3YhU0GsBSYlJZDLy4fY=
+        b=U28ZDNA+DN3laqVcT6nCUiOsQ+eU8Ne8yyQvGwLM+Iue8tIgnfW0IVtFbW+LXjBvB
+         1kBfxcJOe1lcv2x3jpkJEYe5/7yxTAORxgz0FlF/HJBBXbN+Zkx9TOkvl7cyoqvB1E
+         sAllOh9/xSjhuGAr329sAJUgoxNwWNjoJFNJ6Xd4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        Krzysztof Adamski <krzysztof.adamski@nokia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 40/79] xdp: unpin xdp umem pages in error path
-Date:   Fri, 20 Sep 2019 00:03:25 +0200
-Message-Id: <20190919214811.273100959@linuxfoundation.org>
+Subject: [PATCH 4.19 58/79] i2c: designware: Synchronize IRQs when unregistering slave client
+Date:   Fri, 20 Sep 2019 00:03:43 +0200
+Message-Id: <20190919214812.510175662@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214807.612593061@linuxfoundation.org>
 References: <20190919214807.612593061@linuxfoundation.org>
@@ -62,43 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
 
-[ Upstream commit fb89c39455e4b49881c5a42761bd71f03d3ef888 ]
+[ Upstream commit c486dcd2f1bbdd524a1e0149734b79e4ae329650 ]
 
-Fix mem leak caused by missed unpin routine for umem pages.
+Make sure interrupt handler i2c_dw_irq_handler_slave() has finished
+before clearing the the dev->slave pointer in i2c_dw_unreg_slave().
 
-Fixes: 8aef7340ae9695 ("xsk: introduce xdp_umem_page")
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Acked-by: Jonathan Lemon <jonathan.lemon@gmail.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+There is possibility for a race if i2c_dw_irq_handler_slave() is running
+on another CPU while clearing the dev->slave pointer.
+
+Reported-by: Krzysztof Adamski <krzysztof.adamski@nokia.com>
+Reported-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xdp/xdp_umem.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-designware-slave.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
-index a3b037fbfecde..8cab91c482ff5 100644
---- a/net/xdp/xdp_umem.c
-+++ b/net/xdp/xdp_umem.c
-@@ -322,7 +322,7 @@ static int xdp_umem_reg(struct xdp_umem *umem, struct xdp_umem_reg *mr)
- 	umem->pages = kcalloc(umem->npgs, sizeof(*umem->pages), GFP_KERNEL);
- 	if (!umem->pages) {
- 		err = -ENOMEM;
--		goto out_account;
-+		goto out_pin;
- 	}
+diff --git a/drivers/i2c/busses/i2c-designware-slave.c b/drivers/i2c/busses/i2c-designware-slave.c
+index e7f9305b2dd9f..f5f001738df5e 100644
+--- a/drivers/i2c/busses/i2c-designware-slave.c
++++ b/drivers/i2c/busses/i2c-designware-slave.c
+@@ -94,6 +94,7 @@ static int i2c_dw_unreg_slave(struct i2c_client *slave)
  
- 	for (i = 0; i < umem->npgs; i++)
-@@ -330,6 +330,8 @@ static int xdp_umem_reg(struct xdp_umem *umem, struct xdp_umem_reg *mr)
+ 	dev->disable_int(dev);
+ 	dev->disable(dev);
++	synchronize_irq(dev->irq);
+ 	dev->slave = NULL;
+ 	pm_runtime_put(dev->dev);
  
- 	return 0;
- 
-+out_pin:
-+	xdp_umem_unpin_pages(umem);
- out_account:
- 	xdp_umem_unaccount_pages(umem);
- 	return err;
 -- 
 2.20.1
 
