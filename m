@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A694AC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A847CC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AA922054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A2E32054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:26:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931958;
-	bh=XFsM7wsdcQyLz8XZBImqAGO66RPcnyCSdekJTBoxyIY=;
+	s=default; t=1568931966;
+	bh=+zLwyqeloT/kBiMcGpwtDWqjnX2V2XAV8iYqf4jYkI8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WYvJGj7kJNTPbswSMJU9HU+aXfQhRH+NDmYreZFPI+AxcPox52fbpwFiW3zbbApsm
-	 0D06fjldPfI5nJbOisg1jVmiMWnS9V5Qwyl3x971uQy8u/Em/a8UXEYxGncZQhFHWl
-	 p5m9h0jDwt/1pga946L4fxMkYz3w0BxSTKiYXJUU=
+	b=ezX9m24FMWE573apqkRwGhdT7kZaUWK4r57BsfEQHimMjP/02wPQua1V5Avg1WcK7
+	 Km4lNehWAmDwtD2hORpcQK4PA/wI7Nqk0bp+9y90Z7DMYnSMHot3I2JeVT2rubZVfw
+	 9maaST+1mTnxrNXsSherEOmDy/aVvVy8+f1/uro8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393232AbfISWZ5 (ORCPT
+        id S2393792AbfISW0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:25:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38064 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:26:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406917AbfISWWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:22:48 -0400
+        id S2406872AbfISWWe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:22:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D32F2196E;
-        Thu, 19 Sep 2019 22:22:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E54121D6C;
+        Thu, 19 Sep 2019 22:22:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931767;
-        bh=XFsM7wsdcQyLz8XZBImqAGO66RPcnyCSdekJTBoxyIY=;
+        s=default; t=1568931754;
+        bh=+zLwyqeloT/kBiMcGpwtDWqjnX2V2XAV8iYqf4jYkI8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2WxyXzj6a4TvKyk6aq1sim1NfI0DlzfnfHqGfh9aadhBKcsRjC0toZBELQamMwllS
-         wMpEstuDXwIXNtz3D2CeLz4nGdOeTUixEJEY7l/6khh9a6DQ2UkdbdtwvTEPTkHdhd
-         oKrHo1iyclzFoCqyyJdmRJ0Vo+VRMn/26PywImYQ=
+        b=UkjiYQGrpqW34ILpwG1sgqK+RukbcCFhOeRFIq8h0oIG20aFQTBPjj2ecoYJU5MB6
+         R28O/ii60Xzz/0QSKwJ4BWS7pT43fdRESGLX3QAVXpdsmEozn9XorHE4ucnbLug1Uo
+         UO/mb0gDQ218BE/nvqPRcaiFOTPR4A9AdFOwoFq8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        syzbot+0849c524d9c634f5ae66@syzkaller.appspotmail.com
-Subject: [PATCH 4.4 04/56] isdn/capi: check message length in capi_write()
-Date:   Fri, 20 Sep 2019 00:03:45 +0200
-Message-Id: <20190919214746.158332310@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        syzbot+35f4d916c623118d576e@syzkaller.appspotmail.com
+Subject: [PATCH 4.4 27/56] USB: usbcore: Fix slab-out-of-bounds bug during device reset
+Date:   Fri, 20 Sep 2019 00:04:08 +0200
+Message-Id: <20190919214755.636298873@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214742.483643642@linuxfoundation.org>
 References: <20190919214742.483643642@linuxfoundation.org>
@@ -60,86 +59,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-[ Upstream commit fe163e534e5eecdfd7b5920b0dfd24c458ee85d6 ]
+commit 3dd550a2d36596a1b0ee7955da3b611c031d3873 upstream.
 
-syzbot reported:
+The syzbot fuzzer provoked a slab-out-of-bounds error in the USB core:
 
-    BUG: KMSAN: uninit-value in capi_write+0x791/0xa90 drivers/isdn/capi/capi.c:700
-    CPU: 0 PID: 10025 Comm: syz-executor379 Not tainted 4.20.0-rc7+ #2
-    Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-    Call Trace:
-      __dump_stack lib/dump_stack.c:77 [inline]
-      dump_stack+0x173/0x1d0 lib/dump_stack.c:113
-      kmsan_report+0x12e/0x2a0 mm/kmsan/kmsan.c:613
-      __msan_warning+0x82/0xf0 mm/kmsan/kmsan_instr.c:313
-      capi_write+0x791/0xa90 drivers/isdn/capi/capi.c:700
-      do_loop_readv_writev fs/read_write.c:703 [inline]
-      do_iter_write+0x83e/0xd80 fs/read_write.c:961
-      vfs_writev fs/read_write.c:1004 [inline]
-      do_writev+0x397/0x840 fs/read_write.c:1039
-      __do_sys_writev fs/read_write.c:1112 [inline]
-      __se_sys_writev+0x9b/0xb0 fs/read_write.c:1109
-      __x64_sys_writev+0x4a/0x70 fs/read_write.c:1109
-      do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
-      entry_SYSCALL_64_after_hwframe+0x63/0xe7
-    [...]
+BUG: KASAN: slab-out-of-bounds in memcmp+0xa6/0xb0 lib/string.c:904
+Read of size 1 at addr ffff8881d175bed6 by task kworker/0:3/2746
 
-The problem is that capi_write() is reading past the end of the message.
-Fix it by checking the message's length in the needed places.
+CPU: 0 PID: 2746 Comm: kworker/0:3 Not tainted 5.3.0-rc5+ #28
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  print_address_description+0x6a/0x32c mm/kasan/report.c:351
+  __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
+  kasan_report+0xe/0x12 mm/kasan/common.c:612
+  memcmp+0xa6/0xb0 lib/string.c:904
+  memcmp include/linux/string.h:400 [inline]
+  descriptors_changed drivers/usb/core/hub.c:5579 [inline]
+  usb_reset_and_verify_device+0x564/0x1300 drivers/usb/core/hub.c:5729
+  usb_reset_device+0x4c1/0x920 drivers/usb/core/hub.c:5898
+  rt2x00usb_probe+0x53/0x7af
+drivers/net/wireless/ralink/rt2x00/rt2x00usb.c:806
 
-Reported-and-tested-by: syzbot+0849c524d9c634f5ae66@syzkaller.appspotmail.com
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The error occurs when the descriptors_changed() routine (called during
+a device reset) attempts to compare the old and new BOS and capability
+descriptors.  The length it uses for the comparison is the
+wTotalLength value stored in BOS descriptor, but this value is not
+necessarily the same as the length actually allocated for the
+descriptors.  If it is larger the routine will call memcmp() with a
+length that is too big, thus reading beyond the end of the allocated
+region and leading to this fault.
+
+The kernel reads the BOS descriptor twice: first to get the total
+length of all the capability descriptors, and second to read it along
+with all those other descriptors.  A malicious (or very faulty) device
+may send different values for the BOS descriptor fields each time.
+The memory area will be allocated using the wTotalLength value read
+the first time, but stored within it will be the value read the second
+time.
+
+To prevent this possibility from causing any errors, this patch
+modifies the BOS descriptor after it has been read the second time:
+It sets the wTotalLength field to the actual length of the descriptors
+that were read in and validated.  Then the memcpy() call, or any other
+code using these descriptors, will be able to rely on wTotalLength
+being valid.
+
+Reported-and-tested-by: syzbot+35f4d916c623118d576e@syzkaller.appspotmail.com
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+CC: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.1909041154260.1722-100000@iolanthe.rowland.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/isdn/capi/capi.c          |   10 +++++++++-
- include/uapi/linux/isdn/capicmd.h |    1 +
- 2 files changed, 10 insertions(+), 1 deletion(-)
 
---- a/drivers/isdn/capi/capi.c
-+++ b/drivers/isdn/capi/capi.c
-@@ -687,6 +687,9 @@ capi_write(struct file *file, const char
- 	if (!cdev->ap.applid)
- 		return -ENODEV;
- 
-+	if (count < CAPIMSG_BASELEN)
-+		return -EINVAL;
-+
- 	skb = alloc_skb(count, GFP_USER);
- 	if (!skb)
- 		return -ENOMEM;
-@@ -697,7 +700,8 @@ capi_write(struct file *file, const char
+---
+ drivers/usb/core/config.c |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+--- a/drivers/usb/core/config.c
++++ b/drivers/usb/core/config.c
+@@ -891,7 +891,7 @@ int usb_get_bos_descriptor(struct usb_de
+ 	struct usb_bos_descriptor *bos;
+ 	struct usb_dev_cap_header *cap;
+ 	struct usb_ssp_cap_descriptor *ssp_cap;
+-	unsigned char *buffer;
++	unsigned char *buffer, *buffer0;
+ 	int length, total_len, num, i, ssac;
+ 	__u8 cap_type;
+ 	int ret;
+@@ -936,10 +936,12 @@ int usb_get_bos_descriptor(struct usb_de
+ 			ret = -ENOMSG;
+ 		goto err;
  	}
- 	mlen = CAPIMSG_LEN(skb->data);
- 	if (CAPIMSG_CMD(skb->data) == CAPI_DATA_B3_REQ) {
--		if ((size_t)(mlen + CAPIMSG_DATALEN(skb->data)) != count) {
-+		if (count < CAPI_DATA_B3_REQ_LEN ||
-+		    (size_t)(mlen + CAPIMSG_DATALEN(skb->data)) != count) {
- 			kfree_skb(skb);
- 			return -EINVAL;
++
++	buffer0 = buffer;
+ 	total_len -= length;
++	buffer += length;
+ 
+ 	for (i = 0; i < num; i++) {
+-		buffer += length;
+ 		cap = (struct usb_dev_cap_header *)buffer;
+ 
+ 		if (total_len < sizeof(*cap) || total_len < cap->bLength) {
+@@ -953,8 +955,6 @@ int usb_get_bos_descriptor(struct usb_de
+ 			break;
  		}
-@@ -710,6 +714,10 @@ capi_write(struct file *file, const char
- 	CAPIMSG_SETAPPID(skb->data, cdev->ap.applid);
  
- 	if (CAPIMSG_CMD(skb->data) == CAPI_DISCONNECT_B3_RESP) {
-+		if (count < CAPI_DISCONNECT_B3_RESP_LEN) {
-+			kfree_skb(skb);
-+			return -EINVAL;
-+		}
- 		mutex_lock(&cdev->lock);
- 		capincci_free(cdev, CAPIMSG_NCCI(skb->data));
- 		mutex_unlock(&cdev->lock);
---- a/include/uapi/linux/isdn/capicmd.h
-+++ b/include/uapi/linux/isdn/capicmd.h
-@@ -15,6 +15,7 @@
- #define CAPI_MSG_BASELEN		8
- #define CAPI_DATA_B3_REQ_LEN		(CAPI_MSG_BASELEN+4+4+2+2+2)
- #define CAPI_DATA_B3_RESP_LEN		(CAPI_MSG_BASELEN+4+2)
-+#define CAPI_DISCONNECT_B3_RESP_LEN	(CAPI_MSG_BASELEN+4)
+-		total_len -= length;
+-
+ 		if (cap->bDescriptorType != USB_DT_DEVICE_CAPABILITY) {
+ 			dev_warn(ddev, "descriptor type invalid, skip\n");
+ 			continue;
+@@ -989,7 +989,11 @@ int usb_get_bos_descriptor(struct usb_de
+ 		default:
+ 			break;
+ 		}
++
++		total_len -= length;
++		buffer += length;
+ 	}
++	dev->bos->desc->wTotalLength = cpu_to_le16(buffer - buffer0);
  
- /*----- CAPI commands -----*/
- #define CAPI_ALERT		    0x01
+ 	return 0;
+ 
 
 
