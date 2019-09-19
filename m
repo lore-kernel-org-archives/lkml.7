@@ -2,131 +2,111 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D912C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C50C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 712E5218AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:59:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568908785;
-	bh=quymPNwAJydF8iR+m3Bv+sCapAomv486kbqwnW/jX+4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=U3RszM2M9R3BUUWRtw0L1RPW0M8LkizQZBwMPjU8ENV1B5QnBDrCo7SJER/vjEH5q
-	 OjrkZw/qttou2ND62kHZaUp5ictlhuvqjvTZoXqjTUGOauraVH139pkMT9PV2eWMgz
-	 MBcLAV24eO0aaO1PZHGmoONsLJ9/hLS5zQujNgug=
+	by mail.kernel.org (Postfix) with ESMTP id D1325218AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:59:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F4CdTHFj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404041AbfISP7o (ORCPT
+        id S2404052AbfISP7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 11:59:44 -0400
-Received: from mail-lj1-f176.google.com ([209.85.208.176]:37195 "EHLO
-        mail-lj1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389202AbfISP7o (ORCPT
+        Thu, 19 Sep 2019 11:59:52 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46581 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389202AbfISP7v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 11:59:44 -0400
-Received: by mail-lj1-f176.google.com with SMTP id l21so4155607lje.4
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 08:59:42 -0700 (PDT)
+        Thu, 19 Sep 2019 11:59:51 -0400
+Received: by mail-wr1-f67.google.com with SMTP id o18so3621989wrv.13
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 08:59:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=f8LYnz1vv5tI3GZ6Lq+k6CmiHNbJUTHYO30ZgPVV0WU=;
-        b=T/6gIwbfpiXV3L6bav6DhQetuAMBXy/Bqgt8Bn//Ktv5A0ZlOwwdqUFvu2JOVs5YAL
-         GW7fhEsoQl3YTPl3Lrs/5T4hqdFZPN1ThISPa9aW4ffAKtyS96xs7iMX8oXz1SyBa6v/
-         ZT+WNN1O02jjgKM8I1ZCBJsBj3YxaAZ5oaDws=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=t4l++S4hF6P8PdO79QhgLXPON7MjSt7ouoLCNwiJpJg=;
+        b=F4CdTHFjZxUt8+INXMeeRWoumVtisViAzOwRflTU9kvMiHyDabFnDQ3g228R7HGKC9
+         SkD5VMzaqvFxhaIuz4dtDIV0Ela2QvMnt4UXuify3H8c6BLiiBTlZSPqYceZxaiMijZp
+         Sr35/oirvAFsUAYvglvvZ8a6r16RFKSn2OCREVJMYvGzpmdd/nbD/ZWx7xNEHeVJHvLQ
+         gmGHmcM9ybbyMnpETsdTAthw9Auy8q3biUes0SMc2o44CayItCYfM5PBaU722k4tPaog
+         b+bmqL/lNicO/Ox1NiUDOCgRO0FC9UCgl1yfgf1FHMZ456wz4/C6NwV7HUVQWWQaVS93
+         ARzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=f8LYnz1vv5tI3GZ6Lq+k6CmiHNbJUTHYO30ZgPVV0WU=;
-        b=pUIvFgqDALjaTX3HqM26Yr/yY1BhTmfH/xBk3UX46uJ2hIQ9KSH4CLwiDqKbA9CvPg
-         zRbBL7DmwbFYiUnQESAGD+v4/2XUvIqUxhidAnI+BgmNInT8rMw+4HSeApeaTGZy153i
-         SOqV/Tk1kV48JK4sjjDJp9DJ0AtsbAph65ajXm9ZUWK8PmSOeqJ9B2rhw3uXkycy83yD
-         L5/zwtCCN9lDXbtzCta2U3yKxSrv2RHERWEjfz5nFMjmKQG8cV9rWx2R8YQhfIXlYWGj
-         aXJxIpsk64Cv+e9KIZIAMS06XQ5p2yY8lM8+EmlliYhcOAXzGgn337UHi0OEYJIsUZdR
-         L2sg==
-X-Gm-Message-State: APjAAAVDRk6iXKdWFEaf0KOar7TL+gwSoklffXMH7BRGPhr+fVnm6+Ua
-        drxSZa2v+pA0cZf+yviyJFV6eBHxhSA=
-X-Google-Smtp-Source: APXvYqwmjm+JSh+iGjr1ftW/x6ZYGV9pAXlgGJ5PI6UCziyDRwHKE/VqwAKI4Q7M7YwWBwmWuyZrxw==
-X-Received: by 2002:a2e:9159:: with SMTP id q25mr5908521ljg.225.1568908781206;
-        Thu, 19 Sep 2019 08:59:41 -0700 (PDT)
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
-        by smtp.gmail.com with ESMTPSA id 21sm1718371ljq.15.2019.09.19.08.59.39
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Sep 2019 08:59:39 -0700 (PDT)
-Received: by mail-lj1-f179.google.com with SMTP id d5so4100247lja.10
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 08:59:39 -0700 (PDT)
-X-Received: by 2002:a2e:8789:: with SMTP id n9mr5927834lji.52.1568908779394;
- Thu, 19 Sep 2019 08:59:39 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=t4l++S4hF6P8PdO79QhgLXPON7MjSt7ouoLCNwiJpJg=;
+        b=TlI9RKXhfRJPRrrSjZeV2vKMmRf3hWQO+iBaXXv7AvLVGlIx6GfzVR0POHKQcohDvC
+         bsiNPMtNXxepRrReiKQWHyZtSK7FZGNdYD4fkNRXWslG7WafLVfrRa2idLSox4P52k5m
+         gIzqu57WjHd9sBXMnrSj+z5KWNp0K/Yom0huuY60yuxSgNquT4eIL0VjyPR3MJN4TYwU
+         2wLTizamBhIbMd5kaxTer191Amas/sB6SLP5Bgis58DiCFBnnJZ7OuX3Qk7IbpuEY/MI
+         TW9HgExB/pZSHZ2XmewC4SMSRy5xdoPiZJCCaTkKp2YR40Q+0mAPxJbgYrOeHrmLOMdq
+         /aFQ==
+X-Gm-Message-State: APjAAAWp22zD4Tqsnme3Uh1Hw63pnXk57xs8jCOphwXF+g8xZMz9TNDM
+        h6VEJ41xe+5svwypJKAtbwI6CQ==
+X-Google-Smtp-Source: APXvYqwonJMSwv8yPpEA9KIPb82xmRvY7XME/rlZ9wteq/qlF+4+Z+p5n1GVjXevybM6SxJSYJz6ug==
+X-Received: by 2002:adf:f812:: with SMTP id s18mr3373407wrp.32.1568908788727;
+        Thu, 19 Sep 2019 08:59:48 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id v11sm15117085wrv.54.2019.09.19.08.59.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Sep 2019 08:59:48 -0700 (PDT)
+Date:   Thu, 19 Sep 2019 16:59:46 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Jason Wessel <jason.wessel@windriver.com>,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Nadav Amit <namit@vmware.com>
+Subject: [GIT PULL] kgdb changes v5.4-rc1
+Message-ID: <20190919155946.htzamn3s3ovw7ujh@holly.lan>
 MIME-Version: 1.0
-References: <20190915145905.hd5xkc7uzulqhtzr@willie-the-truck>
- <25289.1568379639@warthog.procyon.org.uk> <28447.1568728295@warthog.procyon.org.uk>
- <20190917170716.ud457wladfhhjd6h@willie-the-truck> <15228.1568821380@warthog.procyon.org.uk>
- <CAHk-=wj85tOp8WjcUp6gwstp4Cg2WT=p209S=fOzpWAgqqQPKg@mail.gmail.com> <5385.1568901546@warthog.procyon.org.uk>
-In-Reply-To: <5385.1568901546@warthog.procyon.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 19 Sep 2019 08:59:23 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wigULuTe-c15nEv5661fRxX-7xTmCZ5y6KmqPoWtX7E3g@mail.gmail.com>
-Message-ID: <CAHk-=wigULuTe-c15nEv5661fRxX-7xTmCZ5y6KmqPoWtX7E3g@mail.gmail.com>
-Subject: Re: Do we need to correct barriering in circular-buffers.rst?
-To:     David Howells <dhowells@redhat.com>
-Cc:     Will Deacon <will@kernel.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 6:59 AM David Howells <dhowells@redhat.com> wrote:
->
-> But I don't agree with this.  You're missing half the barriers.  There should
-> be *four* barriers.  The document mandates only 3 barriers, and uses
-> READ_ONCE() where the fourth should be, i.e.:
->
->    thread #1            thread #2
->
->                         smp_load_acquire(head)
->                         ... read data from queue ..
->                         smp_store_release(tail)
->
->    READ_ONCE(tail)
->    ... add data to queue ..
->    smp_store_release(head)
+The following changes since commit d1abaeb3be7b5fa6d7a1fbbd2e14e3310005c4c1:
 
-The document is right, but you shouldn't do this.
+  Linux 5.3-rc5 (2019-08-18 14:31:08 -0700)
 
-The reason that READ_ONCE() is possible - instead of a
-smp_load_acquire() - is that there's now an address dependency chain
-from the READ_ONCE to the subsequent writes of the data.
+are available in the Git repository at:
 
-And while there isn't any barrier, a data or control dependency to a
-_write_ does end up ordering things (even on alpha - it's only the
-read->read dependencies that might be unordered on alpha).
+  git://git.kernel.org/pub/scm/linux/kernel/git/danielt/linux.git/ tags/kgdb-5.4-rc1
 
-But again, don't do this.
+for you to fetch changes up to d8a050f5a3e8242242df6430d5980c142350e461:
 
-Also, you ignored the part where I told you to not do this because we
-already  have locking.
+  kgdb: fix comment regarding static function (2019-09-03 11:19:41 +0100)
 
-I'm not goign to discuss this further. Locking works. Spinlocks are
-cheap. Lockless algorithms that need atomics aren't even cheaper than
-spinlocks: they can in fact scale *worse*, because they don't have the
-nice queuing optimization that our spinlock have.
+----------------------------------------------------------------
+kgdb patches for 5.4-rc1
 
-Lockless algorithms are great if they can avoid the contention on the
-lock and instead only work on distributed data and avoid contention
-entirely.
+It has been a quiet dev cycle for kgdb. There has been some good stuff
+for kdb on the mailing list but unfortunately the patches caused a
+couple of problems with the kdb pager so I had to drop those and they
+will have to wait for next time!
 
-But in this case the lock would be right next to the data anyway, so
-even that case doesn't hold.
+That just leaves us with just a couple of very tiny clean ups for now:
 
-               Linus
+ * Fix a broken comment
+ * Use str_has_prefix() for the grep "pipe" in kdb
+
+Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+
+----------------------------------------------------------------
+Chuhong Yuan (1):
+      kdb: Replace strncmp with str_has_prefix
+
+Nadav Amit (1):
+      kgdb: fix comment regarding static function
+
+ kernel/debug/debug_core.c   | 5 +----
+ kernel/debug/kdb/kdb_main.c | 2 +-
+ 2 files changed, 2 insertions(+), 5 deletions(-)
