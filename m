@@ -2,54 +2,52 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B811EC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E474CC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8915E21920
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:13:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B567121920
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:13:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931203;
-	bh=f37VyrfJ+6B8a1BBEwyKuj1RitCm1kFr2ZZwpsJCCW8=;
+	s=default; t=1568931206;
+	bh=UwkLOss8wkclcHBYiCRbmLPM4E55ZqOq/fuQyOTsQlY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i7TAu/PVJvb0i/WLldEwqAAf3N6xlYhOI58AYCvq94naPNbVcqWBBvCjSNFFPLr4j
-	 JmXRb4wB3kKhWc/IQ55ALNg+6kcYk5UTvUUs/mfD8ZIS7sY9X45NIsD1ucI4dqs3JY
-	 HQDfCZ3x1Lp7m2k876IaI1pUEp1CEQJZjwh3Wd/w=
+	b=TIAae/pu/xiU9lqfs47uRULUfeSywfDC3NxLzNBTylC/03xBfbp6Wxnn8q0EoEhRH
+	 RO72d9WdJAv/ukPlY4tdathfrTGu3YOqXBIbfPT4qkqTNsnQI6j8RWrZqytDmHxBk5
+	 dgIHivlMn9Iy743SHhy1tuWF48d/BZc/339AHd/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406054AbfISWNW (ORCPT
+        id S1732497AbfISWN0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:13:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52296 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:13:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393731AbfISWNN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:13:13 -0400
+        id S2406044AbfISWNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:13:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D99D21924;
-        Thu, 19 Sep 2019 22:13:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72E83218AF;
+        Thu, 19 Sep 2019 22:13:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931192;
-        bh=f37VyrfJ+6B8a1BBEwyKuj1RitCm1kFr2ZZwpsJCCW8=;
+        s=default; t=1568931201;
+        bh=UwkLOss8wkclcHBYiCRbmLPM4E55ZqOq/fuQyOTsQlY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ll/URLjw4blxByFShrC4qYkdsrq92B0NJvcZKgKtE87YGBrUoxBCsufHjwmnHKlqX
-         XHa4ZbKRGYrpIHq/0zet0Ks5khfOP1r4EwerRadUmNHCGOHuGKYMW8rQBIL65h2LUA
-         O+W7WuQTzCL6sAnHggbnleHtVw8cXsIK0vkk91tw=
+        b=130Hp2eTb0qVR1/hQs7024NQU6JqPk/bKh4HJ65NA0xnBV91FNPhGmYXS+/fUI4LL
+         SimcOWBSHTwJT6HlycGWHdVRIknBQcqt/zZlXnja0SAQhSMAvsI93bCZqGgZLoE8tS
+         GfGSbjzXbVQNSJGa9btsWnacIvEVaMJ/PTsJn1NQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 35/79] netfilter: xt_nfacct: Fix alignment mismatch in xt_nfacct_match_info
-Date:   Fri, 20 Sep 2019 00:03:20 +0200
-Message-Id: <20190919214810.818333331@linuxfoundation.org>
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.19 04/79] Input: elan_i2c - remove Lenovo Legion Y7000 PnpID
+Date:   Fri, 20 Sep 2019 00:02:49 +0200
+Message-Id: <20190919214808.140980058@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214807.612593061@linuxfoundation.org>
 References: <20190919214807.612593061@linuxfoundation.org>
@@ -62,107 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 
-[ Upstream commit 89a26cd4b501e9511d3cd3d22327fc76a75a38b3 ]
+commit 0c043d70d04711fe6c380df9065fdc44192c49bf upstream.
 
-When running a 64-bit kernel with a 32-bit iptables binary, the size of
-the xt_nfacct_match_info struct diverges.
+Looks like the Bios of the Lenovo Legion Y7000 is using ELAN061B
+when the actual device is supposed to be used with hid-multitouch.
 
-    kernel: sizeof(struct xt_nfacct_match_info) : 40
-    iptables: sizeof(struct xt_nfacct_match_info)) : 36
+Remove it from the list of the supported device, hoping that
+no one will complain about the loss in functionality.
 
-Trying to append nfacct related rules results in an unhelpful message.
-Although it is suggested to look for more information in dmesg, nothing
-can be found there.
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=203467
+Fixes: 738c06d0e456 ("Input: elan_i2c - add hardware ID for multiple Lenovo laptops")
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-    # iptables -A <chain> -m nfacct --nfacct-name <acct-object>
-    iptables: Invalid argument. Run `dmesg' for more information.
-
-This patch fixes the memory misalignment by enforcing 8-byte alignment
-within the struct's first revision. This solution is often used in many
-other uapi netfilter headers.
-
-Signed-off-by: Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>
-Acked-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/uapi/linux/netfilter/xt_nfacct.h |  5 ++++
- net/netfilter/xt_nfacct.c                | 36 ++++++++++++++++--------
- 2 files changed, 30 insertions(+), 11 deletions(-)
+ drivers/input/mouse/elan_i2c_core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/uapi/linux/netfilter/xt_nfacct.h b/include/uapi/linux/netfilter/xt_nfacct.h
-index 5c8a4d760ee34..b5123ab8d54a8 100644
---- a/include/uapi/linux/netfilter/xt_nfacct.h
-+++ b/include/uapi/linux/netfilter/xt_nfacct.h
-@@ -11,4 +11,9 @@ struct xt_nfacct_match_info {
- 	struct nf_acct	*nfacct;
- };
- 
-+struct xt_nfacct_match_info_v1 {
-+	char		name[NFACCT_NAME_MAX];
-+	struct nf_acct	*nfacct __attribute__((aligned(8)));
-+};
-+
- #endif /* _XT_NFACCT_MATCH_H */
-diff --git a/net/netfilter/xt_nfacct.c b/net/netfilter/xt_nfacct.c
-index 6b56f4170860c..3241fee9f2a19 100644
---- a/net/netfilter/xt_nfacct.c
-+++ b/net/netfilter/xt_nfacct.c
-@@ -57,25 +57,39 @@ nfacct_mt_destroy(const struct xt_mtdtor_param *par)
- 	nfnl_acct_put(info->nfacct);
- }
- 
--static struct xt_match nfacct_mt_reg __read_mostly = {
--	.name       = "nfacct",
--	.family     = NFPROTO_UNSPEC,
--	.checkentry = nfacct_mt_checkentry,
--	.match      = nfacct_mt,
--	.destroy    = nfacct_mt_destroy,
--	.matchsize  = sizeof(struct xt_nfacct_match_info),
--	.usersize   = offsetof(struct xt_nfacct_match_info, nfacct),
--	.me         = THIS_MODULE,
-+static struct xt_match nfacct_mt_reg[] __read_mostly = {
-+	{
-+		.name       = "nfacct",
-+		.revision   = 0,
-+		.family     = NFPROTO_UNSPEC,
-+		.checkentry = nfacct_mt_checkentry,
-+		.match      = nfacct_mt,
-+		.destroy    = nfacct_mt_destroy,
-+		.matchsize  = sizeof(struct xt_nfacct_match_info),
-+		.usersize   = offsetof(struct xt_nfacct_match_info, nfacct),
-+		.me         = THIS_MODULE,
-+	},
-+	{
-+		.name       = "nfacct",
-+		.revision   = 1,
-+		.family     = NFPROTO_UNSPEC,
-+		.checkentry = nfacct_mt_checkentry,
-+		.match      = nfacct_mt,
-+		.destroy    = nfacct_mt_destroy,
-+		.matchsize  = sizeof(struct xt_nfacct_match_info_v1),
-+		.usersize   = offsetof(struct xt_nfacct_match_info_v1, nfacct),
-+		.me         = THIS_MODULE,
-+	},
- };
- 
- static int __init nfacct_mt_init(void)
- {
--	return xt_register_match(&nfacct_mt_reg);
-+	return xt_register_matches(nfacct_mt_reg, ARRAY_SIZE(nfacct_mt_reg));
- }
- 
- static void __exit nfacct_mt_exit(void)
- {
--	xt_unregister_match(&nfacct_mt_reg);
-+	xt_unregister_matches(nfacct_mt_reg, ARRAY_SIZE(nfacct_mt_reg));
- }
- 
- module_init(nfacct_mt_init);
--- 
-2.20.1
-
+--- a/drivers/input/mouse/elan_i2c_core.c
++++ b/drivers/input/mouse/elan_i2c_core.c
+@@ -1358,7 +1358,7 @@ static const struct acpi_device_id elan_
+ 	{ "ELAN0618", 0 },
+ 	{ "ELAN0619", 0 },
+ 	{ "ELAN061A", 0 },
+-	{ "ELAN061B", 0 },
++/*	{ "ELAN061B", 0 }, not working on the Lenovo Legion Y7000 */
+ 	{ "ELAN061C", 0 },
+ 	{ "ELAN061D", 0 },
+ 	{ "ELAN061E", 0 },
 
 
