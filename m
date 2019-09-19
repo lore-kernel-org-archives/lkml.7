@@ -2,53 +2,51 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD651C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 782E5C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF4C720678
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:29:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B45020640
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:30:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932196;
-	bh=mj3U4sRDS8aeanAqrXJcjO6Wq6Bt5NxJ+ZBR9ABdTa0=;
+	s=default; t=1568932200;
+	bh=eVr15m5kKJnEZ0cFWr1VeiANpGOhDU/iAn14qgtCilw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dhYf4GZ6tE5XLtdTFRAyKf3o6AfyT6+Am4bqgeoJBDpew2S0P8TYlkbsRW0Rzo0b0
-	 kLlWoQs3Ah7InRg1e0/yS3f90BHnrTb5itCeJaHUV02ykYqql/Qi3sstjsVps0gq4k
-	 m1JYiEIOciAyF2ARyRB9LM6H2GG3yF9I40p3Xc9A=
+	b=hGpNT1/rCfcigWg0xOH1Ernei2P51Rtjb673MDTfp3xWeDNChZYGZYWUzEXYCZXhP
+	 Panp9S941XEAF/YGlKgDAG29Qcv5xUvgNCQWRiCgH5WaekHF0efewKwfdokOB+UoTq
+	 GWOmE7s89rg+GDaIlXwImgdlZKAOp0148B99vu4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436592AbfISW3z (ORCPT
+        id S2406401AbfISWQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:29:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58050 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:16:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406417AbfISWRD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:17:03 -0400
+        id S2406384AbfISWQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:16:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6576217D6;
-        Thu, 19 Sep 2019 22:17:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7D9F20678;
+        Thu, 19 Sep 2019 22:16:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931423;
-        bh=mj3U4sRDS8aeanAqrXJcjO6Wq6Bt5NxJ+ZBR9ABdTa0=;
+        s=default; t=1568931412;
+        bh=eVr15m5kKJnEZ0cFWr1VeiANpGOhDU/iAn14qgtCilw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CfnnxvUnwtZcuLZ5E4QQ6RBCr2GEBQCEE1FQqm5lZJkiB4dtLNDmFMJviKedou2qo
-         0BMeveSZhn/0k88uLP4guGuW7oqeVYIHblVo2wBZ/AUVbXMdFepFB1AjKvUXpmRYrQ
-         uG1zUw8jctgtSYCsgvSV6qqtiXK1ZWILLPxKjcjw=
+        b=baxLAfguN1OtZhbbnc9a3EsRcYCZZeLyct2KNFSca6S2VXDiaMSMZDQfqACIyu2SR
+         oyq9b3CeHYQ9jy6JVUYBvxLEfId6TNAvI6JZ1DDBy9cTridvqAYtDl0SbwYAN4UXi0
+         NsIXtmYPrxxW4jfoHsq3nBiM7AcuZDusVMXm2RuU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Stancek <jstancek@redhat.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 33/59] NFSv2: Fix write regression
-Date:   Fri, 20 Sep 2019 00:03:48 +0200
-Message-Id: <20190919214805.896609158@linuxfoundation.org>
+        stable@vger.kernel.org, Dongli Zhang <dongli.zhang@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 07/59] xen-netfront: do not assume sk_buff_head list is empty in error handling
+Date:   Fri, 20 Sep 2019 00:03:22 +0200
+Message-Id: <20190919214757.744689312@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214755.852282682@linuxfoundation.org>
 References: <20190919214755.852282682@linuxfoundation.org>
@@ -61,40 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Dongli Zhang <dongli.zhang@oracle.com>
 
-[ Upstream commit d33d4beb522987d1c305c12500796f9be3687dee ]
+[ Upstream commit 00b368502d18f790ab715e055869fd4bb7484a9b ]
 
-Ensure we update the write result count on success, since the
-RPC call itself does not do so.
+When skb_shinfo(skb) is not able to cache extra fragment (that is,
+skb_shinfo(skb)->nr_frags >= MAX_SKB_FRAGS), xennet_fill_frags() assumes
+the sk_buff_head list is already empty. As a result, cons is increased only
+by 1 and returns to error handling path in xennet_poll().
 
-Reported-by: Jan Stancek <jstancek@redhat.com>
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Tested-by: Jan Stancek <jstancek@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+However, if the sk_buff_head list is not empty, queue->rx.rsp_cons may be
+set incorrectly. That is, queue->rx.rsp_cons would point to the rx ring
+buffer entries whose queue->rx_skbs[i] and queue->grant_rx_ref[i] are
+already cleared to NULL. This leads to NULL pointer access in the next
+iteration to process rx ring buffer entries.
+
+Below is how xennet_poll() does error handling. All remaining entries in
+tmpq are accounted to queue->rx.rsp_cons without assuming how many
+outstanding skbs are remained in the list.
+
+ 985 static int xennet_poll(struct napi_struct *napi, int budget)
+... ...
+1032           if (unlikely(xennet_set_skb_gso(skb, gso))) {
+1033                   __skb_queue_head(&tmpq, skb);
+1034                   queue->rx.rsp_cons += skb_queue_len(&tmpq);
+1035                   goto err;
+1036           }
+
+It is better to always have the error handling in the same way.
+
+Fixes: ad4f15dc2c70 ("xen/netfront: don't bug in case of too many frags")
+Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/nfs/proc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/xen-netfront.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfs/proc.c b/fs/nfs/proc.c
-index 73d1f7277e482..eff93315572e7 100644
---- a/fs/nfs/proc.c
-+++ b/fs/nfs/proc.c
-@@ -611,8 +611,10 @@ static int nfs_proc_pgio_rpc_prepare(struct rpc_task *task,
- 
- static int nfs_write_done(struct rpc_task *task, struct nfs_pgio_header *hdr)
- {
--	if (task->tk_status >= 0)
-+	if (task->tk_status >= 0) {
-+		hdr->res.count = hdr->args.count;
- 		nfs_writeback_update_inode(hdr);
-+	}
- 	return 0;
- }
- 
--- 
-2.20.1
-
+--- a/drivers/net/xen-netfront.c
++++ b/drivers/net/xen-netfront.c
+@@ -908,7 +908,7 @@ static RING_IDX xennet_fill_frags(struct
+ 			__pskb_pull_tail(skb, pull_to - skb_headlen(skb));
+ 		}
+ 		if (unlikely(skb_shinfo(skb)->nr_frags >= MAX_SKB_FRAGS)) {
+-			queue->rx.rsp_cons = ++cons;
++			queue->rx.rsp_cons = ++cons + skb_queue_len(list);
+ 			kfree_skb(nskb);
+ 			return ~0U;
+ 		}
 
 
