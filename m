@@ -2,118 +2,174 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB344C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 16:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6E4C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 16:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81FD721907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 16:21:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA0402053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 16:22:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jMp6N6eF"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="jI0ug3YU";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="lOQpewFm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404258AbfISQV0 (ORCPT
+        id S2404273AbfISQWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 12:21:26 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46198 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403833AbfISQV0 (ORCPT
+        Thu, 19 Sep 2019 12:22:23 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:34306 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2404259AbfISQWW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 12:21:26 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q5so2609455pfg.13
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 09:21:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DLElX6prsemmI7+wc0Ol+UL4D1Wa4vwan9SjKgoiFhY=;
-        b=jMp6N6eFq6jQzuKpk6LGVgXz/S9TP47yGUWsOQsmv3xsq5S9u+jNmxuTo95dRVFNrQ
-         94RsctbWhbXCRKVIDU4V3dNX1Lm7RBMmKwruC2/HH68wJByUsD8pMEuCwvoiw7TuSLcY
-         mM44SSo5uSeSL1dqE9gscBIEMegZKliZ/hYgFPzjY4jRKUosd3wQy7ivwomcBJzLZjym
-         1oH4z09PzqslgJ1Z1DUGOl2M0vYtFhQDfcfnrzyVkZfVHJGgvjrZDSYDuVSNkQ1IbC/R
-         uCxN3R9nHOxvKTpgSuqdtFUbQZn2legL4RGJkoOlaQL0CyYazUdvXXuOTWCAdoubX35e
-         0x1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DLElX6prsemmI7+wc0Ol+UL4D1Wa4vwan9SjKgoiFhY=;
-        b=kgkJiucxGkSKVfwAXATmExrjCXPa91WwJmtM0fedzOyCpqDUoxwQKDu+dfFkg6/OA9
-         bNkBsF85OO/qsr0ljz11KtOeyx+PagUCltSRtTQhhuwvQ6xALP3E6k1jVo0lsBFUffGh
-         ux+GIZH5EudjZ6O0EIBXeay+4WKb/16mAFjGjVKwfiwqevvdy5Ica0tcpabXDcQvpSPe
-         X25LAtRzPmZVfPsKhxkBcCunal1tp2Gp65dIAEOPIDbEQbW6V4cfC0P+2v9H3gi9z1kf
-         27+ZTActtRepvqH/ZbBrh/T5aH9Q++MiV3vj/hMCDShKdKk1Mw2RFFOQ5bXcv1AvP6Ar
-         SV2A==
-X-Gm-Message-State: APjAAAUcYe+Yh4DB95L6K++z9MN6egA8JNYyiS4Xwfz+Hh9ZfV30GST/
-        4XfE3ttOWm79qA6r4klRoCC+OOfrMlHSrs/l/d6wRA==
-X-Google-Smtp-Source: APXvYqwUeNlfZfuENe5/I1lSuDmwkraJfDbpWXsOUMmBZl1XGtgiqQCtbZsFABCPk+AaGAlHey/MPAnIwBQkOh7YqN8=
-X-Received: by 2002:a62:5fc1:: with SMTP id t184mr11250186pfb.84.1568910085164;
- Thu, 19 Sep 2019 09:21:25 -0700 (PDT)
+        Thu, 19 Sep 2019 12:22:22 -0400
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id x8JGIx6c014679;
+        Thu, 19 Sep 2019 09:22:14 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=V9QetieczT/8W2WdLmwrvBJJPniW2MfUA0Ke1pxaI+g=;
+ b=jI0ug3YUL2QURlYj6HJ9vanUlwXVn38azeS0RmuJ2BLa580ZsJAVnsFeYU4UU5VbBRwO
+ f1hSsyQDfB3CUhSO5SwC9FEJZZjHxR+Ek5n17b5i8DIi/2GVt2a7m9pd4KShqFHP0H6r
+ zwx2Yavex9k8H0BpZUpmE6hQsNPNXFjv9u4= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by m0089730.ppops.net with ESMTP id 2v3vdpkufn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 19 Sep 2019 09:22:13 -0700
+Received: from prn-hub02.TheFacebook.com (2620:10d:c081:35::126) by
+ prn-hub04.TheFacebook.com (2620:10d:c081:35::128) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Thu, 19 Sep 2019 09:22:11 -0700
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.26) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Thu, 19 Sep 2019 09:22:11 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=V1of8/xg0lqWK2As/99i2ejuE5+7MKGXLY0Hr13FAJ6dYKfNzXRiaideSVUJ8os5znyDC9aZ6ioUJCc+tRimBILiapu1MLMz35h60G+vpErt4RG7iJNNgX7xTZ4F673b+0SUEENJHbRqCSiYRtAG58NqDZinjLgZ6Ma+2dNXtfGutzs88P4XPH1LxsX5s5c/LQmkP7r5usdwZaKNx2NIf+fpKqLKtBpxdmSYM9dMyStxpvUfWrx/H4K+yQbSGgxMM+GmZpXXjnmFtEUw599GyqtMOZQThaFpHI2r4QZnG+vhqz1YomsNJIwLP/Xzn/XYhA+9YTDX/KFwkvjNm27PZg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=V9QetieczT/8W2WdLmwrvBJJPniW2MfUA0Ke1pxaI+g=;
+ b=nnlVuHfUjvktUKAQN0sU0nutQ51+rE05qp8smMcImeW0oUNM6FvBZnp4c4S+9RCNzMiJS8jfpeTbHnMujXthu+QMhK3ThDT6xCnLzEMXBYyCID+ZFKhc4o1148ouiG+WsepPIIdnwmOPx6ozBgUG/qEGeiJlPK62UV+CkqFYz0sl0G+mlLmbSHVLofn4f2pGnb2ahPqYw1PO1uM7naIu+/N3MbX4dTt/dQdhucSfUg7+40MqyQQllubscIYOdRo2Vv9DPWEkhaYBrxb5E5YFympU5QdYfb+piCyDkXXeUGew/+kUMB/LRfShxAXc+l9kSOnK1DCeD/0u7y5WhW0Obw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=V9QetieczT/8W2WdLmwrvBJJPniW2MfUA0Ke1pxaI+g=;
+ b=lOQpewFmlzlgNLmjljlO2B8TwaaaLZBEz7WHlVEWoNrI4xkBLrDSP8o/wI6wV6nNcA6ifJeI6Dpfu6hZoB1aJjsnyoasY5DCk7on4LU5zUS6RxcqQ2MkzMIj0W+z57919971wPCjVH/C9uXFqY1ZZ1/4ihpppcEg+9NKQCQDxdU=
+Received: from BN8PR15MB2626.namprd15.prod.outlook.com (20.179.137.220) by
+ BN8PR15MB2785.namprd15.prod.outlook.com (20.179.140.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.18; Thu, 19 Sep 2019 16:22:10 +0000
+Received: from BN8PR15MB2626.namprd15.prod.outlook.com
+ ([fe80::8174:3438:91db:ec29]) by BN8PR15MB2626.namprd15.prod.outlook.com
+ ([fe80::8174:3438:91db:ec29%5]) with mapi id 15.20.2284.009; Thu, 19 Sep 2019
+ 16:22:09 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Suleiman Souhlal <suleiman@google.com>
+CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "Shakeel Butt" <shakeelb@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        "Waiman Long" <longman@redhat.com>
+Subject: Re: [PATCH RFC 00/14] The new slab memory controller
+Thread-Topic: [PATCH RFC 00/14] The new slab memory controller
+Thread-Index: AQHVZDNwmo4dH7vFVEWbwj6k0KVokaczFt4AgAAtegA=
+Date:   Thu, 19 Sep 2019 16:22:09 +0000
+Message-ID: <20190919162204.GA20035@castle.dhcp.thefacebook.com>
+References: <20190905214553.1643060-1-guro@fb.com>
+ <CABCjUKByipk2e1Hh1_PwC+p2Fig=6RMfd0zBeVQtyn5Y48gYXQ@mail.gmail.com>
+In-Reply-To: <CABCjUKByipk2e1Hh1_PwC+p2Fig=6RMfd0zBeVQtyn5Y48gYXQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR20CA0003.namprd20.prod.outlook.com
+ (2603:10b6:300:13d::13) To BN8PR15MB2626.namprd15.prod.outlook.com
+ (2603:10b6:408:c7::28)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:180::2154]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8ae0c3e5-52ac-4181-7783-08d73d1d8529
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN8PR15MB2785;
+x-ms-traffictypediagnostic: BN8PR15MB2785:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN8PR15MB27853480DBCB7973719FDBE7BE890@BN8PR15MB2785.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 016572D96D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(376002)(346002)(396003)(39860400002)(199004)(189003)(229853002)(81156014)(8676002)(81166006)(8936002)(33656002)(25786009)(52116002)(66946007)(66556008)(64756008)(66446008)(66476007)(6512007)(9686003)(6246003)(6486002)(476003)(102836004)(386003)(11346002)(486006)(446003)(305945005)(7736002)(99286004)(2906002)(53546011)(6506007)(76176011)(6436002)(186003)(46003)(478600001)(6916009)(86362001)(14454004)(6116002)(256004)(14444005)(71200400001)(71190400001)(1076003)(316002)(5660300002)(54906003)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR15MB2785;H:BN8PR15MB2626.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: s3R4daHs6UuPiiA3vXVjRYjOztCej7R1GSbO1CLV2vro+S+k5Q4q0fepYkhxN6NW4dxSNvYve1jBMKs+1SXzmfouBP36+zMzXYA6MENTanefqlgbUDGgT1xnSxew2EXK/eV/SCKnYAXRydMXshwo1bl6s+cC2RN9QlZgximHFS/y8DArJ6lg+il+ZNSRLT/YxTT9qYwBjSmnPl21fT+hjjewUqI4x4+vkLqAT1auhOIQ5oGY60P01UYSzncNx9KsBpsjBIAnNEdjw0TJ4rH+OuARcdhEkjG4kLUPsBcs2DI1Y43Snw6X8j04s+ttiQjfziihQSywi/MjEr/pXCWl21ylQ4oLuh8anTAXcC5xzDgxrGyF81miD0EdBnZNsZo5toIDFeJ1S40xo2M6lwDd7Vd6Bq6fui0SPbZNcSQkFCk=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <5537AB22E3CBB44585ED0BA0E1094AF5@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190919135725.1287963-1-arnd@arndb.de>
-In-Reply-To: <20190919135725.1287963-1-arnd@arndb.de>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 19 Sep 2019 09:21:14 -0700
-Message-ID: <CAKwvOdn=qYoBnsXrGh8KDaFzy6WEsfp1RhoZZQUHHL4OFzx88A@mail.gmail.com>
-Subject: Re: [PATCH] block: t10-pi: fix -Wswitch warning
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Nathan Chancellor <natechancellor@gmail.com>, kbuild-all@01.org
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8ae0c3e5-52ac-4181-7783-08d73d1d8529
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Sep 2019 16:22:09.8095
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jggdSNW8TS5PxzhTLeMNvNZ6+M7mSeqDWB2mS66PQ9J/5eThco2WuMb83eu8RsU6
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR15MB2785
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-19_05:2019-09-19,2019-09-19 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0 malwarescore=0
+ suspectscore=0 bulkscore=0 mlxlogscore=611 adultscore=0 phishscore=0
+ spamscore=0 clxscore=1011 impostorscore=0 priorityscore=1501
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1909190146
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 6:57 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> Changing the switch() statement to symbolic constants made
-> the compiler (at least clang-9, did not check gcc) notice that
-> there is one enum value that is not handled here:
->
-> block/t10-pi.c:62:11: error: enumeration value 'T10_PI_TYPE0_PROTECTION' not handled in switch [-Werror,-Wswitch]
->
-> Add another case for the missing value and do nothing there
-> based on the assumption that the code was working correctly
-> already.
->
-> Fixes: 9b2061b1a262 ("block: use symbolic constants for t10_pi type")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+On Thu, Sep 19, 2019 at 10:39:18PM +0900, Suleiman Souhlal wrote:
+> On Fri, Sep 6, 2019 at 6:57 AM Roman Gushchin <guro@fb.com> wrote:
+> > The patchset has been tested on a number of different workloads in our
+> > production. In all cases, it saved hefty amounts of memory:
+> > 1) web frontend, 650-700 Mb, ~42% of slab memory
+> > 2) database cache, 750-800 Mb, ~35% of slab memory
+> > 3) dns server, 700 Mb, ~36% of slab memory
+>=20
+> Do these workloads cycle through a lot of different memcgs?
 
-Reported-by: kbuild test robot <lkp@intel.com>
-https://groups.google.com/forum/#!topic/clang-built-linux/awgY7hmSCCM
-Hard to say what's the right thing to do here, there's not a lot of
-other switches on this variable.  That enum value barely even shows up
-in the kernel.  Since this is no functional change:
-Acked-by: Nick Desaulniers <ndesaulniers@google.com>
-Thanks for sending the patch.
+Not really, those are just plain services managed by systemd.
+They aren't restarted too often, maybe several times per day at most.
 
-> ---
->  block/t10-pi.c | 2 ++
->  1 file changed, 2 insertions(+)
+Also, there is nothing fb-specific. You can take any new modern
+distributive (I've tried Fedora 30), boot it up and look at the
+amount of slab memory. Numbers are roughly the same.
+
+>=20
+> For workloads that don't, wouldn't this approach potentially use more
+> memory? For example, a workload where everything is in one or two
+> memcgs, and those memcgs last forever.
 >
-> diff --git a/block/t10-pi.c b/block/t10-pi.c
-> index 0c0120a672f9..055fac923946 100644
-> --- a/block/t10-pi.c
-> +++ b/block/t10-pi.c
-> @@ -60,6 +60,8 @@ static blk_status_t t10_pi_verify(struct blk_integrity_iter *iter,
->                 __be16 csum;
->
->                 switch (type) {
-> +               case T10_PI_TYPE0_PROTECTION:
-> +                       break;
->                 case T10_PI_TYPE1_PROTECTION:
->                 case T10_PI_TYPE2_PROTECTION:
->                         if (pi->app_tag == T10_PI_APP_ESCAPE)
-> --
--- 
-Thanks,
-~Nick Desaulniers
+
+Yes, it's true, if you have a very small and fixed number of memory cgroups=
+,
+in theory the new approach can take ~10% more memory.
+
+I don't think it's such a big problem though: it seems that the majority
+of cgroup users have a lot of them, and they are dynamically created and
+destroyed by systemd/kubernetes/whatever else.
+
+And if somebody has a very special setup with only 1-2 cgroups, arguably
+kernel memory accounting isn't such a big thing for them, so it can be simp=
+le
+disabled. Am I wrong and do you have a real-life example?
+
+Thanks!
+
+Roman
