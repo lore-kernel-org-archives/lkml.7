@@ -2,190 +2,139 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1864FC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 06:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC71EC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 06:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5E3621928
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 06:49:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF70121924
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 06:51:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Il5L/Gad"
+	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="vBBJr4Nr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388511AbfISGtO (ORCPT
+        id S2388523AbfISGvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 02:49:14 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:49837 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388141AbfISGtN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 02:49:13 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190919064911euoutp02f153f37092583b11e8619aa89fc4e203~FxC8NDdgW1598015980euoutp02J
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 06:49:11 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190919064911euoutp02f153f37092583b11e8619aa89fc4e203~FxC8NDdgW1598015980euoutp02J
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1568875751;
-        bh=p7qbrmP5w9u16xdsgKqpm4yWd7pNksehgriKSn5DTq0=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=Il5L/GaddKTrNT403tAY0NHMzilpvdBoZlBOF3X5UXNMFdBMIktCZvYpKr/qBfb7L
-         v76RqXyLfpPOCFN531Ap+5FA5allt0HjsgG76ACO2DY1q/h6UbAxXqrYMxIj91ipgb
-         b/Yq67SjhIqMjKLYn2PF+c52VBdtKAk3DYiB8AhE=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190919064910eucas1p1f5d583718810e243d7a5d531253e04ea~FxC7XnmQd2575425754eucas1p1K;
-        Thu, 19 Sep 2019 06:49:10 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 62.95.04309.6E4238D5; Thu, 19
-        Sep 2019 07:49:10 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190919064909eucas1p1ba3cd25428c7b0162de535cf3f038cc6~FxC6jS9eX2169821698eucas1p1m;
-        Thu, 19 Sep 2019 06:49:09 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190919064909eusmtrp15d2cf82b862c88a7e834d47d06e671a3~FxC6Sc9VV1215012150eusmtrp1t;
-        Thu, 19 Sep 2019 06:49:09 +0000 (GMT)
-X-AuditID: cbfec7f4-ae1ff700000010d5-69-5d8324e6ff34
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 11.94.04117.5E4238D5; Thu, 19
-        Sep 2019 07:49:09 +0100 (BST)
-Received: from [106.120.51.20] (unknown [106.120.51.20]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190919064908eusmtip27eebb3e295389c59a871b84f5b28a15b~FxC5pTwOV1178711787eusmtip25;
-        Thu, 19 Sep 2019 06:49:08 +0000 (GMT)
-Subject: Re: [PATCH v2 3/3] dt-bindings: ddr: Add bindings for Samsung
- LPDDR3 memories
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     devicetree@vger.kernel.org,
+        Thu, 19 Sep 2019 02:51:09 -0400
+Received: from mail-eopbgr680116.outbound.protection.outlook.com ([40.107.68.116]:34030
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388141AbfISGvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 02:51:08 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hEBIwwxgTiwU6HuSCRrgRY/mnICp1eWDrzw7xpodAXe6/HDMo6UnL0npfpAZ8ofoVMNzn+IXiFG8RCHc5xz4X8FlEimiwU1oLlwAEH9HZMdJBnoZuiyQTL1ntTO5xPboRCsr05aNpSPIdAMrSXbAwEwRhajK6k4fUxcmcXCtdtfSVQrDG6QfN56rdtejPGWpgAdsF+LpQAqHi9WkAoEEpPhscfZgZJGacVaSqKLlNRc8Trw440tbcpB3gn3AM6PE+Htp9O73RhNnc4HIpyNKH7+PrNZ+2dPWVjzYc3lvjcxKy9M+F9EXM8v2OQEfMRDkBYFTz1C+0cTy0IHHrBymtw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UvpG01b5uUUfNexLvTcA7V96skH48+f6K2cjRXoDswY=;
+ b=nOW+7U/m7b7D0tiDEa5nzKC1drNGbkR/AvdStSIQ1DBDSD3u9PCbqv6ZsD7SvCq9pYeo3wHx+k7Fj0BQAB/pzbQRwKaLXNFY9UZMzgRg0mdAurpuATlW6WVYOkkR4y75dDT29w6S7GNj40xrb3tWCr07Drk7/Cs7FAwYgRCNgil/wBcpkvc06/r20XuacQVpbiTSJXLthFzMy4VufTuZNeOK8RSzWSgtW2GzgT/UZgBRFo4YOROlyPLXybEEcMiIy6YxBc36lxAjkV0cnzMcHcxXK0/xdEAJ1ybeXe1X/yXm8aF99RtCvsf7Lfjuz68Ske9nSNrlrOZ3fUCEd9+dUA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
+ header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UvpG01b5uUUfNexLvTcA7V96skH48+f6K2cjRXoDswY=;
+ b=vBBJr4NrDiPQZ3/dXeTIoirc04ILlXtQ0uIDUdR8uhIeeV8sUo+GVQLINNo2vE3b27TFSEEmEc9HUlaS3rjrm2THtwcCyR7BJfyXbvrOwPjjtLNfVJSXHCV/4Xus4cH3ilgpV0XCTmrN3tWjD07VBnernTy158R3hOUPhzipNWs=
+Received: from MN2PR04MB5886.namprd04.prod.outlook.com (20.179.22.213) by
+ MN2PR04MB6207.namprd04.prod.outlook.com (20.178.247.160) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.17; Thu, 19 Sep 2019 06:51:03 +0000
+Received: from MN2PR04MB5886.namprd04.prod.outlook.com
+ ([fe80::8520:f80f:ae9:63cd]) by MN2PR04MB5886.namprd04.prod.outlook.com
+ ([fe80::8520:f80f:ae9:63cd%6]) with mapi id 15.20.2284.009; Thu, 19 Sep 2019
+ 06:51:03 +0000
+From:   Xin Ji <xji@analogixsemi.com>
+To:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Andrzej Hajda <a.hajda@samsung.com>
+CC:     Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
-        <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com,
-        robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
-        kyungmin.park@samsung.com,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
-        willy.mh.wolff.ml@gmail.com
-From:   Lukasz Luba <l.luba@partner.samsung.com>
-Message-ID: <4a0d1d2c-cd1d-5df4-d4b1-f2dd1ef3bb72@partner.samsung.com>
-Date:   Thu, 19 Sep 2019 08:49:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <CAJKOXPcxG-mMKy5u-b0+xj_sOmrq5yq5-LYJx0Ds6_+yo_=JbA@mail.gmail.com>
+        Sheng Pan <span@analogixsemi.com>
+Subject: [PATCH v1 0/2] Add initial support for slimport anx7625
+Thread-Topic: [PATCH v1 0/2] Add initial support for slimport anx7625
+Thread-Index: AQHVbraamL8O6Yx7zE+wmPglROjXrw==
+Date:   Thu, 19 Sep 2019 06:51:03 +0000
+Message-ID: <cover.1568858880.git.xji@analogixsemi.com>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTcRTH++3eu3sVZ9dpetCoGFrZQ3tzoRJ7EIOIEioiEZvuoqLTtesj
-        s2gZPvERaaXDR1Iy05m2hppghK5UJJ1WmoqoaWqlUD5WllabV8n/Pud7vud3zhd+FCbuJVyp
-        sMhoVhUpi5AIbfGa1/PtO8fcbwXsqk1zZJ7mVRFMz+w4wRQb2wkme+QrxnR0VJPMm8RJktGP
-        dBPM2/oCITOTaURMXscLAVNpHCCZ0p5OAdN/s0zIJDUYSaZpMoVgzC0fkS8t1RXpkPS5ZoCU
-        6svThNJnj25IswzlSDqj33BGeNH2kJyNCItlVd4+l2xDzWneyi7HK98m7mJq9IRORzYU0Pvg
-        c9YkkY5sKTFdhiApo1XAF7MI0pIHML6YQfCyqES4MtI/XojzDS0C7WgOyRdTCEyz6iWXI30B
-        1GW5Ais70Z7Qs/hjaQlGN+KQVz9vaVCUkPaCuvLLVo+IPgHdOj2yMk57QPW8mbTyOss700NN
-        BO9xgNb8Udw6akP7gX5BbpUx2gX6RosFPG+E2qmCpauBXiShp6GX4K8+Du8NpuUEjvCl2UDy
-        vB7acjJwnjlQZ5Ygnq/BSHbhsucgNDV3Eta9mCVLVb03Lx+BBpNhSQbaHj5MOfAn2MOdmvsY
-        L4sgNVnMu7eCIcMk4NkZtLp75G0k0azKpVkVRrMqjOb/3gcIL0cubAynCGG5PZFsnBcnU3Ax
-        kSFewVEKPbJ8uLY/zbN1qH4hqBHRFJLYiX5uSQwQE7JYLl7RiIDCJE6igv0WSSSXxV9lVVGB
-        qpgIlmtEbhQucRElrBnyF9Mhsmg2nGWVrGqlK6BsXNXosCHDvSrRLzg0t8TU9Thh80TmK7f8
-        qtiG1j5lqNmttiJwTuc1fN50wG7wXfDJioLqhECjThc3omjO9qzUKgPdTgu2fxLFqpS+1b/s
-        hAptJkpp75/+fs4jNXyTv2/Qwx3Oypa1g0cXfI+dmgv+7WMeK44olV/f6x+UVeYwXHj2b4wE
-        50Jlu7dhKk72D8690llsAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrLIsWRmVeSWpSXmKPExsVy+t/xe7pPVZpjDTY1ylhsnLGe1eL6l+es
-        FvOPnGO16H/8mtni/PkN7BZnm96wW2x6fI3V4vKuOWwWn3uPMFrMOL+PyWLtkbvsFkuvX2Sy
-        uN24gs2ide8RdovDb9pZLb6deMToIOCxZt4aRo+ds+6ye2xa1cnmsXlJvUffllWMHp83yQWw
-        RenZFOWXlqQqZOQXl9gqRRtaGOkZWlroGZlY6hkam8daGZkq6dvZpKTmZJalFunbJehlfOvU
-        L7gkXPHhxVTmBsZ1Al2MnBwSAiYSt5/PZeli5OIQEljKKDH75m42iISYxKR929khbGGJP9e6
-        2CCKXjNKnFs9BaxIWCBCoufYdFYQW0RAU+L63++sIEXMAodYJD5tPc4I0TGBSeL03llAozg4
-        2AT0JHasKgRp4BVwk7i2ZhMjiM0ioCqx4ec3sG2iQEMP75jFCFEjKHFy5hMWkFZOgUCJTX9S
-        QMLMAmYS8zY/ZIawxSVuPZnPBGHLS2x/O4d5AqPQLCTds5C0zELSMgtJywJGllWMIqmlxbnp
-        ucVGesWJucWleel6yfm5mxiBUb3t2M8tOxi73gUfYhTgYFTi4f2h3hQrxJpYVlyZe4hRgoNZ
-        SYR3jilQiDclsbIqtSg/vqg0J7X4EKMp0G8TmaVEk/OBCSevJN7Q1NDcwtLQ3Njc2MxCSZy3
-        Q+BgjJBAemJJanZqakFqEUwfEwenVAOjw3veWSEGC69u2jAtxJxn6TKHRWeeR3U8tvd2exSU
-        5ZilvMSgPSh6kvMG+7gnNe91S/5Ozdn+U/Xl91nl+5iFc5fLPNhfX81ZHihzvledN5R5EjMv
-        74x4NrOD2h8+rbtz/0apNLvquWe86xIfBt1f+3ve09APt+9Pc9h3Vu68+LF/5f/50yYZKLEU
-        ZyQaajEXFScCAHgiRS8AAwAA
-X-CMS-MailID: 20190919064909eucas1p1ba3cd25428c7b0162de535cf3f038cc6
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190916100719eucas1p206fe95982b774840b5d6e62ba9c42c79
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190916100719eucas1p206fe95982b774840b5d6e62ba9c42c79
-References: <CGME20190916100719eucas1p206fe95982b774840b5d6e62ba9c42c79@eucas1p2.samsung.com>
-        <20190916100704.26692-1-l.luba@partner.samsung.com>
-        <20190916100704.26692-4-l.luba@partner.samsung.com>
-        <CAJKOXPcxG-mMKy5u-b0+xj_sOmrq5yq5-LYJx0Ds6_+yo_=JbA@mail.gmail.com>
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HK0PR03CA0035.apcprd03.prod.outlook.com
+ (2603:1096:203:2f::23) To MN2PR04MB5886.namprd04.prod.outlook.com
+ (2603:10b6:208:a3::21)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=xji@analogixsemi.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [114.247.245.252]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 81cd9dfe-7e5b-469d-8254-08d73ccdbcb9
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MN2PR04MB6207;
+x-ms-traffictypediagnostic: MN2PR04MB6207:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR04MB6207FDB95C7DE1B20E0F5F2DC7890@MN2PR04MB6207.namprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 016572D96D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(376002)(346002)(396003)(39850400004)(136003)(199004)(53754006)(189003)(8936002)(6436002)(71200400001)(3846002)(4744005)(54906003)(107886003)(26005)(81156014)(102836004)(6506007)(8676002)(6512007)(7736002)(386003)(81166006)(2501003)(52116002)(99286004)(71190400001)(6116002)(186003)(486006)(66446008)(6486002)(36756003)(4326008)(2616005)(316002)(64756008)(66476007)(305945005)(2906002)(476003)(86362001)(14444005)(66946007)(478600001)(66556008)(256004)(25786009)(66066001)(14454004)(5660300002)(110136005);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6207;H:MN2PR04MB5886.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: analogixsemi.com does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: v09CYL4OLIxyOUUxm5zN+LS7SKogoo4clle4mbuWnalrbgla8CeX3zf+oF0LIFDss1dWov8PuOM1gdfIePDn3dwhRnpuYTbAKPWLqkbTkNmRrKjhKzLP7hQ6sCfi1mtPfqGCRu3iEJzNgy8nBEd68QbUJhSy7h9MnyfFKFt7HKvqxUwgFfjWDgc+V7OFXeeSMWThsF/U0l++GWL4SmyfE5HaQ+RUn2YZ+jdG98zDWy3oPs+OZIqkksHK0Pwwdm0RX5gAHa5hroLT23wzNlDOracfHAL4EbRRUHvinpW+g/s4iSk63oJVfI45OGidEsV3NmYgm8qotosLvI150qHU+5tWP58aE2Zmo0BTILmK868ohSa6MdLRXPPwLCDBhfIHKsb7nzRZNmHkfEX4npupWOf6r5lpbu+EqxyJ/dyg6F8=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <CD96B94B9246F6488F14E64BFECE21FE@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: analogixsemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 81cd9dfe-7e5b-469d-8254-08d73ccdbcb9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Sep 2019 06:51:03.0669
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: oW9R/EWnC4n8cIUNf5w1zK9csqTqOyJyPKn0KGQVWQVr2dt+/30nVcwZrCKeImuadpAibaC9y7bcKoDdoX8Mkw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6207
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
+Hi all,
 
-On 9/18/19 8:51 PM, Krzysztof Kozlowski wrote:
-> On Mon, 16 Sep 2019 at 12:07, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->>
->> Add compatible for Samsung k3qf2f20db LPDDR3 memory bindings.
->> Introduce minor fixes in the old documentation.
->>
->> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->> ---
->>   Documentation/devicetree/bindings/ddr/lpddr3.txt | 9 ++++++---
->>   1 file changed, 6 insertions(+), 3 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/ddr/lpddr3.txt b/Documentation/devicetree/bindings/ddr/lpddr3.txt
->> index 3b2485b84b3f..49afe794daaa 100644
->> --- a/Documentation/devicetree/bindings/ddr/lpddr3.txt
->> +++ b/Documentation/devicetree/bindings/ddr/lpddr3.txt
->> @@ -1,7 +1,9 @@
->>   * LPDDR3 SDRAM memories compliant to JEDEC JESD209-3C
->>
->>   Required properties:
->> -- compatible : Should be  - "jedec,lpddr3"
->> +- compatible : should be one of the following:
->> +       Generic default - "jedec,lpddr3".
-> 
-> The convention is first compatible, then description. I gave you the
-> example to base on - at25. Why making it different?
+The following series add initial support for the Slimport ANX7625 transmitt=
+er, a
+ultra-low power Full-HD 4K MIPI to DP transmitter designed for portable dev=
+ice.
 
-I have checked at25 that you pointed me to and also checked at24, which
-has a bit longer "compatible" section.
+This is the first version upload, any mistakes, please let me know, I will =
+fix
+it in the next series.
 
-I found that there are many "jedec,spi-nor" compatible devices, which I
-thought would be a better example for my "jedec,lpddr3".
-For example, two configurations, where you have a single labels or dual
-(with specific device)
-arch/arm/boot/dts/imx6dl-rex-basic.dts:
-compatible = "sst,sst25vf016b", "jedec,spi-nor";
-arch/arm/boot/dts/imx6q-ba16.dtsi:
-compatible = "jedec,spi-nor";
+Thanks,
+Xin
 
-The 'compatible' in documentation for the "jedec,spi-nor" is slightly
-different (similar to at24).
-Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-It has a long explanation, which is also OK. So I thought that it is
-quite flexible what you put in there.
 
-I have also checked Cadance QSPI controller.
-Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
-The controller might be built-in into different vendor SoC's
-and the "compatible" is ready to reflect it in similar fashion but
-with a short explanation in this section.
+Xin Ji (2):
+  dt-bindings: drm/bridge: anx7625: MIPI to DP transmitter binding
+  drm/bridge: anx7625: Add anx7625 MIPI to DP bridge driver
 
-Therefore, what you see in the patch draw heavily on Cadence's qspi,
-with a bit of inspiration from jedec,spi-nor usage.
+ .../devicetree/bindings/display/bridge/anx7625.txt |   42 +
+ drivers/gpu/drm/bridge/Makefile                    |    2 +-
+ drivers/gpu/drm/bridge/analogix/Kconfig            |    6 +
+ drivers/gpu/drm/bridge/analogix/Makefile           |    1 +
+ drivers/gpu/drm/bridge/analogix/anx7625.c          | 2086 ++++++++++++++++=
+++++
+ drivers/gpu/drm/bridge/analogix/anx7625.h          |  397 ++++
+ 6 files changed, 2533 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/anx762=
+5.txt
+ create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.c
+ create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.h
 
-Should I change it to at25 "compatible" style and send next patch?
+--=20
+2.7.4
 
-PS. Thank you for taking the other two patches. I will not respond in
-their threads to keep the traffic low.
-
-Regards,
-Lukasz
