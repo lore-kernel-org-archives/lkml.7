@@ -2,74 +2,274 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E39CC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 08:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A366C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 08:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E937121924
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 08:56:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1016E2196F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 08:58:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568883498;
+	bh=iVEj9EnXaU+WqmlUoLEpRYE1JvDrZGXFiflC2Of+4E4=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=XhFzEBotFTrs11Ups7NlE6RID9Jj6G8oYyGhcD+xNiV3YKtAm5kOgi2fFMev+izX6
+	 ArTeYXj+Hyv4Yg5PhrGZIhi9ilt09t26Hb1yECXHFDGJDp+G/Hkb9SPS2tY5K8Ef93
+	 AbZ7uRtp6z8fQq92KtFiMVQJw9/kU6nzHf13KzNs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731957AbfISI4C (ORCPT
+        id S2388320AbfISI6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 04:56:02 -0400
-Received: from relay-b03.edpnet.be ([212.71.1.220]:55229 "EHLO
-        relay-b03.edpnet.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725887AbfISI4B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 04:56:01 -0400
-X-Greylist: delayed 899 seconds by postgrey-1.27 at vger.kernel.org; Thu, 19 Sep 2019 04:56:00 EDT
-X-ASG-Debug-ID: 1568882456-0a88186e203bfccb0001-xx1T2L
-Received: from zotac.vandijck-laurijssen.be (77.109.114.181.adsl.dyn.edpnet.net [77.109.114.181]) by relay-b03.edpnet.be with ESMTP id zku8b7QnzezzfzdY for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 10:40:56 +0200 (CEST)
-X-Barracuda-Envelope-From: dev.kurt@vandijck-laurijssen.be
-X-Barracuda-Effective-Source-IP: 77.109.114.181.adsl.dyn.edpnet.net[77.109.114.181]
-X-Barracuda-Apparent-Source-IP: 77.109.114.181
-Received: from x1.vandijck-laurijssen.be (x1.vandijck-laurijssen.be [IPv6:fd01::1a1d:eaff:fe02:d339])
-        by zotac.vandijck-laurijssen.be (Postfix) with ESMTPSA id BA9E89DD3E5
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 10:40:56 +0200 (CEST)
-Date:   Thu, 19 Sep 2019 10:40:53 +0200
-From:   Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
-To:     linux-kernel@vger.kernel.org
-Subject: Question on priorities with CAN
-Message-ID: <20190919084053.GB1446@x1.vandijck-laurijssen.be>
-X-ASG-Orig-Subj: Question on priorities with CAN
-Mail-Followup-To: linux-kernel@vger.kernel.org
+        Thu, 19 Sep 2019 04:58:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43730 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730839AbfISI6R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 04:58:17 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DD5721907;
+        Thu, 19 Sep 2019 08:58:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568883496;
+        bh=iVEj9EnXaU+WqmlUoLEpRYE1JvDrZGXFiflC2Of+4E4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=VEWCLX/f6ArHjquyp4WehSNjqxuo9dhYbxG8DjZt/8eu7nezXY1YPu6ZMDXJj9gKN
+         uFeVPZ9WcO5MQE8fdPxbRSml19wrNM0He1XBTohE/cf8xWHmrZNtB3beoexFAkBHQr
+         TYrDZQDnLnRKI+a75e2WyUPLkHqdzMmuLd3+yLt4=
+Date:   Thu, 19 Sep 2019 10:58:13 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Linux 4.14.145
+Message-ID: <20190919085813.GA2612736@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="3V7upXqbjpZ4EhLz"
 Content-Disposition: inline
-User-Agent: Mutt/1.5.22 (2013-10-16)
-X-Barracuda-Connect: 77.109.114.181.adsl.dyn.edpnet.net[77.109.114.181]
-X-Barracuda-Start-Time: 1568882456
-X-Barracuda-URL: https://212.71.1.220:443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at edpnet.be
-X-Barracuda-Scan-Msg-Size: 424
-X-Barracuda-BRTS-Status: 1
-X-Barracuda-Bayes: INNOCENT GLOBAL 0.8881 1.0000 3.0996
-X-Barracuda-Spam-Score: 3.10
-X-Barracuda-Spam-Status: No, SCORE=3.10 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=7.0 tests=
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.76587
-        Rule breakdown below
-         pts rule name              description
-        ---- ---------------------- --------------------------------------------------
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey,
 
-I work on a beaglebone-like board using the AM335x can chip, with an RT
-kernel.
+--3V7upXqbjpZ4EhLz
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The can irq task is by default rt prio 50.
-I have a process running on rt prio 10 using CAN_RAW socket.
+I'm announcing the release of the 4.14.145 kernel.
 
-I see that softirqd runs on regular timeslicing.
-Do CAN frames need to pass through the softirqd in order to arrive
-on my process?
-I would need to elevate the softirqd's rt prio also in that case?
+All users of the 4.14 kernel series must upgrade.
 
-Kind regards,
-Kurt
+The updated 4.14.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linu=
+x-4.14.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3Ds=
+ummary
+
+thanks,
+
+greg k-h
+
+------------
+
+ Makefile                               |    2=20
+ arch/mips/Kconfig                      |    3 -
+ arch/mips/include/asm/smp.h            |   12 +++++
+ arch/mips/sibyte/common/Makefile       |    1=20
+ arch/mips/sibyte/common/dma.c          |   14 ------
+ arch/mips/vdso/Makefile                |    4 +
+ arch/powerpc/include/asm/uaccess.h     |    1=20
+ arch/s390/kvm/interrupt.c              |   10 ++++
+ arch/s390/kvm/kvm-s390.c               |    2=20
+ arch/x86/Makefile                      |    1=20
+ arch/x86/kvm/vmx.c                     |    7 ++-
+ arch/x86/kvm/x86.c                     |    7 +++
+ drivers/base/core.c                    |   53 +++++++++++++++++++++++++-
+ drivers/bluetooth/btusb.c              |    5 --
+ drivers/clk/rockchip/clk-mmc-phase.c   |    4 -
+ drivers/crypto/talitos.c               |   67 ++++++++++++++++++++++++----=
+-----
+ drivers/firmware/ti_sci.c              |    8 +--
+ drivers/gpio/gpiolib-acpi.c            |   42 ++++++++++++++++++--
+ drivers/gpio/gpiolib.c                 |   20 ++++++---
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c |    5 +-
+ drivers/gpu/drm/meson/meson_plane.c    |   16 +++++++
+ drivers/isdn/capi/capi.c               |   10 ++++
+ drivers/mtd/nand/mtk_nand.c            |   21 ++++------
+ drivers/net/phy/phylink.c              |    6 +-
+ drivers/net/tun.c                      |   16 +++++--
+ drivers/net/usb/cdc_ether.c            |   13 ++++--
+ drivers/nvmem/core.c                   |   15 +++++--
+ drivers/pci/pci-driver.c               |    3 -
+ drivers/platform/x86/pmc_atom.c        |    8 +++
+ fs/btrfs/compression.c                 |   31 +++++++++++++++
+ fs/btrfs/compression.h                 |    3 +
+ fs/btrfs/props.c                       |    6 --
+ fs/btrfs/tree-log.c                    |    8 +--
+ fs/ubifs/tnc.c                         |   16 +++++--
+ include/uapi/linux/isdn/capicmd.h      |    1=20
+ kernel/irq/resend.c                    |    2=20
+ net/bridge/br_mdb.c                    |    2=20
+ net/core/dev.c                         |    2=20
+ net/core/skbuff.c                      |   19 +++++++++
+ net/ipv4/tcp_input.c                   |    2=20
+ net/ipv6/ping.c                        |    2=20
+ net/sched/sch_hhf.c                    |    2=20
+ net/sctp/protocol.c                    |    2=20
+ net/sctp/sm_sideeffect.c               |    2=20
+ net/tipc/name_distr.c                  |    3 -
+ 45 files changed, 365 insertions(+), 114 deletions(-)
+
+Alex Williamson (1):
+      PCI: Always allow probing with driver_override
+
+Andrew F. Davis (1):
+      firmware: ti_sci: Always request response from firmware
+
+Bj=F8rn Mork (1):
+      cdc_ether: fix rndis support for Mediatek based smartphones
+
+Christophe JAILLET (2):
+      ipv6: Fix the link time qualifier of 'ping_v6_proc_exit_net()'
+      sctp: Fix the link time qualifier of 'sctp_ctrlsock_exit()'
+
+Christophe Leroy (6):
+      crypto: talitos - check AES key size
+      crypto: talitos - fix CTR alg blocksize
+      crypto: talitos - check data blocksize in ablkcipher.
+      crypto: talitos - fix ECB algs ivsize
+      crypto: talitos - Do not modify req->cryptlen on decryption.
+      crypto: talitos - HMAC SNOOP NO AFEU mode requires SW icv checking.
+
+Cong Wang (1):
+      sch_hhf: ensure quantum and hhf_non_hh_weight are non-zero
+
+David Sterba (1):
+      btrfs: compression: add helper for type to string conversion
+
+Douglas Anderson (1):
+      clk: rockchip: Don't yell about bad mmc phases when getting
+
+Eric Biggers (1):
+      isdn/capi: check message length in capi_write()
+
+Filipe Manana (1):
+      Btrfs: fix assertion failure during fsync and use of stale transaction
+
+Fuqian Huang (1):
+      KVM: x86: work around leak of uninitialized stack contents
+
+Greg Kroah-Hartman (2):
+      Revert "MIPS: SiByte: Enable swiotlb for SWARM, LittleSur and BigSur"
+      Linux 4.14.145
+
+Hans de Goede (1):
+      gpiolib: acpi: Add gpiolib_acpi_run_edge_events_on_boot option and bl=
+acklist
+
+Jean Delvare (1):
+      nvmem: Use the same permissions for eeprom as for nvmem
+
+Johannes Thumshirn (1):
+      btrfs: correctly validate compression type
+
+Kent Gibson (2):
+      gpio: fix line flag validation in linehandle_create
+      gpio: fix line flag validation in lineevent_create
+
+Linus Torvalds (1):
+      x86/build: Add -Wnoaddress-of-packed-member to REALMODE_CFLAGS, to si=
+lence GCC9 build warning
+
+Mario Limonciello (1):
+      Revert "Bluetooth: btusb: driver to enable the usb-wakeup feature"
+
+Muchun Song (1):
+      driver core: Fix use-after-free and double free on glue directory
+
+Neal Cardwell (1):
+      tcp: fix tcp_ecn_withdraw_cwr() to clear TCP_ECN_QUEUE_CWR
+
+Neil Armstrong (1):
+      drm/meson: Add support for XBGR8888 & ABGR8888 formats
+
+Nicolas Dichtel (1):
+      bridge/mdb: remove wrong use of NLM_F_MULTI
+
+Nishka Dasgupta (1):
+      drm/mediatek: mtk_drm_drv.c: Add of_node_put() before goto
+
+Paolo Bonzini (1):
+      KVM: nVMX: handle page fault in vmread
+
+Paul Burton (2):
+      MIPS: VDSO: Prevent use of smp_processor_id()
+      MIPS: VDSO: Use same -m%-float cflag as the kernel proper
+
+Richard Weinberger (1):
+      ubifs: Correctly use tnc_next() in search_dh_cookie()
+
+Shmulik Ladkani (1):
+      net: gso: Fix skb_segment splat when splitting gso_size mangled skb h=
+aving linear-headed frag_list
+
+Stefan Chulski (1):
+      net: phylink: Fix flow control resolution
+
+Steffen Dirkwinkel (1):
+      platform/x86: pmc_atom: Add CB4063 Beckhoff Automation board to critc=
+lk_systems DMI table
+
+Subash Abhinov Kasiviswanathan (1):
+      net: Fix null de-reference of device refcount
+
+Suraj Jitindar Singh (1):
+      powerpc: Add barrier_nospec to raw_copy_in_user()
+
+Thomas Huth (1):
+      KVM: s390: Do not leak kernel stack data in the KVM_S390_INTERRUPT io=
+ctl
+
+Xiaolei Li (1):
+      mtd: rawnand: mtk: Fix wrongly assigned OOB buffer pointer issue
+
+Xin Long (2):
+      sctp: use transport pf_retrans in sctp_do_8_2_transport_strike
+      tipc: add NULL pointer check before calling kfree_rcu
+
+Yang Yingliang (1):
+      tun: fix use-after-free when register netdev failed
+
+Yunfeng Ye (1):
+      genirq: Prevent NULL pointer dereference in resend_irqs()
+
+
+--3V7upXqbjpZ4EhLz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAl2DQyIACgkQONu9yGCS
+aT6EwBAAv6vOevDDyaPTv1wXrNciB791Al6O6QjwfMCk0HcZs9cTrBc7DEkCfGjH
+7E4TxCbUezeRDSbvNRiraNDa207j+iVDhxchv5ik+85rXO+bjPCT+BTiEaPQY60R
+3+SyDJA+6N+gKul+AOS/WN5jLEKosO+EHYm+pV6nycWNcV4C0Fs8NITyUrEAdaA6
+SsYA+keGB1T+eHEPhquQOjR0nGXGW+i8eWw2ZLVXHHitfeNHLZB/QS+LVeqq9JXT
+RI7JxilziZvA/6U6xpTBZqZReXZjB4c9qMR8K5yEiR8qp20TjnS0MD0GT7R/uhgz
+ZEjYAheJDEvDAx7RUdC8wnPVf4ZzCJ0mkBf/+9ANW8S9rCkwVlAwmGOClbONUEwN
+kh+BNfWYcPXBF81r5zBPCZx+tA8Y52L6f1DEhWSVCfOFv8ZRzNFeczVd48NwNpYD
+Itxf1EeU1e2C71F7HkNiSD0yqYT8SkNuSM7wphSSoh2bemSpCekb0A+i8M8FsjNJ
+tN1ZgwUaDvJE6Xj3/fU8DSXeyZFmgx7UHdyuB2dk836dwRWY7yzzqYiL/E6yWC6T
+uBu/acLKVx4Gh3RN9M1xiBvOwge5Epn5vYcyLAENxm8gVY4SE37r1Wo0hdRrvsoH
+VaiLycxQWq17mzjB6L4eIGiblaaBZ1xJIo5yOnKQG6sFHiLVYpc=
+=gcG+
+-----END PGP SIGNATURE-----
+
+--3V7upXqbjpZ4EhLz--
