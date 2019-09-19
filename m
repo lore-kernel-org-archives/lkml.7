@@ -2,53 +2,57 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D327CC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB44AC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1B1D20640
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:28:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6AD120640
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:28:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932098;
-	bh=wJP2z8ZNzh52sElzbBzgoA1Y7Rx+wSlB3tahrTFUtBU=;
+	s=default; t=1568932100;
+	bh=m3qCy2g8XdxYeuzfG9cR3BKMkKqjyOQEIvoc12ySV2U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qhqrZXzDT3msnbqHiHZ0L/B2AQye6/4uQti+eb3n9nsvIWNr+f5V2yQuF2v38s0TY
-	 OY5HzfSq7A3t/nbSFPuVGM6qS03wKiBVE/yOqiQMGXVq24aWVX44EWoRo4NkZ/Kc3Y
-	 7UyurzfieizUVarlLu/Mm0Ob9BIkp/0BbGqH0e2Q=
+	b=Y8UQhu16avjoZvAVB5B0x0P+RobchwV36HPrkIhaUUA1j66cGyyMaIE6jmsRdwGF5
+	 S9zuVDxJpfj6WgfpAJqkKNuP6d81D/DKX0/bG91jQkzyUP/ob4xz7awWq2gBVXu5Pw
+	 h37RZRHepFuzsJNABrNKGKqpfMn50Njj9MI+mbR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733294AbfISWTy (ORCPT
+        id S1733281AbfISWTw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:19:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33546 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:19:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732513AbfISWTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:19:44 -0400
+        id S1731332AbfISWTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:19:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B67C21D56;
-        Thu, 19 Sep 2019 22:19:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 728B420678;
+        Thu, 19 Sep 2019 22:19:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931583;
-        bh=wJP2z8ZNzh52sElzbBzgoA1Y7Rx+wSlB3tahrTFUtBU=;
+        s=default; t=1568931581;
+        bh=m3qCy2g8XdxYeuzfG9cR3BKMkKqjyOQEIvoc12ySV2U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JgOPZdm9NO1WE5VoqVD2Xy9k/H4Uv14PtMAjiYFwaI58uNahLazCutTFS6wm6L5Ks
-         xocAVeHOdvP1awqzkIneqZnTVfM6vrd030DH4jQPXQKhf/8bfzatAO8DmctrJoUFYu
-         Z4vGRFqdsAv/q66pz9CocMvOW3cx7gmcN2iYGUuE=
+        b=R68L0J8lpPmQoRWgotrNVHBbVvJ2/pI8DArYYDQWrh2s/MQeZ0a3HKdliy8wRiPh7
+         BkGCSpjyUvnrgvke5C1/sBv8grudzOLtCzeppWYBhj+GooDSpxZGwKGIw7xaNtmQv6
+         2euiAZAqf6Gll26bAIE9om0gneO2MQfp1eVFD6cs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        syzbot+bc6297c11f19ee807dc2@syzkaller.appspotmail.com,
+        syzbot+041483004a7f45f1f20a@syzkaller.appspotmail.com,
+        syzbot+55be5f513bed37fc4367@syzkaller.appspotmail.com,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>, Terry Lam <vtlam@google.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 08/74] sctp: Fix the link time qualifier of sctp_ctrlsock_exit()
-Date:   Fri, 20 Sep 2019 00:03:21 +0200
-Message-Id: <20190919214803.743107325@linuxfoundation.org>
+Subject: [PATCH 4.9 07/74] sch_hhf: ensure quantum and hhf_non_hh_weight are non-zero
+Date:   Fri, 20 Sep 2019 00:03:20 +0200
+Message-Id: <20190919214802.500659970@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214800.519074117@linuxfoundation.org>
 References: <20190919214800.519074117@linuxfoundation.org>
@@ -61,32 +65,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit b456d72412ca8797234449c25815e82f4e1426c0 ]
+[ Upstream commit d4d6ec6dac07f263f06d847d6f732d6855522845 ]
 
-The '.exit' functions from 'pernet_operations' structure should be marked
-as __net_exit, not __net_init.
+In case of TCA_HHF_NON_HH_WEIGHT or TCA_HHF_QUANTUM is zero,
+it would make no progress inside the loop in hhf_dequeue() thus
+kernel would get stuck.
 
-Fixes: 8e2d61e0aed2 ("sctp: fix race on protocol/netns initialization")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Fix this by checking this corner case in hhf_change().
+
+Fixes: 10239edf86f1 ("net-qdisc-hhf: Heavy-Hitter Filter (HHF) qdisc")
+Reported-by: syzbot+bc6297c11f19ee807dc2@syzkaller.appspotmail.com
+Reported-by: syzbot+041483004a7f45f1f20a@syzkaller.appspotmail.com
+Reported-by: syzbot+55be5f513bed37fc4367@syzkaller.appspotmail.com
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>
+Cc: Jiri Pirko <jiri@resnulli.us>
+Cc: Terry Lam <vtlam@google.com>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sctp/protocol.c |    2 +-
+ net/sched/sch_hhf.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/sctp/protocol.c
-+++ b/net/sctp/protocol.c
-@@ -1336,7 +1336,7 @@ static int __net_init sctp_ctrlsock_init
- 	return status;
- }
+--- a/net/sched/sch_hhf.c
++++ b/net/sched/sch_hhf.c
+@@ -543,7 +543,7 @@ static int hhf_change(struct Qdisc *sch,
+ 		new_hhf_non_hh_weight = nla_get_u32(tb[TCA_HHF_NON_HH_WEIGHT]);
  
--static void __net_init sctp_ctrlsock_exit(struct net *net)
-+static void __net_exit sctp_ctrlsock_exit(struct net *net)
- {
- 	/* Free the control endpoint.  */
- 	inet_ctl_sock_destroy(net->sctp.ctl_sock);
+ 	non_hh_quantum = (u64)new_quantum * new_hhf_non_hh_weight;
+-	if (non_hh_quantum > INT_MAX)
++	if (non_hh_quantum == 0 || non_hh_quantum > INT_MAX)
+ 		return -EINVAL;
+ 
+ 	sch_tree_lock(sch);
 
 
