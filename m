@@ -2,93 +2,114 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A9DC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6ECC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BBB721848
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:11:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6F8B21848
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:11:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="aydgU3m7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389745AbfISPLR (ORCPT
+        id S2391116AbfISPLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 11:11:17 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:50049 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728720AbfISPJu (ORCPT
+        Thu, 19 Sep 2019 11:11:31 -0400
+Received: from sonic303-24.consmr.mail.gq1.yahoo.com ([98.137.64.205]:46594
+        "EHLO sonic303-24.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728720AbfISPLa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 11:09:50 -0400
-Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iAy3w-0006n0-31; Thu, 19 Sep 2019 17:09:40 +0200
-Message-Id: <20190919150314.054351477@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Thu, 19 Sep 2019 17:03:14 +0200
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: [RFC patch 00/15] entry: Provide generic implementation for host and
- guest entry/exit work
+        Thu, 19 Sep 2019 11:11:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1568905889; bh=1O+vcGjb05gALj1QAad6oTp09F1ELiXLmBDLOinwAuQ=; h=Date:From:To:Cc:Subject:In-Reply-To:References:From:Subject; b=aydgU3m7Ou6Rcnz6J90S7pTQcDjThuA2WPQTJwSkPWoS2z//BLXddJq5s0FIIxfaIkDw9GsWzVsJ3mhoEjJB2KwyM86cnkdUnJF4FRvMq6zK5jHa9EY5UaLGN+U2930WKF4Nl77Z4gVcp1Y7Lo/ycnR7H0e7zH0FMcz5jW5WyktIZ5iEhJaw5J+XUYrij+21psX814JVrwyNcqszA+jUlvoKRD5Bou+E7jbCfmZiLdasSj5fZvOo0u7INbn/L8sddkOLaQU1uZKkySaQKN5iGLq/w7BUKwpPp/WWwFPfofKxfIbhZAZGwlikpN1ncrVg8L/ZnYAePT9Cpb3DXNEEkw==
+X-YMail-OSG: bWS3MbAVM1n2bVlxeCjg2TlJXEwEXoEGyq.F13_51W51aumfuTjEoZcd2ZUlYYp
+ stFoP_2g5EeXEqZeYPvxKWq0fNMnCYZHDZ0fkrERKiVX36Vt1W.TKP4AJDypwy3m2KyC0OVOnJZL
+ lNWHgRlUkG3GvIryChc7kpQmFEER56RW6RRxvUKy9Dw7i_m4K9W6LEnel6TXSkrGxFScevHaLPIb
+ cIaD7u1cl4BQgucbUHhIxkljUrG8rKIQdNRSkm3sUPLMNWC82p1TGNyuLMGrxVImSzAH5HOAbqIr
+ eb1nEvNXAmBlzuQe1gd_M9cMy0aU7Xp5xwllx7WdHOt7u4o.wqP.PsP2nBLOIHV7rHwqPZJutNsk
+ GVgcFZvwY0QOVy.22QoRTHqitXF5IV4SBE0tdpg8FjikNo76Gss5NPN5QKMc1AR10t0YSLtAU4Lh
+ eCIa7QVMsKdJINa6K8SHDOoTaZNHZEC84uzTgbnpcqIuXpzG0WFKU5NwKdWTX6mzC827UX5l86_G
+ Y3I2V2AC1m3cczrnTg2Jk_78saePb3O4tROy2dpdi2eUJmGtpnQhMXfprvzIQoPCwvhPJAm0VSaR
+ 7igRx3fUIVzar9zL8EXd24N88KP98alU2UYYoOcK1xpz5yeBTR9LV_JrBUH3kM06LUBPL7kKQ1FT
+ _rsK62RKBhagfpGB_sNarttM01UB6cZXFSS0QGalITrL4p8HXXIOuGZkpJYMenvUcXcePXJz7k9m
+ mRfmhsDdC37ejqg4NAF2sQLgjJDTnarPnJUUhGxHI1L95Cdg5Qs3FThDjIZP.3Zszf4bCgtdoSJ6
+ 8oOXIGi2MIhHwYyH5clNw89yC1UkGi0NN4A4UYecGMZnKT2FL89uiNkWmGA30V4P8ipi5sZj1blV
+ 11JrBME.JXClK.hTYUmyonRj8.7yedYE1ierTiuQ8as.QyIU0Ip6Awh8aKuSCyauYhItHz7mvI_Y
+ q.uB7eY1deNgdTngRS14yIMl9dyfpHZ5KHdDmQ1KwlKbRv_uaMUFAdxJwNQWFcFzXKC525vzR4.U
+ 37WeCqn04LlTvF8ZfyHyzhiDsBHO8dc81WzLIVGw22BC1FaAPSSQh05BNHurY3kmRAK9nOLKQL5d
+ SfhFvCWyCuub334uX7tNlsPqXJTMdSOJ_pLJJqWJ0Hq4JM.C5.tqPAZ27YnwBAfyqaijr_go_Byl
+ i6mQPFDvtpUFArRx3S35wK5NaIsf8t6MLYLRQ3MhchdystDZ8aOBTbGtGKDKGcDUXi.gvfpM0s8M
+ tEHadBg0X207GBLRP6HyVhfM6PBxpuMBu4JH52Hv1ahnKngljmMqC8IpAcQ_mIvpB84TwN7WBt6_
+ nMZ4OeTKJpgWVob0Qfs1fYuVo.vuXrf_J5.0rwtwzOg--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic303.consmr.mail.gq1.yahoo.com with HTTP; Thu, 19 Sep 2019 15:11:29 +0000
+Received: by smtp424.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID d8617a679873d1c43053a5376a695e1e;
+          Thu, 19 Sep 2019 15:11:23 +0000 (UTC)
+Date:   Thu, 19 Sep 2019 23:11:16 +0800
+From:   Gao Xiang <hsiangkao@aol.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        linux-erofs@lists.ozlabs.org, Miao Xie <miaoxie@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-next@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: erofs -next tree inclusion request
+Message-ID: <20190919150213.GA6138@hsiangkao-HP-ZHAN-66-Pro-G1>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190919145027.GN3642@sirena.co.uk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190919150213.GA6138.ref@hsiangkao-HP-ZHAN-66-Pro-G1>
+X-Mailer: WebService/1.1.14303 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_181)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When working on a way to move out the posix cpu timer expiry out of the
-timer interrupt context, I noticed that KVM is not handling pending task
-work before entering a guest. A quick hack was to add that to the x86 KVM
-handling loop. The discussion ended with a request to make this a generic
-infrastructure possible with also moving the per arch implementations of
-the enter from and return to user space handling generic.
+On Thu, Sep 19, 2019 at 03:50:27PM +0100, Mark Brown wrote:
+> On Thu, Sep 19, 2019 at 10:37:22PM +0800, Gao Xiang wrote:
+> 
+> > The fixes only -fixes branch is
+> > git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git fixes
+> 
+> > Thanks for taking time on this stuff...
+> 
+> OK, thanks - I've added that for tomorrow and I'll try to remember to
+> add it onto the end of today's build too.  Like I said before you might
+> need to remind Stephen about the trees when he gets back on the 30th but
+> hopefully he'll see these mails.
 
-  https://lore.kernel.org/r/89E42BCC-47A8-458B-B06A-D6A20D20512C@amacapital.net
+Thanks, I will keep eyes on -next branch and remind him when it's really
+necessary.
 
-You asked for it, so don't complain that you have to review it :)
+> 
+> Thanks for adding your subsystem tree as a participant of linux-next.  As
+> you may know, this is not a judgement of your code.  The purpose of
+> linux-next is for integration testing and to lower the impact of
+> conflicts between subsystems in the next merge window.
+> 
+> You will need to ensure that the patches/commits in your tree/series have
+> been:
+>      * submitted under GPL v2 (or later) and include the Contributor's
+>         Signed-off-by,
+>      * posted to the relevant mailing list,
+>      * reviewed by you (or another maintainer of your subsystem tree),
+>      * successfully unit tested, and
+>      * destined for the current or next Linux merge window.
 
-The series implements the syscall enter/exit and the general exit to
-userspace work handling along with the pre guest enter functionality.
+Yes, I understand these rules (by keeping up with several previous rounds)
+and thanks for your reminder again.
 
-The series converts x86 and ARM64. x86 is fully tested including selftests
-etc. ARM64 is only compile tested for now as my only ARM64 testbox is not
-available right now.
+> 
+> Basically, this should be just what you would send to Linus (or ask him
+> to fetch).  It is allowed to be rebased if you deem it necessary.
+
+I will give a try after these commits are all solid and pull request with
+my PGP key then... Thank you...
 
 Thanks,
-
-	tglx
-
----
- /Makefile                               |    3 
- arch/Kconfig                            |    3 
- arch/arm64/Kconfig                      |    1 
- arch/arm64/include/asm/kvm_host.h       |    1 
- arch/arm64/kernel/entry.S               |   18 -
- arch/arm64/kernel/ptrace.c              |   65 ------
- arch/arm64/kernel/signal.c              |   45 ----
- arch/arm64/kernel/syscall.c             |   49 ----
- arch/x86/Kconfig                        |    1 
- arch/x86/entry/common.c                 |  265 +-------------------------
- arch/x86/entry/entry_32.S               |   13 -
- arch/x86/entry/entry_64.S               |   12 -
- arch/x86/entry/entry_64_compat.S        |   21 --
- arch/x86/include/asm/signal.h           |    1 
- arch/x86/include/asm/thread_info.h      |    9 
- arch/x86/kernel/signal.c                |    2 
- arch/x86/kvm/x86.c                      |   17 -
- b/arch/arm64/include/asm/entry-common.h |   76 +++++++
- b/arch/x86/include/asm/entry-common.h   |  104 ++++++++++
- b/include/linux/entry-common.h          |  324 ++++++++++++++++++++++++++++++++
- b/kernel/entry/common.c                 |  220 +++++++++++++++++++++
- kernel/Makefile                         |    1 
- 22 files changed, 776 insertions(+), 475 deletions(-)
-
+Gao Xiang
 
