@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A99C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF92BC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 524F1208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:35:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6FAE208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:35:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932507;
-	bh=vXaRYenn3fpJc/5HchT0ZUQjlU+0iYGXGNJoMVlceuc=;
+	s=default; t=1568932516;
+	bh=pk8YjyyRwMJOPfCa/yxcD7L3OlLFFCTVp2VRhcwJ2fw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nImJJceAH4QjXVlZSY078IVE/K48DbuBtSFusxRQZAil83jI2M/pe4nUvveWixtWc
-	 8aJQi3jrSPyi0/qJhf6mGSJhTdU4yNep9eYDB5e80FlhFqt6JZ9uP49el9zLL6HeLk
-	 TnHilrTob95HFJeXJQ7lz/1UGkmjlqS99k9elrwA=
+	b=soj4ym23qlwa2yIHpvcMYuPLZZk8KyXHZuPRF4Ch85v5YkV2DICPz9GL2aoL2Bl0f
+	 3KSjqwFxVCaCKag6CTlltbL2s2dLTW906C+2eT+smCqtLz4eOfdumF/c+hsiMniEK4
+	 OpABTpOUIf6ck2Pa60WO00BGgAKx7dChgyZ5Tuik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405584AbfISWfC (ORCPT
+        id S2406693AbfISWfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:35:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47124 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:35:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405343AbfISWJE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:09:04 -0400
+        id S2393431AbfISWIe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:08:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAA8C21924;
-        Thu, 19 Sep 2019 22:09:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E515218AF;
+        Thu, 19 Sep 2019 22:08:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568930942;
-        bh=vXaRYenn3fpJc/5HchT0ZUQjlU+0iYGXGNJoMVlceuc=;
+        s=default; t=1568930914;
+        bh=pk8YjyyRwMJOPfCa/yxcD7L3OlLFFCTVp2VRhcwJ2fw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TKg2n6DefgUqofeZTQY9fMsYYzlALUUgSFK/Sk4PpeLV9GEIUwfLXI0GdxdOkB5hR
-         QfrQFl5WpiinMHqeep2M8w1+0stPvjJQkOggkcyyPoALF3SA9+i+aeXtp4Dp8Ig9w/
-         QNFPWo+N24iR9kjbaZFYPLcWpHjNOEuVz7DV8sRs=
+        b=V7BG65Ee34QzFMMyMEBtquwHHGjGRZdR+NT6rdnZpkYyEap4WEJC4TO7XzVxo/xLW
+         s7WgMn80Q2Ynq6Hp72R+acqTeLnXvdZ0PWm+dOTZ1ZxkIwZofYf/qWS1pxbmBqVkaG
+         04KAixctwXssjRe4ewtnwYkdW+DzP46iTyQRaU9c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Faiz Abbas <faiz_abbas@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org, Laszlo Ersek <lersek@redhat.com>,
+        Gerd Hoffmann <kraxel@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 039/124] ARM: dts: dra74x: Fix iodelay configuration for mmc3
-Date:   Fri, 20 Sep 2019 00:02:07 +0200
-Message-Id: <20190919214820.432244700@linuxfoundation.org>
+Subject: [PATCH 5.2 060/124] drm/virtio: use virtio_max_dma_size
+Date:   Fri, 20 Sep 2019 00:02:28 +0200
+Message-Id: <20190919214821.181161783@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -60,108 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Faiz Abbas <faiz_abbas@ti.com>
+From: Gerd Hoffmann <kraxel@redhat.com>
 
-[ Upstream commit 07f9a8be66a9bd86f9eaedf8f8aeb416195adab8 ]
+[ Upstream commit 9b2a0a1ef66f96bf34921a3865581eca32ff05ec ]
 
-According to the latest am572x[1] and dra74x[2] data manuals, mmc3
-default, hs, sdr12 and sdr25 modes use iodelay values given in
-MMC3_MANUAL1. Set the MODE_SELECT bit for these so that manual mode is
-selected and correct iodelay values can be configured.
+We must make sure our scatterlist segments are not too big, otherwise
+we might see swiotlb failures (happens with sev, also reproducable with
+swiotlb=force).
 
-[1] http://www.ti.com/lit/ds/symlink/am5728.pdf
-[2] http://www.ti.com/lit/ds/symlink/dra746.pdf
-
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Suggested-by: Laszlo Ersek <lersek@redhat.com>
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Reviewed-by: Laszlo Ersek <lersek@redhat.com>
+Link: http://patchwork.freedesktop.org/patch/msgid/20190821111210.27165-1-kraxel@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/dra74x-mmc-iodelay.dtsi | 50 +++++++++++------------
- 1 file changed, 25 insertions(+), 25 deletions(-)
+ drivers/gpu/drm/virtio/virtgpu_object.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/dra74x-mmc-iodelay.dtsi b/arch/arm/boot/dts/dra74x-mmc-iodelay.dtsi
-index 28ebb4eb884a9..214b9e6de2c35 100644
---- a/arch/arm/boot/dts/dra74x-mmc-iodelay.dtsi
-+++ b/arch/arm/boot/dts/dra74x-mmc-iodelay.dtsi
-@@ -32,7 +32,7 @@
-  *
-  * Datamanual Revisions:
-  *
-- * AM572x Silicon Revision 2.0: SPRS953B, Revised November 2016
-+ * AM572x Silicon Revision 2.0: SPRS953F, Revised May 2019
-  * AM572x Silicon Revision 1.1: SPRS915R, Revised November 2016
-  *
-  */
-@@ -229,45 +229,45 @@
- 
- 	mmc3_pins_default: mmc3_pins_default {
- 		pinctrl-single,pins = <
--			DRA7XX_CORE_IOPAD(0x377c, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_clk.mmc3_clk */
--			DRA7XX_CORE_IOPAD(0x3780, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_cmd.mmc3_cmd */
--			DRA7XX_CORE_IOPAD(0x3784, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat0.mmc3_dat0 */
--			DRA7XX_CORE_IOPAD(0x3788, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat1.mmc3_dat1 */
--			DRA7XX_CORE_IOPAD(0x378c, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat2.mmc3_dat2 */
--			DRA7XX_CORE_IOPAD(0x3790, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat3.mmc3_dat3 */
-+			DRA7XX_CORE_IOPAD(0x377c, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_clk.mmc3_clk */
-+			DRA7XX_CORE_IOPAD(0x3780, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_cmd.mmc3_cmd */
-+			DRA7XX_CORE_IOPAD(0x3784, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat0.mmc3_dat0 */
-+			DRA7XX_CORE_IOPAD(0x3788, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat1.mmc3_dat1 */
-+			DRA7XX_CORE_IOPAD(0x378c, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat2.mmc3_dat2 */
-+			DRA7XX_CORE_IOPAD(0x3790, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat3.mmc3_dat3 */
- 		>;
+diff --git a/drivers/gpu/drm/virtio/virtgpu_object.c b/drivers/gpu/drm/virtio/virtgpu_object.c
+index b2da31310d24c..09b526518f5a6 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_object.c
++++ b/drivers/gpu/drm/virtio/virtgpu_object.c
+@@ -204,6 +204,7 @@ int virtio_gpu_object_get_sg_table(struct virtio_gpu_device *qdev,
+ 		.interruptible = false,
+ 		.no_wait_gpu = false
  	};
++	size_t max_segment;
  
- 	mmc3_pins_hs: mmc3_pins_hs {
- 		pinctrl-single,pins = <
--			DRA7XX_CORE_IOPAD(0x377c, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_clk.mmc3_clk */
--			DRA7XX_CORE_IOPAD(0x3780, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_cmd.mmc3_cmd */
--			DRA7XX_CORE_IOPAD(0x3784, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat0.mmc3_dat0 */
--			DRA7XX_CORE_IOPAD(0x3788, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat1.mmc3_dat1 */
--			DRA7XX_CORE_IOPAD(0x378c, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat2.mmc3_dat2 */
--			DRA7XX_CORE_IOPAD(0x3790, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat3.mmc3_dat3 */
-+			DRA7XX_CORE_IOPAD(0x377c, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_clk.mmc3_clk */
-+			DRA7XX_CORE_IOPAD(0x3780, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_cmd.mmc3_cmd */
-+			DRA7XX_CORE_IOPAD(0x3784, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat0.mmc3_dat0 */
-+			DRA7XX_CORE_IOPAD(0x3788, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat1.mmc3_dat1 */
-+			DRA7XX_CORE_IOPAD(0x378c, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat2.mmc3_dat2 */
-+			DRA7XX_CORE_IOPAD(0x3790, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat3.mmc3_dat3 */
- 		>;
- 	};
+ 	/* wtf swapping */
+ 	if (bo->pages)
+@@ -215,8 +216,13 @@ int virtio_gpu_object_get_sg_table(struct virtio_gpu_device *qdev,
+ 	if (!bo->pages)
+ 		goto out;
  
- 	mmc3_pins_sdr12: mmc3_pins_sdr12 {
- 		pinctrl-single,pins = <
--			DRA7XX_CORE_IOPAD(0x377c, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_clk.mmc3_clk */
--			DRA7XX_CORE_IOPAD(0x3780, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_cmd.mmc3_cmd */
--			DRA7XX_CORE_IOPAD(0x3784, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat0.mmc3_dat0 */
--			DRA7XX_CORE_IOPAD(0x3788, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat1.mmc3_dat1 */
--			DRA7XX_CORE_IOPAD(0x378c, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat2.mmc3_dat2 */
--			DRA7XX_CORE_IOPAD(0x3790, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat3.mmc3_dat3 */
-+			DRA7XX_CORE_IOPAD(0x377c, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_clk.mmc3_clk */
-+			DRA7XX_CORE_IOPAD(0x3780, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_cmd.mmc3_cmd */
-+			DRA7XX_CORE_IOPAD(0x3784, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat0.mmc3_dat0 */
-+			DRA7XX_CORE_IOPAD(0x3788, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat1.mmc3_dat1 */
-+			DRA7XX_CORE_IOPAD(0x378c, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat2.mmc3_dat2 */
-+			DRA7XX_CORE_IOPAD(0x3790, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat3.mmc3_dat3 */
- 		>;
- 	};
- 
- 	mmc3_pins_sdr25: mmc3_pins_sdr25 {
- 		pinctrl-single,pins = <
--			DRA7XX_CORE_IOPAD(0x377c, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_clk.mmc3_clk */
--			DRA7XX_CORE_IOPAD(0x3780, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_cmd.mmc3_cmd */
--			DRA7XX_CORE_IOPAD(0x3784, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat0.mmc3_dat0 */
--			DRA7XX_CORE_IOPAD(0x3788, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat1.mmc3_dat1 */
--			DRA7XX_CORE_IOPAD(0x378c, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat2.mmc3_dat2 */
--			DRA7XX_CORE_IOPAD(0x3790, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat3.mmc3_dat3 */
-+			DRA7XX_CORE_IOPAD(0x377c, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_clk.mmc3_clk */
-+			DRA7XX_CORE_IOPAD(0x3780, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_cmd.mmc3_cmd */
-+			DRA7XX_CORE_IOPAD(0x3784, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat0.mmc3_dat0 */
-+			DRA7XX_CORE_IOPAD(0x3788, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat1.mmc3_dat1 */
-+			DRA7XX_CORE_IOPAD(0x378c, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat2.mmc3_dat2 */
-+			DRA7XX_CORE_IOPAD(0x3790, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat3.mmc3_dat3 */
- 		>;
- 	};
- 
+-	ret = sg_alloc_table_from_pages(bo->pages, pages, nr_pages, 0,
+-					nr_pages << PAGE_SHIFT, GFP_KERNEL);
++	max_segment = virtio_max_dma_size(qdev->vdev);
++	max_segment &= PAGE_MASK;
++	if (max_segment > SCATTERLIST_MAX_SEGMENT)
++		max_segment = SCATTERLIST_MAX_SEGMENT;
++	ret = __sg_alloc_table_from_pages(bo->pages, pages, nr_pages, 0,
++					  nr_pages << PAGE_SHIFT,
++					  max_segment, GFP_KERNEL);
+ 	if (ret)
+ 		goto out;
+ 	return 0;
 -- 
 2.20.1
 
