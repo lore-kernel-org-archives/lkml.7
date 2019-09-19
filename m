@@ -2,200 +2,111 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39698C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 07:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F0CC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 07:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDF5D21A4C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 07:47:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99D7421A4C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 07:48:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="sSECsxon"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CdQ6YV2u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731399AbfISHrm (ORCPT
+        id S1731489AbfISHsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 03:47:42 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:41007 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726566AbfISHrl (ORCPT
+        Thu, 19 Sep 2019 03:48:24 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35397 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726566AbfISHsY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 03:47:41 -0400
-Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
-  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="Claudiu.Beznea@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa2.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa2.microchip.iphmx.com; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: 3h6dpag7N5rKjPg0pJ0Yu0/Y1t/El6KXYl6Vra1dgA85AXqsZ3I67zEtO+SQNCi+qE9XCyv/iZ
- wDbag4v62GfYT9v7rWvS2oGPNJnEe58r9O9C3/k6DCDMU+fhC29PpG7g8lJTvNG3dSsg4KOM38
- tUOSHqnJGictf4dvFW8aCXz8NmqQdErIDD7ysVpJiJYDito4fN+Y9eeuoD0vLwRiu1Cf7JK4bQ
- iGuf7q8KgB+7AyufVaQE2VZ5+LBi6douS5h8pvuGk86IjBHiwQV9gK7H898CcXPBQ26fssLb3b
- iKk=
-X-IronPort-AV: E=Sophos;i="5.64,522,1559545200"; 
-   d="scan'208";a="49492057"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 19 Sep 2019 00:47:40 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 19 Sep 2019 00:47:34 -0700
-Received: from NAM03-BY2-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5 via Frontend
- Transport; Thu, 19 Sep 2019 00:47:35 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kRq5K5M8IyIJh3XAEzW5yjmPcB35Y4FcwxWOIaLvS6iF1a8WQox/udATNUKfhIXJHtcwF/AmnbhW4CppPBy2WwSNM+gZ8WHHiA9iTvNWwBrqW+mAnJWhJ4QYOK+IkITpCAzChzxqKa10ho6j74MaYfO73vGjXCdMO1ebjRktLm3TqcFLANez9FVpqxy63pPB4fBoaxEKOh9xEiLXIYAoeIL3bbrysoJxZxuH4UBvlC5mW3GVcyDfEVal77ylG6It1FZBGaaJp9a88oStmTOFLEZlvCOHy9QVAtoMKo/WF/7smjdAEWBQnIUw/M/hNXtKe5/ZAe9jr4re26EUtskFXw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9XQ/GAUEealLUZMMuK8niriOHs6GKPsnLIp2RDO+Mhk=;
- b=OVoQwKTGRR1ZH1lOpbOwcFHupDXd4OUEMAkkYMWbNldQzAOcK75aUUFxaOLOPB6ktmII59WIIEDHKrEWO26VEA5smV9CTf2y9PT+XwAjxt2AkAVdwvlrcarUZMI9cxh0O5EC8zL608V8lrUyGRxkN3xW5Xlg1eYNA726o5r955avVeyRUkrmFRA84l/K53n/zePOgRAED+vuP30Pf0cZLGtCJSIh3xAKiMv6Wtz2AZdr02yNrVXERKNt52r+xemk9VYFQ/7e169H/9KzSt6hOErSxzp2tb3rczb/BS/b4pjhiDdkwAtlHNuSdINaWGtADR0Ceu8QGMzjsjLuIVJnqw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+        Thu, 19 Sep 2019 03:48:24 -0400
+Received: by mail-wr1-f66.google.com with SMTP id v8so1993841wrt.2;
+        Thu, 19 Sep 2019 00:48:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9XQ/GAUEealLUZMMuK8niriOHs6GKPsnLIp2RDO+Mhk=;
- b=sSECsxonJo0rOGZFYgn5CTbwQU9ViGNeaOaJzJoJo9JtsUC6h3Cq9fZt9Gac6R1smEG48ZxPuFesF7h9pnDBGWYtBH4QahL6HjFWCgdW49tZdAnu/Nx2MiKkN2WqLLv1R01PgQvSNLfI7i2C4KBhzpRXJ9C4E8SPN3yq7iaQ/K0=
-Received: from MWHPR11MB1549.namprd11.prod.outlook.com (10.172.54.17) by
- MWHPR11MB1680.namprd11.prod.outlook.com (10.172.54.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.20; Thu, 19 Sep 2019 07:47:27 +0000
-Received: from MWHPR11MB1549.namprd11.prod.outlook.com
- ([fe80::e1f5:745f:84b4:7c7c]) by MWHPR11MB1549.namprd11.prod.outlook.com
- ([fe80::e1f5:745f:84b4:7c7c%12]) with mapi id 15.20.2263.023; Thu, 19 Sep
- 2019 07:47:27 +0000
-From:   <Claudiu.Beznea@microchip.com>
-To:     <kamel.bouhara@bootlin.com>, <thierry.reding@gmail.com>,
-        <linux-pwm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <Ludovic.Desroches@microchip.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <gregory.clement@bootlin.com>, <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2] pwm: atmel: Remove platform_device_id and use only dt
- bindings
-Thread-Topic: [PATCH v2] pwm: atmel: Remove platform_device_id and use only dt
- bindings
-Thread-Index: AQHVbr57StGtPvVBBke1anoyhO1u4A==
-Date:   Thu, 19 Sep 2019 07:47:27 +0000
-Message-ID: <e3a8f56f-7471-ac84-c266-1ee446531212@microchip.com>
-References: <20190918145716.32022-1-kamel.bouhara@bootlin.com>
-In-Reply-To: <20190918145716.32022-1-kamel.bouhara@bootlin.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR10CA0095.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:803:28::24) To MWHPR11MB1549.namprd11.prod.outlook.com
- (2603:10b6:301:c::17)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tagtoolbar-keys: D20190919104717861
-x-originating-ip: [94.177.32.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5708e556-b798-42ed-da3f-08d73cd59dc3
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR11MB1680;
-x-ms-traffictypediagnostic: MWHPR11MB1680:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR11MB1680FF4409690D3352E21D2087890@MWHPR11MB1680.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:125;
-x-forefront-prvs: 016572D96D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(346002)(376002)(396003)(39860400002)(199004)(189003)(54534003)(6116002)(3846002)(8936002)(2616005)(54906003)(53546011)(6506007)(386003)(11346002)(186003)(305945005)(7736002)(110136005)(52116002)(99286004)(486006)(316002)(76176011)(476003)(25786009)(478600001)(81166006)(446003)(102836004)(2906002)(26005)(8676002)(81156014)(71200400001)(71190400001)(229853002)(36756003)(66066001)(14454004)(6436002)(2501003)(31696002)(6486002)(6246003)(4326008)(256004)(5660300002)(66476007)(66946007)(66556008)(64756008)(66446008)(86362001)(31686004)(2201001)(6512007);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB1680;H:MWHPR11MB1549.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: sWwbQxQ/e57MKJB2QTe6EWpdQFG58xW3OpdxPlxYZWaIvtZ0O3p+7/Pljra0ib/VZWKgeJ4S2joLysKdBMp45DvJJTiuD2N2gsfpThzBphFXPttkd+59BoKQvOCSOWdLUg/OI+psnn4pyMlONH7ZlAN/glV/RaV6B+d6NcCJeDY/dIjG/nUwVubP+A57B+fnJLuqIzCT7owMgiJV1aOSBEgWgVGWjXT/SAo93FFoB7DxreTzoCQSxCerCr7DJ+biG+CNymkxtuiFLwj45p6GOQl7gGEzNVjBs2AvqUpsROjX8GUptzdUuj8wb/EHpBVtgggWXs6rtT+QcgaZBqHDGEDYAzzgnQG5/BtUB76JqWHU+rMPt+KlPXFbh0Tuxdk7LZdSSjRvFjzePBiIUBNOVyzOICypDS+d7wG5cInNqbk=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E43012DF0B66B14781E1C204C02EE893@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5708e556-b798-42ed-da3f-08d73cd59dc3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Sep 2019 07:47:27.1412
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +rVx1aKAa4nvNX4dMrttRoTu2P08xR52cmbrXTvPIn4VaYSjay+5dZt8DKBlRfhV/JM4yiKy6EmsFcQla00okEFwLY25dVRhLc3deIwCWFU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1680
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=4+IikWYzTHVoP+qr/bH+QADSSsqMyHaDXXhUq1MQaqE=;
+        b=CdQ6YV2u8DkvN7NZv3oWamzT06hOVlVxmHK0/goVfJ5nYPRBaDq2MzukNnVes247od
+         6A/pVklUbgoTWlHmjo65l+vUzL1dxZJ+AJ6API3LDshNMG4Lo39mi2j3YMKQtdi5iyMX
+         k91ok8cbypGednfDRH+hiu/W01ecXreCaFnvov2ay/ZvgNslymEx+bxXLuqUz4U15Gb8
+         ///K99QyOBJ+RAtDcPlzICgC1FJJUllwS1e8anhhY7NAcdFGd4CT9Nuy0OR9tQw7YAqM
+         jg9jpcKKU4rut4Epc8K/jaWjD2wdGBsqFsaP3dO5xyAhyjGjDOX/e4MoIzBrY9b0vIwF
+         eThw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=4+IikWYzTHVoP+qr/bH+QADSSsqMyHaDXXhUq1MQaqE=;
+        b=C2KKgeCLPKM9pXBpP6SY2v1p7a/Q1Rt165+3zpMoBuUBXcccFTIWmmGYdPemho5pqo
+         B8HrhXMMbfXkqpt0ECdFIcrns7kasXRDL4UJj9Rh/lddW/3WUYjWhiQcA6mKzl+527+t
+         ByzbZsWustE5tLsSuxqGIkadTYftdR5bpE2PQeSNsuHGMlF0U7dZFf3/Ya6F8P/n5Ae7
+         EH97RP3EMQK4s9wH2XIOuAFOro21T10YBrY8CTcOefIjNi4nNXSnBxDXhQPhQagMcB4U
+         YhBbeRKR1DoY8wtYBVMsJlXQU0nNMmbaV3iUlMBItv3Ki0GqYmSvShlA0P3af33KZYzz
+         9n4g==
+X-Gm-Message-State: APjAAAXg98RdtnRLIER1paG+gr/ELmObbEMfSHm4z3KgNRzKLzFjNcVF
+        qCuZvW+X+qyRG9QrgDGhebOjlPMjCmA=
+X-Google-Smtp-Source: APXvYqw+ahU3bBlwVkjXOnMv6LzIZQwXrl99hJ4LTJG7ynNbH/PcROfnsBVY/iP/I8DZyIaaNEALyg==
+X-Received: by 2002:adf:e485:: with SMTP id i5mr911416wrm.175.1568879302252;
+        Thu, 19 Sep 2019 00:48:22 -0700 (PDT)
+Received: from linux-code.mgc.mentorg.com (nat-sch.mentorg.com. [139.181.36.34])
+        by smtp.gmail.com with ESMTPSA id q66sm7120969wme.39.2019.09.19.00.48.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Sep 2019 00:48:21 -0700 (PDT)
+From:   Srikanth Krishnakar <skrishnakar@gmail.com>
+X-Google-Original-From: Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>
+To:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dvhart@infradead.org, andy@infradead.org
+Cc:     Cedric_Hombourger@mentor.com, Srikanth_Krishnakar@mentor.com,
+        jan.kiszka@siemens.com
+Subject: [PATCH] platform/x86: pmc_atom: Add Siemens SIMATIC IPC2x7E to critclk_systems DMI table
+Date:   Thu, 19 Sep 2019 13:15:56 +0530
+Message-Id: <20190919074556.25691-1-Srikanth_Krishnakar@mentor.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDE4LjA5LjIwMTkgMTc6NTcsIEthbWVsIEJvdWhhcmEgd3JvdGU6DQo+IFNpbmNlIGNv
-bW1pdCAyNjIwMjg3M2JiNTEgKCJhdnIzMjogcmVtb3ZlIHN1cHBvcnQgZm9yIEFWUjMyDQo+IGFy
-Y2hpdGVjdHVyZSIpIHRoZXJlIGlzIG5vIG1vcmUgdXNlciBvZiBwbGF0Zm9ybV9kZXZpY2VfaWQg
-YW5kIHdlDQo+IHNob3VsZCBvbmx5IHVzZSBkdCBiaW5kaW5ncw0KPiANCj4gU2lnbmVkLW9mZi1i
-eTogS2FtZWwgQm91aGFyYSA8a2FtZWwuYm91aGFyYUBib290bGluLmNvbT4NCg0KQWNrZWQtYnk6
-IENsYXVkaXUgQmV6bmVhIDxjbGF1ZGl1LmJlem5lYUBtaWNyb2NoaXAuY29tPg0KDQo+IC0tLQ0K
-PiBDaGFuZ2Vsb2c6DQo+ICB2MS0+djINCj4gIA0KPiAgLSBSZW1vdmUgd2hvbGUgZnVuY3Rpb24g
-YXRtZWxfcHdtX2dldF9kcml2ZXJfZGF0YSBhbmQgY2FsbA0KPiAgb2ZfZGV2aWNlX2dldF9tYXRj
-aF9kYXRhIGZyb20gYXRtZWxfcHdtX3Byb2JlDQo+IA0KPiAgZHJpdmVycy9wd20vS2NvbmZpZyAg
-ICAgfCAgMiArLQ0KPiAgZHJpdmVycy9wd20vcHdtLWF0bWVsLmMgfCAzNSArKystLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiAgMiBmaWxlcyBjaGFuZ2VkLCA0IGluc2VydGlvbnMo
-KyksIDMzIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcHdtL0tjb25m
-aWcgYi9kcml2ZXJzL3B3bS9LY29uZmlnDQo+IGluZGV4IGE3ZTU3NTE2OTU5ZS4uYjUxZmIxYTMz
-YWEyIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3B3bS9LY29uZmlnDQo+ICsrKyBiL2RyaXZlcnMv
-cHdtL0tjb25maWcNCj4gQEAgLTQ0LDcgKzQ0LDcgQEAgY29uZmlnIFBXTV9BQjg1MDANCj4gIA0K
-PiAgY29uZmlnIFBXTV9BVE1FTA0KPiAgCXRyaXN0YXRlICJBdG1lbCBQV00gc3VwcG9ydCINCj4g
-LQlkZXBlbmRzIG9uIEFSQ0hfQVQ5MQ0KPiArCWRlcGVuZHMgb24gQVJDSF9BVDkxICYmIE9GDQo+
-ICAJaGVscA0KPiAgCSAgR2VuZXJpYyBQV00gZnJhbWV3b3JrIGRyaXZlciBmb3IgQXRtZWwgU29D
-Lg0KPiAgDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3B3bS9wd20tYXRtZWwuYyBiL2RyaXZlcnMv
-cHdtL3B3bS1hdG1lbC5jDQo+IGluZGV4IGU1ZTFlYWYzNzJmYS4uZjdjZjBhODZhMzdjIDEwMDY0
-NA0KPiAtLS0gYS9kcml2ZXJzL3B3bS9wd20tYXRtZWwuYw0KPiArKysgYi9kcml2ZXJzL3B3bS9w
-d20tYXRtZWwuYw0KPiBAQCAtMzE4LDE5ICszMTgsNiBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGF0
-bWVsX3B3bV9kYXRhIG1jaHBfc2FtOXg2MF9wd21fZGF0YSA9IHsNCj4gIAl9LA0KPiAgfTsNCj4g
-IA0KPiAtc3RhdGljIGNvbnN0IHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2VfaWQgYXRtZWxfcHdtX2Rl
-dnR5cGVzW10gPSB7DQo+IC0Jew0KPiAtCQkubmFtZSA9ICJhdDkxc2FtOXJsLXB3bSIsDQo+IC0J
-CS5kcml2ZXJfZGF0YSA9IChrZXJuZWxfdWxvbmdfdCkmYXRtZWxfc2FtOXJsX3B3bV9kYXRhLA0K
-PiAtCX0sIHsNCj4gLQkJLm5hbWUgPSAic2FtYTVkMy1wd20iLA0KPiAtCQkuZHJpdmVyX2RhdGEg
-PSAoa2VybmVsX3Vsb25nX3QpJmF0bWVsX3NhbWE1X3B3bV9kYXRhLA0KPiAtCX0sIHsNCj4gLQkJ
-Lyogc2VudGluZWwgKi8NCj4gLQl9LA0KPiAtfTsNCj4gLU1PRFVMRV9ERVZJQ0VfVEFCTEUocGxh
-dGZvcm0sIGF0bWVsX3B3bV9kZXZ0eXBlcyk7DQo+IC0NCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3Qg
-b2ZfZGV2aWNlX2lkIGF0bWVsX3B3bV9kdF9pZHNbXSA9IHsNCj4gIAl7DQo+ICAJCS5jb21wYXRp
-YmxlID0gImF0bWVsLGF0OTFzYW05cmwtcHdtIiwNCj4gQEAgLTM1MCwxOSArMzM3LDYgQEAgc3Rh
-dGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgYXRtZWxfcHdtX2R0X2lkc1tdID0gew0KPiAg
-fTsNCj4gIE1PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIGF0bWVsX3B3bV9kdF9pZHMpOw0KPiAgDQo+
-IC1zdGF0aWMgaW5saW5lIGNvbnN0IHN0cnVjdCBhdG1lbF9wd21fZGF0YSAqDQo+IC1hdG1lbF9w
-d21fZ2V0X2RyaXZlcl9kYXRhKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+IC17DQo+
-IC0JY29uc3Qgc3RydWN0IHBsYXRmb3JtX2RldmljZV9pZCAqaWQ7DQo+IC0NCj4gLQlpZiAocGRl
-di0+ZGV2Lm9mX25vZGUpDQo+IC0JCXJldHVybiBvZl9kZXZpY2VfZ2V0X21hdGNoX2RhdGEoJnBk
-ZXYtPmRldik7DQo+IC0NCj4gLQlpZCA9IHBsYXRmb3JtX2dldF9kZXZpY2VfaWQocGRldik7DQo+
-IC0NCj4gLQlyZXR1cm4gKHN0cnVjdCBhdG1lbF9wd21fZGF0YSAqKWlkLT5kcml2ZXJfZGF0YTsN
-Cj4gLX0NCj4gLQ0KPiAgc3RhdGljIGludCBhdG1lbF9wd21fcHJvYmUoc3RydWN0IHBsYXRmb3Jt
-X2RldmljZSAqcGRldikNCj4gIHsNCj4gIAljb25zdCBzdHJ1Y3QgYXRtZWxfcHdtX2RhdGEgKmRh
-dGE7DQo+IEBAIC0zNzAsNyArMzQ0LDcgQEAgc3RhdGljIGludCBhdG1lbF9wd21fcHJvYmUoc3Ry
-dWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gIAlzdHJ1Y3QgcmVzb3VyY2UgKnJlczsNCj4g
-IAlpbnQgcmV0Ow0KPiAgDQo+IC0JZGF0YSA9IGF0bWVsX3B3bV9nZXRfZHJpdmVyX2RhdGEocGRl
-dik7DQo+ICsJZGF0YSA9IG9mX2RldmljZV9nZXRfbWF0Y2hfZGF0YSgmcGRldi0+ZGV2KTsNCj4g
-IAlpZiAoIWRhdGEpDQo+ICAJCXJldHVybiAtRU5PREVWOw0KPiAgDQo+IEBAIC0zOTYsMTAgKzM3
-MCw4IEBAIHN0YXRpYyBpbnQgYXRtZWxfcHdtX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2Ug
-KnBkZXYpDQo+ICAJYXRtZWxfcHdtLT5jaGlwLmRldiA9ICZwZGV2LT5kZXY7DQo+ICAJYXRtZWxf
-cHdtLT5jaGlwLm9wcyA9ICZhdG1lbF9wd21fb3BzOw0KPiAgDQo+IC0JaWYgKHBkZXYtPmRldi5v
-Zl9ub2RlKSB7DQo+IC0JCWF0bWVsX3B3bS0+Y2hpcC5vZl94bGF0ZSA9IG9mX3B3bV94bGF0ZV93
-aXRoX2ZsYWdzOw0KPiAtCQlhdG1lbF9wd20tPmNoaXAub2ZfcHdtX25fY2VsbHMgPSAzOw0KPiAt
-CX0NCj4gKwlhdG1lbF9wd20tPmNoaXAub2ZfeGxhdGUgPSBvZl9wd21feGxhdGVfd2l0aF9mbGFn
-czsNCj4gKwlhdG1lbF9wd20tPmNoaXAub2ZfcHdtX25fY2VsbHMgPSAzOw0KPiAgDQo+ICAJYXRt
-ZWxfcHdtLT5jaGlwLmJhc2UgPSAtMTsNCj4gIAlhdG1lbF9wd20tPmNoaXAubnB3bSA9IDQ7DQo+
-IEBAIC00MzcsNyArNDA5LDYgQEAgc3RhdGljIHN0cnVjdCBwbGF0Zm9ybV9kcml2ZXIgYXRtZWxf
-cHdtX2RyaXZlciA9IHsNCj4gIAkJLm5hbWUgPSAiYXRtZWwtcHdtIiwNCj4gIAkJLm9mX21hdGNo
-X3RhYmxlID0gb2ZfbWF0Y2hfcHRyKGF0bWVsX3B3bV9kdF9pZHMpLA0KPiAgCX0sDQo+IC0JLmlk
-X3RhYmxlID0gYXRtZWxfcHdtX2RldnR5cGVzLA0KPiAgCS5wcm9iZSA9IGF0bWVsX3B3bV9wcm9i
-ZSwNCj4gIAkucmVtb3ZlID0gYXRtZWxfcHdtX3JlbW92ZSwNCj4gIH07DQo+IA0K
+The SIMATIC IPC227E and IPC277E uses the PMC clock for on-board components
+and gets stuck during boot if the clock is disabled. Therefore, add this
+device to the critical systems list.
+
+The Board revision does vary in some instances and hence use PRODUCT_NAME
+to allow the boards to boot with identical names.
+
+Tested on SIMATIC IPC227E and IPC277E.
+
+Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
+CC: Jan Kiszka <jan.kiszka@siemens.com>
+CC: Cedric Hombourger <Cedric_Hombourger@mentor.com>
+Signed-off-by: Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>
+---
+ drivers/platform/x86/pmc_atom.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
+index 9aca5e7ce6d0..1e48c2ec684e 100644
+--- a/drivers/platform/x86/pmc_atom.c
++++ b/drivers/platform/x86/pmc_atom.c
+@@ -419,7 +419,14 @@ static const struct dmi_system_id critclk_systems[] = {
+ 		.ident = "SIMATIC IPC227E",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "SIEMENS AG"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "6ES7647-8B"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "SIMATIC IPC227E"),
++		},
++	},
++	{
++		.ident = "SIMATIC IPC277E",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "SIEMENS AG"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "SIMATIC IPC277E"),
+ 		},
+ 	},
+ 	{ /*sentinel*/ }
+-- 
+2.17.1
+
