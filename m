@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A847DC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B2EBC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77CDF21929
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:08:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E288421920
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:08:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568930888;
-	bh=yGI1xP+bnWmpPdOxglMAvXyH9rG4SIEjXhVMxpsQQiY=;
+	s=default; t=1568930891;
+	bh=dQ1rcYng/vG9JREecmlY+aQhD8bv93+NXvLH83n+QRg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hj0L9Dc9YRdz2zHp80/G54ABHMNhO61sBU+QUDWXcBcdxp4Pl6mdUX502qmV0+0IS
-	 ctSEWB+3IlpA5iyHE+BsP+RUwiLizqVb7KqRMUdUoV8BJI6HelaGymeZa7ckORKxYD
-	 CaQ4Vzi3JQzLx/vs43L3D463m3m//fCip54/ozJI=
+	b=aAdQ1ngnwjSeEG9v4OBOIcdb54BeCVJYQ4YnpXiPallKku46clk1A/7fuNMBLty7F
+	 Iet0hO0rE5cih6HAUWxCfTQ9dzDaY0Jy+ykAY2879EzyKS1i8glpPsUssaILqH6nUO
+	 xjP3C7IKvQ18FG3J9jzDTmlROXSYeHfHgWKoI5Bk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393347AbfISWIH (ORCPT
+        id S2393357AbfISWIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:08:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45872 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:08:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391660AbfISWIE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:08:04 -0400
+        id S2393346AbfISWIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:08:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F6DE21928;
-        Thu, 19 Sep 2019 22:08:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47712218AF;
+        Thu, 19 Sep 2019 22:08:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568930884;
-        bh=yGI1xP+bnWmpPdOxglMAvXyH9rG4SIEjXhVMxpsQQiY=;
+        s=default; t=1568930886;
+        bh=dQ1rcYng/vG9JREecmlY+aQhD8bv93+NXvLH83n+QRg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0zQEratFODc8QSKLe6dBCVoJyvJsmdzyitd/9eDbh3H50fl+hye8byudx7hAvbQDB
-         GKZ+LU/hRnOfl+LJrgS/yoLS3kLuEvq9ImiVLkQ5WFkWZLQdxASQisnhwyunDolnpb
-         AqW2hj/cZBWTEacFMuLsNRus1jzfGPSw/yltEaFo=
+        b=StZN5HgMisa9OM5izp0pQf5EiLcPtUdKQUGHBmrnxkz1V176YT1U97fhd7fW2NcNc
+         x4mE93yBabHLeXFDucjlhuU7LHR8MpEVAyqbZtD9LH/+EOYk0gi7x+qs5bddDxK+U4
+         SNbkavdYEshPKh74MG96fM6qdN3STgVUsuppOnB4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 050/124] NFSv4: Fix return values for nfs4_file_open()
-Date:   Fri, 20 Sep 2019 00:02:18 +0200
-Message-Id: <20190919214820.824649410@linuxfoundation.org>
+Subject: [PATCH 5.2 051/124] NFSv4: Fix return value in nfs_finish_open()
+Date:   Fri, 20 Sep 2019 00:02:19 +0200
+Message-Id: <20190919214820.860087945@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -62,47 +62,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 90cf500e338ab3f3c0f126ba37e36fb6a9058441 ]
+[ Upstream commit 9821421a291b548ef4369c6998745baa36ddecd5 ]
 
-Currently, we are translating RPC level errors such as timeouts,
-as well as interrupts etc into EOPENSTALE, which forces a single
-replay of the open attempt. What we actually want to do is
-force the replay only in the cases where the returned error
-indicates that the file may have changed on the server.
-
-So the fix is to spell out the exact set of errors where we want
-to return EOPENSTALE.
+If the file turns out to be of the wrong type after opening, we want
+to revalidate the path and retry, so return EOPENSTALE rather than
+ESTALE.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4file.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ fs/nfs/dir.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
-index 52dbd17e401ed..336643b821880 100644
---- a/fs/nfs/nfs4file.c
-+++ b/fs/nfs/nfs4file.c
-@@ -73,13 +73,13 @@ nfs4_file_open(struct inode *inode, struct file *filp)
- 	if (IS_ERR(inode)) {
- 		err = PTR_ERR(inode);
- 		switch (err) {
--		case -EPERM:
--		case -EACCES:
--		case -EDQUOT:
--		case -ENOSPC:
--		case -EROFS:
--			goto out_put_ctx;
- 		default:
-+			goto out_put_ctx;
-+		case -ENOENT:
-+		case -ESTALE:
-+		case -EISDIR:
-+		case -ENOTDIR:
-+		case -ELOOP:
- 			goto out_drop;
- 		}
- 	}
+diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+index 9f44ddc34c7bf..3321cc7a7ead1 100644
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -1483,7 +1483,7 @@ static int nfs_finish_open(struct nfs_open_context *ctx,
+ 	if (S_ISREG(file->f_path.dentry->d_inode->i_mode))
+ 		nfs_file_set_open_context(file, ctx);
+ 	else
+-		err = -ESTALE;
++		err = -EOPENSTALE;
+ out:
+ 	return err;
+ }
 -- 
 2.20.1
 
