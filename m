@@ -2,77 +2,105 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,PDS_TONAME_EQ_TOLOCAL_SHORT,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D281C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD167C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:50:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14E6221A49
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:50:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FBCB21929
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:50:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="USvraGNP";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Qm5yKpp8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389022AbfISJun (ORCPT
+        id S2389043AbfISJu6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 05:50:43 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:56388 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388872AbfISJum (ORCPT
+        Thu, 19 Sep 2019 05:50:58 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:40884 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388872AbfISJu6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 05:50:42 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 1EFC93C0582;
-        Thu, 19 Sep 2019 11:50:41 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id L6xpfrZ9tsfP; Thu, 19 Sep 2019 11:50:35 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        Thu, 19 Sep 2019 05:50:58 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 31E4961359; Thu, 19 Sep 2019 09:50:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568886657;
+        bh=I55K3nBeZJfFZkk97+0qM6fkrU2I6GrKyjKmHvHvsRM=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=USvraGNPIkGV+y6ZnillN/Jqmt7xWr0MSkBqQ+J8bTMRugpVudA5OpxgdaYKnieQP
+         VYbgSeOQA66x/9P2YlY57AO6vDjFKwSYI0KjaGRU086aH2Z7ZLH3XRLWzsCUMVpVzD
+         r20Uvys4jqWRAFo83Hvu96Hll23T+l/OORUfDZ/k=
+Received: from x230.qca.qualcomm.com (37-136-106-186.rev.dnainternet.fi [37.136.106.186])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id A0C123C057C;
-        Thu, 19 Sep 2019 11:50:23 +0200 (CEST)
-Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Thu, 19 Sep
- 2019 11:50:23 +0200
-Date:   Thu, 19 Sep 2019 11:50:20 +0200
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     shuah <shuah@kernel.org>
-CC:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        "George G. Davis" <george_davis@mentor.com>,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/2] selftests: watchdog: Validate optional file
- argument
-Message-ID: <20190919095020.GA15734@vmlxhi-102.adit-jv.com>
-References: <20190917184023.16701-1-erosca@de.adit-jv.com>
- <20190918113348.GA23977@vmlxhi-102.adit-jv.com>
- <41ad241a-1c9d-7e20-3cb1-84bf42ec6989@kernel.org>
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4D53D602F8;
+        Thu, 19 Sep 2019 09:50:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568886656;
+        bh=I55K3nBeZJfFZkk97+0qM6fkrU2I6GrKyjKmHvHvsRM=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=Qm5yKpp8jxl67lbOId5ADtKAS27CuOw4wb/J51a5wf1fKA5ytEx1ItRh7aoEusgWd
+         gYoVwE7gJ2HXk5vgHkAawHZkmBGkzlNI7cJ9Oye7TCCVMxZGs5pPqZULz66BntiayL
+         zjDXNj+bhRr8Pfn2+A/NW5h6AGUx2bqIyop5VXKI=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4D53D602F8
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Daniel Drake <dsd@gentoo.org>,
+        Ulrich Kunitz <kune@deine-taler.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -net] zd1211rw: zd_usb: Use "%zu" to format size_t
+References: <20190919091532.24951-1-geert@linux-m68k.org>
+Date:   Thu, 19 Sep 2019 12:50:50 +0300
+In-Reply-To: <20190919091532.24951-1-geert@linux-m68k.org> (Geert
+        Uytterhoeven's message of "Thu, 19 Sep 2019 11:15:32 +0200")
+Message-ID: <87h858ehs5.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <41ad241a-1c9d-7e20-3cb1-84bf42ec6989@kernel.org>
-User-Agent: Mutt/1.12.1+40 (7f8642d4ee82) (2019-06-28)
-X-Originating-IP: [10.72.93.184]
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shuah,
+Geert Uytterhoeven <geert@linux-m68k.org> writes:
 
-On Wed, Sep 18, 2019 at 03:05:33PM -0600, Shuah wrote:
+> On 32-bit:
+>
+>     drivers/net/wireless/zydas/zd1211rw/zd_usb.c: In function =E2=80=98ch=
+eck_read_regs=E2=80=99:
+>     drivers/net/wireless/zydas/zd1211rw/zd_def.h:18:25: warning: format =
+=E2=80=98%ld=E2=80=99 expects argument of type =E2=80=98long int=E2=80=99, =
+but argument 6 has type =E2=80=98size_t=E2=80=99 {aka =E2=80=98unsigned int=
+=E2=80=99} [-Wformat=3D]
+>       dev_printk(level, dev, "%s() " fmt, __func__, ##args)
+> 			     ^~~~~~~
+>     drivers/net/wireless/zydas/zd1211rw/zd_def.h:22:4: note: in expansion=
+ of macro =E2=80=98dev_printk_f=E2=80=99
+> 	dev_printk_f(KERN_DEBUG, dev, fmt, ## args)
+> 	^~~~~~~~~~~~
+>     drivers/net/wireless/zydas/zd1211rw/zd_usb.c:1635:3: note: in expansi=
+on of macro =E2=80=98dev_dbg_f=E2=80=99
+>        dev_dbg_f(zd_usb_dev(usb),
+>        ^~~~~~~~~
+>     drivers/net/wireless/zydas/zd1211rw/zd_usb.c:1636:51: note: format st=
+ring is defined here
+> 	 "error: actual length %d less than expected %ld\n",
+> 						     ~~^
+> 						     %d
+>
+> Fixes: 84b0b66352470e64 ("zd1211rw: zd_usb: Use struct_size() helper")
+> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-[..]
+I'll queue this for v5.4.
 
-> They both look good to me. I will apply these patches once the merge
-> window closes or when my first pull request to Linus clears.
-> 
-> You will see a notification when I apply them to kselftest tree.
-
-Many thanks for your prompt feedback.
-
--- 
-Best Regards,
-Eugeniu
+--=20
+Kalle Valo
