@@ -4,89 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2854C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78294C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2DFF208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:15:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B60521927
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:16:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388555AbfISJPh (ORCPT
+        id S2388636AbfISJQ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 05:15:37 -0400
-Received: from andre.telenet-ops.be ([195.130.132.53]:58704 "EHLO
-        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730677AbfISJPh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 05:15:37 -0400
-Received: from ramsan ([84.194.98.4])
-        by andre.telenet-ops.be with bizsmtp
-        id 3MFa2100505gfCL01MFaUC; Thu, 19 Sep 2019 11:15:35 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iAsXG-0003n1-0Q; Thu, 19 Sep 2019 11:15:34 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iAsXF-0006VB-Un; Thu, 19 Sep 2019 11:15:33 +0200
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-To:     "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Daniel Drake <dsd@gentoo.org>,
-        Ulrich Kunitz <kune@deine-taler.de>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH -net] zd1211rw: zd_usb: Use "%zu" to format size_t
-Date:   Thu, 19 Sep 2019 11:15:32 +0200
-Message-Id: <20190919091532.24951-1-geert@linux-m68k.org>
-X-Mailer: git-send-email 2.17.1
+        Thu, 19 Sep 2019 05:16:57 -0400
+Received: from smtp3.goneo.de ([85.220.129.37]:59102 "EHLO smtp3.goneo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387637AbfISJQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 05:16:57 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by smtp3.goneo.de (Postfix) with ESMTP id 6DFEE23FA28;
+        Thu, 19 Sep 2019 11:16:54 +0200 (CEST)
+X-Virus-Scanned: by goneo
+Received: from smtp3.goneo.de ([127.0.0.1])
+        by localhost (smtp3.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id avsuAnECQglS; Thu, 19 Sep 2019 11:16:53 +0200 (CEST)
+Received: from lem-wkst-02.lemonage.de. (hq.lemonage.de [87.138.178.34])
+        by smtp3.goneo.de (Postfix) with ESMTPA id 8485223F2CC;
+        Thu, 19 Sep 2019 11:16:52 +0200 (CEST)
+From:   Lars Poeschel <poeschel@lemonage.de>
+To:     Steve Winslow <swinslow@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Jilayne Lovejoy <opensource@jilayne.com>,
+        Lars Poeschel <poeschel@lemonage.de>,
+        netdev@vger.kernel.org (open list:NFC SUBSYSTEM),
+        linux-kernel@vger.kernel.org (open list)
+Cc:     Johan Hovold <johan@kernel.org>, Simon Horman <horms@verge.net.au>
+Subject: [PATCH v8 1/7] nfc: pn533: i2c: "pn532" as dt compatible string
+Date:   Thu, 19 Sep 2019 11:16:38 +0200
+Message-Id: <20190919091645.16439-1-poeschel@lemonage.de>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 32-bit:
+It is favourable to have one unified compatible string for devices that
+have multiple interfaces. So this adds simply "pn532" as the devicetree
+binding compatible string and makes a note that the old ones are
+deprecated.
 
-    drivers/net/wireless/zydas/zd1211rw/zd_usb.c: In function ‘check_read_regs’:
-    drivers/net/wireless/zydas/zd1211rw/zd_def.h:18:25: warning: format ‘%ld’ expects argument of type ‘long int’, but argument 6 has type ‘size_t’ {aka ‘unsigned int’} [-Wformat=]
-      dev_printk(level, dev, "%s() " fmt, __func__, ##args)
-			     ^~~~~~~
-    drivers/net/wireless/zydas/zd1211rw/zd_def.h:22:4: note: in expansion of macro ‘dev_printk_f’
-	dev_printk_f(KERN_DEBUG, dev, fmt, ## args)
-	^~~~~~~~~~~~
-    drivers/net/wireless/zydas/zd1211rw/zd_usb.c:1635:3: note: in expansion of macro ‘dev_dbg_f’
-       dev_dbg_f(zd_usb_dev(usb),
-       ^~~~~~~~~
-    drivers/net/wireless/zydas/zd1211rw/zd_usb.c:1636:51: note: format string is defined here
-	 "error: actual length %d less than expected %ld\n",
-						     ~~^
-						     %d
-
-Fixes: 84b0b66352470e64 ("zd1211rw: zd_usb: Use struct_size() helper")
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Johan Hovold <johan@kernel.org>
+Cc: Simon Horman <horms@verge.net.au>
+Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
 ---
- drivers/net/wireless/zydas/zd1211rw/zd_usb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes in v6:
+- Rebased the patch series on v5.3-rc5
 
-diff --git a/drivers/net/wireless/zydas/zd1211rw/zd_usb.c b/drivers/net/wireless/zydas/zd1211rw/zd_usb.c
-index 4e44ea8c652d65aa..7b5c2fe5bd4d9cde 100644
---- a/drivers/net/wireless/zydas/zd1211rw/zd_usb.c
-+++ b/drivers/net/wireless/zydas/zd1211rw/zd_usb.c
-@@ -1633,7 +1633,7 @@ static bool check_read_regs(struct zd_usb *usb, struct usb_req_read_regs *req,
- 	 */
- 	if (rr->length < struct_size(regs, regs, count)) {
- 		dev_dbg_f(zd_usb_dev(usb),
--			 "error: actual length %d less than expected %ld\n",
-+			 "error: actual length %d less than expected %zu\n",
- 			 rr->length, struct_size(regs, regs, count));
- 		return false;
- 	}
+Changes in v3:
+- This patch is new in v3
+
+ drivers/nfc/pn533/i2c.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/nfc/pn533/i2c.c b/drivers/nfc/pn533/i2c.c
+index 1832cd921ea7..1abd40398a5a 100644
+--- a/drivers/nfc/pn533/i2c.c
++++ b/drivers/nfc/pn533/i2c.c
+@@ -245,6 +245,11 @@ static int pn533_i2c_remove(struct i2c_client *client)
+ }
+ 
+ static const struct of_device_id of_pn533_i2c_match[] = {
++	{ .compatible = "nxp,pn532", },
++	/*
++	 * NOTE: The use of the compatibles with the trailing "...-i2c" is
++	 * deprecated and will be removed.
++	 */
+ 	{ .compatible = "nxp,pn533-i2c", },
+ 	{ .compatible = "nxp,pn532-i2c", },
+ 	{},
 -- 
-2.17.1
+2.23.0
 
