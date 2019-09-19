@@ -2,53 +2,52 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA8CC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFC4C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:25:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA29320678
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:25:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6900E20678
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:25:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931927;
-	bh=YPQUVoNFly186FGiihx6pRJ6rB1JjNJQOT4c6Wej2H4=;
+	s=default; t=1568931933;
+	bh=cF3MtTz0nl54vr9qdfCWKaugfJ7HGXcCO4z5/TrMAv4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bn41vmCa5dhDZYv69QN4WBkisbySjnM4tsTbrVYYXEUCGdqYUMuauWhd01Z3LAtLh
-	 w5R/WdJ3q6ukEFliwjItPk59vQZ/5sQwDAH8fDmY2Wy/7NWgR+xMfw94Nf56oWTxyb
-	 K9sDcBflQXUnbFYjyFPXs8wx3Hj3PIG6aI3dOlU4=
+	b=iJPN8QDEeH7kYV8JegMouVevBkl4UFooB2+e4NmE51+keC4nXbzdhD6rn/sB1OmGZ
+	 nM+ZFD42ybfdNuJ37GF4hFD77LYyuis7NkjUPfzM/rtns2ls1l0NLZ8OhygbM989s2
+	 YX0tMCr8rI22G5YeGZ1ABEeuK92PPbXT7Z1JdxCY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436538AbfISWZ0 (ORCPT
+        id S2394183AbfISWXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:25:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39830 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:23:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407057AbfISWXx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:23:53 -0400
+        id S2406961AbfISWXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:23:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5356521920;
-        Thu, 19 Sep 2019 22:23:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9DA72196E;
+        Thu, 19 Sep 2019 22:23:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931833;
-        bh=YPQUVoNFly186FGiihx6pRJ6rB1JjNJQOT4c6Wej2H4=;
+        s=default; t=1568931801;
+        bh=cF3MtTz0nl54vr9qdfCWKaugfJ7HGXcCO4z5/TrMAv4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hJN+L7tQn2bh3hjTlpk/Tco3E78Ch8x3Mf4rD745NjDvBrrkW+YCXr0HGfFhAEQys
-         uA7N0Q2qUrS/DUYBD4S1ij95hmdQT3hIhe2BQU9zbtzUWNBoUCzzeuRo4jH6dSm78X
-         /C6t4bZdafa5Wf/4LtrMUZZMhcK0iD1rDAe98JDk=
+        b=OESvIapInBCV8eFrCDh+WXjOVhBbpXLGS4idQXM+BtcAEJpDKzCu4ffoMbHRUzrHS
+         tKbOwpWWsCJ6JVlhL1jJJoUqypFuzwiLXmDcwxU7fz5n9XfjTfnkR4aflOsCfDLbej
+         Sz2ImwXml3uhc1LE51MUp6cOwYpZHeOvuP1B7qcc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+eaaaf38a95427be88f4b@syzkaller.appspotmail.com,
-        Sean Young <sean@mess.org>, Kees Cook <keescook@chromium.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.4 55/56] media: technisat-usb2: break out of loop at end of buffer
-Date:   Fri, 20 Sep 2019 00:04:36 +0200
-Message-Id: <20190919214805.053463953@linuxfoundation.org>
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 45/56] NFSv2: Fix eof handling
+Date:   Fri, 20 Sep 2019 00:04:26 +0200
+Message-Id: <20190919214801.165500012@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214742.483643642@linuxfoundation.org>
 References: <20190919214742.483643642@linuxfoundation.org>
@@ -61,71 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Young <sean@mess.org>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-commit 0c4df39e504bf925ab666132ac3c98d6cbbe380b upstream.
+[ Upstream commit 71affe9be45a5c60b9772e1b2701710712637274 ]
 
-Ensure we do not access the buffer beyond the end if no 0xff byte
-is encountered.
+If we received a reply from the server with a zero length read and
+no error, then that implies we are at eof.
 
-Reported-by: syzbot+eaaaf38a95427be88f4b@syzkaller.appspotmail.com
-Signed-off-by: Sean Young <sean@mess.org>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/dvb-usb/technisat-usb2.c |   21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+ fs/nfs/proc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/media/usb/dvb-usb/technisat-usb2.c
-+++ b/drivers/media/usb/dvb-usb/technisat-usb2.c
-@@ -594,9 +594,9 @@ static int technisat_usb2_frontend_attac
- 
- static int technisat_usb2_get_ir(struct dvb_usb_device *d)
- {
--	u8 buf[62], *b;
--	int ret;
-+	u8 buf[62];
- 	struct ir_raw_event ev;
-+	int i, ret;
- 
- 	buf[0] = GET_IR_DATA_VENDOR_REQUEST;
- 	buf[1] = 0x08;
-@@ -632,26 +632,25 @@ unlock:
- 		return 0; /* no key pressed */
- 
- 	/* decoding */
--	b = buf+1;
- 
- #if 0
- 	deb_rc("RC: %d ", ret);
--	debug_dump(b, ret, deb_rc);
-+	debug_dump(buf + 1, ret, deb_rc);
- #endif
- 
- 	ev.pulse = 0;
--	while (1) {
--		ev.pulse = !ev.pulse;
--		ev.duration = (*b * FIRMWARE_CLOCK_DIVISOR * FIRMWARE_CLOCK_TICK) / 1000;
--		ir_raw_event_store(d->rc_dev, &ev);
--
--		b++;
--		if (*b == 0xff) {
-+	for (i = 1; i < ARRAY_SIZE(buf); i++) {
-+		if (buf[i] == 0xff) {
- 			ev.pulse = 0;
- 			ev.duration = 888888*2;
- 			ir_raw_event_store(d->rc_dev, &ev);
- 			break;
- 		}
-+
-+		ev.pulse = !ev.pulse;
-+		ev.duration = (buf[i] * FIRMWARE_CLOCK_DIVISOR *
-+			       FIRMWARE_CLOCK_TICK) / 1000;
-+		ir_raw_event_store(d->rc_dev, &ev);
+diff --git a/fs/nfs/proc.c b/fs/nfs/proc.c
+index b417bbcd97046..80ecdf2ec8b6a 100644
+--- a/fs/nfs/proc.c
++++ b/fs/nfs/proc.c
+@@ -588,7 +588,8 @@ static int nfs_read_done(struct rpc_task *task, struct nfs_pgio_header *hdr)
+ 		/* Emulate the eof flag, which isn't normally needed in NFSv2
+ 		 * as it is guaranteed to always return the file attributes
+ 		 */
+-		if (hdr->args.offset + hdr->res.count >= hdr->res.fattr->size)
++		if ((hdr->res.count == 0 && hdr->args.count > 0) ||
++		    hdr->args.offset + hdr->res.count >= hdr->res.fattr->size)
+ 			hdr->res.eof = 1;
  	}
- 
- 	ir_raw_event_handle(d->rc_dev);
+ 	return 0;
+-- 
+2.20.1
+
 
 
