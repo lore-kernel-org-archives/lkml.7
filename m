@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 250A6C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:13:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA2A9C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE6AC21907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:13:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE40C21907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:13:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931196;
-	bh=Gp/qNwM84RkpxRbHnSlX6RTzB2CnRAFH6erNUbPZOR0=;
+	s=default; t=1568931201;
+	bh=bVOk13PRzIHQGBfYtVxop4HBf3WHR2t6grZQC+tJR1A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EeH2gaGbPkOVwPwCryW8P1i/BLIaxv7r8+A2q3qdiqniRmF41k5VSvGwJdiMAt01I
-	 70eqh4bSz/n3rB2G2tP6w2pY0XiG+EQeJRirzJXZkuPjHsOhfq+3+8RFFo9JYeO4pb
-	 DeCx4U4hiZjTQyi1FG7hcbuBHkxW/GEKenwOxOzM=
+	b=2IC1n3whqIXXZd3t9HrFmSMFHer0+GDV6+7RmrEIjJTDI60ocyKAgSkm5o8YQ2hP/
+	 DJVbYUkTerkgYfXxWQatVnD+FQ/55mH9K+OgkK9D9UzcUmR2bS7WQpRwKmWFByOlat
+	 /13kcKGSt3KIUJKCx33oj4xVwnnSK7GA6xUX+9pU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392108AbfISWNP (ORCPT
+        id S2406042AbfISWNU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:13:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52250 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:13:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393719AbfISWNK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:13:10 -0400
+        id S2391072AbfISWNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:13:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B362C21907;
-        Thu, 19 Sep 2019 22:13:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0415D21920;
+        Thu, 19 Sep 2019 22:13:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931190;
-        bh=Gp/qNwM84RkpxRbHnSlX6RTzB2CnRAFH6erNUbPZOR0=;
+        s=default; t=1568931195;
+        bh=bVOk13PRzIHQGBfYtVxop4HBf3WHR2t6grZQC+tJR1A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=USMpj5Kh52OrIg1braDCN6IAJH9/SmP7LrxuKrQjcxl1JbtNHjtRkbWO/r+j4OK1A
-         OiR5fWetHnaPypDVgZBjj05xarWu6QEUqksQRlJDKAORKTnKWOcFGuETA9aQzRokzM
-         aXW7nB2VmLRlxDtLSvkAOXI7RoEf/FlP1aEhZIXY=
+        b=PFSsNDOWEp33GdfKJM0NhIB72M+p7LEoWRL8fdRcgfin92iFKW1wXLnUiP1QvoqwY
+         i053Q5rcSBunG1ChVpWgR+UKks7nG7Y3qn6U+n/X9U7CMpNh9cT2X69q+sKGZPdLbI
+         bLdY7XXiL/0mAsOdki7XxSgKcGUlS26+yDA8OTg4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 34/79] netfilter: nft_flow_offload: missing netlink attribute policy
-Date:   Fri, 20 Sep 2019 00:03:19 +0200
-Message-Id: <20190919214810.768461442@linuxfoundation.org>
+Subject: [PATCH 4.19 36/79] NFSv4: Fix return values for nfs4_file_open()
+Date:   Fri, 20 Sep 2019 00:03:21 +0200
+Message-Id: <20190919214810.912059766@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214807.612593061@linuxfoundation.org>
 References: <20190919214807.612593061@linuxfoundation.org>
@@ -59,43 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 14c415862c0630e01712a4eeaf6159a2b1b6d2a4 ]
+[ Upstream commit 90cf500e338ab3f3c0f126ba37e36fb6a9058441 ]
 
-The netlink attribute policy for NFTA_FLOW_TABLE_NAME is missing.
+Currently, we are translating RPC level errors such as timeouts,
+as well as interrupts etc into EOPENSTALE, which forces a single
+replay of the open attempt. What we actually want to do is
+force the replay only in the cases where the returned error
+indicates that the file may have changed on the server.
 
-Fixes: a3c90f7a2323 ("netfilter: nf_tables: flow offload expression")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+So the fix is to spell out the exact set of errors where we want
+to return EOPENSTALE.
+
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_flow_offload.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ fs/nfs/nfs4file.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/net/netfilter/nft_flow_offload.c b/net/netfilter/nft_flow_offload.c
-index 69decbe2c9884..1ef8cb789c41a 100644
---- a/net/netfilter/nft_flow_offload.c
-+++ b/net/netfilter/nft_flow_offload.c
-@@ -149,6 +149,11 @@ static int nft_flow_offload_validate(const struct nft_ctx *ctx,
- 	return nft_chain_validate_hooks(ctx->chain, hook_mask);
- }
- 
-+static const struct nla_policy nft_flow_offload_policy[NFTA_FLOW_MAX + 1] = {
-+	[NFTA_FLOW_TABLE_NAME]	= { .type = NLA_STRING,
-+				    .len = NFT_NAME_MAXLEN - 1 },
-+};
-+
- static int nft_flow_offload_init(const struct nft_ctx *ctx,
- 				 const struct nft_expr *expr,
- 				 const struct nlattr * const tb[])
-@@ -207,6 +212,7 @@ static const struct nft_expr_ops nft_flow_offload_ops = {
- static struct nft_expr_type nft_flow_offload_type __read_mostly = {
- 	.name		= "flow_offload",
- 	.ops		= &nft_flow_offload_ops,
-+	.policy		= nft_flow_offload_policy,
- 	.maxattr	= NFTA_FLOW_MAX,
- 	.owner		= THIS_MODULE,
- };
+diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
+index 61abbb087ed13..75d3cf86f1723 100644
+--- a/fs/nfs/nfs4file.c
++++ b/fs/nfs/nfs4file.c
+@@ -73,13 +73,13 @@ nfs4_file_open(struct inode *inode, struct file *filp)
+ 	if (IS_ERR(inode)) {
+ 		err = PTR_ERR(inode);
+ 		switch (err) {
+-		case -EPERM:
+-		case -EACCES:
+-		case -EDQUOT:
+-		case -ENOSPC:
+-		case -EROFS:
+-			goto out_put_ctx;
+ 		default:
++			goto out_put_ctx;
++		case -ENOENT:
++		case -ESTALE:
++		case -EISDIR:
++		case -ENOTDIR:
++		case -ELOOP:
+ 			goto out_drop;
+ 		}
+ 	}
 -- 
 2.20.1
 
