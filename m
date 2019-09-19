@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E80B3C4CED0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E93C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD4B721920
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BE3C218AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:05:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568930722;
-	bh=U4CHxSGHitHApCNjAH7iKIqHWmPLONJnYaP/Hq8Qqhc=;
+	s=default; t=1568930725;
+	bh=EJP4nNfG7YbTybV+6Scm3vb4nnLKhgmOruTce9/Yr4o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w4/zC6h5/9G3i3afAgz93WttUuJxVdfBlL9dYv+5EKW58adXRIQ52mCuXzZpEPNAu
-	 RUD6PtPebxumKqm6VkFZ3+aQykKdM3BX65a0YhBYXmfyPqxQ2sY2z+moeZGzuujA7/
-	 qvb0VmE1Ni1Pvhcl3XOvO9ZwEUkbLbuEdscvF6eA=
+	b=HNcz2YDyH2HNSrCSYnqbk5qtbP5gJWmJTcey+VgAA1QJ7jE/rRhdWR7Z52FX2icGm
+	 qj8TenVJCRTYjnTSDpFiv34G1S91PySBfWSrzOE1stBCAgT47N150y5tFUAP/icpkn
+	 4TdDtGPdv4X8bctectp7tRNdq52mzUtpQMbr/MJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404957AbfISWFW (ORCPT
+        id S2404971AbfISWFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:05:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42434 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:05:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404932AbfISWFV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:05:21 -0400
+        id S2404932AbfISWFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:05:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB1CA21907;
-        Thu, 19 Sep 2019 22:05:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BA56218AF;
+        Thu, 19 Sep 2019 22:05:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568930719;
-        bh=U4CHxSGHitHApCNjAH7iKIqHWmPLONJnYaP/Hq8Qqhc=;
+        s=default; t=1568930722;
+        bh=EJP4nNfG7YbTybV+6Scm3vb4nnLKhgmOruTce9/Yr4o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iBjl9JEB1NzLqi7ZBixt40e+5kXJvzt9YHjx6Opd72gLGaSHXfD/eYKQlBjLNFCQn
-         jdISz8S2KE4MHF9ptkI/NjfkMxEUPXiDwyW7TchUd080CAJNY50F4Zeoh+RP130cLI
-         9GXMv5NyA3eCPBOYkNnYh07hDGMo3zQOnkkXxV/8=
+        b=zDIixJiHM31ukA+wo+eUpub3U4tV9xSFK2k3oJDL8y06t6CCXBANv/FqPLCn2l2vw
+         QRMqaDmVyd10Rn/pJVcsT4PSR5WaKamFI0GPC5AsZaqEONHZ8t33p0rKtfUKQQ3MaR
+         RJYk0D4PVCjZ/risqkwiyYa2Z1JKGgtlPKgaBNeA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matt Delco <delco@chromium.org>,
-        Jim Mattson <jmattson@google.com>,
-        syzbot+983c866c3dd6efa3662a@syzkaller.appspotmail.com,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.3 11/21] KVM: coalesced_mmio: add bounds checking
-Date:   Fri, 20 Sep 2019 00:03:12 +0200
-Message-Id: <20190919214706.240209850@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH 5.3 12/21] Documentation: sphinx: Add missing comma to list of strings
+Date:   Fri, 20 Sep 2019 00:03:13 +0200
+Message-Id: <20190919214706.339764323@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214657.842130855@linuxfoundation.org>
 References: <20190919214657.842130855@linuxfoundation.org>
@@ -61,84 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Delco <delco@chromium.org>
+From: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
 
-commit b60fe990c6b07ef6d4df67bc0530c7c90a62623a upstream.
+commit 11fec009d97e5bd2329ef7d52d71e9f6763f1048 upstream.
 
-The first/last indexes are typically shared with a user app.
-The app can change the 'last' index that the kernel uses
-to store the next result.  This change sanity checks the index
-before using it for writing to a potentially arbitrary address.
+In Python, like in C, when a comma is omitted in a list of strings, the
+two strings around the missing comma are concatenated.
 
-This fixes CVE-2019-14821.
-
-Cc: stable@vger.kernel.org
-Fixes: 5f94c1741bdc ("KVM: Add coalesced MMIO support (common part)")
-Signed-off-by: Matt Delco <delco@chromium.org>
-Signed-off-by: Jim Mattson <jmattson@google.com>
-Reported-by: syzbot+983c866c3dd6efa3662a@syzkaller.appspotmail.com
-[Use READ_ONCE. - Paolo]
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Cc: stable@vger.kernel.org  # v5.2 only
+Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Jonathan Corbet <corbet@lwn.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- virt/kvm/coalesced_mmio.c |   19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
+ Documentation/sphinx/automarkup.py |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/virt/kvm/coalesced_mmio.c
-+++ b/virt/kvm/coalesced_mmio.c
-@@ -40,7 +40,7 @@ static int coalesced_mmio_in_range(struc
- 	return 1;
- }
+--- a/Documentation/sphinx/automarkup.py
++++ b/Documentation/sphinx/automarkup.py
+@@ -25,7 +25,7 @@ RE_function = re.compile(r'([\w_][\w\d_]
+ # to the creation of incorrect and confusing cross references.  So
+ # just don't even try with these names.
+ #
+-Skipfuncs = [ 'open', 'close', 'read', 'write', 'fcntl', 'mmap'
++Skipfuncs = [ 'open', 'close', 'read', 'write', 'fcntl', 'mmap',
+               'select', 'poll', 'fork', 'execve', 'clone', 'ioctl']
  
--static int coalesced_mmio_has_room(struct kvm_coalesced_mmio_dev *dev)
-+static int coalesced_mmio_has_room(struct kvm_coalesced_mmio_dev *dev, u32 last)
- {
- 	struct kvm_coalesced_mmio_ring *ring;
- 	unsigned avail;
-@@ -52,7 +52,7 @@ static int coalesced_mmio_has_room(struc
- 	 * there is always one unused entry in the buffer
- 	 */
- 	ring = dev->kvm->coalesced_mmio_ring;
--	avail = (ring->first - ring->last - 1) % KVM_COALESCED_MMIO_MAX;
-+	avail = (ring->first - last - 1) % KVM_COALESCED_MMIO_MAX;
- 	if (avail == 0) {
- 		/* full */
- 		return 0;
-@@ -67,25 +67,28 @@ static int coalesced_mmio_write(struct k
- {
- 	struct kvm_coalesced_mmio_dev *dev = to_mmio(this);
- 	struct kvm_coalesced_mmio_ring *ring = dev->kvm->coalesced_mmio_ring;
-+	__u32 insert;
- 
- 	if (!coalesced_mmio_in_range(dev, addr, len))
- 		return -EOPNOTSUPP;
- 
- 	spin_lock(&dev->kvm->ring_lock);
- 
--	if (!coalesced_mmio_has_room(dev)) {
-+	insert = READ_ONCE(ring->last);
-+	if (!coalesced_mmio_has_room(dev, insert) ||
-+	    insert >= KVM_COALESCED_MMIO_MAX) {
- 		spin_unlock(&dev->kvm->ring_lock);
- 		return -EOPNOTSUPP;
- 	}
- 
- 	/* copy data in first free entry of the ring */
- 
--	ring->coalesced_mmio[ring->last].phys_addr = addr;
--	ring->coalesced_mmio[ring->last].len = len;
--	memcpy(ring->coalesced_mmio[ring->last].data, val, len);
--	ring->coalesced_mmio[ring->last].pio = dev->zone.pio;
-+	ring->coalesced_mmio[insert].phys_addr = addr;
-+	ring->coalesced_mmio[insert].len = len;
-+	memcpy(ring->coalesced_mmio[insert].data, val, len);
-+	ring->coalesced_mmio[insert].pio = dev->zone.pio;
- 	smp_wmb();
--	ring->last = (ring->last + 1) % KVM_COALESCED_MMIO_MAX;
-+	ring->last = (insert + 1) % KVM_COALESCED_MMIO_MAX;
- 	spin_unlock(&dev->kvm->ring_lock);
- 	return 0;
- }
+ #
 
 
