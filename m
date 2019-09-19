@@ -2,136 +2,202 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 967A2C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C2DC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:18:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C1F320882
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:16:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDD7F20882
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:18:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="z+2qSOa3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ue2ocIOy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389503AbfISOQu (ORCPT
+        id S2389688AbfISOS5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 10:16:50 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:43688 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388712AbfISOQu (ORCPT
+        Thu, 19 Sep 2019 10:18:57 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:43257 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388006AbfISOS5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 10:16:50 -0400
-Received: by mail-oi1-f195.google.com with SMTP id t84so2806238oih.10
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 07:16:49 -0700 (PDT)
+        Thu, 19 Sep 2019 10:18:57 -0400
+Received: by mail-lf1-f65.google.com with SMTP id u3so2485940lfl.10
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 07:18:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=qaeMCYjZPRaH9Ju9SgkSov7Ze/8oIWs13QEihdDThJ8=;
-        b=z+2qSOa3cyfelEyS2Tc7A9vemu+IwUiJQqeEP2gEj3gSL1xNk+m7ZN8QluhyS5bXfA
-         I8vH6Zhm8sg5ohv6KRmQicpAHf95W+eBHjtmirVWhc7uSQIokMbjxkyHSipMh+zJ7uav
-         g3TZR0TxEX1iedciFW5eFGEwtEFlpF1n2VMEW4f+MlUH334eb9jav1XI8ouU3mpXzrwJ
-         W+3gCxXBF47XY2HQON0XxJLnNkHzgQTsmW5j4rTpDTRpowEFjPSV9LxZ3YwN8n658w/r
-         t780vK5wrh8QDRjJNbdN63IJzBv1Rh2ItXdhYnVdXxlC0VmaJ+7QAzBMBvenefk5pMU+
-         YvhQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VJcWMgQlBXCDJq+mIxTwVnwKjmA/FYBDYBWzdA4+waM=;
+        b=Ue2ocIOyWscRCt7ZzCTi01c0gL7F7vMVAGP9yIEGYKpEYohfx/PwMKCvSdrtlzdPYK
+         BUht9dlkdUgnz/lwVucsdrAvl5byjMtVldpfPt9guguIxcbNz4SFJOHcYVK+1BiYwvNe
+         7DuwgnRk82njueUCROP8jC8sMCF0EJrc49hkHVFvhTE4Bp3o+Q85DuhPxSlM/vTG26Nu
+         CQ6tS1ewupHReyrLiQCexCiPBVGy5oIcGB/rLj/GtSYvVxZkjonoQgHZA1zmA7kWgQO1
+         tBGOWhOzQKBPw8V7d9iQI2UgQVnQN7Osy+Chy72rqp+xsMyXSmOKfZvFWJ1OpljK4fFB
+         95mQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=qaeMCYjZPRaH9Ju9SgkSov7Ze/8oIWs13QEihdDThJ8=;
-        b=ArFaUDxKh8X2gdZZ/5wOS89D60SBzauGWwSTvtrNxQVxOjsJRHlBPzwxL7/jeC37Zf
-         7Y4Kb2acu6b5ABE5u9kK9JHSlHkuVZsTZFZtShU0SvP2r0bFRU329xK3m8qc2zmMJHeU
-         m9pUwEdFPp8b32FqZZ64v6ikxzwUPvls9JQ9S+cwAP83G7j3rJKuUMKX8dF5oq3RbabI
-         DTdnUH8Y94J8PWbifkzYg3g7mXO/VYRfYxeHYjr9wQLkTeq6NGeyfpxaDITZbLH039NT
-         M92xa9IRNVbaoJDjfF8EMX09U5w2joX6rfU6ANgD2ZKBXjiqWP2XGrdu2gnokCOopu5/
-         JAUg==
-X-Gm-Message-State: APjAAAVWR/lFiA7lssL3GJwPoMo/JyCo8Zr9W34q197anZxizDsMnuRA
-        jnb59DlVYJRgLsUC97Ult12ozOIKB95JV/fvvbXMKw==
-X-Google-Smtp-Source: APXvYqwXltbLynYwpGAPcFo116M4pb5TeU6PcSlbflTdA2waTF273hEyMScZ1wWzwpDkltR4r+LG+7VVFEkP7Odi6Ik=
-X-Received: by 2002:aca:ad09:: with SMTP id w9mr2447606oie.114.1568902609135;
- Thu, 19 Sep 2019 07:16:49 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=VJcWMgQlBXCDJq+mIxTwVnwKjmA/FYBDYBWzdA4+waM=;
+        b=jx3joRnBZbqD7EpZrzRSXmc7WerOYgywzs4jvSN7HaPXX7ALxy0Mu5zwh+MyqYqNMs
+         qCbhLU5LiNATSVm844Vs8eG7wXQHXfNGXTfnn7+yyNlTyb9f+E5Ipov/4Uts+NieYNrL
+         Kn6WyCK8Em0/wpOWxbhfIuRWxxfkYLbz510tfT8W3/7UKzDA2LHWFDgy8Y2yDaZCLBz8
+         8LuAGnQRdscOzcmHIzxqWg8RGi0JUYmTdz61/NMmRWRiVTJAe4x6VOS5QDkXrxYZTJkU
+         LlyUrv101QT/RywJ5aNeLvxSORhTa3bhYDOZTRiGKRhpgltV7WnNberY5EwsDNb0kxxe
+         I34A==
+X-Gm-Message-State: APjAAAUh7w1XaSWYuT2urS0RVSkIWQT2WQN8Z6MCOBiLF39TDNkvhVji
+        j1SVHJVS6iGq4rdukXb6YI4qaw==
+X-Google-Smtp-Source: APXvYqxRTZr3llIsZI+fWfYF0ZscJkUyk92xFy/A2Pm6OM2f9WsqMwr+jw4KsPtNY/3pk4jduAvUPw==
+X-Received: by 2002:a19:d6:: with SMTP id 205mr5444406lfa.144.1568902734233;
+        Thu, 19 Sep 2019 07:18:54 -0700 (PDT)
+Received: from khorivan (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
+        by smtp.gmail.com with ESMTPSA id d25sm1582984lfj.15.2019.09.19.07.18.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 19 Sep 2019 07:18:53 -0700 (PDT)
+Date:   Thu, 19 Sep 2019 17:18:50 +0300
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        john fastabend <john.fastabend@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        clang-built-linux@googlegroups.com,
+        sergei.shtylyov@cogentembedded.com
+Subject: Re: [PATCH v3 bpf-next 09/14] samples: bpf: makefile: use own flags
+ but not host when cross compile
+Message-ID: <20190919141848.GA8870@khorivan>
+Mail-Followup-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        john fastabend <john.fastabend@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        clang-built-linux@googlegroups.com,
+        sergei.shtylyov@cogentembedded.com
+References: <20190916105433.11404-1-ivan.khoronzhuk@linaro.org>
+ <20190916105433.11404-10-ivan.khoronzhuk@linaro.org>
+ <CAEf4BzbuPnxAs0A=w60q0jTCy5pb2R-h0uEuT2tmvjsaj4DH4A@mail.gmail.com>
+ <20190918103508.GC2908@khorivan>
+ <CAEf4BzYCNrkaMf-LFHYDi78m9jgMDOswh8VYXGcbttJV-3D21w@mail.gmail.com>
 MIME-Version: 1.0
-References: <1568885957-2968-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1568885957-2968-1-git-send-email-Anson.Huang@nxp.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 19 Sep 2019 16:16:38 +0200
-Message-ID: <CAMpxmJW1Z2WAAcCByPM=MS+PZdo-xxBjsVraHdnftwx-WzRA_A@mail.gmail.com>
-Subject: Re: [PATCH V2] gpio: mxc: Only getting second IRQ when there is more
- than one IRQ
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <Linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAEf4BzYCNrkaMf-LFHYDi78m9jgMDOswh8VYXGcbttJV-3D21w@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-czw., 19 wrz 2019 o 11:40 Anson Huang <Anson.Huang@nxp.com> napisa=C5=82(a)=
-:
+On Wed, Sep 18, 2019 at 02:29:53PM -0700, Andrii Nakryiko wrote:
+>On Wed, Sep 18, 2019 at 3:35 AM Ivan Khoronzhuk
+><ivan.khoronzhuk@linaro.org> wrote:
+>>
+>> On Tue, Sep 17, 2019 at 04:42:07PM -0700, Andrii Nakryiko wrote:
+>> >On Mon, Sep 16, 2019 at 3:59 AM Ivan Khoronzhuk
+>> ><ivan.khoronzhuk@linaro.org> wrote:
+>> >>
+>> >> While compile natively, the hosts cflags and ldflags are equal to ones
+>> >> used from HOSTCFLAGS and HOSTLDFLAGS. When cross compiling it should
+>> >> have own, used for target arch. While verification, for arm, arm64 and
+>> >> x86_64 the following flags were used alsways:
+>> >>
+>> >> -Wall
+>> >> -O2
+>> >> -fomit-frame-pointer
+>> >> -Wmissing-prototypes
+>> >> -Wstrict-prototypes
+>> >>
+>> >> So, add them as they were verified and used before adding
+>> >> Makefile.target, but anyway limit it only for cross compile options as
+>> >> for host can be some configurations when another options can be used,
+>> >> So, for host arch samples left all as is, it allows to avoid potential
+>> >> option mistmatches for existent environments.
+>> >>
+>> >> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+>> >> ---
+>> >>  samples/bpf/Makefile | 9 +++++++++
+>> >>  1 file changed, 9 insertions(+)
+>> >>
+>> >> diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
+>> >> index 1579cc16a1c2..b5c87a8b8b51 100644
+>> >> --- a/samples/bpf/Makefile
+>> >> +++ b/samples/bpf/Makefile
+>> >> @@ -178,8 +178,17 @@ CLANG_EXTRA_CFLAGS := $(ARM_ARCH_SELECTOR)
+>> >>  TPROGS_CFLAGS += $(ARM_ARCH_SELECTOR)
+>> >>  endif
+>> >>
+>> >> +ifdef CROSS_COMPILE
+>> >> +TPROGS_CFLAGS += -Wall
+>> >> +TPROGS_CFLAGS += -O2
+>> >
+>> >Specifying one arg per line seems like overkill, put them in one line?
+>> Will combine.
+>>
+>> >
+>> >> +TPROGS_CFLAGS += -fomit-frame-pointer
+>> >
+>> >Why this one?
+>> I've explained in commit msg. The logic is to have as much as close options
+>> to have smiliar binaries. As those options are used before for hosts and kinda
+>> cross builds - better follow same way.
 >
-> On some of i.MX SoCs like i.MX8QXP, there is ONLY one IRQ for each
-> GPIO bank, so it is better to check the IRQ count before getting
-> second IRQ to avoid below error message during probe:
+>I'm just asking why omit frame pointers and make it harder to do stuff
+>like profiling? What performance benefits are we seeking for in BPF
+>samples?
 >
-> [    1.070908] gpio-mxc 5d080000.gpio: IRQ index 1 not found
-> [    1.077420] gpio-mxc 5d090000.gpio: IRQ index 1 not found
-> [    1.083766] gpio-mxc 5d0a0000.gpio: IRQ index 1 not found
-> [    1.090122] gpio-mxc 5d0b0000.gpio: IRQ index 1 not found
-> [    1.096470] gpio-mxc 5d0c0000.gpio: IRQ index 1 not found
-> [    1.102804] gpio-mxc 5d0d0000.gpio: IRQ index 1 not found
-> [    1.109144] gpio-mxc 5d0e0000.gpio: IRQ index 1 not found
-> [    1.115475] gpio-mxc 5d0f0000.gpio: IRQ index 1 not found
+>>
+>> >
+>> >> +TPROGS_CFLAGS += -Wmissing-prototypes
+>> >> +TPROGS_CFLAGS += -Wstrict-prototypes
+>> >
+>> >Are these in some way special that we want them in cross-compile mode only?
+>> >
+>> >All of those flags seem useful regardless of cross-compilation or not,
+>> >shouldn't they be common? I'm a bit lost about the intent here...
+>> They are common but split is needed to expose it at least. Also host for
+>> different arches can have some own opts already used that shouldn't be present
+>> for cross, better not mix it for safety.
 >
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> Changes since V1:
->         - use local variable irq_count instead or err to avoid confusion.
-> ---
->  drivers/gpio/gpio-mxc.c | 13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
-> index 7907a87..c77d474 100644
-> --- a/drivers/gpio/gpio-mxc.c
-> +++ b/drivers/gpio/gpio-mxc.c
-> @@ -411,6 +411,7 @@ static int mxc_gpio_probe(struct platform_device *pde=
-v)
->  {
->         struct device_node *np =3D pdev->dev.of_node;
->         struct mxc_gpio_port *port;
-> +       int irq_count;
->         int irq_base;
->         int err;
->
-> @@ -426,9 +427,15 @@ static int mxc_gpio_probe(struct platform_device *pd=
-ev)
->         if (IS_ERR(port->base))
->                 return PTR_ERR(port->base);
->
-> -       port->irq_high =3D platform_get_irq(pdev, 1);
-> -       if (port->irq_high < 0)
-> -               port->irq_high =3D 0;
-> +       irq_count =3D platform_irq_count(pdev);
-> +       if (irq_count < 0)
-> +               return irq_count;
-> +
-> +       if (irq_count > 1) {
-> +               port->irq_high =3D platform_get_irq(pdev, 1);
-> +               if (port->irq_high < 0)
-> +                       port->irq_high =3D 0;
-> +       }
->
->         port->irq =3D platform_get_irq(pdev, 0);
->         if (port->irq < 0)
-> --
-> 2.7.4
->
+>We want -Wmissing-prototypes and -Wstrict-prototypes for cross-compile
+>and non-cross-compile cases, right? So let's specify them as common
+>set of options, instead of relying on KBUILD_HOSTCFLAGS or
+>HOST_EXTRACFLAGS to have them. Otherwise we'll be getting extra
+>warnings for just cross-compile case, which is not good. If you are
+>worrying about having duplicate -W flags, seems like it's handled by
+>GCC already, so shouldn't be a problem.
 
-Applied, thanks.
+Ok, lets drop omit-frame-pointer.
 
-Bart
+But then, lets do more radical step and drop
+KBUILD_HOSTCFLAGS & HOST_EXTRACFLAG in this patch:
+
+-ifdef CROSS_COMPILE
++TPROGS_CFLAGS += -Wall -O2
++TPROGS_CFLAGS += -Wmissing-prototypes
++TPROGS_CFLAGS += -Wstrict-prototypes
+-else
+-TPROGS_LDLIBS := $(KBUILD_HOSTLDLIBS)
+-TPROGS_CFLAGS += $(KBUILD_HOSTCFLAGS) $(HOST_EXTRACFLAGS)
+-endif
+
+At least it allows to use same options always for both, native and cross.
+
+I verified on native x86_64, arm64 and arm and cross for arm and arm64,
+but should work for others, at least it can be tuned explicitly and
+no need to depend on KBUILD and use "cross" fork here.
+
+-- 
+Regards,
+Ivan Khoronzhuk
