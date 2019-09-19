@@ -2,152 +2,175 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 178C8C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 10:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C7EEC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 10:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2315207FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 10:48:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D388D207FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 10:48:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="HlgcVhy2"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="epoV/rWG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388228AbfISKsr (ORCPT
+        id S2389376AbfISKsw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 06:48:47 -0400
-Received: from mail-eopbgr740121.outbound.protection.outlook.com ([40.107.74.121]:27920
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387520AbfISKsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 06:48:46 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jQTouy6eUKRRUktgATnJBZPemHH9vhzSatA6L4xVJl1ZoZxZBODxPzAiFjik0XJUwSG04DO+YrTYdwgwl2IwuEXcMKZhCW7fRFZC7fLx0hKHR19sCCnl0LLlBnbbQrn+7huLXxky26KMnS5hT5J2yLNj8hSxvTiqPv/EC1asVNAotkG7SIG2klo5ySzW1mr6NdGJT8E0DZWJlsDgxNU6qEEB6xADkiiBMV8cAjrC7/9c253GxYx0hSeo4hfI5Ove5EbGUP9tGtJ3E4egmQlVoTZPwChAc3kf2j3o4XB9Ps1eyqap2EK5dtJPNaiG2VvgioxhuEaS4cq60YVIJvREPA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LnviiPQztF2wMhw8UUZtUuwkxVKisF9/Tz/Lv4RZuOA=;
- b=VGOhGNxj9rQz6SLMybVPyZjlDHJMBwZHpQ//NWCSAyUYQXbmr9M9OyQcK0EYTQTj+g0W6fHD+7TEkDp1CHZL6mK30UGVKYbL3OLyxKbN7f5qxpuWsi4codcFrOPgejfoVS9xAa7ENVD3Af4RZNEhwyePN0lhjy+TEIAJBGOO7nQH5+MnMsNqOBa6TfbhwIN27X9CYNRTD0aHaM6a96HLtJ5huvn1flHK92t2RuO3R2XNOvs7fHcF9hJWflirld/1HCvimw078Ji/RGvtxIjKXUhVyoeJg4ncnrTNozXKTrcrwDitnzF+tzoFaZ3P8+mXL/fUWjnw9ZpIUgLaCA9XPQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
- header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
+        Thu, 19 Sep 2019 06:48:52 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:36525 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388342AbfISKsv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 06:48:51 -0400
+Received: by mail-qt1-f196.google.com with SMTP id o12so3624097qtf.3
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 03:48:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LnviiPQztF2wMhw8UUZtUuwkxVKisF9/Tz/Lv4RZuOA=;
- b=HlgcVhy2o9lGl9AHUSheXsCIPlx2VfbOn9hxIi6cSOqXOiB2Yr1998JjCdzQiv4dIUt2aIr9hWL9QfnVPewhJRaX4echgpnZf39Rki5FRAkA9aigJMnHJAXkU4fIbfBrgavCNK4mWVgcQNYGZSvEQfjI27/OCU6yY7JZNNX03Pg=
-Received: from MN2PR04MB5886.namprd04.prod.outlook.com (20.179.22.213) by
- MN2PR04MB6861.namprd04.prod.outlook.com (10.186.145.202) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.17; Thu, 19 Sep 2019 10:48:42 +0000
-Received: from MN2PR04MB5886.namprd04.prod.outlook.com
- ([fe80::8520:f80f:ae9:63cd]) by MN2PR04MB5886.namprd04.prod.outlook.com
- ([fe80::8520:f80f:ae9:63cd%6]) with mapi id 15.20.2284.009; Thu, 19 Sep 2019
- 10:48:42 +0000
-From:   Xin Ji <xji@analogixsemi.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-CC:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Sheng Pan <span@analogixsemi.com>
-Subject: Re: [PATCH v1 0/2] Add initial support for slimport anx7625
-Thread-Topic: [PATCH v1 0/2] Add initial support for slimport anx7625
-Thread-Index: AQHVbrX5ZBWm7ngGmkilFiHXsbIhDacykSyAgABA+IA=
-Date:   Thu, 19 Sep 2019 10:48:42 +0000
-Message-ID: <20190919104833.GA30631@xin-VirtualBox>
-References: <cover.1568858880.git.xji@analogixsemi.com>
- <8bb69c72-50bf-c499-ff92-9e3662b4fe87@baylibre.com>
-In-Reply-To: <8bb69c72-50bf-c499-ff92-9e3662b4fe87@baylibre.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HK2PR0302CA0011.apcprd03.prod.outlook.com
- (2603:1096:202::21) To MN2PR04MB5886.namprd04.prod.outlook.com
- (2603:10b6:208:a3::21)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=xji@analogixsemi.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [114.247.245.252]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 40cdd32b-6061-4148-ddb4-08d73ceef006
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR04MB6861;
-x-ms-traffictypediagnostic: MN2PR04MB6861:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR04MB6861296ED3913D699C4D3F81C7890@MN2PR04MB6861.namprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 016572D96D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(136003)(376002)(366004)(39850400004)(396003)(346002)(53754006)(199004)(189003)(7736002)(6916009)(1076003)(486006)(6512007)(3846002)(186003)(6436002)(14454004)(6116002)(6246003)(229853002)(11346002)(5660300002)(386003)(54906003)(53546011)(476003)(2906002)(8936002)(102836004)(107886003)(305945005)(26005)(14444005)(6506007)(446003)(66066001)(7416002)(86362001)(6486002)(256004)(81156014)(478600001)(316002)(66446008)(9686003)(71200400001)(33716001)(76176011)(71190400001)(4326008)(99286004)(8676002)(25786009)(81166006)(66556008)(64756008)(66946007)(66476007)(52116002)(33656002);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6861;H:MN2PR04MB5886.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: analogixsemi.com does not
- designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: dymHbQKjO4hSuVaR6UkRsts+cUlPgc1YaM6SLeKjCJuyl4vFdP0bQY1ev2/QuyhPpGYGLcfXukYEDGQ8I8G20KLvvUsqq9hF6eU5k2oU7TPJ7pUciGywHmNkhP+XGFgWQoS/ib6Eb8KExATQruOsE+6FfNYZeLafTQsSSDzqgyStqWhWYS4u6lEXUuVh9fxmAtMc5d/DJ6IxdatPEomweG3saMpFZS9yfTsmB7Y3jn6eU1mAc9RtPnK2ac/my7ThigPHFQrFSMJ5mdY6qmyAG1Cudt9/lADPDCfI3KSoxz2/EQQ6L+V2yp5UulaDWRYX4ol+WuotSYKfcUBG2W5O2LAai7jv/YQo/QD4iyIqKt5/EdvcV8GFyLtxxy9BlYmK/uDHBFFmu9TH8mLJKSTCBcmkU4WBADdQtUDJEDxOuz8=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <96D1184EF9664145ACC2E445F4D00A84@namprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=S84nPCMJw9014JGc2/dK9IWBxuhEAg3PazuB+GdiwGY=;
+        b=epoV/rWGyV+MeWkqCmr1N0HPDaOuyIUAOjpBEJur9IzQRw9OhWkvcFyS3mKV/ZDIKo
+         Hsv7jI6ug4T5DCmRWwIiMaSR/3qoUIRpFCO8njewQOpVLG780sJXDQ+W7MtCWgFm4OJf
+         rBSYmJDPF27Sj0p/USsIon84XoxNyaz5w0q/hgpekwzylQw85FAP5/cEh5jdpRttaNK2
+         GiTyGlx8W/3zz3W0tXInCXXmc0YuvTjcyX/igseGYZXDmDgFzyk/CSd/uOARFJlFv8BB
+         z3Pwe4Ymb+uXvbT0E4UrelJd4Cfh9RBJUvkDEeaSMDdHEe86s4q8tE6nTNfw4K0CTT+S
+         E2dA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=S84nPCMJw9014JGc2/dK9IWBxuhEAg3PazuB+GdiwGY=;
+        b=Eoj+r6tPYTSITjmJP4SjCzgVH/guq36U1nCJu3gA7tp5lXVc4hK419mx2zOh8cR2q8
+         z9YYIpVsUr3THXVLo/ZcDuykGSsW7Y8dg4n0AIPY3JUOe3oUO5Jh0rxlQ6zNbHWZdauQ
+         fBsBVKmUWag7k6IOOVFaYIfxYCkWaK2bqHzmZZpiTMHDk4Zi1BojENEF+aKH1Ry4LdHC
+         KDTo92fgX3zfkuU48jKdhzFxOoT5h3qUn78J6r53OHmGe9p46qaH2kod4BJ84GeaKgnT
+         l93lY/s/GefLM5udlsSpOHX6hi5VSM3CA+ANKzCM0/GFz+wG3MjY9vF0LW0bbKL8wrE9
+         E2yw==
+X-Gm-Message-State: APjAAAUfV9cBENXq3qpzlxZgYpN0J6ma3HY+wJhlCrFuZ0Zo+IGOsjwh
+        nCc6WxW/YOugjafQrf/9gVrlU9y/UaHbliKnJTA5ug==
+X-Google-Smtp-Source: APXvYqx0WQCFMLZUm7VzlRE6d/t71TZ4OI6ZTg/ZfOLHT1IoSbKsT/JgNfS5bdw3Ul1urko74l5x6/ZlECf4xji7aa4=
+X-Received: by 2002:ac8:595:: with SMTP id a21mr2344007qth.337.1568890129189;
+ Thu, 19 Sep 2019 03:48:49 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: analogixsemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 40cdd32b-6061-4148-ddb4-08d73ceef006
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Sep 2019 10:48:42.5587
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: QJywVg77r63RDyezTwIqUYBbrQP7vRY9YJKEIfj1NIfV2Y2RuNTluwbAHPsvMlzP3+2UCZkHf+lNNg7MT5gOug==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6861
+References: <20190322121745.159768-1-kyletso@google.com> <20190404141345.GF21319@kuha.fi.intel.com>
+ <08a6d422-e8f7-303e-7bf1-952344f2c182@roeck-us.net> <CAGZ6i=2zKLhS4By8Xanc863G+jSxPYg8SLU-UHkY94r5MiEYag@mail.gmail.com>
+ <20190409130230.GC20058@kuha.fi.intel.com> <20190409130649.GD20058@kuha.fi.intel.com>
+ <9c9d17e3-bd99-c877-359c-a0a1b10a8d73@redhat.com> <AM5PR1001MB099440C3AA6DA6BA2AB0F2AE802E0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <CAGZ6i=0rRgNH5bU-zcP58MNi+VSa+xeAQWL67egaZ-ui-ebmYA@mail.gmail.com>
+ <9f9a2de9-2cfb-385c-8e99-54b2587113ce@redhat.com> <AM5PR1001MB09943830CFED9CB321CC883D802E0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <76a3c6df-63c0-78e7-c1ca-c83a30e95d38@redhat.com> <009662c6-2897-e2dd-03a7-992fc0a78599@redhat.com>
+ <AM5PR1001MB099452876C75E45FD774BA77802B0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+In-Reply-To: <AM5PR1001MB099452876C75E45FD774BA77802B0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+From:   Kyle Tso <kyletso@google.com>
+Date:   Thu, 19 Sep 2019 18:48:32 +0800
+Message-ID: <CAGZ6i=10-DVWRseYXjRGVyRtnTijT9Mg_TBTkv=3qWiMfv28cw@mail.gmail.com>
+Subject: Re: [PATCH v2] usb: typec: tcpm: collision avoidance
+To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Badhri Jagan Sridharan <badhri@google.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 08:56:01AM +0200, Neil Armstrong wrote:
-> Hi,
->=20
-> Please Cc dri-devel@lists.freedesktop.org
->=20
-> Thanks,
-> Neil
+Ping! Anyone still reviewing this patch?
+I have another change related to AMS.
+I will group them as a set and re-send it.
 
-OK, thanks.
-Xin
->=20
-> On 19/09/2019 08:51, Xin Ji wrote:
-> > Hi all,
-> >=20
-> > The following series add initial support for the Slimport ANX7625 trans=
-mitter, a
-> > ultra-low power Full-HD 4K MIPI to DP transmitter designed for portable=
- device.
-> >=20
-> > This is the first version upload, any mistakes, please let me know, I w=
-ill fix
-> > it in the next series.
-> >=20
-> > Thanks,
-> > Xin
-> >=20
-> >=20
-> > Xin Ji (2):
-> >   dt-bindings: drm/bridge: anx7625: MIPI to DP transmitter binding
-> >   drm/bridge: anx7625: Add anx7625 MIPI to DP bridge driver
-> >=20
-> >  .../devicetree/bindings/display/bridge/anx7625.txt |   42 +
-> >  drivers/gpu/drm/bridge/Makefile                    |    2 +-
-> >  drivers/gpu/drm/bridge/analogix/Kconfig            |    6 +
-> >  drivers/gpu/drm/bridge/analogix/Makefile           |    1 +
-> >  drivers/gpu/drm/bridge/analogix/anx7625.c          | 2086 ++++++++++++=
-++++++++
-> >  drivers/gpu/drm/bridge/analogix/anx7625.h          |  397 ++++
-> >  6 files changed, 2533 insertions(+), 1 deletion(-)
-> >  create mode 100644 Documentation/devicetree/bindings/display/bridge/an=
-x7625.txt
-> >  create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.c
-> >  create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.h
-> >=20
+Regards,
+Kyle Tso
+
+
+On Mon, Apr 15, 2019 at 6:03 PM Adam Thomson
+<Adam.Thomson.Opensource@diasemi.com> wrote:
+>
+> On 13 April 2019 21:39, Hans de Goede wrote:
+>
+> > On 10-04-19 18:38, Hans de Goede wrote:
+> > > On 10-04-19 18:14, Adam Thomson wrote:
+> > >> On 10 April 2019 16:45, Hans de Goede wrote:
+> >
+> > <snip>
+> >
+> > >>> Starting toggling from tcpm_set_cc() just feels wrong; and currently
+> > >>> power role swapping is broken with the fusb302, which IIRC used to
+> > >>> work. I suspect this is related.
+> > >>>
+> > >>> I plan to write a patch tomorrow to functionally take tcpm_set_cc()
+> > >>> back to the way it was before. This should fix your case and I hope
+> > >>> this also fixes power-role swapping.
+> > >>>
+> > >>> This will re-introduce Adam Thomson's problem, but I have a feeling
+> > >>> that that actually needs a fix in the tcpm.c code rather then at the fusb302
+> > level.
+> > >>
+> > >> To be clear here, the names TOGGLING_MODE_SNK and
+> > TOGGLING_MODE_SRC
+> > >> are a misnomer from the HW spec for fusb302. The device isn't
+> > >> toggling anything as far as I'm aware, so I don't necessarily agree with your
+> > point.
+> > >
+> > > If I understand the datasheet correctly:
+> > >
+> > > "The FUSB302 has the capability to do autonomous DRP toggle. In
+> > > autonomous toggle the FUSB302 internally controls the PDWN1, PDWN2,
+> > > PU_EN1 and PU_EN2, MEAS_CC1 and MEAS_CC2 and implements a fixed DRP
+> > > toggle between presenting as a SRC and presenting as a SNK.
+> > > Alternately, it can present as a SRC or SNK only and poll CC1 and CC2
+> > > continuously."
+> > >
+> > > It is still attaching Rp resp Rd to CC1 or CC2 one at a time to detect
+> > > polarity, so it is still toggling, it just is not doing dual-role
+> > > toggling. This is also expected behavior for a sink, a sink may not
+> > > present Rd on both CC pins at the same time, otherwise the source
+> > > cannot detect the polarity and the source also cannot detect if Vconn
+> > > is necessary.
+> > >
+> > >> It's a mechanism to
+> > >> have the HW report when the CC line changes on connection. Without
+> > >> that we have no reporting from the HW for the fixed role scenarios.
+> > >
+> > > Not just connection, also polarity detection. Notice that the tcpm
+> > > framework / the driver also has a start_drp_toggling() method. I think
+> > > we may also need a start_srp_toggling function just like it and call
+> > > that from the SNK_UNATTACHED and SRC_UNATTACHED states for single-role
+> > > ports. I agree that we need to start toggling when in those states,
+> > > but tcpm_set_cc gets called in a lot of other places where AFAIK we
+> > > should NOT restart toggling and your patch causes us to restart
+> > > toggling in those cases.
+> >
+> > Ok, so as I suspected, commit ea3b4d5523bc ("usb: typec: fusb302:
+> > Resolve fixed power role contract setup") is what caused the power-role
+> > swapping breakage I've been seeing.
+>
+> Apologies for the breakage. Annoyed I didn't catch that when submitting that
+> patch. Thanks for looking to resolve this and will review your updates shortly.
+>
+> > So I've prepared a 3 patch series:
+> >
+> > 1) Add a new start_srp_connection_detect function which, when implemented
+> > by the tcpc_dev, gets called instead of start_drp_toggling for single role ports
+> > (SRPs)
+> >
+> > 2) Implement 1. for fusb302 to fix the SRP issue Adam was seeing, without
+> > depending on set_cc starting "toggling"
+> > or something like it for the fix
+> >
+> > 3) Revert commit ea3b4d5523bc, restoring power-role swap functionality.
+> >
+> > This should also fix the issue Kyle Tso was seeing when trying to change from one
+> > Rp setting to another.
+> >
+> > I'll send out the series right after this email.
+> >
+> > Regards,
+> >
+> > Hans
+>
