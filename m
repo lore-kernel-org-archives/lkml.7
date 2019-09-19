@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D10C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB0EC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD42921907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 805E021927
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931031;
-	bh=hg3v9mNCEl88hPyO4T2hxcD97UjdZDKcsaSktvnl8vA=;
+	s=default; t=1568931036;
+	bh=6k0UVRVuV3BzhmWx/7jUTuLa0+39oNOFja5xFGJCkng=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cN9nxhEAlxHoCoNqc9DkpAdqzdecABP8HsuhWnDAUnlsISrsWNC6m/MQdULBVGHLr
-	 UQvqIm0xY2dYQAUzZDZ/oQ/AaWxnGLCgDtKaQtS1PtqoqDvHsZ0HuvLFYZ3w4k8uEp
-	 ERmayJS4tVI8hd6HtAOa9aIEm+8AgoxwnyQR1mqQ=
+	b=cYIVjXn2iwgBmKAp/pWfD7lW7Ej/Swx2uwhXD7EayYkbcJzvSQ1Nxi5HZw/5UYfEm
+	 gwiaAY55gg6MPBerRbVuoP/efLxpPFd4DSCpPm7E4+uNVyNXCH5Tn/pmhC2XXrSICY
+	 vuoRs5XRhEQVOHOVITS+Y9NHbUpB2hIr15MFWjUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405669AbfISWKX (ORCPT
+        id S2405706AbfISWKf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:10:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48702 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:10:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405657AbfISWKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:10:20 -0400
+        id S2405681AbfISWKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:10:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 130F021920;
-        Thu, 19 Sep 2019 22:10:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D3D021920;
+        Thu, 19 Sep 2019 22:10:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931019;
-        bh=hg3v9mNCEl88hPyO4T2hxcD97UjdZDKcsaSktvnl8vA=;
+        s=default; t=1568931030;
+        bh=6k0UVRVuV3BzhmWx/7jUTuLa0+39oNOFja5xFGJCkng=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p/N+SMv/hNZSSPrTdPQSaQSFyNlVXDJYSE2sDg/pEKMkl0RBNYGJPrgsOnFmcxLjL
-         EITlsWLQSm1fKYg6CB3F2sTkD/cUBRQaEudjl8uIViKZiDz1Wd0INBo5n59A6HSnUO
-         J3Tn38fkuoFTElaNd4wqnwGJfIIPp+rKv25KBPVA=
+        b=UwfkDDxnpZ6tOLWvMYjuNJIpW55DaUsqUdS3nDMY7Eq3EzKyyUP6pYS9trnJqpmty
+         dgl/J3nN18g2ZRYr+aasZbZZ1PN5qbkQ2DRwug3gzjIYft2UyTD0necl9X5CbSIjAG
+         52pSTiojpdZuAKihsHzWbY+dvdeWf4zY90/EK5Y4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Todd Seidelmann <tseidelmann@linode.com>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Len Brown <len.brown@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 071/124] netfilter: xt_physdev: Fix spurious error message in physdev_mt_check
-Date:   Fri, 20 Sep 2019 00:02:39 +0200
-Message-Id: <20190919214821.585914950@linuxfoundation.org>
+Subject: [PATCH 5.2 101/124] tools/power turbostat: Fix CPU%C1 display value
+Date:   Fri, 20 Sep 2019 00:03:09 +0200
+Message-Id: <20190919214822.884237497@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -61,44 +61,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Todd Seidelmann <tseidelmann@linode.com>
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-[ Upstream commit 3cf2f450fff304be9cf4868bf0df17f253bc5b1c ]
+[ Upstream commit 1e9042b9c8d46ada9ee7b3339a31f50d12e5d291 ]
 
-Simplify the check in physdev_mt_check() to emit an error message
-only when passed an invalid chain (ie, NF_INET_LOCAL_OUT).
-This avoids cluttering up the log with errors against valid rules.
+In some case C1% will be wrong value, when platform doesn't have MSR for
+C1 residency.
 
-For large/heavily modified rulesets, current behavior can quickly
-overwhelm the ring buffer, because this function gets called on
-every change, regardless of the rule that was changed.
+For example:
+Core    CPU     CPU%c1
+-       -       100.00
+0       0       100.00
+0       2       100.00
+1       1       100.00
+1       3       100.00
 
-Signed-off-by: Todd Seidelmann <tseidelmann@linode.com>
-Acked-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+But adding Busy% will fix this
+Core    CPU     Busy%   CPU%c1
+-       -       99.77   0.23
+0       0       99.77   0.23
+0       2       99.77   0.23
+1       1       99.77   0.23
+1       3       99.77   0.23
+
+This issue can be reproduced on most of the recent systems including
+Broadwell, Skylake and later.
+
+This is because if we don't select Busy% or Avg_MHz or Bzy_MHz then
+mperf value will not be read from MSR, so it will be 0. But this
+is required for C1% calculation when MSR for C1 residency is not present.
+Same is true for C3, C6 and C7 column selection.
+
+So add another define DO_BIC_READ(), which doesn't depend on user
+column selection and use for mperf, C3, C6 and C7 related counters.
+So when there is no platform support for C1 residency counters,
+we still read these counters, if the CPU has support and user selected
+display of CPU%c1.
+
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Len Brown <len.brown@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/xt_physdev.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ tools/power/x86/turbostat/turbostat.c | 23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
 
-diff --git a/net/netfilter/xt_physdev.c b/net/netfilter/xt_physdev.c
-index ead7c60222086..b92b22ce8abd3 100644
---- a/net/netfilter/xt_physdev.c
-+++ b/net/netfilter/xt_physdev.c
-@@ -101,11 +101,9 @@ static int physdev_mt_check(const struct xt_mtchk_param *par)
- 	if (info->bitmask & (XT_PHYSDEV_OP_OUT | XT_PHYSDEV_OP_ISOUT) &&
- 	    (!(info->bitmask & XT_PHYSDEV_OP_BRIDGED) ||
- 	     info->invert & XT_PHYSDEV_OP_BRIDGED) &&
--	    par->hook_mask & ((1 << NF_INET_LOCAL_OUT) |
--	    (1 << NF_INET_FORWARD) | (1 << NF_INET_POST_ROUTING))) {
-+	    par->hook_mask & (1 << NF_INET_LOCAL_OUT)) {
- 		pr_info_ratelimited("--physdev-out and --physdev-is-out only supported in the FORWARD and POSTROUTING chains with bridged traffic\n");
--		if (par->hook_mask & (1 << NF_INET_LOCAL_OUT))
--			return -EINVAL;
-+		return -EINVAL;
+diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
+index 0a80f3cc24e31..5c0154cf190cc 100644
+--- a/tools/power/x86/turbostat/turbostat.c
++++ b/tools/power/x86/turbostat/turbostat.c
+@@ -506,6 +506,7 @@ unsigned long long bic_enabled = (0xFFFFFFFFFFFFFFFFULL & ~BIC_DISABLED_BY_DEFAU
+ unsigned long long bic_present = BIC_USEC | BIC_TOD | BIC_sysfs | BIC_APIC | BIC_X2APIC;
+ 
+ #define DO_BIC(COUNTER_NAME) (bic_enabled & bic_present & COUNTER_NAME)
++#define DO_BIC_READ(COUNTER_NAME) (bic_present & COUNTER_NAME)
+ #define ENABLE_BIC(COUNTER_NAME) (bic_enabled |= COUNTER_NAME)
+ #define BIC_PRESENT(COUNTER_BIT) (bic_present |= COUNTER_BIT)
+ #define BIC_NOT_PRESENT(COUNTER_BIT) (bic_present &= ~COUNTER_BIT)
+@@ -1287,6 +1288,14 @@ delta_core(struct core_data *new, struct core_data *old)
+ 	}
+ }
+ 
++int soft_c1_residency_display(int bic)
++{
++	if (!DO_BIC(BIC_CPU_c1) || use_c1_residency_msr)
++		return 0;
++
++	return DO_BIC_READ(bic);
++}
++
+ /*
+  * old = new - old
+  */
+@@ -1322,7 +1331,8 @@ delta_thread(struct thread_data *new, struct thread_data *old,
+ 
+ 	old->c1 = new->c1 - old->c1;
+ 
+-	if (DO_BIC(BIC_Avg_MHz) || DO_BIC(BIC_Busy) || DO_BIC(BIC_Bzy_MHz)) {
++	if (DO_BIC(BIC_Avg_MHz) || DO_BIC(BIC_Busy) || DO_BIC(BIC_Bzy_MHz) ||
++	    soft_c1_residency_display(BIC_Avg_MHz)) {
+ 		if ((new->aperf > old->aperf) && (new->mperf > old->mperf)) {
+ 			old->aperf = new->aperf - old->aperf;
+ 			old->mperf = new->mperf - old->mperf;
+@@ -1774,7 +1784,8 @@ int get_counters(struct thread_data *t, struct core_data *c, struct pkg_data *p)
+ retry:
+ 	t->tsc = rdtsc();	/* we are running on local CPU of interest */
+ 
+-	if (DO_BIC(BIC_Avg_MHz) || DO_BIC(BIC_Busy) || DO_BIC(BIC_Bzy_MHz)) {
++	if (DO_BIC(BIC_Avg_MHz) || DO_BIC(BIC_Busy) || DO_BIC(BIC_Bzy_MHz) ||
++	    soft_c1_residency_display(BIC_Avg_MHz)) {
+ 		unsigned long long tsc_before, tsc_between, tsc_after, aperf_time, mperf_time;
+ 
+ 		/*
+@@ -1851,20 +1862,20 @@ retry:
+ 	if (!(t->flags & CPU_IS_FIRST_THREAD_IN_CORE))
+ 		goto done;
+ 
+-	if (DO_BIC(BIC_CPU_c3)) {
++	if (DO_BIC(BIC_CPU_c3) || soft_c1_residency_display(BIC_CPU_c3)) {
+ 		if (get_msr(cpu, MSR_CORE_C3_RESIDENCY, &c->c3))
+ 			return -6;
  	}
  
- 	if (!brnf_probed) {
+-	if (DO_BIC(BIC_CPU_c6) && !do_knl_cstates) {
++	if ((DO_BIC(BIC_CPU_c6) || soft_c1_residency_display(BIC_CPU_c6)) && !do_knl_cstates) {
+ 		if (get_msr(cpu, MSR_CORE_C6_RESIDENCY, &c->c6))
+ 			return -7;
+-	} else if (do_knl_cstates) {
++	} else if (do_knl_cstates || soft_c1_residency_display(BIC_CPU_c6)) {
+ 		if (get_msr(cpu, MSR_KNL_CORE_C6_RESIDENCY, &c->c6))
+ 			return -7;
+ 	}
+ 
+-	if (DO_BIC(BIC_CPU_c7))
++	if (DO_BIC(BIC_CPU_c7) || soft_c1_residency_display(BIC_CPU_c7))
+ 		if (get_msr(cpu, MSR_CORE_C7_RESIDENCY, &c->c7))
+ 			return -8;
+ 
 -- 
 2.20.1
 
