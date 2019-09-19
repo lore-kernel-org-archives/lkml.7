@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2613BC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:19:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FA9C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3158217D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1995E217D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:19:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931555;
-	bh=UwPwWnQUujDomChcfZB29rRr6co/+JKonyQaGZ7csTM=;
+	s=default; t=1568931560;
+	bh=p+3m82tliaje6PacOgqeA/tyzrSNM4L/3dsVSIpEtfI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZatbX1JvSSTrAcW/NpAp/3QWvIFMlHH6BY7u0paI+N+72nzHMJDKi69dvJNKeHiFf
-	 wU2VCAhK6P/1WpkRq4YQOWf1bYAeb553qmvWkRXIro1vOKy8/ewWLtCYbWYvk9EdcF
-	 XG2nRKfbRYP1To8jmlIY1bPbJuVnPc83PvPvWkBA=
+	b=hBP+Dcxj++iA54H5AafI/8/o9JrGwYsz1cqQ9B9ZqNGLRxre8pDBX3xYGPL7qrMVm
+	 SW32UaB/dcg4CeErAv44iA9+PzfUex/DDVTCifBPEujZp+AIwlT4X61ms1po2dU9ir
+	 zKmYmIWWEj90NVr3GZ93hI9lP+MwX/dJfPg8QYSs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390558AbfISWTO (ORCPT
+        id S2406641AbfISWTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:19:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32812 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:19:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406641AbfISWTL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:19:11 -0400
+        id S2392452AbfISWTR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:19:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69EDD21924;
-        Thu, 19 Sep 2019 22:19:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19690217D6;
+        Thu, 19 Sep 2019 22:19:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931550;
-        bh=UwPwWnQUujDomChcfZB29rRr6co/+JKonyQaGZ7csTM=;
+        s=default; t=1568931556;
+        bh=p+3m82tliaje6PacOgqeA/tyzrSNM4L/3dsVSIpEtfI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wogcyngxt3SauuYkliDdy2N7q13hzbfBpCxoIweVNIx8aFrIIa9WB67fZphAmeI7t
-         U+jtETxUbs4kO1fL8th3P5j/L2gkf+qSwpFArvhlh2oiKAo1LK+HilX9fqQ36lXcSw
-         boAP4+4Krvkqtd3mK2geP34zAJ1vXCp5xf2csABg=
+        b=Hfw4A2jfw8tFmr52b2gm1tu8shl9cYr2y7O8OK4AfiB75XN6/Bwlw209CMQwZpAfY
+         mf11Nr9bOkJDCj1/LTU3g2YCf4TdTRXo7Ro9E3vy6weBgsUjbmJAL/1q1a3DuBN2FR
+         kMHSGULV6+0zfIhhXsLfmqnK6PCxx3NxYsNvN6H8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.9 27/74] crypto: talitos - fix CTR alg blocksize
-Date:   Fri, 20 Sep 2019 00:03:40 +0200
-Message-Id: <20190919214807.478438004@linuxfoundation.org>
+Subject: [PATCH 4.9 29/74] crypto: talitos - fix ECB algs ivsize
+Date:   Fri, 20 Sep 2019 00:03:42 +0200
+Message-Id: <20190919214807.728469404@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214800.519074117@linuxfoundation.org>
 References: <20190919214800.519074117@linuxfoundation.org>
@@ -61,9 +61,9 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit b9a05b6041cb9810a291315569b2af0d63c3680a upstream.
+commit d84cc9c9524ec5973a337533e6d8ccd3e5f05f2b upstream.
 
-CTR has a blocksize of 1.
+ECB's ivsize must be 0.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 Fixes: 5e75ae1b3cef ("crypto: talitos - add new crypto modes")
@@ -71,19 +71,18 @@ Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/talitos.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/crypto/talitos.c |    1 -
+ 1 file changed, 1 deletion(-)
 
 --- a/drivers/crypto/talitos.c
 +++ b/drivers/crypto/talitos.c
-@@ -2644,7 +2644,7 @@ static struct talitos_alg_template drive
- 		.alg.crypto = {
- 			.cra_name = "ctr(aes)",
- 			.cra_driver_name = "ctr-aes-talitos",
--			.cra_blocksize = AES_BLOCK_SIZE,
-+			.cra_blocksize = 1,
- 			.cra_flags = CRYPTO_ALG_TYPE_ABLKCIPHER |
- 				     CRYPTO_ALG_ASYNC,
+@@ -2666,7 +2666,6 @@ static struct talitos_alg_template drive
  			.cra_ablkcipher = {
+ 				.min_keysize = AES_MIN_KEY_SIZE,
+ 				.max_keysize = AES_MAX_KEY_SIZE,
+-				.ivsize = AES_BLOCK_SIZE,
+ 				.setkey = ablkcipher_aes_setkey,
+ 			}
+ 		},
 
 
