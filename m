@@ -2,206 +2,147 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 533A1C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15BCCC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1595C21924
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:24:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=hev-cc.20150623.gappssmtp.com header.i=@hev-cc.20150623.gappssmtp.com header.b="XNpK6sD8"
+	by mail.kernel.org (Postfix) with ESMTP id E4D6821924
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:25:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388540AbfISJY1 (ORCPT
+        id S2388672AbfISJZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 05:24:27 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:38758 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387637AbfISJY0 (ORCPT
+        Thu, 19 Sep 2019 05:25:35 -0400
+Received: from baptiste.telenet-ops.be ([195.130.132.51]:50688 "EHLO
+        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388436AbfISJZe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 05:24:26 -0400
-Received: by mail-pg1-f196.google.com with SMTP id x10so1532913pgi.5
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 02:24:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=hev-cc.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Em5t6EauVU0sVfuGE/WQJbJCwK78aKFv2CRbjaBHg78=;
-        b=XNpK6sD84uDyGoEet5+aP4u5D9SrABBaNu7mQmk3wqDZyY2FJAvaYouW0RJze56+/4
-         u2FyIWD/1woLw4N2C9dNvPlQ48PhVVf500U1a22LF2GTcNKLnJi2f3ecsGnXzAhmtyCw
-         hvw1jwwwk5utSSiqmljGqb13mC8AVinOkPqjw4YXhTV2PmiUR9vPVOWt4OC7KIxKuxnS
-         0Ioe2XbUDsHJNh0VpfDD+reFOwlzlM8rGrsbcOUwdHRnzEukOcjg+DblZL53IQQQ//0T
-         8U7M0oYqDjIUGJ8aC9sHPNlQXvcddu+csaRHrs0PT/LqK0eOOl57h3k7aRoWIK97sbaD
-         IXmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Em5t6EauVU0sVfuGE/WQJbJCwK78aKFv2CRbjaBHg78=;
-        b=C1NzvfZB6Uk6ix0dWcrD8NjhvJBsMtYCqllt4zRU16XpJbgooZOAUgZPegF+SkMxXB
-         9KADggrXuVHuyY7inJAd3OhaZwXJPvEaOTWXrpaecN+K+85uuR8zNTbEXtzUDpwMoyPh
-         PW9jiCGuCNXKw8Ao2YNoNQoYJeIy2dErQWJjOa00L2x8k1mhMi3FUq5INYBO0rQL72xb
-         bkihTkyErflKy9O8vazfCgYTUTSOpYNdAp+yoSMYIIvPInrzRUYKNUfmx6qmzvumKKog
-         vD129x24S090R0TgOXvecgHoxPrjXhqhSSwEtlZaTWAZb1VctL8pKz5dT0cvtEzf99hQ
-         UVEQ==
-X-Gm-Message-State: APjAAAWxFCHrmk/785DIlqwMeeNfdKXQs6yt3XSyYhGVsvR5VOxzJzUS
-        6jL0c27pQwwzv6otmjzdjpxDcQ==
-X-Google-Smtp-Source: APXvYqz6XDwzdrsaDrWccJyY0LG2FMNErzKhxv4IReDifWCzG2NutSEjvt/JjZpO9qyPwtZgk259PA==
-X-Received: by 2002:a62:7c4d:: with SMTP id x74mr9086260pfc.95.1568885066049;
-        Thu, 19 Sep 2019 02:24:26 -0700 (PDT)
-Received: from hev-sbc.hz.ali.com ([47.89.83.40])
-        by smtp.gmail.com with ESMTPSA id s19sm9749108pfe.86.2019.09.19.02.24.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2019 02:24:24 -0700 (PDT)
-From:   hev <r@hev.cc>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     Heiher <r@hev.cc>, Al Viro <viro@ZenIV.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Davide Libenzi <davidel@xmailserver.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Eric Wong <e@80x24.org>, Jason Baron <jbaron@akamai.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Roman Penyaev <rpenyaev@suse.de>,
-        Sridhar Samudrala <sridhar.samudrala@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND v2] fs/epoll: Remove unnecessary wakeups of nested epoll that in ET mode
-Date:   Thu, 19 Sep 2019 17:24:13 +0800
-Message-Id: <20190919092413.11141-1-r@hev.cc>
-X-Mailer: git-send-email 2.23.0
+        Thu, 19 Sep 2019 05:25:34 -0400
+Received: from ramsan ([84.194.98.4])
+        by baptiste.telenet-ops.be with bizsmtp
+        id 3MRT2100F05gfCL01MRTpJ; Thu, 19 Sep 2019 11:25:32 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iAsgp-0003ph-6D; Thu, 19 Sep 2019 11:25:27 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iAsgp-0007BK-3i; Thu, 19 Sep 2019 11:25:27 +0200
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+To:     Matthew Wilcox <willy@infradead.org>,
+        "David S . Miller" <davem@davemloft.net>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        netdev@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH -net] staging: octeon: se "(uintptr_t)" to cast from pointer to int
+Date:   Thu, 19 Sep 2019 11:25:26 +0200
+Message-Id: <20190919092526.27564-1-geert@linux-m68k.org>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiher <r@hev.cc>
+On 32-bit:
 
-Take the case where we have:
+    In file included from drivers/staging/octeon/octeon-ethernet.h:41,
+		     from drivers/staging/octeon/ethernet-tx.c:25:
+    drivers/staging/octeon/octeon-stubs.h: In function ‘cvmx_phys_to_ptr’:
+    drivers/staging/octeon/octeon-stubs.h:1205:9: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+      return (void *)(physical_address);
+	     ^
+    drivers/staging/octeon/ethernet-tx.c: In function ‘cvm_oct_xmit’:
+    drivers/staging/octeon/ethernet-tx.c:264:37: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+       hw_buffer.s.addr = XKPHYS_TO_PHYS((u64)skb->data);
+					 ^
+    drivers/staging/octeon/octeon-stubs.h:2:30: note: in definition of macro ‘XKPHYS_TO_PHYS’
+     #define XKPHYS_TO_PHYS(p)   (p)
+				  ^
+    drivers/staging/octeon/ethernet-tx.c:268:37: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+       hw_buffer.s.addr = XKPHYS_TO_PHYS((u64)skb->data);
+					 ^
+    drivers/staging/octeon/octeon-stubs.h:2:30: note: in definition of macro ‘XKPHYS_TO_PHYS’
+     #define XKPHYS_TO_PHYS(p)   (p)
+				  ^
+    drivers/staging/octeon/ethernet-tx.c:276:20: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+	 XKPHYS_TO_PHYS((u64)skb_frag_address(fs));
+			^
+    drivers/staging/octeon/octeon-stubs.h:2:30: note: in definition of macro ‘XKPHYS_TO_PHYS’
+     #define XKPHYS_TO_PHYS(p)   (p)
+				  ^
+    drivers/staging/octeon/ethernet-tx.c:280:37: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+       hw_buffer.s.addr = XKPHYS_TO_PHYS((u64)CVM_OCT_SKB_CB(skb));
+					 ^
+    drivers/staging/octeon/octeon-stubs.h:2:30: note: in definition of macro ‘XKPHYS_TO_PHYS’
+     #define XKPHYS_TO_PHYS(p)   (p)
+				  ^
 
-        t0
-         | (ew)
-        e0
-         | (et)
-        e1
-         | (lt)
-        s0
+Fix this by replacing casts to "u64" by casts to "uintptr_t", which is
+either 32-bit or 64-bit, and adding an intermediate cast to "uintptr_t"
+where needed.
 
-t0: thread 0
-e0: epoll fd 0
-e1: epoll fd 1
-s0: socket fd 0
-ew: epoll_wait
-et: edge-trigger
-lt: level-trigger
+Exposed by commit 171a9bae68c72f2d ("staging/octeon: Allow test build on
+!MIPS").
 
-When s0 fires an event, e1 catches the event, and then e0 catches an event from
-e1. After this, There is a thread t0 do epoll_wait() many times on e0, it should
-only get one event in total, because e1 is a dded to e0 in edge-triggered mode.
-
-This patch only allows the wakeup(&ep->poll_wait) in ep_scan_ready_list under
-two conditions:
-
- 1. depth == 0.
- 2. There have event is added to ep->ovflist during processing.
-
-Test code:
- #include <unistd.h>
- #include <sys/epoll.h>
- #include <sys/socket.h>
-
- int main(int argc, char *argv[])
- {
- 	int sfd[2];
- 	int efd[2];
- 	struct epoll_event e;
-
- 	if (socketpair(AF_UNIX, SOCK_STREAM, 0, sfd) < 0)
- 		goto out;
-
- 	efd[0] = epoll_create(1);
- 	if (efd[0] < 0)
- 		goto out;
-
- 	efd[1] = epoll_create(1);
- 	if (efd[1] < 0)
- 		goto out;
-
- 	e.events = EPOLLIN;
- 	if (epoll_ctl(efd[1], EPOLL_CTL_ADD, sfd[0], &e) < 0)
- 		goto out;
-
- 	e.events = EPOLLIN | EPOLLET;
- 	if (epoll_ctl(efd[0], EPOLL_CTL_ADD, efd[1], &e) < 0)
- 		goto out;
-
- 	if (write(sfd[1], "w", 1) != 1)
- 		goto out;
-
- 	if (epoll_wait(efd[0], &e, 1, 0) != 1)
- 		goto out;
-
- 	if (epoll_wait(efd[0], &e, 1, 0) != 0)
- 		goto out;
-
- 	close(efd[0]);
- 	close(efd[1]);
- 	close(sfd[0]);
- 	close(sfd[1]);
-
- 	return 0;
-
- out:
- 	return -1;
- }
-
-More tests:
- https://github.com/heiher/epoll-wakeup
-
-Cc: Al Viro <viro@ZenIV.linux.org.uk>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Davide Libenzi <davidel@xmailserver.org>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Dominik Brodowski <linux@dominikbrodowski.net>
-Cc: Eric Wong <e@80x24.org>
-Cc: Jason Baron <jbaron@akamai.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Roman Penyaev <rpenyaev@suse.de>
-Cc: Sridhar Samudrala <sridhar.samudrala@intel.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org
-Signed-off-by: hev <r@hev.cc>
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 ---
- fs/eventpoll.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/staging/octeon/ethernet-tx.c  | 9 +++++----
+ drivers/staging/octeon/octeon-stubs.h | 2 +-
+ 2 files changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-index c4159bcc05d9..fa71468dbd51 100644
---- a/fs/eventpoll.c
-+++ b/fs/eventpoll.c
-@@ -685,6 +685,9 @@ static __poll_t ep_scan_ready_list(struct eventpoll *ep,
- 	if (!ep_locked)
- 		mutex_lock_nested(&ep->mtx, depth);
+diff --git a/drivers/staging/octeon/ethernet-tx.c b/drivers/staging/octeon/ethernet-tx.c
+index c64728fc21f229d8..7021ff07ba2a0b70 100644
+--- a/drivers/staging/octeon/ethernet-tx.c
++++ b/drivers/staging/octeon/ethernet-tx.c
+@@ -261,11 +261,11 @@ int cvm_oct_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	/* Build the PKO buffer pointer */
+ 	hw_buffer.u64 = 0;
+ 	if (skb_shinfo(skb)->nr_frags == 0) {
+-		hw_buffer.s.addr = XKPHYS_TO_PHYS((u64)skb->data);
++		hw_buffer.s.addr = XKPHYS_TO_PHYS((uintptr_t)skb->data);
+ 		hw_buffer.s.pool = 0;
+ 		hw_buffer.s.size = skb->len;
+ 	} else {
+-		hw_buffer.s.addr = XKPHYS_TO_PHYS((u64)skb->data);
++		hw_buffer.s.addr = XKPHYS_TO_PHYS((uintptr_t)skb->data);
+ 		hw_buffer.s.pool = 0;
+ 		hw_buffer.s.size = skb_headlen(skb);
+ 		CVM_OCT_SKB_CB(skb)[0] = hw_buffer.u64;
+@@ -273,11 +273,12 @@ int cvm_oct_xmit(struct sk_buff *skb, struct net_device *dev)
+ 			skb_frag_t *fs = skb_shinfo(skb)->frags + i;
  
-+	if (!depth || list_empty_careful(&ep->rdllist))
-+		pwake++;
-+
- 	/*
- 	 * Steal the ready list, and re-init the original one to the
- 	 * empty list. Also, set ep->ovflist to NULL so that events
-@@ -755,7 +758,7 @@ static __poll_t ep_scan_ready_list(struct eventpoll *ep,
- 		mutex_unlock(&ep->mtx);
+ 			hw_buffer.s.addr =
+-				XKPHYS_TO_PHYS((u64)skb_frag_address(fs));
++				XKPHYS_TO_PHYS((uintptr_t)skb_frag_address(fs));
+ 			hw_buffer.s.size = skb_frag_size(fs);
+ 			CVM_OCT_SKB_CB(skb)[i + 1] = hw_buffer.u64;
+ 		}
+-		hw_buffer.s.addr = XKPHYS_TO_PHYS((u64)CVM_OCT_SKB_CB(skb));
++		hw_buffer.s.addr =
++			XKPHYS_TO_PHYS((uintptr_t)CVM_OCT_SKB_CB(skb));
+ 		hw_buffer.s.size = skb_shinfo(skb)->nr_frags + 1;
+ 		pko_command.s.segs = skb_shinfo(skb)->nr_frags + 1;
+ 		pko_command.s.gather = 1;
+diff --git a/drivers/staging/octeon/octeon-stubs.h b/drivers/staging/octeon/octeon-stubs.h
+index a4ac3bfb62a85e65..b78ce9eaab85d310 100644
+--- a/drivers/staging/octeon/octeon-stubs.h
++++ b/drivers/staging/octeon/octeon-stubs.h
+@@ -1202,7 +1202,7 @@ static inline int cvmx_wqe_get_grp(cvmx_wqe_t *work)
  
- 	/* We have to call this outside the lock */
--	if (pwake)
-+	if (pwake == 2)
- 		ep_poll_safewake(&ep->poll_wait);
+ static inline void *cvmx_phys_to_ptr(uint64_t physical_address)
+ {
+-	return (void *)(physical_address);
++	return (void *)(uintptr_t)(physical_address);
+ }
  
- 	return res;
+ static inline uint64_t cvmx_ptr_to_phys(void *ptr)
 -- 
-2.23.0
+2.17.1
 
