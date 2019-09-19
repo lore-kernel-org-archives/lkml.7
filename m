@@ -2,93 +2,100 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A38C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 05:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE16C4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 05:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DB4221924
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 05:07:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45432218AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 05:10:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pdgjowYL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731981AbfISFHi (ORCPT
+        id S1732001AbfISFKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 01:07:38 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:59206 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731914AbfISFHh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 01:07:37 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8113020039E;
-        Thu, 19 Sep 2019 07:07:35 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9F8862000D8;
-        Thu, 19 Sep 2019 07:07:25 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 9C87F402E6;
-        Thu, 19 Sep 2019 13:07:13 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        leonard.crestez@nxp.com, daniel.lezcano@linaro.org,
-        ping.bai@nxp.com, daniel.baluta@nxp.com, jun.li@nxp.com,
-        l.stach@pengutronix.de, abel.vesa@nxp.com,
-        andrew.smirnov@gmail.com, angus@akkea.ca, ccaione@baylibre.com,
-        agx@sigxcpu.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH 3/3] arm64: dts: imx8mn: Use correct clock for usdhc's ipg clk
-Date:   Thu, 19 Sep 2019 13:05:59 +0800
-Message-Id: <1568869559-28611-3-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1568869559-28611-1-git-send-email-Anson.Huang@nxp.com>
-References: <1568869559-28611-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 19 Sep 2019 01:10:41 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43157 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730949AbfISFKk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 01:10:40 -0400
+Received: by mail-wr1-f68.google.com with SMTP id q17so1556049wrx.10;
+        Wed, 18 Sep 2019 22:10:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ttCTUHrEZ8RqxMqrfUks/MJVxPs2athVlNQVJH23ON0=;
+        b=pdgjowYLRCsuSv+iBZ5rHqIu+XC7Y9/cD2khPCOXEgPLOtByZUabXyd+pJgoS/hJjp
+         5Ang/uWeIaLhscF6XMOZNYeYPwVJZ6BVKxSZj6aQLbLJxrzjx7GMceAcyq6bi+JjOKah
+         pnZZq33rabWGrHt4TwpO+ApAcTm2EbXb1pVqCRVjWE8wiI4zPoUNfnjv76JJeiVc6CcW
+         towxbanDYZi+wCkEt0gUi8excCGijYHtQyPGRzGC/YFBiQ0k3GBlaQO8jQStkzutmkdv
+         c+UMU7Dtd54b6Y5hndx9o3L9vusx8IPqMHjWjYDrcuPaYzQkv5zVKKngNE5988Ire5rz
+         UK2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ttCTUHrEZ8RqxMqrfUks/MJVxPs2athVlNQVJH23ON0=;
+        b=KnMs6F5eYUghZ02TkS6cnbJwKupU11CW421YmCI17Jxao1Q03lstBnO+g2kR3VAC68
+         OjtNziVcY3dK/Mgv7Yf1BUxD1C7s1ocfW4RDH3EWn/bqOFXzhzY7Qmz+GHccKf8HzK4U
+         NWOfyiaKV9Kas8xUk1uGaVM57iQYgXPilj9YuE9uum7GEA7yNrs0jwkqs7vnrrpPtJtM
+         K7Rxqa9h/z+ICMqWZsboXEW+LtGqF2xnzArDpkR2tGmGZZ71Y7xVZjZ4KOZ9oNaBV9Wt
+         Imb0w+D+XpgfmGZgMXQmRJytaYmb+mdAUM3FuA6ct8MeJ4L/K9Zw/549fDkLI1eIOIK1
+         dkcw==
+X-Gm-Message-State: APjAAAVBDD1cCZno1RHYXBFqLMtQp08I+gFYPlvQzUaDAztyaKmrg2b0
+        Q+Cvareccy8nift3WZim3QA=
+X-Google-Smtp-Source: APXvYqzGta9q+xvqr076suhGvyYMAdJl62tIA2pJNMA7bhe1Kn3CF25JtfwxOo/WWeoF4ToKaq1CmQ==
+X-Received: by 2002:adf:f401:: with SMTP id g1mr5140106wro.275.1568869839395;
+        Wed, 18 Sep 2019 22:10:39 -0700 (PDT)
+Received: from Red.localdomain ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id 94sm6575552wrk.92.2019.09.18.22.10.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 18 Sep 2019 22:10:38 -0700 (PDT)
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        mripard@kernel.org, wens@csie.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: [PATCH v2 0/2] crypto: sun4i-ss: Enable power management
+Date:   Thu, 19 Sep 2019 07:10:33 +0200
+Message-Id: <20190919051035.4111-1-clabbe.montjoie@gmail.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On i.MX8MN, usdhc's ipg clock is from IMX8MN_CLK_IPG_ROOT,
-assign it explicitly instead of using IMX8MN_CLK_DUMMY.
+Hello
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8mn.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+This serie enables power management in the sun4i-ss driver.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mn.dtsi b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-index 6cb6c9c..725a3a3 100644
---- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-@@ -594,7 +594,7 @@
- 				compatible = "fsl,imx8mn-usdhc", "fsl,imx7d-usdhc";
- 				reg = <0x30b40000 0x10000>;
- 				interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clk IMX8MN_CLK_DUMMY>,
-+				clocks = <&clk IMX8MN_CLK_IPG_ROOT>,
- 					 <&clk IMX8MN_CLK_NAND_USDHC_BUS>,
- 					 <&clk IMX8MN_CLK_USDHC1_ROOT>;
- 				clock-names = "ipg", "ahb", "per";
-@@ -610,7 +610,7 @@
- 				compatible = "fsl,imx8mn-usdhc", "fsl,imx7d-usdhc";
- 				reg = <0x30b50000 0x10000>;
- 				interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clk IMX8MN_CLK_DUMMY>,
-+				clocks = <&clk IMX8MN_CLK_IPG_ROOT>,
- 					 <&clk IMX8MN_CLK_NAND_USDHC_BUS>,
- 					 <&clk IMX8MN_CLK_USDHC2_ROOT>;
- 				clock-names = "ipg", "ahb", "per";
-@@ -624,7 +624,7 @@
- 				compatible = "fsl,imx8mn-usdhc", "fsl,imx7d-usdhc";
- 				reg = <0x30b60000 0x10000>;
- 				interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clk IMX8MN_CLK_DUMMY>,
-+				clocks = <&clk IMX8MN_CLK_IPG_ROOT>,
- 					 <&clk IMX8MN_CLK_NAND_USDHC_BUS>,
- 					 <&clk IMX8MN_CLK_USDHC3_ROOT>;
- 				clock-names = "ipg", "ahb", "per";
+Regards
+
+Changes since v1:
+- Fixed style in patch #1
+- Check more return code of PM functions
+- Add PM support in hash/prng
+- reworked the probe order of PM functions and the PM strategy
+
+Corentin Labbe (2):
+  crypto: sun4i-ss: simplify enable/disable of the device
+  crypto: sun4i-ss: enable pm_runtime
+
+ drivers/crypto/sunxi-ss/sun4i-ss-cipher.c |   9 ++
+ drivers/crypto/sunxi-ss/sun4i-ss-core.c   | 157 ++++++++++++++++------
+ drivers/crypto/sunxi-ss/sun4i-ss-hash.c   |  12 ++
+ drivers/crypto/sunxi-ss/sun4i-ss-prng.c   |   9 +-
+ drivers/crypto/sunxi-ss/sun4i-ss.h        |   2 +
+ 5 files changed, 149 insertions(+), 40 deletions(-)
+
 -- 
-2.7.4
+2.21.0
 
