@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB1DC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA602C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20A8221A49
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:21:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AE6E21A49
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:21:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931670;
-	bh=8Ay5QZRIfx6Enn7YintV43y+fPovqavXMA0bfouCU1Y=;
+	s=default; t=1568931673;
+	bh=diu1F0bK/0fL+YrFDsc1tuITKQzZqCAlrJih1cjftD0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kfs2NgnxrN7F0xkZn5X/RK7207mH2aOuhO+7On6PitqRHIl4yWgVJazm7AcYSpPG+
-	 EUlotc+22f3q9eW6tMOkPjnk8WloVSe/vzvwnFZNq2gOQOHEyHwUpn13UJqHHlhLwg
-	 6+gaBLMffQxlQts5yCBwLJW4rFophq37/jN6Si98=
+	b=GbZ5s4Fe0gxjT3eKz9LS1hSGFVG7gvBVzYLvRdi6BILhL5xfDv+SsEhsmI2wDWlu0
+	 ksKAeLnRaqOKZTXwlTl2BGtrTMxXNx5EARzwSqNk7ALUrYNlDb9dnf1FelwPUmR7+c
+	 RQOf8/4A9/ptlFFXOSjGk1rGpAdpH02mFNE0JyZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393700AbfISWVJ (ORCPT
+        id S2406684AbfISWVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:21:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35402 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:21:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406672AbfISWVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:21:05 -0400
+        id S2404740AbfISWVD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:21:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63DA321924;
-        Thu, 19 Sep 2019 22:21:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1BA921907;
+        Thu, 19 Sep 2019 22:21:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931664;
-        bh=8Ay5QZRIfx6Enn7YintV43y+fPovqavXMA0bfouCU1Y=;
+        s=default; t=1568931662;
+        bh=diu1F0bK/0fL+YrFDsc1tuITKQzZqCAlrJih1cjftD0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r5QpHa/+wPH+FepmPQxcswsCtj4Oe3uoBT7dMSp1fXRMGluCpdo58lYNq6RH3hHRE
-         Gf8gFrq6ZkzAs+3EhlaSvFWYHoyBX6jnixZJf+KwUCCrZt7tEUBASuWOht2+waBAmV
-         JJ0Oz7TNXm8b/IkfAoJU6R8xfIvLSBrxBw3RlGH4=
+        b=lME4PGDRPWIYps9OX1Q+BqXQb4W3BpWtlzAB9ZWmAAOXi3cSCQ2drgDbUwawBxiG8
+         H4ZBrjAxD0lgxTRkDZbr0jVyxvIkY8HXZZSqSH9xOHhwqlj+7x4YL+Q8tGJUgjMAr9
+         TiYZrnfteiu0d5a9Po6ki3VYj6PefYF1+BkBytH8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
         Peter Ujfalusi <peter.ujfalusi@ti.com>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 68/74] dmaengine: ti: omap-dma: Add cleanup in omap_dma_probe()
-Date:   Fri, 20 Sep 2019 00:04:21 +0200
-Message-Id: <20190919214811.035415064@linuxfoundation.org>
+Subject: [PATCH 4.9 67/74] dmaengine: ti: dma-crossbar: Fix a memory leak bug
+Date:   Fri, 20 Sep 2019 00:04:20 +0200
+Message-Id: <20190919214810.976668709@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214800.519074117@linuxfoundation.org>
 References: <20190919214800.519074117@linuxfoundation.org>
@@ -62,37 +62,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit 962411b05a6d3342aa649e39cda1704c1fc042c6 ]
+[ Upstream commit 2c231c0c1dec42192aca0f87f2dc68b8f0cbc7d2 ]
 
-If devm_request_irq() fails to disable all interrupts, no cleanup is
-performed before retuning the error. To fix this issue, invoke
-omap_dma_free() to do the cleanup.
+In ti_dra7_xbar_probe(), 'rsv_events' is allocated through kcalloc(). Then
+of_property_read_u32_array() is invoked to search for the property.
+However, if this process fails, 'rsv_events' is not deallocated, leading to
+a memory leak bug. To fix this issue, free 'rsv_events' before returning
+the error.
 
 Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
 Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Link: https://lore.kernel.org/r/1565938570-7528-1-git-send-email-wenwen@cs.uga.edu
+Link: https://lore.kernel.org/r/1565938136-7249-1-git-send-email-wenwen@cs.uga.edu
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/omap-dma.c | 4 +++-
+ drivers/dma/ti-dma-crossbar.c | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/omap-dma.c b/drivers/dma/omap-dma.c
-index 6b16ce390dce1..9f901f16bddcd 100644
---- a/drivers/dma/omap-dma.c
-+++ b/drivers/dma/omap-dma.c
-@@ -1429,8 +1429,10 @@ static int omap_dma_probe(struct platform_device *pdev)
+diff --git a/drivers/dma/ti-dma-crossbar.c b/drivers/dma/ti-dma-crossbar.c
+index 8c3c588834d2e..a7e1f6e17e3d1 100644
+--- a/drivers/dma/ti-dma-crossbar.c
++++ b/drivers/dma/ti-dma-crossbar.c
+@@ -395,8 +395,10 @@ static int ti_dra7_xbar_probe(struct platform_device *pdev)
  
- 		rc = devm_request_irq(&pdev->dev, irq, omap_dma_irq,
- 				      IRQF_SHARED, "omap-dma-engine", od);
--		if (rc)
-+		if (rc) {
-+			omap_dma_free(od);
- 			return rc;
+ 		ret = of_property_read_u32_array(node, pname, (u32 *)rsv_events,
+ 						 nelm * 2);
+-		if (ret)
++		if (ret) {
++			kfree(rsv_events);
+ 			return ret;
 +		}
- 	}
  
- 	if (omap_dma_glbl_read(od, CAPS_0) & CAPS_0_SUPPORT_LL123)
+ 		for (i = 0; i < nelm; i++) {
+ 			ti_dra7_xbar_reserve(rsv_events[i][0], rsv_events[i][1],
 -- 
 2.20.1
 
