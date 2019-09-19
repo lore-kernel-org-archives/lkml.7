@@ -2,83 +2,97 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1067FC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 214ADC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C74BA21D6C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:39:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=aurabindo.in header.i=@aurabindo.in header.b="VJjNIOqE"
+	by mail.kernel.org (Postfix) with ESMTP id F186521D71
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:40:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390008AbfISLj6 (ORCPT
+        id S2390022AbfISLkG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 07:39:58 -0400
-Received: from mail1.protonmail.ch ([185.70.40.18]:36848 "EHLO
-        mail1.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388068AbfISLj5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 07:39:57 -0400
-Date:   Thu, 19 Sep 2019 11:39:50 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aurabindo.in;
-        s=protonmail; t=1568893195;
-        bh=P6KCUgwyggXktYCrQ9GHQnIhjLgRZDIyVhon5eQuAeg=;
-        h=Date:To:From:Cc:Reply-To:Subject:Feedback-ID:From;
-        b=VJjNIOqECPlxhzmMJZfJ5xOJyScZUcz43jWlbhS5blvtFKUWQlqinWgBFlNDfnEML
-         Ch6HfZiEX2+oTG5E1SwlwCtewelbwzuzkYw9MCeuf664mJIzA95rNfJ9y8kQLCIazy
-         iYrPzrYuF47KVxCRGjY+vv6G/bgF69VAgdV2wJZY=
-To:     gregkh@linuxfoundation.org
-From:   Aurabindo Jayamohanan <mail@aurabindo.in>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Reply-To: Aurabindo Jayamohanan <mail@aurabindo.in>
-Subject: [PATCH] staging: board: use appropriate macro to initialize struct
-Message-ID: <20190919113945.13700-1-mail@aurabindo.in>
-Feedback-ID: D1Wwva8zb0UdpJtanaReRLGO3iCsewpGmDn8ZDKmpao-Gnxd2qXPmwwrSQ99r5Q15lmK-D8x6vKzqhUKCgzweA==:Ext:ProtonMail
+        Thu, 19 Sep 2019 07:40:06 -0400
+Received: from mx1.emlix.com ([188.40.240.192]:57970 "EHLO mx1.emlix.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390009AbfISLkF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 07:40:05 -0400
+Received: from mailer.emlix.com (unknown [81.20.119.6])
+        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx1.emlix.com (Postfix) with ESMTPS id F22E2603CA;
+        Thu, 19 Sep 2019 13:40:03 +0200 (CEST)
+Subject: Re: [PATCH v2] serial: imx: adapt rx buffer and dma periods
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        yibin.gong@nxp.com, fugang.duan@nxp.com, l.stach@pengutronix.de,
+        jslaby@suse.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20190919102628.23621-1-philipp.puschmann@emlix.com>
+ <20190919112216.qjkx5wvqhsadjxg5@pengutronix.de>
+From:   Philipp Puschmann <philipp.puschmann@emlix.com>
+Openpgp: preference=signencrypt
+Message-ID: <9923d405-a62d-0c6a-6039-f4a7bc3bf2e8@emlix.com>
+Date:   Thu, 19 Sep 2019 13:40:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190919112216.qjkx5wvqhsadjxg5@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make code more readable by using macros defined for initializing
-struct resource
+Hi Uwe
 
-Signed-off-by: Aurabindo Jayamohanan <mail@aurabindo.in>
----
- drivers/staging/board/armadillo800eva.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+Am 19.09.19 um 13:22 schrieb Uwe Kleine-König:
+> On Thu, Sep 19, 2019 at 12:26:28PM +0200, Philipp Puschmann wrote:
+>> Using only 4 DMA periods for UART RX is very few if we have a high
+>> frequency of small transfers - like in our case using Bluetooth with
+>> many small packets via UART - causing many dma transfers but in each
+>> only filling a fraction of a single buffer. Such a case may lead to
+>> the situation that DMA RX transfer is triggered but no free buffer is
+>> available. While we have addressed the dma handling already with
+>> "dmaengine: imx-sdma: fix dma freezes" we still want to avoid
+> 
+> Is this statement still true now that you split this patch out of your
+> bigger series?
+Yes. The dma patches care about stopping DMA channel. This patch tries to
+avoid that the channel runs out of usable buffers (aka dma periods).
 
-diff --git a/drivers/staging/board/armadillo800eva.c b/drivers/staging/boar=
-d/armadillo800eva.c
-index 962cc0c79988..0225234dd7aa 100644
---- a/drivers/staging/board/armadillo800eva.c
-+++ b/drivers/staging/board/armadillo800eva.c
-@@ -50,16 +50,8 @@ static struct sh_mobile_lcdc_info lcdc0_info =3D {
- };
-=20
- static struct resource lcdc0_resources[] =3D {
--=09[0] =3D {
--=09=09.name=09=3D "LCD0",
--=09=09.start=09=3D 0xfe940000,
--=09=09.end=09=3D 0xfe943fff,
--=09=09.flags=09=3D IORESOURCE_MEM,
--=09},
--=09[1] =3D {
--=09=09.start=09=3D 177 + 32,
--=09=09.flags=09=3D IORESOURCE_IRQ,
--=09},
-+=09DEFINE_RES_MEM_NAMED(0xfe940000, 0x4000, "LCD0"),
-+=09DEFINE_RES_IRQ(177 + 32),
- };
-=20
- static struct platform_device lcdc0_device =3D {
---=20
-2.23.0
+> 
+>> UART RX FIFO overrun. So we decrease the size of the buffers and
+>> increase their number and the total buffer size.
+> 
+> What happens when such an RX FIFO overrun happens? Are characters lost?
+> Or only time?
+Good question. In explanation i have missed an important point:
+When using HW flowcontrol via RTS/CTS and the buffer is full CTS is used to
+tell the remote device - here the Bluetooth chip - to stop sending data.
+For a while this prevents losing of characters. But then the remote device
+comes into trouble as its internal TX buffers runs over. Depends on the
+device how it handles this case and if it recovers if data flow is enabled
+again.
 
+In case without HW flow control characters would be lost. Depends on the upper
+layer what happens then.
 
+> Does your change have an influence if I do fewer but
+> bigger transfers?
+Don't think so. The dma periods are raw data buffers. If one is full the next one
+is being used. For the performance i don't see a significant difference between
+using 1 kB buffers or 4 kB buffers.
+
+Regards,
+Philipp
+
+> 
+> Best regards
+> Uwe
+>
