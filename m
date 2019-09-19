@@ -2,211 +2,120 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD50C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 00:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D3DC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 00:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 577DB21925
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 00:56:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78E4421925
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 00:57:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ERNEoENv"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="h5/C+5MF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731373AbfISA4c (ORCPT
+        id S1731422AbfISA55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 20:56:32 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:37910 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730468AbfISA4c (ORCPT
+        Wed, 18 Sep 2019 20:57:57 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44880 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726359AbfISA55 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 20:56:32 -0400
-Received: by mail-yb1-f195.google.com with SMTP id o18so709779ybp.5;
-        Wed, 18 Sep 2019 17:56:31 -0700 (PDT)
+        Wed, 18 Sep 2019 20:57:57 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q21so1075302pfn.11
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 17:57:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=gliQnWiLZy4GHcRR9eFMi5rKboC47gniTTdsujj6gQg=;
-        b=ERNEoENvC6ogVHDHS3uhuhKkMts29PZ9pIvOqPrKZNl80bS3J9O1JJR6iy8O1dVtm0
-         zKuDYvA6cCAXC3JTVuP7GTr34wbQA7FI7ZLUFzUW3q6Aama44MURIeL6P36cE7PFB995
-         BAaI28MHB7aIcWLVrphgZhwMwP9GyBbzwCjsEi3ztb+PUm5p6+DcUliR0IV/RyE11SpB
-         HklU+wJ84uTiks5me6WQ+sKgfDjeOkqCCKFbFsTvmSMJxYnNxGVpSttZpmO4jPEIrBcG
-         Bo2yT8kQYiPYe4+O9+7GsxMAdi3fXJWbU1nDMiUB1HeDq1IU2mls3jXvf+FWTzK5ayLW
-         l+4g==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:to:from:subject:user-agent:date;
+        bh=Yjz5L/ozymWepEMwnwlA62WqR6UE9MQbd1808aWPyz0=;
+        b=h5/C+5MFbuEwtpGziR7U/66WRa03Ik7sX99oDvEOGxBQbCv7MSfNP55RcbQ62ZvTQp
+         UH4PZC/3lYFlRNwYwHbtx48DVWG2PzdC5NbpXvh7FwalNwN4O8AGckupbMYY7oQN23c+
+         tGIyYD5CwrHX5GjgsKALa3HoeJOLfM0MjVwzM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=gliQnWiLZy4GHcRR9eFMi5rKboC47gniTTdsujj6gQg=;
-        b=LbWF8CjxrfJnqF7ImuGsVkmH2gfUWkSu+t7mljq75EX5TFlzSYIFmjN15cVZiaqCkq
-         Q6xYECaRIJmAcVfy6iYFclpIAQ8yjN99zcozR52HsgUPgyxuWzLqtem/Unrg4//Za+EC
-         O3WOyHNup58kBcKkwnVib9PEuSafXqxOneOYm7C0LQpkwURDuS6hSpNLL0+0KTIvHHpw
-         KWQgkBfoH8P5fR0t8wwxguQE1iLoTsdnwJqJgHMQeb+T6Sv5MhcKFoQWQ6oKoUQPe2hl
-         knSFd5avoS4WitDOr/PxrHHJjGYYZisEvzoIflXfsZQUqtJNcR4iUUrgbpOpLrIYZjH7
-         V7fg==
-X-Gm-Message-State: APjAAAWEWLCzvNIWXkeMz06HG2H38oD/yFELyYlh361LrlWxEfl4LwdZ
-        kpQAuzCz0r07Pq8Uqm0GZw==
-X-Google-Smtp-Source: APXvYqxAx64eSzE5DVKwNqUd80ksiqv2l+7EpBqq2Z+U4c+9qjyAFI75IvmWfQqc5KHM6ct1jUl/Tg==
-X-Received: by 2002:a25:b9cd:: with SMTP id y13mr4601577ybj.499.1568854590986;
-        Wed, 18 Sep 2019 17:56:30 -0700 (PDT)
-Received: from 960.localdomain ([64.192.53.12])
-        by smtp.gmail.com with ESMTPSA id u69sm1692475ywu.93.2019.09.18.17.56.30
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:to:from:subject
+         :user-agent:date;
+        bh=Yjz5L/ozymWepEMwnwlA62WqR6UE9MQbd1808aWPyz0=;
+        b=g8c9u8oCHwf+7nkO1/+3IYqmUl8on4kUp1e6aZXha8oLrhpGREcabRvGbN2uuGVhnW
+         1iEGUbrruVLBm2WdcBUgh4dPiu9RwRxZ8yStX9dUuYfEp6riTyR08+h5h1oVWpNrvN6Q
+         0PZsjc8VTUB1ZgWW/v0eKLns9KyPfRm7rWqiNHInSi48UFwPRX9BkYABt2HPGCfyryYB
+         9m4iQITLMy5FnjsjtOtaJcz2v8DGlKNGj95f/I2na5FUITyKwO6HeaNPP375osVbjQVV
+         QWBbzW9qHiFnLq06cy2G0C4eP0ngIt/CDgDcZ4qbIcVGt8k2bh7ZLMB6xn3eOneM49Kx
+         4WLw==
+X-Gm-Message-State: APjAAAVHxkuXlFgrdcvPwp0fOiuzD2zoBSykkZohaTGHJtT2fkZKF28L
+        gbbsf3iPX5kt2uZEu9qmbUThvQ==
+X-Google-Smtp-Source: APXvYqzZCvp5DCLQzQoL1v/l8sqwapRkBg8n0RTm+rxsZBtu5UIPpwB536sRL+I8xYtZRRUN0+bSfQ==
+X-Received: by 2002:aa7:8f14:: with SMTP id x20mr7478238pfr.223.1568854676630;
+        Wed, 18 Sep 2019 17:57:56 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id q2sm10853727pfg.144.2019.09.18.17.57.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Sep 2019 17:56:30 -0700 (PDT)
-From:   Ayman Bagabas <ayman.bagabas@gmail.com>
-To:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Ayman Bagabas <ayman.bagabas@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>, Mattias Jacobsson <2pi@mok.nu>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 6/6] platform/x86: huawei-wmi: Add debugfs support
-Date:   Wed, 18 Sep 2019 20:54:58 -0400
-Message-Id: <20190919005505.23822-7-ayman.bagabas@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190919005505.23822-1-ayman.bagabas@gmail.com>
-References: <20190919005505.23822-1-ayman.bagabas@gmail.com>
+        Wed, 18 Sep 2019 17:57:56 -0700 (PDT)
+Message-ID: <5d82d294.1c69fb81.23c8c.8c61@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1513424ecec891d19c1aa3c599ec67db7964b6b2.1568712606.git.saiprakash.ranjan@codeaurora.org>
+References: <cover.1568712606.git.saiprakash.ranjan@codeaurora.org> <1513424ecec891d19c1aa3c599ec67db7964b6b2.1568712606.git.saiprakash.ranjan@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Will Deacon <will@kernel.org>, bjorn.andersson@linaro.org,
+        iommu@lists.linux-foundation.org
+From:   Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCHv6 3/3] iommu: arm-smmu-impl: Add sdm845 implementation hook
+User-Agent: alot/0.8.1
+Date:   Wed, 18 Sep 2019 17:57:55 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a debugfs interface that can be used to call the WMI management
-interface function if available.
+Quoting Sai Prakash Ranjan (2019-09-17 02:45:04)
+> diff --git a/drivers/iommu/arm-smmu-impl.c b/drivers/iommu/arm-smmu-impl.c
+> index 3f88cd078dd5..d62da270f430 100644
+> --- a/drivers/iommu/arm-smmu-impl.c
+> +++ b/drivers/iommu/arm-smmu-impl.c
+> @@ -9,7 +9,6 @@
+> =20
+>  #include "arm-smmu.h"
+> =20
+> -
+>  static int arm_smmu_gr0_ns(int offset)
+>  {
+>         switch(offset) {
 
-Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
----
- drivers/platform/x86/huawei-wmi.c | 91 +++++++++++++++++++++++++++++++
- 1 file changed, 91 insertions(+)
+Why is this hunk still around?
 
-diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
-index 48be55c6027e..9ae2ecadeb10 100644
---- a/drivers/platform/x86/huawei-wmi.c
-+++ b/drivers/platform/x86/huawei-wmi.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <linux/acpi.h>
-+#include <linux/debugfs.h>
- #include <linux/delay.h>
- #include <linux/dmi.h>
- #include <linux/input.h>
-@@ -598,6 +599,94 @@ static void huawei_wmi_fn_lock_exit(struct device *dev)
- 		device_remove_file(dev, &dev_attr_fn_lock_state);
- }
- 
-+/* debugfs */
-+
-+static void huawei_wmi_debugfs_call_dump(struct seq_file *m, void *data,
-+		union acpi_object *obj)
-+{
-+	struct huawei_wmi *huawei = m->private;
-+	int i;
-+
-+	switch (obj->type) {
-+	case ACPI_TYPE_INTEGER:
-+		seq_printf(m, "0x%llx", obj->integer.value);
-+		break;
-+	case ACPI_TYPE_STRING:
-+		seq_printf(m, "\"%*s\"", obj->string.length, obj->string.pointer);
-+		break;
-+	case ACPI_TYPE_BUFFER:
-+		seq_puts(m, "{");
-+		for (i = 0; i < obj->buffer.length; i++) {
-+			seq_printf(m, "0x%02x", obj->buffer.pointer[i]);
-+			if (i < obj->buffer.length - 1)
-+				seq_puts(m, ",");
-+		}
-+		seq_puts(m, "}");
-+		break;
-+	case ACPI_TYPE_PACKAGE:
-+		seq_puts(m, "[");
-+		for (i = 0; i < obj->package.count; i++) {
-+			huawei_wmi_debugfs_call_dump(m, huawei, &obj->package.elements[i]);
-+			if (i < obj->package.count - 1)
-+				seq_puts(m, ",");
-+		}
-+		seq_puts(m, "]");
-+		break;
-+	default:
-+		dev_err(&huawei->pdev->dev, "Unexpected obj type, got %d\n", obj->type);
-+		return;
-+	}
-+}
-+
-+static int huawei_wmi_debugfs_call_show(struct seq_file *m, void *data)
-+{
-+	struct huawei_wmi *huawei = m->private;
-+	struct acpi_buffer out = { ACPI_ALLOCATE_BUFFER, NULL };
-+	struct acpi_buffer in;
-+	union acpi_object *obj;
-+	int err;
-+
-+	in.length = sizeof(u64);
-+	in.pointer = &huawei->debug.arg;
-+
-+	err = huawei_wmi_call(&in, &out);
-+	if (err)
-+		return err;
-+
-+	obj = out.pointer;
-+	if (!obj) {
-+		err = -EIO;
-+		goto fail_debugfs_call;
-+	}
-+
-+	huawei_wmi_debugfs_call_dump(m, huawei, obj);
-+
-+fail_debugfs_call:
-+	kfree(out.pointer);
-+	return err;
-+}
-+
-+DEFINE_SHOW_ATTRIBUTE(huawei_wmi_debugfs_call);
-+
-+static void huawei_wmi_debugfs_setup(struct device *dev)
-+{
-+	struct huawei_wmi *huawei = dev_get_drvdata(dev);
-+
-+	huawei->debug.root = debugfs_create_dir("huawei-wmi", NULL);
-+
-+	debugfs_create_x64("arg", 0644, huawei->debug.root,
-+		&huawei->debug.arg);
-+	debugfs_create_file("call", 0400,
-+		huawei->debug.root, huawei, &huawei_wmi_debugfs_call_fops);
-+}
-+
-+static void huawei_wmi_debugfs_exit(struct device *dev)
-+{
-+	struct huawei_wmi *huawei = dev_get_drvdata(dev);
-+
-+	debugfs_remove_recursive(huawei->debug.root);
-+}
-+
- /* Input */
- 
- static void huawei_wmi_process_key(struct input_dev *idev, int code)
-@@ -723,6 +812,7 @@ static int huawei_wmi_probe(struct platform_device *pdev)
- 		huawei_wmi_leds_setup(&pdev->dev);
- 		huawei_wmi_fn_lock_setup(&pdev->dev);
- 		huawei_wmi_battery_setup(&pdev->dev);
-+		huawei_wmi_debugfs_setup(&pdev->dev);
- 	}
- 
- 	return 0;
-@@ -740,6 +830,7 @@ static int huawei_wmi_remove(struct platform_device *pdev)
- 	}
- 
- 	if (wmi_has_guid(HWMI_METHOD_GUID)) {
-+		huawei_wmi_debugfs_exit(&pdev->dev);
- 		huawei_wmi_battery_exit(&pdev->dev);
- 		huawei_wmi_fn_lock_exit(&pdev->dev);
- 	}
--- 
-2.21.0
+> diff --git a/drivers/iommu/arm-smmu-qcom.c b/drivers/iommu/arm-smmu-qcom.c
+> new file mode 100644
+> index 000000000000..24c071c1d8b0
+> --- /dev/null
+> +++ b/drivers/iommu/arm-smmu-qcom.c
+> @@ -0,0 +1,51 @@
+[...]
+> +struct arm_smmu_device *qcom_smmu_impl_init(struct arm_smmu_device *smmu)
+> +{
+> +       struct qcom_smmu *qsmmu;
+> +
+> +       qsmmu =3D devm_kzalloc(smmu->dev, sizeof(*qsmmu), GFP_KERNEL);
+> +       if (!qsmmu)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       qsmmu->smmu =3D *smmu;
+> +
+> +       qsmmu->smmu.impl =3D &qcom_smmu_impl;
+> +       devm_kfree(smmu->dev, smmu);
 
+This copy is interesting but OK I guess cavium does it.
+
+> +
+> +       return &qsmmu->smmu;
+> +}
