@@ -5,49 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 436B5C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 108F8C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:30:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BBCF20640
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:30:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC01A20640
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:30:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932231;
-	bh=gJ+j8xvF3QHkqRQXLGe2LZiL1kQ2dtxg0eY4AnzEdXk=;
+	s=default; t=1568932234;
+	bh=MDQ7rLMjvv0P66wPoli3ZPds3gzwj7sGjeX3LmqqTIo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hiG+mOL/XfS0bIg7jMczsk0lWJ5QU2oUw8Uw3GvVMU/JiHa0vDBnt6olb/FeOijqj
-	 njC0e6fGRG8zVOwWqDSy76KGw6rd2wdzk5bNZx2v2DfK51XXTMae0GwZdFPIjCSAcn
-	 K07/CaUr6k1mzSwq3ZFQp65BpFEeLsH4ILuyrdHI=
+	b=af8LF3V/OEYgJ3DdRpuw07DNXOEWWS+kq4TSdIP3j4qyqrhjSX583FBe/W1/G63li
+	 1kmk6woE5Rpa2BvNcT+4NSaM0Lxlg5AOzyrGWZjoPrO/QznEos9264ITvGIt5RJSpd
+	 /96ni3rsqZ+4B7gg1GXEalW2EZ+A+Nx2RP+GmIjQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407343AbfISWaa (ORCPT
+        id S2406280AbfISWQL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:30:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56506 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:16:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406287AbfISWQN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:16:13 -0400
+        id S2406249AbfISWQD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:16:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E6C720678;
-        Thu, 19 Sep 2019 22:16:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B15FE217D6;
+        Thu, 19 Sep 2019 22:16:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931372;
-        bh=gJ+j8xvF3QHkqRQXLGe2LZiL1kQ2dtxg0eY4AnzEdXk=;
+        s=default; t=1568931362;
+        bh=MDQ7rLMjvv0P66wPoli3ZPds3gzwj7sGjeX3LmqqTIo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2hrZfcpysb3fs014OoERLJ94gP1SiscdfX9rf4ZTxuofHZzQJ9Jq00wmZmYiY7vA7
-         YBj6R4k3XFUdigiXCjD5WvAtXV7GkZtMJ7KlPyf7xtSo1exbBoVlu5gAtyU/EiDtnQ
-         yjMl5FkGZN2j7K7vyINy2IiURfoGnilW285eh33c=
+        b=W+KAwkVEjVyPZq2dg/tdcOA31pKRLT0Z7wEsgXJ3Nk2xjSO2WEJBrg36DPkWFAbBs
+         3zimrnPrP5nH7evDpr2Tp11N1R2P4kJljHx/odHE3ItLSRQS7gH1+HsyU+gR88CCub
+         KaJNGamk1FrOL7v4XIH9ibMW4PZx8qpccM/1wOkM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 22/59] NFSv4: Fix return values for nfs4_file_open()
-Date:   Fri, 20 Sep 2019 00:03:37 +0200
-Message-Id: <20190919214803.778716576@linuxfoundation.org>
+Subject: [PATCH 4.14 19/59] s390/bpf: use 32-bit index for tail calls
+Date:   Fri, 20 Sep 2019 00:03:34 +0200
+Message-Id: <20190919214801.315715000@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214755.852282682@linuxfoundation.org>
 References: <20190919214755.852282682@linuxfoundation.org>
@@ -60,49 +63,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Ilya Leoshkevich <iii@linux.ibm.com>
 
-[ Upstream commit 90cf500e338ab3f3c0f126ba37e36fb6a9058441 ]
+[ Upstream commit 91b4db5313a2c793aabc2143efb8ed0cf0fdd097 ]
 
-Currently, we are translating RPC level errors such as timeouts,
-as well as interrupts etc into EOPENSTALE, which forces a single
-replay of the open attempt. What we actually want to do is
-force the replay only in the cases where the returned error
-indicates that the file may have changed on the server.
+"p runtime/jit: pass > 32bit index to tail_call" fails when
+bpf_jit_enable=1, because the tail call is not executed.
 
-So the fix is to spell out the exact set of errors where we want
-to return EOPENSTALE.
+This in turn is because the generated code assumes index is 64-bit,
+while it must be 32-bit, and as a result prog array bounds check fails,
+while it should pass. Even if bounds check would have passed, the code
+that follows uses 64-bit index to compute prog array offset.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Fix by using clrj instead of clgrj for comparing index with array size,
+and also by using llgfr for truncating index to 32 bits before using it
+to compute prog array offset.
+
+Fixes: 6651ee070b31 ("s390/bpf: implement bpf_tail_call() helper")
+Reported-by: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
+Acked-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4file.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/s390/net/bpf_jit_comp.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
-index 2b3e0f1ca572f..b8d316a338bc9 100644
---- a/fs/nfs/nfs4file.c
-+++ b/fs/nfs/nfs4file.c
-@@ -74,13 +74,13 @@ nfs4_file_open(struct inode *inode, struct file *filp)
- 	if (IS_ERR(inode)) {
- 		err = PTR_ERR(inode);
- 		switch (err) {
--		case -EPERM:
--		case -EACCES:
--		case -EDQUOT:
--		case -ENOSPC:
--		case -EROFS:
--			goto out_put_ctx;
- 		default:
-+			goto out_put_ctx;
-+		case -ENOENT:
-+		case -ESTALE:
-+		case -EISDIR:
-+		case -ENOTDIR:
-+		case -ELOOP:
- 			goto out_drop;
- 		}
- 	}
+diff --git a/arch/s390/net/bpf_jit_comp.c b/arch/s390/net/bpf_jit_comp.c
+index fcb9e840727cd..b8bd841048434 100644
+--- a/arch/s390/net/bpf_jit_comp.c
++++ b/arch/s390/net/bpf_jit_comp.c
+@@ -1063,8 +1063,8 @@ static noinline int bpf_jit_insn(struct bpf_jit *jit, struct bpf_prog *fp, int i
+ 		/* llgf %w1,map.max_entries(%b2) */
+ 		EMIT6_DISP_LH(0xe3000000, 0x0016, REG_W1, REG_0, BPF_REG_2,
+ 			      offsetof(struct bpf_array, map.max_entries));
+-		/* clgrj %b3,%w1,0xa,label0: if %b3 >= %w1 goto out */
+-		EMIT6_PCREL_LABEL(0xec000000, 0x0065, BPF_REG_3,
++		/* clrj %b3,%w1,0xa,label0: if (u32)%b3 >= (u32)%w1 goto out */
++		EMIT6_PCREL_LABEL(0xec000000, 0x0077, BPF_REG_3,
+ 				  REG_W1, 0, 0xa);
+ 
+ 		/*
+@@ -1090,8 +1090,10 @@ static noinline int bpf_jit_insn(struct bpf_jit *jit, struct bpf_prog *fp, int i
+ 		 *         goto out;
+ 		 */
+ 
+-		/* sllg %r1,%b3,3: %r1 = index * 8 */
+-		EMIT6_DISP_LH(0xeb000000, 0x000d, REG_1, BPF_REG_3, REG_0, 3);
++		/* llgfr %r1,%b3: %r1 = (u32) index */
++		EMIT4(0xb9160000, REG_1, BPF_REG_3);
++		/* sllg %r1,%r1,3: %r1 *= 8 */
++		EMIT6_DISP_LH(0xeb000000, 0x000d, REG_1, REG_1, REG_0, 3);
+ 		/* lg %r1,prog(%b2,%r1) */
+ 		EMIT6_DISP_LH(0xe3000000, 0x0004, REG_1, BPF_REG_2,
+ 			      REG_1, offsetof(struct bpf_array, ptrs));
 -- 
 2.20.1
 
