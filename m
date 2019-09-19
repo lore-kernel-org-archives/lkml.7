@@ -2,170 +2,133 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B06C4CECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 07:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B9CC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 07:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 223FD21907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 07:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A437B21927
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 07:17:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387911AbfISHOq (ORCPT
+        id S1730929AbfISHRs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 03:14:46 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:52068 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730741AbfISHOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 03:14:45 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 550BE2E860EECD4E82C6;
-        Thu, 19 Sep 2019 15:14:41 +0800 (CST)
-Received: from [127.0.0.1] (10.177.251.225) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Thu, 19 Sep 2019
- 15:14:36 +0800
-Subject: Re: [PATCH] mm: Support memblock alloc on the exact node for
- sparse_buffer_init()
-To:     Mike Rapoport <rppt@linux.ibm.com>
-CC:     <akpm@linux-foundation.org>, <osalvador@suse.de>, <mhocko@suse.co>,
-        <dan.j.williams@intel.com>, <david@redhat.com>,
-        <richardw.yang@linux.intel.com>, <cai@lca.pw>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-References: <af88d8ab-4088-e857-575f-9be57542e130@huawei.com>
- <20190919044753.GA20548@linux.ibm.com>
-From:   Yunfeng Ye <yeyunfeng@huawei.com>
-Message-ID: <6d23d00c-f400-f486-dc6d-31b6f141d913@huawei.com>
-Date:   Thu, 19 Sep 2019 15:14:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190919044753.GA20548@linux.ibm.com>
-Content-Type: text/plain; charset="utf-8"
+        Thu, 19 Sep 2019 03:17:48 -0400
+Received: from skedge03.snt-world.com ([91.208.41.68]:39798 "EHLO
+        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727435AbfISHRr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 03:17:47 -0400
+Received: from sntmail10s.snt-is.com (unknown [10.203.32.183])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by skedge03.snt-world.com (Postfix) with ESMTPS id E59A367AB45;
+        Thu, 19 Sep 2019 09:17:44 +0200 (CEST)
+Received: from sntmail14r.snt-is.com (10.203.32.184) by sntmail10s.snt-is.com
+ (10.203.32.183) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 19 Sep
+ 2019 09:17:44 +0200
+Received: from sntmail14r.snt-is.com ([fe80::c8f3:eae9:52c2:11a8]) by
+ sntmail14r.snt-is.com ([fe80::c8f3:eae9:52c2:11a8%3]) with mapi id
+ 15.01.1713.004; Thu, 19 Sep 2019 09:17:44 +0200
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     Anson Huang <Anson.Huang@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "leonard.crestez@nxp.com" <leonard.crestez@nxp.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "ping.bai@nxp.com" <ping.bai@nxp.com>,
+        "daniel.baluta@nxp.com" <daniel.baluta@nxp.com>,
+        "jun.li@nxp.com" <jun.li@nxp.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "abel.vesa@nxp.com" <abel.vesa@nxp.com>,
+        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
+        "angus@akkea.ca" <angus@akkea.ca>,
+        "ccaione@baylibre.com" <ccaione@baylibre.com>,
+        "agx@sigxcpu.org" <agx@sigxcpu.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "Linux-imx@nxp.com" <Linux-imx@nxp.com>
+Subject: Re: [PATCH 2/3] arm64: dts: imx8mm: Use correct clock for usdhc's ipg
+ clk
+Thread-Topic: [PATCH 2/3] arm64: dts: imx8mm: Use correct clock for usdhc's
+ ipg clk
+Thread-Index: AQHVbqhJada8Xsj3oEetJoKRBs2eSKcyddCA
+Date:   Thu, 19 Sep 2019 07:17:44 +0000
+Message-ID: <c680d114-1c14-6bf8-226c-2fdd98350158@kontron.de>
+References: <1568869559-28611-1-git-send-email-Anson.Huang@nxp.com>
+ <1568869559-28611-2-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1568869559-28611-2-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: de-DE, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.251.225]
-X-CFilter-Loop: Reflected
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.25.9.193]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F14B5A1009A44548B13FE27527380192@snt-world.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: E59A367AB45.A1B78
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: frieder.schrempf@kontron.de
+X-SnT-MailScanner-To: abel.vesa@nxp.com, agx@sigxcpu.org,
+        andrew.smirnov@gmail.com, angus@akkea.ca, anson.huang@nxp.com,
+        ccaione@baylibre.com, daniel.baluta@nxp.com,
+        daniel.lezcano@linaro.org, devicetree@vger.kernel.org,
+        festevam@gmail.com, jun.li@nxp.com, kernel@pengutronix.de,
+        l.stach@pengutronix.de, leonard.crestez@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com, ping.bai@nxp.com,
+        robh+dt@kernel.org, s.hauer@pengutronix.de, shawnguo@kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019/9/19 12:47, Mike Rapoport wrote:
-> Hi,
-> 
-> On Wed, Sep 18, 2019 at 12:22:29PM +0800, Yunfeng Ye wrote:
->> Currently, when memblock_find_in_range_node() fail on the exact node, it
->> will use %NUMA_NO_NODE to find memblock from other nodes. At present,
->> the work is good, but when the large memory is insufficient and the
->> small memory is enough, we want to allocate the small memory of this
->> node first, and do not need to allocate large memory from other nodes.
->>
->> In sparse_buffer_init(), it will prepare large chunks of memory for page
->> structure. The page management structure requires a lot of memory, but
->> if the node does not have enough memory, it can be converted to a small
->> memory allocation without having to allocate it from other nodes.
->>
->> Add %MEMBLOCK_ALLOC_EXACT_NODE flag for this situation. Normally, the
->> behavior is the same with %MEMBLOCK_ALLOC_ACCESSIBLE, only that it will
->> not allocate from other nodes when a single node fails to allocate.
->>
->> If large contiguous block memory allocated fail in sparse_buffer_init(),
->> it will allocates small block memmory section by section later.
-> 
-> Did you see the sparse_buffer_init() actually falling back to allocate from a
-> different node? If a node does not have enough memory to hold it's own
-> memory map, filling only it with parts of the memory map will not make such
-> node usable.
->  
-Normally, it won't happen that sparse_buffer_init() falling back from a different
-node, because page structure size is 64 bytes per 4KB of memory, no more than 2%
-of total available memory. But in the special cases, for eaxmple, memory address
-is isolated by BIOS when memory failure, split the total memory many pieces,
-although we have enough memory, but no large contiguous block memory in one node.
-sparse_buffer_init() needs large contiguous block memory to be alloc in one time,
-
-Eg, the size of memory is 1TB, sparse_buffer_init() need 1TB * 64/4096 = 16GB, but
-we have 100 blocks memory which every block only have 10GB, although total memory
-have almost 100*10GB=1TB, but no contiguous 16GB block.
-
-Before commit 2a3cb8baef71 ("mm/sparse: delete old sparse_init and enable new one"),
-we have %CONFIG_SPARSEMEM_ALLOC_MEM_MAP_TOGETHER config to meeting this situation,
-after that, it fall back to allocate memory from other nodes, so have the performance
-impact by remote numa access.
-
-commit 85c77f791390 ("mm/sparse: add new sparse_init_nid() and sparse_init()") wrote
-that:
-    "
-    sparse_init_nid(), which only
-    operates within one memory node, and thus allocates memory either in large
-    contiguous block or allocates section by section
-    "
-it means that allocates section by section is a normal choice too, so I think add
-%MEMBLOCK_ALLOC_EXACT_NODE is also a choice for this situation. Most cases,
-sparse_buffer_init() works good and not allocated from other nodes at present.
-
-thanks.
-Yunfeng Ye
-
->> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
->> ---
->>  include/linux/memblock.h | 1 +
->>  mm/memblock.c            | 3 ++-
->>  mm/sparse.c              | 2 +-
->>  3 files changed, 4 insertions(+), 2 deletions(-)
->>
->> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
->> index f491690..9a81d9c 100644
->> --- a/include/linux/memblock.h
->> +++ b/include/linux/memblock.h
->> @@ -339,6 +339,7 @@ static inline int memblock_get_region_node(const struct memblock_region *r)
->>  #define MEMBLOCK_ALLOC_ANYWHERE	(~(phys_addr_t)0)
->>  #define MEMBLOCK_ALLOC_ACCESSIBLE	0
->>  #define MEMBLOCK_ALLOC_KASAN		1
->> +#define MEMBLOCK_ALLOC_EXACT_NODE	2
->>
->>  /* We are using top down, so it is safe to use 0 here */
->>  #define MEMBLOCK_LOW_LIMIT 0
->> diff --git a/mm/memblock.c b/mm/memblock.c
->> index 7d4f61a..dbd52c3c 100644
->> --- a/mm/memblock.c
->> +++ b/mm/memblock.c
->> @@ -277,6 +277,7 @@ static phys_addr_t __init_memblock memblock_find_in_range_node(phys_addr_t size,
->>
->>  	/* pump up @end */
->>  	if (end == MEMBLOCK_ALLOC_ACCESSIBLE ||
->> +	    end == MEMBLOCK_ALLOC_EXACT_NODE ||
->>  	    end == MEMBLOCK_ALLOC_KASAN)
->>  		end = memblock.current_limit;
->>
->> @@ -1365,7 +1366,7 @@ static phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
->>  	if (found && !memblock_reserve(found, size))
->>  		goto done;
->>
->> -	if (nid != NUMA_NO_NODE) {
->> +	if (end != MEMBLOCK_ALLOC_EXACT_NODE && nid != NUMA_NO_NODE) {
->>  		found = memblock_find_in_range_node(size, align, start,
->>  						    end, NUMA_NO_NODE,
->>  						    flags);
->> diff --git a/mm/sparse.c b/mm/sparse.c
->> index 72f010d..828db46 100644
->> --- a/mm/sparse.c
->> +++ b/mm/sparse.c
->> @@ -477,7 +477,7 @@ static void __init sparse_buffer_init(unsigned long size, int nid)
->>  	sparsemap_buf =
->>  		memblock_alloc_try_nid_raw(size, PAGE_SIZE,
->>  						addr,
->> -						MEMBLOCK_ALLOC_ACCESSIBLE, nid);
->> +						MEMBLOCK_ALLOC_EXACT_NODE, nid);
->>  	sparsemap_buf_end = sparsemap_buf + size;
->>  }
->>
->> -- 
->> 2.7.4.huawei.3
->>
->>
-> 
-
+SGkgQW5zb24sDQoNCkkgaGF2ZSBhIHF1ZXN0aW9uLCB0aGF0IGlzIG5vdCBkaXJlY3RseSByZWxh
+dGVkIHRvIHRoaXMgcGF0Y2guDQpJIHNlZSB0aGF0IGZvciB0aGUgdXNkaGMxIGFuZCB1c2RoYzMg
+bm9kZXMsIHRoZXJlIGlzIGFuICdhc3NpZ25lZC1jbG9jaycgDQphbmQgJ2Fzc2lnbmVkLWNsb2Nr
+LXJhdGVzJyBwcm9wZXJ0eSBidXQgbm90IGZvciB1c2RoYzIuIFRoZSBzYW1lIGFwcGxpZXMgDQp0
+byB0aGUgbXg4bXEgYW5kIG14OG1uIGR0c2kgZmlsZS4NCg0KSXMgdGhlcmUgYW55IHJlYXNvbiBm
+b3IgdGhpcz8gSWYgbm90IGNhbiB5b3UgZml4IGl0Pw0KDQpUaGFua3MsDQpGcmllZGVyDQoNCk9u
+IDE5LjA5LjE5IDA3OjA1LCBBbnNvbiBIdWFuZyB3cm90ZToNCj4gT24gaS5NWDhNTSwgdXNkaGMn
+cyBpcGcgY2xvY2sgaXMgZnJvbSBJTVg4TU1fQ0xLX0lQR19ST09ULA0KPiBhc3NpZ24gaXQgZXhw
+bGljaXRseSBpbnN0ZWFkIG9mIHVzaW5nIElNWDhNTV9DTEtfRFVNTVkuDQo+IA0KPiBTaWduZWQt
+b2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gLS0tDQo+ICAgYXJj
+aC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OG1tLmR0c2kgfCA2ICsrKy0tLQ0KPiAgIDEg
+ZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZm
+IC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OG1tLmR0c2kgYi9hcmNo
+L2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4bW0uZHRzaQ0KPiBpbmRleCA3YzRkY2NlLi44
+YWFmYWQyIDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4
+bW0uZHRzaQ0KPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4bW0uZHRz
+aQ0KPiBAQCAtNjk0LDcgKzY5NCw3IEBADQo+ICAgCQkJCWNvbXBhdGlibGUgPSAiZnNsLGlteDht
+bS11c2RoYyIsICJmc2wsaW14N2QtdXNkaGMiOw0KPiAgIAkJCQlyZWcgPSA8MHgzMGI0MDAwMCAw
+eDEwMDAwPjsNCj4gICAJCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDIyIElSUV9UWVBFX0xFVkVM
+X0hJR0g+Ow0KPiAtCQkJCWNsb2NrcyA9IDwmY2xrIElNWDhNTV9DTEtfRFVNTVk+LA0KPiArCQkJ
+CWNsb2NrcyA9IDwmY2xrIElNWDhNTV9DTEtfSVBHX1JPT1Q+LA0KPiAgIAkJCQkJIDwmY2xrIElN
+WDhNTV9DTEtfTkFORF9VU0RIQ19CVVM+LA0KPiAgIAkJCQkJIDwmY2xrIElNWDhNTV9DTEtfVVNE
+SEMxX1JPT1Q+Ow0KPiAgIAkJCQljbG9jay1uYW1lcyA9ICJpcGciLCAiYWhiIiwgInBlciI7DQo+
+IEBAIC03MTAsNyArNzEwLDcgQEANCj4gICAJCQkJY29tcGF0aWJsZSA9ICJmc2wsaW14OG1tLXVz
+ZGhjIiwgImZzbCxpbXg3ZC11c2RoYyI7DQo+ICAgCQkJCXJlZyA9IDwweDMwYjUwMDAwIDB4MTAw
+MDA+Ow0KPiAgIAkJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMjMgSVJRX1RZUEVfTEVWRUxfSElH
+SD47DQo+IC0JCQkJY2xvY2tzID0gPCZjbGsgSU1YOE1NX0NMS19EVU1NWT4sDQo+ICsJCQkJY2xv
+Y2tzID0gPCZjbGsgSU1YOE1NX0NMS19JUEdfUk9PVD4sDQo+ICAgCQkJCQkgPCZjbGsgSU1YOE1N
+X0NMS19OQU5EX1VTREhDX0JVUz4sDQo+ICAgCQkJCQkgPCZjbGsgSU1YOE1NX0NMS19VU0RIQzJf
+Uk9PVD47DQo+ICAgCQkJCWNsb2NrLW5hbWVzID0gImlwZyIsICJhaGIiLCAicGVyIjsNCj4gQEAg
+LTcyNCw3ICs3MjQsNyBAQA0KPiAgIAkJCQljb21wYXRpYmxlID0gImZzbCxpbXg4bW0tdXNkaGMi
+LCAiZnNsLGlteDdkLXVzZGhjIjsNCj4gICAJCQkJcmVnID0gPDB4MzBiNjAwMDAgMHgxMDAwMD47
+DQo+ICAgCQkJCWludGVycnVwdHMgPSA8R0lDX1NQSSAyNCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsN
+Cj4gLQkJCQljbG9ja3MgPSA8JmNsayBJTVg4TU1fQ0xLX0RVTU1ZPiwNCj4gKwkJCQljbG9ja3Mg
+PSA8JmNsayBJTVg4TU1fQ0xLX0lQR19ST09UPiwNCj4gICAJCQkJCSA8JmNsayBJTVg4TU1fQ0xL
+X05BTkRfVVNESENfQlVTPiwNCj4gICAJCQkJCSA8JmNsayBJTVg4TU1fQ0xLX1VTREhDM19ST09U
+PjsNCj4gICAJCQkJY2xvY2stbmFtZXMgPSAiaXBnIiwgImFoYiIsICJwZXIiOw0KPiA=
