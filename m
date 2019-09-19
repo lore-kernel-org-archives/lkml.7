@@ -2,167 +2,104 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6178FC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 18:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F50C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 18:58:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4179A21907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 18:55:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8166F21907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 18:58:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PdMcH7dA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392028AbfISSz3 (ORCPT
+        id S2392137AbfISS6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 14:55:29 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:50821 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391845AbfISSz3 (ORCPT
+        Thu, 19 Sep 2019 14:58:24 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:33799 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388943AbfISS6Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 14:55:29 -0400
-X-Originating-IP: 90.65.161.137
-Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 703621BF203;
-        Thu, 19 Sep 2019 18:55:27 +0000 (UTC)
-Date:   Thu, 19 Sep 2019 20:55:25 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Shuah Khan <shuah@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH] selftests/kselftest/runner.sh: Add 45 second timeout per
- test
-Message-ID: <20190919185525.GD21254@piout.net>
-References: <201909191102.97FA56072@keescook>
+        Thu, 19 Sep 2019 14:58:24 -0400
+Received: by mail-ot1-f65.google.com with SMTP id m19so2214302otp.1;
+        Thu, 19 Sep 2019 11:58:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YMIQo0y0joi9ONCPZAMGxjNxNx6MRqPmS+7Wzb6NPMw=;
+        b=PdMcH7dAkOiUVObgzoR9D3iU41jNVLqhuajjaBVFwYrNpJtDABOoz75SpJQPYngU//
+         5DcHtHCLgYFS/AXF2zWerXUbAyZKCQpPactZrIWSwVGc4U02cJpbO7bRqRFnkYKe2ApS
+         mXZBH9X6OJjK8fg4uP4W/y2eM8G4JvPy2+4tJVfXG7ajjbxnJEpTYycFmkbShTnGJlBT
+         VYaLM+6B5/rzTtss7vo0gk+hJXLIGTCCPtwc0xxj3sC/eSvF7MD0sHefN8YQcs8BA9hY
+         lQudFnhYdMamD4OtNLLvirAoJrt6FDQ6D7Bw16hUijItmeYDdr0KtLEoY8gY0BLM0yVr
+         Zm4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YMIQo0y0joi9ONCPZAMGxjNxNx6MRqPmS+7Wzb6NPMw=;
+        b=ZqLxMdt/lWd31czs+1+dQ9+qq7gGDs3lzOlyFnWUa8330lGDwTiGAnnQcgXgAGXvZC
+         xMIspQdQEuXIej1TjfSlnOCwf+YIYuxSKFiRoWIvpoFgxTRRm3FhG+zcYxP/0D9MwxaL
+         0Fwr0MCuCi5kVT2QSfHdySpqCd6Sw23TorD/Kxx22c9w48dDOYT6OVq/36vCW0FiPGMh
+         8jL3IwN5tk5/gPZ7L54LpK5XEo5ZZSfGNCY1Upd6juYVFkTY56YxViPKw6xrJgKM88Ko
+         7FIHXxA26mciYLl+AbTl1NsZmVY3ybHes/w2RNn7ixtKcQcxLgAoGIiYX1Y3KVkcbU6q
+         wZdA==
+X-Gm-Message-State: APjAAAX9ni6ikF+Ml3VXHejcjMg2RcmfPmTwRFrp2PCeLfbYxFiftk2J
+        /Txe7xxLfbbGEFGwJmYvYTb6BUR3OzuVs82MGWA=
+X-Google-Smtp-Source: APXvYqxccIC05hsDwWUY5rbQWcSMLJsLpJN2oedXJT8dEp7TlRE79IMU082hbFlMCp4I4WwU4vEACd9GbZXs4zp4yno=
+X-Received: by 2002:a9d:5f10:: with SMTP id f16mr6999602oti.332.1568919503185;
+ Thu, 19 Sep 2019 11:58:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201909191102.97FA56072@keescook>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190919151137.9960-1-TheSven73@gmail.com> <20190919182904.AF657207FC@mail.kernel.org>
+In-Reply-To: <20190919182904.AF657207FC@mail.kernel.org>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Thu, 19 Sep 2019 14:58:12 -0400
+Message-ID: <CAGngYiW2bObc8L+mQJEMzYRe+QU7Xx1X_-So-o0RYAE7TWr3rg@mail.gmail.com>
+Subject: Re: [PATCH v1] power: supply: ltc2941-battery-gauge: fix use-after-free
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/09/2019 11:06:44-0700, Kees Cook wrote:
-> Commit a745f7af3cbd ("selftests/harness: Add 30 second timeout per
-> test") solves the problem of kselftest_harness.h-using binary tests
-> possibly hanging forever. However, scripts and other binaries can still
-> hang forever. This adds a global timeout to each test script run.
-> 
-> To make this configurable (e.g. as needed in the "rtc" test case),
-> include a new per-test-directory "settings" file (similar to "config")
-> that can contain kselftest-specific settings. The first recognized field
-> is "timeout".
-> 
+On Thu, Sep 19, 2019 at 2:29 PM Sasha Levin <sashal@kernel.org> wrote:
+>
+> Hi,
+>
+> [This is an automated email]
+>
+> This commit has been processed because it contains a -stable tag.
+> The stable tag indicates that it's relevant for the following trees: all
+>
+> The bot has tested the following trees: v5.2.15, v4.19.73, v4.14.144, v4.9.193, v4.4.193.
+>
+> v5.2.15: Build OK!
+> v4.19.73: Build OK!
+> v4.14.144: Build OK!
+> v4.9.193: Build OK!
+> v4.4.193: Failed to apply! Possible dependencies:
+>     Unable to calculate
+>
+>
+> NOTE: The patch will not be queued to stable trees until it is upstream.
+>
+> How should we proceed with this patch?
+>
+> --
+> Thanks,
+> Sasha
 
-Seems good to me. I was also wondering whether this is actually
-reasonable to have tests running for so long. I wanted to discuss that
-at LPC but I missed the session.
+Doesn't apply on 4.4 because power supply drivers moved to a different
+directory (power/supply) between 4.4 and 4.9.
 
-> Additionally, this splits the reporting for timeouts into a specific
-> "TIMEOUT" not-ok (and adds exit code reporting in the remaining case).
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  tools/testing/selftests/kselftest/runner.sh | 36 +++++++++++++++++++--
->  tools/testing/selftests/rtc/settings        |  1 +
->  2 files changed, 34 insertions(+), 3 deletions(-)
->  create mode 100644 tools/testing/selftests/rtc/settings
-> 
-> diff --git a/tools/testing/selftests/kselftest/runner.sh b/tools/testing/selftests/kselftest/runner.sh
-> index 00c9020bdda8..84de7bc74f2c 100644
-> --- a/tools/testing/selftests/kselftest/runner.sh
-> +++ b/tools/testing/selftests/kselftest/runner.sh
-> @@ -3,9 +3,14 @@
->  #
->  # Runs a set of tests in a given subdirectory.
->  export skip_rc=4
-> +export timeout_rc=124
->  export logfile=/dev/stdout
->  export per_test_logging=
->  
-> +# Defaults for "settings" file fields:
-> +# "timeout" how many seconds to let each test run before failing.
-> +export kselftest_default_timeout=45
-> +
->  # There isn't a shell-agnostic way to find the path of a sourced file,
->  # so we must rely on BASE_DIR being set to find other tools.
->  if [ -z "$BASE_DIR" ]; then
-> @@ -24,6 +29,16 @@ tap_prefix()
->  	fi
->  }
->  
-> +tap_timeout()
-> +{
-> +	# Make sure tests will time out if utility is available.
-> +	if [ -x /usr/bin/timeout ] ; then
-> +		/usr/bin/timeout "$kselftest_timeout" "$1"
-> +	else
-> +		"$1"
-> +	fi
-> +}
-> +
->  run_one()
->  {
->  	DIR="$1"
-> @@ -32,6 +47,18 @@ run_one()
->  
->  	BASENAME_TEST=$(basename $TEST)
->  
-> +	# Reset any "settings"-file variables.
-> +	export kselftest_timeout="$kselftest_default_timeout"
-> +	# Load per-test-directory kselftest "settings" file.
-> +	settings="$BASE_DIR/$DIR/settings"
-> +	if [ -r "$settings" ] ; then
-> +		while read line ; do
-> +			field=$(echo "$line" | cut -d= -f1)
-> +			value=$(echo "$line" | cut -d= -f2-)
-> +			eval "kselftest_$field"="$value"
-> +		done < "$settings"
-> +	fi
-> +
->  	TEST_HDR_MSG="selftests: $DIR: $BASENAME_TEST"
->  	echo "# $TEST_HDR_MSG"
->  	if [ ! -x "$TEST" ]; then
-> @@ -44,14 +71,17 @@ run_one()
->  		echo "not ok $test_num $TEST_HDR_MSG"
->  	else
->  		cd `dirname $TEST` > /dev/null
-> -		(((((./$BASENAME_TEST 2>&1; echo $? >&3) |
-> +		((((( tap_timeout ./$BASENAME_TEST 2>&1; echo $? >&3) |
->  			tap_prefix >&4) 3>&1) |
->  			(read xs; exit $xs)) 4>>"$logfile" &&
->  		echo "ok $test_num $TEST_HDR_MSG") ||
-> -		(if [ $? -eq $skip_rc ]; then	\
-> +		(rc=$?;	\
-> +		if [ $rc -eq $skip_rc ]; then	\
->  			echo "not ok $test_num $TEST_HDR_MSG # SKIP"
-> +		elif [ $rc -eq $timeout_rc ]; then \
-> +			echo "not ok $test_num $TEST_HDR_MSG # TIMEOUT"
->  		else
-> -			echo "not ok $test_num $TEST_HDR_MSG"
-> +			echo "not ok $test_num $TEST_HDR_MSG # exit=$rc"
->  		fi)
->  		cd - >/dev/null
->  	fi
-> diff --git a/tools/testing/selftests/rtc/settings b/tools/testing/selftests/rtc/settings
-> new file mode 100644
-> index 000000000000..ba4d85f74cd6
-> --- /dev/null
-> +++ b/tools/testing/selftests/rtc/settings
-> @@ -0,0 +1 @@
-> +timeout=90
-> -- 
-> 2.17.1
-> 
-> 
-> -- 
-> Kees Cook
+I will post a patch with a fixed-up file path, marked as "[PATCH 4.4 v1]".
+If this should be addressed differently, please let me know.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Sven
