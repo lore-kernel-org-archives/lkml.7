@@ -3,30 +3,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 307D4C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 01:28:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE319C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 01:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 127CF20644
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 01:28:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD78F20644
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 01:28:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388194AbfISB2y (ORCPT
+        id S2387455AbfISB26 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 21:28:54 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45388 "EHLO mx1.redhat.com"
+        Wed, 18 Sep 2019 21:28:58 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52740 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388173AbfISB2w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 21:28:52 -0400
+        id S2387553AbfISB24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 21:28:56 -0400
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A27D0A3D38D;
-        Thu, 19 Sep 2019 01:28:52 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id D7E993DE31;
+        Thu, 19 Sep 2019 01:28:55 +0000 (UTC)
 Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E03595DA21;
-        Thu, 19 Sep 2019 01:28:49 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0E26D5D9CC;
+        Thu, 19 Sep 2019 01:28:52 +0000 (UTC)
 From:   Richard Guy Briggs <rgb@redhat.com>
 To:     containers@lists.linux-foundation.org,
         Linux-Audit Mailing List <linux-audit@redhat.com>,
@@ -35,128 +35,79 @@ Cc:     eparis@parisplace.org, Steve Grubb <sgrubb@redhat.com>,
         omosnace@redhat.com, Paul Moore <paul@paul-moore.com>,
         nhorman@redhat.com, dwalsh@redhat.com, mpatel@redhat.com,
         Richard Guy Briggs <rgb@redhat.com>
-Subject: [PATCH ghau51/ghau40 v7 06/12] libaudit: add support to get the task audit container identifier
-Date:   Wed, 18 Sep 2019 21:27:46 -0400
-Message-Id: <1568856472-10173-7-git-send-email-rgb@redhat.com>
+Subject: [PATCH ghau51/ghau40 v7 07/12] signal_info: only print context if it is available.
+Date:   Wed, 18 Sep 2019 21:27:47 -0400
+Message-Id: <1568856472-10173-8-git-send-email-rgb@redhat.com>
 In-Reply-To: <1568856472-10173-1-git-send-email-rgb@redhat.com>
 References: <1568856472-10173-1-git-send-email-rgb@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Thu, 19 Sep 2019 01:28:52 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Thu, 19 Sep 2019 01:28:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the audit_get_containerid() call analogous to audit_getloginuid()
-and audit_get_session() calls to get our own audit container identifier.
-
-This is intended as a debug patch, not to be upstreamed.
-
 Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
 ---
- docs/Makefile.am             |  2 +-
- docs/audit_get_containerid.3 | 25 +++++++++++++++++++++++++
- lib/libaudit.c               | 29 +++++++++++++++++++++++++++++
- lib/libaudit.h               |  1 +
- 4 files changed, 56 insertions(+), 1 deletion(-)
- create mode 100644 docs/audit_get_containerid.3
+ src/auditd-event.c    | 20 +++++++++++++++-----
+ src/auditd-reconfig.c |  2 --
+ 2 files changed, 15 insertions(+), 7 deletions(-)
 
-diff --git a/docs/Makefile.am b/docs/Makefile.am
-index 8fb030c6e5e4..209789bb2051 100644
---- a/docs/Makefile.am
-+++ b/docs/Makefile.am
-@@ -28,7 +28,7 @@ man_MANS = audit_add_rule_data.3 audit_add_watch.3 auditctl.8 auditd.8 \
- auditd.conf.5 auditd-plugins.5 \
- audit_delete_rule_data.3 audit_detect_machine.3 \
- audit_encode_nv_string.3 audit_getloginuid.3 \
--audit_get_reply.3 audit_get_session.3 \
-+audit_get_reply.3 audit_get_session.3 audit_get_containerid.3 \
- audit_log_acct_message.3 audit_log_user_avc_message.3 \
- audit_log_user_command.3 audit_log_user_comm_message.3 \
- audit_log_user_message.3 audit_log_semanage_message.3 \
-diff --git a/docs/audit_get_containerid.3 b/docs/audit_get_containerid.3
-new file mode 100644
-index 000000000000..ef62a25db970
---- /dev/null
-+++ b/docs/audit_get_containerid.3
-@@ -0,0 +1,25 @@
-+.TH "AUDIT_GET_CONTAINERID" "3" "Feb 2018" "Red Hat" "Linux Audit API"
-+.SH NAME
-+audit_get_containerid \- Get a program's container id value
-+.SH SYNOPSIS
-+.B #include <libaudit.h>
-+.sp
-+uin64_t audit_get_containerid(void);
-+
-+.SH DESCRIPTION
-+This function returns the task's audit container identifier attribute.
-+
-+.SH "RETURN VALUE"
-+
-+This function returns the audit container identifier value if it was set. It will return a \-1 if the audit container identifier is unset. However, since uint64_t is an unsigned type, you will see the converted value instead of \-1.
-+
-+.SH "ERRORS"
-+
-+This function returns \-2 on failure. Additionally, in the event of a real error, errno would be set. The function can set errno based on failures of open, read, or strtoull.
-+
-+.SH "SEE ALSO"
-+
-+.BR audit_getloginuid (3).
-+
-+.SH AUTHOR
-+Richard Guy Briggs
-diff --git a/lib/libaudit.c b/lib/libaudit.c
-index 7c6b82792b5a..92835a0b35d2 100644
---- a/lib/libaudit.c
-+++ b/lib/libaudit.c
-@@ -944,6 +944,35 @@ uint32_t audit_get_session(void)
- 		return ses;
- }
+diff --git a/src/auditd-event.c b/src/auditd-event.c
+index 1c93173fb30e..45f12fb31f01 100644
+--- a/src/auditd-event.c
++++ b/src/auditd-event.c
+@@ -1323,13 +1323,16 @@ static void reconfigure(struct auditd_event *e)
+ 	const char *ctx = nconf->sender_ctx;
+ 	struct timeval tv;
+ 	char txt[MAX_AUDIT_MESSAGE_LENGTH];
++	int txt_len;
+ 	char date[40];
+ 	unsigned int seq_num;
+ 	int need_size_check = 0, need_reopen = 0, need_space_check = 0;
  
-+/*
-+ * This function will retrieve the audit container identifier or -2 if
-+ * there is an error.
-+ */
-+uint64_t audit_get_containerid(void)
-+{
-+	uint64_t containerid;
-+	int len, in;
-+	char buf[32];
-+
-+	errno = 0;
-+	in = open("/proc/self/audit_containerid", O_NOFOLLOW|O_RDONLY);
-+	if (in < 0)
-+		return -2;
-+	do {
-+		len = read(in, buf, sizeof(buf));
-+	} while (len < 0 && errno == EINTR);
-+	close(in);
-+	if (len < 0 || len >= sizeof(buf))
-+		return -2;
-+	buf[len] = 0;
-+	errno = 0;
-+	containerid = strtoull(buf, 0, 10);
-+	if (errno)
-+		return -2;
-+	else
-+		return containerid;
-+}
-+
- int audit_rule_syscall_data(struct audit_rule_data *rule, int scall)
- {
- 	int word = AUDIT_WORD(scall);
-diff --git a/lib/libaudit.h b/lib/libaudit.h
-index d263e44292ca..9ec37a80bada 100644
---- a/lib/libaudit.h
-+++ b/lib/libaudit.h
-@@ -589,6 +589,7 @@ extern int  audit_get_reply(int fd, struct audit_reply *rep, reply_t block,
- extern uid_t audit_getloginuid(void);
- extern int  audit_setloginuid(uid_t uid);
- extern uint32_t audit_get_session(void);
-+extern uint64_t audit_get_containerid(void);
- extern int  audit_detect_machine(void);
- extern int audit_determine_machine(const char *arch);
- extern char *audit_format_signal_info(char *buf, int len, char *op, struct audit_reply *rep, char *res);
+-	snprintf(txt, sizeof(txt),
+-		"config change requested by pid=%d auid=%u subj=%s",
+-		pid, uid, ctx);
++	txt_len = snprintf(txt, sizeof(txt),
++		"config change requested by pid=%d auid=%u", pid, uid);
++	if (ctx)
++		snprintf(txt + txt_len, sizeof(txt) - txt_len,
++			 " subj=%s", ctx);
+ 	audit_msg(LOG_NOTICE, "%s", txt);
+ 
+ 	/* Do the reconfiguring. These are done in a specific
+@@ -1578,8 +1581,15 @@ static void reconfigure(struct auditd_event *e)
+ 
+ 	e->reply.type = AUDIT_DAEMON_CONFIG;
+ 	e->reply.len = snprintf(e->reply.msg.data, MAX_AUDIT_MESSAGE_LENGTH-2, 
+-	"%s: op=reconfigure state=changed auid=%u pid=%d subj=%s res=success",
+-		date, uid, pid, ctx );
++				"%s: op=reconfigure state=changed auid=%u pid=%d",
++				date, uid, pid);
++	if (ctx)
++		e->reply.len += snprintf(e->reply.msg.data + e->reply.len,
++					 MAX_AUDIT_MESSAGE_LENGTH-2 - e->reply.len,
++					 " subj=%s", ctx);
++	e->reply.len += snprintf(e->reply.msg.data + e->reply.len,
++				 MAX_AUDIT_MESSAGE_LENGTH-2 - e->reply.len, 
++				 " res=success");
+ 	e->reply.message = e->reply.msg.data;
+ 	free((char *)ctx);
+ }
+diff --git a/src/auditd-reconfig.c b/src/auditd-reconfig.c
+index f5b00e6d1dc7..1af402526c4e 100644
+--- a/src/auditd-reconfig.c
++++ b/src/auditd-reconfig.c
+@@ -106,8 +106,6 @@ static void *config_thread_main(void *arg)
+ 		if (e->reply.len > 24)
+ 			new_config.sender_ctx = 
+ 				strdup(e->reply.signal_info->ctx);
+-		else
+-			new_config.sender_ctx = strdup("?"); 
+ 		memcpy(e->reply.msg.data, &new_config, sizeof(new_config));
+ 		e->reply.conf = (struct daemon_conf *)e->reply.msg.data;
+ 		e->reply.type = AUDIT_DAEMON_RECONFIG;
 -- 
 1.8.3.1
 
