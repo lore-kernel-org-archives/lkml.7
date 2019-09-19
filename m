@@ -2,135 +2,91 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B40CFC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D327CC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92B5A20640
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:28:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1B1D20640
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:28:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568932098;
+	bh=wJP2z8ZNzh52sElzbBzgoA1Y7Rx+wSlB3tahrTFUtBU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=qhqrZXzDT3msnbqHiHZ0L/B2AQye6/4uQti+eb3n9nsvIWNr+f5V2yQuF2v38s0TY
+	 OY5HzfSq7A3t/nbSFPuVGM6qS03wKiBVE/yOqiQMGXVq24aWVX44EWoRo4NkZ/Kc3Y
+	 7UyurzfieizUVarlLu/Mm0Ob9BIkp/0BbGqH0e2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407310AbfISW2P (ORCPT
+        id S1733294AbfISWTy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:28:15 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41164 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2393322AbfISW2M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:28:12 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8JMMLNq091634;
-        Thu, 19 Sep 2019 18:27:55 -0400
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2v4g2u4pxd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 19 Sep 2019 18:27:55 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8JMJZti025591;
-        Thu, 19 Sep 2019 22:27:55 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma04wdc.us.ibm.com with ESMTP id 2v3vc5h0qm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 19 Sep 2019 22:27:55 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8JMRsOQ51315116
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Sep 2019 22:27:54 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9EB13AE05F;
-        Thu, 19 Sep 2019 22:27:54 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A45D0AE05C;
-        Thu, 19 Sep 2019 22:27:53 +0000 (GMT)
-Received: from LeoBras.aus.stglabs.ibm.com (unknown [9.18.235.81])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 19 Sep 2019 22:27:53 +0000 (GMT)
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc:     Leonardo Bras <leonardo@linux.ibm.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 1/1] powerpc: kvm: Reduce calls to get current->mm by storing the value locally
-Date:   Thu, 19 Sep 2019 19:27:48 -0300
-Message-Id: <20190919222748.20761-1-leonardo@linux.ibm.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 19 Sep 2019 18:19:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33546 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732513AbfISWTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:19:44 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B67C21D56;
+        Thu, 19 Sep 2019 22:19:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568931583;
+        bh=wJP2z8ZNzh52sElzbBzgoA1Y7Rx+wSlB3tahrTFUtBU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=JgOPZdm9NO1WE5VoqVD2Xy9k/H4Uv14PtMAjiYFwaI58uNahLazCutTFS6wm6L5Ks
+         xocAVeHOdvP1awqzkIneqZnTVfM6vrd030DH4jQPXQKhf/8bfzatAO8DmctrJoUFYu
+         Z4vGRFqdsAv/q66pz9CocMvOW3cx7gmcN2iYGUuE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 08/74] sctp: Fix the link time qualifier of sctp_ctrlsock_exit()
+Date:   Fri, 20 Sep 2019 00:03:21 +0200
+Message-Id: <20190919214803.743107325@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190919214800.519074117@linuxfoundation.org>
+References: <20190919214800.519074117@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-19_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=420 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909190187
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reduces the number of calls to get_current() in order to get the value of
-current->mm by doing it once and storing the value, since it is not
-supposed to change inside the same process).
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
+[ Upstream commit b456d72412ca8797234449c25815e82f4e1426c0 ]
+
+The '.exit' functions from 'pernet_operations' structure should be marked
+as __net_exit, not __net_init.
+
+Fixes: 8e2d61e0aed2 ("sctp: fix race on protocol/netns initialization")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/powerpc/kvm/book3s_64_mmu_hv.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ net/sctp/protocol.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kvm/book3s_64_mmu_hv.c b/arch/powerpc/kvm/book3s_64_mmu_hv.c
-index 9a75f0e1933b..f2b9aea43216 100644
---- a/arch/powerpc/kvm/book3s_64_mmu_hv.c
-+++ b/arch/powerpc/kvm/book3s_64_mmu_hv.c
-@@ -508,6 +508,7 @@ int kvmppc_book3s_hv_page_fault(struct kvm_run *run, struct kvm_vcpu *vcpu,
- 	struct vm_area_struct *vma;
- 	unsigned long rcbits;
- 	long mmio_update;
-+	struct mm_struct *mm;
+--- a/net/sctp/protocol.c
++++ b/net/sctp/protocol.c
+@@ -1336,7 +1336,7 @@ static int __net_init sctp_ctrlsock_init
+ 	return status;
+ }
  
- 	if (kvm_is_radix(kvm))
- 		return kvmppc_book3s_radix_page_fault(run, vcpu, ea, dsisr);
-@@ -584,6 +585,7 @@ int kvmppc_book3s_hv_page_fault(struct kvm_run *run, struct kvm_vcpu *vcpu,
- 	is_ci = false;
- 	pfn = 0;
- 	page = NULL;
-+	mm = current->mm;
- 	pte_size = PAGE_SIZE;
- 	writing = (dsisr & DSISR_ISSTORE) != 0;
- 	/* If writing != 0, then the HPTE must allow writing, if we get here */
-@@ -592,8 +594,8 @@ int kvmppc_book3s_hv_page_fault(struct kvm_run *run, struct kvm_vcpu *vcpu,
- 	npages = get_user_pages_fast(hva, 1, writing ? FOLL_WRITE : 0, pages);
- 	if (npages < 1) {
- 		/* Check if it's an I/O mapping */
--		down_read(&current->mm->mmap_sem);
--		vma = find_vma(current->mm, hva);
-+		down_read(&mm->mmap_sem);
-+		vma = find_vma(mm, hva);
- 		if (vma && vma->vm_start <= hva && hva + psize <= vma->vm_end &&
- 		    (vma->vm_flags & VM_PFNMAP)) {
- 			pfn = vma->vm_pgoff +
-@@ -602,7 +604,7 @@ int kvmppc_book3s_hv_page_fault(struct kvm_run *run, struct kvm_vcpu *vcpu,
- 			is_ci = pte_ci(__pte((pgprot_val(vma->vm_page_prot))));
- 			write_ok = vma->vm_flags & VM_WRITE;
- 		}
--		up_read(&current->mm->mmap_sem);
-+		up_read(&mm->mmap_sem);
- 		if (!pfn)
- 			goto out_put;
- 	} else {
-@@ -621,8 +623,7 @@ int kvmppc_book3s_hv_page_fault(struct kvm_run *run, struct kvm_vcpu *vcpu,
- 			 * hugepage split and collapse.
- 			 */
- 			local_irq_save(flags);
--			ptep = find_current_mm_pte(current->mm->pgd,
--						   hva, NULL, NULL);
-+			ptep = find_current_mm_pte(mm->pgd, hva, NULL, NULL);
- 			if (ptep) {
- 				pte = kvmppc_read_update_linux_pte(ptep, 1);
- 				if (__pte_write(pte))
--- 
-2.20.1
+-static void __net_init sctp_ctrlsock_exit(struct net *net)
++static void __net_exit sctp_ctrlsock_exit(struct net *net)
+ {
+ 	/* Free the control endpoint.  */
+ 	inet_ctl_sock_destroy(net->sctp.ctl_sock);
+
 
