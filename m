@@ -2,134 +2,120 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 199D2C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 16:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36649C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 16:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E554121927
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 16:17:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E3522053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 16:18:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bb8z0jfX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DfOsUoTI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404242AbfISQR4 (ORCPT
+        id S2391840AbfISQSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 12:17:56 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43594 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404228AbfISQR4 (ORCPT
+        Thu, 19 Sep 2019 12:18:25 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:32791 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388098AbfISQSY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 12:17:56 -0400
-Received: by mail-pf1-f195.google.com with SMTP id a2so2615785pfo.10;
-        Thu, 19 Sep 2019 09:17:56 -0700 (PDT)
+        Thu, 19 Sep 2019 12:18:24 -0400
+Received: by mail-qk1-f196.google.com with SMTP id x134so4021246qkb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 09:18:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OsRBtfClCNm1ql8yg5rRkSFQz9KGIB6s6PLgGq7UHrc=;
-        b=bb8z0jfXc77frU0TGE2lnmHZ5//Rk9Ccs+BnFrDFhcStAjAFTB/OTJjcyicg+ppcCh
-         5RDeDscCIZE8NuyO/LTbhUmLt1Y/eSId+zfRwPoCUfr/JlZkdi/UutP4rlDIj/BmpYKi
-         fCZmkftP528a60aeDOYPfAaqJNKoYQYHRsLjX3ecJqKGjAiVgoitPaj2pRjREIJvFi6F
-         tUeBsYMwkPHNgkpvqQZ1XfNp6+SG+tzk17vDo5r2KQT5Q8IXWGP2F3u/+rSWElVA0KFL
-         SfQpRA9wXGcyVPwuPNRxUhmic+9i+S8OjLKSsLYSZCiMV86XfUumgue0pqJE0qKOuPzL
-         NFsQ==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=3Yye6iqRCV5drve2C5oFfaJYT6iHjklqWnjrwbuk4nU=;
+        b=DfOsUoTIpzx2QhunV87jDAkhaGaTZF2Wq9kXmOpB+RnTf0cmun6xSFOeGFWc1nlk8i
+         Vbi2UOvCcag/k7KveMGBxKzBCg6linJ09RjddursD6qERVdl8RmzZcglttS95B1AtRz6
+         t0IdbZ8RQ+GvXnvBMXLvdH/2Wqp8GvwjAwV5dnZ+0E9T/erjw84k5KwDogl1K9OSL3VL
+         1v5O8ENeEjqq3rbwd2pzUsMXosH69kJ4BcjnYaBudSzO8rxxyM0a/p67VWhjO9pIZ7vH
+         6h//AyT8kI2oXAKMshKUTETDne/WMwb/v06zc89YrcaE1VSOwHQ3Mu6c8Pnl6eplsePJ
+         iSOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OsRBtfClCNm1ql8yg5rRkSFQz9KGIB6s6PLgGq7UHrc=;
-        b=F3utIEnz6xVqW449F45VJPExR+35aaqrS6Oq0jftaIsgM2Y9ipRtBIlwSYHL9PGkYa
-         yVWEo5kMcpjQgWVCbj9R00/MObjQ0vA8hcZOAM8oZsLUyR+3lr6uBOy19Os5pXt/jaOr
-         qywNuZP8Z30TGxPbewt4Eodlg+SEAJWfIVdGzGIkjz2AQEGTS7+uS+UP/oWTgbkQDB71
-         EbEP2p5VWFxrnyB8n321B4fbHRoxS+je52rTCSUQyrU9Jbwun8Pz0O/XV0EBludYF3eL
-         LGuC2vk1DH4Ib+SwXybGnHgmII6ziYXi0JIqJVIge4g++hec1TAvYBYgokubJnk/1eXS
-         exfQ==
-X-Gm-Message-State: APjAAAXrxHlF+PkDWphafPsPBxd6feVVHiPg2l0gFD+TUFWGTxaM9BM3
-        WioXFhlgDK+VYWN+tJEsB2U=
-X-Google-Smtp-Source: APXvYqwr7TnX7/h8TuJ2AbWRBE/w0UkboPYNOKIQh6b88uOYZH0KW5HFBXvxBuO+DHn7exS2JjTaZw==
-X-Received: by 2002:a63:db50:: with SMTP id x16mr9539842pgi.87.1568909875356;
-        Thu, 19 Sep 2019 09:17:55 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id n21sm5979264pjo.21.2019.09.19.09.17.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2019 09:17:54 -0700 (PDT)
-Date:   Thu, 19 Sep 2019 09:17:52 -0700
-From:   "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: Re: [PATCH] Input: hyperv-keyboard: Add the support of hibernation
-Message-ID: <20190919161752.GS237523@dtor-ws>
-References: <1568244975-66795-1-git-send-email-decui@microsoft.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1568244975-66795-1-git-send-email-decui@microsoft.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=3Yye6iqRCV5drve2C5oFfaJYT6iHjklqWnjrwbuk4nU=;
+        b=HyYJVzgvGAb0zLgOOOs7yzr23Irx1P7IklLUjLoFbBLXTPhkIr3Q8GFFXd2OYZUwtv
+         yXfXQ2SsrNCC2TQ7kDpO/ceBPch0stkl08ucUxtqVew8T3jH95aDkwNj8AMCPbmx/9cR
+         m81XbjRQHOuO7RwWGTcMpv+G6FSJzUrjdjQBEL0OxINJVOpjiKBhaoVQGrrPLqGu9BwW
+         yezLbE6HWfTcHSCdQ3NJRdLyln4jNDalktrAtJ0fXS7eRBPwhFF/FR+dhUYXziSg/jSn
+         kjm5Njyb7AL8t3DsTXnv6BnKO+HQFSlaOqVJgZRljm//2EsiKUDcoa2dC12Q40Y237T/
+         Dgkw==
+X-Gm-Message-State: APjAAAU9dD6Wnu3HNkgsLsedE/wPHOlOVhIfwfu9xacXr3aVbigN57h2
+        k7lYr938SLTKusoHrRO7J0TDQA==
+X-Google-Smtp-Source: APXvYqwxFzSC67Uj/43CUBfNaRyYl2MKB2Q0JUrBMbcegGoYZlv0KJ4P+lO0843mrSwB6NClo3xNdQ==
+X-Received: by 2002:a05:620a:694:: with SMTP id f20mr3781309qkh.379.1568909903952;
+        Thu, 19 Sep 2019 09:18:23 -0700 (PDT)
+Received: from Thara-Work-Ubuntu.fios-router.home (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
+        by smtp.googlemail.com with ESMTPSA id q62sm4561185qkb.69.2019.09.19.09.18.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 19 Sep 2019 09:18:23 -0700 (PDT)
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+To:     bjorn.andersson@linaro.org, agross@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] soc: qcom: Invert the cooling states for the aoss resources that can act as warming devices
+Date:   Thu, 19 Sep 2019 12:18:22 -0400
+Message-Id: <1568909902-8446-1-git-send-email-thara.gopinath@linaro.org>
+X-Mailer: git-send-email 2.1.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dexuan,
+Thermal framework takes 0 as the lowest/default state for a
+cooling/warming device. The current code has the order reverted with
+1 corresponding to lowest state in hardware and 0 the highest state.
+Invert this for a better fit with the thermal framework.
 
-On Wed, Sep 11, 2019 at 11:36:20PM +0000, Dexuan Cui wrote:
-> We need hv_kbd_pm_notify() to make sure the pm_wakeup_hard_event() call
-> does not prevent the system from entering hibernation: the hibernation
-> is a relatively long process, which can be aborted by the call
-> pm_wakeup_hard_event(), which is invoked upon keyboard events.
-> 
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> ---
-> 
-> This patch is basically a pure Hyper-V specific change and it has a
-> build dependency on the commit 271b2224d42f ("Drivers: hv: vmbus: Implement
-> suspend/resume for VSC drivers for hibernation"), which is on Sasha Levin's
-> Hyper-V tree's hyperv-next branch:
-> https://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git/log/?h=hyperv-next
-> 
-> I request this patch should go through Sasha's tree rather than the
-> input subsystemi's tree.
-> 
-> Hi Dmitry, can you please Ack?
-> 
->  drivers/input/serio/hyperv-keyboard.c | 68 ++++++++++++++++++++++++++++++++---
->  1 file changed, 63 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/input/serio/hyperv-keyboard.c b/drivers/input/serio/hyperv-keyboard.c
-> index 88ae7c2..277dc4c 100644
-> --- a/drivers/input/serio/hyperv-keyboard.c
-> +++ b/drivers/input/serio/hyperv-keyboard.c
-> @@ -10,6 +10,7 @@
->  #include <linux/hyperv.h>
->  #include <linux/serio.h>
->  #include <linux/slab.h>
-> +#include <linux/suspend.h>
->  
->  /*
->   * Current version 1.0
-> @@ -95,6 +96,9 @@ struct hv_kbd_dev {
->  	struct completion wait_event;
->  	spinlock_t lock; /* protects 'started' field */
->  	bool started;
-> +
-> +	struct notifier_block pm_nb;
-> +	bool hibernation_in_progress;
+Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+---
+ drivers/soc/qcom/qcom_aoss.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Why do you use notifier block instead of exposing proper PM methods if
-you want to support hibernation?
-
-Thanks.
-
+diff --git a/drivers/soc/qcom/qcom_aoss.c b/drivers/soc/qcom/qcom_aoss.c
+index 33a27e6..006ac40 100644
+--- a/drivers/soc/qcom/qcom_aoss.c
++++ b/drivers/soc/qcom/qcom_aoss.c
+@@ -44,7 +44,7 @@
+ 
+ #define QMP_NUM_COOLING_RESOURCES	2
+ 
+-static bool qmp_cdev_init_state = 1;
++static bool qmp_cdev_max_state = 1;
+ 
+ struct qmp_cooling_device {
+ 	struct thermal_cooling_device *cdev;
+@@ -402,7 +402,7 @@ static void qmp_pd_remove(struct qmp *qmp)
+ static int qmp_cdev_get_max_state(struct thermal_cooling_device *cdev,
+ 				  unsigned long *state)
+ {
+-	*state = qmp_cdev_init_state;
++	*state = qmp_cdev_max_state;
+ 	return 0;
+ }
+ 
+@@ -432,7 +432,7 @@ static int qmp_cdev_set_cur_state(struct thermal_cooling_device *cdev,
+ 	snprintf(buf, sizeof(buf),
+ 		 "{class: volt_flr, event:zero_temp, res:%s, value:%s}",
+ 			qmp_cdev->name,
+-			cdev_state ? "off" : "on");
++			cdev_state ? "on" : "off");
+ 
+ 	ret = qmp_send(qmp_cdev->qmp, buf, sizeof(buf));
+ 
+@@ -455,7 +455,7 @@ static int qmp_cooling_device_add(struct qmp *qmp,
+ 	char *cdev_name = (char *)node->name;
+ 
+ 	qmp_cdev->qmp = qmp;
+-	qmp_cdev->state = qmp_cdev_init_state;
++	qmp_cdev->state = !qmp_cdev_max_state;
+ 	qmp_cdev->name = cdev_name;
+ 	qmp_cdev->cdev = devm_thermal_of_cooling_device_register
+ 				(qmp->dev, node,
 -- 
-Dmitry
+2.1.4
+
