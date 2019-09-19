@@ -2,103 +2,100 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E198DC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 07:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15841C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 07:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACCB921A4C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 07:54:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC67D20644
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 07:55:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Z1jp9Kab"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tFdvkVKt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731053AbfISHyn (ORCPT
+        id S1731259AbfISHz4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 03:54:43 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:32946 "EHLO
+        Thu, 19 Sep 2019 03:55:56 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46720 "EHLO
         mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730118AbfISHyn (ORCPT
+        with ESMTP id S1729833AbfISHz4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 03:54:43 -0400
-Received: by mail-pg1-f195.google.com with SMTP id n190so1426184pgn.0
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 00:54:42 -0700 (PDT)
+        Thu, 19 Sep 2019 03:55:56 -0400
+Received: by mail-pg1-f195.google.com with SMTP id a3so1379870pgm.13;
+        Thu, 19 Sep 2019 00:55:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=lgSTmC+c9Vj9bE5WscDijHkLpjdSHeo7iIoLFicI/Ow=;
-        b=Z1jp9KabrnEgSNSQRJQKgxItKQkZ0/OIvbBIwjm00LGww/v2HjW0V63QhVE7ZwlBRX
-         +EObeLsxlxsluz6Sztq/BAUExQKy43X15vIHT9Al+hEqIfpISO5p9SMCxb3WLR0f2Jo2
-         cU6EObsPrgdOMm7vdyGLMl0QOluFlRfJewkDMd4XNSb9+nwZ3pDJZ83w/oDnNprGQir1
-         /zOdCpNfrZTXVAGpDZRkz1HrDawz8qteJV+6JHcuAsFz8hGTRZbfSg7WwHsDiG2IW0d8
-         ioRL7h9rj5wweNHTpuBRtn3TyozMsEyHRxgIEkkCF1BaBrkNpcdoH5yQFM6Qd78DA4vo
-         /QEA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=mRA/d6yGGyz12Y4WV+zZOQ6cVlrDjX67UkfMk4HR8Jk=;
+        b=tFdvkVKtsCwrK5ccV9e4F6GfeW594gYwXdFnfFjeLRahIGNr5KYP6NiWNcLzG7yzsZ
+         TXXjmiIgVen0njMvik8r3Ev9O5+1jSr1Ek6VDkl7WzoetHsPBDxKuAYe6qtanGJRsY5H
+         O8YfYxJsICIAEt9FreSjT6nGZo9aydpxHyCWPdaK/Lu0mIkpPOcqyB4lVfJfLfcteaXz
+         BeDjAmP9NOMHI7GIdxjBUOaaZDYg2g8GWPmXWUZ3LYyZx4eHqs4i+g7CqkzTSsalPkE4
+         OuhAg6N2RF10LGb9RvD2oZGArrj8M86S3jegXeFxeY9FXO+lXWw5JNhutr9MHGb/cpnk
+         h6/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=lgSTmC+c9Vj9bE5WscDijHkLpjdSHeo7iIoLFicI/Ow=;
-        b=ublZRHD+QAjEL5zzce2oF1uJg3TJIISS9FiJjSC+dApY3pAPSleBn2S+pFZLyKelLy
-         rbiV1DFEKl3u/9GZTkEZufZLo6u25nsyKXkHz0gWGW2LaXaJKEa6r5AbVNLheyMJZ88z
-         txuWYVcgSF5AUU2H40Fp6xLhRYINXFGv4sb4UueP3Vekx5qXpvmzaA3eRUdELc033jBc
-         xziM2MgmQ+M3CG2hDWXW+DQg4ojRlhdFpB5hTl4d+QjkG+RhgIWlR/9DRZwqnETees/y
-         bjZ2beYrGHxuFzZneC+cLu841e2UO0iqv2+NVC6pju8GLGO8AStIMu4MLBhzCTxBesBt
-         742A==
-X-Gm-Message-State: APjAAAXlhvAWU7BZMX/SEtE0wAMWfrA+cLNm0sb7eJy0ZvnUtNOBpG4Q
-        31+fW1AdrPlD07jauaV34PTpuw==
-X-Google-Smtp-Source: APXvYqyZ1YfxJWZc/POGGnlnuSTSDOy5NhfymPV72q6hKL8KbUZaRUFsYbqH+mFYjWl6fs6PCi1YJA==
-X-Received: by 2002:a62:1888:: with SMTP id 130mr8993763pfy.72.1568879682508;
-        Thu, 19 Sep 2019 00:54:42 -0700 (PDT)
-Received: from localhost (57.sub-174-194-139.myvzw.com. [174.194.139.57])
-        by smtp.gmail.com with ESMTPSA id z12sm14193738pfj.41.2019.09.19.00.54.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2019 00:54:42 -0700 (PDT)
-Date:   Thu, 19 Sep 2019 00:54:38 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Anup Patel <Anup.Patel@wdc.com>
-cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim K <rkrcmar@redhat.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexander Graf <graf@amazon.com>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Anup Patel <anup@brainfault.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 20/21] RISC-V: Enable VIRTIO drivers in RV64 and RV32
- defconfig
-In-Reply-To: <20190904161245.111924-22-anup.patel@wdc.com>
-Message-ID: <alpine.DEB.2.21.9999.1909190054230.28444@viisi.sifive.com>
-References: <20190904161245.111924-1-anup.patel@wdc.com> <20190904161245.111924-22-anup.patel@wdc.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=mRA/d6yGGyz12Y4WV+zZOQ6cVlrDjX67UkfMk4HR8Jk=;
+        b=QUwzqTMCva+/cuzcw5lwCWCY73x7LSUUZkK0zZRXfe8mpakPRxuoZq5QOCHNwLPzq/
+         E9KGe8eFYVDxsk7zEPtlUzMkQmC0YqpkM7Zh5PQEqV2WGBf8hINBkzTj6/weAEJJ3Fcq
+         jGkj8k2TxpfxRQ/n7jORafzLqaODxaECO9pj8TM03i9UG20cVDO3xAnN+oblGiOp+Txb
+         UHbj3PqFujjKy1hFA4o8q9qKiXMqJW3QpP4yptWX+7zt3oGzZybDBgOH3JbmQKlWsPB/
+         tVFllNs6Whqv01o8gI422VG/l6iQoWNe8Zild4z4mfhsiNai1NpAjsEHbcLtZFMA44rM
+         6QaQ==
+X-Gm-Message-State: APjAAAU/6oyhudfqZLECQXhVkWjQTkM597DZHatiyMcJ8IhCc6Awbn/S
+        fj3/TQmz36PU9QZEoDyhH+0=
+X-Google-Smtp-Source: APXvYqz0S6vjX8lv6pJA2Q7Ow4MnUHlRHR4fLO0C6TbcxfLfC1MXOmSSPTd3zeH252UmaqYFxU16zA==
+X-Received: by 2002:a17:90a:17c5:: with SMTP id q63mr2237368pja.106.1568879753903;
+        Thu, 19 Sep 2019 00:55:53 -0700 (PDT)
+Received: from LGEARND20B15 ([27.122.242.75])
+        by smtp.gmail.com with ESMTPSA id s21sm4377625pjr.24.2019.09.19.00.55.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 19 Sep 2019 00:55:53 -0700 (PDT)
+Date:   Thu, 19 Sep 2019 16:55:48 +0900
+From:   Austin Kim <austindh.kim@gmail.com>
+To:     jejb@linux.ibm.com, martin.petersen@oracle.com
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        QLogic-Storage-Upstream@cavium.com, austindh.kim@gmail.com
+Subject: [PATCH] scsi: qedf: Remove always false 'tmp_prio < 0' statement
+Message-ID: <20190919075548.GA112801@LGEARND20B15>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Sep 2019, Anup Patel wrote:
+Since tmp_prio is declared as u8, the following statement is always false.
+   tmp_prio < 0
 
-> This patch enables more VIRTIO drivers (such as console, rpmsg, 9p,
-> rng, etc.) which are usable on KVM RISC-V Guest and Xvisor RISC-V
-> Guest.
-> 
-> Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-> Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
-> Reviewed-by: Alexander Graf <graf@amazon.com>
+So remove 'always false' statement.
 
-Thanks, queued for v5.4-rc.
+Signed-off-by: Austin Kim <austindh.kim@gmail.com>
+---
+ drivers/scsi/qedf/qedf_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/scsi/qedf/qedf_main.c b/drivers/scsi/qedf/qedf_main.c
+index 1659d35..59ca98f 100644
+--- a/drivers/scsi/qedf/qedf_main.c
++++ b/drivers/scsi/qedf/qedf_main.c
+@@ -596,7 +596,7 @@ static void qedf_dcbx_handler(void *dev, struct qed_dcbx_get *get, u32 mib_type)
+ 		tmp_prio = get->operational.app_prio.fcoe;
+ 		if (qedf_default_prio > -1)
+ 			qedf->prio = qedf_default_prio;
+-		else if (tmp_prio < 0 || tmp_prio > 7) {
++		else if (tmp_prio > 7) {
+ 			QEDF_INFO(&(qedf->dbg_ctx), QEDF_LOG_DISC,
+ 			    "FIP/FCoE prio %d out of range, setting to %d.\n",
+ 			    tmp_prio, QEDF_DEFAULT_PRIO);
+-- 
+2.6.2
 
-- Paul
