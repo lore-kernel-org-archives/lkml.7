@@ -2,100 +2,133 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0DFAC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F411C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3CCD21907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E0AB21928
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:41:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391358AbfISPkp (ORCPT
+        id S2391363AbfISPlt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 11:40:45 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:50933 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389923AbfISPkp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 11:40:45 -0400
-X-Originating-IP: 86.207.98.53
-Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
-        (Authenticated sender: gregory.clement@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id E80E8C0002;
-        Thu, 19 Sep 2019 15:40:41 +0000 (UTC)
-From:   Gregory CLEMENT <gregory.clement@bootlin.com>
-To:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: [PATCH] spi: atmel: Remove AVR32 leftover
-Date:   Thu, 19 Sep 2019 17:40:34 +0200
-Message-Id: <20190919154034.7489-1-gregory.clement@bootlin.com>
-X-Mailer: git-send-email 2.23.0
+        Thu, 19 Sep 2019 11:41:49 -0400
+Received: from foss.arm.com ([217.140.110.172]:32884 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389646AbfISPlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 11:41:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B199628;
+        Thu, 19 Sep 2019 08:41:48 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E65BC3F575;
+        Thu, 19 Sep 2019 08:41:45 -0700 (PDT)
+Date:   Thu, 19 Sep 2019 16:41:43 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Jia He <justin.he@arm.com>, Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Suzuki Poulose <Suzuki.Poulose@arm.com>,
+        Punit Agrawal <punitagrawal@gmail.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Jun Yao <yaojun8558363@gmail.com>,
+        Alex Van Brunt <avanbrunt@nvidia.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Ralph Campbell <rcampbell@nvidia.com>, hejianet@gmail.com,
+        Kaly Xin <Kaly.Xin@arm.com>
+Subject: Re: [PATCH v4 3/3] mm: fix double page fault on arm64 if PTE_AF is
+ cleared
+Message-ID: <20190919154143.GA6472@arrakis.emea.arm.com>
+References: <20190918131914.38081-1-justin.he@arm.com>
+ <20190918131914.38081-4-justin.he@arm.com>
+ <20190918140027.ckj32xnryyyesc23@box>
+ <20190918180029.GB20601@iMac.local>
+ <20190919150007.k7scjplcya53j7r4@box>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190919150007.k7scjplcya53j7r4@box>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-AV32 support has been from the kernel a few release ago, but there was
-still some specific macro for this architecture in this driver. Lets
-remove it.
+On Thu, Sep 19, 2019 at 06:00:07PM +0300, Kirill A. Shutemov wrote:
+> On Wed, Sep 18, 2019 at 07:00:30PM +0100, Catalin Marinas wrote:
+> > On Wed, Sep 18, 2019 at 05:00:27PM +0300, Kirill A. Shutemov wrote:
+> > > On Wed, Sep 18, 2019 at 09:19:14PM +0800, Jia He wrote:
+> > > > @@ -2152,20 +2163,34 @@ static inline void cow_user_page(struct page *dst, struct page *src, unsigned lo
+> > > >  	 */
+> > > >  	if (unlikely(!src)) {
+> > > >  		void *kaddr = kmap_atomic(dst);
+> > > > -		void __user *uaddr = (void __user *)(va & PAGE_MASK);
+> > > > +		void __user *uaddr = (void __user *)(addr & PAGE_MASK);
+> > > > +		pte_t entry;
+> > > >  
+> > > >  		/*
+> > > >  		 * This really shouldn't fail, because the page is there
+> > > >  		 * in the page tables. But it might just be unreadable,
+> > > >  		 * in which case we just give up and fill the result with
+> > > > -		 * zeroes.
+> > > > +		 * zeroes. On architectures with software "accessed" bits,
+> > > > +		 * we would take a double page fault here, so mark it
+> > > > +		 * accessed here.
+> > > >  		 */
+> > > > +		if (arch_faults_on_old_pte() && !pte_young(vmf->orig_pte)) {
+> > > > +			spin_lock(vmf->ptl);
+> > > > +			if (likely(pte_same(*vmf->pte, vmf->orig_pte))) {
+> > > > +				entry = pte_mkyoung(vmf->orig_pte);
+> > > > +				if (ptep_set_access_flags(vma, addr,
+> > > > +							  vmf->pte, entry, 0))
+> > > > +					update_mmu_cache(vma, addr, vmf->pte);
+> > > > +			}
+> > > 
+> > > I don't follow.
+> > > 
+> > > So if pte has changed under you, you don't set the accessed bit, but never
+> > > the less copy from the user.
+> > > 
+> > > What makes you think it will not trigger the same problem?
+> > > 
+> > > I think we need to make cow_user_page() fail in this case and caller --
+> > > wp_page_copy() -- return zero. If the fault was solved by other thread, we
+> > > are fine. If not userspace would re-fault on the same address and we will
+> > > handle the fault from the second attempt.
+> > 
+> > It would be nice to clarify the semantics of this function and do as
+> > you suggest but the current comment is slightly confusing:
+> > 
+> > 	/*
+> > 	 * If the source page was a PFN mapping, we don't have
+> > 	 * a "struct page" for it. We do a best-effort copy by
+> > 	 * just copying from the original user address. If that
+> > 	 * fails, we just zero-fill it. Live with it.
+> > 	 */
+> > 
+> > Would any user-space rely on getting a zero-filled page here instead of
+> > a recursive fault?
+> 
+> I don't see the point in zero-filled page in this case. SIGBUS sounds like
+> more appropriate response, no?
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
----
- drivers/spi/spi-atmel.c | 24 ------------------------
- 1 file changed, 24 deletions(-)
+I think misunderstood your comment. So, if !pte_same(), we should let
+userspace re-fault. This wouldn't be a user ABI change and it is
+bounded, can't end up in an infinite re-fault loop.
 
-diff --git a/drivers/spi/spi-atmel.c b/drivers/spi/spi-atmel.c
-index bb94f5927819..de1e1861a70c 100644
---- a/drivers/spi/spi-atmel.c
-+++ b/drivers/spi/spi-atmel.c
-@@ -222,37 +222,13 @@
- 	  | SPI_BF(name, value))
- 
- /* Register access macros */
--#ifdef CONFIG_AVR32
--#define spi_readl(port, reg) \
--	__raw_readl((port)->regs + SPI_##reg)
--#define spi_writel(port, reg, value) \
--	__raw_writel((value), (port)->regs + SPI_##reg)
--
--#define spi_readw(port, reg) \
--	__raw_readw((port)->regs + SPI_##reg)
--#define spi_writew(port, reg, value) \
--	__raw_writew((value), (port)->regs + SPI_##reg)
--
--#define spi_readb(port, reg) \
--	__raw_readb((port)->regs + SPI_##reg)
--#define spi_writeb(port, reg, value) \
--	__raw_writeb((value), (port)->regs + SPI_##reg)
--#else
- #define spi_readl(port, reg) \
- 	readl_relaxed((port)->regs + SPI_##reg)
- #define spi_writel(port, reg, value) \
- 	writel_relaxed((value), (port)->regs + SPI_##reg)
--
--#define spi_readw(port, reg) \
--	readw_relaxed((port)->regs + SPI_##reg)
- #define spi_writew(port, reg, value) \
- 	writew_relaxed((value), (port)->regs + SPI_##reg)
- 
--#define spi_readb(port, reg) \
--	readb_relaxed((port)->regs + SPI_##reg)
--#define spi_writeb(port, reg, value) \
--	writeb_relaxed((value), (port)->regs + SPI_##reg)
--#endif
- /* use PIO for small transfers, avoiding DMA setup/teardown overhead and
-  * cache operations; better heuristics consider wordsize and bitrate.
-  */
+In case of a __copy_from_user_inatomic() error, SIGBUS would make more
+sense but it changes the current behaviour (zero-filling the page). This
+can be left for a separate patch, doesn't affect the arm64 case here.
+
 -- 
-2.23.0
-
+Catalin
