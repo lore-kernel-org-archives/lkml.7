@@ -2,142 +2,72 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 906CFC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 340A3C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F4B021928
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:07:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="f8nGhVnv"
+	by mail.kernel.org (Postfix) with ESMTP id EE588217D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:07:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568923669;
+	bh=vH1UlIZ1Hy1n9+YkCrc/fQHM5s+KDuQfzvDwHRNM8Rs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=2cB8zhPAf4s0g/mqPiswX7PjiJN+VfNypYRSkKSSoLlqgQBXC9BFw+HbdZhA0S/Dq
+	 x53AaJ5SL/Yo8lXnGXzB5pj5J5BNd3Bq4wwRDJt+1/CflTVRc278U0TwlrlZxIYyip
+	 EX6JRJghCkAEXObH8yqlrkJ5LD9j25v4BAE2+Uv0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392471AbfISUHL (ORCPT
+        id S2392490AbfISUHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 16:07:11 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:39170 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390722AbfISUHL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 16:07:11 -0400
-Received: by mail-oi1-f195.google.com with SMTP id w144so3859155oia.6;
-        Thu, 19 Sep 2019 13:07:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6SLgslheBeIIJex/gf/ZVhEBmirzOWHGUduUXl+JfS0=;
-        b=f8nGhVnviG2KbGnxig/mqrpCztbeYB17qB2d4v8zgIMpIo21id++eyGrhRa7Hetlhu
-         1uIaChRD0JXsIkhaEnLlOVilPn+4x4RCBwn4qftOj/Hn1jiDkcWSr9iSRfpGqYg8IPyg
-         p6KZ5T0M5XXE7g4URtoFpVBwAr8qDD1kwXGZhmKQ5TN4D/ZBt9h1HabeDijheKoZ1Hq6
-         Am7QREthxBCAoFRWZlZc9Dn8FvVmj/Ct4TgYQLr4ctdbmmcuJtv86n7ETES+bEZxL1mQ
-         EVg7zzKRiWTN263W8ohXIHHzWdDRk8eIf0Lm/Lzn+chRgIy7X91h9B9AXapeP4UZEFK4
-         1Pqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6SLgslheBeIIJex/gf/ZVhEBmirzOWHGUduUXl+JfS0=;
-        b=LRo5IFeo7bCrSGTPwzfrS3V9994tSJ6StNPbYplCww/oZi062QD+1Ceusj+wGxsKTc
-         2S1ZWmHUWjuU7/+GG38QkQ8zFQlUUun4bmwcy73ioa/dbMnMFM5sby0WaCGgbA8EhpfW
-         pUPte2TuX/Z/tWC3hHILfw4liAmCvP4JV75rm/kCPYK4YCFPpVwG0M69vl9ogyUAE1Fh
-         Hj8ODuEtG3JLKpAyzS2mvqr84BBF+UQRbUGq3769TT0vm4LXPokdKWg06XHLkAElbyj7
-         J+1oIHZG0l1QesIKgLM0CvON8ccbM/SQbWZ3uS66kyTD+sdc/XBzv5LhW9+K886WXoqk
-         iYig==
-X-Gm-Message-State: APjAAAUzfXZ6uql9XutpVXopOzfL846dSj/7bH8GtlgN/4KY23ZbsorT
-        8MaLMGXdjmQzJ4AWbSABlQe2Yq0UrmSCuY5ZJPPiDOW5
-X-Google-Smtp-Source: APXvYqxs8KaOnta4oS+qOBnum0sYdK4kwfRs3AjdmxE14hPdeI3PYvm+RSVJQcA/eiB1hLB6FfwDBOgY14u/8HhKXfM=
-X-Received: by 2002:aca:3ad6:: with SMTP id h205mr3915280oia.129.1568923630403;
- Thu, 19 Sep 2019 13:07:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <1568895064-4116-1-git-send-email-jianxin.pan@amlogic.com> <1568895064-4116-2-git-send-email-jianxin.pan@amlogic.com>
-In-Reply-To: <1568895064-4116-2-git-send-email-jianxin.pan@amlogic.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Thu, 19 Sep 2019 22:06:59 +0200
-Message-ID: <CAFBinCCxeYgso3WQWqNgWUwwCM835uo_6FftVv0YwYTFJV2Ovw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: power: add Amlogic secure power domains bindings
-To:     Jianxin Pan <jianxin.pan@amlogic.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        Zhiqiang Liang <zhiqiang.liang@amlogic.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, Jian Hu <jian.hu@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 19 Sep 2019 16:07:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50062 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392478AbfISUHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 16:07:47 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E82A120644;
+        Thu, 19 Sep 2019 20:07:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568923667;
+        bh=vH1UlIZ1Hy1n9+YkCrc/fQHM5s+KDuQfzvDwHRNM8Rs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=0Aq//kYHRFpI3trIOOLFJpyxo38VuPaBFgEHDvspwKLBsvv08li4Ytw7h+S5FFq6o
+         R/ci/80YL0xCjawRZ3qbl16OnvM7OrsXwZ0og2ciWll9yWE+e9mf/luAUTQJ/QvBGZ
+         OwB4PiFfD7Z1fkjSEdbwtM4m9VA2gRrUTXNPRYjA=
+Date:   Thu, 19 Sep 2019 13:07:46 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     KeMeng Shi <shikemeng@huawei.com>
+Cc:     <will@kernel.org>, <james.morris@microsoft.com>,
+        <gregkh@linuxfoundation.org>, <mortonm@chromium.org>,
+        <will.deacon@arm.com>, <kristina.martsenko@arm.com>,
+        <yuehaibing@huawei.com>, <malat@debian.org>,
+        <j.neuschaefer@gmx.net>, <linux-kernel@vger.kernel.org>,
+        David Miller <davem@davemloft.net>
+Subject: Re: [PATCH] connector: report comm change event when modifying
+ /proc/pid/task/tid/comm
+Message-Id: <20190919130746.58297294885dafa7ce0b91e5@linux-foundation.org>
+In-Reply-To: <20190919024321.2675-1-shikemeng@huawei.com>
+References: <20190917170737.dpchgliux4qi2qef@willie-the-truck>
+        <20190919024321.2675-1-shikemeng@huawei.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jianxin,
+On Wed, 18 Sep 2019 22:43:21 -0400 KeMeng Shi <shikemeng@huawei.com> wrote:
 
-On Thu, Sep 19, 2019 at 2:11 PM Jianxin Pan <jianxin.pan@amlogic.com> wrote:
->
-> Add the bindings for the Amlogic Secure power domains, controlling the
-> secure power domains.
->
-> The bindings targets the Amlogic A1 and C1 compatible SoCs, in which the
-> power domain registers are in secure world.
->
-> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
-> Signed-off-by: Zhiqiang Liang <zhiqiang.liang@amlogic.com>
-> ---
->  .../bindings/power/amlogic,meson-sec-pwrc.yaml     | 32 ++++++++++++++++++++++
->  include/dt-bindings/power/meson-a1-power.h         | 32 ++++++++++++++++++++++
->  2 files changed, 64 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
->  create mode 100644 include/dt-bindings/power/meson-a1-power.h
->
-> diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
-> new file mode 100644
-> index 00000000..327e0d9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
-> @@ -0,0 +1,32 @@
-> +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +# Copyright (c) 2019 Amlogic, Inc
-> +# Author: Jianxin Pan <jianxin.pan@amlogic.com>
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/power/amlogic,meson-sec-pwrc.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Amlogic Meson Secure Power Domains
-> +
-> +maintainers:
-> +  - Jianxin Pan <jianxin.pan@amlogic.com>
-> +
-> +description: |+
-> +  A1/C1 series The Secure Power Domains node should be the child of a syscon
-> +  node with the required property.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - amlogic,meson-a1-pwrc
-> +
-> +required:
-> +  - compatible
-> +
-> +examples:
-> +  - |
-> +    pwrc: power-controller {
-> +          compatible = "amlogic,meson-a1-pwrc";
-> +    };
-not a comment about this binding but about the secure monitor in general:
-there's a recent discussion about the secure monitor in the nvmem bindings: [0]
+> It's indeed necessary to fix the concurrence problem. I will submit
+> a v2 patch when I fix this.
 
+Even though this is a procfs change, connector patches are usually
+handled by davem.  So please cc himself, Evgeniy Polyakov and
+netdev@vger.kernel.org on the next version, thanks.
 
-Martin
-
-
-[0] https://www.spinics.net/lists/arm-kernel/msg750010.html
