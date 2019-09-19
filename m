@@ -2,97 +2,227 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC213C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02BEAC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81272218AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:19:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBB09218AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:22:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TenY/nIF"
+	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="i+KmjjbS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389688AbfISVTH (ORCPT
+        id S2390517AbfISVWH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 17:19:07 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37030 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389222AbfISVTH (ORCPT
+        Thu, 19 Sep 2019 17:22:07 -0400
+Received: from vulcan.natalenko.name ([104.207.131.136]:57666 "EHLO
+        vulcan.natalenko.name" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389506AbfISVWG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 17:19:07 -0400
-Received: by mail-pf1-f196.google.com with SMTP id y5so3118212pfo.4
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 14:19:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=UC6QOlPtFT4L7gAheGuvmlsU7X18QM5xfLgyP/nfovU=;
-        b=TenY/nIF7r7AdT+DbY/MGs07XLbBYbYB48QaTr8BR5xkPDPdFERhf51rjGe3hCmhsS
-         b8Lj5e/Uq+1231XB+btSn0lJ8ydUKyHp5gXzFJ167/FMVN2NcDdzlvLpekeY1+73P9R+
-         ZdwDUdLaVeSZ+JxQTu1Ano0gST3u/0h/mEasM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=UC6QOlPtFT4L7gAheGuvmlsU7X18QM5xfLgyP/nfovU=;
-        b=ERfOeMw5L7Mc78bZNO2Nisp7ak3YR8bFKzGHvIEEFFItRu0tGT0d9ZT0kCuckXnAtN
-         PsxL9T08VlwEua3GBHtWzYBW2uPCpkRIv8JeKNcDpomYKw9wesNAzQFqG89W6YF4S8Zc
-         Mwu9U9bkD47Mi2c5cPYFlyJTVzbldyoasId4eftzIxts5H9cL/0qM4YXGYe8Tkh0chwp
-         emzvzmqoEWL3jS/UZ7+AOrCYC8nsIgUvXq+/Ug2RuTX1iZgQ3N9Pi610H75thqC1H5Y3
-         Ua7YmRnmtRjfCHdQsINlyVtaTja1SB4xYjFbZ85rVwbDoNPR/wJBS5SUpBDiIbrdrV7L
-         MkAw==
-X-Gm-Message-State: APjAAAVakVoCpZ8bC9AfwLQdHmIrOaVR4vQROBVoOjt2Y/pGndasUh4H
-        KWPE6ReQtu94Tu8X3cbiOWnOlA==
-X-Google-Smtp-Source: APXvYqyivzuDow60MKYUgF2hsOkA5SUuSL3Vyv4HlcnvRX2I63cnPL2BPFkFJNZYyVKJygjTqr2CCQ==
-X-Received: by 2002:a17:90a:310:: with SMTP id 16mr125647pje.100.1568927946393;
-        Thu, 19 Sep 2019 14:19:06 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y4sm5933542pjn.19.2019.09.19.14.19.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2019 14:19:05 -0700 (PDT)
-Date:   Thu, 19 Sep 2019 14:19:04 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs: Use make invocation's -j argument for parallelism
-Message-ID: <201909191417.6E59C942@keescook>
-References: <201909191116.192A096C68@keescook>
- <20190919162549.5ccdab62@coco.lan>
+        Thu, 19 Sep 2019 17:22:06 -0400
+Received: from mail.natalenko.name (vulcan.natalenko.name [IPv6:fe80::5400:ff:fe0c:dfa0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by vulcan.natalenko.name (Postfix) with ESMTPSA id 7C7A75E280C;
+        Thu, 19 Sep 2019 23:22:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
+        s=dkim-20170712; t=1568928123;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nvfXNPCQg7B581+MslvcoEWLTwJp2jXTw915+YqYF0w=;
+        b=i+KmjjbSSriAGy62TJ1qhcGVNLO3g7OTsgglPkt+ylvBzx6jO8DN1KJC1G2E6e9r6WBPpC
+        7jhQtsboDmL2YJti9HlWuBCv+SX3r9pn1DrTs5XWew3eOCy59rO0cShMGjnGs1VIXrHqRR
+        5WsU9Sl7rOlJFZMVm7RfAOz1hR8C9w0=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190919162549.5ccdab62@coco.lan>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 19 Sep 2019 23:22:03 +0200
+From:   Oleksandr Natalenko <oleksandr@natalenko.name>
+To:     linux-mediatek@lists.infradead.org
+Cc:     Felix Fietkau <nbd@nbd.name>,
+        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
+        Lorenzo Bianconi <lorenzo@kernel.org>,
+        Stanislaw Gruszka <sgruszka@redhat.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Roy Luo <royluo@google.com>, Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: mt76x2e hardware restart
+In-Reply-To: <deaafa7a3e9ea2111ebb5106430849c6@natalenko.name>
+References: <deaafa7a3e9ea2111ebb5106430849c6@natalenko.name>
+Message-ID: <c6d621759c190f7810d898765115f3b4@natalenko.name>
+X-Sender: oleksandr@natalenko.name
+User-Agent: Roundcube Webmail/1.3.10
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
+        s=arc-20170712; t=1568928123;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nvfXNPCQg7B581+MslvcoEWLTwJp2jXTw915+YqYF0w=;
+        b=ETc2q7YURCqlrETsKKeQkoPlDZrCqCFYY89AXGwPNhu+uYOEQZFte02NHPleOvqNzi05+G
+        48LhJrMbwsTLyDxU3rcisz7iw7H9EfnL0KLSfhvwRodWvQW3eHZFlcgZe9OdbYoM9Qg9Pg
+        TSghhu0PLaDijtfAcg83a9yrI4P0ook=
+ARC-Seal: i=1; s=arc-20170712; d=natalenko.name; t=1568928123; a=rsa-sha256;
+        cv=none;
+        b=FDKorXnDcAKDb8+CrT3w5/PyCrZwO9676UXdBc0WwqcyPOB/xTGw21uNIzbPGPSOJYQNCm
+        z5viRpMuMdaOVmBOTY+aor9YJhQf0kk6lmyVVvh1uRubEjaYOfnyqCYmJGq9C6JaDhCIiY
+        uJj764/pFLr/8vhgqNFjwIDtuc4v+/8=
+ARC-Authentication-Results: i=1;
+        vulcan.natalenko.name;
+        auth=pass smtp.auth=oleksandr@natalenko.name smtp.mailfrom=oleksandr@natalenko.name
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 04:25:49PM -0300, Mauro Carvalho Chehab wrote:
-> Em Thu, 19 Sep 2019 11:18:52 -0700
-> Kees Cook <keescook@chromium.org> escreveu:
-> > [...]
-> > +# Fetch the make environment options.
-> > +flags = os.environ.get('MAKEFLAGS', None)
-> > +if flags == None:
-> > +	print("1")
-> > +	sys.exit(0)
-> > +
-> > +# Look for "--jobserver=R,W"
-> > +opts = [x for x in flags.split(" ") if x.startswith("--jobserver")]
-> > +if len(opts) != 1:
-> > +	print("1")
-> > +	sys.exit(0)
-> 
-> Using "1" as default if -j is not specified doesn't sound a good idea. I
-> mean, Sphinx is very slow without any parallelism. I would keep "auto" as
-> default here, if version >= 1.7 (and if there's no explicit SPHINXOPTS).
+On 19.09.2019 18:24, Oleksandr Natalenko wrote:
+> [  +9,979664] mt76x2e 0000:01:00.0: Firmware Version: 0.0.00
+> [  +0,000014] mt76x2e 0000:01:00.0: Build: 1
+> [  +0,000010] mt76x2e 0000:01:00.0: Build Time: 201507311614____
+> [  +0,018017] mt76x2e 0000:01:00.0: Firmware running!
+> [  +0,001101] ieee80211 phy4: Hardware restart was requested
 
-Okay, that's fair. This does introduce a behavioral regression from that
-perspective. Let me spin a v2 that'll DTRT.
+IIUC, this happens due to watchdog. I think the following applies.
+
+Watchdog is started here:
+
+=== mt76x02_util.c
+130 void mt76x02_init_device(struct mt76x02_dev *dev)
+131 {
+...
+155         INIT_DELAYED_WORK(&dev->wdt_work, mt76x02_wdt_work);
+===
+
+It checks for TX hang here:
+
+=== mt76x02_mmio.c
+557 void mt76x02_wdt_work(struct work_struct *work)
+558 {
+...
+562     mt76x02_check_tx_hang(dev);
+===
+
+Conditions:
+
+=== mt76x02_mmio.c
+530 static void mt76x02_check_tx_hang(struct mt76x02_dev *dev)
+531 {
+532     if (mt76x02_tx_hang(dev)) {
+533         if (++dev->tx_hang_check >= MT_TX_HANG_TH)
+534             goto restart;
+535     } else {
+536         dev->tx_hang_check = 0;
+537     }
+538
+539     if (dev->mcu_timeout)
+540         goto restart;
+541
+542     return;
+543
+544 restart:
+545     mt76x02_watchdog_reset(dev);
+===
+
+Actual check:
+
+=== mt76x02_mmio.c
+367 static bool mt76x02_tx_hang(struct mt76x02_dev *dev)
+368 {
+369     u32 dma_idx, prev_dma_idx;
+370     struct mt76_queue *q;
+371     int i;
+372
+373     for (i = 0; i < 4; i++) {
+374         q = dev->mt76.q_tx[i].q;
+375
+376         if (!q->queued)
+377             continue;
+378
+379         prev_dma_idx = dev->mt76.tx_dma_idx[i];
+380         dma_idx = readl(&q->regs->dma_idx);
+381         dev->mt76.tx_dma_idx[i] = dma_idx;
+382
+383         if (prev_dma_idx == dma_idx)
+384             break;
+385     }
+386
+387     return i < 4;
+388 }
+===
+
+(I don't quite understand what it does here; why 4? does each device 
+have 4 queues? maybe, my does not? I guess this is where watchdog is 
+triggered, though, because otherwise I'd see mcu_timeout message like 
+"MCU message %d (seq %d) timed out\n")
+
+Once it detects TX hang, the reset is triggered:
+
+=== mt76x02_mmio.c
+446 static void mt76x02_watchdog_reset(struct mt76x02_dev *dev)
+447 {
+...
+485     if (restart)
+486         mt76_mcu_restart(dev);
+===
+
+mt76_mcu_restart() is just a define for this series here:
+
+=== mt76.h
+555 #define mt76_mcu_restart(dev, ...)  
+(dev)->mt76.mcu_ops->mcu_restart(&((dev)->mt76))
+===
+
+Actual OP:
+
+=== mt76x2/pci_mcu.c
+188 int mt76x2_mcu_init(struct mt76x02_dev *dev)
+189 {
+190     static const struct mt76_mcu_ops mt76x2_mcu_ops = {
+191         .mcu_restart = mt76pci_mcu_restart,
+192         .mcu_send_msg = mt76x02_mcu_msg_send,
+193     };
+===
+
+This triggers loading the firmware:
+
+=== mt76x2/pci_mcu.c
+168 static int
+169 mt76pci_mcu_restart(struct mt76_dev *mdev)
+170 {
+...
+179     ret = mt76pci_load_firmware(dev);
+===
+
+which does the printout I observe:
+
+=== mt76x2/pci_mcu.c
+  91 static int
+  92 mt76pci_load_firmware(struct mt76x02_dev *dev)
+  93 {
+...
+156     dev_info(dev->mt76.dev, "Firmware running!\n");
+===
+
+Too bad it doesn't show the actual watchdog message, IOW, why the reset 
+happens. I guess I will have to insert some pr_infos here and there.
+
+Does it make sense? Any ideas why this can happen?
+
+More info on the device during boot:
+
+===
+[  +0,333233] mt76x2e 0000:01:00.0: enabling device (0000 -> 0002)
+[  +0,000571] mt76x2e 0000:01:00.0: ASIC revision: 76120044
+[  +0,017806] mt76x2e 0000:01:00.0: ROM patch build: 20141115060606a
+===
 
 -- 
-Kees Cook
+   Oleksandr Natalenko (post-factum)
