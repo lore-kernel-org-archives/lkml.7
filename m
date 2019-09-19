@@ -2,238 +2,94 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B29AC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 08:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04EB3C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 08:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BE6A207FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 08:00:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCD5B2196F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 08:00:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568880020;
+	bh=hioETfU5gPztyUmzdSWWdbfkJJTc6dlm5y+dbhCL8R4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=oj4sYUfXUReyuQPghf8wW6UWa2KBCAAxsqH4l9PnkR0fIuOQfFxdLI8QVVpuRZJld
+	 aP1yN78P22G+ZdQXfbO49Q5M50SO3aNyKdHPo4OpnZ0jJR8FKi/zf5rNysH2fzMmK6
+	 zyRzjquFRcKAUP3eGrjayNX9cBBWNRQqSLx2K4Ko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388208AbfISIAM (ORCPT
+        id S2388264AbfISIAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 04:00:12 -0400
-Received: from foss.arm.com ([217.140.110.172]:53186 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388127AbfISIAM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 04:00:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 52AE91000;
-        Thu, 19 Sep 2019 01:00:11 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BD84C3F575;
-        Thu, 19 Sep 2019 01:00:10 -0700 (PDT)
-Date:   Thu, 19 Sep 2019 09:00:09 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-s390@vger.kernel.org,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Subject: Re: [PATCH v3 06/26] s390/pci: Use PCI_STD_NUM_BARS
-Message-ID: <20190919080008.GG9720@e119886-lin.cambridge.arm.com>
-References: <20190916204158.6889-1-efremov@linux.com>
- <20190916204158.6889-7-efremov@linux.com>
- <20190918085805.GY9720@e119886-lin.cambridge.arm.com>
- <c4496d3d-14c1-ffe7-fa38-0caffe81db54@linux.com>
+        Thu, 19 Sep 2019 04:00:20 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:36316 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727033AbfISIAT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 04:00:19 -0400
+Received: by mail-oi1-f194.google.com with SMTP id k20so1979742oih.3;
+        Thu, 19 Sep 2019 01:00:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hioETfU5gPztyUmzdSWWdbfkJJTc6dlm5y+dbhCL8R4=;
+        b=N2OtSJoNzPDbijtPCMqu/MBOBIWeFBQUdritkXrgkwAWhn/KxsWiHmtg7Q1Ez/1u8B
+         yY+UCRmVrOvSEo2KXAfD3r94WkUm9tLfu76UkWQyuLcuJ3AEk1SGRdtU9ukxycb83akc
+         cyPzWvi/kVSDZtFWIx+B3btHlg3zaq3B2XgFdLx7aqLN0+6lJfkHwSj1910ovQL8FsSa
+         BImG2xPkroMHAS0CtIto/TYcjc4NcdcwJ7sxdRd//ULsHh6ojYCss5H7HjLwxlR4l9mc
+         fCCrYko1FAUgK9zB7fyOabzylpevsoDMC27f7l/3QS18ZDOqK/jOefnwCkUIKMk6Zg/z
+         Z6rw==
+X-Gm-Message-State: APjAAAXGHlWyiCecYhgD22L5hrf+k1MqRbmLxoVhZNy4NIsdQyUs/tXt
+        xXlkIEoIhinmeiOe5hcMwrqSxEKqWG9O+NGoi4ZrIA==
+X-Google-Smtp-Source: APXvYqylkZhk/PgUvzR9MUbnwm+Jmx9a7SqGV5LCTWYriGa/DgUV0OJhNIYh6ze4wXxDMwE+bw1OTYe6fLzOYlHGG4c=
+X-Received: by 2002:aca:db44:: with SMTP id s65mr1289673oig.103.1568880019040;
+ Thu, 19 Sep 2019 01:00:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c4496d3d-14c1-ffe7-fa38-0caffe81db54@linux.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+References: <20190918133419.7969-1-sakari.ailus@linux.intel.com>
+In-Reply-To: <20190918133419.7969-1-sakari.ailus@linux.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 19 Sep 2019 10:00:08 +0200
+Message-ID: <CAJZ5v0iHv=-t3qA3VBfC6ryPOmC8QW9pxwFvEw6SQQZ3CwsScw@mail.gmail.com>
+Subject: Re: [PATCH v7 00/13] Device property improvements, add %pfw format specifier
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Joe Perches <joe@perches.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 05:26:59PM +0300, Denis Efremov wrote:
-> On 9/18/19 11:58 AM, Andrew Murray wrote:
-> > On Mon, Sep 16, 2019 at 11:41:38PM +0300, Denis Efremov wrote:
-> >> Remove local definition PCI_BAR_COUNT for the number of PCI BARs and use
-> >> global one PCI_STD_NUM_BARS instead.
-> >>
-> >> Acked-by: Sebastian Ott <sebott@linux.ibm.com>
-> >> Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-> >> Signed-off-by: Denis Efremov <efremov@linux.com>
-> >> ---
-> >>  arch/s390/include/asm/pci.h     |  5 +----
-> >>  arch/s390/include/asm/pci_clp.h |  6 +++---
-> >>  arch/s390/pci/pci.c             | 16 ++++++++--------
-> >>  arch/s390/pci/pci_clp.c         |  6 +++---
-> >>  4 files changed, 15 insertions(+), 18 deletions(-)
-> >>
-> >> diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
-> >> index a2399eff84ca..3a06c264ea53 100644
-> >> --- a/arch/s390/include/asm/pci.h
-> >> +++ b/arch/s390/include/asm/pci.h
-> >> @@ -2,9 +2,6 @@
-> >>  #ifndef __ASM_S390_PCI_H
-> >>  #define __ASM_S390_PCI_H
-> >>  
-> >> -/* must be set before including pci_clp.h */
-> >> -#define PCI_BAR_COUNT	6
-> >> -
-> >>  #include <linux/pci.h>
-> >>  #include <linux/mutex.h>
-> >>  #include <linux/iommu.h>
-> >> @@ -138,7 +135,7 @@ struct zpci_dev {
-> >>  
-> >>  	char res_name[16];
-> >>  	bool mio_capable;
-> >> -	struct zpci_bar_struct bars[PCI_BAR_COUNT];
-> >> +	struct zpci_bar_struct bars[PCI_STD_NUM_BARS];
-> >>  
-> >>  	u64		start_dma;	/* Start of available DMA addresses */
-> >>  	u64		end_dma;	/* End of available DMA addresses */
-> >> diff --git a/arch/s390/include/asm/pci_clp.h b/arch/s390/include/asm/pci_clp.h
-> >> index 50359172cc48..bd2cb4ea7d93 100644
-> >> --- a/arch/s390/include/asm/pci_clp.h
-> >> +++ b/arch/s390/include/asm/pci_clp.h
-> >> @@ -77,7 +77,7 @@ struct mio_info {
-> >>  	struct {
-> >>  		u64 wb;
-> >>  		u64 wt;
-> >> -	} addr[PCI_BAR_COUNT];
-> >> +	} addr[PCI_STD_NUM_BARS];
-> >>  	u32 reserved[6];
-> >>  } __packed;
-> >>  
-> >> @@ -98,9 +98,9 @@ struct clp_rsp_query_pci {
-> >>  	u16 util_str_avail	:  1;	/* utility string available? */
-> >>  	u16 pfgid		:  8;	/* pci function group id */
-> >>  	u32 fid;			/* pci function id */
-> >> -	u8 bar_size[PCI_BAR_COUNT];
-> >> +	u8 bar_size[PCI_STD_NUM_BARS];
-> >>  	u16 pchid;
-> >> -	__le32 bar[PCI_BAR_COUNT];
-> >> +	__le32 bar[PCI_STD_NUM_BARS];
-> >>  	u8 pfip[CLP_PFIP_NR_SEGMENTS];	/* pci function internal path */
-> >>  	u32			: 16;
-> >>  	u8 fmb_len;
-> >> diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
-> >> index b0e3b9a0e488..aca372c8e34f 100644
-> >> --- a/arch/s390/pci/pci.c
-> >> +++ b/arch/s390/pci/pci.c
-> >> @@ -43,7 +43,7 @@ static DECLARE_BITMAP(zpci_domain, ZPCI_NR_DEVICES);
-> >>  static DEFINE_SPINLOCK(zpci_domain_lock);
-> >>  
-> >>  #define ZPCI_IOMAP_ENTRIES						\
-> >> -	min(((unsigned long) ZPCI_NR_DEVICES * PCI_BAR_COUNT / 2),	\
-> >> +	min(((unsigned long) ZPCI_NR_DEVICES * PCI_STD_NUM_BARS / 2),	\
-> >>  	    ZPCI_IOMAP_MAX_ENTRIES)
-> >>  
-> >>  static DEFINE_SPINLOCK(zpci_iomap_lock);
-> >> @@ -294,7 +294,7 @@ static void __iomem *pci_iomap_range_mio(struct pci_dev *pdev, int bar,
-> >>  void __iomem *pci_iomap_range(struct pci_dev *pdev, int bar,
-> >>  			      unsigned long offset, unsigned long max)
-> >>  {
-> >> -	if (!pci_resource_len(pdev, bar) || bar >= PCI_BAR_COUNT)
-> >> +	if (bar >= PCI_STD_NUM_BARS || !pci_resource_len(pdev, bar))
-> >>  		return NULL;
-> >>  
-> >>  	if (static_branch_likely(&have_mio))
-> >> @@ -324,7 +324,7 @@ static void __iomem *pci_iomap_wc_range_mio(struct pci_dev *pdev, int bar,
-> >>  void __iomem *pci_iomap_wc_range(struct pci_dev *pdev, int bar,
-> >>  				 unsigned long offset, unsigned long max)
-> >>  {
-> >> -	if (!pci_resource_len(pdev, bar) || bar >= PCI_BAR_COUNT)
-> >> +	if (bar >= PCI_STD_NUM_BARS || !pci_resource_len(pdev, bar))
-> >>  		return NULL;
-> > 
-> > This looks like a latent bug fix here. If 'bar' is out of range we return
-> > NULL instead accessing an invalid item of an array. Should this not be
-> > a separate patch and tagged as stable?
-> > 
-> 
-> This fix was suggested by Bjorn in v1 review:
-> https://lkml.org/lkml/2019/8/12/997
-> 
+On Wed, Sep 18, 2019 at 3:34 PM Sakari Ailus
+<sakari.ailus@linux.intel.com> wrote:
+>
+> Hi all,
+>
+> This set adds functionality into the device property API (counting a
+> node's parents as well as obtaining its name) in order to support printing
+> fwnode names using a new conversion specifier "%pfw". The names that are
+> produced are equivalent to its OF counterpart "%pOF" on OF systems for the
+> two supported modifiers ("f" and "P").
+>
+> Printing a node's name is something that's been available on OF for a long
+> time and if something is converted to device property API (such as the
+> V4L2 fwnode framework) it always got removed of a nice feature that was
+> sometimes essential in debugging. With this set, that no longer is the
+> case.
+>
+> Note: the set now depends on 2d44d165e939 ("scsi: lpfc: Convert existing
+> %pf users to %ps") that is expected from the linux-scsi tree. It is
 
-Ah yes, apologies - I'll re-read the previous threads next time.
+OK, so I will be expecting a refresh of the series when the above
+commit appears in the mainline.
 
-Thanks,
-
-Andrew Murray
-
-> 
-> > Thanks,
-> > 
-> > Andrew Murray
-> > 
-> >>  
-> >>  	if (static_branch_likely(&have_mio))
-> >> @@ -416,7 +416,7 @@ static void zpci_map_resources(struct pci_dev *pdev)
-> >>  	resource_size_t len;
-> >>  	int i;
-> >>  
-> >> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
-> >> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
-> >>  		len = pci_resource_len(pdev, i);
-> >>  		if (!len)
-> >>  			continue;
-> >> @@ -451,7 +451,7 @@ static void zpci_unmap_resources(struct pci_dev *pdev)
-> >>  	if (zpci_use_mio(zdev))
-> >>  		return;
-> >>  
-> >> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
-> >> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
-> >>  		len = pci_resource_len(pdev, i);
-> >>  		if (!len)
-> >>  			continue;
-> >> @@ -514,7 +514,7 @@ static int zpci_setup_bus_resources(struct zpci_dev *zdev,
-> >>  	snprintf(zdev->res_name, sizeof(zdev->res_name),
-> >>  		 "PCI Bus %04x:%02x", zdev->domain, ZPCI_BUS_NR);
-> >>  
-> >> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
-> >> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
-> >>  		if (!zdev->bars[i].size)
-> >>  			continue;
-> >>  		entry = zpci_alloc_iomap(zdev);
-> >> @@ -551,7 +551,7 @@ static void zpci_cleanup_bus_resources(struct zpci_dev *zdev)
-> >>  {
-> >>  	int i;
-> >>  
-> >> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
-> >> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
-> >>  		if (!zdev->bars[i].size || !zdev->bars[i].res)
-> >>  			continue;
-> >>  
-> >> @@ -573,7 +573,7 @@ int pcibios_add_device(struct pci_dev *pdev)
-> >>  	pdev->dev.dma_ops = &s390_pci_dma_ops;
-> >>  	zpci_map_resources(pdev);
-> >>  
-> >> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
-> >> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
-> >>  		res = &pdev->resource[i];
-> >>  		if (res->parent || !res->flags)
-> >>  			continue;
-> >> diff --git a/arch/s390/pci/pci_clp.c b/arch/s390/pci/pci_clp.c
-> >> index 9bdff4defef1..8b729b5f2972 100644
-> >> --- a/arch/s390/pci/pci_clp.c
-> >> +++ b/arch/s390/pci/pci_clp.c
-> >> @@ -145,7 +145,7 @@ static int clp_store_query_pci_fn(struct zpci_dev *zdev,
-> >>  {
-> >>  	int i;
-> >>  
-> >> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
-> >> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
-> >>  		zdev->bars[i].val = le32_to_cpu(response->bar[i]);
-> >>  		zdev->bars[i].size = response->bar_size[i];
-> >>  	}
-> >> @@ -164,8 +164,8 @@ static int clp_store_query_pci_fn(struct zpci_dev *zdev,
-> >>  		       sizeof(zdev->util_str));
-> >>  	}
-> >>  	zdev->mio_capable = response->mio_addr_avail;
-> >> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
-> >> -		if (!(response->mio.valid & (1 << (PCI_BAR_COUNT - i - 1))))
-> >> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
-> >> +		if (!(response->mio.valid & (1 << (PCI_STD_NUM_BARS - i - 1))))
-> >>  			continue;
-> >>  
-> >>  		zdev->bars[i].mio_wb = (void __iomem *) response->mio.addr[i].wb;
-> >> -- 
-> >> 2.21.0
-> >>
-> 
+Cheers,
+Rafael
