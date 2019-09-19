@@ -2,147 +2,140 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15BCCC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D0EC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4D6821924
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:25:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D3D221924
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:26:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="j5tkUKL0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388672AbfISJZf (ORCPT
+        id S2388751AbfISJ04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 05:25:35 -0400
-Received: from baptiste.telenet-ops.be ([195.130.132.51]:50688 "EHLO
-        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388436AbfISJZe (ORCPT
+        Thu, 19 Sep 2019 05:26:56 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:55149 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388502AbfISJ0z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 05:25:34 -0400
-Received: from ramsan ([84.194.98.4])
-        by baptiste.telenet-ops.be with bizsmtp
-        id 3MRT2100F05gfCL01MRTpJ; Thu, 19 Sep 2019 11:25:32 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iAsgp-0003ph-6D; Thu, 19 Sep 2019 11:25:27 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iAsgp-0007BK-3i; Thu, 19 Sep 2019 11:25:27 +0200
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-To:     Matthew Wilcox <willy@infradead.org>,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        netdev@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH -net] staging: octeon: se "(uintptr_t)" to cast from pointer to int
-Date:   Thu, 19 Sep 2019 11:25:26 +0200
-Message-Id: <20190919092526.27564-1-geert@linux-m68k.org>
+        Thu, 19 Sep 2019 05:26:55 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190919092653euoutp0262311bcd29ce287beabc1e45aa608129~FzMolh07_1020910209euoutp02l
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 09:26:53 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190919092653euoutp0262311bcd29ce287beabc1e45aa608129~FzMolh07_1020910209euoutp02l
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1568885213;
+        bh=xMgegydTj1VyjtJMSlQNdpjkJ9FHauOHBGUiS06xb+k=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=j5tkUKL0oGjaT4Sa8M0HT/WjLgXDzhLevHIEgMMekKKlnGbbkKvt2L4jlSviBYkMk
+         VfhUuKYZAbstC8K6M4NI+OKHannlUg/vIZjzKy1Zj503zndjqW1lXZLrQSeXskU+Tx
+         5MSG0v72fsvIK7hU1fWQOZ+A8d8lqf73x6XaB0ew=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190919092652eucas1p146a6438833f2b7837de81c491ff25e8c~FzMn00FD03057630576eucas1p14;
+        Thu, 19 Sep 2019 09:26:52 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 26.BE.04309.CD9438D5; Thu, 19
+        Sep 2019 10:26:52 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190919092652eucas1p2715611db7a0b0c4cc79956311e01c35a~FzMm7_JNw0197101971eucas1p2C;
+        Thu, 19 Sep 2019 09:26:52 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190919092651eusmtrp1388058d2816f3078f44dbc3d529337fc~FzMmtcVCN1357513575eusmtrp1O;
+        Thu, 19 Sep 2019 09:26:51 +0000 (GMT)
+X-AuditID: cbfec7f4-ae1ff700000010d5-f3-5d8349dcba50
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 35.25.04166.BD9438D5; Thu, 19
+        Sep 2019 10:26:51 +0100 (BST)
+Received: from AMDC3778.digital.local (unknown [106.120.51.20]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190919092650eusmtip11435e05346dd810ba269b0402294f2b7~FzMl8JRRi1630716307eusmtip1V;
+        Thu, 19 Sep 2019 09:26:50 +0000 (GMT)
+From:   Lukasz Luba <l.luba@partner.samsung.com>
+To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org, cw00.choi@samsung.com,
+        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
+        willy.mh.wolff.ml@gmail.com, dan.carpenter@oracle.com,
+        Lukasz Luba <l.luba@partner.samsung.com>
+Subject: [PATCH v3 0/2] Exynos5 DMC minor fixes
+Date:   Thu, 19 Sep 2019 11:26:39 +0200
+Message-Id: <20190919092641.4407-1-l.luba@partner.samsung.com>
 X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrHKsWRmVeSWpSXmKPExsWy7djPc7p3PJtjDeZd0bTYOGM9q8X1L89Z
+        LV7/m85iMf/IOVaL/sevmS3On9/AbnG26Q27xa0GGYtNj6+xWlzeNYfN4nPvEUaLGef3MVms
+        PXKX3WLp9YtMFrcbV7BZtO49wm5x+E07q8W3E48YHYQ81sxbw+ixc9Zddo9NqzrZPDYvqff4
+        +PQWi8fBd3uYPPq2rGL0+LxJLoAjissmJTUnsyy1SN8ugStj8+6L7AVT2CvezWhnb2D8ydrF
+        yMEhIWAisWRtQhcjF4eQwApGia4zj9kgnC+MEk9+b2WBcD4zSrR2gWQgOpa2m0LElzNK3LnS
+        zQrX0dB5gBmkiE1AT2LHqsIuRk4OEYHFjBLfDkeB2MwCF5gkTq+UBbGFBfQlJj3qYQEpZxFQ
+        lTjwPBIkzCtgJ9F1cDEbiC0hIC+xegPIRC4gex+7RFvPJyaIhIvEzYcPWSFsYYlXx7ewQ9gy
+        Eqcng8wEsYslGnoXMkLYNRKP++dC1VhLHD5+Eex7ZgFNifW79CHCjhL9S7qYIV7kk7jxVhDi
+        Yj6JSdumQ4V5JTrahCCqNSS29FyAOkZMYvmaaVDDPSQez98NZgsJxEp8bt3OPIFRbhbCrgWM
+        jKsYxVNLi3PTU4uN8lLL9YoTc4tL89L1kvNzNzECU9Hpf8e/7GDc9SfpEKMAB6MSD+8P9aZY
+        IdbEsuLK3EOMEhzMSiK8c0yBQrwpiZVVqUX58UWlOanFhxilOViUxHmrGR5ECwmkJ5akZqem
+        FqQWwWSZODilGhhNAvd0HJO/n1G/aaqZrc2qxbtuc4ulyjJaPA9leCT09E2uEfOuvV43j5mU
+        zvgZs8GFP7VIr/WVxISZzoeKtjV6eDCdqc1fsKztjutzc69mli1PEz/s2dT+Xmiuy4fNTQYm
+        PXvuTtw2Y0Fp0/n/CWsvyyuJrtT9yjFbgYt39tOXZU784Z1CPW1KLMUZiYZazEXFiQBUMrMR
+        QQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupgkeLIzCtJLcpLzFFi42I5/e/4Xd3bns2xBud+6lhsnLGe1eL6l+es
+        Fq//TWexmH/kHKtF/+PXzBbnz29gtzjb9Ibd4laDjMWmx9dYLS7vmsNm8bn3CKPFjPP7mCzW
+        HrnLbrH0+kUmi9uNK9gsWvceYbc4/Kad1eLbiUeMDkIea+atYfTYOesuu8emVZ1sHpuX1Ht8
+        fHqLxePguz1MHn1bVjF6fN4kF8ARpWdTlF9akqqQkV9cYqsUbWhhpGdoaaFnZGKpZ2hsHmtl
+        ZKqkb2eTkpqTWZZapG+XoJexefdF9oIp7BXvZrSzNzD+ZO1i5OCQEDCRWNpu2sXIxSEksJRR
+        om/JfeYuRk6guJjEpH3b2SFsYYk/17rYIIo+MUp8XbsLrJlNQE9ix6pCkLiIwHJGiWOr3jKD
+        OMwCD5gkLs49xgjSLSygLzHpUQ8LSAOLgKrEgeeRIGFeATuJroOL2SAWyEus3nCAeQIjzwJG
+        hlWMIqmlxbnpucWGesWJucWleel6yfm5mxiBsbDt2M/NOxgvbQw+xCjAwajEw/tDvSlWiDWx
+        rLgy9xCjBAezkgjvHFOgEG9KYmVValF+fFFpTmrxIUZToN0TmaVEk/OBcZpXEm9oamhuYWlo
+        bmxubGahJM7bIXAwRkggPbEkNTs1tSC1CKaPiYNTqoHRfe5U+YJTj6OkWzuTTEwdNhxImZJ3
+        bMXnpRt3RLE+3daTUxmV+3T7vovnWVvXcfGYhhaev1HXsVpoUpdVuopMbkBPfAbvxrCrLkuf
+        /N/xNJFr893FagYmVuf6Hh+cd1JR9+fCbMWPERvuH/Zxray6uD+AaYK0LrN5jInmTT+jwjae
+        rsTAvZ1KLMUZiYZazEXFiQAHHfzXmwIAAA==
+X-CMS-MailID: 20190919092652eucas1p2715611db7a0b0c4cc79956311e01c35a
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190919092652eucas1p2715611db7a0b0c4cc79956311e01c35a
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190919092652eucas1p2715611db7a0b0c4cc79956311e01c35a
+References: <CGME20190919092652eucas1p2715611db7a0b0c4cc79956311e01c35a@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 32-bit:
+Hi all,
 
-    In file included from drivers/staging/octeon/octeon-ethernet.h:41,
-		     from drivers/staging/octeon/ethernet-tx.c:25:
-    drivers/staging/octeon/octeon-stubs.h: In function ‘cvmx_phys_to_ptr’:
-    drivers/staging/octeon/octeon-stubs.h:1205:9: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
-      return (void *)(physical_address);
-	     ^
-    drivers/staging/octeon/ethernet-tx.c: In function ‘cvm_oct_xmit’:
-    drivers/staging/octeon/ethernet-tx.c:264:37: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-       hw_buffer.s.addr = XKPHYS_TO_PHYS((u64)skb->data);
-					 ^
-    drivers/staging/octeon/octeon-stubs.h:2:30: note: in definition of macro ‘XKPHYS_TO_PHYS’
-     #define XKPHYS_TO_PHYS(p)   (p)
-				  ^
-    drivers/staging/octeon/ethernet-tx.c:268:37: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-       hw_buffer.s.addr = XKPHYS_TO_PHYS((u64)skb->data);
-					 ^
-    drivers/staging/octeon/octeon-stubs.h:2:30: note: in definition of macro ‘XKPHYS_TO_PHYS’
-     #define XKPHYS_TO_PHYS(p)   (p)
-				  ^
-    drivers/staging/octeon/ethernet-tx.c:276:20: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-	 XKPHYS_TO_PHYS((u64)skb_frag_address(fs));
-			^
-    drivers/staging/octeon/octeon-stubs.h:2:30: note: in definition of macro ‘XKPHYS_TO_PHYS’
-     #define XKPHYS_TO_PHYS(p)   (p)
-				  ^
-    drivers/staging/octeon/ethernet-tx.c:280:37: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-       hw_buffer.s.addr = XKPHYS_TO_PHYS((u64)CVM_OCT_SKB_CB(skb));
-					 ^
-    drivers/staging/octeon/octeon-stubs.h:2:30: note: in definition of macro ‘XKPHYS_TO_PHYS’
-     #define XKPHYS_TO_PHYS(p)   (p)
-				  ^
+This is a follow up patch set for the Exynos5 Dynamic Memory Controller
+driver v13 [1]. The patches are for Krzysztof's branch [2]
+for-v5.4-5.5/memory-samsung-dmc
+and/or linux-next where Dan Carpenter reported the issue (patch 1/2).
+There are a few fixes captured during static analysis and a new
+binding for 'samsung,K3QF2F20DB' LPDDR3 memory.
 
-Fix this by replacing casts to "u64" by casts to "uintptr_t", which is
-either 32-bit or 64-bit, and adding an intermediate cast to "uintptr_t"
-where needed.
+Regards,
+Lukasz Luba
 
-Exposed by commit 171a9bae68c72f2d ("staging/octeon: Allow test build on
-!MIPS").
+[1] https://lkml.org/lkml/2019/8/21/283
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git/log/?h=for-v5.4-5.5/memory-samsung-dmc
 
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
----
- drivers/staging/octeon/ethernet-tx.c  | 9 +++++----
- drivers/staging/octeon/octeon-stubs.h | 2 +-
- 2 files changed, 6 insertions(+), 5 deletions(-)
+Lukasz Luba (2):
+  memory: samsung: exynos5422-dmc: Fix kfree() of devm-allocated memory
+    and missing static
+  dt-bindings: ddr: Add bindings for Samsung LPDDR3 memories
 
-diff --git a/drivers/staging/octeon/ethernet-tx.c b/drivers/staging/octeon/ethernet-tx.c
-index c64728fc21f229d8..7021ff07ba2a0b70 100644
---- a/drivers/staging/octeon/ethernet-tx.c
-+++ b/drivers/staging/octeon/ethernet-tx.c
-@@ -261,11 +261,11 @@ int cvm_oct_xmit(struct sk_buff *skb, struct net_device *dev)
- 	/* Build the PKO buffer pointer */
- 	hw_buffer.u64 = 0;
- 	if (skb_shinfo(skb)->nr_frags == 0) {
--		hw_buffer.s.addr = XKPHYS_TO_PHYS((u64)skb->data);
-+		hw_buffer.s.addr = XKPHYS_TO_PHYS((uintptr_t)skb->data);
- 		hw_buffer.s.pool = 0;
- 		hw_buffer.s.size = skb->len;
- 	} else {
--		hw_buffer.s.addr = XKPHYS_TO_PHYS((u64)skb->data);
-+		hw_buffer.s.addr = XKPHYS_TO_PHYS((uintptr_t)skb->data);
- 		hw_buffer.s.pool = 0;
- 		hw_buffer.s.size = skb_headlen(skb);
- 		CVM_OCT_SKB_CB(skb)[0] = hw_buffer.u64;
-@@ -273,11 +273,12 @@ int cvm_oct_xmit(struct sk_buff *skb, struct net_device *dev)
- 			skb_frag_t *fs = skb_shinfo(skb)->frags + i;
- 
- 			hw_buffer.s.addr =
--				XKPHYS_TO_PHYS((u64)skb_frag_address(fs));
-+				XKPHYS_TO_PHYS((uintptr_t)skb_frag_address(fs));
- 			hw_buffer.s.size = skb_frag_size(fs);
- 			CVM_OCT_SKB_CB(skb)[i + 1] = hw_buffer.u64;
- 		}
--		hw_buffer.s.addr = XKPHYS_TO_PHYS((u64)CVM_OCT_SKB_CB(skb));
-+		hw_buffer.s.addr =
-+			XKPHYS_TO_PHYS((uintptr_t)CVM_OCT_SKB_CB(skb));
- 		hw_buffer.s.size = skb_shinfo(skb)->nr_frags + 1;
- 		pko_command.s.segs = skb_shinfo(skb)->nr_frags + 1;
- 		pko_command.s.gather = 1;
-diff --git a/drivers/staging/octeon/octeon-stubs.h b/drivers/staging/octeon/octeon-stubs.h
-index a4ac3bfb62a85e65..b78ce9eaab85d310 100644
---- a/drivers/staging/octeon/octeon-stubs.h
-+++ b/drivers/staging/octeon/octeon-stubs.h
-@@ -1202,7 +1202,7 @@ static inline int cvmx_wqe_get_grp(cvmx_wqe_t *work)
- 
- static inline void *cvmx_phys_to_ptr(uint64_t physical_address)
- {
--	return (void *)(physical_address);
-+	return (void *)(uintptr_t)(physical_address);
- }
- 
- static inline uint64_t cvmx_ptr_to_phys(void *ptr)
+ Documentation/devicetree/bindings/ddr/lpddr3.txt | 10 +++++++---
+ drivers/memory/samsung/exynos5422-dmc.c          |  6 ++----
+ 2 files changed, 9 insertions(+), 7 deletions(-)
+
 -- 
 2.17.1
 
