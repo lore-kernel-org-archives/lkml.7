@@ -2,176 +2,157 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 032EEC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 16:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A3A0C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 16:26:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDF7D2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 16:25:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="hcPwvtHA"
+	by mail.kernel.org (Postfix) with ESMTP id 2EDAE21928
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 16:26:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568910380;
+	bh=L+a2RPg7TvMt+BcXyUJ5gIfCb7Ud4JWHpFNge+LYu8A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Rd02KJtvpNsCOfB7Fh5q9JpSp3AVbz5ONzM0MZNbqMB3gUQGok28xqLU69tuDKVLA
+	 03+bxA+JkJZX3Xy7JIHWAvjpUSkf1FwhgcPNrCw29suwpcfDip+GQXS2W4bvCHFvEj
+	 jhYVg4PIv22rMfZhdpdbAjqa2BNZS5bqiQARSMPI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404304AbfISQZg (ORCPT
+        id S2404315AbfISQ0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 12:25:36 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:30307 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404291AbfISQZg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 12:25:36 -0400
-Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
-  Codrin.Ciubotariu@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Codrin.Ciubotariu@microchip.com";
-  x-sender="Codrin.Ciubotariu@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa2.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Codrin.Ciubotariu@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa2.microchip.iphmx.com; spf=Pass smtp.mailfrom=Codrin.Ciubotariu@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: Q1XwrhEX3GMlcMGaGJeUKoZVURFaVDmMXjlV0pB33APj0+0NYOpKzs4+SlSICepAmdUBxGxEWO
- hzmGhOe3QLE752HVi0rPXx/MEfA/JIYyLYwmcimQR7Qs4ezuRn2zDJNPa569sqxV4O7tlCgMfy
- ScjcqklgSQWJ/t9lrm5DK1D32JXffHjwEaAe0sUSBYFqvhsPOptjo1npM/T8sCvutWsw+Ts36i
- KWscymcwjBspRvC4P64qKi58JfKIjRNS4pjEcLaSMHJYfqyFDMtplG3GxaKkgK6JzSWIETjWLp
- UsE=
-X-IronPort-AV: E=Sophos;i="5.64,524,1559545200"; 
-   d="scan'208";a="49566631"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 19 Sep 2019 09:25:35 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 19 Sep 2019 09:25:34 -0700
-Received: from NAM01-BN3-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Thu, 19 Sep 2019 09:25:34 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GTVSbG7m2wu3lPb+UAfG+ZaNKQRPzu40mhaZnIGNF5dT+xM2o/shKn3P51F6lXCAlEdZJ4jv93WFj28BH4PZROeUIJ5dHQcBXuBr2cn8abD03eYu1qPsC5tutcgLWfLak2NrKWs6l6UcsI2oQIWxgNql1zCSquDhbaQ/y+5CSuRnAn2OrY1p0Pf4mWQLYgFzYEc7aTFDbs+qzBRIn6xbBUWxwBiRZ49TOhenFGADts2/VdgurQmfaax6ujICOrS79gnVgttBjnefDEqBY+qhhgNqikhx2ave+4R56mcJfwvDL8PNsLfP26yCoDQXiGy54xAXFu1XiuAVWIzy9VRKtg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vMUEfJsk9pjwVhXCMLHWKHc41K/itFbtMtAWeMZ00sk=;
- b=WBEruDgEEZEMyCCMjDGUbtS3WrFQVY7tpmjm/wTm6kk+hIzhgHZq0T87kJzmoY3SsWtMu7qjIEG0iqdND9EX8fc8WsNz/KXerUU6LZiM+ywFgCVR5DBL3AnIFX+CTa+G9GkAGYFyanZe1S2u5y5b96tnfJTDyIwMOxqACE+B2HLmfiMylDJxVYSIgwkPjnMMwUdNpdshyOZamaSYkQgk6jCtTwivFOakFpiYeR1EW2E5F6p5QPti+IzsmuH/Xea0CuKN/mW+4V/CUJquvaAKJS+jrXikWuQ9G+K5GPN4NZeKsf/hYVFz0wleVY3ihAl5Mfcd8aOd9H5mj9xhlGi3mg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vMUEfJsk9pjwVhXCMLHWKHc41K/itFbtMtAWeMZ00sk=;
- b=hcPwvtHA6WPobqsLFv5CYoxBn9x7pQ3P9Na+3EkPMY/H/J28Cw3I7WzdCCUh8/CJIby8/gYg1S9oyyo9yaHx1ahR03BmrIjV109DRnsQMEkf3DZMHk1rJl4itLRluA9sa4TC5iXhfTQwaMLLuyKRfat67FPXrlQllfUiQ8coRkI=
-Received: from BY5PR11MB4497.namprd11.prod.outlook.com (52.132.255.220) by
- BY5PR11MB4433.namprd11.prod.outlook.com (52.132.255.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.21; Thu, 19 Sep 2019 16:25:32 +0000
-Received: from BY5PR11MB4497.namprd11.prod.outlook.com
- ([fe80::acc6:9f49:c974:93b4]) by BY5PR11MB4497.namprd11.prod.outlook.com
- ([fe80::acc6:9f49:c974:93b4%5]) with mapi id 15.20.2284.009; Thu, 19 Sep 2019
- 16:25:32 +0000
-From:   <Codrin.Ciubotariu@microchip.com>
-To:     <kamel.bouhara@bootlin.com>, <linux-i2c@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <Ludovic.Desroches@microchip.com>, <Nicolas.Ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <wsa@the-dreams.de>
-Subject: Re: [PATCH] i2c: at91: Send bus clear command if SCL or SDA is down
-Thread-Topic: [PATCH] i2c: at91: Send bus clear command if SCL or SDA is down
-Thread-Index: AQHVaIebKOCwzWWM9UelAunkToehwaczJoQAgAAWGgA=
-Date:   Thu, 19 Sep 2019 16:25:32 +0000
-Message-ID: <d0820574-e677-d261-ac5c-e29bae600b3b@microchip.com>
-References: <20190911095854.5141-1-codrin.ciubotariu@microchip.com>
- <1ed845e5-3835-f1aa-099a-b67c3bc16076@bootlin.com>
-In-Reply-To: <1ed845e5-3835-f1aa-099a-b67c3bc16076@bootlin.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR08CA0028.namprd08.prod.outlook.com
- (2603:10b6:a03:100::41) To BY5PR11MB4497.namprd11.prod.outlook.com
- (2603:10b6:a03:1cc::28)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [94.177.32.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d0f4976f-5e91-450b-87d6-08d73d1dfdfb
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BY5PR11MB4433;
-x-ms-traffictypediagnostic: BY5PR11MB4433:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BY5PR11MB4433269BA6E17BBBDF4378CDE7890@BY5PR11MB4433.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
-x-forefront-prvs: 016572D96D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(39860400002)(346002)(376002)(366004)(136003)(189003)(199004)(186003)(6486002)(6436002)(52116002)(2201001)(2501003)(66556008)(64756008)(66446008)(36756003)(229853002)(66946007)(66476007)(6246003)(6512007)(305945005)(31686004)(54906003)(71190400001)(71200400001)(478600001)(99286004)(76176011)(6506007)(386003)(110136005)(31696002)(53546011)(66066001)(7736002)(446003)(256004)(14444005)(102836004)(11346002)(2616005)(26005)(476003)(2906002)(486006)(81166006)(81156014)(8676002)(8936002)(6116002)(14454004)(3846002)(25786009)(86362001)(5660300002)(316002)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR11MB4433;H:BY5PR11MB4497.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 37cosASPjiJxXr5VRYetWr15SNZpNFj2ac0f3y2t/E4TvltLDabGy5BtQrvAUogd3TvxUvAi6n4Q5oP8UNicgxyrBmPVI2Di1DDDukIUstsiMsHfKQChif1TNYOX7AuqhwpOy4apRXKmkOLiKTwY6a9MY4k5ug5v264fFRLQqt1x3x7Mi1dQfWTStsfsi88SldSWLgCvs9Ob8eSx6+0ziNCxmPYG7UWO/7mmJISBHlAtPePKv4QoXPQzODcIY2QjH+4lyg/C7iOLG2Rbdp6y1pVDaS0UthDOC2Ovm/ACyVnQ74XtGMDJMQHwjJVMwqylnNvgcrZL+BhjxJHbooi+LZGoOmTjeBEhMZpxCxT0QX82f735Khw7aLVD8czUl8rPl9EUmWAtaF0e/+hduWuWbohbjQDSogZS4WGXIR/q5AQ=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <EB34E13450DD284088DEB23122EC935E@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 19 Sep 2019 12:26:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56708 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404291AbfISQ0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 12:26:18 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57C5A20644;
+        Thu, 19 Sep 2019 16:26:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568910377;
+        bh=L+a2RPg7TvMt+BcXyUJ5gIfCb7Ud4JWHpFNge+LYu8A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mZGQO3wKwkYqExwdREYGgvRhqE/puQ+8Hd9m3GHgSeLOBdrXEjpVJ8prsZ+q6NL0X
+         gk5XT36Yyhyg0jkCuXsWTM5AcNXMHzYcx1rud7bqwAdIytemUMA7MA2lDjvKPWq+Ve
+         FLOYvZKqbqmI24eexR7dTv2xeOIkxmJlakxjNnE4=
+Date:   Thu, 19 Sep 2019 17:26:12 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Michael Kerrisk <mtk.manpages@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        paulmck <paulmck@linux.ibm.com>, Ingo Molnar <mingo@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Russell King, ARM Linux" <linux@armlinux.org.uk>,
+        Chris Metcalf <cmetcalf@ezchip.com>,
+        Chris Lameter <cl@linux.com>, Kirill Tkhai <tkhai@yandex.ru>,
+        Mike Galbraith <efault@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [RFC PATCH 4/4] Fix: sched/membarrier: p->mm->membarrier_state
+ racy load (v2)
+Message-ID: <20190919162611.wizldpybn3qd5cik@willie-the-truck>
+References: <20190906082305.GU2349@hirez.programming.kicks-ass.net>
+ <20190908134909.12389-1-mathieu.desnoyers@efficios.com>
+ <CAHk-=wg3AANn8K3OyT7KRNvVC5s0rvWVxXJ=_R+TAd3CGdcF+A@mail.gmail.com>
+ <137355288.1941.1568108882233.JavaMail.zimbra@efficios.com>
+ <20190912134802.mhxyy25xemy5sycm@willie-the-truck>
+ <CAHk-=wgC8YspwtUeaV9ZwHjZDfXaJaT7i4v==Dp-vnVOF5i6qg@mail.gmail.com>
+ <20190912154734.j3mmjmqf2iltbenm@willie-the-truck>
+ <1283729551.2396.1568384548023.JavaMail.zimbra@efficios.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: d0f4976f-5e91-450b-87d6-08d73d1dfdfb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Sep 2019 16:25:32.2559
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: eyZ3ds2qrvuTja2fouXw8si5HwXcbKfHK8a+q/nUUf45JeabvpMgomA907K9NUbKu6rQuFopGaMW8XC+GUQjHI6S8Ibhkq5uU+htHY2pVH8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4433
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1283729551.2396.1568384548023.JavaMail.zimbra@efficios.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMTkuMDkuMjAxOSAxODowNiwga2JvdWhhcmEgd3JvdGU6DQo+IA0KPiBPbiA5LzExLzE5IDEx
-OjU4IEFNLCBDb2RyaW4gQ2l1Ym90YXJpdSB3cm90ZToNCj4+IEFmdGVyIGEgdHJhbnNmZXIgdGlt
-ZW91dCwgc29tZSBmYXVsdHkgSTJDIHNsYXZlIGRldmljZXMgbWlnaHQgaG9sZCBkb3duDQo+PiB0
-aGUgU0NMIG9yIHRoZSBTREEgcGlucy4gV2UgY2FuIGdlbmVyYXRlIGEgYnVzIGNsZWFyIGNvbW1h
-bmQsIGhvcGluZyB0aGF0DQo+PiB0aGUgc2xhdmUgbWlnaHQgcmVsZWFzZSB0aGUgcGlucy4NCj4+
-DQo+PiBTaWduZWQtb2ZmLWJ5OiBDb2RyaW4gQ2l1Ym90YXJpdSA8Y29kcmluLmNpdWJvdGFyaXVA
-bWljcm9jaGlwLmNvbT4NCj4+IC0tLQ0KPj4gwqAgZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1hdDkx
-LW1hc3Rlci5jIHwgMjAgKysrKysrKysrKysrKysrKysrKysNCj4+IMKgIGRyaXZlcnMvaTJjL2J1
-c3Nlcy9pMmMtYXQ5MS5owqDCoMKgwqDCoMKgwqAgfMKgIDYgKysrKystDQo+PiDCoCAyIGZpbGVz
-IGNoYW5nZWQsIDI1IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4+DQo+PiBkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1hdDkxLW1hc3Rlci5jIA0KPj4gYi9kcml2ZXJz
-L2kyYy9idXNzZXMvaTJjLWF0OTEtbWFzdGVyLmMNCj4+IGluZGV4IGEzZmNjMzVmZmQzYi4uNWY1
-NDRhMTZkYjk2IDEwMDY0NA0KPj4gLS0tIGEvZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1hdDkxLW1h
-c3Rlci5jDQo+PiArKysgYi9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLWF0OTEtbWFzdGVyLmMNCj4+
-IEBAIC01OTksNiArNTk5LDI2IEBAIHN0YXRpYyBpbnQgYXQ5MV9kb190d2lfdHJhbnNmZXIoc3Ry
-dWN0IA0KPj4gYXQ5MV90d2lfZGV2ICpkZXYpDQo+PiDCoMKgwqDCoMKgwqDCoMKgwqAgYXQ5MV90
-d2lfd3JpdGUoZGV2LCBBVDkxX1RXSV9DUiwNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAgQVQ5MV9UV0lfVEhSQ0xSIHwgQVQ5MV9UV0lfTE9DS0NMUik7DQo+PiDC
-oMKgwqDCoMKgIH0NCj4+ICsNCj4+ICvCoMKgwqAgLyoNCj4+ICvCoMKgwqDCoCAqIEFmdGVyIHRp
-bWVvdXQsIHNvbWUgZmF1bHR5IEkyQyBzbGF2ZSBkZXZpY2VzIG1pZ2h0IGhvbGQgDQo+PiBTQ0wv
-U0RBIGRvd247DQo+PiArwqDCoMKgwqAgKiB3ZSBjYW4gc2VuZCBhIGJ1cyBjbGVhciBjb21tYW5k
-LCBob3BpbmcgdGhhdCB0aGUgcGlucyB3aWxsIGJlDQo+PiArwqDCoMKgwqAgKiByZWxlYXNlZA0K
-Pj4gK8KgwqDCoMKgICovDQo+PiArwqDCoMKgIGlmICghKGRldi0+dHJhbnNmZXJfc3RhdHVzICYg
-QVQ5MV9UV0lfU0RBKSB8fA0KPj4gK8KgwqDCoMKgwqDCoMKgICEoZGV2LT50cmFuc2Zlcl9zdGF0
-dXMgJiBBVDkxX1RXSV9TQ0wpKSB7DQo+PiArwqDCoMKgwqDCoMKgwqAgZGV2X2RiZyhkZXYtPmRl
-diwNCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICJTREEvU0NMIGFyZSBkb3duOyBzZW5kaW5n
-IGJ1cyBjbGVhciBjb21tYW5kXG4iKTsNCj4+ICvCoMKgwqDCoMKgwqDCoCBpZiAoZGV2LT51c2Vf
-YWx0X2NtZCkgew0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdW5zaWduZWQgaW50IGFjcjsN
-Cj4+ICsNCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGFjciA9IGF0OTFfdHdpX3JlYWQoZGV2
-LCBBVDkxX1RXSV9BQ1IpOw0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgYWNyICY9IH5BVDkx
-X1RXSV9BQ1JfREFUQUxfTUFTSzsNCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGF0OTFfdHdp
-X3dyaXRlKGRldiwgQVQ5MV9UV0lfQUNSLCBhY3IpOw0KPj4gK8KgwqDCoMKgwqDCoMKgIH0NCj4+
-ICvCoMKgwqDCoMKgwqDCoCBhdDkxX3R3aV93cml0ZShkZXYsIEFUOTFfVFdJX0NSLCBBVDkxX1RX
-SV9DTEVBUik7DQo+IA0KPiBUaGlzIGJpdCBpcyBub3QgZG9jdW1lbnRlZCBvbiBTb0NzIGJlZm9y
-ZSBTQU1BNUQyL0Q0LCB0aGlzIHdyaXRlIA0KPiBzaG91bGRuJ3QgYmUgZG9uZSB1bmNvbmRpdGlv
-bmFsbHkuDQo+IA0KPiANCg0KSW5kZWVkLCB0aGV5IGFyZSBub3QgcHJlc2VudCBvbiBTQU1BNUQ0
-IG9yIGVhcmxpZXIgU29Dcy4gSXQgaXMgc3VwcG9ydGVkIA0Kb24gU0FNQTVEMiB0aG91Z2guIEkg
-d2lsbCBtYWtlIGEgbmV3IHZlcnNpb24gYW5kIGltcGxlbWVudCB0aGUgQ0xFQVIgDQpjb21tYW5k
-IG9ubHkgZm9yIHRoZSBTb0NzIHRoYXQgc3VwcG9ydCBpdC4NCg0KVGhhbmsgeW91IGZvciB5b3Vy
-IHJldmlldy4NCg0KQmVzdCByZWdhcmRzLA0KQ29kcmluDQo=
+Hi Mathieu,
+
+Sorry for the delay in responding.
+
+On Fri, Sep 13, 2019 at 10:22:28AM -0400, Mathieu Desnoyers wrote:
+> ----- On Sep 12, 2019, at 11:47 AM, Will Deacon will@kernel.org wrote:
+> 
+> > On Thu, Sep 12, 2019 at 03:24:35PM +0100, Linus Torvalds wrote:
+> >> On Thu, Sep 12, 2019 at 2:48 PM Will Deacon <will@kernel.org> wrote:
+> >> >
+> >> > So the man page for sys_membarrier states that the expedited variants "never
+> >> > block", which feels pretty strong. Do any other system calls claim to
+> >> > provide this guarantee without a failure path if blocking is necessary?
+> >> 
+> >> The traditional semantics for "we don't block" is that "we block on
+> >> memory allocations and locking and user accesses etc, but  we don't
+> >> wait for our own IO".
+> >> 
+> >> So there may be new IO started (and waited on) as part of allocating
+> >> new memory etc, or in just paging in user memory, but the IO that the
+> >> operation _itself_ explicitly starts is not waited on.
+> > 
+> > Thanks, that makes sense, and I'd be inclined to suggest an update to the
+> > sys_membarrier manpage to make this more clear since the "never blocks"
+> > phrasing doesn't seem to be used like this for other system calls.
+> 
+> The current wording from membarrier(2) is:
+> 
+>               The  "expedited" commands complete faster than the non-expedited
+>               ones; they never block, but have the downside of  causing  extra
+>               overhead.
+> 
+> We could simply remove the "; they never block" part then ?
+
+I think so, yes. That or, "; they do not voluntarily block" or something
+like that. Maybe look at other man pages for inspiration ;)
+
+> >> No system call should ever be considered "atomic" in any sense. If
+> >> you're doing RT, you should maybe expect "getpid()" to not ever block,
+> >> but that's just about the exclusive list of truly nonblocking system
+> >> calls, and even that can be preempted.
+> > 
+> > In which case, why can't we just use GFP_KERNEL for the cpumask allocation
+> > instead of GFP_NOWAIT and then remove the failure path altogether? Mathieu?
+> 
+> Looking at:
+> 
+> #define GFP_KERNEL      (__GFP_RECLAIM | __GFP_IO | __GFP_FS)
+> 
+> I notice that it does not include __GFP_NOFAIL. What prevents GFP_KERNEL from
+> failing, and where is this guarantee documented ?
+
+There was an lwn article a little while ago about this:
+
+https://lwn.net/Articles/723317/
+
+I'm not sure what (if anything) has changed in this regard since then,
+however.
+
+> Regarding __GFP_NOFAIL, its use seems to be discouraged in linux/gfp.h:
+> 
+>  * %__GFP_NOFAIL: The VM implementation _must_ retry infinitely: the caller
+>  * cannot handle allocation failures. The allocation could block
+>  * indefinitely but will never return with failure. Testing for
+>  * failure is pointless.
+>  * New users should be evaluated carefully (and the flag should be
+>  * used only when there is no reasonable failure policy) but it is
+>  * definitely preferable to use the flag rather than opencode endless
+>  * loop around allocator.
+>  * Using this flag for costly allocations is _highly_ discouraged.
+> 
+> So I am reluctant to use it.
+> 
+> But if we can agree on the right combination of flags that guarantees there
+> is no failure, I would be perfectly fine with using them to remove the fallback
+> code.
+
+I reckon you'll be fine using GFP_KERNEL and returning -ENOMEM on allocation
+failure. This shouldn't happen in practice and it removes the fallback
+path.
+
+Will
