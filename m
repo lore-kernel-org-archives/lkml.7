@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D091C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E56C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 027B2217D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:33:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 693B8208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:33:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932415;
-	bh=8NBCg4bn+YAcGGwPshiT26t1NXX+A+bvQ5yC6Q+ZwUo=;
+	s=default; t=1568932418;
+	bh=6nwFTGM40OJf3SA3mcvKK+YqV+J1assoWr1tet+7zfI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BJoDhICHtouwZDvFEGMl324mc1/joLR96v9D/8u7da+aT65w9G+j4lwkfTgYUET/A
-	 KCQ45k4oNHecYSmyjxu3RVGe51oHrmDsDUp87tEOWg2Q9vtu+EdSzZ00KhXo8eHDwM
-	 0fu8958TWMAWbdx4XfXxykXBf28QLB4KCI04f4LU=
+	b=vFsYwv7gN6YyAqX4mUw4VwPtmMsY1hvgxNauntR9ubFQ5xghfUlc7/hSnNq9J3zmh
+	 ZNOGnHgV2vUBDtb1uw85ycxQp4BOjZinIaoAS/T7/KWdG0n7yerMTLa9TmvE0Z/YVV
+	 8J0gBBkdo2+MD93cxZYC5HNrhVKsHH14eioavvRE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405830AbfISWL0 (ORCPT
+        id S2393571AbfISWLW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:11:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50052 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:11:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393572AbfISWLX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:11:23 -0400
+        id S2393226AbfISWLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:11:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1660218AF;
-        Thu, 19 Sep 2019 22:11:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A3D7218AF;
+        Thu, 19 Sep 2019 22:11:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931082;
-        bh=8NBCg4bn+YAcGGwPshiT26t1NXX+A+bvQ5yC6Q+ZwUo=;
+        s=default; t=1568931076;
+        bh=6nwFTGM40OJf3SA3mcvKK+YqV+J1assoWr1tet+7zfI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sPcKa5Ghg/0/5qPeXLrXKXLjyBuWM0gw8lusmhb31t7uuPVTEBUmtH0u0shaCap7y
-         DaFnL0jmtxHNgaZ0uiQn2iiSWugHcw1yLicRqrl3Onq/hpnV8oKI8kUWFVfKUiGyrk
-         KdcCWoUHS4HlxK2zZ4CMmcTf0uKu2idi5QMQUkno=
+        b=gd47OST5nvU6KJLm35NgCH8MWhUYtir5pnpZ19dLJP5fMjovpI0h2KHGN8/X85ygE
+         r5zEcbozDrOD5Xyh5ZUrs8+Spj4DGAbfaXO9ZBLqLa77a1WV+YwfY2rvj0EGEKt9zN
+         fqXNx6fnp+hXaJw9Y4/mhVeuBw8NgRvagZ/ZwS04=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Popov <alex.popov@linux.com>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Jann Horn <jannh@google.com>, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.2 122/124] floppy: fix usercopy direction
-Date:   Fri, 20 Sep 2019 00:03:30 +0200
-Message-Id: <20190919214823.616660752@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 5.2 120/124] Revert "arm64: Remove unnecessary ISBs from set_{pte,pmd,pud}"
+Date:   Fri, 20 Sep 2019 00:03:28 +0200
+Message-Id: <20190919214823.541658650@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -60,44 +59,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Will Deacon <will@kernel.org>
 
-commit 52f6f9d74f31078964ca1574f7bb612da7877ac8 upstream.
+commit d0b7a302d58abe24ed0f32a0672dd4c356bb73db upstream.
 
-As sparse points out, these two copy_from_user() should actually be
-copy_to_user().
+This reverts commit 24fe1b0efad4fcdd32ce46cffeab297f22581707.
 
-Fixes: 229b53c9bf4e ("take floppy compat ioctls to sodding floppy.c")
-Cc: stable@vger.kernel.org
-Acked-by: Alexander Popov <alex.popov@linux.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Commit 24fe1b0efad4fcdd ("arm64: Remove unnecessary ISBs from
+set_{pte,pmd,pud}") removed ISB instructions immediately following updates
+to the page table, on the grounds that they are not required by the
+architecture and a DSB alone is sufficient to ensure that subsequent data
+accesses use the new translation:
+
+  DDI0487E_a, B2-128:
+
+  | ... no instruction that appears in program order after the DSB
+  | instruction can alter any state of the system or perform any part of
+  | its functionality until the DSB completes other than:
+  |
+  | * Being fetched from memory and decoded
+  | * Reading the general-purpose, SIMD and floating-point,
+  |   Special-purpose, or System registers that are directly or indirectly
+  |   read without causing side-effects.
+
+However, the same document also states the following:
+
+  DDI0487E_a, B2-125:
+
+  | DMB and DSB instructions affect reads and writes to the memory system
+  | generated by Load/Store instructions and data or unified cache
+  | maintenance instructions being executed by the PE. Instruction fetches
+  | or accesses caused by a hardware translation table access are not
+  | explicit accesses.
+
+which appears to claim that the DSB alone is insufficient.  Unfortunately,
+some CPU designers have followed the second clause above, whereas in Linux
+we've been relying on the first. This means that our mapping sequence:
+
+	MOV	X0, <valid pte>
+	STR	X0, [Xptep]	// Store new PTE to page table
+	DSB	ISHST
+	LDR	X1, [X2]	// Translates using the new PTE
+
+can actually raise a translation fault on the load instruction because the
+translation can be performed speculatively before the page table update and
+then marked as "faulting" by the CPU. For user PTEs, this is ok because we
+can handle the spurious fault, but for kernel PTEs and intermediate table
+entries this results in a panic().
+
+Revert the offending commit to reintroduce the missing barriers.
+
+Cc: <stable@vger.kernel.org>
+Fixes: 24fe1b0efad4fcdd ("arm64: Remove unnecessary ISBs from set_{pte,pmd,pud}")
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/block/floppy.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/include/asm/pgtable.h |   12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -3780,7 +3780,7 @@ static int compat_getdrvprm(int drive,
- 	v.native_format = UDP->native_format;
- 	mutex_unlock(&floppy_mutex);
- 
--	if (copy_from_user(arg, &v, sizeof(struct compat_floppy_drive_params)))
-+	if (copy_to_user(arg, &v, sizeof(struct compat_floppy_drive_params)))
- 		return -EFAULT;
- 	return 0;
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -214,8 +214,10 @@ static inline void set_pte(pte_t *ptep,
+ 	 * Only if the new pte is valid and kernel, otherwise TLB maintenance
+ 	 * or update_mmu_cache() have the necessary barriers.
+ 	 */
+-	if (pte_valid_not_user(pte))
++	if (pte_valid_not_user(pte)) {
+ 		dsb(ishst);
++		isb();
++	}
  }
-@@ -3816,7 +3816,7 @@ static int compat_getdrvstat(int drive,
- 	v.bufblocks = UDRS->bufblocks;
- 	mutex_unlock(&floppy_mutex);
  
--	if (copy_from_user(arg, &v, sizeof(struct compat_floppy_drive_struct)))
-+	if (copy_to_user(arg, &v, sizeof(struct compat_floppy_drive_struct)))
- 		return -EFAULT;
- 	return 0;
- Eintr:
+ extern void __sync_icache_dcache(pte_t pteval);
+@@ -453,8 +455,10 @@ static inline void set_pmd(pmd_t *pmdp,
+ 
+ 	WRITE_ONCE(*pmdp, pmd);
+ 
+-	if (pmd_valid(pmd))
++	if (pmd_valid(pmd)) {
+ 		dsb(ishst);
++		isb();
++	}
+ }
+ 
+ static inline void pmd_clear(pmd_t *pmdp)
+@@ -512,8 +516,10 @@ static inline void set_pud(pud_t *pudp,
+ 
+ 	WRITE_ONCE(*pudp, pud);
+ 
+-	if (pud_valid(pud))
++	if (pud_valid(pud)) {
+ 		dsb(ishst);
++		isb();
++	}
+ }
+ 
+ static inline void pud_clear(pud_t *pudp)
 
 
