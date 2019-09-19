@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD25C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B84C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8AA2208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:31:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12BEC208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:32:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932314;
-	bh=DfOg6QLdAfp3DMZeD0O4pe0XXbH4LfNoN5nUvnEji4c=;
+	s=default; t=1568932328;
+	bh=y+4/48mPRddCtsFRk2xtrrWt0Ag+cNN84eo2U1HHEZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hQl2fB7iGjqAviLk5XJbch3xn5SKHwBPZCZ4aDcTBapQUMmeXx1OmE6Hp+3CQMoEg
-	 K2Y7DdjCCIhCoHOZa5Oy5tAuJOYP5iUugsChUqzLMi8pZ0+xwyn5+zwBbfWzbmFb8g
-	 MPRGfHBoaHhNbV/20oJUwkaNIr9u6M9c7ZzH73v4=
+	b=AHUsZ2ZghIlVR4MexQ8fFu275I3xWBWy4rw1C3HryE1o3vfuiCy2FBdRxvh4eLUrq
+	 o5OyONH5Tcc5xJpLCiY3hfo+ZHVLrukEhM1nMszBG1ywMeqffjvXUWV7aNWEN402tS
+	 2gl9q1tIqh/sZpwXZTr6T+SJ57JtfEm9RYq+E7Po=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392109AbfISWOI (ORCPT
+        id S2392323AbfISWcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:14:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53434 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:32:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732690AbfISWOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:14:06 -0400
+        id S2389084AbfISWNp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:13:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A90AC21907;
-        Thu, 19 Sep 2019 22:14:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA51621927;
+        Thu, 19 Sep 2019 22:13:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931244;
-        bh=DfOg6QLdAfp3DMZeD0O4pe0XXbH4LfNoN5nUvnEji4c=;
+        s=default; t=1568931225;
+        bh=y+4/48mPRddCtsFRk2xtrrWt0Ag+cNN84eo2U1HHEZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B/BWyih7ftImghd5o9P7kQzZ8WW0x2ZdhJATNnSjcBq2PwB3jam0Y9O66IFmHFlNl
-         xfC6sjXDn2GDVGuxJd884L72XzwVqc3+DF8bPHBoAZEPC3UvQo2Vp7pr8YDqhoHqg3
-         8JWdjwcZXBQJ7aEgdfUzsUi3yEF/bAh1N//otCug=
+        b=0Q0o5Am708jaEw4fuOA2NJxsQLfrZE2Q7TDuWjoBa+icZincs6bvNC6iAWzOxCq/M
+         f64YyjlN5VjzzMYkn513Wq01Pl2X7Jjl0I5xPXo5+JYaEwO0ukzfC8GEbldiR0a1Hy
+         6XlM4F7HaEUZR1KdjqXvuh6hUvYjgD3vhs4tfREM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
-        Thomas Falcon <tlfalcon@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 56/79] ibmvnic: Do not process reset during or after device removal
-Date:   Fri, 20 Sep 2019 00:03:41 +0200
-Message-Id: <20190919214812.341879223@linuxfoundation.org>
+Subject: [PATCH 4.19 49/79] NFSv2: Fix eof handling
+Date:   Fri, 20 Sep 2019 00:03:34 +0200
+Message-Id: <20190919214811.846472108@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214807.612593061@linuxfoundation.org>
 References: <20190919214807.612593061@linuxfoundation.org>
@@ -61,52 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Falcon <tlfalcon@linux.ibm.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 36f1031c51a2538e5558fb44c6d6b88f98d3c0f2 ]
+[ Upstream commit 71affe9be45a5c60b9772e1b2701710712637274 ]
 
-Currently, the ibmvnic driver will not schedule device resets
-if the device is being removed, but does not check the device
-state before the reset is actually processed. This leads to a race
-where a reset is scheduled with a valid device state but is
-processed after the driver has been removed, resulting in an oops.
+If we received a reply from the server with a zero length read and
+no error, then that implies we are at eof.
 
-Fix this by checking the device state before processing a queued
-reset event.
-
-Reported-by: Abdul Haleem <abdhalee@linux.vnet.ibm.com>
-Tested-by: Abdul Haleem <abdhalee@linux.vnet.ibm.com>
-Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ibm/ibmvnic.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ fs/nfs/proc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
-index 255de7d68cd33..5a57be66a4872 100644
---- a/drivers/net/ethernet/ibm/ibmvnic.c
-+++ b/drivers/net/ethernet/ibm/ibmvnic.c
-@@ -1998,6 +1998,10 @@ static void __ibmvnic_reset(struct work_struct *work)
- 
- 	rwi = get_next_rwi(adapter);
- 	while (rwi) {
-+		if (adapter->state == VNIC_REMOVING ||
-+		    adapter->state == VNIC_REMOVED)
-+			goto out;
-+
- 		if (adapter->force_reset_recovery) {
- 			adapter->force_reset_recovery = false;
- 			rc = do_hard_reset(adapter, rwi, reset_state);
-@@ -2022,7 +2026,7 @@ static void __ibmvnic_reset(struct work_struct *work)
- 		netdev_dbg(adapter->netdev, "Reset failed\n");
- 		free_all_rwi(adapter);
+diff --git a/fs/nfs/proc.c b/fs/nfs/proc.c
+index e0c257bd62b93..89fa9c706b380 100644
+--- a/fs/nfs/proc.c
++++ b/fs/nfs/proc.c
+@@ -594,7 +594,8 @@ static int nfs_read_done(struct rpc_task *task, struct nfs_pgio_header *hdr)
+ 		/* Emulate the eof flag, which isn't normally needed in NFSv2
+ 		 * as it is guaranteed to always return the file attributes
+ 		 */
+-		if (hdr->args.offset + hdr->res.count >= hdr->res.fattr->size)
++		if ((hdr->res.count == 0 && hdr->args.count > 0) ||
++		    hdr->args.offset + hdr->res.count >= hdr->res.fattr->size)
+ 			hdr->res.eof = 1;
  	}
--
-+out:
- 	adapter->resetting = false;
- 	if (we_lock_rtnl)
- 		rtnl_unlock();
+ 	return 0;
 -- 
 2.20.1
 
