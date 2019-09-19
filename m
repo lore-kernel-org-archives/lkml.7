@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 786F4C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F777C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44183217D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:29:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05EEE20678
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:29:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932183;
-	bh=WDDmQk9gOFP0z6dEEfHIWljZ+gHsBxUO1ko+buhLRBk=;
+	s=default; t=1568932187;
+	bh=Lj7bkb2BiDO38UOg4KwiSGvkPNkyrZAhGxld/8od+KE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YFpPQz9QNPjZF10jDumbVTSz805HZ0gZXFon58mD2JIphrL2SKkWKc/D3MSi3Xvqg
-	 7rKirFtMFMgtex9kzTLcY3UHUPHG6heR856gXWJ72NQnb35QRBYQGTPpwnufUeViSc
-	 A2yf+DkIlZJebQzy0fVGIBj6o2XsY0RO09rpeVLQ=
+	b=OgU31adTkNwBAVTDT3zLYz68kkCxGshLHJqPgAPEScWThG+C6tXxt/MY01LTtKLBQ
+	 VTiskjsRSSjWfAdHHo/f41qhTdC//qrWyT1tT9Q4GulJdJH7nB8M/SiZL8pwbkk3pq
+	 VE9ChzekfjcbyZgkxFLYU19+pZlR5RMGI9SHjuxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406461AbfISWRW (ORCPT
+        id S1732724AbfISWRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:17:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58416 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:17:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392014AbfISWRR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:17:17 -0400
+        id S2406443AbfISWRL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:17:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 418DB21907;
-        Thu, 19 Sep 2019 22:17:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDD8A21907;
+        Thu, 19 Sep 2019 22:17:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931436;
-        bh=WDDmQk9gOFP0z6dEEfHIWljZ+gHsBxUO1ko+buhLRBk=;
+        s=default; t=1568931431;
+        bh=Lj7bkb2BiDO38UOg4KwiSGvkPNkyrZAhGxld/8od+KE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=akh87n8A062ERWSAUbKDUPsKI4FUZtg8vMXdUyPPlv4s9f9cRtr7ImDS5sYdjD6iN
-         0MEq0016cjkwqkSdtJKsq54rZi+IrMQTVdIqdKXH6ePMlLm6yYy2cpnLiuqgDr2tLT
-         ewK9stglGrm+fsZgiIEMPLzfBfhiOKeUlcYa0UHk=
+        b=BJh54lBxjUV30YXNaq2T67Rv/uiaRibk9/lSh7KImWoUq6GMV/YeJdlHiNwN3e8qH
+         IGTl+2PsRvVb4w8Ny/ceCG5u6zqoKwnVIGStJH+8RdeJVHTJ80Ouc7+npNuKWhRzsV
+         BF+wGGDXkm/FnD8VrEOBcn1WdAknry4h5h86WjuQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        "David S. Miller" <davem@davemloft.net>,
+        "Zephaniah E. Loss-Cutler-Hull" <zephaniah@gmail.com>,
+        Len Brown <len.brown@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 46/59] net: seeq: Fix the function used to release some memory in an error handling path
-Date:   Fri, 20 Sep 2019 00:04:01 +0200
-Message-Id: <20190919214807.433413162@linuxfoundation.org>
+Subject: [PATCH 4.14 44/59] tools/power x86_energy_perf_policy: Fix argument parsing
+Date:   Fri, 20 Sep 2019 00:03:59 +0200
+Message-Id: <20190919214807.211407928@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214755.852282682@linuxfoundation.org>
 References: <20190919214755.852282682@linuxfoundation.org>
@@ -62,53 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Zephaniah E. Loss-Cutler-Hull <zephaniah@gmail.com>
 
-[ Upstream commit e1e54ec7fb55501c33b117c111cb0a045b8eded2 ]
+[ Upstream commit 03531482402a2bc4ab93cf6dde46833775e035e9 ]
 
-In commit 99cd149efe82 ("sgiseeq: replace use of dma_cache_wback_inv"),
-a call to 'get_zeroed_page()' has been turned into a call to
-'dma_alloc_coherent()'. Only the remove function has been updated to turn
-the corresponding 'free_page()' into 'dma_free_attrs()'.
-The error hndling path of the probe function has not been updated.
+The -w argument in x86_energy_perf_policy currently triggers an
+unconditional segfault.
 
-Fix it now.
+This is because the argument string reads: "+a:c:dD:E:e:f:m:M:rt:u:vw" and
+yet the argument handler expects an argument.
 
-Rename the corresponding label to something more in line.
+When parse_optarg_string is called with a null argument, we then proceed to
+crash in strncmp, not horribly friendly.
 
-Fixes: 99cd149efe82 ("sgiseeq: replace use of dma_cache_wback_inv")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Reviewed-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The man page describes -w as taking an argument, the long form
+(--hwp-window) is correctly marked as taking a required argument, and the
+code expects it.
+
+As such, this patch simply marks the short form (-w) as requiring an
+argument.
+
+Signed-off-by: Zephaniah E. Loss-Cutler-Hull <zephaniah@gmail.com>
+Signed-off-by: Len Brown <len.brown@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/seeq/sgiseeq.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/seeq/sgiseeq.c b/drivers/net/ethernet/seeq/sgiseeq.c
-index 84a42ed97601d..49a18439bea2b 100644
---- a/drivers/net/ethernet/seeq/sgiseeq.c
-+++ b/drivers/net/ethernet/seeq/sgiseeq.c
-@@ -792,15 +792,16 @@ static int sgiseeq_probe(struct platform_device *pdev)
- 		printk(KERN_ERR "Sgiseeq: Cannot register net device, "
- 		       "aborting.\n");
- 		err = -ENODEV;
--		goto err_out_free_page;
-+		goto err_out_free_attrs;
- 	}
+diff --git a/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c b/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
+index bbef8bcf44d6d..2aba622d1c5aa 100644
+--- a/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
++++ b/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
+@@ -546,7 +546,7 @@ void cmdline(int argc, char **argv)
  
- 	printk(KERN_INFO "%s: %s %pM\n", dev->name, sgiseeqstr, dev->dev_addr);
+ 	progname = argv[0];
  
- 	return 0;
- 
--err_out_free_page:
--	free_page((unsigned long) sp->srings);
-+err_out_free_attrs:
-+	dma_free_attrs(&pdev->dev, sizeof(*sp->srings), sp->srings,
-+		       sp->srings_dma, DMA_ATTR_NON_CONSISTENT);
- err_out_free_dev:
- 	free_netdev(dev);
- 
+-	while ((opt = getopt_long_only(argc, argv, "+a:c:dD:E:e:f:m:M:rt:u:vw",
++	while ((opt = getopt_long_only(argc, argv, "+a:c:dD:E:e:f:m:M:rt:u:vw:",
+ 				long_options, &option_index)) != -1) {
+ 		switch (opt) {
+ 		case 'a':
 -- 
 2.20.1
 
