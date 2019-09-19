@@ -2,127 +2,167 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E557C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 18:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6178FC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 18:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1020121924
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 18:54:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AM2asdnT";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oIlx/h4P"
+	by mail.kernel.org (Postfix) with ESMTP id 4179A21907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 18:55:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391556AbfISSya (ORCPT
+        id S2392028AbfISSz3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 14:54:30 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:44228 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390745AbfISSya (ORCPT
+        Thu, 19 Sep 2019 14:55:29 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:50821 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391845AbfISSz3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 14:54:30 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id B2FB2613A3; Thu, 19 Sep 2019 18:54:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568919268;
-        bh=1KRYCvKV5SHVIhtNgo8m4kr/fGiP20kR6gPIaf/0Otg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=AM2asdnTbcWjTDSKvPLLLdkQcBJUAV1JdLEthM9iH/DgEjywpq7Eoc/p1Vs2GM84p
-         3erF2Xz3fyJi8C5FGvzAuneSUgQqSHMFDaTgN01JSu4qlLoqLdpm1oaHQt9Iow7aJ+
-         3a+8c2Gm3LuPjiXItJKq2muU2J6yjFLAMEgzRnYs=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id A247360710;
-        Thu, 19 Sep 2019 18:54:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568919267;
-        bh=1KRYCvKV5SHVIhtNgo8m4kr/fGiP20kR6gPIaf/0Otg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=oIlx/h4PwXSHJ7h9cZjdPE5H+2CEisDoztsKvW4giVo1k2CxZRaSJqHxI83qP0qHg
-         tkPBPtb/5nGxFi1rBt/YVoq22htrrltzlUQUhT7VuUEumoizV84coZMI2qfK3jo020
-         CWuap7Ca2dLOyFzOGOwA0/CmDlurGT6qNtfukueQ=
+        Thu, 19 Sep 2019 14:55:29 -0400
+X-Originating-IP: 90.65.161.137
+Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 703621BF203;
+        Thu, 19 Sep 2019 18:55:27 +0000 (UTC)
+Date:   Thu, 19 Sep 2019 20:55:25 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Shuah Khan <shuah@kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH] selftests/kselftest/runner.sh: Add 45 second timeout per
+ test
+Message-ID: <20190919185525.GD21254@piout.net>
+References: <201909191102.97FA56072@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 20 Sep 2019 00:24:27 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>
-Cc:     Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCHv6 3/3] iommu: arm-smmu-impl: Add sdm845 implementation
- hook
-In-Reply-To: <a45e8fb6fe1a8cc914fedbfac65af009@codeaurora.org>
-References: <cover.1568712606.git.saiprakash.ranjan@codeaurora.org>
- <1513424ecec891d19c1aa3c599ec67db7964b6b2.1568712606.git.saiprakash.ranjan@codeaurora.org>
- <20190919002501.GA20859@builder>
- <a45e8fb6fe1a8cc914fedbfac65af009@codeaurora.org>
-Message-ID: <081fff2f5dacfa7b6f5df6364f088045@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201909191102.97FA56072@keescook>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-09-19 08:48, Sai Prakash Ranjan wrote:
-> On 2019-09-19 05:55, Bjorn Andersson wrote:
->> In the transition to this new design we lost the ability to
->> enable/disable the safe toggle per board, which according to Vivek
->> would result in some issue with Cheza.
->> 
->> Can you confirm that this is okay? (Or introduce the DT property for
->> enabling the safe_toggle logic?)
->> 
+On 19/09/2019 11:06:44-0700, Kees Cook wrote:
+> Commit a745f7af3cbd ("selftests/harness: Add 30 second timeout per
+> test") solves the problem of kselftest_harness.h-using binary tests
+> possibly hanging forever. However, scripts and other binaries can still
+> hang forever. This adds a global timeout to each test script run.
 > 
-> Hmm, I don't remember Vivek telling about any issue on Cheza because
-> of this logic.
-> But I will test this on Cheza and let you know.
+> To make this configurable (e.g. as needed in the "rtc" test case),
+> include a new per-test-directory "settings" file (similar to "config")
+> that can contain kselftest-specific settings. The first recognized field
+> is "timeout".
 > 
 
-I tested this on Cheza and no perf degradation nor any other issue is 
-seen
-atleast openly, although I see this below stack dump always with 
-cant_sleep change added.
+Seems good to me. I was also wondering whether this is actually
+reasonable to have tests running for so long. I wanted to discuss that
+at LPC but I missed the session.
 
-[    5.048860] BUG: assuming atomic context at 
-/mnt/host/source/src/third_party/kernel/v5.3/drivers/firmware/qcom_scm-64.c:206
-[    5.060303] in_atomic(): 0, irqs_disabled(): 0, pid: 1, name: 
-swapper/0
-[    5.067118] CPU: 4 PID: 1 Comm: swapper/0 Not tainted 5.3.0 #102
-[    5.073299] Hardware name: Google Cheza (rev3+) (DT)
-[    5.078416] Call trace:
-[    5.080953]  dump_backtrace+0x0/0x16c
-[    5.084727]  show_stack+0x20/0x2c
-[    5.088156]  dump_stack+0x90/0xcc
-[    5.091585]  __cant_sleep+0xb4/0xc4
-[    5.095192]  __qcom_scm_qsmmu500_wait_safe_toggle+0x5c/0xa0
-[    5.100929]  qcom_scm_qsmmu500_wait_safe_toggle+0x28/0x34
-[    5.106491]  qcom_sdm845_smmu500_reset+0x24/0x50
-[    5.111249]  arm_smmu_device_reset+0x1a4/0x25c
-[    5.115827]  arm_smmu_device_probe+0x418/0x50c
-[    5.120406]  platform_drv_probe+0x90/0xb0
-[    5.124542]  really_probe+0x14c/0x3b8
-[    5.128327]  driver_probe_device+0x70/0x140
-[    5.132643]  device_driver_attach+0x4c/0x6c
-[    5.136960]  __driver_attach+0xc8/0x150
-[    5.140917]  bus_for_each_dev+0x84/0xcc
-[    5.144873]  driver_attach+0x2c/0x38
-[    5.148555]  bus_add_driver+0x108/0x1fc
-[    5.152512]  driver_register+0x64/0xf8
-[    5.156375]  __platform_driver_register+0x4c/0x58
-[    5.161226]  arm_smmu_driver_init+0x1c/0x24
-[    5.165545]  do_one_initcall+0x11c/0x2dc
-[    5.169595]  do_initcall_level+0x14c/0x174
-[    5.173822]  do_basic_setup+0x30/0x48
-[    5.177595]  kernel_init_freeable+0xc4/0x144
-[    5.181990]  kernel_init+0x14/0x100
-[    5.185584]  ret_from_fork+0x10/0x18
+> Additionally, this splits the reporting for timeouts into a specific
+> "TIMEOUT" not-ok (and adds exit code reporting in the remaining case).
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  tools/testing/selftests/kselftest/runner.sh | 36 +++++++++++++++++++--
+>  tools/testing/selftests/rtc/settings        |  1 +
+>  2 files changed, 34 insertions(+), 3 deletions(-)
+>  create mode 100644 tools/testing/selftests/rtc/settings
+> 
+> diff --git a/tools/testing/selftests/kselftest/runner.sh b/tools/testing/selftests/kselftest/runner.sh
+> index 00c9020bdda8..84de7bc74f2c 100644
+> --- a/tools/testing/selftests/kselftest/runner.sh
+> +++ b/tools/testing/selftests/kselftest/runner.sh
+> @@ -3,9 +3,14 @@
+>  #
+>  # Runs a set of tests in a given subdirectory.
+>  export skip_rc=4
+> +export timeout_rc=124
+>  export logfile=/dev/stdout
+>  export per_test_logging=
+>  
+> +# Defaults for "settings" file fields:
+> +# "timeout" how many seconds to let each test run before failing.
+> +export kselftest_default_timeout=45
+> +
+>  # There isn't a shell-agnostic way to find the path of a sourced file,
+>  # so we must rely on BASE_DIR being set to find other tools.
+>  if [ -z "$BASE_DIR" ]; then
+> @@ -24,6 +29,16 @@ tap_prefix()
+>  	fi
+>  }
+>  
+> +tap_timeout()
+> +{
+> +	# Make sure tests will time out if utility is available.
+> +	if [ -x /usr/bin/timeout ] ; then
+> +		/usr/bin/timeout "$kselftest_timeout" "$1"
+> +	else
+> +		"$1"
+> +	fi
+> +}
+> +
+>  run_one()
+>  {
+>  	DIR="$1"
+> @@ -32,6 +47,18 @@ run_one()
+>  
+>  	BASENAME_TEST=$(basename $TEST)
+>  
+> +	# Reset any "settings"-file variables.
+> +	export kselftest_timeout="$kselftest_default_timeout"
+> +	# Load per-test-directory kselftest "settings" file.
+> +	settings="$BASE_DIR/$DIR/settings"
+> +	if [ -r "$settings" ] ; then
+> +		while read line ; do
+> +			field=$(echo "$line" | cut -d= -f1)
+> +			value=$(echo "$line" | cut -d= -f2-)
+> +			eval "kselftest_$field"="$value"
+> +		done < "$settings"
+> +	fi
+> +
+>  	TEST_HDR_MSG="selftests: $DIR: $BASENAME_TEST"
+>  	echo "# $TEST_HDR_MSG"
+>  	if [ ! -x "$TEST" ]; then
+> @@ -44,14 +71,17 @@ run_one()
+>  		echo "not ok $test_num $TEST_HDR_MSG"
+>  	else
+>  		cd `dirname $TEST` > /dev/null
+> -		(((((./$BASENAME_TEST 2>&1; echo $? >&3) |
+> +		((((( tap_timeout ./$BASENAME_TEST 2>&1; echo $? >&3) |
+>  			tap_prefix >&4) 3>&1) |
+>  			(read xs; exit $xs)) 4>>"$logfile" &&
+>  		echo "ok $test_num $TEST_HDR_MSG") ||
+> -		(if [ $? -eq $skip_rc ]; then	\
+> +		(rc=$?;	\
+> +		if [ $rc -eq $skip_rc ]; then	\
+>  			echo "not ok $test_num $TEST_HDR_MSG # SKIP"
+> +		elif [ $rc -eq $timeout_rc ]; then \
+> +			echo "not ok $test_num $TEST_HDR_MSG # TIMEOUT"
+>  		else
+> -			echo "not ok $test_num $TEST_HDR_MSG"
+> +			echo "not ok $test_num $TEST_HDR_MSG # exit=$rc"
+>  		fi)
+>  		cd - >/dev/null
+>  	fi
+> diff --git a/tools/testing/selftests/rtc/settings b/tools/testing/selftests/rtc/settings
+> new file mode 100644
+> index 000000000000..ba4d85f74cd6
+> --- /dev/null
+> +++ b/tools/testing/selftests/rtc/settings
+> @@ -0,0 +1 @@
+> +timeout=90
+> -- 
+> 2.17.1
+> 
+> 
+> -- 
+> Kees Cook
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
