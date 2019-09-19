@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4577EC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2672C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EC1E217D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:33:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7848521907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:33:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932402;
-	bh=m4oCH407rQAW5XKyhGt+ZTvbJSZ9olcE4tP3pKB+GGo=;
+	s=default; t=1568932405;
+	bh=RuAsJbetNaqUvGAevgs5C+R+84pnOicaOUpUpk5K3oU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VRSFxhZvvPKubZakU6pp1wQQkwSjjrR7TiDsQyfdbIwIcBrzoh3//qEjHUZ1ffpLl
-	 Ye5TtJN/D2C09GR4uX1DMdvvsLiJz4alSX9o8z6bgYUo/cJCDJasNhCUF0WGRMyB53
-	 ULSErYCT6+sTuN7c9Hs0yjoNrA+984mHlLfy0eVs=
+	b=znqWEHp/yr5MEfSB6FsCnF7fRaiREdOfJr0BfLikBW/DlOjUDyLiEQZHSZ2/PhCRZ
+	 79j7mNYDf/RXkeNqJr1vbQYV4IMnYdFT0H9x0E/O7sp7e9TXftCjKpNsyrVb/+N3JX
+	 7I3VlEj9hyximgRl+qgGesIJctENvzLZaCZNCzpI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405880AbfISWLo (ORCPT
+        id S2407057AbfISWdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:11:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50258 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:33:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393604AbfISWLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:11:33 -0400
+        id S2405879AbfISWLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:11:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55948218AF;
-        Thu, 19 Sep 2019 22:11:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45C7B218AF;
+        Thu, 19 Sep 2019 22:11:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931092;
-        bh=m4oCH407rQAW5XKyhGt+ZTvbJSZ9olcE4tP3pKB+GGo=;
+        s=default; t=1568931104;
+        bh=RuAsJbetNaqUvGAevgs5C+R+84pnOicaOUpUpk5K3oU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T+pOs3ZHp9wUT9tKvVYuDdnGgCV2BcS0pHnxpp+5WeWVWRtaff9Ns/84FFk3/nw5f
-         fyao+MqfM5tQxfhZjQEOx7wYXUpjuVQdqHEv6qweep90qODbIVum/UjjISBOKvLvkb
-         SgQk9IJPm380RFtxhg6CrPUP70kvd1jojcTx99SY=
+        b=UbIe8eAp3pyfKgwy03h4Us/0IviS+6EkKc6zZ5qZxcZu3pCu4d/grM6bntv0hM5ev
+         PLEkuzmw2N3Rrwe/2OTburuCKDDDoxmIkTjAiCXhXdNO4s4+Nx9FwfUhL8x7pnx4JT
+         91wZAQmERjKRBh7NQax3UEUXrT6QCYUsWshCBsXI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Razvan Stefanescu <razvan.stefanescu@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 106/124] net: dsa: microchip: add KSZ8563 compatibility string
-Date:   Fri, 20 Sep 2019 00:03:14 +0200
-Message-Id: <20190919214823.053732118@linuxfoundation.org>
+        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 110/124] dmaengine: ti: dma-crossbar: Fix a memory leak bug
+Date:   Fri, 20 Sep 2019 00:03:18 +0200
+Message-Id: <20190919214823.188123999@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -61,31 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Razvan Stefanescu <razvan.stefanescu@microchip.com>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit d9033ae95cf445150fcc5856ccf024f41f0bd0b9 ]
+[ Upstream commit 2c231c0c1dec42192aca0f87f2dc68b8f0cbc7d2 ]
 
-It is a 3-Port 10/100 Ethernet Switch with 1588v2 PTP.
+In ti_dra7_xbar_probe(), 'rsv_events' is allocated through kcalloc(). Then
+of_property_read_u32_array() is invoked to search for the property.
+However, if this process fails, 'rsv_events' is not deallocated, leading to
+a memory leak bug. To fix this issue, free 'rsv_events' before returning
+the error.
 
-Signed-off-by: Razvan Stefanescu <razvan.stefanescu@microchip.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Link: https://lore.kernel.org/r/1565938136-7249-1-git-send-email-wenwen@cs.uga.edu
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/microchip/ksz9477_spi.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/dma/ti/dma-crossbar.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/dsa/microchip/ksz9477_spi.c b/drivers/net/dsa/microchip/ksz9477_spi.c
-index 75178624d3f56..fb15f255a1db4 100644
---- a/drivers/net/dsa/microchip/ksz9477_spi.c
-+++ b/drivers/net/dsa/microchip/ksz9477_spi.c
-@@ -157,6 +157,7 @@ static const struct of_device_id ksz9477_dt_ids[] = {
- 	{ .compatible = "microchip,ksz9897" },
- 	{ .compatible = "microchip,ksz9893" },
- 	{ .compatible = "microchip,ksz9563" },
-+	{ .compatible = "microchip,ksz8563" },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, ksz9477_dt_ids);
+diff --git a/drivers/dma/ti/dma-crossbar.c b/drivers/dma/ti/dma-crossbar.c
+index ad2f0a4cd6a4d..f255056696eec 100644
+--- a/drivers/dma/ti/dma-crossbar.c
++++ b/drivers/dma/ti/dma-crossbar.c
+@@ -391,8 +391,10 @@ static int ti_dra7_xbar_probe(struct platform_device *pdev)
+ 
+ 		ret = of_property_read_u32_array(node, pname, (u32 *)rsv_events,
+ 						 nelm * 2);
+-		if (ret)
++		if (ret) {
++			kfree(rsv_events);
+ 			return ret;
++		}
+ 
+ 		for (i = 0; i < nelm; i++) {
+ 			ti_dra7_xbar_reserve(rsv_events[i][0], rsv_events[i][1],
 -- 
 2.20.1
 
