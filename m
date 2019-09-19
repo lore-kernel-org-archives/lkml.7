@@ -2,262 +2,130 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A790C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C741C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1974121D6C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 737E12196F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:29:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="M5WPvNyf"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="PclmeN69"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389815AbfISN2P (ORCPT
+        id S2389933AbfISN3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 09:28:15 -0400
-Received: from first.geanix.com ([116.203.34.67]:40500 "EHLO first.geanix.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388551AbfISN2O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 09:28:14 -0400
-Received: from [192.168.8.20] (unknown [85.184.140.241])
-        by first.geanix.com (Postfix) with ESMTPSA id 7382D681E6;
-        Thu, 19 Sep 2019 13:28:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
-        t=1568899688; bh=LxLOy5bS6bTw7GCC5DV/lEeFtPvqU59MmQl1lxDD9uU=;
-        h=To:Cc:From:Subject:Date;
-        b=M5WPvNyfcc5qstaASPir9Vm+L2+2qXpyWq/42YcODuhvmuzxW8OhE9lDTW2StCbKD
-         rDaFU5r9+BJ+DFdpWU3ilhYW/sENAW2mla0A8fS6BfBgsx6s8rmUU5f+DyQrXrAmIr
-         yoA8Wj2MKJdgy1cSW17e1oZHb/RjvW/qWAhakCwyNFh/wFkoxTHuZikNEySE+GindO
-         wdHBuqZC8mDbyZkoVHH8wQ7PRxNQqGgI+PQ1XLmnTO6dq1tbNg3rO1aKKpDyAgMe39
-         2ble5YznWiJJVkzjW12AtbLxOt0IXEchrMIw9TLsN4ouY5a05RSPWzsNzsH5Z5PP5/
-         THehPvEdFA4Og==
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Jiri Slaby <jslaby@suse.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Cc:     =?UTF-8?Q?Sean_Nyekj=c3=a6r?= <sean@geanix.com>,
-        Esben Haabendal <esben@geanix.com>
-From:   =?UTF-8?Q?Martin_Hundeb=c3=b8ll?= <martin@geanix.com>
-Subject: [BUG] tty: n_gsm: possible circular locking dependency detected
-Message-ID: <4b2455c0-25ba-0187-6df6-c63b4ccc6a6e@geanix.com>
-Date:   Thu, 19 Sep 2019 15:27:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Thu, 19 Sep 2019 09:29:23 -0400
+Received: from mail-eopbgr730054.outbound.protection.outlook.com ([40.107.73.54]:27264
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389844AbfISN3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 09:29:23 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RByA/1X4RXvLEVaY8+uP5JURx4bdbJ8YbsE9kCcVhX8Wz6t90IF5k2/jWAIv0K6o8i0aXXnFEy9csr/t5VVdPBiXw/kLwlemgBrKAFiuX0wdhaQZgj412HYIS44z2f45M6SvHi5wbFtQ/ojho6bT+rV0YI/UpkxhMlSAysP6c/kb3qI/KNza5PNP/gsM1a4F+cA5Hxki+CyFzm6cS/tbWWGiYTlXLQHSAivdMDL67RsrkfuIxCc8E3jvFTLGpEcKPWDQHW1tUwOn9CGc5seOrPD+xzIPkX6SGc9PLrvxt8bbm1J/XGXXESxXXq1a0RyXoMTUKOebysx1VYxS9vkaHw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Iy1t/yNf8wTN/Zn2NhDq6kaq61fjVw2pcIVKIV6DxQ8=;
+ b=EXp//hVsluwWsofnO5QVEIh6FRR5pEsTN9UFQbJGIALKeS8+6RbtuaDoPhU9vjY3RcreeJjzrLNVYj7Qx1ewUogDbLgV1nlfozVoF8FJ/KOE1n/HOIc7EbHhciv+nABh2Z6CYUNlXU2iBLyMpTcDQGysYg5QpH99pekRy0dMqPaFFO95eIcBzdzZqy8n9wGJgicO0rZLAUXo6Fv1O+ECSLRaPDVuZ81jp/Aw3J8MY8b9V1ZexqpI/LlR6T0PXWFO6xDDsajO6WGlfvG2J53fcFJxXecLoIYPitXgKqnQM+ptROLYXfzpdLhtTBOSxMk4ug1AIq6A+ytUJ55ONnHrIA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Iy1t/yNf8wTN/Zn2NhDq6kaq61fjVw2pcIVKIV6DxQ8=;
+ b=PclmeN69kyZcveP25jRw+9dLpidmg9DJ7ul7mWlwNvFBR2+H+wos/YK/zAt3FzCPG1mYtr4e5iY3X6qCp+TSHaDYN9xPTDI6ys7dNR42ZGiiuD1XghsywGfI0CLLAWkPvDKgJdbP9lPrFPxezv05XImvXVBa5hWXtkP70dlu0yU=
+Received: from MWHPR12MB1455.namprd12.prod.outlook.com (10.172.56.18) by
+ MWHPR12MB1934.namprd12.prod.outlook.com (10.175.50.151) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.22; Thu, 19 Sep 2019 13:29:17 +0000
+Received: from MWHPR12MB1455.namprd12.prod.outlook.com
+ ([fe80::a872:70bf:908d:cfe4]) by MWHPR12MB1455.namprd12.prod.outlook.com
+ ([fe80::a872:70bf:908d:cfe4%10]) with mapi id 15.20.2263.023; Thu, 19 Sep
+ 2019 13:29:17 +0000
+From:   Gary R Hook <ghook@amd.com>
+To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Navid Emamdoost <navid.emamdoost@gmail.com>
+CC:     "emamd001@umn.edu" <emamd001@umn.edu>,
+        "smccaman@umn.edu" <smccaman@umn.edu>,
+        "kjlu@umn.edu" <kjlu@umn.edu>, "Hook, Gary" <Gary.Hook@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] crypto: ccp - release hmac_buf if ccp_run_sha_cmd fails
+Thread-Topic: [PATCH] crypto: ccp - release hmac_buf if ccp_run_sha_cmd fails
+Thread-Index: AQHVao3EuoZXtKbW6ku3QkZQMVvFD6cuTlmAgAS5AAA=
+Date:   Thu, 19 Sep 2019 13:29:17 +0000
+Message-ID: <7ffc6a77-f4e3-7db9-4ec6-53d6e01d881d@amd.com>
+References: <20190913234824.8521-1-navid.emamdoost@gmail.com>
+ <3550c7a3-2932-c222-c1b3-957def794150@amd.com>
+In-Reply-To: <3550c7a3-2932-c222-c1b3-957def794150@amd.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN6PR0102CA0035.prod.exchangelabs.com (2603:10b6:805:1::48)
+ To MWHPR12MB1455.namprd12.prod.outlook.com (2603:10b6:301:10::18)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Gary.Hook@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.204.77.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d47b0faa-81d9-4b3d-387c-08d73d055edb
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:MWHPR12MB1934;
+x-ms-traffictypediagnostic: MWHPR12MB1934:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR12MB193426BCF27F5ED72B06EE7DFD890@MWHPR12MB1934.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2657;
+x-forefront-prvs: 016572D96D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(136003)(39860400002)(376002)(346002)(189003)(199004)(53546011)(6506007)(386003)(52116002)(76176011)(316002)(102836004)(26005)(186003)(31686004)(8936002)(81156014)(81166006)(5660300002)(99286004)(14454004)(66556008)(54906003)(110136005)(64756008)(66946007)(446003)(476003)(11346002)(486006)(2616005)(66476007)(66446008)(36756003)(8676002)(6116002)(3846002)(31696002)(71190400001)(25786009)(71200400001)(4326008)(6512007)(6246003)(229853002)(6436002)(6486002)(66066001)(478600001)(7736002)(305945005)(256004)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR12MB1934;H:MWHPR12MB1455.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: IXQKnoq/ovnJusTyNY1GX+sNN7eD+cs+AR/FS+ZKYVLKglokwyuj+cgssd+U6y+n6eqQSMJNPAhzfq4abGB1VDk9fcZSQVmDd9+3jxFoIy5HDASBmNT4SsJiOtm+egVSxi4B0dkgNqkyXud1SIq4yEI9crX9zk8AgBiw++jisNSmmbo5l7BsEKmbW4goMo5eAEWZQ1O8mshWsabAdoZpxwX8LKRlPCSPkDLT5pOpy6CBHXi363muVQFuhV8u7+ZCDpt4Q12bvX99LPVBe2HCgoXgoPoh6PzdKLAydXHC2vo5TIOBZlQSTtwhIAkNply09WBNE2WlylqFV+jr6/xQST2gZHPbiDZ1YAQei6CbK6owK6DvDMjU60dOeNy3+AzhF2nBiIE1bFvx4nNDFMDQiff6cCwjVyqKI8Uq0s1SMYg=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <863B982D545FF64BB2831692FEF4C574@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US-large
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d47b0faa-81d9-4b3d-387c-08d73d055edb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Sep 2019 13:29:17.7178
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 4i47fKIsY/ykbovlHylKrM2d8Xo8i3QUTk1/aaI43Ryp5uCGkAAq3mwFam7NE93x
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1934
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-We've come across the below lockdep report when using n_gsm multiplexing 
-on an imx uart.
-
-The inverted lock scenario caused by:
-   1) the uart tx-ready interrupt causing the tty layer to call down 
-into n_gsm, and
-   2) n_gsm transmitting data, causing it to call up into the tty layer
-
-We have about 2-3k devices running, and get the report from ~100 devices 
-during a 1 hour span. But we haven't been able to reproduce locally.
-
-The devices run 4.19.22 with my recent n_gsm patches backported.
-
-Any hints on how to dig further are appreciated.
-
-// Martin
-
-[  201.633281] ======================================================
-[  201.639473] WARNING: possible circular locking dependency detected
-[  201.645667] 4.19.22 #1 Not tainted
-[  201.649078] ------------------------------------------------------
-[  201.655270] kworker/u2:0/7 is trying to acquire lock:
-[  201.660337] a66ff7b8 (&(&gsm->tx_lock)->rlock){-.-.}, at: 
-gsmld_write_wakeup+0x28/0x5c
-[  201.668309]
-[  201.668309] but task is already holding lock:
-[  201.674155] 456c79ff (&port_lock_key){-.-.}, at: 
-imx_uart_txint+0x18/0x198
-[  201.681070]
-[  201.681070] which lock already depends on the new lock.
-[  201.681070]
-[  201.689261]
-[  201.689261] the existing dependency chain (in reverse order) is:
-[  201.696754]
-[  201.696754] -> #1 (&port_lock_key){-.-.}:
-[  201.702282]        _raw_spin_lock_irqsave+0x40/0x54
-[  201.707178]        uart_write_room+0x60/0xf8
-[  201.711467]        tty_write_room+0x20/0x2c
-[  201.715665]        gsmld_output+0x20/0x94
-[  201.719690]        gsm_data_kick+0x80/0x164
-[  201.723888]        __gsm_data_queue+0x188/0x1a4
-[  201.728433]        gsm_control_transmit+0x78/0x8c
-[  201.733151]        gsm_control_send+0x130/0x170
-[  201.737693]        gsmld_ioctl+0x238/0x4f8
-[  201.741805]        tty_ioctl+0x3a0/0xc44
-[  201.745744]        do_vfs_ioctl+0xa8/0xa3c
-[  201.749855]        ksys_ioctl+0x3c/0x68
-[  201.753703]        sys_ioctl+0x10/0x14
-[  201.757468]        ret_fast_syscall+0x0/0x28
-[  201.761752]        0xbecd6ab4
-[  201.764728]
-[  201.764728] -> #0 (&(&gsm->tx_lock)->rlock){-.-.}:
-[  201.771036]        lock_acquire+0xd0/0x1f4
-[  201.775148]        _raw_spin_lock_irqsave+0x40/0x54
-[  201.780042]        gsmld_write_wakeup+0x28/0x5c
-[  201.784587]        tty_wakeup+0x58/0x64
-[  201.788436]        tty_port_default_wakeup+0x1c/0x28
-[  201.793412]        tty_port_tty_wakeup+0x18/0x1c
-[  201.798043]        uart_write_wakeup+0x1c/0x24
-[  201.802498]        imx_uart_txint+0x13c/0x198
-[  201.806868]        imx_uart_int+0x100/0x1a4
-[  201.811066]        __handle_irq_event_percpu+0x44/0x364
-[  201.816302]        handle_irq_event_percpu+0x30/0x88
-[  201.821279]        handle_irq_event+0x40/0x64
-[  201.825652]        handle_fasteoi_irq+0xc4/0x174
-[  201.830282]        generic_handle_irq+0x28/0x3c
-[  201.834826]        __handle_domain_irq+0x6c/0xe8
-[  201.839459]        gic_handle_irq+0x60/0xc4
-[  201.843657]        __irq_svc+0x70/0x98
-[  201.847421]        _raw_spin_unlock_irq+0x30/0x34
-[  201.852141]        process_one_work+0x210/0x718
-[  201.856686]        worker_thread+0x2c/0x54c
-[  201.860881]        kthread+0x14c/0x164
-[  201.864643]        ret_from_fork+0x14/0x20
-[  201.868749]          (null)
-[  201.871551]
-[  201.871551] other info that might help us debug this:
-[  201.871551]
-[  201.879568]  Possible unsafe locking scenario:
-[  201.879568]
-[  201.885499]        CPU0                    CPU1
-[  201.890038]        ----                    ----
-[  201.894574]   lock(&port_lock_key);
-[  201.898082]                                lock(&(&gsm->tx_lock)->rlock);
-[  201.904890]                                lock(&port_lock_key);
-[  201.910913]   lock(&(&gsm->tx_lock)->rlock);
-[  201.915200]
-[  201.915200]  *** DEADLOCK ***
-[  201.915200]
-[  201.921134] 2 locks held by kworker/u2:0/7:
-[  201.925326]  #0: 456c79ff (&port_lock_key){-.-.}, at: 
-imx_uart_txint+0x18/0x198
-[  201.932683]  #1: e4c7457f (&tty->ldisc_sem){++++}, at: 
-tty_ldisc_ref+0x1c/0x44
-[  201.939948]
-[  201.939948] stack backtrace:
-[  201.944326] CPU: 0 PID: 7 Comm: kworker/u2:0 Not tainted 4.19.22 #1
-[  201.950604] Hardware name: Freescale i.MX6 Ultralite (Device Tree)
-[  201.956800] Workqueue: events_unbound flush_to_ldisc
-[  201.961782] Backtrace:
-[  201.964255] [<c010ebd4>] (dump_backtrace) from [<c010ef5c>] 
-(show_stack+0x18/0x1c)
-[  201.971840]  r7:00000000 r6:60030193 r5:00000000 r4:c0d7e300
-[  201.977519] [<c010ef44>] (show_stack) from [<c0859d80>] 
-(dump_stack+0xb4/0xec)
-[  201.984760] [<c0859ccc>] (dump_stack) from [<c017bf80>] 
-(print_circular_bug.constprop.15+0x264/0x328)
-[  201.993996]  r10:c14e4e24 r9:00000000 r8:c8094b00 r7:c8095038 
-r6:c1200718 r5:c11e2e38
-[  202.001836]  r4:c1200718 r3:14127a92
-[  202.005430] [<c017bd1c>] (print_circular_bug.constprop.15) from 
-[<c017edec>] (__lock_acquire+0x14a8/0x1970)
-[  202.015186]  r10:00000002 r9:c1491038 r8:c8094b00 r7:c1200718 
-r6:c8094ff8 r5:00000001
-[  202.023027]  r4:c1200718 r3:c8094ff8
-[  202.026620] [<c017d944>] (__lock_acquire) from [<c017fc04>] 
-(lock_acquire+0xd0/0x1f4)
-[  202.034466]  r10:c0d08930 r9:00000000 r8:00000000 r7:00000000 
-r6:00000000 r5:c8ccd5ec
-[  202.042303]  r4:60030193
-[  202.044856] [<c017fb34>] (lock_acquire) from [<c0877fcc>] 
-(_raw_spin_lock_irqsave+0x40/0x54)
-[  202.053310]  r10:00000241 r9:00000015 r8:000000e3 r7:00030193 
-r6:c04d434c r5:60030193
-[  202.061148]  r4:c8ccd5dc
-[  202.063704] [<c0877f8c>] (_raw_spin_lock_irqsave) from [<c04d434c>] 
-(gsmld_write_wakeup+0x28/0x5c)
-[  202.072674]  r6:00000fff r5:c8ccd5dc r4:c8ccd400
-[  202.077313] [<c04d4324>] (gsmld_write_wakeup) from [<c04c46a8>] 
-(tty_wakeup+0x58/0x64)
-[  202.085244]  r7:00030193 r6:00000fff r5:c8d759c0 r4:c8ccdc00
-[  202.090922] [<c04c4650>] (tty_wakeup) from [<c04cf0b0>] 
-(tty_port_default_wakeup+0x1c/0x28)
-[  202.099284]  r5:c82f0000 r4:c8ccdc00
-[  202.102875] [<c04cf094>] (tty_port_default_wakeup) from [<c04cec68>] 
-(tty_port_tty_wakeup+0x18/0x1c)
-[  202.112018]  r5:c82f0000 r4:c8322440
-[  202.115610] [<c04cec50>] (tty_port_tty_wakeup) from [<c04e9a88>] 
-(uart_write_wakeup+0x1c/0x24)
-[  202.124239] [<c04e9a6c>] (uart_write_wakeup) from [<c04ee3d4>] 
-(imx_uart_txint+0x13c/0x198)
-[  202.132605] [<c04ee298>] (imx_uart_txint) from [<c04ee530>] 
-(imx_uart_int+0x100/0x1a4)
-[  202.140538]  r9:00000015 r8:00000000 r7:00000000 r6:00000000 
-r5:c8322440 r4:00002040
-[  202.148299] [<c04ee430>] (imx_uart_int) from [<c018df68>] 
-(__handle_irq_event_percpu+0x44/0x364)
-[  202.157100]  r10:00000015 r9:c80b3da8 r8:00000001 r7:00000000 
-r6:c0d08930 r5:c8158464
-[  202.164941]  r4:c8343e40 r3:c04ee430
-[  202.168534] [<c018df24>] (__handle_irq_event_percpu) from 
-[<c018e2b8>] (handle_irq_event_percpu+0x30/0x88)
-[  202.178203]  r10:c0d42038 r9:c8010400 r8:00000001 r7:00000000 
-r6:c8158400 r5:c8158464
-[  202.186042]  r4:c0d08908
-[  202.188594] [<c018e288>] (handle_irq_event_percpu) from [<c018e350>] 
-(handle_irq_event+0x40/0x64)
-[  202.197477]  r6:c0d14f0c r5:c8158464 r4:c8158400
-[  202.202114] [<c018e310>] (handle_irq_event) from [<c019201c>] 
-(handle_fasteoi_irq+0xc4/0x174)
-[  202.210652]  r7:00000000 r6:c0d14f0c r5:c8158464 r4:c8158400
-[  202.216330] [<c0191f58>] (handle_fasteoi_irq) from [<c018d090>] 
-(generic_handle_irq+0x28/0x3c)
-[  202.224956]  r7:00000000 r6:c0d08d08 r5:00000015 r4:c0c8d128
-[  202.230633] [<c018d068>] (generic_handle_irq) from [<c018d71c>] 
-(__handle_domain_irq+0x6c/0xe8)
-[  202.239350] [<c018d6b0>] (__handle_domain_irq) from [<c048a358>] 
-(gic_handle_irq+0x60/0xc4)
-[  202.247717]  r9:c80b3e80 r8:c0d08f34 r7:d080a000 r6:000003ff 
-r5:000003eb r4:d080a00c
-[  202.255478] [<c048a2f8>] (gic_handle_irq) from [<c0101a30>] 
-(__irq_svc+0x70/0x98)
-[  202.262972] Exception stack(0xc80b3e80 to 0xc80b3ec8)
-[  202.268043] 3e80: 00000001 00000001 00000000 0000b51a c8010000 
-c8028900 c8010000 c800f000
-[  202.276238] 3ea0: c80b3f04 c82f0418 c8010000 c80b3ee4 00000000 
-c80b3ed0 c017fe38 c087816c
-[  202.284425] 3ec0: 20030113 ffffffff
-[  202.287930]  r10:c8010000 r9:c80b2000 r8:c80b3f04 r7:c80b3eb4 
-r6:ffffffff r5:20030113
-[  202.295769]  r4:c087816c
-[  202.298323] [<c087813c>] (_raw_spin_unlock_irq) from [<c014728c>] 
-(process_one_work+0x210/0x718)
-[  202.307122]  r5:c8028900 r4:c82f0414
-[  202.310716] [<c014707c>] (process_one_work) from [<c01477c0>] 
-(worker_thread+0x2c/0x54c)
-[  202.318826]  r10:c8010000 r9:c0d05900 r8:00000088 r7:c8010034 
-r6:c8010000 r5:c8028914
-[  202.326666]  r4:c8028900
-[  202.329216] [<c0147794>] (worker_thread) from [<c014e6c4>] 
-(kthread+0x14c/0x164)
-[  202.336628]  r10:c8099e40 r9:c0147794 r8:c8028900 r7:c80b2000 
-r6:c8037fc0 r5:c8028980
-[  202.344468]  r4:00000000 r3:00000000
-[  202.348060] [<c014e578>] (kthread) from [<c01010b4>] 
-(ret_from_fork+0x14/0x20)
-[  202.355292] Exception stack(0xc80b3fb0 to 0xc80b3ff8)
-[  202.360356] 3fa0:                                     00000000 
-00000000 00000000 00000000
-[  202.368549] 3fc0: 00000000 00000000 00000000 00000000 00000000 
-00000000 00000000 00000000
-[  202.376740] 3fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-[  202.383369]  r10:00000000 r9:00000000 r8:00000000 r7:00000000 
-r6:00000000 r5:c014e578
-[  202.391208]  r4:c8037fc0
+T24gOS8xNi8xOSA4OjIyIEFNLCBMZW5kYWNreSwgVGhvbWFzIHdyb3RlOg0KPiBPbiA5LzEzLzE5
+IDY6NDggUE0sIE5hdmlkIEVtYW1kb29zdCB3cm90ZToNCj4+IEluIGNjcF9ydW5fc2hhX2NtZCwg
+aWYgdGhlIHR5cGUgb2Ygc2hhIGlzIGludmFsaWQsIHRoZSBhbGxvY2F0ZWQNCj4+IGhtYWNfYnVm
+IHNob3VsZCBiZSByZWxlYXNlZC4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBOYXZpZCBFbWFtZG9v
+c3QgPG5hdmlkLmVtYW1kb29zdEBnbWFpbC5jb20+DQo+PiAtLS0NCj4+ICAgZHJpdmVycy9jcnlw
+dG8vY2NwL2NjcC1vcHMuYyB8IDEgKw0KPj4gICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24o
+KykNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9jcnlwdG8vY2NwL2NjcC1vcHMuYyBiL2Ry
+aXZlcnMvY3J5cHRvL2NjcC9jY3Atb3BzLmMNCj4+IGluZGV4IDliYzNjNjIxNTdkNy4uY2ZmMTZm
+MGNjMTViIDEwMDY0NA0KPj4gLS0tIGEvZHJpdmVycy9jcnlwdG8vY2NwL2NjcC1vcHMuYw0KPj4g
+KysrIGIvZHJpdmVycy9jcnlwdG8vY2NwL2NjcC1vcHMuYw0KPj4gQEAgLTE3ODIsNiArMTc4Miw3
+IEBAIHN0YXRpYyBpbnQgY2NwX3J1bl9zaGFfY21kKHN0cnVjdCBjY3BfY21kX3F1ZXVlICpjbWRf
+cSwgc3RydWN0IGNjcF9jbWQgKmNtZCkNCj4+ICAgCQkJICAgICAgIExTQl9JVEVNX1NJWkUpOw0K
+Pj4gICAJCQlicmVhazsNCj4+ICAgCQlkZWZhdWx0Og0KPj4gKwkJCWtmcmVlKGhtYWNfYnVmKTsN
+Cj4gV2VsbCwgdGhlb3JldGljYWxseSB3ZSBjYW4gbmV2ZXIgcmVhY2ggdGhpcyBzZWN0aW9uIHNp
+bmNlIHRoZSByb3V0aW5lDQo+IHdvdWxkIGhhdmUgbmV2ZXIgcHJvY2VlZGVkIHBhc3QgdGhlIGZp
+cnN0IHN3aXRjaCBzdGF0ZW1lbnQgYXQgdGhlDQo+IGJlZ2lubmluZyBvZiB0aGUgZnVuY3Rpb24u
+IEJ1dCwgaWYgdGhlIGNvZGUgaXMgZXZlciBtb2RpZmllZCBhbmQgc29tZSBvZg0KPiB0aGUgc3dp
+dGNoIHN0YXRlbWVudHMgbWlzc2VkIHRoZW4gaXQncyBwb3NzaWJsZS4uLg0KPg0KPj4gICAJCQly
+ZXQgPSAtRUlOVkFMOw0KPj4gICAJCQlnb3RvIGVfY3R4Ow0KPiBJIGtub3cgaXQncyBub3QgcGFy
+dCBvZiB5b3VyIGNoYW5nZSwgYnV0IHRoaXMgbG9va3MgbGlrZSBpdCBzaG91bGQgYmUNCj4gZ290
+byBlX2RhdGEgaW5zdGVhZCBvZiBlX2N0eCwgdG9vLg0KSSBhZ3JlZSB3aXRoIHRoaXMuIFBsZWFz
+ZSByZXN1Ym1pdCB3aXRoIHRoZSBzdWdnZXN0ZWQgY2hhbmdlLCBhbmQgdXNlIGEgDQpjb21taXQg
+bWVzc2FnZSBhbG9uZyB0aGUgdGhlIGxpbmVzIG9mDQoNCmNyeXB0bzogY2NwIC0gUmVsZWFzZSBh
+bGwgYWxsb2NhdGVkIG1lbW9yeSBpZiBzaGEgdHlwZSBpcyBpbnZhbGlkDQoNCg0KR2FyeQ0K
