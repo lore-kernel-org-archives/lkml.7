@@ -2,57 +2,53 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E996EC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32034C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B22ED2196E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:06:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04BA921920
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:06:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568930800;
-	bh=PZCwTfuWldxsg3C3Jw5YY8AHw2TBpq8aBpf9WBQhNXs=;
+	s=default; t=1568930804;
+	bh=ZfHd1jtfZQk+oHwecwNGPskZirVCtdQFTXO5g3EUvdY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wmegoqfpX3Z0XAQf7ghuaWeh58D3C18mMMb0OCuiZOGEHnv3YYa8RoIcbFZcGDbkd
-	 Zz/kpCwEboArxoia8iBoDGbJBrp+0U9w1/K9HLhXZfQ2bUoETviMNh5MhA7lYZ4xkA
-	 iFLEPITx/xMqvf72M8FYWHRIyoJmw6EGKaUWSp10=
+	b=NtMWl+duK7G8hKsnXVI4hC0lR1axa1c+tHwksuiTfk0l3CCpPHR3bo1AWdsjsFiwa
+	 rtDCSmrCTTi20TbG1vroD9AIqqp2QgQeIemGutD8vd6swvag+TZ4/hg0/dHgyJxg8t
+	 LvbbA/n87tzIcfestcEaa/nMArnj+2pHc2SJHtdA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405250AbfISWGj (ORCPT
+        id S2405262AbfISWGm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:06:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44058 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:06:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405236AbfISWGg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:06:36 -0400
+        id S2405243AbfISWGj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:06:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B663521907;
-        Thu, 19 Sep 2019 22:06:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 753EA218AF;
+        Thu, 19 Sep 2019 22:06:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568930795;
-        bh=PZCwTfuWldxsg3C3Jw5YY8AHw2TBpq8aBpf9WBQhNXs=;
+        s=default; t=1568930798;
+        bh=ZfHd1jtfZQk+oHwecwNGPskZirVCtdQFTXO5g3EUvdY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T8GNwO73Zsokx9wvnCy0x2rnWtPn+Yncb+kSdS41i+R09jI0OSJnAOMKenXT53drh
-         vU7O7Dq6L6lFHWrQYHpa2/ZSN4nQYRLhYGpgbNtgl5gFo3JkGLloljff8D+UOMYChM
-         L6W9r/x7FvG/ROKidhhfRmeUI/U0p7xFiHhPDmbA=
+        b=2lDol9xz4CsSbxIojOrZn9CHHpMOwbxb8qYtHWr4rscBIJ7hQgLFijCWeFxpFvuOl
+         UQUBrNVmcqBPBGzNSz7Fkb3YpzIApIBpOeoAf3X+AGDKjpyi9JvdHot3rZEfSCvUpD
+         9GRAa/oR3EoI+6ZoOB3PbtkT2u3Dc/hEWxeFmms8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+d5870a903591faaca4ae@syzkaller.appspotmail.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@mellanox.com>,
+        stable@vger.kernel.org, Willem de Bruijn <willemb@google.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Craig Gallek <kraig@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 017/124] net_sched: let qdisc_put() accept NULL pointer
-Date:   Fri, 20 Sep 2019 00:01:45 +0200
-Message-Id: <20190919214819.740487446@linuxfoundation.org>
+Subject: [PATCH 5.2 018/124] udp: correct reuseport selection with connected sockets
+Date:   Fri, 20 Sep 2019 00:01:46 +0200
+Message-Id: <20190919214819.769727806@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -65,44 +61,176 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Willem de Bruijn <willemb@google.com>
 
-[ Upstream commit 6efb971ba8edfbd80b666f29de12882852f095ae ]
+[ Upstream commit acdcecc61285faed359f1a3568c32089cc3a8329 ]
 
-When tcf_block_get() fails in sfb_init(), q->qdisc is still a NULL
-pointer which leads to a crash in sfb_destroy(). Similar for
-sch_dsmark.
+UDP reuseport groups can hold a mix unconnected and connected sockets.
+Ensure that connections only receive all traffic to their 4-tuple.
 
-Instead of fixing each separately, Linus suggested to just accept
-NULL pointer in qdisc_put(), which would make callers easier.
+Fast reuseport returns on the first reuseport match on the assumption
+that all matches are equal. Only if connections are present, return to
+the previous behavior of scoring all sockets.
 
-(For sch_dsmark, the bug probably exists long before commit
-6529eaba33f0.)
+Record if connections are present and if so (1) treat such connected
+sockets as an independent match from the group, (2) only return
+2-tuple matches from reuseport and (3) do not return on the first
+2-tuple reuseport match to allow for a higher scoring match later.
 
-Fixes: 6529eaba33f0 ("net: sched: introduce tcf block infractructure")
-Reported-by: syzbot+d5870a903591faaca4ae@syzkaller.appspotmail.com
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>
-Cc: Jiri Pirko <jiri@resnulli.us>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
+New field has_conns is set without locks. No other fields in the
+bitmap are modified at runtime and the field is only ever set
+unconditionally, so an RMW cannot miss a change.
+
+Fixes: e32ea7e74727 ("soreuseport: fast reuseport UDP socket selection")
+Link: http://lkml.kernel.org/r/CA+FuTSfRP09aJNYRt04SS6qj22ViiOEWaWmLAwX0psk8-PGNxw@mail.gmail.com
+Signed-off-by: Willem de Bruijn <willemb@google.com>
+Acked-by: Paolo Abeni <pabeni@redhat.com>
+Acked-by: Craig Gallek <kraig@google.com>
+Signed-off-by: Willem de Bruijn <willemb@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/sch_generic.c |    3 +++
- 1 file changed, 3 insertions(+)
+ include/net/sock_reuseport.h |   21 ++++++++++++++++++++-
+ net/core/sock_reuseport.c    |   15 +++++++++++++--
+ net/ipv4/datagram.c          |    2 ++
+ net/ipv4/udp.c               |    5 +++--
+ net/ipv6/datagram.c          |    2 ++
+ net/ipv6/udp.c               |    5 +++--
+ 6 files changed, 43 insertions(+), 7 deletions(-)
 
---- a/net/sched/sch_generic.c
-+++ b/net/sched/sch_generic.c
-@@ -985,6 +985,9 @@ static void qdisc_destroy(struct Qdisc *
- 
- void qdisc_put(struct Qdisc *qdisc)
- {
-+	if (!qdisc)
-+		return;
+--- a/include/net/sock_reuseport.h
++++ b/include/net/sock_reuseport.h
+@@ -21,7 +21,8 @@ struct sock_reuseport {
+ 	unsigned int		synq_overflow_ts;
+ 	/* ID stays the same even after the size of socks[] grows. */
+ 	unsigned int		reuseport_id;
+-	bool			bind_inany;
++	unsigned int		bind_inany:1;
++	unsigned int		has_conns:1;
+ 	struct bpf_prog __rcu	*prog;		/* optional BPF sock selector */
+ 	struct sock		*socks[0];	/* array of sock pointers */
+ };
+@@ -35,6 +36,24 @@ extern struct sock *reuseport_select_soc
+ 					  struct sk_buff *skb,
+ 					  int hdr_len);
+ extern int reuseport_attach_prog(struct sock *sk, struct bpf_prog *prog);
 +
- 	if (qdisc->flags & TCQ_F_BUILTIN ||
- 	    !refcount_dec_and_test(&qdisc->refcnt))
- 		return;
++static inline bool reuseport_has_conns(struct sock *sk, bool set)
++{
++	struct sock_reuseport *reuse;
++	bool ret = false;
++
++	rcu_read_lock();
++	reuse = rcu_dereference(sk->sk_reuseport_cb);
++	if (reuse) {
++		if (set)
++			reuse->has_conns = 1;
++		ret = reuse->has_conns;
++	}
++	rcu_read_unlock();
++
++	return ret;
++}
++
+ int reuseport_get_id(struct sock_reuseport *reuse);
+ 
+ #endif  /* _SOCK_REUSEPORT_H */
+--- a/net/core/sock_reuseport.c
++++ b/net/core/sock_reuseport.c
+@@ -295,8 +295,19 @@ struct sock *reuseport_select_sock(struc
+ 
+ select_by_hash:
+ 		/* no bpf or invalid bpf result: fall back to hash usage */
+-		if (!sk2)
+-			sk2 = reuse->socks[reciprocal_scale(hash, socks)];
++		if (!sk2) {
++			int i, j;
++
++			i = j = reciprocal_scale(hash, socks);
++			while (reuse->socks[i]->sk_state == TCP_ESTABLISHED) {
++				i++;
++				if (i >= reuse->num_socks)
++					i = 0;
++				if (i == j)
++					goto out;
++			}
++			sk2 = reuse->socks[i];
++		}
+ 	}
+ 
+ out:
+--- a/net/ipv4/datagram.c
++++ b/net/ipv4/datagram.c
+@@ -15,6 +15,7 @@
+ #include <net/sock.h>
+ #include <net/route.h>
+ #include <net/tcp_states.h>
++#include <net/sock_reuseport.h>
+ 
+ int __ip4_datagram_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
+ {
+@@ -69,6 +70,7 @@ int __ip4_datagram_connect(struct sock *
+ 	}
+ 	inet->inet_daddr = fl4->daddr;
+ 	inet->inet_dport = usin->sin_port;
++	reuseport_has_conns(sk, true);
+ 	sk->sk_state = TCP_ESTABLISHED;
+ 	sk_set_txhash(sk);
+ 	inet->inet_id = jiffies;
+--- a/net/ipv4/udp.c
++++ b/net/ipv4/udp.c
+@@ -434,12 +434,13 @@ static struct sock *udp4_lib_lookup2(str
+ 		score = compute_score(sk, net, saddr, sport,
+ 				      daddr, hnum, dif, sdif, exact_dif);
+ 		if (score > badness) {
+-			if (sk->sk_reuseport) {
++			if (sk->sk_reuseport &&
++			    sk->sk_state != TCP_ESTABLISHED) {
+ 				hash = udp_ehashfn(net, daddr, hnum,
+ 						   saddr, sport);
+ 				result = reuseport_select_sock(sk, hash, skb,
+ 							sizeof(struct udphdr));
+-				if (result)
++				if (result && !reuseport_has_conns(sk, false))
+ 					return result;
+ 			}
+ 			badness = score;
+--- a/net/ipv6/datagram.c
++++ b/net/ipv6/datagram.c
+@@ -27,6 +27,7 @@
+ #include <net/ip6_route.h>
+ #include <net/tcp_states.h>
+ #include <net/dsfield.h>
++#include <net/sock_reuseport.h>
+ 
+ #include <linux/errqueue.h>
+ #include <linux/uaccess.h>
+@@ -254,6 +255,7 @@ ipv4_connected:
+ 		goto out;
+ 	}
+ 
++	reuseport_has_conns(sk, true);
+ 	sk->sk_state = TCP_ESTABLISHED;
+ 	sk_set_txhash(sk);
+ out:
+--- a/net/ipv6/udp.c
++++ b/net/ipv6/udp.c
+@@ -168,13 +168,14 @@ static struct sock *udp6_lib_lookup2(str
+ 		score = compute_score(sk, net, saddr, sport,
+ 				      daddr, hnum, dif, sdif, exact_dif);
+ 		if (score > badness) {
+-			if (sk->sk_reuseport) {
++			if (sk->sk_reuseport &&
++			    sk->sk_state != TCP_ESTABLISHED) {
+ 				hash = udp6_ehashfn(net, daddr, hnum,
+ 						    saddr, sport);
+ 
+ 				result = reuseport_select_sock(sk, hash, skb,
+ 							sizeof(struct udphdr));
+-				if (result)
++				if (result && !reuseport_has_conns(sk, false))
+ 					return result;
+ 			}
+ 			result = sk;
 
 
