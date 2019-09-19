@@ -2,76 +2,149 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F6FC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEFA5C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B811121929
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:49:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8F1821929
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:50:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389008AbfISJtZ (ORCPT
+        id S2389010AbfISJu1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 05:49:25 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55548 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388872AbfISJtY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 05:49:24 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A7466898104;
-        Thu, 19 Sep 2019 09:49:24 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-125-72.rdu2.redhat.com [10.10.125.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5535D5D9CC;
-        Thu, 19 Sep 2019 09:49:23 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <28368.1568875207@warthog.procyon.org.uk>
-References: <28368.1568875207@warthog.procyon.org.uk> <CAHk-=wgJx0FKq5FUP85Os1HjTPds4B3aQwumnRJDp+XHEbVjfA@mail.gmail.com> <16147.1568632167@warthog.procyon.org.uk>
-Cc:     dhowells@redhat.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        linux-afs@lists.infradead.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL afs: Development for 5.4
+        Thu, 19 Sep 2019 05:50:27 -0400
+Received: from laurent.telenet-ops.be ([195.130.137.89]:56338 "EHLO
+        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388872AbfISJu0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 05:50:26 -0400
+Received: from ramsan ([84.194.98.4])
+        by laurent.telenet-ops.be with bizsmtp
+        id 3MqP2100X05gfCL01MqPoi; Thu, 19 Sep 2019 11:50:24 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iAt4x-00040H-JK; Thu, 19 Sep 2019 11:50:23 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iAt4x-0007aD-GF; Thu, 19 Sep 2019 11:50:23 +0200
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+To:     Matthew Wilcox <willy@infradead.org>,
+        "David S . Miller" <davem@davemloft.net>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        netdev@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH v2] staging: octeon: Use "(uintptr_t)" to cast from pointer to int
+Date:   Thu, 19 Sep 2019 11:50:22 +0200
+Message-Id: <20190919095022.29099-1-geert@linux-m68k.org>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <16256.1568886562.1@warthog.procyon.org.uk>
-Date:   Thu, 19 Sep 2019 10:49:22 +0100
-Message-ID: <16257.1568886562@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Thu, 19 Sep 2019 09:49:24 +0000 (UTC)
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-David Howells <dhowells@redhat.com> wrote:
+On 32-bit:
 
-> > However, I was close to unpulling it again. It has a merge commit with
-> > this merge message:
-> > 
-> >     Merge remote-tracking branch 'net/master' into afs-next
-> > 
-> > and that simply is not acceptable.
-> 
-> Apologies - I meant to rebase that away.  There was a bug fix to rxrpc in
-> net/master that didn't get pulled into your tree until Saturday.
+    In file included from drivers/staging/octeon/octeon-ethernet.h:41,
+		     from drivers/staging/octeon/ethernet-tx.c:25:
+    drivers/staging/octeon/octeon-stubs.h: In function ‘cvmx_phys_to_ptr’:
+    drivers/staging/octeon/octeon-stubs.h:1205:9: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+      return (void *)(physical_address);
+	     ^
+    drivers/staging/octeon/ethernet-tx.c: In function ‘cvm_oct_xmit’:
+    drivers/staging/octeon/ethernet-tx.c:264:37: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+       hw_buffer.s.addr = XKPHYS_TO_PHYS((u64)skb->data);
+					 ^
+    drivers/staging/octeon/octeon-stubs.h:2:30: note: in definition of macro ‘XKPHYS_TO_PHYS’
+     #define XKPHYS_TO_PHYS(p)   (p)
+				  ^
+    drivers/staging/octeon/ethernet-tx.c:268:37: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+       hw_buffer.s.addr = XKPHYS_TO_PHYS((u64)skb->data);
+					 ^
+    drivers/staging/octeon/octeon-stubs.h:2:30: note: in definition of macro ‘XKPHYS_TO_PHYS’
+     #define XKPHYS_TO_PHYS(p)   (p)
+				  ^
+    drivers/staging/octeon/ethernet-tx.c:276:20: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+	 XKPHYS_TO_PHYS((u64)skb_frag_address(fs));
+			^
+    drivers/staging/octeon/octeon-stubs.h:2:30: note: in definition of macro ‘XKPHYS_TO_PHYS’
+     #define XKPHYS_TO_PHYS(p)   (p)
+				  ^
+    drivers/staging/octeon/ethernet-tx.c:280:37: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+       hw_buffer.s.addr = XKPHYS_TO_PHYS((u64)CVM_OCT_SKB_CB(skb));
+					 ^
+    drivers/staging/octeon/octeon-stubs.h:2:30: note: in definition of macro ‘XKPHYS_TO_PHYS’
+     #define XKPHYS_TO_PHYS(p)   (p)
+				  ^
 
-Actually, waiting for all outstanding fixes to get merged and then rebasing
-might not be the right thing here.  The problem is that there are fixes in
-both trees: afs fixes go directly into yours whereas rxrpc fixes go via
-networking and I would prefer to base my patches on both of them for testing
-purposes.  What's the preferred method for dealing with that?  Base on a merge
-of the lastest of those fixes in each tree?
+Fix this by replacing casts to "u64" by casts to "uintptr_t", which is
+either 32-bit or 64-bit, and adding an intermediate cast to "uintptr_t"
+where needed.
 
-David
+Exposed by commit 171a9bae68c72f2d ("staging/octeon: Allow test build on
+!MIPS").
+
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+---
+v2:
+  - Fix silly typo in oneline-summary.
+---
+ drivers/staging/octeon/ethernet-tx.c  | 9 +++++----
+ drivers/staging/octeon/octeon-stubs.h | 2 +-
+ 2 files changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/staging/octeon/ethernet-tx.c b/drivers/staging/octeon/ethernet-tx.c
+index c64728fc21f229d8..7021ff07ba2a0b70 100644
+--- a/drivers/staging/octeon/ethernet-tx.c
++++ b/drivers/staging/octeon/ethernet-tx.c
+@@ -261,11 +261,11 @@ int cvm_oct_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	/* Build the PKO buffer pointer */
+ 	hw_buffer.u64 = 0;
+ 	if (skb_shinfo(skb)->nr_frags == 0) {
+-		hw_buffer.s.addr = XKPHYS_TO_PHYS((u64)skb->data);
++		hw_buffer.s.addr = XKPHYS_TO_PHYS((uintptr_t)skb->data);
+ 		hw_buffer.s.pool = 0;
+ 		hw_buffer.s.size = skb->len;
+ 	} else {
+-		hw_buffer.s.addr = XKPHYS_TO_PHYS((u64)skb->data);
++		hw_buffer.s.addr = XKPHYS_TO_PHYS((uintptr_t)skb->data);
+ 		hw_buffer.s.pool = 0;
+ 		hw_buffer.s.size = skb_headlen(skb);
+ 		CVM_OCT_SKB_CB(skb)[0] = hw_buffer.u64;
+@@ -273,11 +273,12 @@ int cvm_oct_xmit(struct sk_buff *skb, struct net_device *dev)
+ 			skb_frag_t *fs = skb_shinfo(skb)->frags + i;
+ 
+ 			hw_buffer.s.addr =
+-				XKPHYS_TO_PHYS((u64)skb_frag_address(fs));
++				XKPHYS_TO_PHYS((uintptr_t)skb_frag_address(fs));
+ 			hw_buffer.s.size = skb_frag_size(fs);
+ 			CVM_OCT_SKB_CB(skb)[i + 1] = hw_buffer.u64;
+ 		}
+-		hw_buffer.s.addr = XKPHYS_TO_PHYS((u64)CVM_OCT_SKB_CB(skb));
++		hw_buffer.s.addr =
++			XKPHYS_TO_PHYS((uintptr_t)CVM_OCT_SKB_CB(skb));
+ 		hw_buffer.s.size = skb_shinfo(skb)->nr_frags + 1;
+ 		pko_command.s.segs = skb_shinfo(skb)->nr_frags + 1;
+ 		pko_command.s.gather = 1;
+diff --git a/drivers/staging/octeon/octeon-stubs.h b/drivers/staging/octeon/octeon-stubs.h
+index a4ac3bfb62a85e65..b78ce9eaab85d310 100644
+--- a/drivers/staging/octeon/octeon-stubs.h
++++ b/drivers/staging/octeon/octeon-stubs.h
+@@ -1202,7 +1202,7 @@ static inline int cvmx_wqe_get_grp(cvmx_wqe_t *work)
+ 
+ static inline void *cvmx_phys_to_ptr(uint64_t physical_address)
+ {
+-	return (void *)(physical_address);
++	return (void *)(uintptr_t)(physical_address);
+ }
+ 
+ static inline uint64_t cvmx_ptr_to_phys(void *ptr)
+-- 
+2.17.1
+
