@@ -7,53 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96560C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 786F4C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67E97217D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44183217D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:29:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932180;
-	bh=SD+/dPytZJTVINNwhSYESFDl7e+W+IhKtgomcj9nMj0=;
+	s=default; t=1568932183;
+	bh=WDDmQk9gOFP0z6dEEfHIWljZ+gHsBxUO1ko+buhLRBk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JNKllHYJNopqPu9fsA2UrDkGsaVnY4pXNmZUvLzegPwSkKSxQQfVA6VQHRfGf6q+w
-	 JlRnRC1AmA2X2dPdrH4zS9aI3GnlbziwBFazBFQAAYg3maMTJtphmU8QN1Kb8P6WR9
-	 3aOjSBiG2W8k5UP2bU7DKsyLBXyEcU+aaQ/Qwgh8=
+	b=YFpPQz9QNPjZF10jDumbVTSz805HZ0gZXFon58mD2JIphrL2SKkWKc/D3MSi3Xvqg
+	 7rKirFtMFMgtex9kzTLcY3UHUPHG6heR856gXWJ72NQnb35QRBYQGTPpwnufUeViSc
+	 A2yf+DkIlZJebQzy0fVGIBj6o2XsY0RO09rpeVLQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436589AbfISW3j (ORCPT
+        id S2406461AbfISWRW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:29:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58638 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:17:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392500AbfISWR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:17:27 -0400
+        id S2392014AbfISWRR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:17:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B520121907;
-        Thu, 19 Sep 2019 22:17:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 418DB21907;
+        Thu, 19 Sep 2019 22:17:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931447;
-        bh=SD+/dPytZJTVINNwhSYESFDl7e+W+IhKtgomcj9nMj0=;
+        s=default; t=1568931436;
+        bh=WDDmQk9gOFP0z6dEEfHIWljZ+gHsBxUO1ko+buhLRBk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DAvYowNt1jyJokCf6eSpy39A2HUgnl+jfJEZG0opf/UjslWEusW1W2elf2ac7BqkL
-         vq8xSYzaZ1+CROrvB05qESvnCV4eZAI62xk1bGFH5ZpopOVTHJrwyp+z7guSzJlQ1J
-         +ZPTyg9kg5sCkxF1GsFE1tMy87dJPyPt62ibfPmM=
+        b=akh87n8A062ERWSAUbKDUPsKI4FUZtg8vMXdUyPPlv4s9f9cRtr7ImDS5sYdjD6iN
+         0MEq0016cjkwqkSdtJKsq54rZi+IrMQTVdIqdKXH6ePMlLm6yYy2cpnLiuqgDr2tLT
+         ewK9stglGrm+fsZgiIEMPLzfBfhiOKeUlcYa0UHk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Jong Hyun Park <park.jonghyun@yonsei.ac.kr>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 50/59] x86/hyper-v: Fix overflow bug in fill_gva_list()
-Date:   Fri, 20 Sep 2019 00:04:05 +0200
-Message-Id: <20190919214807.701968440@linuxfoundation.org>
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 46/59] net: seeq: Fix the function used to release some memory in an error handling path
+Date:   Fri, 20 Sep 2019 00:04:01 +0200
+Message-Id: <20190919214807.433413162@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214755.852282682@linuxfoundation.org>
 References: <20190919214755.852282682@linuxfoundation.org>
@@ -66,56 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 4030b4c585c41eeefec7bd20ce3d0e100a0f2e4d ]
+[ Upstream commit e1e54ec7fb55501c33b117c111cb0a045b8eded2 ]
 
-When the 'start' parameter is >=  0xFF000000 on 32-bit
-systems, or >= 0xFFFFFFFF'FF000000 on 64-bit systems,
-fill_gva_list() gets into an infinite loop.
+In commit 99cd149efe82 ("sgiseeq: replace use of dma_cache_wback_inv"),
+a call to 'get_zeroed_page()' has been turned into a call to
+'dma_alloc_coherent()'. Only the remove function has been updated to turn
+the corresponding 'free_page()' into 'dma_free_attrs()'.
+The error hndling path of the probe function has not been updated.
 
-With such inputs, 'cur' overflows after adding HV_TLB_FLUSH_UNIT
-and always compares as less than end.  Memory is filled with
-guest virtual addresses until the system crashes.
+Fix it now.
 
-Fix this by never incrementing 'cur' to be larger than 'end'.
+Rename the corresponding label to something more in line.
 
-Reported-by: Jong Hyun Park <park.jonghyun@yonsei.ac.kr>
-Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: 2ffd9e33ce4a ("x86/hyper-v: Use hypercall for remote TLB flush")
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 99cd149efe82 ("sgiseeq: replace use of dma_cache_wback_inv")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Reviewed-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/hyperv/mmu.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/seeq/sgiseeq.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/hyperv/mmu.c b/arch/x86/hyperv/mmu.c
-index 56c9ebac946fe..47718fff0b797 100644
---- a/arch/x86/hyperv/mmu.c
-+++ b/arch/x86/hyperv/mmu.c
-@@ -57,12 +57,14 @@ static inline int fill_gva_list(u64 gva_list[], int offset,
- 		 * Lower 12 bits encode the number of additional
- 		 * pages to flush (in addition to the 'cur' page).
- 		 */
--		if (diff >= HV_TLB_FLUSH_UNIT)
-+		if (diff >= HV_TLB_FLUSH_UNIT) {
- 			gva_list[gva_n] |= ~PAGE_MASK;
--		else if (diff)
-+			cur += HV_TLB_FLUSH_UNIT;
-+		}  else if (diff) {
- 			gva_list[gva_n] |= (diff - 1) >> PAGE_SHIFT;
-+			cur = end;
-+		}
+diff --git a/drivers/net/ethernet/seeq/sgiseeq.c b/drivers/net/ethernet/seeq/sgiseeq.c
+index 84a42ed97601d..49a18439bea2b 100644
+--- a/drivers/net/ethernet/seeq/sgiseeq.c
++++ b/drivers/net/ethernet/seeq/sgiseeq.c
+@@ -792,15 +792,16 @@ static int sgiseeq_probe(struct platform_device *pdev)
+ 		printk(KERN_ERR "Sgiseeq: Cannot register net device, "
+ 		       "aborting.\n");
+ 		err = -ENODEV;
+-		goto err_out_free_page;
++		goto err_out_free_attrs;
+ 	}
  
--		cur += HV_TLB_FLUSH_UNIT;
- 		gva_n++;
+ 	printk(KERN_INFO "%s: %s %pM\n", dev->name, sgiseeqstr, dev->dev_addr);
  
- 	} while (cur < end);
+ 	return 0;
+ 
+-err_out_free_page:
+-	free_page((unsigned long) sp->srings);
++err_out_free_attrs:
++	dma_free_attrs(&pdev->dev, sizeof(*sp->srings), sp->srings,
++		       sp->srings_dma, DMA_ATTR_NON_CONSISTENT);
+ err_out_free_dev:
+ 	free_netdev(dev);
+ 
 -- 
 2.20.1
 
