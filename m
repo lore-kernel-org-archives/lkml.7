@@ -2,111 +2,138 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C6EC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 17:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A5FC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 17:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED67A21928
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 17:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 972F321929
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 17:31:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cfE6edkP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EHUX+BD8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391958AbfISRZh (ORCPT
+        id S2390909AbfISRbo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 13:25:37 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37526 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390842AbfISRZg (ORCPT
+        Thu, 19 Sep 2019 13:31:44 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:50182 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388951AbfISRbn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 13:25:36 -0400
-Received: by mail-pf1-f195.google.com with SMTP id y5so2755733pfo.4
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 10:25:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DJzyXNF8iTS1yqKZOMbwgyqWnQ4cfI4lYx+lKZ4L8Xo=;
-        b=cfE6edkP26+ud/ERpMrZEAYsavn3IO/jjGtCQLonmnCu1KmIMdeQHvqNPOnxoZD/iw
-         HoGC4xNoOfP7iXv75IoFPqkhMpUwgr2tMK3meZqd8hK4p2Vw58aKIE3gZBORjWwUgPD+
-         G+Fmzvu8BDoLs9UBzVzCNPgZW027iSQZ0FnZU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DJzyXNF8iTS1yqKZOMbwgyqWnQ4cfI4lYx+lKZ4L8Xo=;
-        b=IzbyZArgpqEwsM6OTZ+Qf44yQHuQ2+ISEulbHSPH0g1LEVs2vUdcMZPikoFBndk+Ua
-         M4ib/mRVyLFI1g8/ElAUX2Gwelk7MYo8olWZsQKuBPIHGBGtMr4CHg6yFJ7NM2zdaC6P
-         tt6akCPcajx5XW0KtB3sxkWeRW+EcYF4K4pMb1ap2Z6MK3Gbb7SqusupfxBPcOfPmqU0
-         IK5JlNn79AmGmLtnC7y164rENFCoH7M2BZrr2ZSEblV0PHjqPBrBpY9d2AhtE9U8cX1Q
-         n2MuCwAObOyKsczGkQrLuD8Fvg5cI+zVg564HC+iTmdotzZkYWV6LqKNXlxfVLY9hPwx
-         c5Kw==
-X-Gm-Message-State: APjAAAUTo9IImUEgZRnu4CJl7TQd85rRSW0JJXHPua3fQCEuBsDYu3hj
-        f+Zn7aTFNcHq1czlMCo26V/CMw==
-X-Google-Smtp-Source: APXvYqxmUPU6Nfqmu0y8uViniAr+3rSxtfyaajROXjNndjr3j5x89y/frD8XSM6YQBKdRLxAbW6SVg==
-X-Received: by 2002:a65:6547:: with SMTP id a7mr10013007pgw.65.1568913935969;
-        Thu, 19 Sep 2019 10:25:35 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id p20sm8656051pgj.47.2019.09.19.10.25.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Sep 2019 10:25:35 -0700 (PDT)
-Date:   Thu, 19 Sep 2019 10:25:33 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] devfreq: Add tracepoint for frequency changes
-Message-ID: <20190919172533.GS133864@google.com>
-References: <20190918191537.48837-1-mka@chromium.org>
- <20190919123559.2931e0ef@gandalf.local.home>
+        Thu, 19 Sep 2019 13:31:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=AQOZjwcoqaVn82G0FfSuJ2KmD6bdtToACyqb2iajctY=; b=EHUX+BD8HLgR7ssqxL5471sNr
+        bQ6Q592RJERAGuxaMnsztT96IkLDOsemKT0JGHCzQPPlzkPHcCY/vymRNRmyLDCsYnqlxPZFCAR1W
+        RV2gxMvJ7+lHyMEphrd4eHtUvuvCNiAaWxU25/X03kbI2XHEhhEW8lxrLCU8xvr+XxBFaqPMZJ07K
+        RK8JgHLZmJSnxDqU5gRUKSdI79N4FOLqmltBXKfznZyws1dP1bo/BI6Ade+gZVuoRxFYdx4oVdjbA
+        EqBiF7uEl/ZuJTOou8x2B6UXNcd7QSQBWIkDDbnq0JjDRLXYZ+UvBu59fjDxisUc2EYxwQuiC4JOp
+        9W0TVw9Aw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iB0HO-0002Lj-CC; Thu, 19 Sep 2019 17:31:42 +0000
+Date:   Thu, 19 Sep 2019 10:31:42 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] riscv: resolve most warnings from sparse
+Message-ID: <20190919173142.GA26224@infradead.org>
+References: <alpine.DEB.2.21.9999.1909190125400.13510@viisi.sifive.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190919123559.2931e0ef@gandalf.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <alpine.DEB.2.21.9999.1909190125400.13510@viisi.sifive.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Sep 19, 2019 at 01:26:38AM -0700, Paul Walmsley wrote:
+> 
+> Resolve most of the warnings emitted by sparse.  The objective here is
+> to keep arch/riscv as clean as possible with regards to sparse warnings,
+> and to maintain this bar for subsequent patches.
 
-On Thu, Sep 19, 2019 at 12:35:59PM -0400, Steven Rostedt wrote:
-> On Wed, 18 Sep 2019 12:15:37 -0700
-> Matthias Kaehlcke <mka@chromium.org> wrote:
-> 
-> > Add a tracepoint for frequency changes of devfreq devices and
-> > use it.
-> > 
-> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > ---
-> >  drivers/devfreq/devfreq.c      |  3 +++
-> >  include/trace/events/devfreq.h | 18 ++++++++++++++++++
-> >  2 files changed, 21 insertions(+)
-> > 
-> > diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-> > index ab22bf8a12d6..32de1f6ac776 100644
-> > --- a/drivers/devfreq/devfreq.c
-> > +++ b/drivers/devfreq/devfreq.c
-> > @@ -317,6 +317,9 @@ static int devfreq_set_target(struct devfreq *devfreq, unsigned long new_freq,
-> >  
-> >  	devfreq->previous_freq = new_freq;
-> >  
-> > +	if (new_freq != cur_freq)
-> 
-> I would make this:
-> 
-> 	if (trace_devfreq_frequency_enabled() && new_freq != cur_freq)
-> 
-> Because this would place the second check into the "nop" portion of the
-> code, keeping the test from being performed if the devfreq_frequency
-> trace point is not enabled. Slight micro optimization, but still enough
-> to add it.
+I think this patch does just way to many different things and needs
+to be split up into one patch per issue / code module.
 
-Sounds good to me, thanks for the review!
+> --- /dev/null
+> +++ b/arch/riscv/include/asm/entry.h
+
+For example adding this file should be a patch on its own.  It can
+also move to arch/riscv/kernel/ instead of polluting the <asm/*.h>
+namespace.  That being said I'm not sure I like this and the
+head.h patches.  Just adding a header for entry points used from
+aseembly only seems rather pointless, I wonder if there is a way
+to just shut up sparse on them.  Same for most of head.h.
+
+> @@ -61,6 +61,9 @@
+>  
+>  #define PAGE_TABLE		__pgprot(_PAGE_TABLE)
+>  
+> +extern pgd_t swapper_pg_dir[];
+> +extern pgd_t trampoline_pg_dir[];
+> +extern pgd_t early_pg_dir[];
+>  extern pgd_t swapper_pg_dir[];
+
+This seems to add a duplicate definition of swapper_pg_dir.
+
+> +extern asmlinkage void __init smp_callin(void);
+
+No nee for the extern.
+
+> index 905372d7eeb8..d0d980d99019 100644
+> --- a/arch/riscv/include/asm/thread_info.h
+> +++ b/arch/riscv/include/asm/thread_info.h
+> @@ -58,6 +58,8 @@ struct thread_info {
+>  	.addr_limit	= KERNEL_DS,		\
+>  }
+>  
+> +extern int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src);
+
+This really needs to move to a header outside of arch/.  Also no need
+for the extern and as-is this adds a line > 80 chars.
+
+> +#ifdef CONFIG_PROFILING
+>  /* Unsupported */
+>  int setup_profiling_timer(unsigned int multiplier)
+>  {
+>  	return -EINVAL;
+>  }
+> +#endif
+
+Yikes.  All architectures either just return 0 or -EINVAL here,
+and the caller has a spurious extern for it.  Please just remove
+this arch hook and add a Kconfig variable that the few architectures
+currently returning 0 select insted.
+
+> +static void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
+
+This adds an > 80 char line.
+
+> -pmd_t early_pmd[PTRS_PER_PMD * NUM_EARLY_PMDS] __initdata __aligned(PAGE_SIZE);
+> +static pmd_t early_pmd[PTRS_PER_PMD * NUM_EARLY_PMDS] __initdata __aligned(PAGE_SIZE);
+
+Another one.
+
+> --- a/arch/riscv/mm/sifive_l2_cache.c
+> +++ b/arch/riscv/mm/sifive_l2_cache.c
+> @@ -142,7 +142,7 @@ static irqreturn_t l2_int_handler(int irq, void *device)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> -int __init sifive_l2_init(void)
+> +static int __init sifive_l2_init(void)
+>  {
+>  	struct device_node *np;
+>  	struct resource res;
+
+And this needs to be applied after this file moves to the right place
+and isn't completely bogusly built into every RISC-V kernel.  Not all
+the world is a SiFive..
