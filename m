@@ -2,253 +2,127 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB88C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 23:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 783FCC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 23:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06073218AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 23:44:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F21D207FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 23:49:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZVV3OwmA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kNWSnXv4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394180AbfISXoi (ORCPT
+        id S2407691AbfISXtw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 19:44:38 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:34450 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732769AbfISXoh (ORCPT
+        Thu, 19 Sep 2019 19:49:52 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33292 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407674AbfISXtv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 19:44:37 -0400
-Received: by mail-lj1-f194.google.com with SMTP id j19so3805095lja.1;
-        Thu, 19 Sep 2019 16:44:34 -0700 (PDT)
+        Thu, 19 Sep 2019 19:49:51 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q10so3326773pfl.0;
+        Thu, 19 Sep 2019 16:49:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to;
-        bh=i7RuiP19W1VhsgitsYVAzaqHOT4gNVIayT1+H/ObASg=;
-        b=ZVV3OwmA72jygcagD5B0KAqIyLiyPww51wDkDJaO8LIneKYfe2QZ3m5QXOkL+pC2AO
-         8Kdeop+eawtm0bdXcr53uhjpLYINXNqJPYgGDZ7ERf4hDrlejE4S7Xg/kJtYbJR4V0wx
-         R/XdCVdRNweuqTfnt47FH+mDQzpOGJaLLmDa8FKZmPXmfk0snZ3ljSmiO3D+ZVpHg01X
-         2+sgudXxJO9LHy5fIPBTBvO7ZrvEV367GleQIzkVSYRlLsw45R/PxC/k76iqczHjD1G8
-         I0Ep2ck83c6yUV7kl1jAEaEyxRAnbldF7pVVHJinVkxnDrPVU9693VwwVuD7mxJeyK/K
-         3+EA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DO8lDkgH/09igYhmGE97oh8+8ahZBIflCShVrR9OrmU=;
+        b=kNWSnXv4Q9H2UbWOSwbkFDyDYqrw5V5FmU8EqdV7tUgMVaqW5UnRoGaPbLRxAC+hEd
+         3daoRlbwjVz6K32Az6qna8OmyjDaxJuCA2WvshtxpT7DkMnbifHYEJ0BsKiMtLFSyUv3
+         xDtTO+b/VsYw08fNK30ntWhKO+BaL7AAi/8AlX1aHtOMrqbJ8T1WEIQpq9f5s4SWLwhz
+         bMbeKs2DUZAbkByeqfxDZXfHVfm4ozWqy8uoRaFUJ9B0hw9MOXly7hJRc2nommYb7OBW
+         jiKWP5+nLvTY4Ez/l9sDmXVwjP0y2WNKAAcZZMFAx8o/6PkqGygW6BcO7SHlaOPWr9Vk
+         I92g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to;
-        bh=i7RuiP19W1VhsgitsYVAzaqHOT4gNVIayT1+H/ObASg=;
-        b=RKgwmpuepyTaX41R7jn/IpzAADFUO1k6gD8Xi8sxtR/GajeRyVaEVCIna6XoZMdr+x
-         TKtbH7PrXhp+13c7PfDEvqkPtq4UXBWp2Ll1h5rZrlgP5VQ3+vMQVYCRK7lVV2LZhUp1
-         /2PCs+cObYo/L5bKDjo7mm1EoUulZTWDDm2GmYWbgET0bm7MJjLJ8WuxfOtlm53+tmKP
-         NkT6eui6DM0rhaMkEBgzva69wIS4t3TRtqQ6Hg1GvXyw8JEuEwUV5VE1JMgv7fxHiayH
-         7ax28PVkx4w8uSU2/R/vtUohdS/teJWXFit3erIvAsE0Kk9Qxh2AygZeQa8HobRv4jaX
-         n2Ow==
-X-Gm-Message-State: APjAAAV4dk9Zsgd8kDSJYmc/tLPyP79SP9NaKo6TTJy75SKb5xMqiTGc
-        Y4M1TNmXAZX03t8NwjFXTVuK8eJ123N/TA==
-X-Google-Smtp-Source: APXvYqxlnApVYXOOaxD88i0/CP5hDCXTm3cions2ZzKPjkoK6Fq96tp3e36TU5hXdS1YiPqNy30Eug==
-X-Received: by 2002:a2e:1b56:: with SMTP id b83mr6816283ljb.107.1568936673639;
-        Thu, 19 Sep 2019 16:44:33 -0700 (PDT)
-Received: from ?IPv6:2a02:17d0:4a6:5700::ae2? ([2a02:17d0:4a6:5700::ae2])
-        by smtp.googlemail.com with ESMTPSA id q21sm85117lfc.2.2019.09.19.16.44.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Sep 2019 16:44:32 -0700 (PDT)
-Subject: Re: [PATCH RFC v4 1/1] random: WARN on large getrandom() waits and
- introduce getrandom2()
-From:   "Alexander E. Patrakov" <patrakov@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>, linux-ext4@vger.kernel.org,
-        linux-man@vger.kernel.org
-References: <20190912034421.GA2085@darwi-home-pc>
- <20190912082530.GA27365@mit.edu>
- <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
- <20190914122500.GA1425@darwi-home-pc>
- <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
- <20190915052242.GG19710@mit.edu>
- <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
- <20190918211503.GA1808@darwi-home-pc> <20190918211713.GA2225@darwi-home-pc>
- <CAHk-=wiCqDiU7SE3FLn2W26MS_voUAuqj5XFa1V_tiGTrrW-zQ@mail.gmail.com>
- <20190919143427.GQ6762@mit.edu>
- <CAHk-=wgqbBy84ovtr8wPFqRo6U8jvp59rvQ8a6TvXuoyb-4L-Q@mail.gmail.com>
- <CAHk-=wjTbpcyVevsy3g-syB5v9gk_rR-yRFrUAvTL8NFuGfCrw@mail.gmail.com>
- <6adb02d4-c486-a945-7f51-d007d6de45b2@gmail.com>
- <CAHk-=wjGAaPAGnfok6fuZK1PYMkZ9bNOGkWXLYtS7+6bAWnAGQ@mail.gmail.com>
- <bd24cba4-b9c8-2ed8-6434-ee5932c24fb9@gmail.com>
-Message-ID: <9f359f02-0b43-888c-2c05-8e6661bfa38f@gmail.com>
-Date:   Fri, 20 Sep 2019 04:44:30 +0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DO8lDkgH/09igYhmGE97oh8+8ahZBIflCShVrR9OrmU=;
+        b=ps7EeR6n6mMphZjjx426PeLztXGOhHT4Fy23OtGMIYX27yfTgpMe/Q2XGyeHIjh/EQ
+         kmGSgBIq3cCNVNuuny+9vxqRsHkqgOcD2+3LjuGlDm/k+NHEJf8O4BzzDzr9bmzOkChT
+         uqzTBX9/qaVmyrkP52CHfTsJ7BdK5oqv5dODnQYXHzvXPydzNhTJfJndOnMmFhngoP6b
+         lqHuASoQw0z3FbBvxYt1fnRmYgoa1aYAKlA9Q0bH3gZR+cW3CkHkpDb4PpZ1gSohaDjI
+         IaapHhH8BTIQPJOxy8O0ZRz3EMK7o43SyZEZlTtPWtNRyNXnHwcgA6zt0PIjEH7z3mYX
+         VcBA==
+X-Gm-Message-State: APjAAAWSmAvcszbkCp1840yV2HZfX0+sU06DFuCAkH+m81NLAG6MFOe5
+        cz5amJoqcPP4WZNTYBVqN44=
+X-Google-Smtp-Source: APXvYqxicFF4tS7Mcj+VMjT1qOkc2frSVMWmjKYUyhpoVLCZd7f7tLUEHubAzMDOxlG+EHV+svcZtA==
+X-Received: by 2002:a62:1c16:: with SMTP id c22mr13829974pfc.10.1568936990878;
+        Thu, 19 Sep 2019 16:49:50 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id e21sm30169pgr.43.2019.09.19.16.49.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 19 Sep 2019 16:49:50 -0700 (PDT)
+Date:   Thu, 19 Sep 2019 16:48:58 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
+        lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, lars@metafoo.de
+Subject: Re: [PATCH V3 2/4] ASoC: fsl_asrc: update supported sample format
+Message-ID: <20190919234857.GA14287@Asurada-Nvidia.nvidia.com>
+References: <cover.1568861098.git.shengjiu.wang@nxp.com>
+ <5811f393692a7668564fd4b9ef5708c1e3db8dc0.1568861098.git.shengjiu.wang@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <bd24cba4-b9c8-2ed8-6434-ee5932c24fb9@gmail.com>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms010005020607080905000605"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5811f393692a7668564fd4b9ef5708c1e3db8dc0.1568861098.git.shengjiu.wang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a cryptographically signed message in MIME format.
+On Thu, Sep 19, 2019 at 08:11:40PM +0800, Shengjiu Wang wrote:
+> The ASRC support 24bit/16bit/8bit input width, which is
+> data width, not slot width.
+> 
+> For the S20_3LE format, the data with is 20bit, slot width
+> is 24bit, if we set ASRMCR1n.IWD to be 24bits, the result
+> is the volume is lower than expected, it likes 24bit data
+> right shift 4 bits
+> 
+> So replace S20_3LE with S24_3LE in supported list and add S8
+> format in TX supported list
+> 
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 
---------------ms010005020607080905000605
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-PH
-Content-Transfer-Encoding: quoted-printable
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
 
-20.09.2019 03:23, Alexander E. Patrakov =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> 20.09.2019 02:47, Linus Torvalds =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On Thu, Sep 19, 2019 at 1:45 PM Alexander E. Patrakov
->> <patrakov@gmail.com> wrote:
->>>
->>> This already resembles in-kernel haveged (except that it doesn't cred=
-it
->>> entropy), and Willy Tarreau said "collect the small entropy where it =
-is,
->>> period" today. So, too many people touched upon the topic in one day,=
-
->>> and therefore I'll bite.
->>
->> I'm one of the people who aren't entirely convinced by the jitter
->> entropy - I definitely believe it exists, I just am not necessarily
->> convinced about the actual entropy calculations.
->>
->> So while I do think we should take things like the cycle counter into
->> account just because I think it's a a useful way to force some noise,
->> I am *not* a huge fan of the jitter entropy driver either, because of
->> the whole "I'm not convinced about the amount of entropy".
->>
->> The whole "third order time difference" thing would make sense if the
->> time difference was some kind of smooth function - which it is at a
->> macro level.
->>
->> But at a micro level, I could easily see the time difference having
->> some very simple pattern - say that your cycle counter isn't really
->> cycle-granular, and the load takes 5.33 "cycles" and you see a time
->> difference pattern of (5, 5, 6, 5, 5, 6, ...). No real entropy at all
->> there, it is 100% reliable.
->>
->> At a macro level, that's a very smooth curve, and you'd say "ok, time
->> difference is 5.3333 (repeating)". But that's not what the jitter
->> entropy code does. It just does differences of differences.
->>
->> And that completely non-random pattern has a first-order difference of=
-
->> 0, 1, 1, 0, 1, 1.. and a second order of 1, 0, 1, 1, 0,=C2=A0 and so o=
-n
->> forever. So the "jitter entropy" logic will assign that completely
->> repeatable thing entropy, because the delta difference doesn't ever go=
-
->> away.
->>
->> Maybe I misread it.
->=20
-> You didn't. Let me generalize and rephrase the part of the concern that=
-=20
-> I agree with, in my own words:
->=20
-> The same code is used in cryptoapi rng, and also a userspace version=20
-> exists. These two have been tested by the author via the "dieharder"=20
-> tool (see the message for commit d9d67c87), so we know that on his=20
-> machine it actually produces good-quality random bits. However, the=20
-> in-kernel self-test is much, much weaker, and would not catch the=20
-> situation when someone's machine is deterministic in a way that you=20
-> describe, or something similar.
-
-A constructive suggestion here would be to put the first few thousands=20
-(ok, a completely made up number) raw timing intervals through a "gzip=20
-compression test" in addition to the third derivative test, just based=20
-on what we already have in the kernel.
-
---=20
-Alexander E. Patrakov
-
-
---------------ms010005020607080905000605
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: Криптографическая подпись S/MIME
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
-C5wwggVNMIIENaADAgECAhArQ2N9hOajPiuqD20bI16wMA0GCSqGSIb3DQEBCwUAMIGCMQsw
-CQYDVQQGEwJJVDEPMA0GA1UECAwGTWlsYW5vMQ8wDQYDVQQHDAZNaWxhbm8xIzAhBgNVBAoM
-GkFjdGFsaXMgUy5wLkEuLzAzMzU4NTIwOTY3MSwwKgYDVQQDDCNBY3RhbGlzIENsaWVudCBB
-dXRoZW50aWNhdGlvbiBDQSBHMTAeFw0xOTA2MDYwODAxMzVaFw0yMDA2MDYwODAxMzVaMB0x
-GzAZBgNVBAMMEnBhdHJha292QGdtYWlsLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
-AQoCggEBAOA0sb1ubDnIK32rbgW3BnjBcx1pYuEFOCU6aPVJ2gU+wtKJgAo9IdVUXG6kC1fF
-hXjIcZHOgbEqzFjHK1yXlHIUWEv+N8KdmBDOK1UdKQj58d9A4hnH62iEiwQsOR5YT1UyHX4A
-pfMjsBja7254cixR4jOPzfA4YUD6JTTPioyjDwuYQlhweVyXziKswLtGWfKeDcm3fOlKYxGy
-hxjWJRamGTreNBVC9uMkF4DHszpUm07agR2U4mnWy7FsjBuRJ++iX0SvuxKWf19HQWgmgIys
-jBVrArhVzgjOOnbvlklW849wIARF4Y0WAf91DsqPtuR8hu7+9KIVj2qk9BeNXXUCAwEAAaOC
-AiEwggIdMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUfmD8+GynPT3XrpOheQKPs3QpO/Uw
-SwYIKwYBBQUHAQEEPzA9MDsGCCsGAQUFBzAChi9odHRwOi8vY2FjZXJ0LmFjdGFsaXMuaXQv
-Y2VydHMvYWN0YWxpcy1hdXRjbGlnMTAdBgNVHREEFjAUgRJwYXRyYWtvdkBnbWFpbC5jb20w
-RwYDVR0gBEAwPjA8BgYrgR8BGAEwMjAwBggrBgEFBQcCARYkaHR0cHM6Ly93d3cuYWN0YWxp
-cy5pdC9hcmVhLWRvd25sb2FkMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDCB6AYD
-VR0fBIHgMIHdMIGboIGYoIGVhoGSbGRhcDovL2xkYXAwNS5hY3RhbGlzLml0L2NuJTNkQWN0
-YWxpcyUyMENsaWVudCUyMEF1dGhlbnRpY2F0aW9uJTIwQ0ElMjBHMSxvJTNkQWN0YWxpcyUy
-MFMucC5BLi8wMzM1ODUyMDk2NyxjJTNkSVQ/Y2VydGlmaWNhdGVSZXZvY2F0aW9uTGlzdDti
-aW5hcnkwPaA7oDmGN2h0dHA6Ly9jcmwwNS5hY3RhbGlzLml0L1JlcG9zaXRvcnkvQVVUSENM
-LUcxL2dldExhc3RDUkwwHQYDVR0OBBYEFEhX9pz3jwI3+erfsAVB2b4xSsM8MA4GA1UdDwEB
-/wQEAwIFoDANBgkqhkiG9w0BAQsFAAOCAQEAVbKht9PGiUsUaqiyzJb6blSMNaLwopQr3AsI
-FvthyqnSqxmSNYDeZsQYPgBnXvMCvHCn07pm1b96Y3XstBt2FWb9dpDr7y+ec3vxFHb3lKGb
-3WREB1kEATnBu2++dPcILG58gdzgYde3RAJC3/OyOZhDqKwQA5CnXTHigTzw75iezdLne5pU
-MjEQoxdqC+sgbrAueaEpMmRsGSKzgIX8eQ3DWwyIL56fYPJP3u4WZmBUKTFhhUWowG62QLtt
-ZjkiX/j+vjcSRd2app8lYDwQRornZAqrDxy+c4qQJ5FN234p36opwespDCwLN3Z6wPzLvzS+
-jAlmV3DF2xuZGMoebzCCBkcwggQvoAMCAQICCCzUitOxHg+JMA0GCSqGSIb3DQEBCwUAMGsx
-CzAJBgNVBAYTAklUMQ4wDAYDVQQHDAVNaWxhbjEjMCEGA1UECgwaQWN0YWxpcyBTLnAuQS4v
-MDMzNTg1MjA5NjcxJzAlBgNVBAMMHkFjdGFsaXMgQXV0aGVudGljYXRpb24gUm9vdCBDQTAe
-Fw0xNTA1MTQwNzE0MTVaFw0zMDA1MTQwNzE0MTVaMIGCMQswCQYDVQQGEwJJVDEPMA0GA1UE
-CAwGTWlsYW5vMQ8wDQYDVQQHDAZNaWxhbm8xIzAhBgNVBAoMGkFjdGFsaXMgUy5wLkEuLzAz
-MzU4NTIwOTY3MSwwKgYDVQQDDCNBY3RhbGlzIENsaWVudCBBdXRoZW50aWNhdGlvbiBDQSBH
-MTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMD8wYlW2Yji9ARlv80JNasoKTD+
-DMr3J6scEe6GPV3k9WxEtgxXM5WX3oiKjS2p25Mqk8cnV2fpMaEvdO9alrGes0vqcUqly7Pk
-U753RGlseYXR2XCjVhs4cuRYjuBmbxpRSJxRImmPnThKY41r0nl6b3A6Z2MOjPQF7h6OCYYw
-tz/ziv/+UBV587U2uIlOukaS7Xjk4ArYkQsGTSsfBBXqqn06WL3xG+B/dRO5/mOtY5tHdhPH
-ydsBk2kksI3PJ0yNgKV7o6HM7pG9pB6sGhj96uVLnnVnJ0WXOuV1ISv2eit9ir60LjT99hf+
-TMZLxA5yaVJ57fYjBMbxM599cw0CAwEAAaOCAdUwggHRMEEGCCsGAQUFBwEBBDUwMzAxBggr
-BgEFBQcwAYYlaHR0cDovL29jc3AwNS5hY3RhbGlzLml0L1ZBL0FVVEgtUk9PVDAdBgNVHQ4E
-FgQUfmD8+GynPT3XrpOheQKPs3QpO/UwDwYDVR0TAQH/BAUwAwEB/zAfBgNVHSMEGDAWgBRS
-2Ig6yJ94Zu2J83s4cJTJAgI20DBFBgNVHSAEPjA8MDoGBFUdIAAwMjAwBggrBgEFBQcCARYk
-aHR0cHM6Ly93d3cuYWN0YWxpcy5pdC9hcmVhLWRvd25sb2FkMIHjBgNVHR8EgdswgdgwgZag
-gZOggZCGgY1sZGFwOi8vbGRhcDA1LmFjdGFsaXMuaXQvY24lM2RBY3RhbGlzJTIwQXV0aGVu
-dGljYXRpb24lMjBSb290JTIwQ0EsbyUzZEFjdGFsaXMlMjBTLnAuQS4lMmYwMzM1ODUyMDk2
-NyxjJTNkSVQ/Y2VydGlmaWNhdGVSZXZvY2F0aW9uTGlzdDtiaW5hcnkwPaA7oDmGN2h0dHA6
-Ly9jcmwwNS5hY3RhbGlzLml0L1JlcG9zaXRvcnkvQVVUSC1ST09UL2dldExhc3RDUkwwDgYD
-VR0PAQH/BAQDAgEGMA0GCSqGSIb3DQEBCwUAA4ICAQBNk87VJL5BG0oWWHNfZYny2Xo+WIy8
-y8QP5VsWZ7LBS6Qz8kn8zJp3c9xdOkudZbcA3vm5U8HKXc1JdzNmpSh92zq/OeZLvUa+rnnc
-mvhxkFE9Doag6NitggBPZwXHwDcYn430/F8wqAt3LX/bsd6INVrhPFk3C2SoAjLjUQZibXvQ
-uFINMN4l6j86vCrkUaGzSqnXT45NxIivkAPhBQgpGtcTi4f+3DxkyTDbWtf9LuaC4l2jgB3g
-C7f56nmdpGfpYsyvKE7+Ip+WryH93pWt6C+r68KU3Gu02cU1/dHvNOXWUDeKkVT3T26wZVrT
-aMx+0nS3i63KDfJdhFzutfdBgCWHcp03NhOhMqy1RnAylF/dVZgkka6hKaWe1tOU21kS4uvs
-D4wM5k6tl0pin2o6u47kyoJJMOxRSQcosWtDXUmaLHUG91ZC6hvBDmDmpmS6h/r+7mtPrpYO
-xTr4hW3me2EfXkTvNTvBQtbi4LrZchg9vhi44EJ7L53g7GzQFn5KK8vqqgMb1c1+T0mkKdqS
-edgGiB9TDdYtv4HkUj/N00TKxZMLiDMw4V8ShUL6bKTXNfb3E68s47cD+MatFjUuGFj0uFPv
-ZlvlNAoJ7IMfXzIiTWy35X+akm+d49wBh54yv6icz2t/cBU1y1weuPBd8NUH/Ue3mXk0SXwk
-GP3yVDGCA/YwggPyAgEBMIGXMIGCMQswCQYDVQQGEwJJVDEPMA0GA1UECAwGTWlsYW5vMQ8w
-DQYDVQQHDAZNaWxhbm8xIzAhBgNVBAoMGkFjdGFsaXMgUy5wLkEuLzAzMzU4NTIwOTY3MSww
-KgYDVQQDDCNBY3RhbGlzIENsaWVudCBBdXRoZW50aWNhdGlvbiBDQSBHMQIQK0NjfYTmoz4r
-qg9tGyNesDANBglghkgBZQMEAgEFAKCCAi8wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAc
-BgkqhkiG9w0BCQUxDxcNMTkwOTE5MjM0NDMwWjAvBgkqhkiG9w0BCQQxIgQgK58SpgVGaQoV
-xcP19nLEx4xA7QmyVd88OE/p90T5jDcwbAYJKoZIhvcNAQkPMV8wXTALBglghkgBZQMEASow
-CwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA4GCCqGSIb3DQMCAgIAgDANBggqhkiG9w0DAgIB
-QDAHBgUrDgMCBzANBggqhkiG9w0DAgIBKDCBqAYJKwYBBAGCNxAEMYGaMIGXMIGCMQswCQYD
-VQQGEwJJVDEPMA0GA1UECAwGTWlsYW5vMQ8wDQYDVQQHDAZNaWxhbm8xIzAhBgNVBAoMGkFj
-dGFsaXMgUy5wLkEuLzAzMzU4NTIwOTY3MSwwKgYDVQQDDCNBY3RhbGlzIENsaWVudCBBdXRo
-ZW50aWNhdGlvbiBDQSBHMQIQK0NjfYTmoz4rqg9tGyNesDCBqgYLKoZIhvcNAQkQAgsxgZqg
-gZcwgYIxCzAJBgNVBAYTAklUMQ8wDQYDVQQIDAZNaWxhbm8xDzANBgNVBAcMBk1pbGFubzEj
-MCEGA1UECgwaQWN0YWxpcyBTLnAuQS4vMDMzNTg1MjA5NjcxLDAqBgNVBAMMI0FjdGFsaXMg
-Q2xpZW50IEF1dGhlbnRpY2F0aW9uIENBIEcxAhArQ2N9hOajPiuqD20bI16wMA0GCSqGSIb3
-DQEBAQUABIIBAIcUJdnriZ4quPoWUWaiu3YJCrjY2O7MXIzcv5YE6BamPiLVtAbNvv1/+mi+
-MzSZrxlJM9Pv71qLJcyRgXKO1UXJg0OGyqaPnz1rXz1BKF5UAT44O9zEw1ELV5biqs70OcGh
-dKVBmos1CdMvHnLR0WB3z5DgUFHGuUjTH2RApvv29be0NYqoG3gqu7OVDKlu8Dh83lIFPusw
-DANMUXQ9+1M6oREFYrpVTZilsN/PtFZnDO7BRuWa7nY6YSEeeMddvNWX3yVhpIr4aOBvGMp3
-N6Iksr7QscLmGuz+zZEUKGp5zB85rRF2gwJq+5MTYCrfiBdgrYhna4En8Z6s+3OdWfEAAAAA
-AAA=
---------------ms010005020607080905000605--
+> ---
+>  sound/soc/fsl/fsl_asrc.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
+> index 4d3804a1ea55..584badf956d2 100644
+> --- a/sound/soc/fsl/fsl_asrc.c
+> +++ b/sound/soc/fsl/fsl_asrc.c
+> @@ -624,7 +624,7 @@ static int fsl_asrc_dai_probe(struct snd_soc_dai *dai)
+>  
+>  #define FSL_ASRC_FORMATS	(SNDRV_PCM_FMTBIT_S24_LE | \
+>  				 SNDRV_PCM_FMTBIT_S16_LE | \
+> -				 SNDRV_PCM_FMTBIT_S20_3LE)
+> +				 SNDRV_PCM_FMTBIT_S24_3LE)
+>  
+>  static struct snd_soc_dai_driver fsl_asrc_dai = {
+>  	.probe = fsl_asrc_dai_probe,
+> @@ -635,7 +635,8 @@ static struct snd_soc_dai_driver fsl_asrc_dai = {
+>  		.rate_min = 5512,
+>  		.rate_max = 192000,
+>  		.rates = SNDRV_PCM_RATE_KNOT,
+> -		.formats = FSL_ASRC_FORMATS,
+> +		.formats = FSL_ASRC_FORMATS |
+> +			   SNDRV_PCM_FMTBIT_S8,
+>  	},
+>  	.capture = {
+>  		.stream_name = "ASRC-Capture",
+> -- 
+> 2.21.0
+> 
