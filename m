@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE70EC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA1DC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EE7321929
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:06:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B04DE21929
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:07:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568930819;
-	bh=lNGPzVKklQpOAnJE19SGdVzzuuLGOlPtseyl0KJuZm4=;
+	s=default; t=1568930822;
+	bh=i59vVpsWme0l4E3I1ANgSvilDUw/eEg/54eOPwkejZA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2KauNjyHs1BT2/mo2o7mbs20/5sKVt9U6MMv1kpZX2sfSlRe6G++A4y44YPI1wbBg
-	 l5uRYUEzhsZzx3wAR7AdLGY/sIViJlkou6J4HFHFk8/OA/P3+9amzUM0zpjLReFIpq
-	 hdese0CF3C9MNT6sClvmaNNnBtnl1H1V1O2xaLKU=
+	b=ZtbA/Vb2Pype3DP+nOEfbhmnVASgVkEtfzU3u8UzhUAILUoLkZPIs5WFCWKl55a6k
+	 CApOMQErjp0ANkg/UJyStSx1EB1hCz39NjrlQjI44ffqDUtbCiLs1J89qwQj+64hs+
+	 1zokn3/LN8TTMNSfRsuEUL5v6rGrFAb3aKF5fCLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393111AbfISWG6 (ORCPT
+        id S2393122AbfISWHC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:06:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44480 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:07:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390261AbfISWGz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:06:55 -0400
+        id S2393100AbfISWG5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:06:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9977621907;
-        Thu, 19 Sep 2019 22:06:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 541A821920;
+        Thu, 19 Sep 2019 22:06:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568930814;
-        bh=lNGPzVKklQpOAnJE19SGdVzzuuLGOlPtseyl0KJuZm4=;
+        s=default; t=1568930816;
+        bh=i59vVpsWme0l4E3I1ANgSvilDUw/eEg/54eOPwkejZA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pXB207sNiEHexOUAc2pB3dMSHMA2ERgLYkQPGWg4VKWUNiVzXH95yrxUvZAD0mgC2
-         IQbjcyqi2M+KC2caoaFITyLcdWvCN5XKQPDY08JkusiMKzNwl51KMSgiMCEC5+7LF/
-         YYiCsh+PLARmD/QsVN4xbfkpvXzbIVhoXj/JJVSk=
+        b=rsqHmEQ8sUxyvnZt0xROt9Zu5uggbtE0uuORQf8qDZFZN+DoQeXTnBRpSB6m6VEcb
+         PR+9SfgBB5fjNhTNbA3G1lJ2QQelbw7tYLRoaU9DsJknquzpnMcNyjyFTfroFJJXe3
+         rS/Bih3d5ngPCj2stvOOC4cLH8EPjX4LMgmgisQM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Aaron Armstrong Skomra <aaron.skomra@wacom.com>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 5.2 006/124] HID: wacom: generic: read HID_DG_CONTACTMAX from any feature report
-Date:   Fri, 20 Sep 2019 00:01:34 +0200
-Message-Id: <20190919214819.423946513@linuxfoundation.org>
+        Razvan Stefanescu <razvan.stefanescu@microchip.com>
+Subject: [PATCH 5.2 024/124] tty/serial: atmel: reschedule TX after RX was started
+Date:   Fri, 20 Sep 2019 00:01:52 +0200
+Message-Id: <20190919214819.942328981@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -60,74 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaron Armstrong Skomra <skomra@gmail.com>
+From: Razvan Stefanescu <razvan.stefanescu@microchip.com>
 
-commit 184eccd40389df29abefab88092c4ff33191fd0c upstream.
+commit d2ace81bf902a9f11d52e59e5d232d2255a0e353 upstream.
 
-In the generic code path, HID_DG_CONTACTMAX was previously
-only read from the second byte of report 0x23.
+When half-duplex RS485 communication is used, after RX is started, TX
+tasklet still needs to be  scheduled tasklet. This avoids console freezing
+when more data is to be transmitted, if the serial communication is not
+closed.
 
-Another report (0x82) has the HID_DG_CONTACTMAX in the
-higher nibble of the third byte. We should support reading the
-value of HID_DG_CONTACTMAX no matter what report we are reading
-or which position that value is in.
-
-To do this we submit the feature report as a event report
-using hid_report_raw_event(). Our modified finger event path
-records the value of HID_DG_CONTACTMAX when it sees that usage.
-
-Fixes: 8ffffd5212846 ("HID: wacom: fix timeout on probe for some wacoms")
-Signed-off-by: Aaron Armstrong Skomra <aaron.skomra@wacom.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Fixes: 69646d7a3689 ("tty/serial: atmel: RS485 HD w/DMA: enable RX after TX is stopped")
+Signed-off-by: Razvan Stefanescu <razvan.stefanescu@microchip.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20190813074025.16218-1-razvan.stefanescu@microchip.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/wacom_sys.c |   10 ++++++----
- drivers/hid/wacom_wac.c |    4 ++++
- 2 files changed, 10 insertions(+), 4 deletions(-)
+ drivers/tty/serial/atmel_serial.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/drivers/hid/wacom_sys.c
-+++ b/drivers/hid/wacom_sys.c
-@@ -311,14 +311,16 @@ static void wacom_feature_mapping(struct
- 		/* leave touch_max as is if predefined */
- 		if (!features->touch_max) {
- 			/* read manually */
--			data = kzalloc(2, GFP_KERNEL);
-+			n = hid_report_len(field->report);
-+			data = hid_alloc_report_buf(field->report, GFP_KERNEL);
- 			if (!data)
- 				break;
- 			data[0] = field->report->id;
- 			ret = wacom_get_report(hdev, HID_FEATURE_REPORT,
--						data, 2, WAC_CMD_RETRIES);
--			if (ret == 2) {
--				features->touch_max = data[1];
-+					       data, n, WAC_CMD_RETRIES);
-+			if (ret == n) {
-+				ret = hid_report_raw_event(hdev,
-+					HID_FEATURE_REPORT, data, n, 0);
- 			} else {
- 				features->touch_max = 16;
- 				hid_warn(hdev, "wacom_feature_mapping: "
---- a/drivers/hid/wacom_wac.c
-+++ b/drivers/hid/wacom_wac.c
-@@ -2510,6 +2510,7 @@ static void wacom_wac_finger_event(struc
- 	struct wacom *wacom = hid_get_drvdata(hdev);
- 	struct wacom_wac *wacom_wac = &wacom->wacom_wac;
- 	unsigned equivalent_usage = wacom_equivalent_usage(usage->hid);
-+	struct wacom_features *features = &wacom->wacom_wac.features;
+--- a/drivers/tty/serial/atmel_serial.c
++++ b/drivers/tty/serial/atmel_serial.c
+@@ -1400,7 +1400,6 @@ atmel_handle_transmit(struct uart_port *
  
- 	switch (equivalent_usage) {
- 	case HID_GD_X:
-@@ -2530,6 +2531,9 @@ static void wacom_wac_finger_event(struc
- 	case HID_DG_TIPSWITCH:
- 		wacom_wac->hid_data.tipswitch = value;
- 		break;
-+	case HID_DG_CONTACTMAX:
-+		features->touch_max = value;
-+		return;
- 	}
+ 			atmel_port->hd_start_rx = false;
+ 			atmel_start_rx(port);
+-			return;
+ 		}
  
- 
+ 		atmel_tasklet_schedule(atmel_port, &atmel_port->tasklet_tx);
 
 
