@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7677C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 677AAC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7AF421924
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:15:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F98021907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:15:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931328;
-	bh=ej3JkK1HB9anEL2CFh0q2v+icdE1Z+30Ji3GxRcMoV8=;
+	s=default; t=1568931333;
+	bh=ont1s2hWDsj0rjL5UpbAstBll8ppiMiCPDPkdEjRjYY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xan/mG14djd5kJ5hPgFqe/x2NfRP1OmOI9fQC7zY9+ilLeNX+zKvJsb8vkqJXkgMD
-	 Vn48uCFUUuUSn+l2OFfcv288JWOu2PgQSA/39idxVRh8y0PErLvCkK8Wwy03pQeE/9
-	 HTaPtbqyA8GT7nuqbiZHVbu7+9Bhp9tIQwdZlEiw=
+	b=ajOr0UiUh2z5vld16thyLUMJtl3JsHWAwo9Hdb9iAMn8lRV4LTghrZQfD9DjiSYOH
+	 u05JOmbB4sf+LEVRVpsBPt19M1TaCr5ktlQB4Sg/dsk//PlAjeoNOK2uUvUU+3U8+o
+	 4xaNd84V0KS8vWry++dLpIXrnHOwJPg/Brrws9lU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406138AbfISWP2 (ORCPT
+        id S2406146AbfISWPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:15:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55240 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:15:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406110AbfISWPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:15:21 -0400
+        id S2403915AbfISWP3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:15:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B320218AF;
-        Thu, 19 Sep 2019 22:15:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 636A821907;
+        Thu, 19 Sep 2019 22:15:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931321;
-        bh=ej3JkK1HB9anEL2CFh0q2v+icdE1Z+30Ji3GxRcMoV8=;
+        s=default; t=1568931328;
+        bh=ont1s2hWDsj0rjL5UpbAstBll8ppiMiCPDPkdEjRjYY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LBd2x7uoJn2nvjrKr5lVt9RG2R4X921tLkI8R+pKw46EvS9DN7LvVYR277Ec5dNsY
-         8hqPpRJOXzIRMmZYxEq+AUcNFXO+jpCiJXLvfyGJ/git1Y7YsXvqD4jQZfZjR1D76H
-         ncu/zmQiFAp+1Jkq0uUQQVzqnAJy4PNtMneVl960=
+        b=2wdLUiEyiWXUoodjI9s+g3oRIDAHD0XhTP7zI+Ah4diTYKKI0fjC85+4kVlojZEot
+         E51M5iG6o6poVlMlQ8tpCrEU++p6hqBJO/DCDlJc9DWMV3OAN6y0WwDMr+uwWPoQRW
+         qt+m70sbzGSscyTCWfduMHSS2DDL4E08RZr486As=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Popov <alex.popov@linux.com>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Jann Horn <jannh@google.com>, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.19 76/79] floppy: fix usercopy direction
-Date:   Fri, 20 Sep 2019 00:04:01 +0200
-Message-Id: <20190919214814.438395644@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+eaaaf38a95427be88f4b@syzkaller.appspotmail.com,
+        Sean Young <sean@mess.org>, Kees Cook <keescook@chromium.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 4.19 79/79] media: technisat-usb2: break out of loop at end of buffer
+Date:   Fri, 20 Sep 2019 00:04:04 +0200
+Message-Id: <20190919214814.696898666@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214807.612593061@linuxfoundation.org>
 References: <20190919214807.612593061@linuxfoundation.org>
@@ -60,44 +61,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Sean Young <sean@mess.org>
 
-commit 52f6f9d74f31078964ca1574f7bb612da7877ac8 upstream.
+commit 0c4df39e504bf925ab666132ac3c98d6cbbe380b upstream.
 
-As sparse points out, these two copy_from_user() should actually be
-copy_to_user().
+Ensure we do not access the buffer beyond the end if no 0xff byte
+is encountered.
 
-Fixes: 229b53c9bf4e ("take floppy compat ioctls to sodding floppy.c")
-Cc: stable@vger.kernel.org
-Acked-by: Alexander Popov <alex.popov@linux.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Reported-by: syzbot+eaaaf38a95427be88f4b@syzkaller.appspotmail.com
+Signed-off-by: Sean Young <sean@mess.org>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/block/floppy.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/media/usb/dvb-usb/technisat-usb2.c |   22 ++++++++++------------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
 
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -3791,7 +3791,7 @@ static int compat_getdrvprm(int drive,
- 	v.native_format = UDP->native_format;
- 	mutex_unlock(&floppy_mutex);
+--- a/drivers/media/usb/dvb-usb/technisat-usb2.c
++++ b/drivers/media/usb/dvb-usb/technisat-usb2.c
+@@ -607,10 +607,9 @@ static int technisat_usb2_frontend_attac
+ static int technisat_usb2_get_ir(struct dvb_usb_device *d)
+ {
+ 	struct technisat_usb2_state *state = d->priv;
+-	u8 *buf = state->buf;
+-	u8 *b;
+-	int ret;
+ 	struct ir_raw_event ev;
++	u8 *buf = state->buf;
++	int i, ret;
  
--	if (copy_from_user(arg, &v, sizeof(struct compat_floppy_drive_params)))
-+	if (copy_to_user(arg, &v, sizeof(struct compat_floppy_drive_params)))
- 		return -EFAULT;
- 	return 0;
- }
-@@ -3827,7 +3827,7 @@ static int compat_getdrvstat(int drive,
- 	v.bufblocks = UDRS->bufblocks;
- 	mutex_unlock(&floppy_mutex);
+ 	buf[0] = GET_IR_DATA_VENDOR_REQUEST;
+ 	buf[1] = 0x08;
+@@ -646,26 +645,25 @@ unlock:
+ 		return 0; /* no key pressed */
  
--	if (copy_from_user(arg, &v, sizeof(struct compat_floppy_drive_struct)))
-+	if (copy_to_user(arg, &v, sizeof(struct compat_floppy_drive_struct)))
- 		return -EFAULT;
- 	return 0;
- Eintr:
+ 	/* decoding */
+-	b = buf+1;
+ 
+ #if 0
+ 	deb_rc("RC: %d ", ret);
+-	debug_dump(b, ret, deb_rc);
++	debug_dump(buf + 1, ret, deb_rc);
+ #endif
+ 
+ 	ev.pulse = 0;
+-	while (1) {
+-		ev.pulse = !ev.pulse;
+-		ev.duration = (*b * FIRMWARE_CLOCK_DIVISOR * FIRMWARE_CLOCK_TICK) / 1000;
+-		ir_raw_event_store(d->rc_dev, &ev);
+-
+-		b++;
+-		if (*b == 0xff) {
++	for (i = 1; i < ARRAY_SIZE(state->buf); i++) {
++		if (buf[i] == 0xff) {
+ 			ev.pulse = 0;
+ 			ev.duration = 888888*2;
+ 			ir_raw_event_store(d->rc_dev, &ev);
+ 			break;
+ 		}
++
++		ev.pulse = !ev.pulse;
++		ev.duration = (buf[i] * FIRMWARE_CLOCK_DIVISOR *
++			       FIRMWARE_CLOCK_TICK) / 1000;
++		ir_raw_event_store(d->rc_dev, &ev);
+ 	}
+ 
+ 	ir_raw_event_handle(d->rc_dev);
 
 
