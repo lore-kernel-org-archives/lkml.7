@@ -2,52 +2,51 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D51A0C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0439CC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:27:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A998920640
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:27:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCB3F20640
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:27:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932022;
-	bh=rO2RwMACkUszNANNxDC6D0TMvE+3mD6LeC2S+2w5DLs=;
+	s=default; t=1568932032;
+	bh=EEJyiFOb58dYeSeHP50yL1HEZhSK5Fe9OBqGqb3mxTA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ptehIo1H1sU0juGCWXTaGo+X3pPG+UMLMHpphm4WDPiv5M0/A6N6fGz49vitsCk6l
-	 uYXjHYztBldV9OqrRWNoLy7tc6Xm9ZszAw6ygvF8N9VggSkCLxhZQf+c19nGdWM33D
-	 VekhF1m0DA6Csst6GqfqpB64orWtdmmg1coj7vTo=
+	b=z/2YbmW87FUs5RgOS1gaAhs1sSSj4r3DEJzQfWHBUaNmfIT3/id61iTOyd1pTmteQ
+	 BlLPUYnD31e2LBG3KbmOiPeZLgWCGEKv1friVFkx7WhKYcLOWkDZol0CFq5AWDc9N1
+	 Vz+QnBjpUb7ACBpONUvS1Z4A0BxnxVEpSlvfI3cE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436545AbfISW1C (ORCPT
+        id S2436558AbfISW1M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:27:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36072 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:27:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394053AbfISWVc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:21:32 -0400
+        id S2406686AbfISWVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:21:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FA2E217D6;
-        Thu, 19 Sep 2019 22:21:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7584D21927;
+        Thu, 19 Sep 2019 22:21:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931692;
-        bh=rO2RwMACkUszNANNxDC6D0TMvE+3mD6LeC2S+2w5DLs=;
+        s=default; t=1568931672;
+        bh=EEJyiFOb58dYeSeHP50yL1HEZhSK5Fe9OBqGqb3mxTA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NoPzogLPgMGeD4m+PpwJpqsvodTbRo3vM2j8v9uZtOADW1jsa+1bljNx58LXg+B8x
-         Pe0YqOFJ8Wzce7m0/vGdOZErz4h8eO5DIhw7pJ0brgbmE1FIEOBroe+KvZ17+Qp6bz
-         w6iSdQJebK8EQNenN8oP4wWX1JCH5S8dfWTVs4cw=
+        b=tPpcGDutXP4TkKTjZXjcakyc0c+dAlP3QZkXp4YnEm1wHrAGABU71pYKrIIPHN9j0
+         CSHfvCNUYsq/jQ6Vl3nvMtMhSvqtWGB5WnFKEpiWQ6f+p7flLuLApI957V/K2j4lvZ
+         Tn2+xyV/d3CBntHSh2TZ8HRbLeR2JwYnvm/bkzkY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Huang <huangwenabc@gmail.com>,
-        Ganapathi Bhat <gbhat@marvell.comg>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.9 43/74] mwifiex: Fix three heap overflow at parsing element in cfg80211_ap_settings
-Date:   Fri, 20 Sep 2019 00:03:56 +0200
-Message-Id: <20190919214809.018619144@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 71/74] iommu/amd: Fix race in increase_address_space()
+Date:   Fri, 20 Sep 2019 00:04:24 +0200
+Message-Id: <20190919214811.342705594@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214800.519074117@linuxfoundation.org>
 References: <20190919214800.519074117@linuxfoundation.org>
@@ -60,73 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Huang <huangwenabc@gmail.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-commit 7caac62ed598a196d6ddf8d9c121e12e082cac3a upstream.
+[ Upstream commit 754265bcab78a9014f0f99cd35e0d610fcd7dfa7 ]
 
-mwifiex_update_vs_ie(),mwifiex_set_uap_rates() and
-mwifiex_set_wmm_params() call memcpy() without checking
-the destination size.Since the source is given from
-user-space, this may trigger a heap buffer overflow.
+After the conversion to lock-less dma-api call the
+increase_address_space() function can be called without any
+locking. Multiple CPUs could potentially race for increasing
+the address space, leading to invalid domain->mode settings
+and invalid page-tables. This has been happening in the wild
+under high IO load and memory pressure.
 
-Fix them by putting the length check before performing memcpy().
+Fix the race by locking this operation. The function is
+called infrequently so that this does not introduce
+a performance regression in the dma-api path again.
 
-This fix addresses CVE-2019-14814,CVE-2019-14815,CVE-2019-14816.
-
-Signed-off-by: Wen Huang <huangwenabc@gmail.com>
-Acked-by: Ganapathi Bhat <gbhat@marvell.comg>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: Qian Cai <cai@lca.pw>
+Fixes: 256e4621c21a ('iommu/amd: Make use of the generic IOVA allocator')
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/mwifiex/ie.c      |    3 +++
- drivers/net/wireless/marvell/mwifiex/uap_cmd.c |    9 ++++++++-
- 2 files changed, 11 insertions(+), 1 deletion(-)
+ drivers/iommu/amd_iommu.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
---- a/drivers/net/wireless/marvell/mwifiex/ie.c
-+++ b/drivers/net/wireless/marvell/mwifiex/ie.c
-@@ -240,6 +240,9 @@ static int mwifiex_update_vs_ie(const u8
- 		}
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index c1233d0288a03..dd7880de7e4e9 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -1321,18 +1321,21 @@ static void domain_flush_devices(struct protection_domain *domain)
+  * another level increases the size of the address space by 9 bits to a size up
+  * to 64 bits.
+  */
+-static bool increase_address_space(struct protection_domain *domain,
++static void increase_address_space(struct protection_domain *domain,
+ 				   gfp_t gfp)
+ {
++	unsigned long flags;
+ 	u64 *pte;
  
- 		vs_ie = (struct ieee_types_header *)vendor_ie;
-+		if (le16_to_cpu(ie->ie_length) + vs_ie->len + 2 >
-+			IEEE_MAX_IE_SIZE)
-+			return -EINVAL;
- 		memcpy(ie->ie_buffer + le16_to_cpu(ie->ie_length),
- 		       vs_ie, vs_ie->len + 2);
- 		le16_add_cpu(&ie->ie_length, vs_ie->len + 2);
---- a/drivers/net/wireless/marvell/mwifiex/uap_cmd.c
-+++ b/drivers/net/wireless/marvell/mwifiex/uap_cmd.c
-@@ -287,6 +287,8 @@ mwifiex_set_uap_rates(struct mwifiex_uap
+-	if (domain->mode == PAGE_MODE_6_LEVEL)
++	spin_lock_irqsave(&domain->lock, flags);
++
++	if (WARN_ON_ONCE(domain->mode == PAGE_MODE_6_LEVEL))
+ 		/* address space already 64 bit large */
+-		return false;
++		goto out;
  
- 	rate_ie = (void *)cfg80211_find_ie(WLAN_EID_SUPP_RATES, var_pos, len);
- 	if (rate_ie) {
-+		if (rate_ie->len > MWIFIEX_SUPPORTED_RATES)
-+			return;
- 		memcpy(bss_cfg->rates, rate_ie + 1, rate_ie->len);
- 		rate_len = rate_ie->len;
- 	}
-@@ -294,8 +296,11 @@ mwifiex_set_uap_rates(struct mwifiex_uap
- 	rate_ie = (void *)cfg80211_find_ie(WLAN_EID_EXT_SUPP_RATES,
- 					   params->beacon.tail,
- 					   params->beacon.tail_len);
--	if (rate_ie)
-+	if (rate_ie) {
-+		if (rate_ie->len > MWIFIEX_SUPPORTED_RATES - rate_len)
-+			return;
- 		memcpy(bss_cfg->rates + rate_len, rate_ie + 1, rate_ie->len);
-+	}
+ 	pte = (void *)get_zeroed_page(gfp);
+ 	if (!pte)
+-		return false;
++		goto out;
  
- 	return;
+ 	*pte             = PM_LEVEL_PDE(domain->mode,
+ 					virt_to_phys(domain->pt_root));
+@@ -1340,7 +1343,10 @@ static bool increase_address_space(struct protection_domain *domain,
+ 	domain->mode    += 1;
+ 	domain->updated  = true;
+ 
+-	return true;
++out:
++	spin_unlock_irqrestore(&domain->lock, flags);
++
++	return;
  }
-@@ -413,6 +418,8 @@ mwifiex_set_wmm_params(struct mwifiex_pr
- 					    params->beacon.tail_len);
- 	if (vendor_ie) {
- 		wmm_ie = (struct ieee_types_header *)vendor_ie;
-+		if (*(vendor_ie + 1) > sizeof(struct mwifiex_types_wmm_info))
-+			return;
- 		memcpy(&bss_cfg->wmm_info, wmm_ie + 1,
- 		       sizeof(bss_cfg->wmm_info));
- 		priv->wmm_enabled = 1;
+ 
+ static u64 *alloc_pte(struct protection_domain *domain,
+-- 
+2.20.1
+
 
 
