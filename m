@@ -2,87 +2,168 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 871D6C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 01:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CC2C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 01:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B8BA2196F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 01:26:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568856392;
-	bh=ZfiDspvJOuCGtSRwcP0HLJfYq04A5tt/6W88lsnxT34=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=pNcZ60Lem579ctC7UUN9c6TPoVcKrQvz/esquXljpbP1FjBwMhXo119j5XbkmHJqh
-	 JT85F3f8U2RD5V0tKtkqtVvOH/hMp93zyeZ8kmYLh7Zj0GzJkvjtDVulTwbVHjpQT9
-	 aypsw3qHtPe0IcvuhcnviWdv7tDQsUPNLlIFpEqA=
+	by mail.kernel.org (Postfix) with ESMTP id B486921927
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 01:26:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387846AbfISB0b (ORCPT
+        id S2387880AbfISB0n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 21:26:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47398 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 21:26:43 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58708 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387790AbfISB01 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 21:26:27 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2387790AbfISB0l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 21:26:41 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75DFE21929;
-        Thu, 19 Sep 2019 01:26:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568856387;
-        bh=ZfiDspvJOuCGtSRwcP0HLJfYq04A5tt/6W88lsnxT34=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=r33y8fA4h5SG6PL6g15ar+nL6jQ3x3Je6k68k1xRemGhL4gJUzZStGUrJKsAt1jwa
-         4MuQ+8PmtsTR2e/ojhEYnO9nlmlst8hccvrISWUyESK0cj5q3FIVkPKHDo/+4MbqmD
-         +7Oi9/6lic26m7OgBRRIODrv7Dl6bdiWya07SYgY=
-Subject: Re: [PATCH 4.14 00/45] 4.14.145-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190918061222.854132812@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <330b4273-2ca1-b437-0ff0-c458ba31f88b@kernel.org>
-Date:   Wed, 18 Sep 2019 19:26:25 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190918061222.854132812@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        by mx1.redhat.com (Postfix) with ESMTPS id 5B3CE800DF1;
+        Thu, 19 Sep 2019 01:26:36 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D7E0C6107E;
+        Thu, 19 Sep 2019 01:26:21 +0000 (UTC)
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org
+Cc:     Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
+        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
+        eparis@parisplace.org, serge@hallyn.com, ebiederm@xmission.com,
+        nhorman@tuxdriver.com, dwalsh@redhat.com, mpatel@redhat.com,
+        Richard Guy Briggs <rgb@redhat.com>
+Subject: [PATCH ghak90 V7 14/21] audit: contid check descendancy and nesting
+Date:   Wed, 18 Sep 2019 21:22:31 -0400
+Message-Id: <16abf1b2aafeb5f1b8dae20b9a4836e54f959ca5.1568834524.git.rgb@redhat.com>
+In-Reply-To: <cover.1568834524.git.rgb@redhat.com>
+References: <cover.1568834524.git.rgb@redhat.com>
+In-Reply-To: <cover.1568834524.git.rgb@redhat.com>
+References: <cover.1568834524.git.rgb@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Thu, 19 Sep 2019 01:26:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/18/19 12:18 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.145 release.
-> There are 45 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri 20 Sep 2019 06:09:47 AM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.145-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+?fixup! audit: convert to contid list to check for orch/engine ownership
 
-Compiled and booted on my test system. No dmesg regressions.
+Require the target task to be a descendant of the container
+orchestrator/engine.
 
-thanks,
--- Shuah
+You would only change the audit container ID from one set or inherited
+value to another if you were nesting containers.
+
+If changing the contid, the container orchestrator/engine must be a
+descendant and not same orchestrator as the one that set it so it is not
+possible to change the contid of another orchestrator's container.
+
+Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+---
+ kernel/audit.c | 70 +++++++++++++++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 62 insertions(+), 8 deletions(-)
+
+diff --git a/kernel/audit.c b/kernel/audit.c
+index 9ce7a1ec7a92..69fe1e9af7cb 100644
+--- a/kernel/audit.c
++++ b/kernel/audit.c
+@@ -2560,6 +2560,39 @@ static struct task_struct *audit_cont_owner(struct task_struct *tsk)
+ }
+ 
+ /*
++ * task_is_descendant - walk up a process family tree looking for a match
++ * @parent: the process to compare against while walking up from child
++ * @child: the process to start from while looking upwards for parent
++ *
++ * Returns 1 if child is a descendant of parent, 0 if not.
++ */
++static int task_is_descendant(struct task_struct *parent,
++			      struct task_struct *child)
++{
++	int rc = 0;
++	struct task_struct *walker = child;
++
++	if (!parent || !child)
++		return 0;
++
++	rcu_read_lock();
++	if (!thread_group_leader(parent))
++		parent = rcu_dereference(parent->group_leader);
++	while (walker->pid > 0) {
++		if (!thread_group_leader(walker))
++			walker = rcu_dereference(walker->group_leader);
++		if (walker == parent) {
++			rc = 1;
++			break;
++		}
++		walker = rcu_dereference(walker->real_parent);
++	}
++	rcu_read_unlock();
++
++	return rc;
++}
++
++/*
+  * audit_set_contid - set current task's audit contid
+  * @task: target task
+  * @contid: contid value
+@@ -2587,22 +2620,43 @@ int audit_set_contid(struct task_struct *task, u64 contid)
+ 	oldcontid = audit_get_contid(task);
+ 	read_lock(&tasklist_lock);
+ 	/* Don't allow the contid to be unset */
+-	if (!audit_contid_valid(contid))
++	if (!audit_contid_valid(contid)) {
+ 		rc = -EINVAL;
++		goto unlock;
++	}
+ 	/* Don't allow the contid to be set to the same value again */
+-	else if (contid == oldcontid) {
++	if (contid == oldcontid) {
+ 		rc = -EADDRINUSE;
++		goto unlock;
++	}
+ 	/* if we don't have caps, reject */
+-	else if (!capable(CAP_AUDIT_CONTROL))
++	if (!capable(CAP_AUDIT_CONTROL)) {
+ 		rc = -EPERM;
+-	/* if task has children or is not single-threaded, deny */
+-	else if (!list_empty(&task->children))
++		goto unlock;
++	}
++	/* if task has children, deny */
++	if (!list_empty(&task->children)) {
+ 		rc = -EBUSY;
+-	else if (!(thread_group_leader(task) && thread_group_empty(task)))
++		goto unlock;
++	}
++	/* if task is not single-threaded, deny */
++	if (!(thread_group_leader(task) && thread_group_empty(task))) {
+ 		rc = -EALREADY;
+-	/* if contid is already set, deny */
+-	else if (audit_contid_set(task))
++		goto unlock;
++	}
++	/* if task is not descendant, block */
++	if (task == current) {
++		rc = -EBADSLT;
++		goto unlock;
++	}
++	if (!task_is_descendant(current, task)) {
++		rc = -EXDEV;
++		goto unlock;
++	}
++	/* only allow contid setting again if nesting */
++	if (audit_contid_set(task) && current == audit_cont_owner(task))
+ 		rc = -ECHILD;
++unlock:
+ 	read_unlock(&tasklist_lock);
+ 	if (!rc) {
+ 		struct audit_cont *oldcont = audit_cont(task);
+-- 
+1.8.3.1
+
