@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F8DCC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B73F3C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3475020640
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:27:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7711320640
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:27:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932042;
-	bh=eArGvEepIIpMO6s2toapya3rfKhfxPzPCS9EURu4A60=;
+	s=default; t=1568932049;
+	bh=fMTYKkn1JVWInp865hwLQU2k2oWe/XIG6yRkXnaZlh0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=17oQp/VkETkBZWuTN4zQjAnjN6IpJVRODw7vkeApWFYKRZ/GvMetS/taKm5nFzIGZ
-	 28n5f8BEmlvWEzOGDZZTBu1ceSxEkvtCYiZyUR44qVo7goIgLA5CPohh8co/lKx3Uu
-	 vm77+i0szEHdrowvq/g+sAVglBvVosFegnZ2JCuI=
+	b=QV2Sqna1hhwRD4V6gLtCcuNHOllquZ/EZeeaH94nH4XWObhTTCaw6ct6Xu8M9IpzS
+	 AVXOqbIgs8xcUag29FIFMocNjrgcT+SIOPYiMNyxYiaeMRp879pFGqwy89gO5WxhNa
+	 DDpMw+DIeehA+FI7kxhbHfE2mA2KG29TQnMidXXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406144AbfISW1V (ORCPT
+        id S2407262AbfISW12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:27:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35580 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:27:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406680AbfISWVK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:21:10 -0400
+        id S2406657AbfISWVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:21:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6DAF21924;
-        Thu, 19 Sep 2019 22:21:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2622120678;
+        Thu, 19 Sep 2019 22:20:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931670;
-        bh=eArGvEepIIpMO6s2toapya3rfKhfxPzPCS9EURu4A60=;
+        s=default; t=1568931659;
+        bh=fMTYKkn1JVWInp865hwLQU2k2oWe/XIG6yRkXnaZlh0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LJV5E5q+RKxS01iC6/FyfxC1ng7GWIN0FH0J8QrrdnuUkQaJPbUJgntUzlRjv9qk9
-         m/MilsUIPUfPkLhXtljVIh770Xa70MWGigXL/MRrxrCK1kktqA4R2H39pJdVuF4x//
-         lSSASey0gBGFERxKHua/LPN+VqRepGxtUWZopw/s=
+        b=JUrVqofiX6XECOAMRxCnP3AksiEIg4J3DJv5Azj5IiK1CFCdWXGziOxGHQmGMaC+G
+         IV3llOROV9R6wcenVqvW78N88B+GV7IkmUMrQgj3qTExVGsjLVeQXqZou7rs0+WQE6
+         vSev9px2FSRtbNMxYOD2t0RFtws88Qnu4H2bBRQw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        Hillf Danton <hdanton@sina.com>,
-        David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 70/74] keys: Fix missing null pointer check in request_key_auth_describe()
-Date:   Fri, 20 Sep 2019 00:04:23 +0200
-Message-Id: <20190919214811.184544234@linuxfoundation.org>
+Subject: [PATCH 4.9 66/74] net: seeq: Fix the function used to release some memory in an error handling path
+Date:   Fri, 20 Sep 2019 00:04:19 +0200
+Message-Id: <20190919214810.900440107@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214800.519074117@linuxfoundation.org>
 References: <20190919214800.519074117@linuxfoundation.org>
@@ -62,71 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hillf Danton <hdanton@sina.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit d41a3effbb53b1bcea41e328d16a4d046a508381 ]
+[ Upstream commit e1e54ec7fb55501c33b117c111cb0a045b8eded2 ]
 
-If a request_key authentication token key gets revoked, there's a window in
-which request_key_auth_describe() can see it with a NULL payload - but it
-makes no check for this and something like the following oops may occur:
+In commit 99cd149efe82 ("sgiseeq: replace use of dma_cache_wback_inv"),
+a call to 'get_zeroed_page()' has been turned into a call to
+'dma_alloc_coherent()'. Only the remove function has been updated to turn
+the corresponding 'free_page()' into 'dma_free_attrs()'.
+The error hndling path of the probe function has not been updated.
 
-	BUG: Kernel NULL pointer dereference at 0x00000038
-	Faulting instruction address: 0xc0000000004ddf30
-	Oops: Kernel access of bad area, sig: 11 [#1]
-	...
-	NIP [...] request_key_auth_describe+0x90/0xd0
-	LR [...] request_key_auth_describe+0x54/0xd0
-	Call Trace:
-	[...] request_key_auth_describe+0x54/0xd0 (unreliable)
-	[...] proc_keys_show+0x308/0x4c0
-	[...] seq_read+0x3d0/0x540
-	[...] proc_reg_read+0x90/0x110
-	[...] __vfs_read+0x3c/0x70
-	[...] vfs_read+0xb4/0x1b0
-	[...] ksys_read+0x7c/0x130
-	[...] system_call+0x5c/0x70
+Fix it now.
 
-Fix this by checking for a NULL pointer when describing such a key.
+Rename the corresponding label to something more in line.
 
-Also make the read routine check for a NULL pointer to be on the safe side.
-
-[DH: Modified to not take already-held rcu lock and modified to also check
- in the read routine]
-
-Fixes: 04c567d9313e ("[PATCH] Keys: Fix race between two instantiators of a key")
-Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Signed-off-by: Hillf Danton <hdanton@sina.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 99cd149efe82 ("sgiseeq: replace use of dma_cache_wback_inv")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Reviewed-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/keys/request_key_auth.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/ethernet/seeq/sgiseeq.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/security/keys/request_key_auth.c b/security/keys/request_key_auth.c
-index f60baeb338e5f..b47445022d5ce 100644
---- a/security/keys/request_key_auth.c
-+++ b/security/keys/request_key_auth.c
-@@ -71,6 +71,9 @@ static void request_key_auth_describe(const struct key *key,
- {
- 	struct request_key_auth *rka = key->payload.data[0];
+diff --git a/drivers/net/ethernet/seeq/sgiseeq.c b/drivers/net/ethernet/seeq/sgiseeq.c
+index c2bd5378ffdaf..3527962f0bdad 100644
+--- a/drivers/net/ethernet/seeq/sgiseeq.c
++++ b/drivers/net/ethernet/seeq/sgiseeq.c
+@@ -792,15 +792,16 @@ static int sgiseeq_probe(struct platform_device *pdev)
+ 		printk(KERN_ERR "Sgiseeq: Cannot register net device, "
+ 		       "aborting.\n");
+ 		err = -ENODEV;
+-		goto err_out_free_page;
++		goto err_out_free_attrs;
+ 	}
  
-+	if (!rka)
-+		return;
-+
- 	seq_puts(m, "key:");
- 	seq_puts(m, key->description);
- 	if (key_is_positive(key))
-@@ -88,6 +91,9 @@ static long request_key_auth_read(const struct key *key,
- 	size_t datalen;
- 	long ret;
+ 	printk(KERN_INFO "%s: %s %pM\n", dev->name, sgiseeqstr, dev->dev_addr);
  
-+	if (!rka)
-+		return -EKEYREVOKED;
-+
- 	datalen = rka->callout_len;
- 	ret = datalen;
+ 	return 0;
+ 
+-err_out_free_page:
+-	free_page((unsigned long) sp->srings);
++err_out_free_attrs:
++	dma_free_attrs(&pdev->dev, sizeof(*sp->srings), sp->srings,
++		       sp->srings_dma, DMA_ATTR_NON_CONSISTENT);
+ err_out_free_dev:
+ 	free_netdev(dev);
  
 -- 
 2.20.1
