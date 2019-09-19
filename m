@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78FC7C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22404C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:17:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F33921A49
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:17:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBE192196E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:17:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931445;
-	bh=m9stGIrurleB7teL5+inn8FM52zyFO2QE5pbq3KecwI=;
+	s=default; t=1568931450;
+	bh=Yl59bSCmjGQO8ga6KfcvRC+PKgjgMXblO8qVnUO1YgM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dylbkYZvGEGahJc3SC5Xs0r7435FNagqrycTY+VlW65zlbi3wyyc+00DvNx9pliT7
-	 xXF1Bt4EdP1hq96MexsDCWp6QXXb1hUSE9KuJbEb7WM2431OQ8AgyTM8WCAS1FmPRH
-	 Kh+fDEI4dIF2kpbHA5dwOF2NKfIvsbb3CjWMi2Dc=
+	b=HuLAYctAFKfYdBAOGFxhMxrzKU3oEXd665ZE0IefdZz70TrveTL114KX+xkTU+zMG
+	 7D0OztwVhCkC/+VDhGVOLU8fMWiJpRMhMpZ39HmCurtA4bRSUPXlpmR8zfbUnye30a
+	 jC3hrNzrMC1EQ25nKfcQtAwWpWwfQXA8ObcjaQA8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392494AbfISWRY (ORCPT
+        id S2392681AbfISWR3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:17:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58452 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:17:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392403AbfISWRU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:17:20 -0400
+        id S2392403AbfISWRZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:17:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4DB4217D6;
-        Thu, 19 Sep 2019 22:17:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13FB9217D6;
+        Thu, 19 Sep 2019 22:17:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931439;
-        bh=m9stGIrurleB7teL5+inn8FM52zyFO2QE5pbq3KecwI=;
+        s=default; t=1568931444;
+        bh=Yl59bSCmjGQO8ga6KfcvRC+PKgjgMXblO8qVnUO1YgM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SwR34GI+UAt2Ab24uYc7NE3S4Wu3FXEBQLmWFfRXEI0eM3c919plx7RcDB8bDCEot
-         sL5hqCvQ/yOixk0/3apt5eccGUgKRVVD7Fb+J+Ph2QI4ywDj9y1L7VQB6Vb79amhAl
-         4BfCzoCZmAeZ5JXeEf2i4bRhEJTJAWLnmzkR6OWE=
+        b=CIUgrrmIKjBa24Ls/FmheSALLE7QUFmxgEq+YEN5mGp746l6j7Dgoxf417CZHxb1T
+         zT2/xRz9La4xM944I++MHvDoDJRlFkC9pVHti5MwEHn3aLBKT9yYmbfyj2W63Pjc73
+         kG5ksLvWOiRII9OrmXJ9xzszahQXwvJgihV97w1A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 47/59] dmaengine: ti: dma-crossbar: Fix a memory leak bug
-Date:   Fri, 20 Sep 2019 00:04:02 +0200
-Message-Id: <20190919214807.484480233@linuxfoundation.org>
+        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, broonie@kernel.org,
+        sfr@canb.auug.org.au, akpm@linux-foundation.org, mhocko@suse.cz,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 49/59] x86/uaccess: Dont leak the AC flags into __get_user() argument evaluation
+Date:   Fri, 20 Sep 2019 00:04:04 +0200
+Message-Id: <20190919214807.665886883@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214755.852282682@linuxfoundation.org>
 References: <20190919214755.852282682@linuxfoundation.org>
@@ -60,41 +63,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit 2c231c0c1dec42192aca0f87f2dc68b8f0cbc7d2 ]
+[ Upstream commit 9b8bd476e78e89c9ea26c3b435ad0201c3d7dbf5 ]
 
-In ti_dra7_xbar_probe(), 'rsv_events' is allocated through kcalloc(). Then
-of_property_read_u32_array() is invoked to search for the property.
-However, if this process fails, 'rsv_events' is not deallocated, leading to
-a memory leak bug. To fix this issue, free 'rsv_events' before returning
-the error.
+Identical to __put_user(); the __get_user() argument evalution will too
+leak UBSAN crud into the __uaccess_begin() / __uaccess_end() region.
+While uncommon this was observed to happen for:
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Link: https://lore.kernel.org/r/1565938136-7249-1-git-send-email-wenwen@cs.uga.edu
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+  drivers/xen/gntdev.c: if (__get_user(old_status, batch->status[i]))
+
+where UBSAN added array bound checking.
+
+This complements commit:
+
+  6ae865615fc4 ("x86/uaccess: Dont leak the AC flag into __put_user() argument evaluation")
+
+Tested-by Sedat Dilek <sedat.dilek@gmail.com>
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: broonie@kernel.org
+Cc: sfr@canb.auug.org.au
+Cc: akpm@linux-foundation.org
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: mhocko@suse.cz
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Link: https://lkml.kernel.org/r/20190829082445.GM2369@hirez.programming.kicks-ass.net
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/ti-dma-crossbar.c | 4 +++-
+ arch/x86/include/asm/uaccess.h | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/ti-dma-crossbar.c b/drivers/dma/ti-dma-crossbar.c
-index 9272b173c7465..6574cb5a12fee 100644
---- a/drivers/dma/ti-dma-crossbar.c
-+++ b/drivers/dma/ti-dma-crossbar.c
-@@ -395,8 +395,10 @@ static int ti_dra7_xbar_probe(struct platform_device *pdev)
- 
- 		ret = of_property_read_u32_array(node, pname, (u32 *)rsv_events,
- 						 nelm * 2);
--		if (ret)
-+		if (ret) {
-+			kfree(rsv_events);
- 			return ret;
-+		}
- 
- 		for (i = 0; i < nelm; i++) {
- 			ti_dra7_xbar_reserve(rsv_events[i][0], rsv_events[i][1],
+diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
+index 4111edb3188e2..9718303410614 100644
+--- a/arch/x86/include/asm/uaccess.h
++++ b/arch/x86/include/asm/uaccess.h
+@@ -451,8 +451,10 @@ do {									\
+ ({									\
+ 	int __gu_err;							\
+ 	__inttype(*(ptr)) __gu_val;					\
++	__typeof__(ptr) __gu_ptr = (ptr);				\
++	__typeof__(size) __gu_size = (size);				\
+ 	__uaccess_begin_nospec();					\
+-	__get_user_size(__gu_val, (ptr), (size), __gu_err, -EFAULT);	\
++	__get_user_size(__gu_val, __gu_ptr, __gu_size, __gu_err, -EFAULT);	\
+ 	__uaccess_end();						\
+ 	(x) = (__force __typeof__(*(ptr)))__gu_val;			\
+ 	__builtin_expect(__gu_err, 0);					\
 -- 
 2.20.1
 
