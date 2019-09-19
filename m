@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E20C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A68EFC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F271921924
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:28:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77FA320640
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:28:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932085;
-	bh=2ibOJCskqyyIBOusPY1iCMu2HpaNxbbIeVYJZPmsBhE=;
+	s=default; t=1568932089;
+	bh=MKKCdTpxrjO/8GLYKplTiRHH7UYUIgrAhr+SMn0bOcY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ynu21eXf+gA44/2L/dBXWXsXdst/UtCxZKpSuSFrR1XI+HdH9O8DBy66+eMXyXOOV
-	 kKT3fz6E4c2OFEefLAvnSM2RH7KLVcXPFdYQxq5jWDD9dgu1NsoobhV41FSgxDDr92
-	 I61N1eAPPuPjiKV75UvJrsVBByTWTs5nudXdNgmM=
+	b=i0e/jRjodM9n/rghRHzD6YZr/+WBBCcApM6U2cThdnmxhHYoilShuBmikcejiF/n5
+	 0hglBu99MeREPzCbIBDJoFCfg+uEMiMRRDVmrZPEewZDUD84AUaIalVvCftQUvs948
+	 jihQQxP7YQ+SpCmS3D1lib1hbZHrr/mb3tN3dLCY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405310AbfISWUH (ORCPT
+        id S2407300AbfISW2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:20:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33782 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:28:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390487AbfISWT6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:19:58 -0400
+        id S2393961AbfISWUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:20:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5BD921A49;
-        Thu, 19 Sep 2019 22:19:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 681F721907;
+        Thu, 19 Sep 2019 22:20:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931597;
-        bh=2ibOJCskqyyIBOusPY1iCMu2HpaNxbbIeVYJZPmsBhE=;
+        s=default; t=1568931602;
+        bh=MKKCdTpxrjO/8GLYKplTiRHH7UYUIgrAhr+SMn0bOcY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KrIOCHMgqjcJf0AkPmF+2rPZ7VEi/2SxVm9u3tqzWS2CfAJUDvTO7TAYZPEiNg5a5
-         rbBN/14n6AItaCj12i91mRrgnX1CuWnH4D0Zf8Uriee173R0q4KnZDBvYR4lxSmqjx
-         Yi/SM5wgf9JnpMovO07U5yAtJgFxHqa/mcYsadBY=
+        b=pVs0QGEQISfiHNFN1iM4q8g2UZbph3pCoeARM/p3Z8oEbsasWM+FiwYIW1pXV1rrA
+         TOALofm7ThZ5y3Hf2BcDuQVBgtaJ0dYML+Trd7VAoxiTzAOFVOsr/VWVLTvO3NhV5l
+         4K45hhkX8Mzd5MhWiB3Wf70OhkATL8VAtgbzEXuo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilya Leoshkevich <iii@linux.ibm.com>,
+        stable@vger.kernel.org,
+        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
         Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 45/74] s390/bpf: fix lcgr instruction encoding
-Date:   Fri, 20 Sep 2019 00:03:58 +0200
-Message-Id: <20190919214809.196831790@linuxfoundation.org>
+Subject: [PATCH 4.9 47/74] s390/bpf: use 32-bit index for tail calls
+Date:   Fri, 20 Sep 2019 00:04:00 +0200
+Message-Id: <20190919214809.343520917@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214800.519074117@linuxfoundation.org>
 References: <20190919214800.519074117@linuxfoundation.org>
@@ -63,39 +65,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ilya Leoshkevich <iii@linux.ibm.com>
 
-[ Upstream commit bb2d267c448f4bc3a3389d97c56391cb779178ae ]
+[ Upstream commit 91b4db5313a2c793aabc2143efb8ed0cf0fdd097 ]
 
-"masking, test in bounds 3" fails on s390, because
-BPF_ALU64_IMM(BPF_NEG, BPF_REG_2, 0) ignores the top 32 bits of
-BPF_REG_2. The reason is that JIT emits lcgfr instead of lcgr.
-The associated comment indicates that the code was intended to
-emit lcgr in the first place, it's just that the wrong opcode
-was used.
+"p runtime/jit: pass > 32bit index to tail_call" fails when
+bpf_jit_enable=1, because the tail call is not executed.
 
-Fix by using the correct opcode.
+This in turn is because the generated code assumes index is 64-bit,
+while it must be 32-bit, and as a result prog array bounds check fails,
+while it should pass. Even if bounds check would have passed, the code
+that follows uses 64-bit index to compute prog array offset.
 
-Fixes: 054623105728 ("s390/bpf: Add s390x eBPF JIT compiler backend")
-Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Fix by using clrj instead of clgrj for comparing index with array size,
+and also by using llgfr for truncating index to 32 bits before using it
+to compute prog array offset.
+
+Fixes: 6651ee070b31 ("s390/bpf: implement bpf_tail_call() helper")
+Reported-by: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
 Acked-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
 Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/net/bpf_jit_comp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/s390/net/bpf_jit_comp.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
 diff --git a/arch/s390/net/bpf_jit_comp.c b/arch/s390/net/bpf_jit_comp.c
-index 896344b6e0363..e4616090732a4 100644
+index e4616090732a4..9b15a1dc66287 100644
 --- a/arch/s390/net/bpf_jit_comp.c
 +++ b/arch/s390/net/bpf_jit_comp.c
-@@ -881,7 +881,7 @@ static noinline int bpf_jit_insn(struct bpf_jit *jit, struct bpf_prog *fp, int i
- 		break;
- 	case BPF_ALU64 | BPF_NEG: /* dst = -dst */
- 		/* lcgr %dst,%dst */
--		EMIT4(0xb9130000, dst_reg, dst_reg);
-+		EMIT4(0xb9030000, dst_reg, dst_reg);
- 		break;
- 	/*
- 	 * BPF_FROM_BE/LE
+@@ -1062,8 +1062,8 @@ static noinline int bpf_jit_insn(struct bpf_jit *jit, struct bpf_prog *fp, int i
+ 		/* llgf %w1,map.max_entries(%b2) */
+ 		EMIT6_DISP_LH(0xe3000000, 0x0016, REG_W1, REG_0, BPF_REG_2,
+ 			      offsetof(struct bpf_array, map.max_entries));
+-		/* clgrj %b3,%w1,0xa,label0: if %b3 >= %w1 goto out */
+-		EMIT6_PCREL_LABEL(0xec000000, 0x0065, BPF_REG_3,
++		/* clrj %b3,%w1,0xa,label0: if (u32)%b3 >= (u32)%w1 goto out */
++		EMIT6_PCREL_LABEL(0xec000000, 0x0077, BPF_REG_3,
+ 				  REG_W1, 0, 0xa);
+ 
+ 		/*
+@@ -1089,8 +1089,10 @@ static noinline int bpf_jit_insn(struct bpf_jit *jit, struct bpf_prog *fp, int i
+ 		 *         goto out;
+ 		 */
+ 
+-		/* sllg %r1,%b3,3: %r1 = index * 8 */
+-		EMIT6_DISP_LH(0xeb000000, 0x000d, REG_1, BPF_REG_3, REG_0, 3);
++		/* llgfr %r1,%b3: %r1 = (u32) index */
++		EMIT4(0xb9160000, REG_1, BPF_REG_3);
++		/* sllg %r1,%r1,3: %r1 *= 8 */
++		EMIT6_DISP_LH(0xeb000000, 0x000d, REG_1, REG_1, REG_0, 3);
+ 		/* lg %r1,prog(%b2,%r1) */
+ 		EMIT6_DISP_LH(0xe3000000, 0x0004, REG_1, BPF_REG_2,
+ 			      REG_1, offsetof(struct bpf_array, ptrs));
 -- 
 2.20.1
 
