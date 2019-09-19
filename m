@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 694F0C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04546C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3571C21D56
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:23:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBA012196F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:24:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931838;
-	bh=PS4psoici0H95izA0+rLc0LA6/LF/xpQ0WNCxnaETgo=;
+	s=default; t=1568931842;
+	bh=IL7gNa0WwSU3j+XDHGSg+0vrbhkPCEZH8oIstZlTZk4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=14GweiWDTML8IZwOyCYx5H9J6aHR4JNNmeq0R+M3Setxr+o2jE9oMphglCrRuX3X+
-	 uCvYkkkZAJ/3svVgQL7kkzl1jwerRwTJmhqVtjM2YJ0IQ4OPnJJ+IyYQXRxlfPcy5k
-	 sY3Z37hXL+5LK6CCfpKVvdLR/FKQPbJT/n12jMkU=
+	b=aZfzw4jj/pA9lqCgtk9S3f34GmWY0QQONPY2i9EaUg2eAgjIsJEJ1m+o8lZCA4K8n
+	 oMPHuew/ARWQIffUms7EuZW+KZY2q1nMRzDvKkjZ0wh1NzkdfePkq7+o07frLldQb7
+	 RI9jEkpc/vvIaRYontbjZWLFUM2eO1rV+uONjDRI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407072AbfISWX5 (ORCPT
+        id S2407095AbfISWYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:23:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39754 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:24:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389457AbfISWXu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:23:50 -0400
+        id S2407077AbfISWX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:23:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71AE921929;
-        Thu, 19 Sep 2019 22:23:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FD0521929;
+        Thu, 19 Sep 2019 22:23:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931830;
-        bh=PS4psoici0H95izA0+rLc0LA6/LF/xpQ0WNCxnaETgo=;
+        s=default; t=1568931838;
+        bh=IL7gNa0WwSU3j+XDHGSg+0vrbhkPCEZH8oIstZlTZk4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l4z7tw40PsZnWhJJT+ScAdkke4oxBkoo8DCxbH27doaP2esy1k8Xs3c+RgDcUvtBF
-         fhUa4iZEczFaTIVOHjGoFsZUXUTWapYxCZ4mQNiwwka8cDzB7+TAL+n0S1QGiDfy/Q
-         sE7x48NrDa2qwJNEowH9CRQRYNgP+1COO+5nKFHQ=
+        b=WIoiPZ5z0wpKA89Hw8jtO9jnIUAGKUtff0/di/4pmawjVQ7zGGvUgnOgIUBumKlmf
+         s/L8I9GEmGGov1Qx4MDl1NCSYfoIIfrtwbzI4NBmlNnd+bxnfja+zyDLiFB7qWmMhx
+         8u+drf4hYGBfVutDsb5x6Sr9gSsfHVQiskjRX8Oc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Popov <alex.popov@linux.com>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Jann Horn <jannh@google.com>, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.4 54/56] floppy: fix usercopy direction
-Date:   Fri, 20 Sep 2019 00:04:35 +0200
-Message-Id: <20190919214804.957737167@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Huang <huangwenabc@gmail.com>,
+        Ganapathi Bhat <gbhat@marvell.comg>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.4 34/56] mwifiex: Fix three heap overflow at parsing element in cfg80211_ap_settings
+Date:   Fri, 20 Sep 2019 00:04:15 +0200
+Message-Id: <20190919214757.729438296@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214742.483643642@linuxfoundation.org>
 References: <20190919214742.483643642@linuxfoundation.org>
@@ -60,44 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Wen Huang <huangwenabc@gmail.com>
 
-commit 52f6f9d74f31078964ca1574f7bb612da7877ac8 upstream.
+commit 7caac62ed598a196d6ddf8d9c121e12e082cac3a upstream.
 
-As sparse points out, these two copy_from_user() should actually be
-copy_to_user().
+mwifiex_update_vs_ie(),mwifiex_set_uap_rates() and
+mwifiex_set_wmm_params() call memcpy() without checking
+the destination size.Since the source is given from
+user-space, this may trigger a heap buffer overflow.
 
-Fixes: 229b53c9bf4e ("take floppy compat ioctls to sodding floppy.c")
-Cc: stable@vger.kernel.org
-Acked-by: Alexander Popov <alex.popov@linux.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fix them by putting the length check before performing memcpy().
+
+This fix addresses CVE-2019-14814,CVE-2019-14815,CVE-2019-14816.
+
+Signed-off-by: Wen Huang <huangwenabc@gmail.com>
+Acked-by: Ganapathi Bhat <gbhat@marvell.comg>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/block/floppy.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/mwifiex/ie.c      |    3 +++
+ drivers/net/wireless/mwifiex/uap_cmd.c |    9 ++++++++-
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -3784,7 +3784,7 @@ static int compat_getdrvprm(int drive,
- 	v.native_format = UDP->native_format;
- 	mutex_unlock(&floppy_mutex);
+--- a/drivers/net/wireless/mwifiex/ie.c
++++ b/drivers/net/wireless/mwifiex/ie.c
+@@ -240,6 +240,9 @@ static int mwifiex_update_vs_ie(const u8
+ 		}
  
--	if (copy_from_user(arg, &v, sizeof(struct compat_floppy_drive_params)))
-+	if (copy_to_user(arg, &v, sizeof(struct compat_floppy_drive_params)))
- 		return -EFAULT;
- 	return 0;
+ 		vs_ie = (struct ieee_types_header *)vendor_ie;
++		if (le16_to_cpu(ie->ie_length) + vs_ie->len + 2 >
++			IEEE_MAX_IE_SIZE)
++			return -EINVAL;
+ 		memcpy(ie->ie_buffer + le16_to_cpu(ie->ie_length),
+ 		       vs_ie, vs_ie->len + 2);
+ 		le16_add_cpu(&ie->ie_length, vs_ie->len + 2);
+--- a/drivers/net/wireless/mwifiex/uap_cmd.c
++++ b/drivers/net/wireless/mwifiex/uap_cmd.c
+@@ -286,6 +286,8 @@ mwifiex_set_uap_rates(struct mwifiex_uap
+ 
+ 	rate_ie = (void *)cfg80211_find_ie(WLAN_EID_SUPP_RATES, var_pos, len);
+ 	if (rate_ie) {
++		if (rate_ie->len > MWIFIEX_SUPPORTED_RATES)
++			return;
+ 		memcpy(bss_cfg->rates, rate_ie + 1, rate_ie->len);
+ 		rate_len = rate_ie->len;
+ 	}
+@@ -293,8 +295,11 @@ mwifiex_set_uap_rates(struct mwifiex_uap
+ 	rate_ie = (void *)cfg80211_find_ie(WLAN_EID_EXT_SUPP_RATES,
+ 					   params->beacon.tail,
+ 					   params->beacon.tail_len);
+-	if (rate_ie)
++	if (rate_ie) {
++		if (rate_ie->len > MWIFIEX_SUPPORTED_RATES - rate_len)
++			return;
+ 		memcpy(bss_cfg->rates + rate_len, rate_ie + 1, rate_ie->len);
++	}
+ 
+ 	return;
  }
-@@ -3820,7 +3820,7 @@ static int compat_getdrvstat(int drive,
- 	v.bufblocks = UDRS->bufblocks;
- 	mutex_unlock(&floppy_mutex);
- 
--	if (copy_from_user(arg, &v, sizeof(struct compat_floppy_drive_struct)))
-+	if (copy_to_user(arg, &v, sizeof(struct compat_floppy_drive_struct)))
- 		return -EFAULT;
- 	return 0;
- Eintr:
+@@ -412,6 +417,8 @@ mwifiex_set_wmm_params(struct mwifiex_pr
+ 					    params->beacon.tail_len);
+ 	if (vendor_ie) {
+ 		wmm_ie = (struct ieee_types_header *)vendor_ie;
++		if (*(vendor_ie + 1) > sizeof(struct mwifiex_types_wmm_info))
++			return;
+ 		memcpy(&bss_cfg->wmm_info, wmm_ie + 1,
+ 		       sizeof(bss_cfg->wmm_info));
+ 		priv->wmm_enabled = 1;
 
 
