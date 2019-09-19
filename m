@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D751CC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01841C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1B9921920
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4EDA21920
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931001;
-	bh=YTk7WT15d0Y8PLniGSxM2yMCqXNLzL1Es1fkvcZq1Wk=;
+	s=default; t=1568931005;
+	bh=fyQekP0mArh+zpjTNqJQ4onGKRm1HDxeaza/MX5kIQc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cPu4CVWfgBwldsn9Z8EJJDIk3grWRW1mOAQNdFFpWsRrj6400nQZi0UAcHEQadfUq
-	 bwEkWr4ej1DRN2t6uxtDKwXvu31QsiS1D2QjZtUJUGneKBZfWssYRRLHrJ49k2UHVA
-	 WZYp+Ny/0b40fM0H2mhLLMaQTEcZg61k6ac2icHo=
+	b=FuRb1GgkodGkZ3NArr/KeWfEjC/p6HOPKYy9XxEHePe8API83nX/OUIYQR1JOHIZO
+	 gU5Que7yO54MgDOsZCkwBiWNxJGHOSWGanWJ8kORd5EgPGCjQNgjeg2Ejy0S7T2vuX
+	 B1jg+74oavy0i7sD4YrSHq32/UInt/8mXctTs6SU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405573AbfISWKA (ORCPT
+        id S2405597AbfISWKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:10:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48274 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:10:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405493AbfISWJ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:09:58 -0400
+        id S2405583AbfISWKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:10:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB1BE21920;
-        Thu, 19 Sep 2019 22:09:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 620E121924;
+        Thu, 19 Sep 2019 22:10:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568930997;
-        bh=YTk7WT15d0Y8PLniGSxM2yMCqXNLzL1Es1fkvcZq1Wk=;
+        s=default; t=1568931003;
+        bh=fyQekP0mArh+zpjTNqJQ4onGKRm1HDxeaza/MX5kIQc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nrN24fLiKVSAY+Q0GsujzDHz9Ei9oUaUi5AM2VjfnsNfJYoGdbUz2iRm+WW95ZY2p
-         hqJshRvE940eannHSsgH4xmO9Bc8SBoCkU2pRHoGAMckklg12j480eFQlz2zFwU/Kc
-         ClojkjefNyVaGxr3FKT+79+5RlHS8EnWcD1ZnK4Q=
+        b=uDMaLNNzJLR1JKeNKkgU84UTvie1H0a4U+HnoHahjlIIPdwXRM1SMGbP1cgKrJmea
+         1BgQxX990asbTbAgh+A18zdhDi5w+ZT4QBa6Vg+bk5GCb7ZV5MzGKBsxPqJnkfWsYU
+         RNGN9IjWUX2RE2KFDGFWHUcculM3WY7tib8LjmSY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lori Hikichi <lori.hikichi@broadcom.com>,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        Ray Jui <ray.jui@broadcom.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 090/124] i2c: iproc: Stop advertising support of SMBUS quick cmd
-Date:   Fri, 20 Sep 2019 00:02:58 +0200
-Message-Id: <20190919214822.313642904@linuxfoundation.org>
+Subject: [PATCH 5.2 092/124] amd-xgbe: Fix error path in xgbe_mod_init()
+Date:   Fri, 20 Sep 2019 00:03:00 +0200
+Message-Id: <20190919214822.397814587@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -62,42 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lori Hikichi <lori.hikichi@broadcom.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit b3d604d405166edfd4e1e6053409b85008f4f56d ]
+[ Upstream commit b6b4dc4c1fa7f1c99398e7dc85758049645e9588 ]
 
-The driver does not support the SMBUS Quick command so remove the
-flag that indicates that level of support.
-By default the i2c_detect tool uses the quick command to try and
-detect devices at some bus addresses.  If the quick command is used
-then we will not detect the device, even though it is present.
+In xgbe_mod_init(), we should do cleanup if some error occurs
 
-Fixes: e6e5dd3566e0 (i2c: iproc: Add Broadcom iProc I2C Driver)
-Signed-off-by: Lori Hikichi <lori.hikichi@broadcom.com>
-Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: efbaa828330a ("amd-xgbe: Add support to handle device renaming")
+Fixes: 47f164deab22 ("amd-xgbe: Add PCI device support")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-bcm-iproc.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/amd/xgbe/xgbe-main.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c b/drivers/i2c/busses/i2c-bcm-iproc.c
-index ad1681872e39d..b99322d83f483 100644
---- a/drivers/i2c/busses/i2c-bcm-iproc.c
-+++ b/drivers/i2c/busses/i2c-bcm-iproc.c
-@@ -801,7 +801,10 @@ static int bcm_iproc_i2c_xfer(struct i2c_adapter *adapter,
+diff --git a/drivers/net/ethernet/amd/xgbe/xgbe-main.c b/drivers/net/ethernet/amd/xgbe/xgbe-main.c
+index b41f23679a087..7ce9c69e9c44f 100644
+--- a/drivers/net/ethernet/amd/xgbe/xgbe-main.c
++++ b/drivers/net/ethernet/amd/xgbe/xgbe-main.c
+@@ -469,13 +469,19 @@ static int __init xgbe_mod_init(void)
  
- static uint32_t bcm_iproc_i2c_functionality(struct i2c_adapter *adap)
- {
--	u32 val = I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
-+	u32 val;
+ 	ret = xgbe_platform_init();
+ 	if (ret)
+-		return ret;
++		goto err_platform_init;
+ 
+ 	ret = xgbe_pci_init();
+ 	if (ret)
+-		return ret;
++		goto err_pci_init;
+ 
+ 	return 0;
 +
-+	/* We do not support the SMBUS Quick command */
-+	val = I2C_FUNC_I2C | (I2C_FUNC_SMBUS_EMUL & ~I2C_FUNC_SMBUS_QUICK);
++err_pci_init:
++	xgbe_platform_exit();
++err_platform_init:
++	unregister_netdevice_notifier(&xgbe_netdev_notifier);
++	return ret;
+ }
  
- 	if (adap->algo->reg_slave)
- 		val |= I2C_FUNC_SLAVE;
+ static void __exit xgbe_mod_exit(void)
 -- 
 2.20.1
 
