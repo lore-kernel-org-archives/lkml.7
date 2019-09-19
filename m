@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D99D3C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE79C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE0AD21920
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59B5F21920
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:06:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568930811;
-	bh=U4CHxSGHitHApCNjAH7iKIqHWmPLONJnYaP/Hq8Qqhc=;
+	s=default; t=1568930813;
+	bh=fwxLc1gvVOiwSg7+bOEMuYV6/ppNQ5qA39zjinu/lPA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a+J9onj29mmugpwI48YhQWd6VRKvyT1CrIddmFbB45GUROjykY1HBTgjFjUsC2vKv
-	 8Z5mSv0OvnjfBmLMsC8VAHLE5oNeLVKu0qZBv7Ez+ThY2idg53BNWvAXE0VPAAi2bW
-	 u2mrdWSmZY1DlsO3F7Z1dwgT6YANBzEtDIG0x90E=
+	b=k5hewl8II2yCYi7Eab0txsd/SWF7aHJaKg19Q6VLvjB7I4QjiJ7OgxRdm5D7hgffs
+	 ywr+J7sQnTKB459hMhM/THQu/lbAZHJBHE7hjYCwu/rNoTbFy1iSg3959+uRXuMR2T
+	 mnXKRv0+EHTS5vM1veREVH94bAlKyrdzhgvumXHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393065AbfISWGt (ORCPT
+        id S2405281AbfISWGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:06:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44282 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:06:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405269AbfISWGq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:06:46 -0400
+        id S2393044AbfISWGt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:06:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89E5E21920;
-        Thu, 19 Sep 2019 22:06:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 379F321D80;
+        Thu, 19 Sep 2019 22:06:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568930806;
-        bh=U4CHxSGHitHApCNjAH7iKIqHWmPLONJnYaP/Hq8Qqhc=;
+        s=default; t=1568930808;
+        bh=fwxLc1gvVOiwSg7+bOEMuYV6/ppNQ5qA39zjinu/lPA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kVSsixw5obFjMcBuEbwq0N7Esh6fIBgU9+/H+EdR4qsMkT0sU/BRlQ9Ig4mjXRjPQ
-         qFKmZmK9jJU5/ZyPW+VWtGf1dSOM1iTAf/gGr70rjnxqK13qftc/wjC0LON+ghgz0I
-         eazpQmLolwaa5wxX4lkl31+9k8fa6HFoNuSKP05w=
+        b=cWZjtfnXdQRBbIX+nwiEiPB1q6iFp4VqzF8qV+oJtsiYK6mSz2X9HT0tIhkBCN9P3
+         vIRrE4jAsSHtwFuCnLt6NJsC9yWxNvKmfmT1nmJu6CI2F228b3kXXUz0kVuHEY5sH0
+         4NeVGWpBYuHriiqd5prFgdCPW8uraPUGWCT3pSXg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matt Delco <delco@chromium.org>,
-        Jim Mattson <jmattson@google.com>,
-        syzbot+983c866c3dd6efa3662a@syzkaller.appspotmail.com,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.2 021/124] KVM: coalesced_mmio: add bounds checking
-Date:   Fri, 20 Sep 2019 00:01:49 +0200
-Message-Id: <20190919214819.854076035@linuxfoundation.org>
+        stable@vger.kernel.org, Hung-Te Lin <hungte@chromium.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Stephen Boyd <swboyd@chromium.org>
+Subject: [PATCH 5.2 022/124] firmware: google: check if size is valid when decoding VPD data
+Date:   Fri, 20 Sep 2019 00:01:50 +0200
+Message-Id: <20190919214819.882798472@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -61,84 +60,158 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Delco <delco@chromium.org>
+From: Hung-Te Lin <hungte@chromium.org>
 
-commit b60fe990c6b07ef6d4df67bc0530c7c90a62623a upstream.
+commit 4b708b7b1a2c09fbdfff6b942ebe3a160213aacd upstream.
 
-The first/last indexes are typically shared with a user app.
-The app can change the 'last' index that the kernel uses
-to store the next result.  This change sanity checks the index
-before using it for writing to a potentially arbitrary address.
+The VPD implementation from Chromium Vital Product Data project used to
+parse data from untrusted input without checking if the meta data is
+invalid or corrupted. For example, the size from decoded content may
+be negative value, or larger than whole input buffer. Such invalid data
+may cause buffer overflow.
 
-This fixes CVE-2019-14821.
+To fix that, the size parameters passed to vpd_decode functions should
+be changed to unsigned integer (u32) type, and the parsing of entry
+header should be refactored so every size field is correctly verified
+before starting to decode.
 
-Cc: stable@vger.kernel.org
-Fixes: 5f94c1741bdc ("KVM: Add coalesced MMIO support (common part)")
-Signed-off-by: Matt Delco <delco@chromium.org>
-Signed-off-by: Jim Mattson <jmattson@google.com>
-Reported-by: syzbot+983c866c3dd6efa3662a@syzkaller.appspotmail.com
-[Use READ_ONCE. - Paolo]
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fixes: ad2ac9d5c5e0 ("firmware: Google VPD: import lib_vpd source files")
+Signed-off-by: Hung-Te Lin <hungte@chromium.org>
+Cc: stable <stable@vger.kernel.org>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Link: https://lore.kernel.org/r/20190830022402.214442-1-hungte@chromium.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- virt/kvm/coalesced_mmio.c |   19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
+ drivers/firmware/google/vpd.c        |    4 +-
+ drivers/firmware/google/vpd_decode.c |   55 ++++++++++++++++++++---------------
+ drivers/firmware/google/vpd_decode.h |    6 +--
+ 3 files changed, 37 insertions(+), 28 deletions(-)
 
---- a/virt/kvm/coalesced_mmio.c
-+++ b/virt/kvm/coalesced_mmio.c
-@@ -40,7 +40,7 @@ static int coalesced_mmio_in_range(struc
- 	return 1;
+--- a/drivers/firmware/google/vpd.c
++++ b/drivers/firmware/google/vpd.c
+@@ -92,8 +92,8 @@ static int vpd_section_check_key_name(co
+ 	return VPD_OK;
  }
  
--static int coalesced_mmio_has_room(struct kvm_coalesced_mmio_dev *dev)
-+static int coalesced_mmio_has_room(struct kvm_coalesced_mmio_dev *dev, u32 last)
+-static int vpd_section_attrib_add(const u8 *key, s32 key_len,
+-				  const u8 *value, s32 value_len,
++static int vpd_section_attrib_add(const u8 *key, u32 key_len,
++				  const u8 *value, u32 value_len,
+ 				  void *arg)
  {
- 	struct kvm_coalesced_mmio_ring *ring;
- 	unsigned avail;
-@@ -52,7 +52,7 @@ static int coalesced_mmio_has_room(struc
- 	 * there is always one unused entry in the buffer
- 	 */
- 	ring = dev->kvm->coalesced_mmio_ring;
--	avail = (ring->first - ring->last - 1) % KVM_COALESCED_MMIO_MAX;
-+	avail = (ring->first - last - 1) % KVM_COALESCED_MMIO_MAX;
- 	if (avail == 0) {
- 		/* full */
- 		return 0;
-@@ -67,25 +67,28 @@ static int coalesced_mmio_write(struct k
+ 	int ret;
+--- a/drivers/firmware/google/vpd_decode.c
++++ b/drivers/firmware/google/vpd_decode.c
+@@ -11,8 +11,8 @@
+ 
+ #include "vpd_decode.h"
+ 
+-static int vpd_decode_len(const s32 max_len, const u8 *in,
+-			  s32 *length, s32 *decoded_len)
++static int vpd_decode_len(const u32 max_len, const u8 *in,
++			  u32 *length, u32 *decoded_len)
  {
- 	struct kvm_coalesced_mmio_dev *dev = to_mmio(this);
- 	struct kvm_coalesced_mmio_ring *ring = dev->kvm->coalesced_mmio_ring;
-+	__u32 insert;
+ 	u8 more;
+ 	int i = 0;
+@@ -32,18 +32,39 @@ static int vpd_decode_len(const s32 max_
+ 	} while (more);
  
- 	if (!coalesced_mmio_in_range(dev, addr, len))
- 		return -EOPNOTSUPP;
+ 	*decoded_len = i;
++	return VPD_OK;
++}
++
++static int vpd_decode_entry(const u32 max_len, const u8 *input_buf,
++			    u32 *_consumed, const u8 **entry, u32 *entry_len)
++{
++	u32 decoded_len;
++	u32 consumed = *_consumed;
  
- 	spin_lock(&dev->kvm->ring_lock);
- 
--	if (!coalesced_mmio_has_room(dev)) {
-+	insert = READ_ONCE(ring->last);
-+	if (!coalesced_mmio_has_room(dev, insert) ||
-+	    insert >= KVM_COALESCED_MMIO_MAX) {
- 		spin_unlock(&dev->kvm->ring_lock);
- 		return -EOPNOTSUPP;
- 	}
- 
- 	/* copy data in first free entry of the ring */
- 
--	ring->coalesced_mmio[ring->last].phys_addr = addr;
--	ring->coalesced_mmio[ring->last].len = len;
--	memcpy(ring->coalesced_mmio[ring->last].data, val, len);
--	ring->coalesced_mmio[ring->last].pio = dev->zone.pio;
-+	ring->coalesced_mmio[insert].phys_addr = addr;
-+	ring->coalesced_mmio[insert].len = len;
-+	memcpy(ring->coalesced_mmio[insert].data, val, len);
-+	ring->coalesced_mmio[insert].pio = dev->zone.pio;
- 	smp_wmb();
--	ring->last = (ring->last + 1) % KVM_COALESCED_MMIO_MAX;
-+	ring->last = (insert + 1) % KVM_COALESCED_MMIO_MAX;
- 	spin_unlock(&dev->kvm->ring_lock);
- 	return 0;
++	if (vpd_decode_len(max_len - consumed, &input_buf[consumed],
++			   entry_len, &decoded_len) != VPD_OK)
++		return VPD_FAIL;
++	if (max_len - consumed < decoded_len)
++		return VPD_FAIL;
++
++	consumed += decoded_len;
++	*entry = input_buf + consumed;
++
++	/* entry_len is untrusted data and must be checked again. */
++	if (max_len - consumed < *entry_len)
++		return VPD_FAIL;
++
++	consumed += decoded_len;
++	*_consumed = consumed;
+ 	return VPD_OK;
  }
+ 
+-int vpd_decode_string(const s32 max_len, const u8 *input_buf, s32 *consumed,
++int vpd_decode_string(const u32 max_len, const u8 *input_buf, u32 *consumed,
+ 		      vpd_decode_callback callback, void *callback_arg)
+ {
+ 	int type;
+-	int res;
+-	s32 key_len;
+-	s32 value_len;
+-	s32 decoded_len;
++	u32 key_len;
++	u32 value_len;
+ 	const u8 *key;
+ 	const u8 *value;
+ 
+@@ -58,26 +79,14 @@ int vpd_decode_string(const s32 max_len,
+ 	case VPD_TYPE_STRING:
+ 		(*consumed)++;
+ 
+-		/* key */
+-		res = vpd_decode_len(max_len - *consumed, &input_buf[*consumed],
+-				     &key_len, &decoded_len);
+-		if (res != VPD_OK || *consumed + decoded_len >= max_len)
++		if (vpd_decode_entry(max_len, input_buf, consumed, &key,
++				     &key_len) != VPD_OK)
+ 			return VPD_FAIL;
+ 
+-		*consumed += decoded_len;
+-		key = &input_buf[*consumed];
+-		*consumed += key_len;
+-
+-		/* value */
+-		res = vpd_decode_len(max_len - *consumed, &input_buf[*consumed],
+-				     &value_len, &decoded_len);
+-		if (res != VPD_OK || *consumed + decoded_len > max_len)
++		if (vpd_decode_entry(max_len, input_buf, consumed, &value,
++				     &value_len) != VPD_OK)
+ 			return VPD_FAIL;
+ 
+-		*consumed += decoded_len;
+-		value = &input_buf[*consumed];
+-		*consumed += value_len;
+-
+ 		if (type == VPD_TYPE_STRING)
+ 			return callback(key, key_len, value, value_len,
+ 					callback_arg);
+--- a/drivers/firmware/google/vpd_decode.h
++++ b/drivers/firmware/google/vpd_decode.h
+@@ -25,8 +25,8 @@ enum {
+ };
+ 
+ /* Callback for vpd_decode_string to invoke. */
+-typedef int vpd_decode_callback(const u8 *key, s32 key_len,
+-				const u8 *value, s32 value_len,
++typedef int vpd_decode_callback(const u8 *key, u32 key_len,
++				const u8 *value, u32 value_len,
+ 				void *arg);
+ 
+ /*
+@@ -44,7 +44,7 @@ typedef int vpd_decode_callback(const u8
+  * If one entry is successfully decoded, sends it to callback and returns the
+  * result.
+  */
+-int vpd_decode_string(const s32 max_len, const u8 *input_buf, s32 *consumed,
++int vpd_decode_string(const u32 max_len, const u8 *input_buf, u32 *consumed,
+ 		      vpd_decode_callback callback, void *callback_arg);
+ 
+ #endif  /* __VPD_DECODE_H */
 
 
