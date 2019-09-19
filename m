@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D9CC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6BBC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECC06208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44115208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:32:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932363;
-	bh=B68nc9OKkAQbmzyRHs40pHmAXAslMRrZ1Tb5cmtIk74=;
+	s=default; t=1568932370;
+	bh=G/uRdqFkHn7/5EBZ7Enh1oxM91e/mho9qyCW+FhVgXs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=atRblXSdiOAMBagcoC6hFkX/L20YBO85jo0vedIYcmJJqSJLfS2rRba7SiSzH+86i
-	 blgTxuX4WzNhWycDKv8cVc0IREduqys9R8L7DEn3+eyRZYHi9zOmMzo51ZK2Rg4kB1
-	 NexYaFLh2Gw8LevfFnPHUYOsI2F7YJhN5rm/xvAM=
+	b=fh5U5+OAHDly9PAt0y7+qf8cTnC1SzgIQiK8lXLRcDmIfpwdrfqWDw5aZHqPDTsON
+	 k8nOoUlKhgnKmq1LNqk/IkCpAv86N5XA7kPGhIsBNGb2feTKHVkcGBTmmJRQgju1qt
+	 UvMivVuojS8qbQ4nyb8CksPTxfpt5VfVFld2He40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406539AbfISWcm (ORCPT
+        id S2406630AbfISWct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:32:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51824 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:32:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393689AbfISWMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:12:48 -0400
+        id S1725887AbfISWMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:12:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B166521907;
-        Thu, 19 Sep 2019 22:12:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA77121907;
+        Thu, 19 Sep 2019 22:12:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931168;
-        bh=B68nc9OKkAQbmzyRHs40pHmAXAslMRrZ1Tb5cmtIk74=;
+        s=default; t=1568931157;
+        bh=G/uRdqFkHn7/5EBZ7Enh1oxM91e/mho9qyCW+FhVgXs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uGsSkZdopwwKNDgWKqR1Eq5yemySN359YTGlmU3gAahqajX88A4VPsYdTCMsggUNJ
-         zW0/HMFkRNkLkfoyrrmFs8BjTgna6kyatt9VeyDGenOVE5mwMcJ3Q2npdPSG2F8aZ/
-         H2bAN/ZvCKJBz8z6djMWHnutfsuCdFpednerHfUE=
+        b=fkUXE+yCuyEQwVQrOuiBrtyeihWHDymMT7WZ8q6+u/DdCmrbUZ5U22oFhHFqJunYP
+         s2Woz2sxDBeIE3KdKtVeiqFVF2JRvi37hM+1g9scIH2jjU0XQrqKS1QWEcZDIFvFP1
+         NpdbATLLHHH2LVK09ZdnFGCs2GSslQItMz5tCEk8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        stable@vger.kernel.org, Keerthy <j-keerthy@ti.com>,
         Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 27/79] ARM: OMAP1: ams-delta-fiq: Fix missing irq_ack
-Date:   Fri, 20 Sep 2019 00:03:12 +0200
-Message-Id: <20190919214810.301826644@linuxfoundation.org>
+Subject: [PATCH 4.19 23/79] bus: ti-sysc: Fix using configured sysc mask value
+Date:   Fri, 20 Sep 2019 00:03:08 +0200
+Message-Id: <20190919214810.050154383@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214807.612593061@linuxfoundation.org>
 References: <20190919214807.612593061@linuxfoundation.org>
@@ -60,63 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit fa8397e45c64e60c80373bc19ee56e42a6bed9b6 ]
+[ Upstream commit e212abd452a4af3174fcd469d46656f83e135a19 ]
 
-Non-serio path of Amstrad Delta FIQ deferred handler depended on
-irq_ack() method provided by OMAP GPIO driver.  That method has been
-removed by commit 693de831c6e5 ("gpio: omap: remove irq_ack method").
-Remove useless code from the deferred handler and reimplement the
-missing operation inside the base FIQ handler.
+We have cases where there are no softreset bits like with am335x lcdc.
+In that case ti,sysc-mask = <0> needs to be handled properly.
 
-Should another dependency - irq_unmask() - be ever removed from the OMAP
-GPIO driver, WARN once if missing.
-
-Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Tested-by: Keerthy <j-keerthy@ti.com>
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-omap1/ams-delta-fiq-handler.S | 3 ++-
- arch/arm/mach-omap1/ams-delta-fiq.c         | 4 +---
- 2 files changed, 3 insertions(+), 4 deletions(-)
+ drivers/bus/ti-sysc.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/arch/arm/mach-omap1/ams-delta-fiq-handler.S b/arch/arm/mach-omap1/ams-delta-fiq-handler.S
-index ddc27638ba2a5..017c792be0a07 100644
---- a/arch/arm/mach-omap1/ams-delta-fiq-handler.S
-+++ b/arch/arm/mach-omap1/ams-delta-fiq-handler.S
-@@ -135,6 +135,8 @@ restart:
- 	orr r11, r11, r13			@ mask all requested interrupts
- 	str r11, [r12, #OMAP1510_GPIO_INT_MASK]
+diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+index e4fe954e63a9b..4ca006e2137f7 100644
+--- a/drivers/bus/ti-sysc.c
++++ b/drivers/bus/ti-sysc.c
+@@ -1022,10 +1022,7 @@ static int sysc_init_sysc_mask(struct sysc *ddata)
+ 	if (error)
+ 		return 0;
  
-+	str r13, [r12, #OMAP1510_GPIO_INT_STATUS] @ ack all requested interrupts
-+
- 	ands r10, r13, #KEYBRD_CLK_MASK		@ extract keyboard status - set?
- 	beq hksw				@ no - try next source
+-	if (val)
+-		ddata->cfg.sysc_val = val & ddata->cap->sysc_mask;
+-	else
+-		ddata->cfg.sysc_val = ddata->cap->sysc_mask;
++	ddata->cfg.sysc_val = val & ddata->cap->sysc_mask;
  
-@@ -142,7 +144,6 @@ restart:
- 	@@@@@@@@@@@@@@@@@@@@@@
- 	@ Keyboard clock FIQ mode interrupt handler
- 	@ r10 now contains KEYBRD_CLK_MASK, use it
--	str r10, [r12, #OMAP1510_GPIO_INT_STATUS]	@ ack the interrupt
- 	bic r11, r11, r10				@ unmask it
- 	str r11, [r12, #OMAP1510_GPIO_INT_MASK]
- 
-diff --git a/arch/arm/mach-omap1/ams-delta-fiq.c b/arch/arm/mach-omap1/ams-delta-fiq.c
-index b0dc7ddf5877d..b8ba763fe1086 100644
---- a/arch/arm/mach-omap1/ams-delta-fiq.c
-+++ b/arch/arm/mach-omap1/ams-delta-fiq.c
-@@ -73,9 +73,7 @@ static irqreturn_t deferred_fiq(int irq, void *dev_id)
- 			 * interrupts default to since commit 80ac93c27441
- 			 * requires interrupt already acked and unmasked.
- 			 */
--			if (irq_chip->irq_ack)
--				irq_chip->irq_ack(d);
--			if (irq_chip->irq_unmask)
-+			if (!WARN_ON_ONCE(!irq_chip->irq_unmask))
- 				irq_chip->irq_unmask(d);
- 		}
- 		for (; irq_counter[gpio] < fiq_count; irq_counter[gpio]++)
+ 	return 0;
+ }
 -- 
 2.20.1
 
