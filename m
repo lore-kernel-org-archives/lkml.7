@@ -7,54 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6581EC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9403DC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B5C220640
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:26:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FA0120640
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:26:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932013;
-	bh=xTImHa+Fw+hcY0JKhsE+/yBCH+214SuUveX5vVfK+MQ=;
+	s=default; t=1568932017;
+	bh=gP1KFasB8WO5aIgzqJHmO5K+ABZ0LA7tXlnu06A8+bI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GUOD5QDQ/JIAcx+b3ltgylNJNbtj2ZPKXPLd4MAu+dZs3zaNsIZhV0llygHj2C+7m
-	 DVZfi0o5amWUmGcjVjSYusk3k1l1mxZ1Exk7tlFewyXgRvFMkTylS+4KOApFDBuXut
-	 BfpCfd4XIlnO6YNYkjOQsBjqY6jTTDU9kpv7FxOY=
+	b=N2yHD4V4fCwEpSL7R6eirOR0pfJtNB7+w7lOh9MaoOJiNxt69CepiyKTiQ9f9hnzZ
+	 D4doIHM7MNGrHFPkzzfxWVkrZxHeu434f8v0O0SuzFsLLzpjbh7/yKEJsG9uVfYG7P
+	 HMXRIB9RkGif07qyDEgLKwV1rgm312RYEBA7AtG0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394226AbfISW0w (ORCPT
+        id S2404812AbfISWVg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:26:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36332 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:21:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394064AbfISWVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:21:43 -0400
+        id S2389787AbfISWV1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:21:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 842DD21929;
-        Thu, 19 Sep 2019 22:21:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23464217D6;
+        Thu, 19 Sep 2019 22:21:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931703;
-        bh=xTImHa+Fw+hcY0JKhsE+/yBCH+214SuUveX5vVfK+MQ=;
+        s=default; t=1568931686;
+        bh=gP1KFasB8WO5aIgzqJHmO5K+ABZ0LA7tXlnu06A8+bI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h63iTYV13MD7jJJCrNWzH2wnE/VEQxjiKiKDzafch1EwGTrg3XQKDtmyVuQD2Fbh1
-         QPYvJFX6xY2Qk0g4KmK7DGYYiiUWbHFF4bjkbGvYCcSqNZ9v802ufdsfWFPB73f1I9
-         cWunprg+BE1YdaMJX8c7WHPbxhqp9vx8NSxdfGE8=
+        b=QKoKltIs1yHjYXw202u0WcL/Wl3QI+ignW9BO1LpLzeaX/pmAB4rYFZNb+P04pZMi
+         2ylXWV0FoF8VHRYkdJwBzV40RHxw+j1Dp8rrJoAKqDgMXXRGLsjYNUeA+lA41QxWd1
+         hTxMFFyDm1s03ABIe7cYQQnbdsLqiE4uZIaJH8Tw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 01/56] bridge/mdb: remove wrong use of NLM_F_MULTI
-Date:   Fri, 20 Sep 2019 00:03:42 +0200
-Message-Id: <20190919214743.107531741@linuxfoundation.org>
+        stable@vger.kernel.org, Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>
+Subject: [PATCH 4.9 41/74] serial: sprd: correct the wrong sequence of arguments
+Date:   Fri, 20 Sep 2019 00:03:54 +0200
+Message-Id: <20190919214808.860798104@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190919214742.483643642@linuxfoundation.org>
-References: <20190919214742.483643642@linuxfoundation.org>
+In-Reply-To: <20190919214800.519074117@linuxfoundation.org>
+References: <20190919214800.519074117@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,35 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
-[ Upstream commit 94a72b3f024fc7e9ab640897a1e38583a470659d ]
+commit 9c801e313195addaf11c16e155f50789d6ebfd19 upstream.
 
-NLM_F_MULTI must be used only when a NLMSG_DONE message is sent at the end.
-In fact, NLMSG_DONE is sent only at the end of a dump.
+The sequence of arguments which was passed to handle_lsr_errors() didn't
+match the parameters defined in that function, &lsr was passed to flag
+and &flag was passed to lsr, this patch fixed that.
 
-Libraries like libnl will wait forever for NLMSG_DONE.
-
-Fixes: 949f1e39a617 ("bridge: mdb: notify on router port add and del")
-CC: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: b7396a38fb28 ("tty/serial: Add Spreadtrum sc9836-uart driver support")
+Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+Signed-off-by: Chunyan Zhang <zhang.lyra@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20190905074151.5268-1-zhang.lyra@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/bridge/br_mdb.c |    2 +-
+ drivers/tty/serial/sprd_serial.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/bridge/br_mdb.c
-+++ b/net/bridge/br_mdb.c
-@@ -256,7 +256,7 @@ static int nlmsg_populate_rtr_fill(struc
- 	struct nlmsghdr *nlh;
- 	struct nlattr *nest;
+--- a/drivers/tty/serial/sprd_serial.c
++++ b/drivers/tty/serial/sprd_serial.c
+@@ -240,7 +240,7 @@ static inline void sprd_rx(struct uart_p
  
--	nlh = nlmsg_put(skb, pid, seq, type, sizeof(*bpm), NLM_F_MULTI);
-+	nlh = nlmsg_put(skb, pid, seq, type, sizeof(*bpm), 0);
- 	if (!nlh)
- 		return -EMSGSIZE;
- 
+ 		if (lsr & (SPRD_LSR_BI | SPRD_LSR_PE |
+ 			SPRD_LSR_FE | SPRD_LSR_OE))
+-			if (handle_lsr_errors(port, &lsr, &flag))
++			if (handle_lsr_errors(port, &flag, &lsr))
+ 				continue;
+ 		if (uart_handle_sysrq_char(port, ch))
+ 			continue;
 
 
