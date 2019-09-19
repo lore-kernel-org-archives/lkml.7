@@ -2,123 +2,120 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F07C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE8BC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B4152053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:00:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9390D2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:02:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G1NZg1so"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sbqDMqvc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404550AbfISUAz (ORCPT
+        id S2404574AbfISUCx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 16:00:55 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:32980 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392351AbfISUAz (ORCPT
+        Thu, 19 Sep 2019 16:02:53 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:37015 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404554AbfISUCw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 16:00:55 -0400
-Received: by mail-pg1-f195.google.com with SMTP id n190so2510344pgn.0
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 13:00:53 -0700 (PDT)
+        Thu, 19 Sep 2019 16:02:52 -0400
+Received: by mail-qk1-f196.google.com with SMTP id u184so4769393qkd.4;
+        Thu, 19 Sep 2019 13:02:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:to:from:subject:user-agent:date;
-        bh=9iE/fQwbEI86AAV9fsy+eA8BJHdmoZczt8XRdjCLHVg=;
-        b=G1NZg1so9GgzKFvCHvGKBM6Uc4u9SKeSlJSkKxRygJVib/OfcZHo2nZFnsvMQCGhKs
-         zycvLxKiQtN/TrkUGZwgdntuLhr6vO5k3GEAD9K3Xfru0BX8RkKNsO9BFGf35dgqR5FN
-         Z6pEiyu730ZfZOy9JH94iiwYN4KD5MkuQb92I=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8tiLUzdYi4ITB45WucLNW+ND66QoXoPlA91lr3mWY0I=;
+        b=sbqDMqvcvX3x6cU1Bdz+6qPbXVu92Hlw7FpYhWcmNu2nb76PWtUJQnkwE98baOLrmI
+         0MY5otAgmrOc07A8Yw0QDg6TYwqi+mvnIXIpvyl6ZrblMCiJXvmVj9lbRaDSVNV+QHG4
+         67cVb+vU6c/ZsY1HTtHGdmiK6rFizS7IbGORW4k/+nBbjcSQiGBXcGYtSYOW62F56AGF
+         KTtEt9mAPo7t9Y4oJBowYtKY56XThUbC2h6tYPXdFXFriLnIeZRzsQoKFno5YPPTQq/7
+         CElIzcWjG2FWQf2DczVSoq2MHQxMYDCoemtFPqe2+IrN1xGdhKayesdkq08nUYx3ZwOQ
+         WysA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:to:from:subject
-         :user-agent:date;
-        bh=9iE/fQwbEI86AAV9fsy+eA8BJHdmoZczt8XRdjCLHVg=;
-        b=Bweszi68FivpkcW8NVBZBRDBV7u23KlMKFhpJYXg8MQL6lWFEPvb2T9BoarixgdVcQ
-         U3CfKv6K5ESUazThyaiOB++ZdH9RLHQnJTWCWUynSpz5JFJdu8kBpzpzRlCMLfNL60/U
-         D3p19lxI2+ekdHWGA/rWpKv9DZtmSsV6Aeo/qufOBzWL+ukoXFeW89li3VCtaYpqs8JO
-         xCg4oRJQsn/PP3Om9bvJZYaLwNxhUZbkz2RnPkYjROiPeCp2iKbKqSNmE/L7PcR/uSNM
-         LVqWNl10U8EzzlHg0kSPmy3w+eft7+HmElzAXH+BGD5uNTPzBPFUbwrnVjGP9EW6mi2L
-         2J9w==
-X-Gm-Message-State: APjAAAUQMoRF0igSZdY/6MUfaf6PZe1MiY7GehOvcnI0Hm8xUXtJ1C2U
-        JLk1h0nKw+8j3zhZLxjL9M5fwg==
-X-Google-Smtp-Source: APXvYqwblG8awSx8tqE4wTapKOkBur/6RwrbMVL74XUWHvi/ehVchoyA2iAuuT8W5diexnCOtr3PpQ==
-X-Received: by 2002:a62:cf82:: with SMTP id b124mr12123966pfg.159.1568923252840;
-        Thu, 19 Sep 2019 13:00:52 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id r28sm13572503pfg.62.2019.09.19.13.00.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2019 13:00:52 -0700 (PDT)
-Message-ID: <5d83de74.1c69fb81.71c0f.f162@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8tiLUzdYi4ITB45WucLNW+ND66QoXoPlA91lr3mWY0I=;
+        b=lhHDaapT72xnTD1PFTZvH6rcMz/4SQ6Bb4sZLixz/vDTHUqzbImYkB17pXYFMJXBzy
+         zcKqv7KqFM69FWIKxbWuYY9O4WjXd1JO25HtGEZF/xEFAE6ZkTjTYM6gPJH8ahzVj26m
+         H7mFeva/pCmzUEnTVnrwnnZyXsgpTLwAQCcjnTq7qv/FEpkwz1RotZywGv/CTTkXKFxF
+         eevnZjIR3OuAqNOdRYhUjEgd4B396ND9DhpPziG5Gd0gcT3u4NenjB2hHrbn7zJf3dLH
+         c/mZ4RG++oFUsW9XgJia50rzpsZdMpYkHqj447NmYMWzz+F4ZefFqDIvb1Wk3hNwvGwM
+         1KRA==
+X-Gm-Message-State: APjAAAWap6OViTOZDrOKTCeSr6gXXkiXY0toFNPWoevLXQkwC6ogFrfK
+        8zg5E/Wx1wTAT6RlE7xYqh11denF3pgATfNdfes=
+X-Google-Smtp-Source: APXvYqwvmENtZwqOUjQyedETgKcY0/COJMPAGFK2CXOq7iyOjkYW6yMxk6opBKWcdNrSSEZYulbmcSZPLeNxXGPRIvE=
+X-Received: by 2002:a05:620a:119a:: with SMTP id b26mr4913032qkk.39.1568923371419;
+ Thu, 19 Sep 2019 13:02:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <081fff2f5dacfa7b6f5df6364f088045@codeaurora.org>
-References: <cover.1568712606.git.saiprakash.ranjan@codeaurora.org> <1513424ecec891d19c1aa3c599ec67db7964b6b2.1568712606.git.saiprakash.ranjan@codeaurora.org> <20190919002501.GA20859@builder> <a45e8fb6fe1a8cc914fedbfac65af009@codeaurora.org> <081fff2f5dacfa7b6f5df6364f088045@codeaurora.org>
-Cc:     Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm-owner@vger.kernel.org
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCHv6 3/3] iommu: arm-smmu-impl: Add sdm845 implementation hook
-User-Agent: alot/0.8.1
-Date:   Thu, 19 Sep 2019 13:00:51 -0700
+References: <20190919160518.25901-1-ivan.khoronzhuk@linaro.org>
+In-Reply-To: <20190919160518.25901-1-ivan.khoronzhuk@linaro.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 19 Sep 2019 13:02:40 -0700
+Message-ID: <CAEf4BzbCjCYr5NMPctDkUggwpehnqZPVBSqZOsd9MvSq6WmnZQ@mail.gmail.com>
+Subject: Re: [PATCH bpf] libbpf: fix version identification on busybox
+To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin Lau <kafai@fb.com>, Andrii Nakryiko <andriin@fb.com>,
+        Yonghong Song <yhs@fb.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Sai Prakash Ranjan (2019-09-19 11:54:27)
-> On 2019-09-19 08:48, Sai Prakash Ranjan wrote:
-> > On 2019-09-19 05:55, Bjorn Andersson wrote:
-> >> In the transition to this new design we lost the ability to
-> >> enable/disable the safe toggle per board, which according to Vivek
-> >> would result in some issue with Cheza.
-> >>=20
-> >> Can you confirm that this is okay? (Or introduce the DT property for
-> >> enabling the safe_toggle logic?)
-> >>=20
-> >=20
-> > Hmm, I don't remember Vivek telling about any issue on Cheza because
-> > of this logic.
-> > But I will test this on Cheza and let you know.
-> >=20
->=20
-> I tested this on Cheza and no perf degradation nor any other issue is=20
-> seen
-> atleast openly, although I see this below stack dump always with=20
-> cant_sleep change added.
+On Thu, Sep 19, 2019 at 11:22 AM Ivan Khoronzhuk
+<ivan.khoronzhuk@linaro.org> wrote:
+>
+> It's very often for embedded to have stripped version of sort in
+> busybox, when no -V option present. It breaks build natively on target
+> board causing recursive loop.
+>
+> BusyBox v1.24.1 (2019-04-06 04:09:16 UTC) multi-call binary. \
+> Usage: sort [-nrugMcszbdfimSTokt] [-o FILE] [-k \
+> start[.offset][opts][,end[.offset][opts]] [-t CHAR] [FILE]...
+>
+> Lets modify command a little to avoid -V option.
+>
+> Fixes: dadb81d0afe732 ("libbpf: make libbpf.map source of truth for libbpf version")
+>
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+> ---
+>
+> Based on bpf/master
+>
+>  tools/lib/bpf/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
+> index c6f94cffe06e..a12490ad6215 100644
+> --- a/tools/lib/bpf/Makefile
+> +++ b/tools/lib/bpf/Makefile
+> @@ -3,7 +3,7 @@
+>
+>  LIBBPF_VERSION := $(shell \
+>         grep -oE '^LIBBPF_([0-9.]+)' libbpf.map | \
+> -       sort -rV | head -n1 | cut -d'_' -f2)
+> +       cut -d'_' -f2 | sort -r | head -n1)
 
-The usage of cant_sleep() here is wrong then, and the comment should be
-removed from the scm API as well because it looks like it's perfectly OK
-to call the function from a context that can sleep.
+You can't just sort alphabetically, because:
 
->=20
-> [    5.048860] BUG: assuming atomic context at=20
-> /mnt/host/source/src/third_party/kernel/v5.3/drivers/firmware/qcom_scm-64=
-.c:206
-> [    5.060303] in_atomic(): 0, irqs_disabled(): 0, pid: 1, name:=20
-> swapper/0
-> [    5.067118] CPU: 4 PID: 1 Comm: swapper/0 Not tainted 5.3.0 #102
-> [    5.073299] Hardware name: Google Cheza (rev3+) (DT)
-> [    5.078416] Call trace:
-> [    5.080953]  dump_backtrace+0x0/0x16c
-> [    5.084727]  show_stack+0x20/0x2c
-> [    5.088156]  dump_stack+0x90/0xcc
-> [    5.091585]  __cant_sleep+0xb4/0xc4
-> [    5.095192]  __qcom_scm_qsmmu500_wait_safe_toggle+0x5c/0xa0
-> [    5.100929]  qcom_scm_qsmmu500_wait_safe_toggle+0x28/0x34
-> [    5.106491]  qcom_sdm845_smmu500_reset+0x24/0x50
-> [    5.111249]  arm_smmu_device_reset+0x1a4/0x25c
-> [    5.115827]  arm_smmu_device_probe+0x418/0x50c
-> [    5.120406]  platform_drv_probe+0x90/0xb0
+1.2
+1.11
+
+should be in that order. See discussion on mailing thread for original commit.
+
+>  LIBBPF_MAJOR_VERSION := $(firstword $(subst ., ,$(LIBBPF_VERSION)))
+>
+>  MAKEFLAGS += --no-print-directory
+> --
+> 2.17.1
+>
