@@ -2,175 +2,220 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B1BEC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DDD3C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1CC221907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:39:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="rzPV+WDK"
+	by mail.kernel.org (Postfix) with ESMTP id 5F6B621927
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:39:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389977AbfISPjY (ORCPT
+        id S2391345AbfISPjs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 11:39:24 -0400
-Received: from mout.web.de ([212.227.15.4]:55565 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389863AbfISPjX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 11:39:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1568907490;
-        bh=IvBezhGQNiVEUo9qyo82nKP7FH2Z2z0jWTFLjJm5VIk=;
-        h=X-UI-Sender-Class:To:From:Subject:Cc:Date;
-        b=rzPV+WDKiUFdwpv148DBXjvKT8eHCnpSQwH5BvvB3mL8xIIauPW68PNGJ2Y/Gdt9R
-         2Vverci+osFi/62rbFEEdLspPboV/qokX4u2+gQzTP0gKF8t+0K2JTTctKCX6vdjk8
-         Q2kynhJ9JaFQ975Tzc46sORW8FUPxgR9OITHDvwQ=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.132.191.36]) by smtp.web.de (mrweb004
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0Le8Ca-1hs8MA0yNw-00pveZ; Thu, 19
- Sep 2019 17:38:10 +0200
-To:     alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Maruthi Srinivas Bayyavarapu 
-        <maruthi.srinivas.bayyavarapu@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Takashi Iwai <tiwai@suse.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] ASoC: xlnx: Use devm_platform_ioremap_resource() in
- xlnx_formatter_pcm_probe()
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Message-ID: <8f7cf483-6ab3-d00f-5606-863e9f5b31fc@web.de>
-Date:   Thu, 19 Sep 2019 17:38:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Thu, 19 Sep 2019 11:39:48 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:38245 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390004AbfISPjr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 11:39:47 -0400
+X-Originating-IP: 86.207.98.53
+Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
+        (Authenticated sender: gregory.clement@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 940441BF21B;
+        Thu, 19 Sep 2019 15:39:43 +0000 (UTC)
+From:   Gregory CLEMENT <gregory.clement@bootlin.com>
+To:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        stable@vger.kernel.org
+Subject: [PATCH] spi: atmel: Fix crash when using more than 4 gpio CS
+Date:   Thu, 19 Sep 2019 17:38:47 +0200
+Message-Id: <20190919153847.7179-1-gregory.clement@bootlin.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:MQDQt/fh9Ra2BCCpPad/vocCOHbSct9IWDxnRW4ip1FQecY3c5G
- ccw3osppvm8ukIOgtk1IsOLOfiBvK4ocu9o5OitLNLbckVKcUb8Zno6i8GcsXVhFuyupYua
- ra4WHQN6EtawAJmwTK7oYCJolti+/sqJRciMQIws6PJMA2gu/AknFQj/+gJEomO3J/2MtI/
- VF+n4kOIxj1FP7ukngS6g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Kcb0vyePgeQ=:SQL3/RfT/YiXK+gG8Bv1Gp
- chNnGaBiNDF8+vw2QoU/MfWhWzcP/57HYt8+0ZxqH3q8Zkuvx4o362zOm2z9RddMnvxKWb8sj
- x6l5+DiqFZ/Yx30UAKUc7z4VBgqPEBS72Xc2Pgin3MYtzq0dL+VRnNAmIzejbscIBegP6MrMq
- UenW6NGHuKyGzlteU9PrOl4U+hbvvfm0DhCL4skhAztfjFLggVaRVIXFpOs+wZYCy6rBRxshI
- sCnjmrvHGrh9fJ+lPBwymnAIompVHzKkIyKkwe7Ty4jJ/DvP6xQ4JWnGsOXWBd8Mx0xUA6M3c
- jrK/hoUb5QZDIPzThNg+Oy4uslxjGEfhsBD0jhMkdmJJ4Xm4UtgZdG74akRdOFgZM8pOUnvko
- tiiVi15poaSiM8nfHmWHPQp26EguRXYuxlSRmuBQdMt7umbM9U7pbGMHTxUyYcl1tagVtCHqM
- XnpBTMvFS2RXuyzUbDuQNtZNzjDdGN2lGqkxA76aBLjUA12reaQrx7ROruhfO9iOh1GvWoVFu
- w4sChcNJ+mVtQ4SJpuRBd+sLBElLUO8kmCqru2RiDRcyMxF6O2sFR3OnQ9CC7m7KUMILD9IOq
- 2gLx0ceQTp6Bk4uIPxN00zfIookS2opDfZ8qwQvCMFyh2uR40aFofzyrhv4d/x4I5aqKP4LWM
- a8h/ZNKKQwmnnwBqQwVYk1iK6JFdGC/V+G6Y3inM9BmA0nxverZbPwZgKjR0i7+UFPPraE53X
- 9cMOdwE9Ca+YESwBplIGHC+Ui7ELhfZF5ka+gvhBY7d7Xo91azw5a9f2wvuxe9WvTskfu7c/f
- qIU5i5e6UUWQmC9ZR03at6HFInSTjOhm/MR+24vC4Cx/v/nZWsEJQ+4zo+pLYG/rPPnNX87f5
- 24dnCsOjjpHRqS2oWWIYuuU2ZorUJEmu3YTBqY4TmeOhiAzwU6R17RvI4x53DZFpV1mbo+8he
- CpAJozXWtxPBhjxdvAYBr5qe9n/tnXyPtNAXY72IpK0XxqO+Ko9Q5oIC6ANytksafcqPblEaq
- iQ4rTOL1b4TFrRrsbUUxlDxmOYnTxrAbvNKHztcLs8wRAzoiEy5nQoLPDf/9y6h0c+w3n5fbl
- n5hVCUMqvWhUzHmzNLm5JIG966truZ13ikSszfPmaSq52SAxPjigbKqaERXZMQc390PNAHzA+
- U7LS09l4AuYa1fTWIBiWsydCM4cs1/NOiK/PsXiKwNnR2A7GgaT55u8XLiBn1r5yWunqVUTZc
- Rbgtsayl0WjqoA+znbcG0qTEC/iXBqkTN/6HztWCoIcT5FsQ48ntX4jakVAc=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Thu, 19 Sep 2019 17:27:57 +0200
+Even when using a gpio as chip select, the registers controlling the
+hardware chip select have to be configured. However any of the 4
+hardware CS can be controlled.
 
-Simplify this function implementation by using a known wrapper function.
+Until now, the gpio index was used to match an hardware chip select,
+which limited the number of CS than can be used. Using more than 4
+gpios leads to the following kernel crash:
 
-This issue was detected by using the Coccinelle software.
+WARNING: CPU: 0 PID: 1 at drivers/spi/spi-atmel.c:1293 atmel_spi_transfer_one_message+0x8b0/0x8ec
+Modules linked in:
+CPU: 0 PID: 1 Comm: swapper Not tainted 5.3.0+ #24
+Hardware name: Atmel SAMA5
+[<c010d914>] (unwind_backtrace) from [<c010ad84>] (show_stack+0x10/0x14)
+[<c010ad84>] (show_stack) from [<c0117d28>] (__warn+0xd8/0xf0)
+[<c0117d28>] (__warn) from [<c0117d80>] (warn_slowpath_null+0x40/0x48)
+[<c0117d80>] (warn_slowpath_null) from [<c04b21dc>] (atmel_spi_transfer_one_message+0x8b0/0x8ec)
+[<c04b21dc>] (atmel_spi_transfer_one_message) from [<c04afb20>] (__spi_pump_messages+0x330/0x510)
+[<c04afb20>] (__spi_pump_messages) from [<c04afe5c>] (__spi_sync+0x150/0x158)
+[<c04afe5c>] (__spi_sync) from [<c04afe88>] (spi_sync+0x24/0x3c)
+[<c04afe88>] (spi_sync) from [<c04aff88>] (spi_write_then_read+0xe8/0x1a8)
+[<c04aff88>] (spi_write_then_read) from [<c0454da0>] (_regmap_raw_read+0xec/0x148)
+[<c0454da0>] (_regmap_raw_read) from [<c0454f6c>] (regmap_raw_read+0x110/0x238)
+[<c0454f6c>] (regmap_raw_read) from [<c04551f4>] (regmap_bulk_read+0x160/0x19c)
+[<c04551f4>] (regmap_bulk_read) from [<c0517744>] (rv3029_get_sr+0x28/0x64)
+[<c0517744>] (rv3029_get_sr) from [<c0518184>] (rv3029_probe+0x5c/0x260)
+[<c0518184>] (rv3029_probe) from [<c04acf90>] (spi_drv_probe+0x88/0xac)
+[<c04acf90>] (spi_drv_probe) from [<c043fec8>] (really_probe+0xf0/0x2c8)
+[<c043fec8>] (really_probe) from [<c0440214>] (driver_probe_device+0x60/0x16c)
+[<c0440214>] (driver_probe_device) from [<c04404c0>] (device_driver_attach+0x58/0x60)
+[<c04404c0>] (device_driver_attach) from [<c0440520>] (__driver_attach+0x58/0xcc)
+[<c0440520>] (__driver_attach) from [<c043e318>] (bus_for_each_dev+0x78/0xc0)
+[<c043e318>] (bus_for_each_dev) from [<c043f33c>] (bus_add_driver+0x15c/0x1e0)
+[<c043f33c>] (bus_add_driver) from [<c0440d2c>] (driver_register+0x74/0x108)
+[<c0440d2c>] (driver_register) from [<c0a1cb44>] (rv30x9_init+0x38/0x68)
+[<c0a1cb44>] (rv30x9_init) from [<c0102608>] (do_one_initcall+0x58/0x1c0)
+[<c0102608>] (do_one_initcall) from [<c0a00e88>] (kernel_init_freeable+0x124/0x1c0)
+[<c0a00e88>] (kernel_init_freeable) from [<c0774dc0>] (kernel_init+0x8/0x10c)
+[<c0774dc0>] (kernel_init) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
+Exception stack(0xcf429fb0 to 0xcf429ff8)
+9fa0:                                     00000000 00000000 00000000 00000000
+9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- sound/soc/xilinx/xlnx_formatter_pcm.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+With this patch, when using a gpio CS, the hardware CS0 is always
+used. Thanks to this, there is no more limitation for the number of
+gpio CS we can use.
 
-diff --git a/sound/soc/xilinx/xlnx_formatter_pcm.c b/sound/soc/xilinx/xlnx=
-_formatter_pcm.c
-index 48970efe7838..fb652e73abeb 100644
-=2D-- a/sound/soc/xilinx/xlnx_formatter_pcm.c
-+++ b/sound/soc/xilinx/xlnx_formatter_pcm.c
-@@ -564,7 +564,6 @@ static int xlnx_formatter_pcm_probe(struct platform_de=
-vice *pdev)
- 	int ret;
- 	u32 val;
- 	struct xlnx_pcm_drv_data *aud_drv_data;
--	struct resource *res;
- 	struct device *dev =3D &pdev->dev;
+Fixes: 754ce4f29937 ("[PATCH] SPI: atmel_spi driver")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+---
+ drivers/spi/spi-atmel.c | 44 ++++++++++++++++++++++++++++++-----------
+ 1 file changed, 33 insertions(+), 11 deletions(-)
 
- 	aud_drv_data =3D devm_kzalloc(dev, sizeof(*aud_drv_data), GFP_KERNEL);
-@@ -584,13 +583,7 @@ static int xlnx_formatter_pcm_probe(struct platform_d=
-evice *pdev)
- 		return ret;
+diff --git a/drivers/spi/spi-atmel.c b/drivers/spi/spi-atmel.c
+index acf318e7330c..bb94f5927819 100644
+--- a/drivers/spi/spi-atmel.c
++++ b/drivers/spi/spi-atmel.c
+@@ -353,22 +353,28 @@ static void cs_activate(struct atmel_spi *as, struct spi_device *spi)
+ {
+ 	struct atmel_spi_device *asd = spi->controller_state;
+ 	u32 mr;
++	u8 chip_select;
++
++	if (as->use_cs_gpios)
++		chip_select = 0;
++	else
++		chip_select = spi->chip_select;
+ 
+ 	if (atmel_spi_is_v2(as)) {
+-		spi_writel(as, CSR0 + 4 * spi->chip_select, asd->csr);
++		spi_writel(as, CSR0 + 4 * chip_select, asd->csr);
+ 		/* For the low SPI version, there is a issue that PDC transfer
+ 		 * on CS1,2,3 needs SPI_CSR0.BITS config as SPI_CSR1,2,3.BITS
+ 		 */
+ 		spi_writel(as, CSR0, asd->csr);
+ 		if (as->caps.has_wdrbt) {
+ 			spi_writel(as, MR,
+-					SPI_BF(PCS, ~(0x01 << spi->chip_select))
++					SPI_BF(PCS, ~(0x01 << chip_select))
+ 					| SPI_BIT(WDRBT)
+ 					| SPI_BIT(MODFDIS)
+ 					| SPI_BIT(MSTR));
+ 		} else {
+ 			spi_writel(as, MR,
+-					SPI_BF(PCS, ~(0x01 << spi->chip_select))
++					SPI_BF(PCS, ~(0x01 << chip_select))
+ 					| SPI_BIT(MODFDIS)
+ 					| SPI_BIT(MSTR));
+ 		}
+@@ -390,8 +396,8 @@ static void cs_activate(struct atmel_spi *as, struct spi_device *spi)
+ 		}
+ 
+ 		mr = spi_readl(as, MR);
+-		mr = SPI_BFINS(PCS, ~(1 << spi->chip_select), mr);
+-		if (as->use_cs_gpios && spi->chip_select != 0)
++		mr = SPI_BFINS(PCS, ~(1 << chip_select), mr);
++		if (as->use_cs_gpios && chip_select != 0)
+ 			gpiod_set_value(asd->npcs_pin, 1);
+ 		spi_writel(as, MR, mr);
  	}
-
--	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!res) {
--		dev_err(dev, "audio formatter node:addr to resource failed\n");
--		ret =3D -ENXIO;
--		goto clk_err;
--	}
--	aud_drv_data->mmio =3D devm_ioremap_resource(dev, res);
-+	aud_drv_data->mmio =3D devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(aud_drv_data->mmio)) {
- 		dev_err(dev, "audio formatter ioremap failed\n");
- 		ret =3D PTR_ERR(aud_drv_data->mmio);
-=2D-
+@@ -403,12 +409,18 @@ static void cs_deactivate(struct atmel_spi *as, struct spi_device *spi)
+ {
+ 	struct atmel_spi_device *asd = spi->controller_state;
+ 	u32 mr;
++	u8 chip_select;
++
++	if (as->use_cs_gpios)
++		chip_select = 0;
++	else
++		chip_select = spi->chip_select;
+ 
+ 	/* only deactivate *this* device; sometimes transfers to
+ 	 * another device may be active when this routine is called.
+ 	 */
+ 	mr = spi_readl(as, MR);
+-	if (~SPI_BFEXT(PCS, mr) & (1 << spi->chip_select)) {
++	if (~SPI_BFEXT(PCS, mr) & (1 << chip_select)) {
+ 		mr = SPI_BFINS(PCS, 0xf, mr);
+ 		spi_writel(as, MR, mr);
+ 	}
+@@ -417,7 +429,7 @@ static void cs_deactivate(struct atmel_spi *as, struct spi_device *spi)
+ 
+ 	if (!as->use_cs_gpios)
+ 		spi_writel(as, CR, SPI_BIT(LASTXFER));
+-	else if (atmel_spi_is_v2(as) || spi->chip_select != 0)
++	else if (atmel_spi_is_v2(as) || chip_select != 0)
+ 		gpiod_set_value(asd->npcs_pin, 0);
+ }
+ 
+@@ -844,6 +856,12 @@ static int atmel_spi_set_xfer_speed(struct atmel_spi *as,
+ {
+ 	u32			scbr, csr;
+ 	unsigned long		bus_hz;
++	u8 chip_select;
++
++	if (as->use_cs_gpios)
++		chip_select = 0;
++	else
++		chip_select = spi->chip_select;
+ 
+ 	/* v1 chips start out at half the peripheral bus speed. */
+ 	bus_hz = as->spi_clk;
+@@ -872,9 +890,9 @@ static int atmel_spi_set_xfer_speed(struct atmel_spi *as,
+ 			xfer->speed_hz, scbr, bus_hz);
+ 		return -EINVAL;
+ 	}
+-	csr = spi_readl(as, CSR0 + 4 * spi->chip_select);
++	csr = spi_readl(as, CSR0 + 4 * chip_select);
+ 	csr = SPI_BFINS(SCBR, scbr, csr);
+-	spi_writel(as, CSR0 + 4 * spi->chip_select, csr);
++	spi_writel(as, CSR0 + 4 * chip_select, csr);
+ 
+ 	return 0;
+ }
+@@ -1238,8 +1256,12 @@ static int atmel_spi_setup(struct spi_device *spi)
+ 		"setup: bpw %u mode 0x%x -> csr%d %08x\n",
+ 		bits, spi->mode, spi->chip_select, csr);
+ 
+-	if (!atmel_spi_is_v2(as))
+-		spi_writel(as, CSR0 + 4 * spi->chip_select, csr);
++	if (!atmel_spi_is_v2(as)) {
++		if (as->use_cs_gpios)
++			spi_writel(as, CSR0, csr);
++		else
++			spi_writel(as, CSR0 + 4 * spi->chip_select, csr);
++	}
+ 
+ 	return 0;
+ }
+-- 
 2.23.0
 
