@@ -2,128 +2,93 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 603F8C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 17:13:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E73DDC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 17:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 336F1214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 17:13:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568913238;
-	bh=OMKr/cmWPumpo9LCv+3v3aRUPCtQnLyLX5PRnZs/l1Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wMDOPS1YY0wnvHamQ2FJJsMa6/8R8VCU+QwE3Z0O5phQs+sWeFnxcSatJo+ghacwn
-	 nABeXT4RH+Ehrgg2dVyRdyqCggOudmW18kjhqy3kfy44Gd2VMfpEU+lGKwQSMXVhVE
-	 6AWUxpIS+zd3YyGKHWTpWHDu12WLM2MxCwiFCmpg=
+	by mail.kernel.org (Postfix) with ESMTP id B4D0A217D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 17:17:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="fxu3TNsX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391933AbfISRN5 (ORCPT
+        id S2389974AbfISRRl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 13:13:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43194 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389036AbfISRNz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 13:13:55 -0400
-Received: from localhost (unknown [106.200.214.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7047214AF;
-        Thu, 19 Sep 2019 17:13:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568913234;
-        bh=OMKr/cmWPumpo9LCv+3v3aRUPCtQnLyLX5PRnZs/l1Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WleYMfFQAUT2Ob78sZcIRDgLfTKZG/AUrTqsaITJ2OYeCI9pCEVjSqgorDdF9M/6h
-         7f96JC2rTxefq/1FFGt4R/+3wQ00Y2nTIibvhZqc/ePhF+i2n26lrLq827RIErvhVz
-         oDQjUCLI3gL0nJ+niA0Uxoq29+ykYZ5eHovdGRdQ=
-Date:   Thu, 19 Sep 2019 22:42:46 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Alexander Gordeev <a.gordeev.box@gmail.com>,
-        Greg KH <greg@kroah.com>
-Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        Michael Chen <micchen@altera.com>, dmaengine@vger.kernel.org
-Subject: Re: [PATCH RFC 0/2] staging: Support Avalon-MM DMA Interface for PCIe
-Message-ID: <20190919171246.GS4392@vkoul-mobl>
-References: <cover.1568817357.git.a.gordeev.box@gmail.com>
- <20190919113708.GA3153236@kroah.com>
+        Thu, 19 Sep 2019 13:17:41 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:36646 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388943AbfISRRl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 13:17:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1568913460; x=1600449460;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=7/ufa7vNDq03J7rJcwWzKdIosJz93JtbhFQOq7c9jEc=;
+  b=fxu3TNsXK9z6BXrhC5c3DYyzq+5mBk9HRhqIX1B/7CcZvwSWVrHR/JnQ
+   cKsG4RTe6bRlt+nv+Ns70+qmitrE8KGGaYNGzLQQXE2Sz9ERSkGS8Vzm8
+   c2OO0KlBo4YQCuTvRU/Q+rd0lq4qEsRuAo77bwV9ZgB7ZP8OOdAzoJDo7
+   0=;
+X-IronPort-AV: E=Sophos;i="5.64,524,1559520000"; 
+   d="scan'208";a="416145656"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 19 Sep 2019 17:17:37 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com (Postfix) with ESMTPS id 60E14A00AA;
+        Thu, 19 Sep 2019 17:17:35 +0000 (UTC)
+Received: from EX13D19EUB003.ant.amazon.com (10.43.166.69) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 19 Sep 2019 17:17:34 +0000
+Received: from ua9e4f3715fbc5f.ant.amazon.com (10.43.160.5) by
+ EX13D19EUB003.ant.amazon.com (10.43.166.69) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 19 Sep 2019 17:17:27 +0000
+From:   Hanna Hawa <hhhawa@amazon.com>
+To:     <bp@alien8.de>, <mchehab@kernel.org>, <james.morse@arm.com>,
+        <rrichter@marvell.com>
+CC:     <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dwmw@amazon.co.uk>, <benh@amazon.com>, <ronenk@amazon.com>,
+        <talel@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
+        <hhhawa@amazon.com>
+Subject: [PATCH v3 0/2] Add an API for edac device, for mulriple errors
+Date:   Thu, 19 Sep 2019 18:17:11 +0100
+Message-ID: <20190919171713.8060-1-hhhawa@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190919113708.GA3153236@kroah.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
+X-Originating-IP: [10.43.160.5]
+X-ClientProxiedBy: EX13D06UWC002.ant.amazon.com (10.43.162.205) To
+ EX13D19EUB003.ant.amazon.com (10.43.166.69)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-09-19, 13:37, Greg KH wrote:
-> On Thu, Sep 19, 2019 at 11:59:11AM +0200, Alexander Gordeev wrote:
-> > The Avalon-MM DMA Interface for PCIe is a design found in hard IPs for
-> > Intel Arria, Cyclone or Stratix FPGAs. It transfers data between on-chip
-> > memory and system memory. This RFC is an attempt to provide a generic API:
-> > 
-> > 	typedef void (*avalon_dma_xfer_callback)(void *dma_async_param);
-> >  
-> > 	int avalon_dma_submit_xfer(
-> > 		struct avalon_dma *avalon_dma,
-> > 		enum dma_data_direction direction,
-> > 		dma_addr_t dev_addr, dma_addr_t host_addr,
-> > 		unsigned int size,
-> > 		avalon_dma_xfer_callback callback,
-> > 		void *callback_param);
-> >  
-> > 	int avalon_dma_submit_xfer_sg(struct avalon_dma *avalon_dma,
-> > 		enum dma_data_direction direction,
-> > 		dma_addr_t dev_addr,
-> > 		struct sg_table *sg_table,
-> > 		avalon_dma_xfer_callback callback,
-> > 		void *callback_param);
-> >  
-> > 	int avalon_dma_issue_pending(struct avalon_dma *avalon_dma);
+Add an API for EDAC device to report for multiple errors, and move the
+old report function to use the new API.
 
-Why wrap the *existing* kernel APIs with you own!
+Changes from v2:
+----------------
+- Remove copy of edac_device_handle_*() functions, modify the existing
+functions.
 
-A quick glance at the code submitted tells me that it mimcks kernel
-APIs. But why you folks didnt use the kernel dmaengine APIs in not clear
-to me. So please convert it (should be relatively easy as you seem to
-have wrappers for dmaengine callbacks)
+Changes from v1:
+----------------
+- use 'unsigned int' instead of u16
+- update variable name to be count
+- remove WARN_ON and simply exit if count is zero
+- add inline functions in header file
 
-> > 
-> > Patch 1 introduces "avalon-dma" driver that provides the above-mentioned
-> > generic interface.
-> > 
-> > Patch 2 adds "avalon-drv" driver using "avalon-dma" to transfer user-
-> > provided data. This driver was used to debug and stress "avalon-dma"
-> > and could be used as a code base for other implementations. Strictly
-> > speaking, it does not need to be part of the kernel tree.
-> > A companion tool using "avalon-drv" to DMA files (not part of this
-> > patchset) is located at git@github.com:a-gordeev/avalon-drv-tool.git
+Hanna Hawa (2):
+  edac: Add an API for edac device to report for multiple errors
+  edac: move edac_device_handle_*() API functions to header
 
-Heh! We do have a dmatest driver which does this and much more! why not
-use that one instead of adding you own!
-
-> > The suggested interface is developed with the standard "dmaengine"
-> > in mind and could be reworked to suit it. I would appreciate, however
-> > gathering some feedback on the implemenation first - as the hardware-
-> > specific code would persist. It is also a call for testing - I only
-> > have access to a single Arria 10 device to try on.
-
-Why not use dmaengine in first place?
-
-> > This series is against v5.3 and could be found at
-> > git@github.com:a-gordeev/linux.git avalon-dma-engine
-> 
-> Why is this being submitted for drivers/staging/ and not the "real" part
-> of the kernel tree?
-> 
-> All staging code must have a TODO file listing what needs to be done in
-> order to get it out of staging, and be self-contained (i.e. no files
-> include/linux/)
-> 
-> Please fix that up when resending this series.
+ drivers/edac/edac_device.c | 50 +++++++++++++++++-------------
+ drivers/edac/edac_device.h | 63 ++++++++++++++++++++++++++++----------
+ 2 files changed, 76 insertions(+), 37 deletions(-)
 
 -- 
-~Vinod
+2.17.1
+
