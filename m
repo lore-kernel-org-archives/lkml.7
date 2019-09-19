@@ -2,131 +2,249 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A441C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32795C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF1FF21924
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:19:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="fzX/uU6y"
+	by mail.kernel.org (Postfix) with ESMTP id 01CD921924
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:22:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389691AbfISLTZ (ORCPT
+        id S2389750AbfISLWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 07:19:25 -0400
-Received: from mail-eopbgr80058.outbound.protection.outlook.com ([40.107.8.58]:61254
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388922AbfISLTZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 07:19:25 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Gz9NVHeoQSA5u6uNi6mhF27kIbLxMN90vkXsCZscYm3RebTmfdL+4QcbT34jr/2/phPvoD+AJNRgsEPnPIDGgo0YPrwVrzQ68jkqyLueZE9Q2x9yswAZ7No99LUvohnGfRo9+NWdQLIk/a8hq1I5+nAimK9jdimBXmIMsRXxescq13k896NOGMiYjenqaFk5SgbBEPW5eXilgM6JLaFRSiN7waHt7eDuDVQ4arXnjEYAd3K26o3NCQhyLZWCv7VO5Mi8jSKucSiXIA+F9hVC8669hf3sabiTDPoCoOL6wyUoYWfSChdsqXd9olg9sLU7Hc4fGXcU3C2PEl5cpQOePQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tJG9rC6q1jEMRBVxmnUazzHiFj21KU6Ar+gL/kjV86I=;
- b=KPz06XdrWyC2IkBdHDPed8BCRQFCHgPfCagjCiyFmFpaY9Sacp/Ggv1KUMsj/ROeIe7jJCN+c58dK121sGQDY4Y1yWOYjh++n737P8zWEYHefFBVNspdnAmit5S3wWBgm9gH6yXBL8A8EpYWS/WmPJ/QQCQzMNZX/adm2ZTdlRyENo9FY6kum8BT/KID7XcS/R9tVg/w0f61hNnZFT7cPhnQsjG3bExxldSmDMg5LLQiRMAa4TirUU/N5YWoPNVXNa52nLDFBLqv7NjnO5seZ2JN0znEoEooNg6fR0Tl46oo5VexNxYBpMh5K4Go23kYoSBweUQIzl3PzeJTjUAvAA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tJG9rC6q1jEMRBVxmnUazzHiFj21KU6Ar+gL/kjV86I=;
- b=fzX/uU6yl+eFFdUWNQvmKRG2f+91VTO3yvYkyblOus5CprW3GMtBii+Vtpcmc//+B5o7ABf3gXQn/gIjhB9i0E+aOqfPL+LJqzxr/2CggWlLCoe4tVRuZENt/Ndecborpo0KzBXUtST6nnM0iXxXGftgp55t6x41gpQvfFGRVKI=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB3871.eurprd04.prod.outlook.com (52.134.16.159) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.18; Thu, 19 Sep 2019 11:19:22 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::70b4:7829:2e8e:1196]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::70b4:7829:2e8e:1196%7]) with mapi id 15.20.2263.023; Thu, 19 Sep 2019
- 11:19:22 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-CC:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Abel Vesa <abel.vesa@nxp.com>
-Subject: Re: [PATCH 12/12] crypto: caam - change JR device ownership scheme
-Thread-Topic: [PATCH 12/12] crypto: caam - change JR device ownership scheme
-Thread-Index: AQHVYsl3Q5EXd/LaakqIGGHztQ1o4g==
-Date:   Thu, 19 Sep 2019 11:19:22 +0000
-Message-ID: <VI1PR0402MB3485F8B3E4F73EB62A70DBDF98890@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <20190904023515.7107-1-andrew.smirnov@gmail.com>
- <20190904023515.7107-13-andrew.smirnov@gmail.com>
- <VI1PR04MB7023A7EC91599A537CB6A487EEB30@VI1PR04MB7023.eurprd04.prod.outlook.com>
- <CAHQ1cqEkdUJGxUnRQbJSG9L32yC0HVmddzi4GyOkVfq2uvJOMQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d9c1f23d-4360-47e0-2ffc-08d73cf338e1
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3871;
-x-ms-traffictypediagnostic: VI1PR0402MB3871:|VI1PR0402MB3871:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB38711AEAA03CF35663AA900398890@VI1PR0402MB3871.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 016572D96D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(366004)(376002)(136003)(396003)(199004)(189003)(53546011)(52536014)(305945005)(6506007)(6246003)(26005)(186003)(102836004)(4744005)(66476007)(66446008)(71200400001)(446003)(7696005)(5660300002)(91956017)(76116006)(86362001)(14454004)(6116002)(99286004)(256004)(66556008)(64756008)(71190400001)(9686003)(6436002)(476003)(81166006)(54906003)(33656002)(110136005)(316002)(55016002)(25786009)(7736002)(74316002)(8936002)(66066001)(478600001)(8676002)(66946007)(76176011)(81156014)(2906002)(44832011)(486006)(229853002)(4326008)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3871;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 9UvbIGEBe8LtQyFxwFhmf4ylrIH3XKEoaHbHO0OuuaAcbqMkNuyvFmeN/VIB70Ed/PsNBymJN6OM/qB/gqbyIiz7vg3hVPrcU6HC/Rf72/2YiuEtgpifO11/qL3KHiMHJNwyjZv+8dzqHgf2Y7gD522NY8d5h8nLprykVgjZtW43X45UGlkuxKvk3zo5hWboo/mr8bVQEr1Lpi3NLEmPUtabW0+RqLtdieyOd1k6aqUinUuYbf2bKQbbw4cKNL9WRrFTVZscnWeQSoCyxcxJ8IhiFcqCzfbdm0tIsjQDvp1bAd/Bc2FOUGHWfPtm6ETV+XbXcaRROX9JYxm5V8wgFEUx3HzD4fpzrDNayztXIYI9VrbG64yZ7RAuoRBuz15+sigp9whM9KAmUvKZZ/y6q9V2XeDGGken5mpupErW3EQ=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 19 Sep 2019 07:22:22 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:56387 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2389453AbfISLWV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 07:22:21 -0400
+X-UUID: 7b0333bfc1d0494c9e342a1840d295ff-20190919
+X-UUID: 7b0333bfc1d0494c9e342a1840d295ff-20190919
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
+        (envelope-from <jing-ting.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 746610841; Thu, 19 Sep 2019 19:22:16 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 19 Sep 2019 19:22:14 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 19 Sep 2019 19:22:13 +0800
+Message-ID: <1568892135.4892.10.camel@mtkswgap22>
+Subject: Re: [PATCH 1/1] sched/rt: avoid contend with CFS task
+From:   Jing-Ting Wu <jing-ting.wu@mediatek.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+CC:     Qais Yousef <qais.yousef@arm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <wsd_upstream@mediatek.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Thu, 19 Sep 2019 19:22:15 +0800
+In-Reply-To: <CAKfTPtC3txstND=6YkWBJ16i06cQ7xueUpD5j-j-UfuSf0-z-g@mail.gmail.com>
+References: <1567048502-6064-1-git-send-email-jing-ting.wu@mediatek.com>
+         <d5100b2d-46c4-5811-8274-8b06710d2594@arm.com>
+         <20190830145501.zadfv2ffuu7j46ft@e107158-lin.cambridge.arm.com>
+         <1567689999.2389.5.camel@mtkswgap22>
+         <CAKfTPtC3txstND=6YkWBJ16i06cQ7xueUpD5j-j-UfuSf0-z-g@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d9c1f23d-4360-47e0-2ffc-08d73cf338e1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Sep 2019 11:19:22.4126
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gu6T9DETEFeL7rgaohBFDfgUp0vaGZB2zjkc5y1rQZDhxWgHnb/Z6iIi2gtG4Q4getmkvGrwjDjtH4HOQLOs7Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3871
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/18/2019 6:13 AM, Andrey Smirnov wrote:=0A=
->> I think you need to do some form of slow wait loop in jrpriv until=0A=
->> jrpriv->tfm_count reaches zero.=0A=
-> Hmm, what do we do if it never does? Why do you think it would be=0A=
-> better than cancelling all outstanding jobs and resetting the HW?=0A=
-> =0A=
-Herbert,=0A=
-=0A=
-What should a driver do when:=0A=
--user tries to unbind it AND=0A=
--there are tfms referencing algorithms registered by this driver=0A=
-=0A=
-1. If driver tries to unregister the algorithms during its .remove()=0A=
-callback, then this BUG_ON is hit:=0A=
-=0A=
-int crypto_unregister_alg(struct crypto_alg *alg)=0A=
-{=0A=
-[...]=0A=
-        BUG_ON(refcount_read(&alg->cra_refcnt) !=3D 1);=0A=
-=0A=
-2. If driver exits without unregistering the algorithms,=0A=
-next time one of the tfms referencing those algorithms will be used=0A=
-bad things will happen.=0A=
-=0A=
-3. There is no mechanism in crypto core for notifying users=0A=
-to stop using a tfm.=0A=
-=0A=
-Thanks,=0A=
-Horia=0A=
+On Thu, 2019-09-05 at 16:01 +0200, Vincent Guittot wrote:
+> Hi Jing-Ting,
+> 
+> On Thu, 5 Sep 2019 at 15:26, Jing-Ting Wu <jing-ting.wu@mediatek.com> wrote:
+> >
+> > On Fri, 2019-08-30 at 15:55 +0100, Qais Yousef wrote:
+> > > On 08/29/19 11:38, Valentin Schneider wrote:
+> > > > On 29/08/2019 04:15, Jing-Ting Wu wrote:
+> > > > > At original linux design, RT & CFS scheduler are independent.
+> > > > > Current RT task placement policy will select the first cpu in
+> > > > > lowest_mask, even if the first CPU is running a CFS task.
+> > > > > This may put RT task to a running cpu and let CFS task runnable.
+> > > > >
+> > > > > So we select idle cpu in lowest_mask first to avoid preempting
+> > > > > CFS task.
+> > > > >
+> > > >
+> > > > Regarding the RT & CFS thing, that's working as intended. RT is a whole
+> > > > class above CFS, it shouldn't have to worry about CFS.
+> > > >
+> > > > On the other side of things, CFS does worry about RT. We have the concept
+> > > > of RT-pressure in the CFS scheduler, where RT tasks will reduce a CPU's
+> > > > capacity (see fair.c::scale_rt_capacity()).
+> > > >
+> > > > CPU capacity is looked at on CFS wakeup (see wake_cap() and
+> > > > find_idlest_cpu()), and the periodic load balancer tries to spread load
+> > > > over capacity, so it'll tend to put less things on CPUs that are also
+> > > > running RT tasks.
+> > > >
+> > > > If RT were to start avoiding rqs with CFS tasks, we'd end up with a nasty
+> > > > situation were both are avoiding each other. It's even more striking when
+> > > > you see that RT pressure is done with a rq-wide RT util_avg, which
+> > > > *doesn't* get migrated when a RT task migrates. So if you decide to move
+> > > > a RT task to an idle CPU "B" because CPU "A" had runnable CFS tasks, the
+> > > > CFS scheduler will keep seeing CPU "B" as not significantly RT-pressured
+> > > > while that util_avg signal ramps up, whereas it would correctly see CPU
+> > > > "A" as RT-pressured if the RT task previously ran there.
+> > > >
+> > > > So overall I think this is the wrong approach.
+> > >
+> > > I like the idea, but yeah tend to agree the current approach might not be
+> > > enough.
+> > >
+> > > I think the major problem here is that on generic systems where CFS is a first
+> > > class citizen, RT tasks can be hostile to them - not always necessarily for a
+> > > good reason.
+> > >
+> > > To further complicate the matter, even among CFS tasks we can't tell which are
+> > > more important than the others - though hopefully latency-nice proposal will
+> > > make the situation better.
+> > >
+> > > So I agree we have a problem here, but I think this patch is just a temporary
+> > > band aid and we need to do better. Though I have no concrete suggestion yet on
+> > > how to do that.
+> > >
+> > > Another thing I couldn't quantify yet how common and how severe this problem is
+> > > yet. Jing-Ting, if you can share the details of your use case that'd be great.
+> > >
+> > > Cheers
+> > >
+> > > --
+> > > Qais Yousef
+> >
+> >
+> > I agree that the nasty situation will happen.The current approach and this patch might not be enough.
+> 
+> RT task should not harm its cache hotness and responsiveness for the
+> benefit of a CFS task
+> 
+
+Yes, it’s a good point to both consider cache hotness. We have revised
+the implementation to select a better idle CPU in the same sched_domain
+of prev_cpu (with the same cache hotness) when the RT task wakeup.
+
+I modify the code of find_lowest_rq as following:
+@@ -1648,6 +1629,9 @@ static int find_lowest_rq(struct task_struct
+*task)
+        struct cpumask *lowest_mask =
+this_cpu_cpumask_var_ptr(local_cpu_mask);
+        int this_cpu = smp_processor_id();
+        int cpu      = task_cpu(task);
++       int i;
++       struct rq *prev_rq = cpu_rq(cpu);
++       struct sched_domain *prev_sd;
+
+        /* Make sure the mask is initialized first */
+        if (unlikely(!lowest_mask))
+@@ -1659,6 +1643,24 @@ static int find_lowest_rq(struct task_struct
+*task)
+        if (!cpupri_find(&task_rq(task)->rd->cpupri, task, lowest_mask))
+                return -1; /* No targets found */
+
++       /* Choose previous cpu if it is idle and it fits lowest_mask */
++       if (cpumask_test_cpu(cpu, lowest_mask) && idle_cpu(cpu))
++               return cpu;
++
++       rcu_read_lock();
++       prev_sd = rcu_dereference(prev_rq->sd);
++
++       if (prev_sd) {
++               /* Choose idle_cpu among lowest_mask and it is closest
+to our hot cache data */
++               for_each_cpu(i, lowest_mask) {
++                       if (idle_cpu(i) && cpumask_test_cpu(i,
+sched_domain_span(prev_sd))) {
++                               rcu_read_unlock();
++                               return i;
++                       }
++               }
++       }
++       rcu_read_unlock();
++
+        /*
+         * At this point we have built a mask of CPUs representing the
+         * lowest priority tasks in the system.  Now we want to elect
+
+
+
+> > But for requirement of performance, I think it is better to differentiate between idle CPU and CPU has CFS task.
+> >
+> > For example, we use rt-app to evaluate runnable time on non-patched environment.
+> > There are (NR_CPUS-1) heavy CFS tasks and 1 RT Task. When a CFS task is running, the RT task wakes up and choose the same CPU.
+> > The CFS task will be preempted and keep runnable until it is migrated to another cpu by load balance.
+> > But load balance is not triggered immediately, it will be triggered until timer tick hits with some condition satisfied(ex. rq->next_balance).
+> 
+> Yes you will have to wait for the next tick that will trigger an idle
+> load balance because you have an idle cpu and 2 runnable tack (1 RT +
+> 1CFS) on the same CPU. But you should not wait for more than  1 tick
+> 
+> The current load_balance doesn't handle correctly the situation of 1
+> CFS and 1 RT task on same CPU while 1 CPU is idle. There is a rework
+> of the load_balance that is under review on the mailing list that
+> fixes this problem and your CFS task should migrate to the idle CPU
+> faster than now
+> 
+
+Period load balance should be triggered when current jiffies is behind
+rq->next_balance, but rq->next_balance is not often exactly the same
+with next tick. 
+If cpu_busy, interval = sd->balance_interval * sd->busy_factor, and
+interval is clamped by 1 to max_load_balance_interval.
+By experiment, in a system with HZ=250, available_cpus = 8, the
+max_load_balance_interval = HZ * available_cpus / 10 = 250 * 8 / 10 =
+200 jiffies,
+It would let rq->next_balance = sd->last_balance + interval, the maximum
+interval = 200 jiffies, result in more than 1 sched-tick to migrate a
+CFS task.
+
+
+
+> > CFS tasks may be runnable for a long time. In this test case, it increase 332.091 ms runnable time for CFS task.
+> >
+> > The detailed log is shown as following, CFS task(thread1-6580) is preempted by RT task(thread0-6674) about 332ms:
+> 
+> 332ms is quite long and is probably not an idle load blanace but a
+> busy load balance
+> 
+> > thread1-6580  [003] dnh2    94.452898: sched_wakeup: comm=thread0 pid=6674 prio=89 target_cpu=003
+> > thread1-6580  [003] d..2    94.452916: sched_switch: prev_comm=thread1 prev_pid=6580 prev_prio=120 prev_state=R ==> next_comm=thread0 next_pid=6674 next_prio=89
+> > .... 332.091ms
+> > krtatm-1930  [001] d..2    94.785007: sched_migrate_task: comm=thread1 pid=6580 prio=120 orig_cpu=3 dest_cpu=1
+> > krtatm-1930  [001] d..2    94.785020: sched_switch: prev_comm=krtatm prev_pid=1930 prev_prio=100 prev_state=S ==> next_comm=thread1 next_pid=6580 next_prio=120
+> 
+> your CFS task has not moved on the idle CPU but has replaced another task
+> 
+
+I think it is minor and reasonable, because CPU1 has triggered idle
+balance (when krtatm task is the last task leaving CPU1) to pull the
+thread1-6580.
+
+
+
+Best regards,
+Jing-Ting Wu
+
+> Regards,
+> Vincent
+> >
+> > So I think choose idle CPU at RT wake up flow could reduce the CFS runnable time.
+> >
+> >
+> > Best regards,
+> > Jing-Ting Wu
+> >
+> >
+
+
