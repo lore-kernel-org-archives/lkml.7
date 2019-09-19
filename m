@@ -2,61 +2,61 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C833AC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5EEFC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8752E21907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:39:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 888FA21907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:40:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qN4uW/RJ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SwS/QbAf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404722AbfISUj4 (ORCPT
+        id S2392724AbfISUja (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 16:39:56 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:47456 "EHLO
+        Thu, 19 Sep 2019 16:39:30 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:47438 "EHLO
         lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392728AbfISUjb (ORCPT
+        with ESMTP id S2390164AbfISUjX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 16:39:31 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8JKdUdI117326;
-        Thu, 19 Sep 2019 15:39:30 -0500
+        Thu, 19 Sep 2019 16:39:23 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8JKdLBc117311;
+        Thu, 19 Sep 2019 15:39:21 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568925570;
-        bh=+BNoN9sEGMJJWSxrdgtrqd+Qj5+VLPEu6D0bzeKymSs=;
+        s=ti-com-17Q1; t=1568925561;
+        bh=9FamtOVE0t1E3ct7dOeSf1tjCva2GwFUhC+rviJoN10=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=qN4uW/RJFKVzxBdfnBJhDgGdHx4H2TAvxEX7GEjsDZ6Tb0isfLVlocFOw3dAhieWL
-         Evj4vlbdEkVR2cOUD0FTscpwieqgIoKkxQcznNdmRENYq6fiZV1LZptjnbqqRFL5oE
-         x7cncLPT4zqbWO+tpjQbTn1GCXGcofpvGbzGyZuM=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8JKdUHC001870
+        b=SwS/QbAf8xThKhR+i42c6Lq7gU29I6OlbZQ1vjQQtrH/361a9isCwt7I7gjIFhLLF
+         nA7bDReC5oYS231rDf6v1dq5djiOApgPjo/UBD2/CCtv5WhRIXvhc+fPo+v7NSDKZN
+         AOl+7m/J4//8WddINKBDVcoFr3/d2u7WkvnvpUNE=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8JKdLRv002131
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 19 Sep 2019 15:39:30 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 19 Sep 2019 15:39:21 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 19
- Sep 2019 15:39:26 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ Sep 2019 15:39:17 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 19 Sep 2019 15:39:26 -0500
+ Frontend Transport; Thu, 19 Sep 2019 15:39:17 -0500
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8JKdKIc014276;
-        Thu, 19 Sep 2019 15:39:29 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8JKdKIU014276;
+        Thu, 19 Sep 2019 15:39:21 -0500
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>
 CC:     Prabhakar Lad <prabhakar.csengg@gmail.com>,
         <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v2 09/13] media: am437x-vpfe: fix function trace debug log
-Date:   Thu, 19 Sep 2019 15:41:21 -0500
-Message-ID: <20190919204125.15254-10-bparrot@ti.com>
+        <linux-kernel@vger.kernel.org>, Dave Gerlach <d-gerlach@ti.com>,
+        Jyri Sarha <jsarha@ti.com>, Benoit Parrot <bparrot@ti.com>
+Subject: [Patch v2 01/13] media: am437x-vpfe: Fix suspend path to always handle pinctrl config
+Date:   Thu, 19 Sep 2019 15:41:13 -0500
+Message-ID: <20190919204125.15254-2-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190919204125.15254-1-bparrot@ti.com>
 References: <20190919204125.15254-1-bparrot@ti.com>
@@ -68,292 +68,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-checkpatch.pl nows reports several:
-WARNING: Prefer using '"%s...", __func__' to using '<function name>',
-this function's name, in a string.
+From: Dave Gerlach <d-gerlach@ti.com>
 
-So fix these for the whole driver.
-At the same time remove the function entry trace log as those can be
-enabled using ftrace instead.
+Currently if vpfe is not active then it returns immediately in the
+suspend and resume handlers. Change this so that it always performs the
+pinctrl config so that we can still get proper sleep state configuration
+on the pins even if we do not need to worry about fully saving and
+restoring context.
 
+Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
- drivers/media/platform/am437x/am437x-vpfe.c | 72 ++++-----------------
- 1 file changed, 13 insertions(+), 59 deletions(-)
+ drivers/media/platform/am437x/am437x-vpfe.c | 46 ++++++++++-----------
+ 1 file changed, 22 insertions(+), 24 deletions(-)
 
 diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
-index 569618a52082..605a6bb7e6c2 100644
+index 2b42ba1f5949..a3d22f90e64c 100644
 --- a/drivers/media/platform/am437x/am437x-vpfe.c
 +++ b/drivers/media/platform/am437x/am437x-vpfe.c
-@@ -443,8 +443,8 @@ static int vpfe_ccdc_set_params(struct vpfe_ccdc *ccdc, void __user *params)
- 	x = copy_from_user(&raw_params, params, sizeof(raw_params));
- 	if (x) {
- 		vpfe_dbg(1, vpfe,
--			"vpfe_ccdc_set_params: error in copying ccdc params, %d\n",
--			x);
-+			 "%s: error in copying ccdc params, %d\n",
-+			 __func__, x);
- 		return -EFAULT;
- 	}
+@@ -2653,22 +2653,21 @@ static int vpfe_suspend(struct device *dev)
+ 	struct vpfe_device *vpfe = dev_get_drvdata(dev);
+ 	struct vpfe_ccdc *ccdc = &vpfe->ccdc;
  
-@@ -462,11 +462,9 @@ static int vpfe_ccdc_set_params(struct vpfe_ccdc *ccdc, void __user *params)
-  */
- static void vpfe_ccdc_config_ycbcr(struct vpfe_ccdc *ccdc)
- {
--	struct vpfe_device *vpfe = container_of(ccdc, struct vpfe_device, ccdc);
- 	struct ccdc_params_ycbcr *params = &ccdc->ccdc_cfg.ycbcr;
- 	u32 syn_mode;
- 
--	vpfe_dbg(3, vpfe, "vpfe_ccdc_config_ycbcr:\n");
- 	/*
- 	 * first restore the CCDC registers to default values
- 	 * This is important since we assume default values to be set in
-@@ -598,8 +596,6 @@ static void vpfe_ccdc_config_raw(struct vpfe_ccdc *ccdc)
- 	unsigned int syn_mode;
- 	unsigned int val;
- 
--	vpfe_dbg(3, vpfe, "vpfe_ccdc_config_raw:\n");
+-	/* if streaming has not started we don't care */
+-	if (!vb2_start_streaming_called(&vpfe->buffer_queue))
+-		return 0;
 -
- 	/* Reset CCDC */
- 	vpfe_ccdc_restore_defaults(ccdc);
+-	pm_runtime_get_sync(dev);
+-	vpfe_config_enable(ccdc, 1);
++	/* only do full suspend if streaming has started */
++	if (vb2_start_streaming_called(&vpfe->buffer_queue)) {
++		pm_runtime_get_sync(dev);
++		vpfe_config_enable(ccdc, 1);
  
-@@ -700,8 +696,8 @@ static int vpfe_ccdc_set_pixel_format(struct vpfe_ccdc *ccdc, u32 pixfmt)
- {
- 	struct vpfe_device *vpfe = container_of(ccdc, struct vpfe_device, ccdc);
+-	/* Save VPFE context */
+-	vpfe_save_context(ccdc);
++		/* Save VPFE context */
++		vpfe_save_context(ccdc);
  
--	vpfe_dbg(1, vpfe, "vpfe_ccdc_set_pixel_format: if_type: %d, pixfmt:%s\n",
--		 ccdc->ccdc_cfg.if_type, print_fourcc(pixfmt));
-+	vpfe_dbg(1, vpfe, "%s: if_type: %d, pixfmt:%s\n",
-+		 __func__, ccdc->ccdc_cfg.if_type, print_fourcc(pixfmt));
+-	/* Disable CCDC */
+-	vpfe_pcr_enable(ccdc, 0);
+-	vpfe_config_enable(ccdc, 0);
++		/* Disable CCDC */
++		vpfe_pcr_enable(ccdc, 0);
++		vpfe_config_enable(ccdc, 0);
  
- 	if (ccdc->ccdc_cfg.if_type == VPFE_RAW_BAYER) {
- 		ccdc->ccdc_cfg.bayer.pix_fmt = CCDC_PIXFMT_RAW;
-@@ -987,8 +983,6 @@ static int vpfe_config_ccdc_image_format(struct vpfe_device *vpfe)
- 	enum ccdc_frmfmt frm_fmt = CCDC_FRMFMT_INTERLACED;
- 	int ret = 0;
+-	/* Disable both master and slave clock */
+-	pm_runtime_put_sync(dev);
++		/* Disable both master and slave clock */
++		pm_runtime_put_sync(dev);
++	}
  
--	vpfe_dbg(2, vpfe, "vpfe_config_ccdc_image_format\n");
+ 	/* Select sleep pin state */
+ 	pinctrl_pm_select_sleep_state(dev);
+@@ -2710,19 +2709,18 @@ static int vpfe_resume(struct device *dev)
+ 	struct vpfe_device *vpfe = dev_get_drvdata(dev);
+ 	struct vpfe_ccdc *ccdc = &vpfe->ccdc;
+ 
+-	/* if streaming has not started we don't care */
+-	if (!vb2_start_streaming_called(&vpfe->buffer_queue))
+-		return 0;
 -
- 	vpfe_dbg(1, vpfe, "pixelformat: %s\n",
- 		print_fourcc(vpfe->fmt.fmt.pix.pixelformat));
+-	/* Enable both master and slave clock */
+-	pm_runtime_get_sync(dev);
+-	vpfe_config_enable(ccdc, 1);
++	/* only do full resume if streaming has started */
++	if (vb2_start_streaming_called(&vpfe->buffer_queue)) {
++		/* Enable both master and slave clock */
++		pm_runtime_get_sync(dev);
++		vpfe_config_enable(ccdc, 1);
  
-@@ -1354,8 +1348,6 @@ static int vpfe_querycap(struct file *file, void  *priv,
- {
- 	struct vpfe_device *vpfe = video_drvdata(file);
+-	/* Restore VPFE context */
+-	vpfe_restore_context(ccdc);
++		/* Restore VPFE context */
++		vpfe_restore_context(ccdc);
  
--	vpfe_dbg(2, vpfe, "vpfe_querycap\n");
--
- 	strscpy(cap->driver, VPFE_MODULE_NAME, sizeof(cap->driver));
- 	strscpy(cap->card, "TI AM437x VPFE", sizeof(cap->card));
- 	snprintf(cap->bus_info, sizeof(cap->bus_info),
-@@ -1400,7 +1392,7 @@ static int __vpfe_get_format(struct vpfe_device *vpfe,
- 	format->type = vpfe->fmt.type;
+-	vpfe_config_enable(ccdc, 0);
+-	pm_runtime_put_sync(dev);
++		vpfe_config_enable(ccdc, 0);
++		pm_runtime_put_sync(dev);
++	}
  
- 	vpfe_dbg(1, vpfe,
--		 "%s size %dx%d (%s) bytesperline = %d, size = %d, bpp = %d\n",
-+		 "%s: size %dx%d (%s) bytesperline = %d, size = %d, bpp = %d\n",
- 		 __func__, format->fmt.pix.width, format->fmt.pix.height,
- 		 print_fourcc(format->fmt.pix.pixelformat),
- 		 format->fmt.pix.bytesperline, format->fmt.pix.sizeimage, *bpp);
-@@ -1416,8 +1408,6 @@ static int __vpfe_set_format(struct vpfe_device *vpfe,
- 	struct v4l2_subdev_format fmt;
- 	int ret;
- 
--	vpfe_dbg(2, vpfe, "__vpfe_set_format\n");
--
- 	sdinfo = vpfe->current_subdev;
- 	if (!sdinfo->sd)
- 		return -EINVAL;
-@@ -1450,8 +1440,6 @@ static int vpfe_g_fmt(struct file *file, void *priv,
- {
- 	struct vpfe_device *vpfe = video_drvdata(file);
- 
--	vpfe_dbg(2, vpfe, "vpfe_g_fmt\n");
--
- 	*fmt = vpfe->fmt;
- 
- 	return 0;
-@@ -1464,9 +1452,6 @@ static int vpfe_enum_fmt(struct file *file, void  *priv,
- 	struct vpfe_subdev_info *sdinfo;
- 	struct vpfe_fmt *fmt;
- 
--	vpfe_dbg(2, vpfe, "vpfe_enum_format index:%d\n",
--		f->index);
--
- 	sdinfo = vpfe->current_subdev;
- 	if (!sdinfo->sd)
- 		return -EINVAL;
-@@ -1478,8 +1463,8 @@ static int vpfe_enum_fmt(struct file *file, void  *priv,
- 
- 	f->pixelformat = fmt->fourcc;
- 
--	vpfe_dbg(1, vpfe, "vpfe_enum_format: mbus index: %d code: %x pixelformat: %s\n",
--		 f->index, fmt->code, print_fourcc(fmt->fourcc));
-+	vpfe_dbg(1, vpfe, "%s: mbus index: %d code: %x pixelformat: %s\n",
-+		 __func__, f->index, fmt->code, print_fourcc(fmt->fourcc));
- 
- 	return 0;
- }
-@@ -1490,8 +1475,6 @@ static int vpfe_try_fmt(struct file *file, void *priv,
- 	struct vpfe_device *vpfe = video_drvdata(file);
- 	unsigned int bpp;
- 
--	vpfe_dbg(2, vpfe, "vpfe_try_fmt\n");
--
- 	return __vpfe_get_format(vpfe, fmt, &bpp);
- }
- 
-@@ -1503,8 +1486,6 @@ static int vpfe_s_fmt(struct file *file, void *priv,
- 	unsigned int bpp;
- 	int ret;
- 
--	vpfe_dbg(2, vpfe, "vpfe_s_fmt\n");
--
- 	/* If streaming is started, return error */
- 	if (vb2_is_busy(&vpfe->buffer_queue)) {
- 		vpfe_err(vpfe, "%s device busy\n", __func__);
-@@ -1550,8 +1531,6 @@ static int vpfe_enum_size(struct file *file, void  *priv,
- 	struct vpfe_fmt *fmt;
- 	int ret;
- 
--	vpfe_dbg(2, vpfe, "vpfe_enum_size\n");
--
- 	/* check for valid format */
- 	fmt = find_format_by_pix(vpfe, fsize->pixel_format);
- 	if (!fmt) {
-@@ -1584,17 +1563,17 @@ static int vpfe_enum_size(struct file *file, void  *priv,
- 	if (ret)
- 		return -EINVAL;
- 
--	vpfe_dbg(1, vpfe, "vpfe_enum_size: index: %d code: %x W:[%d,%d] H:[%d,%d]\n",
--		fse.index, fse.code, fse.min_width, fse.max_width,
--		fse.min_height, fse.max_height);
-+	vpfe_dbg(1, vpfe, "%s: index: %d code: %x W:[%d,%d] H:[%d,%d]\n",
-+		 __func__, fse.index, fse.code, fse.min_width, fse.max_width,
-+		 fse.min_height, fse.max_height);
- 
- 	fsize->type = V4L2_FRMSIZE_TYPE_DISCRETE;
- 	fsize->discrete.width = fse.max_width;
- 	fsize->discrete.height = fse.max_height;
- 
--	vpfe_dbg(1, vpfe, "vpfe_enum_size: index: %d pixformat: %s size: %dx%d\n",
--		fsize->index, print_fourcc(fsize->pixel_format),
--		fsize->discrete.width, fsize->discrete.height);
-+	vpfe_dbg(1, vpfe, "%s: index: %d pixformat: %4.4s size: %dx%d\n",
-+		 __func__, fsize->index, (char *)&fsize->pixel_format,
-+		 fsize->discrete.width, fsize->discrete.height);
- 
- 	return 0;
- }
-@@ -1659,8 +1638,6 @@ static int vpfe_enum_input(struct file *file, void *priv,
- 	struct vpfe_subdev_info *sdinfo;
- 	int subdev, index;
- 
--	vpfe_dbg(2, vpfe, "vpfe_enum_input\n");
--
- 	if (vpfe_get_subdev_input_index(vpfe, &subdev, &index,
- 					inp->index) < 0) {
- 		vpfe_dbg(1, vpfe,
-@@ -1677,8 +1654,6 @@ static int vpfe_g_input(struct file *file, void *priv, unsigned int *index)
- {
- 	struct vpfe_device *vpfe = video_drvdata(file);
- 
--	vpfe_dbg(2, vpfe, "vpfe_g_input\n");
--
- 	return vpfe_get_app_input_index(vpfe, index);
- }
- 
-@@ -1691,8 +1666,6 @@ static int vpfe_set_input(struct vpfe_device *vpfe, unsigned int index)
- 	u32 input, output;
- 	int ret;
- 
--	vpfe_dbg(2, vpfe, "vpfe_set_input: index: %d\n", index);
--
- 	/* If streaming is started, return error */
- 	if (vb2_is_busy(&vpfe->buffer_queue)) {
- 		vpfe_err(vpfe, "%s device busy\n", __func__);
-@@ -1748,9 +1721,6 @@ static int vpfe_s_input(struct file *file, void *priv, unsigned int index)
- {
- 	struct vpfe_device *vpfe = video_drvdata(file);
- 
--	vpfe_dbg(2, vpfe,
--		"vpfe_s_input: index: %d\n", index);
--
- 	return vpfe_set_input(vpfe, index);
- }
- 
-@@ -1759,8 +1729,6 @@ static int vpfe_querystd(struct file *file, void *priv, v4l2_std_id *std_id)
- 	struct vpfe_device *vpfe = video_drvdata(file);
- 	struct vpfe_subdev_info *sdinfo;
- 
--	vpfe_dbg(2, vpfe, "vpfe_querystd\n");
--
- 	sdinfo = vpfe->current_subdev;
- 	if (!(sdinfo->inputs[0].capabilities & V4L2_IN_CAP_STD))
- 		return -ENODATA;
-@@ -1776,8 +1744,6 @@ static int vpfe_s_std(struct file *file, void *priv, v4l2_std_id std_id)
- 	struct vpfe_subdev_info *sdinfo;
- 	int ret;
- 
--	vpfe_dbg(2, vpfe, "vpfe_s_std\n");
--
- 	sdinfo = vpfe->current_subdev;
- 	if (!(sdinfo->inputs[0].capabilities & V4L2_IN_CAP_STD))
- 		return -ENODATA;
-@@ -1809,8 +1775,6 @@ static int vpfe_g_std(struct file *file, void *priv, v4l2_std_id *std_id)
- 	struct vpfe_device *vpfe = video_drvdata(file);
- 	struct vpfe_subdev_info *sdinfo;
- 
--	vpfe_dbg(2, vpfe, "vpfe_g_std\n");
--
- 	sdinfo = vpfe->current_subdev;
- 	if (sdinfo->inputs[0].capabilities != V4L2_IN_CAP_STD)
- 		return -ENODATA;
-@@ -1828,8 +1792,6 @@ static void vpfe_calculate_offsets(struct vpfe_device *vpfe)
- {
- 	struct v4l2_rect image_win;
- 
--	vpfe_dbg(2, vpfe, "vpfe_calculate_offsets\n");
--
- 	vpfe_ccdc_get_image_window(&vpfe->ccdc, &image_win);
- 	vpfe->field_off = image_win.height * image_win.width;
- }
-@@ -2030,8 +1992,6 @@ static int vpfe_g_pixelaspect(struct file *file, void *priv,
- {
- 	struct vpfe_device *vpfe = video_drvdata(file);
- 
--	vpfe_dbg(2, vpfe, "vpfe_g_pixelaspect\n");
--
- 	if (type != V4L2_BUF_TYPE_VIDEO_CAPTURE ||
- 	    vpfe->std_index >= ARRAY_SIZE(vpfe_standards))
- 		return -EINVAL;
-@@ -2134,8 +2094,6 @@ static long vpfe_ioctl_default(struct file *file, void *priv,
- 	struct vpfe_device *vpfe = video_drvdata(file);
- 	int ret;
- 
--	vpfe_dbg(2, vpfe, "vpfe_ioctl_default\n");
--
- 	if (!valid_prio) {
- 		vpfe_err(vpfe, "%s device busy\n", __func__);
- 		return -EBUSY;
-@@ -2246,8 +2204,6 @@ vpfe_async_bound(struct v4l2_async_notifier *notifier,
- 	bool found = false;
- 	int i, j, k;
- 
--	vpfe_dbg(1, vpfe, "vpfe_async_bound\n");
--
- 	for (i = 0; i < ARRAY_SIZE(vpfe->cfg->asd); i++) {
- 		if (vpfe->cfg->asd[i]->match.fwnode ==
- 		    asd[i].match.fwnode) {
-@@ -2579,8 +2535,6 @@ static int vpfe_remove(struct platform_device *pdev)
- {
- 	struct vpfe_device *vpfe = platform_get_drvdata(pdev);
- 
--	vpfe_dbg(2, vpfe, "vpfe_remove\n");
--
- 	pm_runtime_disable(&pdev->dev);
- 
- 	v4l2_async_notifier_unregister(&vpfe->notifier);
+ 	/* Select default pin state */
+ 	pinctrl_pm_select_default_state(dev);
 -- 
 2.17.1
 
