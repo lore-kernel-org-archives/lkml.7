@@ -2,130 +2,192 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C741C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D020C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 737E12196F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:29:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B79421D6C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:30:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="PclmeN69"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="Oof3RtY5";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="Oof3RtY5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389933AbfISN3X (ORCPT
+        id S2389991AbfISNaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 09:29:23 -0400
-Received: from mail-eopbgr730054.outbound.protection.outlook.com ([40.107.73.54]:27264
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        Thu, 19 Sep 2019 09:30:24 -0400
+Received: from mail-eopbgr30070.outbound.protection.outlook.com ([40.107.3.70]:59765
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389844AbfISN3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 09:29:23 -0400
+        id S2388721AbfISNaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 09:30:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y9I+5xCgF7GzoOP7Rozly63quyjihAUCy1HrvQlGWj8=;
+ b=Oof3RtY5t0OsqzEugsK9f9kXXpXPmjmGiZUyBRr9HeIcwy+GgOEOOX3DnSIlfQPe+eRXrM1DXtZzzccAt+10EhiTYPniW1o4bWq1MZob/Iy6x6kU6seiVhhWEm185HHbX8RZ2ZT1ZrET6q1Ng5mlvD1u5/IJ3J2Z84saKkR6ZNk=
+Received: from VI1PR08CA0127.eurprd08.prod.outlook.com (2603:10a6:800:d4::29)
+ by VI1PR08MB3120.eurprd08.prod.outlook.com (2603:10a6:803:46::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2263.21; Thu, 19 Sep
+ 2019 13:30:16 +0000
+Received: from VE1EUR03FT054.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e09::201) by VI1PR08CA0127.outlook.office365.com
+ (2603:10a6:800:d4::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2284.21 via Frontend
+ Transport; Thu, 19 Sep 2019 13:30:16 +0000
+Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
+ header.from=arm.com;
+Received-SPF: TempError (protection.outlook.com: error in processing during
+ lookup of arm.com: DNS Timeout)
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ VE1EUR03FT054.mail.protection.outlook.com (10.152.19.64) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.20 via Frontend Transport; Thu, 19 Sep 2019 13:30:14 +0000
+Received: ("Tessian outbound 968ab6b62146:v31"); Thu, 19 Sep 2019 13:30:10 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: e39eb3f5e2db9d4b
+X-CR-MTA-TID: 64aa7808
+Received: from 89a7ef77e105.2 (ip-172-16-0-2.eu-west-1.compute.internal [104.47.9.59])
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id B6C1D978-6BE4-4BC7-8366-47303AC00B9A.1;
+        Thu, 19 Sep 2019 13:30:04 +0000
+Received: from EUR03-VE1-obe.outbound.protection.outlook.com (mail-ve1eur03lp2059.outbound.protection.outlook.com [104.47.9.59])
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 89a7ef77e105.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384);
+    Thu, 19 Sep 2019 13:30:04 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RByA/1X4RXvLEVaY8+uP5JURx4bdbJ8YbsE9kCcVhX8Wz6t90IF5k2/jWAIv0K6o8i0aXXnFEy9csr/t5VVdPBiXw/kLwlemgBrKAFiuX0wdhaQZgj412HYIS44z2f45M6SvHi5wbFtQ/ojho6bT+rV0YI/UpkxhMlSAysP6c/kb3qI/KNza5PNP/gsM1a4F+cA5Hxki+CyFzm6cS/tbWWGiYTlXLQHSAivdMDL67RsrkfuIxCc8E3jvFTLGpEcKPWDQHW1tUwOn9CGc5seOrPD+xzIPkX6SGc9PLrvxt8bbm1J/XGXXESxXXq1a0RyXoMTUKOebysx1VYxS9vkaHw==
+ b=Fbnfar14x+TN/yvAhpH/dTYMLqVHoeMB5jk7LlKghTwrnKIKo0GdcJgj46ymwQnpW0jwBz0+Q4EYWmyAkjKqUPNB1NOR9ss6NifRsXkVT7EjWJEz4hG6ogv+qn56WfcofOWt5UJnxiUfAPdn1e5XJpIgYvv1skFAfT49Gkv6+C/NmFtoG3ALhlJnZ7Wf5vuFCq81G5shFtTvm31RMdk4m7A5MlPBtNlQ+72m9HsIB68lonZh6B+3FyglhrK3qs6mtF7mk4kc3jpUJLdsxXObhg2Oe/8q5Q7ZKCtz2y/IpuNyheiMr9AevsLEQdGHN9t5AAoa1iSTvdQc/RtdwWmqNw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Iy1t/yNf8wTN/Zn2NhDq6kaq61fjVw2pcIVKIV6DxQ8=;
- b=EXp//hVsluwWsofnO5QVEIh6FRR5pEsTN9UFQbJGIALKeS8+6RbtuaDoPhU9vjY3RcreeJjzrLNVYj7Qx1ewUogDbLgV1nlfozVoF8FJ/KOE1n/HOIc7EbHhciv+nABh2Z6CYUNlXU2iBLyMpTcDQGysYg5QpH99pekRy0dMqPaFFO95eIcBzdzZqy8n9wGJgicO0rZLAUXo6Fv1O+ECSLRaPDVuZ81jp/Aw3J8MY8b9V1ZexqpI/LlR6T0PXWFO6xDDsajO6WGlfvG2J53fcFJxXecLoIYPitXgKqnQM+ptROLYXfzpdLhtTBOSxMk4ug1AIq6A+ytUJ55ONnHrIA==
+ bh=y9I+5xCgF7GzoOP7Rozly63quyjihAUCy1HrvQlGWj8=;
+ b=JXd+DJuyjPNnkDYDz65KkdVUIgQzxFRywBozbLF3ZEIvmZtse2ZqLX4g6+gPkoo+edemNPewsVQmhPQ1nrQZoSj1Ye+GIkbOmu9vmuAJ4OJYueFNU5aPxi6xalsLuHqdR92EkC1y3Ks5iIaw85o/jEOWFzJfKAAMr+ed6Adubm8gjCH0imYRATj7QBQKFoA7lZDoVp7KcQN1nSjLO3yDnNB1liJxnNeqmSrTrDSor0VvbJCcLmp5YVMk6tnrcSQ1+YROn8QUiNCWN7VUX617uoPV1in3qQkd24mw3r7aPivdCzORiGIXLSsjcFz1bb07/h0tYemLZuu6+LEwvTEZ6g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Iy1t/yNf8wTN/Zn2NhDq6kaq61fjVw2pcIVKIV6DxQ8=;
- b=PclmeN69kyZcveP25jRw+9dLpidmg9DJ7ul7mWlwNvFBR2+H+wos/YK/zAt3FzCPG1mYtr4e5iY3X6qCp+TSHaDYN9xPTDI6ys7dNR42ZGiiuD1XghsywGfI0CLLAWkPvDKgJdbP9lPrFPxezv05XImvXVBa5hWXtkP70dlu0yU=
-Received: from MWHPR12MB1455.namprd12.prod.outlook.com (10.172.56.18) by
- MWHPR12MB1934.namprd12.prod.outlook.com (10.175.50.151) with Microsoft SMTP
+ bh=y9I+5xCgF7GzoOP7Rozly63quyjihAUCy1HrvQlGWj8=;
+ b=Oof3RtY5t0OsqzEugsK9f9kXXpXPmjmGiZUyBRr9HeIcwy+GgOEOOX3DnSIlfQPe+eRXrM1DXtZzzccAt+10EhiTYPniW1o4bWq1MZob/Iy6x6kU6seiVhhWEm185HHbX8RZ2ZT1ZrET6q1Ng5mlvD1u5/IJ3J2Z84saKkR6ZNk=
+Received: from VI1PR08MB4078.eurprd08.prod.outlook.com (20.178.127.92) by
+ VI1PR08MB5376.eurprd08.prod.outlook.com (52.133.244.200) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.22; Thu, 19 Sep 2019 13:29:17 +0000
-Received: from MWHPR12MB1455.namprd12.prod.outlook.com
- ([fe80::a872:70bf:908d:cfe4]) by MWHPR12MB1455.namprd12.prod.outlook.com
- ([fe80::a872:70bf:908d:cfe4%10]) with mapi id 15.20.2263.023; Thu, 19 Sep
- 2019 13:29:17 +0000
-From:   Gary R Hook <ghook@amd.com>
-To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Navid Emamdoost <navid.emamdoost@gmail.com>
-CC:     "emamd001@umn.edu" <emamd001@umn.edu>,
-        "smccaman@umn.edu" <smccaman@umn.edu>,
-        "kjlu@umn.edu" <kjlu@umn.edu>, "Hook, Gary" <Gary.Hook@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+ 15.20.2284.20; Thu, 19 Sep 2019 13:30:03 +0000
+Received: from VI1PR08MB4078.eurprd08.prod.outlook.com
+ ([fe80::f164:4d79:79f:dc6f]) by VI1PR08MB4078.eurprd08.prod.outlook.com
+ ([fe80::f164:4d79:79f:dc6f%7]) with mapi id 15.20.2263.023; Thu, 19 Sep 2019
+ 13:30:03 +0000
+From:   Mihail Atanassov <Mihail.Atanassov@arm.com>
+To:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+CC:     Mihail Atanassov <Mihail.Atanassov@arm.com>, nd <nd@arm.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        David Airlie <airlied@linux.ie>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] crypto: ccp - release hmac_buf if ccp_run_sha_cmd fails
-Thread-Topic: [PATCH] crypto: ccp - release hmac_buf if ccp_run_sha_cmd fails
-Thread-Index: AQHVao3EuoZXtKbW6ku3QkZQMVvFD6cuTlmAgAS5AAA=
-Date:   Thu, 19 Sep 2019 13:29:17 +0000
-Message-ID: <7ffc6a77-f4e3-7db9-4ec6-53d6e01d881d@amd.com>
-References: <20190913234824.8521-1-navid.emamdoost@gmail.com>
- <3550c7a3-2932-c222-c1b3-957def794150@amd.com>
-In-Reply-To: <3550c7a3-2932-c222-c1b3-957def794150@amd.com>
-Accept-Language: en-US
+Subject: [PATCH] drm/komeda: Fix FLIP_COMPLETE timestamp on CRTC enable
+Thread-Topic: [PATCH] drm/komeda: Fix FLIP_COMPLETE timestamp on CRTC enable
+Thread-Index: AQHVbu5XybbezBNH+kaEyHcWelehfw==
+Date:   Thu, 19 Sep 2019 13:30:02 +0000
+Message-ID: <20190919132759.18358-1-mihail.atanassov@arm.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN6PR0102CA0035.prod.exchangelabs.com (2603:10b6:805:1::48)
- To MWHPR12MB1455.namprd12.prod.outlook.com (2603:10b6:301:10::18)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Gary.Hook@amd.com; 
+x-originating-ip: [217.140.106.55]
+x-clientproxiedby: LO2P265CA0215.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:9e::35) To VI1PR08MB4078.eurprd08.prod.outlook.com
+ (2603:10a6:803:e5::28)
+x-mailer: git-send-email 2.23.0
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=Mihail.Atanassov@arm.com; 
 x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.77.1]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d47b0faa-81d9-4b3d-387c-08d73d055edb
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:MWHPR12MB1934;
-x-ms-traffictypediagnostic: MWHPR12MB1934:
+X-MS-Office365-Filtering-Correlation-Id: a17cc2fb-72be-4819-0319-08d73d058157
+X-MS-Office365-Filtering-HT: Tenant
+X-Microsoft-Antispam-Untrusted: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR08MB5376;
+X-MS-TrafficTypeDiagnostic: VI1PR08MB5376:|VI1PR08MB5376:|VI1PR08MB3120:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR12MB193426BCF27F5ED72B06EE7DFD890@MWHPR12MB1934.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2657;
+X-Microsoft-Antispam-PRVS: <VI1PR08MB312071200CD548CCBCE387908F890@VI1PR08MB3120.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+x-ms-oob-tlc-oobclassifiers: OLM:7219;OLM:7219;
 x-forefront-prvs: 016572D96D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(136003)(39860400002)(376002)(346002)(189003)(199004)(53546011)(6506007)(386003)(52116002)(76176011)(316002)(102836004)(26005)(186003)(31686004)(8936002)(81156014)(81166006)(5660300002)(99286004)(14454004)(66556008)(54906003)(110136005)(64756008)(66946007)(446003)(476003)(11346002)(486006)(2616005)(66476007)(66446008)(36756003)(8676002)(6116002)(3846002)(31696002)(71190400001)(25786009)(71200400001)(4326008)(6512007)(6246003)(229853002)(6436002)(6486002)(66066001)(478600001)(7736002)(305945005)(256004)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR12MB1934;H:MWHPR12MB1455.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(376002)(136003)(39860400002)(346002)(199004)(189003)(6916009)(6486002)(25786009)(476003)(6116002)(66066001)(99286004)(71200400001)(71190400001)(6436002)(6512007)(7736002)(2501003)(50226002)(186003)(86362001)(2616005)(26005)(4326008)(8676002)(81156014)(66556008)(66446008)(305945005)(486006)(386003)(5640700003)(316002)(44832011)(478600001)(8936002)(102836004)(1076003)(6506007)(2351001)(54906003)(66476007)(3846002)(2906002)(5660300002)(256004)(14454004)(66946007)(36756003)(81166006)(64756008)(52116002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR08MB5376;H:VI1PR08MB4078.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
  permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: IXQKnoq/ovnJusTyNY1GX+sNN7eD+cs+AR/FS+ZKYVLKglokwyuj+cgssd+U6y+n6eqQSMJNPAhzfq4abGB1VDk9fcZSQVmDd9+3jxFoIy5HDASBmNT4SsJiOtm+egVSxi4B0dkgNqkyXud1SIq4yEI9crX9zk8AgBiw++jisNSmmbo5l7BsEKmbW4goMo5eAEWZQ1O8mshWsabAdoZpxwX8LKRlPCSPkDLT5pOpy6CBHXi363muVQFuhV8u7+ZCDpt4Q12bvX99LPVBe2HCgoXgoPoh6PzdKLAydXHC2vo5TIOBZlQSTtwhIAkNply09WBNE2WlylqFV+jr6/xQST2gZHPbiDZ1YAQei6CbK6owK6DvDMjU60dOeNy3+AzhF2nBiIE1bFvx4nNDFMDQiff6cCwjVyqKI8Uq0s1SMYg=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <863B982D545FF64BB2831692FEF4C574@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info-Original: 821jgBgaCEODxjT3BMGCDKb9ct2ZvvtxDysN711bzYSBrc9M4c87jNsaax68BnCnFHoijHXT2h/VaAYeLW9UM5YYWBZNBv01u8Wora4r87P6qpQmaZHuK1ASCXo3s1tNRaKICrdE+98V/ys4iqVJQpsBrIABWVR/19AISKQ89NPVb7gQp6wf2rFQQHJRpBRC2EtYGtqIhT/mcLPF/s67+TeVBBe9HhCeIBSjXcqLCjr210DtnNGwBCvx676mtphtvdxufWQ2yQuMSzOk5xta1ZAdg2v3GIzT67VcQq66erWmg4uGTyn0k9C4Y9RpotEkUgeeG/GbBPAGAWBaJlNGvCBEIHSXWaZkctIWaNVqES4R1V6LidvfFls4a5mkBEKUYep6eLf7OkKHQySAUJ3fBAlLZbhbEqdXJlAUOWfjotE=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d47b0faa-81d9-4b3d-387c-08d73d055edb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Sep 2019 13:29:17.7178
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB5376
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Mihail.Atanassov@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: VE1EUR03FT054.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(346002)(136003)(39860400002)(189003)(199004)(54906003)(5640700003)(6512007)(76130400001)(6486002)(316002)(23756003)(36756003)(50226002)(6862004)(2351001)(486006)(126002)(2501003)(8746002)(8936002)(81166006)(70206006)(70586007)(8676002)(36906005)(81156014)(63350400001)(25786009)(99286004)(5660300002)(66066001)(14454004)(305945005)(7736002)(26826003)(478600001)(50466002)(47776003)(86362001)(2616005)(1076003)(26005)(386003)(6506007)(102836004)(186003)(356004)(22756006)(476003)(6116002)(3846002)(2906002)(4326008)(336012);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR08MB3120;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:TempError;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;MX:1;A:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 8cf62777-ffce-496a-7fa8-08d73d057a00
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(710020)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR08MB3120;
+NoDisclaimer: True
+X-Forefront-PRVS: 016572D96D
+X-Microsoft-Antispam-Message-Info: aa1X6aH2kll71GQCsS0qoo/TSo4nfZoDBx154Cm9+y+dJ+SCPwTtaRfiVvU0hgf7P0Ya+SwejAt/eAI2oQvRskusS24jkrALUuIlexDa6en4EgtGSUtFPI9cJfA6ImZd7Jl65nk4t+6dO3GAWF/SYG934reV6j9wC4OIuuCB9SQhdJlqWqLDv4Y9hUkZI/cGONlFr/WdRrNZHxRkFm6dqo43JcCAgi7WDmxat4etsHZdS5qRSViBwPyAaoiAb7cjbWaKGF7dvxrW1pfydPMwlY6IF63c3+w0yBXljdFiELM00wxPxWKWc9Ju//khe1YEPrglRatEuhIZPF8ewFmGC1WeIHF603SWlh0ZzMEASR/5Hi8P4lgTZcz++bD3EyhhPG2vp3Ag89ijBER67+VP8uLDksGckS+luPbHvcHlRUc=
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Sep 2019 13:30:14.9307
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 4i47fKIsY/ykbovlHylKrM2d8Xo8i3QUTk1/aaI43Ryp5uCGkAAq3mwFam7NE93x
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1934
+X-MS-Exchange-CrossTenant-Network-Message-Id: a17cc2fb-72be-4819-0319-08d73d058157
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3120
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gOS8xNi8xOSA4OjIyIEFNLCBMZW5kYWNreSwgVGhvbWFzIHdyb3RlOg0KPiBPbiA5LzEzLzE5
-IDY6NDggUE0sIE5hdmlkIEVtYW1kb29zdCB3cm90ZToNCj4+IEluIGNjcF9ydW5fc2hhX2NtZCwg
-aWYgdGhlIHR5cGUgb2Ygc2hhIGlzIGludmFsaWQsIHRoZSBhbGxvY2F0ZWQNCj4+IGhtYWNfYnVm
-IHNob3VsZCBiZSByZWxlYXNlZC4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBOYXZpZCBFbWFtZG9v
-c3QgPG5hdmlkLmVtYW1kb29zdEBnbWFpbC5jb20+DQo+PiAtLS0NCj4+ICAgZHJpdmVycy9jcnlw
-dG8vY2NwL2NjcC1vcHMuYyB8IDEgKw0KPj4gICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24o
-KykNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9jcnlwdG8vY2NwL2NjcC1vcHMuYyBiL2Ry
-aXZlcnMvY3J5cHRvL2NjcC9jY3Atb3BzLmMNCj4+IGluZGV4IDliYzNjNjIxNTdkNy4uY2ZmMTZm
-MGNjMTViIDEwMDY0NA0KPj4gLS0tIGEvZHJpdmVycy9jcnlwdG8vY2NwL2NjcC1vcHMuYw0KPj4g
-KysrIGIvZHJpdmVycy9jcnlwdG8vY2NwL2NjcC1vcHMuYw0KPj4gQEAgLTE3ODIsNiArMTc4Miw3
-IEBAIHN0YXRpYyBpbnQgY2NwX3J1bl9zaGFfY21kKHN0cnVjdCBjY3BfY21kX3F1ZXVlICpjbWRf
-cSwgc3RydWN0IGNjcF9jbWQgKmNtZCkNCj4+ICAgCQkJICAgICAgIExTQl9JVEVNX1NJWkUpOw0K
-Pj4gICAJCQlicmVhazsNCj4+ICAgCQlkZWZhdWx0Og0KPj4gKwkJCWtmcmVlKGhtYWNfYnVmKTsN
-Cj4gV2VsbCwgdGhlb3JldGljYWxseSB3ZSBjYW4gbmV2ZXIgcmVhY2ggdGhpcyBzZWN0aW9uIHNp
-bmNlIHRoZSByb3V0aW5lDQo+IHdvdWxkIGhhdmUgbmV2ZXIgcHJvY2VlZGVkIHBhc3QgdGhlIGZp
-cnN0IHN3aXRjaCBzdGF0ZW1lbnQgYXQgdGhlDQo+IGJlZ2lubmluZyBvZiB0aGUgZnVuY3Rpb24u
-IEJ1dCwgaWYgdGhlIGNvZGUgaXMgZXZlciBtb2RpZmllZCBhbmQgc29tZSBvZg0KPiB0aGUgc3dp
-dGNoIHN0YXRlbWVudHMgbWlzc2VkIHRoZW4gaXQncyBwb3NzaWJsZS4uLg0KPg0KPj4gICAJCQly
-ZXQgPSAtRUlOVkFMOw0KPj4gICAJCQlnb3RvIGVfY3R4Ow0KPiBJIGtub3cgaXQncyBub3QgcGFy
-dCBvZiB5b3VyIGNoYW5nZSwgYnV0IHRoaXMgbG9va3MgbGlrZSBpdCBzaG91bGQgYmUNCj4gZ290
-byBlX2RhdGEgaW5zdGVhZCBvZiBlX2N0eCwgdG9vLg0KSSBhZ3JlZSB3aXRoIHRoaXMuIFBsZWFz
-ZSByZXN1Ym1pdCB3aXRoIHRoZSBzdWdnZXN0ZWQgY2hhbmdlLCBhbmQgdXNlIGEgDQpjb21taXQg
-bWVzc2FnZSBhbG9uZyB0aGUgdGhlIGxpbmVzIG9mDQoNCmNyeXB0bzogY2NwIC0gUmVsZWFzZSBh
-bGwgYWxsb2NhdGVkIG1lbW9yeSBpZiBzaGEgdHlwZSBpcyBpbnZhbGlkDQoNCg0KR2FyeQ0K
+When initially turning a crtc on, drm_reset_vblank_timestamp will
+set the vblank timestamp to 0 for any driver that doesn't provide
+a ->get_vblank_timestamp() hook.
+
+Unfortunately, the FLIP_COMPLETE event depends on that timestamp,
+and the only way to regenerate a valid one is to have vblank
+interrupts enabled and have a valid in-ISR call to
+drm_crtc_handle_vblank.
+
+Wrap the call to komeda_crtc_do_flush in ->atomic_enable() with a
+drm_crtc_vblank_{get,put} pair so we can have a vblank ISR prior to
+the FLIP_COMPLETE ISR (or more likely, they'll get handled in the same
+ISR, which is equally valid).
+
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Liviu Dudau <Liviu.Dudau@arm.com>
+Signed-off-by: Mihail Atanassov <mihail.atanassov@arm.com>
+---
+ drivers/gpu/drm/arm/display/komeda/komeda_crtc.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c b/drivers/gpu=
+/drm/arm/display/komeda/komeda_crtc.c
+index f4400788ab94..87420a767bc4 100644
+--- a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
++++ b/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
+@@ -258,7 +258,9 @@ komeda_crtc_atomic_enable(struct drm_crtc *crtc,
+ {
+ 	komeda_crtc_prepare(to_kcrtc(crtc));
+ 	drm_crtc_vblank_on(crtc);
++	WARN_ON(drm_crtc_vblank_get(crtc));
+ 	komeda_crtc_do_flush(crtc, old);
++	drm_crtc_vblank_put(crtc);
+ }
+=20
+ static void
+--=20
+2.23.0
+
