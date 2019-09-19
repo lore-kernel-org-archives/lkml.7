@@ -2,100 +2,108 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1EF6C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 10:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08314C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 10:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A56E721907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 10:27:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fNTz4uFi"
+	by mail.kernel.org (Postfix) with ESMTP id D032721907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 10:28:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731857AbfISK1q (ORCPT
+        id S1731984AbfISK2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 06:27:46 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:46631 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730905AbfISK1q (ORCPT
+        Thu, 19 Sep 2019 06:28:00 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:52961 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730905AbfISK17 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 06:27:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1568888864;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ig1366euhZE9FQ+BU/G4FDeDExCD+2QP6kSKN1WGaNY=;
-        b=fNTz4uFiwLvZUM7iX9FQvjpNPxsp9kzJj0pFaXgYdgSyMQ8vdY2SafqDia263At8b92lmf
-        RAyaun424Vzvpv6ZEj67ifiVpfVe2MAv32JoEd0S4HHLz3kItHDXiLgJkVNFLlMhd5XLpA
-        KjDFbysxfDqeAciXMwYuMDjWHRjDKLI=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-338-sIXh9il6PEOL1Y8EYqP9Iw-1; Thu, 19 Sep 2019 06:27:42 -0400
-Received: by mail-wr1-f72.google.com with SMTP id j3so858243wrn.7
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 03:27:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=xXbMAImjG3OUwHMb6kPmWON5bGyQvvmz+1UruhCN6yE=;
-        b=hgEC9E3TAm6M3bg+rL4IaarN1xpsrE3jrUyIMyDWPFchuauEhSWdBnuzTIAAOp6NJF
-         rJYxkdu0PGUTbmh0RpNmv/DJix0Z/Fjm1p+9hU9KMVePiEwflCrlEmH8N5crIS+cSfNY
-         Bu/XIqYmePjTcrzVwQE0s1klnffEA6Oe+2a4CdVS5xvgDL0IA0njZoa8GYB+MaM4LAgC
-         vQse55iSfwFJ78b6l8XeWe+BLbAkyH++vZMcBAaH3oM7MQiPuY7mPzR2ySmj2e88t4U3
-         S7J9S9k7FRCdSZEelDFoLKkYEtNQKGXOvG7dJ2AD9sg1WX81BW8ZNuDQG47ouT58l5A4
-         PKWQ==
-X-Gm-Message-State: APjAAAXSAM1MwBOB9VFPX0r9hHY4VQjNRH20X/ay3Pd8bN87eM5RdDJh
-        QOsT2606VRvb/BhcukocLjEZ6nfAGhlyOv9R3mZQj2XTnyL3E+UDgbnGxDWvPPDlKPpdJsZ/rrn
-        BUaaqG1RJ/fYojFuVAMoct11h
-X-Received: by 2002:a5d:4f8c:: with SMTP id d12mr6688936wru.150.1568888861516;
-        Thu, 19 Sep 2019 03:27:41 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqz46e8anRMP1kp0PhuFgPO+/GbU0XjcEmMYDIh9szRAuk4BfIfrefzg5JHBBewFOt1LeJvGiQ==
-X-Received: by 2002:a5d:4f8c:: with SMTP id d12mr6688918wru.150.1568888861290;
-        Thu, 19 Sep 2019 03:27:41 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id 17sm8806368wrl.15.2019.09.19.03.27.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2019 03:27:40 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal\@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: RE: [PATCH 1/3] hv_utils: Add the support of hibernation
-In-Reply-To: <PU1P153MB01694ABFED7ADAE8B40A65F7BF890@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <1568245130-70712-1-git-send-email-decui@microsoft.com> <1568245130-70712-2-git-send-email-decui@microsoft.com> <877e6dcvzj.fsf@vitty.brq.redhat.com> <PU1P153MB0169C6B4A78787930CC9ED4FBFB30@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM> <87pnk0bpe8.fsf@vitty.brq.redhat.com> <PU1P153MB01694ABFED7ADAE8B40A65F7BF890@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-Date:   Thu, 19 Sep 2019 12:27:39 +0200
-Message-ID: <87ftksa8dg.fsf@vitty.brq.redhat.com>
+        Thu, 19 Sep 2019 06:27:59 -0400
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1iAtfK-0005Fo-Jo; Thu, 19 Sep 2019 12:27:58 +0200
+Message-ID: <7d694da8ffe098c6c8f6fe9c3a2306fda55eb655.camel@pengutronix.de>
+Subject: Re: [PATCH v2 1/3] dmaengine: imx-sdma: fix buffer ownership
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Philipp Puschmann <philipp.puschmann@emlix.com>,
+        linux-kernel@vger.kernel.org
+Cc:     yibin.gong@nxp.com, fugang.duan@nxp.com, dan.j.williams@intel.com,
+        vkoul@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Date:   Thu, 19 Sep 2019 12:27:58 +0200
+In-Reply-To: <20190919102319.23368-2-philipp.puschmann@emlix.com>
+References: <20190911144943.21554-1-philipp.puschmann@emlix.com>
+         <20190919102319.23368-1-philipp.puschmann@emlix.com>
+         <20190919102319.23368-2-philipp.puschmann@emlix.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-X-MC-Unique: sIXh9il6PEOL1Y8EYqP9Iw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dexuan Cui <decui@microsoft.com> writes:
+Hi Philipp,
 
-> BTW, for vss, maybe the VM should not hibernate if there is a backup=20
-> ongoing? -- if the file system is frozen by hv_vss_daemon, and the VM
-> hibernates, then when the VM resumes back, it's almost always true that=
-=20
-> the VM won't receive the host's VSS_OP_THAW request, and the VM will
-> end up in an unusable state.
+On Do, 2019-09-19 at 12:23 +0200, Philipp Puschmann wrote:
+> BD_DONE flag marks ownership of the buffer. When 1 SDMA owns the
+> buffer, when 0 ARM owns it. When processing the buffers in
+> sdma_update_channel_loop the ownership of the currently processed
+> buffer was set to SDMA again before running the callback function of
+> the buffer and while the sdma script may be running in parallel. So
+> there was the possibility to get the buffer overwritten by SDMA
+> before
+> it has been processed by kernel leading to kind of random errors in
+> the
+> upper layers, e.g. bluetooth.
+> 
+> Signed-off-by: Philipp Puschmann <philipp.puschmann@emlix.com>
+> 
+> ---
+> 
+> Changelog v2:
+>  - add dma_wb()
+> 
+>  drivers/dma/imx-sdma.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+> index 9ba74ab7e912..e029a2443cfc 100644
+> --- a/drivers/dma/imx-sdma.c
+> +++ b/drivers/dma/imx-sdma.c
+> @@ -802,7 +802,6 @@ static void sdma_update_channel_loop(struct
+> sdma_channel *sdmac)
+>  		*/
+>  
+>  		desc->chn_real_count = bd->mode.count;
+> -		bd->mode.status |= BD_DONE;
+>  		bd->mode.count = desc->period_len;
+>  		desc->buf_ptail = desc->buf_tail;
+>  		desc->buf_tail = (desc->buf_tail + 1) % desc->num_bd;
+> @@ -817,6 +816,9 @@ static void sdma_update_channel_loop(struct
+> sdma_channel *sdmac)
+>  		dmaengine_desc_get_callback_invoke(&desc->vd.tx, NULL);
+>  		spin_lock(&sdmac->vc.lock);
+>  
+> +		dma_wb();
 
-Makes sense. Or, alternatively, can we postpone hibernation until after
-VSS_OP_THAW?
+Has this change been tested? The function you want here is called
+dma_wmb().
 
---=20
-Vitaly
+Regards,
+Lucas
+
+> +		bd->mode.status |= BD_DONE;
+> +
+>  		if (error)
+>  			sdmac->status = old_status;
+>  	}
 
