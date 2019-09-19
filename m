@@ -2,303 +2,116 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D7DAC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 08:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DD4C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 08:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 235C721848
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 08:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D879921848
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 08:22:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568881332;
+	bh=GdIZZlFGEjv0CJajsn6Bw6rMD+Npvpwr2YWM59KC5uI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=u8WzOOhXO5QkjkC5yCEW1zAJiZncL88cT0MJp2x/jDZfbXWucPVOAzab5H8j1MY0E
+	 0q4ZabaEuMHrO/Na3Rs2xJyIL4LySpVQrEcH5/2SQV7fxLnlY60loMDyKzdSevKIby
+	 S7+t3xInI9ZPoTfOFXIV/qEMWOqIRtaPHLM7VtXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731703AbfISIUn (ORCPT
+        id S1731868AbfISIWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 04:20:43 -0400
-Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:49899 "EHLO
-        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730886AbfISIUm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 04:20:42 -0400
-Received: from [IPv6:2001:983:e9a7:1:c95c:52f0:f173:9443] ([IPv6:2001:983:e9a7:1:c95c:52f0:f173:9443])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id Arg7ilWcjz6EAArg8ivEOO; Thu, 19 Sep 2019 10:20:40 +0200
-Subject: Re: [PATCH v2] media: vimc: Implement debayer control for mean window
- size
-To:     Shuah Khan <skhan@linuxfoundation.org>,
-        Arthur Moraes do Lago <arthurmoraeslago@gmail.com>,
-        mchehab@kernel.org, helen.koike@collabora.com,
-        andrealmeid@collabora.com, laispc19@gmail.com,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190917225317.5872-1-arthurmoraeslago@gmail.com>
- <39078cb4-1ea5-e97e-0323-0318b42910c6@linuxfoundation.org>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <e0035c20-ae4b-2f9e-e833-cd3dbe4eaf77@xs4all.nl>
-Date:   Thu, 19 Sep 2019 10:20:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 19 Sep 2019 04:22:12 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44200 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730886AbfISIWL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 04:22:11 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A07A8AFBF;
+        Thu, 19 Sep 2019 08:22:09 +0000 (UTC)
+Date:   Thu, 19 Sep 2019 10:22:08 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Lin Feng <linf@wangsu.com>
+Cc:     Matthew Wilcox <willy@infradead.org>, corbet@lwn.net,
+        mcgrof@kernel.org, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        keescook@chromium.org, mchehab+samsung@kernel.org,
+        mgorman@techsingularity.net, vbabka@suse.cz, ktkhai@virtuozzo.com,
+        hannes@cmpxchg.org, Jens Axboe <axboe@kernel.dk>,
+        Omar Sandoval <osandov@fb.com>, Ming Lei <ming.lei@redhat.com>
+Subject: Re: [PATCH] [RFC] vmscan.c: add a sysctl entry for controlling
+ memory reclaim IO congestion_wait length
+Message-ID: <20190919082208.GB15782@dhcp22.suse.cz>
+References: <20190917115824.16990-1-linf@wangsu.com>
+ <20190917120646.GT29434@bombadil.infradead.org>
+ <20190918123342.GF12770@dhcp22.suse.cz>
+ <6ae57d3e-a3f4-a3db-5654-4ec6001941a9@wangsu.com>
+ <20190919034949.GF9880@bombadil.infradead.org>
+ <33090db5-c7d4-8d7d-0082-ee7643d15775@wangsu.com>
 MIME-Version: 1.0
-In-Reply-To: <39078cb4-1ea5-e97e-0323-0318b42910c6@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfNh//T7lE2nYWgba8fOluw5Ar9E9n4su3evxqeknY4ioy0oAPpbbC56sgjKYlEdnTX22kIC+mRFyI48Qv64yMz69JbNMpOM/TpcmCWInZd2PTl3jPHiG
- jolcm0BRl90+wBvKPISzw0f5vaCM+tBMbkOJqO+KiIPxra/vjbVYNce7Doz+5cAZh1q6oSICQ8hwgD4qoiI9dCpl8eFwveZCHDtZ/3b28s2SKELzoO5r6eqw
- HSFT5IKq6SLN29xoiP7JHa39GKYjLZoFkbShNOqG62g6OVLG7uyboKJ5M/qyZcf9zUi8XVrpxd5dk1K+oRmrvTjXF/xoX4iaFwyjF8XmKhpaDP/KalwRmF2G
- 7YYB7xQjov/WODB9GdmddpJtYLJlH7yQvqNqLBqpltI8y7srlAudLEdVdEyW1xQPEWA4Sf6kHHAktVEBasMpBl61V5v9e1SZbBNNZboYCgP43g3JdcOX6mee
- /HEaeBIRtjHgkWRUURJYtC1wf72hsslxDgeBfLOx32Kxkbb9p4iGDHgmXgxjKyhGs6W1XlOe16ySDMUu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <33090db5-c7d4-8d7d-0082-ee7643d15775@wangsu.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/18/19 1:12 AM, Shuah Khan wrote:
-> On 9/17/19 4:53 PM, Arthur Moraes do Lago wrote:
->> Add mean window size parameter for debayer filter as a control in
->> vimc-debayer.
->>
->> vimc-debayer was patched to allow changing mean windows parameter
->> of the filter without needing to reload the driver. The parameter
->> can now be set using a v4l2-ctl control(mean_window_size).
->>
->> Co-developed-by: Laís Pessine do Carmo <laispc19@gmail.com>
->> Signed-off-by: Laís Pessine do Carmo <laispc19@gmail.com>
->> Signed-off-by: Arthur Moraes do Lago <arthurmoraeslago@gmail.com>
->>
->> Small fixes to vimc debayer mean window size patch
->> ---
->> Changes in V2:
->>   - Updated documentation
->>   - Added v4l2_subev_core_ops to solve errors in v4l2-ctl compliance test
->>   - Changed control naming to follow English capitalization rules
->>   - Rebased to Shuah Khan's newest patch series 171283
->>      ("Collapse vimc single monolithic driver")
->>   - Change maximum value for mean window size
->>
->> We did run streaming tests, the value of 1 for mean window size has a
->> nice side effect of not applying any filter, so we can see the original
->> pattern. The value of 99 for mean window size worked, but was very slow.
->> We wanted to find a way to show that higher values for mean window size
->> yielded very similar results to just blurring the image, but we could
->> not find any way to show this, so we just made the maximum value 25,
->> which runs faster, but is still probably a little high.
->> ---
->>   Documentation/media/v4l-drivers/vimc.rst   | 10 +--
->>   drivers/media/platform/vimc/vimc-common.h  |  1 +
->>   drivers/media/platform/vimc/vimc-debayer.c | 89 +++++++++++++++++++---
->>   3 files changed, 79 insertions(+), 21 deletions(-)
->>
->> diff --git a/Documentation/media/v4l-drivers/vimc.rst b/Documentation/media/v4l-drivers/vimc.rst
->> index a582af0509ee..91c909904b87 100644
->> --- a/Documentation/media/v4l-drivers/vimc.rst
->> +++ b/Documentation/media/v4l-drivers/vimc.rst
->> @@ -80,9 +80,7 @@ vimc-capture:
->>           Module options
->>   ---------------
->>   -Vimc has a few module parameters to configure the driver.
->> -
->> -        param=value
->> +Vimc has a module parameters to configure the driver.
+On Thu 19-09-19 15:46:11, Lin Feng wrote:
 > 
-> parameter
 > 
->>     * ``sca_mult=<unsigned int>``
->>   @@ -91,12 +89,6 @@ Vimc has a few module parameters to configure the driver.
->>           original one. Currently, only supports scaling up (the default value
->>           is 3).
->>   -* ``deb_mean_win_size=<unsigned int>``
->> -
->> -        Window size to calculate the mean. Note: the window size needs to be an
->> -        odd number, as the main pixel stays in the center of the window,
->> -        otherwise the next odd number is considered (the default value is 3).
->> -
->>   Source code documentation
->>   -------------------------
->>   diff --git a/drivers/media/platform/vimc/vimc-common.h b/drivers/media/platform/vimc/vimc-common.h
->> index 236412ad7548..3a5102ddf794 100644
->> --- a/drivers/media/platform/vimc/vimc-common.h
->> +++ b/drivers/media/platform/vimc/vimc-common.h
->> @@ -19,6 +19,7 @@
->>   #define VIMC_CID_VIMC_BASE        (0x00f00000 | 0xf000)
->>   #define VIMC_CID_VIMC_CLASS        (0x00f00000 | 1)
->>   #define VIMC_CID_TEST_PATTERN        (VIMC_CID_VIMC_BASE + 0)
->> +#define VIMC_CID_MEAN_WIN_SIZE        (VIMC_CID_VIMC_BASE + 1)
->>     #define VIMC_FRAME_MAX_WIDTH 4096
->>   #define VIMC_FRAME_MAX_HEIGHT 2160
->> diff --git a/drivers/media/platform/vimc/vimc-debayer.c b/drivers/media/platform/vimc/vimc-debayer.c
->> index 37f3767db469..76df2ac110c0 100644
->> --- a/drivers/media/platform/vimc/vimc-debayer.c
->> +++ b/drivers/media/platform/vimc/vimc-debayer.c
->> @@ -11,17 +11,12 @@
->>   #include <linux/platform_device.h>
->>   #include <linux/vmalloc.h>
->>   #include <linux/v4l2-mediabus.h>
->> +#include <media/v4l2-ctrls.h>
->> +#include <media/v4l2-event.h>
->>   #include <media/v4l2-subdev.h>
->>     #include "vimc-common.h"
->>   -static unsigned int deb_mean_win_size = 3;
->> -module_param(deb_mean_win_size, uint, 0000);
->> -MODULE_PARM_DESC(deb_mean_win_size, " the window size to calculate the mean.\n"
->> -    "NOTE: the window size needs to be an odd number, as the main pixel "
->> -    "stays in the center of the window, otherwise the next odd number "
->> -    "is considered");
->> -
->>   enum vimc_deb_rgb_colors {
->>       VIMC_DEB_RED = 0,
->>       VIMC_DEB_GREEN = 1,
->> @@ -46,6 +41,8 @@ struct vimc_deb_device {
->>       u8 *src_frame;
->>       const struct vimc_deb_pix_map *sink_pix_map;
->>       unsigned int sink_bpp;
->> +    unsigned int mean_win_size;
->> +    struct v4l2_ctrl_handler hdl;
->>   };
->>     static const struct v4l2_mbus_framefmt sink_fmt_default = {
->> @@ -346,11 +343,18 @@ static int vimc_deb_s_stream(struct v4l2_subdev *sd, int enable)
->>       return 0;
->>   }
->>   +static const struct v4l2_subdev_core_ops vimc_deb_core_ops = {
->> +    .log_status = v4l2_ctrl_subdev_log_status,
->> +    .subscribe_event = v4l2_ctrl_subdev_subscribe_event,
->> +    .unsubscribe_event = v4l2_event_subdev_unsubscribe,
->> +};
->> +
->>   static const struct v4l2_subdev_video_ops vimc_deb_video_ops = {
->>       .s_stream = vimc_deb_s_stream,
->>   };
->>     static const struct v4l2_subdev_ops vimc_deb_ops = {
->> +    .core = &vimc_deb_core_ops,
->>       .pad = &vimc_deb_pad_ops,
->>       .video = &vimc_deb_video_ops,
->>   };
->> @@ -384,7 +388,7 @@ static void vimc_deb_calc_rgb_sink(struct vimc_deb_device *vdeb,
->>        * the top left corner of the mean window (considering the current
->>        * pixel as the center)
->>        */
->> -    seek = deb_mean_win_size / 2;
->> +    seek = vdeb->mean_win_size / 2;
->>         /* Sum the values of the colors in the mean window */
->>   @@ -474,6 +478,33 @@ static void *vimc_deb_process_frame(struct vimc_ent_device *ved,
->>     }
->>   +static inline void vimc_deb_s_mean_win_size(struct vimc_deb_device *vdeb,
->> +                        unsigned int mean_win_size)
->> +{
->> +    if (vdeb->mean_win_size == mean_win_size)
->> +        return;
->> +    vdeb->mean_win_size = mean_win_size;
->> +}
->> +
->> +static int vimc_deb_s_ctrl(struct v4l2_ctrl *ctrl)
->> +{
->> +    struct vimc_deb_device *vdeb =
->> +        container_of(ctrl->handler, struct vimc_deb_device, hdl);
->> +
->> +    switch (ctrl->id) {
->> +    case VIMC_CID_MEAN_WIN_SIZE:
->> +        vimc_deb_s_mean_win_size(vdeb, ctrl->val);
->> +        break;
->> +    default:
->> +        return -EINVAL;
->> +    }
->> +    return 0;
->> +}
->> +
->> +static const struct v4l2_ctrl_ops vimc_deb_ctrl_ops = {
->> +    .s_ctrl = vimc_deb_s_ctrl,
->> +};
->> +
->>   static void vimc_deb_release(struct v4l2_subdev *sd)
->>   {
->>       struct vimc_deb_device *vdeb =
->> @@ -495,6 +526,24 @@ void vimc_deb_rm(struct vimc_device *vimc, struct vimc_ent_device *ved)
->>       vimc_ent_sd_unregister(ved, &vdeb->sd);
->>   }
->>   +static const struct v4l2_ctrl_config vimc_deb_ctrl_class = {
->> +    .flags = V4L2_CTRL_FLAG_READ_ONLY | V4L2_CTRL_FLAG_WRITE_ONLY,
->> +    .id = VIMC_CID_VIMC_CLASS,
->> +    .name = "VIMC Controls",
+> On 9/19/19 11:49, Matthew Wilcox wrote:
+> > On Thu, Sep 19, 2019 at 10:33:10AM +0800, Lin Feng wrote:
+> > > On 9/18/19 20:33, Michal Hocko wrote:
+> > > > I absolutely agree here. From you changelog it is also not clear what is
+> > > > the underlying problem. Both congestion_wait and wait_iff_congested
+> > > > should wake up early if the congestion is handled. Is this not the case?
+> > > 
+> > > For now I don't know why, codes seem should work as you said, maybe I need to
+> > > trace more of the internals.
+> > > But weird thing is that once I set the people-disliked-tunable iowait
+> > > drop down instantly, this is contradictory to the code design.
+> > 
+> > Yes, this is quite strange.  If setting a smaller timeout makes a
+> > difference, that indicates we're not waking up soon enough.  I see
+> > two possibilities; one is that a wakeup is missing somewhere -- ie the
+> > conditions under which we call clear_wb_congested() are wrong.  Or we
+> > need to wake up sooner.
+> > 
+> > Umm.  We have clear_wb_congested() called from exactly one spot --
+> > clear_bdi_congested().  That is only called from:
+> > 
+> > drivers/block/pktcdvd.c
+> > fs/ceph/addr.c
+> > fs/fuse/control.c
+> > fs/fuse/dev.c
+> > fs/nfs/write.c
+> > 
+> > Jens, is something supposed to be calling clear_bdi_congested() in the
+> > block layer?  blk_clear_congested() used to exist until October 29th
+> > last year.  Or is something else supposed to be waking up tasks that
+> > are sleeping on congestion?
+> > 
 > 
-> Make this VIMC Debayer Controls?
+> IIUC it looks like after commit a1ce35fa49852db60fc6e268038530be533c5b15,
 
-Actually, no. This control class is similar to the "Vivid Controls" in the vivid
-driver: it collects all VIMC specific controls. It's only Debayer for now, but others
-will be added here as well.
+This is something for Jens to comment on. Not waiting up on congestion
+indeed sounds like a bug.
 
-> 
->> +    .type = V4L2_CTRL_TYPE_CTRL_CLASS,
->> +};
->> +
->> +static const struct v4l2_ctrl_config vimc_deb_ctrl_mean_win_size = {
->> +    .ops = &vimc_deb_ctrl_ops,
->> +    .id = VIMC_CID_MEAN_WIN_SIZE,
->> +    .name = "Mean Window Size",
+> besides those *.c places as you mentioned above, vmscan codes will always
+> wait as long as 100ms and nobody wakes them up.
 
-But it would be useful to change this to:
-
-"Debayer Mean Window Size"
-
-Regards,
-
-	Hans
-
->> +    .type = V4L2_CTRL_TYPE_INTEGER,
->> +    .min = 1,
->> +    .max = 25,
->> +    .step = 2,
->> +    .def = 3,
->> +};
->> +
->>   struct vimc_ent_device *vimc_deb_add(struct vimc_device *vimc,
->>                        const char *vcfg_name)
->>   {
->> @@ -507,6 +556,16 @@ struct vimc_ent_device *vimc_deb_add(struct vimc_device *vimc,
->>       if (!vdeb)
->>           return NULL;
->>   +    /* Create controls: */
->> +    v4l2_ctrl_handler_init(&vdeb->hdl, 2);
->> +    v4l2_ctrl_new_custom(&vdeb->hdl, &vimc_deb_ctrl_class, NULL);
->> +    v4l2_ctrl_new_custom(&vdeb->hdl, &vimc_deb_ctrl_mean_win_size, NULL);
->> +    vdeb->sd.ctrl_handler = &vdeb->hdl;
->> +    if (vdeb->hdl.error) {
->> +        ret = vdeb->hdl.error;
->> +        goto err_free_vdeb;
->> +    }
->> +
->>       /* Initialize ved and sd */
->>       ret = vimc_ent_sd_register(&vdeb->ved, &vdeb->sd, v4l2_dev,
->>                      vcfg_name,
->> @@ -514,13 +573,12 @@ struct vimc_ent_device *vimc_deb_add(struct vimc_device *vimc,
->>                      (const unsigned long[2]) {MEDIA_PAD_FL_SINK,
->>                      MEDIA_PAD_FL_SOURCE},
->>                      &vimc_deb_int_ops, &vimc_deb_ops);
->> -    if (ret) {
->> -        kfree(vdeb);
->> -        return NULL;
->> -    }
->> +    if (ret)
->> +        goto err_free_hdl;
->>         vdeb->ved.process_frame = vimc_deb_process_frame;
->>       vdeb->dev = &vimc->pdev.dev;
->> +    vdeb->mean_win_size = vimc_deb_ctrl_mean_win_size.def;
->>         /* Initialize the frame format */
->>       vdeb->sink_fmt = sink_fmt_default;
->> @@ -534,4 +592,11 @@ struct vimc_ent_device *vimc_deb_add(struct vimc_device *vimc,
->>       vdeb->set_rgb_src = vimc_deb_set_rgb_mbus_fmt_rgb888_1x24;
->>         return &vdeb->ved;
->> +
->> +err_free_hdl:
->> +    v4l2_ctrl_handler_free(&vdeb->hdl);
-> 
-> Free the handle from vimc_deb_release()
-> 
->> +err_free_vdeb:
->> +    kfree(vdeb);
->> +
->> +    return NULL;
->>   }
->>
-> 
-> thanks,
-> -- Shuah
-
+Yes this is true but you should realize that this path is triggered only
+under heavy memory reclaim cases where there is nothing to reclaim
+because there are too many pages already isolated and we are waiting for
+reclaimers to make some progress on them. It is also possible that there
+are simply no reclaimable pages at all and we are heading the OOM
+situation. In both cases waiting a bit shouldn't be critical because
+this is really a cold path. It would be much better to have a mechanism
+to wake up earlier but this is likely to be non trivial and I am not
+sure worth the effort considering how rare this should be.
+-- 
+Michal Hocko
+SUSE Labs
