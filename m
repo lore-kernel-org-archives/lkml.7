@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02ADCC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 410E5C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2C9820678
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:18:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15E88217D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:18:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931525;
-	bh=rnOZ6QzYOdj7zq9IIKSly3ybfBdDx2tHfI82NcO/ph0=;
+	s=default; t=1568931530;
+	bh=gooiVDH5g9HpvZWBNFw92O16E/DOwxjMhDd3ub3cRFU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1OS1mj7jkMILc0m/jCo9OT0kUQ1sS5ui2g70G4Wksov4Q80rScV6KbgjHtTvDC9E0
-	 4DDOROzoIuWh4tOS3TCMb9sIEoeHGJNAkbna8hEPqBmSLt3AeInDGldnjkntHVlkWE
-	 H3SOc64DNhCt89d0snRkHQtVshdFZDLvwmaPrf60=
+	b=GAL3HmospgEEbeMjhhwXxGrhcOKFjfPacQfejLmzran36ESb1mlHNd4Qs3hK9lyUv
+	 5Yd7rTHlD8p0oquN5UfaxIOPg0vVNYQ7970x9xgw4IkXLF0bN8+hOEBYmU+ukrphyG
+	 A5OrtpOGZ2WBe2HBcbNwgUf/O88eS32INUulbVjU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406587AbfISWSo (ORCPT
+        id S2393951AbfISWSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:18:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60218 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:18:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392625AbfISWSj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:18:39 -0400
+        id S2406574AbfISWSl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:18:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C14B6217D6;
-        Thu, 19 Sep 2019 22:18:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8714021907;
+        Thu, 19 Sep 2019 22:18:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931518;
-        bh=rnOZ6QzYOdj7zq9IIKSly3ybfBdDx2tHfI82NcO/ph0=;
+        s=default; t=1568931521;
+        bh=gooiVDH5g9HpvZWBNFw92O16E/DOwxjMhDd3ub3cRFU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d0kN3fOTrKsb8Ylj/pe5EXlhvGe7ZFdczEtyQU162H4eQqiwKoOlgfeOZJ8aQ8mPg
-         cz/jtnp0wTccLucKAzdapuWOBDzuwVsjjF2jYJuYbq3W8zABPsXH2RIW2JD9/L6ebD
-         KSPcc1kEGbUE0SrA0whahSr8MnzFASGI938aZC1Q=
+        b=AH4iU4PcgefFrddLSGF2Wr/DwNrXNpq9JYZMeWbERKOgk569Pg6M5PVCC7KZvhUlz
+         eGiGnWtYjNmUzwKWzXjCT7RzgFh+H+CrLlRJOwRJ9YtuJsVtco+f1XAi4gBtKwo0tO
+         Y09e1P126nYgWhVyMmvbPoYZBPSizMmh9MMrIZ7w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.9 16/74] Btrfs: fix assertion failure during fsync and use of stale transaction
-Date:   Fri, 20 Sep 2019 00:03:29 +0200
-Message-Id: <20190919214805.890256386@linuxfoundation.org>
+        stable@vger.kernel.org, Yunfeng Ye <yeyunfeng@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Subject: [PATCH 4.9 17/74] genirq: Prevent NULL pointer dereference in resend_irqs()
+Date:   Fri, 20 Sep 2019 00:03:30 +0200
+Message-Id: <20190919214806.275866439@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214800.519074117@linuxfoundation.org>
 References: <20190919214800.519074117@linuxfoundation.org>
@@ -60,152 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Yunfeng Ye <yeyunfeng@huawei.com>
 
-commit 410f954cb1d1c79ae485dd83a175f21954fd87cd upstream.
+commit eddf3e9c7c7e4d0707c68d1bb22cc6ec8aef7d4a upstream.
 
-Sometimes when fsync'ing a file we need to log that other inodes exist and
-when we need to do that we acquire a reference on the inodes and then drop
-that reference using iput() after logging them.
+The following crash was observed:
 
-That generally is not a problem except if we end up doing the final iput()
-(dropping the last reference) on the inode and that inode has a link count
-of 0, which can happen in a very short time window if the logging path
-gets a reference on the inode while it's being unlinked.
+  Unable to handle kernel NULL pointer dereference at 0000000000000158
+  Internal error: Oops: 96000004 [#1] SMP
+  pc : resend_irqs+0x68/0xb0
+  lr : resend_irqs+0x64/0xb0
+  ...
+  Call trace:
+   resend_irqs+0x68/0xb0
+   tasklet_action_common.isra.6+0x84/0x138
+   tasklet_action+0x2c/0x38
+   __do_softirq+0x120/0x324
+   run_ksoftirqd+0x44/0x60
+   smpboot_thread_fn+0x1ac/0x1e8
+   kthread+0x134/0x138
+   ret_from_fork+0x10/0x18
 
-In that case we end up getting the eviction callback, btrfs_evict_inode(),
-invoked through the iput() call chain which needs to drop all of the
-inode's items from its subvolume btree, and in order to do that, it needs
-to join a transaction at the helper function evict_refill_and_join().
-However because the task previously started a transaction at the fsync
-handler, btrfs_sync_file(), it has current->journal_info already pointing
-to a transaction handle and therefore evict_refill_and_join() will get
-that transaction handle from btrfs_join_transaction(). From this point on,
-two different problems can happen:
+The reason for this is that the interrupt resend mechanism happens in soft
+interrupt context, which is a asynchronous mechanism versus other
+operations on interrupts. free_irq() does not take resend handling into
+account. Thus, the irq descriptor might be already freed before the resend
+tasklet is executed. resend_irqs() does not check the return value of the
+interrupt descriptor lookup and derefences the return value
+unconditionally.
 
-1) evict_refill_and_join() will often change the transaction handle's
-   block reserve (->block_rsv) and set its ->bytes_reserved field to a
-   value greater than 0. If evict_refill_and_join() never commits the
-   transaction, the eviction handler ends up decreasing the reference
-   count (->use_count) of the transaction handle through the call to
-   btrfs_end_transaction(), and after that point we have a transaction
-   handle with a NULL ->block_rsv (which is the value prior to the
-   transaction join from evict_refill_and_join()) and a ->bytes_reserved
-   value greater than 0. If after the eviction/iput completes the inode
-   logging path hits an error or it decides that it must fallback to a
-   transaction commit, the btrfs fsync handle, btrfs_sync_file(), gets a
-   non-zero value from btrfs_log_dentry_safe(), and because of that
-   non-zero value it tries to commit the transaction using a handle with
-   a NULL ->block_rsv and a non-zero ->bytes_reserved value. This makes
-   the transaction commit hit an assertion failure at
-   btrfs_trans_release_metadata() because ->bytes_reserved is not zero but
-   the ->block_rsv is NULL. The produced stack trace for that is like the
-   following:
+  1):
+  __setup_irq
+    irq_startup
+      check_irq_resend  // activate softirq to handle resend irq
+  2):
+  irq_domain_free_irqs
+    irq_free_descs
+      free_desc
+        call_rcu(&desc->rcu, delayed_free_desc)
+  3):
+  __do_softirq
+    tasklet_action
+      resend_irqs
+        desc = irq_to_desc(irq)
+        desc->handle_irq(desc)  // desc is NULL --> Ooops
 
-   [192922.917158] assertion failed: !trans->bytes_reserved, file: fs/btrfs/transaction.c, line: 816
-   [192922.917553] ------------[ cut here ]------------
-   [192922.917922] kernel BUG at fs/btrfs/ctree.h:3532!
-   [192922.918310] invalid opcode: 0000 [#1] SMP DEBUG_PAGEALLOC PTI
-   [192922.918666] CPU: 2 PID: 883 Comm: fsstress Tainted: G        W         5.1.4-btrfs-next-47 #1
-   [192922.919035] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.2-0-gf9626ccb91-prebuilt.qemu-project.org 04/01/2014
-   [192922.919801] RIP: 0010:assfail.constprop.25+0x18/0x1a [btrfs]
-   (...)
-   [192922.920925] RSP: 0018:ffffaebdc8a27da8 EFLAGS: 00010286
-   [192922.921315] RAX: 0000000000000051 RBX: ffff95c9c16a41c0 RCX: 0000000000000000
-   [192922.921692] RDX: 0000000000000000 RSI: ffff95cab6b16838 RDI: ffff95cab6b16838
-   [192922.922066] RBP: ffff95c9c16a41c0 R08: 0000000000000000 R09: 0000000000000000
-   [192922.922442] R10: ffffaebdc8a27e70 R11: 0000000000000000 R12: ffff95ca731a0980
-   [192922.922820] R13: 0000000000000000 R14: ffff95ca84c73338 R15: ffff95ca731a0ea8
-   [192922.923200] FS:  00007f337eda4e80(0000) GS:ffff95cab6b00000(0000) knlGS:0000000000000000
-   [192922.923579] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-   [192922.923948] CR2: 00007f337edad000 CR3: 00000001e00f6002 CR4: 00000000003606e0
-   [192922.924329] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-   [192922.924711] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-   [192922.925105] Call Trace:
-   [192922.925505]  btrfs_trans_release_metadata+0x10c/0x170 [btrfs]
-   [192922.925911]  btrfs_commit_transaction+0x3e/0xaf0 [btrfs]
-   [192922.926324]  btrfs_sync_file+0x44c/0x490 [btrfs]
-   [192922.926731]  do_fsync+0x38/0x60
-   [192922.927138]  __x64_sys_fdatasync+0x13/0x20
-   [192922.927543]  do_syscall_64+0x60/0x1c0
-   [192922.927939]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-   (...)
-   [192922.934077] ---[ end trace f00808b12068168f ]---
+Fix this by adding a NULL pointer check in resend_irqs() before derefencing
+the irq descriptor.
 
-2) If evict_refill_and_join() decides to commit the transaction, it will
-   be able to do it, since the nested transaction join only increments the
-   transaction handle's ->use_count reference counter and it does not
-   prevent the transaction from getting committed. This means that after
-   eviction completes, the fsync logging path will be using a transaction
-   handle that refers to an already committed transaction. What happens
-   when using such a stale transaction can be unpredictable, we are at
-   least having a use-after-free on the transaction handle itself, since
-   the transaction commit will call kmem_cache_free() against the handle
-   regardless of its ->use_count value, or we can end up silently losing
-   all the updates to the log tree after that iput() in the logging path,
-   or using a transaction handle that in the meanwhile was allocated to
-   another task for a new transaction, etc, pretty much unpredictable
-   what can happen.
-
-In order to fix both of them, instead of using iput() during logging, use
-btrfs_add_delayed_iput(), so that the logging path of fsync never drops
-the last reference on an inode, that step is offloaded to a safe context
-(usually the cleaner kthread).
-
-The assertion failure issue was sporadically triggered by the test case
-generic/475 from fstests, which loads the dm error target while fsstress
-is running, which lead to fsync failing while logging inodes with -EIO
-errors and then trying later to commit the transaction, triggering the
-assertion failure.
-
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: a4633adcdbc1 ("[PATCH] genirq: add genirq sw IRQ-retrigger")
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/1630ae13-5c8e-901e-de09-e740b6a426a7@huawei.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- fs/btrfs/tree-log.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ kernel/irq/resend.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/fs/btrfs/tree-log.c
-+++ b/fs/btrfs/tree-log.c
-@@ -4846,7 +4846,7 @@ again:
- 				err = btrfs_log_inode(trans, root, other_inode,
- 						      LOG_OTHER_INODE,
- 						      0, LLONG_MAX, ctx);
--				iput(other_inode);
-+				btrfs_add_delayed_iput(other_inode);
- 				if (err)
- 					goto out_unlock;
- 				else
-@@ -5264,7 +5264,7 @@ process_leaf:
- 			}
- 
- 			if (btrfs_inode_in_log(di_inode, trans->transid)) {
--				iput(di_inode);
-+				btrfs_add_delayed_iput(di_inode);
- 				break;
- 			}
- 
-@@ -5276,7 +5276,7 @@ process_leaf:
- 			if (!ret &&
- 			    btrfs_must_commit_transaction(trans, di_inode))
- 				ret = 1;
--			iput(di_inode);
-+			btrfs_add_delayed_iput(di_inode);
- 			if (ret)
- 				goto next_dir_inode;
- 			if (ctx->log_new_dentries) {
-@@ -5422,7 +5422,7 @@ static int btrfs_log_all_parents(struct
- 			if (!ret && ctx && ctx->log_new_dentries)
- 				ret = log_new_dir_dentries(trans, root,
- 							   dir_inode, ctx);
--			iput(dir_inode);
-+			btrfs_add_delayed_iput(dir_inode);
- 			if (ret)
- 				goto out;
- 		}
+--- a/kernel/irq/resend.c
++++ b/kernel/irq/resend.c
+@@ -37,6 +37,8 @@ static void resend_irqs(unsigned long ar
+ 		irq = find_first_bit(irqs_resend, nr_irqs);
+ 		clear_bit(irq, irqs_resend);
+ 		desc = irq_to_desc(irq);
++		if (!desc)
++			continue;
+ 		local_irq_disable();
+ 		desc->handle_irq(desc);
+ 		local_irq_enable();
 
 
