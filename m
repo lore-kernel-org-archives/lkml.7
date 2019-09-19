@@ -2,130 +2,170 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0439CC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8AC8C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:27:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCB3F20640
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:27:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932032;
-	bh=EEJyiFOb58dYeSeHP50yL1HEZhSK5Fe9OBqGqb3mxTA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z/2YbmW87FUs5RgOS1gaAhs1sSSj4r3DEJzQfWHBUaNmfIT3/id61iTOyd1pTmteQ
-	 BlLPUYnD31e2LBG3KbmOiPeZLgWCGEKv1friVFkx7WhKYcLOWkDZol0CFq5AWDc9N1
-	 Vz+QnBjpUb7ACBpONUvS1Z4A0BxnxVEpSlvfI3cE=
+	by mail.kernel.org (Postfix) with ESMTP id A684220678
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:27:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436558AbfISW1M (ORCPT
+        id S2436567AbfISW1O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:27:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35618 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:27:14 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40392 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406686AbfISWVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:21:13 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2393493AbfISW1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:27:11 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7584D21927;
-        Thu, 19 Sep 2019 22:21:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931672;
-        bh=EEJyiFOb58dYeSeHP50yL1HEZhSK5Fe9OBqGqb3mxTA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tPpcGDutXP4TkKTjZXjcakyc0c+dAlP3QZkXp4YnEm1wHrAGABU71pYKrIIPHN9j0
-         CSHfvCNUYsq/jQ6Vl3nvMtMhSvqtWGB5WnFKEpiWQ6f+p7flLuLApI957V/K2j4lvZ
-         Tn2+xyV/d3CBntHSh2TZ8HRbLeR2JwYnvm/bkzkY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 71/74] iommu/amd: Fix race in increase_address_space()
-Date:   Fri, 20 Sep 2019 00:04:24 +0200
-Message-Id: <20190919214811.342705594@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190919214800.519074117@linuxfoundation.org>
-References: <20190919214800.519074117@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mx1.redhat.com (Postfix) with ESMTPS id 016AA89AC7;
+        Thu, 19 Sep 2019 22:27:10 +0000 (UTC)
+Received: from x1.home (ovpn-118-102.phx2.redhat.com [10.3.118.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D856060BF1;
+        Thu, 19 Sep 2019 22:27:08 +0000 (UTC)
+Date:   Thu, 19 Sep 2019 16:27:08 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Matthew Rosato <mjrosato@linux.ibm.com>
+Cc:     Cornelia Huck <cohuck@redhat.com>, sebott@linux.ibm.com,
+        gerald.schaefer@de.ibm.com, pasic@linux.ibm.com,
+        borntraeger@de.ibm.com, walling@linux.ibm.com,
+        linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org,
+        joro@8bytes.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        heiko.carstens@de.ibm.com, robin.murphy@arm.com, gor@linux.ibm.com,
+        pmorel@linux.ibm.com
+Subject: Re: [PATCH v4 3/4] vfio: zpci: defining the VFIO headers
+Message-ID: <20190919162708.07d4eec4@x1.home>
+In-Reply-To: <0a62aba7-578a-6875-da4d-13e8b145cf9b@linux.ibm.com>
+References: <1567815231-17940-1-git-send-email-mjrosato@linux.ibm.com>
+        <1567815231-17940-4-git-send-email-mjrosato@linux.ibm.com>
+        <20190919172009.71b1c246.cohuck@redhat.com>
+        <0a62aba7-578a-6875-da4d-13e8b145cf9b@linux.ibm.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Thu, 19 Sep 2019 22:27:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+On Thu, 19 Sep 2019 16:55:57 -0400
+Matthew Rosato <mjrosato@linux.ibm.com> wrote:
 
-[ Upstream commit 754265bcab78a9014f0f99cd35e0d610fcd7dfa7 ]
+> On 9/19/19 11:20 AM, Cornelia Huck wrote:
+> > On Fri,  6 Sep 2019 20:13:50 -0400
+> > Matthew Rosato <mjrosato@linux.ibm.com> wrote:
+> >   
+> >> From: Pierre Morel <pmorel@linux.ibm.com>
+> >>
+> >> We define a new device region in vfio.h to be able to
+> >> get the ZPCI CLP information by reading this region from
+> >> userland.
+> >>
+> >> We create a new file, vfio_zdev.h to define the structure
+> >> of the new region we defined in vfio.h
+> >>
+> >> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> >> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
+> >> ---
+> >>  include/uapi/linux/vfio.h      |  1 +
+> >>  include/uapi/linux/vfio_zdev.h | 35 +++++++++++++++++++++++++++++++++++
+> >>  2 files changed, 36 insertions(+)
+> >>  create mode 100644 include/uapi/linux/vfio_zdev.h
+> >>
+> >> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> >> index 8f10748..8328c87 100644
+> >> --- a/include/uapi/linux/vfio.h
+> >> +++ b/include/uapi/linux/vfio.h
+> >> @@ -371,6 +371,7 @@ struct vfio_region_gfx_edid {
+> >>   * to do TLB invalidation on a GPU.
+> >>   */
+> >>  #define VFIO_REGION_SUBTYPE_IBM_NVLINK2_ATSD	(1)
+> >> +#define VFIO_REGION_SUBTYPE_ZDEV_CLP		(2)  
+> > 
+> > Using a subtype is fine, but maybe add a comment what this is for?
+> >   
+> 
+> Fair point.  Maybe something like "IBM ZDEV CLP is used to pass zPCI
+> device features to guest"
 
-After the conversion to lock-less dma-api call the
-increase_address_space() function can be called without any
-locking. Multiple CPUs could potentially race for increasing
-the address space, leading to invalid domain->mode settings
-and invalid page-tables. This has been happening in the wild
-under high IO load and memory pressure.
+And if you're going to use a PCI vendor ID subtype, maintain consistent
+naming, VFIO_REGION_SUBTYPE_IBM_ZPCI_CLP or something.  Ideally there'd
+also be a reference to the struct provided through this region
+otherwise it's rather obscure to find by looking for the call to
+vfio_pci_register_dev_region() and ops defined for the region.  I
+wouldn't be opposed to defining the region structure here too rather
+than a separate file, but I guess you're following the example set by
+ccw.
 
-Fix the race by locking this operation. The function is
-called infrequently so that this does not introduce
-a performance regression in the dma-api path again.
+> >>  
+> >>  /*
+> >>   * The MSIX mappable capability informs that MSIX data of a BAR can be mmapped
+> >> diff --git a/include/uapi/linux/vfio_zdev.h b/include/uapi/linux/vfio_zdev.h
+> >> new file mode 100644
+> >> index 0000000..55e0d6d
+> >> --- /dev/null
+> >> +++ b/include/uapi/linux/vfio_zdev.h
+> >> @@ -0,0 +1,35 @@
+> >> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+> >> +/*
+> >> + * Region definition for ZPCI devices
+> >> + *
+> >> + * Copyright IBM Corp. 2019
+> >> + *
+> >> + * Author(s): Pierre Morel <pmorel@linux.ibm.com>
+> >> + */
+> >> +
+> >> +#ifndef _VFIO_ZDEV_H_
+> >> +#define _VFIO_ZDEV_H_
+> >> +
+> >> +#include <linux/types.h>
+> >> +
+> >> +/**
+> >> + * struct vfio_region_zpci_info - ZPCI information.  
+> > 
+> > Hm... probably should also get some more explanation. E.g. is that
+> > derived from a hardware structure?
+> >   
+> 
+> The structure itself is not mapped 1:1 to a hardware structure, but it
+> does serve as a collection of information that was derived from other
+> hardware structures.
+> 
+> "Used for passing hardware feature information about a zpci device
+> between the host and guest" ?
+> 
+> >> + *
+> >> + */
+> >> +struct vfio_region_zpci_info {
+> >> +	__u64 dasm;
+> >> +	__u64 start_dma;
+> >> +	__u64 end_dma;
+> >> +	__u64 msi_addr;
+> >> +	__u64 flags;
+> >> +	__u16 pchid;
+> >> +	__u16 mui;
+> >> +	__u16 noi;
+> >> +	__u16 maxstbl;
+> >> +	__u8 version;
+> >> +	__u8 gid;
+> >> +#define VFIO_PCI_ZDEV_FLAGS_REFRESH 1
+> >> +	__u8 util_str[];
+> >> +} __packed;
+> >> +
+> >> +#endif  
 
-Reported-by: Qian Cai <cai@lca.pw>
-Fixes: 256e4621c21a ('iommu/amd: Make use of the generic IOVA allocator')
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/iommu/amd_iommu.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+I'm half tempted to suggest that this struct could be exposed directly
+through an info capability, the trouble is where.  It would be somewhat
+awkward to pick an arbitrary BAR or config space region to expose this
+info.  The VFIO_DEVICE_GET_INFO ioctl could include it, but we don't
+support capabilities on that return structure and I'm not sure it's
+worth implementing versus the solution here.  Just a thought.  Thanks,
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index c1233d0288a03..dd7880de7e4e9 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -1321,18 +1321,21 @@ static void domain_flush_devices(struct protection_domain *domain)
-  * another level increases the size of the address space by 9 bits to a size up
-  * to 64 bits.
-  */
--static bool increase_address_space(struct protection_domain *domain,
-+static void increase_address_space(struct protection_domain *domain,
- 				   gfp_t gfp)
- {
-+	unsigned long flags;
- 	u64 *pte;
- 
--	if (domain->mode == PAGE_MODE_6_LEVEL)
-+	spin_lock_irqsave(&domain->lock, flags);
-+
-+	if (WARN_ON_ONCE(domain->mode == PAGE_MODE_6_LEVEL))
- 		/* address space already 64 bit large */
--		return false;
-+		goto out;
- 
- 	pte = (void *)get_zeroed_page(gfp);
- 	if (!pte)
--		return false;
-+		goto out;
- 
- 	*pte             = PM_LEVEL_PDE(domain->mode,
- 					virt_to_phys(domain->pt_root));
-@@ -1340,7 +1343,10 @@ static bool increase_address_space(struct protection_domain *domain,
- 	domain->mode    += 1;
- 	domain->updated  = true;
- 
--	return true;
-+out:
-+	spin_unlock_irqrestore(&domain->lock, flags);
-+
-+	return;
- }
- 
- static u64 *alloc_pte(struct protection_domain *domain,
--- 
-2.20.1
-
-
-
+Alex
