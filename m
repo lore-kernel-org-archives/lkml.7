@@ -2,55 +2,57 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D882C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4DAEC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0294921A49
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8682621BE5
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:18:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931506;
-	bh=cz8gFurWnBpxuSWFcIrMIt/2/3SrCjZwpN/ECWAf+vg=;
+	s=default; t=1568931509;
+	bh=4XeXMAQl36BSINDqn9rleIQYysRKYqrRW9jUf+jNRkc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QvnS0JY4Tug9F++RrdJD4GP8vm/HqwTwk1ArTZkJfCrxrVPchMl5RMqBoXyhBDEmU
-	 zB9FaRHOhShi3kVNMKWvwKGubtFRay0JWJn6KC6N8zR0jKPdSNTfi2mBNbB9Jc7nDa
-	 yk61hPLhat+gKjjp7m/G/2pue6CHDlgMbdd1r92o=
+	b=JMGiAwH5KCh+ZeOIPL+kZUdQApZ5iMcSENMGmSwysIivCq53r5cVLHP8m1Zh/RL6Q
+	 bWKDEbHB2hjT5g8oev2Qo9ssRs347BY1TQJ82VfYExw2gFhRrdknAeR46h36Cs3WL2
+	 leYJnLkrR6ZtY1zv8hlE4H/sfXA31aiF5G1lwku0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393905AbfISWSU (ORCPT
+        id S2392475AbfISWS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:18:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59772 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:18:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393884AbfISWSQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:18:16 -0400
+        id S2393910AbfISWSW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:18:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 627EA222BD;
-        Thu, 19 Sep 2019 22:18:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D805821A49;
+        Thu, 19 Sep 2019 22:18:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931495;
-        bh=cz8gFurWnBpxuSWFcIrMIt/2/3SrCjZwpN/ECWAf+vg=;
+        s=default; t=1568931501;
+        bh=4XeXMAQl36BSINDqn9rleIQYysRKYqrRW9jUf+jNRkc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EOHdaFdH4BZW/fAPlkStkDFcoS03pbIoG2M6nHmfZxOxxfdZdCihZ6zk6UVy8rhXq
-         rp/oQ+8rBxMRXyZcs2wwfFdudTioIdy1SCeTbXjJbRvAa5KKs+iN6eY73q6y2Refew
-         rRFDx03AF61HFQM4UMFsZoYcZZg9AZcsxTFQw0Ro=
+        b=2L3Ei2iVLvoYz2b484peupAsIaToC7XPTNaJyWZ6fqORKMxoy0XrDpTv4S12uqRyC
+         NLTV+AUWgsOxA4OB79+5j9jZ7oiUx0euYvj7oCsaHKj3eoqEl7Z/pJ1tUWLSnmTRC3
+         clNAl1is25g7nyj37NW1lp5IEtUGtmlsuj8peSQ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 32/59] NFSv2: Fix eof handling
-Date:   Fri, 20 Sep 2019 00:03:47 +0200
-Message-Id: <20190919214805.839751995@linuxfoundation.org>
+        stable@vger.kernel.org, Neal Cardwell <ncardwell@google.com>,
+        Yuchung Cheng <ycheng@google.com>,
+        Soheil Hassas Yeganeh <soheil@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 10/74] tcp: fix tcp_ecn_withdraw_cwr() to clear TCP_ECN_QUEUE_CWR
+Date:   Fri, 20 Sep 2019 00:03:23 +0200
+Message-Id: <20190919214804.728838256@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190919214755.852282682@linuxfoundation.org>
-References: <20190919214755.852282682@linuxfoundation.org>
+In-Reply-To: <20190919214800.519074117@linuxfoundation.org>
+References: <20190919214800.519074117@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,35 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Neal Cardwell <ncardwell@google.com>
 
-[ Upstream commit 71affe9be45a5c60b9772e1b2701710712637274 ]
+[ Upstream commit af38d07ed391b21f7405fa1f936ca9686787d6d2 ]
 
-If we received a reply from the server with a zero length read and
-no error, then that implies we are at eof.
+Fix tcp_ecn_withdraw_cwr() to clear the correct bit:
+TCP_ECN_QUEUE_CWR.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Rationale: basically, TCP_ECN_DEMAND_CWR is a bit that is purely about
+the behavior of data receivers, and deciding whether to reflect
+incoming IP ECN CE marks as outgoing TCP th->ece marks. The
+TCP_ECN_QUEUE_CWR bit is purely about the behavior of data senders,
+and deciding whether to send CWR. The tcp_ecn_withdraw_cwr() function
+is only called from tcp_undo_cwnd_reduction() by data senders during
+an undo, so it should zero the sender-side state,
+TCP_ECN_QUEUE_CWR. It does not make sense to stop the reflection of
+incoming CE bits on incoming data packets just because outgoing
+packets were spuriously retransmitted.
+
+The bug has been reproduced with packetdrill to manifest in a scenario
+with RFC3168 ECN, with an incoming data packet with CE bit set and
+carrying a TCP timestamp value that causes cwnd undo. Before this fix,
+the IP CE bit was ignored and not reflected in the TCP ECE header bit,
+and sender sent a TCP CWR ('W') bit on the next outgoing data packet,
+even though the cwnd reduction had been undone.  After this fix, the
+sender properly reflects the CE bit and does not set the W bit.
+
+Note: the bug actually predates 2005 git history; this Fixes footer is
+chosen to be the oldest SHA1 I have tested (from Sep 2007) for which
+the patch applies cleanly (since before this commit the code was in a
+.h file).
+
+Fixes: bdf1ee5d3bd3 ("[TCP]: Move code from tcp_ecn.h to tcp*.c and tcp.h & remove it")
+Signed-off-by: Neal Cardwell <ncardwell@google.com>
+Acked-by: Yuchung Cheng <ycheng@google.com>
+Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
+Cc: Eric Dumazet <edumazet@google.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/nfs/proc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/ipv4/tcp_input.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfs/proc.c b/fs/nfs/proc.c
-index f7fd9192d4bc8..73d1f7277e482 100644
---- a/fs/nfs/proc.c
-+++ b/fs/nfs/proc.c
-@@ -589,7 +589,8 @@ static int nfs_read_done(struct rpc_task *task, struct nfs_pgio_header *hdr)
- 		/* Emulate the eof flag, which isn't normally needed in NFSv2
- 		 * as it is guaranteed to always return the file attributes
- 		 */
--		if (hdr->args.offset + hdr->res.count >= hdr->res.fattr->size)
-+		if ((hdr->res.count == 0 && hdr->args.count > 0) ||
-+		    hdr->args.offset + hdr->res.count >= hdr->res.fattr->size)
- 			hdr->res.eof = 1;
- 	}
- 	return 0;
--- 
-2.20.1
-
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -247,7 +247,7 @@ static void tcp_ecn_accept_cwr(struct tc
+ 
+ static void tcp_ecn_withdraw_cwr(struct tcp_sock *tp)
+ {
+-	tp->ecn_flags &= ~TCP_ECN_DEMAND_CWR;
++	tp->ecn_flags &= ~TCP_ECN_QUEUE_CWR;
+ }
+ 
+ static void __tcp_ecn_check_ce(struct sock *sk, const struct sk_buff *skb)
 
 
