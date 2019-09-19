@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5678C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D10C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8FF821907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD42921907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931029;
-	bh=Ov6xLFQ1v2QQcBXiK649r5jt25ebyAzDbX3CZoFlSEY=;
+	s=default; t=1568931031;
+	bh=hg3v9mNCEl88hPyO4T2hxcD97UjdZDKcsaSktvnl8vA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F7y1oXsyb6VPIFi+I4C24gO3SaBiRvL3FSDPomIEeae21FIyju4txSGrnZeZzRhyY
-	 8/8H2fSqbDkUSFmy873pDdePDpig/ieT253SIUZ6ctzJAqdKhV59382ffuhzA4CjK5
-	 j7VR5t1MXtYikyr3G/ezqEjuemXAUEMGg48kPZZU=
+	b=cN9nxhEAlxHoCoNqc9DkpAdqzdecABP8HsuhWnDAUnlsISrsWNC6m/MQdULBVGHLr
+	 UQvqIm0xY2dYQAUzZDZ/oQ/AaWxnGLCgDtKaQtS1PtqoqDvHsZ0HuvLFYZ3w4k8uEp
+	 ERmayJS4tVI8hd6HtAOa9aIEm+8AgoxwnyQR1mqQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405680AbfISWK3 (ORCPT
+        id S2405669AbfISWKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:10:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48802 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:10:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393535AbfISWK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:10:26 -0400
+        id S2405657AbfISWKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:10:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E47C21920;
-        Thu, 19 Sep 2019 22:10:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 130F021920;
+        Thu, 19 Sep 2019 22:10:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931025;
-        bh=Ov6xLFQ1v2QQcBXiK649r5jt25ebyAzDbX3CZoFlSEY=;
+        s=default; t=1568931019;
+        bh=hg3v9mNCEl88hPyO4T2hxcD97UjdZDKcsaSktvnl8vA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wsi4SpWiEIdsvJaYi7IKe6+reg1ogseHy7i29Gakcy/C/W9zdxLV2TUq6aSia9gD6
-         X3UHJYCoayvaNHqagmoImr4jBkojGmI86qUp+GYoLJmlOQk5Enuay+dd1kD+mX3MjR
-         wlgs3zIR4l6B3KDSBE6ZlPIgqHWO7JnAI8eo+CxI=
+        b=p/N+SMv/hNZSSPrTdPQSaQSFyNlVXDJYSE2sDg/pEKMkl0RBNYGJPrgsOnFmcxLjL
+         EITlsWLQSm1fKYg6CB3F2sTkD/cUBRQaEudjl8uIViKZiDz1Wd0INBo5n59A6HSnUO
+         J3Tn38fkuoFTElaNd4wqnwGJfIIPp+rKv25KBPVA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Prarit Bhargava <prarit@redhat.com>,
-        Kosuke Tatsukawa <tatsu@ab.jp.nec.com>,
-        Len Brown <len.brown@intel.com>,
+        stable@vger.kernel.org, Todd Seidelmann <tseidelmann@linode.com>,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 099/124] tools/power turbostat: Fix Haswell Core systems
-Date:   Fri, 20 Sep 2019 00:03:07 +0200
-Message-Id: <20190919214822.682987329@linuxfoundation.org>
+Subject: [PATCH 5.2 071/124] netfilter: xt_physdev: Fix spurious error message in physdev_mt_check
+Date:   Fri, 20 Sep 2019 00:02:39 +0200
+Message-Id: <20190919214821.585914950@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -61,89 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Len Brown <len.brown@intel.com>
+From: Todd Seidelmann <tseidelmann@linode.com>
 
-[ Upstream commit cd188af5282d9f9e65f63915b13239bafc746f8d ]
+[ Upstream commit 3cf2f450fff304be9cf4868bf0df17f253bc5b1c ]
 
-turbostat: cpu0: msr offset 0x630 read failed: Input/output error
+Simplify the check in physdev_mt_check() to emit an error message
+only when passed an invalid chain (ie, NF_INET_LOCAL_OUT).
+This avoids cluttering up the log with errors against valid rules.
 
-because Haswell Core does not have C8-C10.
+For large/heavily modified rulesets, current behavior can quickly
+overwhelm the ring buffer, because this function gets called on
+every change, regardless of the rule that was changed.
 
-Output C8-C10 only on Haswell ULT.
-
-Fixes: f5a4c76ad7de ("tools/power turbostat: consolidate duplicate model numbers")
-
-Reported-by: Prarit Bhargava <prarit@redhat.com>
-Suggested-by: Kosuke Tatsukawa <tatsu@ab.jp.nec.com>
-Signed-off-by: Len Brown <len.brown@intel.com>
+Signed-off-by: Todd Seidelmann <tseidelmann@linode.com>
+Acked-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/power/x86/turbostat/turbostat.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ net/netfilter/xt_physdev.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
-index 752cb4c0fde6b..56c3e041d4f93 100644
---- a/tools/power/x86/turbostat/turbostat.c
-+++ b/tools/power/x86/turbostat/turbostat.c
-@@ -3211,6 +3211,7 @@ int probe_nhm_msrs(unsigned int family, unsigned int model)
- 		break;
- 	case INTEL_FAM6_HASWELL_CORE:	/* HSW */
- 	case INTEL_FAM6_HASWELL_X:	/* HSX */
-+	case INTEL_FAM6_HASWELL_ULT:	/* HSW */
- 	case INTEL_FAM6_HASWELL_GT3E:	/* HSW */
- 	case INTEL_FAM6_BROADWELL_CORE:	/* BDW */
- 	case INTEL_FAM6_BROADWELL_GT3E:	/* BDW */
-@@ -3407,6 +3408,7 @@ int has_config_tdp(unsigned int family, unsigned int model)
- 	case INTEL_FAM6_IVYBRIDGE:	/* IVB */
- 	case INTEL_FAM6_HASWELL_CORE:	/* HSW */
- 	case INTEL_FAM6_HASWELL_X:	/* HSX */
-+	case INTEL_FAM6_HASWELL_ULT:	/* HSW */
- 	case INTEL_FAM6_HASWELL_GT3E:	/* HSW */
- 	case INTEL_FAM6_BROADWELL_CORE:	/* BDW */
- 	case INTEL_FAM6_BROADWELL_GT3E:	/* BDW */
-@@ -3843,6 +3845,7 @@ void rapl_probe_intel(unsigned int family, unsigned int model)
- 	case INTEL_FAM6_SANDYBRIDGE:
- 	case INTEL_FAM6_IVYBRIDGE:
- 	case INTEL_FAM6_HASWELL_CORE:	/* HSW */
-+	case INTEL_FAM6_HASWELL_ULT:	/* HSW */
- 	case INTEL_FAM6_HASWELL_GT3E:	/* HSW */
- 	case INTEL_FAM6_BROADWELL_CORE:	/* BDW */
- 	case INTEL_FAM6_BROADWELL_GT3E:	/* BDW */
-@@ -4034,6 +4037,7 @@ void perf_limit_reasons_probe(unsigned int family, unsigned int model)
+diff --git a/net/netfilter/xt_physdev.c b/net/netfilter/xt_physdev.c
+index ead7c60222086..b92b22ce8abd3 100644
+--- a/net/netfilter/xt_physdev.c
++++ b/net/netfilter/xt_physdev.c
+@@ -101,11 +101,9 @@ static int physdev_mt_check(const struct xt_mtchk_param *par)
+ 	if (info->bitmask & (XT_PHYSDEV_OP_OUT | XT_PHYSDEV_OP_ISOUT) &&
+ 	    (!(info->bitmask & XT_PHYSDEV_OP_BRIDGED) ||
+ 	     info->invert & XT_PHYSDEV_OP_BRIDGED) &&
+-	    par->hook_mask & ((1 << NF_INET_LOCAL_OUT) |
+-	    (1 << NF_INET_FORWARD) | (1 << NF_INET_POST_ROUTING))) {
++	    par->hook_mask & (1 << NF_INET_LOCAL_OUT)) {
+ 		pr_info_ratelimited("--physdev-out and --physdev-is-out only supported in the FORWARD and POSTROUTING chains with bridged traffic\n");
+-		if (par->hook_mask & (1 << NF_INET_LOCAL_OUT))
+-			return -EINVAL;
++		return -EINVAL;
+ 	}
  
- 	switch (model) {
- 	case INTEL_FAM6_HASWELL_CORE:	/* HSW */
-+	case INTEL_FAM6_HASWELL_ULT:	/* HSW */
- 	case INTEL_FAM6_HASWELL_GT3E:	/* HSW */
- 		do_gfx_perf_limit_reasons = 1;
- 	case INTEL_FAM6_HASWELL_X:	/* HSX */
-@@ -4253,6 +4257,7 @@ int has_snb_msrs(unsigned int family, unsigned int model)
- 	case INTEL_FAM6_IVYBRIDGE_X:	/* IVB Xeon */
- 	case INTEL_FAM6_HASWELL_CORE:	/* HSW */
- 	case INTEL_FAM6_HASWELL_X:	/* HSW */
-+	case INTEL_FAM6_HASWELL_ULT:	/* HSW */
- 	case INTEL_FAM6_HASWELL_GT3E:	/* HSW */
- 	case INTEL_FAM6_BROADWELL_CORE:	/* BDW */
- 	case INTEL_FAM6_BROADWELL_GT3E:	/* BDW */
-@@ -4286,7 +4291,7 @@ int has_hsw_msrs(unsigned int family, unsigned int model)
- 		return 0;
- 
- 	switch (model) {
--	case INTEL_FAM6_HASWELL_CORE:
-+	case INTEL_FAM6_HASWELL_ULT:	/* HSW */
- 	case INTEL_FAM6_BROADWELL_CORE:	/* BDW */
- 	case INTEL_FAM6_SKYLAKE_MOBILE:	/* SKL */
- 	case INTEL_FAM6_CANNONLAKE_MOBILE:	/* CNL */
-@@ -4570,9 +4575,6 @@ unsigned int intel_model_duplicates(unsigned int model)
- 	case INTEL_FAM6_XEON_PHI_KNM:
- 		return INTEL_FAM6_XEON_PHI_KNL;
- 
--	case INTEL_FAM6_HASWELL_ULT:
--		return INTEL_FAM6_HASWELL_CORE;
--
- 	case INTEL_FAM6_BROADWELL_X:
- 	case INTEL_FAM6_BROADWELL_XEON_D:	/* BDX-DE */
- 		return INTEL_FAM6_BROADWELL_X;
+ 	if (!brnf_probed) {
 -- 
 2.20.1
 
