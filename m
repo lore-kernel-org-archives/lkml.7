@@ -2,126 +2,152 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1CC1C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 03:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C57C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 03:28:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B205820815
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 03:25:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F069320815
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 03:28:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=hardenedlinux.org header.i=@hardenedlinux.org header.b="eQupdZtb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k1JvNLlH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731435AbfISDZB (ORCPT
+        id S1731533AbfISD2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 23:25:01 -0400
-Received: from mail1.protonmail.ch ([185.70.40.18]:33052 "EHLO
-        mail1.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728423AbfISDZB (ORCPT
+        Wed, 18 Sep 2019 23:28:48 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:37989 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731450AbfISD2r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 23:25:01 -0400
-Date:   Thu, 19 Sep 2019 03:24:55 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hardenedlinux.org;
-        s=protonmail; t=1568863498;
-        bh=UGPlxdw/GA0C+GgCymCvb83hIycn10vrVkMuVgnbqls=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:
-         Feedback-ID:From;
-        b=eQupdZtbt6KaoPyu7zLqHFSOw/5smDSldJpuvRo2+051rY8TyCtLzGQrY7FNutC4e
-         u6xjnBS5v9xDo5d3SbxvElYg5bQa4oeqMV3ohqbhezE/tYTCAgdl+XZN5tuZV8OUNo
-         VZqe/467zvs8aT6lKehkXnyBSJHXO6Ia+aJPv4Pg=
-To:     Palmer Dabbelt <palmer@sifive.com>
-From:   Xiang Wang <merle@hardenedlinux.org>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "citypw@hardenedlinux.org" <citypw@hardenedlinux.org>
-Reply-To: Xiang Wang <merle@hardenedlinux.org>
-Subject: Re: arch/riscv: disable too many harts before pick main boot hart
-Message-ID: <LQ8iC9RFpYZKFM9BGCpoHtnE3mzT-DqRwTKwJ_ngjvojyMAVvsVGaLscmiSopwR14QkhFejc7r9Qc8orGLN_H7lqo3yxAmcrYc5sZh9ZqXI=@hardenedlinux.org>
-In-Reply-To: <mhng-0a85b4e9-be39-469c-9a50-4ee1310f6e8e@palmer-si-x1e>
-References: <mhng-0a85b4e9-be39-469c-9a50-4ee1310f6e8e@palmer-si-x1e>
-Feedback-ID: BRRa7Rf7LqOlikZR00e5gSr_IsihWq0drDTak4NnawY-ONQTW87vpTHz90bkJTl_rn8r4L6gc-nP1pm37CQtxw==:Ext:ProtonMail
+        Wed, 18 Sep 2019 23:28:47 -0400
+Received: by mail-io1-f68.google.com with SMTP id k5so4332280iol.5;
+        Wed, 18 Sep 2019 20:28:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BNbLf23EmCSrCvK1MZ3crIYt+lvIMsxQcCUGO2pJXfc=;
+        b=k1JvNLlHbtZMs2Rd6GgQpe1doFKTTqCEiibUCJ/FSDH41thtmtzl+bAdhgZ+VKlyso
+         aO/MfHLkYP8rKJT+JuRi23fomMk2bv3GIpPe6e77b5Uro6zuhhgh0U6PTfvkgMkgQfnf
+         3iKcWGAN4IPYBOA8M0zZyOTRBVM2f3HwlLNuspX1a8SiEqLkGqOYBfRqFwRlTGnbV9gv
+         lQQrhpPr/fRvg39G7YO7v24VQnhRzv0ePWwt5ulyBUTVupkb5BzDHtr2UrgK3j5Fi/G2
+         wQ8X6lQcHv2/upSgJVANJ0o9fG8FuZNsRnpG3IMDS9TreK+fo9/p1DqxuvU37VTSK+Sp
+         OTpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BNbLf23EmCSrCvK1MZ3crIYt+lvIMsxQcCUGO2pJXfc=;
+        b=R/88pi4pm1UVuoFnTCW778NtLF1pdnkvnHfYKHmTc83+1MgiU+/Z4Grdr4BzCEp9hi
+         NxqjOFoyXHZaAdXoXHLJ/ErnzyoHN5v3HgjMKzXEl8iAdGjlxVdaoSFTPtCSoRwk1jaM
+         YeEBMuIUQleIbIK3AagmKX4+w12bQHxk9v6CTcsnDKboaYBC8yYrot6SyXTbYxuN4ln3
+         pM+haff883uL4cEgjF/3EVkYfUWK/qq1eFQIh/8jiHQrvh+0OnovsaBMYM2+akZpgPuO
+         Swh8rjsSyDCYJIMYhnCSQVM/nKZWv/Ik5BsrVsRHR39f0b/rkO+Vt+ldfieqjKrM69yi
+         IP5g==
+X-Gm-Message-State: APjAAAXsVmcy5553Ia6SAO/Zlo7nRGibGAn1lJNPhVlPwBYnQBS4i3f5
+        A3CNGVJZm3MHfgHQOkTXJXt2uVtmAOY+Kf+79cQ=
+X-Google-Smtp-Source: APXvYqzPTP4Dp9sgZd6PgvljuadFfBdfXebs8nrlxtOQggpHX4nAMMgryUdwkFF3YacEaj9vqxdZ4SLiXx8okL428VE=
+X-Received: by 2002:a5d:9eca:: with SMTP id a10mr8986890ioe.180.1568863726773;
+ Wed, 18 Sep 2019 20:28:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <20190812152022.27963-1-stillcompiling@gmail.com>
+ <20190812152022.27963-4-stillcompiling@gmail.com> <CAMB+bfK9Oge1T96aJkuvpoAdUSsm+YxY1W70b62gUMMBKfD8vg@mail.gmail.com>
+ <CAO-hwJLVS0G+TtShbBQ6j9_aCAKjb_AsvoN2HkR+zKpd98MKRw@mail.gmail.com>
+In-Reply-To: <CAO-hwJLVS0G+TtShbBQ6j9_aCAKjb_AsvoN2HkR+zKpd98MKRw@mail.gmail.com>
+From:   Joshua Clayton <stillcompiling@gmail.com>
+Date:   Wed, 18 Sep 2019 23:28:35 -0400
+Message-ID: <CAMB+bfL9RWzCs_FHrLRsQwsvBBSOBEiUq_ApniLpSUkiOtJvvQ@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] HID: core: fix dmesg flooding if report field
+ larger than 32bit
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Joe Perches <joe@perches.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Thanks!
+It means a lot to have this accepted.
+I actually started working on it, thinking "how hard can it be to
+increase the size of a data structure"? It only has to be forward
+compatible anyway.
+My gut feeling is the existing code is working way too hard to do what
+should be a memcpy, and the impulse to "fix" it is strong, despite my
+absolute lack of usb-hid experience.
 
+But the history of this little bit of code is already fraught with
+complaints about big endian breakage.
+I'm tempted to make it much simpler for size>32 bits (fix it only for
+future users), or just way simpler for little endian,
+But what do I know about usb and big endian? I sure don't have the
+equipment to test it. And I worry a little I might be forgetting some
+oddball non-byte-aligned data structure, which the spec would
+theoretically allow.
+Perhaps I'll have to time and courage to take another stab.
 
+~Joshua
 
-
-
-=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90 Original Me=
-ssage =E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90
-On 2019=E5=B9=B49=E6=9C=8814=E6=97=A5SaturdayAM3=E7=82=B904=E5=88=86, Palme=
-r Dabbelt <palmer@sifive.com> wrote:
-
-> On Thu, 05 Sep 2019 23:51:15 PDT (-0700), merle@hardenedlinux.org wrote:
+On Wed, Sep 18, 2019 at 11:35 AM Benjamin Tissoires
+<benjamin.tissoires@redhat.com> wrote:
 >
-> > From 12300865d1103618c9d4c375f7d7fbe601b6618c Mon Sep 17 00:00:00 2001
-> > From: Xiang Wang merle@hardenedlinux.org
-> > Date: Fri, 6 Sep 2019 11:56:09 +0800
-> > Subject: [PATCH] arch/riscv: disable too many harts before pick main bo=
-ot hart
-> > These harts with id greater than or equal to CONFIG_NR_CPUS need to be =
-disabled.
-> > But pick the main Hart can choose any one. So, before pick the main har=
-t, you
-> > need to disable the hart with id greater than or equal to CONFIG_NR_CPU=
-S.
+> On Thu, Aug 29, 2019 at 1:26 AM Joshua Clayton <stillcompiling@gmail.com> wrote:
 > >
-> > Signed-off-by: Xiang Wang merle@hardenedlinux.org
-> >
-> > --------------------------------------------------
-> >
-> > arch/riscv/kernel/head.S | 8 +++++---
-> > 1 file changed, 5 insertions(+), 3 deletions(-)
-> > diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-> > index 0f1ba17e476f..cfffea38eb17 100644
-> > --- a/arch/riscv/kernel/head.S
-> > +++ b/arch/riscv/kernel/head.S
-> > @@ -63,6 +63,11 @@ _start_kernel:
-> > li t0, SR_FS
-> > csrc sstatus, t0
-> > +#ifdef CONFIG_SMP
-> >
-> > -   li t0, CONFIG_NR_CPUS
-> > -   bgeu a0, t0, .Lsecondary_park
-> >     +#endif
-> >
-> > -
-> >
-> > /* Pick one hart to run the main boot sequence */
-> > la a3, hart_lottery
-> > li a2, 1
-> > @@ -154,9 +159,6 @@ relocate:
-> > .Lsecondary_start:
-> > #ifdef CONFIG_SMP
-> >
-> > -   li a1, CONFIG_NR_CPUS
-> > -   bgeu a0, a1, .Lsecondary_park
-> > -
-> >
-> > /* Set trap vector to spin forever to help debug */
-> > la a3, .Lsecondary_park
-> > csrw CSR_STVEC, a3
+> > ping?
+> > I'd love to see this get in.
+> > with distro kernel I have effectively no dmesg due to this issue
 >
-> It would be better to decouple the hart masks from NR_CPUS, as there's re=
-ally
-> no reason for these to be the same.
-
-This may be new feature. Need to define new macros such as disabled_hart_ma=
-sk,
-this patch is used to fix bug and not add new feature.
-
+> Apologies for the delay.
 >
-> Reviewed-by: Palmer Dabbelt palmer@sifive.com
-
-
+> I really thought we should find a better way of fixing this, until I
+> got a laptop affected by it. This series is a must have.
+>
+> Applied to for-5.4/core
+>
+> Cheers,
+> Benjamin
+>
+> >
+> > On Mon, Aug 12, 2019 at 9:20 AM <stillcompiling@gmail.com> wrote:
+> > >
+> > > From: Joshua Clayton <stillcompiling@gmail.com>
+> > >
+> > > Only warn once of oversize hid report value field
+> > >
+> > > On HP spectre x360 convertible the message:
+> > > hid-sensor-hub 001F:8087:0AC2.0002: hid_field_extract() called with n (192) > 32! (kworker/1:2)
+> > > is continually printed many times per second, crowding out all else.
+> > > Protect dmesg by printing the warning only one time.
+> > >
+> > > The size of the hid report field data structure should probably be increased.
+> > > The data structure is treated as a u32 in Linux, but an unlimited number
+> > > of bits in the USB hid spec, so there is some rearchitecture needed now that
+> > > devices are sending more than 32 bits.
+> > >
+> > > Signed-off-by: Joshua Clayton <stillcompiling@gmail.com>
+> > >
+> > > diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
+> > > index 210b81a56e1a..3eaee2c37931 100644
+> > > --- a/drivers/hid/hid-core.c
+> > > +++ b/drivers/hid/hid-core.c
+> > > @@ -1311,8 +1311,8 @@ u32 hid_field_extract(const struct hid_device *hid, u8 *report,
+> > >                         unsigned offset, unsigned n)
+> > >  {
+> > >         if (n > 32) {
+> > > -               hid_warn(hid, "hid_field_extract() called with n (%d) > 32! (%s)\n",
+> > > -                        n, current->comm);
+> > > +               hid_warn_once(hid, "%s() called with n (%d) > 32! (%s)\n",
+> > > +                             __func__, n, current->comm);
+> > >                 n = 32;
+> > >         }
+> > >
+> > > --
+> > > 2.21.0
+> > >
+>
