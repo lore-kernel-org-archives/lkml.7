@@ -2,57 +2,53 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 604ABC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B45F5C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A953208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:36:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B23D217D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:37:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932615;
-	bh=PZCwTfuWldxsg3C3Jw5YY8AHw2TBpq8aBpf9WBQhNXs=;
+	s=default; t=1568932620;
+	bh=uid3Os48d7nQhIFvTqDHrh3Vj11rA7fwL1JrzgyC0v8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v1lgNiA7VPLGWjYI2KH3ypdpLXvpLjWKnTgkHVnVwjcKV5NGu7atsO8/I9u1kKdvA
-	 9wo1vio0pDQl6w7Nlv1F9IdArkcDCnzEy7kEAh5dVUaE9fl090K8oXvAj78jhbb0xP
-	 gy8P8N5JfJx2d7J//3Eo2m1KxmKSGHqusuuUQ/Bw=
+	b=dP8w3YtYJMTa4v68fZRXXQs+544dnBnQUCtdRbOdetAYRL8MafnH6NpdIwCH0XmsM
+	 +VaX9vrbLt20vL9iiQ94g/ZHT9/JcENAVbTFR8q17VptL3/d4KKEtwaIyN+NZ040YG
+	 +zTbGLrXlfH5OpGAbxwRaKn41htvgtPMdM/mhvWI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406992AbfISWgy (ORCPT
+        id S2407135AbfISWg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:36:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43296 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:36:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405034AbfISWGA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:06:00 -0400
+        id S2405075AbfISWF6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:05:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B23721920;
-        Thu, 19 Sep 2019 22:05:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C37A321920;
+        Thu, 19 Sep 2019 22:05:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568930759;
-        bh=PZCwTfuWldxsg3C3Jw5YY8AHw2TBpq8aBpf9WBQhNXs=;
+        s=default; t=1568930757;
+        bh=uid3Os48d7nQhIFvTqDHrh3Vj11rA7fwL1JrzgyC0v8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PVDetxr+lgN897xig/CujbWSFTliGN7yzYkc8LyX+w/s3r+9dYxBu8FbR3T6L8faL
-         reqkP9nlg91vAWZc8jA8b+yhvAqfjJNw0ly7/7JA+93ItwOUcqDHMYOdydMPq/KZZq
-         JLvUUKSA+j15WP/+/5YnoXnRlBhuZJD3nazAEsx0=
+        b=bGROXAVCElHbOaKkUZBemoazPM7VZQGNOXK0V7xtSGejqKTKK5j73MW43ZNGwTaT0
+         Tm03xnOj/ogHZcdEvY2YWrPDYZpXrWGyGat+Fv/P66t+Qz23/IVIWAM5XVSflls/Jf
+         biyIt9dgpXnbtSC2a4bhzYXlBvAlUBwKJ2t0S1H0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+d5870a903591faaca4ae@syzkaller.appspotmail.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 06/21] net_sched: let qdisc_put() accept NULL pointer
-Date:   Fri, 20 Sep 2019 00:03:07 +0200
-Message-Id: <20190919214701.920915648@linuxfoundation.org>
+        stable@vger.kernel.org, Li Shuang <shuali@redhat.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Davide Caratti <dcaratti@redhat.com>
+Subject: [PATCH 5.3 05/21] net/sched: fix race between deactivation and dequeue for NOLOCK qdisc
+Date:   Fri, 20 Sep 2019 00:03:06 +0200
+Message-Id: <20190919214701.605942243@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214657.842130855@linuxfoundation.org>
 References: <20190919214657.842130855@linuxfoundation.org>
@@ -65,44 +61,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Paolo Abeni <pabeni@redhat.com>
 
-[ Upstream commit 6efb971ba8edfbd80b666f29de12882852f095ae ]
+[ Upstream commit d518d2ed8640c1cbbbb6f63939e3e65471817367 ]
 
-When tcf_block_get() fails in sfb_init(), q->qdisc is still a NULL
-pointer which leads to a crash in sfb_destroy(). Similar for
-sch_dsmark.
+The test implemented by some_qdisc_is_busy() is somewhat loosy for
+NOLOCK qdisc, as we may hit the following scenario:
 
-Instead of fixing each separately, Linus suggested to just accept
-NULL pointer in qdisc_put(), which would make callers easier.
+CPU1						CPU2
+// in net_tx_action()
+clear_bit(__QDISC_STATE_SCHED...);
+						// in some_qdisc_is_busy()
+						val = (qdisc_is_running(q) ||
+						       test_bit(__QDISC_STATE_SCHED,
+								&q->state));
+						// here val is 0 but...
+qdisc_run(q)
+// ... CPU1 is going to run the qdisc next
 
-(For sch_dsmark, the bug probably exists long before commit
-6529eaba33f0.)
+As a conseguence qdisc_run() in net_tx_action() can race with qdisc_reset()
+in dev_qdisc_reset(). Such race is not possible for !NOLOCK qdisc as
+both the above bit operations are under the root qdisc lock().
 
-Fixes: 6529eaba33f0 ("net: sched: introduce tcf block infractructure")
-Reported-by: syzbot+d5870a903591faaca4ae@syzkaller.appspotmail.com
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>
-Cc: Jiri Pirko <jiri@resnulli.us>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
+After commit 021a17ed796b ("pfifo_fast: drop unneeded additional lock on dequeue")
+the race can cause use after free and/or null ptr dereference, but the root
+cause is likely older.
+
+This patch addresses the issue explicitly checking for deactivation under
+the seqlock for NOLOCK qdisc, so that the qdisc_run() in the critical
+scenario becomes a no-op.
+
+Note that the enqueue() op can still execute concurrently with dev_qdisc_reset(),
+but that is safe due to the skb_array() locking, and we can't avoid that
+for NOLOCK qdiscs.
+
+Fixes: 021a17ed796b ("pfifo_fast: drop unneeded additional lock on dequeue")
+Reported-by: Li Shuang <shuali@redhat.com>
+Reported-and-tested-by: Davide Caratti <dcaratti@redhat.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/sch_generic.c |    3 +++
- 1 file changed, 3 insertions(+)
+ include/net/pkt_sched.h |    7 ++++++-
+ net/core/dev.c          |   16 ++++++++++------
+ 2 files changed, 16 insertions(+), 7 deletions(-)
 
---- a/net/sched/sch_generic.c
-+++ b/net/sched/sch_generic.c
-@@ -985,6 +985,9 @@ static void qdisc_destroy(struct Qdisc *
- 
- void qdisc_put(struct Qdisc *qdisc)
+--- a/include/net/pkt_sched.h
++++ b/include/net/pkt_sched.h
+@@ -118,7 +118,12 @@ void __qdisc_run(struct Qdisc *q);
+ static inline void qdisc_run(struct Qdisc *q)
  {
-+	if (!qdisc)
-+		return;
-+
- 	if (qdisc->flags & TCQ_F_BUILTIN ||
- 	    !refcount_dec_and_test(&qdisc->refcnt))
- 		return;
+ 	if (qdisc_run_begin(q)) {
+-		__qdisc_run(q);
++		/* NOLOCK qdisc must check 'state' under the qdisc seqlock
++		 * to avoid racing with dev_qdisc_reset()
++		 */
++		if (!(q->flags & TCQ_F_NOLOCK) ||
++		    likely(!test_bit(__QDISC_STATE_DEACTIVATED, &q->state)))
++			__qdisc_run(q);
+ 		qdisc_run_end(q);
+ 	}
+ }
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -3467,18 +3467,22 @@ static inline int __dev_xmit_skb(struct
+ 	qdisc_calculate_pkt_len(skb, q);
+ 
+ 	if (q->flags & TCQ_F_NOLOCK) {
+-		if (unlikely(test_bit(__QDISC_STATE_DEACTIVATED, &q->state))) {
+-			__qdisc_drop(skb, &to_free);
+-			rc = NET_XMIT_DROP;
+-		} else if ((q->flags & TCQ_F_CAN_BYPASS) && q->empty &&
+-			   qdisc_run_begin(q)) {
++		if ((q->flags & TCQ_F_CAN_BYPASS) && q->empty &&
++		    qdisc_run_begin(q)) {
++			if (unlikely(test_bit(__QDISC_STATE_DEACTIVATED,
++					      &q->state))) {
++				__qdisc_drop(skb, &to_free);
++				rc = NET_XMIT_DROP;
++				goto end_run;
++			}
+ 			qdisc_bstats_cpu_update(q, skb);
+ 
++			rc = NET_XMIT_SUCCESS;
+ 			if (sch_direct_xmit(skb, q, dev, txq, NULL, true))
+ 				__qdisc_run(q);
+ 
++end_run:
+ 			qdisc_run_end(q);
+-			rc = NET_XMIT_SUCCESS;
+ 		} else {
+ 			rc = q->enqueue(skb, q, &to_free) & NET_XMIT_MASK;
+ 			qdisc_run(q);
 
 
