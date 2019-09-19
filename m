@@ -2,53 +2,51 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 677AAC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9B4C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:15:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F98021907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:15:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C12C21907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:15:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931333;
-	bh=ont1s2hWDsj0rjL5UpbAstBll8ppiMiCPDPkdEjRjYY=;
+	s=default; t=1568931338;
+	bh=rbeWn0IPTd+TWEds9YFtOWj5EmQqVblA0ypZpXd4tiw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ajOr0UiUh2z5vld16thyLUMJtl3JsHWAwo9Hdb9iAMn8lRV4LTghrZQfD9DjiSYOH
-	 u05JOmbB4sf+LEVRVpsBPt19M1TaCr5ktlQB4Sg/dsk//PlAjeoNOK2uUvUU+3U8+o
-	 4xaNd84V0KS8vWry++dLpIXrnHOwJPg/Brrws9lU=
+	b=wv8WRcKN9YgnNEHLiHuic48foByHYgJGk7DcfMgeI90R9cyyh3/7480e8TgmDGLSi
+	 Nkhw9YOKYUj/OZx82UGWXDyGAqJLFP60DFMqA216C1RZDMWh7fX39Man2kqn6cN8/p
+	 OqkAartYkNP4Z5SDnQ2iEvUAwO2D8nnvEo3zYUWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406146AbfISWPc (ORCPT
+        id S2406158AbfISWPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:15:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55422 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:15:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403915AbfISWP3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:15:29 -0400
+        id S2403915AbfISWPd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:15:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 636A821907;
-        Thu, 19 Sep 2019 22:15:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F6FC218AF;
+        Thu, 19 Sep 2019 22:15:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931328;
-        bh=ont1s2hWDsj0rjL5UpbAstBll8ppiMiCPDPkdEjRjYY=;
+        s=default; t=1568931331;
+        bh=rbeWn0IPTd+TWEds9YFtOWj5EmQqVblA0ypZpXd4tiw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2wdLUiEyiWXUoodjI9s+g3oRIDAHD0XhTP7zI+Ah4diTYKKI0fjC85+4kVlojZEot
-         E51M5iG6o6poVlMlQ8tpCrEU++p6hqBJO/DCDlJc9DWMV3OAN6y0WwDMr+uwWPoQRW
-         qt+m70sbzGSscyTCWfduMHSS2DDL4E08RZr486As=
+        b=lLRRaMU+Gp4rhFKYMA95DqhM7MHyQ7w1tLfWO3nHWK7j9is7s7vulDuuKZDzyHGco
+         h5CVooPiDRN2YV/gapSPOdOYNxVtZhZz1V+AMMF5lrvtESTSJVnxI0E/ss/iHFeJg1
+         5EWXjloGw4b7ik7s6kkfTQ8UrAzyYGTvISPe51kU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+eaaaf38a95427be88f4b@syzkaller.appspotmail.com,
-        Sean Young <sean@mess.org>, Kees Cook <keescook@chromium.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.19 79/79] media: technisat-usb2: break out of loop at end of buffer
-Date:   Fri, 20 Sep 2019 00:04:04 +0200
-Message-Id: <20190919214814.696898666@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 73/79] iommu/amd: Fix race in increase_address_space()
+Date:   Fri, 20 Sep 2019 00:03:58 +0200
+Message-Id: <20190919214814.076342289@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214807.612593061@linuxfoundation.org>
 References: <20190919214807.612593061@linuxfoundation.org>
@@ -61,72 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Young <sean@mess.org>
+From: Joerg Roedel <jroedel@suse.de>
 
-commit 0c4df39e504bf925ab666132ac3c98d6cbbe380b upstream.
+[ Upstream commit 754265bcab78a9014f0f99cd35e0d610fcd7dfa7 ]
 
-Ensure we do not access the buffer beyond the end if no 0xff byte
-is encountered.
+After the conversion to lock-less dma-api call the
+increase_address_space() function can be called without any
+locking. Multiple CPUs could potentially race for increasing
+the address space, leading to invalid domain->mode settings
+and invalid page-tables. This has been happening in the wild
+under high IO load and memory pressure.
 
-Reported-by: syzbot+eaaaf38a95427be88f4b@syzkaller.appspotmail.com
-Signed-off-by: Sean Young <sean@mess.org>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fix the race by locking this operation. The function is
+called infrequently so that this does not introduce
+a performance regression in the dma-api path again.
 
+Reported-by: Qian Cai <cai@lca.pw>
+Fixes: 256e4621c21a ('iommu/amd: Make use of the generic IOVA allocator')
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/dvb-usb/technisat-usb2.c |   22 ++++++++++------------
- 1 file changed, 10 insertions(+), 12 deletions(-)
+ drivers/iommu/amd_iommu.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
---- a/drivers/media/usb/dvb-usb/technisat-usb2.c
-+++ b/drivers/media/usb/dvb-usb/technisat-usb2.c
-@@ -607,10 +607,9 @@ static int technisat_usb2_frontend_attac
- static int technisat_usb2_get_ir(struct dvb_usb_device *d)
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index 8b79e2b32d378..69c269dc4f1bf 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -1340,18 +1340,21 @@ static void domain_flush_devices(struct protection_domain *domain)
+  * another level increases the size of the address space by 9 bits to a size up
+  * to 64 bits.
+  */
+-static bool increase_address_space(struct protection_domain *domain,
++static void increase_address_space(struct protection_domain *domain,
+ 				   gfp_t gfp)
  {
- 	struct technisat_usb2_state *state = d->priv;
--	u8 *buf = state->buf;
--	u8 *b;
--	int ret;
- 	struct ir_raw_event ev;
-+	u8 *buf = state->buf;
-+	int i, ret;
++	unsigned long flags;
+ 	u64 *pte;
  
- 	buf[0] = GET_IR_DATA_VENDOR_REQUEST;
- 	buf[1] = 0x08;
-@@ -646,26 +645,25 @@ unlock:
- 		return 0; /* no key pressed */
- 
- 	/* decoding */
--	b = buf+1;
- 
- #if 0
- 	deb_rc("RC: %d ", ret);
--	debug_dump(b, ret, deb_rc);
-+	debug_dump(buf + 1, ret, deb_rc);
- #endif
- 
- 	ev.pulse = 0;
--	while (1) {
--		ev.pulse = !ev.pulse;
--		ev.duration = (*b * FIRMWARE_CLOCK_DIVISOR * FIRMWARE_CLOCK_TICK) / 1000;
--		ir_raw_event_store(d->rc_dev, &ev);
--
--		b++;
--		if (*b == 0xff) {
-+	for (i = 1; i < ARRAY_SIZE(state->buf); i++) {
-+		if (buf[i] == 0xff) {
- 			ev.pulse = 0;
- 			ev.duration = 888888*2;
- 			ir_raw_event_store(d->rc_dev, &ev);
- 			break;
- 		}
+-	if (domain->mode == PAGE_MODE_6_LEVEL)
++	spin_lock_irqsave(&domain->lock, flags);
 +
-+		ev.pulse = !ev.pulse;
-+		ev.duration = (buf[i] * FIRMWARE_CLOCK_DIVISOR *
-+			       FIRMWARE_CLOCK_TICK) / 1000;
-+		ir_raw_event_store(d->rc_dev, &ev);
- 	}
++	if (WARN_ON_ONCE(domain->mode == PAGE_MODE_6_LEVEL))
+ 		/* address space already 64 bit large */
+-		return false;
++		goto out;
  
- 	ir_raw_event_handle(d->rc_dev);
+ 	pte = (void *)get_zeroed_page(gfp);
+ 	if (!pte)
+-		return false;
++		goto out;
+ 
+ 	*pte             = PM_LEVEL_PDE(domain->mode,
+ 					iommu_virt_to_phys(domain->pt_root));
+@@ -1359,7 +1362,10 @@ static bool increase_address_space(struct protection_domain *domain,
+ 	domain->mode    += 1;
+ 	domain->updated  = true;
+ 
+-	return true;
++out:
++	spin_unlock_irqrestore(&domain->lock, flags);
++
++	return;
+ }
+ 
+ static u64 *alloc_pte(struct protection_domain *domain,
+-- 
+2.20.1
+
 
 
