@@ -2,228 +2,157 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B54A0C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 18:21:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71AD6C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 18:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8293C21928
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 18:21:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FAEB2196E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 18:25:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XixCEN7C"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="LLwFxWNe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391448AbfISSV1 (ORCPT
+        id S2391504AbfISSZr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 14:21:27 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35011 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391388AbfISSV1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 14:21:27 -0400
-Received: by mail-pg1-f194.google.com with SMTP id a24so2363433pgj.2
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 11:21:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vrJRTyRyjbtyxOUOU72/IRaRESZZ7RWR2sxVa56E+kE=;
-        b=XixCEN7COc4bu0j+gxoL0ADFPutUsrj9tqDuZ7Ojr7u2NdFt1sOUDWp/rOSgxWlXMy
-         S+bzIiwWsVpOr6ufZRgRvBhP5MVe8Ltg7qJo26K5Ytxcb+Nj+VN8AkRUSgU90WD1j+zd
-         eAHuc6K00Rw9sl/g9vfhceZrJH/FeR2Jw6ZVATErlHWftHrx9LZ/Nl46IehNw93PPRXN
-         56PEPXmKcHMn7DAa+iF5vztVgg1sBwz/p2dHAjnV7wCVAdwAuEkbbe5cI9fZ53gt95ws
-         QBsaXwflWpQvbWNHbuOFjpJW40gtl3sWU47bXkxUky+u73AtTxc1Jjg6ZhSdtR8H48S9
-         Emqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vrJRTyRyjbtyxOUOU72/IRaRESZZ7RWR2sxVa56E+kE=;
-        b=PjHHyjQpoUcAsZNR8LAhaa04zB154j11uiW+qfabCnThD81NF3UKkK/O49vJoCfjx4
-         wGQJXguVayXsgFg24e3ZV0PS/xMyYPCYDD5cRAEvBfkeSpQ6do6DEjYUuwOpULj+IfQX
-         HaGSqIGg7Q+bgoG6A1w7Bs+vbUw6cB0dWmAr2y2bL0eMH7TQ+rDnJ1HwfBD82zHjj8DI
-         if7PLrDoJutlaLr3XXF+vAjMoitlSmaqMBQrNZc0E/lytujwVF2UgFAD7tTSfgvt1BkV
-         7DPtKTsDRloLmcHV86hajNwJdwdM+kWvwI+TAkF35EhTVW3BvcAkglGLrhPvT9iuu40O
-         1viw==
-X-Gm-Message-State: APjAAAVvCGsdZlSlQrcjwU4n6xE0ijawL61ysLdRrsYxIOfpkcZDURa0
-        Dwg96eCUjCRG8cYFwCljjgUiOETB23MdJ4FU9thAZw==
-X-Google-Smtp-Source: APXvYqyEWPvyz3/heZOq+Pc/sO8gKl+2Qt1uyyenuQ1uFxb333j9qEqFIAjFVo71NZ/FIW11+K76tL9i+uaDawLngiU=
-X-Received: by 2002:a17:90a:1990:: with SMTP id 16mr5142011pji.47.1568917285723;
- Thu, 19 Sep 2019 11:21:25 -0700 (PDT)
+        Thu, 19 Sep 2019 14:25:47 -0400
+Received: from mail-eopbgr10079.outbound.protection.outlook.com ([40.107.1.79]:23694
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390186AbfISSZr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 14:25:47 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FmtwJCx5M9a9CGWJtgax6D3wvn40e853FJ/bfFoxk15ts/Rk9hqoea2CFvQ9WoSiO7cg+B0auQEityGk79kb6oQElUiT83X/zfN4TSYhbgjuUIrgvykB12Ki+P/OFfObYzXq+Ma+JU7fuo4+TR/lsE6wv9xOQZpaP6ZTwAKviWt8QPgDISf2JI6h/8R4/xd8LVKjONPGqYoOqCyYQn0IitLDNjpJ0muutZSL4GllJmiyrLmDQcvKBRi332m5hBKcXtEtP9RaQ4Z36edbzrYF6XNGEUMO3Sjpt36pK3yRFD13E/ma45sFFPIr69p52ChH8G5jkgMeF7s1L8hSmb0+rw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1bLjVPAn/e0z6SUkTV3xdrwDVP22Dv2PXQw6Ej+YXtw=;
+ b=UHlQkHVPlJxULyKSGOObLK+Eg+Ant1B75Dg6TmAZs3X0KSfYSInmKCYseAXnWRllGplL3jrWx7zM8wVLKzCHN7UM4PdUCPtQl0DFZc7s3UhQxvKUkZOUgVWuZpRVg5JacbN8QvZ+gkmpc2zoXYWQv6RrMTo5SoIaTUE3WdF/iuKs4zsKGvloNAYo8uVDEJarNO33jGRusABmOkXM2W4Q8IDVhOI+KBCuzxwhc8Usur5RdULRQziqAZWJj00kg70a9GRjbwG/0qYo1Wvz94Vmke5/4fM7pRkzhH0lOUyxXUXPN+DNd3lCHaJ75jsub/mrnlB7XYLVz5wGDlbnQ4ZUuA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1bLjVPAn/e0z6SUkTV3xdrwDVP22Dv2PXQw6Ej+YXtw=;
+ b=LLwFxWNenAItgBHPL47/JvcWDyjpP22b1IQdYwLPebTRfL3blLA1ShgZXn88Qe9FFTiLOMA6ktTkl4vJWDG/mq3H8kWjw4wpaBe71kYapvGPD0wHCDVuRuwb4TO5I8vGvh0o9H7/S2MLHnHEN6WGUyHelHDEPYdtyUP39esNjgo=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB5967.eurprd05.prod.outlook.com (20.178.126.225) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.20; Thu, 19 Sep 2019 18:25:42 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::d9ac:7e4e:9520:29a6]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::d9ac:7e4e:9520:29a6%6]) with mapi id 15.20.2284.009; Thu, 19 Sep 2019
+ 18:25:42 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     "Raj, Ashok" <ashok.raj@intel.com>
+CC:     Megha Dey <megha.dey@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "megha.dey@intel.com" <megha.dey@intel.com>,
+        "jacob.jun.pan@intel.com" <jacob.jun.pan@intel.com>
+Subject: Re: [RFC V1 0/7] Add support for a new IMS interrupt mechanism
+Thread-Topic: [RFC V1 0/7] Add support for a new IMS interrupt mechanism
+Thread-Index: AQHVadCis80jNXQJ7ESbv2tE+P8b86cpe96AgACTvQCACUwHgA==
+Date:   Thu, 19 Sep 2019 18:25:42 +0000
+Message-ID: <20190919182537.GS30961@mellanox.com>
+References: <1568338328-22458-1-git-send-email-megha.dey@linux.intel.com>
+ <VI1PR05MB4141EAE19EE47DA20A75AE21CFB30@VI1PR05MB4141.eurprd05.prod.outlook.com>
+ <20190913202710.GA999@otc-nc-03>
+In-Reply-To: <20190913202710.GA999@otc-nc-03>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YTOPR0101CA0008.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b00:15::21) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [142.167.223.10]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 925894c2-f9f7-42af-4564-08d73d2ec7bc
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5967;
+x-ms-traffictypediagnostic: VI1PR05MB5967:
+x-microsoft-antispam-prvs: <VI1PR05MB59671A1E67F514948067DBFCCF890@VI1PR05MB5967.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 016572D96D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(39860400002)(376002)(396003)(346002)(199004)(189003)(81156014)(81166006)(6246003)(256004)(33656002)(76176011)(14454004)(316002)(52116002)(36756003)(7416002)(5660300002)(6916009)(6486002)(54906003)(99286004)(1076003)(6512007)(11346002)(6436002)(86362001)(66476007)(66066001)(71190400001)(66556008)(8936002)(229853002)(66446008)(8676002)(4326008)(305945005)(6506007)(64756008)(71200400001)(66946007)(26005)(2906002)(7736002)(2616005)(476003)(25786009)(386003)(446003)(486006)(6116002)(3846002)(478600001)(186003)(102836004);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5967;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 862ZkM4epSk+udoBZqLa6r30v1jZ9vuwfdsXrEdS7gbZRFVp3Dgrh4ZteQRVXfFfbV2r0r+qZ8sC86wAZ7I8/D4ngNdy8AR/jp1ZcFvEZFxTJ9syhZS8fA/NSVtb6w4I1knG2ZmMLICe4ETpCpiQXJ2wgJub2X12kGO4hp/370eOOF619GcorkFE6OTQUZnIhPcAjbr5dT3XZm47MF8Yf4/ljK6zem2m6VrDXiUNUL6Kd9wNfWgDw7z863coexKTgWMukTvtxJn9dEJuwGX+OoAU8bduGt84Mocx75Abjy+wpwGovHIlilS2nRMuQ91Hzx3Lb9JdPsvxztm7eJwGlfIDLmnbh6w2FnT4n5s3fGF+o9La4ERCtvg8JDsfCm+0/lR5tX0rItwmPpPFG7wwJsPT+/CQN/R4t9w81tgewk4=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <DFA492F5B86A2B49B5A2935F788CD314@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <0000000000004349550592ebfd2d@google.com>
-In-Reply-To: <0000000000004349550592ebfd2d@google.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Thu, 19 Sep 2019 20:21:14 +0200
-Message-ID: <CAAeHK+w4HSkQooNa59X41Un2pMVFzf4P0-NV8MuboVBUViUkXw@mail.gmail.com>
-Subject: Re: KASAN: invalid-free in disconnect_rio (2)
-To:     syzbot <syzbot+745b0dff8028f9488eba@syzkaller.appspotmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Cesar Miquel <miquel@df.uba.ar>,
-        rio500-users@lists.sourceforge.net,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 925894c2-f9f7-42af-4564-08d73d2ec7bc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Sep 2019 18:25:42.6308
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: TkZXkF/5MHPq96veannt+eapaD3czEPGp1Mpi/t+7PvAcs2SsM2IJykFj6jaFBH/G0WzmBK4zJmk1rBIIAsc8g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5967
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 8:19 PM syzbot
-<syzbot+745b0dff8028f9488eba@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    e0bd8d79 usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=17d6f31d600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=8847e5384a16f66a
-> dashboard link: https://syzkaller.appspot.com/bug?extid=745b0dff8028f9488eba
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1009f769600000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15b1d4b1600000
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+745b0dff8028f9488eba@syzkaller.appspotmail.com
->
-> usb 5-1: New USB device found, idVendor=0841, idProduct=0001,
-> bcdDevice=c5.d0
-> usb 5-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-> usb 5-1: config 0 descriptor??
-> rio500 5-1:0.133: Second USB Rio at address 2 refused
-> rio500: probe of 5-1:0.133 failed with error -16
-> usb 3-1: USB disconnect, device number 2
-> ==================================================================
-> BUG: KASAN: double-free or invalid-free in disconnect_rio+0x12b/0x1b0
-> drivers/usb/misc/rio500.c:525
->
-> CPU: 0 PID: 102 Comm: kworker/0:2 Not tainted 5.3.0+ #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Workqueue: usb_hub_wq hub_event
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0xca/0x13e lib/dump_stack.c:113
->   print_address_description+0x6a/0x32c mm/kasan/report.c:351
->   kasan_report_invalid_free+0x61/0xa0 mm/kasan/report.c:444
->   __kasan_slab_free+0x162/0x180 mm/kasan/common.c:434
->   slab_free_hook mm/slub.c:1423 [inline]
->   slab_free_freelist_hook mm/slub.c:1474 [inline]
->   slab_free mm/slub.c:3016 [inline]
->   kfree+0xe4/0x2f0 mm/slub.c:3957
->   disconnect_rio+0x12b/0x1b0 drivers/usb/misc/rio500.c:525
->   usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
->   __device_release_driver drivers/base/dd.c:1134 [inline]
->   device_release_driver_internal+0x42f/0x500 drivers/base/dd.c:1165
->   bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:532
->   device_del+0x420/0xb10 drivers/base/core.c:2375
->   usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
->   usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2199
->   hub_port_connect drivers/usb/core/hub.c:4949 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
->   port_event drivers/usb/core/hub.c:5359 [inline]
->   hub_event+0x1454/0x3640 drivers/usb/core/hub.c:5441
->   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
->   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
->   kthread+0x318/0x420 kernel/kthread.c:255
->   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
->
-> Allocated by task 17:
->   save_stack+0x1b/0x80 mm/kasan/common.c:69
->   set_track mm/kasan/common.c:77 [inline]
->   __kasan_kmalloc mm/kasan/common.c:493 [inline]
->   __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:466
->   kmalloc include/linux/slab.h:552 [inline]
->   probe_rio+0x135/0x248 drivers/usb/misc/rio500.c:474
->   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
->   really_probe+0x281/0x6d0 drivers/base/dd.c:548
->   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
->   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
->   bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
->   __device_attach+0x217/0x360 drivers/base/dd.c:894
->   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
->   device_add+0xae6/0x16f0 drivers/base/core.c:2201
->   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
->   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
->   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
->   really_probe+0x281/0x6d0 drivers/base/dd.c:548
->   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
->   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
->   bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
->   __device_attach+0x217/0x360 drivers/base/dd.c:894
->   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
->   device_add+0xae6/0x16f0 drivers/base/core.c:2201
->   usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
->   hub_port_connect drivers/usb/core/hub.c:5098 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
->   port_event drivers/usb/core/hub.c:5359 [inline]
->   hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
->   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
->   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
->   kthread+0x318/0x420 kernel/kthread.c:255
->   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
->
-> Freed by task 83:
->   save_stack+0x1b/0x80 mm/kasan/common.c:69
->   set_track mm/kasan/common.c:77 [inline]
->   __kasan_slab_free+0x130/0x180 mm/kasan/common.c:455
->   slab_free_hook mm/slub.c:1423 [inline]
->   slab_free_freelist_hook mm/slub.c:1474 [inline]
->   slab_free mm/slub.c:3016 [inline]
->   kfree+0xe4/0x2f0 mm/slub.c:3957
->   disconnect_rio+0x12b/0x1b0 drivers/usb/misc/rio500.c:525
->   usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
->   __device_release_driver drivers/base/dd.c:1134 [inline]
->   device_release_driver_internal+0x42f/0x500 drivers/base/dd.c:1165
->   bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:532
->   device_del+0x420/0xb10 drivers/base/core.c:2375
->   usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
->   usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2199
->   hub_port_connect drivers/usb/core/hub.c:4949 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
->   port_event drivers/usb/core/hub.c:5359 [inline]
->   hub_event+0x1454/0x3640 drivers/usb/core/hub.c:5441
->   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
->   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
->   kthread+0x318/0x420 kernel/kthread.c:255
->   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
->
-> The buggy address belongs to the object at ffff8881d5498000
->   which belongs to the cache kmalloc-4k of size 4096
-> The buggy address is located 0 bytes inside of
->   4096-byte region [ffff8881d5498000, ffff8881d5499000)
-> The buggy address belongs to the page:
-> page:ffffea0007552600 refcount:1 mapcount:0 mapping:ffff8881da00c280
-> index:0x0 compound_mapcount: 0
-> flags: 0x200000000010200(slab|head)
-> raw: 0200000000010200 dead000000000100 dead000000000122 ffff8881da00c280
-> raw: 0000000000000000 0000000000070007 00000001ffffffff 0000000000000000
-> page dumped because: kasan: bad access detected
->
-> Memory state around the buggy address:
->   ffff8881d5497f00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->   ffff8881d5497f80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> > ffff8881d5498000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->                     ^
->   ffff8881d5498080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->   ffff8881d5498100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ==================================================================
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
+On Fri, Sep 13, 2019 at 01:27:10PM -0700, Raj, Ashok wrote:
+> On Fri, Sep 13, 2019 at 07:50:50PM +0000, Jason Gunthorpe wrote:
+> > On Thu, Sep 12, 2019 at 06:32:01PM -0700, Megha Dey wrote:
+> >=20
+> > > This series is a basic patchset to get the ball rolling and receive s=
+ome
+> > > inital comments. As per my discussion with Marc Zyngier and Thomas Gl=
+eixner
+> > > at the Linux Plumbers, I need to do the following:
+> > > 1. Since a device can support MSI-X and IMS simultaneously, ensure pr=
+oper
+> > >    locking mechanism for the 'msi_list' in the device structure.
+> > > 2. Introduce dynamic allocation of IMS vectors perhaps by using a gro=
+up ID
+> > > 3. IMS support of a device needs to be discoverable. A bit in the ven=
+dor
+> > >    specific capability in the PCI config is to be added rather than g=
+etting
+> > >    this information from each device driver.
+> >=20
+> > Why #3? The point of this scheme is to delegate programming the
+> > addr/data pairs to the driver so it can be done in some
+> > device-specific way. There is no PCI standard behind this, and no
+> > change in PCI semantics.=20
+> >=20
+> > I think it would be a tall ask to get a config space bit from PCI-SIG
+> > for something that has little to do with PCI.
+>=20
+> This isn't a standard config capability. Its Designated Vendor Specific
+> Capability (DVSEC). The device is responsible for managing the addr-data
+> pair. This provides a hint to the OS framework that this device has
+> device specific methods.
+>=20
+> Agreed its not required, but some OSV's like a generic way to discover
+> these capabilities, hence its there so device vendors can have
+> a common guideline.
 
-The "USB: rio500: Fix lockdep violation" patch is in the usb-fuzzer's
-tree, so this must be a different bug.
+I think it would be reasonable for a specific device driver to test
+the DVSEC, if it wishes too.=20
+
+Since it is not required it does not make sense for the core kernel to
+enforce this on all devices, at least for such a nebulous reason.
+
+Jason
