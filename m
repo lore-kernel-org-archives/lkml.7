@@ -5,57 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28619C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:14:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E50EC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4D462196E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:14:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51C6921927
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:14:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931263;
-	bh=vhzAx/ndFW8mYkIEcffV/Gghf+F3CC60IEG+z+dWDVs=;
+	s=default; t=1568931266;
+	bh=mxeu4uLj13ZdTwyKcHula4thozA5vnCkalosJXisIRE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wxEuTgyVs1zjEBZg0Ovq2hs2+bKLiffajpckfVd024jBx4tFCGCFg7VG21DERwv/P
-	 wWeTrw2xG4u2ERu66dpumPaPsSYFCh+ngAcgiWKQxAuGa92p1hYnHYBfSRTmijjscl
-	 wl8Y3vhK5UZXKb49tO3w13X3cHLsFEn68t7y83sE=
+	b=0Dhxkad6ETvG0utRGcTLF7/xLyBkJUZs8lniXussm1hra6NBkg1WF0UbrayTWGYpm
+	 AJSDueHeXBOsapQnhXodhSVDmfE1dUAZSdItp3Hx1P50I4SrkNarSALfe/r21pgs5g
+	 1ti4l+0v5eOCiqT2QrHC7jxWczimrfXRxxtagBDY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392243AbfISWOV (ORCPT
+        id S2392284AbfISWOZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:14:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53736 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:14:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392166AbfISWOR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:14:17 -0400
+        id S2392247AbfISWOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:14:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE723218AF;
-        Thu, 19 Sep 2019 22:14:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F2CF21927;
+        Thu, 19 Sep 2019 22:14:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931257;
-        bh=vhzAx/ndFW8mYkIEcffV/Gghf+F3CC60IEG+z+dWDVs=;
+        s=default; t=1568931263;
+        bh=mxeu4uLj13ZdTwyKcHula4thozA5vnCkalosJXisIRE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KgUHmv2J5SIYZfxDcHW8kvFFekqJOsReTpFwOFe1Fot/BhAWusl8+nY/KGaAlr7Ro
-         bPKV4OB7F5VUxjlUxYxWMiEDp0IjjIt37t3hqzMejCpjitGHwuMkpgPooInnH8U6Ii
-         m3htMJcXS60+CpffwU6mntpId3WtZMBTy0jiat8A=
+        b=MjYovGCoG8I5KTuC6nWnvEZ35l2YmFTy81kQTEDMcFWukWKO6VOSjemJ0JkqDfmWX
+         Ve/Js3jq8v3kHNnrYhWR5dLPQAp4IiZQMHjpfN7DuOrLgukXwYLVxwCM02pXnxomK9
+         i2gfrCk3fGhtmciOT+rIj37jnNW4VdfakL6cX6o8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Arnaldo Carvalho de Melo" <acme@kernel.org>, x86@kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Borislav Petkov" <bp@alien8.de>,
-        Stephane Eranian <eranian@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        "Namhyung Kim" <namhyung@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 60/79] perf/x86/amd/ibs: Fix sample bias for dispatched micro-ops
-Date:   Fri, 20 Sep 2019 00:03:45 +0200
-Message-Id: <20190919214812.890617076@linuxfoundation.org>
+        stable@vger.kernel.org, Ben Hutchings <ben@decadent.org.uk>,
+        Len Brown <len.brown@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 62/79] tools/power x86_energy_perf_policy: Fix "uninitialized variable" warnings at -O2
+Date:   Fri, 20 Sep 2019 00:03:47 +0200
+Message-Id: <20190919214813.091419115@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214807.612593061@linuxfoundation.org>
 References: <20190919214807.612593061@linuxfoundation.org>
@@ -68,141 +60,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kim Phillips <kim.phillips@amd.com>
+From: Ben Hutchings <ben@decadent.org.uk>
 
-[ Upstream commit 0f4cd769c410e2285a4e9873a684d90423f03090 ]
+[ Upstream commit adb8049097a9ec4acd09fbd3aa8636199a78df8a ]
 
-When counting dispatched micro-ops with cnt_ctl=1, in order to prevent
-sample bias, IBS hardware preloads the least significant 7 bits of
-current count (IbsOpCurCnt) with random values, such that, after the
-interrupt is handled and counting resumes, the next sample taken
-will be slightly perturbed.
+x86_energy_perf_policy first uses __get_cpuid() to check the maximum
+CPUID level and exits if it is too low.  It then assumes that later
+calls will succeed (which I think is architecturally guaranteed).  It
+also assumes that CPUID works at all (which is not guaranteed on
+x86_32).
 
-The current count bitfield is in the IBS execution control h/w register,
-alongside the maximum count field.
+If optimisations are enabled, gcc warns about potentially
+uninitialized variables.  Fix this by adding an exit-on-error after
+every call to __get_cpuid() instead of just checking the maximum
+level.
 
-Currently, the IBS driver writes that register with the maximum count,
-leaving zeroes to fill the current count field, thereby overwriting
-the random bits the hardware preloaded for itself.
-
-Fix the driver to actually retain and carry those random bits from the
-read of the IBS control register, through to its write, instead of
-overwriting the lower current count bits with zeroes.
-
-Tested with:
-
-perf record -c 100001 -e ibs_op/cnt_ctl=1/pp -a -C 0 taskset -c 0 <workload>
-
-'perf annotate' output before:
-
- 15.70  65:   addsd     %xmm0,%xmm1
- 17.30        add       $0x1,%rax
- 15.88        cmp       %rdx,%rax
-              je        82
- 17.32  72:   test      $0x1,%al
-              jne       7c
-  7.52        movapd    %xmm1,%xmm0
-  5.90        jmp       65
-  8.23  7c:   sqrtsd    %xmm1,%xmm0
- 12.15        jmp       65
-
-'perf annotate' output after:
-
- 16.63  65:   addsd     %xmm0,%xmm1
- 16.82        add       $0x1,%rax
- 16.81        cmp       %rdx,%rax
-              je        82
- 16.69  72:   test      $0x1,%al
-              jne       7c
-  8.30        movapd    %xmm1,%xmm0
-  8.13        jmp       65
-  8.24  7c:   sqrtsd    %xmm1,%xmm0
-  8.39        jmp       65
-
-Tested on Family 15h and 17h machines.
-
-Machines prior to family 10h Rev. C don't have the RDWROPCNT capability,
-and have the IbsOpCurCnt bitfield reserved, so this patch shouldn't
-affect their operation.
-
-It is unknown why commit db98c5faf8cb ("perf/x86: Implement 64-bit
-counter support for IBS") ignored the lower 4 bits of the IbsOpCurCnt
-field; the number of preloaded random bits has always been 7, AFAICT.
-
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Cc: <x86@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: "Borislav Petkov" <bp@alien8.de>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: "Namhyung Kim" <namhyung@kernel.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Link: https://lkml.kernel.org/r/20190826195730.30614-1-kim.phillips@amd.com
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Len Brown <len.brown@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/amd/ibs.c         | 13 ++++++++++---
- arch/x86/include/asm/perf_event.h | 12 ++++++++----
- 2 files changed, 18 insertions(+), 7 deletions(-)
+ .../x86_energy_perf_policy.c                  | 26 +++++++++++--------
+ 1 file changed, 15 insertions(+), 11 deletions(-)
 
-diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index d50bb4dc06503..80c6d84cad67b 100644
---- a/arch/x86/events/amd/ibs.c
-+++ b/arch/x86/events/amd/ibs.c
-@@ -672,10 +672,17 @@ fail:
- 
- 	throttle = perf_event_overflow(event, &data, &regs);
- out:
--	if (throttle)
-+	if (throttle) {
- 		perf_ibs_stop(event, 0);
--	else
--		perf_ibs_enable_event(perf_ibs, hwc, period >> 4);
-+	} else {
-+		period >>= 4;
+diff --git a/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c b/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
+index 65bbe627a425f..bbef8bcf44d6d 100644
+--- a/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
++++ b/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
+@@ -1260,6 +1260,15 @@ void probe_dev_msr(void)
+ 		if (system("/sbin/modprobe msr > /dev/null 2>&1"))
+ 			err(-5, "no /dev/cpu/0/msr, Try \"# modprobe msr\" ");
+ }
 +
-+		if ((ibs_caps & IBS_CAPS_RDWROPCNT) &&
-+		    (*config & IBS_OP_CNT_CTL))
-+			period |= *config & IBS_OP_CUR_CNT_RAND;
++static void get_cpuid_or_exit(unsigned int leaf,
++			     unsigned int *eax, unsigned int *ebx,
++			     unsigned int *ecx, unsigned int *edx)
++{
++	if (!__get_cpuid(leaf, eax, ebx, ecx, edx))
++		errx(1, "Processor not supported\n");
++}
 +
-+		perf_ibs_enable_event(perf_ibs, hwc, period);
-+	}
+ /*
+  * early_cpuid()
+  * initialize turbo_is_enabled, has_hwp, has_epb
+@@ -1267,15 +1276,10 @@ void probe_dev_msr(void)
+  */
+ void early_cpuid(void)
+ {
+-	unsigned int eax, ebx, ecx, edx, max_level;
++	unsigned int eax, ebx, ecx, edx;
+ 	unsigned int fms, family, model;
  
- 	perf_event_update_userpage(event);
+-	__get_cpuid(0, &max_level, &ebx, &ecx, &edx);
+-
+-	if (max_level < 6)
+-		errx(1, "Processor not supported\n");
+-
+-	__get_cpuid(1, &fms, &ebx, &ecx, &edx);
++	get_cpuid_or_exit(1, &fms, &ebx, &ecx, &edx);
+ 	family = (fms >> 8) & 0xf;
+ 	model = (fms >> 4) & 0xf;
+ 	if (family == 6 || family == 0xf)
+@@ -1289,7 +1293,7 @@ void early_cpuid(void)
+ 		bdx_highest_ratio = msr & 0xFF;
+ 	}
  
-diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index 78241b736f2a0..f6c4915a863e0 100644
---- a/arch/x86/include/asm/perf_event.h
-+++ b/arch/x86/include/asm/perf_event.h
-@@ -209,16 +209,20 @@ struct x86_pmu_capability {
- #define IBSCTL_LVT_OFFSET_VALID		(1ULL<<8)
- #define IBSCTL_LVT_OFFSET_MASK		0x0F
+-	__get_cpuid(0x6, &eax, &ebx, &ecx, &edx);
++	get_cpuid_or_exit(0x6, &eax, &ebx, &ecx, &edx);
+ 	turbo_is_enabled = (eax >> 1) & 1;
+ 	has_hwp = (eax >> 7) & 1;
+ 	has_epb = (ecx >> 3) & 1;
+@@ -1307,7 +1311,7 @@ void parse_cpuid(void)
  
--/* ibs fetch bits/masks */
-+/* IBS fetch bits/masks */
- #define IBS_FETCH_RAND_EN	(1ULL<<57)
- #define IBS_FETCH_VAL		(1ULL<<49)
- #define IBS_FETCH_ENABLE	(1ULL<<48)
- #define IBS_FETCH_CNT		0xFFFF0000ULL
- #define IBS_FETCH_MAX_CNT	0x0000FFFFULL
+ 	eax = ebx = ecx = edx = 0;
  
--/* ibs op bits/masks */
--/* lower 4 bits of the current count are ignored: */
--#define IBS_OP_CUR_CNT		(0xFFFF0ULL<<32)
-+/*
-+ * IBS op bits/masks
-+ * The lower 7 bits of the current count are random bits
-+ * preloaded by hardware and ignored in software
-+ */
-+#define IBS_OP_CUR_CNT		(0xFFF80ULL<<32)
-+#define IBS_OP_CUR_CNT_RAND	(0x0007FULL<<32)
- #define IBS_OP_CNT_CTL		(1ULL<<19)
- #define IBS_OP_VAL		(1ULL<<18)
- #define IBS_OP_ENABLE		(1ULL<<17)
+-	__get_cpuid(0, &max_level, &ebx, &ecx, &edx);
++	get_cpuid_or_exit(0, &max_level, &ebx, &ecx, &edx);
+ 
+ 	if (ebx == 0x756e6547 && edx == 0x49656e69 && ecx == 0x6c65746e)
+ 		genuine_intel = 1;
+@@ -1316,7 +1320,7 @@ void parse_cpuid(void)
+ 		fprintf(stderr, "CPUID(0): %.4s%.4s%.4s ",
+ 			(char *)&ebx, (char *)&edx, (char *)&ecx);
+ 
+-	__get_cpuid(1, &fms, &ebx, &ecx, &edx);
++	get_cpuid_or_exit(1, &fms, &ebx, &ecx, &edx);
+ 	family = (fms >> 8) & 0xf;
+ 	model = (fms >> 4) & 0xf;
+ 	stepping = fms & 0xf;
+@@ -1341,7 +1345,7 @@ void parse_cpuid(void)
+ 		errx(1, "CPUID: no MSR");
+ 
+ 
+-	__get_cpuid(0x6, &eax, &ebx, &ecx, &edx);
++	get_cpuid_or_exit(0x6, &eax, &ebx, &ecx, &edx);
+ 	/* turbo_is_enabled already set */
+ 	/* has_hwp already set */
+ 	has_hwp_notify = eax & (1 << 8);
 -- 
 2.20.1
 
