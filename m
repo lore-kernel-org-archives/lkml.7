@@ -2,54 +2,55 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9B4C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F22A1C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C12C21907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:15:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1FF121924
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:15:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931338;
-	bh=rbeWn0IPTd+TWEds9YFtOWj5EmQqVblA0ypZpXd4tiw=;
+	s=default; t=1568931341;
+	bh=yoIrDO0cf+GaDOLoHFCRsXHjgRGCbBc+beEhYdSyiCQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wv8WRcKN9YgnNEHLiHuic48foByHYgJGk7DcfMgeI90R9cyyh3/7480e8TgmDGLSi
-	 Nkhw9YOKYUj/OZx82UGWXDyGAqJLFP60DFMqA216C1RZDMWh7fX39Man2kqn6cN8/p
-	 OqkAartYkNP4Z5SDnQ2iEvUAwO2D8nnvEo3zYUWo=
+	b=coyyr9fZ7GyidiYWw+zMZr8M7kCf9yUqfvjTpdX3jMXPp/W5rgpie/T5BpQXV4vCd
+	 STiv3mpRadDBp4khOQl2/QYx0gumnlrlYZHhGrdZPdgJ+JXkt1SWWfECWZhVCK5vWV
+	 Qej1GKWv4CrJ+xhqIPTnBt7HooI5LP7fWN/hlz60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406158AbfISWPg (ORCPT
+        id S2406164AbfISWPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:15:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55468 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:15:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403915AbfISWPd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:15:33 -0400
+        id S2403915AbfISWPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:15:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F6FC218AF;
-        Thu, 19 Sep 2019 22:15:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D773A218AF;
+        Thu, 19 Sep 2019 22:15:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931331;
-        bh=rbeWn0IPTd+TWEds9YFtOWj5EmQqVblA0ypZpXd4tiw=;
+        s=default; t=1568931337;
+        bh=yoIrDO0cf+GaDOLoHFCRsXHjgRGCbBc+beEhYdSyiCQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lLRRaMU+Gp4rhFKYMA95DqhM7MHyQ7w1tLfWO3nHWK7j9is7s7vulDuuKZDzyHGco
-         h5CVooPiDRN2YV/gapSPOdOYNxVtZhZz1V+AMMF5lrvtESTSJVnxI0E/ss/iHFeJg1
-         5EWXjloGw4b7ik7s6kkfTQ8UrAzyYGTvISPe51kU=
+        b=R2ZG+Xs5hnA6BbKUp9OPig06fyiYMFVyY8Xjq8Q7XNoL66mKGRhs1E0itm5PnhD75
+         phom0VmPcSAbVQ/JwkiSB8zwtVnsXymkYMSLjNlYP8bg6Hth2Rd1MByMnjlFheYPga
+         /jNzFrie0hot6S6tPQMGDpmyM2ZKk/Icimey3pEc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 73/79] iommu/amd: Fix race in increase_address_space()
-Date:   Fri, 20 Sep 2019 00:03:58 +0200
-Message-Id: <20190919214814.076342289@linuxfoundation.org>
+        stable@vger.kernel.org, Hung-Te Lin <hungte@chromium.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Stephen Boyd <swboyd@chromium.org>
+Subject: [PATCH 4.14 10/59] firmware: google: check if size is valid when decoding VPD data
+Date:   Fri, 20 Sep 2019 00:03:25 +0200
+Message-Id: <20190919214758.196958344@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190919214807.612593061@linuxfoundation.org>
-References: <20190919214807.612593061@linuxfoundation.org>
+In-Reply-To: <20190919214755.852282682@linuxfoundation.org>
+References: <20190919214755.852282682@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,73 +60,158 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Hung-Te Lin <hungte@chromium.org>
 
-[ Upstream commit 754265bcab78a9014f0f99cd35e0d610fcd7dfa7 ]
+commit 4b708b7b1a2c09fbdfff6b942ebe3a160213aacd upstream.
 
-After the conversion to lock-less dma-api call the
-increase_address_space() function can be called without any
-locking. Multiple CPUs could potentially race for increasing
-the address space, leading to invalid domain->mode settings
-and invalid page-tables. This has been happening in the wild
-under high IO load and memory pressure.
+The VPD implementation from Chromium Vital Product Data project used to
+parse data from untrusted input without checking if the meta data is
+invalid or corrupted. For example, the size from decoded content may
+be negative value, or larger than whole input buffer. Such invalid data
+may cause buffer overflow.
 
-Fix the race by locking this operation. The function is
-called infrequently so that this does not introduce
-a performance regression in the dma-api path again.
+To fix that, the size parameters passed to vpd_decode functions should
+be changed to unsigned integer (u32) type, and the parsing of entry
+header should be refactored so every size field is correctly verified
+before starting to decode.
 
-Reported-by: Qian Cai <cai@lca.pw>
-Fixes: 256e4621c21a ('iommu/amd: Make use of the generic IOVA allocator')
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: ad2ac9d5c5e0 ("firmware: Google VPD: import lib_vpd source files")
+Signed-off-by: Hung-Te Lin <hungte@chromium.org>
+Cc: stable <stable@vger.kernel.org>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Link: https://lore.kernel.org/r/20190830022402.214442-1-hungte@chromium.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/iommu/amd_iommu.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ drivers/firmware/google/vpd.c        |    4 +-
+ drivers/firmware/google/vpd_decode.c |   55 ++++++++++++++++++++---------------
+ drivers/firmware/google/vpd_decode.h |    6 +--
+ 3 files changed, 37 insertions(+), 28 deletions(-)
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index 8b79e2b32d378..69c269dc4f1bf 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -1340,18 +1340,21 @@ static void domain_flush_devices(struct protection_domain *domain)
-  * another level increases the size of the address space by 9 bits to a size up
-  * to 64 bits.
-  */
--static bool increase_address_space(struct protection_domain *domain,
-+static void increase_address_space(struct protection_domain *domain,
- 				   gfp_t gfp)
- {
-+	unsigned long flags;
- 	u64 *pte;
- 
--	if (domain->mode == PAGE_MODE_6_LEVEL)
-+	spin_lock_irqsave(&domain->lock, flags);
-+
-+	if (WARN_ON_ONCE(domain->mode == PAGE_MODE_6_LEVEL))
- 		/* address space already 64 bit large */
--		return false;
-+		goto out;
- 
- 	pte = (void *)get_zeroed_page(gfp);
- 	if (!pte)
--		return false;
-+		goto out;
- 
- 	*pte             = PM_LEVEL_PDE(domain->mode,
- 					iommu_virt_to_phys(domain->pt_root));
-@@ -1359,7 +1362,10 @@ static bool increase_address_space(struct protection_domain *domain,
- 	domain->mode    += 1;
- 	domain->updated  = true;
- 
--	return true;
-+out:
-+	spin_unlock_irqrestore(&domain->lock, flags);
-+
-+	return;
+--- a/drivers/firmware/google/vpd.c
++++ b/drivers/firmware/google/vpd.c
+@@ -100,8 +100,8 @@ static int vpd_section_check_key_name(co
+ 	return VPD_OK;
  }
  
- static u64 *alloc_pte(struct protection_domain *domain,
--- 
-2.20.1
-
+-static int vpd_section_attrib_add(const u8 *key, s32 key_len,
+-				  const u8 *value, s32 value_len,
++static int vpd_section_attrib_add(const u8 *key, u32 key_len,
++				  const u8 *value, u32 value_len,
+ 				  void *arg)
+ {
+ 	int ret;
+--- a/drivers/firmware/google/vpd_decode.c
++++ b/drivers/firmware/google/vpd_decode.c
+@@ -19,8 +19,8 @@
+ 
+ #include "vpd_decode.h"
+ 
+-static int vpd_decode_len(const s32 max_len, const u8 *in,
+-			  s32 *length, s32 *decoded_len)
++static int vpd_decode_len(const u32 max_len, const u8 *in,
++			  u32 *length, u32 *decoded_len)
+ {
+ 	u8 more;
+ 	int i = 0;
+@@ -40,18 +40,39 @@ static int vpd_decode_len(const s32 max_
+ 	} while (more);
+ 
+ 	*decoded_len = i;
++	return VPD_OK;
++}
++
++static int vpd_decode_entry(const u32 max_len, const u8 *input_buf,
++			    u32 *_consumed, const u8 **entry, u32 *entry_len)
++{
++	u32 decoded_len;
++	u32 consumed = *_consumed;
+ 
++	if (vpd_decode_len(max_len - consumed, &input_buf[consumed],
++			   entry_len, &decoded_len) != VPD_OK)
++		return VPD_FAIL;
++	if (max_len - consumed < decoded_len)
++		return VPD_FAIL;
++
++	consumed += decoded_len;
++	*entry = input_buf + consumed;
++
++	/* entry_len is untrusted data and must be checked again. */
++	if (max_len - consumed < *entry_len)
++		return VPD_FAIL;
++
++	consumed += decoded_len;
++	*_consumed = consumed;
+ 	return VPD_OK;
+ }
+ 
+-int vpd_decode_string(const s32 max_len, const u8 *input_buf, s32 *consumed,
++int vpd_decode_string(const u32 max_len, const u8 *input_buf, u32 *consumed,
+ 		      vpd_decode_callback callback, void *callback_arg)
+ {
+ 	int type;
+-	int res;
+-	s32 key_len;
+-	s32 value_len;
+-	s32 decoded_len;
++	u32 key_len;
++	u32 value_len;
+ 	const u8 *key;
+ 	const u8 *value;
+ 
+@@ -66,26 +87,14 @@ int vpd_decode_string(const s32 max_len,
+ 	case VPD_TYPE_STRING:
+ 		(*consumed)++;
+ 
+-		/* key */
+-		res = vpd_decode_len(max_len - *consumed, &input_buf[*consumed],
+-				     &key_len, &decoded_len);
+-		if (res != VPD_OK || *consumed + decoded_len >= max_len)
++		if (vpd_decode_entry(max_len, input_buf, consumed, &key,
++				     &key_len) != VPD_OK)
+ 			return VPD_FAIL;
+ 
+-		*consumed += decoded_len;
+-		key = &input_buf[*consumed];
+-		*consumed += key_len;
+-
+-		/* value */
+-		res = vpd_decode_len(max_len - *consumed, &input_buf[*consumed],
+-				     &value_len, &decoded_len);
+-		if (res != VPD_OK || *consumed + decoded_len > max_len)
++		if (vpd_decode_entry(max_len, input_buf, consumed, &value,
++				     &value_len) != VPD_OK)
+ 			return VPD_FAIL;
+ 
+-		*consumed += decoded_len;
+-		value = &input_buf[*consumed];
+-		*consumed += value_len;
+-
+ 		if (type == VPD_TYPE_STRING)
+ 			return callback(key, key_len, value, value_len,
+ 					callback_arg);
+--- a/drivers/firmware/google/vpd_decode.h
++++ b/drivers/firmware/google/vpd_decode.h
+@@ -33,8 +33,8 @@ enum {
+ };
+ 
+ /* Callback for vpd_decode_string to invoke. */
+-typedef int vpd_decode_callback(const u8 *key, s32 key_len,
+-				const u8 *value, s32 value_len,
++typedef int vpd_decode_callback(const u8 *key, u32 key_len,
++				const u8 *value, u32 value_len,
+ 				void *arg);
+ 
+ /*
+@@ -52,7 +52,7 @@ typedef int vpd_decode_callback(const u8
+  * If one entry is successfully decoded, sends it to callback and returns the
+  * result.
+  */
+-int vpd_decode_string(const s32 max_len, const u8 *input_buf, s32 *consumed,
++int vpd_decode_string(const u32 max_len, const u8 *input_buf, u32 *consumed,
+ 		      vpd_decode_callback callback, void *callback_arg);
+ 
+ #endif  /* __VPD_DECODE_H */
 
 
