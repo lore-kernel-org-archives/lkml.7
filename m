@@ -2,83 +2,66 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 293ECC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 02:09:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F9CC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 02:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00178214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 02:09:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 778A221848
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 02:11:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387935AbfISCJU (ORCPT
+        id S2387553AbfISCLO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 22:09:20 -0400
-Received: from mga02.intel.com ([134.134.136.20]:4977 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726812AbfISCJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 22:09:19 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Sep 2019 19:09:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,522,1559545200"; 
-   d="scan'208";a="387108079"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga005.fm.intel.com with ESMTP; 18 Sep 2019 19:09:16 -0700
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Wei Yang <richardw.yang@linux.intel.com>
-Subject: [PATCH 2/2] x86/mm: replace a goto by merging two if clause
-Date:   Thu, 19 Sep 2019 10:08:44 +0800
-Message-Id: <20190919020844.27461-2-richardw.yang@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190919020844.27461-1-richardw.yang@linux.intel.com>
-References: <20190919020844.27461-1-richardw.yang@linux.intel.com>
+        Wed, 18 Sep 2019 22:11:14 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:39756 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726812AbfISCLO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 22:11:14 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iAluZ-0005e0-L3; Thu, 19 Sep 2019 02:11:11 +0000
+Date:   Thu, 19 Sep 2019 03:11:11 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Ian Kent <raven@themaw.net>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: [git pull] autofs-related stuff
+Message-ID: <20190919021111.GK1131@ZenIV.linux.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is only one place to use good_area jump, which could be reduced by
-merging the following two if clause.
+	The most interesting part here is getting rid of the last trylock
+loop on dentry->d_lock - the ones in fs/dcache.c had been dealt with
+several years ago, but there'd been leftovers in fs/autofs/expire.c
 
-Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
----
- arch/x86/mm/fault.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
 
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index 9d18b73b5f77..72ce6c69e195 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -1390,18 +1390,17 @@ void do_user_addr_fault(struct pt_regs *regs,
- 	vma = find_vma(mm, address);
- 	if (unlikely(!vma))
- 		goto bad_area;
--	if (likely(vma->vm_start <= address))
--		goto good_area;
--	if (unlikely(!(vma->vm_flags & VM_GROWSDOWN)))
--		goto bad_area;
--	if (unlikely(expand_stack(vma, address)))
-+	if (likely(vma->vm_start <= address)) {
-+		/* good area, do nothing */
-+	} else if (unlikely(!(vma->vm_flags & VM_GROWSDOWN)) ||
-+		   unlikely(expand_stack(vma, address))) {
- 		goto bad_area;
-+	}
- 
- 	/*
- 	 * Ok, we have a good vm_area for this memory access, so
- 	 * we can handle it..
- 	 */
--good_area:
- 	if (unlikely(access_error(hw_error_code, vma))) {
- 		bad_area_access_error(regs, hw_error_code, address, vma);
- 		return;
--- 
-2.17.1
+  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
 
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git work.autofs
+
+for you to fetch changes up to 5f68056ca50fdd3954a93ae66fea7452abddb66f:
+
+  autofs_lookup(): hold ->d_lock over playing with ->d_flags (2019-07-27 10:03:14 -0400)
+
+----------------------------------------------------------------
+Al Viro (3):
+      autofs: simplify get_next_positive_...(), get rid of trylocks
+      get rid of autofs_info->active_count
+      autofs_lookup(): hold ->d_lock over playing with ->d_flags
+
+ fs/autofs/autofs_i.h |   1 -
+ fs/autofs/expire.c   | 103 ++++++++++++++++-----------------------------------
+ fs/autofs/root.c     |  44 ++++++----------------
+ 3 files changed, 44 insertions(+), 104 deletions(-)
