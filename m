@@ -2,296 +2,176 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A28FC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E0CC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEF15218AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:53:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568908439;
-	bh=baO7aHG9LjHxLD7RTIPRgmRYChWzMwfNYhSBNH1ULUg=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=iRxgmb32fo52qCYEq9l2tDZEdAPpbFZAfyqNh8EY8auq21Z65DHwCcFVA2uFz+oy+
-	 /SDuU8r0cXoMUf8MO2KtBr4EEcDxYGxasqxVPVa0kH+1xjwro8xJCPgDqH7Mt+bxmY
-	 xb6rsDdrbWvx4JvRRS+WKHvZE6B8/kPO7KB3Yjkc=
+	by mail.kernel.org (Postfix) with ESMTP id 83A1F208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:54:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="lU8DoV05"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390135AbfISPx6 (ORCPT
+        id S2391493AbfISPyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 11:53:58 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:44678 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387881AbfISPx5 (ORCPT
+        Thu, 19 Sep 2019 11:54:55 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:26007 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390161AbfISPyz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 11:53:57 -0400
-Received: by mail-oi1-f195.google.com with SMTP id w6so3100449oie.11;
-        Thu, 19 Sep 2019 08:53:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding:user-agent;
-        bh=EijMKpMKYMOETFMtSDdyBHjc/F+STYbBCeMRpw3f/uU=;
-        b=uHJ+MPwy2Yr2MP9W99sKRkWA0cmXOoXhYePPark1r6Bi4H/MILerG2Sx1JlRshH7hR
-         LI/6GcqC93gqzggmKH7im0rWTBYsNKjibsOqlicZH12Hs1MTWCqfEoTDw4BNH6/hQ1Gw
-         aFnNspIGoPCegeimnf3PLuaKeMWXsyvPCmBPGHfXHUvVDIlA0/hdoOM9IuEoeXdVpYpR
-         bqWrT8F2htOu1kHVcNR7aRlk3VEZX7yJ3G8zwmV2Gzs9ay54F7ljpCgMkk98iSZZ81Ug
-         GwuIdOdyzVvCkmbmP4Hv8A+BmyHqiXCaWKWBTnTV25Q7MAsv4RN8TLfvA1OVc/JKG1lP
-         uIlg==
-X-Gm-Message-State: APjAAAXlzVzh4Z2ZWZgmRtKBlg4jO3Hq3W6ZORV4+JF6v10stMcp5nRq
-        6EbOFuZ140PunzlbTz3cMpBcNVE=
-X-Google-Smtp-Source: APXvYqz8bAyBxn7daCO4V1xZH6QvWdNChN7tV//vhd4TiS0Hk3lmk1aZ23aqdCWhKTy1vT3rZwLcwQ==
-X-Received: by 2002:aca:47d8:: with SMTP id u207mr2904988oia.130.1568908435893;
-        Thu, 19 Sep 2019 08:53:55 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y137sm2918325oie.53.2019.09.19.08.53.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2019 08:53:55 -0700 (PDT)
-Date:   Thu, 19 Sep 2019 10:53:54 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Frank Rowand <frowand.list@gmail.com>
-Subject: [GIT PULL] Devicetree updates for v5.4
-Message-ID: <20190919155354.GA8880@bogus>
+        Thu, 19 Sep 2019 11:54:55 -0400
+Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
+  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="Tudor.Ambarus@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa2.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa2.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: uG3XXq3hZkH/QxyvTJBYqH0W9vM6Is/CidOWH92hUE+R+IKWq+qXmj+qNRsM7OYWriMl+U0Dkl
+ rj+hpwtqBNpzS9yFbfkVpi61eIhxXE57wk+oN47+6jRT3qLlvXCQaYnRROwkKlsxMv0ZN3t1cO
+ TotMPXazP+N48Th/NKYZJqRbM2O1SyA6USjHzcP4JQ9NoMpGIIxRsF0zHb8k4Er8dsgLYhEzsV
+ Dn1D1gEP5alO3EcW5EPS9I7e19PdHnGHsmpyDy2N5YDdRYhdQkZFwu355GKEKVbVdUpIrKzoUP
+ q7U=
+X-IronPort-AV: E=Sophos;i="5.64,524,1559545200"; 
+   d="scan'208";a="49559752"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 19 Sep 2019 08:54:53 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 19 Sep 2019 08:54:53 -0700
+Received: from NAM05-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 19 Sep 2019 08:54:53 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HMbXIbZSDM5/o3m4JYCJ85rAk+CGGZDsfh84YSst+5kOJrp45C485fYNtpRIL6Cg9LVeagH8QW/duzQNnfnSyjraKP6176TyscvHWskKCHS3eJj+Ol7QuMkrv4M12nWdFNI5dJXxFLO5acTxYBobeBwP/xlImmUwucTIUv9GMvjLk3UQYKZjlm6Ij3vuJdSmviErbY5Hx+Omowzsh6OBqLrJ1xzLr4+2JvTNW7Btr823TGNAhDZEU4xWYp0YbbZ5b9PCYQWJtzy+sCYdRHqFmGCOrwwjF4Z6OFjxq83s6fTQ3XP8QCbBN1zIrq7bXcWqSq1yi0oNMYKM5XhY3RfLeg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RvBqlTjjUjcU2RJnUhN/ybdRGZUNSe6dRYQbGHmm1aY=;
+ b=HyWeNvoHEHMMRIbpx3MkfLvX49yUzTS835y1cp5Bk3W6bMerISaZfAeD86FMh3ooRfdu9U4+1Y83px6otdYLCENH+5+VKhkhFsGdQWbp4blZ0DAFlhTxq2GGnCvweCNfP+gJX3f6X569wbWNTDMB390AdEXASZEp7Dae03EficO2qC39TvzdSHjUIAyHDdmCJt4PiNJEZHfm+fkBQSBvOqaz/UHdBImx8tmg3fIXiWY1s3uQOE8DjBpzvlKO/7IV3zXN56BE3ZBq7H5WYoHAz05Vo6SHnIfb+JF58fWAS5exIvk652mZItZHnlj08mUd6migzU/0zHp1tBxWYeQbLg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RvBqlTjjUjcU2RJnUhN/ybdRGZUNSe6dRYQbGHmm1aY=;
+ b=lU8DoV05xdX1C/i3lEOzAbVBvzkzx9rJYizP0nL53y0OsdBHR2zC6mYwDLWPp6/1mEyJxEigrexeY1ZzYvZwpQxqhWqlCKWmPcS+1eJk7k6CQzMk0+v1oz9NS+9mMAczZqSFAT+BXrWDsVOpbycV0yzXw2hB5fIQtv43brnrP+s=
+Received: from MN2PR11MB4448.namprd11.prod.outlook.com (52.135.39.157) by
+ MN2PR11MB3565.namprd11.prod.outlook.com (20.178.250.159) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.13; Thu, 19 Sep 2019 15:54:52 +0000
+Received: from MN2PR11MB4448.namprd11.prod.outlook.com
+ ([fe80::c951:b15a:e4b3:30f7]) by MN2PR11MB4448.namprd11.prod.outlook.com
+ ([fe80::c951:b15a:e4b3:30f7%7]) with mapi id 15.20.2263.023; Thu, 19 Sep 2019
+ 15:54:52 +0000
+From:   <Tudor.Ambarus@microchip.com>
+To:     <vigneshr@ti.com>, <boris.brezillon@collabora.com>,
+        <marek.vasut@gmail.com>, <miquel.raynal@bootlin.com>,
+        <richard@nod.at>, <linux-mtd@lists.infradead.org>
+CC:     <dwmw2@infradead.org>, <computersforpeace@gmail.com>,
+        <joel@jms.id.au>, <andrew@aj.id.au>, <matthias.bgg@gmail.com>,
+        <vz@mleia.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>
+Subject: Re: [PATCH 17/23] mtd: spi-nor: Fix clearing of QE bit on
+ lock()/unlock()
+Thread-Topic: [PATCH 17/23] mtd: spi-nor: Fix clearing of QE bit on
+ lock()/unlock()
+Thread-Index: AQHVbXBXffWwZrBoIkKrGGyrhA4/GaczE40AgAAWrYA=
+Date:   Thu, 19 Sep 2019 15:54:52 +0000
+Message-ID: <b44e398a-037a-8f32-58dd-15b7f714a8a3@microchip.com>
+References: <20190917155426.7432-1-tudor.ambarus@microchip.com>
+ <20190917155426.7432-18-tudor.ambarus@microchip.com>
+ <dceca616-2b98-9bc8-73e4-32fb06fc753d@ti.com>
+In-Reply-To: <dceca616-2b98-9bc8-73e4-32fb06fc753d@ti.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR0601CA0032.eurprd06.prod.outlook.com
+ (2603:10a6:800:1e::42) To MN2PR11MB4448.namprd11.prod.outlook.com
+ (2603:10b6:208:193::29)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [86.120.240.252]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d864dd75-6ef7-43f1-b1eb-08d73d19b529
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MN2PR11MB3565;
+x-ms-traffictypediagnostic: MN2PR11MB3565:
+x-microsoft-antispam-prvs: <MN2PR11MB35653728F4E9B9C744509A04F0890@MN2PR11MB3565.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 016572D96D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(136003)(376002)(396003)(346002)(366004)(189003)(199004)(2201001)(316002)(7736002)(66066001)(386003)(6116002)(53546011)(102836004)(36756003)(305945005)(7416002)(52116002)(54906003)(14454004)(2906002)(6486002)(5660300002)(6506007)(99286004)(86362001)(76176011)(31696002)(81166006)(256004)(8676002)(66476007)(66446008)(66946007)(81156014)(71200400001)(478600001)(25786009)(6436002)(26005)(110136005)(229853002)(486006)(64756008)(2501003)(3846002)(11346002)(66556008)(186003)(31686004)(6512007)(8936002)(2616005)(6246003)(4326008)(476003)(446003)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3565;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ZM4OLvXnRBoH4hsXSleSV5Pms57QMkr/UZmqCE/g8If+16KIv/YovGT9jA+bXC1/2BpK+AhyxQ5F2jGSGSwGFkvfbqapvy2+ZcZmG1hJ1knOXWdt0tKa94GTQREwppdw2XrJDxIM19d+qi68cprp3rA1xDLhiZpRUaABWwfDfcLSuKpVf2DsL95zYI/ywqEX/66HqhdxuGJ8P2q728TLOxHJdnlh5/7HquCiI2hFjWA+DGWT9YNeiOBA2EAym8cZmPbC+Gm9Grtd/QjF4ikAE8UbZvJgnALaWw6FkWFNo2MHVOxICi5Um495hV+0vkErpzCihluETRE2Uxwl27P0khWcnw03QuNT1OZgCSykRr0WFUOB8xbIlsRKnkVS7E8zs31DvBiSGdu8NAoc09zSEfyH+pGECbV8aci3shgWvg8=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D3CB4932602AE44EB0B07313F1DB679F@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d864dd75-6ef7-43f1-b1eb-08d73d19b529
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Sep 2019 15:54:52.1538
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jpQtW4wR+cplVTj5uECnldbPOZpTn4Pb+uJ3vkyn4Lwni9tOZBCiMcArC+xk3XNSYhSjEVsPGk/90UgoAlqnxJMMlmzCUMOSXV1bnCRYPgQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3565
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
-
-Please pull Devicetree updates for 5.4.
-
-Rob
-
-
-The following changes since commit 83f82d7a42583e93d0f0dde3d61ed10f75c0f4d8:
-
-  of: irq: fix a trivial typo in a doc comment (2019-08-14 20:12:16 -0600)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-for-5.4
-
-for you to fetch changes up to 59e9fcf8772bd97b6d681706fb8c9a972500c524:
-
-  of: restore old handling of cells_name=NULL in of_*_phandle_with_args() (2019-09-19 08:33:02 -0500)
-
-----------------------------------------------------------------
-Devicetree updates for v5.4:
-
-- A bunch of DT binding conversions to DT schema format
-
-- Clean-ups of the Arm idle-states binding
-
-- Support a default number of cells in of_for_each_phandle() when the
-  cells name is missing
-
-- Expose dtbs_check and dt_binding_check in the make help
-
-- Convert writting-schema.md to ReST
-
-- HiSilicon reset controller binding updates
-
-- Add documentation for MT8516 RNG
-
-----------------------------------------------------------------
-Bin Meng (1):
-      dt-bindings: pci: pci-msi: Correct the unit-address of the pci node name
-
-Colin Ian King (1):
-      bus: qcom: fix spelling mistake "ambigous" -> "ambiguous"
-
-Fabien Parent (1):
-      dt-bindings: rng: mtk-rng: Add documentation for MT8516
-
-Geert Uytterhoeven (6):
-      dt-bindings: arm-boards: Update pointer to ARM CPU bindings
-      dt-bindings: arm: idle-states: Use "e.g." and "i.e." consistently
-      dt-bindings: arm: idle-states: Correct references to wake-up delay
-      dt-bindings: arm: idle-states: Correct "constraint guarantees"
-      dt-bindings: arm: idle-states: Add punctuation to improve readability
-      dt-bindings: arm: idle-states: Move exit-latency-us explanation
-
-Guillaume Gardet (1):
-      dt-bindings: gpu: mali-midgard: Add samsung exynos5250 compatible
-
-John Wang (1):
-      dt-bindings: Add vendor prefix for Inspur Corporation
-
-Mauro Carvalho Chehab (1):
-      docs: writing-schema.md: convert from markdown to ReST
-
-Maxime Ripard (5):
-      dt-bindings: input: Convert Allwinner LRADC to a schema
-      dt-bindings: bus: Convert Allwinner DE2 bus to a schema
-      dt-bindings: crypto: Convert Allwinner A10 Security Engine to a schema
-      dt-bindings: irq: Convert Allwinner IRQ Controller to a schema
-      dt-bindings: irq: Convert Allwinner NMI Controller to a schema
-
-Miquel Raynal (1):
-      dt-bindings: ata: fix typo in Allwinner R40 reset specific paragraph
-
-Neil Armstrong (9):
-      dt-bindings: mailbox: meson-mhu: convert to yaml
-      dt-bindings: rng: amlogic,meson-rng: convert to yaml
-      dt-bindings: spi: meson: convert to yaml
-      dt-bindings: reset: amlogic,meson-reset: convert to yaml
-      dt-bindings: arm: amlogic: amlogic,meson-gx-ao-secure: convert to yaml
-      dt-bindings: phy: meson-g12a-usb2-phy: convert to yaml
-      dt-bindings: phy: meson-g12a-usb3-pcie-phy: convert to yaml
-      dt-bindings: serial: meson-uart: convert to yaml
-      dt-bindings: watchdog: meson-gxbb-wdt: convert to yaml
-
-Nishka Dasgupta (1):
-      of: unittest: Add of_node_put() before return
-
-Peter Griffin (3):
-      dt-bindings: gpu: mali-utgard: add hisilicon,hi6220-mali compatible
-      dt-bindings: reset: hisilicon: Update compatible documentation
-      dt-bindings: reset: hisilicon: Add ao reset controller
-
-Peter Vernia (1):
-      pinctrl-mcp23s08: Fix property-name in dt-example
-
-Rob Herring (6):
-      Merge branch 'dt/linus' into dt/next
-      dt-bindings: Convert Arm Mali Midgard GPU to DT schema
-      dt-bindings: Convert Arm Mali Bifrost GPU to DT schema
-      dt-bindings: Convert Arm Mali Utgard GPU to DT schema
-      dt-bindings: arm: Convert Actions Semi bindings to jsonschema
-      dt-bindings: arm: Convert Realtek board/soc bindings to json-schema
-
-Sakari Ailus (1):
-      dt-bindings: smiapp: Align documentation with current practices
-
-Simon Horman (1):
-      dt-bindings: Correct spelling in example schema
-
-Stephen Boyd (2):
-      devicetree: Expose dtbs_check and dt_binding_check some more
-      dt-bindings: Clarify interrupts-extended usage
-
-Uwe Kleine-König (3):
-      iommu: pass cell_count = -1 to of_for_each_phandle with cells_name
-      of: Let of_for_each_phandle fallback to non-negative cell_count
-      of: restore old handling of cells_name=NULL in of_*_phandle_with_args()
-
-Vinod Koul (1):
-      dt-bindings: arm: Add kryo485 compatible
-
-james.tai (1):
-      dt-bindings: cpu: Add a support cpu type for cortex-a55
-
- Documentation/devicetree/bindings/arm/actions.txt  |  56 -------
- Documentation/devicetree/bindings/arm/actions.yaml |  38 +++++
- .../arm/amlogic/amlogic,meson-gx-ao-secure.txt     |  28 ----
- .../arm/amlogic/amlogic,meson-gx-ao-secure.yaml    |  52 +++++++
- Documentation/devicetree/bindings/arm/arm-boards   |   2 +-
- Documentation/devicetree/bindings/arm/cpus.yaml    |   2 +
- .../devicetree/bindings/arm/idle-states.txt        |  32 ++--
- Documentation/devicetree/bindings/arm/realtek.txt  |  22 ---
- Documentation/devicetree/bindings/arm/realtek.yaml |  23 +++
- .../devicetree/bindings/ata/ahci-platform.txt      |   2 +-
- .../bindings/bus/allwinner,sun50i-a64-de2.yaml     |  85 +++++++++++
- .../devicetree/bindings/bus/qcom,ebi2.txt          |   2 +-
- .../devicetree/bindings/bus/sun50i-de2-bus.txt     |  40 -----
- .../crypto/allwinner,sun4i-a10-crypto.yaml         |  79 ++++++++++
- .../devicetree/bindings/crypto/sun4i-ss.txt        |  23 ---
- .../devicetree/bindings/example-schema.yaml        |   2 +-
- .../devicetree/bindings/gpu/arm,mali-bifrost.txt   |  92 -----------
- .../devicetree/bindings/gpu/arm,mali-bifrost.yaml  | 116 ++++++++++++++
- .../devicetree/bindings/gpu/arm,mali-midgard.txt   | 119 ---------------
- .../devicetree/bindings/gpu/arm,mali-midgard.yaml  | 168 +++++++++++++++++++++
- .../devicetree/bindings/gpu/arm,mali-utgard.txt    | 124 ---------------
- .../devicetree/bindings/gpu/arm,mali-utgard.yaml   | 168 +++++++++++++++++++++
- .../input/allwinner,sun4i-a10-lradc-keys.yaml      |  95 ++++++++++++
- .../devicetree/bindings/input/sun4i-lradc-keys.txt |  65 --------
- .../allwinner,sun4i-a10-ic.yaml                    |  47 ++++++
- .../interrupt-controller/allwinner,sun4i-ic.txt    |  20 ---
- .../allwinner,sun7i-a20-sc-nmi.yaml                |  70 +++++++++
- .../interrupt-controller/allwinner,sunxi-nmi.txt   |  29 ----
- .../bindings/interrupt-controller/interrupts.txt   |   8 +-
- .../bindings/mailbox/amlogic,meson-gxbb-mhu.yaml   |  52 +++++++
- .../devicetree/bindings/mailbox/meson-mhu.txt      |  34 -----
- .../devicetree/bindings/media/i2c/nokia,smia.txt   |  10 +-
- Documentation/devicetree/bindings/pci/pci-msi.txt  |   2 +-
- .../bindings/phy/amlogic,meson-g12a-usb2-phy.yaml  |  63 ++++++++
- .../phy/amlogic,meson-g12a-usb3-pcie-phy.yaml      |  57 +++++++
- .../bindings/phy/meson-g12a-usb2-phy.txt           |  22 ---
- .../bindings/phy/meson-g12a-usb3-pcie-phy.txt      |  22 ---
- .../bindings/pinctrl/pinctrl-mcp23s08.txt          |   2 +-
- .../bindings/reset/amlogic,meson-reset.txt         |  19 ---
- .../bindings/reset/amlogic,meson-reset.yaml        |  37 +++++
- .../bindings/reset/hisilicon,hi6220-reset.txt      |   1 +
- .../devicetree/bindings/rng/amlogic,meson-rng.txt  |  21 ---
- .../devicetree/bindings/rng/amlogic,meson-rng.yaml |  37 +++++
- Documentation/devicetree/bindings/rng/mtk-rng.txt  |   1 +
- .../bindings/serial/amlogic,meson-uart.txt         |  38 -----
- .../bindings/serial/amlogic,meson-uart.yaml        |  73 +++++++++
- .../bindings/spi/amlogic,meson-gx-spicc.yaml       |  67 ++++++++
- .../bindings/spi/amlogic,meson6-spifc.yaml         |  53 +++++++
- .../devicetree/bindings/spi/spi-meson.txt          |  55 -------
- .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
- .../bindings/watchdog/amlogic,meson-gxbb-wdt.yaml  |  37 +++++
- .../bindings/watchdog/meson-gxbb-wdt.txt           |  16 --
- Documentation/devicetree/writing-schema.md         | 130 ----------------
- Documentation/devicetree/writing-schema.rst        | 154 +++++++++++++++++++
- MAINTAINERS                                        |   4 +-
- Makefile                                           |   6 +-
- drivers/iommu/arm-smmu.c                           |   2 +-
- drivers/iommu/mtk_iommu_v1.c                       |   2 +-
- drivers/of/base.c                                  |  58 +++++--
- drivers/of/unittest.c                              |   4 +-
- include/dt-bindings/reset/hisi,hi6220-resets.h     |   7 +
- 61 files changed, 1675 insertions(+), 1022 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/actions.txt
- create mode 100644 Documentation/devicetree/bindings/arm/actions.yaml
- delete mode 100644 Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt
- create mode 100644 Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml
- delete mode 100644 Documentation/devicetree/bindings/arm/realtek.txt
- create mode 100644 Documentation/devicetree/bindings/arm/realtek.yaml
- create mode 100644 Documentation/devicetree/bindings/bus/allwinner,sun50i-a64-de2.yaml
- delete mode 100644 Documentation/devicetree/bindings/bus/sun50i-de2-bus.txt
- create mode 100644 Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml
- delete mode 100644 Documentation/devicetree/bindings/crypto/sun4i-ss.txt
- delete mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
- create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
- delete mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
- create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
- delete mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
- create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
- create mode 100644 Documentation/devicetree/bindings/input/allwinner,sun4i-a10-lradc-keys.yaml
- delete mode 100644 Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/allwinner,sun4i-a10-ic.yaml
- delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/allwinner,sun4i-ic.txt
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml
- delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/allwinner,sunxi-nmi.txt
- create mode 100644 Documentation/devicetree/bindings/mailbox/amlogic,meson-gxbb-mhu.yaml
- delete mode 100644 Documentation/devicetree/bindings/mailbox/meson-mhu.txt
- create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml
- create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb3-pcie-phy.yaml
- delete mode 100644 Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt
- delete mode 100644 Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
- delete mode 100644 Documentation/devicetree/bindings/reset/amlogic,meson-reset.txt
- create mode 100644 Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml
- delete mode 100644 Documentation/devicetree/bindings/rng/amlogic,meson-rng.txt
- create mode 100644 Documentation/devicetree/bindings/rng/amlogic,meson-rng.yaml
- delete mode 100644 Documentation/devicetree/bindings/serial/amlogic,meson-uart.txt
- create mode 100644 Documentation/devicetree/bindings/serial/amlogic,meson-uart.yaml
- create mode 100644 Documentation/devicetree/bindings/spi/amlogic,meson-gx-spicc.yaml
- create mode 100644 Documentation/devicetree/bindings/spi/amlogic,meson6-spifc.yaml
- delete mode 100644 Documentation/devicetree/bindings/spi/spi-meson.txt
- create mode 100644 Documentation/devicetree/bindings/watchdog/amlogic,meson-gxbb-wdt.yaml
- delete mode 100644 Documentation/devicetree/bindings/watchdog/meson-gxbb-wdt.txt
- delete mode 100644 Documentation/devicetree/writing-schema.md
- create mode 100644 Documentation/devicetree/writing-schema.rst
+DQoNCk9uIDA5LzE5LzIwMTkgMDU6MzMgUE0sIFZpZ25lc2ggUmFnaGF2ZW5kcmEgd3JvdGU6DQo+
+IEhpIFR1ZG9yDQo+IA0KDQpIaSwgVmlnbmVzaCwNCg0KPiBbLi4uXQ0KPiANCj4gT24gMTctU2Vw
+LTE5IDk6MjUgUE0sIFR1ZG9yLkFtYmFydXNAbWljcm9jaGlwLmNvbSB3cm90ZToNCj4+ICtzdGF0
+aWMgaW50IHNwaV9ub3Jfd3JpdGVfMTZiaXRfc3JfYW5kX2NoZWNrKHN0cnVjdCBzcGlfbm9yICpu
+b3IsIHU4IHN0YXR1c19uZXcsDQo+PiArCQkJCQkgICAgdTggbWFzaykNCj4+ICt7DQo+PiArCWlu
+dCByZXQ7DQo+PiArCXU4ICpzcl9jciA9IG5vci0+Ym91bmNlYnVmOw0KPj4gKwl1OCBjcl93cml0
+dGVuOw0KPj4gKw0KPj4gKwkvKiBNYWtlIHN1cmUgd2UgZG9uJ3Qgb3ZlcndyaXRlIHRoZSBjb250
+ZW50cyBvZiBTdGF0dXMgUmVnaXN0ZXIgMi4gKi8NCj4+ICsJaWYgKCEobm9yLT5mbGFncyAmIFNO
+T1JfRl9OT19SRUFEX0NSKSkgew0KPiBBc3N1bWluZyBTTk9SX0ZfTk9fUkVBRF9DUiBpcyBub3Qg
+c2V0Li4uDQo+IA0Kd2hlbiBTTk9SX0ZfTk9fUkVBRF9DUiBpcyBub3Qgc2V0LCBJIHJlYWQgdGhl
+IFN0YXR1cyBSZWdpc3RlciAyIG9uIHRoZSBuZXh0IGxpbmU6DQoNCj4+ICsJCXJldCA9IHNwaV9u
+b3JfcmVhZF9jcihub3IsICZzcl9jclsxXSk7DQo+PiArCQlpZiAocmV0KQ0KPj4gKwkJCXJldHVy
+biByZXQ7DQo+PiArCX0gZWxzZSBpZiAobm9yLT5mbGFzaC5xdWFkX2VuYWJsZSkgew0KPj4gKwkJ
+LyoNCj4+ICsJCSAqIElmIHRoZSBTdGF0dXMgUmVnaXN0ZXIgMiBSZWFkIGNvbW1hbmQgKDM1aCkg
+aXMgbm90DQo+PiArCQkgKiBzdXBwb3J0ZWQsIHdlIHNob3VsZCBhdCBsZWFzdCBiZSBzdXJlIHdl
+IGRvbid0DQo+PiArCQkgKiBjaGFuZ2UgdGhlIHZhbHVlIG9mIHRoZSBTUjIgUXVhZCBFbmFibGUg
+Yml0Lg0KPj4gKwkJICoNCj4+ICsJCSAqIFdlIGNhbiBzYWZlbHkgYXNzdW1lIHRoYXQgd2hlbiB0
+aGUgUXVhZCBFbmFibGUgbWV0aG9kIGlzDQo+PiArCQkgKiBzZXQsIHRoZSB2YWx1ZSBvZiB0aGUg
+UUUgYml0IGlzIG9uZSwgYXMgYSBjb25zZXF1ZW5jZSBvZiB0aGUNCj4+ICsJCSAqIG5vci0+Zmxh
+c2gucXVhZF9lbmFibGUoKSBjYWxsLg0KPj4gKwkJICoNCj4+ICsJCSAqIFdlIGNhbiBzYWZlbHkg
+YXNzdW1lIHRoYXQgdGhlIFF1YWQgRW5hYmxlIGJpdCBpcyBwcmVzZW50IGluDQo+PiArCQkgKiB0
+aGUgU3RhdHVzIFJlZ2lzdGVyIDIgYXQgQklUKDEpLiBBY2NvcmRpbmcgdG8gdGhlIEpFU0QyMTYN
+Cj4+ICsJCSAqIHJldkIgc3RhbmRhcmQsIEJGUFQgRFdPUkRTWzE1XSwgYml0cyAyMjoyMCwgdGhl
+IDE2LWJpdA0KPj4gKwkJICogV3JpdGUgU3RhdHVzICgwMWgpIGNvbW1hbmQgaXMgYXZhaWxhYmxl
+IGp1c3QgZm9yIHRoZSBjYXNlcw0KPj4gKwkJICogaW4gd2hpY2ggdGhlIFFFIGJpdCBpcyBkZXNj
+cmliZWQgaW4gU1IyIGF0IEJJVCgxKS4NCj4+ICsJCSAqLw0KDQp3aGVuIFNOT1JfRl9OT19SRUFE
+X0NSIGlzIHNldCBhbmQgbm9yLT5mbGFzaC5xdWFkX2VuYWJsZSAhPSBOVUxMLCBTdGF0dXMNClJl
+Z2lzdGVyIDIgKENSKSBpcyBlcXVhbCB0byBDUl9RVUFEX0VOX1NQQU4uDQoNCj4+ICsJCXNyX2Ny
+WzFdID0gQ1JfUVVBRF9FTl9TUEFOOw0KPj4gKwl9IGVsc2Ugew0KDQppZiBTTk9SX0ZfTk9fUkVB
+RF9DUiBpcyBzZXQgYW5kIG5vci0+Zmxhc2gucXVhZF9lbmFibGUgPT0gTlVMTCB3ZSBkb24ndCBu
+ZWVkIHRvDQplbmFibGUgUXVhZCBNb2RlLCBzbyBTdGF0dXMgUmVnaXN0ZXIgMiBpcyAwLg0KDQo+
+PiArCQlzcl9jclsxXSA9IDA7DQo+PiArCX0NCj4+ICsNCj4gQ1JfUVVBRF9FTl9TUEFOIHdpbGwg
+bm90IGJlIGluIHNyX2NyWzFdIHdoZW4gd2UgcmVhY2ggaGVyZS4gU28gY29kZQ0KPiB3b24ndCBl
+bmFibGUgcXVhZCBtb2RlLg0KPiANCj4gDQo=
