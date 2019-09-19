@@ -2,73 +2,81 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5709FC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1223C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DA5521D7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:59:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568901562;
-	bh=I8osdBr5rK8/FGiX5xKVgPYs/R2ZYcecd+s4/UF9w7E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Cynj+UbSlVFdkZYzRlrc7RKLlFmBvXPw1XJ+HTADp0bNZ7G8+BImQOAJkDTYaOHTw
-	 fMseOZGo92I0BlybKXVU0O+JJvFf9C19O4SRzTFTOrEjJTOOt6JV5xczV6DypLyY/B
-	 di1JSZlVLuRTK/djnGkmz7jRk2fGyJxuoH/TFkWo=
+	by mail.kernel.org (Postfix) with ESMTP id A13EA2196F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:02:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732394AbfISN7V (ORCPT
+        id S1732401AbfISOCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 09:59:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44528 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732329AbfISN7V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 09:59:21 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1E8A20665;
-        Thu, 19 Sep 2019 13:59:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568901560;
-        bh=I8osdBr5rK8/FGiX5xKVgPYs/R2ZYcecd+s4/UF9w7E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=f8OD1gi3nEkTcNUJXlI6jOI0AXpXmj5vr0wFr4lUW9cV/3FEkMLfxB1hYO9dPEKHm
-         gem2FmhUVREnBHtoUT44ZUBnM2Khz7+40EO3x1jDJCu1W6YYQLVYOdOd92xjzNuT/u
-         1xPPixqNnXvMfZv8eLmwekOhdmVU7OIqADqoj3MU=
-Date:   Thu, 19 Sep 2019 15:59:18 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jerome Pouiller <Jerome.Pouiller@silabs.com>
-Cc:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        David Le Goff <David.Legoff@silabs.com>
-Subject: Re: [PATCH v2 20/20] staging: wfx: implement the rest of mac80211 API
-Message-ID: <20190919135918.GA3853501@kroah.com>
-References: <20190919135220.30663-1-Jerome.Pouiller@silabs.com>
- <20190919135220.30663-21-Jerome.Pouiller@silabs.com>
+        Thu, 19 Sep 2019 10:02:43 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2740 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732323AbfISOCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 10:02:42 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 118C5FBD00B0B2AFF39B;
+        Thu, 19 Sep 2019 22:02:37 +0800 (CST)
+Received: from huawei.com (10.90.53.225) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Thu, 19 Sep 2019
+ 22:02:14 +0800
+From:   yu kuai <yukuai3@huawei.com>
+To:     <airlied@linux.ie>, <daniel@ffwll.ch>, <alexander.deucher@amd.com>,
+        <christian.koenig@amd.com>, <David1.Zhou@amd.com>
+CC:     <yukuai3@huawei.com>, <zhengbin13@huawei.com>,
+        <yi.zhang@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <amd-gfx@lists.freedesktop.org>
+Subject: [PATCH] drm/amdgpu: remove excess function parameter description
+Date:   Thu, 19 Sep 2019 22:09:09 +0800
+Message-ID: <1568902149-70787-1-git-send-email-yukuai3@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190919135220.30663-21-Jerome.Pouiller@silabs.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
+X-Originating-IP: [10.90.53.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 01:52:42PM +0000, Jerome Pouiller wrote:
-> From: Jérôme Pouiller <jerome.pouiller@silabs.com>
-> 
-> Signed-off-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
+Fixes gcc warning:
 
-I can not take patches without any changelog text :(
+drivers/gpu/drm/amd/amdgpu/vcn_v2_5.c:431: warning: Excess function
+parameter 'sw' description in 'vcn_v2_5_disable_clock_gating'
+drivers/gpu/drm/amd/amdgpu/vcn_v2_5.c:550: warning: Excess function
+parameter 'sw' description in 'vcn_v2_5_enable_clock_gating'
 
+Fixes: cbead2bdfcf1 ("drm/amdgpu: add VCN2.5 VCPU start and stop")
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+---
+ drivers/gpu/drm/amd/amdgpu/vcn_v2_5.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/amdgpu/vcn_v2_5.c b/drivers/gpu/drm/amd/amdgpu/vcn_v2_5.c
+index 395c225..9d778a0 100644
+--- a/drivers/gpu/drm/amd/amdgpu/vcn_v2_5.c
++++ b/drivers/gpu/drm/amd/amdgpu/vcn_v2_5.c
+@@ -423,7 +423,6 @@ static void vcn_v2_5_mc_resume(struct amdgpu_device *adev)
+  * vcn_v2_5_disable_clock_gating - disable VCN clock gating
+  *
+  * @adev: amdgpu_device pointer
+- * @sw: enable SW clock gating
+  *
+  * Disable clock gating for VCN block
+  */
+@@ -542,7 +541,6 @@ static void vcn_v2_5_disable_clock_gating(struct amdgpu_device *adev)
+  * vcn_v2_5_enable_clock_gating - enable VCN clock gating
+  *
+  * @adev: amdgpu_device pointer
+- * @sw: enable SW clock gating
+  *
+  * Enable clock gating for VCN block
+  */
+-- 
+2.7.4
 
