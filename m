@@ -2,210 +2,89 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25057C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56EA8C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC907208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:57:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F7C1208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:58:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Skg8FBDY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732873AbfISU5Y (ORCPT
+        id S1732881AbfISU64 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 16:57:24 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46204 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732445AbfISU5X (ORCPT
+        Thu, 19 Sep 2019 16:58:56 -0400
+Received: from mail-pg1-f180.google.com ([209.85.215.180]:40941 "EHLO
+        mail-pg1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732070AbfISU64 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 16:57:23 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8JKVeGE135521;
-        Thu, 19 Sep 2019 16:57:15 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2v4g2u27qq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 19 Sep 2019 16:57:15 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8JKhhIo020191;
-        Thu, 19 Sep 2019 16:57:14 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2v4g2u27qb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 19 Sep 2019 16:57:14 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8JKU3Sw019813;
-        Thu, 19 Sep 2019 20:57:13 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma01dal.us.ibm.com with ESMTP id 2v3vbu2k89-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 19 Sep 2019 20:57:13 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8JKvAd235389736
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Sep 2019 20:57:11 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E0BC6112062;
-        Thu, 19 Sep 2019 20:57:10 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 446ED112063;
-        Thu, 19 Sep 2019 20:57:10 +0000 (GMT)
-Received: from oc4221205838.ibm.com (unknown [9.85.141.73])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 19 Sep 2019 20:57:10 +0000 (GMT)
-Subject: Re: [PATCH v4 4/4] vfio: pci: Using a device region to retrieve zPCI
- information
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     sebott@linux.ibm.com, gerald.schaefer@de.ibm.com,
-        pasic@linux.ibm.com, borntraeger@de.ibm.com, walling@linux.ibm.com,
-        linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org,
-        joro@8bytes.org, linux-kernel@vger.kernel.org,
-        alex.williamson@redhat.com, kvm@vger.kernel.org,
-        heiko.carstens@de.ibm.com, robin.murphy@arm.com, gor@linux.ibm.com,
-        pmorel@linux.ibm.com
-References: <1567815231-17940-1-git-send-email-mjrosato@linux.ibm.com>
- <1567815231-17940-5-git-send-email-mjrosato@linux.ibm.com>
- <20190919172505.2eb075f8.cohuck@redhat.com>
-From:   Matthew Rosato <mjrosato@linux.ibm.com>
-Openpgp: preference=signencrypt
-Message-ID: <c5c5c46e-371b-5be0-064a-b89195cdc3f6@linux.ibm.com>
-Date:   Thu, 19 Sep 2019 16:57:10 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 19 Sep 2019 16:58:56 -0400
+Received: by mail-pg1-f180.google.com with SMTP id w10so2554062pgj.7
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 13:58:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=CUgsbf/jB2T41BbAqv3yJJ6qnY+emEeWTF8GouW0W7k=;
+        b=Skg8FBDYI3SI80OiRaZsajZIS+mB/ws1Benp96vjZIICX5FQ+h9kfoOXJI3HVESzW+
+         GK+aessLoKXzNbE0qDzjfAAkxFLtfNQTm/gGUDRHm1zFBR+P6Gi2NLWI+G0ABr0jhmwy
+         qWUOkMVTLwXp2lAvy82OQuTS8G5C4Pwp9SWq4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CUgsbf/jB2T41BbAqv3yJJ6qnY+emEeWTF8GouW0W7k=;
+        b=gr2q1PcoYe6MRWkIcTIdxiioNv4BHvRXEMAivCrfdttwhwId5A3+JuGrjhE0mwmMQW
+         u9lECHXzwnWplFNakQj7+yHtUbXnyHdRloSlHuEz0NWIjPe3KnrBcrEsq/4p5n/YGAkZ
+         PWPgUa2KutyUemipr6YUALumWn2sLJ6FodEu2GJDrnN1RkUY4xfH73YHGQ+Box5yz6wk
+         RoNvS9JQBfAV3RsyZ3O9v5lbslhYBA1HFseDCoGmFXc4KwQJfklJBLWEgtFFxe0gLMtt
+         gV7c+sU7+DufdgWgCTkAkT/WJeERWlJDuYADPNp14QAXtXqLJFGURrUlKm2jDYARVVxf
+         NUpA==
+X-Gm-Message-State: APjAAAUgvmSaTo6nJfHGqgjcexuIYRfQ91beba3VYXjsRA+YX6NJG8pF
+        dEP8viiXGtPoKm8a8VGNA961Zg==
+X-Google-Smtp-Source: APXvYqxxK218iueQ1y1JKMl7jjQZnPgxxYGDjjTCbDmU0HJIUVzwPt4wc4a+8kSux480STH1xOWYKA==
+X-Received: by 2002:aa7:93b7:: with SMTP id x23mr12589265pff.250.1568926735403;
+        Thu, 19 Sep 2019 13:58:55 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id f18sm3666342pgf.58.2019.09.19.13.58.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Sep 2019 13:58:54 -0700 (PDT)
+Date:   Thu, 19 Sep 2019 13:58:53 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Tim.Bird@sony.com
+Cc:     shuah@kernel.org, anders.roxell@linaro.org,
+        alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH] selftests/kselftest/runner.sh: Add 45 second timeout per
+ test
+Message-ID: <201909191357.7B79D5D427@keescook>
+References: <201909191102.97FA56072@keescook>
+ <ECADFF3FD767C149AD96A924E7EA6EAF977BA636@USCULXMSG01.am.sony.com>
+ <ECADFF3FD767C149AD96A924E7EA6EAF977BA66E@USCULXMSG01.am.sony.com>
 MIME-Version: 1.0
-In-Reply-To: <20190919172505.2eb075f8.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-19_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909190174
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ECADFF3FD767C149AD96A924E7EA6EAF977BA66E@USCULXMSG01.am.sony.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/19/19 11:25 AM, Cornelia Huck wrote:
-> On Fri,  6 Sep 2019 20:13:51 -0400
-> Matthew Rosato <mjrosato@linux.ibm.com> wrote:
+On Thu, Sep 19, 2019 at 08:49:14PM +0000, Tim.Bird@sony.com wrote:
+> > > +export timeout_rc=124
+> > what are the units here?  I presume seconds?
 > 
->> From: Pierre Morel <pmorel@linux.ibm.com>
->>
->> We define a new configuration entry for VFIO/PCI, VFIO_PCI_ZDEV
->>
->> When the VFIO_PCI_ZDEV feature is configured we initialize
->> a new device region, VFIO_REGION_SUBTYPE_ZDEV_CLP, to hold
->> the information from the ZPCI device the use
->>
->> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
->> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
->> ---
->>  drivers/vfio/pci/Kconfig            |  7 +++
->>  drivers/vfio/pci/Makefile           |  1 +
->>  drivers/vfio/pci/vfio_pci.c         |  9 ++++
->>  drivers/vfio/pci/vfio_pci_private.h | 10 +++++
->>  drivers/vfio/pci/vfio_pci_zdev.c    | 85 +++++++++++++++++++++++++++++++++++++
->>  5 files changed, 112 insertions(+)
->>  create mode 100644 drivers/vfio/pci/vfio_pci_zdev.c
->>
->> diff --git a/drivers/vfio/pci/Kconfig b/drivers/vfio/pci/Kconfig
->> index ac3c1dd..d4562a8 100644
->> --- a/drivers/vfio/pci/Kconfig
->> +++ b/drivers/vfio/pci/Kconfig
->> @@ -45,3 +45,10 @@ config VFIO_PCI_NVLINK2
->>  	depends on VFIO_PCI && PPC_POWERNV
->>  	help
->>  	  VFIO PCI support for P9 Witherspoon machine with NVIDIA V100 GPUs
->> +
->> +config VFIO_PCI_ZDEV
->> +	bool "VFIO PCI Generic for ZPCI devices"
->> +	depends on VFIO_PCI && S390
->> +	default y
->> +	help
->> +	  VFIO PCI support for S390 Z-PCI devices
-> 
->>From that description, I'd have no idea whether I'd want that or not.
-> Is there any downside to enabling it?
-> 
+> Nevermind.  I misread this.  This is the return code from the 'timeout' program, right?
 
-:) Not really, you're just getting information from the hardware vs
-using hard-coded defaults.  The only reason I could think of to turn it
-off would be if you wanted/needed to restore this hard-coded behavior.
+Correct -- given the skip_rc usage, it felt weird to hard-code it in the
+if/else statements.
 
-bool "VFIO PCI support for generic ZPCI devices" ?
+As for the "45" I chose, that was just to be "more than 30" which was
+the per-sub-test for tests built using kselftest_harness.h.
 
-"Support for sharing ZPCI hardware device information between the host
-and guests." ?
-
-
->> diff --git a/drivers/vfio/pci/Makefile b/drivers/vfio/pci/Makefile
->> index f027f8a..781e080 100644
->> --- a/drivers/vfio/pci/Makefile
->> +++ b/drivers/vfio/pci/Makefile
->> @@ -3,5 +3,6 @@
->>  vfio-pci-y := vfio_pci.o vfio_pci_intrs.o vfio_pci_rdwr.o vfio_pci_config.o
->>  vfio-pci-$(CONFIG_VFIO_PCI_IGD) += vfio_pci_igd.o
->>  vfio-pci-$(CONFIG_VFIO_PCI_NVLINK2) += vfio_pci_nvlink2.o
->> +vfio-pci-$(CONFIG_VFIO_PCI_ZDEV) += vfio_pci_zdev.o
->>  
->>  obj-$(CONFIG_VFIO_PCI) += vfio-pci.o
->> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
->> index 703948c..b40544a 100644
->> --- a/drivers/vfio/pci/vfio_pci.c
->> +++ b/drivers/vfio/pci/vfio_pci.c
->> @@ -356,6 +356,15 @@ static int vfio_pci_enable(struct vfio_pci_device *vdev)
->>  		}
->>  	}
->>  
->> +	if (IS_ENABLED(CONFIG_VFIO_PCI_ZDEV)) {
->> +		ret = vfio_pci_zdev_init(vdev);
->> +		if (ret) {
->> +			dev_warn(&vdev->pdev->dev,
->> +				 "Failed to setup ZDEV regions\n");
->> +			goto disable_exit;
->> +		}
->> +	}
->> +
->>  	vfio_pci_probe_mmaps(vdev);
->>  
->>  	return 0;
->> diff --git a/drivers/vfio/pci/vfio_pci_private.h b/drivers/vfio/pci/vfio_pci_private.h
->> index ee6ee91..08e02f5 100644
->> --- a/drivers/vfio/pci/vfio_pci_private.h
->> +++ b/drivers/vfio/pci/vfio_pci_private.h
->> @@ -186,4 +186,14 @@ static inline int vfio_pci_ibm_npu2_init(struct vfio_pci_device *vdev)
->>  	return -ENODEV;
->>  }
->>  #endif
->> +
->> +#ifdef CONFIG_VFIO_PCI_ZDEV
->> +extern int vfio_pci_zdev_init(struct vfio_pci_device *vdev);
->> +#else
->> +static inline int vfio_pci_zdev_init(struct vfio_pci_device *vdev)
->> +{
->> +	return -ENODEV;
-> 
-> If you really want to have this configurable, why not just return 0
-> here and skip the IS_ENABLED check above?
-> 
-
-I agree that it functionally has the same result, but in this case I
-think Pierre was repeating the same thing the other init() functions
-here (IGD, etc) are doing.  Though I guess the other cases have at least
-1 other condition they care about besides IS_ENABLED...  OK, I can make
-this change.
-
->> +}
->> +#endif
->> +
->>  #endif /* VFIO_PCI_PRIVATE_H */
-> 
-> (...)
-> 
-
+-- 
+Kees Cook
