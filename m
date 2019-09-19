@@ -2,53 +2,53 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0EDC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F586C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D925820678
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 378982053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:25:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931947;
-	bh=rng0vklXFVK0a4LP4agVcs4rvO5G2fgDSggZLO0gOwQ=;
+	s=default; t=1568931953;
+	bh=AB1E/MbgpqzKN9ZmRscBe9uf/LgHfzWk8FJCCK5DZe4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BNYllqyPz11w/k12W73CgaXBlTjrSCZHOTEs8AO6m4QZUs3IUuNNTYFv7vfOZzSc6
-	 3pcPly1dfjTodCo/xWokOtMkX+WD2pEUSZQwxgN3tmhFDkiAkFMvBV3bIftJmjqvJ8
-	 sigkRyUiUXrXT+uKSYbDAg1iXdVc03DeiDZ1ZebI=
+	b=dbSpkS7jf/CwmhTu1XQWGDGfcYr4Ade5lGGIz3KZTLlswf30nLJwLsVNKuBSOXbvZ
+	 XcbcsiBli4DjqdaBpD+EehfL8M/NqDdsyktNdlMt8So/u4wanKMlitgoKvS/re/qQX
+	 Tu4f0yJSIf6QZVvH2R5QCDj+hS07TLibVBytqTuc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407175AbfISWZp (ORCPT
+        id S2436543AbfISWZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:25:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38772 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:25:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405425AbfISWXN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:23:13 -0400
+        id S2394131AbfISWW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:22:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90E2C2196E;
-        Thu, 19 Sep 2019 22:23:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D649B21920;
+        Thu, 19 Sep 2019 22:22:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931793;
-        bh=rng0vklXFVK0a4LP4agVcs4rvO5G2fgDSggZLO0gOwQ=;
+        s=default; t=1568931778;
+        bh=AB1E/MbgpqzKN9ZmRscBe9uf/LgHfzWk8FJCCK5DZe4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f5sYl+iTmXZY60q/GCJQLGlPoL/192zzni7r/MgPtwpSYFs5VMzVKYXt/i6RrS13L
-         ZRm4uQnW5HLRc9bcgL31O5Dg6WUczQa0dp01ZojfiNkOOmydGrlmmuI+bJTdLtdNUM
-         kJJrcFesxFonO6BE5e6ogrLNbrZMCox6jsOyqRCs=
+        b=Lg15LTHOAw2NgTFaKehXXmUcPPRCsg9qUwfuHl5UU6oCUOuhyCVnCN9r1V4KsGHc+
+         VMffYhBvOMxfO3hduwXrltamTxorh5XR1UOi5R8muTClFZki1KlGdWaNIPP1HKDEkG
+         HVU57ZWfn/n89IGh+hny9VlEdw1uPpsjiWqY7bRA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Prashant Malani <pmalani@chromium.org>,
-        Hayes Wang <hayeswang@realtek.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 42/56] r8152: Set memory to all 0xFFs on failed reg reads
-Date:   Fri, 20 Sep 2019 00:04:23 +0200
-Message-Id: <20190919214800.119555629@linuxfoundation.org>
+        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 08/56] sctp: use transport pf_retrans in sctp_do_8_2_transport_strike
+Date:   Fri, 20 Sep 2019 00:03:49 +0200
+Message-Id: <20190919214747.939647334@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214742.483643642@linuxfoundation.org>
 References: <20190919214742.483643642@linuxfoundation.org>
@@ -61,52 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Prashant Malani <pmalani@chromium.org>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit f53a7ad189594a112167efaf17ea8d0242b5ac00 ]
+[ Upstream commit 10eb56c582c557c629271f1ee31e15e7a9b2558b ]
 
-get_registers() blindly copies the memory written to by the
-usb_control_msg() call even if the underlying urb failed.
+Transport should use its own pf_retrans to do the error_count
+check, instead of asoc's. Otherwise, it's meaningless to make
+pf_retrans per transport.
 
-This could lead to junk register values being read by the driver, since
-some indirect callers of get_registers() ignore the return values. One
-example is:
-  ocp_read_dword() ignores the return value of generic_ocp_read(), which
-  calls get_registers().
-
-So, emulate PCI "Master Abort" behavior by setting the buffer to all
-0xFFs when usb_control_msg() fails.
-
-This patch is copied from the r8152 driver (v2.12.0) published by
-Realtek (www.realtek.com).
-
-Signed-off-by: Prashant Malani <pmalani@chromium.org>
-Acked-by: Hayes Wang <hayeswang@realtek.com>
+Fixes: 5aa93bcf66f4 ("sctp: Implement quick failover draft from tsvwg")
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Acked-by: Neil Horman <nhorman@tuxdriver.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/r8152.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ net/sctp/sm_sideeffect.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-index 2d83689374bbb..10dd307593e89 100644
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -671,8 +671,11 @@ int get_registers(struct r8152 *tp, u16 value, u16 index, u16 size, void *data)
- 	ret = usb_control_msg(tp->udev, usb_rcvctrlpipe(tp->udev, 0),
- 			      RTL8152_REQ_GET_REGS, RTL8152_REQT_READ,
- 			      value, index, tmp, size, 500);
-+	if (ret < 0)
-+		memset(data, 0xff, size);
-+	else
-+		memcpy(data, tmp, size);
+--- a/net/sctp/sm_sideeffect.c
++++ b/net/sctp/sm_sideeffect.c
+@@ -505,7 +505,7 @@ static void sctp_do_8_2_transport_strike
+ 	 */
+ 	if ((transport->state == SCTP_ACTIVE) &&
+ 	   (transport->error_count < transport->pathmaxrxt) &&
+-	   (transport->error_count > asoc->pf_retrans)) {
++	   (transport->error_count > transport->pf_retrans)) {
  
--	memcpy(data, tmp, size);
- 	kfree(tmp);
- 
- 	return ret;
--- 
-2.20.1
-
+ 		sctp_assoc_control_transport(asoc, transport,
+ 					     SCTP_TRANSPORT_PF,
 
 
