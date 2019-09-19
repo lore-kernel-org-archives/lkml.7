@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F586C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A694AC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 378982053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:25:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AA922054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:25:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931953;
-	bh=AB1E/MbgpqzKN9ZmRscBe9uf/LgHfzWk8FJCCK5DZe4=;
+	s=default; t=1568931958;
+	bh=XFsM7wsdcQyLz8XZBImqAGO66RPcnyCSdekJTBoxyIY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dbSpkS7jf/CwmhTu1XQWGDGfcYr4Ade5lGGIz3KZTLlswf30nLJwLsVNKuBSOXbvZ
-	 XcbcsiBli4DjqdaBpD+EehfL8M/NqDdsyktNdlMt8So/u4wanKMlitgoKvS/re/qQX
-	 Tu4f0yJSIf6QZVvH2R5QCDj+hS07TLibVBytqTuc=
+	b=WYvJGj7kJNTPbswSMJU9HU+aXfQhRH+NDmYreZFPI+AxcPox52fbpwFiW3zbbApsm
+	 0D06fjldPfI5nJbOisg1jVmiMWnS9V5Qwyl3x971uQy8u/Em/a8UXEYxGncZQhFHWl
+	 p5m9h0jDwt/1pga946L4fxMkYz3w0BxSTKiYXJUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436543AbfISWZw (ORCPT
+        id S2393232AbfISWZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:25:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38348 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:25:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394131AbfISWW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:22:58 -0400
+        id S2406917AbfISWWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:22:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D649B21920;
-        Thu, 19 Sep 2019 22:22:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D32F2196E;
+        Thu, 19 Sep 2019 22:22:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931778;
-        bh=AB1E/MbgpqzKN9ZmRscBe9uf/LgHfzWk8FJCCK5DZe4=;
+        s=default; t=1568931767;
+        bh=XFsM7wsdcQyLz8XZBImqAGO66RPcnyCSdekJTBoxyIY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lg15LTHOAw2NgTFaKehXXmUcPPRCsg9qUwfuHl5UU6oCUOuhyCVnCN9r1V4KsGHc+
-         VMffYhBvOMxfO3hduwXrltamTxorh5XR1UOi5R8muTClFZki1KlGdWaNIPP1HKDEkG
-         HVU57ZWfn/n89IGh+hny9VlEdw1uPpsjiWqY7bRA=
+        b=2WxyXzj6a4TvKyk6aq1sim1NfI0DlzfnfHqGfh9aadhBKcsRjC0toZBELQamMwllS
+         wMpEstuDXwIXNtz3D2CeLz4nGdOeTUixEJEY7l/6khh9a6DQ2UkdbdtwvTEPTkHdhd
+         oKrHo1iyclzFoCqyyJdmRJ0Vo+VRMn/26PywImYQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 08/56] sctp: use transport pf_retrans in sctp_do_8_2_transport_strike
-Date:   Fri, 20 Sep 2019 00:03:49 +0200
-Message-Id: <20190919214747.939647334@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        syzbot+0849c524d9c634f5ae66@syzkaller.appspotmail.com
+Subject: [PATCH 4.4 04/56] isdn/capi: check message length in capi_write()
+Date:   Fri, 20 Sep 2019 00:03:45 +0200
+Message-Id: <20190919214746.158332310@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214742.483643642@linuxfoundation.org>
 References: <20190919214742.483643642@linuxfoundation.org>
@@ -61,34 +60,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 10eb56c582c557c629271f1ee31e15e7a9b2558b ]
+[ Upstream commit fe163e534e5eecdfd7b5920b0dfd24c458ee85d6 ]
 
-Transport should use its own pf_retrans to do the error_count
-check, instead of asoc's. Otherwise, it's meaningless to make
-pf_retrans per transport.
+syzbot reported:
 
-Fixes: 5aa93bcf66f4 ("sctp: Implement quick failover draft from tsvwg")
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
+    BUG: KMSAN: uninit-value in capi_write+0x791/0xa90 drivers/isdn/capi/capi.c:700
+    CPU: 0 PID: 10025 Comm: syz-executor379 Not tainted 4.20.0-rc7+ #2
+    Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+    Call Trace:
+      __dump_stack lib/dump_stack.c:77 [inline]
+      dump_stack+0x173/0x1d0 lib/dump_stack.c:113
+      kmsan_report+0x12e/0x2a0 mm/kmsan/kmsan.c:613
+      __msan_warning+0x82/0xf0 mm/kmsan/kmsan_instr.c:313
+      capi_write+0x791/0xa90 drivers/isdn/capi/capi.c:700
+      do_loop_readv_writev fs/read_write.c:703 [inline]
+      do_iter_write+0x83e/0xd80 fs/read_write.c:961
+      vfs_writev fs/read_write.c:1004 [inline]
+      do_writev+0x397/0x840 fs/read_write.c:1039
+      __do_sys_writev fs/read_write.c:1112 [inline]
+      __se_sys_writev+0x9b/0xb0 fs/read_write.c:1109
+      __x64_sys_writev+0x4a/0x70 fs/read_write.c:1109
+      do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
+      entry_SYSCALL_64_after_hwframe+0x63/0xe7
+    [...]
+
+The problem is that capi_write() is reading past the end of the message.
+Fix it by checking the message's length in the needed places.
+
+Reported-and-tested-by: syzbot+0849c524d9c634f5ae66@syzkaller.appspotmail.com
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sctp/sm_sideeffect.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/isdn/capi/capi.c          |   10 +++++++++-
+ include/uapi/linux/isdn/capicmd.h |    1 +
+ 2 files changed, 10 insertions(+), 1 deletion(-)
 
---- a/net/sctp/sm_sideeffect.c
-+++ b/net/sctp/sm_sideeffect.c
-@@ -505,7 +505,7 @@ static void sctp_do_8_2_transport_strike
- 	 */
- 	if ((transport->state == SCTP_ACTIVE) &&
- 	   (transport->error_count < transport->pathmaxrxt) &&
--	   (transport->error_count > asoc->pf_retrans)) {
-+	   (transport->error_count > transport->pf_retrans)) {
+--- a/drivers/isdn/capi/capi.c
++++ b/drivers/isdn/capi/capi.c
+@@ -687,6 +687,9 @@ capi_write(struct file *file, const char
+ 	if (!cdev->ap.applid)
+ 		return -ENODEV;
  
- 		sctp_assoc_control_transport(asoc, transport,
- 					     SCTP_TRANSPORT_PF,
++	if (count < CAPIMSG_BASELEN)
++		return -EINVAL;
++
+ 	skb = alloc_skb(count, GFP_USER);
+ 	if (!skb)
+ 		return -ENOMEM;
+@@ -697,7 +700,8 @@ capi_write(struct file *file, const char
+ 	}
+ 	mlen = CAPIMSG_LEN(skb->data);
+ 	if (CAPIMSG_CMD(skb->data) == CAPI_DATA_B3_REQ) {
+-		if ((size_t)(mlen + CAPIMSG_DATALEN(skb->data)) != count) {
++		if (count < CAPI_DATA_B3_REQ_LEN ||
++		    (size_t)(mlen + CAPIMSG_DATALEN(skb->data)) != count) {
+ 			kfree_skb(skb);
+ 			return -EINVAL;
+ 		}
+@@ -710,6 +714,10 @@ capi_write(struct file *file, const char
+ 	CAPIMSG_SETAPPID(skb->data, cdev->ap.applid);
+ 
+ 	if (CAPIMSG_CMD(skb->data) == CAPI_DISCONNECT_B3_RESP) {
++		if (count < CAPI_DISCONNECT_B3_RESP_LEN) {
++			kfree_skb(skb);
++			return -EINVAL;
++		}
+ 		mutex_lock(&cdev->lock);
+ 		capincci_free(cdev, CAPIMSG_NCCI(skb->data));
+ 		mutex_unlock(&cdev->lock);
+--- a/include/uapi/linux/isdn/capicmd.h
++++ b/include/uapi/linux/isdn/capicmd.h
+@@ -15,6 +15,7 @@
+ #define CAPI_MSG_BASELEN		8
+ #define CAPI_DATA_B3_REQ_LEN		(CAPI_MSG_BASELEN+4+4+2+2+2)
+ #define CAPI_DATA_B3_RESP_LEN		(CAPI_MSG_BASELEN+4+2)
++#define CAPI_DISCONNECT_B3_RESP_LEN	(CAPI_MSG_BASELEN+4)
+ 
+ /*----- CAPI commands -----*/
+ #define CAPI_ALERT		    0x01
 
 
