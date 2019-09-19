@@ -7,147 +7,161 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C57C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 03:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E4CC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 03:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F069320815
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 03:28:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96BDF214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 03:32:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k1JvNLlH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CQXGj3gb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731533AbfISD2s (ORCPT
+        id S1731580AbfISDcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 23:28:48 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:37989 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731450AbfISD2r (ORCPT
+        Wed, 18 Sep 2019 23:32:33 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38420 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731450AbfISDcc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 23:28:47 -0400
-Received: by mail-io1-f68.google.com with SMTP id k5so4332280iol.5;
-        Wed, 18 Sep 2019 20:28:47 -0700 (PDT)
+        Wed, 18 Sep 2019 23:32:32 -0400
+Received: by mail-ot1-f68.google.com with SMTP id e11so1822872otl.5;
+        Wed, 18 Sep 2019 20:32:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BNbLf23EmCSrCvK1MZ3crIYt+lvIMsxQcCUGO2pJXfc=;
-        b=k1JvNLlHbtZMs2Rd6GgQpe1doFKTTqCEiibUCJ/FSDH41thtmtzl+bAdhgZ+VKlyso
-         aO/MfHLkYP8rKJT+JuRi23fomMk2bv3GIpPe6e77b5Uro6zuhhgh0U6PTfvkgMkgQfnf
-         3iKcWGAN4IPYBOA8M0zZyOTRBVM2f3HwlLNuspX1a8SiEqLkGqOYBfRqFwRlTGnbV9gv
-         lQQrhpPr/fRvg39G7YO7v24VQnhRzv0ePWwt5ulyBUTVupkb5BzDHtr2UrgK3j5Fi/G2
-         wQ8X6lQcHv2/upSgJVANJ0o9fG8FuZNsRnpG3IMDS9TreK+fo9/p1DqxuvU37VTSK+Sp
-         OTpA==
+         :cc:content-transfer-encoding;
+        bh=XLXh4xNHALuOZK8dyA3iFHDzalrZl/6foxvzoKSQZJ4=;
+        b=CQXGj3gbHNXcqcdjIR6t+AnhuRdTrZKzzV1RhBswUgSyDaDBF7OpsnVVvfOUIXFkFf
+         Mh/pojzQL06QOpPq32HupO8Unptfx/1TkVDfwtg3jfMuKBiq6B1S7PI8/ZJPquhWVHm9
+         w0HUlQ6E/leKOgx7hdiajTvn23bosTNqVvVbKe6n4W0ej6PWPmjuxgoScyLV+Z1n2pKq
+         k0UZtrPN7luNRscaLFz80HOqzZEtS2y/NsS0ZGggTN3q5h/+7BLNKZwsTXn0voARb5Xh
+         O0gzkE9b6icjMDoAt+lodF2acv5nc7yc/MxSp1Zp7Ap0yt7sNqXlb3vm2fsaORKIphd4
+         r6TA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BNbLf23EmCSrCvK1MZ3crIYt+lvIMsxQcCUGO2pJXfc=;
-        b=R/88pi4pm1UVuoFnTCW778NtLF1pdnkvnHfYKHmTc83+1MgiU+/Z4Grdr4BzCEp9hi
-         NxqjOFoyXHZaAdXoXHLJ/ErnzyoHN5v3HgjMKzXEl8iAdGjlxVdaoSFTPtCSoRwk1jaM
-         YeEBMuIUQleIbIK3AagmKX4+w12bQHxk9v6CTcsnDKboaYBC8yYrot6SyXTbYxuN4ln3
-         pM+haff883uL4cEgjF/3EVkYfUWK/qq1eFQIh/8jiHQrvh+0OnovsaBMYM2+akZpgPuO
-         Swh8rjsSyDCYJIMYhnCSQVM/nKZWv/Ik5BsrVsRHR39f0b/rkO+Vt+ldfieqjKrM69yi
-         IP5g==
-X-Gm-Message-State: APjAAAXsVmcy5553Ia6SAO/Zlo7nRGibGAn1lJNPhVlPwBYnQBS4i3f5
-        A3CNGVJZm3MHfgHQOkTXJXt2uVtmAOY+Kf+79cQ=
-X-Google-Smtp-Source: APXvYqzPTP4Dp9sgZd6PgvljuadFfBdfXebs8nrlxtOQggpHX4nAMMgryUdwkFF3YacEaj9vqxdZ4SLiXx8okL428VE=
-X-Received: by 2002:a5d:9eca:: with SMTP id a10mr8986890ioe.180.1568863726773;
- Wed, 18 Sep 2019 20:28:46 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=XLXh4xNHALuOZK8dyA3iFHDzalrZl/6foxvzoKSQZJ4=;
+        b=J5R7Vj97QvIPuFO7lLJ/Mt/sor0CoCLn3fUiBlS8WBSVTl6lLRSkYoi9Sp+3acPMqa
+         XqDip66vYDOWEt1s0PshIdHZC8T0gQZ8FVW9tyHjKVaLwWhaXwRO8g86N6i2iQueOhkS
+         nqK5+B2SWOqrxwfUNgbSpJaLwNCPbYatpL0h/UgETE+P23IpTaCiEeed52Rs08Kekcil
+         5hcqsbG15PtjfztYsaMzl1baVr46fMG4vEukBKBspdvwzgQzAI2TE1RbjoWrfRrLoo5/
+         PyS5YTFLpI1fTOHSC1ibnA7YEsQMQJk6ueV1CcNOOV+gpukGHMw2LNgM1ODY1OyAXuq+
+         IzWw==
+X-Gm-Message-State: APjAAAXCAk+tIOc9vO0XPrkbxT0D8WhdIBtfv5OqMNoPGpV6QjV0SU4Y
+        Lzgos2I6EBU78in0Xrff3Zxp/VP6HerLDSq9sCE=
+X-Google-Smtp-Source: APXvYqxQHk/8EEfucooDW0QXIuYL1tQAaE9sURwlyRdBwibAoGuIR16btyLoVL3eSpmvKvZqNu5Fdzul1WRH2AyIlNs=
+X-Received: by 2002:a05:6830:1258:: with SMTP id s24mr5023325otp.313.1568863950244;
+ Wed, 18 Sep 2019 20:32:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190812152022.27963-1-stillcompiling@gmail.com>
- <20190812152022.27963-4-stillcompiling@gmail.com> <CAMB+bfK9Oge1T96aJkuvpoAdUSsm+YxY1W70b62gUMMBKfD8vg@mail.gmail.com>
- <CAO-hwJLVS0G+TtShbBQ6j9_aCAKjb_AsvoN2HkR+zKpd98MKRw@mail.gmail.com>
-In-Reply-To: <CAO-hwJLVS0G+TtShbBQ6j9_aCAKjb_AsvoN2HkR+zKpd98MKRw@mail.gmail.com>
-From:   Joshua Clayton <stillcompiling@gmail.com>
-Date:   Wed, 18 Sep 2019 23:28:35 -0400
-Message-ID: <CAMB+bfL9RWzCs_FHrLRsQwsvBBSOBEiUq_ApniLpSUkiOtJvvQ@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] HID: core: fix dmesg flooding if report field
- larger than 32bit
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Joe Perches <joe@perches.com>
+References: <f112a741c053ac5fb0637e2f058be81e17f78ccc.1568862391.git.liuhhome@gmail.com>
+ <CAMz4kuJzYa_4TsvgdWo4nZ9ReroEf9+LCqQh4DD5jO8jfSnf3w@mail.gmail.com>
+In-Reply-To: <CAMz4kuJzYa_4TsvgdWo4nZ9ReroEf9+LCqQh4DD5jO8jfSnf3w@mail.gmail.com>
+From:   hhome liu <liuhhome@gmail.com>
+Date:   Thu, 19 Sep 2019 11:32:19 +0800
+Message-ID: <CAHshu7PFHv_i=rvxkgdmPqyego1PsEO2z4qzi4pYnWH=6LovUg@mail.gmail.com>
+Subject: Re: [PATCH v2] serial: sprd: Add polling IO support
+To:     Baolin Wang <baolin.wang@linaro.org>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>,
+        =?UTF-8?B?5YiY5bKa5riFIChMYW5xaW5nIExpdSk=?= 
+        <lanqing.liu@unisoc.com>, linux-serial@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks!
-It means a lot to have this accepted.
-I actually started working on it, thinking "how hard can it be to
-increase the size of a data structure"? It only has to be forward
-compatible anyway.
-My gut feeling is the existing code is working way too hard to do what
-should be a memcpy, and the impulse to "fix" it is strong, despite my
-absolute lack of usb-hid experience.
-
-But the history of this little bit of code is already fraught with
-complaints about big endian breakage.
-I'm tempted to make it much simpler for size>32 bits (fix it only for
-future users), or just way simpler for little endian,
-But what do I know about usb and big endian? I sure don't have the
-equipment to test it. And I worry a little I might be forgetting some
-oddball non-byte-aligned data structure, which the spec would
-theoretically allow.
-Perhaps I'll have to time and courage to take another stab.
-
-~Joshua
-
-On Wed, Sep 18, 2019 at 11:35 AM Benjamin Tissoires
-<benjamin.tissoires@redhat.com> wrote:
+Baolin Wang <baolin.wang@linaro.org> =E4=BA=8E2019=E5=B9=B49=E6=9C=8819=E6=
+=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8A=E5=8D=8811:21=E5=86=99=E9=81=93=EF=BC=9A
 >
-> On Thu, Aug 29, 2019 at 1:26 AM Joshua Clayton <stillcompiling@gmail.com> wrote:
+> Hi,
+>
+> On Thu, 19 Sep 2019 at 11:10, Lanqing Liu <liuhhome@gmail.com> wrote:
 > >
-> > ping?
-> > I'd love to see this get in.
-> > with distro kernel I have effectively no dmesg due to this issue
->
-> Apologies for the delay.
->
-> I really thought we should find a better way of fixing this, until I
-> got a laptop affected by it. This series is a must have.
->
-> Applied to for-5.4/core
->
-> Cheers,
-> Benjamin
->
+> > In order to access the UART without the interrupts, the kernel uses
+> > the basic polling methods for IO with the device. With these methods
+> > implemented, it is now possible to enable kgdb during early boot over s=
+erial.
 > >
-> > On Mon, Aug 12, 2019 at 9:20 AM <stillcompiling@gmail.com> wrote:
-> > >
-> > > From: Joshua Clayton <stillcompiling@gmail.com>
-> > >
-> > > Only warn once of oversize hid report value field
-> > >
-> > > On HP spectre x360 convertible the message:
-> > > hid-sensor-hub 001F:8087:0AC2.0002: hid_field_extract() called with n (192) > 32! (kworker/1:2)
-> > > is continually printed many times per second, crowding out all else.
-> > > Protect dmesg by printing the warning only one time.
-> > >
-> > > The size of the hid report field data structure should probably be increased.
-> > > The data structure is treated as a u32 in Linux, but an unlimited number
-> > > of bits in the USB hid spec, so there is some rearchitecture needed now that
-> > > devices are sending more than 32 bits.
-> > >
-> > > Signed-off-by: Joshua Clayton <stillcompiling@gmail.com>
-> > >
-> > > diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-> > > index 210b81a56e1a..3eaee2c37931 100644
-> > > --- a/drivers/hid/hid-core.c
-> > > +++ b/drivers/hid/hid-core.c
-> > > @@ -1311,8 +1311,8 @@ u32 hid_field_extract(const struct hid_device *hid, u8 *report,
-> > >                         unsigned offset, unsigned n)
-> > >  {
-> > >         if (n > 32) {
-> > > -               hid_warn(hid, "hid_field_extract() called with n (%d) > 32! (%s)\n",
-> > > -                        n, current->comm);
-> > > +               hid_warn_once(hid, "%s() called with n (%d) > 32! (%s)\n",
-> > > +                             __func__, n, current->comm);
-> > >                 n = 32;
-> > >         }
-> > >
-> > > --
-> > > 2.21.0
-> > >
+> > Signed-off-by: Lanqing Liu <liuhhome@gmail.com>
+> > ---
+> > Change from v1:
+> >  - Add poll_init() support.
 >
+> Looks good to me and the KGDB can work well on my board, so feel free
+> to add my tags:
+> Reviewed-by: Baolin Wang <baolin.wang@linaro.org>
+> Tested-by: Baolin Wang <baolin.wang@linaro.org>
+>
+ok, thanks
+> > ---
+> >  drivers/tty/serial/sprd_serial.c | 33 ++++++++++++++++++++++++++++++++=
++
+> >  1 file changed, 33 insertions(+)
+> >
+> > diff --git a/drivers/tty/serial/sprd_serial.c b/drivers/tty/serial/sprd=
+_serial.c
+> > index 73d71a4..d833160 100644
+> > --- a/drivers/tty/serial/sprd_serial.c
+> > +++ b/drivers/tty/serial/sprd_serial.c
+> > @@ -911,6 +911,34 @@ static void sprd_pm(struct uart_port *port, unsign=
+ed int state,
+> >         }
+> >  }
+> >
+> > +#ifdef CONFIG_CONSOLE_POLL
+> > +static int sprd_poll_init(struct uart_port *port)
+> > +{
+> > +       if (port->state->pm_state !=3D UART_PM_STATE_ON) {
+> > +               sprd_pm(port, UART_PM_STATE_ON, 0);
+> > +               port->state->pm_state =3D UART_PM_STATE_ON;
+> > +       }
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static int sprd_poll_get_char(struct uart_port *port)
+> > +{
+> > +       while (!(serial_in(port, SPRD_STS1) & SPRD_RX_FIFO_CNT_MASK))
+> > +               cpu_relax();
+> > +
+> > +       return serial_in(port, SPRD_RXD);
+> > +}
+> > +
+> > +static void sprd_poll_put_char(struct uart_port *port, unsigned char c=
+h)
+> > +{
+> > +       while (serial_in(port, SPRD_STS1) & SPRD_TX_FIFO_CNT_MASK)
+> > +               cpu_relax();
+> > +
+> > +       serial_out(port, SPRD_TXD, ch);
+> > +}
+> > +#endif
+> > +
+> >  static const struct uart_ops serial_sprd_ops =3D {
+> >         .tx_empty =3D sprd_tx_empty,
+> >         .get_mctrl =3D sprd_get_mctrl,
+> > @@ -928,6 +956,11 @@ static void sprd_pm(struct uart_port *port, unsign=
+ed int state,
+> >         .config_port =3D sprd_config_port,
+> >         .verify_port =3D sprd_verify_port,
+> >         .pm =3D sprd_pm,
+> > +#ifdef CONFIG_CONSOLE_POLL
+> > +       .poll_init      =3D sprd_poll_init,
+> > +       .poll_get_char  =3D sprd_poll_get_char,
+> > +       .poll_put_char  =3D sprd_poll_put_char,
+> > +#endif
+> >  };
+> >
+> >  #ifdef CONFIG_SERIAL_SPRD_CONSOLE
+> > --
+> > 1.9.1
+> >
+>
+>
+> --
+> Baolin Wang
+> Best Regards
