@@ -5,59 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED405C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D0AC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B661421927
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:38:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1FB7207FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:38:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XXwpasjf"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DUg4dv1B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392624AbfISUiT (ORCPT
+        id S2392639AbfISUi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 16:38:19 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:34846 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392547AbfISUh7 (ORCPT
+        Thu, 19 Sep 2019 16:38:27 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:42476 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392528AbfISUh6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 16:37:59 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8JKbrtb011397;
-        Thu, 19 Sep 2019 15:37:53 -0500
+        Thu, 19 Sep 2019 16:37:58 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8JKbud5116637;
+        Thu, 19 Sep 2019 15:37:56 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568925473;
-        bh=CrlXIhfT8xsTDmUmEr9Vo9usJitecelkTp/ShJS5Jrc=;
+        s=ti-com-17Q1; t=1568925476;
+        bh=tsBmjzi9hLfO4Z1XFvwOJKvOG2eQliXcESn/VYx9n4c=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=XXwpasjfQAONe77F/174265Xt3n68YsFeXjCN0ik+av0GGxCBYt6qy95dQip8YKzw
-         Ww33GWb5QlUmxEJdPK+vs2zqqu2kAIbCXRnCG+lla8qe25bpdoM7kDvZQ8KaIj4hho
-         leis+rweavQejPE/TNmgJ7AWDVD891KIF6J8FEH8=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8JKbrkI130715
+        b=DUg4dv1B5+9t7nd8TQtiZ0Cy7FSqHWc3H1klknxxmukuhWZMWHKQsMK0YJpkny4ZU
+         PMrzO6u1bmD1PmGAVSPP+wBJw0zaJN4g/CM8PpTNIwF4vvSLFlD1AeaZqV/ikNGIRo
+         Hwj03BNTAuM9Xr7FztZyzQVLkSJs/XhBaGOYk0c4=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8JKbum8001182
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 19 Sep 2019 15:37:53 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 19 Sep 2019 15:37:56 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 19
- Sep 2019 15:37:49 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ Sep 2019 15:37:52 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 19 Sep 2019 15:37:48 -0500
+ Frontend Transport; Thu, 19 Sep 2019 15:37:56 -0500
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8JKboc1083029;
-        Thu, 19 Sep 2019 15:37:52 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8JKboc4083029;
+        Thu, 19 Sep 2019 15:37:56 -0500
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>,
         Sakari Ailus <sakari.ailus@linux.intel.com>
 CC:     Prabhakar Lad <prabhakar.csengg@gmail.com>,
         <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>,
-        Jyri Sarha <jsarha@ti.com>
-Subject: [Patch v2 2/7] media: i2c: ov2659: Fix sensor detection to actually fail when device is not present
-Date:   Thu, 19 Sep 2019 15:39:50 -0500
-Message-ID: <20190919203955.15125-3-bparrot@ti.com>
+        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
+Subject: [Patch v2 5/7] media: i2c: ov2659: Add powerdown/reset gpio handling
+Date:   Thu, 19 Sep 2019 15:39:53 -0500
+Message-ID: <20190919203955.15125-6-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190919203955.15125-1-bparrot@ti.com>
 References: <20190919203955.15125-1-bparrot@ti.com>
@@ -69,35 +68,212 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make sure that if the expected sensor device id register
-is not recognized properly the failure is propagated
-up so devices are not left partially initialized.
+On some board it is possible that the sensor 'powerdown' and or 'reset'
+pin might be controlled by gpio instead of being tied.
+
+To implement we add pm_runtime support which will handle the power
+up/down sequence.
+
+Now originally the driver assumed tat the sensor would always stay
+powered and there keep its register setting. We cannot assume that this
+anymore, so every time we "power up" we need to re-program the initial
+registers configuration first. This was previously done only at probe
+time.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Signed-off-by: Jyri Sarha <jsarha@ti.com>
 ---
- drivers/media/i2c/ov2659.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/media/i2c/Kconfig  |  2 +-
+ drivers/media/i2c/ov2659.c | 88 +++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 88 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+index 7eee1812bba3..315c1d8bdb7b 100644
+--- a/drivers/media/i2c/Kconfig
++++ b/drivers/media/i2c/Kconfig
+@@ -634,7 +634,7 @@ config VIDEO_OV2640
+ config VIDEO_OV2659
+ 	tristate "OmniVision OV2659 sensor support"
+ 	depends on VIDEO_V4L2 && I2C
+-	depends on MEDIA_CAMERA_SUPPORT
++	depends on MEDIA_CAMERA_SUPPORT && GPIOLIB
+ 	select V4L2_FWNODE
+ 	help
+ 	  This is a Video4Linux2 sensor driver for the OmniVision
 diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-index 17573257097d..efbe6dc720e2 100644
+index f77320e8a60d..170f80a1a51f 100644
 --- a/drivers/media/i2c/ov2659.c
 +++ b/drivers/media/i2c/ov2659.c
-@@ -1330,11 +1330,12 @@ static int ov2659_detect(struct v4l2_subdev *sd)
- 		unsigned short id;
+@@ -22,9 +22,11 @@
  
- 		id = OV265X_ID(pid, ver);
--		if (id != OV2659_ID)
-+		if (id != OV2659_ID) {
- 			dev_err(&client->dev,
- 				"Sensor detection failed (%04X, %d)\n",
- 				id, ret);
--		else {
-+			ret = -ENODEV;
-+		} else {
+ #include <linux/clk.h>
+ #include <linux/delay.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/i2c.h>
+ #include <linux/module.h>
+ #include <linux/of_graph.h>
++#include <linux/pm_runtime.h>
+ 
+ #include <media/i2c/ov2659.h>
+ #include <media/v4l2-ctrls.h>
+@@ -218,6 +220,11 @@ struct ov2659 {
+ 	struct sensor_register *format_ctrl_regs;
+ 	struct ov2659_pll_ctrl pll;
+ 	int streaming;
++	/* used to control the sensor PWDN pin */
++	struct gpio_desc *pwdn_gpio;
++	/* used to control the sensor RESETB pin */
++	struct gpio_desc *resetb_gpio;
++	int on;
+ };
+ 
+ static const struct sensor_register ov2659_init_regs[] = {
+@@ -1184,9 +1191,17 @@ static int ov2659_s_stream(struct v4l2_subdev *sd, int on)
+ 		/* Stop Streaming Sequence */
+ 		ov2659_set_streaming(ov2659, 0);
+ 		ov2659->streaming = on;
++		pm_runtime_put(&client->dev);
+ 		goto unlock;
+ 	}
+ 
++	ret = pm_runtime_get_sync(&client->dev);
++	if (ret < 0) {
++		pm_runtime_put_noidle(&client->dev);
++		goto unlock;
++	}
++
++	ov2659_init(sd, 0);
+ 	ov2659_set_pixel_clock(ov2659);
+ 	ov2659_set_frame_size(ov2659);
+ 	ov2659_set_format(ov2659);
+@@ -1243,6 +1258,32 @@ static const char * const ov2659_test_pattern_menu[] = {
+ 	"Vertical Color Bars",
+ };
+ 
++static int ov2659_set_power(struct ov2659 *ov2659, int on)
++{
++	struct i2c_client *client = ov2659->client;
++
++	dev_dbg(&client->dev, "%s: on: %d\n", __func__, on);
++
++	if (on) {
++		if (ov2659->pwdn_gpio)
++			gpiod_direction_output(ov2659->pwdn_gpio, 0);
++
++		if (ov2659->resetb_gpio) {
++			gpiod_set_value(ov2659->resetb_gpio, 1);
++			usleep_range(500, 1000);
++			gpiod_set_value(ov2659->resetb_gpio, 0);
++			usleep_range(3000, 5000);
++		}
++	} else {
++		if (ov2659->pwdn_gpio)
++			gpiod_direction_output(ov2659->pwdn_gpio, 1);
++	}
++
++	ov2659->on = on;
++
++	return 0;
++}
++
+ /* -----------------------------------------------------------------------------
+  * V4L2 subdev internal operations
+  */
+@@ -1323,7 +1364,6 @@ static int ov2659_detect(struct v4l2_subdev *sd)
+ 			ret = -ENODEV;
+ 		} else {
  			dev_info(&client->dev, "Found OV%04X sensor\n", id);
- 			ret = ov2659_init(sd, 0);
+-			ret = ov2659_init(sd, 0);
  		}
+ 	}
+ 
+@@ -1400,6 +1440,18 @@ static int ov2659_probe(struct i2c_client *client)
+ 	    ov2659->xvclk_frequency > 27000000)
+ 		return -EINVAL;
+ 
++	/* Optional gpio don't fail if not present */
++	ov2659->pwdn_gpio = devm_gpiod_get_optional(&client->dev, "powerdown",
++						    GPIOD_OUT_LOW);
++	if (IS_ERR(ov2659->pwdn_gpio))
++		return PTR_ERR(ov2659->pwdn_gpio);
++
++	/* Optional gpio don't fail if not present */
++	ov2659->resetb_gpio = devm_gpiod_get_optional(&client->dev, "reset",
++						      GPIOD_OUT_HIGH);
++	if (IS_ERR(ov2659->resetb_gpio))
++		return PTR_ERR(ov2659->resetb_gpio);
++
+ 	v4l2_ctrl_handler_init(&ov2659->ctrls, 2);
+ 	ov2659->link_frequency =
+ 			v4l2_ctrl_new_std(&ov2659->ctrls, &ov2659_ctrl_ops,
+@@ -1445,6 +1497,9 @@ static int ov2659_probe(struct i2c_client *client)
+ 	ov2659->frame_size = &ov2659_framesizes[2];
+ 	ov2659->format_ctrl_regs = ov2659_formats[0].format_ctrl_regs;
+ 
++	pm_runtime_enable(&client->dev);
++	pm_runtime_get_sync(&client->dev);
++
+ 	ret = ov2659_detect(sd);
+ 	if (ret < 0)
+ 		goto error;
+@@ -1458,10 +1513,14 @@ static int ov2659_probe(struct i2c_client *client)
+ 
+ 	dev_info(&client->dev, "%s sensor driver registered !!\n", sd->name);
+ 
++	pm_runtime_put(&client->dev);
++
+ 	return 0;
+ 
+ error:
+ 	v4l2_ctrl_handler_free(&ov2659->ctrls);
++	pm_runtime_put(&client->dev);
++	pm_runtime_disable(&client->dev);
+ 	media_entity_cleanup(&sd->entity);
+ 	mutex_destroy(&ov2659->lock);
+ 	return ret;
+@@ -1477,9 +1536,35 @@ static int ov2659_remove(struct i2c_client *client)
+ 	media_entity_cleanup(&sd->entity);
+ 	mutex_destroy(&ov2659->lock);
+ 
++	pm_runtime_disable(&client->dev);
++
+ 	return 0;
+ }
+ 
++static int ov2659_runtime_suspend(struct device *dev)
++{
++	struct i2c_client *client = to_i2c_client(dev);
++	struct v4l2_subdev *sd = i2c_get_clientdata(client);
++	struct ov2659 *ov2659 = to_ov2659(sd);
++
++	ov2659_set_power(ov2659, 0);
++
++	return 0;
++}
++
++static int ov2659_runtime_resume(struct device *dev)
++{
++	struct i2c_client *client = to_i2c_client(dev);
++	struct v4l2_subdev *sd = i2c_get_clientdata(client);
++	struct ov2659 *ov2659 = to_ov2659(sd);
++
++	return ov2659_set_power(ov2659, 1);
++}
++
++static const struct dev_pm_ops ov2659_pm_ops = {
++	SET_RUNTIME_PM_OPS(ov2659_runtime_suspend, ov2659_runtime_resume, NULL)
++};
++
+ static const struct i2c_device_id ov2659_id[] = {
+ 	{ "ov2659", 0 },
+ 	{ /* sentinel */ },
+@@ -1497,6 +1582,7 @@ MODULE_DEVICE_TABLE(of, ov2659_of_match);
+ static struct i2c_driver ov2659_i2c_driver = {
+ 	.driver = {
+ 		.name	= DRIVER_NAME,
++		.pm	= &ov2659_pm_ops,
+ 		.of_match_table = of_match_ptr(ov2659_of_match),
+ 	},
+ 	.probe_new	= ov2659_probe,
 -- 
 2.17.1
 
