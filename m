@@ -2,59 +2,61 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E51BC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:39:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A77C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31E3A21920
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:39:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8506621920
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:39:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wcjoyd0B"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PtjU5GgX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404693AbfISUjn (ORCPT
+        id S2404709AbfISUju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 16:39:43 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:54278 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392750AbfISUje (ORCPT
+        Thu, 19 Sep 2019 16:39:50 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:42664 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392734AbfISUjc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 16:39:34 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8JKdXnV073308;
-        Thu, 19 Sep 2019 15:39:33 -0500
+        Thu, 19 Sep 2019 16:39:32 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8JKdVRb117044;
+        Thu, 19 Sep 2019 15:39:31 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568925573;
-        bh=4AxNmIxxGvgr2uIp2fxIL46eCkuXfMeHXM5eby2OiO4=;
+        s=ti-com-17Q1; t=1568925571;
+        bh=Tva2WjU8DYBp+72RMbfv//hBo8xWJDGWc06CK0eXp+k=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=wcjoyd0BwJqWbzrhdZD7unEkimBq7BSp72DCBI9eo66QKAsOSwFTV4xO14Pc0jnij
-         7ak/m6LMisl2q4nPFnwTFL0hNWmaZOyA9YxHB9nih2Qpr4VSGkaoGMrDMsAN9NFlWh
-         X+H+6A/5x9CKxgrCfc5XU7PFnIa0Zd0fduRoia+k=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8JKdXsC122925;
-        Thu, 19 Sep 2019 15:39:33 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 19
- Sep 2019 15:39:29 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
+        b=PtjU5GgX1YRo5Ya1ZUarkkzEBGukAdF8Ax05ygRvhuRQwfhlGLn/UPC56ZAjK/Rzy
+         8NQfo2k4/RYMe1QSDyp44FdxyaXuZd1tMLcpwMGFYDTrcH12iA9evRPTpo/vSsei8l
+         Nmfhi4T8ToSnzAYiA+9RkWQeMVzd0exfdVSnSnkk=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8JKdVtj002286
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 19 Sep 2019 15:39:31 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE115.ent.ti.com
  (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 19
+ Sep 2019 15:39:30 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 19 Sep 2019 15:39:33 -0500
+ Frontend Transport; Thu, 19 Sep 2019 15:39:26 -0500
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8JKdKIg014276;
-        Thu, 19 Sep 2019 15:39:33 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8JKdKId014276;
+        Thu, 19 Sep 2019 15:39:30 -0500
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>
 CC:     Prabhakar Lad <prabhakar.csengg@gmail.com>,
         <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v2 13/13] media: am437x-vpfe: Switch to SPDX Licensing
-Date:   Thu, 19 Sep 2019 15:41:25 -0500
-Message-ID: <20190919204125.15254-14-bparrot@ti.com>
+Subject: [Patch v2 10/13] media: am437x-vpfe: Remove print_fourcc helper
+Date:   Thu, 19 Sep 2019 15:41:22 -0500
+Message-ID: <20190919204125.15254-11-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190919204125.15254-1-bparrot@ti.com>
 References: <20190919204125.15254-1-bparrot@ti.com>
@@ -66,96 +68,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Switch to SPDX licensing and drop the redundant GPL text.
+print_fourcc helper function was used for debug log to
+convert a pixel format code into its readable form for display
+purposes. But since it used a single static buffer to perform
+the conversion this might lead to display format issue when more
+than one instance was invoked simultaneously.
+
+It turns out that print_fourcc can be safely replace by using
+"%4pE" instead and passing the pointer to the fourcc code.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
- drivers/media/platform/am437x/am437x-vpfe.c      | 14 +-------------
- drivers/media/platform/am437x/am437x-vpfe.h      | 14 +-------------
- drivers/media/platform/am437x/am437x-vpfe_regs.h | 10 +---------
- 3 files changed, 3 insertions(+), 35 deletions(-)
+ drivers/media/platform/am437x/am437x-vpfe.c | 42 +++++++--------------
+ 1 file changed, 14 insertions(+), 28 deletions(-)
 
 diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
-index 6416b7955fb7..5a66b0e9cff5 100644
+index 605a6bb7e6c2..ad46e037fe89 100644
 --- a/drivers/media/platform/am437x/am437x-vpfe.c
 +++ b/drivers/media/platform/am437x/am437x-vpfe.c
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0-only
- /*
-  * TI VPFE capture Driver
-  *
-@@ -5,19 +6,6 @@
-  *
-  * Benoit Parrot <bparrot@ti.com>
-  * Lad, Prabhakar <prabhakar.csengg@gmail.com>
-- *
-- * This program is free software; you may redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; version 2 of the License.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
+@@ -221,20 +221,6 @@ static void pix_to_mbus(struct vpfe_device *vpfe,
+ 	v4l2_fill_mbus_format(mbus_fmt, pix_fmt, fmt->code);
+ }
  
- #include <linux/delay.h>
-diff --git a/drivers/media/platform/am437x/am437x-vpfe.h b/drivers/media/platform/am437x/am437x-vpfe.h
-index 7556cca308c2..fa5b85bcd8db 100644
---- a/drivers/media/platform/am437x/am437x-vpfe.h
-+++ b/drivers/media/platform/am437x/am437x-vpfe.h
-@@ -1,21 +1,9 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
- /*
-  * Copyright (C) 2013 - 2014 Texas Instruments, Inc.
-  *
-  * Benoit Parrot <bparrot@ti.com>
-  * Lad, Prabhakar <prabhakar.csengg@gmail.com>
-- *
-- * This program is free software; you may redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; version 2 of the License.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
+-/*  Print Four-character-code (FOURCC) */
+-static char *print_fourcc(u32 fmt)
+-{
+-	static char code[5];
+-
+-	code[0] = (unsigned char)(fmt & 0xff);
+-	code[1] = (unsigned char)((fmt >> 8) & 0xff);
+-	code[2] = (unsigned char)((fmt >> 16) & 0xff);
+-	code[3] = (unsigned char)((fmt >> 24) & 0xff);
+-	code[4] = '\0';
+-
+-	return code;
+-}
+-
+ static int
+ cmp_v4l2_format(const struct v4l2_format *lhs, const struct v4l2_format *rhs)
+ {
+@@ -696,8 +682,8 @@ static int vpfe_ccdc_set_pixel_format(struct vpfe_ccdc *ccdc, u32 pixfmt)
+ {
+ 	struct vpfe_device *vpfe = container_of(ccdc, struct vpfe_device, ccdc);
  
- #ifndef AM437X_VPFE_H
-diff --git a/drivers/media/platform/am437x/am437x-vpfe_regs.h b/drivers/media/platform/am437x/am437x-vpfe_regs.h
-index 0746c48ec23f..63ecdca3b908 100644
---- a/drivers/media/platform/am437x/am437x-vpfe_regs.h
-+++ b/drivers/media/platform/am437x/am437x-vpfe_regs.h
-@@ -1,3 +1,4 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
- /*
-  * TI AM437x Image Sensor Interface Registers
-  *
-@@ -5,15 +6,6 @@
-  *
-  * Benoit Parrot <bparrot@ti.com>
-  * Lad, Prabhakar <prabhakar.csengg@gmail.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-- * kind, whether express or implied; without even the implied warranty
-- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
+-	vpfe_dbg(1, vpfe, "%s: if_type: %d, pixfmt:%s\n",
+-		 __func__, ccdc->ccdc_cfg.if_type, print_fourcc(pixfmt));
++	vpfe_dbg(1, vpfe, "%s: if_type: %d, pixfmt:%4pE\n",
++		 __func__, ccdc->ccdc_cfg.if_type, &pixfmt);
  
- #ifndef AM437X_VPFE_REGS_H
+ 	if (ccdc->ccdc_cfg.if_type == VPFE_RAW_BAYER) {
+ 		ccdc->ccdc_cfg.bayer.pix_fmt = CCDC_PIXFMT_RAW;
+@@ -983,8 +969,8 @@ static int vpfe_config_ccdc_image_format(struct vpfe_device *vpfe)
+ 	enum ccdc_frmfmt frm_fmt = CCDC_FRMFMT_INTERLACED;
+ 	int ret = 0;
+ 
+-	vpfe_dbg(1, vpfe, "pixelformat: %s\n",
+-		print_fourcc(vpfe->fmt.fmt.pix.pixelformat));
++	vpfe_dbg(1, vpfe, "pixelformat: %4pE\n",
++		 &vpfe->fmt.fmt.pix.pixelformat);
+ 
+ 	if (vpfe_ccdc_set_pixel_format(&vpfe->ccdc,
+ 			vpfe->fmt.fmt.pix.pixelformat) < 0) {
+@@ -1392,9 +1378,9 @@ static int __vpfe_get_format(struct vpfe_device *vpfe,
+ 	format->type = vpfe->fmt.type;
+ 
+ 	vpfe_dbg(1, vpfe,
+-		 "%s: size %dx%d (%s) bytesperline = %d, size = %d, bpp = %d\n",
++		 "%s: size %dx%d (%4pE) bytesperline = %d, size = %d, bpp = %d\n",
+ 		 __func__, format->fmt.pix.width, format->fmt.pix.height,
+-		 print_fourcc(format->fmt.pix.pixelformat),
++		 &format->fmt.pix.pixelformat,
+ 		 format->fmt.pix.bytesperline, format->fmt.pix.sizeimage, *bpp);
+ 
+ 	return 0;
+@@ -1427,9 +1413,9 @@ static int __vpfe_set_format(struct vpfe_device *vpfe,
+ 	format->type = vpfe->fmt.type;
+ 
+ 	vpfe_dbg(1, vpfe,
+-		 "%s size %dx%d (%s) bytesperline = %d, size = %d, bpp = %d\n",
++		 "%s: size %dx%d (%4pE) bytesperline = %d, size = %d, bpp = %d\n",
+ 		 __func__,  format->fmt.pix.width, format->fmt.pix.height,
+-		 print_fourcc(format->fmt.pix.pixelformat),
++		 &format->fmt.pix.pixelformat,
+ 		 format->fmt.pix.bytesperline, format->fmt.pix.sizeimage, *bpp);
+ 
+ 	return 0;
+@@ -1463,8 +1449,8 @@ static int vpfe_enum_fmt(struct file *file, void  *priv,
+ 
+ 	f->pixelformat = fmt->fourcc;
+ 
+-	vpfe_dbg(1, vpfe, "%s: mbus index: %d code: %x pixelformat: %s\n",
+-		 __func__, f->index, fmt->code, print_fourcc(fmt->fourcc));
++	vpfe_dbg(1, vpfe, "%s: mbus index: %d code: %x pixelformat: %4pE\n",
++		 __func__, f->index, fmt->code, &fmt->fourcc);
+ 
+ 	return 0;
+ }
+@@ -1571,8 +1557,8 @@ static int vpfe_enum_size(struct file *file, void  *priv,
+ 	fsize->discrete.width = fse.max_width;
+ 	fsize->discrete.height = fse.max_height;
+ 
+-	vpfe_dbg(1, vpfe, "%s: index: %d pixformat: %4.4s size: %dx%d\n",
+-		 __func__, fsize->index, (char *)&fsize->pixel_format,
++	vpfe_dbg(1, vpfe, "%s: index: %d pixformat: %4pE size: %dx%d\n",
++		 __func__, fsize->index, &fsize->pixel_format,
+ 		 fsize->discrete.width, fsize->discrete.height);
+ 
+ 	return 0;
+@@ -2242,8 +2228,8 @@ vpfe_async_bound(struct v4l2_async_notifier *notifier,
+ 				continue;
+ 			vpfe->active_fmt[i] = fmt;
+ 			vpfe_dbg(3, vpfe,
+-				 "matched fourcc: %4.4s code: %04x idx: %d\n",
+-				 (char *)&fmt->fourcc, mbus_code.code, i);
++				 "matched fourcc: %4pE code: %04x idx: %d\n",
++				 &fmt->fourcc, mbus_code.code, i);
+ 			vpfe->num_active_fmt = ++i;
+ 		}
+ 	}
 -- 
 2.17.1
 
