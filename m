@@ -2,170 +2,197 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 750CEC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75DC5C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B139208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:45:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568933119;
-	bh=9t4m24bCa6On3TwKiyttvShF+09sL/iPY+usUt9nDRY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ERNp+OfNMM6iEPFn4FI0uAzGdNiUtZ6wAFN6QZJlPaKH3DB+pNxs14DBcHHxviKz+
-	 2iQ6TGsxS+AtdhLG3uci6tRgaP6dM65Eh2jwgQIiOsmi/uVi1jD9bnOjAS+fiWFOFj
-	 SGFctvxpzjM3Phnq/Ge256gSq5BHXrKJ66zmipB8=
+	by mail.kernel.org (Postfix) with ESMTP id 438EA208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:45:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uvaiz9SL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392202AbfISWpS (ORCPT
+        id S2393167AbfISWpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:45:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53532 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729256AbfISWpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:45:18 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55D9A208C0;
-        Thu, 19 Sep 2019 22:45:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568933116;
-        bh=9t4m24bCa6On3TwKiyttvShF+09sL/iPY+usUt9nDRY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=L1MCyUBUYqaktX6FTVjUSNaPw7RSU2Tiv1KzBg2kLnqi/snozRyxJtZomRBGOWCFA
-         iBibJbVhzM6fgetGFBqOrBSwi07r9RgDXN7nmdPrxSw91FEQlVvWbNsXhW078tIL0N
-         ORYO8CDP0V/L/e0DLiLb3kHgS2+YlhVT4mSIiSzA=
-Date:   Fri, 20 Sep 2019 00:45:14 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Murali Nalajala <mnalajal@codeaurora.org>, rafael@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] base: soc: Export soc_device_to_device API
-Message-ID: <20190919224514.GA447028@kroah.com>
-References: <1568927624-13682-1-git-send-email-mnalajal@codeaurora.org>
- <20190919213203.GA395325@kroah.com>
- <20190919215300.GC1418@minitux>
- <20190919215836.GA426988@kroah.com>
- <20190919221456.GA63675@minitux>
- <20190919222525.GA445429@kroah.com>
- <20190919224017.GB63675@minitux>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190919224017.GB63675@minitux>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Thu, 19 Sep 2019 18:45:24 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44560 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392278AbfISWpX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:45:23 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 21so4548274otj.11;
+        Thu, 19 Sep 2019 15:45:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id;
+        bh=haUSW2nZ3c3G2iZ6BINHVsWlZJ1ycviKyW4bDnnGsEo=;
+        b=Uvaiz9SLmkkHqRYMDfWiXIVGVFH+UKkX+5LsA9Qr5ZLLKYJgJ4e2HDqCrZ9/Zja13g
+         dGvCSYny/pI6hNqxoRF29QZgLD9KPn5Y3st3ULhSozhgpL45r/PMi/o5vDkmIm5aLLZ4
+         c3dCPlZ41o7D5QHKB8GULUL+Aag2bLw6o627u1yQCIEUGr9jJGj591mSGUuTlilbXNp4
+         MrR7A3a8QLuRND0jQawVUUft4vlBV5sR4XrKJ2p1pdNhxjBjU8XumgYmMmdd/z8HtXRb
+         ocP6W3pSRU54ZTMLOvjCVNV6Ze8lXVPtX9xJba7OELqxumtCDSsOMfY9t9I3ZgC3LY7R
+         8w+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=haUSW2nZ3c3G2iZ6BINHVsWlZJ1ycviKyW4bDnnGsEo=;
+        b=T6mSwohs4ccTxq6gGp1k0iJzeTinW4wFHzxGHQyhjRRv/4KeCdUqXRp+i6XBHGZuwK
+         DPXgAwSVf5swhIxB9+ab8wrcwYv3KKwwW5kCtPHcCrNk5Ggcuy73A9KioiB6RvuLy5S0
+         E7UJ3jDCELf8OuJmbd62h8uFjK6NmVCwBcq8d2WEmQvx1P0KMjLKSLJzZ7GtxC4RJZY0
+         CfR2DFpWU086wHSaA7J6BgCnl2RXmH68/NxR0x6c46icRkTiFIOY8TFezH+6t+YVuqOe
+         31cODrJT4fPeVf4jpvVt4K6zc0wGTKnPJDLv2vyYcUnHMixSTxlU7MdPfUEEOYNFA6Y7
+         CxbQ==
+X-Gm-Message-State: APjAAAVMukLY+SHiDyLz0C1T3+xQMTV4TNm0DT/naJ68b2/HBYgE7Wwg
+        h06lhf4Hjv6ZMAT95ypQe9g=
+X-Google-Smtp-Source: APXvYqzygx4OQ/zjZJDPRBdLGVUzJCt573VOjfy3NSLyT+NPVmpM0MmkD+vOXvILYulNMsjBMFvUbg==
+X-Received: by 2002:a9d:825:: with SMTP id 34mr1195058oty.178.1568933122417;
+        Thu, 19 Sep 2019 15:45:22 -0700 (PDT)
+Received: from localhost.localdomain (ip24-56-44-135.ph.ph.cox.net. [24.56.44.135])
+        by smtp.gmail.com with ESMTPSA id y11sm1621oih.18.2019.09.19.15.45.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 19 Sep 2019 15:45:21 -0700 (PDT)
+From:   Matthew Cover <werekraken@gmail.com>
+X-Google-Original-From: Matthew Cover <matthew.cover@stackpath.com>
+To:     davem@davemloft.net, ast@kernel.org, daniel@iogearbox.net,
+        kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
+        nikolay@cumulusnetworks.com, sd@queasysnail.net,
+        sbrivio@redhat.com, vincent@bernat.ch, kda@linux-powerpc.org,
+        matthew.cover@stackpath.com, jiri@mellanox.com,
+        edumazet@google.com, pabeni@redhat.com, idosch@mellanox.com,
+        petrm@mellanox.com, f.fainelli@gmail.com,
+        stephen@networkplumber.org, dsahern@gmail.com,
+        christian@brauner.io, jakub.kicinski@netronome.com,
+        roopa@cumulusnetworks.com, johannes.berg@intel.com,
+        mkubecek@suse.cz, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: [RFC {net,iproute2}-next 0/2] Introduce an eBPF hookpoint for tx queue selection in the XPS (Transmit Packet Steering) code.
+Date:   Thu, 19 Sep 2019 15:44:58 -0700
+Message-Id: <20190919224458.91422-1-matthew.cover@stackpath.com>
+X-Mailer: git-send-email 2.15.2 (Apple Git-101.1)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 03:40:17PM -0700, Bjorn Andersson wrote:
-> On Thu 19 Sep 15:25 PDT 2019, Greg KH wrote:
-> 
-> > On Thu, Sep 19, 2019 at 03:14:56PM -0700, Bjorn Andersson wrote:
-> > > On Thu 19 Sep 14:58 PDT 2019, Greg KH wrote:
-> > > 
-> > > > On Thu, Sep 19, 2019 at 02:53:00PM -0700, Bjorn Andersson wrote:
-> > > > > On Thu 19 Sep 14:32 PDT 2019, Greg KH wrote:
-> > > > > 
-> > > > > > On Thu, Sep 19, 2019 at 02:13:44PM -0700, Murali Nalajala wrote:
-> > > > > > > If the soc drivers want to add custom sysfs entries it needs to
-> > > > > > > access "dev" field in "struct soc_device". This can be achieved
-> > > > > > > by "soc_device_to_device" API. Soc drivers which are built as a
-> > > > > > > module they need above API to be exported. Otherwise one can
-> > > > > > > observe compilation issues.
-> > > > > > > 
-> > > > > > > Signed-off-by: Murali Nalajala <mnalajal@codeaurora.org>
-> > > > > > > ---
-> > > > > > >  drivers/base/soc.c | 1 +
-> > > > > > >  1 file changed, 1 insertion(+)
-> > > > > > > 
-> > > > > > > diff --git a/drivers/base/soc.c b/drivers/base/soc.c
-> > > > > > > index 7c0c5ca..4ad52f6 100644
-> > > > > > > --- a/drivers/base/soc.c
-> > > > > > > +++ b/drivers/base/soc.c
-> > > > > > > @@ -41,6 +41,7 @@ struct device *soc_device_to_device(struct soc_device *soc_dev)
-> > > > > > >  {
-> > > > > > >  	return &soc_dev->dev;
-> > > > > > >  }
-> > > > > > > +EXPORT_SYMBOL_GPL(soc_device_to_device);
-> > > > > > >  
-> > > > > > >  static umode_t soc_attribute_mode(struct kobject *kobj,
-> > > > > > >  				struct attribute *attr,
-> > > > > > 
-> > > > > > What in-kernel driver needs this?
-> > > > > > 
-> > > > > 
-> > > > > Half of the drivers interacting with the soc driver calls this API,
-> > > > > several of these I see no reason for being builtin (e.g.
-> > > > > ux500 andversatile). So I think this patch makes sense to allow us to
-> > > > > build these as modules.
-> > > > > 
-> > > > > > Is linux-next breaking without this?
-> > > > > > 
-> > > > > 
-> > > > > No, we postponed the addition of any sysfs attributes in the Qualcomm
-> > > > > socinfo driver.
-> > > > > 
-> > > > > > We don't export things unless we have a user of the export.
-> > > > > > 
-> > > > > > Also, adding "custom" sysfs attributes is almost always not the correct
-> > > > > > thing to do at all.  The driver should be doing it, by setting up the
-> > > > > > attribute group properly so that the driver core can do it automatically
-> > > > > > for it.
-> > > > > > 
-> > > > > > No driver should be doing individual add/remove of sysfs files.  If it
-> > > > > > does so, it is almost guaranteed to be doing it incorrectly and racing
-> > > > > > userspace.
-> > > > > > 
-> > > > > 
-> > > > > The problem here is that the attributes are expected to be attached to
-> > > > > the soc driver, which is separate from the platform-specific drivers. So
-> > > > > there's no way to do platform specific attributes the right way.
-> > > > > 
-> > > > > > And yes, there's loads of in-kernel examples of doing this wrong, I've
-> > > > > > been working on fixing that up, look at the patches now in Linus's tree
-> > > > > > for platform and USB drivers that do this as examples of how to do it
-> > > > > > right.
-> > > > > > 
-> > > > > 
-> > > > > Agreed, this patch should not be used as an approval for any crazy
-> > > > > attributes; but it's necessary in order to extend the soc device's
-> > > > > attributes, per the current design.
-> > > > 
-> > > > Wait, no, let's not let the "current design" remain if it is broken!
-> > > > 
-> > > > Why can't the soc driver handle the attributes properly so that the
-> > > > individual driver doesn't have to do the create/remove?
-> > > > 
-> > > 
-> > > The custom attributes that these drivers want to add to the common ones
-> > > are known in advance, so I presume we could have them passed into
-> > > soc_device_register() and registered together with the common
-> > > attributes...
-> > > 
-> > > It sounds like it's worth a prototype.
-> > 
-> > Do you have an in-kernel example I can look at to get an idea of what is
-> > needed here?
-> > 
-> 
-> realview_soc_probe(), in drivers/soc/versatile/soc-realview.c,
-> implements the current mechanism of acquiring the soc's struct device
-> and then issuing a few device_create_file calls on that.
+WORK IN PROGRESS:
+  * bpf program loading works!
+  * txq steering via bpf program return code works!
+  * bpf program unloading not working.
+  * bpf program attached query not working.
 
-That looks to be a trivial driver to fix up.  Look at 6d03c140db2e
-("USB: phy: fsl-usb: convert platform driver to use dev_groups") as an
-example of how to do this.
+This patch set provides a bpf hookpoint with goals similar to, but a more
+generic implementation than, TUNSETSTEERINGEBPF; userspace supplied tx queue
+selection policy.
 
-Also gotta love the total lack of error checking when calling
-device_create_file() in that driver :(
+TUNSETSTEERINGEBPF is a useful bpf hookpoint, but has some drawbacks.
 
-thanks,
+First, it only works on tun/tap devices.
 
-greg k-h
+Second, there is no way in the current TUNSETSTEERINGEBPF implementation
+to bail out or load a noop bpf prog and fallback to the no prog tx queue
+selection method.
+
+Third, the TUNSETSTEERINGEBPF interface seems to require possession of existing
+or creation of new queues/fds.
+
+This most naturally fits in the "wire" implementation since possession of fds
+is ensured. However, it also means the various "wire" implementations (e.g.
+qemu) have to all be made aware of TUNSETSTEERINGEBPF and expose an interface
+to load/unload a bpf prog (or provide a mechanism to pass an fd to another
+program).
+
+Alternatively, you can spin up an extra queue and immediately disable via
+IFF_DETACH_QUEUE, but this seems unsafe; packets could be enqueued to this
+extra file descriptor which is part of our bpf prog loader, not our "wire".
+
+Placing this in the XPS code and leveraging iproute2 and rtnetlink to provide
+our bpf prog loader in a similar manner to xdp gives us a nice way to separate
+the tap "wire" and the loading of tx queue selection policy. It also lets us
+use this hookpoint for any device traversing XPS.
+
+This patch only introduces the new hookpoint to the XPS code and will not yet
+be used by tun/tap devices using the intree tun.ko (which implements an
+.ndo_select_queue and does not traverse the XPS code).
+
+In a future patch set, we can optionally refactor tun.ko to traverse this call
+to bpf_prog_run_clear_cb() and bpf prog storage. tun/tap devices could then
+leverage iproute2 as a generic loader. The TUNSETSTEERINGEBPF interface could
+at this point be optionally deprecated/removed.
+
+Both patches in this set have been tested using a rebuilt tun.ko with no
+.ndo_select_queue.
+
+  sed -i '/\.ndo_select_queue.*=/d' drivers/net/tun.c
+
+The tap device was instantiated using tap_mq_pong.c, supporting scripts, and
+wrapping service found here:
+
+  https://github.com/stackpath/rxtxcpu/tree/v1.2.6/helpers
+
+The bpf prog source and test scripts can be found here:
+
+  https://github.com/werekraken/xps_ebpf
+
+In nstxq, netsniff-ng using PACKET_FANOUT_QM is leveraged to check the
+queue_mapping.
+
+With no prog loaded, the tx queue selection is adhering our xps_cpus
+configuration.
+
+  [vagrant@localhost ~]$ grep . /sys/class/net/tap0/queues/tx-*/xps_cpus; ./nstxq; sudo timeout 1 cat /sys/kernel/debug/tracing/trace_pipe;
+  /sys/class/net/tap0/queues/tx-0/xps_cpus:1
+  /sys/class/net/tap0/queues/tx-1/xps_cpus:2
+  cpu0: ping: 64 bytes from 169.254.254.1: icmp_seq=1 ttl=64 time=0.146 ms
+  cpu0: qm0:  > tap0 98 Unknown => Unknown IPv4 169.254.254.2/169.254.254.1 Len 84 Type 8 Code 0
+  cpu1: ping: 64 bytes from 169.254.254.1: icmp_seq=1 ttl=64 time=0.121 ms
+  cpu1: qm1:  > tap0 98 Unknown => Unknown IPv4 169.254.254.2/169.254.254.1 Len 84 Type 8 Code 0
+
+With a return 0 bpg prog, our tx queue is 0 (despite xps_cpus).
+
+  [vagrant@localhost ~]$ sudo ip link set dev tap0 xps obj hello0.o sec hello && { ./nstxq; sudo timeout 1 cat /sys/kernel/debug/tracing/trace_pipe; }
+  cpu0: ping: 64 bytes from 169.254.254.1: icmp_seq=1 ttl=64 time=0.160 ms
+  cpu0: qm0:  > tap0 98 Unknown => Unknown IPv4 169.254.254.2/169.254.254.1 Len 84 Type 8 Code 0
+  cpu1: ping: 64 bytes from 169.254.254.1: icmp_seq=1 ttl=64 time=0.124 ms
+  cpu1: qm0:  > tap0 98 Unknown => Unknown IPv4 169.254.254.2/169.254.254.1 Len 84 Type 8 Code 0
+              ping-4852  [000] ....  2691.633260: 0: xps (RET 0): Hello, World!
+              ping-4869  [001] ....  2695.753588: 0: xps (RET 0): Hello, World!
+
+With a return 1 bpg prog, our tx queue is 1.
+
+  [vagrant@localhost ~]$ sudo ip link set dev tap0 xps obj hello1.o sec hello && { ./nstxq; sudo timeout 1 cat /sys/kernel/debug/tracing/trace_pipe; }
+  cpu0: ping: 64 bytes from 169.254.254.1: icmp_seq=1 ttl=64 time=0.193 ms
+  cpu0: qm1:  > tap0 98 Unknown => Unknown IPv4 169.254.254.2/169.254.254.1 Len 84 Type 8 Code 0
+  cpu1: ping: 64 bytes from 169.254.254.1: icmp_seq=1 ttl=64 time=0.135 ms
+  cpu1: qm1:  > tap0 98 Unknown => Unknown IPv4 169.254.254.2/169.254.254.1 Len 84 Type 8 Code 0
+              ping-4894  [000] ....  2710.652080: 0: xps (RET 1): Hello, World!
+              ping-4911  [001] ....  2714.774608: 0: xps (RET 1): Hello, World!
+
+With a return 2 bpg prog, our tx queue is 0 (we only have 2 tx queues).
+
+  [vagrant@localhost ~]$ sudo ip link set dev tap0 xps obj hello2.o sec hello && { ./nstxq; sudo timeout 1 cat /sys/kernel/debug/tracing/trace_pipe; }
+  cpu0: ping: 64 bytes from 169.254.254.1: icmp_seq=1 ttl=64 time=1.20 ms
+  cpu0: qm0:  > tap0 98 Unknown => Unknown IPv4 169.254.254.2/169.254.254.1 Len 84 Type 8 Code 0
+  cpu1: ping: 64 bytes from 169.254.254.1: icmp_seq=1 ttl=64 time=0.986 ms
+  cpu1: qm0:  > tap0 98 Unknown => Unknown IPv4 169.254.254.2/169.254.254.1 Len 84 Type 8 Code 0
+              ping-4936  [000] ....  2729.442668: 0: xps (RET 2): Hello, World!
+              ping-4953  [001] ....  2733.614558: 0: xps (RET 2): Hello, World!
+
+With a return -1 bpf prog, our tx queue selection is once again determined by
+xps_cpus. Any negative return should work the same and provides a nice
+mechanism to bail out or have a noop bpf prog at this hookpoint.
+
+  [vagrant@localhost ~]$ sudo ip link set dev tap0 xps obj hello_neg1.o sec hello && { ./nstxq; sudo timeout 1 cat /sys/kernel/debug/tracing/trace_pipe; }
+  cpu0: ping: 64 bytes from 169.254.254.1: icmp_seq=1 ttl=64 time=0.628 ms
+  cpu0: qm0:  > tap0 98 Unknown => Unknown IPv4 169.254.254.2/169.254.254.1 Len 84 Type 8 Code 0
+  cpu1: ping: 64 bytes from 169.254.254.1: icmp_seq=1 ttl=64 time=0.322 ms
+  cpu1: qm1:  > tap0 98 Unknown => Unknown IPv4 169.254.254.2/169.254.254.1 Len 84 Type 8 Code 0
+              ping-4981  [000] ....  2763.510760: 0: xps (RET -1): Hello, World!
+              ping-4998  [001] ....  2767.632583: 0: xps (RET -1): Hello, World!
+
+bpf prog unloading is not yet working and neither does `ip link show` report
+when an "xps" bpf prog is attached. This is my first time touching iproute2 or
+rtnetlink, so it may be something obvious to those more familiar.
