@@ -5,49 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD78DC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96560C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72680217D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:29:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67E97217D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:29:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932175;
-	bh=dMmQ/8eCsAFOvBzLqKSRTPtQzG0tXkumYwZ1Un/PvgQ=;
+	s=default; t=1568932180;
+	bh=SD+/dPytZJTVINNwhSYESFDl7e+W+IhKtgomcj9nMj0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dVlY3Wm8ytAZZNgoXrS14SgIhc4/iEYt2fYwihkrqIODkEKCEAnhc5dgUb6MKGhmp
-	 xUpbOGH19+r5bXQoGxxKG9R6afj44Qj2JSvAdBQg7IBXEj2b/gG7/MsA7rEKwIdedW
-	 Pi7PB4E2vlF7wZKlwKis6DosPkzbNBSZogmFAgdQ=
+	b=JNKllHYJNopqPu9fsA2UrDkGsaVnY4pXNmZUvLzegPwSkKSxQQfVA6VQHRfGf6q+w
+	 JlRnRC1AmA2X2dPdrH4zS9aI3GnlbziwBFazBFQAAYg3maMTJtphmU8QN1Kb8P6WR9
+	 3aOjSBiG2W8k5UP2bU7DKsyLBXyEcU+aaQ/Qwgh8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406471AbfISWRb (ORCPT
+        id S2436589AbfISW3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:17:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58524 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:29:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406460AbfISWRW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:17:22 -0400
+        id S2392500AbfISWR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:17:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8ECD620678;
-        Thu, 19 Sep 2019 22:17:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B520121907;
+        Thu, 19 Sep 2019 22:17:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931442;
-        bh=dMmQ/8eCsAFOvBzLqKSRTPtQzG0tXkumYwZ1Un/PvgQ=;
+        s=default; t=1568931447;
+        bh=SD+/dPytZJTVINNwhSYESFDl7e+W+IhKtgomcj9nMj0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g0qhiJkjaU0MXXcDGkwYg8ykJcZ/fwktqKJ+3159J6aGawvsFbMWk8zLBzqaekmt/
-         1fuP4HaZvVd2gLIkhcNmIBa6xevRICvwT4rNQC8dlU381cFwqhXIZHM7Il7eR9Ran/
-         oPz5OaDO1fc+R0d2MdFmM6g8is8Xrwu8BPHEbTn0=
+        b=DAvYowNt1jyJokCf6eSpy39A2HUgnl+jfJEZG0opf/UjslWEusW1W2elf2ac7BqkL
+         vq8xSYzaZ1+CROrvB05qESvnCV4eZAI62xk1bGFH5ZpopOVTHJrwyp+z7guSzJlQ1J
+         +ZPTyg9kg5sCkxF1GsFE1tMy87dJPyPt62ibfPmM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 48/59] dmaengine: ti: omap-dma: Add cleanup in omap_dma_probe()
-Date:   Fri, 20 Sep 2019 00:04:03 +0200
-Message-Id: <20190919214807.534286029@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Jong Hyun Park <park.jonghyun@yonsei.ac.kr>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 50/59] x86/hyper-v: Fix overflow bug in fill_gva_list()
+Date:   Fri, 20 Sep 2019 00:04:05 +0200
+Message-Id: <20190919214807.701968440@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214755.852282682@linuxfoundation.org>
 References: <20190919214755.852282682@linuxfoundation.org>
@@ -60,39 +66,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-[ Upstream commit 962411b05a6d3342aa649e39cda1704c1fc042c6 ]
+[ Upstream commit 4030b4c585c41eeefec7bd20ce3d0e100a0f2e4d ]
 
-If devm_request_irq() fails to disable all interrupts, no cleanup is
-performed before retuning the error. To fix this issue, invoke
-omap_dma_free() to do the cleanup.
+When the 'start' parameter is >=  0xFF000000 on 32-bit
+systems, or >= 0xFFFFFFFF'FF000000 on 64-bit systems,
+fill_gva_list() gets into an infinite loop.
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Link: https://lore.kernel.org/r/1565938570-7528-1-git-send-email-wenwen@cs.uga.edu
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+With such inputs, 'cur' overflows after adding HV_TLB_FLUSH_UNIT
+and always compares as less than end.  Memory is filled with
+guest virtual addresses until the system crashes.
+
+Fix this by never incrementing 'cur' to be larger than 'end'.
+
+Reported-by: Jong Hyun Park <park.jonghyun@yonsei.ac.kr>
+Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Fixes: 2ffd9e33ce4a ("x86/hyper-v: Use hypercall for remote TLB flush")
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/omap-dma.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/x86/hyperv/mmu.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/dma/omap-dma.c b/drivers/dma/omap-dma.c
-index 8c1665c8fe33a..14b560facf779 100644
---- a/drivers/dma/omap-dma.c
-+++ b/drivers/dma/omap-dma.c
-@@ -1534,8 +1534,10 @@ static int omap_dma_probe(struct platform_device *pdev)
- 
- 		rc = devm_request_irq(&pdev->dev, irq, omap_dma_irq,
- 				      IRQF_SHARED, "omap-dma-engine", od);
--		if (rc)
-+		if (rc) {
-+			omap_dma_free(od);
- 			return rc;
+diff --git a/arch/x86/hyperv/mmu.c b/arch/x86/hyperv/mmu.c
+index 56c9ebac946fe..47718fff0b797 100644
+--- a/arch/x86/hyperv/mmu.c
++++ b/arch/x86/hyperv/mmu.c
+@@ -57,12 +57,14 @@ static inline int fill_gva_list(u64 gva_list[], int offset,
+ 		 * Lower 12 bits encode the number of additional
+ 		 * pages to flush (in addition to the 'cur' page).
+ 		 */
+-		if (diff >= HV_TLB_FLUSH_UNIT)
++		if (diff >= HV_TLB_FLUSH_UNIT) {
+ 			gva_list[gva_n] |= ~PAGE_MASK;
+-		else if (diff)
++			cur += HV_TLB_FLUSH_UNIT;
++		}  else if (diff) {
+ 			gva_list[gva_n] |= (diff - 1) >> PAGE_SHIFT;
++			cur = end;
 +		}
- 	}
  
- 	if (omap_dma_glbl_read(od, CAPS_0) & CAPS_0_SUPPORT_LL123)
+-		cur += HV_TLB_FLUSH_UNIT;
+ 		gva_n++;
+ 
+ 	} while (cur < end);
 -- 
 2.20.1
 
