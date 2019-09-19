@@ -2,165 +2,109 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02CC5C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B837AC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2C95208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:54:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 866B5208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:55:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="I+iiAiaI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732778AbfISUy2 (ORCPT
+        id S1732829AbfISUzs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 16:54:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:5781 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730064AbfISUy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 16:54:27 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 02CA97F75E;
-        Thu, 19 Sep 2019 20:54:27 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 66B4519D70;
-        Thu, 19 Sep 2019 20:54:14 +0000 (UTC)
-Subject: Re: [PATCH v4 3/5] locking/qspinlock: Introduce CNA into the slow
- path of qspinlock
-To:     Alex Kogan <alex.kogan@oracle.com>
-Cc:     linux@armlinux.org.uk, peterz@infradead.org, mingo@redhat.com,
-        will.deacon@arm.com, arnd@arndb.de, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        guohanjun@huawei.com, jglauber@marvell.com,
-        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        dave.dice@oracle.com, rahul.x.yadav@oracle.com
-References: <20190906142541.34061-1-alex.kogan@oracle.com>
- <20190906142541.34061-4-alex.kogan@oracle.com>
- <3ae2b6a2-ffe6-2ca1-e5bf-2292db50e26f@redhat.com>
- <87B87982-670F-4F12-9EE0-DC89A059FAEC@oracle.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <6c08767a-f60c-077d-4e94-66ea189db6f1@redhat.com>
-Date:   Thu, 19 Sep 2019 16:54:13 -0400
+        Thu, 19 Sep 2019 16:55:48 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:39151 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730064AbfISUzs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 16:55:48 -0400
+Received: by mail-ed1-f65.google.com with SMTP id a15so1747412edt.6
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 13:55:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=oOsPY7dzPYXiWz16EZVCaTHv03LDObuM8JWwXte1DFk=;
+        b=I+iiAiaIIT1nzYGWMnmtIf3Q6k+Hv0VaD1K0im3yX9TzkVKsN7MjqK0bhtqBQoluxh
+         zPtgCkfNEGABORe8XY+4RWdDCfjGP4b5ZINwVGwiyiM7uKbYzfGbtmNpS2Az7ucR658B
+         SZSdFTywaXV9o0GkxZjdWIXycr76F2bwWxO48=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=oOsPY7dzPYXiWz16EZVCaTHv03LDObuM8JWwXte1DFk=;
+        b=SIN6DZka97VzCxNtq2J9FEqV4z1DgrGvH5mpjGqy4FvtUcLEYmNBZU7/MVWZO2CvGJ
+         I+PhmlKbbeiY7iS1rpIAKi+thHs9tNs9cuHTRy5KC9fYMYky6IE+XD1YQnyMTgrC1kwY
+         /ZdY8IHfxvnq3R6kBoQzYbVA9yk72wSUL5yVFr5CK7854ABXreEM/cmIGBIRJBX7nAPV
+         a2vXskDaZsqIfqeNHhR4/hTzzPoGdaR47qzlFPZ63LQZaRP7+yxelKfL16XN/iTPSlnL
+         eKzU0kCYgX/5wFKHyGChep9GVSaOFtV6Z5UoogaebLO8Tx6gJDtfBZYms2EkhmPd98H9
+         frZA==
+X-Gm-Message-State: APjAAAU8ZwXWXYMlGkBgbdTW3EGXSb/vLbf0rD4Br5Cv4iMtP8Ttdft/
+        o7lhfJS/6pWcyW9ZKw446w9PVeVTPF5oMMYi
+X-Google-Smtp-Source: APXvYqwn4goKlaLZbVdpBFd3OXJN7wo8pexhHo9njJlkZ1lxazLRn6VzU0ezwxdUc5CFnrtbuRI6vQ==
+X-Received: by 2002:a17:906:944b:: with SMTP id z11mr15601123ejx.46.1568926546319;
+        Thu, 19 Sep 2019 13:55:46 -0700 (PDT)
+Received: from [192.168.1.149] (ip-5-186-115-35.cgn.fibianet.dk. [5.186.115.35])
+        by smtp.gmail.com with ESMTPSA id fx25sm1148608ejb.19.2019.09.19.13.55.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 19 Sep 2019 13:55:45 -0700 (PDT)
+Subject: Re: INFO: task hung in pipe_write (2)
+To:     syzbot <syzbot+3c01db6025f26530cf8d@syzkaller.appspotmail.com>,
+        agruenba@redhat.com, darrick.wong@oracle.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+References: <000000000000ac6a360592eb26c1@google.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <d9a957b3-9f0a-20b5-588a-64ca4722d433@rasmusvillemoes.dk>
+Date:   Thu, 19 Sep 2019 22:55:44 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <87B87982-670F-4F12-9EE0-DC89A059FAEC@oracle.com>
+In-Reply-To: <000000000000ac6a360592eb26c1@google.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Thu, 19 Sep 2019 20:54:27 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/19/19 11:55 AM, Alex Kogan wrote:
->>> +/*
->>> + * cna_try_find_next - scan the main waiting queue looking for the first
->>> + * thread running on the same NUMA node as the lock holder. If found (call it
->>> + * thread T), move all threads in the main queue between the lock holder and
->>> + * T to the end of the secondary queue and return T; otherwise, return NULL.
->>> + *
->>> + * Schematically, this may look like the following (nn stands for numa_node and
->>> + * et stands for encoded_tail).
->>> + *
->>> + *     when cna_try_find_next() is called (the secondary queue is empty):
->>> + *
->>> + *  A+------------+   B+--------+   C+--------+   T+--------+
->>> + *   |mcs:next    | -> |mcs:next| -> |mcs:next| -> |mcs:next| -> NULL
->>> + *   |mcs:locked=1|    |cna:nn=0|    |cna:nn=2|    |cna:nn=1|
->>> + *   |cna:nn=1    |    +--------+    +--------+    +--------+
->>> + *   +----------- +
->>> + *
->>> + *     when cna_try_find_next() returns (the secondary queue contains B and C):
->>> + *
->>> + *  A+----------------+    T+--------+
->>> + *   |mcs:next        | ->  |mcs:next| -> NULL
->>> + *   |mcs:locked=B.et | -+  |cna:nn=1|
->>> + *   |cna:nn=1        |  |  +--------+
->>> + *   +--------------- +  |
->>> + *                       |
->>> + *                       +->  B+--------+   C+--------+
->>> + *                             |mcs:next| -> |mcs:next|
->>> + *                             |cna:nn=0|    |cna:nn=2|
->>> + *                             |cna:tail| -> +--------+
->>> + *                             +--------+
->>> + *
->>> + * The worst case complexity of the scan is O(n), where n is the number
->>> + * of current waiters. However, the fast path, which is expected to be the
->>> + * common case, is O(1).
->>> + */
->>> +static struct mcs_spinlock *cna_try_find_next(struct mcs_spinlock *node,
->>> +					      struct mcs_spinlock *next)
->>> +{
->>> +	struct cna_node *cn = (struct cna_node *)node;
->>> +	struct cna_node *cni = (struct cna_node *)next;
->>> +	struct cna_node *first, *last = NULL;
->>> +	int my_numa_node = cn->numa_node;
->>> +
->>> +	/* fast path: immediate successor is on the same NUMA node */
->>> +	if (cni->numa_node == my_numa_node)
->>> +		return next;
->>> +
->>> +	/* find any next waiter on 'our' NUMA node */
->>> +	for (first = cni;
->>> +	     cni && cni->numa_node != my_numa_node;
->>> +	     last = cni, cni = (struct cna_node *)READ_ONCE(cni->mcs.next))
->>> +		;
->>> +
->>> +	/* if found, splice any skipped waiters onto the secondary queue */
->>> +	if (cni && last)
->>> +		cna_splice_tail(cn, first, last);
->>> +
->>> +	return (struct mcs_spinlock *)cni;
->>> +}
->> At the Linux Plumbers Conference last week, Will has raised the concern
->> about the latency of the O(1) cna_try_find_next() operation that will
->> add to the lock hold time.
-> While the worst case complexity of the scan is O(n), I _think it can be proven
-> that the amortized complexity is O(1). For intuition, consider a two-node 
-> system with N threads total. In the worst case scenario, the scan will go 
-> over N/2 threads running on a different node. If the scan ultimately “fails”
-> (no thread from the lock holder’s node is found), the lock will be passed
-> to the first thread from a different node and then between all those N/2 threads,
-> with a scan of just one node for the next N/2 - 1 passes. Otherwise, those 
-> N/2 threads will be moved to the secondary queue. On the next lock handover, 
-> we pass the lock either to the next thread in the main queue (as it has to be 
-> from our node) or to the first node in the secondary queue. In both cases, we 
-> scan just one node, and in the latter case, we have again N/2 - 1 passes with 
-> a scan of just one node each.
-I agree that it should not be a problem for a 2-socket. For larger SMP
-systems with 8, 16 or even 32 sockets, it can be an issue as those
-systems are also more likely to have more lock contention and hence
-longer wait queues.
->> One way to hide some of the latency is to do
->> a pre-scan before acquiring the lock. The CNA code could override the
->> pv_wait_head_or_lock() function to call cna_try_find_next() as a
->> pre-scan and return 0. What do you think?
-> This is certainly possible, but I do not think it would completely eliminate 
-> the worst case scenario. It will probably make it even less likely, but at 
-> the same time, we will reduce the chance of actually finding a thread from the
-> same node (that may enter the main queue while we wait for the owner & pending 
-> to go away).
+On 19/09/2019 19.19, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    288b9117 Add linux-next specific files for 20190918
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=17e86645600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=f6126e51304ef1c3
+> dashboard link:
+> https://syzkaller.appspot.com/bug?extid=3c01db6025f26530cf8d
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11855769600000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=143580a1600000
+> 
+> The bug was bisected to:
+> 
+> commit cfb864757d8690631aadf1c4b80022c18ae865b3
+> Author: Darrick J. Wong <darrick.wong@oracle.com>
+> Date:   Tue Sep 17 16:05:22 2019 +0000
+> 
+>     splice: only read in as much information as there is pipe buffer space
 
-When I said prescan, I mean to move the front queue entries that are
-from non-local nodes to the secondary queue before acquiring the lock.
-After acquiring the lock, you can repeat the scan in case the prescan
-didn't find any local node queue entry. Yes, we will need to do the
-similar operation twice.
+The middle hunk (the one before splice_pipe_to_pipe()) accesses
+opipe->{buffers, nrbufs}, but opipe is not locked at that point. So
+maybe we end up passing len==0, which seems (once there's room in opipe)
+it would put a zero-length pipe_buffer in opipe - and that probably
+violates an invariant somewhere.
 
-Yes, it does not eliminate the worst case scenario, but it should help
-in reducing the average lock hold time.
+But does the splice_pipe_to_pipe() case even need that extra logic?
+Doesn't it handle short writes correctly already?
 
-Of course, the probabilistic (or deterministic) check to go to the next
-local node entry or to the secondary queue should be done before
-pre-scan so that we won't waste the effort.
-
-Cheers,
-Longman
-
+Rasmus
