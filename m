@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03AA9C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 239B8C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD31420678
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:16:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC7E921924
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:16:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931377;
-	bh=xlj4YzSLybuhqRVuRFUgZO5wN1PoJ9k1JCxgoRxgs3M=;
+	s=default; t=1568931382;
+	bh=uzKKD5qqt73DIpkrsgYADca5BmE3oK1MNkTTEMz098g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=usCWyN5uWZIlT3UOznaR2lQ3h+VJf5eUlXbQAlirO+WcTiKV4fYZ9eNsckFAp1rr7
-	 XvEfSa4Qa5tvePa7xfFwnZTeKCK6yg+A8YhL30ycaUIdnwhB1xdisfbmQGkiF7n5bQ
-	 55Qyq/zYNR9stlf4S1D5kmPZ64IJ3j8zv0OVAHkI=
+	b=FQIkMTi0DirqPFbpv5mRJFu0zTHmBu2WIk+jJqRKUTGuYM/EwgGDtTGszKjeQ3OFH
+	 r2nc1p5Jhj3fXSXDa6DwL+Kcdix0zQOf4r1ogv58ZqA/dCOiYc44m0HU5ag8fGrIGF
+	 /nvqRG60/0jTCp55kUp918rLPMuMKGBUKI1/4QWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406294AbfISWQQ (ORCPT
+        id S2406315AbfISWQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:16:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56370 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:16:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406266AbfISWQI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:16:08 -0400
+        id S2406277AbfISWQL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:16:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 153C0218AF;
-        Thu, 19 Sep 2019 22:16:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFD2421920;
+        Thu, 19 Sep 2019 22:16:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931367;
-        bh=xlj4YzSLybuhqRVuRFUgZO5wN1PoJ9k1JCxgoRxgs3M=;
+        s=default; t=1568931370;
+        bh=uzKKD5qqt73DIpkrsgYADca5BmE3oK1MNkTTEMz098g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UAkKYE5nmg1u8Z87SMsqCzyIGy8AIJYDJzVJvK+cK0F4oiTX5HOE6lpaWmlehVKch
-         6HuRDun1YQsnXTPjcLPYjN8Sf6ol9FWXTOriKGyaKV6YQ8qDEiLD7qHoVHHB43ZZEu
-         Xg7B/HEX5wXJnMhBQvNd+ZYq8K13r2PCQ7yBs2rI=
+        b=sraszFUoxL0Ndd/5VKiJ5Zt2vBMQM4hzx+VHHqM7uqykpU8M8/PTmJ7tJsnPWnp1X
+         vaHhu6X4myg6Tc8PCNnExyGIs0UICSNJgNRgAwSLu39wE1tlbI8NxA9pLg655VWXGn
+         +iCnfEzMh8/dLDF4UG/0BLm1bqfVZJeOpa5v/s3k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Phil Reid <preid@electromag.com.au>,
-        Moritz Fischer <mdf@kernel.org>,
+        stable@vger.kernel.org,
+        Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 20/59] fpga: altera-ps-spi: Fix getting of optional confd gpio
-Date:   Fri, 20 Sep 2019 00:03:35 +0200
-Message-Id: <20190919214801.744973272@linuxfoundation.org>
+Subject: [PATCH 4.14 21/59] netfilter: xt_nfacct: Fix alignment mismatch in xt_nfacct_match_info
+Date:   Fri, 20 Sep 2019 00:03:36 +0200
+Message-Id: <20190919214802.089357664@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214755.852282682@linuxfoundation.org>
 References: <20190919214755.852282682@linuxfoundation.org>
@@ -60,52 +62,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Phil Reid <preid@electromag.com.au>
+From: Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>
 
-[ Upstream commit dec43da46f63eb71f519d963ba6832838e4262a3 ]
+[ Upstream commit 89a26cd4b501e9511d3cd3d22327fc76a75a38b3 ]
 
-Currently the driver does not handle EPROBE_DEFER for the confd gpio.
-Use devm_gpiod_get_optional() instead of devm_gpiod_get() and return
-error codes from altera_ps_probe().
+When running a 64-bit kernel with a 32-bit iptables binary, the size of
+the xt_nfacct_match_info struct diverges.
 
-Fixes: 5692fae0742d ("fpga manager: Add altera-ps-spi driver for Altera FPGAs")
-Signed-off-by: Phil Reid <preid@electromag.com.au>
-Signed-off-by: Moritz Fischer <mdf@kernel.org>
+    kernel: sizeof(struct xt_nfacct_match_info) : 40
+    iptables: sizeof(struct xt_nfacct_match_info)) : 36
+
+Trying to append nfacct related rules results in an unhelpful message.
+Although it is suggested to look for more information in dmesg, nothing
+can be found there.
+
+    # iptables -A <chain> -m nfacct --nfacct-name <acct-object>
+    iptables: Invalid argument. Run `dmesg' for more information.
+
+This patch fixes the memory misalignment by enforcing 8-byte alignment
+within the struct's first revision. This solution is often used in many
+other uapi netfilter headers.
+
+Signed-off-by: Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>
+Acked-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/fpga/altera-ps-spi.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ include/uapi/linux/netfilter/xt_nfacct.h |  5 ++++
+ net/netfilter/xt_nfacct.c                | 36 ++++++++++++++++--------
+ 2 files changed, 30 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/fpga/altera-ps-spi.c b/drivers/fpga/altera-ps-spi.c
-index 06d212a3d49dd..19b1cf8a82528 100644
---- a/drivers/fpga/altera-ps-spi.c
-+++ b/drivers/fpga/altera-ps-spi.c
-@@ -207,7 +207,7 @@ static int altera_ps_write_complete(struct fpga_manager *mgr,
- 		return -EIO;
- 	}
+diff --git a/include/uapi/linux/netfilter/xt_nfacct.h b/include/uapi/linux/netfilter/xt_nfacct.h
+index 5c8a4d760ee34..b5123ab8d54a8 100644
+--- a/include/uapi/linux/netfilter/xt_nfacct.h
++++ b/include/uapi/linux/netfilter/xt_nfacct.h
+@@ -11,4 +11,9 @@ struct xt_nfacct_match_info {
+ 	struct nf_acct	*nfacct;
+ };
  
--	if (!IS_ERR(conf->confd)) {
-+	if (conf->confd) {
- 		if (!gpiod_get_raw_value_cansleep(conf->confd)) {
- 			dev_err(&mgr->dev, "CONF_DONE is inactive!\n");
- 			return -EIO;
-@@ -263,10 +263,13 @@ static int altera_ps_probe(struct spi_device *spi)
- 		return PTR_ERR(conf->status);
- 	}
++struct xt_nfacct_match_info_v1 {
++	char		name[NFACCT_NAME_MAX];
++	struct nf_acct	*nfacct __attribute__((aligned(8)));
++};
++
+ #endif /* _XT_NFACCT_MATCH_H */
+diff --git a/net/netfilter/xt_nfacct.c b/net/netfilter/xt_nfacct.c
+index 6f92d25590a85..ea447b437f122 100644
+--- a/net/netfilter/xt_nfacct.c
++++ b/net/netfilter/xt_nfacct.c
+@@ -55,25 +55,39 @@ nfacct_mt_destroy(const struct xt_mtdtor_param *par)
+ 	nfnl_acct_put(info->nfacct);
+ }
  
--	conf->confd = devm_gpiod_get(&spi->dev, "confd", GPIOD_IN);
-+	conf->confd = devm_gpiod_get_optional(&spi->dev, "confd", GPIOD_IN);
- 	if (IS_ERR(conf->confd)) {
--		dev_warn(&spi->dev, "Not using confd gpio: %ld\n",
--			 PTR_ERR(conf->confd));
-+		dev_err(&spi->dev, "Failed to get confd gpio: %ld\n",
-+			PTR_ERR(conf->confd));
-+		return PTR_ERR(conf->confd);
-+	} else if (!conf->confd) {
-+		dev_warn(&spi->dev, "Not using confd gpio");
- 	}
+-static struct xt_match nfacct_mt_reg __read_mostly = {
+-	.name       = "nfacct",
+-	.family     = NFPROTO_UNSPEC,
+-	.checkentry = nfacct_mt_checkentry,
+-	.match      = nfacct_mt,
+-	.destroy    = nfacct_mt_destroy,
+-	.matchsize  = sizeof(struct xt_nfacct_match_info),
+-	.usersize   = offsetof(struct xt_nfacct_match_info, nfacct),
+-	.me         = THIS_MODULE,
++static struct xt_match nfacct_mt_reg[] __read_mostly = {
++	{
++		.name       = "nfacct",
++		.revision   = 0,
++		.family     = NFPROTO_UNSPEC,
++		.checkentry = nfacct_mt_checkentry,
++		.match      = nfacct_mt,
++		.destroy    = nfacct_mt_destroy,
++		.matchsize  = sizeof(struct xt_nfacct_match_info),
++		.usersize   = offsetof(struct xt_nfacct_match_info, nfacct),
++		.me         = THIS_MODULE,
++	},
++	{
++		.name       = "nfacct",
++		.revision   = 1,
++		.family     = NFPROTO_UNSPEC,
++		.checkentry = nfacct_mt_checkentry,
++		.match      = nfacct_mt,
++		.destroy    = nfacct_mt_destroy,
++		.matchsize  = sizeof(struct xt_nfacct_match_info_v1),
++		.usersize   = offsetof(struct xt_nfacct_match_info_v1, nfacct),
++		.me         = THIS_MODULE,
++	},
+ };
  
- 	/* Register manager with unique name */
+ static int __init nfacct_mt_init(void)
+ {
+-	return xt_register_match(&nfacct_mt_reg);
++	return xt_register_matches(nfacct_mt_reg, ARRAY_SIZE(nfacct_mt_reg));
+ }
+ 
+ static void __exit nfacct_mt_exit(void)
+ {
+-	xt_unregister_match(&nfacct_mt_reg);
++	xt_unregister_matches(nfacct_mt_reg, ARRAY_SIZE(nfacct_mt_reg));
+ }
+ 
+ module_init(nfacct_mt_init);
 -- 
 2.20.1
 
