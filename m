@@ -2,51 +2,57 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 050DBC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB2FC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBDCE20678
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C8D521907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:17:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931415;
-	bh=9rTI+ECXDz6aoBl8w9ersEwiK2iS2GSObYGj5ltca24=;
+	s=default; t=1568931423;
+	bh=0d+4Cw+EXZlf6smP3ZQcXUGuFe+smEJO/16gc3anj7A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ciNm0jO2zJSv5n036tN1t3h5xZxJ0abirr6yQDY1ewr8QNoD2kXvvCjjXt0IeaaLn
-	 WqfdJFA4CP93AIBQauYpD5NkKoV4mLeKqEw7PFdqBBQfpNy2GXeCIVM7lg6hqd5dr5
-	 qKpTneQdbHB2oAFP/GfNqWXb8i3v/oXEGz3bq5CM=
+	b=wnq4Jl8gc48oWUxMPdHIvNi2LdoI1MwDXln3zP0iC/bw9h3Gv2gUfFmbkCxJQ9Yls
+	 C2Dh8GkQhJPzS6ZaHy9n/jDTzziRm8eItPi0Vt629NicFdsXY2g/vwnkKOKdIT+Ynb
+	 CD2p+4zKalyh3rbqgjPGKlmpvC6Yg8C8UzC1VI1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406391AbfISWQz (ORCPT
+        id S2406412AbfISWRC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:16:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57680 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:17:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404513AbfISWQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:16:50 -0400
+        id S2406390AbfISWQz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:16:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8E9F21907;
-        Thu, 19 Sep 2019 22:16:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77CAB21920;
+        Thu, 19 Sep 2019 22:16:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931409;
-        bh=9rTI+ECXDz6aoBl8w9ersEwiK2iS2GSObYGj5ltca24=;
+        s=default; t=1568931415;
+        bh=0d+4Cw+EXZlf6smP3ZQcXUGuFe+smEJO/16gc3anj7A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NKd654DTuRt7iN0ewvjP6pHdvp0SXv3IlY0SComgI5WZuvG13Slc6afLu5Lil/TrN
-         HT3mfBeM/kqWXS5s3ASQpRIi6uG9f9NmKJtHHAvSe890kaU3ZvxWHAUOUgdrTlHp/F
-         8M/7wxplD4UlSwhcnLGGG1lbQV1IiNohvq1Z0awM=
+        b=JrQH/O/Ejmd005BZMrkvej6DMLun1UxoWxwSmIKR8KzeljpC6YPQ2Pa+/4DFn3/fM
+         GgA5H/gwEobkIS1YffAa0Qh2o4w2XuHREiAptwycJCP3WsaJn2chU3kwTx00WFlfwu
+         N1Znjl+xa7BIxB68x3R8h1ZBVoMKwN5vdCTT1QPg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.14 06/59] media: tm6000: double free if usb disconnect while streaming
-Date:   Fri, 20 Sep 2019 00:03:21 +0200
-Message-Id: <20190919214757.686584149@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+d5870a903591faaca4ae@syzkaller.appspotmail.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 08/59] net_sched: let qdisc_put() accept NULL pointer
+Date:   Fri, 20 Sep 2019 00:03:23 +0200
+Message-Id: <20190919214757.815158337@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214755.852282682@linuxfoundation.org>
 References: <20190919214755.852282682@linuxfoundation.org>
@@ -59,135 +65,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Young <sean@mess.org>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-commit 699bf94114151aae4dceb2d9dbf1a6312839dcae upstream.
+[ Upstream commit 6efb971ba8edfbd80b666f29de12882852f095ae ]
 
-The usb_bulk_urb will kfree'd on disconnect, so ensure the pointer is set
-to NULL after each free.
+When tcf_block_get() fails in sfb_init(), q->qdisc is still a NULL
+pointer which leads to a crash in sfb_destroy(). Similar for
+sch_dsmark.
 
-stop stream
-urb killing
-urb buffer free
-tm6000: got start feed request tm6000_start_feed
-tm6000: got start stream request tm6000_start_stream
-tm6000: pipe reset
-tm6000: got start feed request tm6000_start_feed
-tm6000: got start feed request tm6000_start_feed
-tm6000: got start feed request tm6000_start_feed
-tm6000: got start feed request tm6000_start_feed
-tm6000: IR URB failure: status: -71, length 0
-xhci_hcd 0000:00:14.0: ERROR unknown event type 37
-xhci_hcd 0000:00:14.0: ERROR unknown event type 37
-tm6000:  error tm6000_urb_received
-usb 1-2: USB disconnect, device number 5
-tm6000: disconnecting tm6000 #0
-==================================================================
-BUG: KASAN: use-after-free in dvb_fini+0x75/0x140 [tm6000_dvb]
-Read of size 8 at addr ffff888241044060 by task kworker/2:0/22
+Instead of fixing each separately, Linus suggested to just accept
+NULL pointer in qdisc_put(), which would make callers easier.
 
-CPU: 2 PID: 22 Comm: kworker/2:0 Tainted: G        W         5.3.0-rc4+ #1
-Hardware name: LENOVO 20KHCTO1WW/20KHCTO1WW, BIOS N23ET65W (1.40 ) 07/02/2019
-Workqueue: usb_hub_wq hub_event
-Call Trace:
- dump_stack+0x9a/0xf0
- print_address_description.cold+0xae/0x34f
- __kasan_report.cold+0x75/0x93
- ? tm6000_fillbuf+0x390/0x3c0 [tm6000_alsa]
- ? dvb_fini+0x75/0x140 [tm6000_dvb]
- kasan_report+0xe/0x12
- dvb_fini+0x75/0x140 [tm6000_dvb]
- tm6000_close_extension+0x51/0x80 [tm6000]
- tm6000_usb_disconnect.cold+0xd4/0x105 [tm6000]
- usb_unbind_interface+0xe4/0x390
- device_release_driver_internal+0x121/0x250
- bus_remove_device+0x197/0x260
- device_del+0x268/0x550
- ? __device_links_no_driver+0xd0/0xd0
- ? usb_remove_ep_devs+0x30/0x3b
- usb_disable_device+0x122/0x400
- usb_disconnect+0x153/0x430
- hub_event+0x800/0x1e40
- ? trace_hardirqs_on_thunk+0x1a/0x20
- ? hub_port_debounce+0x1f0/0x1f0
- ? retint_kernel+0x10/0x10
- ? lock_is_held_type+0xf1/0x130
- ? hub_port_debounce+0x1f0/0x1f0
- ? process_one_work+0x4ae/0xa00
- process_one_work+0x4ba/0xa00
- ? pwq_dec_nr_in_flight+0x160/0x160
- ? do_raw_spin_lock+0x10a/0x1d0
- worker_thread+0x7a/0x5c0
- ? process_one_work+0xa00/0xa00
- kthread+0x1d5/0x200
- ? kthread_create_worker_on_cpu+0xd0/0xd0
- ret_from_fork+0x3a/0x50
+(For sch_dsmark, the bug probably exists long before commit
+6529eaba33f0.)
 
-Allocated by task 2682:
- save_stack+0x1b/0x80
- __kasan_kmalloc.constprop.0+0xc2/0xd0
- usb_alloc_urb+0x28/0x60
- tm6000_start_feed+0x10a/0x300 [tm6000_dvb]
- dmx_ts_feed_start_filtering+0x86/0x120 [dvb_core]
- dvb_dmxdev_start_feed+0x121/0x180 [dvb_core]
- dvb_dmxdev_filter_start+0xcb/0x540 [dvb_core]
- dvb_demux_do_ioctl+0x7ed/0x890 [dvb_core]
- dvb_usercopy+0x97/0x1f0 [dvb_core]
- dvb_demux_ioctl+0x11/0x20 [dvb_core]
- do_vfs_ioctl+0x5d8/0x9d0
- ksys_ioctl+0x5e/0x90
- __x64_sys_ioctl+0x3d/0x50
- do_syscall_64+0x74/0xe0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 22:
- save_stack+0x1b/0x80
- __kasan_slab_free+0x12c/0x170
- kfree+0xfd/0x3a0
- xhci_giveback_urb_in_irq+0xfe/0x230
- xhci_td_cleanup+0x276/0x340
- xhci_irq+0x1129/0x3720
- __handle_irq_event_percpu+0x6e/0x420
- handle_irq_event_percpu+0x6f/0x100
- handle_irq_event+0x55/0x84
- handle_edge_irq+0x108/0x3b0
- handle_irq+0x2e/0x40
- do_IRQ+0x83/0x1a0
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 6529eaba33f0 ("net: sched: introduce tcf block infractructure")
+Reported-by: syzbot+d5870a903591faaca4ae@syzkaller.appspotmail.com
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>
+Cc: Jiri Pirko <jiri@resnulli.us>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/media/usb/tm6000/tm6000-dvb.c |    3 +++
+ net/sched/sch_generic.c |    3 +++
  1 file changed, 3 insertions(+)
 
---- a/drivers/media/usb/tm6000/tm6000-dvb.c
-+++ b/drivers/media/usb/tm6000/tm6000-dvb.c
-@@ -105,6 +105,7 @@ static void tm6000_urb_received(struct u
- 			printk(KERN_ERR "tm6000:  error %s\n", __func__);
- 			kfree(urb->transfer_buffer);
- 			usb_free_urb(urb);
-+			dev->dvb->bulk_urb = NULL;
- 		}
- 	}
- }
-@@ -135,6 +136,7 @@ static int tm6000_start_stream(struct tm
- 	dvb->bulk_urb->transfer_buffer = kzalloc(size, GFP_KERNEL);
- 	if (dvb->bulk_urb->transfer_buffer == NULL) {
- 		usb_free_urb(dvb->bulk_urb);
-+		dvb->bulk_urb = NULL;
- 		printk(KERN_ERR "tm6000: couldn't allocate transfer buffer!\n");
- 		return -ENOMEM;
- 	}
-@@ -162,6 +164,7 @@ static int tm6000_start_stream(struct tm
+--- a/net/sched/sch_generic.c
++++ b/net/sched/sch_generic.c
+@@ -705,6 +705,9 @@ void qdisc_destroy(struct Qdisc *qdisc)
+ {
+ 	const struct Qdisc_ops  *ops = qdisc->ops;
  
- 		kfree(dvb->bulk_urb->transfer_buffer);
- 		usb_free_urb(dvb->bulk_urb);
-+		dvb->bulk_urb = NULL;
- 		return ret;
- 	}
- 
++	if (!qdisc)
++		return;
++
+ 	if (qdisc->flags & TCQ_F_BUILTIN ||
+ 	    !refcount_dec_and_test(&qdisc->refcnt))
+ 		return;
 
 
