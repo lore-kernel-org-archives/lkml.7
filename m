@@ -2,198 +2,163 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7798C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 18:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E47BC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 18:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91C3D21A49
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 18:18:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568917122;
-	bh=TCa764fDVm0BUS6jXDj8jA5f2AYG6d9jG3RP2yK6Qgg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=S2LwK84VaomUWTkH/fkmcyg6H8zaCWtKcmjvSYkqNysUe2oVFm8C+91PnDJchZQZs
-	 TyH9YtWdDHH8B+YPhYeF8ox3/ezq/nyYLhZrFcScTtezLmII3v434CLwRgS+zL4Db4
-	 eQI/uqQJuc4YRrEFjaMftlaHcp63y47Ftq4BCd/g=
+	by mail.kernel.org (Postfix) with ESMTP id 6253621928
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 18:19:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nQqsDv4h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732645AbfISSSm (ORCPT
+        id S1732715AbfISSSz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 14:18:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54956 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732583AbfISSSl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 14:18:41 -0400
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CEEA21928;
-        Thu, 19 Sep 2019 18:18:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568917119;
-        bh=TCa764fDVm0BUS6jXDj8jA5f2AYG6d9jG3RP2yK6Qgg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=K8lPzaOs5uyswM5REgjEu/RUFpspu42cKGkuvs/ihehMn4NjIoqOcdyAN505ZZ700
-         PWs5ixGmCLcsweiD7ajKJO52oDKH9L5Eq01aWAC9Ey/nF8LA3e2OK3oBU1W6LB7NwD
-         N4xHYVc6nA5ef4YDOdpicOZD/WNqJfleo5hkvsKo=
-Date:   Thu, 19 Sep 2019 20:18:37 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Chen-Yu Tsai <wens@csie.org>
-Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Subject: Re: [linux-sunxi] [PATCH] clk: sunxi-ng: h6: Use sigma-delta
- modulation for audio PLL
-Message-ID: <20190919181837.yuhmqnojxpoqp35a@gilmour>
-References: <20190914135100.327412-1-jernej.skrabec@siol.net>
- <CAGb2v640R7edA3EJvC=aJQZXGcfqot50O3-PFyrYj767pUEYrQ@mail.gmail.com>
- <8129141.yvSaxnLE4m@jernej-laptop>
- <CAGb2v65KQf_OX1sX9+4DAKKMKHP464cCZKjCRsn3LzTKRGLTcQ@mail.gmail.com>
+        Thu, 19 Sep 2019 14:18:55 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46435 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732659AbfISSSz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 14:18:55 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q5so2805483pfg.13
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 11:18:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=LK/ntI5e8UZBioVWF4cAdPWBEu0iGHGSIa7+VcXi35o=;
+        b=nQqsDv4htqMeTr29+sArilMSGc4WdWh8clDbsS+ZhaBH8MnOghUWrj7q7bo55eU4zE
+         I+mXGqd+A3IXVvRg1mRHX8jhbtB4Q9/WWo2tQqfq3B/6/bmTsiA86mB9fIXjIarfyfUz
+         T9M59UB/RUpZXAvS9UMEvet3Chkn1EjLPhN9c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=LK/ntI5e8UZBioVWF4cAdPWBEu0iGHGSIa7+VcXi35o=;
+        b=UjWRfyHws5vFX1P28x1qAnud6DK53ZtawJwbsFGJM+YStkC4i67L6XtNRq7dYHHc32
+         +BtXuDIdAdm4V7SHo+lzrA5EvKTJf/CEmh8O9V8JqgPw7NXlxENlWHRK+u23nwcfR1vs
+         EX7HWgYAywdSr2viBiTx50Nob4qzWmmX8euxU5ReN16S5sQf6Utl7dWTmFV3gntN+8vj
+         7GELDtwTQotBS8yd7voQrBS7N0+8G0Wf6Osv2guP+0tx4BXr5ks0LHugNyLKuE8Fu3NW
+         xvXzwxE4RIxyH7nZVs8azS4k8cXoQ7NDik5UrwKjyZyhHYLa8e4uOD4eVKUW69dJ/gut
+         k7wA==
+X-Gm-Message-State: APjAAAUbSdsmWJIHyqGMmpJugBxVfYGj6JJui3pxCxCB2hrQSorpbf6k
+        F0yRbQHVOXPHbbCSxF8nxzgJnA==
+X-Google-Smtp-Source: APXvYqy2AC9epTUjkt4q5SHYgCwow/H1wFtZDkXZGQpB8RDBJY/GgHldQNGy/Er8PHpj0kcHasCe9g==
+X-Received: by 2002:aa7:998d:: with SMTP id k13mr11961195pfh.134.1568917134616;
+        Thu, 19 Sep 2019 11:18:54 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 37sm13724113pgv.32.2019.09.19.11.18.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Sep 2019 11:18:53 -0700 (PDT)
+Date:   Thu, 19 Sep 2019 11:18:52 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] docs: Use make invocation's -j argument for parallelism
+Message-ID: <201909191116.192A096C68@keescook>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="pfkcvjqh5wmcwf4x"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAGb2v65KQf_OX1sX9+4DAKKMKHP464cCZKjCRsn3LzTKRGLTcQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+While sphinx 1.7 and later supports "-jauto" for parallelism, this
+effectively ignores the "-j" flag used in the "make" invocation, which
+may cause confusion for build systems. Instead, extract the available
+parallelism from "make"'s job server (since it is not exposed in any
+special variables) and use that for the "sphinx-build" run. Now things
+work correctly for builds where -j is specified at the top-level:
 
---pfkcvjqh5wmcwf4x
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+	make -j16 htmldocs
 
-On Wed, Sep 18, 2019 at 01:46:34PM +0800, Chen-Yu Tsai wrote:
-> On Wed, Sep 18, 2019 at 1:21 PM Jernej =C5=A0krabec <jernej.skrabec@siol.=
-net> wrote:
-> >
-> > Dne torek, 17. september 2019 ob 08:54:08 CEST je Chen-Yu Tsai napisal(=
-a):
-> > > On Sat, Sep 14, 2019 at 9:51 PM Jernej Skrabec <jernej.skrabec@siol.n=
-et>
-> > wrote:
-> > > > Audio devices needs exact clock rates in order to correctly reprodu=
-ce
-> > > > the sound. Until now, only integer factors were used to configure H6
-> > > > audio PLL which resulted in inexact rates. Fix that by adding suppo=
-rt
-> > > > for fractional factors using sigma-delta modulation look-up table. =
-It
-> > > > contains values for two most commonly used audio base frequencies.
-> > > >
-> > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > > ---
-> > > >
-> > > >  drivers/clk/sunxi-ng/ccu-sun50i-h6.c | 21 +++++++++++++++------
-> > > >  1 file changed, 15 insertions(+), 6 deletions(-)
-> > > >
-> > > > diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
-> > > > b/drivers/clk/sunxi-ng/ccu-sun50i-h6.c index d89353a3cdec..ed6338d7=
-4474
-> > > > 100644
-> > > > --- a/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
-> > > > +++ b/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
-> > > > @@ -203,12 +203,21 @@ static struct ccu_nkmp pll_hsic_clk =3D {
-> > > >
-> > > >   * hardcode it to match with the clock names.
-> > > >   */
-> > > >
-> > > >  #define SUN50I_H6_PLL_AUDIO_REG                0x078
-> > > >
-> > > > +
-> > > > +static struct ccu_sdm_setting pll_audio_sdm_table[] =3D {
-> > > > +       { .rate =3D 541900800, .pattern =3D 0xc001288d, .m =3D 1, .=
-n =3D 22 },
-> > > > +       { .rate =3D 589824000, .pattern =3D 0xc00126e9, .m =3D 1, .=
-n =3D 24 },
-> > > > +};
-> > > > +
-> > > >
-> > > >  static struct ccu_nm pll_audio_base_clk =3D {
-> > > >
-> > > >         .enable         =3D BIT(31),
-> > > >         .lock           =3D BIT(28),
-> > > >         .n              =3D _SUNXI_CCU_MULT_MIN(8, 8, 12),
-> > > >         .m              =3D _SUNXI_CCU_DIV(1, 1), /* input divider =
-*/
-> > > >
-> > > > +       .sdm            =3D _SUNXI_CCU_SDM(pll_audio_sdm_table,
-> > > > +                                        BIT(24), 0x178, BIT(31)),
-> > > >
-> > > >         .common         =3D {
-> > > >
-> > > > +               .features       =3D CCU_FEATURE_SIGMA_DELTA_MOD,
-> > > >
-> > > >                 .reg            =3D 0x078,
-> > > >                 .hw.init        =3D CLK_HW_INIT("pll-audio-base", "=
-osc24M",
-> > > >
-> > > >                                               &ccu_nm_ops,
-> > > >
-> > > > @@ -753,12 +762,12 @@ static const struct clk_hw *clk_parent_pll_au=
-dio[] =3D
-> > > > {>
-> > > >  };
-> > > >
-> > > >  /*
-> > > >
-> > > > - * The divider of pll-audio is fixed to 8 now, as pll-audio-4x has=
- a
-> > > > - * fixed post-divider 2.
-> > > > + * The divider of pll-audio is fixed to 24 for now, so 24576000 and
-> > > > 22579200 + * rates can be set exactly in conjunction with sigma-del=
-ta
-> > > > modulation.>
-> > > >   */
-> > > >
-> > > >  static CLK_FIXED_FACTOR_HWS(pll_audio_clk, "pll-audio",
-> > > >
-> > > >                             clk_parent_pll_audio,
-> > > >
-> > > > -                           8, 1, CLK_SET_RATE_PARENT);
-> > > > +                           24, 1, CLK_SET_RATE_PARENT);
-> > > >
-> > > >  static CLK_FIXED_FACTOR_HWS(pll_audio_2x_clk, "pll-audio-2x",
-> > > >
-> > > >                             clk_parent_pll_audio,
-> > > >                             4, 1, CLK_SET_RATE_PARENT);
-> > >
-> > > You need to fix the factors for the other two outputs as well, since =
-all
-> > > three are derived from pll-audio-base.
-> >
-> > Fix how? pll-audio-2x and pll-audio-4x clocks have fixed divider in reg=
-ards to
-> > pll-audio-base, while pll-audio has not. Unless you mean changing their=
- name?
->
-> Argh... I got it wrong. It looks good actually.
->
-> Acked-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ Documentation/Makefile  |  3 +--
+ scripts/jobserver-count | 46 +++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 47 insertions(+), 2 deletions(-)
+ create mode 100755 scripts/jobserver-count
 
-Queued for 5.5, thanks
+diff --git a/Documentation/Makefile b/Documentation/Makefile
+index e145e4db508b..4408eeaf2891 100644
+--- a/Documentation/Makefile
++++ b/Documentation/Makefile
+@@ -33,8 +33,6 @@ ifeq ($(HAVE_SPHINX),0)
+ 
+ else # HAVE_SPHINX
+ 
+-export SPHINXOPTS = $(shell perl -e 'open IN,"sphinx-build --version 2>&1 |"; while (<IN>) { if (m/([\d\.]+)/) { print "-jauto" if ($$1 >= "1.7") } ;} close IN')
+-
+ # User-friendly check for pdflatex and latexmk
+ HAVE_PDFLATEX := $(shell if which $(PDFLATEX) >/dev/null 2>&1; then echo 1; else echo 0; fi)
+ HAVE_LATEXMK := $(shell if which latexmk >/dev/null 2>&1; then echo 1; else echo 0; fi)
+@@ -68,6 +66,7 @@ quiet_cmd_sphinx = SPHINX  $@ --> file://$(abspath $(BUILDDIR)/$3/$4)
+ 	PYTHONDONTWRITEBYTECODE=1 \
+ 	BUILDDIR=$(abspath $(BUILDDIR)) SPHINX_CONF=$(abspath $(srctree)/$(src)/$5/$(SPHINX_CONF)) \
+ 	$(SPHINXBUILD) \
++	-j $(shell $(srctree)/scripts/jobserver-count) \
+ 	-b $2 \
+ 	-c $(abspath $(srctree)/$(src)) \
+ 	-d $(abspath $(BUILDDIR)/.doctrees/$3) \
+diff --git a/scripts/jobserver-count b/scripts/jobserver-count
+new file mode 100755
+index 000000000000..5fc9d2fd5254
+--- /dev/null
++++ b/scripts/jobserver-count
+@@ -0,0 +1,46 @@
++#!/usr/bin/env python3
++# SPDX-License-Identifier: GPL-2.0-or-later
++#
++# This determines how many parallel tasks "make" is expecting, as it is
++# not exposed via an special variables.
++# https://www.gnu.org/software/make/manual/html_node/POSIX-Jobserver.html#POSIX-Jobserver
++import os, sys, fcntl
++
++# Set non-blocking for a given file descriptor.
++def nonblock(fd):
++	flags = fcntl.fcntl(fd, fcntl.F_GETFL)
++	fcntl.fcntl(fd, fcntl.F_SETFL, flags | os.O_NONBLOCK)
++	return fd
++
++# Fetch the make environment options.
++flags = os.environ.get('MAKEFLAGS', None)
++if flags == None:
++	print("1")
++	sys.exit(0)
++
++# Look for "--jobserver=R,W"
++opts = [x for x in flags.split(" ") if x.startswith("--jobserver")]
++if len(opts) != 1:
++	print("1")
++	sys.exit(0)
++
++# Parse out R,W file descriptor numbers and set them nonblocking.
++fds = opts[0].split("=", 1)[1]
++reader, writer = [nonblock(int(x)) for x in fds.split(",", 1)]
++
++# Read out as many jobserver slots as possible.
++jobs = b""
++while True:
++	try:
++		slot = os.read(reader, 1)
++		jobs += slot
++	except:
++		break
++# Return all the reserved slots.
++os.write(writer, jobs)
++
++# Report available slots (with a bump for our caller's reserveration).
++if len(jobs) < 1:
++	print("1")
++else:
++	print(len(jobs) + 1)
+-- 
+2.17.1
 
-Maxime
 
---pfkcvjqh5wmcwf4x
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXYPGfQAKCRDj7w1vZxhR
-xfhxAQCQlPrCxV4nnEbqZUIhSmWlxP/HXHmMx5Kk4J83e7xUfgEAsQrTGvWtLAcb
-3mTnYeJg0Ko41ya+QDycztsT65ffCAA=
-=NCZi
------END PGP SIGNATURE-----
-
---pfkcvjqh5wmcwf4x--
+-- 
+Kees Cook
