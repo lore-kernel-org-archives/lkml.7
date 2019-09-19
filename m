@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA01C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA93C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 016EA21927
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:15:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3258E21927
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:15:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931301;
-	bh=Vq+Q+TyIywCf300bwo+nTFXCX0Vt2F+9ts4QLniHC3Y=;
+	s=default; t=1568931304;
+	bh=9ZkUmIAtqapg5V4o9+m2L/LvSQjknh64QISz0pC6Op8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cCMsc3OIfwhGSiK1u+jNbHLxxl3JaOVMNWyiA95k7FnXkGMlSf9JPokkat2TXmDcN
-	 Z1GhmpNiOASTU6c8YzDFUeR4UG3v8AxgTtS3w9oQ5lPMGBWR2ajP5SLGsK7qi47bwO
-	 mxdPtwbmZq5TNPKkVmkvNzudw1xBERCgCZ2QtOAQ=
+	b=ltS+JMj7N2hvWPMr8YtA1oE64kgSZbaSk7ffdH84XUdAQj6wHapaGljwr60f8/peN
+	 e7VW+2DFCUpUZpF6xXoE4jAvLOJmGSmZ0Sbeu6rxzp42l5U26fD+eNnf8VhZ+kCiDf
+	 XyIj/3MKDu1BVm2WBWfskflTduOOE/b7bMbKljDA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393841AbfISWO7 (ORCPT
+        id S2393850AbfISWPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:14:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54604 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:15:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392385AbfISWOy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:14:54 -0400
+        id S2393839AbfISWO7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:14:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F12F321929;
-        Thu, 19 Sep 2019 22:14:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 393CB218AF;
+        Thu, 19 Sep 2019 22:14:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931293;
-        bh=Vq+Q+TyIywCf300bwo+nTFXCX0Vt2F+9ts4QLniHC3Y=;
+        s=default; t=1568931298;
+        bh=9ZkUmIAtqapg5V4o9+m2L/LvSQjknh64QISz0pC6Op8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ixKyx9m6QsJT6W0LZtRjiDYjSnlIXx8khA8n1XQunK5+aEz7oL7SFcBCGjitD40UO
-         yfnrQ80A/wyIBNtBcAzbdG5vk9ZNZ8F4iZ6unjzfZ5P7C93PGL+8h9cDrbyhzDigSa
-         HTHfnGhIUBXyicK8GXeU0/LEp3ZDlI08/DCySwAM=
+        b=Nz3kV8nie4T7bPraOQXw3Ot1JT0MHXqZGQnBsLWUoqYOaiuecEYqwI1l5P9Y5mOaU
+         8+vZhDCf2gi3is5zxS/HbEqMYZl1CCaKV+7M/uzL+LYx9A3p4gY/+8zKvTSEK8Pk9z
+         /Gtk3wo4byw6lQp8ArlayktwZdiHTOAzjB4BGyCo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stuart Hayes <stuart.w.hayes@gmail.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 72/79] iommu/amd: Flush old domains in kdump kernel
-Date:   Fri, 20 Sep 2019 00:03:57 +0200
-Message-Id: <20190919214814.038217977@linuxfoundation.org>
+        stable@vger.kernel.org, Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 43/79] batman-adv: Only read OGM2 tvlv_len after buffer len check
+Date:   Fri, 20 Sep 2019 00:03:28 +0200
+Message-Id: <20190919214811.470416788@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214807.612593061@linuxfoundation.org>
 References: <20190919214807.612593061@linuxfoundation.org>
@@ -59,82 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stuart Hayes <stuart.w.hayes@gmail.com>
+From: Sven Eckelmann <sven@narfation.org>
 
-[ Upstream commit 36b7200f67dfe75b416b5281ed4ace9927b513bc ]
+[ Upstream commit 0ff0f15a32c093381ad1abc06abe85afb561ab28 ]
 
-When devices are attached to the amd_iommu in a kdump kernel, the old device
-table entries (DTEs), which were copied from the crashed kernel, will be
-overwritten with a new domain number.  When the new DTE is written, the IOMMU
-is told to flush the DTE from its internal cache--but it is not told to flush
-the translation cache entries for the old domain number.
+Multiple batadv_ogm2_packet can be stored in an skbuff. The functions
+batadv_v_ogm_send_to_if() uses batadv_v_ogm_aggr_packet() to check if there
+is another additional batadv_ogm2_packet in the skb or not before they
+continue processing the packet.
 
-Without this patch, AMD systems using the tg3 network driver fail when kdump
-tries to save the vmcore to a network system, showing network timeouts and
-(sometimes) IOMMU errors in the kernel log.
+The length for such an OGM2 is BATADV_OGM2_HLEN +
+batadv_ogm2_packet->tvlv_len. The check must first check that at least
+BATADV_OGM2_HLEN bytes are available before it accesses tvlv_len (which is
+part of the header. Otherwise it might try read outside of the currently
+available skbuff to get the content of tvlv_len.
 
-This patch will flush IOMMU translation cache entries for the old domain when
-a DTE gets overwritten with a new domain number.
-
-Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
-Fixes: 3ac3e5ee5ed5 ('iommu/amd: Copy old trans table from old kernel')
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fixes: 9323158ef9f4 ("batman-adv: OGMv2 - implement originators logic")
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ net/batman-adv/bat_v_ogm.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index 8d9920ff41344..8b79e2b32d378 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -1153,6 +1153,17 @@ static void amd_iommu_flush_tlb_all(struct amd_iommu *iommu)
- 	iommu_completion_wait(iommu);
- }
- 
-+static void amd_iommu_flush_tlb_domid(struct amd_iommu *iommu, u32 dom_id)
-+{
-+	struct iommu_cmd cmd;
-+
-+	build_inv_iommu_pages(&cmd, 0, CMD_INV_IOMMU_ALL_PAGES_ADDRESS,
-+			      dom_id, 1);
-+	iommu_queue_command(iommu, &cmd);
-+
-+	iommu_completion_wait(iommu);
-+}
-+
- static void amd_iommu_flush_all(struct amd_iommu *iommu)
+diff --git a/net/batman-adv/bat_v_ogm.c b/net/batman-adv/bat_v_ogm.c
+index 2948b41b06d47..d241ccc0ca027 100644
+--- a/net/batman-adv/bat_v_ogm.c
++++ b/net/batman-adv/bat_v_ogm.c
+@@ -643,17 +643,23 @@ batadv_v_ogm_process_per_outif(struct batadv_priv *bat_priv,
+  * batadv_v_ogm_aggr_packet() - checks if there is another OGM aggregated
+  * @buff_pos: current position in the skb
+  * @packet_len: total length of the skb
+- * @tvlv_len: tvlv length of the previously considered OGM
++ * @ogm2_packet: potential OGM2 in buffer
+  *
+  * Return: true if there is enough space for another OGM, false otherwise.
+  */
+-static bool batadv_v_ogm_aggr_packet(int buff_pos, int packet_len,
+-				     __be16 tvlv_len)
++static bool
++batadv_v_ogm_aggr_packet(int buff_pos, int packet_len,
++			 const struct batadv_ogm2_packet *ogm2_packet)
  {
- 	struct iommu_cmd cmd;
-@@ -1838,6 +1849,7 @@ static void set_dte_entry(u16 devid, struct protection_domain *domain,
- {
- 	u64 pte_root = 0;
- 	u64 flags = 0;
-+	u32 old_domid;
+ 	int next_buff_pos = 0;
  
- 	if (domain->mode != PAGE_MODE_NONE)
- 		pte_root = iommu_virt_to_phys(domain->pt_root);
-@@ -1887,8 +1899,20 @@ static void set_dte_entry(u16 devid, struct protection_domain *domain,
- 	flags &= ~DEV_DOMID_MASK;
- 	flags |= domain->id;
- 
-+	old_domid = amd_iommu_dev_table[devid].data[1] & DEV_DOMID_MASK;
- 	amd_iommu_dev_table[devid].data[1]  = flags;
- 	amd_iommu_dev_table[devid].data[0]  = pte_root;
+-	next_buff_pos += buff_pos + BATADV_OGM2_HLEN;
+-	next_buff_pos += ntohs(tvlv_len);
++	/* check if there is enough space for the header */
++	next_buff_pos += buff_pos + sizeof(*ogm2_packet);
++	if (next_buff_pos > packet_len)
++		return false;
 +
-+	/*
-+	 * A kdump kernel might be replacing a domain ID that was copied from
-+	 * the previous kernel--if so, it needs to flush the translation cache
-+	 * entries for the old domain ID that is being overwritten
-+	 */
-+	if (old_domid) {
-+		struct amd_iommu *iommu = amd_iommu_rlookup_table[devid];
-+
-+		amd_iommu_flush_tlb_domid(iommu, old_domid);
-+	}
- }
++	/* check if there is enough space for the optional TVLV */
++	next_buff_pos += ntohs(ogm2_packet->tvlv_len);
  
- static void clear_dte_entry(u16 devid)
+ 	return (next_buff_pos <= packet_len) &&
+ 	       (next_buff_pos <= BATADV_MAX_AGGREGATION_BYTES);
+@@ -830,7 +836,7 @@ int batadv_v_ogm_packet_recv(struct sk_buff *skb,
+ 	ogm_packet = (struct batadv_ogm2_packet *)skb->data;
+ 
+ 	while (batadv_v_ogm_aggr_packet(ogm_offset, skb_headlen(skb),
+-					ogm_packet->tvlv_len)) {
++					ogm_packet)) {
+ 		batadv_v_ogm_process(skb, ogm_offset, if_incoming);
+ 
+ 		ogm_offset += BATADV_OGM2_HLEN;
 -- 
 2.20.1
 
