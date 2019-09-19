@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FB2C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B10C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9943F208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:32:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3318D208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:32:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932333;
-	bh=G1zJi/9JfDk5Zq1Bft9rAYTAbGWQwwHcOFvaA0/MDkA=;
+	s=default; t=1568932339;
+	bh=HSDBrtfx0RrD3/Qa7HSXACxV8XQljFuckFcTvqevCnQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Foci21yuxRKK9/nyUdkjR8nslVbupZXJ6blQA7NaxSXejk2KtvD9fk/+mAjsPsGeq
-	 b2M7f7G9Jf5da9J/38yzv9rFzbp7wcfo/6E7mURMzt4HhH4UUH12JxMCm/DrAB44KD
-	 iPWk3Mr8cnhYuGXPBlrnPHg43xoQ35VMrD+PhnbA=
+	b=IrqeXkpBCvdqs+Rlr3Nin1UucBqyHFizqvxNrI0PmkhMmd+R5Tkow2EwvGYkQDVIU
+	 zMw4hgnhm7c5XMjIHnrWdc7Z0ZVk4h3Nlu0wzVozyriGnk68oUl+PmYoNHLkRHoIFG
+	 P+CPClES4W4CJybDvrbEHgjq2xgziH1+FN04NFAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405597AbfISWcM (ORCPT
+        id S2406444AbfISWcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:32:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52746 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:32:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393745AbfISWNe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:13:34 -0400
+        id S2390588AbfISWNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:13:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6081218AF;
-        Thu, 19 Sep 2019 22:13:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D69521907;
+        Thu, 19 Sep 2019 22:13:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931214;
-        bh=G1zJi/9JfDk5Zq1Bft9rAYTAbGWQwwHcOFvaA0/MDkA=;
+        s=default; t=1568931211;
+        bh=HSDBrtfx0RrD3/Qa7HSXACxV8XQljFuckFcTvqevCnQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yjQSHm42/CB6ZILyvZKPGY9GXBSZlZ6vzLxOJ53hEUbfBBr1S1x9fXc2EQVMLqoXc
-         DpParH9EdqHYJMXq3O6O2p7S21b2/BAfuaY8Tlfitfc5pE2zhYHLq+nYt9v46h4CI7
-         zI+XhiPWElCvureGyyBQJYeSnNXVCwdPVaAjxJL8=
+        b=v1j9P0W+FoItIQWeZpZkp4SdLBxhZty43lA2uhAV79sWjxPxeFo8qqEnOIyIGf0hD
+         rlHZPa+/qpvGykEQIQxp3Yka3gUdDtRIENeUvZgWlvQTpAABTT3SMCPb3YUsdGlY+G
+         euGXC5ljVJ9JNRJnTbGVNu6+QqOn4YUTHfb1Wa7k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
-        William Tu <u9012063@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 09/79] ip6_gre: fix a dst leak in ip6erspan_tunnel_xmit
-Date:   Fri, 20 Sep 2019 00:02:54 +0200
-Message-Id: <20190919214808.668645962@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 4.19 08/79] phy: renesas: rcar-gen3-usb2: Disable clearing VBUS in over-current
+Date:   Fri, 20 Sep 2019 00:02:53 +0200
+Message-Id: <20190919214808.486081633@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214807.612593061@linuxfoundation.org>
 References: <20190919214807.612593061@linuxfoundation.org>
@@ -60,35 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-[ Upstream commit 28e486037747c2180470b77c290d4090ad42f259 ]
+commit e6839c31a608e79f2057fab987dd814f5d3477e6 upstream.
 
-In ip6erspan_tunnel_xmit(), if the skb will not be sent out, it has to
-be freed on the tx_err path. Otherwise when deleting a netns, it would
-cause dst/dev to leak, and dmesg shows:
+The hardware manual should be revised, but the initial value of
+VBCTRL.OCCLREN is set to 1 actually. If the bit is set, the hardware
+clears VBCTRL.VBOUT and ADPCTRL.DRVVBUS registers automatically
+when the hardware detects over-current signal from a USB power switch.
+However, since the hardware doesn't have any registers which
+indicates over-current, the driver cannot handle it at all. So, if
+"is_otg_channel" hardware detects over-current, since ADPCTRL.DRVVBUS
+register is cleared automatically, the channel cannot be used after
+that.
 
-  unregister_netdevice: waiting for lo to become free. Usage count = 1
+To resolve this behavior, this patch sets the VBCTRL.OCCLREN to 0
+to keep ADPCTRL.DRVVBUS even if the "is_otg_channel" hardware
+detects over-current. (We assume a USB power switch itself protects
+over-current and turns the VBUS off.)
 
-Fixes: ef7baf5e083c ("ip6_gre: add ip6 erspan collect_md mode")
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Acked-by: William Tu <u9012063@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This patch is inspired by a BSP patch from Kazuya Mizuguchi.
+
+Fixes: 1114e2d31731 ("phy: rcar-gen3-usb2: change the mode to OTG on the combined channel")
+Cc: <stable@vger.kernel.org> # v4.5+
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv6/ip6_gre.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv6/ip6_gre.c
-+++ b/net/ipv6/ip6_gre.c
-@@ -988,7 +988,7 @@ static netdev_tx_t ip6erspan_tunnel_xmit
- 		if (unlikely(!tun_info ||
- 			     !(tun_info->mode & IP_TUNNEL_INFO_TX) ||
- 			     ip_tunnel_info_af(tun_info) != AF_INET6))
--			return -EINVAL;
-+			goto tx_err;
+---
+ drivers/phy/renesas/phy-rcar-gen3-usb2.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
++++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+@@ -66,6 +66,7 @@
+ 					 USB2_OBINT_IDDIGCHG)
  
- 		key = &tun_info->key;
- 		memset(&fl6, 0, sizeof(fl6));
+ /* VBCTRL */
++#define USB2_VBCTRL_OCCLREN		BIT(16)
+ #define USB2_VBCTRL_DRVVBUSSEL		BIT(8)
+ 
+ /* LINECTRL1 */
+@@ -289,6 +290,7 @@ static void rcar_gen3_init_otg(struct rc
+ 	u32 val;
+ 
+ 	val = readl(usb2_base + USB2_VBCTRL);
++	val &= ~USB2_VBCTRL_OCCLREN;
+ 	writel(val | USB2_VBCTRL_DRVVBUSSEL, usb2_base + USB2_VBCTRL);
+ 	writel(USB2_OBINT_BITS, usb2_base + USB2_OBINTSTA);
+ 	val = readl(usb2_base + USB2_OBINTEN);
 
 
