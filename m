@@ -2,106 +2,105 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F33EDC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 16:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7230C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 16:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C492220665
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 16:05:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ACF121924
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 16:05:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mBvRSHwQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Aa3gf0rV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404073AbfISQFF (ORCPT
+        id S2404091AbfISQFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 12:05:05 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:37739 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404060AbfISQFE (ORCPT
+        Thu, 19 Sep 2019 12:05:24 -0400
+Received: from mail-lj1-f171.google.com ([209.85.208.171]:43227 "EHLO
+        mail-lj1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404074AbfISQFY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 12:05:04 -0400
-Received: by mail-io1-f65.google.com with SMTP id b19so9034185iob.4;
-        Thu, 19 Sep 2019 09:05:02 -0700 (PDT)
+        Thu, 19 Sep 2019 12:05:24 -0400
+Received: by mail-lj1-f171.google.com with SMTP id d5so4121321lja.10
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 09:05:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=I36Yq2VwXBdLTsy979OXOJLPrf5I1O04uwmTwfk7AV0=;
-        b=mBvRSHwQhaiwSHy+grn5OzxBpH/5Wz/XXFK+oCIKRx1CQ42bj/yMQM7F8U9m20+5vp
-         LsinHDd6aJQaqzp3ENiu6ksW/RNxH/miqtR8eZII+AbtMRWregMnmj6LAEbmw4khObgj
-         YvMgUTZRGBWBvB6y28l7GhnSzcQIvIeZqS6k7cvDm2c76dtMBtSJx0ypJhbo3dqQ1zwQ
-         gCSC3KCpTio4j1lt0TwrAw7XY2UEcTpJsxAKQHd83O5t1W4NsdCsGbQl+ucb3bIk92su
-         UT6imsMlxAiuIwtVjO46s/t2UtOttudfVMD288QdJy8loTF6l98nue+4Sb8kZ6TWkNq1
-         gn/Q==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=oWulYD7B080MVQfmnSpp87cWzUMLXTr6wp3qPP73Jlc=;
+        b=Aa3gf0rVn+UXxcLOYGQp70TrEQPIIequrVJ9zMGiCp6udjxIQ8Kazoqh0wDrR1dL3N
+         yqKZoRPPm7sZMHI8bNu37kRoDwIEEEUgxrySM8ACD7NkvswaYk7QwaH4ANDK6MjGFA2B
+         lymG274elFcNkvhcm4UvZELFHgciyvp7B2JANal60jVrLsft5ciknrwg8idEJ7Qnzkgi
+         XaBAcDXAC3wmCBjxZDMvr4RVewwrLrw85eBlc5UrIaRQBR6gfjHLemcDQZ20AYhVDHG3
+         YfKVexILIlZOhKWWVPl+fuzx2uAYBFDh3pp+tnXPPmTmFkFqgj9L+LyKvHo8b/yyvdMR
+         jJaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=I36Yq2VwXBdLTsy979OXOJLPrf5I1O04uwmTwfk7AV0=;
-        b=el+Pnfg+Fbje+qxec2DzdDddnHu+vJDzMCKjGP0Fghi2KVKHk1pE6w8BJg2ps4JNmx
-         E1l587E5bLTa7mdOxWR2bIYaZtYFOhcZorOlKaLXeVi+AV7q+8fqGdCxzLpncpM4zy5P
-         /63qfy3KibwqMEttbu670JGr4z+fOubdCUtCZzuNnxBpBn0RuQEwKaGVJvqpz4hPh+7v
-         qiVXONZ//G4wkcjJn6FM0amcczxe+HThcktIEexYlqvqrgGt6VoegggjuaZqvZ2LiW/s
-         ClY+0Xwrh8iQN+evDuyAs0r7/Px5xHDIBjDJyDMMEPsC/r5HQ0dsPkii+McBImXW8kGd
-         8uNg==
-X-Gm-Message-State: APjAAAXVos459A0JGI50yZskZIHW+eMx/jBuU2Ccm4BV7yhf9aQeAp7H
-        2O0CL6HXje2nIEQMUWSG4LOFiAY+eZ8=
-X-Google-Smtp-Source: APXvYqy5MiUiVetTSZ6weYK7h2G0HbJvg8EoGoDMZN3TqjAR6UODgxa2cp1ASQ5wkOShprtBASzzbQ==
-X-Received: by 2002:a5d:8908:: with SMTP id b8mr918621ion.237.1568909102290;
-        Thu, 19 Sep 2019 09:05:02 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id g8sm5902449ioc.0.2019.09.19.09.05.01
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=oWulYD7B080MVQfmnSpp87cWzUMLXTr6wp3qPP73Jlc=;
+        b=rVCOkQx+vkOIEbRXuaYE9FdqtuUqJqwCpqrilPDbLzG5ml2XDMMaNdxlsbwvYzrXjv
+         xKk1GNs8FH0QLAcQ2IZ/VXhuIPdbC2JUhxv2qpbVOq5Dq3f1u3k3pW1HhMPrinehtSrx
+         gSgpWgqXFcdXwP28cp0Cmxz8edt/zz/unhoC8dKAc29oflX67eg20SOslr7hhidcjRqO
+         I0Yr09d+yUJFe04iykI3v0Qtw316iYV2PgW9KPcUYW7USZo4MVpUpvXiGA7/bFj0EXdr
+         WgjrKQoK6i+qZpyVGKVGSeUQvMTh2aYtuwENZul80t0IpDpyVyoMsSRCdxLgSLfB/hc6
+         Ihhw==
+X-Gm-Message-State: APjAAAWjSvUt8M6pLHm07ZWqD4hNrfF70FE/N9xJXJPLGLJW3XPQ3DvW
+        vLWwVCbxg4qEo+kkckxFHfd9ww==
+X-Google-Smtp-Source: APXvYqz/YDgxnx5B4g6INq61NG3EDGiHS7/lv1YfTLwHNxtOzep+r5dUzDw8bxPOTGNKDifK1CzjYg==
+X-Received: by 2002:a05:651c:21b:: with SMTP id y27mr2636904ljn.219.1568909122191;
+        Thu, 19 Sep 2019 09:05:22 -0700 (PDT)
+Received: from localhost.localdomain (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
+        by smtp.gmail.com with ESMTPSA id t6sm1719039ljd.102.2019.09.19.09.05.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2019 09:05:01 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-To:     ghook@amd.com
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Gary Hook <gary.hook@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] crypto: ccp - Release all allocated memory if sha type is invalid
-Date:   Thu, 19 Sep 2019 11:04:48 -0500
-Message-Id: <20190919160449.4303-1-navid.emamdoost@gmail.com>
+        Thu, 19 Sep 2019 09:05:21 -0700 (PDT)
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     ast@kernel.org, daniel@iogearbox.net, kafai@fb.com, andriin@fb.com
+Cc:     yhs@fb.com, netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Subject: [PATCH bpf] libbpf: fix version identification on busybox
+Date:   Thu, 19 Sep 2019 19:05:18 +0300
+Message-Id: <20190919160518.25901-1-ivan.khoronzhuk@linaro.org>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <7ffc6a77-f4e3-7db9-4ec6-53d6e01d881d@amd.com>
-References: <7ffc6a77-f4e3-7db9-4ec6-53d6e01d881d@amd.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Release all allocated memory if sha type is invalid:
-In ccp_run_sha_cmd, if the type of sha is invalid, the allocated
-hmac_buf should be released.
+It's very often for embedded to have stripped version of sort in
+busybox, when no -V option present. It breaks build natively on target
+board causing recursive loop.
 
-v2: fix the goto.
+BusyBox v1.24.1 (2019-04-06 04:09:16 UTC) multi-call binary. \
+Usage: sort [-nrugMcszbdfimSTokt] [-o FILE] [-k \
+start[.offset][opts][,end[.offset][opts]] [-t CHAR] [FILE]...
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Lets modify command a little to avoid -V option.
+
+Fixes: dadb81d0afe732 ("libbpf: make libbpf.map source of truth for libbpf version")
+
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 ---
- drivers/crypto/ccp/ccp-ops.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/ccp/ccp-ops.c b/drivers/crypto/ccp/ccp-ops.c
-index 9bc3c62157d7..440df9208f8f 100644
---- a/drivers/crypto/ccp/ccp-ops.c
-+++ b/drivers/crypto/ccp/ccp-ops.c
-@@ -1782,8 +1782,9 @@ static int ccp_run_sha_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
- 			       LSB_ITEM_SIZE);
- 			break;
- 		default:
-+			kfree(hmac_buf);
- 			ret = -EINVAL;
--			goto e_ctx;
-+			goto e_data;
- 		}
+Based on bpf/master
+
+ tools/lib/bpf/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
+index c6f94cffe06e..a12490ad6215 100644
+--- a/tools/lib/bpf/Makefile
++++ b/tools/lib/bpf/Makefile
+@@ -3,7 +3,7 @@
  
- 		memset(&hmac_cmd, 0, sizeof(hmac_cmd));
+ LIBBPF_VERSION := $(shell \
+ 	grep -oE '^LIBBPF_([0-9.]+)' libbpf.map | \
+-	sort -rV | head -n1 | cut -d'_' -f2)
++	cut -d'_' -f2 | sort -r | head -n1)
+ LIBBPF_MAJOR_VERSION := $(firstword $(subst ., ,$(LIBBPF_VERSION)))
+ 
+ MAKEFLAGS += --no-print-directory
 -- 
 2.17.1
 
