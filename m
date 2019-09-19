@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADBE1C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 570B2C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 825ED21929
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:22:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23C582196F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:22:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931771;
-	bh=suureZVG+145knog9Eb2+hj7W8Jxe3Kfoq+zWj6Ufn4=;
+	s=default; t=1568931775;
+	bh=JZD1Aid+y/Gpw+xCYHlRE+v2aDotVsNhARNQaLCm6K8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=atZyDZkiD7JlzlAl2D4ofExzzcq+mrpnzFH2lKLUkyPpNZNDDzKo2lXQIh99NdLYN
-	 hZiAHZe4lNdVt0qZg5Ak+EHKCH2GAoCCubLa39aMeNM1aUnauZc6d8nF4NLbhrhIT/
-	 xoOQHkJsChb8S4h9bP2OM8RB/BYF8diS0XKqriDY=
+	b=gOat6fr/F7e9q6LzioThkrWeVQsVO/xx1wuzd+mFhiFbhf5khLKlnI+ioRGSo/cZe
+	 0y5esn5FjieAwHTjyk0M82ZTZiNqDwK51wTgCpEGd11Sp8xGEy2db51xkKaEzS/5e+
+	 xHTSGh+d/ukps9ZOOst8Z2E7g0F7lpxOrJN3Wrqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406914AbfISWWu (ORCPT
+        id S2406940AbfISWWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:22:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37984 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:22:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406910AbfISWWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:22:45 -0400
+        id S2406910AbfISWWv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:22:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C89A21920;
-        Thu, 19 Sep 2019 22:22:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0882A21920;
+        Thu, 19 Sep 2019 22:22:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931765;
-        bh=suureZVG+145knog9Eb2+hj7W8Jxe3Kfoq+zWj6Ufn4=;
+        s=default; t=1568931770;
+        bh=JZD1Aid+y/Gpw+xCYHlRE+v2aDotVsNhARNQaLCm6K8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W1a+jjfptd5PxLGfdFthEORsP2GlbVOj14VzSmL3ymKIxBCs3tfxWK5VQTdcPRGhG
-         1zGp1s4gp0tqijqss+vPZ1B1gSxXceLgZ4/5V2ZO/O4Ww5lKn/GhL8sfUYBatoxg82
-         bKUBPuE3YfcDnDzgQI29NTHjUoTNpdWQA6+j+UGs=
+        b=bB2ioGJ8nZpXKHPbjVSrcFeoObL2n68AX/8KRU1Q/E+74gPdWunq4Dg8dsvgXw92G
+         AnKOy7fh1s90dcI/MvAZSBjwtKMhceVG7A5VA22IknktVbinhZl1ojZB8ypQZUF/jB
+         QBoR+M0zRexgIB50P5ZkpS+E8DZZvLRlUCbl9UXs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dongli Zhang <dongli.zhang@oracle.com>,
+        stable@vger.kernel.org, Sean Tranchetti <stranche@codeaurora.org>,
+        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 30/56] xen-netfront: do not assume sk_buff_head list is empty in error handling
-Date:   Fri, 20 Sep 2019 00:04:11 +0200
-Message-Id: <20190919214756.708114014@linuxfoundation.org>
+Subject: [PATCH 4.4 05/56] net: Fix null de-reference of device refcount
+Date:   Fri, 20 Sep 2019 00:03:46 +0200
+Message-Id: <20190919214746.405086721@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214742.483643642@linuxfoundation.org>
 References: <20190919214742.483643642@linuxfoundation.org>
@@ -59,53 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dongli Zhang <dongli.zhang@oracle.com>
+From: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
 
-[ Upstream commit 00b368502d18f790ab715e055869fd4bb7484a9b ]
+[ Upstream commit 10cc514f451a0f239aa34f91bc9dc954a9397840 ]
 
-When skb_shinfo(skb) is not able to cache extra fragment (that is,
-skb_shinfo(skb)->nr_frags >= MAX_SKB_FRAGS), xennet_fill_frags() assumes
-the sk_buff_head list is already empty. As a result, cons is increased only
-by 1 and returns to error handling path in xennet_poll().
+In event of failure during register_netdevice, free_netdev is
+invoked immediately. free_netdev assumes that all the netdevice
+refcounts have been dropped prior to it being called and as a
+result frees and clears out the refcount pointer.
 
-However, if the sk_buff_head list is not empty, queue->rx.rsp_cons may be
-set incorrectly. That is, queue->rx.rsp_cons would point to the rx ring
-buffer entries whose queue->rx_skbs[i] and queue->grant_rx_ref[i] are
-already cleared to NULL. This leads to NULL pointer access in the next
-iteration to process rx ring buffer entries.
+However, this is not necessarily true as some of the operations
+in the NETDEV_UNREGISTER notifier handlers queue RCU callbacks for
+invocation after a grace period. The IPv4 callback in_dev_rcu_put
+tries to access the refcount after free_netdev is called which
+leads to a null de-reference-
 
-Below is how xennet_poll() does error handling. All remaining entries in
-tmpq are accounted to queue->rx.rsp_cons without assuming how many
-outstanding skbs are remained in the list.
+44837.761523:   <6> Unable to handle kernel paging request at
+                    virtual address 0000004a88287000
+44837.761651:   <2> pc : in_dev_finish_destroy+0x4c/0xc8
+44837.761654:   <2> lr : in_dev_finish_destroy+0x2c/0xc8
+44837.762393:   <2> Call trace:
+44837.762398:   <2>  in_dev_finish_destroy+0x4c/0xc8
+44837.762404:   <2>  in_dev_rcu_put+0x24/0x30
+44837.762412:   <2>  rcu_nocb_kthread+0x43c/0x468
+44837.762418:   <2>  kthread+0x118/0x128
+44837.762424:   <2>  ret_from_fork+0x10/0x1c
 
- 985 static int xennet_poll(struct napi_struct *napi, int budget)
-... ...
-1032           if (unlikely(xennet_set_skb_gso(skb, gso))) {
-1033                   __skb_queue_head(&tmpq, skb);
-1034                   queue->rx.rsp_cons += skb_queue_len(&tmpq);
-1035                   goto err;
-1036           }
+Fix this by waiting for the completion of the call_rcu() in
+case of register_netdevice errors.
 
-It is better to always have the error handling in the same way.
-
-Fixes: ad4f15dc2c70 ("xen/netfront: don't bug in case of too many frags")
-Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+Fixes: 93ee31f14f6f ("[NET]: Fix free_netdev on register_netdev failure.")
+Cc: Sean Tranchetti <stranche@codeaurora.org>
+Signed-off-by: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/xen-netfront.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/core/dev.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/net/xen-netfront.c
-+++ b/drivers/net/xen-netfront.c
-@@ -893,7 +893,7 @@ static RING_IDX xennet_fill_frags(struct
- 			__pskb_pull_tail(skb, pull_to - skb_headlen(skb));
- 		}
- 		if (unlikely(skb_shinfo(skb)->nr_frags >= MAX_SKB_FRAGS)) {
--			queue->rx.rsp_cons = ++cons;
-+			queue->rx.rsp_cons = ++cons + skb_queue_len(list);
- 			kfree_skb(nskb);
- 			return ~0U;
- 		}
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -6837,6 +6837,8 @@ int register_netdevice(struct net_device
+ 	ret = notifier_to_errno(ret);
+ 	if (ret) {
+ 		rollback_registered(dev);
++		rcu_barrier();
++
+ 		dev->reg_state = NETREG_UNREGISTERED;
+ 	}
+ 	/*
 
 
