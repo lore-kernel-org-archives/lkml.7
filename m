@@ -2,96 +2,297 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C3DC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 12:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD32C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 12:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87AB721907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 12:55:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8B3E214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 12:56:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="TgF8fD+c"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="oBEzttwM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390439AbfISMzo (ORCPT
+        id S2390460AbfISM4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 08:55:44 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:37362 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389212AbfISMzo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 08:55:44 -0400
-Received: from nazgul.tnic (unknown [193.86.95.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C9A5B1EC04BC;
-        Thu, 19 Sep 2019 14:55:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1568897742;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=8r+UmcwsFhZ9VWdz0aPZcHPp1vQPeZJ3k2MKS/v1A2U=;
-        b=TgF8fD+cZ9m2VONduQeIPB8NafkJ6pETyTk6/R9hI9AlhUwkgTKntCCiji3BLDRgIsz/Zv
-        Gtb/mvJADXZMHv2kwU7hjT1oDfVa7rA7osXuAyJvXcUGjkcnA/L/KIZJGk8gNXA5H3E6kk
-        3MikCL7sJd/slsJOLVUgFiPYcua6+C4=
-Date:   Thu, 19 Sep 2019 14:55:42 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86-ml <x86@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] Improve memset
-Message-ID: <20190919125542.GB18148@nazgul.tnic>
-References: <20190913072237.GA12381@zn.tnic>
- <20190917201021.evoxxj7vkcb45rpg@treble>
- <CAHk-=wjDiDOcz2GHC88rV8gySCMZZko8PFW-ywJDkeY5n+je9Q@mail.gmail.com>
+        Thu, 19 Sep 2019 08:56:18 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42576 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390446AbfISM4R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 08:56:17 -0400
+Received: by mail-wr1-f67.google.com with SMTP id n14so2963378wrw.9
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 05:56:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FbuzH0daMt+MsoMW45qZdAf/7ra0L3lDjQjOsI2VHWQ=;
+        b=oBEzttwMR9rbIp1WYQ0uoKtd9fQVsAyv5adJg6k2jsN17FRK/uMFdPM+iWYhwyHUgY
+         Wv9otQwbkODuQaxad4JWGpV+NnSTy0AfrrK7qT/2Mq1omJkblCtRPp0vvickWuGdaEAo
+         9LwjkJo26aBKXkTzaguMdcy5yUjl0IFXDDEg5CshxjaSKj8PDWoO5cf1IWeIlv817pWl
+         GnFeewZA9/Mdg5g4HJZ0UuYrwLJvgs1twQCCW1q/dEnO7Yl7KGVIfz57DQCCrjeFEzHv
+         zt4PnAUp2JurM57cC4gFbCpH/qTbDXQlHCYpUwhhYXCFflKZubX3QVAjqvoPmuALF7VR
+         afzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FbuzH0daMt+MsoMW45qZdAf/7ra0L3lDjQjOsI2VHWQ=;
+        b=kj1R7ExI4yl7R0v9CgzGNCrSeSqgK3OowTLZLgXDTo68Yoym2VpIhOWlkM2HK69Mcd
+         aIfUSTBsQbzHKy3OaF3sdQv1SpJ01O5reBUxTkPLIIyDdyXrTg3hriGvw7d1EgeA+V1b
+         9gzRGzS8sqiLrJUth+2TUTFNCRojKxR9FF5N7TNy8fQYB6n7RmRhzncZ1dv8Jn5xLxTh
+         wRjM1M2qD3nBB0i/cR6xGTV2t4G2SQewCCn7m9qr52BdcOgqaTnQZsAp4w+U+BDw6e4t
+         Yf0/3aPmT2afYORIikt2S7tvzMsdg6XDgqkprTPrRkmCBo/C1IqwgQNriPyz+FOcIKxT
+         agkg==
+X-Gm-Message-State: APjAAAXThnvyAvrydmuVUKHs9UJJOqZ0M3g9YXYKMPQh6yQs9yrST2JW
+        cG6gP+UT+BqHSp5yCv4j8t91svzU3WmYFU0ZExubaw==
+X-Google-Smtp-Source: APXvYqxO8H0t5ovhrPmidpWD1aY3uJm4qdbUX/FofBcjV1DfA+0t9o9O4kMGJdkYbxAEiOpYaWykN8tDWG7Vnyi6zxc=
+X-Received: by 2002:a05:6000:110f:: with SMTP id z15mr6556036wrw.328.1568897774029;
+ Thu, 19 Sep 2019 05:56:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wjDiDOcz2GHC88rV8gySCMZZko8PFW-ywJDkeY5n+je9Q@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190904161245.111924-1-anup.patel@wdc.com> <20190904161245.111924-4-anup.patel@wdc.com>
+In-Reply-To: <20190904161245.111924-4-anup.patel@wdc.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Thu, 19 Sep 2019 18:26:02 +0530
+Message-ID: <CAAhSdy1n34wi9iR-QViBFo_ApQx-2R6Jkd8Zpvyt9aLB91jDSw@mail.gmail.com>
+Subject: Re: [PATCH v7 02/21] RISC-V: Add bitmap reprensenting ISA features
+ common across CPUs
+To:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Anup Patel <Anup.Patel@wdc.com>
+Cc:     Palmer Dabbelt <palmer@sifive.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim K <rkrcmar@redhat.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexander Graf <graf@amazon.com>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 01:45:20PM -0700, Linus Torvalds wrote:
-> That sounds better, but I'm a bit nervous about the whole thing
-> because who knows when the alternatives code itself internally uses
-> memset() and then we have a nasty little chicken-and-egg problem.
+Hi Paul,
 
-You mean memcpy()...?
+On Wed, Sep 4, 2019 at 9:43 PM Anup Patel <Anup.Patel@wdc.com> wrote:
+>
+> This patch adds riscv_isa bitmap which represents Host ISA features
+> common across all Host CPUs. The riscv_isa is not same as elf_hwcap
+> because elf_hwcap will only have ISA features relevant for user-space
+> apps whereas riscv_isa will have ISA features relevant to both kernel
+> and user-space apps.
+>
+> One of the use-case for riscv_isa bitmap is in KVM hypervisor where
+> we will use it to do following operations:
+>
+> 1. Check whether hypervisor extension is available
+> 2. Find ISA features that need to be virtualized (e.g. floating
+>    point support, vector extension, etc.)
 
-> Also, for it to make sense to inline rep stosb, I think we also need
-> to just make the calling conventions for the alternative calls be that
-> they _don't_ clobber other registers than the usual rep ones
-> (cx/di/si). Otherwise one big code generation advantage of inlining
-> the thing just goes away.
+I had addressed your previous comments on this patch by
+making riscv_isa as bitmap to cover Z-extensions.
 
-Yah, that is tricky and I have no smart idea how. The ABI puts the
-operands in rdi,rsi,rdx, ... while REP; STOSB wants them in rax,rcx,rdi.
-And if it were only that, then we could probably accept the 2 movs and
-a push but then the old functions clobber three more: "rdx", "r8", "r9".
+Please review it again.
 
-I could try to rewrite the old functions to see if I can save some regs...
+Regards,
+Anup
 
-> On the whole I get the feeling that this is all painful complexity and
-> we shouldn't do it. At least not without some hard performance numbers
-> for some huge improvement, which I don't think we've seen.
-
-Yap, it is starting to become hairy.
-
-> Because I find the thing fascinating conceptually, but am not at all
-> convinced I want to deal with the pain in practice ;)
-
-I hear ya.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-ECO tip #101: Trim your mails when you reply.
---
+>
+> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> Reviewed-by: Alexander Graf <graf@amazon.com>
+> ---
+>  arch/riscv/include/asm/hwcap.h | 26 +++++++++++
+>  arch/riscv/kernel/cpufeature.c | 79 ++++++++++++++++++++++++++++++++--
+>  2 files changed, 102 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
+> index 7ecb7c6a57b1..9b657375aa51 100644
+> --- a/arch/riscv/include/asm/hwcap.h
+> +++ b/arch/riscv/include/asm/hwcap.h
+> @@ -8,6 +8,7 @@
+>  #ifndef __ASM_HWCAP_H
+>  #define __ASM_HWCAP_H
+>
+> +#include <linux/bits.h>
+>  #include <uapi/asm/hwcap.h>
+>
+>  #ifndef __ASSEMBLY__
+> @@ -22,5 +23,30 @@ enum {
+>  };
+>
+>  extern unsigned long elf_hwcap;
+> +
+> +#define RISCV_ISA_EXT_a                ('a' - 'a')
+> +#define RISCV_ISA_EXT_c                ('c' - 'a')
+> +#define RISCV_ISA_EXT_d                ('d' - 'a')
+> +#define RISCV_ISA_EXT_f                ('f' - 'a')
+> +#define RISCV_ISA_EXT_h                ('h' - 'a')
+> +#define RISCV_ISA_EXT_i                ('i' - 'a')
+> +#define RISCV_ISA_EXT_m                ('m' - 'a')
+> +#define RISCV_ISA_EXT_s                ('s' - 'a')
+> +#define RISCV_ISA_EXT_u                ('u' - 'a')
+> +#define RISCV_ISA_EXT_zicsr    (('z' - 'a') + 1)
+> +#define RISCV_ISA_EXT_zifencei (('z' - 'a') + 2)
+> +#define RISCV_ISA_EXT_zam      (('z' - 'a') + 3)
+> +#define RISCV_ISA_EXT_ztso     (('z' - 'a') + 4)
+> +
+> +#define RISCV_ISA_EXT_MAX      256
+> +
+> +unsigned long riscv_isa_extension_base(const unsigned long *isa_bitmap);
+> +
+> +#define riscv_isa_extension_mask(ext) BIT_MASK(RISCV_ISA_EXT_##ext)
+> +
+> +bool __riscv_isa_extension_available(const unsigned long *isa_bitmap, int bit);
+> +#define riscv_isa_extension_available(isa_bitmap, ext) \
+> +       __riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_##ext)
+> +
+>  #endif
+>  #endif
+> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+> index b1ade9a49347..4ce71ce5e290 100644
+> --- a/arch/riscv/kernel/cpufeature.c
+> +++ b/arch/riscv/kernel/cpufeature.c
+> @@ -6,21 +6,64 @@
+>   * Copyright (C) 2017 SiFive
+>   */
+>
+> +#include <linux/bitmap.h>
+>  #include <linux/of.h>
+>  #include <asm/processor.h>
+>  #include <asm/hwcap.h>
+>  #include <asm/smp.h>
+>
+>  unsigned long elf_hwcap __read_mostly;
+> +
+> +/* Host ISA bitmap */
+> +static DECLARE_BITMAP(riscv_isa, RISCV_ISA_EXT_MAX) __read_mostly;
+> +
+>  #ifdef CONFIG_FPU
+>  bool has_fpu __read_mostly;
+>  #endif
+>
+> +/**
+> + * riscv_isa_extension_base - Get base extension word
+> + *
+> + * @isa_bitmap ISA bitmap to use
+> + * @returns base extension word as unsigned long value
+> + *
+> + * NOTE: If isa_bitmap is NULL then Host ISA bitmap will be used.
+> + */
+> +unsigned long riscv_isa_extension_base(const unsigned long *isa_bitmap)
+> +{
+> +       if (!isa_bitmap)
+> +               return riscv_isa[0];
+> +       return isa_bitmap[0];
+> +}
+> +EXPORT_SYMBOL_GPL(riscv_isa_extension_base);
+> +
+> +/**
+> + * __riscv_isa_extension_available - Check whether given extension
+> + * is available or not
+> + *
+> + * @isa_bitmap ISA bitmap to use
+> + * @bit bit position of the desired extension
+> + * @returns true or false
+> + *
+> + * NOTE: If isa_bitmap is NULL then Host ISA bitmap will be used.
+> + */
+> +bool __riscv_isa_extension_available(const unsigned long *isa_bitmap, int bit)
+> +{
+> +       const unsigned long *bmap = (isa_bitmap) ? isa_bitmap : riscv_isa;
+> +
+> +       if (bit >= RISCV_ISA_EXT_MAX)
+> +               return false;
+> +
+> +       return test_bit(bit, bmap) ? true : false;
+> +}
+> +EXPORT_SYMBOL_GPL(__riscv_isa_extension_available);
+> +
+>  void riscv_fill_hwcap(void)
+>  {
+>         struct device_node *node;
+>         const char *isa;
+> -       size_t i;
+> +       char print_str[BITS_PER_LONG+1];
+> +       size_t i, j, isa_len;
+>         static unsigned long isa2hwcap[256] = {0};
+>
+>         isa2hwcap['i'] = isa2hwcap['I'] = COMPAT_HWCAP_ISA_I;
+> @@ -32,8 +75,11 @@ void riscv_fill_hwcap(void)
+>
+>         elf_hwcap = 0;
+>
+> +       bitmap_zero(riscv_isa, RISCV_ISA_EXT_MAX);
+> +
+>         for_each_of_cpu_node(node) {
+>                 unsigned long this_hwcap = 0;
+> +               unsigned long this_isa = 0;
+>
+>                 if (riscv_of_processor_hartid(node) < 0)
+>                         continue;
+> @@ -43,8 +89,20 @@ void riscv_fill_hwcap(void)
+>                         continue;
+>                 }
+>
+> -               for (i = 0; i < strlen(isa); ++i)
+> +               i = 0;
+> +               isa_len = strlen(isa);
+> +#if defined(CONFIG_32BIT)
+> +               if (!strncmp(isa, "rv32", 4))
+> +                       i += 4;
+> +#elif defined(CONFIG_64BIT)
+> +               if (!strncmp(isa, "rv64", 4))
+> +                       i += 4;
+> +#endif
+> +               for (; i < isa_len; ++i) {
+>                         this_hwcap |= isa2hwcap[(unsigned char)(isa[i])];
+> +                       if ('a' <= isa[i] && isa[i] <= 'z')
+> +                               this_isa |= (1UL << (isa[i] - 'a'));
+> +               }
+>
+>                 /*
+>                  * All "okay" hart should have same isa. Set HWCAP based on
+> @@ -55,6 +113,11 @@ void riscv_fill_hwcap(void)
+>                         elf_hwcap &= this_hwcap;
+>                 else
+>                         elf_hwcap = this_hwcap;
+> +
+> +               if (riscv_isa[0])
+> +                       riscv_isa[0] &= this_isa;
+> +               else
+> +                       riscv_isa[0] = this_isa;
+>         }
+>
+>         /* We don't support systems with F but without D, so mask those out
+> @@ -64,7 +127,17 @@ void riscv_fill_hwcap(void)
+>                 elf_hwcap &= ~COMPAT_HWCAP_ISA_F;
+>         }
+>
+> -       pr_info("elf_hwcap is 0x%lx\n", elf_hwcap);
+> +       memset(print_str, 0, sizeof(print_str));
+> +       for (i = 0, j = 0; i < BITS_PER_LONG; i++)
+> +               if (riscv_isa[0] & BIT_MASK(i))
+> +                       print_str[j++] = (char)('a' + i);
+> +       pr_info("riscv: ISA extensions %s\n", print_str);
+> +
+> +       memset(print_str, 0, sizeof(print_str));
+> +       for (i = 0, j = 0; i < BITS_PER_LONG; i++)
+> +               if (elf_hwcap & BIT_MASK(i))
+> +                       print_str[j++] = (char)('a' + i);
+> +       pr_info("riscv: ELF capabilities %s\n", print_str);
+>
+>  #ifdef CONFIG_FPU
+>         if (elf_hwcap & (COMPAT_HWCAP_ISA_F | COMPAT_HWCAP_ISA_D))
+> --
+> 2.17.1
+>
