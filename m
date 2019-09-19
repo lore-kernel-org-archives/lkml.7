@@ -2,152 +2,114 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA13DC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D088C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:27:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C491F21BE5
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:25:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FB6C20665
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:27:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="TU+WvyEN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391121AbfISPZS convert rfc822-to-8bit (ORCPT
+        id S2391247AbfISP1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 11:25:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42200 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388084AbfISPZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 11:25:18 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 82AB181DE7;
-        Thu, 19 Sep 2019 15:25:17 +0000 (UTC)
-Received: from gondolin (dhcp-192-230.str.redhat.com [10.33.192.230])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CBCE860C18;
-        Thu, 19 Sep 2019 15:25:07 +0000 (UTC)
-Date:   Thu, 19 Sep 2019 17:25:05 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Matthew Rosato <mjrosato@linux.ibm.com>
-Cc:     sebott@linux.ibm.com, gerald.schaefer@de.ibm.com,
-        pasic@linux.ibm.com, borntraeger@de.ibm.com, walling@linux.ibm.com,
-        linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org,
-        joro@8bytes.org, linux-kernel@vger.kernel.org,
-        alex.williamson@redhat.com, kvm@vger.kernel.org,
-        heiko.carstens@de.ibm.com, robin.murphy@arm.com, gor@linux.ibm.com,
-        pmorel@linux.ibm.com
-Subject: Re: [PATCH v4 4/4] vfio: pci: Using a device region to retrieve
- zPCI information
-Message-ID: <20190919172505.2eb075f8.cohuck@redhat.com>
-In-Reply-To: <1567815231-17940-5-git-send-email-mjrosato@linux.ibm.com>
-References: <1567815231-17940-1-git-send-email-mjrosato@linux.ibm.com>
-        <1567815231-17940-5-git-send-email-mjrosato@linux.ibm.com>
-Organization: Red Hat GmbH
+        Thu, 19 Sep 2019 11:27:52 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41184 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391234AbfISP1v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 11:27:51 -0400
+Received: by mail-ot1-f68.google.com with SMTP id g13so3427121otp.8
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 08:27:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BQhJr69/vPd/U/psJVJ1y2BU+JZc/GqWvX4OAnagwrY=;
+        b=TU+WvyEN5IqmhO1QeCdr0zyP5aga8ovoC/U2eRs61E+zTYw6pidSqTlkToVYeiIHo6
+         vCcaYto8j9wnV9tJrRMQRX0nadMJFe7U6CZLGRjbdhBK35pUGFPhvnnu9BcvNG6vl1yA
+         wtSwB0eb62xfZVsN+sGz7OcIHWAUcDVZ8eQ0ZxSoKRT+1F202vpKjLle/8YGBqDDH793
+         uBqFTCNdFgu9r/ReamEEtBFyyRKuV9ACURztz002sq82ARVTbabM+KjTIkK7pfmcHezX
+         2DxqyGFnmk7tvKZz12hstb8UMYVmd4W5+0DAM8450Uy88YRbBd9mPpjxKKhT19A+kApK
+         /9sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BQhJr69/vPd/U/psJVJ1y2BU+JZc/GqWvX4OAnagwrY=;
+        b=jY6S6EnlyKZd+f2DvyqM81pPIFghx3w66nwxJcXzdRdxNpx3hm2w6reKraV4nG3I6T
+         rtED/RjrfsdEB9WsfE6nQjat3nlyEIonZP7/PsJVknqB+2w8jbjnZJAEb5jkJ3a/ipvB
+         pMEkrEfRw5LKV2AoWHfapDAdDvLMeurTWbPyF3DByNwEg7d1BAqKcM5JCp065+8il35E
+         wg0MO0wSU0bKIaZgwcXBbBip8UaCBfv0++ZwaDTQkAOWbpKpwz8KODtbFHvrWlfLfqrv
+         xO6Hwdfb4eRhuoPjnJaipD9Mu4JZmzg4z9WDXvK0aJkL4vPzWBp8FAJ7Str4JxyeOEoV
+         bqfA==
+X-Gm-Message-State: APjAAAXN9NrVqVmTWI3j9AG09Iu40b3Dy8kx8HiQcgR3tA10785aVePU
+        1BSOpac6Jr+jJswyLaCsLAI6FV7dDg5YOVmu89Zhtg==
+X-Google-Smtp-Source: APXvYqxSV6mNOx+JelZSXq1gKYybEh6/xyhCkyebC74L1X6VZAart17bTvoaHHN9s5S2diRF49ItUjuFyqqea11bCLs=
+X-Received: by 2002:a9d:6014:: with SMTP id h20mr7012748otj.207.1568906871267;
+ Thu, 19 Sep 2019 08:27:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8BIT
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 19 Sep 2019 15:25:17 +0000 (UTC)
+References: <20190919150147.GO3642@sirena.co.uk>
+In-Reply-To: <20190919150147.GO3642@sirena.co.uk>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 19 Sep 2019 08:27:40 -0700
+Message-ID: <CAPcyv4hq2N2H-HszhEm-rT2YziTLSeU1A5ea19-bDvSXMZLjCw@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the nvdimm tree with the
+ libnvdimm-fixes tree
+To:     Mark Brown <broonie@kernel.org>
+Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Yi Zhang <yi.zhang@redhat.com>, Jeff Moyer <jmoyer@redhat.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  6 Sep 2019 20:13:51 -0400
-Matthew Rosato <mjrosato@linux.ibm.com> wrote:
+On Thu, Sep 19, 2019 at 8:02 AM Mark Brown <broonie@kernel.org> wrote:
+>
+> Hi all,
+>
+> Today's linux-next merge of the nvdimm tree got a conflict in:
+>
+>   drivers/nvdimm/pfn_devs.c
+>
+> between commit:
+>
+>   274b924088e935 ("libnvdimm/pfn: Fix namespace creation on misaligned addresses")
+>
+> from the libnvdimm-fixes tree and commit:
+>
+>   edbb52c24441ab ("libnvdimm/pfn_dev: Add page size and struct page size to pfn superblock")
+>
+> from the nvdimm tree.
+>
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+>
+> diff --cc drivers/nvdimm/pfn_devs.c
+> index cb98b8fe786e2,80c7992bc5389..0000000000000
+> --- a/drivers/nvdimm/pfn_devs.c
+> +++ b/drivers/nvdimm/pfn_devs.c
+> @@@ -724,9 -786,10 +788,11 @@@ static int nd_pfn_init(struct nd_pfn *n
+>         memcpy(pfn_sb->uuid, nd_pfn->uuid, 16);
+>         memcpy(pfn_sb->parent_uuid, nd_dev_to_uuid(&ndns->dev), 16);
+>         pfn_sb->version_major = cpu_to_le16(1);
+> -       pfn_sb->version_minor = cpu_to_le16(3);
+> +       pfn_sb->version_minor = cpu_to_le16(4);
+>  +      pfn_sb->end_trunc = cpu_to_le32(end_trunc);
+>         pfn_sb->align = cpu_to_le32(nd_pfn->align);
+> +       pfn_sb->page_struct_size = cpu_to_le16(MAX_STRUCT_PAGE_SIZE);
+> +       pfn_sb->page_size = cpu_to_le32(PAGE_SIZE);
+>         checksum = nd_sb_checksum((struct nd_gen_sb *) pfn_sb);
+>         pfn_sb->checksum = cpu_to_le64(checksum);
 
-> From: Pierre Morel <pmorel@linux.ibm.com>
-> 
-> We define a new configuration entry for VFIO/PCI, VFIO_PCI_ZDEV
-> 
-> When the VFIO_PCI_ZDEV feature is configured we initialize
-> a new device region, VFIO_REGION_SUBTYPE_ZDEV_CLP, to hold
-> the information from the ZPCI device the use
-> 
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
-> ---
->  drivers/vfio/pci/Kconfig            |  7 +++
->  drivers/vfio/pci/Makefile           |  1 +
->  drivers/vfio/pci/vfio_pci.c         |  9 ++++
->  drivers/vfio/pci/vfio_pci_private.h | 10 +++++
->  drivers/vfio/pci/vfio_pci_zdev.c    | 85 +++++++++++++++++++++++++++++++++++++
->  5 files changed, 112 insertions(+)
->  create mode 100644 drivers/vfio/pci/vfio_pci_zdev.c
-> 
-> diff --git a/drivers/vfio/pci/Kconfig b/drivers/vfio/pci/Kconfig
-> index ac3c1dd..d4562a8 100644
-> --- a/drivers/vfio/pci/Kconfig
-> +++ b/drivers/vfio/pci/Kconfig
-> @@ -45,3 +45,10 @@ config VFIO_PCI_NVLINK2
->  	depends on VFIO_PCI && PPC_POWERNV
->  	help
->  	  VFIO PCI support for P9 Witherspoon machine with NVIDIA V100 GPUs
-> +
-> +config VFIO_PCI_ZDEV
-> +	bool "VFIO PCI Generic for ZPCI devices"
-> +	depends on VFIO_PCI && S390
-> +	default y
-> +	help
-> +	  VFIO PCI support for S390 Z-PCI devices
-
-From that description, I'd have no idea whether I'd want that or not.
-Is there any downside to enabling it?
-
-> diff --git a/drivers/vfio/pci/Makefile b/drivers/vfio/pci/Makefile
-> index f027f8a..781e080 100644
-> --- a/drivers/vfio/pci/Makefile
-> +++ b/drivers/vfio/pci/Makefile
-> @@ -3,5 +3,6 @@
->  vfio-pci-y := vfio_pci.o vfio_pci_intrs.o vfio_pci_rdwr.o vfio_pci_config.o
->  vfio-pci-$(CONFIG_VFIO_PCI_IGD) += vfio_pci_igd.o
->  vfio-pci-$(CONFIG_VFIO_PCI_NVLINK2) += vfio_pci_nvlink2.o
-> +vfio-pci-$(CONFIG_VFIO_PCI_ZDEV) += vfio_pci_zdev.o
->  
->  obj-$(CONFIG_VFIO_PCI) += vfio-pci.o
-> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-> index 703948c..b40544a 100644
-> --- a/drivers/vfio/pci/vfio_pci.c
-> +++ b/drivers/vfio/pci/vfio_pci.c
-> @@ -356,6 +356,15 @@ static int vfio_pci_enable(struct vfio_pci_device *vdev)
->  		}
->  	}
->  
-> +	if (IS_ENABLED(CONFIG_VFIO_PCI_ZDEV)) {
-> +		ret = vfio_pci_zdev_init(vdev);
-> +		if (ret) {
-> +			dev_warn(&vdev->pdev->dev,
-> +				 "Failed to setup ZDEV regions\n");
-> +			goto disable_exit;
-> +		}
-> +	}
-> +
->  	vfio_pci_probe_mmaps(vdev);
->  
->  	return 0;
-> diff --git a/drivers/vfio/pci/vfio_pci_private.h b/drivers/vfio/pci/vfio_pci_private.h
-> index ee6ee91..08e02f5 100644
-> --- a/drivers/vfio/pci/vfio_pci_private.h
-> +++ b/drivers/vfio/pci/vfio_pci_private.h
-> @@ -186,4 +186,14 @@ static inline int vfio_pci_ibm_npu2_init(struct vfio_pci_device *vdev)
->  	return -ENODEV;
->  }
->  #endif
-> +
-> +#ifdef CONFIG_VFIO_PCI_ZDEV
-> +extern int vfio_pci_zdev_init(struct vfio_pci_device *vdev);
-> +#else
-> +static inline int vfio_pci_zdev_init(struct vfio_pci_device *vdev)
-> +{
-> +	return -ENODEV;
-
-If you really want to have this configurable, why not just return 0
-here and skip the IS_ENABLED check above?
-
-> +}
-> +#endif
-> +
->  #endif /* VFIO_PCI_PRIVATE_H */
-
-(...)
+Yes, looks correct. Apologies for not highlighting this conflict in advance.
