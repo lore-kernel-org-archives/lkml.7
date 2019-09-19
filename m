@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D413CC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:14:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4453EC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A58921D7B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:14:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1926F2196F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:14:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931257;
-	bh=RBiB+nszUOZlllJwJQPDLHwFxoOujyJoImu0eDIhmHY=;
+	s=default; t=1568931260;
+	bh=/zn1JWC4udK02VZdQPPerR33ohGRkYLn8Tcfj/DZzDE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eMroVF7cQvb5SCeTXfsemc9a0JpPSBxKZyzeHHwYFZx2lz+pDRVSJLD2b6MmUMGFV
-	 RHTBv4W6jo3/dkByVcoF4zx/YJDjHy/KAAQJ+epAj0VrO42IkfhPeLth6STFkhMZZh
-	 QqxQDjlS7EgKmBXs0En6BfyeqEKXNePNEcMKOTzw=
+	b=xHv+YTiJsx9wXscMMGlCbDTNX8sFaC+3wwu9cwXYe8dnTZtyJ4HHse5t2rk775+/r
+	 9ltQyGf60ZqZzZA4CHzjTV7nRGqWB7ahEpODbEyPUSuaSZzLo5cFkd7HTzllT27jWq
+	 XGDV5YX4RD44540QVmrVDFQwarowNOedIiuSrp4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392230AbfISWOP (ORCPT
+        id S2391411AbfISWOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:14:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53610 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:14:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392166AbfISWOO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:14:14 -0400
+        id S2392224AbfISWOP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:14:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A38F7218AF;
-        Thu, 19 Sep 2019 22:14:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31F4A21928;
+        Thu, 19 Sep 2019 22:14:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931252;
-        bh=RBiB+nszUOZlllJwJQPDLHwFxoOujyJoImu0eDIhmHY=;
+        s=default; t=1568931254;
+        bh=/zn1JWC4udK02VZdQPPerR33ohGRkYLn8Tcfj/DZzDE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U28ZDNA+DN3laqVcT6nCUiOsQ+eU8Ne8yyQvGwLM+Iue8tIgnfW0IVtFbW+LXjBvB
-         1kBfxcJOe1lcv2x3jpkJEYe5/7yxTAORxgz0FlF/HJBBXbN+Zkx9TOkvl7cyoqvB1E
-         sAllOh9/xSjhuGAr329sAJUgoxNwWNjoJFNJ6Xd4=
+        b=g0ELyCmBiuGglpNdDq9/LWB/kv+0L57NCYg+IvpHjzcuZfhtqbV2ivtX6k0vbzWzv
+         ncOFwf6xVWyJbOhHcWLkbCunCt3SnykV1enTkJ1fv052+huQ4wodm8bL0gBsSeezu1
+         lhcxUN5G8NgjU+fCqePjHHxHbsW34IhnERGqsO5Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Krzysztof Adamski <krzysztof.adamski@nokia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>, acme@kernel.org,
+        Josh Hunt <johunt@akamai.com>, bpuranda@akamai.com,
+        mingo@redhat.com, jolsa@redhat.com, tglx@linutronix.de,
+        namhyung@kernel.org, alexander.shishkin@linux.intel.com,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 58/79] i2c: designware: Synchronize IRQs when unregistering slave client
-Date:   Fri, 20 Sep 2019 00:03:43 +0200
-Message-Id: <20190919214812.510175662@linuxfoundation.org>
+Subject: [PATCH 4.19 59/79] perf/x86/intel: Restrict period on Nehalem
+Date:   Fri, 20 Sep 2019 00:03:44 +0200
+Message-Id: <20190919214812.680108137@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214807.612593061@linuxfoundation.org>
 References: <20190919214807.612593061@linuxfoundation.org>
@@ -62,36 +63,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+From: Josh Hunt <johunt@akamai.com>
 
-[ Upstream commit c486dcd2f1bbdd524a1e0149734b79e4ae329650 ]
+[ Upstream commit 44d3bbb6f5e501b873218142fe08cdf62a4ac1f3 ]
 
-Make sure interrupt handler i2c_dw_irq_handler_slave() has finished
-before clearing the the dev->slave pointer in i2c_dw_unreg_slave().
+We see our Nehalem machines reporting 'perfevents: irq loop stuck!' in
+some cases when using perf:
 
-There is possibility for a race if i2c_dw_irq_handler_slave() is running
-on another CPU while clearing the dev->slave pointer.
-
-Reported-by: Krzysztof Adamski <krzysztof.adamski@nokia.com>
-Reported-by: Wolfram Sang <wsa@the-dreams.de>
-Signed-off-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+perfevents: irq loop stuck!
+WARNING: CPU: 0 PID: 3485 at arch/x86/events/intel/core.c:2282 intel_pmu_handle_irq+0x37b/0x530
+...
+RIP: 0010:intel_pmu_handle_irq+0x37b/0x530
+...
+Call Trace:
+<NMI>
+? perf_event_nmi_handler+0x2e/0x50
+? intel_pmu_save_and_restart+0x50/0x50
+perf_event_nmi_handler+0x2e/0x50
+nmi_handle+0x6e/0x120
+default_do_nmi+0x3e/0x100
+do_nmi+0x102/0x160
+end_repeat_nmi+0x16/0x50
+...
+? native_write_msr+0x6/0x20
+? native_write_msr+0x6/0x20
+</NMI>
+intel_pmu_enable_event+0x1ce/0x1f0
+x86_pmu_start+0x78/0xa0
+x86_pmu_enable+0x252/0x310
+__perf_event_task_sched_in+0x181/0x190
+? __switch_to_asm+0x41/0x70
+? __switch_to_asm+0x35/0x70
+? __switch_to_asm+0x41/0x70
+? __switch_to_asm+0x35/0x70
+finish_task_switch+0x158/0x260
+__schedule+0x2f6/0x840
+? hrtimer_start_range_ns+0x153/0x210
+schedule+0x32/0x80
+schedule_hrtimeout_range_clock+0x8a/0x100
+? hrtimer_init+0x120/0x120
+ep_poll+0x2f7/0x3a0
+? wake_up_q+0x60/0x60
+do_epoll_wait+0xa9/0xc0
+__x64_sys_epoll_wait+0x1a/0x20
+do_syscall_64+0x4e/0x110
+entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x7fdeb1e96c03
+...
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: acme@kernel.org
+Cc: Josh Hunt <johunt@akamai.com>
+Cc: bpuranda@akamai.com
+Cc: mingo@redhat.com
+Cc: jolsa@redhat.com
+Cc: tglx@linutronix.de
+Cc: namhyung@kernel.org
+Cc: alexander.shishkin@linux.intel.com
+Link: https://lkml.kernel.org/r/1566256411-18820-1-git-send-email-johunt@akamai.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-designware-slave.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/events/intel/core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/i2c/busses/i2c-designware-slave.c b/drivers/i2c/busses/i2c-designware-slave.c
-index e7f9305b2dd9f..f5f001738df5e 100644
---- a/drivers/i2c/busses/i2c-designware-slave.c
-+++ b/drivers/i2c/busses/i2c-designware-slave.c
-@@ -94,6 +94,7 @@ static int i2c_dw_unreg_slave(struct i2c_client *slave)
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index db5a2ba617536..2dd8b0d64295a 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3319,6 +3319,11 @@ static u64 bdw_limit_period(struct perf_event *event, u64 left)
+ 	return left;
+ }
  
- 	dev->disable_int(dev);
- 	dev->disable(dev);
-+	synchronize_irq(dev->irq);
- 	dev->slave = NULL;
- 	pm_runtime_put(dev->dev);
++static u64 nhm_limit_period(struct perf_event *event, u64 left)
++{
++	return max(left, 32ULL);
++}
++
+ PMU_FORMAT_ATTR(event,	"config:0-7"	);
+ PMU_FORMAT_ATTR(umask,	"config:8-15"	);
+ PMU_FORMAT_ATTR(edge,	"config:18"	);
+@@ -4115,6 +4120,7 @@ __init int intel_pmu_init(void)
+ 		x86_pmu.pebs_constraints = intel_nehalem_pebs_event_constraints;
+ 		x86_pmu.enable_all = intel_pmu_nhm_enable_all;
+ 		x86_pmu.extra_regs = intel_nehalem_extra_regs;
++		x86_pmu.limit_period = nhm_limit_period;
+ 
+ 		x86_pmu.cpu_events = nhm_events_attrs;
  
 -- 
 2.20.1
