@@ -2,174 +2,154 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26BAAC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF85C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:46:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E17B921920
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:44:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17F2E217D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:46:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HlZ1OQE3"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="GoERXF8x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393092AbfISVom (ORCPT
+        id S2404749AbfISVqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 17:44:42 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34745 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393049AbfISVol (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 17:44:41 -0400
-Received: by mail-pl1-f195.google.com with SMTP id d3so2224987plr.1
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 14:44:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=lwqOPnc+Hjspz39B1KdPwekwTjVU9dAcHcFGUbS/esU=;
-        b=HlZ1OQE3iymgQ80SUY3b+Fuk//VK9KTazuInlcYoRmR20coGXrKV9oRmqxpUkyja9S
-         uC87fqyMVhaBi37taW9UIp5BTh/OgTP/dfs3vTzL7NbY6rF2IZdUXiRGrjNHNSCwQ2n8
-         GTJkvUfDHt2fpxT02DnGs4LARmG4fhNSwsnPY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=lwqOPnc+Hjspz39B1KdPwekwTjVU9dAcHcFGUbS/esU=;
-        b=WVtBeK+2lqCDeYC54U+O9Kdmc/WrvhOwAp4QqKJWQYYSkZ+3nQdzYTal8g9zOoItH/
-         r4Uqoohy1yhRrywWJ5Xb7JyBu6lexwIPjr4XuJx3mUnKWO2NnwvrZEw2aFrhO8KWLBjC
-         P/HdXCv0IsdkOPHhP9BLP8ciV9xXUdEj6Tg5Zg69suMn6y8wwHNjjx8SzHbmbKSA8x5x
-         MN4maigFCaXoOYjnf7pJFQ65nvb3FqLb3jQr1Vw+Zl5I6tY0mNGCKgSARbzlLokELwgp
-         OulmTWJgTu8Uc+c9INWUnRmtpvitfi6pY4SH1yICG6F/36nQrjX6SkKX9vxe4cXKkiQT
-         mZOg==
-X-Gm-Message-State: APjAAAXXeeFFaFYwf5mlmSLKKTW6Eq3TWaOk3+Mm5z8U9oazl9izwLEc
-        yBOa9sRX3XbFpY/FxjPwqaoeiQ==
-X-Google-Smtp-Source: APXvYqx/8ttJRdpg/QX+6cfq1KNAhA8woc3uN5dOVzoy8J/e0FrMLpj502vN+iv2c2lfaubQHgbvqg==
-X-Received: by 2002:a17:902:7895:: with SMTP id q21mr11565977pll.94.1568929479404;
-        Thu, 19 Sep 2019 14:44:39 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b185sm11082438pfg.14.2019.09.19.14.44.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2019 14:44:38 -0700 (PDT)
-Date:   Thu, 19 Sep 2019 14:44:37 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] docs: Use make invocation's -j argument for parallelism
-Message-ID: <201909191438.C00E6DB@keescook>
+        Thu, 19 Sep 2019 17:46:20 -0400
+Received: from mail-eopbgr730115.outbound.protection.outlook.com ([40.107.73.115]:42268
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2403799AbfISVqT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 17:46:19 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=F1mw7IWCnSdGo7Id3fiZUVDAWv9lB6bGSzUWvYdyeSVkLVoshlLEx3yWbTboNiTYsmVtQ7WijYwDw/l18gfnFN/15k/5sCi5ZUSOldSu1bamnxgxxiK9pJhuYqlMGvLlfzfVsI/vW06f12GJln5vGS60W4A4NeNG4DuFmdpt0N1QvNdydh2vphgNH47PpjR9INxV68mB+Sycpnjg20gb26jrguVqGse4S2gvQnaJ68HuEgstHfOdUe8syprCEb+YwPQ90UflFgroBpu4sgnuJqPbpkHraopqwJMNqLnoUSbv8CkCqINB/nF4om5tOcMRaP2JLfpAqnCAYfgYSkK2yA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qcJ4GYYCYznLUjHpJArbXKnXw5TV4914/d0wALog7V4=;
+ b=eINBvi5pMswtoMo8f5trJ2XDHEmiT/jL/gsGg77NSGdpRDQ5SpSTygPx3DTFEEcFs6bt2HlJobt+b6wMCK7uAUAHbZfnK03xraM4PgkirY0MqMvdihHILmBmwyHedlgrgnE6koBV/JvXIctH2DVf/BpyuX0XABLuLiPjnu7nbe/fIDc9R8L/v9VnZqCtqz6GtcAUzAs5nurv2LH46ILQjahYcozMZmTiqU/yQ+cKU9lpuXXhnp9tt7iocNzzuVjSvniU7Dn/js+cefv5J8yWRlmgvRxcL/vqT6jp6u+ScTFQ8VBYyD8Svv1OgieXO31ZgqUtizR4BSoFGb/EWPX0FA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qcJ4GYYCYznLUjHpJArbXKnXw5TV4914/d0wALog7V4=;
+ b=GoERXF8xG7Wa7gQ/FTERalmA3S/sAm95UJAU5+33gogdopp7QxyH6ulMLIW26T6I1t7AuwP/dHwwzlLj0Y02sGyfYVcmFVGwLJxbWJyx6PXtnhGDqwWCOcLryHNjnzo0t6OCZq6bBu8fU0xuKNu0/iM6ApGqptGoq4J4ngH3j08=
+Received: from SN6PR2101MB0942.namprd21.prod.outlook.com (52.132.114.19) by
+ SN6PR2101MB0909.namprd21.prod.outlook.com (52.132.117.10) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.4; Thu, 19 Sep 2019 21:46:14 +0000
+Received: from SN6PR2101MB0942.namprd21.prod.outlook.com
+ ([fe80::7d1a:ddb:3473:b383]) by SN6PR2101MB0942.namprd21.prod.outlook.com
+ ([fe80::7d1a:ddb:3473:b383%9]) with mapi id 15.20.2305.000; Thu, 19 Sep 2019
+ 21:46:13 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "arnd@arndb.de" <arnd@arndb.de>
+CC:     Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH v2] Drivers: hv: vmbus: Fix harmless building warnings without
+ CONFIG_PM_SLEEP
+Thread-Topic: [PATCH v2] Drivers: hv: vmbus: Fix harmless building warnings
+ without CONFIG_PM_SLEEP
+Thread-Index: AQHVbzOn66tbgs3I5Ui535QUQicqZA==
+Date:   Thu, 19 Sep 2019 21:46:12 +0000
+Message-ID: <1568929540-116670-1-git-send-email-decui@microsoft.com>
+Reply-To: Dexuan Cui <decui@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR20CA0040.namprd20.prod.outlook.com
+ (2603:10b6:300:ed::26) To SN6PR2101MB0942.namprd21.prod.outlook.com
+ (2603:10b6:805:4::19)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 1.8.3.1
+x-originating-ip: [13.77.154.182]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d074d2ef-7c69-4305-9648-08d73d4ac9e4
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: SN6PR2101MB0909:|SN6PR2101MB0909:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SN6PR2101MB0909C45A94BB123FE578B7BCBF890@SN6PR2101MB0909.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:173;
+x-forefront-prvs: 016572D96D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(346002)(39860400002)(366004)(396003)(376002)(199004)(189003)(22452003)(256004)(3846002)(305945005)(2201001)(2906002)(8676002)(66476007)(66556008)(64756008)(3450700001)(6116002)(7736002)(8936002)(71190400001)(71200400001)(66446008)(14454004)(81166006)(81156014)(5660300002)(14444005)(66946007)(102836004)(26005)(386003)(52116002)(25786009)(6486002)(10090500001)(99286004)(486006)(2616005)(6512007)(4326008)(6506007)(36756003)(316002)(186003)(50226002)(86362001)(107886003)(110136005)(476003)(1511001)(43066004)(66066001)(6436002)(10290500003)(478600001)(2501003)(4720700003);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB0909;H:SN6PR2101MB0942.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +aZqXBtos2vjtiR6RJUe2+ycGsBQOE4rXH8666Y2ODVNQyARayTq2/HzNTohoZLM/ERjr90fyupC4NannSAqkDpr1fnyNG0jXljILd2e2rqj2fhRf3AS5uQCX8iceBqL+t0hCulD9qOEq+aSvFg8CKES20iX0YaawjKsesGMEWL4J6ZhS5jGCjosb4KJiCmSjcKuCc704NrX3UKYLkXZmxRi9mEWuiMrpbCICRykJLOEFfEgzFniiRkbYK4CcNXzy69MHmzkG2rJxMJvnZf8RAcWmwRTrOeRfjrOOs+QlA+eWjDU/KUWzdiHe1T1MckHTBKcC+p0CV4dAwZk2ViI9U4NWGvsa6BPHTPlumcwjJdPFjzIz7KVqndRvTQ2mfuzro96QyXDgh9U2zi2aUzm0teV9UTrDuUCldcELx2dplY=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <FE973C329B10A544AD7D4FBBBE87579D@namprd21.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d074d2ef-7c69-4305-9648-08d73d4ac9e4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Sep 2019 21:46:12.9464
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ax68cX73LeHXkhDcHtxLwJ+uRW0Vjdg60lr6kAszfRvuZyYkcJCLdtSabhPf9igPyAl2BODUpTsK8RORNVScPA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB0909
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While sphinx 1.7 and later supports "-jauto" for parallelism, this
-effectively ignores the "-j" flag used in the "make" invocation, which
-may cause confusion for build systems. Instead, extract the available
-parallelism from "make"'s job server (since it is not exposed in any
-special variables) and use that for the "sphinx-build" run. Now things
-work correctly for builds where -j is specified at the top-level:
-
-	make -j16 htmldocs
-
-If -j is not specified, continue to fallback to "-jauto" if available.
-
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-v2: retain "-jauto" default behavior with top-level -j is missing.
----
- Documentation/Makefile  |  3 ++-
- scripts/jobserver-count | 53 +++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 55 insertions(+), 1 deletion(-)
- create mode 100755 scripts/jobserver-count
-
-diff --git a/Documentation/Makefile b/Documentation/Makefile
-index e145e4db508b..8bfd38a865ff 100644
---- a/Documentation/Makefile
-+++ b/Documentation/Makefile
-@@ -33,7 +33,7 @@ ifeq ($(HAVE_SPHINX),0)
- 
- else # HAVE_SPHINX
- 
--export SPHINXOPTS = $(shell perl -e 'open IN,"sphinx-build --version 2>&1 |"; while (<IN>) { if (m/([\d\.]+)/) { print "-jauto" if ($$1 >= "1.7") } ;} close IN')
-+export SPHINX_PARALLEL = $(shell perl -e 'open IN,"sphinx-build --version 2>&1 |"; while (<IN>) { if (m/([\d\.]+)/) { print "auto" if ($$1 >= "1.7") } ;} close IN')
- 
- # User-friendly check for pdflatex and latexmk
- HAVE_PDFLATEX := $(shell if which $(PDFLATEX) >/dev/null 2>&1; then echo 1; else echo 0; fi)
-@@ -68,6 +68,7 @@ quiet_cmd_sphinx = SPHINX  $@ --> file://$(abspath $(BUILDDIR)/$3/$4)
- 	PYTHONDONTWRITEBYTECODE=1 \
- 	BUILDDIR=$(abspath $(BUILDDIR)) SPHINX_CONF=$(abspath $(srctree)/$(src)/$5/$(SPHINX_CONF)) \
- 	$(SPHINXBUILD) \
-+	-j $(shell python3 $(srctree)/scripts/jobserver-count $(SPHINX_PARALLEL)) \
- 	-b $2 \
- 	-c $(abspath $(srctree)/$(src)) \
- 	-d $(abspath $(BUILDDIR)/.doctrees/$3) \
-diff --git a/scripts/jobserver-count b/scripts/jobserver-count
-new file mode 100755
-index 000000000000..ff6ebe6b0194
---- /dev/null
-+++ b/scripts/jobserver-count
-@@ -0,0 +1,53 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+#
-+# This determines how many parallel tasks "make" is expecting, as it is
-+# not exposed via an special variables.
-+# https://www.gnu.org/software/make/manual/html_node/POSIX-Jobserver.html#POSIX-Jobserver
-+import os, sys, fcntl
-+
-+# Default parallelism is "1" unless overridden on the command-line.
-+default="1"
-+if len(sys.argv) > 1:
-+	default=sys.argv[1]
-+
-+# Set non-blocking for a given file descriptor.
-+def nonblock(fd):
-+	flags = fcntl.fcntl(fd, fcntl.F_GETFL)
-+	fcntl.fcntl(fd, fcntl.F_SETFL, flags | os.O_NONBLOCK)
-+	return fd
-+
-+# Extract and prepare jobserver file descriptors from envirnoment.
-+try:
-+	# Fetch the make environment options.
-+	flags = os.environ['MAKEFLAGS']
-+
-+	# Look for "--jobserver=R,W"
-+	opts = [x for x in flags.split(" ") if x.startswith("--jobserver")]
-+
-+	# Parse out R,W file descriptor numbers and set them nonblocking.
-+	fds = opts[0].split("=", 1)[1]
-+	reader, writer = [nonblock(int(x)) for x in fds.split(",", 1)]
-+except:
-+	# Any failures here should result in just using the default
-+	# specified parallelism.
-+	print(default)
-+	sys.exit(0)
-+
-+# Read out as many jobserver slots as possible.
-+jobs = b""
-+while True:
-+	try:
-+		slot = os.read(reader, 1)
-+		jobs += slot
-+	except:
-+		break
-+# Return all the reserved slots.
-+os.write(writer, jobs)
-+
-+# If the jobserver was (impossibly) full or communication failed, use default.
-+if len(jobs) < 1:
-+	print(default)
-+
-+# Report available slots (with a bump for our caller's reserveration).
-+print(len(jobs) + 1)
--- 
-2.17.1
-
-
--- 
-Kees Cook
+SWYgQ09ORklHX1BNX1NMRUVQIGlzIG5vdCBzZXQsIHdlIGNhbiBjb21tZW50IG91dCB0aGVzZSBm
+dW5jdGlvbnMgdG8gYXZvaWQNCnRoZSBiZWxvdyB3YXJuaW5nczoNCg0KZHJpdmVycy9odi92bWJ1
+c19kcnYuYzoyMjA4OjEyOiB3YXJuaW5nOiDigJh2bWJ1c19idXNfcmVzdW1l4oCZIGRlZmluZWQg
+YnV0IG5vdCB1c2VkIFstV3VudXNlZC1mdW5jdGlvbl0NCmRyaXZlcnMvaHYvdm1idXNfZHJ2LmM6
+MjEyODoxMjogd2FybmluZzog4oCYdm1idXNfYnVzX3N1c3BlbmTigJkgZGVmaW5lZCBidXQgbm90
+IHVzZWQgWy1XdW51c2VkLWZ1bmN0aW9uXQ0KZHJpdmVycy9odi92bWJ1c19kcnYuYzo5Mzc6MTI6
+IHdhcm5pbmc6IOKAmHZtYnVzX3Jlc3VtZeKAmSBkZWZpbmVkIGJ1dCBub3QgdXNlZCBbLVd1bnVz
+ZWQtZnVuY3Rpb25dDQpkcml2ZXJzL2h2L3ZtYnVzX2Rydi5jOjkxODoxMjogd2FybmluZzog4oCY
+dm1idXNfc3VzcGVuZOKAmSBkZWZpbmVkIGJ1dCBub3QgdXNlZCBbLVd1bnVzZWQtZnVuY3Rpb25d
+DQoNCkZpeGVzOiAyNzFiMjIyNGQ0MmYgKCJEcml2ZXJzOiBodjogdm1idXM6IEltcGxlbWVudCBz
+dXNwZW5kL3Jlc3VtZSBmb3IgVlNDIGRyaXZlcnMgZm9yIGhpYmVybmF0aW9uIikNCkZpeGVzOiBm
+NTMzMzVlMzI4OWYgKCJEcml2ZXJzOiBodjogdm1idXM6IFN1c3BlbmQvcmVzdW1lIHRoZSB2bWJ1
+cyBpdHNlbGYgZm9yIGhpYmVybmF0aW9uIikNClJlcG9ydGVkLWJ5OiBBcm5kIEJlcmdtYW5uIDxh
+cm5kQGFybmRiLmRlPg0KU2lnbmVkLW9mZi1ieTogRGV4dWFuIEN1aSA8ZGVjdWlAbWljcm9zb2Z0
+LmNvbT4NCi0tLQ0KDQpJbiB2MjoNCgl0ZXN0IENPTkZJR19QTV9TTEVFUCByYXRoZXIgdGhhbiBD
+T05GSUdfUE0uIFRoYW5rcywgQXJuZCENCg0KIGRyaXZlcnMvaHYvdm1idXNfZHJ2LmMgfCA2ICsr
+KysrKw0KIDEgZmlsZSBjaGFuZ2VkLCA2IGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvaHYvdm1idXNfZHJ2LmMgYi9kcml2ZXJzL2h2L3ZtYnVzX2Rydi5jDQppbmRleCAzOTFm
+MGIyMjVjOWEuLjUzYTYwYzgxZTIyMCAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvaHYvdm1idXNfZHJ2
+LmMNCisrKyBiL2RyaXZlcnMvaHYvdm1idXNfZHJ2LmMNCkBAIC05MTIsNiArOTEyLDcgQEAgc3Rh
+dGljIHZvaWQgdm1idXNfc2h1dGRvd24oc3RydWN0IGRldmljZSAqY2hpbGRfZGV2aWNlKQ0KIAkJ
+ZHJ2LT5zaHV0ZG93bihkZXYpOw0KIH0NCiANCisjaWZkZWYgQ09ORklHX1BNX1NMRUVQDQogLyoN
+CiAgKiB2bWJ1c19zdXNwZW5kIC0gU3VzcGVuZCBhIHZtYnVzIGRldmljZQ0KICAqLw0KQEAgLTk0
+OSw2ICs5NTAsNyBAQCBzdGF0aWMgaW50IHZtYnVzX3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpjaGls
+ZF9kZXZpY2UpDQogDQogCXJldHVybiBkcnYtPnJlc3VtZShkZXYpOw0KIH0NCisjZW5kaWYgLyog
+Q09ORklHX1BNX1NMRUVQICovDQogDQogLyoNCiAgKiB2bWJ1c19kZXZpY2VfcmVsZWFzZSAtIEZp
+bmFsIGNhbGxiYWNrIHJlbGVhc2Ugb2YgdGhlIHZtYnVzIGNoaWxkIGRldmljZQ0KQEAgLTEwNzAs
+NiArMTA3Miw3IEBAIHZvaWQgdm1idXNfb25fbXNnX2RwYyh1bnNpZ25lZCBsb25nIGRhdGEpDQog
+CXZtYnVzX3NpZ25hbF9lb20obXNnLCBtZXNzYWdlX3R5cGUpOw0KIH0NCiANCisjaWZkZWYgQ09O
+RklHX1BNX1NMRUVQDQogLyoNCiAgKiBGYWtlIFJFU0NJTkRfQ0hBTk5FTCBtZXNzYWdlcyB0byBj
+bGVhbiB1cCBodl9zb2NrIGNoYW5uZWxzIGJ5IGZvcmNlIGZvcg0KICAqIGhpYmVybmF0aW9uLCBi
+ZWNhdXNlIGh2X3NvY2sgY29ubmVjdGlvbnMgY2FuIG5vdCBwZXJzaXN0IGFjcm9zcyBoaWJlcm5h
+dGlvbi4NCkBAIC0xMTA1LDYgKzExMDgsNyBAQCBzdGF0aWMgdm9pZCB2bWJ1c19mb3JjZV9jaGFu
+bmVsX3Jlc2NpbmRlZChzdHJ1Y3Qgdm1idXNfY2hhbm5lbCAqY2hhbm5lbCkNCiAJCSAgICAgIHZt
+YnVzX2Nvbm5lY3Rpb24ud29ya19xdWV1ZSwNCiAJCSAgICAgICZjdHgtPndvcmspOw0KIH0NCisj
+ZW5kaWYgLyogQ09ORklHX1BNX1NMRUVQICovDQogDQogLyoNCiAgKiBEaXJlY3QgY2FsbGJhY2sg
+Zm9yIGNoYW5uZWxzIHVzaW5nIG90aGVyIGRlZmVycmVkIHByb2Nlc3NpbmcNCkBAIC0yMTI1LDYg
+KzIxMjksNyBAQCBzdGF0aWMgaW50IHZtYnVzX2FjcGlfYWRkKHN0cnVjdCBhY3BpX2RldmljZSAq
+ZGV2aWNlKQ0KIAlyZXR1cm4gcmV0X3ZhbDsNCiB9DQogDQorI2lmZGVmIENPTkZJR19QTV9TTEVF
+UA0KIHN0YXRpYyBpbnQgdm1idXNfYnVzX3N1c3BlbmQoc3RydWN0IGRldmljZSAqZGV2KQ0KIHsN
+CiAJc3RydWN0IHZtYnVzX2NoYW5uZWwgKmNoYW5uZWwsICpzYzsNCkBAIC0yMjQ3LDYgKzIyNTIs
+NyBAQCBzdGF0aWMgaW50IHZtYnVzX2J1c19yZXN1bWUoc3RydWN0IGRldmljZSAqZGV2KQ0KIA0K
+IAlyZXR1cm4gMDsNCiB9DQorI2VuZGlmIC8qIENPTkZJR19QTV9TTEVFUCAqLw0KIA0KIHN0YXRp
+YyBjb25zdCBzdHJ1Y3QgYWNwaV9kZXZpY2VfaWQgdm1idXNfYWNwaV9kZXZpY2VfaWRzW10gPSB7
+DQogCXsiVk1CVVMiLCAwfSwNCi0tIA0KMi4xOS4xDQoNCg==
