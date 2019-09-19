@@ -5,52 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 148C1C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:14:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D5EC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB4EC21924
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27831218AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:14:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931291;
-	bh=Yl59bSCmjGQO8ga6KfcvRC+PKgjgMXblO8qVnUO1YgM=;
+	s=default; t=1568931295;
+	bh=cA0/ajFdxMeE7KcBnjMNO94Hp7DUcbWHvPWzYGo6SCU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ii8nU5MeqU13YYm+L/DndghSBE98iKRjHMdJvc0zCf9a1qVc5T3dv6YXxX5Wams68
-	 ke6JnKCbgQK2LfeKFWhMDhs1OPV/v0t/CJSeDUqMx4OB8qPTy9mUTvk7yK2luCgNpN
-	 Co0Ta3u/0ZUohpDtiuGGmdg5MQbRoBtsaChMhauE=
+	b=dptT1rz9tiXKFXb8N6twvD7jYIN4hqRhBL2N4zUOnDqMmpOiee0zYHzK0GnOsMle2
+	 pgv/ke9XZ9OzizMqdSyNfgZT6hGjCt1LCCDIKWiScrVAhOvW/GB6tfgujYLBCxR5He
+	 5VGM12GtMfeXT71kaDd/QyAHLsbfn0C852hgSMfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392063AbfISWOv (ORCPT
+        id S2393823AbfISWOy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:14:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54398 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:14:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393780AbfISWOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:14:45 -0400
+        id S2391518AbfISWOs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:14:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0509721920;
-        Thu, 19 Sep 2019 22:14:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8411B21928;
+        Thu, 19 Sep 2019 22:14:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931285;
-        bh=Yl59bSCmjGQO8ga6KfcvRC+PKgjgMXblO8qVnUO1YgM=;
+        s=default; t=1568931288;
+        bh=cA0/ajFdxMeE7KcBnjMNO94Hp7DUcbWHvPWzYGo6SCU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x+B1HhQ+m+0jEYZ7tfXXW96AX1KDlRNZDMyaukxL77tBPSdUm1Z7DQ9hlNMWoBgli
-         ssZn5ad1EcfIeS5JvN8ys5TGTMZJjrdaNIa2qVkmhcAZWt4kTHGmp5B/5L8pGwskME
-         YXKHBSjUMu6iOqoJYvJfEn7muKTh+wt2HTpwMy8I=
+        b=RGucq759syS2UCsX3pvaCgvUHJMOoMcNt9EzXgghu3vzY9vHmpK4cIRP7Zv4LXceS
+         2JVtfU3g++0cfxyjClqx/bSwhCf0E+MEtEtTAHN2TGFABUjCD6WfzRT5xt4BaANPa6
+         RBtDoXsma3MqJLHlwPOhqyL1yN9TFzCNUy4Ugn54=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, broonie@kernel.org,
-        sfr@canb.auug.org.au, akpm@linux-foundation.org, mhocko@suse.cz,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 69/79] x86/uaccess: Dont leak the AC flags into __get_user() argument evaluation
-Date:   Fri, 20 Sep 2019 00:03:54 +0200
-Message-Id: <20190919214813.794977239@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Jong Hyun Park <park.jonghyun@yonsei.ac.kr>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 70/79] x86/hyper-v: Fix overflow bug in fill_gva_list()
+Date:   Fri, 20 Sep 2019 00:03:55 +0200
+Message-Id: <20190919214813.934615543@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214807.612593061@linuxfoundation.org>
 References: <20190919214807.612593061@linuxfoundation.org>
@@ -63,55 +66,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-[ Upstream commit 9b8bd476e78e89c9ea26c3b435ad0201c3d7dbf5 ]
+[ Upstream commit 4030b4c585c41eeefec7bd20ce3d0e100a0f2e4d ]
 
-Identical to __put_user(); the __get_user() argument evalution will too
-leak UBSAN crud into the __uaccess_begin() / __uaccess_end() region.
-While uncommon this was observed to happen for:
+When the 'start' parameter is >=  0xFF000000 on 32-bit
+systems, or >= 0xFFFFFFFF'FF000000 on 64-bit systems,
+fill_gva_list() gets into an infinite loop.
 
-  drivers/xen/gntdev.c: if (__get_user(old_status, batch->status[i]))
+With such inputs, 'cur' overflows after adding HV_TLB_FLUSH_UNIT
+and always compares as less than end.  Memory is filled with
+guest virtual addresses until the system crashes.
 
-where UBSAN added array bound checking.
+Fix this by never incrementing 'cur' to be larger than 'end'.
 
-This complements commit:
-
-  6ae865615fc4 ("x86/uaccess: Dont leak the AC flag into __put_user() argument evaluation")
-
-Tested-by Sedat Dilek <sedat.dilek@gmail.com>
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: broonie@kernel.org
-Cc: sfr@canb.auug.org.au
-Cc: akpm@linux-foundation.org
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: mhocko@suse.cz
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Link: https://lkml.kernel.org/r/20190829082445.GM2369@hirez.programming.kicks-ass.net
+Reported-by: Jong Hyun Park <park.jonghyun@yonsei.ac.kr>
+Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Fixes: 2ffd9e33ce4a ("x86/hyper-v: Use hypercall for remote TLB flush")
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/uaccess.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/x86/hyperv/mmu.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
-index 4111edb3188e2..9718303410614 100644
---- a/arch/x86/include/asm/uaccess.h
-+++ b/arch/x86/include/asm/uaccess.h
-@@ -451,8 +451,10 @@ do {									\
- ({									\
- 	int __gu_err;							\
- 	__inttype(*(ptr)) __gu_val;					\
-+	__typeof__(ptr) __gu_ptr = (ptr);				\
-+	__typeof__(size) __gu_size = (size);				\
- 	__uaccess_begin_nospec();					\
--	__get_user_size(__gu_val, (ptr), (size), __gu_err, -EFAULT);	\
-+	__get_user_size(__gu_val, __gu_ptr, __gu_size, __gu_err, -EFAULT);	\
- 	__uaccess_end();						\
- 	(x) = (__force __typeof__(*(ptr)))__gu_val;			\
- 	__builtin_expect(__gu_err, 0);					\
+diff --git a/arch/x86/hyperv/mmu.c b/arch/x86/hyperv/mmu.c
+index ef5f29f913d7b..2f34d52753526 100644
+--- a/arch/x86/hyperv/mmu.c
++++ b/arch/x86/hyperv/mmu.c
+@@ -37,12 +37,14 @@ static inline int fill_gva_list(u64 gva_list[], int offset,
+ 		 * Lower 12 bits encode the number of additional
+ 		 * pages to flush (in addition to the 'cur' page).
+ 		 */
+-		if (diff >= HV_TLB_FLUSH_UNIT)
++		if (diff >= HV_TLB_FLUSH_UNIT) {
+ 			gva_list[gva_n] |= ~PAGE_MASK;
+-		else if (diff)
++			cur += HV_TLB_FLUSH_UNIT;
++		}  else if (diff) {
+ 			gva_list[gva_n] |= (diff - 1) >> PAGE_SHIFT;
++			cur = end;
++		}
+ 
+-		cur += HV_TLB_FLUSH_UNIT;
+ 		gva_n++;
+ 
+ 	} while (cur < end);
 -- 
 2.20.1
 
