@@ -2,55 +2,55 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB75CC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D1DC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0F2721907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:12:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AC3721920
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:13:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931179;
-	bh=3HAtcNX2DRMK1WORxo3LhucqMRLD9zKMpi4DblG6/Yg=;
+	s=default; t=1568931186;
+	bh=nQm9fmpxpPMRbefy42NAkue3FZlAfMV+pg0Kwb0mokM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=djVpR7FaQQ98BgWey3I2O9GvVSILrU9NKL0JPa3vooYYg2m0Bi7bTt4Kqv1/H4NzL
-	 ZL2v1iZHCfAhZMuxuZ46blRoSOoo/MNM/zKPCVikfuF5tyoKC5rsTPh1DP+/BdKwdJ
-	 STNpVitROknaaqyx8NWTu151uiEAz8h1kUMFYMKI=
+	b=tcog2pglQoMBm64Qj1SvJ0uYGYpNx0PkRhAoPVKrXc6hwcmIsJCNWhsHfyqZebOk5
+	 SjCWLoYKPjAWn+6rL6/Tj8u4GzxROExvYvCJDJWDGWgGiFflz+kVbKIUtIpKRuTK22
+	 K6H40wJPt+uKay5p603fnXtfny39faJ6zVHZjjGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406021AbfISWM7 (ORCPT
+        id S2389714AbfISWNF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:12:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51978 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:13:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406008AbfISWM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:12:57 -0400
+        id S2406026AbfISWNC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:13:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDB8721907;
-        Thu, 19 Sep 2019 22:12:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C3AF21907;
+        Thu, 19 Sep 2019 22:13:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931176;
-        bh=3HAtcNX2DRMK1WORxo3LhucqMRLD9zKMpi4DblG6/Yg=;
+        s=default; t=1568931181;
+        bh=nQm9fmpxpPMRbefy42NAkue3FZlAfMV+pg0Kwb0mokM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=smZ2lSfo9HpBZsyWdBsKYIT0RbLOoLRN/ULk/eGzU8uezr3WfF73ySWR1W00zKqd/
-         VD7plGowq5SxpLg8dPUdRwpjnIm94IGl4mK849OFB+LvHrJUt6IRLklVORctn3KgMR
-         raAf2XAdkAusmUmmH+iQ9FsPdGE1BDDfmCC+4IBw=
+        b=F/OWM5tQXGYBn+kbTSvTvEJs/I/I7QfDVtq6RgI9NPnIRvNHFSeYjkFtI7GfRXoUS
+         j30uloUQrJBt/Ul87kbYn+LvB0KlsYVDtfNMxih9wcWRostHT8rmY5UBefwm5zQkoB
+         9J+VvBgOYHkOhln14oAnBVGeFzQf1Wd33QohdX2w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Artemy Kovalyov <artemyko@mellanox.com>,
-        Yossi Itigin <yosefe@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Steve Wise <swise@opengridcomputing.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>
-Subject: [PATCH 4.19 03/79] RDMA/restrack: Release task struct which was hold by CM_ID object
-Date:   Fri, 20 Sep 2019 00:02:48 +0200
-Message-Id: <20190919214808.101726182@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 31/79] tools: bpftool: close prog FD before exit on showing a single program
+Date:   Fri, 20 Sep 2019 00:03:16 +0200
+Message-Id: <20190919214810.531834718@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214807.612593061@linuxfoundation.org>
 References: <20190919214807.612593061@linuxfoundation.org>
@@ -63,85 +63,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@mellanox.com>
+From: Quentin Monnet <quentin.monnet@netronome.com>
 
-commit ed7a01fd3fd77f40b4ef2562b966a5decd8928d2 upstream.
+[ Upstream commit d34b044038bfb0e19caa8b019910efc465f41d5f ]
 
-Tracking CM_ID resource is performed in two stages: creation of cm_id
-and connecting it to the cma_dev. It is needed because rdma-cm protocol
-exports two separate user-visible calls rdma_create_id and rdma_accept.
+When showing metadata about a single program by invoking
+"bpftool prog show PROG", the file descriptor referring to the program
+is not closed before returning from the function. Let's close it.
 
-At the time of CM_ID creation, the real owner of that object is unknown
-yet and we need to grab task_struct. This task_struct is released or
-reassigned in attach phase later on. but call to rdma_destroy_id left
-this task_struct unreleased.
-
-Such separation is unique to CM_ID and other restrack objects initialize
-in one shot. It means that it is safe to use "res->valid" check to catch
-unfinished CM_ID flow and release task_struct for that object.
-
-Fixes: 00313983cda6 ("RDMA/nldev: provide detailed CM_ID information")
-Reported-by: Artemy Kovalyov <artemyko@mellanox.com>
-Reviewed-by: Artemy Kovalyov <artemyko@mellanox.com>
-Reviewed-by: Yossi Itigin <yosefe@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Reviewed-by: Steve Wise <swise@opengridcomputing.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Cc: Håkon Bugge <haakon.bugge@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 71bb428fe2c1 ("tools: bpf: add bpftool")
+Signed-off-by: Quentin Monnet <quentin.monnet@netronome.com>
+Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/cma.c      |    7 +++----
- drivers/infiniband/core/restrack.c |    6 ++++--
- 2 files changed, 7 insertions(+), 6 deletions(-)
+ tools/bpf/bpftool/prog.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/infiniband/core/cma.c
-+++ b/drivers/infiniband/core/cma.c
-@@ -1723,8 +1723,8 @@ void rdma_destroy_id(struct rdma_cm_id *
- 	mutex_lock(&id_priv->handler_mutex);
- 	mutex_unlock(&id_priv->handler_mutex);
+diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
+index bbba0d61570fe..4f9611af46422 100644
+--- a/tools/bpf/bpftool/prog.c
++++ b/tools/bpf/bpftool/prog.c
+@@ -381,7 +381,9 @@ static int do_show(int argc, char **argv)
+ 		if (fd < 0)
+ 			return -1;
  
-+	rdma_restrack_del(&id_priv->res);
- 	if (id_priv->cma_dev) {
--		rdma_restrack_del(&id_priv->res);
- 		if (rdma_cap_ib_cm(id_priv->id.device, 1)) {
- 			if (id_priv->cm_id.ib)
- 				ib_destroy_cm_id(id_priv->cm_id.ib);
-@@ -3463,10 +3463,9 @@ int rdma_bind_addr(struct rdma_cm_id *id
+-		return show_prog(fd);
++		err = show_prog(fd);
++		close(fd);
++		return err;
+ 	}
  
- 	return 0;
- err2:
--	if (id_priv->cma_dev) {
--		rdma_restrack_del(&id_priv->res);
-+	rdma_restrack_del(&id_priv->res);
-+	if (id_priv->cma_dev)
- 		cma_release_dev(id_priv);
--	}
- err1:
- 	cma_comp_exch(id_priv, RDMA_CM_ADDR_BOUND, RDMA_CM_IDLE);
- 	return ret;
---- a/drivers/infiniband/core/restrack.c
-+++ b/drivers/infiniband/core/restrack.c
-@@ -209,7 +209,7 @@ void rdma_restrack_del(struct rdma_restr
- 	struct ib_device *dev;
- 
- 	if (!res->valid)
--		return;
-+		goto out;
- 
- 	dev = res_to_dev(res);
- 	if (!dev)
-@@ -222,8 +222,10 @@ void rdma_restrack_del(struct rdma_restr
- 	down_write(&dev->res.rwsem);
- 	hash_del(&res->node);
- 	res->valid = false;
-+	up_write(&dev->res.rwsem);
-+
-+out:
- 	if (res->task)
- 		put_task_struct(res->task);
--	up_write(&dev->res.rwsem);
- }
- EXPORT_SYMBOL(rdma_restrack_del);
+ 	if (argc)
+-- 
+2.20.1
+
 
 
