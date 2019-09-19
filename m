@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA3FAC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADBE1C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A690C21920
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 825ED21929
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:22:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931767;
-	bh=6lbVreInaH404zhbhVoQ5uFCBC6jGV91lY47KF4kOV4=;
+	s=default; t=1568931771;
+	bh=suureZVG+145knog9Eb2+hj7W8Jxe3Kfoq+zWj6Ufn4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NbRrLy2cwdl+Mn4v7/Ds4bgGaBCiGjSHgQDElKf6LVqZDY3J3nMk9AdWBldF+7ncz
-	 tNkbeCJdGp+lwbXfoEiFu93jzSSey67LnB7ldTFe5yFkfI4mrp6FeKgDLcwdTEYeuS
-	 +iXdjJiZ0ZwftG8i8+VWVuJDBaU3vrqTQavaN4B4=
+	b=atZyDZkiD7JlzlAl2D4ofExzzcq+mrpnzFH2lKLUkyPpNZNDDzKo2lXQIh99NdLYN
+	 hZiAHZe4lNdVt0qZg5Ak+EHKCH2GAoCCubLa39aMeNM1aUnauZc6d8nF4NLbhrhIT/
+	 xoOQHkJsChb8S4h9bP2OM8RB/BYF8diS0XKqriDY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406915AbfISWWq (ORCPT
+        id S2406914AbfISWWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:22:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37902 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:22:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406899AbfISWWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:22:42 -0400
+        id S2406910AbfISWWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:22:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC60020678;
-        Thu, 19 Sep 2019 22:22:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C89A21920;
+        Thu, 19 Sep 2019 22:22:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931762;
-        bh=6lbVreInaH404zhbhVoQ5uFCBC6jGV91lY47KF4kOV4=;
+        s=default; t=1568931765;
+        bh=suureZVG+145knog9Eb2+hj7W8Jxe3Kfoq+zWj6Ufn4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iUglyqE+BKY7RwpPXs/T5fqxWaGP/9QkRAwezBVz58wh3poiLHsUTS2h/crR3v8lZ
-         aH34KGo8ufaxRePV22f7VPKqsE4t40S5DXMhQBhkmL6J83ZdS29rkjJk2yjLqnHuFn
-         joU7/FExW1BtmVbss+2Y4gUt8xCMxje/w8tRpNpg=
+        b=W1a+jjfptd5PxLGfdFthEORsP2GlbVOj14VzSmL3ymKIxBCs3tfxWK5VQTdcPRGhG
+         1zGp1s4gp0tqijqss+vPZ1B1gSxXceLgZ4/5V2ZO/O4Ww5lKn/GhL8sfUYBatoxg82
+         bKUBPuE3YfcDnDzgQI29NTHjUoTNpdWQA6+j+UGs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        stable@vger.kernel.org, Dongli Zhang <dongli.zhang@oracle.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 03/56] ipv6: Fix the link time qualifier of ping_v6_proc_exit_net()
-Date:   Fri, 20 Sep 2019 00:03:44 +0200
-Message-Id: <20190919214745.103855719@linuxfoundation.org>
+Subject: [PATCH 4.4 30/56] xen-netfront: do not assume sk_buff_head list is empty in error handling
+Date:   Fri, 20 Sep 2019 00:04:11 +0200
+Message-Id: <20190919214756.708114014@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214742.483643642@linuxfoundation.org>
 References: <20190919214742.483643642@linuxfoundation.org>
@@ -60,31 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Dongli Zhang <dongli.zhang@oracle.com>
 
-[ Upstream commit d23dbc479a8e813db4161a695d67da0e36557846 ]
+[ Upstream commit 00b368502d18f790ab715e055869fd4bb7484a9b ]
 
-The '.exit' functions from 'pernet_operations' structure should be marked
-as __net_exit, not __net_init.
+When skb_shinfo(skb) is not able to cache extra fragment (that is,
+skb_shinfo(skb)->nr_frags >= MAX_SKB_FRAGS), xennet_fill_frags() assumes
+the sk_buff_head list is already empty. As a result, cons is increased only
+by 1 and returns to error handling path in xennet_poll().
 
-Fixes: d862e5461423 ("net: ipv6: Implement /proc/net/icmp6.")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+However, if the sk_buff_head list is not empty, queue->rx.rsp_cons may be
+set incorrectly. That is, queue->rx.rsp_cons would point to the rx ring
+buffer entries whose queue->rx_skbs[i] and queue->grant_rx_ref[i] are
+already cleared to NULL. This leads to NULL pointer access in the next
+iteration to process rx ring buffer entries.
+
+Below is how xennet_poll() does error handling. All remaining entries in
+tmpq are accounted to queue->rx.rsp_cons without assuming how many
+outstanding skbs are remained in the list.
+
+ 985 static int xennet_poll(struct napi_struct *napi, int budget)
+... ...
+1032           if (unlikely(xennet_set_skb_gso(skb, gso))) {
+1033                   __skb_queue_head(&tmpq, skb);
+1034                   queue->rx.rsp_cons += skb_queue_len(&tmpq);
+1035                   goto err;
+1036           }
+
+It is better to always have the error handling in the same way.
+
+Fixes: ad4f15dc2c70 ("xen/netfront: don't bug in case of too many frags")
+Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/ping.c |    2 +-
+ drivers/net/xen-netfront.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv6/ping.c
-+++ b/net/ipv6/ping.c
-@@ -234,7 +234,7 @@ static int __net_init ping_v6_proc_init_
- 	return ping_proc_register(net, &ping_v6_seq_afinfo);
- }
- 
--static void __net_init ping_v6_proc_exit_net(struct net *net)
-+static void __net_exit ping_v6_proc_exit_net(struct net *net)
- {
- 	return ping_proc_unregister(net, &ping_v6_seq_afinfo);
- }
+--- a/drivers/net/xen-netfront.c
++++ b/drivers/net/xen-netfront.c
+@@ -893,7 +893,7 @@ static RING_IDX xennet_fill_frags(struct
+ 			__pskb_pull_tail(skb, pull_to - skb_headlen(skb));
+ 		}
+ 		if (unlikely(skb_shinfo(skb)->nr_frags >= MAX_SKB_FRAGS)) {
+-			queue->rx.rsp_cons = ++cons;
++			queue->rx.rsp_cons = ++cons + skb_queue_len(list);
+ 			kfree_skb(nskb);
+ 			return ~0U;
+ 		}
 
 
