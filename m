@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF6AC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A21C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B088D21BE5
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:34:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 895D421920
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:34:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932475;
-	bh=AXPR9OXJuhp5iAZ5tC1XbkvuhWf5TaT1co01bJ2eGsE=;
+	s=default; t=1568932495;
+	bh=lQYj4NUXHSkeIRtL2lZVGzZ2tZyvwgqLTUTTjnchcWA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2qJQLjdT92YxxWt0Zpzh/uMXKwS6+r+2SN3M7aSTkUdWXaLRT9Q3FFveJkV+80RmT
-	 lILWtgTbF6OUYLEFSPJbpkh0X/0V2UF7Am2ighCQH2H3WaBajVdzmKJKuFq4xmqMWM
-	 ORMNvkZaNZfgb8ocGx+ei3js09D2CFVOPE7g4W68=
+	b=n1PlpoNYeDBtdwqmmCY6mOk/FKw9g7xofgJK+s9ElNArAGnktPeiz/vsAlzUH8lXE
+	 1VYcdOdCML8Bpk7wq/ZoSGOlbZHgzbwdBBMcquHMw5UzODcxfZcqQa7EARDJF13PRK
+	 w3xmV/lbbSnlVFncuPYUq4MM0yVlPWyxxwUFTP0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405081AbfISWef (ORCPT
+        id S2394415AbfISWex (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:34:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47886 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:34:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405462AbfISWJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:09:38 -0400
+        id S2405429AbfISWJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:09:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D0DC21907;
-        Thu, 19 Sep 2019 22:09:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E880221928;
+        Thu, 19 Sep 2019 22:09:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568930977;
-        bh=AXPR9OXJuhp5iAZ5tC1XbkvuhWf5TaT1co01bJ2eGsE=;
+        s=default; t=1568930969;
+        bh=lQYj4NUXHSkeIRtL2lZVGzZ2tZyvwgqLTUTTjnchcWA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CF27y1I214x9qjCtnPqqai8qV6AUeP1YCBQ3sMQjoUdjAAl+I4hoxb2fnwdSkjP18
-         2E7ZiBJYjQuJwf4fZqnC/JExkN7G4IFX5bbdTK9CHJGbl1ty6gRPkdEWJhblbTLh4e
-         U6nA6LpR1iXybjBWhBr7ts4PoGubZpkh2/8D+5ZU=
+        b=c30OzBzbBzJsIbKqN1iFffRxUnmbGuOeHE3v8nUEX7IgYQzfbt3nm59v/yCxk/XKa
+         ODIVHC+0G1igSqUxMTvuIjweOyYnm+NE8Whz2pb4/qnB88qiCb2ijWgfluUPXwTt4K
+         DurdW+MqqU9NnQI96My+Vz5dDuDUPBu5naaVdqFg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 084/124] ARM: 8901/1: add a criteria for pfn_valid of arm
-Date:   Fri, 20 Sep 2019 00:02:52 +0200
-Message-Id: <20190919214822.077733327@linuxfoundation.org>
+Subject: [PATCH 5.2 081/124] libceph: dont call crypto_free_sync_skcipher() on a NULL tfm
+Date:   Fri, 20 Sep 2019 00:02:49 +0200
+Message-Id: <20190919214821.960015249@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -60,48 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhaoyang <huangzhaoyang@gmail.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 5b3efa4f1479c91cb8361acef55f9c6662feba57 ]
+[ Upstream commit e8c99200b4d117c340c392ebd5e62d85dfeed027 ]
 
-pfn_valid can be wrong when parsing a invalid pfn whose phys address
-exceeds BITS_PER_LONG as the MSB will be trimed when shifted.
+In set_secret(), key->tfm is assigned to NULL on line 55, and then
+ceph_crypto_key_destroy(key) is executed.
 
-The issue originally arise from bellowing call stack, which corresponding to
-an access of the /proc/kpageflags from userspace with a invalid pfn parameter
-and leads to kernel panic.
+ceph_crypto_key_destroy(key)
+  crypto_free_sync_skcipher(key->tfm)
+    crypto_free_skcipher(&tfm->base);
 
-[46886.723249] c7 [<c031ff98>] (stable_page_flags) from [<c03203f8>]
-[46886.723264] c7 [<c0320368>] (kpageflags_read) from [<c0312030>]
-[46886.723280] c7 [<c0311fb0>] (proc_reg_read) from [<c02a6e6c>]
-[46886.723290] c7 [<c02a6e24>] (__vfs_read) from [<c02a7018>]
-[46886.723301] c7 [<c02a6f74>] (vfs_read) from [<c02a778c>]
-[46886.723315] c7 [<c02a770c>] (SyS_pread64) from [<c0108620>]
-(ret_fast_syscall+0x0/0x28)
+This happens to work because crypto_sync_skcipher is a trivial wrapper
+around crypto_skcipher: &tfm->base is still 0 and crypto_free_skcipher()
+handles that.  Let's not rely on the layout of crypto_sync_skcipher.
 
-Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+This bug is found by a static analysis tool STCheck written by us.
+
+Fixes: 69d6302b65a8 ("libceph: Remove VLA usage of skcipher").
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mm/init.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ net/ceph/crypto.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-index 8e793cddac661..98e17388a563f 100644
---- a/arch/arm/mm/init.c
-+++ b/arch/arm/mm/init.c
-@@ -174,6 +174,11 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max_low,
- #ifdef CONFIG_HAVE_ARCH_PFN_VALID
- int pfn_valid(unsigned long pfn)
- {
-+	phys_addr_t addr = __pfn_to_phys(pfn);
-+
-+	if (__phys_to_pfn(addr) != pfn)
-+		return 0;
-+
- 	return memblock_is_map_memory(__pfn_to_phys(pfn));
+diff --git a/net/ceph/crypto.c b/net/ceph/crypto.c
+index 5d6724cee38f9..4f75df40fb121 100644
+--- a/net/ceph/crypto.c
++++ b/net/ceph/crypto.c
+@@ -136,8 +136,10 @@ void ceph_crypto_key_destroy(struct ceph_crypto_key *key)
+ 	if (key) {
+ 		kfree(key->key);
+ 		key->key = NULL;
+-		crypto_free_sync_skcipher(key->tfm);
+-		key->tfm = NULL;
++		if (key->tfm) {
++			crypto_free_sync_skcipher(key->tfm);
++			key->tfm = NULL;
++		}
+ 	}
  }
- EXPORT_SYMBOL(pfn_valid);
+ 
 -- 
 2.20.1
 
