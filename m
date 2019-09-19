@@ -2,97 +2,106 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6AFAC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 19:39:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27044C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 19:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A252821924
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 19:39:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0536F21907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 19:40:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392400AbfISTjR (ORCPT
+        id S2404464AbfISTkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 15:39:17 -0400
-Received: from mga07.intel.com ([134.134.136.100]:50290 "EHLO mga07.intel.com"
+        Thu, 19 Sep 2019 15:40:40 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46600 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392354AbfISTjR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 15:39:17 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Sep 2019 12:39:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,524,1559545200"; 
-   d="scan'208";a="217417278"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga002.fm.intel.com with ESMTP; 19 Sep 2019 12:39:15 -0700
-Date:   Thu, 19 Sep 2019 12:39:15 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paul Mackerras <paulus@ozlabs.org>
-Cc:     James Hogan <jhogan@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Suzuki K Pouloze <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 10/13] KVM: Provide common implementation for generic
- dirty log functions
-Message-ID: <20190919193915.GC30495@linux.intel.com>
-References: <20190911185038.24341-1-sean.j.christopherson@intel.com>
- <20190911185038.24341-11-sean.j.christopherson@intel.com>
- <20190919002242.GA19503@blackberry>
+        id S2404328AbfISTkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 15:40:39 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5F5B5882FB;
+        Thu, 19 Sep 2019 19:40:39 +0000 (UTC)
+Received: from treble (ovpn-123-153.rdu2.redhat.com [10.10.123.153])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7FD0B5D9CC;
+        Thu, 19 Sep 2019 19:40:38 +0000 (UTC)
+Date:   Thu, 19 Sep 2019 14:40:36 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: linux-next: Tree for Sep 18 (objtool)
+Message-ID: <20190919194036.smeaapv6armqswub@treble>
+References: <20190918221053.GV2596@sirena.co.uk>
+ <be0fb087-5fb4-a790-90dd-cc2af62419e7@infradead.org>
+ <20190919165118.lffzvrl5efbpnvux@treble>
+ <8dc0ef20-c776-bfdc-de31-1759125c77e9@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190919002242.GA19503@blackberry>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <8dc0ef20-c776-bfdc-de31-1759125c77e9@infradead.org>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Thu, 19 Sep 2019 19:40:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 10:22:42AM +1000, Paul Mackerras wrote:
-> On Wed, Sep 11, 2019 at 11:50:35AM -0700, Sean Christopherson wrote:
-> > Move the implementations of KVM_GET_DIRTY_LOG and KVM_CLEAR_DIRTY_LOG
-> > for CONFIG_KVM_GENERIC_DIRTYLOG_READ_PROTECT into common KVM code.
-> > The arch specific implemenations are extremely similar, differing
-> > only in whether the dirty log needs to be sync'd from hardware (x86)
-> > and how the TLBs are flushed.  Add new arch hooks to handle sync
-> > and TLB flush; the sync will also be used for non-generic dirty log
-> > support in a future patch (s390).
+On Thu, Sep 19, 2019 at 12:21:46PM -0700, Randy Dunlap wrote:
+> On 9/19/19 9:51 AM, Josh Poimboeuf wrote:
+> > On Wed, Sep 18, 2019 at 09:04:21PM -0700, Randy Dunlap wrote:
+> >> On 9/18/19 3:10 PM, Mark Brown wrote:
+> >>> Hi all,
+> >>>
+> >>> Changes since 20190917:
+> >>>
+> >>
+> >> on x86_64:
+> >>
+> >> drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool: i915_gem_execbuffer2_ioctl()+0x2fb: call to gen8_canonical_addr() with UACCESS enabled
+> >>
+> >> using
+> >>> gcc --version
+> >> gcc (SUSE Linux) 7.4.1 20190424 [gcc-7-branch revision 270538]
+> >>
+> >> .o and .config files are attached.
 > > 
-> > The ulterior motive for providing a common implementation is to
-> > eliminate the dependency between arch and common code with respect to
-> > the memslot referenced by the dirty log, i.e. to make it obvious in the
-> > code that the validity of the memslot is guaranteed, as a future patch
-> > will rework memslot handling such that id_to_memslot() can return NULL.
+> > Does this fix it?
 > 
-> I notice you add empty definitions of kvm_arch_sync_dirty_log() for
-> PPC, both Book E and Book 3S.  Given that PPC doesn't select
-> CONFIG_KVM_GENERIC_DIRTYLOG_READ_PROTECT, why is this necessary?
+> This patch produces this message:
+> 
+> drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool: i915_gem_execbuffer2_ioctl()+0x2fb: call to sign_extend64.constprop.20() with UACCESS enabled
 
-s390 has a non-empty kvm_arch_sync_dirty_log() but doesn't select
-CONFIG_KVM_GENERIC_DIRTYLOG_READ_PROTECT.  Patch 11/13 moves s390's call
-of kvm_arch_sync_dirty_log() from s390's kvm_vm_ioctl_get_dirty_log() into
-the common (but not "generic") kvm_get_dirty_log() so that it's obvious
-that kvm_vm_ioctl_get_dirty_log() and kvm_get_dirty_log() are operating on
-the same memslot, i.e. aren't independently querying id_to_memslot().
+Ha, ok.  I guess we have to __always_inline that one too...
 
-I originally made kvm_arch_sync_dirty_log() opt-in with a __KVM_HAVE_ARCH
-macro, but the resulting #ifdeffery felt uglier than having PPC and ARM
-provide empty functions.
+diff --git a/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c b/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
+index b5f6937369ea..7e111cb5b14b 100644
+--- a/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
++++ b/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
+@@ -284,7 +284,7 @@ struct i915_execbuffer {
+  * canonical form [63:48] == [47]."
+  */
+ #define GEN8_HIGH_ADDRESS_BIT 47
+-static inline u64 gen8_canonical_addr(u64 address)
++static __always_inline u64 gen8_canonical_addr(u64 address)
+ {
+ 	return sign_extend64(address, GEN8_HIGH_ADDRESS_BIT);
+ }
+diff --git a/include/linux/bitops.h b/include/linux/bitops.h
+index cf074bce3eb3..fae10792b198 100644
+--- a/include/linux/bitops.h
++++ b/include/linux/bitops.h
+@@ -151,7 +151,7 @@ static inline __s32 sign_extend32(__u32 value, int index)
+  * @value: value to sign extend
+  * @index: 0 based bit index (0<=index<64) to sign bit
+  */
+-static inline __s64 sign_extend64(__u64 value, int index)
++static __always_inline __s64 sign_extend64(__u64 value, int index)
+ {
+ 	__u8 shift = 63 - index;
+ 	return (__s64)(value << shift) >> shift;
