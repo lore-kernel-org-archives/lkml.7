@@ -2,275 +2,337 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EFA5C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 288A1C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4ACF21848
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:12:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE0E321848
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:13:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=auristor.com header.i=jaltman@auristor.com header.b="KbndkEHT"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="mHKvC3e4";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="mHKvC3e4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390179AbfISPMk (ORCPT
+        id S2391135AbfISPNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 11:12:40 -0400
-Received: from sequoia-grove.ad.secure-endpoints.com ([208.125.0.235]:64992
-        "EHLO smtp.secure-endpoints.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388084AbfISPMj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 11:12:39 -0400
-X-Greylist: delayed 433 seconds by postgrey-1.27 at vger.kernel.org; Thu, 19 Sep 2019 11:12:39 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/relaxed;
-        d=auristor.com; s=MDaemon; t=1568905524; x=1569510324;
-        i=jaltman@auristor.com; q=dns/txt; h=VBR-Info:Subject:To:Cc:
-        References:From:Openpgp:Autocrypt:Organization:Message-ID:Date:
-        User-Agent:MIME-Version:In-Reply-To:Content-Type; bh=awTwZnTsmAg
-        rZj040hJEKwBhb0pJw1qp6pch4GgCseQ=; b=KbndkEHT8F9pXAl+dMfpzsN4EEU
-        nR3dlff5nfzSnUYY7hS1DvpaTJT90PMFXfRixHqr6P6aQbgJ2+SV9Z0wSBDdQCXH
-        xzZufxTez4ONhmDxON1xsLU/smEE689jnSxJG+G0V/Ps1IgwcBnFtoX3lAOqFJvI
-        gQnzw8rcKO4yP2lE=
-X-MDAV-Result: clean
-X-MDAV-Processed: smtp.secure-endpoints.com, Thu, 19 Sep 2019 11:05:24 -0400
-Received: from [IPv6:2001:470:1f07:f77:9cf4:2223:3de0:7be8] by auristor.com (IPv6:2001:470:1f07:f77:28d9:68fb:855d:c2a5) (MDaemon PRO v19.5.0b) 
-        with ESMTPSA id md50002227285.msg; Thu, 19 Sep 2019 11:05:23 -0400
-VBR-Info: md=auristor.com; mc=all; mv=vbr.emailcertification.org;
-X-MDRemoteIP: 2001:470:1f07:f77:9cf4:2223:3de0:7be8
-X-MDHelo: [IPv6:2001:470:1f07:f77:9cf4:2223:3de0:7be8]
-X-MDArrival-Date: Thu, 19 Sep 2019 11:05:23 -0400
-X-Authenticated-Sender: jaltman@auristor.com
-X-Return-Path: prvs=116552db50=jaltman@auristor.com
-X-Envelope-From: jaltman@auristor.com
-X-MDaemon-Deliver-To: linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL afs: Development for 5.4
-To:     Matthew Wilcox <willy@infradead.org>,
-        David Howells <dhowells@redhat.com>
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-afs@lists.infradead.org
-References: <28368.1568875207@warthog.procyon.org.uk>
- <CAHk-=wgJx0FKq5FUP85Os1HjTPds4B3aQwumnRJDp+XHEbVjfA@mail.gmail.com>
- <16147.1568632167@warthog.procyon.org.uk>
- <16257.1568886562@warthog.procyon.org.uk>
- <20190919131537.GA15392@bombadil.infradead.org>
-From:   Jeffrey E Altman <jaltman@auristor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jaltman@auristor.com; keydata=
- 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
- akGVmjD5917A1HqWfMmiKA==
-Organization: AuriStor, Inc.
-Message-ID: <a275c813-bb3c-e5cf-4c5b-2521f4b155aa@auristor.com>
-Date:   Thu, 19 Sep 2019 11:05:00 -0400
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 19 Sep 2019 11:13:33 -0400
+Received: from mail-eopbgr80080.outbound.protection.outlook.com ([40.107.8.80]:56128
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388792AbfISPNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 11:13:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WDe4fnpdt0/NxxMC2o+OYJvDeNmXC4tvIz6hILWxmVo=;
+ b=mHKvC3e4JsE5FGAYvzmK55HhRxMjxZPBkKN3nMB5TbS0mKyxyCev+EmytxSYiOevDkpHhczYw8ACviZt453IbFLmOoikOTAY0BaR+FO5XZ3GyAoVDqomyBkodeJpqNTNKoKTIPSLPbO44RNPT3KVOv8smWLByWEukZzzD5TCd50=
+Received: from VI1PR0801CA0085.eurprd08.prod.outlook.com
+ (2603:10a6:800:7d::29) by DB7PR08MB3193.eurprd08.prod.outlook.com
+ (2603:10a6:5:24::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2284.20; Thu, 19 Sep
+ 2019 15:13:24 +0000
+Received: from VE1EUR03FT037.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e09::204) by VI1PR0801CA0085.outlook.office365.com
+ (2603:10a6:800:7d::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2284.20 via Frontend
+ Transport; Thu, 19 Sep 2019 15:13:24 +0000
+Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
+ header.from=arm.com;
+Received-SPF: TempError (protection.outlook.com: error in processing during
+ lookup of arm.com: DNS Timeout)
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ VE1EUR03FT037.mail.protection.outlook.com (10.152.19.70) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.20 via Frontend Transport; Thu, 19 Sep 2019 15:13:22 +0000
+Received: ("Tessian outbound 968ab6b62146:v31"); Thu, 19 Sep 2019 15:13:18 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: f7e7bfd89acc9074
+X-CR-MTA-TID: 64aa7808
+Received: from d673e86a8d06.2 (ip-172-16-0-2.eu-west-1.compute.internal [104.47.8.55])
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 3B291DE2-265F-4034-B709-10FD1FE2E296.1;
+        Thu, 19 Sep 2019 15:13:13 +0000
+Received: from EUR03-AM5-obe.outbound.protection.outlook.com (mail-am5eur03lp2055.outbound.protection.outlook.com [104.47.8.55])
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id d673e86a8d06.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Thu, 19 Sep 2019 15:13:13 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mwrZwFE5DXf88UhVN5ZYiE/ZLB50dVhSu4iN8CBSSVaZIFDuH6DsrlgKn9xApZKAbGEm/5f6mOaq1Br0M3IfMptaKtZJh+GcBUxxsmE//TE20ldhw8IbJZwaBfEut/8DIO/VEzBI1Qt2yh9I9Jai9+cNn6Wt59IyV+7Vr3uNe/gUCanfB2NGeGn/w3gCt4NOSqive4flv5oJfSBoRVzlWOk13D57tI/mp2i8BgM/GY+jMMCc3bS2mKmPG6ZB1NNfdIJ0+ublPVD8gC3kXaBGR8kjQgAHpQiD0WpDuF9ID8PQrH3vJS4qNObrr4OoD4IyHRNLa/OJr8RoRiIj0lxmmg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WDe4fnpdt0/NxxMC2o+OYJvDeNmXC4tvIz6hILWxmVo=;
+ b=UNGr8pIOA2med0v4/RrLskn3Fe+TxrqbWvSoHzzBNbh1Y/VMw/UZXFgYHdgK4SQzMTYPg9kZMsA5IHkTjsvIHC1A8V3i4hKBURQrmi/hevRlmHQfKERUQTRJbLiLBs/z/DbyqmZ8PXqTbFxO9awO9YqKntBy56pGostER7Lfxze7qXsqHbuKY/eCIy/pV5M1d4GmXMuU/htzjEkgrH/KPsThwjbPunOrLt2sFoFCEHunU+II0BMObK+6X0ZYYYLi4KrW+c20RsrVQoldTm5ISIbPTDiJq31/6w+Fl0rc2VVx0d2C994dmDh1ZsEPwJEvosilaaky+YgiyUdJVAV+FQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WDe4fnpdt0/NxxMC2o+OYJvDeNmXC4tvIz6hILWxmVo=;
+ b=mHKvC3e4JsE5FGAYvzmK55HhRxMjxZPBkKN3nMB5TbS0mKyxyCev+EmytxSYiOevDkpHhczYw8ACviZt453IbFLmOoikOTAY0BaR+FO5XZ3GyAoVDqomyBkodeJpqNTNKoKTIPSLPbO44RNPT3KVOv8smWLByWEukZzzD5TCd50=
+Received: from AM7PR08MB5352.eurprd08.prod.outlook.com (10.141.172.139) by
+ AM7PR08MB5334.eurprd08.prod.outlook.com (10.141.172.71) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.20; Thu, 19 Sep 2019 15:13:12 +0000
+Received: from AM7PR08MB5352.eurprd08.prod.outlook.com
+ ([fe80::c81a:63b1:5826:cf74]) by AM7PR08MB5352.eurprd08.prod.outlook.com
+ ([fe80::c81a:63b1:5826:cf74%2]) with mapi id 15.20.2263.023; Thu, 19 Sep 2019
+ 15:13:12 +0000
+From:   Ayan Halder <Ayan.Halder@arm.com>
+To:     Daniel Vetter <daniel@ffwll.ch>
+CC:     Daniel Stone <daniel@fooishbar.org>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "airlied@linux.ie" <airlied@linux.ie>, nd <nd@arm.com>,
+        "sean@poorly.run" <sean@poorly.run>
+Subject: Re: [RFC PATCH] drm:- Add a modifier to denote 'protected'
+ framebuffer
+Thread-Topic: [RFC PATCH] drm:- Add a modifier to denote 'protected'
+ framebuffer
+Thread-Index: AQHVZxR6T7KOwVbC3kmqPMMH1PUhIKcv34OAgAFOWACAADZTAIAAnioAgAEVfoCAAAILAIAAEXQA
+Date:   Thu, 19 Sep 2019 15:13:11 +0000
+Message-ID: <20190919151310.GA12236@arm.com>
+References: <20190909134241.23297-1-ayan.halder@arm.com>
+ <20190917125301.GQ3958@phenom.ffwll.local>
+ <CAPj87rPKp1ogZhk_fMrsX885zkAh1PB4usNQUd4KxNFUv4vsFw@mail.gmail.com>
+ <20190918120406.2ylkxx2rqsbhn2te@e110455-lin.cambridge.arm.com>
+ <CAPj87rOc3MvkjrX1qHpGuVUaGLuZiC7QYBO9v3T2NS+dicLC1g@mail.gmail.com>
+ <20190919140323.GA3456@arm.com>
+ <CAKMK7uHYy9pfmqV_qE948QMPOaxHsJ2sy3+J4kQqixanLP_SUQ@mail.gmail.com>
+In-Reply-To: <CAKMK7uHYy9pfmqV_qE948QMPOaxHsJ2sy3+J4kQqixanLP_SUQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: LO2P265CA0317.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:a4::17) To AM7PR08MB5352.eurprd08.prod.outlook.com
+ (2603:10a6:20b:106::11)
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=Ayan.Halder@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [217.140.106.54]
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-Correlation-Id: 1cb9b1f4-11e1-4e1d-abbc-08d73d13e982
+X-MS-Office365-Filtering-HT: Tenant
+X-Microsoft-Antispam-Untrusted: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM7PR08MB5334;
+X-MS-TrafficTypeDiagnostic: AM7PR08MB5334:|AM7PR08MB5334:|DB7PR08MB3193:
+X-MS-Exchange-PUrlCount: 1
+x-ms-exchange-transport-forked: True
+X-Microsoft-Antispam-PRVS: <DB7PR08MB3193E52A192E946FDCE7BFFDE4890@DB7PR08MB3193.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+x-ms-oob-tlc-oobclassifiers: OLM:10000;OLM:10000;
+x-forefront-prvs: 016572D96D
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(376002)(39860400002)(366004)(396003)(199004)(189003)(53754006)(478600001)(14444005)(229853002)(6306002)(2616005)(476003)(446003)(11346002)(66066001)(44832011)(305945005)(14454004)(486006)(6246003)(25786009)(71200400001)(6486002)(33656002)(6512007)(6916009)(6436002)(36756003)(966005)(71190400001)(7736002)(81156014)(8676002)(2906002)(4326008)(81166006)(8936002)(52116002)(256004)(66476007)(76176011)(99286004)(5660300002)(86362001)(3846002)(1076003)(66446008)(386003)(66556008)(26005)(64756008)(53546011)(102836004)(186003)(316002)(6506007)(54906003)(66946007)(6116002)(21314003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM7PR08MB5334;H:AM7PR08MB5352.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info-Original: +y+NAggt8WeTGhykNsLtoZ9pnmJG44l2ZxbnYO0esIZ5yOQWlq+KtRhPXbZc9a/NIe8K8u2/xZi9CQwad6jgMj/a0JZiEYBM1E8sJYjhOqjLdfzQbcaK4c7gouVHD+d2V1vXtZD+usw1mqLBrZ708vC5/8d8JomQXUJEe8EERn1BnudLw7o2XKeobnLUnFHA0q/1/0KO1cDVBobAE8GtB/1MRoUiC6yw0cGpq3xvm/AeG+TXdyu1Ui6ZUmJr2Ju5FTCiehc/AsYkHHIpRHDqeCBJLGFFP2a6R/Cq9t0cAN3hHpCzDEQ3W4k9q0WORYPtfi1U6xlEkVL4Yh6zccLK0gzqIPUQBwPU870VMq7zi5LnTVZEwfS8KfFRyreNBIdL8++uTsmYDY9CEn7pxT9fQ/WL6fCug4RxgI+H72vGL/A=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <DC2653E39A52E74F9CAB3ED1A53E7132@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <20190919131537.GA15392@bombadil.infradead.org>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms040506050500000107030202"
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR08MB5334
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Ayan.Halder@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: VE1EUR03FT037.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(346002)(376002)(39860400002)(189003)(199004)(53754006)(6512007)(4326008)(229853002)(22756006)(97756001)(446003)(6246003)(63350400001)(5660300002)(70206006)(6862004)(76176011)(50466002)(6486002)(53546011)(23726003)(3846002)(102836004)(336012)(33656002)(99286004)(25786009)(76130400001)(186003)(6306002)(26005)(46406003)(2906002)(386003)(6116002)(66066001)(6506007)(47776003)(316002)(107886003)(36906005)(8676002)(54906003)(7736002)(26826003)(356004)(966005)(8746002)(8936002)(1076003)(2616005)(81166006)(81156014)(476003)(126002)(36756003)(14444005)(305945005)(486006)(14454004)(478600001)(86362001)(11346002)(70586007)(21314003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR08MB3193;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:TempError;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;MX:1;A:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 32f70d15-19e2-46e7-c826-08d73d13e2b1
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(710020)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB7PR08MB3193;
+NoDisclaimer: True
+X-Forefront-PRVS: 016572D96D
+X-Microsoft-Antispam-Message-Info: Fu52MnrX1aaPK/z0rOgAsayHxUcppWTGilUfHcUbRzU9+1fIFuSANPPDkAvDp01NKS6m77CrSBJ57SwK1fgeYcG+PgGeOv1lruhp8izzxX2zwqvddYJEMBuSY2LlZZh2QPjBLyqu/pHi3j93/C/FyHc/4B9qhRxvcJgyVMhFgJ1tAX4kaLnr9NBLcYJf4mHUcL9FaEqUCUSCg/MkNFFoqAFkFbl+1mLpji1w2Q4GUUWb1AWh8QdK+bMNRjzr53sa8QQS199UsqXakfX7zxaANY0412ZUMVK/L4VL6NWkeq2CB0AVmAzxBEVYSFRKgC1OwtGx4J6BfUO9joaoX8PHC2iTLwWv+KxwxoYyPGY3OOkXyFv5GkCORTuXrJQZJS1oxxDtST/kx3VLkW7B0XTHy1ATwjTE5RujzIW5Hci/HPg=
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Sep 2019 15:13:22.6131
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1cb9b1f4-11e1-4e1d-abbc-08d73d13e982
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3193
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a cryptographically signed message in MIME format.
-
---------------ms040506050500000107030202
-Content-Type: multipart/mixed;
- boundary="------------038C540BCD924EA1E1CE4C7A"
-Content-Language: en-US
-
-This is a multi-part message in MIME format.
---------------038C540BCD924EA1E1CE4C7A
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-On 9/19/2019 9:15 AM, Matthew Wilcox wrote:
-> Why is it organised this way?  I mean, yes, technically, rxrpc is a
-> generic layer-6 protocol that any blah blah blah, but in practice no
-> other user has come up in the last 37 years, so why bother pretending
-> one is going to?  Just git mv net/rxrpc fs/afs/ and merge everything
-> through your tree.
+On Thu, Sep 19, 2019 at 04:10:42PM +0200, Daniel Vetter wrote:
+> On Thu, Sep 19, 2019 at 4:03 PM Ayan Halder <Ayan.Halder@arm.com> wrote:
+> >
+> > On Wed, Sep 18, 2019 at 10:30:12PM +0100, Daniel Stone wrote:
+> >
+> > Hi All,
+> > Thanks for your suggestions.
+> >
+> > > Hi Liviu,
+> > >
+> > > On Wed, 18 Sep 2019 at 13:04, Liviu Dudau <Liviu.Dudau@arm.com> wrote=
+:
+> > > > On Wed, Sep 18, 2019 at 09:49:40AM +0100, Daniel Stone wrote:
+> > > > > I totally agree. Framebuffers aren't about the underlying memory =
+they
+> > > > > point to, but about how to _interpret_ that memory: it decorates =
+a
+> > > > > pointer with width, height, stride, format, etc, to allow you to =
+make
+> > > > > sense of that memory. I see content protection as being the same =
+as
+> > > > > physical contiguity, which is a property of the underlying memory
+> > > > > itself. Regardless of the width, height, or format, you just cann=
+ot
+> > > > > access that memory unless it's under the appropriate ('secure eno=
+ugh')
+> > > > > conditions.
+> > > > >
+> > > > > So I think a dmabuf attribute would be most appropriate, since th=
+at's
+> > > > > where you have to do all your MMU handling, and everything else y=
+ou
+> > > > > need to do to allow access to that buffer, anyway.
+> > > >
+> > > > Isn't it how AMD currently implements protected buffers as well?
+> > >
+> > > No idea to be honest, I haven't seen anything upstream.
+> > >
+> > > > > There's a lot of complexity beyond just 'it's protected'; for
+> > > > > instance, some CP providers mandate that their content can only b=
+e
+> > > > > streamed over HDCP 2.2 Type-1 when going through an external
+> > > > > connection. One way you could do that is to use a secure world
+> > > > > (external controller like Intel's ME, or CPU-internal enclave lik=
+e SGX
+> > > > > or TEE) to examine the display pipe configuration, and only then =
+allow
+> > > > > access to the buffers and/or keys. Stuff like that is always goin=
+g to
+> > > > > be out in the realm of vendor & product-policy-specific add-ons, =
+but
+> > > > > it should be possible to agree on at least the basic mechanics an=
+d
+> > > > > expectations of a secure path without things like that.
+> > > >
+> > > > I also expect that going through the secure world will be pretty mu=
+ch transparent for
+> > > > the kernel driver, as the most likely hardware implementations woul=
+d enable
+> > > > additional signaling that will get trapped and handled by the secur=
+e OS. I'm not
+> > > > trying to simplify things, just taking the stance that it is usersp=
+ace that is
+> > > > coordinating all this, we're trying only to find a common ground on=
+ how to handle
+> > > > this in the kernel.
+> > >
+> > > Yeah, makes sense.
+> > >
+> > > As a strawman, how about a new flag to drmPrimeHandleToFD() which set=
+s
+> > > the 'protected' flag on the resulting dmabuf?
+> >
+> > To be honest, during our internal discussion james.qian.wang@arm.com ha=
+d a
+> > similar suggestion of adding a new flag to dma_buf but I decided
+> > against it.
+> >
+> > As per my understanding, adding custom dma buf flags (like
+> > AMDGPU_GEM_CREATE_XXX, etc) is possible if we(Arm) had our own allocato=
+r. We
+> > rely on the dumb allocator and ion allocator for framebuffer creation.
+> >
+> > I was looking at an allocator independent way of userspace
+> > communicating to the drm framework that the framebuffer is protected.
+> >
+> > Thus, it looked to me that framebuffer modifier is the best (or the lea=
+st
+> > corrupt) way of going forth.
+> >
+> > We use ion and dumb allocator for framebuffer object creation. The way
+> > I see it is as follows :-
+> >
+> > 1. For ion allocator :-
+> > Userspace can specify that it wants the buffer from a secure heap or an=
+y other
+> > special region of heap. The ion driver will either fault into the secur=
+e os to
+> > create the buffers or it will do some other magic. Honestly, I have sti=
+ll not
+> > figured that out. But it will be agnostic to the drm core.
 >=20
-> I feel similarly about net/9p, net/sunrpc and net/ceph.  Every filesyst=
-em
-> comes with its own presentation layer; nobody reuses an existing one.
-> Just stop pretending they're separate components.
+> Allocating buffers from a special heap is what I expected the
+> interface to be. The issue is that if we specify the secure mode any
+> time later on, then it could be changed. E.g. with Daniel Stone's idea
+> of a handle2fd flag, you could export the buffer twice, once secure,
+> once non-secure. That sounds like a silly thing to me, and better to
+> prevent that - or is this actually possible/wanted, i.e. do we want to
+> change the secure mode for a buffer later on?
+>=20
+> > The userspace gets a handle to the buffer and then it calls addFB2 with
+> > DRM_FORMAT_MOD_ARM_PROTECTED, so that the driver can configure the
+> > dpu's protection bits (to access the memory with special signals).
+>=20
+> If we allocate a secure buffer there's no need for flags anymore I
+> think - it would be a property of the underlying buffer (like a
+> contiguous buffer). All we need are two things:
+> - make sure secure buffers can only be imported by secure-buffer aware dr=
+ivers
+> - some way for such drivers to figure out whether they deal with a
+> secure buffer or not.
 
-The IBM/OpenAFS rxrpc implementation has been used for many services
-other than afs3 over the past 37 years within institutions that had
-source code access.  rxrpc provides a light-weight rpc layer capable of
-pluggable per-service security classes.  It offers optional end-to-end
-authentication, integrity protection and wire privacy.
+I am with you on this. Yes, we need to communicate the above two
+things.
 
-The existence of Linux rxrpc as a socket family means that it can be
-used to implement not only clients for AFS and AuriStorFS services
-beyond the fileserver but also the location service, protection service,
-backup service, etc.  The rxrpc socket family could also be used to
-implement the servers.
+>=20
+> There's no need for any flags anywhere else with the ion/secure
+> dma-buf heap solution. E.g. for contig buffer we also dont pass around
+> a DRM_FORMAT_MOD_PHYSICALLY_CONTIG for addfb2.
 
-The linux rxrpc implementation does not yet have all of the
-functionality of the AuriStor RX implementation but it is fast.  Unlike
-every other RX implementation, the Linux rxrpc doesn't process packets
-through both UDP and RX.  To achieve the same performance as Linux rxrpc
-the AuriStor userland RX must leverage DPDK.
+Sorry, I could not follow you here. For the driver to know if it is importi=
+ng
+a secure buffer or using a secure buffer, it needs some flags, right?
 
-It is my hope that as Linux rxrpc continues to improve and is built into
-kernels by more distributions that it will see wider use.  It is a
-perfect match for IoT.
+Or on a second thought, are you suggesting that we should stick with
+a dma_buf flag (IS_PROTECTED) only ?
 
-Jeffrey Altman
+>=20
+> > 2. For dumb allocator :-
+> > I am curious to know if we can add 'IS_PROTECTED' flag to
+> > drm_mode_create_dumb.flags. This can/might be used to set dma_buf
+> > flags. Let me know if this is an incorrect/forbidden path.
+>=20
+> dumb is dumb, this definitely feels like the wrong interface to me.
+>=20
+> > In a nutshell, my objective is to figure out if the userspace is able
+> > to communicate to the drm core about the 'protection' status of the
+> > buffer without introducing Arm specific buffer allocator.
+>=20
+> Why does userspace need to communicate this again? What's the issue
+> with using an ARM specific allocator for this?
 
+We never felt the need to create an Arm specific allocator. Either
+Dumb or Ion allocator would always suffice our purpose.
 
+To upstream 'protected mode' feature of our komeda driver, if we need to
+write our own allocator, it will be a big overhead. :)
 
+Also to answer your earlier question
 
+"But if it's a generic flag, how do you combine that with other
+modifiers? Like if you have a tiled buffer, but also encrypted? Or
+afbc compressed, or whatever else. I'd expect for your hw encryption
+is orthogonal to the buffer/tiling/compression format used?"
 
+Yes, hw encryption(protected mode) is orthogonal/independent to AFBC compre=
+ssion.
+Thus, any/all AFBC buffers can be supported with/without protected
+mode.
 
---------------038C540BCD924EA1E1CE4C7A
-Content-Type: text/x-vcard; charset=utf-8;
- name="jaltman.vcf"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: attachment;
- filename="jaltman.vcf"
-
-begin:vcard
-fn:Jeffrey Altman
-n:Altman;Jeffrey
-org:AuriStor, Inc.
-adr:;;255 W 94TH ST STE 6B;New York;NY;10025-6985;United States
-email;internet:jaltman@auristor.com
-title:CEO
-tel;work:+1-212-769-9018
-url:https://www.linkedin.com/in/jeffreyaltman/
-version:2.1
-end:vcard
-
-
---------------038C540BCD924EA1E1CE4C7A--
-
---------------ms040506050500000107030202
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
-DGswggXSMIIEuqADAgECAhBAAW0B1qVVQ32wvx2EXYU6MA0GCSqGSIb3DQEBCwUAMDoxCzAJ
-BgNVBAYTAlVTMRIwEAYDVQQKEwlJZGVuVHJ1c3QxFzAVBgNVBAMTDlRydXN0SUQgQ0EgQTEy
-MB4XDTE5MDkwNTE0MzE0N1oXDTIyMTEwMTE0MzE0N1owcDEvMC0GCgmSJomT8ixkAQETH0Ew
-MTQxMEMwMDAwMDE2RDAxRDZBNTQwMDAwMDQ0NDcxGTAXBgNVBAMTEEplZmZyZXkgRSBBbHRt
-YW4xFTATBgNVBAoTDEF1cmlTdG9yIEluYzELMAkGA1UEBhMCVVMwggEiMA0GCSqGSIb3DQEB
-AQUAA4IBDwAwggEKAoIBAQCY1TC9QeWnUgEoJ81FcAVnhGn/AWuzvkYRUG5/ZyXDdaM212e8
-ybCklgSmZweqNdrfaaHXk9vwjpvpD4YWgb07nJ1QBwlvRV/VPAaDdneIygJJWBCzaMVLttKO
-0VimH/I/HUwFBQT2mrktucCEf2qogdi2P+p5nuhnhIUiyZ71Fo43gF6cuXIMV/1rBNIJDuwM
-Q3H8zi6GL0p4mZFZDDKtbYq2l8+MNxFvMrYcLaJqejQNQRBuZVfv0Fq9pOGwNLAk19baIw3U
-xdwx+bGpTtS63Py1/57MQ0W/ZXE/Ocnt1qoDLpJeZIuEBKgMcn5/iN9+Ro5zAuOBEKg34wBS
-8QCTAgMBAAGjggKcMIICmDAOBgNVHQ8BAf8EBAMCBPAwgYQGCCsGAQUFBwEBBHgwdjAwBggr
-BgEFBQcwAYYkaHR0cDovL2NvbW1lcmNpYWwub2NzcC5pZGVudHJ1c3QuY29tMEIGCCsGAQUF
-BzAChjZodHRwOi8vdmFsaWRhdGlvbi5pZGVudHJ1c3QuY29tL2NlcnRzL3RydXN0aWRjYWEx
-Mi5wN2MwHwYDVR0jBBgwFoAUpHPa72k1inXMoBl7CDL4a4nkQuwwCQYDVR0TBAIwADCCASsG
-A1UdIASCASIwggEeMIIBGgYLYIZIAYb5LwAGAgEwggEJMEoGCCsGAQUFBwIBFj5odHRwczov
-L3NlY3VyZS5pZGVudHJ1c3QuY29tL2NlcnRpZmljYXRlcy9wb2xpY3kvdHMvaW5kZXguaHRt
-bDCBugYIKwYBBQUHAgIwga0MgapUaGlzIFRydXN0SUQgQ2VydGlmaWNhdGUgaGFzIGJlZW4g
-aXNzdWVkIGluIGFjY29yZGFuY2Ugd2l0aCBJZGVuVHJ1c3QncyBUcnVzdElEIENlcnRpZmlj
-YXRlIFBvbGljeSBmb3VuZCBhdCBodHRwczovL3NlY3VyZS5pZGVudHJ1c3QuY29tL2NlcnRp
-ZmljYXRlcy9wb2xpY3kvdHMvaW5kZXguaHRtbDBFBgNVHR8EPjA8MDqgOKA2hjRodHRwOi8v
-dmFsaWRhdGlvbi5pZGVudHJ1c3QuY29tL2NybC90cnVzdGlkY2FhMTIuY3JsMB8GA1UdEQQY
-MBaBFGphbHRtYW5AYXVyaXN0b3IuY29tMB0GA1UdDgQWBBR7pHsvL4H5GdzNToI9e5BuzV19
-bzAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwDQYJKoZIhvcNAQELBQADggEBAFlm
-JYk4Ff1v/n0foZkv661W4LCRtroBaVykOXetrDDOQNK2N6JdTa146uIZVgBeU+S/0DLvJBKY
-tkUHQ9ovjXJTsuCBmhIIw3YlHoFxbku0wHEpXMdFUHV3tUodFJJKF3MbC8j7dOMkag59/Mdz
-Sjszdvit0av9nTxWs/tRKKtSQQlxtH34TouIke2UgP/Nn901QLOrJYJmtjzVz8DW3IYVxfci
-SBHhbhJTdley5cuEzphELo5NR4gFjBNlxH7G57Hno9+EWILpx302FJMwTgodIBJbXLbPMHou
-xQbOL2anOTUMKO8oH0QdQHCtC7hpgoQa7UJYJxDBI+PRaQ/HObkwggaRMIIEeaADAgECAhEA
-+d5Wf8lNDHdw+WAbUtoVOzANBgkqhkiG9w0BAQsFADBKMQswCQYDVQQGEwJVUzESMBAGA1UE
-ChMJSWRlblRydXN0MScwJQYDVQQDEx5JZGVuVHJ1c3QgQ29tbWVyY2lhbCBSb290IENBIDEw
-HhcNMTUwMjE4MjIyNTE5WhcNMjMwMjE4MjIyNTE5WjA6MQswCQYDVQQGEwJVUzESMBAGA1UE
-ChMJSWRlblRydXN0MRcwFQYDVQQDEw5UcnVzdElEIENBIEExMjCCASIwDQYJKoZIhvcNAQEB
-BQADggEPADCCAQoCggEBANGRTTzPCic0kq5L6ZrUJWt5LE/n6tbPXPhGt2Egv7plJMoEpvVJ
-JDqGqDYymaAsd8Hn9ZMAuKUEFdlx5PgCkfu7jL5zgiMNnAFVD9PyrsuF+poqmlxhlQ06sFY2
-hbhQkVVQ00KCNgUzKcBUIvjv04w+fhNPkwGW5M7Ae5K5OGFGwOoRck9GG6MUVKvTNkBw2/vN
-MOd29VGVTtR0tjH5PS5yDXss48Yl1P4hDStO2L4wTsW2P37QGD27//XGN8K6amWB6F2XOgff
-/PmlQjQOORT95PmLkwwvma5nj0AS0CVp8kv0K2RHV7GonllKpFDMT0CkxMQKwoj+tWEWJTiD
-KSsCAwEAAaOCAoAwggJ8MIGJBggrBgEFBQcBAQR9MHswMAYIKwYBBQUHMAGGJGh0dHA6Ly9j
-b21tZXJjaWFsLm9jc3AuaWRlbnRydXN0LmNvbTBHBggrBgEFBQcwAoY7aHR0cDovL3ZhbGlk
-YXRpb24uaWRlbnRydXN0LmNvbS9yb290cy9jb21tZXJjaWFscm9vdGNhMS5wN2MwHwYDVR0j
-BBgwFoAU7UQZwNPwBovupHu+QucmVMiONnYwDwYDVR0TAQH/BAUwAwEB/zCCASAGA1UdIASC
-ARcwggETMIIBDwYEVR0gADCCAQUwggEBBggrBgEFBQcCAjCB9DBFFj5odHRwczovL3NlY3Vy
-ZS5pZGVudHJ1c3QuY29tL2NlcnRpZmljYXRlcy9wb2xpY3kvdHMvaW5kZXguaHRtbDADAgEB
-GoGqVGhpcyBUcnVzdElEIENlcnRpZmljYXRlIGhhcyBiZWVuIGlzc3VlZCBpbiBhY2NvcmRh
-bmNlIHdpdGggSWRlblRydXN0J3MgVHJ1c3RJRCBDZXJ0aWZpY2F0ZSBQb2xpY3kgZm91bmQg
-YXQgaHR0cHM6Ly9zZWN1cmUuaWRlbnRydXN0LmNvbS9jZXJ0aWZpY2F0ZXMvcG9saWN5L3Rz
-L2luZGV4Lmh0bWwwSgYDVR0fBEMwQTA/oD2gO4Y5aHR0cDovL3ZhbGlkYXRpb24uaWRlbnRy
-dXN0LmNvbS9jcmwvY29tbWVyY2lhbHJvb3RjYTEuY3JsMB0GA1UdJQQWMBQGCCsGAQUFBwMC
-BggrBgEFBQcDBDAOBgNVHQ8BAf8EBAMCAYYwHQYDVR0OBBYEFKRz2u9pNYp1zKAZewgy+GuJ
-5ELsMA0GCSqGSIb3DQEBCwUAA4ICAQAN4YKu0vv062MZfg+xMSNUXYKvHwvZIk+6H1pUmivy
-DI4I6A3wWzxlr83ZJm0oGIF6PBsbgKJ/fhyyIzb+vAYFJmyI8I/0mGlc+nIQNuV2XY8cypPo
-VJKgpnzp/7cECXkX8R4NyPtEn8KecbNdGBdEaG4a7AkZ3ujlJofZqYdHxN29tZPdDlZ8fR36
-/mAFeCEq0wOtOOc0Eyhs29+9MIZYjyxaPoTS+l8xLcuYX3RWlirRyH6RPfeAi5kySOEhG1qu
-NHe06QIwpigjyFT6v/vRqoIBr7WpDOSt1VzXPVbSj1PcWBgkwyGKHlQUOuSbHbHcjOD8w8wH
-SDbL+L2he8hNN54doy1e1wJHKmnfb0uBAeISoxRbJnMMWvgAlH5FVrQWlgajeH/6NbYbBSRx
-ALuEOqEQepmJM6qz4oD2sxdq4GMN5adAdYEswkY/o0bRKyFXTD3mdqeRXce0jYQbWm7oapqS
-ZBccFvUgYOrB78tB6c1bxIgaQKRShtWR1zMM0JfqUfD9u8Fg7G5SVO0IG/GcxkSvZeRjhYcb
-TfqF2eAgprpyzLWmdr0mou3bv1Sq4OuBhmTQCnqxAXr4yVTRYHkp5lCvRgeJAme1OTVpVPth
-/O7HJ7VuEP9GOr6kCXCXmjB4P3UJ2oU0NqfoQdcSSSt9hliALnExTEjii20B2nSDojGCAxQw
-ggMQAgEBME4wOjELMAkGA1UEBhMCVVMxEjAQBgNVBAoTCUlkZW5UcnVzdDEXMBUGA1UEAxMO
-VHJ1c3RJRCBDQSBBMTICEEABbQHWpVVDfbC/HYRdhTowDQYJYIZIAWUDBAIBBQCgggGXMBgG
-CSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTE5MDkxOTE1MDUwM1ow
-LwYJKoZIhvcNAQkEMSIEILnKAlLH/2R0cBhY7b1upLBwc/++syatvLD2Mf9eWBqgMF0GCSsG
-AQQBgjcQBDFQME4wOjELMAkGA1UEBhMCVVMxEjAQBgNVBAoTCUlkZW5UcnVzdDEXMBUGA1UE
-AxMOVHJ1c3RJRCBDQSBBMTICEEABbQHWpVVDfbC/HYRdhTowXwYLKoZIhvcNAQkQAgsxUKBO
-MDoxCzAJBgNVBAYTAlVTMRIwEAYDVQQKEwlJZGVuVHJ1c3QxFzAVBgNVBAMTDlRydXN0SUQg
-Q0EgQTEyAhBAAW0B1qVVQ32wvx2EXYU6MGwGCSqGSIb3DQEJDzFfMF0wCwYJYIZIAWUDBAEq
-MAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzAOBggqhkiG9w0DAgICAIAwDQYIKoZIhvcNAwIC
-AUAwBwYFKw4DAgcwDQYIKoZIhvcNAwICASgwDQYJKoZIhvcNAQEBBQAEggEAZ3gAMStnXOka
-+c5vHmBX13Q0fh0QAduYj/tqXA9InDZuvtCPxInaG1Rgg0XsTYDr2RnrQw0ptn32T0ksOWbI
-UYWWG0/KQ/yLyQmWM0fvqehFznQUyumj1/5QeedGkvTnV9rtCC/wBpaNYZHK1CW0vTHTVlXw
-4Oc+WD0dZQxho2Ns/EPAYPYLUWlAAvTOv8EfvAEOs14n0rwKs4ZcifZp/JAbnWzL9zUiCrlS
-ttl/6CvHY/VzdCEGEFqHRS8Je1w1fw5LFfuMAIUml3raVqPFWg21zh3lfrhc2vzou8yQgL8t
-gseg+A+oGvAwwSUi0WdISamFAR8T7ryfZX5H5xj21QAAAAAAAA==
---------------ms040506050500000107030202--
-
+> -Daniel
+> --=20
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> +41 (0) 79 365 57 48 - http://blog.ffwll.ch
