@@ -2,128 +2,112 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95389C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 05:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E33CC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 05:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 647F5218AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 05:51:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28505218AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 05:54:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="F9KTVUqr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731149AbfISFvb (ORCPT
+        id S1731385AbfISFyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 01:51:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47382 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730861AbfISFvb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 01:51:31 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7685318CB8FB;
-        Thu, 19 Sep 2019 05:51:30 +0000 (UTC)
-Received: from thuth.remote.csb (ovpn-116-72.ams2.redhat.com [10.36.116.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C6E1C60C18;
-        Thu, 19 Sep 2019 05:51:28 +0000 (UTC)
-Subject: Re: [PATCH trivial] KVM: PPC: Remove superfluous check for non-zero
- return value
-To:     Greg Kurz <groug@kaod.org>
-Cc:     Paul Mackerras <paulus@ozlabs.org>, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Jiri Kosina <trivial@kernel.org>
-References: <20190911195235.29048-1-thuth@redhat.com>
- <20190918184436.5323298d@bahia.lan> <20190918225459.0f1091ad@bahia.lan>
-From:   Thomas Huth <thuth@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=thuth@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat
-Message-ID: <b61e5d33-60be-8f3e-a103-d66e5511bae8@redhat.com>
-Date:   Thu, 19 Sep 2019 07:51:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 19 Sep 2019 01:54:12 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:20058 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731171AbfISFyL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 01:54:11 -0400
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8J5jgn5017033
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 22:54:11 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=qoIfaq0yE8OIwpJ2DpJzQWe83nfZ+Iy15Q/fJpXKkFI=;
+ b=F9KTVUqraScd6kE6mCKxhNNtfbd755iTJ2GxKJGUXIJmH9WdP3b5In50U83R2zAi/eYc
+ OZ/c1MWujuKSW32qirwV31bbN2kC2W9quq+0R25dOtGUGkXASP0lAQYAiROX2N5SlcGf
+ H9Ia61eUKWTzFJI7PLfDVuOv9+jWLgjHzBY= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2v3vdu1j9v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 22:54:11 -0700
+Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:83::4) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 18 Sep 2019 22:54:09 -0700
+Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
+        id E1DE262E1C78; Wed, 18 Sep 2019 22:54:02 -0700 (PDT)
+Smtp-Origin-Hostprefix: devbig
+From:   Song Liu <songliubraving@fb.com>
+Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
+To:     <linux-kernel@vger.kernel.org>
+CC:     Song Liu <songliubraving@fb.com>, <kernel-team@fb.com>,
+        <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Smtp-Origin-Cluster: ftw2c04
+Subject: [PATCH] x86/mm/pti: Handle unaligned addr to PMD-mapped page in pti_clone_pgtable
+Date:   Wed, 18 Sep 2019 22:53:12 -0700
+Message-ID: <20190919055312.3020652-1-songliubraving@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-In-Reply-To: <20190918225459.0f1091ad@bahia.lan>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.63]); Thu, 19 Sep 2019 05:51:30 +0000 (UTC)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-19_02:2019-09-18,2019-09-19 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 impostorscore=0
+ spamscore=0 clxscore=1015 malwarescore=0 mlxscore=0 adultscore=0
+ mlxlogscore=520 lowpriorityscore=0 bulkscore=0 suspectscore=0
+ priorityscore=1501 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1908290000 definitions=main-1909190054
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/09/2019 22.54, Greg Kurz wrote:
-> On Wed, 18 Sep 2019 18:44:36 +0200
-> Greg Kurz <groug@kaod.org> wrote:
-> 
->> On Wed, 11 Sep 2019 21:52:35 +0200
->> Thomas Huth <thuth@redhat.com> wrote:
->>
->>> After the kfree()s haven been removed in the previous
->>> commit 9798f4ea71ea ("fix rollback when kvmppc_xive_create fails"),
->>> the code can be simplified even more to simply always "return ret"
->>> now.
->>>
->>> Signed-off-by: Thomas Huth <thuth@redhat.com>
->>> ---
->>
->> This looks like a good candidate for trivial, hence Cc'ing Jiri
->> and adding trivial keyword in subject.
->>
->> Reviewed-by: Greg Kurz <groug@kaod.org>
->>
-> 
-> Oops, the patch is correct but there are some fixes that require
-> the return 0 to stay around...
-> 
-> https://patchwork.ozlabs.org/project/kvm-ppc/list/?series=129957
+To clone page table of PMD-mapped pages, pti_clone_pgtable() requires PMD
+aligned start address. [1] adds warning for unaligned addresses. However,
+there is still no warning for unaligned address to valid huge pmd [2].
 
-:-)
+Add alignment check in valid pmd_large() case. If the address is
+unaligned, round it down to the nearest PMD aligned address and show
+warning.
 
-Ok, then please simply ignore my patch.
+[1] commit 825d0b73cd75 ("x86/mm/pti: Handle unaligned address gracefully
+                          in pti_clone_pagetable()")
+[2] https://lore.kernel.org/lkml/156864062019.3407.14798418565580024723.tglx@nanos.tec.linutronix.de/
 
- Thomas
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Song Liu <songliubraving@fb.com>
+---
+ arch/x86/mm/pti.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/x86/mm/pti.c b/arch/x86/mm/pti.c
+index 7f2140414440..d224115c350d 100644
+--- a/arch/x86/mm/pti.c
++++ b/arch/x86/mm/pti.c
+@@ -343,6 +343,10 @@ pti_clone_pgtable(unsigned long start, unsigned long end,
+ 		}
+ 
+ 		if (pmd_large(*pmd) || level == PTI_CLONE_PMD) {
++			/* warn and round_down() unaligned addr */
++			if (WARN_ON_ONCE(addr & ~PMD_MASK))
++				addr &= PMD_MASK;
++
+ 			target_pmd = pti_user_pagetable_walk_pmd(addr);
+ 			if (WARN_ON(!target_pmd))
+ 				return;
+-- 
+2.17.1
+
