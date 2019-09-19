@@ -2,92 +2,142 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 450E9C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 08:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C47C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 08:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 211BA207FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 08:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 012AC207FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 08:11:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731794AbfISILa (ORCPT
+        id S1731891AbfISIL7 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 04:11:30 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2735 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727033AbfISIL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 04:11:29 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 81500F5F3AA2D190C1C0;
-        Thu, 19 Sep 2019 16:11:25 +0800 (CST)
-Received: from [127.0.0.1] (10.63.139.185) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Thu, 19 Sep 2019
- 16:11:15 +0800
-Subject: Re: [PATCH 2/2] crypto: hisilicon - avoid unused function warning
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Arnd Bergmann <arnd@arndb.de>
-References: <20190906152250.1450649-1-arnd@arndb.de>
- <20190906152250.1450649-2-arnd@arndb.de>
- <20190913091718.GA6382@gondor.apana.org.au>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Hao Fang <fanghao11@huawei.com>,
-        Kenneth Lee <liguozhu@hisilicon.com>,
-        <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-From:   Zhou Wang <wangzhou1@hisilicon.com>
-Message-ID: <5D833821.5000504@hisilicon.com>
-Date:   Thu, 19 Sep 2019 16:11:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.5.1
+        Thu, 19 Sep 2019 04:11:59 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:51304 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727033AbfISIL6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 04:11:58 -0400
+Received: from static-dcd-cqq-121001.business.bouyguestelecom.com ([212.194.121.1] helo=nyx.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <jay.vosburgh@canonical.com>)
+        id 1iArXb-00025e-IU; Thu, 19 Sep 2019 08:11:51 +0000
+Received: by nyx.localdomain (Postfix, from userid 1000)
+        id 7E1A12402EB; Thu, 19 Sep 2019 10:11:51 +0200 (CEST)
+Received: from nyx (localhost [127.0.0.1])
+        by nyx.localdomain (Postfix) with ESMTP id 756FE289C50;
+        Thu, 19 Sep 2019 10:11:51 +0200 (CEST)
+From:   Jay Vosburgh <jay.vosburgh@canonical.com>
+To:     "zhangsha \(A\)" <zhangsha.zhang@huawei.com>
+cc:     "vfalico@gmail.com" <vfalico@gmail.com>,
+        "andy@greyhouse.net" <andy@greyhouse.net>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        yuehaibing <yuehaibing@huawei.com>,
+        hunongda <hunongda@huawei.com>,
+        "Chenzhendong (alex)" <alex.chen@huawei.com>
+Subject: Re: [PATCH v3] bonding: force enable lacp port after link state recovery for 802.3ad
+In-reply-to: <e333c8d2f3624a898a378eb1073f5f29@huawei.com>
+References: <20190918130620.8556-1-zhangsha.zhang@huawei.com> <e333c8d2f3624a898a378eb1073f5f29@huawei.com>
+Comments: In-reply-to "zhangsha (A)" <zhangsha.zhang@huawei.com>
+   message dated "Wed, 18 Sep 2019 13:35:40 -0000."
+X-Mailer: MH-E 8.5+bzr; nmh 1.7.1-RC3; GNU Emacs 27.0.50
 MIME-Version: 1.0
-In-Reply-To: <20190913091718.GA6382@gondor.apana.org.au>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.63.139.185]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Date:   Thu, 19 Sep 2019 10:11:51 +0200
+Message-ID: <10098.1568880711@nyx>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/9/13 17:17, Herbert Xu wrote:
-> On Fri, Sep 06, 2019 at 05:22:30PM +0200, Arnd Bergmann wrote:
->> The only caller of hisi_zip_vf_q_assign() is hidden in an #ifdef,
->> so the function causes a warning when CONFIG_PCI_IOV is disabled:
->>
->> drivers/crypto/hisilicon/zip/zip_main.c:740:12: error: unused function 'hisi_zip_vf_q_assign' [-Werror,-Wunused-function]
->>
->> Move it into the same #ifdef.
->>
->> Fixes: 79e09f30eeba ("crypto: hisilicon - add SRIOV support for ZIP")
->> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+zhangsha (A) <zhangsha.zhang@huawei.com> wrote:
+
+>> -----Original Message-----
+>> From: zhangsha (A)
+>> Sent: 2019年9月18日 21:06
+>> To: jay.vosburgh@canonical.com; vfalico@gmail.com; andy@greyhouse.net;
+>> davem@davemloft.net; netdev@vger.kernel.org; linux-kernel@vger.kernel.org;
+>> yuehaibing <yuehaibing@huawei.com>; hunongda <hunongda@huawei.com>;
+>> Chenzhendong (alex) <alex.chen@huawei.com>; zhangsha (A)
+>> <zhangsha.zhang@huawei.com>
+>> Subject: [PATCH v3] bonding: force enable lacp port after link state recovery for
+>> 802.3ad
+>> 
+>> From: Sha Zhang <zhangsha.zhang@huawei.com>
+>> 
+>> After the commit 334031219a84 ("bonding/802.3ad: fix slave link initialization
+>> transition states") merged, the slave's link status will be changed to
+>> BOND_LINK_FAIL from BOND_LINK_DOWN in the following scenario:
+>> - Driver reports loss of carrier and
+>>   bonding driver receives NETDEV_DOWN notifier
+>> - slave's duplex and speed is zerod and
+>>   its port->is_enabled is cleard to 'false';
+>> - Driver reports link recovery and
+>>   bonding driver receives NETDEV_UP notifier;
+>> - If speed/duplex getting failed here, the link status
+>>   will be changed to BOND_LINK_FAIL;
+>> - The MII monotor later recover the slave's speed/duplex
+>>   and set link status to BOND_LINK_UP, but remains
+>>   the 'port->is_enabled' to 'false'.
+>> 
+>> In this scenario, the lacp port will not be enabled even its speed and duplex are
+>> valid. The bond will not send LACPDU's, and its state is 'AD_STATE_DEFAULTED'
+>> forever. The simplest fix I think is to call bond_3ad_handle_link_change() in
+>> bond_miimon_commit, this function can enable lacp after port slave speed
+>> check.
+>> As enabled, the lacp port can run its state machine normally after link recovery.
+>> 
+>> Signed-off-by: Sha Zhang <zhangsha.zhang@huawei.com>
 >> ---
->>  drivers/crypto/hisilicon/zip/zip_main.c | 2 ++
->>  1 file changed, 2 insertions(+)
-> 
-> Please find a way to fix this warning without reducing compiler
-> coverage.  I prefer to see any compile issues immediately rather
-> than through automated build testing.
-> 
-> Thanks,
+>>  drivers/net/bonding/bond_main.c | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/drivers/net/bonding/bond_main.c
+>> b/drivers/net/bonding/bond_main.c index 931d9d9..76324a5 100644
+>> --- a/drivers/net/bonding/bond_main.c
+>> +++ b/drivers/net/bonding/bond_main.c
+>> @@ -2206,7 +2206,8 @@ static void bond_miimon_commit(struct bonding
+>> *bond)
+>>  			 */
+>>  			if (BOND_MODE(bond) == BOND_MODE_8023AD &&
+>>  			    slave->link == BOND_LINK_UP)
+>> -
+>> 	bond_3ad_adapter_speed_duplex_changed(slave);
+>> +				bond_3ad_handle_link_change(slave,
+>> +							    BOND_LINK_UP);
+>>  			continue;
+>> 
+>>  		case BOND_LINK_UP:
 >
+>Hi, David,
+>I have replied your email for a while,  I guess you may miss my email, so I resend it.
+>The following link address is the last email, please review the new one again, thank you.
+>https://patchwork.ozlabs.org/patch/1151915/
+>
+>Last time, you doubted this is a driver specific problem,
+>I prefer to believe it's not because I find the commit 4d2c0cda,
+>its log says " Some NIC drivers don't have correct speed/duplex 
+>settings at the time they send NETDEV_UP notification ...".
+>
+>Anyway, I think the lacp status should be fixed correctly,
+>since link-monitoring (miimon) set SPEED/DUPLEX right here.
 
-Sorry for missing this patch.
+	I suspect this is going to be related to the concurrent
+discussion with Aleksei, and would like to see the instrumentation
+results from his tests before adding another change to attempt to
+resolve this.
 
-Seems other drivers also do like using #ifdef. Do you mean something like this:
-#ifdef CONFIG_PCI_IOV
-sriov_enable()
-...
-#else
-/* stub */
-sriov_enable()
-...
-#endif
+	Also, what device are you using for your testing, and are you
+able to run the instrumentation patch that I provided to Aleksei and
+provide its results?
 
-Best,
-Zhou
+	-J
 
-
-
+---
+	-Jay Vosburgh, jay.vosburgh@canonical.com
