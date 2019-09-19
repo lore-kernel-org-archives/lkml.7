@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A02FEC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 433D6C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7027021920
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:21:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 152A221920
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:21:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931694;
-	bh=QMakK+G65d4PJQDEwWQuOtWlgbNXWcSWTNdfOIwnlt8=;
+	s=default; t=1568931699;
+	bh=txizpSKWNllJpJ8T6Vas/37oGmdhWUzm8YhP+TFhjJs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kG75j/Z4U2vYpiRnfvHq4LNc/a7+itciZOEjy/7HPC4+mCKM0csAl3k/D2Ty99lpc
-	 4HRFDNQWVaZdROHIDGr3l+32FSsAk9GV7cr1b3m5CVJ3nJ1WUYffyA3q7Zk7PVyMgF
-	 nEQM+ujIpI722UNAa9d5KDp5Nkw7XEQdoCm4lZcA=
+	b=gf6fhH2i31dXaHO3WJu9Rnncg7rG+i36qcejCe9I1E0+bivDY1xqDnTZ49K2zAsRi
+	 +m76oI0NVGuwpqCSO+odNCFTWyXj71yZNvohiZqBtKC1UiHYGvGXtSCKLo0yUP49Lp
+	 wCYf4opOiLEwxVU+kIy3gsMXj73BGRVJgO/zRC+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394057AbfISWVd (ORCPT
+        id S2404843AbfISWVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:21:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36006 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:21:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390113AbfISWV3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:21:29 -0400
+        id S2406735AbfISWVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:21:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFF4E21920;
-        Thu, 19 Sep 2019 22:21:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45FBC217D6;
+        Thu, 19 Sep 2019 22:21:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931689;
-        bh=QMakK+G65d4PJQDEwWQuOtWlgbNXWcSWTNdfOIwnlt8=;
+        s=default; t=1568931694;
+        bh=txizpSKWNllJpJ8T6Vas/37oGmdhWUzm8YhP+TFhjJs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U4cm3FHjazkMyHCkItQHQF85xeKsLunzlW2W9ZFfG+Fl44lf7Z21FVI18Dda/bVTN
-         wAr8n9kmaEnw18k+KhO5fo0SOSeSUHSpLoS9P9E5BCJbUgFJ1ZxyEA2gW7VbofrMK4
-         LkR1jY+dmjHG5vmoXjgUUd95BRR6NQf/g0Qwzo6E=
+        b=oPzX5JjNPqeYJ6cqV7aARSwM0zsYEYp0bJGR9dn1HObcAwysa+PAC+Ch86ugD548L
+         BdYhDEU9r8RXspJlRUK7tLQ/7wIb0LGcsYy0vvdCajjwcTldwowgYTeG4+FMyyVvuB
+         TCTD+LGMBW6dEi8ylpigLs+ThzyYiPbmofZm1k2g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Razvan Stefanescu <razvan.stefanescu@microchip.com>
-Subject: [PATCH 4.9 42/74] tty/serial: atmel: reschedule TX after RX was started
-Date:   Fri, 20 Sep 2019 00:03:55 +0200
-Message-Id: <20190919214808.944700419@linuxfoundation.org>
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.9 34/74] x86/build: Add -Wnoaddress-of-packed-member to REALMODE_CFLAGS, to silence GCC9 build warning
+Date:   Fri, 20 Sep 2019 00:03:47 +0200
+Message-Id: <20190919214808.286300816@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214800.519074117@linuxfoundation.org>
 References: <20190919214800.519074117@linuxfoundation.org>
@@ -59,34 +63,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Razvan Stefanescu <razvan.stefanescu@microchip.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit d2ace81bf902a9f11d52e59e5d232d2255a0e353 upstream.
+commit 42e0e95474fc6076b5cd68cab8fa0340a1797a72 upstream.
 
-When half-duplex RS485 communication is used, after RX is started, TX
-tasklet still needs to be  scheduled tasklet. This avoids console freezing
-when more data is to be transmitted, if the serial communication is not
-closed.
+One of the very few warnings I have in the current build comes from
+arch/x86/boot/edd.c, where I get the following with a gcc9 build:
 
-Fixes: 69646d7a3689 ("tty/serial: atmel: RS485 HD w/DMA: enable RX after TX is stopped")
-Signed-off-by: Razvan Stefanescu <razvan.stefanescu@microchip.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20190813074025.16218-1-razvan.stefanescu@microchip.com
+   arch/x86/boot/edd.c: In function ‘query_edd’:
+   arch/x86/boot/edd.c:148:11: warning: taking address of packed member of ‘struct boot_params’ may result in an unaligned pointer value [-Waddress-of-packed-member]
+     148 |  mbrptr = boot_params.edd_mbr_sig_buffer;
+         |           ^~~~~~~~~~~
+
+This warning triggers because we throw away all the CFLAGS and then make
+a new set for REALMODE_CFLAGS, so the -Wno-address-of-packed-member we
+added in the following commit is not present:
+
+  6f303d60534c ("gcc-9: silence 'address-of-packed-member' warning")
+
+The simplest solution for now is to adjust the warning for this version
+of CFLAGS as well, but it would definitely make sense to examine whether
+REALMODE_CFLAGS could be derived from CFLAGS, so that it picks up changes
+in the compiler flags environment automatically.
+
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Acked-by: Borislav Petkov <bp@alien8.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/atmel_serial.c |    1 -
- 1 file changed, 1 deletion(-)
+ arch/x86/Makefile |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/tty/serial/atmel_serial.c
-+++ b/drivers/tty/serial/atmel_serial.c
-@@ -1279,7 +1279,6 @@ atmel_handle_transmit(struct uart_port *
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -38,6 +38,7 @@ REALMODE_CFLAGS	:= $(M16_CFLAGS) -g -Os
  
- 			atmel_port->hd_start_rx = false;
- 			atmel_start_rx(port);
--			return;
- 		}
+ REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), -ffreestanding)
+ REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), -fno-stack-protector)
++REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), -Wno-address-of-packed-member)
+ REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), $(cc_stack_align4))
+ export REALMODE_CFLAGS
  
- 		atmel_tasklet_schedule(atmel_port, &atmel_port->tasklet_tx);
 
 
