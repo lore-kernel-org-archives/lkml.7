@@ -7,47 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C56CC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 105B8C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5995621929
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D93F621927
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:09:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568930937;
-	bh=gcfw7Pl9wJ1QreK2DJ9KV2FBShwf39zNfDMOs861Vlc=;
+	s=default; t=1568930940;
+	bh=UK3c53+5Ln36+1z3mp+kBI3ksWKT8ZfYTQ98LiYFiWI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y6dYRi9mMtWt6aXptKOhuKSHUlXv7G1h54BMTweMeTlRkKO3re7pAdEOJyAwFg0pc
-	 zOmKFUY6ANWWusWsWdSzNIYDRfhFhaMRnz27pP/hoRxVwwixSloYBmb5WffnKyo69h
-	 JqTHqXa2tA0VcpvUSD5plzsPl1874YCZ9ctRltYE=
+	b=gduq0AFONAsVAi6mDwrZZItmb6Pmkgrh6BZfRg0v/xMJ7EiYYsXVzdRWAmqS2x953
+	 +hhO10rq/Mw3FkUocJqdU6B0NUvuH1STC9XVKaP/i5Pzi+SsVOLek2GBd/WU+IKv54
+	 xongmPGIde5adwriqjKlLnA8h77LJ3YhLvBAr/hw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393496AbfISWI4 (ORCPT
+        id S2405325AbfISWJA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:08:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46824 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:09:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404077AbfISWIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:08:49 -0400
+        id S2393491AbfISWIz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:08:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CE1D2196F;
-        Thu, 19 Sep 2019 22:08:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99E73218AF;
+        Thu, 19 Sep 2019 22:08:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568930928;
-        bh=gcfw7Pl9wJ1QreK2DJ9KV2FBShwf39zNfDMOs861Vlc=;
+        s=default; t=1568930934;
+        bh=UK3c53+5Ln36+1z3mp+kBI3ksWKT8ZfYTQ98LiYFiWI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YoFjiHZtPBFmE4VfyO1XNzUBJigMmwVFJYW4jT+pyoKY3DPAhGXjkAobuZnlmin/k
-         u+sIQHslYnS8SVmfy0orvH4MXo59V1NDLyMj2y9DNsrQnphTVXB2SeehqdPtQqXIxB
-         JVYYU6/mpwAXq2HX6psIihbRiauVoA6v9z0Q/PeA=
+        b=a1DqqfHSetbdlrmVs6I363DaeWYLaTC85HmpoumBpkeOCamtkfKYBHj61zFquEWHh
+         Lcd51N90RbKSpbHH7g4aPo/D85xkDQ8ki7i3OmWlsfZEIbfpwqg3OrO7/WqlDaoHo3
+         B1RuX+HmAcolagX0zh29tFU0CG8zzU+baDFgPQjo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilya Leoshkevich <iii@linux.ibm.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 064/124] bpf: allow narrow loads of some sk_reuseport_md fields with offset > 0
-Date:   Fri, 20 Sep 2019 00:02:32 +0200
-Message-Id: <20190919214821.326409691@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>, alan@linux.intel.com,
+        bp@alien8.de, cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        rahul.tanwar@intel.com, rppt@linux.ibm.com, tony.luck@intel.com,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 066/124] x86/apic: Fix arch_dynirq_lower_bound() bug for DT enabled machines
+Date:   Fri, 20 Sep 2019 00:02:34 +0200
+Message-Id: <20190919214821.400996706@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -60,59 +67,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Leoshkevich <iii@linux.ibm.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit 2c238177bd7f4b14bdf7447cc1cd9bb791f147e6 ]
+[ Upstream commit 3e5bedc2c258341702ddffbd7688c5e6eb01eafa ]
 
-test_select_reuseport fails on s390 due to verifier rejecting
-test_select_reuseport_kern.o with the following message:
+Rahul Tanwar reported the following bug on DT systems:
 
-	; data_check.eth_protocol = reuse_md->eth_protocol;
-	18: (69) r1 = *(u16 *)(r6 +22)
-	invalid bpf_context access off=22 size=2
+> 'ioapic_dynirq_base' contains the virtual IRQ base number. Presently, it is
+> updated to the end of hardware IRQ numbers but this is done only when IOAPIC
+> configuration type is IOAPIC_DOMAIN_LEGACY or IOAPIC_DOMAIN_STRICT. There is
+> a third type IOAPIC_DOMAIN_DYNAMIC which applies when IOAPIC configuration
+> comes from devicetree.
+>
+> See dtb_add_ioapic() in arch/x86/kernel/devicetree.c
+>
+> In case of IOAPIC_DOMAIN_DYNAMIC (DT/OF based system), 'ioapic_dynirq_base'
+> remains to zero initialized value. This means that for OF based systems,
+> virtual IRQ base will get set to zero.
 
-This is because on big-endian machines casts from __u32 to __u16 are
-generated by referencing the respective variable as __u16 with an offset
-of 2 (as opposed to 0 on little-endian machines).
+Such systems will very likely not even boot.
 
-The verifier already has all the infrastructure in place to allow such
-accesses, it's just that they are not explicitly enabled for
-eth_protocol field. Enable them for eth_protocol field by using
-bpf_ctx_range instead of offsetof.
+For DT enabled machines ioapic_dynirq_base is irrelevant and not
+updated, so simply map the IRQ base 1:1 instead.
 
-Ditto for ip_protocol, bind_inany and len, since they already allow
-narrowing, and the same problem can arise when working with them.
-
-Fixes: 2dbb9b9e6df6 ("bpf: Introduce BPF_PROG_TYPE_SK_REUSEPORT")
-Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Reported-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Tested-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Tested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: alan@linux.intel.com
+Cc: bp@alien8.de
+Cc: cheol.yong.kim@intel.com
+Cc: qi-ming.wu@intel.com
+Cc: rahul.tanwar@intel.com
+Cc: rppt@linux.ibm.com
+Cc: tony.luck@intel.com
+Link: http://lkml.kernel.org/r/20190821081330.1187-1-rahul.tanwar@linux.intel.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/filter.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/x86/kernel/apic/io_apic.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/net/core/filter.c b/net/core/filter.c
-index 534c310bb0893..7aee6f368754a 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -8553,13 +8553,13 @@ sk_reuseport_is_valid_access(int off, int size,
- 		return size == size_default;
+diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
+index c9fec0657eea2..e8c6466ef65ed 100644
+--- a/arch/x86/kernel/apic/io_apic.c
++++ b/arch/x86/kernel/apic/io_apic.c
+@@ -2434,7 +2434,13 @@ unsigned int arch_dynirq_lower_bound(unsigned int from)
+ 	 * dmar_alloc_hwirq() may be called before setup_IO_APIC(), so use
+ 	 * gsi_top if ioapic_dynirq_base hasn't been initialized yet.
+ 	 */
+-	return ioapic_initialized ? ioapic_dynirq_base : gsi_top;
++	if (!ioapic_initialized)
++		return gsi_top;
++	/*
++	 * For DT enabled machines ioapic_dynirq_base is irrelevant and not
++	 * updated. So simply return @from if ioapic_dynirq_base == 0.
++	 */
++	return ioapic_dynirq_base ? : from;
+ }
  
- 	/* Fields that allow narrowing */
--	case offsetof(struct sk_reuseport_md, eth_protocol):
-+	case bpf_ctx_range(struct sk_reuseport_md, eth_protocol):
- 		if (size < FIELD_SIZEOF(struct sk_buff, protocol))
- 			return false;
- 		/* fall through */
--	case offsetof(struct sk_reuseport_md, ip_protocol):
--	case offsetof(struct sk_reuseport_md, bind_inany):
--	case offsetof(struct sk_reuseport_md, len):
-+	case bpf_ctx_range(struct sk_reuseport_md, ip_protocol):
-+	case bpf_ctx_range(struct sk_reuseport_md, bind_inany):
-+	case bpf_ctx_range(struct sk_reuseport_md, len):
- 		bpf_ctx_record_field_size(info, size_default);
- 		return bpf_ctx_narrow_access_ok(off, size, size_default);
- 
+ #ifdef CONFIG_X86_32
 -- 
 2.20.1
 
