@@ -2,157 +2,157 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0505C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC48C4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87ECE2067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:34:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FTkM871P"
+	by mail.kernel.org (Postfix) with ESMTP id BF6A62067B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:34:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732323AbfISOef (ORCPT
+        id S1732567AbfISOek (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 10:34:35 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:60774 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732082AbfISOef (ORCPT
+        Thu, 19 Sep 2019 10:34:40 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:46914 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732082AbfISOej (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 10:34:35 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8JEXe2Y028567;
-        Thu, 19 Sep 2019 09:33:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568903620;
-        bh=3hWAzQBM44NiooNx2UDD2G0o6OnQ7ufrB9rlUJiQznU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=FTkM871POjpB2V/MidnKMkHV/yuwzTF3OaC1byDeyAEInNV/O4vFeg5/hMNA7pF9L
-         UYKMyvfdq7OoMiI4tGTkyJj7WB0Ew4f+wKLqF8a0MkPm3c7wRM6GYcA8UC3O/7Crbs
-         VaS5W2CSoelQS2h+77ZHgfmnJTJmpFAs+v3GAWJw=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8JEXefC069798;
-        Thu, 19 Sep 2019 09:33:40 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 19
- Sep 2019 09:33:36 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 19 Sep 2019 09:33:40 -0500
-Received: from [10.250.132.15] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8JEXYtc011335;
-        Thu, 19 Sep 2019 09:33:35 -0500
-Subject: Re: [PATCH 17/23] mtd: spi-nor: Fix clearing of QE bit on
- lock()/unlock()
-To:     <Tudor.Ambarus@microchip.com>, <boris.brezillon@collabora.com>,
-        <marek.vasut@gmail.com>, <miquel.raynal@bootlin.com>,
-        <richard@nod.at>, <linux-mtd@lists.infradead.org>
-CC:     <dwmw2@infradead.org>, <computersforpeace@gmail.com>,
-        <joel@jms.id.au>, <andrew@aj.id.au>, <matthias.bgg@gmail.com>,
-        <vz@mleia.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>
-References: <20190917155426.7432-1-tudor.ambarus@microchip.com>
- <20190917155426.7432-18-tudor.ambarus@microchip.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <dceca616-2b98-9bc8-73e4-32fb06fc753d@ti.com>
-Date:   Thu, 19 Sep 2019 20:03:34 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 19 Sep 2019 10:34:39 -0400
+Received: from callcc.thunk.org (guestnat-104-133-0-98.corp.google.com [104.133.0.98] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x8JEYRHU016692
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 Sep 2019 10:34:29 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 6085D420811; Thu, 19 Sep 2019 10:34:27 -0400 (EDT)
+Date:   Thu, 19 Sep 2019 10:34:27 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        lkml <linux-kernel@vger.kernel.org>, linux-ext4@vger.kernel.org,
+        linux-man@vger.kernel.org
+Subject: Re: [PATCH RFC v4 1/1] random: WARN on large getrandom() waits and
+ introduce getrandom2()
+Message-ID: <20190919143427.GQ6762@mit.edu>
+References: <20190912034421.GA2085@darwi-home-pc>
+ <20190912082530.GA27365@mit.edu>
+ <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+ <20190914122500.GA1425@darwi-home-pc>
+ <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
+ <20190915052242.GG19710@mit.edu>
+ <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
+ <20190918211503.GA1808@darwi-home-pc>
+ <20190918211713.GA2225@darwi-home-pc>
+ <CAHk-=wiCqDiU7SE3FLn2W26MS_voUAuqj5XFa1V_tiGTrrW-zQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190917155426.7432-18-tudor.ambarus@microchip.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wiCqDiU7SE3FLn2W26MS_voUAuqj5XFa1V_tiGTrrW-zQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tudor
+(Adding linux-api since this patch proposes an API change; both by
+changing the existing behavior, and adding new flags and possibly a
+new system call.)
 
-[...]
+On Wed, Sep 18, 2019 at 04:57:58PM -0700, Linus Torvalds wrote:
+> On Wed, Sep 18, 2019 at 2:17 PM Ahmed S. Darwish <darwish.07@gmail.com> wrote:
+> >
+> > Since Linux v3.17, getrandom(2) has been created as a new and more
+> > secure interface for pseudorandom data requests.  It attempted to
+> > solve three problems, as compared to /dev/urandom:
+> 
+> I don't think your patch is really _wrong_, but I think it's silly to
+> introduce a new system call, when we have 30 bits left in the flags of
+> the old one, and the old system call checked them.
 
-On 17-Sep-19 9:25 PM, Tudor.Ambarus@microchip.com wrote:
-> +static int spi_nor_write_16bit_sr_and_check(struct spi_nor *nor, u8 status_new,
-> +					    u8 mask)
-> +{
-> +	int ret;
-> +	u8 *sr_cr = nor->bouncebuf;
-> +	u8 cr_written;
-> +
-> +	/* Make sure we don't overwrite the contents of Status Register 2. */
-> +	if (!(nor->flags & SNOR_F_NO_READ_CR)) {
+The only reason to introduce a new system call is if we were going to
+keep the existing behavior of getrandom.  Given that the patch changes
+what getrandom(0), I agree there's no point to adding a new system
+call.
 
-Assuming SNOR_F_NO_READ_CR is not set...
+> There is *one* other small semantic change: The old code did
+> urandom_read() which added warnings, but each warning also _reset_ the
+> crng_init_cnt. Until it decided not to warn any more, at which point
+> it also stops that resetting of crng_init_cnt.
+> 
+> And that reset of crng_init_cnt, btw, is some cray cray.
+> 
+> It's basically a "we used up entropy" thing, which is very
+> questionable to begin with as the whole discussion has shown, but
+> since it stops doing it after 10 cases, it's not even good security
+> assuming the "use up entropy" case makes sense in the first place.
 
-> +		ret = spi_nor_read_cr(nor, &sr_cr[1]);
+It was a bug that it stopped doing it after 10 tries, and there's a
+really good reason for it.  Yes, the "using up entropy" thing doesn't
+make much sense in the general case.  But we still need some threshold
+for deciding whether or not it's been sufficiently initialized such
+that we consider the CRNG initialized.
+
+The reason for zeroing it after we expose state is because otherwise
+if the pool starts in a known state (the attacker knows the starting
+configuration, knows the DMI table that we're mixing into the pool
+since that's a constant, etc.), then after we've injected a small
+amount of uncertainty in the pool --- say, we started with a single
+known state of the pool, and after injecting some randomness, there
+are 64 possible states of the pool.  If the attacker can read from
+/dev/urandom, the attacker can know which of the 64 possible states of
+the pool it's in.  Now suppose we inject more uncertainty, so that
+there's another 64 unknown states, and the attacker is able to
+constantly read from /dev/urandom in a tight loop; it'll be able to
+keep up with the injection of entropy insertion, and so even though
+we've injected 256 "bits" of uncertainty, the attacker will still know
+the state of the pool.  That's why when we read from the pool, we need
+to clear the entropy bits.
+
+This is sometimes called a "state extension attack", and there have
+been attacks that have been carried out against RNG's that's don't
+protect against it.  What happened is when I added the rate-limiting
+to the uninitialized /dev/urandom warning, I accidentally wiped out
+the protection.  But it was there for a reason.
+
+> And the new cases are defined to *not* warn. In particular,
+> GRND_INSECURE very much does *not* warn about early urandom access
+> when crng isn't ready. Because the whole point of that new mode is
+> that the user knows it isn't secure.
+> 
+> So that should make getrandom(GRND_INSECURE) palatable to the systemd
+> kind of use that wanted to avoid the pointless kernel warning.
+
+Yes, that's clearly the right thing to do.  I do think we need to
+restore the state extension attack protections, though.
+
+> +	/*
+> +	 * People are really confused about whether
+> +	 * this is secure or insecure. Traditional
+> +	 * behavior is secure, but there are users
+> +	 * who clearly didn't want that, and just
+> +	 * never thought about it.
+> +	 */
+> +	case 0:
+>  		ret = wait_for_random_bytes();
+> -		if (unlikely(ret))
 > +		if (ret)
-> +			return ret;
-> +	} else if (nor->flash.quad_enable) {
-> +		/*
-> +		 * If the Status Register 2 Read command (35h) is not
-> +		 * supported, we should at least be sure we don't
-> +		 * change the value of the SR2 Quad Enable bit.
-> +		 *
-> +		 * We can safely assume that when the Quad Enable method is
-> +		 * set, the value of the QE bit is one, as a consequence of the
-> +		 * nor->flash.quad_enable() call.
-> +		 *
-> +		 * We can safely assume that the Quad Enable bit is present in
-> +		 * the Status Register 2 at BIT(1). According to the JESD216
-> +		 * revB standard, BFPT DWORDS[15], bits 22:20, the 16-bit
-> +		 * Write Status (01h) command is available just for the cases
-> +		 * in which the QE bit is described in SR2 at BIT(1).
-> +		 */
-> +		sr_cr[1] = CR_QUAD_EN_SPAN;
-> +	} else {
-> +		sr_cr[1] = 0;
-> +	}
-> +
+>  			return ret;
+> +		break;
 
-CR_QUAD_EN_SPAN will not be in sr_cr[1] when we reach here. So code
-won't enable quad mode.
+I'm happy this proposed is not changing the behavior of getrandom(0).
+Why not just remap 0 to GRND_EXPLICIT | GRND_WAIT_ENTROPY, though?  It
+will have the same effect, and it's make it clear what we're doing.
 
+Later on, when we rip out /dev/random pool code (and make reading from
+/dev/random the equivalent of getrandom(GRND_SECURE)), we'll need to
+similarly map the legacy combination of flags for GRND_RANDOM and
+GRND_RANDOM | GRND_NONBLOCK.
 
-> +	sr_cr[0] = status_new;
-> +
-> +	ret = spi_nor_write_sr(nor, sr_cr, 2);
-> +	if (ret)
-> +		return ret;
-> +
-> +	cr_written = sr_cr[1];
-> +
-> +	ret = spi_nor_read_sr(nor, &sr_cr[0]);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if ((sr_cr[0] & mask) != (status_new & mask)) {
-> +		dev_err(nor->dev, "Read back test failed\n");
-> +		return -EIO;
-> +	}
-> +
-> +	if (nor->flags & SNOR_F_NO_READ_CR)
-> +		return 0;
-> +
-> +	ret = spi_nor_read_cr(nor, &sr_cr[1]);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (cr_written != sr_cr[1]) {
-> +		dev_err(nor->dev, "Read back test failed\n");
-> +		return -EIO;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-
-Regards
-Vignesh
+						- Ted
