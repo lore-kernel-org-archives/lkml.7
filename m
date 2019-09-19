@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF92BC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 823AAC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6FAE208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:35:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49A0B217D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:35:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932516;
-	bh=pk8YjyyRwMJOPfCa/yxcD7L3OlLFFCTVp2VRhcwJ2fw=;
+	s=default; t=1568932521;
+	bh=YGUky5l4b/jTQwvCUKgf0yLafhrXcctKofNMlj9R7Ao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=soj4ym23qlwa2yIHpvcMYuPLZZk8KyXHZuPRF4Ch85v5YkV2DICPz9GL2aoL2Bl0f
-	 3KSjqwFxVCaCKag6CTlltbL2s2dLTW906C+2eT+smCqtLz4eOfdumF/c+hsiMniEK4
-	 OpABTpOUIf6ck2Pa60WO00BGgAKx7dChgyZ5Tuik=
+	b=Y1LGMWvD1NraShvbkxKIFdO6MC1DAaaeJgfr5DVKsVVsCCo+ooSCcliSSKBMRK3Wg
+	 xlCN4FJTG86G5y3JL/++4BS95fhQfgN96iFmKVQgAKsW+0DpK3PEInuouua41v+tZc
+	 Fei7uoQfHJ7h0FRJTYQgeaC8pq7sKglRlTvfOAtU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406693AbfISWfQ (ORCPT
+        id S2393395AbfISWIT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:35:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46522 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:08:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393431AbfISWIe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:08:34 -0400
+        id S2393369AbfISWIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:08:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E515218AF;
-        Thu, 19 Sep 2019 22:08:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62225218AF;
+        Thu, 19 Sep 2019 22:08:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568930914;
-        bh=pk8YjyyRwMJOPfCa/yxcD7L3OlLFFCTVp2VRhcwJ2fw=;
+        s=default; t=1568930894;
+        bh=YGUky5l4b/jTQwvCUKgf0yLafhrXcctKofNMlj9R7Ao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V7BG65Ee34QzFMMyMEBtquwHHGjGRZdR+NT6rdnZpkYyEap4WEJC4TO7XzVxo/xLW
-         s7WgMn80Q2Ynq6Hp72R+acqTeLnXvdZ0PWm+dOTZ1ZxkIwZofYf/qWS1pxbmBqVkaG
-         04KAixctwXssjRe4ewtnwYkdW+DzP46iTyQRaU9c=
+        b=gENUcj9LB1VQbGdpoY2RT4k0vgcXDIeyJBNc1P3PHs7N/eGqM6uqyBJkjBxPAbSp3
+         s9VDCsukmGFARzqegasoY1+wCEh5kTc0h+SNsirvGo/v1ugZr7w9dGkkueFrqEjyby
+         0lTvxN4wB0bDvbyvUTMO7jFtTCBMNedU2ax/EHgU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Laszlo Ersek <lersek@redhat.com>,
-        Gerd Hoffmann <kraxel@redhat.com>,
+        stable@vger.kernel.org, Ilya Leoshkevich <iii@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 060/124] drm/virtio: use virtio_max_dma_size
-Date:   Fri, 20 Sep 2019 00:02:28 +0200
-Message-Id: <20190919214821.181161783@linuxfoundation.org>
+Subject: [PATCH 5.2 036/124] s390/bpf: fix lcgr instruction encoding
+Date:   Fri, 20 Sep 2019 00:02:04 +0200
+Message-Id: <20190919214820.329463470@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -60,51 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gerd Hoffmann <kraxel@redhat.com>
+From: Ilya Leoshkevich <iii@linux.ibm.com>
 
-[ Upstream commit 9b2a0a1ef66f96bf34921a3865581eca32ff05ec ]
+[ Upstream commit bb2d267c448f4bc3a3389d97c56391cb779178ae ]
 
-We must make sure our scatterlist segments are not too big, otherwise
-we might see swiotlb failures (happens with sev, also reproducable with
-swiotlb=force).
+"masking, test in bounds 3" fails on s390, because
+BPF_ALU64_IMM(BPF_NEG, BPF_REG_2, 0) ignores the top 32 bits of
+BPF_REG_2. The reason is that JIT emits lcgfr instead of lcgr.
+The associated comment indicates that the code was intended to
+emit lcgr in the first place, it's just that the wrong opcode
+was used.
 
-Suggested-by: Laszlo Ersek <lersek@redhat.com>
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-Reviewed-by: Laszlo Ersek <lersek@redhat.com>
-Link: http://patchwork.freedesktop.org/patch/msgid/20190821111210.27165-1-kraxel@redhat.com
+Fix by using the correct opcode.
+
+Fixes: 054623105728 ("s390/bpf: Add s390x eBPF JIT compiler backend")
+Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Acked-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/virtio/virtgpu_object.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ arch/s390/net/bpf_jit_comp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_object.c b/drivers/gpu/drm/virtio/virtgpu_object.c
-index b2da31310d24c..09b526518f5a6 100644
---- a/drivers/gpu/drm/virtio/virtgpu_object.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_object.c
-@@ -204,6 +204,7 @@ int virtio_gpu_object_get_sg_table(struct virtio_gpu_device *qdev,
- 		.interruptible = false,
- 		.no_wait_gpu = false
- 	};
-+	size_t max_segment;
- 
- 	/* wtf swapping */
- 	if (bo->pages)
-@@ -215,8 +216,13 @@ int virtio_gpu_object_get_sg_table(struct virtio_gpu_device *qdev,
- 	if (!bo->pages)
- 		goto out;
- 
--	ret = sg_alloc_table_from_pages(bo->pages, pages, nr_pages, 0,
--					nr_pages << PAGE_SHIFT, GFP_KERNEL);
-+	max_segment = virtio_max_dma_size(qdev->vdev);
-+	max_segment &= PAGE_MASK;
-+	if (max_segment > SCATTERLIST_MAX_SEGMENT)
-+		max_segment = SCATTERLIST_MAX_SEGMENT;
-+	ret = __sg_alloc_table_from_pages(bo->pages, pages, nr_pages, 0,
-+					  nr_pages << PAGE_SHIFT,
-+					  max_segment, GFP_KERNEL);
- 	if (ret)
- 		goto out;
- 	return 0;
+diff --git a/arch/s390/net/bpf_jit_comp.c b/arch/s390/net/bpf_jit_comp.c
+index 5e7c630331590..9a711472cbdc0 100644
+--- a/arch/s390/net/bpf_jit_comp.c
++++ b/arch/s390/net/bpf_jit_comp.c
+@@ -853,7 +853,7 @@ static noinline int bpf_jit_insn(struct bpf_jit *jit, struct bpf_prog *fp, int i
+ 		break;
+ 	case BPF_ALU64 | BPF_NEG: /* dst = -dst */
+ 		/* lcgr %dst,%dst */
+-		EMIT4(0xb9130000, dst_reg, dst_reg);
++		EMIT4(0xb9030000, dst_reg, dst_reg);
+ 		break;
+ 	/*
+ 	 * BPF_FROM_BE/LE
 -- 
 2.20.1
 
