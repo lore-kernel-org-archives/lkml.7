@@ -2,96 +2,67 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD1D6C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 06:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77CA7C4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 06:40:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93FDF218AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 06:39:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="PMxExpOI"
+	by mail.kernel.org (Postfix) with ESMTP id 4FDCB21928
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 06:40:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388408AbfISGjQ (ORCPT
+        id S2388422AbfISGkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 02:39:16 -0400
-Received: from mail-pg1-f178.google.com ([209.85.215.178]:42857 "EHLO
-        mail-pg1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388094AbfISGjQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 02:39:16 -0400
-Received: by mail-pg1-f178.google.com with SMTP id z12so1278703pgp.9
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 23:39:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=wpuMn03tUIQsR8rZavj+GiJJtBb+wUvitnysLC3OpiU=;
-        b=PMxExpOIXlUFXAFa3Moc3DfVHDnJscDeFnXV/qaxLuAv2F7DbqFqoz9P2w/LypXfKI
-         5xZwMOLHP7oblg4tNGly6XXBws+o4YSonS36H5xvLXAenzN0AheQQ6+JjT/7dIdsyu2A
-         xpcCStC9zyaH6IcNgFcxquUrX/jUNPrmmpjbzJ2dYeVDAiS3SuaTK6WuTadsiZBF6niW
-         +EA/Lp6VeIM1hNl/E/doXLlBN3jJeKzw1IDNihxrOCLx2y9JJxvUWRb+ZvUwyHhv6g4W
-         KM2+RJeUMKNU5+lDY0qJzkEh1Qs4aOqXR28Q7Cjk3/nbH5iK6CLU2shH7STEELSyDSy8
-         YolA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=wpuMn03tUIQsR8rZavj+GiJJtBb+wUvitnysLC3OpiU=;
-        b=Tk/sofmoU5eEpPy2m6ofJicsdyawQ9CSGkOw9E/XkcwwSIugN3GaSOyY9E8YSXXEe3
-         aXVlux6JxogtzM8pwNKDdq6xtis/j5cCoOEnwMfluyDYbxCe2Gryr/TtuSvCh1z12fe6
-         oeaGiKSzpDhe6vZnegTM40bwPHIrn45H5wF0ZOaLGsqDVuhhLX2EFJQ5XN/akhR1fPKb
-         xQh9AQoeeIZR77Sh/8Y1BNRVkIAE/41NWfw0x70YYUvwbVwDr6846y0qhEl9RavLJu+1
-         MUtF6Xg8VMwz0ojxm1tSgSmW8ruQCufCmKAF3KBy771Aoi0vhzxMAzvu3OC4GKdiRiT+
-         hFHw==
-X-Gm-Message-State: APjAAAWK/Y3USQyXUF9yxTmGByoU9qrJDhTilWNJ/3qVbQsNnSXPZocg
-        IKGyzF3fXhTtvtOTIpu6anFrtw==
-X-Google-Smtp-Source: APXvYqwHp1zJz34n8tT1pKbEoEETsbDLuoiL8pzuyfr/mZ7BuShBULuW5Pa7A5XuIVS9Qqs0wjqKXw==
-X-Received: by 2002:a17:90a:3086:: with SMTP id h6mr1972443pjb.1.1568875155727;
-        Wed, 18 Sep 2019 23:39:15 -0700 (PDT)
-Received: from pragneshp.open-silicon.com ([114.143.65.226])
-        by smtp.gmail.com with ESMTPSA id v5sm11550757pfv.76.2019.09.18.23.39.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 18 Sep 2019 23:39:15 -0700 (PDT)
-From:   Pragnesh Patel <pragnesh.patel@sifive.com>
-To:     lgirdwood@gmail.com, broonie@kernel.org
-Cc:     Pragnesh Patel <pragnesh.patel@sifive.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH] fixed-regulator: dt-bindings: Fixed building error for compatible property
-Date:   Thu, 19 Sep 2019 12:09:04 +0530
-Message-Id: <1568875145-2864-1-git-send-email-pragnesh.patel@sifive.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 19 Sep 2019 02:40:10 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33658 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725320AbfISGkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 02:40:10 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2855910CC1ED;
+        Thu, 19 Sep 2019 06:40:10 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-125-72.rdu2.redhat.com [10.10.125.72])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A04E05D6B0;
+        Thu, 19 Sep 2019 06:40:08 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAHk-=wgJx0FKq5FUP85Os1HjTPds4B3aQwumnRJDp+XHEbVjfA@mail.gmail.com>
+References: <CAHk-=wgJx0FKq5FUP85Os1HjTPds4B3aQwumnRJDp+XHEbVjfA@mail.gmail.com> <16147.1568632167@warthog.procyon.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     dhowells@redhat.com, YueHaibing <yuehaibing@huawei.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        linux-afs@lists.infradead.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL afs: Development for 5.4
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <28367.1568875207.1@warthog.procyon.org.uk>
+Date:   Thu, 19 Sep 2019 07:40:07 +0100
+Message-ID: <28368.1568875207@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.65]); Thu, 19 Sep 2019 06:40:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Compatible property is not of type 'string', so remove const:
-from it.
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-Signed-off-by: Pragnesh Patel <pragnesh.patel@sifive.com>
----
- Documentation/devicetree/bindings/regulator/fixed-regulator.yaml | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> However, I was close to unpulling it again. It has a merge commit with
+> this merge message:
+> 
+>     Merge remote-tracking branch 'net/master' into afs-next
+> 
+> and that simply is not acceptable.
 
-diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml b/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-index a78150c..f324169 100644
---- a/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-+++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-@@ -30,8 +30,8 @@ if:
- properties:
-   compatible:
-     enum:
--      - const: regulator-fixed
--      - const: regulator-fixed-clock
-+      - regulator-fixed
-+      - regulator-fixed-clock
- 
-   regulator-name: true
- 
--- 
-2.7.4
+Apologies - I meant to rebase that away.  There was a bug fix to rxrpc in
+net/master that didn't get pulled into your tree until Saturday.
 
+David
