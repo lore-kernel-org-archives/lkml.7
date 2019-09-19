@@ -5,121 +5,191 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1170C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 17:48:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3910CC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 17:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C2E621924
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 17:48:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C9DD21924
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 17:54:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RwKDc87r"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dDqdCLKv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391157AbfISRsV (ORCPT
+        id S2391989AbfISRyT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 13:48:21 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51970 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389990AbfISRsU (ORCPT
+        Thu, 19 Sep 2019 13:54:19 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:43522 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389717AbfISRyT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 13:48:20 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 7so5681589wme.1
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 10:48:19 -0700 (PDT)
+        Thu, 19 Sep 2019 13:54:19 -0400
+Received: by mail-qt1-f194.google.com with SMTP id c3so5307006qtv.10;
+        Thu, 19 Sep 2019 10:54:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=mCJxWV+T/vjZAkW9RLOGqcR/p13/ZsoE2pnzqrwefyM=;
-        b=RwKDc87r24DJ6Y7GfJUFEk9L6ElwCNLK9Gl5JusgqDGR1VoMQUsYMKXQbtzSRGCDK8
-         XAtyk6pQ9oq0RG+a+vd2qH9nJej/VjE+g1lEAPgPuPlB31Sj7PaWKBfhm/i2WK5CbAaM
-         jt/GNaYrvt/1qUS/jkapk6EAueH4J+MZ89P9yH/kKJF53oLE0UnwTzY2jRso/mm7IlDQ
-         qrzFDSloroX9I+LIqoL9ixaSXuVEXN1VEm7tDk3D+Qxj0uY8efB+sE+PwScK7JyumSRq
-         FGRdNUWRBNK+8isR0jR7pKuVBOitWXheIL2UcwUA9YfswmuuM9OV/ik0p5n0wBleCTcw
-         g23g==
+        bh=lhjn8qyJcwUfBjY1N3P+y5aRQQfw1E5mf/LtWXDIb7I=;
+        b=dDqdCLKvRNnKNp57sJxOb1B7tco0FEvav4u5SXb0PyIMdZGKomwxE60hmX6bODO/be
+         2RUwUJ2CaVlpAEZLKzTVc+iEaTpF/fxmGpt2UXK1odgysVQHaLRtFN6RdAkQda86IZCg
+         SaBwLHgrT4x+zuE0FdL0ZVOs4CNFSj7KzMUdBTHo/YS7B8AOpOzaen4K1LQqZC13aND/
+         W2qh2OIXWxr9mImTXHRdoNtZh6M/dxDXWAiOH+m2XQv4lNmn9konaNkTjLLYPv42Nqby
+         oz8bO9xeS6piKL/oR8HHRz0FflKwI0frQyI8KHSLU4ZEB7QTiEFuaNRMHu2tJs9lFhmz
+         fxPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=mCJxWV+T/vjZAkW9RLOGqcR/p13/ZsoE2pnzqrwefyM=;
-        b=fBzIk6mUxBnnkgWNUPJRMpAxDgujKT4KAy0w9iwynNaDEsYkNSU35EbpwskcVz9z7d
-         g9m1hKJeozPiW593IvwMxV3VkksHrNm/sdzJzjajyCHkUyV3aIfl3gf6cxNgCi9vs512
-         tZM9k7p5okV9wXaLasPhkckEEVmeX6n334aKq+ygd6FN85t1akWIRATXRlMtMYMFzDw6
-         3+Lss+nOKXPybYWb3QZym/dlQaJI5+jag3BaYs6Hc8wSiK4U39FbDR/oDaVM6sYgx7CZ
-         6bPLvKzgkjMdSmzR2O96o3DjJsrknsCay2HxDIx2IjoBOptoA8Th1uxfSaFl+4krpYUe
-         9HfQ==
-X-Gm-Message-State: APjAAAVMQS6jydxINMRJk8eR08n82y4vLAj8b2XNJM2y6mnx1GAF3c3C
-        ZRW/AJNlF9V4+1WKcXhbhJRFfJWRewNqGvOf3i8iZg==
-X-Google-Smtp-Source: APXvYqwm3MwPUu29S+PyJhKgcfKK9CwyzKAmTvvnC6MkPxf32vS8pD2QcP8WucowrzjF1uKErJ9EG25uKekDpyqYLQQ=
-X-Received: by 2002:a05:600c:54a:: with SMTP id k10mr1223343wmc.127.1568915298712;
- Thu, 19 Sep 2019 10:48:18 -0700 (PDT)
+        bh=lhjn8qyJcwUfBjY1N3P+y5aRQQfw1E5mf/LtWXDIb7I=;
+        b=jiZZLrDFEvd5QhD8E6/YqFJcaGr26d9NcuhAlEkkeHQRfSegWZn5tsft0skS9nik56
+         9KAeOOx8ZyNy2JNSF7uTVkHE2Vlmhztgu0jU7nTrGiNtYTUkNRHKSGHxkbfRtv7oRuMK
+         V2a7xObL3V/XtGKprzzgPQOz1vwr1tVExGC115Yz3FF5elncfyVE2dJUNZIyy/2CIV1y
+         rfDgaDgtnKkrm2I8QekGfbn64TxoNIPSrORjs6pXqPqYrRmnObGDiMr4VbBbUaYewHHG
+         9EaFSpcNDcXoNWuUE6qJGLAPHN2DNhyfGLUpK8ME91Hsu6iUPmes0C7Gy3dxOZLjzt8R
+         PJCw==
+X-Gm-Message-State: APjAAAW7ba5tzGIRNNpSUJ1+Cx1NXFjqzYyQuzV9sitqZnkI1KpkcHcY
+        eUhTqpOihg7MlLIvETpQl/Z3s9/sDFnDICrv78U=
+X-Google-Smtp-Source: APXvYqySMGE9FQ3NKlK5aMuYtzri2leqgoI/V/pw2qlSldLW0loyhGWYeK/GZOi2frfzKsEOl1zObzann3PRUdjIT/Y=
+X-Received: by 2002:a05:6214:582:: with SMTP id bx2mr8789123qvb.60.1568915657312;
+ Thu, 19 Sep 2019 10:54:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <1568902149-70787-1-git-send-email-yukuai3@huawei.com>
-In-Reply-To: <1568902149-70787-1-git-send-email-yukuai3@huawei.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Thu, 19 Sep 2019 13:48:06 -0400
-Message-ID: <CADnq5_MFLy3zFXu39BaUb-7Y4rYqqFQt2B=_fVMOozh87Z2X1g@mail.gmail.com>
-Subject: Re: [PATCH] drm/amdgpu: remove excess function parameter description
-To:     yu kuai <yukuai3@huawei.com>
-Cc:     Dave Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        "Deucher, Alexander" <alexander.deucher@amd.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Chunming Zhou <David1.Zhou@amd.com>, yi.zhang@huawei.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        zhengbin13@huawei.com,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>
+References: <20190916105433.11404-1-ivan.khoronzhuk@linaro.org>
+ <20190916105433.11404-10-ivan.khoronzhuk@linaro.org> <CAEf4BzbuPnxAs0A=w60q0jTCy5pb2R-h0uEuT2tmvjsaj4DH4A@mail.gmail.com>
+ <20190918103508.GC2908@khorivan> <CAEf4BzYCNrkaMf-LFHYDi78m9jgMDOswh8VYXGcbttJV-3D21w@mail.gmail.com>
+ <20190919141848.GA8870@khorivan>
+In-Reply-To: <20190919141848.GA8870@khorivan>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 19 Sep 2019 10:54:06 -0700
+Message-ID: <CAEf4BzYukBi6DjiN-_ueFp4=n8S3Qfpq1wM2CnPGS-R8LJ7+KQ@mail.gmail.com>
+Subject: Re: [PATCH v3 bpf-next 09/14] samples: bpf: makefile: use own flags
+ but not host when cross compile
+To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        john fastabend <john.fastabend@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        clang-built-linux@googlegroups.com,
+        sergei.shtylyov@cogentembedded.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 10:03 AM yu kuai <yukuai3@huawei.com> wrote:
+On Thu, Sep 19, 2019 at 7:18 AM Ivan Khoronzhuk
+<ivan.khoronzhuk@linaro.org> wrote:
 >
-> Fixes gcc warning:
+> On Wed, Sep 18, 2019 at 02:29:53PM -0700, Andrii Nakryiko wrote:
+> >On Wed, Sep 18, 2019 at 3:35 AM Ivan Khoronzhuk
+> ><ivan.khoronzhuk@linaro.org> wrote:
+> >>
+> >> On Tue, Sep 17, 2019 at 04:42:07PM -0700, Andrii Nakryiko wrote:
+> >> >On Mon, Sep 16, 2019 at 3:59 AM Ivan Khoronzhuk
+> >> ><ivan.khoronzhuk@linaro.org> wrote:
+> >> >>
+> >> >> While compile natively, the hosts cflags and ldflags are equal to ones
+> >> >> used from HOSTCFLAGS and HOSTLDFLAGS. When cross compiling it should
+> >> >> have own, used for target arch. While verification, for arm, arm64 and
+> >> >> x86_64 the following flags were used alsways:
+> >> >>
+> >> >> -Wall
+> >> >> -O2
+> >> >> -fomit-frame-pointer
+> >> >> -Wmissing-prototypes
+> >> >> -Wstrict-prototypes
+> >> >>
+> >> >> So, add them as they were verified and used before adding
+> >> >> Makefile.target, but anyway limit it only for cross compile options as
+> >> >> for host can be some configurations when another options can be used,
+> >> >> So, for host arch samples left all as is, it allows to avoid potential
+> >> >> option mistmatches for existent environments.
+> >> >>
+> >> >> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+> >> >> ---
+> >> >>  samples/bpf/Makefile | 9 +++++++++
+> >> >>  1 file changed, 9 insertions(+)
+> >> >>
+> >> >> diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
+> >> >> index 1579cc16a1c2..b5c87a8b8b51 100644
+> >> >> --- a/samples/bpf/Makefile
+> >> >> +++ b/samples/bpf/Makefile
+> >> >> @@ -178,8 +178,17 @@ CLANG_EXTRA_CFLAGS := $(ARM_ARCH_SELECTOR)
+> >> >>  TPROGS_CFLAGS += $(ARM_ARCH_SELECTOR)
+> >> >>  endif
+> >> >>
+> >> >> +ifdef CROSS_COMPILE
+> >> >> +TPROGS_CFLAGS += -Wall
+> >> >> +TPROGS_CFLAGS += -O2
+> >> >
+> >> >Specifying one arg per line seems like overkill, put them in one line?
+> >> Will combine.
+> >>
+> >> >
+> >> >> +TPROGS_CFLAGS += -fomit-frame-pointer
+> >> >
+> >> >Why this one?
+> >> I've explained in commit msg. The logic is to have as much as close options
+> >> to have smiliar binaries. As those options are used before for hosts and kinda
+> >> cross builds - better follow same way.
+> >
+> >I'm just asking why omit frame pointers and make it harder to do stuff
+> >like profiling? What performance benefits are we seeking for in BPF
+> >samples?
+> >
+> >>
+> >> >
+> >> >> +TPROGS_CFLAGS += -Wmissing-prototypes
+> >> >> +TPROGS_CFLAGS += -Wstrict-prototypes
+> >> >
+> >> >Are these in some way special that we want them in cross-compile mode only?
+> >> >
+> >> >All of those flags seem useful regardless of cross-compilation or not,
+> >> >shouldn't they be common? I'm a bit lost about the intent here...
+> >> They are common but split is needed to expose it at least. Also host for
+> >> different arches can have some own opts already used that shouldn't be present
+> >> for cross, better not mix it for safety.
+> >
+> >We want -Wmissing-prototypes and -Wstrict-prototypes for cross-compile
+> >and non-cross-compile cases, right? So let's specify them as common
+> >set of options, instead of relying on KBUILD_HOSTCFLAGS or
+> >HOST_EXTRACFLAGS to have them. Otherwise we'll be getting extra
+> >warnings for just cross-compile case, which is not good. If you are
+> >worrying about having duplicate -W flags, seems like it's handled by
+> >GCC already, so shouldn't be a problem.
 >
-> drivers/gpu/drm/amd/amdgpu/vcn_v2_5.c:431: warning: Excess function
-> parameter 'sw' description in 'vcn_v2_5_disable_clock_gating'
-> drivers/gpu/drm/amd/amdgpu/vcn_v2_5.c:550: warning: Excess function
-> parameter 'sw' description in 'vcn_v2_5_enable_clock_gating'
+> Ok, lets drop omit-frame-pointer.
 >
-> Fixes: cbead2bdfcf1 ("drm/amdgpu: add VCN2.5 VCPU start and stop")
-> Signed-off-by: yu kuai <yukuai3@huawei.com>
+> But then, lets do more radical step and drop
+> KBUILD_HOSTCFLAGS & HOST_EXTRACFLAG in this patch:
 
-Applied.  thanks!
+Yeah, let's do this, if you confirmed that everything still works (and
+I don't see a reason why it shouldn't). Thanks.
 
-Alex
-
-> ---
->  drivers/gpu/drm/amd/amdgpu/vcn_v2_5.c | 2 --
->  1 file changed, 2 deletions(-)
 >
-> diff --git a/drivers/gpu/drm/amd/amdgpu/vcn_v2_5.c b/drivers/gpu/drm/amd/amdgpu/vcn_v2_5.c
-> index 395c225..9d778a0 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/vcn_v2_5.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/vcn_v2_5.c
-> @@ -423,7 +423,6 @@ static void vcn_v2_5_mc_resume(struct amdgpu_device *adev)
->   * vcn_v2_5_disable_clock_gating - disable VCN clock gating
->   *
->   * @adev: amdgpu_device pointer
-> - * @sw: enable SW clock gating
->   *
->   * Disable clock gating for VCN block
->   */
-> @@ -542,7 +541,6 @@ static void vcn_v2_5_disable_clock_gating(struct amdgpu_device *adev)
->   * vcn_v2_5_enable_clock_gating - enable VCN clock gating
->   *
->   * @adev: amdgpu_device pointer
-> - * @sw: enable SW clock gating
->   *
->   * Enable clock gating for VCN block
->   */
+> -ifdef CROSS_COMPILE
+> +TPROGS_CFLAGS += -Wall -O2
+> +TPROGS_CFLAGS += -Wmissing-prototypes
+> +TPROGS_CFLAGS += -Wstrict-prototypes
+> -else
+> -TPROGS_LDLIBS := $(KBUILD_HOSTLDLIBS)
+> -TPROGS_CFLAGS += $(KBUILD_HOSTCFLAGS) $(HOST_EXTRACFLAGS)
+> -endif
+>
+> At least it allows to use same options always for both, native and cross.
+>
+> I verified on native x86_64, arm64 and arm and cross for arm and arm64,
+> but should work for others, at least it can be tuned explicitly and
+> no need to depend on KBUILD and use "cross" fork here.
+
+Yep, I like it.
+
+>
 > --
-> 2.7.4
->
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+> Regards,
+> Ivan Khoronzhuk
