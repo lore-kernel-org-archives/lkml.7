@@ -2,118 +2,120 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA56AC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 10:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 802A3C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 10:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6EFB21924
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 10:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51F8D21924
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 10:06:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YJ3anWqk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389134AbfISKEn (ORCPT
+        id S2389168AbfISKF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 06:04:43 -0400
-Received: from skedge03.snt-world.com ([91.208.41.68]:60388 "EHLO
-        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388956AbfISKEn (ORCPT
+        Thu, 19 Sep 2019 06:05:59 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36190 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389073AbfISKF7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 06:04:43 -0400
-Received: from sntmail10s.snt-is.com (unknown [10.203.32.183])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by skedge03.snt-world.com (Postfix) with ESMTPS id 7B5A667B344;
-        Thu, 19 Sep 2019 12:04:41 +0200 (CEST)
-Received: from sntmail14r.snt-is.com (10.203.32.184) by sntmail10s.snt-is.com
- (10.203.32.183) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 19 Sep
- 2019 12:04:41 +0200
-Received: from sntmail14r.snt-is.com ([fe80::c8f3:eae9:52c2:11a8]) by
- sntmail14r.snt-is.com ([fe80::c8f3:eae9:52c2:11a8%3]) with mapi id
- 15.01.1713.004; Thu, 19 Sep 2019 12:04:40 +0200
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        Jacky Bai <ping.bai@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>, Jun Li <jun.li@nxp.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
-        "angus@akkea.ca" <angus@akkea.ca>,
-        "ccaione@baylibre.com" <ccaione@baylibre.com>,
-        "agx@sigxcpu.org" <agx@sigxcpu.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH 2/3] arm64: dts: imx8mm: Use correct clock for usdhc's ipg
- clk
-Thread-Topic: [PATCH 2/3] arm64: dts: imx8mm: Use correct clock for usdhc's
- ipg clk
-Thread-Index: AQHVbqhJada8Xsj3oEetJoKRBs2eSKcyddCAgAAlboCAAAk3AA==
-Date:   Thu, 19 Sep 2019 10:04:40 +0000
-Message-ID: <c1c08d49-3473-b4b1-4ed1-f30276ffbbf1@kontron.de>
-References: <1568869559-28611-1-git-send-email-Anson.Huang@nxp.com>
- <1568869559-28611-2-git-send-email-Anson.Huang@nxp.com>
- <c680d114-1c14-6bf8-226c-2fdd98350158@kontron.de>
- <DB3PR0402MB3916B0DE9EBC0B0F6664CE34F5890@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-In-Reply-To: <DB3PR0402MB3916B0DE9EBC0B0F6664CE34F5890@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <2798A0465DE2B140910482FC94ED1272@snt-world.com>
-Content-Transfer-Encoding: base64
+        Thu, 19 Sep 2019 06:05:59 -0400
+Received: by mail-wm1-f67.google.com with SMTP id m18so796602wmc.1
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 03:05:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0qCMMPkPMs7VBfcvx3JaPL0V56C94XiExPoi5TYfUdo=;
+        b=YJ3anWqkz3yfMdDXZlWvfwd2aRSX1GEWmuiEvzP4HnRI/QUu14biCE0o0kKjREXsCf
+         KuW4986tQaHaCZuqMpurrkj8rK6Txizw1DhqQIJ4AWTDSZ9yeaLNKdWapvPAu+a1e0Wy
+         0NKhkRAFN1BL+Fro8CrV82lsXppSNdtTsQJBE1IVuxoJfBHtHV0Ve6IKj8vqag92lSBl
+         6fHu8EODi8AyrZZvYOiJJa6KyqEiyjkvyJH8Hg6zgKhSxat7GGzDkPtc1y9q0pGjD6ZO
+         JZI34ycmL8mzIKssv01a5fULUS5KbRJnJUBPhdgzDG+SPSdDnQJYtuJplCrc7J5SExLd
+         xijQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0qCMMPkPMs7VBfcvx3JaPL0V56C94XiExPoi5TYfUdo=;
+        b=uUI7NEsCD7f2JntRKn6nyVcVGdWFy7ikLKCG/mT89v10z7nhbGcygEFw5WZHmSTeHx
+         oLcULkJq+4ULYnPz/tzQK/fzfqQBDAttqZ6dWvBVgL0tgKJEmcjN9WU+YeCXA9J+/+fv
+         SFJ4jql00pueihNC0EtTzaYeCn0dQwgMtlqdxDMrSkcWg3K3oLU9y4pcgkEquLx7CLzp
+         vTE+g4SsJRrzwtrWmZrEOBSDL0dEM53pxNkl8nqrMm0L3wGDz2RPxTTPQcMSQ7iabrW+
+         cWYxSwg5UyiKTA5FpjYPrkmUNF6erC5n6F5dC7WKardvdiuBTlUis4Wm/RJ5lVk8tdi/
+         aARg==
+X-Gm-Message-State: APjAAAVHmVfM2VSj9JNcbpPaj0hJWsHuQK+uIUpRUrDe4WgkTaSsh4m1
+        07qtyj7PieeWwudkDFSJjX6nrw==
+X-Google-Smtp-Source: APXvYqxgniKjpSqUKCq3LuuJ49giEyIk2zZbAqW994p+uQN2HoctohFog3xIGNP6T7hvGty7R9NUXQ==
+X-Received: by 2002:a7b:c4d6:: with SMTP id g22mr2081077wmk.21.1568887556601;
+        Thu, 19 Sep 2019 03:05:56 -0700 (PDT)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id s10sm8590175wmf.48.2019.09.19.03.05.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Sep 2019 03:05:56 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     ohad@wizery.com, bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH] rpmsg: glink: Fix channel memory leak
+Date:   Thu, 19 Sep 2019 11:05:40 +0100
+Message-Id: <20190919100540.28159-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: 7B5A667B344.AF6E0
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: abel.vesa@nxp.com, agx@sigxcpu.org,
-        andrew.smirnov@gmail.com, angus@akkea.ca, anson.huang@nxp.com,
-        ccaione@baylibre.com, daniel.baluta@nxp.com,
-        daniel.lezcano@linaro.org, devicetree@vger.kernel.org,
-        festevam@gmail.com, jun.li@nxp.com, kernel@pengutronix.de,
-        l.stach@pengutronix.de, leonard.crestez@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com, ping.bai@nxp.com,
-        robh+dt@kernel.org, s.hauer@pengutronix.de, shawnguo@kernel.org
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQW5zb24sDQoNCk9uIDE5LjA5LjE5IDExOjMxLCBBbnNvbiBIdWFuZyB3cm90ZToNCj4gSGks
-IFNjaHJlbXBmDQo+IA0KPj4gSGkgQW5zb24sDQo+Pg0KPj4gSSBoYXZlIGEgcXVlc3Rpb24sIHRo
-YXQgaXMgbm90IGRpcmVjdGx5IHJlbGF0ZWQgdG8gdGhpcyBwYXRjaC4NCj4+IEkgc2VlIHRoYXQg
-Zm9yIHRoZSB1c2RoYzEgYW5kIHVzZGhjMyBub2RlcywgdGhlcmUgaXMgYW4gJ2Fzc2lnbmVkLWNs
-b2NrJw0KPj4gYW5kICdhc3NpZ25lZC1jbG9jay1yYXRlcycgcHJvcGVydHkgYnV0IG5vdCBmb3Ig
-dXNkaGMyLiBUaGUgc2FtZSBhcHBsaWVzIHRvDQo+PiB0aGUgbXg4bXEgYW5kIG14OG1uIGR0c2kg
-ZmlsZS4NCj4+DQo+PiBJcyB0aGVyZSBhbnkgcmVhc29uIGZvciB0aGlzPyBJZiBub3QgY2FuIHlv
-dSBmaXggaXQ/DQo+IA0KPiBUaGlzIHBhdGNoIHNlcmllcyBpcyBOT1QgcmVsYXRlZCB0byAnYXNz
-aWduZWQtY2xvY2snIG9yICdhc3NpZ25lZC1jbG9jay1yYXRlcycNCj4gcHJvcGVydHksDQoNClRo
-YXQncyBleGFjdGx5IHdoYXQgSSdtIHNheWluZy4gVG8gbm90IGNhdXNlIG1vcmUgY29uZnVzaW9u
-LCBJIGhhdmUgc2VudCANCmEgbWVzc2FnZSBpbiBhIG5ldyB0aHJlYWQ6IA0KaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvcGlwZXJtYWlsL2xpbnV4LWFybS1rZXJuZWwvMjAxOS1TZXB0ZW1iZXIv
-NjgxNDI2Lmh0bWwNCg0KPiBpdCBpcyBqdXN0IGZvciBjb3JyZWN0aW5nIGNsb2NrIHNvdXJjZSBh
-Y2NvcmRpbmcgdG8gcmVmZXJlbmNlIG1hbnVhbCwNCj4gdGhlICdpcGcnIGNsb2NrIGlzIGZyb20g
-c3lzdGVtJ3MgSVBHX1JPT1QgY2xvY2sgYWNjb3JkaW5nIHRvIHJlZmVyZW5jZSBtYW51YWwgQ0NN
-DQo+IGNoYXB0ZXIsIHVzaW5nIERVTU1ZIGNsb2NrIGlzIE5PVCBhIGdvb2Qgb3B0aW9uLCB0aGUg
-J2lwZycgY2xvY2sgaXMgc3VwcG9zZWQNCj4gdG8gYmUgdGhlIGNsb2NrIGZvciBhY2Nlc3Npbmcg
-cmVnaXN0ZXIsIGFuZCBpdCBzaG91bGQgTk9UIGJlIERVTU1ZIGlmIHdlIGtub3cNCj4gd2hhdCBl
-eGFjdGx5IHRoZSBjbG9jayBzb3VyY2UgaXMgdXNlZC4NCg0KVGhhdCdzIHByb2JhYmx5IHJpZ2h0
-IGFuZCBJIGRpZG4ndCBtZWFuIHRvIHF1ZXN0aW9uIHRoZSBwYXRjaCBhdCBhbGwuDQoNClRoYW5r
-cywNCkZyaWVkZXI=
+If we stop and start the dsp while channel is open then there is a leak
+in the driver as the refcount is not accounted for the open.
+
+This patch checks if the channel is open while running cleanup code
+and does an extra kref_put to account for open which would ensure
+that channel does not leak.
+
+Originally detected by kmemleak:
+  backtrace:
+    [<ffffff80088b74d8>] kmemleak_alloc+0x50/0x84
+    [<ffffff80081ddbc8>] kmem_cache_alloc_trace+0xd4/0x178
+    [<ffffff80086b8bd0>] qcom_glink_alloc_channel+0x34/0x148
+    [<ffffff80086b8038>] qcom_glink_work+0x3b0/0x664
+    [<ffffff80080c3da8>] process_one_work+0x160/0x2f8
+    [<ffffff80080c4198>] worker_thread+0x1e8/0x2d4
+    [<ffffff80080c8b24>] kthread+0x128/0x138
+    [<ffffff80080845b4>] ret_from_fork+0x10/0x18
+    [<ffffffffffffffff>] 0xffffffffffffffff
+unreferenced object 0xffffffc02cf5ed80 (size 128):
+
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ drivers/rpmsg/qcom_glink_native.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
+index dc7d3d098fd3..38a10dcc2029 100644
+--- a/drivers/rpmsg/qcom_glink_native.c
++++ b/drivers/rpmsg/qcom_glink_native.c
+@@ -1660,8 +1660,13 @@ void qcom_glink_native_remove(struct qcom_glink *glink)
+ 
+ 	spin_lock_irqsave(&glink->idr_lock, flags);
+ 	/* Release any defunct local channels, waiting for close-ack */
+-	idr_for_each_entry(&glink->lcids, channel, cid)
++	idr_for_each_entry(&glink->lcids, channel, cid) {
++		if (channel->rcid)
++			kref_put(&channel->refcount,
++				 qcom_glink_channel_release);
++
+ 		kref_put(&channel->refcount, qcom_glink_channel_release);
++	}
+ 
+ 	/* Release any defunct local channels, waiting for close-req */
+ 	idr_for_each_entry(&glink->rcids, channel, cid)
+-- 
+2.21.0
+
