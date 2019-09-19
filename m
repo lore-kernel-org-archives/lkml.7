@@ -2,208 +2,97 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDC0C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 16:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9115CC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 16:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6605021929
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 16:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BA1C2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 16:14:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404207AbfISQMb (ORCPT
+        id S2391828AbfISQOf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 12:12:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:33484 "EHLO foss.arm.com"
+        Thu, 19 Sep 2019 12:14:35 -0400
+Received: from know-smtprelay-omc-7.server.virginmedia.net ([80.0.253.71]:42762
+        "EHLO know-smtprelay-omc-7.server.virginmedia.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404174AbfISQMb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 12:12:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9470C15A2;
-        Thu, 19 Sep 2019 09:12:30 -0700 (PDT)
-Received: from localhost.localdomain (entos-thunderx2-02.shanghai.arm.com [10.169.40.54])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3DF9F3F575;
-        Thu, 19 Sep 2019 09:12:26 -0700 (PDT)
-From:   Jia He <justin.he@arm.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Suzuki Poulose <Suzuki.Poulose@arm.com>
-Cc:     Punit Agrawal <punitagrawal@gmail.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Alex Van Brunt <avanbrunt@nvidia.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Ralph Campbell <rcampbell@nvidia.com>, hejianet@gmail.com,
-        Kaly Xin <Kaly.Xin@arm.com>, Jia He <justin.he@arm.com>
-Subject: [PATCH v5 3/3] mm: fix double page fault on arm64 if PTE_AF is cleared
-Date:   Fri, 20 Sep 2019 00:12:04 +0800
-Message-Id: <20190919161204.142796-4-justin.he@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190919161204.142796-1-justin.he@arm.com>
-References: <20190919161204.142796-1-justin.he@arm.com>
+        id S2391814AbfISQOf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 12:14:35 -0400
+Received: from mail0.xen.dingwall.me.uk ([82.47.84.47])
+        by cmsmtp with ESMTPA
+        id Az4hiXCT9wGUPAz4ii0U28; Thu, 19 Sep 2019 17:14:32 +0100
+X-Originating-IP: [82.47.84.47]
+X-Authenticated-User: james.dingwall@blueyonder.co.uk
+X-Spam: 0
+X-Authority: v=2.3 cv=Kc78TzQD c=1 sm=1 tr=0 a=0bfgdX8EJi0Cr9X0x0jFDA==:117
+ a=0bfgdX8EJi0Cr9X0x0jFDA==:17 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
+ a=kj9zAlcOel0A:10 a=xqWC_Br6kY4A:10 a=J70Eh1EUuV4A:10
+ a=Up2SM8xWjtv0cdOD_0EA:9 a=CjuIK1q_8ugA:10
+Received: from localhost (localhost [IPv6:::1])
+        by mail0.xen.dingwall.me.uk (Postfix) with ESMTP id A1B3D10B982;
+        Thu, 19 Sep 2019 16:14:31 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at dingwall.me.uk
+Received: from mail0.xen.dingwall.me.uk ([IPv6:::1])
+        by localhost (mail0.xen.dingwall.me.uk [IPv6:::1]) (amavisd-new, port 10024)
+        with ESMTP id wIlhLp6unAav; Thu, 19 Sep 2019 16:14:31 +0000 (UTC)
+Received: from ubuild.dingwall.me.uk (ubuild.dingwall.me.uk [IPv6:2001:470:695c:302::c0a8:175])
+        by dingwall.me.uk (Postfix) with ESMTP id 5AD0D10B97F;
+        Thu, 19 Sep 2019 16:14:31 +0000 (UTC)
+Received: by ubuild.dingwall.me.uk (Postfix, from userid 1000)
+        id 155CFEDBAE; Thu, 19 Sep 2019 16:14:31 +0000 (UTC)
+Date:   Thu, 19 Sep 2019 16:14:30 +0000
+From:   James Dingwall <james@dingwall.me.uk>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        "Luck, Tony" <tony.luck@intel.com>
+Subject: Re: pstore does not work under xen
+Message-ID: <20190919161430.GA28042@dingwall.me.uk>
+References: <20190919102643.GA9400@dingwall.me.uk>
+ <3908561D78D1C84285E8C5FCA982C28F7F472015@ORSMSX115.amr.corp.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3908561D78D1C84285E8C5FCA982C28F7F472015@ORSMSX115.amr.corp.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-CMAE-Envelope: MS4wfAt5r1KnVoDs+eBuRcobGW8ZKcVognsfhZ1lcDZPy0IyOr0Rxz3a4KXoRqU9G4IcYf93ZqXJlOC6C1NPKmcStqOhHzBQKH1ENw6ZV5phg7HdarlGummL
+ YwckzAXm6SpNNTdgRJntDi/NW/gQPkOzXZK2PrT6APaRHJkOLzxVpUdWJRdE3dmSaa4ju9C50A3jua03HU4r/fM+kT/560crfYU1RlCk+TMfiICayZyEzrpe
+ ecTJVqo7Y+z5AGOir7/SFdVYQqwN4BCJL35QvzYL4V9aDDbUIB+1Wd/HSWdMly2Oc8IhgyxolzSp/+GK3/DiSN+Ydv25NiS2LF3ffgtdx3C2hqi5/PoZrSI8
+ 8cndDfZYnZXq8802mt1mTmuhi4YHgQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When we tested pmdk unit test [1] vmmalloc_fork TEST1 in arm64 guest, there
-will be a double page fault in __copy_from_user_inatomic of cow_user_page.
+On Thu, Sep 19, 2019 at 03:51:33PM +0000, Luck, Tony wrote:
+> > I have been investigating a regression in our environment where pstore 
+> > (efi-pstore specifically but I suspect this would affect all 
+> > implementations) no longer works after upgrading from a 4.4 to 5.0 
+> > kernel when running under xen.  (This is an Ubuntu kernel but I don't 
+> > think there are patches which affect this area.)
+> 
+> I don't have any answer for this ... but want to throw out the idea that
+> VMM systems could provide some hypercalls to guests to save/return
+> some blob of memory (perhaps the "save" triggers automagically if the
+> guest crashes?).
+> 
+> That would provide a much better pstore back end than relying on emulation
+> of EFI persistent variables (which have severe contraints on size, and don't
+> support some pstore modes because you can't dynamically update EFI variables
+> hundreds of times per second).
+> 
 
-Below call trace is from arm64 do_page_fault for debugging purpose
-[  110.016195] Call trace:
-[  110.016826]  do_page_fault+0x5a4/0x690
-[  110.017812]  do_mem_abort+0x50/0xb0
-[  110.018726]  el1_da+0x20/0xc4
-[  110.019492]  __arch_copy_from_user+0x180/0x280
-[  110.020646]  do_wp_page+0xb0/0x860
-[  110.021517]  __handle_mm_fault+0x994/0x1338
-[  110.022606]  handle_mm_fault+0xe8/0x180
-[  110.023584]  do_page_fault+0x240/0x690
-[  110.024535]  do_mem_abort+0x50/0xb0
-[  110.025423]  el0_da+0x20/0x24
+For clarification this is a dom0 crash rather than an HVM guest with EFI.  I
+should probably have also mentioned the xen verion has changed from 4.8.4 to
+4.11.2 in case its behaviour on detection of crashed domain has changed.
 
-The pte info before __copy_from_user_inatomic is (PTE_AF is cleared):
-[ffff9b007000] pgd=000000023d4f8003, pud=000000023da9b003, pmd=000000023d4b3003, pte=360000298607bd3
+(For capturing guest crashes we have enabled xenconsole logging so the
+hvc0 log is available in dom0.)
 
-As told by Catalin: "On arm64 without hardware Access Flag, copying from
-user will fail because the pte is old and cannot be marked young. So we
-always end up with zeroed page after fork() + CoW for pfn mappings. we
-don't always have a hardware-managed access flag on arm64."
-
-This patch fix it by calling pte_mkyoung. Also, the parameter is
-changed because vmf should be passed to cow_user_page()
-
-Add a WARN_ON_ONCE when __copy_from_user_inatomic() returns error
-in case there can be some obscure use-case.(by Kirill)
-
-[1] https://github.com/pmem/pmdk/tree/master/src/test/vmmalloc_fork
-
-Reported-by: Yibo Cai <Yibo.Cai@arm.com>
-Signed-off-by: Jia He <justin.he@arm.com>
----
- mm/memory.c | 59 ++++++++++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 54 insertions(+), 5 deletions(-)
-
-diff --git a/mm/memory.c b/mm/memory.c
-index e2bb51b6242e..cf681963b2f5 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -118,6 +118,13 @@ int randomize_va_space __read_mostly =
- 					2;
- #endif
- 
-+#ifndef arch_faults_on_old_pte
-+static inline bool arch_faults_on_old_pte(void)
-+{
-+	return false;
-+}
-+#endif
-+
- static int __init disable_randmaps(char *s)
- {
- 	randomize_va_space = 0;
-@@ -2140,8 +2147,12 @@ static inline int pte_unmap_same(struct mm_struct *mm, pmd_t *pmd,
- 	return same;
- }
- 
--static inline void cow_user_page(struct page *dst, struct page *src, unsigned long va, struct vm_area_struct *vma)
-+static inline int cow_user_page(struct page *dst, struct page *src,
-+				struct vm_fault *vmf)
- {
-+	struct vm_area_struct *vma = vmf->vma;
-+	unsigned long addr = vmf->address;
-+
- 	debug_dma_assert_idle(src);
- 
- 	/*
-@@ -2152,7 +2163,29 @@ static inline void cow_user_page(struct page *dst, struct page *src, unsigned lo
- 	 */
- 	if (unlikely(!src)) {
- 		void *kaddr = kmap_atomic(dst);
--		void __user *uaddr = (void __user *)(va & PAGE_MASK);
-+		void __user *uaddr = (void __user *)(addr & PAGE_MASK);
-+		pte_t entry;
-+
-+		/* On architectures with software "accessed" bits, we would
-+		 * take a double page fault, so mark it accessed here.
-+		 */
-+		if (arch_faults_on_old_pte() && !pte_young(vmf->orig_pte)) {
-+			spin_lock(vmf->ptl);
-+			if (likely(pte_same(*vmf->pte, vmf->orig_pte))) {
-+				entry = pte_mkyoung(vmf->orig_pte);
-+				if (ptep_set_access_flags(vma, addr,
-+							  vmf->pte, entry, 0))
-+					update_mmu_cache(vma, addr, vmf->pte);
-+			} else {
-+				/* Other thread has already handled the fault
-+				 * and we don't need to do anything. If it's
-+				 * not the case, the fault will be triggered
-+				 * again on the same address.
-+				 */
-+				return -1;
-+			}
-+			spin_unlock(vmf->ptl);
-+		}
- 
- 		/*
- 		 * This really shouldn't fail, because the page is there
-@@ -2160,12 +2193,17 @@ static inline void cow_user_page(struct page *dst, struct page *src, unsigned lo
- 		 * in which case we just give up and fill the result with
- 		 * zeroes.
- 		 */
--		if (__copy_from_user_inatomic(kaddr, uaddr, PAGE_SIZE))
-+		if (__copy_from_user_inatomic(kaddr, uaddr, PAGE_SIZE)) {
-+			/* In case there can be some obscure use-case */
-+			WARN_ON_ONCE(1);
- 			clear_page(kaddr);
-+		}
- 		kunmap_atomic(kaddr);
- 		flush_dcache_page(dst);
- 	} else
--		copy_user_highpage(dst, src, va, vma);
-+		copy_user_highpage(dst, src, addr, vma);
-+
-+	return 0;
- }
- 
- static gfp_t __get_fault_gfp_mask(struct vm_area_struct *vma)
-@@ -2318,7 +2356,16 @@ static vm_fault_t wp_page_copy(struct vm_fault *vmf)
- 				vmf->address);
- 		if (!new_page)
- 			goto oom;
--		cow_user_page(new_page, old_page, vmf->address, vma);
-+
-+		if (cow_user_page(new_page, old_page, vmf)) {
-+			/* COW failed, if the fault was solved by other,
-+			 * it's fine. If not, userspace would re-fault on
-+			 * the same address and we will handle the fault
-+			 * from the second attempt.
-+			 */
-+			put_page(new_page);
-+			goto normal;
-+		}
- 	}
- 
- 	if (mem_cgroup_try_charge_delay(new_page, mm, GFP_KERNEL, &memcg, false))
-@@ -2420,6 +2467,8 @@ static vm_fault_t wp_page_copy(struct vm_fault *vmf)
- 		}
- 		put_page(old_page);
- 	}
-+
-+normal:
- 	return page_copied ? VM_FAULT_WRITE : 0;
- oom_free_new:
- 	put_page(new_page);
--- 
-2.17.1
-
+Thanks,
+James
