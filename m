@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E8C1C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B00B5C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70C7021907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:11:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B2DF218AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:11:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931092;
-	bh=0qOUK7DxgaowD+7uXfhLT4sDuEmqh4GKgVw/JQxHd3w=;
+	s=default; t=1568931095;
+	bh=CmiYWrCziYWwm/L7yhLnm4McX5taLlSI0gBZlUARNcE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o+Xlr/+unwjKtEAnFYjtwt4hBDbXPdnowOdZGUVMuRW/gl30JMNd7mKRFSwyfDdaW
-	 KpapQThH6z8lF3s4k0/fCEx+wQuKg8IHqmZVUKNZoBa82R5ylhvtJ6IZQkmVABhzds
-	 zPzOn8TzCCsmYgooG8EhSy6cv5OeSXD/q6qIZUb8=
+	b=dKK+f63BTHlACZy47w03Eo+NEPs7XkcCwJa96zlEkduJc+R3AaBWNKBZuR++GVTp/
+	 9K6/4RM2VJ98FjqSCpHKGNdu9IESGZoJQpGzAevCqXZYVmeVzcoTQsA6/XjCEonvec
+	 ihiP7gkOPqC/NJ6kO1r5+YpI4eFx2kVrFExu8Abo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393598AbfISWLb (ORCPT
+        id S2393611AbfISWLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:11:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50140 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:11:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405853AbfISWL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:11:28 -0400
+        id S2393595AbfISWLa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:11:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C7DE218AF;
-        Thu, 19 Sep 2019 22:11:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5EE8218AF;
+        Thu, 19 Sep 2019 22:11:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931087;
-        bh=0qOUK7DxgaowD+7uXfhLT4sDuEmqh4GKgVw/JQxHd3w=;
+        s=default; t=1568931090;
+        bh=CmiYWrCziYWwm/L7yhLnm4McX5taLlSI0gBZlUARNcE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wpZ/JpmkYkozwWk62QXLbDUAkr3Q7MzA+3iaU0QGNRJ4IaaKEa1s8R14VSGeC1Zac
-         eHeQmZ2TaEjCOUlQSi3kXoY8PvQe2ToVW5uIkfEbtMZ2Tqi6mrVuBDMtlr6IZPfoN7
-         8wN6ppZBPNsUslOeG8qf0odzkTZLfqo2bvjJpUgU=
+        b=WPwZ97055epYiOqafzcZglfFRGhoRcey/h8PdkO1blGT1XS8HxYFAZXNw1DMuzKMm
+         il4ewKKDYK9vVkr0ipuLocuzPa94qywKvamRKK3iif0hkzF8/a7CQ2bLYT99ILCs8U
+         EQPvdnb0rHN5iZnKK1a4i5PYh2S7U+Xjl+tb4Efo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+eaaaf38a95427be88f4b@syzkaller.appspotmail.com,
-        Sean Young <sean@mess.org>, Kees Cook <keescook@chromium.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 5.2 123/124] media: technisat-usb2: break out of loop at end of buffer
-Date:   Fri, 20 Sep 2019 00:03:31 +0200
-Message-Id: <20190919214823.660182963@linuxfoundation.org>
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>
+Subject: [PATCH 5.2 124/124] vfs: Fix refcounting of filenames in fs_parser
+Date:   Fri, 20 Sep 2019 00:03:32 +0200
+Message-Id: <20190919214823.713060325@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -61,72 +58,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Young <sean@mess.org>
+From: David Howells <dhowells@redhat.com>
 
-commit 0c4df39e504bf925ab666132ac3c98d6cbbe380b upstream.
+commit 7cdfa44227b0d8842d46a775cebe4311150cb8f2 upstream.
 
-Ensure we do not access the buffer beyond the end if no 0xff byte
-is encountered.
+Fix an overput in which filename_lookup() unconditionally drops a ref to
+the filename it was given, but this isn't taken account of in the caller,
+fs_lookup_param().
 
-Reported-by: syzbot+eaaaf38a95427be88f4b@syzkaller.appspotmail.com
-Signed-off-by: Sean Young <sean@mess.org>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Addresses-Coverity-ID: 1443811 ("Use after free")
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/dvb-usb/technisat-usb2.c |   22 ++++++++++------------
- 1 file changed, 10 insertions(+), 12 deletions(-)
+ fs/fs_parser.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/media/usb/dvb-usb/technisat-usb2.c
-+++ b/drivers/media/usb/dvb-usb/technisat-usb2.c
-@@ -608,10 +608,9 @@ static int technisat_usb2_frontend_attac
- static int technisat_usb2_get_ir(struct dvb_usb_device *d)
- {
- 	struct technisat_usb2_state *state = d->priv;
--	u8 *buf = state->buf;
--	u8 *b;
--	int ret;
- 	struct ir_raw_event ev;
-+	u8 *buf = state->buf;
-+	int i, ret;
- 
- 	buf[0] = GET_IR_DATA_VENDOR_REQUEST;
- 	buf[1] = 0x08;
-@@ -647,26 +646,25 @@ unlock:
- 		return 0; /* no key pressed */
- 
- 	/* decoding */
--	b = buf+1;
- 
- #if 0
- 	deb_rc("RC: %d ", ret);
--	debug_dump(b, ret, deb_rc);
-+	debug_dump(buf + 1, ret, deb_rc);
- #endif
- 
- 	ev.pulse = 0;
--	while (1) {
--		ev.pulse = !ev.pulse;
--		ev.duration = (*b * FIRMWARE_CLOCK_DIVISOR * FIRMWARE_CLOCK_TICK) / 1000;
--		ir_raw_event_store(d->rc_dev, &ev);
--
--		b++;
--		if (*b == 0xff) {
-+	for (i = 1; i < ARRAY_SIZE(state->buf); i++) {
-+		if (buf[i] == 0xff) {
- 			ev.pulse = 0;
- 			ev.duration = 888888*2;
- 			ir_raw_event_store(d->rc_dev, &ev);
- 			break;
- 		}
-+
-+		ev.pulse = !ev.pulse;
-+		ev.duration = (buf[i] * FIRMWARE_CLOCK_DIVISOR *
-+			       FIRMWARE_CLOCK_TICK) / 1000;
-+		ir_raw_event_store(d->rc_dev, &ev);
+--- a/fs/fs_parser.c
++++ b/fs/fs_parser.c
+@@ -264,6 +264,7 @@ int fs_lookup_param(struct fs_context *f
+ 		return invalf(fc, "%s: not usable as path", param->key);
  	}
  
- 	ir_raw_event_handle(d->rc_dev);
++	f->refcnt++; /* filename_lookup() drops our ref. */
+ 	ret = filename_lookup(param->dirfd, f, flags, _path, NULL);
+ 	if (ret < 0) {
+ 		errorf(fc, "%s: Lookup failure for '%s'", param->key, f->name);
 
 
