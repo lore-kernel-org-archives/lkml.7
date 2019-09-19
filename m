@@ -7,55 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A39FBC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E55A3C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 788F8217D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:31:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B000B217D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:31:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932281;
-	bh=8iB2lI3WyLgCxqLP6y4q7SwKtknI0k26DSWibv/8LkA=;
+	s=default; t=1568932295;
+	bh=566Bz2o9qSdYSA2i4UQw+4bzvn1OWackuqqOtUWjLro=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aG7DUh9Q++hUmRbj4KxV/wax5fLvv6Iekj/TfzarEUc+2BhhUzceFoRA8F0HPa9Ah
-	 owp9ucSW68dkfVSg9MFY1s8CcNQ1OdSgtYtcm9/jUN+nLy9iZPiLox/otVbVDmBAsI
-	 2blpF84jI9jCWPH1kIjqOrDMAiMj+ECacP6H5SFs=
+	b=wfDF0GFbnmIIlowz3Kqw9z2cvH6cNlRmjkRkw3gV7YhxOrsEieX4MqTBZyEQrBJ9a
+	 1y4NFvXxfCnDib5mniE+xlzBIkIpRIxFNRQ/hRvLKB6OjRtITzumvTsvXyoP6pF4s1
+	 gJIFdq9hQAfZQY+W6tGRE4l0Cggxi5CNu9WmF/ww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392249AbfISWbU (ORCPT
+        id S2393803AbfISWOn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:31:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54662 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:14:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391738AbfISWO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:14:57 -0400
+        id S2393787AbfISWOh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:14:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85F8721920;
-        Thu, 19 Sep 2019 22:14:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44B3A21920;
+        Thu, 19 Sep 2019 22:14:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931296;
-        bh=8iB2lI3WyLgCxqLP6y4q7SwKtknI0k26DSWibv/8LkA=;
+        s=default; t=1568931276;
+        bh=566Bz2o9qSdYSA2i4UQw+4bzvn1OWackuqqOtUWjLro=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q+IOPpSjTL24q6oHkC38wXK7tAyW1KazTWgo9gNu9BtbRLML0DPpix3pm1uswzjff
-         rkpTdXdOzeANJTWGTm6IF5IQpm4YM+dTVotWp/4aVLX5wF+MmYvv5A3gMKzHaIY182
-         KndZ7k/YTDvrlgMgDcL4dzxJNKmvRkRU5ULHgEEE=
+        b=Wf+7F/fomjdfPZ+9IB7wG/KwceUMeaB/qZO3JCJhxmk5u5NDdPbVRIWYssn8wOsh0
+         9j1KgVfUS1FnlR3dz2xPIqlbiKjJM2Z+5wM5jd+PWU78y99g8kywBaSEExOayo3DnC
+         VfzeWdOlz7yS5gDPCL8DN5Z6Vm7RmLW5DoMyzemg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 42/79] ARM: 8874/1: mm: only adjust sections of valid mm structures
-Date:   Fri, 20 Sep 2019 00:03:27 +0200
-Message-Id: <20190919214811.413321024@linuxfoundation.org>
+        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 67/79] dmaengine: ti: dma-crossbar: Fix a memory leak bug
+Date:   Fri, 20 Sep 2019 00:03:52 +0200
+Message-Id: <20190919214813.573405650@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214807.612593061@linuxfoundation.org>
 References: <20190919214807.612593061@linuxfoundation.org>
@@ -68,50 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Doug Berger <opendmb@gmail.com>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit c51bc12d06b3a5494fbfcbd788a8e307932a06e9 ]
+[ Upstream commit 2c231c0c1dec42192aca0f87f2dc68b8f0cbc7d2 ]
 
-A timing hazard exists when an early fork/exec thread begins
-exiting and sets its mm pointer to NULL while a separate core
-tries to update the section information.
+In ti_dra7_xbar_probe(), 'rsv_events' is allocated through kcalloc(). Then
+of_property_read_u32_array() is invoked to search for the property.
+However, if this process fails, 'rsv_events' is not deallocated, leading to
+a memory leak bug. To fix this issue, free 'rsv_events' before returning
+the error.
 
-This commit ensures that the mm pointer is not NULL before
-setting its section parameters. The arguments provided by
-commit 11ce4b33aedc ("ARM: 8672/1: mm: remove tasklist locking
-from update_sections_early()") are equally valid for not
-requiring grabbing the task_lock around this check.
-
-Fixes: 08925c2f124f ("ARM: 8464/1: Update all mm structures with section adjustments")
-Signed-off-by: Doug Berger <opendmb@gmail.com>
-Acked-by: Laura Abbott <labbott@redhat.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Cc: Peng Fan <peng.fan@nxp.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Link: https://lore.kernel.org/r/1565938136-7249-1-git-send-email-wenwen@cs.uga.edu
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mm/init.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/dma/ti/dma-crossbar.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-index 0cc8e04295a40..66b1568b95e05 100644
---- a/arch/arm/mm/init.c
-+++ b/arch/arm/mm/init.c
-@@ -713,7 +713,8 @@ static void update_sections_early(struct section_perm perms[], int n)
- 		if (t->flags & PF_KTHREAD)
- 			continue;
- 		for_each_thread(t, s)
--			set_section_perms(perms, n, true, s->mm);
-+			if (s->mm)
-+				set_section_perms(perms, n, true, s->mm);
- 	}
- 	set_section_perms(perms, n, true, current->active_mm);
- 	set_section_perms(perms, n, true, &init_mm);
+diff --git a/drivers/dma/ti/dma-crossbar.c b/drivers/dma/ti/dma-crossbar.c
+index 9272b173c7465..6574cb5a12fee 100644
+--- a/drivers/dma/ti/dma-crossbar.c
++++ b/drivers/dma/ti/dma-crossbar.c
+@@ -395,8 +395,10 @@ static int ti_dra7_xbar_probe(struct platform_device *pdev)
+ 
+ 		ret = of_property_read_u32_array(node, pname, (u32 *)rsv_events,
+ 						 nelm * 2);
+-		if (ret)
++		if (ret) {
++			kfree(rsv_events);
+ 			return ret;
++		}
+ 
+ 		for (i = 0; i < nelm; i++) {
+ 			ti_dra7_xbar_reserve(rsv_events[i][0], rsv_events[i][1],
 -- 
 2.20.1
 
