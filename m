@@ -2,99 +2,111 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA10BC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D994DC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 912DC2067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:39:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="LvX3/OFc"
+	by mail.kernel.org (Postfix) with ESMTP id AD45320882
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:41:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568904091;
+	bh=TJHkQTtaGQHKS5CUibyY3os9gYsyoVt2bCM2nr2IE3I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jR4vqGpKDbVTp2KtXA1VH1Hb5BgreGOrhHrskd/ogPxDP+C5URXzRvGzIobBYZNxT
+	 HcuybA60ShBYL9HAx/pdIlwmJEKhyVqdDsC1gmxsNdbYyWuaEItR3N9TDfk76I1XHu
+	 wN4YJTKfA6ec1NPy2KJqKjF213Zlxjye5nK57GJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732671AbfISOjj (ORCPT
+        id S1732693AbfISOlb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 10:39:39 -0400
-Received: from sonic316-33.consmr.mail.gq1.yahoo.com ([98.137.69.57]:38827
-        "EHLO sonic316-33.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732606AbfISOji (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 10:39:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1568903977; bh=qvpy+ovGR6FPZ93+sFuofMU46weY7iNTSQ/65dQcwh8=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=LvX3/OFcaWf4dhDrxzcfuhMtlF0Qo+blYbSSSVTPlPTy7J3jKHx+k53vQtNS/a/8/6Sd0cff/tLL924P14sKy88NrNdEp44uM8urzvCaDzS0kth+eUMTLslcjUaXRZNAvj8lb0/2H7wGLSV+yreldr9HVq33MDKC0vm+BhbjezZNlp0cH/1UyXGkUANrwUwdpXQ1zV/QuZVm3cb2uQPVwRFZE3HMqReJ4/eBhzCezdr3Kp0NhMBvjGjRuVqfP+gz/SqRrU2ce2z3zYYdfkQFNSok8/i+jbUazzuodo0hJuaZsNc8GJU6qsFyAQ6cGvGPfLPPQChsIgImNob41KZgaA==
-X-YMail-OSG: N_6BpMEVRDvd.miR6A7lED5GPdAEx7ojsA--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic316.consmr.mail.gq1.yahoo.com with HTTP; Thu, 19 Sep 2019 14:39:37 +0000
-Received: by smtp405.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 50f03e35e4d03b35efeb76c0a57e355e;
-          Thu, 19 Sep 2019 14:37:35 +0000 (UTC)
-Date:   Thu, 19 Sep 2019 22:37:22 +0800
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-next@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Miao Xie <miaoxie@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: Re: erofs -next tree inclusion request
-Message-ID: <20190919143722.GA5363@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20190919120110.GA48697@architecture4>
- <20190919121739.GG3642@sirena.co.uk>
- <20190919122328.GA82662@architecture4>
+        Thu, 19 Sep 2019 10:41:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43520 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732606AbfISOla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 10:41:30 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CEF62067B;
+        Thu, 19 Sep 2019 14:41:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568904089;
+        bh=TJHkQTtaGQHKS5CUibyY3os9gYsyoVt2bCM2nr2IE3I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YK7tcTHra9Le/h5CmSNa6LtWZSL5o4cwJ5rVAf2P+1X+wlsuAy/k+IOGQEI6mrRXo
+         NX6UgrRnJtjB5Tjxdh20rmvLJCYDLM1AjucKjmmdkioeymP65FUmeYdUixedjjrzog
+         rf26ghS7hGTSkoavOfnR5yDqRvo+1cLM2ntxQSpI=
+Date:   Thu, 19 Sep 2019 16:41:26 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jerome Pouiller <Jerome.Pouiller@silabs.com>
+Cc:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        David Le Goff <David.Legoff@silabs.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: Re: [PATCH v3 00/20] Add support for Silicon Labs WiFi chip WF200
+ and further
+Message-ID: <20190919144126.GA3997726@kroah.com>
+References: <20190919142527.31797-1-Jerome.Pouiller@silabs.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190919122328.GA82662@architecture4>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Mailer: WebService/1.1.14303 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_181)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190919142527.31797-1-Jerome.Pouiller@silabs.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+On Thu, Sep 19, 2019 at 02:25:36PM +0000, Jerome Pouiller wrote:
+> From: Jérôme Pouiller <jerome.pouiller@silabs.com>
+> 
+> Hello all,
+> 
+> This series add support for Silicon Labs WiFi chip WF200 and further:
+> 
+>    https://www.silabs.com/documents/public/data-sheets/wf200-datasheet.pdf
+> 
+> This driver is an export from:
+> 
+>    https://github.com/SiliconLabs/wfx-linux-driver/
+>    
+> I squashed all commits from github (it definitely does not make sense to
+> import history). Then I split it in comprehensible (at least try to be)
+> commits. I hope it will help readers to understand driver architecture.
+> IMHO, firsts commits are clean enough to be reviewed. Things get more
+> difficult when I introduce mac8011 API. I tried to extract important
+> parts like Rx/Tx process but, big and complex patches seem unavoidable
+> in this part.
+> 
+> Architecture itself is described in commit messages.
+> 
+> The series below is aligned on version 2.3.1 on github. If compare this
+> series with github, you will find traditional differences between
+> external and a in-tree driver: Documentation, build infrastructure,
+> compatibility with older kernel revisions, etc... In add, I dropped all
+> code in CONFIG_WFX_SECURE_LINK. Indeed, "Secure Link" feature depends
+> on mbedtls and I don't think to pull mbedtls in kernel is an option
+> (see "TODO" file in first commit).
+> 
+> v3:
+>   - Fill commit log of patches 18, 19 and 20
+> 
+> v2:
+>   - Add TODO file (and dropped todo list from cover letter)
+>   - Drop code relative to compatibility with older kernels
 
-On Thu, Sep 19, 2019 at 08:23:28PM +0800, Gao Xiang wrote:
-> Hi Mark,
-> 
-> On Thu, Sep 19, 2019 at 01:17:39PM +0100, Mark Brown wrote:
-> > On Thu, Sep 19, 2019 at 08:01:10PM +0800, Gao Xiang wrote:
-> > 
-> > > Could you kindly help add the erofs -next tree to linux-next?
-> > 
-> > > git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
-> > 
-> > > This can test all erofs patches with the latest linux-next tree
-> > > and make erofs better...
-> > 
-> > That seems like a good idea however since we're in the merge window and 
-> > the only things that should be being added to -next right now are fixes
-> > I'll hold off on doing this myself.  Stephen will be back on the 30th
-> > (just after merge window closes), I'm sure he'll be happy to add the
-> > tree but in case this gets lost in all the mail from the time he's been
-> > travelling you might want to remind him after that.
-> > 
-> > If you have a separate fixes branch I'd be happy to add that right now.
-> 
-> Thanks for the -fixes information and detailed reminder (I didn't notice
-> that, sorry...)
-> 
-> I will do a -fix only branch later for urgent and trivial fixes.
+dude, slow down.  wait for others to look at this.
 
-The fixes only -fixes branch is
-git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git fixes
+there's nothing I can do until after 5.4-rc1 is out, so there is no rush
+at all...
 
-Thanks for taking time on this stuff...
+thanks,
 
-Thanks,
-Gao Xiang
-
-> 
-> For -next, it's okay to wait for Stephen of course :) ...
-> 
-> Thanks,
-> Gao Xiang
-> 
+greg k-h
