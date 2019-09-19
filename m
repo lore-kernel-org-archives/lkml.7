@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 704FEC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B64C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44FD721928
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:09:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AA01218AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:09:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568930945;
-	bh=QEOXCkAFfbkcYXS6txlrgPu4vS3DygSi0dUG+iUNWG0=;
+	s=default; t=1568930946;
+	bh=Au2opSr7JKBzP5lhHQCa+HofEwWR2Wj4MUH/7+LDhsI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d8bj4aZ9d31NpwPOV7pXpiCCIGDqBzV/C4gh/U+ahG4xe+bu/JBuaK2RRFtYlJ3Uw
-	 SfbidIAbBS/Mzi2D9Sqnh7xuiOk61qFgVymJAjxkUjalYYxS+YiS20LSwiKcmLPBrn
-	 SfSBn/Ajis1k2xFiD9dL1wiqOC7lUEv02a1zyI7I=
+	b=OMChez2eUsFMbpFrFi8TWj7CgoT5JE3qTaI70p5VHASOLyekaNUidZIfvDUAfiool
+	 1XD2j5SrYCPA1taM4T3YtcB/EiDiW0Zm1+0KMJly9Uj4HoGjDC7vk0aIO62FNIiWE/
+	 KfCyG11KTFoFawH1K+IYySI09nqRU/LADaKoKNF4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405349AbfISWJE (ORCPT
+        id S2405360AbfISWJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:09:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46722 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:09:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393461AbfISWIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:08:46 -0400
+        id S2393502AbfISWI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:08:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BA2A218AF;
-        Thu, 19 Sep 2019 22:08:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8994821927;
+        Thu, 19 Sep 2019 22:08:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568930925;
-        bh=QEOXCkAFfbkcYXS6txlrgPu4vS3DygSi0dUG+iUNWG0=;
+        s=default; t=1568930937;
+        bh=Au2opSr7JKBzP5lhHQCa+HofEwWR2Wj4MUH/7+LDhsI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oHDRRY1xqHrDOeBaPik1eVnt42EFFASAF1rsw/5V2GcKhKBCkcemM45dujrhFMq10
-         iNa9Lm3muMUFaLlwCMBLfXkeqEyO/7JJOPfQ1FtHfgwepGcrBl7NWHqJPBfYDAyjLG
-         aVFteV5YuQxPiVnAigV/VhiTiT4w/poe9ZYgcyKU=
+        b=s+3Hw9Gl1RbtjkEqbJE12t8jEM2k+NVxbov4cEJS3m2tmBM2ob+Hr1tD8NFNDGDtp
+         z3I02KX7UOqZK7NWAPwzTA4QuTUhK9m/QSSEmkjfd/AJwDfv6hKkXm7uCAGrRpabEU
+         PdV3aPSAAjV24X69GEepqM7583Z4dkJ3WcUeXKsI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 037/124] ARM: OMAP2+: Fix omap4 errata warning on other SoCs
-Date:   Fri, 20 Sep 2019 00:02:05 +0200
-Message-Id: <20190919214820.363334347@linuxfoundation.org>
+Subject: [PATCH 5.2 067/124] pNFS/flexfiles: Dont time out requests on hard mounts
+Date:   Fri, 20 Sep 2019 00:02:35 +0200
+Message-Id: <20190919214821.437000252@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -59,43 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 45da5e09dd32fa98c32eaafe2513db6bd75e2f4f ]
+[ Upstream commit 7af46292dadcf8870946916f79fdddf79bd7267f ]
 
-We have errata i688 workaround produce warnings on SoCs other than
-omap4 and omap5:
+If the mount is hard, we should ignore the 'io_maxretrans' module
+parameter so that we always keep retrying.
 
-omap4_sram_init:Unable to allocate sram needed to handle errata I688
-omap4_sram_init:Unable to get sram pool needed to handle errata I688
-
-This is happening because there is no ti,omap4-mpu node, or no SRAM
-to configure for the other SoCs, so let's remove the warning based
-on the SoC revision checks.
-
-As nobody has complained it seems that the other SoC variants do not
-need this workaround.
-
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-omap2/omap4-common.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/nfs/flexfilelayout/flexfilelayout.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/mach-omap2/omap4-common.c b/arch/arm/mach-omap2/omap4-common.c
-index f9c02f9f1c921..5c3845730dbf5 100644
---- a/arch/arm/mach-omap2/omap4-common.c
-+++ b/arch/arm/mach-omap2/omap4-common.c
-@@ -127,6 +127,9 @@ static int __init omap4_sram_init(void)
- 	struct device_node *np;
- 	struct gen_pool *sram_pool;
+diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
+index c67cdbb36ce7c..38d9158142219 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayout.c
++++ b/fs/nfs/flexfilelayout/flexfilelayout.c
+@@ -8,6 +8,7 @@
+  */
  
-+	if (!soc_is_omap44xx() && !soc_is_omap54xx())
-+		return 0;
-+
- 	np = of_find_compatible_node(NULL, NULL, "ti,omap4-mpu");
- 	if (!np)
- 		pr_warn("%s:Unable to allocate sram needed to handle errata I688\n",
+ #include <linux/nfs_fs.h>
++#include <linux/nfs_mount.h>
+ #include <linux/nfs_page.h>
+ #include <linux/module.h>
+ #include <linux/sched/mm.h>
+@@ -928,7 +929,9 @@ retry:
+ 	pgm = &pgio->pg_mirrors[0];
+ 	pgm->pg_bsize = mirror->mirror_ds->ds_versions[0].rsize;
+ 
+-	pgio->pg_maxretrans = io_maxretrans;
++	if (NFS_SERVER(pgio->pg_inode)->flags &
++			(NFS_MOUNT_SOFT|NFS_MOUNT_SOFTERR))
++		pgio->pg_maxretrans = io_maxretrans;
+ 	return;
+ out_nolseg:
+ 	if (pgio->pg_error < 0)
+@@ -936,6 +939,7 @@ out_nolseg:
+ out_mds:
+ 	pnfs_put_lseg(pgio->pg_lseg);
+ 	pgio->pg_lseg = NULL;
++	pgio->pg_maxretrans = 0;
+ 	nfs_pageio_reset_read_mds(pgio);
+ }
+ 
+@@ -996,12 +1000,15 @@ retry:
+ 		pgm->pg_bsize = mirror->mirror_ds->ds_versions[0].wsize;
+ 	}
+ 
+-	pgio->pg_maxretrans = io_maxretrans;
++	if (NFS_SERVER(pgio->pg_inode)->flags &
++			(NFS_MOUNT_SOFT|NFS_MOUNT_SOFTERR))
++		pgio->pg_maxretrans = io_maxretrans;
+ 	return;
+ 
+ out_mds:
+ 	pnfs_put_lseg(pgio->pg_lseg);
+ 	pgio->pg_lseg = NULL;
++	pgio->pg_maxretrans = 0;
+ 	nfs_pageio_reset_write_mds(pgio);
+ }
+ 
 -- 
 2.20.1
 
