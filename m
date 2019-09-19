@@ -2,60 +2,60 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B042BC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 05:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B7BC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 05:59:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83690218AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 05:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30924218AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 05:59:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zhv8Kx6v"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o/AXHGJN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731638AbfISF7R (ORCPT
+        id S1731703AbfISF7V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 01:59:17 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:40682 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731450AbfISF7P (ORCPT
+        Thu, 19 Sep 2019 01:59:21 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46688 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731642AbfISF7S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 01:59:15 -0400
-Received: by mail-pg1-f194.google.com with SMTP id w10so1228499pgj.7
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 22:59:14 -0700 (PDT)
+        Thu, 19 Sep 2019 01:59:18 -0400
+Received: by mail-pg1-f193.google.com with SMTP id a3so1208132pgm.13
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 22:59:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=+JBkSI5LCUYcNi8/zrQxcvj8pwF/Tq3geiwHLKhqOig=;
-        b=zhv8Kx6vvUW/d7G+xYSAYrOmmvnaIbwd5gC9xnntdZLFNYJheYP9yad0XegrdSLaYV
-         FtKxwxRKzxKYC4cFofV9qglatWamCIw3rEpnNjS0uryaWYo45+5Rw+d5lJxVCkVLJ5Wc
-         2wXinXW/OoaLp01TuCXoSq2LscxafvxxPk2bS9f0KBg7u1JsG8aMPP10DhprooMDraD/
-         4YzvzVdEFJ+kNxQWJxHZ+k1MGbvj7v5FQlxHVrroq49RsqSNgQYEtpOi0P13IKDJUzd7
-         4Etzw54ergkoDmwiYVi9WpizuooEBTikcZPYopkAMZEHYgzlieRUZaJRucZFYHLFU2YB
-         LaSg==
+        bh=4zoX/y4PganInWe3/mARbaR8aRBFEpK4D2RgCbSuiC4=;
+        b=o/AXHGJNcTfb/QBuxV38Fov0fPaFAUpu8RlqAYA4p8z9IGQUjrbH1dhdTrh7Pxn5tt
+         1c4mVI7h4+1BboYpvs2myRmOEcH8K0jR+YSh2OvqgmCpviiwqzimh64MVuKX2ti+hhxX
+         LtvbniIR/k8e8TUEm10xjPxY9KLs8J08cAK77cFe3pI08aJpQHb2mqSHvDQFv9eknMuZ
+         pw6qLJahZEZCj8epZ7qNz/1PZWUA9o8N6+34wQl37HLz1ObtcasbIVBSJNxTMuhbho7h
+         inGOKpUPjGqphtG8c1q9JUH7O3yCf5MzZv9lH08E9tLPgEZefupgWwXVDzmQl8WBz0Wd
+         vG4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=+JBkSI5LCUYcNi8/zrQxcvj8pwF/Tq3geiwHLKhqOig=;
-        b=qFF/5DBVpZdFecr1XuQfmKktG39rbNHcYc9a1/j1JggS7Ua63hKoUKyhHnAtVDLkub
-         ORLUri9TVAM0gYRR3h2xxCSJihOUAQOStRDEbqE/GM32MCqG4WaWsLY0KGoF1g1A1M2H
-         Q37uyLryf3lx2mgkOWcqH8y7KPvpG/TGakM74K+0Ra1rwO+W+4iMv6LNm4EFk43XX7Q0
-         QNEclLZQa0ZVFE0o0DenDxP+RvfMKTajc+AH0hKVWpteT2ZmE2FJNhUgsqQDOb1Hfu95
-         l4yCapk/RNVYa5LRqE5ACZOzKmg40Dcz2y7hs5P7dGOdp3T7vcvHLMQJnex01u4b5RPW
-         G/HQ==
-X-Gm-Message-State: APjAAAX1CrrSU4CZ5PX8W8r6srhHJeZfeq1Ysaf6iBTSNThAJW0Q9Rw3
-        gOqrQj2WWebR7vmryQERjPnRwQ==
-X-Google-Smtp-Source: APXvYqxdLkUiH/diHMsr4vp4ZRs5ubOYFJhyRIGXzQnn3NjsJUKcnzmVMxnsRlXvrREIPR/ZYLBTog==
-X-Received: by 2002:a17:90a:1b46:: with SMTP id q64mr1858748pjq.76.1568872753745;
-        Wed, 18 Sep 2019 22:59:13 -0700 (PDT)
+        bh=4zoX/y4PganInWe3/mARbaR8aRBFEpK4D2RgCbSuiC4=;
+        b=fcIxG3OEgGcF7R8H8r9P8oLkqEVJOIUcthrPYGlYjf2PtfniMBrIoGbWyB/vu6VLYo
+         rmjdxTIqskHaL3yn620Rz6CMxUcJ+zcsjVMmQOHaXQohYYYmbn0Q6vI5KRx4WPe2jqD8
+         l+pKj07pXn3SxqKSuUiUp4zYnpg+CN0eGsSHoVPTGG1UnvNTZN2XtYFMlKbXKXXca1Xw
+         R3IZWV3T1v/q4X2Snv4MzhDXymc3XLlNXx9H8auj7KXK3Idu0u1dfp37nhwGdJrqmK5e
+         eQjrn/rN2MV77Zoy5xDVOyhQgJdK6bw9Ti5frXghOw8cgkVi+jVdrk/mXpYPtr7HzAWM
+         Yy0Q==
+X-Gm-Message-State: APjAAAU+x5nA/UVZFbEEfR2/WH/+sxThjNz3RrQczpIAeQBaX+XvFmNW
+        5bldS5kQo7ippBDvA7xxK419Yw==
+X-Google-Smtp-Source: APXvYqwz76HqhSedoS5r2mMBa6dzmPqh1Ag3DfmlNk0vZL1fBXLgDth4GoDuVRex1pgIuJTQXdT58Q==
+X-Received: by 2002:a62:583:: with SMTP id 125mr8684554pff.69.1568872757864;
+        Wed, 18 Sep 2019 22:59:17 -0700 (PDT)
 Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id c127sm9666027pfb.5.2019.09.18.22.59.09
+        by smtp.gmail.com with ESMTPSA id c127sm9666027pfb.5.2019.09.18.22.59.13
         (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 18 Sep 2019 22:59:13 -0700 (PDT)
+        Wed, 18 Sep 2019 22:59:17 -0700 (PDT)
 From:   Baolin Wang <baolin.wang@linaro.org>
 To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
         asutoshd@codeaurora.org
@@ -63,9 +63,9 @@ Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, arnd@arndb.de,
         linus.walleij@linaro.org, vincent.guittot@linaro.org,
         baolin.wang@linaro.org, linux-mmc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/3] mmc: host: sdhci: Add request_done ops for struct sdhci_ops
-Date:   Thu, 19 Sep 2019 13:58:46 +0800
-Message-Id: <ae58746cc2a8cd1810662b189c11a237539ba2a8.1568864713.git.baolin.wang@linaro.org>
+Subject: [PATCH v3 3/3] mmc: host: sdhci-sprd: Add software queue support
+Date:   Thu, 19 Sep 2019 13:58:47 +0800
+Message-Id: <17069e44dbab0302bb7bd5eee64dc769b1f181d3.1568864713.git.baolin.wang@linaro.org>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <cover.1568864712.git.baolin.wang@linaro.org>
 References: <cover.1568864712.git.baolin.wang@linaro.org>
@@ -76,59 +76,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add request_done ops for struct sdhci_ops as a preparation in case some
-host controllers have different method to complete one request, such as
-supporting request completion of MMC software queue.
+Add software queue support to improve the performance.
 
 Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 ---
- drivers/mmc/host/sdhci.c |   12 ++++++++++--
- drivers/mmc/host/sdhci.h |    2 ++
- 2 files changed, 12 insertions(+), 2 deletions(-)
+ drivers/mmc/host/Kconfig      |    1 +
+ drivers/mmc/host/sdhci-sprd.c |   26 ++++++++++++++++++++++++++
+ 2 files changed, 27 insertions(+)
 
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index a5dc5aa..b2c8695 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -2710,7 +2710,10 @@ static bool sdhci_request_done(struct sdhci_host *host)
+diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+index d117f18..862e8e9 100644
+--- a/drivers/mmc/host/Kconfig
++++ b/drivers/mmc/host/Kconfig
+@@ -619,6 +619,7 @@ config MMC_SDHCI_SPRD
+ 	depends on ARCH_SPRD
+ 	depends on MMC_SDHCI_PLTFM
+ 	select MMC_SDHCI_IO_ACCESSORS
++	select MMC_SQHCI
+ 	help
+ 	  This selects the SDIO Host Controller in Spreadtrum
+ 	  SoCs, this driver supports R11(IP version: R11P0).
+diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
+index d07b979..4dec0b3 100644
+--- a/drivers/mmc/host/sdhci-sprd.c
++++ b/drivers/mmc/host/sdhci-sprd.c
+@@ -19,6 +19,7 @@
+ #include <linux/slab.h>
  
- 	spin_unlock_irqrestore(&host->lock, flags);
+ #include "sdhci-pltfm.h"
++#include "sqhci.h"
  
--	mmc_request_done(host->mmc, mrq);
-+	if (host->ops->request_done)
-+		host->ops->request_done(host, mrq);
-+	else
-+		mmc_request_done(host->mmc, mrq);
- 
- 	return false;
+ /* SDHCI_ARGUMENT2 register high 16bit */
+ #define SDHCI_SPRD_ARG2_STUFF		GENMASK(31, 16)
+@@ -379,6 +380,16 @@ static unsigned int sdhci_sprd_get_ro(struct sdhci_host *host)
+ 	return 0;
  }
-@@ -3133,7 +3136,12 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
  
- 	/* Process mrqs ready for immediate completion */
- 	for (i = 0; i < SDHCI_MAX_MRQS; i++) {
--		if (mrqs_done[i])
-+		if (!mrqs_done[i])
-+			continue;
++static void sdhci_sprd_request_done(struct sdhci_host *host,
++				    struct mmc_request *mrq)
++{
++	/* Validate if the request was from software queue firstly. */
++	if (sqhci_finalize_request(host->mmc, mrq))
++		return;
 +
-+		if (host->ops->request_done)
-+			host->ops->request_done(host, mrqs_done[i]);
-+		else
- 			mmc_request_done(host->mmc, mrqs_done[i]);
- 	}
- 
-diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-index 902f855..e9a476f 100644
---- a/drivers/mmc/host/sdhci.h
-+++ b/drivers/mmc/host/sdhci.h
-@@ -643,6 +643,8 @@ struct sdhci_ops {
- 	void	(*voltage_switch)(struct sdhci_host *host);
- 	void	(*adma_write_desc)(struct sdhci_host *host, void **desc,
- 				   dma_addr_t addr, int len, unsigned int cmd);
-+	void	(*request_done)(struct sdhci_host *host,
-+				struct mmc_request *mrq);
++	 mmc_request_done(host->mmc, mrq);
++}
++
+ static struct sdhci_ops sdhci_sprd_ops = {
+ 	.read_l = sdhci_sprd_readl,
+ 	.write_l = sdhci_sprd_writel,
+@@ -392,6 +403,7 @@ static unsigned int sdhci_sprd_get_ro(struct sdhci_host *host)
+ 	.hw_reset = sdhci_sprd_hw_reset,
+ 	.get_max_timeout_count = sdhci_sprd_get_max_timeout_count,
+ 	.get_ro = sdhci_sprd_get_ro,
++	.request_done = sdhci_sprd_request_done,
  };
  
- #ifdef CONFIG_MMC_SDHCI_IO_ACCESSORS
+ static void sdhci_sprd_request(struct mmc_host *mmc, struct mmc_request *mrq)
+@@ -521,6 +533,7 @@ static int sdhci_sprd_probe(struct platform_device *pdev)
+ {
+ 	struct sdhci_host *host;
+ 	struct sdhci_sprd_host *sprd_host;
++	struct sqhci_host *sq_host;
+ 	struct clk *clk;
+ 	int ret = 0;
+ 
+@@ -631,6 +644,16 @@ static int sdhci_sprd_probe(struct platform_device *pdev)
+ 
+ 	sprd_host->flags = host->flags;
+ 
++	sq_host = devm_kzalloc(&pdev->dev, sizeof(*sq_host), GFP_KERNEL);
++	if (!sq_host) {
++		ret = -ENOMEM;
++		goto err_cleanup_host;
++	}
++
++	ret = sqhci_init(sq_host, host->mmc);
++	if (ret)
++		goto err_cleanup_host;
++
+ 	ret = __sdhci_add_host(host);
+ 	if (ret)
+ 		goto err_cleanup_host;
+@@ -689,6 +712,7 @@ static int sdhci_sprd_runtime_suspend(struct device *dev)
+ 	struct sdhci_host *host = dev_get_drvdata(dev);
+ 	struct sdhci_sprd_host *sprd_host = TO_SPRD_HOST(host);
+ 
++	sqhci_suspend(host->mmc);
+ 	sdhci_runtime_suspend_host(host);
+ 
+ 	clk_disable_unprepare(sprd_host->clk_sdio);
+@@ -717,6 +741,8 @@ static int sdhci_sprd_runtime_resume(struct device *dev)
+ 		goto clk_disable;
+ 
+ 	sdhci_runtime_resume_host(host, 1);
++	sqhci_resume(host->mmc);
++
+ 	return 0;
+ 
+ clk_disable:
 -- 
 1.7.9.5
 
