@@ -2,53 +2,52 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2239C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0919C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B86AA21907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:07:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96DF621907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:07:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568930844;
-	bh=fC9zQTXxaXkLzzBujYFrnT6lf8KESuMXzjNmK1gqNEk=;
+	s=default; t=1568930847;
+	bh=lm6BwGJhFtDWraC0/vbb1JJxq858JWoVqUniMJAji9Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xiHs5X0PwjKT6mQ7J3I5VFO5RcPcxGJz5WQOJbFrWmbyc5Y9aTeC1zwgbPbOd+gts
-	 HFeY20AvqwSmExvFQqE9Djuz/yisByN/G/aSl9TW4EPVmiW1n1RqtMQZctg4mgixGt
-	 5jK85ZfOTWEttdYSQuGL8nByfgf4ZrJrdO1KX5Lo=
+	b=YOCPmPXDRN7xqfKsjaqgYdalA8+P1HjwH3SrxKNXM6SRibg8GyC2g7RNnegTLjWJR
+	 nhmmrvEiKKiYYyhME9Q8c91qy5OgwsHFC7WXDVDE6YQDX6k/EnLGQRvRqiRsAHo7Wb
+	 FtGSCI3C1dexGRElqk8iNeTpktWWvnUhXvYzOPfw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393194AbfISWHX (ORCPT
+        id S2393207AbfISWH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:07:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44912 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:07:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393177AbfISWHQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:07:16 -0400
+        id S2389600AbfISWHY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:07:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 562F3218AF;
-        Thu, 19 Sep 2019 22:07:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4345C218AF;
+        Thu, 19 Sep 2019 22:07:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568930835;
-        bh=fC9zQTXxaXkLzzBujYFrnT6lf8KESuMXzjNmK1gqNEk=;
+        s=default; t=1568930843;
+        bh=lm6BwGJhFtDWraC0/vbb1JJxq858JWoVqUniMJAji9Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c5itxUT2tMDlUpj0mVc9CM7cIF+ORrCpeLf7/3as3nNxG8EO9fwjXGNRb8jpyf2dh
-         O64aidr1RalFDJnzO7SkrCznjLnCYZwq+2lLReb7AAw6nEdRn4YxmeF17veqm9D7Rm
-         0DitzsbC88+Rh2+KK0pk/rfTS+L/qULuIJVIfHeE=
+        b=FNDJVY3dDmPIiErxB34zgJT57xkVzMaMWRahHDDV5H0FZrUy9dO7SmAUnIpAut+8s
+         TyvIstRRj+5tU4iEf6vlNQQGAggCa7cQ8ZsZpXfdY5cjfWq08z5kCYgjZE4T8clcom
+         Bunqf7TjTReHhoRAKw68L5uGGK0pvGOqi56fo4eE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roger Quadros <rogerq@ti.com>,
-        Suman Anna <s-anna@ti.com>, Keerthy <j-keerthy@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 031/124] bus: ti-sysc: Fix handling of forced idle
-Date:   Fri, 20 Sep 2019 00:01:59 +0200
-Message-Id: <20190919214820.163461685@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 5.2 007/124] Input: elan_i2c - remove Lenovo Legion Y7000 PnpID
+Date:   Fri, 20 Sep 2019 00:01:35 +0200
+Message-Id: <20190919214819.454119527@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -61,42 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 
-[ Upstream commit 6ee8241d17c68b94a91efabfd6bdfe63bb1b79c1 ]
+commit 0c043d70d04711fe6c380df9065fdc44192c49bf upstream.
 
-For some devices we can get the following warning on boot:
+Looks like the Bios of the Lenovo Legion Y7000 is using ELAN061B
+when the actual device is supposed to be used with hid-multitouch.
 
-ti-sysc 48485200.target-module: sysc_disable_module: invalid midlemode
+Remove it from the list of the supported device, hoping that
+no one will complain about the loss in functionality.
 
-Fix this by treating SYSC_IDLE_FORCE like we do for the other bits
-for idlemodes mask.
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=203467
+Fixes: 738c06d0e456 ("Input: elan_i2c - add hardware ID for multiple Lenovo laptops")
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: d59b60564cbf ("bus: ti-sysc: Add generic enable/disable functions")
-Cc: Roger Quadros <rogerq@ti.com>
-Reviewed-by: Suman Anna <s-anna@ti.com>
-Tested-by: Keerthy <j-keerthy@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bus/ti-sysc.c | 2 +-
+ drivers/input/mouse/elan_i2c_core.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
-index b72741668c927..f5176a5d38cd9 100644
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -853,7 +853,7 @@ static int sysc_best_idle_mode(u32 idlemodes, u32 *best_mode)
- 		*best_mode = SYSC_IDLE_SMART_WKUP;
- 	else if (idlemodes & BIT(SYSC_IDLE_SMART))
- 		*best_mode = SYSC_IDLE_SMART;
--	else if (idlemodes & SYSC_IDLE_FORCE)
-+	else if (idlemodes & BIT(SYSC_IDLE_FORCE))
- 		*best_mode = SYSC_IDLE_FORCE;
- 	else
- 		return -EINVAL;
--- 
-2.20.1
-
+--- a/drivers/input/mouse/elan_i2c_core.c
++++ b/drivers/input/mouse/elan_i2c_core.c
+@@ -1357,7 +1357,7 @@ static const struct acpi_device_id elan_
+ 	{ "ELAN0618", 0 },
+ 	{ "ELAN0619", 0 },
+ 	{ "ELAN061A", 0 },
+-	{ "ELAN061B", 0 },
++/*	{ "ELAN061B", 0 }, not working on the Lenovo Legion Y7000 */
+ 	{ "ELAN061C", 0 },
+ 	{ "ELAN061D", 0 },
+ 	{ "ELAN061E", 0 },
 
 
