@@ -2,52 +2,52 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74FA3C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D441AC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47C572196F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:09:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E31421928
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:09:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568930960;
-	bh=FyVssxbu35YOSuSBsVhZcdxlN4l730ukFePFxHMR+LE=;
+	s=default; t=1568930968;
+	bh=xNd4kCXq6hUuyEVyhnEMc4+6Y/+LDdNmnahKeej3FwM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ndP//2NOL5hEDIt71JGN0LTC/xlzkcpqCQp67dW/gyh0rdY8UwpgjvHQvzo69RyEo
-	 6bB184asYpfnYOavEaf0SFF5EL/pK5zGHn6x8vq35zf31lq4Q2BZ2TKb6XPjmxBDCt
-	 Opi1d1G9H5Xue+Lr2sk45DWE9CeGVbLmnWokCuS8=
+	b=0CoQKu+8V6EAZwbyd5frOcqhYzGQ9npbnUQHV4E+bo/SiI+szeXWRTxoJ8KB7Phjo
+	 BFebk4a63cLi786TkKiV67Ryp95Gdb4DoWP1Rz4w/JbhXwyIUYHZ/d0rA9Y3bXwUCz
+	 JvbOvouucWW5NeBsPSPteCxGqBf5a7yCjemC8ni8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405395AbfISWJT (ORCPT
+        id S2405427AbfISWJ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:09:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47430 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:09:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405379AbfISWJR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:09:17 -0400
+        id S2405379AbfISWJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:09:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DA1021928;
-        Thu, 19 Sep 2019 22:09:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75E1B21928;
+        Thu, 19 Sep 2019 22:09:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568930955;
-        bh=FyVssxbu35YOSuSBsVhZcdxlN4l730ukFePFxHMR+LE=;
+        s=default; t=1568930964;
+        bh=xNd4kCXq6hUuyEVyhnEMc4+6Y/+LDdNmnahKeej3FwM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wAquTO2P47U2XZo7JXrfxLmrg53juX9DHwMR5hto/DKd2OpY28N3qzydJX52fRMnA
-         f7lLRdDnqe0NwmfjjJ+7HSkuclcGbxPVaS8/dUm366sRPuq/23CVLHgXVji96dqPhT
-         N/b8grkLnCkGnzedeziIDtqK7yZELKGdYIKGNu9w=
+        b=NuwNSH4t7Ijvn+oYEBDQO8Z1bkiOikGqoAuNk0g5lQScuQ0e0hKLIsCM1I800qGHz
+         PoZkjBtSvcalwjReyvDdseZtW0PpVVK1+NOpRiz06Gm2OuaKcmpTZeRBGu+Vb6qqUX
+         oLy1/bv9CCeNMwNTz7GoXzOQ2sSRD0lsV+RpU79M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Keerthy <j-keerthy@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
+        Steve French <stfrench@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 034/124] ARM: dts: Fix incorrect dcan register mapping for am3, am4 and dra7
-Date:   Fri, 20 Sep 2019 00:02:02 +0200
-Message-Id: <20190919214820.262275206@linuxfoundation.org>
+Subject: [PATCH 5.2 079/124] cifs: set domainName when a domain-key is used in multiuser
+Date:   Fri, 20 Sep 2019 00:02:47 +0200
+Message-Id: <20190919214821.884661825@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -60,104 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Ronnie Sahlberg <lsahlber@redhat.com>
 
-[ Upstream commit 89bbc6f1eb90809b1538b3a9c54030c558180e3b ]
+[ Upstream commit f2aee329a68f5a907bcff11a109dfe17c0b41aeb ]
 
-We are currently using a wrong register for dcan revision. Although
-this is currently only used for detecting the dcan module, let's
-fix it to avoid confusion.
+RHBZ: 1710429
 
-Tested-by: Keerthy <j-keerthy@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+When we use a domain-key to authenticate using multiuser we must also set
+the domainnmame for the new volume as it will be used and passed to the server
+in the NTLMSSP Domain-name.
+
+Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/am33xx-l4.dtsi | 4 ++++
- arch/arm/boot/dts/am437x-l4.dtsi | 4 ++++
- arch/arm/boot/dts/dra7-l4.dtsi   | 4 ++--
- drivers/bus/ti-sysc.c            | 3 ++-
- 4 files changed, 12 insertions(+), 3 deletions(-)
+ fs/cifs/connect.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
-index ced1a19d5f898..4bd22c1edf963 100644
---- a/arch/arm/boot/dts/am33xx-l4.dtsi
-+++ b/arch/arm/boot/dts/am33xx-l4.dtsi
-@@ -1758,6 +1758,8 @@
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index 18c7c6b2fe08a..2beaa14519f5d 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -2961,6 +2961,7 @@ static int
+ cifs_set_cifscreds(struct smb_vol *vol, struct cifs_ses *ses)
+ {
+ 	int rc = 0;
++	int is_domain = 0;
+ 	const char *delim, *payload;
+ 	char *desc;
+ 	ssize_t len;
+@@ -3008,6 +3009,7 @@ cifs_set_cifscreds(struct smb_vol *vol, struct cifs_ses *ses)
+ 			rc = PTR_ERR(key);
+ 			goto out_err;
+ 		}
++		is_domain = 1;
+ 	}
  
- 		target-module@cc000 {			/* 0x481cc000, ap 60 46.0 */
- 			compatible = "ti,sysc-omap4", "ti,sysc";
-+			reg = <0xcc020 0x4>;
-+			reg-names = "rev";
- 			ti,hwmods = "d_can0";
- 			/* Domains (P, C): per_pwrdm, l4ls_clkdm */
- 			clocks = <&l4ls_clkctrl AM3_L4LS_D_CAN0_CLKCTRL 0>,
-@@ -1780,6 +1782,8 @@
+ 	down_read(&key->sem);
+@@ -3065,6 +3067,26 @@ cifs_set_cifscreds(struct smb_vol *vol, struct cifs_ses *ses)
+ 		goto out_key_put;
+ 	}
  
- 		target-module@d0000 {			/* 0x481d0000, ap 62 42.0 */
- 			compatible = "ti,sysc-omap4", "ti,sysc";
-+			reg = <0xd0020 0x4>;
-+			reg-names = "rev";
- 			ti,hwmods = "d_can1";
- 			/* Domains (P, C): per_pwrdm, l4ls_clkdm */
- 			clocks = <&l4ls_clkctrl AM3_L4LS_D_CAN1_CLKCTRL 0>,
-diff --git a/arch/arm/boot/dts/am437x-l4.dtsi b/arch/arm/boot/dts/am437x-l4.dtsi
-index 989cb60b90295..04bee4ff9dcb8 100644
---- a/arch/arm/boot/dts/am437x-l4.dtsi
-+++ b/arch/arm/boot/dts/am437x-l4.dtsi
-@@ -1574,6 +1574,8 @@
- 
- 		target-module@cc000 {			/* 0x481cc000, ap 50 46.0 */
- 			compatible = "ti,sysc-omap4", "ti,sysc";
-+			reg = <0xcc020 0x4>;
-+			reg-names = "rev";
- 			ti,hwmods = "d_can0";
- 			/* Domains (P, C): per_pwrdm, l4ls_clkdm */
- 			clocks = <&l4ls_clkctrl AM4_L4LS_D_CAN0_CLKCTRL 0>;
-@@ -1593,6 +1595,8 @@
- 
- 		target-module@d0000 {			/* 0x481d0000, ap 52 3a.0 */
- 			compatible = "ti,sysc-omap4", "ti,sysc";
-+			reg = <0xd0020 0x4>;
-+			reg-names = "rev";
- 			ti,hwmods = "d_can1";
- 			/* Domains (P, C): per_pwrdm, l4ls_clkdm */
- 			clocks = <&l4ls_clkctrl AM4_L4LS_D_CAN1_CLKCTRL 0>;
-diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
-index 63628e166c0cd..21e5914fdd620 100644
---- a/arch/arm/boot/dts/dra7-l4.dtsi
-+++ b/arch/arm/boot/dts/dra7-l4.dtsi
-@@ -3025,7 +3025,7 @@
- 
- 		target-module@80000 {			/* 0x48480000, ap 31 16.0 */
- 			compatible = "ti,sysc-omap4", "ti,sysc";
--			reg = <0x80000 0x4>;
-+			reg = <0x80020 0x4>;
- 			reg-names = "rev";
- 			clocks = <&l4per2_clkctrl DRA7_L4PER2_DCAN2_CLKCTRL 0>;
- 			clock-names = "fck";
-@@ -4577,7 +4577,7 @@
- 
- 		target-module@c000 {			/* 0x4ae3c000, ap 30 04.0 */
- 			compatible = "ti,sysc-omap4", "ti,sysc";
--			reg = <0xc000 0x4>;
-+			reg = <0xc020 0x4>;
- 			reg-names = "rev";
- 			clocks = <&wkupaon_clkctrl DRA7_WKUPAON_DCAN1_CLKCTRL 0>;
- 			clock-names = "fck";
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
-index 56a2399f341e8..58b38630171ff 100644
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -1127,7 +1127,8 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
- 	SYSC_QUIRK("control", 0, 0, 0x10, -1, 0x40000900, 0xffffffff, 0),
- 	SYSC_QUIRK("cpgmac", 0, 0x1200, 0x1208, 0x1204, 0x4edb1902,
- 		   0xffff00f0, 0),
--	SYSC_QUIRK("dcan", 0, 0, -1, -1, 0xffffffff, 0xffffffff, 0),
-+	SYSC_QUIRK("dcan", 0, 0x20, -1, -1, 0xa3170504, 0xffffffff, 0),
-+	SYSC_QUIRK("dcan", 0, 0x20, -1, -1, 0x4edb1902, 0xffffffff, 0),
- 	SYSC_QUIRK("dmic", 0, 0, 0x10, -1, 0x50010000, 0xffffffff, 0),
- 	SYSC_QUIRK("dwc3", 0, 0, 0x10, -1, 0x500a0200, 0xffffffff, 0),
- 	SYSC_QUIRK("epwmss", 0, 0, 0x4, -1, 0x47400001, 0xffffffff, 0),
++	/*
++	 * If we have a domain key then we must set the domainName in the
++	 * for the request.
++	 */
++	if (is_domain && ses->domainName) {
++		vol->domainname = kstrndup(ses->domainName,
++					   strlen(ses->domainName),
++					   GFP_KERNEL);
++		if (!vol->domainname) {
++			cifs_dbg(FYI, "Unable to allocate %zd bytes for "
++				 "domain\n", len);
++			rc = -ENOMEM;
++			kfree(vol->username);
++			vol->username = NULL;
++			kfree(vol->password);
++			vol->password = NULL;
++			goto out_key_put;
++		}
++	}
++
+ out_key_put:
+ 	up_read(&key->sem);
+ 	key_put(key);
 -- 
 2.20.1
 
