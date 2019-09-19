@@ -2,80 +2,180 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D79DBC4CECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 18:30:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A665BC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 18:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B16CA21BE5
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 18:30:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74F8D2196F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 18:34:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="n4O1iT1Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392070AbfISSaU (ORCPT
+        id S2392119AbfISSeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 14:30:20 -0400
-Received: from vmicros1.altlinux.org ([194.107.17.57]:37874 "EHLO
-        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392032AbfISSaT (ORCPT
+        Thu, 19 Sep 2019 14:34:14 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:50534 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732834AbfISSeL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 14:30:19 -0400
-Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
-        by vmicros1.altlinux.org (Postfix) with ESMTP id 99AB672CCE7;
-        Thu, 19 Sep 2019 21:30:17 +0300 (MSK)
-Received: by mua.local.altlinux.org (Postfix, from userid 508)
-        id 8541B7CCB47; Thu, 19 Sep 2019 21:30:17 +0300 (MSK)
-Date:   Thu, 19 Sep 2019 21:30:17 +0300
-From:   "Dmitry V. Levin" <ldv@altlinux.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Tyler Hicks <tyhicks@canonical.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        luto@amacapital.net, jannh@google.com, wad@chromium.org,
-        shuah@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Tycho Andersen <tycho@tycho.ws>, stable@vger.kernel.org
-Subject: Re: [PATCH 2/4] seccomp: add two missing ptrace ifdefines
-Message-ID: <20190919183017.GD22257@altlinux.org>
-References: <20190918084833.9369-1-christian.brauner@ubuntu.com>
- <20190918084833.9369-3-christian.brauner@ubuntu.com>
- <20190918091512.GA5088@elm>
- <201909181031.1EE73B4@keescook>
- <20190919104251.GA16834@altlinux.org>
- <201909190918.443D6BC7@keescook>
+        Thu, 19 Sep 2019 14:34:11 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8JIY7eo112792;
+        Thu, 19 Sep 2019 13:34:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568918047;
+        bh=Bww3DmLPInN+74zzf9x1fHcHAM7PHNA7A5KdfU8oS5o=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=n4O1iT1YlS2WTKwziF0THN0iEeeF+N/P5gRPN6pQ28CvqCcC1rzr+88oBOiv4bc4L
+         7AwHGNO2ZhBnhIxbbN1I3Nb1o3uiSaGyieTz2JiUD2BRMKOB1TKdiFp3TvqvOZ4VWa
+         dN2H6P2ihpvkcemt5PB7KL9EnOi41JBBYqwPneB4=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8JIY7Yd107070
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 19 Sep 2019 13:34:07 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 19
+ Sep 2019 13:34:03 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 19 Sep 2019 13:34:03 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8JIY6q6034168;
+        Thu, 19 Sep 2019 13:34:07 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v7 3/9] dt: bindings: Add multicolor class dt bindings documention
+Date:   Thu, 19 Sep 2019 13:36:51 -0500
+Message-ID: <20190919183657.1339-4-dmurphy@ti.com>
+X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
+In-Reply-To: <20190919183657.1339-1-dmurphy@ti.com>
+References: <20190919183657.1339-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201909190918.443D6BC7@keescook>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 09:55:30AM -0700, Kees Cook wrote:
-> On Thu, Sep 19, 2019 at 01:42:51PM +0300, Dmitry V. Levin wrote:
-> > On Wed, Sep 18, 2019 at 10:33:09AM -0700, Kees Cook wrote:
-> > > This is actually fixed in -next already (and, yes, with the Fixes line
-> > > Tyler has mentioned):
-> > > 
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git/commit/?h=next&id=69b2d3c5924273a0ae968d3818210fc57a1b9d07
-> > 
-> > Excuse me, does it mean that you expect each selftest to be self-hosted?
-> > I was (and still is) under impression that selftests should be built
-> > with headers installed from the tree. Is it the case, or is it not?
-> 
-> As you know (but to give others some context) there is a long-standing
-> bug in the selftest build environment that causes these problems (it
-> isn't including the uAPI headers) which you'd proposed to be fixed
-> recently[1]. Did that ever get sent as a "real" patch? I don't see it
-> in Shuah's tree; can you send it to Shuah?
-> 
-> [1] https://lore.kernel.org/lkml/20190805094719.GA1693@altlinux.org/
+Add DT bindings for the LEDs multicolor class framework.
 
-The [1] was an idea rather than a patch, it didn't take arch uapi headers
-into account.  OK, I'll try to come up with a proper fix then.
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ .../bindings/leds/leds-class-multicolor.txt   | 95 +++++++++++++++++++
+ 1 file changed, 95 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
 
-
+diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
+new file mode 100644
+index 000000000000..215d3c90f351
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
+@@ -0,0 +1,95 @@
++* Multicolor LED properties
++
++Monochrome LEDs can grouped into LED clusters.  These clusters can provide a
++visible output that have a wide range of colors and intensities.
++
++The nodes and properties defined in this document are unique to the multicolor
++LED class.  Common LED nodes and properties are inherited from the common.txt
++within this documentation directory.
++
++Required LED Child properties:
++	- color : For multicolor LED support this property should be defined as
++		  LED_COLOR_ID_MULTI and further definition can be found in
++		  include/linux/leds/common.h.
++
++led-controller@30 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	compatible = "ti,lp5024";
++	reg = <0x29>;
++
++	multi-led@1 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <1>;
++		color = <LED_COLOR_ID_MULTI>;
++		function = LED_FUNCTION_STATUS;
++
++
++		led@3 {
++			reg = <3>;
++			color = <LED_COLOR_ID_RED>;
++		};
++
++		led@4 {
++			reg = <4>;
++			color = <LED_COLOR_ID_GREEN>;
++		};
++
++		led@5 {
++			reg = <5>;
++			color = <LED_COLOR_ID_BLUE>;
++		};
++	};
++
++	multi-led@2 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		color = <LED_COLOR_ID_MULTI>;
++		function = LED_FUNCTION_ACTIVITY;
++		reg = <2>;
++		ti,led-bank = <2 3 5>;
++
++		led@6 {
++			reg = <0x6>;
++			color = <LED_COLOR_ID_RED>;
++			led-sources = <6 9 15>;
++		};
++
++		led@7 {
++			reg = <0x7>;
++			color = <LED_COLOR_ID_GREEN>;
++			led-sources = <7 10 16>;
++		};
++
++		led@8 {
++			reg = <0x8>;
++			color = <LED_COLOR_ID_BLUE>;
++			led-sources = <8 11 17>;
++		};
++	};
++
++	multi-led@4 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <4>;
++		color = <LED_COLOR_ID_MULTI>;
++		function = LED_FUNCTION_ACTIVITY;
++
++		led@12 {
++			reg = <12>;
++			color = <LED_COLOR_ID_RED>;
++		};
++
++		led@13 {
++			reg = <13>;
++			color = <LED_COLOR_ID_GREEN>;
++		};
++
++		led@14 {
++			reg = <14>;
++			color = <LED_COLOR_ID_BLUE>;
++		};
++	};
++
++};
 -- 
-ldv
+2.22.0.214.g8dca754b1e
+
