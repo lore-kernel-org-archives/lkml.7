@@ -2,91 +2,157 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B69ADC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 01:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD169C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 01:36:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94C4221907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 01:33:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A59AF21907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 01:36:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387669AbfISBdm (ORCPT
+        id S2387646AbfISBg2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 21:33:42 -0400
-Received: from 123.103.51.227-BJ-CNC ([123.103.51.227]:49529 "EHLO wangsu.com"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727114AbfISBdm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 21:33:42 -0400
-Received: from localhost.localdomain (unknown [218.85.123.226])
-        by app2 (Coremail) with SMTP id 4zNnewDHpwDA2oJdbAABAA--.14S2;
-        Thu, 19 Sep 2019 09:32:49 +0800 (CST)
-Subject: Re: [PATCH] [RESEND] vmscan.c: add a sysctl entry for controlling
- memory reclaim IO congestion_wait length
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     corbet@lwn.net, mcgrof@kernel.org, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        keescook@chromium.org, mchehab+samsung@kernel.org,
-        mgorman@techsingularity.net, vbabka@suse.cz, ktkhai@virtuozzo.com,
-        hannes@cmpxchg.org, willy@infradead.org,
-        kbuild test robot <lkp@intel.com>
-References: <20190918095159.27098-1-linf@wangsu.com>
- <20190918122738.GE12770@dhcp22.suse.cz>
-From:   Lin Feng <linf@wangsu.com>
-Message-ID: <c5f278da-ec68-3206-d91b-d1ca7c97bb8c@wangsu.com>
-Date:   Thu, 19 Sep 2019 09:32:48 +0800
+        Wed, 18 Sep 2019 21:36:28 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:12804 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727114AbfISBg2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 21:36:28 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8J1O3CT166512;
+        Wed, 18 Sep 2019 21:36:20 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2v3ve0wqb2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 18 Sep 2019 21:36:20 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8J1PStb169475;
+        Wed, 18 Sep 2019 21:36:20 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2v3ve0wqar-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 18 Sep 2019 21:36:20 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8J1QRUQ002729;
+        Thu, 19 Sep 2019 01:36:19 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma02wdc.us.ibm.com with ESMTP id 2v3vbtsgxc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 Sep 2019 01:36:19 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8J1aF2t58655170
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 19 Sep 2019 01:36:15 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4ABB6BE058;
+        Thu, 19 Sep 2019 01:36:15 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 39503BE051;
+        Thu, 19 Sep 2019 01:36:13 +0000 (GMT)
+Received: from oc4221205838.ibm.com (unknown [9.85.141.73])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 19 Sep 2019 01:36:13 +0000 (GMT)
+Subject: Re: [PATCH v4 0/4] Retrieving zPCI specific info with VFIO
+To:     sebott@linux.ibm.com
+Cc:     gerald.schaefer@de.ibm.com, pasic@linux.ibm.com,
+        borntraeger@de.ibm.com, walling@linux.ibm.com,
+        linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org,
+        joro@8bytes.org, linux-kernel@vger.kernel.org,
+        alex.williamson@redhat.com, kvm@vger.kernel.org,
+        heiko.carstens@de.ibm.com, robin.murphy@arm.com, gor@linux.ibm.com,
+        cohuck@redhat.com, pmorel@linux.ibm.com
+References: <1567815231-17940-1-git-send-email-mjrosato@linux.ibm.com>
+From:   Matthew Rosato <mjrosato@linux.ibm.com>
+Openpgp: preference=signencrypt
+Message-ID: <b4af47c1-0dc1-938d-20e4-0eeca095a7d5@linux.ibm.com>
+Date:   Wed, 18 Sep 2019 21:36:12 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190918122738.GE12770@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <1567815231-17940-1-git-send-email-mjrosato@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: 4zNnewDHpwDA2oJdbAABAA--.14S2
-X-Coremail-Antispam: 1UD129KBjvdXoWruF17try7Kw4xCF1kXF4DXFb_yoWfJwbE9F
-        18Krnxuws5KF4DWFsrJrnxCrykKw4rtr1kWrW8JrnxGa4rJF1rAa95Ww1kWa1kt3y8WrZr
-        XrySkryDXw129jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbVxYjsxI4VWkCwAYFVCjjxCrM7CY07I20VC2zVCF04k26cxKx2IY
-        s7xG6rWj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
-        8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_GcCE3s1l84ACjcxK6I8E
-        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
-        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6cx26r48McIj
-        6xkF7I0En7xvr7AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFI
-        xGxcIEc7CjxVA2Y2ka0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY02Avz4vE14v_KwCF
-        04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26r48MxC20s026xCaFVCjc4AY6r1j6r
-        4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
-        67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
-        x0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY
-        6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa
-        73UjIFyTuYvjxU1qXdUUUUU
-X-CM-SenderInfo: holqwq5zdqw23xof0z/
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-19_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909190010
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+ping
 
-
-On 9/18/19 20:27, Michal Hocko wrote:
-> Please do not post a new version with a minor compile fixes until there
-> is a general agreement on the approach. Willy had comments which really
-> need to be resolved first. 
-
-Sorry, but thanks for pointing out.
-
+On 9/6/19 8:13 PM, Matthew Rosato wrote:
+> Note: These patches by Pierre got lost in the ether a few months back
+> as he has been unavailable to carry them forward.  I've made changes
+> based upon comments received on his last version.
 > 
-> Also does this
-> [...]
->> Reported-by: kbuild test robot<lkp@intel.com>
-> really hold? Because it suggests that the problem has been spotted by
-> the kbuild bot which is kinda unexpected... I suspect you have just
-> added that for the minor compilation issue that you have fixed since the
-> last version.
-
-Yes, I do know the issue is not reported by the robot, but
-just followed the kbuild robot tip, this Reported-by suggested by kbuild robot
-seems a little misleading, I'm not sure if it has other meanings.
-'If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>'
+> We define a new configuration entry for VFIO/PCI, VFIO_PCI_ZDEV
+> to configure access to a zPCI region dedicated for retrieving
+> zPCI features.
+> 
+> When the VFIO_PCI_ZDEV feature is configured we initialize
+> a new device region, VFIO_REGION_SUBTYPE_ZDEV_CLP, to hold
+> the information from the ZPCI device the userland needs to
+> give to a guest driving the zPCI function.
+> 
+> 
+> Note that in the current state we do not use the CLP instructions
+> to access the firmware but get the information directly from
+> the zdev device.
+> 
+> -This means that the patch 1, "s390: pci: Exporting access to CLP PCI
+> function and PCI group" is not used and can be let out of this series
+> without denying the good working of the other patches.
+> - But we will need this later, eventually in the next iteration
+>   to retrieve values not being saved inside the zdev structure.
+>   like maxstbl and the PCI supported version
+> 
+> To share the code with arch/s390/pci/pci_clp.c the original functions
+> in pci_clp.c to query PCI functions and PCI functions group are
+> modified so that they can be exported.
+> 
+> A new function clp_query_pci() replaces clp_query_pci_fn() and
+> the previous calls to clp_query_pci_fn() and clp_query_pci_fngrp()
+> are replaced with calls to zdev_query_pci_fn() and zdev_query_pci_fngrp()
+> using a zdev pointer as argument.
+> 
+> Changes since v3:
+> - New patch: define maxstbl
+> - Remove CLP_UTIL_STR_LEN references from uapi header
+> - Fix broken ifdef CONFIG_VFIO_PCI_ZDEV
+> - Change Kconfig option from tristate to bool
+> - Remove VFIO_REGION_TYPE_IBM_ZDEV, move VFIO_REGION_SUBTYPE_ZDEV_CLP to a 1014 subtype
+> - reject iswrite in .rw callback
+> - Remove rw restriction on identical buffer sizes
+> - Allow arbitrary sized read
+> 
+> Pierre Morel (4):
+>   s390: pci: Exporting access to CLP PCI function and PCI group
+>   s390: pci: Define the maxstbl CLP response entry
+>   vfio: zpci: defining the VFIO headers
+>   vfio: pci: Using a device region to retrieve zPCI information
+> 
+>  arch/s390/include/asm/pci.h         |  3 ++
+>  arch/s390/include/asm/pci_clp.h     |  2 +-
+>  arch/s390/pci/pci_clp.c             | 71 ++++++++++++++++---------------
+>  drivers/vfio/pci/Kconfig            |  7 +++
+>  drivers/vfio/pci/Makefile           |  1 +
+>  drivers/vfio/pci/vfio_pci.c         |  9 ++++
+>  drivers/vfio/pci/vfio_pci_private.h | 10 +++++
+>  drivers/vfio/pci/vfio_pci_zdev.c    | 85 +++++++++++++++++++++++++++++++++++++
+>  include/uapi/linux/vfio.h           |  1 +
+>  include/uapi/linux/vfio_zdev.h      | 35 +++++++++++++++
+>  10 files changed, 189 insertions(+), 35 deletions(-)
+>  create mode 100644 drivers/vfio/pci/vfio_pci_zdev.c
+>  create mode 100644 include/uapi/linux/vfio_zdev.h
+> 
 
