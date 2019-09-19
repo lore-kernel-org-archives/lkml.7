@@ -2,145 +2,210 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CDDFC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25057C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD1B1208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:56:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC907208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:57:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732857AbfISU4r (ORCPT
+        id S1732873AbfISU5Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 16:56:47 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:44114 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732841AbfISU4r (ORCPT
+        Thu, 19 Sep 2019 16:57:24 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46204 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732445AbfISU5X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 16:56:47 -0400
-Received: from callcc.thunk.org (guestnat-104-133-0-98.corp.google.com [104.133.0.98] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x8JKuf3T028218
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 19 Sep 2019 16:56:42 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 65BE8420811; Thu, 19 Sep 2019 16:56:41 -0400 (EDT)
-Date:   Thu, 19 Sep 2019 16:56:41 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, linux-ext4@vger.kernel.org
-Subject: [GIT PULL] ext4 updates for 5.4
-Message-ID: <20190919205641.GA23449@mit.edu>
+        Thu, 19 Sep 2019 16:57:23 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8JKVeGE135521;
+        Thu, 19 Sep 2019 16:57:15 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2v4g2u27qq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 Sep 2019 16:57:15 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8JKhhIo020191;
+        Thu, 19 Sep 2019 16:57:14 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2v4g2u27qb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 Sep 2019 16:57:14 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8JKU3Sw019813;
+        Thu, 19 Sep 2019 20:57:13 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma01dal.us.ibm.com with ESMTP id 2v3vbu2k89-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 Sep 2019 20:57:13 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8JKvAd235389736
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 19 Sep 2019 20:57:11 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E0BC6112062;
+        Thu, 19 Sep 2019 20:57:10 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 446ED112063;
+        Thu, 19 Sep 2019 20:57:10 +0000 (GMT)
+Received: from oc4221205838.ibm.com (unknown [9.85.141.73])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 19 Sep 2019 20:57:10 +0000 (GMT)
+Subject: Re: [PATCH v4 4/4] vfio: pci: Using a device region to retrieve zPCI
+ information
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     sebott@linux.ibm.com, gerald.schaefer@de.ibm.com,
+        pasic@linux.ibm.com, borntraeger@de.ibm.com, walling@linux.ibm.com,
+        linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org,
+        joro@8bytes.org, linux-kernel@vger.kernel.org,
+        alex.williamson@redhat.com, kvm@vger.kernel.org,
+        heiko.carstens@de.ibm.com, robin.murphy@arm.com, gor@linux.ibm.com,
+        pmorel@linux.ibm.com
+References: <1567815231-17940-1-git-send-email-mjrosato@linux.ibm.com>
+ <1567815231-17940-5-git-send-email-mjrosato@linux.ibm.com>
+ <20190919172505.2eb075f8.cohuck@redhat.com>
+From:   Matthew Rosato <mjrosato@linux.ibm.com>
+Openpgp: preference=signencrypt
+Message-ID: <c5c5c46e-371b-5be0-064a-b89195cdc3f6@linux.ibm.com>
+Date:   Thu, 19 Sep 2019 16:57:10 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190919172505.2eb075f8.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-19_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909190174
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit d45331b00ddb179e291766617259261c112db872:
+On 9/19/19 11:25 AM, Cornelia Huck wrote:
+> On Fri,  6 Sep 2019 20:13:51 -0400
+> Matthew Rosato <mjrosato@linux.ibm.com> wrote:
+> 
+>> From: Pierre Morel <pmorel@linux.ibm.com>
+>>
+>> We define a new configuration entry for VFIO/PCI, VFIO_PCI_ZDEV
+>>
+>> When the VFIO_PCI_ZDEV feature is configured we initialize
+>> a new device region, VFIO_REGION_SUBTYPE_ZDEV_CLP, to hold
+>> the information from the ZPCI device the use
+>>
+>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+>> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
+>> ---
+>>  drivers/vfio/pci/Kconfig            |  7 +++
+>>  drivers/vfio/pci/Makefile           |  1 +
+>>  drivers/vfio/pci/vfio_pci.c         |  9 ++++
+>>  drivers/vfio/pci/vfio_pci_private.h | 10 +++++
+>>  drivers/vfio/pci/vfio_pci_zdev.c    | 85 +++++++++++++++++++++++++++++++++++++
+>>  5 files changed, 112 insertions(+)
+>>  create mode 100644 drivers/vfio/pci/vfio_pci_zdev.c
+>>
+>> diff --git a/drivers/vfio/pci/Kconfig b/drivers/vfio/pci/Kconfig
+>> index ac3c1dd..d4562a8 100644
+>> --- a/drivers/vfio/pci/Kconfig
+>> +++ b/drivers/vfio/pci/Kconfig
+>> @@ -45,3 +45,10 @@ config VFIO_PCI_NVLINK2
+>>  	depends on VFIO_PCI && PPC_POWERNV
+>>  	help
+>>  	  VFIO PCI support for P9 Witherspoon machine with NVIDIA V100 GPUs
+>> +
+>> +config VFIO_PCI_ZDEV
+>> +	bool "VFIO PCI Generic for ZPCI devices"
+>> +	depends on VFIO_PCI && S390
+>> +	default y
+>> +	help
+>> +	  VFIO PCI support for S390 Z-PCI devices
+> 
+>>From that description, I'd have no idea whether I'd want that or not.
+> Is there any downside to enabling it?
+> 
 
-  Linux 5.3-rc4 (2019-08-11 13:26:41 -0700)
+:) Not really, you're just getting information from the hardware vs
+using hard-coded defaults.  The only reason I could think of to turn it
+off would be if you wanted/needed to restore this hard-coded behavior.
 
-are available in the Git repository at:
+bool "VFIO PCI support for generic ZPCI devices" ?
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git tags/ext4_for_linus
+"Support for sharing ZPCI hardware device information between the host
+and guests." ?
 
-for you to fetch changes up to 040823b5372b445d1d9483811e85a24d71314d33:
 
-  Merge tag 'unicode-next-v5.4' of https://git.kernel.org/pub/scm/linux/kernel/git/krisman/unicode into dev (2019-09-18 10:36:24 -0400)
+>> diff --git a/drivers/vfio/pci/Makefile b/drivers/vfio/pci/Makefile
+>> index f027f8a..781e080 100644
+>> --- a/drivers/vfio/pci/Makefile
+>> +++ b/drivers/vfio/pci/Makefile
+>> @@ -3,5 +3,6 @@
+>>  vfio-pci-y := vfio_pci.o vfio_pci_intrs.o vfio_pci_rdwr.o vfio_pci_config.o
+>>  vfio-pci-$(CONFIG_VFIO_PCI_IGD) += vfio_pci_igd.o
+>>  vfio-pci-$(CONFIG_VFIO_PCI_NVLINK2) += vfio_pci_nvlink2.o
+>> +vfio-pci-$(CONFIG_VFIO_PCI_ZDEV) += vfio_pci_zdev.o
+>>  
+>>  obj-$(CONFIG_VFIO_PCI) += vfio-pci.o
+>> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+>> index 703948c..b40544a 100644
+>> --- a/drivers/vfio/pci/vfio_pci.c
+>> +++ b/drivers/vfio/pci/vfio_pci.c
+>> @@ -356,6 +356,15 @@ static int vfio_pci_enable(struct vfio_pci_device *vdev)
+>>  		}
+>>  	}
+>>  
+>> +	if (IS_ENABLED(CONFIG_VFIO_PCI_ZDEV)) {
+>> +		ret = vfio_pci_zdev_init(vdev);
+>> +		if (ret) {
+>> +			dev_warn(&vdev->pdev->dev,
+>> +				 "Failed to setup ZDEV regions\n");
+>> +			goto disable_exit;
+>> +		}
+>> +	}
+>> +
+>>  	vfio_pci_probe_mmaps(vdev);
+>>  
+>>  	return 0;
+>> diff --git a/drivers/vfio/pci/vfio_pci_private.h b/drivers/vfio/pci/vfio_pci_private.h
+>> index ee6ee91..08e02f5 100644
+>> --- a/drivers/vfio/pci/vfio_pci_private.h
+>> +++ b/drivers/vfio/pci/vfio_pci_private.h
+>> @@ -186,4 +186,14 @@ static inline int vfio_pci_ibm_npu2_init(struct vfio_pci_device *vdev)
+>>  	return -ENODEV;
+>>  }
+>>  #endif
+>> +
+>> +#ifdef CONFIG_VFIO_PCI_ZDEV
+>> +extern int vfio_pci_zdev_init(struct vfio_pci_device *vdev);
+>> +#else
+>> +static inline int vfio_pci_zdev_init(struct vfio_pci_device *vdev)
+>> +{
+>> +	return -ENODEV;
+> 
+> If you really want to have this configurable, why not just return 0
+> here and skip the IS_ENABLED check above?
+> 
 
-----------------------------------------------------------------
-Added new ext4 debugging ioctls to allow userspace to get information
-about the state of the extent status cache.
+I agree that it functionally has the same result, but in this case I
+think Pierre was repeating the same thing the other init() functions
+here (IGD, etc) are doing.  Though I guess the other cases have at least
+1 other condition they care about besides IS_ENABLED...  OK, I can make
+this change.
 
-Dropped workaround for pre-1970 dates which were encoded incorrectly
-in pre-4.4 kernels.  Since both the kernel correctly generates, and
-e2fsck detects and fixes this issue for the past four years, it'e time
-to drop the workaround.  (Also, it's not like files with dates in the
-distant past were all that common in the first place.)
+>> +}
+>> +#endif
+>> +
+>>  #endif /* VFIO_PCI_PRIVATE_H */
+> 
+> (...)
+> 
 
-A lot of miscellaneous bug fixes and cleanups, including some ext4
-Documentation fixes.  Also included are two minor bug fixes in
-fs/unicode.
-
-----------------------------------------------------------------
-Ayush Ranjan (2):
-      ext4: documentation fixes
-      ext4: add missing bigalloc documentation.
-
-Chandan Rajendra (1):
-      jbd2: flush_descriptor(): Do not decrease buffer head's ref count
-
-Colin Ian King (2):
-      ext4: set error return correctly when ext4_htree_store_dirent fails
-      unicode: make array 'token' static const, makes object smaller
-
-Eric Whitney (1):
-      ext4: rework reserved cluster accounting when invalidating pages
-
-Krzysztof Wilczynski (1):
-      unicode: Move static keyword to the front of declarations
-
-Rakesh Pandit (1):
-      ext4: fix warning inside ext4_convert_unwritten_extents_endio
-
-Shi Siyuan (1):
-      ext4: remove unnecessary error check
-
-Theodore Ts'o (7):
-      ext4: add a new ioctl EXT4_IOC_CLEAR_ES_CACHE
-      ext4: add a new ioctl EXT4_IOC_GETSTATE
-      ext4: add new ioctl EXT4_IOC_GET_ES_CACHE
-      ext4: drop legacy pre-1970 encoding workaround
-      ext4: fix punch hole for inline_data file systems
-      ext4: fix kernel oops caused by spurious casefold flag
-      Merge tag 'unicode-next-v5.4' of https://git.kernel.org/.../krisman/unicode into dev
-
-Xiaoguang Wang (1):
-      jbd2: add missing tracepoint for reserved handle
-
-Yang Guo (1):
-      ext4: use percpu_counters for extent_status cache hits/misses
-
-ZhangXiaoxu (1):
-      ext4: treat buffers with write errors as containing valid data
-
-yangerkun (1):
-      ext4: fix warning when turn on dioread_nolock and inline_data
-
-zhangyi (F) (2):
-      ext4: fix potential use after free after remounting with noblock_validity
-      ext4: fix integer overflow when calculating commit interval
-
- Documentation/filesystems/ext4/bigalloc.rst    |  32 ++-
- Documentation/filesystems/ext4/blockgroup.rst  |  10 +-
- Documentation/filesystems/ext4/blocks.rst      |   4 +-
- Documentation/filesystems/ext4/directory.rst   |   2 +-
- Documentation/filesystems/ext4/group_descr.rst |   9 +-
- Documentation/filesystems/ext4/inodes.rst      |   4 +-
- Documentation/filesystems/ext4/super.rst       |  20 +-
- fs/ext4/block_validity.c                       | 189 +++++++++++++-----
- fs/ext4/dir.c                                  |   7 +-
- fs/ext4/ext4.h                                 |  64 ++++--
- fs/ext4/extents.c                              |  98 +++++++++-
- fs/ext4/extents_status.c                       | 521 ++++++++++++++++++++++++++++++++++++++-----------
- fs/ext4/extents_status.h                       |   8 +-
- fs/ext4/file.c                                 |   2 -
- fs/ext4/hash.c                                 |   2 +-
- fs/ext4/inline.c                               |   2 +-
- fs/ext4/inode.c                                | 103 +++-------
- fs/ext4/ioctl.c                                |  98 ++++++++++
- fs/ext4/namei.c                                |   4 +-
- fs/ext4/super.c                                |   7 +
- fs/jbd2/revoke.c                               |   4 +-
- fs/jbd2/transaction.c                          |   3 +
- fs/unicode/utf8-core.c                         |   2 +-
- fs/unicode/utf8-selftest.c                     |   4 +-
- 24 files changed, 890 insertions(+), 309 deletions(-)
