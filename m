@@ -2,133 +2,153 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F411C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8619C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E0AB21928
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8927D21907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:42:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jUMy0gQ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391363AbfISPlt (ORCPT
+        id S2391376AbfISPmJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 11:41:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:32884 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389646AbfISPlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 11:41:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B199628;
-        Thu, 19 Sep 2019 08:41:48 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E65BC3F575;
-        Thu, 19 Sep 2019 08:41:45 -0700 (PDT)
-Date:   Thu, 19 Sep 2019 16:41:43 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Jia He <justin.he@arm.com>, Will Deacon <will@kernel.org>,
+        Thu, 19 Sep 2019 11:42:09 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47790 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2389646AbfISPmJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 11:42:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1568907724;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
+        bh=jtOOTxtBSH0XScdrTXtYNsOa16spVRV1/m7O55QYuzg=;
+        b=jUMy0gQ8/mVPTz2Ib5EUA10pvBOKrCyIP7ZwsamO3Zx+YCJgaQAJfG3ErQhC2k1B0n+pj1
+        aTw3JJ2hv3bMiA6/8em4xtv5dJg8G9myzy7c/sevGboLFpW8dAsvtgMd0FjZO7xvygAjuF
+        ZvP0aAp74aC31grTfvqat1DA6hSSx28=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-58-DkEixw0iMGqyYQCATYbj-Q-1; Thu, 19 Sep 2019 11:41:56 -0400
+Received: by mail-wm1-f70.google.com with SMTP id n3so1999307wmf.3
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 08:41:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bAINjjRSlbUTjobcIGuJ8vNAwyPobHG3I1/jgsCdgXw=;
+        b=fbN0lmI9qB6FUKRhQMpbBGhDQymC/j+5d8njAkjjs6+w+IrCMNYKdrKHf+wQnGZMBO
+         XSwN5lEBrPXmJ8u6Wu0Tp9H3OIKX2FAJayokDawbC1IU5JbeaErN6/0eEcOw/pDPl/DK
+         8OcktscDDqDovVEKXZ2iXSQAChBNBpgbqJORNIe+FP5b51D02+0xM2WKaYxZYgd+D8II
+         0SH9KDQtbTcOaAhT6VvZ17m7c6L+XXJPCQ2bRvDU211HJDfaRv2//wj12QV9uKhaZi1a
+         jGeVN7tJPT9PJ+tSIcLAhY2A2g9CTpu1fmuZdw0nHd0C3r9JGsWyMa508eGyAZpxKWPk
+         XXAA==
+X-Gm-Message-State: APjAAAWaTKsn1ZSMf/Ybbl12JSr8tYeRw00J+t4ZgwJhb0osqE4FOIZX
+        GR8P/YPncbB0OUgMIlZuR+t6bUX23Cv2OojpTmcyas7xKqhWDCRhcsVycnZrQxZYjkyAuF31yBa
+        9MC+VRrUpCLlymF5kTOKYB9wm
+X-Received: by 2002:adf:e488:: with SMTP id i8mr7375473wrm.20.1568907653242;
+        Thu, 19 Sep 2019 08:40:53 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwR9KVma4Xblc47G5SpP/XvO6PKkeiTk0NhW+haXvKEfP9pKSHtsHzJm0BanCJIZYw+ZParUA==
+X-Received: by 2002:adf:e488:: with SMTP id i8mr7375450wrm.20.1568907652977;
+        Thu, 19 Sep 2019 08:40:52 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:c46c:2acb:d8d2:21d8? ([2001:b07:6468:f312:c46c:2acb:d8d2:21d8])
+        by smtp.gmail.com with ESMTPSA id t6sm9820328wmf.8.2019.09.19.08.40.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Sep 2019 08:40:52 -0700 (PDT)
+Subject: Re: [RFC patch 15/15] x86/kvm: Use GENERIC_EXIT_WORKPENDING
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Suzuki Poulose <Suzuki.Poulose@arm.com>,
-        Punit Agrawal <punitagrawal@gmail.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Jun Yao <yaojun8558363@gmail.com>,
-        Alex Van Brunt <avanbrunt@nvidia.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Ralph Campbell <rcampbell@nvidia.com>, hejianet@gmail.com,
-        Kaly Xin <Kaly.Xin@arm.com>
-Subject: Re: [PATCH v4 3/3] mm: fix double page fault on arm64 if PTE_AF is
- cleared
-Message-ID: <20190919154143.GA6472@arrakis.emea.arm.com>
-References: <20190918131914.38081-1-justin.he@arm.com>
- <20190918131914.38081-4-justin.he@arm.com>
- <20190918140027.ckj32xnryyyesc23@box>
- <20190918180029.GB20601@iMac.local>
- <20190919150007.k7scjplcya53j7r4@box>
+        Marc Zyngier <maz@kernel.org>, kvm@vger.kernel.org,
+        linux-arch@vger.kernel.org
+References: <20190919150314.054351477@linutronix.de>
+ <20190919150809.964620570@linutronix.de>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <ef1145d8-01af-57d2-1065-cf12db16e422@redhat.com>
+Date:   Thu, 19 Sep 2019 17:40:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190919150007.k7scjplcya53j7r4@box>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190919150809.964620570@linutronix.de>
+Content-Language: en-US
+X-MC-Unique: DkEixw0iMGqyYQCATYbj-Q-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 06:00:07PM +0300, Kirill A. Shutemov wrote:
-> On Wed, Sep 18, 2019 at 07:00:30PM +0100, Catalin Marinas wrote:
-> > On Wed, Sep 18, 2019 at 05:00:27PM +0300, Kirill A. Shutemov wrote:
-> > > On Wed, Sep 18, 2019 at 09:19:14PM +0800, Jia He wrote:
-> > > > @@ -2152,20 +2163,34 @@ static inline void cow_user_page(struct page *dst, struct page *src, unsigned lo
-> > > >  	 */
-> > > >  	if (unlikely(!src)) {
-> > > >  		void *kaddr = kmap_atomic(dst);
-> > > > -		void __user *uaddr = (void __user *)(va & PAGE_MASK);
-> > > > +		void __user *uaddr = (void __user *)(addr & PAGE_MASK);
-> > > > +		pte_t entry;
-> > > >  
-> > > >  		/*
-> > > >  		 * This really shouldn't fail, because the page is there
-> > > >  		 * in the page tables. But it might just be unreadable,
-> > > >  		 * in which case we just give up and fill the result with
-> > > > -		 * zeroes.
-> > > > +		 * zeroes. On architectures with software "accessed" bits,
-> > > > +		 * we would take a double page fault here, so mark it
-> > > > +		 * accessed here.
-> > > >  		 */
-> > > > +		if (arch_faults_on_old_pte() && !pte_young(vmf->orig_pte)) {
-> > > > +			spin_lock(vmf->ptl);
-> > > > +			if (likely(pte_same(*vmf->pte, vmf->orig_pte))) {
-> > > > +				entry = pte_mkyoung(vmf->orig_pte);
-> > > > +				if (ptep_set_access_flags(vma, addr,
-> > > > +							  vmf->pte, entry, 0))
-> > > > +					update_mmu_cache(vma, addr, vmf->pte);
-> > > > +			}
-> > > 
-> > > I don't follow.
-> > > 
-> > > So if pte has changed under you, you don't set the accessed bit, but never
-> > > the less copy from the user.
-> > > 
-> > > What makes you think it will not trigger the same problem?
-> > > 
-> > > I think we need to make cow_user_page() fail in this case and caller --
-> > > wp_page_copy() -- return zero. If the fault was solved by other thread, we
-> > > are fine. If not userspace would re-fault on the same address and we will
-> > > handle the fault from the second attempt.
-> > 
-> > It would be nice to clarify the semantics of this function and do as
-> > you suggest but the current comment is slightly confusing:
-> > 
-> > 	/*
-> > 	 * If the source page was a PFN mapping, we don't have
-> > 	 * a "struct page" for it. We do a best-effort copy by
-> > 	 * just copying from the original user address. If that
-> > 	 * fails, we just zero-fill it. Live with it.
-> > 	 */
-> > 
-> > Would any user-space rely on getting a zero-filled page here instead of
-> > a recursive fault?
-> 
-> I don't see the point in zero-filled page in this case. SIGBUS sounds like
-> more appropriate response, no?
+On 19/09/19 17:03, Thomas Gleixner wrote:
+> Use the generic infrastructure to check for and handle pending work befor=
+e
+> entering into guest mode.
+>=20
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-I think misunderstood your comment. So, if !pte_same(), we should let
-userspace re-fault. This wouldn't be a user ABI change and it is
-bounded, can't end up in an infinite re-fault loop.
+Subject should be "x86/kvm: use exit_to_guestmode".
 
-In case of a __copy_from_user_inatomic() error, SIGBUS would make more
-sense but it changes the current behaviour (zero-filling the page). This
-can be left for a separate patch, doesn't affect the arm64 case here.
+Paolo
 
--- 
-Catalin
+> ---
+>  arch/x86/kvm/x86.c |   17 +++++------------
+>  1 file changed, 5 insertions(+), 12 deletions(-)
+>=20
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -52,6 +52,7 @@
+>  #include <linux/irqbypass.h>
+>  #include <linux/sched/stat.h>
+>  #include <linux/sched/isolation.h>
+> +#include <linux/entry-common.h>
+>  #include <linux/mem_encrypt.h>
+> =20
+>  #include <trace/events/kvm.h>
+> @@ -7984,8 +7985,8 @@ static int vcpu_enter_guest(struct kvm_v
+>  =09if (kvm_lapic_enabled(vcpu) && vcpu->arch.apicv_active)
+>  =09=09kvm_x86_ops->sync_pir_to_irr(vcpu);
+> =20
+> -=09if (vcpu->mode =3D=3D EXITING_GUEST_MODE || kvm_request_pending(vcpu)
+> -=09    || need_resched() || signal_pending(current)) {
+> +=09if (vcpu->mode =3D=3D EXITING_GUEST_MODE || kvm_request_pending(vcpu)=
+ ||
+> +=09    exit_to_guestmode_work_pending()) {
+>  =09=09vcpu->mode =3D OUTSIDE_GUEST_MODE;
+>  =09=09smp_wmb();
+>  =09=09local_irq_enable();
+> @@ -8178,17 +8179,9 @@ static int vcpu_run(struct kvm_vcpu *vcp
+> =20
+>  =09=09kvm_check_async_pf_completion(vcpu);
+> =20
+> -=09=09if (signal_pending(current)) {
+> -=09=09=09r =3D -EINTR;
+> -=09=09=09vcpu->run->exit_reason =3D KVM_EXIT_INTR;
+> -=09=09=09++vcpu->stat.signal_exits;
+> +=09=09r =3D exit_to_guestmode(kvm, vcpu);
+> +=09=09if (r)
+>  =09=09=09break;
+> -=09=09}
+> -=09=09if (need_resched()) {
+> -=09=09=09srcu_read_unlock(&kvm->srcu, vcpu->srcu_idx);
+> -=09=09=09cond_resched();
+> -=09=09=09vcpu->srcu_idx =3D srcu_read_lock(&kvm->srcu);
+> -=09=09}
+>  =09}
+> =20
+>  =09srcu_read_unlock(&kvm->srcu, vcpu->srcu_idx);
+>=20
+>=20
+
