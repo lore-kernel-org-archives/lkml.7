@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B337FC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF0EC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 864482196F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:22:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60C852196E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:22:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931752;
-	bh=txizpSKWNllJpJ8T6Vas/37oGmdhWUzm8YhP+TFhjJs=;
+	s=default; t=1568931754;
+	bh=4pzk7W34Hwiym1j70wpXjtgVm/YZFf5dNu8qSh4DBXg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zXEeAHkbXhYqpsNIr7n6rpN43agtwT8YqGy4J8lc5PKVua7rIHWfv5rOrvik+yp7t
-	 dobiYtsRcFa6Q2g5FJv/KpZ4s77oqekTeka9fXx+S7eZf+p/B4K7rt5lwS+5qDpvma
-	 daunXyzrbIU4lpkAMbzL7oGGCf0VtZ6rf7wlGA6A=
+	b=xDgRVkayHWfcHOJBUCKqbeA9L9p5elarVVC/Ow/m/xaT7xquLv7NOg6TjKAiR9EU/
+	 ggmeM5MfOzYZ6B9ZrUiLaGgqYLQ1yphzW86F6mJYxnZf5vRgWNiqqzUQ0S4kIeZvqL
+	 jz8zO0j1o8A+D6Ur7yW9OmYrsMVE7358GjudHtHQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404822AbfISWWb (ORCPT
+        id S2406870AbfISWWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:22:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37486 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:22:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406847AbfISWW1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:22:27 -0400
+        id S2406853AbfISWW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:22:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9492F20678;
-        Thu, 19 Sep 2019 22:22:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69BA121927;
+        Thu, 19 Sep 2019 22:22:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931746;
-        bh=txizpSKWNllJpJ8T6Vas/37oGmdhWUzm8YhP+TFhjJs=;
+        s=default; t=1568931748;
+        bh=4pzk7W34Hwiym1j70wpXjtgVm/YZFf5dNu8qSh4DBXg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r01GTohX7ctfgL48vFJmIxwn8cgn5eKl7NBZa48NykWZa5OTXT7Y576v3Fd3Zbspb
-         jMWXI+KLX/nzuNOBwFZfBYTQKYaTeFPYe7IsuIP2Csx8hdT4Byk6JWdJBeXZJK0K2t
-         qrY1+ixsrTuB7e65zhHC1veGI/DV6JQCFdEcU5E0=
+        b=OqomM5ShHsZ5G6UDpdAWEfxs6rcf+aLxfX40qJRXrvRy2FqNX8WuUdbl7CtkJdsaE
+         KtZpknYtXntzKcmUeLEgUAPw1uIFQrrY0ESMBJoC5QSgDNp54JBbSzrOkY1VudgLEI
+         aysrsw65M1B6auDsiyLacJOk/0SuLpPy+MSNt2UE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.4 24/56] x86/build: Add -Wnoaddress-of-packed-member to REALMODE_CFLAGS, to silence GCC9 build warning
-Date:   Fri, 20 Sep 2019 00:04:05 +0200
-Message-Id: <20190919214755.167385430@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
+        Ganesan Ramalingam <ganesanr@broadcom.com>,
+        James Hogan <jhogan@kernel.org>,
+        Jayachandran C <jnair@caviumnetworks.com>,
+        John Crispin <john@phrozen.org>,
+        Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.4 25/56] MIPS: netlogic: xlr: Remove erroneous check in nlm_fmn_send()
+Date:   Fri, 20 Sep 2019 00:04:06 +0200
+Message-Id: <20190919214755.209045371@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214742.483643642@linuxfoundation.org>
 References: <20190919214742.483643642@linuxfoundation.org>
@@ -63,49 +64,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Paul Burton <paul.burton@mips.com>
 
-commit 42e0e95474fc6076b5cd68cab8fa0340a1797a72 upstream.
+commit 02eec6c9fc0cb13169cc97a6139771768791f92b upstream.
 
-One of the very few warnings I have in the current build comes from
-arch/x86/boot/edd.c, where I get the following with a gcc9 build:
+In nlm_fmn_send() we have a loop which attempts to send a message
+multiple times in order to handle the transient failure condition of a
+lack of available credit. When examining the status register to detect
+the failure we check for a condition that can never be true, which falls
+foul of gcc 8's -Wtautological-compare:
 
-   arch/x86/boot/edd.c: In function ‘query_edd’:
-   arch/x86/boot/edd.c:148:11: warning: taking address of packed member of ‘struct boot_params’ may result in an unaligned pointer value [-Waddress-of-packed-member]
-     148 |  mbrptr = boot_params.edd_mbr_sig_buffer;
-         |           ^~~~~~~~~~~
+  In file included from arch/mips/netlogic/common/irq.c:65:
+  ./arch/mips/include/asm/netlogic/xlr/fmn.h: In function 'nlm_fmn_send':
+  ./arch/mips/include/asm/netlogic/xlr/fmn.h:304:22: error: bitwise
+    comparison always evaluates to false [-Werror=tautological-compare]
+     if ((status & 0x2) == 1)
+                        ^~
 
-This warning triggers because we throw away all the CFLAGS and then make
-a new set for REALMODE_CFLAGS, so the -Wno-address-of-packed-member we
-added in the following commit is not present:
+If the path taken if this condition were true all we do is print a
+message to the kernel console. Since failures seem somewhat expected
+here (making the console message questionable anyway) and the condition
+has clearly never evaluated true we simply remove it, rather than
+attempting to fix it to check status correctly.
 
-  6f303d60534c ("gcc-9: silence 'address-of-packed-member' warning")
-
-The simplest solution for now is to adjust the warning for this version
-of CFLAGS as well, but it would definitely make sense to examine whether
-REALMODE_CFLAGS could be derived from CFLAGS, so that it picks up changes
-in the compiler flags environment automatically.
-
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Acked-by: Borislav Petkov <bp@alien8.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Patchwork: https://patchwork.linux-mips.org/patch/20174/
+Cc: Ganesan Ramalingam <ganesanr@broadcom.com>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: Jayachandran C <jnair@caviumnetworks.com>
+Cc: John Crispin <john@phrozen.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: linux-mips@linux-mips.org
+Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/Makefile |    1 +
- 1 file changed, 1 insertion(+)
+ arch/mips/include/asm/netlogic/xlr/fmn.h |    2 --
+ 1 file changed, 2 deletions(-)
 
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -38,6 +38,7 @@ REALMODE_CFLAGS	:= $(M16_CFLAGS) -g -Os
- 
- REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), -ffreestanding)
- REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), -fno-stack-protector)
-+REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), -Wno-address-of-packed-member)
- REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), $(cc_stack_align4))
- export REALMODE_CFLAGS
- 
+--- a/arch/mips/include/asm/netlogic/xlr/fmn.h
++++ b/arch/mips/include/asm/netlogic/xlr/fmn.h
+@@ -301,8 +301,6 @@ static inline int nlm_fmn_send(unsigned
+ 	for (i = 0; i < 8; i++) {
+ 		nlm_msgsnd(dest);
+ 		status = nlm_read_c2_status0();
+-		if ((status & 0x2) == 1)
+-			pr_info("Send pending fail!\n");
+ 		if ((status & 0x4) == 0)
+ 			return 0;
+ 	}
 
 
