@@ -2,179 +2,88 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B7BC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 05:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02279C4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 06:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30924218AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 05:59:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o/AXHGJN"
+	by mail.kernel.org (Postfix) with ESMTP id CDB1A21848
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 06:10:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731703AbfISF7V (ORCPT
+        id S2387468AbfISGK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 01:59:21 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46688 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731642AbfISF7S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 01:59:18 -0400
-Received: by mail-pg1-f193.google.com with SMTP id a3so1208132pgm.13
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 22:59:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=4zoX/y4PganInWe3/mARbaR8aRBFEpK4D2RgCbSuiC4=;
-        b=o/AXHGJNcTfb/QBuxV38Fov0fPaFAUpu8RlqAYA4p8z9IGQUjrbH1dhdTrh7Pxn5tt
-         1c4mVI7h4+1BboYpvs2myRmOEcH8K0jR+YSh2OvqgmCpviiwqzimh64MVuKX2ti+hhxX
-         LtvbniIR/k8e8TUEm10xjPxY9KLs8J08cAK77cFe3pI08aJpQHb2mqSHvDQFv9eknMuZ
-         pw6qLJahZEZCj8epZ7qNz/1PZWUA9o8N6+34wQl37HLz1ObtcasbIVBSJNxTMuhbho7h
-         inGOKpUPjGqphtG8c1q9JUH7O3yCf5MzZv9lH08E9tLPgEZefupgWwXVDzmQl8WBz0Wd
-         vG4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=4zoX/y4PganInWe3/mARbaR8aRBFEpK4D2RgCbSuiC4=;
-        b=fcIxG3OEgGcF7R8H8r9P8oLkqEVJOIUcthrPYGlYjf2PtfniMBrIoGbWyB/vu6VLYo
-         rmjdxTIqskHaL3yn620Rz6CMxUcJ+zcsjVMmQOHaXQohYYYmbn0Q6vI5KRx4WPe2jqD8
-         l+pKj07pXn3SxqKSuUiUp4zYnpg+CN0eGsSHoVPTGG1UnvNTZN2XtYFMlKbXKXXca1Xw
-         R3IZWV3T1v/q4X2Snv4MzhDXymc3XLlNXx9H8auj7KXK3Idu0u1dfp37nhwGdJrqmK5e
-         eQjrn/rN2MV77Zoy5xDVOyhQgJdK6bw9Ti5frXghOw8cgkVi+jVdrk/mXpYPtr7HzAWM
-         Yy0Q==
-X-Gm-Message-State: APjAAAU+x5nA/UVZFbEEfR2/WH/+sxThjNz3RrQczpIAeQBaX+XvFmNW
-        5bldS5kQo7ippBDvA7xxK419Yw==
-X-Google-Smtp-Source: APXvYqwz76HqhSedoS5r2mMBa6dzmPqh1Ag3DfmlNk0vZL1fBXLgDth4GoDuVRex1pgIuJTQXdT58Q==
-X-Received: by 2002:a62:583:: with SMTP id 125mr8684554pff.69.1568872757864;
-        Wed, 18 Sep 2019 22:59:17 -0700 (PDT)
-Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id c127sm9666027pfb.5.2019.09.18.22.59.13
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 18 Sep 2019 22:59:17 -0700 (PDT)
-From:   Baolin Wang <baolin.wang@linaro.org>
-To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        asutoshd@codeaurora.org
-Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, arnd@arndb.de,
-        linus.walleij@linaro.org, vincent.guittot@linaro.org,
-        baolin.wang@linaro.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/3] mmc: host: sdhci-sprd: Add software queue support
-Date:   Thu, 19 Sep 2019 13:58:47 +0800
-Message-Id: <17069e44dbab0302bb7bd5eee64dc769b1f181d3.1568864713.git.baolin.wang@linaro.org>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <cover.1568864712.git.baolin.wang@linaro.org>
-References: <cover.1568864712.git.baolin.wang@linaro.org>
-In-Reply-To: <cover.1568864712.git.baolin.wang@linaro.org>
-References: <cover.1568864712.git.baolin.wang@linaro.org>
+        Thu, 19 Sep 2019 02:10:57 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:50096 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725887AbfISGK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 02:10:57 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 1D0F82003AB;
+        Thu, 19 Sep 2019 08:10:55 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 38804200053;
+        Thu, 19 Sep 2019 08:10:52 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 53ABA402FC;
+        Thu, 19 Sep 2019 14:10:48 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] gpio: mxc: Only getting second IRQ when there is more than one IRQ
+Date:   Thu, 19 Sep 2019 14:09:37 +0800
+Message-Id: <1568873377-13433-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add software queue support to improve the performance.
+On some of i.MX SoCs like i.MX8QXP, there is ONLY one IRQ for each
+GPIO bank, so it is better to check the IRQ count before getting
+second IRQ to avoid below error message during probe:
 
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+[    1.070908] gpio-mxc 5d080000.gpio: IRQ index 1 not found
+[    1.077420] gpio-mxc 5d090000.gpio: IRQ index 1 not found
+[    1.083766] gpio-mxc 5d0a0000.gpio: IRQ index 1 not found
+[    1.090122] gpio-mxc 5d0b0000.gpio: IRQ index 1 not found
+[    1.096470] gpio-mxc 5d0c0000.gpio: IRQ index 1 not found
+[    1.102804] gpio-mxc 5d0d0000.gpio: IRQ index 1 not found
+[    1.109144] gpio-mxc 5d0e0000.gpio: IRQ index 1 not found
+[    1.115475] gpio-mxc 5d0f0000.gpio: IRQ index 1 not found
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- drivers/mmc/host/Kconfig      |    1 +
- drivers/mmc/host/sdhci-sprd.c |   26 ++++++++++++++++++++++++++
- 2 files changed, 27 insertions(+)
+ drivers/gpio/gpio-mxc.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-index d117f18..862e8e9 100644
---- a/drivers/mmc/host/Kconfig
-+++ b/drivers/mmc/host/Kconfig
-@@ -619,6 +619,7 @@ config MMC_SDHCI_SPRD
- 	depends on ARCH_SPRD
- 	depends on MMC_SDHCI_PLTFM
- 	select MMC_SDHCI_IO_ACCESSORS
-+	select MMC_SQHCI
- 	help
- 	  This selects the SDIO Host Controller in Spreadtrum
- 	  SoCs, this driver supports R11(IP version: R11P0).
-diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
-index d07b979..4dec0b3 100644
---- a/drivers/mmc/host/sdhci-sprd.c
-+++ b/drivers/mmc/host/sdhci-sprd.c
-@@ -19,6 +19,7 @@
- #include <linux/slab.h>
+diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
+index 7907a87..39ba7dd 100644
+--- a/drivers/gpio/gpio-mxc.c
++++ b/drivers/gpio/gpio-mxc.c
+@@ -426,9 +426,15 @@ static int mxc_gpio_probe(struct platform_device *pdev)
+ 	if (IS_ERR(port->base))
+ 		return PTR_ERR(port->base);
  
- #include "sdhci-pltfm.h"
-+#include "sqhci.h"
- 
- /* SDHCI_ARGUMENT2 register high 16bit */
- #define SDHCI_SPRD_ARG2_STUFF		GENMASK(31, 16)
-@@ -379,6 +380,16 @@ static unsigned int sdhci_sprd_get_ro(struct sdhci_host *host)
- 	return 0;
- }
- 
-+static void sdhci_sprd_request_done(struct sdhci_host *host,
-+				    struct mmc_request *mrq)
-+{
-+	/* Validate if the request was from software queue firstly. */
-+	if (sqhci_finalize_request(host->mmc, mrq))
-+		return;
+-	port->irq_high = platform_get_irq(pdev, 1);
+-	if (port->irq_high < 0)
+-		port->irq_high = 0;
++	err = platform_irq_count(pdev);
++	if (err < 0)
++		return err;
 +
-+	 mmc_request_done(host->mmc, mrq);
-+}
-+
- static struct sdhci_ops sdhci_sprd_ops = {
- 	.read_l = sdhci_sprd_readl,
- 	.write_l = sdhci_sprd_writel,
-@@ -392,6 +403,7 @@ static unsigned int sdhci_sprd_get_ro(struct sdhci_host *host)
- 	.hw_reset = sdhci_sprd_hw_reset,
- 	.get_max_timeout_count = sdhci_sprd_get_max_timeout_count,
- 	.get_ro = sdhci_sprd_get_ro,
-+	.request_done = sdhci_sprd_request_done,
- };
- 
- static void sdhci_sprd_request(struct mmc_host *mmc, struct mmc_request *mrq)
-@@ -521,6 +533,7 @@ static int sdhci_sprd_probe(struct platform_device *pdev)
- {
- 	struct sdhci_host *host;
- 	struct sdhci_sprd_host *sprd_host;
-+	struct sqhci_host *sq_host;
- 	struct clk *clk;
- 	int ret = 0;
- 
-@@ -631,6 +644,16 @@ static int sdhci_sprd_probe(struct platform_device *pdev)
- 
- 	sprd_host->flags = host->flags;
- 
-+	sq_host = devm_kzalloc(&pdev->dev, sizeof(*sq_host), GFP_KERNEL);
-+	if (!sq_host) {
-+		ret = -ENOMEM;
-+		goto err_cleanup_host;
++	if (err > 1) {
++		port->irq_high = platform_get_irq(pdev, 1);
++		if (port->irq_high < 0)
++			port->irq_high = 0;
 +	}
-+
-+	ret = sqhci_init(sq_host, host->mmc);
-+	if (ret)
-+		goto err_cleanup_host;
-+
- 	ret = __sdhci_add_host(host);
- 	if (ret)
- 		goto err_cleanup_host;
-@@ -689,6 +712,7 @@ static int sdhci_sprd_runtime_suspend(struct device *dev)
- 	struct sdhci_host *host = dev_get_drvdata(dev);
- 	struct sdhci_sprd_host *sprd_host = TO_SPRD_HOST(host);
  
-+	sqhci_suspend(host->mmc);
- 	sdhci_runtime_suspend_host(host);
- 
- 	clk_disable_unprepare(sprd_host->clk_sdio);
-@@ -717,6 +741,8 @@ static int sdhci_sprd_runtime_resume(struct device *dev)
- 		goto clk_disable;
- 
- 	sdhci_runtime_resume_host(host, 1);
-+	sqhci_resume(host->mmc);
-+
- 	return 0;
- 
- clk_disable:
+ 	port->irq = platform_get_irq(pdev, 0);
+ 	if (port->irq < 0)
 -- 
-1.7.9.5
+2.7.4
 
