@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB33C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 436B5C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2649620640
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:30:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BBCF20640
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:30:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932226;
-	bh=dLATFpVow7aojoKfxCGuwrnTgzpLrr1z4QSTjwV1B5M=;
+	s=default; t=1568932231;
+	bh=gJ+j8xvF3QHkqRQXLGe2LZiL1kQ2dtxg0eY4AnzEdXk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p2oCBPJFJXIJc9Z/RR+KROzZX5SAr4NeTAuov/AoUpzUJVJNVWzr04QpMLVQx9liB
-	 98/LH+9b5Z+TOzgjmPSZPplsL2kpH7eeusjo2K5qqsHo8A4wW6mUp+/fmXTK3jmZ6D
-	 gcL3pHRcCID+qeVv9QOQXGbhzYKfxc2p2gkyjqXA=
+	b=hiG+mOL/XfS0bIg7jMczsk0lWJ5QU2oUw8Uw3GvVMU/JiHa0vDBnt6olb/FeOijqj
+	 njC0e6fGRG8zVOwWqDSy76KGw6rd2wdzk5bNZx2v2DfK51XXTMae0GwZdFPIjCSAcn
+	 K07/CaUr6k1mzSwq3ZFQp65BpFEeLsH4ILuyrdHI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407334AbfISWaZ (ORCPT
+        id S2407343AbfISWaa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:30:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56596 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:30:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404443AbfISWQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:16:16 -0400
+        id S2406287AbfISWQN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:16:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DE15218AF;
-        Thu, 19 Sep 2019 22:16:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E6C720678;
+        Thu, 19 Sep 2019 22:16:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931375;
-        bh=dLATFpVow7aojoKfxCGuwrnTgzpLrr1z4QSTjwV1B5M=;
+        s=default; t=1568931372;
+        bh=gJ+j8xvF3QHkqRQXLGe2LZiL1kQ2dtxg0eY4AnzEdXk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RzeMSQJ6HuOs+UNwYPKk28dAvdohi7k0/5/pyXZoUYuGxY2SA6TKEflOhimUo3r2o
-         zMWjHKJmYc7wBeGfXAPyQuAQSc+nUcC61VJJhPS4+12adIoUc6N8GJ3ohlYOUU5Ef6
-         kgNnq86vy2NB+nzF2MDpIot+7z0cnE4BRPuLz4M8=
+        b=2hrZfcpysb3fs014OoERLJ94gP1SiscdfX9rf4ZTxuofHZzQJ9Jq00wmZmYiY7vA7
+         YBj6R4k3XFUdigiXCjD5WvAtXV7GkZtMJ7KlPyf7xtSo1exbBoVlu5gAtyU/EiDtnQ
+         yjMl5FkGZN2j7K7vyINy2IiURfoGnilW285eh33c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 23/59] NFSv4: Fix return value in nfs_finish_open()
-Date:   Fri, 20 Sep 2019 00:03:38 +0200
-Message-Id: <20190919214803.970032400@linuxfoundation.org>
+Subject: [PATCH 4.14 22/59] NFSv4: Fix return values for nfs4_file_open()
+Date:   Fri, 20 Sep 2019 00:03:37 +0200
+Message-Id: <20190919214803.778716576@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214755.852282682@linuxfoundation.org>
 References: <20190919214755.852282682@linuxfoundation.org>
@@ -62,31 +62,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 9821421a291b548ef4369c6998745baa36ddecd5 ]
+[ Upstream commit 90cf500e338ab3f3c0f126ba37e36fb6a9058441 ]
 
-If the file turns out to be of the wrong type after opening, we want
-to revalidate the path and retry, so return EOPENSTALE rather than
-ESTALE.
+Currently, we are translating RPC level errors such as timeouts,
+as well as interrupts etc into EOPENSTALE, which forces a single
+replay of the open attempt. What we actually want to do is
+force the replay only in the cases where the returned error
+indicates that the file may have changed on the server.
+
+So the fix is to spell out the exact set of errors where we want
+to return EOPENSTALE.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/dir.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/nfs4file.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index 85a6fdd76e20b..50c181fa00251 100644
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -1470,7 +1470,7 @@ static int nfs_finish_open(struct nfs_open_context *ctx,
- 	if (S_ISREG(file->f_path.dentry->d_inode->i_mode))
- 		nfs_file_set_open_context(file, ctx);
- 	else
--		err = -ESTALE;
-+		err = -EOPENSTALE;
- out:
- 	return err;
- }
+diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
+index 2b3e0f1ca572f..b8d316a338bc9 100644
+--- a/fs/nfs/nfs4file.c
++++ b/fs/nfs/nfs4file.c
+@@ -74,13 +74,13 @@ nfs4_file_open(struct inode *inode, struct file *filp)
+ 	if (IS_ERR(inode)) {
+ 		err = PTR_ERR(inode);
+ 		switch (err) {
+-		case -EPERM:
+-		case -EACCES:
+-		case -EDQUOT:
+-		case -ENOSPC:
+-		case -EROFS:
+-			goto out_put_ctx;
+ 		default:
++			goto out_put_ctx;
++		case -ENOENT:
++		case -ESTALE:
++		case -EISDIR:
++		case -ENOTDIR:
++		case -ELOOP:
+ 			goto out_drop;
+ 		}
+ 	}
 -- 
 2.20.1
 
