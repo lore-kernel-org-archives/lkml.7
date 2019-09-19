@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15659C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:21:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AADEC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:21:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB6F7222BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15FED21920
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:21:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931679;
-	bh=PS4psoici0H95izA0+rLc0LA6/LF/xpQ0WNCxnaETgo=;
+	s=default; t=1568931683;
+	bh=wnITQ2KXJYh9SLVeKmbRzzeu15XPQTUn5t2r+rTvR54=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w74kYIjfq2zLtThQmX5oMaFGLvdNI+DUp6Iinvxkd8XsqgFJk7V9GCelPpNznBexk
-	 +dubNmUeyB8NlsvBVYDxp6PfjAqgyTTKpoiTk4RUkgbzS/O7oARNYsVjAnuFzp+1Jp
-	 XrEz0WiEo67Mu/o6/h60Mz7J6gmtW1Y2K0tWUyJY=
+	b=W2lKrhFt8Vtu1/dPd3tp/lVdBPa8A9RiIDrCejrm2RQMOYHGFpZDKSigIDFY0a4Sb
+	 miUcC02yiK2V6WKvE/9CcnRo/GtlJvmv4KdwaBWmdNCad347FlI1am4ATTjYX6lJG8
+	 uC2pb5En/tPjqMgaHwhVUDufdWUfJCuoPRwbfMtA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406705AbfISWVS (ORCPT
+        id S2406717AbfISWVW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:21:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35686 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:21:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406696AbfISWVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:21:16 -0400
+        id S2406704AbfISWVS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:21:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25CCD21924;
-        Thu, 19 Sep 2019 22:21:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE66E21907;
+        Thu, 19 Sep 2019 22:21:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931675;
-        bh=PS4psoici0H95izA0+rLc0LA6/LF/xpQ0WNCxnaETgo=;
+        s=default; t=1568931678;
+        bh=wnITQ2KXJYh9SLVeKmbRzzeu15XPQTUn5t2r+rTvR54=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RDvWytPPiRfQs3yKd7bm1thG395y3KGSUG37KCFpuxfnGGVvTgPTLCdGTK2ka/tpz
-         7RuRp3imJmkCUPgQWMcjpNBVJtUh/HKhxWPUZ5oJc47rmcfodA4+S1pb11tFW+MjWU
-         B4R+bEj6XrHg1z6S7U3MICRQJNdGke3Vl6GlS3kE=
+        b=kyZixq5H3Q6ZeMRt+ZBhh/YfY+K5wFMUH+JG3Pcx7zKMoElwmeBmaDs5mzN2skObd
+         8/TRwoAh/m6W2jYMbHLyRVqor1gkS8WTTIFKZcioLdzLg0u8xMnwGW6XiZ9XrvgB9A
+         7N8zW8udSFzaUubuMmT729G8qwsfzEz+KjirC5bU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Popov <alex.popov@linux.com>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Jann Horn <jannh@google.com>, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.9 72/74] floppy: fix usercopy direction
-Date:   Fri, 20 Sep 2019 00:04:25 +0200
-Message-Id: <20190919214811.404794753@linuxfoundation.org>
+        Corey Minyard <cminyard@mvista.com>
+Subject: [PATCH 4.9 38/74] x86/boot: Add missing bootparam that breaks boot on some platforms
+Date:   Fri, 20 Sep 2019 00:03:51 +0200
+Message-Id: <20190919214808.643870604@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214800.519074117@linuxfoundation.org>
 References: <20190919214800.519074117@linuxfoundation.org>
@@ -60,44 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Corey Minyard <cminyard@mvista.com>
 
-commit 52f6f9d74f31078964ca1574f7bb612da7877ac8 upstream.
+Change
 
-As sparse points out, these two copy_from_user() should actually be
-copy_to_user().
+  a90118c445cc x86/boot: Save fields explicitly, zero out everything else
 
-Fixes: 229b53c9bf4e ("take floppy compat ioctls to sodding floppy.c")
-Cc: stable@vger.kernel.org
-Acked-by: Alexander Popov <alex.popov@linux.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+modified the way boot parameters were saved on x86.  When this was
+backported, e820_table didn't exists, and that change was dropped.
+Unfortunately, e820_table did exist, it was just named e820_map
+in this kernel version.
+
+This was breaking booting on a Supermicro Super Server/A2SDi-2C-HLN4F
+with a Denverton CPU.  Adding e820_map to the saved boot params table
+fixes the issue.
+
+Cc: <stable@vger.kernel.org> # 4.9.x, 4.4.x
+Signed-off-by: Corey Minyard <cminyard@mvista.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/block/floppy.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/bootparam_utils.h |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -3784,7 +3784,7 @@ static int compat_getdrvprm(int drive,
- 	v.native_format = UDP->native_format;
- 	mutex_unlock(&floppy_mutex);
+--- a/arch/x86/include/asm/bootparam_utils.h
++++ b/arch/x86/include/asm/bootparam_utils.h
+@@ -71,6 +71,7 @@ static void sanitize_boot_params(struct
+ 			BOOT_PARAM_PRESERVE(edd_mbr_sig_buf_entries),
+ 			BOOT_PARAM_PRESERVE(edd_mbr_sig_buffer),
+ 			BOOT_PARAM_PRESERVE(hdr),
++			BOOT_PARAM_PRESERVE(e820_map),
+ 			BOOT_PARAM_PRESERVE(eddbuf),
+ 		};
  
--	if (copy_from_user(arg, &v, sizeof(struct compat_floppy_drive_params)))
-+	if (copy_to_user(arg, &v, sizeof(struct compat_floppy_drive_params)))
- 		return -EFAULT;
- 	return 0;
- }
-@@ -3820,7 +3820,7 @@ static int compat_getdrvstat(int drive,
- 	v.bufblocks = UDRS->bufblocks;
- 	mutex_unlock(&floppy_mutex);
- 
--	if (copy_from_user(arg, &v, sizeof(struct compat_floppy_drive_struct)))
-+	if (copy_to_user(arg, &v, sizeof(struct compat_floppy_drive_struct)))
- 		return -EFAULT;
- 	return 0;
- Eintr:
 
 
