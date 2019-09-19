@@ -2,62 +2,64 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C5FC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 06:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4AE5C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 06:57:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1304421848
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 06:56:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89B6821848
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 06:57:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="e9Z0dQcB"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="mS/QIMJU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731833AbfISG4G (ORCPT
+        id S1731790AbfISG5R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 02:56:06 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52606 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbfISG4F (ORCPT
+        Thu, 19 Sep 2019 02:57:17 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34943 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725954AbfISG5Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 02:56:05 -0400
-Received: by mail-wm1-f65.google.com with SMTP id x2so2933735wmj.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 23:56:03 -0700 (PDT)
+        Thu, 19 Sep 2019 02:57:16 -0400
+Received: by mail-wm1-f67.google.com with SMTP id y21so2593692wmi.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 23:57:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:openpgp:autocrypt:organization
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=k+5ikMfQkrkWjV+8BM5My0YRzyXVw2lhdvo+uZelhc0=;
-        b=e9Z0dQcBvm8KkwpK3j3U3k17B1BH50dCD90O8CiT8CDTPJl03Oo3iqfUeuKpCuSL/P
-         Qb8BbLu3BmihTeaK292U/8CG639fsuep6t0kBAuPmgjvnns8F807Sb/exN1C/8EgrFFW
-         81CwFIx/I+pIUs4rqujAjNHqXSAfzA9ngrBeWfdbFjAq3ujXHpIdX6GklV/uB8psG30p
-         B1zTg+rrO6MBJAREbLLcHgkSfsgGFY2mG8T/BzQxvN7Uq076TlzBd/983pYMomNoqc16
-         aI5DFaO/EtMD4mxjsArW5KPUoie/4wEGG288S6s5b1Bsmzjth8jrQVpIFovqZe0FwsGX
-         cGng==
+        bh=H6mdaYx5irFz1dKycBPlcNWUBlWg7UpLZ2wQ0axK7Z8=;
+        b=mS/QIMJUn2U3A4W3Ug/Cuwf6BQQLJeQlY8zoMtZLQ1w4OmgFQBHMsOi3krQgcdR8tK
+         kzHw2mWT4Fxmh7y2NR/vE2MoPDBzzjcVFInGoHfFSu8lkyiQXV6x9n0rLsWuV4dgrJdW
+         vEIZuqcgna2TwGxLbnRnJUsRzsrXC01AxZdbAIP9wRCbtwCEiQ2gpqX/MSlCiGGiELrz
+         fe2M+TlNlvqzqskyucQE+CMm4pThbIhm6n9OjHQMh7Oyehx5vfN/b6MckvWZ3ZO+v1a6
+         skFQtf/FwCSJfaC4RU5qJwXwpYHH8FwyCPME7rorNokFhNkcgPs/GtDjNr2JgPlJ7Q6E
+         Ti+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=k+5ikMfQkrkWjV+8BM5My0YRzyXVw2lhdvo+uZelhc0=;
-        b=YNgQLGWNfyw98BCknVLLGyWECdP+2x72ZWd7IIlSTjy56gmTdcmTDI2EuqncuR5Puh
-         J8PV0Ug0nCNnSuDy+XU3iHjAeiXqFX+OK2rY21mj/itaGH+x7pzvAs40t8scBb2XwEtB
-         ggdlr/xtWjjnybeVQBfTJbAFiJyjFic4bJvShsnywr8aPJhbMjLmINlTQxnd9YAICcYr
-         MjXdFD/UT+f0miNh/bVP4bmwppLL9N0On+4N2qwCrX4+t/qdzDG4gacYNPWpNQPelnsT
-         9ge28ZAFtglOfxV2ulufus+zISzGdArbGmaKPF/IAantrHL7i9ZNvBnAUYf2ss+N2Vh/
-         GzUA==
-X-Gm-Message-State: APjAAAXPq10T0ty0SojFNEMJCaRjOBOI1V8tSrmcBqWBUl7a3hn/401N
-        o4p16JiD+x5vAg5PqwKk4P0/uw+P+moPcw==
-X-Google-Smtp-Source: APXvYqzkRqs6C0FY3pL3x8QyN0bcyv5Q9Y3H3gsxobS7QwJ2ODFKdWYVeX1wU/QATOKazsNse2DhFQ==
-X-Received: by 2002:a1c:1b58:: with SMTP id b85mr1451450wmb.95.1568876162628;
-        Wed, 18 Sep 2019 23:56:02 -0700 (PDT)
+        bh=H6mdaYx5irFz1dKycBPlcNWUBlWg7UpLZ2wQ0axK7Z8=;
+        b=C58COUdVT7Ahd+M7Nj8ljMBqOjqTndBknAwBC+fQycuRvWjn+za5kY1rwOh6wTaRIp
+         BQhjKRaAvwu7x5PJzEW6Q64ELS1/kS16Y+JwhfejfnqDGbi1q8RhqnsVNj2d8n1yrear
+         jiZHffPUj0YLQYNHcIAdEHzaUC0PWExh2xo9j1XyiPB2scTInUtaX0COMpGM5CJ4ynIs
+         tyGy55T/kO7J+Efhb2wizluyZsG2QZBs8QrBsXAuKY1itKQa7zEvaFMkq8EBbDBu216R
+         I94Hvx8SUzMNv6xaEhuQ4t4M2ZEAAl0LighUmpH64yrT7BUJVW6C4aAcnUzGUKtAVudB
+         PVcw==
+X-Gm-Message-State: APjAAAV2cWgAgYEbke/60N2LE/Db0MlnnnJ8bvN/XoygRXvlyQvrNjJ6
+        WOX/EvgF0DuQARhC+xZxQLOUP1ncon5LBw==
+X-Google-Smtp-Source: APXvYqz6FGwaKbs4wUddwO8P8nj2r+dQVUlAjhvcPIaT7WYVNhNVIhcmuCCXJqGe6mqrfmmzPtUbng==
+X-Received: by 2002:a1c:4c12:: with SMTP id z18mr1363862wmf.45.1568876233569;
+        Wed, 18 Sep 2019 23:57:13 -0700 (PDT)
 Received: from [192.168.1.62] (176-150-251-154.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id y186sm8160010wmd.26.2019.09.18.23.56.01
+        by smtp.gmail.com with ESMTPSA id c132sm6485686wme.27.2019.09.18.23.57.12
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 18 Sep 2019 23:56:01 -0700 (PDT)
-Subject: Re: [PATCH v1 0/2] Add initial support for slimport anx7625
+        Wed, 18 Sep 2019 23:57:13 -0700 (PDT)
+Subject: Re: [PATCH v1 1/2] dt-bindings: drm/bridge: anx7625: MIPI to DP
+ transmitter binding
 To:     Xin Ji <xji@analogixsemi.com>,
         "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
@@ -69,6 +71,7 @@ Cc:     Jonas Karlman <jonas@kwiboo.se>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Sheng Pan <span@analogixsemi.com>
 References: <cover.1568858880.git.xji@analogixsemi.com>
+ <e41d10504b7d1e977a1f53663c287e4e7d53011a.1568858880.git.xji@analogixsemi.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
@@ -121,12 +124,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
  ZaTUOEkgIor5losDrePdPgE=
 Organization: Baylibre
-Message-ID: <8bb69c72-50bf-c499-ff92-9e3662b4fe87@baylibre.com>
-Date:   Thu, 19 Sep 2019 08:56:01 +0200
+Message-ID: <446ff66c-8097-fca8-8371-9223679f16bb@baylibre.com>
+Date:   Thu, 19 Sep 2019 08:57:12 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <cover.1568858880.git.xji@analogixsemi.com>
+In-Reply-To: <e41d10504b7d1e977a1f53663c287e4e7d53011a.1568858880.git.xji@analogixsemi.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -137,37 +140,90 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi,
 
-Please Cc dri-devel@lists.freedesktop.org
+On 19/09/2019 08:55, Xin Ji wrote:
+> The ANX7625 is an ultra-low power 4K Mobile HD Transmitter designed
+> for portable device. It converts MIPI to DisplayPort 1.3 4K.
+> 
+> You can add support to your board with binding.
+> 
+> Example:
+> 	anx_bridge: anx7625@58 {
+> 		compatible = "analogix,anx7625";
+> 		reg = <0x58>;
+> 		anx,low_power_mode = <1>;
+> 		anx,dsi_supported = <1>;
+> 		anx,dsi_channel = <1>;
+> 		anx,dsi_lanes = <4>;
+> 		anx,internal_pannel = <1>;
+> 		anx,p-on-gpio = <&gpio0 45 GPIO_ACTIVE_LOW>;
+> 		anx,reset-gpio = <&gpio0 73 GPIO_ACTIVE_LOW>;
+> 		status = "okay";
+> 		port {
+> 			anx7625_1_in: endpoint {
+> 				remote-endpoint = <&mipi_dsi_bridge_1>;
+> 			};
+> 		};
+> 	};
+> 
+> Signed-off-by: Xin Ji <xji@analogixsemi.com>
+> ---
+>  .../devicetree/bindings/display/bridge/anx7625.txt | 42 ++++++++++++++++++++++
+>  1 file changed, 42 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/anx7625.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/anx7625.txt b/Documentation/devicetree/bindings/display/bridge/anx7625.txt
+> new file mode 100644
+> index 0000000..f2a1c2a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/anx7625.txt
+> @@ -0,0 +1,42 @@
+> +Analogix ANX7625 SlimPort (4K Mobile HD Transmitter)
+> +-----------------------------------------------
 
-Thanks,
+New bindings should use yaml format:
+https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/example-schema.yaml
+
 Neil
 
-On 19/09/2019 08:51, Xin Ji wrote:
-> Hi all,
-> 
-> The following series add initial support for the Slimport ANX7625 transmitter, a
-> ultra-low power Full-HD 4K MIPI to DP transmitter designed for portable device.
-> 
-> This is the first version upload, any mistakes, please let me know, I will fix
-> it in the next series.
-> 
-> Thanks,
-> Xin
-> 
-> 
-> Xin Ji (2):
->   dt-bindings: drm/bridge: anx7625: MIPI to DP transmitter binding
->   drm/bridge: anx7625: Add anx7625 MIPI to DP bridge driver
-> 
->  .../devicetree/bindings/display/bridge/anx7625.txt |   42 +
->  drivers/gpu/drm/bridge/Makefile                    |    2 +-
->  drivers/gpu/drm/bridge/analogix/Kconfig            |    6 +
->  drivers/gpu/drm/bridge/analogix/Makefile           |    1 +
->  drivers/gpu/drm/bridge/analogix/anx7625.c          | 2086 ++++++++++++++++++++
->  drivers/gpu/drm/bridge/analogix/anx7625.h          |  397 ++++
->  6 files changed, 2533 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/anx7625.txt
->  create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.c
->  create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.h
+> +
+> +The ANX7625 is an ultra-low power 4K Mobile HD Transmitter
+> +designed for portable devices.
+> +
+> +Required properties:
+> +
+> + - compatible		: "analogix,anx7625"
+> + - reg			: I2C address of the device
+> + - anx,low_power_mode	: Low power mode support feature
+> + - anx,dsi_supported	: DSI or DPI
+> + - anx,dsi_channel	: DSI channel index
+> + - anx,dsi_lanes	: DSI lane count
+> + - anx,intr-hpd-gpio	: Which GPIO to use for interrupt
+> +
+> +Optional properties:
+> +
+> + - anx,extcon_supported
+> +	external connector interface support flag
+> + - anx,internal_pannel
+> +	Which indicate internal pannel
+> + - anx,p-on-gpio
+> +	Which GPIO to use for Power On chip
+> + - anx,reset-gpio
+> +	Which GPIO to use for RESET
+> + - port
+> +	SoC specific port nodes with endpoint definitions as defined in
+> +	Documentation/devicetree/bindings/media/video-interfaces.txt,
+> +
+> +Example:
+> +
+> +	anx_bridge: anx7625@58 {
+> +		compatible = "analogix,anx7625";
+> +		reg = <0x58>;
+> +		anx,low_power_mode = <0>;
+> +		anx,dsi_supported = <1>;
+> +		anx,dsi_channel = <1>;
+> +		anx,dsi_lanes = <4>;
+> +		anx,intr-hpd-gpio = <&gpio1 19 IRQ_TYPE_LEVEL_LOW>;
+> +		status = "okay";
+> +	};
 > 
 
