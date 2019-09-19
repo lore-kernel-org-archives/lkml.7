@@ -2,81 +2,172 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43707C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26325C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20C3E21924
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED60121A4C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:22:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DOLQKcTa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389798AbfISLW1 (ORCPT
+        id S2389810AbfISLWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 07:22:27 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:50739 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389453AbfISLW0 (ORCPT
+        Thu, 19 Sep 2019 07:22:50 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38855 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387690AbfISLWt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 07:22:26 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iAuVu-0002Bi-B8; Thu, 19 Sep 2019 13:22:18 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iAuVs-00035s-QK; Thu, 19 Sep 2019 13:22:16 +0200
-Date:   Thu, 19 Sep 2019 13:22:16 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Philipp Puschmann <philipp.puschmann@emlix.com>
-Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        yibin.gong@nxp.com, fugang.duan@nxp.com, l.stach@pengutronix.de,
-        jslaby@suse.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2] serial: imx: adapt rx buffer and dma periods
-Message-ID: <20190919112216.qjkx5wvqhsadjxg5@pengutronix.de>
-References: <20190919102628.23621-1-philipp.puschmann@emlix.com>
+        Thu, 19 Sep 2019 07:22:49 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 3so3516015wmi.3
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 04:22:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=L/z7HqNsHflGQAbfR3vmMZA79Q4P41CqUalbXCPqdL4=;
+        b=DOLQKcTa6DvDnKAxXNjTbyJ/UeL95KDBH6zVylwU+sMxSJJU0wkL4mdw8D5Z/N9t6j
+         Btxi/ziR8aabLIaf9+xTlTKlOoD0X7wfyjm3hE84FrzWC0nZU7OPFat0OSWRyJrE5xbw
+         ftTT1mu0jKgPUWzkHfoN8cm9nQCtgBUqORV+jYEHWywYCGKIJE1nN+a39/C8sX5qJzln
+         2441htdnt/tab0cAGYxZC8MpPlh45AfIbT1Neu6dSbEILiraHU4jBVlEVLURGMn+4Mhj
+         j7R1vzhFCvLLAa2+6iE+P2jdQmofOfWrplWcqWpWvlI4P9DNB+enAkV52RmVWXiPv3bs
+         CP4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=L/z7HqNsHflGQAbfR3vmMZA79Q4P41CqUalbXCPqdL4=;
+        b=Jq30UHtC7jGyAFYtgolgGvR83mGLzD0UWCC6H0uR4Wl9ORomJljETpjOU+kpqFWCxT
+         Q2T9JYLyiidwIuFXEAvNEpejTg3QlLRmi1tpwR509Ri4ANRdV+2EUfZwfwT2qNIiQfe5
+         tGYk11Y+koQRzOlUPbHpHOjUnKI83uPjL2TT2MNcvQgARaOh/u63IBt4EoJwyr7Xi2qe
+         iOYpeGi7Vxx6gbqH/bWDtlJNYkPZETg+ku3XQTw36osZ6KO8kF2AOCH510iXrUjhV8cg
+         eVpq2ah+LUX9I6N8BxrHFPJ/peYGvG6d0BcyTVlvuiodtL/EiTc20AfuX++AyvZMmqDN
+         NMVw==
+X-Gm-Message-State: APjAAAVf4n4gajs/fks4Xlj4Fo5FkOOj6DMfsZCGZWeA+PN4s3fwNVbh
+        4Alqatj+uXdSfqSsuC/qXgoopA==
+X-Google-Smtp-Source: APXvYqy2mqc1xRSA6U/tXepOzf4zA4ahtXymq3ZbLKy64+rCf2R+XjoTC4eA68T2fhVOwbifGx/Gww==
+X-Received: by 2002:a05:600c:22da:: with SMTP id 26mr2283972wmg.177.1568892165840;
+        Thu, 19 Sep 2019 04:22:45 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id g185sm11071560wme.10.2019.09.19.04.22.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 19 Sep 2019 04:22:44 -0700 (PDT)
+Subject: Re: [PATCH v6 3/4] dt-bindings: ASoC: Add WSA881x bindings
+To:     broonie@kernel.org, robh+dt@kernel.org, vkoul@kernel.org
+Cc:     spapothi@codeaurora.org, bgoswami@codeaurora.org,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        lgirdwood@gmail.com, devicetree@vger.kernel.org
+References: <20190829163514.11221-1-srinivas.kandagatla@linaro.org>
+ <20190829163514.11221-4-srinivas.kandagatla@linaro.org>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <f488e01f-7ce9-09dd-676d-a476e7b00b46@linaro.org>
+Date:   Thu, 19 Sep 2019 12:22:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190919102628.23621-1-philipp.puschmann@emlix.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20190829163514.11221-4-srinivas.kandagatla@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 12:26:28PM +0200, Philipp Puschmann wrote:
-> Using only 4 DMA periods for UART RX is very few if we have a high
-> frequency of small transfers - like in our case using Bluetooth with
-> many small packets via UART - causing many dma transfers but in each
-> only filling a fraction of a single buffer. Such a case may lead to
-> the situation that DMA RX transfer is triggered but no free buffer is
-> available. While we have addressed the dma handling already with
-> "dmaengine: imx-sdma: fix dma freezes" we still want to avoid
+Hi Mark,
 
-Is this statement still true now that you split this patch out of your
-bigger series?
+On 29/08/2019 17:35, Srinivas Kandagatla wrote:
+> This patch adds bindings for WSA8810/WSA8815 Class-D Smart Speaker
+> Amplifier. This Amplifier also has a simple thermal sensor for
+> over temperature and speaker protection.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-> UART RX FIFO overrun. So we decrease the size of the buffers and
-> increase their number and the total buffer size.
+Bindings for the codec have been Acked by Rob, SoundWire depended 
+patches are already applied for 5.4 and codec driver is Acked by Pierre.
 
-What happens when such an RX FIFO overrun happens? Are characters lost?
-Or only time? Does your change have an influence if I do fewer but
-bigger transfers?
+Do you want me to resend these two patches separately?
 
-Best regards
-Uwe
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+thanks,
+srini
+
+> ---
+>   .../bindings/sound/qcom,wsa881x.yaml          | 62 +++++++++++++++++++
+>   1 file changed, 62 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml b/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
+> new file mode 100644
+> index 000000000000..faa90966a33a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
+> @@ -0,0 +1,62 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/qcom,wsa881x.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Bindings for Qualcomm WSA8810/WSA8815 Class-D Smart Speaker Amplifier
+> +
+> +maintainers:
+> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> +
+> +description: |
+> +  WSA8810 is a class-D smart speaker amplifier and WSA8815
+> +  is a high-output power class-D smart speaker amplifier.
+> +  Their primary operating mode uses a SoundWire digital audio
+> +  interface. This binding is for SoundWire interface.
+> +
+> +properties:
+> +  compatible:
+> +    const: sdw10217201000
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  powerdown-gpios:
+> +    description: GPIO spec for Powerdown/Shutdown line to use
+> +    maxItems: 1
+> +
+> +  '#thermal-sensor-cells':
+> +    const: 0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - powerdown-gpios
+> +  - "#thermal-sensor-cells"
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    soundwire@c2d0000 {
+> +        #address-cells = <2>;
+> +        #size-cells = <0>;
+> +        reg = <0x0c2d0000 0x2000>;
+> +
+> +        speaker@0,1 {
+> +            compatible = "sdw10217201000";
+> +            reg = <0 1>;
+> +            powerdown-gpios = <&wcdpinctrl 2 0>;
+> +            #thermal-sensor-cells = <0>;
+> +        };
+> +
+> +        speaker@0,2 {
+> +            compatible = "sdw10217201000";
+> +            reg = <0 2>;
+> +            powerdown-gpios = <&wcdpinctrl 2 0>;
+> +            #thermal-sensor-cells = <0>;
+> +        };
+> +    };
+> +
+> +...
+> 
