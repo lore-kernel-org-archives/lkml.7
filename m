@@ -2,202 +2,424 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C2DC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A55A8C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDD7F20882
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:18:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ue2ocIOy"
+	by mail.kernel.org (Postfix) with ESMTP id 6C71220882
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:22:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389688AbfISOS5 (ORCPT
+        id S2389999AbfISOWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 10:18:57 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:43257 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388006AbfISOS5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 10:18:57 -0400
-Received: by mail-lf1-f65.google.com with SMTP id u3so2485940lfl.10
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 07:18:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VJcWMgQlBXCDJq+mIxTwVnwKjmA/FYBDYBWzdA4+waM=;
-        b=Ue2ocIOyWscRCt7ZzCTi01c0gL7F7vMVAGP9yIEGYKpEYohfx/PwMKCvSdrtlzdPYK
-         BUht9dlkdUgnz/lwVucsdrAvl5byjMtVldpfPt9guguIxcbNz4SFJOHcYVK+1BiYwvNe
-         7DuwgnRk82njueUCROP8jC8sMCF0EJrc49hkHVFvhTE4Bp3o+Q85DuhPxSlM/vTG26Nu
-         CQ6tS1ewupHReyrLiQCexCiPBVGy5oIcGB/rLj/GtSYvVxZkjonoQgHZA1zmA7kWgQO1
-         tBGOWhOzQKBPw8V7d9iQI2UgQVnQN7Osy+Chy72rqp+xsMyXSmOKfZvFWJ1OpljK4fFB
-         95mQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=VJcWMgQlBXCDJq+mIxTwVnwKjmA/FYBDYBWzdA4+waM=;
-        b=jx3joRnBZbqD7EpZrzRSXmc7WerOYgywzs4jvSN7HaPXX7ALxy0Mu5zwh+MyqYqNMs
-         qCbhLU5LiNATSVm844Vs8eG7wXQHXfNGXTfnn7+yyNlTyb9f+E5Ipov/4Uts+NieYNrL
-         Kn6WyCK8Em0/wpOWxbhfIuRWxxfkYLbz510tfT8W3/7UKzDA2LHWFDgy8Y2yDaZCLBz8
-         8LuAGnQRdscOzcmHIzxqWg8RGi0JUYmTdz61/NMmRWRiVTJAe4x6VOS5QDkXrxYZTJkU
-         LlyUrv101QT/RywJ5aNeLvxSORhTa3bhYDOZTRiGKRhpgltV7WnNberY5EwsDNb0kxxe
-         I34A==
-X-Gm-Message-State: APjAAAUh7w1XaSWYuT2urS0RVSkIWQT2WQN8Z6MCOBiLF39TDNkvhVji
-        j1SVHJVS6iGq4rdukXb6YI4qaw==
-X-Google-Smtp-Source: APXvYqxRTZr3llIsZI+fWfYF0ZscJkUyk92xFy/A2Pm6OM2f9WsqMwr+jw4KsPtNY/3pk4jduAvUPw==
-X-Received: by 2002:a19:d6:: with SMTP id 205mr5444406lfa.144.1568902734233;
-        Thu, 19 Sep 2019 07:18:54 -0700 (PDT)
-Received: from khorivan (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
-        by smtp.gmail.com with ESMTPSA id d25sm1582984lfj.15.2019.09.19.07.18.52
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 19 Sep 2019 07:18:53 -0700 (PDT)
-Date:   Thu, 19 Sep 2019 17:18:50 +0300
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        john fastabend <john.fastabend@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        clang-built-linux@googlegroups.com,
-        sergei.shtylyov@cogentembedded.com
-Subject: Re: [PATCH v3 bpf-next 09/14] samples: bpf: makefile: use own flags
- but not host when cross compile
-Message-ID: <20190919141848.GA8870@khorivan>
-Mail-Followup-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        john fastabend <john.fastabend@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        clang-built-linux@googlegroups.com,
-        sergei.shtylyov@cogentembedded.com
-References: <20190916105433.11404-1-ivan.khoronzhuk@linaro.org>
- <20190916105433.11404-10-ivan.khoronzhuk@linaro.org>
- <CAEf4BzbuPnxAs0A=w60q0jTCy5pb2R-h0uEuT2tmvjsaj4DH4A@mail.gmail.com>
- <20190918103508.GC2908@khorivan>
- <CAEf4BzYCNrkaMf-LFHYDi78m9jgMDOswh8VYXGcbttJV-3D21w@mail.gmail.com>
+        Thu, 19 Sep 2019 10:22:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51800 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389303AbfISOWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 10:22:53 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 21E0B30860B5;
+        Thu, 19 Sep 2019 14:22:51 +0000 (UTC)
+Received: from t460s.redhat.com (unknown [10.36.118.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 74E3160872;
+        Thu, 19 Sep 2019 14:22:29 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, virtualization@lists.linux-foundation.org,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Young <dyoung@redhat.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jason Wang <jasowang@redhat.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Juergen Gross <jgross@suse.com>, Len Brown <lenb@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Oscar Salvador <osalvador@suse.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Wei Yang <richardw.yang@linux.intel.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Yu Zhao <yuzhao@google.com>
+Subject: [PATCH RFC v3 0/9] virtio-mem: paravirtualized memory
+Date:   Thu, 19 Sep 2019 16:22:19 +0200
+Message-Id: <20190919142228.5483-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAEf4BzYCNrkaMf-LFHYDi78m9jgMDOswh8VYXGcbttJV-3D21w@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 19 Sep 2019 14:22:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 02:29:53PM -0700, Andrii Nakryiko wrote:
->On Wed, Sep 18, 2019 at 3:35 AM Ivan Khoronzhuk
-><ivan.khoronzhuk@linaro.org> wrote:
->>
->> On Tue, Sep 17, 2019 at 04:42:07PM -0700, Andrii Nakryiko wrote:
->> >On Mon, Sep 16, 2019 at 3:59 AM Ivan Khoronzhuk
->> ><ivan.khoronzhuk@linaro.org> wrote:
->> >>
->> >> While compile natively, the hosts cflags and ldflags are equal to ones
->> >> used from HOSTCFLAGS and HOSTLDFLAGS. When cross compiling it should
->> >> have own, used for target arch. While verification, for arm, arm64 and
->> >> x86_64 the following flags were used alsways:
->> >>
->> >> -Wall
->> >> -O2
->> >> -fomit-frame-pointer
->> >> -Wmissing-prototypes
->> >> -Wstrict-prototypes
->> >>
->> >> So, add them as they were verified and used before adding
->> >> Makefile.target, but anyway limit it only for cross compile options as
->> >> for host can be some configurations when another options can be used,
->> >> So, for host arch samples left all as is, it allows to avoid potential
->> >> option mistmatches for existent environments.
->> >>
->> >> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
->> >> ---
->> >>  samples/bpf/Makefile | 9 +++++++++
->> >>  1 file changed, 9 insertions(+)
->> >>
->> >> diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
->> >> index 1579cc16a1c2..b5c87a8b8b51 100644
->> >> --- a/samples/bpf/Makefile
->> >> +++ b/samples/bpf/Makefile
->> >> @@ -178,8 +178,17 @@ CLANG_EXTRA_CFLAGS := $(ARM_ARCH_SELECTOR)
->> >>  TPROGS_CFLAGS += $(ARM_ARCH_SELECTOR)
->> >>  endif
->> >>
->> >> +ifdef CROSS_COMPILE
->> >> +TPROGS_CFLAGS += -Wall
->> >> +TPROGS_CFLAGS += -O2
->> >
->> >Specifying one arg per line seems like overkill, put them in one line?
->> Will combine.
->>
->> >
->> >> +TPROGS_CFLAGS += -fomit-frame-pointer
->> >
->> >Why this one?
->> I've explained in commit msg. The logic is to have as much as close options
->> to have smiliar binaries. As those options are used before for hosts and kinda
->> cross builds - better follow same way.
->
->I'm just asking why omit frame pointers and make it harder to do stuff
->like profiling? What performance benefits are we seeking for in BPF
->samples?
->
->>
->> >
->> >> +TPROGS_CFLAGS += -Wmissing-prototypes
->> >> +TPROGS_CFLAGS += -Wstrict-prototypes
->> >
->> >Are these in some way special that we want them in cross-compile mode only?
->> >
->> >All of those flags seem useful regardless of cross-compilation or not,
->> >shouldn't they be common? I'm a bit lost about the intent here...
->> They are common but split is needed to expose it at least. Also host for
->> different arches can have some own opts already used that shouldn't be present
->> for cross, better not mix it for safety.
->
->We want -Wmissing-prototypes and -Wstrict-prototypes for cross-compile
->and non-cross-compile cases, right? So let's specify them as common
->set of options, instead of relying on KBUILD_HOSTCFLAGS or
->HOST_EXTRACFLAGS to have them. Otherwise we'll be getting extra
->warnings for just cross-compile case, which is not good. If you are
->worrying about having duplicate -W flags, seems like it's handled by
->GCC already, so shouldn't be a problem.
+Long time no RFC! I finally had time to get the next version of the Linux
+driver side of virtio-mem into shape, incorporating ideas and feedback from
+previous discussions.
 
-Ok, lets drop omit-frame-pointer.
+This RFC is based on the series currently on the mm list:
+- [PATCH 0/3] Remove __online_page_set_limits()
+- [PATCH v1 0/3] mm/memory_hotplug: Export generic_online_page()
+- [PATCH v4 0/8] mm/memory_hotplug: Shrink zones before removing memory
+The current state (kept updated) is available on
+- https://github.com/davidhildenbrand/linux/tree/virtio-mem
 
-But then, lets do more radical step and drop
-KBUILD_HOSTCFLAGS & HOST_EXTRACFLAG in this patch:
+The basic idea of virtio-mem is to provide a flexible,
+cross-architecture memory hot(un)plug solution that avoids many limitations
+imposed by existing technologies, architectures, and interfaces. More
+details can be found below and in linked material.
 
--ifdef CROSS_COMPILE
-+TPROGS_CFLAGS += -Wall -O2
-+TPROGS_CFLAGS += -Wmissing-prototypes
-+TPROGS_CFLAGS += -Wstrict-prototypes
--else
--TPROGS_LDLIBS := $(KBUILD_HOSTLDLIBS)
--TPROGS_CFLAGS += $(KBUILD_HOSTCFLAGS) $(HOST_EXTRACFLAGS)
--endif
+This RFC was only tested on x86-64, however, should theoretically work
+on any Linux architecture that implements memory hot(un)plug - like
+s390x. On x86-64, it is currently possible to add/remove memory to the
+system in >= 4MB granularity. Memory hotplug works very reliable. For
+memory unplug, there are no guarantees how much memory can actually get
+unplugged, it depends on the setup. I have plans to improve that in the
+future.
 
-At least it allows to use same options always for both, native and cross.
+--------------------------------------------------------------------------
+1. virtio-mem
+--------------------------------------------------------------------------
 
-I verified on native x86_64, arm64 and arm and cross for arm and arm64,
-but should work for others, at least it can be tuned explicitly and
-no need to depend on KBUILD and use "cross" fork here.
+The basic idea behind virtio-mem was presented at KVM Forum 2018. The
+slides can be found at [1]. The previous RFC can be found at [2]. The
+first RFC can be found at [3]. However, the concept evolved over time. The
+KVM Forum slides roughly match the current design.
+
+Patch #2 ("virtio-mem: Paravirtualized memory hotplug") contains quite some
+information, especially in "include/uapi/linux/virtio_mem.h":
+
+  Each virtio-mem device manages a dedicated region in physical address
+  space. Each device can belong to a single NUMA node, multiple devices
+  for a single NUMA node are possible. A virtio-mem device is like a
+  "resizable DIMM" consisting of small memory blocks that can be plugged
+  or unplugged. The device driver is responsible for (un)plugging memory
+  blocks on demand.
+
+  Virtio-mem devices can only operate on their assigned memory region in
+  order to (un)plug memory. A device cannot (un)plug memory belonging to
+  other devices.
+
+  The "region_size" corresponds to the maximum amount of memory that can
+  be provided by a device. The "size" corresponds to the amount of memory
+  that is currently plugged. "requested_size" corresponds to a request
+  from the device to the device driver to (un)plug blocks. The
+  device driver should try to (un)plug blocks in order to reach the
+  "requested_size". It is impossible to plug more memory than requested.
+
+  The "usable_region_size" represents the memory region that can actually
+  be used to (un)plug memory. It is always at least as big as the
+  "requested_size" and will grow dynamically. It will only shrink when
+  explicitly triggered (VIRTIO_MEM_REQ_UNPLUG).
+
+  Memory in the usable region can usually be read, however, there are no
+  guarantees. It can happen that the device cannot process a request,
+  because it is busy. The device driver has to retry later.
+
+  Usually, during system resets all memory will get unplugged, so the
+  device driver can start with a clean state. However, in specific
+  scenarios (if the device is busy) it can happen that the device still
+  has memory plugged. The device driver can request to unplug all memory
+  (VIRTIO_MEM_REQ_UNPLUG) - which might take a while to succeed if the
+  device is busy.
+
+--------------------------------------------------------------------------
+2. Linux Implementation
+--------------------------------------------------------------------------
+
+This RFC reuses quite some existing MM infrastructure, however, has to
+expose some additional functionality.
+
+Memory blocks (e.g., 128MB) are added/removed on demand. Within these
+memory blocks, subblocks (e.g., 4MB) are plugged/unplugged. The sizes
+depend on the target architecture, MAX_ORDER + pageblock_order, and
+the block size of a virtio-mem device.
+
+add_memory()/try_remove_memory() is used to add/remove memory blocks.
+virtio-mem will not online memory blocks itself. This has to be done by
+user space, or configured into the kernel
+(CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE). virtio-mem will only unplug memory
+that was online to the ZONE_NORMAL. Memory is suggested to be onlined to
+the ZONE_NORMAL for now.
+
+The memory hotplug notifier is used to properly synchronize against
+onlining/offlining of memory blocks and to track the states of memory
+blocks (including the zone memory blocks are onlined to). Locking is
+done similar to the PPC CMA implementation.
+
+The set_online_page() callback is used to keep unplugged subblocks
+of a memory block fake-offline when onlining the memory block.
+generic_online_page() is used to fake-online plugged subblocks. This
+handling is similar to the Hyper-V balloon driver.
+
+PG_offline is used to mark unplugged subblocks as offline, so e.g.,
+dumping tools (makedumpfile) will skip these pages. This is similar to
+other balloon drivers like virtio-balloon and Hyper-V.
+
+PG_offline + reference count of 0 [new] is now also used to mark pages as
+a "skip" when offlining memory blocks. This allows to offline memory blocks
+that have partially unplugged subblocks - or are completely unplugged.
+
+alloc_contig_range()/free_contig_range() [now exposed] is used to
+unplug/plug subblocks of memory blocks the are already exposed to Linux.
+
+offline_and_remove_memory() [new] is used to offline a fully unplugged
+memory block and remove it from Linux.
+
+
+A lot of additional information can be found in the separate patches and
+as comments in the code itself.
+
+--------------------------------------------------------------------------
+3. Major changes since last RFC
+--------------------------------------------------------------------------
+
+A lot of things changed, especially also on the QEMU + virtio side. The
+biggest changes on the Linux driver side are:
+- Onlining/offlining of subblocks is now emulated on top of memory blocks.
+  set_online_page()+alloc_contig_range()+free_contig_range() is now used
+  for that. Core MM does not have to be modified and will continue to
+  online/offline full memory blocks.
+- Onlining/offlining of memory blocks is no longer performed by virtio-mem.
+- Pg_offline is upstream and can be used. It is also used to allow
+  offlining of partially unplugged memory blocks.
+- Memory block states + subblocks are now tracked more space-efficient.
+- Proper kexec(), kdump(), driver unload, driver reload, ZONE_MOVABLE, ...
+  handling.
+
+--------------------------------------------------------------------------
+4. Future work
+--------------------------------------------------------------------------
+
+The separate patches contain a lot of future work items. One of the next
+steps is to make memory unplug more likely to succeed - currently, there
+are no guarantees on how much memory can get unplugged again. I have
+various ideas on how to limit fragmentation of all memory blocks that
+virtio-mem added.
+
+Memory hotplug:
+- Reduce the amount of memory resources if that turnes out to be an
+  issue. Or try to speed up relevant code paths to deal with many
+  resources.
+- Allocate the vmemmap from the added memory. Makes hotplug more likely
+  to succeed, the vmemmap is stored on the same NUMA node and that
+  unmovable memory will later not hinder unplug.
+
+Memory hotunplug:
+- Performance improvements:
+-- Sense (lockless) if it make sense to try alloc_contig_range() at all
+   before directly trying to isolate and taking locks.
+-- Try to unplug bigger chunks if possible first.
+-- Identify free areas first, that don't have to be evacuated.
+- Make unplug more likely to succeed:
+-- The "issue" is that in the ZONE_NORMAL, the buddy will randomly
+   allocate memory. Only pageblocks somewhat limit fragmentation,
+   however we would want to limit fragmentation on subblock granularity
+   and even memory block granularity. One idea is to have a new
+   ZONE_PREFER_MOVABLE. Memory blocks will then be onlined to ZONE_NORMAL
+   / ZONE_PREFER_MOVABLE in a certain ratio per node (e.g.,
+   1:4). This makes unplug of quite some memory likely to succeed in most
+   setups. ZONE_PREFER_MOVABLE is then a mixture of ZONE_NORMAL and
+   ZONE_MOVABlE. Especially, movable data can end up on that zone, but
+   only if really required - avoiding running out of memory on ZONE
+   imbalances. The zone fallback order would be
+   MOVABLE=>PREFER_MOVABLE=>HIGHMEM=>NORMAL=>PREFER_MOVABLE=>DMA32=>DMA
+-- Allocate memmap from added memory. This way, less unmovable data can
+   end up on the memory blocks.
+-- Call drop_slab() before trying to unplug. Eventually shrink other
+   caches.
+- Better retry handling in case memory is busy. We certainly don't want
+  to try for ever in a short interval to try to get some memory back.
+- OOM handling, e.g., via an OOM handler.
+
+--------------------------------------------------------------------------
+5. Example Usage
+--------------------------------------------------------------------------
+
+A very basic QEMU prototype (kept updated) is available at:
+- https://github.com/davidhildenbrand/qemu/tree/virtio-mem
+
+It lacks various features, however works to test the guest driver side:
+- No support for resizable memory regions / memory backends
+- No protection of unplugged memory (esp., userfaultfd-wp)
+- No dump/migration/XXX optimizations to skip over unplugged memory
+
+Start QEMU with two virtio-mem devices (one per NUMA node):
+ $ qemu-system-x86_64 -m 4G,maxmem=20G \
+  -smp sockets=2,cores=2 \
+  -numa node,nodeid=0,cpus=0-1 -numa node,nodeid=1,cpus=2-3 \
+  [...]
+  -object memory-backend-ram,id=mem0,size=8G \
+  -device virtio-mem-pci,id=vm0,memdev=mem0,node=0,requested-size=128M \
+  -object memory-backend-ram,id=mem1,size=8G \
+  -device virtio-mem-pci,id=vm1,memdev=mem1,node=1,requested-size=80M
+
+Query the configuration:
+ QEMU 4.1.50 monitor - type 'help' for more information
+ (qemu) info memory-devices
+ Memory device [virtio-mem]: "vm0"
+   memaddr: 0x140000000
+   node: 0
+   requested-size: 134217728
+   size: 134217728
+   max-size: 8589934592
+   block-size: 2097152
+   memdev: /objects/mem0
+ Memory device [virtio-mem]: "vm1"
+   memaddr: 0x340000000
+   node: 1
+   requested-size: 83886080
+   size: 83886080
+   max-size: 8589934592
+   block-size: 2097152
+   memdev: /objects/mem1
+
+Add some memory to node 1:
+ QEMU 4.1.50 monitor - type 'help' for more information
+ (qemu) qom-set vm1 requested-size 1G
+
+Remove some memory from node 0:
+ QEMU 4.1.50 monitor - type 'help' for more information
+ (qemu) qom-set vm0 requested-size 64M
+
+Query the configuration:
+(qemu) info memory-devices
+Memory device [virtio-mem]: "vm0"
+  memaddr: 0x140000000
+  node: 0
+  requested-size: 67108864
+  size: 67108864
+  max-size: 8589934592
+  block-size: 2097152
+  memdev: /objects/mem0
+Memory device [virtio-mem]: "vm1"
+  memaddr: 0x340000000
+  node: 1
+  requested-size: 1073741824
+  size: 1073741824
+  max-size: 8589934592
+  block-size: 2097152
+  memdev: /objects/mem1
+
+--------------------------------------------------------------------------
+6. Q/A
+--------------------------------------------------------------------------
+
+Q: Why add/remove parts ("subblocks") of memory blocks/sections?
+A: Flexibility (section size depends on the architecture) - e.g., some
+   architectures have a section size of 2GB. Also, the memory block size
+   is variable (e.g., on x86-64). I want to avoid any such restrictions.
+   Some use cases want to add/remove memory in smaller granularities to a
+   VM (e.g., the Hyper-V balloon also implements this) - especially smaller
+   VMs like used for kata containers. Also, on memory unplug, it is more
+   reliable to free-up and unplug multiple small chunks instead
+   of one big chunk. E.g., if one page of a DIMM is either unmovable or
+   pinned, the DIMM can't get unplugged. This approach is basically a
+   compromise between DIMM-based memory hot(un)plug and balloon
+   inflation/deflation, which works mostly on page granularity.
+
+Q: Why care about memory blocks?
+A: They are the way to tell user space about new memory. This way,
+   memory can get onlined/offlined by user space. Also, e.g., kdump
+   relies on udev events to reload kexec when memory blocks are
+   onlined/offlined. Memory blocks are the "real" memory hot(un)plug
+   granularity. Everything that's smaller has to be emulated "on top".
+
+Q: Won't memory unplug of subblocks fragment memory?
+A: Yes and no. Unplugging e.g., >=4MB subblocks on x86-64 will not really
+   fragment memory like unplugging random pages like a balloon driver does.
+   Buddy merging will not be limited. However, any allocation that requires
+   bigger consecutive memory chunks (e.g., gigantic pages) might observe
+   the fragmentation. Possible solutions: Allocate gigantic huge pages
+   before unplugging memory, don't unplug memory, combine virtio-mem with
+   DIMM based memory or bigger initial memory. Remember, a virtio-mem
+   device will only unplug on the memory range it manages, not on other
+   DIMMs. Unplug of single memory blocks will result in similar
+   fragmentation in respect to gigantic huge pages.
+
+Q: How reliable is memory unplug?
+A: There are no guarantees on how much memory can get unplugged
+   again. However, it is more likely to find 4MB chunks to unplug than
+   e.g., 128MB chunks. If memory is terribly fragmented, there is nothing
+   we can do - for now. I consider memory hotplug the first primary use
+   of virtio-mem. Memory unplug might usually work, but we want to improve
+   the performance and the amount of memory we can actually unplug later.
+
+Q: Why not unplug from the ZONE_MOVABLE?
+A: Unplugged memory chunks are unmovable. Unmovable data must not end up
+   on the ZONE_MOVABLE - similar to gigantic pages - they will never be
+   allocated from ZONE_MOVABLE. Teaching MM to move unplugged chunks within
+   a device might be problematic and will require a new guest->hypervisor
+   command to move unplugged chunks. virtio-mem added memory can be onlined
+   to the ZONE_MOVABLE, but subblocks will not get unplugged from it.
+
+Q: How big should the initial (!virtio-mem) memory of a VM be?
+A: virtio-mem memory will not go to the DMA zones. So to avoid running out
+   of DMA memory, I suggest something like 2-3GB on x86-64. But many
+   VMs can most probably deal with less DMA memory - depends on the use
+   case.
+
+[1] https://events.linuxfoundation.org/wp-content/uploads/2017/12/virtio-mem-Paravirtualized-Memory-David-Hildenbrand-Red-Hat-1.pdf
+[2] https://lwn.net/Articles/755423/
+[3] https://lists.gnu.org/archive/html/qemu-devel/2017-06/msg03870.html
+
+---
+
+David Hildenbrand (9):
+  ACPI: NUMA: export pxm_to_node
+  virtio-mem: Paravirtualized memory hotplug
+  virtio-mem: Paravirtualized memory hotunplug part 1
+  mm: Export alloc_contig_range() / free_contig_range()
+  virtio-mem: Paravirtualized memory hotunplug part 2
+  mm: Allow to offline PageOffline() pages with a reference count of 0
+  virtio-mem: Allow to offline partially unplugged memory blocks
+  mm/memory_hotplug: Introduce offline_and_remove_memory()
+  virtio-mem: Offline and remove completely unplugged memory blocks
+
+ drivers/acpi/numa.c             |    1 +
+ drivers/virtio/Kconfig          |   18 +
+ drivers/virtio/Makefile         |    1 +
+ drivers/virtio/virtio_mem.c     | 1900 +++++++++++++++++++++++++++++++
+ include/linux/memory_hotplug.h  |    1 +
+ include/linux/page-flags.h      |    4 +
+ include/linux/page-isolation.h  |    4 +-
+ include/uapi/linux/virtio_ids.h |    1 +
+ include/uapi/linux/virtio_mem.h |  204 ++++
+ mm/memory_hotplug.c             |   44 +-
+ mm/page_alloc.c                 |   24 +-
+ mm/page_isolation.c             |   18 +-
+ mm/swap.c                       |    9 +
+ 13 files changed, 2219 insertions(+), 10 deletions(-)
+ create mode 100644 drivers/virtio/virtio_mem.c
+ create mode 100644 include/uapi/linux/virtio_mem.h
 
 -- 
-Regards,
-Ivan Khoronzhuk
+2.21.0
+
