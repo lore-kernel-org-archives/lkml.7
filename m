@@ -2,193 +2,270 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1670C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 18:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFDD4C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 18:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3FE3217D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 18:09:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97D3F21928
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 18:15:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392012AbfISSJk (ORCPT
+        id S2391352AbfISSPz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 14:09:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54538 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389717AbfISSJj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 14:09:39 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4C9FE10CBC4B;
-        Thu, 19 Sep 2019 18:09:39 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A0C8210018F8;
-        Thu, 19 Sep 2019 18:09:29 +0000 (UTC)
-Date:   Thu, 19 Sep 2019 14:09:26 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     containers@lists.linux-foundation.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     nhorman@redhat.com, eparis@parisplace.org, mpatel@redhat.com,
-        dwalsh@redhat.com
-Subject: Re: [PATCH ghau51/ghau40 v7 00/12] add support for audit container
- identifier
-Message-ID: <20190919180926.vhpuxv3vzuwjffop@madcap2.tricolour.ca>
-References: <1568856472-10173-1-git-send-email-rgb@redhat.com>
+        Thu, 19 Sep 2019 14:15:55 -0400
+Received: from mailoutvs41.siol.net ([185.57.226.232]:51786 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2389923AbfISSPz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 14:15:55 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 0A6CF522ADB;
+        Thu, 19 Sep 2019 20:15:51 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id aN1n3KoJdUQs; Thu, 19 Sep 2019 20:15:50 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id 80AE052376F;
+        Thu, 19 Sep 2019 20:15:50 +0200 (CEST)
+Received: from jernej-laptop.localnet (cpe-86-58-59-25.static.triera.net [86.58.59.25])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id 392C7522ADB;
+        Thu, 19 Sep 2019 20:15:50 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     roman.stratiienko@globallogic.com, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH] drm/sun4i: Use vi plane as primary
+Date:   Thu, 19 Sep 2019 20:15:49 +0200
+Message-ID: <104595190.vWb6g8xIPX@jernej-laptop>
+In-Reply-To: <20190919171754.x6lq73cctnqsjr4v@gilmour>
+References: <20190919123703.8545-1-roman.stratiienko@globallogic.com> <20190919171754.x6lq73cctnqsjr4v@gilmour>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1568856472-10173-1-git-send-email-rgb@redhat.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Thu, 19 Sep 2019 18:09:39 +0000 (UTC)
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-09-18 21:27, Richard Guy Briggs wrote:
-> Add support for audit kernel container identifiers to userspace tools.
+Dne četrtek, 19. september 2019 ob 19:17:54 CEST je Maxime Ripard napisal(a):
+> Hi,
 > 
-> The first and second add new record types.  The third adds filter
-> support.  The fourth and 5th start to add search support.
-> 
-> The 6th is to read the calling process' audit container identifier from
-> the /proc filesystem matching the kernel /proc read patch.
-> 
-> The 7th is to fix signal support and the 8th is to learn the audit
-> container identifier of the process that signals the audit daemon.
-> 
-> The 9th is a touch up to allow the contid field to be interpreted as a
-> CSV list.
-> 
-> The 10th and 11th add audit netlink support for setting and getting
-> contid, loginuid and sessionid preparing to deprecate the /proc
-> interface.
-> 
-> The last adds audit library support to allow a process to give
-> permission to a container orchestrator in a non-init user namespace via
-> audit netlink messages.
-> 
-> See: https://github.com/linux-audit/audit-userspace/issues/51
-> See: https://github.com/linux-audit/audit-userspace/issues/40
-> See: https://github.com/linux-audit/audit-kernel/issues/90
-> See: https://github.com/linux-audit/audit-kernel/issues/91
-> See: https://github.com/linux-audit/audit-testsuite/issues/64
-> See: https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
+> On Thu, Sep 19, 2019 at 03:37:03PM +0300, roman.stratiienko@globallogic.com 
+wrote:
+> > From: Roman Stratiienko <roman.stratiienko@globallogic.com>
+> > 
+> > DE2.0 blender does not take into the account alpha channel of vi layer.
+> > Thus makes overlaying of this layer totally opaque.
+> > Using vi layer as bottom solves this issue.
 
-Here's my working tree:
-        https://github.com/linux-audit/audit-userspace/compare/master...rgbriggs:ghau40-containerid-filter.v7.0
-And a test rpms:
-        http://people.redhat.com/~rbriggs/ghak90/git-247fe71
+What issue? Overlays don't have to be "full screen", thus missing support for 
+alpha blending doesn't make it less valuable. And VI planes are already placed 
+at the bottom (zpos = 0).
 
-> Changelog:
-> v7
-> - rebase on ghau90 and touchup
-> - rebase on ghak10 support (change AUDIT_CONTAINER_ID to 1334)
-> - render type contid as a CSV
-> - switch from /proc to audit netlink to set/get contid, auid/sessionid
-> - add support for capcontid
+> > 
+> > Tested on Android.
+> > 
+> > Signed-off-by: Roman Stratiienko <roman.stratiienko@globallogic.com>
 > 
-> v6
-> - auditd signaller tracking was moved to a new AUDIT_SIGNAL_INFO2
->   request and record
-> - swap CONTAINER_OP contid/old-contid to ease parsing
-> - add to auparse
+> It sounds like a workaround more than an actual fix.
 > 
-> v5
-> - updated aux record from AUDIT_CONTAINER to AUDIT_CONTAINER_ID
-> - add AUDIT_CONTAINER_ID to normalization
-> - rebase on AUDIT_ANOM_LINK and AUDIT_MAC_CALIPSO_ADD
+> If the VI planes can't use the alpha, then we should just stop
+> reporting that format.
 > 
-> v4
-> - change from AUDIT_CONTAINER_ID to AUDIT_CONTAINER_OP
-> - change from AUDIT_FEATURE_BITMAP_CONTAINERID_FILTER to
->   AUDIT_FEATURE_BITMAP_CONTAINERID
-> - change from event_container_id to event_contid internally
-> - change from container_id to contid and event_container_id to
->   event_contid internally
-> - change command line option from --container-id to --contid
-> 
-> v3
-> - change from AUDIT_CONTAINER to AUDIT_CONTAINER_ID
-> - change from AUDIT_CONTAINER_INFO to AUDIT_CONTAINER
-> - change from AUDIT_CONTAINERID to AUDIT_CONTID
-> - update github issue refs
-> - add audit_get_containerid
-> - change event_container_id default value
-> - add --containerid to ausearch options help text
-> - update ausearch parser and error codes
-> 
-> v2
-> - rebase on UINT_MAX patch
-> - add patches for AUDIT_CONTAINER, AUDIT_CONTAINER_INFO, ausearch,
->   normalization
-> 
-> Richard Guy Briggs (12):
->   AUDIT_CONTAINER_OP message type basic support
->   AUDIT_CONTAINER_ID message type basic support
->   auditctl: add support for AUDIT_CONTID filter
->   add ausearch containerid support
->   start normalization containerid support
->   libaudit: add support to get the task audit container identifier
->   signal_info: only print context if it is available.
->   add support for audit_signal_info2
->   contid: interpret correctly CONTAINER_ID contid field csv
->   contid: switch from /proc to netlink
->   loginuid/sessionid: switch from /proc to netlink
->   libaudit: add support to get and set capcontid on a task
-> 
->  auparse/auditd-config.c          |   1 +
->  auparse/auparse-defs.h           |   3 +-
->  auparse/interpret.c              |  10 +
->  auparse/normalize_record_map.h   |   2 +
->  auparse/typetab.h                |   2 +
->  bindings/python/auparse_python.c |   1 +
->  docs/Makefile.am                 |   3 +-
->  docs/audit_get_containerid.3     |  25 +++
->  docs/audit_request_signal_info.3 |   1 +
->  docs/audit_set_containerid.3     |  24 +++
->  docs/auditctl.8                  |   3 +
->  lib/fieldtab.h                   |   1 +
->  lib/libaudit.c                   | 425 ++++++++++++++++++++++++++++++++-------
->  lib/libaudit.h                   |  73 +++++++
->  lib/msg_typetab.h                |  10 +
->  lib/netlink.c                    |  15 ++
->  src/auditctl-listing.c           |  21 ++
->  src/auditd-config.c              |   1 +
->  src/auditd-config.h              |   1 +
->  src/auditd-event.c               |  28 ++-
->  src/auditd-reconfig.c            |  25 ++-
->  src/auditd.c                     |   3 +-
->  src/aureport-options.c           |   1 +
->  src/ausearch-llist.c             |   2 +
->  src/ausearch-llist.h             |   1 +
->  src/ausearch-match.c             |   3 +
->  src/ausearch-options.c           |  47 ++++-
->  src/ausearch-options.h           |   1 +
->  src/ausearch-parse.c             | 197 ++++++++++++++++++
->  src/ausearch-report.c            |   6 +-
->  30 files changed, 848 insertions(+), 88 deletions(-)
->  create mode 100644 docs/audit_get_containerid.3
->  create mode 100644 docs/audit_set_containerid.3
-> 
-> -- 
-> 1.8.3.1
-> 
-> --
-> Linux-audit mailing list
-> Linux-audit@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-audit
+> Jernej, what do you think?
 
-- RGB
+Commit message is misleading. What this commit actually does is moving primary 
+plane from first UI plane to bottom most plane, i.e. first VI plane. However, VI 
+planes are scarce resource, almost all mixers have only one. I wouldn't set it 
+as primary, because it's the only one which provide support for YUV formats. 
+That could be used for example by video player for zero-copy rendering. 
+Probably most apps wouldn't touch it if it was primary (that's usually 
+reserved for window manager, if used).
 
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+I left few formats with alpha channel exposed by VI planes, just because they 
+don't have equivalent format without alpha. But I'm fine with removing them if 
+you all agree on that.
+
+Best regards,
+Jernej
+
+> 
+> Maxime
+> 
+> > ---
+> > 
+> >  drivers/gpu/drm/sun4i/sun8i_ui_layer.c | 33 -----------------------
+> >  drivers/gpu/drm/sun4i/sun8i_vi_layer.c | 36 +++++++++++++++++++++++++-
+> >  2 files changed, 35 insertions(+), 34 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
+> > b/drivers/gpu/drm/sun4i/sun8i_ui_layer.c index dd2a1c851939..25183badc85f
+> > 100644
+> > --- a/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
+> > +++ b/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
+> > @@ -99,36 +99,6 @@ static int sun8i_ui_layer_update_coord(struct
+> > sun8i_mixer *mixer, int channel,> 
+> >  	insize = SUN8I_MIXER_SIZE(src_w, src_h);
+> >  	outsize = SUN8I_MIXER_SIZE(dst_w, dst_h);
+> > 
+> > -	if (plane->type == DRM_PLANE_TYPE_PRIMARY) {
+> > -		bool interlaced = false;
+> > -		u32 val;
+> > -
+> > -		DRM_DEBUG_DRIVER("Primary layer, updating global size 
+W: %u H: %u\n",
+> > -				 dst_w, dst_h);
+> > -		regmap_write(mixer->engine.regs,
+> > -			     SUN8I_MIXER_GLOBAL_SIZE,
+> > -			     outsize);
+> > -		regmap_write(mixer->engine.regs,
+> > -			     SUN8I_MIXER_BLEND_OUTSIZE(bld_base), 
+outsize);
+> > -
+> > -		if (state->crtc)
+> > -			interlaced = state->crtc->state-
+>adjusted_mode.flags
+> > -				& DRM_MODE_FLAG_INTERLACE;
+> > -
+> > -		if (interlaced)
+> > -			val = SUN8I_MIXER_BLEND_OUTCTL_INTERLACED;
+> > -		else
+> > -			val = 0;
+> > -
+> > -		regmap_update_bits(mixer->engine.regs,
+> > -				   
+SUN8I_MIXER_BLEND_OUTCTL(bld_base),
+> > -				   
+SUN8I_MIXER_BLEND_OUTCTL_INTERLACED,
+> > -				   val);
+> > -
+> > -		DRM_DEBUG_DRIVER("Switching display mixer interlaced 
+mode %s\n",
+> > -				 interlaced ? "on" : "off");
+> > -	}
+> > -
+> > 
+> >  	/* Set height and width */
+> >  	DRM_DEBUG_DRIVER("Layer source offset X: %d Y: %d\n",
+> >  	
+> >  			 state->src.x1 >> 16, state->src.y1 >> 16);
+> > 
+> > @@ -349,9 +319,6 @@ struct sun8i_ui_layer *sun8i_ui_layer_init_one(struct
+> > drm_device *drm,> 
+> >  	if (!layer)
+> >  	
+> >  		return ERR_PTR(-ENOMEM);
+> > 
+> > -	if (index == 0)
+> > -		type = DRM_PLANE_TYPE_PRIMARY;
+> > -
+> > 
+> >  	/* possible crtcs are set later */
+> >  	ret = drm_universal_plane_init(drm, &layer->plane, 0,
+> >  	
+> >  				       &sun8i_ui_layer_funcs,
+> > 
+> > diff --git a/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
+> > b/drivers/gpu/drm/sun4i/sun8i_vi_layer.c index 07c27e6a4b77..49c4074e164f
+> > 100644
+> > --- a/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
+> > +++ b/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
+> > @@ -116,6 +116,36 @@ static int sun8i_vi_layer_update_coord(struct
+> > sun8i_mixer *mixer, int channel,> 
+> >  	insize = SUN8I_MIXER_SIZE(src_w, src_h);
+> >  	outsize = SUN8I_MIXER_SIZE(dst_w, dst_h);
+> > 
+> > +	if (plane->type == DRM_PLANE_TYPE_PRIMARY) {
+> > +		bool interlaced = false;
+> > +		u32 val;
+> > +
+> > +		DRM_DEBUG_DRIVER("Primary layer, updating global size 
+W: %u H: %u\n",
+> > +				 dst_w, dst_h);
+> > +		regmap_write(mixer->engine.regs,
+> > +			     SUN8I_MIXER_GLOBAL_SIZE,
+> > +			     outsize);
+> > +		regmap_write(mixer->engine.regs,
+> > +			     SUN8I_MIXER_BLEND_OUTSIZE(bld_base), 
+outsize);
+> > +
+> > +		if (state->crtc)
+> > +			interlaced = state->crtc->state-
+>adjusted_mode.flags
+> > +				& DRM_MODE_FLAG_INTERLACE;
+> > +
+> > +		if (interlaced)
+> > +			val = SUN8I_MIXER_BLEND_OUTCTL_INTERLACED;
+> > +		else
+> > +			val = 0;
+> > +
+> > +		regmap_update_bits(mixer->engine.regs,
+> > +				   
+SUN8I_MIXER_BLEND_OUTCTL(bld_base),
+> > +				   
+SUN8I_MIXER_BLEND_OUTCTL_INTERLACED,
+> > +				   val);
+> > +
+> > +		DRM_DEBUG_DRIVER("Switching display mixer interlaced 
+mode %s\n",
+> > +				 interlaced ? "on" : "off");
+> > +	}
+> > +
+> > 
+> >  	/* Set height and width */
+> >  	DRM_DEBUG_DRIVER("Layer source offset X: %d Y: %d\n",
+> >  	
+> >  			 (state->src.x1 >> 16) & ~(format->hsub - 
+1),
+> > 
+> > @@ -445,6 +475,7 @@ struct sun8i_vi_layer *sun8i_vi_layer_init_one(struct
+> > drm_device *drm,> 
+> >  					       struct 
+sun8i_mixer *mixer,
+> >  					       int index)
+> >  
+> >  {
+> > 
+> > +	enum drm_plane_type type = DRM_PLANE_TYPE_OVERLAY;
+> > 
+> >  	struct sun8i_vi_layer *layer;
+> >  	unsigned int plane_cnt;
+> >  	int ret;
+> > 
+> > @@ -453,12 +484,15 @@ struct sun8i_vi_layer
+> > *sun8i_vi_layer_init_one(struct drm_device *drm,> 
+> >  	if (!layer)
+> >  	
+> >  		return ERR_PTR(-ENOMEM);
+> > 
+> > +	if (index == 0)
+> > +		type = DRM_PLANE_TYPE_PRIMARY;
+> > +
+> > 
+> >  	/* possible crtcs are set later */
+> >  	ret = drm_universal_plane_init(drm, &layer->plane, 0,
+> >  	
+> >  				       &sun8i_vi_layer_funcs,
+> >  				       sun8i_vi_layer_formats,
+> >  				       
+ARRAY_SIZE(sun8i_vi_layer_formats),
+> > 
+> > -				       NULL, 
+DRM_PLANE_TYPE_OVERLAY, NULL);
+> > +				       NULL, type, NULL);
+> > 
+> >  	if (ret) {
+> >  	
+> >  		dev_err(drm->dev, "Couldn't initialize layer\n");
+> >  		return ERR_PTR(ret);
+> > 
+> > --
+> > 2.17.1
+
+
+
+
