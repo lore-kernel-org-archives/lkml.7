@@ -2,208 +2,87 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33457C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 01:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 871D6C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 01:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 155A82196F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 01:26:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B8BA2196F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 01:26:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568856392;
+	bh=ZfiDspvJOuCGtSRwcP0HLJfYq04A5tt/6W88lsnxT34=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=pNcZ60Lem579ctC7UUN9c6TPoVcKrQvz/esquXljpbP1FjBwMhXo119j5XbkmHJqh
+	 JT85F3f8U2RD5V0tKtkqtVvOH/hMp93zyeZ8kmYLh7Zj0GzJkvjtDVulTwbVHjpQT9
+	 aypsw3qHtPe0IcvuhcnviWdv7tDQsUPNLlIFpEqA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387832AbfISB03 (ORCPT
+        id S2387846AbfISB0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 21:26:29 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48106 "EHLO mx1.redhat.com"
+        Wed, 18 Sep 2019 21:26:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387767AbfISB01 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387790AbfISB01 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 18 Sep 2019 21:26:27 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 842A78A1C87;
-        Thu, 19 Sep 2019 01:26:21 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D971060C18;
-        Thu, 19 Sep 2019 01:26:13 +0000 (UTC)
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org
-Cc:     Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
-        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
-        eparis@parisplace.org, serge@hallyn.com, ebiederm@xmission.com,
-        nhorman@tuxdriver.com, dwalsh@redhat.com, mpatel@redhat.com,
-        Richard Guy Briggs <rgb@redhat.com>
-Subject: [PATCH ghak90 V7 13/21] audit: NETFILTER_PKT: record each container ID associated with a netNS
-Date:   Wed, 18 Sep 2019 21:22:30 -0400
-Message-Id: <18f14bfbffc30c53c2b1dd06694b69ef286f3b72.1568834524.git.rgb@redhat.com>
-In-Reply-To: <cover.1568834524.git.rgb@redhat.com>
-References: <cover.1568834524.git.rgb@redhat.com>
-In-Reply-To: <cover.1568834524.git.rgb@redhat.com>
-References: <cover.1568834524.git.rgb@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Thu, 19 Sep 2019 01:26:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75DFE21929;
+        Thu, 19 Sep 2019 01:26:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568856387;
+        bh=ZfiDspvJOuCGtSRwcP0HLJfYq04A5tt/6W88lsnxT34=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=r33y8fA4h5SG6PL6g15ar+nL6jQ3x3Je6k68k1xRemGhL4gJUzZStGUrJKsAt1jwa
+         4MuQ+8PmtsTR2e/ojhEYnO9nlmlst8hccvrISWUyESK0cj5q3FIVkPKHDo/+4MbqmD
+         +7Oi9/6lic26m7OgBRRIODrv7Dl6bdiWya07SYgY=
+Subject: Re: [PATCH 4.14 00/45] 4.14.145-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20190918061222.854132812@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <330b4273-2ca1-b437-0ff0-c458ba31f88b@kernel.org>
+Date:   Wed, 18 Sep 2019 19:26:25 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190918061222.854132812@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add audit container identifier auxiliary record(s) to NETFILTER_PKT
-event standalone records.  Iterate through all potential audit container
-identifiers associated with a network namespace.
+On 9/18/19 12:18 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.145 release.
+> There are 45 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri 20 Sep 2019 06:09:47 AM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.145-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
-Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
----
- include/linux/audit.h    |  5 +++++
- kernel/audit.c           | 39 +++++++++++++++++++++++++++++++++++++++
- net/netfilter/nft_log.c  | 11 +++++++++--
- net/netfilter/xt_AUDIT.c | 11 +++++++++--
- 4 files changed, 62 insertions(+), 4 deletions(-)
+Compiled and booted on my test system. No dmesg regressions.
 
-diff --git a/include/linux/audit.h b/include/linux/audit.h
-index 73e3ab38e3e0..dcd92f964120 100644
---- a/include/linux/audit.h
-+++ b/include/linux/audit.h
-@@ -241,6 +241,8 @@ static inline u64 audit_get_contid(struct task_struct *tsk)
- extern void audit_netns_contid_del(struct net *net, u64 contid);
- extern void audit_switch_task_namespaces(struct nsproxy *ns,
- 					 struct task_struct *p);
-+extern void audit_log_netns_contid_list(struct net *net,
-+					struct audit_context *context);
- 
- extern u32 audit_enabled;
- 
-@@ -328,6 +330,9 @@ static inline void audit_netns_contid_del(struct net *net, u64 contid)
- static inline void audit_switch_task_namespaces(struct nsproxy *ns,
- 						struct task_struct *p)
- { }
-+static inline void audit_log_netns_contid_list(struct net *net,
-+					       struct audit_context *context)
-+{ }
- 
- #define audit_enabled AUDIT_OFF
- 
-diff --git a/kernel/audit.c b/kernel/audit.c
-index e0c27bc39925..9ce7a1ec7a92 100644
---- a/kernel/audit.c
-+++ b/kernel/audit.c
-@@ -450,6 +450,45 @@ void audit_switch_task_namespaces(struct nsproxy *ns, struct task_struct *p)
- 		audit_netns_contid_add(new->net_ns, contid);
- }
- 
-+/**
-+ * audit_log_netns_contid_list - List contids for the given network namespace
-+ * @net: the network namespace of interest
-+ * @context: the audit context to use
-+ *
-+ * Description:
-+ * Issues a CONTAINER_ID record with a CSV list of contids associated
-+ * with a network namespace to accompany a NETFILTER_PKT record.
-+ */
-+void audit_log_netns_contid_list(struct net *net, struct audit_context *context)
-+{
-+	struct audit_buffer *ab = NULL;
-+	struct audit_contid *cont;
-+	struct audit_net *aunet;
-+
-+	/* Generate AUDIT_CONTAINER_ID record with container ID CSV list */
-+	rcu_read_lock();
-+	aunet = net_generic(net, audit_net_id);
-+	if (!aunet)
-+		goto out;
-+	list_for_each_entry_rcu(cont, &aunet->contid_list, list) {
-+		if (!ab) {
-+			ab = audit_log_start(context, GFP_ATOMIC,
-+					     AUDIT_CONTAINER_ID);
-+			if (!ab) {
-+				audit_log_lost("out of memory in audit_log_netns_contid_list");
-+				goto out;
-+			}
-+			audit_log_format(ab, "contid=");
-+		} else
-+			audit_log_format(ab, ",");
-+		audit_log_format(ab, "%llu", cont->id);
-+	}
-+	audit_log_end(ab);
-+out:
-+	rcu_read_unlock();
-+}
-+EXPORT_SYMBOL(audit_log_netns_contid_list);
-+
- void audit_panic(const char *message)
- {
- 	switch (audit_failure) {
-diff --git a/net/netfilter/nft_log.c b/net/netfilter/nft_log.c
-index fe4831f2258f..98d1e7e1a83c 100644
---- a/net/netfilter/nft_log.c
-+++ b/net/netfilter/nft_log.c
-@@ -66,13 +66,16 @@ static void nft_log_eval_audit(const struct nft_pktinfo *pkt)
- 	struct sk_buff *skb = pkt->skb;
- 	struct audit_buffer *ab;
- 	int fam = -1;
-+	struct audit_context *context;
-+	struct net *net;
- 
- 	if (!audit_enabled)
- 		return;
- 
--	ab = audit_log_start(NULL, GFP_ATOMIC, AUDIT_NETFILTER_PKT);
-+	context = audit_alloc_local(GFP_ATOMIC);
-+	ab = audit_log_start(context, GFP_ATOMIC, AUDIT_NETFILTER_PKT);
- 	if (!ab)
--		return;
-+		goto errout;
- 
- 	audit_log_format(ab, "mark=%#x", skb->mark);
- 
-@@ -99,6 +102,10 @@ static void nft_log_eval_audit(const struct nft_pktinfo *pkt)
- 		audit_log_format(ab, " saddr=? daddr=? proto=-1");
- 
- 	audit_log_end(ab);
-+	net = xt_net(&pkt->xt);
-+	audit_log_netns_contid_list(net, context);
-+errout:
-+	audit_free_context(context);
- }
- 
- static void nft_log_eval(const struct nft_expr *expr,
-diff --git a/net/netfilter/xt_AUDIT.c b/net/netfilter/xt_AUDIT.c
-index 9cdc16b0d0d8..ecf868a1abde 100644
---- a/net/netfilter/xt_AUDIT.c
-+++ b/net/netfilter/xt_AUDIT.c
-@@ -68,10 +68,13 @@ static bool audit_ip6(struct audit_buffer *ab, struct sk_buff *skb)
- {
- 	struct audit_buffer *ab;
- 	int fam = -1;
-+	struct audit_context *context;
-+	struct net *net;
- 
- 	if (audit_enabled == AUDIT_OFF)
--		goto errout;
--	ab = audit_log_start(NULL, GFP_ATOMIC, AUDIT_NETFILTER_PKT);
-+		goto out;
-+	context = audit_alloc_local(GFP_ATOMIC);
-+	ab = audit_log_start(context, GFP_ATOMIC, AUDIT_NETFILTER_PKT);
- 	if (ab == NULL)
- 		goto errout;
- 
-@@ -101,7 +104,11 @@ static bool audit_ip6(struct audit_buffer *ab, struct sk_buff *skb)
- 
- 	audit_log_end(ab);
- 
-+	net = xt_net(par);
-+	audit_log_netns_contid_list(net, context);
- errout:
-+	audit_free_context(context);
-+out:
- 	return XT_CONTINUE;
- }
- 
--- 
-1.8.3.1
-
+thanks,
+-- Shuah
