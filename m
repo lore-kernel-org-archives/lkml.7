@@ -2,95 +2,169 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A68B6C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D37DC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:06:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7535321927
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:06:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 383F921848
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:06:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sm1kYe9P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390912AbfISPGV (ORCPT
+        id S2403808AbfISPGi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 11:06:21 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:55433 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389179AbfISPGV (ORCPT
+        Thu, 19 Sep 2019 11:06:38 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:42340 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390897AbfISPGi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 11:06:21 -0400
-X-Originating-IP: 86.207.98.53
-Received: from [192.168.10.51] (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
-        (Authenticated sender: kamel.bouhara@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id BED25C0002;
-        Thu, 19 Sep 2019 15:06:18 +0000 (UTC)
-Subject: Re: [PATCH] i2c: at91: Send bus clear command if SCL or SDA is down
-To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     ludovic.desroches@microchip.com, nicolas.ferre@microchip.com,
-        alexandre.belloni@bootlin.com, wsa@the-dreams.de
-References: <20190911095854.5141-1-codrin.ciubotariu@microchip.com>
-From:   kbouhara <kamel.bouhara@bootlin.com>
-Message-ID: <1ed845e5-3835-f1aa-099a-b67c3bc16076@bootlin.com>
-Date:   Thu, 19 Sep 2019 17:06:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 19 Sep 2019 11:06:38 -0400
+Received: by mail-ed1-f68.google.com with SMTP id y91so3495788ede.9
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 08:06:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=oUQUKfGGLyoufGiv0FoEyuW3RCfv5lyXYP4LRA9yUnI=;
+        b=sm1kYe9P5pTViCKFjNk/d6ebqMWyJNooZxf91TSUePYb/5i7/VaEYPsMPIc2wfZVi8
+         P/ooqN0dZaXdOGopagPyYfk47lN5uurdLwK5TuwLmyhYW1FITstvFCYOZDjE+2XBbEGs
+         DVxBofb6ZPhP/lrm+qE4xpNtlFMAcMZAd1Ca6mP8mwuQVxEQi5Rsqjk+fTKinMoccU00
+         yhhDKLGlRrtw55fnv6F+DBvplwGlSB8NUvnA7oH0UD9rik/SsDa/qisHAdtFxMcNHJ5E
+         poqcqtsjOyIKhSbiF+IAS/z0wbnfXeBUqDE1jU6R7i186QYsRgMIkQLl1pqPo1r1IhhB
+         MT4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oUQUKfGGLyoufGiv0FoEyuW3RCfv5lyXYP4LRA9yUnI=;
+        b=rdptH/W3iAaHWIFG/Js+UN6s4Rv7Xc2oCkBUFltexMaVSAYNEl0UwGYyJ2eUuXlQUQ
+         7duPu8L8Cef7YGadlM6J2GiAssLRxJ2K8xK5bxmoFb7Jdvnv2aSgZK7JyWmHXrol0+5N
+         eWtl7OikbN3zsHVTgTf1KJcjNyEgALWg7FbrSdZ6Yg4XhnVZkzLPdc4myk9BsW1aSOqY
+         Cj+wuGuFRjSIMlOua/70fVFv1Vxcy1bPs2SLxYyXGXp3E9UEf1B1dFuLuMU6Yzc532S0
+         8XoftKtnmcQektcTCw7DqKRa8RNWhcGR12ljBevMNAIF3WG3zG13zLl4+KbHpeYV8ZAe
+         fjtA==
+X-Gm-Message-State: APjAAAUgCIkoKRYXuGlbaPXPJJ/DSsmnGotdL0ktpFlsv/1oitxNOuMS
+        5dcuNH0NnnpidvjQMYMoIxFbcA==
+X-Google-Smtp-Source: APXvYqyS7bkpasvboOin36PhpvvHG70FNN59FYjP0q8duVqRlwWW9FcPkvkPkK/8rnvVy/QAXxBLOw==
+X-Received: by 2002:aa7:d295:: with SMTP id w21mr9488517edq.302.1568905596363;
+        Thu, 19 Sep 2019 08:06:36 -0700 (PDT)
+Received: from lophozonia ([85.195.192.192])
+        by smtp.gmail.com with ESMTPSA id a19sm1374424edy.37.2019.09.19.08.06.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Sep 2019 08:06:35 -0700 (PDT)
+Date:   Thu, 19 Sep 2019 17:06:34 +0200
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        robin.murphy@arm.com, jacob.jun.pan@linux.intel.com,
+        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        eric.auger@redhat.com
+Subject: Re: [PATCH 6/8] iommu/arm-smmu-v3: Support auxiliary domains
+Message-ID: <20190919150634.GE1013538@lophozonia>
+References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
+ <20190610184714.6786-7-jean-philippe.brucker@arm.com>
+ <20190626175959.ubxvb2qn4taclact@willie-the-truck>
 MIME-Version: 1.0
-In-Reply-To: <20190911095854.5141-1-codrin.ciubotariu@microchip.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190626175959.ubxvb2qn4taclact@willie-the-truck>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/11/19 11:58 AM, Codrin Ciubotariu wrote:
-> After a transfer timeout, some faulty I2C slave devices might hold down
-> the SCL or the SDA pins. We can generate a bus clear command, hoping that
-> the slave might release the pins.
->
-> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-> ---
->   drivers/i2c/busses/i2c-at91-master.c | 20 ++++++++++++++++++++
->   drivers/i2c/busses/i2c-at91.h        |  6 +++++-
->   2 files changed, 25 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/i2c/busses/i2c-at91-master.c b/drivers/i2c/busses/i2c-at91-master.c
-> index a3fcc35ffd3b..5f544a16db96 100644
-> --- a/drivers/i2c/busses/i2c-at91-master.c
-> +++ b/drivers/i2c/busses/i2c-at91-master.c
-> @@ -599,6 +599,26 @@ static int at91_do_twi_transfer(struct at91_twi_dev *dev)
->   		at91_twi_write(dev, AT91_TWI_CR,
->   			       AT91_TWI_THRCLR | AT91_TWI_LOCKCLR);
->   	}
-> +
-> +	/*
-> +	 * After timeout, some faulty I2C slave devices might hold SCL/SDA down;
-> +	 * we can send a bus clear command, hoping that the pins will be
-> +	 * released
-> +	 */
-> +	if (!(dev->transfer_status & AT91_TWI_SDA) ||
-> +	    !(dev->transfer_status & AT91_TWI_SCL)) {
-> +		dev_dbg(dev->dev,
-> +			"SDA/SCL are down; sending bus clear command\n");
-> +		if (dev->use_alt_cmd) {
-> +			unsigned int acr;
-> +
-> +			acr = at91_twi_read(dev, AT91_TWI_ACR);
-> +			acr &= ~AT91_TWI_ACR_DATAL_MASK;
-> +			at91_twi_write(dev, AT91_TWI_ACR, acr);
-> +		}
-> +		at91_twi_write(dev, AT91_TWI_CR, AT91_TWI_CLEAR);
+On Wed, Jun 26, 2019 at 06:59:59PM +0100, Will Deacon wrote:
+> > @@ -666,8 +668,14 @@ struct arm_smmu_domain {
+> >  
+> >  	struct iommu_domain		domain;
+> >  
+> > +	/* Unused in aux domains */
+> >  	struct list_head		devices;
+> >  	spinlock_t			devices_lock;
+> > +
+> > +	/* Auxiliary domain stuff */
+> > +	struct arm_smmu_domain		*parent;
+> > +	ioasid_t			ssid;
+> > +	unsigned long			aux_nr_devs;
+> 
+> Maybe use a union to avoid comments about what is used/unused?
 
-This bit is not documented on SoCs before SAMA5D2/D4, this write 
-shouldn't be done unconditionally.
+OK
 
+> > +static void arm_smmu_aux_detach_dev(struct iommu_domain *domain, struct device *dev)
+> > +{
+> > +	struct iommu_domain *parent_domain;
+> > +	struct arm_smmu_domain *parent_smmu_domain;
+> > +	struct arm_smmu_master *master = dev_to_master(dev);
+> > +	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
+> > +
+> > +	if (!arm_smmu_dev_feature_enabled(dev, IOMMU_DEV_FEAT_AUX))
+> > +		return;
+> > +
+> > +	parent_domain = iommu_get_domain_for_dev(dev);
+> > +	if (!parent_domain)
+> > +		return;
+> > +	parent_smmu_domain = to_smmu_domain(parent_domain);
+> > +
+> > +	mutex_lock(&smmu_domain->init_mutex);
+> > +	if (!smmu_domain->aux_nr_devs)
+> > +		goto out_unlock;
+> > +
+> > +	if (!--smmu_domain->aux_nr_devs) {
+> > +		arm_smmu_write_ctx_desc(parent_smmu_domain, smmu_domain->ssid,
+> > +					NULL);
+> > +		/*
+> > +		 * TLB doesn't need invalidation since accesses from the device
+> > +		 * can't use this domain's ASID once the CD is clear.
+> > +		 *
+> > +		 * Sadly that doesn't apply to ATCs, which are PASID tagged.
+> > +		 * Invalidate all other devices as well, because even though
+> > +		 * they weren't 'officially' attached to the auxiliary domain,
+> > +		 * they could have formed ATC entries.
+> > +		 */
+> > +		arm_smmu_atc_inv_domain(smmu_domain, 0, 0);
+> 
+> I've been struggling to understand the locking here, since both
+> arm_smmu_write_ctx_desc and arm_smmu_atc_inv_domain take and release the
+> devices_lock for the domain. Is there not a problem with devices coming and
+> going in-between the two calls?
 
--- 
-Kamel Bouhara, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+Yes, I need to think about this more. I bet there are plenty more issues
+like this. For example I don't think I currently prevent the parent
+domain from disappearing while auxiliary domains are attached.
+
+> >  static struct iommu_ops arm_smmu_ops = {
+> >  	.capable		= arm_smmu_capable,
+> >  	.domain_alloc		= arm_smmu_domain_alloc,
+> > @@ -2539,6 +2772,13 @@ static struct iommu_ops arm_smmu_ops = {
+> >  	.of_xlate		= arm_smmu_of_xlate,
+> >  	.get_resv_regions	= arm_smmu_get_resv_regions,
+> >  	.put_resv_regions	= arm_smmu_put_resv_regions,
+> > +	.dev_has_feat		= arm_smmu_dev_has_feature,
+> > +	.dev_feat_enabled	= arm_smmu_dev_feature_enabled,
+> > +	.dev_enable_feat	= arm_smmu_dev_enable_feature,
+> > +	.dev_disable_feat	= arm_smmu_dev_disable_feature,
+> 
+> Why can't we use the existing ->capable and ->dev_{get,set}_attr callbacks
+> for this?
+
+->capable isn't very useful because it applies to all SMMUs in the
+system. The existing ->{get,set}_attr callbacks apply to an
+iommu_domain. I think the main reason for doing it on endpoints was that
+it would be tedious to keep track of capabilities when attaching and
+detaching devices to a domain, especially for drivers that allow
+multiple IOMMUs per domain [1]. There were more discussions, and in the
+end we agreed on this API for device attributes [2].
+
+Thanks,
+Jean
+
+[1] https://lore.kernel.org/lkml/aa1ff748-c2ec-acc0-f1d9-cdff2b131e58@linux.intel.com/
+[2] https://lore.kernel.org/linux-iommu/20181207102926.GM16835@8bytes.org/
 
