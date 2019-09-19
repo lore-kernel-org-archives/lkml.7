@@ -2,64 +2,101 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFCEDC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31FE3C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98EDE21D56
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:44:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="dG2dXJoa"
+	by mail.kernel.org (Postfix) with ESMTP id 0CDDB21D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:45:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390472AbfISNoC (ORCPT
+        id S2390498AbfISNpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 09:44:02 -0400
-Received: from first.geanix.com ([116.203.34.67]:42344 "EHLO first.geanix.com"
+        Thu, 19 Sep 2019 09:45:20 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:34376 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387417AbfISNoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 09:44:01 -0400
-Received: from [192.168.8.20] (unknown [85.184.140.241])
-        by first.geanix.com (Postfix) with ESMTPSA id C2CAD64891;
-        Thu, 19 Sep 2019 13:43:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
-        t=1568900636; bh=IQmTBlSmfjmmHffrMqbWC875jDk1mYznbnYK/ryoUmw=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To;
-        b=dG2dXJoakXB737JIyjv+dOTuRqrVroPoVIsTux9BAdHWn+smyWMlCYl56C4a2wBnM
-         ZswbfvjYyV4R90Yy0N8cfvC7L1iGXTUxE0l+iM2R0bvY0nvHVHVZqMcc9JJaaPQ7pg
-         BUnt6DmDZf8peshFUJThizGhT2DERsdEeU2qH/r+LXLVJMAgtpCZEwzQVdFOwM6HN9
-         1ij6m4tI4Mo7g6I504k7nAn6aElvkLMk1/RVg9cHKLLA72V6kMGudOt6Y7/rvqM2mm
-         THd4dEaGzTlgpcNza8JEXcwponWdzUKHQHVmiCBnhKBqV7LyhA3YfTJDJ+r2wEwnKN
-         r4pZPPk1n1A2g==
-Subject: Re: [BUG] tty: n_gsm: possible circular locking dependency detected
-From:   =?UTF-8?Q?Martin_Hundeb=c3=b8ll?= <martin@geanix.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Jiri Slaby <jslaby@suse.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Cc:     =?UTF-8?Q?Sean_Nyekj=c3=a6r?= <sean@geanix.com>,
-        Esben Haabendal <esben@geanix.com>
-References: <4b2455c0-25ba-0187-6df6-c63b4ccc6a6e@geanix.com>
-Message-ID: <fd71a56a-2f5f-757f-7011-b5a618ff6951@geanix.com>
-Date:   Thu, 19 Sep 2019 15:43:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        id S2387417AbfISNpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 09:45:19 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
+        id 1iAwkG-0008DZ-6e; Thu, 19 Sep 2019 23:45:17 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 19 Sep 2019 23:45:13 +1000
+Date:   Thu, 19 Sep 2019 23:45:13 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Horia Geanta <horia.geanta@nxp.com>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Abel Vesa <abel.vesa@nxp.com>
+Subject: Re: [PATCH 12/12] crypto: caam - change JR device ownership scheme
+Message-ID: <20190919134512.GA29320@gondor.apana.org.au>
+References: <20190904023515.7107-1-andrew.smirnov@gmail.com>
+ <20190904023515.7107-13-andrew.smirnov@gmail.com>
+ <VI1PR04MB7023A7EC91599A537CB6A487EEB30@VI1PR04MB7023.eurprd04.prod.outlook.com>
+ <CAHQ1cqEkdUJGxUnRQbJSG9L32yC0HVmddzi4GyOkVfq2uvJOMQ@mail.gmail.com>
+ <VI1PR0402MB3485F8B3E4F73EB62A70DBDF98890@VI1PR0402MB3485.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <4b2455c0-25ba-0187-6df6-c63b4ccc6a6e@geanix.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US-large
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VI1PR0402MB3485F8B3E4F73EB62A70DBDF98890@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/09/2019 15.27, Martin Hundebøll wrote:
-> But we haven't been able to reproduce locally.
+On Thu, Sep 19, 2019 at 11:19:22AM +0000, Horia Geanta wrote:
+>
+> What should a driver do when:
+> -user tries to unbind it AND
+> -there are tfms referencing algorithms registered by this driver
+> 
+> 1. If driver tries to unregister the algorithms during its .remove()
+> callback, then this BUG_ON is hit:
+> 
+> int crypto_unregister_alg(struct crypto_alg *alg)
+> {
+> [...]
+>         BUG_ON(refcount_read(&alg->cra_refcnt) != 1);
 
-Scratch that. It's reliably reproduced by sending/saturating the uart 
-with outgoing data.
+You must not unregister the algorithm until it's no longer in use.
+Normally we enforce this using module reference counts.
 
-// Martin
+For hardware devices that need to be unregistered without unloading
+the module at the same time, you will need your own reference
+counting to determine when unregistration can be carried out.  But
+it must be carefully done so that it is not racy.
+
+> 2. If driver exits without unregistering the algorithms,
+> next time one of the tfms referencing those algorithms will be used
+> bad things will happen.
+
+Well remember hardware devices can always go away (e.g., dead
+or unplugged) so the driver must do something sensible when that
+happens.  If this happened on a live tfm then further operations
+should ideally fail and any outstanding requests should also fail
+in a timely manner.
+
+> 3. There is no mechanism in crypto core for notifying users
+> to stop using a tfm.
+
+For software implementations we use the module reference count
+as the mechanism to signal that an algorithm is going away.  In
+particular try_module_get (and consequently crypto_mod_get) will
+fail when the module is being unregistered.
+
+We should extend this to cover hardware devices.  Perhaps we can
+introduce a callback in crypto_alg that crypto_mod_get can invoke
+which would then fail if the device is going away (or has gone away).
+
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
