@@ -2,149 +2,102 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A540AC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D091C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AFFB208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:33:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZY0Rkt0U"
+	by mail.kernel.org (Postfix) with ESMTP id 027B2217D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:33:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568932415;
+	bh=8NBCg4bn+YAcGGwPshiT26t1NXX+A+bvQ5yC6Q+ZwUo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=BJoDhICHtouwZDvFEGMl324mc1/joLR96v9D/8u7da+aT65w9G+j4lwkfTgYUET/A
+	 KCQ45k4oNHecYSmyjxu3RVGe51oHrmDsDUp87tEOWg2Q9vtu+EdSzZ00KhXo8eHDwM
+	 0fu8958TWMAWbdx4XfXxykXBf28QLB4KCI04f4LU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407150AbfISWdb (ORCPT
+        id S2405830AbfISWL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:33:31 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39964 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405879AbfISWd3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:33:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Cc:To:Subject:From:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=caeA/02qRI4RebALR6RnJseaugOqJ+jt25dGBDaeAaI=; b=ZY0Rkt0UIeEu336HG0FLfhTIL
-        /DSR9LO+YNj1ZUEDas7ubnvcLhtiOFkWBL+Z8QjbEBI3S7rowrNjgi53qeN0MpEF7C6ivYZUfFekG
-        8ifA6XG8I8qtkgnPI/8oR4B7kFR8qr+NEBqpASU0koI9Kdt4cCimBl1zwwx1pbHdFIWcM4JyAggjx
-        kjU4MH+G5sB2ambF/XAIw3tx7MOL71LYXXVNHPrQDHVYkqWmLFHawa5ukdM0bOpcoD1yVZnrCzYQf
-        RJtWfqQ/IUUHn9PdcfFS6bVXPIFgNkb5sypB7xeGsuGnEUbH7qBksC0dIwgbBDiO1lfwnpxQUyhhW
-        11gBPxjEQ==;
-Received: from [2601:1c0:6280:3f0::9a1f]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iB4zM-0006Wl-EL; Thu, 19 Sep 2019 22:33:24 +0000
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH 1/2] soc: ti: big cleanup of Kconfig file
-To:     LKML <linux-kernel@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>
-Cc:     Olof Johansson <olof@lixom.net>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Sandeep Nair <sandeep_n@ti.com>,
-        Dave Gerlach <d-gerlach@ti.com>, Keerthy <j-keerthy@ti.com>,
-        Tony Lindgren <tony@atomide.com>
-Message-ID: <8437a1f9-18f2-dd03-4fea-de5ba71f25c9@infradead.org>
-Date:   Thu, 19 Sep 2019 15:33:23 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 19 Sep 2019 18:11:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50052 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2393572AbfISWLX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:11:23 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1660218AF;
+        Thu, 19 Sep 2019 22:11:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568931082;
+        bh=8NBCg4bn+YAcGGwPshiT26t1NXX+A+bvQ5yC6Q+ZwUo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sPcKa5Ghg/0/5qPeXLrXKXLjyBuWM0gw8lusmhb31t7uuPVTEBUmtH0u0shaCap7y
+         DaFnL0jmtxHNgaZ0uiQn2iiSWugHcw1yLicRqrl3Onq/hpnV8oKI8kUWFVfKUiGyrk
+         KdcCWoUHS4HlxK2zZ4CMmcTf0uKu2idi5QMQUkno=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Alexander Popov <alex.popov@linux.com>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Jann Horn <jannh@google.com>, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.2 122/124] floppy: fix usercopy direction
+Date:   Fri, 20 Sep 2019 00:03:30 +0200
+Message-Id: <20190919214823.616660752@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
+References: <20190919214819.198419517@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+From: Jann Horn <jannh@google.com>
 
-Cleanup drivers/soc/ti/Kconfig:
-- delete duplicate words
-- end sentences with '.'
-- fix typos/spellos
-- Subsystem is one word
-- capitalize acronyms
-- reflow lines to be <= 80 columns
+commit 52f6f9d74f31078964ca1574f7bb612da7877ac8 upstream.
 
-Fixes: 41f93af900a2 ("soc: ti: add Keystone Navigator QMSS driver")
-Fixes: 88139ed03058 ("soc: ti: add Keystone Navigator DMA support")
-Fixes: afe761f8d3e9 ("soc: ti: Add pm33xx driver for basic suspend support")
-Fixes: 5a99ae0092fe ("soc: ti: pm33xx: AM437X: Add rtc_only with ddr in self-refresh support")
-Fixes: a869b7b30dac ("soc: ti: Add Support for AM654 SoC config option")
-Fixes: cff377f7897a ("soc: ti: Add Support for J721E SoC config option")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Olof Johansson <olof@lixom.net>
-Cc: Santosh Shilimkar <ssantosh@kernel.org>
-Cc: Sandeep Nair <sandeep_n@ti.com>
-Cc: Dave Gerlach <d-gerlach@ti.com>
-Cc: Keerthy <j-keerthy@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
+As sparse points out, these two copy_from_user() should actually be
+copy_to_user().
+
+Fixes: 229b53c9bf4e ("take floppy compat ioctls to sodding floppy.c")
+Cc: stable@vger.kernel.org
+Acked-by: Alexander Popov <alex.popov@linux.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
-@Santosh: MAINTAINERS says that you maintain drivers/soc/ti/*,
-but there is more that Keystone-related code in that subdirectory
-now... just in case you want to update that info.
+ drivers/block/floppy.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
- drivers/soc/ti/Kconfig |   20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -3780,7 +3780,7 @@ static int compat_getdrvprm(int drive,
+ 	v.native_format = UDP->native_format;
+ 	mutex_unlock(&floppy_mutex);
+ 
+-	if (copy_from_user(arg, &v, sizeof(struct compat_floppy_drive_params)))
++	if (copy_to_user(arg, &v, sizeof(struct compat_floppy_drive_params)))
+ 		return -EFAULT;
+ 	return 0;
+ }
+@@ -3816,7 +3816,7 @@ static int compat_getdrvstat(int drive,
+ 	v.bufblocks = UDRS->bufblocks;
+ 	mutex_unlock(&floppy_mutex);
+ 
+-	if (copy_from_user(arg, &v, sizeof(struct compat_floppy_drive_struct)))
++	if (copy_to_user(arg, &v, sizeof(struct compat_floppy_drive_struct)))
+ 		return -EFAULT;
+ 	return 0;
+ Eintr:
 
---- lnx-53.orig/drivers/soc/ti/Kconfig
-+++ lnx-53/drivers/soc/ti/Kconfig
-@@ -7,12 +7,12 @@ if ARCH_K3
- config ARCH_K3_AM6_SOC
- 	bool "K3 AM6 SoC"
- 	help
--	  Enable support for TI's AM6 SoC Family support
-+	  Enable support for TI's AM6 SoC Family.
- 
- config ARCH_K3_J721E_SOC
- 	bool "K3 J721E SoC"
- 	help
--	  Enable support for TI's J721E SoC Family support
-+	  Enable support for TI's J721E SoC Family.
- 
- endif
- 
-@@ -27,7 +27,7 @@ menuconfig SOC_TI
- if SOC_TI
- 
- config KEYSTONE_NAVIGATOR_QMSS
--	tristate "Keystone Queue Manager Sub System"
-+	tristate "Keystone Queue Manager Subsystem"
- 	depends on ARCH_KEYSTONE
- 	help
- 	  Say y here to support the Keystone multicore Navigator Queue
-@@ -42,9 +42,9 @@ config KEYSTONE_NAVIGATOR_DMA
- 	tristate "TI Keystone Navigator Packet DMA support"
- 	depends on ARCH_KEYSTONE
- 	help
--	  Say y tp enable support for the Keystone Navigator Packet DMA on
--	  on Keystone family of devices. It sets up the dma channels for the
--	  Queue Manager Sub System.
-+	  Say y to enable support for the Keystone Navigator Packet DMA on
-+	  on Keystone family of devices. It sets up the DMA channels for the
-+	  Queue Manager Subsystem.
- 
- 	  If unsure, say N.
- 
-@@ -53,10 +53,10 @@ config AMX3_PM
- 	depends on SOC_AM33XX || SOC_AM43XX
- 	depends on WKUP_M3_IPC && TI_EMIF_SRAM && SRAM && RTC_DRV_OMAP
- 	help
--	  Enable power management on AM335x and AM437x. Required for suspend to mem
--	  and standby states on both AM335x and AM437x platforms and for deeper cpuidle
--	  c-states on AM335x. Also required for rtc and ddr in self-refresh low
--	  power mode on AM437x platforms.
-+	  Enable power management on AM335x and AM437x. Required for suspend
-+	  to mem and standby states on both AM335x and AM437x platforms and
-+	  for deeper cpuidle c-states on AM335x. Also required for RTC and
-+	  DDR in self-refresh low power mode on AM437x platforms.
- 
- config WKUP_M3_IPC
- 	tristate "TI AMx3 Wkup-M3 IPC Driver"
 
