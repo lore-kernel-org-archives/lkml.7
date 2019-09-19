@@ -2,87 +2,136 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A9C4C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 01:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE3A1C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 01:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 328A421929
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 01:24:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568856254;
-	bh=WvVMaZ6o5q+pQh1jzXhkIF8dn/EdE5hc9ID95Zhlvsc=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=naihuhLt4ZtPWXHjNhXiOLdkvJSTMtRtmzm4eLdxxr4fYyoNzNAJDAxZBNsPewCju
-	 4TgEAcpAHZ4pTk27qRF+h/FJsZ+8oZpfS7dAkxggrZFAccfSxQ6dLvjPUMZUiXIXv6
-	 QcNzhYG2wMBiQIOTPkrVc7kRb5ZhzwBMA8a+bizI=
+	by mail.kernel.org (Postfix) with ESMTP id CC0F121A49
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 01:24:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731861AbfISBYM (ORCPT
+        id S1731902AbfISBYZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 21:24:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45180 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 21:24:25 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55756 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731790AbfISBYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 21:24:11 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726359AbfISBYY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 21:24:24 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2937421925;
-        Thu, 19 Sep 2019 01:24:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568856250;
-        bh=WvVMaZ6o5q+pQh1jzXhkIF8dn/EdE5hc9ID95Zhlvsc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ji0k6mmheiV53f287tnQVhgb8Kcu3qSwGa2ImrQc985N9a6SC5zt/0Y8gq8hHZNa/
-         /fEO6rtDOpxvdwHeM2CE/Q+93M/Gevl2E96wlmQIrs0MMiYdrbAsc6cJixsTKuLfI1
-         pBj9nvR+ndWPWNwkwcDn2oCAM77WN53N9+YJ2u5Y=
-Subject: Re: [PATCH 4.19 00/50] 4.19.74-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190918061223.116178343@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <d095760f-6dfe-aa9f-ee4e-a3b47c8ef697@kernel.org>
-Date:   Wed, 18 Sep 2019 19:24:09 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190918061223.116178343@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        by mx1.redhat.com (Postfix) with ESMTPS id 744B03082131;
+        Thu, 19 Sep 2019 01:24:18 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CEE7560C44;
+        Thu, 19 Sep 2019 01:24:05 +0000 (UTC)
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org
+Cc:     Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
+        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
+        eparis@parisplace.org, serge@hallyn.com, ebiederm@xmission.com,
+        nhorman@tuxdriver.com, dwalsh@redhat.com, mpatel@redhat.com,
+        Richard Guy Briggs <rgb@redhat.com>
+Subject: [PATCH ghak90 V7 05/21] audit: log drop of contid on exit of last task
+Date:   Wed, 18 Sep 2019 21:22:22 -0400
+Message-Id: <71b75f54342f32f176c2b6d94584f2a666964e68.1568834524.git.rgb@redhat.com>
+In-Reply-To: <cover.1568834524.git.rgb@redhat.com>
+References: <cover.1568834524.git.rgb@redhat.com>
+In-Reply-To: <cover.1568834524.git.rgb@redhat.com>
+References: <cover.1568834524.git.rgb@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 19 Sep 2019 01:24:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/18/19 12:18 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.74 release.
-> There are 50 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri 20 Sep 2019 06:09:47 AM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.74-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+Since we are tracking the life of each audit container indentifier, we
+can match the creation event with the destruction event.  Log the
+destruction of the audit container identifier when the last process in
+that container exits.
 
-Compiled and booted on my test system. No dmesg regressions.
+Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+---
+ kernel/audit.c   | 32 ++++++++++++++++++++++++++++++++
+ kernel/audit.h   |  2 ++
+ kernel/auditsc.c |  2 ++
+ 3 files changed, 36 insertions(+)
 
-thanks,
--- Shuah
+diff --git a/kernel/audit.c b/kernel/audit.c
+index ea0899130cc1..53d13d638c63 100644
+--- a/kernel/audit.c
++++ b/kernel/audit.c
+@@ -2503,6 +2503,38 @@ int audit_set_contid(struct task_struct *task, u64 contid)
+ 	return rc;
+ }
+ 
++void audit_log_container_drop(void)
++{
++	struct audit_buffer *ab;
++	uid_t uid;
++	struct tty_struct *tty;
++	char comm[sizeof(current->comm)];
++
++	if (!current->audit || !current->audit->cont ||
++	    refcount_read(&current->audit->cont->refcount) > 1)
++		return;
++	ab = audit_log_start(audit_context(), GFP_KERNEL, AUDIT_CONTAINER_OP);
++	if (!ab)
++		return;
++
++	uid = from_kuid(&init_user_ns, task_uid(current));
++	tty = audit_get_tty();
++	audit_log_format(ab,
++			 "op=drop opid=%d contid=%llu old-contid=%llu pid=%d uid=%u auid=%u tty=%s ses=%u",
++			 task_tgid_nr(current), audit_get_contid(current),
++			 audit_get_contid(current), task_tgid_nr(current), uid,
++			 from_kuid(&init_user_ns, audit_get_loginuid(current)),
++			 tty ? tty_name(tty) : "(none)",
++       			 audit_get_sessionid(current));
++	audit_put_tty(tty);
++	audit_log_task_context(ab);
++	audit_log_format(ab, " comm=");
++	audit_log_untrustedstring(ab, get_task_comm(comm, current));
++	audit_log_d_path_exe(ab, current->mm);
++	audit_log_format(ab, " res=1");
++	audit_log_end(ab);
++}
++
+ /**
+  * audit_log_end - end one audit record
+  * @ab: the audit_buffer
+diff --git a/kernel/audit.h b/kernel/audit.h
+index e4a31aa92dfe..162de8366b32 100644
+--- a/kernel/audit.h
++++ b/kernel/audit.h
+@@ -255,6 +255,8 @@ extern void audit_log_d_path_exe(struct audit_buffer *ab,
+ extern struct tty_struct *audit_get_tty(void);
+ extern void audit_put_tty(struct tty_struct *tty);
+ 
++extern void audit_log_container_drop(void);
++
+ /* audit watch/mark/tree functions */
+ #ifdef CONFIG_AUDITSYSCALL
+ extern unsigned int audit_serial(void);
+diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+index 0e2d50533959..bd855794ad26 100644
+--- a/kernel/auditsc.c
++++ b/kernel/auditsc.c
+@@ -1568,6 +1568,8 @@ static void audit_log_exit(void)
+ 
+ 	audit_log_proctitle();
+ 
++	audit_log_container_drop();
++
+ 	/* Send end of event record to help user space know we are finished */
+ 	ab = audit_log_start(context, GFP_KERNEL, AUDIT_EOE);
+ 	if (ab)
+-- 
+1.8.3.1
+
