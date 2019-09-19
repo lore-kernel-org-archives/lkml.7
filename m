@@ -2,170 +2,134 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8AC8C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F8DCC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:27:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A684220678
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3475020640
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:27:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568932042;
+	bh=eArGvEepIIpMO6s2toapya3rfKhfxPzPCS9EURu4A60=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=17oQp/VkETkBZWuTN4zQjAnjN6IpJVRODw7vkeApWFYKRZ/GvMetS/taKm5nFzIGZ
+	 28n5f8BEmlvWEzOGDZZTBu1ceSxEkvtCYiZyUR44qVo7goIgLA5CPohh8co/lKx3Uu
+	 vm77+i0szEHdrowvq/g+sAVglBvVosFegnZ2JCuI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436567AbfISW1O (ORCPT
+        id S2406144AbfISW1V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:27:14 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40392 "EHLO mx1.redhat.com"
+        Thu, 19 Sep 2019 18:27:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393493AbfISW1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:27:11 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S2406680AbfISWVK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:21:10 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 016AA89AC7;
-        Thu, 19 Sep 2019 22:27:10 +0000 (UTC)
-Received: from x1.home (ovpn-118-102.phx2.redhat.com [10.3.118.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D856060BF1;
-        Thu, 19 Sep 2019 22:27:08 +0000 (UTC)
-Date:   Thu, 19 Sep 2019 16:27:08 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Matthew Rosato <mjrosato@linux.ibm.com>
-Cc:     Cornelia Huck <cohuck@redhat.com>, sebott@linux.ibm.com,
-        gerald.schaefer@de.ibm.com, pasic@linux.ibm.com,
-        borntraeger@de.ibm.com, walling@linux.ibm.com,
-        linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org,
-        joro@8bytes.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        heiko.carstens@de.ibm.com, robin.murphy@arm.com, gor@linux.ibm.com,
-        pmorel@linux.ibm.com
-Subject: Re: [PATCH v4 3/4] vfio: zpci: defining the VFIO headers
-Message-ID: <20190919162708.07d4eec4@x1.home>
-In-Reply-To: <0a62aba7-578a-6875-da4d-13e8b145cf9b@linux.ibm.com>
-References: <1567815231-17940-1-git-send-email-mjrosato@linux.ibm.com>
-        <1567815231-17940-4-git-send-email-mjrosato@linux.ibm.com>
-        <20190919172009.71b1c246.cohuck@redhat.com>
-        <0a62aba7-578a-6875-da4d-13e8b145cf9b@linux.ibm.com>
-Organization: Red Hat
+        by mail.kernel.org (Postfix) with ESMTPSA id B6DAF21924;
+        Thu, 19 Sep 2019 22:21:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568931670;
+        bh=eArGvEepIIpMO6s2toapya3rfKhfxPzPCS9EURu4A60=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LJV5E5q+RKxS01iC6/FyfxC1ng7GWIN0FH0J8QrrdnuUkQaJPbUJgntUzlRjv9qk9
+         m/MilsUIPUfPkLhXtljVIh770Xa70MWGigXL/MRrxrCK1kktqA4R2H39pJdVuF4x//
+         lSSASey0gBGFERxKHua/LPN+VqRepGxtUWZopw/s=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Sachin Sant <sachinp@linux.vnet.ibm.com>,
+        Hillf Danton <hdanton@sina.com>,
+        David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 70/74] keys: Fix missing null pointer check in request_key_auth_describe()
+Date:   Fri, 20 Sep 2019 00:04:23 +0200
+Message-Id: <20190919214811.184544234@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190919214800.519074117@linuxfoundation.org>
+References: <20190919214800.519074117@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Thu, 19 Sep 2019 22:27:10 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 19 Sep 2019 16:55:57 -0400
-Matthew Rosato <mjrosato@linux.ibm.com> wrote:
+From: Hillf Danton <hdanton@sina.com>
 
-> On 9/19/19 11:20 AM, Cornelia Huck wrote:
-> > On Fri,  6 Sep 2019 20:13:50 -0400
-> > Matthew Rosato <mjrosato@linux.ibm.com> wrote:
-> >   
-> >> From: Pierre Morel <pmorel@linux.ibm.com>
-> >>
-> >> We define a new device region in vfio.h to be able to
-> >> get the ZPCI CLP information by reading this region from
-> >> userland.
-> >>
-> >> We create a new file, vfio_zdev.h to define the structure
-> >> of the new region we defined in vfio.h
-> >>
-> >> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> >> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
-> >> ---
-> >>  include/uapi/linux/vfio.h      |  1 +
-> >>  include/uapi/linux/vfio_zdev.h | 35 +++++++++++++++++++++++++++++++++++
-> >>  2 files changed, 36 insertions(+)
-> >>  create mode 100644 include/uapi/linux/vfio_zdev.h
-> >>
-> >> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> >> index 8f10748..8328c87 100644
-> >> --- a/include/uapi/linux/vfio.h
-> >> +++ b/include/uapi/linux/vfio.h
-> >> @@ -371,6 +371,7 @@ struct vfio_region_gfx_edid {
-> >>   * to do TLB invalidation on a GPU.
-> >>   */
-> >>  #define VFIO_REGION_SUBTYPE_IBM_NVLINK2_ATSD	(1)
-> >> +#define VFIO_REGION_SUBTYPE_ZDEV_CLP		(2)  
-> > 
-> > Using a subtype is fine, but maybe add a comment what this is for?
-> >   
-> 
-> Fair point.  Maybe something like "IBM ZDEV CLP is used to pass zPCI
-> device features to guest"
+[ Upstream commit d41a3effbb53b1bcea41e328d16a4d046a508381 ]
 
-And if you're going to use a PCI vendor ID subtype, maintain consistent
-naming, VFIO_REGION_SUBTYPE_IBM_ZPCI_CLP or something.  Ideally there'd
-also be a reference to the struct provided through this region
-otherwise it's rather obscure to find by looking for the call to
-vfio_pci_register_dev_region() and ops defined for the region.  I
-wouldn't be opposed to defining the region structure here too rather
-than a separate file, but I guess you're following the example set by
-ccw.
+If a request_key authentication token key gets revoked, there's a window in
+which request_key_auth_describe() can see it with a NULL payload - but it
+makes no check for this and something like the following oops may occur:
 
-> >>  
-> >>  /*
-> >>   * The MSIX mappable capability informs that MSIX data of a BAR can be mmapped
-> >> diff --git a/include/uapi/linux/vfio_zdev.h b/include/uapi/linux/vfio_zdev.h
-> >> new file mode 100644
-> >> index 0000000..55e0d6d
-> >> --- /dev/null
-> >> +++ b/include/uapi/linux/vfio_zdev.h
-> >> @@ -0,0 +1,35 @@
-> >> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> >> +/*
-> >> + * Region definition for ZPCI devices
-> >> + *
-> >> + * Copyright IBM Corp. 2019
-> >> + *
-> >> + * Author(s): Pierre Morel <pmorel@linux.ibm.com>
-> >> + */
-> >> +
-> >> +#ifndef _VFIO_ZDEV_H_
-> >> +#define _VFIO_ZDEV_H_
-> >> +
-> >> +#include <linux/types.h>
-> >> +
-> >> +/**
-> >> + * struct vfio_region_zpci_info - ZPCI information.  
-> > 
-> > Hm... probably should also get some more explanation. E.g. is that
-> > derived from a hardware structure?
-> >   
-> 
-> The structure itself is not mapped 1:1 to a hardware structure, but it
-> does serve as a collection of information that was derived from other
-> hardware structures.
-> 
-> "Used for passing hardware feature information about a zpci device
-> between the host and guest" ?
-> 
-> >> + *
-> >> + */
-> >> +struct vfio_region_zpci_info {
-> >> +	__u64 dasm;
-> >> +	__u64 start_dma;
-> >> +	__u64 end_dma;
-> >> +	__u64 msi_addr;
-> >> +	__u64 flags;
-> >> +	__u16 pchid;
-> >> +	__u16 mui;
-> >> +	__u16 noi;
-> >> +	__u16 maxstbl;
-> >> +	__u8 version;
-> >> +	__u8 gid;
-> >> +#define VFIO_PCI_ZDEV_FLAGS_REFRESH 1
-> >> +	__u8 util_str[];
-> >> +} __packed;
-> >> +
-> >> +#endif  
+	BUG: Kernel NULL pointer dereference at 0x00000038
+	Faulting instruction address: 0xc0000000004ddf30
+	Oops: Kernel access of bad area, sig: 11 [#1]
+	...
+	NIP [...] request_key_auth_describe+0x90/0xd0
+	LR [...] request_key_auth_describe+0x54/0xd0
+	Call Trace:
+	[...] request_key_auth_describe+0x54/0xd0 (unreliable)
+	[...] proc_keys_show+0x308/0x4c0
+	[...] seq_read+0x3d0/0x540
+	[...] proc_reg_read+0x90/0x110
+	[...] __vfs_read+0x3c/0x70
+	[...] vfs_read+0xb4/0x1b0
+	[...] ksys_read+0x7c/0x130
+	[...] system_call+0x5c/0x70
 
-I'm half tempted to suggest that this struct could be exposed directly
-through an info capability, the trouble is where.  It would be somewhat
-awkward to pick an arbitrary BAR or config space region to expose this
-info.  The VFIO_DEVICE_GET_INFO ioctl could include it, but we don't
-support capabilities on that return structure and I'm not sure it's
-worth implementing versus the solution here.  Just a thought.  Thanks,
+Fix this by checking for a NULL pointer when describing such a key.
 
-Alex
+Also make the read routine check for a NULL pointer to be on the safe side.
+
+[DH: Modified to not take already-held rcu lock and modified to also check
+ in the read routine]
+
+Fixes: 04c567d9313e ("[PATCH] Keys: Fix race between two instantiators of a key")
+Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Signed-off-by: Hillf Danton <hdanton@sina.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ security/keys/request_key_auth.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/security/keys/request_key_auth.c b/security/keys/request_key_auth.c
+index f60baeb338e5f..b47445022d5ce 100644
+--- a/security/keys/request_key_auth.c
++++ b/security/keys/request_key_auth.c
+@@ -71,6 +71,9 @@ static void request_key_auth_describe(const struct key *key,
+ {
+ 	struct request_key_auth *rka = key->payload.data[0];
+ 
++	if (!rka)
++		return;
++
+ 	seq_puts(m, "key:");
+ 	seq_puts(m, key->description);
+ 	if (key_is_positive(key))
+@@ -88,6 +91,9 @@ static long request_key_auth_read(const struct key *key,
+ 	size_t datalen;
+ 	long ret;
+ 
++	if (!rka)
++		return -EKEYREVOKED;
++
+ 	datalen = rka->callout_len;
+ 	ret = datalen;
+ 
+-- 
+2.20.1
+
+
+
