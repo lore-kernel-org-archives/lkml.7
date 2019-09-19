@@ -2,131 +2,87 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E50C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB61C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE66821D7A
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:37:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568900233;
-	bh=4h3Wk30EhI1KisIg5rn7cH+Dc4+DOKJ7JCZLxO6zmPI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=CHIDVYruwd5hklF4fBYG2FZt5ZQYBWBmsxXVq9tharkXPVDWNHvGnh6GuRIjRM8Me
-	 k/RRnYi+MxKi9Bl0GolyJi4c1STQrRX3h3q0R5eQgE1yfQ16cWjNgzWYVCdw5OltIF
-	 wKUG0S36tw1pZKUqFqIxwMtuWWtHZ9PAY6krxo9E=
+	by mail.kernel.org (Postfix) with ESMTP id 98F0521D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:39:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ieeib4Ap"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390472AbfISNhN (ORCPT
+        id S2390482AbfISNjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 09:37:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48056 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388819AbfISNhM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 09:37:12 -0400
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCC4921D80
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 13:37:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568900232;
-        bh=4h3Wk30EhI1KisIg5rn7cH+Dc4+DOKJ7JCZLxO6zmPI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=mwBzoNaTiK9xjLVihi6v8b+ryPsg0IP++84Wia1oIqwwNfxtQ14YDYKpBHJ3dYMni
-         fBW0yG7v0NaSg/4OkKv0v7bY4ZNVgMqn10+8QuxFJes4isxMfpfRJSSSnElwMfLq/C
-         aLk1/rm+0igwywEd+xuqNGYA8E4GRYk48izsxAtU=
-Received: by mail-wr1-f47.google.com with SMTP id l3so3123172wru.7
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 06:37:11 -0700 (PDT)
-X-Gm-Message-State: APjAAAULu0WkRxvLYozpx5pa67Lqk2HZjnxzLKesQp40UCwiV6IkJo0O
-        4De/CxDn2tl8H4R+3BEi+nPSWoHXnjZ1sM0xPNw=
-X-Google-Smtp-Source: APXvYqzlXvVrim8rTycGbIV+PmHAEsjEw4YXguoJ0i5mulID6kS2AA+pRkt/c/jlP2DTaZZMrey31vSOQlTtKW2gKOA=
-X-Received: by 2002:a5d:6b49:: with SMTP id x9mr6988060wrw.80.1568900230203;
- Thu, 19 Sep 2019 06:37:10 -0700 (PDT)
+        Thu, 19 Sep 2019 09:39:31 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:39512 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389222AbfISNjb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 09:39:31 -0400
+Received: by mail-yb1-f194.google.com with SMTP id o80so1334139ybc.6
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 06:39:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gh9epQbPDXS45t0vdSz30/htyHlI6NEZom/dNuM2sGs=;
+        b=ieeib4ApNmoMaWTclSUxdRd2KtnX6idLkHzrhFUwAyBClrQ4kku9aL9aTofkCcrasC
+         ZVdU1AM4T84Jn4WW5X+mUslTzGyn2RP3kRs453/UtfKoxf7aAByCAWxuuthh01LEZ6XZ
+         pa2A5qr/JT3myBWj7qNoSPvwZce6BFFBGJUfVmzcG83Ee9lzDFFcaYitb65MhoXKye0u
+         jaDkWCeVgEXo2LZ293ZeUnm5tbaDTCqcwbCIsnX7gWIC6hBFMQZsGviDyV18ukHdh5dN
+         1EvTQ5Aa67fcKxfzhixaPaBbmhZqa+B9X7+YgvKmNFY5gywNqog/UzNZug8NUfp+5eGc
+         C1Kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gh9epQbPDXS45t0vdSz30/htyHlI6NEZom/dNuM2sGs=;
+        b=X8Lweb1o2laQeLZr1UPX9iCGddOTpfahheO067BoNrxUNnlQOFsp5RHwX6+sBHZb3B
+         vvBciiFRCl8oQMTRpyRTipUfLlngloS/+BnrkC6d1VGKdTFVbSKfwr1vPT75VRqBGvwQ
+         4wEyiCpyDOdzmUv4y5GUG1t31a+BPyWZlneLm9nUAZyBolfuKua0vBfv7TBvvoOiXfyd
+         Y2vppkBAhizWMs+chOxIoQwHhGuQVHAen7Q7tc7dpdyDiEVJA4KjE8BNqF06PyCc+QSt
+         h84AFJEzTkG/mbeQKQW03JASBiBIvtCRhcRq9aXV8h6m1KOWYa9Eu1ruga2c07iRQ3eG
+         CrJg==
+X-Gm-Message-State: APjAAAVaFWabIaeT6tCXZ3sy0kuS4UdW66U/Y7TlHLqA2sjYjrjUOylq
+        ocdbNQgPSTt7mtgLpzxM5KcCKPCbVk6KdRz2Z/knqw==
+X-Google-Smtp-Source: APXvYqyTTjYSC4/xvE4YiMCj3MA7ZD4bi7SRQ4CDsCuRNHidPBrDbCC1madTD9IMdduZjh/1UXDKHeEVxOBAWhjVCFA=
+X-Received: by 2002:a25:ba8d:: with SMTP id s13mr6638491ybg.332.1568900370326;
+ Thu, 19 Sep 2019 06:39:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190912140256.fwbutgmadpjbjnab@willie-the-truck>
- <mhng-166dcd4f-9483-4aab-a83a-914d70ddb5a4@palmer-si-x1e> <MN2PR04MB606117F2AC47385EF23D267D8D8D0@MN2PR04MB6061.namprd04.prod.outlook.com>
- <20190916181800.7lfpt3t627byoomt@willie-the-truck> <MN2PR04MB60612846CD50ED157DE5AB548D8F0@MN2PR04MB6061.namprd04.prod.outlook.com>
-In-Reply-To: <MN2PR04MB60612846CD50ED157DE5AB548D8F0@MN2PR04MB6061.namprd04.prod.outlook.com>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Thu, 19 Sep 2019 21:36:58 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTRu4cSPd09mXkUOxnL2HO0wnAzqeVr3a3He0AFGCFD00g@mail.gmail.com>
-Message-ID: <CAJF2gTRu4cSPd09mXkUOxnL2HO0wnAzqeVr3a3He0AFGCFD00g@mail.gmail.com>
-Subject: Re: [PATCH RFC 11/14] arm64: Move the ASID allocator code in a
- separate file
-To:     Anup Patel <Anup.Patel@wdc.com>
-Cc:     Will Deacon <will@kernel.org>, Palmer Dabbelt <palmer@sifive.com>,
-        Will Deacon <will.deacon@arm.com>,
-        "julien.thierry@arm.com" <julien.thierry@arm.com>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
-        "marc.zyngier@arm.com" <marc.zyngier@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        "julien.grall@arm.com" <julien.grall@arm.com>,
-        "gary@garyguo.net" <gary@garyguo.net>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "christoffer.dall@arm.com" <christoffer.dall@arm.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
+References: <20190905214553.1643060-1-guro@fb.com>
+In-Reply-To: <20190905214553.1643060-1-guro@fb.com>
+From:   Suleiman Souhlal <suleiman@google.com>
+Date:   Thu, 19 Sep 2019 22:39:18 +0900
+Message-ID: <CABCjUKByipk2e1Hh1_PwC+p2Fig=6RMfd0zBeVQtyn5Y48gYXQ@mail.gmail.com>
+Subject: Re: [PATCH RFC 00/14] The new slab memory controller
+To:     Roman Gushchin <guro@fb.com>
+Cc:     linux-mm@kvack.org, Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        kernel-team@fb.com, Shakeel Butt <shakeelb@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Waiman Long <longman@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, Sep 6, 2019 at 6:57 AM Roman Gushchin <guro@fb.com> wrote:
+> The patchset has been tested on a number of different workloads in our
+> production. In all cases, it saved hefty amounts of memory:
+> 1) web frontend, 650-700 Mb, ~42% of slab memory
+> 2) database cache, 750-800 Mb, ~35% of slab memory
+> 3) dns server, 700 Mb, ~36% of slab memory
 
-On Tue, Sep 17, 2019 at 11:42 AM Anup Patel <Anup.Patel@wdc.com> wrote:
+Do these workloads cycle through a lot of different memcgs?
 
-> >
-> > With a reply stating that the patch "absolutely does not work" ;)
->
-> This patch was tested on existing HW (which does not have ASID implementation)
-> and tested on QEMU (which has very simplistic Implementation of ASID).
->
-> When I asked Gary Guo about way to get access to their HW (in same patch
-> email thread), I did not get any reply. After so many months passed, I now
-> doubt the his comment "absolutely does not work".
-> >
-> > What exactly do you want people to do with that? It's an awful lot of effort to
-> > review this sort of stuff and given that Guo Ren is talking about sharing page
-> > tables between the CPU and an accelerator, maybe you're better off
-> > stabilising Linux for the platforms that you can actually test rather than
-> > getting so far ahead of yourselves that you end up with a bunch of wasted
-> > work on patches that probably won't get merged any time soon.
->
-> The intention of the ASID patch was to encourage RISC-V implementations
-> having ASID in HW and also ensure that things don't break on existing HW.
->
-> I don't see our efforts being wasted in trying to make Linux RISC-V feature
-> complete and encouraging more feature rich RISC-V CPUs.
->
-> Delays in merging patches are fine as long as people have something to try
-> on their RISC-V CPU implementations.
->
-I'm the supporter of that patch:
-http://archive.lwn.net:8080/linux-kernel/20190329045111.14040-1-anup.patel@wdc.com/T/#u
+For workloads that don't, wouldn't this approach potentially use more
+memory? For example, a workload where everything is in one or two
+memcgs, and those memcgs last forever.
 
-Because it implicit hw broadcast tlb invalidation optimization.
-
-Honestly it's not suitable for remote tlb flush with software IPI, but
-it's still much better than current RISC-V's.
-
-I'll try it on our hardware: 910. wait a moment :)
-
--- 
-Best Regards
- Guo Ren
-
-ML: https://lore.kernel.org/linux-csky/
+-- Suleiman
