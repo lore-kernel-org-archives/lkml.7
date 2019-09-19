@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8FCC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A3AC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF2822196E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:23:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2F9321924
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:23:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931817;
-	bh=d9E8e5Yl/LVurahZOx39SNiiMA2U+50O6/6d+nmjWBs=;
+	s=default; t=1568931820;
+	bh=VlEPEG/5/6vOlgK2tyw5SjA1y6Lt098z68Ly0L6u+/c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sM/CO11SWJFsT5tsyDM941WIg/8F7CijP/CnmQPU/Zbk8k4SPiFIVaug26xCyCcVy
-	 QXzzq0+gbTvOkUvNbP6QBwOFxLBHH3W+vL/bNdElHnPXAL72nGycuDdYVTk144OWA1
-	 rREgMLTJuzxTPz17J+0e8vhigt8XFgN5GOsps1AQ=
+	b=H1YCNhokchOlveFK5cFCVQgcXbXmDO9Y4PagDpKx3eKz+15iUb4xdhKADqbRwt7lI
+	 3Cxsb+bEJ5yGvDZCYZew3mZv5aBZibo/yBrLBOYGw83QQEdgemwLivGFB4mx9kZtxr
+	 9FMFnKo2NBWLBhCs3bpvAUy/KkTXm+SG3QZneUIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407006AbfISWXf (ORCPT
+        id S2407017AbfISWXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:23:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39294 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:23:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406997AbfISWXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:23:33 -0400
+        id S2404833AbfISWXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:23:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C3E4217D6;
-        Thu, 19 Sep 2019 22:23:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FE5021929;
+        Thu, 19 Sep 2019 22:23:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931813;
-        bh=d9E8e5Yl/LVurahZOx39SNiiMA2U+50O6/6d+nmjWBs=;
+        s=default; t=1568931816;
+        bh=VlEPEG/5/6vOlgK2tyw5SjA1y6Lt098z68Ly0L6u+/c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PpuUeXieHjW164CEWV5WZLo95Dae37TXg9ah50cw+o4kTGJvOSgZPokQvvvdTjOd0
-         a5BoAUouEQhfyz5hB0E0mmdhpKAS+zx60Ng1fnmO1sfGkozQ+NgxCvyi0MrvmT1i9m
-         KpsL4vv0/a9PPNQozrblNetT+RlgMYuKQI4NEK+c=
+        b=JueD8uZeotFEgwrw6NhcKw1LPMgVlvWpQwSx1ixczjd/xnzjy87rJXTG6yFHCV++P
+         ygmM3n/bvlyWS7HpP4gijKblPQ/OIH2oQbpXmSl2Uc+ZZhycCVRjrh+dj6/T66cjab
+         yMxqjJOZHev9lNCun3eXMstkEzMP9PQ7fHjcNO8Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, SteveM <swm@swm1.com>
-Subject: [PATCH 4.4 49/56] sky2: Disable MSI on yet another ASUS boards (P6Xxxx)
-Date:   Fri, 20 Sep 2019 00:04:30 +0200
-Message-Id: <20190919214803.772490094@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Len Brown <len.brown@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 50/56] tools/power turbostat: fix buffer overrun
+Date:   Fri, 20 Sep 2019 00:04:31 +0200
+Message-Id: <20190919214803.948625363@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214742.483643642@linuxfoundation.org>
 References: <20190919214742.483643642@linuxfoundation.org>
@@ -60,41 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
 
-[ Upstream commit 189308d5823a089b56e2299cd96589507dac7319 ]
+[ Upstream commit eeb71c950bc6eee460f2070643ce137e067b234c ]
 
-A similar workaround for the suspend/resume problem is needed for yet
-another ASUS machines, P6X models.  Like the previous fix, the BIOS
-doesn't provide the standard DMI_SYS_* entry, so again DMI_BOARD_*
-entries are used instead.
+turbostat could be terminated by general protection fault on some latest
+hardwares which (for example) support 9 levels of C-states and show 18
+"tADDED" lines. That bloats the total output and finally causes buffer
+overrun.  So let's extend the buffer to avoid this.
 
-Reported-and-tested-by: SteveM <swm@swm1.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Signed-off-by: Len Brown <len.brown@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/sky2.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ tools/power/x86/turbostat/turbostat.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/marvell/sky2.c b/drivers/net/ethernet/marvell/sky2.c
-index dcd72b2a37150..8ba9eadc20791 100644
---- a/drivers/net/ethernet/marvell/sky2.c
-+++ b/drivers/net/ethernet/marvell/sky2.c
-@@ -4946,6 +4946,13 @@ static const struct dmi_system_id msi_blacklist[] = {
- 			DMI_MATCH(DMI_BOARD_NAME, "P6T"),
- 		},
- 	},
-+	{
-+		.ident = "ASUS P6X",
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "ASUSTeK Computer INC."),
-+			DMI_MATCH(DMI_BOARD_NAME, "P6X"),
-+		},
-+	},
- 	{}
- };
+diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
+index 532e7bf068689..58cf161887225 100644
+--- a/tools/power/x86/turbostat/turbostat.c
++++ b/tools/power/x86/turbostat/turbostat.c
+@@ -3014,7 +3014,7 @@ int initialize_counters(int cpu_id)
  
+ void allocate_output_buffer()
+ {
+-	output_buffer = calloc(1, (1 + topo.num_cpus) * 1024);
++	output_buffer = calloc(1, (1 + topo.num_cpus) * 2048);
+ 	outp = output_buffer;
+ 	if (outp == NULL)
+ 		err(-1, "calloc output buffer");
 -- 
 2.20.1
 
