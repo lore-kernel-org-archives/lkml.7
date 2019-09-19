@@ -2,149 +2,77 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,PDS_TONAME_EQ_TOLOCAL_SHORT,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEFA5C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D281C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8F1821929
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:50:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14E6221A49
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:50:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389010AbfISJu1 (ORCPT
+        id S2389022AbfISJun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 05:50:27 -0400
-Received: from laurent.telenet-ops.be ([195.130.137.89]:56338 "EHLO
-        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388872AbfISJu0 (ORCPT
+        Thu, 19 Sep 2019 05:50:43 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:56388 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388872AbfISJum (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 05:50:26 -0400
-Received: from ramsan ([84.194.98.4])
-        by laurent.telenet-ops.be with bizsmtp
-        id 3MqP2100X05gfCL01MqPoi; Thu, 19 Sep 2019 11:50:24 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iAt4x-00040H-JK; Thu, 19 Sep 2019 11:50:23 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iAt4x-0007aD-GF; Thu, 19 Sep 2019 11:50:23 +0200
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-To:     Matthew Wilcox <willy@infradead.org>,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        netdev@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH v2] staging: octeon: Use "(uintptr_t)" to cast from pointer to int
-Date:   Thu, 19 Sep 2019 11:50:22 +0200
-Message-Id: <20190919095022.29099-1-geert@linux-m68k.org>
-X-Mailer: git-send-email 2.17.1
+        Thu, 19 Sep 2019 05:50:42 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 1EFC93C0582;
+        Thu, 19 Sep 2019 11:50:41 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id L6xpfrZ9tsfP; Thu, 19 Sep 2019 11:50:35 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id A0C123C057C;
+        Thu, 19 Sep 2019 11:50:23 +0200 (CEST)
+Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Thu, 19 Sep
+ 2019 11:50:23 +0200
+Date:   Thu, 19 Sep 2019 11:50:20 +0200
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     shuah <shuah@kernel.org>
+CC:     Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>,
+        "George G. Davis" <george_davis@mentor.com>,
+        Jerry Hoemann <jerry.hoemann@hpe.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/2] selftests: watchdog: Validate optional file
+ argument
+Message-ID: <20190919095020.GA15734@vmlxhi-102.adit-jv.com>
+References: <20190917184023.16701-1-erosca@de.adit-jv.com>
+ <20190918113348.GA23977@vmlxhi-102.adit-jv.com>
+ <41ad241a-1c9d-7e20-3cb1-84bf42ec6989@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <41ad241a-1c9d-7e20-3cb1-84bf42ec6989@kernel.org>
+User-Agent: Mutt/1.12.1+40 (7f8642d4ee82) (2019-06-28)
+X-Originating-IP: [10.72.93.184]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 32-bit:
+Hi Shuah,
 
-    In file included from drivers/staging/octeon/octeon-ethernet.h:41,
-		     from drivers/staging/octeon/ethernet-tx.c:25:
-    drivers/staging/octeon/octeon-stubs.h: In function ‘cvmx_phys_to_ptr’:
-    drivers/staging/octeon/octeon-stubs.h:1205:9: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
-      return (void *)(physical_address);
-	     ^
-    drivers/staging/octeon/ethernet-tx.c: In function ‘cvm_oct_xmit’:
-    drivers/staging/octeon/ethernet-tx.c:264:37: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-       hw_buffer.s.addr = XKPHYS_TO_PHYS((u64)skb->data);
-					 ^
-    drivers/staging/octeon/octeon-stubs.h:2:30: note: in definition of macro ‘XKPHYS_TO_PHYS’
-     #define XKPHYS_TO_PHYS(p)   (p)
-				  ^
-    drivers/staging/octeon/ethernet-tx.c:268:37: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-       hw_buffer.s.addr = XKPHYS_TO_PHYS((u64)skb->data);
-					 ^
-    drivers/staging/octeon/octeon-stubs.h:2:30: note: in definition of macro ‘XKPHYS_TO_PHYS’
-     #define XKPHYS_TO_PHYS(p)   (p)
-				  ^
-    drivers/staging/octeon/ethernet-tx.c:276:20: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-	 XKPHYS_TO_PHYS((u64)skb_frag_address(fs));
-			^
-    drivers/staging/octeon/octeon-stubs.h:2:30: note: in definition of macro ‘XKPHYS_TO_PHYS’
-     #define XKPHYS_TO_PHYS(p)   (p)
-				  ^
-    drivers/staging/octeon/ethernet-tx.c:280:37: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-       hw_buffer.s.addr = XKPHYS_TO_PHYS((u64)CVM_OCT_SKB_CB(skb));
-					 ^
-    drivers/staging/octeon/octeon-stubs.h:2:30: note: in definition of macro ‘XKPHYS_TO_PHYS’
-     #define XKPHYS_TO_PHYS(p)   (p)
-				  ^
+On Wed, Sep 18, 2019 at 03:05:33PM -0600, Shuah wrote:
 
-Fix this by replacing casts to "u64" by casts to "uintptr_t", which is
-either 32-bit or 64-bit, and adding an intermediate cast to "uintptr_t"
-where needed.
+[..]
 
-Exposed by commit 171a9bae68c72f2d ("staging/octeon: Allow test build on
-!MIPS").
+> They both look good to me. I will apply these patches once the merge
+> window closes or when my first pull request to Linus clears.
+> 
+> You will see a notification when I apply them to kselftest tree.
 
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
----
-v2:
-  - Fix silly typo in oneline-summary.
----
- drivers/staging/octeon/ethernet-tx.c  | 9 +++++----
- drivers/staging/octeon/octeon-stubs.h | 2 +-
- 2 files changed, 6 insertions(+), 5 deletions(-)
+Many thanks for your prompt feedback.
 
-diff --git a/drivers/staging/octeon/ethernet-tx.c b/drivers/staging/octeon/ethernet-tx.c
-index c64728fc21f229d8..7021ff07ba2a0b70 100644
---- a/drivers/staging/octeon/ethernet-tx.c
-+++ b/drivers/staging/octeon/ethernet-tx.c
-@@ -261,11 +261,11 @@ int cvm_oct_xmit(struct sk_buff *skb, struct net_device *dev)
- 	/* Build the PKO buffer pointer */
- 	hw_buffer.u64 = 0;
- 	if (skb_shinfo(skb)->nr_frags == 0) {
--		hw_buffer.s.addr = XKPHYS_TO_PHYS((u64)skb->data);
-+		hw_buffer.s.addr = XKPHYS_TO_PHYS((uintptr_t)skb->data);
- 		hw_buffer.s.pool = 0;
- 		hw_buffer.s.size = skb->len;
- 	} else {
--		hw_buffer.s.addr = XKPHYS_TO_PHYS((u64)skb->data);
-+		hw_buffer.s.addr = XKPHYS_TO_PHYS((uintptr_t)skb->data);
- 		hw_buffer.s.pool = 0;
- 		hw_buffer.s.size = skb_headlen(skb);
- 		CVM_OCT_SKB_CB(skb)[0] = hw_buffer.u64;
-@@ -273,11 +273,12 @@ int cvm_oct_xmit(struct sk_buff *skb, struct net_device *dev)
- 			skb_frag_t *fs = skb_shinfo(skb)->frags + i;
- 
- 			hw_buffer.s.addr =
--				XKPHYS_TO_PHYS((u64)skb_frag_address(fs));
-+				XKPHYS_TO_PHYS((uintptr_t)skb_frag_address(fs));
- 			hw_buffer.s.size = skb_frag_size(fs);
- 			CVM_OCT_SKB_CB(skb)[i + 1] = hw_buffer.u64;
- 		}
--		hw_buffer.s.addr = XKPHYS_TO_PHYS((u64)CVM_OCT_SKB_CB(skb));
-+		hw_buffer.s.addr =
-+			XKPHYS_TO_PHYS((uintptr_t)CVM_OCT_SKB_CB(skb));
- 		hw_buffer.s.size = skb_shinfo(skb)->nr_frags + 1;
- 		pko_command.s.segs = skb_shinfo(skb)->nr_frags + 1;
- 		pko_command.s.gather = 1;
-diff --git a/drivers/staging/octeon/octeon-stubs.h b/drivers/staging/octeon/octeon-stubs.h
-index a4ac3bfb62a85e65..b78ce9eaab85d310 100644
---- a/drivers/staging/octeon/octeon-stubs.h
-+++ b/drivers/staging/octeon/octeon-stubs.h
-@@ -1202,7 +1202,7 @@ static inline int cvmx_wqe_get_grp(cvmx_wqe_t *work)
- 
- static inline void *cvmx_phys_to_ptr(uint64_t physical_address)
- {
--	return (void *)(physical_address);
-+	return (void *)(uintptr_t)(physical_address);
- }
- 
- static inline uint64_t cvmx_ptr_to_phys(void *ptr)
 -- 
-2.17.1
-
+Best Regards,
+Eugeniu
