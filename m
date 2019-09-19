@@ -2,122 +2,379 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6CCC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 04:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03635C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 04:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63C4621907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 04:53:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Q2UT1pwI"
+	by mail.kernel.org (Postfix) with ESMTP id C0C5220578
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 04:55:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731577AbfISEx2 (ORCPT
+        id S1731770AbfISEz4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 00:53:28 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:30474 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731192AbfISEx2 (ORCPT
+        Thu, 19 Sep 2019 00:55:56 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45146 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725320AbfISEzz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 00:53:28 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190919045324epoutp031224df02b10cee1ea5489dd98a80d41f~Fvd2oAXLR2531025310epoutp03i
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 04:53:24 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190919045324epoutp031224df02b10cee1ea5489dd98a80d41f~Fvd2oAXLR2531025310epoutp03i
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1568868804;
-        bh=rWYsy+UNGlR5+0/eqBMs6htpuEB3LmWQnpGlPQZ6M9A=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=Q2UT1pwI9vb3FmPQviv64iYoQtF2FRDgGWut+F951Jz8/IBBrDUE5f0gXrBKKRxx7
-         NMfwxS9H51+j8q51I6Bx1mMbqOJBwn3qCOwCE6pyEFuxpchbWNtSegPEHEfv5c3FxV
-         YC6hQ1UH/3PrcYQAOiwwJk27oNdX/IJmIQskzUnA=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20190919045324epcas1p3ef1fe78d8f0f35c70379c9a51a19fd2e~Fvd17j6CC2782027820epcas1p3R;
-        Thu, 19 Sep 2019 04:53:24 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.156]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 46Ykxr3VW1zMqYlp; Thu, 19 Sep
-        2019 04:53:20 +0000 (GMT)
-X-AuditID: b6c32a39-cebff70000000ff5-84-5d8309bb5e92
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        7D.1F.04085.BB9038D5; Thu, 19 Sep 2019 13:53:15 +0900 (KST)
-Mime-Version: 1.0
-Subject: RE: [PATCH] devfreq: Make log message more explicit when devfreq
- device already exists
-Reply-To: myungjoo.ham@samsung.com
-From:   MyungJoo Ham <myungjoo.ham@samsung.com>
-To:     Matthias Kaehlcke <mka@chromium.org>
-CC:     Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <20190919000946.158454-1-mka@chromium.org>
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <20190919045314epcms1p178a5f45c964e53f28e55b9bf8ab11d28@epcms1p1>
-Date:   Thu, 19 Sep 2019 13:53:14 +0900
-X-CMS-MailID: 20190919045314epcms1p178a5f45c964e53f28e55b9bf8ab11d28
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SeUiTcRju57fjmzj5NY9eLGx9oKSk26ctt8qotBhltEiiBFkf+jV1Z/um
-        dLMsSeygw0jMK4qkpFudafSHWWFeRVkN84hu0gqnRIfZLtH/Hh6e533eiyQk//gRZK7JxlpN
-        jIESBPIaH8TEx7WIDmXKT38WKV+NfeIruwqHhcrnzRUCpet4G1K6br5DK/nq8/ZnPPWJ+qtI
-        7bodqSEy9MtzWCabtUpZU5Y5O9ekS6bWb9amaBVL5HQcrVImUVITY2STqdQ0TdzaXIM7kpIW
-        MIZ8N6VhOI6SrVhuNefbWGmOmbMlU6wl22BRWeI5xsjlm3TxWWbjUlouT1C4hdv1OdcOnuVZ
-        asldNXUTyI4KhSWIJAEvhreVBSVIREpwE4LrZUYPLcazYaIpxEOHYAZ6bl3h+yQU2J33CR8v
-        g+KhRuTBAhwHDTf7eR4cihfC+z89bj6QJHAPgtejj70GwGIoO/KB58NzwVHb4DWLcBI4ijr9
-        mjBw1o0Ip/D3R9XIh0OhaKDLr5kNQ79a0FSdstJJf8298PLcRaEnGPBhBMfrSv0iGXRWtgs8
-        WIw3QPsLh9fAw1EwfLTPb06F3p+D3mACzwfHSAXhWQSBY+BGs8wnWQB3/1QinyQYvo0f40/N
-        1VT1PsCHo6G15ZK//3nQce6Cv2c1uLr6BJ6SEnwAut6mnUTS8ulNl8/ILZ/OrUHEVRTOWjij
-        juVoi2LmaW8j7+/FqprQo+60VoRJRAWJNbGFmRI+U8DtNrYiIAkqVFyhcFPibGb3HtZq1lrz
-        DSzXihTu8U8REWFZZvcnm2xaWpGQmJioXEwvUdA0NUes1tkzJVjH2Fg9y1pY65QvgBRF2NGq
-        FR9jZT9qd5ZUf4183NBXFX55WenTZQNbNMJtazNzx4NXRg5r9/zdKX2j2bGub6lInuEcXKRZ
-        PeqE9N6U3+lP2DFVj7buzBr1xGTCvpCErVUPxzfKqvVDri8F0RndzgGx7eX+jhZBUHDx5L28
-        vCB6U/jkai7Fead/sK2jPko1a4DicTkMHUtYOeY/4J6gdpEDAAA=
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190919000955epcas5p12bff9e26df88da7c0564d55081a0185b
-References: <20190919000946.158454-1-mka@chromium.org>
-        <CGME20190919000955epcas5p12bff9e26df88da7c0564d55081a0185b@epcms1p1>
+        Thu, 19 Sep 2019 00:55:55 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8J4pqbc058206
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 00:55:54 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v3ve8acq5-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 00:55:53 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Thu, 19 Sep 2019 05:55:51 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 19 Sep 2019 05:55:46 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8J4tjmj43516084
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 19 Sep 2019 04:55:45 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6B226A4054;
+        Thu, 19 Sep 2019 04:55:45 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C5BEBA4060;
+        Thu, 19 Sep 2019 04:55:44 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 19 Sep 2019 04:55:44 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 813DAA01EB;
+        Thu, 19 Sep 2019 14:55:41 +1000 (AEST)
+Subject: Re: [PATCH 3/5] ocxl: Tally up the LPC memory on a link & allow it
+ to be mapped
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     Frederic Barrat <fbarrat@linux.ibm.com>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Date:   Thu, 19 Sep 2019 14:55:41 +1000
+In-Reply-To: <268bcb76-fd37-6996-e5ff-43625b60a95a@linux.ibm.com>
+References: <20190917014307.30485-1-alastair@au1.ibm.com>
+         <20190917014307.30485-4-alastair@au1.ibm.com>
+         <268bcb76-fd37-6996-e5ff-43625b60a95a@linux.ibm.com>
+Organization: IBM Australia
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19091904-0008-0000-0000-00000318413B
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19091904-0009-0000-0000-00004A36C4DD
+Message-Id: <16a0270590e50a45854ae2e57a3b0ef969fd0c78.camel@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-19_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909190044
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->Before creating a new devfreq device devfreq_add_device() checks
->if there is already a devfreq dev associated with the requesting
->device (parent). If that's the case the function rejects to create
->another devfreq dev for that parent and logs an error. The error
->message is very unspecific, make it a bit more explicit.
->
->Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
->---
-> drivers/devfreq/devfreq.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
->diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
->index ab22bf8a12d6..0e2dd734ab58 100644
->--- a/drivers/devfreq/devfreq.c
->+++ b/drivers/devfreq/devfreq.c
->@@ -625,7 +625,7 @@ struct devfreq *devfreq_add_device(struct device *dev,
-> 	devfreq = find_device_devfreq(dev);
-> 	mutex_unlock(&devfreq_list_lock);
-> 	if (!IS_ERR(devfreq)) {
->-		dev_err(dev, "%s: Unable to create devfreq for the device.\n",
->+		dev_err(dev, "%s: devfreq device already exists!\n",
+On Wed, 2019-09-18 at 16:02 +0200, Frederic Barrat wrote:
+> 
+> Le 17/09/2019 à 03:42, Alastair D'Silva a écrit :
+> > From: Alastair D'Silva <alastair@d-silva.org>
+> > 
+> > Tally up the LPC memory on an OpenCAPI link & allow it to be mapped
+> > 
+> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> > ---
+> >   drivers/misc/ocxl/core.c          |  9 +++++
+> >   drivers/misc/ocxl/link.c          | 61
+> > +++++++++++++++++++++++++++++++
+> >   drivers/misc/ocxl/ocxl_internal.h | 42 +++++++++++++++++++++
+> >   3 files changed, 112 insertions(+)
+> > 
+> > diff --git a/drivers/misc/ocxl/core.c b/drivers/misc/ocxl/core.c
+> > index b7a09b21ab36..fdfe4e0a34e1 100644
+> > --- a/drivers/misc/ocxl/core.c
+> > +++ b/drivers/misc/ocxl/core.c
+> > @@ -230,8 +230,17 @@ static int configure_afu(struct ocxl_afu *afu,
+> > u8 afu_idx, struct pci_dev *dev)
+> >   	if (rc)
+> >   		goto err_free_pasid;
+> >   
+> > +	if (afu->config.lpc_mem_size || afu-
+> > >config.special_purpose_mem_size) {
+> > +		rc = ocxl_link_add_lpc_mem(afu->fn->link,
+> > +			afu->config.lpc_mem_size + afu-
+> > >config.special_purpose_mem_size);
+> 
+> I don't think we should count the special purpose memory, as it's
+> not 
+> meant to be accessed through the GPU mem BAR, but I'll check.
 
-Yes, this is more helpful! Thanks!
+At least for OpenCAPI 3.0, there is no other in-spec way to access the
+memory if it is not mapped by the NPU.
 
-Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+> 
+> What happens when unconfiguring the AFU? We should reduce the range
+> (see 
+> also below). Partial reconfig doesn't seem so far off, so we should
+> take 
+> it into account.
+> 
 
+The mapping is left until the last AFU on the link offlines it's
+memory, at which point we clear the mapping from the NPU.
+
+> 
+> > +		if (rc)
+> > +			goto err_free_mmio;
+> > +	}
+> > +
+> >   	return 0;
+> >   
+> > +err_free_mmio:
+> > +	unmap_mmio_areas(afu);
+> >   err_free_pasid:
+> >   	reclaim_afu_pasid(afu);
+> >   err_free_actag:
+> > diff --git a/drivers/misc/ocxl/link.c b/drivers/misc/ocxl/link.c
+> > index 58d111afd9f6..2874811a4398 100644
+> > --- a/drivers/misc/ocxl/link.c
+> > +++ b/drivers/misc/ocxl/link.c
+> > @@ -84,6 +84,11 @@ struct ocxl_link {
+> >   	int dev;
+> >   	atomic_t irq_available;
+> >   	struct spa *spa;
+> > +	struct mutex lpc_mem_lock;
+> > +	u64 lpc_mem_sz; /* Total amount of LPC memory presented on the
+> > link */
+> > +	u64 lpc_mem;
+> > +	int lpc_consumers;
+> > +
+> >   	void *platform_data;
+> >   };
+> >   static struct list_head links_list = LIST_HEAD_INIT(links_list);
+> > @@ -396,6 +401,8 @@ static int alloc_link(struct pci_dev *dev, int
+> > PE_mask, struct ocxl_link **out_l
+> >   	if (rc)
+> >   		goto err_spa;
+> >   
+> > +	mutex_init(&link->lpc_mem_lock);
+> > +
+> >   	/* platform specific hook */
+> >   	rc = pnv_ocxl_spa_setup(dev, link->spa->spa_mem, PE_mask,
+> >   				&link->platform_data);
+> > @@ -711,3 +718,57 @@ void ocxl_link_free_irq(void *link_handle, int
+> > hw_irq)
+> >   	atomic_inc(&link->irq_available);
+> >   }
+> >   EXPORT_SYMBOL_GPL(ocxl_link_free_irq);
+> > +
+> > +int ocxl_link_add_lpc_mem(void *link_handle, u64 size)
+> > +{
+> > +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
+> > +
+> > +	u64 orig_size;
+> > +	bool good = false;
+> > +
+> > +	mutex_lock(&link->lpc_mem_lock);
+> > +	orig_size = link->lpc_mem_sz;
+> > +	link->lpc_mem_sz += size;
+> 
+> 
+> We have a choice to make here:
+> 1. either we only support one LPC memory-carrying AFU (and the above
+> is 
+> overkill)
+> 2. or we support multiple AFUs with LPC memory (on the same
+> function), 
+> but then I think the above is too simple.
+> 
+>  From the opencapi spec, each AFU can define a chunk of memory with
+> a 
+> starting address and a size. There's no rule which says they have to
+> be 
+> contiguous. There's no rule which says it must start at 0. So to
+> support 
+> multiple AFUs with LPC memory, we should record the current maximum 
+> range instead of just the global size. Ultimately, we need to tell
+> the 
+> NPU the range of permissible addresses. It starts at 0, so we need
+> to 
+> take into account any intial offset and holes.
+> 
+> I would go for option 2, to at least be consistent within ocxl and 
+> support multiple AFUs. Even though I don't think we'll see FPGA
+> images 
+> with multiple AFUs with LPC memory any time soon.
+> 
+
+Ill rework this to take an offset & size, the NPU will map from the
+base address up to the largest offset + size provided across all AFUs
+on the link.
+
+> 
+> > +	good = orig_size < link->lpc_mem_sz;
+> > +	mutex_unlock(&link->lpc_mem_lock);
+> > +
+> > +	// Check for overflow
+> > +	return (good) ? 0 : -EINVAL;
+> > +}
+> > +EXPORT_SYMBOL_GPL(ocxl_link_add_lpc_mem);
+> 
+> Do the symbol really need to be exported? IIUC, the next patch
+> defines a 
+> higher level ocxl_afu_map_lpc_mem() which is meant to be called by a 
+> calling driver.
+> 
+
+No, I'll remove it.
+
+> 
+> > +
+> > +u64 ocxl_link_lpc_map(void *link_handle, struct pci_dev *pdev)
+> > +{
+> > +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
+> > +
+> > +	mutex_lock(&link->lpc_mem_lock);
+> > +	if (link->lpc_mem) {
+> > +		u64 lpc_mem = link->lpc_mem;
+> > +
+> > +		link->lpc_consumers++;
+> > +		mutex_unlock(&link->lpc_mem_lock);
+> > +		return lpc_mem;
+> > +	}
+> > +
+> > +	link->lpc_mem = pnv_ocxl_platform_lpc_setup(pdev, link-
+> > >lpc_mem_sz);
+> > +	if (link->lpc_mem)
+> > +		link->lpc_consumers++;
+> > +	mutex_unlock(&link->lpc_mem_lock);
+> > +
+> > +	return link->lpc_mem;
+> 
+> Should be cached in a temp variable, like on the fast path,
+> otherwise 
+> it's accessed with no lock.
+
+Good spotting, thanks.
+
+> 
+> > +}
+> > +
+> > +void ocxl_link_lpc_release(void *link_handle, struct pci_dev
+> > *pdev)
+> > +{
+> > +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
+> > +
+> > +	mutex_lock(&link->lpc_mem_lock);
+> > +	link->lpc_consumers--;
+> > +	if (link->lpc_consumers == 0) {
+> > +		pnv_ocxl_platform_lpc_release(pdev);
+> > +		link->lpc_mem = 0;
+> > +	}
+> > +
+> > +	mutex_unlock(&link->lpc_mem_lock);
+> > +}
+> > diff --git a/drivers/misc/ocxl/ocxl_internal.h
+> > b/drivers/misc/ocxl/ocxl_internal.h
+> > index 97415afd79f3..db2647a90fc8 100644
+> > --- a/drivers/misc/ocxl/ocxl_internal.h
+> > +++ b/drivers/misc/ocxl/ocxl_internal.h
+> > @@ -141,4 +141,46 @@ int ocxl_irq_offset_to_id(struct ocxl_context
+> > *ctx, u64 offset);
+> >   u64 ocxl_irq_id_to_offset(struct ocxl_context *ctx, int irq_id);
+> >   void ocxl_afu_irq_free_all(struct ocxl_context *ctx);
+> >   
+> > +/**
+> > + * Increment the amount of memory required by an OpenCAPI link
+> > + *
+> > + * link_handle: The OpenCAPI link handle
+> > + * size: The amount of memory to increment by
+> > + *
+> > + * Return 0 on success, negative on overflow
+> > + */
+> > +extern int ocxl_link_add_lpc_mem(void *link_handle, u64 size);
+> 
+> We've removed all the 'extern' in a previous patch.
+
+Thanks, I spotted this too (after I posted it).
+
+> > +
+> > +/**
+> > + * Get the amount of memory required by an OpenCAPI link
+> > + *
+> > + * link_handle: The OpenCAPI link handle
+> > + *
+> > + * Return the amount of memory required by the link, this value is
+> > undefined if
+> > + * ocxl_link_add_lpc_mem failed.
+> > + */
+> > +extern u64 ocxl_link_get_lpc_mem_sz(void *link_handle);
+> 
+> I don't see that one defined anywhere.
+> 
+
+Whoops, I'll remove it.
+
+>    Fred
+> 
+> 
+> > +
+> > +/**
+> > + * Map the LPC memory for an OpenCAPI device
+> > + *
+> > + * Since LPC memory belongs to a link, the whole LPC memory
+> > available
+> > + * on the link bust be mapped in order to make it accessible to a
+> > device.
+> > + *
+> > + * @link_handle: The OpenCAPI link handle
+> > + * @pdev: A device that is on the link
+> > + */
+> > +u64 ocxl_link_lpc_map(void *link_handle, struct pci_dev *pdev);
+> > +
+> > +/**
+> > + * Release the LPC memory device for an OpenCAPI device
+> > + *
+> > + * Releases LPC memory on an OpenCAPI link for a device. If this
+> > is the
+> > + * last device on the link to release the memory, unmap it from
+> > the link.
+> > + *
+> > + * @link_handle: The OpenCAPI link handle
+> > + * @pdev: A device that is on the link
+> > + */
+> > +void ocxl_link_lpc_release(void *link_handle, struct pci_dev
+> > *pdev);
+> > +
+> >   #endif /* _OCXL_INTERNAL_H_ */
+> > 
+-- 
+Alastair D'Silva
+Open Source Developer
+Linux Technology Centre, IBM Australia
+mob: 0423 762 819
 
