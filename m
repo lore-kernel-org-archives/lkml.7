@@ -2,168 +2,165 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88FC4C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 07:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E221FC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 07:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A86B21848
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 07:58:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568879918;
-	bh=TQvmWd5zYHGc5GFOCBUS0EwRWcJw//EptkY3LXiIdf0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DUd+udyTdcUNU2+bIT6PSEKmCF5js7QVCObssndy0ZuJF5PwNt6Jp2h/Zf4o+nn7p
-	 a5TNRHgz8x9o5+MnfOUQuPnN+AT0sYIfUjWhpaHl+L6eaer42CmYwcdcpBiQgIwsa8
-	 Y6gfUCNDsZXVLQA4fq4+/9ViYkw25Vy+2wZfRtwQ=
+	by mail.kernel.org (Postfix) with ESMTP id 9A7E6207FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 07:58:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="c4bkFuuV";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="Yjib9lZj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387856AbfISH6h (ORCPT
+        id S2388002AbfISH6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 03:58:37 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:32772 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727033AbfISH6h (ORCPT
+        Thu, 19 Sep 2019 03:58:55 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:40422 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727033AbfISH6z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 03:58:37 -0400
-Received: by mail-oi1-f193.google.com with SMTP id e18so1992038oii.0;
-        Thu, 19 Sep 2019 00:58:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7gzgxvKneHeLUz/ZHsURkSXb+QEFiAaX6Im27DEWXsw=;
-        b=EvP1JxongnASLSTqxOC9cg6vKdv5o9oUqmH+GEgNkYS1Q4nEDEfFMDgkkdySM+OY91
-         4g7TtX1pdRTKz0TBxHMC7ZiBH05YaTMMqai3sOb8HzPQFFl2hDgnkxYxu1tvbRfB8EhV
-         7TXMR592oEpkm87xfU9VliFz8dPddluh2UH54/a7tcNGPfTkkqFF4ZJNPAE+NzuiPxmE
-         5j/3kZxu2kRx5K0hqeqtvlVwbmxbldZthB9peLibZh5QTRc7dGPyalpPOXM6L3Wtb9Km
-         u4TWqheiybRsz9lAYrC1xAVuQH3nNLdPzjTkzQpTnDv7Gb3Ww6+JPo0CUcX/jjpv7rEN
-         WcSQ==
-X-Gm-Message-State: APjAAAVPbAfGWh19jzqOeU7NbXZNSNC74LEzeMXTRxWcRpUvct3X9JpL
-        C7d/KG1XAZPl5E8yVCVv7gj7bAHk/UDtG3/xt+Y=
-X-Google-Smtp-Source: APXvYqxf1sEYGXWTjnimeWPrpnLdxl6qIsuH8BxLaYq8kEqCjkSoUa+pku/AhqCl9hYvN40oGfj9lkPMxStg54f52NE=
-X-Received: by 2002:aca:4890:: with SMTP id v138mr1333545oia.57.1568879916166;
- Thu, 19 Sep 2019 00:58:36 -0700 (PDT)
+        Thu, 19 Sep 2019 03:58:55 -0400
+Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 23CFEC016D;
+        Thu, 19 Sep 2019 07:58:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1568879934; bh=7ZGib0D6tQJI8IyzmFat7Pl5E7J1svJZvRVe4/3leF0=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=c4bkFuuVe4rfNIiU3CM7u6shL9nbIdCHB/PGghjwoRwQ9zuZ/xoB4cLwFlHHAGlaY
+         JFbePRkgSzHF541Jv2mVn/OZsEpJBNsIqSfeyNkEm1EIGGqYPPjG7ioRaLqhkGnFP9
+         7f/cLtjvNQChufNtqYiNk/Dk3gCKzxa3SuFTwv56VdkabATBtrAM/njrJMTKr0BxZj
+         /D0B04Qzv1DUR7wBcp01iByfNsrYIWWPhnYxInXCtE3+1SKy+A+v6HjwtAh10Bjo2p
+         n3m9UgGC2s0KnNwcn8VDv7B9nG1N3MtxCdRljvjxkwlU977DUsbGKrzdkxI7xWJfbq
+         Bdy6gthc7OkSw==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id BFB16A0079;
+        Thu, 19 Sep 2019 07:58:52 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 19 Sep 2019 00:58:51 -0700
+Received: from NAM01-BY2-obe.outbound.protection.outlook.com (10.13.134.195)
+ by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Thu, 19 Sep 2019 00:58:51 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DOyiOi4bUWLUR4Kcb7pJXHkb2FumuJoIfNaCtOFSA1OSXU0c+4b06Tlfm5PS12Mgc399CbdOaO0CN2PbxBTJhF+gOOiARv14bcowaXoXuXi68FCkbho2dq80iueJw1qtQLpXZfP+iyfUlhbyGHYh9Wq868N2pGtvju4GNH0j6uNGDb0Zn0mDxzplahVWoc5h7m/Df4NCY+OckskBiY3zKl/cH+AwuSraq2q6S4x8ayihpnHrJLOWdgA3ckOXWPPAn0TtdUVGRO5/iz45Oy4+aXcYLNKOg0xQzfg9AXtZpM75PHJfCDDDW/l8ghrtsqMknyG/e0FCkjeQZYOc8GVDOw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AAiZj6E/4uUxoV0CfK9XKfh4VlJGHU1UExUKSlc6wXk=;
+ b=M+1Mo6N9yu0O4xHtAoq+uU7VaEpBhHQtQKTeTD0CJ55Q5zyOM+lufpVs162oFdNcSCxLmRPMRW5wVQ7WT5HH1tfgjVFfVl6VxnvYgJLL+/IEqJ9CiKlctYTWZW0oSzOd9wG/b9jVJeAagg3SE9Xh9L+otsjprhRo/L/SOCOp7AzfrV3a+0PVr9o7bJoe64q7ascwSakLqWf6nqzc//snkdJeII4/B3H4OKOlgH7fkv6jB2SE9FGUdZHWOLLmxDMJFq1y3yDGVWWydlA4Yu8/Xv2+v+Jar5IlbBF2v7TgVoX3kbedXGcTcgzflq/wPSihNlRgMuTYi+cz7v4SlwoDog==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AAiZj6E/4uUxoV0CfK9XKfh4VlJGHU1UExUKSlc6wXk=;
+ b=Yjib9lZjkwy1oxYPzaxGqxEF//jJ2TxnBfGgiHmk7pEsNQJP+m/F+3lHvuzq51jPpC2mHqvcpDPjaMiVLUo7gjMa62OPViE5Xma62AxHaYraRQ4Fs0c2zMJWibD7aNBRZmgeybHNs3KD8eTchTKsuUwGyE29AK48G2Dc0ftFaQc=
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.67.145) by
+ BN8PR12MB2947.namprd12.prod.outlook.com (20.179.67.28) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.21; Thu, 19 Sep 2019 07:58:50 +0000
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::59fc:d942:487d:15b8]) by BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::59fc:d942:487d:15b8%7]) with mapi id 15.20.2263.023; Thu, 19 Sep 2019
+ 07:58:50 +0000
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] stmmac: selftest: avoid large stack usage
+Thread-Topic: [PATCH] stmmac: selftest: avoid large stack usage
+Thread-Index: AQHVblsKA5f8SYRfDU6spEieG1UuDacyof5w
+Date:   Thu, 19 Sep 2019 07:58:50 +0000
+Message-ID: <BN8PR12MB3266E044DDF00F227B9B191CD3890@BN8PR12MB3266.namprd12.prod.outlook.com>
+References: <20190918195454.2056139-1-arnd@arndb.de>
+In-Reply-To: <20190918195454.2056139-1-arnd@arndb.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=joabreu@synopsys.com; 
+x-originating-ip: [198.182.37.200]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 963955c0-40e0-4e63-e081-08d73cd73548
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN8PR12MB2947;
+x-ms-traffictypediagnostic: BN8PR12MB2947:
+x-microsoft-antispam-prvs: <BN8PR12MB29475914B34EF6102BD8070AD3890@BN8PR12MB2947.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:773;
+x-forefront-prvs: 016572D96D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(39860400002)(396003)(376002)(346002)(136003)(189003)(199004)(11346002)(446003)(486006)(476003)(4326008)(71200400001)(66476007)(64756008)(66556008)(6246003)(316002)(71190400001)(110136005)(54906003)(66446008)(5660300002)(81166006)(81156014)(8676002)(4744005)(256004)(6436002)(55016002)(9686003)(52536014)(86362001)(229853002)(8936002)(478600001)(66066001)(99286004)(33656002)(305945005)(7736002)(3846002)(6116002)(74316002)(14454004)(2906002)(76116006)(102836004)(6506007)(66946007)(186003)(26005)(7696005)(25786009)(76176011);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB2947;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: L1tzPgt02GhDOi7hwMEfUsdgXJqOHy4r5KxqkvdPijflMgYIBFaDvu/FqTxU5wtwRvU9JQb0Fn0foyvh7KphH5Zu215dPVGPwOViG+wjY+ebTbYO2Ls4zRo12PgAyTbtHWXLI3nYvtN5Thhjr/FL6+kC/7Jym1kkTIWyIkeG65y4k5xbFB27SWLgXkOHEYyhL6xYTRdzfddDiui33qalWoLT5O3VEjv7srAuJ2Ct9YoxKS6QiLAOeIm9D+tzNYLiXJ1WBPfqNaEfab+xoSNDpkZw0AUQD3fhQZG3FTWnsH00g+blm9yMuu9AJNBZXZbmI2MdRp0FziD48UpXqFZXf/m6Mb+aF71im8s8Ldtm3VYRdCFs1Q7wpCQ9Xpi+nTi3AODdWwubSMeUXf0oRC2fkleW1b3LDzBPuLEaxJ4eSRU=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190918133419.7969-1-sakari.ailus@linux.intel.com> <20190918133419.7969-9-sakari.ailus@linux.intel.com>
-In-Reply-To: <20190918133419.7969-9-sakari.ailus@linux.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 19 Sep 2019 09:58:24 +0200
-Message-ID: <CAJZ5v0hhOowv93-7wApvetr10bO+geTX_giH_2kHWmsRGdWFFw@mail.gmail.com>
-Subject: Re: [PATCH v7 08/13] lib/vsprintf: Remove support for %pF and %pf in
- favour of %pS and %ps
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Joe Perches <joe@perches.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: 963955c0-40e0-4e63-e081-08d73cd73548
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Sep 2019 07:58:50.4808
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: XsYVCUGVKfufyGrw50SAxyg5TXB72mrdURze05f8e74+4/SLe/YawNP9qyZed8ZndSR8ZE16iVh+AJnTaXH4OQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB2947
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 3:34 PM Sakari Ailus
-<sakari.ailus@linux.intel.com> wrote:
->
-> %pS and %ps are now the preferred conversion specifiers to print function
-> names. The functionality is equivalent; remove the old, deprecated %pF
-> and %pf support.
->
-> Depends-on: commit 2d44d165e939 ("scsi: lpfc: Convert existing %pf users to %ps")
+From: Arnd Bergmann <arnd@arndb.de>
+Date: Sep/18/2019, 20:54:34 (UTC+00:00)
 
-Where is this commit present?
+> +	if (!cfg || !cfg->enable) {
+>  		value &=3D ~XGMAC_RSSE;
+>  		writel(value, ioaddr + XGMAC_RSS_CTRL);
+>  		return 0;
+>  	}
+> =20
+>  	for (i =3D 0; i < (sizeof(cfg->key) / sizeof(u32)); i++) {
+> -		ret =3D dwxgmac2_rss_write_reg(ioaddr, true, i, *key++);
+> +		if (cfg)
+> +			ret =3D dwxgmac2_rss_write_reg(ioaddr, true, i, cfg->key[i]);
+> +		else
+> +			ret =3D dwxgmac2_rss_write_reg(ioaddr, true, i, 0);
+> +
+>  		if (ret)
+>  			return ret;
+>  	}
+> =20
+>  	for (i =3D 0; i < ARRAY_SIZE(cfg->table); i++) {
+> -		ret =3D dwxgmac2_rss_write_reg(ioaddr, false, i, cfg->table[i]);
+> +		if (cfg)
+> +			ret =3D dwxgmac2_rss_write_reg(ioaddr, false, i, cfg->table[i]);
+> +		else
+> +			ret =3D dwxgmac2_rss_write_reg(ioaddr, false, i, 0);
+> +
 
-Not in the mainline as of today.
+I don't get these "if (cfg)" checks. You already check earlier if cfg is=20
+NULL and return if so. I don't think you need these extra checks.
 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  Documentation/core-api/printk-formats.rst | 10 ----------
->  lib/vsprintf.c                            |  8 ++------
->  scripts/checkpatch.pl                     |  1 -
->  3 files changed, 2 insertions(+), 17 deletions(-)
->
-> diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
-> index c6224d039bcbe..922a29eb70e6c 100644
-> --- a/Documentation/core-api/printk-formats.rst
-> +++ b/Documentation/core-api/printk-formats.rst
-> @@ -86,8 +86,6 @@ Symbols/Function Pointers
->
->         %pS     versatile_init+0x0/0x110
->         %ps     versatile_init
-> -       %pF     versatile_init+0x0/0x110
-> -       %pf     versatile_init
->         %pSR    versatile_init+0x9/0x110
->                 (with __builtin_extract_return_addr() translation)
->         %pB     prev_fn_of_versatile_init+0x88/0x88
-> @@ -97,14 +95,6 @@ The ``S`` and ``s`` specifiers are used for printing a pointer in symbolic
->  format. They result in the symbol name with (S) or without (s)
->  offsets. If KALLSYMS are disabled then the symbol address is printed instead.
->
-> -Note, that the ``F`` and ``f`` specifiers are identical to ``S`` (``s``)
-> -and thus deprecated. We have ``F`` and ``f`` because on ia64, ppc64 and
-> -parisc64 function pointers are indirect and, in fact, are function
-> -descriptors, which require additional dereferencing before we can lookup
-> -the symbol. As of now, ``S`` and ``s`` perform dereferencing on those
-> -platforms (when needed), so ``F`` and ``f`` exist for compatibility
-> -reasons only.
-> -
->  The ``B`` specifier results in the symbol name with offsets and should be
->  used when printing stack backtraces. The specifier takes into
->  consideration the effect of compiler optimisations which may occur
-> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-> index b0967cf17137d..b00b57f9f911f 100644
-> --- a/lib/vsprintf.c
-> +++ b/lib/vsprintf.c
-> @@ -909,7 +909,7 @@ char *symbol_string(char *buf, char *end, void *ptr,
->  #ifdef CONFIG_KALLSYMS
->         if (*fmt == 'B')
->                 sprint_backtrace(sym, value);
-> -       else if (*fmt != 'f' && *fmt != 's')
-> +       else if (*fmt != 's')
->                 sprint_symbol(sym, value);
->         else
->                 sprint_symbol_no_offset(sym, value);
-> @@ -2007,9 +2007,7 @@ static char *kobject_string(char *buf, char *end, void *ptr,
->   *
->   * - 'S' For symbolic direct pointers (or function descriptors) with offset
->   * - 's' For symbolic direct pointers (or function descriptors) without offset
-> - * - 'F' Same as 'S'
-> - * - 'f' Same as 's'
-> - * - '[FfSs]R' as above with __builtin_extract_return_addr() translation
-> + * - '[Ss]R' as above with __builtin_extract_return_addr() translation
->   * - 'B' For backtraced symbolic direct pointers with offset
->   * - 'R' For decoded struct resource, e.g., [mem 0x0-0x1f 64bit pref]
->   * - 'r' For raw struct resource, e.g., [mem 0x0-0x1f flags 0x201]
-> @@ -2112,8 +2110,6 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
->               struct printf_spec spec)
->  {
->         switch (*fmt) {
-> -       case 'F':
-> -       case 'f':
->         case 'S':
->         case 's':
->                 ptr = dereference_symbol_descriptor(ptr);
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> index 93a7edfe0f059..a60c241112cd4 100755
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -6012,7 +6012,6 @@ sub process {
->                                         my $ext_type = "Invalid";
->                                         my $use = "";
->                                         if ($bad_specifier =~ /p[Ff]/) {
-> -                                               $ext_type = "Deprecated";
->                                                 $use = " - use %pS instead";
->                                                 $use =~ s/pS/ps/ if ($bad_specifier =~ /pf/);
->                                         }
-> --
-> 2.20.1
->
+Also, your subject line should be something like: "net: stmmac:=20
+selftests: ..."
+
+---
+Thanks,
+Jose Miguel Abreu
