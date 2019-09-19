@@ -2,51 +2,52 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C11FC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3FBC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0EE2218AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:11:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5383218AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:11:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931079;
-	bh=Zqd5/E63vnr/mwIYahJPTQHIhkHsBfJp65brYETECCo=;
+	s=default; t=1568931084;
+	bh=+BPb9aFqpMEOx8qFpFHPVr0Dux9gRUGsNun4XS+W0Ds=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uhxlMC9eydw2rkazerCmdhNmHYechtHj5zNc3QGhjI73e3NQ1G4ESwrOjrnKpRMF6
-	 r2oBzD7jXKmKX90XfChe+wqijEQC7fymSUKqYQJGSu486FQR9jKRHwkhdkjFnj7qI6
-	 hysPMjTgAtteXtMsN0ygy5YfEtN1TSfKE2QZhQjY=
+	b=rJU5bN1mxO4r4M3+VJe9Kv2SojSy5msjy2u2+DNzRjCkGF0LqKYUG+awPDaX+1F0b
+	 6m191ZLcSIDrHXGrKyI44u3iwFzw1vBFfxZCBmCDqAJNSU7icZa0pNgIooopC+Jdlr
+	 OWjPrD5TOyDJnuoyMbLTyG6X0K/S56pANLDjGiN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393559AbfISWLS (ORCPT
+        id S2393583AbfISWLX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:11:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49834 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:11:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393539AbfISWLN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:11:13 -0400
+        id S2393561AbfISWLU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:11:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 166AF218AF;
-        Thu, 19 Sep 2019 22:11:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14A7B21920;
+        Thu, 19 Sep 2019 22:11:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931071;
-        bh=Zqd5/E63vnr/mwIYahJPTQHIhkHsBfJp65brYETECCo=;
+        s=default; t=1568931079;
+        bh=+BPb9aFqpMEOx8qFpFHPVr0Dux9gRUGsNun4XS+W0Ds=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IF9BKjROGgu8k6CDVh5+wAJm7iJc0fyPWfYgQZ/PDnViSZTCB7BGWEWyzoO95IcPP
-         j+geUez3Th4WK58ner7DSnCwP9nbW8mpFDDJzTSZTZaNz8X2hTi2K3oMGg4JBW9J8K
-         4Prcd6sC44kfs9jP1ihg8sDCn8KoQygyOmR/L0Aw=
+        b=hyh5cX7fSgMp7nOGwgFbCWNk9qWbaFYSQDgvbp7K3cxycotMrr3eTiAoQqEOPKALI
+         3dchvybt3kidxuCG6G7UPfs4Fx+Q8VJZt5OfyrhMBx+ofmaIrZUhDE+BRQDuP9HCvl
+         6weumTbc+RTNISVFzB2ChSZqITCUGvOTo3sJCngA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stuart Hayes <stuart.w.hayes@gmail.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 118/124] iommu/amd: Flush old domains in kdump kernel
-Date:   Fri, 20 Sep 2019 00:03:26 +0200
-Message-Id: <20190919214823.471987280@linuxfoundation.org>
+        stable@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
+        Colin Walters <walters@verbum.org>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 5.2 121/124] ovl: fix regression caused by overlapping layers detection
+Date:   Fri, 20 Sep 2019 00:03:29 +0200
+Message-Id: <20190919214823.578495152@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -59,84 +60,226 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stuart Hayes <stuart.w.hayes@gmail.com>
+From: Amir Goldstein <amir73il@gmail.com>
 
-[ Upstream commit 36b7200f67dfe75b416b5281ed4ace9927b513bc ]
+commit 0be0bfd2de9dfdd2098a9c5b14bdd8f739c9165d upstream.
 
-When devices are attached to the amd_iommu in a kdump kernel, the old device
-table entries (DTEs), which were copied from the crashed kernel, will be
-overwritten with a new domain number.  When the new DTE is written, the IOMMU
-is told to flush the DTE from its internal cache--but it is not told to flush
-the translation cache entries for the old domain number.
+Once upon a time, commit 2cac0c00a6cd ("ovl: get exclusive ownership on
+upper/work dirs") in v4.13 added some sanity checks on overlayfs layers.
+This change caused a docker regression. The root cause was mount leaks
+by docker, which as far as I know, still exist.
 
-Without this patch, AMD systems using the tg3 network driver fail when kdump
-tries to save the vmcore to a network system, showing network timeouts and
-(sometimes) IOMMU errors in the kernel log.
+To mitigate the regression, commit 85fdee1eef1a ("ovl: fix regression
+caused by exclusive upper/work dir protection") in v4.14 turned the
+mount errors into warnings for the default index=off configuration.
 
-This patch will flush IOMMU translation cache entries for the old domain when
-a DTE gets overwritten with a new domain number.
+Recently, commit 146d62e5a586 ("ovl: detect overlapping layers") in
+v5.2, re-introduced exclusive upper/work dir checks regardless of
+index=off configuration.
 
-Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
-Fixes: 3ac3e5ee5ed5 ('iommu/amd: Copy old trans table from old kernel')
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This changes the status quo and mount leak related bug reports have
+started to re-surface. Restore the status quo to fix the regressions.
+To clarify, index=off does NOT relax overlapping layers check for this
+ovelayfs mount. index=off only relaxes exclusive upper/work dir checks
+with another overlayfs mount.
+
+To cover the part of overlapping layers detection that used the
+exclusive upper/work dir checks to detect overlap with self upper/work
+dir, add a trap also on the work base dir.
+
+Link: https://github.com/moby/moby/issues/34672
+Link: https://lore.kernel.org/linux-fsdevel/20171006121405.GA32700@veci.piliscsaba.szeredi.hu/
+Link: https://github.com/containers/libpod/issues/3540
+Fixes: 146d62e5a586 ("ovl: detect overlapping layers")
+Cc: <stable@vger.kernel.org> # v4.19+
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+Tested-by: Colin Walters <walters@verbum.org>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/iommu/amd_iommu.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ Documentation/filesystems/overlayfs.txt |    2 
+ fs/overlayfs/ovl_entry.h                |    1 
+ fs/overlayfs/super.c                    |   73 ++++++++++++++++++++------------
+ 3 files changed, 49 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index dce1d8d2e8a44..b265062edf6c8 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -1143,6 +1143,17 @@ static void amd_iommu_flush_tlb_all(struct amd_iommu *iommu)
- 	iommu_completion_wait(iommu);
+--- a/Documentation/filesystems/overlayfs.txt
++++ b/Documentation/filesystems/overlayfs.txt
+@@ -302,7 +302,7 @@ beneath or above the path of another ove
+ 
+ Using an upper layer path and/or a workdir path that are already used by
+ another overlay mount is not allowed and may fail with EBUSY.  Using
+-partially overlapping paths is not allowed but will not fail with EBUSY.
++partially overlapping paths is not allowed and may fail with EBUSY.
+ If files are accessed from two overlayfs mounts which share or overlap the
+ upper layer and/or workdir path the behavior of the overlay is undefined,
+ though it will not result in a crash or deadlock.
+--- a/fs/overlayfs/ovl_entry.h
++++ b/fs/overlayfs/ovl_entry.h
+@@ -66,6 +66,7 @@ struct ovl_fs {
+ 	bool workdir_locked;
+ 	/* Traps in ovl inode cache */
+ 	struct inode *upperdir_trap;
++	struct inode *workbasedir_trap;
+ 	struct inode *workdir_trap;
+ 	struct inode *indexdir_trap;
+ 	/* Inode numbers in all layers do not use the high xino_bits */
+--- a/fs/overlayfs/super.c
++++ b/fs/overlayfs/super.c
+@@ -212,6 +212,7 @@ static void ovl_free_fs(struct ovl_fs *o
+ {
+ 	unsigned i;
+ 
++	iput(ofs->workbasedir_trap);
+ 	iput(ofs->indexdir_trap);
+ 	iput(ofs->workdir_trap);
+ 	iput(ofs->upperdir_trap);
+@@ -1003,6 +1004,25 @@ static int ovl_setup_trap(struct super_b
+ 	return 0;
  }
  
-+static void amd_iommu_flush_tlb_domid(struct amd_iommu *iommu, u32 dom_id)
++/*
++ * Determine how we treat concurrent use of upperdir/workdir based on the
++ * index feature. This is papering over mount leaks of container runtimes,
++ * for example, an old overlay mount is leaked and now its upperdir is
++ * attempted to be used as a lower layer in a new overlay mount.
++ */
++static int ovl_report_in_use(struct ovl_fs *ofs, const char *name)
 +{
-+	struct iommu_cmd cmd;
-+
-+	build_inv_iommu_pages(&cmd, 0, CMD_INV_IOMMU_ALL_PAGES_ADDRESS,
-+			      dom_id, 1);
-+	iommu_queue_command(iommu, &cmd);
-+
-+	iommu_completion_wait(iommu);
++	if (ofs->config.index) {
++		pr_err("overlayfs: %s is in-use as upperdir/workdir of another mount, mount with '-o index=off' to override exclusive upperdir protection.\n",
++		       name);
++		return -EBUSY;
++	} else {
++		pr_warn("overlayfs: %s is in-use as upperdir/workdir of another mount, accessing files from both mounts will result in undefined behavior.\n",
++			name);
++		return 0;
++	}
 +}
 +
- static void amd_iommu_flush_all(struct amd_iommu *iommu)
+ static int ovl_get_upper(struct super_block *sb, struct ovl_fs *ofs,
+ 			 struct path *upperpath)
  {
- 	struct iommu_cmd cmd;
-@@ -1863,6 +1874,7 @@ static void set_dte_entry(u16 devid, struct protection_domain *domain,
+@@ -1040,14 +1060,12 @@ static int ovl_get_upper(struct super_bl
+ 	upper_mnt->mnt_flags &= ~(MNT_NOATIME | MNT_NODIRATIME | MNT_RELATIME);
+ 	ofs->upper_mnt = upper_mnt;
+ 
+-	err = -EBUSY;
+ 	if (ovl_inuse_trylock(ofs->upper_mnt->mnt_root)) {
+ 		ofs->upperdir_locked = true;
+-	} else if (ofs->config.index) {
+-		pr_err("overlayfs: upperdir is in-use by another mount, mount with '-o index=off' to override exclusive upperdir protection.\n");
+-		goto out;
+ 	} else {
+-		pr_warn("overlayfs: upperdir is in-use by another mount, accessing files from both mounts will result in undefined behavior.\n");
++		err = ovl_report_in_use(ofs, "upperdir");
++		if (err)
++			goto out;
+ 	}
+ 
+ 	err = 0;
+@@ -1157,16 +1175,19 @@ static int ovl_get_workdir(struct super_
+ 
+ 	ofs->workbasedir = dget(workpath.dentry);
+ 
+-	err = -EBUSY;
+ 	if (ovl_inuse_trylock(ofs->workbasedir)) {
+ 		ofs->workdir_locked = true;
+-	} else if (ofs->config.index) {
+-		pr_err("overlayfs: workdir is in-use by another mount, mount with '-o index=off' to override exclusive workdir protection.\n");
+-		goto out;
+ 	} else {
+-		pr_warn("overlayfs: workdir is in-use by another mount, accessing files from both mounts will result in undefined behavior.\n");
++		err = ovl_report_in_use(ofs, "workdir");
++		if (err)
++			goto out;
+ 	}
+ 
++	err = ovl_setup_trap(sb, ofs->workbasedir, &ofs->workbasedir_trap,
++			     "workdir");
++	if (err)
++		goto out;
++
+ 	err = ovl_make_workdir(sb, ofs, &workpath);
+ 
+ out:
+@@ -1313,16 +1334,16 @@ static int ovl_get_lower_layers(struct s
+ 		if (err < 0)
+ 			goto out;
+ 
+-		err = -EBUSY;
+-		if (ovl_is_inuse(stack[i].dentry)) {
+-			pr_err("overlayfs: lowerdir is in-use as upperdir/workdir\n");
+-			goto out;
+-		}
+-
+ 		err = ovl_setup_trap(sb, stack[i].dentry, &trap, "lowerdir");
+ 		if (err)
+ 			goto out;
+ 
++		if (ovl_is_inuse(stack[i].dentry)) {
++			err = ovl_report_in_use(ofs, "lowerdir");
++			if (err)
++				goto out;
++		}
++
+ 		mnt = clone_private_mount(&stack[i]);
+ 		err = PTR_ERR(mnt);
+ 		if (IS_ERR(mnt)) {
+@@ -1469,8 +1490,8 @@ out_err:
+  * - another layer of this overlayfs instance
+  * - upper/work dir of any overlayfs instance
+  */
+-static int ovl_check_layer(struct super_block *sb, struct dentry *dentry,
+-			   const char *name)
++static int ovl_check_layer(struct super_block *sb, struct ovl_fs *ofs,
++			   struct dentry *dentry, const char *name)
  {
- 	u64 pte_root = 0;
- 	u64 flags = 0;
-+	u32 old_domid;
+ 	struct dentry *next = dentry, *parent;
+ 	int err = 0;
+@@ -1482,13 +1503,11 @@ static int ovl_check_layer(struct super_
  
- 	if (domain->mode != PAGE_MODE_NONE)
- 		pte_root = iommu_virt_to_phys(domain->pt_root);
-@@ -1912,8 +1924,20 @@ static void set_dte_entry(u16 devid, struct protection_domain *domain,
- 	flags &= ~DEV_DOMID_MASK;
- 	flags |= domain->id;
+ 	/* Walk back ancestors to root (inclusive) looking for traps */
+ 	while (!err && parent != next) {
+-		if (ovl_is_inuse(parent)) {
+-			err = -EBUSY;
+-			pr_err("overlayfs: %s path overlapping in-use upperdir/workdir\n",
+-			       name);
+-		} else if (ovl_lookup_trap_inode(sb, parent)) {
++		if (ovl_lookup_trap_inode(sb, parent)) {
+ 			err = -ELOOP;
+ 			pr_err("overlayfs: overlapping %s path\n", name);
++		} else if (ovl_is_inuse(parent)) {
++			err = ovl_report_in_use(ofs, name);
+ 		}
+ 		next = parent;
+ 		parent = dget_parent(next);
+@@ -1509,7 +1528,8 @@ static int ovl_check_overlapping_layers(
+ 	int i, err;
  
-+	old_domid = amd_iommu_dev_table[devid].data[1] & DEV_DOMID_MASK;
- 	amd_iommu_dev_table[devid].data[1]  = flags;
- 	amd_iommu_dev_table[devid].data[0]  = pte_root;
-+
-+	/*
-+	 * A kdump kernel might be replacing a domain ID that was copied from
-+	 * the previous kernel--if so, it needs to flush the translation cache
-+	 * entries for the old domain ID that is being overwritten
-+	 */
-+	if (old_domid) {
-+		struct amd_iommu *iommu = amd_iommu_rlookup_table[devid];
-+
-+		amd_iommu_flush_tlb_domid(iommu, old_domid);
-+	}
- }
+ 	if (ofs->upper_mnt) {
+-		err = ovl_check_layer(sb, ofs->upper_mnt->mnt_root, "upperdir");
++		err = ovl_check_layer(sb, ofs, ofs->upper_mnt->mnt_root,
++				      "upperdir");
+ 		if (err)
+ 			return err;
  
- static void clear_dte_entry(u16 devid)
--- 
-2.20.1
-
+@@ -1520,13 +1540,14 @@ static int ovl_check_overlapping_layers(
+ 		 * workbasedir.  In that case, we already have their traps in
+ 		 * inode cache and we will catch that case on lookup.
+ 		 */
+-		err = ovl_check_layer(sb, ofs->workbasedir, "workdir");
++		err = ovl_check_layer(sb, ofs, ofs->workbasedir, "workdir");
+ 		if (err)
+ 			return err;
+ 	}
+ 
+ 	for (i = 0; i < ofs->numlower; i++) {
+-		err = ovl_check_layer(sb, ofs->lower_layers[i].mnt->mnt_root,
++		err = ovl_check_layer(sb, ofs,
++				      ofs->lower_layers[i].mnt->mnt_root,
+ 				      "lowerdir");
+ 		if (err)
+ 			return err;
 
 
