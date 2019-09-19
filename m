@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9403DC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D51A0C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FA0120640
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:26:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A998920640
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:27:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932017;
-	bh=gP1KFasB8WO5aIgzqJHmO5K+ABZ0LA7tXlnu06A8+bI=;
+	s=default; t=1568932022;
+	bh=rO2RwMACkUszNANNxDC6D0TMvE+3mD6LeC2S+2w5DLs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N2yHD4V4fCwEpSL7R6eirOR0pfJtNB7+w7lOh9MaoOJiNxt69CepiyKTiQ9f9hnzZ
-	 D4doIHM7MNGrHFPkzzfxWVkrZxHeu434f8v0O0SuzFsLLzpjbh7/yKEJsG9uVfYG7P
-	 HMXRIB9RkGif07qyDEgLKwV1rgm312RYEBA7AtG0=
+	b=ptehIo1H1sU0juGCWXTaGo+X3pPG+UMLMHpphm4WDPiv5M0/A6N6fGz49vitsCk6l
+	 uYXjHYztBldV9OqrRWNoLy7tc6Xm9ZszAw6ygvF8N9VggSkCLxhZQf+c19nGdWM33D
+	 VekhF1m0DA6Csst6GqfqpB64orWtdmmg1coj7vTo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404812AbfISWVg (ORCPT
+        id S2436545AbfISW1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:21:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35950 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:27:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389787AbfISWV1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:21:27 -0400
+        id S2394053AbfISWVc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:21:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23464217D6;
-        Thu, 19 Sep 2019 22:21:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FA2E217D6;
+        Thu, 19 Sep 2019 22:21:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931686;
-        bh=gP1KFasB8WO5aIgzqJHmO5K+ABZ0LA7tXlnu06A8+bI=;
+        s=default; t=1568931692;
+        bh=rO2RwMACkUszNANNxDC6D0TMvE+3mD6LeC2S+2w5DLs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QKoKltIs1yHjYXw202u0WcL/Wl3QI+ignW9BO1LpLzeaX/pmAB4rYFZNb+P04pZMi
-         2ylXWV0FoF8VHRYkdJwBzV40RHxw+j1Dp8rrJoAKqDgMXXRGLsjYNUeA+lA41QxWd1
-         hTxMFFyDm1s03ABIe7cYQQnbdsLqiE4uZIaJH8Tw=
+        b=NoPzogLPgMGeD4m+PpwJpqsvodTbRo3vM2j8v9uZtOADW1jsa+1bljNx58LXg+B8x
+         Pe0YqOFJ8Wzce7m0/vGdOZErz4h8eO5DIhw7pJ0brgbmE1FIEOBroe+KvZ17+Qp6bz
+         w6iSdQJebK8EQNenN8oP4wWX1JCH5S8dfWTVs4cw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>
-Subject: [PATCH 4.9 41/74] serial: sprd: correct the wrong sequence of arguments
-Date:   Fri, 20 Sep 2019 00:03:54 +0200
-Message-Id: <20190919214808.860798104@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Huang <huangwenabc@gmail.com>,
+        Ganapathi Bhat <gbhat@marvell.comg>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.9 43/74] mwifiex: Fix three heap overflow at parsing element in cfg80211_ap_settings
+Date:   Fri, 20 Sep 2019 00:03:56 +0200
+Message-Id: <20190919214809.018619144@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214800.519074117@linuxfoundation.org>
 References: <20190919214800.519074117@linuxfoundation.org>
@@ -59,35 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+From: Wen Huang <huangwenabc@gmail.com>
 
-commit 9c801e313195addaf11c16e155f50789d6ebfd19 upstream.
+commit 7caac62ed598a196d6ddf8d9c121e12e082cac3a upstream.
 
-The sequence of arguments which was passed to handle_lsr_errors() didn't
-match the parameters defined in that function, &lsr was passed to flag
-and &flag was passed to lsr, this patch fixed that.
+mwifiex_update_vs_ie(),mwifiex_set_uap_rates() and
+mwifiex_set_wmm_params() call memcpy() without checking
+the destination size.Since the source is given from
+user-space, this may trigger a heap buffer overflow.
 
-Fixes: b7396a38fb28 ("tty/serial: Add Spreadtrum sc9836-uart driver support")
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-Signed-off-by: Chunyan Zhang <zhang.lyra@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20190905074151.5268-1-zhang.lyra@gmail.com
+Fix them by putting the length check before performing memcpy().
+
+This fix addresses CVE-2019-14814,CVE-2019-14815,CVE-2019-14816.
+
+Signed-off-by: Wen Huang <huangwenabc@gmail.com>
+Acked-by: Ganapathi Bhat <gbhat@marvell.comg>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/sprd_serial.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/marvell/mwifiex/ie.c      |    3 +++
+ drivers/net/wireless/marvell/mwifiex/uap_cmd.c |    9 ++++++++-
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
---- a/drivers/tty/serial/sprd_serial.c
-+++ b/drivers/tty/serial/sprd_serial.c
-@@ -240,7 +240,7 @@ static inline void sprd_rx(struct uart_p
+--- a/drivers/net/wireless/marvell/mwifiex/ie.c
++++ b/drivers/net/wireless/marvell/mwifiex/ie.c
+@@ -240,6 +240,9 @@ static int mwifiex_update_vs_ie(const u8
+ 		}
  
- 		if (lsr & (SPRD_LSR_BI | SPRD_LSR_PE |
- 			SPRD_LSR_FE | SPRD_LSR_OE))
--			if (handle_lsr_errors(port, &lsr, &flag))
-+			if (handle_lsr_errors(port, &flag, &lsr))
- 				continue;
- 		if (uart_handle_sysrq_char(port, ch))
- 			continue;
+ 		vs_ie = (struct ieee_types_header *)vendor_ie;
++		if (le16_to_cpu(ie->ie_length) + vs_ie->len + 2 >
++			IEEE_MAX_IE_SIZE)
++			return -EINVAL;
+ 		memcpy(ie->ie_buffer + le16_to_cpu(ie->ie_length),
+ 		       vs_ie, vs_ie->len + 2);
+ 		le16_add_cpu(&ie->ie_length, vs_ie->len + 2);
+--- a/drivers/net/wireless/marvell/mwifiex/uap_cmd.c
++++ b/drivers/net/wireless/marvell/mwifiex/uap_cmd.c
+@@ -287,6 +287,8 @@ mwifiex_set_uap_rates(struct mwifiex_uap
+ 
+ 	rate_ie = (void *)cfg80211_find_ie(WLAN_EID_SUPP_RATES, var_pos, len);
+ 	if (rate_ie) {
++		if (rate_ie->len > MWIFIEX_SUPPORTED_RATES)
++			return;
+ 		memcpy(bss_cfg->rates, rate_ie + 1, rate_ie->len);
+ 		rate_len = rate_ie->len;
+ 	}
+@@ -294,8 +296,11 @@ mwifiex_set_uap_rates(struct mwifiex_uap
+ 	rate_ie = (void *)cfg80211_find_ie(WLAN_EID_EXT_SUPP_RATES,
+ 					   params->beacon.tail,
+ 					   params->beacon.tail_len);
+-	if (rate_ie)
++	if (rate_ie) {
++		if (rate_ie->len > MWIFIEX_SUPPORTED_RATES - rate_len)
++			return;
+ 		memcpy(bss_cfg->rates + rate_len, rate_ie + 1, rate_ie->len);
++	}
+ 
+ 	return;
+ }
+@@ -413,6 +418,8 @@ mwifiex_set_wmm_params(struct mwifiex_pr
+ 					    params->beacon.tail_len);
+ 	if (vendor_ie) {
+ 		wmm_ie = (struct ieee_types_header *)vendor_ie;
++		if (*(vendor_ie + 1) > sizeof(struct mwifiex_types_wmm_info))
++			return;
+ 		memcpy(&bss_cfg->wmm_info, wmm_ie + 1,
+ 		       sizeof(bss_cfg->wmm_info));
+ 		priv->wmm_enabled = 1;
 
 
