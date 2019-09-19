@@ -2,59 +2,56 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D27C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:11:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8554C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 935A921928
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:11:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3F4F21929
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:12:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931116;
-	bh=tPzGboQ2VnK6/pYSRZGVL6p0puK6dTpZVMtYRRdtCtU=;
+	s=default; t=1568931120;
+	bh=JQQVKiSnaCmnV1xUm/kINyEfc9GQ5GGAKeWbjaUCzsM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0Ijn+gafxR5iBxSce1tOOLgYueljdBVn0ayPIUWrW86AopFYQKImtJDIR3fueCm0i
-	 d8lfpxyBx7U11cWGcbtRbvw8zkLDchxppGUEGi6vT56I+c/cvQDnFfi8BMXTKH6rzq
-	 W3S8sfDkUp6FJjjHH2kkTjBkzvSCQhN/pVdX2IAY=
+	b=dkyyzev8jMU+QNuWWrtkKbkZxgGcGF4mptPf557ozFi813k1Z+vvKc4bdtLkfobTL
+	 O6SoYkYBObAJnLpMSmYyHIzXaBIGfolE/n3DQ7f5JaxVFhN0foZqV7tD6MD2amfPld
+	 X0hfFCqg2O40bu+wepH8eq5Z1pC2r+r06WY8qbt8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389381AbfISWLz (ORCPT
+        id S2405902AbfISWMA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:11:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50586 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:12:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389875AbfISWLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:11:50 -0400
+        id S2390037AbfISWLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:11:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6224B21927;
-        Thu, 19 Sep 2019 22:11:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDC1421907;
+        Thu, 19 Sep 2019 22:11:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931109;
-        bh=tPzGboQ2VnK6/pYSRZGVL6p0puK6dTpZVMtYRRdtCtU=;
+        s=default; t=1568931115;
+        bh=JQQVKiSnaCmnV1xUm/kINyEfc9GQ5GGAKeWbjaUCzsM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V/JxtGOuhZJJdFqoA/P0etpZtSo0KpxJ3//MwppC1KPywdKNT7N4BGIqK3ZOMHgAD
-         WPe8wMmlCXE2QHKT9vgHBE+kJZVfxkkc7IEtL6OD1mpp3huA3+NCIRPuR48yt+YKeM
-         4sfJDDMZxaeFjZN1WPA9/eILFPRVlcru6dTjb5Lk=
+        b=c1u8Y+Z9cN3hF9r5DeaxA/thbN/PXwMnla+2zoZ0TukZy3w0UJDW1990WGXvZXujK
+         ZaCM44Xyhtgi2ibVFb+ScXianyCkM6M412d0E1GK52NhN9chAlLM4Zg0NRqORZSzF/
+         ZUVGo5RFuIW6mDUAPn56fcaBHh9TerN1AIjn6Oco=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, broonie@kernel.org,
-        sfr@canb.auug.org.au, akpm@linux-foundation.org, mhocko@suse.cz,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 112/124] x86/uaccess: Dont leak the AC flags into __get_user() argument evaluation
-Date:   Fri, 20 Sep 2019 00:03:20 +0200
-Message-Id: <20190919214823.256617645@linuxfoundation.org>
+        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 4.19 01/79] netfilter: nf_flow_table: set default timeout after successful insertion
+Date:   Fri, 20 Sep 2019 00:02:46 +0200
+Message-Id: <20190919214807.735209930@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
-References: <20190919214819.198419517@linuxfoundation.org>
+In-Reply-To: <20190919214807.612593061@linuxfoundation.org>
+References: <20190919214807.612593061@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,57 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit 9b8bd476e78e89c9ea26c3b435ad0201c3d7dbf5 ]
+commit 110e48725db6262f260f10727d0fb2d3d25895e4 upstream.
 
-Identical to __put_user(); the __get_user() argument evalution will too
-leak UBSAN crud into the __uaccess_begin() / __uaccess_end() region.
-While uncommon this was observed to happen for:
+Set up the default timeout for this new entry otherwise the garbage
+collector might quickly remove it right after the flowtable insertion.
 
-  drivers/xen/gntdev.c: if (__get_user(old_status, batch->status[i]))
+Fixes: ac2a66665e23 ("netfilter: add generic flow table infrastructure")
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-where UBSAN added array bound checking.
-
-This complements commit:
-
-  6ae865615fc4 ("x86/uaccess: Dont leak the AC flag into __put_user() argument evaluation")
-
-Tested-by Sedat Dilek <sedat.dilek@gmail.com>
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: broonie@kernel.org
-Cc: sfr@canb.auug.org.au
-Cc: akpm@linux-foundation.org
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: mhocko@suse.cz
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Link: https://lkml.kernel.org/r/20190829082445.GM2369@hirez.programming.kicks-ass.net
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/uaccess.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/netfilter/nf_flow_table_core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
-index c82abd6e4ca39..869794bd0fd98 100644
---- a/arch/x86/include/asm/uaccess.h
-+++ b/arch/x86/include/asm/uaccess.h
-@@ -442,8 +442,10 @@ __pu_label:							\
- ({									\
- 	int __gu_err;							\
- 	__inttype(*(ptr)) __gu_val;					\
-+	__typeof__(ptr) __gu_ptr = (ptr);				\
-+	__typeof__(size) __gu_size = (size);				\
- 	__uaccess_begin_nospec();					\
--	__get_user_size(__gu_val, (ptr), (size), __gu_err, -EFAULT);	\
-+	__get_user_size(__gu_val, __gu_ptr, __gu_size, __gu_err, -EFAULT);	\
- 	__uaccess_end();						\
- 	(x) = (__force __typeof__(*(ptr)))__gu_val;			\
- 	__builtin_expect(__gu_err, 0);					\
--- 
-2.20.1
-
+--- a/net/netfilter/nf_flow_table_core.c
++++ b/net/netfilter/nf_flow_table_core.c
+@@ -203,7 +203,7 @@ int flow_offload_add(struct nf_flowtable
+ 		return err;
+ 	}
+ 
+-	flow->timeout = (u32)jiffies;
++	flow->timeout = (u32)jiffies + NF_FLOW_TIMEOUT;
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(flow_offload_add);
 
 
