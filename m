@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E03C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B8AC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2929821D6C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:08:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE10C21907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:08:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568930912;
-	bh=zPGuwjDYDiMDQS1Q5oFy7DwqvLOrtR8i3MQgAW0T9QA=;
+	s=default; t=1568930914;
+	bh=jsxjZ6c2pKwOfwzh1srusN1d3KgkyddtgzEIeAdJ3vY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xLVv3Th9hIezZO2NgMZWiTPu+cOmstO7fnZ73HZtOlGwINf7WE4zasKJttfgnq3Gq
-	 Mx5GOxVFmngiTgQJHbYEFD2Eb8ftIMWaaHR8p9FcyJ4D3y7d7L0LrMcpwevpSaAFgW
-	 vq+lvi6ek1S2ZQaSABAgFoFHaLx/faq7IVNDCVmE=
+	b=GIS/8BEuHj8cnR8uzkwxZoUPA0mTNKS3zL4fZrAW6WVK5MBMqCIg++wTeAPr4j0EU
+	 6RwXhmFbpneuvjEYSf6ECJzlu1pWGn3/N77ikZqkcERdJb2AQrpV8hcxrcpYNXR4Cz
+	 NrKutmkIBafTK3n+NC+QLnICHsqcqZNTX8drOFdQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393440AbfISWIb (ORCPT
+        id S2393448AbfISWId (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:08:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46368 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:08:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393418AbfISWI0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:08:26 -0400
+        id S2393431AbfISWI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:08:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 452E321927;
-        Thu, 19 Sep 2019 22:08:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0739A21A49;
+        Thu, 19 Sep 2019 22:08:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568930905;
-        bh=zPGuwjDYDiMDQS1Q5oFy7DwqvLOrtR8i3MQgAW0T9QA=;
+        s=default; t=1568930908;
+        bh=jsxjZ6c2pKwOfwzh1srusN1d3KgkyddtgzEIeAdJ3vY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JId8Wjvo73JVXzlrF256AUi7DDUuo8bdYDHE1B/DuWUedOgsrVH44O6xIjxd43Fjk
-         cnFcCM1U5POnBBx0FlpOrz0cjqiQtC2sS84rb2aMcf5v4UXb2VwtC+Uma1cv2MQfb/
-         RevbyzCMe2KLSirobilff6LnruaZh64ZkFZ7oVww=
+        b=Tsqj87Hf1apoNsV5OWlo1DtDzc2eLz/DlYLV/pNwFXFFj0We24UbmGe+w0mGf6Kn9
+         dXNww/twPZbuJsWRt/45kYkBX1J6L0kM6BpFQwQxY4RnZ+pQnT8Qdw+Vk+iblcEKII
+         ecXW7vJpJSqHvniSjkWrYqtje4tFyqZ0IaHLABEA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
+        Sudarsana Reddy Kalluru <skalluru@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 057/124] selftests/bpf: add config fragment BPF_JIT
-Date:   Fri, 20 Sep 2019 00:02:25 +0200
-Message-Id: <20190919214821.075146918@linuxfoundation.org>
+Subject: [PATCH 5.2 058/124] qed: Add cleanup in qed_slowpath_start()
+Date:   Fri, 20 Sep 2019 00:02:26 +0200
+Message-Id: <20190919214821.110406518@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -60,35 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anders Roxell <anders.roxell@linaro.org>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit 0604409df9e04cdec7b08d471c8c1c0c10b5554d ]
+[ Upstream commit de0e4fd2f07ce3bbdb69dfb8d9426b7227451b69 ]
 
-When running test_kmod.sh the following shows up
+If qed_mcp_send_drv_version() fails, no cleanup is executed, leading to
+memory leaks. To fix this issue, introduce the label 'err4' to perform the
+cleanup work before returning the error.
 
- # sysctl cannot stat /proc/sys/net/core/bpf_jit_enable No such file or directory
- cannot: stat_/proc/sys/net/core/bpf_jit_enable #
- # sysctl cannot stat /proc/sys/net/core/bpf_jit_harden No such file or directory
- cannot: stat_/proc/sys/net/core/bpf_jit_harden #
-
-Rework to enable CONFIG_BPF_JIT to solve "No such file or directory"
-
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Acked-by: Sudarsana Reddy Kalluru <skalluru@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/config | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/qlogic/qed/qed_main.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/bpf/config b/tools/testing/selftests/bpf/config
-index f7a0744db31e1..5dc109f4c0970 100644
---- a/tools/testing/selftests/bpf/config
-+++ b/tools/testing/selftests/bpf/config
-@@ -34,3 +34,4 @@ CONFIG_NET_MPLS_GSO=m
- CONFIG_MPLS_ROUTING=m
- CONFIG_MPLS_IPTUNNEL=m
- CONFIG_IPV6_SIT=m
-+CONFIG_BPF_JIT=y
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_main.c b/drivers/net/ethernet/qlogic/qed/qed_main.c
+index 6de23b56b2945..c875a2fa75966 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_main.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_main.c
+@@ -1215,7 +1215,7 @@ static int qed_slowpath_start(struct qed_dev *cdev,
+ 					      &drv_version);
+ 		if (rc) {
+ 			DP_NOTICE(cdev, "Failed sending drv version command\n");
+-			return rc;
++			goto err4;
+ 		}
+ 	}
+ 
+@@ -1223,6 +1223,8 @@ static int qed_slowpath_start(struct qed_dev *cdev,
+ 
+ 	return 0;
+ 
++err4:
++	qed_ll2_dealloc_if(cdev);
+ err3:
+ 	qed_hw_stop(cdev);
+ err2:
 -- 
 2.20.1
 
