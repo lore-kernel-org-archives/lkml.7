@@ -2,502 +2,134 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D815DC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 08:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E78C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D14621924
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 08:59:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECD0C21928
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:02:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="mXOdzfOL"
+	dkim=pass (1024-bit key) header.d=NETORGFT5553547.onmicrosoft.com header.i=@NETORGFT5553547.onmicrosoft.com header.b="G+LOGFql"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388567AbfISI7p (ORCPT
+        id S2388443AbfISJCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 04:59:45 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:52626 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730677AbfISI7p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 04:59:45 -0400
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 71769325;
-        Thu, 19 Sep 2019 10:59:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1568883582;
-        bh=vsOFDIsx8LwAe2LG1OMhpWIedQphT5Et7RUQrm5ToTs=;
-        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=mXOdzfOLqV1D/CP/Jlnzkwt0qIdFvBakylVIC8K7urmZYmBIR2bfTJoJUAE+MMo05
-         NiCa5e4hxOGsoDJGegUpB+sVwQyeZMe9srQuZAr5nvW2b/Lbh1fCzciHCbyRu69vQ7
-         bLIw3RzF5yaLBH+a6TvH6e9pcpCLPFcXkfASVtLA=
-Reply-To: kieran.bingham+renesas@ideasonboard.com
-Subject: Re: [PATCH v4 3/9] drm: rcar-du: Add support for CMM
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     geert@linux-m68k.org, horms@verge.net.au, uli+renesas@fpond.eu,
-        VenkataRajesh.Kalakodima@in.bosch.com, airlied@linux.ie,
-        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-References: <20190906135436.10622-1-jacopo+renesas@jmondi.org>
- <20190906135436.10622-4-jacopo+renesas@jmondi.org>
- <20190918225534.GA11474@pendragon.ideasonboard.com>
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Organization: Ideas on Board
-Message-ID: <48b1333a-74e4-34b8-f898-79a74a88a816@ideasonboard.com>
-Date:   Thu, 19 Sep 2019 09:59:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 19 Sep 2019 05:02:09 -0400
+Received: from mail-eopbgr1380059.outbound.protection.outlook.com ([40.107.138.59]:50778
+        "EHLO IND01-MA1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387881AbfISJCJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 05:02:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZXIZtrL7Le5S2HhafkHiwaUjgDIYCRfCQ9uXVeCWO5dyk/qmc/enVFbxFG4cd2P6xXdTYEDQSnw4l15Q1BTWnogdLg79PS6jiCXnnUzW0ayoftr3pBsbSzr+d8uFWNAaUcearNEL47XUjTDh5tKvZ+ghLr+2M4944zAzHx7t3WfgN4/MdgJdkfEzGklO+d7BImrfNkGv/dYnDMe2qxf2LZMHcY8whRJfi4b1F8VwkJ4w1RErHI/xH7SBGMljAlXbSb6qdSV2ZmzBQL9sHxfJLXmJ7Di37VBRTqS5gSuf0Xh9WJPgrBPRgrGHauH575gAMUlXFiRSYUE3jXm39WGvGA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jCxe5DKdnVcIkP6wIrozrO4jQ2ivdKpTuzlsdPohjeI=;
+ b=P6TjsnTb5WiygeTXgeYpjUa8tj38r5U8zxHFilNLpHbTHAKf+XUijL+w4K4blbEc9pSX6lAuNpCmRbt0SgXjoAkBF5WiyXE65OHMWuBTpg0XWQuYhKUwc6OzkvV9srNy4b8SA/hGX42RMhNW2gpycacTJ5pV3SDG096oU04C9+Kq7ITgZyjM5/E6D9TGYLRfZDH3ALmwQLcPrnvMyzc6mqYWxzgcN+lB8oPrV7YjZOf8KNkwq7ozz7A81RleB95nCyL5Z3g4FVYCe67mn8lKg/7+9lDPmAorriGbv7r5gxHygL/4rBoYFEcSmBOj4/qFGeW1FzTv06HiW7qtpeAiaA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=universaledigitaldata.com; dmarc=pass action=none
+ header.from=universaledigitaldata.com; dkim=pass
+ header.d=universaledigitaldata.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=NETORGFT5553547.onmicrosoft.com;
+ s=selector1-NETORGFT5553547-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jCxe5DKdnVcIkP6wIrozrO4jQ2ivdKpTuzlsdPohjeI=;
+ b=G+LOGFqlOXC7+0I9tBDYaoehgzehzvMLiIya2rtz9Lhe0ilAU8ebxUF39QPQIyMcYS9gY9fkxxKFigu8xUtJwP0sZUA7BILdgj4SjdkqFxnq1eoygdp+J0nAp4QmOzPbANU1SVTkbkdRQO8cjs8YWX+XhkGfTdZBqrRO8C5HRHk=
+Received: from BMXPR01MB3735.INDPRD01.PROD.OUTLOOK.COM (20.179.243.22) by
+ BMXPR01MB3125.INDPRD01.PROD.OUTLOOK.COM (10.255.157.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.26; Thu, 19 Sep 2019 09:02:04 +0000
+Received: from BMXPR01MB3735.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::10fb:2e40:fa7e:92cc]) by BMXPR01MB3735.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::10fb:2e40:fa7e:92cc%7]) with mapi id 15.20.2263.023; Thu, 19 Sep 2019
+ 09:02:04 +0000
+From:   Sarah Wilson <sarah.wilson@universaledigitaldata.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Visitors List
+Thread-Topic: Visitors List
+Thread-Index: AdVuyNJeNaW0oqwFSbiKb5wJBk4Lvw==
+Date:   Thu, 19 Sep 2019 09:02:04 +0000
+Message-ID: <!&!AAAAAAAAAAAYAAAAAAAAAB17YbDcQgpNo03dDX/NrcbCgAAAEAAAAO1T89jfxsFPjMtgxnGvtG8BAAAAAA==@universaledigitaldata.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MAXPR0101CA0018.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:c::28) To BMXPR01MB3735.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:b00:61::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=sarah.wilson@universaledigitaldata.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: Microsoft Outlook 15.0
+x-antivirus: Avast (VPS 190918-4, 09/18/2019), Outbound message
+x-antivirus-status: Clean
+x-originating-ip: [106.51.18.83]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1f03630b-4ebb-4fd4-a860-08d73ce00a94
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(7168020)(4627221)(201702281549075)(8990200)(7048125)(7027125)(7029214)(7031125)(7023125)(5600167)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BMXPR01MB3125;
+x-ms-traffictypediagnostic: BMXPR01MB3125:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <BMXPR01MB3125F4DAB524CE4FB67225D090890@BMXPR01MB3125.INDPRD01.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 016572D96D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(39510400003)(39830400003)(34096005)(136003)(376002)(396003)(189003)(199004)(81156014)(221733001)(36756003)(4744005)(81166006)(8676002)(102836004)(8936002)(26005)(50226002)(498600001)(256004)(99286004)(25786009)(71190400001)(2501003)(71200400001)(3480700005)(52116002)(3846002)(386003)(6116002)(6916009)(61296003)(55236004)(9456002)(9476002)(6306002)(7116003)(6506007)(186003)(476003)(7736002)(6486002)(586005)(38610400001)(44832011)(6512007)(2351001)(66066001)(5660300002)(2906002)(5640700003)(966005)(88246002)(64756008)(66446008)(305945005)(2616005)(486006)(66556008)(6436002)(66476007)(86362001)(14454004)(66946007)(626008)(130950200001);DIR:OUT;SFP:1101;SCL:1;SRVR:BMXPR01MB3125;H:BMXPR01MB3735.INDPRD01.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: universaledigitaldata.com does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: FMiliajx6zgNPkhBVQgsDEFQluozm4H3DApL5Yifqyq/3f4vPe4lHOwCmPatSmbNFrBXEaMxVIt6mlx5tYUQPcvaksQDLCQ1o7JMwucSZr7ZyStnLdvs264ksPFg0jzAy0dj9cm0b/rBrnvEaJHQreFfw6dAKasnZow8tbBWV1BWo9HscmMhGk+4ZNqwk7maHPuyJMNsUHdUmA0+03y20hrGh0pxnyz5Isy9jzWh+UALjRjRw7Jc8Wwyfx6K/DyH/2dXMml5i8r66f2IHIn46OTjOkDR63I9N4rWzGrHXsKRH+rhliuhode/xYMXG9iRGbJODVXxoH/x6IX0p54BGF8rZk/9fyAb070S6IyrH+hi41jrXmGTacLuHNpWpJJ35Jj9xBZ+S0lUckWx2gL1Jo15se38kzkFXGOQH1aaiV4=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <F4FD146946431A4A818753F0326D978C@INDPRD01.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <20190918225534.GA11474@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: universaledigitaldata.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1f03630b-4ebb-4fd4-a860-08d73ce00a94
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Sep 2019 09:02:04.5669
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 136679fb-fa93-4ffb-ae24-fda892c47083
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 1acp3GEPJV9AzCJH2L1i98B8ze4iaY2OkEN9AOqtzr9IfE79/uEbA4NM9llQgwO92Jq0/cA1lUEz49dkUzW6381tU0tVsLyZFKt1TeSqn72k1NqaSCspYOYU6KjTZ1oQ
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BMXPR01MB3125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo, Laurent,
+Hello,
+
+Good Day to you!
+
+Just wanted to check if you would be interested in acquire Batimat 2019
+(International Multi-Specialism Trade Show for the Construction Industry
+2019)  attendee companies to increase prospect flow at your booth - Product
+launch- Brand awareness - increase Sales - Annual marketing Etc.
+
+Information Provided: - Company name, URL, Contact name, Job title, Phone
+number, fax number, physical address, Industry, Company size, Email address=
+.
+
+We also provide customized lists for all your multi-channel marketing
+planning.=20
+
+Please advice, so I can provide you available counts and cost information
+for your approval.
+
+Look forward to your reply.
+
+Best Regards,
+Sarah Wilson=20
+B2B Marketing & Tradeshow Specialist
+
+If you do not wish to receive the attendees list, please reply as 'Opt-out'=
+.
 
 
-On 18/09/2019 23:55, Laurent Pinchart wrote:
-> Hi Jacopo,
-> 
-> Thank you for the patch.
-> 
-> On Fri, Sep 06, 2019 at 03:54:30PM +0200, Jacopo Mondi wrote:
->> Add a driver for the R-Car Display Unit Color Correction Module.
->>
->> In most of Gen3 SoCs, each DU output channel is provided with a CMM unit
->> to perform image enhancement and color correction.
->>
->> Add support for CMM through a driver that supports configuration of
->> the 1-dimensional LUT table. More advanced CMM feature will be
->> implemented on top of this basic one.
->>
->> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
->> ---
->>  drivers/gpu/drm/rcar-du/Kconfig    |   7 +
->>  drivers/gpu/drm/rcar-du/Makefile   |   1 +
->>  drivers/gpu/drm/rcar-du/rcar_cmm.c | 251 +++++++++++++++++++++++++++++
->>  drivers/gpu/drm/rcar-du/rcar_cmm.h |  61 +++++++
->>  4 files changed, 320 insertions(+)
->>  create mode 100644 drivers/gpu/drm/rcar-du/rcar_cmm.c
->>  create mode 100644 drivers/gpu/drm/rcar-du/rcar_cmm.h
->>
->> diff --git a/drivers/gpu/drm/rcar-du/Kconfig b/drivers/gpu/drm/rcar-du/Kconfig
->> index 1529849e217e..539d232790d1 100644
->> --- a/drivers/gpu/drm/rcar-du/Kconfig
->> +++ b/drivers/gpu/drm/rcar-du/Kconfig
->> @@ -13,6 +13,13 @@ config DRM_RCAR_DU
->>  	  Choose this option if you have an R-Car chipset.
->>  	  If M is selected the module will be called rcar-du-drm.
->>  
->> +config DRM_RCAR_CMM
->> +	bool "R-Car DU Color Management Module (CMM) Support"
->> +	depends on DRM && OF
->> +	depends on DRM_RCAR_DU
->> +	help
->> +	  Enable support for R-Car Color Management Module (CMM).
->> +
->>  config DRM_RCAR_DW_HDMI
->>  	tristate "R-Car DU Gen3 HDMI Encoder Support"
->>  	depends on DRM && OF
->> diff --git a/drivers/gpu/drm/rcar-du/Makefile b/drivers/gpu/drm/rcar-du/Makefile
->> index 6c2ed9c46467..4d1187ccc3e5 100644
->> --- a/drivers/gpu/drm/rcar-du/Makefile
->> +++ b/drivers/gpu/drm/rcar-du/Makefile
->> @@ -15,6 +15,7 @@ rcar-du-drm-$(CONFIG_DRM_RCAR_LVDS)	+= rcar_du_of.o \
->>  rcar-du-drm-$(CONFIG_DRM_RCAR_VSP)	+= rcar_du_vsp.o
->>  rcar-du-drm-$(CONFIG_DRM_RCAR_WRITEBACK) += rcar_du_writeback.o
->>  
->> +obj-$(CONFIG_DRM_RCAR_CMM)		+= rcar_cmm.o
->>  obj-$(CONFIG_DRM_RCAR_DU)		+= rcar-du-drm.o
->>  obj-$(CONFIG_DRM_RCAR_DW_HDMI)		+= rcar_dw_hdmi.o
->>  obj-$(CONFIG_DRM_RCAR_LVDS)		+= rcar_lvds.o
->> diff --git a/drivers/gpu/drm/rcar-du/rcar_cmm.c b/drivers/gpu/drm/rcar-du/rcar_cmm.c
->> new file mode 100644
->> index 000000000000..3cacdc4474c7
->> --- /dev/null
->> +++ b/drivers/gpu/drm/rcar-du/rcar_cmm.c
->> @@ -0,0 +1,251 @@
->> +// SPDX-License-Identifier: GPL-2.0+
->> +/*
->> + * rcar_cmm.c -- R-Car Display Unit Color Management Module
->> + *
->> + * Copyright (C) 2019 Jacopo Mondi <jacopo+renesas@jmondi.org>
->> + */
->> +
->> +#include <linux/io.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/pm_runtime.h>
->> +
->> +#include <drm/drm_color_mgmt.h>
->> +
->> +#include "rcar_cmm.h"
->> +
->> +#define CM2_LUT_CTRL		0x0000
->> +#define CM2_LUT_CTRL_LUT_EN	BIT(0)
->> +#define CM2_LUT_TBL_BASE	0x0600
->> +#define CM2_LUT_TBL(__i)	(CM2_LUT_TBL_BASE + (__i) * 4)
->> +
->> +struct rcar_cmm {
->> +	void __iomem *base;
->> +	bool enabled;
->> +
->> +	/*
->> +	 * @lut:		1D-LUT status
->> +	 * @lut.enabled:	1D-LUT enabled flag
->> +	 * @lut.table:		Table of 1D-LUT entries scaled to hardware
->> +	 *			precision (8-bits per color component)
->> +	 */
->> +	struct {
->> +		bool enabled;
->> +		u32 table[CM2_LUT_SIZE];
->> +	} lut;
->> +};
->> +
->> +static inline int rcar_cmm_read(struct rcar_cmm *rcmm, u32 reg)
->> +{
->> +	return ioread32(rcmm->base + reg);
->> +}
->> +
->> +static inline void rcar_cmm_write(struct rcar_cmm *rcmm, u32 reg, u32 data)
->> +{
->> +	iowrite32(data, rcmm->base + reg);
->> +}
->> +
->> +/*
->> + * rcar_cmm_lut_extract() - Scale down to hardware precision the DRM LUT table
->> + *			    entries and store them.
-> 
-> "Scale the DRM LUT table entries to hardware precision and store them."
-> 
->> + * @rcmm: Pointer to the CMM device
->> + * @drm_lut: Pointer to the DRM LUT table
->> + */
->> +static void rcar_cmm_lut_extract(struct rcar_cmm *rcmm,
->> +				 const struct drm_color_lut *drm_lut)
->> +{
->> +	unsigned int i;
->> +
->> +	for (i = 0; i < CM2_LUT_SIZE; ++i) {
->> +		const struct drm_color_lut *lut = &drm_lut[i];
->> +
->> +		rcmm->lut.table[i] = drm_color_lut_extract(lut->red, 8) << 16
->> +				   | drm_color_lut_extract(lut->green, 8) << 8
->> +				   | drm_color_lut_extract(lut->blue, 8);
->> +	}
->> +}
->> +
->> +/*
->> + * rcar_cmm_lut_write() - Write to hardware the LUT table entries from the
->> + *			  local table.
-> 
-> "Write the LUT table entries from the local table to the hardware."
-> 
->> + * @rcmm: Pointer to the CMM device
->> + */
->> +static void rcar_cmm_lut_write(struct rcar_cmm *rcmm)
->> +{
->> +	unsigned int i;
->> +
->> +	for (i = 0; i < CM2_LUT_SIZE; ++i)
->> +		rcar_cmm_write(rcmm, CM2_LUT_TBL(i), rcmm->lut.table[i]);
->> +}
->> +
->> +/*
->> + * rcar_cmm_setup() - Configure the CMM unit.
->> + * @pdev: The platform device associated with the CMM instance
->> + * @config: The CRTC-provided configuration.
->> + *
->> + * Configure the CMM unit with the CRTC-provided configuration.
->> + * Currently enabling, disabling and programming of the 1-D LUT unit is
->> + * supported.
->> + */
->> +int rcar_cmm_setup(struct platform_device *pdev,
->> +		   const struct rcar_cmm_config *config)
->> +{
->> +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
->> +
->> +	/*
->> +	 * As rcar_cmm_setup() is called by atomic commit tail helper, it might
->> +	 * be called when the CMM is disabled. As we can't program the hardware
->> +	 * in that case, store the configuration internally and apply it when
->> +	 * the CMM will be enabled by the CRTC through rcar_cmm_enable().
->> +	 */
->> +	if (!rcmm->enabled) {
->> +		if (!config->lut.enable)
->> +			return 0;
->> +
->> +		rcar_cmm_lut_extract(rcmm, config->lut.table);
->> +		rcmm->lut.enabled = true;
->> +
->> +		return 0;
->> +	}
->> +
->> +	/* Stop LUT operations if requested. */
->> +	if (!config->lut.enable) {
->> +		if (rcmm->lut.enabled) {
->> +			rcar_cmm_write(rcmm, CM2_LUT_CTRL, 0);
->> +			rcmm->lut.enabled = false;
->> +		}
->> +
->> +		return 0;
->> +	}
->> +
->> +	/*
->> +	 * Enable LUT and program the new gamma table values.
->> +	 *
->> +	 * FIXME: In order to have stable operations it is required to first
->> +	 * enable the 1D-LUT and then program its table entries. This seems to
->> +	 * contradict what the chip manual reports, and will have to be
->> +	 * reconsidered when implementing support for double buffering.
->> +	 */
->> +	if (!rcmm->lut.enabled) {
->> +		rcar_cmm_write(rcmm, CM2_LUT_CTRL, CM2_LUT_CTRL_LUT_EN);
->> +		rcmm->lut.enabled = true;
->> +	}
->> +
->> +	rcar_cmm_lut_extract(rcmm, config->lut.table);
->> +	rcar_cmm_lut_write(rcmm);
->> +
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(rcar_cmm_setup);
->> +
->> +/*
->> + * rcar_cmm_enable() - Enable the CMM unit.
->> + * @pdev: The platform device associated with the CMM instance
->> + *
->> + * Enable the CMM unit by enabling the parent clock and enabling the CMM
->> + * components, such as 1-D LUT, if requested.
->> + */
->> +int rcar_cmm_enable(struct platform_device *pdev)
->> +{
->> +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
->> +	int ret;
->> +
->> +	ret = pm_runtime_get_sync(&pdev->dev);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	/* Apply the LUT table values saved at rcar_cmm_setup() time. */
->> +	if (rcmm->lut.enabled) {
->> +		rcar_cmm_write(rcmm, CM2_LUT_CTRL, CM2_LUT_CTRL_LUT_EN);
->> +		rcar_cmm_lut_write(rcmm);
->> +	}
->> +
->> +	rcmm->enabled = true;
->> +
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(rcar_cmm_enable);
->> +
->> +/*
->> + * rcar_cmm_disable() - Disable the CMM unit.
->> + * @pdev: The platform device associated with the CMM instance
->> + *
->> + * Disable the CMM unit by stopping the parent clock.
->> + */
->> +void rcar_cmm_disable(struct platform_device *pdev)
->> +{
->> +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
->> +
->> +	rcar_cmm_write(rcmm, CM2_LUT_CTRL, 0);
->> +
->> +	pm_runtime_put(&pdev->dev);
->> +
->> +	rcmm->lut.enabled = false;
->> +	rcmm->enabled = false;
->> +}
->> +EXPORT_SYMBOL_GPL(rcar_cmm_disable);
->> +
->> +/*
->> + * rcar_cmm_init() - Make sure the CMM has probed.
-> 
-> I would document this as "Intialize the CMM" to match the function name.
-> We may add more initialization in the future.
-> 
->> + * @pdev: The platform device associated with the CMM instance
->> + *
->> + * Return: 0 if the CMM has probed, -EPROBE_DEFER otherwise
-> 
-> 0 on success, -EPROBE_DEFER is the CMM isn't availablet yet
-
-And possibly -ENODEV if the suggestion below in the header is worthy, to
-return no device if the CMM is disabled at the CONFIG_ level.
-
-
-
-> 
->> + */
->> +int rcar_cmm_init(struct platform_device *pdev)
->> +{
->> +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
->> +
->> +	if (!rcmm)
->> +		return -EPROBE_DEFER;
->> +
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(rcar_cmm_init);
->> +
->> +static int rcar_cmm_probe(struct platform_device *pdev)
->> +{
->> +	struct rcar_cmm *rcmm;
->> +
->> +	rcmm = devm_kzalloc(&pdev->dev, sizeof(*rcmm), GFP_KERNEL);
->> +	if (!rcmm)
->> +		return -ENOMEM;
->> +	platform_set_drvdata(pdev, rcmm);
->> +
->> +	rcmm->base = devm_platform_ioremap_resource(pdev, 0);
->> +	if (IS_ERR(rcmm->base))
->> +		return PTR_ERR(rcmm->base);
->> +
->> +	pm_runtime_enable(&pdev->dev);
->> +
->> +	return 0;
->> +}
->> +
->> +static int rcar_cmm_remove(struct platform_device *pdev)
->> +{
->> +	pm_runtime_disable(&pdev->dev);
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct of_device_id rcar_cmm_of_table[] = {
->> +	{ .compatible = "renesas,rcar-gen3-cmm", },
->> +	{ .compatible = "renesas,rcar-gen2-cmm", },
->> +	{ },
->> +};
->> +MODULE_DEVICE_TABLE(of, rcar_cmm_of_table);
->> +
->> +static struct platform_driver rcar_cmm_platform_driver = {
->> +	.probe		= rcar_cmm_probe,
->> +	.remove		= rcar_cmm_remove,
->> +	.driver		= {
->> +		.name	= "rcar-cmm",
->> +		.of_match_table = rcar_cmm_of_table,
->> +	},
->> +};
->> +
->> +module_platform_driver(rcar_cmm_platform_driver);
->> +
->> +MODULE_AUTHOR("Jacopo Mondi <jacopo+renesas@jmondi.org>");
->> +MODULE_DESCRIPTION("Renesas R-Car CMM Driver");
->> +MODULE_LICENSE("GPL v2");
->> diff --git a/drivers/gpu/drm/rcar-du/rcar_cmm.h b/drivers/gpu/drm/rcar-du/rcar_cmm.h
->> new file mode 100644
->> index 000000000000..15a2c874b6a6
->> --- /dev/null
->> +++ b/drivers/gpu/drm/rcar-du/rcar_cmm.h
->> @@ -0,0 +1,61 @@
->> +/* SPDX-License-Identifier: GPL-2.0+ */
->> +/*
->> + * rcar_cmm.h -- R-Car Display Unit Color Management Module
->> + *
->> + * Copyright (C) 2019 Jacopo Mondi <jacopo+renesas@jmondi.org>
->> + */
->> +
->> +#ifndef __RCAR_CMM_H__
->> +#define __RCAR_CMM_H__
->> +
->> +#define CM2_LUT_SIZE		256
->> +
->> +struct drm_color_lut;
->> +struct platform_device;
->> +
->> +/**
->> + * struct rcar_cmm_config - CMM configuration
->> + *
->> + * @lut:	1D-LUT configuration
->> + * @lut.enable:	1D-LUT enable flag
->> + * @lut.table:	1D-LUT table entries. Might be set to NULL when the CMM has to
->> + *		be re-enabled but not re=programmed.
-> 
-> s/re=programmed/re-programmed/
-> 
-> As discussed offline this can't really happen as far as I can tell.
-> However, it will still be useful when we'll add CLU support, as then a
-> CLU reprogramming without a LUT reprogramming could happen.
-> 
-> I think we should make the documentation a bit clearer:
-> 
-> "1D-LUT table entries. Only valid when lut.enable is true, shall be NULL
-> otherwise. When non-NULL, the LUT table will be programmed with the new
-> values. Otherwise the LUT table will retain its previously programmed
-> values."
-> 
-> This being said, the code in rcar_cmm_setup() will crash if table is
-> NULL. I would either drop the option of table being NULL (and thus
-> update the documentation here) if you don't need this yet in the DU
-> driver, or fix rcar_cmm_setup(). You've posted enough versions of this
-> series in my opinion, so please pick the easiest option, and we'll
-> rework the code when adding CLU support anyway.
-> 
-> With those small issues fixes,
-> 
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> 
->> + */
->> +struct rcar_cmm_config {
->> +	struct {
->> +		bool enable;
->> +		struct drm_color_lut *table;
->> +	} lut;
->> +};
->> +
->> +#if IS_ENABLED(CONFIG_DRM_RCAR_CMM)
->> +int rcar_cmm_init(struct platform_device *pdev);
->> +
->> +int rcar_cmm_enable(struct platform_device *pdev);
->> +void rcar_cmm_disable(struct platform_device *pdev);
->> +
->> +int rcar_cmm_setup(struct platform_device *pdev,
->> +		   const struct rcar_cmm_config *config);
->> +#else
->> +static inline int rcar_cmm_init(struct platform_device *pdev)
->> +{
->> +	return 0;
-
-I feel like here, this should return -ENODEV if CMM is disabled, and
-allow rcar_du_cmm_init() to succeed, but leave the rcdu->cmms[i]
-unpopulated. ...
-
-But this could be updated later too if it's awkward ...
-
---
-Kieran
-
-
->> +}
->> +
->> +static inline int rcar_cmm_enable(struct platform_device *pdev)
->> +{
->> +	return 0;
->> +}
->> +
->> +static inline void rcar_cmm_disable(struct platform_device *pdev)
->> +{
->> +}
->> +
->> +static int rcar_cmm_setup(struct platform_device *pdev,
->> +			  const struct rcar_cmm_config *config)
->> +{
->> +	return 0;
->> +}
->> +#endif /* IS_ENABLED(CONFIG_DRM_RCAR_CMM) */
->> +
->> +#endif /* __RCAR_CMM_H__ */
-> 
+---
+This email has been checked for viruses by Avast antivirus software.
+https://www.avast.com/antivirus
 
