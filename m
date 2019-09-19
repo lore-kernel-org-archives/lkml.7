@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B64C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F3CC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AA01218AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:09:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA9EC21924
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:09:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568930946;
-	bh=Au2opSr7JKBzP5lhHQCa+HofEwWR2Wj4MUH/7+LDhsI=;
+	s=default; t=1568930950;
+	bh=2GL256L2/6vJG33uyRE6ssbbk6KXwoAxkQYI36Ywbvg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OMChez2eUsFMbpFrFi8TWj7CgoT5JE3qTaI70p5VHASOLyekaNUidZIfvDUAfiool
-	 1XD2j5SrYCPA1taM4T3YtcB/EiDiW0Zm1+0KMJly9Uj4HoGjDC7vk0aIO62FNIiWE/
-	 KfCyG11KTFoFawH1K+IYySI09nqRU/LADaKoKNF4=
+	b=w1Z+ssb1PqCnW2K/ChGaDkeLohOL19BqfCTBSOxzbUQTT5N/n/E2D52C0fDWc/ltR
+	 XNRgnQ8hnWFYGDeaxKY2AZEUY2/acoNJY/ovNh6xW0GpdJApDxUYVWu0rOspcgDstv
+	 B3Rdm53yjj1qBmZbWSAJZaWJeASQjZzOqO6fHmfw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405360AbfISWJF (ORCPT
+        id S2393516AbfISWJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:09:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46966 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:09:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393502AbfISWI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:08:58 -0400
+        id S2393461AbfISWJF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:09:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8994821927;
-        Thu, 19 Sep 2019 22:08:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A03C218AF;
+        Thu, 19 Sep 2019 22:09:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568930937;
-        bh=Au2opSr7JKBzP5lhHQCa+HofEwWR2Wj4MUH/7+LDhsI=;
+        s=default; t=1568930945;
+        bh=2GL256L2/6vJG33uyRE6ssbbk6KXwoAxkQYI36Ywbvg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s+3Hw9Gl1RbtjkEqbJE12t8jEM2k+NVxbov4cEJS3m2tmBM2ob+Hr1tD8NFNDGDtp
-         z3I02KX7UOqZK7NWAPwzTA4QuTUhK9m/QSSEmkjfd/AJwDfv6hKkXm7uCAGrRpabEU
-         PdV3aPSAAjV24X69GEepqM7583Z4dkJ3WcUeXKsI=
+        b=s5Du6DjrBYY5zQWENrYjVOwXkwCTKm3pkPQfW0W2KasooGsUKcsUiWuONs+TBlXs3
+         p0Tx5sOCKQITHM+JRTEWrgnNx8qD5XBz1ykxRTXzDUEoeDEuDLSwE4fYuyo5mdZj7T
+         B7PlDenQFpASViVEciYdCgdjuRkGltPglnySDg/s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        stable@vger.kernel.org, Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 067/124] pNFS/flexfiles: Dont time out requests on hard mounts
-Date:   Fri, 20 Sep 2019 00:02:35 +0200
-Message-Id: <20190919214821.437000252@linuxfoundation.org>
+Subject: [PATCH 5.2 040/124] ARM: OMAP1: ams-delta-fiq: Fix missing irq_ack
+Date:   Fri, 20 Sep 2019 00:02:08 +0200
+Message-Id: <20190919214820.466235900@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -60,67 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
 
-[ Upstream commit 7af46292dadcf8870946916f79fdddf79bd7267f ]
+[ Upstream commit fa8397e45c64e60c80373bc19ee56e42a6bed9b6 ]
 
-If the mount is hard, we should ignore the 'io_maxretrans' module
-parameter so that we always keep retrying.
+Non-serio path of Amstrad Delta FIQ deferred handler depended on
+irq_ack() method provided by OMAP GPIO driver.  That method has been
+removed by commit 693de831c6e5 ("gpio: omap: remove irq_ack method").
+Remove useless code from the deferred handler and reimplement the
+missing operation inside the base FIQ handler.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Should another dependency - irq_unmask() - be ever removed from the OMAP
+GPIO driver, WARN once if missing.
+
+Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/flexfilelayout/flexfilelayout.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ arch/arm/mach-omap1/ams-delta-fiq-handler.S | 3 ++-
+ arch/arm/mach-omap1/ams-delta-fiq.c         | 4 +---
+ 2 files changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
-index c67cdbb36ce7c..38d9158142219 100644
---- a/fs/nfs/flexfilelayout/flexfilelayout.c
-+++ b/fs/nfs/flexfilelayout/flexfilelayout.c
-@@ -8,6 +8,7 @@
-  */
+diff --git a/arch/arm/mach-omap1/ams-delta-fiq-handler.S b/arch/arm/mach-omap1/ams-delta-fiq-handler.S
+index 81159af44862e..14a6c3eb32985 100644
+--- a/arch/arm/mach-omap1/ams-delta-fiq-handler.S
++++ b/arch/arm/mach-omap1/ams-delta-fiq-handler.S
+@@ -126,6 +126,8 @@ restart:
+ 	orr r11, r11, r13			@ mask all requested interrupts
+ 	str r11, [r12, #OMAP1510_GPIO_INT_MASK]
  
- #include <linux/nfs_fs.h>
-+#include <linux/nfs_mount.h>
- #include <linux/nfs_page.h>
- #include <linux/module.h>
- #include <linux/sched/mm.h>
-@@ -928,7 +929,9 @@ retry:
- 	pgm = &pgio->pg_mirrors[0];
- 	pgm->pg_bsize = mirror->mirror_ds->ds_versions[0].rsize;
++	str r13, [r12, #OMAP1510_GPIO_INT_STATUS] @ ack all requested interrupts
++
+ 	ands r10, r13, #KEYBRD_CLK_MASK		@ extract keyboard status - set?
+ 	beq hksw				@ no - try next source
  
--	pgio->pg_maxretrans = io_maxretrans;
-+	if (NFS_SERVER(pgio->pg_inode)->flags &
-+			(NFS_MOUNT_SOFT|NFS_MOUNT_SOFTERR))
-+		pgio->pg_maxretrans = io_maxretrans;
- 	return;
- out_nolseg:
- 	if (pgio->pg_error < 0)
-@@ -936,6 +939,7 @@ out_nolseg:
- out_mds:
- 	pnfs_put_lseg(pgio->pg_lseg);
- 	pgio->pg_lseg = NULL;
-+	pgio->pg_maxretrans = 0;
- 	nfs_pageio_reset_read_mds(pgio);
- }
+@@ -133,7 +135,6 @@ restart:
+ 	@@@@@@@@@@@@@@@@@@@@@@
+ 	@ Keyboard clock FIQ mode interrupt handler
+ 	@ r10 now contains KEYBRD_CLK_MASK, use it
+-	str r10, [r12, #OMAP1510_GPIO_INT_STATUS]	@ ack the interrupt
+ 	bic r11, r11, r10				@ unmask it
+ 	str r11, [r12, #OMAP1510_GPIO_INT_MASK]
  
-@@ -996,12 +1000,15 @@ retry:
- 		pgm->pg_bsize = mirror->mirror_ds->ds_versions[0].wsize;
- 	}
- 
--	pgio->pg_maxretrans = io_maxretrans;
-+	if (NFS_SERVER(pgio->pg_inode)->flags &
-+			(NFS_MOUNT_SOFT|NFS_MOUNT_SOFTERR))
-+		pgio->pg_maxretrans = io_maxretrans;
- 	return;
- 
- out_mds:
- 	pnfs_put_lseg(pgio->pg_lseg);
- 	pgio->pg_lseg = NULL;
-+	pgio->pg_maxretrans = 0;
- 	nfs_pageio_reset_write_mds(pgio);
- }
- 
+diff --git a/arch/arm/mach-omap1/ams-delta-fiq.c b/arch/arm/mach-omap1/ams-delta-fiq.c
+index 0af2bf6f99331..fd87382a3f183 100644
+--- a/arch/arm/mach-omap1/ams-delta-fiq.c
++++ b/arch/arm/mach-omap1/ams-delta-fiq.c
+@@ -69,9 +69,7 @@ static irqreturn_t deferred_fiq(int irq, void *dev_id)
+ 			 * interrupts default to since commit 80ac93c27441
+ 			 * requires interrupt already acked and unmasked.
+ 			 */
+-			if (irq_chip->irq_ack)
+-				irq_chip->irq_ack(d);
+-			if (irq_chip->irq_unmask)
++			if (!WARN_ON_ONCE(!irq_chip->irq_unmask))
+ 				irq_chip->irq_unmask(d);
+ 		}
+ 		for (; irq_counter[gpio] < fiq_count; irq_counter[gpio]++)
 -- 
 2.20.1
 
