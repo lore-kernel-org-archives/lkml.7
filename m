@@ -2,147 +2,108 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9772FC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1709C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6508721924
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:07:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568898451;
-	bh=xDlkbYtekNq2g+j/zLZRiaXJuHeVfYxFX/p6ICWFSTw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=umBWHBuXgj5EJWHiyf6gp/WkNLXEz+Ic1k5MjdoA8F5brgBKhBK39ieSU2W0UsV3w
-	 eJBHApCE8J860pcJzzT1fKkKQvoUj9uScbylVBnzOw4AL0n6o//SYm5KBNkaWo7UHV
-	 HeggrIQrMhuFiO7GDDwFxWhlSOIfcoYrEVH/ouQU=
+	by mail.kernel.org (Postfix) with ESMTP id 9F05721907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:08:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732259AbfISNHa (ORCPT
+        id S2388935AbfISNIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 09:07:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51932 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 09:08:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39868 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731332AbfISNHa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 09:07:30 -0400
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1732271AbfISNIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 09:08:35 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 643CF21D79
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 13:07:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568898448;
-        bh=xDlkbYtekNq2g+j/zLZRiaXJuHeVfYxFX/p6ICWFSTw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=BCHVqSuL/6xTcR4UIQNbftn+i7ALTmzjbkxcwXg9kdHIXUeW5wKOJj0jG8SGA29kT
-         rlFF6uog75GxK0bdFaRZNI0ABOEfr0Om7lb2CRZPfxIDL3GXQYc0LdqrbSwCsSMul1
-         OvFGEKKeZ74rerDPYJ6ZKN6QBZCubXMaIdO0VgrU=
-Received: by mail-wr1-f46.google.com with SMTP id r3so3028521wrj.6
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 06:07:28 -0700 (PDT)
-X-Gm-Message-State: APjAAAXHPl0m8kNYX8Ex3qEL/RaAJ+oHgVzkJkbhtMVKZXo+EkEuZ1Cf
-        RlBBXutW0jESZlAMhaD+1RYwRKnm0SxaQKgiRTw=
-X-Google-Smtp-Source: APXvYqyNvo9nMD/j9PGGbZY5fbWhu9DS32hN7clZh4PtaLsYsLNB9DQGeR8UyO6Q34SnbEzf8UHVp/ztmfjTiqTh1Ok=
-X-Received: by 2002:a5d:66d2:: with SMTP id k18mr7066721wrw.7.1568898446854;
- Thu, 19 Sep 2019 06:07:26 -0700 (PDT)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2765189810C;
+        Thu, 19 Sep 2019 13:08:35 +0000 (UTC)
+Received: from [10.72.12.81] (ovpn-12-81.pek2.redhat.com [10.72.12.81])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id ABF825D9CC;
+        Thu, 19 Sep 2019 13:08:22 +0000 (UTC)
+Subject: Re: [RFC v4 0/3] vhost: introduce mdev based hardware backend
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Tiwei Bie <tiwei.bie@intel.com>, alex.williamson@redhat.com,
+        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, dan.daly@intel.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        lingshan.zhu@intel.com
+References: <20190917010204.30376-1-tiwei.bie@intel.com>
+ <993841ed-942e-c90b-8016-8e7dc76bf13a@redhat.com>
+ <20190917105801.GA24855@___>
+ <fa6957f3-19ad-f351-8c43-65bc8342b82e@redhat.com>
+ <20190918102923-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <d2efe7e4-cf13-437d-e2dc-e2779fac7d2f@redhat.com>
+Date:   Thu, 19 Sep 2019 21:08:11 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190321163623.20219-12-julien.grall@arm.com> <0dfe120b-066a-2ac8-13bc-3f5a29e2caa3@arm.com>
- <CAJF2gTTXHHgDboaexdHA284y6kNZVSjLis5-Q2rDnXCxr4RSmA@mail.gmail.com>
- <c871a5ae-914f-a8bb-9474-1dcfec5d45bf@arm.com> <20190619091219.GB7767@fuggles.cambridge.arm.com>
- <CAJF2gTTmFq3yYa9UrdZRAFwJgC=KmKTe2_NFy_UZBUQovqQJPg@mail.gmail.com>
- <20190619123939.GF7767@fuggles.cambridge.arm.com> <CAJF2gTSiiiewTLwVAXvPLO7rTSUw1rg8VtFLzANdP2S2EEbTjg@mail.gmail.com>
- <20190624104006.lvm32nahemaqklxc@willie-the-truck> <CAJF2gTSC1sGgmiTCgzKUTdPyUZ3LG4H7N8YbMyWr-E+eifGuYg@mail.gmail.com>
- <20190912140256.fwbutgmadpjbjnab@willie-the-truck> <CAJF2gTT2c45HRfATF+=zs-HNToFAKgq1inKRmJMV3uPYBo4iVg@mail.gmail.com>
- <CAJF2gTTsHCsSpf1ncVb=ZJS2d=r+AdDi2=5z-REVS=uUg9138A@mail.gmail.com> <057a0af3-93f7-271c-170e-4b31e6894c3c@linaro.org>
-In-Reply-To: <057a0af3-93f7-271c-170e-4b31e6894c3c@linaro.org>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Thu, 19 Sep 2019 21:07:15 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTRbyfrUqAULPqJTXdxx8YOscPqAEuMsoJ+dTNobNrUV1g@mail.gmail.com>
-Message-ID: <CAJF2gTRbyfrUqAULPqJTXdxx8YOscPqAEuMsoJ+dTNobNrUV1g@mail.gmail.com>
-Subject: Re: [PATCH RFC 11/14] arm64: Move the ASID allocator code in a
- separate file
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Palmer Dabbelt <palmer@sifive.com>, christoffer.dall@arm.com,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Julien Grall <julien.grall@arm.com>, gary@garyguo.net,
-        linux-riscv@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        Mike Rapoport <rppt@linux.ibm.com>, aou@eecs.berkeley.edu,
-        Arnd Bergmann <arnd@arndb.de>, suzuki.poulose@arm.com,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Anup Patel <anup.Patel@wdc.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        iommu@lists.linux-foundation.org, james.morse@arm.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190918102923-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Thu, 19 Sep 2019 13:08:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On Mon, Sep 16, 2019 at 8:57 PM Jean-Philippe Brucker
-<jean-philippe@linaro.org> wrote:
-> On 13/09/2019 09:13, Guo Ren wrote:
-> > Another idea is seperate remote TLB invalidate into two instructions:
-> >
-> >  - sfence.vma.b.asyc
-> >  - sfence.vma.b.barrier // wait all async TLB invalidate operations
-> > finished for all harts.
->
-> It's not clear to me how this helps, but I probably don't have the whole
-> picture. If you have a place where it is safe to wait for the barrier to
-> complete, why not do the whole invalidate there?
->
-> > (I remember who mentioned me separate them into two instructions after
-> > session. Anup? Is the idea right ?)
-Forget it, I still use irq signal in my formal proposal [1]. I also
-couldn't image the whole picture :P
+On 2019/9/18 下午10:32, Michael S. Tsirkin wrote:
+>>>> So I have some questions:
+>>>>
+>>>> 1) Compared to method 2, what's the advantage of creating a new vhost char
+>>>> device? I guess it's for keep the API compatibility?
+>>> One benefit is that we can avoid doing vhost ioctls on
+>>> VFIO device fd.
+>> Yes, but any benefit from doing this?
+> It does seem a bit more modular, but it's certainly not a big deal.
 
 
-> >     To solve the problem, we could define a async mode in sfence.vma.b to
-> >     slove the problem and finished with per_cpu_irq/exception.
->
-> The solution I had to this problem is pinning the ASID [1] used by the
-> IOMMU, to prevent the CPU from recycling the ASID on rollover. This way
-> the CPU doesn't have to wait for IOMMU invalidations to complete, when
-> scheduling a task that might not even have anything to do with the IOMMU.
->
+Ok, if we go this way, it could be as simple as provide some callback to 
+vhost, then vhost can just forward the ioctl through parent_ops.
 
-> In the Arm SMMU, ASID and IOASID (PASID) are separate identifiers. IOASID
-> indexes an entry in the context descriptor table, which contains the ASID.
-> So with unpinned shared ASID you don't need to invalidate the ATC on
-> rollover, since the IOASID doesn't change, but you do need to modify the
-> context descriptor and invalidate cached versions of it.
-The terminology confused me a lot. I perfer use PASID for IOMMU and
-ASID is for CPU.
-Arm's entry of the context descriptor table contains a "IOASID"
-
-IOASID != ASID for CPU_TLB and IOMMU_TLB.
-
-When you say "since the IOASID doesn't change",Is it PASID or my IOASID ? -_*!
-PASID in PCI-sig was used to determine transfer address space.
-For intel, the entry which is indexed by PASID also contain S1/S2.PGD
-and DID(VMID).
-For arm, the entry which is indexed by PASID only contain S1.PGD and
-IOASID. Compare to Intel Vt-d Scalable mode, arm's design can't
-support PCI Virtual Function.
 
 >
-> Once you have pinned ASIDs, you could also declare that IOASID = ASID. I
-> don't remember finding an argument to strictly forbid it, even though ASID
-> and IOASID have different sizes on Arm (respectively 8/16 and 20 bits).
-ASID and IOASID are hard to keep the same between CPU system and IOMMU
-system. So I introduce S1/S2.PGD.PPN as a bridge between CPUs and
-IOMMUs.
-See my proposal [1]
+>>>> 2) For method 2, is there any easy way for user/admin to distinguish e.g
+>>>> ordinary vfio-mdev for vhost from ordinary vfio-mdev?
+>>> I think device-api could be a choice.
+>> Ok.
+>>
+>>
+>>>> I saw you introduce
+>>>> ops matching helper but it's not friendly to management.
+>>> The ops matching helper is just to check whether a given
+>>> vfio-device is based on a mdev device.
+>>>
+>>>> 3) A drawback of 1) and 2) is that it must follow vfio_device_ops that
+>>>> assumes the parameter comes from userspace, it prevents support kernel
+>>>> virtio drivers.
+>>>>
+>>>> 4) So comes the idea of method 3, since it register a new vhost-mdev driver,
+>>>> we can use device specific ops instead of VFIO ones, then we can have a
+>>>> common API between vDPA parent and vhost-mdev/virtio-mdev drivers.
+>>> As the above draft shows, this requires introducing a new
+>>> VFIO device driver. I think Alex's opinion matters here.
 
-1: https://lore.kernel.org/linux-csky/1568896556-28769-1-git-send-email-guoren@kernel.org/T/#u
--- 
-Best Regards
- Guo Ren
 
-ML: https://lore.kernel.org/linux-csky/
+Just to clarify, a new type of mdev driver but provides dummy 
+vfio_device_ops for VFIO to make container DMA ioctl work.
+
+Thanks
+
+
+>> Yes, it is.
+>>
+>> Thanks
+>>
+>>
