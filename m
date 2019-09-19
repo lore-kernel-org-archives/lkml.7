@@ -2,80 +2,97 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D3AC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 19:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6AFAC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 19:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8532B21928
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 19:38:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568921894;
-	bh=Kdd48kV9rxB8tD0Euh0gJPqWjrtHztGyM+E9VlOArbc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=klQ9nUWvRoxgs0InCmh9o2QYD6O61BEYk9S1x+LX272xatT3GF8uuzkBXFuJhvPrA
-	 f4LijbIcrOaSqzalwpJwc547ppyHFOCT56PW3lncVsNy7L/WUmBvXmKP34VRBLO4/x
-	 OWTWraMwKkeoVX8FrALnHFMyrbIGj0hp2AsT0UdE=
+	by mail.kernel.org (Postfix) with ESMTP id A252821924
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 19:39:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392383AbfISTiN (ORCPT
+        id S2392400AbfISTjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 15:38:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36242 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 15:39:17 -0400
+Received: from mga07.intel.com ([134.134.136.100]:50290 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392354AbfISTiN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 15:38:13 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAC3721907;
-        Thu, 19 Sep 2019 19:38:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568921892;
-        bh=Kdd48kV9rxB8tD0Euh0gJPqWjrtHztGyM+E9VlOArbc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ysIhimgFRoRKPndsu8xugv24mx5P35MkKujSQD7hmVfmeQx+hnc70Ak+sdrzEzcjI
-         K1K0PrNtglFg7Gy6bkXW6ITb5a21l5JCMNawHolZLrFucMZbIdNW5V9eO85Tn+f4OK
-         2NjmmFCn9ccMNBLgC5O3gGeTZ0u+QXPG+TW5Jheo=
-Date:   Thu, 19 Sep 2019 12:38:12 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: threads-max observe limits
-Message-Id: <20190919123812.8601e63d31cf44178dcbe75e@linux-foundation.org>
-In-Reply-To: <20190919075911.GA15782@dhcp22.suse.cz>
-References: <20190917100350.GB1872@dhcp22.suse.cz>
-        <38349607-b09c-fa61-ccbb-20bee9f282a3@gmx.de>
-        <20190917153830.GE1872@dhcp22.suse.cz>
-        <87ftku96md.fsf@x220.int.ebiederm.org>
-        <20190918071541.GB12770@dhcp22.suse.cz>
-        <20190919075911.GA15782@dhcp22.suse.cz>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S2392354AbfISTjR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 15:39:17 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Sep 2019 12:39:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,524,1559545200"; 
+   d="scan'208";a="217417278"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga002.fm.intel.com with ESMTP; 19 Sep 2019 12:39:15 -0700
+Date:   Thu, 19 Sep 2019 12:39:15 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paul Mackerras <paulus@ozlabs.org>
+Cc:     James Hogan <jhogan@kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry@arm.com>,
+        Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 10/13] KVM: Provide common implementation for generic
+ dirty log functions
+Message-ID: <20190919193915.GC30495@linux.intel.com>
+References: <20190911185038.24341-1-sean.j.christopherson@intel.com>
+ <20190911185038.24341-11-sean.j.christopherson@intel.com>
+ <20190919002242.GA19503@blackberry>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190919002242.GA19503@blackberry>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 19 Sep 2019 09:59:11 +0200 Michal Hocko <mhocko@kernel.org> wrote:
-
-> On Wed 18-09-19 09:15:41, Michal Hocko wrote:
-> > On Tue 17-09-19 12:26:18, Eric W. Biederman wrote:
-> [...]
-> > > b) Not being able to bump threads_max to the physical limit of
-> > >    the machine is very clearly a regression.
+On Thu, Sep 19, 2019 at 10:22:42AM +1000, Paul Mackerras wrote:
+> On Wed, Sep 11, 2019 at 11:50:35AM -0700, Sean Christopherson wrote:
+> > Move the implementations of KVM_GET_DIRTY_LOG and KVM_CLEAR_DIRTY_LOG
+> > for CONFIG_KVM_GENERIC_DIRTYLOG_READ_PROTECT into common KVM code.
+> > The arch specific implemenations are extremely similar, differing
+> > only in whether the dirty log needs to be sync'd from hardware (x86)
+> > and how the TLBs are flushed.  Add new arch hooks to handle sync
+> > and TLB flush; the sync will also be used for non-generic dirty log
+> > support in a future patch (s390).
 > > 
-> > ... exactly this part. The changelog of the respective patch doesn't
-> > really exaplain why it is needed except of "it sounds like a good idea
-> > to be consistent".
+> > The ulterior motive for providing a common implementation is to
+> > eliminate the dependency between arch and common code with respect to
+> > the memslot referenced by the dirty log, i.e. to make it obvious in the
+> > code that the validity of the memslot is guaranteed, as a future patch
+> > will rework memslot handling such that id_to_memslot() can return NULL.
 > 
-> Any take on this Heinrich? If there really is not strong reasoning about
-> the restricting user input then I will suggest reverting 16db3d3f1170
-> ("kernel/sysctl.c: threads-max observe limits")
+> I notice you add empty definitions of kvm_arch_sync_dirty_log() for
+> PPC, both Book E and Book 3S.  Given that PPC doesn't select
+> CONFIG_KVM_GENERIC_DIRTYLOG_READ_PROTECT, why is this necessary?
 
-I agree, based on what I'm seeing in this thread.
+s390 has a non-empty kvm_arch_sync_dirty_log() but doesn't select
+CONFIG_KVM_GENERIC_DIRTYLOG_READ_PROTECT.  Patch 11/13 moves s390's call
+of kvm_arch_sync_dirty_log() from s390's kvm_vm_ioctl_get_dirty_log() into
+the common (but not "generic") kvm_get_dirty_log() so that it's obvious
+that kvm_vm_ioctl_get_dirty_log() and kvm_get_dirty_log() are operating on
+the same memslot, i.e. aren't independently querying id_to_memslot().
+
+I originally made kvm_arch_sync_dirty_log() opt-in with a __KVM_HAVE_ARCH
+macro, but the resulting #ifdeffery felt uglier than having PPC and ARM
+provide empty functions.
