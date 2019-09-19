@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC500C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BE0C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91EC021924
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:20:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CA22217D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:20:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931629;
-	bh=h7bs5BaL3V7O2y9WW5ZRBJX0p8qiT4bHZLFJo4yFCI8=;
+	s=default; t=1568931636;
+	bh=dz3ZAh8uhkziH89Cqtb57Ig1Dfn4IwRMxgvdjvoB64c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n+/1s5TFqXoFiC9mTovWws4IRnXHiG2+kmuQ30VFjfLg/4sQsQ0nnGUndzvjttoCu
-	 w3L5mOF6Sl7/msMk7n61bYqgV+YKWQUBWzw3nqXHyvsbHMmLxLx8BaDBA3mtKiC7TU
-	 NEKFvmEj38XjcuLgIHVHw9kP0Rj0fT4oRYVATaKk=
+	b=CTeS76KjjL6mYZyxI8iKCa5lB4/fyBSrgIUtpjb1xjJ12QGnas4bZBGA2sG0lh8Z7
+	 kLoq9L5H+AZTnd6BEMopCF1GdqUrC40RKUMTo+pfUjV0vO3TAeOrU82SGwX/ZiME30
+	 O8FmyBqHqoBKlAs2vfMdXUqf33vMLS7Zv+anoWQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732759AbfISWU2 (ORCPT
+        id S1733200AbfISWUf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:20:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34410 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:20:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394026AbfISWUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:20:25 -0400
+        id S1733115AbfISWUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:20:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A59721907;
-        Thu, 19 Sep 2019 22:20:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5033121924;
+        Thu, 19 Sep 2019 22:20:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931624;
-        bh=h7bs5BaL3V7O2y9WW5ZRBJX0p8qiT4bHZLFJo4yFCI8=;
+        s=default; t=1568931632;
+        bh=dz3ZAh8uhkziH89Cqtb57Ig1Dfn4IwRMxgvdjvoB64c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y4/KJKy5Eyw/kGjEyhKF0DroOgd3eiPoo4/+03yUY4VHKurHijqKK0Ux6yhHujNbf
-         3sSE5WWKfIC22GKht4MjSZs9RciWbJGlO3uFQ129TYbl6aVEHt4/bD5cGaQz8dNN9Q
-         Y/P+AvfnftFnrsAr5p5h6r+UC9NTyFykivNm9LQs=
+        b=d+mW05iRJRxKLkfMuwiS47JBEHqF+DtbdAXyKLIDi447Ydhsc7rK1VuMa8dgg33Wf
+         7zoQG+e2OTAq5+4wbYghWM2Vh/nHo/qy3hBMGE+KO3oP493rDTdlHMRYcBxQxB4UuM
+         x6TbfIgjQaSPU0oS5drydE3mybtiHWzNmfkzu0n4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Prashant Malani <pmalani@chromium.org>,
-        Hayes Wang <hayeswang@realtek.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 54/74] r8152: Set memory to all 0xFFs on failed reg reads
-Date:   Fri, 20 Sep 2019 00:04:07 +0200
-Message-Id: <20190919214810.052809203@linuxfoundation.org>
+Subject: [PATCH 4.9 57/74] NFSv2: Fix eof handling
+Date:   Fri, 20 Sep 2019 00:04:10 +0200
+Message-Id: <20190919214810.227366238@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214800.519074117@linuxfoundation.org>
 References: <20190919214800.519074117@linuxfoundation.org>
@@ -61,50 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Prashant Malani <pmalani@chromium.org>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit f53a7ad189594a112167efaf17ea8d0242b5ac00 ]
+[ Upstream commit 71affe9be45a5c60b9772e1b2701710712637274 ]
 
-get_registers() blindly copies the memory written to by the
-usb_control_msg() call even if the underlying urb failed.
+If we received a reply from the server with a zero length read and
+no error, then that implies we are at eof.
 
-This could lead to junk register values being read by the driver, since
-some indirect callers of get_registers() ignore the return values. One
-example is:
-  ocp_read_dword() ignores the return value of generic_ocp_read(), which
-  calls get_registers().
-
-So, emulate PCI "Master Abort" behavior by setting the buffer to all
-0xFFs when usb_control_msg() fails.
-
-This patch is copied from the r8152 driver (v2.12.0) published by
-Realtek (www.realtek.com).
-
-Signed-off-by: Prashant Malani <pmalani@chromium.org>
-Acked-by: Hayes Wang <hayeswang@realtek.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/r8152.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ fs/nfs/proc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-index 02e29562d254e..15dc70c118579 100644
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -689,8 +689,11 @@ int get_registers(struct r8152 *tp, u16 value, u16 index, u16 size, void *data)
- 	ret = usb_control_msg(tp->udev, usb_rcvctrlpipe(tp->udev, 0),
- 			      RTL8152_REQ_GET_REGS, RTL8152_REQT_READ,
- 			      value, index, tmp, size, 500);
-+	if (ret < 0)
-+		memset(data, 0xff, size);
-+	else
-+		memcpy(data, tmp, size);
- 
--	memcpy(data, tmp, size);
- 	kfree(tmp);
- 
- 	return ret;
+diff --git a/fs/nfs/proc.c b/fs/nfs/proc.c
+index b7bca83039895..f3e8bcbd29a09 100644
+--- a/fs/nfs/proc.c
++++ b/fs/nfs/proc.c
+@@ -588,7 +588,8 @@ static int nfs_read_done(struct rpc_task *task, struct nfs_pgio_header *hdr)
+ 		/* Emulate the eof flag, which isn't normally needed in NFSv2
+ 		 * as it is guaranteed to always return the file attributes
+ 		 */
+-		if (hdr->args.offset + hdr->res.count >= hdr->res.fattr->size)
++		if ((hdr->res.count == 0 && hdr->args.count > 0) ||
++		    hdr->args.offset + hdr->res.count >= hdr->res.fattr->size)
+ 			hdr->res.eof = 1;
+ 	}
+ 	return 0;
 -- 
 2.20.1
 
