@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 664FCC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13918C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31C8420678
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:29:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D16FA20678
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:29:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932150;
-	bh=mP0K/uEJqx8+BnvBniqIy2bLIgX7+uy59FBpsDE/IJo=;
+	s=default; t=1568932153;
+	bh=aw9Ccs93FdRhCdFHunJR7zrEHuMOFb3DevjX4PIvUr0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oFCYNLRnBsZwKUTakNc9vVxQQLjbSlVfgd7dMBNWNkQ0hKvnTWjuoEdMnTpGAVeYD
-	 8k3gUtOq/fW1gTdg0LrPVn/RCxfIUa9vrFtC8aCbkfRu3x7eVhdgp2PqVCUL5x5UV1
-	 JK//K/Z7Zo55zE1bzVaqvpJ1NeJ7J+hPdeEP8Jus=
+	b=O4RYOphZ/s9v8k6Z7wsKCqImQZnp+EO/ouAHi1vdU/ulmBrp5DkzAMAGslVEnRIEE
+	 uEegQblWt2FpIwsPwp1l55/CZYiT43eON35R5VT6szwkNur1V0OXFJFXKupUL16igu
+	 ROk61Xq06OZQoI4GJGDM4WL9vnYf0cby/tlLbIf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393865AbfISWSM (ORCPT
+        id S2406551AbfISWSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:18:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59524 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:18:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406562AbfISWSF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:18:05 -0400
+        id S2393097AbfISWR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:17:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEA9E21D7C;
-        Thu, 19 Sep 2019 22:18:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8ED832196E;
+        Thu, 19 Sep 2019 22:17:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931485;
-        bh=mP0K/uEJqx8+BnvBniqIy2bLIgX7+uy59FBpsDE/IJo=;
+        s=default; t=1568931477;
+        bh=aw9Ccs93FdRhCdFHunJR7zrEHuMOFb3DevjX4PIvUr0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YDvhAMxpAYYPAxLRKQkivAZ1BAEVH+tNGFYe5S6idw2qFKRrLKBQR5h2qWdxVWdmj
-         ykuy7/Rhx3ozZPHX1sajMi1U7M35tTSofAFJcbjAbHAVdWN2GxyTSH3YWbixbzXrFD
-         r+H7Cd76IAbMZIS6sbo/cmuoGhvOAaja2WbRr4B4=
+        b=iLC8LwKZD1XE8EWgMYiJCb8I8gitNQv/jbctcdN/LNjesOf9IKCW22RILgWH9crRe
+         YBcuTOrpEhLL0Y/41qdok1qjneVvDshF9pkX95N0EwyXbFqdZBveLu/AxfFygrWsR4
+         MkEl+kK/d7ddKtlfD1aaACIed0gpFHTMstpnY5Mw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, SteveM <swm@swm1.com>
-Subject: [PATCH 4.14 38/59] sky2: Disable MSI on yet another ASUS boards (P6Xxxx)
-Date:   Fri, 20 Sep 2019 00:03:53 +0200
-Message-Id: <20190919214806.539597792@linuxfoundation.org>
+        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
+        Steve French <stfrench@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 35/59] cifs: set domainName when a domain-key is used in multiuser
+Date:   Fri, 20 Sep 2019 00:03:50 +0200
+Message-Id: <20190919214806.293833827@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214755.852282682@linuxfoundation.org>
 References: <20190919214755.852282682@linuxfoundation.org>
@@ -60,41 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Ronnie Sahlberg <lsahlber@redhat.com>
 
-[ Upstream commit 189308d5823a089b56e2299cd96589507dac7319 ]
+[ Upstream commit f2aee329a68f5a907bcff11a109dfe17c0b41aeb ]
 
-A similar workaround for the suspend/resume problem is needed for yet
-another ASUS machines, P6X models.  Like the previous fix, the BIOS
-doesn't provide the standard DMI_SYS_* entry, so again DMI_BOARD_*
-entries are used instead.
+RHBZ: 1710429
 
-Reported-and-tested-by: SteveM <swm@swm1.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+When we use a domain-key to authenticate using multiuser we must also set
+the domainnmame for the new volume as it will be used and passed to the server
+in the NTLMSSP Domain-name.
+
+Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/sky2.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ fs/cifs/connect.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/drivers/net/ethernet/marvell/sky2.c b/drivers/net/ethernet/marvell/sky2.c
-index 7b239af6cc040..5046efdad5390 100644
---- a/drivers/net/ethernet/marvell/sky2.c
-+++ b/drivers/net/ethernet/marvell/sky2.c
-@@ -4954,6 +4954,13 @@ static const struct dmi_system_id msi_blacklist[] = {
- 			DMI_MATCH(DMI_BOARD_NAME, "P6T"),
- 		},
- 	},
-+	{
-+		.ident = "ASUS P6X",
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "ASUSTeK Computer INC."),
-+			DMI_MATCH(DMI_BOARD_NAME, "P6X"),
-+		},
-+	},
- 	{}
- };
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index 57c62ff4e8d6d..699e763ea671a 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -2542,6 +2542,7 @@ static int
+ cifs_set_cifscreds(struct smb_vol *vol, struct cifs_ses *ses)
+ {
+ 	int rc = 0;
++	int is_domain = 0;
+ 	const char *delim, *payload;
+ 	char *desc;
+ 	ssize_t len;
+@@ -2589,6 +2590,7 @@ cifs_set_cifscreds(struct smb_vol *vol, struct cifs_ses *ses)
+ 			rc = PTR_ERR(key);
+ 			goto out_err;
+ 		}
++		is_domain = 1;
+ 	}
  
+ 	down_read(&key->sem);
+@@ -2646,6 +2648,26 @@ cifs_set_cifscreds(struct smb_vol *vol, struct cifs_ses *ses)
+ 		goto out_key_put;
+ 	}
+ 
++	/*
++	 * If we have a domain key then we must set the domainName in the
++	 * for the request.
++	 */
++	if (is_domain && ses->domainName) {
++		vol->domainname = kstrndup(ses->domainName,
++					   strlen(ses->domainName),
++					   GFP_KERNEL);
++		if (!vol->domainname) {
++			cifs_dbg(FYI, "Unable to allocate %zd bytes for "
++				 "domain\n", len);
++			rc = -ENOMEM;
++			kfree(vol->username);
++			vol->username = NULL;
++			kfree(vol->password);
++			vol->password = NULL;
++			goto out_key_put;
++		}
++	}
++
+ out_key_put:
+ 	up_read(&key->sem);
+ 	key_put(key);
 -- 
 2.20.1
 
