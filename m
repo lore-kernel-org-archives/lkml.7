@@ -2,105 +2,112 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82873C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 12:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91EA5C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 12:36:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63B1421848
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 12:34:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E49420644
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 12:36:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390350AbfISMen (ORCPT
+        id S2390139AbfISMgV convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 08:34:43 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:44481 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390333AbfISMel (ORCPT
+        Thu, 19 Sep 2019 08:36:21 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:48614 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387846AbfISMgU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 08:34:41 -0400
-Received: by mail-qk1-f195.google.com with SMTP id i78so3114197qke.11;
-        Thu, 19 Sep 2019 05:34:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7Uyhy6Uax8YQF7rWKudmdZRWa5YwRk9haOx429+okoM=;
-        b=gcuL/s5GFV01y9WW388I08iuExeSiWgxvjuGQQ6YI26IQ/9UK5jZx4tgb9wcH/gMlG
-         u/NwKEcTLMeQkiA8vI+mhOfOgq2Y4o6aI76WM/BbW5UATF5B25Z1eCD/aEM5rVrafRSz
-         A/R1StzLJsmY4JPHtAZlJr1oNmqO5ETgu6niCuSn4lXJBJYImr+1la93OFhJS0q9OFAR
-         4etYfeQfz1MfWrJRoinqJ/s8G9Np42W/mgvwr0cHkClopnZVAPKtSbWy09+5AZNJFBzw
-         LKGZK/d+ezxPP6EGKMab9EVbJvEsdYzNIr25kDV6Yu3VCT7VqFbHihXwX3+5G9JkweCg
-         vVvw==
-X-Gm-Message-State: APjAAAVUi+rhSMD8ICl49JQx9r8V/K0JJ7VegxAbZKlLXfv+CEVQYU+A
-        xwhL+SqImqDjBc8FIo6aiPJUnaIvqyoR0gXazqw=
-X-Google-Smtp-Source: APXvYqxsF0NeJ+J6q20ijNnid8HRUOX+T6xU0Euwl3Qp0xXUeXxuvP+eu08WL+MyzK8Ts+WBX7qXW2dB2Aa8EsOeWcU=
-X-Received: by 2002:ae9:f503:: with SMTP id o3mr2579143qkg.3.1568896479756;
- Thu, 19 Sep 2019 05:34:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190918195454.2056139-1-arnd@arndb.de> <BN8PR12MB3266E044DDF00F227B9B191CD3890@BN8PR12MB3266.namprd12.prod.outlook.com>
-In-Reply-To: <BN8PR12MB3266E044DDF00F227B9B191CD3890@BN8PR12MB3266.namprd12.prod.outlook.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 19 Sep 2019 14:34:23 +0200
-Message-ID: <CAK8P3a2QXMSPdDSQTx_MrgOhg4XjMp=Qre1LNp7iX2uKzdwC1g@mail.gmail.com>
-Subject: Re: [PATCH] stmmac: selftest: avoid large stack usage
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-Cc:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
+        Thu, 19 Sep 2019 08:36:20 -0400
+Received: from marcel-macbook.fritz.box (p4FEFC197.dip0.t-ipconnect.de [79.239.193.151])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 0C1ACCECE0;
+        Thu, 19 Sep 2019 14:45:10 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] Bluetooth: btusb: avoid unused function warning
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <CAK8P3a0AeGi2pd78A3yzh0NNGdgGvo_y1LCginyTCY3OUeVHkg@mail.gmail.com>
+Date:   Thu, 19 Sep 2019 14:36:18 +0200
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        Alex Lu <alex_lu@realsil.com.cn>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rajat Jain <rajatja@google.com>,
+        Raghuram Hegde <raghuram.hegde@intel.com>,
+        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Message-Id: <A91B8FA0-50F3-44FC-9466-F8569EA89C99@holtmann.org>
+References: <20190918195918.2190556-1-arnd@arndb.de>
+ <C6D98BD8-F57F-411F-A2F2-D9E531137002@holtmann.org>
+ <CAK8P3a0AeGi2pd78A3yzh0NNGdgGvo_y1LCginyTCY3OUeVHkg@mail.gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 9:58 AM Jose Abreu <Jose.Abreu@synopsys.com> wrote:
->
-> From: Arnd Bergmann <arnd@arndb.de>
-> Date: Sep/18/2019, 20:54:34 (UTC+00:00)
->
-> > +     if (!cfg || !cfg->enable) {
-> >               value &= ~XGMAC_RSSE;
-> >               writel(value, ioaddr + XGMAC_RSS_CTRL);
-> >               return 0;
-> >       }
-> >
-> >       for (i = 0; i < (sizeof(cfg->key) / sizeof(u32)); i++) {
-> > -             ret = dwxgmac2_rss_write_reg(ioaddr, true, i, *key++);
-> > +             if (cfg)
-> > +                     ret = dwxgmac2_rss_write_reg(ioaddr, true, i, cfg->key[i]);
-> > +             else
-> > +                     ret = dwxgmac2_rss_write_reg(ioaddr, true, i, 0);
-> > +
-> >               if (ret)
-> >                       return ret;
-> >       }
-> >
-> >       for (i = 0; i < ARRAY_SIZE(cfg->table); i++) {
-> > -             ret = dwxgmac2_rss_write_reg(ioaddr, false, i, cfg->table[i]);
-> > +             if (cfg)
-> > +                     ret = dwxgmac2_rss_write_reg(ioaddr, false, i, cfg->table[i]);
-> > +             else
-> > +                     ret = dwxgmac2_rss_write_reg(ioaddr, false, i, 0);
-> > +
->
-> I don't get these "if (cfg)" checks. You already check earlier if cfg is
-> NULL and return if so. I don't think you need these extra checks.
+Hi Arnd,
 
-Ah, you are right, I missed the 'return 0', that makes it much easier.
+>>> The btusb_rtl_cmd_timeout() function is used inside of an
+>>> ifdef, leading to a warning when this part is hidden
+>>> from the compiler:
+>>> 
+>>> drivers/bluetooth/btusb.c:530:13: error: unused function 'btusb_rtl_cmd_timeout' [-Werror,-Wunused-function]
+>>> 
+>>> Use an IS_ENABLED() check instead so the compiler can see
+>>> the code and then discard it silently.
+>>> 
+>>> Fixes: d7ef0d1e3968 ("Bluetooth: btusb: Use cmd_timeout to reset Realtek device")
+>>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>>> ---
+>>> drivers/bluetooth/btusb.c | 5 ++---
+>>> 1 file changed, 2 insertions(+), 3 deletions(-)
+>>> 
+>>> diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+>>> index a9c35ebb30f8..23e606aaaea4 100644
+>>> --- a/drivers/bluetooth/btusb.c
+>>> +++ b/drivers/bluetooth/btusb.c
+>>> @@ -3807,8 +3807,8 @@ static int btusb_probe(struct usb_interface *intf,
+>>>              btusb_check_needs_reset_resume(intf);
+>>>      }
+>>> 
+>>> -#ifdef CONFIG_BT_HCIBTUSB_RTL
+>>> -     if (id->driver_info & BTUSB_REALTEK) {
+>>> +     if (IS_ENABLED(CONFIG_BT_HCIBTUSB_RTL) &&
+>>> +         (id->driver_info & BTUSB_REALTEK)) {
+>>>              hdev->setup = btrtl_setup_realtek;
+>>>              hdev->shutdown = btrtl_shutdown_realtek;
+>>>              hdev->cmd_timeout = btusb_rtl_cmd_timeout;
+>>> @@ -3819,7 +3819,6 @@ static int btusb_probe(struct usb_interface *intf,
+>>>               */
+>>>              set_bit(BTUSB_WAKEUP_DISABLE, &data->flags);
+>>>      }
+>>> -#endif
+>> 
+>> I prefer that we stick another ifdef around the btusb_rtl_cmd_timeout function since that
+>> is how we did it for the other vendors as well.
+> 
+> Ok. Can you just commit that with 'Reported-by: Arnd Bergmann <arnd@arndb.de>'?
+> 
+>> However I start to wonder if we need all these vendor ifdef anyway. The vendor specific
+>> functions should turn into empty stubs if their support is not selected.
+> 
+> It just wastes a little bit of object code space, which my approach
+> above avoids.
+> 
+> I guess one could also be clever and redefine those macros like
+> 
+> #define BTUSB_REALTEK (IS_ENABLED(CONFIG_BT_HCIBTUSB_RTL) ? 0x20000 : 0)
+> 
+> so the if() section gets silently dropped, in addition to treating
+> zero like BTUSB_IGNORE.
 
-> Also, your subject line should be something like: "net: stmmac:
-> selftests: ..."
+we could do that as well. I just want it to be consistent in the code.
 
-I think both styles is common for network drivers, though I think most
-just leave out the 'net:'. I changed it in v2 now.
+Regards
 
-      Arnd
+Marcel
+
