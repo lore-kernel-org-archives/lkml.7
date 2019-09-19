@@ -2,52 +2,59 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85274C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C202BC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 589DE2196F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:16:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96E8E21907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:16:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931401;
-	bh=YC0WJzuqTRA7+YNRCGTQLnco4VMdrdFFmvdF3+/Ysw4=;
+	s=default; t=1568931405;
+	bh=ig1QAX5ew4WFIw7Z0NgMyjHLCTDINWuxaWZVyI6TGbQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FIbDItCsD0uEs+v+pySMYYyFtxsI4QoTV2iV6k9qr1I/0ki9NQHQ7CXZAvTLFWyL0
-	 Axu8E8gQNdlGXnf7hmq+GXOnw65D+4/2V4uOSnRO+eqst64/OlIJhFY5B311bu8MyW
-	 J2FcjfjoUgCesZddWpn+uhdqW13tk4Y6o7QxFYaQ=
+	b=lDZ3t9T+1hIvbhbBAaXmM0dLXZ0LFTzbQ8vH8qq0pSdpVPZEH1dU16DHnm0YXfY+D
+	 kNxD8vMOhhSBiBEVUtFpal39B/AW3jh90YwbebUSgPQdHpVV0PJt9YfQOPxtjYRby8
+	 GYRRjCtNLW78iqwaXePZ0L5s8S3mijatCnZriMJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406345AbfISWQk (ORCPT
+        id S2406353AbfISWQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:16:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57230 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:16:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406331AbfISWQg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:16:36 -0400
+        id S2404461AbfISWQk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:16:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36E3321A49;
-        Thu, 19 Sep 2019 22:16:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6B1121924;
+        Thu, 19 Sep 2019 22:16:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931395;
-        bh=YC0WJzuqTRA7+YNRCGTQLnco4VMdrdFFmvdF3+/Ysw4=;
+        s=default; t=1568931398;
+        bh=ig1QAX5ew4WFIw7Z0NgMyjHLCTDINWuxaWZVyI6TGbQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=humT7wFZHdJ+VLp8DB8KDPFyUmbhaBVSifvuG3VUvQKMI3qSKejnlPZpe1xyCZJ7L
-         sjtJJa6ktzdiw0Uh0ZAvgcvwbDcu9BjKkVqDq9KiEd9R2Q8B/Sx5X+decqRzBrDPUG
-         SyjrDzAMJMUXFHJJ2LQBofq4LJ7t+n+TRTu7Bs+U=
+        b=WXhpGHeatRj1f7a+Qd4zSeTFWoCzQpPCque7njSdb8MwB022pfXEUpmpqdTt5i+Bu
+         rvd7SSE7Gwuo6KURx5LzeYvwzTL/CSSEAgkOu2338RbFLHBWj1u9N6KkBV+F9M7tKD
+         UHUeshtgAWr/9Hbeg7eZ2SKmWzgrGU01iydGSGLY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.14 03/59] powerpc/mm/radix: Use the right page size for vmemmap mapping
-Date:   Fri, 20 Sep 2019 00:03:18 +0200
-Message-Id: <20190919214756.748600031@linuxfoundation.org>
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>, alan@linux.intel.com,
+        bp@alien8.de, cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        rahul.tanwar@intel.com, rppt@linux.ibm.com, tony.luck@intel.com,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 30/59] x86/apic: Fix arch_dynirq_lower_bound() bug for DT enabled machines
+Date:   Fri, 20 Sep 2019 00:03:45 +0200
+Message-Id: <20190919214805.641905580@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214755.852282682@linuxfoundation.org>
 References: <20190919214755.852282682@linuxfoundation.org>
@@ -60,58 +67,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-commit 89a3496e0664577043666791ec07fb731d57c950 upstream.
+[ Upstream commit 3e5bedc2c258341702ddffbd7688c5e6eb01eafa ]
 
-We use mmu_vmemmap_psize to find the page size for mapping the vmmemap area.
-With radix translation, we are suboptimally setting this value to PAGE_SIZE.
+Rahul Tanwar reported the following bug on DT systems:
 
-We do check for 2M page size support and update mmu_vmemap_psize to use
-hugepage size but we suboptimally reset the value to PAGE_SIZE in
-radix__early_init_mmu(). This resulted in always mapping vmemmap area with
-64K page size.
+> 'ioapic_dynirq_base' contains the virtual IRQ base number. Presently, it is
+> updated to the end of hardware IRQ numbers but this is done only when IOAPIC
+> configuration type is IOAPIC_DOMAIN_LEGACY or IOAPIC_DOMAIN_STRICT. There is
+> a third type IOAPIC_DOMAIN_DYNAMIC which applies when IOAPIC configuration
+> comes from devicetree.
+>
+> See dtb_add_ioapic() in arch/x86/kernel/devicetree.c
+>
+> In case of IOAPIC_DOMAIN_DYNAMIC (DT/OF based system), 'ioapic_dynirq_base'
+> remains to zero initialized value. This means that for OF based systems,
+> virtual IRQ base will get set to zero.
 
-Fixes: 2bfd65e45e87 ("powerpc/mm/radix: Add radix callbacks for early init routines")
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Such systems will very likely not even boot.
 
+For DT enabled machines ioapic_dynirq_base is irrelevant and not
+updated, so simply map the IRQ base 1:1 instead.
+
+Reported-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Tested-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Tested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: alan@linux.intel.com
+Cc: bp@alien8.de
+Cc: cheol.yong.kim@intel.com
+Cc: qi-ming.wu@intel.com
+Cc: rahul.tanwar@intel.com
+Cc: rppt@linux.ibm.com
+Cc: tony.luck@intel.com
+Link: http://lkml.kernel.org/r/20190821081330.1187-1-rahul.tanwar@linux.intel.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/pgtable-radix.c |   16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+ arch/x86/kernel/apic/io_apic.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/arch/powerpc/mm/pgtable-radix.c
-+++ b/arch/powerpc/mm/pgtable-radix.c
-@@ -442,14 +442,6 @@ void __init radix__early_init_devtree(vo
- 	mmu_psize_defs[MMU_PAGE_64K].shift = 16;
- 	mmu_psize_defs[MMU_PAGE_64K].ap = 0x5;
- found:
--#ifdef CONFIG_SPARSEMEM_VMEMMAP
--	if (mmu_psize_defs[MMU_PAGE_2M].shift) {
--		/*
--		 * map vmemmap using 2M if available
--		 */
--		mmu_vmemmap_psize = MMU_PAGE_2M;
--	}
--#endif /* CONFIG_SPARSEMEM_VMEMMAP */
- 	return;
+diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
+index 96a8a68f9c793..566b7bc5deaa0 100644
+--- a/arch/x86/kernel/apic/io_apic.c
++++ b/arch/x86/kernel/apic/io_apic.c
+@@ -2342,7 +2342,13 @@ unsigned int arch_dynirq_lower_bound(unsigned int from)
+ 	 * dmar_alloc_hwirq() may be called before setup_IO_APIC(), so use
+ 	 * gsi_top if ioapic_dynirq_base hasn't been initialized yet.
+ 	 */
+-	return ioapic_initialized ? ioapic_dynirq_base : gsi_top;
++	if (!ioapic_initialized)
++		return gsi_top;
++	/*
++	 * For DT enabled machines ioapic_dynirq_base is irrelevant and not
++	 * updated. So simply return @from if ioapic_dynirq_base == 0.
++	 */
++	return ioapic_dynirq_base ? : from;
  }
  
-@@ -527,7 +519,13 @@ void __init radix__early_init_mmu(void)
- 
- #ifdef CONFIG_SPARSEMEM_VMEMMAP
- 	/* vmemmap mapping */
--	mmu_vmemmap_psize = mmu_virtual_psize;
-+	if (mmu_psize_defs[MMU_PAGE_2M].shift) {
-+		/*
-+		 * map vmemmap using 2M if available
-+		 */
-+		mmu_vmemmap_psize = MMU_PAGE_2M;
-+	} else
-+		mmu_vmemmap_psize = mmu_virtual_psize;
- #endif
- 	/*
- 	 * initialize page table size
+ #ifdef CONFIG_X86_32
+-- 
+2.20.1
+
 
 
