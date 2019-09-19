@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC036C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA39C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CE0021920
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:08:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6251221920
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:08:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568930893;
-	bh=NjRPUgu6FMXfgGHAXdGdhpBFv17LwrP5rPdyr66FpIQ=;
+	s=default; t=1568930896;
+	bh=4UVjTMRfyo4/iT3zFZt/WN2rfF3f6IP/Scn344Vv84M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hah78Wkb9S4ZEdBFFI5pE39JLndIdUXo4Szff9Z6PRx5ogchomdRYWZ47mlF2d/Kd
-	 5XCi6hLAFcOLCyWQjsapekFhwT6KWnvkn/Ba16dE9a+d+9iL0pvCSII+OOpyZZAdn/
-	 7i+PYTB1ZT3nXlOUJP0wAovvT/m3n14ClGDtqIcU=
+	b=vwzXDUHGY6LZwtEB4tBh9OBmU98ZUf66aMJA2F77vO9n1PHTCoI8bltwl+I+8rNUL
+	 mqApuAn9W/MSi3LAVFIq9sCkpILkhJLL63dgJtwAu6Dl3wk9GrwffC1mQFYeSDVXYE
+	 ca8U64QTTpe6s+pr9pRSzBKG2puMhBhLShmH7dmk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393368AbfISWIM (ORCPT
+        id S2393379AbfISWIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:08:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46030 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:08:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393355AbfISWIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:08:10 -0400
+        id S2393369AbfISWIM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:08:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2238218AF;
-        Thu, 19 Sep 2019 22:08:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7E06218AF;
+        Thu, 19 Sep 2019 22:08:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568930889;
-        bh=NjRPUgu6FMXfgGHAXdGdhpBFv17LwrP5rPdyr66FpIQ=;
+        s=default; t=1568930892;
+        bh=4UVjTMRfyo4/iT3zFZt/WN2rfF3f6IP/Scn344Vv84M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GbAMUTcY6PKSax3CQ27Makr0dehlQwo4DRKK1gxJF1K0h/tuWnhVeiNZzK65BTD3b
-         G6198S0EUPDpZrIs2G5vEuSU6fEcM7BM7ZZQvCtYIDjKTbhKM95z3z4cnE6zxodK8P
-         9nexeakP0QqX0w/AOcL/qK/VEs6+qcIfwEmHOWJQ=
+        b=AkmMAbKb1GMnXXEtIcQVRdZAQyGSTRI2b/XwzZb1Uyu/iHl2oAU3NV5Jycd9g6kJd
+         1lFa1beferAsXNUhaNBz84uY4/hHi0DBo0CVxxoZGFkGBM5KJ8WWgTdDx3fF0V5edC
+         2z2Z8VNRZmZyPd0JUmiA0hJEGJO3U/+I4ByW8ha0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 052/124] NFS: Fix initialisation of I/O result struct in nfs_pgio_rpcsetup
-Date:   Fri, 20 Sep 2019 00:02:20 +0200
-Message-Id: <20190919214820.896371438@linuxfoundation.org>
+Subject: [PATCH 5.2 053/124] NFS: On fatal writeback errors, we need to call nfs_inode_remove_request()
+Date:   Fri, 20 Sep 2019 00:02:21 +0200
+Message-Id: <20190919214820.932342115@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -62,32 +62,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 17d8c5d145000070c581f2a8aa01edc7998582ab ]
+[ Upstream commit 06c9fdf3b9f1acc6e53753c99c54c39764cc979f ]
 
-Initialise the result count to 0 rather than initialising it to the
-argument count. The reason is that we want to ensure we record the
-I/O stats correctly in the case where an error is returned (for
-instance in the layoutstats).
+If the writeback error is fatal, we need to remove the tracking structures
+(i.e. the nfs_page) from the inode.
 
+Fixes: 6fbda89b257f ("NFS: Replace custom error reporting mechanism...")
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/pagelist.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/write.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/nfs/pagelist.c b/fs/nfs/pagelist.c
-index 8b62117532289..eae584dbfa085 100644
---- a/fs/nfs/pagelist.c
-+++ b/fs/nfs/pagelist.c
-@@ -590,7 +590,7 @@ static void nfs_pgio_rpcsetup(struct nfs_pgio_header *hdr,
- 	}
+diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+index 059a7c38bc4fc..bf3a3f5e1884e 100644
+--- a/fs/nfs/write.c
++++ b/fs/nfs/write.c
+@@ -57,6 +57,7 @@ static const struct rpc_call_ops nfs_commit_ops;
+ static const struct nfs_pgio_completion_ops nfs_async_write_completion_ops;
+ static const struct nfs_commit_completion_ops nfs_commit_completion_ops;
+ static const struct nfs_rw_ops nfs_rw_write_ops;
++static void nfs_inode_remove_request(struct nfs_page *req);
+ static void nfs_clear_request_commit(struct nfs_page *req);
+ static void nfs_init_cinfo_from_inode(struct nfs_commit_info *cinfo,
+ 				      struct inode *inode);
+@@ -591,7 +592,9 @@ release_request:
  
- 	hdr->res.fattr   = &hdr->fattr;
--	hdr->res.count   = count;
-+	hdr->res.count   = 0;
- 	hdr->res.eof     = 0;
- 	hdr->res.verf    = &hdr->verf;
- 	nfs_fattr_init(&hdr->fattr);
+ static void nfs_write_error(struct nfs_page *req, int error)
+ {
++	nfs_set_pageerror(page_file_mapping(req->wb_page));
+ 	nfs_mapping_set_error(req->wb_page, error);
++	nfs_inode_remove_request(req);
+ 	nfs_end_page_writeback(req);
+ 	nfs_release_request(req);
+ }
 -- 
 2.20.1
 
