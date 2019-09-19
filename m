@@ -5,50 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 949B8C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A22C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68C4721927
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6E6421A4C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:11:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931059;
-	bh=kq4pdFmtcMw82+SxqAXPhY8B6WPqlfQZGcEo6PI8wQ0=;
+	s=default; t=1568931063;
+	bh=sgpC2KLS/4Rjhn2ZMgXWoTc6xu05EmuS7/jOsnoo6nI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sB7rWzk5HeCLjoWnNvWLrGHqFIyCBq3LNJmtlQfwtL6/+XLgW0nYI2QDVXbJpIx+v
-	 gO5TNJ4z5llKMFky4uM2EQ8X67k6faICbBXuK0axyGF61DMDrCedZpYIS643x/4Pix
-	 7eo08G3xTBYKOP2t9jONXLW5Gcy80qA9zcidHB7E=
+	b=0C5RGl5Mvl//RxIac9Leqqq04jR+nt93kVy/CI5nWCSdeF6kAPC4ORfH41fWUCERt
+	 WGqAeuaju0quj5oLeA1r/1WIhdrjD2O7Ds63ZO9i9GmTcVnJO/wnt1KZHXZt13V1CW
+	 JQYBpRwAOx4ZVAzdfRLDYA5KC+mh4YxD8x8mH34Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405811AbfISWK6 (ORCPT
+        id S2405824AbfISWLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:10:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49486 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:11:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389407AbfISWK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:10:56 -0400
+        id S2389407AbfISWK7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:10:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E8EA218AF;
-        Thu, 19 Sep 2019 22:10:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA850218AF;
+        Thu, 19 Sep 2019 22:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931055;
-        bh=kq4pdFmtcMw82+SxqAXPhY8B6WPqlfQZGcEo6PI8wQ0=;
+        s=default; t=1568931058;
+        bh=sgpC2KLS/4Rjhn2ZMgXWoTc6xu05EmuS7/jOsnoo6nI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X7lcwSKLU+I/H//CGICbmYGDKt8Q3rQE6nrwL/4YDGdmhwxW39cOCY+JWK3NV8Wsh
-         98ryX52vO2ZDsIfOzJRDqkpyi8/dNE69PTT4nOd1344kSqOyMSNu5vAp4GcO3Az4xs
-         jbUmcMwY5tNuLM4JFbcaSZtyUyWBN/dTQwCmlwSA=
+        b=PwgA2yXphFnXjqScztzRSskqnC2D6a/RGhIHUfxRgIg2rCPiTiLwRMpIGaz0TBqrC
+         s3hJAUno/nwtVeD8pxmw62DBJodwoaYYNePOVA+IIPzyZaFpkh4IVqZg/VBA459Ydq
+         0xZdPoCC5UmI3nGie8uv8K0gieX2665emfiZg3QY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Igor Russkikh <igor.russkikh@aquantia.com>,
-        Michael Symolkin <Michael.Symolkin@aquantia.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 104/124] net: aquantia: linkstate irq should be oneshot
-Date:   Fri, 20 Sep 2019 00:03:12 +0200
-Message-Id: <20190919214822.988354358@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Jong Hyun Park <park.jonghyun@yonsei.ac.kr>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 113/124] x86/hyper-v: Fix overflow bug in fill_gva_list()
+Date:   Fri, 20 Sep 2019 00:03:21 +0200
+Message-Id: <20190919214823.298130011@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -61,45 +66,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Igor Russkikh <Igor.Russkikh@aquantia.com>
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-[ Upstream commit 5c47e3ba6fe52465603cf9d816b3371e6881d649 ]
+[ Upstream commit 4030b4c585c41eeefec7bd20ce3d0e100a0f2e4d ]
 
-Declaring threaded irq handler should also indicate the irq is
-oneshot. It is oneshot indeed, because HW implements irq automasking
-on trigger.
+When the 'start' parameter is >=  0xFF000000 on 32-bit
+systems, or >= 0xFFFFFFFF'FF000000 on 64-bit systems,
+fill_gva_list() gets into an infinite loop.
 
-Not declaring this causes some kernel configurations to fail
-on interface up, because request_threaded_irq returned an err code.
+With such inputs, 'cur' overflows after adding HV_TLB_FLUSH_UNIT
+and always compares as less than end.  Memory is filled with
+guest virtual addresses until the system crashes.
 
-The issue was originally hidden on normal x86_64 configuration with
-latest kernel, because depending on interrupt controller, irq driver
-added ONESHOT flag on its own.
+Fix this by never incrementing 'cur' to be larger than 'end'.
 
-Issue was observed on older kernels (4.14) where no such logic exists.
-
-Fixes: 4c83f170b3ac ("net: aquantia: link status irq handling")
-Signed-off-by: Igor Russkikh <igor.russkikh@aquantia.com>
-Reported-by: Michael Symolkin <Michael.Symolkin@aquantia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Jong Hyun Park <park.jonghyun@yonsei.ac.kr>
+Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Fixes: 2ffd9e33ce4a ("x86/hyper-v: Use hypercall for remote TLB flush")
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/aquantia/atlantic/aq_nic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/hyperv/mmu.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-index 41172fbebddd3..1a2b090652930 100644
---- a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-@@ -390,7 +390,7 @@ int aq_nic_start(struct aq_nic_s *self)
- 						   self->aq_nic_cfg.link_irq_vec);
- 			err = request_threaded_irq(irqvec, NULL,
- 						   aq_linkstate_threaded_isr,
--						   IRQF_SHARED,
-+						   IRQF_SHARED | IRQF_ONESHOT,
- 						   self->ndev->name, self);
- 			if (err < 0)
- 				goto err_exit;
+diff --git a/arch/x86/hyperv/mmu.c b/arch/x86/hyperv/mmu.c
+index e65d7fe6489f3..5208ba49c89a9 100644
+--- a/arch/x86/hyperv/mmu.c
++++ b/arch/x86/hyperv/mmu.c
+@@ -37,12 +37,14 @@ static inline int fill_gva_list(u64 gva_list[], int offset,
+ 		 * Lower 12 bits encode the number of additional
+ 		 * pages to flush (in addition to the 'cur' page).
+ 		 */
+-		if (diff >= HV_TLB_FLUSH_UNIT)
++		if (diff >= HV_TLB_FLUSH_UNIT) {
+ 			gva_list[gva_n] |= ~PAGE_MASK;
+-		else if (diff)
++			cur += HV_TLB_FLUSH_UNIT;
++		}  else if (diff) {
+ 			gva_list[gva_n] |= (diff - 1) >> PAGE_SHIFT;
++			cur = end;
++		}
+ 
+-		cur += HV_TLB_FLUSH_UNIT;
+ 		gva_n++;
+ 
+ 	} while (cur < end);
 -- 
 2.20.1
 
