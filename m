@@ -2,57 +2,60 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA17EC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 05:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 198A7C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 05:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A169D218AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 05:59:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4180218AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 05:59:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mx/H2l9l"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TFF0Mo4s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731504AbfISF7G (ORCPT
+        id S1731580AbfISF7N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 01:59:06 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43436 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731450AbfISF7G (ORCPT
+        Thu, 19 Sep 2019 01:59:13 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:32996 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731450AbfISF7M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 01:59:06 -0400
-Received: by mail-pg1-f195.google.com with SMTP id u72so1217111pgb.10
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 22:59:05 -0700 (PDT)
+        Thu, 19 Sep 2019 01:59:12 -0400
+Received: by mail-pg1-f196.google.com with SMTP id n190so1256336pgn.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 22:59:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=dgIbwimAQkKlSbgSJtp+/dbeJWRHJe81c9/KX+VIXkA=;
-        b=Mx/H2l9leg+629kRjV3+tiwLwEZ6F/KyzkTl6eX6RY6pupN7Xff6M+EMKN3/umfHHv
-         HmSV3r/hM3awiSBfYWeH90K1//aKCBjTFLn/gPz3lxOaDgNLBzpUK7wrxNcfXYErKz8g
-         nsTJ0SR/Q/V4XtK45n45CopPBtRiqMp2T1I8kzCNJGshf/cpYzRdMy/eAkFwQ/z1C+W2
-         1c5sezQKa7URE96MzFNDmVYH0xmRkV2wR+X+qwfHRkjdcZsILECVvf+Y26Kgw5UN3bEE
-         Q8uN0RDphMiawxn+MfbqqNbCI4Qd5qRYk+AbiMWqRFzZoIRNffJosT82jbm6SqEb/lVW
-         Li+Q==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :in-reply-to:references;
+        bh=fI78AuapDHj1s1hPCOtpJGxQEMTS5gb6aCLf0P0IeCM=;
+        b=TFF0Mo4sqp4YIcVjewvwHSlhaGhOhMzD2fcpN/W25T3T6lEa65EoKVJcHkC2tV6cH1
+         pSyU6dcOlivNz821/3Ap+dE+ks0S0b2/nUID/Ia3zf/dwQd8Ky9TQIawJuSvNSIAEKXJ
+         F8gqpjli020GX/xT0GIM5yhwhDZCd8gmeFlBqz2Lo1B14rKxLJguyfFQ0ajvm56sT++S
+         pHjjOnDwEAgyzIXy1JNhHl2lIpuNtP/VuQE7EHN7m/DfLjAxou47060QEbpiGvJ+QUQJ
+         /GAKVKiQKlHht8qD4KFLc6PhpHC0LhcV0mypPpTGl7MTo+L1sacLekl54gCgedSsgJ9S
+         FZ0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=dgIbwimAQkKlSbgSJtp+/dbeJWRHJe81c9/KX+VIXkA=;
-        b=Zt+pn2XHrFjiCBUgQsF2elIMMYvAQeLIvIe5zqqMqk1fgFc0Zl4+1kI5ZuWzPssq5I
-         4umETM7EHTWJnr7JDogiiuwKRv9xKqh03Dk1c3u80EYVuWdfet/AjtBZPZILKrwB3beh
-         3M8FwhCs+sm29CkY8ctLvbGp+/UVB5v9Fmyg7/KUpuOrbnRtsb4Dcg6GZp/TG6HBZDRE
-         K8PAfZmReWEkuFNxeROig3tE714kTL1ncaYddYERL4HvA97EuutGMsbC6FKRxS4KhbOu
-         JGG6yNI75ebqM01YUXXEjc36AYECjfGOYlhEAUCwWEIOC9GTHlIn1i/7A/4wCEKeynmT
-         Sd1Q==
-X-Gm-Message-State: APjAAAU+iH05z/y+NtvUrVW1ovj6VJTQS+8a59V+3B1q43fZjjexRjtM
-        8KYA1nHGJ4igMb3GafjxdKyeTQ==
-X-Google-Smtp-Source: APXvYqxU2SNk/ft+XHxPveItevSjUrywmPGWEbwcAe5zoy/dD14xqkRCRTvVutRSRRzgDKhfZ0fp7w==
-X-Received: by 2002:a65:5cc8:: with SMTP id b8mr7711967pgt.30.1568872745170;
-        Wed, 18 Sep 2019 22:59:05 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:in-reply-to:references;
+        bh=fI78AuapDHj1s1hPCOtpJGxQEMTS5gb6aCLf0P0IeCM=;
+        b=OZ7RLC5sl5f9FhBdVKSFps/6ouoFjjCvXbC+AXSLLc/6k3Xwj/jczUd7UDqLGJ5Jru
+         lscYOZpXTXNjQkPvk904SMHC2blVpDpEtYOTgtx17kX7sA47cOArmRu9iz9XQRyJW8v9
+         uujiTt04fVKvMjfkGLEcqYz7UoJApI7wnolPtTUurwsMxPpb0dA8fWI69eR/5gtNksgX
+         EcNpz6LD2ld0nLpvXkRAf6b8CJj4W6mQZeTFxDkJ2pBrAGwCzIxuckBRNeGvaRtJqgRy
+         d84qRQanUtLnfGtLINrwQsT0syhRfhg9an6KtnRklEhtFIbRsgSX9LhdlzBKIxHhCJrf
+         RgrQ==
+X-Gm-Message-State: APjAAAUkinDHtXNNFNM9ATBpb5CDY2h9HrG56A4cLkLBWFiu6dCvg5zr
+        Cr5Uig4TTb557aLKw6IrSlrtWw==
+X-Google-Smtp-Source: APXvYqx6NZlzGsF2B/C2Tp/Pbup+k4qr55P5+p81XgNETtyaLd4njQC9HFKBCQ9Eo0vWBOhuxHH3dA==
+X-Received: by 2002:a62:7790:: with SMTP id s138mr8239489pfc.57.1568872749594;
+        Wed, 18 Sep 2019 22:59:09 -0700 (PDT)
 Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id c127sm9666027pfb.5.2019.09.18.22.59.00
+        by smtp.gmail.com with ESMTPSA id c127sm9666027pfb.5.2019.09.18.22.59.05
         (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 18 Sep 2019 22:59:03 -0700 (PDT)
+        Wed, 18 Sep 2019 22:59:08 -0700 (PDT)
 From:   Baolin Wang <baolin.wang@linaro.org>
 To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
         asutoshd@codeaurora.org
@@ -60,16 +63,18 @@ Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, arnd@arndb.de,
         linus.walleij@linaro.org, vincent.guittot@linaro.org,
         baolin.wang@linaro.org, linux-mmc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/3] Add MMC software queue support
-Date:   Thu, 19 Sep 2019 13:58:44 +0800
-Message-Id: <cover.1568864712.git.baolin.wang@linaro.org>
+Subject: [PATCH v3 1/3] mmc: Add MMC software queue support
+Date:   Thu, 19 Sep 2019 13:58:45 +0800
+Message-Id: <63395d0c73f0bb1cf7c2f52545137fd4014f84ba.1568864712.git.baolin.wang@linaro.org>
 X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <cover.1568864712.git.baolin.wang@linaro.org>
+References: <cover.1568864712.git.baolin.wang@linaro.org>
+In-Reply-To: <cover.1568864712.git.baolin.wang@linaro.org>
+References: <cover.1568864712.git.baolin.wang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-
-Hi All,
 
 Now the MMC read/write stack will always wait for previous request is
 completed by mmc_blk_rw_wait(), before sending a new request to hardware,
@@ -77,103 +82,685 @@ or queue a work to complete request, that will bring context switching
 overhead, especially for high I/O per second rates, to affect the IO
 performance.
 
-Thus this patch set will introduce the MMC software command queue support
-based on command queue engine's interfaces, and set the queue depth as 2,
-that means we do not need wait for previous request is completed and can
-queue 2 requests in flight. It is enough to let the irq handler always
-trigger the next request without a context switch and then ask the blk_mq
-layer for the next one to get queued, as well as avoiding a long latency.
+Thus this patch introduces MMC software queue interface based on the
+hardware command queue engine's interfaces, which is similar with the
+hardware command queue engine's idea, that can remove the context
+switching. Moreover we set the queue depth as 2 for software queue,
+that is enough to let the irq handler always trigger the next request
+without a context switch and then ask the blk_mq layer for the next one
+to get queued, as well as avoiding a long latency.
 
-Moreover we can expand the MMC software queue interface to support
-MMC packed request or packed command instead of adding new interfaces,
-according to previosus discussion.
+From the fio testing data in cover letter, we can see the software
+queue can improve performance obviously with 4K block size, increasing
+about 52% for sequential read, increasing about 114% for random read,
+increasing about 81% for sequential write, and increasing about 127%
+for random write.
 
-Below are some comparison data with fio tool. The fio command I used
-is like below with changing the '--rw' parameter and enabling the direct
-IO flag to measure the actual hardware transfer speed in 4K block size.
+Moreover we can expand the software queue interface to support MMC
+packed request or packed command in future.
 
-./fio --filename=/dev/mmcblk0p30 --direct=1 --iodepth=20 --rw=read --bs=4K --size=512M --group_reporting --numjobs=20 --name=test_read
-
-My eMMC card working at HS400 Enhanced strobe mode:
-[    2.229856] mmc0: new HS400 Enhanced strobe MMC card at address 0001
-[    2.237566] mmcblk0: mmc0:0001 HBG4a2 29.1 GiB 
-[    2.242621] mmcblk0boot0: mmc0:0001 HBG4a2 partition 1 4.00 MiB
-[    2.249110] mmcblk0boot1: mmc0:0001 HBG4a2 partition 2 4.00 MiB
-[    2.255307] mmcblk0rpmb: mmc0:0001 HBG4a2 partition 3 4.00 MiB, chardev (248:0)
-
-1. Without MMC software queue
-I tested 3 times for each case and output a average speed.
-
-1) Sequential read:
-Speed: 28.9MiB/s, 26.4MiB/s, 30.9MiB/s
-Average speed: 28.7MiB/s
-
-2) Random read:
-Speed: 18.2MiB/s, 8.9MiB/s, 15.8MiB/s
-Average speed: 14.3MiB/s
-
-3) Sequential write:
-Speed: 21.1MiB/s, 27.9MiB/s, 25MiB/s
-Average speed: 24.7MiB/s
-
-4) Random write:
-Speed: 21.5MiB/s, 18.1MiB/s, 18.1MiB/s
-Average speed: 19.2MiB/s
-
-2. With MMC software queue
-I tested 3 times for each case and output a average speed.
-
-1) Sequential read:
-Speed: 44.1MiB/s, 42.3MiB/s, 44.4MiB/s
-Average speed: 43.6MiB/s
-
-2) Random read:
-Speed: 30.6MiB/s, 30.9MiB/s, 30.5MiB/s
-Average speed: 30.6MiB/s
-
-3) Sequential write:
-Speed: 44.1MiB/s, 45.9MiB/s, 44.2MiB/s
-Average speed: 44.7MiB/s
-
-4) Random write:
-Speed: 45.1MiB/s, 43.3MiB/s, 42.4MiB/s
-Average speed: 43.6MiB/s
-
-Form above data, we can see the MMC software queue can help to improve the
-performance obviously.
-
-Any comments are welcome. Thanks a lot.
-
-Changes from v2:
- - Remove reference to 'struct cqhci_host' and 'struct cqhci_slot',
- instead adding 'struct sqhci_host', which is only used by software queue.
-
-Changes from v1:
- - Add request_done ops for sdhci_ops.
- - Replace virtual command queue with software queue for functions and
- variables.
- - Rename the software queue file and add sqhci.h header file.
-
-Baolin Wang (3):
-  mmc: Add MMC software queue support
-  mmc: host: sdhci: Add request_done ops for struct sdhci_ops
-  mmc: host: sdhci-sprd: Add software queue support
-
- drivers/mmc/core/block.c      |   61 ++++++++
- drivers/mmc/core/mmc.c        |   13 +-
- drivers/mmc/core/queue.c      |   25 ++-
- drivers/mmc/host/Kconfig      |    9 ++
- drivers/mmc/host/Makefile     |    1 +
- drivers/mmc/host/sdhci-sprd.c |   26 ++++
- drivers/mmc/host/sdhci.c      |   12 +-
- drivers/mmc/host/sdhci.h      |    2 +
- drivers/mmc/host/sqhci.c      |  344 +++++++++++++++++++++++++++++++++++++++++
- drivers/mmc/host/sqhci.h      |   53 +++++++
- include/linux/mmc/host.h      |    3 +
- 11 files changed, 537 insertions(+), 12 deletions(-)
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+---
+ drivers/mmc/core/block.c  |   61 ++++++++
+ drivers/mmc/core/mmc.c    |   13 +-
+ drivers/mmc/core/queue.c  |   25 +++-
+ drivers/mmc/host/Kconfig  |    8 ++
+ drivers/mmc/host/Makefile |    1 +
+ drivers/mmc/host/sqhci.c  |  344 +++++++++++++++++++++++++++++++++++++++++++++
+ drivers/mmc/host/sqhci.h  |   53 +++++++
+ include/linux/mmc/host.h  |    3 +
+ 8 files changed, 498 insertions(+), 10 deletions(-)
  create mode 100644 drivers/mmc/host/sqhci.c
  create mode 100644 drivers/mmc/host/sqhci.h
 
+diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
+index 2c71a43..870462c 100644
+--- a/drivers/mmc/core/block.c
++++ b/drivers/mmc/core/block.c
+@@ -168,6 +168,11 @@ struct mmc_rpmb_data {
+ 
+ static inline int mmc_blk_part_switch(struct mmc_card *card,
+ 				      unsigned int part_type);
++static void mmc_blk_rw_rq_prep(struct mmc_queue_req *mqrq,
++			       struct mmc_card *card,
++			       int disable_multi,
++			       struct mmc_queue *mq);
++static void mmc_blk_swq_req_done(struct mmc_request *mrq);
+ 
+ static struct mmc_blk_data *mmc_blk_get(struct gendisk *disk)
+ {
+@@ -1569,9 +1574,30 @@ static int mmc_blk_cqe_issue_flush(struct mmc_queue *mq, struct request *req)
+ 	return mmc_blk_cqe_start_req(mq->card->host, mrq);
+ }
+ 
++static int mmc_blk_swq_issue_rw_rq(struct mmc_queue *mq, struct request *req)
++{
++	struct mmc_queue_req *mqrq = req_to_mmc_queue_req(req);
++	struct mmc_host *host = mq->card->host;
++	int err;
++
++	mmc_blk_rw_rq_prep(mqrq, mq->card, 0, mq);
++	mqrq->brq.mrq.done = mmc_blk_swq_req_done;
++	mmc_pre_req(host, &mqrq->brq.mrq);
++
++	err = mmc_cqe_start_req(host, &mqrq->brq.mrq);
++	if (err)
++		mmc_post_req(host, &mqrq->brq.mrq, err);
++
++	return err;
++}
++
+ static int mmc_blk_cqe_issue_rw_rq(struct mmc_queue *mq, struct request *req)
+ {
+ 	struct mmc_queue_req *mqrq = req_to_mmc_queue_req(req);
++	struct mmc_host *host = mq->card->host;
++
++	if (host->swq_enabled)
++		return mmc_blk_swq_issue_rw_rq(mq, req);
+ 
+ 	mmc_blk_data_prep(mq, mqrq, 0, NULL, NULL);
+ 
+@@ -1957,6 +1983,41 @@ static void mmc_blk_urgent_bkops(struct mmc_queue *mq,
+ 		mmc_run_bkops(mq->card);
+ }
+ 
++static void mmc_blk_swq_req_done(struct mmc_request *mrq)
++{
++	struct mmc_queue_req *mqrq =
++		container_of(mrq, struct mmc_queue_req, brq.mrq);
++	struct request *req = mmc_queue_req_to_req(mqrq);
++	struct request_queue *q = req->q;
++	struct mmc_queue *mq = q->queuedata;
++	struct mmc_host *host = mq->card->host;
++	unsigned long flags;
++
++	if (mmc_blk_rq_error(&mqrq->brq) ||
++	    mmc_blk_urgent_bkops_needed(mq, mqrq)) {
++		spin_lock_irqsave(&mq->lock, flags);
++		mq->recovery_needed = true;
++		mq->recovery_req = req;
++		spin_unlock_irqrestore(&mq->lock, flags);
++
++		host->cqe_ops->cqe_recovery_start(host);
++
++		schedule_work(&mq->recovery_work);
++		return;
++	}
++
++	mmc_blk_rw_reset_success(mq, req);
++
++	/*
++	 * Block layer timeouts race with completions which means the normal
++	 * completion path cannot be used during recovery.
++	 */
++	if (mq->in_recovery)
++		mmc_blk_cqe_complete_rq(mq, req);
++	else
++		blk_mq_complete_request(req);
++}
++
+ void mmc_blk_mq_complete(struct request *req)
+ {
+ 	struct mmc_queue *mq = req->q->queuedata;
+diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
+index c880489..8eac1a2 100644
+--- a/drivers/mmc/core/mmc.c
++++ b/drivers/mmc/core/mmc.c
+@@ -1852,15 +1852,22 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
+ 	 */
+ 	card->reenable_cmdq = card->ext_csd.cmdq_en;
+ 
+-	if (card->ext_csd.cmdq_en && !host->cqe_enabled) {
++	if (host->cqe_ops && !host->cqe_enabled) {
+ 		err = host->cqe_ops->cqe_enable(host, card);
+ 		if (err) {
+ 			pr_err("%s: Failed to enable CQE, error %d\n",
+ 				mmc_hostname(host), err);
+ 		} else {
+ 			host->cqe_enabled = true;
+-			pr_info("%s: Command Queue Engine enabled\n",
+-				mmc_hostname(host));
++
++			if (card->ext_csd.cmdq_en) {
++				pr_info("%s: Command Queue Engine enabled\n",
++					mmc_hostname(host));
++			} else {
++				host->swq_enabled = true;
++				pr_info("%s: Software Queue enabled\n",
++					mmc_hostname(host));
++			}
+ 		}
+ 	}
+ 
+diff --git a/drivers/mmc/core/queue.c b/drivers/mmc/core/queue.c
+index 7102e2e..2c93c29 100644
+--- a/drivers/mmc/core/queue.c
++++ b/drivers/mmc/core/queue.c
+@@ -60,7 +60,7 @@ enum mmc_issue_type mmc_issue_type(struct mmc_queue *mq, struct request *req)
+ {
+ 	struct mmc_host *host = mq->card->host;
+ 
+-	if (mq->use_cqe)
++	if (mq->use_cqe && !host->swq_enabled)
+ 		return mmc_cqe_issue_type(host, req);
+ 
+ 	if (req_op(req) == REQ_OP_READ || req_op(req) == REQ_OP_WRITE)
+@@ -122,12 +122,14 @@ static enum blk_eh_timer_return mmc_mq_timed_out(struct request *req,
+ {
+ 	struct request_queue *q = req->q;
+ 	struct mmc_queue *mq = q->queuedata;
++	struct mmc_card *card = mq->card;
++	struct mmc_host *host = card->host;
+ 	unsigned long flags;
+ 	int ret;
+ 
+ 	spin_lock_irqsave(&mq->lock, flags);
+ 
+-	if (mq->recovery_needed || !mq->use_cqe)
++	if (mq->recovery_needed || !mq->use_cqe || host->swq_enabled)
+ 		ret = BLK_EH_RESET_TIMER;
+ 	else
+ 		ret = mmc_cqe_timed_out(req);
+@@ -142,12 +144,13 @@ static void mmc_mq_recovery_handler(struct work_struct *work)
+ 	struct mmc_queue *mq = container_of(work, struct mmc_queue,
+ 					    recovery_work);
+ 	struct request_queue *q = mq->queue;
++	struct mmc_host *host = mq->card->host;
+ 
+ 	mmc_get_card(mq->card, &mq->ctx);
+ 
+ 	mq->in_recovery = true;
+ 
+-	if (mq->use_cqe)
++	if (mq->use_cqe && !host->swq_enabled)
+ 		mmc_blk_cqe_recovery(mq);
+ 	else
+ 		mmc_blk_mq_recovery(mq);
+@@ -158,6 +161,9 @@ static void mmc_mq_recovery_handler(struct work_struct *work)
+ 	mq->recovery_needed = false;
+ 	spin_unlock_irq(&mq->lock);
+ 
++	if (host->swq_enabled)
++		host->cqe_ops->cqe_recovery_finish(host);
++
+ 	mmc_put_card(mq->card, &mq->ctx);
+ 
+ 	blk_mq_run_hw_queues(q, true);
+@@ -407,11 +413,16 @@ int mmc_init_queue(struct mmc_queue *mq, struct mmc_card *card)
+ 	 * The queue depth for CQE must match the hardware because the request
+ 	 * tag is used to index the hardware queue.
+ 	 */
+-	if (mq->use_cqe)
+-		mq->tag_set.queue_depth =
+-			min_t(int, card->ext_csd.cmdq_depth, host->cqe_qdepth);
+-	else
++	if (mq->use_cqe) {
++		if (host->swq_enabled)
++			mq->tag_set.queue_depth = host->cqe_qdepth;
++		else
++			mq->tag_set.queue_depth =
++				min_t(int, card->ext_csd.cmdq_depth, host->cqe_qdepth);
++	} else {
+ 		mq->tag_set.queue_depth = MMC_QUEUE_DEPTH;
++	}
++
+ 	mq->tag_set.numa_node = NUMA_NO_NODE;
+ 	mq->tag_set.flags = BLK_MQ_F_SHOULD_MERGE | BLK_MQ_F_BLOCKING;
+ 	mq->tag_set.nr_hw_queues = 1;
+diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+index 14d89a1..d117f18 100644
+--- a/drivers/mmc/host/Kconfig
++++ b/drivers/mmc/host/Kconfig
+@@ -923,6 +923,14 @@ config MMC_CQHCI
+ 
+ 	  If unsure, say N.
+ 
++config MMC_SQHCI
++	bool "Software Queue Host Controller Interface support"
++	help
++	  This selects the Software Queue Host Controller Interface (SQHCI)
++	  support.
++
++	  If unsure, say N.
++
+ config MMC_TOSHIBA_PCI
+ 	tristate "Toshiba Type A SD/MMC Card Interface Driver"
+ 	depends on PCI
+diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
+index 7357871..a3588d4 100644
+--- a/drivers/mmc/host/Makefile
++++ b/drivers/mmc/host/Makefile
+@@ -97,6 +97,7 @@ obj-$(CONFIG_MMC_SDHCI_BRCMSTB)		+= sdhci-brcmstb.o
+ obj-$(CONFIG_MMC_SDHCI_OMAP)		+= sdhci-omap.o
+ obj-$(CONFIG_MMC_SDHCI_SPRD)		+= sdhci-sprd.o
+ obj-$(CONFIG_MMC_CQHCI)			+= cqhci.o
++obj-$(CONFIG_MMC_SQHCI)			+= sqhci.o
+ 
+ ifeq ($(CONFIG_CB710_DEBUG),y)
+ 	CFLAGS-cb710-mmc	+= -DDEBUG
+diff --git a/drivers/mmc/host/sqhci.c b/drivers/mmc/host/sqhci.c
+new file mode 100644
+index 0000000..c172bc1
+--- /dev/null
++++ b/drivers/mmc/host/sqhci.c
+@@ -0,0 +1,344 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * MMC software queue support based on command queue interfaces
++ *
++ * Copyright (C) 2019 Linaro, Inc.
++ * Author: Baolin Wang <baolin.wang@linaro.org>
++ */
++
++#include <linux/mmc/card.h>
++#include <linux/mmc/host.h>
++
++#include "sqhci.h"
++
++#define SQHCI_NUM_SLOTS		2
++#define SQHCI_INVALID_TAG	SQHCI_NUM_SLOTS
++
++static void sqhci_pump_requests(struct sqhci_host *sq_host)
++{
++	struct mmc_host *mmc = sq_host->mmc;
++	struct sqhci_slot *slot;
++	unsigned long flags;
++
++	spin_lock_irqsave(&sq_host->lock, flags);
++
++	/* Make sure we are not already running a request now */
++	if (sq_host->mrq) {
++		spin_unlock_irqrestore(&sq_host->lock, flags);
++		return;
++	}
++
++	/* Make sure there are remain requests need to pump */
++	if (!sq_host->qcnt || !sq_host->enabled) {
++		spin_unlock_irqrestore(&sq_host->lock, flags);
++		return;
++	}
++
++	slot = &sq_host->slot[sq_host->next_tag];
++	sq_host->mrq = slot->mrq;
++	sq_host->qcnt--;
++
++	spin_unlock_irqrestore(&sq_host->lock, flags);
++
++	mmc->ops->request(mmc, sq_host->mrq);
++}
++
++static void sqhci_update_next_tag(struct sqhci_host *sq_host, int remains)
++{
++	struct sqhci_slot *slot;
++	int tag;
++
++	/*
++	 * If there are no remain requests in software queue, then set a invalid
++	 * tag.
++	 */
++	if (!remains) {
++		sq_host->next_tag = SQHCI_INVALID_TAG;
++		return;
++	}
++
++	/*
++	 * Increasing the next tag and check if the corresponding request is
++	 * available, if yes, then we found a candidate request.
++	 */
++	if (++sq_host->next_tag != SQHCI_INVALID_TAG) {
++		slot = &sq_host->slot[sq_host->next_tag];
++		if (slot->mrq)
++			return;
++	}
++
++	/* Othersie we should iterate all slots to find a available tag. */
++	for (tag = 0; tag < SQHCI_NUM_SLOTS; tag++) {
++		slot = &sq_host->slot[tag];
++		if (slot->mrq)
++			break;
++	}
++
++	if (tag == SQHCI_NUM_SLOTS)
++		tag = SQHCI_INVALID_TAG;
++
++	sq_host->next_tag = tag;
++}
++
++static void sqhci_post_request(struct sqhci_host *sq_host)
++{
++	unsigned long flags;
++	int remains;
++
++	spin_lock_irqsave(&sq_host->lock, flags);
++
++	remains = sq_host->qcnt;
++	sq_host->mrq = NULL;
++
++	/* Update the next available tag to be queued. */
++	sqhci_update_next_tag(sq_host, remains);
++
++	if (sq_host->waiting_for_idle && !remains) {
++		sq_host->waiting_for_idle = false;
++		wake_up(&sq_host->wait_queue);
++	}
++
++	/* Do not pump new request in recovery mode. */
++	if (sq_host->recovery_halt) {
++		spin_unlock_irqrestore(&sq_host->lock, flags);
++		return;
++	}
++
++	spin_unlock_irqrestore(&sq_host->lock, flags);
++
++	 /*
++	  * Try to pump new request to host controller as fast as possible,
++	  * after completing previous request.
++	  */
++	if (remains > 0)
++		sqhci_pump_requests(sq_host);
++}
++
++/**
++ * sqhci_finalize_request - finalize one request if the request is done
++ * @mmc: the host controller
++ * @mrq: the request need to be finalized
++ *
++ * Return true if we finalized the corresponding request in software queue,
++ * otherwise return false.
++ */
++bool sqhci_finalize_request(struct mmc_host *mmc, struct mmc_request *mrq)
++{
++	struct sqhci_host *sq_host = mmc->cqe_private;
++	unsigned long flags;
++
++	spin_lock_irqsave(&sq_host->lock, flags);
++
++	if (!sq_host->enabled || !sq_host->mrq || sq_host->mrq != mrq) {
++		spin_unlock_irqrestore(&sq_host->lock, flags);
++		return false;
++	}
++
++	/*
++	 * Clear current completed slot request to make a room for new request.
++	 */
++	sq_host->slot[sq_host->next_tag].mrq = NULL;
++
++	spin_unlock_irqrestore(&sq_host->lock, flags);
++
++	mmc_cqe_request_done(mmc, sq_host->mrq);
++
++	sqhci_post_request(sq_host);
++
++	return true;
++}
++EXPORT_SYMBOL_GPL(sqhci_finalize_request);
++
++static void sqhci_recovery_start(struct mmc_host *mmc)
++{
++	struct sqhci_host *sq_host = mmc->cqe_private;
++	unsigned long flags;
++
++	spin_lock_irqsave(&sq_host->lock, flags);
++
++	sq_host->recovery_halt = true;
++
++	spin_unlock_irqrestore(&sq_host->lock, flags);
++}
++
++static void sqhci_recovery_finish(struct mmc_host *mmc)
++{
++	struct sqhci_host *sq_host = mmc->cqe_private;
++	int remains;
++
++	spin_lock_irq(&sq_host->lock);
++
++	sq_host->recovery_halt = false;
++	remains = sq_host->qcnt;
++
++	spin_unlock_irq(&sq_host->lock);
++
++	/*
++	 * Try to pump new request if there are request pending in software
++	 * queue after finishing recovery.
++	 */
++	if (remains > 0)
++		sqhci_pump_requests(sq_host);
++}
++
++static int sqhci_request(struct mmc_host *mmc, struct mmc_request *mrq)
++{
++	struct sqhci_host *sq_host = mmc->cqe_private;
++	int tag = mrq->tag;
++
++	spin_lock_irq(&sq_host->lock);
++
++	if (!sq_host->enabled) {
++		spin_unlock_irq(&sq_host->lock);
++		return -ESHUTDOWN;
++	}
++
++	/* Do not queue any new requests in recovery mode. */
++	if (sq_host->recovery_halt) {
++		spin_unlock_irq(&sq_host->lock);
++		return -EBUSY;
++	}
++
++	sq_host->slot[tag].mrq = mrq;
++
++	/*
++	 * Set the next tag as current request tag if no available
++	 * next tag.
++	 */
++	if (sq_host->next_tag == SQHCI_INVALID_TAG)
++		sq_host->next_tag = tag;
++
++	sq_host->qcnt++;
++
++	spin_unlock_irq(&sq_host->lock);
++
++	sqhci_pump_requests(sq_host);
++
++	return 0;
++}
++
++static void sqhci_post_req(struct mmc_host *mmc, struct mmc_request *mrq)
++{
++	if (mmc->ops->post_req)
++		mmc->ops->post_req(mmc, mrq, 0);
++}
++
++static bool sqhci_queue_is_idle(struct sqhci_host *sq_host, int *ret)
++{
++	bool is_idle;
++
++	spin_lock_irq(&sq_host->lock);
++
++	is_idle = (!sq_host->mrq && !sq_host->qcnt) ||
++		sq_host->recovery_halt;
++
++	*ret = sq_host->recovery_halt ? -EBUSY : 0;
++	sq_host->waiting_for_idle = !is_idle;
++
++	spin_unlock_irq(&sq_host->lock);
++
++	return is_idle;
++}
++
++static int sqhci_wait_for_idle(struct mmc_host *mmc)
++{
++	struct sqhci_host *sq_host = mmc->cqe_private;
++	int ret;
++
++	wait_event(sq_host->wait_queue,
++		   sqhci_queue_is_idle(sq_host, &ret));
++
++	return ret;
++}
++
++static void sqhci_disable(struct mmc_host *mmc)
++{
++	struct sqhci_host *sq_host = mmc->cqe_private;
++	u32 timeout = 500;
++	int ret;
++
++	spin_lock_irq(&sq_host->lock);
++
++	if (!sq_host->enabled) {
++		spin_unlock_irq(&sq_host->lock);
++		return;
++	}
++
++	spin_unlock_irq(&sq_host->lock);
++
++	ret = wait_event_timeout(sq_host->wait_queue,
++				 sqhci_queue_is_idle(sq_host, &ret),
++				 msecs_to_jiffies(timeout));
++	if (ret == 0) {
++		pr_warn("could not stop mmc software queue\n");
++		return;
++	}
++
++	spin_lock_irq(&sq_host->lock);
++
++	sq_host->enabled = false;
++
++	spin_unlock_irq(&sq_host->lock);
++}
++
++static int sqhci_enable(struct mmc_host *mmc, struct mmc_card *card)
++{
++	struct sqhci_host *sq_host = mmc->cqe_private;
++
++	spin_lock_irq(&sq_host->lock);
++
++	if (sq_host->enabled) {
++		spin_unlock_irq(&sq_host->lock);
++		return -EBUSY;
++	}
++
++	sq_host->enabled = true;
++
++	spin_unlock_irq(&sq_host->lock);
++
++	return 0;
++}
++
++static const struct mmc_cqe_ops sqhci_ops = {
++	.cqe_enable = sqhci_enable,
++	.cqe_disable = sqhci_disable,
++	.cqe_request = sqhci_request,
++	.cqe_post_req = sqhci_post_req,
++	.cqe_wait_for_idle = sqhci_wait_for_idle,
++	.cqe_recovery_start = sqhci_recovery_start,
++	.cqe_recovery_finish = sqhci_recovery_finish,
++};
++
++int sqhci_init(struct sqhci_host *sq_host, struct mmc_host *mmc)
++{
++	sq_host->num_slots = SQHCI_NUM_SLOTS;
++	sq_host->next_tag = SQHCI_INVALID_TAG;
++	mmc->cqe_qdepth = SQHCI_NUM_SLOTS;
++
++	sq_host->slot = devm_kcalloc(mmc_dev(mmc), sq_host->num_slots,
++				     sizeof(struct sqhci_slot), GFP_KERNEL);
++	if (!sq_host->slot)
++		return -ENOMEM;
++
++	sq_host->mmc = mmc;
++	sq_host->mmc->cqe_private = sq_host;
++	mmc->cqe_ops = &sqhci_ops;
++
++	spin_lock_init(&sq_host->lock);
++	init_waitqueue_head(&sq_host->wait_queue);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(sqhci_init);
++
++void sqhci_suspend(struct mmc_host *mmc)
++{
++	sqhci_disable(mmc);
++}
++EXPORT_SYMBOL_GPL(sqhci_suspend);
++
++int sqhci_resume(struct mmc_host *mmc)
++{
++	return sqhci_enable(mmc, NULL);
++}
++EXPORT_SYMBOL_GPL(sqhci_resume);
+diff --git a/drivers/mmc/host/sqhci.h b/drivers/mmc/host/sqhci.h
+new file mode 100644
+index 0000000..517e0a5
+--- /dev/null
++++ b/drivers/mmc/host/sqhci.h
+@@ -0,0 +1,53 @@
++// SPDX-License-Identifier: GPL-2.0
++#ifndef LINUX_MMC_SQHCI_H
++#define LINUX_MMC_SQHCI_H
++
++struct sqhci_slot {
++	struct mmc_request *mrq;
++};
++
++struct sqhci_host {
++	struct mmc_host *mmc;
++	struct mmc_request *mrq;
++	wait_queue_head_t wait_queue;
++	struct sqhci_slot *slot;
++	spinlock_t lock;
++
++	int next_tag;
++	int num_slots;
++	int qcnt;
++
++	bool enabled;
++	bool waiting_for_idle;
++	bool recovery_halt;
++};
++
++#ifdef CONFIG_MMC_SQHCI
++int sqhci_init(struct sqhci_host *sq_host, struct mmc_host *mmc);
++void sqhci_suspend(struct mmc_host *mmc);
++int sqhci_resume(struct mmc_host *mmc);
++bool sqhci_finalize_request(struct mmc_host *mmc, struct mmc_request *mrq);
++#else
++static inline int sqhci_init(struct sqhci_host *sq_host, struct mmc_host *mmc)
++{
++	return -EINVAL;
++}
++
++static inline void sqhci_suspend(struct mmc_host *mmc)
++{
++}
++
++static inline int sqhci_resume(struct mmc_host *mmc)
++{
++	return 0;
++}
++
++static inline bool sqhci_finalize_request(struct mmc_host *mmc,
++					  struct mmc_request *mrq)
++{
++	return false;
++}
++
++#endif
++
++#endif
+diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
+index 4a351cb..706e2bc 100644
+--- a/include/linux/mmc/host.h
++++ b/include/linux/mmc/host.h
+@@ -459,6 +459,9 @@ struct mmc_host {
+ 	bool			cqe_enabled;
+ 	bool			cqe_on;
+ 
++	/* Software Queue support */
++	bool			swq_enabled;
++
+ 	unsigned long		private[0] ____cacheline_aligned;
+ };
+ 
 -- 
 1.7.9.5
 
