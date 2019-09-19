@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A21C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B03FDC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 895D421920
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:34:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80D7A217D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:35:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932495;
-	bh=lQYj4NUXHSkeIRtL2lZVGzZ2tZyvwgqLTUTTjnchcWA=;
+	s=default; t=1568932505;
+	bh=98bX0MPt6vFtYJpPxfdI5sUpNttahp3t6HhrK1Ib86Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n1PlpoNYeDBtdwqmmCY6mOk/FKw9g7xofgJK+s9ElNArAGnktPeiz/vsAlzUH8lXE
-	 1VYcdOdCML8Bpk7wq/ZoSGOlbZHgzbwdBBMcquHMw5UzODcxfZcqQa7EARDJF13PRK
-	 w3xmV/lbbSnlVFncuPYUq4MM0yVlPWyxxwUFTP0o=
+	b=BbyiYJzoeQ3LIHHeuXdGBXm1O+W4nUUlqZnpdG2LrZPodmNqFDi/UUSfKgtVN9YGg
+	 9Bg6sbJmIWaOfvRnGXYVt0klS4OLXary4pAiJ8bzs32M8H7W8IfPB2tKF7MFSR1jAY
+	 +kZl9CWdbHJbdLRQcKWTIwwNhg+JidvmBL2tVfTM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394415AbfISWex (ORCPT
+        id S2406621AbfISWfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:34:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47718 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:35:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405429AbfISWJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:09:31 -0400
+        id S2405342AbfISWJC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:09:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E880221928;
-        Thu, 19 Sep 2019 22:09:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 403CE21928;
+        Thu, 19 Sep 2019 22:08:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568930969;
-        bh=lQYj4NUXHSkeIRtL2lZVGzZ2tZyvwgqLTUTTjnchcWA=;
+        s=default; t=1568930939;
+        bh=98bX0MPt6vFtYJpPxfdI5sUpNttahp3t6HhrK1Ib86Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c30OzBzbBzJsIbKqN1iFffRxUnmbGuOeHE3v8nUEX7IgYQzfbt3nm59v/yCxk/XKa
-         ODIVHC+0G1igSqUxMTvuIjweOyYnm+NE8Whz2pb4/qnB88qiCb2ijWgfluUPXwTt4K
-         DurdW+MqqU9NnQI96My+Vz5dDuDUPBu5naaVdqFg=
+        b=f3vQXqx1EXb03YM0N5eVUdM0F3m5evCgumjIKDXvyOEYH3UWm/TmD73BbkeksFMzu
+         m1w36+ZnGgXgXozQozKNhCS/teaytnT7XfCxLEx1xjJFY/rvSo/c/YXgyo+ixL8836
+         xsTWfPW9K6sn05B9SKdvmzUnvWlaR/okbfAgaC1U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
+        stable@vger.kernel.org, Emmanuel Vadot <manu@freebsd.org>,
+        Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 081/124] libceph: dont call crypto_free_sync_skcipher() on a NULL tfm
-Date:   Fri, 20 Sep 2019 00:02:49 +0200
-Message-Id: <20190919214821.960015249@linuxfoundation.org>
+Subject: [PATCH 5.2 038/124] ARM: dts: am335x: Fix UARTs length
+Date:   Fri, 20 Sep 2019 00:02:06 +0200
+Message-Id: <20190919214820.397686697@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -60,49 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Emmanuel Vadot <manu@freebsd.org>
 
-[ Upstream commit e8c99200b4d117c340c392ebd5e62d85dfeed027 ]
+[ Upstream commit 8613e2ca4fff764f23785eadfa54a08631ee682a ]
 
-In set_secret(), key->tfm is assigned to NULL on line 55, and then
-ceph_crypto_key_destroy(key) is executed.
+As seen on the AM335x TRM all the UARTs controller only are 0x1000 in size.
+Fix this in the DTS.
 
-ceph_crypto_key_destroy(key)
-  crypto_free_sync_skcipher(key->tfm)
-    crypto_free_skcipher(&tfm->base);
-
-This happens to work because crypto_sync_skcipher is a trivial wrapper
-around crypto_skcipher: &tfm->base is still 0 and crypto_free_skcipher()
-handles that.  Let's not rely on the layout of crypto_sync_skcipher.
-
-This bug is found by a static analysis tool STCheck written by us.
-
-Fixes: 69d6302b65a8 ("libceph: Remove VLA usage of skcipher").
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ceph/crypto.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/am33xx-l4.dtsi | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/net/ceph/crypto.c b/net/ceph/crypto.c
-index 5d6724cee38f9..4f75df40fb121 100644
---- a/net/ceph/crypto.c
-+++ b/net/ceph/crypto.c
-@@ -136,8 +136,10 @@ void ceph_crypto_key_destroy(struct ceph_crypto_key *key)
- 	if (key) {
- 		kfree(key->key);
- 		key->key = NULL;
--		crypto_free_sync_skcipher(key->tfm);
--		key->tfm = NULL;
-+		if (key->tfm) {
-+			crypto_free_sync_skcipher(key->tfm);
-+			key->tfm = NULL;
-+		}
- 	}
- }
- 
+diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
+index 4bd22c1edf963..46849d6ecb3e2 100644
+--- a/arch/arm/boot/dts/am33xx-l4.dtsi
++++ b/arch/arm/boot/dts/am33xx-l4.dtsi
+@@ -185,7 +185,7 @@
+ 			uart0: serial@0 {
+ 				compatible = "ti,am3352-uart", "ti,omap3-uart";
+ 				clock-frequency = <48000000>;
+-				reg = <0x0 0x2000>;
++				reg = <0x0 0x1000>;
+ 				interrupts = <72>;
+ 				status = "disabled";
+ 				dmas = <&edma 26 0>, <&edma 27 0>;
+@@ -934,7 +934,7 @@
+ 			uart1: serial@0 {
+ 				compatible = "ti,am3352-uart", "ti,omap3-uart";
+ 				clock-frequency = <48000000>;
+-				reg = <0x0 0x2000>;
++				reg = <0x0 0x1000>;
+ 				interrupts = <73>;
+ 				status = "disabled";
+ 				dmas = <&edma 28 0>, <&edma 29 0>;
+@@ -966,7 +966,7 @@
+ 			uart2: serial@0 {
+ 				compatible = "ti,am3352-uart", "ti,omap3-uart";
+ 				clock-frequency = <48000000>;
+-				reg = <0x0 0x2000>;
++				reg = <0x0 0x1000>;
+ 				interrupts = <74>;
+ 				status = "disabled";
+ 				dmas = <&edma 30 0>, <&edma 31 0>;
+@@ -1614,7 +1614,7 @@
+ 			uart3: serial@0 {
+ 				compatible = "ti,am3352-uart", "ti,omap3-uart";
+ 				clock-frequency = <48000000>;
+-				reg = <0x0 0x2000>;
++				reg = <0x0 0x1000>;
+ 				interrupts = <44>;
+ 				status = "disabled";
+ 			};
+@@ -1644,7 +1644,7 @@
+ 			uart4: serial@0 {
+ 				compatible = "ti,am3352-uart", "ti,omap3-uart";
+ 				clock-frequency = <48000000>;
+-				reg = <0x0 0x2000>;
++				reg = <0x0 0x1000>;
+ 				interrupts = <45>;
+ 				status = "disabled";
+ 			};
+@@ -1674,7 +1674,7 @@
+ 			uart5: serial@0 {
+ 				compatible = "ti,am3352-uart", "ti,omap3-uart";
+ 				clock-frequency = <48000000>;
+-				reg = <0x0 0x2000>;
++				reg = <0x0 0x1000>;
+ 				interrupts = <46>;
+ 				status = "disabled";
+ 			};
 -- 
 2.20.1
 
