@@ -2,111 +2,199 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F0CC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 07:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C257C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 07:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99D7421A4C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 07:48:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D2FE21A4C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 07:52:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CdQ6YV2u"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="SBAxLABF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731489AbfISHsY (ORCPT
+        id S1730613AbfISHw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 03:48:24 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35397 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726566AbfISHsY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 03:48:24 -0400
-Received: by mail-wr1-f66.google.com with SMTP id v8so1993841wrt.2;
-        Thu, 19 Sep 2019 00:48:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=4+IikWYzTHVoP+qr/bH+QADSSsqMyHaDXXhUq1MQaqE=;
-        b=CdQ6YV2u8DkvN7NZv3oWamzT06hOVlVxmHK0/goVfJ5nYPRBaDq2MzukNnVes247od
-         6A/pVklUbgoTWlHmjo65l+vUzL1dxZJ+AJ6API3LDshNMG4Lo39mi2j3YMKQtdi5iyMX
-         k91ok8cbypGednfDRH+hiu/W01ecXreCaFnvov2ay/ZvgNslymEx+bxXLuqUz4U15Gb8
-         ///K99QyOBJ+RAtDcPlzICgC1FJJUllwS1e8anhhY7NAcdFGd4CT9Nuy0OR9tQw7YAqM
-         jg9jpcKKU4rut4Epc8K/jaWjD2wdGBsqFsaP3dO5xyAhyjGjDOX/e4MoIzBrY9b0vIwF
-         eThw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=4+IikWYzTHVoP+qr/bH+QADSSsqMyHaDXXhUq1MQaqE=;
-        b=C2KKgeCLPKM9pXBpP6SY2v1p7a/Q1Rt165+3zpMoBuUBXcccFTIWmmGYdPemho5pqo
-         B8HrhXMMbfXkqpt0ECdFIcrns7kasXRDL4UJj9Rh/lddW/3WUYjWhiQcA6mKzl+527+t
-         ByzbZsWustE5tLsSuxqGIkadTYftdR5bpE2PQeSNsuHGMlF0U7dZFf3/Ya6F8P/n5Ae7
-         EH97RP3EMQK4s9wH2XIOuAFOro21T10YBrY8CTcOefIjNi4nNXSnBxDXhQPhQagMcB4U
-         YhBbeRKR1DoY8wtYBVMsJlXQU0nNMmbaV3iUlMBItv3Ki0GqYmSvShlA0P3af33KZYzz
-         9n4g==
-X-Gm-Message-State: APjAAAXg98RdtnRLIER1paG+gr/ELmObbEMfSHm4z3KgNRzKLzFjNcVF
-        qCuZvW+X+qyRG9QrgDGhebOjlPMjCmA=
-X-Google-Smtp-Source: APXvYqw+ahU3bBlwVkjXOnMv6LzIZQwXrl99hJ4LTJG7ynNbH/PcROfnsBVY/iP/I8DZyIaaNEALyg==
-X-Received: by 2002:adf:e485:: with SMTP id i5mr911416wrm.175.1568879302252;
-        Thu, 19 Sep 2019 00:48:22 -0700 (PDT)
-Received: from linux-code.mgc.mentorg.com (nat-sch.mentorg.com. [139.181.36.34])
-        by smtp.gmail.com with ESMTPSA id q66sm7120969wme.39.2019.09.19.00.48.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2019 00:48:21 -0700 (PDT)
-From:   Srikanth Krishnakar <skrishnakar@gmail.com>
-X-Google-Original-From: Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>
-To:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dvhart@infradead.org, andy@infradead.org
-Cc:     Cedric_Hombourger@mentor.com, Srikanth_Krishnakar@mentor.com,
-        jan.kiszka@siemens.com
-Subject: [PATCH] platform/x86: pmc_atom: Add Siemens SIMATIC IPC2x7E to critclk_systems DMI table
-Date:   Thu, 19 Sep 2019 13:15:56 +0530
-Message-Id: <20190919074556.25691-1-Srikanth_Krishnakar@mentor.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 19 Sep 2019 03:52:57 -0400
+Received: from ozlabs.org ([203.11.71.1]:37043 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728033AbfISHw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 03:52:57 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46Ypwy16CFz9s4Y;
+        Thu, 19 Sep 2019 17:52:50 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1568879574;
+        bh=MQ8i8P7x2CIntxGyuHQOnvXpKPoSHnuNRpmky603kjI=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=SBAxLABFw4vvY6CS2eOFusJcODowDpeY/9sSgVE831lCrQSnYnI7mlbhEEFUiI0+D
+         WH3apBam2mKZAvDFvQdZ+d8exmnQ/GsGkGAZWYX8H8TUftz/bb8WuG1s0Ak4Vd+TOT
+         GXwL6+CxGCCgfjMFs+YYQtDAxZNKX5Wij5BVup5a5zs07tdnwqeFrtPgQDdZhVSTKa
+         HbV1oXW5r/tNE2b/bPw7hE7HC9Vl0uRdjzY3NvWJLMZEpRc7u97L+dsN6P7KSVZKet
+         L0dy8e3HBhcWXyswwtNyNdRntkyLHlCZkF5oyxjL4Ut/n9bqpflQvG3AyW0fHqBKLW
+         UnjBlzcBJGiBQ==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Oleg Nesterov <oleg@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     Jan Kratochvil <jan.kratochvil@redhat.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH?] powerpc: Hard wire PT_SOFTE value to 1 in gpr_get() too
+In-Reply-To: <20190917121256.GA8659@redhat.com>
+References: <20190917121256.GA8659@redhat.com>
+Date:   Thu, 19 Sep 2019 17:52:39 +1000
+Message-ID: <87ftksvi2g.fsf@mpe.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SIMATIC IPC227E and IPC277E uses the PMC clock for on-board components
-and gets stuck during boot if the clock is disabled. Therefore, add this
-device to the critical systems list.
+Hi Oleg,
 
-The Board revision does vary in some instances and hence use PRODUCT_NAME
-to allow the boards to boot with identical names.
+Thanks for the patch.
 
-Tested on SIMATIC IPC227E and IPC277E.
+Oleg Nesterov <oleg@redhat.com> writes:
+> I don't have a ppc machine, this patch wasn't even compile tested,
+> could you please review?
+>
+> The commit a8a4b03ab95f ("powerpc: Hard wire PT_SOFTE value to 1 in
+> ptrace & signals") changed ptrace_get_reg(PT_SOFTE) to report 0x1,
+> but PTRACE_GETREGS still copies pt_regs->softe as is.
 
-Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
-CC: Jan Kiszka <jan.kiszka@siemens.com>
-CC: Cedric Hombourger <Cedric_Hombourger@mentor.com>
-Signed-off-by: Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>
----
- drivers/platform/x86/pmc_atom.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+Ugh, that certainly seems broken. I guess we forgot/didn't-know that
+there were two paths through ptrace to get the one register.
 
-diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
-index 9aca5e7ce6d0..1e48c2ec684e 100644
---- a/drivers/platform/x86/pmc_atom.c
-+++ b/drivers/platform/x86/pmc_atom.c
-@@ -419,7 +419,14 @@ static const struct dmi_system_id critclk_systems[] = {
- 		.ident = "SIMATIC IPC227E",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "SIEMENS AG"),
--			DMI_MATCH(DMI_PRODUCT_VERSION, "6ES7647-8B"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "SIMATIC IPC227E"),
-+		},
-+	},
-+	{
-+		.ident = "SIMATIC IPC277E",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "SIEMENS AG"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "SIMATIC IPC277E"),
- 		},
- 	},
- 	{ /*sentinel*/ }
--- 
-2.17.1
+> This is not consistent and this breaks
+> http://sourceware.org/systemtap/wiki/utrace/tests/user-regs-peekpoke
 
+That's a 404 for me?
+
+Is it this: https://sourceware.org/systemtap/wiki/utrace/tests/
+
+That seems to point me to a CVS repo? Which then didn't build. But now I
+have that one test built, and you're right it fails with:
+
+$ ./user-regs-peekpoke 
+mismatch at offset 0x138: poked 0 but peeked 1
+
+
+> Reported-by: Jan Kratochvil <jan.kratochvil@redhat.com>
+> Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+> ---
+>  arch/powerpc/kernel/ptrace.c | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>
+> diff --git a/arch/powerpc/kernel/ptrace.c b/arch/powerpc/kernel/ptrace.c
+> index 8c92feb..9e9342c 100644
+> --- a/arch/powerpc/kernel/ptrace.c
+> +++ b/arch/powerpc/kernel/ptrace.c
+> @@ -363,11 +363,36 @@ static int gpr_get(struct task_struct *target, const struct user_regset *regset,
+>  	BUILD_BUG_ON(offsetof(struct pt_regs, orig_gpr3) !=
+>  		     offsetof(struct pt_regs, msr) + sizeof(long));
+>  
+> +#ifdef CONFIG_PPC64
+> +	if (!ret)
+> +		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+> +					  &target->thread.regs->orig_gpr3,
+> +					  offsetof(struct pt_regs, orig_gpr3),
+> +					  offsetof(struct pt_regs, softe));
+> +
+> +	if (!ret) {
+> +		unsigned long softe = 0x1;
+> +		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf, &msr,
+> +					  offsetof(struct pt_regs, softe),
+> +					  offsetof(struct pt_regs, softe) +
+> +					  sizeof(softe));
+> +	}
+> +
+> +	BUILD_BUG_ON(offsetof(struct pt_regs, trap) !=
+> +		     offsetof(struct pt_regs, softe) + sizeof(long));
+> +
+> +	if (!ret)
+> +		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+> +					  &target->thread.regs->trap,
+> +					  offsetof(struct pt_regs, trap),
+> +					  sizeof(struct user_pt_regs));
+> +#else
+>  	if (!ret)
+>  		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+>  					  &target->thread.regs->orig_gpr3,
+>  					  offsetof(struct pt_regs, orig_gpr3),
+>  					  sizeof(struct user_pt_regs));
+> +#endif
+>  	if (!ret)
+>  		ret = user_regset_copyout_zero(&pos, &count, &kbuf, &ubuf,
+>  					       sizeof(struct user_pt_regs), -1);
+
+It would be nice if we could isolate the special logic in once place,
+ie. ptrace_get_reg().
+
+We could do it like below. I'm 50/50 though on whether it's worth it, or
+if we should just go with the big ifdef like in your patch.
+
+cheers
+
+
+diff --git a/arch/powerpc/kernel/ptrace.c b/arch/powerpc/kernel/ptrace.c
+index 8c92febf5f44..55510f1a7ec1 100644
+--- a/arch/powerpc/kernel/ptrace.c
++++ b/arch/powerpc/kernel/ptrace.c
+@@ -334,6 +334,11 @@ int ptrace_put_reg(struct task_struct *task, int regno, unsigned long data)
+ 	return -EIO;
+ }
+ 
++#ifndef __powerpc64__
++/* Needed on 32-bit to make the SOFTE logic below work without ifdefs */
++#define PT_SOFTE	PT_MQ
++#endif
++
+ static int gpr_get(struct task_struct *target, const struct user_regset *regset,
+ 		   unsigned int pos, unsigned int count,
+ 		   void *kbuf, void __user *ubuf)
+@@ -367,6 +372,24 @@ static int gpr_get(struct task_struct *target, const struct user_regset *regset,
+ 		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+ 					  &target->thread.regs->orig_gpr3,
+ 					  offsetof(struct pt_regs, orig_gpr3),
++					  PT_SOFTE * sizeof(long));
++
++	/* SOFTE is special on 64-bit, the logic is in ptrace_get_reg() */
++	if (!ret) {
++		unsigned long val = 0;
++		ptrace_get_reg(target, PT_SOFTE, &val);
++		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf, &val,
++					  PT_SOFTE * sizeof(long),
++					  offsetof(struct pt_regs, trap));
++	}
++
++	BUILD_BUG_ON(offsetof(struct pt_regs, trap) !=
++		     (PT_SOFTE * sizeof(long)) + sizeof(long));
++
++	if (!ret)
++		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
++					  &target->thread.regs->trap,
++					  offsetof(struct pt_regs, trap),
+ 					  sizeof(struct user_pt_regs));
+ 	if (!ret)
+ 		ret = user_regset_copyout_zero(&pos, &count, &kbuf, &ubuf,
+@@ -3384,9 +3407,13 @@ void __init pt_regs_check(void)
+ #ifdef __powerpc64__
+ 	BUILD_BUG_ON(offsetof(struct pt_regs, softe) !=
+ 		     offsetof(struct user_pt_regs, softe));
++	BUILD_BUG_ON(offsetof(struct pt_regs, softe) !=
++		     PT_SOFTE * sizeof(long));
+ #else
+ 	BUILD_BUG_ON(offsetof(struct pt_regs, mq) !=
+ 		     offsetof(struct user_pt_regs, mq));
++	BUILD_BUG_ON(offsetof(struct pt_regs, mq) !=
++		     PT_MQ * sizeof(long));
+ #endif
+ 	BUILD_BUG_ON(offsetof(struct pt_regs, trap) !=
+ 		     offsetof(struct user_pt_regs, trap));
