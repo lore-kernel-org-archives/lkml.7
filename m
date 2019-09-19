@@ -2,428 +2,131 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C7A9C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D912C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E76A421907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:59:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 712E5218AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:59:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568908785;
+	bh=quymPNwAJydF8iR+m3Bv+sCapAomv486kbqwnW/jX+4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=U3RszM2M9R3BUUWRtw0L1RPW0M8LkizQZBwMPjU8ENV1B5QnBDrCo7SJER/vjEH5q
+	 OjrkZw/qttou2ND62kHZaUp5ictlhuvqjvTZoXqjTUGOauraVH139pkMT9PV2eWMgz
+	 MBcLAV24eO0aaO1PZHGmoONsLJ9/hLS5zQujNgug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391528AbfISP71 (ORCPT
+        id S2404041AbfISP7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 11:59:27 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:27140 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389202AbfISP70 (ORCPT
+        Thu, 19 Sep 2019 11:59:44 -0400
+Received: from mail-lj1-f176.google.com ([209.85.208.176]:37195 "EHLO
+        mail-lj1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389202AbfISP7o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 11:59:26 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8JFxLvj103772
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 11:59:24 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v4ct4g059-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 11:59:24 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ldufour@linux.ibm.com>;
-        Thu, 19 Sep 2019 16:59:22 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 19 Sep 2019 16:59:18 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8JFxHD652232332
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Sep 2019 15:59:17 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B1AB4A4040;
-        Thu, 19 Sep 2019 15:59:17 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4E19CA4059;
-        Thu, 19 Sep 2019 15:59:17 +0000 (GMT)
-Received: from pomme.tls.ibm.com (unknown [9.101.4.33])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 19 Sep 2019 15:59:17 +0000 (GMT)
-Subject: Re: [PATCH v2 1/2] powperc/mm: read TLB Block Invalidate
- Characteristics
-To:     Michael Ellerman <mpe@ellerman.id.au>, benh@kernel.crashing.org,
-        paulus@samba.org, aneesh.kumar@linux.ibm.com, npiggin@gmail.com,
-        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20190916095543.17496-1-ldufour@linux.ibm.com>
- <20190916095543.17496-2-ldufour@linux.ibm.com>
- <87zhj1vhz6.fsf@mpe.ellerman.id.au>
-From:   Laurent Dufour <ldufour@linux.ibm.com>
-Date:   Thu, 19 Sep 2019 17:59:16 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
+        Thu, 19 Sep 2019 11:59:44 -0400
+Received: by mail-lj1-f176.google.com with SMTP id l21so4155607lje.4
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 08:59:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=f8LYnz1vv5tI3GZ6Lq+k6CmiHNbJUTHYO30ZgPVV0WU=;
+        b=T/6gIwbfpiXV3L6bav6DhQetuAMBXy/Bqgt8Bn//Ktv5A0ZlOwwdqUFvu2JOVs5YAL
+         GW7fhEsoQl3YTPl3Lrs/5T4hqdFZPN1ThISPa9aW4ffAKtyS96xs7iMX8oXz1SyBa6v/
+         ZT+WNN1O02jjgKM8I1ZCBJsBj3YxaAZ5oaDws=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=f8LYnz1vv5tI3GZ6Lq+k6CmiHNbJUTHYO30ZgPVV0WU=;
+        b=pUIvFgqDALjaTX3HqM26Yr/yY1BhTmfH/xBk3UX46uJ2hIQ9KSH4CLwiDqKbA9CvPg
+         zRbBL7DmwbFYiUnQESAGD+v4/2XUvIqUxhidAnI+BgmNInT8rMw+4HSeApeaTGZy153i
+         SOqV/Tk1kV48JK4sjjDJp9DJ0AtsbAph65ajXm9ZUWK8PmSOeqJ9B2rhw3uXkycy83yD
+         L5/zwtCCN9lDXbtzCta2U3yKxSrv2RHERWEjfz5nFMjmKQG8cV9rWx2R8YQhfIXlYWGj
+         aXJxIpsk64Cv+e9KIZIAMS06XQ5p2yY8lM8+EmlliYhcOAXzGgn337UHi0OEYJIsUZdR
+         L2sg==
+X-Gm-Message-State: APjAAAVDRk6iXKdWFEaf0KOar7TL+gwSoklffXMH7BRGPhr+fVnm6+Ua
+        drxSZa2v+pA0cZf+yviyJFV6eBHxhSA=
+X-Google-Smtp-Source: APXvYqwmjm+JSh+iGjr1ftW/x6ZYGV9pAXlgGJ5PI6UCziyDRwHKE/VqwAKI4Q7M7YwWBwmWuyZrxw==
+X-Received: by 2002:a2e:9159:: with SMTP id q25mr5908521ljg.225.1568908781206;
+        Thu, 19 Sep 2019 08:59:41 -0700 (PDT)
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
+        by smtp.gmail.com with ESMTPSA id 21sm1718371ljq.15.2019.09.19.08.59.39
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Sep 2019 08:59:39 -0700 (PDT)
+Received: by mail-lj1-f179.google.com with SMTP id d5so4100247lja.10
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 08:59:39 -0700 (PDT)
+X-Received: by 2002:a2e:8789:: with SMTP id n9mr5927834lji.52.1568908779394;
+ Thu, 19 Sep 2019 08:59:39 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <87zhj1vhz6.fsf@mpe.ellerman.id.au>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19091915-0008-0000-0000-00000318818E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19091915-0009-0000-0000-00004A37079B
-Message-Id: <ff9ccf9f-0299-372a-a044-02183174723c@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-19_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909190145
+References: <20190915145905.hd5xkc7uzulqhtzr@willie-the-truck>
+ <25289.1568379639@warthog.procyon.org.uk> <28447.1568728295@warthog.procyon.org.uk>
+ <20190917170716.ud457wladfhhjd6h@willie-the-truck> <15228.1568821380@warthog.procyon.org.uk>
+ <CAHk-=wj85tOp8WjcUp6gwstp4Cg2WT=p209S=fOzpWAgqqQPKg@mail.gmail.com> <5385.1568901546@warthog.procyon.org.uk>
+In-Reply-To: <5385.1568901546@warthog.procyon.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 19 Sep 2019 08:59:23 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wigULuTe-c15nEv5661fRxX-7xTmCZ5y6KmqPoWtX7E3g@mail.gmail.com>
+Message-ID: <CAHk-=wigULuTe-c15nEv5661fRxX-7xTmCZ5y6KmqPoWtX7E3g@mail.gmail.com>
+Subject: Re: Do we need to correct barriering in circular-buffers.rst?
+To:     David Howells <dhowells@redhat.com>
+Cc:     Will Deacon <will@kernel.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 18/09/2019 à 15:42, Michael Ellerman a écrit :
-> Hi Laurent,
-> 
-> Comments below ...
+On Thu, Sep 19, 2019 at 6:59 AM David Howells <dhowells@redhat.com> wrote:
+>
+> But I don't agree with this.  You're missing half the barriers.  There should
+> be *four* barriers.  The document mandates only 3 barriers, and uses
+> READ_ONCE() where the fourth should be, i.e.:
+>
+>    thread #1            thread #2
+>
+>                         smp_load_acquire(head)
+>                         ... read data from queue ..
+>                         smp_store_release(tail)
+>
+>    READ_ONCE(tail)
+>    ... add data to queue ..
+>    smp_store_release(head)
 
-Hi Michael,
+The document is right, but you shouldn't do this.
 
-Thanks for your review.
+The reason that READ_ONCE() is possible - instead of a
+smp_load_acquire() - is that there's now an address dependency chain
+from the READ_ONCE to the subsequent writes of the data.
 
-One comment below (at the end).
+And while there isn't any barrier, a data or control dependency to a
+_write_ does end up ordering things (even on alpha - it's only the
+read->read dependencies that might be unordered on alpha).
 
-> 
-> Laurent Dufour <ldufour@linux.ibm.com> writes:
->> The PAPR document specifies the TLB Block Invalidate Characteristics which
->> tells for each couple segment base page size, actual page size, the size of
->                   ^
->                   "pair of" again
-> 
->> the block the hcall H_BLOCK_REMOVE is supporting.
->                                       ^
->                                       "supports" is fine.
-> 
->> These characteristics are loaded at boot time in a new table hblkr_size.
->> The table is appart the mmu_psize_def because this is specific to the
->                 ^
->                 "separate from"
-> 
->> pseries architecture.
->            ^
->            platform
->>
->> A new init service, pseries_lpar_read_hblkr_characteristics() is added to
->               ^
->               function
-> 
->> read the characteristics. In that function, the size of the buffer is set
->> to twice the number of known page size, plus 10 bytes to ensure we have
->> enough place. This new init function is called from pSeries_setup_arch().
->           ^
->           space
->>
->> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
->> ---
->>   .../include/asm/book3s/64/tlbflush-hash.h     |   1 +
->>   arch/powerpc/platforms/pseries/lpar.c         | 138 ++++++++++++++++++
->>   arch/powerpc/platforms/pseries/setup.c        |   1 +
->>   3 files changed, 140 insertions(+)
->>
->> diff --git a/arch/powerpc/include/asm/book3s/64/tlbflush-hash.h b/arch/powerpc/include/asm/book3s/64/tlbflush-hash.h
->> index 64d02a704bcb..74155cc8cf89 100644
->> --- a/arch/powerpc/include/asm/book3s/64/tlbflush-hash.h
->> +++ b/arch/powerpc/include/asm/book3s/64/tlbflush-hash.h
->> @@ -117,4 +117,5 @@ extern void __flush_hash_table_range(struct mm_struct *mm, unsigned long start,
->>   				     unsigned long end);
->>   extern void flush_tlb_pmd_range(struct mm_struct *mm, pmd_t *pmd,
->>   				unsigned long addr);
->> +extern void pseries_lpar_read_hblkr_characteristics(void);
-> 
-> This doesn't need "extern", and also should go in
-> arch/powerpc/platforms/pseries/pseries.h as it's local to that directory.
-> 
-> You're using "hblkr" in a few places, can we instead make it "hblkrm" -
-> "rm" is a well known abbreviation for "remove".
-> 
-> 
->> diff --git a/arch/powerpc/platforms/pseries/lpar.c b/arch/powerpc/platforms/pseries/lpar.c
->> index 36b846f6e74e..98a5c2ff9a0b 100644
->> --- a/arch/powerpc/platforms/pseries/lpar.c
->> +++ b/arch/powerpc/platforms/pseries/lpar.c
->> @@ -56,6 +56,15 @@ EXPORT_SYMBOL(plpar_hcall);
->>   EXPORT_SYMBOL(plpar_hcall9);
->>   EXPORT_SYMBOL(plpar_hcall_norets);
->>   
->> +/*
->> + * H_BLOCK_REMOVE supported block size for this page size in segment who's base
->> + * page size is that page size.
->> + *
->> + * The first index is the segment base page size, the second one is the actual
->> + * page size.
->> + */
->> +static int hblkr_size[MMU_PAGE_COUNT][MMU_PAGE_COUNT];
-> 
-> Can you make that __ro_after_init, it goes at the end, eg:
-> 
-> static int hblkr_size[MMU_PAGE_COUNT][MMU_PAGE_COUNT] __ro_after_init;
-> 
->> @@ -1311,6 +1320,135 @@ static void do_block_remove(unsigned long number, struct ppc64_tlb_batch *batch,
->>   		(void)call_block_remove(pix, param, true);
->>   }
->>   
->> +/*
->> + * TLB Block Invalidate Characteristics These characteristics define the size of
->                                             ^
->                                             newline before here?
-> 
->> + * the block the hcall H_BLOCK_REMOVE is able to process for each couple segment
->> + * base page size, actual page size.
->> + *
->> + * The ibm,get-system-parameter properties is returning a buffer with the
->> + * following layout:
->> + *
->> + * [ 2 bytes size of the RTAS buffer (without these 2 bytes) ]
->                                           ^
->                                           "excluding"
-> 
->> + * -----------------
->> + * TLB Block Invalidate Specifiers:
->> + * [ 1 byte LOG base 2 of the TLB invalidate block size being specified ]
->> + * [ 1 byte Number of page sizes (N) that are supported for the specified
->> + *          TLB invalidate block size ]
->> + * [ 1 byte Encoded segment base page size and actual page size
->> + *          MSB=0 means 4k segment base page size and actual page size
->> + *          MSB=1 the penc value in mmu_psize_def ]
->> + * ...
->> + * -----------------
->> + * Next TLB Block Invalidate Specifiers...
->> + * -----------------
->> + * [ 0 ]
->> + */
->> +static inline void __init set_hblk_bloc_size(int bpsize, int psize,
->> +					     unsigned int block_size)
-> 
-> "static inline" and __init are sort of contradictory.
-> 
-> Just make it "static void __init" and the compiler will inline it
-> anyway, but if it decides not to the section will be correct.
-> 
-> This one uses "hblk"? Should it be set_hblkrm_block_size() ?
-> 
->> +{
->> +	if (block_size > hblkr_size[bpsize][psize])
->> +		hblkr_size[bpsize][psize] = block_size;
->> +}
->> +
->> +/*
->> + * Decode the Encoded segment base page size and actual page size.
->> + * PAPR specifies with bit 0 as MSB:
->> + *   - bit 0 is the L bit
->> + *   - bits 2-7 are the penc value
-> 
-> Can we just convert those to normal bit ordering for the comment, eg:
-> 
->   PAPR specifies:
->     - bit 7 is the L bit
->     - bits 0-5 are the penc value
-> 
->> + * If the L bit is 0, this means 4K segment base page size and actual page size
->> + * otherwise the penc value should be readed.
->                                           ^
->                                           "read" ?
->> + */
->> +#define HBLKR_L_BIT_MASK	0x80
-> 
-> "HBLKRM_L_MASK" would do I think?
-> 
->> +#define HBLKR_PENC_MASK		0x3f
->> +static inline void __init check_lp_set_hblk(unsigned int lp,
->> +					    unsigned int block_size)
->> +{
->> +	unsigned int bpsize, psize;
->> +
-> 
-> One blank line is sufficient :)
-> 
->> +
->> +	/* First, check the L bit, if not set, this means 4K */
->> +	if ((lp & HBLKR_L_BIT_MASK) == 0) {
->> +		set_hblk_bloc_size(MMU_PAGE_4K, MMU_PAGE_4K, block_size);
->> +		return;
->> +	}
->> +
->> +	lp &= HBLKR_PENC_MASK;
->> +	for (bpsize = 0; bpsize < MMU_PAGE_COUNT; bpsize++) {
->> +		struct mmu_psize_def *def =  &mmu_psize_defs[bpsize];
->                                              ^
->                                              stray space there
->> +
->> +		for (psize = 0; psize < MMU_PAGE_COUNT; psize++) {
->> +			if (def->penc[psize] == lp) {
->> +				set_hblk_bloc_size(bpsize, psize, block_size);
->> +				return;
->> +			}
->> +		}
->> +	}
->> +}
->> +
->> +#define SPLPAR_TLB_BIC_TOKEN		50
->> +#define SPLPAR_TLB_BIC_MAXLENGTH	(MMU_PAGE_COUNT*2 + 10)
-> 
-> The +10 is just a guess I think?
-> 
-> If I'm counting right that ends up as 42 bytes, which is not much at
-> all. You could probably just make it a cache line, 128 bytes, which
-> should be plenty of space?
-> 
->> +void __init pseries_lpar_read_hblkr_characteristics(void)
->> +{
->> +	int call_status;
-> 
-> This should be grouped with the other ints below on one line.
-> 
->> +	unsigned char local_buffer[SPLPAR_TLB_BIC_MAXLENGTH];
->> +	int len, idx, bpsize;
->> +
->> +	if (!firmware_has_feature(FW_FEATURE_BLOCK_REMOVE)) {
->> +		pr_info("H_BLOCK_REMOVE is not supported");
-> 
-> That's going to trigger on a lot of older machines, and all KVM VMs, so
-> just return silently.
-> 
->> +		return;
->> +	}
->> +
->> +	memset(local_buffer, 0, SPLPAR_TLB_BIC_MAXLENGTH);
-> 
-> Here you memset the whole buffer ...
-> 
->> +	spin_lock(&rtas_data_buf_lock);
->> +	memset(rtas_data_buf, 0, RTAS_DATA_BUF_SIZE);
->> +	call_status = rtas_call(rtas_token("ibm,get-system-parameter"), 3, 1,
->> +				NULL,
->> +				SPLPAR_TLB_BIC_TOKEN,
->> +				__pa(rtas_data_buf),
->> +				RTAS_DATA_BUF_SIZE);
->> +	memcpy(local_buffer, rtas_data_buf, SPLPAR_TLB_BIC_MAXLENGTH);
-> 
-> But then here you memcpy over the entire buffer, making the memset above
-> unnecessary.
-> 
->> +	local_buffer[SPLPAR_TLB_BIC_MAXLENGTH - 1] = '\0';
->> +	spin_unlock(&rtas_data_buf_lock);
->> +
->> +	if (call_status != 0) {
->> +		pr_warn("%s %s Error calling get-system-parameter (0x%x)\n",
->> +			__FILE__, __func__, call_status);
-> 
-> __FILE__ and __func__ is pretty verbose for what should be a rare case
-> (I realise you copied that from existing code).
-> 
-> 		pr_warn("Error calling get-system-parameter(%d, ...) (0x%x)\n",
->                          SPLPAR_TLB_BIC_TOKEN, call_status);
-> 
-> Should do I think?
-> 
->> +		return;
->> +	}
->> +
->> +	/*
->> +	 * The first two (2) bytes of the data in the buffer are the length of
->> +	 * the returned data, not counting these first two (2) bytes.
->> +	 */
->> +	len = local_buffer[0] * 256 + local_buffer[1] + 2;
-> 
-> This took me a minute to parse. I guess I was expecting something more
-> like:
-> 	len = be16_to_cpu(local_buffer) + 2;
-> 
-> ??
-> 
->> +	if (len >= SPLPAR_TLB_BIC_MAXLENGTH) {
-> 
-> I think it's allowed for len to be == SPLPAR_TLB_BIC_MAXLENGTH isn't it?
-> 
->> +		pr_warn("%s too large returned buffer %d", __func__, len);
->> +		return;
->> +	}
->> +
->> +	idx = 2;
->> +	while (idx < len) {
->> +		unsigned int block_size = local_buffer[idx++];
-> 
-> This is a little subtle, local_buffer is char, so no endian issue, but
-> you're loading that into an unsigned int which makes it look like there
-> should be an endian swap.
-> 
-> Maybe instead do:
-> 		u8 block_shift = local_buffer[idx++];
->                  u32 block_size;
-> 
-> 		if (!block_shift)
->                  	break;
-> 
-> 		block_size = 1 << block_shift;
-> 
-> ??
-> 
->> +		unsigned int npsize;
->> +
->> +		if (!block_size)
->> +			break;
->> +
->> +		block_size = 1 << block_size;
->> +
->> +		for (npsize = local_buffer[idx++];  npsize > 0; npsize--)
->> +			check_lp_set_hblk((unsigned int) local_buffer[idx++],
->> +					  block_size);
-> 
-> This could overflow if npsize is too big. I think you can just ad
-> "&& idx < len" to the for condition to make it safe?
-> 
->> +	}
->> +
->> +	for (bpsize = 0; bpsize < MMU_PAGE_COUNT; bpsize++)
->> +		for (idx = 0; idx < MMU_PAGE_COUNT; idx++)
->> +			if (hblkr_size[bpsize][idx])
->> +				pr_info("H_BLOCK_REMOVE supports base psize:%d psize:%d block size:%d",
->> +					bpsize, idx, hblkr_size[bpsize][idx]);
-> 
-> I think this is probably too verbose, except for debugging. Probably
-> just remove it?
+But again, don't do this.
 
-I'd like to keep that displayed because this is the only way to get these 
-values.
-I tried to use pr_debug() and rely on a dyndbg kernel command line option, 
-but the dynamic debug system is not yet initialised at this time of boot.
+Also, you ignored the part where I told you to not do this because we
+already  have locking.
 
-When a system is booting, those messages are interleaved with other user 
-cryptic messages ;):
+I'm not goign to discuss this further. Locking works. Spinlocks are
+cheap. Lockless algorithms that need atomics aren't even cheaper than
+spinlocks: they can in fact scale *worse*, because they don't have the
+nice queuing optimization that our spinlock have.
 
-[    0.000000] numa:   NODE_DATA [mem 0x7ffdd7000-0x7ffddbfff]
-[    0.000000] numa:     NODE_DATA(0) on node 2
-[    0.000000] numa:   NODE_DATA [mem 0x7ffdd2000-0x7ffdd6fff]
-[    0.000000] rfi-flush: fallback displacement flush available
-[    0.000000] rfi-flush: mttrig type flush available
-[    0.000000] count-cache-flush: full software flush sequence enabled.
-[    0.000000] stf-barrier: eieio barrier available
-[    0.000000] lpar: H_BLOCK_REMOVE supports base psize:0 psize:0 block size:8
-[    0.000000] lpar: H_BLOCK_REMOVE supports base psize:0 psize:2 block size:8
-[    0.000000] lpar: H_BLOCK_REMOVE supports base psize:0 psize:10 block size:8
-[    0.000000] lpar: H_BLOCK_REMOVE supports base psize:2 psize:2 block size:8
-[    0.000000] lpar: H_BLOCK_REMOVE supports base psize:2 psize:10 block size:8
-[    0.000000] PPC64 nvram contains 15360 bytes
-[    0.000000] barrier-nospec: using ORI speculation barrier
-[    0.000000] Zone ranges:
-[    0.000000]   Normal   [mem 0x0000000000000000-0x00000007ffffffff]
-[    0.000000] Movable zone start for each node
-[    0.000000] Early memory node ranges
-[    0.000000]   node   2: [mem 0x0000000000000000-0x00000007ffffffff]
-[    0.000000] Could not find start_pfn for node 0
+Lockless algorithms are great if they can avoid the contention on the
+lock and instead only work on distributed data and avoid contention
+entirely.
 
-Is this an issue to keep those lines ?
+But in this case the lock would be right next to the data anyway, so
+even that case doesn't hold.
 
-Cheers
-
+               Linus
