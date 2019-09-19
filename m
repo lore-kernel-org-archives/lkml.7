@@ -2,53 +2,53 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C80C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B0C0C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D65E217D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:25:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1722821929
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:25:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931911;
-	bh=BhAkphDj+0fgyrcKIHmH9JEYx3kwCeJH+ofYqdmz4b4=;
+	s=default; t=1568931915;
+	bh=oAccNfbSXfw152/LAL/LhbXvHUYErX5skTH3a8n2azk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zUinW8+VRUqoX0BkgObIpxUlT2+BvSQAJeJp8GiIffse3qNK4F60WD3ARYfcQ8QRL
-	 TsqHD20azaWkNAfKH54o/4yhuiA5GjPhwiUf5f9GHurH22gyBKhsBihSUrmP6YLLQF
-	 sIyS7z4cJLCn1PImXGjVVsAPEpiSj3biJhgktoRI=
+	b=NSGR12yuWG0JUYMaYZgBJa5DVQ6F+RYm+8WDG+hyUzhp8h1f5kJo0d9cdeweZI1hm
+	 bg5j275UPGGg35+Eb2MTye0wAE5JxstIPsmZ5pZhMbftsxWyMjABgb32vys/Pqxyix
+	 iVXQ8pd4CFvn34Fu0C3xywrDuj50KqG5SxUy99UI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407164AbfISWYZ (ORCPT
+        id S2407110AbfISWYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:24:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40462 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:24:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407126AbfISWYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:24:20 -0400
+        id S2407096AbfISWYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:24:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E757321929;
-        Thu, 19 Sep 2019 22:24:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EF9021920;
+        Thu, 19 Sep 2019 22:24:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931858;
-        bh=BhAkphDj+0fgyrcKIHmH9JEYx3kwCeJH+ofYqdmz4b4=;
+        s=default; t=1568931841;
+        bh=oAccNfbSXfw152/LAL/LhbXvHUYErX5skTH3a8n2azk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QojTKrL80Ux4WJRtxWgeJ+CV1DvacUBmENo2JmojmRkW35MBT4d8GobaFaImgKbFE
-         XMR6eEdOPrc2em62x0rJGF6oKe7fDHh5FyUmGiTbwVVCQdaLp4MPmczJ7WFj5Q2zar
-         319DJQ87unlnGM7VkG5ZG6et+oSy3UlInsSR64SA=
+        b=ZBRXdJP9P+4gJGkzlk7xpRVpXpY1FrRnrR/brT7T4o5uaepfUbZPCibx6vtuwvjB+
+         fSvkESuc6aDcWWLEozbEhao9LavcTNvrnkETGbNlabefShg6fixRyL37LTxBkKbPGF
+         SkaYZd56UnuDqf2/7/0JcH3/8BP+SuXV+X/Xjv3c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matt Delco <delco@chromium.org>,
-        Jim Mattson <jmattson@google.com>,
-        syzbot+983c866c3dd6efa3662a@syzkaller.appspotmail.com,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.4 31/56] KVM: coalesced_mmio: add bounds checking
-Date:   Fri, 20 Sep 2019 00:04:12 +0200
-Message-Id: <20190919214757.048128688@linuxfoundation.org>
+        stable@vger.kernel.org, Ilya Leoshkevich <iii@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 35/56] s390/bpf: fix lcgr instruction encoding
+Date:   Fri, 20 Sep 2019 00:04:16 +0200
+Message-Id: <20190919214757.771079796@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214742.483643642@linuxfoundation.org>
 References: <20190919214742.483643642@linuxfoundation.org>
@@ -61,82 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Delco <delco@chromium.org>
+From: Ilya Leoshkevich <iii@linux.ibm.com>
 
-commit b60fe990c6b07ef6d4df67bc0530c7c90a62623a upstream.
+[ Upstream commit bb2d267c448f4bc3a3389d97c56391cb779178ae ]
 
-The first/last indexes are typically shared with a user app.
-The app can change the 'last' index that the kernel uses
-to store the next result.  This change sanity checks the index
-before using it for writing to a potentially arbitrary address.
+"masking, test in bounds 3" fails on s390, because
+BPF_ALU64_IMM(BPF_NEG, BPF_REG_2, 0) ignores the top 32 bits of
+BPF_REG_2. The reason is that JIT emits lcgfr instead of lcgr.
+The associated comment indicates that the code was intended to
+emit lcgr in the first place, it's just that the wrong opcode
+was used.
 
-This fixes CVE-2019-14821.
+Fix by using the correct opcode.
 
-Cc: stable@vger.kernel.org
-Fixes: 5f94c1741bdc ("KVM: Add coalesced MMIO support (common part)")
-Signed-off-by: Matt Delco <delco@chromium.org>
-Signed-off-by: Jim Mattson <jmattson@google.com>
-Reported-by: syzbot+983c866c3dd6efa3662a@syzkaller.appspotmail.com
-[Use READ_ONCE. - Paolo]
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 054623105728 ("s390/bpf: Add s390x eBPF JIT compiler backend")
+Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Acked-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- virt/kvm/coalesced_mmio.c |   17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ arch/s390/net/bpf_jit_comp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/virt/kvm/coalesced_mmio.c
-+++ b/virt/kvm/coalesced_mmio.c
-@@ -39,7 +39,7 @@ static int coalesced_mmio_in_range(struc
- 	return 1;
- }
- 
--static int coalesced_mmio_has_room(struct kvm_coalesced_mmio_dev *dev)
-+static int coalesced_mmio_has_room(struct kvm_coalesced_mmio_dev *dev, u32 last)
- {
- 	struct kvm_coalesced_mmio_ring *ring;
- 	unsigned avail;
-@@ -51,7 +51,7 @@ static int coalesced_mmio_has_room(struc
- 	 * there is always one unused entry in the buffer
- 	 */
- 	ring = dev->kvm->coalesced_mmio_ring;
--	avail = (ring->first - ring->last - 1) % KVM_COALESCED_MMIO_MAX;
-+	avail = (ring->first - last - 1) % KVM_COALESCED_MMIO_MAX;
- 	if (avail == 0) {
- 		/* full */
- 		return 0;
-@@ -66,24 +66,27 @@ static int coalesced_mmio_write(struct k
- {
- 	struct kvm_coalesced_mmio_dev *dev = to_mmio(this);
- 	struct kvm_coalesced_mmio_ring *ring = dev->kvm->coalesced_mmio_ring;
-+	__u32 insert;
- 
- 	if (!coalesced_mmio_in_range(dev, addr, len))
- 		return -EOPNOTSUPP;
- 
- 	spin_lock(&dev->kvm->ring_lock);
- 
--	if (!coalesced_mmio_has_room(dev)) {
-+	insert = READ_ONCE(ring->last);
-+	if (!coalesced_mmio_has_room(dev, insert) ||
-+	    insert >= KVM_COALESCED_MMIO_MAX) {
- 		spin_unlock(&dev->kvm->ring_lock);
- 		return -EOPNOTSUPP;
- 	}
- 
- 	/* copy data in first free entry of the ring */
- 
--	ring->coalesced_mmio[ring->last].phys_addr = addr;
--	ring->coalesced_mmio[ring->last].len = len;
--	memcpy(ring->coalesced_mmio[ring->last].data, val, len);
-+	ring->coalesced_mmio[insert].phys_addr = addr;
-+	ring->coalesced_mmio[insert].len = len;
-+	memcpy(ring->coalesced_mmio[insert].data, val, len);
- 	smp_wmb();
--	ring->last = (ring->last + 1) % KVM_COALESCED_MMIO_MAX;
-+	ring->last = (insert + 1) % KVM_COALESCED_MMIO_MAX;
- 	spin_unlock(&dev->kvm->ring_lock);
- 	return 0;
- }
+diff --git a/arch/s390/net/bpf_jit_comp.c b/arch/s390/net/bpf_jit_comp.c
+index 727693e283da2..e53d410e88703 100644
+--- a/arch/s390/net/bpf_jit_comp.c
++++ b/arch/s390/net/bpf_jit_comp.c
+@@ -886,7 +886,7 @@ static noinline int bpf_jit_insn(struct bpf_jit *jit, struct bpf_prog *fp, int i
+ 		break;
+ 	case BPF_ALU64 | BPF_NEG: /* dst = -dst */
+ 		/* lcgr %dst,%dst */
+-		EMIT4(0xb9130000, dst_reg, dst_reg);
++		EMIT4(0xb9030000, dst_reg, dst_reg);
+ 		break;
+ 	/*
+ 	 * BPF_FROM_BE/LE
+-- 
+2.20.1
+
 
 
