@@ -2,235 +2,158 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A132AC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 08:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF96C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 08:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78484217D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 08:38:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C647217D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 08:40:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mFgRj5Nl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388491AbfISIiO (ORCPT
+        id S2388361AbfISIkJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 04:38:14 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:21262 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388008AbfISIiO (ORCPT
+        Thu, 19 Sep 2019 04:40:09 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:38661 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387617AbfISIkJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 04:38:14 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8J8bWmO057355
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 04:38:13 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2v451c2wvm-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 04:38:12 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
-        Thu, 19 Sep 2019 09:38:11 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 19 Sep 2019 09:38:06 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8J8c4GR35062202
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Sep 2019 08:38:05 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DFD62A4057;
-        Thu, 19 Sep 2019 08:38:04 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 33AFDA4051;
-        Thu, 19 Sep 2019 08:38:04 +0000 (GMT)
-Received: from bali.tls.ibm.com (unknown [9.101.4.17])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 19 Sep 2019 08:38:04 +0000 (GMT)
-Subject: Re: [PATCH 2/5] powerpc: Map & release OpenCAPI LPC memory
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Allison Randal <allison@lohutok.net>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Vaibhav Jain <vaibhav@linux.ibm.com>,
-        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20190917014307.30485-1-alastair@au1.ibm.com>
- <20190917014307.30485-3-alastair@au1.ibm.com>
- <c644b511-86c8-e71b-11ae-dd425c3be28d@linux.ibm.com>
- <aa0be6fd63fd65fa66467234ce9790b39ac6b689.camel@au1.ibm.com>
-From:   Frederic Barrat <fbarrat@linux.ibm.com>
-Date:   Thu, 19 Sep 2019 10:38:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Thu, 19 Sep 2019 04:40:09 -0400
+Received: by mail-ed1-f66.google.com with SMTP id a23so2428443edv.5;
+        Thu, 19 Sep 2019 01:40:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=G6gxprrxxWhNaep2gy6TkOgQmUEnXSE534x9gzQ10xM=;
+        b=mFgRj5Nlqr4bPXljsKYcy6ZCY1XvPCnSsO1GMuxYyC3GfAMTblXf/a3EhcAElHiHYq
+         x8O+jB0pNrZgvE6Shik4JDsS+4QRwFRqSz3zhiRZk/QfXwDUeRZVKrzdCHrV+YGqEh26
+         EUf5WHpnuxb4ibWqE+rp4SBlL1rVeGUNTzDYzmRfRsvAXeP+39sFD+XlKJVKMKbDMGwO
+         3RHZuFtsIzopkTDCyCmTvvsfj18EAKqb1MbDDQz8e2ak2aSEVrkTUnfZp7AJSoXK0Bmq
+         EsM1iq9xWoXVpNfsRE2kc3X+sOmAVzycY/DNyQ/SYt15fsSn3VKC9THtQ8TZMSIvJXkn
+         Dw0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=G6gxprrxxWhNaep2gy6TkOgQmUEnXSE534x9gzQ10xM=;
+        b=et9gS0IOFxLj8j4KuyppJ1TpA4JgXwbSvQzU2BF3njK/p6fbcSCQmBmdMwamS9splX
+         F/xf5cKIuWdP3QzTYNB9VpyU3AjsueSU5YKChZDEbE6GMXg+POGjonjbv/S9xhPw0dje
+         8Qe8LXDvl8UHJI2+MB91cH2FX2+/801ulnngMdojNRblGnN9Rr18ZBYrqHyhmQ5N0jSS
+         GhrfGsoFFfLUiCDu0Qr/Aia5n/tCbLR25NvTXQK3moWbAjFnHKJ8V2jsz1W0w03Rfra2
+         X/CfAEHeqbM2JJ0Kd1fuJ9W2s5IcR8RosQnhhfPjIXHsG3j15pLHdE1KywHDOKB1Md6L
+         1pww==
+X-Gm-Message-State: APjAAAUhq2AJNKQdbUlqirhOSB1P7bf2qZNFjVbeFoQXG+zJQHb6/L0q
+        Vkzvfen1eDNK38xy2LtBlNVGD6x3
+X-Google-Smtp-Source: APXvYqxoR5lUv9djP6jltC8gTYY7JsELTOjRd1IWs5TPBa8JWr/cg8E3TBCq9CiBiqs74XErNO6m8g==
+X-Received: by 2002:a17:906:2ccc:: with SMTP id r12mr909850ejr.219.1568882406611;
+        Thu, 19 Sep 2019 01:40:06 -0700 (PDT)
+Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
+        by smtp.gmail.com with ESMTPSA id a20sm1492487edt.95.2019.09.19.01.40.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Sep 2019 01:40:05 -0700 (PDT)
+Date:   Thu, 19 Sep 2019 10:40:03 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Nagarjuna Kristam <nkristam@nvidia.com>
+Cc:     jonathanh@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Patch V2] soc/tegra: fuse: Add fuse clock check in
+ tegra_fuse_readl
+Message-ID: <20190919084003.GA5041@ulmo>
+References: <1567508212-1194-1-git-send-email-nkristam@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <aa0be6fd63fd65fa66467234ce9790b39ac6b689.camel@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19091908-0028-0000-0000-0000039FE752
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19091908-0029-0000-0000-00002461ED91
-Message-Id: <df0e5246-abd2-7bf0-be3d-ae339aac4b57@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-19_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909190083
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="gKMricLos+KVdGMg"
+Content-Disposition: inline
+In-Reply-To: <1567508212-1194-1-git-send-email-nkristam@nvidia.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--gKMricLos+KVdGMg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Le 19/09/2019 à 02:58, Alastair D'Silva a écrit :
-> On Wed, 2019-09-18 at 16:03 +0200, Frederic Barrat wrote:
->>
->> Le 17/09/2019 à 03:42, Alastair D'Silva a écrit :
->>> From: Alastair D'Silva <alastair@d-silva.org>
->>>
->>> Map & release OpenCAPI LPC memory.
->>>
->>> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
->>> ---
->>>    arch/powerpc/include/asm/pnv-ocxl.h   |  2 ++
->>>    arch/powerpc/platforms/powernv/ocxl.c | 42
->>> +++++++++++++++++++++++++++
->>>    2 files changed, 44 insertions(+)
->>>
->>> diff --git a/arch/powerpc/include/asm/pnv-ocxl.h
->>> b/arch/powerpc/include/asm/pnv-ocxl.h
->>> index 7de82647e761..f8f8ffb48aa8 100644
->>> --- a/arch/powerpc/include/asm/pnv-ocxl.h
->>> +++ b/arch/powerpc/include/asm/pnv-ocxl.h
->>> @@ -32,5 +32,7 @@ extern int pnv_ocxl_spa_remove_pe_from_cache(void
->>> *platform_data, int pe_handle)
->>>    
->>>    extern int pnv_ocxl_alloc_xive_irq(u32 *irq, u64 *trigger_addr);
->>>    extern void pnv_ocxl_free_xive_irq(u32 irq);
->>> +extern u64 pnv_ocxl_platform_lpc_setup(struct pci_dev *pdev, u64
->>> size);
->>> +extern void pnv_ocxl_platform_lpc_release(struct pci_dev *pdev);
->>>    
->>>    #endif /* _ASM_PNV_OCXL_H */
->>> diff --git a/arch/powerpc/platforms/powernv/ocxl.c
->>> b/arch/powerpc/platforms/powernv/ocxl.c
->>> index 8c65aacda9c8..81393728d6a3 100644
->>> --- a/arch/powerpc/platforms/powernv/ocxl.c
->>> +++ b/arch/powerpc/platforms/powernv/ocxl.c
->>> @@ -475,6 +475,48 @@ void pnv_ocxl_spa_release(void *platform_data)
->>>    }
->>>    EXPORT_SYMBOL_GPL(pnv_ocxl_spa_release);
->>>    
->>> +u64 pnv_ocxl_platform_lpc_setup(struct pci_dev *pdev, u64 size)
->>> +{
->>> +	struct pci_controller *hose = pci_bus_to_host(pdev->bus);
->>> +	struct pnv_phb *phb = hose->private_data;
->>> +	struct pci_dn *pdn = pci_get_pdn(pdev);
->>> +	u32 bdfn = (pdn->busno << 8) | pdn->devfn;
->>
->> We can spare a call to pci_get_pdn() with
->> bdfn = (pdev->bus->number << 8) | pdev->devfn;
->>
-> 
-> Ok.
-> 
->>
->>> +	u64 base_addr = 0;
->>> +
->>> +	int rc = opal_npu_mem_alloc(phb->opal_id, bdfn, size,
->>> &base_addr);
->>> +
->>> +	WARN_ON(rc);
->>
->> Instead of a WARN, we should catch the error and return a null
->> address
->> to the caller.
->>
-> 
-> base_addr will be 0 in the error case, are you suggesting we just
-> remove the WARN_ON()?
+On Tue, Sep 03, 2019 at 04:26:52PM +0530, Nagarjuna Kristam wrote:
+> tegra_fuse_readl() can be called from drivers at any time. If this API is
+> called before tegra_fuse_probe(), we end up enabling clock before it is
+> registered. Add check for fuse clock in tegra_fuse_readl() and return
+> corresponding error if any.
+>=20
+> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+> ---
+> V2:
+> 	- Added Null and other error checks for fuse->clk.
+> ---
+>  drivers/soc/tegra/fuse/fuse-tegra.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 
+Hi ARM-SoC maintainers,
 
-Well, we don't really have any reason to keep going if the opal call 
-fails, right? And anyway, I wouldn't make any assumption on the content 
-of base_addr if the call fails.
-But my remark was really to avoid polluting the logs with the WARN 
-output. The stack backtrace and register content is scary and is not 
-going to help in that situation. A proper error message is more suitable.
+can you pick this up as a bugfix for v5.4-rc1? Would you prefer to pick
+it up directly or do you want a pull request for this?
 
-   Fred
+The patchwork link is:
 
+	http://patchwork.ozlabs.org/patch/1156928/
 
+And in that case:
 
->>> +
->>> +	base_addr = be64_to_cpu(base_addr);
->>> +
->>> +	rc = check_hotplug_memory_addressable(base_addr, base_addr +
->>> size);
->>
->> That code is missing?
->>
-> 
-> That's added in the following patch on the mm list:
->   [PATCH v3 1/2] memory_hotplug: Add a bounds check to
-> check_hotplug_memory_range()
-> 
->>
->>> +	if (rc) {
->>> +		dev_warn(&pdev->dev,
->>> +			 "LPC memory range 0x%llx-0x%llx is not fully
->>> addressable",
->>> +			 base_addr, base_addr + size - 1);
->>> +		return 0;
->>> +	}
->>> +
->>> +
->>> +	return base_addr;
->>> +}
->>> +EXPORT_SYMBOL_GPL(pnv_ocxl_platform_lpc_setup);
->>> +
->>> +void pnv_ocxl_platform_lpc_release(struct pci_dev *pdev)
->>> +{
->>> +	struct pci_controller *hose = pci_bus_to_host(pdev->bus);
->>> +	struct pnv_phb *phb = hose->private_data;
->>> +	struct pci_dn *pdn = pci_get_pdn(pdev);
->>> +	u32 bdfn;
->>> +	int rc;
->>> +
->>> +	bdfn = (pdn->busno << 8) | pdn->devfn;
->>> +	rc = opal_npu_mem_release(phb->opal_id, bdfn);
->>> +	WARN_ON(rc);
->>
->> Same comments as above.
->>
->>     Fred
->>
->>
->>
->>> +}
->>> +EXPORT_SYMBOL_GPL(pnv_ocxl_platform_lpc_release);
->>> +
->>> +
->>>    int pnv_ocxl_spa_remove_pe_from_cache(void *platform_data, int
->>> pe_handle)
->>>    {
->>>    	struct spa_data *data = (struct spa_data *) platform_data;
->>>
+Acked-by: Thierry Reding <treding@nvidia.com>
 
+Thanks,
+Thierry
+
+> diff --git a/drivers/soc/tegra/fuse/fuse-tegra.c b/drivers/soc/tegra/fuse=
+/fuse-tegra.c
+> index 3eb44e6..58996c6 100644
+> --- a/drivers/soc/tegra/fuse/fuse-tegra.c
+> +++ b/drivers/soc/tegra/fuse/fuse-tegra.c
+> @@ -186,9 +186,12 @@ u32 __init tegra_fuse_read_early(unsigned int offset)
+> =20
+>  int tegra_fuse_readl(unsigned long offset, u32 *value)
+>  {
+> -	if (!fuse->read)
+> +	if (!fuse->read || !fuse->clk)
+>  		return -EPROBE_DEFER;
+> =20
+> +	if (IS_ERR(fuse->clk))
+> +		return PTR_ERR(fuse->clk);
+> +
+>  	*value =3D fuse->read(fuse, offset);
+> =20
+>  	return 0;
+> --=20
+> 2.7.4
+>=20
+
+--gKMricLos+KVdGMg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2DPuAACgkQ3SOs138+
+s6GmAg/+Jhj7yV6aaQ9kxLakkr2/Th9Tz8TCfLK/J6wyD1YDS+AV8shbj0xqaJ+9
+dyfl226iOR8PVxbjjSFe0w7oiUNooDVS8HpQrrvGgMqCoZLX5eewx9krafWilYzc
+sq0ayCUteJjJ4FjygmoBkaKDyqXqosYnXMr3NMC7f6uXBBUTbQKAcO6Mg0igk1Ss
+OkV2Pa1W771tKqlWyPAQy/DLXDeKsvp/mW2DId9GZhJw8pgToZUcCNiJoL2yFPmq
+KsZBE4mxacIelukWGjYaGwufIP4r8qKSzp/99aYOM+dmhToKPGZG1XDQMNDseatM
+7yNBKguVXZatZbHy8wXseC6LZy8KhDY5xOeNhZK5Im5sff30Egs1RKMj+NAZgrNo
+Js4quAlLe0SqWf4sOC3iiPrqa1VctDKttd1mQg3rx2svu7Rg6AFD55zcNyy9R6Mm
+tMXO5wi/G8Wd776caNI9jL2vZth/29P/hs+3Wo6HZ3p+KtiaVdUIMAgG2wcK6mkQ
+r/kmk6d+nlrKL6WLNJLASmgeV6Hw3QCiOj5HWxCfhUvjA+0edcANinlxUNl20Wbe
+AVd30Pkh8ISJxO7Kls+zGfDiTqsPmNZn/+i/rlHE6BUw2Rhjze9Wl3w3qMfrV485
+EgpG8wYwsomtCX4DBdNsZaAo5UdfxyDPwXDZZIecEAstyJ67ymw=
+=W88y
+-----END PGP SIGNATURE-----
+
+--gKMricLos+KVdGMg--
