@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B100DC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8DD5C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88578208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:35:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEC0F21E6F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:35:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932540;
-	bh=TBM/g7fLh8WR9QTERgiZC7qPfWyjzVeCnZnE5JZBrvQ=;
+	s=default; t=1568932542;
+	bh=Uuj6fa+HvSLw5t6MTO2P08i/ljV4VbXYamOjuOMQEKM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uZQfyrFg0k9sFjMyVPStn/k3BjU3dS2m86O/bR5j6KjnH/l58tdrdIGq0O+u768yX
-	 x26zywXrT7DTAxTf+m7WFLDP3SODRz107YzLNOC/hjOBbPbQjMMBuQnFS9Njr3ZgTD
-	 uUTG6trLj9besSeCfR3wS/cWFvXJWkV0soBdc9p0=
+	b=ZUbsWIF3bgo7l3PSSSPzesrxTF9GNat9PCI7BirR3XRMmHJ9bXHcVqJ23ooSuxN9j
+	 YSunXOjbDdl7lDJI7MsoBH63ln/1oK1IJaQy/7pCqQX+EgDNJ6UWIEsGuKKrsTj/QK
+	 e0H1Dp224fLnQ1+HUpOAr/iWjGaqSzSoWmmauIHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405297AbfISWHq (ORCPT
+        id S2393288AbfISWHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:07:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45458 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:07:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393278AbfISWHn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:07:43 -0400
+        id S2393269AbfISWHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:07:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 166DF21924;
-        Thu, 19 Sep 2019 22:07:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 688AB218AF;
+        Thu, 19 Sep 2019 22:07:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568930862;
-        bh=TBM/g7fLh8WR9QTERgiZC7qPfWyjzVeCnZnE5JZBrvQ=;
+        s=default; t=1568930859;
+        bh=Uuj6fa+HvSLw5t6MTO2P08i/ljV4VbXYamOjuOMQEKM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xEcE9H8WKppXhuqr3f4X7rTZANJGODGV+kNziWWWnykHn9g3lfneGhWxkiOFZsM8y
-         fvPz6rGe7+JdxLxq2V1gVr8j9utNJRuUYSH5/cA/q/efUEsknW6Gvq1gdpIGVKPCkc
-         9WGyN3a449HdS/eJcOdhI0CUDk1uhQ4HM+q0a3JY=
+        b=t7H05iGwXNmbvMunC+v0rHXuujuH3BHukx7lp/bqFNDyKweOhTeNsqvYjD5LNsXXF
+         q6tA+ZUI1equuPmAXbc/WncG9fN9L5OIuqjuuirGVb8MaYeYH38PbA/wstltl1NHUb
+         WSdGXSEz9WhF1jvzOmEVSSgLkbMeODUMeXlRQkvA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Huazhong Tan <tanhuazhong@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
+        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
+        linyunsheng <linyunsheng@huawei.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 004/124] net: hns3: adjust hns3_uninit_phy()s location in the hns3_client_uninit()
-Date:   Fri, 20 Sep 2019 00:01:32 +0200
-Message-Id: <20190919214819.348401191@linuxfoundation.org>
+Subject: [PATCH 5.2 013/124] net: hns: fix LED configuration for marvell phy
+Date:   Fri, 20 Sep 2019 00:01:41 +0200
+Message-Id: <20190919214819.627489279@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -60,43 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huazhong Tan <tanhuazhong@huawei.com>
+From: Yonglong Liu <liuyonglong@huawei.com>
 
-commit 0d2f68c7bcf4c7bbdd6f810f7b6e658f43d4461e upstream.
+commit f4e5f775db5a4631300dccd0de5eafb50a77c131 upstream.
 
-hns3_uninit_phy() should be called before checking
-HNS3_NIC_STATE_INITED flags, otherwise when this checking fails,
-there is nobody to call hns3_uninit_phy().
+Since commit(net: phy: marvell: change default m88e1510 LED configuration),
+the active LED of Hip07 devices is always off, because Hip07 just
+use 2 LEDs.
+This patch adds a phy_register_fixup_for_uid() for m88e1510 to
+correct the LED configuration.
 
-Fixes: c8a8045b2d0a ("net: hns3: Fix NULL deref when unloading driver")
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
+Fixes: 077772468ec1 ("net: phy: marvell: change default m88e1510 LED configuration")
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+Reviewed-by: linyunsheng <linyunsheng@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/hisilicon/hns/hns_enet.c |   23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -3896,6 +3896,8 @@ static void hns3_client_uninit(struct hn
+--- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+@@ -11,6 +11,7 @@
+ #include <linux/io.h>
+ #include <linux/ip.h>
+ #include <linux/ipv6.h>
++#include <linux/marvell_phy.h>
+ #include <linux/module.h>
+ #include <linux/phy.h>
+ #include <linux/platform_device.h>
+@@ -1149,6 +1150,13 @@ static void hns_nic_adjust_link(struct n
+ 	}
+ }
  
- 	hns3_client_stop(handle);
- 
-+	hns3_uninit_phy(netdev);
++static int hns_phy_marvell_fixup(struct phy_device *phydev)
++{
++	phydev->dev_flags |= MARVELL_PHY_LED0_LINK_LED1_ACTIVE;
 +
- 	if (!test_and_clear_bit(HNS3_NIC_STATE_INITED, &priv->state)) {
- 		netdev_warn(netdev, "already uninitialized\n");
- 		goto out_netdev_free;
-@@ -3905,8 +3907,6 @@ static void hns3_client_uninit(struct hn
++	return 0;
++}
++
+ /**
+  *hns_nic_init_phy - init phy
+  *@ndev: net device
+@@ -1174,6 +1182,16 @@ int hns_nic_init_phy(struct net_device *
+ 	if (h->phy_if != PHY_INTERFACE_MODE_XGMII) {
+ 		phy_dev->dev_flags = 0;
  
- 	hns3_clear_all_ring(handle, true);
++		/* register the PHY fixup (for Marvell 88E1510) */
++		ret = phy_register_fixup_for_uid(MARVELL_PHY_ID_88E1510,
++						 MARVELL_PHY_ID_MASK,
++						 hns_phy_marvell_fixup);
++		/* we can live without it, so just issue a warning */
++		if (ret)
++			netdev_warn(ndev,
++				    "Cannot register PHY fixup, ret=%d\n",
++				    ret);
++
+ 		ret = phy_connect_direct(ndev, phy_dev, hns_nic_adjust_link,
+ 					 h->phy_if);
+ 	} else {
+@@ -2429,8 +2447,11 @@ static int hns_nic_dev_remove(struct pla
+ 		hns_nic_uninit_ring_data(priv);
+ 	priv->ring_data = NULL;
  
--	hns3_uninit_phy(netdev);
--
- 	hns3_nic_uninit_vector_data(priv);
+-	if (ndev->phydev)
++	if (ndev->phydev) {
++		phy_unregister_fixup_for_uid(MARVELL_PHY_ID_88E1510,
++					     MARVELL_PHY_ID_MASK);
+ 		phy_disconnect(ndev->phydev);
++	}
  
- 	ret = hns3_nic_dealloc_vector_data(priv);
+ 	if (!IS_ERR_OR_NULL(priv->ae_handle))
+ 		hnae_put_handle(priv->ae_handle);
 
 
