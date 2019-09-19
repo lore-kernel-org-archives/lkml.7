@@ -2,152 +2,165 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 340F3C4CECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 05:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 651F6C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 05:23:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0127121848
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 05:19:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C56721848
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 05:23:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="SbkCLmIY"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="AjITiU4z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387929AbfISFTS (ORCPT
+        id S2388020AbfISFXW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 01:19:18 -0400
-Received: from mail-eopbgr730108.outbound.protection.outlook.com ([40.107.73.108]:46065
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387576AbfISFTR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 01:19:17 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=C5Bw0Z8ZI+cjmEPFRZ+JOcrB0SVGB7JjgvedC8sEWI5zrJBNA04E5BBBbKjYU4ceWSoChCyk6GZk+Lx+RktWQBEcl/KzWka+RJMhAnrFMwgkDj5Bd7Hbnxm89Ymse/SWivfNo0YUStSTgRSOO7WAYd20MjWAAh/puly0V3EpgQzZKIEvlWiUpSzhXq9+JgEMnSzhOOhqS1yhAAzp1REu41WER5ONJs4G3/uVdGzTes0ZlJpp9pfXz9JoDm025Mb7XMpvspU+cKn0lqmEly+0Vrrw00FpjWbydhVm1sMpyHUEO2dWsMus4qq4OpN1ylcSKlhvYUYzXIktt+x8p2qFwA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XVdLhnvC2LboEVFA17TX0R4DGm/M9CscwHgflRuNKC0=;
- b=msp5u/ejRSN3O943FS5ifTrT97xkij1vCOk6kSNpiDza2XspCzyKMfgNj/LdTZJviIgH3Wdp+vhQNx8kK8be1Jdn1bvugjhlv0oyIihjM/AiJ6bRPOqton7FQg72vMv0N7APULELDU1e7WCQDpmGqtEl5uGqF7O0W4h1Y4auxVQhY44jVqDUmTft1X3GbDvq3ba2NUzd7+dHbmv0EM3mieaaYvp26crOAeEhDg0idQYDK6E+n9MJb1T1emxoXyWXZ4Nv4m4aXn8KQqNMtS1X3uXmMfzJc9Vavy2d4DQob/pfxo+9MLXK6ACjXyKqFnwDHTgUGGnRbXspNXFM0AEy8Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XVdLhnvC2LboEVFA17TX0R4DGm/M9CscwHgflRuNKC0=;
- b=SbkCLmIY7uK16Ez7a2S1f3GXOR6czObzk8CHn9GSwqrhv0nkMOP570mIsS/ZEnRS8RSWY7Xwx9F2Fbv4NWAmbjRdFrRy3cmi/bZhTI0blScT2T/dMoWH8+SPeTwYGyZXxaqwXlVJZ7Migtt4llwxxl+a+AxeeJH8NXy1Y/6UIPY=
-Received: from SN6PR2101MB0942.namprd21.prod.outlook.com (52.132.114.19) by
- SN6PR2101MB0926.namprd21.prod.outlook.com (52.132.117.15) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.6; Thu, 19 Sep 2019 05:19:15 +0000
-Received: from SN6PR2101MB0942.namprd21.prod.outlook.com
- ([fe80::7d1a:ddb:3473:b383]) by SN6PR2101MB0942.namprd21.prod.outlook.com
- ([fe80::7d1a:ddb:3473:b383%9]) with mapi id 15.20.2305.000; Thu, 19 Sep 2019
- 05:19:15 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "arnd@arndb.de" <arnd@arndb.de>
-CC:     Dexuan Cui <decui@microsoft.com>
-Subject: [PATCH] Drivers: hv: vmbus: Fix harmless building warnings without
- CONFIG_PM
-Thread-Topic: [PATCH] Drivers: hv: vmbus: Fix harmless building warnings
- without CONFIG_PM
-Thread-Index: AQHVbqnHI1Mc0HXAtE6Mh83Vyyvt0Q==
-Date:   Thu, 19 Sep 2019 05:19:14 +0000
-Message-ID: <1568870297-108679-1-git-send-email-decui@microsoft.com>
-Reply-To: Dexuan Cui <decui@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR1001CA0009.namprd10.prod.outlook.com
- (2603:10b6:301:2a::22) To SN6PR2101MB0942.namprd21.prod.outlook.com
- (2603:10b6:805:4::19)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 1.8.3.1
-x-originating-ip: [13.77.154.182]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 579dc9d5-bd3a-4db0-eace-08d73cc0e997
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: SN6PR2101MB0926:|SN6PR2101MB0926:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR2101MB0926087DA6A7C371B7AD33E5BF890@SN6PR2101MB0926.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:126;
-x-forefront-prvs: 016572D96D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(366004)(346002)(39860400002)(376002)(396003)(199004)(189003)(6116002)(10090500001)(102836004)(14444005)(26005)(2501003)(256004)(99286004)(81166006)(478600001)(186003)(6512007)(6486002)(8676002)(86362001)(386003)(2201001)(25786009)(107886003)(50226002)(8936002)(52116002)(6506007)(6436002)(71190400001)(71200400001)(81156014)(10290500003)(66066001)(2906002)(4326008)(110136005)(66446008)(486006)(66946007)(1511001)(3846002)(5660300002)(64756008)(66556008)(66476007)(316002)(476003)(4720700003)(305945005)(2616005)(7736002)(36756003)(22452003)(43066004)(14454004)(3450700001);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB0926;H:SN6PR2101MB0942.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: A/QV0FGGHD7GD8sH3C4/N6xkcglY0xts+S9S2ORDMBFd1wLu66PYenpdkq1Dzny0AsVxW7IMKMhcWqLJQ3YEhgbFLQmjH+QuplCWOYML5PGWjQEgmKPkFaR++CALmSFVrvbgCC5XloRtbGgDr2sDDqsPudwusCT9k7zZi28Q7MS1v9gYVyqaHFQadgiGI5gBf1vKFzUOlOpXLAcAqdxG4FVlsPPB7PJ3/97DFfOY+G7bo3Rt8uR32hQcUqVqHa5pUXIHhD4bsqoV2X0Oei9Ki+JXSyBESMMnD02N7yKU/0T0kdMiobSKxg/veyp4f94UZTP89EwDp4AJodnA29G1rZReXIQ1be/bWgEp+ib3c4T6r9oi5gUISz6GxkOStRyWlIuXWmIktCfSFG2zuyTF3P0gN0DETuaJ4gMzPg1Or6s=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F5B829FAAB87E5459823BE2EE9B4A294@namprd21.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 19 Sep 2019 01:23:22 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:45766 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387576AbfISFXV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 01:23:21 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46YlcR0Mfhz9v4gb;
+        Thu, 19 Sep 2019 07:23:19 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=AjITiU4z; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id W0ZjiSo4UdoG; Thu, 19 Sep 2019 07:23:18 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46YlcQ6Qbkz9v4gY;
+        Thu, 19 Sep 2019 07:23:18 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1568870598; bh=U7o25f1gtEsBxQM8z6wcetUpJ35EiEndIk0n8Ib4tnA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=AjITiU4z12BJw9kZqMy9qm6OfxEhLABIVX23Ntzy4PzVm9V3k5kgIdrT/EE1pFFxN
+         XSee4lZqpXrFzjDWE8MH/8e8mqYyhe1DBSqNlThvuFHwkOHqOa1lexWcVUWxdD7K4q
+         KtPbJzIlOEfrHp9Q+EbRVt024dLmQFDf6fxysRFM=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B6FDE8B80B;
+        Thu, 19 Sep 2019 07:23:19 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id LHmi5fzDEdPX; Thu, 19 Sep 2019 07:23:19 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0F0018B783;
+        Thu, 19 Sep 2019 07:23:19 +0200 (CEST)
+Subject: Re: [PATCH v3 2/2] powerpc/irq: inline call_do_irq() and
+ call_do_softirq()
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, npiggin@gmail.com,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <d0b002c96cfc069a1bc7bafcac28defe5d7d3643.1568821668.git.christophe.leroy@c-s.fr>
+ <5fb4aedadbd28b9849cf2fabe13392fb3b5cd3ed.1568821668.git.christophe.leroy@c-s.fr>
+ <20190918163919.GH9749@gate.crashing.org>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <a7a46d1b-873c-1267-b8ca-615a7fabfd6b@c-s.fr>
+Date:   Thu, 19 Sep 2019 07:23:18 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 579dc9d5-bd3a-4db0-eace-08d73cc0e997
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Sep 2019 05:19:15.1506
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vxfeCCSY2VZmQwvfxmEPvtXn6Dv2DP3D377ADr1FmR1323kzHPRNyj7ddPpiNHwnOeS1vmn+doj6jRJb3Tleyg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB0926
+In-Reply-To: <20190918163919.GH9749@gate.crashing.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SWYgQ09ORklHX1BNIGlzIG5vdCBzZXQsIHdlIGNhbiBjb21tZW50IG91dCB0aGVzZSBmdW5jdGlv
-bnMgdG8gYXZvaWQgdGhlDQpiZWxvdyB3YXJuaW5nczoNCg0KZHJpdmVycy9odi92bWJ1c19kcnYu
-YzoyMjA4OjEyOiB3YXJuaW5nOiDigJh2bWJ1c19idXNfcmVzdW1l4oCZIGRlZmluZWQgYnV0IG5v
-dCB1c2VkIFstV3VudXNlZC1mdW5jdGlvbl0NCmRyaXZlcnMvaHYvdm1idXNfZHJ2LmM6MjEyODox
-Mjogd2FybmluZzog4oCYdm1idXNfYnVzX3N1c3BlbmTigJkgZGVmaW5lZCBidXQgbm90IHVzZWQg
-Wy1XdW51c2VkLWZ1bmN0aW9uXQ0KZHJpdmVycy9odi92bWJ1c19kcnYuYzo5Mzc6MTI6IHdhcm5p
-bmc6IOKAmHZtYnVzX3Jlc3VtZeKAmSBkZWZpbmVkIGJ1dCBub3QgdXNlZCBbLVd1bnVzZWQtZnVu
-Y3Rpb25dDQpkcml2ZXJzL2h2L3ZtYnVzX2Rydi5jOjkxODoxMjogd2FybmluZzog4oCYdm1idXNf
-c3VzcGVuZOKAmSBkZWZpbmVkIGJ1dCBub3QgdXNlZCBbLVd1bnVzZWQtZnVuY3Rpb25dDQoNCkZp
-eGVzOiAyNzFiMjIyNGQ0MmYgKCJEcml2ZXJzOiBodjogdm1idXM6IEltcGxlbWVudCBzdXNwZW5k
-L3Jlc3VtZSBmb3IgVlNDIGRyaXZlcnMgZm9yIGhpYmVybmF0aW9uIikNCkZpeGVzOiBmNTMzMzVl
-MzI4OWYgKCJEcml2ZXJzOiBodjogdm1idXM6IFN1c3BlbmQvcmVzdW1lIHRoZSB2bWJ1cyBpdHNl
-bGYgZm9yIGhpYmVybmF0aW9uIikNClJlcG9ydGVkLWJ5OiBBcm5kIEJlcmdtYW5uIDxhcm5kQGFy
-bmRiLmRlPg0KU2lnbmVkLW9mZi1ieTogRGV4dWFuIEN1aSA8ZGVjdWlAbWljcm9zb2Z0LmNvbT4N
-Ci0tLQ0KIGRyaXZlcnMvaHYvdm1idXNfZHJ2LmMgfCA2ICsrKysrKw0KIDEgZmlsZSBjaGFuZ2Vk
-LCA2IGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvaHYvdm1idXNfZHJ2LmMg
-Yi9kcml2ZXJzL2h2L3ZtYnVzX2Rydi5jDQppbmRleCAzOTFmMGIyMjVjOWEuLjhiZmIzNjY5NTQx
-MyAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvaHYvdm1idXNfZHJ2LmMNCisrKyBiL2RyaXZlcnMvaHYv
-dm1idXNfZHJ2LmMNCkBAIC05MTIsNiArOTEyLDcgQEAgc3RhdGljIHZvaWQgdm1idXNfc2h1dGRv
-d24oc3RydWN0IGRldmljZSAqY2hpbGRfZGV2aWNlKQ0KIAkJZHJ2LT5zaHV0ZG93bihkZXYpOw0K
-IH0NCiANCisjaWZkZWYgQ09ORklHX1BNDQogLyoNCiAgKiB2bWJ1c19zdXNwZW5kIC0gU3VzcGVu
-ZCBhIHZtYnVzIGRldmljZQ0KICAqLw0KQEAgLTk0OSw2ICs5NTAsNyBAQCBzdGF0aWMgaW50IHZt
-YnVzX3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpjaGlsZF9kZXZpY2UpDQogDQogCXJldHVybiBkcnYt
-PnJlc3VtZShkZXYpOw0KIH0NCisjZW5kaWYgLyogQ09ORklHX1BNICovDQogDQogLyoNCiAgKiB2
-bWJ1c19kZXZpY2VfcmVsZWFzZSAtIEZpbmFsIGNhbGxiYWNrIHJlbGVhc2Ugb2YgdGhlIHZtYnVz
-IGNoaWxkIGRldmljZQ0KQEAgLTEwNzAsNiArMTA3Miw3IEBAIHZvaWQgdm1idXNfb25fbXNnX2Rw
-Yyh1bnNpZ25lZCBsb25nIGRhdGEpDQogCXZtYnVzX3NpZ25hbF9lb20obXNnLCBtZXNzYWdlX3R5
-cGUpOw0KIH0NCiANCisjaWZkZWYgQ09ORklHX1BNDQogLyoNCiAgKiBGYWtlIFJFU0NJTkRfQ0hB
-Tk5FTCBtZXNzYWdlcyB0byBjbGVhbiB1cCBodl9zb2NrIGNoYW5uZWxzIGJ5IGZvcmNlIGZvcg0K
-ICAqIGhpYmVybmF0aW9uLCBiZWNhdXNlIGh2X3NvY2sgY29ubmVjdGlvbnMgY2FuIG5vdCBwZXJz
-aXN0IGFjcm9zcyBoaWJlcm5hdGlvbi4NCkBAIC0xMTA1LDYgKzExMDgsNyBAQCBzdGF0aWMgdm9p
-ZCB2bWJ1c19mb3JjZV9jaGFubmVsX3Jlc2NpbmRlZChzdHJ1Y3Qgdm1idXNfY2hhbm5lbCAqY2hh
-bm5lbCkNCiAJCSAgICAgIHZtYnVzX2Nvbm5lY3Rpb24ud29ya19xdWV1ZSwNCiAJCSAgICAgICZj
-dHgtPndvcmspOw0KIH0NCisjZW5kaWYgLyogQ09ORklHX1BNICovDQogDQogLyoNCiAgKiBEaXJl
-Y3QgY2FsbGJhY2sgZm9yIGNoYW5uZWxzIHVzaW5nIG90aGVyIGRlZmVycmVkIHByb2Nlc3NpbmcN
-CkBAIC0yMTI1LDYgKzIxMjksNyBAQCBzdGF0aWMgaW50IHZtYnVzX2FjcGlfYWRkKHN0cnVjdCBh
-Y3BpX2RldmljZSAqZGV2aWNlKQ0KIAlyZXR1cm4gcmV0X3ZhbDsNCiB9DQogDQorI2lmZGVmIENP
-TkZJR19QTQ0KIHN0YXRpYyBpbnQgdm1idXNfYnVzX3N1c3BlbmQoc3RydWN0IGRldmljZSAqZGV2
-KQ0KIHsNCiAJc3RydWN0IHZtYnVzX2NoYW5uZWwgKmNoYW5uZWwsICpzYzsNCkBAIC0yMjQ3LDYg
-KzIyNTIsNyBAQCBzdGF0aWMgaW50IHZtYnVzX2J1c19yZXN1bWUoc3RydWN0IGRldmljZSAqZGV2
-KQ0KIA0KIAlyZXR1cm4gMDsNCiB9DQorI2VuZGlmIC8qIENPTkZJR19QTSAqLw0KIA0KIHN0YXRp
-YyBjb25zdCBzdHJ1Y3QgYWNwaV9kZXZpY2VfaWQgdm1idXNfYWNwaV9kZXZpY2VfaWRzW10gPSB7
-DQogCXsiVk1CVVMiLCAwfSwNCi0tIA0KMi4xOS4xDQoNCg==
+
+
+Le 18/09/2019 à 18:39, Segher Boessenkool a écrit :
+> Hi Christophe,
+> 
+> On Wed, Sep 18, 2019 at 03:48:20PM +0000, Christophe Leroy wrote:
+>> call_do_irq() and call_do_softirq() are quite similar on PPC32 and
+>> PPC64 and are simple enough to be worth inlining.
+>>
+>> Inlining them avoids an mflr/mtlr pair plus a save/reload on stack.
+> 
+> But you hardcode the calling sequence in inline asm, which for various
+> reasons is not a great idea.
+> 
+>> +static inline void call_do_irq(struct pt_regs *regs, void *sp)
+>> +{
+>> +	register unsigned long r3 asm("r3") = (unsigned long)regs;
+>> +
+>> +	asm volatile(
+>> +		"	"PPC_STLU"	1, %2(%1);\n"
+>> +		"	mr		1, %1;\n"
+>> +		"	bl		%3;\n"
+>> +		"	"PPC_LL"	1, 0(1);\n" : "+r"(r3) :
+>> +		"b"(sp), "i"(THREAD_SIZE - STACK_FRAME_OVERHEAD), "i"(__do_irq) :
+>> +		"lr", "xer", "ctr", "memory", "cr0", "cr1", "cr5", "cr6", "cr7",
+>> +		"r0", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12");
+>> +}
+> 
+> I realise the original code had this...  Loading the old stack pointer
+> value back from the stack creates a bottleneck (via the store->load
+> forwarding it requires).  It could just use
+>    addi 1,1,-(%2)
+> here, which can also be written as
+>    addi 1,1,%n2
+> (that is portable to all architectures btw).
+
+No, we switched stack before the bl call, we replaced r1 by r3 after 
+saving r1 into r3 stack. Now we have to restore the original r1.
+
+> 
+> 
+> Please write the  "+r"(r3)  on the next line?  Not on the same line as
+> the multi-line template.  This make things more readable.
+> 
+> 
+> I don't know if using functions as an "i" works properly...  It probably
+> does, it's just not something that you see often :-)
+> 
+> 
+> What about r2?  Various ABIs handle that differently.  This might make
+> it impossible to share implementation between 32-bit and 64-bit for this.
+> But we could add it to the clobber list worst case, that will always work.
+
+Isn't r2 non-volatile on all ABIs ?
+
+> 
+> 
+> So anyway, it looks to me like it will work.  Nice cleanup.  Would be
+> better if you could do the call to __do_irq from C code, but maybe we
+> cannot have everything ;-)
+
+sparc do it the following way, is there no risk that GCC adds unwanted 
+code inbetween that is not aware there the stack pointer has changed ?
+
+void do_softirq_own_stack(void)
+{
+	void *orig_sp, *sp = softirq_stack[smp_processor_id()];
+
+	sp += THREAD_SIZE - 192 - STACK_BIAS;
+
+	__asm__ __volatile__("mov %%sp, %0\n\t"
+			     "mov %1, %%sp"
+			     : "=&r" (orig_sp)
+			     : "r" (sp));
+	__do_softirq();
+	__asm__ __volatile__("mov %0, %%sp"
+			     : : "r" (orig_sp));
+}
+
+If the above is no risk, then can we do the same on powerpc ?
+
+> 
+> Reviewed-by: Segher Boessenkool <segher@kernel.crashing.org>
+
+Thanks for the review.
+
+Christophe
