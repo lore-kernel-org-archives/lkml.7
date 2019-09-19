@@ -2,61 +2,60 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A77C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC7CC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8506621920
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:39:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2295621D6C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:39:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PtjU5GgX"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fNxhihCq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404709AbfISUju (ORCPT
+        id S2392736AbfISUjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 16:39:50 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:42664 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392734AbfISUjc (ORCPT
+        Thu, 19 Sep 2019 16:39:31 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:54252 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392664AbfISUj0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 16:39:32 -0400
+        Thu, 19 Sep 2019 16:39:26 -0400
 Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8JKdVRb117044;
-        Thu, 19 Sep 2019 15:39:31 -0500
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8JKdOcm073288;
+        Thu, 19 Sep 2019 15:39:24 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568925571;
-        bh=Tva2WjU8DYBp+72RMbfv//hBo8xWJDGWc06CK0eXp+k=;
+        s=ti-com-17Q1; t=1568925564;
+        bh=0S3XWkeoKQY64i4zH0hGmMh3PZ2jhiw8o3Vh/+6Z4rk=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=PtjU5GgX1YRo5Ya1ZUarkkzEBGukAdF8Ax05ygRvhuRQwfhlGLn/UPC56ZAjK/Rzy
-         8NQfo2k4/RYMe1QSDyp44FdxyaXuZd1tMLcpwMGFYDTrcH12iA9evRPTpo/vSsei8l
-         Nmfhi4T8ToSnzAYiA+9RkWQeMVzd0exfdVSnSnkk=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8JKdVtj002286
+        b=fNxhihCqfGEmDo7ZjBXYl1/se/PWcR4JA00XK9u2dAn6Vajfvr9li5nOHAsYqex/0
+         N3xFC9wEi8agHvSQV6MAtUSjpDAUIJtX+f/MaCgf7F9vGffMTsox47j+uJI7+RB3rF
+         CGMXJiD/NSgqiBE4YZfV1huFgcECzzgKfZG0HKoU=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8JKdOH6002209
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 19 Sep 2019 15:39:31 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 19 Sep 2019 15:39:24 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 19
- Sep 2019 15:39:30 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ Sep 2019 15:39:20 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 19 Sep 2019 15:39:26 -0500
+ Frontend Transport; Thu, 19 Sep 2019 15:39:20 -0500
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8JKdKId014276;
-        Thu, 19 Sep 2019 15:39:30 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8JKdKIX014276;
+        Thu, 19 Sep 2019 15:39:24 -0500
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>
 CC:     Prabhakar Lad <prabhakar.csengg@gmail.com>,
         <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v2 10/13] media: am437x-vpfe: Remove print_fourcc helper
-Date:   Thu, 19 Sep 2019 15:41:22 -0500
-Message-ID: <20190919204125.15254-11-bparrot@ti.com>
+Subject: [Patch v2 04/13] media: am437x-vpfe: Wait for end of frame before tear-down
+Date:   Thu, 19 Sep 2019 15:41:16 -0500
+Message-ID: <20190919204125.15254-5-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190919204125.15254-1-bparrot@ti.com>
 References: <20190919204125.15254-1-bparrot@ti.com>
@@ -68,124 +67,157 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-print_fourcc helper function was used for debug log to
-convert a pixel format code into its readable form for display
-purposes. But since it used a single static buffer to perform
-the conversion this might lead to display format issue when more
-than one instance was invoked simultaneously.
+We were originally attempting to stop all processing as soon
+as possible, but the in-progress DMA operation cannot be canceled.
+This led to the module being in a busy state and prevented proper
+power management functionality.
 
-It turns out that print_fourcc can be safely replace by using
-"%4pE" instead and passing the pointer to the fourcc code.
+The existing implementation would attempt to clean things up by waiting
+up to 50ms. However when receiving video frame at 15fps or lower,
+it meant an inter frame arrival rate of 66.6 ms or higher.
+In such cases upon tear down the following message could be seen:
+omap_hwmod: vpfe0: _wait_target_disable failed
+
+This patch fixes this issue by adding a stopping state where
+we would wait for the next Vsync before disabling the hardware.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
- drivers/media/platform/am437x/am437x-vpfe.c | 42 +++++++--------------
- 1 file changed, 14 insertions(+), 28 deletions(-)
+ drivers/media/platform/am437x/am437x-vpfe.c | 52 ++++++++++-----------
+ drivers/media/platform/am437x/am437x-vpfe.h |  3 ++
+ 2 files changed, 29 insertions(+), 26 deletions(-)
 
 diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
-index 605a6bb7e6c2..ad46e037fe89 100644
+index 13bf4b32b40b..66df87d310a2 100644
 --- a/drivers/media/platform/am437x/am437x-vpfe.c
 +++ b/drivers/media/platform/am437x/am437x-vpfe.c
-@@ -221,20 +221,6 @@ static void pix_to_mbus(struct vpfe_device *vpfe,
- 	v4l2_fill_mbus_format(mbus_fmt, pix_fmt, fmt->code);
+@@ -441,40 +441,25 @@ static void vpfe_ccdc_restore_defaults(struct vpfe_ccdc *ccdc)
+ 
+ static int vpfe_ccdc_close(struct vpfe_ccdc *ccdc, struct device *dev)
+ {
+-	int dma_cntl, i, pcr;
++	struct vpfe_device *vpfe = container_of(ccdc, struct vpfe_device, ccdc);
++	u32 dma_cntl, pcr;
+ 
+-	/* If the CCDC module is still busy wait for it to be done */
+-	for (i = 0; i < 10; i++) {
+-		usleep_range(5000, 6000);
+-		pcr = vpfe_reg_read(ccdc, VPFE_PCR);
+-		if (!pcr)
+-			break;
++	pcr = vpfe_reg_read(ccdc, VPFE_PCR);
++	if (pcr)
++		vpfe_dbg(1, vpfe, "VPFE_PCR is still set (%x)", pcr);
+ 
+-		/* make sure it it is disabled */
+-		vpfe_pcr_enable(ccdc, 0);
+-	}
++	dma_cntl = vpfe_reg_read(ccdc, VPFE_DMA_CNTL);
++	if ((dma_cntl & VPFE_DMA_CNTL_OVERFLOW))
++		vpfe_dbg(1, vpfe, "VPFE_DMA_CNTL_OVERFLOW is still set (%x)",
++			 dma_cntl);
+ 
+ 	/* Disable CCDC by resetting all register to default POR values */
+ 	vpfe_ccdc_restore_defaults(ccdc);
+ 
+-	/* if DMA_CNTL overflow bit is set. Clear it
+-	 *  It appears to take a while for this to become quiescent ~20ms
+-	 */
+-	for (i = 0; i < 10; i++) {
+-		dma_cntl = vpfe_reg_read(ccdc, VPFE_DMA_CNTL);
+-		if (!(dma_cntl & VPFE_DMA_CNTL_OVERFLOW))
+-			break;
+-
+-		/* Clear the overflow bit */
+-		vpfe_reg_write(ccdc, dma_cntl, VPFE_DMA_CNTL);
+-		usleep_range(5000, 6000);
+-	}
+-
+ 	/* Disabled the module at the CONFIG level */
+ 	vpfe_config_enable(ccdc, 0);
+ 
+ 	pm_runtime_put_sync(dev);
+-
+ 	return 0;
  }
  
--/*  Print Four-character-code (FOURCC) */
--static char *print_fourcc(u32 fmt)
--{
--	static char code[5];
--
--	code[0] = (unsigned char)(fmt & 0xff);
--	code[1] = (unsigned char)((fmt >> 8) & 0xff);
--	code[2] = (unsigned char)((fmt >> 16) & 0xff);
--	code[3] = (unsigned char)((fmt >> 24) & 0xff);
--	code[4] = '\0';
--
--	return code;
--}
--
- static int
- cmp_v4l2_format(const struct v4l2_format *lhs, const struct v4l2_format *rhs)
+@@ -1303,6 +1288,9 @@ static void vpfe_handle_interlaced_irq(struct vpfe_device *vpfe,
+ 			if (vpfe->cur_frm != vpfe->next_frm)
+ 				vpfe_process_buffer_complete(vpfe);
+ 
++			if (vpfe->stopping)
++				return;
++
+ 			/*
+ 			 * based on whether the two fields are stored
+ 			 * interleave or separately in memory,
+@@ -1341,7 +1329,7 @@ static irqreturn_t vpfe_isr(int irq, void *dev)
  {
-@@ -696,8 +682,8 @@ static int vpfe_ccdc_set_pixel_format(struct vpfe_ccdc *ccdc, u32 pixfmt)
- {
- 	struct vpfe_device *vpfe = container_of(ccdc, struct vpfe_device, ccdc);
+ 	struct vpfe_device *vpfe = (struct vpfe_device *)dev;
+ 	enum v4l2_field field = vpfe->fmt.fmt.pix.field;
+-	int intr_status;
++	int intr_status, stopping = vpfe->stopping;
  
--	vpfe_dbg(1, vpfe, "%s: if_type: %d, pixfmt:%s\n",
--		 __func__, ccdc->ccdc_cfg.if_type, print_fourcc(pixfmt));
-+	vpfe_dbg(1, vpfe, "%s: if_type: %d, pixfmt:%4pE\n",
-+		 __func__, ccdc->ccdc_cfg.if_type, &pixfmt);
+ 	intr_status = vpfe_reg_read(&vpfe->ccdc, VPFE_IRQ_STS);
  
- 	if (ccdc->ccdc_cfg.if_type == VPFE_RAW_BAYER) {
- 		ccdc->ccdc_cfg.bayer.pix_fmt = CCDC_PIXFMT_RAW;
-@@ -983,8 +969,8 @@ static int vpfe_config_ccdc_image_format(struct vpfe_device *vpfe)
- 	enum ccdc_frmfmt frm_fmt = CCDC_FRMFMT_INTERLACED;
- 	int ret = 0;
- 
--	vpfe_dbg(1, vpfe, "pixelformat: %s\n",
--		print_fourcc(vpfe->fmt.fmt.pix.pixelformat));
-+	vpfe_dbg(1, vpfe, "pixelformat: %4pE\n",
-+		 &vpfe->fmt.fmt.pix.pixelformat);
- 
- 	if (vpfe_ccdc_set_pixel_format(&vpfe->ccdc,
- 			vpfe->fmt.fmt.pix.pixelformat) < 0) {
-@@ -1392,9 +1378,9 @@ static int __vpfe_get_format(struct vpfe_device *vpfe,
- 	format->type = vpfe->fmt.type;
- 
- 	vpfe_dbg(1, vpfe,
--		 "%s: size %dx%d (%s) bytesperline = %d, size = %d, bpp = %d\n",
-+		 "%s: size %dx%d (%4pE) bytesperline = %d, size = %d, bpp = %d\n",
- 		 __func__, format->fmt.pix.width, format->fmt.pix.height,
--		 print_fourcc(format->fmt.pix.pixelformat),
-+		 &format->fmt.pix.pixelformat,
- 		 format->fmt.pix.bytesperline, format->fmt.pix.sizeimage, *bpp);
- 
- 	return 0;
-@@ -1427,9 +1413,9 @@ static int __vpfe_set_format(struct vpfe_device *vpfe,
- 	format->type = vpfe->fmt.type;
- 
- 	vpfe_dbg(1, vpfe,
--		 "%s size %dx%d (%s) bytesperline = %d, size = %d, bpp = %d\n",
-+		 "%s: size %dx%d (%4pE) bytesperline = %d, size = %d, bpp = %d\n",
- 		 __func__,  format->fmt.pix.width, format->fmt.pix.height,
--		 print_fourcc(format->fmt.pix.pixelformat),
-+		 &format->fmt.pix.pixelformat,
- 		 format->fmt.pix.bytesperline, format->fmt.pix.sizeimage, *bpp);
- 
- 	return 0;
-@@ -1463,8 +1449,8 @@ static int vpfe_enum_fmt(struct file *file, void  *priv,
- 
- 	f->pixelformat = fmt->fourcc;
- 
--	vpfe_dbg(1, vpfe, "%s: mbus index: %d code: %x pixelformat: %s\n",
--		 __func__, f->index, fmt->code, print_fourcc(fmt->fourcc));
-+	vpfe_dbg(1, vpfe, "%s: mbus index: %d code: %x pixelformat: %4pE\n",
-+		 __func__, f->index, fmt->code, &fmt->fourcc);
- 
- 	return 0;
- }
-@@ -1571,8 +1557,8 @@ static int vpfe_enum_size(struct file *file, void  *priv,
- 	fsize->discrete.width = fse.max_width;
- 	fsize->discrete.height = fse.max_height;
- 
--	vpfe_dbg(1, vpfe, "%s: index: %d pixformat: %4.4s size: %dx%d\n",
--		 __func__, fsize->index, (char *)&fsize->pixel_format,
-+	vpfe_dbg(1, vpfe, "%s: index: %d pixformat: %4pE size: %dx%d\n",
-+		 __func__, fsize->index, &fsize->pixel_format,
- 		 fsize->discrete.width, fsize->discrete.height);
- 
- 	return 0;
-@@ -2242,8 +2228,8 @@ vpfe_async_bound(struct v4l2_async_notifier *notifier,
- 				continue;
- 			vpfe->active_fmt[i] = fmt;
- 			vpfe_dbg(3, vpfe,
--				 "matched fourcc: %4.4s code: %04x idx: %d\n",
--				 (char *)&fmt->fourcc, mbus_code.code, i);
-+				 "matched fourcc: %4pE code: %04x idx: %d\n",
-+				 &fmt->fourcc, mbus_code.code, i);
- 			vpfe->num_active_fmt = ++i;
+@@ -1352,9 +1340,13 @@ static irqreturn_t vpfe_isr(int irq, void *dev)
+ 		} else {
+ 			vpfe_handle_interlaced_irq(vpfe, field);
  		}
++		if (stopping) {
++			vpfe->stopping = false;
++			complete(&vpfe->capture_stop);
++		}
  	}
+ 
+-	if (intr_status & VPFE_VDINT1) {
++	if (intr_status & VPFE_VDINT1 && !stopping) {
+ 		if (field == V4L2_FIELD_NONE &&
+ 		    vpfe->cur_frm == vpfe->next_frm)
+ 			vpfe_schedule_next_buffer(vpfe);
+@@ -1980,6 +1972,9 @@ static int vpfe_start_streaming(struct vb2_queue *vq, unsigned int count)
+ 
+ 	vpfe_attach_irq(vpfe);
+ 
++	vpfe->stopping = false;
++	init_completion(&vpfe->capture_stop);
++
+ 	if (vpfe->ccdc.ccdc_cfg.if_type == VPFE_RAW_BAYER)
+ 		vpfe_ccdc_config_raw(&vpfe->ccdc);
+ 	else
+@@ -2032,6 +2027,11 @@ static void vpfe_stop_streaming(struct vb2_queue *vq)
+ 
+ 	vpfe_pcr_enable(&vpfe->ccdc, 0);
+ 
++	/* Wait for the last frame to be captured */
++	vpfe->stopping = true;
++	wait_for_completion_timeout(&vpfe->capture_stop,
++				    msecs_to_jiffies(250));
++
+ 	vpfe_detach_irq(vpfe);
+ 
+ 	sdinfo = vpfe->current_subdev;
+diff --git a/drivers/media/platform/am437x/am437x-vpfe.h b/drivers/media/platform/am437x/am437x-vpfe.h
+index 4678285f34c6..2dde09780215 100644
+--- a/drivers/media/platform/am437x/am437x-vpfe.h
++++ b/drivers/media/platform/am437x/am437x-vpfe.h
+@@ -23,6 +23,7 @@
+ 
+ #include <linux/am437x-vpfe.h>
+ #include <linux/clk.h>
++#include <linux/completion.h>
+ #include <linux/device.h>
+ #include <linux/io.h>
+ #include <linux/i2c.h>
+@@ -270,6 +271,8 @@ struct vpfe_device {
+ 	 */
+ 	u32 field_off;
+ 	struct vpfe_ccdc ccdc;
++	int stopping;
++	struct completion capture_stop;
+ };
+ 
+ #endif	/* AM437X_VPFE_H */
 -- 
 2.17.1
 
