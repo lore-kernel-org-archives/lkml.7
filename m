@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC4BCC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CADF7C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 850F321924
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E65821924
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:14:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931273;
-	bh=cwgAFUwFMh2HCxi09ZDiFYIacY5CLnOxIn+IPjzlR80=;
+	s=default; t=1568931276;
+	bh=WDvQUbKcJHAN78tC7rWq9WCVMyV4U0AuITSfOrmD5UQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xNn3iJ5nrw3cXLpDRk/ZSw7zesUxZrPcGRN2M0kV33Tl3AcEispmbeZiv5dEJPft0
-	 xSELBbX1JPYeIl20SoJR2uuqXHKts5+4Te1ZF3q8Ox0ocIgcvKzhaHsuR0n3duVLcL
-	 n0YvI6Nr6W+8O7odCYgWkXEpI/vWp2PoQ5HaGcis=
+	b=gsRAZhOL39xyQPMNQSDUSy74vXCLrjzy9l94bUhMIMU5y+e+33t8ZKjvLzOSSXmoy
+	 UNHc/C5rfzHvOiyMU9AWsnHIbn2/oso3lSbsz0YDkHyx3UlVcRA7n7CAX82ZrNhr+D
+	 ubqKvKPEXohVq7DdpwkT2/wmFFJFf3vIhQ7NIs10=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393773AbfISWOc (ORCPT
+        id S2393782AbfISWOf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:14:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54044 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:14:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393760AbfISWO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:14:29 -0400
+        id S2393769AbfISWOc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:14:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38B83218AF;
-        Thu, 19 Sep 2019 22:14:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E42892196E;
+        Thu, 19 Sep 2019 22:14:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931268;
-        bh=cwgAFUwFMh2HCxi09ZDiFYIacY5CLnOxIn+IPjzlR80=;
+        s=default; t=1568931271;
+        bh=WDvQUbKcJHAN78tC7rWq9WCVMyV4U0AuITSfOrmD5UQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=09Jkt5BvjzOTFRsEreGFekjQxCOQiNYrU/Uq3wZv3u/uwYzhGp8/qaP2rVKY57AqW
-         zQfCN7EXZv//MBBYnQ8TZdLymWpZt9MGXf/ue/+1zfcU+9AeBOQi5+EjJWHWdxUSsa
-         E0h8dIcfg5n8JeU9MpnXrdVbaYWCfujOq+yS1vvA=
+        b=Dagi1RAEI/jo9Yp3UxoZDFrY+Q9FgiprX4XBpcCckjFRm4YR0e7gX9RSJp/1SuqJ1
+         4+7IykRHh3dWlYW9h44tjn130y+lk81gq/1KgKUbcuDGDuIXDXmmVKg5/mpq66F94c
+         fCWCQ4F1+04Grw2ytedxjQsbFRdbcHHpa8aXmx/g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Len Brown <len.brown@intel.com>,
+        stable@vger.kernel.org, Igor Russkikh <igor.russkikh@aquantia.com>,
+        Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 64/79] tools/power turbostat: fix buffer overrun
-Date:   Fri, 20 Sep 2019 00:03:49 +0200
-Message-Id: <20190919214813.330867435@linuxfoundation.org>
+Subject: [PATCH 4.19 65/79] net: aquantia: fix out of memory condition on rx side
+Date:   Fri, 20 Sep 2019 00:03:50 +0200
+Message-Id: <20190919214813.375849733@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214807.612593061@linuxfoundation.org>
 References: <20190919214807.612593061@linuxfoundation.org>
@@ -61,35 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+From: Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>
 
-[ Upstream commit eeb71c950bc6eee460f2070643ce137e067b234c ]
+[ Upstream commit be6cef69ba570ebb327eba1ef6438f7af49aaf86 ]
 
-turbostat could be terminated by general protection fault on some latest
-hardwares which (for example) support 9 levels of C-states and show 18
-"tADDED" lines. That bloats the total output and finally causes buffer
-overrun.  So let's extend the buffer to avoid this.
+On embedded environments with hard memory limits it is a normal although
+rare case when skb can't be allocated on rx part under high traffic.
 
-Signed-off-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-Signed-off-by: Len Brown <len.brown@intel.com>
+In such OOM cases napi_complete_done() was not called.
+So the napi object became in an invalid state like it is "scheduled".
+Kernel do not re-schedules the poll of that napi object.
+
+Consequently, kernel can not remove that object the system hangs on
+`ifconfig down` waiting for a poll.
+
+We are fixing this by gracefully closing napi poll routine with correct
+invocation of napi_complete_done.
+
+This was reproduced with artificially failing the allocation of skb to
+simulate an "out of memory" error case and check that traffic does
+not get stuck.
+
+Fixes: 970a2e9864b0 ("net: ethernet: aquantia: Vector operations")
+Signed-off-by: Igor Russkikh <igor.russkikh@aquantia.com>
+Signed-off-by: Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/power/x86/turbostat/turbostat.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/aquantia/atlantic/aq_vec.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
-index fbb53c952b739..71cf7e77291ad 100644
---- a/tools/power/x86/turbostat/turbostat.c
-+++ b/tools/power/x86/turbostat/turbostat.c
-@@ -4953,7 +4953,7 @@ int initialize_counters(int cpu_id)
+diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_vec.c b/drivers/net/ethernet/aquantia/atlantic/aq_vec.c
+index d335c334fa561..82582fa54d5d2 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_vec.c
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_vec.c
+@@ -89,6 +89,7 @@ static int aq_vec_poll(struct napi_struct *napi, int budget)
+ 			}
+ 		}
  
- void allocate_output_buffer()
- {
--	output_buffer = calloc(1, (1 + topo.num_cpus) * 1024);
-+	output_buffer = calloc(1, (1 + topo.num_cpus) * 2048);
- 	outp = output_buffer;
- 	if (outp == NULL)
- 		err(-1, "calloc output buffer");
++err_exit:
+ 		if (!was_tx_cleaned)
+ 			work_done = budget;
+ 
+@@ -98,7 +99,7 @@ static int aq_vec_poll(struct napi_struct *napi, int budget)
+ 					1U << self->aq_ring_param.vec_idx);
+ 		}
+ 	}
+-err_exit:
++
+ 	return work_done;
+ }
+ 
 -- 
 2.20.1
 
