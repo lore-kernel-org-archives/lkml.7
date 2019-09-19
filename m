@@ -2,150 +2,158 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C5FC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A040DC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF58B217D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:53:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 635F5208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:54:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z7uMzduh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H6FLad1k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733086AbfISVxF (ORCPT
+        id S1733106AbfISVyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 17:53:05 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38374 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732426AbfISVxF (ORCPT
+        Thu, 19 Sep 2019 17:54:36 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45564 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732504AbfISVyg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 17:53:05 -0400
-Received: by mail-pf1-f196.google.com with SMTP id h195so3158376pfe.5
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 14:53:03 -0700 (PDT)
+        Thu, 19 Sep 2019 17:54:36 -0400
+Received: by mail-wr1-f68.google.com with SMTP id r5so4641620wrm.12
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 14:54:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ruovMVYJjXPQTVCPUHE1KGFchlWZ6UJGh5pYStjnRd4=;
-        b=Z7uMzduhDzAdayqBJOHW7hks8pDNL9ak3sQhSb0Z2lM9M0Enc80PCUSdgPzH/raueq
-         X63eiXg7eHdVKTXMC1xV2cK2+92TeYLSYTCYfwzrTU4nStzu0G0Oc1IFA6X6H6JhJLfh
-         dbP2ZnN5qxSV5pBmgLvOM9vpx1fZ6y2l+grEysoVmoELDcwF0gFAd26aL5NfJ63orlZG
-         VQe0g4oIUiZqNk5GCyjLpqJwBC27h+vvgbtWCTvJzNyc3l2O9BaNdqvQ1Sm4RRl1MPtx
-         le93kDDdPxe4oTTZU2vWMG9fXPvEciUJzuG2TYt1jaWEMXZGqFFltSFMV48xskn/aXOU
-         MqQQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=dDQhgqTVaKKerDS1Wnw7r8CYmkbiExuH1OvXVrz7qFg=;
+        b=H6FLad1kEM+x9ztmI1BPxp4rJ6pp7Lfr6kexHYDsZH9Yi4OQN1GG9L53cf54qWm0nb
+         TjsKT5ctnD2KPVohtEN+jx7NgDJPVvUZNAaCAaWbnNh1ySnOc2N61Dqo1dcrlrmayERw
+         tf8Xg522bThDevE6ks/Vepp3BOta4dTJI/K+K4gZtce2lflrbbpT1kWCH61Mzl+2I1D0
+         9x38M0qrJoAsyrZOYIRCrzZA/QJcNCrmcJTa05OK9SkTN0cuwRCkhqcbqU8R8EZPGbxh
+         NkEctdt+LeliWs4Th6gPVildx75WFgMHZELzDUbXm1chL0akZHn19IdgCa/vD5u9Q3QY
+         Qt8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ruovMVYJjXPQTVCPUHE1KGFchlWZ6UJGh5pYStjnRd4=;
-        b=JkZ/aHyiR4u1JYr/hDBJ/sYKQ7ZetQj0gz0aKm+fZJs8a/dIbFsmF00PVxZ0Rtroy5
-         nHb9dtsrXf1YY20pQCihz5ZkWEXb9AJ4h4rUQIUIdM1E2YhulthmecNBG0QdttTA8Z9w
-         owL8s++Or75mQS2uNMBbLxt82pP/GUQVBe5CvPcStDmDizzY5oAaoEuBgMqawC1VaR2X
-         8IiiRehutmt1ipTOnVK1pXWDiqHFIq3LFY/xQj4uFjU79GRUjKPNFYHNnHLkPavYbzFS
-         PwzmLGl8vmTMub5AevNDaU8RCLEgajiMF6uo0n6wfRB01zzBs1izVL8OWKS/3lO+uHTF
-         7Z6g==
-X-Gm-Message-State: APjAAAXY+7esSsqGjBJSx3jmbTPtP/zHRVQq1pB8HoVJXuubfaeG94Zb
-        H/qndjsaKG4vLKMEyYhBj3k7rw==
-X-Google-Smtp-Source: APXvYqzvlLVlbxwqi/PKdrrVmvPE3Utp7lxx0LxNp2MZzisfAvK9bjrhAH0sGgUs0ykXcKtBP/Ygvw==
-X-Received: by 2002:aa7:8813:: with SMTP id c19mr10319247pfo.101.1568929982814;
-        Thu, 19 Sep 2019 14:53:02 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 30sm6417430pjk.25.2019.09.19.14.53.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2019 14:53:02 -0700 (PDT)
-Date:   Thu, 19 Sep 2019 14:53:00 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Murali Nalajala <mnalajal@codeaurora.org>, rafael@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] base: soc: Export soc_device_to_device API
-Message-ID: <20190919215300.GC1418@minitux>
-References: <1568927624-13682-1-git-send-email-mnalajal@codeaurora.org>
- <20190919213203.GA395325@kroah.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=dDQhgqTVaKKerDS1Wnw7r8CYmkbiExuH1OvXVrz7qFg=;
+        b=Pu7dLlJL5EapE+svD1WHgC/fo+bLEeK8d7T91IpCZpWjL/4Rk3wkRB3df4TcJhI6Ad
+         aLFdyaaTbFHzKec5nhuw11VgqZ7JJ4cFyk2cWGKUgkENLHgWc7RiNvXLEqXvCbdxkH5h
+         wRSSrMCMu6ZMP9P7glFmLzFaJiYq4egI1XbfJzbwidAhFOTO+V3XLgDlACt5hOOQZgSP
+         CWvHhH09Aby07Ql/IfyAYmvoZs2pibHmF6eA7hC+5TXY+GUVFV1XpACFTQFGSv2ye6+s
+         6aMsLsv794Qr7i0zpW4k6j90kARDua9VnmMCPgct5YlZHDHg7dZEG2lAEjmNh0gfQc6X
+         cjUQ==
+X-Gm-Message-State: APjAAAWwwmaA4cZXvAB3l1ntAvZbmWB+8YuY6qtvhixgc2nbhSl86Lf4
+        q/m31qBZqhpEmEhkbecuJq4=
+X-Google-Smtp-Source: APXvYqwgUnNOVsR6gRzXDDdDITIQWQapnTm1vwR/Ap+JiO1rrnskvgjLArtyPDkWpzoKqV0+xlN3RA==
+X-Received: by 2002:adf:f081:: with SMTP id n1mr8802933wro.273.1568930072408;
+        Thu, 19 Sep 2019 14:54:32 -0700 (PDT)
+Received: from gmail.com ([206.189.48.126])
+        by smtp.gmail.com with ESMTPSA id z189sm10861620wmc.25.2019.09.19.14.54.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 19 Sep 2019 14:54:31 -0700 (PDT)
+Date:   Thu, 19 Sep 2019 23:54:21 +0200
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] compiler-attributes for v5.4
+Message-ID: <20190919215353.GA16429@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190919213203.GA395325@kroah.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+User-Agent: elm/2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 19 Sep 14:32 PDT 2019, Greg KH wrote:
+Hi Linus,
 
-> On Thu, Sep 19, 2019 at 02:13:44PM -0700, Murali Nalajala wrote:
-> > If the soc drivers want to add custom sysfs entries it needs to
-> > access "dev" field in "struct soc_device". This can be achieved
-> > by "soc_device_to_device" API. Soc drivers which are built as a
-> > module they need above API to be exported. Otherwise one can
-> > observe compilation issues.
-> > 
-> > Signed-off-by: Murali Nalajala <mnalajal@codeaurora.org>
-> > ---
-> >  drivers/base/soc.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/drivers/base/soc.c b/drivers/base/soc.c
-> > index 7c0c5ca..4ad52f6 100644
-> > --- a/drivers/base/soc.c
-> > +++ b/drivers/base/soc.c
-> > @@ -41,6 +41,7 @@ struct device *soc_device_to_device(struct soc_device *soc_dev)
-> >  {
-> >  	return &soc_dev->dev;
-> >  }
-> > +EXPORT_SYMBOL_GPL(soc_device_to_device);
-> >  
-> >  static umode_t soc_attribute_mode(struct kobject *kobj,
-> >  				struct attribute *attr,
-> 
-> What in-kernel driver needs this?
-> 
+Please pull this patch series which make us take advantage of `asm inline`.
 
-Half of the drivers interacting with the soc driver calls this API,
-several of these I see no reason for being builtin (e.g.
-ux500 andversatile). So I think this patch makes sense to allow us to
-build these as modules.
+You will encounter an easy merge conflict on `init/Kconfig` due to
+the (already merged) arm64 tree.
 
-> Is linux-next breaking without this?
-> 
+Cheers,
+Miguel
 
-No, we postponed the addition of any sysfs attributes in the Qualcomm
-socinfo driver.
+The following changes since commit f74c2bb98776e2de508f4d607cd519873065118e:
 
-> We don't export things unless we have a user of the export.
-> 
-> Also, adding "custom" sysfs attributes is almost always not the correct
-> thing to do at all.  The driver should be doing it, by setting up the
-> attribute group properly so that the driver core can do it automatically
-> for it.
-> 
-> No driver should be doing individual add/remove of sysfs files.  If it
-> does so, it is almost guaranteed to be doing it incorrectly and racing
-> userspace.
-> 
+  Linux 5.3-rc8 (2019-09-08 13:33:15 -0700)
 
-The problem here is that the attributes are expected to be attached to
-the soc driver, which is separate from the platform-specific drivers. So
-there's no way to do platform specific attributes the right way.
+are available in the Git repository at:
 
-> And yes, there's loads of in-kernel examples of doing this wrong, I've
-> been working on fixing that up, look at the patches now in Linus's tree
-> for platform and USB drivers that do this as examples of how to do it
-> right.
-> 
+  https://github.com/ojeda/linux.git tags/compiler-attributes-for-linus-v5.4
 
-Agreed, this patch should not be used as an approval for any crazy
-attributes; but it's necessary in order to extend the soc device's
-attributes, per the current design.
+for you to fetch changes up to 32ee8230b2b06c50f583e14fcd174d7d2edb52f5:
 
-So:
+  x86: bug.h: use asm_inline in _BUG_FLAGS definitions (2019-09-15 20:14:15 +0200)
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+----------------------------------------------------------------
+Make use of gcc 9's "asm inline()" (Rasmus Villemoes):
 
-Regards,
-Bjorn
+    gcc 9+ (and gcc 8.3, 7.5) provides a way to override the otherwise
+    crude heuristic that gcc uses to estimate the size of the code
+    represented by an asm() statement. From the gcc docs
+
+      If you use 'asm inline' instead of just 'asm', then for inlining
+      purposes the size of the asm is taken as the minimum size, ignoring
+      how many instructions GCC thinks it is.
+
+    For compatibility with older compilers, we obviously want a
+
+      #if [understands asm inline]
+      #define asm_inline asm inline
+      #else
+      #define asm_inline asm
+      #endif
+
+    But since we #define the identifier inline to attach some attributes,
+    we have to use an alternate spelling of that keyword. gcc provides
+    both __inline__ and __inline, and we currently #define both to inline,
+    so they all have the same semantics. We have to free up one of
+    __inline__ and __inline, and the latter is by far the easiest.
+
+    The two x86 changes cause smaller code gen differences than I'd
+    expect, but I think we do want the asm_inline thing available sooner
+    or later, so this is just to get the ball rolling.
+
+----------------------------------------------------------------
+Rasmus Villemoes (6):
+      staging: rtl8723bs: replace __inline by inline
+      lib/zstd/mem.h: replace __inline by inline
+      compiler_types.h: don't #define __inline
+      compiler-types.h: add asm_inline definition
+      x86: alternative.h: use asm_inline for all alternative variants
+      x86: bug.h: use asm_inline in _BUG_FLAGS definitions
+
+ arch/x86/include/asm/alternative.h                      | 14 +++++++-------
+ arch/x86/include/asm/bug.h                              |  4 ++--
+ drivers/staging/rtl8723bs/core/rtw_pwrctrl.c            |  4 ++--
+ drivers/staging/rtl8723bs/core/rtw_wlan_util.c          |  2 +-
+ drivers/staging/rtl8723bs/include/drv_types.h           |  6 +++---
+ drivers/staging/rtl8723bs/include/osdep_service.h       | 10 +++++-----
+ drivers/staging/rtl8723bs/include/osdep_service_linux.h | 14 +++++++-------
+ drivers/staging/rtl8723bs/include/rtw_mlme.h            | 14 +++++++-------
+ drivers/staging/rtl8723bs/include/rtw_recv.h            | 16 ++++++++--------
+ drivers/staging/rtl8723bs/include/sta_info.h            |  2 +-
+ drivers/staging/rtl8723bs/include/wifi.h                | 14 +++++++-------
+ drivers/staging/rtl8723bs/include/wlan_bssdef.h         |  2 +-
+ include/linux/compiler_types.h                          | 17 ++++++++++++++++-
+ init/Kconfig                                            |  3 +++
+ lib/zstd/mem.h                                          |  2 +-
+ 15 files changed, 71 insertions(+), 53 deletions(-)
