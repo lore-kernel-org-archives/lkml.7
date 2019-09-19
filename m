@@ -2,104 +2,131 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 073EEC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 395F4C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:11:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2D4A21848
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:11:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lluivDNT"
+	by mail.kernel.org (Postfix) with ESMTP id 12EA921848
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:11:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391124AbfISPLq (ORCPT
+        id S2391132AbfISPL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 11:11:46 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:42670 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388084AbfISPLp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 11:11:45 -0400
-Received: by mail-io1-f65.google.com with SMTP id n197so8495478iod.9;
-        Thu, 19 Sep 2019 08:11:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=G1RgniGBhHx+ePsQxRnB8cqCywBk5uIA9l0Oj05OQJ8=;
-        b=lluivDNTjH/IK8vsfViEiPYr0Do1I8vpk22HCMZYTG+ILPHBGU/1bjqSnlsio3o37p
-         Ffgn/qq/9VwzZpCrEg1P03b2tFPYaipfRcfhiFSITFaEZ+PlQJMUsPeAXBMS28HxWRhc
-         M3/1S0G6S39YYXZ5hOy5jxg5wfjGZQja/lkJlLMO+f6UZ8YZ3c6a/Vl9KYdWes3EIz0/
-         CCCypwbbE7qjzKS3woIujH9Orz2G35LUbA7mNeOL5iOld4X39RBhn6VRKzJR8k+BnmtW
-         vDZFVr1uSEVqB6hMFYZ6fTZi1lCTigZQU4tp4WZOCzChM0S7xDJu0eZDW2P0zPnkydIn
-         E9Nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=G1RgniGBhHx+ePsQxRnB8cqCywBk5uIA9l0Oj05OQJ8=;
-        b=KJXTc2mAv2b8kIs2+8ZKIOStWt1JJNPnsl95QROqgqWsCn3GGCDFYkLDBBd2vD3g76
-         1ocDzKTxnG+TxyI+XVCcigQyceEBDygtMvfEK/J9ZniG0DgSy2cX3xU/CqjZbnNMsplx
-         YRvQl0PZTYoNoUkvEAVY7Is46L/kfthcCQFwsV9HlcGA2JRdH+Bn7ReKf61kAzpzIIng
-         5oc4dA5Jwd2297cUij7AaWN+iV52d0D3QJ7adTWDTMB4/gjEZlw3+14pqySYHn4wcwSq
-         PuQ2w/mC5MsoVPKIf844l9kuoOARq53C+VEjdmI3yO087pmfHxS2Gu5CpoHHWCNPGrOa
-         rIwA==
-X-Gm-Message-State: APjAAAWoX8CygWF7ZAPfN4NybTf5g0lb77iZk+YXAvrRiiUFanpvkyCF
-        N05J5DnBs6viXj0A+LQ7Vc8=
-X-Google-Smtp-Source: APXvYqxMvRcKAwAN7dmHT4oVWvVN4P2GjI72CaFiSuSJlG+cansVsMxmMIebqpx4x4MHyTmjALktFQ==
-X-Received: by 2002:a6b:fa07:: with SMTP id p7mr12316093ioh.164.1568905904288;
-        Thu, 19 Sep 2019 08:11:44 -0700 (PDT)
-Received: from svens-asus.arcx.com ([184.94.50.30])
-        by smtp.gmail.com with ESMTPSA id e15sm6422625ioe.33.2019.09.19.08.11.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2019 08:11:43 -0700 (PDT)
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
-To:     Sebastian Reichel <sre@kernel.org>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable <stable@vger.kernel.org>
-Subject: [PATCH v1] power: supply: ltc2941-battery-gauge: fix use-after-free
-Date:   Thu, 19 Sep 2019 11:11:37 -0400
-Message-Id: <20190919151137.9960-1-TheSven73@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 19 Sep 2019 11:11:57 -0400
+Received: from foss.arm.com ([217.140.110.172]:60532 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389660AbfISPL4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 11:11:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 01E87337;
+        Thu, 19 Sep 2019 08:11:56 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.194.52])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BAAF03F575;
+        Thu, 19 Sep 2019 08:11:54 -0700 (PDT)
+Date:   Thu, 19 Sep 2019 16:11:52 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Jing-Ting Wu <jing-ting.wu@mediatek.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        wsd_upstream@mediatek.com,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH 1/1] sched/rt: avoid contend with CFS task
+Message-ID: <20190919151152.m2zmiaspr6s5mcfh@e107158-lin.cambridge.arm.com>
+References: <1567048502-6064-1-git-send-email-jing-ting.wu@mediatek.com>
+ <d5100b2d-46c4-5811-8274-8b06710d2594@arm.com>
+ <20190830145501.zadfv2ffuu7j46ft@e107158-lin.cambridge.arm.com>
+ <1567689999.2389.5.camel@mtkswgap22>
+ <CAKfTPtC3txstND=6YkWBJ16i06cQ7xueUpD5j-j-UfuSf0-z-g@mail.gmail.com>
+ <1568892135.4892.10.camel@mtkswgap22>
+ <CAKfTPtCuWrpW_o6r5cmGhLf_84PFHJhBk0pJ3fcbU_YgcBnTkQ@mail.gmail.com>
+ <20190919142315.vmrrpvljpspqpurp@e107158-lin.cambridge.arm.com>
+ <CAKfTPtA9-JLxs+DdLYjBQ6VfVGNxm++QYYi1wy-xS6o==EAPNw@mail.gmail.com>
+ <CAKfTPtAy1JSh725GAVXmg_x3fby1UfYn504tq4n2rQs1-JMy6Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAKfTPtAy1JSh725GAVXmg_x3fby1UfYn504tq4n2rQs1-JMy6Q@mail.gmail.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver's remove path calls cancel_delayed_work().
-However, that function does not wait until the work function
-finishes. This could mean that the work function is still
-running after the driver's remove function has finished,
-which would result in a use-after-free.
+On 09/19/19 16:37, Vincent Guittot wrote:
+> On Thu, 19 Sep 2019 at 16:32, Vincent Guittot
+> <vincent.guittot@linaro.org> wrote:
+> >
+> > On Thu, 19 Sep 2019 at 16:23, Qais Yousef <qais.yousef@arm.com> wrote:
+> > >
+> > > On 09/19/19 14:27, Vincent Guittot wrote:
+> > > > > > > But for requirement of performance, I think it is better to differentiate between idle CPU and CPU has CFS task.
+> > > > > > >
+> > > > > > > For example, we use rt-app to evaluate runnable time on non-patched environment.
+> > > > > > > There are (NR_CPUS-1) heavy CFS tasks and 1 RT Task. When a CFS task is running, the RT task wakes up and choose the same CPU.
+> > > > > > > The CFS task will be preempted and keep runnable until it is migrated to another cpu by load balance.
+> > > > > > > But load balance is not triggered immediately, it will be triggered until timer tick hits with some condition satisfied(ex. rq->next_balance).
+> > > > > >
+> > > > > > Yes you will have to wait for the next tick that will trigger an idle
+> > > > > > load balance because you have an idle cpu and 2 runnable tack (1 RT +
+> > > > > > 1CFS) on the same CPU. But you should not wait for more than  1 tick
+> > > > > >
+> > > > > > The current load_balance doesn't handle correctly the situation of 1
+> > > > > > CFS and 1 RT task on same CPU while 1 CPU is idle. There is a rework
+> > > > > > of the load_balance that is under review on the mailing list that
+> > > > > > fixes this problem and your CFS task should migrate to the idle CPU
+> > > > > > faster than now
+> > > > > >
+> > > > >
+> > > > > Period load balance should be triggered when current jiffies is behind
+> > > > > rq->next_balance, but rq->next_balance is not often exactly the same
+> > > > > with next tick.
+> > > > > If cpu_busy, interval = sd->balance_interval * sd->busy_factor, and
+> > > >
+> > > > But if there is an idle CPU on the system, the next idle load balance
+> > > > should apply shortly because the busy_factor is not used for this CPU
+> > > > which is  not busy.
+> > > > In this case, the next_balance interval is sd_weight which is probably
+> > > > 4ms at cluster level and 8ms at system level in your case. This means
+> > > > between 1 and 2 ticks
+> > >
+> > > But if the CFS task we're preempting was latency sensitive - this 1 or 2 tick
+> > > is too late of a recovery.
+> > >
+> > > So while it's good we recover, but a preventative approach would be useful too.
+> > > Just saying :-) I'm still not sure if this is the best longer term approach.
+> >
+> > like using a rt task ?
+> 
+> I mean, RT task should select a sub optimal CPU because of CFS
+> If you want to favor CFS compared to RT it's probably because your
+> task should be RT too
 
-Fix by calling cancel_delayed_work_sync(), which ensures that
-that the work is properly cancelled, no longer running, and
-unable to re-schedule itself.
+Yes possibly. But I don't think this is always doable. Especially when you're
+running on generic system not a special purposed one.
 
-This issue was detected with the help of Coccinelle.
+And we don't need to favor CFS over RT. But I think they can play nicely
+together.
 
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
----
- drivers/power/supply/ltc2941-battery-gauge.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+For example on Android there are few RT tasks and rarely more than 1 runnable
+RT task at a time. But if it happened to wakeup on the same CPU that is
+running the UI thread you could lose a frame. And from what I've seen as well
+we have 1-3 CFS tasks runnable, weighted more towards 1 task. So we do have
+plenty of idle CPUs on average.
 
-diff --git a/drivers/power/supply/ltc2941-battery-gauge.c b/drivers/power/supply/ltc2941-battery-gauge.c
-index da49436176cd..30a9014b2f95 100644
---- a/drivers/power/supply/ltc2941-battery-gauge.c
-+++ b/drivers/power/supply/ltc2941-battery-gauge.c
-@@ -449,7 +449,7 @@ static int ltc294x_i2c_remove(struct i2c_client *client)
- {
- 	struct ltc294x_info *info = i2c_get_clientdata(client);
- 
--	cancel_delayed_work(&info->work);
-+	cancel_delayed_work_sync(&info->work);
- 	power_supply_unregister(info->supply);
- 	return 0;
- }
--- 
-2.17.1
+But as I mentioned earlier I couldn't prove yet this being a serious problem.
+I was hoping the use case presented here is based on a real workload, but it's
+synthetic. So I agree we need stronger reasons, but I think conceptually we do
+have a conflict of interest where RT task could unnecessarily hurt the
+performance of CFS task.
 
+Another way to look at the problem is that the system is not partitioned
+correctly and the admin could do a better job to prevent this.
+
+--
+Qais Yousef
