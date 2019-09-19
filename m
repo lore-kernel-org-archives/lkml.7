@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB9AC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29CF8C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA72820678
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F253F21A49
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:22:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931740;
-	bh=acqf8iWr/flWMhoJlMX9Rq4SnUZG25hjg5RNHePwK0M=;
+	s=default; t=1568931744;
+	bh=zE1iJSEMK9YZIgnP80T4/msrDHV/DtZhxS52pqkEUoo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TSf4f7mUktPiEC/B7GVBgY221exkGBWZai1YI3rSnP8bjc9ApP0r7x3MrTQ71kWgA
-	 V3OtqZctlZnXc8Ys6PsEZ2lKbTal7Fb35pwq0I8Rb5kGnOOl2fycM1/MYzsXByncOB
-	 mdXTd5VLbGJa0AFp5wbPT5S1IwbOPYlgx3LZ2is8=
+	b=f1k/HycwKgzqFU6JtWOfM/nawvNJAYPs09ay6UjkPpQQVgf4f7dCJmDKYFpepGGNI
+	 7iEPSazOEa1kBRMAaFdYp5rjue8IOqGUMxaz0/s5r2GsQIcsxz8oqRmwCtH/qCUisY
+	 pjBEO5MxI3b0BasSpP/n+ifbR/JPCetAXuPP+hFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406812AbfISWWT (ORCPT
+        id S2406824AbfISWWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:22:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37192 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:22:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406778AbfISWWQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:22:16 -0400
+        id S2406787AbfISWWN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:22:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3FEB20678;
-        Thu, 19 Sep 2019 22:22:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B4F721A49;
+        Thu, 19 Sep 2019 22:22:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931735;
-        bh=acqf8iWr/flWMhoJlMX9Rq4SnUZG25hjg5RNHePwK0M=;
+        s=default; t=1568931732;
+        bh=zE1iJSEMK9YZIgnP80T4/msrDHV/DtZhxS52pqkEUoo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S4bOcv0BUuGKoKsYVvhKFajpSVsLtMRxt67u2oi71oA+aH8e85fJrM3eN7XK59MFg
-         QCrRtnb2SIFJ62C5rXty6MrBrMHSH9ZImyMpHdO0V1cn2LaxjYUOGa6ah4alnrgKD/
-         nsHKFtiH88Dtqfhh0YxG5BytyGj4X6WG7jV8nr7g=
+        b=Ih9xdIRk2FdJYQitOuNXQI5BCfvU3VEp4jq2t00PrSwE1Yt0RSKZr7j8zvezVRpq+
+         pD9aYs7d5QfDQwPOAlZHq03gr4wtSUK77T29Aad20fqa69AaQRTipB4qoqSUMoq0pC
+         V+8Q5Bf1qDd1Fr9y7x/tbdYfB8g7mzeP7P7idbdA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH 4.4 20/56] clk: rockchip: Dont yell about bad mmc phases when getting
-Date:   Fri, 20 Sep 2019 00:04:01 +0200
-Message-Id: <20190919214754.225657690@linuxfoundation.org>
+        stable@vger.kernel.org, Lars Melin <larsm17@gmail.com>,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 02/56] cdc_ether: fix rndis support for Mediatek based smartphones
+Date:   Fri, 20 Sep 2019 00:03:43 +0200
+Message-Id: <20190919214744.275826995@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214742.483643642@linuxfoundation.org>
 References: <20190919214742.483643642@linuxfoundation.org>
@@ -59,48 +60,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: "Bjørn Mork" <bjorn@mork.no>
 
-commit 6943b839721ad4a31ad2bacf6e71b21f2dfe3134 upstream.
+[ Upstream commit 4d7ffcf3bf1be98d876c570cab8fc31d9fa92725 ]
 
-At boot time, my rk3288-veyron devices yell with 8 lines that look
-like this:
-  [    0.000000] rockchip_mmc_get_phase: invalid clk rate
+A Mediatek based smartphone owner reports problems with USB
+tethering in Linux.  The verbose USB listing shows a rndis_host
+interface pair (e0/01/03 + 10/00/00), but the driver fails to
+bind with
 
-This is because the clock framework at clk_register() time tries to
-get the phase but we don't have a parent yet.
+[  355.960428] usb 1-4: bad CDC descriptors
 
-While the errors appear to be harmless they are still ugly and, in
-general, we don't want yells like this in the log unless they are
-important.
+The problem is a failsafe test intended to filter out ACM serial
+functions using the same 02/02/ff class/subclass/protocol as RNDIS.
+The serial functions are recognized by their non-zero bmCapabilities.
 
-There's no real reason to be yelling here.  We can still return
--EINVAL to indicate that the phase makes no sense without a parent.
-If someone really tries to do tuning and the clock is reported as 0
-then we'll see the yells in rockchip_mmc_set_phase().
+No RNDIS function with non-zero bmCapabilities were known at the time
+this failsafe was added. But it turns out that some Wireless class
+RNDIS functions are using the bmCapabilities field. These functions
+are uniquely identified as RNDIS by their class/subclass/protocol, so
+the failing test can safely be disabled.  The same applies to the two
+types of Misc class RNDIS functions.
 
-Fixes: 4bf59902b500 ("clk: rockchip: Prevent calculating mmc phase if clock rate is zero")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Applying the failsafe to Communication class functions only retains
+the original functionality, and fixes the problem for the Mediatek based
+smartphone.
+
+Tow examples of CDC functional descriptors with non-zero bmCapabilities
+from Wireless class RNDIS functions are:
+
+0e8d:000a  Mediatek Crosscall Spider X5 3G Phone
+
+      CDC Header:
+        bcdCDC               1.10
+      CDC ACM:
+        bmCapabilities       0x0f
+          connection notifications
+          sends break
+          line coding and serial state
+          get/set/clear comm features
+      CDC Union:
+        bMasterInterface        0
+        bSlaveInterface         1
+      CDC Call Management:
+        bmCapabilities       0x03
+          call management
+          use DataInterface
+        bDataInterface          1
+
+and
+
+19d2:1023  ZTE K4201-z
+
+      CDC Header:
+        bcdCDC               1.10
+      CDC ACM:
+        bmCapabilities       0x02
+          line coding and serial state
+      CDC Call Management:
+        bmCapabilities       0x03
+          call management
+          use DataInterface
+        bDataInterface          1
+      CDC Union:
+        bMasterInterface        0
+        bSlaveInterface         1
+
+The Mediatek example is believed to apply to most smartphones with
+Mediatek firmware.  The ZTE example is most likely also part of a larger
+family of devices/firmwares.
+
+Suggested-by: Lars Melin <larsm17@gmail.com>
+Signed-off-by: Bjørn Mork <bjorn@mork.no>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/clk/rockchip/clk-mmc-phase.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/net/usb/cdc_ether.c |   13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
---- a/drivers/clk/rockchip/clk-mmc-phase.c
-+++ b/drivers/clk/rockchip/clk-mmc-phase.c
-@@ -61,10 +61,8 @@ static int rockchip_mmc_get_phase(struct
- 	u32 delay_num = 0;
- 
- 	/* See the comment for rockchip_mmc_set_phase below */
--	if (!rate) {
--		pr_err("%s: invalid clk rate\n", __func__);
-+	if (!rate)
- 		return -EINVAL;
--	}
- 
- 	raw_value = readl(mmc_clock->reg) >> (mmc_clock->shift);
- 
+--- a/drivers/net/usb/cdc_ether.c
++++ b/drivers/net/usb/cdc_ether.c
+@@ -212,9 +212,16 @@ int usbnet_generic_cdc_bind(struct usbne
+ 		goto bad_desc;
+ 	}
+ skip:
+-	if (	rndis &&
+-		header.usb_cdc_acm_descriptor &&
+-		header.usb_cdc_acm_descriptor->bmCapabilities) {
++	/* Communcation class functions with bmCapabilities are not
++	 * RNDIS.  But some Wireless class RNDIS functions use
++	 * bmCapabilities for their own purpose. The failsafe is
++	 * therefore applied only to Communication class RNDIS
++	 * functions.  The rndis test is redundant, but a cheap
++	 * optimization.
++	 */
++	if (rndis && is_rndis(&intf->cur_altsetting->desc) &&
++	    header.usb_cdc_acm_descriptor &&
++	    header.usb_cdc_acm_descriptor->bmCapabilities) {
+ 			dev_dbg(&intf->dev,
+ 				"ACM capabilities %02x, not really RNDIS?\n",
+ 				header.usb_cdc_acm_descriptor->bmCapabilities);
 
 
