@@ -2,122 +2,131 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF834C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58212C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC27A21927
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:01:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gFhPQZUt"
+	by mail.kernel.org (Postfix) with ESMTP id 2A6E921848
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:02:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568905321;
+	bh=GnTtgywfO1zuer3wD//cz3MZUM90IbdL/4Yt0duFEN8=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=nLtfV3330SEhxBK4qgnexo+hox6YGH8UQg03zk8bvBHVEFQ1HOLiG/GoLZxnKIp9M
+	 eIIGmpVHO3xuWVlVXmDUDo/qhQHvGG8vALzkURyAqsF+8+xyAKb5Tfez1z4/uPRNnT
+	 W9UcFg+gdN99g33xYU5sutQFifj7csiQdokFzA70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390875AbfISPBq (ORCPT
+        id S2390887AbfISPCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 11:01:46 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:40618 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390849AbfISPBo (ORCPT
+        Thu, 19 Sep 2019 11:02:00 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:46370 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389586AbfISPB7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 11:01:44 -0400
-Received: by mail-ed1-f65.google.com with SMTP id v38so3490831edm.7
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 08:01:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=KzQTk6xzLzucmWYoRU1s1qEtj1rE5wSKjOBqxGDWi/o=;
-        b=gFhPQZUtwgWrCpL+lfpRPt59XpuIEnB98c1kiyEq+ontzS1nT6THLM3v60XXSiiotI
-         2hdM97Jp9Im9zb2prqtZ/Aqt5igaCx+De8KULA2DUqDHvZNCmqg7sY5NotIT7BO4ZVGZ
-         NMXP0fwNtJF3kjd0+cx2ZH3Y0EuIbqYe/R/8WS74kFPM2RRv0U2rnGplh5k2BBbjVMSL
-         AQNDV/6Ovn9dmPVN2mnJpyNLagnJRgjCfQRn8lVxn1yT47GHBHHR+Yb331ZtpumZ7oXx
-         jRv77JQKQog4T53rFFKSYbM4Rs6GI674XoL6AR6MTapjm4AMv6R22A/Yfbwx4T6f6eXN
-         /Isw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KzQTk6xzLzucmWYoRU1s1qEtj1rE5wSKjOBqxGDWi/o=;
-        b=QTLwR1VTAly02jIkRDBFbqGXvlBwnM1nwqTJFP1hYq0ZhofmCUd7sF+8k6cB5xSLVP
-         /ik1zyLrn7aUIFNqYeah6XmpWfIFi9DPJpYqdBQ15a4/iANIcly7AhVtdNC0PZH1jJev
-         uhim4UXnfW6c8vynKPYMRg2bTQN2O3+uYOCOnG+2mWH23H4duihZNf5soVjK1zbOQU7O
-         S8XApd7cNZe3e/zy4ZIXV3CDGwy6NT4FNITsf6lU9WSbcgpiEhQGRA5OdxN2AWlIsUng
-         b22lbtMMPfuyZNlfyc7FS8LUBN89uC31Icn3b0S4U72BawOqDon8iIxGa+SsFyHAvUNg
-         /KRw==
-X-Gm-Message-State: APjAAAWPitus8JWnPxM9AkbqoInj5/ixdnQOeNl0zjt+qPGfY8O4+K/X
-        Q/SmeqqeI39iTolCTW/DAZeYJg==
-X-Google-Smtp-Source: APXvYqy11szzvwjni4nk4Rtsyh7bSUzszKXPgiMJKzEOHUFSjeTYlwaY1Lk6k4T/GgI6xyRlGiG3Lw==
-X-Received: by 2002:a50:d5c5:: with SMTP id g5mr16735289edj.57.1568905302153;
-        Thu, 19 Sep 2019 08:01:42 -0700 (PDT)
-Received: from lophozonia ([85.195.192.192])
-        by smtp.gmail.com with ESMTPSA id g8sm892232edm.82.2019.09.19.08.01.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2019 08:01:41 -0700 (PDT)
-Date:   Thu, 19 Sep 2019 17:01:39 +0200
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Auger Eric <eric.auger@redhat.com>
-Cc:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        will@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org,
-        jacob.jun.pan@linux.intel.com, joro@8bytes.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        robh+dt@kernel.org, robin.murphy@arm.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 4/8] iommu/arm-smmu-v3: Add support for Substream IDs
-Message-ID: <20190919150139.GC1013538@lophozonia>
-References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
- <20190610184714.6786-5-jean-philippe.brucker@arm.com>
- <af286d72-97d7-d106-40a8-edfcbe563c98@redhat.com>
+        Thu, 19 Sep 2019 11:01:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
+        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=WBYOGgHTyUustwZaXfY4IyXe0lajHxD9KsjkOCE9Jb0=; b=PuizwbktyjHwVSSPcg8jCanmz
+        qNVS2YnmRJIRmNGB9/7CKV8FVpTkgp25DZsUHkdZKK/fRbl8rqD/MZnmCcACf1jcPGB2FaHkMR5Ta
+        KV17nyypfjIKKqvLA+YSvNEcpbhgS4VzP8CuILY94TeQxxlhb/Y6S5Odmn+QQvsdPKc9I=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iAxwL-00049Y-SG; Thu, 19 Sep 2019 15:01:49 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id D45A82742939; Thu, 19 Sep 2019 16:01:47 +0100 (BST)
+Date:   Thu, 19 Sep 2019 16:01:47 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Yi Zhang <yi.zhang@redhat.com>, Jeff Moyer <jmoyer@redhat.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the nvdimm tree with the libnvdimm-fixes
+ tree
+Message-ID: <20190919150147.GO3642@sirena.co.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="umrsQkkrw7viUWFs"
 Content-Disposition: inline
-In-Reply-To: <af286d72-97d7-d106-40a8-edfcbe563c98@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Cookie: I'll be Grateful when they're Dead.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 05:31:53PM +0200, Auger Eric wrote:
-> Hi Jean,
-> 
-> On 6/10/19 8:47 PM, Jean-Philippe Brucker wrote:
-> >  	/*
-> > -	 * We don't need to issue any invalidation here, as we'll invalidate
-> > -	 * the STE when installing the new entry anyway.
-> > +	 * This function handles the following cases:
-> > +	 *
-> > +	 * (1) Install primary CD, for normal DMA traffic (SSID = 0).
-> > +	 * (2) Install a secondary CD, for SID+SSID traffic.
-> > +	 * (3) Update ASID of a CD. Atomically write the first 64 bits of the
-> > +	 *     CD, then invalidate the old entry and mappings.
-> Can you explain when (3) does occur?
 
-When sharing a process context with devices (SVA), we write in that
-context descriptor the ASID allocated by the arch ASID allocator for
-that process. But that ASID might already have been allocated locally by
-the SMMU driver for a private context. As there is a single ASID space
-per SMMU for both private and shared ASIDs, we reallocated the private
-ASID and update it here. See
-https://lore.kernel.org/linux-iommu/20180511190641.23008-25-jean-philippe.brucker@arm.com/
+--umrsQkkrw7viUWFs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > +	 * (4) Remove a secondary CD.
-> >  	 */
-> > -	val = arm_smmu_cpu_tcr_to_cd(cfg->cd.tcr) |
-> > +
-> > +	if (!cdptr)
-> > +		return -ENOMEM;
-> Is that relevant? arm_smmu_get_cd_ptr() does not test ssid is within the
-> cfg->s1cdmax range and always return smthg != NULL AFAIU.
+Hi all,
 
-It might return NULL with patch 5/8, when we can't allocate a 2nd-level
-table. I can move the check over to that patch.
+Today's linux-next merge of the nvdimm tree got a conflict in:
 
-> > +	ret = arm_smmu_write_ctx_desc(smmu_domain, 0, &smmu_domain->s1_cfg.cd);
-> cfg.cd
+  drivers/nvdimm/pfn_devs.c
 
-Right.
+between commit:
 
-Thanks,
-Jean
+  274b924088e935 ("libnvdimm/pfn: Fix namespace creation on misaligned addr=
+esses")
+
+=66rom the libnvdimm-fixes tree and commit:
+
+  edbb52c24441ab ("libnvdimm/pfn_dev: Add page size and struct page size to=
+ pfn superblock")
+
+=66rom the nvdimm tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+diff --cc drivers/nvdimm/pfn_devs.c
+index cb98b8fe786e2,80c7992bc5389..0000000000000
+--- a/drivers/nvdimm/pfn_devs.c
++++ b/drivers/nvdimm/pfn_devs.c
+@@@ -724,9 -786,10 +788,11 @@@ static int nd_pfn_init(struct nd_pfn *n
+  	memcpy(pfn_sb->uuid, nd_pfn->uuid, 16);
+  	memcpy(pfn_sb->parent_uuid, nd_dev_to_uuid(&ndns->dev), 16);
+  	pfn_sb->version_major =3D cpu_to_le16(1);
+- 	pfn_sb->version_minor =3D cpu_to_le16(3);
++ 	pfn_sb->version_minor =3D cpu_to_le16(4);
+ +	pfn_sb->end_trunc =3D cpu_to_le32(end_trunc);
+  	pfn_sb->align =3D cpu_to_le32(nd_pfn->align);
++ 	pfn_sb->page_struct_size =3D cpu_to_le16(MAX_STRUCT_PAGE_SIZE);
++ 	pfn_sb->page_size =3D cpu_to_le32(PAGE_SIZE);
+  	checksum =3D nd_sb_checksum((struct nd_gen_sb *) pfn_sb);
+  	pfn_sb->checksum =3D cpu_to_le64(checksum);
+ =20
+
+
+--umrsQkkrw7viUWFs
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2DmFoACgkQJNaLcl1U
+h9Aukgf/Vv9cDAm7ZbWkhFeK1RH9SwZoPutCDECnVpkwDmhGQTF5USRjTqfipjgD
+jWPbrFlfj2NywPLcr3m3Kbv68oh9nG4hiR9BlMXeUXphR21F1s42lFs43ytqqNHP
+jg2RxrZQUTDvjDGjzj2Tw15K0k13fKfab7fsP8tmLL7gD1J/1+ZqC2PcfDezrJ6N
+/apUiyOfVTG295FxK0cPT+R1XK+MlxZFA4ZlE3orPloYAXYn68Zfg2fTqnfYD/xh
+9e0l3vR5TgydO+RMP8hN/nYUqMTkCoFDrQcAa0dGMpWKku726UYQESFG22t4ptuW
+4Kdhu90lals2zJkZvBe0BbRnXWv8RA==
+=7hvk
+-----END PGP SIGNATURE-----
+
+--umrsQkkrw7viUWFs--
