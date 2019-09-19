@@ -2,154 +2,158 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55134C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 02:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9002DC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 02:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E7E2214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 02:14:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 573CD214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 02:14:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tvnklaXj"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="rKWvUw2Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387849AbfISCOo (ORCPT
+        id S2387961AbfISCOw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 22:14:44 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:36158 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730815AbfISCOn (ORCPT
+        Wed, 18 Sep 2019 22:14:52 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:11360 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387854AbfISCOv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 22:14:43 -0400
-Received: by mail-oi1-f196.google.com with SMTP id k20so1417803oih.3;
-        Wed, 18 Sep 2019 19:14:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=VBY2TI6sW6pflJ0u8FX5HSLEQmM9vGWsPIQFvfeaCg0=;
-        b=tvnklaXjNaHa33RKFV4OXLDIp1FMx55Ui99DXIXTmVOtzCUVmWMy6v1nlgEYcNkWu5
-         TLe0FO4yrqp5bUYF79iUDoKG2cHgtXljobj4Nh+l6f+6H85d1r119wyfspuhw3aqYG9d
-         U3uWBTB9jQMKxzfxoZyrcmmpmiRil4HBLfsDyi4RD6Ca/zHnAgjhqvFHNBwNFDj/BXel
-         fBB/RP4rsK8vnjF03qc8FKro0/9exEcAmuUmQtA3wJ/kp1+74AKs2E4fw5mx3nzQsWMA
-         Do1c5sbBYvc7cAVrXnTVg3JIRH8oK0m+AtGxdM7+69eWAnFbeexHiT0sanPs4/3Bu7fb
-         eizg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=VBY2TI6sW6pflJ0u8FX5HSLEQmM9vGWsPIQFvfeaCg0=;
-        b=JQnUDu9VMk0HWJx61PMB+6UZwQbtbx80HmE4KqLo+Raj7k54e07P6dPyCoDCKnUn+Q
-         18fz5VPJ6tyCvRWDchxlZq+OArUTJwsFBYAGDxImZkdhl1OZbtsh1sOr31gajCis7mNt
-         iy434rbuc1kS6U/CqsTHHqZJeT8QBI5SLJuUiTmpHo+NANoO3laREWRSP0OKBCFKgTQM
-         RZtFTPqvSCMf2LnsTCHSVwrWmJVg5XL7YoAvC7e4rmRFYH4qLbathAM8N911BHk0Aqlh
-         sTIP0bcm1oYDMqxAwHGLfuZYrJuWERx/1OF4t3BzduRUpkF+ieC5WXEzg48PUh5RKw+J
-         E49A==
-X-Gm-Message-State: APjAAAXWZmm7j2JMknDGRHeaWrsWQsCwqvXztnuyZsUScoW/NOmogbpB
-        b30/4rRy16Fhgo9cviNJFHJeJCk0gM8SIYwwMvQ=
-X-Google-Smtp-Source: APXvYqz/wLAfImMW8PcbBtFygbL4scAqfazjrUNtzu7d6rj4w0qiO0yq38R1fI9Q5nWMvkFp8qU38no2eCldZqsitvw=
-X-Received: by 2002:aca:4988:: with SMTP id w130mr654511oia.108.1568859282707;
- Wed, 18 Sep 2019 19:14:42 -0700 (PDT)
+        Wed, 18 Sep 2019 22:14:51 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190919021447epoutp0123fb11b7e62a0b6eec3389c4094b3e75~FtTXBZDvZ1742817428epoutp01r
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 02:14:47 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190919021447epoutp0123fb11b7e62a0b6eec3389c4094b3e75~FtTXBZDvZ1742817428epoutp01r
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1568859287;
+        bh=AtgesWOHsfbaq9Kj5/tNceRw+CGKiQA5nLpQb69plM0=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=rKWvUw2ZrSbofJ0CmbSJBmCqI5tTQi5PiFSD7LuurABB2VWEOko8VSHE6GlYi6ORq
+         5+F9ZgUuyFCUd7VO5y3dWidIRg0CDoZlhC2p2Gtj+aG+e/WjrDTZbOTaDey+XQ54H3
+         eFCyCD8ToNWkjXtd8EmBijmIHPQLPpV14N8LyASw=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190919021446epcas1p2edf9dc5c820d110949802d4d8a240250~FtTWVMtnK2148921489epcas1p2r;
+        Thu, 19 Sep 2019 02:14:46 +0000 (GMT)
+Received: from epsmges1p5.samsung.com (unknown [182.195.40.164]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 46YgQs6yBJzMqYkf; Thu, 19 Sep
+        2019 02:14:45 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        F5.8C.04085.594E28D5; Thu, 19 Sep 2019 11:14:45 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190919021445epcas1p20f7267d354d5a0d247591a85acb4d7d4~FtTU9VPff2483524835epcas1p2z;
+        Thu, 19 Sep 2019 02:14:45 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190919021445epsmtrp2f991922884200bc5a3c66a296fa0b875~FtTU8eW4v1870218702epsmtrp2f;
+        Thu, 19 Sep 2019 02:14:45 +0000 (GMT)
+X-AuditID: b6c32a39-cebff70000000ff5-c1-5d82e495be13
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        CA.22.03638.594E28D5; Thu, 19 Sep 2019 11:14:45 +0900 (KST)
+Received: from DONAMJAEJEO06 (unknown [10.88.104.63]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190919021445epsmtip166923a5b30b6116e66ba7b196291e6ce~FtTUw13Ly2780227802epsmtip1y;
+        Thu, 19 Sep 2019 02:14:45 +0000 (GMT)
+From:   "Namjae Jeon" <namjae.jeon@samsung.com>
+To:     "'Dan Carpenter'" <dan.carpenter@oracle.com>,
+        "'Greg KH'" <gregkh@linuxfoundation.org>
+Cc:     "'Greg KH'" <gregkh@linuxfoundation.org>,
+        <devel@driverdev.osuosl.org>, <linkinjeon@gmail.com>,
+        "'Valdis Kletnieks'" <valdis.kletnieks@vt.edu>,
+        "'Sergey Senozhatsky'" <sergey.senozhatsky.work@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <alexander.levin@microsoft.com>,
+        <sergey.senozhatsky@gmail.com>, <linux-fsdevel@vger.kernel.org>,
+        <sj1557.seo@samsung.com>, "'Ju Hyung Park'" <qkrwngud825@gmail.com>
+In-Reply-To: <20190918092405.GC2959@kadam>
+Subject: RE: [PATCH] staging: exfat: add exfat filesystem code to
+Date:   Thu, 19 Sep 2019 11:14:45 +0900
+Message-ID: <008c01d56e90$01420eb0$03c62c10$@samsung.com>
 MIME-Version: 1.0
-References: <a634860d9194cc235298d6d8bbd2282bf6f853c4.1568793195.git.liuhhome@gmail.com>
- <CAMz4kuLrAWDaZj2Am452BX+aVO0yCQB_cCiNUx4FAamoX6KWtA@mail.gmail.com>
-In-Reply-To: <CAMz4kuLrAWDaZj2Am452BX+aVO0yCQB_cCiNUx4FAamoX6KWtA@mail.gmail.com>
-From:   hhome liu <liuhhome@gmail.com>
-Date:   Thu, 19 Sep 2019 10:14:31 +0800
-Message-ID: <CAHshu7PoJriq6R+rNzqAVrEy=mSWvu6k=83=pkRo0dNhrS1xhw@mail.gmail.com>
-Subject: Re: [PATCH] serial: sprd: Add polling IO support
-To:     Baolin Wang <baolin.wang@linaro.org>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>,
-        =?UTF-8?B?5YiY5bKa5riFIChMYW5xaW5nIExpdSk=?= 
-        <lanqing.liu@unisoc.com>, linux-serial@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 14.0
+Thread-Index: AQGT5RAmYrUvbIdPV5wSdu6UWeOkRAHEPqcjASg+jxcBWaTXGQHGgTvdAmfpepEChGr/QAIs0XV3AVAC8PIBuUjzQAFD/owypymulmA=
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDJsWRmVeSWpSXmKPExsWy7bCmnu7UJ02xBs8fWVjsm/6U2eL1v+ks
+        FnvO/GK3aF68ns3i+t1bzBZ79p5ksbi8aw6bxdHHC9ksHk2YxGSx9vNjdost/46wWlx6/4HF
+        gcfj3r7DLB47Z91l99g/dw27R+uOv+weH5/eYvHo27KK0ePzJjmPQ9vfsAVwROXYZKQmpqQW
+        KaTmJeenZOal2yp5B8c7x5uaGRjqGlpamCsp5CXmptoqufgE6Lpl5gCdq6RQlphTChQKSCwu
+        VtK3synKLy1JVcjILy6xVUotSMkpMDQo0CtOzC0uzUvXS87PtTI0MDAyBapMyMlo+n+JteAD
+        e8X3XR2MDYzT2boYOTkkBEwkzl+exd7FyMUhJLCDUeLi3VdMEM4nRonlvUugMt8YJfrPP4Nr
+        aX5/kBXEFhLYyyixe7EURNErRonpKyYygSTYBHQl/v3ZD9TAwSEiECPR9dgdpIZZYD6zxJav
+        n9hBajgFtCTuHjgLZgsLOEr8uHwArJdFQFXi5v1TzCA2r4ClxJTewywQtqDEyZlPwGxmAXmJ
+        7W/nMEMcpCCx4+xrRhBbRKBM4tbqa4wQNSISszvbmEEWSwisY5d4+GAuVIOLxML9r6BsYYlX
+        x7ewQ9hSEp/f7QU7WkKgWuLjfqiSDkaJF99tIWxjiZvrN7CClDALaEqs36UPEVaU2Pl7LtRa
+        Pol3X3tYIabwSnS0CUGUqEr0XTrMBGFLS3S1f2CfwKg0C8ljs5A8NgvJA7MQli1gZFnFKJZa
+        UJybnlpsWGCKHNebGMEpWctyB+Oxcz6HGAU4GJV4eAO0mmKFWBPLiitzDzFKcDArifDOMQUK
+        8aYkVlalFuXHF5XmpBYfYjQFhvtEZinR5HxgvsgriTc0NTI2NrYwMTM3MzVWEuf1SG+IFRJI
+        TyxJzU5NLUgtgulj4uCUamA8aLJMw+bNgszkH0rG5Z8rDh61WaO04/UPxqb+mg2eD/SSRIPu
+        P945JZ5z2oIlFxkqg6VFn2ttmdt69HU9v8m3urqL9+duqq7INs0OvvWshF1Gq5ErROO8RMrh
+        6B7GOPFfVS/8a38aZStOeyJ/PlRW9XJo/tWQaRtelAo+ejR505yjFRcOKs9SYinOSDTUYi4q
+        TgQAu0LOMN8DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrGIsWRmVeSWpSXmKPExsWy7bCSnO7UJ02xBjM7JC32TX/KbPH633QW
+        iz1nfrFbNC9ez2Zx/e4tZos9e0+yWFzeNYfN4ujjhWwWjyZMYrJY+/kxu8WWf0dYLS69/8Di
+        wONxb99hFo+ds+6ye+yfu4bdo3XHX3aPj09vsXj0bVnF6PF5k5zHoe1v2AI4orhsUlJzMstS
+        i/TtErgymv5fYi34wF7xfVcHYwPjdLYuRk4OCQETieb3B1m7GLk4hAR2M0qs/3yZCSIhLXHs
+        xBnmLkYOIFtY4vDhYoiaF4wSu6ZtZAWpYRPQlfj3Zz8bSI2IQIzEiUsCIDXMAiuZJVYufscG
+        0TCNRWLa4oMsIA2cAloSdw+cZQexhQUcJX5cPgC2jEVAVeLm/VPMIDavgKXElN7DLBC2oMTJ
+        mU9YQBYwC+hJtG1kBAkzC8hLbH87hxniTgWJHWdfg8VFBMokbq2+BlUjIjG7s415AqPwLCST
+        ZiFMmoVk0iwkHQsYWVYxSqYWFOem5xYbFhjlpZbrFSfmFpfmpesl5+duYgTHppbWDsYTJ+IP
+        MQpwMCrx8P5Qb4oVYk0sK67MPcQowcGsJMI7xxQoxJuSWFmVWpQfX1Sak1p8iFGag0VJnFc+
+        /1ikkEB6YklqdmpqQWoRTJaJg1OqgXF12FzdEOObeUsY/T3kAh9qLkuQeXjwhr6R8ruPDmll
+        0tPPVlUJOuvmBr7O1fA5uVpmVdilB2nCD2fscbCqbPp5/7o/v0+P2pLLrh8q1fYGf/4olPpX
+        0mr6OnUfNrXofzJud3O7joc0zjc+5s6zrPD8V6G3rrOmnbmirLPa3TyoXcFBbbnqXyWW4oxE
+        Qy3mouJEADZbqN7JAgAA
+X-CMS-MailID: 20190919021445epcas1p20f7267d354d5a0d247591a85acb4d7d4
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190917060433epcas2p4b12d7581d0ac5477d8f26ec74e634f0a
+References: <8998.1568693976@turing-police>
+        <20190917053134.27926-1-qkrwngud825@gmail.com>
+        <20190917054726.GA2058532@kroah.com>
+        <CGME20190917060433epcas2p4b12d7581d0ac5477d8f26ec74e634f0a@epcas2p4.samsung.com>
+        <CAD14+f1adJPRTvk8awgPJwCoHXSngqoKcAze1xbHVVvrhSMGrQ@mail.gmail.com>
+        <004401d56dc9$b00fd7a0$102f86e0$@samsung.com>
+        <20190918061605.GA1832786@kroah.com> <20190918063304.GA8354@jagdpanzerIV>
+        <20190918082658.GA1861850@kroah.com>
+        <CAD14+f24gujg3S41ARYn3CvfCq9_v+M2kot=RR3u7sNsBGte0Q@mail.gmail.com>
+        <20190918092405.GC2959@kadam>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Baolin Wang <baolin.wang@linaro.org> =E4=BA=8E2019=E5=B9=B49=E6=9C=8818=E6=
-=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8B=E5=8D=888:10=E5=86=99=E9=81=93=EF=BC=9A
->
-> Hi Lanqing,
->
-> On Wed, 18 Sep 2019 at 16:16, Lanqing Liu <liuhhome@gmail.com> wrote:
-> >
-> > In order to access the UART without the interrupts, the kernel uses
-> > the basic polling methods for IO with the device. With these methods
-> > implemented, it is now possible to enable kgdb during early boot over s=
-erial.
-> >
-> > Signed-off-by: Lanqing Liu <liuhhome@gmail.com>
-> > ---
-> >  drivers/tty/serial/sprd_serial.c | 22 ++++++++++++++++++++++
-> >  1 file changed, 22 insertions(+)
-> >
-> > diff --git a/drivers/tty/serial/sprd_serial.c b/drivers/tty/serial/sprd=
-_serial.c
-> > index 73d71a4..579ab41 100644
-> > --- a/drivers/tty/serial/sprd_serial.c
-> > +++ b/drivers/tty/serial/sprd_serial.c
-> > @@ -911,6 +911,24 @@ static void sprd_pm(struct uart_port *port, unsign=
-ed int state,
-> >         }
-> >  }
-> >
-> > +#ifdef CONFIG_CONSOLE_POLL
-> > +static int sprd_poll_get_char(struct uart_port *port)
-> > +{
-> > +       while (!(serial_in(port, SPRD_STS1) & SPRD_RX_FIFO_CNT_MASK))
-> > +               cpu_relax();
-> > +
-> > +       return serial_in(port, SPRD_RXD);
-> > +}
-> > +
-> > +static void sprd_poll_put_char(struct uart_port *port, unsigned char c=
-h)
-> > +{
-> > +       while (serial_in(port, SPRD_STS1) & SPRD_TX_FIFO_CNT_MASK)
-> > +               cpu_relax();
-> > +
-> > +       serial_out(port, SPRD_TXD, ch);
-> > +}
-> > +#endif
->
-> When I tested your patch, I found only one case can work if the port
-> used by KGDB is same with the port selected as console, which means
-> this port will be powered on all the time. We had implemented the
-> power management for the UART ports, so I think you should enable the
-> clock for the port used by KGDB in poll_init(), then other ports can
-> be used by KGDB.
->
-Yes, agree with you. I will add poll_init()  support.  Thanks for your
-comments.
-> > +
-> >  static const struct uart_ops serial_sprd_ops =3D {
-> >         .tx_empty =3D sprd_tx_empty,
-> >         .get_mctrl =3D sprd_get_mctrl,
-> > @@ -928,6 +946,10 @@ static void sprd_pm(struct uart_port *port, unsign=
-ed int state,
-> >         .config_port =3D sprd_config_port,
-> >         .verify_port =3D sprd_verify_port,
-> >         .pm =3D sprd_pm,
-> > +#ifdef CONFIG_CONSOLE_POLL
-> > +       .poll_get_char  =3D sprd_poll_get_char,
-> > +       .poll_put_char  =3D sprd_poll_put_char,
-> > +#endif
-> >  };
-> >
-> >  #ifdef CONFIG_SERIAL_SPRD_CONSOLE
-> > --
-> > 1.9.1
-> >
->
->
-> --
-> Baolin Wang
-> Best Regards
+[..]
+> Put it in drivers/staging/sdfat/.
+> 
+> But really we want someone from Samsung to say that they will treat
+> the staging version as upstream.  It doesn't work when people apply
+> fixes to their version and a year later back port the fixes into
+> staging.  The staging tree is going to have tons and tons of white space
+> fixes so backports are a pain.  All development needs to be upstream
+> first where the staging driver is upstream.  Otherwise we should just
+> wait for Samsung to get it read to be merged in fs/ and not through the
+> staging tree.
+Quite frankly,
+This whole thing came as a huge-huge surprise to us, we did not initiate
+upstreaming of exfat/sdfat code and, as of this moment, I'm not exactly
+sure that we are prepared for any immediate radical changes to our internal
+development process which people all of a sudden want from us. I need to
+discuss with related people on internal thread.
+please wait a while:)
+
+Thanks!
+> 
+> regards,
+> dan carpenter
+> 
+
+
