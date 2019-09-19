@@ -2,99 +2,170 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0528C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 07:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B06C4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 07:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BB1421907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 07:09:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 223FD21907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 07:14:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388279AbfISHJG (ORCPT
+        id S2387911AbfISHOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 03:09:06 -0400
-Received: from s3.sipsolutions.net ([144.76.43.62]:35128 "EHLO
-        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387611AbfISHJG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 03:09:06 -0400
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1iAqYi-00025V-AE; Thu, 19 Sep 2019 09:08:56 +0200
-Message-ID: <fd8813c1c3c02734d60f494a3c8081d95550ec85.camel@sipsolutions.net>
-Subject: Re: [PATCH] iwlwifi: fix a potential NULL pointer dereference
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Allen Pais <allen.pais@oracle.com>, kvalo@codeaurora.org
-Cc:     davem@davemloft.net, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 19 Sep 2019 09:08:55 +0200
-In-Reply-To: <1568830262-5529-1-git-send-email-allen.pais@oracle.com> (sfid-20190918_201340_397923_45638148)
-References: <1568830262-5529-1-git-send-email-allen.pais@oracle.com>
-         (sfid-20190918_201340_397923_45638148)
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Thu, 19 Sep 2019 03:14:46 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:52068 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730741AbfISHOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 03:14:45 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 550BE2E860EECD4E82C6;
+        Thu, 19 Sep 2019 15:14:41 +0800 (CST)
+Received: from [127.0.0.1] (10.177.251.225) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Thu, 19 Sep 2019
+ 15:14:36 +0800
+Subject: Re: [PATCH] mm: Support memblock alloc on the exact node for
+ sparse_buffer_init()
+To:     Mike Rapoport <rppt@linux.ibm.com>
+CC:     <akpm@linux-foundation.org>, <osalvador@suse.de>, <mhocko@suse.co>,
+        <dan.j.williams@intel.com>, <david@redhat.com>,
+        <richardw.yang@linux.intel.com>, <cai@lca.pw>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
+References: <af88d8ab-4088-e857-575f-9be57542e130@huawei.com>
+ <20190919044753.GA20548@linux.ibm.com>
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+Message-ID: <6d23d00c-f400-f486-dc6d-31b6f141d913@huawei.com>
+Date:   Thu, 19 Sep 2019 15:14:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190919044753.GA20548@linux.ibm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.251.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-09-18 at 23:41 +0530, Allen Pais wrote:
-> alloc_workqueue is not checked for errors and as a result,
-> a potential NULL dereference could occur.
-
-Wonder why this is coming out now ... but I don't think kmalloc() was
-ever 'fixed' to fail for small allocations, so I guess this will never
-fail?
-
-Anyway, as 0-day bot pointed out, this isn't really right. The cleanup
-paths here are also tricky, so I arrived at this patch a few days ago:
 
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-index eb544811759d..882fdf7e5e7b 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-@@ -3530,6 +3530,15 @@ struct iwl_trans *iwl_trans_pcie_alloc(struct pci_dev *pdev,
- 	spin_lock_init(&trans_pcie->reg_lock);
- 	mutex_init(&trans_pcie->mutex);
- 	init_waitqueue_head(&trans_pcie->ucode_write_waitq);
-+
-+	trans_pcie->rba.alloc_wq = alloc_workqueue("rb_allocator",
-+						   WQ_HIGHPRI | WQ_UNBOUND, 1);
-+	if (!trans_pcie->rba.alloc_wq) {
-+		ret = -ENOMEM;
-+		goto out_free_trans;
-+	}
-+	INIT_WORK(&trans_pcie->rba.rx_alloc, iwl_pcie_rx_allocator_work);
-+
- 	trans_pcie->tso_hdr_page = alloc_percpu(struct iwl_tso_hdr_page);
- 	if (!trans_pcie->tso_hdr_page) {
- 		ret = -ENOMEM;
-@@ -3664,10 +3673,6 @@ struct iwl_trans *iwl_trans_pcie_alloc(struct pci_dev *pdev,
- 		trans_pcie->inta_mask = CSR_INI_SET_MASK;
- 	 }
- 
--	trans_pcie->rba.alloc_wq = alloc_workqueue("rb_allocator",
--						   WQ_HIGHPRI | WQ_UNBOUND, 1);
--	INIT_WORK(&trans_pcie->rba.rx_alloc, iwl_pcie_rx_allocator_work);
--
- #ifdef CPTCFG_IWLWIFI_DEBUGFS
- 	trans_pcie->fw_mon_data.state = IWL_FW_MON_DBGFS_STATE_CLOSED;
- 	mutex_init(&trans_pcie->fw_mon_data.mutex);
-@@ -3681,6 +3686,8 @@ out_free_ict:
- 	iwl_pcie_free_ict(trans);
- out_no_pci:
- 	free_percpu(trans_pcie->tso_hdr_page);
-+	destroy_workqueue(trans_pcie->rba.alloc_wq);
-+out_free_trans:
- 	iwl_trans_free(trans);
- 	return ERR_PTR(ret);
- }
+On 2019/9/19 12:47, Mike Rapoport wrote:
+> Hi,
+> 
+> On Wed, Sep 18, 2019 at 12:22:29PM +0800, Yunfeng Ye wrote:
+>> Currently, when memblock_find_in_range_node() fail on the exact node, it
+>> will use %NUMA_NO_NODE to find memblock from other nodes. At present,
+>> the work is good, but when the large memory is insufficient and the
+>> small memory is enough, we want to allocate the small memory of this
+>> node first, and do not need to allocate large memory from other nodes.
+>>
+>> In sparse_buffer_init(), it will prepare large chunks of memory for page
+>> structure. The page management structure requires a lot of memory, but
+>> if the node does not have enough memory, it can be converted to a small
+>> memory allocation without having to allocate it from other nodes.
+>>
+>> Add %MEMBLOCK_ALLOC_EXACT_NODE flag for this situation. Normally, the
+>> behavior is the same with %MEMBLOCK_ALLOC_ACCESSIBLE, only that it will
+>> not allocate from other nodes when a single node fails to allocate.
+>>
+>> If large contiguous block memory allocated fail in sparse_buffer_init(),
+>> it will allocates small block memmory section by section later.
+> 
+> Did you see the sparse_buffer_init() actually falling back to allocate from a
+> different node? If a node does not have enough memory to hold it's own
+> memory map, filling only it with parts of the memory map will not make such
+> node usable.
+>  
+Normally, it won't happen that sparse_buffer_init() falling back from a different
+node, because page structure size is 64 bytes per 4KB of memory, no more than 2%
+of total available memory. But in the special cases, for eaxmple, memory address
+is isolated by BIOS when memory failure, split the total memory many pieces,
+although we have enough memory, but no large contiguous block memory in one node.
+sparse_buffer_init() needs large contiguous block memory to be alloc in one time,
 
-johannes
+Eg, the size of memory is 1TB, sparse_buffer_init() need 1TB * 64/4096 = 16GB, but
+we have 100 blocks memory which every block only have 10GB, although total memory
+have almost 100*10GB=1TB, but no contiguous 16GB block.
+
+Before commit 2a3cb8baef71 ("mm/sparse: delete old sparse_init and enable new one"),
+we have %CONFIG_SPARSEMEM_ALLOC_MEM_MAP_TOGETHER config to meeting this situation,
+after that, it fall back to allocate memory from other nodes, so have the performance
+impact by remote numa access.
+
+commit 85c77f791390 ("mm/sparse: add new sparse_init_nid() and sparse_init()") wrote
+that:
+    "
+    sparse_init_nid(), which only
+    operates within one memory node, and thus allocates memory either in large
+    contiguous block or allocates section by section
+    "
+it means that allocates section by section is a normal choice too, so I think add
+%MEMBLOCK_ALLOC_EXACT_NODE is also a choice for this situation. Most cases,
+sparse_buffer_init() works good and not allocated from other nodes at present.
+
+thanks.
+Yunfeng Ye
+
+>> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+>> ---
+>>  include/linux/memblock.h | 1 +
+>>  mm/memblock.c            | 3 ++-
+>>  mm/sparse.c              | 2 +-
+>>  3 files changed, 4 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+>> index f491690..9a81d9c 100644
+>> --- a/include/linux/memblock.h
+>> +++ b/include/linux/memblock.h
+>> @@ -339,6 +339,7 @@ static inline int memblock_get_region_node(const struct memblock_region *r)
+>>  #define MEMBLOCK_ALLOC_ANYWHERE	(~(phys_addr_t)0)
+>>  #define MEMBLOCK_ALLOC_ACCESSIBLE	0
+>>  #define MEMBLOCK_ALLOC_KASAN		1
+>> +#define MEMBLOCK_ALLOC_EXACT_NODE	2
+>>
+>>  /* We are using top down, so it is safe to use 0 here */
+>>  #define MEMBLOCK_LOW_LIMIT 0
+>> diff --git a/mm/memblock.c b/mm/memblock.c
+>> index 7d4f61a..dbd52c3c 100644
+>> --- a/mm/memblock.c
+>> +++ b/mm/memblock.c
+>> @@ -277,6 +277,7 @@ static phys_addr_t __init_memblock memblock_find_in_range_node(phys_addr_t size,
+>>
+>>  	/* pump up @end */
+>>  	if (end == MEMBLOCK_ALLOC_ACCESSIBLE ||
+>> +	    end == MEMBLOCK_ALLOC_EXACT_NODE ||
+>>  	    end == MEMBLOCK_ALLOC_KASAN)
+>>  		end = memblock.current_limit;
+>>
+>> @@ -1365,7 +1366,7 @@ static phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
+>>  	if (found && !memblock_reserve(found, size))
+>>  		goto done;
+>>
+>> -	if (nid != NUMA_NO_NODE) {
+>> +	if (end != MEMBLOCK_ALLOC_EXACT_NODE && nid != NUMA_NO_NODE) {
+>>  		found = memblock_find_in_range_node(size, align, start,
+>>  						    end, NUMA_NO_NODE,
+>>  						    flags);
+>> diff --git a/mm/sparse.c b/mm/sparse.c
+>> index 72f010d..828db46 100644
+>> --- a/mm/sparse.c
+>> +++ b/mm/sparse.c
+>> @@ -477,7 +477,7 @@ static void __init sparse_buffer_init(unsigned long size, int nid)
+>>  	sparsemap_buf =
+>>  		memblock_alloc_try_nid_raw(size, PAGE_SIZE,
+>>  						addr,
+>> -						MEMBLOCK_ALLOC_ACCESSIBLE, nid);
+>> +						MEMBLOCK_ALLOC_EXACT_NODE, nid);
+>>  	sparsemap_buf_end = sparsemap_buf + size;
+>>  }
+>>
+>> -- 
+>> 2.7.4.huawei.3
+>>
+>>
+> 
 
