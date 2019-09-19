@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE6DC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF6AC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAA362196F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:34:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B088D21BE5
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:34:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932472;
-	bh=2vjN1mTgWrVfPYXSq4C3quBd4Ijtnf7GY7w2gVNMFUw=;
+	s=default; t=1568932475;
+	bh=AXPR9OXJuhp5iAZ5tC1XbkvuhWf5TaT1co01bJ2eGsE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=inE6nsBtkxmOXySrNimzgXmD5FdIJ9IBYRy427tBlxFmHa6iBALl6xpuYC/04ESlY
-	 MGqAF1ir5Hud/L8arUkhAccQk9vvZmOCJ+SL3Tyf9DZRwJ8NpFDtYAsdG2WU8yBoZI
-	 bL0p5rUWntFYvMIBEu70fd+i3ldC6fv1RsCBKl2g=
+	b=2qJQLjdT92YxxWt0Zpzh/uMXKwS6+r+2SN3M7aSTkUdWXaLRT9Q3FFveJkV+80RmT
+	 lILWtgTbF6OUYLEFSPJbpkh0X/0V2UF7Am2ighCQH2H3WaBajVdzmKJKuFq4xmqMWM
+	 ORMNvkZaNZfgb8ocGx+ei3js09D2CFVOPE7g4W68=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405467AbfISWJj (ORCPT
+        id S2405081AbfISWef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:09:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47786 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:34:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405437AbfISWJc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:09:32 -0400
+        id S2405462AbfISWJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:09:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 972D621907;
-        Thu, 19 Sep 2019 22:09:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D0DC21907;
+        Thu, 19 Sep 2019 22:09:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568930972;
-        bh=2vjN1mTgWrVfPYXSq4C3quBd4Ijtnf7GY7w2gVNMFUw=;
+        s=default; t=1568930977;
+        bh=AXPR9OXJuhp5iAZ5tC1XbkvuhWf5TaT1co01bJ2eGsE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cULZrZgm80e8dykXA/U6jC+zm/i0QknXbhd+rPfah7qC3Wl8kQGzgrPIJGds38aFt
-         IWHSe7YV6FzzgBjfY7bi1LwJO0IyZ4Vbt9heWeLGEcM0praVKh7r2gJbpN4Vl/+Z2W
-         7eEQ2g8PmnbmGYpgNF8slvrZfSgyViO8+x0IzifA=
+        b=CF27y1I214x9qjCtnPqqai8qV6AUeP1YCBQ3sMQjoUdjAAl+I4hoxb2fnwdSkjP18
+         2E7ZiBJYjQuJwf4fZqnC/JExkN7G4IFX5bbdTK9CHJGbl1ty6gRPkdEWJhblbTLh4e
+         U6nA6LpR1iXybjBWhBr7ts4PoGubZpkh2/8D+5ZU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nagarjuna Kristam <nkristam@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
+        stable@vger.kernel.org, Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 082/124] usb: host: xhci-tegra: Set DMA mask correctly
-Date:   Fri, 20 Sep 2019 00:02:50 +0200
-Message-Id: <20190919214822.000675695@linuxfoundation.org>
+Subject: [PATCH 5.2 084/124] ARM: 8901/1: add a criteria for pfn_valid of arm
+Date:   Fri, 20 Sep 2019 00:02:52 +0200
+Message-Id: <20190919214822.077733327@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -60,55 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nagarjuna Kristam <nkristam@nvidia.com>
+From: zhaoyang <huangzhaoyang@gmail.com>
 
-[ Upstream commit 993cc8753453fccfe060a535bbe21fcf1001b626 ]
+[ Upstream commit 5b3efa4f1479c91cb8361acef55f9c6662feba57 ]
 
-The Falcon microcontroller that runs the XUSB firmware and which is
-responsible for exposing the XHCI interface can address only 40 bits of
-memory. Typically that's not a problem because Tegra devices don't have
-enough system memory to exceed those 40 bits.
+pfn_valid can be wrong when parsing a invalid pfn whose phys address
+exceeds BITS_PER_LONG as the MSB will be trimed when shifted.
 
-However, if the ARM SMMU is enable on Tegra186 and later, the addresses
-passed to the XUSB controller can be anywhere in the 48-bit IOV address
-space of the ARM SMMU. Since the DMA/IOMMU API starts allocating from
-the top of the IOVA space, the Falcon microcontroller is not able to
-load the firmware successfully.
+The issue originally arise from bellowing call stack, which corresponding to
+an access of the /proc/kpageflags from userspace with a invalid pfn parameter
+and leads to kernel panic.
 
-Fix this by setting the DMA mask to 40 bits, which will force the DMA
-API to map the buffer for the firmware to an IOVA that is addressable by
-the Falcon.
+[46886.723249] c7 [<c031ff98>] (stable_page_flags) from [<c03203f8>]
+[46886.723264] c7 [<c0320368>] (kpageflags_read) from [<c0312030>]
+[46886.723280] c7 [<c0311fb0>] (proc_reg_read) from [<c02a6e6c>]
+[46886.723290] c7 [<c02a6e24>] (__vfs_read) from [<c02a7018>]
+[46886.723301] c7 [<c02a6f74>] (vfs_read) from [<c02a778c>]
+[46886.723315] c7 [<c02a770c>] (SyS_pread64) from [<c0108620>]
+(ret_fast_syscall+0x0/0x28)
 
-Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Link: https://lore.kernel.org/r/1566989697-13049-1-git-send-email-nkristam@nvidia.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci-tegra.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm/mm/init.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/usb/host/xhci-tegra.c b/drivers/usb/host/xhci-tegra.c
-index 294158113d62c..77142f9bf26ae 100644
---- a/drivers/usb/host/xhci-tegra.c
-+++ b/drivers/usb/host/xhci-tegra.c
-@@ -1217,6 +1217,16 @@ static int tegra_xusb_probe(struct platform_device *pdev)
- 
- 	tegra_xusb_config(tegra, regs);
- 
-+	/*
-+	 * The XUSB Falcon microcontroller can only address 40 bits, so set
-+	 * the DMA mask accordingly.
-+	 */
-+	err = dma_set_mask_and_coherent(tegra->dev, DMA_BIT_MASK(40));
-+	if (err < 0) {
-+		dev_err(&pdev->dev, "failed to set DMA mask: %d\n", err);
-+		goto put_rpm;
-+	}
+diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
+index 8e793cddac661..98e17388a563f 100644
+--- a/arch/arm/mm/init.c
++++ b/arch/arm/mm/init.c
+@@ -174,6 +174,11 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max_low,
+ #ifdef CONFIG_HAVE_ARCH_PFN_VALID
+ int pfn_valid(unsigned long pfn)
+ {
++	phys_addr_t addr = __pfn_to_phys(pfn);
 +
- 	err = tegra_xusb_load_firmware(tegra);
- 	if (err < 0) {
- 		dev_err(&pdev->dev, "failed to load firmware: %d\n", err);
++	if (__phys_to_pfn(addr) != pfn)
++		return 0;
++
+ 	return memblock_is_map_memory(__pfn_to_phys(pfn));
+ }
+ EXPORT_SYMBOL(pfn_valid);
 -- 
 2.20.1
 
