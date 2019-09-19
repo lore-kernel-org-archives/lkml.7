@@ -2,64 +2,93 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A23C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D43C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 535F721920
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:09:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86E4721920
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:09:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568930978;
+	bh=NCKSJd3yW93ThPjxg8k5p+Y2bbx7TMPopGxJbJ3B2/o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=AhvltSKntVK/nS9D1qWwjXfJDfaAxxlwAiuSdv6J714apIdECeKZaxKqr4lFYSkV3
+	 mAFXo6Qt/SiZ66Hp3LvK+mmAl9YJ6UKo2K6EmUqAcFZYjWR4DlLmEyX3TlQUIQVGoO
+	 kFWAQLF/6dkovt5nfiIAY4XzjrzzLDEa0E317CFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405444AbfISWJd (ORCPT
+        id S2405455AbfISWJf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:09:33 -0400
-Received: from mga18.intel.com ([134.134.136.126]:16405 "EHLO mga18.intel.com"
+        Thu, 19 Sep 2019 18:09:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405428AbfISWJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:09:29 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Sep 2019 15:09:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,526,1559545200"; 
-   d="scan'208";a="189747060"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by orsmga003.jf.intel.com with ESMTP; 19 Sep 2019 15:09:28 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id A4F4A3013C9; Thu, 19 Sep 2019 15:09:28 -0700 (PDT)
-Date:   Thu, 19 Sep 2019 15:09:28 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Kim Phillips <kim.phillips@amd.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Borislav Petkov <bp@suse.de>, Martin Liska <mliska@suse.cz>,
-        Luke Mujica <lukemujica@google.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 3/5] perf vendor events: minor fixes to the README
-Message-ID: <20190919220928.GH8537@tassilo.jf.intel.com>
-References: <20190919204306.12598-1-kim.phillips@amd.com>
- <20190919204306.12598-3-kim.phillips@amd.com>
+        id S2405379AbfISWJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:09:28 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3801C2196F;
+        Thu, 19 Sep 2019 22:09:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568930966;
+        bh=NCKSJd3yW93ThPjxg8k5p+Y2bbx7TMPopGxJbJ3B2/o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HUWvBmaNpbcbzjI0joxOYLLuDJiYK3Oea32k1MdG0y4x2GMQ/yDIlK6mARkLKVkVN
+         CFkyAmR/UUw4/MBe0lexp2ByT849dMkYt0r3J9QUd2Svetxjh1LBIOKEKNdaf7ntrL
+         GxpkFzmlpmqyinc4BnJvvw66G80h5J90ejjrVeBc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Steve French <stfrench@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 080/124] cifs: Use kzfree() to zero out the password
+Date:   Fri, 20 Sep 2019 00:02:48 +0200
+Message-Id: <20190919214821.922337244@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
+References: <20190919214819.198419517@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190919204306.12598-3-kim.phillips@amd.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For all the patches except the last
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
+[ Upstream commit 478228e57f81f6cb60798d54fc02a74ea7dd267e ]
+
+It's safer to zero out the password so that it can never be disclosed.
+
+Fixes: 0c219f5799c7 ("cifs: set domainName when a domain-key is used in multiuser")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/cifs/connect.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index 2beaa14519f5d..85b2107e8a3d7 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -3081,7 +3081,7 @@ cifs_set_cifscreds(struct smb_vol *vol, struct cifs_ses *ses)
+ 			rc = -ENOMEM;
+ 			kfree(vol->username);
+ 			vol->username = NULL;
+-			kfree(vol->password);
++			kzfree(vol->password);
+ 			vol->password = NULL;
+ 			goto out_key_put;
+ 		}
+-- 
+2.20.1
+
+
+
