@@ -2,47 +2,46 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C34D5C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD66C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 930122067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:56:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73D4E21907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:56:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390785AbfISO4I (ORCPT
+        id S2390820AbfISO4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 10:56:08 -0400
-Received: from proxima.lasnet.de ([78.47.171.185]:50654 "EHLO
+        Thu, 19 Sep 2019 10:56:46 -0400
+Received: from proxima.lasnet.de ([78.47.171.185]:50660 "EHLO
         proxima.lasnet.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388551AbfISO4H (ORCPT
+        with ESMTP id S1728720AbfISO4q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 10:56:07 -0400
+        Thu, 19 Sep 2019 10:56:46 -0400
 Received: from localhost.localdomain (p200300E9D7197E1C5D26FA1D92192C91.dip0.t-ipconnect.de [IPv6:2003:e9:d719:7e1c:5d26:fa1d:9219:2c91])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: stefan@datenfreihafen.org)
-        by proxima.lasnet.de (Postfix) with ESMTPSA id 3E21BC167A;
-        Thu, 19 Sep 2019 16:56:05 +0200 (CEST)
-Subject: Re: [PATCH] ieee802154: atusb: fix use-after-free at disconnect
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Alexander Aring <alex.aring@gmail.com>,
+        by proxima.lasnet.de (Postfix) with ESMTPSA id 00C25C11CD;
+        Thu, 19 Sep 2019 16:56:43 +0200 (CEST)
+Subject: Re: [PATCH] ieee802154: ca8210: prevent memory leak
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
+        Harry Morris <h.morris@cascoda.com>,
+        Alexander Aring <alex.aring@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         linux-wpan@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andreyknvl@google.com,
-        syzkaller-bugs@googlegroups.com, stable <stable@vger.kernel.org>,
-        syzbot+f4509a9138a1472e7e80@syzkaller.appspotmail.com
-References: <20190919121234.30620-1-johan@kernel.org>
+        linux-kernel@vger.kernel.org
+References: <20190917224713.26371-1-navid.emamdoost@gmail.com>
 From:   Stefan Schmidt <stefan@datenfreihafen.org>
-Message-ID: <fe42123b-d454-776e-759c-bf42c0a214c7@datenfreihafen.org>
-Date:   Thu, 19 Sep 2019 16:56:04 +0200
+Message-ID: <5c53dd25-80de-86ce-5072-bdb6a54835bd@datenfreihafen.org>
+Date:   Thu, 19 Sep 2019 16:56:43 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190919121234.30620-1-johan@kernel.org>
+In-Reply-To: <20190917224713.26371-1-navid.emamdoost@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -51,48 +50,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello.
+Hello Harry.
 
-On 19.09.19 14:12, Johan Hovold wrote:
-> The disconnect callback was accessing the hardware-descriptor private
-> data after having having freed it.
+On 18.09.19 00:47, Navid Emamdoost wrote:
+> In ca8210_probe the allocated pdata needs to be assigned to
+> spi_device->dev.platform_data before calling ca8210_get_platform_data. 
+> Othrwise when ca8210_get_platform_data fails pdata cannot be released.
 > 
-> Fixes: 7490b008d123 ("ieee802154: add support for atusb transceiver")
-> Cc: stable <stable@vger.kernel.org>     # 4.2
-> Cc: Alexander Aring <alex.aring@gmail.com>
-> Reported-by: syzbot+f4509a9138a1472e7e80@syzkaller.appspotmail.com
-> Signed-off-by: Johan Hovold <johan@kernel.org>
+> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 > ---
+>  drivers/net/ieee802154/ca8210.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> #syz test: https://github.com/google/kasan.git f0df5c1b
-> 
->  drivers/net/ieee802154/atusb.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ieee802154/atusb.c b/drivers/net/ieee802154/atusb.c
-> index ceddb424f887..0dd0ba915ab9 100644
-> --- a/drivers/net/ieee802154/atusb.c
-> +++ b/drivers/net/ieee802154/atusb.c
-> @@ -1137,10 +1137,11 @@ static void atusb_disconnect(struct usb_interface *interface)
+> diff --git a/drivers/net/ieee802154/ca8210.c b/drivers/net/ieee802154/ca8210.c
+> index b188fce3f641..229d70a897ca 100644
+> --- a/drivers/net/ieee802154/ca8210.c
+> +++ b/drivers/net/ieee802154/ca8210.c
+> @@ -3152,12 +3152,12 @@ static int ca8210_probe(struct spi_device *spi_device)
+>  		goto error;
+>  	}
 >  
->  	ieee802154_unregister_hw(atusb->hw);
+> +	priv->spi->dev.platform_data = pdata;
+>  	ret = ca8210_get_platform_data(priv->spi, pdata);
+>  	if (ret) {
+>  		dev_crit(&spi_device->dev, "ca8210_get_platform_data failed\n");
+>  		goto error;
+>  	}
+> -	priv->spi->dev.platform_data = pdata;
 >  
-> +	usb_put_dev(atusb->usb_dev);
-> +
->  	ieee802154_free_hw(atusb->hw);
->  
->  	usb_set_intfdata(interface, NULL);
-> -	usb_put_dev(atusb->usb_dev);
->  
->  	pr_debug("%s done\n", __func__);
->  }
+>  	ret = ca8210_dev_com_init(priv);
+>  	if (ret) {
 > 
 
-
-This patch has been applied to the wpan tree and will be
-part of the next pull request to net.
-
-Thanks a lot for having a look at this!
+Could you review this patch for the ca8210 driver?
 
 regards
 Stefan Schmidt
