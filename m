@@ -2,120 +2,228 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D3DC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 00:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E038C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 00:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78E4421925
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 00:57:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="h5/C+5MF"
+	by mail.kernel.org (Postfix) with ESMTP id F0CFA21925
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 00:58:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731422AbfISA55 (ORCPT
+        id S1731483AbfISA6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 20:57:57 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:44880 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726359AbfISA55 (ORCPT
+        Wed, 18 Sep 2019 20:58:19 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7388 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727324AbfISA6S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 20:57:57 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q21so1075302pfn.11
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 17:57:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:to:from:subject:user-agent:date;
-        bh=Yjz5L/ozymWepEMwnwlA62WqR6UE9MQbd1808aWPyz0=;
-        b=h5/C+5MFbuEwtpGziR7U/66WRa03Ik7sX99oDvEOGxBQbCv7MSfNP55RcbQ62ZvTQp
-         UH4PZC/3lYFlRNwYwHbtx48DVWG2PzdC5NbpXvh7FwalNwN4O8AGckupbMYY7oQN23c+
-         tGIyYD5CwrHX5GjgsKALa3HoeJOLfM0MjVwzM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:to:from:subject
-         :user-agent:date;
-        bh=Yjz5L/ozymWepEMwnwlA62WqR6UE9MQbd1808aWPyz0=;
-        b=g8c9u8oCHwf+7nkO1/+3IYqmUl8on4kUp1e6aZXha8oLrhpGREcabRvGbN2uuGVhnW
-         1iEGUbrruVLBm2WdcBUgh4dPiu9RwRxZ8yStX9dUuYfEp6riTyR08+h5h1oVWpNrvN6Q
-         0PZsjc8VTUB1ZgWW/v0eKLns9KyPfRm7rWqiNHInSi48UFwPRX9BkYABt2HPGCfyryYB
-         9m4iQITLMy5FnjsjtOtaJcz2v8DGlKNGj95f/I2na5FUITyKwO6HeaNPP375osVbjQVV
-         QWBbzW9qHiFnLq06cy2G0C4eP0ngIt/CDgDcZ4qbIcVGt8k2bh7ZLMB6xn3eOneM49Kx
-         4WLw==
-X-Gm-Message-State: APjAAAVHxkuXlFgrdcvPwp0fOiuzD2zoBSykkZohaTGHJtT2fkZKF28L
-        gbbsf3iPX5kt2uZEu9qmbUThvQ==
-X-Google-Smtp-Source: APXvYqzZCvp5DCLQzQoL1v/l8sqwapRkBg8n0RTm+rxsZBtu5UIPpwB536sRL+I8xYtZRRUN0+bSfQ==
-X-Received: by 2002:aa7:8f14:: with SMTP id x20mr7478238pfr.223.1568854676630;
-        Wed, 18 Sep 2019 17:57:56 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id q2sm10853727pfg.144.2019.09.18.17.57.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Sep 2019 17:57:56 -0700 (PDT)
-Message-ID: <5d82d294.1c69fb81.23c8c.8c61@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Wed, 18 Sep 2019 20:58:18 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8J0ukc5011874
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 20:58:17 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2v3vdn51he-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 20:58:17 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Thu, 19 Sep 2019 01:58:15 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 19 Sep 2019 01:58:10 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8J0w9RA54919296
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 19 Sep 2019 00:58:09 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 904394C044;
+        Thu, 19 Sep 2019 00:58:09 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EACFF4C040;
+        Thu, 19 Sep 2019 00:58:08 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 19 Sep 2019 00:58:08 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 5EC2FA01EB;
+        Thu, 19 Sep 2019 10:58:07 +1000 (AEST)
+Subject: Re: [PATCH 2/5] powerpc: Map & release OpenCAPI LPC memory
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     Frederic Barrat <fbarrat@linux.ibm.com>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Allison Randal <allison@lohutok.net>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Vaibhav Jain <vaibhav@linux.ibm.com>,
+        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Date:   Thu, 19 Sep 2019 10:58:07 +1000
+In-Reply-To: <c644b511-86c8-e71b-11ae-dd425c3be28d@linux.ibm.com>
+References: <20190917014307.30485-1-alastair@au1.ibm.com>
+         <20190917014307.30485-3-alastair@au1.ibm.com>
+         <c644b511-86c8-e71b-11ae-dd425c3be28d@linux.ibm.com>
+Organization: IBM Australia
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1513424ecec891d19c1aa3c599ec67db7964b6b2.1568712606.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1568712606.git.saiprakash.ranjan@codeaurora.org> <1513424ecec891d19c1aa3c599ec67db7964b6b2.1568712606.git.saiprakash.ranjan@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Will Deacon <will@kernel.org>, bjorn.andersson@linaro.org,
-        iommu@lists.linux-foundation.org
-From:   Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCHv6 3/3] iommu: arm-smmu-impl: Add sdm845 implementation hook
-User-Agent: alot/0.8.1
-Date:   Wed, 18 Sep 2019 17:57:55 -0700
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19091900-0028-0000-0000-0000039FBEB8
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19091900-0029-0000-0000-00002461C3DC
+Message-Id: <aa0be6fd63fd65fa66467234ce9790b39ac6b689.camel@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-18_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=818 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909190006
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Sai Prakash Ranjan (2019-09-17 02:45:04)
-> diff --git a/drivers/iommu/arm-smmu-impl.c b/drivers/iommu/arm-smmu-impl.c
-> index 3f88cd078dd5..d62da270f430 100644
-> --- a/drivers/iommu/arm-smmu-impl.c
-> +++ b/drivers/iommu/arm-smmu-impl.c
-> @@ -9,7 +9,6 @@
-> =20
->  #include "arm-smmu.h"
-> =20
-> -
->  static int arm_smmu_gr0_ns(int offset)
->  {
->         switch(offset) {
+On Wed, 2019-09-18 at 16:03 +0200, Frederic Barrat wrote:
+> 
+> Le 17/09/2019 à 03:42, Alastair D'Silva a écrit :
+> > From: Alastair D'Silva <alastair@d-silva.org>
+> > 
+> > Map & release OpenCAPI LPC memory.
+> > 
+> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> > ---
+> >   arch/powerpc/include/asm/pnv-ocxl.h   |  2 ++
+> >   arch/powerpc/platforms/powernv/ocxl.c | 42
+> > +++++++++++++++++++++++++++
+> >   2 files changed, 44 insertions(+)
+> > 
+> > diff --git a/arch/powerpc/include/asm/pnv-ocxl.h
+> > b/arch/powerpc/include/asm/pnv-ocxl.h
+> > index 7de82647e761..f8f8ffb48aa8 100644
+> > --- a/arch/powerpc/include/asm/pnv-ocxl.h
+> > +++ b/arch/powerpc/include/asm/pnv-ocxl.h
+> > @@ -32,5 +32,7 @@ extern int pnv_ocxl_spa_remove_pe_from_cache(void
+> > *platform_data, int pe_handle)
+> >   
+> >   extern int pnv_ocxl_alloc_xive_irq(u32 *irq, u64 *trigger_addr);
+> >   extern void pnv_ocxl_free_xive_irq(u32 irq);
+> > +extern u64 pnv_ocxl_platform_lpc_setup(struct pci_dev *pdev, u64
+> > size);
+> > +extern void pnv_ocxl_platform_lpc_release(struct pci_dev *pdev);
+> >   
+> >   #endif /* _ASM_PNV_OCXL_H */
+> > diff --git a/arch/powerpc/platforms/powernv/ocxl.c
+> > b/arch/powerpc/platforms/powernv/ocxl.c
+> > index 8c65aacda9c8..81393728d6a3 100644
+> > --- a/arch/powerpc/platforms/powernv/ocxl.c
+> > +++ b/arch/powerpc/platforms/powernv/ocxl.c
+> > @@ -475,6 +475,48 @@ void pnv_ocxl_spa_release(void *platform_data)
+> >   }
+> >   EXPORT_SYMBOL_GPL(pnv_ocxl_spa_release);
+> >   
+> > +u64 pnv_ocxl_platform_lpc_setup(struct pci_dev *pdev, u64 size)
+> > +{
+> > +	struct pci_controller *hose = pci_bus_to_host(pdev->bus);
+> > +	struct pnv_phb *phb = hose->private_data;
+> > +	struct pci_dn *pdn = pci_get_pdn(pdev);
+> > +	u32 bdfn = (pdn->busno << 8) | pdn->devfn;
+> 
+> We can spare a call to pci_get_pdn() with
+> bdfn = (pdev->bus->number << 8) | pdev->devfn;
+> 
 
-Why is this hunk still around?
+Ok.
 
-> diff --git a/drivers/iommu/arm-smmu-qcom.c b/drivers/iommu/arm-smmu-qcom.c
-> new file mode 100644
-> index 000000000000..24c071c1d8b0
-> --- /dev/null
-> +++ b/drivers/iommu/arm-smmu-qcom.c
-> @@ -0,0 +1,51 @@
-[...]
-> +struct arm_smmu_device *qcom_smmu_impl_init(struct arm_smmu_device *smmu)
-> +{
-> +       struct qcom_smmu *qsmmu;
-> +
-> +       qsmmu =3D devm_kzalloc(smmu->dev, sizeof(*qsmmu), GFP_KERNEL);
-> +       if (!qsmmu)
-> +               return ERR_PTR(-ENOMEM);
-> +
-> +       qsmmu->smmu =3D *smmu;
-> +
-> +       qsmmu->smmu.impl =3D &qcom_smmu_impl;
-> +       devm_kfree(smmu->dev, smmu);
+> 
+> > +	u64 base_addr = 0;
+> > +
+> > +	int rc = opal_npu_mem_alloc(phb->opal_id, bdfn, size,
+> > &base_addr);
+> > +
+> > +	WARN_ON(rc);
+> 
+> Instead of a WARN, we should catch the error and return a null
+> address 
+> to the caller.
+> 
 
-This copy is interesting but OK I guess cavium does it.
+base_addr will be 0 in the error case, are you suggesting we just
+remove the WARN_ON()?
 
-> +
-> +       return &qsmmu->smmu;
-> +}
+> > +
+> > +	base_addr = be64_to_cpu(base_addr);
+> > +
+> > +	rc = check_hotplug_memory_addressable(base_addr, base_addr +
+> > size);
+> 
+> That code is missing?
+> 
+
+That's added in the following patch on the mm list:
+ [PATCH v3 1/2] memory_hotplug: Add a bounds check to
+check_hotplug_memory_range()
+
+> 
+> > +	if (rc) {
+> > +		dev_warn(&pdev->dev,
+> > +			 "LPC memory range 0x%llx-0x%llx is not fully
+> > addressable",
+> > +			 base_addr, base_addr + size - 1);
+> > +		return 0;
+> > +	}
+> > +
+> > +
+> > +	return base_addr;
+> > +}
+> > +EXPORT_SYMBOL_GPL(pnv_ocxl_platform_lpc_setup);
+> > +
+> > +void pnv_ocxl_platform_lpc_release(struct pci_dev *pdev)
+> > +{
+> > +	struct pci_controller *hose = pci_bus_to_host(pdev->bus);
+> > +	struct pnv_phb *phb = hose->private_data;
+> > +	struct pci_dn *pdn = pci_get_pdn(pdev);
+> > +	u32 bdfn;
+> > +	int rc;
+> > +
+> > +	bdfn = (pdn->busno << 8) | pdn->devfn;
+> > +	rc = opal_npu_mem_release(phb->opal_id, bdfn);
+> > +	WARN_ON(rc);
+> 
+> Same comments as above.
+> 
+>    Fred
+> 
+> 
+> 
+> > +}
+> > +EXPORT_SYMBOL_GPL(pnv_ocxl_platform_lpc_release);
+> > +
+> > +
+> >   int pnv_ocxl_spa_remove_pe_from_cache(void *platform_data, int
+> > pe_handle)
+> >   {
+> >   	struct spa_data *data = (struct spa_data *) platform_data;
+> > 
+-- 
+Alastair D'Silva
+Open Source Developer
+Linux Technology Centre, IBM Australia
+mob: 0423 762 819
+
