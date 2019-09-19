@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A75DC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8220EC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF398218AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5644121928
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:11:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931109;
-	bh=vqObBkhoO609+NUAEDOL9UqgzQOvbGgAuUdWe8urEDw=;
+	s=default; t=1568931113;
+	bh=av/HOu5spNOELdXEp7JvfiosYFmX82BZmEDL9SfYScU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cyZUCZwgcJbiHuSm0+YLgMqH2MO3ZEKbWgv14gXpESATMy8yNH23wpOUwTG96IqQe
-	 XQ88y0CidVnofIBdMwBVKyC1HfddgHOiRJsK/2zN0GJ/m7jUy/HKpkDl1aFtzMIiPh
-	 F6rGVXOdI6CAvDZywICD5TZDkHi631SAL3kckE1A=
+	b=y06QTY5WbdzPFAcUw011wGYLt5+C63ycATXJKsbuzwlbhobHl80fLXH2Ksq51HzJV
+	 7Wh8BJkTz7Z1CgtGEkGi0ZbOl8Nt9zQVIaTwrlyKN2sbbkbY/wBRdKHPxW35DxUHuJ
+	 gHFkuudaTtdHS7eCKao4tiys/gMzueywCylF+A04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405511AbfISWLt (ORCPT
+        id S2405881AbfISWLv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:11:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50446 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:11:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405869AbfISWLl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:11:41 -0400
+        id S2404370AbfISWLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:11:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66A8621907;
-        Thu, 19 Sep 2019 22:11:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E16621907;
+        Thu, 19 Sep 2019 22:11:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931100;
-        bh=vqObBkhoO609+NUAEDOL9UqgzQOvbGgAuUdWe8urEDw=;
+        s=default; t=1568931106;
+        bh=av/HOu5spNOELdXEp7JvfiosYFmX82BZmEDL9SfYScU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IH3a/+xMTZ6lFJpitKubp+h1FuEVJOM29BaK7iST1iyHemEeFTP+oG2kKew/n0N0B
-         ypy5LOx0c2jcOP8UxGafxcFalx08T/Qx4mQ6VoZ4zceUf+YVnAf6a95fBiM1AHN/hK
-         83rtKqMTYl5A17RkX3izCA0PEmyQv0PG3Aqm1Qr8=
+        b=YR6Ta3ZRlu/SZkteceQrgY8jLmATQuBU71P8GCZhoKg1+wkJkfufKSmIPE8OHvvX8
+         BXZy4mtDaqmEqUM0d7kPTp+FOsA+j6eM4AZEt/RdKje/jClWZKkBwLUiHksYwwpvOc
+         k28+0lBURqRfjm3rcAJZoBuS7i1QH23otgPs0xdE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 109/124] arm64: dts: renesas: r8a77995: draak: Fix backlight regulator name
-Date:   Fri, 20 Sep 2019 00:03:17 +0200
-Message-Id: <20190919214823.154469383@linuxfoundation.org>
+        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 111/124] dmaengine: ti: omap-dma: Add cleanup in omap_dma_probe()
+Date:   Fri, 20 Sep 2019 00:03:19 +0200
+Message-Id: <20190919214823.222362856@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -61,57 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit 45f5d5a9e34d3fe4140a9a3b5f7ebe86c252440a ]
+[ Upstream commit 962411b05a6d3342aa649e39cda1704c1fc042c6 ]
 
-Currently there are two nodes named "regulator1" in the Draak DTS: a
-3.3V regulator for the eMMC and the LVDS decoder, and a 12V regulator
-for the backlight.  This causes the former to be overwritten by the
-latter.
+If devm_request_irq() fails to disable all interrupts, no cleanup is
+performed before retuning the error. To fix this issue, invoke
+omap_dma_free() to do the cleanup.
 
-Fix this by renaming all regulators with numerical suffixes to use named
-suffixes, which are less likely to conflict.
-
-Fixes: 4fbd4158fe8967e9 ("arm64: dts: renesas: r8a77995: draak: Add backlight")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Link: https://lore.kernel.org/r/1565938570-7528-1-git-send-email-wenwen@cs.uga.edu
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/renesas/r8a77995-draak.dts | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/dma/ti/omap-dma.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-index a7dc11e36fd9d..071f66d8719e7 100644
---- a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-@@ -97,7 +97,7 @@
- 		reg = <0x0 0x48000000 0x0 0x18000000>;
- 	};
+diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
+index ba27802efcd0a..d07c0d5de7a25 100644
+--- a/drivers/dma/ti/omap-dma.c
++++ b/drivers/dma/ti/omap-dma.c
+@@ -1540,8 +1540,10 @@ static int omap_dma_probe(struct platform_device *pdev)
  
--	reg_1p8v: regulator0 {
-+	reg_1p8v: regulator-1p8v {
- 		compatible = "regulator-fixed";
- 		regulator-name = "fixed-1.8V";
- 		regulator-min-microvolt = <1800000>;
-@@ -106,7 +106,7 @@
- 		regulator-always-on;
- 	};
+ 		rc = devm_request_irq(&pdev->dev, irq, omap_dma_irq,
+ 				      IRQF_SHARED, "omap-dma-engine", od);
+-		if (rc)
++		if (rc) {
++			omap_dma_free(od);
+ 			return rc;
++		}
+ 	}
  
--	reg_3p3v: regulator1 {
-+	reg_3p3v: regulator-3p3v {
- 		compatible = "regulator-fixed";
- 		regulator-name = "fixed-3.3V";
- 		regulator-min-microvolt = <3300000>;
-@@ -115,7 +115,7 @@
- 		regulator-always-on;
- 	};
- 
--	reg_12p0v: regulator1 {
-+	reg_12p0v: regulator-12p0v {
- 		compatible = "regulator-fixed";
- 		regulator-name = "D12.0V";
- 		regulator-min-microvolt = <12000000>;
+ 	if (omap_dma_glbl_read(od, CAPS_0) & CAPS_0_SUPPORT_LL123)
 -- 
 2.20.1
 
