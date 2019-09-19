@@ -2,276 +2,225 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15779C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7845EC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC83D20882
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:23:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34C0D208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:23:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="C6T3JoXr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390458AbfISOXX (ORCPT
+        id S2403775AbfISOX2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 10:23:23 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43574 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390422AbfISOXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 10:23:22 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BFB7D1DCD;
-        Thu, 19 Sep 2019 14:23:21 +0000 (UTC)
-Received: from t460s.redhat.com (unknown [10.36.118.9])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4701D60872;
-        Thu, 19 Sep 2019 14:23:16 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, virtualization@lists.linux-foundation.org,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@kernel.org>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Dave Young <dyoung@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: [PATCH RFC v3 5/9] virtio-mem: Paravirtualized memory hotunplug part 2
-Date:   Thu, 19 Sep 2019 16:22:24 +0200
-Message-Id: <20190919142228.5483-6-david@redhat.com>
-In-Reply-To: <20190919142228.5483-1-david@redhat.com>
-References: <20190919142228.5483-1-david@redhat.com>
+        Thu, 19 Sep 2019 10:23:28 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:46486 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390493AbfISOX0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 10:23:26 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190919142324euoutp01fb03b3ccb8d1511ea22b2a88f9080512~F3PhiZkv-2256022560euoutp01X
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 14:23:24 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190919142324euoutp01fb03b3ccb8d1511ea22b2a88f9080512~F3PhiZkv-2256022560euoutp01X
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1568903004;
+        bh=g5BuchGjulmMrqHu7UnNWSPjw3PX42w6jYwlR2z1Rfg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=C6T3JoXrmDr315AUzTCkwRr7TLrJk/JzHE+8ZjeINxyUxVi2O3ZZ/XdmhsTqX8rNd
+         /fmKEK8gLqTdUqzVIGBIl4F+bdYD62cdJhcJ6BjlPXP+qFaYDEvD/tZMSIRqz++CCs
+         db6LidNrZM+h7Mcai8dEX++P5K4TggX6kGGw8JTA=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190919142323eucas1p19985294982f8a206d190447d9d111ac6~F3Pgvj2m30292702927eucas1p17;
+        Thu, 19 Sep 2019 14:23:23 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 54.0C.04469.B5F838D5; Thu, 19
+        Sep 2019 15:23:23 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190919142322eucas1p1949ad95468af26698c4c5addc060ce00~F3Pf9116O1888018880eucas1p18;
+        Thu, 19 Sep 2019 14:23:22 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190919142322eusmtrp1d6241a1800bd62d08a28d8a886482408~F3Pfuxx9k0555105551eusmtrp1N;
+        Thu, 19 Sep 2019 14:23:22 +0000 (GMT)
+X-AuditID: cbfec7f2-994db9c000001175-fe-5d838f5b4888
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 3E.55.04117.A5F838D5; Thu, 19
+        Sep 2019 15:23:22 +0100 (BST)
+Received: from AMDC3555.digital.local (unknown [106.120.51.67]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190919142321eusmtip1ddb6ff07278fac49544b852180531b8e~F3Pe9szH-3161631616eusmtip1b;
+        Thu, 19 Sep 2019 14:23:21 +0000 (GMT)
+From:   =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@samsung.com>
+To:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc:     =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@partner.samsung.com>,
+        cw00.choi@samsung.com, myungjoo.ham@samsung.com,
+        inki.dae@samsung.com, sw0312.kim@samsung.com,
+        georgi.djakov@linaro.org, leonard.crestez@nxp.com,
+        m.szyprowski@samsung.com, b.zolnierkie@samsung.com, krzk@kernel.org
+Subject: [RFC PATCH v2 02/11] devfreq: exynos-bus: Extract
+ exynos_bus_profile_init_passive()
+Date:   Thu, 19 Sep 2019 16:22:27 +0200
+Message-Id: <20190919142236.4071-3-a.swigon@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190919142236.4071-1-a.swigon@samsung.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Thu, 19 Sep 2019 14:23:21 +0000 (UTC)
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SeyyVYRjv/W7nI0efo+aJppytNjZKsd6GRqv1ra3Lam2NoVO+0XLrfC6V
+        LbdpkVRouYWW5TbDQSFUpxM144RSQsdWVsllrslWy/FR/vu9v8vze57tZUnFJ9qaPRcaIahD
+        VcFKxpR61PpL7+hzM9F3x1QhYG1rnQwb8pMQrs6qpPH7ma80LtB10vjt7ASD7zZrGJxuuEVh
+        vb5KhksGJ2ms+dxL457GPAZP39AhnKVvIXCFblCG++NLGJyV8Z3xtOA1ZckMP9DbxPCG620E
+        X1MUy1eP1xP88/Emgk+rLUP8tMb2GOtt6h4gBJ+LEtTb9542DfrWMUKGP914MX7qFRGH4jek
+        IBMWOBcY+FNBGrGCK0HQ0rM2BZku4hkET2pGGekxjeBFwzy1kpjrf0pLQjGCx8WV1L/Iz/xy
+        xuhiOC9IvzMkMwrrOR2CjMKJJRfJFRGQlqtfarTk/GD2Rx+RgliW4rZCwjs7Iy3nMJSPliKp
+        bjOUVz1bsptwe2CmpYCSPBbwOvvLEiYXPYl1uaRxPnBJLMw96yCl8H54PpFJSNgSRtpqZRLe
+        BO0Zqcv3iDDcYKClcBwCzUPdctgNXrR10cblSM4eKhu3S7QX5Ob2UEYaOHP4MGYh7WAO6Y/u
+        khIth2tXFRJUQmO2uRQESCjvXZ7NQ2njbeYWsstZdUzOqmNy/tcWIrIMWQmRYkigIDqHCtFO
+        oipEjAwNdDobFqJBi7+u/U/bVD2a7T6jRRyLlGbyLdGJvgpaFSVeCtEiYEnlenmea4KvQh6g
+        unRZUIf5qyODBVGLbFhKaSWPWTPko+ACVRHCeUEIF9QrKsGaWMehhrqjI9ormR3NJzyPnI7x
+        6Gw6m3rK+eVvb7/hB9MHzWz3drvKdyksttTYJQlpB7y2DTlMjt6zHfZQOzq/uRx7yPrAPlm2
+        wx37N81d4Yn2Fw8r1J+PZyfX9q+j/dm5lkMLvgvBGupCa9d5K5eondW775/82DdmEz1xuDdr
+        vqDU4O4W7aWkxCCVswOpFlV/AfT9tq9xAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrMIsWRmVeSWpSXmKPExsVy+t/xu7pR/c2xBsueqFgcOraV3eL+vFZG
+        i40z1rNaXP/ynNVi/pFzrBZXvr5ns5i+dxObxaT7E1gszp/fwG6x4u5HVotNj6+xWlzeNYfN
+        4nPvEUaLGef3MVmsPXKX3eJ24wo2ixmTX7I5CHpsWtXJ5nHn2h42j/vdx5k8Ni+p99j4bgeT
+        x8F3e5g8+rasYvT4vEkugCNKz6Yov7QkVSEjv7jEVina0MJIz9DSQs/IxFLP0Ng81srIVEnf
+        ziYlNSezLLVI3y5BL+PF2VfMBfslKxo/nWBqYGwU7WLk5JAQMJH4dns/K4gtJLCUUeLeUxWI
+        uITEx/U3WCFsYYk/17rYuhi5gGo+MUpMmjGDBSTBJuAoMWnqA3aQhIjAKUaJrcvPgVUxC2xg
+        klj+9CVYu7BAjMSSjTeZuhg5OFgEVCWariqChHkFLCRWv1nJCLFBXmL1hgPMIDangKXEl33z
+        WSAuspCY+3guI0S9oMTJmU9YQMYwC6hLrJ8nBBJmBmpt3jqbeQKj4CwkVbMQqmYhqVrAyLyK
+        USS1tDg3PbfYSK84Mbe4NC9dLzk/dxMjMIK3Hfu5ZQdj17vgQ4wCHIxKPLwK5c2xQqyJZcWV
+        uYcYJTiYlUR455g2xQrxpiRWVqUW5ccXleakFh9iNAX6bCKzlGhyPjC55JXEG5oamltYGpob
+        mxubWSiJ83YIHIwREkhPLEnNTk0tSC2C6WPi4JRqYFQQ3u1sNGGxUdVs5eNLNj8Wrwn++TTk
+        ztZJsl3VRzPeFNxm9f1xOvy4vlRqa94erpXiiftLN0ds27b8yIP2K4727O5pWW1/rvxPnSs8
+        49ICKx/VOyrHJrAIpnNbiv/5KHArllGX/bPfPc1+Obbgqqs+3//lfPhbysPncXk7w3Rvb6fH
+        O5N1m5VYijMSDbWYi4oTATIk7Rz2AgAA
+X-CMS-MailID: 20190919142322eucas1p1949ad95468af26698c4c5addc060ce00
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190919142322eucas1p1949ad95468af26698c4c5addc060ce00
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190919142322eucas1p1949ad95468af26698c4c5addc060ce00
+References: <20190919142236.4071-1-a.swigon@samsung.com>
+        <CGME20190919142322eucas1p1949ad95468af26698c4c5addc060ce00@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We can use alloc_contig_range() to try to unplug subblocks. Unplugged
-blocks will be marked PG_offline, however, don't have the PG_reserved
-flag set. This way, we can differentiate these allocated subblocks from
-subblocks that were never onlined and handle them properly in
-virtio_mem_fake_online(). free_contig_range() is used to hand back
-subblocks to Linux.
+From: Artur Świgoń <a.swigon@partner.samsung.com>
 
-It is worth noting that there are no guarantess on how much memory can
-actually get unplugged again. All device memory might completely be
-fragmented with unmovable data, such that no subblock can get unplugged.
-We might want to improve the unplugging capability in the future.
+This patch adds a new static function, exynos_bus_profile_init_passive(),
+extracted from exynos_bus_probe().
 
-We are not touching the ZONE_MOVABLE. If memory is onlined to the
-ZONE_MOVABLE, it can only get unplugged after that memory was offlined
-manually by user space. In normal operation, virtio-mem memory is
-suggested to be onlined to ZONE_NORMAL. In the future, we will try to
-make unplug more likely to succeed.
-
-Future work:
-- Offline + remove memory blocks once all subblocks were unplugged. This
-  might then free up unmovable data un other memory blocks.
-- Performance improvements:
--- Sense (lockless) if it make sense to try alloc_contig_range() at all
-   before directly trying to isolate and taking locks.
--- Try to unplug bigger chunks if possible first.
--- Identify free areas first, that don't have to be evacuated.
-- Make unplug more likely to succeed:
--- The "issue" is that in the ZONE_NORMAL, the buddy will randomly
-   allocate memory. Only pageblocks somewhat limit fragmentation,
-   however we would want to limit fragmentation on subblock granularity
-   and even memory block granularity. One idea is to have a new
-   ZONE_PREFER_MOVABLE. Memory blocks will then be onlined to ZONE_NORMAL
-   / ZONE_PREFER_MOVABLE in a certain ratio per node (e.g.,
-   1:4). This makes unplug of quite some memory likely to succeed in most
-   setups. ZONE_PREFER_MOVABLE is then a mixture of ZONE_NORMAL and
-   ZONE_MOVABlE. Especially, movable data can end up on that zone, but
-   only if really required - avoiding running out of memory on ZONE
-   imbalances. The zone fallback order would be
-   MOVABLE=>PREFER_MOVABLE=>HIGHMEM=>NORMAL=>PREFER_MOVABLE=>DMA32=>DMA
--- Allocate memmap from added memory. This way, less unmovable data can
-   end up on the memory blocks.
--- Call drop_slab() before trying to unplug. Eventually shrink other
-   caches.
-- Better retry handling in case memory is busy. We certainly don't want
-  to try for ever in a short interval to try to get some memory back.
-- OOM handling, e.g., via an OOM handler.
-
-Cc: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Jason Wang <jasowang@redhat.com>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Igor Mammedov <imammedo@redhat.com>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Stefan Hajnoczi <stefanha@redhat.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Signed-off-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Artur Świgoń <a.swigon@partner.samsung.com>
 ---
- drivers/virtio/Kconfig      |   1 +
- drivers/virtio/virtio_mem.c | 106 +++++++++++++++++++++++++++++++++++-
- 2 files changed, 104 insertions(+), 3 deletions(-)
+ drivers/devfreq/exynos-bus.c | 70 +++++++++++++++++++++---------------
+ 1 file changed, 42 insertions(+), 28 deletions(-)
 
-diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
-index 294720d53057..75a760f32ec7 100644
---- a/drivers/virtio/Kconfig
-+++ b/drivers/virtio/Kconfig
-@@ -71,6 +71,7 @@ config VIRTIO_MEM
- 	depends on VIRTIO
- 	depends on MEMORY_HOTPLUG_SPARSE
- 	depends on MEMORY_HOTREMOVE
-+	select CONTIG_ALLOC
- 	help
- 	 This driver provides access to virtio-mem paravirtualized memory
- 	 devices, allowing to hotplug and hotunplug memory.
-diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
-index 6fb55d4b6f6c..91052a37d10d 100644
---- a/drivers/virtio/virtio_mem.c
-+++ b/drivers/virtio/virtio_mem.c
-@@ -689,7 +689,17 @@ static void virtio_mem_fake_online(unsigned long pfn, unsigned int nr_pages)
- 	for (i = 0; i < nr_pages; i += 1 << order) {
- 		struct page *page = pfn_to_page(pfn + i);
- 
--		generic_online_page(page, order);
-+		/*
-+		 * If the page is reserved, it was kept fake-offline when
-+		 * onlining the memory block. Otherwise, it was allocated
-+		 * using alloc_contig_range().
-+		 */
-+		if (PageReserved(page))
-+			generic_online_page(page, order);
-+		else {
-+			free_contig_range(pfn + i, 1 << order);
-+			totalram_pages_add(1 << order);
-+		}
- 	}
+diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
+index 78f38b7fb596..f85bed241631 100644
+--- a/drivers/devfreq/exynos-bus.c
++++ b/drivers/devfreq/exynos-bus.c
+@@ -338,13 +338,51 @@ static int exynos_bus_profile_init(struct exynos_bus *bus,
+ 	return ret;
  }
  
-@@ -1187,6 +1197,72 @@ static int virtio_mem_mb_unplug_any_sb_offline(struct virtio_mem *vm,
- 	return 0;
- }
- 
-+/*
-+ * Unplug the desired number of plugged subblocks of an online memory block.
-+ * Will skip subblock that are busy.
-+ *
-+ * Will modify the state of the memory block.
-+ *
-+ * Note: Can fail after some subblocks were successfully unplugged. Can
-+ *       return 0 even if subblocks were busy and could not get unplugged.
-+ */
-+static int virtio_mem_mb_unplug_any_sb_online(struct virtio_mem *vm,
-+					      unsigned long mb_id,
-+					      uint64_t *nb_sb)
++static int exynos_bus_profile_init_passive(struct exynos_bus *bus,
++					   struct devfreq_dev_profile *profile)
 +{
-+	const unsigned long nr_pages = PFN_DOWN(vm->subblock_size);
-+	unsigned long start_pfn;
-+	int rc, sb_id;
++	struct device *dev = bus->dev;
++	struct devfreq_passive_data *passive_data;
++	struct devfreq *parent_devfreq;
++	int ret = 0;
 +
-+	/*
-+	 * TODO: To increase the performance we want to try bigger, consecutive
-+	 * subblocks first before falling back to single subblocks. Also,
-+	 * we should sense via something like is_mem_section_removable()
-+	 * first if it makes sense to go ahead any try to allocate.
-+	 */
-+	for (sb_id = 0; sb_id < vm->nb_sb_per_mb && *nb_sb; sb_id++) {
-+		/* Find the next candidate subblock */
-+		while (sb_id < vm->nb_sb_per_mb &&
-+		       !virtio_mem_mb_test_sb_plugged(vm, mb_id, sb_id, 1))
-+			sb_id++;
-+		if (sb_id >= vm->nb_sb_per_mb)
-+			break;
++	/* Initialize the struct profile and governor data for passive device */
++	profile->target = exynos_bus_target;
++	profile->exit = exynos_bus_passive_exit;
 +
-+		start_pfn = PFN_DOWN(virtio_mem_mb_id_to_phys(mb_id) +
-+				     sb_id * vm->subblock_size);
-+		rc = alloc_contig_range(start_pfn, start_pfn + nr_pages,
-+					MIGRATE_MOVABLE, GFP_KERNEL);
-+		if (rc == -ENOMEM)
-+			/* whoops, out of memory */
-+			return rc;
-+		if (rc)
-+			/* memory busy, we can't unplug this chunk */
-+			continue;
-+
-+		/* Mark it as fake-offline before unplugging it */
-+		virtio_mem_set_fake_offline(start_pfn, nr_pages);
-+		totalram_pages_add(-nr_pages);
-+
-+		/* Try to unplug the allocated memory */
-+		rc = virtio_mem_mb_unplug_sb(vm, mb_id, sb_id, 1);
-+		if (rc) {
-+			/* Return the memory to the buddy. */
-+			virtio_mem_fake_online(start_pfn, nr_pages);
-+			return rc;
-+		}
-+
-+		virtio_mem_mb_set_state(vm, mb_id,
-+					VIRTIO_MEM_MB_STATE_ONLINE_PARTIAL);
-+		*nb_sb -= 1;
++	/* Get the instance of parent devfreq device */
++	parent_devfreq = devfreq_get_devfreq_by_phandle(dev, 0);
++	if (IS_ERR(parent_devfreq)) {
++		ret = -EPROBE_DEFER;
++		goto err;
 +	}
 +
-+	/*
-+	 * TODO: Once all subblocks of a memory block were unplugged, we want
-+	 * to offline the memory block and remove it.
-+	 */
-+	return 0;
++	passive_data = devm_kzalloc(dev, sizeof(*passive_data), GFP_KERNEL);
++	if (!passive_data) {
++		ret = -ENOMEM;
++		goto err;
++	}
++	passive_data->parent = parent_devfreq;
++
++	/* Add devfreq device for exynos bus with passive governor */
++	bus->devfreq = devm_devfreq_add_device(dev, profile, DEVFREQ_GOV_PASSIVE,
++						passive_data);
++	if (IS_ERR(bus->devfreq)) {
++		dev_err(dev,
++			"failed to add devfreq dev with passive governor\n");
++		ret = PTR_ERR(bus->devfreq);
++		goto err;
++	}
++
++err:
++	return ret;
 +}
 +
- /*
-  * Try to unplug the requested amount of memory.
-  */
-@@ -1225,8 +1301,31 @@ static int virtio_mem_unplug_request(struct virtio_mem *vm, uint64_t diff)
- 		cond_resched();
- 	}
+ static int exynos_bus_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *np = dev->of_node, *node;
+ 	struct devfreq_dev_profile *profile;
+-	struct devfreq_passive_data *passive_data;
+-	struct devfreq *parent_devfreq;
+ 	struct exynos_bus *bus;
+ 	int ret, max_state;
+ 	unsigned long min_freq, max_freq;
+@@ -390,33 +428,9 @@ static int exynos_bus_probe(struct platform_device *pdev)
  
-+	/* Try to unplug subblocks of partially plugged online blocks. */
-+	virtio_mem_for_each_mb_state(vm, mb_id,
-+				     VIRTIO_MEM_MB_STATE_ONLINE_PARTIAL) {
-+		rc = virtio_mem_mb_unplug_any_sb_online(vm, mb_id,
-+							&nb_sb);
-+		if (rc || !nb_sb)
-+			goto out_unlock;
-+		mutex_unlock(&vm->hotplug_mutex);
-+		cond_resched();
-+		mutex_lock(&vm->hotplug_mutex);
-+	}
-+
-+	/* Try to unplug subblocks of plugged online blocks. */
-+	virtio_mem_for_each_mb_state(vm, mb_id, VIRTIO_MEM_MB_STATE_ONLINE) {
-+		rc = virtio_mem_mb_unplug_any_sb_online(vm, mb_id,
-+							&nb_sb);
-+		if (rc || !nb_sb)
-+			goto out_unlock;
-+		mutex_unlock(&vm->hotplug_mutex);
-+		cond_resched();
-+		mutex_lock(&vm->hotplug_mutex);
-+	}
-+
- 	mutex_unlock(&vm->hotplug_mutex);
--	return 0;
-+	return nb_sb ? -EBUSY : 0;
- out_unlock:
- 	mutex_unlock(&vm->hotplug_mutex);
- 	return rc;
-@@ -1330,7 +1429,8 @@ static void virtio_mem_run_wq(struct work_struct *work)
- 	case -EBUSY:
- 		/*
- 		 * The hypervisor cannot process our request right now
--		 * (e.g., out of memory, migrating).
-+		 * (e.g., out of memory, migrating) or we cannot free up
-+		 * any memory to unplug it (all plugged memory is busy).
- 		 */
- 	case -ENOMEM:
- 		/* Out of memory, try again later. */
+ 	goto out;
+ passive:
+-	/* Initialize the struct profile and governor data for passive device */
+-	profile->target = exynos_bus_target;
+-	profile->exit = exynos_bus_passive_exit;
+-
+-	/* Get the instance of parent devfreq device */
+-	parent_devfreq = devfreq_get_devfreq_by_phandle(dev, 0);
+-	if (IS_ERR(parent_devfreq)) {
+-		ret = -EPROBE_DEFER;
++	ret = exynos_bus_profile_init_passive(bus, profile);
++	if (ret < 0)
+ 		goto err;
+-	}
+-
+-	passive_data = devm_kzalloc(dev, sizeof(*passive_data), GFP_KERNEL);
+-	if (!passive_data) {
+-		ret = -ENOMEM;
+-		goto err;
+-	}
+-	passive_data->parent = parent_devfreq;
+-
+-	/* Add devfreq device for exynos bus with passive governor */
+-	bus->devfreq = devm_devfreq_add_device(dev, profile, DEVFREQ_GOV_PASSIVE,
+-						passive_data);
+-	if (IS_ERR(bus->devfreq)) {
+-		dev_err(dev,
+-			"failed to add devfreq dev with passive governor\n");
+-		ret = PTR_ERR(bus->devfreq);
+-		goto err;
+-	}
+ 
+ out:
+ 	max_state = bus->devfreq->profile->max_state;
 -- 
-2.21.0
+2.17.1
 
