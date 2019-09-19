@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 433D6C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0781EC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 152A221920
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD94C21929
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:21:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931699;
-	bh=txizpSKWNllJpJ8T6Vas/37oGmdhWUzm8YhP+TFhjJs=;
+	s=default; t=1568931701;
+	bh=MJwYI1KVbjryZ/U0QHBipNr+8bajKoJ+EZOTakjitT8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gf6fhH2i31dXaHO3WJu9Rnncg7rG+i36qcejCe9I1E0+bivDY1xqDnTZ49K2zAsRi
-	 +m76oI0NVGuwpqCSO+odNCFTWyXj71yZNvohiZqBtKC1UiHYGvGXtSCKLo0yUP49Lp
-	 wCYf4opOiLEwxVU+kIy3gsMXj73BGRVJgO/zRC+M=
+	b=i00W1V3iGp86U8P2hUo9GKYGTrmvAMogxTrrHSgaj9jI/QqubkecSu1hjezh6iAUy
+	 bVJ9wDDfE5DUxDjjs6bTqs+iVSOD44L8WEhxOsMNfRgK+OYppXXaRM3q/mrS9N8dgf
+	 tH701nO+MAs3Ls/DXUah64xHvFNUSXPl4eorCuD8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404843AbfISWVi (ORCPT
+        id S2391128AbfISWVl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:21:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36140 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:21:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406735AbfISWVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:21:35 -0400
+        id S2404844AbfISWVh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:21:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45FBC217D6;
-        Thu, 19 Sep 2019 22:21:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D835E20678;
+        Thu, 19 Sep 2019 22:21:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931694;
-        bh=txizpSKWNllJpJ8T6Vas/37oGmdhWUzm8YhP+TFhjJs=;
+        s=default; t=1568931697;
+        bh=MJwYI1KVbjryZ/U0QHBipNr+8bajKoJ+EZOTakjitT8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oPzX5JjNPqeYJ6cqV7aARSwM0zsYEYp0bJGR9dn1HObcAwysa+PAC+Ch86ugD548L
-         BdYhDEU9r8RXspJlRUK7tLQ/7wIb0LGcsYy0vvdCajjwcTldwowgYTeG4+FMyyVvuB
-         TCTD+LGMBW6dEi8ylpigLs+ThzyYiPbmofZm1k2g=
+        b=NWv3xZJAptqbZkZ6/WWrzOWJ5FAxEMEE8ikTqZlC1GUlAkTSxZnJ4NbE6Z4L09O9h
+         cPBNUNSOEDkYzRVv6NytR+NsIT/8DOb5OTjXVW0xd+fP3KJMKNWBOIBtGlqlq+Hmbr
+         gwhBXluNgYKk+dJeOX+XD9NQGnwhMfvWLEZxxI4U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.9 34/74] x86/build: Add -Wnoaddress-of-packed-member to REALMODE_CFLAGS, to silence GCC9 build warning
-Date:   Fri, 20 Sep 2019 00:03:47 +0200
-Message-Id: <20190919214808.286300816@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Vineet Gupta <vgupta@synopsys.com>
+Subject: [PATCH 4.9 74/74] ARC: export "abort" for modules
+Date:   Fri, 20 Sep 2019 00:04:27 +0200
+Message-Id: <20190919214811.564310227@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214800.519074117@linuxfoundation.org>
 References: <20190919214800.519074117@linuxfoundation.org>
@@ -63,49 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
 
-commit 42e0e95474fc6076b5cd68cab8fa0340a1797a72 upstream.
+This is a custom patch (no mainline equivalent) for stable backport only
+to address 0-Day kernel test infra ARC 4.x.y builds errors.
 
-One of the very few warnings I have in the current build comes from
-arch/x86/boot/edd.c, where I get the following with a gcc9 build:
+The reason for this custom patch as that it is a single patch, touches
+only ARC, vs. atleast two 7c2c11b208be09c1, dc8635b78cd8669 which touch
+atleast 3 other arches (one long removed) and could potentially have a
+fallout.
 
-   arch/x86/boot/edd.c: In function ‘query_edd’:
-   arch/x86/boot/edd.c:148:11: warning: taking address of packed member of ‘struct boot_params’ may result in an unaligned pointer value [-Waddress-of-packed-member]
-     148 |  mbrptr = boot_params.edd_mbr_sig_buffer;
-         |           ^~~~~~~~~~~
-
-This warning triggers because we throw away all the CFLAGS and then make
-a new set for REALMODE_CFLAGS, so the -Wno-address-of-packed-member we
-added in the following commit is not present:
-
-  6f303d60534c ("gcc-9: silence 'address-of-packed-member' warning")
-
-The simplest solution for now is to adjust the warning for this version
-of CFLAGS as well, but it would definitely make sense to examine whether
-REALMODE_CFLAGS could be derived from CFLAGS, so that it picks up changes
-in the compiler flags environment automatically.
-
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Acked-by: Borislav Petkov <bp@alien8.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reported-by: kbuild test robot <lkp@intel.com>
+CC: stable@vger.kernel.org	# 4.4, 4.9
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/Makefile |    1 +
+ arch/arc/kernel/traps.c |    1 +
  1 file changed, 1 insertion(+)
 
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -38,6 +38,7 @@ REALMODE_CFLAGS	:= $(M16_CFLAGS) -g -Os
- 
- REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), -ffreestanding)
- REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), -fno-stack-protector)
-+REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), -Wno-address-of-packed-member)
- REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), $(cc_stack_align4))
- export REALMODE_CFLAGS
- 
+--- a/arch/arc/kernel/traps.c
++++ b/arch/arc/kernel/traps.c
+@@ -163,3 +163,4 @@ void abort(void)
+ {
+ 	__asm__ __volatile__("trap_s  5\n");
+ }
++EXPORT_SYMBOL(abort);
 
 
