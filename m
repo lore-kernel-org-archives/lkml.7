@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB92C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E81C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 334C821927
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C22E6218AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931009;
-	bh=d4SIohXQNvARrAc4/XY4cpPn0pLAAyDtVryElAjLMhM=;
+	s=default; t=1568931016;
+	bh=0HIquPwMCTW8gtw7EavUTVW8D815yiPZOCdg/GqAhlo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hv/6CopzqribWuhlTf5k1mAspVtrPrLK5AGsIkScU6TuRC8ohaz5bZDq46ObOF98c
-	 6jXKyXfCWH0viKdsiq+gpy9fNhYoCm/OzkKoWSkq3PfDuZH1b1kH8PSDlpmAm6ldpj
-	 xdb+E+9wVz52bA6j7VMP6KxjfGprxYyeYUqZDt80=
+	b=oaZdNAMEFnfL78kpdBnNGvoQ7dOT07zRWdyyHOTu99A3/vSMm8GT2y5ZGLD327tyA
+	 Gxys+dPaTFKrJnLev3me5CjFSpfV+dhXIH4APxWEOlVkRo0dlwHXN1rrvaL58K4b10
+	 Ld7xyluhhJBML29Evq+CkQTcxVGxhGLQrjAyaYFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405608AbfISWKI (ORCPT
+        id S2405636AbfISWKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:10:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48444 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:10:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405583AbfISWKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:10:06 -0400
+        id S2405617AbfISWKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:10:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DAB5218AF;
-        Thu, 19 Sep 2019 22:10:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD175218AF;
+        Thu, 19 Sep 2019 22:10:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931005;
-        bh=d4SIohXQNvARrAc4/XY4cpPn0pLAAyDtVryElAjLMhM=;
+        s=default; t=1568931011;
+        bh=0HIquPwMCTW8gtw7EavUTVW8D815yiPZOCdg/GqAhlo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MZIh+lzHc42eraaFwnPZaup5o6oo6Vp1R+Wpz+MpuvXbV1Q7BDl821CLdt5v8F/U4
-         3FAizNkv13ToYYRlCeNcOsO8VEiyPuuAgHJ58yxW4ShtRqSRz7d6UIxydMQr1gUiPx
-         J+P7EBXoTLkU0h74Fh76nfBfviMVcQLdFIhcm6+k=
+        b=x2JQ54QWdqE9HJskQ0njHEEDHarKiH7XI27mRAS3LFQsR0d/SnyldMyZ4YFusxZWQ
+         f+LU5MRSbrleBZrDvR5vl8qZdtnoUx9goYh+chCUpi+nxnqrsr6rjhaWzNFV+h315R
+         eV4Cy72vbWOnn0Kh0EC+W4JAIGGYbSyx7uVKCKy0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org,
+        "Zephaniah E. Loss-Cutler-Hull" <zephaniah@gmail.com>,
+        Len Brown <len.brown@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 093/124] netfilter: nf_flow_table: clear skb tstamp before xmit
-Date:   Fri, 20 Sep 2019 00:03:01 +0200
-Message-Id: <20190919214822.436912552@linuxfoundation.org>
+Subject: [PATCH 5.2 095/124] tools/power x86_energy_perf_policy: Fix argument parsing
+Date:   Fri, 20 Sep 2019 00:03:03 +0200
+Message-Id: <20190919214822.511771154@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -60,49 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Zephaniah E. Loss-Cutler-Hull <zephaniah@gmail.com>
 
-[ Upstream commit de20900fbe1c4fd36de25a7a5a43223254ecf0d0 ]
+[ Upstream commit 03531482402a2bc4ab93cf6dde46833775e035e9 ]
 
-If 'fq' qdisc is used and a program has requested timestamps,
-skb->tstamp needs to be cleared, else fq will treat these as
-'transmit time'.
+The -w argument in x86_energy_perf_policy currently triggers an
+unconditional segfault.
 
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+This is because the argument string reads: "+a:c:dD:E:e:f:m:M:rt:u:vw" and
+yet the argument handler expects an argument.
+
+When parse_optarg_string is called with a null argument, we then proceed to
+crash in strncmp, not horribly friendly.
+
+The man page describes -w as taking an argument, the long form
+(--hwp-window) is correctly marked as taking a required argument, and the
+code expects it.
+
+As such, this patch simply marks the short form (-w) as requiring an
+argument.
+
+Signed-off-by: Zephaniah E. Loss-Cutler-Hull <zephaniah@gmail.com>
+Signed-off-by: Len Brown <len.brown@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_flow_table_ip.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nf_flow_table_ip.c b/net/netfilter/nf_flow_table_ip.c
-index d68c801dd614b..b9e7dd6e60ce2 100644
---- a/net/netfilter/nf_flow_table_ip.c
-+++ b/net/netfilter/nf_flow_table_ip.c
-@@ -228,7 +228,6 @@ static unsigned int nf_flow_xmit_xfrm(struct sk_buff *skb,
- {
- 	skb_orphan(skb);
- 	skb_dst_set_noref(skb, dst);
--	skb->tstamp = 0;
- 	dst_output(state->net, state->sk, skb);
- 	return NF_STOLEN;
- }
-@@ -284,6 +283,7 @@ nf_flow_offload_ip_hook(void *priv, struct sk_buff *skb,
- 	flow->timeout = (u32)jiffies + NF_FLOW_TIMEOUT;
- 	iph = ip_hdr(skb);
- 	ip_decrease_ttl(iph);
-+	skb->tstamp = 0;
+diff --git a/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c b/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
+index 7663abef51e96..3fe1eed900d41 100644
+--- a/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
++++ b/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
+@@ -545,7 +545,7 @@ void cmdline(int argc, char **argv)
  
- 	if (unlikely(dst_xfrm(&rt->dst))) {
- 		memset(skb->cb, 0, sizeof(struct inet_skb_parm));
-@@ -512,6 +512,7 @@ nf_flow_offload_ipv6_hook(void *priv, struct sk_buff *skb,
- 	flow->timeout = (u32)jiffies + NF_FLOW_TIMEOUT;
- 	ip6h = ipv6_hdr(skb);
- 	ip6h->hop_limit--;
-+	skb->tstamp = 0;
+ 	progname = argv[0];
  
- 	if (unlikely(dst_xfrm(&rt->dst))) {
- 		memset(skb->cb, 0, sizeof(struct inet6_skb_parm));
+-	while ((opt = getopt_long_only(argc, argv, "+a:c:dD:E:e:f:m:M:rt:u:vw",
++	while ((opt = getopt_long_only(argc, argv, "+a:c:dD:E:e:f:m:M:rt:u:vw:",
+ 				long_options, &option_index)) != -1) {
+ 		switch (opt) {
+ 		case 'a':
 -- 
 2.20.1
 
