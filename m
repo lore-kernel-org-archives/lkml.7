@@ -7,62 +7,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3BE2C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D37C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B283208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:06:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85FC0214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 14:06:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="f2Ajvc95"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="W4FhrPJA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389645AbfISOGj (ORCPT
+        id S2389771AbfISOGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 10:06:39 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:38029 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389439AbfISOGh (ORCPT
+        Thu, 19 Sep 2019 10:06:44 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:38021 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389045AbfISOGd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 10:06:37 -0400
-Received: by mail-lj1-f196.google.com with SMTP id y23so3741772ljn.5
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 07:06:34 -0700 (PDT)
+        Thu, 19 Sep 2019 10:06:33 -0400
+Received: by mail-lj1-f195.google.com with SMTP id y23so3741619ljn.5
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 07:06:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rasmusvillemoes.dk; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=/yVIRHWuN5NvCtSgoWOt0FQ2pzS304r/JIoa8grAoeg=;
-        b=f2Ajvc95IBsXh7QC0KZ/teCtaJOBbCEfy1jTDghOCpoMue299R9/PRIrxJa61AhHv2
-         FGuAHPZ/5qwEVRMCyZVGIzWcRRE51U7Y9ufetLTkOildedAbixwpSSWt8s3BpyF78wJk
-         BEp3etejaiM41Nb/o2kwQSHvyAgLC7MFtjhs4=
+        bh=k4SJ+eSfjSAP63ushly3GU0Efl4ebkKBMuWTSOkSqS8=;
+        b=W4FhrPJAR9Dqgs5qFA5Pl22WVgeXGbokdSlE6Xjl8ev+AwkvtlovQkmnKhocbnMFdS
+         81B7iYoNdsvMs2yQlsvxAdJGvvAKDR0FvjYPLiSIbpwUt9AMKu8kvddB2vIg68Gs3TZA
+         XspHxRzEPQhGFNCyXRy2eUNIWhGekZOWx5Sfw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=/yVIRHWuN5NvCtSgoWOt0FQ2pzS304r/JIoa8grAoeg=;
-        b=BEJMCnBOL6wbKhdZ05YQyAURncVUp0p8VgesDUSVG0NTC0kmeQUkEyzU/WrmCEFBY2
-         QxpfSLk3uRmEH27Ft50aZgFGX7GxNNEZGfPk/degVTX66h35CHgacDOKpu2H4pwKgEtf
-         NOH5ZV5PB2hIZxcO98e0U5M99+IUr18SsF0oIu9ZjnyyNVwfOwslSM6+++xtbkqG3zN/
-         +UkRm3+XDOt6P4ps3obaMKKYWThQLsS/oACAXMUhHJpJoiZ517Ta4jdDVaU1UNF0qsND
-         sTOPwPyFvSk2Njhj8V5w64+BjUkGG5Ud6p8jSybX4i5HoPVTKWCEPHJ5at9rPGyi57DS
-         2mkA==
-X-Gm-Message-State: APjAAAUA6lAEB0HZh3bETNj6zjXM0LeZT7VT0WNasP1c0eB9JaBA3f3r
-        BbPHvl/YQQaX5KMQnhLAFyYdjw==
-X-Google-Smtp-Source: APXvYqxNV7T4a+Lz/TAxhTojpZAjz21AOC3VAcsbmQjZSn1bKXyNDAPA+CiUO1gVMkRxzZv/TM5X0w==
-X-Received: by 2002:a2e:9854:: with SMTP id e20mr5681390ljj.72.1568901994159;
-        Thu, 19 Sep 2019 07:06:34 -0700 (PDT)
+        bh=k4SJ+eSfjSAP63ushly3GU0Efl4ebkKBMuWTSOkSqS8=;
+        b=UHoorSYByjIita2OBCwiWOUg1/EV/pcp5K9SxLYz835jVIQkW1n6CdyjyuVjU3cArI
+         JFSihOr2QT/tVwXtH6L/9Sw8Wyx3fik7mHFYxwcU3gjntGDdzIMCxtyLwwhOrFuTA+UF
+         Kl64DVLVgJS0rQCnaAJU3fn0hKb11XJXEKh1Htf1p+IdcAWxgXo4pL0SErfsPl30+bmD
+         B7NZi8y8FQzd/W+7q2mZLOKhWqcLwMOVD0emttr1kOJn/XOGXDY6jrTW9iv20BCZH/Cp
+         9Hq+5PKlOqiVdSQjM8sO3+nkyCNuxAN9erWqGyZLVtK5R+uI0QqCtjZv+MY3ttk6wy7F
+         tCDQ==
+X-Gm-Message-State: APjAAAXG2faME0rdGWv5fkO01QP4WpvL4D6/xmfJf/iyQ9uS4PdVqwIf
+        OF/XswcdlkRQZ+ofQJKKA4l9Lg==
+X-Google-Smtp-Source: APXvYqzlHJRhLqL82K2xKbtjAXAMpinhzWwpvMBA7qVfJ7tNQ26aw9X0BviaTA3hpMKKf3q8cAewtQ==
+X-Received: by 2002:a2e:934f:: with SMTP id m15mr5586940ljh.101.1568901991526;
+        Thu, 19 Sep 2019 07:06:31 -0700 (PDT)
 Received: from prevas-ravi.prevas.se ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id h3sm1687886ljf.12.2019.09.19.07.06.33
+        by smtp.gmail.com with ESMTPSA id h3sm1687886ljf.12.2019.09.19.07.06.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2019 07:06:33 -0700 (PDT)
+        Thu, 19 Sep 2019 07:06:31 -0700 (PDT)
 From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
 To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] lib/math: remove int_pow()
-Date:   Thu, 19 Sep 2019 16:06:20 +0200
-Message-Id: <20190919140620.32407-5-linux@rasmusvillemoes.dk>
+        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 3/5] backlight: pwm_bl: drop use of int_pow()
+Date:   Thu, 19 Sep 2019 16:06:18 +0200
+Message-Id: <20190919140620.32407-3-linux@rasmusvillemoes.dk>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190919140620.32407-1-linux@rasmusvillemoes.dk>
 References: <20190919140620.32407-1-linux@rasmusvillemoes.dk>
@@ -73,92 +75,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No users left.
+The scheduler uses a (currently private) fixed_power_int() in its load
+average computation for computing powers of numbers 0 < x < 1
+expressed as fixed-point numbers, which is also what we want here. But
+that requires the scale to be a power-of-2.
+
+We could (and a following patch will) change to use a power-of-2 scale,
+but for a fixed small exponent of 3, there's no advantage in using
+repeated squaring.
 
 Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
- Documentation/core-api/kernel-api.rst |  3 ---
- include/linux/kernel.h                |  1 -
- lib/math/Makefile                     |  2 +-
- lib/math/int_pow.c                    | 32 ---------------------------
- 4 files changed, 1 insertion(+), 37 deletions(-)
- delete mode 100644 lib/math/int_pow.c
+ drivers/video/backlight/pwm_bl.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/core-api/kernel-api.rst b/Documentation/core-api/kernel-api.rst
-index 08af5caf036d..5f9cf47581b3 100644
---- a/Documentation/core-api/kernel-api.rst
-+++ b/Documentation/core-api/kernel-api.rst
-@@ -144,9 +144,6 @@ Base 2 log and power Functions
- Integer power Functions
- -----------------------
+diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+index 9252d51f31b9..aee6839e024a 100644
+--- a/drivers/video/backlight/pwm_bl.c
++++ b/drivers/video/backlight/pwm_bl.c
+@@ -179,7 +179,8 @@ static u64 cie1931(unsigned int lightness, unsigned int scale)
+ 	if (lightness <= (8 * scale)) {
+ 		retval = DIV_ROUND_CLOSEST(lightness * 10, 9033);
+ 	} else {
+-		retval = int_pow((lightness + (16 * scale)) / 116, 3);
++		retval = (lightness + (16 * scale)) / 116;
++		retval *= retval * retval;
+ 		retval = DIV_ROUND_CLOSEST_ULL(retval, (scale * scale));
+ 	}
  
--.. kernel-doc:: lib/math/int_pow.c
--   :export:
--
- .. kernel-doc:: lib/math/int_sqrt.c
-    :export:
- 
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index 4fa360a13c1e..afe7c2cc81aa 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -487,7 +487,6 @@ extern int __kernel_text_address(unsigned long addr);
- extern int kernel_text_address(unsigned long addr);
- extern int func_ptr_is_kernel_text(void *ptr);
- 
--u64 int_pow(u64 base, unsigned int exp);
- unsigned long int_sqrt(unsigned long);
- 
- #if BITS_PER_LONG < 64
-diff --git a/lib/math/Makefile b/lib/math/Makefile
-index be6909e943bd..3e5db680a404 100644
---- a/lib/math/Makefile
-+++ b/lib/math/Makefile
-@@ -1,5 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0-only
--obj-y += div64.o gcd.o lcm.o int_pow.o int_sqrt.o reciprocal_div.o
-+obj-y += div64.o gcd.o lcm.o int_sqrt.o reciprocal_div.o
- 
- obj-$(CONFIG_CORDIC)		+= cordic.o
- obj-$(CONFIG_PRIME_NUMBERS)	+= prime_numbers.o
-diff --git a/lib/math/int_pow.c b/lib/math/int_pow.c
-deleted file mode 100644
-index 622fc1ab3c74..000000000000
---- a/lib/math/int_pow.c
-+++ /dev/null
-@@ -1,32 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/*
-- * An integer based power function
-- *
-- * Derived from drivers/video/backlight/pwm_bl.c
-- */
--
--#include <linux/export.h>
--#include <linux/kernel.h>
--#include <linux/types.h>
--
--/**
-- * int_pow - computes the exponentiation of the given base and exponent
-- * @base: base which will be raised to the given power
-- * @exp: power to be raised to
-- *
-- * Computes: pow(base, exp), i.e. @base raised to the @exp power
-- */
--u64 int_pow(u64 base, unsigned int exp)
--{
--	u64 result = 1;
--
--	while (exp) {
--		if (exp & 1)
--			result *= base;
--		exp >>= 1;
--		base *= base;
--	}
--
--	return result;
--}
--EXPORT_SYMBOL_GPL(int_pow);
 -- 
 2.20.1
 
