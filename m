@@ -2,105 +2,230 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 722F5C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB2E9C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42D8B20665
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:19:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="obLTwYgu"
+	by mail.kernel.org (Postfix) with ESMTP id B00AD20665
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:19:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391182AbfISPTZ (ORCPT
+        id S2391200AbfISPTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 11:19:25 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35311 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388706AbfISPTZ (ORCPT
+        Thu, 19 Sep 2019 11:19:44 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:42347 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391183AbfISPTn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 11:19:25 -0400
-Received: by mail-pl1-f194.google.com with SMTP id y10so458619plp.2
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 08:19:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HIx6RSMcBx+AkpCbzjzq7BE2iXvqoNefszXIBP0DlaU=;
-        b=obLTwYgu2ct6C15EVBrPLKx2xA1kewtCk+U74Njt7jA+dfkH2VFSEpjuc1dx+MsPWx
-         o6kLi2E0YBHvu0lQrHy1eHY6ZXjvmjpKStHgK16A5b9tx7jM9509QmrevE1y/rcX1hoQ
-         OZ8YTj/bDtP7rbvwtycofFZ6nd1E5suzksPx1StXaH3hwH2GTn8ZEhfYlXl0xyf1YYE0
-         AO5oKPuXXA3D2nDB8T4qG9ElDsCItYCUtNjkWGZSQ+E9GWH5JYkDJ6UCKY/cqb65JdmY
-         r4hBXoIqEV8HwCBJfOmMkBA5jTjoEc0TWMpy+mLOIL/h26k5uGiJfasSqhIUEk2rz+79
-         tNNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HIx6RSMcBx+AkpCbzjzq7BE2iXvqoNefszXIBP0DlaU=;
-        b=QespbRnd//fnfnwFhwjAS73wH8rm5Y5Vmqn/G1oNApaNIc4E7ci1pVGArD/YQV3EUG
-         WF2YVXPHdAkfOgiSY+XylhT28q4rVRvtKsduTowdBqqT+Rwz1klAIzzWYI2J06ut8+si
-         7AFv0zuimZML1ZrvzZlbAsamlh0g4m2f4nLAP2fFmXsLJ1GQupLPX5agOn3HGFqC2xgO
-         OQE//ngLhYLWey6lzCCDZ2+aAN7R+kP9pG/AB696EHlNJUpZXrGlELTa9sG1MbuVw3+5
-         72JrkbQayDd1loAXf5DQQsYwoA9NFlBH7T0RZ17ndK/DICXkrBcNDjOZv/ppKHurh6sX
-         A73g==
-X-Gm-Message-State: APjAAAWsQ3Q7mYLohNu06xSr57uqjZ3gTsRJL6nfawnUd0a6MJCg8c5R
-        h1RCA5TAXOh6M1B5tC2xVAvx7G2lpKpdsjbnFmmI+g==
-X-Google-Smtp-Source: APXvYqyiDWT+CRfk1TTP/9assNZVatUd4spJEhVcFXVa6XgsJHQVrDSX/rZS90PdEOTkSyC/w0c3pcRCV31KmmTzUPA=
-X-Received: by 2002:a17:902:a50a:: with SMTP id s10mr10346338plq.336.1568906363888;
- Thu, 19 Sep 2019 08:19:23 -0700 (PDT)
+        Thu, 19 Sep 2019 11:19:43 -0400
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <jlu@pengutronix.de>)
+        id 1iAyDd-0003JN-7Q; Thu, 19 Sep 2019 17:19:41 +0200
+Received: from localhost ([127.0.0.1])
+        by ptx.hi.pengutronix.de with esmtp (Exim 4.89)
+        (envelope-from <jlu@pengutronix.de>)
+        id 1iAyDc-00018D-7s; Thu, 19 Sep 2019 17:19:40 +0200
+Message-ID: <ad87f175496358adb825240f1de609318ed8204c.camel@pengutronix.de>
+Subject: Re: [PATCH v4 2/3] dmaengine: imx-sdma: fix dma freezes
+From:   Jan =?ISO-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>
+To:     Philipp Puschmann <philipp.puschmann@emlix.com>,
+        linux-kernel@vger.kernel.org
+Cc:     fugang.duan@nxp.com, festevam@gmail.com, s.hauer@pengutronix.de,
+        vkoul@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de,
+        dan.j.williams@intel.com, yibin.gong@nxp.com, shawnguo@kernel.org,
+        dmaengine@vger.kernel.or, linux-arm-kernel@lists.infradead.org,
+        l.stach@pengutronix.de
+Date:   Thu, 19 Sep 2019 17:19:39 +0200
+In-Reply-To: <20190919142942.12469-3-philipp.puschmann@emlix.com>
+References: <20190919142942.12469-1-philipp.puschmann@emlix.com>
+         <20190919142942.12469-3-philipp.puschmann@emlix.com>
+Content-Type: multipart/mixed; boundary="=-sqfX9QZyaTnBJ7ZxOgmw"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-References: <00000000000001595b0592c41731@google.com> <Pine.LNX.4.44L0.1909181454300.1507-100000@iolanthe.rowland.org>
-In-Reply-To: <Pine.LNX.4.44L0.1909181454300.1507-100000@iolanthe.rowland.org>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Thu, 19 Sep 2019 17:19:12 +0200
-Message-ID: <CAAeHK+xcJjE_+U7tTs76CkV1v95r8J+eKXhMj00iyrHA2cxGmA@mail.gmail.com>
-Subject: Re: general protection fault in usb_set_interface
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     syzbot <syzbot+7fa38a608b1075dfd634@syzkaller.appspotmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kai Heng Feng <kai.heng.feng@canonical.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>, mans@mansr.com,
-        Oliver Neukum <oneukum@suse.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: jlu@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 8:57 PM Alan Stern <stern@rowland.harvard.edu> wrote:
->
-> On Tue, 17 Sep 2019, syzbot wrote:
->
-> > Hello,
-> >
-> > syzbot has tested the proposed patch but the reproducer still triggered
-> > crash:
-> > WARNING in sysfs_remove_group
-> >
-> > ------------[ cut here ]------------
-> > sysfs group 'power' not found for kobject 'radio0'
->
-> Andrey:
->
-> Is there any way to tell syzbot to run the reproducer but with only one
-> device instance (that is, only one dummy-hcd bus)?
->
-> Or can you a new, modified reproducer that will do this?
 
-AFAIU there two bugs here and you've fixed the first one, but the
-second one gets triggered.
+--=-sqfX9QZyaTnBJ7ZxOgmw
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-I think the second one got reported separately here:
+Hi Philipp,
 
-https://syzkaller.appspot.com/bug?extid=5b9bba68c833c84a1135
+see below...
 
-That one has a reproducer with a single dummy-hcd, so you can try
-running your debugging patch against that report.
+On Thu, 2019-09-19 at 16:29 +0200, Philipp Puschmann wrote:
+> For some years and since many kernel versions there are reports that the
+> RX UART SDMA channel stops working at some point. The workaround was to
+> disable DMA for RX. This commit tries to fix the problem itself.
+> 
+> Due to its license i wasn't able to debug the sdma script itself but it
+> somehow leads to blocking the scheduling of the channel script when a
+> running sdma script does not find any free descriptor in the ring to put
+> its data into.
+> 
+> If we detect such a potential case we manually restart the channel.
+> 
+> As sdmac->desc is constant we can move desc out of the loop.
+> 
+> Fixes: 1ec1e82f2510 ("dmaengine: Add Freescale i.MX SDMA support")
+> Signed-off-by: Philipp Puschmann <philipp.puschmann@emlix.com>
+> Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+> ---
+> 
+> Changelog v4:
+>  - fixed the fixes tag
+>  
+> Changelog v3:
+>  - use correct dma_wmb() instead of dma_wb()
+>  - add fixes tag
+>  
+> Changelog v2:
+>  - clarify comment and commit description
+> 
+>  drivers/dma/imx-sdma.c | 21 +++++++++++++++++----
+>  1 file changed, 17 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+> index e029a2443cfc..a32b5962630e 100644
+> --- a/drivers/dma/imx-sdma.c
+> +++ b/drivers/dma/imx-sdma.c
+> @@ -775,21 +775,23 @@ static void sdma_start_desc(struct sdma_channel *sdmac)
+>  static void sdma_update_channel_loop(struct sdma_channel *sdmac)
+>  {
+>  	struct sdma_buffer_descriptor *bd;
+> -	int error = 0;
+> -	enum dma_status	old_status = sdmac->status;
+> +	struct sdma_desc *desc = sdmac->desc;
+> +	int error = 0, cnt = 0;
+> +	enum dma_status old_status = sdmac->status;
+>  
+>  	/*
+>  	 * loop mode. Iterate over descriptors, re-setup them and
+>  	 * call callback function.
+>  	 */
+> -	while (sdmac->desc) {
+> -		struct sdma_desc *desc = sdmac->desc;
+> +	while (desc) {
+>  
+>  		bd = &desc->bd[desc->buf_tail];
+>  
+>  		if (bd->mode.status & BD_DONE)
+>  			break;
+>  
+> +		cnt++;
+> +
+>  		if (bd->mode.status & BD_RROR) {
+>  			bd->mode.status &= ~BD_RROR;
+>  			sdmac->status = DMA_ERROR;
+> @@ -822,6 +824,17 @@ static void sdma_update_channel_loop(struct sdma_channel *sdmac)
+>  		if (error)
+>  			sdmac->status = old_status;
+>  	}
+> +
+> +	/* In some situations it may happen that the sdma does not found any
+                                                          ^ hasn't
+> +	 * usable descriptor in the ring to put data into. The channel is
+> +	 * stopped then. While there is no specific error condition we can
+> +	 * check for, a necessary condition is that all available buffers for
+> +	 * the current channel have been written to by the sdma script. In
+> +	 * this case and after we have made the buffers available again,
+> +	 * we restart the channel.
+> +	 */
 
-I'll see if I can run it manually in the meantime.
+Are you sure we can't miss cases where we only had to make some buffers
+available again, but the SDMA already ran out of buffers before?
+
+A while ago, I was debugging a similar issue triggered by receiving
+data with a wrong baud rate, which leads to all descriptors being
+marked with the error flag very quickly (and the SDMA stalling).
+I noticed that you can check if the channel is still running by
+checking the SDMA_H_STATSTOP register & BIT(sdmac->channel).
+
+I also added a flag for the sdmac->flags field to allow stopping the
+channel from the callback (otherwise it would enable the channel
+again).
+
+Attached is my current version of that patch for reference.
+
+> +	if (cnt >= desc->num_bd)
+> +		sdma_enable_channel(sdmac->sdma, sdmac->channel);
+>  }
+>  
+>  static void mxc_sdma_handle_channel_normal(struct sdma_channel *data)
+
+--=-sqfX9QZyaTnBJ7ZxOgmw
+Content-Disposition: attachment;
+	filename*0=0001-dmaengine-imx-sdma-restart-stopped-cyclic-transfers.patc;
+	filename*1=h
+Content-Type: text/x-patch;
+	name="0001-dmaengine-imx-sdma-restart-stopped-cyclic-transfers.patch";
+	charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+RnJvbSA3M2Q3ZGNmODRkYWM1NTEyYzUwNDQ4ZmY2YWRmMDg0ZjFhOWJkNmY5IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBKYW4gTHVlYmJlIDxqbHVAcGVuZ3V0cm9uaXguZGU+CkRhdGU6
+IFR1ZSwgMTYgQXByIDIwMTkgMTg6MzU6MDQgKzAyMDAKU3ViamVjdDogW1BBVENIXSBkbWFlbmdp
+bmU6IGlteC1zZG1hOiByZXN0YXJ0IHN0b3BwZWQgY3ljbGljIHRyYW5zZmVycwoKRm9yIGN5Y2xp
+YyBETUEgdHJhbnNmZXJzLCB3ZSBoYXZlIGF0IGxlYXN0IHR3byBjYXNlcyB3aGVyZSB3ZSBjYW4g
+cnVuCm91dCBkZXNjcmlwdG9ycyBhdmFpbGFibGUgdG8gdGhlIGVuZ2luZToKLSBJbnRlcnJ1cHMg
+YXJlIGRpc2FibGVkIGZvciB0b28gbG9uZyBhbmQgYWxsIGJ1ZmZlcnMgYSBmaWxsZWQgd2l0aAog
+IGRhdGEuCi0gRE1BIGVycm9ycyAoc3VjaCBhcyBnZW5lcmF0ZWQgYnkgYmF1ZCByYXRlIG1pc21h
+dGNoIHdpdGggaW14LXVhcnQpIHVzZQogIHVwIGFsbCBkZXNjcmlwdG9ycyBiZWZvcmUgd2UgY2Fu
+IHJlYWN0LgoKSW4gdGhpcyBjYXNlLCBTRE1BIHN0b3BzIHRoZSBjaGFubmVsIGFuZCBubyBmdXJ0
+aGVyIHRyYW5zZmVycyBhcmUgZG9uZQp1bnRpbCB0aGUgcmVzcGVjdGl2ZSBjaGFubmVsIGlzIGRp
+c2FibGVkIGFuZCByZS1lbmFibGVkLgoKVGhlIGJlc3Qgd2UgY2FuIGRvIGluIHRoaXMgY2FzZSBp
+cyB0byBjaGVjayBpZiB0aGUgdHJhbnNmZXIgc2hvdWxkIHN0aWxsCmJlIGVuYWJsZWQgKGl0IGNv
+dWxkIGhhdmUgYmVlbiBkaXNhYmxlZCBkdXJpbmcKc2RtYV91cGRhdGVfY2hhbm5lbF9sb29wKSwg
+YnV0IHRoZSBTRE1BIGNoYW5uZWwgaXMgc3RvcHBlZC4gSW4gdGhpcwpjYXNlLCB3ZSByZS1zdGFy
+dCB0aGUgY2hhbm5lbC4KClRvIGF2b2lkIHJhY2luZyB3aXRoIGNoYW5nZXMgdG8gdGhlIHNkbWFj
+LT5zdGF0dXMgZmllbGQgKHdoaWNoIGlzCndyaXR0ZW4gYW5kIHJlc3RvcmVkIGluIHNkbWFfdXBk
+YXRlX2NoYW5uZWxfbG9vcCksIHdlIGFkZCBhIG5ldyBmbGFnCihJTVhfRE1BX0FDVElWRSkgdG8g
+aW5kaWNhdGUgdGhhdCB0aGUgY2hhbm5lbCBpcyBjdXJyZW50bHkgYWN0aXZlLgoKU2lnbmVkLW9m
+Zi1ieTogSmFuIEx1ZWJiZSA8amx1QHBlbmd1dHJvbml4LmRlPgotLS0KIGRyaXZlcnMvZG1hL2lt
+eC1zZG1hLmMgfCAxMyArKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgMTMgaW5zZXJ0aW9u
+cygrKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZG1hL2lteC1zZG1hLmMgYi9kcml2ZXJzL2RtYS9p
+bXgtc2RtYS5jCmluZGV4IDU4ZmE4NTIwODkyYi4uODc3NDI1OWFmMjRjIDEwMDY0NAotLS0gYS9k
+cml2ZXJzL2RtYS9pbXgtc2RtYS5jCisrKyBiL2RyaXZlcnMvZG1hL2lteC1zZG1hLmMKQEAgLTM4
+Myw2ICszODMsNyBAQCBzdHJ1Y3Qgc2RtYV9jaGFubmVsIHsKIH07CiAKICNkZWZpbmUgSU1YX0RN
+QV9TR19MT09QCQlCSVQoMCkKKyNkZWZpbmUgSU1YX0RNQV9BQ1RJVkUJCUJJVCgxKQogCiAjZGVm
+aW5lIE1BWF9ETUFfQ0hBTk5FTFMgMzIKICNkZWZpbmUgTVhDX1NETUFfREVGQVVMVF9QUklPUklU
+WSAxCkBAIC02NTgsNiArNjU5LDkgQEAgc3RhdGljIGludCBzZG1hX2NvbmZpZ19vd25lcnNoaXAo
+c3RydWN0IHNkbWFfY2hhbm5lbCAqc2RtYWMsCiAKIHN0YXRpYyB2b2lkIHNkbWFfZW5hYmxlX2No
+YW5uZWwoc3RydWN0IHNkbWFfZW5naW5lICpzZG1hLCBpbnQgY2hhbm5lbCkKIHsKKwlzdHJ1Y3Qg
+c2RtYV9jaGFubmVsICpzZG1hYyA9ICZzZG1hLT5jaGFubmVsW2NoYW5uZWxdOworCisJc2RtYWMt
+PmZsYWdzIHw9IElNWF9ETUFfQUNUSVZFOwogCXdyaXRlbChCSVQoY2hhbm5lbCksIHNkbWEtPnJl
+Z3MgKyBTRE1BX0hfU1RBUlQpOwogfQogCkBAIC03NzQsNiArNzc4LDcgQEAgc3RhdGljIHZvaWQg
+c2RtYV9zdGFydF9kZXNjKHN0cnVjdCBzZG1hX2NoYW5uZWwgKnNkbWFjKQogCiBzdGF0aWMgdm9p
+ZCBzZG1hX3VwZGF0ZV9jaGFubmVsX2xvb3Aoc3RydWN0IHNkbWFfY2hhbm5lbCAqc2RtYWMpCiB7
+CisJc3RydWN0IHNkbWFfZW5naW5lICpzZG1hID0gc2RtYWMtPnNkbWE7CiAJc3RydWN0IHNkbWFf
+YnVmZmVyX2Rlc2NyaXB0b3IgKmJkOwogCWludCBlcnJvciA9IDA7CiAJZW51bSBkbWFfc3RhdHVz
+CW9sZF9zdGF0dXMgPSBzZG1hYy0+c3RhdHVzOwpAQCAtODIwLDYgKzgyNSwxMyBAQCBzdGF0aWMg
+dm9pZCBzZG1hX3VwZGF0ZV9jaGFubmVsX2xvb3Aoc3RydWN0IHNkbWFfY2hhbm5lbCAqc2RtYWMp
+CiAJCWlmIChlcnJvcikKIAkJCXNkbWFjLT5zdGF0dXMgPSBvbGRfc3RhdHVzOwogCX0KKworCWlm
+ICgoc2RtYWMtPmZsYWdzICYgSU1YX0RNQV9BQ1RJVkUpICYmCisJICAgICEocmVhZGxfcmVsYXhl
+ZChzZG1hLT5yZWdzICsgU0RNQV9IX1NUQVRTVE9QKSAmIEJJVChzZG1hYy0+Y2hhbm5lbCkpKSB7
+CisJCWRldl9lcnJfcmF0ZWxpbWl0ZWQoc2RtYS0+ZGV2LCAiU0RNQSBjaGFubmVsICVkOiBjeWNs
+aWMgdHJhbnNmZXIgZGlzYWJsZWQgYnkgSFcsIHJlZW5hYmxpbmdcbiIsCisJCQkJc2RtYWMtPmNo
+YW5uZWwpOworCQl3cml0ZWwoQklUKHNkbWFjLT5jaGFubmVsKSwgc2RtYS0+cmVncyArIFNETUFf
+SF9TVEFSVCk7CisJfTsKIH0KIAogc3RhdGljIHZvaWQgbXhjX3NkbWFfaGFuZGxlX2NoYW5uZWxf
+bm9ybWFsKHN0cnVjdCBzZG1hX2NoYW5uZWwgKmRhdGEpCkBAIC0xMDQ5LDYgKzEwNjEsNyBAQCBz
+dGF0aWMgaW50IHNkbWFfZGlzYWJsZV9jaGFubmVsKHN0cnVjdCBkbWFfY2hhbiAqY2hhbikKIAlz
+dHJ1Y3Qgc2RtYV9lbmdpbmUgKnNkbWEgPSBzZG1hYy0+c2RtYTsKIAlpbnQgY2hhbm5lbCA9IHNk
+bWFjLT5jaGFubmVsOwogCisJc2RtYWMtPmZsYWdzICY9IH5JTVhfRE1BX0FDVElWRTsKIAl3cml0
+ZWxfcmVsYXhlZChCSVQoY2hhbm5lbCksIHNkbWEtPnJlZ3MgKyBTRE1BX0hfU1RBVFNUT1ApOwog
+CXNkbWFjLT5zdGF0dXMgPSBETUFfRVJST1I7CiAKLS0gCjIuMjMuMAoK
+
+
+--=-sqfX9QZyaTnBJ7ZxOgmw--
+
