@@ -2,118 +2,134 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E6BC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 07:24:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7749AC4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 07:26:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34D6421927
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 07:24:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 423A921928
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 07:26:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="g1bytpOZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="CtQFocnZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388392AbfISHYb (ORCPT
+        id S1732032AbfISH0p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 03:24:31 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:33808 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731332AbfISHYa (ORCPT
+        Thu, 19 Sep 2019 03:26:45 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46011 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731873AbfISH0p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 03:24:30 -0400
+        Thu, 19 Sep 2019 03:26:45 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 4so1340000pgm.12
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 00:26:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1568877870; x=1600413870;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=cDQXeztJkbOYpb7Pna6W7vbY9Ot8FUoLg5+7af6dXbA=;
-  b=g1bytpOZZL7etmGnh/hBhv3Ex3J9YCVfk0oQCHnicKvP9bxd9FrA6tbS
-   u1yN6f76FRyYjy9fZMbxkZ1TkwC/9PJTPhV23JEa36OcKrVXs0rzySHS0
-   pmghMsDvC4x5I4EzO7nUzU2UufjHQRmfO7c76lNsO+EjRN05pCUmkFQG+
-   g=;
-X-IronPort-AV: E=Sophos;i="5.64,522,1559520000"; 
-   d="scan'208";a="751550593"
-Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2c-168cbb73.us-west-2.amazon.com) ([10.124.125.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 19 Sep 2019 07:24:27 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2c-168cbb73.us-west-2.amazon.com (Postfix) with ESMTPS id 4F66CA208D;
-        Thu, 19 Sep 2019 07:24:27 +0000 (UTC)
-Received: from EX13D13UWB001.ant.amazon.com (10.43.161.156) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 19 Sep 2019 07:24:27 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (10.43.162.135) by
- EX13D13UWB001.ant.amazon.com (10.43.161.156) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 19 Sep 2019 07:24:26 +0000
-Received: from [10.107.3.20] (10.107.3.20) by mail-relay.amazon.com
- (10.43.162.232) with Microsoft SMTP Server (TLS) id 15.0.1367.3 via Frontend
- Transport; Thu, 19 Sep 2019 07:24:23 +0000
-Subject: Re: [PATCH v2 1/2] edac: Add an API for edac device to report for
- multiple errors
-To:     Robert Richter <rrichter@marvell.com>
-CC:     "bp@alien8.de" <bp@alien8.de>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dwmw@amazon.co.uk" <dwmw@amazon.co.uk>,
-        "benh@amazon.com" <benh@amazon.com>,
-        "ronenk@amazon.com" <ronenk@amazon.com>,
-        "talel@amazon.com" <talel@amazon.com>,
-        "jonnyc@amazon.com" <jonnyc@amazon.com>,
-        "hanochu@amazon.com" <hanochu@amazon.com>
-References: <20190912145305.21008-1-hhhawa@amazon.com>
- <20190912145305.21008-2-hhhawa@amazon.com>
- <20190919063334.x2rfk33swyjqur3q@rric.localdomain>
-From:   "Hawa, Hanna" <hhhawa@amazon.com>
-Message-ID: <722df1dd-b91b-bf65-b398-3e3d6ab3a59b@amazon.com>
-Date:   Thu, 19 Sep 2019 10:24:21 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20190919063334.x2rfk33swyjqur3q@rric.localdomain>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=LT2z44LmrD8QiD0ZavUH6kqFzDYzxRxS7Yx8XNbtmgg=;
+        b=CtQFocnZL4WmYuwxWCYhyEntS5rlt+d1KJfZ+HqgKSog1hBrz8eBhoC7C/vROml3Oh
+         AS++a3QV9CsqrBUzgONj0CPB5SzjdH18bMPKvGgPA/TopigokdBDKHJTdr2MO1vdwu9A
+         oyCWz79UboRAvyHMV8QE2A7lSeDLGuy7FrLbe9azF3v/ppn5HSRegEli0MrxXI71FkLn
+         7yfJlz4wFoUsQnY8gyFCjw+j4+J/lNhR4t6muGEMsg+gZJDjn/b2iBzpZqO4xYbYZDtE
+         6QkI5t16FOK6ssoLnkapKTHBxwKZrINNCZ9xNk6K4eQVuS85UDsRcxDa4Ln//yQ10cn8
+         PDNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=LT2z44LmrD8QiD0ZavUH6kqFzDYzxRxS7Yx8XNbtmgg=;
+        b=WaeP/uqAfG+fMXUCkKjSWOmiFnMfoAsO1asTHhkLnn1Uq/LlBQNW2PpYEb0q0L9GcT
+         2I1Zc6nG0mgX79FQuqo0FKoDMf9YneJSCUJarXd1QIOO8Kx4sfLZa3wzl+fG24YNj/hP
+         MU8QUJFEULqdu2MQUo3a+q67vd99uoA5UC+Om8rNgeEmdq3kKZ7uql++d417WoNcbcWg
+         v3AjfUxfjksUGg0DSbi2RnuVZwIoG+EXW7N23AQSj/EoOj8Pp00+hYlK4Tsw7oucdZ/0
+         ObkS4TN7ZAuRIZow4PVLwp7yk8IxNlKARUsr/8sxX8lCPR9OfrK9ftaoaeHKjqpTohA8
+         eaPQ==
+X-Gm-Message-State: APjAAAUbUgYV7hFvzrhIZEu9Mr4/YaQd1GABjD3RqYcDHu28IQzht05b
+        BKSftyaQey9vnlMXvC4wLsKYog==
+X-Google-Smtp-Source: APXvYqzj/tUGOJg5wnHc5YqepfesJlG4rD39ze0qs4Fw4GBM+v3Y4zCzaZ44ydGQGaexDNA219KQ3A==
+X-Received: by 2002:a63:3c46:: with SMTP id i6mr7623466pgn.18.1568878004335;
+        Thu, 19 Sep 2019 00:26:44 -0700 (PDT)
+Received: from localhost.localdomain (36-228-113-219.dynamic-ip.hinet.net. [36.228.113.219])
+        by smtp.gmail.com with ESMTPSA id b2sm10453620pfd.81.2019.09.19.00.26.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Sep 2019 00:26:43 -0700 (PDT)
+From:   Green Wan <green.wan@sifive.com>
+Cc:     linux-hackers@sifive.com, Green Wan <green.wan@sifive.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] dmaengine: sf-pdma: Add platform dma driver
+Date:   Thu, 19 Sep 2019 15:26:03 +0800
+Message-Id: <20190919072634.1885-1-green.wan@sifive.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add PDMA driver support for SiFive HiFive Unleashed RevA00 board. Mainly follows
+DMAengine controller doc[1] to implement and take other DMA drivers as reference.
+Such as
 
+  - drivers/dma/fsl-edma.c
+  - drivers/dma/dw-edma/
+  - drivers/dma/pxa-dma.c
 
-On 9/19/2019 9:33 AM, Robert Richter wrote:
-> On 12.09.19 15:53:04, Hanna Hawa wrote:
->> Add an API for EDAC device to report multiple errors with same type.
->>
->> Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
->> ---
->>   drivers/edac/edac_device.c | 91 ++++++++++++++++++++++++++++++++++++++
->>   drivers/edac/edac_device.h | 40 +++++++++++++++++
->>   2 files changed, 131 insertions(+)
->>
->> diff --git a/drivers/edac/edac_device.c b/drivers/edac/edac_device.c
->> index 65cf2b9355c4..78ac44103acc 100644
->> --- a/drivers/edac/edac_device.c
->> +++ b/drivers/edac/edac_device.c
->> @@ -643,3 +643,94 @@ void edac_device_handle_ue(struct edac_device_ctl_info *edac_dev,
->>   			block ? block->name : "N/A", msg);
->>   }
->>   EXPORT_SYMBOL_GPL(edac_device_handle_ue);
->> +
->> +void __edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
->> +			     unsigned int count, int inst_nr, int block_nr,
->> +			     const char *msg)
->> +{
-> 
-> Please do not add a copy here, instead modify the existing function
-> and share the code with both, old and new functions.
+Using DMA test client[2] to test. Detailed datasheet is doc[3]. Driver supports:
 
-Will be fixed.
+ - 4 physical DMA channels, share same DONE and error interrupt handler. 
+ - Support MEM_TO_MEM
+ - Tested by DMA test client
+ - patches include DT Bindgins document and dts for fu450-c000 SoC. Separate dts
+   patch for easier review and apply to different branch or SoC platform.
+ - retry 1 time if DMA error occurs.
 
-> 
-> Thanks,
-> 
-> -Robert
-> 
+[Reference Doc]
+ [1] ./Documentation/driver-api/dmaengine/provider.rst
+ [2] ./Documentation/driver-api/dmaengine/dmatest.rst
+ [3] https://static.dev.sifive.com/FU540-C000-v1.0.pdf 
+
+[Simple steps to test of DMA Test client]
+ $ echo 1 > /sys/module/dmatest/parameters/iterations
+ $ echo dma0chan0 > /sys/module/dmatest/parameters/channel
+ $ echo dma0chan1 > /sys/module/dmatest/parameters/channel
+ $ echo dma0chan2 > /sys/module/dmatest/parameters/channel
+ $ echo dma0chan3 > /sys/module/dmatest/parameters/channel
+ $ echo 1 > /sys/module/dmatest/parameters/run
+
+Green Wan (3):
+  dt-bindings: dmaengine: sf-pdma: add bindins for SiFive PDMA
+  riscv: dts: add support for PDMA device of HiFive Unleashed Rev A00
+  dmaengine: sf-pdma: add platform DMA support for HiFive Unleashed A00
+
+ .../bindings/dma/sifive,fu540-c000-pdma.yaml  |  63 ++
+ MAINTAINERS                                   |   6 +
+ arch/riscv/boot/dts/sifive/fu540-c000.dtsi    |   7 +
+ drivers/dma/Kconfig                           |   2 +
+ drivers/dma/Makefile                          |   1 +
+ drivers/dma/sf-pdma/Kconfig                   |   6 +
+ drivers/dma/sf-pdma/Makefile                  |   1 +
+ drivers/dma/sf-pdma/sf-pdma.c                 | 623 ++++++++++++++++++
+ drivers/dma/sf-pdma/sf-pdma.h                 | 124 ++++
+ 9 files changed, 833 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
+ create mode 100644 drivers/dma/sf-pdma/Kconfig
+ create mode 100644 drivers/dma/sf-pdma/Makefile
+ create mode 100644 drivers/dma/sf-pdma/sf-pdma.c
+ create mode 100644 drivers/dma/sf-pdma/sf-pdma.h
+
+-- 
+2.17.1
+
