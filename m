@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2D8C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79CA3C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:20:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17B66217D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:20:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42C6E217D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:20:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931642;
-	bh=AHZGMLGH7p3cXTEIIRUUmKB1ISTKB3Aln3YLCJhurA8=;
+	s=default; t=1568931648;
+	bh=tzPSHXoVYrM17REt73DsfUFl6A91aQSGj8oWbHWsNXM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SdMkaZVld5FCsJDLo5bsJUkCWm0M0xm20fogzpB8ChVyhv9zsQYGXqZ/N/N9mRjgE
-	 0taI4vbdwKSy2EzJZoMcr17pLNx3TA5rW/MkxpHur+K++Dk+TFTFYgwHv6L4T1KynX
-	 KWRmdEC6smBTb9Y9IWJ4W787WtysVl4pa/jnU0t0=
+	b=YvIfWPWb5LI2MsWr0x1OJwwyOdM1hS1pnm6Z5A+8KGNKNrkJIKKnEvaaXISbNb6IR
+	 092uxpxEu8U0y0y7I44R7P9PfMfrqzFPbf7s88SePhvxR4U50hsnGxHeCM16ucm7S2
+	 CR7GolM2Dcjxa+A/lJRQQoUJafN0JbNxJLmGjz9I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733243AbfISWUk (ORCPT
+        id S2394037AbfISWUr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:20:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34678 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:20:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733201AbfISWUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:20:35 -0400
+        id S1733248AbfISWUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:20:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0261A21907;
-        Thu, 19 Sep 2019 22:20:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C47A20678;
+        Thu, 19 Sep 2019 22:20:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931635;
-        bh=AHZGMLGH7p3cXTEIIRUUmKB1ISTKB3Aln3YLCJhurA8=;
+        s=default; t=1568931640;
+        bh=tzPSHXoVYrM17REt73DsfUFl6A91aQSGj8oWbHWsNXM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Db50uBLh5s6Q57MAY7PA/r9vCjBDGPg0fufedSnhoYAF+S8JEU9I3XDx+jL+fgDcV
-         LFi4fuZYywd+c/wdi+9NR1qCc+RgcW43esHPTNeFB3kQ0Ra3CPsDMkJ6EyNq8ebURf
-         qiWm/60rTsby3v8F2qSfb0NpErwvLffya17jXTa0=
+        b=zZC7ADbK1fQxvRa/2bntUVAwuuXmxIzvCCws4WM7GNsmNbCvpNC4G8IE2vQSS8M86
+         hBFNekZZI3F9noZ2Lp4I00aOwqZNaOeKn9xfHtOPUsmh6v8rZs/I2m2gzlfbj9rfPO
+         tM7sJwDz259h12qVUP/VNw+/kHaT7dDapjSJ4+AA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Stancek <jstancek@redhat.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Steve French <stfrench@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 58/74] NFSv2: Fix write regression
-Date:   Fri, 20 Sep 2019 00:04:11 +0200
-Message-Id: <20190919214810.292739132@linuxfoundation.org>
+Subject: [PATCH 4.9 60/74] cifs: Use kzfree() to zero out the password
+Date:   Fri, 20 Sep 2019 00:04:13 +0200
+Message-Id: <20190919214810.410180508@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214800.519074117@linuxfoundation.org>
 References: <20190919214800.519074117@linuxfoundation.org>
@@ -61,38 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit d33d4beb522987d1c305c12500796f9be3687dee ]
+[ Upstream commit 478228e57f81f6cb60798d54fc02a74ea7dd267e ]
 
-Ensure we update the write result count on success, since the
-RPC call itself does not do so.
+It's safer to zero out the password so that it can never be disclosed.
 
-Reported-by: Jan Stancek <jstancek@redhat.com>
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Tested-by: Jan Stancek <jstancek@redhat.com>
+Fixes: 0c219f5799c7 ("cifs: set domainName when a domain-key is used in multiuser")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/proc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/cifs/connect.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfs/proc.c b/fs/nfs/proc.c
-index f3e8bcbd29a09..06e72229be123 100644
---- a/fs/nfs/proc.c
-+++ b/fs/nfs/proc.c
-@@ -610,8 +610,10 @@ static int nfs_proc_pgio_rpc_prepare(struct rpc_task *task,
- 
- static int nfs_write_done(struct rpc_task *task, struct nfs_pgio_header *hdr)
- {
--	if (task->tk_status >= 0)
-+	if (task->tk_status >= 0) {
-+		hdr->res.count = hdr->args.count;
- 		nfs_writeback_update_inode(hdr);
-+	}
- 	return 0;
- }
- 
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index 2a199f4b663bf..e43ba6db2bdd6 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -2567,7 +2567,7 @@ cifs_set_cifscreds(struct smb_vol *vol, struct cifs_ses *ses)
+ 			rc = -ENOMEM;
+ 			kfree(vol->username);
+ 			vol->username = NULL;
+-			kfree(vol->password);
++			kzfree(vol->password);
+ 			vol->password = NULL;
+ 			goto out_key_put;
+ 		}
 -- 
 2.20.1
 
