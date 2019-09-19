@@ -7,47 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFC4C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13933C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:25:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6900E20678
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:25:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA09B21920
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:25:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931933;
-	bh=cF3MtTz0nl54vr9qdfCWKaugfJ7HGXcCO4z5/TrMAv4=;
+	s=default; t=1568931937;
+	bh=pUVWt381qJjF8tjvuVMb4FsfCYLWkbgME4MV9zTIhsc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iJPN8QDEeH7kYV8JegMouVevBkl4UFooB2+e4NmE51+keC4nXbzdhD6rn/sB1OmGZ
-	 nM+ZFD42ybfdNuJ37GF4hFD77LYyuis7NkjUPfzM/rtns2ls1l0NLZ8OhygbM989s2
-	 YX0tMCr8rI22G5YeGZ1ABEeuK92PPbXT7Z1JdxCY=
+	b=OHbmpmUnzgBj1fOSPlrUPGEEAkN6O+J+yikWq7UciQVWuQMe3QdEoEdMegPRotrn9
+	 zqEwPvHyus12yPuw7NQfWE3VKQtqmt52MJAAhGCpse84DMSbT2IJfj6bDvTEX6pdg8
+	 KEzfoAjc71n/SJGOdDEHuJmmXNBJ4ddbgrkPJRo8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394183AbfISWXZ (ORCPT
+        id S2406955AbfISWXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:23:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39020 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:23:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406961AbfISWXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:23:22 -0400
+        id S2406932AbfISWXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:23:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9DA72196E;
-        Thu, 19 Sep 2019 22:23:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26FE52196F;
+        Thu, 19 Sep 2019 22:23:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931801;
-        bh=cF3MtTz0nl54vr9qdfCWKaugfJ7HGXcCO4z5/TrMAv4=;
+        s=default; t=1568931795;
+        bh=pUVWt381qJjF8tjvuVMb4FsfCYLWkbgME4MV9zTIhsc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OESvIapInBCV8eFrCDh+WXjOVhBbpXLGS4idQXM+BtcAEJpDKzCu4ffoMbHRUzrHS
-         tKbOwpWWsCJ6JVlhL1jJJoUqypFuzwiLXmDcwxU7fz5n9XfjTfnkR4aflOsCfDLbej
-         Sz2ImwXml3uhc1LE51MUp6cOwYpZHeOvuP1B7qcc=
+        b=Afb5WMsFAWMqUCMKSeDuV56tmFZ/ktfNfaRZX3nRACS+GqNQuTdPJHkYfgBtIBrHB
+         dqWBycw+T1wLQucjyTdGk+9sxOFvl+yAof1k0xzEkYUHfp+fZocrLpDp+CMzWutV12
+         Se2siSLLvbG0uTWQtJJzhr7ZcGvD1Yaq8O94EQrI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 45/56] NFSv2: Fix eof handling
-Date:   Fri, 20 Sep 2019 00:04:26 +0200
-Message-Id: <20190919214801.165500012@linuxfoundation.org>
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>, alan@linux.intel.com,
+        bp@alien8.de, cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        rahul.tanwar@intel.com, rppt@linux.ibm.com, tony.luck@intel.com,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 43/56] x86/apic: Fix arch_dynirq_lower_bound() bug for DT enabled machines
+Date:   Fri, 20 Sep 2019 00:04:24 +0200
+Message-Id: <20190919214800.738602266@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214742.483643642@linuxfoundation.org>
 References: <20190919214742.483643642@linuxfoundation.org>
@@ -60,33 +67,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit 71affe9be45a5c60b9772e1b2701710712637274 ]
+[ Upstream commit 3e5bedc2c258341702ddffbd7688c5e6eb01eafa ]
 
-If we received a reply from the server with a zero length read and
-no error, then that implies we are at eof.
+Rahul Tanwar reported the following bug on DT systems:
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> 'ioapic_dynirq_base' contains the virtual IRQ base number. Presently, it is
+> updated to the end of hardware IRQ numbers but this is done only when IOAPIC
+> configuration type is IOAPIC_DOMAIN_LEGACY or IOAPIC_DOMAIN_STRICT. There is
+> a third type IOAPIC_DOMAIN_DYNAMIC which applies when IOAPIC configuration
+> comes from devicetree.
+>
+> See dtb_add_ioapic() in arch/x86/kernel/devicetree.c
+>
+> In case of IOAPIC_DOMAIN_DYNAMIC (DT/OF based system), 'ioapic_dynirq_base'
+> remains to zero initialized value. This means that for OF based systems,
+> virtual IRQ base will get set to zero.
+
+Such systems will very likely not even boot.
+
+For DT enabled machines ioapic_dynirq_base is irrelevant and not
+updated, so simply map the IRQ base 1:1 instead.
+
+Reported-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Tested-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Tested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: alan@linux.intel.com
+Cc: bp@alien8.de
+Cc: cheol.yong.kim@intel.com
+Cc: qi-ming.wu@intel.com
+Cc: rahul.tanwar@intel.com
+Cc: rppt@linux.ibm.com
+Cc: tony.luck@intel.com
+Link: http://lkml.kernel.org/r/20190821081330.1187-1-rahul.tanwar@linux.intel.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/proc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/kernel/apic/io_apic.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/proc.c b/fs/nfs/proc.c
-index b417bbcd97046..80ecdf2ec8b6a 100644
---- a/fs/nfs/proc.c
-+++ b/fs/nfs/proc.c
-@@ -588,7 +588,8 @@ static int nfs_read_done(struct rpc_task *task, struct nfs_pgio_header *hdr)
- 		/* Emulate the eof flag, which isn't normally needed in NFSv2
- 		 * as it is guaranteed to always return the file attributes
- 		 */
--		if (hdr->args.offset + hdr->res.count >= hdr->res.fattr->size)
-+		if ((hdr->res.count == 0 && hdr->args.count > 0) ||
-+		    hdr->args.offset + hdr->res.count >= hdr->res.fattr->size)
- 			hdr->res.eof = 1;
- 	}
- 	return 0;
+diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
+index fd945099fc958..4d5e8ff3b5e5c 100644
+--- a/arch/x86/kernel/apic/io_apic.c
++++ b/arch/x86/kernel/apic/io_apic.c
+@@ -2344,7 +2344,13 @@ unsigned int arch_dynirq_lower_bound(unsigned int from)
+ 	 * dmar_alloc_hwirq() may be called before setup_IO_APIC(), so use
+ 	 * gsi_top if ioapic_dynirq_base hasn't been initialized yet.
+ 	 */
+-	return ioapic_initialized ? ioapic_dynirq_base : gsi_top;
++	if (!ioapic_initialized)
++		return gsi_top;
++	/*
++	 * For DT enabled machines ioapic_dynirq_base is irrelevant and not
++	 * updated. So simply return @from if ioapic_dynirq_base == 0.
++	 */
++	return ioapic_dynirq_base ? : from;
+ }
+ 
+ #ifdef CONFIG_X86_32
 -- 
 2.20.1
 
