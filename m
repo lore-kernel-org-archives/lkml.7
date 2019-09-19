@@ -2,91 +2,100 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19587C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 10:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1EF6C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 10:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBF722196E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 10:26:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A56E721907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 10:27:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fNTz4uFi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731539AbfISK0t (ORCPT
+        id S1731857AbfISK1q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 06:26:49 -0400
-Received: from mx1.emlix.com ([188.40.240.192]:57624 "EHLO mx1.emlix.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388156AbfISK0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 06:26:49 -0400
-Received: from mailer.emlix.com (unknown [81.20.119.6])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx1.emlix.com (Postfix) with ESMTPS id EF3CC603CA;
-        Thu, 19 Sep 2019 12:26:46 +0200 (CEST)
-From:   Philipp Puschmann <philipp.puschmann@emlix.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org, yibin.gong@nxp.com,
-        fugang.duan@nxp.com, l.stach@pengutronix.de, jslaby@suse.com,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-imx@nxp.com,
-        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Philipp Puschmann <philipp.puschmann@emlix.com>
-Subject: [PATCH v2] serial: imx: adapt rx buffer and dma periods
-Date:   Thu, 19 Sep 2019 12:26:28 +0200
-Message-Id: <20190919102628.23621-1-philipp.puschmann@emlix.com>
-X-Mailer: git-send-email 2.23.0
+        Thu, 19 Sep 2019 06:27:46 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:46631 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730905AbfISK1q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 06:27:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1568888864;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ig1366euhZE9FQ+BU/G4FDeDExCD+2QP6kSKN1WGaNY=;
+        b=fNTz4uFiwLvZUM7iX9FQvjpNPxsp9kzJj0pFaXgYdgSyMQ8vdY2SafqDia263At8b92lmf
+        RAyaun424Vzvpv6ZEj67ifiVpfVe2MAv32JoEd0S4HHLz3kItHDXiLgJkVNFLlMhd5XLpA
+        KjDFbysxfDqeAciXMwYuMDjWHRjDKLI=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-338-sIXh9il6PEOL1Y8EYqP9Iw-1; Thu, 19 Sep 2019 06:27:42 -0400
+Received: by mail-wr1-f72.google.com with SMTP id j3so858243wrn.7
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 03:27:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=xXbMAImjG3OUwHMb6kPmWON5bGyQvvmz+1UruhCN6yE=;
+        b=hgEC9E3TAm6M3bg+rL4IaarN1xpsrE3jrUyIMyDWPFchuauEhSWdBnuzTIAAOp6NJF
+         rJYxkdu0PGUTbmh0RpNmv/DJix0Z/Fjm1p+9hU9KMVePiEwflCrlEmH8N5crIS+cSfNY
+         Bu/XIqYmePjTcrzVwQE0s1klnffEA6Oe+2a4CdVS5xvgDL0IA0njZoa8GYB+MaM4LAgC
+         vQse55iSfwFJ78b6l8XeWe+BLbAkyH++vZMcBAaH3oM7MQiPuY7mPzR2ySmj2e88t4U3
+         S7J9S9k7FRCdSZEelDFoLKkYEtNQKGXOvG7dJ2AD9sg1WX81BW8ZNuDQG47ouT58l5A4
+         PKWQ==
+X-Gm-Message-State: APjAAAXSAM1MwBOB9VFPX0r9hHY4VQjNRH20X/ay3Pd8bN87eM5RdDJh
+        QOsT2606VRvb/BhcukocLjEZ6nfAGhlyOv9R3mZQj2XTnyL3E+UDgbnGxDWvPPDlKPpdJsZ/rrn
+        BUaaqG1RJ/fYojFuVAMoct11h
+X-Received: by 2002:a5d:4f8c:: with SMTP id d12mr6688936wru.150.1568888861516;
+        Thu, 19 Sep 2019 03:27:41 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqz46e8anRMP1kp0PhuFgPO+/GbU0XjcEmMYDIh9szRAuk4BfIfrefzg5JHBBewFOt1LeJvGiQ==
+X-Received: by 2002:a5d:4f8c:: with SMTP id d12mr6688918wru.150.1568888861290;
+        Thu, 19 Sep 2019 03:27:41 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id 17sm8806368wrl.15.2019.09.19.03.27.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Sep 2019 03:27:40 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal\@kernel.org" <sashal@kernel.org>,
+        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: RE: [PATCH 1/3] hv_utils: Add the support of hibernation
+In-Reply-To: <PU1P153MB01694ABFED7ADAE8B40A65F7BF890@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <1568245130-70712-1-git-send-email-decui@microsoft.com> <1568245130-70712-2-git-send-email-decui@microsoft.com> <877e6dcvzj.fsf@vitty.brq.redhat.com> <PU1P153MB0169C6B4A78787930CC9ED4FBFB30@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM> <87pnk0bpe8.fsf@vitty.brq.redhat.com> <PU1P153MB01694ABFED7ADAE8B40A65F7BF890@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+Date:   Thu, 19 Sep 2019 12:27:39 +0200
+Message-ID: <87ftksa8dg.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MC-Unique: sIXh9il6PEOL1Y8EYqP9Iw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using only 4 DMA periods for UART RX is very few if we have a high
-frequency of small transfers - like in our case using Bluetooth with
-many small packets via UART - causing many dma transfers but in each
-only filling a fraction of a single buffer. Such a case may lead to
-the situation that DMA RX transfer is triggered but no free buffer is
-available. While we have addressed the dma handling already with
-"dmaengine: imx-sdma: fix dma freezes" we still want to avoid
-UART RX FIFO overrun. So we decrease the size of the buffers and
-increase their number and the total buffer size.
+Dexuan Cui <decui@microsoft.com> writes:
 
-Signed-off-by: Philipp Puschmann <philipp.puschmann@emlix.com>
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
----
+> BTW, for vss, maybe the VM should not hibernate if there is a backup=20
+> ongoing? -- if the file system is frozen by hv_vss_daemon, and the VM
+> hibernates, then when the VM resumes back, it's almost always true that=
+=20
+> the VM won't receive the host's VSS_OP_THAW request, and the VM will
+> end up in an unusable state.
 
-Changelog v2:
- - split this patch from series "Fix UART DMA freezes for iMX6"
- - add Reviewed-by tag
+Makes sense. Or, alternatively, can we postpone hibernation until after
+VSS_OP_THAW?
 
- drivers/tty/serial/imx.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
-index 87c58f9f6390..51dc19833eab 100644
---- a/drivers/tty/serial/imx.c
-+++ b/drivers/tty/serial/imx.c
-@@ -1034,8 +1034,6 @@ static void imx_uart_timeout(struct timer_list *t)
- 	}
- }
- 
--#define RX_BUF_SIZE	(PAGE_SIZE)
--
- /*
-  * There are two kinds of RX DMA interrupts(such as in the MX6Q):
-  *   [1] the RX DMA buffer is full.
-@@ -1118,7 +1116,8 @@ static void imx_uart_dma_rx_callback(void *data)
- }
- 
- /* RX DMA buffer periods */
--#define RX_DMA_PERIODS 4
-+#define RX_DMA_PERIODS	16
-+#define RX_BUF_SIZE	(PAGE_SIZE / 4)
- 
- static int imx_uart_start_rx_dma(struct imx_port *sport)
- {
--- 
-2.23.0
+--=20
+Vitaly
 
