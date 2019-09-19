@@ -3,164 +3,181 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D83C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13475C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:59:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A51CC207FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:58:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D51A4207FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 09:59:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TkzK1Zap"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qTu9xgnt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389039AbfISJ66 (ORCPT
+        id S2389063AbfISJ7U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 05:58:58 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54084 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388956AbfISJ65 (ORCPT
+        Thu, 19 Sep 2019 05:59:20 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46165 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388956AbfISJ7T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 05:58:57 -0400
-Received: by mail-wm1-f68.google.com with SMTP id i16so3680532wmd.3
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 02:58:54 -0700 (PDT)
+        Thu, 19 Sep 2019 05:59:19 -0400
+Received: by mail-wr1-f67.google.com with SMTP id o18so2363047wrv.13;
+        Thu, 19 Sep 2019 02:59:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bPSaATQZ9B9id9IxoV0ABTnYae6x+cIN84+Yw8w1wdM=;
-        b=TkzK1ZapJYwNzuPciw07rOAc0VMRvHyA7gfNpi6tourX9IjveBaCyYy5WD/JCioXBS
-         E5E98AzSGjHoQorIKjK4KZXdNDdIc8ca6puJynHoxHKDA7ARuxa4pGEkN4aTKcfghzW4
-         N7UrjPbEvgZlcllzhV4KSRsTlKWn7vmobH+2NLWPjqKmkSvthtO/wJNq/TFEm27Q8eVu
-         Pf7xOuf9O3STWy8N98CBiygWlVOeNoIepPM6bPKwOeZVoEmt+UQeGdKU/in+B9jgMPWJ
-         G3PuN4YPUdEe3Y/TByvpgbpF12fXBa7Ec81342/9YdAoIE3m5zrfUIdTGJ799S1uMKtr
-         Am+g==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6YboXs4mQIylOrMolQVGgl1HM0og05CGlsxjYW+iH7k=;
+        b=qTu9xgntVL5lvm8X1qZsU5crk286GN6BEL/GGXbnJf64rW/GM+EUt0Bu8yDv8CmWWY
+         xf0qCzH/cdoopyoFtP/Nv/TeXDYeGJxg0hymnHWeAaLlbsdi9PxQqls0t0Ek9aHE6ckI
+         Z2nVvxM8HFr6f/UQnaS98vIMA6blz3OI/WrfnjnqmMSLgissuunGJuxSX6gYsOncqqYV
+         2jnlCNy1rNjflyG2FVCfGJoO94M7K49xiCoQqGZAIQrjjbOQTNxEBaLMv50mhDFDVXFu
+         d8OwtzzZxwiBCV6Njl4tkOyRZCJlIZpC2MEZc4ROjPr3vEy8WmweZfDpx80RBJT3ZyID
+         64Cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bPSaATQZ9B9id9IxoV0ABTnYae6x+cIN84+Yw8w1wdM=;
-        b=gbEvyetrea35NwyirNzkqdOIZEXz0VnTEJskN/5A137wjNL+MBQJdzIISKnOu4PtHV
-         ad1vLcZ7VG3JWMrQhfGLGLFn/6LAUbvXYX6QShBJZlTKTStGLIpE6Ez3ZUpSa+AC6dlp
-         VWgdp57XyIV1C79RKx+VGFFtBLbvwgx1XvrwYDC81fFoTA3SyoBk+eNZ2OMe3R6NnDc9
-         RltnWXMKtXAAGj0g9RVfMsUx3RkjJjS+EiGRQ+SHIZtFtPuzzOUGzYbkKJmmUS4ur3SS
-         3rcBdpAihNLfPl1851+0nyKtu2Y3n8fGDbbBn/NTWDTiD4aUXcdt7BDuWHBBVDbR4WLr
-         wQXA==
-X-Gm-Message-State: APjAAAV2b8xocLG0bRKIrzKyPN17i6ryRoraeSoW2fRLjcnKAD/3T8ZS
-        sqA/jpc7pMHNCe92VB3tkHJBboRptOZXWS+kVm3H6w==
-X-Google-Smtp-Source: APXvYqzpxFpqchmOADWd2ksUM9GQP3aipqqDW9ze0bYZ+/2bSXbm6Kx28kFlyNPtom2dEJ0lV/Y0b9bMJOemdvBEkiY=
-X-Received: by 2002:a7b:cf37:: with SMTP id m23mr2102535wmg.53.1568887133866;
- Thu, 19 Sep 2019 02:58:53 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6YboXs4mQIylOrMolQVGgl1HM0og05CGlsxjYW+iH7k=;
+        b=FG27jgilOJ7yuR10XVZ8DJQQjXrMOiyh5IT+Y/YTEg/KQwi8IDfvNb12UvsOFvnbMp
+         clYFRl89LAnYXKZmZJq0h8+dvH6Q9AzUNG+S1+jbklPyn7TtMIiSXq4QeGOSeMPtU9BL
+         w2KfVWdZQ30AXWwtuAjl5h4NkIO6gPqUwkl6qZ9oRsaKL6+76/KNWi78sgk2IwbJHCdB
+         YsGkOVKecpYH5A7U/TPnuQyBy0pmX83IyFD76JkxMi+mcPj/iU/ZF70AZjjAYnJi1kvX
+         MZrFkbO14JRuk0U2INOwyI4g9RK3Mwo161jztbAVWNdfREIgYod8pzQNGOq9wDl5qext
+         Vu3g==
+X-Gm-Message-State: APjAAAUE4jXvOwdmKrt2su86uHvmuiad2pqIMW5XgvjLhQIlQx3dExgE
+        uAGUsj2AO1FFQjm5e+1KZ/TsTtKT
+X-Google-Smtp-Source: APXvYqwkccDuJHbaNPpKriH1ct1LstdVeisfChkzu85ct1d5VdtuJTBELwZtNELGqXp7JiqyE7uhWA==
+X-Received: by 2002:a5d:4745:: with SMTP id o5mr6250925wrs.125.1568887156690;
+        Thu, 19 Sep 2019 02:59:16 -0700 (PDT)
+Received: from localhost.localdomain ([213.86.25.14])
+        by smtp.googlemail.com with ESMTPSA id y186sm10037704wmb.41.2019.09.19.02.59.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Sep 2019 02:59:15 -0700 (PDT)
+From:   Alexander Gordeev <a.gordeev.box@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Alexander Gordeev <a.gordeev.box@gmail.com>,
+        Michael Chen <micchen@altera.com>, devel@driverdev.osuosl.org,
+        dmaengine@vger.kernel.org
+Subject: [PATCH RFC 0/2] staging: Support Avalon-MM DMA Interface for PCIe
+Date:   Thu, 19 Sep 2019 11:59:11 +0200
+Message-Id: <cover.1568817357.git.a.gordeev.box@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <git-mailbomb-linux-master-724ecd3c0eb7040d423b22332a60d097e2666820@kernel.org>
- <CAMuHMdW-n73yuP3V6CCmc8igHcP25KsgZj9eMBCJRowXV5AWVg@mail.gmail.com>
-In-Reply-To: <CAMuHMdW-n73yuP3V6CCmc8igHcP25KsgZj9eMBCJRowXV5AWVg@mail.gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Thu, 19 Sep 2019 12:58:26 +0300
-Message-ID: <CAKv+Gu_DFnuRAg7uo8JR2SX2YH-YAW2EnkSn=c9rxCV5pXFkbw@mail.gmail.com>
-Subject: Re: crypto: aes - rename local routines to prevent future clashes
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 19 Sep 2019 at 12:43, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Ard,
->
+The Avalon-MM DMA Interface for PCIe is a design found in hard IPs for
+Intel Arria, Cyclone or Stratix FPGAs. It transfers data between on-chip
+memory and system memory. This RFC is an attempt to provide a generic API:
 
-Hello Geert,
+	typedef void (*avalon_dma_xfer_callback)(void *dma_async_param);
+ 
+	int avalon_dma_submit_xfer(
+		struct avalon_dma *avalon_dma,
+		enum dma_data_direction direction,
+		dma_addr_t dev_addr, dma_addr_t host_addr,
+		unsigned int size,
+		avalon_dma_xfer_callback callback,
+		void *callback_param);
+ 
+	int avalon_dma_submit_xfer_sg(struct avalon_dma *avalon_dma,
+		enum dma_data_direction direction,
+		dma_addr_t dev_addr,
+		struct sg_table *sg_table,
+		avalon_dma_xfer_callback callback,
+		void *callback_param);
+ 
+	int avalon_dma_issue_pending(struct avalon_dma *avalon_dma);
 
-> On Wed, Sep 18, 2019 at 9:59 PM Linux Kernel Mailing List
-> <linux-kernel@vger.kernel.org> wrote:
-> > Commit:     724ecd3c0eb7040d423b22332a60d097e2666820
-> > Parent:     20bb4ef038a97b8bb5c07d2a1125019a93f618b3
-> > Refname:    refs/heads/master
-> > Web:        https://git.kernel.org/torvalds/c/724ecd3c0eb7040d423b22332a60d097e2666820
-> > Author:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> > AuthorDate: Tue Jul 2 21:41:20 2019 +0200
-> > Committer:  Herbert Xu <herbert@gondor.apana.org.au>
-> > CommitDate: Fri Jul 26 14:52:03 2019 +1000
-> >
-> >     crypto: aes - rename local routines to prevent future clashes
-> >
-> >     Rename some local AES encrypt/decrypt routines so they don't clash with
-> >     the names we are about to introduce for the routines exposed by the
-> >     generic AES library.
-> >
-> >     Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> >     Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
->
-> > --- a/crypto/aes_generic.c
-> > +++ b/crypto/aes_generic.c
-> > @@ -1332,7 +1332,7 @@ EXPORT_SYMBOL_GPL(crypto_aes_set_key);
-> >         f_rl(bo, bi, 3, k);     \
-> >  } while (0)
-> >
-> > -static void aes_encrypt(struct crypto_tfm *tfm, u8 *out, const u8 *in)
-> > +static void crypto_aes_encrypt(struct crypto_tfm *tfm, u8 *out, const u8 *in)
-> >  {
-> >         const struct crypto_aes_ctx *ctx = crypto_tfm_ctx(tfm);
->
-> Looking ay the bloat-o-meter output:
->
-> crypto_aes_encrypt                             -    3158   +3158
-> crypto_aes_decrypt                             -    3154   +3154
-> aes_decrypt                                 3154    1276   -1878
-> aes_encrypt                                 3158    1270   -1888
->
-> Can't this just call aes_encrypt() now?
-> CONFIG_CRYPTO_AES already selects CRYPTO_LIB_AES?
-> Or does the latter has less features (it's smaller, too)?
->
+Patch 1 introduces "avalon-dma" driver that provides the above-mentioned
+generic interface.
 
-The latter is smaller but slower, especially for decryption. I am not
-sure whether the output accounts for this, but the actual space saving
-is in the lookup tables, not in the code itself (16k vs 512 bytes)
+Patch 2 adds "avalon-drv" driver using "avalon-dma" to transfer user-
+provided data. This driver was used to debug and stress "avalon-dma"
+and could be used as a code base for other implementations. Strictly
+speaking, it does not need to be part of the kernel tree.
+A companion tool using "avalon-drv" to DMA files (not part of this
+patchset) is located at git@github.com:a-gordeev/avalon-drv-tool.git
 
-Also, we removed the x86 ASM implementations of scalar AES, since the
-compiler actually produces faster code, but this also uses the
-'bloated' version above.
+The suggested interface is developed with the standard "dmaengine"
+in mind and could be reworked to suit it. I would appreciate, however
+gathering some feedback on the implemenation first - as the hardware-
+specific code would persist. It is also a call for testing - I only
+have access to a single Arria 10 device to try on.
 
-To make matters more interesting, the fact that the tables are much
-smaller means that the new code is assumed to be much less susceptible
-to known timing-related vulnerabilities in table based AES.
-
-So to summarize, platforms that don't have special instructions or
-SIMD based AES implementations will need the original aes-generic
-driver, or we will cause significant performance regression,
-especially when decrypting. The library interface is more intended as
-a) a base layer for other AES implementations, and b) a reasonable
-option for non-performance critical code.
+This series is against v5.3 and could be found at
+git@github.com:a-gordeev/linux.git avalon-dma-engine
 
 
+CC: Michael Chen <micchen@altera.com>
+CC: devel@driverdev.osuosl.org
+CC: dmaengine@vger.kernel.org
 
-> >         u32 b0[4], b1[4];
-> > @@ -1402,7 +1402,7 @@ static void aes_encrypt(struct crypto_tfm *tfm, u8 *out, const u8 *in)
-> >         i_rl(bo, bi, 3, k);     \
-> >  } while (0)
-> >
-> > -static void aes_decrypt(struct crypto_tfm *tfm, u8 *out, const u8 *in)
-> > +static void crypto_aes_decrypt(struct crypto_tfm *tfm, u8 *out, const u8 *in)
-> >  {
-> >         const struct crypto_aes_ctx *ctx = crypto_tfm_ctx(tfm);
->
-> aes_decrypt()?
->
-> >         u32 b0[4], b1[4];
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+Alexander Gordeev (2):
+  staging: avalon-dma: Avalon DMA engine
+  staging: avalon-drv: Avalon DMA driver
+
+ drivers/staging/Kconfig                       |   4 +
+ drivers/staging/Makefile                      |   2 +
+ drivers/staging/avalon-dma/Kconfig            |  45 ++
+ drivers/staging/avalon-dma/Makefile           |  11 +
+ drivers/staging/avalon-dma/avalon-dma-core.c  | 515 ++++++++++++++
+ drivers/staging/avalon-dma/avalon-dma-core.h  |  52 ++
+ .../staging/avalon-dma/avalon-dma-interrupt.c | 118 ++++
+ .../staging/avalon-dma/avalon-dma-interrupt.h |  13 +
+ drivers/staging/avalon-dma/avalon-dma-util.c  | 196 ++++++
+ drivers/staging/avalon-dma/avalon-dma-util.h  |  25 +
+ drivers/staging/avalon-drv/Kconfig            |  34 +
+ drivers/staging/avalon-drv/Makefile           |  14 +
+ drivers/staging/avalon-drv/avalon-drv-dev.c   | 193 ++++++
+ drivers/staging/avalon-drv/avalon-drv-ioctl.c | 137 ++++
+ drivers/staging/avalon-drv/avalon-drv-ioctl.h |  12 +
+ drivers/staging/avalon-drv/avalon-drv-mmap.c  |  93 +++
+ drivers/staging/avalon-drv/avalon-drv-mmap.h  |  12 +
+ .../staging/avalon-drv/avalon-drv-sg-buf.c    | 132 ++++
+ .../staging/avalon-drv/avalon-drv-sg-buf.h    |  26 +
+ drivers/staging/avalon-drv/avalon-drv-util.c  |  54 ++
+ drivers/staging/avalon-drv/avalon-drv-util.h  |  12 +
+ drivers/staging/avalon-drv/avalon-drv-xfer.c  | 655 ++++++++++++++++++
+ drivers/staging/avalon-drv/avalon-drv-xfer.h  |  24 +
+ drivers/staging/avalon-drv/avalon-drv.h       |  22 +
+ include/linux/avalon-dma-hw.h                 |  72 ++
+ include/linux/avalon-dma.h                    |  68 ++
+ include/uapi/linux/avalon-drv-ioctl.h         |  30 +
+ 27 files changed, 2571 insertions(+)
+ create mode 100644 drivers/staging/avalon-dma/Kconfig
+ create mode 100644 drivers/staging/avalon-dma/Makefile
+ create mode 100644 drivers/staging/avalon-dma/avalon-dma-core.c
+ create mode 100644 drivers/staging/avalon-dma/avalon-dma-core.h
+ create mode 100644 drivers/staging/avalon-dma/avalon-dma-interrupt.c
+ create mode 100644 drivers/staging/avalon-dma/avalon-dma-interrupt.h
+ create mode 100644 drivers/staging/avalon-dma/avalon-dma-util.c
+ create mode 100644 drivers/staging/avalon-dma/avalon-dma-util.h
+ create mode 100644 drivers/staging/avalon-drv/Kconfig
+ create mode 100644 drivers/staging/avalon-drv/Makefile
+ create mode 100644 drivers/staging/avalon-drv/avalon-drv-dev.c
+ create mode 100644 drivers/staging/avalon-drv/avalon-drv-ioctl.c
+ create mode 100644 drivers/staging/avalon-drv/avalon-drv-ioctl.h
+ create mode 100644 drivers/staging/avalon-drv/avalon-drv-mmap.c
+ create mode 100644 drivers/staging/avalon-drv/avalon-drv-mmap.h
+ create mode 100644 drivers/staging/avalon-drv/avalon-drv-sg-buf.c
+ create mode 100644 drivers/staging/avalon-drv/avalon-drv-sg-buf.h
+ create mode 100644 drivers/staging/avalon-drv/avalon-drv-util.c
+ create mode 100644 drivers/staging/avalon-drv/avalon-drv-util.h
+ create mode 100644 drivers/staging/avalon-drv/avalon-drv-xfer.c
+ create mode 100644 drivers/staging/avalon-drv/avalon-drv-xfer.h
+ create mode 100644 drivers/staging/avalon-drv/avalon-drv.h
+ create mode 100644 include/linux/avalon-dma-hw.h
+ create mode 100644 include/linux/avalon-dma.h
+ create mode 100644 include/uapi/linux/avalon-drv-ioctl.h
+
+-- 
+2.22.0
+
