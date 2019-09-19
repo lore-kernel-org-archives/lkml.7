@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E56C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 818F2C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E4AA20640
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:26:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E09820640
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:26:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931986;
-	bh=oodeJ+0d7shrMwu2VCOzA6cipo4DbmkAS4qiVyyugnE=;
+	s=default; t=1568931993;
+	bh=8BTfjg4RNnB4XrZjNOTvCz6Gtu4UnMZH+r+BDGHfquI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EeyxAcRaAzYcV/0gMpeKjMfbqsrHrZ3hWSv/jkf6Jb8T+d//dCy1LGn4tA+vKhrmH
-	 ru4SRTA2XUgNUu3Zps8N91gR7tRH3kofpkLrPZwSSgpVpuet3XWuDS1pgy0cCHbELN
-	 4fO8GBEnpceY3KH40qTQVi//D2/KZV0Wn0eIQip4=
+	b=SjX48rUWj8wlWlIM686schlYDhGKJZFYrm/Y4cqXrD+xbcRqqM9KonP8+IxI8JNcd
+	 dUKoLbfn/WMexrf1f1fL0snbbF0YIv7ujV/rujKcL4U1rLYJOkfET/YdMniAy8zZH6
+	 /drQccOUFLogX6IjsvUZ3ieZTVxdmykU9xDgvrfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394192AbfISW0Z (ORCPT
+        id S2406774AbfISWWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:26:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37414 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:22:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406830AbfISWWY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:22:24 -0400
+        id S2404958AbfISWWF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:22:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC4D1217D6;
-        Thu, 19 Sep 2019 22:22:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F21EC21924;
+        Thu, 19 Sep 2019 22:22:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931743;
-        bh=oodeJ+0d7shrMwu2VCOzA6cipo4DbmkAS4qiVyyugnE=;
+        s=default; t=1568931724;
+        bh=8BTfjg4RNnB4XrZjNOTvCz6Gtu4UnMZH+r+BDGHfquI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b0Icf6lTNWqF3E+PoyalGZQi6Wv/bwnNyb66nSPRQNX2X0T8AlbtySVlUBTtL8SIo
-         01n1OLsN6KLq9Ri3c6HT52T9c/ruVzs26fu+m5ET/cyi/ZbHcuGwJHpTTz86Q2ldtM
-         pC4R8Yblb3qMYIAwBB0j7B5t9FoZxZujWMS0E+SQ=
+        b=nM6minULzke+XowmMgGG13m5mvkRU0j2unFgN4ZfCEEzcTNcp9fnNAw1hD3ZOIAqE
+         5PsqDqPSYlxEsAPIQwIjBZTicTd2QnnG1Y5z93SrU6bZs0ZYDWAoLDWcvr1DfblV+v
+         wOoaNFiiZR5r/27BUY34DsSyWTkfVsK3Kk3HwQfs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.4 23/56] crypto: talitos - check data blocksize in ablkcipher.
-Date:   Fri, 20 Sep 2019 00:04:04 +0200
-Message-Id: <20190919214754.861255842@linuxfoundation.org>
+        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.4 17/56] KVM: nVMX: handle page fault in vmread
+Date:   Fri, 20 Sep 2019 00:03:58 +0200
+Message-Id: <20190919214752.927023617@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214742.483643642@linuxfoundation.org>
 References: <20190919214742.483643642@linuxfoundation.org>
@@ -59,58 +58,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-commit ee483d32ee1a1a7f7d7e918fbc350c790a5af64a upstream.
+commit f7eea636c3d505fe6f1d1066234f1aaf7171b681 upstream.
 
-When data size is not a multiple of the alg's block size,
-the SEC generates an error interrupt and dumps the registers.
-And for NULL size, the SEC does just nothing and the interrupt
-is awaited forever.
+The implementation of vmread to memory is still incomplete, as it
+lacks the ability to do vmread to I/O memory just like vmptrst.
 
-This patch ensures the data size is correct before submitting
-the request to the SEC engine.
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Fixes: 4de9d0b547b9 ("crypto: talitos - Add ablkcipher algorithms")
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: stable@vger.kernel.org
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/talitos.c |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ arch/x86/kvm/vmx.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/drivers/crypto/talitos.c
-+++ b/drivers/crypto/talitos.c
-@@ -1641,6 +1641,14 @@ static int ablkcipher_encrypt(struct abl
- 	struct crypto_ablkcipher *cipher = crypto_ablkcipher_reqtfm(areq);
- 	struct talitos_ctx *ctx = crypto_ablkcipher_ctx(cipher);
- 	struct talitos_edesc *edesc;
-+	unsigned int blocksize =
-+			crypto_tfm_alg_blocksize(crypto_ablkcipher_tfm(cipher));
-+
-+	if (!areq->nbytes)
-+		return 0;
-+
-+	if (areq->nbytes % blocksize)
-+		return -EINVAL;
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -7247,6 +7247,7 @@ static int handle_vmread(struct kvm_vcpu
+ 	unsigned long exit_qualification = vmcs_readl(EXIT_QUALIFICATION);
+ 	u32 vmx_instruction_info = vmcs_read32(VMX_INSTRUCTION_INFO);
+ 	gva_t gva = 0;
++	struct x86_exception e;
  
- 	/* allocate extended descriptor */
- 	edesc = ablkcipher_edesc_alloc(areq, true);
-@@ -1658,6 +1666,14 @@ static int ablkcipher_decrypt(struct abl
- 	struct crypto_ablkcipher *cipher = crypto_ablkcipher_reqtfm(areq);
- 	struct talitos_ctx *ctx = crypto_ablkcipher_ctx(cipher);
- 	struct talitos_edesc *edesc;
-+	unsigned int blocksize =
-+			crypto_tfm_alg_blocksize(crypto_ablkcipher_tfm(cipher));
-+
-+	if (!areq->nbytes)
-+		return 0;
-+
-+	if (areq->nbytes % blocksize)
-+		return -EINVAL;
+ 	if (!nested_vmx_check_permission(vcpu) ||
+ 	    !nested_vmx_check_vmcs12(vcpu))
+@@ -7273,8 +7274,10 @@ static int handle_vmread(struct kvm_vcpu
+ 				vmx_instruction_info, true, &gva))
+ 			return 1;
+ 		/* _system ok, as nested_vmx_check_permission verified cpl=0 */
+-		kvm_write_guest_virt_system(vcpu, gva, &field_value,
+-					    (is_long_mode(vcpu) ? 8 : 4), NULL);
++		if (kvm_write_guest_virt_system(vcpu, gva, &field_value,
++						(is_long_mode(vcpu) ? 8 : 4),
++						NULL))
++			kvm_inject_page_fault(vcpu, &e);
+ 	}
  
- 	/* allocate extended descriptor */
- 	edesc = ablkcipher_edesc_alloc(areq, false);
+ 	nested_vmx_succeed(vcpu);
 
 
