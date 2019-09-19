@@ -2,101 +2,77 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D023FC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 12:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A8EC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 12:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97F0021D56
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 12:29:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="MOlak7eH"
+	by mail.kernel.org (Postfix) with ESMTP id F1B8A21848
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 12:32:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390328AbfISM3s (ORCPT
+        id S1732080AbfISMcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 08:29:48 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38125 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389275AbfISM3s (ORCPT
+        Thu, 19 Sep 2019 08:32:05 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:45677 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731897AbfISMcD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 08:29:48 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 3so3750297wmi.3
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 05:29:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ih/MDhEc/lR/EwwEWd3UKHZku0wmOCPvpYdqNd7Cz3I=;
-        b=MOlak7eHLX23anoot934MZPNCqef49OxOac8Pza7p1zC+IDnTa6+D9nOHorfBejy36
-         XEdV05aEj0wP1+o9uwLdfQdWQyzTOJ0ZAmvaFnkmKmyxhMXjuJYAm33Yz2x0TkmnsdHW
-         zU5ZqlaIfSDtNTWqGnoU4EftY6U2Kh++BvXSAvGG6pSeilS8SDvl2vvHTW/O4GRH2H30
-         uTecNMafO95TjhTMtK4XYXYhSekGxXNpnuTluTNVP+pzARHkbznR4yZkAKcWvct0CV6F
-         rdz8UljICE9v2iWgDSbWMFua5epnyEpndor195DpDgx4rkq+DivxLiNb7lumlEcWcpay
-         lbKw==
+        Thu, 19 Sep 2019 08:32:03 -0400
+Received: by mail-io1-f69.google.com with SMTP id o11so4903633iop.12
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 05:32:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ih/MDhEc/lR/EwwEWd3UKHZku0wmOCPvpYdqNd7Cz3I=;
-        b=gFKAh3+G3bVdbdrGO9dKKnOX0y3I5tLyiWT98ZlJii1vmLrIZK9iaXM4sgBWzfI4cx
-         D29zkb9JB5BGXaZztLYPja+n5h1v2VopG4KnxiZ6LFhz22WZsa92fS/mRLATwoQ0w9pU
-         R57Hlbmsp7W9MVwwEj/HwDGYO2NmspCqQ7WVPZUvdji1Wk+8vtWbgcfY3VqOv+CggjBh
-         Jo/lwRjaqOZ/5AYqPK0Tw8wCifx0LCfOBsd0qiONOFIQW59AUFeLE+G7fW7jsULg7QEr
-         S6uIOki8VZ3yQPbc1qkhCQK235MWOc3qI1/94hLcQXO12GcArmjTOw3ZcSRHfb9MXBcY
-         xxcQ==
-X-Gm-Message-State: APjAAAXntMqyqZwkPG3/9SqIuej89ztKIWNBTx0U76Jvlpr+576XVSWs
-        Gnfn50tygbVyf1jRV1dveDwliA==
-X-Google-Smtp-Source: APXvYqx4hKCNiv9gZpKM7ZBFgWrBwYBYMkwk3rpvdDiIL6bb7B9oUvwnBLk2HXj2VFiNljt+us5Ktw==
-X-Received: by 2002:a05:600c:118a:: with SMTP id i10mr2640350wmf.80.1568896186212;
-        Thu, 19 Sep 2019 05:29:46 -0700 (PDT)
-Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
-        by smtp.gmail.com with ESMTPSA id s10sm9203194wmf.48.2019.09.19.05.29.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2019 05:29:45 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH] mtd: st_spi_fsm: remove unused variable
-Date:   Thu, 19 Sep 2019 14:29:37 +0200
-Message-Id: <20190919122937.29850-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.23.0
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=xRvATBd4vJz/ca0H8KHxwpk25gX5YP7T2VKX90zZjjY=;
+        b=jMryXIbCRojtvrOVuWLRZI2riJQiikAdZ6t9vwYO4hrAFZ44v6jybDvrVKz+zCyJce
+         TQOcFhE4BJdxexavWjucbFSEW+aGlmAsKLpUoAjY34oAJXWeeVX6uMpmHWVr5AJEWPk8
+         hZPcu5heoaLJ0Egd8DbYOX9cSk/fbo14gsKlMGMzacOokhb2I6rPsMMuLsbwy02c0qZY
+         OVl2WSmImrg0LL3vRTHSY5UT4hbWLJW+Aq8iUaj71Fwyp7DWY/b+rig/WCMQ9Wb4V+ST
+         F6HEUb4/gBKxG5sOIG+hac7ycOWuz2K80+zF/zvjDzgIMNUY3b/Vfj8OUPuZ9UNZiKMA
+         H9dg==
+X-Gm-Message-State: APjAAAUeL8jj1Fr0fFeRqcV2tPPDZLjPtBjZxlY1Tr4ky7f1k+mb2LI+
+        T6iwbr3wqtvfl4jdjXvmZQTQ0ejiwZS3/pDYBrMvW9Gqxgus
+X-Google-Smtp-Source: APXvYqznsY295KYp6iVKDsqG6sE+Z6Mre4W0acF8SRnsbhhSSg0DoispESLcXcx0yTSMXL8rH7pjSRc8Sz/uxP6+Ti76M+HxxP4c
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a6b:b8c3:: with SMTP id i186mr12174261iof.194.1568896320918;
+ Thu, 19 Sep 2019 05:32:00 -0700 (PDT)
+Date:   Thu, 19 Sep 2019 05:32:00 -0700
+In-Reply-To: <20190919121234.30620-1-johan@kernel.org>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e5e3c40592e723c4@google.com>
+Subject: Re: KASAN: use-after-free Read in atusb_disconnect
+From:   syzbot <syzbot+f4509a9138a1472e7e80@syzkaller.appspotmail.com>
+To:     alex.aring@gmail.com, andreyknvl@google.com, davem@davemloft.net,
+        johan@kernel.org, linux-kernel@vger.kernel.org,
+        linux-wpan@vger.kernel.org, netdev@vger.kernel.org,
+        stable@vger.kernel.org, stefan@datenfreihafen.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Hello,
 
-The region resource in struct stfsm is unused and can be removed.
+syzbot has tested the proposed patch and the reproducer did not trigger  
+crash:
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- drivers/mtd/devices/st_spi_fsm.c | 1 -
- 1 file changed, 1 deletion(-)
+Reported-and-tested-by:  
+syzbot+f4509a9138a1472e7e80@syzkaller.appspotmail.com
 
-diff --git a/drivers/mtd/devices/st_spi_fsm.c b/drivers/mtd/devices/st_spi_fsm.c
-index f4d1667daaf9..1888523d9745 100644
---- a/drivers/mtd/devices/st_spi_fsm.c
-+++ b/drivers/mtd/devices/st_spi_fsm.c
-@@ -255,7 +255,6 @@ struct stfsm_seq {
- struct stfsm {
- 	struct device		*dev;
- 	void __iomem		*base;
--	struct resource		*region;
- 	struct mtd_info		mtd;
- 	struct mutex		lock;
- 	struct flash_info       *info;
--- 
-2.23.0
+Tested on:
 
+commit:         f0df5c1b usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6633fa4ed00be5
+dashboard link: https://syzkaller.appspot.com/bug?extid=f4509a9138a1472e7e80
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=10f3ebb5600000
+
+Note: testing is done by a robot and is best-effort only.
