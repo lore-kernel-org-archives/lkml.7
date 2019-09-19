@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2846C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1EC0C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5F2C2196E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBBA2217D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:24:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931856;
-	bh=ZnDZXhBIRGN6OWMGxYRviA8kQtnsHMHEhPRM7nl7h60=;
+	s=default; t=1568931860;
+	bh=1uYRIa9dJFLkZU1QyZXcVGUl/P1dDHw2UzJHa6GuqiA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lBuk1/zQJBD0mUWYIzVnUtbt9AfmJRSapyeAp8LRle/vmxOY0yeqCE8xWXygZOIVF
-	 IfTWLNGu0RUz4QbMQDqKDhZVPx4EXTC5UE/pkkrJlIeHT8IERM+jmEHr7B5LuDxk8d
-	 q4A+t6t4ZIcEarNzsMU1KV3gGo98Rz0DqCuDh6lw=
+	b=frCg2F3krmZnV7S/cFl5b832A1jOdHUQJxeqbtIrgbav3MpJfD4so9t6FEPO9OnzI
+	 fT5nJgK9Sl9qVbWUtQcG/ipFS599qkmLaHpGFmKnlOaHOZr6npW0oiofVY2XiiRJSY
+	 Vl133/Kd5tv+jP0sdnrYLRcE5cH1Bu78FHU3KHAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407142AbfISWYP (ORCPT
+        id S2407151AbfISWYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:24:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40232 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:24:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407126AbfISWYK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:24:10 -0400
+        id S2407126AbfISWYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:24:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9462321929;
-        Thu, 19 Sep 2019 22:24:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BB9121929;
+        Thu, 19 Sep 2019 22:24:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931850;
-        bh=ZnDZXhBIRGN6OWMGxYRviA8kQtnsHMHEhPRM7nl7h60=;
+        s=default; t=1568931855;
+        bh=1uYRIa9dJFLkZU1QyZXcVGUl/P1dDHw2UzJHa6GuqiA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yte8qhvcRP9MDSpBEcddV9UMGqJ7KRn1A5bl3dRZ+lOVAusy7Ucl4F5nKtww9ffZa
-         W530S/aMgb34nBDtNs4lovmYSpZdVtoo9aiiPefpTtn2JAcDU4/AbtjOannQOqcjXi
-         SMbl6/vQukUp2BMUyuPSrBW0re3FlbA0lzLlZCN8=
+        b=ij+VIwp+gJ+xsn7Mn5qWO+CjfrKGWTNpPMr6s1v1dmIrkMPl4qrRWaLANpYORtyF+
+         UmCuOQ+cWIa6l0ZcxdWszApyOSPzSr3iek/8rG9lEF/RffDSUCOlFxp0EJCUA9aOLC
+         hjs/KGOHRliCe0X7P6tfnWpeZ3Bv41MAjC1niQxU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 38/56] NFSv4: Fix return values for nfs4_file_open()
-Date:   Fri, 20 Sep 2019 00:04:19 +0200
-Message-Id: <20190919214758.710383344@linuxfoundation.org>
+Subject: [PATCH 4.4 40/56] Kconfig: Fix the reference to the IDT77105 Phy driver in the description of ATM_NICSTAR_USE_IDT77105
+Date:   Fri, 20 Sep 2019 00:04:21 +0200
+Message-Id: <20190919214759.532303351@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214742.483643642@linuxfoundation.org>
 References: <20190919214742.483643642@linuxfoundation.org>
@@ -60,49 +61,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 90cf500e338ab3f3c0f126ba37e36fb6a9058441 ]
+[ Upstream commit cd9d4ff9b78fcd0fc4708900ba3e52e71e1a7690 ]
 
-Currently, we are translating RPC level errors such as timeouts,
-as well as interrupts etc into EOPENSTALE, which forces a single
-replay of the open attempt. What we actually want to do is
-force the replay only in the cases where the returned error
-indicates that the file may have changed on the server.
+This should be IDT77105, not IDT77015.
 
-So the fix is to spell out the exact set of errors where we want
-to return EOPENSTALE.
-
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4file.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/atm/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
-index d3e3761eacfa2..c5e884585c23a 100644
---- a/fs/nfs/nfs4file.c
-+++ b/fs/nfs/nfs4file.c
-@@ -73,13 +73,13 @@ nfs4_file_open(struct inode *inode, struct file *filp)
- 	if (IS_ERR(inode)) {
- 		err = PTR_ERR(inode);
- 		switch (err) {
--		case -EPERM:
--		case -EACCES:
--		case -EDQUOT:
--		case -ENOSPC:
--		case -EROFS:
--			goto out_put_ctx;
- 		default:
-+			goto out_put_ctx;
-+		case -ENOENT:
-+		case -ESTALE:
-+		case -EISDIR:
-+		case -ENOTDIR:
-+		case -ELOOP:
- 			goto out_drop;
- 		}
- 	}
+diff --git a/drivers/atm/Kconfig b/drivers/atm/Kconfig
+index 31c60101a69a4..7fa840170151b 100644
+--- a/drivers/atm/Kconfig
++++ b/drivers/atm/Kconfig
+@@ -199,7 +199,7 @@ config ATM_NICSTAR_USE_SUNI
+ 	  make the card work).
+ 
+ config ATM_NICSTAR_USE_IDT77105
+-	bool "Use IDT77015 PHY driver (25Mbps)"
++	bool "Use IDT77105 PHY driver (25Mbps)"
+ 	depends on ATM_NICSTAR
+ 	help
+ 	  Support for the PHYsical layer chip in ForeRunner LE25 cards. In
 -- 
 2.20.1
 
