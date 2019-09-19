@@ -2,228 +2,252 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E038C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 00:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E340C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 01:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0CFA21925
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 00:58:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25D1E21925
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 01:04:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Lr6jYjHL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731483AbfISA6T (ORCPT
+        id S1730958AbfISBEe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 20:58:19 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7388 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727324AbfISA6S (ORCPT
+        Wed, 18 Sep 2019 21:04:34 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:35366 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727509AbfISBEe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 20:58:18 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8J0ukc5011874
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 20:58:17 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2v3vdn51he-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 20:58:17 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Thu, 19 Sep 2019 01:58:15 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 19 Sep 2019 01:58:10 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8J0w9RA54919296
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Sep 2019 00:58:09 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 904394C044;
-        Thu, 19 Sep 2019 00:58:09 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EACFF4C040;
-        Thu, 19 Sep 2019 00:58:08 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 19 Sep 2019 00:58:08 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 5EC2FA01EB;
-        Thu, 19 Sep 2019 10:58:07 +1000 (AEST)
-Subject: Re: [PATCH 2/5] powerpc: Map & release OpenCAPI LPC memory
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     Frederic Barrat <fbarrat@linux.ibm.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Allison Randal <allison@lohutok.net>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Vaibhav Jain <vaibhav@linux.ibm.com>,
-        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Date:   Thu, 19 Sep 2019 10:58:07 +1000
-In-Reply-To: <c644b511-86c8-e71b-11ae-dd425c3be28d@linux.ibm.com>
-References: <20190917014307.30485-1-alastair@au1.ibm.com>
-         <20190917014307.30485-3-alastair@au1.ibm.com>
-         <c644b511-86c8-e71b-11ae-dd425c3be28d@linux.ibm.com>
-Organization: IBM Australia
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Wed, 18 Sep 2019 21:04:34 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8J14Ts1098266;
+        Wed, 18 Sep 2019 20:04:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568855069;
+        bh=rPBS5zBNd7UI5aUNEVcNVvCTXtpqv1yvXkuIqhNPbLw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Lr6jYjHLKylEiax3j+6TFJ01I08QUarT+193ZlkMps2F+cecZBQ5guAuNDEVmboOL
+         046RggRtv7z5k+FodDrLfnIYewvOwEpWjPOLqIZOCFAUV9MF2xGmtu+LOTcQzbQeDZ
+         zxjHMtgyUs0fpL/ZZi1it9EIvrfP4StRU9N6GYYA=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8J14TpK090856
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 18 Sep 2019 20:04:29 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 18
+ Sep 2019 20:04:25 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 18 Sep 2019 20:04:29 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8J14SHw032335;
+        Wed, 18 Sep 2019 20:04:28 -0500
+Subject: Re: [PATCH v6 6/9] leds: multicolor: Introduce a multicolor class
+ definition
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190917175937.13872-1-dmurphy@ti.com>
+ <20190917175937.13872-6-dmurphy@ti.com>
+ <ff1d2ede-6bdf-8f73-9e89-0e990cce09a7@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <e1de10a6-49ad-c7f2-9246-5bee29f58c80@ti.com>
+Date:   Wed, 18 Sep 2019 20:07:04 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <ff1d2ede-6bdf-8f73-9e89-0e990cce09a7@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19091900-0028-0000-0000-0000039FBEB8
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19091900-0029-0000-0000-00002461C3DC
-Message-Id: <aa0be6fd63fd65fa66467234ce9790b39ac6b689.camel@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-18_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=818 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909190006
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-09-18 at 16:03 +0200, Frederic Barrat wrote:
-> 
-> Le 17/09/2019 à 03:42, Alastair D'Silva a écrit :
-> > From: Alastair D'Silva <alastair@d-silva.org>
-> > 
-> > Map & release OpenCAPI LPC memory.
-> > 
-> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> > ---
-> >   arch/powerpc/include/asm/pnv-ocxl.h   |  2 ++
-> >   arch/powerpc/platforms/powernv/ocxl.c | 42
-> > +++++++++++++++++++++++++++
-> >   2 files changed, 44 insertions(+)
-> > 
-> > diff --git a/arch/powerpc/include/asm/pnv-ocxl.h
-> > b/arch/powerpc/include/asm/pnv-ocxl.h
-> > index 7de82647e761..f8f8ffb48aa8 100644
-> > --- a/arch/powerpc/include/asm/pnv-ocxl.h
-> > +++ b/arch/powerpc/include/asm/pnv-ocxl.h
-> > @@ -32,5 +32,7 @@ extern int pnv_ocxl_spa_remove_pe_from_cache(void
-> > *platform_data, int pe_handle)
-> >   
-> >   extern int pnv_ocxl_alloc_xive_irq(u32 *irq, u64 *trigger_addr);
-> >   extern void pnv_ocxl_free_xive_irq(u32 irq);
-> > +extern u64 pnv_ocxl_platform_lpc_setup(struct pci_dev *pdev, u64
-> > size);
-> > +extern void pnv_ocxl_platform_lpc_release(struct pci_dev *pdev);
-> >   
-> >   #endif /* _ASM_PNV_OCXL_H */
-> > diff --git a/arch/powerpc/platforms/powernv/ocxl.c
-> > b/arch/powerpc/platforms/powernv/ocxl.c
-> > index 8c65aacda9c8..81393728d6a3 100644
-> > --- a/arch/powerpc/platforms/powernv/ocxl.c
-> > +++ b/arch/powerpc/platforms/powernv/ocxl.c
-> > @@ -475,6 +475,48 @@ void pnv_ocxl_spa_release(void *platform_data)
-> >   }
-> >   EXPORT_SYMBOL_GPL(pnv_ocxl_spa_release);
-> >   
-> > +u64 pnv_ocxl_platform_lpc_setup(struct pci_dev *pdev, u64 size)
-> > +{
-> > +	struct pci_controller *hose = pci_bus_to_host(pdev->bus);
-> > +	struct pnv_phb *phb = hose->private_data;
-> > +	struct pci_dn *pdn = pci_get_pdn(pdev);
-> > +	u32 bdfn = (pdn->busno << 8) | pdn->devfn;
-> 
-> We can spare a call to pci_get_pdn() with
-> bdfn = (pdev->bus->number << 8) | pdev->devfn;
-> 
+Jacek
 
-Ok.
+On 9/18/19 4:27 PM, Jacek Anaszewski wrote:
+> Hi Dan,
+>
+> I think Greg's guidance clarified everything nicely -
+> we will avoid <color> sub-dirs in favour of prefixes
+> to *intensity and *max_intensity.
+Yes I will make the change accordingly.  It will simplify the code.
+>
+> Before you will send an update I have some improvement
+> ideas regarding the remnants after the previous approach,
+> where single color intensity update resulted in updating
+> hardware state. Now the update will happen only on write to
+> brightness file, so we will not need color_set/color_get ops
+> anymore.
 
-> 
-> > +	u64 base_addr = 0;
-> > +
-> > +	int rc = opal_npu_mem_alloc(phb->opal_id, bdfn, size,
-> > &base_addr);
-> > +
-> > +	WARN_ON(rc);
-> 
-> Instead of a WARN, we should catch the error and return a null
-> address 
-> to the caller.
-> 
+I left those call backs in specifically for the LP50xx. Otherwise the 
+LEDs are only updated when the brightness file is written.
 
-base_addr will be 0 in the error case, are you suggesting we just
-remove the WARN_ON()?
+The LP50xx has an engine that performs the intensity computation for the 
+specific LED.  So there is no call back to the MC FW for calculating the 
+intensity.
 
-> > +
-> > +	base_addr = be64_to_cpu(base_addr);
-> > +
-> > +	rc = check_hotplug_memory_addressable(base_addr, base_addr +
-> > size);
-> 
-> That code is missing?
-> 
+The brightness and intensity are written directly to the device and the 
+MCU in the device does all the computations so you have real time update.
 
-That's added in the following patch on the mm list:
- [PATCH v3 1/2] memory_hotplug: Add a bounds check to
-check_hotplug_memory_range()
+For the LP55xx device the LEDs are only updated when the brightness file 
+is written.
 
-> 
-> > +	if (rc) {
-> > +		dev_warn(&pdev->dev,
-> > +			 "LPC memory range 0x%llx-0x%llx is not fully
-> > addressable",
-> > +			 base_addr, base_addr + size - 1);
-> > +		return 0;
-> > +	}
-> > +
-> > +
-> > +	return base_addr;
-> > +}
-> > +EXPORT_SYMBOL_GPL(pnv_ocxl_platform_lpc_setup);
-> > +
-> > +void pnv_ocxl_platform_lpc_release(struct pci_dev *pdev)
-> > +{
-> > +	struct pci_controller *hose = pci_bus_to_host(pdev->bus);
-> > +	struct pnv_phb *phb = hose->private_data;
-> > +	struct pci_dn *pdn = pci_get_pdn(pdev);
-> > +	u32 bdfn;
-> > +	int rc;
-> > +
-> > +	bdfn = (pdn->busno << 8) | pdn->devfn;
-> > +	rc = opal_npu_mem_release(phb->opal_id, bdfn);
-> > +	WARN_ON(rc);
-> 
-> Same comments as above.
-> 
->    Fred
-> 
-> 
-> 
-> > +}
-> > +EXPORT_SYMBOL_GPL(pnv_ocxl_platform_lpc_release);
-> > +
-> > +
-> >   int pnv_ocxl_spa_remove_pe_from_cache(void *platform_data, int
-> > pe_handle)
-> >   {
-> >   	struct spa_data *data = (struct spa_data *) platform_data;
-> > 
--- 
-Alastair D'Silva
-Open Source Developer
-Linux Technology Centre, IBM Australia
-mob: 0423 762 819
+I think we can leave those call backs in if device driver or product 
+development teams would like to use them.
 
+Dan
+
+
+> On 9/17/19 7:59 PM, Dan Murphy wrote:
+>> Introduce a multicolor class that groups colored LEDs
+>> within a LED node.
+>>
+>> The framework allows for dynamically setting individual LEDs
+>> or setting brightness levels of LEDs and updating them virtually
+>> simultaneously.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>
+>> v6 removed color_id and color_mix files, used sysfs_create_groups instead of
+>> kobject call for LED color directory, kept kobject_create for the "colors" directory,
+>> removed the calculate function, updated the export for the intensity calculations.
+>>
+>>
+>>   drivers/leds/Kconfig                 |  10 +
+>>   drivers/leds/Makefile                |   1 +
+>>   drivers/leds/led-class-multicolor.c  | 306 +++++++++++++++++++++++++++
+>>   include/linux/led-class-multicolor.h |  90 ++++++++
+>>   4 files changed, 407 insertions(+)
+>>   create mode 100644 drivers/leds/led-class-multicolor.c
+>>   create mode 100644 include/linux/led-class-multicolor.h
+>>
+>> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+>> index 1988de1d64c0..71e7fd4f6f15 100644
+>> --- a/drivers/leds/Kconfig
+>> +++ b/drivers/leds/Kconfig
+>> @@ -30,6 +30,16 @@ config LEDS_CLASS_FLASH
+>>   	  for the flash related features of a LED device. It can be built
+>>   	  as a module.
+>>   
+>> +config LEDS_CLASS_MULTI_COLOR
+>> +	tristate "LED Mulit Color LED Class Support"
+>> +	depends on LEDS_CLASS
+>> +	help
+>> +	  This option enables the multicolor LED sysfs class in /sys/class/leds.
+>> +	  It wraps LED class and adds multicolor LED specific sysfs attributes
+>> +	  and kernel internal API to it. You'll need this to provide support
+>> +	  for multicolor LEDs that are grouped together. This class is not
+>> +	  intended for single color LEDs. It can be built as a module.
+>> +
+>>   config LEDS_BRIGHTNESS_HW_CHANGED
+>>   	bool "LED Class brightness_hw_changed attribute support"
+>>   	depends on LEDS_CLASS
+>> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+>> index 41fb073a39c1..897b810257dd 100644
+>> --- a/drivers/leds/Makefile
+>> +++ b/drivers/leds/Makefile
+>> @@ -4,6 +4,7 @@
+>>   obj-$(CONFIG_NEW_LEDS)			+= led-core.o
+>>   obj-$(CONFIG_LEDS_CLASS)		+= led-class.o
+>>   obj-$(CONFIG_LEDS_CLASS_FLASH)		+= led-class-flash.o
+>> +obj-$(CONFIG_LEDS_CLASS_MULTI_COLOR)	+= led-class-multicolor.o
+>>   obj-$(CONFIG_LEDS_TRIGGERS)		+= led-triggers.o
+>>   
+>>   # LED Platform Drivers
+>> diff --git a/drivers/leds/led-class-multicolor.c b/drivers/leds/led-class-multicolor.c
+>> new file mode 100644
+>> index 000000000000..d43bd344ed4c
+>> --- /dev/null
+>> +++ b/drivers/leds/led-class-multicolor.c
+>> @@ -0,0 +1,306 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +// LED Multi Color class interface
+>> +// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
+>> +
+>> +#include <linux/device.h>
+>> +#include <linux/init.h>
+>> +#include <linux/led-class-multicolor.h>
+>> +#include <linux/module.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/uaccess.h>
+>> +
+>> +#include "leds.h"
+>> +
+>> +struct led_mc_color_entry {
+>> +	struct led_classdev_mc *mcled_cdev;
+>> +
+>> +	struct device_attribute max_intensity_attr;
+>> +	struct device_attribute intensity_attr;
+>> +
+>> +	enum led_brightness max_intensity;
+>> +	enum led_brightness intensity;
+>> +
+>> +	struct list_head list;
+>> +
+>> +	int led_color_id;
+>> +};
+>> +
+>> +void led_mc_calc_brightness(struct led_classdev_mc *mcled_cdev,
+>> +			    enum led_brightness brightness,
+>> +			    int brightness_val[])
+>> +{
+>> +	struct led_classdev_mc_data *data = mcled_cdev->data;
+>> +	struct led_mc_color_entry *priv;
+>> +	int i = 0;
+>> +
+>> +	list_for_each_entry(priv, &data->color_list, list) {
+>> +		brightness_val[i] = brightness *
+>> +				    priv->intensity / priv->max_intensity;
+>> +		i++;
+>> +	}
+>> +}
+>> +EXPORT_SYMBOL_GPL(led_mc_calc_brightness);
+>> +
+>> +static ssize_t intensity_store(struct device *dev,
+>> +				struct device_attribute *intensity_attr,
+>> +				const char *buf, size_t size)
+>> +{
+>> +	struct led_mc_color_entry *priv = container_of(intensity_attr,
+>> +						    struct led_mc_color_entry,
+>> +						      intensity_attr);
+>> +	struct led_classdev_mc_data *data = priv->mcled_cdev->data;
+>> +	struct led_classdev_mc *mcled_cdev = data->mcled_cdev;
+>> +	struct led_classdev *led_cdev = priv->mcled_cdev->led_cdev;
+>> +	unsigned long value;
+>> +	ssize_t ret;
+>> +
+>> +	mutex_lock(&led_cdev->led_access);
+>> +
+>> +	ret = kstrtoul(buf, 10, &value);
+>> +	if (ret)
+>> +		goto unlock;
+>> +
+>> +	if (value > priv->max_intensity) {
+>> +		ret = -EINVAL;
+>> +		goto unlock;
+>> +	}
+>> +
+>> +	priv->intensity = value;
+>> +
+>> +	if (mcled_cdev->ops) {
+>> +		ret = mcled_cdev->ops->set_color_brightness(mcled_cdev,
+>> +							    priv->led_color_id,
+>> +							    priv->intensity);
+> I don't think this is a good idea to update hw here now.
+> As I proposed before - let's do the write only in brightness set.
+> Otherwise any change of hue requiring alteration of more than one color
+> component will be non-atomic w.r.t. hw state change. Just cache the
+> intensity in the entry here.
+>
+> [...]
+>
