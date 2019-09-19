@@ -2,137 +2,171 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80CE8C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E91CC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54F96217D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:58:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDEC921907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:05:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568930321;
-	bh=aKB8RP1/z708xjO+R/vS8Tbbw9jCj5WKa/D1wo6zyyY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aAEnT6DvUiF7OpiZ8/YWpgAg3mcp4DNvCdtLHRs0xjmdoAjDqKSzv+hUmLgQGj/nc
-	 50MJ/tCso0lqSRXRakFvLtK/rlYAjkRcFZgtwyzHugBzs7hLnyesdEBUPVKWku1Mug
-	 OQDVZ9/ruTF2dYKp+MyhjTDEeGWYKsnQamEedlSE=
+	s=default; t=1568930715;
+	bh=vy1EzxvngNCsmQmWVotcmYnRrXaza0Re7DnzpcbIggc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=WqD45DrhN0aebDkTiE4F94Lcv+3E9lETdNUhHkoUXK0n7d3WvyHK+gQFil2QIAk8d
+	 23u0aiSucFgUmcSO/eHLkZC05EKXpreFGHEhLnl31nr0QomvM25XjwCDJbEuG2OzEo
+	 6ctWLV5gsS6x31K5bTEX8Ps9pBIzvpe47QtR+KE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404928AbfISV6k (ORCPT
+        id S2404931AbfISWFP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 17:58:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40912 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:05:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389212AbfISV6k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 17:58:40 -0400
+        id S2389212AbfISWFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:05:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59315208C0;
-        Thu, 19 Sep 2019 21:58:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 575F4218AF;
+        Thu, 19 Sep 2019 22:05:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568930319;
-        bh=aKB8RP1/z708xjO+R/vS8Tbbw9jCj5WKa/D1wo6zyyY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NHhdH/EZk2gyCgyf5KxSejYwQBY6AA4UjAnnpIe+ueRaQFteHKvCEUl8K64w272HL
-         /UpuWRROij41Zh/A44RB/A/ssPrK4o8ypWDUBeen0SYGCAMckZCbRtdIe41/MfGxy7
-         OCHRaqo1aznCdgf9RPSfI1U3ckF8tRYqotakNnMY=
-Date:   Thu, 19 Sep 2019 23:58:36 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Murali Nalajala <mnalajal@codeaurora.org>, rafael@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] base: soc: Export soc_device_to_device API
-Message-ID: <20190919215836.GA426988@kroah.com>
-References: <1568927624-13682-1-git-send-email-mnalajal@codeaurora.org>
- <20190919213203.GA395325@kroah.com>
- <20190919215300.GC1418@minitux>
+        s=default; t=1568930713;
+        bh=vy1EzxvngNCsmQmWVotcmYnRrXaza0Re7DnzpcbIggc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GQNGOU3hg+oByzJzOljP1GKLBrp1iDvFMaoOgtOqDY/VQVZXj+HSZEsU72jyVxowy
+         SvRVp0fMhzW9OkVRldNkSCI+tQ+Y1gQ7nwvkex6M3JVyUgyMRifg6xp/D2LIeV3aiP
+         kiuepFZHFAW0vMRp/lBh89CjZfwt6MWAfE+UnBr8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        syzbot+35f4d916c623118d576e@syzkaller.appspotmail.com
+Subject: [PATCH 5.3 01/21] USB: usbcore: Fix slab-out-of-bounds bug during device reset
+Date:   Fri, 20 Sep 2019 00:03:02 +0200
+Message-Id: <20190919214658.658811345@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190919214657.842130855@linuxfoundation.org>
+References: <20190919214657.842130855@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190919215300.GC1418@minitux>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 02:53:00PM -0700, Bjorn Andersson wrote:
-> On Thu 19 Sep 14:32 PDT 2019, Greg KH wrote:
-> 
-> > On Thu, Sep 19, 2019 at 02:13:44PM -0700, Murali Nalajala wrote:
-> > > If the soc drivers want to add custom sysfs entries it needs to
-> > > access "dev" field in "struct soc_device". This can be achieved
-> > > by "soc_device_to_device" API. Soc drivers which are built as a
-> > > module they need above API to be exported. Otherwise one can
-> > > observe compilation issues.
-> > > 
-> > > Signed-off-by: Murali Nalajala <mnalajal@codeaurora.org>
-> > > ---
-> > >  drivers/base/soc.c | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > > 
-> > > diff --git a/drivers/base/soc.c b/drivers/base/soc.c
-> > > index 7c0c5ca..4ad52f6 100644
-> > > --- a/drivers/base/soc.c
-> > > +++ b/drivers/base/soc.c
-> > > @@ -41,6 +41,7 @@ struct device *soc_device_to_device(struct soc_device *soc_dev)
-> > >  {
-> > >  	return &soc_dev->dev;
-> > >  }
-> > > +EXPORT_SYMBOL_GPL(soc_device_to_device);
-> > >  
-> > >  static umode_t soc_attribute_mode(struct kobject *kobj,
-> > >  				struct attribute *attr,
-> > 
-> > What in-kernel driver needs this?
-> > 
-> 
-> Half of the drivers interacting with the soc driver calls this API,
-> several of these I see no reason for being builtin (e.g.
-> ux500 andversatile). So I think this patch makes sense to allow us to
-> build these as modules.
-> 
-> > Is linux-next breaking without this?
-> > 
-> 
-> No, we postponed the addition of any sysfs attributes in the Qualcomm
-> socinfo driver.
-> 
-> > We don't export things unless we have a user of the export.
-> > 
-> > Also, adding "custom" sysfs attributes is almost always not the correct
-> > thing to do at all.  The driver should be doing it, by setting up the
-> > attribute group properly so that the driver core can do it automatically
-> > for it.
-> > 
-> > No driver should be doing individual add/remove of sysfs files.  If it
-> > does so, it is almost guaranteed to be doing it incorrectly and racing
-> > userspace.
-> > 
-> 
-> The problem here is that the attributes are expected to be attached to
-> the soc driver, which is separate from the platform-specific drivers. So
-> there's no way to do platform specific attributes the right way.
-> 
-> > And yes, there's loads of in-kernel examples of doing this wrong, I've
-> > been working on fixing that up, look at the patches now in Linus's tree
-> > for platform and USB drivers that do this as examples of how to do it
-> > right.
-> > 
-> 
-> Agreed, this patch should not be used as an approval for any crazy
-> attributes; but it's necessary in order to extend the soc device's
-> attributes, per the current design.
+From: Alan Stern <stern@rowland.harvard.edu>
 
-Wait, no, let's not let the "current design" remain if it is broken!
+commit 3dd550a2d36596a1b0ee7955da3b611c031d3873 upstream.
 
-Why can't the soc driver handle the attributes properly so that the
-individual driver doesn't have to do the create/remove?
+The syzbot fuzzer provoked a slab-out-of-bounds error in the USB core:
 
-thanks,
+BUG: KASAN: slab-out-of-bounds in memcmp+0xa6/0xb0 lib/string.c:904
+Read of size 1 at addr ffff8881d175bed6 by task kworker/0:3/2746
 
-greg k-h
+CPU: 0 PID: 2746 Comm: kworker/0:3 Not tainted 5.3.0-rc5+ #28
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  print_address_description+0x6a/0x32c mm/kasan/report.c:351
+  __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
+  kasan_report+0xe/0x12 mm/kasan/common.c:612
+  memcmp+0xa6/0xb0 lib/string.c:904
+  memcmp include/linux/string.h:400 [inline]
+  descriptors_changed drivers/usb/core/hub.c:5579 [inline]
+  usb_reset_and_verify_device+0x564/0x1300 drivers/usb/core/hub.c:5729
+  usb_reset_device+0x4c1/0x920 drivers/usb/core/hub.c:5898
+  rt2x00usb_probe+0x53/0x7af
+drivers/net/wireless/ralink/rt2x00/rt2x00usb.c:806
+
+The error occurs when the descriptors_changed() routine (called during
+a device reset) attempts to compare the old and new BOS and capability
+descriptors.  The length it uses for the comparison is the
+wTotalLength value stored in BOS descriptor, but this value is not
+necessarily the same as the length actually allocated for the
+descriptors.  If it is larger the routine will call memcmp() with a
+length that is too big, thus reading beyond the end of the allocated
+region and leading to this fault.
+
+The kernel reads the BOS descriptor twice: first to get the total
+length of all the capability descriptors, and second to read it along
+with all those other descriptors.  A malicious (or very faulty) device
+may send different values for the BOS descriptor fields each time.
+The memory area will be allocated using the wTotalLength value read
+the first time, but stored within it will be the value read the second
+time.
+
+To prevent this possibility from causing any errors, this patch
+modifies the BOS descriptor after it has been read the second time:
+It sets the wTotalLength field to the actual length of the descriptors
+that were read in and validated.  Then the memcpy() call, or any other
+code using these descriptors, will be able to rely on wTotalLength
+being valid.
+
+Reported-and-tested-by: syzbot+35f4d916c623118d576e@syzkaller.appspotmail.com
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+CC: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.1909041154260.1722-100000@iolanthe.rowland.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/usb/core/config.c |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+--- a/drivers/usb/core/config.c
++++ b/drivers/usb/core/config.c
+@@ -921,7 +921,7 @@ int usb_get_bos_descriptor(struct usb_de
+ 	struct usb_bos_descriptor *bos;
+ 	struct usb_dev_cap_header *cap;
+ 	struct usb_ssp_cap_descriptor *ssp_cap;
+-	unsigned char *buffer;
++	unsigned char *buffer, *buffer0;
+ 	int length, total_len, num, i, ssac;
+ 	__u8 cap_type;
+ 	int ret;
+@@ -966,10 +966,12 @@ int usb_get_bos_descriptor(struct usb_de
+ 			ret = -ENOMSG;
+ 		goto err;
+ 	}
++
++	buffer0 = buffer;
+ 	total_len -= length;
++	buffer += length;
+ 
+ 	for (i = 0; i < num; i++) {
+-		buffer += length;
+ 		cap = (struct usb_dev_cap_header *)buffer;
+ 
+ 		if (total_len < sizeof(*cap) || total_len < cap->bLength) {
+@@ -983,8 +985,6 @@ int usb_get_bos_descriptor(struct usb_de
+ 			break;
+ 		}
+ 
+-		total_len -= length;
+-
+ 		if (cap->bDescriptorType != USB_DT_DEVICE_CAPABILITY) {
+ 			dev_warn(ddev, "descriptor type invalid, skip\n");
+ 			continue;
+@@ -1019,7 +1019,11 @@ int usb_get_bos_descriptor(struct usb_de
+ 		default:
+ 			break;
+ 		}
++
++		total_len -= length;
++		buffer += length;
+ 	}
++	dev->bos->desc->wTotalLength = cpu_to_le16(buffer - buffer0);
+ 
+ 	return 0;
+ 
+
+
