@@ -2,235 +2,132 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,LOCALPART_IN_SUBJECT,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2118CC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 16:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93620C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 16:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA84F21927
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 16:06:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6957921927
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 16:06:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568909205;
+	bh=jvNH7qUXfE3YwVHywOl6yUfhFMpjSPVWpJ1WHfIQ2NU=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=qV8nLSw6WxkMU2dUnf7Iqhi9RajMu36fGwG7yrLhyoKF5Qw3Be2ZBvxs1mVXjK/HX
+	 TVxLS0hQa+r4a+ISPbW69vUwoTlz0Zf8YaiiINCWqrAWDfrcPTfUZ6XOHj234wZiro
+	 DPWxj5rY9qnkfW7uQ4RvDNSjxb66Os1F3ZAtq05w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391546AbfISQG3 (ORCPT
+        id S2391556AbfISQGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 12:06:29 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48320 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387433AbfISQG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 12:06:28 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 126BC307D971;
-        Thu, 19 Sep 2019 16:06:28 +0000 (UTC)
-Received: from localhost.localdomain.com (ovpn-12-80.pek2.redhat.com [10.72.12.80])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 259D06013A;
-        Thu, 19 Sep 2019 16:06:10 +0000 (UTC)
-From:   Kairui Song <kasong@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
-        x86@kernel.org, linux-efi@vger.kernel.org,
-        Kairui Song <kasong@redhat.com>
-Subject: [PATCH v2] x86, efi: never relocate kernel below lowest acceptable address
-Date:   Fri, 20 Sep 2019 00:05:21 +0800
-Message-Id: <20190919160521.13820-1-kasong@redhat.com>
+        Thu, 19 Sep 2019 12:06:44 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:42302 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388098AbfISQGo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 12:06:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
+        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=GOCQvL6i0fVL0FmIWtQyMjmyubdpwyxSGTHDlRvQXGA=; b=ANf9+cj9bFejOnKyvJZDCHIqd
+        AGihL6BbZMQR8CC6eWrph+zIcUEWSev176/r7tkMBxE3rW/KFIy7Yb66esryNDUNYO8CdtrcO0Vv4
+        Zi4DN70QWQSkOa7iBHEW6V4q1B+LCh9387clj437KnLxAWaoVseNciVBwZyKzzG+e7kQo=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iAyx8-0004Mq-0z; Thu, 19 Sep 2019 16:06:42 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 81AF12741D3A; Thu, 19 Sep 2019 17:06:41 +0100 (BST)
+Date:   Thu, 19 Sep 2019 17:06:41 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Tree for Sep 19
+Message-ID: <20190919160641.GR3642@sirena.co.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Thu, 19 Sep 2019 16:06:28 +0000 (UTC)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="9DptZICXTlJ7FQ09"
+Content-Disposition: inline
+X-Cookie: I'll be Grateful when they're Dead.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, kernel fails to boot on some HyperV VMs when using EFI.
-And it's a potential issue on all platforms.
 
-It's caused a broken kernel relocation on EFI systems, when below three
-conditions are met:
+--9DptZICXTlJ7FQ09
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-1. Kernel image is not loaded to the default address (LOAD_PHYSICAL_ADDR)
-   by the loader.
-2. There isn't enough room to contain the kernel, starting from the
-   default load address (eg. something else occupied part the region).
-3. In the memmap provided by EFI firmware, there is a memory region
-   starts below LOAD_PHYSICAL_ADDR, and suitable for containing the
-   kernel.
+Hi all,
 
-Efi stub will perform a kernel relocation when condition 1 is met. But
-due to condition 2, efi stub can't relocate kernel to the preferred
-address, so it fallback to query and alloc from EFI firmware for lowest
-usable memory region.
+Changes since 20190918:
 
-It's incorrect to use the lowest memory address. In later stage, kernel
-will assume LOAD_PHYSICAL_ADDR as the minimal acceptable relocate address,
-but efi stub will end up relocating kernel below it.
+The btrfs-kave tree gained a conflict with Linus' tree which I wasn't
+comfortable resolving so I skipped the tre for today.
 
-Then before the kernel decompressing. Kernel will do another relocation
-to address not lower than LOAD_PHYSICAL_ADDR, this time the relocate will
-over write the blockage at the default load address, which efi stub tried
-to avoid, and lead to unexpected behavior. Beside, the memory region it
-writes to is not allocated from EFI firmware, which is also wrong.
+The ext4 tree gained a conflict with Linus' tree which I fixed up.
 
-To fix it, just don't let efi stub relocate the kernel to any address
-lower than lowest acceptable address.
+The nvdimm tree gained a conflict with the libnvdimm-fixes tree which I
+fixed up.
 
-Signed-off-by: Kairui Song <kasong@redhat.com>
+The erofs-fixes tree was added.
 
----
+Non-merge commits (relative to Linus' tree): 5119
+ 4678 files changed, 388151 insertions(+), 105686 deletions(-)
 
-Update from V1:
- - Redo the commit message.
+----------------------------------------------------------------------------
 
- arch/x86/boot/compressed/eboot.c               |  8 +++++---
- drivers/firmware/efi/libstub/arm32-stub.c      |  2 +-
- drivers/firmware/efi/libstub/arm64-stub.c      |  2 +-
- drivers/firmware/efi/libstub/efi-stub-helper.c | 12 ++++++++----
- include/linux/efi.h                            |  5 +++--
- 5 files changed, 18 insertions(+), 11 deletions(-)
+I have created today's linux-next tree at
+git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+(patches at http://www.kernel.org/pub/linux/kernel/next/ ).  If you
+are tracking the linux-next tree using git, you should not use "git pull"
+to do so as that will try to merge the new linux-next release with the
+old one.  You should use "git fetch" and checkout or reset to the new
+master.
 
-diff --git a/arch/x86/boot/compressed/eboot.c b/arch/x86/boot/compressed/eboot.c
-index 936bdb924ec2..8207e8aa297e 100644
---- a/arch/x86/boot/compressed/eboot.c
-+++ b/arch/x86/boot/compressed/eboot.c
-@@ -13,6 +13,7 @@
- #include <asm/e820/types.h>
- #include <asm/setup.h>
- #include <asm/desc.h>
-+#include <asm/boot.h>
- 
- #include "../string.h"
- #include "eboot.h"
-@@ -432,7 +433,7 @@ struct boot_params *make_boot_params(struct efi_config *c)
- 	}
- 
- 	status = efi_low_alloc(sys_table, 0x4000, 1,
--			       (unsigned long *)&boot_params);
-+			       (unsigned long *)&boot_params, 0);
- 	if (status != EFI_SUCCESS) {
- 		efi_printk(sys_table, "Failed to allocate lowmem for boot params\n");
- 		return NULL;
-@@ -817,7 +818,7 @@ efi_main(struct efi_config *c, struct boot_params *boot_params)
- 
- 	gdt->size = 0x800;
- 	status = efi_low_alloc(sys_table, gdt->size, 8,
--			   (unsigned long *)&gdt->address);
-+			       (unsigned long *)&gdt->address, 0);
- 	if (status != EFI_SUCCESS) {
- 		efi_printk(sys_table, "Failed to allocate memory for 'gdt'\n");
- 		goto fail;
-@@ -842,7 +843,8 @@ efi_main(struct efi_config *c, struct boot_params *boot_params)
- 		status = efi_relocate_kernel(sys_table, &bzimage_addr,
- 					     hdr->init_size, hdr->init_size,
- 					     hdr->pref_address,
--					     hdr->kernel_alignment);
-+					     hdr->kernel_alignment,
-+					     LOAD_PHYSICAL_ADDR);
- 		if (status != EFI_SUCCESS) {
- 			efi_printk(sys_table, "efi_relocate_kernel() failed!\n");
- 			goto fail;
-diff --git a/drivers/firmware/efi/libstub/arm32-stub.c b/drivers/firmware/efi/libstub/arm32-stub.c
-index e8f7aefb6813..bf6f954d6afe 100644
---- a/drivers/firmware/efi/libstub/arm32-stub.c
-+++ b/drivers/firmware/efi/libstub/arm32-stub.c
-@@ -220,7 +220,7 @@ efi_status_t handle_kernel_image(efi_system_table_t *sys_table,
- 	*image_size = image->image_size;
- 	status = efi_relocate_kernel(sys_table, image_addr, *image_size,
- 				     *image_size,
--				     dram_base + MAX_UNCOMP_KERNEL_SIZE, 0);
-+				     dram_base + MAX_UNCOMP_KERNEL_SIZE, 0, 0);
- 	if (status != EFI_SUCCESS) {
- 		pr_efi_err(sys_table, "Failed to relocate kernel.\n");
- 		efi_free(sys_table, *reserve_size, *reserve_addr);
-diff --git a/drivers/firmware/efi/libstub/arm64-stub.c b/drivers/firmware/efi/libstub/arm64-stub.c
-index 1550d244e996..3d2e517e10f4 100644
---- a/drivers/firmware/efi/libstub/arm64-stub.c
-+++ b/drivers/firmware/efi/libstub/arm64-stub.c
-@@ -140,7 +140,7 @@ efi_status_t handle_kernel_image(efi_system_table_t *sys_table_arg,
- 	if (status != EFI_SUCCESS) {
- 		*reserve_size = kernel_memsize + TEXT_OFFSET;
- 		status = efi_low_alloc(sys_table_arg, *reserve_size,
--				       MIN_KIMG_ALIGN, reserve_addr);
-+				       MIN_KIMG_ALIGN, reserve_addr, 0);
- 
- 		if (status != EFI_SUCCESS) {
- 			pr_efi_err(sys_table_arg, "Failed to relocate kernel\n");
-diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
-index 3caae7f2cf56..00b00a2562aa 100644
---- a/drivers/firmware/efi/libstub/efi-stub-helper.c
-+++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
-@@ -260,11 +260,11 @@ efi_status_t efi_high_alloc(efi_system_table_t *sys_table_arg,
- }
- 
- /*
-- * Allocate at the lowest possible address.
-+ * Allocate at the lowest possible address that is not below 'min'.
-  */
- efi_status_t efi_low_alloc(efi_system_table_t *sys_table_arg,
- 			   unsigned long size, unsigned long align,
--			   unsigned long *addr)
-+			   unsigned long *addr, unsigned long min)
- {
- 	unsigned long map_size, desc_size, buff_size;
- 	efi_memory_desc_t *map;
-@@ -311,6 +311,9 @@ efi_status_t efi_low_alloc(efi_system_table_t *sys_table_arg,
- 		start = desc->phys_addr;
- 		end = start + desc->num_pages * EFI_PAGE_SIZE;
- 
-+		if (start < min)
-+			start = min;
-+
- 		/*
- 		 * Don't allocate at 0x0. It will confuse code that
- 		 * checks pointers against NULL. Skip the first 8
-@@ -698,7 +701,8 @@ efi_status_t efi_relocate_kernel(efi_system_table_t *sys_table_arg,
- 				 unsigned long image_size,
- 				 unsigned long alloc_size,
- 				 unsigned long preferred_addr,
--				 unsigned long alignment)
-+				 unsigned long alignment,
-+				 unsigned long min_addr)
- {
- 	unsigned long cur_image_addr;
- 	unsigned long new_addr = 0;
-@@ -732,7 +736,7 @@ efi_status_t efi_relocate_kernel(efi_system_table_t *sys_table_arg,
- 	 */
- 	if (status != EFI_SUCCESS) {
- 		status = efi_low_alloc(sys_table_arg, alloc_size, alignment,
--				       &new_addr);
-+				       &new_addr, min_addr);
- 	}
- 	if (status != EFI_SUCCESS) {
- 		pr_efi_err(sys_table_arg, "Failed to allocate usable memory for kernel.\n");
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index f87fabea4a85..cc947c0f3e06 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -1587,7 +1587,7 @@ efi_status_t efi_get_memory_map(efi_system_table_t *sys_table_arg,
- 
- efi_status_t efi_low_alloc(efi_system_table_t *sys_table_arg,
- 			   unsigned long size, unsigned long align,
--			   unsigned long *addr);
-+			   unsigned long *addr, unsigned long min);
- 
- efi_status_t efi_high_alloc(efi_system_table_t *sys_table_arg,
- 			    unsigned long size, unsigned long align,
-@@ -1598,7 +1598,8 @@ efi_status_t efi_relocate_kernel(efi_system_table_t *sys_table_arg,
- 				 unsigned long image_size,
- 				 unsigned long alloc_size,
- 				 unsigned long preferred_addr,
--				 unsigned long alignment);
-+				 unsigned long alignment,
-+				 unsigned long min_addr);
- 
- efi_status_t handle_cmdline_files(efi_system_table_t *sys_table_arg,
- 				  efi_loaded_image_t *image,
--- 
-2.21.0
+You can see which trees have been included by looking in the Next/Trees
+file in the source.  There are also quilt-import.log and merge.log
+files in the Next directory.  Between each merge, the tree was built
+with a defconfig for arm64, an allmodconfig for x86_64, a
+multi_v7_defconfig for arm and a native build of tools/perf.
 
+Below is a summary of the state of the merge.
+
+I am currently merging 311 trees (counting Linus' and 77 trees of bug
+fix patches pending for the current merge release).
+
+Stats about the size of the tree over time can be seen at
+http://neuling.org/linux-next-size.html .
+
+Status of my local build tests will be at
+http://kisskb.ellerman.id.au/linux-next .  If maintainers want to give
+advice about cross compilers/configs that work, we are always open to add
+more builds.
+
+Thanks to Randy Dunlap for doing many randconfig builds.  And to Paul
+Gortmaker for triage and bug fixes.
+
+--9DptZICXTlJ7FQ09
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2Dp5AACgkQJNaLcl1U
+h9AyVQf+KDYCy2XvdPPARkmMF7W6ccQba30uCpl8jmQuJeDrrh8DJHnNeX/O6SrN
+19D/48pUSoQoLIRJIYN7W3a+3YowypiVwxkg4XWk/VlpNIy2qWDqUIplQ09DQsjq
+/b8s58VoKvRlVwZn4SRToQ2+kigjTf5YTlsJ/BohUgMJhdq4j5BuLG0RPQqMWpoX
+3O3KRw63kya2r2OPU2NmcKyAUqNwsmnb9yEO52S6eiZdj0Q+tpP4lgJBsHKvcfGv
+Xl0EN0Fzq2LZig98unj1X+YeQDNjMVQnE31358MS3KNMles/+OmAmo6JqZoMvul5
+ot6eIhZ8jyF4OGz1wuKd6WpFtC6Eag==
+=jSt5
+-----END PGP SIGNATURE-----
+
+--9DptZICXTlJ7FQ09--
