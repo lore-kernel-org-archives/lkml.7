@@ -2,85 +2,126 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45847C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 12:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A469C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 12:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BB1E218AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 12:55:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="aMXMVXNc"
+	by mail.kernel.org (Postfix) with ESMTP id 163EB218AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 12:55:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390364AbfISMzX (ORCPT
+        id S2390428AbfISMz3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 08:55:23 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35312 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389212AbfISMzW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 08:55:22 -0400
-Received: by mail-wr1-f65.google.com with SMTP id v8so3010953wrt.2
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 05:55:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=65/ywDMWrzjeCzGWCGYnBZeM7JciK2cM+apP1oaSTMo=;
-        b=aMXMVXNc+01+ALajqoxJSw001xwdNeYz8ol0SlDxQ23fL+trAlbYvQpAtgX5YMFRPk
-         boQx8cdnW+Hxop65M+odc7EH+HqEkw6/hVRPSgasuYXJlzjSidX52xTTaBXqjVeIpOXH
-         GC904JYvj30jGTfjm/qj+mgyoFJVo0MXRHWDe7VXTgz4rtIX/wWhTJjpVkb8sRohbjtF
-         BtdyqNCFKqVgCnQoxne1Pqu4uPeqYX7jQvJIkp2o4gdjFOMVHHEYarCoQEKR2P24i1J9
-         pNpq8ur/JCVRqiorhCqDxPsPVfR2THSMQ/Nfn3ectKGf7KOv6IpTUR9wtIFfi5nsfawp
-         Ey8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=65/ywDMWrzjeCzGWCGYnBZeM7JciK2cM+apP1oaSTMo=;
-        b=Ge36tlnvlJRA06JivmhVyRzV+gIIjFmIUAbWghhYW/lwKymJ5f/y7r+86sdzR+JKja
-         96uAL6uEYSLfE3P/FsrpecKbxsLC9vvrM0RMLe+cQNqfTnHCHXv3jxB9tDqAZA/cRcTq
-         /45gaRc5mhFp2paknzBKUav4Czcs+poM4ep2gX9qs3Yqqe8nqe7yLQKw6gBLVlSANbqO
-         DxD/D5dtzg4Gjq3HUH8tAc5g/c16FVOPOezL2tQtIIR3YQIdkgqZi7xujxvaXcGyIT3t
-         IweMOZ9Q9DxLAbE6v9+ZdMpfy9wiQxRf+hjN4fFYV5kE4aaNRSmNZ+nM6p3s/1obixW5
-         f+uQ==
-X-Gm-Message-State: APjAAAXrQHW+k3+rH6UDRkNg6RcWwFK3cUbEaNyo5KTEDh5F9utYwnJE
-        sy1COJmr9AcpP+9yoC0HZBO1VA==
-X-Google-Smtp-Source: APXvYqzfX9Vgi3rEEb5XfbpNt8GsXKxAGn3g+PjDZmnfOKy+ytg28J4GtD1MxJfxDh88ZbWtbFr7XA==
-X-Received: by 2002:adf:ce91:: with SMTP id r17mr7277133wrn.97.1568897720776;
-        Thu, 19 Sep 2019 05:55:20 -0700 (PDT)
-Received: from localhost ([109.190.253.11])
-        by smtp.gmail.com with ESMTPSA id q3sm10364469wrm.86.2019.09.19.05.55.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2019 05:55:20 -0700 (PDT)
-Date:   Thu, 19 Sep 2019 05:55:18 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Bin Meng <bmeng.cn@gmail.com>
-cc:     Palmer Dabbelt <palmer@sifive.com>, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v2] riscv: dts: sifive: Drop "clock-frequency" property
- of cpu nodes
-In-Reply-To: <1567687553-22334-1-git-send-email-bmeng.cn@gmail.com>
-Message-ID: <alpine.DEB.2.21.9999.1909190555020.13446@viisi.sifive.com>
-References: <1567687553-22334-1-git-send-email-bmeng.cn@gmail.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Thu, 19 Sep 2019 08:55:29 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2739 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389212AbfISMz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 08:55:28 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 91770C78C476D9935686;
+        Thu, 19 Sep 2019 20:55:25 +0800 (CST)
+Received: from [127.0.0.1] (10.57.88.168) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Thu, 19 Sep 2019
+ 20:55:19 +0800
+Subject: Re: [PATCH v4 1/3] kernel/notifier.c: intercepting duplicate
+ registrations to avoid infinite loops
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     <akpm@linux-foundation.org>, <vvs@virtuozzo.com>,
+        <torvalds@linux-foundation.org>, <adobriyan@gmail.com>,
+        <anna.schumaker@netapp.com>, <arjan@linux.intel.com>,
+        <bfields@fieldses.org>, <chuck.lever@oracle.com>,
+        <davem@davemloft.net>, <jlayton@kernel.org>, <luto@kernel.org>,
+        <mingo@kernel.org>, <Nadia.Derbey@bull.net>,
+        <paulmck@linux.vnet.ibm.com>, <semen.protsenko@linaro.org>,
+        <stern@rowland.harvard.edu>, <tglx@linutronix.de>,
+        <trond.myklebust@hammerspace.com>, <viresh.kumar@linaro.org>,
+        <stable@kernel.org>, <dylix.dailei@huawei.com>,
+        <yuehaibing@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <linux-nfs@vger.kernel.org>, <netdev@vger.kernel.org>
+References: <1568861888-34045-1-git-send-email-nixiaoming@huawei.com>
+ <1568861888-34045-2-git-send-email-nixiaoming@huawei.com>
+ <20190919063615.GA2069346@kroah.com>
+From:   Xiaoming Ni <nixiaoming@huawei.com>
+Message-ID: <b37575b1-2ea4-d813-c262-b52b322652c1@huawei.com>
+Date:   Thu, 19 Sep 2019 20:55:19 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190919063615.GA2069346@kroah.com>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.57.88.168]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 5 Sep 2019, Bin Meng wrote:
-
-> The "clock-frequency" property of cpu nodes isn't required. Drop it.
+On 2019/9/19 14:36, Greg KH wrote:
+> On Thu, Sep 19, 2019 at 10:58:06AM +0800, Xiaoming Ni wrote:
+>> Registering the same notifier to a hook repeatedly can cause the hook
+>> list to form a ring or lose other members of the list.
+>>
+>> case1: An infinite loop in notifier_chain_register() can cause soft lockup
+>>         atomic_notifier_chain_register(&test_notifier_list, &test1);
+>>         atomic_notifier_chain_register(&test_notifier_list, &test1);
+>>         atomic_notifier_chain_register(&test_notifier_list, &test2);
+>>
+>> case2: An infinite loop in notifier_chain_register() can cause soft lockup
+>>         atomic_notifier_chain_register(&test_notifier_list, &test1);
+>>         atomic_notifier_chain_register(&test_notifier_list, &test1);
+>>         atomic_notifier_call_chain(&test_notifier_list, 0, NULL);
+>>
+>> case3: lose other hook test2
+>>         atomic_notifier_chain_register(&test_notifier_list, &test1);
+>>         atomic_notifier_chain_register(&test_notifier_list, &test2);
+>>         atomic_notifier_chain_register(&test_notifier_list, &test1);
+>>
+>> case4: Unregister returns 0, but the hook is still in the linked list,
+>>         and it is not really registered. If you call notifier_call_chain
+>>         after ko is unloaded, it will trigger oops.
+>>
+>> If the system is configured with softlockup_panic and the same
+>> hook is repeatedly registered on the panic_notifier_list, it
+>> will cause a loop panic.
+>>
+>> Add a check in notifier_chain_register(),
+>> Intercepting duplicate registrations to avoid infinite loops
+>>
+>> Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
+>> Reviewed-by: Vasily Averin <vvs@virtuozzo.com>
+>> ---
+>>  kernel/notifier.c | 5 ++++-
+>>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
-> Signed-off-by: Bin Meng <bmeng.cn@gmail.com>
+> <formletter>
+> 
+> This is not the correct way to submit patches for inclusion in the
+> stable kernel tree.  Please read:
+>     https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+> for how to do this properly.
+> 
+thanks for your guidance
+I thought that as long as the code exists in the stable branch, it should be copied to stable@kernel.org
+it is my mistake,
 
-Thanks, queued for v5.4-rc with Christoph's Reviewed-by:.
+These patches are intended to be sent to the main line.
+Should I resend it again?
 
-- Paul
+> </formletter>
+> 
+> Same thing goes for all of the patches in this series.
+> 
+> thanks,
+> 
+> greg k-h
+> 
+> .
+> 
+
+thanks
+
+Xiaoming Ni
+
