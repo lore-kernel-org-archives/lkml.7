@@ -6,36 +6,37 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0946C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 23:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C53C4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 23:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CEE721920
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 23:24:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 749C321D80
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 23:24:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406117AbfISXYC (ORCPT
+        id S2406383AbfISXYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 19:24:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35596 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 19:24:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392498AbfISXYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 19:24:00 -0400
+        id S2405579AbfISXYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 19:24:01 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 943DA21924;
-        Thu, 19 Sep 2019 23:24:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11EDD21A4C;
+        Thu, 19 Sep 2019 23:24:01 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92)
         (envelope-from <rostedt@goodmis.org>)
-        id 1iB5mJ-0000fc-P0; Thu, 19 Sep 2019 19:23:59 -0400
-Message-Id: <20190919232359.659326578@goodmis.org>
+        id 1iB5mK-0000h5-8E; Thu, 19 Sep 2019 19:24:00 -0400
+Message-Id: <20190919232400.143897364@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Thu, 19 Sep 2019 19:23:15 -0400
+Date:   Thu, 19 Sep 2019 19:23:18 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [for-next][PATCH 2/8] tracing: Be more clever when dumping hex in __print_hex()
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [for-next][PATCH 5/8] selftests/ftrace: Select an existing function in kprobe_eventname
+ test
 References: <20190919232313.198902049@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -44,37 +45,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-Hex dump as many as 16 bytes at once in trace_print_hex_seq()
-instead of byte-by-byte approach.
+Running the ftrace selftests on the latest kernel caused the
+kprobe_eventname test to fail. It was due to the test that searches for
+a function with at "dot" in the name and adding a probe to that.
+Unfortunately, for this test, it picked:
 
-Link: http://lkml.kernel.org/r/20190806151543.86061-1-andriy.shevchenko@linux.intel.com
+ optimize_nops.isra.2.cold.4
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Which happens to be marked as "__init", which means it no longer exists
+in the kernel! (kallsyms keeps those function names around for tracing
+purposes)
+
+As only functions that still exist are in the
+available_filter_functions file, as they are removed when the functions
+are freed at boot or module exit, have the test search for a function
+with ".isra." in the name as well as being in the
+available_filter_functions (if the file exists).
+
+Link: http://lkml.kernel.org/r/20190322150923.1b58eca5@gandalf.local.home
+
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/trace/trace_output.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ .../ftrace/test.d/kprobe/kprobe_eventname.tc     | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index cab4a5398f1d..d54ce252b05a 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -219,10 +219,10 @@ trace_print_hex_seq(struct trace_seq *p, const unsigned char *buf, int buf_len,
- {
- 	int i;
- 	const char *ret = trace_seq_buffer_ptr(p);
-+	const char *fmt = concatenate ? "%*phN" : "%*ph";
+diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_eventname.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_eventname.tc
+index 3fb70e01b1fe..3ff236719b6e 100644
+--- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_eventname.tc
++++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_eventname.tc
+@@ -24,7 +24,21 @@ test -d events/kprobes2/event2 || exit_failure
  
--	for (i = 0; i < buf_len; i++)
--		trace_seq_printf(p, "%s%2.2x", concatenate || i == 0 ? "" : " ",
--				 buf[i]);
-+	for (i = 0; i < buf_len; i += 16)
-+		trace_seq_printf(p, fmt, min(buf_len - i, 16), &buf[i]);
- 	trace_seq_putc(p, 0);
+ :;: "Add an event on dot function without name" ;:
  
- 	return ret;
+-FUNC=`grep -m 10 " [tT] .*\.isra\..*$" /proc/kallsyms | tail -n 1 | cut -f 3 -d " "`
++find_dot_func() {
++	if [ ! -f available_filter_functions ]; then
++		grep -m 10 " [tT] .*\.isra\..*$" /proc/kallsyms | tail -n 1 | cut -f 3 -d " "
++		return;
++	fi
++
++	grep " [tT] .*\.isra\..*" /proc/kallsyms | cut -f 3 -d " " | while read f; do
++		if grep -s $f available_filter_functions; then
++			echo $f
++			break
++		fi
++	done
++}
++
++FUNC=`find_dot_func | tail -n 1`
+ [ "x" != "x$FUNC" ] || exit_unresolved
+ echo "p $FUNC" > kprobe_events
+ EVENT=`grep $FUNC kprobe_events | cut -f 1 -d " " | cut -f 2 -d:`
 -- 
 2.20.1
 
