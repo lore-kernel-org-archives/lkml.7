@@ -2,98 +2,90 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A890BC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 06:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D243C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 06:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8326D21848
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 06:12:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E3F721907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 06:20:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387748AbfISGMm (ORCPT
+        id S1730861AbfISGUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 02:12:42 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:38634 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387646AbfISGMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 02:12:42 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 28B1F52A7D8C5FEA9B88;
-        Thu, 19 Sep 2019 14:12:40 +0800 (CST)
-Received: from [127.0.0.1] (10.63.139.185) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Thu, 19 Sep 2019
- 14:12:29 +0800
-Subject: Re: [PATCH] crypto: hisilicon - Fix return value check in
- hisi_zip_acompress()
-To:     Yunfeng Ye <yeyunfeng@huawei.com>, <herbert@gondor.apana.org.au>,
-        <davem@davemloft.net>
-References: <23be2eb5-8256-0c19-aef9-994974d11c9d@huawei.com>
-CC:     <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-From:   Zhou Wang <wangzhou1@hisilicon.com>
-Message-ID: <5D831C63.9020500@hisilicon.com>
-Date:   Thu, 19 Sep 2019 14:12:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.5.1
+        Thu, 19 Sep 2019 02:20:01 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:47899 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730291AbfISGUB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 02:20:01 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iApnJ-0002d9-8T; Thu, 19 Sep 2019 08:19:57 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iApn6-00018G-1u; Thu, 19 Sep 2019 08:19:44 +0200
+Date:   Thu, 19 Sep 2019 08:19:44 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>, Peter Rosin <peda@axentia.se>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH v2] of: restore old handling of cells_name=NULL in
+ of_*_phandle_with_args()
+Message-ID: <20190919061943.ga7jwdn4ednulvgs@pengutronix.de>
+References: <20190918063837.8196-1-u.kleine-koenig@pengutronix.de>
+ <b00ca30f-2c06-7722-96b2-123d15751cb6@axentia.se>
+ <20190918084748.hnjkiq7wc5b35wjh@pengutronix.de>
+ <CAL_JsqJuJrOj+D4xkGACC1=zaB5OUkt=SNzCOiOiTVtM9E9z+A@mail.gmail.com>
+ <20190918201954.2phyqxqhoj5jwklt@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <23be2eb5-8256-0c19-aef9-994974d11c9d@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.63.139.185]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190918201954.2phyqxqhoj5jwklt@pengutronix.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/9/16 14:38, Yunfeng Ye wrote:
-> The return valude of add_comp_head() is int, but @head_size is size_t,
-> which is a unsigned type.
+On Wed, Sep 18, 2019 at 10:19:54PM +0200, Uwe Kleine-König wrote:
+> On Wed, Sep 18, 2019 at 03:09:06PM -0500, Rob Herring wrote:
+> > Can I get a proper patch please.
 > 
-> 	size_t head_size;
-> 	...
-> 	if (head_size < 0)  // it will never work
-> 		return -ENOMEM
-> 
-> Modify the type of @head_size to int, then change the type to size_t
-> when invoke hisi_zip_create_req() as a parameter.
+> I don't understand what is wrong with my patch. Can you please expand
+> what you are missing? I just tried to git-am it and the result looks
+> fine.
 
-Acked-by: Zhou Wang <wangzhou1@hisilicon.com>
+I see that the commit this patch is fixing isn't in Linus' tree yet. Do
+you want instead of this commit fixing the previous one a single good
+patch that replaces e42ee61017f5 ("of: Let of_for_each_phandle fallback
+to non-negative cell_count")?
 
-This is a bug, thinks for your fix!
+Best regards
+Uwe
 
-Best,
-Zhou
-
-> 
-> Fixes: 62c455ca853e ("crypto: hisilicon - add HiSilicon ZIP accelerator support")
-> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-> ---
->  drivers/crypto/hisilicon/zip/zip_crypto.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/crypto/hisilicon/zip/zip_crypto.c b/drivers/crypto/hisilicon/zip/zip_crypto.c
-> index 5a3f84d..5902354 100644
-> --- a/drivers/crypto/hisilicon/zip/zip_crypto.c
-> +++ b/drivers/crypto/hisilicon/zip/zip_crypto.c
-> @@ -559,7 +559,7 @@ static int hisi_zip_acompress(struct acomp_req *acomp_req)
->  	struct hisi_zip_ctx *ctx = crypto_tfm_ctx(acomp_req->base.tfm);
->  	struct hisi_zip_qp_ctx *qp_ctx = &ctx->qp_ctx[QPC_COMP];
->  	struct hisi_zip_req *req;
-> -	size_t head_size;
-> +	int head_size;
->  	int ret;
-> 
->  	/* let's output compression head now */
-> @@ -567,7 +567,7 @@ static int hisi_zip_acompress(struct acomp_req *acomp_req)
->  	if (head_size < 0)
->  		return -ENOMEM;
-> 
-> -	req = hisi_zip_create_req(acomp_req, qp_ctx, head_size, true);
-> +	req = hisi_zip_create_req(acomp_req, qp_ctx, (size_t)head_size, true);
->  	if (IS_ERR(req))
->  		return PTR_ERR(req);
-> 
-
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
