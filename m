@@ -2,53 +2,52 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5107BC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91909C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CE2921907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:07:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ABF121907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:07:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568930862;
-	bh=T9iwYbpHIaYcR1ObrXmOlOde3mk1fmj61LLaKMZLwwA=;
+	s=default; t=1568930869;
+	bh=17rbaqT/jginQt/FhvS50ubtnD5Kp84zT/frCb6KDG8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u/e1lZ1aHdC8OWCvfnCTqHAn3XIRLu7WYzc9IZr2YcV+rVYhdT7dtCElT5emSY2mQ
-	 adVMvUXjJCNPJAXJteFHPA0azycoFOly10HSiz10YK6gRkI4STu3HaIHrfHqhbxKET
-	 hmlfyFfnCBo6Rd+D5ZNpOZYfS9KUwFgTQoyV4Hvo=
+	b=t5Q1TjRod4lYie3lD+KhHQQnt+cnNAwF7WCg6DXaBZicvs+7CcEZRj3I9UPUdu10O
+	 54aahg6GWcfYY/k3XTpT38TPePZoladtBc7xiOX+AP8HwG+tYy1QuGLWaaWYnn9Vzu
+	 xgDDEg+e7pj988uoScA8sScYp07rgStE05KYgmzo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393275AbfISWHl (ORCPT
+        id S2405310AbfISWHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:07:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45336 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:07:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393260AbfISWHh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:07:37 -0400
+        id S2405294AbfISWHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:07:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBB4E21907;
-        Thu, 19 Sep 2019 22:07:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C48BA218AF;
+        Thu, 19 Sep 2019 22:07:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568930857;
-        bh=T9iwYbpHIaYcR1ObrXmOlOde3mk1fmj61LLaKMZLwwA=;
+        s=default; t=1568930865;
+        bh=17rbaqT/jginQt/FhvS50ubtnD5Kp84zT/frCb6KDG8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fBMwqFllH7Pss9TwY1FCZaAOWxTWfFfTd1yPNyHF8cBAGLTfjxdT9ZC5zufXO9NYs
-         y07ivpMV3+ndf7sdeCyvDvckRwWFWnWo//Ep/pECmbfCFEr3RG9Er06y+siZEhYu0c
-         MY56B0N0BUFdsylryo9lb2qZCzcXXD9r5Mmc5pGQ=
+        b=RTzcFiC27sRlWzAsagrljG6fzt3FA1DJnR3zQRoXd1sc6rYhlhG1vnh1BKS211XmJ
+         2A2xCaC5uJ4bwtQOoqQJxF1mOYVOhTUWT/U/oNMPXm0KdWNfoHCABnfTvZF39VpOHi
+         x/kNeA5YXUMUjc+S61/OpYKs8abye4hMUpjBei+k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.2 012/124] scripts/decode_stacktrace: match basepath using shell prefix operator, not regex
-Date:   Fri, 20 Sep 2019 00:01:40 +0200
-Message-Id: <20190919214819.599451200@linuxfoundation.org>
+        stable@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 035/124] arm64: dts: meson-g12a: add missing dwc2 phy-names
+Date:   Fri, 20 Sep 2019 00:02:03 +0200
+Message-Id: <20190919214820.295912007@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -61,35 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Boichat <drinkcat@chromium.org>
+From: Neil Armstrong <narmstrong@baylibre.com>
 
-commit 31013836a71e07751a6827f9d2ad41ef502ddaff upstream.
+[ Upstream commit 3d4bacdc207a7b62941700b374e7199cbb184a43 ]
 
-The basepath may contain special characters, which would confuse the regex
-matcher.  ${var#prefix} does the right thing.
+The G12A USB2 OTG capable PHY uses a 8bit large UTMI bus, and the OTG
+controller gets the PHY but width by probing the associated phy.
 
-Link: http://lkml.kernel.org/r/20190518055946.181563-1-drinkcat@chromium.org
-Fixes: 67a28de47faa8358 ("scripts/decode_stacktrace: only strip base path when a prefix of the path")
-Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+By default it will use 16bit wide settings if a phy is not specified,
+in our case we specified the phy, but not the phy-names.
 
+The dwc2 bindings specifies that if phys is present, phy-names shall be
+"usb2-phy".
+
+Adding phy-names = "usb2-phy" solves the OTG PHY bus configuration.
+
+Fixes: 9baf7d6be730 ("arm64: dts: meson: g12a: Add G12A USB nodes")
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/decode_stacktrace.sh |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/scripts/decode_stacktrace.sh
-+++ b/scripts/decode_stacktrace.sh
-@@ -85,7 +85,7 @@ parse_symbol() {
- 	fi
- 
- 	# Strip out the base of the path
--	code=${code//^$basepath/""}
-+	code=${code#$basepath/}
- 
- 	# In the case of inlines, move everything to same line
- 	code=${code//$'\n'/' '}
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+index 9f72396ba7103..4c92c197aeb8a 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+@@ -591,6 +591,7 @@
+ 				clocks = <&clkc CLKID_USB1_DDR_BRIDGE>;
+ 				clock-names = "ddr";
+ 				phys = <&usb2_phy1>;
++				phy-names = "usb2-phy";
+ 				dr_mode = "peripheral";
+ 				g-rx-fifo-size = <192>;
+ 				g-np-tx-fifo-size = <128>;
+-- 
+2.20.1
+
 
 
