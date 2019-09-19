@@ -6,49 +6,49 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6244AC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 02:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C42C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 02:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 399E0217D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 02:29:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83D7821A49
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 02:34:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731224AbfISC3X (ORCPT
+        id S1731385AbfISCdl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 22:29:23 -0400
-Received: from aliyun-cloud.icoremail.net ([47.90.88.91]:24308 "HELO
-        aliyun-sdnproxy-2.icoremail.net" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with SMTP id S1730669AbfISC3W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 22:29:22 -0400
+        Wed, 18 Sep 2019 22:33:41 -0400
+Received: from mail.wangsu.com ([123.103.51.198]:41758 "EHLO wangsu.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730834AbfISCdl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 22:33:41 -0400
+X-Greylist: delayed 83498 seconds by postgrey-1.27 at vger.kernel.org; Wed, 18 Sep 2019 22:33:40 EDT
 Received: from localhost.localdomain (unknown [218.85.123.226])
-        by app1 (Coremail) with SMTP id xjNnewDnybbs5YJdNFQBAA--.26S2;
-        Thu, 19 Sep 2019 10:20:30 +0800 (CST)
+        by app1 (Coremail) with SMTP id xjNnewBnBOjm6IJdKGYBAA--.30S2;
+        Thu, 19 Sep 2019 10:33:11 +0800 (CST)
 Subject: Re: [PATCH] [RFC] vmscan.c: add a sysctl entry for controlling memory
  reclaim IO congestion_wait length
-To:     Matthew Wilcox <willy@infradead.org>
+To:     Michal Hocko <mhocko@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>
 Cc:     corbet@lwn.net, mcgrof@kernel.org, akpm@linux-foundation.org,
         linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         keescook@chromium.org, mchehab+samsung@kernel.org,
-        mgorman@techsingularity.net, vbabka@suse.cz, mhocko@suse.com,
-        ktkhai@virtuozzo.com, hannes@cmpxchg.org
+        mgorman@techsingularity.net, vbabka@suse.cz, ktkhai@virtuozzo.com,
+        hannes@cmpxchg.org
 References: <20190917115824.16990-1-linf@wangsu.com>
  <20190917120646.GT29434@bombadil.infradead.org>
- <3fbb428e-9466-b56b-0be8-c0f510e3aa99@wangsu.com>
- <20190918113859.GA9880@bombadil.infradead.org>
+ <20190918123342.GF12770@dhcp22.suse.cz>
 From:   Lin Feng <linf@wangsu.com>
-Message-ID: <afb916d8-2c19-f4b7-649f-0d819c2f7e08@wangsu.com>
-Date:   Thu, 19 Sep 2019 10:20:28 +0800
+Message-ID: <6ae57d3e-a3f4-a3db-5654-4ec6001941a9@wangsu.com>
+Date:   Thu, 19 Sep 2019 10:33:10 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190918113859.GA9880@bombadil.infradead.org>
+In-Reply-To: <20190918123342.GF12770@dhcp22.suse.cz>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: xjNnewDnybbs5YJdNFQBAA--.26S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7tF45GF15WFyxZFWUJrW3Awb_yoW8tw17pF
-        y8tFsFgF4qyr93tr92va47Kw1Ut3yUGrW7Jry3X34Uu3s8JF92vF4IgayY9asxurn3Gry2
-        vr4j934kZrWYvaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID: xjNnewBnBOjm6IJdKGYBAA--.30S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7CF1xGF4UZFyUGrW8tFyrJFb_yoW8CFy5pF
+        WfWFZ2yr1DA343CFs293Z7W34vya1UKrW3CF1agryUAr9Iyrn2kr4Fk3yruFyjkry8C34q
+        vr4qgw1UC398AaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
         9KBjDU0xBIdaVrnRJUUUvEb7Iv0xC_Kw4lb4IE77IF4wAFc2x0x2IEx4CE42xK8VAvwI8I
         cIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjx
         v20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl6s0DM28EF7xvwVC2
@@ -68,47 +68,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 9/18/19 19:38, Matthew Wilcox wrote:
-> On Wed, Sep 18, 2019 at 11:21:04AM +0800, Lin Feng wrote:
->>> Adding a new tunable is not the right solution.  The right way is
->>> to make Linux auto-tune itself to avoid the problem.  For example,
->>> bdi_writeback contains an estimated write bandwidth (calculated by the
->>> memory management layer).  Given that, we should be able to make an
->>> estimate for how long to wait for the queues to drain.
->>>
->>
->> Yes, I had ever considered that, auto-tuning is definitely the senior AI way.
->> While considering all kinds of production environments hybird storage solution
->> is also common today, servers' dirty pages' bdi drivers can span from high end
->> ssds to low end sata disk, so we have to think of a *formula(AI core)* by using
->> the factors of dirty pages' amount and bdis' write bandwidth, and this AI-core
->> will depend on if the estimated write bandwidth is sane and moreover the to be
->> written back dirty pages is sequential or random if the bdi is rotational disk,
->> it's likey to give a not-sane number and hurt guys who dont't want that, while
->> if only consider ssd is relatively simple.
->>
->> So IMHO it's not sane to brute force add a guessing logic into memory writeback
->> codes and pray on inventing a formula that caters everyone's need.
->> Add a sysctl entry may be a right choice that give people who need it and
->> doesn't hurt people who don't want it.
-> 
-> You're making this sound far harder than it is.  All the writeback code
-> needs to know is "How long should I sleep for in order for the queues
-> to drain a substantial amount".  Since you know the bandwidth and how
-> many pages you've queued up, it's a simple calculation.
-> 
 
-Ah, I should have read more of the writeback codes ;-)
-Based on Michal's comments:
- > the underlying problem. Both congestion_wait and wait_iff_congested
- > should wake up early if the congestion is handled. Is this not the case?
-If process is waken up once bdi congested is clear, this timeout length's role
-seems not that important. I need to trace more if I can reproduce this issue
-without online network traffic. But still weird thing is that once I set the
-people-disliked-tunable iowait drop down instantly, they are contradictory.
+On 9/18/19 20:33, Michal Hocko wrote:
+>>> +mm_reclaim_congestion_wait_jiffies
+>>> +==========
+>>> +
+>>> +This control is used to define how long kernel will wait/sleep while
+>>> +system memory is under pressure and memroy reclaim is relatively active.
+>>> +Lower values will decrease the kernel wait/sleep time.
+>>> +
+>>> +It's suggested to lower this value on high-end box that system is under memory
+>>> +pressure but with low storage IO utils and high CPU iowait, which could also
+>>> +potentially decrease user application response time in this case.
+>>> +
+>>> +Keep this control as it were if your box are not above case.
+>>> +
+>>> +The default value is HZ/10, which is of equal value to 100ms independ of how
+>>> +many HZ is defined.
+>> Adding a new tunable is not the right solution.  The right way is
+>> to make Linux auto-tune itself to avoid the problem.
+> I absolutely agree here. From you changelog it is also not clear what is
+> the underlying problem. Both congestion_wait and wait_iff_congested
+> should wake up early if the congestion is handled. Is this not the case?
 
-Anyway, thanks a lot for your suggestions!
-linfeng
+For now I don't know why, codes seem should work as you said, maybe I need to
+trace more of the internals.
+But weird thing is that once I set the people-disliked-tunable iowait
+drop down instantly, this is contradictory to the code design.
+
+
+> Why? Are you sure a shorter timeout is not just going to cause problems
+> elsewhere. These sleeps are used to throttle the reclaim. I do agree
+> there is no great deal of design behind them so they are more of "let's
+> hope it works" kinda thing but making their timeout configurable just
+> doesn't solve this at all. You are effectively exporting a very subtle
+> implementation detail into the userspace.
+
+Kind of agree, but it does fix the issue at least mine and user response
+time also improve in the meantime.
+So, just make it as it were and exported to someone needs it..
 
