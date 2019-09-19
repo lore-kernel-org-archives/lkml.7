@@ -2,203 +2,423 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B57C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF818C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29B8521D6C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADDBE20644
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:45:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="A7dGL4la"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a2sugheY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390307AbfISUoO (ORCPT
+        id S1732445AbfISUpt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 16:44:14 -0400
-Received: from mail-eopbgr750072.outbound.protection.outlook.com ([40.107.75.72]:52098
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387403AbfISUoN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 16:44:13 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=c22TfhQrtIb+HZzmDp3pTN0crKwVQTGOSg8K3poqYC5T+nlAdcjQpeho+tQo0jKMkkwRdrrlaUUvcW/k/q+mVcfQmwKZ9gf8L4i7APoOC6+uBBy59z6Nxer+wCKP9st0UEGUVev+SdHvMrJKuweaPrjgH0v9kxDLw44urMAI4bTY8ac8oBx8F3Ah4/+MQhPJy2UOfEyUJNvQbT/3g0xrN8IDfCYga2QyZQRxq8+ch7OzdhUEfTM7t0cyLdAQktcMaXQ+HtPy9U3hXSI9Lur9SnkRaxrMAfJdIVuW3r2Jx9ti+JC97sw7R+KQONI9h4OEANeao15qVT8XiE8flLGOzg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HZQrI1z4p3JMQVIYjr6tGQ4BaJaBk/f9OJtfvb0JRoo=;
- b=M8AA/n6KAZTe9qC0xYSXJGJ1La2WFKVpy7KXteFAQtURG7c3fDK0drDKYGwh/2pDwtVWEn7y4gGGyrZe8Qrl/Zx8geBJXgiJYCqvTA35KjLcaeWOImly3+t0YcZNXT0Zl+VwshlOYJmsbR1HtmqzDMCohEBLOKtsqiOwx+cZ2mZqndKd6azI6cx6VwegzQmRgY/E1yc3fim0FUoDH3N2L9WFb3/ujW6owUbBzcL136ZOSXPA3BP7Q5Mk+6JLhHeqRwQGy28Wsl7qj3dWS+vl7l8vJE979IO7Rbw4rWcGmvsPRl3K5Ky4/dXLLLKOfVZUtfMa1XclJvBAFpzvCj8LQQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com;
- dmarc=permerror action=none header.from=amd.com; dkim=none (message not
- signed); arc=none
+        Thu, 19 Sep 2019 16:45:49 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42144 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727273AbfISUps (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 16:45:48 -0400
+Received: by mail-lj1-f194.google.com with SMTP id y23so4939652lje.9;
+        Thu, 19 Sep 2019 13:45:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HZQrI1z4p3JMQVIYjr6tGQ4BaJaBk/f9OJtfvb0JRoo=;
- b=A7dGL4la5HMFUVjpqFjbww29hvZzYw6OXySlkq7++CyWJNkaf87AH6eVaCw9lrl2TQ5y3n5vleohpU2krTe4/xlvyTAsH0GE9b6GDY8nHQL4S1+3fIHdEXnKuwwWAplvo0ayk/HzPs4X4I4qMtNCLZ7/n3U7oJ04HMgn8uLZDSY=
-Received: from MN2PR12CA0015.namprd12.prod.outlook.com (2603:10b6:208:a8::28)
- by MWHPR12MB1487.namprd12.prod.outlook.com (2603:10b6:301:3::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2284.18; Thu, 19 Sep
- 2019 20:44:09 +0000
-Received: from CO1NAM03FT044.eop-NAM03.prod.protection.outlook.com
- (2a01:111:f400:7e48::209) by MN2PR12CA0015.outlook.office365.com
- (2603:10b6:208:a8::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2284.19 via Frontend
- Transport; Thu, 19 Sep 2019 20:44:09 +0000
-Authentication-Results: spf=none (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; google.com; dkim=none (message not signed)
- header.d=none;google.com; dmarc=permerror action=none header.from=amd.com;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-Received: from SATLEXCHOV01.amd.com (165.204.84.17) by
- CO1NAM03FT044.mail.protection.outlook.com (10.152.81.108) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2284.20 via Frontend Transport; Thu, 19 Sep 2019 20:44:09 +0000
-Received: from totem.amd.com (10.180.168.240) by SATLEXCHOV01.amd.com
- (10.181.40.71) with Microsoft SMTP Server (TLS) id 14.3.389.1; Thu, 19 Sep
- 2019 15:44:06 -0500
-From:   Kim Phillips <kim.phillips@amd.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-CC:     <kim.phillips@amd.com>,
-        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Jiri Olsa" <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Borislav Petkov <bp@suse.de>, Martin Liska <mliska@suse.cz>,
-        Luke Mujica <lukemujica@google.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
-Subject: [PATCH 5/5] perf list: specify metrics are to be used with -M
-Date:   Thu, 19 Sep 2019 15:43:06 -0500
-Message-ID: <20190919204306.12598-5-kim.phillips@amd.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190919204306.12598-1-kim.phillips@amd.com>
-References: <20190919204306.12598-1-kim.phillips@amd.com>
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to;
+        bh=kCZ3f3UknN+JlMO3GLtJ8KXZoaqSJ47tpCRq0yGk7Dc=;
+        b=a2sugheYlWf6t2UZx8G9y71zjw1xsf+A6wkSZm+IBYFbBLoKLYkXg3p9dVaGEeq+NP
+         gWzzJz48bPCBHNRIdA+IjJ7GEv/mJguYKPnftVMpVR4KqpLKduihAlDcogCJ1TXMNsps
+         bLzbu1L3ptzCo4BfPo3S4h+DlMEYTUr2EObfTWcPvI7gi4RUaoNs5kBS4ZtP5kWFRX/7
+         0Qtoiuyu48kk5wnVL50CeXDy84a+Ru1ZKVMn8NQd4H/kh0AVksR0PcBsh+2lwDcaA4cf
+         yO8zL1nHtZSd/cLP2+74K7zEuIYSP4maQc4s18AHUXD8yWvQbtAcY3R2MOAH34QyVK/D
+         fwlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to;
+        bh=kCZ3f3UknN+JlMO3GLtJ8KXZoaqSJ47tpCRq0yGk7Dc=;
+        b=K4UWu/5eRGvCA1s1WmlAQhr9cnMfU8MHPiu4I0DrdV6hn4LtW9pD5gibPwp/EC187g
+         48hxV2MTFfsfT/SAKKY8ZFKIysnh3eau1+ionRG8RbdF5DslAUpUiKC4xQLPtC3Y7Cjs
+         1TJaML0hOofOx/VXf3G7IeayihgyuZ3r4W4tbJepmdx+Jb9zEADtChsEelBoh3VziXTS
+         aqhIHt6P4O0YCN5oKr4YYcwerF3AXj7hBFJye/WwRWIqMzrdMzTz+6sSyicKb5G4Wjeu
+         q6blNtXFOhXUwsgPUIj6rObWQsetxcugF4ImTgXFYYDJV4pu1aHqDjYCzxFQwQCWTYft
+         fyPg==
+X-Gm-Message-State: APjAAAV74/g56uDMUlg/V3jlcjwC//w/a8FPbOMSGr3r06fD/osXhneg
+        +f+aD1sa/0CoNzGh65sGg6uGTgFFm1b6FA==
+X-Google-Smtp-Source: APXvYqykLUWcrmum+J0F14bs9oOcORFwj225QU7ucyM512SoNxrbpYxw35SlN/r7NkIVgheUN86bvg==
+X-Received: by 2002:a2e:9a88:: with SMTP id p8mr6383903lji.86.1568925943966;
+        Thu, 19 Sep 2019 13:45:43 -0700 (PDT)
+Received: from ?IPv6:2a02:17d0:4a6:5700::ae2? ([2a02:17d0:4a6:5700::ae2])
+        by smtp.googlemail.com with ESMTPSA id g10sm1798240lfb.76.2019.09.19.13.45.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Sep 2019 13:45:42 -0700 (PDT)
+Subject: Re: [PATCH RFC v4 1/1] random: WARN on large getrandom() waits and
+ introduce getrandom2()
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        lkml <linux-kernel@vger.kernel.org>, linux-ext4@vger.kernel.org,
+        linux-man@vger.kernel.org
+References: <20190912034421.GA2085@darwi-home-pc>
+ <20190912082530.GA27365@mit.edu>
+ <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+ <20190914122500.GA1425@darwi-home-pc>
+ <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
+ <20190915052242.GG19710@mit.edu>
+ <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
+ <20190918211503.GA1808@darwi-home-pc> <20190918211713.GA2225@darwi-home-pc>
+ <CAHk-=wiCqDiU7SE3FLn2W26MS_voUAuqj5XFa1V_tiGTrrW-zQ@mail.gmail.com>
+ <20190919143427.GQ6762@mit.edu>
+ <CAHk-=wgqbBy84ovtr8wPFqRo6U8jvp59rvQ8a6TvXuoyb-4L-Q@mail.gmail.com>
+ <CAHk-=wjTbpcyVevsy3g-syB5v9gk_rR-yRFrUAvTL8NFuGfCrw@mail.gmail.com>
+From:   "Alexander E. Patrakov" <patrakov@gmail.com>
+Message-ID: <6adb02d4-c486-a945-7f51-d007d6de45b2@gmail.com>
+Date:   Fri, 20 Sep 2019 01:45:40 +0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:165.204.84.17;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(376002)(136003)(396003)(428003)(199004)(189003)(426003)(81166006)(81156014)(2616005)(4326008)(48376002)(7416002)(486006)(50226002)(476003)(446003)(11346002)(44832011)(126002)(16526019)(186003)(26005)(478600001)(70586007)(70206006)(8676002)(8936002)(7736002)(86362001)(336012)(316002)(2870700001)(76176011)(7696005)(51416003)(3846002)(2906002)(6116002)(50466002)(305945005)(36756003)(47776003)(54906003)(6916009)(5660300002)(53416004)(1076003)(356004);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR12MB1487;H:SATLEXCHOV01.amd.com;FPR:;SPF:None;LANG:en;PTR:InfoDomainNonexistent;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 0bb6bb04-d736-4c06-40a0-08d73d421eec
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:MWHPR12MB1487;
-X-MS-TrafficTypeDiagnostic: MWHPR12MB1487:
-X-Microsoft-Antispam-PRVS: <MWHPR12MB1487D549AA5B86122F8FBB2287890@MWHPR12MB1487.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
-X-Forefront-PRVS: 016572D96D
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: Xg/wKLBaCSsQl26LI/+pirpLTajP8gPdnXKNT8y2P1lQzoT3WFcRd0eU62mLUJ8mobR1GRSzJQ+wmp5/Z6wMIXh19ZKA27GHun3pzPjjNOskndlOHvT6CKaFgzI/33IKfeBFTWVmMKNbIIjU01z7UXkZCfDlFYWyaDQMX7zHOK5EgfXIp7OfSRcFk5x9Zzd/tRNI/0ciJ2+JgX00p6gHCk8TEcUbN9bVLmU1p7stDxZ8qpV0MEuBEvoRR6h4FeLO4WVZxKRbMT8IMTM0oVDn+t8/JEh9iWKcf4axOw5eYvbg/vdvsT9XJunIUXUHijeBgGSSJSDdwDo51VT5u+hoexZX89WaGhjDv+e3QcFcGNaLWsF7Hge29nLTHac4tSEoMKnoQJgc1dxUHjzJCrjbWT4Fps4x+wDUb9+WoNTCjIE=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Sep 2019 20:44:09.0148
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0bb6bb04-d736-4c06-40a0-08d73d421eec
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXCHOV01.amd.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1487
+In-Reply-To: <CAHk-=wjTbpcyVevsy3g-syB5v9gk_rR-yRFrUAvTL8NFuGfCrw@mail.gmail.com>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms000304060005040105070706"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Output of 'perf list metrics' before:
+This is a cryptographically signed message in MIME format.
 
-  $ perf list metrics
+--------------ms000304060005040105070706
+Content-Type: multipart/mixed;
+ boundary="------------84DCDD92DB3AA9B299024B99"
+Content-Language: en-PH
 
-  List of pre-defined events (to be used in -e):
+This is a multi-part message in MIME format.
+--------------84DCDD92DB3AA9B299024B99
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 
-  Metrics:
+20.09.2019 01:04, Linus Torvalds =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
 
-    C2_Pkg_Residency
-         [C2 residency percent per package]
-  ...
+> instead. Yeah, it still doesn't help on machines that don't even have
+> a cycle counter, but it at least means that you don't have to have a
+> CPU rdrand (or equivalent) but you do have a cycle counter, now the
+> extraction of randomness from the pool doesn't just do the
+> (predictable) mutation for the backtracking, but actually means that
+> you have some very hard to predict timing effects.
+>=20
+> Again, in this case a cycle counter really does add a small amount of
+> entropy (everybody agrees that modern CPU's are simply too complex to
+> be predictable at a cycle level), but that's not really the point. The
+> point is that now doing the extraction really fundamentally changes
+> the state in unpredictable ways, so that you don't have that "if I
+> recognize a value, I know what the next value will be" kind of attack.
 
-This misleads the uninitiated user to try:
+This already resembles in-kernel haveged (except that it doesn't credit=20
+entropy), and Willy Tarreau said "collect the small entropy where it is, =
 
-  $ perf stat -e C2_Pkg_Residency
+period" today. So, too many people touched upon the topic in one day,=20
+and therefore I'll bite.
 
-which gets:
+We already have user-space software (haveged and modern versions of=20
+rngd) that extract supposed entropy from clock jitter and feed it back=20
+to the kernel via /dev/random (crediting it). Indeed, at present, on=20
+some hardware this is the only way for distributions and users to=20
+collect enough entropy during boot and avoid stalls - all other=20
+suggestions are simply non-constructive. Also, Google's Fuchsia OS does=20
+use and credit jitter entropy.
 
-  event syntax error: 'C2_Pkg_Residency'
-                       \___ parser error
-  Run 'perf list' for a list of valid events
+For the record: I do not have a justifiable opinion whether haveged/rngd =
 
-Explicitly clarify that metrics and metricgroups are meant to
-be used with -M, and correct the grammar for the -e equivalent
-statement.
+output (known as jitter entropy) actually contains any entropy. I=20
+understand that there are two possible viewpoints here. The rest of the=20
+email is written under the assumption that haveged does provide real=20
+entropy and not fake one.
 
-Output of 'perf list metrics' after:
+The problem that I have with the current situation is that distributions =
 
-  $ perf list metrics
+and users, when they set up their systems to run haveged or rngd, often=20
+do it incorrectly (even, as mentioned, under the assumption that haveged =
 
-  List of pre-defined events (to be used with -e):
+is something valid and useful). The most common mistake is relying on=20
+systemd-provided default dependencies, thus not starting such software=20
+as early as possible. Even worse, no initramfs generator allows one to=20
+easily include haveged/rngd in the initramfs and run it there. And for=20
+me, the first urandom warning comes from the initramfs, so anything=20
+started from the main system is, arguably, already too late.
 
-  Metrics (to be used with -M):
+Therefore, I think, an in-kernel hwrng that exposes jitter entropy is=20
+something useful (for those who agree that jitter entropy is not fake),=20
+because it avoids the pitfall-ridden userspace setup. Just as an=20
+exercise, I have implemented a very simple driver (attached as a patch)=20
+that does just that. I am only half-serious here, the driver is only=20
+lightly tested in KVM without any devices except an unconnected virtio=20
+network card, not on any real hardware. Someone else can also find it=20
+useful as a test/fake hwrng driver.
 
-    C2_Pkg_Residency
-         [C2 residency percent per package]
-  ...
+I am aware that there was an earlier decision that jitter entropy should =
 
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Cc: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Martin Liska <mliska@suse.cz>
-Cc: Luke Mujica <lukemujica@google.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-perf-users@vger.kernel.org
+not be credited, i.e. effectively a pre-existing NAK from Theodore Ts'o. =
+
+But, well, distributions are already overriding this decision in=20
+userspace, and do it badly, so in my viewpoint, the driver would be a=20
+net win if some mechanism is added that makes it a no-op by default even =
+
+if the driver is built-in. E.g. an explicit "enable" parameter, but I am =
+
+open to other suggestions, too.
+
+--=20
+Alexander E. Patrakov
+
+--------------84DCDD92DB3AA9B299024B99
+Content-Type: text/x-patch; charset=UTF-8;
+ name="0001-hw_random-Add-jitterentropy_hwrng.patch"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: attachment;
+ filename="0001-hw_random-Add-jitterentropy_hwrng.patch"
+
+=46rom 2836990aff5bc1dab6a4e927304247dae469c774 Mon Sep 17 00:00:00 2001
+From: "Alexander E. Patrakov" <patrakov@gmail.com>
+Date: Thu, 19 Sep 2019 01:18:39 +0500
+Subject: [PATCH] hw_random: Add jitterentropy_hwrng
+
+This re-exports the existing "jitterentropy_rng" cryptoapi RNG as a
+hwrng. The use case is to replace haveged, which distributions
+often misconfigure by running it too late, while it is really needed
+even in the initramfs on some systems.
+
+Signed-off-by: Alexander E. Patrakov <patrakov@gmail.com>
 ---
- tools/perf/builtin-list.c     | 2 +-
- tools/perf/util/metricgroup.c | 5 +++--
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ drivers/char/hw_random/Kconfig               | 20 ++++++
+ drivers/char/hw_random/Makefile              |  1 +
+ drivers/char/hw_random/jitterentropy-hwrng.c | 70 ++++++++++++++++++++
+ 3 files changed, 91 insertions(+)
+ create mode 100644 drivers/char/hw_random/jitterentropy-hwrng.c
 
-diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-index 08e62ae9d37e..be8e878aa556 100644
---- a/tools/perf/builtin-list.c
-+++ b/tools/perf/builtin-list.c
-@@ -51,7 +51,7 @@ int cmd_list(int argc, const char **argv)
- 	setup_pager();
- 
- 	if (!raw_dump && pager_in_use())
--		printf("\nList of pre-defined events (to be used in -e):\n\n");
-+		printf("\nList of pre-defined events (to be used with -e):\n\n");
- 
- 	if (argc == 0) {
- 		print_events(NULL, raw_dump, !desc_flag, long_desc_flag,
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index a7c0424dbda3..f116848be9f7 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -377,9 +377,10 @@ void metricgroup__print(bool metrics, bool metricgroups, char *filter,
- 	}
- 
- 	if (metricgroups && !raw)
--		printf("\nMetric Groups:\n\n");
-+		printf("\nMetric Groups");
- 	else if (metrics && !raw)
--		printf("\nMetrics:\n\n");
-+		printf("\nMetrics");
-+	printf(" (to be used with -M):\n\n");
- 
- 	for (node = rb_first_cached(&groups.entries); node; node = next) {
- 		struct mep *me = container_of(node, struct mep, nd);
--- 
+diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kcon=
+fig
+index 59f25286befe..ff2102c0159c 100644
+--- a/drivers/char/hw_random/Kconfig
++++ b/drivers/char/hw_random/Kconfig
+@@ -35,6 +35,26 @@ config HW_RANDOM_TIMERIOMEM
+=20
+ 	  If unsure, say Y.
+=20
++config HW_RANDOM_JITTERENTROPY
++        tristate "Jitter Entropy HW Random Number Generator support"
++        select CRYPTO_JITTERENTROPY
++        ---help---
++          This driver provides kernel-side support for extracting entrop=
+y
++          from CPU and memory clock jitter.
++
++          jitterentropy-hwrng serves the same purpose as haveged, but is=
+ in
++          the kernel. So, if you otherwise would have to run haveged, bu=
+ild
++          this driver instead, it has an advantage of being available ve=
+ry
++          early in the boot process.
++
++          Note that it is still not known whether clock jitter provides =
+any
++          actual entropy.
++
++          To compile this driver as a module, choose M here: the
++          module will be called jitterentropy-hwrng.
++
++          If unsure, say N.
++
+ config HW_RANDOM_INTEL
+ 	tristate "Intel HW Random Number Generator support"
+ 	depends on (X86 || IA64) && PCI
+diff --git a/drivers/char/hw_random/Makefile b/drivers/char/hw_random/Mak=
+efile
+index 7c9ef4a7667f..9c6d1d3626f6 100644
+--- a/drivers/char/hw_random/Makefile
++++ b/drivers/char/hw_random/Makefile
+@@ -6,6 +6,7 @@
+ obj-$(CONFIG_HW_RANDOM) +=3D rng-core.o
+ rng-core-y :=3D core.o
+ obj-$(CONFIG_HW_RANDOM_TIMERIOMEM) +=3D timeriomem-rng.o
++obj-$(CONFIG_HW_RANDOM_JITTERENTROPY) +=3D jitterentropy-hwrng.o
+ obj-$(CONFIG_HW_RANDOM_INTEL) +=3D intel-rng.o
+ obj-$(CONFIG_HW_RANDOM_AMD) +=3D amd-rng.o
+ obj-$(CONFIG_HW_RANDOM_ATMEL) +=3D atmel-rng.o
+diff --git a/drivers/char/hw_random/jitterentropy-hwrng.c b/drivers/char/=
+hw_random/jitterentropy-hwrng.c
+new file mode 100644
+index 000000000000..b7aeefe4f47d
+--- /dev/null
++++ b/drivers/char/hw_random/jitterentropy-hwrng.c
+@@ -0,0 +1,70 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2019 Alexander E. Patrakov <patrakov@gmail.com>
++ *
++ * Driver that exposes CPU clock jitter as a hardware random number gene=
+rator
++ */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/delay.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/hw_random.h>
++#include <crypto/rng.h>
++
++static struct crypto_rng *drng;
++
++static int jitterentropy_rng_read(struct hwrng *rng, void *data, size_t =
+max, bool wait)
++{
++	int err;
++
++	/* Prevent the hwrng_fill thread from impeding progress of everything e=
+lse */
++	if (wait)
++		schedule();
++
++	err =3D crypto_rng_get_bytes(drng, data, max);
++	if (err)
++		return err;
++	return max;
++}
++
++static struct hwrng jitterentropy_rng =3D {
++	.name		=3D KBUILD_MODNAME,
++	.read		=3D jitterentropy_rng_read,
++	.quality	=3D 4, /* minimum that guarantees progress in hwrng_fill threa=
+d */
++};
++
++static int __init mod_init(void)
++{
++	int ret;
++
++	pr_info("Registering the driver\n");
++	drng =3D crypto_alloc_rng("jitterentropy_rng", 0, 0);
++	if (!drng) {
++		pr_err("crypto_alloc_rng() failed\n");
++		return -ENODEV;
++	}
++
++	ret =3D hwrng_register(&jitterentropy_rng);
++	if (ret) {
++		crypto_free_rng(drng);
++		return ret;
++	}
++
++	return 0;
++}
++
++static void __exit mod_exit(void)
++{
++	hwrng_unregister(&jitterentropy_rng);
++	crypto_free_rng(drng);
++}
++
++module_init(mod_init);
++module_exit(mod_exit);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Alexander E. Patrakov <patrakov@gmail.com>");
++MODULE_DESCRIPTION("Exposes clock jitter as a hwrng");
++MODULE_SOFTDEP("pre: jitterentropy_rng");
+--=20
 2.23.0
 
+
+--------------84DCDD92DB3AA9B299024B99--
+
+--------------ms000304060005040105070706
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: Криптографическая подпись S/MIME
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
+C5wwggVNMIIENaADAgECAhArQ2N9hOajPiuqD20bI16wMA0GCSqGSIb3DQEBCwUAMIGCMQsw
+CQYDVQQGEwJJVDEPMA0GA1UECAwGTWlsYW5vMQ8wDQYDVQQHDAZNaWxhbm8xIzAhBgNVBAoM
+GkFjdGFsaXMgUy5wLkEuLzAzMzU4NTIwOTY3MSwwKgYDVQQDDCNBY3RhbGlzIENsaWVudCBB
+dXRoZW50aWNhdGlvbiBDQSBHMTAeFw0xOTA2MDYwODAxMzVaFw0yMDA2MDYwODAxMzVaMB0x
+GzAZBgNVBAMMEnBhdHJha292QGdtYWlsLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
+AQoCggEBAOA0sb1ubDnIK32rbgW3BnjBcx1pYuEFOCU6aPVJ2gU+wtKJgAo9IdVUXG6kC1fF
+hXjIcZHOgbEqzFjHK1yXlHIUWEv+N8KdmBDOK1UdKQj58d9A4hnH62iEiwQsOR5YT1UyHX4A
+pfMjsBja7254cixR4jOPzfA4YUD6JTTPioyjDwuYQlhweVyXziKswLtGWfKeDcm3fOlKYxGy
+hxjWJRamGTreNBVC9uMkF4DHszpUm07agR2U4mnWy7FsjBuRJ++iX0SvuxKWf19HQWgmgIys
+jBVrArhVzgjOOnbvlklW849wIARF4Y0WAf91DsqPtuR8hu7+9KIVj2qk9BeNXXUCAwEAAaOC
+AiEwggIdMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUfmD8+GynPT3XrpOheQKPs3QpO/Uw
+SwYIKwYBBQUHAQEEPzA9MDsGCCsGAQUFBzAChi9odHRwOi8vY2FjZXJ0LmFjdGFsaXMuaXQv
+Y2VydHMvYWN0YWxpcy1hdXRjbGlnMTAdBgNVHREEFjAUgRJwYXRyYWtvdkBnbWFpbC5jb20w
+RwYDVR0gBEAwPjA8BgYrgR8BGAEwMjAwBggrBgEFBQcCARYkaHR0cHM6Ly93d3cuYWN0YWxp
+cy5pdC9hcmVhLWRvd25sb2FkMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDCB6AYD
+VR0fBIHgMIHdMIGboIGYoIGVhoGSbGRhcDovL2xkYXAwNS5hY3RhbGlzLml0L2NuJTNkQWN0
+YWxpcyUyMENsaWVudCUyMEF1dGhlbnRpY2F0aW9uJTIwQ0ElMjBHMSxvJTNkQWN0YWxpcyUy
+MFMucC5BLi8wMzM1ODUyMDk2NyxjJTNkSVQ/Y2VydGlmaWNhdGVSZXZvY2F0aW9uTGlzdDti
+aW5hcnkwPaA7oDmGN2h0dHA6Ly9jcmwwNS5hY3RhbGlzLml0L1JlcG9zaXRvcnkvQVVUSENM
+LUcxL2dldExhc3RDUkwwHQYDVR0OBBYEFEhX9pz3jwI3+erfsAVB2b4xSsM8MA4GA1UdDwEB
+/wQEAwIFoDANBgkqhkiG9w0BAQsFAAOCAQEAVbKht9PGiUsUaqiyzJb6blSMNaLwopQr3AsI
+FvthyqnSqxmSNYDeZsQYPgBnXvMCvHCn07pm1b96Y3XstBt2FWb9dpDr7y+ec3vxFHb3lKGb
+3WREB1kEATnBu2++dPcILG58gdzgYde3RAJC3/OyOZhDqKwQA5CnXTHigTzw75iezdLne5pU
+MjEQoxdqC+sgbrAueaEpMmRsGSKzgIX8eQ3DWwyIL56fYPJP3u4WZmBUKTFhhUWowG62QLtt
+ZjkiX/j+vjcSRd2app8lYDwQRornZAqrDxy+c4qQJ5FN234p36opwespDCwLN3Z6wPzLvzS+
+jAlmV3DF2xuZGMoebzCCBkcwggQvoAMCAQICCCzUitOxHg+JMA0GCSqGSIb3DQEBCwUAMGsx
+CzAJBgNVBAYTAklUMQ4wDAYDVQQHDAVNaWxhbjEjMCEGA1UECgwaQWN0YWxpcyBTLnAuQS4v
+MDMzNTg1MjA5NjcxJzAlBgNVBAMMHkFjdGFsaXMgQXV0aGVudGljYXRpb24gUm9vdCBDQTAe
+Fw0xNTA1MTQwNzE0MTVaFw0zMDA1MTQwNzE0MTVaMIGCMQswCQYDVQQGEwJJVDEPMA0GA1UE
+CAwGTWlsYW5vMQ8wDQYDVQQHDAZNaWxhbm8xIzAhBgNVBAoMGkFjdGFsaXMgUy5wLkEuLzAz
+MzU4NTIwOTY3MSwwKgYDVQQDDCNBY3RhbGlzIENsaWVudCBBdXRoZW50aWNhdGlvbiBDQSBH
+MTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMD8wYlW2Yji9ARlv80JNasoKTD+
+DMr3J6scEe6GPV3k9WxEtgxXM5WX3oiKjS2p25Mqk8cnV2fpMaEvdO9alrGes0vqcUqly7Pk
+U753RGlseYXR2XCjVhs4cuRYjuBmbxpRSJxRImmPnThKY41r0nl6b3A6Z2MOjPQF7h6OCYYw
+tz/ziv/+UBV587U2uIlOukaS7Xjk4ArYkQsGTSsfBBXqqn06WL3xG+B/dRO5/mOtY5tHdhPH
+ydsBk2kksI3PJ0yNgKV7o6HM7pG9pB6sGhj96uVLnnVnJ0WXOuV1ISv2eit9ir60LjT99hf+
+TMZLxA5yaVJ57fYjBMbxM599cw0CAwEAAaOCAdUwggHRMEEGCCsGAQUFBwEBBDUwMzAxBggr
+BgEFBQcwAYYlaHR0cDovL29jc3AwNS5hY3RhbGlzLml0L1ZBL0FVVEgtUk9PVDAdBgNVHQ4E
+FgQUfmD8+GynPT3XrpOheQKPs3QpO/UwDwYDVR0TAQH/BAUwAwEB/zAfBgNVHSMEGDAWgBRS
+2Ig6yJ94Zu2J83s4cJTJAgI20DBFBgNVHSAEPjA8MDoGBFUdIAAwMjAwBggrBgEFBQcCARYk
+aHR0cHM6Ly93d3cuYWN0YWxpcy5pdC9hcmVhLWRvd25sb2FkMIHjBgNVHR8EgdswgdgwgZag
+gZOggZCGgY1sZGFwOi8vbGRhcDA1LmFjdGFsaXMuaXQvY24lM2RBY3RhbGlzJTIwQXV0aGVu
+dGljYXRpb24lMjBSb290JTIwQ0EsbyUzZEFjdGFsaXMlMjBTLnAuQS4lMmYwMzM1ODUyMDk2
+NyxjJTNkSVQ/Y2VydGlmaWNhdGVSZXZvY2F0aW9uTGlzdDtiaW5hcnkwPaA7oDmGN2h0dHA6
+Ly9jcmwwNS5hY3RhbGlzLml0L1JlcG9zaXRvcnkvQVVUSC1ST09UL2dldExhc3RDUkwwDgYD
+VR0PAQH/BAQDAgEGMA0GCSqGSIb3DQEBCwUAA4ICAQBNk87VJL5BG0oWWHNfZYny2Xo+WIy8
+y8QP5VsWZ7LBS6Qz8kn8zJp3c9xdOkudZbcA3vm5U8HKXc1JdzNmpSh92zq/OeZLvUa+rnnc
+mvhxkFE9Doag6NitggBPZwXHwDcYn430/F8wqAt3LX/bsd6INVrhPFk3C2SoAjLjUQZibXvQ
+uFINMN4l6j86vCrkUaGzSqnXT45NxIivkAPhBQgpGtcTi4f+3DxkyTDbWtf9LuaC4l2jgB3g
+C7f56nmdpGfpYsyvKE7+Ip+WryH93pWt6C+r68KU3Gu02cU1/dHvNOXWUDeKkVT3T26wZVrT
+aMx+0nS3i63KDfJdhFzutfdBgCWHcp03NhOhMqy1RnAylF/dVZgkka6hKaWe1tOU21kS4uvs
+D4wM5k6tl0pin2o6u47kyoJJMOxRSQcosWtDXUmaLHUG91ZC6hvBDmDmpmS6h/r+7mtPrpYO
+xTr4hW3me2EfXkTvNTvBQtbi4LrZchg9vhi44EJ7L53g7GzQFn5KK8vqqgMb1c1+T0mkKdqS
+edgGiB9TDdYtv4HkUj/N00TKxZMLiDMw4V8ShUL6bKTXNfb3E68s47cD+MatFjUuGFj0uFPv
+ZlvlNAoJ7IMfXzIiTWy35X+akm+d49wBh54yv6icz2t/cBU1y1weuPBd8NUH/Ue3mXk0SXwk
+GP3yVDGCA/YwggPyAgEBMIGXMIGCMQswCQYDVQQGEwJJVDEPMA0GA1UECAwGTWlsYW5vMQ8w
+DQYDVQQHDAZNaWxhbm8xIzAhBgNVBAoMGkFjdGFsaXMgUy5wLkEuLzAzMzU4NTIwOTY3MSww
+KgYDVQQDDCNBY3RhbGlzIENsaWVudCBBdXRoZW50aWNhdGlvbiBDQSBHMQIQK0NjfYTmoz4r
+qg9tGyNesDANBglghkgBZQMEAgEFAKCCAi8wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAc
+BgkqhkiG9w0BCQUxDxcNMTkwOTE5MjA0NTQwWjAvBgkqhkiG9w0BCQQxIgQgImnlfwoQbLHl
+mN6/LF2b2b7sHzXUsNK5jJfOvNzjHK4wbAYJKoZIhvcNAQkPMV8wXTALBglghkgBZQMEASow
+CwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA4GCCqGSIb3DQMCAgIAgDANBggqhkiG9w0DAgIB
+QDAHBgUrDgMCBzANBggqhkiG9w0DAgIBKDCBqAYJKwYBBAGCNxAEMYGaMIGXMIGCMQswCQYD
+VQQGEwJJVDEPMA0GA1UECAwGTWlsYW5vMQ8wDQYDVQQHDAZNaWxhbm8xIzAhBgNVBAoMGkFj
+dGFsaXMgUy5wLkEuLzAzMzU4NTIwOTY3MSwwKgYDVQQDDCNBY3RhbGlzIENsaWVudCBBdXRo
+ZW50aWNhdGlvbiBDQSBHMQIQK0NjfYTmoz4rqg9tGyNesDCBqgYLKoZIhvcNAQkQAgsxgZqg
+gZcwgYIxCzAJBgNVBAYTAklUMQ8wDQYDVQQIDAZNaWxhbm8xDzANBgNVBAcMBk1pbGFubzEj
+MCEGA1UECgwaQWN0YWxpcyBTLnAuQS4vMDMzNTg1MjA5NjcxLDAqBgNVBAMMI0FjdGFsaXMg
+Q2xpZW50IEF1dGhlbnRpY2F0aW9uIENBIEcxAhArQ2N9hOajPiuqD20bI16wMA0GCSqGSIb3
+DQEBAQUABIIBADTjTjIjbDuUdgxvLJssdHlBwQiUaozp2c6244FzldvPx62vYFdv+fyIrMdQ
+mG1CwZSsuepqcieIVWWpLmNzhmFcdp/9Ex/AZScfpoNNb1NDjMeG08DMlZcWV5hwFFw94PFL
+I8iEinfixgzGPmAh07eP4KmA8MvLmi78f4Ag0NkXyjj9vLvzEXEcxLdkJz74AHNSsKOPkCqv
+A5UUjRioIXP0TikvF1PzcFvUZCTW0ZO+TbmdiLg3Dy7D8kVCtapYJhcvRi3wib1bgLA75V5m
+FWvR8jXsPTTNDlKlAWNohiUI1XkFPD0E+rWXlIUAXe8ooEh0rgPMfZV9EOZ8ngM1N9wAAAAA
+AAA=
+--------------ms000304060005040105070706--
