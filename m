@@ -2,142 +2,133 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E031EC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E96C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC98921924
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:56:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7077121924
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:56:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z95ybOiz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390008AbfISL4Z (ORCPT
+        id S2390067AbfISL4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 07:56:25 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:42663 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388771AbfISL4Z (ORCPT
+        Thu, 19 Sep 2019 07:56:46 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:35256 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388771AbfISL4q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 07:56:25 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MPrXf-1iW2n605kR-00MvcF; Thu, 19 Sep 2019 13:56:15 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] iwlwifi: fix building without CONFIG_THERMAL
-Date:   Thu, 19 Sep 2019 13:55:37 +0200
-Message-Id: <20190919115612.1924937-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Thu, 19 Sep 2019 07:56:46 -0400
+Received: by mail-ua1-f67.google.com with SMTP id n63so964253uan.2;
+        Thu, 19 Sep 2019 04:56:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5z5u0o7PbQVY4AiWOVq68ozptawOh6Ts0gi7RJ8q+vc=;
+        b=Z95ybOizbHlFYWAPfDhf0TXuaP4IpO+79JGGupMcSCwPlnvldsXaVpcVhuZ63Z/KlO
+         RsgQ5bomH78tVFurWCQg+L83jek3Eb7aiYGtbgBNawt5U55K2+tSmCcO3b5UhVw80+NO
+         ho3uTnpnaAmk49RmnBcDbRenxBvwCdy91hPhBZKOCseBPjt0Ttk3RHZZC74vU2rcRuUk
+         Ll6UaI2wG4c7nBdSYnZSiP3o0SyTrib5O1eChdNeYWS11MCY1GG7k6HtHJSUtFG8KXal
+         abp2tYNnSilQ4fPrOIlA//c/YjgVLxkkNpisjz61EzwkqMp3M92yxZlDyAaZD/F4zlTb
+         UKhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5z5u0o7PbQVY4AiWOVq68ozptawOh6Ts0gi7RJ8q+vc=;
+        b=a3tnCf8vzcXEAPjOK04+CNm4MdRpFKhrZFKC0qz17hTVSlaiCbAhhsD1W6EdMyCbdx
+         LFkK3b8y9tAzxIG9ihqeLbZy+CF8Rzi0qZiVbIDu8e2bwqB7SXlLbplwKlgnRAcSizZN
+         63964t7eT80YqbzNkzH4W/NblIV0s2Iq2AoUFzulNrSiAiwn6/Ei2N21McSjQwHMdRFo
+         46B0yiPEvHJ1RgVK105MceUDUnb2FFU8LSvd0jHKYbqWrXP0mWr6hfKoAIlO5YnPyIZ3
+         y2HHliyAPX0uFR0URyPvLEearjnrqgEfELCZ6YKUejusi34uJFQKbzTp2pbfGrfNpYB4
+         bCkQ==
+X-Gm-Message-State: APjAAAXxl+X3iVjXzxOfiZAUyis8Kn4JLUDXFwyU0Ww/Kbj7bx78mfJ0
+        FWOZPflYGpcsFieAzpuhK1y9bd2HnLSSL3KkLI4=
+X-Google-Smtp-Source: APXvYqxKATzXSuOngJ1GS37vVqVjID3FljIjWDx4H4TM0nY6yDDgsOmCGP2jzJhWk9wmDDAjQAZ9nIDtwOUseh2uA3A=
+X-Received: by 2002:ab0:240f:: with SMTP id f15mr4747430uan.103.1568894205232;
+ Thu, 19 Sep 2019 04:56:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:SwXOiiSORYDXDfMCe6gQdCAdzGv8MKZxAwL4gFDJXNzLzWDJd6G
- nd7yqPX2JzfvLwnSU8PjMQsOE1gXih85tdA2ZiU/DtvFK1TFt1y9Ev15H195hBNiyGAh/LE
- fsKSn+7Y0/ckNVK8WMe6xO0utp37F59mwrmO+VTwAdaTvMlmg2pdGlDExgJ2H0VUo+0bJuT
- z7lj3k4LOws0CUSw9jVEg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:xu/YVaCDX5s=:+COHs1HoImMhOZL9Giql69
- /lGJyi8Et1LJees5kkadiNbWUN4Gy9/VcYpjpSmRy/cbkQbySMO7FLfucQM9Wf/TJpEmAHoKL
- V230KV2tDAHnlj7SYqTtWvdK4BGwO+I5hCF+dy8fHsMfehBukV7iDyRCoBtJZS38cf733FZOf
- hNE9ASksiNl8fChFWxSuU5+xg0BNWyimC5kbTBxdxXqaOW2zRMPdmjUMXo4/Orw5KMRvWXo8k
- N9KdLCrA2mxm04sx0gi4L28+684nIXi2qBuSdsu7zlI/HQJM157/oslbRtLblRVkp2bSnEU//
- NDxleYG+onV2PjGm+ZMsvIO4biz+YgMoze55FBxyK1Oc9YuyFSE7kNFW8UPSL0IR9dfggd22F
- kGAVg90FxgzCtffShS4swVTaKKu/OjXwYpjBNRD8j9dj4j+suxae1Yy+m2TeX3bRaAnjnVfv9
- NnDApVtMO2fN+9CTin8Dh23Zu2zYzvopZEMCIyG6BxxgkPgczjKXEIXku9RCdad6m4IjVxCdm
- bbkXyNzI8POMhHxHKGBAK3DHF3RM3ypG5P1+pMvVqrzeUa1GAgqc7fVsBj3HCpA9v/eCJG/ZC
- KYv5eWqz7egk1giR8ORBiK7koXmzq7yxDA49qDJBCnyZdScNN+li0mxLOXQu1DoxaIuuiQXJ1
- M6kco3+wsq+0mX1TDMDfUX2/q88Y+9tKnOgwk0CHI9yRlOAqI8fKIKS/Iv0SLtEPOaPTRpWLH
- TBBUqVnUb7awDjt4r6W+M6cwYSVYMcPsWr5kHpl6+EYQezcr/oeVME5UMRIQPh3T6hjKzR1Jb
- vrvQwabwsH+qwkf0e6moXM8ye3y+unt+tKI09oFHDJNhNqFXd5mnS7u8a7d+o1hDc3j8HWvgY
- eePNO36zdg6pBqdJm4mA==
+References: <20190903115114.33053-1-alcooperx@gmail.com> <CAPDyKFqaNBH3Thwy1O+KXkcsgM2gMrm9zNGYWH8vVP+Y2vSLdA@mail.gmail.com>
+In-Reply-To: <CAPDyKFqaNBH3Thwy1O+KXkcsgM2gMrm9zNGYWH8vVP+Y2vSLdA@mail.gmail.com>
+From:   Alan Cooper <alcooperx@gmail.com>
+Date:   Thu, 19 Sep 2019 07:57:45 -0400
+Message-ID: <CAOGqxeUJD7eQxRnH1rep=m2+Ga5DDF=uWMsc_j2NZgC+EnZqsg@mail.gmail.com>
+Subject: Re: [PATCH] mmc: sdhci: Fix incorrect switch to HS mode
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The iwl_mvm_send_temp_report_ths_cmd() function is now called without
-CONFIG_THERMAL, but not defined:
+This does correct the sequence of switching to HS400 but it might be
+safest to just add this to the latest until it gets a little testing
+to make sure it doesn't expose some bug in existing controllers.
 
-ERROR: "iwl_mvm_send_temp_report_ths_cmd" [drivers/net/wireless/intel/iwlwifi/mvm/iwlmvm.ko] undefined!
+Thanks
+Al
 
-Move that function out of the #ifdef as well and change it so
-that empty data gets sent even if no thermal device was
-registered.
-
-Fixes: 242d9c8b9a93 ("iwlwifi: mvm: use FW thermal monitoring regardless of CONFIG_THERMAL")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-No idea if this does what was intended in the commit that introduced
-the link failure, please see for youself.
----
- drivers/net/wireless/intel/iwlwifi/mvm/mvm.h | 4 ++--
- drivers/net/wireless/intel/iwlwifi/mvm/tt.c  | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h b/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
-index 843d00bf2bd5..1b4139372e57 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
-@@ -542,7 +542,6 @@ struct iwl_mvm_tt_mgmt {
- 	bool throttle;
- };
- 
--#ifdef CONFIG_THERMAL
- /**
-  *struct iwl_mvm_thermal_device - thermal zone related data
-  * @temp_trips: temperature thresholds for report
-@@ -555,6 +554,7 @@ struct iwl_mvm_thermal_device {
- 	struct thermal_zone_device *tzone;
- };
- 
-+#ifdef CONFIG_THERMAL
- /*
-  * struct iwl_mvm_cooling_device
-  * @cur_state: current state
-@@ -1034,8 +1034,8 @@ struct iwl_mvm {
- 
- 	/* Thermal Throttling and CTkill */
- 	struct iwl_mvm_tt_mgmt thermal_throttle;
--#ifdef CONFIG_THERMAL
- 	struct iwl_mvm_thermal_device tz_device;
-+#ifdef CONFIG_THERMAL
- 	struct iwl_mvm_cooling_device cooling_dev;
- #endif
- 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tt.c b/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
-index 32a708301cfc..6d717bb65ab7 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
-@@ -549,7 +549,6 @@ int iwl_mvm_ctdp_command(struct iwl_mvm *mvm, u32 op, u32 state)
- 	return 0;
- }
- 
--#ifdef CONFIG_THERMAL
- static int compare_temps(const void *a, const void *b)
- {
- 	return ((s16)le16_to_cpu(*(__le16 *)a) -
-@@ -564,7 +563,7 @@ int iwl_mvm_send_temp_report_ths_cmd(struct iwl_mvm *mvm)
- 	lockdep_assert_held(&mvm->mutex);
- 
- 	if (!mvm->tz_device.tzone)
--		return -EINVAL;
-+		goto send;
- 
- 	/* The driver holds array of temperature trips that are unsorted
- 	 * and uncompressed, the FW should get it compressed and sorted
-@@ -607,6 +606,7 @@ int iwl_mvm_send_temp_report_ths_cmd(struct iwl_mvm *mvm)
- 	return ret;
- }
- 
-+#ifdef CONFIG_THERMAL
- static int iwl_mvm_tzone_get_temp(struct thermal_zone_device *device,
- 				  int *temperature)
- {
--- 
-2.20.0
-
+On Tue, Sep 3, 2019 at 10:52 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> On Tue, 3 Sep 2019 at 13:51, Al Cooper <alcooperx@gmail.com> wrote:
+> >
+> > When switching from any MMC speed mode that requires 1.8v
+> > (HS200, HS400 and HS400ES) to High Speed (HS) mode, the system
+> > ends up configured for SDR12 with a 50MHz clock which is an illegal
+> > mode.
+> >
+> > This happens because the SDHCI_CTRL_VDD_180 bit in the
+> > SDHCI_HOST_CONTROL2 register is left set and when this bit is
+> > set, the speed mode is controlled by the SDHCI_CTRL_UHS field
+> > in the SDHCI_HOST_CONTROL2 register. The SDHCI_CTRL_UHS field
+> > will end up being set to 0 (SDR12) by sdhci_set_uhs_signaling()
+> > because there is no UHS mode being set.
+> >
+> > The fix is to change sdhci_set_uhs_signaling() to set the
+> > SDHCI_CTRL_UHS field to SDR25 (which is the same as HS) for
+> > any switch to HS mode.
+> >
+> > This was found on a new eMMC controller that does strict checking
+> > of the speed mode and the corresponding clock rate. It caused the
+> > switch to HS400 mode to fail because part of the sequence to switch
+> > to HS400 requires a switch from HS200 to HS before going to HS400.
+> >
+> > This fix was suggested by Adrian Hunter
+> >
+> > Signed-off-by: Al Cooper <alcooperx@gmail.com>
+>
+> Should this be applied for fixes and tagged for stable you think?
+>
+> Kind regards
+> Uffe
+>
+> > ---
+> >  drivers/mmc/host/sdhci.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> > index 61d845fe0b97..068149640ecd 100644
+> > --- a/drivers/mmc/host/sdhci.c
+> > +++ b/drivers/mmc/host/sdhci.c
+> > @@ -1858,7 +1858,9 @@ void sdhci_set_uhs_signaling(struct sdhci_host *host, unsigned timing)
+> >                 ctrl_2 |= SDHCI_CTRL_UHS_SDR104;
+> >         else if (timing == MMC_TIMING_UHS_SDR12)
+> >                 ctrl_2 |= SDHCI_CTRL_UHS_SDR12;
+> > -       else if (timing == MMC_TIMING_UHS_SDR25)
+> > +       else if (timing == MMC_TIMING_SD_HS ||
+> > +                timing == MMC_TIMING_MMC_HS ||
+> > +                timing == MMC_TIMING_UHS_SDR25)
+> >                 ctrl_2 |= SDHCI_CTRL_UHS_SDR25;
+> >         else if (timing == MMC_TIMING_UHS_SDR50)
+> >                 ctrl_2 |= SDHCI_CTRL_UHS_SDR50;
+> > --
+> > 2.17.1
+> >
