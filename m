@@ -2,180 +2,64 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9187C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A23C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A28A121928
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:09:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568930971;
-	bh=xBkj8GB32KkFsE/GwKypiAlolOQzVn5JCvq+Tp/7DnI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RwexO5uOzHCiKo13oKnKTmFg4xHrLPyAZ+Cim/P6uo0GABoPtX45UkPIokB8ijF3z
-	 Q6BQ2l16G4ytyNY3w9hp5lsIzL0qSR+NSP83NIBXYnx1mWmXwD869HrqJoJPeEBaXx
-	 lloI8Kw3ZI5iERSS5wmFhAbzyF4LNeaG37ZKN3Zg=
+	by mail.kernel.org (Postfix) with ESMTP id 535F721920
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:09:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405417AbfISWJZ (ORCPT
+        id S2405444AbfISWJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:09:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47568 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:09:33 -0400
+Received: from mga18.intel.com ([134.134.136.126]:16405 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405401AbfISWJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:09:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D4342196F;
-        Thu, 19 Sep 2019 22:09:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568930961;
-        bh=xBkj8GB32KkFsE/GwKypiAlolOQzVn5JCvq+Tp/7DnI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sVwW1cHjyyyXqYZyR0dvg8lOWOlauj/5Lh88cstGT+j9gfYJdCzve6xsS+QPfoEqx
-         WiJMY7z0VkxLjfSPFoop39LUgiGZcYpw7Y9aK43cJtwGLL/zYnQFChqSjieiYMprTj
-         /wBwuO/9bql1bWRC52c9MHH2COM7ipLqVbP0NKeQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 078/124] drm/amd/powerplay: correct Vega20 dpm level related settings
-Date:   Fri, 20 Sep 2019 00:02:46 +0200
-Message-Id: <20190919214821.847203825@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
-References: <20190919214819.198419517@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S2405428AbfISWJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:09:29 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Sep 2019 15:09:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,526,1559545200"; 
+   d="scan'208";a="189747060"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
+  by orsmga003.jf.intel.com with ESMTP; 19 Sep 2019 15:09:28 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id A4F4A3013C9; Thu, 19 Sep 2019 15:09:28 -0700 (PDT)
+Date:   Thu, 19 Sep 2019 15:09:28 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Kim Phillips <kim.phillips@amd.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Borislav Petkov <bp@suse.de>, Martin Liska <mliska@suse.cz>,
+        Luke Mujica <lukemujica@google.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 3/5] perf vendor events: minor fixes to the README
+Message-ID: <20190919220928.GH8537@tassilo.jf.intel.com>
+References: <20190919204306.12598-1-kim.phillips@amd.com>
+ <20190919204306.12598-3-kim.phillips@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190919204306.12598-3-kim.phillips@amd.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evan Quan <evan.quan@amd.com>
+For all the patches except the last
 
-[ Upstream commit 83e09d5bddbee749fc83063890244397896a1971 ]
-
-Correct the settings for auto mode and skip the unnecessary
-settings for dcefclk and fclk.
-
-Signed-off-by: Evan Quan <evan.quan@amd.com>
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- .../drm/amd/powerplay/hwmgr/vega20_hwmgr.c    | 60 +++++++++++++++++--
- 1 file changed, 54 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/vega20_hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/vega20_hwmgr.c
-index 9b9f87b84910c..d98fe481cd365 100644
---- a/drivers/gpu/drm/amd/powerplay/hwmgr/vega20_hwmgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/hwmgr/vega20_hwmgr.c
-@@ -2288,12 +2288,16 @@ static int vega20_force_dpm_highest(struct pp_hwmgr *hwmgr)
- 		data->dpm_table.soc_table.dpm_state.soft_max_level =
- 		data->dpm_table.soc_table.dpm_levels[soft_level].value;
- 
--	ret = vega20_upload_dpm_min_level(hwmgr, 0xFFFFFFFF);
-+	ret = vega20_upload_dpm_min_level(hwmgr, FEATURE_DPM_GFXCLK_MASK |
-+						 FEATURE_DPM_UCLK_MASK |
-+						 FEATURE_DPM_SOCCLK_MASK);
- 	PP_ASSERT_WITH_CODE(!ret,
- 			"Failed to upload boot level to highest!",
- 			return ret);
- 
--	ret = vega20_upload_dpm_max_level(hwmgr, 0xFFFFFFFF);
-+	ret = vega20_upload_dpm_max_level(hwmgr, FEATURE_DPM_GFXCLK_MASK |
-+						 FEATURE_DPM_UCLK_MASK |
-+						 FEATURE_DPM_SOCCLK_MASK);
- 	PP_ASSERT_WITH_CODE(!ret,
- 			"Failed to upload dpm max level to highest!",
- 			return ret);
-@@ -2326,12 +2330,16 @@ static int vega20_force_dpm_lowest(struct pp_hwmgr *hwmgr)
- 		data->dpm_table.soc_table.dpm_state.soft_max_level =
- 		data->dpm_table.soc_table.dpm_levels[soft_level].value;
- 
--	ret = vega20_upload_dpm_min_level(hwmgr, 0xFFFFFFFF);
-+	ret = vega20_upload_dpm_min_level(hwmgr, FEATURE_DPM_GFXCLK_MASK |
-+						 FEATURE_DPM_UCLK_MASK |
-+						 FEATURE_DPM_SOCCLK_MASK);
- 	PP_ASSERT_WITH_CODE(!ret,
- 			"Failed to upload boot level to highest!",
- 			return ret);
- 
--	ret = vega20_upload_dpm_max_level(hwmgr, 0xFFFFFFFF);
-+	ret = vega20_upload_dpm_max_level(hwmgr, FEATURE_DPM_GFXCLK_MASK |
-+						 FEATURE_DPM_UCLK_MASK |
-+						 FEATURE_DPM_SOCCLK_MASK);
- 	PP_ASSERT_WITH_CODE(!ret,
- 			"Failed to upload dpm max level to highest!",
- 			return ret);
-@@ -2342,14 +2350,54 @@ static int vega20_force_dpm_lowest(struct pp_hwmgr *hwmgr)
- 
- static int vega20_unforce_dpm_levels(struct pp_hwmgr *hwmgr)
- {
-+	struct vega20_hwmgr *data =
-+			(struct vega20_hwmgr *)(hwmgr->backend);
-+	uint32_t soft_min_level, soft_max_level;
- 	int ret = 0;
- 
--	ret = vega20_upload_dpm_min_level(hwmgr, 0xFFFFFFFF);
-+	/* gfxclk soft min/max settings */
-+	soft_min_level =
-+		vega20_find_lowest_dpm_level(&(data->dpm_table.gfx_table));
-+	soft_max_level =
-+		vega20_find_highest_dpm_level(&(data->dpm_table.gfx_table));
-+
-+	data->dpm_table.gfx_table.dpm_state.soft_min_level =
-+		data->dpm_table.gfx_table.dpm_levels[soft_min_level].value;
-+	data->dpm_table.gfx_table.dpm_state.soft_max_level =
-+		data->dpm_table.gfx_table.dpm_levels[soft_max_level].value;
-+
-+	/* uclk soft min/max settings */
-+	soft_min_level =
-+		vega20_find_lowest_dpm_level(&(data->dpm_table.mem_table));
-+	soft_max_level =
-+		vega20_find_highest_dpm_level(&(data->dpm_table.mem_table));
-+
-+	data->dpm_table.mem_table.dpm_state.soft_min_level =
-+		data->dpm_table.mem_table.dpm_levels[soft_min_level].value;
-+	data->dpm_table.mem_table.dpm_state.soft_max_level =
-+		data->dpm_table.mem_table.dpm_levels[soft_max_level].value;
-+
-+	/* socclk soft min/max settings */
-+	soft_min_level =
-+		vega20_find_lowest_dpm_level(&(data->dpm_table.soc_table));
-+	soft_max_level =
-+		vega20_find_highest_dpm_level(&(data->dpm_table.soc_table));
-+
-+	data->dpm_table.soc_table.dpm_state.soft_min_level =
-+		data->dpm_table.soc_table.dpm_levels[soft_min_level].value;
-+	data->dpm_table.soc_table.dpm_state.soft_max_level =
-+		data->dpm_table.soc_table.dpm_levels[soft_max_level].value;
-+
-+	ret = vega20_upload_dpm_min_level(hwmgr, FEATURE_DPM_GFXCLK_MASK |
-+						 FEATURE_DPM_UCLK_MASK |
-+						 FEATURE_DPM_SOCCLK_MASK);
- 	PP_ASSERT_WITH_CODE(!ret,
- 			"Failed to upload DPM Bootup Levels!",
- 			return ret);
- 
--	ret = vega20_upload_dpm_max_level(hwmgr, 0xFFFFFFFF);
-+	ret = vega20_upload_dpm_max_level(hwmgr, FEATURE_DPM_GFXCLK_MASK |
-+						 FEATURE_DPM_UCLK_MASK |
-+						 FEATURE_DPM_SOCCLK_MASK);
- 	PP_ASSERT_WITH_CODE(!ret,
- 			"Failed to upload DPM Max Levels!",
- 			return ret);
--- 
-2.20.1
-
-
-
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
