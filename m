@@ -2,210 +2,190 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D55C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E98C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DD3F21907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:07:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A9C121907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:08:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hcQ1FJyT"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VlWFQna5";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FeJksmbv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388878AbfISLHd (ORCPT
+        id S2389409AbfISLId (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 07:07:33 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21017 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387465AbfISLHd (ORCPT
+        Thu, 19 Sep 2019 07:08:33 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:56778 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388924AbfISLIc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 07:07:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1568891250;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=akH4tA+8boh2Z3ENSsOS4nb9YnmpMGx/umkuL11b15A=;
-        b=hcQ1FJyTDbpzAyYONA+I3Cz3DP8fCDB5ipWa/HqU3fTNhHwiwKjLnbscOKalVc13G0L0tx
-        9BWpdvww/YaVj8VQUO9quAwmANYb53JVY9fTo1ghZM5Jo4oMnPvpjhpdWrcQIwHFYRG8QK
-        RQx64d2jiM8MF2Rf9xbdX4nIZjvIp7c=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-132-LUqh9HIOPiOq1lNs6A6tMg-1; Thu, 19 Sep 2019 07:07:29 -0400
-Received: by mail-wm1-f71.google.com with SMTP id r187so2695456wme.0
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 04:07:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MrXngNBkRSb78QhU35+OjWCZncslayQbSrEJYxPwRu8=;
-        b=K0U318jyrMwpYwOzmLmHTib4e4XL+79qglpUmwSQjE22jPSEnHO+8pmpnu3m1w0Cjg
-         VpegYYBeFPUu6RwQiKXGDC76OqVwHrzvsFPT/r+phDR/tCnmNOKYKqe68ONm64vkg8XG
-         tRFzs60ZOagwX3DY5avEY7sIiGo8pJ8dTD5QxbSLCitqz5zVUPNqb9wHKE8Z6a0tfjbq
-         sj0y3z2cD3oDAgEgQgAc9OM1nfb5pPFlIA7ptKFBtgtoZhVbDmPEaSNbwyiiFpKNKF0E
-         7Jft3re1IWEGs5GChH050rfiZbxrHBEulAUEnEr/BVAQxVIf2whhveASFHFDsXf9+QVH
-         g7cw==
-X-Gm-Message-State: APjAAAUQrzs2NKiddDxtO3+7sMzpnzWp9nqi4dmuXgkzIw7uQ/94BTiD
-        cyuty2euatC7Gwd8TzY2buVEDiVFmFRlJ9O2h8qKzNaXYLyVf9Ve1g3yOhDrs38D1TJkYHCUGYg
-        2pU++CNbPMYYmDwk3tU24fmoE
-X-Received: by 2002:a5d:40d2:: with SMTP id b18mr6966164wrq.4.1568891247735;
-        Thu, 19 Sep 2019 04:07:27 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwckM+/LSaoom2PwxEmBix+GsMstuwLeTRInJeFdhoBW3jpxwLH/cidatmfnMnCjGzYBzirCw==
-X-Received: by 2002:a5d:40d2:: with SMTP id b18mr6966141wrq.4.1568891247420;
-        Thu, 19 Sep 2019 04:07:27 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:c46c:2acb:d8d2:21d8? ([2001:b07:6468:f312:c46c:2acb:d8d2:21d8])
-        by smtp.gmail.com with ESMTPSA id b16sm14179405wrh.5.2019.09.19.04.07.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Sep 2019 04:07:26 -0700 (PDT)
-Subject: Re: [RFC PATCH v3 4/6] psci: Add hvc call service for ptp_kvm.
-To:     "Jianyong Wu (Arm Technology China)" <Jianyong.Wu@arm.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "yangbo.lu@nxp.com" <yangbo.lu@nxp.com>,
-        "john.stultz@linaro.org" <john.stultz@linaro.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "richardcochran@gmail.com" <richardcochran@gmail.com>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Will Deacon <Will.Deacon@arm.com>,
-        Suzuki Poulose <Suzuki.Poulose@arm.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Steve Capper <Steve.Capper@arm.com>,
-        "Kaly Xin (Arm Technology China)" <Kaly.Xin@arm.com>,
-        "Justin He (Arm Technology China)" <Justin.He@arm.com>,
-        nd <nd@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190918080716.64242-1-jianyong.wu@arm.com>
- <20190918080716.64242-5-jianyong.wu@arm.com>
- <83ed7fac-277f-a31e-af37-8ec134f39d26@redhat.com>
- <HE1PR0801MB1676F57B317AE85E3B934B32F48E0@HE1PR0801MB1676.eurprd08.prod.outlook.com>
- <629538ea-13fb-e666-8df6-8ad23f114755@redhat.com>
- <HE1PR0801MB167639E2F025998058A77F86F4890@HE1PR0801MB1676.eurprd08.prod.outlook.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <ef6ab8bd-41ad-88f8-9cfd-dc749ca65310@redhat.com>
-Date:   Thu, 19 Sep 2019 13:07:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 19 Sep 2019 07:08:32 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id ACBB560736; Thu, 19 Sep 2019 11:08:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568891310;
+        bh=K9ke7ozlRukiKpFPzOB06YIaFObZUHMF5JsQi3muFHI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=VlWFQna5g8zHvZ20t/fP2hnMbTUuQQk0HPFdoM0RPra0OXd/0bDPuPul+zJ8PZs6P
+         Kqdx7d6K3OwVRDDCvMuyyBVnjLFQT2H2jm7KEBlRkuSksAwySiFaq+EKeyQ2wSqOnU
+         sl/r5nx7i+AUwHw+7du9HmgsZlBPt5Xtg4vAEFp0=
+Received: from [192.168.0.103] (unknown [49.207.53.137])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E459E60736;
+        Thu, 19 Sep 2019 11:08:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568891307;
+        bh=K9ke7ozlRukiKpFPzOB06YIaFObZUHMF5JsQi3muFHI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=FeJksmbvaaiudlu+lpWCm/Vwk/sZ308XFKnIVSMGYA98VvX8Nq9AcFXYCEpTzSWDl
+         k1m4aIdM545LgyrKGUD3DMPYTVFermJtdTky1HawKyLuTZf50+nEEdSnTtbVri6Eg/
+         LTKqU6Fji/3Mbtfpp4zhb2+5dKSMmoFTWrSqCxd8=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E459E60736
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH v3 3/3] clk: qcom: Add Global Clock controller (GCC)
+ driver for SC7180
+To:     Taniya Das <tdas@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>, robh+dt@kernel.org
+Cc:     David Brown <david.brown@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20190918095018.17979-1-tdas@codeaurora.org>
+ <20190918095018.17979-4-tdas@codeaurora.org>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <74643831-1a58-e279-aca3-8753f5fcbe04@codeaurora.org>
+Date:   Thu, 19 Sep 2019 16:38:19 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <HE1PR0801MB167639E2F025998058A77F86F4890@HE1PR0801MB1676.eurprd08.prod.outlook.com>
+In-Reply-To: <20190918095018.17979-4-tdas@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-MC-Unique: LUqh9HIOPiOq1lNs6A6tMg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/09/19 11:46, Jianyong Wu (Arm Technology China) wrote:
->> On 18/09/19 11:57, Jianyong Wu (Arm Technology China) wrote:
->>> Paolo Bonzini wrote:
->>>> This is not Y2038-safe.  Please use ktime_get_real_ts64 instead, and
->>>> split the 64-bit seconds value between val[0] and val[1].
->
-> Val[] should be long not u32 I think, so in arm64 I can avoid that Y2038_=
-safe, but
-> also need rewrite for arm32.
+[]..
 
-I don't think there's anything inherently wrong with u32 val[], and as
-you notice it lets you reuse code between arm and arm64.  It's up to you
-and Marc to decide.
+> +static struct clk_rcg_dfs_data gcc_dfs_clocks[] = {
+> +	DEFINE_RCG_DFS(gcc_qupv3_wrap0_s0_clk_src),
+> +	DEFINE_RCG_DFS(gcc_qupv3_wrap0_s1_clk_src),
+> +	DEFINE_RCG_DFS(gcc_qupv3_wrap0_s2_clk_src),
+> +	DEFINE_RCG_DFS(gcc_qupv3_wrap0_s3_clk_src),
+> +	DEFINE_RCG_DFS(gcc_qupv3_wrap0_s4_clk_src),
+> +	DEFINE_RCG_DFS(gcc_qupv3_wrap0_s5_clk_src),
+> +	DEFINE_RCG_DFS(gcc_qupv3_wrap1_s0_clk_src),
+> +	DEFINE_RCG_DFS(gcc_qupv3_wrap1_s1_clk_src),
+> +	DEFINE_RCG_DFS(gcc_qupv3_wrap1_s2_clk_src),
+> +	DEFINE_RCG_DFS(gcc_qupv3_wrap1_s3_clk_src),
+> +	DEFINE_RCG_DFS(gcc_qupv3_wrap1_s4_clk_src),
+> +	DEFINE_RCG_DFS(gcc_qupv3_wrap1_s5_clk_src),
+> +};
 
->>>> However, it seems to me that the new function is not needed and you
->>>> can just use ktime_get_snapshot.  You'll get the time in
->>>> systime_snapshot->real and the cycles value in systime_snapshot->cycle=
-s.
->>>
->>> See patch 5/6, I need both counter cycle and clocksource,
->> ktime_get_snapshot seems only offer cycles.
->>
->> No, patch 5/6 only needs the current clock (ptp_sc.cycles is never acces=
-sed).
->> So you could just use READ_ONCE(tk->tkr_mono.clock).
->>
-> Yeah, patch 5/6 just need clocksource, but I think tk->tkr_mono.clock can=
-'t read in external like module,
-> So I need an API to expose clocksource.
-> =20
->> However, even then I don't think it is correct to use ptp_sc.cs blindly =
-in patch
->> 5.  I think there is a misunderstanding on the meaning of
->> system_counterval.cs as passed to get_device_system_crosststamp.
->> system_counterval.cs is not the active clocksource; it's the clocksource=
- on
->> which system_counterval.cycles is based.
->>
->=20
-> I think we can use system_counterval_t as pass current clocksource to sys=
-tem_counterval_t.cs and its
-> corresponding cycles to system_counterval_t.cycles. is it a big problem?
+this fails to build..
 
-Yes, it is.  Because...
+In file included from drivers/clk/qcom/gcc-sc7180.c:17:0:
+drivers/clk/qcom/gcc-sc7180.c:2429:17: error: ‘gcc_qupv3_wrap0_s0_clk_src_src’ undeclared here (not in a function)
+   DEFINE_RCG_DFS(gcc_qupv3_wrap0_s0_clk_src),
+                  ^
+drivers/clk/qcom/clk-rcg.h:171:12: note: in definition of macro ‘DEFINE_RCG_DFS’
+   { .rcg = &r##_src, .init = &r##_init }
+             ^
+drivers/clk/qcom/gcc-sc7180.c:2430:17: error: ‘gcc_qupv3_wrap0_s1_clk_src_src’ undeclared here (not in a function)
+   DEFINE_RCG_DFS(gcc_qupv3_wrap0_s1_clk_src),
+                  ^
+drivers/clk/qcom/clk-rcg.h:171:12: note: in definition of macro ‘DEFINE_RCG_DFS’
+   { .rcg = &r##_src, .init = &r##_init }
+             ^
+Perhaps you should drop _src here and in the clk_init_data names.
 
->> Hypothetically, the clocksource could be one for which ptp_sc.cycles is =
-_not_
->> a cycle value.  If you set system_counterval.cs to the system clocksourc=
-e,
->> get_device_system_crosststamp will return a bogus value.
->=20
-> Yeah, but in patch 3/6, we have a corresponding pair of clock source and =
-cycle value. So I think there will be no
-> that problem in this patch set.
-> In the implementation of get_device_system_crosststamp:
-> "
-> ...
-> if (tk->tkr_mono.clock !=3D system_counterval.cs)
->                         return -ENODEV;
-> ...
-> "
-> We need tk->tkr_mono.clock passed to get_device_system_crosststamp, just =
-like patch 3/6 do, otherwise will return error.
+> +
+> +static const struct regmap_config gcc_sc7180_regmap_config = {
+> +	.reg_bits = 32,
+> +	.reg_stride = 4,
+> +	.val_bits = 32,
+> +	.max_register = 0x18208c,
+> +	.fast_io = true,
+> +};
+> +
+> +static const struct qcom_cc_desc gcc_sc7180_desc = {
+> +	.config = &gcc_sc7180_regmap_config,
+> +	.clk_hws = gcc_sc7180_hws,
+> +	.num_clk_hws = ARRAY_SIZE(gcc_sc7180_hws),
+> +	.clks = gcc_sc7180_clocks,
+> +	.num_clks = ARRAY_SIZE(gcc_sc7180_clocks),
+> +	.resets = gcc_sc7180_resets,
+> +	.num_resets = ARRAY_SIZE(gcc_sc7180_resets),
+> +	.gdscs = gcc_sc7180_gdscs,
+> +	.num_gdscs = ARRAY_SIZE(gcc_sc7180_gdscs),
+> +};
+> +
+> +static const struct of_device_id gcc_sc7180_match_table[] = {
+> +	{ .compatible = "qcom,gcc-sc7180" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, gcc_sc7180_match_table);
+> +
+> +static int gcc_sc7180_probe(struct platform_device *pdev)
+> +{
+> +	struct regmap *regmap;
+> +	int ret;
+> +
+> +	regmap = qcom_cc_map(pdev, &gcc_sc7180_desc);
+> +	if (IS_ERR(regmap))
+> +		return PTR_ERR(regmap);
+> +
+> +	/*
+> +	 * Disable the GPLL0 active input to MM blocks, NPU
+> +	 * and GPU via MISC registers.
+> +	 */
+> +	regmap_update_bits(regmap, GCC_MMSS_MISC, 0x3, 0x3);
+> +	regmap_update_bits(regmap, GCC_NPU_MISC, 0x3, 0x3);
+> +	regmap_update_bits(regmap, GCC_GPU_MISC, 0x3, 0x3);
+> +
+> +	ret = qcom_cc_register_rcg_dfs(regmap, gcc_dfs_clocks,
+> +					ARRAY_SIZE(gcc_dfs_clocks));
+> +	if (ret)
+> +		return ret;
+> +
+> +	return qcom_cc_really_probe(pdev, &gcc_sc7180_desc, regmap);
+> +}
+> +
+> +static struct platform_driver gcc_sc7180_driver = {
+> +	.probe = gcc_sc7180_probe,
+> +	.driver = {
+> +		.name = "gcc-sc7180",
+> +		.of_match_table = gcc_sc7180_match_table,
+> +	},
+> +};
+> +
+> +static int __init gcc_sc7180_init(void)
+> +{
+> +	return platform_driver_register(&gcc_sc7180_driver);
+> +}
+> +subsys_initcall(gcc_sc7180_init);
+> +
+> +static void __exit gcc_sc7180_exit(void)
+> +{
+> +	platform_driver_unregister(&gcc_sc7180_driver);
+> +}
+> +module_exit(gcc_sc7180_exit);
+> +
+> +MODULE_DESCRIPTION("QTI GCC SC7180 Driver");
+> +MODULE_LICENSE("GPL v2");
+> --
+> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+> of the Code Aurora Forum, hosted by the  Linux Foundation.
+> 
 
-... if the hypercall returns an architectural timer value, you must not
-pass tk->tkr.mono.clock to get_device_system_crosststamp: you must pass
-&clocksource_counter.  This way, PTP is disabled when using any other
-clocksource.
-
->> So system_counterval.cs should be set to something like
->> &clocksource_counter (from drivers/clocksource/arm_arch_timer.c).
->> Perhaps the right place to define kvm_arch_ptp_get_clock_fn is in that f=
-ile?
->>
-> I have checked that ptp_sc.cs is arch_sys_counter.
-> Also move the module API to arm_arch_timer.c will looks a little
-> ugly and it's not easy to be accept by arm side I think.
-
-I don't think it's ugly but more important, using tk->tkr_mono.clock is
-incorrect.  See how the x86 code hardcodes &kvm_clock, it's the same for
-ARM.
-
->> You also have to check here that the clocksource is based on the ARM
->> architectural timer.  Again, maybe you could place the implementation in
->> drivers/clocksource/arm_arch_timer.c, and make it return -ENODEV if the
->> active clocksource is not clocksource_counter.  Then KVM can look for er=
-rors
->> and return SMCCC_RET_NOT_SUPPORTED in that case.
->=20
-> I have checked it. The clock source is arch_sys_counter which is arm arch=
- timer.
-> I can try to do that but I'm not sure arm side will be happy for that cha=
-nge.
-
-Just try.  For my taste, it's nice to include both sides of the
-hypercall in drivers/clocksource/arm_arch_timer.c, possibly
-conditionalizing them on #ifdef CONFIG_KVM and #ifdef
-CONFIG_PTP_1588_CLOCK_KVM.  But there is an alternative which is simply
-to export the clocksource struct.  Both choices are easy to implement so
-you can just ask the ARM people what they prefer and they can judge from
-the code.
-
-Paolo
-
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
