@@ -2,833 +2,171 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF5AC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 766DFC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ECB02053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:00:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37E0421927
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:01:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gg+BER7K"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="k6Yx1GPo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390848AbfISPAx (ORCPT
+        id S2390865AbfISPBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 11:00:53 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:37578 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388350AbfISPAx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 11:00:53 -0400
-Received: by mail-qt1-f193.google.com with SMTP id d2so4624365qtr.4;
-        Thu, 19 Sep 2019 08:00:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tjs1L+w/JwLfTxwa2iXiO78vfjJpkDJkSmObwyMF4AU=;
-        b=Gg+BER7KD6pYFK16IB03nNBX6Mvi0AxoHtl1M+rt/UYxbWyCvRCrwxJefcjhq/jn4G
-         Qhirwe/GyBVK3qngs96vs89W+olQCoL4Oq+uBI4al/ntlOGPLePznf/3nVIK+3ii7ndz
-         I9d9kv9ASgi/gVSvVRtvN34CV/TChuc94RFTN59hcWJNhSOZU2ye+AcPaTLec7PwTb2k
-         hkjvcdLG/Udwg+3F/S8erjB3JUBOViRAO4klDBGAMdx9CnBzIP+6Bzrv/eBrybm0Uw+L
-         c10bl8kaxekfj6CEOMTIEF2ji7ggcFw3O/hdSqCF3UewfwwnsX7jkTTfT53KsluAwY69
-         zakw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tjs1L+w/JwLfTxwa2iXiO78vfjJpkDJkSmObwyMF4AU=;
-        b=C+UEOcB27PbxhdR9DbpF/oycUnKJS+z3QmjyohSKe28JVY2TkJgiNHUMK+vKZGx05/
-         JckWGJGGOT9ss1jkzosXKYJgeQaawuXIFCaMjjYydgdYhL0qrtobQL/VaQ7CxXMux9m9
-         LCZykRRIV1ZHTFZ9J6OHvZVeMKlNN5jYivnjz31nUJ+mIDm/kfOS3EMyzvPgy8d8PGr6
-         8N9N96AkFN0sS24rcxZZv8BPuxuKL1TLe6Vo6iN7IXhqQT5Iy7FX0p5eDWpbxUXd917C
-         yrR3xaJhSRFbkfLQmfuDERYzLfbcTIAWup88+MOaSeDovG2V6LSGC52gMWghJkiZz1fd
-         PjGA==
-X-Gm-Message-State: APjAAAW0rFoXhxKnvUvzuzzGWqcBpiVANEjgUI+k2MOocUe2c8sFIBFT
-        0yWyIibjinHpXPKaIhZnEpS7APX16kOr6pV5tuo=
-X-Google-Smtp-Source: APXvYqw21hWO6ouQJ7v+NkfdWCZ7wwkxh4FsIdAyp00BklZplwE5StOP9kvQ80hFWwI33RBlN3rQc50GBmWBZAzn23g=
-X-Received: by 2002:a0c:edb4:: with SMTP id h20mr8118321qvr.178.1568905250713;
- Thu, 19 Sep 2019 08:00:50 -0700 (PDT)
+        Thu, 19 Sep 2019 11:01:43 -0400
+Received: from mout.web.de ([212.227.15.4]:41845 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388350AbfISPBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 11:01:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1568905268;
+        bh=u2ovSWunxy9woIqBvZsHHuYvMbTrtREDqeUgpPJUF+Q=;
+        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
+        b=k6Yx1GPosRG5DH4dGC24VKIBHqJ9oV7UJjavEdRO9oq00replubxs7LFvDVuheqvr
+         CNRRZrUNzsIpesEmE8IywRevk/KoPJrKsDkOMTdYfJSRj4QQaVs6g7iNylbg8h5PUR
+         cBAjg2WO4ztYJ/ob/1ZU1cadrf7s8nHu0JIK1n5A=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.132.191.36]) by smtp.web.de (mrweb001
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0M8hhT-1hwrLz2DVj-00wFZO; Thu, 19
+ Sep 2019 17:01:08 +0200
+To:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Himanshu Jha <himanshujha199640@gmail.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] video: pxafb: Use devm_platform_ioremap_resource() in
+ pxafb_probe()
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <a1b804b1-43c2-327a-d6d1-df49aebec680@web.de>
+Date:   Thu, 19 Sep 2019 17:01:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-References: <20190916130427.20413-1-marcel@ziswiler.com>
-In-Reply-To: <20190916130427.20413-1-marcel@ziswiler.com>
-From:   Oleksandr Suvorov <cryosay@gmail.com>
-Date:   Thu, 19 Sep 2019 18:00:39 +0300
-Message-ID: <CAGgjyvGg9p9Dcm2AFkmEgcaSphaHpLLAHkacGAB39Lzn4WseUw@mail.gmail.com>
-Subject: Re: [PATCH v1] arm64: dts: freescale: add initial support for colibri imx8x
-To:     Marcel Ziswiler <marcel@ziswiler.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Jon Nettleton <jon@solid-run.com>,
-        Li Yang <leoyang.li@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Pramod Kumar <pramod.kumar_1@nxp.com>,
-        Richard Hu <richard.hu@technexion.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Vabhav Sharma <vabhav.sharma@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:GrKDkEUMXLoBldX1avxLfVJzh5A9CLC6e6YKXbC8kO+UVNS6N5F
+ dyesIWm1P8pt1HihyBzR8SS+eY2PERRnhMkL4VV0XKIqGe+HFZGwtmfFvuktbP6pi/7nEOm
+ MUXbuJ0VeVmZhrzrKkmk1hv5evmQnhE7QRbHYYLiyMaEXsvI91Sd6bXgCMcB4+LyKlWsS7h
+ IiTHKiM1JYwiNd0fZWHoQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:B8nBfBYkohA=:oRm+2mcW0XSB725MmbvJws
+ Q0q/udRo19sSg24j0CXCEufY7FDLq3wkJnSEyMyq0xgQMjhpI+T2RzJGKJDBiqnlZ/jmjvpa4
+ QsziN78u7/3S3bydWNtpyyudUUGv9RA3c2c4aIi62qM3bh8vj9/o/r2xLrLlV7TmzABEkKlc2
+ d1l3tqJFLZJ0x4pvgVH05VJ0ZrSIlTUCrKWOW3UCwq9f/oFCl8dOTvkeG4M14klNg6z6Pcy5C
+ BeU07A7HQAmKDN5EbGu+OUF3sAnvfxad7OLM9nMjV5tX63MXiuSeAI8tQSFE8Dp9/JmExi+PW
+ zU3iUQYTAcTZM/jmQgsxZYw+fvofkscd01MGhV7xNOlw97J/0BUeJ/IgrQNC8RJwI6yeG9mcZ
+ cdl2A0RM4Xtue883N9ZzD4HZLOT0PwuyUiSLldG2MRQnpOrVqVxb47Jr1dWYfT6k96EducUCu
+ z1m9j2TV+gtGe9EgIlconbITPRiHUWBIDIoN5RNWTN5vWRZVlqeLZojI5AP4pH2xBGEuKm4Jd
+ jvjz90AbRsb9SWdOtgV3LXNJoulz1QD9yDfR1DJDLktWA54MGdpYDh8iLYIkAp+O3yrjCGU19
+ hfl1lAMv32xGkhsEova5aFPDf7/ZJOkHeHbc4DhbrpxBSVfC6P7JofQbt+DenHtMOkW+gsR5C
+ WoiMz5sZGXlDYwTM8/kOPk+RZeq83BHBv76jT2abatL1y8MkNGlyUjTLc1yOfuX2zDOPJNoJJ
+ 6hK9UUFPDPUj3hO/6VPvaI6+wPstYWQAO3+bspQZ+gT+dRPZs1W+zWTndMdUNE+BJMRy/sMRR
+ JdGUNW9qQlELKx7r5YON4AdfofuRUDqqDJhbm1fh7+5s/e+RelH1LgJode8e6q7z9RtTrxwUV
+ YVeitXO72xKJt+wY944aM0LjW+jJ/Cv8WgxQv375DffX/8dwd2D2PfgGQvafQkv2F1MlObFMe
+ yMys5pVUDf30OSnmhZwRWHzifXWhkAiU1+0KZbuqrSV2ECuM2m8rxEbsVQeu3uex62FyqEez9
+ +OeS8WEm/gXQ1rHb1+ZVy181CeVNPcAelRn2KOXmKmp3Hun/Jim05hBVrBuB4aY1x4bzkhYTN
+ wvRA2uhgo+KdrbAN3keae+dJ/s/UqTIpUGOLLzOWXB48jtLAFUXVPwG/+bsRb05Se4AgfjQpN
+ 867sE1Gc1TEnLePPkLkRlGxiMlFrENtieFPD2+FnRBZBDVb2PstG1m7HHvE1jyuNSQnDN6rKd
+ BdpxBuiOcz5lx0qiYppU7zYfg29wAuo9RlFznOisNQ680y9FjfhCmUPvMLIU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 4:11 PM Marcel Ziswiler <marcel@ziswiler.com> wrote:
->
-> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
->
-> This patch adds the device tree to support Toradex Colibri iMX8X a
-> computer on module which can be used on different carrier boards.
->
-> The module consists of a NXP i.MX 8X family SoC (either i.MX 8DualX or
-> 8QuadXPlus), a PF8100 PMIC, a FastEthernet PHY, 1 or 2 GB of LPDDR4
-> RAM, some level shifters, a Micron eMMC, a USB hub, an AD7879 resistive
-> touch controller, a SGTL5000 audio codec and on-module CSI as well as
-> DSI-LVDS FFC receptacles plus an optional Bluetooth/Wi-Fi module.
->
-> Anything that is not self-contained on the module is disabled by
-> default.
->
-> The device tree for the Colibri Evaluation Board includes the module's
-> device tree and enables the supported peripherals of the carrier board
-> (the Colibri Evaluation Board supports almost all of them).
->
-> So far there is no display or USB functionality supported at all but
-> basic console UART, eMMC and Ethernet functionality work fine.
->
-> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Thu, 19 Sep 2019 16:51:38 +0200
 
-Reviewed-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Simplify this function implementation by using a known wrapper function.
 
->
-> ---
->
->  arch/arm64/boot/dts/freescale/Makefile        |   1 +
->  .../dts/freescale/imx8qxp-colibri-eval-v3.dts |  15 +
->  .../freescale/imx8qxp-colibri-eval-v3.dtsi    |  62 ++
->  .../boot/dts/freescale/imx8qxp-colibri.dtsi   | 592 ++++++++++++++++++
->  4 files changed, 670 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/freescale/imx8qxp-colibri-eval-v3.dts
->  create mode 100644 arch/arm64/boot/dts/freescale/imx8qxp-colibri-eval-v3.dtsi
->  create mode 100644 arch/arm64/boot/dts/freescale/imx8qxp-colibri.dtsi
->
-> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-> index 93fce8f0c66d..bd3764e52cfd 100644
-> --- a/arch/arm64/boot/dts/freescale/Makefile
-> +++ b/arch/arm64/boot/dts/freescale/Makefile
-> @@ -31,4 +31,5 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mq-pico-pi.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-rmb3.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-zest.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8qxp-ai_ml.dtb
-> +dtb-$(CONFIG_ARCH_MXC) += imx8qxp-colibri-eval-v3.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
-> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-colibri-eval-v3.dts b/arch/arm64/boot/dts/freescale/imx8qxp-colibri-eval-v3.dts
-> new file mode 100644
-> index 000000000000..85fc800c348f
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/imx8qxp-colibri-eval-v3.dts
-> @@ -0,0 +1,15 @@
-> +// SPDX-License-Identifier: GPL-2.0+ OR X11
-> +/*
-> + * Copyright 2019 Toradex
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "imx8qxp-colibri.dtsi"
-> +#include "imx8qxp-colibri-eval-v3.dtsi"
-> +
-> +/ {
-> +       model = "Toradex Colibri iMX8QXP/DX on Colibri Evaluation Board V3";
-> +       compatible = "toradex,colibri-imx8qxp-eval-v3",
-> +                    "toradex,colibri-imx8qxp", "fsl,imx8qxp";
-> +};
-> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-colibri-eval-v3.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp-colibri-eval-v3.dtsi
-> new file mode 100644
-> index 000000000000..f5e4f380755c
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/imx8qxp-colibri-eval-v3.dtsi
-> @@ -0,0 +1,62 @@
-> +// SPDX-License-Identifier: GPL-2.0+ OR X11
-> +/*
-> + * Copyright 2019 Toradex
-> + */
-> +
-> +#include "dt-bindings/input/linux-event-codes.h"
-> +
-> +/ {
-> +       aliases {
-> +               rtc0 = &rtc_i2c;
-> +               rtc1 = &rtc;
-> +       };
-> +
-> +       gpio-keys {
-> +               compatible = "gpio-keys";
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&pinctrl_gpiokeys>;
-> +
-> +               power {
-> +                       label = "Wake-Up";
-> +                       gpios = <&lsio_gpio3 10 GPIO_ACTIVE_HIGH>;
-> +                       linux,code = <KEY_WAKEUP>;
-> +                       debounce-interval = <10>;
-> +                       gpio-key,wakeup;
-> +               };
-> +       };
-> +};
-> +
-> +/* Colibri Ethernet */
-> +&fec1 {
-> +       status = "okay";
-> +};
-> +
-> +&adma_i2c1 {
-> +       status = "okay";
-> +
-> +       /* M41T0M6 real time clock on carrier board */
-> +       rtc_i2c: rtc@68 {
-> +               compatible = "st,m41t0";
-> +               reg = <0x68>;
-> +       };
-> +};
-> +
-> +/* Colibri UART_B */
-> +&adma_lpuart0 {
-> +       status= "okay";
-> +};
-> +
-> +/* Colibri UART_C */
-> +&adma_lpuart2 {
-> +       status= "okay";
-> +};
-> +
-> +/* Colibri UART_A */
-> +&adma_lpuart3 {
-> +       status= "okay";
-> +};
-> +
-> +/* Colibri SDCard */
-> +&usdhc2 {
-> +       status = "okay";
-> +};
-> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-colibri.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp-colibri.dtsi
-> new file mode 100644
-> index 000000000000..efdc332d082e
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/imx8qxp-colibri.dtsi
-> @@ -0,0 +1,592 @@
-> +// SPDX-License-Identifier: GPL-2.0+ OR X11
-> +/*
-> + * Copyright 2019 Toradex
-> + */
-> +
-> +#include "imx8qxp.dtsi"
-> +
-> +/ {
-> +       model = "Toradex Colibri iMX8QXP/DX Module";
-> +       compatible = "toradex,colibri-imx8x", "fsl,imx8qxp";
-> +
-> +       chosen {
-> +               stdout-path = &adma_lpuart3;
-> +       };
-> +
-> +       reg_module_3v3: regulator-module-3v3 {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "+V3.3";
-> +               regulator-min-microvolt = <3300000>;
-> +               regulator-max-microvolt = <3300000>;
-> +       };
-> +};
-> +
-> +/* Colibri Ethernet */
-> +&fec1 {
-> +       pinctrl-names = "default", "sleep";
-> +       pinctrl-0 = <&pinctrl_fec1>;
-> +       pinctrl-1 = <&pinctrl_fec1_sleep>;
-> +       phy-mode = "rmii";
-> +       phy-handle = <&ethphy0>;
-> +       fsl,magic-packet;
-> +
-> +       mdio {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               ethphy0: ethernet-phy@2 {
-> +                       compatible = "ethernet-phy-ieee802.3-c22";
-> +                       max-speed = <100>;
-> +                       reg = <2>;
-> +               };
-> +       };
-> +};
-> +
-> +/* On-module I2C */
-> +&adma_i2c0 {
-> +       #address-cells = <1>;
-> +       #size-cells = <0>;
-> +       clock-frequency = <100000>;
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_i2c0>, <&pinctrl_sgtl5000_usb_clk>;
-> +       status = "okay";
-> +
-> +       /* Touch controller */
-> +       ad7879@2c {
-> +               compatible = "adi,ad7879-1";
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&pinctrl_ad7879_int>;
-> +               reg = <0x2c>;
-> +               interrupt-parent = <&lsio_gpio3>;
-> +               interrupts = <5 IRQ_TYPE_EDGE_FALLING>;
-> +               touchscreen-max-pressure = <4096>;
-> +               adi,resistance-plate-x = <120>;
-> +               adi,first-conversion-delay = /bits/ 8 <3>;
-> +               adi,acquisition-time = /bits/ 8 <1>;
-> +               adi,median-filter-size = /bits/ 8 <2>;
-> +               adi,averaging = /bits/ 8 <1>;
-> +               adi,conversion-interval = /bits/ 8 <255>;
-> +       };
-> +};
-> +
-> +/* Colibri I2C */
-> +&adma_i2c1 {
-> +       #address-cells = <1>;
-> +       #size-cells = <0>;
-> +       clock-frequency = <100000>;
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_i2c1>;
-> +};
-> +
-> +&iomuxc {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_hog0>, <&pinctrl_hog1>, <&pinctrl_ext_io0>;
-> +
-> +       colibri-imx8qxp {
-> +               /* On-module touch pen-down interrupt */
-> +               pinctrl_ad7879_int: ad7879-int {
-> +                       fsl,pins = <
-> +                               IMX8QXP_MIPI_CSI0_I2C0_SCL_LSIO_GPIO3_IO05      0x21
-> +                       >;
-> +               };
-> +
-> +               /* Colibri Analogue Inputs */
-> +               pinctrl_adc0: adc0grp {
-> +                       fsl,pins = <
-> +                               IMX8QXP_ADC_IN0_ADMA_ADC_IN0                    0x60            /* SODIMM   8 */
-> +                               IMX8QXP_ADC_IN1_ADMA_ADC_IN1                    0x60            /* SODIMM   6 */
-> +                               IMX8QXP_ADC_IN4_ADMA_ADC_IN4                    0x60            /* SODIMM   4 */
-> +                               IMX8QXP_ADC_IN5_ADMA_ADC_IN5                    0x60            /* SODIMM   2 */
-> +                       >;
-> +               };
-> +
-> +               pinctrl_can_int: can-int-grp {
-> +                       fsl,pins = <
-> +                               IMX8QXP_QSPI0A_DQS_LSIO_GPIO3_IO13              0x40            /* SODIMM  73 */
-> +                       >;
-> +               };
-> +
-> +               pinctrl_csi_ctl: csictlgrp {
-> +                       fsl,pins = <
-> +                               IMX8QXP_QSPI0A_SS0_B_LSIO_GPIO3_IO14            0x20            /* SODIMM  77 */
-> +                               IMX8QXP_QSPI0A_SS1_B_LSIO_GPIO3_IO15            0x20            /* SODIMM  89 */
-> +                       >;
-> +               };
-> +
-> +               pinctrl_gpiokeys: gpiokeysgrp {
-> +                       fsl,pins = <
-> +                               IMX8QXP_QSPI0A_DATA1_LSIO_GPIO3_IO10            0x20            /* SODIMM  45 */
-> +                       >;
-> +               };
-> +
-> +               /* Colibri UART_B */
-> +               pinctrl_lpuart0: lpuart0grp {
-> +                       fsl,pins = <
-> +                               IMX8QXP_UART0_RX_ADMA_UART0_RX                  0x06000020      /* SODIMM  36 */
-> +                               IMX8QXP_UART0_TX_ADMA_UART0_TX                  0x06000020      /* SODIMM  38 */
-> +                               IMX8QXP_FLEXCAN0_RX_ADMA_UART0_RTS_B            0x06000020      /* SODIMM  34 */
-> +                               IMX8QXP_FLEXCAN0_TX_ADMA_UART0_CTS_B            0x06000020      /* SODIMM  32 */
-> +                       >;
-> +               };
-> +
-> +               /* Colibri UART_C */
-> +               pinctrl_lpuart2: lpuart2grp {
-> +                       fsl,pins = <
-> +                               IMX8QXP_UART2_RX_ADMA_UART2_RX                  0x06000020      /* SODIMM  19 */
-> +                               IMX8QXP_UART2_TX_ADMA_UART2_TX                  0x06000020      /* SODIMM  21 */
-> +                       >;
-> +               };
-> +
-> +               /* Colibri UART_A */
-> +               pinctrl_lpuart3: lpuart3grp {
-> +                       fsl,pins = <
-> +                               IMX8QXP_FLEXCAN2_RX_ADMA_UART3_RX               0x06000020      /* SODIMM  33 */
-> +                               IMX8QXP_FLEXCAN2_TX_ADMA_UART3_TX               0x06000020      /* SODIMM  35 */
-> +                       >;
-> +               };
-> +
-> +               /* Colibri UART_A Control */
-> +               pinctrl_lpuart3_ctrl: lpuart3ctrlgrp {
-> +                       fsl,pins = <
-> +                               IMX8QXP_MIPI_DSI1_GPIO0_01_LSIO_GPIO2_IO00      0x20            /* SODIMM  23 */
-> +                               IMX8QXP_SAI1_RXD_LSIO_GPIO0_IO29                0x20            /* SODIMM  25 */
-> +                               IMX8QXP_SAI1_RXC_LSIO_GPIO0_IO30                0x20            /* SODIMM  27 */
-> +                               IMX8QXP_CSI_RESET_LSIO_GPIO3_IO03               0x20            /* SODIMM  29 */
-> +                               IMX8QXP_USDHC1_CD_B_LSIO_GPIO4_IO22             0x20            /* SODIMM  31 */
-> +                               IMX8QXP_CSI_EN_LSIO_GPIO3_IO02                  0x20            /* SODIMM  37 */
-> +                       >;
-> +               };
-> +
-> +               /* Colibri Ethernet: On-module 100Mbps PHY Micrel KSZ8041 */
-> +               pinctrl_fec1: fec1grp {
-> +                       fsl,pins = <
-> +                               IMX8QXP_ENET0_MDC_CONN_ENET0_MDC                        0x06000020
-> +                               IMX8QXP_ENET0_MDIO_CONN_ENET0_MDIO                      0x06000020
-> +                               IMX8QXP_ENET0_RGMII_TX_CTL_CONN_ENET0_RGMII_TX_CTL      0x61
-> +                               IMX8QXP_ENET0_RGMII_TXC_CONN_ENET0_RCLK50M_OUT          0x06000061
-> +                               IMX8QXP_ENET0_RGMII_TXD0_CONN_ENET0_RGMII_TXD0          0x61
-> +                               IMX8QXP_ENET0_RGMII_TXD1_CONN_ENET0_RGMII_TXD1          0x61
-> +                               IMX8QXP_ENET0_RGMII_RX_CTL_CONN_ENET0_RGMII_RX_CTL      0x61
-> +                               IMX8QXP_ENET0_RGMII_RXD0_CONN_ENET0_RGMII_RXD0          0x61
-> +                               IMX8QXP_ENET0_RGMII_RXD1_CONN_ENET0_RGMII_RXD1          0x61
-> +                               IMX8QXP_ENET0_RGMII_RXD2_CONN_ENET0_RMII_RX_ER          0x61
-> +                       >;
-> +               };
-> +
-> +               pinctrl_fec1_sleep: fec1-sleep-grp {
-> +                       fsl,pins = <
-> +                               IMX8QXP_ENET0_MDC_LSIO_GPIO5_IO11               0x06000041
-> +                               IMX8QXP_ENET0_MDIO_LSIO_GPIO5_IO10              0x06000041
-> +                               IMX8QXP_ENET0_RGMII_TX_CTL_LSIO_GPIO4_IO30      0x41
-> +                               IMX8QXP_ENET0_RGMII_TXC_LSIO_GPIO4_IO29         0x41
-> +                               IMX8QXP_ENET0_RGMII_TXD0_LSIO_GPIO4_IO31        0x41
-> +                               IMX8QXP_ENET0_RGMII_TXD1_LSIO_GPIO5_IO00        0x41
-> +                               IMX8QXP_ENET0_RGMII_RX_CTL_LSIO_GPIO5_IO04      0x41
-> +                               IMX8QXP_ENET0_RGMII_RXD0_LSIO_GPIO5_IO05        0x41
-> +                               IMX8QXP_ENET0_RGMII_RXD1_LSIO_GPIO5_IO06        0x41
-> +                               IMX8QXP_ENET0_RGMII_RXD2_LSIO_GPIO5_IO07        0x41
-> +                       >;
-> +               };
-> +
-> +               /* Colibri LCD Back-Light GPIO */
-> +               pinctrl_gpio_bl_on: gpio-bl-on {
-> +                       fsl,pins = <
-> +                               IMX8QXP_QSPI0A_DATA3_LSIO_GPIO3_IO12            0x60            /* SODIMM  71 */
-> +                       >;
-> +               };
-> +
-> +               pinctrl_hog0: hog0grp {
-> +                       fsl,pins = <
-> +                               IMX8QXP_ENET0_RGMII_TXD3_LSIO_GPIO5_IO02        0x06000020      /* SODIMM  65 */
-> +                               IMX8QXP_CSI_D07_CI_PI_D09                       0x61            /* SODIMM  65 */
-> +                               IMX8QXP_QSPI0A_DATA2_LSIO_GPIO3_IO11            0x20            /* SODIMM  69 */
-> +                               IMX8QXP_SAI0_TXC_LSIO_GPIO0_IO26                0x20            /* SODIMM  79 */
-> +                               IMX8QXP_CSI_D02_CI_PI_D04                       0x61            /* SODIMM  79 */
-> +                               IMX8QXP_ENET0_RGMII_RXC_LSIO_GPIO5_IO03         0x06000020      /* SODIMM  85 */
-> +                               IMX8QXP_CSI_D06_CI_PI_D08                       0x61            /* SODIMM  85 */
-> +                               IMX8QXP_QSPI0B_SCLK_LSIO_GPIO3_IO17             0x20            /* SODIMM  95 */
-> +                               IMX8QXP_SAI0_RXD_LSIO_GPIO0_IO27                0x20            /* SODIMM  97 */
-> +                               IMX8QXP_CSI_D03_CI_PI_D05                       0x61            /* SODIMM  97 */
-> +                               IMX8QXP_QSPI0B_DATA0_LSIO_GPIO3_IO18            0x20            /* SODIMM  99 */
-> +                               IMX8QXP_SAI0_TXFS_LSIO_GPIO0_IO28               0x20            /* SODIMM 101 */
-> +                               IMX8QXP_CSI_D00_CI_PI_D02                       0x61            /* SODIMM 101 */
-> +                               IMX8QXP_SAI0_TXD_LSIO_GPIO0_IO25                0x20            /* SODIMM 103 */
-> +                               IMX8QXP_CSI_D01_CI_PI_D03                       0x61            /* SODIMM 103 */
-> +                               IMX8QXP_QSPI0B_DATA1_LSIO_GPIO3_IO19            0x20            /* SODIMM 105 */
-> +                               IMX8QXP_QSPI0B_DATA2_LSIO_GPIO3_IO20            0x20            /* SODIMM 107 */
-> +                               IMX8QXP_USB_SS3_TC2_LSIO_GPIO4_IO05             0x20            /* SODIMM 127 */
-> +                               IMX8QXP_USB_SS3_TC3_LSIO_GPIO4_IO06             0x20            /* SODIMM 131 */
-> +                               IMX8QXP_USB_SS3_TC1_LSIO_GPIO4_IO04             0x20            /* SODIMM 133 */
-> +                               IMX8QXP_CSI_PCLK_LSIO_GPIO3_IO00                0x20            /* SODIMM  96 */
-> +                               IMX8QXP_QSPI0B_DATA3_LSIO_GPIO3_IO21            0x20            /* SODIMM  98 */
-> +                               IMX8QXP_SAI1_RXFS_LSIO_GPIO0_IO31               0x20            /* SODIMM 100 */
-> +                               IMX8QXP_QSPI0B_DQS_LSIO_GPIO3_IO22              0x20            /* SODIMM 102 */
-> +                               IMX8QXP_QSPI0B_SS0_B_LSIO_GPIO3_IO23            0x20            /* SODIMM 104 */
-> +                               IMX8QXP_QSPI0B_SS1_B_LSIO_GPIO3_IO24            0x20            /* SODIMM 106 */
-> +                       >;
-> +               };
-> +
-> +               pinctrl_hog1: hog1grp {
-> +                       fsl,pins = <
-> +                               IMX8QXP_CSI_MCLK_LSIO_GPIO3_IO01                0x20            /* SODIMM  75 */
-> +                               IMX8QXP_QSPI0A_SCLK_LSIO_GPIO3_IO16             0x20            /* SODIMM  93 */
-> +                       >;
-> +               };
-> +
-> +               /*
-> +                * This pin is used in the SCFW as a UART. Using it from
-> +                * Linux would require rewritting the SCFW board file.
-> +                */
-> +               pinctrl_hog_scfw: hogscfwgrp {
-> +                       fsl,pins = <
-> +                               IMX8QXP_SCU_GPIO0_00_LSIO_GPIO2_IO03            0x20            /* SODIMM 144 */
-> +                       >;
-> +               };
-> +
-> +               /* On Module I2C */
-> +               pinctrl_i2c0: i2c0grp {
-> +                       fsl,pins = <
-> +                               IMX8QXP_MIPI_CSI0_GPIO0_00_ADMA_I2C0_SCL        0x06000021
-> +                               IMX8QXP_MIPI_CSI0_GPIO0_01_ADMA_I2C0_SDA        0x06000021
-> +                       >;
-> +               };
-> +
-> +               /* Colibri I2C */
-> +               pinctrl_i2c1: i2c1grp {
-> +                       fsl,pins = <
-> +                               IMX8QXP_MIPI_DSI0_GPIO0_00_ADMA_I2C1_SCL        0x06000021      /* SODIMM 196 */
-> +                               IMX8QXP_MIPI_DSI0_GPIO0_01_ADMA_I2C1_SDA        0x06000021      /* SODIMM 194 */
-> +                       >;
-> +               };
-> +
-> +               /* Colibri optional CAN on UART_B RTS/CTS */
-> +               pinctrl_flexcan1: flexcan0grp {
-> +                       fsl,pins = <
-> +                               IMX8QXP_FLEXCAN0_TX_ADMA_FLEXCAN0_TX            0x21            /* SODIMM  32 */
-> +                               IMX8QXP_FLEXCAN0_RX_ADMA_FLEXCAN0_RX            0x21            /* SODIMM  34 */
-> +                       >;
-> +               };
-> +
-> +               /* Colibri optional CAN on PS2 */
-> +               pinctrl_flexcan2: flexcan1grp {
-> +                       fsl,pins = <
-> +                               IMX8QXP_FLEXCAN1_TX_ADMA_FLEXCAN1_TX            0x21            /* SODIMM  55 */
-> +                               IMX8QXP_FLEXCAN1_RX_ADMA_FLEXCAN1_RX            0x21            /* SODIMM  63 */
-> +                       >;
-> +               };
-> +
-> +               /* On module wifi module */
-> +               pinctrl_pcieb: pciebgrp {
-> +                       fsl,pins = <
-> +                               IMX8QXP_PCIE_CTRL0_CLKREQ_B_LSIO_GPIO4_IO01     0x04000061      /* SODIMM 178 */
-> +                               IMX8QXP_PCIE_CTRL0_WAKE_B_LSIO_GPIO4_IO02       0x04000061      /* SODIMM  94 */
-> +                               IMX8QXP_PCIE_CTRL0_PERST_B_LSIO_GPIO4_IO00      0x60            /* SODIMM  81 */
-> +                       >;
-> +               };
-> +
-> +               /* Colibri PWM_A */
-> +               pinctrl_pwm_a: pwma {
-> +               /* both pins are connected together, reserve the unused CSI_D05 */
-> +                       fsl,pins = <
-> +                               IMX8QXP_CSI_D05_CI_PI_D07                       0x61            /* SODIMM  59 */
-> +                               IMX8QXP_SPI0_CS1_ADMA_LCD_PWM0_OUT              0x60            /* SODIMM  59 */
-> +                       >;
-> +               };
-> +
-> +               /* Colibri PWM_B */
-> +               pinctrl_pwm_b: pwmb {
-> +                       fsl,pins = <
-> +                               IMX8QXP_UART1_TX_LSIO_PWM0_OUT                  0x60            /* SODIMM  28 */
-> +                       >;
-> +               };
-> +
-> +               /* Colibri PWM_C */
-> +               pinctrl_pwm_c: pwmc {
-> +                       fsl,pins = <
-> +                               IMX8QXP_UART1_RX_LSIO_PWM1_OUT                  0x60            /* SODIMM  30 */
-> +                       >;
-> +               };
-> +
-> +               /* Colibri PWM_D */
-> +               pinctrl_pwm_d: pwmd {
-> +               /* both pins are connected together, reserve the unused CSI_D04 */
-> +                       fsl,pins = <
-> +                               IMX8QXP_CSI_D04_CI_PI_D06                       0x61            /* SODIMM  67 */
-> +                               IMX8QXP_UART1_RTS_B_LSIO_PWM2_OUT               0x60            /* SODIMM  67 */
-> +                       >;
-> +               };
-> +
-> +               /* On-module I2S */
-> +               pinctrl_sai0: sai0grp {
-> +                       fsl,pins = <
-> +                               IMX8QXP_SPI0_SDI_ADMA_SAI0_TXD                  0x06000040
-> +                               IMX8QXP_SPI0_CS0_ADMA_SAI0_RXD                  0x06000040
-> +                               IMX8QXP_SPI0_SCK_ADMA_SAI0_TXC                  0x06000040
-> +                               IMX8QXP_SPI0_SDO_ADMA_SAI0_TXFS                 0x06000040
-> +                       >;
-> +               };
-> +
-> +               /* Colibri Audio Analogue Microphone GND */
-> +               pinctrl_sgtl5000: sgtl5000 {
-> +                       fsl,pins = <
-> +                               /* MIC GND EN */
-> +                               IMX8QXP_MIPI_CSI0_I2C0_SDA_LSIO_GPIO3_IO06      0x41
-> +                       >;
-> +               };
-> +
-> +               /* On-module SGTL5000 clock */
-> +               pinctrl_sgtl5000_usb_clk: sgtl5000-usb-clk {
-> +                       fsl,pins = <
-> +                               IMX8QXP_ADC_IN3_ADMA_ACM_MCLK_OUT0              0x21
-> +                       >;
-> +               };
-> +
-> +               /* On-module USB interrupt */
-> +               pinctrl_usb3503a: usb3503a-grp {
-> +                       fsl,pins = <
-> +                               IMX8QXP_MIPI_CSI0_MCLK_OUT_LSIO_GPIO3_IO04      0x61
-> +                       >;
-> +               };
-> +
-> +               /* Colibri USB Client Cable Detect */
-> +               pinctrl_usbc_det: usbc-det {
-> +                       fsl,pins = <
-> +                               IMX8QXP_ENET0_REFCLK_125M_25M_LSIO_GPIO5_IO09   0x06000040      /* SODIMM 137 */
-> +                       >;
-> +               };
-> +
-> +               pinctrl_ext_io0: ext-io0 {
-> +                       fsl,pins = <
-> +                               IMX8QXP_ENET0_RGMII_RXD3_LSIO_GPIO5_IO08        0x06000040      /* SODIMM 135 */
-> +                       >;
-> +               };
-> +
-> +               /* Colibri Parallel RGB LCD Interface */
-> +               pinctrl_lcdif: lcdif-pins {
-> +                       fsl,pins = <
-> +                               IMX8QXP_MCLK_OUT0_ADMA_LCDIF_CLK                0x60            /* SODIMM  56 */
-> +                               IMX8QXP_SPI3_CS0_ADMA_LCDIF_HSYNC               0x60            /* SODIMM  68 */
-> +                               IMX8QXP_MCLK_IN0_ADMA_LCDIF_VSYNC               0x60            /* SODIMM  82 */
-> +                               IMX8QXP_MCLK_IN1_ADMA_LCDIF_EN                  0x60            /* SODIMM  44 */
-> +                               IMX8QXP_USDHC1_RESET_B_LSIO_GPIO4_IO19          0x60            /* SODIMM  44 */
-> +                               IMX8QXP_ESAI0_FSR_ADMA_LCDIF_D00                0x60            /* SODIMM  76 */
-> +                               IMX8QXP_USDHC1_WP_LSIO_GPIO4_IO21               0x60            /* SODIMM  76 */
-> +                               IMX8QXP_ESAI0_FST_ADMA_LCDIF_D01                0x60            /* SODIMM  70 */
-> +                               IMX8QXP_ESAI0_SCKR_ADMA_LCDIF_D02               0x60            /* SODIMM  60 */
-> +                               IMX8QXP_ESAI0_SCKT_ADMA_LCDIF_D03               0x60            /* SODIMM  58 */
-> +                               IMX8QXP_ESAI0_TX0_ADMA_LCDIF_D04                0x60            /* SODIMM  78 */
-> +                               IMX8QXP_ESAI0_TX1_ADMA_LCDIF_D05                0x60            /* SODIMM  72 */
-> +                               IMX8QXP_ESAI0_TX2_RX3_ADMA_LCDIF_D06            0x60            /* SODIMM  80 */
-> +                               IMX8QXP_ESAI0_TX3_RX2_ADMA_LCDIF_D07            0x60            /* SODIMM  46 */
-> +                               IMX8QXP_ESAI0_TX4_RX1_ADMA_LCDIF_D08            0x60            /* SODIMM  62 */
-> +                               IMX8QXP_ESAI0_TX5_RX0_ADMA_LCDIF_D09            0x60            /* SODIMM  48 */
-> +                               IMX8QXP_SPDIF0_RX_ADMA_LCDIF_D10                0x60            /* SODIMM  74 */
-> +                               IMX8QXP_SPDIF0_TX_ADMA_LCDIF_D11                0x60            /* SODIMM  50 */
-> +                               IMX8QXP_SPDIF0_EXT_CLK_ADMA_LCDIF_D12           0x60            /* SODIMM  52 */
-> +                               IMX8QXP_SPI3_SCK_ADMA_LCDIF_D13                 0x60            /* SODIMM  54 */
-> +                               IMX8QXP_SPI3_SDO_ADMA_LCDIF_D14                 0x60            /* SODIMM  66 */
-> +                               IMX8QXP_SPI3_SDI_ADMA_LCDIF_D15                 0x60            /* SODIMM  64 */
-> +                               IMX8QXP_SPI3_CS1_ADMA_LCDIF_D16                 0x60            /* SODIMM  57 */
-> +                               IMX8QXP_ENET0_RGMII_TXD2_LSIO_GPIO5_IO01        0x60            /* SODIMM  57 */
-> +                               IMX8QXP_UART1_CTS_B_ADMA_LCDIF_D17              0x60            /* SODIMM  61 */
-> +                       >;
-> +               };
-> +
-> +               /* USB Host Power Enable */
-> +               pinctrl_usbh1_reg: usbh1-reg {
-> +                       fsl,pins = <
-> +                               IMX8QXP_USB_SS3_TC0_LSIO_GPIO4_IO03             0x06000040      /* SODIMM 129 */
-> +                       >;
-> +               };
-> +
-> +               /* On-module eMMC */
-> +               pinctrl_usdhc1: usdhc1grp {
-> +                       fsl,pins = <
-> +                               IMX8QXP_EMMC0_CLK_CONN_EMMC0_CLK                0x06000041
-> +                               IMX8QXP_EMMC0_CMD_CONN_EMMC0_CMD                0x21
-> +                               IMX8QXP_EMMC0_DATA0_CONN_EMMC0_DATA0            0x21
-> +                               IMX8QXP_EMMC0_DATA1_CONN_EMMC0_DATA1            0x21
-> +                               IMX8QXP_EMMC0_DATA2_CONN_EMMC0_DATA2            0x21
-> +                               IMX8QXP_EMMC0_DATA3_CONN_EMMC0_DATA3            0x21
-> +                               IMX8QXP_EMMC0_DATA4_CONN_EMMC0_DATA4            0x21
-> +                               IMX8QXP_EMMC0_DATA5_CONN_EMMC0_DATA5            0x21
-> +                               IMX8QXP_EMMC0_DATA6_CONN_EMMC0_DATA6            0x21
-> +                               IMX8QXP_EMMC0_DATA7_CONN_EMMC0_DATA7            0x21
-> +                               IMX8QXP_EMMC0_STROBE_CONN_EMMC0_STROBE          0x41
-> +                               IMX8QXP_EMMC0_RESET_B_CONN_EMMC0_RESET_B        0x21
-> +                       >;
-> +               };
-> +
-> +               pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
-> +                       fsl,pins = <
-> +                               IMX8QXP_EMMC0_CLK_CONN_EMMC0_CLK                0x06000041
-> +                               IMX8QXP_EMMC0_CMD_CONN_EMMC0_CMD                0x21
-> +                               IMX8QXP_EMMC0_DATA0_CONN_EMMC0_DATA0            0x21
-> +                               IMX8QXP_EMMC0_DATA1_CONN_EMMC0_DATA1            0x21
-> +                               IMX8QXP_EMMC0_DATA2_CONN_EMMC0_DATA2            0x21
-> +                               IMX8QXP_EMMC0_DATA3_CONN_EMMC0_DATA3            0x21
-> +                               IMX8QXP_EMMC0_DATA4_CONN_EMMC0_DATA4            0x21
-> +                               IMX8QXP_EMMC0_DATA5_CONN_EMMC0_DATA5            0x21
-> +                               IMX8QXP_EMMC0_DATA6_CONN_EMMC0_DATA6            0x21
-> +                               IMX8QXP_EMMC0_DATA7_CONN_EMMC0_DATA7            0x21
-> +                               IMX8QXP_EMMC0_STROBE_CONN_EMMC0_STROBE          0x41
-> +                               IMX8QXP_EMMC0_RESET_B_CONN_EMMC0_RESET_B        0x21
-> +                       >;
-> +               };
-> +
-> +               pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
-> +                       fsl,pins = <
-> +                               IMX8QXP_EMMC0_CLK_CONN_EMMC0_CLK                0x06000041
-> +                               IMX8QXP_EMMC0_CMD_CONN_EMMC0_CMD                0x21
-> +                               IMX8QXP_EMMC0_DATA0_CONN_EMMC0_DATA0            0x21
-> +                               IMX8QXP_EMMC0_DATA1_CONN_EMMC0_DATA1            0x21
-> +                               IMX8QXP_EMMC0_DATA2_CONN_EMMC0_DATA2            0x21
-> +                               IMX8QXP_EMMC0_DATA3_CONN_EMMC0_DATA3            0x21
-> +                               IMX8QXP_EMMC0_DATA4_CONN_EMMC0_DATA4            0x21
-> +                               IMX8QXP_EMMC0_DATA5_CONN_EMMC0_DATA5            0x21
-> +                               IMX8QXP_EMMC0_DATA6_CONN_EMMC0_DATA6            0x21
-> +                               IMX8QXP_EMMC0_DATA7_CONN_EMMC0_DATA7            0x21
-> +                               IMX8QXP_EMMC0_STROBE_CONN_EMMC0_STROBE          0x41
-> +                               IMX8QXP_EMMC0_RESET_B_CONN_EMMC0_RESET_B        0x21
-> +                       >;
-> +               };
-> +
-> +               /* Colibri SDCard CardDetect */
-> +               pinctrl_usdhc2_gpio: usdhc2gpiogrp {
-> +                       fsl,pins = <
-> +                               IMX8QXP_QSPI0A_DATA0_LSIO_GPIO3_IO09            0x06000021      /* SODIMM  43 */
-> +                       >;
-> +               };
-> +
-> +               pinctrl_usdhc2_gpio_sleep: usdhc2gpioslpgrp {
-> +                       fsl,pins = <
-> +                               IMX8QXP_QSPI0A_DATA0_LSIO_GPIO3_IO09            0x60            /* SODIMM  43 */
-> +                       >;
-> +               };
-> +
-> +               /* Colibri SDCard */
-> +               pinctrl_usdhc2: usdhc2grp {
-> +                       fsl,pins = <
-> +                               IMX8QXP_USDHC1_CLK_CONN_USDHC1_CLK              0x06000041      /* SODIMM  47 */
-> +                               IMX8QXP_USDHC1_CMD_CONN_USDHC1_CMD              0x21            /* SODIMM 190 */
-> +                               IMX8QXP_USDHC1_DATA0_CONN_USDHC1_DATA0          0x21            /* SODIMM 192 */
-> +                               IMX8QXP_USDHC1_DATA1_CONN_USDHC1_DATA1          0x21            /* SODIMM  49 */
-> +                               IMX8QXP_USDHC1_DATA2_CONN_USDHC1_DATA2          0x21            /* SODIMM  51 */
-> +                               IMX8QXP_USDHC1_DATA3_CONN_USDHC1_DATA3          0x21            /* SODIMM  53 */
-> +                               IMX8QXP_USDHC1_VSELECT_CONN_USDHC1_VSELECT      0x21
-> +                       >;
-> +               };
-> +
-> +               pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
-> +                       fsl,pins = <
-> +                               IMX8QXP_USDHC1_CLK_CONN_USDHC1_CLK              0x06000041      /* SODIMM  47 */
-> +                               IMX8QXP_USDHC1_CMD_CONN_USDHC1_CMD              0x21            /* SODIMM 190 */
-> +                               IMX8QXP_USDHC1_DATA0_CONN_USDHC1_DATA0          0x21            /* SODIMM 192 */
-> +                               IMX8QXP_USDHC1_DATA1_CONN_USDHC1_DATA1          0x21            /* SODIMM  49 */
-> +                               IMX8QXP_USDHC1_DATA2_CONN_USDHC1_DATA2          0x21            /* SODIMM  51 */
-> +                               IMX8QXP_USDHC1_DATA3_CONN_USDHC1_DATA3          0x21            /* SODIMM  53 */
-> +                               IMX8QXP_USDHC1_VSELECT_CONN_USDHC1_VSELECT      0x21
-> +                       >;
-> +               };
-> +
-> +               pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
-> +                       fsl,pins = <
-> +                               IMX8QXP_USDHC1_CLK_CONN_USDHC1_CLK              0x06000041      /* SODIMM  47 */
-> +                               IMX8QXP_USDHC1_CMD_CONN_USDHC1_CMD              0x21            /* SODIMM 190 */
-> +                               IMX8QXP_USDHC1_DATA0_CONN_USDHC1_DATA0          0x21            /* SODIMM 192 */
-> +                               IMX8QXP_USDHC1_DATA1_CONN_USDHC1_DATA1          0x21            /* SODIMM  49 */
-> +                               IMX8QXP_USDHC1_DATA2_CONN_USDHC1_DATA2          0x21            /* SODIMM  51 */
-> +                               IMX8QXP_USDHC1_DATA3_CONN_USDHC1_DATA3          0x21            /* SODIMM  53 */
-> +                               IMX8QXP_USDHC1_VSELECT_CONN_USDHC1_VSELECT      0x21
-> +                       >;
-> +               };
-> +
-> +               pinctrl_usdhc2_sleep: usdhc2slpgrp {
-> +                       fsl,pins = <
-> +                               IMX8QXP_USDHC1_CLK_LSIO_GPIO4_IO23              0x60            /* SODIMM  47 */
-> +                               IMX8QXP_USDHC1_CMD_LSIO_GPIO4_IO24              0x60            /* SODIMM 190 */
-> +                               IMX8QXP_USDHC1_DATA0_LSIO_GPIO4_IO25            0x60            /* SODIMM 192 */
-> +                               IMX8QXP_USDHC1_DATA1_LSIO_GPIO4_IO26            0x60            /* SODIMM  49 */
-> +                               IMX8QXP_USDHC1_DATA2_LSIO_GPIO4_IO27            0x60            /* SODIMM  51 */
-> +                               IMX8QXP_USDHC1_DATA3_LSIO_GPIO4_IO28            0x60            /* SODIMM  53 */
-> +                               IMX8QXP_USDHC1_VSELECT_CONN_USDHC1_VSELECT      0x21
-> +                       >;
-> +               };
-> +
-> +               /* MIPI DSI I2C accessible on SODIMM (X1) and FFC (X2) */
-> +               pinctrl_i2c0_mipi_lvds0: mipi_lvds0_i2c0_grp {
-> +                       fsl,pins = <
-> +                               IMX8QXP_MIPI_DSI0_I2C0_SCL_MIPI_DSI0_I2C0_SCL   0xc6000020      /* SODIMM 140 */
-> +                               IMX8QXP_MIPI_DSI0_I2C0_SDA_MIPI_DSI0_I2C0_SDA   0xc6000020      /* SODIMM 142 */
-> +                       >;
-> +               };
-> +
-> +               /* MIPI CSI I2C accessible on SODIMM (X1) and FFC (X3) */
-> +               pinctrl_i2c0_mipi_lvds1: mipi_lvds1_i2c0_grp {
-> +                       fsl,pins = <
-> +                               IMX8QXP_MIPI_DSI1_I2C0_SCL_MIPI_DSI1_I2C0_SCL   0xc6000020      /* SODIMM 186 */
-> +                               IMX8QXP_MIPI_DSI1_I2C0_SDA_MIPI_DSI1_I2C0_SDA   0xc6000020      /* SODIMM 188 */
-> +                       >;
-> +               };
-> +
-> +               /* Colibri SPI */
-> +               pinctrl_lpspi2: lpspi2 {
-> +                       fsl,pins = <
-> +                               IMX8QXP_SPI2_CS0_LSIO_GPIO1_IO00                0x21            /* SODIMM  86 */
-> +                               IMX8QXP_SPI2_SDO_ADMA_SPI2_SDO                  0x06000040      /* SODIMM  92 */
-> +                               IMX8QXP_SPI2_SDI_ADMA_SPI2_SDI                  0x06000040      /* SODIMM  90 */
-> +                               IMX8QXP_SPI2_SCK_ADMA_SPI2_SCK                  0x06000040      /* SODIMM  88 */
-> +                       >;
-> +               };
-> +
-> +               pinctrl_wifi: wifigrp {
-> +                       fsl,pins = <
-> +                               IMX8QXP_SCU_BOOT_MODE3_SCU_DSC_RTC_CLOCK_OUTPUT_32K     0x20
-> +                       >;
-> +               };
-> +       };
-> +};
-> +
-> +/* Colibri UART_B */
-> +&adma_lpuart0 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_lpuart0>;
-> +};
-> +
-> +/* Colibri UART_C */
-> +&adma_lpuart2 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_lpuart2>;
-> +};
-> +
-> +/* Colibri UART_A */
-> +&adma_lpuart3 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_lpuart3>, <&pinctrl_lpuart3_ctrl>;
-> +};
-> +
-> +/* On-module eMMC */
-> +&usdhc1 {
-> +       bus-width = <8>;
-> +       non-removable;
-> +       no-sd;
-> +       no-sdio;
-> +       pinctrl-names = "default", "state_100mhz", "state_200mhz";
-> +       pinctrl-0 = <&pinctrl_usdhc1>;
-> +       pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
-> +       pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
-> +       status = "okay";
-> +};
-> +
-> +/* Colibri SDCard */
-> +&usdhc2 {
-> +       bus-width = <4>;
-> +       cd-gpios = <&lsio_gpio3 9 GPIO_ACTIVE_LOW>;
-> +       vmmc-supply = <&reg_module_3v3>;
-> +       pinctrl-names = "default", "state_100mhz", "state_200mhz", "sleep";
-> +       pinctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
-> +       pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_usdhc2_gpio>;
-> +       pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_gpio>;
-> +       pinctrl-3 = <&pinctrl_usdhc2_sleep>, <&pinctrl_usdhc2_gpio_sleep>;
-> +       disable-wp;
-> +};
-> --
-> 2.21.0
->
+This issue was detected by using the Coccinelle software.
 
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/video/fbdev/pxafb.c | 10 +---------
+ 1 file changed, 1 insertion(+), 9 deletions(-)
 
--- 
-Best regards
+diff --git a/drivers/video/fbdev/pxafb.c b/drivers/video/fbdev/pxafb.c
+index f70c9f79622e..237f8f436fdb 100644
+=2D-- a/drivers/video/fbdev/pxafb.c
++++ b/drivers/video/fbdev/pxafb.c
+@@ -2237,7 +2237,6 @@ static int pxafb_probe(struct platform_device *dev)
+ {
+ 	struct pxafb_info *fbi;
+ 	struct pxafb_mach_info *inf, *pdata;
+-	struct resource *r;
+ 	int i, irq, ret;
 
-Oleksandr Suvorov
-cryosay@gmail.com
+ 	dev_dbg(&dev->dev, "pxafb_probe\n");
+@@ -2303,14 +2302,7 @@ static int pxafb_probe(struct platform_device *dev)
+ 		fbi->lcd_supply =3D NULL;
+ 	}
+
+-	r =3D platform_get_resource(dev, IORESOURCE_MEM, 0);
+-	if (r =3D=3D NULL) {
+-		dev_err(&dev->dev, "no I/O memory resource defined\n");
+-		ret =3D -ENODEV;
+-		goto failed;
+-	}
+-
+-	fbi->mmio_base =3D devm_ioremap_resource(&dev->dev, r);
++	fbi->mmio_base =3D devm_platform_ioremap_resource(dev, 0);
+ 	if (IS_ERR(fbi->mmio_base)) {
+ 		dev_err(&dev->dev, "failed to get I/O memory\n");
+ 		ret =3D -EBUSY;
+=2D-
+2.23.0
+
