@@ -2,90 +2,78 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86DC5C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 05:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5482C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 05:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BF5921907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 05:31:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AbTQUPPt"
+	by mail.kernel.org (Postfix) with ESMTP id AD6DA21924
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 05:36:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388233AbfISFbB (ORCPT
+        id S2387854AbfISFgX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 01:31:01 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:36770 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387589AbfISFbB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 01:31:01 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8J5Usqg107312;
-        Thu, 19 Sep 2019 00:30:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568871054;
-        bh=2OtrowgE9ndSQCOBZ8NXiS3tn45GXBmAzD6PSfkBktE=;
-        h=To:CC:From:Subject:Date;
-        b=AbTQUPPtLwhmMTWYjO6w7/tOO8v0QhButyErFMP8EphjYOY9Oudjnb7qXVWhgOMIG
-         GPsxwWQE3X/gdDE1+FWb5PByb9jxWbQK1xqUL02BaDSWa6+4yA+MYaT6XivPvXdr1w
-         09bq0KYiruGNYfJDtOCyMBW32X/AjQZleqgPVkFk=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8J5Usj8031599
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 19 Sep 2019 00:30:54 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 19
- Sep 2019 00:30:50 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 19 Sep 2019 00:30:50 -0500
-Received: from [172.24.191.45] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8J5UpIc015454;
-        Thu, 19 Sep 2019 00:30:52 -0500
-To:     <hch@lst.de>, <bjorn.andersson@linaro.org>
-CC:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        Tony Lindgren <tony@atomide.com>, Suman Anna <s-anna@ti.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Kristo, Tero" <t-kristo@ti.com>
-From:   Keerthy <j-keerthy@ti.com>
-Subject: remoteproc: don't allow modular build
-Message-ID: <5bf9425f-4ea0-09db-70cc-415ac0031b95@ti.com>
-Date:   Thu, 19 Sep 2019 11:01:35 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 19 Sep 2019 01:36:23 -0400
+Received: from a.mx.secunet.com ([62.96.220.36]:38570 "EHLO a.mx.secunet.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727435AbfISFgX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 01:36:23 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by a.mx.secunet.com (Postfix) with ESMTP id 5F19C20591;
+        Thu, 19 Sep 2019 07:36:21 +0200 (CEST)
+X-Virus-Scanned: by secunet
+Received: from a.mx.secunet.com ([127.0.0.1])
+        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id b2ZgNklMSnpS; Thu, 19 Sep 2019 07:36:20 +0200 (CEST)
+Received: from mail-essen-01.secunet.de (mail-essen-01.secunet.de [10.53.40.204])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by a.mx.secunet.com (Postfix) with ESMTPS id A735E2058E;
+        Thu, 19 Sep 2019 07:36:20 +0200 (CEST)
+Received: from gauss2.secunet.de (10.182.7.193) by mail-essen-01.secunet.de
+ (10.53.40.204) with Microsoft SMTP Server id 14.3.439.0; Thu, 19 Sep 2019
+ 07:36:20 +0200
+Received: by gauss2.secunet.de (Postfix, from userid 1000)      id 3FBC2318016F;
+ Thu, 19 Sep 2019 07:36:20 +0200 (CEST)
+Date:   Thu, 19 Sep 2019 07:36:20 +0200
+From:   Steffen Klassert <steffen.klassert@secunet.com>
+To:     syzbot <syzbot+f39ab8494f6015e62360@syzkaller.appspotmail.com>,
+        <ast@kernel.org>, <aviadye@mellanox.com>, <borisp@mellanox.com>,
+        <bpf@vger.kernel.org>, <daniel@iogearbox.net>,
+        <davejwatson@fb.com>, <davem@davemloft.net>, <ilyal@mellanox.com>,
+        <jakub.kicinski@netronome.com>, <john.fastabend@gmail.com>,
+        <kafai@fb.com>, <linux-crypto@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <songliubraving@fb.com>, <syzkaller-bugs@googlegroups.com>,
+        <yhs@fb.com>
+Subject: Re: INFO: task hung in cancel_delayed_work_sync
+Message-ID: <20190919053620.GG2879@gauss3.secunet.de>
+References: <0000000000001348750592a8ef50@google.com>
+ <20190919051545.GB666@sol.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190919051545.GB666@sol.localdomain>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph/Bjorn,
+On Wed, Sep 18, 2019 at 10:15:45PM -0700, Eric Biggers wrote:
+> 
+> Reproducer involves pcrypt, so probably the pcrypt deadlock again...
+> https://lkml.kernel.org/linux-crypto/20190817054743.GE8209@sol.localdomain/
 
-There are a bunch of defconfigs that rely on modular build of remoteproc.
+I'll submit the patch I proposed here in case noone has a better idea
+how to fix this now:
 
-If i do a git grep CONFIG_REMOTEPROC on linux-next:
+https://lkml.kernel.org/linux-crypto/20190821063704.GM2879@gauss3.secunet.de/
 
-arch/arm/configs/davinci_all_defconfig:CONFIG_REMOTEPROC=m
-arch/arm/configs/multi_v7_defconfig:CONFIG_REMOTEPROC=m
-arch/arm/configs/omap2plus_defconfig:CONFIG_REMOTEPROC=m
-arch/arm/configs/qcom_defconfig:CONFIG_REMOTEPROC=y
-arch/arm64/configs/defconfig:CONFIG_REMOTEPROC=m
+The original patch is from you, I did some modifications to forbid
+pcrypt if an underlying algorithm needs a fallback.
 
-All of them now stop building the remoteproc as a module and all the 
-dependent modules consequently do not get built. Do you recommend all of 
-them to get converted to built in?
-
-That will be some magnitude of change.
-
-Best Regards,
-Keerthy
+May I leave your 'Signed off' on this patch, or just
+quote that the initial version is from you?
