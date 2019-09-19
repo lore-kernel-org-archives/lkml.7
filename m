@@ -2,200 +2,138 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B090C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C32EAC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:10:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C8DC2196E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94CA021924
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:10:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oP8A5i+9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403992AbfISPKG (ORCPT
+        id S2404007AbfISPKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 11:10:06 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:50105 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388199AbfISPKA (ORCPT
+        Thu, 19 Sep 2019 11:10:09 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38267 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403990AbfISPKH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 11:10:00 -0400
-Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iAy49-0006pg-1u; Thu, 19 Sep 2019 17:09:53 +0200
-Message-Id: <20190919150809.860645841@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Thu, 19 Sep 2019 17:03:28 +0200
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: [RFC patch 14/15] workpending: Provide infrastructure for work before
- entering a guest
-References: <20190919150314.054351477@linutronix.de>
+        Thu, 19 Sep 2019 11:10:07 -0400
+Received: by mail-ed1-f65.google.com with SMTP id a23so3537293edv.5
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 08:10:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=AtJmx7YzvmNMJX7vvcIKkFLqCflOxxyrvK1PoirDPTw=;
+        b=oP8A5i+95DshExg2j5Uy8V9cUWkT0LstsMnL2HErbO3Vbig4wntTV4m9mYDptkb17n
+         DAQHzC8LQ2HHXAIlqY5oIicOzr1wdnGP8KPctTWRc8JkI8n/5S2+1EkzYZyn93b7xA1L
+         NRMSQHt8iAoE7YAYXWfur0TQYTo8GWxJZe5JgQytR/3NugB/OyojB6PhG45vS5P5rCgU
+         vIx+13MlRVX+3pbxQFpNkjMlKkilkbYM3IuJysA6VOviuAKnocL55IrKfuuCVLzkrQjJ
+         X3ULAwILuiC2s4Vo0QyTdo9hMV7Jp7SwibWqDyGQH8nHWaysISxxH80tBDisIJEEM9WM
+         HTiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AtJmx7YzvmNMJX7vvcIKkFLqCflOxxyrvK1PoirDPTw=;
+        b=a7tA22dNvJGw3/T4tu4gqfXvBPisTFUG4tMLdoS45a3LcWEqPkOj+lMbNeRytUcOd4
+         0QMG9qHDWSw5NONW58hhTsRsafIZdlP2+wrSdBZU4dIwnbrID1Cjzpywi/86Gsv1e43r
+         fadsv/swLyBjXIGkb6uUVV01zRHL2MpthC9WPZg3xeS5PmoP6Xg5U/vgdsroEhPPhT27
+         89nLxZmjbPx82pCKi1HugrekCxEaSLcK46E7S+Sg7s1pOuppxS54em7g5dh2hr5RmN3U
+         zWWknwz+cRjMbFiN52WVq+dlm3UmIKnrNdEp7WA1mV9ekdlNpCOd6pa3FML14+hc5slF
+         wouQ==
+X-Gm-Message-State: APjAAAUQNz8fHll7OEk4gwMbFzMp1M6UnF3nfz/bXzfSukIivC0LY/xZ
+        aqHggoJMhlNP/Exj91mhtOsP9A==
+X-Google-Smtp-Source: APXvYqxYxiZ2bVj5BdC3D15rlj8ekrnex1zF/A83CKnKWTrXRSvBVCzcdgefGE1QNSwyzfOfjt1OGw==
+X-Received: by 2002:a17:906:244c:: with SMTP id a12mr14473110ejb.288.1568905805521;
+        Thu, 19 Sep 2019 08:10:05 -0700 (PDT)
+Received: from lophozonia ([85.195.192.192])
+        by smtp.gmail.com with ESMTPSA id j10sm1683364ede.59.2019.09.19.08.10.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Sep 2019 08:10:04 -0700 (PDT)
+Date:   Thu, 19 Sep 2019 17:10:02 +0200
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Auger Eric <eric.auger@redhat.com>
+Cc:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        will.deacon@arm.com, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, jacob.jun.pan@linux.intel.com,
+        joro@8bytes.org, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org, robh+dt@kernel.org,
+        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 8/8] iommu/arm-smmu-v3: Add support for PCI PASID
+Message-ID: <20190919151002.GF1013538@lophozonia>
+References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
+ <20190610184714.6786-9-jean-philippe.brucker@arm.com>
+ <b0e3d9a9-6085-b393-1982-3dd95bf5d100@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b0e3d9a9-6085-b393-1982-3dd95bf5d100@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Entering a guest is similar to exiting to user space. Pending work like
-handling signals, rescheduling, task work etc. needs to be handled before
-that.
+On Mon, Jul 08, 2019 at 09:58:16AM +0200, Auger Eric wrote:
+> > +	ret = pci_enable_pasid(pdev, features);
+> > +	if (!ret)
+> > +		master->ssid_bits = min_t(u8, ilog2(num_pasids),
+> > +					  master->smmu->ssid_bits);
+> I don't really get why this setting is conditional to the success of
+> pci_enabled_pasid and not num_pasids > 0.
 
-Provide generic infrastructure to avoid duplication of the same handling code
-all over the place.
+num_pasids only contains the value of the PCIe PASID capability. If
+pci_enable_pasid() fails then we want to leave master->ssid_bits to 0 so
+that we report to users that SVA and AUXD aren't supported.
 
-Update ARM64 struct kvm_vcpu_stat with a signal_exit member so the generic
-code compiles.
+> If it fails the ssid_bits is set to min(smmu->ssid_bits,
+> fwspec->num_pasid_bits) anyway.
+>
+> > +	return ret;
+> > +}
+> > +
+> > +static void arm_smmu_disable_pasid(struct arm_smmu_master *master)
+> > +{
+> > +	struct pci_dev *pdev;
+> > +
+> > +	if (!dev_is_pci(master->dev))
+> > +		return;
+> > +
+> > +	pdev = to_pci_dev(master->dev);
+> > +
+> > +	if (!pdev->pasid_enabled)
+> > +		return;
+> > +
+> > +	pci_disable_pasid(pdev);
+> > +	master->ssid_bits = 0;
+> in case of a platform device you leave the ssid_bits to a value != 0. Is
+> that what you want?
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- arch/arm64/include/asm/kvm_host.h |    1 
- include/linux/entry-common.h      |   66 ++++++++++++++++++++++++++++++++++++++
- kernel/entry/common.c             |   44 +++++++++++++++++++++++++
- 3 files changed, 111 insertions(+)
+Yes, this is only for PCI devices, there is no standard way of disabling
+PASID in platform devices. We just take whatever the firmware gives us.
 
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -409,6 +409,7 @@ struct kvm_vcpu_stat {
- 	u64 wfi_exit_stat;
- 	u64 mmio_exit_user;
- 	u64 mmio_exit_kernel;
-+	u64 signal_exits;
- 	u64 exits;
- };
- 
---- a/include/linux/entry-common.h
-+++ b/include/linux/entry-common.h
-@@ -255,4 +255,70 @@ static inline void arch_syscall_exit_tra
- /* Common syscall exit function */
- void syscall_exit_to_usermode(struct pt_regs *regs, long syscall, long retval);
- 
-+#if IS_ENABLED(CONFIG_KVM)
-+
-+#include <linux/kvm_host.h>
-+
-+#ifndef ARCH_EXIT_TO_GUESTMODE_WORK
-+# define ARCH_EXIT_TO_GUESTMODE_WORK	(0)
-+#endif
-+
-+#define EXIT_TO_GUESTMODE_WORK						\
-+	(_TIF_NEED_RESCHED | _TIF_SIGPENDING | _TIF_NOTIFY_RESUME |	\
-+	 ARCH_EXIT_TO_GUESTMODE_WORK)
-+
-+int core_exit_to_guestmode_work(struct kvm *kvm, struct kvm_vcpu *vcpu,
-+				unsigned long ti_work);
-+
-+/**
-+ * arch_exit_to_guestmode - Architecture specific exit to guest mode function
-+ * @kvm:	Pointer to the guest instance
-+ * @vcpu:	Pointer to current's VCPU data
-+ * @ti_work:	Cached TIF flags gathered in exit_to_guestmode()
-+ *
-+ * Invoked from core_exit_to_guestmode_work(). Can be replaced by
-+ * architecture specific code.
-+ */
-+static inline int arch_exit_to_guestmode(struct kvm *kvm, struct kvm_vcpu *vcpu,
-+					 unsigned long ti_work);
-+
-+#ifndef arch_exit_to_guestmode
-+static inline int arch_exit_to_guestmode(struct kvm *kvm, struct kvm_vcpu *vcpu,
-+					 unsigned long ti_work)
-+{
-+	return 0;
-+}
-+#endif
-+
-+/**
-+ * exit_to_guestmode - Check and handle pending work which needs to be
-+ *		       handled before returning to guest mode
-+ * @kvm:	Pointer to the guest instance
-+ * @vcpu:	Pointer to current's VCPU data
-+ *
-+ * Returns: 0 or an error code
-+ */
-+static inline int exit_to_guestmode(struct kvm *kvm, struct kvm_vcpu *vcpu)
-+{
-+	unsigned long ti_work = READ_ONCE(current_thread_info()->flags);
-+
-+	if (unlikely(ti_work & EXIT_TO_GUESTMODE_WORK))
-+		return core_exit_to_guestmode_work(kvm, vcpu, ti_work);
-+	return 0;
-+}
-+
-+
-+/**
-+ * _exit_to_guestmode_work_pending - Check if work is pending which needs to be
-+ *				     handled before returning to guest mode
-+ */
-+static inline bool exit_to_guestmode_work_pending(void)
-+{
-+	unsigned long ti_work = READ_ONCE(current_thread_info()->flags);
-+
-+	return !!(ti_work & EXIT_TO_GUESTMODE_WORK);
-+
-+}
-+#endif /* CONFIG_KVM */
-+
- #endif
---- a/kernel/entry/common.c
-+++ b/kernel/entry/common.c
-@@ -174,3 +174,47 @@ void syscall_exit_to_usermode(struct pt_
- 	do_exit_to_usermode(regs);
- #endif
- }
-+
-+#if IS_ENABLED(CONFIG_KVM)
-+int __weak arch_exit_to_guestmode_work(struct kvm *kvm, struct kvm_vcpu *vcpu,
-+				       unsigned long ti_work)
-+{
-+	return 0;
-+}
-+
-+int core_exit_to_guestmode_work(struct kvm *kvm, struct kvm_vcpu *vcpu,
-+				unsigned long ti_work)
-+{
-+	/*
-+	 * Before returning to guest mode handle all pending work
-+	 */
-+	if (ti_work & _TIF_SIGPENDING) {
-+		vcpu->run->exit_reason = KVM_EXIT_INTR;
-+		vcpu->stat.signal_exits++;
-+		return -EINTR;
-+	}
-+
-+	if (ti_work & _TIF_NEED_RESCHED) {
-+		srcu_read_unlock(&kvm->srcu, vcpu->srcu_idx);
-+		schedule();
-+		vcpu->srcu_idx = srcu_read_lock(&kvm->srcu);
-+	}
-+
-+	if (ti_work & _TIF_PATCH_PENDING) {
-+		srcu_read_unlock(&kvm->srcu, vcpu->srcu_idx);
-+		klp_update_patch_state(current);
-+		vcpu->srcu_idx = srcu_read_lock(&kvm->srcu);
-+	}
-+
-+	if (ti_work & _TIF_NOTIFY_RESUME) {
-+		srcu_read_unlock(&kvm->srcu, vcpu->srcu_idx);
-+		clear_thread_flag(TIF_NOTIFY_RESUME);
-+		tracehook_notify_resume(NULL);
-+		vcpu->srcu_idx = srcu_read_lock(&kvm->srcu);
-+	}
-+
-+	/* Any extra architecture specific work */
-+	return arch_exit_to_guestmode_work(kvm, vcpu, ti_work);
-+}
-+EXPORT_SYMBOL_GPL(core_exit_to_guestmode_work);
-+#endif
+> > +}
+> > +
+> >  static void arm_smmu_detach_dev(struct arm_smmu_master *master)
+> >  {
+> >  	unsigned long flags;
+> > @@ -2413,6 +2456,9 @@ static int arm_smmu_add_device(struct device *dev)
+> >  
+> >  	master->ssid_bits = min(smmu->ssid_bits, fwspec->num_pasid_bits);
+> >  
+> > +	/* Note that PASID must be enabled before, and disabled after ATS */
+> > +	arm_smmu_enable_pasid(master);
+> In case the call fails, don't you want to handle the error and reset the
+> ssid_bits?
 
+This function fails if the device doesn't support PASID, and we leave
+ssid_bits to 0. That said, I think it would be nicer to move the above
+line (that deals with fwspec) into arm_smmu_enable_pasid()
 
+Thanks,
+Jean
