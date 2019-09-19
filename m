@@ -2,335 +2,161 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3916CC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF52C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB35121924
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:20:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="OhKxk2Wf"
+	by mail.kernel.org (Postfix) with ESMTP id 7542021929
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 13:25:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729629AbfISNUG (ORCPT
+        id S2389505AbfISNZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 09:20:06 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:56819 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731819AbfISNUF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 09:20:05 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190919132003euoutp020408a7898fe78643e22c72fc250a0513~F2YN2cDew1288512885euoutp022
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 13:20:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190919132003euoutp020408a7898fe78643e22c72fc250a0513~F2YN2cDew1288512885euoutp022
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1568899203;
-        bh=elF/o5EauRPnSTTBG6lmRKBVlDN/9CAvgA/uzFSxGsg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OhKxk2Wfrq0iWW4//bRoZ2hPpHgAiWWUy4DbgksKbS0rbncjbakLp+rm06V8vV4/o
-         GB5YS3475x+8rnswRNESRHoep8nMiGbYk8uyn2YAviFPuAPs+pxhciXtTXPQNLt+3n
-         HFcpX5khSIw3YqW1OnFHm9UvmgLZm1VO4CHj0EO4=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190919132003eucas1p15cdf9e5608cbe3470269e2dd769bf46a~F2YNaSk7b2823128231eucas1p1R;
-        Thu, 19 Sep 2019 13:20:03 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 0B.6F.04374.280838D5; Thu, 19
-        Sep 2019 14:20:02 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190919132002eucas1p19ceac65f49939be3152affb4d6a426a1~F2YMaJhQs2823128231eucas1p1O;
-        Thu, 19 Sep 2019 13:20:02 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190919132002eusmtrp2d6125dbbdee00ce9699b42d923722228~F2YMMDv-R2532425324eusmtrp2z;
-        Thu, 19 Sep 2019 13:20:02 +0000 (GMT)
-X-AuditID: cbfec7f5-4f7ff70000001116-57-5d838082d225
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 42.2C.04117.180838D5; Thu, 19
-        Sep 2019 14:20:01 +0100 (BST)
-Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190919132001eusmtip1be43ba9fadc469b12019839d8bb36150~F2YLuJf_I2610626106eusmtip1B;
-        Thu, 19 Sep 2019 13:20:01 +0000 (GMT)
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Maciej Falkowski <m.falkowski@samsung.com>, krzk@kernel.org,
-        mark.rutland@arm.com, robh@kernel.org, a.hajda@samsung.com,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCH v4] dt-bindings: iommu: Convert Samsung Exynos IOMMU H/W,
- System MMU to dt-schema
-Date:   Thu, 19 Sep 2019 15:19:44 +0200
-Message-Id: <20190919131944.11007-1-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190917192113.GA26604@bogus>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrLIsWRmVeSWpSXmKPExsWy7djP87pNDc2xBmv/WVvcWneO1WL+ESBx
-        /vwGdovLu+awWcw4v4/J4kHzOjaLtUfuslssvX6RyeL/nh3sDpwea+atYfTYtKqTzaNvyypG
-        j8+b5AJYorhsUlJzMstSi/TtErgyelY4F7Q4VvQcPcvewHjWuIuRk0NCwETi1LkljF2MXBxC
-        AisYJWZ9eQ7lfGGUWPBjPjOE85lR4tXV/8wwLdPefWWDSCxnlNja+ZMZruXKwedgVWwChhJd
-        b7vYQGwRgUSJ27/72UGKmAXWMEp8+faOtYuRg0NYIFli1p5qkBoWAVWJpZP6wOp5BWwlXnVu
-        ZoTYJi+xesMBsJmcAtoSlz70QsU/s0ksPA5lu0i8vtQLdZ2wxKvjW9ghbBmJ/zvnM4HslRBo
-        ZpR4eG4tO4TTwyhxuWkGVLe1xOHjF8EOYhbQlFi/Sx/ElBBwlLj+MRbC5JO48VYQpJgZyJy0
-        bTozRJhXoqNNCGKGmsSs4+vgth68cAnqGg+Jgx8nM4GUCwnUSXzcFjKBUX4WwqYFjIyrGMVT
-        S4tz01OLjfNSy/WKE3OLS/PS9ZLzczcxAhPF6X/Hv+5g3Pcn6RCjAAejEg+vQnlzrBBrYllx
-        Ze4hRgkOZiUR3jmmTbFCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeasZHkQLCaQnlqRmp6YWpBbB
-        ZJk4OKUaGFcJXWOvfufE8fPa/B5L8R9pe3qfK9uUaSTXFOet2PlEX+BlMedVvbYWxvuhMfOm
-        zr8Wf2XdwT8fEiIl1L8/sOp//Nrkzv9p78RFFvpIVwt5WGjff3t8UwTf5UxeJZVaNy5lJudJ
-        vDsFLdaIMwbVL1l0V3M2X+ChHyVetcX5fztNegXE/hl+V2Ipzkg01GIuKk4EAOqJOOwQAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrILMWRmVeSWpSXmKPExsVy+t/xu7pNDc2xBtfELW6tO8dqMf8IkDh/
-        fgO7xeVdc9gsZpzfx2TxoHkdm8XaI3fZLZZev8hk8X/PDnYHTo8189Ywemxa1cnm0bdlFaPH
-        501yASxRejZF+aUlqQoZ+cUltkrRhhZGeoaWFnpGJpZ6hsbmsVZGpkr6djYpqTmZZalF+nYJ
-        ehk9K5wLWhwreo6eZW9gPGvcxcjJISFgIjHt3Ve2LkYuDiGBpYwSexduYodIyEicnNbACmEL
-        S/y51gVV9IlR4vOei2AJNgFDia63IAlODhGBZInFh3cyghQxC2xilNi54jIjSEJYIFFi3fo1
-        YEUsAqoSSyf1gdm8ArYSrzo3M0JskJdYveEAM4jNKaAtcelDL1hcSEBL4vWcxywTGPkWMDKs
-        YhRJLS3OTc8tNtIrTswtLs1L10vOz93ECAzebcd+btnB2PUu+BCjAAejEg+vQnlzrBBrYllx
-        Ze4hRgkOZiUR3jmmTbFCvCmJlVWpRfnxRaU5qcWHGE2BjprILCWanA+MrLySeENTQ3MLS0Nz
-        Y3NjMwslcd4OgYMxQgLpiSWp2ampBalFMH1MHJxSDYwrXcU1bgrXTWMou7DEq7LpFev+3eu6
-        /K5crvW8/ObLpOTqID3vuyHlLOmXeyR8vVWl3txqL1f32LbYU6WyfmqYEotWg0KVlJRYgHe1
-        7t6wvQybIhTcut68zRb68bRo5p63U37nbLPjqHvGy79hqlsDV9WGDeu+b98dqTNJcN/59n+T
-        Qix/OSixFGckGmoxFxUnAgD/izNQdAIAAA==
-X-CMS-MailID: 20190919132002eucas1p19ceac65f49939be3152affb4d6a426a1
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190919132002eucas1p19ceac65f49939be3152affb4d6a426a1
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190919132002eucas1p19ceac65f49939be3152affb4d6a426a1
-References: <20190917192113.GA26604@bogus>
-        <CGME20190919132002eucas1p19ceac65f49939be3152affb4d6a426a1@eucas1p1.samsung.com>
+        Thu, 19 Sep 2019 09:25:46 -0400
+Received: from foss.arm.com ([217.140.110.172]:58176 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388601AbfISNZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 09:25:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 11F27337;
+        Thu, 19 Sep 2019 06:25:45 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CE10C3F67D;
+        Thu, 19 Sep 2019 06:25:40 -0700 (PDT)
+Subject: Re: arm64 iommu groups issue
+To:     John Garry <john.garry@huawei.com>, Marc Zyngier <maz@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>
+Cc:     iommu <iommu@lists.linux-foundation.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <9625faf4-48ef-2dd3-d82f-931d9cf26976@huawei.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <4768c541-ebf4-61d5-0c5e-77dee83f8f94@arm.com>
+Date:   Thu, 19 Sep 2019 14:25:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <9625faf4-48ef-2dd3-d82f-931d9cf26976@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maciej Falkowski <m.falkowski@samsung.com>
+Hi John,
 
-Convert Samsung Exynos IOMMU H/W, System Memory Management Unit
-to newer dt-schema format.
+On 19/09/2019 09:43, John Garry wrote:
+> Hi all,
+> 
+> We have noticed a special behaviour on our arm64 D05 board when the SMMU 
+> is enabled with regards PCI device iommu groups.
+> 
+> This platform does not support ACS, yet we find that all functions for a 
+> PCI device are not grouped together:
+> 
+> root@ubuntu:/sys# dmesg | grep "Adding to iommu group"
+> [    7.307539] hisi_sas_v2_hw HISI0162:01: Adding to iommu group 0
+> [   12.590533] hns_dsaf HISI00B2:00: Adding to iommu group 1
+> [   13.688527] mlx5_core 000a:11:00.0: Adding to iommu group 2
+> [   14.324606] mlx5_core 000a:11:00.1: Adding to iommu group 3
+> [   14.937090] ehci-platform PNP0D20:00: Adding to iommu group 4
+> [   15.276637] pcieport 0002:f8:00.0: Adding to iommu group 5
+> [   15.340845] pcieport 0004:88:00.0: Adding to iommu group 6
+> [   15.392098] pcieport 0005:78:00.0: Adding to iommu group 7
+> [   15.443356] pcieport 000a:10:00.0: Adding to iommu group 8
+> [   15.484975] pcieport 000c:20:00.0: Adding to iommu group 9
+> [   15.543647] pcieport 000d:30:00.0: Adding to iommu group 10
+> [   15.599771] serial 0002:f9:00.0: Adding to iommu group 5
+> [   15.690807] serial 0002:f9:00.1: Adding to iommu group 5
+> [   84.322097] mlx5_core 000a:11:00.2: Adding to iommu group 8
+> [   84.856408] mlx5_core 000a:11:00.3: Adding to iommu group 8
+> 
+> root@ubuntu:/sys#  lspci -tv
+> lspci -tvv
+> -+-[000d:30]---00.0-[31]--
+>    +-[000c:20]---00.0-[21]----00.0  Huawei Technologies Co., Ltd.
+>    +-[000a:10]---00.0-[11-12]--+-00.0  Mellanox [ConnectX-5]
+>    |                           +-00.1  Mellanox [ConnectX-5]
+>    |                           +-00.2  Mellanox [ConnectX-5 VF]
+>    |                           \-00.3  Mellanox [ConnectX-5 VF]
+>    +-[0007:90]---00.0-[91]----00.0  Huawei Technologies Co., ...
+>    +-[0006:c0]---00.0-[c1]--
+>    +-[0005:78]---00.0-[79]--
+>    +-[0004:88]---00.0-[89]--
+>    +-[0002:f8]---00.0-[f9]--+-00.0  MosChip Semiconductor Technology ...
+>    |                        +-00.1  MosChip Semiconductor Technology ...
+>    |                        \-00.2  MosChip Semiconductor Technology ...
+>    \-[0000:00]-
+> 
+> For the PCI devices in question - on port 000a:10:00.0 - you will notice 
+> that the port and VFs (000a:11:00.2, 3) are in one group, yet the 2 PFs 
+> (000a:11:00.0, 000a:11:00.1) are in separate groups.
+> 
+> I also notice the same ordering nature on our D06 platform - the 
+> pcieport is added to an iommu group after PF for that port. However this 
+> platform supports ACS, so not such a problem.
+> 
+> After some checking, I find that when the pcieport driver probes, the 
+> associated SMMU device had not registered yet with the IOMMU framework, 
+> so we defer the probe for this device - in iort.c:iort_iommu_xlate(), 
+> when no iommu ops are available, we defer.
+> 
+> Yet, when the mlx5 PF devices probe, the iommu ops are available at this 
+> stage. So the probe continues and we get an iommu group for the device - 
+> but not the same group as the parent port, as it has not yet been added 
+> to a group. When the port eventually probes it gets a new, separate group.
+> 
+> This all seems to be as the built-in module init ordering is as follows: 
+> pcieport drv, smmu drv, mlx5 drv
+> 
+> I notice that if I build the mlx5 drv as a ko and insert after boot, all 
+> functions + pcieport are in the same group:
+> 
+> [   11.530046] hisi_sas_v2_hw HISI0162:01: Adding to iommu group 0
+> [   17.301093] hns_dsaf HISI00B2:00: Adding to iommu group 1
+> [   18.743600] ehci-platform PNP0D20:00: Adding to iommu group 2
+> [   20.212284] pcieport 0002:f8:00.0: Adding to iommu group 3
+> [   20.356303] pcieport 0004:88:00.0: Adding to iommu group 4
+> [   20.493337] pcieport 0005:78:00.0: Adding to iommu group 5
+> [   20.702999] pcieport 000a:10:00.0: Adding to iommu group 6
+> [   20.859183] pcieport 000c:20:00.0: Adding to iommu group 7
+> [   20.996140] pcieport 000d:30:00.0: Adding to iommu group 8
+> [   21.152637] serial 0002:f9:00.0: Adding to iommu group 3
+> [   21.346991] serial 0002:f9:00.1: Adding to iommu group 3
+> [  100.754306] mlx5_core 000a:11:00.0: Adding to iommu group 6
+> [  101.420156] mlx5_core 000a:11:00.1: Adding to iommu group 6
+> [  292.481714] mlx5_core 000a:11:00.2: Adding to iommu group 6
+> [  293.281061] mlx5_core 000a:11:00.3: Adding to iommu group 6
+> 
+> This does seem like a problem for arm64 platforms which don't support 
+> ACS, yet enable an SMMU. Maybe also a problem even if they do support ACS.
+> 
+> Opinion?
 
-Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
-Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
-v4:
-- Rename commit message to match common style
-- Remove '"pclk", "aclk"' option from clock-names property.
-  Some of bindings are incompatible with that and they will be fixed with
-  another patch.
-- Remove unneeded description of clock-names property.
-- Remove type description from power-domains property as it is
-  already a common property.
-- Rename node names to match generic names,
-  specifically: sysmmu -> iommu, gsc -> scaler
+Yeah, this is less than ideal. One way to bodge it might be to make 
+pci_device_group() also walk downwards to see if any non-ACS-isolated 
+children already have a group, rather than assuming that groups get 
+allocated in hierarchical order, but that's far from ideal.
 
-- Add include directive in examples to include
-  clock macros. This increases readability of the example
-  as clock macros do not have to be substituted with numerical values
-  which makes examples more self-explanatory and natural.
+The underlying issue is that, for historical reasons, OF/IORT-based 
+IOMMU drivers have ended up with group allocation being tied to endpoint 
+driver probing via the dma_configure() mechanism (long story short, 
+driver probe is the only thing which can be delayed in order to wait for 
+a specific IOMMU instance to be ready). However, in the meantime, the 
+IOMMU API internals have evolved sufficiently that I think there's a way 
+to really put things right - I have the spark of an idea which I'll try 
+to sketch out ASAP...
 
-Best regards,
-Maciej Falkowski
----
- .../bindings/iommu/samsung,sysmmu.txt         |  67 -----------
- .../bindings/iommu/samsung,sysmmu.yaml        | 108 ++++++++++++++++++
- 2 files changed, 108 insertions(+), 67 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt
- create mode 100644 Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml
-
-diff --git a/Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt b/Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt
-deleted file mode 100644
-index 525ec82615a6..000000000000
---- a/Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt
-+++ /dev/null
-@@ -1,67 +0,0 @@
--Samsung Exynos IOMMU H/W, System MMU (System Memory Management Unit)
--
--Samsung's Exynos architecture contains System MMUs that enables scattered
--physical memory chunks visible as a contiguous region to DMA-capable peripheral
--devices like MFC, FIMC, FIMD, GScaler, FIMC-IS and so forth.
--
--System MMU is an IOMMU and supports identical translation table format to
--ARMv7 translation tables with minimum set of page properties including access
--permissions, shareability and security protection. In addition, System MMU has
--another capabilities like L2 TLB or block-fetch buffers to minimize translation
--latency.
--
--System MMUs are in many to one relation with peripheral devices, i.e. single
--peripheral device might have multiple System MMUs (usually one for each bus
--master), but one System MMU can handle transactions from only one peripheral
--device. The relation between a System MMU and the peripheral device needs to be
--defined in device node of the peripheral device.
--
--MFC in all Exynos SoCs and FIMD, M2M Scalers and G2D in Exynos5420 has 2 System
--MMUs.
--* MFC has one System MMU on its left and right bus.
--* FIMD in Exynos5420 has one System MMU for window 0 and 4, the other system MMU
--  for window 1, 2 and 3.
--* M2M Scalers and G2D in Exynos5420 has one System MMU on the read channel and
--  the other System MMU on the write channel.
--
--For information on assigning System MMU controller to its peripheral devices,
--see generic IOMMU bindings.
--
--Required properties:
--- compatible: Should be "samsung,exynos-sysmmu"
--- reg: A tuple of base address and size of System MMU registers.
--- #iommu-cells: Should be <0>.
--- interrupts: An interrupt specifier for interrupt signal of System MMU,
--	      according to the format defined by a particular interrupt
--	      controller.
--- clock-names: Should be "sysmmu" or a pair of "aclk" and "pclk" to gate
--	       SYSMMU core clocks.
--	       Optional "master" if the clock to the System MMU is gated by
--	       another gate clock other core  (usually main gate clock
--	       of peripheral device this SYSMMU belongs to).
--- clocks: Phandles for respective clocks described by clock-names.
--- power-domains: Required if the System MMU is needed to gate its power.
--	  Please refer to the following document:
--	  Documentation/devicetree/bindings/power/pd-samsung.txt
--
--Examples:
--	gsc_0: gsc@13e00000 {
--		compatible = "samsung,exynos5-gsc";
--		reg = <0x13e00000 0x1000>;
--		interrupts = <0 85 0>;
--		power-domains = <&pd_gsc>;
--		clocks = <&clock CLK_GSCL0>;
--		clock-names = "gscl";
--		iommus = <&sysmmu_gsc0>;
--	};
--
--	sysmmu_gsc0: sysmmu@13e80000 {
--		compatible = "samsung,exynos-sysmmu";
--		reg = <0x13E80000 0x1000>;
--		interrupt-parent = <&combiner>;
--		interrupts = <2 0>;
--		clock-names = "sysmmu", "master";
--		clocks = <&clock CLK_SMMU_GSCL0>, <&clock CLK_GSCL0>;
--		power-domains = <&pd_gsc>;
--		#iommu-cells = <0>;
--	};
-diff --git a/Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml b/Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml
-new file mode 100644
-index 000000000000..ecde98da5b72
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml
-@@ -0,0 +1,108 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iommu/samsung,sysmmu.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Samsung Exynos IOMMU H/W, System MMU (System Memory Management Unit)
-+
-+maintainers:
-+  - Marek Szyprowski <m.szyprowski@samsung.com>
-+
-+description: |+
-+  Samsung's Exynos architecture contains System MMUs that enables scattered
-+  physical memory chunks visible as a contiguous region to DMA-capable peripheral
-+  devices like MFC, FIMC, FIMD, GScaler, FIMC-IS and so forth.
-+
-+  System MMU is an IOMMU and supports identical translation table format to
-+  ARMv7 translation tables with minimum set of page properties including access
-+  permissions, shareability and security protection. In addition, System MMU has
-+  another capabilities like L2 TLB or block-fetch buffers to minimize translation
-+  latency.
-+
-+  System MMUs are in many to one relation with peripheral devices, i.e. single
-+  peripheral device might have multiple System MMUs (usually one for each bus
-+  master), but one System MMU can handle transactions from only one peripheral
-+  device. The relation between a System MMU and the peripheral device needs to be
-+  defined in device node of the peripheral device.
-+
-+  MFC in all Exynos SoCs and FIMD, M2M Scalers and G2D in Exynos5420 has 2 System
-+  MMUs.
-+  * MFC has one System MMU on its left and right bus.
-+  * FIMD in Exynos5420 has one System MMU for window 0 and 4, the other system MMU
-+    for window 1, 2 and 3.
-+  * M2M Scalers and G2D in Exynos5420 has one System MMU on the read channel and
-+    the other System MMU on the write channel.
-+
-+  For information on assigning System MMU controller to its peripheral devices,
-+  see generic IOMMU bindings.
-+
-+properties:
-+  compatible:
-+    const: samsung,exynos-sysmmu
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 2
-+
-+  clock-names:
-+    oneOf:
-+      - items:
-+        - const: sysmmu
-+      - items:
-+        - const: sysmmu
-+        - const: master
-+      - items:
-+        - const: aclk
-+        - const: pclk
-+
-+  "#iommu-cells":
-+    const: 0
-+
-+  power-domains:
-+    description: |
-+      Required if the System MMU is needed to gate its power.
-+      Please refer to the following document:
-+      Documentation/devicetree/bindings/power/pd-samsung.txt
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - "#iommu-cells"
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/exynos5250.h>
-+
-+    gsc_0: scaler@13e00000 {
-+      compatible = "samsung,exynos5-gsc";
-+      reg = <0x13e00000 0x1000>;
-+      interrupts = <0 85 0>;
-+      power-domains = <&pd_gsc>;
-+      clocks = <&clock CLK_GSCL0>;
-+      clock-names = "gscl";
-+      iommus = <&sysmmu_gsc0>;
-+    };
-+
-+    sysmmu_gsc0: iommu@13e80000 {
-+      compatible = "samsung,exynos-sysmmu";
-+      reg = <0x13E80000 0x1000>;
-+      interrupt-parent = <&combiner>;
-+      interrupts = <2 0>;
-+      clock-names = "sysmmu", "master";
-+      clocks = <&clock CLK_SMMU_GSCL0>,
-+               <&clock CLK_GSCL0>;
-+      power-domains = <&pd_gsc>;
-+      #iommu-cells = <0>;
-+    };
-+
--- 
-2.17.1
-
-
-
+Robin.
