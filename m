@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCF1C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF16C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6903217D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0655217D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:34:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932431;
-	bh=g76naGs97Ybb8HLkSTNdZwBrQayN+tkzV82EWo/D3AQ=;
+	s=default; t=1568932443;
+	bh=csKgyx9cIvcyBdEkZTLKA3ImSwmlRCwcW6veHW3zcEA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YnW3nj5rZ0YYEAopeVJPxTNVyXB4viTmm88IRGR9pkrYEcIiZ5di+LMteaNuY5h2N
-	 9vL8xQhjuRkARq1Dx9MvMHjQPmLoWQAv4qp6Vdls3proqyMSUYk9fRFm4kWSwArzRB
-	 b7Z7y6hYXqHyqa3ardgoyzr0xOM+bkVXJJCvxtfU=
+	b=VhndeT61z8rbR0HjkGtIw4FxV1QFYS6/KdD/SMUr61+M7/8bbN3WkR/HR+sL7pfud
+	 oQxaK36gwYwI08ftRduhDAU/X9fmTNyA1cY6BOn39Vguva5LW52oIeYJVaCIaQQGX/
+	 OxhF1w5QQOn1pArdUmNNOyKQw/1w4w8OxCwEkYa4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407351AbfISWdt (ORCPT
+        id S2405731AbfISWKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:33:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49730 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:10:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405841AbfISWLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:11:07 -0400
+        id S2405712AbfISWKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:10:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9AB521920;
-        Thu, 19 Sep 2019 22:11:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E900321907;
+        Thu, 19 Sep 2019 22:10:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931066;
-        bh=g76naGs97Ybb8HLkSTNdZwBrQayN+tkzV82EWo/D3AQ=;
+        s=default; t=1568931036;
+        bh=csKgyx9cIvcyBdEkZTLKA3ImSwmlRCwcW6veHW3zcEA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OmDQCDesxvoUXdJKYOdE4xUHWQIdzxvFCVtJDbBgfVpXi00MzmPlrYeNReQDWY7mx
-         lZ27nXk+YihsamzZ4toQ6K9yvdkoz5D/JvBMaiQil9yG9LlbsLdyNtlX2GuTB6GHti
-         16Js3+zja3+OChHeM7LSUnzpMpTMfzhbM/H33FZY=
+        b=cH/w5/XnR3vGgCCsjL7i4eY1pzxWn4vyIgKTAW+vd+VMvQNIe+eSovXGwa0UxdGLE
+         1xAjk+CpB4YC/6umHyXtQLvviq+IW02dZNYIQ7MJqPjh7gFlzli4+qf6PA8HMOuRCg
+         4rCRZXgofVhhDFv9PlpoD5LP7to7rEhGY3akF1ic=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 116/124] dmaengine: rcar-dmac: Fix DMACHCLR handling if iommu is mapped
-Date:   Fri, 20 Sep 2019 00:03:24 +0200
-Message-Id: <20190919214823.402195765@linuxfoundation.org>
+        Thomas Jarosch <thomas.jarosch@intra2net.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 072/124] netfilter: nf_conntrack_ftp: Fix debug output
+Date:   Fri, 20 Sep 2019 00:02:40 +0200
+Message-Id: <20190919214821.620903152@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -62,131 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+From: Thomas Jarosch <thomas.jarosch@intra2net.com>
 
-[ Upstream commit cf24aac38698bfa1d021afd3883df3c4c65143a4 ]
+[ Upstream commit 3a069024d371125227de3ac8fa74223fcf473520 ]
 
-The commit 20c169aceb45 ("dmaengine: rcar-dmac: clear pertinence
-number of channels") forgets to clear the last channel by
-DMACHCLR in rcar_dmac_init() (and doesn't need to clear the first
-channel) if iommu is mapped to the device. So, this patch fixes it
-by using "channels_mask" bitfield.
+The find_pattern() debug output was printing the 'skip' character.
+This can be a NULL-byte and messes up further pr_debug() output.
 
-Note that the hardware and driver don't support more than 32 bits
-in DMACHCLR register anyway, so this patch should reject more than
-32 channels in rcar_dmac_parse_of().
+Output without the fix:
+kernel: nf_conntrack_ftp: Pattern matches!
+kernel: nf_conntrack_ftp: Skipped up to `<7>nf_conntrack_ftp: find_pattern `PORT': dlen = 8
+kernel: nf_conntrack_ftp: find_pattern `EPRT': dlen = 8
 
-Fixes: 20c169aceb459575 ("dmaengine: rcar-dmac: clear pertinence number of channels")
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/1567424643-26629-1-git-send-email-yoshihiro.shimoda.uh@renesas.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Output with the fix:
+kernel: nf_conntrack_ftp: Pattern matches!
+kernel: nf_conntrack_ftp: Skipped up to 0x0 delimiter!
+kernel: nf_conntrack_ftp: Match succeeded!
+kernel: nf_conntrack_ftp: conntrack_ftp: match `172,17,0,100,200,207' (20 bytes at 4150681645)
+kernel: nf_conntrack_ftp: find_pattern `PORT': dlen = 8
+
+Signed-off-by: Thomas Jarosch <thomas.jarosch@intra2net.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/sh/rcar-dmac.c | 28 +++++++++++++++++++---------
- 1 file changed, 19 insertions(+), 9 deletions(-)
+ net/netfilter/nf_conntrack_ftp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/sh/rcar-dmac.c b/drivers/dma/sh/rcar-dmac.c
-index 54de669c38b84..f1d89bdebddab 100644
---- a/drivers/dma/sh/rcar-dmac.c
-+++ b/drivers/dma/sh/rcar-dmac.c
-@@ -192,6 +192,7 @@ struct rcar_dmac_chan {
-  * @iomem: remapped I/O memory base
-  * @n_channels: number of available channels
-  * @channels: array of DMAC channels
-+ * @channels_mask: bitfield of which DMA channels are managed by this driver
-  * @modules: bitmask of client modules in use
-  */
- struct rcar_dmac {
-@@ -202,6 +203,7 @@ struct rcar_dmac {
- 
- 	unsigned int n_channels;
- 	struct rcar_dmac_chan *channels;
-+	unsigned int channels_mask;
- 
- 	DECLARE_BITMAP(modules, 256);
- };
-@@ -438,7 +440,7 @@ static int rcar_dmac_init(struct rcar_dmac *dmac)
- 	u16 dmaor;
- 
- 	/* Clear all channels and enable the DMAC globally. */
--	rcar_dmac_write(dmac, RCAR_DMACHCLR, GENMASK(dmac->n_channels - 1, 0));
-+	rcar_dmac_write(dmac, RCAR_DMACHCLR, dmac->channels_mask);
- 	rcar_dmac_write(dmac, RCAR_DMAOR,
- 			RCAR_DMAOR_PRI_FIXED | RCAR_DMAOR_DME);
- 
-@@ -814,6 +816,9 @@ static void rcar_dmac_stop_all_chan(struct rcar_dmac *dmac)
- 	for (i = 0; i < dmac->n_channels; ++i) {
- 		struct rcar_dmac_chan *chan = &dmac->channels[i];
- 
-+		if (!(dmac->channels_mask & BIT(i)))
-+			continue;
-+
- 		/* Stop and reinitialize the channel. */
- 		spin_lock_irq(&chan->lock);
- 		rcar_dmac_chan_halt(chan);
-@@ -1776,6 +1781,8 @@ static int rcar_dmac_chan_probe(struct rcar_dmac *dmac,
- 	return 0;
- }
- 
-+#define RCAR_DMAC_MAX_CHANNELS	32
-+
- static int rcar_dmac_parse_of(struct device *dev, struct rcar_dmac *dmac)
- {
- 	struct device_node *np = dev->of_node;
-@@ -1787,12 +1794,16 @@ static int rcar_dmac_parse_of(struct device *dev, struct rcar_dmac *dmac)
- 		return ret;
+diff --git a/net/netfilter/nf_conntrack_ftp.c b/net/netfilter/nf_conntrack_ftp.c
+index 8c6c11bab5b67..b5df6c4c159cd 100644
+--- a/net/netfilter/nf_conntrack_ftp.c
++++ b/net/netfilter/nf_conntrack_ftp.c
+@@ -322,7 +322,7 @@ static int find_pattern(const char *data, size_t dlen,
+ 		i++;
  	}
  
--	if (dmac->n_channels <= 0 || dmac->n_channels >= 100) {
-+	/* The hardware and driver don't support more than 32 bits in CHCLR */
-+	if (dmac->n_channels <= 0 ||
-+	    dmac->n_channels >= RCAR_DMAC_MAX_CHANNELS) {
- 		dev_err(dev, "invalid number of channels %u\n",
- 			dmac->n_channels);
- 		return -EINVAL;
- 	}
+-	pr_debug("Skipped up to `%c'!\n", skip);
++	pr_debug("Skipped up to 0x%hhx delimiter!\n", skip);
  
-+	dmac->channels_mask = GENMASK(dmac->n_channels - 1, 0);
-+
- 	return 0;
- }
- 
-@@ -1802,7 +1813,6 @@ static int rcar_dmac_probe(struct platform_device *pdev)
- 		DMA_SLAVE_BUSWIDTH_2_BYTES | DMA_SLAVE_BUSWIDTH_4_BYTES |
- 		DMA_SLAVE_BUSWIDTH_8_BYTES | DMA_SLAVE_BUSWIDTH_16_BYTES |
- 		DMA_SLAVE_BUSWIDTH_32_BYTES | DMA_SLAVE_BUSWIDTH_64_BYTES;
--	unsigned int channels_offset = 0;
- 	struct dma_device *engine;
- 	struct rcar_dmac *dmac;
- 	struct resource *mem;
-@@ -1831,10 +1841,8 @@ static int rcar_dmac_probe(struct platform_device *pdev)
- 	 * level we can't disable it selectively, so ignore channel 0 for now if
- 	 * the device is part of an IOMMU group.
- 	 */
--	if (device_iommu_mapped(&pdev->dev)) {
--		dmac->n_channels--;
--		channels_offset = 1;
--	}
-+	if (device_iommu_mapped(&pdev->dev))
-+		dmac->channels_mask &= ~BIT(0);
- 
- 	dmac->channels = devm_kcalloc(&pdev->dev, dmac->n_channels,
- 				      sizeof(*dmac->channels), GFP_KERNEL);
-@@ -1892,8 +1900,10 @@ static int rcar_dmac_probe(struct platform_device *pdev)
- 	INIT_LIST_HEAD(&engine->channels);
- 
- 	for (i = 0; i < dmac->n_channels; ++i) {
--		ret = rcar_dmac_chan_probe(dmac, &dmac->channels[i],
--					   i + channels_offset);
-+		if (!(dmac->channels_mask & BIT(i)))
-+			continue;
-+
-+		ret = rcar_dmac_chan_probe(dmac, &dmac->channels[i], i);
- 		if (ret < 0)
- 			goto error;
- 	}
+ 	*numoff = i;
+ 	*numlen = getnum(data + i, dlen - i, cmd, term, numoff);
 -- 
 2.20.1
 
