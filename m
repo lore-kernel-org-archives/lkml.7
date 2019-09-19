@@ -2,195 +2,112 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A98E1C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 02:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D904FC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 02:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 804F1217D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 02:18:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9492217D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 02:21:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YilbaR6j"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QMhAwatW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388410AbfISCSn (ORCPT
+        id S1731036AbfISCVG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 22:18:43 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:35023 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388273AbfISCSb (ORCPT
+        Wed, 18 Sep 2019 22:21:06 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:34865 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727231AbfISCVF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 22:18:31 -0400
-Received: by mail-qt1-f196.google.com with SMTP id m15so2347044qtq.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 19:18:30 -0700 (PDT)
+        Wed, 18 Sep 2019 22:21:05 -0400
+Received: by mail-io1-f68.google.com with SMTP id q10so4108700iop.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 19:21:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=H7D4s+CkAmLBeZ/6zlhP2G8xuIQDDKxrEeqdqHuDSaE=;
-        b=YilbaR6jBv62EnsBExQZKzQiV2/klUvm9VFz1WjN6yvxoRyUNArOCv19ThV/q2dUji
-         S+8nzP58nrfXl7hAMWWWHjrsALTqpfZ/TIsX9ziepgrgVanl9SnDa/S3yNLgnGMZRgBZ
-         KMld+X7eTF2dvMCg7AqNTCXvetYubo4gUKztyJVRKCvdeD+AM/dga7wURid/ufYhNz+H
-         24iP7Bch7ZDyI8ENMW4xZYkSaaLVeLH1BuILTVq7H9KIxcC7iB2xbLc8imybqDNyHpjJ
-         LOtCrLOrcCKeiIlBlRdkCGCyeTRG7825WQo5/Uv3J/M713IsjmD9U/l1dKn5XmTSGZwU
-         eZkw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=28FR0iGdSsSntn0HXavBQASb15ncS9YhNIEPya+d/ZY=;
+        b=QMhAwatWpTgV9Q79tPLRXDuYsGcn7T+ASU2X96tHXWftVa4ngLSP3VwpX7kdaEak5Y
+         o0a+QXENkjEiRbXSYPCxyyqke/sSSWDHGKpQONvEvFS+7EGAjQbcybOqlenxKw9OZIpA
+         zj70GUGkis+eScMnC4lXEsqefD3cvJ089cH9uIhos23Zfz8mDK8fA1gxOzuHRRASfbIm
+         380J4A4iXCdKSNXlajDRMZYPdlVh+jeT8k+NWfP2ZMHwijhtXn6fFwAf6IymDDx9PiZU
+         R2vM7p2e9lPGqbyg7rNLqGCdhZAGYIuansGpJwi1I6QriPhQATOKevAnZifIJWidGn5S
+         vOpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=H7D4s+CkAmLBeZ/6zlhP2G8xuIQDDKxrEeqdqHuDSaE=;
-        b=eoxfXnIdWdJ5fkCXRQ+xYv3gbFRUrVmxqCIhFP6elxaiANVYjSO1F6ekSzg1qptm6N
-         R2KGZVWEerdyFxAK2dRoHhFMo/3hY3Qz3KRqAISCVUh75GQYQsSU7290zsvzUg1dYB5J
-         M+EI3uJU8RoKu3StYq8PTTl7Buaaseq8Td4fLEoDlainrykCaIRlpeNDpvLIYSZ6hI9j
-         6y/ABpD2pejxNRwJR8JHdzUIaZ/OYiF7f3GXu5YTM+VabIR+079JU/V3eqwQ2fBnJ6aC
-         Ip762twnpELArqJLZkif6Nf5PeNbfSGqr7ipdH5eg/nXnyjf/l4mCIY84L4YTrnio5f4
-         gcPA==
-X-Gm-Message-State: APjAAAWmESszi7jKqymLitGQjJpgYaO0S9NA9XDbTm6GjQaHiHDlIxxK
-        hxHKkmnAyPoY864BElo5ytKQvg==
-X-Google-Smtp-Source: APXvYqwXaeBcVyAp1JNYBKDS7In10ssdhrlNkNgEMbkiLJMfzw7ZWi1vOYe4JONKg6yntHxCTwyi0w==
-X-Received: by 2002:ac8:4612:: with SMTP id p18mr886307qtn.94.1568859509919;
-        Wed, 18 Sep 2019 19:18:29 -0700 (PDT)
-Received: from Thara-Work-Ubuntu.fios-router.home (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.googlemail.com with ESMTPSA id o52sm5261275qtf.56.2019.09.18.19.18.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 18 Sep 2019 19:18:29 -0700 (PDT)
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-To:     rui.zhang@intel.com, edubezval@gmail.com,
-        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org
-Cc:     amit.kucheria@verdurent.com, mark.rutland@arm.com,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] thermal: step_wise: Extend thermal step-wise governor to monitor falling temperature.
-Date:   Wed, 18 Sep 2019 22:18:23 -0400
-Message-Id: <1568859503-19725-5-git-send-email-thara.gopinath@linaro.org>
-X-Mailer: git-send-email 2.1.4
-In-Reply-To: <1568859503-19725-1-git-send-email-thara.gopinath@linaro.org>
-References: <1568859503-19725-1-git-send-email-thara.gopinath@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=28FR0iGdSsSntn0HXavBQASb15ncS9YhNIEPya+d/ZY=;
+        b=Y+9X9kFb3sLfScrxeN7i4K9Qww/qfh1Fnsx5admfSGU4lTJKOoKerYCE80w8Yxsmoo
+         teUUhkqz7/mZdt91PPWyFkQmt89pBtv6hKC5VGICx2qRwtBHPtswMTV1+NjeHoOF6Huq
+         YfH7lT1iT4ff3ddyU3uRpUEfRHd9kK/xzTiv2aQIrUPtlWEkDHE73peTcT/m+TU3ABnP
+         R0sU+0DLq8FsslA58Ph/Xf0aBHpw8XvRyB+VFV+bvXW8IRX3On9EkLsCCewxAE9rvN06
+         j1Qr5DlhJcolHkDLg7JhfzdUVGWHJvVn26bgvfIiIdv4aj4f3WtUxlRwfmoxrEbyXFsy
+         XNSQ==
+X-Gm-Message-State: APjAAAUQ+me+63xkxZ203bF5iu0NDubVqoO2mJK9/AmupL7Cbq/jtmiX
+        IlB1nqkc/iMAMC4CqCHwRany+ljgoPhJlb475aI=
+X-Google-Smtp-Source: APXvYqzIjt/mvoTyN72tqDx3aUGKSUk8fTRKQjQr0hxKDeo1qLTcozizxASVMl1qI0/O8Y1KmhrvWRsYiQhLHkw6u+M=
+X-Received: by 2002:a6b:6d07:: with SMTP id a7mr4459674iod.261.1568859664907;
+ Wed, 18 Sep 2019 19:21:04 -0700 (PDT)
+MIME-Version: 1.0
+References: <1568801744-21380-1-git-send-email-gene.chen.richtek@gmail.com> <20190918105121.GB5016@dell>
+In-Reply-To: <20190918105121.GB5016@dell>
+From:   Gene Chen <gene.chen.richtek@gmail.com>
+Date:   Thu, 19 Sep 2019 10:20:53 +0800
+Message-ID: <CAE+NS37XG+kfbj6yJrL5A-d2O_aiRU90yV5TUk3Kfa0Rv7dWmw@mail.gmail.com>
+Subject: Re: [PATCH] mfd: mt6360: add pmic mt6360 driver
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        gene_chen@richtek.com, Wilma.Wu@mediatek.com,
+        shufan_lee@richtek.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From the step wise governor point of view, the policy decisions
-that has to taken on a thermal trip point that is defined to be monitored
-for falling temprature is the mirror opposite of the decisions it has
-to take on a trip point that is monitored for rising temperature.
+Lee Jones <lee.jones@linaro.org> =E6=96=BC 2019=E5=B9=B49=E6=9C=8818=E6=97=
+=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=886:51=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On Wed, 18 Sep 2019, Gene Chen wrote:
+>
+> > From: Gene Chen <gene_chen@richtek.com>
+> >
+> > Add mfd driver for mt6360 pmic chip include
+> > Battery Charger/USB_PD/Flash LED/RGB LED/LDO/Buck
+> >
+> > Signed-off-by: Gene Chen <gene_chen@richtek.com
+> > ---
+>
+> This looks different from the one you sent before, but I don't see a
+> version bump or any changelog in this space.  Please re-submit with
+> the differences noted.
+>
 
-Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
----
- drivers/thermal/step_wise.c | 59 +++++++++++++++++++++++++++++++++------------
- 1 file changed, 44 insertions(+), 15 deletions(-)
+the change is
+1. add missing include file
+2. modify commit message
 
-diff --git a/drivers/thermal/step_wise.c b/drivers/thermal/step_wise.c
-index 6e051cb..aa8e0a0 100644
---- a/drivers/thermal/step_wise.c
-+++ b/drivers/thermal/step_wise.c
-@@ -35,7 +35,8 @@
-  *       deactivate the thermal instance
-  */
- static unsigned long get_target_state(struct thermal_instance *instance,
--				enum thermal_trend trend, bool throttle)
-+				enum thermal_trend trend, bool throttle,
-+				enum thermal_trip_monitor_type type)
- {
- 	struct thermal_cooling_device *cdev = instance->cdev;
- 	unsigned long cur_state;
-@@ -65,11 +66,21 @@ static unsigned long get_target_state(struct thermal_instance *instance,
- 
- 	switch (trend) {
- 	case THERMAL_TREND_RAISING:
--		if (throttle) {
--			next_target = cur_state < instance->upper ?
--				    (cur_state + 1) : instance->upper;
--			if (next_target < instance->lower)
--				next_target = instance->lower;
-+		if (type == THERMAL_TRIP_MONITOR_FALLING) {
-+			if (cur_state <= instance->lower) {
-+				if (!throttle)
-+					next_target = THERMAL_NO_TARGET;
-+			} else {
-+				if (!throttle)
-+					next_target = cur_state - 1;
-+			}
-+		} else {
-+			if (throttle) {
-+				next_target = cur_state < instance->upper ?
-+					    (cur_state + 1) : instance->upper;
-+				if (next_target < instance->lower)
-+					next_target = instance->lower;
-+			}
- 		}
- 		break;
- 	case THERMAL_TREND_RAISE_FULL:
-@@ -77,14 +88,23 @@ static unsigned long get_target_state(struct thermal_instance *instance,
- 			next_target = instance->upper;
- 		break;
- 	case THERMAL_TREND_DROPPING:
--		if (cur_state <= instance->lower) {
--			if (!throttle)
--				next_target = THERMAL_NO_TARGET;
-+		if (type == THERMAL_TRIP_MONITOR_FALLING) {
-+			if (throttle) {
-+				next_target = cur_state < instance->upper ?
-+					(cur_state + 1) : instance->upper;
-+				if (next_target < instance->lower)
-+					next_target = instance->lower;
-+			}
- 		} else {
--			if (!throttle) {
--				next_target = cur_state - 1;
--				if (next_target > instance->upper)
--					next_target = instance->upper;
-+			if (cur_state <= instance->lower) {
-+				if (!throttle)
-+					next_target = THERMAL_NO_TARGET;
-+			} else {
-+				if (!throttle) {
-+					next_target = cur_state - 1;
-+					if (next_target > instance->upper)
-+						next_target = instance->upper;
-+				}
- 			}
- 		}
- 		break;
-@@ -117,6 +137,8 @@ static void thermal_zone_trip_update(struct thermal_zone_device *tz, int trip)
- {
- 	int trip_temp;
- 	enum thermal_trip_type trip_type;
-+	enum thermal_trip_monitor_type monitor_type =
-+					THERMAL_TRIP_MONITOR_RISING;
- 	enum thermal_trend trend;
- 	struct thermal_instance *instance;
- 	bool throttle = false;
-@@ -130,9 +152,15 @@ static void thermal_zone_trip_update(struct thermal_zone_device *tz, int trip)
- 		tz->ops->get_trip_type(tz, trip, &trip_type);
- 	}
- 
-+	if (tz->ops->get_trip_monitor_type)
-+		tz->ops->get_trip_monitor_type(tz, trip, &monitor_type);
-+
- 	trend = get_tz_trend(tz, trip);
- 
--	if (tz->temperature >= trip_temp) {
-+	if (((monitor_type == THERMAL_TRIP_MONITOR_RISING) &&
-+	      (tz->temperature >= trip_temp)) ||
-+	      ((monitor_type == THERMAL_TRIP_MONITOR_FALLING) &&
-+	      (tz->temperature <= trip_temp))) {
- 		throttle = true;
- 		trace_thermal_zone_trip(tz, trip, trip_type);
- 	}
-@@ -147,7 +175,8 @@ static void thermal_zone_trip_update(struct thermal_zone_device *tz, int trip)
- 			continue;
- 
- 		old_target = instance->target;
--		instance->target = get_target_state(instance, trend, throttle);
-+		instance->target = get_target_state(instance, trend, throttle,
-+						    monitor_type);
- 		dev_dbg(&instance->cdev->device, "old_target=%d, target=%d\n",
- 					old_target, (int)instance->target);
- 
--- 
-2.1.4
+this patch is regarded as version 1
 
+> >  drivers/mfd/Kconfig                |  12 +
+> >  drivers/mfd/Makefile               |   1 +
+> >  drivers/mfd/mt6360-core.c          | 463 +++++++++++++++++++++++++++++=
+++++++++
+> >  include/linux/mfd/mt6360-private.h | 279 ++++++++++++++++++++++
+> >  include/linux/mfd/mt6360.h         |  33 +++
+> >  5 files changed, 788 insertions(+)
+> >  create mode 100644 drivers/mfd/mt6360-core.c
+> >  create mode 100644 include/linux/mfd/mt6360-private.h
+> >  create mode 100644 include/linux/mfd/mt6360.h
+>
+> --
+> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
+> Linaro Services Technical Lead
+> Linaro.org =E2=94=82 Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
