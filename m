@@ -2,90 +2,77 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D243C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 06:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D3BC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 06:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E3F721907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 06:20:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD1B321907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 06:21:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730861AbfISGUB (ORCPT
+        id S2387901AbfISGVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 02:20:01 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:47899 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730291AbfISGUB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 02:20:01 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iApnJ-0002d9-8T; Thu, 19 Sep 2019 08:19:57 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iApn6-00018G-1u; Thu, 19 Sep 2019 08:19:44 +0200
-Date:   Thu, 19 Sep 2019 08:19:44 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will@kernel.org>, Peter Rosin <peda@axentia.se>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH v2] of: restore old handling of cells_name=NULL in
- of_*_phandle_with_args()
-Message-ID: <20190919061943.ga7jwdn4ednulvgs@pengutronix.de>
-References: <20190918063837.8196-1-u.kleine-koenig@pengutronix.de>
- <b00ca30f-2c06-7722-96b2-123d15751cb6@axentia.se>
- <20190918084748.hnjkiq7wc5b35wjh@pengutronix.de>
- <CAL_JsqJuJrOj+D4xkGACC1=zaB5OUkt=SNzCOiOiTVtM9E9z+A@mail.gmail.com>
- <20190918201954.2phyqxqhoj5jwklt@pengutronix.de>
+        Thu, 19 Sep 2019 02:21:24 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2681 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728230AbfISGVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 02:21:24 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 0E1C4D25D45C7A3AE125;
+        Thu, 19 Sep 2019 14:21:22 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 19 Sep 2019 14:21:13 +0800
+From:   Mao Wenan <maowenan@huawei.com>
+To:     <olteanv@gmail.com>, <andrew@lunn.ch>, <vivien.didelot@gmail.com>,
+        <f.fainelli@gmail.com>, <davem@davemloft.net>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>, Mao Wenan <maowenan@huawei.com>
+Subject: [PATCH net] net: dsa: sja1105: Add dependency for NET_DSA_SJA1105_TAS
+Date:   Thu, 19 Sep 2019 14:38:19 +0800
+Message-ID: <20190919063819.164826-1-maowenan@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190918201954.2phyqxqhoj5jwklt@pengutronix.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 10:19:54PM +0200, Uwe Kleine-König wrote:
-> On Wed, Sep 18, 2019 at 03:09:06PM -0500, Rob Herring wrote:
-> > Can I get a proper patch please.
-> 
-> I don't understand what is wrong with my patch. Can you please expand
-> what you are missing? I just tried to git-am it and the result looks
-> fine.
+If CONFIG_NET_DSA_SJA1105_TAS=y and CONFIG_NET_SCH_TAPRIO=n,
+below error can be found:
+drivers/net/dsa/sja1105/sja1105_tas.o: In function `sja1105_setup_tc_taprio':
+sja1105_tas.c:(.text+0x318): undefined reference to `taprio_offload_free'
+sja1105_tas.c:(.text+0x590): undefined reference to `taprio_offload_get'
+drivers/net/dsa/sja1105/sja1105_tas.o: In function `sja1105_tas_teardown':
+sja1105_tas.c:(.text+0x610): undefined reference to `taprio_offload_free'
+make: *** [vmlinux] Error 1
 
-I see that the commit this patch is fixing isn't in Linus' tree yet. Do
-you want instead of this commit fixing the previous one a single good
-patch that replaces e42ee61017f5 ("of: Let of_for_each_phandle fallback
-to non-negative cell_count")?
+sja1105_tas needs tc-taprio, so this patch add the dependency for it.
 
-Best regards
-Uwe
+Fixes: 317ab5b86c8e ("net: dsa: sja1105: Configure the Time-Aware Scheduler via tc-taprio offload")
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+---
+ drivers/net/dsa/sja1105/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/drivers/net/dsa/sja1105/Kconfig b/drivers/net/dsa/sja1105/Kconfig
+index 55424f3..f40b248 100644
+--- a/drivers/net/dsa/sja1105/Kconfig
++++ b/drivers/net/dsa/sja1105/Kconfig
+@@ -27,6 +27,7 @@ config NET_DSA_SJA1105_PTP
+ config NET_DSA_SJA1105_TAS
+ 	bool "Support for the Time-Aware Scheduler on NXP SJA1105"
+ 	depends on NET_DSA_SJA1105
++	depends on NET_SCH_TAPRIO
+ 	help
+ 	  This enables support for the TTEthernet-based egress scheduling
+ 	  engine in the SJA1105 DSA driver, which is controlled using a
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+2.7.4
+
