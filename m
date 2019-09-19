@@ -2,114 +2,104 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6ECC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 073EEC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6F8B21848
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2D4A21848
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:11:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="aydgU3m7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lluivDNT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391116AbfISPLb (ORCPT
+        id S2391124AbfISPLq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 11:11:31 -0400
-Received: from sonic303-24.consmr.mail.gq1.yahoo.com ([98.137.64.205]:46594
-        "EHLO sonic303-24.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728720AbfISPLa (ORCPT
+        Thu, 19 Sep 2019 11:11:46 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:42670 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388084AbfISPLp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 11:11:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1568905889; bh=1O+vcGjb05gALj1QAad6oTp09F1ELiXLmBDLOinwAuQ=; h=Date:From:To:Cc:Subject:In-Reply-To:References:From:Subject; b=aydgU3m7Ou6Rcnz6J90S7pTQcDjThuA2WPQTJwSkPWoS2z//BLXddJq5s0FIIxfaIkDw9GsWzVsJ3mhoEjJB2KwyM86cnkdUnJF4FRvMq6zK5jHa9EY5UaLGN+U2930WKF4Nl77Z4gVcp1Y7Lo/ycnR7H0e7zH0FMcz5jW5WyktIZ5iEhJaw5J+XUYrij+21psX814JVrwyNcqszA+jUlvoKRD5Bou+E7jbCfmZiLdasSj5fZvOo0u7INbn/L8sddkOLaQU1uZKkySaQKN5iGLq/w7BUKwpPp/WWwFPfofKxfIbhZAZGwlikpN1ncrVg8L/ZnYAePT9Cpb3DXNEEkw==
-X-YMail-OSG: bWS3MbAVM1n2bVlxeCjg2TlJXEwEXoEGyq.F13_51W51aumfuTjEoZcd2ZUlYYp
- stFoP_2g5EeXEqZeYPvxKWq0fNMnCYZHDZ0fkrERKiVX36Vt1W.TKP4AJDypwy3m2KyC0OVOnJZL
- lNWHgRlUkG3GvIryChc7kpQmFEER56RW6RRxvUKy9Dw7i_m4K9W6LEnel6TXSkrGxFScevHaLPIb
- cIaD7u1cl4BQgucbUHhIxkljUrG8rKIQdNRSkm3sUPLMNWC82p1TGNyuLMGrxVImSzAH5HOAbqIr
- eb1nEvNXAmBlzuQe1gd_M9cMy0aU7Xp5xwllx7WdHOt7u4o.wqP.PsP2nBLOIHV7rHwqPZJutNsk
- GVgcFZvwY0QOVy.22QoRTHqitXF5IV4SBE0tdpg8FjikNo76Gss5NPN5QKMc1AR10t0YSLtAU4Lh
- eCIa7QVMsKdJINa6K8SHDOoTaZNHZEC84uzTgbnpcqIuXpzG0WFKU5NwKdWTX6mzC827UX5l86_G
- Y3I2V2AC1m3cczrnTg2Jk_78saePb3O4tROy2dpdi2eUJmGtpnQhMXfprvzIQoPCwvhPJAm0VSaR
- 7igRx3fUIVzar9zL8EXd24N88KP98alU2UYYoOcK1xpz5yeBTR9LV_JrBUH3kM06LUBPL7kKQ1FT
- _rsK62RKBhagfpGB_sNarttM01UB6cZXFSS0QGalITrL4p8HXXIOuGZkpJYMenvUcXcePXJz7k9m
- mRfmhsDdC37ejqg4NAF2sQLgjJDTnarPnJUUhGxHI1L95Cdg5Qs3FThDjIZP.3Zszf4bCgtdoSJ6
- 8oOXIGi2MIhHwYyH5clNw89yC1UkGi0NN4A4UYecGMZnKT2FL89uiNkWmGA30V4P8ipi5sZj1blV
- 11JrBME.JXClK.hTYUmyonRj8.7yedYE1ierTiuQ8as.QyIU0Ip6Awh8aKuSCyauYhItHz7mvI_Y
- q.uB7eY1deNgdTngRS14yIMl9dyfpHZ5KHdDmQ1KwlKbRv_uaMUFAdxJwNQWFcFzXKC525vzR4.U
- 37WeCqn04LlTvF8ZfyHyzhiDsBHO8dc81WzLIVGw22BC1FaAPSSQh05BNHurY3kmRAK9nOLKQL5d
- SfhFvCWyCuub334uX7tNlsPqXJTMdSOJ_pLJJqWJ0Hq4JM.C5.tqPAZ27YnwBAfyqaijr_go_Byl
- i6mQPFDvtpUFArRx3S35wK5NaIsf8t6MLYLRQ3MhchdystDZ8aOBTbGtGKDKGcDUXi.gvfpM0s8M
- tEHadBg0X207GBLRP6HyVhfM6PBxpuMBu4JH52Hv1ahnKngljmMqC8IpAcQ_mIvpB84TwN7WBt6_
- nMZ4OeTKJpgWVob0Qfs1fYuVo.vuXrf_J5.0rwtwzOg--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic303.consmr.mail.gq1.yahoo.com with HTTP; Thu, 19 Sep 2019 15:11:29 +0000
-Received: by smtp424.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID d8617a679873d1c43053a5376a695e1e;
-          Thu, 19 Sep 2019 15:11:23 +0000 (UTC)
-Date:   Thu, 19 Sep 2019 23:11:16 +0800
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-erofs@lists.ozlabs.org, Miao Xie <miaoxie@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-next@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: erofs -next tree inclusion request
-Message-ID: <20190919150213.GA6138@hsiangkao-HP-ZHAN-66-Pro-G1>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190919145027.GN3642@sirena.co.uk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-References: <20190919150213.GA6138.ref@hsiangkao-HP-ZHAN-66-Pro-G1>
-X-Mailer: WebService/1.1.14303 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_181)
+        Thu, 19 Sep 2019 11:11:45 -0400
+Received: by mail-io1-f65.google.com with SMTP id n197so8495478iod.9;
+        Thu, 19 Sep 2019 08:11:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=G1RgniGBhHx+ePsQxRnB8cqCywBk5uIA9l0Oj05OQJ8=;
+        b=lluivDNTjH/IK8vsfViEiPYr0Do1I8vpk22HCMZYTG+ILPHBGU/1bjqSnlsio3o37p
+         Ffgn/qq/9VwzZpCrEg1P03b2tFPYaipfRcfhiFSITFaEZ+PlQJMUsPeAXBMS28HxWRhc
+         M3/1S0G6S39YYXZ5hOy5jxg5wfjGZQja/lkJlLMO+f6UZ8YZ3c6a/Vl9KYdWes3EIz0/
+         CCCypwbbE7qjzKS3woIujH9Orz2G35LUbA7mNeOL5iOld4X39RBhn6VRKzJR8k+BnmtW
+         vDZFVr1uSEVqB6hMFYZ6fTZi1lCTigZQU4tp4WZOCzChM0S7xDJu0eZDW2P0zPnkydIn
+         E9Nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=G1RgniGBhHx+ePsQxRnB8cqCywBk5uIA9l0Oj05OQJ8=;
+        b=KJXTc2mAv2b8kIs2+8ZKIOStWt1JJNPnsl95QROqgqWsCn3GGCDFYkLDBBd2vD3g76
+         1ocDzKTxnG+TxyI+XVCcigQyceEBDygtMvfEK/J9ZniG0DgSy2cX3xU/CqjZbnNMsplx
+         YRvQl0PZTYoNoUkvEAVY7Is46L/kfthcCQFwsV9HlcGA2JRdH+Bn7ReKf61kAzpzIIng
+         5oc4dA5Jwd2297cUij7AaWN+iV52d0D3QJ7adTWDTMB4/gjEZlw3+14pqySYHn4wcwSq
+         PuQ2w/mC5MsoVPKIf844l9kuoOARq53C+VEjdmI3yO087pmfHxS2Gu5CpoHHWCNPGrOa
+         rIwA==
+X-Gm-Message-State: APjAAAWoX8CygWF7ZAPfN4NybTf5g0lb77iZk+YXAvrRiiUFanpvkyCF
+        N05J5DnBs6viXj0A+LQ7Vc8=
+X-Google-Smtp-Source: APXvYqxMvRcKAwAN7dmHT4oVWvVN4P2GjI72CaFiSuSJlG+cansVsMxmMIebqpx4x4MHyTmjALktFQ==
+X-Received: by 2002:a6b:fa07:: with SMTP id p7mr12316093ioh.164.1568905904288;
+        Thu, 19 Sep 2019 08:11:44 -0700 (PDT)
+Received: from svens-asus.arcx.com ([184.94.50.30])
+        by smtp.gmail.com with ESMTPSA id e15sm6422625ioe.33.2019.09.19.08.11.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Sep 2019 08:11:43 -0700 (PDT)
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
+To:     Sebastian Reichel <sre@kernel.org>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable <stable@vger.kernel.org>
+Subject: [PATCH v1] power: supply: ltc2941-battery-gauge: fix use-after-free
+Date:   Thu, 19 Sep 2019 11:11:37 -0400
+Message-Id: <20190919151137.9960-1-TheSven73@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 03:50:27PM +0100, Mark Brown wrote:
-> On Thu, Sep 19, 2019 at 10:37:22PM +0800, Gao Xiang wrote:
-> 
-> > The fixes only -fixes branch is
-> > git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git fixes
-> 
-> > Thanks for taking time on this stuff...
-> 
-> OK, thanks - I've added that for tomorrow and I'll try to remember to
-> add it onto the end of today's build too.  Like I said before you might
-> need to remind Stephen about the trees when he gets back on the 30th but
-> hopefully he'll see these mails.
+This driver's remove path calls cancel_delayed_work().
+However, that function does not wait until the work function
+finishes. This could mean that the work function is still
+running after the driver's remove function has finished,
+which would result in a use-after-free.
 
-Thanks, I will keep eyes on -next branch and remind him when it's really
-necessary.
+Fix by calling cancel_delayed_work_sync(), which ensures that
+that the work is properly cancelled, no longer running, and
+unable to re-schedule itself.
 
-> 
-> Thanks for adding your subsystem tree as a participant of linux-next.  As
-> you may know, this is not a judgement of your code.  The purpose of
-> linux-next is for integration testing and to lower the impact of
-> conflicts between subsystems in the next merge window.
-> 
-> You will need to ensure that the patches/commits in your tree/series have
-> been:
->      * submitted under GPL v2 (or later) and include the Contributor's
->         Signed-off-by,
->      * posted to the relevant mailing list,
->      * reviewed by you (or another maintainer of your subsystem tree),
->      * successfully unit tested, and
->      * destined for the current or next Linux merge window.
+This issue was detected with the help of Coccinelle.
 
-Yes, I understand these rules (by keeping up with several previous rounds)
-and thanks for your reminder again.
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+---
+ drivers/power/supply/ltc2941-battery-gauge.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> Basically, this should be just what you would send to Linus (or ask him
-> to fetch).  It is allowed to be rebased if you deem it necessary.
-
-I will give a try after these commits are all solid and pull request with
-my PGP key then... Thank you...
-
-Thanks,
-Gao Xiang
+diff --git a/drivers/power/supply/ltc2941-battery-gauge.c b/drivers/power/supply/ltc2941-battery-gauge.c
+index da49436176cd..30a9014b2f95 100644
+--- a/drivers/power/supply/ltc2941-battery-gauge.c
++++ b/drivers/power/supply/ltc2941-battery-gauge.c
+@@ -449,7 +449,7 @@ static int ltc294x_i2c_remove(struct i2c_client *client)
+ {
+ 	struct ltc294x_info *info = i2c_get_clientdata(client);
+ 
+-	cancel_delayed_work(&info->work);
++	cancel_delayed_work_sync(&info->work);
+ 	power_supply_unregister(info->supply);
+ 	return 0;
+ }
+-- 
+2.17.1
 
