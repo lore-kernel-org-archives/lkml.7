@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6702AC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8647FC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38B60217D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:21:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C74B217D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:21:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931704;
-	bh=W034x0wSS5mmCtPD4124rROzfcSw96M90lN4pTGITfM=;
+	s=default; t=1568931706;
+	bh=JYYdEn/FHh0Qp63iTxBnQEDPzotdp6ZEypjl8ByySCo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ThQ5A2UDVUOsDDNA4it3+d+1v0dTHgwbnmwiDb6Sj4LuKUY0yAWU1R7b0UTqq2wxW
-	 nXgpMWPNajtimTTk+Quymk7DpD9cw53rX+mFwl0DWw525bLCrJn4TiZm8YRpE80gvq
-	 pOPJbZhP69wdfb+OqR+XIrIJruaY238FTaG1kVa0=
+	b=whxGeyO+Q5Kxa7x8LjnCl9HrB/8OcPPkshaxYeplMTzFlJWfT/Q2R9tuJmyG4VBEB
+	 TTdqFnZ6Z78xqIVHQNtyAV4oAiQoGYOk6V28FldWTEytfqj5OV093MWWG6xAk0s8da
+	 4nslDeN2SBexBK+4SfIkVA+tdaeYcJG/f6pz1D7Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392899AbfISWTg (ORCPT
+        id S2394072AbfISWVo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:19:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33202 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:21:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392787AbfISWTb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:19:31 -0400
+        id S2389787AbfISWVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:21:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D730A20678;
-        Thu, 19 Sep 2019 22:19:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C983820678;
+        Thu, 19 Sep 2019 22:21:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931570;
-        bh=W034x0wSS5mmCtPD4124rROzfcSw96M90lN4pTGITfM=;
+        s=default; t=1568931700;
+        bh=JYYdEn/FHh0Qp63iTxBnQEDPzotdp6ZEypjl8ByySCo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nFeMTOVf6gTjuhAcNtp5Cyc8IPDAvWTwigxr9TNX3EYSjZTYjfO0mh+TFUya6mJGQ
-         RJ+VvyAMIIlZi8yBkTHWjMlUoKUZJOLzheTqudGkTH83GPfD4XGmVDrcJRZNujW6u2
-         BcGcAL28qxH938ePc3K07ZoowneSu4YAC8P9pSL4=
+        b=YTMCv3M60RUis55ibpoKSUpxDThiDBwtOiqbu231Burdu0CjDT/JFWLwuq+OaqdaX
+         rtPEaIMo56VXzq2lR543MVFLMcCQRWc66NbKxB859rXn0ygjtGqZwRCco354SnDkY1
+         mOSnkI5WNiB73jjRUiT24fBy3aqnTfQM+A9wYWyo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jean Delvare <jdelvare@suse.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 4.9 33/74] nvmem: Use the same permissions for eeprom as for nvmem
-Date:   Fri, 20 Sep 2019 00:03:46 +0200
-Message-Id: <20190919214808.197323512@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+eaaaf38a95427be88f4b@syzkaller.appspotmail.com,
+        Sean Young <sean@mess.org>, Kees Cook <keescook@chromium.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 4.9 73/74] media: technisat-usb2: break out of loop at end of buffer
+Date:   Fri, 20 Sep 2019 00:04:26 +0200
+Message-Id: <20190919214811.498210608@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214800.519074117@linuxfoundation.org>
 References: <20190919214800.519074117@linuxfoundation.org>
@@ -62,51 +61,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jean Delvare <jdelvare@suse.de>
+From: Sean Young <sean@mess.org>
 
-commit e70d8b287301eb6d7c7761c6171c56af62110ea3 upstream.
+commit 0c4df39e504bf925ab666132ac3c98d6cbbe380b upstream.
 
-The compatibility "eeprom" attribute is currently root-only no
-matter what the configuration says. The "nvmem" attribute does
-respect the setting of the root_only configuration bit, so do the
-same for "eeprom".
+Ensure we do not access the buffer beyond the end if no 0xff byte
+is encountered.
 
-Signed-off-by: Jean Delvare <jdelvare@suse.de>
-Fixes: b6c217ab9be6 ("nvmem: Add backwards compatibility support for older EEPROM drivers.")
-Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20190728184255.563332e6@endymion
+Reported-by: syzbot+eaaaf38a95427be88f4b@syzkaller.appspotmail.com
+Signed-off-by: Sean Young <sean@mess.org>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/nvmem/core.c |   15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ drivers/media/usb/dvb-usb/technisat-usb2.c |   22 ++++++++++------------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
 
---- a/drivers/nvmem/core.c
-+++ b/drivers/nvmem/core.c
-@@ -401,10 +401,17 @@ static int nvmem_setup_compat(struct nvm
- 	if (!config->base_dev)
- 		return -EINVAL;
+--- a/drivers/media/usb/dvb-usb/technisat-usb2.c
++++ b/drivers/media/usb/dvb-usb/technisat-usb2.c
+@@ -612,10 +612,9 @@ static int technisat_usb2_frontend_attac
+ static int technisat_usb2_get_ir(struct dvb_usb_device *d)
+ {
+ 	struct technisat_usb2_state *state = d->priv;
+-	u8 *buf = state->buf;
+-	u8 *b;
+-	int ret;
+ 	struct ir_raw_event ev;
++	u8 *buf = state->buf;
++	int i, ret;
  
--	if (nvmem->read_only)
--		nvmem->eeprom = bin_attr_ro_root_nvmem;
--	else
--		nvmem->eeprom = bin_attr_rw_root_nvmem;
-+	if (nvmem->read_only) {
-+		if (config->root_only)
-+			nvmem->eeprom = bin_attr_ro_root_nvmem;
-+		else
-+			nvmem->eeprom = bin_attr_ro_nvmem;
-+	} else {
-+		if (config->root_only)
-+			nvmem->eeprom = bin_attr_rw_root_nvmem;
-+		else
-+			nvmem->eeprom = bin_attr_rw_nvmem;
-+	}
- 	nvmem->eeprom.attr.name = "eeprom";
- 	nvmem->eeprom.size = nvmem->size;
- #ifdef CONFIG_DEBUG_LOCK_ALLOC
+ 	buf[0] = GET_IR_DATA_VENDOR_REQUEST;
+ 	buf[1] = 0x08;
+@@ -651,26 +650,25 @@ unlock:
+ 		return 0; /* no key pressed */
+ 
+ 	/* decoding */
+-	b = buf+1;
+ 
+ #if 0
+ 	deb_rc("RC: %d ", ret);
+-	debug_dump(b, ret, deb_rc);
++	debug_dump(buf + 1, ret, deb_rc);
+ #endif
+ 
+ 	ev.pulse = 0;
+-	while (1) {
+-		ev.pulse = !ev.pulse;
+-		ev.duration = (*b * FIRMWARE_CLOCK_DIVISOR * FIRMWARE_CLOCK_TICK) / 1000;
+-		ir_raw_event_store(d->rc_dev, &ev);
+-
+-		b++;
+-		if (*b == 0xff) {
++	for (i = 1; i < ARRAY_SIZE(state->buf); i++) {
++		if (buf[i] == 0xff) {
+ 			ev.pulse = 0;
+ 			ev.duration = 888888*2;
+ 			ir_raw_event_store(d->rc_dev, &ev);
+ 			break;
+ 		}
++
++		ev.pulse = !ev.pulse;
++		ev.duration = (buf[i] * FIRMWARE_CLOCK_DIVISOR *
++			       FIRMWARE_CLOCK_TICK) / 1000;
++		ir_raw_event_store(d->rc_dev, &ev);
+ 	}
+ 
+ 	ir_raw_event_handle(d->rc_dev);
 
 
