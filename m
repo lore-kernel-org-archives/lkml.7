@@ -2,90 +2,132 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD00C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE43AC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D66A421907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:14:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADCE5218AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:17:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Oq3rc5DM";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XO6KFt2N"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QXarkbJ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389206AbfISVOE (ORCPT
+        id S2389506AbfISVRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 17:14:04 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:46872 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733012AbfISVOE (ORCPT
+        Thu, 19 Sep 2019 17:17:16 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42740 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389206AbfISVRP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 17:14:04 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 915E0614DB; Thu, 19 Sep 2019 21:14:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568927643;
-        bh=KRNk2S5gZA412W14oKRxzMDd/ncyEhN7XLY9M5tqf9U=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Oq3rc5DMYudDuG9XsGRkOGjKOyfb6Uo6qrGwVTPTxzAOK7sMDs5rLwYG1VQM+GCT9
-         56W6QRZ9noFnWewOJ2Owrh3u4GnPH33pK76JpxRaLKBuVNLIHvXfbPdSaHJg7DeTBh
-         0g0jZJfbywPvBqrzsBw4LJXdeg5yFo/NTHzNXUaQ=
-Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mnalajal@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 32728611DC;
-        Thu, 19 Sep 2019 21:13:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568927638;
-        bh=KRNk2S5gZA412W14oKRxzMDd/ncyEhN7XLY9M5tqf9U=;
-        h=From:To:Cc:Subject:Date:From;
-        b=XO6KFt2NWij/To1WWwPASCUg8IM8Y+Gemu6RIt8JVDXq81vMzClXisT3/YhirFPKj
-         L8UwCDafkC5udKcLCv6e3b2KMc9rJ9j7vmcjIRl3gN9XK/olEFWlR/W55xZZ8BgxFx
-         7/wJQMmpYE0mwnM3lc8ewg0M/YLSQLoElT9eNh5Y=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 32728611DC
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mnalajal@codeaurora.org
-From:   Murali Nalajala <mnalajal@codeaurora.org>
-To:     gregkh@linuxfoundation.org, rafael@kernel.org
-Cc:     mnalajal@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org
-Subject: [PATCH] base: soc: Export soc_device_to_device API
-Date:   Thu, 19 Sep 2019 14:13:44 -0700
-Message-Id: <1568927624-13682-1-git-send-email-mnalajal@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Thu, 19 Sep 2019 17:17:15 -0400
+Received: by mail-pl1-f196.google.com with SMTP id e5so2176650pls.9
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 14:17:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=xj8/5rMbJMvQLHdvqTpGAyaZkQ0QmWr6aPMc+dirhyE=;
+        b=QXarkbJ94PPe/jDAampPvBpRv6YtJTBdHfaF9OoeyZUYDf/2GIlOfga8FszHtRrdxo
+         Ywau71UlNDGyKBjInwec8HhZYERnCxZaRSkaY9U/ZtX8ZDTvXZaRGCf/qsI/E9679ffX
+         N9GrXRSzw7XDn9WvdyLV/nwAZ3tXC+jin9CiQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xj8/5rMbJMvQLHdvqTpGAyaZkQ0QmWr6aPMc+dirhyE=;
+        b=uKRARbrWU7BRQFbIp2FMDymHZw9QErSFYO7eVbqaaATx1Oc32wf431HG8cGFWlsAel
+         AbFgl9MmSWMIMs5KTFV3ce3CGFL+tYcfYw3v3eOLbg5yGEZ+3Ord96+QoNHFTsZgnmvR
+         iuzucamkcI36Wy+2zM3P7C07+ZSP+rKsnsBmfNGxhCyOzxo5cJbji3d4PFSmkGFtum9G
+         FXE2U8wkyMbohwUbxR6NmfduSYqCT36Qdk/lLXNcHGInCIn6LhlbrExQ5GMyIKoMqH9M
+         +1e7lfZHPXrbhN/2Mb0KfH+v4zd/OfwohdwBnjDC27uwylO7Jz7oKECqqoUg1PY3PFWz
+         DSsQ==
+X-Gm-Message-State: APjAAAUDOLBV7m0GZbXxKzC+8acWDdAjsFwmdmazGOzjdfoYFTlkp+u5
+        dzVJssPGO7/Y9ve2KLe2GT24UA==
+X-Google-Smtp-Source: APXvYqz2PSO7y+O/A1ytcHFtxVA1uYd2UOVylwoYJopRhmw3YJGhHI5WmIvCzkcOQrtdO8V9Md5dFA==
+X-Received: by 2002:a17:902:d916:: with SMTP id c22mr12221663plz.101.1568927833530;
+        Thu, 19 Sep 2019 14:17:13 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id j23sm11856902pfn.75.2019.09.19.14.17.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Sep 2019 14:17:12 -0700 (PDT)
+Date:   Thu, 19 Sep 2019 14:17:11 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     shuah <shuah@kernel.org>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH] selftests/kselftest/runner.sh: Add 45 second timeout per
+ test
+Message-ID: <201909191411.3FA57CBCF3@keescook>
+References: <201909191102.97FA56072@keescook>
+ <20190919185525.GD21254@piout.net>
+ <4844c68f-603d-14f2-f976-5bd255268c0d@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4844c68f-603d-14f2-f976-5bd255268c0d@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the soc drivers want to add custom sysfs entries it needs to
-access "dev" field in "struct soc_device". This can be achieved
-by "soc_device_to_device" API. Soc drivers which are built as a
-module they need above API to be exported. Otherwise one can
-observe compilation issues.
+On Thu, Sep 19, 2019 at 02:09:37PM -0600, shuah wrote:
+> On 9/19/19 12:55 PM, Alexandre Belloni wrote:
+> > On 19/09/2019 11:06:44-0700, Kees Cook wrote:
+> > > Commit a745f7af3cbd ("selftests/harness: Add 30 second timeout per
+> > > test") solves the problem of kselftest_harness.h-using binary tests
+> > > possibly hanging forever. However, scripts and other binaries can still
+> > > hang forever. This adds a global timeout to each test script run.
+> > > 
+> 
+> Timeout is good, but really tests should not hang. So we have to somehow
+> indicate that the test needs to be fixed.
 
-Signed-off-by: Murali Nalajala <mnalajal@codeaurora.org>
----
- drivers/base/soc.c | 1 +
- 1 file changed, 1 insertion(+)
+Totally agreed, which is why I changed the reporting to call out a
+"TIMEOUT" instead of just having it enter the general failure noise.
 
-diff --git a/drivers/base/soc.c b/drivers/base/soc.c
-index 7c0c5ca..4ad52f6 100644
---- a/drivers/base/soc.c
-+++ b/drivers/base/soc.c
-@@ -41,6 +41,7 @@ struct device *soc_device_to_device(struct soc_device *soc_dev)
- {
- 	return &soc_dev->dev;
- }
-+EXPORT_SYMBOL_GPL(soc_device_to_device);
- 
- static umode_t soc_attribute_mode(struct kobject *kobj,
- 				struct attribute *attr,
+> This timeout is a band-aid and not real solution for the problem. This
+> arbitrary value doesn't take into account that the test(s) in that
+> particular directory (TARGET) could be running normally and working
+> through all the tests.
+
+Even something that looks like it's making progress may still be hung or
+won't finish in a reasonable amount of time.
+
+> We need some way to differentiate the two cases.
+
+I don't think it's unreasonable to declare that no test should take
+longer than some default amount of time that can be tweaked via a
+"settings" file. It gives the framework the option of easily removing
+tests that take "too long", etc. If the "timeout=..." value was made
+mandatory for each test directory, then the framework could actually
+filter based on expected worst-case run time.
+
+> > > To make this configurable (e.g. as needed in the "rtc" test case),
+> > > include a new per-test-directory "settings" file (similar to "config")
+> > > that can contain kselftest-specific settings. The first recognized field
+> > > is "timeout".
+> > > 
+> > 
+> > Seems good to me. I was also wondering whether this is actually
+> > reasonable to have tests running for so long. I wanted to discuss that
+> > at LPC but I missed the session.
+> > 
+> 
+> There is the individual test times and overall kselftest run time. We
+> have lots of tests now and it does take long.
+
+This patch seeks to implement a "timeout for a single test from
+kselftest's perspective". Some "individual" tests have many subtests
+(e.g. anything built with kselftest_harness.h) giving us the whole
+subtest issue. I think my solution here is a good middle ground: we
+specify the max run time for each executed test binary/script.
+
+It's not clear to me if a v2 is needed? Is this patch fine as-is?
+
+Thanks!
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+Kees Cook
