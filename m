@@ -2,138 +2,101 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E56C4C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 17:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF49C4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 17:04:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBCA120644
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 17:03:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ED7521929
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 17:04:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568912632;
-	bh=MONPxZZQ9H7FCHb02M2zPOYkSXure61GJtN6KikJuV8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=bq1JMIzP6bi1Q/GvLyr1mcq5JD5Z6Z+gK5kSQSalQCJvCp7YK081Ze8MKdETRkluP
-	 ln1D4Yx+m6pyQTXRDltirecn7M/jyv/mlUVxuq5g7Vr62hAdg/gou3qboltjFJfmP0
-	 Ni9M77RMtowhDFOocF1Ex/+eJ0FmExrAkR30C5UY=
+	s=default; t=1568912673;
+	bh=9McqeeEKIgFZ2ZuG6M5IYR2WrH93EYD26mVgUCa8/Tc=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=V1NMik6Hft7/DkcK2TNIPwn/6yv56aaf41KnaIQvCU+aPr+8udePtTyokxMI9b1kz
+	 CK639zXjASmaRCSQas2dMOywyvwND4dQITuHPLxRlP635UBprev9Di1YyghbpGH56P
+	 BDv1ac8ZSOaGFqw5toevnGyFdbvsK+OyUc1yJgqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390733AbfISRDw (ORCPT
+        id S2390790AbfISREc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 13:03:52 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:46413 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731729AbfISRDv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 13:03:51 -0400
-Received: by mail-lj1-f193.google.com with SMTP id e17so4295752ljf.13
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 10:03:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e+Le165FOxvtzRMwfFqjOH0U+XVnKpWjfAd4ukIEWR4=;
-        b=FL9rhk1LXaWaOToMWtkofnf+ifZC7L6LjK+IHdHsF/ZjKrMGyWQHvozYfnjOkbc2Aa
-         NaQT+Ln1+A5psdVMqEdRU37SGn1dPcL1GnHoARhDT9QcKBubA/swLTsvj8azaK1+sKlm
-         HBGHGssbScaIPzuXiY0UhyHgSHDfp0ZEzinrQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e+Le165FOxvtzRMwfFqjOH0U+XVnKpWjfAd4ukIEWR4=;
-        b=f2Ykq+beZWntJ80JE8lndS1Y5+VRnYPVCIHZDFGWVDhVYVt3fvFO4exqzLSbwSc1SG
-         BEzbmpa+D4uEIN/1ZcNX/X4gXI0EBUTBaCBeSuCN7h8h2jvJb7q+69bp955IDLOGLeFl
-         QSWdtVBOApYgXF1zevUPbJXiIzTfmKrck5MUI29ezvFdZgHbJGTMZoKFqo9ZJvJubRS3
-         Ta7tKSjNKMe472ZgPEO1BN9S1g+RyjOtejmUpmQm9e1XD+L0xQFGu9VGKcSSW9lNkbIA
-         h8Jfyb7uSUADRR/8NalBBYtzPGiC3KyfoEFoY11NVXUrqKfrp3ARmU5cG3lSe+J80oIt
-         YmPw==
-X-Gm-Message-State: APjAAAWKAYquy4sD4CZ0snWjbCQisFtUedEHrxWqdrZmZhMVGDGEv6jr
-        SFNwIn1+0aX0fDexZr83sTfolxEDcso=
-X-Google-Smtp-Source: APXvYqyAz1lDRhEbEaU88mIcEq8qX2Xq+xTTev5KVbRswQfAOSdtcuRFqgeSiFiIKH/Se6qBJ/Hvvg==
-X-Received: by 2002:a2e:8084:: with SMTP id i4mr1051887ljg.119.1568912628259;
-        Thu, 19 Sep 2019 10:03:48 -0700 (PDT)
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
-        by smtp.gmail.com with ESMTPSA id l23sm1756856lje.106.2019.09.19.10.03.47
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Sep 2019 10:03:47 -0700 (PDT)
-Received: by mail-lf1-f42.google.com with SMTP id x80so2928436lff.3
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 10:03:47 -0700 (PDT)
-X-Received: by 2002:ac2:5c11:: with SMTP id r17mr5667771lfp.61.1568912626555;
- Thu, 19 Sep 2019 10:03:46 -0700 (PDT)
+        Thu, 19 Sep 2019 13:04:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35218 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389542AbfISREc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 13:04:32 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D236220644;
+        Thu, 19 Sep 2019 17:04:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568912671;
+        bh=9McqeeEKIgFZ2ZuG6M5IYR2WrH93EYD26mVgUCa8/Tc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=0ycU1wvP2mrqf8GK5O4ONtZQDBtEcD+OFQJsLURtPM9tTVQyyv7/19v5DoGYVJVbA
+         c+0GgB2uXtOOMAdHA00L3TGwZxO4kPRaeXctKSx3W+IScnfzLxbZe6T9n9dn0DB/yF
+         Jqm3sVqz5aDOcvritlx2YajoAgWXtBKSWpLLv75s=
+Subject: Re: [PATCH 2/4] seccomp: add two missing ptrace ifdefines
+To:     Kees Cook <keescook@chromium.org>,
+        "Dmitry V. Levin" <ldv@altlinux.org>
+Cc:     Tyler Hicks <tyhicks@canonical.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        luto@amacapital.net, jannh@google.com, wad@chromium.org,
+        ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
+        songliubraving@fb.com, yhs@fb.com, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Tycho Andersen <tycho@tycho.ws>,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20190918084833.9369-1-christian.brauner@ubuntu.com>
+ <20190918084833.9369-3-christian.brauner@ubuntu.com>
+ <20190918091512.GA5088@elm> <201909181031.1EE73B4@keescook>
+ <20190919104251.GA16834@altlinux.org> <201909190918.443D6BC7@keescook>
+From:   shuah <shuah@kernel.org>
+Message-ID: <21046d2a-dd80-1d9a-9560-ea3f21d41234@kernel.org>
+Date:   Thu, 19 Sep 2019 11:04:19 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190917152140.GU2229799@magnolia> <CAHk-=wj9Zjb=NENJ6SViNiYiYi4LFX9WYqskZh4E_OzjijK1VA@mail.gmail.com>
- <20190919034502.GJ2229799@magnolia>
-In-Reply-To: <20190919034502.GJ2229799@magnolia>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 19 Sep 2019 10:03:30 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgFRM=z6WS-QLThxL2T1AaoCQeZSoHzj8ak35uSePQVbA@mail.gmail.com>
-Message-ID: <CAHk-=wgFRM=z6WS-QLThxL2T1AaoCQeZSoHzj8ak35uSePQVbA@mail.gmail.com>
-Subject: Re: [GIT PULL] iomap: new code for 5.4
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Eric Sandeen <sandeen@sandeen.net>,
-        Christoph Hellwig <hch@lst.de>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Bob Peterson <rpeterso@redhat.com>,
-        cluster-devel <cluster-devel@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <201909190918.443D6BC7@keescook>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 8:45 PM Darrick J. Wong <darrick.wong@oracle.com> wrote:
->
-> I propose the following (assuming Linus isn't cranky enough to refuse
-> the entire iomap patchpile forever):
+On 9/19/19 10:55 AM, Kees Cook wrote:
+> On Thu, Sep 19, 2019 at 01:42:51PM +0300, Dmitry V. Levin wrote:
+>> On Wed, Sep 18, 2019 at 10:33:09AM -0700, Kees Cook wrote:
+>>> This is actually fixed in -next already (and, yes, with the Fixes line
+>>> Tyler has mentioned):
+>>>
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git/commit/?h=next&id=69b2d3c5924273a0ae968d3818210fc57a1b9d07
+>>
+>> Excuse me, does it mean that you expect each selftest to be self-hosted?
+>> I was (and still is) under impression that selftests should be built
+>> with headers installed from the tree. Is it the case, or is it not?
+> 
+> As you know (but to give others some context) there is a long-standing
+> bug in the selftest build environment that causes these problems (it
+> isn't including the uAPI headers) which you'd proposed to be fixed
+> recently[1]. Did that ever get sent as a "real" patch? I don't see it
+> in Shuah's tree; can you send it to Shuah?
+> 
+> But even with that fixed, since the seccomp selftest has a history of
+> being built stand-alone, I've continued to take these kinds of fixes.
+> 
+> -Kees
+> 
+> [1] https://lore.kernel.org/lkml/20190805094719.GA1693@altlinux.org/
+> 
 
-Since I don't think the code was _wrong_, it was just that I didn't
-want to introduce a new pattern for something we already have, I'd be
-ok with just a fix patch on top too.
+It has been sent to kselftest list yesterday. I will pull this in for
+my next update.
 
-And if the xfs people really want to use the "pop" model, that's fine
-too - just make it specific to just the iomap_ioend type, which is all
-you seem to really want to pop, and make the typing (and naming) be
-about that particular thing.
-
-As mentioned, I don't think that whole "while (pop)" model is _wrong_
-per se.  But I also don't like proliferating new random list users in
-general, just because some subsystem has some internal preference.
-See?
-
-And I notice that one of the users actually does keep the list around
-and modifies it, ie this one:
-
-        while ((ioend = list_pop_entry(&tmp, struct xfs_ioend, io_list))) {
-                xfs_ioend_try_merge(ioend, &tmp);
-                xfs_end_ioend(ioend);
-        }
-
-actually seems to _work_ on the remaining part of the list in that
-xfs_ioend_try_merge() function.
-
-So inside of xfs, that "pop ioend from the list" model really may make
-perfect sense, and you could just do
-
-    static inline struct xfs_ioend *xfs_pop_ioend(struct list_head *head)
-    {
-        struct xfs_ioend *ioend = list_first_entry_or_null(head,
-struct xfs_ioend *, io_list);
-        if (ioend)
-                list_del(&ioend->io_list);
-        return ioend;
-    }
-
-and I don't think it's wrong.
-
-It's just that we've survived three decades without that list_pop(),
-and I don't want to make our header files even bigger and more complex
-unless we actually have multiple real users.
-
-             Linus
+thanks,
+-- Shuah
