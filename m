@@ -5,50 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C9FC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED34CC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B50620678
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:27:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2B7121D79
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:27:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932063;
-	bh=INDJQZJbLv6NZK2YvstF0dhVGzZJAfkD6dXh5LtwKSg=;
+	s=default; t=1568932065;
+	bh=zMZ3NN5Ec3j2NtL7lZrB4gu39QodgcLY7Q9IEA1DIFo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bv0eQZw/zcy4OhjEp424PmlrjYW8ineMM65QTKVqb31Cm6i4IQ6oqTJsG0ob2Hq7Y
-	 fEk0XcA+AADIDCtCxZ+P7wIQJ91J2bHMB7qaZ7h80WXt/Pu7X7ivwSzCxeAVCNUQGK
-	 iyElMgwu3TYU7j9YaslNRfksNNE+hi/6XFJOIuzg=
+	b=sYYLhp+6uDzBt/7t0A2U/VRH1KE5xBafnUFsg0QpNBUs0J3Yx5b6hLyTgTQXGSrvo
+	 6SVQMPoKf1gcheFf/cI8LLGso4FZRsrBxpzpS0iWUkMnLvbwCd4cuMwASOqWNEaFr1
+	 P+VqdeUDgYYKpPIj+1NS64ZWnTLbfYuYtrjwmeco=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733128AbfISWUd (ORCPT
+        id S1732996AbfISWUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:20:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34578 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:20:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732875AbfISWUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:20:30 -0400
+        id S2394032AbfISWU2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:20:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84B5121907;
-        Thu, 19 Sep 2019 22:20:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBD97217D6;
+        Thu, 19 Sep 2019 22:20:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931630;
-        bh=INDJQZJbLv6NZK2YvstF0dhVGzZJAfkD6dXh5LtwKSg=;
+        s=default; t=1568931627;
+        bh=zMZ3NN5Ec3j2NtL7lZrB4gu39QodgcLY7Q9IEA1DIFo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ye7k9fQUAkbCeaC5i5uEU0L7agv/pnaBdnaL28s9R1goDs24qPph+OZ4oV9YZEFyw
-         kWflKShkbd9lZ9nLseUh9vwvXUl64fze/KB6B6lnyrIY0fd7KJtsrTvlmOd6bP8eS5
-         JZt2H7n3RltRxOnmcUgeld/IJX+j2gdI77laOPkI=
+        b=apl3mXN5zkhRAE5zp7w4A6Ebl+dB8BR6uPTRXsfKkxNprPFA4lKUBK4QRvdTQAJcl
+         FBl8KigGDRB01Is7EOHj0oE2xh7T1fQ6K9nPDhpxEjeBpH/PWOVwwMrHMaej2nAaEA
+         +NIk9ZtbFbIExCp379lQ7Jgj7S0/Yu3L3CVevPvo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Thomas Jarosch <thomas.jarosch@intra2net.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 56/74] netfilter: nf_conntrack_ftp: Fix debug output
-Date:   Fri, 20 Sep 2019 00:04:09 +0200
-Message-Id: <20190919214810.162846928@linuxfoundation.org>
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>, alan@linux.intel.com,
+        bp@alien8.de, cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        rahul.tanwar@intel.com, rppt@linux.ibm.com, tony.luck@intel.com,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 55/74] x86/apic: Fix arch_dynirq_lower_bound() bug for DT enabled machines
+Date:   Fri, 20 Sep 2019 00:04:08 +0200
+Message-Id: <20190919214810.108283855@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214800.519074117@linuxfoundation.org>
 References: <20190919214800.519074117@linuxfoundation.org>
@@ -61,45 +67,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Jarosch <thomas.jarosch@intra2net.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit 3a069024d371125227de3ac8fa74223fcf473520 ]
+[ Upstream commit 3e5bedc2c258341702ddffbd7688c5e6eb01eafa ]
 
-The find_pattern() debug output was printing the 'skip' character.
-This can be a NULL-byte and messes up further pr_debug() output.
+Rahul Tanwar reported the following bug on DT systems:
 
-Output without the fix:
-kernel: nf_conntrack_ftp: Pattern matches!
-kernel: nf_conntrack_ftp: Skipped up to `<7>nf_conntrack_ftp: find_pattern `PORT': dlen = 8
-kernel: nf_conntrack_ftp: find_pattern `EPRT': dlen = 8
+> 'ioapic_dynirq_base' contains the virtual IRQ base number. Presently, it is
+> updated to the end of hardware IRQ numbers but this is done only when IOAPIC
+> configuration type is IOAPIC_DOMAIN_LEGACY or IOAPIC_DOMAIN_STRICT. There is
+> a third type IOAPIC_DOMAIN_DYNAMIC which applies when IOAPIC configuration
+> comes from devicetree.
+>
+> See dtb_add_ioapic() in arch/x86/kernel/devicetree.c
+>
+> In case of IOAPIC_DOMAIN_DYNAMIC (DT/OF based system), 'ioapic_dynirq_base'
+> remains to zero initialized value. This means that for OF based systems,
+> virtual IRQ base will get set to zero.
 
-Output with the fix:
-kernel: nf_conntrack_ftp: Pattern matches!
-kernel: nf_conntrack_ftp: Skipped up to 0x0 delimiter!
-kernel: nf_conntrack_ftp: Match succeeded!
-kernel: nf_conntrack_ftp: conntrack_ftp: match `172,17,0,100,200,207' (20 bytes at 4150681645)
-kernel: nf_conntrack_ftp: find_pattern `PORT': dlen = 8
+Such systems will very likely not even boot.
 
-Signed-off-by: Thomas Jarosch <thomas.jarosch@intra2net.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+For DT enabled machines ioapic_dynirq_base is irrelevant and not
+updated, so simply map the IRQ base 1:1 instead.
+
+Reported-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Tested-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Tested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: alan@linux.intel.com
+Cc: bp@alien8.de
+Cc: cheol.yong.kim@intel.com
+Cc: qi-ming.wu@intel.com
+Cc: rahul.tanwar@intel.com
+Cc: rppt@linux.ibm.com
+Cc: tony.luck@intel.com
+Link: http://lkml.kernel.org/r/20190821081330.1187-1-rahul.tanwar@linux.intel.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_conntrack_ftp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/apic/io_apic.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nf_conntrack_ftp.c b/net/netfilter/nf_conntrack_ftp.c
-index e3ed200608788..562b545242492 100644
---- a/net/netfilter/nf_conntrack_ftp.c
-+++ b/net/netfilter/nf_conntrack_ftp.c
-@@ -323,7 +323,7 @@ static int find_pattern(const char *data, size_t dlen,
- 		i++;
- 	}
+diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
+index d34629d70421f..09dd95cabfc28 100644
+--- a/arch/x86/kernel/apic/io_apic.c
++++ b/arch/x86/kernel/apic/io_apic.c
+@@ -2346,7 +2346,13 @@ unsigned int arch_dynirq_lower_bound(unsigned int from)
+ 	 * dmar_alloc_hwirq() may be called before setup_IO_APIC(), so use
+ 	 * gsi_top if ioapic_dynirq_base hasn't been initialized yet.
+ 	 */
+-	return ioapic_initialized ? ioapic_dynirq_base : gsi_top;
++	if (!ioapic_initialized)
++		return gsi_top;
++	/*
++	 * For DT enabled machines ioapic_dynirq_base is irrelevant and not
++	 * updated. So simply return @from if ioapic_dynirq_base == 0.
++	 */
++	return ioapic_dynirq_base ? : from;
+ }
  
--	pr_debug("Skipped up to `%c'!\n", skip);
-+	pr_debug("Skipped up to 0x%hhx delimiter!\n", skip);
- 
- 	*numoff = i;
- 	*numlen = getnum(data + i, dlen - i, cmd, term, numoff);
+ #ifdef CONFIG_X86_32
 -- 
 2.20.1
 
