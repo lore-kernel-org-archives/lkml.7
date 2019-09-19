@@ -2,51 +2,52 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF2FC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB87C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91D35217D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:17:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C882B217D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:17:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931461;
-	bh=wOfno92071SM8Zoy2bQQhGzk30UPTtn44awh7U17Mu0=;
+	s=default; t=1568931467;
+	bh=MoOK1kbmH/PlUlGVhX+eVSP8Lf9p1z+Q42UJKNKglQs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Of/ikHqwaK92r8uuu9F1nGrvQacSic9hwGewaLKJrrmEH9Di4XX4X8neydFML6tGD
-	 BJ5k2YvkO0npL2uigWqeYTymw23bqSrAqEpP1YCpDtTvD4MMbJqDIcFOgyDassQPiY
-	 kutFmORhgknQUqtpy05uy1DyaFVC6dl5qrgyuNWM=
+	b=nuVbSau73UyhROKIoNHi23cmtAlWhWQ1eP61fS8J3FZssBcD13KLe7qlSMoneFPRx
+	 ZW7EoiGTI9zzy1wDpKsCPZWvIQDusjYdQQtR4fXh9CBSDf3SaE7z0gRC1ANQNcU9LL
+	 s/73GIVjvwOso9FS49gkmFMNDtEzapdMK7Yo5UBA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406506AbfISWRk (ORCPT
+        id S2406531AbfISWRq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:17:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58804 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:17:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406488AbfISWRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:17:36 -0400
+        id S2406517AbfISWRo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:17:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEE3B20678;
-        Thu, 19 Sep 2019 22:17:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2F3021907;
+        Thu, 19 Sep 2019 22:17:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931455;
-        bh=wOfno92071SM8Zoy2bQQhGzk30UPTtn44awh7U17Mu0=;
+        s=default; t=1568931463;
+        bh=MoOK1kbmH/PlUlGVhX+eVSP8Lf9p1z+Q42UJKNKglQs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iAQ+8fB+fNFDqiCVnoqrmiFHFYB/EXIiioGmv+QBR3SnwyIneFB1Sy4sDBCZAR5KV
-         czZqi1wm6ZCfapuv8KNZyfq9i9IMHQd3i5nKLoULyKG1tR1YNMr+GGBusWa4HZU4pL
-         1gJJtTZdJ5oSV8imIY7MK52I6IfNJtROkuGX2Exk=
+        b=uxciM2eR5aETlnHa7dyqaHjfguarRTi1h+d6dXLybALacpm+ewMiVLGD3+XyvErBu
+         jIqX8Lu4N4KdO0Wg03bsWzXuTmvP6ZIJ9uLn4F8Rcf2YP2Pap7ChNpJaoz2/IPp4rH
+         aAlW3pcKh1vy5B3Ti4VxuxOWpqeUX7rDkWzYJWlM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stuart Hayes <stuart.w.hayes@gmail.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 52/59] iommu/amd: Flush old domains in kdump kernel
-Date:   Fri, 20 Sep 2019 00:04:07 +0200
-Message-Id: <20190919214808.023865468@linuxfoundation.org>
+        stable@vger.kernel.org, Alexander Popov <alex.popov@linux.com>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Jann Horn <jannh@google.com>, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.14 55/59] floppy: fix usercopy direction
+Date:   Fri, 20 Sep 2019 00:04:10 +0200
+Message-Id: <20190919214808.203421137@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214755.852282682@linuxfoundation.org>
 References: <20190919214755.852282682@linuxfoundation.org>
@@ -59,84 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stuart Hayes <stuart.w.hayes@gmail.com>
+From: Jann Horn <jannh@google.com>
 
-[ Upstream commit 36b7200f67dfe75b416b5281ed4ace9927b513bc ]
+commit 52f6f9d74f31078964ca1574f7bb612da7877ac8 upstream.
 
-When devices are attached to the amd_iommu in a kdump kernel, the old device
-table entries (DTEs), which were copied from the crashed kernel, will be
-overwritten with a new domain number.  When the new DTE is written, the IOMMU
-is told to flush the DTE from its internal cache--but it is not told to flush
-the translation cache entries for the old domain number.
+As sparse points out, these two copy_from_user() should actually be
+copy_to_user().
 
-Without this patch, AMD systems using the tg3 network driver fail when kdump
-tries to save the vmcore to a network system, showing network timeouts and
-(sometimes) IOMMU errors in the kernel log.
+Fixes: 229b53c9bf4e ("take floppy compat ioctls to sodding floppy.c")
+Cc: stable@vger.kernel.org
+Acked-by: Alexander Popov <alex.popov@linux.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-This patch will flush IOMMU translation cache entries for the old domain when
-a DTE gets overwritten with a new domain number.
-
-Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
-Fixes: 3ac3e5ee5ed5 ('iommu/amd: Copy old trans table from old kernel')
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ drivers/block/floppy.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index 684f7cdd814b6..822c85226a29f 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -1150,6 +1150,17 @@ static void amd_iommu_flush_tlb_all(struct amd_iommu *iommu)
- 	iommu_completion_wait(iommu);
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -3786,7 +3786,7 @@ static int compat_getdrvprm(int drive,
+ 	v.native_format = UDP->native_format;
+ 	mutex_unlock(&floppy_mutex);
+ 
+-	if (copy_from_user(arg, &v, sizeof(struct compat_floppy_drive_params)))
++	if (copy_to_user(arg, &v, sizeof(struct compat_floppy_drive_params)))
+ 		return -EFAULT;
+ 	return 0;
  }
+@@ -3822,7 +3822,7 @@ static int compat_getdrvstat(int drive,
+ 	v.bufblocks = UDRS->bufblocks;
+ 	mutex_unlock(&floppy_mutex);
  
-+static void amd_iommu_flush_tlb_domid(struct amd_iommu *iommu, u32 dom_id)
-+{
-+	struct iommu_cmd cmd;
-+
-+	build_inv_iommu_pages(&cmd, 0, CMD_INV_IOMMU_ALL_PAGES_ADDRESS,
-+			      dom_id, 1);
-+	iommu_queue_command(iommu, &cmd);
-+
-+	iommu_completion_wait(iommu);
-+}
-+
- static void amd_iommu_flush_all(struct amd_iommu *iommu)
- {
- 	struct iommu_cmd cmd;
-@@ -1835,6 +1846,7 @@ static void set_dte_entry(u16 devid, struct protection_domain *domain, bool ats)
- {
- 	u64 pte_root = 0;
- 	u64 flags = 0;
-+	u32 old_domid;
- 
- 	if (domain->mode != PAGE_MODE_NONE)
- 		pte_root = iommu_virt_to_phys(domain->pt_root);
-@@ -1877,8 +1889,20 @@ static void set_dte_entry(u16 devid, struct protection_domain *domain, bool ats)
- 	flags &= ~DEV_DOMID_MASK;
- 	flags |= domain->id;
- 
-+	old_domid = amd_iommu_dev_table[devid].data[1] & DEV_DOMID_MASK;
- 	amd_iommu_dev_table[devid].data[1]  = flags;
- 	amd_iommu_dev_table[devid].data[0]  = pte_root;
-+
-+	/*
-+	 * A kdump kernel might be replacing a domain ID that was copied from
-+	 * the previous kernel--if so, it needs to flush the translation cache
-+	 * entries for the old domain ID that is being overwritten
-+	 */
-+	if (old_domid) {
-+		struct amd_iommu *iommu = amd_iommu_rlookup_table[devid];
-+
-+		amd_iommu_flush_tlb_domid(iommu, old_domid);
-+	}
- }
- 
- static void clear_dte_entry(u16 devid)
--- 
-2.20.1
-
+-	if (copy_from_user(arg, &v, sizeof(struct compat_floppy_drive_struct)))
++	if (copy_to_user(arg, &v, sizeof(struct compat_floppy_drive_struct)))
+ 		return -EFAULT;
+ 	return 0;
+ Eintr:
 
 
