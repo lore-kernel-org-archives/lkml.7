@@ -2,188 +2,195 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55259C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 742DDC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23F1321D6C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4689D21D6C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:44:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568893464;
+	bh=GCGFxhvfLQo4eF/yGCl938RPSALxA8fzemkSmnsYqyE=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=SHVKH0lYf6JTKrNteanmks5jf60qNbGQRgTUISKunRjWM0sVuUudf5MVd7bevL3rH
+	 7+giKSn8StKLJFoNcFaqEdn+kRudHCXy7TXkKqRByZJiJfBl5KwEZSFCUbC65MV2V1
+	 qMhO7B1n7wz620sfB0bj2QcklSbgknA27hV6lWKw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390052AbfISLnj (ORCPT
+        id S2390063AbfISLoX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 07:43:39 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:59888 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388688AbfISLni (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 07:43:38 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 28BDE19F94551683E666;
-        Thu, 19 Sep 2019 19:43:35 +0800 (CST)
-Received: from [127.0.0.1] (10.177.251.225) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Thu, 19 Sep 2019
- 19:43:33 +0800
-Subject: Re: [PATCH] mm: Support memblock alloc on the exact node for
- sparse_buffer_init()
-To:     Mike Rapoport <rppt@linux.ibm.com>
-CC:     <akpm@linux-foundation.org>, <osalvador@suse.de>, <mhocko@suse.co>,
-        <dan.j.williams@intel.com>, <david@redhat.com>,
-        <richardw.yang@linux.intel.com>, <cai@lca.pw>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-References: <af88d8ab-4088-e857-575f-9be57542e130@huawei.com>
- <20190919044753.GA20548@linux.ibm.com>
- <6d23d00c-f400-f486-dc6d-31b6f141d913@huawei.com>
- <20190919092836.GA22691@linux.ibm.com>
-From:   Yunfeng Ye <yeyunfeng@huawei.com>
-Message-ID: <19cb9d42-f237-5534-371b-af31e40b0f39@huawei.com>
-Date:   Thu, 19 Sep 2019 19:43:24 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 19 Sep 2019 07:44:23 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53142 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388482AbfISLoX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 07:44:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
+        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Da5FiItdeCzmu3cyfuKDHkOkHNCwW6x89LvMmSWMsX4=; b=RQPNYeWa17Wsbv3uvrG373jNu
+        ZpW2//okLjNXnA/s68m01EmYSUYvgUptyBaDQkpbnc62kKO/yLl9c0cT7o7YvqvfUDEpTBTfCM0Uo
+        7PJRe+40zuhuza98IEsbFlA7tCnsBHoXZdi9T3NLIu4PuR9L/Nl517QAiRNJyyQq3ZnmA=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iAurC-0002LO-54; Thu, 19 Sep 2019 11:44:18 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 6D9F62742939; Thu, 19 Sep 2019 12:44:17 +0100 (BST)
+Date:   Thu, 19 Sep 2019 12:44:17 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Theodore Ts'o <tytso@mit.edu>, Eric Biggers <ebiggers@google.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the ext4 tree with Linus' tree
+Message-ID: <20190919114417.GD3642@sirena.co.uk>
 MIME-Version: 1.0
-In-Reply-To: <20190919092836.GA22691@linux.ibm.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.251.225]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="5QAgd0e35j3NYeGe"
+Content-Disposition: inline
+X-Cookie: I'll be Grateful when they're Dead.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--5QAgd0e35j3NYeGe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 2019/9/19 17:28, Mike Rapoport wrote:
-> On Thu, Sep 19, 2019 at 03:14:22PM +0800, Yunfeng Ye wrote:
->>
->>
->> On 2019/9/19 12:47, Mike Rapoport wrote:
->>> Hi,
->>>
->>> On Wed, Sep 18, 2019 at 12:22:29PM +0800, Yunfeng Ye wrote:
->>>> Currently, when memblock_find_in_range_node() fail on the exact node, it
->>>> will use %NUMA_NO_NODE to find memblock from other nodes. At present,
->>>> the work is good, but when the large memory is insufficient and the
->>>> small memory is enough, we want to allocate the small memory of this
->>>> node first, and do not need to allocate large memory from other nodes.
->>>>
->>>> In sparse_buffer_init(), it will prepare large chunks of memory for page
->>>> structure. The page management structure requires a lot of memory, but
->>>> if the node does not have enough memory, it can be converted to a small
->>>> memory allocation without having to allocate it from other nodes.
->>>>
->>>> Add %MEMBLOCK_ALLOC_EXACT_NODE flag for this situation. Normally, the
->>>> behavior is the same with %MEMBLOCK_ALLOC_ACCESSIBLE, only that it will
->>>> not allocate from other nodes when a single node fails to allocate.
->>>>
->>>> If large contiguous block memory allocated fail in sparse_buffer_init(),
->>>> it will allocates small block memmory section by section later.
->>>
->>> Did you see the sparse_buffer_init() actually falling back to allocate from a
->>> different node? If a node does not have enough memory to hold it's own
->>> memory map, filling only it with parts of the memory map will not make such
->>> node usable.
->>>  
->> Normally, it won't happen that sparse_buffer_init() falling back from a different
->> node, because page structure size is 64 bytes per 4KB of memory, no more than 2%
->> of total available memory. But in the special cases, for eaxmple, memory address
->> is isolated by BIOS when memory failure, split the total memory many pieces,
->> although we have enough memory, but no large contiguous block memory in one node.
->> sparse_buffer_init() needs large contiguous block memory to be alloc in one time,
->>
->> Eg, the size of memory is 1TB, sparse_buffer_init() need 1TB * 64/4096 = 16GB, but
->> we have 100 blocks memory which every block only have 10GB, although total memory
->> have almost 100*10GB=1TB, but no contiguous 16GB block.
->  
-> An explanation that a node memory may become highly fragmented should be a
-> part of the changelog.
-> 
-ok, thanks for your advice.
+Hi all,
 
->> Before commit 2a3cb8baef71 ("mm/sparse: delete old sparse_init and enable new one"),
->> we have %CONFIG_SPARSEMEM_ALLOC_MEM_MAP_TOGETHER config to meeting this situation,
->> after that, it fall back to allocate memory from other nodes, so have the performance
->> impact by remote numa access.
->>
->> commit 85c77f791390 ("mm/sparse: add new sparse_init_nid() and sparse_init()") wrote
->> that:
->>     "
->>     sparse_init_nid(), which only
->>     operates within one memory node, and thus allocates memory either in large
->>     contiguous block or allocates section by section
->>     "
->> it means that allocates section by section is a normal choice too, so I think add
->> %MEMBLOCK_ALLOC_EXACT_NODE is also a choice for this situation. Most cases,
->> sparse_buffer_init() works good and not allocated from other nodes at present.
-> 
-> I'd prefer to see memblock_alloc_exact_nid_raw() wrapper for
-> memblock_find_in_range_node() rather than using a flag.
->  
-I've also thought about this modification method, I will modify as you suggest. thanks.
+Today's linux-next merge of the ext4 tree got a conflict in:
 
->> thanks.
->> Yunfeng Ye
->>
->>>> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
->>>> ---
->>>>  include/linux/memblock.h | 1 +
->>>>  mm/memblock.c            | 3 ++-
->>>>  mm/sparse.c              | 2 +-
->>>>  3 files changed, 4 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
->>>> index f491690..9a81d9c 100644
->>>> --- a/include/linux/memblock.h
->>>> +++ b/include/linux/memblock.h
->>>> @@ -339,6 +339,7 @@ static inline int memblock_get_region_node(const struct memblock_region *r)
->>>>  #define MEMBLOCK_ALLOC_ANYWHERE	(~(phys_addr_t)0)
->>>>  #define MEMBLOCK_ALLOC_ACCESSIBLE	0
->>>>  #define MEMBLOCK_ALLOC_KASAN		1
->>>> +#define MEMBLOCK_ALLOC_EXACT_NODE	2
->>>>
->>>>  /* We are using top down, so it is safe to use 0 here */
->>>>  #define MEMBLOCK_LOW_LIMIT 0
->>>> diff --git a/mm/memblock.c b/mm/memblock.c
->>>> index 7d4f61a..dbd52c3c 100644
->>>> --- a/mm/memblock.c
->>>> +++ b/mm/memblock.c
->>>> @@ -277,6 +277,7 @@ static phys_addr_t __init_memblock memblock_find_in_range_node(phys_addr_t size,
->>>>
->>>>  	/* pump up @end */
->>>>  	if (end == MEMBLOCK_ALLOC_ACCESSIBLE ||
->>>> +	    end == MEMBLOCK_ALLOC_EXACT_NODE ||
->>>>  	    end == MEMBLOCK_ALLOC_KASAN)
->>>>  		end = memblock.current_limit;
->>>>
->>>> @@ -1365,7 +1366,7 @@ static phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
->>>>  	if (found && !memblock_reserve(found, size))
->>>>  		goto done;
->>>>
->>>> -	if (nid != NUMA_NO_NODE) {
->>>> +	if (end != MEMBLOCK_ALLOC_EXACT_NODE && nid != NUMA_NO_NODE) {
->>>>  		found = memblock_find_in_range_node(size, align, start,
->>>>  						    end, NUMA_NO_NODE,
->>>>  						    flags);
->>>> diff --git a/mm/sparse.c b/mm/sparse.c
->>>> index 72f010d..828db46 100644
->>>> --- a/mm/sparse.c
->>>> +++ b/mm/sparse.c
->>>> @@ -477,7 +477,7 @@ static void __init sparse_buffer_init(unsigned long size, int nid)
->>>>  	sparsemap_buf =
->>>>  		memblock_alloc_try_nid_raw(size, PAGE_SIZE,
->>>>  						addr,
->>>> -						MEMBLOCK_ALLOC_ACCESSIBLE, nid);
->>>> +						MEMBLOCK_ALLOC_EXACT_NODE, nid);
->>>>  	sparsemap_buf_end = sparsemap_buf + size;
->>>>  }
->>>>
->>>> -- 
->>>> 2.7.4.huawei.3
->>>>
->>>>
->>>
->>
-> 
+  fs/ext4/ioctl.c
 
+between commit:
+
+  29b3692e6dbf8226 ("ext4: wire up new fscrypt ioctls")
+
+=66rom Linus' tree and commits:
+
+  bb5835edcdf8bf7 ("ext4: add new ioctl EXT4_IOC_GET_ES_CACHE")
+  1ad3ea6e0a694b0 ("ext4: add a new ioctl EXT4_IOC_GETSTATE")
+
+=66rom the ext4 tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+diff --cc fs/ext4/ioctl.c
+index 5444d49cbf09d,d6242b7b87182..0000000000000
+--- a/fs/ext4/ioctl.c
++++ b/fs/ext4/ioctl.c
+@@@ -1113,35 -1181,35 +1181,62 @@@ resizefs_out
+  #endif
+  	}
+  	case EXT4_IOC_GET_ENCRYPTION_POLICY:
+ +		if (!ext4_has_feature_encrypt(sb))
+ +			return -EOPNOTSUPP;
+  		return fscrypt_ioctl_get_policy(filp, (void __user *)arg);
+ =20
+ +	case FS_IOC_GET_ENCRYPTION_POLICY_EX:
+ +		if (!ext4_has_feature_encrypt(sb))
+ +			return -EOPNOTSUPP;
+ +		return fscrypt_ioctl_get_policy_ex(filp, (void __user *)arg);
+ +
+ +	case FS_IOC_ADD_ENCRYPTION_KEY:
+ +		if (!ext4_has_feature_encrypt(sb))
+ +			return -EOPNOTSUPP;
+ +		return fscrypt_ioctl_add_key(filp, (void __user *)arg);
+ +
+ +	case FS_IOC_REMOVE_ENCRYPTION_KEY:
+ +		if (!ext4_has_feature_encrypt(sb))
+ +			return -EOPNOTSUPP;
+ +		return fscrypt_ioctl_remove_key(filp, (void __user *)arg);
+ +
+ +	case FS_IOC_REMOVE_ENCRYPTION_KEY_ALL_USERS:
+ +		if (!ext4_has_feature_encrypt(sb))
+ +			return -EOPNOTSUPP;
+ +		return fscrypt_ioctl_remove_key_all_users(filp,
+ +							  (void __user *)arg);
+ +	case FS_IOC_GET_ENCRYPTION_KEY_STATUS:
+ +		if (!ext4_has_feature_encrypt(sb))
+ +			return -EOPNOTSUPP;
+ +		return fscrypt_ioctl_get_key_status(filp, (void __user *)arg);
+ +
++ 	case EXT4_IOC_CLEAR_ES_CACHE:
++ 	{
++ 		if (!inode_owner_or_capable(inode))
++ 			return -EACCES;
++ 		ext4_clear_inode_es(inode);
++ 		return 0;
++ 	}
++=20
++ 	case EXT4_IOC_GETSTATE:
++ 	{
++ 		__u32	state =3D 0;
++=20
++ 		if (ext4_test_inode_state(inode, EXT4_STATE_EXT_PRECACHED))
++ 			state |=3D EXT4_STATE_FLAG_EXT_PRECACHED;
++ 		if (ext4_test_inode_state(inode, EXT4_STATE_NEW))
++ 			state |=3D EXT4_STATE_FLAG_NEW;
++ 		if (ext4_test_inode_state(inode, EXT4_STATE_NEWENTRY))
++ 			state |=3D EXT4_STATE_FLAG_NEWENTRY;
++ 		if (ext4_test_inode_state(inode, EXT4_STATE_DA_ALLOC_CLOSE))
++ 			state |=3D EXT4_STATE_FLAG_DA_ALLOC_CLOSE;
++=20
++ 		return put_user(state, (__u32 __user *) arg);
++ 	}
++=20
++ 	case EXT4_IOC_GET_ES_CACHE:
++ 		return ext4_ioctl_get_es_cache(filp, arg);
++=20
+  	case EXT4_IOC_FSGETXATTR:
+  	{
+  		struct fsxattr fa;
+@@@ -1269,15 -1326,11 +1364,18 @@@ long ext4_compat_ioctl(struct file *fil
+  	case EXT4_IOC_SET_ENCRYPTION_POLICY:
+  	case EXT4_IOC_GET_ENCRYPTION_PWSALT:
+  	case EXT4_IOC_GET_ENCRYPTION_POLICY:
+ +	case FS_IOC_GET_ENCRYPTION_POLICY_EX:
+ +	case FS_IOC_ADD_ENCRYPTION_KEY:
+ +	case FS_IOC_REMOVE_ENCRYPTION_KEY:
+ +	case FS_IOC_REMOVE_ENCRYPTION_KEY_ALL_USERS:
+ +	case FS_IOC_GET_ENCRYPTION_KEY_STATUS:
+  	case EXT4_IOC_SHUTDOWN:
+  	case FS_IOC_GETFSMAP:
+ +	case FS_IOC_ENABLE_VERITY:
+ +	case FS_IOC_MEASURE_VERITY:
++ 	case EXT4_IOC_CLEAR_ES_CACHE:
++ 	case EXT4_IOC_GETSTATE:
++ 	case EXT4_IOC_GET_ES_CACHE:
+  		break;
+  	default:
+  		return -ENOIOCTLCMD;
+
+--5QAgd0e35j3NYeGe
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2DahAACgkQJNaLcl1U
+h9DkmAf/YXj+0ZN5JQVw5MxOcVgNUi/zYDpAoK1rKxDl/Kj1WTPLS2XP7U/ntXXF
+oemCiIQ7RJ2UJHVPNKjojvzwdHzHx1jR4+F3fNQ37G0PR+bz9ptN9lr+xXzLltki
+WRBamc1M+9fJq/wyTjBqqQhfE1Fu7uwu1Bxr+g1cy3jKnQyKfOIKyuEh/hztWFpM
+zw3bgxG3k1L1uFB9u+SLX27vV4ejTE9kewuoRvgNtsP7J2LPYWbi5rFAnbSTeNbL
+7NJpirLodjz1sNJ2Rv/G045kAge2U6Zg/t0soSFQZa0/mo530g91jvYhec9JvAnj
+ZhSPG/sXqKr5fllOnWwG6UkX5FYJbg==
+=Ns1H
+-----END PGP SIGNATURE-----
+
+--5QAgd0e35j3NYeGe--
