@@ -2,51 +2,57 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD57FC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 604ABC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B42ED217D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A953208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:36:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932608;
-	bh=slnhpFEp5xIh7mPkMPWgPhf7Q9Yh1FvqHssoFJ05Vfw=;
+	s=default; t=1568932615;
+	bh=PZCwTfuWldxsg3C3Jw5YY8AHw2TBpq8aBpf9WBQhNXs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J8VXqMn8E9yaWkOjW7gw1P4FP+93qC380H3XuZAT8RpaPSo2C/OmEIqtUaC9ppPgP
-	 /qyEkgoBdQRxt+WdXuC+/2SLiqKvdTlcoEoHK8QkEfk5WJSPT/uiSOgEAHCkbS7y6O
-	 HRejugU6fX+XfdUIydS+kfq05WNVObzxIHk9AeQg=
+	b=v1lgNiA7VPLGWjYI2KH3ypdpLXvpLjWKnTgkHVnVwjcKV5NGu7atsO8/I9u1kKdvA
+	 9wo1vio0pDQl6w7Nlv1F9IdArkcDCnzEy7kEAh5dVUaE9fl090K8oXvAj78jhbb0xP
+	 gy8P8N5JfJx2d7J//3Eo2m1KxmKSGHqusuuUQ/Bw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406898AbfISWgr (ORCPT
+        id S2406992AbfISWgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:36:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43432 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:36:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405105AbfISWGF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:06:05 -0400
+        id S2405034AbfISWGA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:06:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF4C621927;
-        Thu, 19 Sep 2019 22:06:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B23721920;
+        Thu, 19 Sep 2019 22:05:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568930765;
-        bh=slnhpFEp5xIh7mPkMPWgPhf7Q9Yh1FvqHssoFJ05Vfw=;
+        s=default; t=1568930759;
+        bh=PZCwTfuWldxsg3C3Jw5YY8AHw2TBpq8aBpf9WBQhNXs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TKBIDNKZMiuXVCSC4GNzt0pm05hysQtgAbx9+M0A+SqOkOMymTHq+5nQS2viuSehu
-         NGtupbLK9z9Led/NJex53Hj4pKXtzmrpb5T/OwFuiKnji56Q/tyJuFNp8WZ26t+G7Q
-         xFCr3eLY4WZ/acF9EPNsy30Z1IyIE/3tzKnzXNA8=
+        b=PVDetxr+lgN897xig/CujbWSFTliGN7yzYkc8LyX+w/s3r+9dYxBu8FbR3T6L8faL
+         reqkP9nlg91vAWZc8jA8b+yhvAqfjJNw0ly7/7JA+93ItwOUcqDHMYOdydMPq/KZZq
+         JLvUUKSA+j15WP/+/5YnoXnRlBhuZJD3nazAEsx0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dongli Zhang <dongli.zhang@oracle.com>,
+        stable@vger.kernel.org,
+        syzbot+d5870a903591faaca4ae@syzkaller.appspotmail.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 08/21] xen-netfront: do not assume sk_buff_head list is empty in error handling
-Date:   Fri, 20 Sep 2019 00:03:09 +0200
-Message-Id: <20190919214702.452008775@linuxfoundation.org>
+Subject: [PATCH 5.3 06/21] net_sched: let qdisc_put() accept NULL pointer
+Date:   Fri, 20 Sep 2019 00:03:07 +0200
+Message-Id: <20190919214701.920915648@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214657.842130855@linuxfoundation.org>
 References: <20190919214657.842130855@linuxfoundation.org>
@@ -59,53 +65,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dongli Zhang <dongli.zhang@oracle.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit 00b368502d18f790ab715e055869fd4bb7484a9b ]
+[ Upstream commit 6efb971ba8edfbd80b666f29de12882852f095ae ]
 
-When skb_shinfo(skb) is not able to cache extra fragment (that is,
-skb_shinfo(skb)->nr_frags >= MAX_SKB_FRAGS), xennet_fill_frags() assumes
-the sk_buff_head list is already empty. As a result, cons is increased only
-by 1 and returns to error handling path in xennet_poll().
+When tcf_block_get() fails in sfb_init(), q->qdisc is still a NULL
+pointer which leads to a crash in sfb_destroy(). Similar for
+sch_dsmark.
 
-However, if the sk_buff_head list is not empty, queue->rx.rsp_cons may be
-set incorrectly. That is, queue->rx.rsp_cons would point to the rx ring
-buffer entries whose queue->rx_skbs[i] and queue->grant_rx_ref[i] are
-already cleared to NULL. This leads to NULL pointer access in the next
-iteration to process rx ring buffer entries.
+Instead of fixing each separately, Linus suggested to just accept
+NULL pointer in qdisc_put(), which would make callers easier.
 
-Below is how xennet_poll() does error handling. All remaining entries in
-tmpq are accounted to queue->rx.rsp_cons without assuming how many
-outstanding skbs are remained in the list.
+(For sch_dsmark, the bug probably exists long before commit
+6529eaba33f0.)
 
- 985 static int xennet_poll(struct napi_struct *napi, int budget)
-... ...
-1032           if (unlikely(xennet_set_skb_gso(skb, gso))) {
-1033                   __skb_queue_head(&tmpq, skb);
-1034                   queue->rx.rsp_cons += skb_queue_len(&tmpq);
-1035                   goto err;
-1036           }
-
-It is better to always have the error handling in the same way.
-
-Fixes: ad4f15dc2c70 ("xen/netfront: don't bug in case of too many frags")
-Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+Fixes: 6529eaba33f0 ("net: sched: introduce tcf block infractructure")
+Reported-by: syzbot+d5870a903591faaca4ae@syzkaller.appspotmail.com
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>
+Cc: Jiri Pirko <jiri@resnulli.us>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/xen-netfront.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/sched/sch_generic.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/net/xen-netfront.c
-+++ b/drivers/net/xen-netfront.c
-@@ -906,7 +906,7 @@ static RING_IDX xennet_fill_frags(struct
- 			__pskb_pull_tail(skb, pull_to - skb_headlen(skb));
- 		}
- 		if (unlikely(skb_shinfo(skb)->nr_frags >= MAX_SKB_FRAGS)) {
--			queue->rx.rsp_cons = ++cons;
-+			queue->rx.rsp_cons = ++cons + skb_queue_len(list);
- 			kfree_skb(nskb);
- 			return ~0U;
- 		}
+--- a/net/sched/sch_generic.c
++++ b/net/sched/sch_generic.c
+@@ -985,6 +985,9 @@ static void qdisc_destroy(struct Qdisc *
+ 
+ void qdisc_put(struct Qdisc *qdisc)
+ {
++	if (!qdisc)
++		return;
++
+ 	if (qdisc->flags & TCQ_F_BUILTIN ||
+ 	    !refcount_dec_and_test(&qdisc->refcnt))
+ 		return;
 
 
