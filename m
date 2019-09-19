@@ -4,260 +4,123 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDBD8C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 18:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E16C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 18:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FA8D207FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 18:28:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 388E321A4C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 18:29:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KRlbNxI8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lOeg7N6P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392028AbfISS20 (ORCPT
+        id S2392045AbfISS3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 14:28:26 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42759 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389805AbfISS2Z (ORCPT
+        Thu, 19 Sep 2019 14:29:34 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39569 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392032AbfISS3e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 14:28:25 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q12so2838375pff.9
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 11:28:23 -0700 (PDT)
+        Thu, 19 Sep 2019 14:29:34 -0400
+Received: by mail-pf1-f196.google.com with SMTP id i1so2852213pfa.6
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 11:29:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Vqx0TSF21g4XcREvUgMsuxrRDDTSFK0SBGI4Jj4a1rs=;
-        b=KRlbNxI8eLb41SfE6inKKCS15SCVKgX5R9IHxF3ywoHU4HxwsQa2r2QM9FC0vvcAxX
-         iFerlwDMdzdB98jyyCv7siYD26+bTBzlqgdzm7dfwDJDW6HlV18hKdvDZa4KHD9Ni6KK
-         aqCL1a0Ug6wocivpZgpHV8EtIyYhQBrXPaVd3YKUjzducLr1KoN5rtYmuAXAK0VouJRt
-         H7N5X7HiuR7a1xqPmp+sfr2a+GjcwpfesZyXltfjafHzsP0ArgeYxmgPUBjFoTO43MzH
-         vkPLuCyozZLi0JFxouRO7kr4++bAhdDqAhvzkUSd2AsJOxWRoIF8w4P7D3nifsJ4Bvsl
-         sinQ==
+        bh=L+egVsXTih8AcjpoFq8MrlR1R2OAn0r56wvvLUrVKT0=;
+        b=lOeg7N6P6ratCco6cR2CzzUcEKxK7mbScFHDl0Wih4XkzRVA0DZCoOMNako11XW2Vd
+         MxzWPyTkZ8Bi+/qkgoT0zULYBaDw2RH4BFLTGx4WqgjwROcUgj4OYk0jC+dEi0NThQlt
+         sc8Mupj/1NU1kzHi44qDOc6ci1NFMZjTsChCeNYFIsjJ6trKnxmXsn3ToCiNs4bvkKQL
+         uL+6/t8MWuUkknY7id7H6b4FN/ke1HthC1qwqsEIZ7MxZg+PbzgOtAoTXg8ceoQDNWbJ
+         SosKfV3NcKbZxZlgSWNVd6qgUeXoAJHANe0+MmPQw6oWij2B9qreAWV+tuLAZewjv2dv
+         02hQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Vqx0TSF21g4XcREvUgMsuxrRDDTSFK0SBGI4Jj4a1rs=;
-        b=tin9PhJ69d7MtSFmJmQ9I9EwZjxxgwNskwff+uBAgulIkjsGfn3rc7zp1CpBTux/xe
-         /1s5x+k2GdZ0lqBIiTxnEjNJJ2gVk4wglY+emR8OTzPEGXiEMfppULR2XdB2qHwc8It9
-         LvH0GyzFNxakA7A8vtYctxDx5AiX3RdFCFyDeynz8weDMMmOmAXqtiussjL2yKcohRCl
-         03qtqFvCotNpEtSmrz+qOdW6RSrPWCIMpv13zSuUfQHbpcN6uGACbRw8BfuELgBLruoO
-         0/Kf0j5qcyi8rdO20WPPpiHTEA3o5IvMk/NWM8rOD33OrA/25ElfeMFPEUsGL2G8WX3b
-         J0Rw==
-X-Gm-Message-State: APjAAAUMgi4lYN6tCAd5LJKMYEnmi83xTdkVpsm30cyY/fUhY8BoK793
-        7KVUjVUNmDKv+JEdR5TyGEx1tesoID8YFWmO5dyysA==
-X-Google-Smtp-Source: APXvYqwmOAPnnt2msZSQx3Qy/Wm3CdeIIuEPd9UnmzyItJCGsKzPuEOJsBSZUr7ZSUrh78MW2hygkBAsNJtZUUhrC0Q=
-X-Received: by 2002:a63:3006:: with SMTP id w6mr10589677pgw.440.1568917702538;
- Thu, 19 Sep 2019 11:28:22 -0700 (PDT)
+        bh=L+egVsXTih8AcjpoFq8MrlR1R2OAn0r56wvvLUrVKT0=;
+        b=BrxtePSoHwvAO+Rh0iiUKdEt9lZRWus0A4VkTjysOK9kkHoB+HyiOo2HW5yPOOin2N
+         SBNjnXy2NqVjAB5Wq7BqvV5cvFNfoeA6vjBDzQfkQk2a2QDeNxlpiZCqHH+y16JWV69v
+         NhrEdscw+A6I1r0Q2Ib00nsNq1EZ7CzcRdjNXavqONnoHGWs4U3ftAnInVgO51V3zEt0
+         J8TRiTBeqDyloOEYGrJhxi0j2MdGxNaFGh9JClG2e+PP4RL0qV8H8/m72H6VNEiptjXq
+         hbtxa1uYu8P+6nNGoPckK6zTRKaD556kMcPdE1ahlJKqmazCqBd4Mw3Cgh1jxxsU3XTR
+         IGAg==
+X-Gm-Message-State: APjAAAVzbEaMHx6Phh1i7PLV9a+JH/QrbhtXSNxW+Bdk2Tx/ZO9yImUw
+        QevuouU6HRc17iVEwynMemONVolWVQc9xtupJahFYQ==
+X-Google-Smtp-Source: APXvYqyw4DqS43DzKxjdvNSfsZpaFyQ29Bu0vG1o/hF4aRsRWpqEPFPS2O+6I98nB1YSgOflOq6EqdsPjem6w/kpufY=
+X-Received: by 2002:a62:1cd2:: with SMTP id c201mr12126076pfc.51.1568917773162;
+ Thu, 19 Sep 2019 11:29:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <000000000000747bcf0591bcd434@google.com>
-In-Reply-To: <000000000000747bcf0591bcd434@google.com>
+References: <00000000000025ae690592b00fbd@google.com> <alpine.DEB.2.21.1909161258150.118156@chino.kir.corp.google.com>
+ <20190916205756.GR29434@bombadil.infradead.org>
+In-Reply-To: <20190916205756.GR29434@bombadil.infradead.org>
 From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Thu, 19 Sep 2019 20:28:11 +0200
-Message-ID: <CAAeHK+zf2Yz9Zi1jgOc6+7oFS5-r=zHzEPC0W96FSJFBtpZfTw@mail.gmail.com>
-Subject: Re: KASAN: slab-out-of-bounds Write in hid_report_raw_event
-To:     syzbot <syzbot+54323a55a37ec53f8045@syzkaller.appspotmail.com>
-Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>, linux-input@vger.kernel.org,
+Date:   Thu, 19 Sep 2019 20:29:22 +0200
+Message-ID: <CAAeHK+zV6M8MOWUt8BUgmTO1Dr6+KMKR8yR65_O2HBVrwkg1MQ@mail.gmail.com>
+Subject: Re: WARNING in __alloc_pages_nodemask
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     David Rientjes <rientjes@google.com>,
+        syzbot <syzbot+e38fe539fedfc127987e@syzkaller.appspotmail.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         LKML <linux-kernel@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
         USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+        Michal Hocko <mhocko@suse.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Vlastimil Babka <vbabka@suse.cz>, yang.shi@linux.alibaba.com,
+        zhongjiang@huawei.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 4, 2019 at 6:38 PM syzbot
-<syzbot+54323a55a37ec53f8045@syzkaller.appspotmail.com> wrote:
+On Mon, Sep 16, 2019 at 10:58 PM Matthew Wilcox <willy@infradead.org> wrote:
 >
-> Hello,
+> On Mon, Sep 16, 2019 at 01:00:11PM -0700, David Rientjes wrote:
+> > On Mon, 16 Sep 2019, syzbot wrote:
+> > > HEAD commit:    f0df5c1b usb-fuzzer: main usb gadget fuzzer driver
+> > > git tree:       https://github.com/google/kasan.git usb-fuzzer
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=14b15371600000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6633fa4ed00be5
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=e38fe539fedfc127987e
+> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1093bed1600000
+> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1603cfc6600000
+> > >
+> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > Reported-by: syzbot+e38fe539fedfc127987e@syzkaller.appspotmail.com
+> > >
+> > > WARNING: CPU: 0 PID: 1720 at mm/page_alloc.c:4696
+> > > __alloc_pages_nodemask+0x36f/0x780 mm/page_alloc.c:4696
+> > > Kernel panic - not syncing: panic_on_warn set ...
 >
-> syzbot found the following crash on:
+> > > alloc_pages_current+0xff/0x200 mm/mempolicy.c:2153
+> > > alloc_pages include/linux/gfp.h:509 [inline]
+> > > kmalloc_order+0x1a/0x60 mm/slab_common.c:1257
+> > > kmalloc_order_trace+0x18/0x110 mm/slab_common.c:1269
+> > > __usbhid_submit_report drivers/hid/usbhid/hid-core.c:588 [inline]
+> > > usbhid_submit_report+0x5b5/0xde0 drivers/hid/usbhid/hid-core.c:638
+> > > usbhid_request+0x3c/0x70 drivers/hid/usbhid/hid-core.c:1252
+> > > hid_hw_request include/linux/hid.h:1053 [inline]
+> > > hiddev_ioctl+0x526/0x1550 drivers/hid/usbhid/hiddev.c:735
+> > Adding Jiri and Benjamin.  The hid report length is simply too large for
+> > the page allocator to allocate: this is triggering because the resulting
+> > allocation order is > MAX_ORDER-1.  Any way to make this allocate less
+> > physically contiguous memory?
 >
-> HEAD commit:    eea39f24 usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=152148a2600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=d0c62209eedfd54e
-> dashboard link: https://syzkaller.appspot.com/bug?extid=54323a55a37ec53f8045
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=112238a2600000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11b92412600000
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+54323a55a37ec53f8045@syzkaller.appspotmail.com
->
-> logitech-djreceiver 0003:046D:C71C.0001: Unexpected input report number 82
-> ==================================================================
-> BUG: KASAN: slab-out-of-bounds in memset include/linux/string.h:344 [inline]
-> BUG: KASAN: slab-out-of-bounds in hid_report_raw_event+0x13a/0xed0
-> drivers/hid/hid-core.c:1698
-> Write of size 3980 at addr ffff8881d76da275 by task swapper/1/0
->
-> CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.3.0-rc5+ #28
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Call Trace:
->   <IRQ>
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0xca/0x13e lib/dump_stack.c:113
->   print_address_description+0x6a/0x32c mm/kasan/report.c:351
->   __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
->   kasan_report+0xe/0x12 mm/kasan/common.c:612
->   check_memory_region_inline mm/kasan/generic.c:185 [inline]
->   check_memory_region+0x128/0x190 mm/kasan/generic.c:192
->   memset+0x20/0x40 mm/kasan/common.c:105
->   memset include/linux/string.h:344 [inline]
->   hid_report_raw_event+0x13a/0xed0 drivers/hid/hid-core.c:1698
->   hid_input_report+0x315/0x3f0 drivers/hid/hid-core.c:1778
->   hid_irq_in+0x50e/0x690 drivers/hid/usbhid/hid-core.c:284
->   __usb_hcd_giveback_urb+0x1f2/0x470 drivers/usb/core/hcd.c:1657
->   usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1722
->   dummy_timer+0x120f/0x2fa2 drivers/usb/gadget/udc/dummy_hcd.c:1965
->   call_timer_fn+0x179/0x650 kernel/time/timer.c:1322
->   expire_timers kernel/time/timer.c:1366 [inline]
->   __run_timers kernel/time/timer.c:1685 [inline]
->   __run_timers kernel/time/timer.c:1653 [inline]
->   run_timer_softirq+0x5cc/0x14b0 kernel/time/timer.c:1698
->   __do_softirq+0x221/0x912 kernel/softirq.c:292
->   invoke_softirq kernel/softirq.c:373 [inline]
->   irq_exit+0x178/0x1a0 kernel/softirq.c:413
->   exiting_irq arch/x86/include/asm/apic.h:537 [inline]
->   smp_apic_timer_interrupt+0x12f/0x500 arch/x86/kernel/apic/apic.c:1095
->   apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
->   </IRQ>
-> RIP: 0010:default_idle+0x28/0x2e0 arch/x86/kernel/process.c:581
-> Code: 90 90 41 56 41 55 65 44 8b 2d 64 fa 93 7a 41 54 55 53 0f 1f 44 00 00
-> e8 96 6a d5 fb e9 07 00 00 00 0f 00 2d 3a a0 54 00 fb f4 <65> 44 8b 2d 40
-> fa 93 7a 0f 1f 44 00 00 5b 5d 41 5c 41 5d 41 5e c3
-> RSP: 0018:ffff8881da217dc8 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
-> RAX: 0000000000000007 RBX: ffff8881da1fb000 RCX: 0000000000000000
-> RDX: 0000000000000000 RSI: 0000000000000006 RDI: ffff8881da1fb844
-> RBP: ffffed103b43f600 R08: ffff8881da1fb000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000001
-> R13: 0000000000000001 R14: 0000000000000000 R15: 0000000000000000
->   cpuidle_idle_call kernel/sched/idle.c:154 [inline]
->   do_idle+0x3c2/0x4f0 kernel/sched/idle.c:263
->   cpu_startup_entry+0x14/0x20 kernel/sched/idle.c:354
->   start_secondary+0x297/0x340 arch/x86/kernel/smpboot.c:264
->   secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:241
->
-> Allocated by task 21:
->   save_stack+0x1b/0x80 mm/kasan/common.c:69
->   set_track mm/kasan/common.c:77 [inline]
->   __kasan_kmalloc mm/kasan/common.c:487 [inline]
->   __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:460
->   kmalloc include/linux/slab.h:557 [inline]
->   hcd_buffer_alloc+0x1bf/0x260 drivers/usb/core/buffer.c:132
->   usb_alloc_coherent+0x5d/0x80 drivers/usb/core/usb.c:910
->   hid_alloc_buffers drivers/hid/usbhid/hid-core.c:846 [inline]
->   usbhid_start+0x60b/0x22f0 drivers/hid/usbhid/hid-core.c:1075
->   hid_hw_start+0x5d/0x130 drivers/hid/hid-core.c:1976
->   logi_dj_probe+0x808/0xcd7 drivers/hid/hid-logitech-dj.c:1703
->   hid_device_probe+0x2be/0x3f0 drivers/hid/hid-core.c:2209
->   really_probe+0x281/0x6d0 drivers/base/dd.c:548
->   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
->   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
->   bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x217/0x360 drivers/base/dd.c:894
->   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
->   device_add+0xae6/0x16f0 drivers/base/core.c:2165
->   hid_add_device+0x33c/0x990 drivers/hid/hid-core.c:2365
->   usbhid_probe+0xa81/0xfa0 drivers/hid/usbhid/hid-core.c:1386
->   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
->   really_probe+0x281/0x6d0 drivers/base/dd.c:548
->   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
->   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
->   bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x217/0x360 drivers/base/dd.c:894
->   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
->   device_add+0xae6/0x16f0 drivers/base/core.c:2165
->   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
->   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
->   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
->   really_probe+0x281/0x6d0 drivers/base/dd.c:548
->   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
->   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
->   bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x217/0x360 drivers/base/dd.c:894
->   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
->   device_add+0xae6/0x16f0 drivers/base/core.c:2165
->   usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
->   hub_port_connect drivers/usb/core/hub.c:5098 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
->   port_event drivers/usb/core/hub.c:5359 [inline]
->   hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
->   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
->   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
->   kthread+0x318/0x420 kernel/kthread.c:255
->   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
->
-> Freed by task 1:
->   save_stack+0x1b/0x80 mm/kasan/common.c:69
->   set_track mm/kasan/common.c:77 [inline]
->   __kasan_slab_free+0x130/0x180 mm/kasan/common.c:449
->   slab_free_hook mm/slub.c:1423 [inline]
->   slab_free_freelist_hook mm/slub.c:1474 [inline]
->   slab_free mm/slub.c:3016 [inline]
->   kfree+0xe4/0x2f0 mm/slub.c:3957
->   kobject_uevent_env+0x29e/0x1160 lib/kobject_uevent.c:625
->   device_add+0xade/0x16f0 drivers/base/core.c:2164
->   scsi_add_host_with_dma.cold+0x41e/0x7ad drivers/scsi/hosts.c:256
->   scsi_add_host include/scsi/scsi_host.h:741 [inline]
->   virtscsi_probe+0x7e2/0xbb5 drivers/scsi/virtio_scsi.c:838
->   virtio_dev_probe+0x463/0x710 drivers/virtio/virtio.c:248
->   really_probe+0x281/0x6d0 drivers/base/dd.c:548
->   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
->   device_driver_attach+0x108/0x140 drivers/base/dd.c:995
->   __driver_attach+0xda/0x240 drivers/base/dd.c:1072
->   bus_for_each_dev+0x14b/0x1d0 drivers/base/bus.c:304
->   bus_add_driver+0x457/0x5a0 drivers/base/bus.c:645
->   driver_register+0x1c4/0x330 drivers/base/driver.c:170
->   __write_once_size include/linux/compiler.h:226 [inline]
->   INIT_LIST_HEAD include/linux/list.h:28 [inline]
->   init+0xa1/0x115 drivers/char/virtio_console.c:2251
->   do_one_initcall+0xf0/0x614 init/main.c:939
->   do_initcall_level init/main.c:1007 [inline]
->   do_initcalls init/main.c:1015 [inline]
->   do_basic_setup init/main.c:1032 [inline]
->   kernel_init_freeable+0x4a9/0x596 init/main.c:1192
->   kernel_init+0xd/0x1bf init/main.c:1110
->   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
->
-> The buggy address belongs to the object at ffff8881d76da200
->   which belongs to the cache kmalloc-4k of size 4096
-> The buggy address is located 117 bytes inside of
->   4096-byte region [ffff8881d76da200, ffff8881d76db200)
-> The buggy address belongs to the page:
-> page:ffffea00075db600 refcount:1 mapcount:0 mapping:ffff8881da00c280
-> index:0x0 compound_mapcount: 0
-> flags: 0x200000000010200(slab|head)
-> raw: 0200000000010200 dead000000000100 dead000000000122 ffff8881da00c280
-> raw: 0000000000000000 0000000000070007 00000001ffffffff 0000000000000000
-> page dumped because: kasan: bad access detected
->
-> Memory state around the buggy address:
->   ffff8881d76db100: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->   ffff8881d76db180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> > ffff8881d76db200: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->                     ^
->   ffff8881d76db280: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->   ffff8881d76db300: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> ==================================================================
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
+> The HID code should, presumably, reject reports which are larger than
+> PAGE_SIZE << PAGE_ALLOC_COSTLY_ORDER.  Particularly since it's using
+> GFP_ATOMIC.
+
+This is an int underflow when doing report buffer size calculation, see here:
+
+https://groups.google.com/d/msg/syzkaller-bugs/X0zVbh8aFEM/NsPcshjxBgAJ
 
 #syz dup: KMSAN: kernel-usb-infoleak in hid_submit_ctrl
 
