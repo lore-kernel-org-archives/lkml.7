@@ -2,397 +2,128 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44278C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C7E0C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08D5621920
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:09:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C1E5217D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:09:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NBVpQfu/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732959AbfISVJc convert rfc822-to-8bit (ORCPT
+        id S1732978AbfISVJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 17:09:32 -0400
-Received: from mailoutvs13.siol.net ([185.57.226.204]:42824 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732855AbfISVJb (ORCPT
+        Thu, 19 Sep 2019 17:09:42 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49186 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732968AbfISVJl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 17:09:31 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 00B235239A0;
-        Thu, 19 Sep 2019 23:09:24 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id JutS1di-wSOl; Thu, 19 Sep 2019 23:09:24 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 43809522086;
-        Thu, 19 Sep 2019 23:09:24 +0200 (CEST)
-Received: from jernej-laptop.localnet (cpe-86-58-59-25.static.triera.net [86.58.59.25])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id F1EA55239A0;
-        Thu, 19 Sep 2019 23:09:22 +0200 (CEST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Roman Stratiienko <roman.stratiienko@globallogic.com>
-Cc:     mripard@kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH] drm/sun4i: Use vi plane as primary
-Date:   Thu, 19 Sep 2019 23:09:22 +0200
-Message-ID: <18678433.SrbcsYDe2f@jernej-laptop>
-In-Reply-To: <CAODwZ7sPG+_YvnLBU11uYaNpDFthLOkcYXsd=ZQtM+88+cPi9A@mail.gmail.com>
-References: <20190919123703.8545-1-roman.stratiienko@globallogic.com> <104595190.vWb6g8xIPX@jernej-laptop> <CAODwZ7sPG+_YvnLBU11uYaNpDFthLOkcYXsd=ZQtM+88+cPi9A@mail.gmail.com>
+        Thu, 19 Sep 2019 17:09:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=LRFKtLfl3rGg6hIBWZRy1shlE7PvB7ThwahdssU1WZQ=; b=NBVpQfu/8MPESbwFRTyM97kN9
+        pgz3tLZKw02m/O9UCtWMQKLoNapTBhfPARRCdjUmHSSUI5G3EahebhTKH9vxMZGOAMs7kRHZrmMYs
+        QvotGklKRPE/PS8vbnyMEMOg7/5yvwVQ1lKTM1rpQO3t8H4Qstmudi81bYjfFxjMcKCZNMta65sBa
+        fmPfg2obMIMw+vgKuM/Vt7hndMT//YHm/PW6T22Px2FOls1N4vvWZw6LnWoQyywZMLRDOWhm/6XfP
+        GkVzRVE+Z67T3wfHbFHDhpzBPXAEb6DwJT987swiWwFLNgV/aPg9jnbBVNCMYPvArzGNBqdPjnTNU
+        3vp2sO+5Q==;
+Received: from [2601:1c0:6280:3f0::9a1f]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iB3gL-0001dK-Ew; Thu, 19 Sep 2019 21:09:41 +0000
+Subject: Re: linux-next: Tree for Sep 18 (objtool)
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+References: <20190918221053.GV2596@sirena.co.uk>
+ <be0fb087-5fb4-a790-90dd-cc2af62419e7@infradead.org>
+ <20190919165118.lffzvrl5efbpnvux@treble>
+ <8dc0ef20-c776-bfdc-de31-1759125c77e9@infradead.org>
+ <20190919194036.smeaapv6armqswub@treble>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <2ab5a918-529e-405d-57c0-68d5406269fc@infradead.org>
+Date:   Thu, 19 Sep 2019 14:09:40 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190919194036.smeaapv6armqswub@treble>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne četrtek, 19. september 2019 ob 22:03:26 CEST je Roman Stratiienko 
-napisal(a):
-> Hello guys,
+On 9/19/19 12:40 PM, Josh Poimboeuf wrote:
+> On Thu, Sep 19, 2019 at 12:21:46PM -0700, Randy Dunlap wrote:
+>> On 9/19/19 9:51 AM, Josh Poimboeuf wrote:
+>>> On Wed, Sep 18, 2019 at 09:04:21PM -0700, Randy Dunlap wrote:
+>>>> On 9/18/19 3:10 PM, Mark Brown wrote:
+>>>>> Hi all,
+>>>>>
+>>>>> Changes since 20190917:
+>>>>>
+>>>>
+>>>> on x86_64:
+>>>>
+>>>> drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool: i915_gem_execbuffer2_ioctl()+0x2fb: call to gen8_canonical_addr() with UACCESS enabled
+>>>>
+>>>> using
+>>>>> gcc --version
+>>>> gcc (SUSE Linux) 7.4.1 20190424 [gcc-7-branch revision 270538]
+>>>>
+>>>> .o and .config files are attached.
+>>>
+>>> Does this fix it?
+>>
+>> This patch produces this message:
+>>
+>> drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool: i915_gem_execbuffer2_ioctl()+0x2fb: call to sign_extend64.constprop.20() with UACCESS enabled
 > 
-> Actually, I beleive this is True solution, and current one is wrong.  Let
-> me explain why.
+> Ha, ok.  I guess we have to __always_inline that one too...
+
+Yes, that takes care of the objtool warning.  Thanks.
+
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+
+> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c b/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
+> index b5f6937369ea..7e111cb5b14b 100644
+> --- a/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
+> +++ b/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
+> @@ -284,7 +284,7 @@ struct i915_execbuffer {
+>   * canonical form [63:48] == [47]."
+>   */
+>  #define GEN8_HIGH_ADDRESS_BIT 47
+> -static inline u64 gen8_canonical_addr(u64 address)
+> +static __always_inline u64 gen8_canonical_addr(u64 address)
+>  {
+>  	return sign_extend64(address, GEN8_HIGH_ADDRESS_BIT);
+>  }
+> diff --git a/include/linux/bitops.h b/include/linux/bitops.h
+> index cf074bce3eb3..fae10792b198 100644
+> --- a/include/linux/bitops.h
+> +++ b/include/linux/bitops.h
+> @@ -151,7 +151,7 @@ static inline __s32 sign_extend32(__u32 value, int index)
+>   * @value: value to sign extend
+>   * @index: 0 based bit index (0<=index<64) to sign bit
+>   */
+> -static inline __s64 sign_extend64(__u64 value, int index)
+> +static __always_inline __s64 sign_extend64(__u64 value, int index)
+>  {
+>  	__u8 shift = 63 - index;
+>  	return (__s64)(value << shift) >> shift;
 > 
-> De2. 0 was designed to match Android hwcomposer hal requirements IMO.
-> You can easily agree with this conclusion by comparing Composer HAL and
-> De2. 0 hardware manuals.
-> 
-> I faced at least 4 issues when try to run Android using the mainline kernel
-> sun8i mixer implementation. Current one, missing pixel formats (my previous
-> patch), missing plane alpha and rotation properties. I plan to fix it and
-> also send appropriate solution to the upstream.
-
-Android and mainline Linux don't have necessarily same view how things should 
-work. Check how different Android version of Linux kernel was in the past. 
-Fortunately, they are converging now. 
-
-While I agree that HW was probably designed with Android in mind, that doesn't 
-mean that Android way is the best or only way of doing things. Android can 
-afford a lot of non-intuitive things because it's closed system and all IP 
-cores are used only in certain ways. You can't say that for general Linux 
-distro.
-
-Would you say that advertising formats with alpha support is correct thing to 
-do if alpha blending is not supported? Put aside the fact that it makes it 
-easier to implement Android features for you and imagine some app which finds 
-first available overlay plane with ARGB8888 support. It puts it on top with 
-zpos property and gives it some transparent image. If that plane is VI, it 
-would look wrong and users would complain. At the end, it's not apps fault to 
-expect that if plane advertises format with alpha channel actually supports 
-transparency.
-
-Regarding rotation, that core is not part of display pipeline. It takes one 
-buffer and writes transformed (rotated in this case) image to output buffer. 
-This principle is very definition of V4L2 M2M framework and should be handled 
-by it.
-
-> 
-> To achieve optimal UI performance Android requires at least 4 ui layers to
-> make screen composition. Current patch enables 4th plane usable.
-
-Ah, your idea is to pretend that VI planes supports all features of UI planes 
-while in fact they not?
-
-> 
-> As for using vi plane to display video. I assume that some of current users
-> may have regression in their software, but it could be easily fixed. For
-> example if vi layer isn't fullscreen and should be on top of the other
-> layers, it can actually be placed on the bottom and overlayed with pictures
-> with transparent rectangles in video region.
-
-This idea is imposible to implement if VI plane becomes primary plane. Apps 
-wouldn't find overlay plane which suports YUV buffers and only one which does, 
-it's already taken by window manager for rendering windows.
-
-Best regards,
-Jernej
-
-> But I assume most of users such as browser etc. uses GPU for that.
-> 
-> And if you are watching fullscreen video, I can imagine only subtitles
-> layer and advertizing layers on top of the video layers.
-> 
-> чт, 19 сент. 2019 г., 21:15 Jernej Škrabec <jernej.skrabec@siol.net>:
-> > Dne četrtek, 19. september 2019 ob 19:17:54 CEST je Maxime Ripard
-> > 
-> > napisal(a):
-> > > Hi,
-> > > 
-> > > On Thu, Sep 19, 2019 at 03:37:03PM +0300,
-> > 
-> > roman.stratiienko@globallogic.com
-> > 
-> > wrote:
-> > > > From: Roman Stratiienko <roman.stratiienko@globallogic.com>
-> > > > 
-> > > > DE2.0 blender does not take into the account alpha channel of vi
-> > > > layer.
-> > > > Thus makes overlaying of this layer totally opaque.
-> > > > Using vi layer as bottom solves this issue.
-> > 
-> > What issue? Overlays don't have to be "full screen", thus missing support
-> > for
-> > alpha blending doesn't make it less valuable. And VI planes are already
-> > placed
-> > at the bottom (zpos = 0).
-> > 
-> > > > Tested on Android.
-> > > > 
-> > > > Signed-off-by: Roman Stratiienko <roman.stratiienko@globallogic.com>
-> > > 
-> > > It sounds like a workaround more than an actual fix.
-> > > 
-> > > If the VI planes can't use the alpha, then we should just stop
-> > > reporting that format.
-> > > 
-> > > Jernej, what do you think?
-> > 
-> > Commit message is misleading. What this commit actually does is moving
-> > primary
-> > plane from first UI plane to bottom most plane, i.e. first VI plane.
-> > However, VI
-> > planes are scarce resource, almost all mixers have only one. I wouldn't
-> > set it
-> > as primary, because it's the only one which provide support for YUV
-> > formats.
-> > That could be used for example by video player for zero-copy rendering.
-> > Probably most apps wouldn't touch it if it was primary (that's usually
-> > reserved for window manager, if used).
-> > 
-> > I left few formats with alpha channel exposed by VI planes, just because
-> > they
-> > don't have equivalent format without alpha. But I'm fine with removing
-> > them if
-> > you all agree on that.
-> > 
-> > Best regards,
-> > Jernej
-> > 
-> > > Maxime
-> > > 
-> > > > ---
-> > > > 
-> > > >  drivers/gpu/drm/sun4i/sun8i_ui_layer.c | 33 -----------------------
-> > > >  drivers/gpu/drm/sun4i/sun8i_vi_layer.c | 36
-> > > >  +++++++++++++++++++++++++-
-> > > >  2 files changed, 35 insertions(+), 34 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
-> > > > b/drivers/gpu/drm/sun4i/sun8i_ui_layer.c index
-> > 
-> > dd2a1c851939..25183badc85f
-> > 
-> > > > 100644
-> > > > --- a/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
-> > > > +++ b/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
-> > > > @@ -99,36 +99,6 @@ static int sun8i_ui_layer_update_coord(struct
-> > > > sun8i_mixer *mixer, int channel,>
-> > > > 
-> > > >     insize = SUN8I_MIXER_SIZE(src_w, src_h);
-> > > >     outsize = SUN8I_MIXER_SIZE(dst_w, dst_h);
-> > > > 
-> > > > -   if (plane->type == DRM_PLANE_TYPE_PRIMARY) {
-> > > > -           bool interlaced = false;
-> > > > -           u32 val;
-> > > > -
-> > > > -           DRM_DEBUG_DRIVER("Primary layer, updating global size
-> > 
-> > W: %u H: %u\n",
-> > 
-> > > > -                            dst_w, dst_h);
-> > > > -           regmap_write(mixer->engine.regs,
-> > > > -                        SUN8I_MIXER_GLOBAL_SIZE,
-> > > > -                        outsize);
-> > > > -           regmap_write(mixer->engine.regs,
-> > > > -                        SUN8I_MIXER_BLEND_OUTSIZE(bld_base),
-> > 
-> > outsize);
-> > 
-> > > > -
-> > > > -           if (state->crtc)
-> > > > -                   interlaced = state->crtc->state-
-> > >
-> > >adjusted_mode.flags
-> > >
-> > > > -                           & DRM_MODE_FLAG_INTERLACE;
-> > > > -
-> > > > -           if (interlaced)
-> > > > -                   val = SUN8I_MIXER_BLEND_OUTCTL_INTERLACED;
-> > > > -           else
-> > > > -                   val = 0;
-> > > > -
-> > > > -           regmap_update_bits(mixer->engine.regs,
-> > > > -
-> > 
-> > SUN8I_MIXER_BLEND_OUTCTL(bld_base),
-> > 
-> > > > -
-> > 
-> > SUN8I_MIXER_BLEND_OUTCTL_INTERLACED,
-> > 
-> > > > -                              val);
-> > > > -
-> > > > -           DRM_DEBUG_DRIVER("Switching display mixer interlaced
-> > 
-> > mode %s\n",
-> > 
-> > > > -                            interlaced ? "on" : "off");
-> > > > -   }
-> > > > -
-> > > > 
-> > > >     /* Set height and width */
-> > > >     DRM_DEBUG_DRIVER("Layer source offset X: %d Y: %d\n",
-> > > >     
-> > > >                      state->src.x1 >> 16, state->src.y1 >> 16);
-> > > > 
-> > > > @@ -349,9 +319,6 @@ struct sun8i_ui_layer
-> > 
-> > *sun8i_ui_layer_init_one(struct
-> > 
-> > > > drm_device *drm,>
-> > > > 
-> > > >     if (!layer)
-> > > >     
-> > > >             return ERR_PTR(-ENOMEM);
-> > > > 
-> > > > -   if (index == 0)
-> > > > -           type = DRM_PLANE_TYPE_PRIMARY;
-> > > > -
-> > > > 
-> > > >     /* possible crtcs are set later */
-> > > >     ret = drm_universal_plane_init(drm, &layer->plane, 0,
-> > > >     
-> > > >                                    &sun8i_ui_layer_funcs,
-> > > > 
-> > > > diff --git a/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
-> > > > b/drivers/gpu/drm/sun4i/sun8i_vi_layer.c index
-> > 
-> > 07c27e6a4b77..49c4074e164f
-> > 
-> > > > 100644
-> > > > --- a/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
-> > > > +++ b/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
-> > > > @@ -116,6 +116,36 @@ static int sun8i_vi_layer_update_coord(struct
-> > > > sun8i_mixer *mixer, int channel,>
-> > > > 
-> > > >     insize = SUN8I_MIXER_SIZE(src_w, src_h);
-> > > >     outsize = SUN8I_MIXER_SIZE(dst_w, dst_h);
-> > > > 
-> > > > +   if (plane->type == DRM_PLANE_TYPE_PRIMARY) {
-> > > > +           bool interlaced = false;
-> > > > +           u32 val;
-> > > > +
-> > > > +           DRM_DEBUG_DRIVER("Primary layer, updating global size
-> > 
-> > W: %u H: %u\n",
-> > 
-> > > > +                            dst_w, dst_h);
-> > > > +           regmap_write(mixer->engine.regs,
-> > > > +                        SUN8I_MIXER_GLOBAL_SIZE,
-> > > > +                        outsize);
-> > > > +           regmap_write(mixer->engine.regs,
-> > > > +                        SUN8I_MIXER_BLEND_OUTSIZE(bld_base),
-> > 
-> > outsize);
-> > 
-> > > > +
-> > > > +           if (state->crtc)
-> > > > +                   interlaced = state->crtc->state-
-> > >
-> > >adjusted_mode.flags
-> > >
-> > > > +                           & DRM_MODE_FLAG_INTERLACE;
-> > > > +
-> > > > +           if (interlaced)
-> > > > +                   val = SUN8I_MIXER_BLEND_OUTCTL_INTERLACED;
-> > > > +           else
-> > > > +                   val = 0;
-> > > > +
-> > > > +           regmap_update_bits(mixer->engine.regs,
-> > > > +
-> > 
-> > SUN8I_MIXER_BLEND_OUTCTL(bld_base),
-> > 
-> > > > +
-> > 
-> > SUN8I_MIXER_BLEND_OUTCTL_INTERLACED,
-> > 
-> > > > +                              val);
-> > > > +
-> > > > +           DRM_DEBUG_DRIVER("Switching display mixer interlaced
-> > 
-> > mode %s\n",
-> > 
-> > > > +                            interlaced ? "on" : "off");
-> > > > +   }
-> > > > +
-> > > > 
-> > > >     /* Set height and width */
-> > > >     DRM_DEBUG_DRIVER("Layer source offset X: %d Y: %d\n",
-> > > >     
-> > > >                      (state->src.x1 >> 16) & ~(format->hsub -
-> > 
-> > 1),
-> > 
-> > > > @@ -445,6 +475,7 @@ struct sun8i_vi_layer
-> > 
-> > *sun8i_vi_layer_init_one(struct
-> > 
-> > > > drm_device *drm,>
-> > > > 
-> > > >                                            struct
-> > 
-> > sun8i_mixer *mixer,
-> > 
-> > > >                                            int index)
-> > > >  
-> > > >  {
-> > > > 
-> > > > +   enum drm_plane_type type = DRM_PLANE_TYPE_OVERLAY;
-> > > > 
-> > > >     struct sun8i_vi_layer *layer;
-> > > >     unsigned int plane_cnt;
-> > > >     int ret;
-> > > > 
-> > > > @@ -453,12 +484,15 @@ struct sun8i_vi_layer
-> > > > *sun8i_vi_layer_init_one(struct drm_device *drm,>
-> > > > 
-> > > >     if (!layer)
-> > > >     
-> > > >             return ERR_PTR(-ENOMEM);
-> > > > 
-> > > > +   if (index == 0)
-> > > > +           type = DRM_PLANE_TYPE_PRIMARY;
-> > > > +
-> > > > 
-> > > >     /* possible crtcs are set later */
-> > > >     ret = drm_universal_plane_init(drm, &layer->plane, 0,
-> > > >     
-> > > >                                    &sun8i_vi_layer_funcs,
-> > > >                                    sun8i_vi_layer_formats,
-> > 
-> > ARRAY_SIZE(sun8i_vi_layer_formats),
-> > 
-> > > > -                                  NULL,
-> > 
-> > DRM_PLANE_TYPE_OVERLAY, NULL);
-> > 
-> > > > +                                  NULL, type, NULL);
-> > > > 
-> > > >     if (ret) {
-> > > >     
-> > > >             dev_err(drm->dev, "Couldn't initialize layer\n");
-> > > >             return ERR_PTR(ret);
-> > > > 
-> > > > --
-> > > > 2.17.1
 
 
-
-
+-- 
+~Randy
