@@ -2,96 +2,83 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2269C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1067FC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6D3E21D6C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C74BA21D6C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 11:39:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="df2ht/hY"
+	dkim=pass (1024-bit key) header.d=aurabindo.in header.i=@aurabindo.in header.b="VJjNIOqE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389996AbfISLjh (ORCPT
+        id S2390008AbfISLj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 07:39:37 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51176 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388068AbfISLjf (ORCPT
+        Thu, 19 Sep 2019 07:39:58 -0400
+Received: from mail1.protonmail.ch ([185.70.40.18]:36848 "EHLO
+        mail1.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388068AbfISLj5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 07:39:35 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 5so4115781wmg.0
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 04:39:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=DKzAQahCYPhZ2ssPBGIJt75n2wk0bxvGCrcodj0E+8o=;
-        b=df2ht/hYt42oGahvKnuFkzhFM20BjG6q6b2qOTyHeZ5qndKJKUFk/S8p9AtiHgm21z
-         lLbbmV9F/x0vLg/s2ehHstlIlV8sPpwE1vP2BHwIpiPdcgqKajPq3ENzi/oCValibmbG
-         Sgz6zWgIP5QJmAUogGBCFWNuYvNKKEp5OhQA4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DKzAQahCYPhZ2ssPBGIJt75n2wk0bxvGCrcodj0E+8o=;
-        b=syD41KPZItQ4BaeezHRMCYTlEtvhfuY7f8A6na/QJFaoXOSUbw43XMComUGHvL0cyB
-         JdQAx9tgkAh1pdXZou6bChcHiZxyLw2/s9h6pFSi46EVYSDl6bg3YoA5cfc8azfOlsti
-         qQBDhG/143Mg7qZBhehWX/ObMcmZQGDg4DtAs0e6TRkstUHCnPUuPrziwB1Z1p3x+mKe
-         7NnsUX1Cp7FCzbctj166czvwa0E1eIsfgBLUmV7wnuxqBLf9wrA/RH4313S3BK653UuU
-         D5INw6ScHEiteeYYG/ms/tIpuxJKcvtN+Y/bkWsugWbNX76RPnu8pZhp0sQSrV8/M/lJ
-         dH+Q==
-X-Gm-Message-State: APjAAAWTrI0dOvs8wP23MMaT+3y5nTROs+thlyxUNGynQgZKFhPVn0KN
-        iIUdhA6Z6/4Mjf5xLGAxR63XBQ==
-X-Google-Smtp-Source: APXvYqynRI01eO1fYwKFW25INxMrTheYRYlf7PGDeX+77jnNAOkkPYIuZOeB0pAEfbh+4FmCSDeScw==
-X-Received: by 2002:a05:600c:2208:: with SMTP id z8mr2687432wml.113.1568893173499;
-        Thu, 19 Sep 2019 04:39:33 -0700 (PDT)
-Received: from [10.230.33.15] ([192.19.248.250])
-        by smtp.gmail.com with ESMTPSA id z142sm11043922wmc.24.2019.09.19.04.39.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 19 Sep 2019 04:39:32 -0700 (PDT)
-Subject: Re: [PATCH 00/20] Add support for Silicon Labs WiFi chip WF200 and
- further
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jerome Pouiller <Jerome.Pouiller@silabs.com>
-Cc:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        David Le Goff <David.Legoff@silabs.com>
-References: <20190919105153.15285-1-Jerome.Pouiller@silabs.com>
- <20190919112508.GA3037175@kroah.com>
-From:   Arend Van Spriel <arend.vanspriel@broadcom.com>
-Message-ID: <7639195f-59f0-a0dc-02f2-45b3a08e7002@broadcom.com>
-Date:   Thu, 19 Sep 2019 13:39:31 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 19 Sep 2019 07:39:57 -0400
+Date:   Thu, 19 Sep 2019 11:39:50 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aurabindo.in;
+        s=protonmail; t=1568893195;
+        bh=P6KCUgwyggXktYCrQ9GHQnIhjLgRZDIyVhon5eQuAeg=;
+        h=Date:To:From:Cc:Reply-To:Subject:Feedback-ID:From;
+        b=VJjNIOqECPlxhzmMJZfJ5xOJyScZUcz43jWlbhS5blvtFKUWQlqinWgBFlNDfnEML
+         Ch6HfZiEX2+oTG5E1SwlwCtewelbwzuzkYw9MCeuf664mJIzA95rNfJ9y8kQLCIazy
+         iYrPzrYuF47KVxCRGjY+vv6G/bgF69VAgdV2wJZY=
+To:     gregkh@linuxfoundation.org
+From:   Aurabindo Jayamohanan <mail@aurabindo.in>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Reply-To: Aurabindo Jayamohanan <mail@aurabindo.in>
+Subject: [PATCH] staging: board: use appropriate macro to initialize struct
+Message-ID: <20190919113945.13700-1-mail@aurabindo.in>
+Feedback-ID: D1Wwva8zb0UdpJtanaReRLGO3iCsewpGmDn8ZDKmpao-Gnxd2qXPmwwrSQ99r5Q15lmK-D8x6vKzqhUKCgzweA==:Ext:ProtonMail
 MIME-Version: 1.0
-In-Reply-To: <20190919112508.GA3037175@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/19/2019 1:25 PM, Greg Kroah-Hartman wrote:
->>    - I also kept compatibility code for earlier Linux kernel version. I
->>      may drop it in future. Maybe I will maintain compatibility with
->>      older kernels in a external set of patches.
-> That has to be dropped for the in-kernel version.
+Make code more readable by using macros defined for initializing
+struct resource
 
-There is no need to maintain such compatibility. You basically get it 
-for free with the linux-backports project [1].
+Signed-off-by: Aurabindo Jayamohanan <mail@aurabindo.in>
+---
+ drivers/staging/board/armadillo800eva.c | 12 ++----------
+ 1 file changed, 2 insertions(+), 10 deletions(-)
 
-Regards,
-Arend
+diff --git a/drivers/staging/board/armadillo800eva.c b/drivers/staging/boar=
+d/armadillo800eva.c
+index 962cc0c79988..0225234dd7aa 100644
+--- a/drivers/staging/board/armadillo800eva.c
++++ b/drivers/staging/board/armadillo800eva.c
+@@ -50,16 +50,8 @@ static struct sh_mobile_lcdc_info lcdc0_info =3D {
+ };
+=20
+ static struct resource lcdc0_resources[] =3D {
+-=09[0] =3D {
+-=09=09.name=09=3D "LCD0",
+-=09=09.start=09=3D 0xfe940000,
+-=09=09.end=09=3D 0xfe943fff,
+-=09=09.flags=09=3D IORESOURCE_MEM,
+-=09},
+-=09[1] =3D {
+-=09=09.start=09=3D 177 + 32,
+-=09=09.flags=09=3D IORESOURCE_IRQ,
+-=09},
++=09DEFINE_RES_MEM_NAMED(0xfe940000, 0x4000, "LCD0"),
++=09DEFINE_RES_IRQ(177 + 32),
+ };
+=20
+ static struct platform_device lcdc0_device =3D {
+--=20
+2.23.0
 
-[1] https://backports.wiki.kernel.org/index.php/Main_Page
+
