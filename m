@@ -2,78 +2,165 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 175EEC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02CC5C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3EE5218AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:51:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2C95208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 20:54:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732715AbfISUvW (ORCPT
+        id S1732778AbfISUy2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 16:51:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40548 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 16:54:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:5781 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727273AbfISUvV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 16:51:21 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730064AbfISUy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 16:54:27 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D983C208C0;
-        Thu, 19 Sep 2019 20:51:20 +0000 (UTC)
-Date:   Thu, 19 Sep 2019 16:51:19 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Subject: [PATCH] tools/lib/traceevent: Round up in tep_print_event() time
- precision
-Message-ID: <20190919165119.5efa5de6@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mx1.redhat.com (Postfix) with ESMTPS id 02CA97F75E;
+        Thu, 19 Sep 2019 20:54:27 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 66B4519D70;
+        Thu, 19 Sep 2019 20:54:14 +0000 (UTC)
+Subject: Re: [PATCH v4 3/5] locking/qspinlock: Introduce CNA into the slow
+ path of qspinlock
+To:     Alex Kogan <alex.kogan@oracle.com>
+Cc:     linux@armlinux.org.uk, peterz@infradead.org, mingo@redhat.com,
+        will.deacon@arm.com, arnd@arndb.de, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        guohanjun@huawei.com, jglauber@marvell.com,
+        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
+        dave.dice@oracle.com, rahul.x.yadav@oracle.com
+References: <20190906142541.34061-1-alex.kogan@oracle.com>
+ <20190906142541.34061-4-alex.kogan@oracle.com>
+ <3ae2b6a2-ffe6-2ca1-e5bf-2292db50e26f@redhat.com>
+ <87B87982-670F-4F12-9EE0-DC89A059FAEC@oracle.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <6c08767a-f60c-077d-4e94-66ea189db6f1@redhat.com>
+Date:   Thu, 19 Sep 2019 16:54:13 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <87B87982-670F-4F12-9EE0-DC89A059FAEC@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Thu, 19 Sep 2019 20:54:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 9/19/19 11:55 AM, Alex Kogan wrote:
+>>> +/*
+>>> + * cna_try_find_next - scan the main waiting queue looking for the first
+>>> + * thread running on the same NUMA node as the lock holder. If found (call it
+>>> + * thread T), move all threads in the main queue between the lock holder and
+>>> + * T to the end of the secondary queue and return T; otherwise, return NULL.
+>>> + *
+>>> + * Schematically, this may look like the following (nn stands for numa_node and
+>>> + * et stands for encoded_tail).
+>>> + *
+>>> + *     when cna_try_find_next() is called (the secondary queue is empty):
+>>> + *
+>>> + *  A+------------+   B+--------+   C+--------+   T+--------+
+>>> + *   |mcs:next    | -> |mcs:next| -> |mcs:next| -> |mcs:next| -> NULL
+>>> + *   |mcs:locked=1|    |cna:nn=0|    |cna:nn=2|    |cna:nn=1|
+>>> + *   |cna:nn=1    |    +--------+    +--------+    +--------+
+>>> + *   +----------- +
+>>> + *
+>>> + *     when cna_try_find_next() returns (the secondary queue contains B and C):
+>>> + *
+>>> + *  A+----------------+    T+--------+
+>>> + *   |mcs:next        | ->  |mcs:next| -> NULL
+>>> + *   |mcs:locked=B.et | -+  |cna:nn=1|
+>>> + *   |cna:nn=1        |  |  +--------+
+>>> + *   +--------------- +  |
+>>> + *                       |
+>>> + *                       +->  B+--------+   C+--------+
+>>> + *                             |mcs:next| -> |mcs:next|
+>>> + *                             |cna:nn=0|    |cna:nn=2|
+>>> + *                             |cna:tail| -> +--------+
+>>> + *                             +--------+
+>>> + *
+>>> + * The worst case complexity of the scan is O(n), where n is the number
+>>> + * of current waiters. However, the fast path, which is expected to be the
+>>> + * common case, is O(1).
+>>> + */
+>>> +static struct mcs_spinlock *cna_try_find_next(struct mcs_spinlock *node,
+>>> +					      struct mcs_spinlock *next)
+>>> +{
+>>> +	struct cna_node *cn = (struct cna_node *)node;
+>>> +	struct cna_node *cni = (struct cna_node *)next;
+>>> +	struct cna_node *first, *last = NULL;
+>>> +	int my_numa_node = cn->numa_node;
+>>> +
+>>> +	/* fast path: immediate successor is on the same NUMA node */
+>>> +	if (cni->numa_node == my_numa_node)
+>>> +		return next;
+>>> +
+>>> +	/* find any next waiter on 'our' NUMA node */
+>>> +	for (first = cni;
+>>> +	     cni && cni->numa_node != my_numa_node;
+>>> +	     last = cni, cni = (struct cna_node *)READ_ONCE(cni->mcs.next))
+>>> +		;
+>>> +
+>>> +	/* if found, splice any skipped waiters onto the secondary queue */
+>>> +	if (cni && last)
+>>> +		cna_splice_tail(cn, first, last);
+>>> +
+>>> +	return (struct mcs_spinlock *)cni;
+>>> +}
+>> At the Linux Plumbers Conference last week, Will has raised the concern
+>> about the latency of the O(1) cna_try_find_next() operation that will
+>> add to the lock hold time.
+> While the worst case complexity of the scan is O(n), I _think it can be proven
+> that the amortized complexity is O(1). For intuition, consider a two-node 
+> system with N threads total. In the worst case scenario, the scan will go 
+> over N/2 threads running on a different node. If the scan ultimately “fails”
+> (no thread from the lock holder’s node is found), the lock will be passed
+> to the first thread from a different node and then between all those N/2 threads,
+> with a scan of just one node for the next N/2 - 1 passes. Otherwise, those 
+> N/2 threads will be moved to the secondary queue. On the next lock handover, 
+> we pass the lock either to the next thread in the main queue (as it has to be 
+> from our node) or to the first node in the secondary queue. In both cases, we 
+> scan just one node, and in the latter case, we have again N/2 - 1 passes with 
+> a scan of just one node each.
+I agree that it should not be a problem for a 2-socket. For larger SMP
+systems with 8, 16 or even 32 sockets, it can be an issue as those
+systems are also more likely to have more lock contention and hence
+longer wait queues.
+>> One way to hide some of the latency is to do
+>> a pre-scan before acquiring the lock. The CNA code could override the
+>> pv_wait_head_or_lock() function to call cna_try_find_next() as a
+>> pre-scan and return 0. What do you think?
+> This is certainly possible, but I do not think it would completely eliminate 
+> the worst case scenario. It will probably make it even less likely, but at 
+> the same time, we will reduce the chance of actually finding a thread from the
+> same node (that may enter the main queue while we wait for the owner & pending 
+> to go away).
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+When I said prescan, I mean to move the front queue entries that are
+from non-local nodes to the secondary queue before acquiring the lock.
+After acquiring the lock, you can repeat the scan in case the prescan
+didn't find any local node queue entry. Yes, we will need to do the
+similar operation twice.
 
+Yes, it does not eliminate the worst case scenario, but it should help
+in reducing the average lock hold time.
 
-When testing the output of the old trace-cmd compared to the one that uses
-the updated tep_print_event() logic, it was different in that the time stamp
-precision in the old format would round up to the nearest precision, where
-as the new logic truncates. Bring back the old method of rounding up.
+Of course, the probabilistic (or deterministic) check to go to the next
+local node entry or to the secondary queue should be done before
+pre-scan so that we won't waste the effort.
 
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- tools/lib/traceevent/event-parse.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index bb22238debfe..eb84fbb49e4d 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -5517,8 +5517,10 @@ static void print_event_time(struct tep_handle *tep, struct trace_seq *s,
- 	if (divstr && isdigit(*(divstr + 1)))
- 		div = atoi(divstr + 1);
- 	time = record->ts;
--	if (div)
-+	if (div) {
-+		time += div / 2;
- 		time /= div;
-+	}
- 	pr = prec;
- 	while (pr--)
- 		p10 *= 10;
--- 
-2.20.1
+Cheers,
+Longman
 
