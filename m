@@ -2,53 +2,51 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A3AC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A341AC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2F9321924
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:23:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 765F9217D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:23:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931820;
-	bh=VlEPEG/5/6vOlgK2tyw5SjA1y6Lt098z68Ly0L6u+/c=;
+	s=default; t=1568931822;
+	bh=PR52xkbux8D/o0y0jOqLn/nJhGP7n4QdaZlmgyNHkAU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H1YCNhokchOlveFK5cFCVQgcXbXmDO9Y4PagDpKx3eKz+15iUb4xdhKADqbRwt7lI
-	 3Cxsb+bEJ5yGvDZCYZew3mZv5aBZibo/yBrLBOYGw83QQEdgemwLivGFB4mx9kZtxr
-	 9FMFnKo2NBWLBhCs3bpvAUy/KkTXm+SG3QZneUIw=
+	b=cLCejNXze0LiyANlxATP/9Pv1V9fG2MEt+yUp/T1WweY56uzq2izGCX1XKwjR8Gc+
+	 EaayPBtEBGhI4dwNsQFxNjqzE6H/qmu5lrGES0sHBJd4MCcRl8jRmrMUQwYmQVyLbY
+	 xxH+enmEeoiEcdVvka1PdVQpBiEKmoSHjhWqj1U8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407017AbfISWXi (ORCPT
+        id S2407027AbfISWXl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:23:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39374 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:23:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404833AbfISWXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:23:36 -0400
+        id S2404833AbfISWXj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:23:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FE5021929;
-        Thu, 19 Sep 2019 22:23:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D940217D6;
+        Thu, 19 Sep 2019 22:23:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931816;
-        bh=VlEPEG/5/6vOlgK2tyw5SjA1y6Lt098z68Ly0L6u+/c=;
+        s=default; t=1568931818;
+        bh=PR52xkbux8D/o0y0jOqLn/nJhGP7n4QdaZlmgyNHkAU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JueD8uZeotFEgwrw6NhcKw1LPMgVlvWpQwSx1ixczjd/xnzjy87rJXTG6yFHCV++P
-         ygmM3n/bvlyWS7HpP4gijKblPQ/OIH2oQbpXmSl2Uc+ZZhycCVRjrh+dj6/T66cjab
-         yMxqjJOZHev9lNCun3eXMstkEzMP9PQ7fHjcNO8Q=
+        b=yD/UFC7OHrgbUsIBKdTu+sg8p3bNwTERIv5D4OJbphlNinp2n3ZhEmX0GBMM0tVkl
+         7LRKKIq93CssPOJyY7OsGdqI2ZGphoaZBZ7voqS+xCXHR3nH9EEhGklpPWBckKLBrt
+         koIJg+8SqMXNQ9iWkQqanjL6ATfqZCPYZ8zKqUJo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Len Brown <len.brown@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 50/56] tools/power turbostat: fix buffer overrun
-Date:   Fri, 20 Sep 2019 00:04:31 +0200
-Message-Id: <20190919214803.948625363@linuxfoundation.org>
+        Razvan Stefanescu <razvan.stefanescu@microchip.com>
+Subject: [PATCH 4.4 33/56] tty/serial: atmel: reschedule TX after RX was started
+Date:   Fri, 20 Sep 2019 00:04:14 +0200
+Message-Id: <20190919214757.680401739@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214742.483643642@linuxfoundation.org>
 References: <20190919214742.483643642@linuxfoundation.org>
@@ -61,37 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+From: Razvan Stefanescu <razvan.stefanescu@microchip.com>
 
-[ Upstream commit eeb71c950bc6eee460f2070643ce137e067b234c ]
+commit d2ace81bf902a9f11d52e59e5d232d2255a0e353 upstream.
 
-turbostat could be terminated by general protection fault on some latest
-hardwares which (for example) support 9 levels of C-states and show 18
-"tADDED" lines. That bloats the total output and finally causes buffer
-overrun.  So let's extend the buffer to avoid this.
+When half-duplex RS485 communication is used, after RX is started, TX
+tasklet still needs to be  scheduled tasklet. This avoids console freezing
+when more data is to be transmitted, if the serial communication is not
+closed.
 
-Signed-off-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-Signed-off-by: Len Brown <len.brown@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 69646d7a3689 ("tty/serial: atmel: RS485 HD w/DMA: enable RX after TX is stopped")
+Signed-off-by: Razvan Stefanescu <razvan.stefanescu@microchip.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20190813074025.16218-1-razvan.stefanescu@microchip.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- tools/power/x86/turbostat/turbostat.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/serial/atmel_serial.c |    1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
-index 532e7bf068689..58cf161887225 100644
---- a/tools/power/x86/turbostat/turbostat.c
-+++ b/tools/power/x86/turbostat/turbostat.c
-@@ -3014,7 +3014,7 @@ int initialize_counters(int cpu_id)
+--- a/drivers/tty/serial/atmel_serial.c
++++ b/drivers/tty/serial/atmel_serial.c
+@@ -1275,7 +1275,6 @@ atmel_handle_transmit(struct uart_port *
  
- void allocate_output_buffer()
- {
--	output_buffer = calloc(1, (1 + topo.num_cpus) * 1024);
-+	output_buffer = calloc(1, (1 + topo.num_cpus) * 2048);
- 	outp = output_buffer;
- 	if (outp == NULL)
- 		err(-1, "calloc output buffer");
--- 
-2.20.1
-
+ 			atmel_port->hd_start_rx = false;
+ 			atmel_start_rx(port);
+-			return;
+ 		}
+ 
+ 		tasklet_schedule(&atmel_port->tasklet);
 
 
