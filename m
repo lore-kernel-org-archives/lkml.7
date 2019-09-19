@@ -2,28 +2,76 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3E7C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 17:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E56C4C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 17:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98C3421907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 17:01:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBCA120644
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 17:03:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568912632;
+	bh=MONPxZZQ9H7FCHb02M2zPOYkSXure61GJtN6KikJuV8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bq1JMIzP6bi1Q/GvLyr1mcq5JD5Z6Z+gK5kSQSalQCJvCp7YK081Ze8MKdETRkluP
+	 ln1D4Yx+m6pyQTXRDltirecn7M/jyv/mlUVxuq5g7Vr62hAdg/gou3qboltjFJfmP0
+	 Ni9M77RMtowhDFOocF1Ex/+eJ0FmExrAkR30C5UY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390106AbfISRBw (ORCPT
+        id S2390733AbfISRDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 13:01:52 -0400
-Received: from verein.lst.de ([213.95.11.211]:42775 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731729AbfISRBw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 13:01:52 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 80CD768B20; Thu, 19 Sep 2019 19:01:48 +0200 (CEST)
-Date:   Thu, 19 Sep 2019 19:01:48 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
+        Thu, 19 Sep 2019 13:03:52 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:46413 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731729AbfISRDv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 13:03:51 -0400
+Received: by mail-lj1-f193.google.com with SMTP id e17so4295752ljf.13
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 10:03:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=e+Le165FOxvtzRMwfFqjOH0U+XVnKpWjfAd4ukIEWR4=;
+        b=FL9rhk1LXaWaOToMWtkofnf+ifZC7L6LjK+IHdHsF/ZjKrMGyWQHvozYfnjOkbc2Aa
+         NaQT+Ln1+A5psdVMqEdRU37SGn1dPcL1GnHoARhDT9QcKBubA/swLTsvj8azaK1+sKlm
+         HBGHGssbScaIPzuXiY0UhyHgSHDfp0ZEzinrQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=e+Le165FOxvtzRMwfFqjOH0U+XVnKpWjfAd4ukIEWR4=;
+        b=f2Ykq+beZWntJ80JE8lndS1Y5+VRnYPVCIHZDFGWVDhVYVt3fvFO4exqzLSbwSc1SG
+         BEzbmpa+D4uEIN/1ZcNX/X4gXI0EBUTBaCBeSuCN7h8h2jvJb7q+69bp955IDLOGLeFl
+         QSWdtVBOApYgXF1zevUPbJXiIzTfmKrck5MUI29ezvFdZgHbJGTMZoKFqo9ZJvJubRS3
+         Ta7tKSjNKMe472ZgPEO1BN9S1g+RyjOtejmUpmQm9e1XD+L0xQFGu9VGKcSSW9lNkbIA
+         h8Jfyb7uSUADRR/8NalBBYtzPGiC3KyfoEFoY11NVXUrqKfrp3ARmU5cG3lSe+J80oIt
+         YmPw==
+X-Gm-Message-State: APjAAAWKAYquy4sD4CZ0snWjbCQisFtUedEHrxWqdrZmZhMVGDGEv6jr
+        SFNwIn1+0aX0fDexZr83sTfolxEDcso=
+X-Google-Smtp-Source: APXvYqyAz1lDRhEbEaU88mIcEq8qX2Xq+xTTev5KVbRswQfAOSdtcuRFqgeSiFiIKH/Se6qBJ/Hvvg==
+X-Received: by 2002:a2e:8084:: with SMTP id i4mr1051887ljg.119.1568912628259;
+        Thu, 19 Sep 2019 10:03:48 -0700 (PDT)
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
+        by smtp.gmail.com with ESMTPSA id l23sm1756856lje.106.2019.09.19.10.03.47
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Sep 2019 10:03:47 -0700 (PDT)
+Received: by mail-lf1-f42.google.com with SMTP id x80so2928436lff.3
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 10:03:47 -0700 (PDT)
+X-Received: by 2002:ac2:5c11:: with SMTP id r17mr5667771lfp.61.1568912626555;
+ Thu, 19 Sep 2019 10:03:46 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190917152140.GU2229799@magnolia> <CAHk-=wj9Zjb=NENJ6SViNiYiYi4LFX9WYqskZh4E_OzjijK1VA@mail.gmail.com>
+ <20190919034502.GJ2229799@magnolia>
+In-Reply-To: <20190919034502.GJ2229799@magnolia>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 19 Sep 2019 10:03:30 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgFRM=z6WS-QLThxL2T1AaoCQeZSoHzj8ak35uSePQVbA@mail.gmail.com>
+Message-ID: <CAHk-=wgFRM=z6WS-QLThxL2T1AaoCQeZSoHzj8ak35uSePQVbA@mail.gmail.com>
+Subject: Re: [GIT PULL] iomap: new code for 5.4
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     "Darrick J. Wong" <djwong@kernel.org>,
         linux-fsdevel <linux-fsdevel@vger.kernel.org>,
         linux-xfs <linux-xfs@vger.kernel.org>,
@@ -34,67 +82,58 @@ Cc:     "Darrick J. Wong" <djwong@kernel.org>,
         Andreas Gruenbacher <agruenba@redhat.com>,
         Bob Peterson <rpeterso@redhat.com>,
         cluster-devel <cluster-devel@redhat.com>
-Subject: Re: [GIT PULL] iomap: new code for 5.4
-Message-ID: <20190919170148.GA8908@lst.de>
-References: <20190917152140.GU2229799@magnolia> <CAHk-=wj9Zjb=NENJ6SViNiYiYi4LFX9WYqskZh4E_OzjijK1VA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wj9Zjb=NENJ6SViNiYiYi4LFX9WYqskZh4E_OzjijK1VA@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 06:31:29PM -0700, Linus Torvalds wrote:
-> It seems to have come from "list_empty()", but the difference is that
-> it actually makes sense to check for emptiness of a list outside
-> whatever lock that protects the list. It can be one of those very
-> useful optimizations where you don't even bother taking the lock if
-> you can optimistically check that the list is empty.
-> 
-> But the same is _not_ true of an operation like "list_pop()". By
-> definition, the list you pop something off has to be stable, so the
-> READ_ONCE() makes no sense here.
+On Wed, Sep 18, 2019 at 8:45 PM Darrick J. Wong <darrick.wong@oracle.com> wrote:
+>
+> I propose the following (assuming Linus isn't cranky enough to refuse
+> the entire iomap patchpile forever):
 
-Indeed.
+Since I don't think the code was _wrong_, it was just that I didn't
+want to introduce a new pattern for something we already have, I'd be
+ok with just a fix patch on top too.
 
-> Anyway, if that was the only issue, I wouldn't care. But looking
-> closer, the whole thing is just completely wrong.
-> 
-> All the users seem to do some version of this:
-> 
->         struct list_head tmp;
-> 
->         list_replace_init(&ioend->io_list, &tmp);
->         iomap_finish_ioend(ioend, error);
->         while ((ioend = list_pop_entry(&tmp, struct iomap_ioend, io_list)))
->                 iomap_finish_ioend(ioend, error);
-> 
-> which is completely wrong and pointless.
-> 
-> Why would anybody use that odd "list_pop()" thing in a loop, when what
-> it really seems to just want is that bog-standard
-> "list_for_each_entry_safe()"
-> 
->         struct list_head tmp;
->         struct iomap_ioend *next;
-> 
->         list_replace_init(&ioend->io_list, &tmp);
->         iomap_finish_ioend(ioend, error);
->         list_for_each_entry_safe(struct iomap_ioend, next, &tmp, io_list)
->                 iomap_finish_ioend(ioend, error);
-> 
-> which is not only the common pattern, it's more efficient and doesn't
-> pointlessly re-write the list for each entry, it just walks it (and
-> the "_safe()" part is because it looks up the next entry early, so
-> that the entry that it's walking can be deleted).
+And if the xfs people really want to use the "pop" model, that's fine
+too - just make it specific to just the iomap_ioend type, which is all
+you seem to really want to pop, and make the typing (and naming) be
+about that particular thing.
 
-That might be true for the current two cases that operate on a temporary
-local list, but in general we have lots of cases where we operate on
-lists that are not just local and where have to delete all the entries.
+As mentioned, I don't think that whole "while (pop)" model is _wrong_
+per se.  But I also don't like proliferating new random list users in
+general, just because some subsystem has some internal preference.
+See?
 
-Sure, we could somehow let them dangle and then just do a INIT_LIST_HEAD
-on the list later, but that is just asking for trouble down the road
-when people actually use list_empty in the functions called in the loop.
+And I notice that one of the users actually does keep the list around
+and modifies it, ie this one:
+
+        while ((ioend = list_pop_entry(&tmp, struct xfs_ioend, io_list))) {
+                xfs_ioend_try_merge(ioend, &tmp);
+                xfs_end_ioend(ioend);
+        }
+
+actually seems to _work_ on the remaining part of the list in that
+xfs_ioend_try_merge() function.
+
+So inside of xfs, that "pop ioend from the list" model really may make
+perfect sense, and you could just do
+
+    static inline struct xfs_ioend *xfs_pop_ioend(struct list_head *head)
+    {
+        struct xfs_ioend *ioend = list_first_entry_or_null(head,
+struct xfs_ioend *, io_list);
+        if (ioend)
+                list_del(&ioend->io_list);
+        return ioend;
+    }
+
+and I don't think it's wrong.
+
+It's just that we've survived three decades without that list_pop(),
+and I don't want to make our header files even bigger and more complex
+unless we actually have multiple real users.
+
+             Linus
