@@ -2,52 +2,60 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3BABC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE88C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD31421927
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A528920678
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:21:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931659;
-	bh=JGn3IDncK4xvyXxYnk8ag5YaB4m59tQ8igsrSqqrYlY=;
+	s=default; t=1568931662;
+	bh=IaBM54VjXjLvBbyNVHfirjB5tFsoeGZwZDIjgVaGGhE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CyrC2Eg0QHbfWE8h2GnMfX08Ei9cj4JlfKoObJZODUoL2UFEukvjYGw6+7lMN59sK
-	 2jEajwIPHMXTntVunns/R1KkTncUXzrVvmJNu9lfY8B29B8UMvcxY113EafApogQvW
-	 8XaCK74RKCnT6pXTf9wzWmejpPU30JHkaE74Hxz0=
+	b=IjDCN+E+SRdiJELCP3H1SKL9ibbG3AeQZBAaoQcBj9iYF28EK/jY2H9tgZfVTNPEE
+	 UbbVambOVYNry+/8rBY9LOr774ihBBn+mgL1BAbWx9XJT2ucJ6RyMc+kzvX4Q8xy5S
+	 LagcvWW08645+hyvD2dsDcYSMKWMHY3rUWZw3Er4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406655AbfISWU6 (ORCPT
+        id S2406667AbfISWVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:20:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35068 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:21:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394032AbfISWUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:20:52 -0400
+        id S2405750AbfISWUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:20:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3335E20678;
-        Thu, 19 Sep 2019 22:20:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB1A6217D6;
+        Thu, 19 Sep 2019 22:20:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931651;
-        bh=JGn3IDncK4xvyXxYnk8ag5YaB4m59tQ8igsrSqqrYlY=;
+        s=default; t=1568931654;
+        bh=IaBM54VjXjLvBbyNVHfirjB5tFsoeGZwZDIjgVaGGhE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yiNXocELKOXe56TEfbvVRyAfbRYjFOKFkH5KHhbX7H7Z/x+qDv57+M/Re+dngElx3
-         +dMgE1u/pU5t3fzuntckpzuPRXit8L7tEkxiq8rTW2oKNKLE2IjqCUgYp4EHPmcKS7
-         1c+KyjfogRM2Gh2HYh5yk+vGEKZrRirTQ5LVmlb0=
+        b=c2gbgvRzEJDFpeiSx5oZ5QuLYAV41mesf20ZDz9JJDrSbvcZcnaQxqbfYKvyNa+GF
+         xRvmOJ/BA1MBRS5tI6eU/e3AJBG9paE8HYdYTRHXEaRJxvILS35aPNpNQjNz5SzabL
+         D0stU5wh3ASOWONJxARfm2LI2XZreeq87P61EFX4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.9 37/74] powerpc/mm/radix: Use the right page size for vmemmap mapping
-Date:   Fri, 20 Sep 2019 00:03:50 +0200
-Message-Id: <20190919214808.577253698@linuxfoundation.org>
+        stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Arnaldo Carvalho de Melo" <acme@kernel.org>, x86@kernel.org,
+        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Borislav Petkov" <bp@alien8.de>,
+        Stephane Eranian <eranian@google.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        "Namhyung Kim" <namhyung@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 64/74] perf/x86/amd/ibs: Fix sample bias for dispatched micro-ops
+Date:   Fri, 20 Sep 2019 00:04:17 +0200
+Message-Id: <20190919214810.780897502@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214800.519074117@linuxfoundation.org>
 References: <20190919214800.519074117@linuxfoundation.org>
@@ -60,58 +68,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+From: Kim Phillips <kim.phillips@amd.com>
 
-commit 89a3496e0664577043666791ec07fb731d57c950 upstream.
+[ Upstream commit 0f4cd769c410e2285a4e9873a684d90423f03090 ]
 
-We use mmu_vmemmap_psize to find the page size for mapping the vmmemap area.
-With radix translation, we are suboptimally setting this value to PAGE_SIZE.
+When counting dispatched micro-ops with cnt_ctl=1, in order to prevent
+sample bias, IBS hardware preloads the least significant 7 bits of
+current count (IbsOpCurCnt) with random values, such that, after the
+interrupt is handled and counting resumes, the next sample taken
+will be slightly perturbed.
 
-We do check for 2M page size support and update mmu_vmemap_psize to use
-hugepage size but we suboptimally reset the value to PAGE_SIZE in
-radix__early_init_mmu(). This resulted in always mapping vmemmap area with
-64K page size.
+The current count bitfield is in the IBS execution control h/w register,
+alongside the maximum count field.
 
-Fixes: 2bfd65e45e87 ("powerpc/mm/radix: Add radix callbacks for early init routines")
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Currently, the IBS driver writes that register with the maximum count,
+leaving zeroes to fill the current count field, thereby overwriting
+the random bits the hardware preloaded for itself.
 
+Fix the driver to actually retain and carry those random bits from the
+read of the IBS control register, through to its write, instead of
+overwriting the lower current count bits with zeroes.
+
+Tested with:
+
+perf record -c 100001 -e ibs_op/cnt_ctl=1/pp -a -C 0 taskset -c 0 <workload>
+
+'perf annotate' output before:
+
+ 15.70  65:   addsd     %xmm0,%xmm1
+ 17.30        add       $0x1,%rax
+ 15.88        cmp       %rdx,%rax
+              je        82
+ 17.32  72:   test      $0x1,%al
+              jne       7c
+  7.52        movapd    %xmm1,%xmm0
+  5.90        jmp       65
+  8.23  7c:   sqrtsd    %xmm1,%xmm0
+ 12.15        jmp       65
+
+'perf annotate' output after:
+
+ 16.63  65:   addsd     %xmm0,%xmm1
+ 16.82        add       $0x1,%rax
+ 16.81        cmp       %rdx,%rax
+              je        82
+ 16.69  72:   test      $0x1,%al
+              jne       7c
+  8.30        movapd    %xmm1,%xmm0
+  8.13        jmp       65
+  8.24  7c:   sqrtsd    %xmm1,%xmm0
+  8.39        jmp       65
+
+Tested on Family 15h and 17h machines.
+
+Machines prior to family 10h Rev. C don't have the RDWROPCNT capability,
+and have the IbsOpCurCnt bitfield reserved, so this patch shouldn't
+affect their operation.
+
+It is unknown why commit db98c5faf8cb ("perf/x86: Implement 64-bit
+counter support for IBS") ignored the lower 4 bits of the IbsOpCurCnt
+field; the number of preloaded random bits has always been 7, AFAICT.
+
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: <x86@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: "Borislav Petkov" <bp@alien8.de>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: "Namhyung Kim" <namhyung@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Link: https://lkml.kernel.org/r/20190826195730.30614-1-kim.phillips@amd.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/pgtable-radix.c |   16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+ arch/x86/events/amd/ibs.c         | 13 ++++++++++---
+ arch/x86/include/asm/perf_event.h | 12 ++++++++----
+ 2 files changed, 18 insertions(+), 7 deletions(-)
 
---- a/arch/powerpc/mm/pgtable-radix.c
-+++ b/arch/powerpc/mm/pgtable-radix.c
-@@ -287,14 +287,6 @@ void __init radix__early_init_devtree(vo
- 	mmu_psize_defs[MMU_PAGE_64K].shift = 16;
- 	mmu_psize_defs[MMU_PAGE_64K].ap = 0x5;
- found:
--#ifdef CONFIG_SPARSEMEM_VMEMMAP
--	if (mmu_psize_defs[MMU_PAGE_2M].shift) {
--		/*
--		 * map vmemmap using 2M if available
--		 */
--		mmu_vmemmap_psize = MMU_PAGE_2M;
--	}
--#endif /* CONFIG_SPARSEMEM_VMEMMAP */
- 	return;
- }
+diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
+index fd4484ae3ffca..112e3c4636b4f 100644
+--- a/arch/x86/events/amd/ibs.c
++++ b/arch/x86/events/amd/ibs.c
+@@ -671,10 +671,17 @@ fail:
  
-@@ -337,7 +329,13 @@ void __init radix__early_init_mmu(void)
+ 	throttle = perf_event_overflow(event, &data, &regs);
+ out:
+-	if (throttle)
++	if (throttle) {
+ 		perf_ibs_stop(event, 0);
+-	else
+-		perf_ibs_enable_event(perf_ibs, hwc, period >> 4);
++	} else {
++		period >>= 4;
++
++		if ((ibs_caps & IBS_CAPS_RDWROPCNT) &&
++		    (*config & IBS_OP_CNT_CTL))
++			period |= *config & IBS_OP_CUR_CNT_RAND;
++
++		perf_ibs_enable_event(perf_ibs, hwc, period);
++	}
  
- #ifdef CONFIG_SPARSEMEM_VMEMMAP
- 	/* vmemmap mapping */
--	mmu_vmemmap_psize = mmu_virtual_psize;
-+	if (mmu_psize_defs[MMU_PAGE_2M].shift) {
-+		/*
-+		 * map vmemmap using 2M if available
-+		 */
-+		mmu_vmemmap_psize = MMU_PAGE_2M;
-+	} else
-+		mmu_vmemmap_psize = mmu_virtual_psize;
- #endif
- 	/*
- 	 * initialize page table size
+ 	perf_event_update_userpage(event);
+ 
+diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+index f353061bba1d0..81d5ea71bbe94 100644
+--- a/arch/x86/include/asm/perf_event.h
++++ b/arch/x86/include/asm/perf_event.h
+@@ -200,16 +200,20 @@ struct x86_pmu_capability {
+ #define IBSCTL_LVT_OFFSET_VALID		(1ULL<<8)
+ #define IBSCTL_LVT_OFFSET_MASK		0x0F
+ 
+-/* ibs fetch bits/masks */
++/* IBS fetch bits/masks */
+ #define IBS_FETCH_RAND_EN	(1ULL<<57)
+ #define IBS_FETCH_VAL		(1ULL<<49)
+ #define IBS_FETCH_ENABLE	(1ULL<<48)
+ #define IBS_FETCH_CNT		0xFFFF0000ULL
+ #define IBS_FETCH_MAX_CNT	0x0000FFFFULL
+ 
+-/* ibs op bits/masks */
+-/* lower 4 bits of the current count are ignored: */
+-#define IBS_OP_CUR_CNT		(0xFFFF0ULL<<32)
++/*
++ * IBS op bits/masks
++ * The lower 7 bits of the current count are random bits
++ * preloaded by hardware and ignored in software
++ */
++#define IBS_OP_CUR_CNT		(0xFFF80ULL<<32)
++#define IBS_OP_CUR_CNT_RAND	(0x0007FULL<<32)
+ #define IBS_OP_CNT_CTL		(1ULL<<19)
+ #define IBS_OP_VAL		(1ULL<<18)
+ #define IBS_OP_ENABLE		(1ULL<<17)
+-- 
+2.20.1
+
 
 
