@@ -2,131 +2,164 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA93C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A11C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3258E21927
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:15:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931304;
-	bh=9ZkUmIAtqapg5V4o9+m2L/LvSQjknh64QISz0pC6Op8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ltS+JMj7N2hvWPMr8YtA1oE64kgSZbaSk7ffdH84XUdAQj6wHapaGljwr60f8/peN
-	 e7VW+2DFCUpUZpF6xXoE4jAvLOJmGSmZ0Sbeu6rxzp42l5U26fD+eNnf8VhZ+kCiDf
-	 XyIj/3MKDu1BVm2WBWfskflTduOOE/b7bMbKljDA=
+	by mail.kernel.org (Postfix) with ESMTP id 9AD7421927
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:15:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xODCt9c4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393850AbfISWPD (ORCPT
+        id S2405276AbfISWPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:15:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54736 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393839AbfISWO7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:14:59 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 393CB218AF;
-        Thu, 19 Sep 2019 22:14:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931298;
-        bh=9ZkUmIAtqapg5V4o9+m2L/LvSQjknh64QISz0pC6Op8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nz3kV8nie4T7bPraOQXw3Ot1JT0MHXqZGQnBsLWUoqYOaiuecEYqwI1l5P9Y5mOaU
-         8+vZhDCf2gi3is5zxS/HbEqMYZl1CCaKV+7M/uzL+LYx9A3p4gY/+8zKvTSEK8Pk9z
-         /Gtk3wo4byw6lQp8ArlayktwZdiHTOAzjB4BGyCo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 43/79] batman-adv: Only read OGM2 tvlv_len after buffer len check
-Date:   Fri, 20 Sep 2019 00:03:28 +0200
-Message-Id: <20190919214811.470416788@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190919214807.612593061@linuxfoundation.org>
-References: <20190919214807.612593061@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 19 Sep 2019 18:15:04 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:43644 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393842AbfISWPA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:15:00 -0400
+Received: by mail-pf1-f194.google.com with SMTP id a2so3166778pfo.10
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 15:15:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fB4zQQtxD6RQxzuoXRwLfGvFn/ooCdWNGohHK66LQ08=;
+        b=xODCt9c4PPzf7ZJP+bySIqn30TXjt1heT30OW1TE2tgQtVhEZ7PHRfvCGWTlZvgjNV
+         apIa133AHQl1MXOGINvY5iFkudp6kx2frahxdJAcNMzV4Y4J64OAEOnRdDYg8+HNB/99
+         nqJBshr9YGEOTxr7GHCPTuHdo1o0hTVg/jt0hakbqbYZt2h/5166qpMQW5S6VqM1V+Xw
+         etWTjs94jRmnO7JqoXz7dZN92pFkE5YflNvMSyPlBjqvNtq64WMXpUqtQB5kuK8Sbwo9
+         fx1+RAgTe8xE+mAHEuDd8+bLlYv0yz3sQOkn8B4Fkqa6lUkA15fs422p51e3RUn/AkKS
+         vMeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fB4zQQtxD6RQxzuoXRwLfGvFn/ooCdWNGohHK66LQ08=;
+        b=mDG1zuoM5vg9U2RmOm1IxQJDen9jjQrXDfcbk0fzN6ToncNdPq80Wj1POtqNFIkaIw
+         xEM8mAyNbfc4RVz4+pJgsO+KkORTGjYD1mkffFyGdvRFA+JnhfhEXxus92Bpl0V/btdp
+         aMpicFyJDqscuaZ+qQ68R9HBrW2zRrPeeWbUqYV7s/prd8yvOOHrYzHkn9mw28fLG2Mp
+         FVTAXoW7rc1/5zxa4aiieDo1mQ4eiE9+O2+pp0Gm6dJ9unuDgIxbNd1Hdxt2hPqWaixt
+         dIGp7G6Y7IlJzSty9JZDz+rJJKNWS6wr/T+159iEpxXSNU1REXtJSxcJRf72c9AQ/0/f
+         gZdg==
+X-Gm-Message-State: APjAAAX84CuWtdG7q5a+Z+DSC2bpDDqa/VerNOjoyJ++CitT8Smolc54
+        /6v4yo4OVM3Fk+yd5mTbMETstA==
+X-Google-Smtp-Source: APXvYqwHnPaYhBk4Lt3yi1dUPz66jlOkeds9a5M1ZpocrTHis+sK2zkXHck+Dypk2L3DX5oswWkkiQ==
+X-Received: by 2002:a17:90a:8991:: with SMTP id v17mr145915pjn.127.1568931299611;
+        Thu, 19 Sep 2019 15:14:59 -0700 (PDT)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id c62sm7071pfa.92.2019.09.19.15.14.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Sep 2019 15:14:59 -0700 (PDT)
+Date:   Thu, 19 Sep 2019 15:14:56 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Murali Nalajala <mnalajal@codeaurora.org>, rafael@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] base: soc: Export soc_device_to_device API
+Message-ID: <20190919221456.GA63675@minitux>
+References: <1568927624-13682-1-git-send-email-mnalajal@codeaurora.org>
+ <20190919213203.GA395325@kroah.com>
+ <20190919215300.GC1418@minitux>
+ <20190919215836.GA426988@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190919215836.GA426988@kroah.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Eckelmann <sven@narfation.org>
+On Thu 19 Sep 14:58 PDT 2019, Greg KH wrote:
 
-[ Upstream commit 0ff0f15a32c093381ad1abc06abe85afb561ab28 ]
+> On Thu, Sep 19, 2019 at 02:53:00PM -0700, Bjorn Andersson wrote:
+> > On Thu 19 Sep 14:32 PDT 2019, Greg KH wrote:
+> > 
+> > > On Thu, Sep 19, 2019 at 02:13:44PM -0700, Murali Nalajala wrote:
+> > > > If the soc drivers want to add custom sysfs entries it needs to
+> > > > access "dev" field in "struct soc_device". This can be achieved
+> > > > by "soc_device_to_device" API. Soc drivers which are built as a
+> > > > module they need above API to be exported. Otherwise one can
+> > > > observe compilation issues.
+> > > > 
+> > > > Signed-off-by: Murali Nalajala <mnalajal@codeaurora.org>
+> > > > ---
+> > > >  drivers/base/soc.c | 1 +
+> > > >  1 file changed, 1 insertion(+)
+> > > > 
+> > > > diff --git a/drivers/base/soc.c b/drivers/base/soc.c
+> > > > index 7c0c5ca..4ad52f6 100644
+> > > > --- a/drivers/base/soc.c
+> > > > +++ b/drivers/base/soc.c
+> > > > @@ -41,6 +41,7 @@ struct device *soc_device_to_device(struct soc_device *soc_dev)
+> > > >  {
+> > > >  	return &soc_dev->dev;
+> > > >  }
+> > > > +EXPORT_SYMBOL_GPL(soc_device_to_device);
+> > > >  
+> > > >  static umode_t soc_attribute_mode(struct kobject *kobj,
+> > > >  				struct attribute *attr,
+> > > 
+> > > What in-kernel driver needs this?
+> > > 
+> > 
+> > Half of the drivers interacting with the soc driver calls this API,
+> > several of these I see no reason for being builtin (e.g.
+> > ux500 andversatile). So I think this patch makes sense to allow us to
+> > build these as modules.
+> > 
+> > > Is linux-next breaking without this?
+> > > 
+> > 
+> > No, we postponed the addition of any sysfs attributes in the Qualcomm
+> > socinfo driver.
+> > 
+> > > We don't export things unless we have a user of the export.
+> > > 
+> > > Also, adding "custom" sysfs attributes is almost always not the correct
+> > > thing to do at all.  The driver should be doing it, by setting up the
+> > > attribute group properly so that the driver core can do it automatically
+> > > for it.
+> > > 
+> > > No driver should be doing individual add/remove of sysfs files.  If it
+> > > does so, it is almost guaranteed to be doing it incorrectly and racing
+> > > userspace.
+> > > 
+> > 
+> > The problem here is that the attributes are expected to be attached to
+> > the soc driver, which is separate from the platform-specific drivers. So
+> > there's no way to do platform specific attributes the right way.
+> > 
+> > > And yes, there's loads of in-kernel examples of doing this wrong, I've
+> > > been working on fixing that up, look at the patches now in Linus's tree
+> > > for platform and USB drivers that do this as examples of how to do it
+> > > right.
+> > > 
+> > 
+> > Agreed, this patch should not be used as an approval for any crazy
+> > attributes; but it's necessary in order to extend the soc device's
+> > attributes, per the current design.
+> 
+> Wait, no, let's not let the "current design" remain if it is broken!
+> 
+> Why can't the soc driver handle the attributes properly so that the
+> individual driver doesn't have to do the create/remove?
+> 
 
-Multiple batadv_ogm2_packet can be stored in an skbuff. The functions
-batadv_v_ogm_send_to_if() uses batadv_v_ogm_aggr_packet() to check if there
-is another additional batadv_ogm2_packet in the skb or not before they
-continue processing the packet.
+The custom attributes that these drivers want to add to the common ones
+are known in advance, so I presume we could have them passed into
+soc_device_register() and registered together with the common
+attributes...
 
-The length for such an OGM2 is BATADV_OGM2_HLEN +
-batadv_ogm2_packet->tvlv_len. The check must first check that at least
-BATADV_OGM2_HLEN bytes are available before it accesses tvlv_len (which is
-part of the header. Otherwise it might try read outside of the currently
-available skbuff to get the content of tvlv_len.
+It sounds like it's worth a prototype.
 
-Fixes: 9323158ef9f4 ("batman-adv: OGMv2 - implement originators logic")
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/batman-adv/bat_v_ogm.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
-
-diff --git a/net/batman-adv/bat_v_ogm.c b/net/batman-adv/bat_v_ogm.c
-index 2948b41b06d47..d241ccc0ca027 100644
---- a/net/batman-adv/bat_v_ogm.c
-+++ b/net/batman-adv/bat_v_ogm.c
-@@ -643,17 +643,23 @@ batadv_v_ogm_process_per_outif(struct batadv_priv *bat_priv,
-  * batadv_v_ogm_aggr_packet() - checks if there is another OGM aggregated
-  * @buff_pos: current position in the skb
-  * @packet_len: total length of the skb
-- * @tvlv_len: tvlv length of the previously considered OGM
-+ * @ogm2_packet: potential OGM2 in buffer
-  *
-  * Return: true if there is enough space for another OGM, false otherwise.
-  */
--static bool batadv_v_ogm_aggr_packet(int buff_pos, int packet_len,
--				     __be16 tvlv_len)
-+static bool
-+batadv_v_ogm_aggr_packet(int buff_pos, int packet_len,
-+			 const struct batadv_ogm2_packet *ogm2_packet)
- {
- 	int next_buff_pos = 0;
- 
--	next_buff_pos += buff_pos + BATADV_OGM2_HLEN;
--	next_buff_pos += ntohs(tvlv_len);
-+	/* check if there is enough space for the header */
-+	next_buff_pos += buff_pos + sizeof(*ogm2_packet);
-+	if (next_buff_pos > packet_len)
-+		return false;
-+
-+	/* check if there is enough space for the optional TVLV */
-+	next_buff_pos += ntohs(ogm2_packet->tvlv_len);
- 
- 	return (next_buff_pos <= packet_len) &&
- 	       (next_buff_pos <= BATADV_MAX_AGGREGATION_BYTES);
-@@ -830,7 +836,7 @@ int batadv_v_ogm_packet_recv(struct sk_buff *skb,
- 	ogm_packet = (struct batadv_ogm2_packet *)skb->data;
- 
- 	while (batadv_v_ogm_aggr_packet(ogm_offset, skb_headlen(skb),
--					ogm_packet->tvlv_len)) {
-+					ogm_packet)) {
- 		batadv_v_ogm_process(skb, ogm_offset, if_incoming);
- 
- 		ogm_offset += BATADV_OGM2_HLEN;
--- 
-2.20.1
-
-
-
+Regards,
+Bjorn
