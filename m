@@ -2,120 +2,118 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36649C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 16:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB344C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 16:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E3522053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 16:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81FD721907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 16:21:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DfOsUoTI"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jMp6N6eF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391840AbfISQSZ (ORCPT
+        id S2404258AbfISQV0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 12:18:25 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:32791 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388098AbfISQSY (ORCPT
+        Thu, 19 Sep 2019 12:21:26 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46198 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403833AbfISQV0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 12:18:24 -0400
-Received: by mail-qk1-f196.google.com with SMTP id x134so4021246qkb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 09:18:24 -0700 (PDT)
+        Thu, 19 Sep 2019 12:21:26 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q5so2609455pfg.13
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 09:21:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=3Yye6iqRCV5drve2C5oFfaJYT6iHjklqWnjrwbuk4nU=;
-        b=DfOsUoTIpzx2QhunV87jDAkhaGaTZF2Wq9kXmOpB+RnTf0cmun6xSFOeGFWc1nlk8i
-         Vbi2UOvCcag/k7KveMGBxKzBCg6linJ09RjddursD6qERVdl8RmzZcglttS95B1AtRz6
-         t0IdbZ8RQ+GvXnvBMXLvdH/2Wqp8GvwjAwV5dnZ+0E9T/erjw84k5KwDogl1K9OSL3VL
-         1v5O8ENeEjqq3rbwd2pzUsMXosH69kJ4BcjnYaBudSzO8rxxyM0a/p67VWhjO9pIZ7vH
-         6h//AyT8kI2oXAKMshKUTETDne/WMwb/v06zc89YrcaE1VSOwHQ3Mu6c8Pnl6eplsePJ
-         iSOg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DLElX6prsemmI7+wc0Ol+UL4D1Wa4vwan9SjKgoiFhY=;
+        b=jMp6N6eFq6jQzuKpk6LGVgXz/S9TP47yGUWsOQsmv3xsq5S9u+jNmxuTo95dRVFNrQ
+         94RsctbWhbXCRKVIDU4V3dNX1Lm7RBMmKwruC2/HH68wJByUsD8pMEuCwvoiw7TuSLcY
+         mM44SSo5uSeSL1dqE9gscBIEMegZKliZ/hYgFPzjY4jRKUosd3wQy7ivwomcBJzLZjym
+         1oH4z09PzqslgJ1Z1DUGOl2M0vYtFhQDfcfnrzyVkZfVHJGgvjrZDSYDuVSNkQ1IbC/R
+         uCxN3R9nHOxvKTpgSuqdtFUbQZn2legL4RGJkoOlaQL0CyYazUdvXXuOTWCAdoubX35e
+         0x1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=3Yye6iqRCV5drve2C5oFfaJYT6iHjklqWnjrwbuk4nU=;
-        b=HyYJVzgvGAb0zLgOOOs7yzr23Irx1P7IklLUjLoFbBLXTPhkIr3Q8GFFXd2OYZUwtv
-         yXfXQ2SsrNCC2TQ7kDpO/ceBPch0stkl08ucUxtqVew8T3jH95aDkwNj8AMCPbmx/9cR
-         m81XbjRQHOuO7RwWGTcMpv+G6FSJzUrjdjQBEL0OxINJVOpjiKBhaoVQGrrPLqGu9BwW
-         yezLbE6HWfTcHSCdQ3NJRdLyln4jNDalktrAtJ0fXS7eRBPwhFF/FR+dhUYXziSg/jSn
-         kjm5Njyb7AL8t3DsTXnv6BnKO+HQFSlaOqVJgZRljm//2EsiKUDcoa2dC12Q40Y237T/
-         Dgkw==
-X-Gm-Message-State: APjAAAU9dD6Wnu3HNkgsLsedE/wPHOlOVhIfwfu9xacXr3aVbigN57h2
-        k7lYr938SLTKusoHrRO7J0TDQA==
-X-Google-Smtp-Source: APXvYqwxFzSC67Uj/43CUBfNaRyYl2MKB2Q0JUrBMbcegGoYZlv0KJ4P+lO0843mrSwB6NClo3xNdQ==
-X-Received: by 2002:a05:620a:694:: with SMTP id f20mr3781309qkh.379.1568909903952;
-        Thu, 19 Sep 2019 09:18:23 -0700 (PDT)
-Received: from Thara-Work-Ubuntu.fios-router.home (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.googlemail.com with ESMTPSA id q62sm4561185qkb.69.2019.09.19.09.18.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 19 Sep 2019 09:18:23 -0700 (PDT)
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-To:     bjorn.andersson@linaro.org, agross@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] soc: qcom: Invert the cooling states for the aoss resources that can act as warming devices
-Date:   Thu, 19 Sep 2019 12:18:22 -0400
-Message-Id: <1568909902-8446-1-git-send-email-thara.gopinath@linaro.org>
-X-Mailer: git-send-email 2.1.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DLElX6prsemmI7+wc0Ol+UL4D1Wa4vwan9SjKgoiFhY=;
+        b=kgkJiucxGkSKVfwAXATmExrjCXPa91WwJmtM0fedzOyCpqDUoxwQKDu+dfFkg6/OA9
+         bNkBsF85OO/qsr0ljz11KtOeyx+PagUCltSRtTQhhuwvQ6xALP3E6k1jVo0lsBFUffGh
+         ux+GIZH5EudjZ6O0EIBXeay+4WKb/16mAFjGjVKwfiwqevvdy5Ica0tcpabXDcQvpSPe
+         X25LAtRzPmZVfPsKhxkBcCunal1tp2Gp65dIAEOPIDbEQbW6V4cfC0P+2v9H3gi9z1kf
+         27+ZTActtRepvqH/ZbBrh/T5aH9Q++MiV3vj/hMCDShKdKk1Mw2RFFOQ5bXcv1AvP6Ar
+         SV2A==
+X-Gm-Message-State: APjAAAUcYe+Yh4DB95L6K++z9MN6egA8JNYyiS4Xwfz+Hh9ZfV30GST/
+        4XfE3ttOWm79qA6r4klRoCC+OOfrMlHSrs/l/d6wRA==
+X-Google-Smtp-Source: APXvYqwUeNlfZfuENe5/I1lSuDmwkraJfDbpWXsOUMmBZl1XGtgiqQCtbZsFABCPk+AaGAlHey/MPAnIwBQkOh7YqN8=
+X-Received: by 2002:a62:5fc1:: with SMTP id t184mr11250186pfb.84.1568910085164;
+ Thu, 19 Sep 2019 09:21:25 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190919135725.1287963-1-arnd@arndb.de>
+In-Reply-To: <20190919135725.1287963-1-arnd@arndb.de>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 19 Sep 2019 09:21:14 -0700
+Message-ID: <CAKwvOdn=qYoBnsXrGh8KDaFzy6WEsfp1RhoZZQUHHL4OFzx88A@mail.gmail.com>
+Subject: Re: [PATCH] block: t10-pi: fix -Wswitch warning
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Nathan Chancellor <natechancellor@gmail.com>, kbuild-all@01.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thermal framework takes 0 as the lowest/default state for a
-cooling/warming device. The current code has the order reverted with
-1 corresponding to lowest state in hardware and 0 the highest state.
-Invert this for a better fit with the thermal framework.
+On Thu, Sep 19, 2019 at 6:57 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> Changing the switch() statement to symbolic constants made
+> the compiler (at least clang-9, did not check gcc) notice that
+> there is one enum value that is not handled here:
+>
+> block/t10-pi.c:62:11: error: enumeration value 'T10_PI_TYPE0_PROTECTION' not handled in switch [-Werror,-Wswitch]
+>
+> Add another case for the missing value and do nothing there
+> based on the assumption that the code was working correctly
+> already.
+>
+> Fixes: 9b2061b1a262 ("block: use symbolic constants for t10_pi type")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
----
- drivers/soc/qcom/qcom_aoss.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Reported-by: kbuild test robot <lkp@intel.com>
+https://groups.google.com/forum/#!topic/clang-built-linux/awgY7hmSCCM
+Hard to say what's the right thing to do here, there's not a lot of
+other switches on this variable.  That enum value barely even shows up
+in the kernel.  Since this is no functional change:
+Acked-by: Nick Desaulniers <ndesaulniers@google.com>
+Thanks for sending the patch.
 
-diff --git a/drivers/soc/qcom/qcom_aoss.c b/drivers/soc/qcom/qcom_aoss.c
-index 33a27e6..006ac40 100644
---- a/drivers/soc/qcom/qcom_aoss.c
-+++ b/drivers/soc/qcom/qcom_aoss.c
-@@ -44,7 +44,7 @@
- 
- #define QMP_NUM_COOLING_RESOURCES	2
- 
--static bool qmp_cdev_init_state = 1;
-+static bool qmp_cdev_max_state = 1;
- 
- struct qmp_cooling_device {
- 	struct thermal_cooling_device *cdev;
-@@ -402,7 +402,7 @@ static void qmp_pd_remove(struct qmp *qmp)
- static int qmp_cdev_get_max_state(struct thermal_cooling_device *cdev,
- 				  unsigned long *state)
- {
--	*state = qmp_cdev_init_state;
-+	*state = qmp_cdev_max_state;
- 	return 0;
- }
- 
-@@ -432,7 +432,7 @@ static int qmp_cdev_set_cur_state(struct thermal_cooling_device *cdev,
- 	snprintf(buf, sizeof(buf),
- 		 "{class: volt_flr, event:zero_temp, res:%s, value:%s}",
- 			qmp_cdev->name,
--			cdev_state ? "off" : "on");
-+			cdev_state ? "on" : "off");
- 
- 	ret = qmp_send(qmp_cdev->qmp, buf, sizeof(buf));
- 
-@@ -455,7 +455,7 @@ static int qmp_cooling_device_add(struct qmp *qmp,
- 	char *cdev_name = (char *)node->name;
- 
- 	qmp_cdev->qmp = qmp;
--	qmp_cdev->state = qmp_cdev_init_state;
-+	qmp_cdev->state = !qmp_cdev_max_state;
- 	qmp_cdev->name = cdev_name;
- 	qmp_cdev->cdev = devm_thermal_of_cooling_device_register
- 				(qmp->dev, node,
+> ---
+>  block/t10-pi.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/block/t10-pi.c b/block/t10-pi.c
+> index 0c0120a672f9..055fac923946 100644
+> --- a/block/t10-pi.c
+> +++ b/block/t10-pi.c
+> @@ -60,6 +60,8 @@ static blk_status_t t10_pi_verify(struct blk_integrity_iter *iter,
+>                 __be16 csum;
+>
+>                 switch (type) {
+> +               case T10_PI_TYPE0_PROTECTION:
+> +                       break;
+>                 case T10_PI_TYPE1_PROTECTION:
+>                 case T10_PI_TYPE2_PROTECTION:
+>                         if (pi->app_tag == T10_PI_APP_ESCAPE)
+> --
 -- 
-2.1.4
-
+Thanks,
+~Nick Desaulniers
