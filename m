@@ -2,129 +2,150 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5102DC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C5FC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 221F4208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:53:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF58B217D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:53:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oaYhnKDk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z7uMzduh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733099AbfISVxG (ORCPT
+        id S1733086AbfISVxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 17:53:06 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:34926 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733028AbfISVxF (ORCPT
+        Thu, 19 Sep 2019 17:53:05 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38374 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732426AbfISVxF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 19 Sep 2019 17:53:05 -0400
-Received: by mail-wm1-f65.google.com with SMTP id y21so78444wmi.0
+Received: by mail-pf1-f196.google.com with SMTP id h195so3158376pfe.5
         for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 14:53:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LiC9VN7bT0DhZf+NDDCV4pCQeBnob2CMZdKYzKfRqZ0=;
-        b=oaYhnKDkjDxXym+93Odu9FpUTOdlhuHb8kuDPqWfRctTObozWL0ag7B813jgRBMJOU
-         +u3mGWZzJN/mkF0K6KgrVuOM3rg55ekWS+7yGes8kRYwShE/eytEz92+LrJ/h3FffDwa
-         /uggRDfS1E2cFBiolgeYh2EH5Af7/LidAfakt3ONCkcoKEmZCJooaHR9hbrp/2n8/LQM
-         eV4rh2I4HjOjhQ8Em6RJnd+HXP5i1UqEE2qw5+z3GIvJpVXSjW0/45FMoCvBoNgvi9rF
-         geO8EweVTzW4EftTrhvaWaaTTw2PDU4RBy7t6CS/E3G7W2tG9U9NpeHDQf/d6nnglTfL
-         UMHg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ruovMVYJjXPQTVCPUHE1KGFchlWZ6UJGh5pYStjnRd4=;
+        b=Z7uMzduhDzAdayqBJOHW7hks8pDNL9ak3sQhSb0Z2lM9M0Enc80PCUSdgPzH/raueq
+         X63eiXg7eHdVKTXMC1xV2cK2+92TeYLSYTCYfwzrTU4nStzu0G0Oc1IFA6X6H6JhJLfh
+         dbP2ZnN5qxSV5pBmgLvOM9vpx1fZ6y2l+grEysoVmoELDcwF0gFAd26aL5NfJ63orlZG
+         VQe0g4oIUiZqNk5GCyjLpqJwBC27h+vvgbtWCTvJzNyc3l2O9BaNdqvQ1Sm4RRl1MPtx
+         le93kDDdPxe4oTTZU2vWMG9fXPvEciUJzuG2TYt1jaWEMXZGqFFltSFMV48xskn/aXOU
+         MqQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LiC9VN7bT0DhZf+NDDCV4pCQeBnob2CMZdKYzKfRqZ0=;
-        b=tZIIDtB5wCZff4vONEqBF4uJf68Ytfcna2uWihBTy8WVd+LFIlQeLILj2UnXibnsBU
-         9VJAhQVaxgmzLXk4EPbXUXrxPLtGADA74/+joCo+a/05bOV1mI1DKMh1Ra1cM20cGa24
-         90yhjmZhlr4Pjr52zZcOHxMFjk8ycjYijUMtdOEZ6bOJk8cANT7poy70FxGKlcOc/gjH
-         9gZDBplVW6KXA95FzB/AjhFoBWUXmiIIJD8KSAnkcjIO7Der4j37r9jehuTMRy7IAaxC
-         339AF3im5ceyUrbc+BmZrjq+c+rMAS4DhRNqIcLF++gmTAb0dRm7LJPP4YOnFE1BBA2w
-         RVZQ==
-X-Gm-Message-State: APjAAAWQWylW7ozoU6CcyX7Vi8N/rGdHlaZv3g8AwmYV+sdYPlLWUf/m
-        AzWnA6OBm3tV8axMP1NYwiJwHELnY3sUzbrUfMc=
-X-Google-Smtp-Source: APXvYqzCZrQwLmXjxRuxnOhumLlCYo6qgQJXs/Z6uJi0aOfkJzfbJHNfp6YkfvlarLb0VyyjE0MnAkEX4K1sDTbMxxo=
-X-Received: by 2002:a05:600c:54a:: with SMTP id k10mr29584wmc.127.1568929982740;
- Thu, 19 Sep 2019 14:53:02 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ruovMVYJjXPQTVCPUHE1KGFchlWZ6UJGh5pYStjnRd4=;
+        b=JkZ/aHyiR4u1JYr/hDBJ/sYKQ7ZetQj0gz0aKm+fZJs8a/dIbFsmF00PVxZ0Rtroy5
+         nHb9dtsrXf1YY20pQCihz5ZkWEXb9AJ4h4rUQIUIdM1E2YhulthmecNBG0QdttTA8Z9w
+         owL8s++Or75mQS2uNMBbLxt82pP/GUQVBe5CvPcStDmDizzY5oAaoEuBgMqawC1VaR2X
+         8IiiRehutmt1ipTOnVK1pXWDiqHFIq3LFY/xQj4uFjU79GRUjKPNFYHNnHLkPavYbzFS
+         PwzmLGl8vmTMub5AevNDaU8RCLEgajiMF6uo0n6wfRB01zzBs1izVL8OWKS/3lO+uHTF
+         7Z6g==
+X-Gm-Message-State: APjAAAXY+7esSsqGjBJSx3jmbTPtP/zHRVQq1pB8HoVJXuubfaeG94Zb
+        H/qndjsaKG4vLKMEyYhBj3k7rw==
+X-Google-Smtp-Source: APXvYqzvlLVlbxwqi/PKdrrVmvPE3Utp7lxx0LxNp2MZzisfAvK9bjrhAH0sGgUs0ykXcKtBP/Ygvw==
+X-Received: by 2002:aa7:8813:: with SMTP id c19mr10319247pfo.101.1568929982814;
+        Thu, 19 Sep 2019 14:53:02 -0700 (PDT)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id 30sm6417430pjk.25.2019.09.19.14.53.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Sep 2019 14:53:02 -0700 (PDT)
+Date:   Thu, 19 Sep 2019 14:53:00 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Murali Nalajala <mnalajal@codeaurora.org>, rafael@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] base: soc: Export soc_device_to_device API
+Message-ID: <20190919215300.GC1418@minitux>
+References: <1568927624-13682-1-git-send-email-mnalajal@codeaurora.org>
+ <20190919213203.GA395325@kroah.com>
 MIME-Version: 1.0
-References: <20190828183758.11553-1-rrangel@chromium.org>
-In-Reply-To: <20190828183758.11553-1-rrangel@chromium.org>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Thu, 19 Sep 2019 17:52:50 -0400
-Message-ID: <CADnq5_PX852kyFtBX_caTfZyfW6agt90qWQ1m-csW37o-uNL6g@mail.gmail.com>
-Subject: Re: [PATCH v2] drm/amd/display: fix struct init in update_bounding_box
-To:     Raul E Rangel <rrangel@chromium.org>
-Cc:     amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        Charlene Liu <charlene.liu@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        Nikola Cornij <nikola.cornij@amd.com>,
-        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
-        hersen wu <hersenxs.wu@amd.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Jun Lei <Jun.Lei@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190919213203.GA395325@kroah.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 2:51 PM Raul E Rangel <rrangel@chromium.org> wrote:
->
-> dcn20_resource.c:2636:9: error: missing braces around initializer [-Werror=missing-braces]
->   struct _vcs_dpi_voltage_scaling_st calculated_states[MAX_CLOCK_LIMIT_STATES] = {0};
->          ^
-> Fixes: 7ed4e6352c16f ("drm/amd/display: Add DCN2 HW Sequencer and Resource")
->
-> Signed-off-by: Raul E Rangel <rrangel@chromium.org>
-> ---
-> So apparently `{}` is a gcc extension. The C standard requires at least
-> one expression. So {{0}} is correct. I got a lint error about {{0}}
-> needing a space, so i use `{ {0} }`.
+On Thu 19 Sep 14:32 PDT 2019, Greg KH wrote:
 
-I think there were issues with {{}} as well.  How about just a memset?
+> On Thu, Sep 19, 2019 at 02:13:44PM -0700, Murali Nalajala wrote:
+> > If the soc drivers want to add custom sysfs entries it needs to
+> > access "dev" field in "struct soc_device". This can be achieved
+> > by "soc_device_to_device" API. Soc drivers which are built as a
+> > module they need above API to be exported. Otherwise one can
+> > observe compilation issues.
+> > 
+> > Signed-off-by: Murali Nalajala <mnalajal@codeaurora.org>
+> > ---
+> >  drivers/base/soc.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/drivers/base/soc.c b/drivers/base/soc.c
+> > index 7c0c5ca..4ad52f6 100644
+> > --- a/drivers/base/soc.c
+> > +++ b/drivers/base/soc.c
+> > @@ -41,6 +41,7 @@ struct device *soc_device_to_device(struct soc_device *soc_dev)
+> >  {
+> >  	return &soc_dev->dev;
+> >  }
+> > +EXPORT_SYMBOL_GPL(soc_device_to_device);
+> >  
+> >  static umode_t soc_attribute_mode(struct kobject *kobj,
+> >  				struct attribute *attr,
+> 
+> What in-kernel driver needs this?
+> 
 
-Alex
+Half of the drivers interacting with the soc driver calls this API,
+several of these I see no reason for being builtin (e.g.
+ux500 andversatile). So I think this patch makes sense to allow us to
+build these as modules.
 
->
-> Changes in v2:
-> - Use { {0} } instead of {}
->
->  drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-> index b949e202d6cb..8e6433be2252 100644
-> --- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-> +++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-> @@ -2633,7 +2633,7 @@ static void cap_soc_clocks(
->  static void update_bounding_box(struct dc *dc, struct _vcs_dpi_soc_bounding_box_st *bb,
->                 struct pp_smu_nv_clock_table *max_clocks, unsigned int *uclk_states, unsigned int num_states)
->  {
-> -       struct _vcs_dpi_voltage_scaling_st calculated_states[MAX_CLOCK_LIMIT_STATES] = {0};
-> +       struct _vcs_dpi_voltage_scaling_st calculated_states[MAX_CLOCK_LIMIT_STATES] = { {0} };
->         int i;
->         int num_calculated_states = 0;
->         int min_dcfclk = 0;
-> --
-> 2.23.0.187.g17f5b7556c-goog
->
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+> Is linux-next breaking without this?
+> 
+
+No, we postponed the addition of any sysfs attributes in the Qualcomm
+socinfo driver.
+
+> We don't export things unless we have a user of the export.
+> 
+> Also, adding "custom" sysfs attributes is almost always not the correct
+> thing to do at all.  The driver should be doing it, by setting up the
+> attribute group properly so that the driver core can do it automatically
+> for it.
+> 
+> No driver should be doing individual add/remove of sysfs files.  If it
+> does so, it is almost guaranteed to be doing it incorrectly and racing
+> userspace.
+> 
+
+The problem here is that the attributes are expected to be attached to
+the soc driver, which is separate from the platform-specific drivers. So
+there's no way to do platform specific attributes the right way.
+
+> And yes, there's loads of in-kernel examples of doing this wrong, I've
+> been working on fixing that up, look at the patches now in Linus's tree
+> for platform and USB drivers that do this as examples of how to do it
+> right.
+> 
+
+Agreed, this patch should not be used as an approval for any crazy
+attributes; but it's necessary in order to extend the soc device's
+attributes, per the current design.
+
+So:
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
+Bjorn
