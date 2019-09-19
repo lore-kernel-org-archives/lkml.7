@@ -7,48 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C7EC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB09C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:16:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B76621924
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:16:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF1402196F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:16:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931389;
-	bh=XFNuF7uzs1Qn5arkiQ4mGqElYb+I6FDtsCAORgQUYos=;
+	s=default; t=1568931393;
+	bh=HM89y0GM3yQ9uGNFebzaFnpLm1dfQiI9Y1XTs/Ja0fo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S/DdK8eNOkTdG9Yk+gvnt7yYMlgfvdtOQ2tI1zSQEQ811DIkftNk8UQCGYf4xRy9/
-	 ZKdv76xHZ2CmEKY70HPJ7kz53f8ha8BTiNN3oXVp3eSAcLJ3XHoni217j0v3lsk0T9
-	 miLv7+l0oC784gnEwXRGeo1QdRqPjYPL1fyACslU=
+	b=DkdjwZ7hvIzkLzkdTnlD4KwSdO7FA94Dt/E54QKv1lhWTVOx00GFRM1UUj9vZFmGC
+	 VGgdO6qhxIJZdQNERH5X9PST1J4wCmkAtSk2XrVndvklbFWHqEeY9hHJ3nKzP2L/as
+	 2KG9BBv15MH8SZE49PA3bUGHpjrPlxag51TUxXnA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390554AbfISWQ1 (ORCPT
+        id S2393099AbfISWQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:16:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56744 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:16:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406321AbfISWQW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:16:22 -0400
+        id S2392317AbfISWQ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:16:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CD78217D6;
-        Thu, 19 Sep 2019 22:16:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A43E521927;
+        Thu, 19 Sep 2019 22:16:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931381;
-        bh=XFNuF7uzs1Qn5arkiQ4mGqElYb+I6FDtsCAORgQUYos=;
+        s=default; t=1568931387;
+        bh=HM89y0GM3yQ9uGNFebzaFnpLm1dfQiI9Y1XTs/Ja0fo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DyThtcXmjGWqoOUk9ir/mZrJVsd769MY9Gioh9BD/XXQCI4ahjpoc2L6DIXnb0Be3
-         mnjqr8Erk4zNenKcLaagHeSd1qXdDNrXEsdnxHSLPgYyDMY7jK8DMEsiQAUO6qYvSR
-         q6SH6yNRKT6gOaqPxbQpB6g30MP07N4FLtGQAjos=
+        b=B6V/m6qVTdy9Jqv9q6fmda+ikHDHvaSdXlHTUQ0SzklJLV3z1fKXpUdgKyyP/6P7t
+         ap5eLiVXkfAIcoj5dwbAuYbRvwjIt2L/tnkEHIh4/+xI9cjzxO/JkYR0G5USFAG0QT
+         Rt4wFBGEK3sjWRO618wweKSFkZmBCxljJs+1hP38=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 25/59] Kconfig: Fix the reference to the IDT77105 Phy driver in the description of ATM_NICSTAR_USE_IDT77105
-Date:   Fri, 20 Sep 2019 00:03:40 +0200
-Message-Id: <20190919214804.605568642@linuxfoundation.org>
+Subject: [PATCH 4.14 27/59] ARM: 8874/1: mm: only adjust sections of valid mm structures
+Date:   Fri, 20 Sep 2019 00:03:42 +0200
+Message-Id: <20190919214805.014893472@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214755.852282682@linuxfoundation.org>
 References: <20190919214755.852282682@linuxfoundation.org>
@@ -61,32 +68,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Doug Berger <opendmb@gmail.com>
 
-[ Upstream commit cd9d4ff9b78fcd0fc4708900ba3e52e71e1a7690 ]
+[ Upstream commit c51bc12d06b3a5494fbfcbd788a8e307932a06e9 ]
 
-This should be IDT77105, not IDT77015.
+A timing hazard exists when an early fork/exec thread begins
+exiting and sets its mm pointer to NULL while a separate core
+tries to update the section information.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This commit ensures that the mm pointer is not NULL before
+setting its section parameters. The arguments provided by
+commit 11ce4b33aedc ("ARM: 8672/1: mm: remove tasklist locking
+from update_sections_early()") are equally valid for not
+requiring grabbing the task_lock around this check.
+
+Fixes: 08925c2f124f ("ARM: 8464/1: Update all mm structures with section adjustments")
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+Acked-by: Laura Abbott <labbott@redhat.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Rob Herring <robh@kernel.org>
+Cc: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Cc: Peng Fan <peng.fan@nxp.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/atm/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/mm/init.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/atm/Kconfig b/drivers/atm/Kconfig
-index 2e2efa577437e..8c37294f1d1ee 100644
---- a/drivers/atm/Kconfig
-+++ b/drivers/atm/Kconfig
-@@ -200,7 +200,7 @@ config ATM_NICSTAR_USE_SUNI
- 	  make the card work).
- 
- config ATM_NICSTAR_USE_IDT77105
--	bool "Use IDT77015 PHY driver (25Mbps)"
-+	bool "Use IDT77105 PHY driver (25Mbps)"
- 	depends on ATM_NICSTAR
- 	help
- 	  Support for the PHYsical layer chip in ForeRunner LE25 cards. In
+diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
+index defb7fc264280..4fa12fcf1f5d8 100644
+--- a/arch/arm/mm/init.c
++++ b/arch/arm/mm/init.c
+@@ -722,7 +722,8 @@ static void update_sections_early(struct section_perm perms[], int n)
+ 		if (t->flags & PF_KTHREAD)
+ 			continue;
+ 		for_each_thread(t, s)
+-			set_section_perms(perms, n, true, s->mm);
++			if (s->mm)
++				set_section_perms(perms, n, true, s->mm);
+ 	}
+ 	set_section_perms(perms, n, true, current->active_mm);
+ 	set_section_perms(perms, n, true, &init_mm);
 -- 
 2.20.1
 
