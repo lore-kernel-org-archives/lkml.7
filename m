@@ -2,85 +2,138 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0FD8C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:51:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA821C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F36A21924
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:51:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7D2C208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 15:52:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391459AbfISPvg convert rfc822-to-8bit (ORCPT
+        id S2391475AbfISPwN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 11:51:36 -0400
-Received: from mga04.intel.com ([192.55.52.120]:2484 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390134AbfISPvf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 11:51:35 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Sep 2019 08:51:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,524,1559545200"; 
-   d="scan'208";a="388328357"
-Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
-  by fmsmga006.fm.intel.com with ESMTP; 19 Sep 2019 08:51:35 -0700
-Received: from orsmsx116.amr.corp.intel.com (10.22.240.14) by
- ORSMSX106.amr.corp.intel.com (10.22.225.133) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 19 Sep 2019 08:51:34 -0700
-Received: from orsmsx115.amr.corp.intel.com ([169.254.4.199]) by
- ORSMSX116.amr.corp.intel.com ([169.254.7.232]) with mapi id 14.03.0439.000;
- Thu, 19 Sep 2019 08:51:34 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     James Dingwall <james@dingwall.me.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>
-Subject: RE: pstore does not work under xen
-Thread-Topic: pstore does not work under xen
-Thread-Index: AQHVbtTEG3HZwn8Lm06tueedx7eTRqczJUnA
-Date:   Thu, 19 Sep 2019 15:51:33 +0000
-Message-ID: <3908561D78D1C84285E8C5FCA982C28F7F472015@ORSMSX115.amr.corp.intel.com>
-References: <20190919102643.GA9400@dingwall.me.uk>
-In-Reply-To: <20190919102643.GA9400@dingwall.me.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYjYwYWNjODgtZDVhOS00ZWQyLWEyNjItNTA1YmZmYTJkNWQyIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiQnJzNkJ1NUpKMFRpTnAxb0pxRVlLVkJcLzF0ZXJza1h3Q1pHeVJheXJaUldKWVFZRHpEMFRwYUdHTkZxT3gxdEsifQ==
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 19 Sep 2019 11:52:13 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:50194 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390134AbfISPwN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 11:52:13 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iAyiw-0007jL-NO; Thu, 19 Sep 2019 17:52:02 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 1DCF51C0896;
+        Thu, 19 Sep 2019 17:52:02 +0200 (CEST)
+Date:   Thu, 19 Sep 2019 15:52:01 -0000
+From:   "tip-bot2 for Li RongQing" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/urgent] timer: Read jiffies once when forwarding base clk
+Cc:     Li RongQing <lirongqing@baidu.com>,
+        Liang ZhiCheng <liangzhicheng@baidu.com>,
+        Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <1568894687-14499-1-git-send-email-lirongqing@baidu.com>
+References: <1568894687-14499-1-git-send-email-lirongqing@baidu.com>
 MIME-Version: 1.0
+Message-ID: <156890832199.24167.16270557930790056516.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> I have been investigating a regression in our environment where pstore 
-> (efi-pstore specifically but I suspect this would affect all 
-> implementations) no longer works after upgrading from a 4.4 to 5.0 
-> kernel when running under xen.  (This is an Ubuntu kernel but I don't 
-> think there are patches which affect this area.)
+The following commit has been merged into the timers/urgent branch of tip:
 
-I don't have any answer for this ... but want to throw out the idea that
-VMM systems could provide some hypercalls to guests to save/return
-some blob of memory (perhaps the "save" triggers automagically if the
-guest crashes?).
+Commit-ID:     e430d802d6a3aaf61bd3ed03d9404888a29b9bf9
+Gitweb:        https://git.kernel.org/tip/e430d802d6a3aaf61bd3ed03d9404888a29b9bf9
+Author:        Li RongQing <lirongqing@baidu.com>
+AuthorDate:    Thu, 19 Sep 2019 20:04:47 +08:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Thu, 19 Sep 2019 17:50:11 +02:00
 
-That would provide a much better pstore back end than relying on emulation
-of EFI persistent variables (which have severe contraints on size, and don't
-support some pstore modes because you can't dynamically update EFI variables
-hundreds of times per second).
+timer: Read jiffies once when forwarding base clk
 
--Tony
+The timer delayed for more than 3 seconds warning was triggered during
+testing.
+
+  Workqueue: events_unbound sched_tick_remote
+  RIP: 0010:sched_tick_remote+0xee/0x100
+  ...
+  Call Trace:
+   process_one_work+0x18c/0x3a0
+   worker_thread+0x30/0x380
+   kthread+0x113/0x130
+   ret_from_fork+0x22/0x40
+
+The reason is that the code in collect_expired_timers() uses jiffies
+unprotected:
+
+    if (next_event > jiffies)
+        base->clk = jiffies;
+
+As the compiler is allowed to reload the value base->clk can advance
+between the check and the store and in the worst case advance farther than
+next event. That causes the timer expiry to be delayed until the wheel
+pointer wraps around.
+
+Convert the code to use READ_ONCE()
+
+Fixes: 236968383cf5 ("timers: Optimize collect_expired_timers() for NOHZ")
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+Signed-off-by: Liang ZhiCheng <liangzhicheng@baidu.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/1568894687-14499-1-git-send-email-lirongqing@baidu.com
+
+---
+ kernel/time/timer.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/time/timer.c b/kernel/time/timer.c
+index 0e315a2..4820823 100644
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -1678,24 +1678,26 @@ void timer_clear_idle(void)
+ static int collect_expired_timers(struct timer_base *base,
+ 				  struct hlist_head *heads)
+ {
++	unsigned long now = READ_ONCE(jiffies);
++
+ 	/*
+ 	 * NOHZ optimization. After a long idle sleep we need to forward the
+ 	 * base to current jiffies. Avoid a loop by searching the bitfield for
+ 	 * the next expiring timer.
+ 	 */
+-	if ((long)(jiffies - base->clk) > 2) {
++	if ((long)(now - base->clk) > 2) {
+ 		unsigned long next = __next_timer_interrupt(base);
+ 
+ 		/*
+ 		 * If the next timer is ahead of time forward to current
+ 		 * jiffies, otherwise forward to the next expiry time:
+ 		 */
+-		if (time_after(next, jiffies)) {
++		if (time_after(next, now)) {
+ 			/*
+ 			 * The call site will increment base->clk and then
+ 			 * terminate the expiry loop immediately.
+ 			 */
+-			base->clk = jiffies;
++			base->clk = now;
+ 			return 0;
+ 		}
+ 		base->clk = next;
