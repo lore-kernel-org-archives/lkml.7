@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 892FDC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6728EC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 604E82080F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:38:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C48D2080F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:38:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390699AbfITOiP (ORCPT
+        id S2392899AbfITOiM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:38:15 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35694 "EHLO
+        Fri, 20 Sep 2019 10:38:12 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35720 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728899AbfITOY7 (ORCPT
+        by vger.kernel.org with ESMTP id S2388004AbfITOY7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Sep 2019 10:24:59 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqC-0004wa-Sk; Fri, 20 Sep 2019 15:24:56 +0100
+        id 1iBJqC-0004wZ-QM; Fri, 20 Sep 2019 15:24:56 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqC-0007pr-FY; Fri, 20 Sep 2019 15:24:56 +0100
+        id 1iBJqC-0007pk-Ef; Fri, 20 Sep 2019 15:24:56 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "=?UTF-8?q?Noralf=20Tr=C3=B8nnes?=" <noralf@tronnes.org>,
-        "Daniel Vetter" <daniel.vetter@ffwll.ch>
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        "David S. Miller" <davem@davemloft.net>
 Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.173739634@decadent.org.uk>
+Message-ID: <lsq.1568989415.232069857@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 016/132] drm/fb-helper: dpms_legacy(): Only set on
- connectors in use
+Subject: [PATCH 3.16 015/132] cxgb3/l2t: Fix undefined behaviour
 In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,52 +55,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Noralf Trønnes <noralf@tronnes.org>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-commit 65a102f68005891d7f39354cfd79099908df6d51 upstream.
+commit 76497732932f15e7323dc805e8ea8dc11bb587cf upstream.
 
-For each enabled crtc the functions sets dpms on all registered connectors.
-Limit this to only doing it once and on the connectors actually in use.
+The use of zero-sized array causes undefined behaviour when it is not
+the last member in a structure. As it happens to be in this case.
 
-Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
-Fixes: 023eb571a1d0 ("drm: correctly update connector DPMS status in drm_fb_helper")
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190326175546.18126-3-noralf@tronnes.org
-[bwh: Backported to 3.16: adjust context]
+Also, the current code makes use of a language extension to the C90
+standard, but the preferred mechanism to declare variable-length
+types such as this one is a flexible array member, introduced in
+C99:
+
+struct foo {
+        int stuff;
+        struct boo array[];
+};
+
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last. Which is beneficial
+to cultivate a high-quality code.
+
+Fixes: e48f129c2f20 ("[SCSI] cxgb3i: convert cdev->l2opt to use rcu to prevent NULL dereference")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/gpu/drm/drm_fb_helper.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/chelsio/cxgb3/l2t.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/drm_fb_helper.c
-+++ b/drivers/gpu/drm/drm_fb_helper.c
-@@ -453,8 +453,8 @@ static void drm_fb_helper_dpms(struct fb
- {
- 	struct drm_fb_helper *fb_helper = info->par;
- 	struct drm_device *dev = fb_helper->dev;
--	struct drm_crtc *crtc;
- 	struct drm_connector *connector;
-+	struct drm_mode_set *modeset;
- 	int i, j;
+--- a/drivers/net/ethernet/chelsio/cxgb3/l2t.h
++++ b/drivers/net/ethernet/chelsio/cxgb3/l2t.h
+@@ -75,8 +75,8 @@ struct l2t_data {
+ 	struct l2t_entry *rover;	/* starting point for next allocation */
+ 	atomic_t nfree;		/* number of free entries */
+ 	rwlock_t lock;
+-	struct l2t_entry l2tab[0];
+ 	struct rcu_head rcu_head;	/* to handle rcu cleanup */
++	struct l2t_entry l2tab[];
+ };
  
- 	/*
-@@ -475,14 +475,13 @@ static void drm_fb_helper_dpms(struct fb
- 	}
- 
- 	for (i = 0; i < fb_helper->crtc_count; i++) {
--		crtc = fb_helper->crtc_info[i].mode_set.crtc;
-+		modeset = &fb_helper->crtc_info[i].mode_set;
- 
--		if (!crtc->enabled)
-+		if (!modeset->crtc->enabled)
- 			continue;
- 
--		/* Walk the connectors & encoders on this fb turning them on/off */
--		for (j = 0; j < fb_helper->connector_count; j++) {
--			connector = fb_helper->connector_info[j]->connector;
-+		for (j = 0; j < modeset->num_connectors; j++) {
-+			connector = modeset->connectors[j];
- 			connector->funcs->dpms(connector, dpms_mode);
- 			drm_object_property_set_value(&connector->base,
- 				dev->mode_config.dpms_property, dpms_mode);
+ typedef void (*arp_failure_handler_func)(struct t3cdev * dev,
 
