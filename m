@@ -2,123 +2,69 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4FDC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 23:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C55C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 23:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FFAF2080F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 23:00:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QmGf8fno"
+	by mail.kernel.org (Postfix) with ESMTP id 91EE1217F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 23:00:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569020428;
+	bh=ohXvMkhgOssbGFzFsH3WYA8GivXmapSr+T3y1U1LNQs=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=2frXW2JTjxCWuLe5skms6QO+ebQBgHjl2k0Qu4CV8AZhwTFdAHV58g5nYmMNSZZCy
+	 plqSc9qnTuiLONmRIfbfvsitFaxDtoMyzvO5vxzCTcBGP37Qyn1t/UPGiDTDA7yn1J
+	 J0Bqt493KkYiuXoOHWaSh4QQYkfju76SYDKv7cQg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbfITXAF (ORCPT
+        id S2404605AbfITXA1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 19:00:05 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44340 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726301AbfITXAE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 19:00:04 -0400
-Received: by mail-pl1-f195.google.com with SMTP id q15so3851542pll.11;
-        Fri, 20 Sep 2019 16:00:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=De39hz22dQEBdHKSHHQzsk2bdb/AfbkcxOJ2cj3f/3o=;
-        b=QmGf8fnoSJRL9b9fpyAuTeFHcrwMZPJsqHGXU7uNtnUWLlEtz70iBWSjg+CZZDgPQu
-         0PrETpgXtN/ERBiq+oTCvXWlTP+G5qMFKRhWEsIwS9sY9Zqp5BsdvVAh2xd+fezGt4kZ
-         +xAEnsuF8EBfkiIZBUmS9tfGNqkSK0BCOzRBAuV4NBMqjI4HWj6Eia0w1XAXy96gdLky
-         6BMWXOOZ519Kgua50FyFXGydzZg2jIA2B+kunb80hb37ReJgfgsaoYyQ8XJsVCzwoiub
-         DlHnfzYmdVqtZoTqm+eaCm2Pl0op2IYKVA1MTZyBpwvRdP0Y1aTpmT9qB22IBmO4J57q
-         TKYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=De39hz22dQEBdHKSHHQzsk2bdb/AfbkcxOJ2cj3f/3o=;
-        b=kbdxE+u7ehr4IN4mVNbnMhQapBW2K4YdVjoO5RJxerbVRmz8YXQaLL3ucErssQxJPZ
-         spaymETtXQxXAiUjqtLa6jdIpbqo76GvGnPG1X4VUlur4G8yVuqx8JN7ywGZ3cQ6XL0H
-         jGWoG5vGrhclRiPrAme8DqUKoHyZKMqXHPp2EAnRqfhaM6W/GcL0HyjRQsCYOWeMWb38
-         lmOy8gSfRfnOu212w+uFNMArPEVkyvCrg/bJOovBItaBM9iTgl/sx07w8Vyv4ZFnjNmw
-         11zWulTMBiDNdAuNihjjPE7WgIoP4phAYGmtEpPd6jIwp9ZdAtRDe9ZkBOYRyYXOjzVr
-         2MwQ==
-X-Gm-Message-State: APjAAAUOrOVDpeP8+Qq4y5Lwg4cnwSkakk19sww0x4UMxYggyjHsqXWu
-        qC7wZk6t7UuYBp/mMKxX49neq1OA
-X-Google-Smtp-Source: APXvYqybAE/L6AhdiFAn0l6VCwfk1LdQL+NW9LSz9muG45nl6A9wP39gqunIAizGq/KYVzKUstRoow==
-X-Received: by 2002:a17:902:8f88:: with SMTP id z8mr5494597plo.232.1569020404056;
-        Fri, 20 Sep 2019 16:00:04 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id z6sm2914145pgk.18.2019.09.20.16.00.02
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 20 Sep 2019 16:00:02 -0700 (PDT)
-Date:   Fri, 20 Sep 2019 16:00:01 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Ben Hutchings <ben@decadent.org.uk>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        Denis Kirjanov <kda@linux-powerpc.org>
-Subject: Re: [PATCH 3.16 000/132] 3.16.74-rc1 review
-Message-ID: <20190920230001.GA32583@roeck-us.net>
-References: <lsq.1568989414.954567518@decadent.org.uk>
- <20190920200423.GA26056@roeck-us.net>
- <8dbced01558cd8d4a1d4f058010e7d63e5f6810e.camel@decadent.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8dbced01558cd8d4a1d4f058010e7d63e5f6810e.camel@decadent.org.uk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Fri, 20 Sep 2019 19:00:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36600 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726909AbfITXA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 19:00:27 -0400
+Subject: Re: [GIT PULL] VFIO updates for v5.4-rc1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569020426;
+        bh=ohXvMkhgOssbGFzFsH3WYA8GivXmapSr+T3y1U1LNQs=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=CiYDFxbqXEkwQTLYqU4JGm58WZqZNiiub0WJNLkTylTv1KK9/xCVUPLtc+1MaKEcH
+         krwSlpcougQfMRkEIVP1cRovP5AGEkiNjpk1OmdZBpmuHe5Ckd9xHTdQ6KZ6E4wj90
+         nzzgFlrgd84jNbWaAT7NrsGebK07xsQpUVJqb5g4=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190920151226.541871fe@x1.home>
+References: <20190920151226.541871fe@x1.home>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190920151226.541871fe@x1.home>
+X-PR-Tracked-Remote: git://github.com/awilliam/linux-vfio.git
+ tags/vfio-v5.4-rc1
+X-PR-Tracked-Commit-Id: e6c5d727db0a86a3ff21aca6824aae87f3bc055f
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 1ddd00276fd5fbd14dd5e366d8777dcd5f2d1b65
+Message-Id: <156902042693.31413.16973837338352473872.pr-tracker-bot@kernel.org>
+Date:   Fri, 20 Sep 2019 23:00:26 +0000
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 10:16:49PM +0100, Ben Hutchings wrote:
-> On Fri, 2019-09-20 at 13:04 -0700, Guenter Roeck wrote:
-> > On Fri, Sep 20, 2019 at 03:23:34PM +0100, Ben Hutchings wrote:
-> > > This is the start of the stable review cycle for the 3.16.74 release.
-> > > There are 132 patches in this series, which will be posted as responses
-> > > to this one.  If anyone has any issues with these being applied, please
-> > > let me know.
-> > > 
-> > > Responses should be made by Mon Sep 23 20:00:00 UTC 2019.
-> > > Anything received after that time might be too late.
-> > > 
-> > 
-> > Build results:
-> > 	total: 136 pass: 135 fail: 1
-> > Failed builds:
-> > 	arm:allmodconfig
-> > Qemu test results:
-> > 	total: 229 pass: 229 fail: 0
-> > 
-> > Build errors in arm:allmodconfig are along the line of
-> > 
-> > In file included from include/linux/printk.h:5,
-> >                  from include/linux/kernel.h:13,
-> >                  from include/linux/clk.h:16,
-> >                  from drivers/gpu/drm/tilcdc/tilcdc_drv.h:21,
-> >                  from drivers/gpu/drm/tilcdc/tilcdc_drv.c:20:
-> > include/linux/init.h:343:7: error: 'cleanup_module'
-> > 	specifies less restrictive attribute than its target 'tilcdc_drm_fini': 'cold'
-> > 
-> > In addition to a few errors like that, there are literally thousands
-> > of similar warnings.
-> 
-> It looks like this is triggered by you switching arm builds from gcc 8
-> to 9, rather than by any code change.
-> 
-Ah, good point.
+The pull request you sent on Fri, 20 Sep 2019 15:12:26 -0600:
 
-> Does it actually make sense to try to support building Linux 3.16 with
-> gcc 9?  If so, I suppose I'll need to add:
-> 
+> git://github.com/awilliam/linux-vfio.git tags/vfio-v5.4-rc1
 
-It helps streamline my builds and reduces the number of compilers
-I have to keep around. No problem, though; I can switch back to an older
-compiler for arm on 3.16.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/1ddd00276fd5fbd14dd5e366d8777dcd5f2d1b65
 
-Guenter
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
