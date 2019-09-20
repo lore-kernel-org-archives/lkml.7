@@ -2,215 +2,87 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD6CC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 02:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB329C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 02:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B179A207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 02:19:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98797207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 02:21:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437096AbfITCTT (ORCPT
+        id S2404240AbfITCVq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 22:19:19 -0400
-Received: from mga11.intel.com ([192.55.52.93]:25069 "EHLO mga11.intel.com"
+        Thu, 19 Sep 2019 22:21:46 -0400
+Received: from foss.arm.com ([217.140.110.172]:40110 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437065AbfITCTS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 22:19:18 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Sep 2019 19:19:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,527,1559545200"; 
-   d="scan'208";a="362711315"
-Received: from dpdk-virtio-tbie-2.sh.intel.com (HELO ___) ([10.67.104.71])
-  by orsmga005.jf.intel.com with ESMTP; 19 Sep 2019 19:19:14 -0700
-Date:   Fri, 20 Sep 2019 10:16:30 +0800
-From:   Tiwei Bie <tiwei.bie@intel.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>, alex.williamson@redhat.com,
-        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, dan.daly@intel.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        lingshan.zhu@intel.com
-Subject: Re: [RFC v4 0/3] vhost: introduce mdev based hardware backend
-Message-ID: <20190920021630.GA4108@___>
-References: <20190917010204.30376-1-tiwei.bie@intel.com>
- <993841ed-942e-c90b-8016-8e7dc76bf13a@redhat.com>
- <20190917105801.GA24855@___>
- <fa6957f3-19ad-f351-8c43-65bc8342b82e@redhat.com>
- <20190918102923-mutt-send-email-mst@kernel.org>
- <d2efe7e4-cf13-437d-e2dc-e2779fac7d2f@redhat.com>
- <20190919154552.GA27657@___>
- <43aaf7dc-f08b-8898-3c55-908ff4d68866@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <43aaf7dc-f08b-8898-3c55-908ff4d68866@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        id S2388199AbfITCVq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 22:21:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AAF3C337;
+        Thu, 19 Sep 2019 19:21:45 -0700 (PDT)
+Received: from localhost.localdomain (entos-thunderx2-02.shanghai.arm.com [10.169.40.54])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2F5563F67D;
+        Thu, 19 Sep 2019 19:21:41 -0700 (PDT)
+From:   Jia He <justin.he@arm.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Suzuki Poulose <Suzuki.Poulose@arm.com>
+Cc:     Punit Agrawal <punitagrawal@gmail.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Jun Yao <yaojun8558363@gmail.com>,
+        Alex Van Brunt <avanbrunt@nvidia.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Ralph Campbell <rcampbell@nvidia.com>, hejianet@gmail.com,
+        Kaly Xin <Kaly.Xin@arm.com>, Jia He <justin.he@arm.com>
+Subject: [PATCH v6 0/3] fix double page fault on arm64
+Date:   Fri, 20 Sep 2019 10:21:29 +0800
+Message-Id: <20190920022132.149467-1-justin.he@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 09:30:58AM +0800, Jason Wang wrote:
-> On 2019/9/19 下午11:45, Tiwei Bie wrote:
-> > On Thu, Sep 19, 2019 at 09:08:11PM +0800, Jason Wang wrote:
-> > > On 2019/9/18 下午10:32, Michael S. Tsirkin wrote:
-> > > > > > > So I have some questions:
-> > > > > > > 
-> > > > > > > 1) Compared to method 2, what's the advantage of creating a new vhost char
-> > > > > > > device? I guess it's for keep the API compatibility?
-> > > > > > One benefit is that we can avoid doing vhost ioctls on
-> > > > > > VFIO device fd.
-> > > > > Yes, but any benefit from doing this?
-> > > > It does seem a bit more modular, but it's certainly not a big deal.
-> > > Ok, if we go this way, it could be as simple as provide some callback to
-> > > vhost, then vhost can just forward the ioctl through parent_ops.
-> > > 
-> > > > > > > 2) For method 2, is there any easy way for user/admin to distinguish e.g
-> > > > > > > ordinary vfio-mdev for vhost from ordinary vfio-mdev?
-> > > > > > I think device-api could be a choice.
-> > > > > Ok.
-> > > > > 
-> > > > > 
-> > > > > > > I saw you introduce
-> > > > > > > ops matching helper but it's not friendly to management.
-> > > > > > The ops matching helper is just to check whether a given
-> > > > > > vfio-device is based on a mdev device.
-> > > > > > 
-> > > > > > > 3) A drawback of 1) and 2) is that it must follow vfio_device_ops that
-> > > > > > > assumes the parameter comes from userspace, it prevents support kernel
-> > > > > > > virtio drivers.
-> > > > > > > 
-> > > > > > > 4) So comes the idea of method 3, since it register a new vhost-mdev driver,
-> > > > > > > we can use device specific ops instead of VFIO ones, then we can have a
-> > > > > > > common API between vDPA parent and vhost-mdev/virtio-mdev drivers.
-> > > > > > As the above draft shows, this requires introducing a new
-> > > > > > VFIO device driver. I think Alex's opinion matters here.
-> > > Just to clarify, a new type of mdev driver but provides dummy
-> > > vfio_device_ops for VFIO to make container DMA ioctl work.
-> > I see. Thanks! IIUC, you mean we can provide a very tiny
-> > VFIO device driver in drivers/vhost/mdev.c, e.g.:
-> > 
-> > static int vfio_vhost_mdev_open(void *device_data)
-> > {
-> > 	if (!try_module_get(THIS_MODULE))
-> > 		return -ENODEV;
-> > 	return 0;
-> > }
-> > 
-> > static void vfio_vhost_mdev_release(void *device_data)
-> > {
-> > 	module_put(THIS_MODULE);
-> > }
-> > 
-> > static const struct vfio_device_ops vfio_vhost_mdev_dev_ops = {
-> > 	.name		= "vfio-vhost-mdev",
-> > 	.open		= vfio_vhost_mdev_open,
-> > 	.release	= vfio_vhost_mdev_release,
-> > };
-> > 
-> > static int vhost_mdev_probe(struct device *dev)
-> > {
-> > 	struct mdev_device *mdev = to_mdev_device(dev);
-> > 
-> > 	... Check the mdev device_id proposed in ...
-> > 	... https://lkml.org/lkml/2019/9/12/151 ...
-> 
-> 
-> To clarify, this should be done through the id_table fields in
-> vhost_mdev_driver, and it should claim it supports virtio-mdev device only:
-> 
-> 
-> static struct mdev_class_id id_table[] = {
->     { MDEV_ID_VIRTIO },
->     { 0 },
-> };
-> 
-> 
-> static struct mdev_driver vhost_mdev_driver = {
->     ...
->     .id_table = id_table,
-> }
+When we tested pmdk unit test vmmalloc_fork TEST1 in arm64 guest, there
+will be a double page fault in __copy_from_user_inatomic of cow_user_page.
 
-In this way, both of virtio-mdev and vhost-mdev will try to
-take this device. We may want a way to let vhost-mdev take this
-device only when users explicitly ask it to do it. Or maybe we
-can have a different MDEV_ID for vhost-mdev but share the device
-ops with virtio-mdev.
+As told by Catalin: "On arm64 without hardware Access Flag, copying from
+user will fail because the pte is old and cannot be marked young. So we
+always end up with zeroed page after fork() + CoW for pfn mappings. we
+don't always have a hardware-managed access flag on arm64."
 
-> 
-> 
-> > 
-> > 	return vfio_add_group_dev(dev, &vfio_vhost_mdev_dev_ops, mdev);
-> 
-> 
-> And in vfio_vhost_mdev_ops, all its need is to just implement vhost-net
-> ioctl and translate them to virtio-mdev transport (e.g device_ops I proposed
-> or ioctls other whatever other method) API.
+Changes
+v6: fix error case of returning with spinlock taken (Catalin)
+    move kmap_atomic to avoid handling kunmap_atomic
+v5: handle the case correctly when !pte_same
+    fix kbuild test failed
+v4: introduce cpu_has_hw_af (Suzuki)
+    bail out if !pte_same (Kirill)
+v3: add vmf->ptl lock/unlock (Kirill A. Shutemov)
+    add arch_faults_on_old_pte (Matthew, Catalin)
+v2: remove FAULT_FLAG_WRITE when setting pte access flag (Catalin)
 
-I see, so my previous understanding is basically correct:
+Jia He (3):
+  arm64: cpufeature: introduce helper cpu_has_hw_af()
+  arm64: mm: implement arch_faults_on_old_pte() on arm64
+  mm: fix double page fault on arm64 if PTE_AF is cleared
 
-https://lkml.org/lkml/2019/9/17/332
+ arch/arm64/include/asm/cpufeature.h | 10 +++++
+ arch/arm64/include/asm/pgtable.h    | 12 ++++++
+ mm/memory.c                         | 65 ++++++++++++++++++++++++++---
+ 3 files changed, 81 insertions(+), 6 deletions(-)
 
-I.e. we won't have a separate vhost fd and we will do all vhost
-ioctls on the VFIO device fd backed by this new VFIO driver.
+-- 
+2.17.1
 
-> And it could have a dummy ops
-> implementation for the other device_ops.
-> 
-> 
-> > }
-> > 
-> > static void vhost_mdev_remove(struct device *dev)
-> > {
-> > 	vfio_del_group_dev(dev);
-> > }
-> > 
-> > static struct mdev_driver vhost_mdev_driver = {
-> > 	.name	= "vhost_mdev",
-> > 	.probe	= vhost_mdev_probe,
-> > 	.remove	= vhost_mdev_remove,
-> > };
-> > 
-> > So we can bind above mdev driver to the virtio-mdev compatible
-> > mdev devices when we want to use vhost-mdev.
-> > 
-> > After binding above driver to the mdev device, we can setup IOMMU
-> > via VFIO and get VFIO device fd of this mdev device, and pass it
-> > to vhost fd (/dev/vhost-mdev) with a SET_BACKEND ioctl.
-> 
-> 
-> Then what vhost-mdev char device did is just forwarding ioctl back to this
-> vfio device fd which seems a overkill. It's simpler that just do ioctl on
-> the device ops directly.
-
-Yes.
-
-Thanks,
-Tiwei
-
-
-> 
-> Thanks
-> 
-> 
-> > 
-> > Thanks,
-> > Tiwei
-> > 
-> > > Thanks
-> > > 
-> > > 
-> > > > > Yes, it is.
-> > > > > 
-> > > > > Thanks
-> > > > > 
-> > > > > 
