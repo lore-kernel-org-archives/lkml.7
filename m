@@ -2,480 +2,138 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0413C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:13:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB552C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:14:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87722208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:13:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 827CF20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:14:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="KUj/mG6b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392538AbfITQNT (ORCPT
+        id S2392846AbfITQOQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 12:13:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:32894 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388473AbfITQNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 12:13:18 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8AF5D308624A;
-        Fri, 20 Sep 2019 16:13:17 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 481D45C1B5;
-        Fri, 20 Sep 2019 16:13:01 +0000 (UTC)
-Date:   Fri, 20 Sep 2019 12:12:58 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     containers@lists.linux-foundation.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     eparis@parisplace.org, Steve Grubb <sgrubb@redhat.com>,
-        omosnace@redhat.com, Paul Moore <paul@paul-moore.com>,
-        nhorman@redhat.com, dwalsh@redhat.com, mpatel@redhat.com
-Subject: Re: [PATCH ghau51/ghau40 v7 04/12] add ausearch containerid support
-Message-ID: <20190920161258.4yffmfnmofdtwtdp@madcap2.tricolour.ca>
-References: <1568856472-10173-1-git-send-email-rgb@redhat.com>
- <1568856472-10173-5-git-send-email-rgb@redhat.com>
+        Fri, 20 Sep 2019 12:14:16 -0400
+Received: from mail-eopbgr50109.outbound.protection.outlook.com ([40.107.5.109]:1926
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388473AbfITQOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 12:14:16 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Nj1CXZf5FeuzIJLQdnUkYqGu8zw6h0omyl6/J4ZI5y9btf2b/Yp4YHRThNubXjwO3DvTW5CN14xKscSc9ZZFcIjfSB/un063rxzpNBnehweTQlJYw7+MSft5BGpPxGrOJ5alImQwa91YiqbOr1ZOPs3L7SurkI578s4/ug0Z6XDz8s7c4mL/e3NALg6TVzRVljd0Q0U10M3bg9/1akiHMutGnTA3gksyjkZsybqUF2RXepwylgwkQGoiovbRErOR08z9yZq4F3Gj4UFhzreugf/Sdo3xSHDK4oqKSioqFifjMndj8Z0258IESisjYoyhMuWomj9s6gpZQXsMhTLPzg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m+4Bh2ybJkFMdS6p2FgiVBrSvTxmmSFZY39CoLCdlnA=;
+ b=OWwlYLRQplYUbxpxkTfeoYpdiELPjnatpJr0t7OysU4GE6GDBOOztJjkaJgKRNwwkdQSDran1BurcaTLGDb38HQ7y34HIWnjYKuiT9UW74Zl+tlY4lp+HbP0QUsy9K5jVPva2RScd4QbT4Linn5sn47G4GgYwqS0E0JJP8zbs9gK5EPVKkWwA0yI8XFaHOKzttqzX7O6najwuS9j9U6eX8cysfgo5GklTtfI95xVuoOgpz3pVdRHv6I+2yC+aOqUt7RSIyRiT7UGE2h3FmsVqIGZZK+3CdnW3Sq7TqbmMze+ZifvyOpD3H3b1FzNmPI/EsuPZn8Nu/32SWChCrfIwA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nokia.com; dmarc=pass action=none header.from=nokia.com;
+ dkim=pass header.d=nokia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
+ s=selector1-nokia-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m+4Bh2ybJkFMdS6p2FgiVBrSvTxmmSFZY39CoLCdlnA=;
+ b=KUj/mG6bpk2wFlM3g8V7PWZf7Z2Djnwq0W/QjE1WPn7f8NdywigQHPiJoJAA10VCbVgb13TTUPnytI/xcXcAQq9vqq6lUAcaG6pc+aILMFbX83brqrnDO5ZYcE1oOzJdG6TLG4PFYDvU48F6yRrTovt43bqfQIzhBWKEVqZjP8A=
+Received: from AM6PR0702MB3527.eurprd07.prod.outlook.com (52.133.24.149) by
+ AM6PR0702MB3605.eurprd07.prod.outlook.com (52.133.20.28) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.17; Fri, 20 Sep 2019 16:14:12 +0000
+Received: from AM6PR0702MB3527.eurprd07.prod.outlook.com
+ ([fe80::892c:2b90:e54f:ab56]) by AM6PR0702MB3527.eurprd07.prod.outlook.com
+ ([fe80::892c:2b90:e54f:ab56%3]) with mapi id 15.20.2284.009; Fri, 20 Sep 2019
+ 16:14:12 +0000
+From:   "Sverdlin, Alexander (Nokia - DE/Ulm)" <alexander.sverdlin@nokia.com>
+To:     Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Grant Likely <grant.likely@secretlab.ca>
+CC:     Mark Brown <broonie@opensource.wolfsonmicro.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        "Glavinic-Pecotic, Matija (EXT - DE/Ulm)" 
+        <matija.glavinic-pecotic.ext@nokia.com>,
+        "Adamski, Krzysztof (Nokia - PL/Wroclaw)" 
+        <krzysztof.adamski@nokia.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH 3/3] genirq/irqdomain: Detect type race in
+ irq_create_fwspec_mapping()
+Thread-Topic: [PATCH 3/3] genirq/irqdomain: Detect type race in
+ irq_create_fwspec_mapping()
+Thread-Index: AQHVaU6gc4wd5DvxjEeG+LE441tLCKc0yF8AgAAB4AA=
+Date:   Fri, 20 Sep 2019 16:14:11 +0000
+Message-ID: <f3092af0-b354-b8cb-7c07-b874c2dd909f@nokia.com>
+References: <20190912094343.5480-1-alexander.sverdlin@nokia.com>
+ <20190912094343.5480-4-alexander.sverdlin@nokia.com>
+ <e86441c4-9ce2-b0f2-f8ca-2823497b4d6d@kernel.org>
+In-Reply-To: <e86441c4-9ce2-b0f2-f8ca-2823497b4d6d@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [131.228.32.166]
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
+x-clientproxiedby: HE1PR05CA0193.eurprd05.prod.outlook.com
+ (2603:10a6:3:f9::17) To AM6PR0702MB3527.eurprd07.prod.outlook.com
+ (2603:10a6:209:11::21)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=alexander.sverdlin@nokia.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 89be7f80-18a8-4727-94b7-08d73de592ed
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:AM6PR0702MB3605;
+x-ms-traffictypediagnostic: AM6PR0702MB3605:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR0702MB3605A8D18B471A2359EFFDF588880@AM6PR0702MB3605.eurprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 0166B75B74
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(396003)(136003)(39860400002)(366004)(346002)(189003)(199004)(14444005)(54906003)(5660300002)(4326008)(53546011)(305945005)(6246003)(66946007)(110136005)(31686004)(229853002)(6486002)(316002)(6512007)(256004)(14454004)(36756003)(71190400001)(71200400001)(6436002)(58126008)(31696002)(25786009)(2906002)(99286004)(66446008)(65806001)(478600001)(3846002)(52116002)(446003)(86362001)(11346002)(26005)(8936002)(8676002)(81166006)(66066001)(2616005)(76176011)(486006)(7736002)(476003)(66476007)(6506007)(386003)(65956001)(66556008)(64756008)(186003)(2501003)(102836004)(6116002)(81156014);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6PR0702MB3605;H:AM6PR0702MB3527.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nokia.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: V5/DJOPOnyRCQ51zTMezhJxJhgS6cdRw0GJGx6Jw187DJ28ibH3jJl9mKi+ijtYrX+vWonl9zqLb7ldh6xiE1dmn0+b6AGiWEO1fClJw2agLq0lqOkyLxzTnJ6WeZkkVyMGS19pcoVAehRW8W5ZniEBUGY78L4DkOGJPdgt21QN5ZoCt2TMSFDFKiVGj4EoiW9ZZ3NBQTzN9RW5BXBq7anK92VCAcptyilam7WlMusXFN0Oy9nnhnXAEWjVk/SA5WUBMYmnx5zwrrhy8bnJV4j0XT563VvRaBsEOuzYsMv4RYLhgjJHUNitvikNwJpqErkmYW2FedleZPicHMqBhYLn1kpTYBz5/FAsOfyMVdCNI+0Dd54URnPoPgQ0OiV6UBLpTOLU1s0vF9fmcdf7QR8NLJyHTpuCHQH52KubpehM=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <10F9AF03540D2049B1A9119B56583365@eurprd07.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1568856472-10173-5-git-send-email-rgb@redhat.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Fri, 20 Sep 2019 16:13:17 +0000 (UTC)
+X-OriginatorOrg: nokia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 89be7f80-18a8-4727-94b7-08d73de592ed
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Sep 2019 16:14:11.9802
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7oP78RRKgI+UQ8I8sifiOlc2P4LTbE5G6rPtIfldnHkrIB2A/BHkXdd3ZBPkJrSxyZVr7P7aEsevmb6kaVFm+L/Cqvh+7VN8IzZwo0B0c18=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0702MB3605
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-09-18 21:27, Richard Guy Briggs wrote:
-> Add support to ausearch for searching on the containerid field in
-> records.
-
-Steve, I'm expecting that you may be able to help here on ausearch.  The
-problem is I've modelled this search code on expecting only one value to
-be delivered in the contid= field in CONTAINER_OP and CONTAINER_ID
-records.  In the case of the latter type of record, the value could
-either be a CSV list or a nested list (separated by ^), so the value
-stored in "s->contid" (or l->s.contid) would need to be more complex and
-the check against it no longer a simple equality check but rather a
-parse and check of each listed value for a match.
-
-Do you have a way to do that already in other fields that I could use as
-a current best practice, or shall I work on a method myself?
-
-The CSV search will be necessary to support network namespace container
-events and the nesting will be necessary only if the nesting feature and
-reporting method are accepted.
-
-> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> ---
->  src/aureport-options.c |   1 +
->  src/ausearch-llist.c   |   2 +
->  src/ausearch-llist.h   |   1 +
->  src/ausearch-match.c   |   3 +
->  src/ausearch-options.c |  47 +++++++++++-
->  src/ausearch-options.h |   1 +
->  src/ausearch-parse.c   | 197 +++++++++++++++++++++++++++++++++++++++++++++++++
->  7 files changed, 251 insertions(+), 1 deletion(-)
-> 
-> diff --git a/src/aureport-options.c b/src/aureport-options.c
-> index bd847d7d57f0..679c36c00985 100644
-> --- a/src/aureport-options.c
-> +++ b/src/aureport-options.c
-> @@ -62,6 +62,7 @@ const char *event_vmname = NULL;
->  long long event_exit = 0;
->  int event_exit_is_set = 0;
->  int event_ppid = -1, event_session_id = -2;
-> +unsigned long long int event_contid = -1;
->  int event_debug = 0, event_machine = -1;
->  
->  /* These are used by aureport */
-> diff --git a/src/ausearch-llist.c b/src/ausearch-llist.c
-> index ef5503c34fd9..ade727a9e102 100644
-> --- a/src/ausearch-llist.c
-> +++ b/src/ausearch-llist.c
-> @@ -60,6 +60,7 @@ void list_create(llist *l)
->  	l->s.arch = 0;
->  	l->s.syscall = 0;
->  	l->s.session_id = -2;
-> +	l->s.contid = -1;
->  	l->s.uuid = NULL;
->  	l->s.vmname = NULL;
->  	l->s.tuid = NULL;
-> @@ -211,6 +212,7 @@ void list_clear(llist* l)
->  	l->s.arch = 0;
->  	l->s.syscall = 0;
->  	l->s.session_id = -2;
-> +	l->s.contid = -1;
->  	free(l->s.uuid);
->  	l->s.uuid = NULL;
->  	free(l->s.vmname);
-> diff --git a/src/ausearch-llist.h b/src/ausearch-llist.h
-> index 64e4ee1f3694..2d1f52237ce6 100644
-> --- a/src/ausearch-llist.h
-> +++ b/src/ausearch-llist.h
-> @@ -56,6 +56,7 @@ typedef struct
->    int arch;             // arch
->    int syscall;          // syscall
->    uint32_t session_id;  // Login session id
-> +  __u64 contid;         // Container id
->    long long exit;       // Syscall exit code
->    int exit_is_set;      // Syscall exit code is valid
->    char *hostname;       // remote hostname
-> diff --git a/src/ausearch-match.c b/src/ausearch-match.c
-> index 61a11d30a09b..47c12581a963 100644
-> --- a/src/ausearch-match.c
-> +++ b/src/ausearch-match.c
-> @@ -113,6 +113,9 @@ int match(llist *l)
->  				if ((event_session_id != -2) &&
->  					(event_session_id != l->s.session_id))
->  					return 0;
-> +				if ((event_contid != -1) &&
-> +					(event_contid != l->s.contid))
-> +					return 0;
->  				if (event_exit_is_set) {
->  					if (l->s.exit_is_set == 0)
->  						return 0;
-> diff --git a/src/ausearch-options.c b/src/ausearch-options.c
-> index eb483e670957..609718657775 100644
-> --- a/src/ausearch-options.c
-> +++ b/src/ausearch-options.c
-> @@ -60,6 +60,7 @@ int event_syscall = -1, event_machine = -1;
->  int event_ua = 0, event_ga = 0, event_se = 0;
->  int just_one = 0;
->  uint32_t event_session_id = -2;
-> +unsigned long long int event_contid = -1;
->  long long event_exit = 0;
->  int event_exit_is_set = 0;
->  int line_buffered = 0;
-> @@ -88,7 +89,7 @@ struct nv_pair {
->  
->  enum { S_EVENT, S_COMM, S_FILENAME, S_ALL_GID, S_EFF_GID, S_GID, S_HELP,
->  S_HOSTNAME, S_INTERP, S_INFILE, S_MESSAGE_TYPE, S_PID, S_SYSCALL, S_OSUCCESS,
-> -S_TIME_END, S_TIME_START, S_TERMINAL, S_ALL_UID, S_EFF_UID, S_UID, S_LOGINID,
-> +S_TIME_END, S_TIME_START, S_TERMINAL, S_ALL_UID, S_EFF_UID, S_UID, S_LOGINID, S_CONTID,
->  S_VERSION, S_EXACT_MATCH, S_EXECUTABLE, S_CONTEXT, S_SUBJECT, S_OBJECT,
->  S_PPID, S_KEY, S_RAW, S_NODE, S_IN_LOGS, S_JUST_ONE, S_SESSION, S_EXIT,
->  S_LINEBUFFERED, S_UUID, S_VMNAME, S_DEBUG, S_CHECKPOINT, S_ARCH, S_FORMAT,
-> @@ -100,6 +101,7 @@ static struct nv_pair optiontab[] = {
->  	{ S_EVENT, "--event" },
->  	{ S_COMM, "-c" },
->  	{ S_COMM, "--comm" },
-> +	{ S_CONTID, "--contid" },
->  	{ S_CHECKPOINT, "--checkpoint" },
->  	{ S_DEBUG, "--debug" },
->  	{ S_EXIT, "-e" },
-> @@ -197,6 +199,7 @@ static void usage(void)
->  	"\t-a,--event <Audit event id>\tsearch based on audit event id\n"
->  	"\t--arch <CPU>\t\t\tsearch based on the CPU architecture\n"
->  	"\t-c,--comm  <Comm name>\t\tsearch based on command line name\n"
-> +	"\t--contid <audit container id>\tsearch based on the task's audit container id\n"
->  	"\t--checkpoint <checkpoint file>\tsearch from last complete event\n"
->  	"\t--debug\t\t\tWrite malformed events that are skipped to stderr\n"
->  	"\t-e,--exit  <Exit code or errno>\tsearch based on syscall exit code\n"
-> @@ -1182,6 +1185,48 @@ int check_params(int count, char *vars[])
->  			}
->  			c++;
->  			break;
-> +		case S_CONTID:
-> +			if (!optarg) {
-> +				if ((c+1 < count) && vars[c+1])
-> +					optarg = vars[c+1];
-> +				else {
-> +					fprintf(stderr,
-> +						"Argument is required for %s\n",
-> +						vars[c]);
-> +					retval = -1;
-> +					break;
-> +				}
-> +			}
-> +			{
-> +			size_t len = strlen(optarg);
-> +			if (isdigit(optarg[0])) {
-> +				errno = 0;
-> +				event_contid = strtoull(optarg,NULL,0);
-> +				if (errno) {
-> +					fprintf(stderr, 
-> +			"Numeric container ID conversion error (%s) for %s\n",
-> +						strerror(errno), optarg);
-> +					retval = -1;
-> +				}
-> +			} else if (len >= 2 && *(optarg)=='-' &&
-> +					(isdigit(optarg[1]))) {
-> +				errno = 0;
-> +				event_contid = strtoll(optarg, NULL, 0);
-> +				if (errno) {
-> +					retval = -1;
-> +					fprintf(stderr, "Error converting %s\n",
-> +						optarg);
-> +				}
-> +			} else {
-> +				fprintf(stderr, 
-> +			"Container ID is non-numeric and unknown (%s)\n",
-> +						optarg);
-> +				retval = -1;
-> +				break;
-> +			}
-> +			}
-> +			c++;
-> +			break;
->  		case S_UUID:
->  			if (!optarg) {
->  				fprintf(stderr,
-> diff --git a/src/ausearch-options.h b/src/ausearch-options.h
-> index 1372762b4b3e..c03256e36495 100644
-> --- a/src/ausearch-options.h
-> +++ b/src/ausearch-options.h
-> @@ -40,6 +40,7 @@ extern int line_buffered;
->  extern int event_debug;
->  extern pid_t event_ppid;
->  extern uint32_t event_session_id;
-> +extern unsigned long long int event_contid;
->  extern ilist *event_type;
->  
->  /* Data type to govern output format */
-> diff --git a/src/ausearch-parse.c b/src/ausearch-parse.c
-> index 497306dde070..4d48d59caa0f 100644
-> --- a/src/ausearch-parse.c
-> +++ b/src/ausearch-parse.c
-> @@ -52,6 +52,8 @@ static int parse_path(const lnode *n, search_items *s);
->  static int parse_user(const lnode *n, search_items *s, anode *avc);
->  static int parse_obj(const lnode *n, search_items *s);
->  static int parse_login(const lnode *n, search_items *s);
-> +static int parse_container_op(const lnode *n, search_items *s);
-> +static int parse_container_id(const lnode *n, search_items *s);
->  static int parse_daemon1(const lnode *n, search_items *s);
->  static int parse_daemon2(const lnode *n, search_items *s);
->  static int parse_sockaddr(const lnode *n, search_items *s);
-> @@ -113,6 +115,9 @@ int extract_search_items(llist *l)
->  			case AUDIT_LOGIN:
->  				ret = parse_login(n, s);
->  				break;
-> +			case AUDIT_CONTAINER_OP:
-> +				ret = parse_container_op(n, s);
-> +				break;
->  			case AUDIT_IPC:
->  			case AUDIT_OBJ_PID:
->  				ret = parse_obj(n, s);
-> @@ -179,6 +184,9 @@ int extract_search_items(llist *l)
->  			case AUDIT_TTY:
->  				ret = parse_tty(n, s);
->  				break;
-> +			case AUDIT_CONTAINER_ID:
-> +				ret = parse_container_id(n, s);
-> +				break;
->  			default:
->  				if (event_debug)
->  					fprintf(stderr,
-> @@ -1444,6 +1452,195 @@ static int parse_login(const lnode *n, search_items *s)
->  	return 0;
->  }
->  
-> +static int parse_container_op(const lnode *n, search_items *s)
-> +{
-> +	char *ptr, *str, *term = n->message;
-> +
-> +	// skip op
-> +	// skip opid
-> +	// get contid
-> +	if (event_contid != -1) {
-> +		str = strstr(term, "contid=");
-> +		if (str == NULL)
-> +			return 45;
-> +		ptr = str + 7;
-> +		term = strchr(ptr, ' ');
-> +		if (term == NULL)
-> +			return 46;
-> +		*term = 0;
-> +		errno = 0;
-> +		s->contid = strtoull(ptr, NULL, 10);
-> +		if (errno)
-> +			return 47;
-> +		*term = ' ';
-> +	}
-> +	// skip old-contid
-> +	// get pid
-> +	if (event_pid != -1) {
-> +		str = strstr(term, "pid=");
-> +		if (str == NULL)
-> +			return 48;
-> +		ptr = str + 4;
-> +		term = strchr(ptr, ' ');
-> +		if (term == NULL)
-> +			return 49;
-> +		*term = 0;
-> +		errno = 0;
-> +		s->pid = strtoul(ptr, NULL, 10);
-> +		if (errno)
-> +			return 50;
-> +		*term = ' ';
-> +	}
-> +	// get loginuid
-> +	if (event_loginuid != -2 || event_tauid) {
-> +		str = strstr(term, "auid=");
-> +		if (str == NULL) {
-> +			return 51;
-> +		} else
-> +			ptr = str + 5;
-> +		term = strchr(ptr, ' ');
-> +		if (term == NULL)
-> +			return 52;
-> +		*term = 0;
-> +		errno = 0;
-> +		s->loginuid = strtoul(ptr, NULL, 10);
-> +		if (errno)
-> +			return 53;
-> +		*term = ' ';
-> +		s->tauid = lookup_uid("auid", s->loginuid);
-> +	}
-> +	// get uid
-> +	if (event_uid != -1 || event_tuid) {
-> +		str = strstr(term, "uid=");
-> +		if (str == NULL)
-> +			return 54;
-> +		ptr = str + 4;
-> +		term = strchr(ptr, ' ');
-> +		if (term == NULL)
-> +			return 55;
-> +		*term = 0;
-> +		errno = 0;
-> +		s->uid = strtoul(ptr, NULL, 10);
-> +		if (errno)
-> +			return 56;
-> +		*term = ' ';
-> +		s->tuid = lookup_uid("uid", s->uid);
-> +	}
-> +	// skip tty
-> +	// ses
-> +	if (event_session_id != -2 ) {
-> +		str = strstr(term, "ses=");
-> +		if (str == NULL)
-> +			return 57;
-> +		else
-> +			ptr = str + 4;
-> +		term = strchr(ptr, ' ');
-> +		if (term == NULL)
-> +			return 58;
-> +		*term = 0;
-> +		errno = 0;
-> +		s->session_id = strtoul(ptr, NULL, 10);
-> +		if (errno)
-> +			return 59;
-> +		*term = ' ';
-> +	}
-> +	// get subj
-> +	if (event_subject) {
-> +		str = strstr(term, "subj=");
-> +		if (str == NULL)
-> +			return 60;
-> +		ptr = str + 5;
-> +		term = strchr(ptr, ' ');
-> +		if (term == NULL)
-> +			return 61;
-> +		*term = 0;
-> +		if (audit_avc_init(s) == 0) {
-> +			anode an;
-> +
-> +			anode_init(&an);
-> +			an.scontext = strdup(str);
-> +			alist_append(s->avc, &an);
-> +			*term = ' ';
-> +		} else
-> +			return 62;
-> +		*term = ' ';
-> +	}
-> +	// get comm
-> +	if (event_comm) {
-> +		str = strstr(ptr, "comm=");
-> +		if (str == NULL)
-> +			return 63;
-> +		str += 5;
-> +		if (*str == '"') {
-> +			str++;
-> +			term = strchr(str, '"');
-> +			if (term == NULL)
-> +				return 64;
-> +			*term = 0;
-> +			s->comm = strdup(str);
-> +			*term = '"';
-> +		} else 
-> +			s->comm = unescape(str);
-> +	}
-> +	// get exe
-> +	if (event_exe) {
-> +		str = strstr(term, "exe=");
-> +		if (str == NULL)
-> +			return 65;
-> +		str += 4;
-> +		if (*str == '"') {
-> +			str++;
-> +			term = strchr(str, '"');
-> +			if (term == NULL)
-> +				return 66;
-> +			*term = 0;
-> +			s->exe = strdup(str);
-> +			*term = '"';
-> +		} else 
-> +			s->exe = unescape(str);
-> +	}
-> +	// success
-> +	if (event_success != S_UNSET) {
-> +		str = strstr(term, "res=");
-> +		if (str == NULL)
-> +			return 67;
-> +		ptr = str + 4;
-> +		term = strchr(ptr, ' ');
-> +		if (term)
-> +			return 68;
-> +		*term = 0;
-> +		errno = 0;
-> +		s->success = strtoul(ptr, NULL, 10);
-> +		if (errno)
-> +			return 69;
-> +		*term = ' ';
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int parse_container_id(const lnode *n, search_items *s)
-> +{
-> +	char *ptr, *str, *term = n->message;
-> +
-> +	// get contid
-> +	if (event_contid != -1) {
-> +		str = strstr(term, "contid=");
-> +		if (str == NULL)
-> +			return 70;
-> +		ptr = str + 7;
-> +		term = strchr(ptr, ' ');
-> +		if (term == NULL)
-> +			return 71;
-> +		*term = 0;
-> +		errno = 0;
-> +		s->contid = strtoull(ptr, NULL, 10);
-> +		if (errno)
-> +			return 72;
-> +		*term = ' ';
-> +	}
-> +	return 0;
-> +}
-> +
->  static int parse_daemon1(const lnode *n, search_items *s)
->  {
->  	char *ptr, *str, *term, saved, *mptr;
-> -- 
-> 1.8.3.1
-> 
-
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+SGkhDQoNCk9uIDIwLzA5LzIwMTkgMTg6MDcsIE1hcmMgWnluZ2llciB3cm90ZToNCj4+IGlycV9j
+cmVhdGVfZndzcGVjX21hcHBpbmcoKSBjYW4gcmFjZSB3aXRoIGl0c2VsZiBkdXJpbmcgSVJRIHRy
+aWdnZXIgdHlwZQ0KPj4gY29uZmlndXJhdGlvbi4gUG9zc2libGUgc2NlbmFyaW9zIGluY2x1ZGU6
+DQo+Pg0KPj4gLSBNYXBwaW5nIGV4aXN0cywgdHdvIGlycV9jcmVhdGVfZndzcGVjX21hcHBpbmco
+KSBydW5uaW5nIGluIHBhcmFsbGVsIGRvDQo+PiAgIG5vdCBkZXRlY3QgdHlwZSBtaXNtYXRjaCwg
+SVJRIHJlbWFpbnMgY29uZmlndXJlZCB3aXRoIG9uZSBvZiB0aGUNCj4+ICAgZGlmZmVyZW50IHRy
+aWdnZXIgdHlwZXMgcmFuZG9tbHkNCj4+IC0gU2Vjb25kIGNhbGwgdG8gaXJxX2NyZWF0ZV9md3Nw
+ZWNfbWFwcGluZygpIHNlZXMgZXhpc3RpbmcgbWFwcGluZyBqdXN0DQo+PiAgIGNyZWF0ZWQgYnkg
+Zmlyc3QgY2FsbCwgYnV0IGVhcmxpZXIgaXJxZF9zZXRfdHJpZ2dlcl90eXBlKCkgY2FsbCByYWNl
+cw0KPj4gICB3aXRoIGxhdGVyIGlycWRfc2V0X3RyaWdnZXJfdHlwZSgpID0+IHRvdGFsbHkgdW5k
+ZXRlY3RlZCwgSVJRIHR5cGUNCj4+ICAgaXMgYmVpbmcgc2V0IHJhbmRvbWx5IHRvIGVpdGhlciBv
+bmUgb3IgYW5vdGhlciB0eXBlDQo+IElzIHRoYXQgYW4gYWN0dWFsIHRoaW5nPyBGcmFua2x5LCB0
+aGUgc2NlbmFyaW8geW91J3JlIGRlc2NyaWJpbmcgaGVyZQ0KPiBzZWVtcyB0byBjYXJyeSB0aGUg
+aGFsbG1hcmtzIG9mIGEgY29tcGxldGVseSBicm9rZW4gc3lzdGVtLiBDYW4geW91DQo+IHBvaW50
+IGF0IGEgc3lzdGVtIHN1cHBvcnRlZCBpbiBtYWlubGluZSB0aGF0IHdvdWxkIGJlaGF2ZSBhcyBz
+dWNoPw0KDQpCcmllZmx5IHNwZWFraW5nLCB0aGlzIHJhY2UgaXMgYWJvdXQgbm90LWNvbXBsYWlu
+aW5nIGluIGNhc2Ugb2YgYSBicm9rZW4NCmRldmljZSB0cmVlLiBUaGlzIGlzIG5vdCBzb21ldGhp
+bmcgcHVyZWx5IHRoZW9yZXRpY2FsLiBJIGRvbid0IGtub3cgaWYNCkRUcyB1bmRlciBhcmNoL2Fy
+bS9ib290L2R0cyBhcmUgYWxsIGNvcnJlY3QsIGJ1dCBJIHNhdyBhIGxvdCBEVHMgZnJvbQ0Kc2ls
+aWNvbmUgdmVuZG9ycyBhbmQgdmVyeSBsaXR0bGUgb2YgdGhlbSB3ZXJlIDEwMCUgY29ycmVjdC4N
+Cg0KSW4gb3RoZXIgd29yZHMsIHRoaXMgcGF0Y2ggcmVwYWlycyBlcnJvci1oYW5kbGluZy4gV2l0
+aCAxMDAlIGNvcnJlY3QNCkRUcyAob3IgQUNQSSB0YWJsZXMsIGhhdmUgeW91IHNlZW4gb25lIDEw
+MCUgY29ycmVjdCBCVFc/IDopKSBpdCdzDQpub3QgcmVxdWlyZWQuDQoNCi0tIA0KQmVzdCByZWdh
+cmRzLA0KQWxleGFuZGVyIFN2ZXJkbGluLg0K
