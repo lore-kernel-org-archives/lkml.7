@@ -2,100 +2,200 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5666C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 22:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A095BC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 22:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71C512080F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 22:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74D552080F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 22:49:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ACsUX2E2"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="nGDtt8Xv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406248AbfITWtd (ORCPT
+        id S2406536AbfITWtk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 18:49:33 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:32845 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387598AbfITWtd (ORCPT
+        Fri, 20 Sep 2019 18:49:40 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:60844 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406254AbfITWtk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 18:49:33 -0400
-Received: by mail-io1-f68.google.com with SMTP id m11so19869459ioo.0
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 15:49:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=wOpJQk7o6uD40KwVMmu8VQcBIeJeRyt/YndwGm9kx/0=;
-        b=ACsUX2E2WcuZZFmvPnh2nXTsETrz8yamMn3bO6rMtq/UC1IFTo5Q9N2tcaMQH2EChi
-         o/5jdQNjzXTYviqKafcRo+xbmAAD7tKV/F5Xa6eGMWs3pc+c62WzMfvlrNp4/m42ne2S
-         jvZLlMIqQrSeOuc6YRgeLnUMd/KxDX/Uy0olM0H0qNgMjgfXnjHrDAo0PO8adFmuL6rr
-         fv5gGcbx1HRGvda/OiHQ4QxhLuqr14NxyS3INmNjyLnHP1dnMcTcSCQxFc22TBfBz4lZ
-         ZNZn5IL8lRABN6AB0iWFzBsNmz5PWd9P/Mst27mRvSxjMWFczBsgGOERFcDn+YHm15t7
-         y3Zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=wOpJQk7o6uD40KwVMmu8VQcBIeJeRyt/YndwGm9kx/0=;
-        b=AslU+2K6Z17/vgwMhbiH0L3XX3mNmmrjRf+RxPez92htnOo6ReHW8yR2cRzU+pO+vv
-         Od+u7T+Ny1bJef2/jcfusJMQMF35OyJlHwxG3kNChlWCSZ1MYiAThwtubFz982US3jWn
-         btiX8JzVG8KiCeu7MsuR9hrUkjloFNjf4hnNxc4zB+VnJfb5uvbk7//6hgWvTg2x4079
-         EBAUUDECIvgXruP1jiWHkTs3bNYHtX77BgbYDX8Ng039zn/2TzY83zcKCbpa/Ke9IUTa
-         TDc9vMfqPjdQ/nv+xsVkXnZp4KIIKpc3llM8qLdnuHou5UlqNDKfcHuaQUJpnBlpoMu+
-         2/2g==
-X-Gm-Message-State: APjAAAXBj/CFcmhX44Ogim8baPp/1ZZajsyRq/CkkK5qenX1GAMwCEAY
-        PVkEgdPCHq+x6sVXQCniU2LoUcgQsrg=
-X-Google-Smtp-Source: APXvYqwwbVOjmnF+xSJ83lf0QEM65bDBvT+0GLoqdM7aVkcp+sFzFWRjgpRovLgsdFtvQ4qa85aHqQ==
-X-Received: by 2002:a6b:3a43:: with SMTP id h64mr550056ioa.89.1569019771106;
-        Fri, 20 Sep 2019 15:49:31 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id a14sm3835732ioo.85.2019.09.20.15.49.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Sep 2019 15:49:30 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sam Ravnborg <sam@ravnborg.org>, Rex Zhu <Rex.Zhu@amd.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        Fri, 20 Sep 2019 18:49:40 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2CE252F9;
+        Sat, 21 Sep 2019 00:49:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1569019778;
+        bh=MXdyC92nZxPWNwpEC220/y38MMTZ88P8BeKNptk7oi4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nGDtt8XvhbiVcDVzUPuwbMH2FhknLah2kmir5+F17VCWD9D0jtItgogS4JbFAttEq
+         pHbUpRRxtaWpYhTK1GK1+5zoZEGXSDwxjfp6tIOB38Y3D54XxUcTt4cJbxYqiMT9kf
+         DnNIF+ZFGA6wTDcD42WG599MqqeLIBYbk/k6YBDs=
+Date:   Sat, 21 Sep 2019 01:49:29 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     daniel@ffwll.ch
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
+        horms@verge.net.au, uli+renesas@fpond.eu,
+        VenkataRajesh.Kalakodima@in.bosch.com, airlied@linux.ie,
+        koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/amdgpu: release allocated memory
-Date:   Fri, 20 Sep 2019 17:49:10 -0500
-Message-Id: <20190920224915.2788-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+Subject: Re: [PATCH v4 8/9] drm: rcar-du: kms: Update CMM in atomic commit
+ tail
+Message-ID: <20190920224929.GE12672@pendragon.ideasonboard.com>
+References: <20190906135436.10622-1-jacopo+renesas@jmondi.org>
+ <20190906135436.10622-9-jacopo+renesas@jmondi.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190906135436.10622-9-jacopo+renesas@jmondi.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In amdgpu_vmid_grab_idle, fences is being leaked in one execution path.
-The missing kfree was added.
+Hi Daniel,
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_ids.c | 1 +
- 1 file changed, 1 insertion(+)
+On Fri, Sep 06, 2019 at 03:54:35PM +0200, Jacopo Mondi wrote:
+> Update CMM settings at in the atomic commit tail helper method.
+> The CMM is updated with new gamma values provided to the driver
+> in the GAMMA_LUT blob property.
+> 
+> When resuming from system suspend, the DU driver is responsible for
+> reprogramming and enabling the CMM unit if it was in use at the time the
+> system entered the suspend state.  Force the color_mgmt_changed flag to
+> true if the DRM gamma lut color transformation property was set in the
+> CRTC state duplicated at suspend time, as the CMM gets reprogrammed only
+> if said flag is active in the rcar_du_atomic_commit_update_cmm() method.
+> 
+> Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> ---
+> 
+> Daniel could you have a look if resume bits are worth being moved to the
+> DRM core? The color_mgmt_changed flag is set to false when the state is
+> duplicated if I read the code correctly, but when this happens in a
+> suspend/resume sequence its value should probably be restored to true if
+> any color management property was set in the crtc state when system entered
+> suspend.
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ids.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ids.c
-index 57b3d8a9bef3..9063cd36fa94 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ids.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ids.c
-@@ -244,6 +244,7 @@ static int amdgpu_vmid_grab_idle(struct amdgpu_vm *vm,
- 		r = amdgpu_sync_fence(adev, sync, &array->base, false);
- 		dma_fence_put(ring->vmid_wait);
- 		ring->vmid_wait = &array->base;
-+		kfree(fences);
- 		return r;
- 	}
- 	kfree(fences);
+Gentle ping on this.
+
+> ---
+> 
+>  drivers/gpu/drm/rcar-du/rcar_du_drv.c | 20 ++++++++++++++
+>  drivers/gpu/drm/rcar-du/rcar_du_kms.c | 38 +++++++++++++++++++++++++++
+>  2 files changed, 58 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_drv.c b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+> index 018480a8f35c..d1003d31cfaf 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/wait.h>
+> 
+> +#include <drm/drm_atomic.h>
+>  #include <drm/drm_atomic_helper.h>
+>  #include <drm/drm_fb_cma_helper.h>
+>  #include <drm/drm_fb_helper.h>
+> @@ -482,6 +483,25 @@ static int rcar_du_pm_suspend(struct device *dev)
+>  static int rcar_du_pm_resume(struct device *dev)
+>  {
+>  	struct rcar_du_device *rcdu = dev_get_drvdata(dev);
+> +	struct drm_atomic_state *state = rcdu->ddev->mode_config.suspend_state;
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < rcdu->num_crtcs; ++i) {
+> +		struct drm_crtc *crtc = &rcdu->crtcs[i].crtc;
+> +		struct drm_crtc_state *crtc_state;
+> +
+> +		crtc_state = drm_atomic_get_new_crtc_state(state, crtc);
+> +		if (!crtc_state)
+> +			continue;
+> +
+> +		/*
+> +		 * Force re-enablement of CMM after system resume if any
+> +		 * of the DRM color transformation properties was set in
+> +		 * the state saved at system suspend time.
+> +		 */
+> +		if (crtc_state->gamma_lut)
+> +			crtc_state->color_mgmt_changed = true;
+> +	}
+> 
+>  	return drm_mode_config_helper_resume(rcdu->ddev);
+>  }
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_kms.c b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> index 294630e56992..fc30fff0eb8d 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/of_platform.h>
+>  #include <linux/wait.h>
+> 
+> +#include "rcar_cmm.h"
+>  #include "rcar_du_crtc.h"
+>  #include "rcar_du_drv.h"
+>  #include "rcar_du_encoder.h"
+> @@ -368,6 +369,40 @@ rcar_du_fb_create(struct drm_device *dev, struct drm_file *file_priv,
+>   * Atomic Check and Update
+>   */
+> 
+> +static void rcar_du_atomic_commit_update_cmm(struct drm_crtc *crtc,
+> +					     struct drm_crtc_state *old_state)
+> +{
+> +	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
+> +	struct rcar_cmm_config cmm_config = {};
+> +	struct device *dev = rcrtc->dev->dev;
+> +	struct drm_property_blob *lut_blob;
+> +
+> +	if (!rcrtc->cmm || !crtc->state->color_mgmt_changed)
+> +		return;
+> +
+> +	if (!crtc->state->gamma_lut) {
+> +		cmm_config.lut.enable = false;
+> +		rcar_cmm_setup(rcrtc->cmm, &cmm_config);
+> +		return;
+> +	}
+> +
+> +	lut_blob = crtc->state->gamma_lut;
+> +	if (lut_blob->length != (CM2_LUT_SIZE * sizeof(struct drm_color_lut))) {
+> +		/*
+> +		 * We only accept fully populated LUT tables;
+> +		 * be loud here, otherwise the CMM gets silently ignored.
+> +		 */
+> +		dev_err(dev, "invalid gamma lut size of %lu bytes\n",
+> +			lut_blob->length);
+> +		return;
+> +	}
+> +
+> +	cmm_config.lut.enable = true;
+> +	cmm_config.lut.table = (struct drm_color_lut *)lut_blob->data;
+> +
+> +	rcar_cmm_setup(rcrtc->cmm, &cmm_config);
+> +}
+> +
+>  static int rcar_du_atomic_check(struct drm_device *dev,
+>  				struct drm_atomic_state *state)
+>  {
+> @@ -410,6 +445,9 @@ static void rcar_du_atomic_commit_tail(struct drm_atomic_state *old_state)
+>  			rcdu->dpad1_source = rcrtc->index;
+>  	}
+> 
+> +	for_each_old_crtc_in_state(old_state, crtc, crtc_state, i)
+> +		rcar_du_atomic_commit_update_cmm(crtc, crtc_state);
+> +
+>  	/* Apply the atomic update. */
+>  	drm_atomic_helper_commit_modeset_disables(dev, old_state);
+>  	drm_atomic_helper_commit_planes(dev, old_state,
+
 -- 
-2.17.1
+Regards,
 
+Laurent Pinchart
