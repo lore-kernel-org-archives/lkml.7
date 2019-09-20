@@ -2,409 +2,102 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E48C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E4B3C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F3FF207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:19:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53F70218AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:20:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nLw1HL3e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395153AbfITIT1 (ORCPT
+        id S2395164AbfITIUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 04:19:27 -0400
-Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:37721 "EHLO
-        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389212AbfITIT0 (ORCPT
+        Fri, 20 Sep 2019 04:20:00 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:35017 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391319AbfITIUA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 04:19:26 -0400
-Received: from [IPv6:2001:983:e9a7:1:3829:6e33:4e49:c53d] ([IPv6:2001:983:e9a7:1:3829:6e33:4e49:c53d])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id BE8PiU8Dd9D4hBE8QicgR2; Fri, 20 Sep 2019 10:19:23 +0200
-Subject: Re: [Patch v2 08/13] media: am437x-vpfe: Use a per instance format
- array instead of a static one
-To:     Benoit Parrot <bparrot@ti.com>
-Cc:     Prabhakar Lad <prabhakar.csengg@gmail.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190919204125.15254-1-bparrot@ti.com>
- <20190919204125.15254-9-bparrot@ti.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <a73280f1-4fc0-2ea2-2611-9e410f3f0689@xs4all.nl>
-Date:   Fri, 20 Sep 2019 10:19:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 20 Sep 2019 04:20:00 -0400
+Received: by mail-qt1-f195.google.com with SMTP id m15so7739387qtq.2
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 01:19:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3SocQEUUMkK769LhW2Pd9m5ZQqfoBNJ10901hl/4ay4=;
+        b=nLw1HL3elE8+Sl+dCKaY9ufcrvHnF8x33T1asuG5/yPil0hxbSfwf1Wp4ZcsEm9kKV
+         6lBc0znEAm2vAWbqhqnMjBi3jZsfmj0teBImHoavMyHXPXWJLD7Xo5PowPkCZ+0hmZ9+
+         fxnsAJQ9ihkQJZFVslAaafYyAx3QfmIinfhxhPiyCeb7Dv1hC5dobbi3BFuQZPljAiDH
+         P+xA1GZFp6o4HDRHq2V9L8olN04Lwa7iz6Sn5JUH0GoA+zhoOq5FD+JEXu0/+RCc34nF
+         yyCniL7e/t4BxT8qVfk8q76UZiA8iYPkAQqURVCTZc/oG72GX2Tl/Daro/+anIkcYmC9
+         ST5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3SocQEUUMkK769LhW2Pd9m5ZQqfoBNJ10901hl/4ay4=;
+        b=kW+bbRBfA0akHtc8nBZW0TiyncZH2z4LT2uMlKZUNanZjnib2CA5Ftyb63powdig3F
+         x2VR/metjBUSIqXzXBCwk2flM4aQuQDFok6O6zrh5chkXZuPbA27DoOhYXNtQRhTJrRG
+         0q0EN6gPhdYqehyhmylQYn5Enp5iOq91hMzy+gznav9BQn59Cw/dedRpfZICuGd9U7eC
+         g2zRdLDybgVy7XmKbdrPGO2BpjL9J6iADwKbdjPjWPllN5DS1JkyttM/d1aDjwuVuGyP
+         /1l3+khURtEnRvrBskJ9aCQFSa/Yk/nVVRaSq6dmLrR9sNzNmb5yK7lifpLiojA6UlkL
+         hMLw==
+X-Gm-Message-State: APjAAAWgrPp9BY2rydMKptZFngetcBwtPioIFnuf608jGKU27mSxOr/C
+        wFBimOQadnfkfu4Uw87YBWOdFPg7fR4f8UA+sEfk7A==
+X-Google-Smtp-Source: APXvYqwlO5TN7aw8zddGqA6dfFkWBaGlE6Zgfrdslwr71Wxgag4BouCltVzFfmnE4S6FPXI8LDpPdjgihPX+lyfXNZQ=
+X-Received: by 2002:a0c:f6cd:: with SMTP id d13mr12063122qvo.146.1568967598534;
+ Fri, 20 Sep 2019 01:19:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190919204125.15254-9-bparrot@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfGi/24L8SbiF9dZMDIWZ+ds8xybd8V2mRGJXHBU5ECha2szMDOEr/shlZNR0YMCtTRxhrOJ3cz4rxiFMuqUCZIqxtuLIbO8AU0VFt4mzVFeql7G8N5Ve
- YcIydqhmF6kDTw79gpNV15ILybbT5HXONZxmMy4+y50P5K8QbEuyDy+ndB9/giQ+fA4Z8p6vCZlAvVaRC2wR1lOFon5w9aPg6IWKnkfz9Nvke0+v5lMbq/4L
- MnYAi9hoJBw74wym1RiDFZiOm96iCAFgMcZeaY/k8pflhyqrIFSVMwjJG0pbHUfxf0rxtcX8zXFBjOMsib3VhhdLtOUJrXnHNPEZb6JAho3a5HKwo4TD/09c
- PT5W92E1GRbbuQPE5vqMt+9QpyJ4u1LC0kZWqyLxmgXB5sX8Gg5INeTIT5Mvw+U26diTpolN
+References: <20190920032437.242187-1-kyletso@google.com> <cb225c94-da97-1b47-48b6-3802dc3eb93b@redhat.com>
+In-Reply-To: <cb225c94-da97-1b47-48b6-3802dc3eb93b@redhat.com>
+From:   Kyle Tso <kyletso@google.com>
+Date:   Fri, 20 Sep 2019 16:19:42 +0800
+Message-ID: <CAGZ6i=3O2zLJMPY5UevjTrJJj7fxpWcn28dZYRptWES74=4Tgg@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] tcpm: AMS and Collision Avoidance
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Badhri Jagan Sridharan <badhri@google.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/19/19 10:41 PM, Benoit Parrot wrote:
-> Using a statically defined format array would cause issue when
-> multiple vpfe instance would be connected to sub-device of
-> different capabilities. We need to use an instance based array
-> instead to properly maintain a per port/instance format list.
-> 
-> Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> ---
->  drivers/media/platform/am437x/am437x-vpfe.c | 110 ++++++++------------
->  drivers/media/platform/am437x/am437x-vpfe.h |  36 +++++++
->  2 files changed, 77 insertions(+), 69 deletions(-)
-> 
-> diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
-> index 8b218f48428f..569618a52082 100644
-> --- a/drivers/media/platform/am437x/am437x-vpfe.c
-> +++ b/drivers/media/platform/am437x/am437x-vpfe.c
-> @@ -69,31 +69,7 @@ static const struct vpfe_standard vpfe_standards[] = {
->  	{V4L2_STD_625_50, 720, 576, {54, 59}, 1},
->  };
->  
-> -struct bus_format {
-> -	unsigned int width;
-> -	unsigned int bpp;
-> -};
-> -
-> -/*
-> - * struct vpfe_fmt - VPFE media bus format information
-> - * @code: V4L2 media bus format code
-> - * @shifted: V4L2 media bus format code for the same pixel layout but
-> - *	shifted to be 8 bits per pixel. =0 if format is not shiftable.
-> - * @pixelformat: V4L2 pixel format FCC identifier
-> - * @width: Bits per pixel (when transferred over a bus)
-> - * @bpp: Bytes per pixel (when stored in memory)
-> - * @supported: Indicates format supported by subdev
-> - */
-> -struct vpfe_fmt {
-> -	u32 fourcc;
-> -	u32 code;
-> -	struct bus_format l;
-> -	struct bus_format s;
-> -	bool supported;
-> -	u32 index;
-> -};
-> -
-> -static struct vpfe_fmt formats[] = {
-> +static struct vpfe_fmt formats[VPFE_MAX_ACTIVE_FMT] = {
->  	{
->  		.fourcc		= V4L2_PIX_FMT_YUYV,
->  		.code		= MEDIA_BUS_FMT_YUYV8_2X8,
-> @@ -101,7 +77,6 @@ static struct vpfe_fmt formats[] = {
->  		.l.bpp		= 4,
->  		.s.width	= 8,
->  		.s.bpp		= 2,
-> -		.supported	= false,
->  	}, {
->  		.fourcc		= V4L2_PIX_FMT_UYVY,
->  		.code		= MEDIA_BUS_FMT_UYVY8_2X8,
-> @@ -109,7 +84,6 @@ static struct vpfe_fmt formats[] = {
->  		.l.bpp		= 4,
->  		.s.width	= 8,
->  		.s.bpp		= 2,
-> -		.supported	= false,
->  	}, {
->  		.fourcc		= V4L2_PIX_FMT_YVYU,
->  		.code		= MEDIA_BUS_FMT_YVYU8_2X8,
-> @@ -117,7 +91,6 @@ static struct vpfe_fmt formats[] = {
->  		.l.bpp		= 4,
->  		.s.width	= 8,
->  		.s.bpp		= 2,
-> -		.supported	= false,
->  	}, {
->  		.fourcc		= V4L2_PIX_FMT_VYUY,
->  		.code		= MEDIA_BUS_FMT_VYUY8_2X8,
-> @@ -125,7 +98,6 @@ static struct vpfe_fmt formats[] = {
->  		.l.bpp		= 4,
->  		.s.width	= 8,
->  		.s.bpp		= 2,
-> -		.supported	= false,
->  	}, {
->  		.fourcc		= V4L2_PIX_FMT_SBGGR8,
->  		.code		= MEDIA_BUS_FMT_SBGGR8_1X8,
-> @@ -133,7 +105,6 @@ static struct vpfe_fmt formats[] = {
->  		.l.bpp		= 2,
->  		.s.width	= 8,
->  		.s.bpp		= 1,
-> -		.supported	= false,
->  	}, {
->  		.fourcc		= V4L2_PIX_FMT_SGBRG8,
->  		.code		= MEDIA_BUS_FMT_SGBRG8_1X8,
-> @@ -141,7 +112,6 @@ static struct vpfe_fmt formats[] = {
->  		.l.bpp		= 2,
->  		.s.width	= 8,
->  		.s.bpp		= 1,
-> -		.supported	= false,
->  	}, {
->  		.fourcc		= V4L2_PIX_FMT_SGRBG8,
->  		.code		= MEDIA_BUS_FMT_SGRBG8_1X8,
-> @@ -149,7 +119,6 @@ static struct vpfe_fmt formats[] = {
->  		.l.bpp		= 2,
->  		.s.width	= 8,
->  		.s.bpp		= 1,
-> -		.supported	= false,
->  	}, {
->  		.fourcc		= V4L2_PIX_FMT_SRGGB8,
->  		.code		= MEDIA_BUS_FMT_SRGGB8_1X8,
-> @@ -157,7 +126,6 @@ static struct vpfe_fmt formats[] = {
->  		.l.bpp		= 2,
->  		.s.width	= 8,
->  		.s.bpp		= 1,
-> -		.supported	= false,
->  	}, {
->  		.fourcc		= V4L2_PIX_FMT_RGB565,
->  		.code		= MEDIA_BUS_FMT_RGB565_2X8_LE,
-> @@ -165,7 +133,6 @@ static struct vpfe_fmt formats[] = {
->  		.l.bpp		= 4,
->  		.s.width	= 8,
->  		.s.bpp		= 2,
-> -		.supported	= false,
->  	}, {
->  		.fourcc		= V4L2_PIX_FMT_RGB565X,
->  		.code		= MEDIA_BUS_FMT_RGB565_2X8_BE,
-> @@ -173,7 +140,6 @@ static struct vpfe_fmt formats[] = {
->  		.l.bpp		= 4,
->  		.s.width	= 8,
->  		.s.bpp		= 2,
-> -		.supported	= false,
->  	},
->  };
->  
-> @@ -181,13 +147,14 @@ static int
->  __vpfe_get_format(struct vpfe_device *vpfe,
->  		  struct v4l2_format *format, unsigned int *bpp);
->  
-> -static struct vpfe_fmt *find_format_by_code(unsigned int code)
-> +static struct vpfe_fmt *find_format_by_code(struct vpfe_device *vpfe,
-> +					    unsigned int code)
->  {
->  	struct vpfe_fmt *fmt;
->  	unsigned int k;
->  
-> -	for (k = 0; k < ARRAY_SIZE(formats); k++) {
-> -		fmt = &formats[k];
-> +	for (k = 0; k < vpfe->num_active_fmt; k++) {
-> +		fmt = vpfe->active_fmt[k];
->  		if (fmt->code == code)
->  			return fmt;
->  	}
-> @@ -195,13 +162,14 @@ static struct vpfe_fmt *find_format_by_code(unsigned int code)
->  	return NULL;
->  }
->  
-> -static struct vpfe_fmt *find_format_by_pix(unsigned int pixelformat)
-> +static struct vpfe_fmt *find_format_by_pix(struct vpfe_device *vpfe,
-> +					   unsigned int pixelformat)
->  {
->  	struct vpfe_fmt *fmt;
->  	unsigned int k;
->  
-> -	for (k = 0; k < ARRAY_SIZE(formats); k++) {
-> -		fmt = &formats[k];
-> +	for (k = 0; k < vpfe->num_active_fmt; k++) {
-> +		fmt = vpfe->active_fmt[k];
->  		if (fmt->fourcc == pixelformat)
->  			return fmt;
->  	}
-> @@ -218,7 +186,7 @@ mbus_to_pix(struct vpfe_device *vpfe,
->  	unsigned int bus_width = sdinfo->vpfe_param.bus_width;
->  	struct vpfe_fmt *fmt;
->  
-> -	fmt = find_format_by_code(mbus->code);
-> +	fmt = find_format_by_code(vpfe, mbus->code);
->  	if (WARN_ON(fmt == NULL)) {
->  		pr_err("Invalid mbus code set\n");
->  		*bpp = 1;
-> @@ -241,12 +209,12 @@ static void pix_to_mbus(struct vpfe_device *vpfe,
->  {
->  	struct vpfe_fmt *fmt;
->  
-> -	fmt = find_format_by_pix(pix_fmt->pixelformat);
-> +	fmt = find_format_by_pix(vpfe, pix_fmt->pixelformat);
->  	if (!fmt) {
->  		/* default to first entry */
->  		vpfe_dbg(3, vpfe, "Invalid pixel code: %x, default used instead\n",
->  			pix_fmt->pixelformat);
-> -		fmt = &formats[0];
-> +		fmt = vpfe->active_fmt[0];
->  	}
->  
->  	memset(mbus_fmt, 0, sizeof(*mbus_fmt));
-> @@ -1494,8 +1462,7 @@ static int vpfe_enum_fmt(struct file *file, void  *priv,
->  {
->  	struct vpfe_device *vpfe = video_drvdata(file);
->  	struct vpfe_subdev_info *sdinfo;
-> -	struct vpfe_fmt *fmt = NULL;
-> -	unsigned int k;
-> +	struct vpfe_fmt *fmt;
->  
->  	vpfe_dbg(2, vpfe, "vpfe_enum_format index:%d\n",
->  		f->index);
-> @@ -1504,17 +1471,10 @@ static int vpfe_enum_fmt(struct file *file, void  *priv,
->  	if (!sdinfo->sd)
->  		return -EINVAL;
->  
-> -	if (f->index > ARRAY_SIZE(formats))
-> +	if (f->index >= vpfe->num_active_fmt)
->  		return -EINVAL;
->  
-> -	for (k = 0; k < ARRAY_SIZE(formats); k++) {
-> -		if (formats[k].index == f->index) {
-> -			fmt = &formats[k];
-> -			break;
-> -		}
-> -	}
-> -	if (!fmt)
-> -		return -EINVAL;
-> +	fmt = vpfe->active_fmt[f->index];
->  
->  	f->pixelformat = fmt->fourcc;
->  
-> @@ -1593,7 +1553,7 @@ static int vpfe_enum_size(struct file *file, void  *priv,
->  	vpfe_dbg(2, vpfe, "vpfe_enum_size\n");
->  
->  	/* check for valid format */
-> -	fmt = find_format_by_pix(fsize->pixel_format);
-> +	fmt = find_format_by_pix(vpfe, fsize->pixel_format);
->  	if (!fmt) {
->  		vpfe_dbg(3, vpfe, "Invalid pixel code: %x, default used instead\n",
->  			fsize->pixel_format);
-> @@ -2281,8 +2241,10 @@ vpfe_async_bound(struct v4l2_async_notifier *notifier,
->  					       struct vpfe_device, v4l2_dev);
->  	struct v4l2_subdev_mbus_code_enum mbus_code;
->  	struct vpfe_subdev_info *sdinfo;
-> +	struct vpfe_fmt *fmt;
-> +	int ret = 0;
->  	bool found = false;
-> -	int i, j;
-> +	int i, j, k;
->  
->  	vpfe_dbg(1, vpfe, "vpfe_async_bound\n");
->  
-> @@ -2304,27 +2266,37 @@ vpfe_async_bound(struct v4l2_async_notifier *notifier,
->  
->  	vpfe->video_dev.tvnorms |= sdinfo->inputs[0].std;
->  
-> -	/* setup the supported formats & indexes */
-> -	for (j = 0, i = 0; ; ++j) {
-> -		struct vpfe_fmt *fmt;
-> -		int ret;
-> -
-> +	vpfe->num_active_fmt = 0;
-> +	for (j = 0, i = 0; (ret != -EINVAL); ++j) {
->  		memset(&mbus_code, 0, sizeof(mbus_code));
->  		mbus_code.index = j;
->  		mbus_code.which = V4L2_SUBDEV_FORMAT_ACTIVE;
->  		ret = v4l2_subdev_call(subdev, pad, enum_mbus_code,
-> -			       NULL, &mbus_code);
-> +				       NULL, &mbus_code);
->  		if (ret)
-> -			break;
-> -
-> -		fmt = find_format_by_code(mbus_code.code);
-> -		if (!fmt)
->  			continue;
->  
-> -		fmt->supported = true;
-> -		fmt->index = i++;
-> +		vpfe_dbg(3, vpfe,
-> +			 "subdev %s: code: %04x idx: %d\n",
-> +			 subdev->name, mbus_code.code, j);
-> +
-> +		for (k = 0; k < ARRAY_SIZE(formats); k++) {
-> +			fmt = &formats[k];
-> +			if (mbus_code.code != fmt->code)
-> +				continue;
-> +			vpfe->active_fmt[i] = fmt;
-> +			vpfe_dbg(3, vpfe,
-> +				 "matched fourcc: %4.4s code: %04x idx: %d\n",
-> +				 (char *)&fmt->fourcc, mbus_code.code, i);
-> +			vpfe->num_active_fmt = ++i;
-> +		}
->  	}
->  
-> +	if (!i) {
-> +		vpfe_err(vpfe, "No suitable format reported by subdev %s\n",
-> +			 subdev->name);
-> +		return -EINVAL;
-> +	}
->  	return 0;
->  }
->  
-> diff --git a/drivers/media/platform/am437x/am437x-vpfe.h b/drivers/media/platform/am437x/am437x-vpfe.h
-> index 2dde09780215..79a6505c083d 100644
-> --- a/drivers/media/platform/am437x/am437x-vpfe.h
-> +++ b/drivers/media/platform/am437x/am437x-vpfe.h
-> @@ -215,6 +215,39 @@ struct vpfe_ccdc {
->  	u32 ccdc_ctx[VPFE_REG_END / sizeof(u32)];
->  };
->  
-> +/*
-> + * struct bus_format - VPFE bus format information
-> + * width: Bits per pixel (when transferred over a bus)
-> + * bpp: Bytes per pixel (when stored in memory)
-> + */
-> +struct bus_format {
-> +	unsigned int width;
-> +	unsigned int bpp;
-> +};
-> +
-> +/*
-> + * struct vpfe_fmt - VPFE media bus format information
-> + * fourcc: V4L2 pixel format code
-> + * code: V4L2 media bus format code
-> + * l: 10 bit bus format info
-> + * s: 8 bit bus format info
-> + */
-> +struct vpfe_fmt {
-> +	u32 fourcc;
-> +	u32 code;
-> +	struct bus_format l;
-> +	struct bus_format s;
-> +};
-> +
-> +/*
-> + * This value needs to be at least as large as the number of entry in
-> + * formats[].
-> + * When formats[] is modified make sure to adjust this value also.
-> + * Expect compile time warnings if VPFE_MAX_ACTIVE_FMT is smaller then
-> + * the number of elements in formats[].
-> + */
-> +#define VPFE_MAX_ACTIVE_FMT	10
+Hi Hans,
 
-The comment is outdated since this define is used as the size of the formats
-array. So you can't really get into problems.
-
-For the same reason the name is now wrong as well, I'd call it VPFE_NUM_FORMATS.
-
-That's what it actually is.
+I have tested these on an Android device (ARM64).
+All the swap operations work fine (Power Role/Data Role/Vconn Swap).
+(except for Fast Role Swap because it is still not supported in TCPM)
 
 Regards,
+Kyle Tso
 
-	Hans
 
-> +
->  struct vpfe_device {
->  	/* V4l2 specific parameters */
->  	/* Identifies video device for this channel */
-> @@ -252,6 +285,9 @@ struct vpfe_device {
->  	struct v4l2_format fmt;
->  	/* Used to store current bytes per pixel based on current format */
->  	unsigned int bpp;
-> +	struct vpfe_fmt	*active_fmt[VPFE_MAX_ACTIVE_FMT];
-> +	unsigned int num_active_fmt;
-> +
->  	/*
->  	 * used when IMP is chained to store the crop window which
->  	 * is different from the image window
-> 
-
+On Fri, Sep 20, 2019 at 4:02 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi Kyle,
+>
+> On 20-09-2019 05:24, Kyle Tso wrote:
+> > *** BLURB HERE ***
+> >
+> > Kyle Tso (2):
+> >    usb: typec: tcpm: AMS and Collision Avoidance
+> >    usb: typec: tcpm: AMS for PD2.0
+>
+> May I ask how and on which hardware you have tested this?
+>
+> And specifically if you have tested this in combination with pwr-role swapping?
+>
+> Regards,
+>
+> Hans
+>
