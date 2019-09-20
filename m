@@ -2,158 +2,140 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 856DCC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA11FC4CECD
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AB96218AE
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:22:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gpxypbyV"
+	by mail.kernel.org (Postfix) with ESMTP id 9B604207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:22:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395206AbfITIWM (ORCPT
+        id S2395227AbfITIWP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 20 Sep 2019 04:22:15 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42100 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2395207AbfITIWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Sep 2019 04:22:12 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:44063 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393179AbfITIWL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 04:22:11 -0400
-Received: by mail-lj1-f195.google.com with SMTP id m13so6167580ljj.11
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 01:22:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hOm0RSVxiN9cy/2zlDkuDpGL5XVU330++py7GJHjAx0=;
-        b=gpxypbyVCKkOGbVW+Afzq0G0SijqxBGhC3HHNQu38FBsCf3mjnrrXApKO4u8mD5Ge3
-         zA04+tnmTerkM4T1RJ7krUmnB+9hTEFLGJXEb12Rj7tOexqvl+NS34gitG6WfSllFUWh
-         4jKwiMG6K5ttmC0iW8Q0blWchaToknxTaq+xx5nUNjEIhDlZ7S96cWZ1yNPU3qPe62aT
-         INq3V5DtnKDJFTpcH19QS0y3kVdWHtz23xRU/H+KEZJ7m5AG/GrfFIJPrCDg5eZ8ICEB
-         RG4tAhxqXtZROOpeRHPk9By6C7D7GJeujMxAGxPFpnXTUGQimTyzigJgMQ//nJSFb65u
-         p+7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=hOm0RSVxiN9cy/2zlDkuDpGL5XVU330++py7GJHjAx0=;
-        b=sJP5/vBI+82dxOgOfolm8n5iuVZZ0UVhqjw4cWAS5wSv+Jx0QcMazhIRc8jAVICTin
-         7ZdTyxmsfFaQR3R8gegytmlL9B8YZMUIxYxp7nVyIDmVcp8W61Wa8R7Lvd0wRkkyjECQ
-         SkauTPAtqBqVobCMbjrpRQ74s7CyNWGFAuKVtDwzNAqbVTJa2iLhpq9TJ1eqabfE2lUI
-         FVV2MzK0h3NZMawjVTSCc8+l4tF40AWpdfCE74AS1zpVR5qlczvXGc5ZnRo3K0PD5JdV
-         MBiQ4LadCaXntpai1u9cCdPDwR2ra+7whAALiZUKr8L/m9QLwvIyT4coy0wZfWw8K8mE
-         HxJg==
-X-Gm-Message-State: APjAAAVLhmc61YqOSnx6Ukxfl2TVfHgDHN/+lTDRTnazSx6JDNJJ95eP
-        gwY/0u8G8EzE00zauPqfFC+AGQ==
-X-Google-Smtp-Source: APXvYqwL1jMaxNVYlobOS7lqzCZWK0IyjHtQ8tNd29VLU4eery6g9+RMfYffbt3kONUMacbsmztDtw==
-X-Received: by 2002:a05:651c:c4:: with SMTP id 4mr6073391ljr.111.1568967729239;
-        Fri, 20 Sep 2019 01:22:09 -0700 (PDT)
-Received: from khorivan (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
-        by smtp.gmail.com with ESMTPSA id k15sm270207ljg.65.2019.09.20.01.22.07
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 20 Sep 2019 01:22:08 -0700 (PDT)
-Date:   Fri, 20 Sep 2019 11:22:06 +0300
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin Lau <kafai@fb.com>, Andrii Nakryiko <andriin@fb.com>,
-        Yonghong Song <yhs@fb.com>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH bpf] libbpf: fix version identification on busybox
-Message-ID: <20190920082204.GC8870@khorivan>
-Mail-Followup-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, Martin Lau <kafai@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>, Yonghong Song <yhs@fb.com>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190919160518.25901-1-ivan.khoronzhuk@linaro.org>
- <CAEf4BzbCjCYr5NMPctDkUggwpehnqZPVBSqZOsd9MvSq6WmnZQ@mail.gmail.com>
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9CC0410DCC9D;
+        Fri, 20 Sep 2019 08:22:11 +0000 (UTC)
+Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-88.pek2.redhat.com [10.72.12.88])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 43D14101E67D;
+        Fri, 20 Sep 2019 08:21:03 +0000 (UTC)
+From:   Jason Wang <jasowang@redhat.com>
+To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com
+Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        pmorel@linux.ibm.com, freude@linux.ibm.com, lingshan.zhu@intel.com,
+        idos@mellanox.com, eperezma@redhat.com, lulu@redhat.com,
+        Jason Wang <jasowang@redhat.com>
+Subject: [RFC PATCH V2 0/6] mdev based hardware virtio offloading support
+Date:   Fri, 20 Sep 2019 16:20:44 +0800
+Message-Id: <20190920082050.19352-1-jasowang@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAEf4BzbCjCYr5NMPctDkUggwpehnqZPVBSqZOsd9MvSq6WmnZQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Fri, 20 Sep 2019 08:22:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 01:02:40PM -0700, Andrii Nakryiko wrote:
->On Thu, Sep 19, 2019 at 11:22 AM Ivan Khoronzhuk
-><ivan.khoronzhuk@linaro.org> wrote:
->>
->> It's very often for embedded to have stripped version of sort in
->> busybox, when no -V option present. It breaks build natively on target
->> board causing recursive loop.
->>
->> BusyBox v1.24.1 (2019-04-06 04:09:16 UTC) multi-call binary. \
->> Usage: sort [-nrugMcszbdfimSTokt] [-o FILE] [-k \
->> start[.offset][opts][,end[.offset][opts]] [-t CHAR] [FILE]...
->>
->> Lets modify command a little to avoid -V option.
->>
->> Fixes: dadb81d0afe732 ("libbpf: make libbpf.map source of truth for libbpf version")
->>
->> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
->> ---
->>
->> Based on bpf/master
->>
->>  tools/lib/bpf/Makefile | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
->> index c6f94cffe06e..a12490ad6215 100644
->> --- a/tools/lib/bpf/Makefile
->> +++ b/tools/lib/bpf/Makefile
->> @@ -3,7 +3,7 @@
->>
->>  LIBBPF_VERSION := $(shell \
->>         grep -oE '^LIBBPF_([0-9.]+)' libbpf.map | \
->> -       sort -rV | head -n1 | cut -d'_' -f2)
->> +       cut -d'_' -f2 | sort -r | head -n1)
->
->You can't just sort alphabetically, because:
->
->1.2
->1.11
->
->should be in that order. See discussion on mailing thread for original commit.
+Hi all:
 
-if X1.X2.X3, where X = {0,1,....99999}
-Then it can be:
+There are hardware that can do virtio datapath offloading while having
+its own control path. This path tries to implement a mdev based
+unified API to support using kernel virtio driver to drive those
+devices. This is done by introducing a new mdev transport for virtio
+(virtio_mdev) and register itself as a new kind of mdev driver. Then
+it provides a unified way for kernel virtio driver to talk with mdev
+device implementation.
 
--LIBBPF_VERSION := $(shell \
--       grep -oE '^LIBBPF_([0-9.]+)' libbpf.map | \
--       sort -rV | head -n1 | cut -d'_' -f2)
-+_LBPFLIST := $(patsubst %;,%,$(patsubst LIBBPF_%,%,$(filter LIBBPF_%, \
-+           $(shell cat libbpf.map))))
-+_LBPFLIST2 := $(foreach v,$(_LBPFLIST), \
-+               $(subst $() $(),,$(foreach n,$(subst .,$() $(),$(v)), \
-+                       $(shell printf "%05d" $(n)))))
-+_LBPF_VER := $(word $(words $(sort $(_LBPFLIST2))), $(sort $(_LBPFLIST2)))
-+LIBBPF_VERSION := $(patsubst %_$(_LBPF_VER),%,$(filter %_$(_LBPF_VER), \
-+        $(join $(addsuffix _, $(_LBPFLIST)),$(_LBPFLIST2))))
+Though the series only contain kernel driver support, the goal is to
+make the transport generic enough to support userspace drivers. This
+means vhost-mdev[1] could be built on top as well by resuing the
+transport.
 
-It's bigger but avoids invocations of grep/sort/cut/head, only cat/printf
-, thus -V option also.
+A sample driver is also implemented which simulate a virito-net
+loopback ethernet device on top of vringh + workqueue. This could be
+used as a reference implementation for real hardware driver.
 
->
->>  LIBBPF_MAJOR_VERSION := $(firstword $(subst ., ,$(LIBBPF_VERSION)))
->>
->>  MAKEFLAGS += --no-print-directory
->> --
->> 2.17.1
->>
+Consider mdev framework only support VFIO device and driver right now,
+this series also extend it to support other types. This is done
+through introducing class id to the device and pairing it with
+id_talbe claimed by the driver. On top, this seris also decouple
+device specific parents ops out of the common ones.
+
+Pktgen test was done with virito-net + mvnet loop back device.
+
+Please review.
+
+Changes from V1:
+
+- rename device id to class id
+- add docs for class id and device specific ops (device_ops)
+- split device_ops into seperate headers
+- drop the mdev_set_dma_ops()
+- use device_ops to implement the transport API, then it's not a part
+  of UAPI any more
+- use GFP_ATOMIC in mvnet sample device and other tweaks
+- set_vring_base/get_vring_base support for mvnet device
+
+Jason Wang (6):
+  mdev: class id support
+  mdev: introduce device specific ops
+  mdev: introduce virtio device and its device ops
+  virtio: introudce a mdev based transport
+  vringh: fix copy direction of vringh_iov_push_kern()
+  docs: Sample driver to demonstrate how to implement virtio-mdev
+    framework
+
+ .../driver-api/vfio-mediated-device.rst       |  11 +-
+ drivers/gpu/drm/i915/gvt/kvmgt.c              |  17 +-
+ drivers/s390/cio/vfio_ccw_ops.c               |  17 +-
+ drivers/s390/crypto/vfio_ap_ops.c             |  14 +-
+ drivers/vfio/mdev/Kconfig                     |   7 +
+ drivers/vfio/mdev/Makefile                    |   1 +
+ drivers/vfio/mdev/mdev_core.c                 |  21 +-
+ drivers/vfio/mdev/mdev_driver.c               |  14 +
+ drivers/vfio/mdev/mdev_private.h              |   1 +
+ drivers/vfio/mdev/vfio_mdev.c                 |  37 +-
+ drivers/vfio/mdev/virtio_mdev.c               | 418 +++++++++++
+ drivers/vhost/vringh.c                        |   8 +-
+ include/linux/mdev.h                          |  46 +-
+ include/linux/mod_devicetable.h               |   8 +
+ include/linux/vfio_mdev.h                     |  50 ++
+ include/linux/virtio_mdev.h                   | 141 ++++
+ samples/Kconfig                               |   7 +
+ samples/vfio-mdev/Makefile                    |   1 +
+ samples/vfio-mdev/mbochs.c                    |  19 +-
+ samples/vfio-mdev/mdpy.c                      |  19 +-
+ samples/vfio-mdev/mtty.c                      |  17 +-
+ samples/vfio-mdev/mvnet.c                     | 688 ++++++++++++++++++
+ 22 files changed, 1473 insertions(+), 89 deletions(-)
+ create mode 100644 drivers/vfio/mdev/virtio_mdev.c
+ create mode 100644 include/linux/vfio_mdev.h
+ create mode 100644 include/linux/virtio_mdev.h
+ create mode 100644 samples/vfio-mdev/mvnet.c
 
 -- 
-Regards,
-Ivan Khoronzhuk
+2.19.1
+
