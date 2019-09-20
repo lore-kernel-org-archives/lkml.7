@@ -8,74 +8,74 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 253B5C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 00:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03451C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 00:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E41B221907
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 00:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C286921920
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 00:41:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V8+4qccv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sOgv/y0M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394497AbfITAkz (ORCPT
+        id S2394507AbfITAlH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 20:40:55 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:33307 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388479AbfITAkz (ORCPT
+        Thu, 19 Sep 2019 20:41:07 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:37268 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388479AbfITAlG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 20:40:55 -0400
-Received: by mail-yw1-f68.google.com with SMTP id i188so1524035ywf.0;
-        Thu, 19 Sep 2019 17:40:54 -0700 (PDT)
+        Thu, 19 Sep 2019 20:41:06 -0400
+Received: by mail-yw1-f65.google.com with SMTP id u65so1934615ywe.4;
+        Thu, 19 Sep 2019 17:41:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=aQSk775q1feKYpb6MaNUDEQvmeqn7p7J8OSj2R1kBy4=;
-        b=V8+4qccvfb89IgNf3gbjHpacnjCwTr5vF2zJAEmZ0zkPYHvUww0DMQFBCKT1lN9+im
-         N1N2OibxW5fyhYjjSX+sPKMLT/55da1hy4N2RsCWmfs1SOc7MLy7YrlwjvTQ/ZsHNe4Z
-         ekAGHGYvXvss/z5jOdQIYu9MoML46mI4byjDx6+pfZWBl3LYnfzdU38F+h1izWZDbLJG
-         YTKGy+gnqU0Jz9+2MVWguzm9VY4a+bcbd0w0bQZJR+bek+ZlHjCNpXB8NREwrYgzgBqn
-         oWEnNI31kTduaGHI+nG/F/wVcyrbEfrO0dDszMmopISiBgNN3u1Q6RUJFPsVNGKO76h5
-         4Kcg==
+        bh=i+tHQQIVQzEbeUZdVQWPUgZcFAD65xbujylPTpUTyNY=;
+        b=sOgv/y0MyWza+27Zo0Dc7UqOr37F51AjoqxT36vfivH0a/78d5FrCeqOt+nS4SspGQ
+         3gv3nVwJJZSEASyRTQjTMZZ7YCw4yT1TAFdZo9WMGfcfqrrz6KiL/WHlKsaR4t8Ujdda
+         q2fGY7110VRgX7Rmysp84DKarNZ5UDYIMGtRcDwzWdDo5emBJsql8w7gZaujFM2cKgsB
+         sdSeyxe8KErINM5eKZJcxMhxMxjcoBGA0eC+wFT7iyLAvECgyIJvWw2l3bRdaH1yCagL
+         NVG+s6UAa/ov3Ng1Y4XG8TDtSIVz8Cf+SkqGEQzNDXJzunP5/FNWA9bZH1KaTsh2vaIk
+         SdDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=aQSk775q1feKYpb6MaNUDEQvmeqn7p7J8OSj2R1kBy4=;
-        b=ffbefuML+sPgDvcPC3LQvF1atcVSNcXhwi6xNHegDeMgCSztgeXEqzkzu+/9RU5vPZ
-         4hCqM8Z8AdMHbVn8i9Cyn0Gp44jQZ0+G/qlw3Z0oQUkdwLN5CAbHwOPecfkLYgz1mSaM
-         /Dav47/TX6sROCZZMKzWxyo+WkGz74cjIKDqkt5aWMMRLn3MLlxSwaIYIsCxFZOdBCXO
-         DAe3zJnnfQ+ypMZyYwpy/KEdPKNeL/rOHyCsZlqdBlPBd+U/acvt+NsfzFeGjxHj5tEZ
-         R57QBgeR/B8oQzGkMwVrqIdhyJIv5TzcJNB/gEpXOWjyRcUjFon84RRgus+jJKeGRpq9
-         NX5g==
-X-Gm-Message-State: APjAAAUrqHkecAeAdI2/WhVWfAVAomk74dLEivcOSJjfwS5DGLvjN1Ue
-        STazhoQuxKlf5MS35Rv5EA==
-X-Google-Smtp-Source: APXvYqy5mCZ791yHnhfT2O8o8iYehWvwyPf+Y9pE/iSuyebRfrl0y3AwTnNtsNrUlXDASrc9iieyUQ==
-X-Received: by 2002:a81:2b54:: with SMTP id r81mr10547277ywr.163.1568940054097;
-        Thu, 19 Sep 2019 17:40:54 -0700 (PDT)
+        bh=i+tHQQIVQzEbeUZdVQWPUgZcFAD65xbujylPTpUTyNY=;
+        b=j6dOr1wh0Iid5YGReFjWCEytMlr8+/ViRa0oVQTglox9c/OW8SoGLsRb/AAMbCyNyp
+         gLCptxazY20gsgT7hSqbM6iBLarre24qjCQWJxHj3ZwFU4prCxcV5va+zteLc+yn4GqX
+         6ZWNFMjc8+qbKjlXGwrMRYqk0mc+wRqu7VqYF43Tfj74z7wiY+xpvZGGJZE4FtQ3ZXad
+         +OWRejW6azRFs8a+DhM2GGYeKtzwt4Do8l9BijwBy0MZEftqlKe+Hm96Y/ny+8JoD6l8
+         BilNvGyufyIp/0LcmGVRCS9AqEkpasqHVb/r1rRSLM5Qvn8DcJPNvGe1Ysbi2oMBUV/o
+         k5oA==
+X-Gm-Message-State: APjAAAVSCGfbk5m5FsE/6jlkncJb0jWDpAaFHFKfXUkLAcJqJ41Ca4FL
+        xbEFG533X2RKakGbcrYkdQ==
+X-Google-Smtp-Source: APXvYqyHFG04J+N3eQ8onFjXKxQ4GNnYQ3DIsL1OatK/Yttll4/63iXV3oDyUeEuNFVe0FdbdEOthQ==
+X-Received: by 2002:a81:5c57:: with SMTP id q84mr9802626ywb.88.1568940065549;
+        Thu, 19 Sep 2019 17:41:05 -0700 (PDT)
 Received: from 960.localdomain ([64.192.53.12])
-        by smtp.gmail.com with ESMTPSA id r63sm102802ywg.36.2019.09.19.17.40.53
+        by smtp.gmail.com with ESMTPSA id r63sm102802ywg.36.2019.09.19.17.41.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2019 17:40:53 -0700 (PDT)
+        Thu, 19 Sep 2019 17:41:05 -0700 (PDT)
 From:   Ayman Bagabas <ayman.bagabas@gmail.com>
 To:     Darren Hart <dvhart@infradead.org>,
         Andy Shevchenko <andy@infradead.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sinan Kaya <okaya@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Takashi Iwai <tiwai@suse.de>,
         Ayman Bagabas <ayman.bagabas@gmail.com>,
         Stuart Hayes <stuart.w.hayes@gmail.com>,
         Matan Ziv-Av <matan@svgalib.org>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
         Hans de Goede <hdegoede@redhat.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
         Peng Hao <peng.hao2@zte.com.cn>,
         Krzysztof Kozlowski <krzk@kernel.org>,
         Mattias Jacobsson <2pi@mok.nu>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 5/6] platform/x86: huawei-wmi: Add fn-lock support
-Date:   Thu, 19 Sep 2019 20:39:10 -0400
-Message-Id: <20190920003938.21617-6-ayman.bagabas@gmail.com>
+Subject: [PATCH v3 6/6] platform/x86: huawei-wmi: Add debugfs support
+Date:   Thu, 19 Sep 2019 20:39:11 -0400
+Message-Id: <20190920003938.21617-7-ayman.bagabas@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190920003938.21617-1-ayman.bagabas@gmail.com>
 References: <20190920003938.21617-1-ayman.bagabas@gmail.com>
@@ -86,132 +86,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Huawei Matebook laptops uses Fn key and toggle to access F1-F12 keys.
-Along with that, there is this feature called fn-lock that inverts the
-behavior of this Fn key and the F1-F12 row.
+Add a debugfs interface that can be used to call the WMI management
+interface function if available.
 
 Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
 ---
- drivers/platform/x86/huawei-wmi.c | 85 +++++++++++++++++++++++++++++++
- 1 file changed, 85 insertions(+)
+ drivers/platform/x86/huawei-wmi.c | 91 +++++++++++++++++++++++++++++++
+ 1 file changed, 91 insertions(+)
 
 diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
-index 4ca1a6896766..8fc11a296357 100644
+index 8fc11a296357..c8f41121160c 100644
 --- a/drivers/platform/x86/huawei-wmi.c
 +++ b/drivers/platform/x86/huawei-wmi.c
-@@ -59,6 +59,7 @@ struct huawei_wmi_debug {
+@@ -6,6 +6,7 @@
+  */
  
- struct huawei_wmi {
- 	bool battery_available;
-+	bool fn_lock_available;
- 
- 	struct huawei_wmi_debug debug;
- 	struct input_dev *idev[2];
-@@ -515,6 +516,88 @@ static void huawei_wmi_battery_exit(struct device *dev)
- 	}
+ #include <linux/acpi.h>
++#include <linux/debugfs.h>
+ #include <linux/delay.h>
+ #include <linux/dmi.h>
+ #include <linux/input.h>
+@@ -598,6 +599,94 @@ static void huawei_wmi_fn_lock_exit(struct device *dev)
+ 		device_remove_file(dev, &dev_attr_fn_lock_state);
  }
  
-+/* Fn lock */
++/* debugfs */
 +
-+static int huawei_wmi_fn_lock_get(int *on)
++static void huawei_wmi_debugfs_call_dump(struct seq_file *m, void *data,
++		union acpi_object *obj)
 +{
-+	u8 ret[0x100] = { 0 };
-+	int err, i;
++	struct huawei_wmi *huawei = m->private;
++	int i;
 +
-+	err = huawei_wmi_cmd(FN_LOCK_GET, ret, 0x100);
++	switch (obj->type) {
++	case ACPI_TYPE_INTEGER:
++		seq_printf(m, "0x%llx", obj->integer.value);
++		break;
++	case ACPI_TYPE_STRING:
++		seq_printf(m, "\"%*s\"", obj->string.length, obj->string.pointer);
++		break;
++	case ACPI_TYPE_BUFFER:
++		seq_puts(m, "{");
++		for (i = 0; i < obj->buffer.length; i++) {
++			seq_printf(m, "0x%02x", obj->buffer.pointer[i]);
++			if (i < obj->buffer.length - 1)
++				seq_puts(m, ",");
++		}
++		seq_puts(m, "}");
++		break;
++	case ACPI_TYPE_PACKAGE:
++		seq_puts(m, "[");
++		for (i = 0; i < obj->package.count; i++) {
++			huawei_wmi_debugfs_call_dump(m, huawei, &obj->package.elements[i]);
++			if (i < obj->package.count - 1)
++				seq_puts(m, ",");
++		}
++		seq_puts(m, "]");
++		break;
++	default:
++		dev_err(&huawei->pdev->dev, "Unexpected obj type, got %d\n", obj->type);
++		return;
++	}
++}
++
++static int huawei_wmi_debugfs_call_show(struct seq_file *m, void *data)
++{
++	struct huawei_wmi *huawei = m->private;
++	struct acpi_buffer out = { ACPI_ALLOCATE_BUFFER, NULL };
++	struct acpi_buffer in;
++	union acpi_object *obj;
++	int err;
++
++	in.length = sizeof(u64);
++	in.pointer = &huawei->debug.arg;
++
++	err = huawei_wmi_call(&in, &out);
 +	if (err)
 +		return err;
 +
-+	/* Find the first non-zero value. Return status is ignored. */
-+	i = 1;
-+	do {
-+		if (on)
-+			*on = ret[i] - 1; // -1 undefined, 0 off, 1 on.
-+	} while (i < 0x100 && !ret[i++]);
++	obj = out.pointer;
++	if (!obj) {
++		err = -EIO;
++		goto fail_debugfs_call;
++	}
 +
-+	return 0;
++	huawei_wmi_debugfs_call_dump(m, huawei, obj);
++
++fail_debugfs_call:
++	kfree(out.pointer);
++	return err;
 +}
 +
-+static int huawei_wmi_fn_lock_set(int on)
-+{
-+	union hwmi_arg arg;
++DEFINE_SHOW_ATTRIBUTE(huawei_wmi_debugfs_call);
 +
-+	arg.cmd = FN_LOCK_SET;
-+	arg.args[2] = on + 1; // 0 undefined, 1 off, 2 on.
-+
-+	return huawei_wmi_cmd(arg.cmd, NULL, 0);
-+}
-+
-+static ssize_t fn_lock_state_show(struct device *dev,
-+		struct device_attribute *attr,
-+		char *buf)
-+{
-+	int err, on;
-+
-+	err = huawei_wmi_fn_lock_get(&on);
-+	if (err)
-+		return err;
-+
-+	return sprintf(buf, "%d\n", on);
-+}
-+
-+static ssize_t fn_lock_state_store(struct device *dev,
-+		struct device_attribute *attr,
-+		const char *buf, size_t size)
-+{
-+	int on, err;
-+
-+	if (kstrtoint(buf, 10, &on) ||
-+			on < 0 || on > 1)
-+		return -EINVAL;
-+
-+	err = huawei_wmi_fn_lock_set(on);
-+	if (err)
-+		return err;
-+
-+	return size;
-+}
-+
-+static DEVICE_ATTR_RW(fn_lock_state);
-+
-+static void huawei_wmi_fn_lock_setup(struct device *dev)
++static void huawei_wmi_debugfs_setup(struct device *dev)
 +{
 +	struct huawei_wmi *huawei = dev_get_drvdata(dev);
 +
-+	huawei->fn_lock_available = true;
-+	if (huawei_wmi_fn_lock_get(NULL)) {
-+		huawei->fn_lock_available = false;
-+		return;
-+	}
++	huawei->debug.root = debugfs_create_dir("huawei-wmi", NULL);
 +
-+	device_create_file(dev, &dev_attr_fn_lock_state);
++	debugfs_create_x64("arg", 0644, huawei->debug.root,
++		&huawei->debug.arg);
++	debugfs_create_file("call", 0400,
++		huawei->debug.root, huawei, &huawei_wmi_debugfs_call_fops);
 +}
 +
-+static void huawei_wmi_fn_lock_exit(struct device *dev)
++static void huawei_wmi_debugfs_exit(struct device *dev)
 +{
-+	if (huawei_wmi->fn_lock_available)
-+		device_remove_file(dev, &dev_attr_fn_lock_state);
++	struct huawei_wmi *huawei = dev_get_drvdata(dev);
++
++	debugfs_remove_recursive(huawei->debug.root);
 +}
 +
  /* Input */
  
  static void huawei_wmi_process_key(struct input_dev *idev, int code)
-@@ -638,6 +721,7 @@ static int huawei_wmi_probe(struct platform_device *pdev)
- 		mutex_init(&huawei_wmi->battery_lock);
- 
+@@ -723,6 +812,7 @@ static int huawei_wmi_probe(struct platform_device *pdev)
  		huawei_wmi_leds_setup(&pdev->dev);
-+		huawei_wmi_fn_lock_setup(&pdev->dev);
+ 		huawei_wmi_fn_lock_setup(&pdev->dev);
  		huawei_wmi_battery_setup(&pdev->dev);
- 	}
- 
-@@ -657,6 +741,7 @@ static int huawei_wmi_remove(struct platform_device *pdev)
- 
- 	if (wmi_has_guid(HWMI_METHOD_GUID)) {
- 		huawei_wmi_battery_exit(&pdev->dev);
-+		huawei_wmi_fn_lock_exit(&pdev->dev);
++		huawei_wmi_debugfs_setup(&pdev->dev);
  	}
  
  	return 0;
+@@ -740,6 +830,7 @@ static int huawei_wmi_remove(struct platform_device *pdev)
+ 	}
+ 
+ 	if (wmi_has_guid(HWMI_METHOD_GUID)) {
++		huawei_wmi_debugfs_exit(&pdev->dev);
+ 		huawei_wmi_battery_exit(&pdev->dev);
+ 		huawei_wmi_fn_lock_exit(&pdev->dev);
+ 	}
 -- 
 2.21.0
 
