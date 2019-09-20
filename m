@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 018A1C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED886C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D101B21A4C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:30:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C662C2086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:30:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388789AbfITOZy (ORCPT
+        id S2388741AbfITOZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:25:54 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36108 "EHLO
+        Fri, 20 Sep 2019 10:25:50 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36114 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388141AbfITOZE (ORCPT
+        by vger.kernel.org with ESMTP id S2388144AbfITOZE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Sep 2019 10:25:04 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqH-0004xy-Gw; Fri, 20 Sep 2019 15:25:01 +0100
+        id 1iBJqH-00051H-Ug; Fri, 20 Sep 2019 15:25:02 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqE-0007td-Oy; Fri, 20 Sep 2019 15:24:58 +0100
+        id 1iBJqH-0007yJ-87; Fri, 20 Sep 2019 15:25:01 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Kailang Yang" <kailang@realtek.com>,
-        "Takashi Iwai" <tiwai@suse.de>
+        "Hui Peng" <benquike@gmail.com>, "Takashi Iwai" <tiwai@suse.de>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Mathias Payer" <mathias.payer@nebelwelt.net>
 Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.213396990@decadent.org.uk>
+Message-ID: <lsq.1568989415.695753136@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 063/132] ALSA: hda/realtek - EAPD turn on later
+Subject: [PATCH 3.16 113/132] ALSA: usb-audio: Fix an OOB bug in
+ parse_audio_mixer_unit
 In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,37 +57,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Kailang Yang <kailang@realtek.com>
+From: Hui Peng <benquike@gmail.com>
 
-commit 607ca3bd220f4022e6f5356026b19dafc363863a upstream.
+commit daac07156b330b18eb5071aec4b3ddca1c377f2c upstream.
 
-Let EAPD turn on after set pin output.
+The `uac_mixer_unit_descriptor` shown as below is read from the
+device side. In `parse_audio_mixer_unit`, `baSourceID` field is
+accessed from index 0 to `bNrInPins` - 1, the current implementation
+assumes that descriptor is always valid (the length  of descriptor
+is no shorter than 5 + `bNrInPins`). If a descriptor read from
+the device side is invalid, it may trigger out-of-bound memory
+access.
 
-[ NOTE: This change is supposed to reduce the possible click noises at
-  (runtime) PM resume.  The functionality should be same (i.e. the
-  verbs are executed correctly) no matter which order is, so this
-  should be safe to apply for all codecs -- tiwai ]
+```
+struct uac_mixer_unit_descriptor {
+	__u8 bLength;
+	__u8 bDescriptorType;
+	__u8 bDescriptorSubtype;
+	__u8 bUnitID;
+	__u8 bNrInPins;
+	__u8 baSourceID[];
+}
+```
 
-Signed-off-by: Kailang Yang <kailang@realtek.com>
+This patch fixes the bug by add a sanity check on the length of
+the descriptor.
+
+Reported-by: Hui Peng <benquike@gmail.com>
+Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
+Signed-off-by: Hui Peng <benquike@gmail.com>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- sound/pci/hda/patch_realtek.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ sound/usb/mixer.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -831,11 +831,10 @@ static int alc_init(struct hda_codec *co
- 	if (spec->init_hook)
- 		spec->init_hook(codec);
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -1594,6 +1594,7 @@ static int parse_audio_mixer_unit(struct
+ 	int pin, ich, err;
  
-+	snd_hda_gen_init(codec);
- 	alc_fix_pll(codec);
- 	alc_auto_init_amp(codec, spec->init_amp);
- 
--	snd_hda_gen_init(codec);
--
- 	snd_hda_apply_fixup(codec, HDA_FIXUP_ACT_INIT);
- 
- 	return 0;
+ 	if (desc->bLength < 11 || !(input_pins = desc->bNrInPins) ||
++	    desc->bLength < sizeof(*desc) + desc->bNrInPins ||
+ 	    !(num_outs = uac_mixer_unit_bNrChannels(desc))) {
+ 		usb_audio_err(state->chip,
+ 			      "invalid MIXER UNIT descriptor %d\n",
 
