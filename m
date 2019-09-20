@@ -2,119 +2,186 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61ABAC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:18:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4614CC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35DCD208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:18:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FdmXUSoY"
+	by mail.kernel.org (Postfix) with ESMTP id 225812086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:20:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393384AbfITQSj (ORCPT
+        id S2393225AbfITQU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 12:18:39 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:40166 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390271AbfITQSj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 12:18:39 -0400
-Received: by mail-pl1-f193.google.com with SMTP id d22so3407286pll.7
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 09:18:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=LzFrqPQBDwdXmQkSuu8KsIj5oRAPGrw4JRLMdlkzg/s=;
-        b=FdmXUSoYQVg4zFefv12JxYtGNAaoDsOdUsRjf9g6/5FNTQ7wRh5WH+BpMjuSVKNvXI
-         UxS7ihGz7Yy6lQl5dtcuaFGCjkTDEV29U6eGY9hjgG+TkzxBXZWkzb/e+OpeR/y5zsM1
-         7MP/ocSY6EgCG/5xtTxcHbGCxCNdktO+F+2wVPpPognyAjPkixpst1Nq5oYMhAuCRVnP
-         N7nD9QbfSZ2+qnc1SwUbQ7ov7tZ639c0YIQHu4WIitYSMrbkon2Zi1xXILmJjESkRb8S
-         VtuMoD+Ip4dx/DzUzDLnONK1EzMB6PWgLq5uRJHFAlgBvxBswwRYoATBD8duB0K3N+fo
-         jg8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=LzFrqPQBDwdXmQkSuu8KsIj5oRAPGrw4JRLMdlkzg/s=;
-        b=b7hgR1MaFDmmPhaAt2ZC5RfLsL7BBvlHlZObUU/Y0MLWfbeIEiFzsdP+5gZGUM49mC
-         TxhzLu4BkDshXlppgtc5vIxP+35j5ny0YmkjZFXCNLbVZ2etSKau9Wx1oK3kBt4Lz56O
-         iS7qfLant9wMKJvzWnHIOVGQBJTD2liJCHTiXk0dBh4fSGbWmCUCjAIYNXdXdijp7f+U
-         Ke5rrCYdcEFy1GwyWx70qVunpeQU2f6aJBVdRRVYiAuNgryNLGFJQ5kZ5Ju3bqcAY5X5
-         YeQ2aDgSFIlpQNJkkyyNioq2b3K7is7kuOKIVStGjXRiwZYHoPmfHZSeySE/XzoVI8LQ
-         kQIA==
-X-Gm-Message-State: APjAAAVrbyWL4P1BvqaarGbDyWpXtep2UdOj9j1H2POTj2aMWtZ5tLlM
-        aZA3A78l/n4s2bcanYs9cNQ=
-X-Google-Smtp-Source: APXvYqxwjCVURm9DK7zOJITte1sP/f6LHs0VLXylGM1ogKUzVMvMZepcrd+bCdCxyw0K5KRu5fjf/w==
-X-Received: by 2002:a17:902:9a92:: with SMTP id w18mr17524414plp.255.1568996318341;
-        Fri, 20 Sep 2019 09:18:38 -0700 (PDT)
-Received: from nishad ([106.51.235.3])
-        by smtp.gmail.com with ESMTPSA id e192sm3526981pfh.83.2019.09.20.09.18.34
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 20 Sep 2019 09:18:37 -0700 (PDT)
-Date:   Fri, 20 Sep 2019 21:48:30 +0530
-From:   Nishad Kamdar <nishadkamdar@gmail.com>
-To:     Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Steven Royer <seroyer@linux.ibm.com>,
-        Joe Perches <joe@perches.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ocxl: Use the correct style for SPDX License Identifier
-Message-ID: <20190920161826.GA6894@nishad>
+        Fri, 20 Sep 2019 12:20:29 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42198 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387644AbfITQU3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 12:20:29 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 49A1918C892A;
+        Fri, 20 Sep 2019 16:20:28 +0000 (UTC)
+Received: from asgard.redhat.com (ovpn-112-68.ams2.redhat.com [10.36.112.68])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CD5CD5D6B0;
+        Fri, 20 Sep 2019 16:20:25 +0000 (UTC)
+Date:   Fri, 20 Sep 2019 18:20:03 +0200
+From:   Eugene Syromiatnikov <esyr@redhat.com>
+To:     John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     Frederic Weisbecker <frederic@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] uapi, posix-timers: provide clockid-related macros and
+ functions to UAPI
+Message-ID: <20190920162003.GA31301@asgard.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Fri, 20 Sep 2019 16:20:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch corrects the SPDX License Identifier style
-in header files for Open Coherent Accelerator (OCXL) compatible device
-drivers. For C header files Documentation/process/license-rules.rst
-mandates C-like comments (opposed to C source files where
-C++ style should be used)
+As of now, there is no interface exposed for converting pid/fd into
+clockid and vice versa; linuxptp, for example, has been carrying these
+definitions in missing.h header for quite some time[1].
 
-Changes made by using a script provided by Joe Perches here:
-https://lkml.org/lkml/2019/2/7/46.
+[1] https://sourceforge.net/p/linuxptp/code/ci/af380e86/tree/missing.h
 
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
 ---
- drivers/misc/ocxl/ocxl_internal.h | 2 +-
- drivers/misc/ocxl/trace.h         | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ include/linux/posix-timers.h | 47 +-------------------------------------------
+ include/uapi/linux/time.h    | 47 ++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 48 insertions(+), 46 deletions(-)
 
-diff --git a/drivers/misc/ocxl/ocxl_internal.h b/drivers/misc/ocxl/ocxl_internal.h
-index 97415afd79f3..345bf843a38e 100644
---- a/drivers/misc/ocxl/ocxl_internal.h
-+++ b/drivers/misc/ocxl/ocxl_internal.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0+
-+/* SPDX-License-Identifier: GPL-2.0+ */
- // Copyright 2017 IBM Corp.
- #ifndef _OCXL_INTERNAL_H_
- #define _OCXL_INTERNAL_H_
-diff --git a/drivers/misc/ocxl/trace.h b/drivers/misc/ocxl/trace.h
-index 024f417e7e01..17e21cb2addd 100644
---- a/drivers/misc/ocxl/trace.h
-+++ b/drivers/misc/ocxl/trace.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0+
-+/* SPDX-License-Identifier: GPL-2.0+ */
- // Copyright 2017 IBM Corp.
- #undef TRACE_SYSTEM
- #define TRACE_SYSTEM ocxl
+diff --git a/include/linux/posix-timers.h b/include/linux/posix-timers.h
+index 3d10c84..ddc7e6e6 100644
+--- a/include/linux/posix-timers.h
++++ b/include/linux/posix-timers.h
+@@ -4,58 +4,13 @@
+ 
+ #include <linux/spinlock.h>
+ #include <linux/list.h>
++#include <linux/time.h>
+ #include <linux/alarmtimer.h>
+ #include <linux/timerqueue.h>
+ 
+ struct kernel_siginfo;
+ struct task_struct;
+ 
+-/*
+- * Bit fields within a clockid:
+- *
+- * The most significant 29 bits hold either a pid or a file descriptor.
+- *
+- * Bit 2 indicates whether a cpu clock refers to a thread or a process.
+- *
+- * Bits 1 and 0 give the type: PROF=0, VIRT=1, SCHED=2, or FD=3.
+- *
+- * A clockid is invalid if bits 2, 1, and 0 are all set.
+- */
+-#define CPUCLOCK_PID(clock)		((pid_t) ~((clock) >> 3))
+-#define CPUCLOCK_PERTHREAD(clock) \
+-	(((clock) & (clockid_t) CPUCLOCK_PERTHREAD_MASK) != 0)
+-
+-#define CPUCLOCK_PERTHREAD_MASK	4
+-#define CPUCLOCK_WHICH(clock)	((clock) & (clockid_t) CPUCLOCK_CLOCK_MASK)
+-#define CPUCLOCK_CLOCK_MASK	3
+-#define CPUCLOCK_PROF		0
+-#define CPUCLOCK_VIRT		1
+-#define CPUCLOCK_SCHED		2
+-#define CPUCLOCK_MAX		3
+-#define CLOCKFD			CPUCLOCK_MAX
+-#define CLOCKFD_MASK		(CPUCLOCK_PERTHREAD_MASK|CPUCLOCK_CLOCK_MASK)
+-
+-static inline clockid_t make_process_cpuclock(const unsigned int pid,
+-		const clockid_t clock)
+-{
+-	return ((~pid) << 3) | clock;
+-}
+-static inline clockid_t make_thread_cpuclock(const unsigned int tid,
+-		const clockid_t clock)
+-{
+-	return make_process_cpuclock(tid, clock | CPUCLOCK_PERTHREAD_MASK);
+-}
+-
+-static inline clockid_t fd_to_clockid(const int fd)
+-{
+-	return make_process_cpuclock((unsigned int) fd, CLOCKFD);
+-}
+-
+-static inline int clockid_to_fd(const clockid_t clk)
+-{
+-	return ~(clk >> 3);
+-}
+-
+ #ifdef CONFIG_POSIX_TIMERS
+ 
+ /**
+diff --git a/include/uapi/linux/time.h b/include/uapi/linux/time.h
+index 958932e..41a004c 100644
+--- a/include/uapi/linux/time.h
++++ b/include/uapi/linux/time.h
+@@ -70,4 +70,51 @@ struct itimerval {
+  */
+ #define TIMER_ABSTIME			0x01
+ 
++/*
++ * Bit fields within a clockid:
++ *
++ * The most significant 29 bits hold either a pid or a file descriptor.
++ *
++ * Bit 2 indicates whether a cpu clock refers to a thread or a process.
++ *
++ * Bits 1 and 0 give the type: PROF=0, VIRT=1, SCHED=2, or FD=3.
++ *
++ * A clockid is invalid if bits 2, 1, and 0 are all set.
++ */
++#define CPUCLOCK_PID(clock)		((pid_t) ~((clock) >> 3))
++#define CPUCLOCK_PERTHREAD(clock) \
++	(((clock) & (clockid_t) CPUCLOCK_PERTHREAD_MASK) != 0)
++
++#define CPUCLOCK_PERTHREAD_MASK	4
++#define CPUCLOCK_WHICH(clock)	((clock) & (clockid_t) CPUCLOCK_CLOCK_MASK)
++#define CPUCLOCK_CLOCK_MASK	3
++#define CPUCLOCK_PROF		0
++#define CPUCLOCK_VIRT		1
++#define CPUCLOCK_SCHED		2
++#define CPUCLOCK_MAX		3
++#define CLOCKFD			CPUCLOCK_MAX
++#define CLOCKFD_MASK		(CPUCLOCK_PERTHREAD_MASK|CPUCLOCK_CLOCK_MASK)
++
++static inline clockid_t make_process_cpuclock(const unsigned int pid,
++		const clockid_t clock)
++{
++	return ((~pid) << 3) | clock;
++}
++static inline clockid_t make_thread_cpuclock(const unsigned int tid,
++		const clockid_t clock)
++{
++	return make_process_cpuclock(tid, clock | CPUCLOCK_PERTHREAD_MASK);
++}
++
++static inline clockid_t fd_to_clockid(const int fd)
++{
++	return make_process_cpuclock((unsigned int) fd, CLOCKFD);
++}
++
++static inline int clockid_to_fd(const clockid_t clk)
++{
++	return ~(clk >> 3);
++}
++
++
+ #endif /* _UAPI_LINUX_TIME_H */
 -- 
-2.17.1
+2.1.4
 
