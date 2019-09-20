@@ -2,96 +2,255 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 524EEC4CECD
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE57C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28E0B20717
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 048FD206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:46:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kcdCLS5v"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UsFHVTZB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728331AbfITNpR (ORCPT
+        id S1728367AbfITNqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 09:45:17 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37018 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727952AbfITNpR (ORCPT
+        Fri, 20 Sep 2019 09:46:22 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44761 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727680AbfITNqV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 09:45:17 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y5so4551530pfo.4;
-        Fri, 20 Sep 2019 06:45:16 -0700 (PDT)
+        Fri, 20 Sep 2019 09:46:21 -0400
+Received: by mail-wr1-f68.google.com with SMTP id i18so6805352wru.11;
+        Fri, 20 Sep 2019 06:46:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ojmHmo8XFekuW2Eo/U0LbJMPHHysze4khKG4aZaPrl0=;
-        b=kcdCLS5vIWNE6sa5s3YGOpk7vTCtxDI+WH8buw+rK3m8FAw2ZHhm0zPRAK503H1NLE
-         IHorKBGA7iZM5EpZ+6kj/Xc5/liZkYbeJTWjqD/N86VlZWuQ2vJd+qh94Ak1FiGi4ena
-         BPp9BrlwOffu+ARHVq0Cnv2lKDPM6rvMX3CvuLFnZafS5syZEpqsE9h00VMtI30RTOjM
-         mymnmh/tvNm+WRvmk8c1JxaT1u8ZdfAPR9OM0OxDYaf3iGwSBfjhwJTgJi8ocHpyBAPb
-         J0y4aIxkvy2WnoudALtSkAjhLcFncWbG7VY4XTlaLD45OeC22Tf74RL2OSmHpsyhjS7y
-         bFew==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=v18o4epmCiLj70+yDWUy/xPSUUAJCLpQRtK9SndsVZg=;
+        b=UsFHVTZBNKJvIPkIxz90yTUltqa6e82AkrRwq3Qv5YTdAcFsnGD8e+pBo7Afo6GtRF
+         LrrPPcvZsYgNd2zyO1gdbODB1iC/52P4qgCHnr0S7GeU7Oe1QnMGeFMYLspHB18pEH4H
+         zQuxGv03jhX8Nfna6xFtV2gv3eZ34pms32j0lL7a6iBZtnZXXuqw1pBAEAOMEUa71vVx
+         Yrwfq//YhAKUamC49nVgqHhsoRAkU6dONf8Zy10YZL+GuaOYa6AoR9wZtPdYgTid9oye
+         Af3VhI+bjAM3IypSkylZPsoMGXKbfvKcL0UT98GCKDy5mihOdUI19CANEk1XVYMbOhk/
+         rDmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ojmHmo8XFekuW2Eo/U0LbJMPHHysze4khKG4aZaPrl0=;
-        b=JAps7Ieox4TriS40fjgo8zEec5gKqxlJTF6efyfTq6TX23z2AAWa0BttyQGqTVh86/
-         Hce0IlY+UqVEH6f2FLJkAzj0xkyLbsXoF0S+flC78n7uy7l2dXFWfXYkQU64OnirjGrF
-         DEIEVQOPJCoJm7GcNMHsfyt9wSQhhd4Rg3DhYQNmWsNT2rR9lhgvmSjf4W3NePimZzjF
-         vlZ6WjKXrnMrj3PcX2q47O61huVlI6SZtakRnfytI6SyY/Fin6A7YjMiSnHYXPMxWjCR
-         Z0r8V5AX7uJrbDL9knYROaDDPAzHwGMUwviKp/JVFkth2VHimzSecgTSr4J8BKvO5gj9
-         ioCQ==
-X-Gm-Message-State: APjAAAWrZ2s++INvl+fz9VulPusiQJ8VQgBh6bpBBkGJ6q9+J8xPQgXv
-        GtrPElfgfFR1fb5EzvEIzWSH7Aqq
-X-Google-Smtp-Source: APXvYqyJyO/bAKlyDnP/SUGUobEZsxSP6aF/kyuTGKFt8bg/DwKCEnTNxxgEOSU6hdbN8R5qX+BTRQ==
-X-Received: by 2002:a63:c03:: with SMTP id b3mr9759349pgl.23.1568987116155;
-        Fri, 20 Sep 2019 06:45:16 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id ep10sm32957534pjb.2.2019.09.20.06.45.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 20 Sep 2019 06:45:15 -0700 (PDT)
-Subject: Re: [PATCH 5.3 00/21] 5.3.1-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20190919214657.842130855@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <69a64b52-1227-e53b-c26e-312416df5141@roeck-us.net>
-Date:   Fri, 20 Sep 2019 06:45:14 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=v18o4epmCiLj70+yDWUy/xPSUUAJCLpQRtK9SndsVZg=;
+        b=J5AgWc2zxI52a1gQirB/HE+FbQfEeT3t9pfCANL1mQ4zMT6i93fooI38ZXPG9nXrRq
+         UFJXy2JdaO9wuzWVIIfWKb5wnxlPOqT+jpcXUH2mJbjMEGIcWE7IJtOuO8Td5aYKSzMX
+         4qsaTF2JyjXWBrLH2wXLZExMmxiIIE8yQOjaCy1PCYfgZHv4CRJRGjDPcuQFA6jtdsDl
+         SW0nlmHG1GlekwEP6FSVTkEG+yEcSrFdlOYjHPanjk6bLMZvANCNymW/Q8RfqjGqTAMu
+         awDoqzyk3AhkK4Ka6e+iVxNMJFJt279jqX0F7tT6WeBpCaZ65ygCsVAm1B+qDL6O1blD
+         V77w==
+X-Gm-Message-State: APjAAAWoCz0QpECbUU7sOdpm8RpFi6PJXi+ggJVUIvWVZ7rPmqhVuyDz
+        95Vzv48ONaSqHLPWF7un2HE=
+X-Google-Smtp-Source: APXvYqxrTf1Lx7csPg2szgi9qDj/25HjBl/9yXhXA0qJ6BzUj0t4aPfWbZoTDtgklWiTyQ+aPvnOnQ==
+X-Received: by 2002:adf:f20e:: with SMTP id p14mr1231898wro.212.1568987178126;
+        Fri, 20 Sep 2019 06:46:18 -0700 (PDT)
+Received: from pc ([5.158.153.53])
+        by smtp.gmail.com with ESMTPSA id q25sm1855860wmq.27.2019.09.20.06.46.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Sep 2019 06:46:16 -0700 (PDT)
+Date:   Fri, 20 Sep 2019 15:46:09 +0200
+From:   "Ahmed S. Darwish" <darwish.07@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Lennart Poettering <mzxreary@0pointer.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        lkml <linux-kernel@vger.kernel.org>, linux-ext4@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-man@vger.kernel.org
+Subject: Re: [PATCH RFC v4 1/1] random: WARN on large getrandom() waits and
+ introduce getrandom2()
+Message-ID: <20190920134609.GA2113@pc>
+References: <20190912034421.GA2085@darwi-home-pc>
+ <20190912082530.GA27365@mit.edu>
+ <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+ <20190914122500.GA1425@darwi-home-pc>
+ <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
+ <20190915052242.GG19710@mit.edu>
+ <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
+ <20190918211503.GA1808@darwi-home-pc>
+ <20190918211713.GA2225@darwi-home-pc>
+ <CAHk-=wiCqDiU7SE3FLn2W26MS_voUAuqj5XFa1V_tiGTrrW-zQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190919214657.842130855@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wiCqDiU7SE3FLn2W26MS_voUAuqj5XFa1V_tiGTrrW-zQ@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/19/19 3:03 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.3.1 release.
-> There are 21 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat 21 Sep 2019 09:44:25 PM UTC.
-> Anything received after that time might be too late.
-> 
+Hi,
 
-Build results:
-	total: 158 pass: 158 fail: 0
-Qemu test results:
-	total: 391 pass: 391 fail: 0
+On Wed, Sep 18, 2019 at 04:57:58PM -0700, Linus Torvalds wrote:
+> On Wed, Sep 18, 2019 at 2:17 PM Ahmed S. Darwish <darwish.07@gmail.com> wrote:
+> >
+> > Since Linux v3.17, getrandom(2) has been created as a new and more
+> > secure interface for pseudorandom data requests.  It attempted to
+> > solve three problems, as compared to /dev/urandom:
+  > 
+> I don't think your patch is really _wrong_, but I think it's silly to
+> introduce a new system call, when we have 30 bits left in the flags of
+> the old one, and the old system call checked them.
+> 
+> So it's much simpler and more straightforward to  just introduce a
+> single new bit #2 that says "I actually know what I'm doing, and I'm
+> explicitly asking for secure/insecure random data".
+> 
+> And then say that the existing bit #1 just means "I want to wait for entropy".
+> 
+> So then you end up with this:
+> 
+>     /*
+>      * Flags for getrandom(2)
+>      *
+>      * GRND_NONBLOCK    Don't block and return EAGAIN instead
+>      * GRND_WAIT_ENTROPY        Explicitly wait for entropy
+>      * GRND_EXPLICIT    Make it clear you know what you are doing
+>      */
+>     #define GRND_NONBLOCK               0x0001
+>     #define GRND_WAIT_ENTROPY   0x0002
+>     #define GRND_EXPLICIT               0x0004
+> 
+>     #define GRND_SECURE (GRND_EXPLICIT | GRND_WAIT_ENTROPY)
+>     #define GRND_INSECURE       (GRND_EXPLICIT | GRND_NONBLOCK)
+> 
+>     /* Nobody wants /dev/random behavior, nobody should use it */
+>     #define GRND_RANDOM 0x0002
+> 
+> which is actually fairly easy to understand. So now we have three
+> bits, and the values are:
+> 
+>  000  - ambiguous "secure or just lazy/ignorant"
+>  001 - -EAGAIN or secure
+>  010 - blocking /dev/random DO NOT USE
+>  011 - nonblocking /dev/random DO NOT USE
+>  100 - nonsense, returns -EINVAL
+>  101 - /dev/urandom without warnings
+>  110 - blocking secure
+>  111 - -EAGAIN or secure
+>
 
-Guenter
+Hmmm, the point of the new syscall was **exactly** to avoid the 2^3
+combinations above, and to provide developers only two, sane and easy,
+options:
+
+  - GRND2_INSECURE
+  - GRND2_SECURE_UNBOUNDED_INITIAL_WAIT
+
+You *must* pick one of these, and that's it. (!)
+
+Then the proposed getrandom_wait(7) manpage, also mentioned in the V4
+patch WARN message, would provide a big rationale, and encourage
+everyone to use the new getrandom2(2) syscall instead.
+
+But yeah, maybe we should add the extra flags to the old getrandom()
+instead, and let glibc implement a getrandom_safe(3) wrapper only
+with the sane options available.
+
+Problem is, glibc is still *really* slow in adopting linux syscall
+wrappers, so I'm not optimistic about that...
+
+I still see the new system call as the sanest path, even provided
+the cost of a new syscall number..
+
+@Linus, @Ted:  Final thoughts?
+
+> and people would be encouraged to use one of these three:
+> 
+>  - GRND_INSECURE
+>  - GRND_SECURE
+>  - GRND_SECURE | GRND_NONBLOCK
+> 
+> all of which actually make sense, and none of which have any
+> ambiguity. And while "GRND_INSECURE | GRND_NONBLOCK" works, it's
+> exactly the same as just plain GRND_INSECURE - the point is that it
+> doesn't block for entropy anyway, so non-blocking makes no different.
+>
+
+[...]
+
+> 
+> There is *one* other small semantic change: The old code did
+> urandom_read() which added warnings, but each warning also _reset_ the
+> crng_init_cnt. Until it decided not to warn any more, at which point
+> it also stops that resetting of crng_init_cnt.
+> 
+> And that reset of crng_init_cnt, btw, is some cray cray.
+> 
+> It's basically a "we used up entropy" thing, which is very
+> questionable to begin with as the whole discussion has shown, but
+> since it stops doing it after 10 cases, it's not even good security
+> assuming the "use up entropy" case makes sense in the first place.
+> 
+> So I didn't copy that insanity either. And I'm wondering if removing
+> it from /dev/urandom might also end up helping Ahmed's case of getting
+> entropy earlier, when we don't reset the counter.
+>
+
+Yeah, noticed that, but I've learned not to change crypto or
+speculative-execution code even if the changes "just look the same" at
+first glance ;-)
+
+(out of curiosity, I'll do a quick test with this CRNG entropy reset
+part removed. Maybe it was indeed part of the problem..)
+
+> But other than those two details, none of the existing semantics
+> changed, we just added the three actually _sane_ cases without any
+> ambiguity.
+> 
+> In particular, this still leaves the semantics of that nasty
+> "getrandom(0)" as the same "blocking urandom" that it currently is.
+> But now it's a separate case, and we can make that perhaps do the
+> timeout, or at least the warning.
+>
+
+Yeah, I would propose to keep the V4-submitted "timeout then WARN"
+logic. This alone will give user-space / distributions time to adapt.
+
+For example, it was interesting that even the 0day bot had limited
+entropy on boot (virtio-rng / TRUST_CPU not enabled):
+
+    https://lkml.kernel.org/r/20190920005120.GP15734@shao2-debian
+
+If user-space didn't get its act together, then the other extreme
+measures can be implemented later (the getrandom() length test, using
+jitter as a credited kernel entropy source, etc., etc.)
+
+> And the new cases are defined to *not* warn. In particular,
+> GRND_INSECURE very much does *not* warn about early urandom access
+> when crng isn't ready. Because the whole point of that new mode is
+> that the user knows it isn't secure.
+>
+> So that should make getrandom(GRND_INSECURE) palatable to the systemd
+> kind of use that wanted to avoid the pointless kernel warning.
+>
+
+Yup, that's what was in the submitted V4 patch too. The caller
+explicitly asked for "insecure", so they know what they're doing.
+
+getrandom2(2) never prints any kernel message.
+
+> And we could mark this for stable and try to get it backported so that
+> it will have better coverage, and encourage people to use the new sane
+> _explicit_ waiting (or not) for entropy.
+>
+
+ACK. I'll wait for an answer to the "Final thoughts?" question above,
+send a V5 with CC:stable, then disappear from this thread ;-)
+
+Thanks a lot everyone!
+
+--
+Ahmed Darwish
