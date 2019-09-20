@@ -2,187 +2,162 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF5FDC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8EDC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD10E208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:51:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FBA82070C
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:51:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UEgIQlBP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TrQNrlHG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404951AbfITRvR (ORCPT
+        id S2405211AbfITRv0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 13:51:17 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34674 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390680AbfITRvR (ORCPT
+        Fri, 20 Sep 2019 13:51:26 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33551 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404970AbfITRv0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 13:51:17 -0400
-Received: by mail-oi1-f195.google.com with SMTP id 83so2497599oii.1
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 10:51:16 -0700 (PDT)
+        Fri, 20 Sep 2019 13:51:26 -0400
+Received: by mail-pl1-f193.google.com with SMTP id d22so2207979pls.0;
+        Fri, 20 Sep 2019 10:51:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eTz6yzxiFyHtcxZo7L97GNHOGY6QY7O6TNCJQilZlzU=;
-        b=UEgIQlBPZuG/x9jdC25TMCOjdIAuit0OtbKI7LeWZhf1jNcX4Cf+LAPC2zklx2jgsf
-         +iD2KDdjo+PxvIJIzga/BJoFr9y/LMIo/xvCU4ugOa6fxl1SR1B3E8TSdtLiKNxkgGHP
-         XLPwyhT7PGr9M3J9Q29Yd4iDC/zmEtoidcEkMSHsu6gNcT1s8+lLWT2yhpyFXe5Kd5VQ
-         pCnH9461L0/WDksxLcZTDgw17k1m4YQQfAuzKFuKsM8NVgGWU7vI+XKu1dic8mLIYkCU
-         5Esdvda1jsAPFD1gXQdWDBxJq/TDRW/lIXM5OGS0Mqw2Ynd7o9NQtvIuXVmuPtTllS2j
-         xPbQ==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3CrXeC4LhwNob4cmLLTWLe1VRgX4UE5/WFGL96oHNLk=;
+        b=TrQNrlHGD2A6CG6toILqFSZ+vNbuGpDD/qERbwPB8t5QRwLcdiplvDxV4lzNQLRwET
+         47GVkU+rIxZ9EoekBlMcThpKURaResIfGQC7CIHckq/I+DhHlbSjCPfLqJWv7509wMLD
+         c2K201WjGbH7tD8rbzS+3jkRH7QLjwB5usBxfzkOR3mFRcCM0mTgQU7BbVKutJHral3a
+         +tDjEEKGmSAhXO3deGZjqlp14chLHoTiE36Htisrl3l+WFjUoXUja14QfYZ3j5076rI2
+         swIOFK9yQFsA1cuNQK3Im0puhGz5lmWUokedz6jQzr1e8Co/QTvbU5kbHhTahllNE+08
+         xTLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eTz6yzxiFyHtcxZo7L97GNHOGY6QY7O6TNCJQilZlzU=;
-        b=EOXT8vmrCZQK8URUAzAugZ0GQmsXE8huYjJvpzzkOqoHkUfe2QsgcvrAeUPuYa9f23
-         988NU8j/ueMd1wdoJPp+lxTjSrR/gyvu+GBNRloB4yu+9bETY7ydn4KdalRkfA19ftwz
-         nQXETZWgv/2cT7k93l48dW7BpNJuB4TtONJPX3DJbWXg2dKZdPzeSbIlvO/D7ZtMIot1
-         dS2bfN4gW50EhAucnFUkyEUcDuOup4YhNpEjqTpU7AVmSGkzoDeG+Ykk1MQYeQcz9gLC
-         t1uNFt9eMxctyNR0krxRtMwCpt12MhmIZm4Ijh1q34/aG736TRK3hI5nJdkjz/k25LI7
-         Mhmw==
-X-Gm-Message-State: APjAAAXrAmOEuaDuLv2CozvijNxeH2ItJyzhNF/gQioNc4KCu0cm2V2S
-        zAq9Fhy0Ik6p8WDKXvtHtBBHFaF9z5K1KZtLozY7g7msIACrv6w4
-X-Google-Smtp-Source: APXvYqzQv14eah59dI7M05mLG3IQ6Y3E2Vd2r36SLtDH09RoY2MnFpEK6sAnb3mKhl+SqOo6gdWOKZhxAk9E6uiHjRo=
-X-Received: by 2002:aca:5510:: with SMTP id j16mr4095393oib.121.1569001876015;
- Fri, 20 Sep 2019 10:51:16 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=3CrXeC4LhwNob4cmLLTWLe1VRgX4UE5/WFGL96oHNLk=;
+        b=nXTZuHDxvdH0K3zNzzDpDc0ZxfffSaFBGzD0EN6iniC6O/zKaWZzZFRUJXwp0HnQuS
+         Y4edOK1Q4fAit7JLThrSX48A3/qN6dnalghT8Y7lQx/Vcx4oUI9nw+sqvOgO+SpGUOCp
+         v2C2vA75P31ecWoBgulM85b+p2Ua22/HIuiaydn5V2kHoEz6HrsT/qkNcCXCEuk4W62a
+         l/BUiazaPt1zE5CYhUdnj0xPAcW/sBuejhlDX5vCWURvhuwn6g07qCk0sr102kNij5to
+         qAcelZepfggB2Tt2x4a/0bq+WcK1mhpweUGpqLDWY538DZ5YdmQ4beCNjRr1cTMFI0Gp
+         mucQ==
+X-Gm-Message-State: APjAAAVDA6jly+XSBcjpR9CRuYdBAx6/3jvTwb+2UsuN9hnFJ/nMwuYv
+        069tJEu/u0hmTroma9j9+8I=
+X-Google-Smtp-Source: APXvYqzk73FAfuUXnbLbApgqtdj/qWIfb3TIp7RRMyrJcUHPLOSc3v7s5M1snaWsK4U+Ym9vSNWe1A==
+X-Received: by 2002:a17:902:b617:: with SMTP id b23mr17802447pls.184.1569001883457;
+        Fri, 20 Sep 2019 10:51:23 -0700 (PDT)
+Received: from [10.67.50.53] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id c128sm2840117pfc.166.2019.09.20.10.51.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 20 Sep 2019 10:51:22 -0700 (PDT)
+Subject: Re: [PATCH] serial: bcm2835: Use devm_platform_ioremap_resource() in
+ bcm2835aux_serial_probe()
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        linux-serial@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Eric Anholt <eric@anholt.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Martin Sperl <kernel@martin.sperl.org>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Stephen Boyd <swboyd@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Himanshu Jha <himanshujha199640@gmail.com>
+References: <fcb34c72-89c7-9993-fc0a-ba3a61708bec@web.de>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <b874901f-8dc2-e0ec-b2da-26b37e75ec26@gmail.com>
+Date:   Fri, 20 Sep 2019 10:51:20 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <CANpmjNPJ_bHjfLZCAPV23AXFfiPiyXXqqu72n6TgWzb2Gnu1eA@mail.gmail.com>
- <20190920163123.GC55224@lakrids.cambridge.arm.com> <CACT4Y+ZwyBhR8pB7jON8eVObCGbJ54L8Sbz6Wfmy3foHkPb_fA@mail.gmail.com>
-In-Reply-To: <CACT4Y+ZwyBhR8pB7jON8eVObCGbJ54L8Sbz6Wfmy3foHkPb_fA@mail.gmail.com>
-From:   Marco Elver <elver@google.com>
-Date:   Fri, 20 Sep 2019 19:51:04 +0200
-Message-ID: <CANpmjNM+aEzySwuMDkEvsVaeTooxExuTRAv-nzjhp7npT8a3ag@mail.gmail.com>
-Subject: Re: Kernel Concurrency Sanitizer (KCSAN)
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Paul Turner <pjt@google.com>, Daniel Axtens <dja@axtens.net>,
-        Anatol Pomazau <anatol@google.com>,
-        Will Deacon <willdeacon@google.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <fcb34c72-89c7-9993-fc0a-ba3a61708bec@web.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Sep 2019 at 18:47, Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Fri, Sep 20, 2019 at 6:31 PM Mark Rutland <mark.rutland@arm.com> wrote:
-> >
-> > On Fri, Sep 20, 2019 at 04:18:57PM +0200, Marco Elver wrote:
-> > > We would like to share a new data-race detector for the Linux kernel:
-> > > Kernel Concurrency Sanitizer (KCSAN) --
-> > > https://github.com/google/ktsan/wiki/KCSAN  (Details:
-> > > https://github.com/google/ktsan/blob/kcsan/Documentation/dev-tools/kcsan.rst)
-> >
-> > Nice!
-> >
-> > BTW kcsan_atomic_next() is missing a stub definition in <linux/kcsan.h>
-> > when !CONFIG_KCSAN:
-> >
-> > https://github.com/google/ktsan/commit/a22a093a0f0d0b582c82cdbac4f133a3f61d207c#diff-19d7c475b4b92aab8ba440415ab786ec
-> >
-> > ... and I think the kcsan_{begin,end}_atomic() stubs need to be static
-> > inline too.
+On 9/18/19 1:12 PM, Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Wed, 18 Sep 2019 22:00:14 +0200
+> 
+> Simplify this function implementation by using a known wrapper function.
+> 
+> This issue was detected by using the Coccinelle software.
+> 
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
 
-Thanks for catching, fixed and pushed. Feel free to rebase your arm64 branch.
-
-> > It looks like this is easy enough to enable on arm64, with the only real
-> > special case being secondary_start_kernel() which we might want to
-> > refactor to allow some portions to be instrumented.
-> >
-> > I pushed the trivial patches I needed to get arm64 booting to my arm64/kcsan
-> > branch:
-> >
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git arm64/kcsan
-
-Cool, thanks for testing!
-
-> > We have some interesting splats at boot time in stop_machine, which
-> > don't seem to have been hit/fixed on x86 yet in the kcsan-with-fixes
-> > branch, e.g.
-> >
-> > [    0.237939] ==================================================================
-> > [    0.239431] BUG: KCSAN: data-race in multi_cpu_stop+0xa8/0x198 and set_state+0x80/0xb0
-> > [    0.241189]
-> > [    0.241606] write to 0xffff00001003bd00 of 4 bytes by task 24 on cpu 3:
-> > [    0.243435]  set_state+0x80/0xb0
-> > [    0.244328]  multi_cpu_stop+0x16c/0x198
-> > [    0.245406]  cpu_stopper_thread+0x170/0x298
-> > [    0.246565]  smpboot_thread_fn+0x40c/0x560
-> > [    0.247696]  kthread+0x1a8/0x1b0
-> > [    0.248586]  ret_from_fork+0x10/0x18
-> > [    0.249589]
-> > [    0.250006] read to 0xffff00001003bd00 of 4 bytes by task 14 on cpu 1:
-> > [    0.251804]  multi_cpu_stop+0xa8/0x198
-> > [    0.252851]  cpu_stopper_thread+0x170/0x298
-> > [    0.254008]  smpboot_thread_fn+0x40c/0x560
-> > [    0.255135]  kthread+0x1a8/0x1b0
-> > [    0.256027]  ret_from_fork+0x10/0x18
-> > [    0.257036]
-> > [    0.257449] Reported by Kernel Concurrency Sanitizer on:
-> > [    0.258918] CPU: 1 PID: 14 Comm: migration/1 Not tainted 5.3.0-00007-g67ab35a199f4-dirty #3
-> > [    0.261241] Hardware name: linux,dummy-virt (DT)
-> > [    0.262517] ==================================================================>
-
-Thanks, the fixes in -with-fixes were ones I only encountered with
-Syzkaller, where I disable KCSAN during boot. I've just added a fix
-for this race and pushed to kcsan-with-fixes.
-
-> > > To those of you who we mentioned at LPC that we're working on a
-> > > watchpoint-based KTSAN inspired by DataCollider [1], this is it (we
-> > > renamed it to KCSAN to avoid confusion with KTSAN).
-> > > [1] http://usenix.org/legacy/events/osdi10/tech/full_papers/Erickson.pdf
-> > >
-> > > In the coming weeks we're planning to:
-> > > * Set up a syzkaller instance.
-> > > * Share the dashboard so that you can see the races that are found.
-> > > * Attempt to send fixes for some races upstream (if you find that the
-> > > kcsan-with-fixes branch contains an important fix, please feel free to
-> > > point it out and we'll prioritize that).
-> > >
-> > > There are a few open questions:
-> > > * The big one: most of the reported races are due to unmarked
-> > > accesses; prioritization or pruning of races to focus initial efforts
-> > > to fix races might be required. Comments on how best to proceed are
-> > > welcome. We're aware that these are issues that have recently received
-> > > attention in the context of the LKMM
-> > > (https://lwn.net/Articles/793253/).
-> >
-> > I think the big risk here is drive-by "fixes" masking the warnings
-> > rather than fixing the actual issue. It's easy for people to suppress a
-> > warning with {READ,WRITE}_ONCE(), so they're liable to do that even the
-> > resulting race isn't benign.
-> >
-> > I don't have a clue how to prevent that, though.
->
-> I think this is mostly orthogonal problem. E.g. for some syzbot bugs I
-> see fixes that also try to simply "shut up" the immediate
-> manifestation with whatever means, e.g. sprinkling some slinlocks. So
-> (1) it's not unique to atomics, (2) presence of READ/WRITE_ONCE will
-> make the reader aware of the fact that this runs concurrently with
-> something else, and then they may ask themselves why this runs
-> concurrently with something when the object is supposed to be private
-> to the thread, and then maybe they re-fix it properly. Whereas if it's
-> completely unmarked, nobody will even notice that this code accesses
-> the object concurrently with other code. So even if READ/WRITE_ONCE
-> was a wrong fix, it's still better to have it rather than not.
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
