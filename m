@@ -2,112 +2,119 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FEA9C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61ABAC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 093A3208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:18:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568996295;
-	bh=GCKtG+CD95R2mS8EzwBNLj/gVyiJwKt4oDtH9SJYBic=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=gjpPTLmt/a5+EIuuHCj/z1csmD6QCuGV0CfO7GYd/kovtKPb8pwNHeySTqJXVyhBm
-	 A8zN5Nl69xgBoNSoD7VePIruheamag/hc57lCXgJ8ywOf4Mah4kFjqUqKB84tH3I+4
-	 AEL+ciYMX/E2haFUmfHGvUYk7dTbojLRBoR0y+Do=
+	by mail.kernel.org (Postfix) with ESMTP id 35DCD208C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:18:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FdmXUSoY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393240AbfITQSO (ORCPT
+        id S2393384AbfITQSj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 12:18:14 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:43511 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390271AbfITQSO (ORCPT
+        Fri, 20 Sep 2019 12:18:39 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:40166 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390271AbfITQSj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 12:18:14 -0400
-Received: by mail-lf1-f67.google.com with SMTP id u3so5438406lfl.10
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 09:18:12 -0700 (PDT)
+        Fri, 20 Sep 2019 12:18:39 -0400
+Received: by mail-pl1-f193.google.com with SMTP id d22so3407286pll.7
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 09:18:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/tRAwwujfBovXt36HtC9JZ/4MVaZlXqEF94BXjqBttQ=;
-        b=OuqSL56Vss9lPTztD/skWobMCVipuMEUX9+lHEdLASwSyG2xgG8y/svapwJXwLJJ5u
-         M79im92CVbCsjPjTYjVv8TYLIjFWLKAMMY6KVlzWgrt2X3MS5NS4puwacoKKKjsNj6mF
-         Qa7CZgFDD3VTS2AuGKApg6P+YvbDbM9exl/2w=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=LzFrqPQBDwdXmQkSuu8KsIj5oRAPGrw4JRLMdlkzg/s=;
+        b=FdmXUSoYQVg4zFefv12JxYtGNAaoDsOdUsRjf9g6/5FNTQ7wRh5WH+BpMjuSVKNvXI
+         UxS7ihGz7Yy6lQl5dtcuaFGCjkTDEV29U6eGY9hjgG+TkzxBXZWkzb/e+OpeR/y5zsM1
+         7MP/ocSY6EgCG/5xtTxcHbGCxCNdktO+F+2wVPpPognyAjPkixpst1Nq5oYMhAuCRVnP
+         N7nD9QbfSZ2+qnc1SwUbQ7ov7tZ639c0YIQHu4WIitYSMrbkon2Zi1xXILmJjESkRb8S
+         VtuMoD+Ip4dx/DzUzDLnONK1EzMB6PWgLq5uRJHFAlgBvxBswwRYoATBD8duB0K3N+fo
+         jg8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/tRAwwujfBovXt36HtC9JZ/4MVaZlXqEF94BXjqBttQ=;
-        b=srPiy9REzUbRPgY5m6JUkCQU8C95G9Sxvg1S+Uo25yAd9QizDMAPWk47aBsLdZ1uCj
-         KTnreScsXHma68e9rCbCCBtMBo925qK9/AxSb84bf2qf0pEl6KaNv1K1Av0z1pdgy0Oa
-         +pZWVDt/kKXlzO3ppsQeQlptiOnarbXWm6MUFgxih99vAOoDNONilLZYvStanR0E/47n
-         MMLwqdp4LtQHT6IY1mu15IKRurYiywdNMU9Ehdpl/S/wwp+69g9fBIXqHciKCxwgups9
-         xtJF2i4H/U0Soho4YvSRIegkhH9/X11tuglzSnOYqLI4Cji0zwXI33KFqXHq4f8jt9Xo
-         p3sA==
-X-Gm-Message-State: APjAAAVtYOI7IOerkf19zSOfRdM86tdGCscxjs4aLiILPJ7ODL7rbNQm
-        xzQRRDbTVJsoymfsv6IN+MCvOt6SWKE=
-X-Google-Smtp-Source: APXvYqwTKdeDrAerYC+Lk+z2j9Glfv+qyFvUqBU2Qf+YetSX7Qw4SNr3ThAOtI+/VZrmU91Q8/vpRA==
-X-Received: by 2002:a05:6512:251:: with SMTP id b17mr9787326lfo.35.1568996291081;
-        Fri, 20 Sep 2019 09:18:11 -0700 (PDT)
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
-        by smtp.gmail.com with ESMTPSA id a8sm550869ljf.47.2019.09.20.09.18.10
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Sep 2019 09:18:10 -0700 (PDT)
-Received: by mail-lj1-f170.google.com with SMTP id m7so7661879lji.2
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 09:18:10 -0700 (PDT)
-X-Received: by 2002:a2e:3e07:: with SMTP id l7mr9721577lja.180.1568996289896;
- Fri, 20 Sep 2019 09:18:09 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=LzFrqPQBDwdXmQkSuu8KsIj5oRAPGrw4JRLMdlkzg/s=;
+        b=b7hgR1MaFDmmPhaAt2ZC5RfLsL7BBvlHlZObUU/Y0MLWfbeIEiFzsdP+5gZGUM49mC
+         TxhzLu4BkDshXlppgtc5vIxP+35j5ny0YmkjZFXCNLbVZ2etSKau9Wx1oK3kBt4Lz56O
+         iS7qfLant9wMKJvzWnHIOVGQBJTD2liJCHTiXk0dBh4fSGbWmCUCjAIYNXdXdijp7f+U
+         Ke5rrCYdcEFy1GwyWx70qVunpeQU2f6aJBVdRRVYiAuNgryNLGFJQ5kZ5Ju3bqcAY5X5
+         YeQ2aDgSFIlpQNJkkyyNioq2b3K7is7kuOKIVStGjXRiwZYHoPmfHZSeySE/XzoVI8LQ
+         kQIA==
+X-Gm-Message-State: APjAAAVrbyWL4P1BvqaarGbDyWpXtep2UdOj9j1H2POTj2aMWtZ5tLlM
+        aZA3A78l/n4s2bcanYs9cNQ=
+X-Google-Smtp-Source: APXvYqxwjCVURm9DK7zOJITte1sP/f6LHs0VLXylGM1ogKUzVMvMZepcrd+bCdCxyw0K5KRu5fjf/w==
+X-Received: by 2002:a17:902:9a92:: with SMTP id w18mr17524414plp.255.1568996318341;
+        Fri, 20 Sep 2019 09:18:38 -0700 (PDT)
+Received: from nishad ([106.51.235.3])
+        by smtp.gmail.com with ESMTPSA id e192sm3526981pfh.83.2019.09.20.09.18.34
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 20 Sep 2019 09:18:37 -0700 (PDT)
+Date:   Fri, 20 Sep 2019 21:48:30 +0530
+From:   Nishad Kamdar <nishadkamdar@gmail.com>
+To:     Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Steven Royer <seroyer@linux.ibm.com>,
+        Joe Perches <joe@perches.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ocxl: Use the correct style for SPDX License Identifier
+Message-ID: <20190920161826.GA6894@nishad>
 MIME-Version: 1.0
-References: <be8059f4-8e8f-cd18-0978-a9c861f6396b@linuxfoundation.org>
-In-Reply-To: <be8059f4-8e8f-cd18-0978-a9c861f6396b@linuxfoundation.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 20 Sep 2019 09:17:53 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgs+UoZWfHGENWSVBd57Z-Vp0Nqe68R6wkDb5zF+cfvDg@mail.gmail.com>
-Message-ID: <CAHk-=wgs+UoZWfHGENWSVBd57Z-Vp0Nqe68R6wkDb5zF+cfvDg@mail.gmail.com>
-Subject: Re: [GIT PULL] Kselftest update for Linux 5.4-rc1
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 12:26 PM Shuah Khan <skhan@linuxfoundation.org> wrote:
->
-> This Kselftest update for Linux 5.4-rc1 consists of several fixes to
-> existing tests and adds KUnit, a lightweight unit testing and mocking
-> framework for the Linux kernel from Brendan Higgins.
+This patch corrects the SPDX License Identifier style
+in header files for Open Coherent Accelerator (OCXL) compatible device
+drivers. For C header files Documentation/process/license-rules.rst
+mandates C-like comments (opposed to C source files where
+C++ style should be used)
 
-So I pulled this, but then I almost immediately unpulled it.
+Changes made by using a script provided by Joe Perches here:
+https://lkml.org/lkml/2019/2/7/46.
 
-My reason for doing that may be odd, but it's because of the top-level
-'kunit' directory. This shouldn't be on the top level.
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+---
+ drivers/misc/ocxl/ocxl_internal.h | 2 +-
+ drivers/misc/ocxl/trace.h         | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-The reason I react so strongly is that it actually breaks my finger
-memory. I don't type out filenames - I auto-compete them. So "kernel/"
-is "k<tab>", "drivers/" is "d<tab>" etc.
+diff --git a/drivers/misc/ocxl/ocxl_internal.h b/drivers/misc/ocxl/ocxl_internal.h
+index 97415afd79f3..345bf843a38e 100644
+--- a/drivers/misc/ocxl/ocxl_internal.h
++++ b/drivers/misc/ocxl/ocxl_internal.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0+
++/* SPDX-License-Identifier: GPL-2.0+ */
+ // Copyright 2017 IBM Corp.
+ #ifndef _OCXL_INTERNAL_H_
+ #define _OCXL_INTERNAL_H_
+diff --git a/drivers/misc/ocxl/trace.h b/drivers/misc/ocxl/trace.h
+index 024f417e7e01..17e21cb2addd 100644
+--- a/drivers/misc/ocxl/trace.h
++++ b/drivers/misc/ocxl/trace.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0+
++/* SPDX-License-Identifier: GPL-2.0+ */
+ // Copyright 2017 IBM Corp.
+ #undef TRACE_SYSTEM
+ #define TRACE_SYSTEM ocxl
+-- 
+2.17.1
 
-It already doesn't work for everything ("mm/" is actually "mm<tab>"
-not because we have files in the git tree, but because the build
-creates various "module" files), but this breaks a common pattern for
-me.
-
-> In the future KUnit will be linked to Kselftest framework to provide
-> a way to trigger KUnit tests from user-space.
-
-Can the kernel parts please move to lib/kunit/ or something like that?
-
-               Linus
