@@ -1,203 +1,138 @@
-Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=ZeNX=XP=cdkyrfs.ltd=cdkyrfs.ltd1@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_NAME_MR_MRS,HTML_MESSAGE,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83CE4C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:42:24 +0000 (UTC)
-Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FEB32080F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:42:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="ZPi0iS9h";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="Ys3m/lxP"
-Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437498AbfITGmX (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 02:42:23 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:49672 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2437403AbfITGmX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 02:42:23 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8K6eoUc011977;
-        Thu, 19 Sep 2019 23:42:09 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=pfpt0818;
- bh=B+zvqKx38jbpkiB6iH65mT/csKiQIoctEdj4BwINfKo=;
- b=ZPi0iS9h1sew8BMxg0VoX6+AleG+J3TsUEZd3s27BAqGgyUffSD89J54W0nYADhGBIJn
- 0S5MO1+csckLh6r5Q8CtpIa/ZDX8YbpPiVOuqWMaW7IqvvFxOkhee+1E8W91KRMn7tXJ
- ZyaE77bMucidkwjSuhDqbG8Ufe6usYoh+PK0CUm4T3xOqKk0JqOgbLf5F5BukdULyTJn
- a9bqXzmu9CfdIzHDBv17rT8mMcyu9XFrOwURG4sA8/d6butx722kfAIdI9Ko10X6cHxn
- vQRhbnsvqJ3wVKQQyUFMkoqtn0ShS14PNRcF28QwKQKDEPGiOMXPe675c9u4ILqVWzQU Uw== 
-Received: from sc-exch03.marvell.com ([199.233.58.183])
-        by mx0b-0016f401.pphosted.com with ESMTP id 2v3vcfpy27-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 19 Sep 2019 23:42:09 -0700
-Received: from SC-EXCH03.marvell.com (10.93.176.83) by SC-EXCH03.marvell.com
- (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 19 Sep
- 2019 23:42:07 -0700
-Received: from NAM05-BY2-obe.outbound.protection.outlook.com (104.47.50.57) by
- SC-EXCH03.marvell.com (10.93.176.83) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Thu, 19 Sep 2019 23:42:07 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BVht/ZTygTp9ixOdYXSmWxCb+wGudVKGFbHAWfy+z8fsSgzKAtsSEgJmqztvAEzB6mOhQ/lb7kb7LaWL2Pw4w9ntr1dMSmk0B41yiPiJsUsQF3nUB7zyEXG73UCrzXOD3QsoUPRt7rIzPTnB+TO9PDUJNZGaDwf1NPb58tqYIB0mJ9ej+mWwu7j9WDTXQdSJGbq1ki7Rvh7IE4HFq1N/MhRrDbhQ67fKYM61AJT1se3uDLrdgufBSuYcGZjz+MlZemr3L02MXKkvD2nUWiM7t9sj3Iw6S5dD/AqGBEi+hXbtVEfvEQ9H046OvNRnmx+HjBAX/F0+yxWfHIAzpMNWnQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B+zvqKx38jbpkiB6iH65mT/csKiQIoctEdj4BwINfKo=;
- b=Q2yDyPQETLNGm7iyu8fJIwFqlSsOK/S9WJzQ/6WpwxmrYVfDP7UzDsgqTXOKMJCdEzD58c1JyvOun4EORtSUtwHbYflhVLdRVM+IEcwyewtf7KaxUokSAuTFGVdfSNSGilKT9hdgowxbPcJAglGqKiF86J3M6botSoFMJ3ZYaGbwy3g2Z+zM2NRxk15d4GdaJn5xOW3oyUX03fDbH6visMUsky8h7owYK6Fy5OOL7jFYeYEsBaSbAeBgTzUahi11uOlWCr7I1KClbWj9u7kn0TNL6+fOYkkhjwVkwwzQ+E8KBngnQlnXU34iGNaaZrSGrQr1G44BQpMLGNal7+4OVQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B+zvqKx38jbpkiB6iH65mT/csKiQIoctEdj4BwINfKo=;
- b=Ys3m/lxP2VyFuv44bpbjQfgMjSk1flByl2suwQbfIU5eYnIaIeqSsG0kCk+vsdC0KcY5ZdvZ3iK5jicoapZSyEvPVPtUPfG/ccA9bp6kcl3AV1y6DkwVP3sS3CZnppOlG2/yOWeN2fN50Ihd0y52fTTR4ic6WvGlNKyXL//0duE=
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.238.217) by
- MN2PR18MB2799.namprd18.prod.outlook.com (20.179.22.74) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.20; Fri, 20 Sep 2019 06:42:06 +0000
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::8162:62e8:aeeb:ec7b]) by MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::8162:62e8:aeeb:ec7b%3]) with mapi id 15.20.2263.023; Fri, 20 Sep 2019
- 06:42:06 +0000
-From:   Robert Richter <rrichter@marvell.com>
-To:     Hanna Hawa <hhhawa@amazon.com>
-CC:     "bp@alien8.de" <bp@alien8.de>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dwmw@amazon.co.uk" <dwmw@amazon.co.uk>,
-        "benh@amazon.com" <benh@amazon.com>,
-        "ronenk@amazon.com" <ronenk@amazon.com>,
-        "talel@amazon.com" <talel@amazon.com>,
-        "jonnyc@amazon.com" <jonnyc@amazon.com>,
-        "hanochu@amazon.com" <hanochu@amazon.com>
-Subject: Re: [PATCH v3 1/2] edac: Add an API for edac device to report for
- multiple errors
-Thread-Topic: [PATCH v3 1/2] edac: Add an API for edac device to report for
- multiple errors
-Thread-Index: AQHVb36EykX7q7YxkEG2nId0bF/CGQ==
-Date:   Fri, 20 Sep 2019 06:42:05 +0000
-Message-ID: <20190920064155.f3xeqzobiud5hvxf@rric.localdomain>
-References: <20190919171713.8060-1-hhhawa@amazon.com>
- <20190919171713.8060-2-hhhawa@amazon.com>
-In-Reply-To: <20190919171713.8060-2-hhhawa@amazon.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR05CA0342.eurprd05.prod.outlook.com
- (2603:10a6:7:92::37) To MN2PR18MB3408.namprd18.prod.outlook.com
- (2603:10b6:208:16c::25)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [31.208.96.227]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5a487e78-7b85-430f-ee1f-08d73d95a6db
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB2799;
-x-ms-traffictypediagnostic: MN2PR18MB2799:
-x-microsoft-antispam-prvs: <MN2PR18MB2799C5A2B4E39831993CC191D9880@MN2PR18MB2799.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 0166B75B74
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(366004)(376002)(39860400002)(136003)(199004)(189003)(6116002)(66066001)(7416002)(86362001)(3846002)(4326008)(99286004)(229853002)(8676002)(6916009)(81156014)(2906002)(54906003)(8936002)(81166006)(316002)(66476007)(66556008)(64756008)(66946007)(66446008)(5660300002)(71190400001)(71200400001)(11346002)(476003)(6246003)(446003)(6436002)(486006)(6486002)(1076003)(14454004)(478600001)(53546011)(6506007)(386003)(102836004)(52116002)(256004)(76176011)(186003)(7736002)(305945005)(9686003)(6512007)(25786009)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2799;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Y8f2lAqpbfKhICf9b9IyfaYvKYgw8exCm6McnRf7lsQXgEfS8XMTAdPNI8Ag81B9Bi/rKauZapfo2GEU3/244MMYg3fJPOiWNHMUG0taRm7rOTqMwy1oO1iPnXVgO7unvdLQBK7Ss+GwYxJpgz5OMoxwETfVxu4rckb6Cp4+6b5BKJHz21clyyOTOZNqzR2uErygxDZnc+03PYjiWTFPTmjblT6B8x7dULgm51qXmRWYWKt7cfsC9ex1z9/4RYJ7AM8s2KLA3JBZHURLxD9v0gufI7uKFOsYBrP6imRhc4opZMVoOhWHuumTNjoow1A2bDlXf1nOUS/JczY6X2tyqegWz6sXLZa77XkSz03sZyX4SJrq4Kxc+w9AezMdnneAhUBaQQ0kOefQofbPH41x/ghVfJ3mYWigtF1n9k1sg6E=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <4643F7B24759F747990E32FE51562174@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C26C5C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:45:24 +0000 (UTC)
+X-Greylist: delayed 310 seconds by postgrey-1.34 at mail.kernel.org; Fri, 20 Sep 2019 06:45:23 UTC
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 92C592080F
+Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=cdkyrfs.ltd
+Authentication-Results: mail.kernel.org; spf=pass smtp.mailfrom=cdkyrfs.ltd1@cdkyrfs.ltd
+Received: from out20-169.mail.aliyun.com (out20-169.mail.aliyun.com [115.124.20.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.kernel.org (Postfix) with ESMTPS id 92C592080F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:45:23 +0000 (UTC)
+X-Alimail-AntiSpam:AC=CONTINUE;BC=0.3440386|-1;CH=blue;DM=SPAM|OVERLOAD|true|0.985241-0.00772572-0.00703341;FP=13365934464461629194|6|1|6|0|-1|-1|-1;HT=e01a16370;MF=cdkyrfs.ltd1@cdkyrfs.ltd;NM=1;PH=DS;RN=1;RT=1;SR=0;TI=SMTPD_---.FYCxD2J_1568961610;
+Received: from N253DLPLPO3NG8H(mailfrom:cdkyrfs.ltd1@cdkyrfs.ltd fp:SMTPD_---.FYCxD2J_1568961610)
+          by smtp.aliyun-inc.com(10.147.41.137);
+          Fri, 20 Sep 2019 14:40:10 +0800
+Message-ID: <20190920144009891.cdkyrfs.ltd1@cdkyrfs.ltd>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5a487e78-7b85-430f-ee1f-08d73d95a6db
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Sep 2019 06:42:05.8725
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mEpZZYuKKAHmMD5uqHvqF5lmiyEwQ0LvSuqiVKbbsO/QqcEvZW4F2zYn8+NxcAMYkml8uHV4zjlvGYUJeYybQg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2799
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-20_01:2019-09-19,2019-09-20 signatures=0
-Sender: linux-kernel-owner@vger.kernel.org
-Precedence: bulk
-List-ID: <linux-kernel.vger.kernel.org>
-X-Mailing-List: linux-kernel@vger.kernel.org
+From: "Mr liu" <cdkyrfs.ltd1@cdkyrfs.ltd>
+To: "Linux-kernel" <linux-kernel@archiver.kernel.org>
+Reply-To: sales@xxx.com
+Date: 20 Sep 2019 14:40:10 +0800
+Subject: Linux-kernelChildren's clothing manufacturers can take samples for
+ free
+Content-Type: multipart/alternative;
+ boundary=--boundary_72_7ffeb6bc-b679-406a-8a5c-fe1768b62f85
+List-Id: <linux-kernel.vger.kernel.org>
 
-On 19.09.19 18:17:12, Hanna Hawa wrote:
-> Add an API for EDAC device to report multiple errors with same type.
->=20
-> Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
 
-With the change below it looks good to me:
+----boundary_72_7ffeb6bc-b679-406a-8a5c-fe1768b62f85
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Robert Richter <rrichter@marvell.com>
+HelloLinux-kernelsir,=0D=0AI am honored to know that you are enga=
+ged in the professional design and sales industry in the children=
+'s clothing industry. We are a company integrating development, p=
+roduction and sales. We have a professional design, plate making =
+and other technical teams and the latest machinery and equipment.=
+ High-end children's clothing, denim skirts, jackets, school unif=
+orms, children's trousers, children's three-piece products, etc. =
+Our products: cheap, high quality, stylish, and many styles. I ho=
+pe to establish business relationship with you! If you want to kn=
+ow more about our company, we would be grateful! I look forward t=
+o hearing from you. Thank you.=0D=0ABest blessing=0D=0AMs. Liu=0D=0A=
+<!--EndFragment-->=0D=0A=0D=0A<!--EndFragment-->=0D=0AU n s u b s=
+ c r i b e / =E9=80=80=EF=BC=88T=EF=BC=89=E8=AE=A2=EF=BC=88D=EF=BC=
+=89<!--EndFragment--><!--EndFragment--><!--EndFragment--><!--EndF=
+ragment--> =20
+----boundary_72_7ffeb6bc-b679-406a-8a5c-fe1768b62f85
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
+<!DOCTYPE HTML>=0A<html><head><meta HTTP-EQUIV=3D"Content-Type" C=
+ONTENT=3D"text/html; charset=3DUTF-8"/>=0D=0A                    =
+                  <title>Linux-kernelChildren's clothing manufact=
+urers can take samples for free</title></head><body><P class=3DMs=
+oNormal style=3D"MARGIN: 0pt"><SPAN style=3D"FONT-SIZE: 10.5pt; F=
+ONT-FAMILY: =E5=AE=8B=E4=BD=93; mso-spacerun: 'yes'; mso-font-ker=
+ning: 1.0000pt; mso-bidi-font-family: 'Times New Roman'; mso-asci=
+i-font-family: Calibri; mso-hansi-font-family: Calibri">Hello</SP=
+AN><SPAN style=3D"FONT-SIZE: 10.5pt; FONT-FAMILY: =E5=AE=8B=E4=BD=
+=93; mso-spacerun: 'yes'; mso-font-kerning: 1.0000pt; mso-bidi-fo=
+nt-family: 'Times New Roman'; mso-ascii-font-family: Calibri; mso=
+-hansi-font-family: Calibri">&nbsp;Linux-kernel</SPAN><SPAN style=
+=3D"FONT-SIZE: 10.5pt; FONT-FAMILY: =E5=AE=8B=E4=BD=93; mso-space=
+run: 'yes'; mso-font-kerning: 1.0000pt; mso-bidi-font-family: 'Ti=
+mes New Roman'; mso-ascii-font-family: Calibri; mso-hansi-font-fa=
+mily: Calibri">&nbsp;sir,</SPAN><SPAN style=3D"FONT-SIZE: 10.5pt;=
+ FONT-FAMILY: =E5=AE=8B=E4=BD=93; mso-spacerun: 'yes'; mso-font-k=
+erning: 1.0000pt; mso-bidi-font-family: 'Times New Roman'; mso-as=
+cii-font-family: Calibri; mso-hansi-font-family: Calibri"><?xml:n=
+amespace prefix =3D "o" ns =3D "urn:schemas-microsoft-com:office:=
+office" /><o:p></o:p></SPAN></P>=0D=0A<P class=3DMsoNormal style=3D=
+"MARGIN: 0pt"><SPAN style=3D"FONT-SIZE: 10.5pt; FONT-FAMILY: =E5=AE=
+=8B=E4=BD=93; mso-spacerun: 'yes'; mso-font-kerning: 1.0000pt; ms=
+o-bidi-font-family: 'Times New Roman'; mso-ascii-font-family: Cal=
+ibri; mso-hansi-font-family: Calibri">I am honored to know that y=
+ou are engaged in the professional design and sales industry in t=
+he children's clothing industry. We are a company integrating dev=
+elopment, production and sales. We have a professional design, pl=
+ate making and other technical teams and the latest machinery and=
+ equipment. High-end children's clothing, denim skirts, jackets, =
+school uniforms, children's trousers, children's three-piece prod=
+ucts, etc. Our products: cheap, high quality, stylish, and many s=
+tyles. I hope to establish business relationship with you! If you=
+ want to know more about our company, we would be grateful! I loo=
+k forward to hearing from you. Thank you.</SPAN><SPAN style=3D"FO=
+NT-SIZE: 10.5pt; FONT-FAMILY: =E5=AE=8B=E4=BD=93; mso-spacerun: '=
+yes'; mso-font-kerning: 1.0000pt; mso-bidi-font-family: 'Times Ne=
+w Roman'; mso-ascii-font-family: Calibri; mso-hansi-font-family: =
+Calibri"><o:p></o:p></SPAN></P>=0D=0A<P class=3DMsoNormal style=3D=
+"MARGIN: 0pt"><SPAN style=3D"FONT-SIZE: 10.5pt; FONT-FAMILY: =E5=AE=
+=8B=E4=BD=93; mso-spacerun: 'yes'; mso-font-kerning: 1.0000pt; ms=
+o-bidi-font-family: 'Times New Roman'; mso-ascii-font-family: Cal=
+ibri; mso-hansi-font-family: Calibri">Best blessing</SPAN><SPAN s=
+tyle=3D"FONT-SIZE: 10.5pt; FONT-FAMILY: =E5=AE=8B=E4=BD=93; mso-s=
+pacerun: 'yes'; mso-font-kerning: 1.0000pt; mso-bidi-font-family:=
+ 'Times New Roman'; mso-ascii-font-family: Calibri; mso-hansi-fon=
+t-family: Calibri"><o:p></o:p></SPAN></P>=0D=0A<P class=3DMsoNorm=
+al style=3D"MARGIN: 0pt"><SPAN style=3D"FONT-SIZE: 10.5pt; FONT-F=
+AMILY: =E5=AE=8B=E4=BD=93; mso-spacerun: 'yes'; mso-font-kerning:=
+ 1.0000pt; mso-bidi-font-family: 'Times New Roman'; mso-ascii-fon=
+t-family: Calibri; mso-hansi-font-family: Calibri">Ms. Liu</SPAN>=
+<SPAN style=3D"FONT-SIZE: 10.5pt; FONT-FAMILY: =E5=AE=8B=E4=BD=93=
+; mso-spacerun: 'yes'; mso-font-kerning: 1.0000pt; mso-bidi-font-=
+family: 'Times New Roman'; mso-ascii-font-family: Calibri; mso-ha=
+nsi-font-family: Calibri"><o:p></o:p></SPAN></P>=0D=0A<P class=3D=
+MsoNormal style=3D"MARGIN: 0pt"><!--EndFragment-->&nbsp;</P>=0D=0A=
+<P class=3DMsoNormal style=3D"MARGIN: 0pt"><SPAN style=3D"FONT-SI=
+ZE: 10.5pt; FONT-FAMILY: =E5=AE=8B=E4=BD=93; COLOR: rgb(0,0,0); m=
+so-spacerun: 'yes'; mso-font-kerning: 1.0000pt; mso-bidi-font-fam=
+ily: 'Times New Roman'; mso-ascii-font-family: Calibri; mso-hansi=
+-font-family: Calibri"></SPAN><SPAN style=3D"FONT-SIZE: 10.5pt; F=
+ONT-FAMILY: =E5=AE=8B=E4=BD=93; COLOR: rgb(0,0,0); mso-spacerun: =
+'yes'; mso-font-kerning: 1.0000pt; mso-bidi-font-family: 'Times N=
+ew Roman'; mso-ascii-font-family: Calibri; mso-hansi-font-family:=
+ Calibri"><o:p></o:p></SPAN>&nbsp;</P>=0D=0A<P class=3DMsoNormal =
+style=3D"MARGIN: 0pt"><!--EndFragment--><BR>&nbsp;</P>=0D=0A<P><A=
+ href=3D"http://www.d0918.emtd7.online/php/unsub.php?id=3DREZGQTh=
+EQTUyRDQ2M0EzMzU0QzEyNDVEMEU3MkI2NzUsbGludXgta2VybmVsQGFyY2hpdmVy=
+Lmtlcm5lbC5vcmcsMjAxOTA5MjAxNDQwMDUsYTliMDNlY2I3NzBlZDJhMDgxMDYzZ=
+TBhZDBmYTFkYmU=3D" target=3D_blank>U n s u b s c r i b e / =E9=80=
+=80=EF=BC=88T=EF=BC=89=E8=AE=A2=EF=BC=88D=EF=BC=89</A></P><!--End=
+Fragment--><!--EndFragment--><!--EndFragment--><!--EndFragment-->=
+<div style=3D"display:none;"> <img src=3D"http://www.d0918.emtd7.=
+online/php/imgtr.php?uid=3DDFFA8DA52D463A3354C1245D0E72B675&mdt=3D=
+20190920144005&ckc=3D1597722104" alt=3D"20190920144005"> </div></=
+body></html>
+----boundary_72_7ffeb6bc-b679-406a-8a5c-fe1768b62f85--
 
--Robert
 
-> ---
->  drivers/edac/edac_device.c | 62 ++++++++++++++++++++++++++------------
->  drivers/edac/edac_device.h | 40 ++++++++++++++++++++++++
->  2 files changed, 82 insertions(+), 20 deletions(-)
->=20
-> diff --git a/drivers/edac/edac_device.c b/drivers/edac/edac_device.c
-> index 65cf2b9355c4..866934f2bcb0 100644
-> --- a/drivers/edac/edac_device.c
-> +++ b/drivers/edac/edac_device.c
-> @@ -555,12 +555,16 @@ static inline int edac_device_get_panic_on_ue(struc=
-t edac_device_ctl_info
->  	return edac_dev->panic_on_ue;
->  }
-> =20
-> -void edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
-> -			int inst_nr, int block_nr, const char *msg)
-> +void __edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
-> +			     unsigned int count, int inst_nr, int block_nr,
-> +			     const char *msg)
->  {
->  	struct edac_device_instance *instance;
->  	struct edac_device_block *block =3D NULL;
-> =20
-> +	if (!count)
-> +		return;
-> +
-
-Those checks should be moved to the *_count() variants of both
-functions.
-
-[...]
-
-> +static inline void edac_device_handle_ce_count(struct edac_device_ctl_in=
-fo *edac_dev,
-> +					       unsigned int count, int inst_nr,
-> +					       int block_nr, const char *msg)
-> +{
-
-	if (count)
-		...
-
-> +	__edac_device_handle_ce(edac_dev, count, inst_nr, block_nr, msg);
-> +}
-> +
-> +static inline void edac_device_handle_ue_count(struct edac_device_ctl_in=
-fo *edac_dev,
-> +					       unsigned int count, int inst_nr,
-> +					       int block_nr, const char *msg)
-> +{
-
-Here too.
-
-> +	__edac_device_handle_ue(edac_dev, count, inst_nr, block_nr, msg);
-> +}
