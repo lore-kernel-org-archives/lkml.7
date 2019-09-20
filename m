@@ -2,124 +2,192 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D25C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:26:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67881C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A537208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:26:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="DEacpKnl"
+	by mail.kernel.org (Postfix) with ESMTP id 374C1208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:29:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730012AbfITU0F (ORCPT
+        id S1730023AbfITU3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 16:26:05 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:45172 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728040AbfITU0F (ORCPT
+        Fri, 20 Sep 2019 16:29:35 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:47788 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728379AbfITU3e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 16:26:05 -0400
-Received: by mail-qt1-f195.google.com with SMTP id c21so10097684qtj.12
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 13:26:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:mime-version
-         :content-transfer-encoding;
-        bh=VRsyGDeb9R/uhxLrzbzo7A02ki7s9rOkj4n2kKbCZWg=;
-        b=DEacpKnlBfwxkcPbb8gICvQhBQxqwryBAVa1F9KgqMI/eOwvnVea27HH6pMU04pl2J
-         BwNVr/gmS/9HT4m3qjKC5gV+yaKFoLHyLiW0Sbuma+4MbxBkhv1OmPSG5EDMrbCX2aHk
-         kFMyD4B9F4eOeowCJ2ZdWAsxkji34kS0EBLeNUtnFRq0QlJ0Oods6PixvSuK7MD+8vb1
-         XArFn+i6C/u76uPrF5z0wMfr8jNuzWxECB26URZ5cH8eUWZb+A4xxui27t6kIBL/OfP4
-         amrXwasgCMw0Om60EMGOsAzZU6h2zXLwfwIWEac5lIzcFvxxZ3iCSU3h2mYytV7O5NmC
-         Xigg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:mime-version
-         :content-transfer-encoding;
-        bh=VRsyGDeb9R/uhxLrzbzo7A02ki7s9rOkj4n2kKbCZWg=;
-        b=ZbAG2qXFzsBg1+LtXBwI0GEByhkAWvaIQLamze0UfWw+vsL6+rtfmOj4ztDZLnKQ9g
-         LbejmazR31TJiGGEQUXixL3nMLd0mZYUt3ifivKkHtEVvXxpd80TGIlkS96lv6wfLD3g
-         n+I6DXalZX86kXLRz7azESdi6KpBsRgTb/xEATl5KtcUrM0A4PXm4eh7hSB7Gopz9/fs
-         YCmBlsl5O+T9qI/0Ihror5mcR40ZecdMwF1tdn/MEktYn9wdbj6Aim/yqp+cgX6ZBwwB
-         x0wuuL4gq15mxMg1adYP30RQ7Q+b/5MDIxjr4oCtYJfZfrWZnsJrr6tK57GnxM/Q0FPP
-         VRmQ==
-X-Gm-Message-State: APjAAAUDB62uLseAbk9+Fz2RirHzhixj1ciNTdC1MmN4buw+7aMomIKN
-        Qo1Gj/FV6xaNiDBD267oQbd0bQ==
-X-Google-Smtp-Source: APXvYqwvdEOvPTyF2/FF1Xyi8f53x0fUiTK6UxQ9CYAlzKYH5G2RTlLya93bx+uRVtYelmLKcglSnA==
-X-Received: by 2002:aed:2381:: with SMTP id j1mr5285735qtc.373.1569011163865;
-        Fri, 20 Sep 2019 13:26:03 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id j5sm1490750qkd.56.2019.09.20.13.26.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 20 Sep 2019 13:26:02 -0700 (PDT)
-Message-ID: <1569011160.5576.205.camel@lca.pw>
-Subject: "Fix spurious sanity check failures in destroy_workqueue()"
- introduced memory leaks
-From:   Qian Cai <cai@lca.pw>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Marcin Pawlowski <mpawlowski@fb.com>,
-        "Williams, Gerald S" <gerald.s.williams@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Date:   Fri, 20 Sep 2019 16:26:00 -0400
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 20 Sep 2019 16:29:34 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8KKRUkP105910;
+        Fri, 20 Sep 2019 16:28:53 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2v53kcn9fr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 20 Sep 2019 16:28:53 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8KKS8FO108104;
+        Fri, 20 Sep 2019 16:28:52 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2v53kcn9fc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 20 Sep 2019 16:28:52 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8KKOi38003907;
+        Fri, 20 Sep 2019 20:28:51 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma04dal.us.ibm.com with ESMTP id 2v3vbuw4t6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 20 Sep 2019 20:28:51 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8KKSnjn50004434
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 20 Sep 2019 20:28:49 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DA540C6057;
+        Fri, 20 Sep 2019 20:28:49 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 79BD1C6055;
+        Fri, 20 Sep 2019 20:28:45 +0000 (GMT)
+Received: from leobras.br.ibm.com (unknown [9.18.235.184])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri, 20 Sep 2019 20:28:45 +0000 (GMT)
+Message-ID: <24863d8904c6e05e5dd48cab57db4274675ae654.camel@linux.ibm.com>
+Subject: Re: [PATCH v2 11/11] powerpc/mm/book3s64/pgtable: Uses counting
+ method to skip serializing
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     John Hubbard <jhubbard@nvidia.com>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        Ganesh Goudar <ganeshgr@linux.ibm.com>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Keith Busch <keith.busch@intel.com>
+Date:   Fri, 20 Sep 2019 17:28:41 -0300
+In-Reply-To: <1b39eaa7-751d-40bc-d3d7-41aaa15be42a@nvidia.com>
+References: <20190920195047.7703-1-leonardo@linux.ibm.com>
+         <20190920195047.7703-12-leonardo@linux.ibm.com>
+         <1b39eaa7-751d-40bc-d3d7-41aaa15be42a@nvidia.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-EbNtHEwclx7KXmENRZAu"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+MIME-Version: 1.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-20_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909200168
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The linux-next commit [1] introduced a lot of memory leaks while running LTP fs
-tests (/opt/ltp/runltp -f fs). Reverted the commit fixed the problem. It seems
-the new code wq->rescuer to NULL without free it first, so later rcu_free_wq()
-is unable to free it.
 
-unreferenced object 0xffff8f822e7c8428 (size 192):
-  comm "fs_fill", pid 8310, jiffies 4294965449 (age 494.720s)
-  hex dump (first 32 bytes):
-    28 84 7c 2e 82 8f ff ff 28 84 7c 2e 82 8f ff ff  (.|.....(.|.....
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<0000000030795d2f>] kmem_cache_alloc_node_trace+0x153/0x470
-    [<000000000398512e>] alloc_worker+0x21/0x50
-    [<000000001934cb3a>] init_rescuer.part.4+0x1d/0xb0
-    [<00000000f36417e5>] alloc_workqueue+0x336/0x5f3
-    [<0000000011066bf3>] ext4_fill_super+0x1eec/0x2f70 [ext4]
-    [<000000001fdee6fd>] mount_bdev+0x191/0x1c0
-    [<00000000e2d3e265>] ext4_mount+0x15/0x20 [ext4]
-    [<00000000631fe1d9>] legacy_get_tree+0x34/0x60
-    [<00000000ee947c38>] vfs_get_tree+0x27/0xb0
-    [<00000000f4bcb594>] do_mount+0x8a0/0xae0
-    [<0000000005dd5056>] ksys_mount+0xb6/0xd0
-    [<00000000fb14e10a>] __x64_sys_mount+0x25/0x30
-    [<000000009fb1dd3e>] do_syscall_64+0x6d/0x488
-    [<00000000a822a6c4>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-unreferenced object 0xffff8f824c314218 (size 192):
-  comm "fs_fill", pid 8310, jiffies 4294966011 (age 489.100s)
-  hex dump (first 32 bytes):
-    18 42 31 4c 82 8f ff ff 18 42 31 4c 82 8f ff ff  .B1L.....B1L....
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<0000000030795d2f>] kmem_cache_alloc_node_trace+0x153/0x470
-    [<000000000398512e>] alloc_worker+0x21/0x50
-    [<000000001934cb3a>] init_rescuer.part.4+0x1d/0xb0
-    [<00000000f36417e5>] alloc_workqueue+0x336/0x5f3
-    [<000000000b6d2e88>] xfs_init_mount_workqueues+0x2a/0x150 [xfs]
-    [<0000000014c756cd>] xfs_fs_fill_super+0x311/0x760 [xfs]
-    [<000000001fdee6fd>] mount_bdev+0x191/0x1c0
-    [<00000000d0aa6706>] xfs_fs_mount+0x15/0x20 [xfs]
-    [<00000000631fe1d9>] legacy_get_tree+0x34/0x60
-    [<00000000ee947c38>] vfs_get_tree+0x27/0xb0
-    [<00000000f4bcb594>] do_mount+0x8a0/0xae0
-    [<0000000005dd5056>] ksys_mount+0xb6/0xd0
-    [<00000000fb14e10a>] __x64_sys_mount+0x25/0x30
-    [<000000009fb1dd3e>] do_syscall_64+0x6d/0x488
-    [<00000000a822a6c4>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+--=-EbNtHEwclx7KXmENRZAu
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-[1] https://lore.kernel.org/lkml/20190919014340.GM3084169@devbig004.ftw2.faceboo
-k.com/
+On Fri, 2019-09-20 at 13:11 -0700, John Hubbard wrote:
+> On 9/20/19 12:50 PM, Leonardo Bras wrote:
+> > Skips slow part of serialize_against_pte_lookup if there is no running
+> > lockless pagetable walk.
+> >=20
+> > Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
+> > ---
+> >  arch/powerpc/mm/book3s64/pgtable.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/arch/powerpc/mm/book3s64/pgtable.c b/arch/powerpc/mm/book3=
+s64/pgtable.c
+> > index 13239b17a22c..41ca30269fa3 100644
+> > --- a/arch/powerpc/mm/book3s64/pgtable.c
+> > +++ b/arch/powerpc/mm/book3s64/pgtable.c
+> > @@ -95,7 +95,8 @@ static void do_nothing(void *unused)
+> >  void serialize_against_pte_lookup(struct mm_struct *mm)
+> >  {
+> >  	smp_mb();
+> > -	smp_call_function_many(mm_cpumask(mm), do_nothing, NULL, 1);
+> > +	if (running_lockless_pgtbl_walk(mm))
+> > +		smp_call_function_many(mm_cpumask(mm), do_nothing, NULL, 1);
+>=20
+> Hi,
+>=20
+> If you do this, then you are left without any synchronization. So it will
+> have race conditions: a page table walk could begin right after the above
+> check returns "false", and then code such as hash__pmdp_huge_get_and_clea=
+r()
+> will continue on right away, under the false assumption that it has let
+> all the current page table walks complete.
+>=20
+> The current code uses either interrupts or RCU to synchronize, and in
+> either case, you end up scheduling something on each CPU. If you remove
+> that entirely, I don't see anything left. ("Pure" atomic counting is not
+> a synchronization technique all by itself.)
+>=20
+> thanks,
+
+Hello John,
+Thanks for the fast feedback.
+
+See, before calling serialize_against_pte_lookup(), there is always an
+update or clear on the pmd. So, if a page table walk begin right after
+the check returns "false", there is no problem, since it will use the
+updated pmd.
+
+Think about serialize, on a process with a bunch of cpus. After you
+check the last processor (wait part), there is no guarantee that the
+first one is not starting a lockless pagetable walk.
+
+The same mechanism protect both methods.
+
+Does it make sense?
+
+Best regards,
+Leonardo Bras
+
+
+
+--=-EbNtHEwclx7KXmENRZAu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl2FNnkACgkQlQYWtz9S
+ttSPMw//aJn7kdxYecY+MRvifVWoQyBdJ5umQJcly7LvttzqAl+3S5Q/uZgg75xp
+1Bw5gwlD7/PUEkgryL3CjdYgywmVWZVP9gu+//oyj0wMCeICEgNmaswQdZHgUF4y
+X86VJ2urZ1WSNesqcjoc7P65Q2WjxoBQiRwCAZfBRPaFKxELIc3jg2NuRDiTHPih
+CoKC1167Kzrl3LsEhFUwcTUO6zDMsDCfUY/+I+XeuvBQyQNlV6oazPhxH0XzRj+I
+e2dSZtnVQvzaD1a/GHbWQ4DdIl21kms6yQLVWE24h5voiAd8DloXlIcoL6oiEIeG
+00KWNLd7pcWyZXGWHRG9F7StTkeiRVCcGIut+k3lia9WKeTULC53h9l5JzwIwO5Q
+zVE+rPFuE9myUA8KRKTz4UyoLEpeuZEWD/EE8nRdcyvGYg0Eo7mYopiNb9vewhpi
+9XSsMFmaUR4PS0A64bpByLJE5nzq7vWim4AAEPMMzIa13ey8jaOXgb22NKGfVKVU
+b61o91K/miqsw17iGj+wknw8R6cR7fyWwRKQXJD7aF7zzW6P4acudkPdi/shKSNo
+mIxf6PJ5qyM6AKy8ZWY3fd7SNZBiH/mprXnNFbMDonVBZH/viejZwCce7DN8K8z4
+DBEkCKD1I/q7+QkFfylu/wz3m2gJg+CSCeivgY5wf7XlpZbK0co=
+=98u8
+-----END PGP SIGNATURE-----
+
+--=-EbNtHEwclx7KXmENRZAu--
+
