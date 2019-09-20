@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 276E7C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93441C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F413D208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:38:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E262207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:38:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JUH7y9le"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZzkLNWKQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392988AbfITRis (ORCPT
+        id S2393227AbfITRiw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 13:38:48 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:42674 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392230AbfITRib (ORCPT
+        Fri, 20 Sep 2019 13:38:52 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:54466 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392231AbfITRib (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Sep 2019 13:38:31 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8KHcQA5109365;
-        Fri, 20 Sep 2019 12:38:26 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8KHcRSZ016881;
+        Fri, 20 Sep 2019 12:38:27 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569001106;
-        bh=3r8NrvCOTUy6K4oFLHF2BYQC94/INWkCD7dFECGXy+E=;
+        s=ti-com-17Q1; t=1569001107;
+        bh=Bww3DmLPInN+74zzf9x1fHcHAM7PHNA7A5KdfU8oS5o=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=JUH7y9le3lkmSBUOJz00goGAu1mMXQ3XAzP+O/jANk9S6k2qhNOjK4VCDFg0AvAnh
-         Xwj4yR5y7F4JUuBZIYD9kzXYqu03oj0qizQl5VDwOHcYcW5DOAjtw35m+9OCKlNuos
-         ZFNGRBOkUD/1l0Chmoz932Cpbxun/5k5aNhOSClE=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8KHcQDH013167
+        b=ZzkLNWKQyeu43gwHKcm7t5FOmQn3XEBIGeqs/0J6Qhj6nxEp91UAKHH0mumpD35go
+         83JOCGVNzl6qMHq3qYQO1BJRhr0Xyzr5xyFM7u96gmNDtVRcht+/7RNeMdU4iokeaV
+         AiRGgQhJgu0303SMclprmc3ObOIJbx88GOeK6/bM=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8KHcRd6021615
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 20 Sep 2019 12:38:26 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 20 Sep 2019 12:38:27 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 20
  Sep 2019 12:38:22 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 20 Sep 2019 12:38:22 -0500
+ Frontend Transport; Fri, 20 Sep 2019 12:38:26 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8KHcQbd060504;
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8KHcQEw107409;
         Fri, 20 Sep 2019 12:38:26 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
 CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v8 1/9] leds: multicolor: Add sysfs interface definition
-Date:   Fri, 20 Sep 2019 12:41:31 -0500
-Message-ID: <20190920174139.30079-2-dmurphy@ti.com>
+Subject: [PATCH v8 3/9] dt: bindings: Add multicolor class dt bindings documention
+Date:   Fri, 20 Sep 2019 12:41:33 -0500
+Message-ID: <20190920174139.30079-4-dmurphy@ti.com>
 X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
 In-Reply-To: <20190920174139.30079-1-dmurphy@ti.com>
 References: <20190920174139.30079-1-dmurphy@ti.com>
@@ -67,64 +67,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a documentation of LED Multicolor LED class specific
-sysfs attributes.
+Add DT bindings for the LEDs multicolor class framework.
 
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- .../ABI/testing/sysfs-class-led-multicolor    | 43 +++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
+ .../bindings/leds/leds-class-multicolor.txt   | 95 +++++++++++++++++++
+ 1 file changed, 95 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
 
-diff --git a/Documentation/ABI/testing/sysfs-class-led-multicolor b/Documentation/ABI/testing/sysfs-class-led-multicolor
+diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
 new file mode 100644
-index 000000000000..39fc73becfec
+index 000000000000..215d3c90f351
 --- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-class-led-multicolor
-@@ -0,0 +1,43 @@
-+What:		/sys/class/leds/<led>/brightness
-+Date:		Sept 2019
-+KernelVersion:	5.5
-+Contact:	Dan Murphy <dmurphy@ti.com>
-+Description:	read/write
-+		Writing to this file will update all LEDs within the group to a
-+		calculated percentage of what each color LED intensity is set
-+		to. The percentage is calculated via the equation below:
++++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
+@@ -0,0 +1,95 @@
++* Multicolor LED properties
 +
-+		led_brightness = requested_value * led_color_intensity/led_color_max_intensity
++Monochrome LEDs can grouped into LED clusters.  These clusters can provide a
++visible output that have a wide range of colors and intensities.
 +
-+		For additional details please refer to
-+		Documentation/leds/leds-class-multicolor.rst.
++The nodes and properties defined in this document are unique to the multicolor
++LED class.  Common LED nodes and properties are inherited from the common.txt
++within this documentation directory.
 +
-+		The value of the color is from 0 to
-+		/sys/class/leds/<led>/max_brightness.
++Required LED Child properties:
++	- color : For multicolor LED support this property should be defined as
++		  LED_COLOR_ID_MULTI and further definition can be found in
++		  include/linux/leds/common.h.
 +
-+What:		/sys/class/leds/<led>/colors/<led_color>_intensity
-+Date:		Sept 2019
-+KernelVersion:	5.5
-+Contact:	Dan Murphy <dmurphy@ti.com>
-+Description:	read/write
-+		The led_color directory is dynamically created based on the
-+		colors defined by the registrar of the class.
-+		The value for the led_color is defined in the
-+		include/dt-bindings/leds/common.h. There is one directory per
-+		color presented.  The intensity file is created under each
-+		led_color directory and controls the individual LED color
-+		setting.
++led-controller@30 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	compatible = "ti,lp5024";
++	reg = <0x29>;
 +
-+		The value of the color is from 0 to
-+		/sys/class/leds/<led>/colors/<led_color>_max_intensity.
++	multi-led@1 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <1>;
++		color = <LED_COLOR_ID_MULTI>;
++		function = LED_FUNCTION_STATUS;
 +
-+What:		/sys/class/leds/<led>/colors/<led_color>_max_intensity
-+Date:		Sept 2019
-+KernelVersion:	5.5
-+Contact:	Dan Murphy <dmurphy@ti.com>
-+Description:	read only
-+		Maximum intensity level for the LED color, default is
-+		255 (LED_FULL).
 +
-+		If the LED does not support different intensity levels, this
-+		should be 1.
++		led@3 {
++			reg = <3>;
++			color = <LED_COLOR_ID_RED>;
++		};
++
++		led@4 {
++			reg = <4>;
++			color = <LED_COLOR_ID_GREEN>;
++		};
++
++		led@5 {
++			reg = <5>;
++			color = <LED_COLOR_ID_BLUE>;
++		};
++	};
++
++	multi-led@2 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		color = <LED_COLOR_ID_MULTI>;
++		function = LED_FUNCTION_ACTIVITY;
++		reg = <2>;
++		ti,led-bank = <2 3 5>;
++
++		led@6 {
++			reg = <0x6>;
++			color = <LED_COLOR_ID_RED>;
++			led-sources = <6 9 15>;
++		};
++
++		led@7 {
++			reg = <0x7>;
++			color = <LED_COLOR_ID_GREEN>;
++			led-sources = <7 10 16>;
++		};
++
++		led@8 {
++			reg = <0x8>;
++			color = <LED_COLOR_ID_BLUE>;
++			led-sources = <8 11 17>;
++		};
++	};
++
++	multi-led@4 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <4>;
++		color = <LED_COLOR_ID_MULTI>;
++		function = LED_FUNCTION_ACTIVITY;
++
++		led@12 {
++			reg = <12>;
++			color = <LED_COLOR_ID_RED>;
++		};
++
++		led@13 {
++			reg = <13>;
++			color = <LED_COLOR_ID_GREEN>;
++		};
++
++		led@14 {
++			reg = <14>;
++			color = <LED_COLOR_ID_BLUE>;
++		};
++	};
++
++};
 -- 
 2.22.0.214.g8dca754b1e
 
