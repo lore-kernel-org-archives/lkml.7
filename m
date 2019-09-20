@@ -2,107 +2,155 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46EB0C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F32CC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AFC5208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 267C520717
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:42:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Oof2UcZt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bCKyfITE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729402AbfITQis (ORCPT
+        id S1729415AbfITQmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 12:38:48 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:37570 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729372AbfITQis (ORCPT
+        Fri, 20 Sep 2019 12:42:07 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:33558 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729069AbfITQmG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 12:38:48 -0400
-Received: by mail-ed1-f66.google.com with SMTP id r4so7101766edy.4
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 09:38:46 -0700 (PDT)
+        Fri, 20 Sep 2019 12:42:06 -0400
+Received: by mail-qt1-f195.google.com with SMTP id r5so9430821qtd.0;
+        Fri, 20 Sep 2019 09:42:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+JjVHOFtPkrIu+975k/69BRdOa3f1zZRGu6VFUJO+SE=;
-        b=Oof2UcZtDBoL9r9YUCMpa+YnL1BKRRXdv7Tg4CF5oueJtWk+uI/AjuBbiD2CpsKKDn
-         AJyUm43wEixxj0qrSfWYAMFH/5/QhaW282DyEwlTgG4FfNoIRDvyhemzDmKmj1JIloiA
-         1NcnNuKU8cn5kN+lFOgJAV49GCt2d3K5r+DV3ZOuIgTWx74V5iWK9PH66MBrRLVPBEUp
-         U5x9zERtv5LXZcdyFhAHH4kVijTEt98/vZF2jd80k77DoUU2q1UJen0oKmMMC2UaTi1U
-         QOkg3f/Z+qjV88usI7PtEbXVbx0F5kKrmQmI2iY+Xp11ZQ4LcSYhXXD2ejNv6YjUuMVc
-         L6Nw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kqT5lIVpsBt9QgotSREzEDcmUdKvdLEfcdlmXuAx+xk=;
+        b=bCKyfITEKTXsbQLWL/X7tZ3LWMdwmrHZUwtTYcuA+LHSnQDaeCPy+Wy/PMqWOOTLOa
+         VKn5Hzm4PIfK4m4yrkFrTf+WA1Sn1nRK06DdEbtV5HmX6Hq60mpscbjAfsEZ0q3InPIF
+         kpuozEjIWvfPAGBw60M3DF53gURbxxmXZhQvjuQVzh7ypy9tIaQ0UwDlO36Q2wAbT96t
+         fN3vRrefgW/a64cH1/Fk9HDQq3XeuSIa9IgVuF55jjkFRPEoZaZ4rHzgBlFiGYNJm+CK
+         05thmQqLc5n8gEK+Xs38wTd7UDJBbF5y9F9a3X3InXr1xDxLFoLygZ4lQqZBSrSs8M5A
+         CRdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+JjVHOFtPkrIu+975k/69BRdOa3f1zZRGu6VFUJO+SE=;
-        b=Yj2kIUdgXKE6HEsr5hwO8aohSbn90ORv7SMQTsSTBWKQk5eV2voPpSGqjBQKYb9UcY
-         Ml1hW4V+vvdHf29KSOzxBVUGgTenEAo/XqxYdZOoDgo/XJvZWOxrZ7BDXC33ANhrkc/h
-         /qkQ83BwzFHtIde38I8aoqNSJfc7FjRbuM1wiHYUOVbXpUPk+qTMHN6J+/cjKMroKjyN
-         rb1H6v7hlnjiBGq3ylGG0ywoltsLTggc/eOlzw4anFPUEt67K4kRlDCUYTnupHoWFjdf
-         J4mxi7QZb3IT5mvINHo4lSxDI1fftcsjqYkW1DK565nys9uCTJYq9KMS+w7w/V2dPQb6
-         VAog==
-X-Gm-Message-State: APjAAAXp7YweMz0e1+p1JWJqIdTXgD+kC7Vxx9/3oaCoVrt3+RkR1Ca1
-        RLqSye5e6FQqPTsOh/NRzw0Gpw==
-X-Google-Smtp-Source: APXvYqwJczKwjDOiGLA7EtKQlZ9dOCzqyi58hY9xeDlLLlGSMNkfPS+mwtXM4drn+jdNkHaovaWf1Q==
-X-Received: by 2002:a17:907:20a2:: with SMTP id pw2mr19642839ejb.163.1568997526248;
-        Fri, 20 Sep 2019 09:38:46 -0700 (PDT)
-Received: from lophozonia ([85.195.192.192])
-        by smtp.gmail.com with ESMTPSA id e39sm407528edb.69.2019.09.20.09.38.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Sep 2019 09:38:45 -0700 (PDT)
-Date:   Fri, 20 Sep 2019 18:38:43 +0200
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 4/4] iommu: Introduce guest PASID bind function
-Message-ID: <20190920163843.GD1533866@lophozonia>
-References: <1568849194-47874-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1568849194-47874-5-git-send-email-jacob.jun.pan@linux.intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kqT5lIVpsBt9QgotSREzEDcmUdKvdLEfcdlmXuAx+xk=;
+        b=uEMQF+YMCghP3DFXxDfiVAHKFLx7NxgWk5UlPkKGjJYeU7w21rFBbYW5fkRbSzzKJs
+         ZLuNk0v5y2MkFNVKEp4POzLDyzXdvMet9YmVKBFAyq1LlrXsccSwfkHwMuQWkdQpLgin
+         vgO8ORGJWWooHJkrBLwcvQzFGpvAT/ktO3ycZWnzszeWgiUbiiTQeqrs/lhhQzeR631H
+         6OXtOIW61kMdlLdmvS8ovPgzZS53rMsESeQX8hHjr6WJ48khLG3UsyLokMDLS3hq1AD/
+         vAunxmps4CowH+IRx7f6itViugXWG+bSqylyTQO2mK7H54a6o7tvOBYec+56wvBX5dCJ
+         nDUA==
+X-Gm-Message-State: APjAAAXrHgvaXdJqU+uCbxPWom38GbSpvasjZz4+Up8LzOrulH0r0XOG
+        OET0mwn9fpSFlhejjbGo4kd7ehlw33oZ3AoN/dI=
+X-Google-Smtp-Source: APXvYqwHlEZPBHp6TKMq1Bn/wdXI2AU0A7FFVFNUPrCMEWbLJufkAEjZObSWazLl9RrBYJT3ie5Lgd1RVV4XtK9V9EU=
+X-Received: by 2002:a0c:e48b:: with SMTP id n11mr14252983qvl.38.1568997725782;
+ Fri, 20 Sep 2019 09:42:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1568849194-47874-5-git-send-email-jacob.jun.pan@linux.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190919160518.25901-1-ivan.khoronzhuk@linaro.org>
+ <CAEf4BzbCjCYr5NMPctDkUggwpehnqZPVBSqZOsd9MvSq6WmnZQ@mail.gmail.com> <20190920082204.GC8870@khorivan>
+In-Reply-To: <20190920082204.GC8870@khorivan>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Fri, 20 Sep 2019 09:41:54 -0700
+Message-ID: <CAEf4BzaVuaN3HhMu8W_i9z4n-2zfjqxBXyOEOaQHexxZq7b3qg@mail.gmail.com>
+Subject: Re: [PATCH bpf] libbpf: fix version identification on busybox
+To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin Lau <kafai@fb.com>, Andrii Nakryiko <andriin@fb.com>,
+        Yonghong Song <yhs@fb.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 04:26:34PM -0700, Jacob Pan wrote:
-> Guest shared virtual address (SVA) may require host to shadow guest
-> PASID tables. Guest PASID can also be allocated from the host via
-> enlightened interfaces. In this case, guest needs to bind the guest
-> mm, i.e. cr3 in guest physical address to the actual PASID table in
-> the host IOMMU. Nesting will be turned on such that guest virtual
-> address can go through a two level translation:
-> - 1st level translates GVA to GPA
-> - 2nd level translates GPA to HPA
-> This patch introduces APIs to bind guest PASID data to the assigned
-> device entry in the physical IOMMU. See the diagram below for usage
-> explaination.
+On Fri, Sep 20, 2019 at 1:22 AM Ivan Khoronzhuk
+<ivan.khoronzhuk@linaro.org> wrote:
+>
+> On Thu, Sep 19, 2019 at 01:02:40PM -0700, Andrii Nakryiko wrote:
+> >On Thu, Sep 19, 2019 at 11:22 AM Ivan Khoronzhuk
+> ><ivan.khoronzhuk@linaro.org> wrote:
+> >>
+> >> It's very often for embedded to have stripped version of sort in
+> >> busybox, when no -V option present. It breaks build natively on target
+> >> board causing recursive loop.
+> >>
+> >> BusyBox v1.24.1 (2019-04-06 04:09:16 UTC) multi-call binary. \
+> >> Usage: sort [-nrugMcszbdfimSTokt] [-o FILE] [-k \
+> >> start[.offset][opts][,end[.offset][opts]] [-t CHAR] [FILE]...
+> >>
+> >> Lets modify command a little to avoid -V option.
+> >>
+> >> Fixes: dadb81d0afe732 ("libbpf: make libbpf.map source of truth for libbpf version")
+> >>
+> >> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+> >> ---
+> >>
+> >> Based on bpf/master
+> >>
+> >>  tools/lib/bpf/Makefile | 2 +-
+> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
+> >> index c6f94cffe06e..a12490ad6215 100644
+> >> --- a/tools/lib/bpf/Makefile
+> >> +++ b/tools/lib/bpf/Makefile
+> >> @@ -3,7 +3,7 @@
+> >>
+> >>  LIBBPF_VERSION := $(shell \
+> >>         grep -oE '^LIBBPF_([0-9.]+)' libbpf.map | \
+> >> -       sort -rV | head -n1 | cut -d'_' -f2)
+> >> +       cut -d'_' -f2 | sort -r | head -n1)
+> >
+> >You can't just sort alphabetically, because:
+> >
+> >1.2
+> >1.11
+> >
+> >should be in that order. See discussion on mailing thread for original commit.
+>
+> if X1.X2.X3, where X = {0,1,....99999}
+> Then it can be:
+>
+> -LIBBPF_VERSION := $(shell \
+> -       grep -oE '^LIBBPF_([0-9.]+)' libbpf.map | \
+> -       sort -rV | head -n1 | cut -d'_' -f2)
+> +_LBPFLIST := $(patsubst %;,%,$(patsubst LIBBPF_%,%,$(filter LIBBPF_%, \
+> +           $(shell cat libbpf.map))))
+> +_LBPFLIST2 := $(foreach v,$(_LBPFLIST), \
+> +               $(subst $() $(),,$(foreach n,$(subst .,$() $(),$(v)), \
+> +                       $(shell printf "%05d" $(n)))))
+> +_LBPF_VER := $(word $(words $(sort $(_LBPFLIST2))), $(sort $(_LBPFLIST2)))
+> +LIBBPF_VERSION := $(patsubst %_$(_LBPF_VER),%,$(filter %_$(_LBPF_VER), \
+> +        $(join $(addsuffix _, $(_LBPFLIST)),$(_LBPFLIST2))))
+>
+> It's bigger but avoids invocations of grep/sort/cut/head, only cat/printf
+> , thus -V option also.
+>
 
-explanation
+No way, this is way too ugly (and still unreliable, if we ever have
+X.Y.Z.W or something). I'd rather go with my original approach of
+fetching the last version in libbpf.map file. See
+https://www.spinics.net/lists/netdev/msg592703.html.
 
-Otherwise Looks fine to me. I was wondering if we would be able to reuse
-the API for Arm SMMUv2, which allows nesting translation, but without
-PASID - there is a single address space per device, with two stages of
-translation. I think it would work, although it would look better with
-something like "PGD" instead of "PASID" in the API names (e.g.
-iommu_sva_bind_gpgd) since that case wouldn't use PASID at all. But I
-don't want to quibble over names, so
-
-Reviewed-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> >
+> >>  LIBBPF_MAJOR_VERSION := $(firstword $(subst ., ,$(LIBBPF_VERSION)))
+> >>
+> >>  MAKEFLAGS += --no-print-directory
+> >> --
+> >> 2.17.1
+> >>
+>
+> --
+> Regards,
+> Ivan Khoronzhuk
