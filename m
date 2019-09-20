@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA7AC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:25:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 923EFC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBE1C207E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:25:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FC2F2080F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:25:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388574AbfITOZf (ORCPT
+        id S2387979AbfITOZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:25:35 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35758 "EHLO
+        Fri, 20 Sep 2019 10:25:41 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36000 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388019AbfITOZA (ORCPT
+        by vger.kernel.org with ESMTP id S2388105AbfITOZD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 10:25:00 -0400
+        Fri, 20 Sep 2019 10:25:03 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqD-0004x2-PA; Fri, 20 Sep 2019 15:24:57 +0100
+        id 1iBJqG-0004xD-Kj; Fri, 20 Sep 2019 15:25:00 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqC-0007qi-TX; Fri, 20 Sep 2019 15:24:56 +0100
+        id 1iBJqE-0007sA-2p; Fri, 20 Sep 2019 15:24:58 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "YueHaibing" <yuehaibing@huawei.com>,
-        "Robert Jarzmik" <robert.jarzmik@free.fr>
+        "Takashi Iwai" <tiwai@suse.de>
 Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.912264975@decadent.org.uk>
+Message-ID: <lsq.1568989415.364236498@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 027/132] ARM: pxa: ssp: Fix "WARNING: invalid free of
- devm_ allocated data"
+Subject: [PATCH 3.16 045/132] ALSA: usb-audio: Handle the error from
+ snd_usb_mixer_apply_create_quirk()
 In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,41 +55,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 9ee8578d953023cc57e7e736ae48502c707c0210 upstream.
+commit 328e9f6973be2ee67862cb17bf6c0c5c5918cd72 upstream.
 
-Since commit 1c459de1e645 ("ARM: pxa: ssp: use devm_ functions")
-kfree, iounmap, clk_put etc are not needed anymore in remove path.
+The error from snd_usb_mixer_apply_create_quirk() is ignored in the
+current usb-audio driver code, which will continue the probing even
+after the error.  Let's take it more serious.
 
-Fixes: 1c459de1e645 ("ARM: pxa: ssp: use devm_ functions")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-[ commit message spelling fix ]
-Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+Fixes: 7b1eda223deb ("ALSA: usb-mixer: factor out quirks")
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/arm/plat-pxa/ssp.c | 6 ------
- 1 file changed, 6 deletions(-)
+ sound/usb/mixer.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/arch/arm/plat-pxa/ssp.c
-+++ b/arch/arm/plat-pxa/ssp.c
-@@ -232,18 +232,12 @@ static int pxa_ssp_probe(struct platform
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -2499,7 +2499,9 @@ int snd_usb_create_mixer(struct snd_usb_
+ 	    (err = snd_usb_mixer_status_create(mixer)) < 0)
+ 		goto _error;
  
- static int pxa_ssp_remove(struct platform_device *pdev)
- {
--	struct resource *res;
- 	struct ssp_device *ssp;
+-	snd_usb_mixer_apply_create_quirk(mixer);
++	err = snd_usb_mixer_apply_create_quirk(mixer);
++	if (err < 0)
++		goto _error;
  
- 	ssp = platform_get_drvdata(pdev);
- 	if (ssp == NULL)
- 		return -ENODEV;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	release_mem_region(res->start, resource_size(res));
--
--	clk_put(ssp->clk);
--
- 	mutex_lock(&ssp_lock);
- 	list_del(&ssp->node);
- 	mutex_unlock(&ssp_lock);
+ 	err = snd_device_new(chip->card, SNDRV_DEV_CODEC, mixer, &dev_ops);
+ 	if (err < 0)
 
