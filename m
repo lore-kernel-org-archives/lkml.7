@@ -2,113 +2,140 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B7DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C14C3C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45C9C205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:21:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a3VFKP3p"
+	by mail.kernel.org (Postfix) with ESMTP id 9D39D205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:22:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569007353;
+	bh=homZ5/jVE6qK/W5gpVsVG6gkmrT6KcPIx3K0xMnM6BU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=WDF4C+QNLm/oYN05Uxo6NAvJpwKkz0awrYh+9jzSiGGFRtIs+aU3Aj1oZlda7pgF4
+	 a1Nw5f2IipNKRe3JpChDInHmdWJDJCJw96J4gzZdicYMUu0stho78E7lL3mTRXus7v
+	 CCyhhjXWcxjC8AtXB/vmXHNNGRubGrfXltgvnxwE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbfITTVi (ORCPT
+        id S1729552AbfITTWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 15:21:38 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41685 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725869AbfITTVi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 15:21:38 -0400
-Received: by mail-wr1-f68.google.com with SMTP id h7so7864370wrw.8
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 12:21:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=PJyeClMQVfNi5aFiPW4+LQNcu88byDAQ1TqGQo4z/1g=;
-        b=a3VFKP3pP7MsgoR9+U3VItQ4jCWJoGV9jijSEb+eqgTlAziNCCnavHxtgIFsD5J95R
-         g/cCazSjQSATWLk0WQEygPus1eLmpmmfRaw1bYPrh6OI5CGl3HB65VzcLNMDcEIk690x
-         8B5uS9XkRPcKshYWtDUR5DyJ1dZGPD2JjFeY4PEKM9J6xg0Yp9Bzn3Kl3Ofli6LThZXx
-         NHZkfo903VKQS/izbH1VPZTgb5gNPYBkesO0p4bO8ubWOmKDaqxdAoUBTcyWgaTycd8s
-         ROznvdCjMZdGL2EOcBN1jlgyYbRASLU0gv/+7ZIBchCqwYQrvJDQjdoazEv7kBFZpabQ
-         HsAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PJyeClMQVfNi5aFiPW4+LQNcu88byDAQ1TqGQo4z/1g=;
-        b=L5IztBSFpbIZs9Lg//4EEANZ2zVQgrL8vGX7rsMxAzZxBMTh7fxtP+2t+l7UNrdXk5
-         a6NbZpSA8VZqORNR5nbNWCuKb7ZmfJ1XuUEUYyB88YBn8SgIZgzDY05wde2ZDuq9xOwT
-         NU7mxdY35PaUUry9FAAFgflJeYKqITQfeEP5pk9bOX5Q+u6ancC952gwmP3wjlUo3V4d
-         8CGReBwsoYs0ApPjl6zzyIy2tb7XHnvyF230OQUubAgieUMbyXV6d2MMTcqe0rP+ZabY
-         CzUdwu32PS+TyIy85oiiqDOfU9lo79mgFpp8id8HwKRQX9GZYSFn2lLv8Nbd12xxjZ/V
-         4cHw==
-X-Gm-Message-State: APjAAAVYdKjL82wwWQMgwjVcznV/Rqsw6f0xJ2h50kfNjoDJOwfCmdbU
-        Ik//YDNwJGV6tIeQlFPtnSU2P1bA
-X-Google-Smtp-Source: APXvYqziOU8XeRx1ViKOkNnAeYNxQKqLPgBJKUiE52oKkbZ40GHXI1ev8ZeIJvOvn1qG3Edkg03rmA==
-X-Received: by 2002:a5d:5352:: with SMTP id t18mr13608922wrv.72.1569007295889;
-        Fri, 20 Sep 2019 12:21:35 -0700 (PDT)
-Received: from [192.168.2.28] (39.35.broadband4.iol.cz. [85.71.35.39])
-        by smtp.gmail.com with ESMTPSA id o9sm4917013wrh.46.2019.09.20.12.21.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Sep 2019 12:21:35 -0700 (PDT)
-Subject: Re: dm-crypt error when CONFIG_CRYPTO_AUTHENC is disabled
-To:     Mike Snitzer <snitzer@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@clip-os.org>
-Cc:     dm-devel@redhat.com, Alasdair Kergon <agk@redhat.com>,
-        linux-kernel@vger.kernel.org
-References: <20190920154434.GA923@gandi.net>
- <20190920173707.GA21143@redhat.com>
-From:   Milan Broz <gmazyland@gmail.com>
-Openpgp: preference=signencrypt
-Message-ID: <13e25b01-f344-ea1d-8f6c-9d0a60eb1e0f@gmail.com>
-Date:   Fri, 20 Sep 2019 21:21:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 20 Sep 2019 15:22:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51862 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726421AbfITTWb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 15:22:31 -0400
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD78220B7C
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 19:22:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569007350;
+        bh=homZ5/jVE6qK/W5gpVsVG6gkmrT6KcPIx3K0xMnM6BU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=iCFCVXmPfPvCs/1zcdBMhM+80/1muA7HKuwNCHzo+8l2uDl8BmONjahmc/BYhrFAy
+         yl8/tvT7mYKtTzMqwiR5H1AC0osZbZ56j1OcZ5oocGxCShwzk0CiGVvNa7atDUSBWN
+         Tw22OW2bglq/7cTmIblOeP1M2CVBY3joL9mtpUIE=
+Received: by mail-wr1-f49.google.com with SMTP id n14so7870369wrw.9
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 12:22:29 -0700 (PDT)
+X-Gm-Message-State: APjAAAVtgSWjTuum2J8qIFcI80T61jkUEwC9NxBfoXiv4WbKNTgNFIY+
+        9m0KoEUDqmJhzCz/p9LOok9DMdnWb7J/hkOxDNWnZQ==
+X-Google-Smtp-Source: APXvYqxEocuWEej/sldfkaXIpLP0XzVesFych7dN3OsMlgs+CV57GwRNtOeXJF5c9FkgZg/1ugPty4WR8s3lIeHGk+4=
+X-Received: by 2002:a05:6000:1632:: with SMTP id v18mr14264806wrb.61.1569007348381;
+ Fri, 20 Sep 2019 12:22:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190920173707.GA21143@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
+ <20190915052242.GG19710@mit.edu> <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
+ <20190918211503.GA1808@darwi-home-pc> <20190918211713.GA2225@darwi-home-pc>
+ <CAHk-=wiCqDiU7SE3FLn2W26MS_voUAuqj5XFa1V_tiGTrrW-zQ@mail.gmail.com>
+ <20190920134609.GA2113@pc> <CALCETrWvE5es3i+to33y6jw=Yf0Tw6ZfV-6QWjZT5v0fo76tWw@mail.gmail.com>
+ <CAHk-=wgW8rN2EVL_Rdn63V9vQO0GkZ=RQFeqqsYJM==8fujpPg@mail.gmail.com>
+ <CALCETrV=4TX2a4uV5t2xOFzv+zM_jnOtMLJna8Vb7uXz6S=wSw@mail.gmail.com> <20190920181216.GA1889@1wt.eu>
+In-Reply-To: <20190920181216.GA1889@1wt.eu>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 20 Sep 2019 12:22:17 -0700
+X-Gmail-Original-Message-ID: <CALCETrW_mw0qOR2oqYC0+T6V65c+t+Vdxk5Jb6S+sPTqN6SXfw@mail.gmail.com>
+Message-ID: <CALCETrW_mw0qOR2oqYC0+T6V65c+t+Vdxk5Jb6S+sPTqN6SXfw@mail.gmail.com>
+Subject: Re: [PATCH RFC v4 1/1] random: WARN on large getrandom() waits and
+ introduce getrandom2()
+To:     Willy Tarreau <w@1wt.eu>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/09/2019 19:37, Mike Snitzer wrote:
-> On Fri, Sep 20 2019 at 11:44am -0400,
-> Thibaut Sautereau <thibaut.sautereau@clip-os.org> wrote:
-> 
->> Hi,
->>
->> I just got a dm-crypt "crypt: Error allocating crypto tfm" error when
->> trying to "cryptsetup open" a volume. I found out that it was only
->> happening when I disabled CONFIG_CRYPTO_AUTHENC.
->>
->> drivers/md/dm-crypt.c includes the crypto/authenc.h header and seems to
->> use some CRYPTO_AUTHENC-related stuff. Therefore, shouldn't
->> CONFIG_DM_CRYPT select CONFIG_CRYPTO_AUTHENC?
-> 
-> Yes, it looks like commit ef43aa38063a6 ("dm crypt: add cryptographic
-> data integrity protection (authenticated encryption)") should've added
-> 'select CRYPTO_AUTHENC' to dm-crypt's Kconfig.  I'll let Milan weigh-in
-> but that seems like the right way forward.
+On Fri, Sep 20, 2019 at 11:12 AM Willy Tarreau <w@1wt.eu> wrote:
+>
+> Hi Andy,
+>
+> On Fri, Sep 20, 2019 at 10:52:30AM -0700, Andy Lutomirski wrote:
+> > 2. Fix what is arguably a straight up kernel bug, not even an ABI
+> > issue: when a user program is blocking in getrandom(..., 0), the
+> > kernel happily sits there doing absolutely nothing and deadlocks the
+> > system as a result.  This IMO isn't an ABI issue -- it's an
+> > implementation problem.  How about we make getrandom() (probably
+> > actually wait_for_random_bytes()) do something useful to try to seed
+> > the RNG if the system is otherwise not doing IO.
+>
+> I thought about it as well with my old MSDOS reflexes, but here I
+> doubt we can do a lot. It seems fishy to me to start to fiddle with
+> various drivers from within a getrandom() syscall, we could sometimes
+> even end up waiting even longer because one device is already locked,
+> and when we have access there there's not much we can do without
+> risking to cause some harm. On desktop systems you have a bit more
+> choice than on headless systems (blink keyboard leds and time the
+> interrupts, run some disk accesses when there's still a disk, get a
+> copy of the last buffer of the audio input and/or output, turn on
+> the microphone and/or webcam, and collect some data). Many of them
+> cannot always be used. We could do some more portable stuff like scan
+> and hash the totality of the RAM. But that's all quite bad and
+> unreliable and at this point it's better to tell userland "here's
+> what I could get for you, if you want better, do it yourself" and the
+> userland can then ask the user "dear user, I really need valid entropy
+> this time to generate your GPG key, please type frantically on this
+> keyboard". And it will be more reliable this way in my opinion.
 
-No, I don't this so. It is like you use some algorithm that is just not compiled-in,
-or it is disabled in the current state (because of FIPS mode od so) - it fails
-to initialize it.
+Perhaps userland could register a helper that takes over and does
+something better?  But I think the kernel really should do something
+vaguely reasonable all by itself.  If nothing else, we want the ext4
+patch that provoked this whole discussion to be applied, which means
+that we need to unbreak userspace somehow, and returning garbage it to
+is not a good choice.
 
-I think we should not force dm-crypt to depend on AEAD - most users
-do not use authenticated encryption, it is perfectly ok to keep this compiled out.
+Here are some possible approaches that come to mind:
 
-I do not see any principal difference from disabling any other crypto
-(if you disable XTS mode, it fails to open device that uses it).
+int count;
+while (crng isn't inited) {
+  msleep(1);
+}
 
-IMO the current config dependence is ok.
+and modify add_timer_randomness() to at least credit a tiny bit to
+crng_init_cnt.
 
-Milan
+Or we do something like intentionally triggering readahead on some
+offset on the root block device.  We should definitely not trigger
+*blocking* IO.
+
+Also, I wonder if the real problem preventing the RNG from staring up
+is that the crng_init_cnt threshold is too high.  We have a rather
+baroque accounting system, and it seems like we can accumulate and
+credit entropy for a very long time indeed without actually
+considering ourselves done.
+
+--Andy
