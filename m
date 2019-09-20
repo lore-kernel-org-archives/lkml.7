@@ -2,96 +2,151 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3102EC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FAE6C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:26:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F29BD20644
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:26:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 568382086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:26:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568986008;
+	bh=l6trHkVRVi4Jtoy88rMW6wbwgrdI8cPoidRU+a4Nsio=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ALHoFSpkypweJex4SYcweDGed21N2qEGIsiWdxT88MaoGUr34hHFPI7vMD7t0+xvl
+	 BS7t7i9qMCsNJ0Aa82FGNbVJMgnej0AUg1zxAdGlBfHkw+GF3vXRw/nHLOBm8eWl17
+	 /EHcgnf1IPNkt1bItASOEXy2H4kWVvcetrQqYFj8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727633AbfITN0E (ORCPT
+        id S1727685AbfITN0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 09:26:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33450 "EHLO mail.kernel.org"
+        Fri, 20 Sep 2019 09:26:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726794AbfITN0D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 09:26:03 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1727637AbfITN0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 09:26:47 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5EA7205F4;
-        Fri, 20 Sep 2019 13:26:01 +0000 (UTC)
-Date:   Fri, 20 Sep 2019 09:26:00 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc:     Joe Perches <joe@perches.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Alexei Starovoitov" <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Petr Mladek <pmladek@suse.com>, Arnd Bergmann <arnd@arndb.de>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 25/32] trace: Use pr_warn instead of pr_warning
-Message-ID: <20190920092600.29a26322@gandalf.local.home>
-In-Reply-To: <20190920062544.180997-26-wangkefeng.wang@huawei.com>
-References: <20190920062544.180997-1-wangkefeng.wang@huawei.com>
-        <20190920062544.180997-26-wangkefeng.wang@huawei.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3E5A20644;
+        Fri, 20 Sep 2019 13:26:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568986006;
+        bh=l6trHkVRVi4Jtoy88rMW6wbwgrdI8cPoidRU+a4Nsio=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dJwu4kjg0I7EPoOxOCF9/xh8sTyrXKV0lUmPsvj4kB1vxJH9xuOBzn7f5vgJn8R4L
+         gqF/dYYJPT7E+azdmsMGSglPJ61pl62C7tlTsYKAo70ctR53+WA7M71176sFajIWYB
+         PNy0rNBhWw1Zo0iZRd4Gi9Ks4zX+ZGxEL7VfK0Ho=
+Date:   Fri, 20 Sep 2019 08:26:44 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     tiwai@suse.com, Linux PCI <linux-pci@vger.kernel.org>,
+        alsa-devel@alsa-project.org, LKML <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH 1/2] PCI: Add a helper to check Power Resource
+ Requirements _PR3 existence
+Message-ID: <20190920132644.GA226476@google.com>
+References: <20190827134756.10807-1-kai.heng.feng@canonical.com>
+ <20190909114129.GT103977@google.com>
+ <CAAd53p4mc0tgCBiwfZRowr4os_bqDP+7Ko=d+do8OW2aH1Whzg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAd53p4mc0tgCBiwfZRowr4os_bqDP+7Ko=d+do8OW2aH1Whzg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Sep 2019 14:25:37 +0800
-Kefeng Wang <wangkefeng.wang@huawei.com> wrote:
+[+cc Rafael]
 
-> As said in commit f2c2cbcc35d4 ("powerpc: Use pr_warn instead of
-> pr_warning"), removing pr_warning so all logging messages use a
-> consistent <prefix>_warn style. Let's do it.
+On Fri, Sep 20, 2019 at 01:23:20PM +0200, Kai-Heng Feng wrote:
+> On Mon, Sep 9, 2019 at 1:41 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-
--- Steve
-
+> > > +bool pci_pr3_present(struct pci_dev *pdev)
+> > > +{
+> > > +     struct pci_dev *parent_pdev = pci_upstream_bridge(pdev);
+> > > +     struct acpi_device *parent_adev;
+> > > +
+> > > +     if (acpi_disabled)
+> > > +             return false;
+> > > +
+> > > +     if (!parent_pdev)
+> > > +             return false;
+> > > +
+> > > +     parent_adev = ACPI_COMPANION(&parent_pdev->dev);
+> > > +     if (!parent_adev)
+> > > +             return false;
+> > > +
+> > > +     return parent_adev->power.flags.power_resources &&
+> > > +             acpi_has_method(parent_adev->handle, "_PR3");
+> >
+> > I think this is generally OK, but it doesn't actually check whether
+> > *pdev* has a _PR3; it checks whether pdev's *parent* does.  So does
+> > that mean this is dependent on the GPU topology, i.e., does it assume
+> > that there is an upstream bridge and that power for everything under
+> > that bridge can be managed together?
 > 
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-> ---
->  kernel/trace/trace_benchmark.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Yes, the power resource is managed by its upstream port.
 > 
-> diff --git a/kernel/trace/trace_benchmark.c b/kernel/trace/trace_benchmark.c
-> index 80e0b2aca703..2e9a4746ea85 100644
-> --- a/kernel/trace/trace_benchmark.c
-> +++ b/kernel/trace/trace_benchmark.c
-> @@ -178,14 +178,14 @@ static int benchmark_event_kthread(void *arg)
->  int trace_benchmark_reg(void)
->  {
->  	if (!ok_to_run) {
-> -		pr_warning("trace benchmark cannot be started via kernel command line\n");
-> +		pr_warn("trace benchmark cannot be started via kernel command line\n");
->  		return -EBUSY;
->  	}
->  
->  	bm_event_thread = kthread_run(benchmark_event_kthread,
->  				      NULL, "event_benchmark");
->  	if (IS_ERR(bm_event_thread)) {
-> -		pr_warning("trace benchmark failed to create kernel thread\n");
-> +		pr_warn("trace benchmark failed to create kernel thread\n");
->  		return PTR_ERR(bm_event_thread);
->  	}
->  
+> > I'm wondering whether the "parent_pdev = pci_upstream_bridge()" part
+> > should be in the caller rather than in pci_pr3_present()?
+> 
+> This will make the function more align to its name, but needs more
+> work from caller side.
+> How about rename the function to pci_upstream_pr3_present()?
 
+I cc'd Rafael because he knows all about how this stuff works, and I
+don't.
+
+_PR3 is defined in terms of the device itself and the doc (ACPI v6.3,
+sec 7.3.11) doesn't mention any hierarchy.  I assume it would be legal
+for firmware to supply a _PR3 for "pdev" as well as for "parent_pdev"?
+
+If that is legal, I think it would be appropriate for the caller to
+look up the upstream bridge.  That way this interface could be used
+for both "pdev" and an upstream bridge.  If we look up the bridge
+internally, we would have to add a second interface if we actually
+want to know about _PR3 for the device itself.
+
+> > I can't connect any of the dots from _PR3 through to
+> > "need_eld_notify_link" (whatever "eld" is :)) and the uses of
+> > hda_intel.need_eld_notify_link (and needs_eld_notify_link()).
+> >
+> > But that's beyond the scope of *this* patch and it makes sense that
+> > you do want to discover the _PR3 existence, so I'm fine with this once
+> > we figure out the pdev vs parent question.
+> 
+> Thanks for your review.
+> 
+> Kai-Heng
+> 
+> >
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(pci_pr3_present);
+> > > +
+> > >  /**
+> > >   * pci_add_dma_alias - Add a DMA devfn alias for a device
+> > >   * @dev: the PCI device for which alias is added
+> > > diff --git a/include/linux/pci.h b/include/linux/pci.h
+> > > index 82e4cd1b7ac3..9b6f7b67fac9 100644
+> > > --- a/include/linux/pci.h
+> > > +++ b/include/linux/pci.h
+> > > @@ -2348,9 +2348,11 @@ struct irq_domain *pci_host_bridge_acpi_msi_domain(struct pci_bus *bus);
+> > >
+> > >  void
+> > >  pci_msi_register_fwnode_provider(struct fwnode_handle *(*fn)(struct device *));
+> > > +bool pci_pr3_present(struct pci_dev *pdev);
+> > >  #else
+> > >  static inline struct irq_domain *
+> > >  pci_host_bridge_acpi_msi_domain(struct pci_bus *bus) { return NULL; }
+> > > +static bool pci_pr3_present(struct pci_dev *pdev) { return false; }
+> > >  #endif
+> > >
+> > >  #ifdef CONFIG_EEH
+> > > --
+> > > 2.17.1
+> > >
