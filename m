@@ -2,145 +2,140 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F098C4CECD
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B54FC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:07:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65B02205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF4D6205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:07:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s17gJ4lq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vcxVVEjh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438003AbfITKGC (ORCPT
+        id S2438009AbfITKHc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 06:06:02 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:34692 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437990AbfITKGC (ORCPT
+        Fri, 20 Sep 2019 06:07:32 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44437 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390997AbfITKHb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 06:06:02 -0400
-Received: by mail-qk1-f193.google.com with SMTP id q203so6752237qke.1
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 03:06:01 -0700 (PDT)
+        Fri, 20 Sep 2019 06:07:31 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q21so4157352pfn.11;
+        Fri, 20 Sep 2019 03:07:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mqz6p6f3gQZREp4wRBwqV1CXY4CFc2wJXeVDbpZwnRo=;
-        b=s17gJ4lqim6Yex+7ZbeyBwTOV5zQRVncDPzcNKA7j+xdCMNuqhecn9u5KhYrQe0jpK
-         hrVnN1yIG94MWyq8hCLVRuwl8ThIEXpAKCeYcDuGoFeRTSftk50vJC6zaISWg9FROQ4V
-         CRukDqnIkzDCMFtjh39sSn6QhsqxjvEfG1yCuBwoEavDPSXM19qNQTIc1NzGhYrlPirb
-         uduKHT06dptUz9BPSgkkzXKYLewu2z3AI/nbEUMw3OxxA0kWB0KZwmCA+har+H2CDfIj
-         LrCg7kXZzz70Wy9zVFq8wm6yl2Pcvz4pQfoEOqbN/DS+NTtrT6NRkCQ+pWwsNYRdX3ib
-         lDEQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=jJNUGZzD6WYdW7WfV7c4VlXWYypeskgZBi3y5u2An+c=;
+        b=vcxVVEjhhAnlFY+dIZQ4WK+YE01JpIpPV6Qi2Y2N4tPD7KDM5GlHoytVeiB6OJpXTo
+         IACh3vdiysSwPoF+NDiBBb8Lumc0vP5opKJRRienBLlmZ98W9iCExr42WCivypqQQOXC
+         S0XpLooJJqwzUKmM508Gr6pl7EI0tArdKNXqlRkUEbjVJ3FnpoTFb/ttp9VXv4bmemTc
+         /3ZkTDN3Yc+xor35jyPzN4lsu1y+xDAuf3opERIsaZ+/7L1Vg/mVghPEuO+0IRkTN2jm
+         HzP1ExW4J3HsrYrKtcyVSpFhM/OSoFcVlywf7iV3DZs82k59dV3kDLd4WuIxkgTrqqfx
+         uOuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mqz6p6f3gQZREp4wRBwqV1CXY4CFc2wJXeVDbpZwnRo=;
-        b=V7NuXTn/DwvuufaxlTZCUgg2A/sVWofSLKI7BpnwoCWADw167zXbmmPOROtrmB5Mxv
-         TgbDxBm15knVvYgUGznaKMGHzq59Ko7CUttlbF1utFSqrAg7gKHw6ItxnktEJamiBuoq
-         Ns3JQkxa5WGCLsJnjsQBmxzOSib3qJohyHKDOROaW29lNqxIpQUIXyglfkVNkcnDPAEV
-         KXRFLmtXwFpYbCg6pF71DDtEBmkzetPI1/uZILpMH232ycQBkYWkKncsx9yNBuXXfjNh
-         ZOqvE8hIThXkCovTGOk/iC/ZxXIRlJUVfnuvZ4XzLPsp00MNdoTxr7XS0lLP865gLsoB
-         ciZQ==
-X-Gm-Message-State: APjAAAX6heCDyrL7pEiODxWzDAcwemldXXtQvgtxOq6FCNcIxkhyyNQZ
-        zry8GgIiZwd59o0hK+eGefH8zw/iQwUA8Uj1plSAkQ==
-X-Google-Smtp-Source: APXvYqxgN5OeGDPaGyFPR+r1Wy/FBEwQrFtw92p5x9iifhQ0Ah/boYVFOOZFtbEccVbyFwbOVWF4lNCKen/JdK/BOQw=
-X-Received: by 2002:a37:9c57:: with SMTP id f84mr2943928qke.250.1568973960048;
- Fri, 20 Sep 2019 03:06:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <000000000000d12d24058f5d6b65@google.com> <000000000000a12822058fb4f408@google.com>
- <20190920090803.GM30545@localhost> <CACT4Y+Yg5wTsMUGRmTwexKUMzi1ZxrH3k3yaMaJvLaEp7qnjSw@mail.gmail.com>
- <20190920092153.GN30545@localhost> <CACT4Y+aLCfq_eJ0w9EnWN-kiTR7qxgtq+8osCqdNw7L4NYCASg@mail.gmail.com>
- <20190920093557.GO30545@localhost>
-In-Reply-To: <20190920093557.GO30545@localhost>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Fri, 20 Sep 2019 12:05:47 +0200
-Message-ID: <CACT4Y+bHYp7Sd76PYxPtw3oxfxA-1yFp=4bXQW7an6iy_qdthQ@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in adu_disconnect
-To:     Johan Hovold <johan@kernel.org>
-Cc:     syzbot <syzbot+0243cb250a51eeefb8cc@syzkaller.appspotmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        dmg@turingmachine.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=jJNUGZzD6WYdW7WfV7c4VlXWYypeskgZBi3y5u2An+c=;
+        b=hZ5LMMAsuxUAlKv6YM53dkh+ZIpf9lP1LViS8PUQma/V6xGMj6NgcIA/JAbPHPr2Dj
+         UnxnZCJ26l80lVm0Qf5vBe/p1RjFKXqob4ViDFnuHXIGX14U3mqSEFw8+wiNvHUv0A1G
+         zEvtOBVHS16Px+ef4tuRaR/hewEM0sPRaCHnOefAyNkWlsxOxfCIzeOrgRBvqUG10AGh
+         VLFZU8SfCTu/ZSzKQJwNv6N+8kJizXYX3mMHZpCTTUnp8rE592x/kmxdWNWWfxTrGM4m
+         ms6pTw+OxTFUnF7e+G/L7cEwXqjQxsTRlF3xS0hJ2Ba4gt2bVUF8g6+hZ0qAGuggusoU
+         MRpw==
+X-Gm-Message-State: APjAAAW8gWqNQVqORp4uq59+aGDiDWZKZU4IfNJTpQgTVWbMPsVZPZaV
+        k0WYaPVzWIETqI9kZHD68Jd1ve6w
+X-Google-Smtp-Source: APXvYqx79uB+/pgIn5cFXBKIG+GHsHPmX87BRc+n28KQzU+g+ywrrhcAzHmZ2s2ssPMeUS3D/TPidQ==
+X-Received: by 2002:a63:2a87:: with SMTP id q129mr14807014pgq.101.1568974050770;
+        Fri, 20 Sep 2019 03:07:30 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.123])
+        by smtp.googlemail.com with ESMTPSA id i10sm1417345pfa.70.2019.09.20.03.07.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 20 Sep 2019 03:07:29 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: [PATCH] KVM: LAPIC: micro-optimize fixed mode ipi delivery
+Date:   Fri, 20 Sep 2019 18:07:18 +0800
+Message-Id: <1568974038-13750-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 11:35 AM Johan Hovold <johan@kernel.org> wrote:
->
-> On Fri, Sep 20, 2019 at 11:28:22AM +0200, Dmitry Vyukov wrote:
-> > On Fri, Sep 20, 2019 at 11:21 AM Johan Hovold <johan@kernel.org> wrote:
-> > >
-> > > On Fri, Sep 20, 2019 at 11:13:14AM +0200, Dmitry Vyukov wrote:
-> > > > On Fri, Sep 20, 2019 at 11:08 AM Johan Hovold <johan@kernel.org> wrote:
-> > > > >
-> > > > > On Fri, Aug 09, 2019 at 01:24:04PM -0700, syzbot wrote:
-> > > > > > syzbot has found a reproducer for the following crash on:
-> > > > > >
-> > > > > > HEAD commit:    e96407b4 usb-fuzzer: main usb gadget fuzzer driver
-> > > > > > git tree:       https://github.com/google/kasan.git usb-fuzzer
-> > > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=13871a4a600000
-> > > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=cfa2c18fb6a8068e
-> > > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=0243cb250a51eeefb8cc
-> > > > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11c4c8e2600000
-> > > > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11d80d2c600000
-> > > > > >
-> > > > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > > > > Reported-by: syzbot+0243cb250a51eeefb8cc@syzkaller.appspotmail.com
-> > > > > >
-> > > > > > usb 1-1: USB disconnect, device number 4
-> > > > > > ==================================================================
-> > > > > > BUG: KASAN: use-after-free in atomic64_read
-> > > > > > include/asm-generic/atomic-instrumented.h:836 [inline]
-> > > > > > BUG: KASAN: use-after-free in atomic_long_read
-> > > > > > include/asm-generic/atomic-long.h:28 [inline]
-> > > > > > BUG: KASAN: use-after-free in __mutex_unlock_slowpath+0x96/0x670
-> > > > > > kernel/locking/mutex.c:1211
-> > > > > > Read of size 8 at addr ffff8881d1d0aa00 by task kworker/0:1/12
-> > > > >
-> > > > > Let's resend and retest with commit id from latest report to make sure
-> > > > > the patch was actually applied during the last run:
-> > > >
-> > > > The reply contains:
-> > > > patch:          https://syzkaller.appspot.com/x/patch.diff?x=1440268d600000
-> > > > that's what's being parsed and applied during testing.
-> > >
-> > > Thanks for confirming, but I can't seem to find that link in the report
-> > > from syzbot:
-> > >
-> > >         https://lkml.kernel.org/r/000000000000b05ce40592f8521a@google.com
-> > >
-> > > Is it supposed to be there?
-> >
-> > I meant the previous one:
-> > https://lore.kernel.org/linux-usb/000000000000d290e00592e5c17d@google.com/
-> >
-> > The one that you pointed to indeed does not have a patch (was tested
-> > without any patches). But you did not include any in the request, so
-> > this WAI.
->
-> Ok, that was what I thought. I first tried retriggering the test by
-> responding to the mail with the patch and a new test directive, but when
-> that test failed, I figured the patch had not been applied and that I
-> had to include it directly in the mail when retesting.
->
-> Apparently misremembered someone from google responding to a patch with
-> a test directive, but perhaps they also included the patch in that mail.
+From: Wanpeng Li <wanpengli@tencent.com>
 
-Yes, they probably included. But some developers point to own git
-tree/branch with the fix (e.g. on github), and then they don't need to
-attach patch separately.
-Note the first time you included the patch inline in the email. syzbot
-understands that too: you can either include inline or attach. So it
-tested with your patch.
+After disabling mwait/halt/pause vmexits, RESCHEDULE_VECTOR and 
+CALL_FUNCTION_SINGLE_VECTOR etc IPI is one of the main remaining
+cause of vmexits observed in product environment which can't be 
+optimized by PV IPIs. This patch is the follow-up on commit 
+0e6d242eccdb (KVM: LAPIC: Micro optimize IPI latency), to optimize 
+redundancy logic before fixed mode ipi is delivered in the fast 
+path.
+
+- broadcast handling needs to go slow path, so the delivery mode repair 
+  can be delayed to before slow path.
+- self-IPI will not be intervened by hypervisor any more after APICv is 
+  introduced and the boxes support APICv are popular now. In addition, 
+  kvm_apic_map_get_dest_lapic() can handle the self-IPI, so there is no 
+  need a shortcut for the non-APICv case.
+
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+---
+ arch/x86/kvm/irq_comm.c | 6 +++---
+ arch/x86/kvm/lapic.c    | 5 -----
+ 2 files changed, 3 insertions(+), 8 deletions(-)
+
+diff --git a/arch/x86/kvm/irq_comm.c b/arch/x86/kvm/irq_comm.c
+index 8ecd48d..aa88156 100644
+--- a/arch/x86/kvm/irq_comm.c
++++ b/arch/x86/kvm/irq_comm.c
+@@ -52,15 +52,15 @@ int kvm_irq_delivery_to_apic(struct kvm *kvm, struct kvm_lapic *src,
+ 	unsigned long dest_vcpu_bitmap[BITS_TO_LONGS(KVM_MAX_VCPUS)];
+ 	unsigned int dest_vcpus = 0;
+ 
++	if (kvm_irq_delivery_to_apic_fast(kvm, src, irq, &r, dest_map))
++		return r;
++
+ 	if (irq->dest_mode == 0 && irq->dest_id == 0xff &&
+ 			kvm_lowest_prio_delivery(irq)) {
+ 		printk(KERN_INFO "kvm: apic: phys broadcast and lowest prio\n");
+ 		irq->delivery_mode = APIC_DM_FIXED;
+ 	}
+ 
+-	if (kvm_irq_delivery_to_apic_fast(kvm, src, irq, &r, dest_map))
+-		return r;
+-
+ 	memset(dest_vcpu_bitmap, 0, sizeof(dest_vcpu_bitmap));
+ 
+ 	kvm_for_each_vcpu(i, vcpu, kvm) {
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index 323bdca..d77fe29 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -955,11 +955,6 @@ bool kvm_irq_delivery_to_apic_fast(struct kvm *kvm, struct kvm_lapic *src,
+ 
+ 	*r = -1;
+ 
+-	if (irq->shorthand == APIC_DEST_SELF) {
+-		*r = kvm_apic_set_irq(src->vcpu, irq, dest_map);
+-		return true;
+-	}
+-
+ 	rcu_read_lock();
+ 	map = rcu_dereference(kvm->arch.apic_map);
+ 
+-- 
+2.7.4
+
