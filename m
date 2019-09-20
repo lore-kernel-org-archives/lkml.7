@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1114AC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 892FDC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0FAD2080F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:38:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 604E82080F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:38:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392916AbfITOiN (ORCPT
+        id S2390699AbfITOiP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:38:13 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35702 "EHLO
+        Fri, 20 Sep 2019 10:38:15 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35694 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387993AbfITOY7 (ORCPT
+        by vger.kernel.org with ESMTP id S1728899AbfITOY7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Sep 2019 10:24:59 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqD-0004wk-3z; Fri, 20 Sep 2019 15:24:57 +0100
+        id 1iBJqC-0004wa-Sk; Fri, 20 Sep 2019 15:24:56 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqC-0007qA-JG; Fri, 20 Sep 2019 15:24:56 +0100
+        id 1iBJqC-0007pr-FY; Fri, 20 Sep 2019 15:24:56 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "=?UTF-8?q?Stefan=20M=C3=A4tje?=" <stefan.maetje@esd.eu>,
-        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
-        "Bjorn Helgaas" <bhelgaas@google.com>
+        "=?UTF-8?q?Noralf=20Tr=C3=B8nnes?=" <noralf@tronnes.org>,
+        "Daniel Vetter" <daniel.vetter@ffwll.ch>
 Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.605726088@decadent.org.uk>
+Message-ID: <lsq.1568989415.173739634@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 020/132] PCI: Factor out pcie_retrain_link() function
+Subject: [PATCH 3.16 016/132] drm/fb-helper: dpms_legacy(): Only set on
+ connectors in use
 In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,82 +56,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Stefan Mätje <stefan.maetje@esd.eu>
+From: Noralf Trønnes <noralf@tronnes.org>
 
-commit 86fa6a344209d9414ea962b1f1ac6ade9dd7563a upstream.
+commit 65a102f68005891d7f39354cfd79099908df6d51 upstream.
 
-Factor out pcie_retrain_link() to use for Pericom Retrain Link quirk.  No
-functional change intended.
+For each enabled crtc the functions sets dpms on all registered connectors.
+Limit this to only doing it once and on the connectors actually in use.
 
-Signed-off-by: Stefan Mätje <stefan.maetje@esd.eu>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
+Fixes: 023eb571a1d0 ("drm: correctly update connector DPMS status in drm_fb_helper")
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190326175546.18126-3-noralf@tronnes.org
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/pci/pcie/aspm.c | 40 ++++++++++++++++++++++++----------------
- 1 file changed, 24 insertions(+), 16 deletions(-)
+ drivers/gpu/drm/drm_fb_helper.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -175,6 +175,29 @@ static void pcie_clkpm_cap_init(struct p
- 	link->clkpm_capable = (blacklist) ? 0 : capable;
- }
- 
-+static bool pcie_retrain_link(struct pcie_link_state *link)
-+{
-+	struct pci_dev *parent = link->pdev;
-+	unsigned long start_jiffies;
-+	u16 reg16;
-+
-+	pcie_capability_read_word(parent, PCI_EXP_LNKCTL, &reg16);
-+	reg16 |= PCI_EXP_LNKCTL_RL;
-+	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
-+
-+	/* Wait for link training end. Break out after waiting for timeout */
-+	start_jiffies = jiffies;
-+	for (;;) {
-+		pcie_capability_read_word(parent, PCI_EXP_LNKSTA, &reg16);
-+		if (!(reg16 & PCI_EXP_LNKSTA_LT))
-+			break;
-+		if (time_after(jiffies, start_jiffies + LINK_RETRAIN_TIMEOUT))
-+			break;
-+		msleep(1);
-+	}
-+	return !(reg16 & PCI_EXP_LNKSTA_LT);
-+}
-+
- /*
-  * pcie_aspm_configure_common_clock: check if the 2 ends of a link
-  *   could use common clock. If they are, configure them to use the
-@@ -184,7 +207,6 @@ static void pcie_aspm_configure_common_c
+--- a/drivers/gpu/drm/drm_fb_helper.c
++++ b/drivers/gpu/drm/drm_fb_helper.c
+@@ -453,8 +453,8 @@ static void drm_fb_helper_dpms(struct fb
  {
- 	int same_clock = 1;
- 	u16 reg16, parent_reg, child_reg[8];
--	unsigned long start_jiffies;
- 	struct pci_dev *child, *parent = link->pdev;
- 	struct pci_bus *linkbus = parent->subordinate;
+ 	struct drm_fb_helper *fb_helper = info->par;
+ 	struct drm_device *dev = fb_helper->dev;
+-	struct drm_crtc *crtc;
+ 	struct drm_connector *connector;
++	struct drm_mode_set *modeset;
+ 	int i, j;
+ 
  	/*
-@@ -224,21 +246,7 @@ static void pcie_aspm_configure_common_c
- 		reg16 &= ~PCI_EXP_LNKCTL_CCC;
- 	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
+@@ -475,14 +475,13 @@ static void drm_fb_helper_dpms(struct fb
+ 	}
  
--	/* Retrain link */
--	reg16 |= PCI_EXP_LNKCTL_RL;
--	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
--
--	/* Wait for link training end. Break out after waiting for timeout */
--	start_jiffies = jiffies;
--	for (;;) {
--		pcie_capability_read_word(parent, PCI_EXP_LNKSTA, &reg16);
--		if (!(reg16 & PCI_EXP_LNKSTA_LT))
--			break;
--		if (time_after(jiffies, start_jiffies + LINK_RETRAIN_TIMEOUT))
--			break;
--		msleep(1);
--	}
--	if (!(reg16 & PCI_EXP_LNKSTA_LT))
-+	if (pcie_retrain_link(link))
- 		return;
+ 	for (i = 0; i < fb_helper->crtc_count; i++) {
+-		crtc = fb_helper->crtc_info[i].mode_set.crtc;
++		modeset = &fb_helper->crtc_info[i].mode_set;
  
- 	/* Training failed. Restore common clock configurations */
+-		if (!crtc->enabled)
++		if (!modeset->crtc->enabled)
+ 			continue;
+ 
+-		/* Walk the connectors & encoders on this fb turning them on/off */
+-		for (j = 0; j < fb_helper->connector_count; j++) {
+-			connector = fb_helper->connector_info[j]->connector;
++		for (j = 0; j < modeset->num_connectors; j++) {
++			connector = modeset->connectors[j];
+ 			connector->funcs->dpms(connector, dpms_mode);
+ 			drm_object_property_set_value(&connector->base,
+ 				dev->mode_config.dpms_property, dpms_mode);
 
