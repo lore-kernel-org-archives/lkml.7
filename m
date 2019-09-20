@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C529C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6049C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79A32206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:35:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6A4F206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:35:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388796AbfITOfQ (ORCPT
+        id S2391763AbfITOfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:35:16 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36062 "EHLO
+        Fri, 20 Sep 2019 10:35:19 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36038 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388138AbfITOZE (ORCPT
+        by vger.kernel.org with ESMTP id S2388129AbfITOZE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Sep 2019 10:25:04 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqH-00051E-PG; Fri, 20 Sep 2019 15:25:01 +0100
+        id 1iBJqH-0004xz-HJ; Fri, 20 Sep 2019 15:25:01 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqH-0007y8-3J; Fri, 20 Sep 2019 15:25:01 +0100
+        id 1iBJqE-0007tY-OO; Fri, 20 Sep 2019 15:24:58 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,12 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Kalle Valo" <kvalo@codeaurora.org>,
-        "Wen Huang" <huangwenabc@gmail.com>,
-        "Ganapathi Bhat" <gbhat@marvell.comg>
+        "Johan Hovold" <johan@kernel.org>
 Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.540101899@decadent.org.uk>
+Message-ID: <lsq.1568989415.882376429@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 111/132] mwifiex: Fix three heap overflow at parsing
- element in cfg80211_ap_settings
+Subject: [PATCH 3.16 062/132] USB: serial: fix initial-termios handling
 In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,72 +54,72 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Wen Huang <huangwenabc@gmail.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 7caac62ed598a196d6ddf8d9c121e12e082cac3a upstream.
+commit 579bebe5dd522580019e7b10b07daaf500f9fb1e upstream.
 
-mwifiex_update_vs_ie(),mwifiex_set_uap_rates() and
-mwifiex_set_wmm_params() call memcpy() without checking
-the destination size.Since the source is given from
-user-space, this may trigger a heap buffer overflow.
+The USB-serial driver init_termios callback is used to override the
+default initial terminal settings provided by USB-serial core.
 
-Fix them by putting the length check before performing memcpy().
+After a bug was fixed in the original implementation introduced by
+commit fe1ae7fdd2ee ("tty: USB serial termios bits"), the init_termios
+callback was no longer called just once on first use as intended but
+rather on every (first) open.
 
-This fix addresses CVE-2019-14814,CVE-2019-14815,CVE-2019-14816.
+This specifically meant that the terminal settings saved on (final)
+close were ignored when reopening a port for drivers overriding the
+initial settings.
 
-Signed-off-by: Wen Huang <huangwenabc@gmail.com>
-Acked-by: Ganapathi Bhat <gbhat@marvell.comg>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-[bwh: Backported to 3.16: adjust filenames]
+Also update the outdated function header referring to the creation of
+termios objects.
+
+Fixes: 7e29bb4b779f ("usb-serial: fix termios initialization logic")
+Signed-off-by: Johan Hovold <johan@kernel.org>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/wireless/mwifiex/ie.c      | 3 +++
- drivers/net/wireless/mwifiex/uap_cmd.c | 9 ++++++++-
- 2 files changed, 11 insertions(+), 1 deletion(-)
+ drivers/usb/serial/usb-serial.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
---- a/drivers/net/wireless/mwifiex/ie.c
-+++ b/drivers/net/wireless/mwifiex/ie.c
-@@ -240,6 +240,9 @@ static int mwifiex_update_vs_ie(const u8
- 		}
+--- a/drivers/usb/serial/usb-serial.c
++++ b/drivers/usb/serial/usb-serial.c
+@@ -167,9 +167,9 @@ void usb_serial_put(struct usb_serial *s
+  * @driver: the driver (USB in our case)
+  * @tty: the tty being created
+  *
+- * Create the termios objects for this tty.  We use the default
++ * Initialise the termios structure for this tty.  We use the default
+  * USB serial settings but permit them to be overridden by
+- * serial->type->init_termios.
++ * serial->type->init_termios on first open.
+  *
+  * This is the first place a new tty gets used.  Hence this is where we
+  * acquire references to the usb_serial structure and the driver module,
+@@ -181,6 +181,7 @@ static int serial_install(struct tty_dri
+ 	int idx = tty->index;
+ 	struct usb_serial *serial;
+ 	struct usb_serial_port *port;
++	bool init_termios;
+ 	int retval = -ENODEV;
  
- 		vs_ie = (struct ieee_types_header *)vendor_ie;
-+		if (le16_to_cpu(ie->ie_length) + vs_ie->len + 2 >
-+			IEEE_MAX_IE_SIZE)
-+			return -EINVAL;
- 		memcpy(ie->ie_buffer + le16_to_cpu(ie->ie_length),
- 		       vs_ie, vs_ie->len + 2);
- 		le16_add_cpu(&ie->ie_length, vs_ie->len + 2);
---- a/drivers/net/wireless/mwifiex/uap_cmd.c
-+++ b/drivers/net/wireless/mwifiex/uap_cmd.c
-@@ -247,6 +247,8 @@ mwifiex_set_uap_rates(struct mwifiex_uap
+ 	port = usb_serial_port_get_by_minor(idx);
+@@ -195,14 +196,16 @@ static int serial_install(struct tty_dri
+ 	if (retval)
+ 		goto error_get_interface;
  
- 	rate_ie = (void *)cfg80211_find_ie(WLAN_EID_SUPP_RATES, var_pos, len);
- 	if (rate_ie) {
-+		if (rate_ie->len > MWIFIEX_SUPPORTED_RATES)
-+			return;
- 		memcpy(bss_cfg->rates, rate_ie + 1, rate_ie->len);
- 		rate_len = rate_ie->len;
- 	}
-@@ -254,8 +256,11 @@ mwifiex_set_uap_rates(struct mwifiex_uap
- 	rate_ie = (void *)cfg80211_find_ie(WLAN_EID_EXT_SUPP_RATES,
- 					   params->beacon.tail,
- 					   params->beacon.tail_len);
--	if (rate_ie)
-+	if (rate_ie) {
-+		if (rate_ie->len > MWIFIEX_SUPPORTED_RATES - rate_len)
-+			return;
- 		memcpy(bss_cfg->rates + rate_len, rate_ie + 1, rate_ie->len);
-+	}
++	init_termios = (driver->termios[idx] == NULL);
++
+ 	retval = tty_port_install(&port->port, driver, tty);
+ 	if (retval)
+ 		goto error_init_termios;
  
- 	return;
- }
-@@ -373,6 +378,8 @@ mwifiex_set_wmm_params(struct mwifiex_pr
- 					    params->beacon.tail_len);
- 	if (vendor_ie) {
- 		wmm_ie = vendor_ie;
-+		if (*(wmm_ie + 1) > sizeof(struct mwifiex_types_wmm_info))
-+			return;
- 		memcpy(&bss_cfg->wmm_info, wmm_ie +
- 		       sizeof(struct ieee_types_header), *(wmm_ie + 1));
- 		priv->wmm_enabled = 1;
+ 	mutex_unlock(&serial->disc_mutex);
+ 
+-	/* allow the driver to update the settings */
+-	if (serial->type->init_termios)
++	/* allow the driver to update the initial settings */
++	if (init_termios && serial->type->init_termios)
+ 		serial->type->init_termios(tty);
+ 
+ 	tty->driver_data = port;
 
