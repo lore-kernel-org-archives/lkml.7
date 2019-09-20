@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D870FC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:29:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D94DC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:29:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFA622080F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:29:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 210612080F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:29:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568989743;
-	bh=PeElNlpH9IG2KF67PPPdCydzhTDeRnFOcsjPh5VrkL8=;
+	s=default; t=1568989746;
+	bh=8W2d7317UQ2+3SdCKUKlB36N6OP2BIBPxbxn0TIEPek=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aEoLGS9qKQlTwe+opuWVYmDTi7UEdAySA5jXe2epIcvg2LAqkzbus1AoT4oATxZzS
-	 4jIkn6r4TcXAuKAbZOq60xdymTaPt3Wq+deNt5+HHLN6ZCzHrFxjXZPpSjU+HGmqO2
-	 QdFQOlkvE/hk4DmmHE/mbV+OCb81Dg0I10O8+OQE=
+	b=y/j289UhhrQ7bB1HqMMXL/o3SSm8fP7MbC0HosiLpcs3+1HZGEUAYFJwNl7Srmx7D
+	 D/wAFDIjesSFB3XbAGfpSAwcGkFEvDNN5MwqwMahi4ektUyi+MNyyyIjuohP5/bZql
+	 5XJHnXPWfgTTlkDq+Kv38LTD9m27irCsqXsg+zLY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390293AbfITO3D (ORCPT
+        id S2390274AbfITO3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:29:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39284 "EHLO mail.kernel.org"
+        Fri, 20 Sep 2019 10:29:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389137AbfITO0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 10:26:34 -0400
+        id S2389164AbfITO0h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 10:26:37 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0324820B7C;
-        Fri, 20 Sep 2019 14:26:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83098208C3;
+        Fri, 20 Sep 2019 14:26:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568989594;
-        bh=PeElNlpH9IG2KF67PPPdCydzhTDeRnFOcsjPh5VrkL8=;
+        s=default; t=1568989596;
+        bh=8W2d7317UQ2+3SdCKUKlB36N6OP2BIBPxbxn0TIEPek=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mh1dZfF1XeaA9QaEiJ10V3cKqfZujmTXUkDxbfuw1eIuWzubZOWFCACLYNqz95E96
-         4zIDWYJkuOLJp/6njYwMKlrctrgWVHbu8OlGo24pBMGF+zG2Ej4vSxyAFf3pfbX64K
-         VpLXbGFNM8g9xijnl1+koogN8Y/3skDP8+B1VCIo=
+        b=PYIx07k7Muh/Vxk/ashkNEM5wicBaI57+00kch7IflF38uHWzSebPy104lLwbNrsz
+         YlxWT8uUTQaw/vAsLHIVXvGBb+KR41a9vjL/dliU2RXiZYXFZzqUIVkNCppg3IlOrC
+         Hrl0sTCilk4WXSnypgHZat7amX7RlJzATGEQ8LO4=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,9 +47,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 15/31] perf stat: Move perf_stat_synthesize_config() to event.h
-Date:   Fri, 20 Sep 2019 11:25:26 -0300
-Message-Id: <20190920142542.12047-16-acme@kernel.org>
+Subject: [PATCH 16/31] perf callchain: Remove needless event.h include
+Date:   Fri, 20 Sep 2019 11:25:27 -0300
+Message-Id: <20190920142542.12047-17-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190920142542.12047-1-acme@kernel.org>
 References: <20190920142542.12047-1-acme@kernel.org>
@@ -62,102 +62,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Together with the other synthsizers, and rename it to
-perf_event__synthesize_stat_events().
-
-This allows us to stop including event.h in util/stat.h.
+All we need is a bunch of struct forward declarations and then add
+event.h to the only place that was getting it indirectly via
+callchain.h.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-q5ebhrp44txboobs86htu5r9@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-qq2xhyuxcvx5vmxha9otjd8d@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-stat.c |  4 ++--
- tools/perf/util/event.h   |  5 +++++
- tools/perf/util/stat.c    | 10 +++++-----
- tools/perf/util/stat.h    |  8 ++------
- 4 files changed, 14 insertions(+), 13 deletions(-)
+ tools/perf/arch/powerpc/util/skip-callchain-idx.c | 1 +
+ tools/perf/util/callchain.h                       | 5 ++++-
+ tools/perf/util/evsel_fprintf.c                   | 1 +
+ 3 files changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 5bc0c570b7b6..b55e8060810b 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -540,8 +540,8 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 		if (err < 0)
- 			return err;
+diff --git a/tools/perf/arch/powerpc/util/skip-callchain-idx.c b/tools/perf/arch/powerpc/util/skip-callchain-idx.c
+index fc9c2f5fcd52..3018a054526a 100644
+--- a/tools/perf/arch/powerpc/util/skip-callchain-idx.c
++++ b/tools/perf/arch/powerpc/util/skip-callchain-idx.c
+@@ -13,6 +13,7 @@
+ #include "util/callchain.h"
+ #include "util/debug.h"
+ #include "util/dso.h"
++#include "util/event.h" // struct ip_callchain
+ #include "util/map.h"
+ #include "util/symbol.h"
  
--		err = perf_stat_synthesize_config(&stat_config, NULL, evsel_list,
--						  process_synthesized_event, is_pipe);
-+		err = perf_event__synthesize_stat_events(&stat_config, NULL, evsel_list,
-+							 process_synthesized_event, is_pipe);
- 		if (err < 0)
- 			return err;
- 	}
-diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index 4e6d33c76d57..89a2404170a0 100644
---- a/tools/perf/util/event.h
-+++ b/tools/perf/util/event.h
-@@ -293,6 +293,11 @@ typedef int (*perf_event__handler_t)(struct perf_tool *tool,
- 				     struct perf_sample *sample,
- 				     struct machine *machine);
+diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
+index b042ceef4114..83398e5bbe4b 100644
+--- a/tools/perf/util/callchain.h
++++ b/tools/perf/util/callchain.h
+@@ -4,12 +4,15 @@
  
-+int perf_event__synthesize_stat_events(struct perf_stat_config *config,
-+				       struct perf_tool *tool,
-+				       struct evlist *evlist,
-+				       perf_event__handler_t process,
-+				       bool attrs);
- int perf_event__synthesize_attr(struct perf_tool *tool,
- 				struct perf_event_attr *attr, u32 ids, u64 *id,
- 				perf_event__handler_t process);
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index d309c1cc13db..2e318d95c528 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -495,11 +495,11 @@ int create_perf_stat_counter(struct evsel *evsel,
- 	return perf_evsel__open_per_thread(evsel, evsel->core.threads);
- }
- 
--int perf_stat_synthesize_config(struct perf_stat_config *config,
--				struct perf_tool *tool,
--				struct evlist *evlist,
--				perf_event__handler_t process,
--				bool attrs)
-+int perf_event__synthesize_stat_events(struct perf_stat_config *config,
-+				       struct perf_tool *tool,
-+				       struct evlist *evlist,
-+				       perf_event__handler_t process,
-+				       bool attrs)
- {
- 	int err;
- 
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index 14fe3e548229..0f9c9f6e2041 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -7,8 +7,9 @@
- #include <sys/types.h>
- #include <sys/resource.h>
- #include "rblist.h"
+ #include <linux/list.h>
+ #include <linux/rbtree.h>
 -#include "event.h"
+ #include "map_symbol.h"
+ #include "branch.h"
  
-+struct perf_cpu_map;
-+struct perf_stat_config;
- struct timespec;
++struct addr_location;
+ struct evsel;
++struct ip_callchain;
+ struct map;
++struct perf_sample;
++struct thread;
  
- struct stats {
-@@ -210,11 +211,6 @@ size_t perf_event__fprintf_stat_config(union perf_event *event, FILE *fp);
- int create_perf_stat_counter(struct evsel *evsel,
- 			     struct perf_stat_config *config,
- 			     struct target *target);
--int perf_stat_synthesize_config(struct perf_stat_config *config,
--				struct perf_tool *tool,
--				struct evlist *evlist,
--				perf_event__handler_t process,
--				bool attrs);
- void
- perf_evlist__print_counters(struct evlist *evlist,
- 			    struct perf_stat_config *config,
+ #define HELP_PAD "\t\t\t\t"
+ 
+diff --git a/tools/perf/util/evsel_fprintf.c b/tools/perf/util/evsel_fprintf.c
+index 496fec01f5d1..a8cbdf4c2753 100644
+--- a/tools/perf/util/evsel_fprintf.c
++++ b/tools/perf/util/evsel_fprintf.c
+@@ -4,6 +4,7 @@
+ #include <stdbool.h>
+ #include <traceevent/event-parse.h>
+ #include "evsel.h"
++#include "util/event.h"
+ #include "callchain.h"
+ #include "map.h"
+ #include "strlist.h"
 -- 
 2.21.0
 
