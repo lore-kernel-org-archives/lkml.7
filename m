@@ -2,154 +2,164 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA30FC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9908BC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB3C120882
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 681512080F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:28:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568989692;
+	bh=4B5yQ92QUi6P8NZc+MewGItmJMfRgDRANaMjtsNAYY8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=XjLJ1n909kLYueZ1O/IX2mdYSdQsGD5VMW0p9NSQMNP3HgLUZZkLck3+pOe2N6+cj
+	 +XWrBQpvEFmM7KdV71ywRDBvn5DotR7+a63ejtyhdu1DlJ90Sl3QGonWGaJU80IJgb
+	 ImjPDPjCJai7em1Nb7RbWRIkNnATiP2vwGx71JMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389611AbfITO1J (ORCPT
+        id S2390083AbfITO2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 20 Sep 2019 10:28:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40132 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389593AbfITO1J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Sep 2019 10:27:09 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58994 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388977AbfITO0U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 10:26:20 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8KE8ivV094660;
-        Fri, 20 Sep 2019 10:26:05 -0400
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v4ycskjwv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 20 Sep 2019 10:26:04 -0400
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8KEMFf0006224;
-        Fri, 20 Sep 2019 14:26:03 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma05wdc.us.ibm.com with ESMTP id 2v3vbu6h7p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 20 Sep 2019 14:26:03 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8KEPxhq49611246
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 20 Sep 2019 14:26:00 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E13E8B2064;
-        Fri, 20 Sep 2019 14:25:59 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2911FB206B;
-        Fri, 20 Sep 2019 14:25:58 +0000 (GMT)
-Received: from skywalker.linux.ibm.com (unknown [9.199.44.128])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 20 Sep 2019 14:25:57 +0000 (GMT)
-X-Mailer: emacs 26.2 (via feedmail 11-beta-1 I)
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: "Pick the right alignment default when creating dax devices" failed to build on powerpc
-In-Reply-To: <1568988209.5576.199.camel@lca.pw>
-References: <1568988209.5576.199.camel@lca.pw>
-Date:   Fri, 20 Sep 2019 19:55:55 +0530
-Message-ID: <87r24bhwng.fsf@linux.ibm.com>
+Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D534217F5;
+        Fri, 20 Sep 2019 14:27:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568989628;
+        bh=4B5yQ92QUi6P8NZc+MewGItmJMfRgDRANaMjtsNAYY8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=d85XiTlY/Eh8Uj7RurSSa1IctQmXtn2LmWbvz7kZACeEDfXaPydgpqnMUOO9Kj1bP
+         DPkoIvvNX25KeFmU+A9fBoPg34f1+kF+z0ZhV5e2epWfBJB8WhATTlVRiGapZRqywq
+         KpR2jC1Ce4t8swUCB4slf1FOEVMFgoFEa37eQra4=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        stable@vger.kernel.org
+Subject: [PATCH 27/31] perf stat: Fix a segmentation fault when using repeat forever
+Date:   Fri, 20 Sep 2019 11:25:38 -0300
+Message-Id: <20190920142542.12047-28-acme@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190920142542.12047-1-acme@kernel.org>
+References: <20190920142542.12047-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-20_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909200136
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Qian Cai <cai@lca.pw> writes:
+From: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
 
-> The linux-next commit "libnvdimm/dax: Pick the right alignment default when
-> creating dax devices" causes powerpc failed to build with this config. Reverted
-> it fixed the issue.
->
-> ERROR: "hash__has_transparent_hugepage" [drivers/nvdimm/libnvdimm.ko] undefined!
-> ERROR: "radix__has_transparent_hugepage" [drivers/nvdimm/libnvdimm.ko]
-> undefined!
-> make[1]: *** [scripts/Makefile.modpost:93: __modpost] Error 1
-> make: *** [Makefile:1305: modules] Error 2
->
-> [1] https://patchwork.kernel.org/patch/11133445/
-> [2] https://raw.githubusercontent.com/cailca/linux-mm/master/powerpc.config
+Observe a segmentation fault when 'perf stat' is asked to repeat forever
+with the interval option.
 
-Sorry for breaking the build. How about?
+Without fix:
 
-commit ea15fd8b5489e2c8e9f1b96d67248a7428ffb74a
-Author: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Date:   Fri Sep 20 19:47:56 2019 +0530
+  # perf stat -r 0 -I 5000 -e cycles -a sleep 10
+  #           time             counts unit events
+       5.000211692  3,13,89,82,34,157      cycles
+      10.000380119  1,53,98,52,22,294      cycles
+      10.040467280       17,16,79,265      cycles
+  Segmentation fault
 
-    powerpc/book3s/nvdimm: Fix build error with nvdimm kernel module
-    
-    Fix the below comiple error.
-    
-    ERROR: "hash__has_transparent_hugepage" [drivers/nvdimm/libnvdimm.ko] undefined!
-    ERROR: "radix__has_transparent_hugepage" [drivers/nvdimm/libnvdimm.ko] undefined!
-    
-    Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+This problem was only observed when we use forever option aka -r 0 and
+works with limited repeats. Calling print_counter with ts being set to
+NULL, is not a correct option when interval is set. Hence avoid
+print_counter(NULL,..)  if interval is set.
 
-diff --git a/arch/powerpc/include/asm/book3s/64/radix.h b/arch/powerpc/include/asm/book3s/64/radix.h
-index e04a839cb5b9..65a6966f1de4 100644
---- a/arch/powerpc/include/asm/book3s/64/radix.h
-+++ b/arch/powerpc/include/asm/book3s/64/radix.h
-@@ -254,7 +254,13 @@ extern void radix__pgtable_trans_huge_deposit(struct mm_struct *mm, pmd_t *pmdp,
- extern pgtable_t radix__pgtable_trans_huge_withdraw(struct mm_struct *mm, pmd_t *pmdp);
- extern pmd_t radix__pmdp_huge_get_and_clear(struct mm_struct *mm,
- 				      unsigned long addr, pmd_t *pmdp);
--extern int radix__has_transparent_hugepage(void);
-+static inline int radix__has_transparent_hugepage(void)
-+{
-+	/* For radix 2M at PMD level means thp */
-+	if (mmu_psize_defs[MMU_PAGE_2M].shift == PMD_SHIFT)
-+		return 1;
-+	return 0;
-+}
- #endif
+With fix:
+
+  # perf stat -r 0 -I 5000 -e cycles -a sleep 10
+   #           time             counts unit events
+       5.019866622  3,15,14,43,08,697      cycles
+      10.039865756  3,15,16,31,95,261      cycles
+      10.059950628     1,26,05,47,158      cycles
+       5.009902655  3,14,52,62,33,932      cycles
+      10.019880228  3,14,52,22,89,154      cycles
+      10.030543876       66,90,18,333      cycles
+       5.009848281  3,14,51,98,25,437      cycles
+      10.029854402  3,15,14,93,04,918      cycles
+       5.009834177  3,14,51,95,92,316      cycles
+
+Committer notes:
+
+Did the 'git bisect' to find the cset introducing the problem to add the
+Fixes tag below, and at that time the problem reproduced as:
+
+  (gdb) run stat -r0 -I500 sleep 1
+  <SNIP>
+  Program received signal SIGSEGV, Segmentation fault.
+  print_interval (prefix=prefix@entry=0x7fffffffc8d0 "", ts=ts@entry=0x0) at builtin-stat.c:866
+  866		sprintf(prefix, "%6lu.%09lu%s", ts->tv_sec, ts->tv_nsec, csv_sep);
+  (gdb) bt
+  #0  print_interval (prefix=prefix@entry=0x7fffffffc8d0 "", ts=ts@entry=0x0) at builtin-stat.c:866
+  #1  0x000000000041860a in print_counters (ts=ts@entry=0x0, argc=argc@entry=2, argv=argv@entry=0x7fffffffd640) at builtin-stat.c:938
+  #2  0x0000000000419a7f in cmd_stat (argc=2, argv=0x7fffffffd640, prefix=<optimized out>) at builtin-stat.c:1411
+  #3  0x000000000045c65a in run_builtin (p=p@entry=0x6291b8 <commands+216>, argc=argc@entry=5, argv=argv@entry=0x7fffffffd640) at perf.c:370
+  #4  0x000000000045c893 in handle_internal_command (argc=5, argv=0x7fffffffd640) at perf.c:429
+  #5  0x000000000045c8f1 in run_argv (argcp=argcp@entry=0x7fffffffd4ac, argv=argv@entry=0x7fffffffd4a0) at perf.c:473
+  #6  0x000000000045cac9 in main (argc=<optimized out>, argv=<optimized out>) at perf.c:588
+  (gdb)
+
+Mostly the same as just before this patch:
+
+  Program received signal SIGSEGV, Segmentation fault.
+  0x00000000005874a7 in print_interval (config=0xa1f2a0 <stat_config>, evlist=0xbc9b90, prefix=0x7fffffffd1c0 "`", ts=0x0) at util/stat-display.c:964
+  964		sprintf(prefix, "%6lu.%09lu%s", ts->tv_sec, ts->tv_nsec, config->csv_sep);
+  (gdb) bt
+  #0  0x00000000005874a7 in print_interval (config=0xa1f2a0 <stat_config>, evlist=0xbc9b90, prefix=0x7fffffffd1c0 "`", ts=0x0) at util/stat-display.c:964
+  #1  0x0000000000588047 in perf_evlist__print_counters (evlist=0xbc9b90, config=0xa1f2a0 <stat_config>, _target=0xa1f0c0 <target>, ts=0x0, argc=2, argv=0x7fffffffd670)
+      at util/stat-display.c:1172
+  #2  0x000000000045390f in print_counters (ts=0x0, argc=2, argv=0x7fffffffd670) at builtin-stat.c:656
+  #3  0x0000000000456bb5 in cmd_stat (argc=2, argv=0x7fffffffd670) at builtin-stat.c:1960
+  #4  0x00000000004dd2e0 in run_builtin (p=0xa30e00 <commands+288>, argc=5, argv=0x7fffffffd670) at perf.c:310
+  #5  0x00000000004dd54d in handle_internal_command (argc=5, argv=0x7fffffffd670) at perf.c:362
+  #6  0x00000000004dd694 in run_argv (argcp=0x7fffffffd4cc, argv=0x7fffffffd4c0) at perf.c:406
+  #7  0x00000000004dda11 in main (argc=5, argv=0x7fffffffd670) at perf.c:531
+  (gdb)
+
+Fixes: d4f63a4741a8 ("perf stat: Introduce print_counters function")
+Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Cc: stable@vger.kernel.org # v4.2+
+Link: http://lore.kernel.org/lkml/20190904094738.9558-3-srikar@linux.vnet.ibm.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/builtin-stat.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index fa4b148ecfca..60cdd383af81 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -1956,7 +1956,7 @@ int cmd_stat(int argc, const char **argv)
+ 			perf_evlist__reset_prev_raw_counts(evsel_list);
  
- extern int __meminit radix__vmemmap_create_mapping(unsigned long start,
-diff --git a/arch/powerpc/mm/book3s64/hash_pgtable.c b/arch/powerpc/mm/book3s64/hash_pgtable.c
-index d1f390ac9cdb..64733b9cb20a 100644
---- a/arch/powerpc/mm/book3s64/hash_pgtable.c
-+++ b/arch/powerpc/mm/book3s64/hash_pgtable.c
-@@ -406,6 +406,8 @@ int hash__has_transparent_hugepage(void)
- 
- 	return 1;
- }
-+EXPORT_SYMBOL_GPL(hash__has_transparent_hugepage);
-+
- #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
- 
- #ifdef CONFIG_STRICT_KERNEL_RWX
-diff --git a/arch/powerpc/mm/book3s64/radix_pgtable.c b/arch/powerpc/mm/book3s64/radix_pgtable.c
-index b4ca9e95e678..dc7a38f0a45b 100644
---- a/arch/powerpc/mm/book3s64/radix_pgtable.c
-+++ b/arch/powerpc/mm/book3s64/radix_pgtable.c
-@@ -1057,13 +1057,6 @@ pmd_t radix__pmdp_huge_get_and_clear(struct mm_struct *mm,
- 	return old_pmd;
- }
- 
--int radix__has_transparent_hugepage(void)
--{
--	/* For radix 2M at PMD level means thp */
--	if (mmu_psize_defs[MMU_PAGE_2M].shift == PMD_SHIFT)
--		return 1;
--	return 0;
--}
- #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
- 
- void radix__ptep_set_access_flags(struct vm_area_struct *vma, pte_t *ptep,
+ 		status = run_perf_stat(argc, argv, run_idx);
+-		if (forever && status != -1) {
++		if (forever && status != -1 && !interval) {
+ 			print_counters(NULL, argc, argv);
+ 			perf_stat__reset_stats();
+ 		}
+-- 
+2.21.0
+
