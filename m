@@ -4,56 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52243C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E440C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 333C02086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:21:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0002F2086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:22:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405543AbfITQVz (ORCPT
+        id S2405366AbfITQVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 12:21:55 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:52895 "EHLO
+        Fri, 20 Sep 2019 12:21:38 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:52889 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405374AbfITQVk (ORCPT
+        with ESMTP id S2405011AbfITQVX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 12:21:40 -0400
+        Fri, 20 Sep 2019 12:21:23 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iBLeV-00040t-1S; Fri, 20 Sep 2019 18:20:59 +0200
+        id 1iBLem-0004Cm-9q; Fri, 20 Sep 2019 18:21:16 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id CE4B71C0E2D;
-        Fri, 20 Sep 2019 18:20:57 +0200 (CEST)
-Date:   Fri, 20 Sep 2019 16:20:57 -0000
-From:   "tip-bot2 for Sakari Ailus" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 58D521C0E3A;
+        Fri, 20 Sep 2019 18:21:02 +0200 (CEST)
+Date:   Fri, 20 Sep 2019 16:21:02 -0000
+From:   "tip-bot2 for Jiri Olsa" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] tools lib traceevent: Convert remaining %p[fF]
- users to %p[sS]
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        devicetree@vger.kernel.org,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, Joe Perches <joe@perches.com>,
-        linux-acpi@vger.kernel.org, linux-trace-devel@vger.kernel.org,
+Subject: [tip: perf/urgent] libperf: Add missing event.h file to install rule
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20190918133419.7969-2-sakari.ailus@linux.intel.com>
-References: <20190918133419.7969-2-sakari.ailus@linux.intel.com>
+In-Reply-To: <20190901124822.10132-5-jolsa@kernel.org>
+References: <20190901124822.10132-5-jolsa@kernel.org>
 MIME-Version: 1.0
-Message-ID: <156899645777.24167.16043877590667740321.tip-bot2@tip-bot2>
+Message-ID: <156899646228.24167.14002163604963866446.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -69,100 +61,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     b295c3e39c1383e06ba1db4dd836018502e2ff3a
-Gitweb:        https://git.kernel.org/tip/b295c3e39c1383e06ba1db4dd836018502e2ff3a
-Author:        Sakari Ailus <sakari.ailus@linux.intel.com>
-AuthorDate:    Wed, 18 Sep 2019 16:34:07 +03:00
+Commit-ID:     227cb129858a3eb4b874937274b09834ffcc39b0
+Gitweb:        https://git.kernel.org/tip/227cb129858a3eb4b874937274b09834ffcc39b0
+Author:        Jiri Olsa <jolsa@kernel.org>
+AuthorDate:    Sun, 01 Sep 2019 14:48:22 +02:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Fri, 20 Sep 2019 10:28:26 -03:00
+CommitterDate: Tue, 10 Sep 2019 14:33:32 +01:00
 
-tools lib traceevent: Convert remaining %p[fF] users to %p[sS]
+libperf: Add missing event.h file to install rule
 
-There are no in-kernel %p[fF] users left. Convert the traceevent tool,
-too, to align with the kernel.
+So that this development header is properly installed and can be found
+by tools linking with libperf.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: devicetree@vger.kernel.org
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Joe Perches <joe@perches.com>
-Cc: linux-acpi@vger.kernel.org
-Cc: linux-trace-devel@vger.kernel.org
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Rafael J. Wysocki <rafael@kernel.org>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Link: http://lore.kernel.org/lkml/20190918133419.7969-2-sakari.ailus@linux.intel.com
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/20190901124822.10132-5-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/traceevent/Documentation/libtraceevent-func_apis.txt | 10 ++--
- tools/lib/traceevent/event-parse.c                             | 18 +++++--
- 2 files changed, 19 insertions(+), 9 deletions(-)
+ tools/perf/lib/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/lib/traceevent/Documentation/libtraceevent-func_apis.txt b/tools/lib/traceevent/Documentation/libtraceevent-func_apis.txt
-index 38bfea3..f6aca0d 100644
---- a/tools/lib/traceevent/Documentation/libtraceevent-func_apis.txt
-+++ b/tools/lib/traceevent/Documentation/libtraceevent-func_apis.txt
-@@ -59,12 +59,12 @@ parser context.
+diff --git a/tools/perf/lib/Makefile b/tools/perf/lib/Makefile
+index a67efb8..e325c05 100644
+--- a/tools/perf/lib/Makefile
++++ b/tools/perf/lib/Makefile
+@@ -146,6 +146,7 @@ install_headers:
+ 		$(call do_install,include/perf/threadmap.h,$(prefix)/include/perf,644); \
+ 		$(call do_install,include/perf/evlist.h,$(prefix)/include/perf,644); \
+ 		$(call do_install,include/perf/evsel.h,$(prefix)/include/perf,644);
++		$(call do_install,include/perf/event.h,$(prefix)/include/perf,644);
  
- The _tep_register_function()_ function registers a function name mapped to an
- address and (optional) module. This mapping is used in case the function tracer
--or events have "%pF" or "%pS" parameter in its format string. It is common to
--pass in the kallsyms function names with their corresponding addresses with this
-+or events have "%pS" parameter in its format string. It is common to pass in
-+the kallsyms function names with their corresponding addresses with this
- function. The _tep_ argument is the trace event parser context. The _name_ is
--the name of the function, the string is copied internally. The _addr_ is
--the start address of the function. The _mod_ is the kernel module
--the function may be in (NULL for none).
-+the name of the function, the string is copied internally. The _addr_ is the
-+start address of the function. The _mod_ is the kernel module the function may
-+be in (NULL for none).
- 
- The _tep_register_print_string()_ function  registers a string by the address
- it was stored in the kernel. Some strings internal to the kernel with static
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index bb22238..6f842af 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -4367,10 +4367,20 @@ static struct tep_print_arg *make_bprint_args(char *fmt, void *data, int size, s
- 					switch (*ptr) {
- 					case 's':
- 					case 'S':
--					case 'f':
--					case 'F':
- 					case 'x':
- 						break;
-+					case 'f':
-+					case 'F':
-+						/*
-+						 * Pre-5.5 kernels use %pf and
-+						 * %pF for printing symbols
-+						 * while kernels since 5.5 use
-+						 * %pfw for fwnodes. So check
-+						 * %p[fF] isn't followed by 'w'.
-+						 */
-+						if (ptr[1] != 'w')
-+							break;
-+						/* fall through */
- 					default:
- 						/*
- 						 * Older kernels do not process
-@@ -4487,12 +4497,12 @@ get_bprint_format(void *data, int size __maybe_unused,
- 
- 	printk = find_printk(tep, addr);
- 	if (!printk) {
--		if (asprintf(&format, "%%pf: (NO FORMAT FOUND at %llx)\n", addr) < 0)
-+		if (asprintf(&format, "%%ps: (NO FORMAT FOUND at %llx)\n", addr) < 0)
- 			return NULL;
- 		return format;
- 	}
- 
--	if (asprintf(&format, "%s: %s", "%pf", printk->printk) < 0)
-+	if (asprintf(&format, "%s: %s", "%ps", printk->printk) < 0)
- 		return NULL;
- 
- 	return format;
+ install_pkgconfig: $(LIBPERF_PC)
+ 	$(call QUIET_INSTALL, $(LIBPERF_PC)) \
