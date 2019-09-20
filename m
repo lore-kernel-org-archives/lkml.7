@@ -2,97 +2,199 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C1FEC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 03:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1584C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 03:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E82221929
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 03:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA65A21928
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 03:02:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fzAGUdQV"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TvdMtOJy";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="glf8992B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406042AbfITDAw (ORCPT
+        id S2437103AbfITDCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 23:00:52 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44050 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389956AbfITDAv (ORCPT
+        Thu, 19 Sep 2019 23:02:25 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:60872 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405830AbfITDCZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 23:00:51 -0400
-Received: by mail-io1-f66.google.com with SMTP id j4so12740088iog.11;
-        Thu, 19 Sep 2019 20:00:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=wR9pye3sH3f9c/Ue486PD/cpETKoqUyEfHnMaMiRPdY=;
-        b=fzAGUdQVIXP8BO6Um0bEY7aXmxWrofp3WYusEuhMgPmQ27A5ZhIq51xSMAN9gohJey
-         xdsD6nXME5ZveH9/lQ1MvNo7e8lxKB+VJiF53+KRWHjYY3yo3CO+r/lMh38wUGe5T120
-         NI5FyQ8YmYV/aaqGUTa6/SbDVBDZBSb3F3uOkXNjWxRyI80HGsx60/fhQaY8HNtHHcDb
-         511aV1DthYS9mGIh4z56qpebAKs9Q6CMcrqtYaemGR01y1sZsyooYZweWPqYYQ28lZUi
-         oVHgUKZHp3jvfYhzZnVc8ousIPPiZiLXszN06Siqs6CGkR6p4m+lf80we8Xi6J0bEISz
-         hFBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=wR9pye3sH3f9c/Ue486PD/cpETKoqUyEfHnMaMiRPdY=;
-        b=mUe4i46sJphvT9eHFwqTegYlyqNnE95+R/GbAr/Is0OJfzCFXHu/cUrw5ElaQR4ATd
-         ShSEU7xpcL4ISPtNRc3kSBvt3ROv3RHbxdgCw3UYVG+DJLMet3AvPnJT0bwN5UWcCodd
-         z7bw4VprjwTZj8WPj+itlX2LdPws17O4C/ROM8RuRJ7MFQLwCg0qLscbxBXwKUsnyoTp
-         KIi52u4X85ABBEBFgGrx6ZS/sllG/u+spcSMjf/TVV0UglkLy7sRgZ4gyMBHgbMrzUDO
-         tGJQMGon7uU9OTA6a73s3ap8eeQ/c8KZUftJBh6c7xJL7qrH5lfZJSQBjePgKF+RF/rt
-         40wQ==
-X-Gm-Message-State: APjAAAWUFzu7MpjxWJtu4hgZuo8rk1uE8i27EiFcdjhNEG5ZaOg9jkNB
-        zqGym44mT1nF7nFS4RHjg/Y=
-X-Google-Smtp-Source: APXvYqwI+IXRu7Lhr0HmMj08qfXGIRkcCHYMdmSMkCW5GIIz+Ml1cQ5Uy6GCUGV2WrCpixMQAv4aog==
-X-Received: by 2002:a02:ac82:: with SMTP id x2mr13978167jan.34.1568948450810;
-        Thu, 19 Sep 2019 20:00:50 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id t9sm380269iop.86.2019.09.19.20.00.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2019 20:00:50 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Jes Sorensen <Jes.Sorensen@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] rtl8xxxu: prevent leaking urb
-Date:   Thu, 19 Sep 2019 22:00:41 -0500
-Message-Id: <20190920030043.30137-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Thu, 19 Sep 2019 23:02:25 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 252AD613A8; Fri, 20 Sep 2019 03:02:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568948544;
+        bh=QIJWG6caLaWwd5v0ncOFpPPGx8GXJqON0TsfQqoQpAA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TvdMtOJy5shV2RGoR6nG5lm8yI26T8CtpMfBA/b5FYDRNFcTFYqRHjg9PAhZ2qd0A
+         /fIb/A2VSFDgSpEav5K8wWkw5aQ4X1n0ElJEv187sgca1V86OYhD4WyxtbdWbwVzai
+         RqDVf0I7UuYp3lIbVZU7gVnuDRqeD8aYyWkTFCQc=
+Received: from codeaurora.org (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: pkondeti@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 29F8360735;
+        Fri, 20 Sep 2019 03:02:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568948543;
+        bh=QIJWG6caLaWwd5v0ncOFpPPGx8GXJqON0TsfQqoQpAA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=glf8992BlH0H9MnIHQ0KWiCJMQZfvd+6Eu74U8BOMBHNwj0WoSoOnRbwQILnMGgbc
+         qH2Rs1h7YzIfJ2f3We9gNDko3eIY0zEIZje7CZBDoPJ9HPkpsxMXXhf0yX9JywwKiC
+         dYFOhJLKOgyinPTSugX7IxUnQtCEDn9qKwRAi3dA=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 29F8360735
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=pkondeti@codeaurora.org
+Date:   Fri, 20 Sep 2019 08:32:15 +0530
+From:   Pavan Kondeti <pkondeti@codeaurora.org>
+To:     Quentin Perret <qperret@qperret.net>
+Cc:     peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, juri.lelli@redhat.com, rjw@rjwysocki.net,
+        morten.rasmussen@arm.com, valentin.schneider@arm.com,
+        qais.yousef@arm.com, tkjos@google.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched/fair: Speed-up energy-aware wake-ups
+Message-ID: <20190920030215.GA20250@codeaurora.org>
+References: <20190912094404.13802-1-qperret@qperret.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190912094404.13802-1-qperret@qperret.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In rtl8xxxu_submit_int_urb if usb_submit_urb fails the allocated urb
-should be released.
+Hi Quentin,
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c | 1 +
- 1 file changed, 1 insertion(+)
+On Thu, Sep 12, 2019 at 11:44:04AM +0200, Quentin Perret wrote:
+> From: Quentin Perret <quentin.perret@arm.com>
+> 
+> EAS computes the energy impact of migrating a waking task when deciding
+> on which CPU it should run. However, the current approach is known to
+> have a high algorithmic complexity, which can result in prohibitively
+> high wake-up latencies on systems with complex energy models, such as
+> systems with per-CPU DVFS. On such systems, the algorithm complexity is
+> in O(n^2) (ignoring the cost of searching for performance states in the
+> EM) with 'n' the number of CPUs.
+> 
+> To address this, re-factor the EAS wake-up path to compute the energy
+> 'delta' (with and without the task) on a per-performance domain basis,
+> rather than system-wide, which brings the complexity down to O(n).
+> 
+> No functional changes intended.
+> 
+> Signed-off-by: Quentin Perret <quentin.perret@arm.com>
+>  
 
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-index 8136e268b4e6..4a559c37e208 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-@@ -5443,6 +5443,7 @@ static int rtl8xxxu_submit_int_urb(struct ieee80211_hw *hw)
- 	ret = usb_submit_urb(urb, GFP_KERNEL);
- 	if (ret) {
- 		usb_unanchor_urb(urb);
-+		usb_free_urb(urb);
- 		goto error;
- 	}
- 
+[snip]
+
+>  /*
+> @@ -6381,21 +6367,19 @@ compute_energy(struct task_struct *p, int dst_cpu, struct perf_domain *pd)
+>   * other use-cases too. So, until someone finds a better way to solve this,
+>   * let's keep things simple by re-using the existing slow path.
+>   */
+> -
+>  static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
+>  {
+> -	unsigned long prev_energy = ULONG_MAX, best_energy = ULONG_MAX;
+> +	unsigned long prev_delta = ULONG_MAX, best_delta = ULONG_MAX;
+>  	struct root_domain *rd = cpu_rq(smp_processor_id())->rd;
+> +	unsigned long cpu_cap, util, base_energy = 0;
+>  	int cpu, best_energy_cpu = prev_cpu;
+> -	struct perf_domain *head, *pd;
+> -	unsigned long cpu_cap, util;
+>  	struct sched_domain *sd;
+> +	struct perf_domain *pd;
+>  
+>  	rcu_read_lock();
+>  	pd = rcu_dereference(rd->pd);
+>  	if (!pd || READ_ONCE(rd->overutilized))
+>  		goto fail;
+> -	head = pd;
+>  
+>  	/*
+>  	 * Energy-aware wake-up happens on the lowest sched_domain starting
+> @@ -6412,9 +6396,14 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
+>  		goto unlock;
+>  
+>  	for (; pd; pd = pd->next) {
+> -		unsigned long cur_energy, spare_cap, max_spare_cap = 0;
+> +		unsigned long cur_delta, spare_cap, max_spare_cap = 0;
+> +		unsigned long base_energy_pd;
+>  		int max_spare_cap_cpu = -1;
+>  
+> +		/* Compute the 'base' energy of the pd, without @p */
+> +		base_energy_pd = compute_energy(p, -1, pd);
+> +		base_energy += base_energy_pd;
+> +
+>  		for_each_cpu_and(cpu, perf_domain_span(pd), sched_domain_span(sd)) {
+>  			if (!cpumask_test_cpu(cpu, p->cpus_ptr))
+>  				continue;
+> @@ -6427,9 +6416,9 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
+>  
+>  			/* Always use prev_cpu as a candidate. */
+>  			if (cpu == prev_cpu) {
+> -				prev_energy = compute_energy(p, prev_cpu, head);
+> -				best_energy = min(best_energy, prev_energy);
+> -				continue;
+> +				prev_delta = compute_energy(p, prev_cpu, pd);
+> +				prev_delta -= base_energy_pd;
+> +				best_delta = min(best_delta, prev_delta);
+>  			}
+
+Earlier, we are not checking the spare capacity for the prev_cpu. Now that the
+continue statement is removed, prev_cpu could also be the max_spare_cap_cpu.
+Actually that makes sense. Because there is no reason why we want to select
+another CPU which has less spare capacity than previous CPU.
+
+Is this behavior intentional?
+
+When prev_cpu == max_spare_cap_cpu, we are evaluating the energy again for the
+same CPU below. That could have been skipped by returning prev_cpu when
+prev_cpu == max_spare_cap_cpu.
+
+>  
+>  			/*
+> @@ -6445,9 +6434,10 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
+>  
+>  		/* Evaluate the energy impact of using this CPU. */
+>  		if (max_spare_cap_cpu >= 0) {
+> -			cur_energy = compute_energy(p, max_spare_cap_cpu, head);
+> -			if (cur_energy < best_energy) {
+> -				best_energy = cur_energy;
+> +			cur_delta = compute_energy(p, max_spare_cap_cpu, pd);
+> +			cur_delta -= base_energy_pd;
+> +			if (cur_delta < best_delta) {
+> +				best_delta = cur_delta;
+>  				best_energy_cpu = max_spare_cap_cpu;
+>  			}
+>  		}
+> @@ -6459,10 +6449,10 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
+>  	 * Pick the best CPU if prev_cpu cannot be used, or if it saves at
+>  	 * least 6% of the energy used by prev_cpu.
+>  	 */
+> -	if (prev_energy == ULONG_MAX)
+> +	if (prev_delta == ULONG_MAX)
+>  		return best_energy_cpu;
+>  
+> -	if ((prev_energy - best_energy) > (prev_energy >> 4))
+> +	if ((prev_delta - best_delta) > ((prev_delta + base_energy) >> 4))
+>  		return best_energy_cpu;
+>  
+>  	return prev_cpu;
+> -- 
+> 2.22.1
+> 
+
+Thanks,
+Pavan
+
 -- 
-2.17.1
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
