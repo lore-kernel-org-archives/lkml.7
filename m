@@ -2,32 +2,32 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 176E1C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F7EC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECB7B206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:31:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3475B207E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:31:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391112AbfITObZ (ORCPT
+        id S2391148AbfITOb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:31:25 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36800 "EHLO
+        Fri, 20 Sep 2019 10:31:26 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36776 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388365AbfITOZO (ORCPT
+        by vger.kernel.org with ESMTP id S2388361AbfITOZO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Sep 2019 10:25:14 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqR-0004y2-Hm; Fri, 20 Sep 2019 15:25:11 +0100
+        id 1iBJqP-000512-UW; Fri, 20 Sep 2019 15:25:10 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqF-0007uH-4Y; Fri, 20 Sep 2019 15:24:59 +0100
+        id 1iBJqF-0007vA-OL; Fri, 20 Sep 2019 15:24:59 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Oliver Neukum" <oneukum@suse.com>,
-        "Johan Hovold" <johan@kernel.org>
+        "Oleg Nesterov" <oleg@redhat.com>,
+        "Orit Wasserman" <orit.was@gmail.com>,
+        "Elazar Leibovich" <elazar@lightbitslabs.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        "Ingo Molnar" <mingo@redhat.com>
 Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.692470111@decadent.org.uk>
+Message-ID: <lsq.1568989415.223863765@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 071/132] USB: serial: use variable for status
+Subject: [PATCH 3.16 082/132] tracing: Fix partial reading of trace
+ event's id file
 In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,91 +59,74 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Elazar Leibovich <elazar@lightbitslabs.com>
 
-commit 3161da970d38cd6ed2ba8cadec93874d1d06e11e upstream.
+commit cbe08bcbbe787315c425dde284dcb715cfbf3f39 upstream.
 
-This patch turns status in a variable read once from the URB.
-The long term plan is to deliver status to the callback.
-In addition it makes the code a bit more elegant.
+When reading only part of the id file, the ppos isn't tracked correctly.
+This is taken care by simple_read_from_buffer.
 
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Reading a single byte, and then the next byte would result EOF.
+
+While this seems like not a big deal, this breaks abstractions that
+reads information from files unbuffered. See for example
+https://github.com/golang/go/issues/29399
+
+This code was mentioned as problematic in
+commit cd458ba9d5a5
+("tracing: Do not (ab)use trace_seq in event_id_read()")
+
+An example C code that show this bug is:
+
+  #include <stdio.h>
+  #include <stdint.h>
+
+  #include <sys/types.h>
+  #include <sys/stat.h>
+  #include <fcntl.h>
+  #include <unistd.h>
+
+  int main(int argc, char **argv) {
+    if (argc < 2)
+      return 1;
+    int fd = open(argv[1], O_RDONLY);
+    char c;
+    read(fd, &c, 1);
+    printf("First  %c\n", c);
+    read(fd, &c, 1);
+    printf("Second %c\n", c);
+  }
+
+Then run with, e.g.
+
+  sudo ./a.out /sys/kernel/debug/tracing/events/tcp/tcp_set_state/id
+
+You'll notice you're getting the first character twice, instead of the
+first two characters in the id file.
+
+Link: http://lkml.kernel.org/r/20181231115837.4932-1-elazar@lightbitslabs.com
+
+Cc: Orit Wasserman <orit.was@gmail.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Fixes: 23725aeeab10b ("ftrace: provide an id file for each event")
+Signed-off-by: Elazar Leibovich <elazar@lightbitslabs.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/serial/generic.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ kernel/trace/trace_events.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
---- a/drivers/usb/serial/generic.c
-+++ b/drivers/usb/serial/generic.c
-@@ -350,6 +350,7 @@ void usb_serial_generic_read_bulk_callba
- 	struct usb_serial_port *port = urb->context;
- 	unsigned char *data = urb->transfer_buffer;
- 	unsigned long flags;
-+	int status = urb->status;
- 	int i;
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -1007,9 +1007,6 @@ event_id_read(struct file *filp, char __
+ 	char buf[32];
+ 	int len;
  
- 	for (i = 0; i < ARRAY_SIZE(port->read_urbs); ++i) {
-@@ -360,22 +361,22 @@ void usb_serial_generic_read_bulk_callba
- 
- 	dev_dbg(&port->dev, "%s - urb %d, len %d\n", __func__, i,
- 							urb->actual_length);
--	switch (urb->status) {
-+	switch (status) {
- 	case 0:
- 		break;
- 	case -ENOENT:
- 	case -ECONNRESET:
- 	case -ESHUTDOWN:
- 		dev_dbg(&port->dev, "%s - urb stopped: %d\n",
--							__func__, urb->status);
-+							__func__, status);
- 		return;
- 	case -EPIPE:
- 		dev_err(&port->dev, "%s - urb stopped: %d\n",
--							__func__, urb->status);
-+							__func__, status);
- 		return;
- 	default:
- 		dev_dbg(&port->dev, "%s - nonzero urb status: %d\n",
--							__func__, urb->status);
-+							__func__, status);
- 		goto resubmit;
- 	}
- 
-@@ -399,6 +400,7 @@ void usb_serial_generic_write_bulk_callb
- {
- 	unsigned long flags;
- 	struct usb_serial_port *port = urb->context;
-+	int status = urb->status;
- 	int i;
- 
- 	for (i = 0; i < ARRAY_SIZE(port->write_urbs); ++i) {
-@@ -410,22 +412,22 @@ void usb_serial_generic_write_bulk_callb
- 	set_bit(i, &port->write_urbs_free);
- 	spin_unlock_irqrestore(&port->lock, flags);
- 
--	switch (urb->status) {
-+	switch (status) {
- 	case 0:
- 		break;
- 	case -ENOENT:
- 	case -ECONNRESET:
- 	case -ESHUTDOWN:
- 		dev_dbg(&port->dev, "%s - urb stopped: %d\n",
--							__func__, urb->status);
-+							__func__, status);
- 		return;
- 	case -EPIPE:
- 		dev_err_console(port, "%s - urb stopped: %d\n",
--							__func__, urb->status);
-+							__func__, status);
- 		return;
- 	default:
- 		dev_err_console(port, "%s - nonzero urb status: %d\n",
--							__func__, urb->status);
-+							__func__, status);
- 		goto resubmit;
- 	}
+-	if (*ppos)
+-		return 0;
+-
+ 	if (unlikely(!id))
+ 		return -ENODEV;
  
 
