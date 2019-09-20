@@ -2,99 +2,97 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AFA7C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 02:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C1FEC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 03:00:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D64AC20882
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 02:56:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E82221929
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 03:00:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="OdjC06zX";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="bEOK5oau"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fzAGUdQV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405721AbfITC4V (ORCPT
+        id S2406042AbfITDAw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 22:56:21 -0400
-Received: from pb-smtp2.pobox.com ([64.147.108.71]:53730 "EHLO
-        pb-smtp2.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404240AbfITC4U (ORCPT
+        Thu, 19 Sep 2019 23:00:52 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:44050 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389956AbfITDAv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 22:56:20 -0400
-Received: from pb-smtp2.pobox.com (unknown [127.0.0.1])
-        by pb-smtp2.pobox.com (Postfix) with ESMTP id 66E8D27046;
-        Thu, 19 Sep 2019 22:56:18 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
-        :cc:subject:in-reply-to:message-id:references:mime-version
-        :content-type; s=sasl; bh=DxwA3Xb/j2BmQm76HYP5HmvpMK0=; b=OdjC06
-        zXUq8YTULHORUItoAvRfnXd08ov9T5VOAE7PUdURZvaXDFIBu2tDUneLwCI+u7fT
-        8mXT3pACfe7gXr29NpHrQYUEgX2U0XuXnEASOXyJEKp9gFxnprvG7b5Ppg5d6AQJ
-        g/BbnQeuxyLK697twtLUq9bztkvA8FT9mEJtY=
-Received: from pb-smtp2.nyi.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp2.pobox.com (Postfix) with ESMTP id 5C03527044;
-        Thu, 19 Sep 2019 22:56:18 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
- h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=KxVWMOQwuPubePImZVl5t1gqR2PwuYXiHV8sMvllCO4=; b=bEOK5oauHGt+2Vquj2cCGyyusTHwIBz7dSIQCFCFQG5bJPfYxBM4DfrV9G6Wp5h1lDlmtrWow6/NGlKOO4VamWy5uu8+7gLlg9l46wQ/aJROI+9TPnUhwtdcw1TzNR8Jjz9N6VgstxIPcIDslC88UAhXyJrHjwt7haI6LUHU4zU=
-Received: from yoda.home (unknown [24.203.50.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by pb-smtp2.pobox.com (Postfix) with ESMTPSA id AE87527043;
-        Thu, 19 Sep 2019 22:56:16 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-Received: from xanadu.home (xanadu.home [192.168.2.2])
-        by yoda.home (Postfix) with ESMTPSA id DB46D2DA01D7;
-        Thu, 19 Sep 2019 22:56:15 -0400 (EDT)
-Date:   Thu, 19 Sep 2019 22:56:15 -0400 (EDT)
-From:   Nicolas Pitre <nico@fluxnic.net>
-To:     Greg KH <gregkh@linuxfoundation.org>
-cc:     Xiaoming Ni <nixiaoming@huawei.com>, penberg@cs.helsinki.fi,
-        jslaby@suse.com, textshell@uchuujin.de, sam@ravnborg.org,
-        daniel.vetter@ffwll.ch, mpatocka@redhat.com, ghalat@redhat.com,
-        linux-kernel@vger.kernel.org, yangyingliang@huawei.com,
-        yuehaibing@huawei.com, zengweilin@huawei.com
-Subject: Re: [PATCH] tty:vt: Add check the return value of kzalloc to avoid
- oops
-In-Reply-To: <20190919092933.GA2684163@kroah.com>
-Message-ID: <nycvar.YSQ.7.76.1909192251210.24536@knanqh.ubzr>
-References: <1568884695-56789-1-git-send-email-nixiaoming@huawei.com> <20190919092933.GA2684163@kroah.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Pobox-Relay-ID: 36F541B0-DB52-11E9-A06F-D1361DBA3BAF-78420484!pb-smtp2.pobox.com
+        Thu, 19 Sep 2019 23:00:51 -0400
+Received: by mail-io1-f66.google.com with SMTP id j4so12740088iog.11;
+        Thu, 19 Sep 2019 20:00:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=wR9pye3sH3f9c/Ue486PD/cpETKoqUyEfHnMaMiRPdY=;
+        b=fzAGUdQVIXP8BO6Um0bEY7aXmxWrofp3WYusEuhMgPmQ27A5ZhIq51xSMAN9gohJey
+         xdsD6nXME5ZveH9/lQ1MvNo7e8lxKB+VJiF53+KRWHjYY3yo3CO+r/lMh38wUGe5T120
+         NI5FyQ8YmYV/aaqGUTa6/SbDVBDZBSb3F3uOkXNjWxRyI80HGsx60/fhQaY8HNtHHcDb
+         511aV1DthYS9mGIh4z56qpebAKs9Q6CMcrqtYaemGR01y1sZsyooYZweWPqYYQ28lZUi
+         oVHgUKZHp3jvfYhzZnVc8ousIPPiZiLXszN06Siqs6CGkR6p4m+lf80we8Xi6J0bEISz
+         hFBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=wR9pye3sH3f9c/Ue486PD/cpETKoqUyEfHnMaMiRPdY=;
+        b=mUe4i46sJphvT9eHFwqTegYlyqNnE95+R/GbAr/Is0OJfzCFXHu/cUrw5ElaQR4ATd
+         ShSEU7xpcL4ISPtNRc3kSBvt3ROv3RHbxdgCw3UYVG+DJLMet3AvPnJT0bwN5UWcCodd
+         z7bw4VprjwTZj8WPj+itlX2LdPws17O4C/ROM8RuRJ7MFQLwCg0qLscbxBXwKUsnyoTp
+         KIi52u4X85ABBEBFgGrx6ZS/sllG/u+spcSMjf/TVV0UglkLy7sRgZ4gyMBHgbMrzUDO
+         tGJQMGon7uU9OTA6a73s3ap8eeQ/c8KZUftJBh6c7xJL7qrH5lfZJSQBjePgKF+RF/rt
+         40wQ==
+X-Gm-Message-State: APjAAAWUFzu7MpjxWJtu4hgZuo8rk1uE8i27EiFcdjhNEG5ZaOg9jkNB
+        zqGym44mT1nF7nFS4RHjg/Y=
+X-Google-Smtp-Source: APXvYqwI+IXRu7Lhr0HmMj08qfXGIRkcCHYMdmSMkCW5GIIz+Ml1cQ5Uy6GCUGV2WrCpixMQAv4aog==
+X-Received: by 2002:a02:ac82:: with SMTP id x2mr13978167jan.34.1568948450810;
+        Thu, 19 Sep 2019 20:00:50 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id t9sm380269iop.86.2019.09.19.20.00.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Sep 2019 20:00:50 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Jes Sorensen <Jes.Sorensen@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] rtl8xxxu: prevent leaking urb
+Date:   Thu, 19 Sep 2019 22:00:41 -0500
+Message-Id: <20190920030043.30137-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 19 Sep 2019, Greg KH wrote:
+In rtl8xxxu_submit_int_urb if usb_submit_urb fails the allocated urb
+should be released.
 
-> On Thu, Sep 19, 2019 at 05:18:15PM +0800, Xiaoming Ni wrote:
-> > Using kzalloc() to allocate memory in function con_init(), but not
-> > checking the return value, there is a risk of null pointer references
-> > oops.
-> > 
-> > Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
-> 
-> We keep having this be "reported" :(
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Something probably needs to be "communicated" about that.
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+index 8136e268b4e6..4a559c37e208 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+@@ -5443,6 +5443,7 @@ static int rtl8xxxu_submit_int_urb(struct ieee80211_hw *hw)
+ 	ret = usb_submit_urb(urb, GFP_KERNEL);
+ 	if (ret) {
+ 		usb_unanchor_urb(urb);
++		usb_free_urb(urb);
+ 		goto error;
+ 	}
+ 
+-- 
+2.17.1
 
-> >  		vc_cons[currcons].d = vc = kzalloc(sizeof(struct vc_data), GFP_NOWAIT);
-> > +		if (unlikely(!vc)) {
-> > +			pr_warn("%s:failed to allocate memory for the %u vc\n",
-> > +					__func__, currcons);
-> > +			break;
-> > +		}
-> 
-> At init, this really can not happen.  Have you see it ever happen?
-
-This is maybe too subtle a fact. The "communication" could be done with 
-some GFP_WONTFAIL flag, and have the allocator simply pannic() if it 
-ever fails.
-
-
-Nicolas
