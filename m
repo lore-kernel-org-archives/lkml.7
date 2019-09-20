@@ -2,163 +2,90 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A637FC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48813C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65806208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:51:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569012713;
-	bh=xg2vlVd+lUwNBRO5ewZnZq4NbIRw0nw27U11uZH30fk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=JkYvZgKwOhSIR1Nog09OPwiOzcbu9orVtY33Byxtqk2i44s2hgKnjO770zAp+/AgI
-	 YmIRJWqoODPuLEHk/r1glTSpkHqGOvlv5tiZj8cqIrf0Gn3Mnd11WnHHvMlBE9fn5y
-	 9AV35BXVfXNC/KAxYmknP1VTyJJo//DZWK/BSvds=
+	by mail.kernel.org (Postfix) with ESMTP id 168F32086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:54:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387681AbfITUvw (ORCPT
+        id S2387762AbfITUyA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 16:51:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54542 "EHLO mail.kernel.org"
+        Fri, 20 Sep 2019 16:54:00 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49570 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387597AbfITUvw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 16:51:52 -0400
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2387431AbfITUyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 16:54:00 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB17D218AE
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 20:51:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569012711;
-        bh=xg2vlVd+lUwNBRO5ewZnZq4NbIRw0nw27U11uZH30fk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ja/HOdXighvrnJiFLrz4+KK+jUExurZERXM/s9E9gYXmBROOvr2pFDqFILFyC2OWE
-         9WE/Sxa1j7kQq2UZ9XGCw7M8tv8wlhUKChtrC39CVes45zIqidsR1DyWei3GQR5w5I
-         NXNEmgCZY5E7YJX/nIXRHu7kQOw2KxnAWjdOCfvc=
-Received: by mail-wm1-f51.google.com with SMTP id v17so3460286wml.4
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 13:51:50 -0700 (PDT)
-X-Gm-Message-State: APjAAAUyDOT4yoKMxVuYTPo0EadQ2dOLy0Ryft0/gNGsYT4RuYGUIf6/
-        /8lOZUQMBvJF72ypj2/HrSQBcM458sKPTw/swoevVg==
-X-Google-Smtp-Source: APXvYqywYkJ/O57lEsQ+jvss3/ohzrMA8/uB8+mxAxzS3Bfy8j/rWUdJ5qoeAdvcjylTbdAKIxJ5AvFG9fnkwNFUq8U=
-X-Received: by 2002:a1c:1bcf:: with SMTP id b198mr5091632wmb.0.1569012709337;
- Fri, 20 Sep 2019 13:51:49 -0700 (PDT)
+        by mx1.redhat.com (Postfix) with ESMTPS id BA80F10A8121;
+        Fri, 20 Sep 2019 20:53:59 +0000 (UTC)
+Received: from krava (ovpn-204-16.brq.redhat.com [10.40.204.16])
+        by smtp.corp.redhat.com (Postfix) with SMTP id C07FA60606;
+        Fri, 20 Sep 2019 20:53:57 +0000 (UTC)
+Date:   Fri, 20 Sep 2019 22:53:56 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf: add support for logging debug messages to file
+Message-ID: <20190920205356.GA1041@krava>
+References: <20190915102740.24209-1-changbin.du@gmail.com>
 MIME-Version: 1.0
-References: <20190912034421.GA2085@darwi-home-pc> <20190912082530.GA27365@mit.edu>
- <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
- <20190914122500.GA1425@darwi-home-pc> <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
- <20190915052242.GG19710@mit.edu> <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
- <20190918211503.GA1808@darwi-home-pc> <20190918211713.GA2225@darwi-home-pc>
- <CAHk-=wiCqDiU7SE3FLn2W26MS_voUAuqj5XFa1V_tiGTrrW-zQ@mail.gmail.com>
- <20190920134609.GA2113@pc> <CALCETrWvE5es3i+to33y6jw=Yf0Tw6ZfV-6QWjZT5v0fo76tWw@mail.gmail.com>
- <CAHk-=wgW8rN2EVL_Rdn63V9vQO0GkZ=RQFeqqsYJM==8fujpPg@mail.gmail.com>
- <CALCETrV=4TX2a4uV5t2xOFzv+zM_jnOtMLJna8Vb7uXz6S=wSw@mail.gmail.com>
- <CAHk-=wjpTWgpo6d24pTv+ubfea_uEomX-sHjjOkdACfV-8Nmkg@mail.gmail.com>
- <CALCETrUEqjFmPvpcJQwJe3dNbz8eaJ4k3_AV2u0v96MffjLn+g@mail.gmail.com> <CAHk-=whJ3kmcZp=Ws+uXnRB9KokG6nXSQCSuBnerG--jkAfP5w@mail.gmail.com>
-In-Reply-To: <CAHk-=whJ3kmcZp=Ws+uXnRB9KokG6nXSQCSuBnerG--jkAfP5w@mail.gmail.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Fri, 20 Sep 2019 13:51:37 -0700
-X-Gmail-Original-Message-ID: <CALCETrXMp3dJaKDm+RQijQEUuPNPmpKWr8Ljf+RqycXChGnKrw@mail.gmail.com>
-Message-ID: <CALCETrXMp3dJaKDm+RQijQEUuPNPmpKWr8Ljf+RqycXChGnKrw@mail.gmail.com>
-Subject: Re: [PATCH RFC v4 1/1] random: WARN on large getrandom() waits and
- introduce getrandom2()
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190915102740.24209-1-changbin.du@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Fri, 20 Sep 2019 20:53:59 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 12:51 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> > And the only real question is how to map existing users to these
-> > semantics.  I see two sensible choices:
-> >
-> > 1. 0 means "secure, blocking". I think this is not what we'd do if we
-> > could go back in time and chage the ABI from day 1, but I think it's
-> > actually good enough.  As long as this mode won't deadlock, it's not
-> > *that* bad if programs are using it when they wanted "insecure".
->
-> It's exactly that "as long as it won't deadlock" that is our current problem.
->
-> It *does* deadlock.
->
-> So it can't mean "blocking" in any long-term meaning.
->
-> It can mean "blocks for up to 15 seconds" or something like that. I'd
-> honestly prefer a smaller number, but I think 15 seconds is an
-> acceptable "your user space is buggy, but we won't make you think the
-> machine hung".
+On Sun, Sep 15, 2019 at 06:27:40PM +0800, Changbin Du wrote:
+> When in TUI mode, it is impossible to show all the debug messages to
+> console. This make it hard to debug perf issues using debug messages.
+> This patch adds support for logging debug messages to file to resolve
+> this problem.
+> 
+> The usage is:
+> perf -debug verbose=2 --debug file=1 COMMAND
+> 
+> And the path of log file is '~/perf.log'.
+> 
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> ---
+>  tools/perf/Documentation/perf.txt |  4 +++-
+>  tools/perf/util/debug.c           | 20 ++++++++++++++++++++
+>  2 files changed, 23 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/Documentation/perf.txt b/tools/perf/Documentation/perf.txt
+> index 401f0ed67439..45db7b22d1a5 100644
+> --- a/tools/perf/Documentation/perf.txt
+> +++ b/tools/perf/Documentation/perf.txt
+> @@ -16,7 +16,8 @@ OPTIONS
+>  	Setup debug variable (see list below) in value
+>  	range (0, 10). Use like:
+>  	  --debug verbose   # sets verbose = 1
+> -	  --debug verbose=2 # sets verbose = 2
+> +	  --debug verbose=2 --debug file=1
+> +	                    # sets verbose = 2 and save log to file
 
-To be clear, when I say "blocking", I mean "blocks until we're ready,
-but we make sure we're ready in a moderately timely manner".
+it's variable already, why not allow to pass the path directly like:
 
-Rather than answering everything point by point, here's a updated
-mini-proposal and some thoughts.  There are two families of security
-people that I think we care about.  One is the FIPS or CC or PCI
-crowd, and they might, quite reasonably, demand actual hardware RNGs.
-We should make the hwrng API stop sucking and they should be happy.
-(This means expose an hwrng device node per physical device, IMO.)
-The other is the one who wants getrandom(), etc to be convincingly
-secure and is willing to do some actual analysis.  And I think we can
-make them quite happy like this:
+  --debug file=~/perf.log
 
-In the kernel, we have two types of requests for random numbers: a
-request for "secure" bytes and a request for "insecure" bytes.
-Requests for "secure" bytes can block or return -EAGAIN.  Requests for
-"insecure" bytes succeed without waiting.  In addition, we have a
-jitter entropy mechanism (maybe the one mjg59 referenced, maybe
-Alexander's -- doesn't really matter) and we *guarantee* that jitter
-entropy, by itself, is enough to get the "secure" generator working
-after, say, 5s of effort.  By this, I mean that, on an idle system, it
-finishes in 5s and, on a fully loaded system, it's allowed to take a
-little while longer but not too much longer.
+would be great if we won't need to use --debug twice and allow:
 
-In other words, I want GRND_SECURE_BLOCKING and /dev/random reads to
-genuinely always work and to genuinely never take much longer than 5s.
-I don't want a special case where they fail.
+  --debug verbose=2,file=perf.log
 
-The exposed user APIs are, subject to bikeshedding that can happen
-later over the actual values, etc:
-
-GRND_SECURE_BLOCKING: returns "secure" output and blocks until it's
-ready.  This never fails, but it also never blocks forever.
-
-GRND_SECURE_NONBLOCKING: same but returns -EAGAIN instead of blocking.
-
-GRND_INSECURE: returns "insecure" output immediately.  I think we do
-need this -- the "secure" mode may take a little while at early boot,
-and libraries that initialize themselves with some randomness really
-do want a way to get some numbers without any delay whatsoever.
-
-0: either the same as GRND_SECURE_BLOCKING plus a warning or the
-"accelerated" version.  The "accelerated" version means wait up to 2s
-for secure numbers and, if there still aren't any, fall back to
-"insecure".
-
-GRND_RANDOM: either the same as 0 or the same as GRND_SECURE_BLOCKING
-but with a warning.  I don't particularly care either way.
-
-I'm okay with a well-defined semantic like I proposed for an
-accelerated mode.  I don't really want to try to define what a
-secure-but-not-as-secure mode means as a separate complication that
-the underlying RNG needs to support forever.  I don't think the
-security folks would like that either.
-
-How does this sound?
+jirka
