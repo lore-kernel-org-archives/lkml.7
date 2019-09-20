@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D076CC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDDB1C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3834206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:31:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C057F206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:31:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391216AbfITObj (ORCPT
+        id S2391249AbfITObn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:31:39 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36736 "EHLO
+        Fri, 20 Sep 2019 10:31:43 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36734 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388353AbfITOZO (ORCPT
+        by vger.kernel.org with ESMTP id S2388348AbfITOZO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Sep 2019 10:25:14 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqQ-00051F-99; Fri, 20 Sep 2019 15:25:10 +0100
+        id 1iBJqQ-0004y5-5R; Fri, 20 Sep 2019 15:25:10 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqF-0007ub-Ah; Fri, 20 Sep 2019 15:24:59 +0100
+        id 1iBJqF-0007uq-FP; Fri, 20 Sep 2019 15:24:59 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Laurentiu Tudor" <laurentiu.tudor@nxp.com>,
-        "Michael Ellerman" <mpe@ellerman.id.au>
+        "Hui Wang" <hui.wang@canonical.com>, "Takashi Iwai" <tiwai@suse.de>
 Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.618609984@decadent.org.uk>
+Message-ID: <lsq.1568989415.522114580@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 075/132] powerpc/booke64: set RI in default MSR
+Subject: [PATCH 3.16 078/132] ALSA: hda/hdmi - Read the pin sense from
+ register when repolling
 In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,31 +55,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+From: Hui Wang <hui.wang@canonical.com>
 
-commit 5266e58d6cd90ac85c187d673093ad9cb649e16d upstream.
+commit 8c2e6728c2bf95765b724e07d0278ae97cd1ee0d upstream.
 
-Set RI in the default kernel's MSR so that the architected way of
-detecting unrecoverable machine check interrupts has a chance to work.
-This is inline with the MSR setup of the rest of booke powerpc
-architectures configured here.
+The driver will check the monitor presence when resuming from suspend,
+starting poll or interrupt triggers. In these 3 situations, the
+jack_dirty will be set to 1 first, then the hda_jack.c reads the
+pin_sense from register, after reading the register, the jack_dirty
+will be set to 0. But hdmi_repoll_work() is enabled in these 3
+situations, It will read the pin_sense a couple of times subsequently,
+since the jack_dirty is 0 now, It does not read the register anymore,
+instead it uses the shadow pin_sense which is read at the first time.
 
-Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+It is meaningless to check the shadow pin_sense a couple of times,
+we need to read the register to check the real plugging state, so
+we set the jack_dirty to 1 in the hdmi_repoll_work().
+
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/powerpc/include/asm/reg_booke.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/arch/powerpc/include/asm/reg_booke.h
-+++ b/arch/powerpc/include/asm/reg_booke.h
-@@ -29,7 +29,7 @@
- #if defined(CONFIG_PPC_BOOK3E_64)
- #define MSR_64BIT	MSR_CM
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -1632,6 +1632,12 @@ static void hdmi_repoll_eld(struct work_
+ {
+ 	struct hdmi_spec_per_pin *per_pin =
+ 	container_of(to_delayed_work(work), struct hdmi_spec_per_pin, work);
++	struct hda_codec *codec = per_pin->codec;
++	struct hda_jack_tbl *jack;
++
++	jack = snd_hda_jack_tbl_get(codec, per_pin->pin_nid);
++	if (jack)
++		jack->jack_dirty = 1;
  
--#define MSR_		(MSR_ME | MSR_CE)
-+#define MSR_		(MSR_ME | MSR_RI | MSR_CE)
- #define MSR_KERNEL	(MSR_ | MSR_64BIT)
- #define MSR_USER32	(MSR_ | MSR_PR | MSR_EE)
- #define MSR_USER64	(MSR_USER32 | MSR_64BIT)
+ 	if (per_pin->repoll_count++ > 6)
+ 		per_pin->repoll_count = 0;
 
