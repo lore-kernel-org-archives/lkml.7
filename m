@@ -2,950 +2,278 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED422C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 09:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F43BC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 09:03:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5A992054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 09:02:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA76B2054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 09:03:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="GXlddo/W"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="w5w0Jz+j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408409AbfITJCS (ORCPT
+        id S2408419AbfITJDp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 05:02:18 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46078 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408398AbfITJCS (ORCPT
+        Fri, 20 Sep 2019 05:03:45 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:37507 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405602AbfITJDo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 05:02:18 -0400
-Received: by mail-pf1-f196.google.com with SMTP id y72so4051384pfb.12
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 02:02:16 -0700 (PDT)
+        Fri, 20 Sep 2019 05:03:44 -0400
+Received: by mail-ed1-f68.google.com with SMTP id r4so5692606edy.4
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 02:03:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=FIwQ3d+wtqE4uyVnTJHVtS9doswMYI8AzLHHqPIV+H0=;
-        b=GXlddo/WMFdP//TGeSIxjZHJNNTmT5MGhERClFXBOqzOe4lPAdb/ZRJi4J3huGYPgu
-         l9iMGNyL27uyJ6dqj3iRJGkCqhAhP0Mu9qnbqYPPVueFINXw6a4zj8MWk1nvqo11KACQ
-         4ipW9h3mHBnhi58CD/KDk9t1HyGNmTvImAcclq3cprjJSHtoiQt9IHqH6/DXOoADElLC
-         MyxGCJgCbfb5T7LnpfNp+/1hY/HGv12QVZjwdnoGPUmUWHHA1u36Et3SZoGtVqmuPe1r
-         mVFfHMDr6gq9mA4zsquRncRJttL9QJz5NUaEjV5IfgayslVYyu2wKZtGxMD0ia1tFQYA
-         /zYw==
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7f7iIewityqCPGZx7dQm7jfBt0RvFj0GrtCbkpP6ccU=;
+        b=w5w0Jz+jH7Pg37OdeijB29i5yxb9yKmdsDbkLFFQjznoGPwxm3fzMCgxsaIrfLCzzc
+         OJnMMYN8y9lFwzlL1QUOoXOUiGTbq7EDPjgNs9UzQwaVMCpEnMCFO23sSonOWti0utit
+         a/l4E+vlM5oP6rLPtk4qybkOL3h2nhd5AGyLli/SlFfI/h2fXpXvlE5GyE9WNrASaAR4
+         Lh5BUwHfYLvfvjcgG9rSLWsvwbeYQoVOrfjl4DR+qRNG93dEZ1cVSZhoi5fu5U14VUdl
+         fg3To7OKWvBt4fkNatKsyo+x0G8U/BbQBt9/cbVJ9LYelUYqtvjThZeOrKNVh35P3fpb
+         mXCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=FIwQ3d+wtqE4uyVnTJHVtS9doswMYI8AzLHHqPIV+H0=;
-        b=Fs9sdnR/tpjbKJo+WU02ydkIQ7HtpEQ2EGCsnYuNIve24sjbQ4yAQkcsnG70xksnBA
-         kx3L+9Ds7UnuEvhi2JCZvPZm2LF+vquBepyCX997+dRIi5Iua1jMsz+KQ/2jvXV1mWMg
-         //W7xdwoO9mwF5kUzo0iQajsvHG0J4hb/K9B46AvI7u7ONyxqkPTzyC6ztQLPfrzrVD4
-         WeZAiEAtgWZirVHaL7ohyQviJ+9W3kIT8rQoeBHXpkSZPifKwKipDoGj1JsGfHw339dk
-         XWfFUsIej85Z2c0i3LSm+5rj1Os7BRmocaRNKCuvH74i/ILIJWSiGYXWGiuPrTW0feN7
-         NmqQ==
-X-Gm-Message-State: APjAAAVgv553HlvdiZgHEX9xwY+s9zkVehqdLF4zHI78FhDbHiTs59WX
-        L7MMxxkCwcEoAW2WxBZk/3DSDw==
-X-Google-Smtp-Source: APXvYqxad82R0Qnzlyj8RIPs/6/nt7eekFKFqUN4YwCRGT4bXjthPSl6atCDmLvlos7KF1V5NXE8oA==
-X-Received: by 2002:a63:225f:: with SMTP id t31mr14142173pgm.50.1568970136074;
-        Fri, 20 Sep 2019 02:02:16 -0700 (PDT)
-Received: from localhost.localdomain (36-228-113-219.dynamic-ip.hinet.net. [36.228.113.219])
-        by smtp.gmail.com with ESMTPSA id n3sm1550012pff.102.2019.09.20.02.02.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Sep 2019 02:02:15 -0700 (PDT)
-From:   Green Wan <green.wan@sifive.com>
-Cc:     linux-hackers@sifive.com, Green Wan <green.wan@sifive.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Subject: [PATCH v3 3/3] dmaengine: sf-pdma: add platform DMA support for HiFive Unleashed A00
-Date:   Fri, 20 Sep 2019 17:01:33 +0800
-Message-Id: <20190920090205.19552-1-green.wan@sifive.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7f7iIewityqCPGZx7dQm7jfBt0RvFj0GrtCbkpP6ccU=;
+        b=T+hOrbXbI66fmM0ZhudsplMQfaBEN8cUnqw4gmVabmnYz3oRUldHtDUuPvYB5/Jyu1
+         HDOaucuPuFAQgHwpKxEr9sR1XHN4GRb+19oVbQpwk6/RUuhNevg1ra4meQtMsmzBvq+O
+         iJnmNghRqSSstQxVr3QBH7bPAqjVoIc2pG6mDcY0sHmUAbFvn3i3cUsG6TleFxNggn0S
+         Rad0RCv9M0maYYIJM6BPhQxbLP1rtUy36VKqN+oBpV1Jl5HNc8XQ3wkNHlbSPLRtOvZ7
+         Uz+srXQOrpUdmxCczlUdIarMTmaCgyIM4SkO0C7Mbmr3Z6oW0KfcUX33wuSI9/86auPI
+         /XdQ==
+X-Gm-Message-State: APjAAAXnFtPVm35ybHaMgt2iBVK9EhbuA9adoapkrGYOFauiRFA345Q0
+        MRh/TUNWlaxaF/Al5OSWb4No+g==
+X-Google-Smtp-Source: APXvYqySJJLb2ToIjdZWEjdisjwCvQmt8kW2QvOzzR1Iyip5v/Cl1a++EDimj/ghAzYeSyWZlm2w9g==
+X-Received: by 2002:a17:906:3110:: with SMTP id 16mr11058571ejx.306.1568970221772;
+        Fri, 20 Sep 2019 02:03:41 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id v4sm214627edy.54.2019.09.20.02.03.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 20 Sep 2019 02:03:40 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id D180310077B; Fri, 20 Sep 2019 12:03:40 +0300 (+03)
+Date:   Fri, 20 Sep 2019 12:03:40 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Jia He <justin.he@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Suzuki Poulose <Suzuki.Poulose@arm.com>,
+        Punit Agrawal <punitagrawal@gmail.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Jun Yao <yaojun8558363@gmail.com>,
+        Alex Van Brunt <avanbrunt@nvidia.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Ralph Campbell <rcampbell@nvidia.com>, hejianet@gmail.com,
+        Kaly Xin <Kaly.Xin@arm.com>
+Subject: Re: [PATCH v6 3/3] mm: fix double page fault on arm64 if PTE_AF is
+ cleared
+Message-ID: <20190920090340.6emsac4s6gdd75sj@box>
+References: <20190920022132.149467-1-justin.he@arm.com>
+ <20190920022132.149467-4-justin.he@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190920022132.149467-4-justin.he@arm.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Link: https://www.kernel.org/doc/html/v4.17/driver-api/dmaengine/
-Link: https://static.dev.sifive.com/FU540-C000-v1.0.pdf
+On Fri, Sep 20, 2019 at 10:21:32AM +0800, Jia He wrote:
+> When we tested pmdk unit test [1] vmmalloc_fork TEST1 in arm64 guest, there
+> will be a double page fault in __copy_from_user_inatomic of cow_user_page.
+> 
+> Below call trace is from arm64 do_page_fault for debugging purpose
+> [  110.016195] Call trace:
+> [  110.016826]  do_page_fault+0x5a4/0x690
+> [  110.017812]  do_mem_abort+0x50/0xb0
+> [  110.018726]  el1_da+0x20/0xc4
+> [  110.019492]  __arch_copy_from_user+0x180/0x280
+> [  110.020646]  do_wp_page+0xb0/0x860
+> [  110.021517]  __handle_mm_fault+0x994/0x1338
+> [  110.022606]  handle_mm_fault+0xe8/0x180
+> [  110.023584]  do_page_fault+0x240/0x690
+> [  110.024535]  do_mem_abort+0x50/0xb0
+> [  110.025423]  el0_da+0x20/0x24
+> 
+> The pte info before __copy_from_user_inatomic is (PTE_AF is cleared):
+> [ffff9b007000] pgd=000000023d4f8003, pud=000000023da9b003, pmd=000000023d4b3003, pte=360000298607bd3
+> 
+> As told by Catalin: "On arm64 without hardware Access Flag, copying from
+> user will fail because the pte is old and cannot be marked young. So we
+> always end up with zeroed page after fork() + CoW for pfn mappings. we
+> don't always have a hardware-managed access flag on arm64."
+> 
+> This patch fix it by calling pte_mkyoung. Also, the parameter is
+> changed because vmf should be passed to cow_user_page()
+> 
+> Add a WARN_ON_ONCE when __copy_from_user_inatomic() returns error
+> in case there can be some obscure use-case.(by Kirill)
+> 
+> [1] https://github.com/pmem/pmdk/tree/master/src/test/vmmalloc_fork
+> 
+> Reported-by: Yibo Cai <Yibo.Cai@arm.com>
+> Signed-off-by: Jia He <justin.he@arm.com>
+> ---
+>  mm/memory.c | 65 ++++++++++++++++++++++++++++++++++++++++++++++++-----
+>  1 file changed, 59 insertions(+), 6 deletions(-)
+> 
+> diff --git a/mm/memory.c b/mm/memory.c
+> index e2bb51b6242e..7c38c1ce5440 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -118,6 +118,13 @@ int randomize_va_space __read_mostly =
+>  					2;
+>  #endif
+>  
+> +#ifndef arch_faults_on_old_pte
+> +static inline bool arch_faults_on_old_pte(void)
+> +{
+> +	return false;
+> +}
+> +#endif
+> +
+>  static int __init disable_randmaps(char *s)
+>  {
+>  	randomize_va_space = 0;
+> @@ -2140,8 +2147,12 @@ static inline int pte_unmap_same(struct mm_struct *mm, pmd_t *pmd,
+>  	return same;
+>  }
+>  
+> -static inline void cow_user_page(struct page *dst, struct page *src, unsigned long va, struct vm_area_struct *vma)
+> +static inline int cow_user_page(struct page *dst, struct page *src,
+> +				struct vm_fault *vmf)
+>  {
+> +	struct vm_area_struct *vma = vmf->vma;
+> +	unsigned long addr = vmf->address;
+> +
+>  	debug_dma_assert_idle(src);
+>  
+>  	/*
+> @@ -2151,21 +2162,52 @@ static inline void cow_user_page(struct page *dst, struct page *src, unsigned lo
+>  	 * fails, we just zero-fill it. Live with it.
+>  	 */
+>  	if (unlikely(!src)) {
+> -		void *kaddr = kmap_atomic(dst);
+> -		void __user *uaddr = (void __user *)(va & PAGE_MASK);
+> +		void *kaddr;
+> +		void __user *uaddr = (void __user *)(addr & PAGE_MASK);
+> +		pte_t entry;
+> +
+> +		/* On architectures with software "accessed" bits, we would
+> +		 * take a double page fault, so mark it accessed here.
+> +		 */
+> +		if (arch_faults_on_old_pte() && !pte_young(vmf->orig_pte)) {
+> +			spin_lock(vmf->ptl);
 
-Add PDMA driver, sf-pdma, to enable DMA engine on HiFive Unleashed
-Rev A00 board.
+It's probably okay for arm64, but for archs with highmem it will be
+a problem.
 
- - Implement dmaengine APIs, support MEM_TO_MEM async copy.
- - Tested by DMA Test client
- - Supports 4 channels DMA, each channel has 1 done and 1 err
-   interrupt connected to platform-level interrupt controller (PLIC).
- - Depends on DMA_ENGINE and DMA_VIRTUAL_CHANNELS
+Use pte_offset_map_lock() instead.
 
-Follow the DMAengine controller doc,
-"./Documentation/driver-api/dmaengine/provider.rst" to implement DMA
-engine. And use the dma test client in doc,
-"./Documentation/driver-api/dmaengine/dmatest.rst", to test.
+> +			if (likely(pte_same(*vmf->pte, vmf->orig_pte))) {
+> +				entry = pte_mkyoung(vmf->orig_pte);
+> +				if (ptep_set_access_flags(vma, addr,
+> +							  vmf->pte, entry, 0))
+> +					update_mmu_cache(vma, addr, vmf->pte);
+> +			} else {
+> +				/* Other thread has already handled the fault
+> +				 * and we don't need to do anything. If it's
+> +				 * not the case, the fault will be triggered
+> +				 * again on the same address.
+> +				 */
+> +				spin_unlock(vmf->ptl);
 
-Each DMA channel has separate HW regs and support done and error ISRs.
-4 channels share 1 done and 1 err ISRs. There's no expander/arbitrator
-in DMA HW.
+And pte_unmap_unlock() here...
 
-   ------               ------
-   |    |--< done 23 >--|ch 0|
-   |    |--< err  24 >--|    |     (dma0chan0)
-   |    |               ------
-   |    |               ------
-   |    |--< done 25 >--|ch 1|
-   |    |--< err  26 >--|    |     (dma0chan1)
-   |PLIC|               ------
-   |    |               ------
-   |    |--< done 27 >--|ch 2|
-   |    |--< err  28 >--|    |     (dma0chan2)
-   |    |               ------
-   |    |               ------
-   |    |--< done 29 >--|ch 3|
-   |    |--< err  30 >--|    |     (dma0chan3)
-   ------               ------
+> +				return -1;
+> +			}
+> +			spin_unlock(vmf->ptl);
 
-Signed-off-by: Green Wan <green.wan@sifive.com>
----
- MAINTAINERS                   |   1 +
- drivers/dma/Kconfig           |   2 +
- drivers/dma/Makefile          |   1 +
- drivers/dma/sf-pdma/Kconfig   |   6 +
- drivers/dma/sf-pdma/Makefile  |   1 +
- drivers/dma/sf-pdma/sf-pdma.c | 623 ++++++++++++++++++++++++++++++++++
- drivers/dma/sf-pdma/sf-pdma.h | 124 +++++++
- 7 files changed, 758 insertions(+)
- create mode 100644 drivers/dma/sf-pdma/Kconfig
- create mode 100644 drivers/dma/sf-pdma/Makefile
- create mode 100644 drivers/dma/sf-pdma/sf-pdma.c
- create mode 100644 drivers/dma/sf-pdma/sf-pdma.h
+and here.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d0caa09a479e..c5f0662c9106 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14594,6 +14594,7 @@ F:	drivers/media/mmc/siano/
- SIFIVE PDMA DRIVER
- M:	Green Wan <green.wan@sifive.com>
- S:	Maintained
-+F:	drivers/dma/sf-pdma/
- F:	Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
- 
- SIFIVE DRIVERS
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index 413efef5fbb6..f05a928f5a3d 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -667,6 +667,8 @@ source "drivers/dma/qcom/Kconfig"
- 
- source "drivers/dma/dw/Kconfig"
- 
-+source "drivers/dma/sf-pdma/Kconfig"
-+
- source "drivers/dma/dw-edma/Kconfig"
- 
- source "drivers/dma/hsu/Kconfig"
-diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
-index 5bddf6f8790f..77a552d970ae 100644
---- a/drivers/dma/Makefile
-+++ b/drivers/dma/Makefile
-@@ -29,6 +29,7 @@ obj-$(CONFIG_DMA_SUN4I) += sun4i-dma.o
- obj-$(CONFIG_DMA_SUN6I) += sun6i-dma.o
- obj-$(CONFIG_DW_AXI_DMAC) += dw-axi-dmac/
- obj-$(CONFIG_DW_DMAC_CORE) += dw/
-+obj-$(CONFIG_SF_PDMA) += sf-pdma/
- obj-$(CONFIG_DW_EDMA) += dw-edma/
- obj-$(CONFIG_EP93XX_DMA) += ep93xx_dma.o
- obj-$(CONFIG_FSL_DMA) += fsldma.o
-diff --git a/drivers/dma/sf-pdma/Kconfig b/drivers/dma/sf-pdma/Kconfig
-new file mode 100644
-index 000000000000..0e01a5728a79
---- /dev/null
-+++ b/drivers/dma/sf-pdma/Kconfig
-@@ -0,0 +1,6 @@
-+config SF_PDMA
-+	bool "Sifive PDMA controller driver"
-+	select DMA_ENGINE
-+	select DMA_VIRTUAL_CHANNELS
-+	help
-+	  Support the SiFive PDMA controller.
-diff --git a/drivers/dma/sf-pdma/Makefile b/drivers/dma/sf-pdma/Makefile
-new file mode 100644
-index 000000000000..764552ab8d0a
---- /dev/null
-+++ b/drivers/dma/sf-pdma/Makefile
-@@ -0,0 +1 @@
-+obj-$(CONFIG_SF_PDMA)   += sf-pdma.o
-diff --git a/drivers/dma/sf-pdma/sf-pdma.c b/drivers/dma/sf-pdma/sf-pdma.c
-new file mode 100644
-index 000000000000..0ebf8a819811
---- /dev/null
-+++ b/drivers/dma/sf-pdma/sf-pdma.c
-@@ -0,0 +1,623 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/**
-+ * SiFive FU540 Platform DMA driver
-+ * Copyright (C) 2019 SiFive
-+ *
-+ * Based partially on:
-+ * - drivers/dma/fsl-edma.c
-+ * - drivers/dma/dw-edma/
-+ * - drivers/dma/pxa-dma.c
-+ *
-+ * See the following sources for further documentation:
-+ * - Chapter 12 "Platform DMA Engine (PDMA)" of
-+ *   SiFive FU540-C000 v1.0
-+ *   https://static.dev.sifive.com/FU540-C000-v1.0.pdf
-+ */
-+#include <linux/module.h>
-+#include <linux/device.h>
-+#include <linux/kernel.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/dmaengine.h>
-+#include <linux/err.h>
-+#include <linux/interrupt.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/irq.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_dma.h>
-+#include <linux/time64.h>
-+
-+#include "sf-pdma.h"
-+#include "../dmaengine.h"
-+#include "../virt-dma.h"
-+
-+#define SIFIVE_PDMA_NAME "sf-pdma"
-+
-+#ifndef readq
-+static inline unsigned long long readq(void __iomem *addr)
-+{
-+	return readl(addr) | (((unsigned long long)readl(addr + 4)) << 32LL);
-+}
-+#endif
-+
-+#ifndef writeq
-+static inline void writeq(unsigned long long v, void __iomem *addr)
-+{
-+	writel(v & 0xffffffff, addr);
-+	writel(v >> 32, addr + 4);
-+}
-+#endif
-+
-+static inline struct sf_pdma_chan *to_sf_pdma_chan(struct dma_chan *dchan)
-+{
-+	return container_of(dchan, struct sf_pdma_chan, vchan.chan);
-+}
-+
-+static inline struct sf_pdma_desc *to_sf_pdma_desc(struct virt_dma_desc *vd)
-+{
-+	return container_of(vd, struct sf_pdma_desc, vdesc);
-+}
-+
-+static struct sf_pdma_desc *sf_pdma_alloc_desc(struct sf_pdma_chan *chan)
-+{
-+	struct sf_pdma_desc *desc;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&chan->lock, flags);
-+
-+	if (chan->desc && !chan->desc->in_use) {
-+		spin_unlock_irqrestore(&chan->lock, flags);
-+		return chan->desc;
-+	}
-+
-+	spin_unlock_irqrestore(&chan->lock, flags);
-+
-+	desc = kzalloc(sizeof(*desc), GFP_NOWAIT);
-+
-+	if (!desc)
-+		return NULL;
-+
-+	desc->chan = chan;
-+
-+	return desc;
-+}
-+
-+static void sf_pdma_fill_desc(struct sf_pdma_chan *chan,
-+			      u64 dst,
-+			      u64 src,
-+			      u64 size)
-+{
-+	struct pdma_regs *regs = &chan->regs;
-+
-+	writel(PDMA_FULL_SPEED, regs->xfer_type);
-+	writeq(size, regs->xfer_size);
-+	writeq(dst, regs->dst_addr);
-+	writeq(src, regs->src_addr);
-+}
-+
-+void sf_pdma_disclaim_chan(struct sf_pdma_chan *chan)
-+{
-+	struct pdma_regs *regs = &chan->regs;
-+
-+	writel(PDMA_CLEAR_CTRL, regs->ctrl);
-+}
-+
-+struct dma_async_tx_descriptor *
-+	sf_pdma_prep_dma_memcpy(struct dma_chan *dchan,
-+				dma_addr_t dest,
-+				dma_addr_t src,
-+				size_t len,
-+				unsigned long flags)
-+{
-+	struct sf_pdma_chan *chan = to_sf_pdma_chan(dchan);
-+	struct sf_pdma_desc *desc;
-+
-+	if (!chan || !len || !dest || !src) {
-+		pr_debug("%s: Please check dma len, dest, src!\n", __func__);
-+		return NULL;
-+	}
-+
-+	desc = sf_pdma_alloc_desc(chan);
-+	if (!desc)
-+		return NULL;
-+
-+	desc->in_use = true;
-+	desc->dirn = DMA_MEM_TO_MEM;
-+	desc->async_tx = vchan_tx_prep(&chan->vchan, &desc->vdesc, flags);
-+
-+	spin_lock_irqsave(&chan->lock, flags);
-+	chan->desc = desc;
-+	sf_pdma_fill_desc(desc->chan, dest, src, len);
-+	spin_unlock_irqrestore(&chan->lock, flags);
-+
-+	return desc->async_tx;
-+}
-+
-+static void sf_pdma_unprep_slave_dma(struct sf_pdma_chan *chan)
-+{
-+	if (chan->dma_dir != DMA_NONE)
-+		dma_unmap_resource(chan->vchan.chan.device->dev,
-+				   chan->dma_dev_addr,
-+				   chan->dma_dev_size,
-+				   chan->dma_dir, 0);
-+	chan->dma_dir = DMA_NONE;
-+}
-+
-+static int sf_pdma_slave_config(struct dma_chan *dchan,
-+				struct dma_slave_config *cfg)
-+{
-+	struct sf_pdma_chan *chan = to_sf_pdma_chan(dchan);
-+
-+	memcpy(&chan->cfg, cfg, sizeof(*cfg));
-+	sf_pdma_unprep_slave_dma(chan);
-+
-+	return 0;
-+}
-+
-+static int sf_pdma_alloc_chan_resources(struct dma_chan *dchan)
-+{
-+	struct sf_pdma_chan *chan = to_sf_pdma_chan(dchan);
-+	struct pdma_regs *regs = &chan->regs;
-+
-+	dma_cookie_init(dchan);
-+	writel(PDMA_CLAIM_MASK, regs->ctrl);
-+
-+	return 0;
-+}
-+
-+static void sf_pdma_disable_request(struct sf_pdma_chan *chan)
-+{
-+	struct pdma_regs *regs = &chan->regs;
-+
-+	writel(readl(regs->ctrl) & ~PDMA_RUN_MASK, regs->ctrl);
-+}
-+
-+static void sf_pdma_free_chan_resources(struct dma_chan *dchan)
-+{
-+	struct sf_pdma_chan *chan = to_sf_pdma_chan(dchan);
-+	unsigned long flags;
-+	LIST_HEAD(head);
-+
-+	spin_lock_irqsave(&chan->vchan.lock, flags);
-+	sf_pdma_disable_request(chan);
-+	kfree(chan->desc);
-+	chan->desc = NULL;
-+	vchan_get_all_descriptors(&chan->vchan, &head);
-+	sf_pdma_unprep_slave_dma(chan);
-+	vchan_dma_desc_free_list(&chan->vchan, &head);
-+	sf_pdma_disclaim_chan(chan);
-+	spin_unlock_irqrestore(&chan->vchan.lock, flags);
-+}
-+
-+static size_t sf_pdma_desc_residue(struct sf_pdma_chan *chan,
-+				   dma_cookie_t cookie)
-+{
-+	struct virt_dma_desc *vd = NULL;
-+	struct sf_pdma_desc *desc;
-+	struct pdma_regs *regs = &chan->regs;
-+	unsigned long flags;
-+	u64 residue;
-+
-+	residue = readq(regs->residue);
-+
-+	chan->status = residue ? DMA_IN_PROGRESS : DMA_COMPLETE;
-+
-+	spin_lock_irqsave(&chan->vchan.lock, flags);
-+	vd = vchan_find_desc(&chan->vchan, cookie);
-+	if (!vd)
-+		goto out;
-+
-+	desc = to_sf_pdma_desc(vd);
-+
-+	spin_unlock_irqrestore(&chan->vchan.lock, flags);
-+
-+	if (desc && chan->status == DMA_COMPLETE)
-+		vchan_tx_desc_free(desc->async_tx);
-+
-+	return residue;
-+
-+out:
-+	spin_unlock_irqrestore(&chan->vchan.lock, flags);
-+	return residue;
-+}
-+
-+static enum dma_status
-+sf_pdma_tx_status(struct dma_chan *dchan,
-+		  dma_cookie_t cookie,
-+		  struct dma_tx_state *txstate)
-+{
-+	struct sf_pdma_chan *chan = to_sf_pdma_chan(dchan);
-+	enum dma_status status;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&chan->lock, flags);
-+	if (chan->xfer_err) {
-+		chan->status = DMA_ERROR;
-+		spin_unlock_irqrestore(&chan->lock, flags);
-+		return chan->status;
-+	}
-+
-+	spin_unlock_irqrestore(&chan->lock, flags);
-+
-+	status = dma_cookie_status(dchan, cookie, txstate);
-+
-+	if (status == DMA_COMPLETE)
-+		return status;
-+
-+	if (!txstate)
-+		return chan->status;
-+
-+	txstate->residue = sf_pdma_desc_residue(chan, cookie);
-+
-+	return chan->status;
-+}
-+
-+static int sf_pdma_terminate_all(struct dma_chan *dchan)
-+{
-+	struct sf_pdma_chan *chan = to_sf_pdma_chan(dchan);
-+	unsigned long flags;
-+	LIST_HEAD(head);
-+
-+	spin_lock_irqsave(&chan->vchan.lock, flags);
-+	sf_pdma_disable_request(chan);
-+	kfree(chan->desc);
-+	chan->desc = NULL;
-+	chan->xfer_err = false;
-+	vchan_get_all_descriptors(&chan->vchan, &head);
-+	vchan_dma_desc_free_list(&chan->vchan, &head);
-+	spin_unlock_irqrestore(&chan->vchan.lock, flags);
-+
-+	return 0;
-+}
-+
-+static void sf_pdma_enable_request(struct sf_pdma_chan *chan)
-+{
-+	struct pdma_regs *regs = &chan->regs;
-+	u32 v;
-+
-+	v = PDMA_CLAIM_MASK |
-+		PDMA_ENABLE_DONE_INT_MASK |
-+		PDMA_ENABLE_ERR_INT_MASK |
-+		PDMA_RUN_MASK;
-+
-+	writel(v, regs->ctrl);
-+}
-+
-+static void sf_pdma_xfer_desc(struct sf_pdma_chan *chan)
-+{
-+	struct virt_dma_desc *vdesc;
-+
-+	vdesc = vchan_next_desc(&chan->vchan);
-+	if (!vdesc)
-+		return;
-+
-+	chan->desc = to_sf_pdma_desc(vdesc);
-+	chan->status = DMA_IN_PROGRESS;
-+}
-+
-+static void sf_pdma_issue_pending(struct dma_chan *dchan)
-+{
-+	struct sf_pdma_chan *chan = to_sf_pdma_chan(dchan);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&chan->vchan.lock, flags);
-+
-+	if (chan->pm_state != RUNNING) {
-+		spin_unlock_irqrestore(&chan->vchan.lock, flags);
-+		/* cannot submit due to suspend */
-+		return;
-+	}
-+
-+	if (vchan_issue_pending(&chan->vchan) && !chan->desc)
-+		sf_pdma_xfer_desc(chan);
-+
-+	sf_pdma_enable_request(chan);
-+	spin_unlock_irqrestore(&chan->vchan.lock, flags);
-+}
-+
-+static void sf_pdma_free_desc(struct virt_dma_desc *vdesc)
-+{
-+	struct sf_pdma_desc *desc;
-+
-+	desc = to_sf_pdma_desc(vdesc);
-+	desc->in_use = false;
-+}
-+
-+static void sf_pdma_donebh_tasklet(unsigned long arg)
-+{
-+	struct sf_pdma_chan *chan = (struct sf_pdma_chan *)arg;
-+	struct sf_pdma_desc *desc = chan->desc;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&chan->lock, flags);
-+	if (chan->xfer_err) {
-+		chan->retries = MAX_RETRY;
-+		chan->status = DMA_COMPLETE;
-+		chan->xfer_err = false;
-+	}
-+	spin_unlock_irqrestore(&chan->lock, flags);
-+
-+	dmaengine_desc_get_callback_invoke(desc->async_tx, NULL);
-+}
-+
-+static void sf_pdma_errbh_tasklet(unsigned long arg)
-+{
-+	struct sf_pdma_chan *chan = (struct sf_pdma_chan *)arg;
-+	struct sf_pdma_desc *desc = chan->desc;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&chan->lock, flags);
-+	if (chan->retries <= 0) {
-+		/* fail to recover, tx_status() is in DMA_ERROR */
-+		spin_unlock_irqrestore(&chan->lock, flags);
-+		dmaengine_desc_get_callback_invoke(desc->async_tx, NULL);
-+	} else {
-+		/* retry */
-+		chan->retries--;
-+		chan->xfer_err = true;
-+		chan->status = DMA_ERROR;
-+
-+		sf_pdma_enable_request(chan);
-+		spin_unlock_irqrestore(&chan->lock, flags);
-+	}
-+}
-+
-+static irqreturn_t sf_pdma_done_isr(int irq, void *dev_id)
-+{
-+	struct sf_pdma_chan *chan = dev_id;
-+	struct pdma_regs *regs = &chan->regs;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&chan->lock, flags);
-+	writel((readl(regs->ctrl)) & ~PDMA_DONE_STATUS_MASK, regs->ctrl);
-+	spin_unlock_irqrestore(&chan->lock, flags);
-+
-+	tasklet_hi_schedule(&chan->done_tasklet);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t sf_pdma_err_isr(int irq, void *dev_id)
-+{
-+	struct sf_pdma_chan *chan = dev_id;
-+	struct pdma_regs *regs = &chan->regs;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&chan->lock, flags);
-+	writel((readl(regs->ctrl)) & ~PDMA_ERR_STATUS_MASK, regs->ctrl);
-+	spin_unlock_irqrestore(&chan->lock, flags);
-+
-+	tasklet_schedule(&chan->err_tasklet);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+/**
-+ * sf_pdma_irq_init() - Init PDMA IRQ Handlers
-+ * @pdev: pointer of platform_device
-+ * @pdma: pointer of PDMA engine. Caller should check NULL
-+ *
-+ * Initialize DONE and ERROR interrupt handler for 4 channels. Caller should
-+ * make sure the pointer passed in are non-NULL. This function should be called
-+ * only one time during the device probe.
-+ *
-+ * Context: Any context.
-+ *
-+ * Return:
-+ * * 0		- OK to init all IRQ handlers
-+ * * irq	- Fail to retrieve from DT binding
-+ * * -1		- Fail to call request_irq()
-+ */
-+static int sf_pdma_irq_init(struct platform_device *pdev, struct sf_pdma *pdma)
-+{
-+	int irq, r, i;
-+	struct sf_pdma_chan *chan;
-+
-+	for (i = 0; i < pdma->n_chans; i++) {
-+		chan = &pdma->chans[i];
-+
-+		irq = platform_get_irq(pdev, i * 2);
-+		if (irq < 0) {
-+			dev_err(&pdev->dev, "Can't get pdma done irq.\n");
-+			return irq;
-+		}
-+
-+		r = request_irq(irq, sf_pdma_done_isr, 0,
-+				dev_name(&pdev->dev), (void *)chan);
-+		if (r) {
-+			dev_err(&pdev->dev, "Fail to attach done ISR: %d\n", r);
-+			return -1;
-+		}
-+
-+		chan->txirq = irq;
-+
-+		irq = platform_get_irq(pdev, (i * 2) + 1);
-+		if (irq < 0) {
-+			dev_err(&pdev->dev, "Can't get pdma err irq.\n");
-+			return irq;
-+		}
-+
-+		r = request_irq(irq, sf_pdma_err_isr, 0,
-+				dev_name(&pdev->dev), (void *)chan);
-+		if (r) {
-+			dev_err(&pdev->dev, "Fail to attach err ISR: %d\n", r);
-+			return -1;
-+		}
-+
-+		chan->errirq = irq;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * sf_pdma_setup_chans() - Init settings of each channel
-+ * @pdma: pointer of PDMA engine. Caller should check NULL
-+ *
-+ * Initialize all data structure and register base. Caller should make sure
-+ * the pointer passed in are non-NULL. This function should be called only
-+ * one time during the device probe.
-+ *
-+ * Context: Any context.
-+ *
-+ * Return: none
-+ */
-+#define SF_PDMA_REG_BASE(ch)	(pdma->membase + (PDMA_CHAN_OFFSET * (ch)))
-+static void sf_pdma_setup_chans(struct sf_pdma *pdma)
-+{
-+	int i;
-+	struct sf_pdma_chan *chan;
-+
-+	INIT_LIST_HEAD(&pdma->dma_dev.channels);
-+
-+	for (i = 0; i < pdma->n_chans; i++) {
-+		chan = &pdma->chans[i];
-+
-+		chan->regs.ctrl =
-+			SF_PDMA_REG_BASE(i) + PDMA_CTRL;
-+		chan->regs.xfer_type =
-+			SF_PDMA_REG_BASE(i) + PDMA_XFER_TYPE;
-+		chan->regs.xfer_size =
-+			SF_PDMA_REG_BASE(i) + PDMA_XFER_SIZE;
-+		chan->regs.dst_addr =
-+			SF_PDMA_REG_BASE(i) + PDMA_DST_ADDR;
-+		chan->regs.src_addr =
-+			SF_PDMA_REG_BASE(i) + PDMA_SRC_ADDR;
-+		chan->regs.act_type =
-+			SF_PDMA_REG_BASE(i) + PDMA_ACT_TYPE;
-+		chan->regs.residue =
-+			SF_PDMA_REG_BASE(i) + PDMA_REMAINING_BYTE;
-+		chan->regs.cur_dst_addr =
-+			SF_PDMA_REG_BASE(i) + PDMA_CUR_DST_ADDR;
-+		chan->regs.cur_src_addr =
-+			SF_PDMA_REG_BASE(i) + PDMA_CUR_SRC_ADDR;
-+
-+		chan->pdma = pdma;
-+		chan->pm_state = RUNNING;
-+		chan->slave_id = i;
-+		chan->xfer_err = false;
-+		spin_lock_init(&chan->lock);
-+
-+		chan->vchan.desc_free = sf_pdma_free_desc;
-+		vchan_init(&chan->vchan, &pdma->dma_dev);
-+
-+		writel(PDMA_CLEAR_CTRL, chan->regs.ctrl);
-+
-+		tasklet_init(&chan->done_tasklet,
-+			     sf_pdma_donebh_tasklet, (unsigned long)chan);
-+		tasklet_init(&chan->err_tasklet,
-+			     sf_pdma_errbh_tasklet, (unsigned long)chan);
-+	}
-+}
-+
-+static int sf_pdma_probe(struct platform_device *pdev)
-+{
-+	struct sf_pdma *pdma;
-+	struct sf_pdma_chan *chan;
-+	struct resource *res;
-+	int len, chans;
-+	int ret;
-+
-+	chans = PDMA_NR_CH;
-+	len = sizeof(*pdma) + sizeof(*chan) * chans;
-+	pdma = devm_kzalloc(&pdev->dev, len, GFP_KERNEL);
-+	if (!pdma)
-+		return -ENOMEM;
-+
-+	pdma->n_chans = chans;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	pdma->membase = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(pdma->membase))
-+		goto ERR_MEMBASE;
-+
-+	ret = sf_pdma_irq_init(pdev, pdma);
-+	if (ret)
-+		goto ERR_INITIRQ;
-+
-+	sf_pdma_setup_chans(pdma);
-+
-+	pdma->dma_dev.dev = &pdev->dev;
-+	dma_cap_set(DMA_MEMCPY, pdma->dma_dev.cap_mask);
-+
-+	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
-+	if (ret)
-+		pr_warn("*** Failed to set DMA mask. Fall back to default.\n");
-+
-+	/* Setup DMA APIs */
-+	pdma->dma_dev.device_alloc_chan_resources =
-+		sf_pdma_alloc_chan_resources;
-+	pdma->dma_dev.device_free_chan_resources =
-+		sf_pdma_free_chan_resources;
-+	pdma->dma_dev.device_tx_status = sf_pdma_tx_status;
-+	pdma->dma_dev.device_prep_dma_memcpy = sf_pdma_prep_dma_memcpy;
-+	pdma->dma_dev.device_config = sf_pdma_slave_config;
-+	pdma->dma_dev.device_terminate_all = sf_pdma_terminate_all;
-+	pdma->dma_dev.device_issue_pending = sf_pdma_issue_pending;
-+
-+	platform_set_drvdata(pdev, pdma);
-+
-+	ret = dma_async_device_register(&pdma->dma_dev);
-+	if (ret)
-+		goto ERR_REG_DMADEVICE;
-+
-+	return 0;
-+
-+ERR_MEMBASE:
-+	devm_kfree(&pdev->dev, pdma);
-+	return PTR_ERR(pdma->membase);
-+
-+ERR_INITIRQ:
-+	devm_kfree(&pdev->dev, pdma);
-+	return ret;
-+
-+ERR_REG_DMADEVICE:
-+	devm_kfree(&pdev->dev, pdma);
-+	dev_err(&pdev->dev,
-+		"Can't register SiFive Platform DMA. (%d)\n", ret);
-+	return ret;
-+}
-+
-+static int sf_pdma_remove(struct platform_device *pdev)
-+{
-+	struct sf_pdma *pdma = platform_get_drvdata(pdev);
-+
-+	dma_async_device_unregister(&pdma->dma_dev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id sf_pdma_of_match[] = {
-+	{ .compatible = "sifive,fu540-c000-pdma" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, sifive_serial_of_match);
-+
-+static struct platform_driver sf_pdma_driver = {
-+	.probe		= sf_pdma_probe,
-+	.remove		= sf_pdma_remove,
-+	.driver		= {
-+		.name	= SIFIVE_PDMA_NAME,
-+		.of_match_table = of_match_ptr(sf_pdma_of_match),
-+	},
-+};
-+
-+static int __init sf_pdma_init(void)
-+{
-+	return platform_driver_register(&sf_pdma_driver);
-+}
-+
-+static void __exit sf_pdma_exit(void)
-+{
-+	platform_driver_unregister(&sf_pdma_driver);
-+}
-+
-+/* do early init */
-+subsys_initcall(sf_pdma_init);
-+module_exit(sf_pdma_exit);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("SiFive Platform DMA driver");
-+MODULE_AUTHOR("Green Wan <green.wan@sifive.com>");
-diff --git a/drivers/dma/sf-pdma/sf-pdma.h b/drivers/dma/sf-pdma/sf-pdma.h
-new file mode 100644
-index 000000000000..d577d5af0bf4
---- /dev/null
-+++ b/drivers/dma/sf-pdma/sf-pdma.h
-@@ -0,0 +1,124 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/**
-+ * SiFive FU540 Platform DMA driver
-+ * Copyright (C) 2019 SiFive
-+ *
-+ * Based partially on:
-+ * - drivers/dma/fsl-edma.c
-+ * - drivers/dma/dw-edma/
-+ * - drivers/dma/pxa-dma.c
-+ *
-+ * See the following sources for further documentation:
-+ * - Chapter 12 "Platform DMA Engine (PDMA)" of
-+ *   SiFive FU540-C000 v1.0
-+ *   https://static.dev.sifive.com/FU540-C000-v1.0.pdf
-+ */
-+#ifndef _SF_PDMA_H
-+#define _SF_PDMA_H
-+
-+#include <linux/msi.h>
-+#include <linux/dmaengine.h>
-+#include <linux/dma-direction.h>
-+#include <linux/timer.h>
-+#include <linux/time64.h>
-+#include <linux/timekeeping.h>
-+#include <linux/workqueue.h>
-+
-+#include "../dmaengine.h"
-+#include "../virt-dma.h"
-+
-+#define PDMA_NR_CH					4
-+
-+#if (PDMA_NR_CH != 4)
-+#error "Please define PDMA_NR_CH to 4"
-+#endif
-+
-+#define PDMA_BASE_ADDR					0x3000000
-+#define PDMA_CHAN_OFFSET				0x1000
-+
-+/* Register Offset */
-+#define PDMA_CTRL					0x000
-+#define PDMA_XFER_TYPE					0x004
-+#define PDMA_XFER_SIZE					0x008
-+#define PDMA_DST_ADDR					0x010
-+#define PDMA_SRC_ADDR					0x018
-+#define PDMA_ACT_TYPE					0x104 /* Read-only */
-+#define PDMA_REMAINING_BYTE				0x108 /* Read-only */
-+#define PDMA_CUR_DST_ADDR				0x110 /* Read-only*/
-+#define PDMA_CUR_SRC_ADDR				0x118 /* Read-only*/
-+
-+/* CTRL */
-+#define PDMA_CLEAR_CTRL					0x0
-+#define PDMA_CLAIM_MASK					GENMASK(0, 0)
-+#define PDMA_RUN_MASK					GENMASK(1, 1)
-+#define PDMA_ENABLE_DONE_INT_MASK			GENMASK(14, 14)
-+#define PDMA_ENABLE_ERR_INT_MASK			GENMASK(15, 15)
-+#define PDMA_DONE_STATUS_MASK				GENMASK(30, 30)
-+#define PDMA_ERR_STATUS_MASK				GENMASK(31, 31)
-+
-+/* Transfer Type */
-+#define PDMA_FULL_SPEED					0xFF000008
-+
-+/* Error Recovery */
-+#define MAX_RETRY					1
-+
-+struct pdma_regs {
-+	/* read-write regs */
-+	void __iomem *ctrl;		/* 4 bytes */
-+
-+	void __iomem *xfer_type;	/* 4 bytes */
-+	void __iomem *xfer_size;	/* 8 bytes */
-+	void __iomem *dst_addr;		/* 8 bytes */
-+	void __iomem *src_addr;		/* 8 bytes */
-+
-+	/* read-only */
-+	void __iomem *act_type;		/* 4 bytes */
-+	void __iomem *residue;		/* 8 bytes */
-+	void __iomem *cur_dst_addr;	/* 8 bytes */
-+	void __iomem *cur_src_addr;	/* 8 bytes */
-+};
-+
-+struct sf_pdma_desc {
-+	struct virt_dma_desc		vdesc;
-+	struct sf_pdma_chan		*chan;
-+	bool				in_use;
-+	enum dma_transfer_direction	dirn;
-+	struct dma_async_tx_descriptor *async_tx;
-+};
-+
-+enum sf_pdma_pm_state {
-+	RUNNING = 0,
-+	SUSPENDED,
-+};
-+
-+struct sf_pdma_chan {
-+	struct virt_dma_chan		vchan;
-+	enum dma_status			status;
-+	enum sf_pdma_pm_state		pm_state;
-+	u32				slave_id;
-+	struct sf_pdma			*pdma;
-+	struct sf_pdma_desc		*desc;
-+	struct dma_slave_config		cfg;
-+	u32				attr;
-+	dma_addr_t			dma_dev_addr;
-+	u32				dma_dev_size;
-+	enum dma_data_direction		dma_dir;
-+	struct tasklet_struct		done_tasklet;
-+	struct tasklet_struct		err_tasklet;
-+	struct pdma_regs		regs;
-+	spinlock_t			lock; /* protect chan data */
-+	bool				xfer_err;
-+	int				txirq;
-+	int				errirq;
-+	int				retries;
-+};
-+
-+struct sf_pdma {
-+	struct dma_device       dma_dev;
-+	void __iomem            *membase;
-+	void __iomem            *mappedbase;
-+	u32			n_chans;
-+	struct sf_pdma_chan	chans[PDMA_NR_CH];
-+};
-+
-+#endif /* _SF_PDMA_H */
+> +		}
+>  
+> +		kaddr = kmap_atomic(dst);
+>  		/*
+>  		 * This really shouldn't fail, because the page is there
+>  		 * in the page tables. But it might just be unreadable,
+>  		 * in which case we just give up and fill the result with
+>  		 * zeroes.
+>  		 */
+> -		if (__copy_from_user_inatomic(kaddr, uaddr, PAGE_SIZE))
+> +		if (__copy_from_user_inatomic(kaddr, uaddr, PAGE_SIZE)) {
+> +			/* Give a warn in case there can be some obscure
+> +			 * use-case
+> +			 */
+> +			WARN_ON_ONCE(1);
+>  			clear_page(kaddr);
+> +		}
+>  		kunmap_atomic(kaddr);
+>  		flush_dcache_page(dst);
+>  	} else
+> -		copy_user_highpage(dst, src, va, vma);
+> +		copy_user_highpage(dst, src, addr, vma);
+> +
+> +	return 0;
+>  }
+>  
+>  static gfp_t __get_fault_gfp_mask(struct vm_area_struct *vma)
+> @@ -2318,7 +2360,16 @@ static vm_fault_t wp_page_copy(struct vm_fault *vmf)
+>  				vmf->address);
+>  		if (!new_page)
+>  			goto oom;
+> -		cow_user_page(new_page, old_page, vmf->address, vma);
+> +
+> +		if (cow_user_page(new_page, old_page, vmf)) {
+> +			/* COW failed, if the fault was solved by other,
+> +			 * it's fine. If not, userspace would re-fault on
+> +			 * the same address and we will handle the fault
+> +			 * from the second attempt.
+> +			 */
+> +			put_page(new_page);
+
+I think you also need to give the reference on the old page back:
+
+			if (old_page)
+				put_page(old_page);
+
+> +			goto normal;
+
+I don't see much point in this goto. Just return 0.
+> +		}
+>  	}
+>  
+>  	if (mem_cgroup_try_charge_delay(new_page, mm, GFP_KERNEL, &memcg, false))
+> @@ -2420,6 +2471,8 @@ static vm_fault_t wp_page_copy(struct vm_fault *vmf)
+>  		}
+>  		put_page(old_page);
+>  	}
+> +
+> +normal:
+>  	return page_copied ? VM_FAULT_WRITE : 0;
+>  oom_free_new:
+>  	put_page(new_page);
+> -- 
+> 2.17.1
+> 
+> 
+
 -- 
-2.17.1
-
+ Kirill A. Shutemov
