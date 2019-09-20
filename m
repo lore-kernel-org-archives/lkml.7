@@ -2,141 +2,203 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C2BC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 21:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C53D2C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 21:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83EEE208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 21:48:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D99E208C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 21:51:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YZ5qfjEY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZqCT0beT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbfITVsk (ORCPT
+        id S1726673AbfITVv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 17:48:40 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:40156 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726190AbfITVsk (ORCPT
+        Fri, 20 Sep 2019 17:51:27 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:43182 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726160AbfITVv0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 17:48:40 -0400
-Received: by mail-pg1-f194.google.com with SMTP id w10so4559241pgj.7;
-        Fri, 20 Sep 2019 14:48:39 -0700 (PDT)
+        Fri, 20 Sep 2019 17:51:26 -0400
+Received: by mail-qt1-f195.google.com with SMTP id c3so10357475qtv.10;
+        Fri, 20 Sep 2019 14:51:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cOjgGJkyJP6zsyOzGyTZLAba7fauSCLYEeNHZNyuj6c=;
-        b=YZ5qfjEYvpWX+YTO596k5Omho/xNo/Jy0vDIcsOQShlWyRkgbIrMrJusl2sUFUmNm9
-         lZx7sGPdAjsfmmsRmj8VSOojWQt7Kx8tJVzUl7oVay8c1cSGei9keRAK9yKcjf5Tl1XX
-         C5yXB5uLdaez7pUVAFuVVrLHZLT/IULgRcHgKnshagUJWRDKt+x/NmMLzMgTSDNLr2l0
-         G3oDp7SpE7QCN39wS6l8KiRG2BkRy/bYpnNk4apJSqi6SLX0lN4aDD5dNZWqQ0p/pPBY
-         GlJ5/WD7VGD9lxzcQhxhzGiutAwlbRxDLHhOcznO6o58cPZSSO4bF/mpu1sjldmve2z/
-         ErLw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JyV3eQ6Txws71HKCK24SrBhT6PsVZFz2DYxOGXDUyAU=;
+        b=ZqCT0beTqmAjmXhDyXh28o7FSbUyirsuCTK6mfjtWlHrDSPUB6Wrl/3k94MT2YFwup
+         EbbiOW1eTm7wyq0p+MKUcDg/kBZXhsVbHhTHpHx1aqTtG6jOPqPXm//y1H/FHLQrjn04
+         9sWGA2Pgoqih53m1DHJjZeHGUDb3zTLl7GR7swZZkcReY1jSq0MrDns6SHahQKeKqpl7
+         GZzM//3p082FukWjfvxb1snV2hdsPPV47n30lniGj5kj7rn/hd20551dhsO4DyPNCIp1
+         SUDGe50CDrhXsVwkX7MbeNwi2SUH8mmXaXKCJwFL4pD8qexXtosWChP/MXPecMo1f6sB
+         YCgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cOjgGJkyJP6zsyOzGyTZLAba7fauSCLYEeNHZNyuj6c=;
-        b=e4E+6feve0P72wqQSjkdyCv2K928hxgBBhl3OY0kNSqxRmwqTc/quuo+BF867RS9gO
-         f8OY+mwNnphbF71CjRa65T9EHGbzPLnSHamHhJg1XqCQCZ3fcE7+6ifeSMJwiVnJulps
-         24HuhjTaJO1TxSmRLjqI0jBOflzuBRvQ4JbzNrOYwgKFCV80hN/brhZpv72VFnzCWqSF
-         6e73HDwRoNV7db8TAtP0UtuhErmDnwZZkH9yV5sXSoj6LDYYCvDMif0KWdaJPWlk6BLy
-         5Gb7vpxKcMg3Y4c6oOa6ClEo3UZweEfhqTNH5vXaJI+A3zfyX4MNj5fgPvkdU6JvC8AP
-         KAGA==
-X-Gm-Message-State: APjAAAV8BKA1F91ixqYkseaY7p1UWDEazA16/aBHmeQ2a9tXrL20Xd3W
-        PSVHdWkitUwg8naNGgNc+vY=
-X-Google-Smtp-Source: APXvYqwq30FwhkOXtw91IJSWNz6Ti1LQPyO8qH7HV1RkI5ss/197xZ9/ak5A01tnaXW3r15Gy2LR1Q==
-X-Received: by 2002:a65:6903:: with SMTP id s3mr17286927pgq.269.1569016119264;
-        Fri, 20 Sep 2019 14:48:39 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id w11sm6092481pfd.116.2019.09.20.14.48.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 20 Sep 2019 14:48:38 -0700 (PDT)
-Date:   Fri, 20 Sep 2019 14:47:47 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jon Hunter <jonathanh@nvidia.com>, inux-mmc@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] mmc: sdhci: Let drivers define their DMA mask
-Message-ID: <20190920214746.GA21389@Asurada-Nvidia.nvidia.com>
-References: <20190920145317.11972-1-thierry.reding@gmail.com>
- <20190920145317.11972-2-thierry.reding@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JyV3eQ6Txws71HKCK24SrBhT6PsVZFz2DYxOGXDUyAU=;
+        b=G2BIWc58ztSw05UKS2IkZu6E50PaQXmu3DnGgmhbmjYb80BYfHH3NANX1gpFV7L8sq
+         nVWLJgghvl+8Ocfw/mJykFqynZGvTatkdGGMepkAQ08yIMpKTThH1kyzqyjJdhs2rCWs
+         vAl82Ya0E+GTjU5AO9mczLR7dqjFNjiw7WKe2ao85RIXqtZz7QZtsPJp/48MNOB0O/8x
+         Jsh/hSHLjQ01tadRh32XK0W47tyRyG3tkpVcvx2BwwutQMjk1zBl+vGv6NTzYBV0wdRW
+         AuiTtn9bZdkIbWGTwE4OtioCX6Uvu3KW4NgvLi0iPqO38V5YqRHwFYWAOVpiv9pe0w+Y
+         LsIQ==
+X-Gm-Message-State: APjAAAVLTot1zxQXHpPBy6XGizLSBInfzrwFuL3iorrldL2AG85Myoji
+        ScQ8pNAs2CPuVC3rDpINRhHzdtPR3pWGWa43jA+myQ==
+X-Google-Smtp-Source: APXvYqxfY8raxBEebjXOuo+E4xqbSqW+LOmgA/YRHzphdGNLvbHWp48LTp6h50xBP99SDiX0r2hsxmbCKWQCeE81ug4=
+X-Received: by 2002:ac8:1417:: with SMTP id k23mr5352617qtj.93.1569016284859;
+ Fri, 20 Sep 2019 14:51:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190920145317.11972-2-thierry.reding@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190919160518.25901-1-ivan.khoronzhuk@linaro.org>
+ <CAEf4BzbCjCYr5NMPctDkUggwpehnqZPVBSqZOsd9MvSq6WmnZQ@mail.gmail.com>
+ <20190920082204.GC8870@khorivan> <CAEf4BzaVuaN3HhMu8W_i9z4n-2zfjqxBXyOEOaQHexxZq7b3qg@mail.gmail.com>
+ <20190920183449.GA2760@khorivan> <20190920191941.GB2760@khorivan>
+In-Reply-To: <20190920191941.GB2760@khorivan>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Fri, 20 Sep 2019 14:51:14 -0700
+Message-ID: <CAEf4BzZGeY-WD17mq6FTd7Rae_f26j4kBAWCmuppeu4VjZxvUg@mail.gmail.com>
+Subject: Re: [PATCH bpf] libbpf: fix version identification on busybox
+To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin Lau <kafai@fb.com>, Andrii Nakryiko <andriin@fb.com>,
+        Yonghong Song <yhs@fb.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 04:53:16PM +0200, Thierry Reding wrote:
-> From: Adrian Hunter <adrian.hunter@intel.com>
-> 
-> Add host operation ->set_dma_mask() so that drivers can define their own
-> DMA masks.
-> 
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
+On Fri, Sep 20, 2019 at 12:19 PM Ivan Khoronzhuk
+<ivan.khoronzhuk@linaro.org> wrote:
+>
+> On Fri, Sep 20, 2019 at 09:34:51PM +0300, Ivan Khoronzhuk wrote:
+> >On Fri, Sep 20, 2019 at 09:41:54AM -0700, Andrii Nakryiko wrote:
+> >>On Fri, Sep 20, 2019 at 1:22 AM Ivan Khoronzhuk
+> >><ivan.khoronzhuk@linaro.org> wrote:
+> >>>
+> >>>On Thu, Sep 19, 2019 at 01:02:40PM -0700, Andrii Nakryiko wrote:
+> >>>>On Thu, Sep 19, 2019 at 11:22 AM Ivan Khoronzhuk
+> >>>><ivan.khoronzhuk@linaro.org> wrote:
+> >>>>>
+> >>>>> It's very often for embedded to have stripped version of sort in
+> >>>>> busybox, when no -V option present. It breaks build natively on target
+> >>>>> board causing recursive loop.
+> >>>>>
+> >>>>> BusyBox v1.24.1 (2019-04-06 04:09:16 UTC) multi-call binary. \
+> >>>>> Usage: sort [-nrugMcszbdfimSTokt] [-o FILE] [-k \
+> >>>>> start[.offset][opts][,end[.offset][opts]] [-t CHAR] [FILE]...
+> >>>>>
+> >>>>> Lets modify command a little to avoid -V option.
+> >>>>>
+> >>>>> Fixes: dadb81d0afe732 ("libbpf: make libbpf.map source of truth for libbpf version")
+> >>>>>
+> >>>>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+> >>>>> ---
+> >>>>>
+> >>>>> Based on bpf/master
+> >>>>>
+> >>>>>  tools/lib/bpf/Makefile | 2 +-
+> >>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>>>>
+> >>>>> diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
+> >>>>> index c6f94cffe06e..a12490ad6215 100644
+> >>>>> --- a/tools/lib/bpf/Makefile
+> >>>>> +++ b/tools/lib/bpf/Makefile
+> >>>>> @@ -3,7 +3,7 @@
+> >>>>>
+> >>>>>  LIBBPF_VERSION := $(shell \
+> >>>>>         grep -oE '^LIBBPF_([0-9.]+)' libbpf.map | \
+> >>>>> -       sort -rV | head -n1 | cut -d'_' -f2)
+> >>>>> +       cut -d'_' -f2 | sort -r | head -n1)
+> >>>>
+> >>>>You can't just sort alphabetically, because:
+> >>>>
+> >>>>1.2
+> >>>>1.11
+> >>>>
+> >>>>should be in that order. See discussion on mailing thread for original commit.
+> >>>
+> >>>if X1.X2.X3, where X = {0,1,....99999}
+> >>>Then it can be:
+> >>>
+> >>>-LIBBPF_VERSION := $(shell \
+> >>>-       grep -oE '^LIBBPF_([0-9.]+)' libbpf.map | \
+> >>>-       sort -rV | head -n1 | cut -d'_' -f2)
+> >>>+_LBPFLIST := $(patsubst %;,%,$(patsubst LIBBPF_%,%,$(filter LIBBPF_%, \
+> >>>+           $(shell cat libbpf.map))))
+> >>>+_LBPFLIST2 := $(foreach v,$(_LBPFLIST), \
+> >>>+               $(subst $() $(),,$(foreach n,$(subst .,$() $(),$(v)), \
+> >>>+                       $(shell printf "%05d" $(n)))))
+> >>>+_LBPF_VER := $(word $(words $(sort $(_LBPFLIST2))), $(sort $(_LBPFLIST2)))
+> >>>+LIBBPF_VERSION := $(patsubst %_$(_LBPF_VER),%,$(filter %_$(_LBPF_VER), \
+> >>>+        $(join $(addsuffix _, $(_LBPFLIST)),$(_LBPFLIST2))))
+> >>>
+> >>>It's bigger but avoids invocations of grep/sort/cut/head, only cat/printf
+> >>>, thus -V option also.
+> >>>
+> >>
+> >>No way, this is way too ugly (and still unreliable, if we ever have
+> >>X.Y.Z.W or something). I'd rather go with my original approach of
+> >Yes, forgot to add
+> >X1,X2,X3,...XN, where X = {0,1,....99999} and N = const for all versions.
+> >But frankly, 1.0.0 looks too far.
+>
+> It actually works for any numbs of X1.X2...X100
+> but not when you have couple kindof:
+> X1.X2.X3
+> and
+> X1.X2.X3.X4
+>
+> But, no absolutely any problem to extend this solution to handle all cases,
+> by just adding leading 0 to every "transformed version", say limit it to 10
+> possible 'dots' (%5*10d) and it will work as clocks. Advantage - mostly make
+> functions.
+>
+> Here can be couple more solutions with sed, not sure it can look less maniac.
+>
+> >
+> >>fetching the last version in libbpf.map file. See
+> >>https://www.spinics.net/lists/netdev/msg592703.html.
+>
+> Yes it's nice but, no sort, no X1.X2.X3....XN
+>
+> Main is to solve it for a long time.
 
-Tested-by: Nicolin Chen <nicoleotsuka@gmail.com>
-
-Ran a boot test with both patches on a Tegra186 board.
-
+Thinking a bit more about this, I'm even more convinced that we should
+just go with my original approach: find last section in libbpf.map and
+extract LIBBPF version from that. That will handle whatever crazy
+version format we might decide to use (e.g., 1.2.3-experimental).
+We'll just need to make sure that latest version is the last in
+libbpf.map, which will just happen naturally. So instead of this
+Makefile complexity, please can you port back my original approach?
 Thanks!
 
-> ---
->  drivers/mmc/host/sdhci.c | 12 ++++--------
->  drivers/mmc/host/sdhci.h |  1 +
->  2 files changed, 5 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index a5dc5aae973e..bc04c3180477 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -3756,18 +3756,14 @@ int sdhci_setup_host(struct sdhci_host *host)
->  		host->flags &= ~SDHCI_USE_ADMA;
->  	}
->  
-> -	/*
-> -	 * It is assumed that a 64-bit capable device has set a 64-bit DMA mask
-> -	 * and *must* do 64-bit DMA.  A driver has the opportunity to change
-> -	 * that during the first call to ->enable_dma().  Similarly
-> -	 * SDHCI_QUIRK2_BROKEN_64_BIT_DMA must be left to the drivers to
-> -	 * implement.
-> -	 */
->  	if (sdhci_can_64bit_dma(host))
->  		host->flags |= SDHCI_USE_64_BIT_DMA;
->  
->  	if (host->flags & (SDHCI_USE_SDMA | SDHCI_USE_ADMA)) {
-> -		ret = sdhci_set_dma_mask(host);
-> +		if (host->ops->set_dma_mask)
-> +			ret = host->ops->set_dma_mask(host);
-> +		else
-> +			ret = sdhci_set_dma_mask(host);
->  
->  		if (!ret && host->ops->enable_dma)
->  			ret = host->ops->enable_dma(host);
-> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> index 902f855efe8f..8285498c0d8a 100644
-> --- a/drivers/mmc/host/sdhci.h
-> +++ b/drivers/mmc/host/sdhci.h
-> @@ -622,6 +622,7 @@ struct sdhci_ops {
->  
->  	u32		(*irq)(struct sdhci_host *host, u32 intmask);
->  
-> +	int		(*set_dma_mask)(struct sdhci_host *host);
->  	int		(*enable_dma)(struct sdhci_host *host);
->  	unsigned int	(*get_max_clock)(struct sdhci_host *host);
->  	unsigned int	(*get_min_clock)(struct sdhci_host *host);
-> -- 
-> 2.23.0
-> 
+>
+> >>
+> >>>>
+> >>>>>  LIBBPF_MAJOR_VERSION := $(firstword $(subst ., ,$(LIBBPF_VERSION)))
+> >>>>>
+> >>>>>  MAKEFLAGS += --no-print-directory
+> >>>>> --
+> >>>>> 2.17.1
+> >>>>>
+> >>>
+> >>>--
+> >>>Regards,
+> >>>Ivan Khoronzhuk
+> >
+> >--
+> >Regards,
+> >Ivan Khoronzhuk
+>
+> --
+> Regards,
+> Ivan Khoronzhuk
