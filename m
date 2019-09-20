@@ -2,146 +2,113 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 687F3C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BE4C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A7052086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:34:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568990061;
-	bh=5T/4VfiO/HqhsBQATWPC19/qw+SPrKZRtyV53KT0GwQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wtMNVyxG6CD7DRhnzzH2W+H1IB5KFNg6MtBMvWpxR2ki3jH2mm8LMEO+Gkhygjspc
-	 o9n4m4319tWbJClcp9nRg+LdvAiHcyzyrKtF/YMEk4io2XHnmNf1Qhthrm26NR/9TZ
-	 NrwIa7urk8+uDQ3IX+WPvHaWHAN4pYPN4tYh4P98=
+	by mail.kernel.org (Postfix) with ESMTP id 1C1D820B7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:34:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391682AbfITOeT (ORCPT
+        id S2391717AbfITOeb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:34:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46826 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391631AbfITOeB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 10:34:01 -0400
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FBC12190F
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 14:34:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568990040;
-        bh=5T/4VfiO/HqhsBQATWPC19/qw+SPrKZRtyV53KT0GwQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ERG/TepvuolOT6Mw8ez/j7trPLA7A2UHhgppUbM1UKt5I3anQ/LyiAyc1Gzj2TlKM
-         sADxzjaDUCB5buPl3eS2UovJkkkCM5lajx430tmkdOhaMKDDGW+G/nttRZzcXhrsdr
-         zAieZhwuQe6tN6TAp81EjJVKtEqxNKxDSB5o4mHU=
-Received: by mail-wr1-f52.google.com with SMTP id n14so6984599wrw.9
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 07:34:00 -0700 (PDT)
-X-Gm-Message-State: APjAAAWjEmPtiUebluAdFWXBhVS88fE21FfuypzjpAE4IvQRSjLL75CU
-        5EmHgjFbE8sIjpryKeuC0ihIR/FodyAmYF/DfL9TVA==
-X-Google-Smtp-Source: APXvYqw97uK1m0GzlqxXwrKua5Pdc2B9TF8UZRisIXGn8aSTnAlq1AfsIBHJ3uk1lXhVKnKKQuKNgHptfa8+mPFi7KY=
-X-Received: by 2002:adf:fe0f:: with SMTP id n15mr12713274wrr.343.1568990038968;
- Fri, 20 Sep 2019 07:33:58 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190912034421.GA2085@darwi-home-pc> <20190912082530.GA27365@mit.edu>
- <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
- <20190914122500.GA1425@darwi-home-pc> <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
- <20190915052242.GG19710@mit.edu> <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
- <20190918211503.GA1808@darwi-home-pc> <20190918211713.GA2225@darwi-home-pc>
- <CAHk-=wiCqDiU7SE3FLn2W26MS_voUAuqj5XFa1V_tiGTrrW-zQ@mail.gmail.com> <20190920134609.GA2113@pc>
-In-Reply-To: <20190920134609.GA2113@pc>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Fri, 20 Sep 2019 07:33:47 -0700
-X-Gmail-Original-Message-ID: <CALCETrWvE5es3i+to33y6jw=Yf0Tw6ZfV-6QWjZT5v0fo76tWw@mail.gmail.com>
-Message-ID: <CALCETrWvE5es3i+to33y6jw=Yf0Tw6ZfV-6QWjZT5v0fo76tWw@mail.gmail.com>
-Subject: Re: [PATCH RFC v4 1/1] random: WARN on large getrandom() waits and
- introduce getrandom2()
-To:     "Ahmed S. Darwish" <darwish.07@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>
+        Fri, 20 Sep 2019 10:34:31 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36316 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388232AbfITOZH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 10:25:07 -0400
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1iBJqL-00050v-2h; Fri, 20 Sep 2019 15:25:05 +0100
+Received: from ben by deadeye with local (Exim 4.92.1)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1iBJqH-0007zV-O8; Fri, 20 Sep 2019 15:25:01 +0100
 Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "Marcel Holtmann" <marcel@holtmann.org>,
+        "Jeremy Cline" <jcline@redhat.com>,
+        syzbot+899a33dc0fa0dbaf06a6@syzkaller.appspotmail.com,
+        "Kefeng Wang" <wangkefeng.wang@huawei.com>
+Date:   Fri, 20 Sep 2019 15:23:35 +0100
+Message-ID: <lsq.1568989415.810725363@decadent.org.uk>
+X-Mailer: LinuxStableQueue (scripts by bwh)
+X-Patchwork-Hint: ignore
+Subject: [PATCH 3.16 128/132] Bluetooth: hci_ldisc: Postpone
+ HCI_UART_PROTO_READY bit set in hci_uart_set_proto()
+In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 6:46 AM Ahmed S. Darwish <darwish.07@gmail.com> wrote:
->
-> Hi,
->
-> On Wed, Sep 18, 2019 at 04:57:58PM -0700, Linus Torvalds wrote:
-> > On Wed, Sep 18, 2019 at 2:17 PM Ahmed S. Darwish <darwish.07@gmail.com> wrote:
-> > >
-> > > Since Linux v3.17, getrandom(2) has been created as a new and more
-> > > secure interface for pseudorandom data requests.  It attempted to
-> > > solve three problems, as compared to /dev/urandom:
->   >
-> > I don't think your patch is really _wrong_, but I think it's silly to
-> > introduce a new system call, when we have 30 bits left in the flags of
-> > the old one, and the old system call checked them.
-> >
-> > So it's much simpler and more straightforward to  just introduce a
-> > single new bit #2 that says "I actually know what I'm doing, and I'm
-> > explicitly asking for secure/insecure random data".
-> >
-> > And then say that the existing bit #1 just means "I want to wait for entropy".
-> >
-> > So then you end up with this:
-> >
-> >     /*
-> >      * Flags for getrandom(2)
-> >      *
-> >      * GRND_NONBLOCK    Don't block and return EAGAIN instead
-> >      * GRND_WAIT_ENTROPY        Explicitly wait for entropy
-> >      * GRND_EXPLICIT    Make it clear you know what you are doing
-> >      */
-> >     #define GRND_NONBLOCK               0x0001
-> >     #define GRND_WAIT_ENTROPY   0x0002
-> >     #define GRND_EXPLICIT               0x0004
+3.16.74-rc1 review patch.  If anyone has any objections, please let me know.
 
-What is this GRND_EXPLICIT thing?
+------------------
 
-A few weeks ago, I sent a whole series to address this, and I
-obviously didn't cc enough people.  I'll resend a rebased version
-today.  Meanwhile, some comments on this whole mess:
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
 
-As I think everyone mostly agrees in this whole thread, getrandom()
-can't just magically start returning non-random results.  That would
-be a big problem.
+commit 56897b217a1d0a91c9920cb418d6b3fe922f590a upstream.
 
-Linus, I disagree that blocking while waiting for randomness is an
-error.  Sometimes you want to generate a key, you want to finish as
-quickly as possible, and you don't want to be in the business of
-fiddling with the setup of the kernel RNG.  I would argue that *most*
-crypto applications are in this category.  I think that the kernel
-should, instead, handle this mess itself.  As a first pass, it could
-be as simple as noticing that someone is blocking on randomness and
-kicking off a thread that does some randomish reads to the rootfs.
-This would roughly simulate the old behavior in which an ext4 rootfs
-did more IO than necessary.  A fancier version would, as discussed in
-this thread, do more clever things.
+task A:                                task B:
+hci_uart_set_proto                     flush_to_ldisc
+ - p->open(hu) -> h5_open  //alloc h5  - receive_buf
+ - set_bit HCI_UART_PROTO_READY         - tty_port_default_receive_buf
+ - hci_uart_register_dev                 - tty_ldisc_receive_buf
+                                          - hci_uart_tty_receive
+				           - test_bit HCI_UART_PROTO_READY
+				            - h5_recv
+ - clear_bit HCI_UART_PROTO_READY             while() {
+ - p->open(hu) -> h5_close //free h5
+				              - h5_rx_3wire_hdr
+				               - h5_reset()  //use-after-free
+                                              }
 
-(As an aside, I am not a fan of xoring or adding stuff to the CRNG
-state.  We should just use an actual crypto primitive for this.
-Accumulate the state in a buffer and SHA-512 it.  Or use something
-like the Keccak duplex sponge.  But this is a discussion for another
-day.)
+It could use ioctl to set hci uart proto, but there is
+a use-after-free issue when hci_uart_register_dev() fail in
+hci_uart_set_proto(), see stack above, fix this by setting
+HCI_UART_PROTO_READY bit only when hci_uart_register_dev()
+return success.
 
-So I'm going to resend my series.  You can all fight over whether the
-patch that actually goes in should be based on my series or based on
-this patch.
+Reported-by: syzbot+899a33dc0fa0dbaf06a6@syzkaller.appspotmail.com
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Reviewed-by: Jeremy Cline <jcline@redhat.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+[bwh: Backported to 3.16: adjust context]
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+---
+ drivers/bluetooth/hci_ldisc.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---Andy
+--- a/drivers/bluetooth/hci_ldisc.c
++++ b/drivers/bluetooth/hci_ldisc.c
+@@ -477,15 +477,14 @@ static int hci_uart_set_proto(struct hci
+ 		return err;
+ 
+ 	hu->proto = p;
+-	set_bit(HCI_UART_PROTO_READY, &hu->flags);
+ 
+ 	err = hci_uart_register_dev(hu);
+ 	if (err) {
+-		clear_bit(HCI_UART_PROTO_READY, &hu->flags);
+ 		p->close(hu);
+ 		return err;
+ 	}
+ 
++	set_bit(HCI_UART_PROTO_READY, &hu->flags);
+ 	return 0;
+ }
+ 
+
