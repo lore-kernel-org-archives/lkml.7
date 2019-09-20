@@ -2,81 +2,98 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84715C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BFDC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 560DE2080F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:27:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEF22218AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:27:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395297AbfITI1Q (ORCPT
+        id S2405396AbfITI1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 04:27:16 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2691 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388411AbfITI1Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 04:27:16 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 10334526B13114035257;
-        Fri, 20 Sep 2019 16:27:14 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 20 Sep 2019 16:27:03 +0800
-From:   Mao Wenan <maowenan@huawei.com>
-To:     <netanel@amazon.com>, <saeedb@amazon.com>, <zorik@amazon.com>,
-        <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>, Mao Wenan <maowenan@huawei.com>
-Subject: [PATCH net] net: ena: Add dependency for ENA_ETHERNET
-Date:   Fri, 20 Sep 2019 16:44:05 +0800
-Message-ID: <20190920084405.140750-1-maowenan@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 20 Sep 2019 04:27:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51142 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388411AbfITI1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 04:27:23 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1AF9AC05AA64;
+        Fri, 20 Sep 2019 08:27:23 +0000 (UTC)
+Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-88.pek2.redhat.com [10.72.12.88])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F10FA10016EB;
+        Fri, 20 Sep 2019 08:26:03 +0000 (UTC)
+From:   Jason Wang <jasowang@redhat.com>
+To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com
+Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        pmorel@linux.ibm.com, freude@linux.ibm.com, lingshan.zhu@intel.com,
+        idos@mellanox.com, eperezma@redhat.com, lulu@redhat.com,
+        Jason Wang <jasowang@redhat.com>
+Subject: [RFC PATCH V2 5/6] vringh: fix copy direction of vringh_iov_push_kern()
+Date:   Fri, 20 Sep 2019 16:20:49 +0800
+Message-Id: <20190920082050.19352-6-jasowang@redhat.com>
+In-Reply-To: <20190920082050.19352-1-jasowang@redhat.com>
+References: <20190920082050.19352-1-jasowang@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 20 Sep 2019 08:27:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CONFIG_ENA_ETHERNET=y and CONFIG_DIMLIB=n,
-below erros can be found:
-drivers/net/ethernet/amazon/ena/ena_netdev.o: In function `ena_dim_work':
-ena_netdev.c:(.text+0x21cc): undefined reference to `net_dim_get_rx_moderation'
-ena_netdev.c:(.text+0x21cc): relocation truncated to
-fit: R_AARCH64_CALL26 against undefined symbol `net_dim_get_rx_moderation'
-drivers/net/ethernet/amazon/ena/ena_netdev.o: In function `ena_io_poll':
-ena_netdev.c:(.text+0x7bd4): undefined reference to `net_dim'
-ena_netdev.c:(.text+0x7bd4): relocation truncated to fit:
-R_AARCH64_CALL26 against undefined symbol `net_dim'
+We want to copy from iov to buf, so the direction was wrong.
 
-After commit 282faf61a053 ("net: ena: switch to dim algorithm for rx adaptive
-interrupt moderation"), it introduces dim algorithm, which configured by CONFIG_DIMLIB.
-
-Fixes: 282faf61a053 ("net: ena: switch to dim algorithm for rx adaptive interrupt moderation")
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
+Signed-off-by: Jason Wang <jasowang@redhat.com>
 ---
- drivers/net/ethernet/amazon/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/vhost/vringh.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/amazon/Kconfig b/drivers/net/ethernet/amazon/Kconfig
-index 69ca99d..fe46df4 100644
---- a/drivers/net/ethernet/amazon/Kconfig
-+++ b/drivers/net/ethernet/amazon/Kconfig
-@@ -18,7 +18,7 @@ if NET_VENDOR_AMAZON
+diff --git a/drivers/vhost/vringh.c b/drivers/vhost/vringh.c
+index 08ad0d1f0476..a0a2d74967ef 100644
+--- a/drivers/vhost/vringh.c
++++ b/drivers/vhost/vringh.c
+@@ -852,6 +852,12 @@ static inline int xfer_kern(void *src, void *dst, size_t len)
+ 	return 0;
+ }
  
- config ENA_ETHERNET
- 	tristate "Elastic Network Adapter (ENA) support"
--	depends on PCI_MSI && !CPU_BIG_ENDIAN
-+	depends on PCI_MSI && !CPU_BIG_ENDIAN && DIMLIB
- 	---help---
- 	  This driver supports Elastic Network Adapter (ENA)"
++static inline int kern_xfer(void *dst, void *src, size_t len)
++{
++	memcpy(dst, src, len);
++	return 0;
++}
++
+ /**
+  * vringh_init_kern - initialize a vringh for a kernelspace vring.
+  * @vrh: the vringh to initialize.
+@@ -958,7 +964,7 @@ EXPORT_SYMBOL(vringh_iov_pull_kern);
+ ssize_t vringh_iov_push_kern(struct vringh_kiov *wiov,
+ 			     const void *src, size_t len)
+ {
+-	return vringh_iov_xfer(wiov, (void *)src, len, xfer_kern);
++	return vringh_iov_xfer(wiov, (void *)src, len, kern_xfer);
+ }
+ EXPORT_SYMBOL(vringh_iov_push_kern);
  
 -- 
-2.7.4
+2.19.1
 
