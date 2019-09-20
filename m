@@ -2,112 +2,106 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F2A0C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 07:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE66C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 07:43:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DC3820882
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 07:43:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pytRpzDQ"
+	by mail.kernel.org (Postfix) with ESMTP id A6B6B207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 07:43:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404774AbfITHnA (ORCPT
+        id S2404807AbfITHnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 03:43:00 -0400
-Received: from mail-vk1-f195.google.com ([209.85.221.195]:46819 "EHLO
-        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393040AbfITHm7 (ORCPT
+        Fri, 20 Sep 2019 03:43:10 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:35351 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403879AbfITHnJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 03:42:59 -0400
-Received: by mail-vk1-f195.google.com with SMTP id t128so1368226vkd.13
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 00:42:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Og92PK7lYuYxZVroo0I3fiUsRwDg032RIvVPfcZDz9g=;
-        b=pytRpzDQlDd43MinOxKbi8uqIvJ3ntOh9vfhvnAVt87Jq56QaUx03Fg5JnldbvdAAY
-         0NTWM4iprCKUJyuzGw35eX863u9+ZtC02/IkTZCLFO5DI2qFnELZ2HlwpWh3suuk1Xwc
-         SxTr5+VtHrUc62XyPyA9S1FL5g3WzGTDYNKZK0wf3r2vKfKeCaLl7sFj8nkjdaNcXPN4
-         x4VLVZ2C/hBlkviyHixSyljJmUILQ1CC+Vn1lW1qYycdWUoF9fBid2e117FrqIQNjm/n
-         ZMBTgF3taIj2iuyx1eBLNHoX9WtgiU8FAtr6YxwvfrrRFNDVSqKz9QySnFuLX//HLhwS
-         dg9w==
+        Fri, 20 Sep 2019 03:43:09 -0400
+Received: by mail-qk1-f194.google.com with SMTP id w2so6396440qkf.2
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 00:43:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Og92PK7lYuYxZVroo0I3fiUsRwDg032RIvVPfcZDz9g=;
-        b=m89XzjSac23uW53UmGl8TFrjPP+V3GrhgOPm/PvgicZwZSM47FfuyCPD+NE79r4B/M
-         IaB6vFyQjGtWDQyY5sjvRt/LkAW7qPsereL5l3laBgu7u9UT8NJFVCZ8tYnkIYhp8gAJ
-         WYWFtBvFf5Ik219yCp7o+lHE9NWpo8hg21zh6vAHWV3gbhpHK3S8i0AMa+HcBrpavsDm
-         PDFNUM/UrmAl8SvwZM+0jw+h+j1Dp5F1/xXQ7fFeBmiW4MMoTz6rbhbPorpWwIEUp4/N
-         +4GP+KUUm25kduomPZJWa7COemITqEdaDnMUbgMkRMVFHs9MRNaa5o9rGZAOXQM8bbfo
-         VaUA==
-X-Gm-Message-State: APjAAAUBqkgteqW9CZmH/ubMuPmKLMCM7ZPCFFFHmq9pKA/vYIEz20KS
-        dNBuT3ie1XHWhmPFptv8kp3PSlLnZLaXeKOV8UWhYQ==
-X-Google-Smtp-Source: APXvYqzeAbPjybDZ+vBRhEdO6biNo/RravmZvb9w7AWjx86v7n7nmiui7V5NcVtaybCFi9rV9GIoxy35TYNC25gIh6g=
-X-Received: by 2002:a1f:da45:: with SMTP id r66mr3600161vkg.36.1568965377565;
- Fri, 20 Sep 2019 00:42:57 -0700 (PDT)
+        bh=3lKk+zwO3ztRJxmFWZdj4M4We36PKrcFNdQxMw/wFCw=;
+        b=dL5pk6fk9pnGohgEAkcCZB9PH3ybx6ltgPxZt1xQ2P+2DlmiHSD5QjYWLuSLbBpx0r
+         SoQ0CeOm3juEX7rI93R3GFVVdTfDuOFAoyNdM6c69IY8f5//i1cGMEE3buKr2f/pVwS+
+         VjC6I0UHJwAK2bvPs+ndB5kskLIriIxLvAHSSG4nouTR9uS+GovhkI6N3clRtYAsUX2M
+         vLm6EWGEAYsp31dU9FFHwPrWzhVZnHOKBDki54i9LE1d7oL/wZVhiuYBQpYVlaU+TaDL
+         n1Kzs01cX7HamrERt+tC2tuzmTmu9/ByQooPNSVUPKGmlCB5UeuzKSAun7fAYAQoaW3/
+         Qurg==
+X-Gm-Message-State: APjAAAWEPnp7nSS/sweKjbimYoGrA7vpOiFgZ9s9dd0Uir1+BN409znz
+        Bl7Pt6Hxu72r9yBo4XThXsdl6ChorfA9BPUgpHLQjysMAs8=
+X-Google-Smtp-Source: APXvYqzBHupHID5t8krankJiBM+2cD1x69FWvFH32XCalJNyUJQ3f3NQ0ko9RSVCp48Pj9I3P/V020rv8gspzcooDJE=
+X-Received: by 2002:a37:a858:: with SMTP id r85mr2318323qke.394.1568965387375;
+ Fri, 20 Sep 2019 00:43:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190916204158.6889-1-efremov@linux.com> <20190916204158.6889-24-efremov@linux.com>
-In-Reply-To: <20190916204158.6889-24-efremov@linux.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 20 Sep 2019 09:42:20 +0200
-Message-ID: <CAPDyKFoVEMex2_p1M-cFZnGLuwgK0wZk-kL_eZ=eDiT1tjvDGA@mail.gmail.com>
-Subject: Re: [PATCH v3 23/26] memstick: use PCI_STD_NUM_BARS
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Maxim Levitsky <maximlevitsky@gmail.com>,
-        Alex Dubov <oakad@yahoo.com>
+References: <20190919142654.1578823-1-arnd@arndb.de> <CACPK8XcsegR5R0nkiZ-UEMgCqNMggCXjAr2N-6J1S6mEhGLrBQ@mail.gmail.com>
+In-Reply-To: <CACPK8XcsegR5R0nkiZ-UEMgCqNMggCXjAr2N-6J1S6mEhGLrBQ@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 20 Sep 2019 09:42:51 +0200
+Message-ID: <CAK8P3a17ReGKk70YoS72OvV=9KfDJBwDQkFDKx_1imdEbTboZQ@mail.gmail.com>
+Subject: Re: [PATCH] ARM: aspeed: ast2500 is ARMv6K
+To:     Joel Stanley <joel@jms.id.au>
+Cc:     Andrew Jeffery <andrew@aj.id.au>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 16 Sep 2019 at 22:47, Denis Efremov <efremov@linux.com> wrote:
->
-> Use define PCI_STD_NUM_BARS instead of PCI_ROM_RESOURCE for the number of
-> PCI BARs.
->
-> Cc: Maxim Levitsky <maximlevitsky@gmail.com>
-> Cc: Alex Dubov <oakad@yahoo.com>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Signed-off-by: Denis Efremov <efremov@linux.com>
+On Fri, Sep 20, 2019 at 7:51 AM Joel Stanley <joel@jms.id.au> wrote:
+> On Thu, 19 Sep 2019 at 14:27, Arnd Bergmann <arnd@arndb.de> wrote:
 
-Assuming this depends on other changes in the series? Thus this is
-probably for PCI maintainers to pick up?
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> >  arch/arm/mach-aspeed/Kconfig | 1 -
+> >  1 file changed, 1 deletion(-)
+> >
+> > diff --git a/arch/arm/mach-aspeed/Kconfig b/arch/arm/mach-aspeed/Kconfig
+> > index a293137f5814..163931a03136 100644
+> > --- a/arch/arm/mach-aspeed/Kconfig
+> > +++ b/arch/arm/mach-aspeed/Kconfig
+> > @@ -26,7 +26,6 @@ config MACH_ASPEED_G4
+> >  config MACH_ASPEED_G5
+> >         bool "Aspeed SoC 5th Generation"
+> >         depends on ARCH_MULTI_V6
+> > -       select CPU_V6
+> >         select PINCTRL_ASPEED_G5 if !CC_IS_CLANG
+>
+> I can't find any trees with !CC_IS_CLANG here. Is there a problem
+> building our pinmux driver with Clang?
 
-Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
+This was an unrelated change from my local randconfig tree.
 
-Kind regards
-Uffe
+Your driver uncovered a bug in clang that is now fixed, the driver
+itself is fine, see https://bugs.llvm.org/show_bug.cgi?id=43243
 
-> ---
->  drivers/memstick/host/jmb38x_ms.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> I tested with this patch:
+> --- a/arch/arm/mach-aspeed/Kconfig
+> +++ b/arch/arm/mach-aspeed/Kconfig
+> @@ -25,8 +25,8 @@ config MACH_ASPEED_G4
 >
-> diff --git a/drivers/memstick/host/jmb38x_ms.c b/drivers/memstick/host/jmb38x_ms.c
-> index 32747425297d..fd281c1d39b1 100644
-> --- a/drivers/memstick/host/jmb38x_ms.c
-> +++ b/drivers/memstick/host/jmb38x_ms.c
-> @@ -848,7 +848,7 @@ static int jmb38x_ms_count_slots(struct pci_dev *pdev)
->  {
->         int cnt, rc = 0;
+>  config MACH_ASPEED_G5
+>         bool "Aspeed SoC 5th Generation"
+> +       # This implies ARMv6K which covers the ARM1176
+>         depends on ARCH_MULTI_V6
+> -       select CPU_V6
+>         select PINCTRL_ASPEED_G5
+>         select FTTMR010_TIMER
+>         help
 >
-> -       for (cnt = 0; cnt < PCI_ROM_RESOURCE; ++cnt) {
-> +       for (cnt = 0; cnt < PCI_STD_NUM_BARS; ++cnt) {
->                 if (!(IORESOURCE_MEM & pci_resource_flags(pdev, cnt)))
->                         break;
+> If you want to apply that as a fix for 5.4 I would be happy with that.
 >
-> --
-> 2.21.0
->
+> Fixes: 8c2ed9bcfbeb ("arm: Add Aspeed machine")
+> Reviewed-by: Joel Stanley <joel@jms.id.au>
+
+Applied to arm/fixes now.
+
+      Arnd
