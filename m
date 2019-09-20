@@ -2,131 +2,90 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC721C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B6FDC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8C2F2086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12DFA207E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:28:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568989723;
+	bh=aGgdFvpMglC45vwjBAcHm0WOQNCFhiuqOIYXysefnNU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=BrIPkG5zLdRQ2cuR3fIL2TtrIXmTnPu5Kp+zTqaLEbJgnSelgwekX+uX2046PJpFW
+	 V08LhMpXyWwCUt6CTG571LRcNNmbx9kQdyv7HeR5jFzJ9PN9pIA+dx+BVa5+CgfuHl
+	 9/92NV+5EPTxvCPEaRDrbJxwC3LCuOi4yTBVPQNU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389342AbfITO0u (ORCPT
+        id S2390210AbfITO2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:26:50 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36982 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388434AbfITOZR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 10:25:17 -0400
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqT-000514-LV; Fri, 20 Sep 2019 15:25:13 +0100
-Received: from ben by deadeye with local (Exim 4.92.1)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqE-0007tJ-K3; Fri, 20 Sep 2019 15:24:58 +0100
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+        Fri, 20 Sep 2019 10:28:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39646 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389321AbfITO0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 10:26:49 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F685207E0;
+        Fri, 20 Sep 2019 14:26:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568989609;
+        bh=aGgdFvpMglC45vwjBAcHm0WOQNCFhiuqOIYXysefnNU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=orosjw/gIU3tpnvXh6EHp7SNyZ187AdlCFHev+8rVgRZdMjn3rtfIk5L5ZFuZgImQ
+         LplZ1QiTP0CS1X8UDJ4L4b/vzqShMiq/dwLMXV5VvOUgIlSBUmkoQrbH0QoK9viMlA
+         4Mdz68qIivREC3Zg+ViQHDwSKjXQ3foU0Z+DVSJs=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: [PATCH 21/31] perf auxtrace: Add missing 'struct perf_sample' forward declaration
+Date:   Fri, 20 Sep 2019 11:25:32 -0300
+Message-Id: <20190920142542.12047-22-acme@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190920142542.12047-1-acme@kernel.org>
+References: <20190920142542.12047-1-acme@kernel.org>
 MIME-Version: 1.0
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "=?UTF-8?q?Petr=20=C5=A0tetiar?=" <ynezz@true.cz>,
-        "Eubert Bao" <bunnier@gmail.com>,
-        "Kalle Valo" <kvalo@codeaurora.org>
-Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.749085752@decadent.org.uk>
-X-Mailer: LinuxStableQueue (scripts by bwh)
-X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 059/132] mwl8k: Fix rate_idx underflow
-In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-3.16.74-rc1 review patch.  If anyone has any objections, please let me know.
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-------------------
+Its needed, was being obtained indirectly, fix it.
 
-From: Petr Štetiar <ynezz@true.cz>
-
-commit 6b583201fa219b7b1b6aebd8966c8fd9357ef9f4 upstream.
-
-It was reported on OpenWrt bug tracking system[1], that several users
-are affected by the endless reboot of their routers if they configure
-5GHz interface with channel 44 or 48.
-
-The reboot loop is caused by the following excessive number of WARN_ON
-messages:
-
- WARNING: CPU: 0 PID: 0 at backports-4.19.23-1/net/mac80211/rx.c:4516
-                             ieee80211_rx_napi+0x1fc/0xa54 [mac80211]
-
-as the messages are being correctly emitted by the following guard:
-
- case RX_ENC_LEGACY:
-      if (WARN_ON(status->rate_idx >= sband->n_bitrates))
-
-as the rate_idx is in this case erroneously set to 251 (0xfb). This fix
-simply converts previously used magic number to proper constant and
-guards against substraction which is leading to the currently observed
-underflow.
-
-1. https://bugs.openwrt.org/index.php?do=details&task_id=2218
-
-Fixes: 854783444bab ("mwl8k: properly set receive status rate index on 5 GHz receive")
-Tested-by: Eubert Bao <bunnier@gmail.com>
-Reported-by: Eubert Bao <bunnier@gmail.com>
-Signed-off-by: Petr Štetiar <ynezz@true.cz>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-[bwh: Backported to 3.16: adjust filename, context]
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-c3k1il7sm28old4e22nwlm7l@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- drivers/net/wireless/mwl8k.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ tools/perf/util/auxtrace.h | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/wireless/mwl8k.c
-+++ b/drivers/net/wireless/mwl8k.c
-@@ -436,6 +436,9 @@ static const struct ieee80211_rate mwl8k
- #define MWL8K_CMD_UPDATE_STADB		0x1123
- #define MWL8K_CMD_BASTREAM		0x1125
- 
-+#define MWL8K_LEGACY_5G_RATE_OFFSET \
-+	(ARRAY_SIZE(mwl8k_rates_24) - ARRAY_SIZE(mwl8k_rates_50))
-+
- static const char *mwl8k_cmd_name(__le16 cmd, char *buf, int bufsize)
- {
- 	u16 command = le16_to_cpu(cmd);
-@@ -1011,8 +1014,9 @@ mwl8k_rxd_ap_process(void *_rxd, struct
- 
- 	if (rxd->channel > 14) {
- 		status->band = IEEE80211_BAND_5GHZ;
--		if (!(status->flag & RX_FLAG_HT))
--			status->rate_idx -= 5;
-+		if (!(status->flag & RX_FLAG_HT) &&
-+		    status->rate_idx >= MWL8K_LEGACY_5G_RATE_OFFSET)
-+			status->rate_idx -= MWL8K_LEGACY_5G_RATE_OFFSET;
- 	} else {
- 		status->band = IEEE80211_BAND_2GHZ;
- 	}
-@@ -1119,8 +1123,9 @@ mwl8k_rxd_sta_process(void *_rxd, struct
- 
- 	if (rxd->channel > 14) {
- 		status->band = IEEE80211_BAND_5GHZ;
--		if (!(status->flag & RX_FLAG_HT))
--			status->rate_idx -= 5;
-+		if (!(status->flag & RX_FLAG_HT) &&
-+		    status->rate_idx >= MWL8K_LEGACY_5G_RATE_OFFSET)
-+			status->rate_idx -= MWL8K_LEGACY_5G_RATE_OFFSET;
- 	} else {
- 		status->band = IEEE80211_BAND_2GHZ;
- 	}
+diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+index 37e70dc01436..1ed902a24a39 100644
+--- a/tools/perf/util/auxtrace.h
++++ b/tools/perf/util/auxtrace.h
+@@ -24,6 +24,7 @@ struct perf_session;
+ struct evlist;
+ struct perf_tool;
+ struct perf_mmap;
++struct perf_sample;
+ struct option;
+ struct record_opts;
+ struct perf_record_auxtrace_info;
+-- 
+2.21.0
 
