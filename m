@@ -2,92 +2,103 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6DEC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB0FC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B480F207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:39:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69916207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:41:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CM+D4oh9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="p98/Tel/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393736AbfITRjD (ORCPT
+        id S2393768AbfITRlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 13:39:03 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:47666 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392294AbfITRia (ORCPT
+        Fri, 20 Sep 2019 13:41:25 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59510 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393075AbfITRlZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 13:38:30 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8KHcRkn042379;
-        Fri, 20 Sep 2019 12:38:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569001107;
-        bh=vNLixCA7rV3r89geVpDyZT2afzJln66pkNhtKdigswM=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=CM+D4oh9e8YeV9WET3XKoe4RO8kXVnG0/FFu+mYcHbjQ/6Ew+1U2aT6WBIeye42W7
-         L65RiwRwiEMAwgtcKFH4nO1JKb5zBRVY5xK40EzgYcJGYkqBFL4XfdbNwTW56rpCoG
-         339vd4VsgUWi1fNKIR3l7fUbnfLnXddMFUUhV6rc=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8KHcRwJ021389
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 20 Sep 2019 12:38:27 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 20
- Sep 2019 12:38:22 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 20 Sep 2019 12:38:27 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8KHcRs4060524;
-        Fri, 20 Sep 2019 12:38:27 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v8 5/9] leds: Add multicolor ID to the color ID list
-Date:   Fri, 20 Sep 2019 12:41:35 -0500
-Message-ID: <20190920174139.30079-6-dmurphy@ti.com>
-X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
-In-Reply-To: <20190920174139.30079-1-dmurphy@ti.com>
-References: <20190920174139.30079-1-dmurphy@ti.com>
+        Fri, 20 Sep 2019 13:41:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=/VvqufFGpmqqg9EwBNt6ZCvzhwzYEFtu/lWXv6sdh+Y=; b=p98/Tel/BkuZReEL/i4p502+7
+        ILUhH8ICRijtv5lldUEayz6vOH59Yn/LPIhtLzZcg3zXLSqhKjoKkJhlU+DnUySVBuM0NlhrMyH6v
+        R1hL0q+HAz+mphljT6U9glCNynjfzKJtUlgXYw46NociyKWhl/5xcXPOpMdtiO6mfyJmG3imcO9ly
+        QFfZ4+YzcEAENmiosO/Sd/AM3qu6yrUzgoCmAHQdIKPCrrbaUbfV0RSctBRzqnf2uJTHUZ8UVNwuU
+        fO7nyUyNUCoSs6R9yKO3VXiyIb9g8HQM6v+dFLqTDBPyufIo0cPgqKkmVP9bBRNNozlBdvrvKgY0C
+        FFubsVghg==;
+Received: from [2601:1c0:6280:3f0::9a1f]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iBMuJ-0001ci-H1; Fri, 20 Sep 2019 17:41:23 +0000
+Subject: Re: [PATCH] dimlib: make DIMLIB a hidden symbol
+To:     Tal Gilboa <talgi@mellanox.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Arthur Kiyanovski <akiyano@amazon.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+References: <20190920133115.12802-1-uwe@kleine-koenig.org>
+ <670cc72f-fef0-a8cf-eb03-25fdb608eea8@mellanox.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <89be8d33-ae26-6e46-be11-a653402d3230@infradead.org>
+Date:   Fri, 20 Sep 2019 10:41:22 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <670cc72f-fef0-a8cf-eb03-25fdb608eea8@mellanox.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a new color ID that is declared as MULTICOLOR as with the
-multicolor framework declaring a definitive color is not accurate
-as the node can contain multiple colors.
+On 9/20/19 10:02 AM, Tal Gilboa wrote:
+> On 9/20/2019 4:31 PM, Uwe Kleine-König wrote:
+>> According to Tal Gilboa the only benefit from DIM comes from a driver
+>> that uses it. So it doesn't make sense to make this symbol user visible,
+>> instead all drivers that use it should select it (as is already the case
+>> AFAICT).
+>>
+>> Signed-off-by: Uwe Kleine-König <uwe@kleine-koenig.org>
+>> ---
+>>   lib/Kconfig | 3 +--
+>>   1 file changed, 1 insertion(+), 2 deletions(-)
+>>
+>> diff --git a/lib/Kconfig b/lib/Kconfig
+>> index cc04124ed8f7..9fe8a21fd183 100644
+>> --- a/lib/Kconfig
+>> +++ b/lib/Kconfig
+>> @@ -555,8 +555,7 @@ config SIGNATURE
+>>   	  Implementation is done using GnuPG MPI library
+>>   
+>>   config DIMLIB
+>> -	bool "DIM library"
+>> -	default y
+>> +	bool
+>>   	help
+>>   	  Dynamic Interrupt Moderation library.
+>>   	  Implements an algorithm for dynamically change CQ moderation values
+>>
+> There's a pending series using DIM which didn't add the select clause 
+> [1]. Arthur, FYI. Other than that LGTM.
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- drivers/leds/led-core.c | 1 +
- 1 file changed, 1 insertion(+)
+That's easy enough to fix.
 
-diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
-index f1f718dbe0f8..846248a0693d 100644
---- a/drivers/leds/led-core.c
-+++ b/drivers/leds/led-core.c
-@@ -34,6 +34,7 @@ const char * const led_colors[LED_COLOR_ID_MAX] = {
- 	[LED_COLOR_ID_VIOLET] = "violet",
- 	[LED_COLOR_ID_YELLOW] = "yellow",
- 	[LED_COLOR_ID_IR] = "ir",
-+	[LED_COLOR_ID_MULTI] = "multicolor",
- };
- EXPORT_SYMBOL_GPL(led_colors);
- 
+> [1] https://www.mail-archive.com/netdev@vger.kernel.org/msg314304.html
+
+for the patch:
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+
+
 -- 
-2.22.0.214.g8dca754b1e
-
+~Randy
