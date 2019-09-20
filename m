@@ -2,134 +2,134 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0DBC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5881EC4CECD
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:26:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 401DE20640
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:26:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 300C520640
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:26:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EmmREtJc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V/Ep7Zr1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394977AbfITIZ7 (ORCPT
+        id S2395230AbfITI0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 04:25:59 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34687 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390765AbfITIZ6 (ORCPT
+        Fri, 20 Sep 2019 04:26:02 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:48328 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2393485AbfITI0A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 04:25:58 -0400
-Received: by mail-pf1-f195.google.com with SMTP id b128so4044785pfa.1
+        Fri, 20 Sep 2019 04:26:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1568967958;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=r8MGonTFVdpjASlfAFrsQcR94wwuke9pmPqJjwL2ARA=;
+        b=V/Ep7Zr1PKchtk+18mjolDKLHMAUb0nK/BC/hMXUHzpqLrtfJvFQS0Ey0Kl8g/tOL2Rpm6
+        z8bR8tpiwjoV/kv0eRLmAe9WajgD8yrXTQAhymTM9k5UrHAN501eK859fUCtep8IRGyTXA
+        qZbfUiLuaR0GQ/s224VPd9NJsQySPYs=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-363-UVZEZGXvNumjfgUQa8Jd7Q-1; Fri, 20 Sep 2019 04:25:58 -0400
+Received: by mail-ed1-f71.google.com with SMTP id l5so552760edr.10
         for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 01:25:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JAXmdTpb/xSiP8DRhBYoimT1TCs8GW8rlo3bs8Zrbps=;
-        b=EmmREtJc8YLf1Ho6uWOjNk6cewsuN9DrUj+y7yP5CgQjjkbSx0V1N36fJo6sDeLkQ3
-         AahUPRCMg7y66gQJNmOzPtj1MvbSlUuZ9kckKYGowh/aJlFf/ZQ9XP2SbzEysQCFXFDI
-         Idoewuh9cO8NwbTKJvhdHR0oAw6UPnN5H+Fb1w40gVZgn4mfI1Bw7UUYiT2Sx7mBKQwE
-         83vrjVZGmvDBQ2NqNHyEGtTED7343/nX2rKXCm3QJ9LAnxglco8QLl4s/9eNfFJryUsT
-         j2E3w/Wio+yvE6zknLwRIzxWTKdozqOyVNeMR1tcSvX6jFHAAF2L/U5ZiNRPaq3W0mE+
-         htjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JAXmdTpb/xSiP8DRhBYoimT1TCs8GW8rlo3bs8Zrbps=;
-        b=UMdTGb8blvyNY/b09IUiOgWRItSh/PLO/HWeVOAXRp9lEiUA3Kp7DPpOK8NqsP8trW
-         R+zWVaX9sngDV8SDvvd6xLmcf7hvZXdskOJl6FrJXP6vIB7G3csj2cHGFkK6keo54NQY
-         1QzS+8aokdyeqel4YayN4ruFbSq6T8nh3ovxNNj8dVCoceOrPgaTpdwPG35Ld0B3C7nQ
-         IKZPyXaRysksXMgbOVztpEyIlAoaWUYiylGdIAcD75G7mjQbM+UrQ37xS/AfO11akVId
-         5ezfPLK4CL8tV25zXh1lgLOh10u1stVSlPraOM6Jm8UFd9uNlBTHWFrePLebtxyhTWRJ
-         G8Vw==
-X-Gm-Message-State: APjAAAVDKKpQeVOcVyMo6dXoQ/6FSsqnd1s1CJ+F2g0NZLa0TjoL0KaP
-        cHcw3wqke2ZxRJ6JxCqMUJpfnuuf/uKeOXM/dYQ=
-X-Google-Smtp-Source: APXvYqyd2r9EKLFMa7/imhbgn9R/b7KrAYqcM1zOA9AG5pDAQf/kRGvgjl5Qc5bu0zFpVz4onc+4GmOP6DiN+BsLoCA=
-X-Received: by 2002:a62:c141:: with SMTP id i62mr16106765pfg.64.1568967956707;
- Fri, 20 Sep 2019 01:25:56 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4hsw2OCRdLgrAW4Yeak8FOMwaa+mJKoCk0ZlY8muiX0=;
+        b=HmsvE6wW+BRpYXtuyKFew302uZhvmzwZjKqc7TYmKkbywCiHS78lVmcGKgpulGl6a6
+         UanVxw7EXY3OK/bEX6rUAUKHMwP5GNa2W6tFX2cUEvd98TWkssShYgJu55CkaAQBbaQP
+         mw2BrSGXy9w4+lroPHprF5Zar1KGSDLHIR1OhiVHQ4ATvU4h96Jl8P6S5ZF+Yh+WcL67
+         RN+bAC2otMGibAdYtmUMf1uX/2z4tfqV8B75NRYTmmFwxQQUiJGzlzHsM2o4V43eaN1k
+         P0hp4XRZO17jxrOeJy0M5h/zMHH1GF4wWXdDlda3uEIcdk5v7Irb2KSyd8ugCngs04P5
+         o0cQ==
+X-Gm-Message-State: APjAAAWAD8Rzrslc3dZ/LH0uIZvPo8xMh3uxfuaYLaM6UGOiiJxH5u99
+        iTWKJTu2Nb9lJ/yeuYCb0abxhCpwaSFNlmT1iBoPiZYMHzu5MiSIMzaTOYInfUpRrvqTcyzhGTm
+        M1U6MI55Gbk0gMUqFG0RVehNr
+X-Received: by 2002:aa7:c1d4:: with SMTP id d20mr20280813edp.223.1568967956122;
+        Fri, 20 Sep 2019 01:25:56 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqz4ECaEH5yi1nNGb2T6JpxBw1IUeNWJDkLqw3EkA+fF9rzpEigjtCD/uc67Fl2hfK4NA4oQWw==
+X-Received: by 2002:aa7:c1d4:: with SMTP id d20mr20280801edp.223.1568967956014;
+        Fri, 20 Sep 2019 01:25:56 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id i53sm200485eda.33.2019.09.20.01.25.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Sep 2019 01:25:55 -0700 (PDT)
+Subject: Re: [PATCH v3 0/2] tcpm: AMS and Collision Avoidance
+To:     Kyle Tso <kyletso@google.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Badhri Jagan Sridharan <badhri@google.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190920032437.242187-1-kyletso@google.com>
+ <cb225c94-da97-1b47-48b6-3802dc3eb93b@redhat.com>
+ <CAGZ6i=3O2zLJMPY5UevjTrJJj7fxpWcn28dZYRptWES74=4Tgg@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <ce0e1163-cb0f-29ef-e071-3c0ee795a7e6@redhat.com>
+Date:   Fri, 20 Sep 2019 10:25:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-References: <20190916211536.29646-1-jekhor@gmail.com> <20190916211536.29646-2-jekhor@gmail.com>
-In-Reply-To: <20190916211536.29646-2-jekhor@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 20 Sep 2019 11:25:45 +0300
-Message-ID: <CAHp75VeCFYZ11c0jW3aXZTXHROfU5k0YRcJC4Vz3S2_tvDwt4w@mail.gmail.com>
-Subject: Re: [PATCH v2] extcon-intel-cht-wc: Don't reset USB data connection
- at probe
-To:     Yauhen Kharuzhy <jekhor@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAGZ6i=3O2zLJMPY5UevjTrJJj7fxpWcn28dZYRptWES74=4Tgg@mail.gmail.com>
+Content-Language: en-US
+X-MC-Unique: UVZEZGXvNumjfgUQa8Jd7Q-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 10:29 AM Yauhen Kharuzhy <jekhor@gmail.com> wrote:
->
-> Intel Cherry Trail Whiskey Cove extcon driver connect USB data lines to
-> PMIC at driver probing for further charger detection. This causes reset of
-> USB data sessions and removing all devices from bus. If system was
-> booted from Live CD or USB dongle, this makes system unusable.
->
-> Check if USB ID pin is floating and re-route data lines in this case
-> only, don't touch otherwise.
->
+Hi Kyle,
 
-FWIW,
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+On 20-09-2019 10:19, Kyle Tso wrote:
+> Hi Hans,
+>=20
+> I have tested these on an Android device (ARM64).
+> All the swap operations work fine (Power Role/Data Role/Vconn Swap).
+> (except for Fast Role Swap because it is still not supported in TCPM)
 
-> Signed-off-by: Yauhen Kharuzhy <jekhor@gmail.com>
-> ---
->  drivers/extcon/extcon-intel-cht-wc.c | 16 ++++++++++++++--
->  1 file changed, 14 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/extcon/extcon-intel-cht-wc.c b/drivers/extcon/extcon-intel-cht-wc.c
-> index 9d32150e68db..da1886a92f75 100644
-> --- a/drivers/extcon/extcon-intel-cht-wc.c
-> +++ b/drivers/extcon/extcon-intel-cht-wc.c
-> @@ -338,6 +338,7 @@ static int cht_wc_extcon_probe(struct platform_device *pdev)
->         struct intel_soc_pmic *pmic = dev_get_drvdata(pdev->dev.parent);
->         struct cht_wc_extcon_data *ext;
->         unsigned long mask = ~(CHT_WC_PWRSRC_VBUS | CHT_WC_PWRSRC_USBID_MASK);
-> +       int pwrsrc_sts, id;
->         int irq, ret;
->
->         irq = platform_get_irq(pdev, 0);
-> @@ -387,8 +388,19 @@ static int cht_wc_extcon_probe(struct platform_device *pdev)
->                 goto disable_sw_control;
->         }
->
-> -       /* Route D+ and D- to PMIC for initial charger detection */
-> -       cht_wc_extcon_set_phymux(ext, MUX_SEL_PMIC);
-> +       ret = regmap_read(ext->regmap, CHT_WC_PWRSRC_STS, &pwrsrc_sts);
-> +       if (ret) {
-> +               dev_err(ext->dev, "Error reading pwrsrc status: %d\n", ret);
-> +               goto disable_sw_control;
-> +       }
-> +
-> +       id = cht_wc_extcon_get_id(ext, pwrsrc_sts);
-> +
-> +       /* If no USB host or device connected, route D+ and D- to PMIC for
-> +        * initial charger detection
-> +        */
-> +       if (id != INTEL_USB_ID_GND)
-> +               cht_wc_extcon_set_phymux(ext, MUX_SEL_PMIC);
->
->         /* Get initial state */
->         cht_wc_extcon_pwrsrc_event(ext);
-> --
-> 2.23.0.rc1
->
+May I ask which type-c controller are these devices using?
+
+Regards,
+
+Hans
 
 
--- 
-With Best Regards,
-Andy Shevchenko
+
+>=20
+> Regards,
+> Kyle Tso
+>=20
+>=20
+> On Fri, Sep 20, 2019 at 4:02 PM Hans de Goede <hdegoede@redhat.com> wrote=
+:
+>>
+>> Hi Kyle,
+>>
+>> On 20-09-2019 05:24, Kyle Tso wrote:
+>>> *** BLURB HERE ***
+>>>
+>>> Kyle Tso (2):
+>>>     usb: typec: tcpm: AMS and Collision Avoidance
+>>>     usb: typec: tcpm: AMS for PD2.0
+>>
+>> May I ask how and on which hardware you have tested this?
+>>
+>> And specifically if you have tested this in combination with pwr-role sw=
+apping?
+>>
+>> Regards,
+>>
+>> Hans
+>>
+
