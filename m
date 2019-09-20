@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88278C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1ECFC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:26:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69697207E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:26:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FF4F21882
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:26:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389029AbfITO0Z (ORCPT
+        id S2389061AbfITO02 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:26:25 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36714 "EHLO
+        Fri, 20 Sep 2019 10:26:28 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36752 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388342AbfITOZN (ORCPT
+        by vger.kernel.org with ESMTP id S2388356AbfITOZO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 10:25:13 -0400
+        Fri, 20 Sep 2019 10:25:14 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqQ-00051E-9E; Fri, 20 Sep 2019 15:25:10 +0100
+        id 1iBJqR-0004xe-PR; Fri, 20 Sep 2019 15:25:11 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqF-0007ug-Bo; Fri, 20 Sep 2019 15:24:59 +0100
+        id 1iBJqF-0007uC-2S; Fri, 20 Sep 2019 15:24:59 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,17 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Zhenyu Wang" <zhenyuw@linux.intel.com>,
-        "Kevin Tian" <kevin.tian@intel.com>,
-        "Joerg Roedel" <jroedel@suse.de>,
-        "Ashok Raj" <ashok.raj@intel.com>,
-        "Jacob Pan" <jacob.jun.pan@linux.intel.com>,
-        "Lu Baolu" <baolu.lu@linux.intel.com>
+        "Oliver Neukum" <oneukum@suse.com>,
+        "Johan Hovold" <johan@kernel.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
 Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.401579323@decadent.org.uk>
+Message-ID: <lsq.1568989415.752564858@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 076/132] iommu/vt-d: Set intel_iommu_gfx_mapped correctly
+Subject: [PATCH 3.16 070/132] USB: cdc-acm: fix unthrottle races
 In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,50 +56,130 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Lu Baolu <baolu.lu@linux.intel.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit cf1ec4539a50bdfe688caad4615ca47646884316 upstream.
+commit 764478f41130f1b8d8057575b89e69980a0f600d upstream.
 
-The intel_iommu_gfx_mapped flag is exported by the Intel
-IOMMU driver to indicate whether an IOMMU is used for the
-graphic device. In a virtualized IOMMU environment (e.g.
-QEMU), an include-all IOMMU is used for graphic device.
-This flag is found to be clear even the IOMMU is used.
+Fix two long-standing bugs which could potentially lead to memory
+corruption or leave the port throttled until it is reopened (on weakly
+ordered systems), respectively, when read-URB completion races with
+unthrottle().
 
-Cc: Ashok Raj <ashok.raj@intel.com>
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: Kevin Tian <kevin.tian@intel.com>
-Reported-by: Zhenyu Wang <zhenyuw@linux.intel.com>
-Fixes: c0771df8d5297 ("intel-iommu: Export a flag indicating that the IOMMU is used for iGFX.")
-Suggested-by: Kevin Tian <kevin.tian@intel.com>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+First, the URB must not be marked as free before processing is complete
+to prevent it from being submitted by unthrottle() on another CPU.
+
+	CPU 1				CPU 2
+	================		================
+	complete()			unthrottle()
+	  process_urb();
+	  smp_mb__before_atomic();
+	  set_bit(i, free);		  if (test_and_clear_bit(i, free))
+						  submit_urb();
+
+Second, the URB must be marked as free before checking the throttled
+flag to prevent unthrottle() on another CPU from failing to observe that
+the URB needs to be submitted if complete() sees that the throttled flag
+is set.
+
+	CPU 1				CPU 2
+	================		================
+	complete()			unthrottle()
+	  set_bit(i, free);		  throttled = 0;
+	  smp_mb__after_atomic();	  smp_mb();
+	  if (throttled)		  if (test_and_clear_bit(i, free))
+		  return;			  submit_urb();
+
+Note that test_and_clear_bit() only implies barriers when the test is
+successful. To handle the case where the URB is still in use an explicit
+barrier needs to be added to unthrottle() for the second race condition.
+
+Also note that the first race was fixed by 36e59e0d70d6 ("cdc-acm: fix
+race between callback and unthrottle") back in 2015, but the bug was
+reintroduced a year later.
+
+Fixes: 1aba579f3cf5 ("cdc-acm: handle read pipe errors")
+Fixes: 088c64f81284 ("USB: cdc-acm: re-write read processing")
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Acked-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/iommu/intel-iommu.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/usb/class/cdc-acm.c | 32 +++++++++++++++++++++++++-------
+ 1 file changed, 25 insertions(+), 7 deletions(-)
 
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -3578,9 +3578,7 @@ static void __init init_no_remapping_dev
+--- a/drivers/usb/class/cdc-acm.c
++++ b/drivers/usb/class/cdc-acm.c
+@@ -420,12 +420,12 @@ static void acm_read_bulk_callback(struc
+ 	struct acm *acm = rb->instance;
+ 	unsigned long flags;
+ 	int status = urb->status;
++	bool stopped = false;
++	bool stalled = false;
  
- 		/* This IOMMU has *only* gfx devices. Either bypass it or
- 		   set the gfx_mapped flag, as appropriate */
--		if (dmar_map_gfx) {
--			intel_iommu_gfx_mapped = 1;
--		} else {
-+		if (!dmar_map_gfx) {
- 			drhd->ignored = 1;
- 			for_each_active_dev_scope(drhd->devices,
- 						  drhd->devices_cnt, i, dev)
-@@ -4074,6 +4072,9 @@ int __init intel_iommu_init(void)
- 		goto out_free_reserved_range;
+ 	dev_vdbg(&acm->data->dev, "%s - urb %d, len %d\n", __func__,
+ 					rb->index, urb->actual_length);
+ 
+-	set_bit(rb->index, &acm->read_urbs_free);
+-
+ 	if (!acm->dev) {
+ 		dev_dbg(&acm->data->dev, "%s - disconnected\n", __func__);
+ 		return;
+@@ -438,15 +438,16 @@ static void acm_read_bulk_callback(struc
+ 		break;
+ 	case -EPIPE:
+ 		set_bit(EVENT_RX_STALL, &acm->flags);
+-		schedule_work(&acm->work);
+-		return;
++		stalled = true;
++		break;
+ 	case -ENOENT:
+ 	case -ECONNRESET:
+ 	case -ESHUTDOWN:
+ 		dev_dbg(&acm->data->dev,
+ 			"%s - urb shutting down with status: %d\n",
+ 			__func__, status);
+-		return;
++		stopped = true;
++		break;
+ 	default:
+ 		dev_dbg(&acm->data->dev,
+ 			"%s - nonzero urb status received: %d\n",
+@@ -455,10 +456,24 @@ static void acm_read_bulk_callback(struc
  	}
  
-+	if (dmar_map_gfx)
-+		intel_iommu_gfx_mapped = 1;
+ 	/*
+-	 * Unthrottle may run on another CPU which needs to see events
+-	 * in the same order. Submission has an implict barrier
++	 * Make sure URB processing is done before marking as free to avoid
++	 * racing with unthrottle() on another CPU. Matches the barriers
++	 * implied by the test_and_clear_bit() in acm_submit_read_urb().
+ 	 */
+ 	smp_mb__before_atomic();
++	set_bit(rb->index, &acm->read_urbs_free);
++	/*
++	 * Make sure URB is marked as free before checking the throttled flag
++	 * to avoid racing with unthrottle() on another CPU. Matches the
++	 * smp_mb() in unthrottle().
++	 */
++	smp_mb__after_atomic();
 +
- 	init_no_remapping_devices();
++	if (stopped || stalled) {
++		if (stalled)
++			schedule_work(&acm->work);
++		return;
++	}
  
- 	ret = init_dmars();
+ 	/* throttle device if requested by tty */
+ 	spin_lock_irqsave(&acm->read_lock, flags);
+@@ -807,6 +822,9 @@ static void acm_tty_unthrottle(struct tt
+ 	acm->throttle_req = 0;
+ 	spin_unlock_irq(&acm->read_lock);
+ 
++	/* Matches the smp_mb__after_atomic() in acm_read_bulk_callback(). */
++	smp_mb();
++
+ 	if (was_throttled)
+ 		acm_submit_read_urbs(acm, GFP_KERNEL);
+ }
 
