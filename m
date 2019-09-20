@@ -2,120 +2,131 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC7EC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2C4C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1180520882
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:12:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568959933;
-	bh=LFxPD7bXEN0iUHzSgV2IAaqhJMR9jcy71uqdbxqIPmo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Y3iOese0awGotZW3dZMfTrfhZxRqwVCjXyTYYGIMSVj+O2KTBOvUOnnVwqtASGSFH
-	 9ygL39CLgqHD94WdGinT1DLHeQxW/PdpLLZZ4Hh9gyWRq1ORLEK42XsFx5VuYAaDko
-	 EY/v9he8H0X4cDCtGP0bVUBjd6rkk6fVOMEi4670=
+	by mail.kernel.org (Postfix) with ESMTP id 909C220665
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:12:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="SWhpw9n8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390817AbfITGMM (ORCPT
+        id S2392880AbfITGMn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 02:12:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51790 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389655AbfITGMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 02:12:12 -0400
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2369F20665;
-        Fri, 20 Sep 2019 06:12:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568959931;
-        bh=LFxPD7bXEN0iUHzSgV2IAaqhJMR9jcy71uqdbxqIPmo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VPUqzg6q9sM0ka6k4geicLtzFC4DJG+pHllGG5x2r85z9Orqm1+AtNmbw90l2ki4V
-         EQzuvzBXyZU9ZNusHhrEERZWTEk77Rb0MC4FOuHcd5eoB1yAByb00w+7EN9eg3Kxwl
-         nDD+yjxYFJcACzDu/0nZvIpNJMG+8RMI8WxBoOgE=
-Date:   Fri, 20 Sep 2019 08:12:09 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
-Cc:     roman.stratiienko@globallogic.com, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH] drm/sun4i: Use vi plane as primary
-Message-ID: <20190920061209.ostddxvzf6xwrmdp@gilmour>
-References: <20190919123703.8545-1-roman.stratiienko@globallogic.com>
- <20190919171754.x6lq73cctnqsjr4v@gilmour>
- <104595190.vWb6g8xIPX@jernej-laptop>
+        Fri, 20 Sep 2019 02:12:43 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:32953 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389579AbfITGMn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 02:12:43 -0400
+Received: by mail-oi1-f194.google.com with SMTP id e18so839838oii.0
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 23:12:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lESsRT7Y742o9lu/7K8TiQ3yA1m0tsPUb2vMEBOJDG8=;
+        b=SWhpw9n8wEag72+Bq3xU93j3s9vQ6N+riAK0leJCeHMgOch5nmKmhvSYL+Jhn/1kEw
+         KJSE9g3m+BQTRg9EdWIxwrt7Ttz8c5mq8dKO5z38wG6ZChbw3wXHBBrL58n81xrLGhv9
+         ni7fxymhsN7XJxvNm1dEqL8+FvlXzAjIzLixU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lESsRT7Y742o9lu/7K8TiQ3yA1m0tsPUb2vMEBOJDG8=;
+        b=ochDFb7Su5mIIHX25YBMzAvyIbbLYB3brtnfzOsE6WQS36Xa4SLLFUmiHMlHh4Ktej
+         AGrbo82irCJ17Isl7ot1WbP34U4KrzjutKQ1pDLqNwjXiT8dEbYmVMLT2mNsOX3zDQ3Y
+         7afRWsDVi1FQ2vI3vojkSn/LPmSnoFZDFRswWfd1WV567pRgaBxiTL4m1g1BbYiGb64J
+         CacIR8ZvrF61qehDCxx84zaaabTEns40XATrlMQn44i+c/KnutJ5rTnXKWkkOwMog/yF
+         65LLi4zwNyYhW4T8yESpMHf4BCGDF2ZBjuKFnbFJVMsNorGCWPEyxuT3WHPYK7VYS1YT
+         JLSQ==
+X-Gm-Message-State: APjAAAV8yH2jX/XrMlhAt1fp6e/SlDq8l3mQEkjzEMr0qBO08R7nj1ZQ
+        s7plIngbBxCx2tssL5/ajzwbUaPzxrmyCvyZj263zKV2
+X-Google-Smtp-Source: APXvYqzTN7JfI+nPor6h/gdDsP+sD4veOVaMUBxGoFMVBtbAM50YvC2eEmGFl6vAWO8whxDaCQl6kvwaPAt6JU9IQDs=
+X-Received: by 2002:aca:d841:: with SMTP id p62mr1636407oig.128.1568959961655;
+ Thu, 19 Sep 2019 23:12:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3ylh7nsjnj6zhso3"
-Content-Disposition: inline
-In-Reply-To: <104595190.vWb6g8xIPX@jernej-laptop>
-User-Agent: NeoMutt/20180716
+References: <CAPM=9txTjip6SonSATB-O38TGX9ituQaw+29PnAkNJ960R1z6g@mail.gmail.com>
+ <CAHk-=wjHDrmx+Rj+oJw5V4mfWjpYzpwcJbqY-L-nvsNW_d8e_g@mail.gmail.com> <CAPM=9tzLFenqZQo_NQqKd5xPQ5g-5WY+JxTotL7AHk_+6S89ow@mail.gmail.com>
+In-Reply-To: <CAPM=9tzLFenqZQo_NQqKd5xPQ5g-5WY+JxTotL7AHk_+6S89ow@mail.gmail.com>
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+Date:   Fri, 20 Sep 2019 08:12:29 +0200
+Message-ID: <CAKMK7uHdNgL2hKdGqKeht2n2An4jemhrr2Jpn0JYpHbop67GpA@mail.gmail.com>
+Subject: Re: [git pull] drm tree for 5.4-rc1
+To:     Dave Airlie <airlied@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---3ylh7nsjnj6zhso3
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Sep 19, 2019 at 08:15:49PM +0200, Jernej =C5=A0krabec wrote:
-> Dne =C4=8Detrtek, 19. september 2019 ob 19:17:54 CEST je Maxime Ripard na=
-pisal(a):
-> > >
-> > > Tested on Android.
-> > >
-> > > Signed-off-by: Roman Stratiienko <roman.stratiienko@globallogic.com>
+On Fri, Sep 20, 2019 at 2:11 AM Dave Airlie <airlied@gmail.com> wrote:
+> > Hmm. My merge isn't identical to that. It's close though. Different
+> > order for one #define which might be just from you and me merging
+> > different directions.
 > >
-> > It sounds like a workaround more than an actual fix.
+> > But I also ended up removing the .gem_prime_export initialization to
+> > drm_gem_prime_export, because it's the default if none exists. That's
+> > the left-over from
 > >
-> > If the VI planes can't use the alpha, then we should just stop
-> > reporting that format.
+> >     3baeeb21983a ("drm/mtk: Drop drm_gem_prime_export/import")
 > >
-> > Jernej, what do you think?
+> > after the import stayed around because it got turned into an actually
+> > non-default one.
+> >
+> > I think that both of our merges are right - equivalent but just
+> > slightly different.
+> >
+> > But the reason I'm pointing this out is that I also get the feeling
+> > that if it needs that dev->dev_private difference from the default
+> > function in prime_import(), wouldn't it need the same for prime_export
+> > too?
+> >
+> > I don't know the code, and I don't know the hardware, but just from a
+> > "pattern matching" angle I just wanted to check whether maybe there's
+> > need for a mtk_drm_gem_prime_export() wrapper that does that same
+> > thing with
+> >
+> >         struct mtk_drm_private *private = dev->dev_private;
+> >
+> >         .. use private->dev  instead of dev->dev ..
+> >
+> > So I'm just asking that somebody that knows that drm/mtk code should
+> > double-check that oddity.
 >
-> Commit message is misleading. What this commit actually does is moving pr=
-imary
-> plane from first UI plane to bottom most plane, i.e. first VI plane. Howe=
-ver, VI
-> planes are scarce resource, almost all mixers have only one. I wouldn't s=
-et it
-> as primary, because it's the only one which provide support for YUV forma=
-ts.
-> That could be used for example by video player for zero-copy rendering.
-> Probably most apps wouldn't touch it if it was primary (that's usually
-> reserved for window manager, if used).
+> I've cc'ed Alexandre who wrote the import half of this code to look into it.
+>
+> I've looked at the other results and it all seems fine to me.
 
-Yeah, we definitely don't want to use it as primary and prevent the
-video display.
+(pre-coffee, but let's hope the brain is awake enough)
 
-> I left few formats with alpha channel exposed by VI planes, just because =
-they
-> don't have equivalent format without alpha. But I'm fine with removing th=
-em if
-> you all agree on that.
+This asymmetry in prime import/export is somewhat common for devices
+with funky dma requirements/setup in the dt/soc world.
 
-If there's no alpha support, then yeah, we shouldn't expose the format
-at all, and then we can either add the new formats, or just not expose
-them if they are exotic enough.
+- on export we need to use the "official" struct device, so that when
+we re-import (i.e. userspace just shared a buffer across process
+through fd-passing, not across device-drivers) the common helpers
+realize "ah this is ours, let me just grab the underlying buffer
+object", instead of creating a full new buffer object handle like it
+does for a real import of a dma-buf from a different device driver.
+Because having 2 buffer object handles pointing at the same underlying
+buffer objects tends to not go well.
 
-Maxime
+- on import otoh we need to pass the struct device we actually need
+for dma (which for reasons that I don't fully grok isn't the same, I
+got it explained once by dt/soc folks and forgot again why exactly),
+so that dma_map_sg and friends dtrt.
 
---3ylh7nsjnj6zhso3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXYRtuQAKCRDj7w1vZxhR
-xeqxAP47vhP9Zt2VoOykoxUSb+0IORx7/qZJWXiMTdUUPVILWQEAgu6XBa76F/RH
-QcYmCCHcvowZxHbGSkRFp2//2Y0bsAw=
-=16hs
------END PGP SIGNATURE-----
-
---3ylh7nsjnj6zhso3--
+So that part should be all fine.
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
