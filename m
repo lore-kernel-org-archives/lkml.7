@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC77C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A49BC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE6A120882
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:26:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27CC420C01
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:26:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729019AbfITO0E (ORCPT
+        id S2387614AbfITO0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:26:04 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36476 "EHLO
+        Fri, 20 Sep 2019 10:26:08 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36520 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388275AbfITOZK (ORCPT
+        by vger.kernel.org with ESMTP id S2388286AbfITOZL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 10:25:10 -0400
+        Fri, 20 Sep 2019 10:25:11 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqN-00050v-M5; Fri, 20 Sep 2019 15:25:07 +0100
+        id 1iBJqN-00051H-M8; Fri, 20 Sep 2019 15:25:07 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqG-0007vt-5X; Fri, 20 Sep 2019 15:25:00 +0100
+        id 1iBJqG-0007vy-7D; Fri, 20 Sep 2019 15:25:00 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Anna Schumaker" <Anna.Schumaker@Netapp.com>,
-        "ZhangXiaoxu" <zhangxiaoxu5@huawei.com>
+        "Paul Dufresne" <dufresnep@gmail.com>,
+        "=?UTF-8?q?Christian=20K=C3=B6nig?=" <christian.koenig@amd.com>,
+        "Alex Deucher" <alexander.deucher@amd.com>
 Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.431007731@decadent.org.uk>
+Message-ID: <lsq.1568989415.591577538@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 091/132] NFS4: Fix v4.0 client state corruption when
- mount
+Subject: [PATCH 3.16 092/132] drm/radeon: prefer lower reference dividers
 In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,44 +56,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+From: Christian König <christian.koenig@amd.com>
 
-commit f02f3755dbd14fb935d24b14650fff9ba92243b8 upstream.
+commit 2e26ccb119bde03584be53406bbd22e711b0d6e6 upstream.
 
-stat command with soft mount never return after server is stopped.
+Instead of the closest reference divider prefer the lowest,
+this fixes flickering issues on HP Compaq nx9420.
 
-When alloc a new client, the state of the client will be set to
-NFS4CLNT_LEASE_EXPIRED.
-
-When the server is stopped, the state manager will work, and accord
-the state to recover. But the state is NFS4CLNT_LEASE_EXPIRED, it
-will drain the slot table and lead other task to wait queue, until
-the client recovered. Then the stat command is hung.
-
-When discover server trunking, the client will renew the lease,
-but check the client state, it lead the client state corruption.
-
-So, we need to call state manager to recover it when detect server
-ip trunking.
-
-Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Bugs: https://bugs.freedesktop.org/show_bug.cgi?id=108514
+Suggested-by: Paul Dufresne <dufresnep@gmail.com>
+Signed-off-by: Christian König <christian.koenig@amd.com>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/nfs/nfs4state.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/gpu/drm/radeon/radeon_display.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -140,6 +140,10 @@ int nfs40_discover_server_trunking(struc
- 		/* Sustain the lease, even if it's empty.  If the clientid4
- 		 * goes stale it's of no use for trunking discovery. */
- 		nfs4_schedule_state_renewal(*result);
-+
-+		/* If the client state need to recover, do it. */
-+		if (clp->cl_state)
-+			nfs4_schedule_state_manager(clp);
+--- a/drivers/gpu/drm/radeon/radeon_display.c
++++ b/drivers/gpu/drm/radeon/radeon_display.c
+@@ -942,12 +942,12 @@ static void avivo_get_fb_ref_div(unsigne
+ 	ref_div_max = max(min(100 / post_div, ref_div_max), 1u);
+ 
+ 	/* get matching reference and feedback divider */
+-	*ref_div = min(max(DIV_ROUND_CLOSEST(den, post_div), 1u), ref_div_max);
++	*ref_div = min(max(den/post_div, 1u), ref_div_max);
+ 	*fb_div = DIV_ROUND_CLOSEST(nom * *ref_div * post_div, den);
+ 
+ 	/* limit fb divider to its maximum */
+         if (*fb_div > fb_div_max) {
+-		*ref_div = DIV_ROUND_CLOSEST(*ref_div * fb_div_max, *fb_div);
++		*ref_div = (*ref_div * fb_div_max)/(*fb_div);
+ 		*fb_div = fb_div_max;
  	}
- out:
- 	return status;
+ }
 
