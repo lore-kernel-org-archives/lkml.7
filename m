@@ -2,109 +2,194 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C8FBC4CECD
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1013C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DBE3207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:49:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8013C207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:49:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="cZ1oZtxi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408720AbfITKtA (ORCPT
+        id S2408730AbfITKt5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 06:49:00 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:31183 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2408705AbfITKtA (ORCPT
+        Fri, 20 Sep 2019 06:49:57 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:47188 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732138AbfITKt5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 06:49:00 -0400
-X-UUID: ae8f3706e87c4cb793d76c5bada37fc8-20190920
-X-UUID: ae8f3706e87c4cb793d76c5bada37fc8-20190920
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <miles.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 235144964; Fri, 20 Sep 2019 18:48:52 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 20 Sep 2019 18:48:49 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 20 Sep 2019 18:48:48 +0800
-From:   Miles Chen <miles.chen@mediatek.com>
-To:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        Miles Chen <miles.chen@mediatek.com>
-Subject: [PATCH] mm: slub: print_hex_dump() with DUMP_PREFIX_OFFSET
-Date:   Fri, 20 Sep 2019 18:48:49 +0800
-Message-ID: <20190920104849.32504-1-miles.chen@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Fri, 20 Sep 2019 06:49:57 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 72D552F9;
+        Fri, 20 Sep 2019 12:49:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1568976594;
+        bh=ZRLNhELSrDVvsDc4wQX1GyKih6qSucdVjUH7bhYjr2g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cZ1oZtxip2xEUaGXJHKulGPwe9CiLcIihnUHmncJegyk6F4KjIXz8QXZKKTwOvur0
+         8xOu/qptSg+o4KYk51i4RsddVMbi6XM4DDbtnPVhbc57o+pwaoPezc+qW3L3ElCz4Q
+         KuQ2pcPkIU6344FseREsGVsYplabua+DrHSc8+bQ=
+Date:   Fri, 20 Sep 2019 13:49:45 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     a.hajda@samsung.com, narmstrong@baylibre.com, jonas@kwiboo.se,
+        jernej.skrabec@siol.net, airlied@linux.ie, daniel@ffwll.ch,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        enric.balletbo@collabora.com
+Subject: Re: [PATCH v2] drm/bridge: analogix-anx78xx: add support for 7808
+ addresses
+Message-ID: <20190920104945.GC12950@pendragon.ideasonboard.com>
+References: <20190920101438.6912-1-masneyb@onstation.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190920101438.6912-1-masneyb@onstation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit ad67b74d2469d9b8 ("printk: hash addresses printed with %p"),
-The use DUMP_PREFIX_OFFSET instead of DUMP_PREFIX_ADDRESS with
-print_hex_dump() can generate more useful messages.
+Hi Brian,
 
-In the following example, it's easier get the offset of incorrect poison
-value with DUMP_PREFIX_OFFSET.
+Thank you for the patch.
 
-Before:
-Object 00000000e817b73b: 00 00 00 00 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-Object 00000000816f4601: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-Object 00000000169d2bb8: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-Object 00000000f4c38716: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-Object 00000000917e3491: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-Object 00000000c0e33738: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-Object 000000001755ddd1: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+On Fri, Sep 20, 2019 at 06:14:38AM -0400, Brian Masney wrote:
+> According to the downstream Android sources, the anx7808 variants use
+> address 0x78 for TX_P0 and the anx781x variants use address 0x70. Since
+> the datasheets aren't available for these devices, and we only have the
+> downstream kernel sources to look at, let's assume that these addresses
+> are fixed based on the model, and pass the i2c addresses to the data
+> pointer in the driver's of_match_table.
+> 
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> ---
+> V1 of this patch with some discussion:
+> https://lore.kernel.org/lkml/20190815004854.19860-6-masneyb@onstation.org/
+> 
+>  drivers/gpu/drm/bridge/analogix-anx78xx.c | 36 +++++++++++++++--------
+>  drivers/gpu/drm/bridge/analogix-anx78xx.h |  7 -----
+>  2 files changed, 23 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.c b/drivers/gpu/drm/bridge/analogix-anx78xx.c
+> index 48adf010816c..e25fae36dbe1 100644
+> --- a/drivers/gpu/drm/bridge/analogix-anx78xx.c
+> +++ b/drivers/gpu/drm/bridge/analogix-anx78xx.c
+> @@ -38,12 +38,20 @@
+>  #define AUX_CH_BUFFER_SIZE	16
+>  #define AUX_WAIT_TIMEOUT_MS	15
+>  
+> -static const u8 anx78xx_i2c_addresses[] = {
+> -	[I2C_IDX_TX_P0] = TX_P0,
+> -	[I2C_IDX_TX_P1] = TX_P1,
+> -	[I2C_IDX_TX_P2] = TX_P2,
+> -	[I2C_IDX_RX_P0] = RX_P0,
+> -	[I2C_IDX_RX_P1] = RX_P1,
+> +static const u8 anx7808_i2c_addresses[] = {
+> +	[I2C_IDX_TX_P0] = 0x78,
+> +	[I2C_IDX_TX_P1] = 0x7a,
+> +	[I2C_IDX_TX_P2] = 0x72,
+> +	[I2C_IDX_RX_P0] = 0x7e,
+> +	[I2C_IDX_RX_P1] = 0x80,
+> +};
+> +
+> +static const u8 anx781x_i2c_addresses[] = {
+> +	[I2C_IDX_TX_P0] = 0x70,
+> +	[I2C_IDX_TX_P1] = 0x7a,
+> +	[I2C_IDX_TX_P2] = 0x72,
+> +	[I2C_IDX_RX_P0] = 0x7e,
+> +	[I2C_IDX_RX_P1] = 0x80,
+>  };
 
-After:
-Object 00000000: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-Object 00000010: 63 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-Object 00000020: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-Object 00000030: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b a5
+If those addresses are really fixed they should have been added to DT,
+in order for all fixed I2C addresses used on an I2C bus to be reported
+in DT. I guess it's too late now :-/ This seems to be the best we can do
+to solve the problem with existing DT. Updating the bindings could
+however still be a good idea to make this clear moving forward.
 
-I think it might be worth to convert all DUMP_PREFIX_ADDRESS to
-DUMP_PREFIX_OFFSET for the whole Linux kernel.
+>  struct anx78xx_platform_data {
+> @@ -1348,6 +1356,7 @@ static int anx78xx_i2c_probe(struct i2c_client *client,
+>  	struct anx78xx *anx78xx;
+>  	struct anx78xx_platform_data *pdata;
+>  	unsigned int i, idl, idh, version;
+> +	const u8 *i2c_addresses;
+>  	bool found = false;
+>  	int err;
+>  
+> @@ -1387,15 +1396,16 @@ static int anx78xx_i2c_probe(struct i2c_client *client,
+>  	}
+>  
+>  	/* Map slave addresses of ANX7814 */
+> +	i2c_addresses = device_get_match_data(&client->dev);
+>  	for (i = 0; i < I2C_NUM_ADDRESSES; i++) {
+>  		struct i2c_client *i2c_dummy;
+>  
+>  		i2c_dummy = i2c_new_dummy_device(client->adapter,
+> -						 anx78xx_i2c_addresses[i] >> 1);
+> +						 i2c_addresses[i] >> 1);
+>  		if (IS_ERR(i2c_dummy)) {
+>  			err = PTR_ERR(i2c_dummy);
+>  			DRM_ERROR("Failed to reserve I2C bus %02x: %d\n",
+> -				  anx78xx_i2c_addresses[i], err);
+> +				  i2c_addresses[i], err);
+>  			goto err_unregister_i2c;
+>  		}
+>  
+> @@ -1405,7 +1415,7 @@ static int anx78xx_i2c_probe(struct i2c_client *client,
+>  		if (IS_ERR(anx78xx->map[i])) {
+>  			err = PTR_ERR(anx78xx->map[i]);
+>  			DRM_ERROR("Failed regmap initialization %02x\n",
+> -				  anx78xx_i2c_addresses[i]);
+> +				  i2c_addresses[i]);
+>  			goto err_unregister_i2c;
+>  		}
+>  	}
+> @@ -1504,10 +1514,10 @@ MODULE_DEVICE_TABLE(i2c, anx78xx_id);
+>  
+>  #if IS_ENABLED(CONFIG_OF)
+>  static const struct of_device_id anx78xx_match_table[] = {
+> -	{ .compatible = "analogix,anx7808", },
+> -	{ .compatible = "analogix,anx7812", },
+> -	{ .compatible = "analogix,anx7814", },
+> -	{ .compatible = "analogix,anx7818", },
+> +	{ .compatible = "analogix,anx7808", .data = anx7808_i2c_addresses },
+> +	{ .compatible = "analogix,anx7812", .data = anx781x_i2c_addresses },
+> +	{ .compatible = "analogix,anx7814", .data = anx781x_i2c_addresses },
+> +	{ .compatible = "analogix,anx7818", .data = anx781x_i2c_addresses },
+>  	{ /* sentinel */ },
+>  };
+>  MODULE_DEVICE_TABLE(of, anx78xx_match_table);
+> diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.h b/drivers/gpu/drm/bridge/analogix-anx78xx.h
+> index 25e063bcecbc..8697647709f7 100644
+> --- a/drivers/gpu/drm/bridge/analogix-anx78xx.h
+> +++ b/drivers/gpu/drm/bridge/analogix-anx78xx.h
+> @@ -6,13 +6,6 @@
+>  #ifndef __ANX78xx_H
+>  #define __ANX78xx_H
+>  
+> -#define TX_P0				0x70
+> -#define TX_P1				0x7a
+> -#define TX_P2				0x72
+> -
+> -#define RX_P0				0x7e
+> -#define RX_P1				0x80
+> -
+>  /***************************************************************/
+>  /* Register definition of device address 0x7e                  */
+>  /***************************************************************/
 
-$ git grep 'DUMP_PREFIX_ADDRESS' | cut -f1 -d"/" | sort | uniq -c
-3 arch
-140 drivers
-12 fs
-1 include
-5 lib
-2 mm
+Should you also rename the headers to mention [RT]X P[012] instead of
+the numerical addresses ?
 
-Signed-off-by: Miles Chen <miles.chen@mediatek.com>
----
- mm/slub.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Apart from that,
 
-diff --git a/mm/slub.c b/mm/slub.c
-index 8834563cdb4b..89d91c1eb33d 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -528,7 +528,7 @@ static void print_section(char *level, char *text, u8 *addr,
- 			  unsigned int length)
- {
- 	metadata_access_enable();
--	print_hex_dump(level, text, DUMP_PREFIX_ADDRESS, 16, 1, addr,
-+	print_hex_dump(level, text, DUMP_PREFIX_OFFSET, 16, 1, addr,
- 			length, 1);
- 	metadata_access_disable();
- }
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
 -- 
-2.18.0
+Regards,
 
+Laurent Pinchart
