@@ -2,119 +2,114 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E420C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC16BC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:05:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33183208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:05:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EmDdv0Lz"
+	by mail.kernel.org (Postfix) with ESMTP id 9F7C4208C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:05:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568959527;
+	bh=X7t/VZSp6LudvbPeX6l74ReA7A/d8L11/pSeOs2po1A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LaZaq6CoUYHuDFPNg9oCWExU/zr3ORO768uv2+QUvm7vc9p5ZATsYb3yD0pMd/Mcl
+	 LqKZ0KsXzmwWwju8R21XY2EkeSQqR49WvLl/Tmqp0M1nPhSGqaghhAjBHyP9loEyjE
+	 BRUv/hsokC0eF8pLWxb/haM7dsKL3+aQ60WfE9N4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408230AbfITGFK (ORCPT
+        id S2408242AbfITGF0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 02:05:10 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44661 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404716AbfITGFI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 02:05:08 -0400
-Received: by mail-wr1-f66.google.com with SMTP id i18so5399965wru.11;
-        Thu, 19 Sep 2019 23:05:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cED18m1mvjZ+niHvjAeZ+v1xJ6oH9Dol7OSVjJcLyuU=;
-        b=EmDdv0Lzck9qjY3AmMNK8VHhZlfh9YkKN0+gv6DY6FojUJnC560+vgvJ7nnaWZSUrz
-         s4cHXnPkVuduXEWZJ2pf6L/Rbje7VwoPtHY+AzUlKmeylLsbT/I5OpyLNgh9TZm0weED
-         ur3d56IgMs0pQ1X6/0R890LmIgohd5ULnBYZ7A+mpxEEIdPUvVB6J1Uz6ocIP+EOZQ1a
-         P6dKhenrIdziB4pZpv2ehc8RVlZcGIIjE2ghmLpjMRcqGDxgU2lAtqZuTejYVnq3fFi+
-         HAfSuu0/6Z+DZS77Md7dLvNFq9URNo3Tw2lFkEt/QBx1jBDTk7+SfvSXNHrWt1x9cVp+
-         Az5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cED18m1mvjZ+niHvjAeZ+v1xJ6oH9Dol7OSVjJcLyuU=;
-        b=HM2zl29nIMnWJ/fDesL2XzVNFTb+sEJmPOB22RWz0c3V61CA8ZsxiXMxbNqCUCKLE5
-         BipHiPuALizQFtHRaWEzk0fTfcJrBCpebp4GAAmnwTyKfuCFfHagicBBYXIrdA+7l5mk
-         yujMSblZaiSwmJTN1U3BUWHh2EsvYRou1seygwCJx0sbn5FL9hpBfBpIdHMjnl0lFCW0
-         GMnUoCYZ+Vsgez5Zb53U5Hrom2RE7yRX5cYRaKhhA9R9vIslXgeuzh3hFZLkw+9pwrWi
-         S4iIy/029uMb2lGfIubB/hUbIm0JrtyO3dM7TaEIg2PaKlv9hPAlNdn0k7po93qK9olU
-         haww==
-X-Gm-Message-State: APjAAAUjQr33l64uJbcqt+v8z2hpHxTxMh0YQvZr2p2+V27nmp0TqwOg
-        iuvsDaHOaEtasuv/mCVHEXSkLm2rk2E=
-X-Google-Smtp-Source: APXvYqx9G70xEnXbHl9Gpjja/wrBXdZt5GW23xEsjeblfV1FMA9CU/z4o5/y77gPAMKzAPDd3jBitg==
-X-Received: by 2002:adf:e7ca:: with SMTP id e10mr5806942wrn.234.1568959505815;
-        Thu, 19 Sep 2019 23:05:05 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id h125sm913513wmf.31.2019.09.19.23.05.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2019 23:05:04 -0700 (PDT)
-Date:   Thu, 19 Sep 2019 23:05:03 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] block: t10-pi: fix -Wswitch warning
-Message-ID: <20190920060503.GA130425@archlinux-threadripper>
-References: <20190919135725.1287963-1-arnd@arndb.de>
+        Fri, 20 Sep 2019 02:05:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46520 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2408232AbfITGF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 02:05:26 -0400
+Received: from localhost (unknown [145.15.244.23])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A179D20882;
+        Fri, 20 Sep 2019 06:05:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568959525;
+        bh=X7t/VZSp6LudvbPeX6l74ReA7A/d8L11/pSeOs2po1A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Oi+BknRY202JsDjyAQXI0SXV4CWWmY1cnDooz/gwqyHNCYimNCZANRM+89t7UTpcp
+         uKwuE6Egkbqu/yPTj3mQa63LQCMSCXzzb1v9//VKXBL1UvoMUZ/C9VQIronA6ODsWq
+         QKaIUW/AUYezFpHJXtfpDb5IWkfEKhW3NPnbuwJg=
+Date:   Fri, 20 Sep 2019 08:04:54 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Nixiaoming <nixiaoming@huawei.com>
+Cc:     "penberg@cs.helsinki.fi" <penberg@cs.helsinki.fi>,
+        "jslaby@suse.com" <jslaby@suse.com>,
+        "nico@fluxnic.net" <nico@fluxnic.net>,
+        "textshell@uchuujin.de" <textshell@uchuujin.de>,
+        "sam@ravnborg.org" <sam@ravnborg.org>,
+        "daniel.vetter@ffwll.ch" <daniel.vetter@ffwll.ch>,
+        "mpatocka@redhat.com" <mpatocka@redhat.com>,
+        "ghalat@redhat.com" <ghalat@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Yangyingliang <yangyingliang@huawei.com>,
+        yuehaibing <yuehaibing@huawei.com>,
+        Zengweilin <zengweilin@huawei.com>
+Subject: Re: [PATCH] tty:vt: Add check the return value of kzalloc to avoid
+ oops
+Message-ID: <20190920060454.GB473496@kroah.com>
+References: <1568884695-56789-1-git-send-email-nixiaoming@huawei.com>
+ <20190919092933.GA2684163@kroah.com>
+ <E490CD805F7529488761C40FD9D26EF12AE5F4FA@dggemm507-mbx.china.huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190919135725.1287963-1-arnd@arndb.de>
+In-Reply-To: <E490CD805F7529488761C40FD9D26EF12AE5F4FA@dggemm507-mbx.china.huawei.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 03:57:19PM +0200, Arnd Bergmann wrote:
-> Changing the switch() statement to symbolic constants made
-> the compiler (at least clang-9, did not check gcc) notice that
-> there is one enum value that is not handled here:
+On Fri, Sep 20, 2019 at 02:29:49AM +0000, Nixiaoming wrote:
+> On 2019/9/19 17:30, Greg KH wrote:
+> > On Thu, Sep 19, 2019 at 05:18:15PM +0800, Xiaoming Ni wrote:
+> >> Using kzalloc() to allocate memory in function con_init(), but not
+> >> checking the return value, there is a risk of null pointer references
+> >> oops.
+> >>
+> >> Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
+> >
+> > We keep having this be "reported" 
+> >
+> >> ---
+> >>  drivers/tty/vt/vt.c | 18 ++++++++++++++++++
+> >>  1 file changed, 18 insertions(+)
+> >>
+> >> diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+> >> index 34aa39d..db83e52 100644
+> >> --- a/drivers/tty/vt/vt.c
+> >> +++ b/drivers/tty/vt/vt.c
+> >> @@ -3357,15 +3357,33 @@ static int __init con_init(void)
+> >>  
+> >>  	for (currcons = 0; currcons < MIN_NR_CONSOLES; currcons++) {
+> >>  		vc_cons[currcons].d = vc = kzalloc(sizeof(struct vc_data), GFP_NOWAIT);
+> >> +		if (unlikely(!vc)) {
+> >> +			pr_warn("%s:failed to allocate memory for the %u vc\n",
+> >> +					__func__, currcons);
+> >> +			break;
+> >> +		}
+> >
+> > At init, this really can not happen.  Have you see it ever happen?
 > 
-> block/t10-pi.c:62:11: error: enumeration value 'T10_PI_TYPE0_PROTECTION' not handled in switch [-Werror,-Wswitch]
-> 
-> Add another case for the missing value and do nothing there
-> based on the assumption that the code was working correctly
-> already.
-> 
-> Fixes: 9b2061b1a262 ("block: use symbolic constants for t10_pi type")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  block/t10-pi.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/block/t10-pi.c b/block/t10-pi.c
-> index 0c0120a672f9..055fac923946 100644
-> --- a/block/t10-pi.c
-> +++ b/block/t10-pi.c
-> @@ -60,6 +60,8 @@ static blk_status_t t10_pi_verify(struct blk_integrity_iter *iter,
->  		__be16 csum;
->  
->  		switch (type) {
-> +		case T10_PI_TYPE0_PROTECTION:
-> +			break;
->  		case T10_PI_TYPE1_PROTECTION:
->  		case T10_PI_TYPE2_PROTECTION:
->  			if (pi->app_tag == T10_PI_APP_ESCAPE)
-> -- 
-> 2.20.0
+> I did not actually observe the null pointer here.
+> I am confused when I see the code allocated here without check the return value.
+> Small memory allocation failures are difficult to occur during system initialization
+> But is it not safe enough if the code is not judged?
+> Also if the memory allocation failure is not allowed here, is it better to add the __GFP_NOFAIL flags?
 
-I didn't have the break in my local patch but I think this is more
-correct based on the description of the enums. Like Nick pointed out,
-there is no functional change because this value is not used in this
-file.
+See my response to Nicolas, but yes, that would be a good way to handle
+this.
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+thanks,
+
+greg k-h
