@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB65C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3FAC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20EE1207E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCDD2208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:25:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388656AbfITOZo (ORCPT
+        id S2388766AbfITOZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:25:44 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36032 "EHLO
+        Fri, 20 Sep 2019 10:25:51 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36110 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388127AbfITOZE (ORCPT
+        by vger.kernel.org with ESMTP id S2388145AbfITOZE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Sep 2019 10:25:04 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqH-0004y6-H8; Fri, 20 Sep 2019 15:25:01 +0100
+        id 1iBJqH-00051J-Rd; Fri, 20 Sep 2019 15:25:01 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqE-0007th-Pm; Fri, 20 Sep 2019 15:24:58 +0100
+        id 1iBJqH-0007yN-8o; Fri, 20 Sep 2019 15:25:01 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Takashi Iwai" <tiwai@suse.de>
+        "Mathias Payer" <mathias.payer@nebelwelt.net>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Hui Peng" <benquike@gmail.com>, "Takashi Iwai" <tiwai@suse.de>
 Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.416974554@decadent.org.uk>
+Message-ID: <lsq.1568989415.723106414@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 064/132] ALSA: hda/realtek - Fix overridden
- device-specific initialization
+Subject: [PATCH 3.16 114/132] ALSA: usb-audio: Fix a stack buffer overflow
+ bug in check_input_term
 In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,66 +57,102 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Hui Peng <benquike@gmail.com>
 
-commit 89781d0806c2c4f29072d3f00cb2dd4274aabc3d upstream.
+commit 19bce474c45be69a284ecee660aa12d8f1e88f18 upstream.
 
-The recent change to shuffle the codec initialization procedure for
-Realtek via commit 607ca3bd220f ("ALSA: hda/realtek - EAPD turn on
-later") caused the silent output on some machines.  This change was
-supposed to be safe, but it isn't actually; some devices have quirk
-setups to override the EAPD via COEF or BTL in the additional verb
-table, which is applied at the beginning of snd_hda_gen_init().  And
-this EAPD setup is again overridden in alc_auto_init_amp().
+`check_input_term` recursively calls itself with input from
+device side (e.g., uac_input_terminal_descriptor.bCSourceID)
+as argument (id). In `check_input_term`, if `check_input_term`
+is called with the same `id` argument as the caller, it triggers
+endless recursive call, resulting kernel space stack overflow.
 
-For recovering from the regression, tell snd_hda_gen_init() not to
-apply the verbs there by a new flag, then apply the verbs in
-alc_init().
+This patch fixes the bug by adding a bitmap to `struct mixer_build`
+to keep track of the checked ids and stop the execution if some id
+has been checked (similar to how parse_audio_unit handles unitid
+argument).
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204727
-Fixes: 607ca3bd220f ("ALSA: hda/realtek - EAPD turn on later")
+Reported-by: Hui Peng <benquike@gmail.com>
+Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
+Signed-off-by: Hui Peng <benquike@gmail.com>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- sound/pci/hda/hda_generic.c   | 3 ++-
- sound/pci/hda/hda_generic.h   | 1 +
- sound/pci/hda/patch_realtek.c | 2 ++
- 3 files changed, 5 insertions(+), 1 deletion(-)
+ sound/usb/mixer.c | 29 ++++++++++++++++++++++++-----
+ 1 file changed, 24 insertions(+), 5 deletions(-)
 
---- a/sound/pci/hda/hda_generic.c
-+++ b/sound/pci/hda/hda_generic.c
-@@ -5348,7 +5348,8 @@ int snd_hda_gen_init(struct hda_codec *c
- 	if (spec->init_hook)
- 		spec->init_hook(codec);
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -81,6 +81,7 @@ struct mixer_build {
+ 	unsigned char *buffer;
+ 	unsigned int buflen;
+ 	DECLARE_BITMAP(unitbitmap, MAX_ID_ELEMS);
++	DECLARE_BITMAP(termbitmap, MAX_ID_ELEMS);
+ 	struct usb_audio_term oterm;
+ 	const struct usbmix_name_map *map;
+ 	const struct usbmix_selector_map *selector_map;
+@@ -685,15 +686,24 @@ static int get_term_name(struct mixer_bu
+  * parse the source unit recursively until it reaches to a terminal
+  * or a branched unit.
+  */
+-static int check_input_term(struct mixer_build *state, int id,
++static int __check_input_term(struct mixer_build *state, int id,
+ 			    struct usb_audio_term *term)
+ {
+ 	int err;
+ 	void *p1;
++	unsigned char *hdr;
  
--	snd_hda_apply_verbs(codec);
-+	if (!spec->skip_verbs)
-+		snd_hda_apply_verbs(codec);
+ 	memset(term, 0, sizeof(*term));
+-	while ((p1 = find_audio_control_unit(state, id)) != NULL) {
+-		unsigned char *hdr = p1;
++	for (;;) {
++		/* a loop in the terminal chain? */
++		if (test_and_set_bit(id, state->termbitmap))
++			return -EINVAL;
++
++		p1 = find_audio_control_unit(state, id);
++		if (!p1)
++			break;
++
++		hdr = p1;
+ 		term->id = id;
+ 		switch (hdr[2]) {
+ 		case UAC_INPUT_TERMINAL:
+@@ -711,7 +721,7 @@ static int check_input_term(struct mixer
+ 				term->name = d->iTerminal;
  
- 	codec->cached_write = 1;
+ 				/* call recursively to get the clock selectors */
+-				err = check_input_term(state, d->bCSourceID, term);
++				err = __check_input_term(state, d->bCSourceID, term);
+ 				if (err < 0)
+ 					return err;
+ 			}
+@@ -734,7 +744,7 @@ static int check_input_term(struct mixer
+ 		case UAC2_CLOCK_SELECTOR: {
+ 			struct uac_selector_unit_descriptor *d = p1;
+ 			/* call recursively to retrieve the channel info */
+-			err = check_input_term(state, d->baSourceID[0], term);
++			err = __check_input_term(state, d->baSourceID[0], term);
+ 			if (err < 0)
+ 				return err;
+ 			term->type = d->bDescriptorSubtype << 16; /* virtual type */
+@@ -781,6 +791,15 @@ static int check_input_term(struct mixer
+ 	return -ENODEV;
+ }
  
---- a/sound/pci/hda/hda_generic.h
-+++ b/sound/pci/hda/hda_generic.h
-@@ -238,6 +238,7 @@ struct hda_gen_spec {
- 	unsigned int indep_hp_enabled:1; /* independent HP enabled */
- 	unsigned int have_aamix_ctl:1;
- 	unsigned int hp_mic_jack_modes:1;
-+	unsigned int skip_verbs:1; /* don't apply verbs at snd_hda_gen_init() */
- 
- 	/* additional mute flags (only effective with auto_mute_via_amp=1) */
- 	u64 mute_bits;
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -831,9 +831,11 @@ static int alc_init(struct hda_codec *co
- 	if (spec->init_hook)
- 		spec->init_hook(codec);
- 
-+	spec->gen.skip_verbs = 1; /* applied in below */
- 	snd_hda_gen_init(codec);
- 	alc_fix_pll(codec);
- 	alc_auto_init_amp(codec, spec->init_amp);
-+	snd_hda_apply_verbs(codec); /* apply verbs here after own init */
- 
- 	snd_hda_apply_fixup(codec, HDA_FIXUP_ACT_INIT);
- 
++
++static int check_input_term(struct mixer_build *state, int id,
++			    struct usb_audio_term *term)
++{
++	memset(term, 0, sizeof(*term));
++	memset(state->termbitmap, 0, sizeof(state->termbitmap));
++	return __check_input_term(state, id, term);
++}
++
+ /*
+  * Feature Unit
+  */
 
