@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E90EC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45534C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FB022080F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:31:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AC06207E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:32:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391348AbfITObx (ORCPT
+        id S2391405AbfITOcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:31:53 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36694 "EHLO
+        Fri, 20 Sep 2019 10:32:01 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36704 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388337AbfITOZN (ORCPT
+        by vger.kernel.org with ESMTP id S2388341AbfITOZN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Sep 2019 10:25:13 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqP-0004xy-UA; Fri, 20 Sep 2019 15:25:10 +0100
+        id 1iBJqQ-00051J-58; Fri, 20 Sep 2019 15:25:10 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqF-0007vK-RU; Fri, 20 Sep 2019 15:24:59 +0100
+        id 1iBJqF-0007uw-Ho; Fri, 20 Sep 2019 15:24:59 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "David Ahern" <dsahern@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Stephen Suryaputra" <ssuryaextr@gmail.com>
+        "Mark Brown" <broonie@kernel.org>,
+        "Jon Hunter" <jonathanh@nvidia.com>
 Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.168503847@decadent.org.uk>
+Message-ID: <lsq.1568989415.939042765@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 084/132] ipv4: Use return value of inet_iif() for
- __raw_v4_lookup in the while loop
+Subject: [PATCH 3.16 079/132] ASoC: max98090: Fix restore of DAPM Muxes
 In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,34 +55,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Stephen Suryaputra <ssuryaextr@gmail.com>
+From: Jon Hunter <jonathanh@nvidia.com>
 
-commit 38c73529de13e1e10914de7030b659a2f8b01c3b upstream.
+commit ecb2795c08bc825ebd604997e5be440b060c5b18 upstream.
 
-In commit 19e4e768064a8 ("ipv4: Fix raw socket lookup for local
-traffic"), the dif argument to __raw_v4_lookup() is coming from the
-returned value of inet_iif() but the change was done only for the first
-lookup. Subsequent lookups in the while loop still use skb->dev->ifIndex.
+The max98090 driver defines 3 DAPM muxes; one for the right line output
+(LINMOD Mux), one for the left headphone mixer source (MIXHPLSEL Mux)
+and one for the right headphone mixer source (MIXHPRSEL Mux). The same
+bit is used for the mux as well as the DAPM enable, and although the mux
+can be correctly configured, after playback has completed, the mux will
+be reset during the disable phase. This is preventing the state of these
+muxes from being saved and restored correctly on system reboot. Fix this
+by marking these muxes as SND_SOC_NOPM.
 
-Fixes: 19e4e768064a8 ("ipv4: Fix raw socket lookup for local traffic")
-Signed-off-by: Stephen Suryaputra <ssuryaextr@gmail.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-[bwh: Backported to 3.16: adjust context]
+Note this has been verified this on the Tegra124 Nyan Big which features
+the MAX98090 codec.
+
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/ipv4/raw.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/codecs/max98090.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---- a/net/ipv4/raw.c
-+++ b/net/ipv4/raw.c
-@@ -193,7 +193,7 @@ static int raw_v4_input(struct sk_buff *
- 		}
- 		sk = __raw_v4_lookup(net, sk_next(sk), iph->protocol,
- 				     iph->saddr, iph->daddr,
--				     skb->dev->ifindex);
-+				     dif);
- 	}
- out:
- 	read_unlock(&raw_v4_hashinfo.lock);
+--- a/sound/soc/codecs/max98090.c
++++ b/sound/soc/codecs/max98090.c
+@@ -1271,14 +1271,14 @@ static const struct snd_soc_dapm_widget
+ 		&max98090_right_rcv_mixer_controls[0],
+ 		ARRAY_SIZE(max98090_right_rcv_mixer_controls)),
+ 
+-	SND_SOC_DAPM_MUX("LINMOD Mux", M98090_REG_LOUTR_MIXER,
+-		M98090_LINMOD_SHIFT, 0, &max98090_linmod_mux),
++	SND_SOC_DAPM_MUX("LINMOD Mux", SND_SOC_NOPM, 0, 0,
++		&max98090_linmod_mux),
+ 
+-	SND_SOC_DAPM_MUX("MIXHPLSEL Mux", M98090_REG_HP_CONTROL,
+-		M98090_MIXHPLSEL_SHIFT, 0, &max98090_mixhplsel_mux),
++	SND_SOC_DAPM_MUX("MIXHPLSEL Mux", SND_SOC_NOPM, 0, 0,
++		&max98090_mixhplsel_mux),
+ 
+-	SND_SOC_DAPM_MUX("MIXHPRSEL Mux", M98090_REG_HP_CONTROL,
+-		M98090_MIXHPRSEL_SHIFT, 0, &max98090_mixhprsel_mux),
++	SND_SOC_DAPM_MUX("MIXHPRSEL Mux", SND_SOC_NOPM, 0, 0,
++		&max98090_mixhprsel_mux),
+ 
+ 	SND_SOC_DAPM_PGA("HP Left Out", M98090_REG_OUTPUT_ENABLE,
+ 		M98090_HPLEN_SHIFT, 0, NULL, 0),
 
