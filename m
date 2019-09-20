@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5769FC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 209BEC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38DD9206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:33:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2C68207E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:33:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391606AbfITOdr (ORCPT
+        id S2391584AbfITOdm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:33:47 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36332 "EHLO
+        Fri, 20 Sep 2019 10:33:42 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36322 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388235AbfITOZH (ORCPT
+        by vger.kernel.org with ESMTP id S2388233AbfITOZH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Sep 2019 10:25:07 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqL-00051F-2b; Fri, 20 Sep 2019 15:25:05 +0100
+        id 1iBJqK-000514-Sg; Fri, 20 Sep 2019 15:25:04 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqH-0007yw-FZ; Fri, 20 Sep 2019 15:25:01 +0100
+        id 1iBJqH-0007zj-Qc; Fri, 20 Sep 2019 15:25:01 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,12 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Oliver Neukum" <oneukum@suse.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        syzbot+a0cbdbd6d169020c8959@syzkaller.appspotmail.com
+        "Thomas Bork" <tom@eisfair.net>
 Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.19241258@decadent.org.uk>
+Message-ID: <lsq.1568989415.604781684@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 121/132] USB: sisusbvga: fix oops in error path of
- sisusb_probe
+Subject: [PATCH 3.16 131/132] media: poseidon: Depend on PM_RUNTIME
 In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,53 +54,26 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Ben Hutchings <ben@decadent.org.uk>
 
-commit 9a5729f68d3a82786aea110b1bfe610be318f80a upstream.
+This is a stable-only patch as the driver has been removed upstream.
 
-The pointer used to log a failure of usb_register_dev() must
-be set before the error is logged.
+Commit c2b71462d294 "USB: core: Fix bug caused by duplicate interface
+PM usage counter" switched USB to using only the standard runtime PM
+mechanism.  In my backport I changed poseidon to read the runtime PM
+counter, but that means it now needs to depend on PM_RUNTIME.
 
-v2: fix that minor is not available before registration
-
-Signed-off-by: oliver Neukum <oneukum@suse.com>
-Reported-by: syzbot+a0cbdbd6d169020c8959@syzkaller.appspotmail.com
-Fixes: 7b5cd5fefbe02 ("USB: SisUSB2VGA: Convert printk to dev_* macros")
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-by: Thomas Bork <tom@eisfair.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/misc/sisusbvga/sisusb.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
-
---- a/drivers/usb/misc/sisusbvga/sisusb.c
-+++ b/drivers/usb/misc/sisusbvga/sisusb.c
-@@ -3093,6 +3093,13 @@ static int sisusb_probe(struct usb_inter
+--- a/drivers/media/usb/tlg2300/Kconfig
++++ b/drivers/media/usb/tlg2300/Kconfig
+@@ -7,6 +7,7 @@ config VIDEO_TLG2300
+ 	select VIDEOBUF_VMALLOC
+ 	select SND_PCM
+ 	select VIDEOBUF_DVB
++	depends on PM_RUNTIME
  
- 	mutex_init(&(sisusb->lock));
- 
-+	sisusb->sisusb_dev = dev;
-+	sisusb->vrambase   = SISUSB_PCI_MEMBASE;
-+	sisusb->mmiobase   = SISUSB_PCI_MMIOBASE;
-+	sisusb->mmiosize   = SISUSB_PCI_MMIOSIZE;
-+	sisusb->ioportbase = SISUSB_PCI_IOPORTBASE;
-+	/* Everything else is zero */
-+
- 	/* Register device */
- 	if ((retval = usb_register_dev(intf, &usb_sisusb_class))) {
- 		dev_err(&sisusb->sisusb_dev->dev, "Failed to get a minor for device %d\n",
-@@ -3101,13 +3108,7 @@ static int sisusb_probe(struct usb_inter
- 		goto error_1;
- 	}
- 
--	sisusb->sisusb_dev = dev;
--	sisusb->minor      = intf->minor;
--	sisusb->vrambase   = SISUSB_PCI_MEMBASE;
--	sisusb->mmiobase   = SISUSB_PCI_MMIOBASE;
--	sisusb->mmiosize   = SISUSB_PCI_MMIOSIZE;
--	sisusb->ioportbase = SISUSB_PCI_IOPORTBASE;
--	/* Everything else is zero */
-+	sisusb->minor = intf->minor;
- 
- 	/* Allocate buffers */
- 	sisusb->ibufsize = SISUSB_IBUF_SIZE;
+ 	---help---
+ 	  This is a video4linux driver for Telegent tlg2300 based TV cards.
 
