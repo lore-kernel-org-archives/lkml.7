@@ -2,123 +2,179 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF1AC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 18:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A965C4CECD
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 18:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0CBB2173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 18:06:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A1C420C01
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 18:10:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569002801;
-	bh=HDlb3ASxQQ+AQNI8W66Qxj6Ff0cT1tkAnS/DeUrit2Q=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=J0eFkK0BZbAQt3L/+Vrfp3nNxAqagutyhQkOvvZkc1aFSCFhyqqvCaNIHeb8y1PP1
-	 wr2GRJD+vyOn78c6q0S6Fc8+NmKj/zT9lSCvIRZEOEgJcgadVcKlS+Ui4Jsp/TpGor
-	 Vjj8ijRg/vXGab2qtuF9HDQTXQsf4r70jpdmJ/7k=
+	s=default; t=1569003017;
+	bh=TOirQ/CrcJM5+kJRFG8UyA6qktTtifqcvgRKAEXmjs8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=zG+cN6y/+j5j4UTzh/MQsRHscUpvzd1+R3E2ZwpI6XKsuc2l3pxm7UKvg5Xja0y/G
+	 AnhYMfhrcqfegFK9OBRHdcGDA/BsWwU/f4Kz5JQsqF+0cM8OLLMe61C7lT1zpD9TSs
+	 qd2bhqrv805VFsAGgUMu3Boigb3TudmldYAIXDdE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406246AbfITSGk (ORCPT
+        id S2406259AbfITSKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 14:06:40 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:40581 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389097AbfITSGj (ORCPT
+        Fri, 20 Sep 2019 14:10:16 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34253 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404981AbfITSKQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 14:06:39 -0400
-Received: by mail-io1-f67.google.com with SMTP id h144so18160387iof.7
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 11:06:39 -0700 (PDT)
+        Fri, 20 Sep 2019 14:10:16 -0400
+Received: by mail-lj1-f194.google.com with SMTP id j19so6473387lja.1
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 11:10:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=nJi+jkD9qkHLIeHwUoAJGIQIqvA5hcES7DlWqDuq6Uo=;
-        b=M7KNKfCYlTuZYd5fJJ2JsOl9hW194OD55o4viiTNyKlcrYO0rDmZoxtNZd4ZB+KS2y
-         ralsCLv78mEryfEF7fz/DcUaj+6ezd0i2fS+q4+ysIRasL9xeEMWMJveP4Ej8BML7QO0
-         LLV5JfMtSFzBnFdKfTUMeIAxG/AIpg6jr2Kqk=
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rM+Onl6ZZjCImWZH5w1UTQehqPPbzrNaxCZa4cd8l/4=;
+        b=WFFZp5fgdUni5U9NnLZhbw6pO9xDM5RkYeghIYgcBWXFD7T14QJUQvBU7Cdx+lxBSa
+         bkTbGx0p3+3IzHwHnVfQ/fS6soC0P0rWIQj80S3A+ae2wmbHsBjD9Sa0XYRauaOcnE0g
+         4Ju1XgJzmbU7Wa53qZygI9UxcmISnicMfpTV4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=nJi+jkD9qkHLIeHwUoAJGIQIqvA5hcES7DlWqDuq6Uo=;
-        b=XOC+GHUfsP652CcgnKOub0LrYTrju12a91j9DwqZ34hVdhIOX/UrCnz/JXo/A/aC+x
-         t9wDLiMBEgCNPmwwlqTRR/OplmIzZwXr3utPBtgQjQvqJjBhRpDzvhAl+6TFrM0Abv6U
-         SoHOrguNXE+1YbdJ1Z7e2fU2x5HoSbCAvkbND7cNEBvNGdguy8pBOQuTfubghPdISHmF
-         qXVrwsu36blTpNgIt65BuyFEWMNkI+geFnffc4IRDscE/xaiX6cRCmirX+xXT1TeYphI
-         P350ea7vAIWLzXMWX0r+nTZ5R60ivJ8Z1xZQzQrrsV3qStIvmZJSCFYyUds9vWdNsVro
-         /55Q==
-X-Gm-Message-State: APjAAAVJ3Q4Wm6cJgVxNW+NfPlTY99yCpidRFYFSBK2OqoNX7geQhTWR
-        F1nnUyYFGlwJr+mEGN952wUnSQ==
-X-Google-Smtp-Source: APXvYqzcxmufuhpTV8cPIXs3gqKlIndr6SLD+RwC0Nj0QKygB/UhV/bxz2HEf/+9nCsKFuqws5/ZmQ==
-X-Received: by 2002:a6b:7109:: with SMTP id q9mr15165154iog.229.1569002798715;
-        Fri, 20 Sep 2019 11:06:38 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id a26sm2573274iot.46.2019.09.20.11.06.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 20 Sep 2019 11:06:38 -0700 (PDT)
-Subject: Re: [GIT PULL] Kselftest update for Linux 5.4-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Brendan Higgins <brendanhiggins@google.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <be8059f4-8e8f-cd18-0978-a9c861f6396b@linuxfoundation.org>
- <CAHk-=wgs+UoZWfHGENWSVBd57Z-Vp0Nqe68R6wkDb5zF+cfvDg@mail.gmail.com>
- <CAKRRn-edxk9Du70A27V=d3Na73fh=fVvGEVsQRGROrQm05YRrA@mail.gmail.com>
- <CAFd5g45ROPm-1SD5cD772gqESaP3D8RbBhSiJXZzbaA+2hFdHA@mail.gmail.com>
- <CAHk-=wgMuNLBhJR_nFHrpViHbz2ErQ-fJV6B9o0+wym+Wk+r0w@mail.gmail.com>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <2474b796-2e38-2e27-06db-4d917e822a26@linuxfoundation.org>
-Date:   Fri, 20 Sep 2019 12:06:37 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rM+Onl6ZZjCImWZH5w1UTQehqPPbzrNaxCZa4cd8l/4=;
+        b=gflOOmbnx8tjyt0sSECY44NKTk5LVNP0JigQLpYswxTdjpNGcCZ19ol0+m3Mf3gP+8
+         uLTc6wNmGxI1RhSZYr845y/kB3vH3FURoupIaRd7ZcalDWYh3tGu7QT1A5hjpY4CsGjF
+         wtxduoJvObd6t01UU3IsyG8wxiBB7bu+f0AH4D6I/cSZ24aWIpf0HheTwck+6QVacDjJ
+         mO+kTTNmnFGCBtFLbBa0gfnrxR+xAccA6MJ+2xTnutPF7jqSK6SZEoGJ1T9SGb8AixX9
+         Adw2gx8EXvfTHh/6tqG42QQdFeONroQPsBxsPGDxftVa3nYDl873u6H/nGy7wJ9j0Fwo
+         f8kA==
+X-Gm-Message-State: APjAAAV4YuVAZr9mBtMKuNf/vN2z8yi54QQ7YH5Ducj+sMSvtBS0Ozy9
+        Um88k0h4oo07MOykfw8km5C6o+pVbzU=
+X-Google-Smtp-Source: APXvYqwiK+EYqwtJ3PQ4wqUgoARUj+ZxHFerZn69Jo+8AxgxN1G3zSATHSJvvvoF1JxCbrQFb2XM5A==
+X-Received: by 2002:a2e:b009:: with SMTP id y9mr9847132ljk.185.1569003013002;
+        Fri, 20 Sep 2019 11:10:13 -0700 (PDT)
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
+        by smtp.gmail.com with ESMTPSA id e8sm645260ljk.54.2019.09.20.11.10.10
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Sep 2019 11:10:10 -0700 (PDT)
+Received: by mail-lf1-f54.google.com with SMTP id u28so5673747lfc.5
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 11:10:10 -0700 (PDT)
+X-Received: by 2002:ac2:50cb:: with SMTP id h11mr9479913lfm.170.1569003009866;
+ Fri, 20 Sep 2019 11:10:09 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wgMuNLBhJR_nFHrpViHbz2ErQ-fJV6B9o0+wym+Wk+r0w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190912034421.GA2085@darwi-home-pc> <20190912082530.GA27365@mit.edu>
+ <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+ <20190914122500.GA1425@darwi-home-pc> <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
+ <20190915052242.GG19710@mit.edu> <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
+ <20190918211503.GA1808@darwi-home-pc> <20190918211713.GA2225@darwi-home-pc>
+ <CAHk-=wiCqDiU7SE3FLn2W26MS_voUAuqj5XFa1V_tiGTrrW-zQ@mail.gmail.com>
+ <20190920134609.GA2113@pc> <CALCETrWvE5es3i+to33y6jw=Yf0Tw6ZfV-6QWjZT5v0fo76tWw@mail.gmail.com>
+ <CAHk-=wgW8rN2EVL_Rdn63V9vQO0GkZ=RQFeqqsYJM==8fujpPg@mail.gmail.com> <CALCETrV=4TX2a4uV5t2xOFzv+zM_jnOtMLJna8Vb7uXz6S=wSw@mail.gmail.com>
+In-Reply-To: <CALCETrV=4TX2a4uV5t2xOFzv+zM_jnOtMLJna8Vb7uXz6S=wSw@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 20 Sep 2019 11:09:53 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjpTWgpo6d24pTv+ubfea_uEomX-sHjjOkdACfV-8Nmkg@mail.gmail.com>
+Message-ID: <CAHk-=wjpTWgpo6d24pTv+ubfea_uEomX-sHjjOkdACfV-8Nmkg@mail.gmail.com>
+Subject: Re: [PATCH RFC v4 1/1] random: WARN on large getrandom() waits and
+ introduce getrandom2()
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/20/19 10:51 AM, Linus Torvalds wrote:
-> On Fri, Sep 20, 2019 at 9:35 AM Brendan Higgins
-> <brendanhiggins@google.com> wrote:
->>
->> Sorry about that. I am surprised that none of the other reviewers
->> brought this up.
-> 
-> I think I'm "special".
-> 
-> There was some other similar change a few years ago, which I
-> absolutely hated because of how it broke autocomplete for me. Very few
-> other people seemed to react to it.
-> 
-> Part of it may be that the kernel is almost the _only_ project I work
-> with, so unlike a lot of other developers, I end up having muscle
-> memory for kernel-specific issues.
-> 
-> Auto-completion was also one of the (many) reasons why I hated CVS -
-> having that annoying "CVS" directory there just always annoyed me.
-> There's a reason why git uses a dot-file.
-> 
-> So I just have issues that perhaps other people don't react to as
-> much. And aggressive tab-completion happens to be a thing for me.
-> 
+On Fri, Sep 20, 2019 at 10:52 AM Andy Lutomirski <luto@kernel.org> wrote:
+>
+> IMO, from the beginning, we should have done this:
+>
+> GRND_INSECURE: insecure.  always works.
+>
+> GRND_SECURE_BLOCKING: does exactly what it says.
+>
+> 0: -EINVAL.
 
-Thanks for explaining. Brendan and I will get this sorted out.
+Violently agreed. And that's kind of what the GRND_EXPLICIT is really
+aiming for.
 
-Looks like my previous response didn't make it to the kselftest
-and kernel lists.
+However, it's worth noting that nobody should ever use GRND_EXPLICIT
+directly. That's just the name for the bit. The actual users would use
+GRND_INSECURE or GRND_SECURE.
 
-thanks,
--- Shuah
+And yes, maybe it's worth making the name be GRND_SECURE_BLOCKING just
+to make people see what the big deal is.
 
+In the meantime, we need that new bit just to be able to create the
+new semantics eventually. With a warning to nudge people in the right
+direction.
+
+We may never be able to return -EINVAL, but we can add the pr_notice()
+to discourage people from using it.
+
+And yes, we'll have to block - at least for a time - to get some
+entropy. But at some point we either start making entropy up, or we
+say "0 means jitter-entropy for ten seconds".
+
+That will _work_, but it will also make the security-people nervous,
+which is just one more hint that they should move to
+GRND_SECURE[_BLOCKING].
+
+> getrandom(..., GRND_EXPLICIT): just fscking give me a number.  it
+> seems to work and it shuts up the warning
+>
+> And we're back to square one.
+
+Actually, you didn't read the GRND_INSECURE patch, did you.
+
+getrandom(GRND_EXPLICIT) on its own returns -EINVAL.
+
+Because yes, I thought about it, and yes, I agree that it's the same
+as the old 0.
+
+So GRND_EXPLICIT is a bit that basically means "I am explicit about
+what behavior I want". But part of that is that you need to _state_
+the behavior too.
+
+So:
+
+ - GRND_INSECURE is (GRND_EXPLICIT | GRND_NONBLOCK)
+
+   As in "I explicitly ask you not to just not ever block": urandom
+
+ - GRND_SECURE_BLOCKING is (GRND_EXPLICIT | GRND_RANDOM)
+
+   As in "I explicitly ask you for those secure random numbers"
+
+ - GRND_SECURE_NONBLOCKING is (GRND_EXPLICIT | GRND_RANDOM | GRND_NONBLOCK)
+
+   As in "I want explicitly secure random numbers, but return -EAGAIN
+if that would block".
+
+Which are the three sane behaviors (that last one is useful for the "I
+can try to generate entropy if you don't have any" case. I'm not sure
+anybody will do it, but it definitely conceptually makes sense).
+
+And I agree that your naming is better.
+
+I had it as just "GRND_SECURE" for the blocking version, and
+"GRND_SECURE | GRND_NONBLOCK" for the "secure but return EAGAIN if you
+would need to block for entropy" version.
+
+But explicitly stating the blockingness in the name makes it clearer
+to the people who just want GRND_INSECURE, and makes them realize that
+they don't want the blocking version.
+
+             Linus
