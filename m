@@ -2,221 +2,165 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB112C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 02:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A598C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 02:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC317217D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 02:37:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 208D4217D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 02:44:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="k91bm4Ho"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392792AbfITChO (ORCPT
+        id S2394708AbfITCoi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 22:37:14 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51248 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389457AbfITChO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 22:37:14 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9A1B93082E44;
-        Fri, 20 Sep 2019 02:37:13 +0000 (UTC)
-Received: from [10.72.12.88] (ovpn-12-88.pek2.redhat.com [10.72.12.88])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 717C95D9CD;
-        Fri, 20 Sep 2019 02:37:00 +0000 (UTC)
-Subject: Re: [RFC v4 0/3] vhost: introduce mdev based hardware backend
-To:     Tiwei Bie <tiwei.bie@intel.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>, alex.williamson@redhat.com,
-        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, dan.daly@intel.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        lingshan.zhu@intel.com
-References: <20190917010204.30376-1-tiwei.bie@intel.com>
- <993841ed-942e-c90b-8016-8e7dc76bf13a@redhat.com>
- <20190917105801.GA24855@___>
- <fa6957f3-19ad-f351-8c43-65bc8342b82e@redhat.com>
- <20190918102923-mutt-send-email-mst@kernel.org>
- <d2efe7e4-cf13-437d-e2dc-e2779fac7d2f@redhat.com>
- <20190919154552.GA27657@___>
- <43aaf7dc-f08b-8898-3c55-908ff4d68866@redhat.com> <20190920021630.GA4108@___>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <09dced89-3892-be43-3748-054ce21e37ab@redhat.com>
-Date:   Fri, 20 Sep 2019 10:36:57 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190920021630.GA4108@___>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Thu, 19 Sep 2019 22:44:38 -0400
+Received: from mail-eopbgr140048.outbound.protection.outlook.com ([40.107.14.48]:50055
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388350AbfITCoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 22:44:38 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hq8lhjoXTKLRWz17v7whL/QuaLGRbwnVk7sc3tWmG0i0YJGaiairq0thP0eCYfAuHHImS6kM3ApqNJoAvx2CL28yh/6HoR/JLYkfaDIyS4oezfqHc1KT6eDa2hR9Q62q7VCjLPpC4Qu/hHDAymfSrHs1jB7n/J3mfS+1jLkIizhGw7l6mzUO9E33fh/+Sn75oZnjNQkX4GLtGz7bFbKiz60WtBpFLghfad9CTw0XGMUkqd3idM2sV/TP83U20NYInpU1neqI9pybKkwsSMfcyxMnS/FtffkSkF7UK538HukY/HsXwTGdw5C7qFszIHkfZQ0z8zbpuKBztodGXoncRQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=r5lyX5pJb+Cu7vIUgQHU76lsQ9j3sWP+prDicFUQKEM=;
+ b=cJrCxSEveSYsaxJEXcHaqoliHC/fOO0Axz+LamHfztSyQ7rTMx/3w9zZFd8Y86ThjJ4+gvo/7Q3I2XNPnYnLgQxXa3CLY5n/2BeT+PBAOdkZ/k4l1pHNeAxckN7qlyoRpwvUowcdbsZFhqZ6I2DuLb8SNOEFWTMhy49eSP6vJjnlx89W/thKw6cis2O2sUzY7oXnMGoUiwzSp8Q4KqEjB99A06Ae6Urr9SudYBJmGBCGEJAhJ3KuzK6tohX2UAWMW6rc1O+nL9DnCdSPIEe4a37qjK++ZuJBi4tfP0fR7lTnsS1CfpSFhY4D8PsUJ9oIxgsZkSbzoJwGPVEsSM9GNw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=r5lyX5pJb+Cu7vIUgQHU76lsQ9j3sWP+prDicFUQKEM=;
+ b=k91bm4HoQoSyF1tNJ4TyzwdrSxQYxIwqP1fG521HZLNgKo/As7QOjylVhN5PE1fqlVmWuF/dL08bTZoEBV8WalyxPQldPoda+Xmk4FFOHJVByw5pIeOASOKxRFDlmIp+HjIiXuiD6QAwCgfeXubn7+ssySuTPpINJQFIq0NvRyA=
+Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com (52.134.5.23) by
+ VI1PR0402MB3712.eurprd04.prod.outlook.com (52.134.15.30) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.20; Fri, 20 Sep 2019 02:44:33 +0000
+Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com
+ ([fe80::f919:a62a:998c:6e9a]) by VI1PR0402MB3600.eurprd04.prod.outlook.com
+ ([fe80::f919:a62a:998c:6e9a%6]) with mapi id 15.20.2284.009; Fri, 20 Sep 2019
+ 02:44:33 +0000
+From:   Andy Duan <fugang.duan@nxp.com>
+To:     Philipp Puschmann <philipp.puschmann@emlix.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Robin Gong <yibin.gong@nxp.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "dmaengine@vger.kernel.or" <dmaengine@vger.kernel.or>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [EXT] [PATCH v4 0/3] Fix UART DMA freezes for i.MX SOCs
+Thread-Topic: [EXT] [PATCH v4 0/3] Fix UART DMA freezes for i.MX SOCs
+Thread-Index: AQHVbvawZ3M9Pccxp0iKGAqRTaAJlKcz3AJg
+Date:   Fri, 20 Sep 2019 02:44:33 +0000
+Message-ID: <VI1PR0402MB36002C1C1E5A48EBA2385406FF880@VI1PR0402MB3600.eurprd04.prod.outlook.com>
+References: <20190919142942.12469-1-philipp.puschmann@emlix.com>
+In-Reply-To: <20190919142942.12469-1-philipp.puschmann@emlix.com>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Fri, 20 Sep 2019 02:37:13 +0000 (UTC)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=fugang.duan@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e38708cf-f9b0-45be-5cab-08d73d74782b
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3712;
+x-ms-traffictypediagnostic: VI1PR0402MB3712:|VI1PR0402MB3712:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB37123F1C5955607E631DE7A4FF880@VI1PR0402MB3712.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0166B75B74
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(396003)(376002)(39860400002)(366004)(189003)(199004)(54534003)(55016002)(305945005)(478600001)(9686003)(66066001)(26005)(14454004)(6436002)(7736002)(74316002)(6246003)(25786009)(4326008)(256004)(14444005)(7416002)(229853002)(71190400001)(71200400001)(66446008)(11346002)(2501003)(8936002)(446003)(476003)(8676002)(66946007)(64756008)(81156014)(66556008)(81166006)(102836004)(6506007)(186003)(5660300002)(66476007)(86362001)(99286004)(33656002)(7696005)(76176011)(6116002)(486006)(3846002)(52536014)(2906002)(76116006)(54906003)(110136005)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3712;H:VI1PR0402MB3600.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: cpP1fmF+aj2TqdmSXWITrq6I8oXDV11f93uEyN11UOAVr0nt+gqb2mYh8xAy6kz1zfpYMX2USSwHjJJSMWmEciciBq1gAdKl2Df162G2BZKnx6z5eC9rdE3mcpdXPx2AjtzQUA8DaON6FOXIKaiKQidak263+0yd7ZXp5ZanMcLy5R5+r2ThbPdguFeTbqsiyU7q/jodt5xSqYzb8FNI2mOQ8xIKDyIXGmMmILiERT6HBTxgIRK7ZgfR/WaE91x09vzW2YKy+MdgX3yznOf9p/DKSKm9y8jKEz/QPDjHVSyVNcRu0GkkKJvJHo3Z28kkgX7voLQAgWfHy8Ie03TpSVSDOewYH+l9mCQC2xgqSdPZGUYTWwtEoA03c238lRMc7WKg9cH4wNfVR3ot4+zdn1r+5bATweTz9mzG9UFoqRY=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e38708cf-f9b0-45be-5cab-08d73d74782b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Sep 2019 02:44:33.6223
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: LUx0JS+3ci5cSWOyo7OWhbaapN5XMf5UmKSc8MlMP0kP68pAyrFk5jTpQjnB+bPXgU5NhNDG5bVuUEduoHzW0Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3712
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Philipp Puschmann <philipp.puschmann@emlix.com> Sent: Thursday, Septe=
+mber 19, 2019 10:30 PM
+> For some years and since many kernel versions there are reports that RX
+> UART DMA channel stops working at one point. So far the usual workaround
+> was to disable RX DMA. This patches fix the underlying problem.
+>=20
+> When a running sdma script does not find any usable destination buffer to=
+ put
+> its data into it just leads to stopping the channel being scheduled again=
+. As
+> solution we manually retrigger the sdma script for this channel and by th=
+is
+> dissolve the freeze.
+>=20
+> While this seems to work fine so far, it may come to buffer overruns when=
+ the
+> channel - even temporary - is stopped. This case has to be addressed by
+> device drivers by increasing the number of DMA periods.
+>=20
+> This patch series was tested with the current kernel and backported to ke=
+rnel
+> 4.15 with a special use case using a WL1837MOD via UART and provoking the
+> hanging of UART RX DMA within seconds after starting a test application. =
+It
+> resulted in well known
+>   "Bluetooth: hci0: command 0x0408 tx timeout"
+> errors and complete stop of UART data reception. Our Bluetooth traffic
+> consists of many independent small packets, mostly only a few bytes, caus=
+ing
+> high usage of periods.
+>=20
+> Changelog v4:
+>  - fixed the fixes tags
+>=20
+> Changelog v3:
+>  - fixes typo in dma_wmb
+>  - add fixes tags
+>=20
+> Changelog v2:
+>  - adapt title (this patches are not only for i.MX6)
+>  - improve some comments and patch descriptions
+>  - add a dma_wb() around BD_DONE flag
+>  - add Reviewed-by tags
+>  - split off  "serial: imx: adapt rx buffer and dma periods"
+>=20
+> Philipp Puschmann (3):
+>   dmaengine: imx-sdma: fix buffer ownership
+>   dmaengine: imx-sdma: fix dma freezes
+>   dmaengine: imx-sdma: drop redundant variable
+>=20
+>  drivers/dma/imx-sdma.c | 32 ++++++++++++++++++++++----------
+>  1 file changed, 22 insertions(+), 10 deletions(-)
+>=20
+> --
+> 2.23.0
 
-On 2019/9/20 上午10:16, Tiwei Bie wrote:
-> On Fri, Sep 20, 2019 at 09:30:58AM +0800, Jason Wang wrote:
->> On 2019/9/19 下午11:45, Tiwei Bie wrote:
->>> On Thu, Sep 19, 2019 at 09:08:11PM +0800, Jason Wang wrote:
->>>> On 2019/9/18 下午10:32, Michael S. Tsirkin wrote:
->>>>>>>> So I have some questions:
->>>>>>>>
->>>>>>>> 1) Compared to method 2, what's the advantage of creating a new vhost char
->>>>>>>> device? I guess it's for keep the API compatibility?
->>>>>>> One benefit is that we can avoid doing vhost ioctls on
->>>>>>> VFIO device fd.
->>>>>> Yes, but any benefit from doing this?
->>>>> It does seem a bit more modular, but it's certainly not a big deal.
->>>> Ok, if we go this way, it could be as simple as provide some callback to
->>>> vhost, then vhost can just forward the ioctl through parent_ops.
->>>>
->>>>>>>> 2) For method 2, is there any easy way for user/admin to distinguish e.g
->>>>>>>> ordinary vfio-mdev for vhost from ordinary vfio-mdev?
->>>>>>> I think device-api could be a choice.
->>>>>> Ok.
->>>>>>
->>>>>>
->>>>>>>> I saw you introduce
->>>>>>>> ops matching helper but it's not friendly to management.
->>>>>>> The ops matching helper is just to check whether a given
->>>>>>> vfio-device is based on a mdev device.
->>>>>>>
->>>>>>>> 3) A drawback of 1) and 2) is that it must follow vfio_device_ops that
->>>>>>>> assumes the parameter comes from userspace, it prevents support kernel
->>>>>>>> virtio drivers.
->>>>>>>>
->>>>>>>> 4) So comes the idea of method 3, since it register a new vhost-mdev driver,
->>>>>>>> we can use device specific ops instead of VFIO ones, then we can have a
->>>>>>>> common API between vDPA parent and vhost-mdev/virtio-mdev drivers.
->>>>>>> As the above draft shows, this requires introducing a new
->>>>>>> VFIO device driver. I think Alex's opinion matters here.
->>>> Just to clarify, a new type of mdev driver but provides dummy
->>>> vfio_device_ops for VFIO to make container DMA ioctl work.
->>> I see. Thanks! IIUC, you mean we can provide a very tiny
->>> VFIO device driver in drivers/vhost/mdev.c, e.g.:
->>>
->>> static int vfio_vhost_mdev_open(void *device_data)
->>> {
->>> 	if (!try_module_get(THIS_MODULE))
->>> 		return -ENODEV;
->>> 	return 0;
->>> }
->>>
->>> static void vfio_vhost_mdev_release(void *device_data)
->>> {
->>> 	module_put(THIS_MODULE);
->>> }
->>>
->>> static const struct vfio_device_ops vfio_vhost_mdev_dev_ops = {
->>> 	.name		= "vfio-vhost-mdev",
->>> 	.open		= vfio_vhost_mdev_open,
->>> 	.release	= vfio_vhost_mdev_release,
->>> };
->>>
->>> static int vhost_mdev_probe(struct device *dev)
->>> {
->>> 	struct mdev_device *mdev = to_mdev_device(dev);
->>>
->>> 	... Check the mdev device_id proposed in ...
->>> 	... https://lkml.org/lkml/2019/9/12/151 ...
->>
->> To clarify, this should be done through the id_table fields in
->> vhost_mdev_driver, and it should claim it supports virtio-mdev device only:
->>
->>
->> static struct mdev_class_id id_table[] = {
->>      { MDEV_ID_VIRTIO },
->>      { 0 },
->> };
->>
->>
->> static struct mdev_driver vhost_mdev_driver = {
->>      ...
->>      .id_table = id_table,
->> }
-> In this way, both of virtio-mdev and vhost-mdev will try to
-> take this device. We may want a way to let vhost-mdev take this
-> device only when users explicitly ask it to do it. Or maybe we
-> can have a different MDEV_ID for vhost-mdev but share the device
-> ops with virtio-mdev.
+The patch set look fine that is really to fix some corner issue from the lo=
+gical view.
 
-
-I think it's similar to virtio-pci vs vfio-pci. User can choose to 
-switch the driver through bind/unbind.
-
-
->
->>
->>> 	return vfio_add_group_dev(dev, &vfio_vhost_mdev_dev_ops, mdev);
->>
->> And in vfio_vhost_mdev_ops, all its need is to just implement vhost-net
->> ioctl and translate them to virtio-mdev transport (e.g device_ops I proposed
->> or ioctls other whatever other method) API.
-> I see, so my previous understanding is basically correct:
->
-> https://lkml.org/lkml/2019/9/17/332
->
-> I.e. we won't have a separate vhost fd and we will do all vhost
-> ioctls on the VFIO device fd backed by this new VFIO driver.
-
-
-Yes.
-
-Thanks
-
-
->
->> And it could have a dummy ops
->> implementation for the other device_ops.
->>
->>
->>> }
->>>
->>> static void vhost_mdev_remove(struct device *dev)
->>> {
->>> 	vfio_del_group_dev(dev);
->>> }
->>>
->>> static struct mdev_driver vhost_mdev_driver = {
->>> 	.name	= "vhost_mdev",
->>> 	.probe	= vhost_mdev_probe,
->>> 	.remove	= vhost_mdev_remove,
->>> };
->>>
->>> So we can bind above mdev driver to the virtio-mdev compatible
->>> mdev devices when we want to use vhost-mdev.
->>>
->>> After binding above driver to the mdev device, we can setup IOMMU
->>> via VFIO and get VFIO device fd of this mdev device, and pass it
->>> to vhost fd (/dev/vhost-mdev) with a SET_BACKEND ioctl.
->>
->> Then what vhost-mdev char device did is just forwarding ioctl back to this
->> vfio device fd which seems a overkill. It's simpler that just do ioctl on
->> the device ops directly.
-> Yes.
->
-> Thanks,
-> Tiwei
->
->
->> Thanks
->>
->>
->>> Thanks,
->>> Tiwei
->>>
->>>> Thanks
->>>>
->>>>
->>>>>> Yes, it is.
->>>>>>
->>>>>> Thanks
->>>>>>
->>>>>>
+Reviewed-by: Fugang Duan <fugang.duan@nxp.com>
