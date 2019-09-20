@@ -2,82 +2,69 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11980C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D50C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB61020B7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:29:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="BurnvNZg"
+	by mail.kernel.org (Postfix) with ESMTP id 51B9C207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:37:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729530AbfITR32 (ORCPT
+        id S2392172AbfITRhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 13:29:28 -0400
-Received: from vps.xff.cz ([195.181.215.36]:40652 "EHLO vps.xff.cz"
+        Fri, 20 Sep 2019 13:37:14 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44594 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729485AbfITR32 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 13:29:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1569000566; bh=yFh3SHDAWhDFWZ5U5l/Fjokt0AcfkOIyuWq4AwQu/1I=;
-        h=From:To:Cc:Subject:Date:From;
-        b=BurnvNZgHpqgi/eynnP37W8qjm5smxV9mFxNb/P2HCRa1yCfRpDl/aVWnCjBqF1xT
-         7VrjpaRFq8lr99bIywaCbc875zzJoqbP65yjBYuwuKPx/BQYfhLNzvY05CbKN8U96U
-         ykzSiij1086wXyyLCickKTAEqPUclG7xSWCH74Do=
-From:   megous@megous.com
-To:     dri-devel@lists.freedesktop.org
-Cc:     Ondrej Jirman <megous@megous.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] drm: Remove redundant of_device_is_available check
-Date:   Fri, 20 Sep 2019 19:29:14 +0200
-Message-Id: <20190920172914.4015180-1-megous@megous.com>
+        id S2390962AbfITRhO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 13:37:14 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 00FDF20E6;
+        Fri, 20 Sep 2019 17:37:14 +0000 (UTC)
+Received: from localhost (unknown [10.18.25.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 78A4A600C6;
+        Fri, 20 Sep 2019 17:37:08 +0000 (UTC)
+Date:   Fri, 20 Sep 2019 13:37:07 -0400
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
+        Milan Broz <gmazyland@gmail.com>
+Cc:     dm-devel@redhat.com, Alasdair Kergon <agk@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: dm-crypt error when CONFIG_CRYPTO_AUTHENC is disabled
+Message-ID: <20190920173707.GA21143@redhat.com>
+References: <20190920154434.GA923@gandi.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190920154434.GA923@gandi.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Fri, 20 Sep 2019 17:37:14 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
+On Fri, Sep 20 2019 at 11:44am -0400,
+Thibaut Sautereau <thibaut.sautereau@clip-os.org> wrote:
 
-This check is already performed by of_graph_get_remote_node. No
-need to repeat it immediately after the call.
+> Hi,
+> 
+> I just got a dm-crypt "crypt: Error allocating crypto tfm" error when
+> trying to "cryptsetup open" a volume. I found out that it was only
+> happening when I disabled CONFIG_CRYPTO_AUTHENC.
+> 
+> drivers/md/dm-crypt.c includes the crypto/authenc.h header and seems to
+> use some CRYPTO_AUTHENC-related stuff. Therefore, shouldn't
+> CONFIG_DM_CRYPT select CONFIG_CRYPTO_AUTHENC?
 
-Signed-off-by: Ondrej Jirman <megous@megous.com>
----
- drivers/gpu/drm/drm_of.c | 5 -----
- 1 file changed, 5 deletions(-)
+Yes, it looks like commit ef43aa38063a6 ("dm crypt: add cryptographic
+data integrity protection (authenticated encryption)") should've added
+'select CRYPTO_AUTHENC' to dm-crypt's Kconfig.  I'll let Milan weigh-in
+but that seems like the right way forward.
 
-diff --git a/drivers/gpu/drm/drm_of.c b/drivers/gpu/drm/drm_of.c
-index 43d89dd59c6b..0ca58803ba46 100644
---- a/drivers/gpu/drm/drm_of.c
-+++ b/drivers/gpu/drm/drm_of.c
-@@ -247,17 +247,12 @@ int drm_of_find_panel_or_bridge(const struct device_node *np,
- 		*panel = NULL;
- 
- 	remote = of_graph_get_remote_node(np, port, endpoint);
- 	if (!remote)
- 		return -ENODEV;
- 
--	if (!of_device_is_available(remote)) {
--		of_node_put(remote);
--		return -ENODEV;
--	}
--
- 	if (panel) {
- 		*panel = of_drm_find_panel(remote);
- 		if (!IS_ERR(*panel))
- 			ret = 0;
- 		else
- 			*panel = NULL;
--- 
-2.23.0
-
+Thanks for your report!
+Mike
