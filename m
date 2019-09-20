@@ -2,191 +2,167 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F93C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:21:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52243C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:21:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A5EC2086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:21:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568996512;
-	bh=G4ZWXDDOctrbtK9IV3kMcbrs/YmvosJWapnn4V56nvQ=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=ha85soC8hoznJJq0Hsz2GjWdSBmTh1hKcRTlJco9zE8iLtRiOvWVvMo3gRzC9dOu0
-	 d+lhvM9pj3qUN7HKEnXwxQ4k4hoUSJQw81Iq3olTVKC2HGTw28U7U6rlwkZcydlvv2
-	 yn1uljJkeycyAt6qJDYr34VDc0pA4YNKvM0vQKtU=
+	by mail.kernel.org (Postfix) with ESMTP id 333C02086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:21:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405438AbfITQVn (ORCPT
+        id S2405543AbfITQVz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 12:21:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39978 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405006AbfITQVh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 12:21:37 -0400
-Received: from localhost.localdomain (unknown [194.230.155.145])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DB6520C01;
-        Fri, 20 Sep 2019 16:21:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568996496;
-        bh=G4ZWXDDOctrbtK9IV3kMcbrs/YmvosJWapnn4V56nvQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=2dMv4gKGZ2vVFWgyWkGWdSMy2Di/pvOoU6hPZv63Uy16TKnhnB6kYGji2GP8gVwC9
-         6sxGbRg41pP6pwfavuLFXjJFxNmnkJ88MbUuKZVlNjgmR8fUDyrlfZN5r0KZ1hm23F
-         IhnUK0hl/KOLKz0NhWnM6pOSrFuAC9P/OsyH3FyM=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2 1/3] dt-bindings: watchdog: Convert Samsung SoC watchdog bindings to json-schema
-Date:   Fri, 20 Sep 2019 18:21:22 +0200
-Message-Id: <20190920162124.7036-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Fri, 20 Sep 2019 12:21:55 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:52895 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405374AbfITQVk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 12:21:40 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iBLeV-00040t-1S; Fri, 20 Sep 2019 18:20:59 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id CE4B71C0E2D;
+        Fri, 20 Sep 2019 18:20:57 +0200 (CEST)
+Date:   Fri, 20 Sep 2019 16:20:57 -0000
+From:   "tip-bot2 for Sakari Ailus" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/urgent] tools lib traceevent: Convert remaining %p[fF]
+ users to %p[sS]
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        devicetree@vger.kernel.org,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>, Joe Perches <joe@perches.com>,
+        linux-acpi@vger.kernel.org, linux-trace-devel@vger.kernel.org,
+        Namhyung Kim <namhyung@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20190918133419.7969-2-sakari.ailus@linux.intel.com>
+References: <20190918133419.7969-2-sakari.ailus@linux.intel.com>
+MIME-Version: 1.0
+Message-ID: <156899645777.24167.16043877590667740321.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert Samsung S3C/S5P/Exynos watchdog bindings to DT schema format
-using json-schema.
+The following commit has been merged into the perf/urgent branch of tip:
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Commit-ID:     b295c3e39c1383e06ba1db4dd836018502e2ff3a
+Gitweb:        https://git.kernel.org/tip/b295c3e39c1383e06ba1db4dd836018502e2ff3a
+Author:        Sakari Ailus <sakari.ailus@linux.intel.com>
+AuthorDate:    Wed, 18 Sep 2019 16:34:07 +03:00
+Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitterDate: Fri, 20 Sep 2019 10:28:26 -03:00
 
+tools lib traceevent: Convert remaining %p[fF] users to %p[sS]
+
+There are no in-kernel %p[fF] users left. Convert the traceevent tool,
+too, to align with the kernel.
+
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: devicetree@vger.kernel.org
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Joe Perches <joe@perches.com>
+Cc: linux-acpi@vger.kernel.org
+Cc: linux-trace-devel@vger.kernel.org
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Rafael J. Wysocki <rafael@kernel.org>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Link: http://lore.kernel.org/lkml/20190918133419.7969-2-sakari.ailus@linux.intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
+ tools/lib/traceevent/Documentation/libtraceevent-func_apis.txt | 10 ++--
+ tools/lib/traceevent/event-parse.c                             | 18 +++++--
+ 2 files changed, 19 insertions(+), 9 deletions(-)
 
-Changes since v1:
-1. Indent example with four spaces (more readable),
-2. Remove unneeded timeout-sec description and include generic bindings.
----
- .../bindings/watchdog/samsung-wdt.txt         | 35 ----------
- .../bindings/watchdog/samsung-wdt.yaml        | 65 +++++++++++++++++++
- 2 files changed, 65 insertions(+), 35 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
- create mode 100644 Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml
-
-diff --git a/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt b/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
-deleted file mode 100644
-index 46dcb48e75b4..000000000000
---- a/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
-+++ /dev/null
-@@ -1,35 +0,0 @@
--* Samsung's Watchdog Timer Controller
--
--The Samsung's Watchdog controller is used for resuming system operation
--after a preset amount of time during which the WDT reset event has not
--occurred.
--
--Required properties:
--- compatible : should be one among the following
--	- "samsung,s3c2410-wdt" for S3C2410
--	- "samsung,s3c6410-wdt" for S3C6410, S5PV210 and Exynos4
--	- "samsung,exynos5250-wdt" for Exynos5250
--	- "samsung,exynos5420-wdt" for Exynos5420
--	- "samsung,exynos7-wdt" for Exynos7
--
--- reg : base physical address of the controller and length of memory mapped
--	region.
--- interrupts : interrupt number to the cpu.
--- samsung,syscon-phandle : reference to syscon node (This property required only
--	in case of compatible being "samsung,exynos5250-wdt" or "samsung,exynos5420-wdt".
--	In case of Exynos5250 and 5420 this property points to syscon node holding the PMU
--	base address)
--
--Optional properties:
--- timeout-sec : contains the watchdog timeout in seconds.
--
--Example:
--
--watchdog@101d0000 {
--	compatible = "samsung,exynos5250-wdt";
--	reg = <0x101D0000 0x100>;
--	interrupts = <0 42 0>;
--	clocks = <&clock 336>;
--	clock-names = "watchdog";
--	samsung,syscon-phandle = <&pmu_syscon>;
--};
-diff --git a/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml b/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml
-new file mode 100644
-index 000000000000..5a3a3cec8e20
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml
-@@ -0,0 +1,65 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/watchdog/samsung-wdt.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Samsung SoC Watchdog Timer Controller
-+
-+maintainers:
-+  - Krzysztof Kozlowski <krzk@kernel.org>
-+
-+description: |+
-+  The Samsung's Watchdog controller is used for resuming system operation
-+  after a preset amount of time during which the WDT reset event has not
-+  occurred.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - samsung,s3c2410-wdt                   # for S3C2410
-+      - samsung,s3c6410-wdt                   # for S3C6410, S5PV210 and Exynos4
-+      - samsung,exynos5250-wdt                # for Exynos5250
-+      - samsung,exynos5420-wdt                # for Exynos5420
-+      - samsung,exynos7-wdt                   # for Exynos7
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  samsung,syscon-phandle:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      Phandle to the PMU system controller node (in case of Exynos5250
-+      and Exynos5420).
-+
-+required:
-+  - compatible
-+  - interrupts
-+  - reg
-+
-+allOf:
-+  - $ref: watchdog.yaml#
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - samsung,exynos5250-wdt
-+              - samsung,exynos5420-wdt
-+    then:
-+      required:
-+        - samsung,syscon-phandle
-+
-+examples:
-+  - |
-+    watchdog@101d0000 {
-+        compatible = "samsung,exynos5250-wdt";
-+        reg = <0x101D0000 0x100>;
-+        interrupts = <0 42 0>;
-+        clocks = <&clock 336>;
-+        clock-names = "watchdog";
-+        samsung,syscon-phandle = <&pmu_syscon>;
-+    };
--- 
-2.17.1
-
+diff --git a/tools/lib/traceevent/Documentation/libtraceevent-func_apis.txt b/tools/lib/traceevent/Documentation/libtraceevent-func_apis.txt
+index 38bfea3..f6aca0d 100644
+--- a/tools/lib/traceevent/Documentation/libtraceevent-func_apis.txt
++++ b/tools/lib/traceevent/Documentation/libtraceevent-func_apis.txt
+@@ -59,12 +59,12 @@ parser context.
+ 
+ The _tep_register_function()_ function registers a function name mapped to an
+ address and (optional) module. This mapping is used in case the function tracer
+-or events have "%pF" or "%pS" parameter in its format string. It is common to
+-pass in the kallsyms function names with their corresponding addresses with this
++or events have "%pS" parameter in its format string. It is common to pass in
++the kallsyms function names with their corresponding addresses with this
+ function. The _tep_ argument is the trace event parser context. The _name_ is
+-the name of the function, the string is copied internally. The _addr_ is
+-the start address of the function. The _mod_ is the kernel module
+-the function may be in (NULL for none).
++the name of the function, the string is copied internally. The _addr_ is the
++start address of the function. The _mod_ is the kernel module the function may
++be in (NULL for none).
+ 
+ The _tep_register_print_string()_ function  registers a string by the address
+ it was stored in the kernel. Some strings internal to the kernel with static
+diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
+index bb22238..6f842af 100644
+--- a/tools/lib/traceevent/event-parse.c
++++ b/tools/lib/traceevent/event-parse.c
+@@ -4367,10 +4367,20 @@ static struct tep_print_arg *make_bprint_args(char *fmt, void *data, int size, s
+ 					switch (*ptr) {
+ 					case 's':
+ 					case 'S':
+-					case 'f':
+-					case 'F':
+ 					case 'x':
+ 						break;
++					case 'f':
++					case 'F':
++						/*
++						 * Pre-5.5 kernels use %pf and
++						 * %pF for printing symbols
++						 * while kernels since 5.5 use
++						 * %pfw for fwnodes. So check
++						 * %p[fF] isn't followed by 'w'.
++						 */
++						if (ptr[1] != 'w')
++							break;
++						/* fall through */
+ 					default:
+ 						/*
+ 						 * Older kernels do not process
+@@ -4487,12 +4497,12 @@ get_bprint_format(void *data, int size __maybe_unused,
+ 
+ 	printk = find_printk(tep, addr);
+ 	if (!printk) {
+-		if (asprintf(&format, "%%pf: (NO FORMAT FOUND at %llx)\n", addr) < 0)
++		if (asprintf(&format, "%%ps: (NO FORMAT FOUND at %llx)\n", addr) < 0)
+ 			return NULL;
+ 		return format;
+ 	}
+ 
+-	if (asprintf(&format, "%s: %s", "%pf", printk->printk) < 0)
++	if (asprintf(&format, "%s: %s", "%ps", printk->printk) < 0)
+ 		return NULL;
+ 
+ 	return format;
