@@ -2,138 +2,178 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 764BBC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC649C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BA12208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:50:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2BF12086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:51:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="lVqbg1WO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IL2YeVVO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437876AbfITIuj (ORCPT
+        id S2408343AbfITIvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 04:50:39 -0400
-Received: from mail-eopbgr80083.outbound.protection.outlook.com ([40.107.8.83]:46380
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2405234AbfITIui (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 04:50:38 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eHrAYpbJ7yM1A7ebyppihakOEJkUqH6B7Dz6SoINgHi/Zv0CwbxvnH7MhDk13vQEDeSbzS+p2Bh6w4acPY4XEosS7xpFkp80XoFgjRFRZKBzIx/KsaAD9D9ke1Eu/DAfyngaWyFSo0KRtGAh3Q4nMZ/qQ4hnb5tQZbfB7IbVpLoFueiL18QH/THynsVWWsEnVAc+gwZZVCsgbIYIgEOwR0RUd+c70MujjrTxyN44IKAnKspt4dcAvBQr/QQLpL4uaxf9ga5p+TtC6weE3IqI19mRUs9YCXZY2ToteGCxryAEPPDzxxCpfQNUdXdpyUrOPw8ANyXqz4+pT3qTIS1X7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TL6lnL4ivLzmv6u+ZIQrRcMDG88TCOHTE/3mxQXKiwM=;
- b=AMAocfLfk1xtmGHfF6q/FLtNUrltlTBp8CMj1+WBkQGV1J61vhjIFvZ3EeJByaIoYJZzJ9DQz0afBkI3yr4jysKWFA/qMepb6usA8znprebe82Fl8zKLHrwAJqJ54lvuUiuIB6vm8vJJfzJh/8F4gNY1/2vygNY+p4kmPyDdRHHySZ2AuHF0YZj+7cYIhVMIH2lvZuceD3Hyf1LyIgy7LKdIGFA686DVNO3bvs9C8vVCy5EuPRKWMXAV8GqQnTgmhwilwsev23SeKd8+HUM/KUH1D7Z1TZhTo1W0i6tVEvwnDQdjBKQlJjs1rbfGJSq65rflqSu5+VuWf0+zx/r2Nw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TL6lnL4ivLzmv6u+ZIQrRcMDG88TCOHTE/3mxQXKiwM=;
- b=lVqbg1WOJr+jBTbsbFDDfHrEciHPFoBJ/Ot6PfgYKS70W7X+SbdrdwC1nyR2GE91D7pNC3UNaf3uXJOGadoNZPdSAI7F815TBMVbCicYcHpIkNFqYdEenRXeMRrdhf4d6YjkZ/CKM3pm1aR+hQuSrCJfvovKrj1A/ckd2XDyu+o=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3769.eurprd04.prod.outlook.com (52.134.71.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.23; Fri, 20 Sep 2019 08:49:54 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::8958:299c:bc54:2a38]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::8958:299c:bc54:2a38%7]) with mapi id 15.20.2284.023; Fri, 20 Sep 2019
- 08:49:54 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
-        <u.kleine-koenig@pengutronix.de>
-CC:     Aisheng Dong <aisheng.dong@nxp.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH] pwm: mxs: use devm_platform_ioremap_resource() to
- simplify code
-Thread-Topic: [PATCH] pwm: mxs: use devm_platform_ioremap_resource() to
- simplify code
-Thread-Index: AQHVPQnp3vOphZGlaUm/vNIIqkC+RKbPuYMAgDQEZACABe0wAIAq+wHQ
-Date:   Fri, 20 Sep 2019 08:49:53 +0000
-Message-ID: <DB3PR0402MB39167A2F613F92FD8CA145C8F5880@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190718013205.24919-1-Anson.Huang@nxp.com>
- <AM0PR04MB42116F0753C9C6A619A2D8EC80C80@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <DB3PR0402MB3916423A6E334EDD4C06B884F5AB0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20190824002634.nfrhof3kpsrcc742@pengutronix.de>
-In-Reply-To: <20190824002634.nfrhof3kpsrcc742@pengutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 07061f5f-f715-474f-565b-08d73da781b0
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3769;
-x-ms-traffictypediagnostic: DB3PR0402MB3769:|DB3PR0402MB3769:
-x-ms-exchange-purlcount: 1
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB37696F556964CDA727F32685F5880@DB3PR0402MB3769.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1417;
-x-forefront-prvs: 0166B75B74
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(366004)(346002)(39860400002)(376002)(199004)(189003)(966005)(478600001)(14454004)(45080400002)(476003)(6246003)(11346002)(4326008)(486006)(44832011)(33656002)(446003)(256004)(229853002)(86362001)(6436002)(6116002)(3846002)(71190400001)(71200400001)(25786009)(55016002)(6306002)(9686003)(2906002)(54906003)(66446008)(316002)(66556008)(64756008)(76176011)(5660300002)(52536014)(76116006)(6506007)(74316002)(66946007)(66476007)(7696005)(99286004)(81166006)(8676002)(81156014)(8936002)(66066001)(186003)(26005)(6916009)(305945005)(102836004)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3769;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: YF5rfLm8nm0DAaXgU4dJt02tSJJBT0o6vkKNS3eimk+9pstyTcFxm4fY9ymJP58bSSsV2z7AvH+mkh+tJ+Sd1jU4eaptLrqqzXI/3QbnwFX7oRqnlTpoTAnL5qLFfgvCZE0zRy2VBj6u5vMLFjZVtE4IKTcs5BCGJC2e21Vnz6VzF9CghgtQr+xBYZDrsL5DqiRMuAsRNmxQjjv5wEuWw2dzavmQkdXUGCEGse20gGbIajWOkLbKPx99H+gTgf0L3FRfl/J36puHU+nEaxwX5//2LRppLPQeHhLRQjsv55OXRraKp4HEygR5Qw7dU1oOVbQM3QXMfZ9NIsfmGF+EuwxNHpeiQQXapTw3hhPwP8OIa9ExsylvwWFgmLLP6pXTBa0PX5Fcve7AiXQRF/qC/0eyfP8FqaCXzz/EOJSclyg=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 20 Sep 2019 04:51:13 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:39545 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405346AbfITIvN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 04:51:13 -0400
+Received: by mail-lf1-f67.google.com with SMTP id 72so4468684lfh.6
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 01:51:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=zIK1gtR2VAgqI25bOAo9P0A+M/0NEfNWxEFQpC0ed4g=;
+        b=IL2YeVVOQFHRdWlofI9jH/napiLP/qrH7Ep+y9faHSgo7WQEIKTUdAzpuaQA8SqkY1
+         scHjmFrFGgRc8tQhjHg3NT7myRyx+8zO+VvvFLRWckOHUqWDotd+jCuAZA3HI2eoA+Lt
+         Sj9pi0lv7bBTGFlpxGvCtVQ1PDbnkhLqIkSNL7/0y5GU9rcD3LafVlRyAH5U/U6NL3//
+         BdlSb2lSdTuL2HwmPGUt0UUejIgAtXwu3QAgavvSUCr90mcJh9j/AR/mO4VqIIGmw85P
+         M9X+Akh6tnZ6XoZe+3lLLzJYmjyHgGrBIaIIFK7Uxjz/zJXRsaoXNu3xHKpIggDR3UuZ
+         oSsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=zIK1gtR2VAgqI25bOAo9P0A+M/0NEfNWxEFQpC0ed4g=;
+        b=kP1o/aBPFY1scuYB+GdjRu4aICSkKVejCQu36UDbDXjd9dGK3MayOD49FylXpPl6Hx
+         ojJ+Y7TrqATsZyrjbuxwG87dYZHZoguFBtRnUhxlpol6qMhXv4IZhy+bDIqd1EvLOgxT
+         ixbqXO/icfv5r2x1ywZuIwdpAfRHO+ENSKB6MOkUoikAS7pVk3E/G+l7Em1by1QaD4r2
+         D1U70g8KLQ5ozUsTnKFxDOTeeAn8c6ORjaFElfhqdEdn67KOPZGhih9AXF72xBEAIxBF
+         2HHV8LVnfAHAG3Y1zCXnT8B/kfkIr2eqxpa5VWf9GI0hyl52r0b235GGpDelHVbEeGMG
+         B3lg==
+X-Gm-Message-State: APjAAAW7PD+Kvw6IVoHCRhGZkv66nN5jiG7XkNh6g3zrJZUbpNpX4wtQ
+        5cQUADw7sNJqHewGiiSCyOmst0f2CU4Z/lHUnDauIiYJiLk=
+X-Google-Smtp-Source: APXvYqzbbTB32LmFOnnaWg0hpAl48UhlO/D6hLTKcniCdSi+QI6Ez7Rr3AFYweJqmrlLoL0DbkygDkqR35iMC/3w/+s=
+X-Received: by 2002:ac2:48af:: with SMTP id u15mr8312303lfg.75.1568969471206;
+ Fri, 20 Sep 2019 01:51:11 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 07061f5f-f715-474f-565b-08d73da781b0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Sep 2019 08:49:53.9125
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: BjxKXvqIQXyws/gKRPInHRn6dHDR2bV1gENa7RYuilusZUfnuGtd+/1TvcdRqwZ/2e+/Oi+nynElNGseljR+3w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3769
+References: <20190919214807.612593061@linuxfoundation.org>
+In-Reply-To: <20190919214807.612593061@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 20 Sep 2019 14:21:00 +0530
+Message-ID: <CA+G9fYsdAOWeRSxnrWOJVaw1tp7QVgOgHw-i58Ek7hknAEq0cA@mail.gmail.com>
+Subject: Re: [PATCH 4.19 00/79] 4.19.75-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UGluZy4uLiwgMSBtb250aCBwYXNzZWQsIE5PVCBzdXJlIHdoYXQgaXMgdGhlIGxhdGVzdCBzdGF0
-dXMuDQoNCkFuc29uDQoNCj4gT24gVHVlLCBBdWcgMjAsIDIwMTkgYXQgMDU6NTY6NDBBTSArMDAw
-MCwgQW5zb24gSHVhbmcgd3JvdGU6DQo+ID4gR2VudGxlIHBpbmcuLi4NCj4gDQo+IE15IGltcHJl
-c3Npb25bMV0gaXMgdGhhdCBUaGllcnJ5IGNvbGxlY3RzIHBhdGNoZXMgaW4gYnVsayBvbmNlIG9y
-IHR3aWNlIHBlcg0KPiByZWxlYXNlIGN5Y2xlLiBUaGUgbGFzdCB0d28gc3VjaCBidWxrcyB3ZXJl
-IGJldHdlZW4gNS4yLXJjNiBhbmQNCj4gNS4yLXJjNyBhbmQgaW4gdGhlIDUuMiBtZXJnZSB3aW5k
-b3cuIFNvIGdpdmVuIHdlJ3JlIGF0IHY1LjMtcmM1IG5vdyBJIGV4cGVjdA0KPiBzb21lIGFjdGlv
-biBzb29uIDotKQ0KPiANCj4gPiA+ID4gRnJvbTogQW5zb24uSHVhbmdAbnhwLmNvbSA8QW5zb24u
-SHVhbmdAbnhwLmNvbT4NCj4gPiA+ID4gU2VudDogVGh1cnNkYXksIEp1bHkgMTgsIDIwMTkgOToz
-MiBBTQ0KPiA+ID4gPg0KPiA+ID4gPiBVc2UgdGhlIG5ldyBoZWxwZXIgZGV2bV9wbGF0Zm9ybV9p
-b3JlbWFwX3Jlc291cmNlKCkgd2hpY2ggd3JhcHMNCj4gPiA+ID4gdGhlDQo+ID4gPiA+IHBsYXRm
-b3JtX2dldF9yZXNvdXJjZSgpIGFuZCBkZXZtX2lvcmVtYXBfcmVzb3VyY2UoKSB0b2dldGhlciwg
-dG8NCj4gPiA+ID4gc2ltcGxpZnkgdGhlIGNvZGUuDQo+ID4gPiA+DQo+ID4gPiA+IFNpZ25lZC1v
-ZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+ID4NCj4gPiA+IFJl
-dmlld2VkLWJ5OiBEb25nIEFpc2hlbmcgPGFpc2hlbmcuZG9uZ0BueHAuY29tPg0KPiANCj4gQWNr
-ZWQtYnk6IFV3ZSBLbGVpbmUtS8O2bmlnIDx1LmtsZWluZS1rb2VuaWdAcGVuZ3V0cm9uaXguZGU+
-DQo+IA0KPiBCZXN0IHJlZ2FyZHMNCj4gVXdlDQo+IA0KPiBbMV0gZnJvbSBnaXQgbG9nIC0tY29t
-bWl0dGVyPVRoaWVycnkgLS1mb3JtYXQ9JWNpIGRyaXZlcnMvcHdtIHwgY3V0IC1kXCAgLWYxIHwN
-Cj4gdW5pcSAtYw0KPiAtLQ0KPiBQZW5ndXRyb25peCBlLksuICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgfCBVd2UgS2xlaW5lLUvDtm5pZyAgICAgICAgICAgIHwNCj4gSW5kdXN0cmlhbCBMaW51
-eCBTb2x1dGlvbnMgICAgICAgICAgICAgICAgIHwNCj4gaHR0cHM6Ly9ldXIwMS5zYWZlbGlua3Mu
-cHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHAlM0ElMkYlMkZ3d3cucA0KPiBlbmd1dHJv
-bml4LmRlJTJGJmFtcDtkYXRhPTAyJTdDMDElN0NhbnNvbi5odWFuZyU0MG54cC5jb20lN0MzNA0K
-PiBlZDc4ZTViOTA2NDJlNjE3M2QwOGQ3MjgyOWJjNjUlN0M2ODZlYTFkM2JjMmI0YzZmYTkyY2Q5
-OWM1YzMwMTYzDQo+IDUlN0MwJTdDMCU3QzYzNzAyMjAzMjAyNjc1NTMxMCZhbXA7c2RhdGE9Uk0w
-RGpOOUIlMkZvbXhTU2xHcA0KPiBhZHhYNTB5WWVzTmpPQUZUWGFnaGt4eU9DUSUzRCZhbXA7cmVz
-ZXJ2ZWQ9MCAgfA0K
+On Fri, 20 Sep 2019 at 03:43, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.19.75 release.
+> There are 79 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat 21 Sep 2019 09:44:25 PM UTC.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.19.75-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.19.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.19.75-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.19.y
+git commit: 42a609acc1b2b5a744dd9ad3d3eb6a71906e4bcc
+git describe: v4.19.74-80-g42a609acc1b2
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
+ild/v4.19.74-80-g42a609acc1b2
+
+
+No regressions (compared to build v4.19.74)
+
+No fixes (compared to build v4.19.74)
+
+
+Ran 21908 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* libgpiod
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* network-basic-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* ltp-open-posix-tests
+* kvm-unit-tests
+* ssuite
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
