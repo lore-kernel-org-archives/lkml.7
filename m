@@ -2,259 +2,131 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=BODY_QUOTE_MALF_MSGID,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,LOCALPART_IN_SUBJECT,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C57C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB1B7C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0D6F20640
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:36:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CauVxj6M"
+	by mail.kernel.org (Postfix) with ESMTP id A367221835
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:36:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568997401;
+	bh=5JoPYywNTtbFyk8et6sdx3gFPlCbkcsU1PQzvcGQFtI=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=qIpZE1jmlPK6FdlZIEI3VtLvhylVbDB9wb/lBOE2rrqQ4sPcSv+/aLj49gQEsc622
+	 GyW2FX8UCj8RMMS0Xcdch8yf7YU54eAO7mZp/rhCmn5KZkBoTf0I7ZBT7NhhMoobZv
+	 keIm0S41ZrhqeHYGH+5Jin5wQ7fizHRMmmvm1oP8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729224AbfITQgD (ORCPT
+        id S1729330AbfITQgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 12:36:03 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:35102 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbfITQgD (ORCPT
+        Fri, 20 Sep 2019 12:36:41 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56922 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725280AbfITQgk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 12:36:03 -0400
-Received: by mail-ed1-f66.google.com with SMTP id v8so7100609eds.2
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 09:36:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7hzm3K7b35rEliLwtwWMBUwsKHdn+N/LZtz2QhNViq0=;
-        b=CauVxj6MR1/RdV5hq7nYFTEiAQ38w+HRge127iXApIBR59r3qh4l0aPcKXW0Sbx/5A
-         RTg+s1ZfTru6nN27dI2fp0QIy1jAxhK/pl9MW19Gaug4CV+G1dKXBsgMiTLIA2UVybqO
-         UAmb13NlHSnT6mnFVOyne6rvTAbrt7Ej9OoVJFCBomxNr65ASSxT8YU4OTkLkMeT4JCj
-         +bJsQXHFF0pcImSMExHzjCEk3x1AHLLm2nsUrmzbOQCK69plnVx/IYiZRHQPC+WVubqz
-         Aegc9x+DYxt3BFMK0FyToqmU77UgRPf0rQW8PJc0lYgYLh/2uCixziS2U870hMWTxDnf
-         gr/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7hzm3K7b35rEliLwtwWMBUwsKHdn+N/LZtz2QhNViq0=;
-        b=b+0w2gCnwhLQv1MmOlZrSNn6sBH9F1FmbAX11ZUNoUIuKJmu00vEqd0sRoyvcm1bJV
-         tQGGJKOmeil7NzeF3gRHL0awZ3Q/hza2RWJxCOD4nM0Y0T31dEtQ02mjp4pkLi/27iai
-         Mlll9YdW8cd1z9jXiJC/NxdNLbkAzg3fAdN9Q3xi41jBFVOek13vk2xtlDVBqPT8lbVc
-         LBkJPb/efUAQLfUyOxGBjF0wcBJ/B1TGD8cHIT3LqNb76+5JLRpXndmM6T1jKRtJ3ETL
-         0gJXFP/5bq9sHR0/nYttJe5iS1YUZk1kV0EeTuwWl9RYyVPu+QDoc+OY28pVIAZ48+sE
-         q7fQ==
-X-Gm-Message-State: APjAAAXaGXQmbryRf8mzHCFYCoOV9CrfnqhxcukKKrCT+ua+CNKIY/o+
-        PCD0FR8u2sTzmPn/+p7X5klHqg==
-X-Google-Smtp-Source: APXvYqzlxtJkxMrObFiFEfMvTttDlFX1Lhn2rxHuQzhFG8RUkiyWTAgaUrjIEHSvAzKzYqD39ju+AQ==
-X-Received: by 2002:a50:ee92:: with SMTP id f18mr22835043edr.253.1568997360481;
-        Fri, 20 Sep 2019 09:36:00 -0700 (PDT)
-Received: from lophozonia ([85.195.192.192])
-        by smtp.gmail.com with ESMTPSA id y22sm277918eje.42.2019.09.20.09.35.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Sep 2019 09:35:59 -0700 (PDT)
-Date:   Fri, 20 Sep 2019 18:35:58 +0200
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 3/4] iommu/ioasid: Add custom allocators
-Message-ID: <20190920163558.GC1533866@lophozonia>
-References: <1568849194-47874-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1568849194-47874-4-git-send-email-jacob.jun.pan@linux.intel.com>
+        Fri, 20 Sep 2019 12:36:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
+        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=DJcRMUIoHnhHwFIAld5UtZEHloJI/VNoy6j6pLhjbfU=; b=m5D9R4nyDBQaUFOrlSve2bpIv
+        k/BcrkopN6ab2o88k84NRkLK59BBANzerFdOJp/azg8/ZvwnRVzvZOIC5YeKCvLLf1EkDuv065UWz
+        9ibPFbuytlPpa/9fl/LsxEzKaKSyGa4PAIwj5SPiiHpYdCHom/l9nKIVDHl/maI7jsGZ8=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iBLte-00033E-Mq; Fri, 20 Sep 2019 16:36:38 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id ABB7E274293F; Fri, 20 Sep 2019 17:36:37 +0100 (BST)
+Date:   Fri, 20 Sep 2019 17:36:37 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Tree for Sep 20
+Message-ID: <20190920163637.GI3822@sirena.co.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="SdaPbLtAangIkrMZ"
 Content-Disposition: inline
-In-Reply-To: <1568849194-47874-4-git-send-email-jacob.jun.pan@linux.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Cookie: Stay away from hurricanes for a while.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 04:26:33PM -0700, Jacob Pan wrote:
-> +/*
-> + * struct ioasid_allocator_data - Internal data structure to hold information
-> + * about an allocator. There are two types of allocators:
-> + *
-> + * - Default allocator always has its own XArray to track the IOASIDs allocated.
-> + * - Custom allocators may share allocation helpers with different private data.
-> + *   Custom allocators share the same helper functions also share the same
-> + *   XArray.
 
-"that share the same helper"
+--SdaPbLtAangIkrMZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> + * Rules:
-> + * 1. Default allocator is always available, not dynamically registered. This is
-> + *    to prevent race conditions with early boot code that want to register
-> + *    custom allocators or allocate IOASIDs.
-> + * 2. Custom allocators take precedence over the default allocator.
-> + * 3. When all custom allocators sharing the same helper functions are
-> + *    unregistered (e.g. due to hotplug), all outstanding IOASIDs must be
-> + *    freed.
-> + * 4. When switching between custom allocators sharing the same helper
-> + *    functions, outstanding IOASIDs are preserved.
-> + * 5. When switching between custom allocator and default allocator, all IOASIDs
-> + *    must be freed to ensure unadulterated space for the new allocator.
-> + *
-> + * @ops:	allocator helper functions and its data
-> + * @list:	registered custom allocators
-> + * @slist:	allocators share the same ops but different data
-> + * @flags:	attributes of the allocator
-> + * @xa		xarray holds the IOASID space
-> + * @users	number of allocators sharing the same ops and XArray
-> + */
-> +struct ioasid_allocator_data {
-> +	struct ioasid_allocator_ops *ops;
-> +	struct list_head list;
-> +	struct list_head slist;
-> +#define IOASID_ALLOCATOR_CUSTOM BIT(0) /* Needs framework to track results */
-> +	unsigned long flags;
-> +	struct xarray xa;
-> +	refcount_t users;
-> +};
-> +
-> +static DEFINE_SPINLOCK(ioasid_allocator_lock);
+Hi all,
 
-Thanks for making this a spinlock! I hit that sleep-in-atomic problem
-while updating iommu-sva to the new MMU notifier API, which doesn't
-allow sleeping in the free() callback.
+News: There will likely be no more -next builds until Stephen returns on
+the 30th, I *may* do some next week but it's more likely that I won't
+and it certainly won't be every day.
 
-I don't like having to use GFP_ATOMIC everywhere as a result, but can't
-see a better way. Maybe we can improve that later.
+Changes since 20190919:
 
-[...]
-> +/**
-> + * ioasid_unregister_allocator - Remove a custom IOASID allocator ops
-> + * @ops: the custom allocator to be removed
-> + *
-> + * Remove an allocator from the list, activate the next allocator in
-> + * the order it was registered. Or revert to default allocator if all
-> + * custom allocators are unregistered without outstanding IOASIDs.
-> + */
-> +void ioasid_unregister_allocator(struct ioasid_allocator_ops *ops)
-> +{
-> +	struct ioasid_allocator_data *pallocator;
-> +	struct ioasid_allocator_ops *sops;
-> +
-> +	spin_lock(&ioasid_allocator_lock);
-> +	if (list_empty(&allocators_list)) {
-> +		pr_warn("No custom IOASID allocators active!\n");
-> +		goto exit_unlock;
-> +	}
-> +
-> +	list_for_each_entry(pallocator, &allocators_list, list) {
-> +		if (!use_same_ops(pallocator->ops, ops))
-> +			continue;
-> +
-> +		if (refcount_read(&pallocator->users) == 1) {
-> +			/* No shared helper functions */
-> +			list_del(&pallocator->list);
-> +			/*
-> +			 * All IOASIDs should have been freed before
-> +			 * the last allocator that shares the same ops
-> +			 * is unregistered.
-> +			 */
-> +			WARN_ON(!xa_empty(&pallocator->xa));
+The thermal tree gained a conflict with Linus' tree which I fixed up.
 
-The function doc seems to say that we revert to the default allocator
-only if there wasn't any outstanding IOASID, which isn't what this does.
-To follow the doc, we'd need to return here instead of continuing. The
-best solution would be to return with an error, but since we don't
-propagate errors I think leaking stuff is preferable to leaving the
-allocator registered, since the caller might free the ops when this
-function return. So I would keep the code like that but change the
-function's comment. What do you think is best?
+The akpm-current tree gained a conflict with the risc-v-fixes tree which
+I fixed up.
 
-> +			kfree(pallocator);
-> +			if (list_empty(&allocators_list)) {
-> +				pr_info("No custom IOASID allocators, switch to default.\n");
-> +				active_allocator = &default_allocator;
+Non-merge commits (relative to Linus' tree): 2719
+ 2712 files changed, 92075 insertions(+), 40381 deletions(-)
 
-I'm concerned about the active_allocator variable, because ioasid_find()
-accesses it without holding ioasid_allocator_lock. It is holding the RCU
-read lock, so I think we need to free pallocator after a RCU grace
-period (using kfree_rcu)? I think we also need to update
-active_allocator with rcu_assign_pointer() and dereference it with
-rcu_dereference()
+----------------------------------------------------------------------------
 
-> +			} else if (pallocator == active_allocator) {
-> +				active_allocator = list_first_entry(&allocators_list, struct ioasid_allocator_data, list);
-> +				pr_info("IOASID allocator changed");
-> +			}
-> +			break;
-> +		}
-> +		/*
-> +		 * Find the matching shared ops to delete,
-> +		 * but keep outstanding IOASIDs
-> +		 */
-> +		list_for_each_entry(sops, &pallocator->slist, list) {
-> +			if (sops == ops) {
-> +				list_del(&ops->list);
-> +				if (refcount_dec_and_test(&pallocator->users))
-> +					pr_err("no shared ops\n");
+I have created today's linux-next tree at
+git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+(patches at http://www.kernel.org/pub/linux/kernel/next/ ).  If you
+are tracking the linux-next tree using git, you should not use "git pull"
+to do so as that will try to merge the new linux-next release with the
+old one.  You should use "git fetch" and checkout or reset to the new
+master.
 
-That's not possible, right, since dec_and_test only returns true if
-pallocator->users was 1, which we already checked against? I find
-pallocator->users a bit redundant since you can use list_is_empty() or
-list_is_singular() on pallocator->slist
+You can see which trees have been included by looking in the Next/Trees
+file in the source.  There are also quilt-import.log and merge.log
+files in the Next directory.  Between each merge, the tree was built
+with a defconfig for arm64, an allmodconfig for x86_64, a
+multi_v7_defconfig for arm and a native build of tools/perf.
 
-[...]
->  ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
->  		      void *private)
->  {
-> -	ioasid_t id;
->  	struct ioasid_data *data;
-> +	void *adata;
-> +	ioasid_t id;
->  
->  	data = kzalloc(sizeof(*data), GFP_KERNEL);
->  	if (!data)
-> @@ -76,14 +324,34 @@ ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
->  	data->set = set;
->  	data->private = private;
->  
-> -	if (xa_alloc(&ioasid_xa, &id, data, XA_LIMIT(min, max), GFP_KERNEL)) {
-> -		pr_err("Failed to alloc ioasid from %d to %d\n", min, max);
-> +	/*
-> +	 * Custom allocator needs allocator data to perform platform specific
-> +	 * operations.
-> +	 */
-> +	spin_lock(&ioasid_allocator_lock);
-> +	adata = active_allocator->flags & IOASID_ALLOCATOR_CUSTOM ? active_allocator->ops->pdata : data;
-> +	id = active_allocator->ops->alloc(min, max, adata);
-> +	if (id == INVALID_IOASID) {
-> +		pr_err("Failed ASID allocation %lu\n", active_allocator->flags);
->  		goto exit_free;
->  	}
-> +
-> +	if (active_allocator->flags & IOASID_ALLOCATOR_CUSTOM) {
-> +		/* Custom allocator needs framework to store and track allocation results */
-> +		min = max = id;
-> +
-> +		if (xa_alloc(&active_allocator->xa, &id, data, XA_LIMIT(min, max), GFP_KERNEL)) {
+Below is a summary of the state of the merge.
 
-Or just XA_LIMIT(id, id), and merge the two ifs?
+I am currently merging 311 trees (counting Linus' and 77 trees of bug
+fix patches pending for the current merge release).
 
-You do need GFP_ATOMIC here.
+Stats about the size of the tree over time can be seen at
+http://neuling.org/linux-next-size.html .
 
-> +			pr_err("Failed to alloc ioasid from %d to %d\n", min, max);
+Status of my local build tests will be at
+http://kisskb.ellerman.id.au/linux-next .  If maintainers want to give
+advice about cross compilers/configs that work, we are always open to add
+more builds.
 
-Maybe just "Failed to alloc ioasid %d\n" then
+Thanks to Randy Dunlap for doing many randconfig builds.  And to Paul
+Gortmaker for triage and bug fixes.
 
-> +			active_allocator->ops->free(id, NULL);
+--SdaPbLtAangIkrMZ
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Why doesn't this call need to pass active_allocator->ops->pdata like the
-one in ioasid_free()?
+-----BEGIN PGP SIGNATURE-----
 
-Thanks,
-Jean
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2FABQACgkQJNaLcl1U
+h9B0oAf/UVIP4LrDU46vVRhUEy8SIiIYvRiSBAR1UQuvYKR/6wSrkKRRcrpcydmZ
+DN/9SudF9wB5uZuqDTW1GBCNVHWKP3aYDtdMnUoTfQ1RRLlK133m5GpjcBHL7WjD
+5GZH9/EYJpFJPw8Q+hyhd6ScBljtoTPg2mVey4ADRwsjCaFPac9mjAae0CmLSTKi
+Oo3IW2ZTTtjtfVl0tkKD+9fBhx5CVM8k/kbNXSDMAgwyews6HwWs2wNlFpY+GrX2
+oIMcbBijJiS3qYrMGXmodtTh8jJxfDCzTI4TKD47iTCQKBhpvnEqgdJiYf08IPqR
+vPobGqP6kL/kj/5uQmHZvZ3Ymz04fA==
+=IpSs
+-----END PGP SIGNATURE-----
+
+--SdaPbLtAangIkrMZ--
