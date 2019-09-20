@@ -2,138 +2,188 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62713C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31856C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35833205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:57:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F15762086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:01:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569009671;
+	bh=TsCzroLgNhThVbiMnKL3twJK9UDWIJ/baZ2ndbvC/48=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=B2yCNcIa3P2uk5eTuIQqD5SW1GN8oqjsb3+G4Lk+tJCgUqYq9hx6zrgIUrc6yENnj
+	 +dHCPIec2R1ij5TS17xntVYh0IRw/9w57pwC0oi5guV36q3DolqoPftal+u1kiTVXX
+	 VPx5SeTvFvqUPwVzA5h+zqzpHKZg0vRXj4rE+M24=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727963AbfITT5d (ORCPT
+        id S1728025AbfITUBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 15:57:33 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34110 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726835AbfITT5d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 15:57:33 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8KJqVpw055501;
-        Fri, 20 Sep 2019 15:57:07 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v51uh8jv4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 20 Sep 2019 15:57:06 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8KJv6KE065468;
-        Fri, 20 Sep 2019 15:57:06 -0400
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v51uh8ju4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 20 Sep 2019 15:57:06 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8KJoH7a013688;
-        Fri, 20 Sep 2019 19:57:04 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma04wdc.us.ibm.com with ESMTP id 2v3vc5rqxc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 20 Sep 2019 19:57:04 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8KJv2SX27394310
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 20 Sep 2019 19:57:02 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A23E57805E;
-        Fri, 20 Sep 2019 19:57:02 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 00CC57805C;
-        Fri, 20 Sep 2019 19:56:57 +0000 (GMT)
-Received: from leobras.br.ibm.com (unknown [9.18.235.184])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Fri, 20 Sep 2019 19:56:57 +0000 (GMT)
-Message-ID: <56444e28eeb8e5ca7322112a7c8359d1d89ffe2d.camel@linux.ibm.com>
-Subject: Re: [PATCH v2 00/11] Introduces new count-based method for
- monitoring lockless pagetable wakls
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Richard Fontana <rfontana@redhat.com>,
-        Ganesh Goudar <ganeshgr@linux.ibm.com>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Keith Busch <keith.busch@intel.com>
-Date:   Fri, 20 Sep 2019 16:56:56 -0300
-In-Reply-To: <20190920195047.7703-1-leonardo@linux.ibm.com>
-References: <20190920195047.7703-1-leonardo@linux.ibm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-zBmeUsHIw6iPjGkcXUp7"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Fri, 20 Sep 2019 16:01:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39020 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726835AbfITUBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 16:01:09 -0400
+Received: from localhost (unknown [104.132.0.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C7172067B;
+        Fri, 20 Sep 2019 20:01:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569009668;
+        bh=TsCzroLgNhThVbiMnKL3twJK9UDWIJ/baZ2ndbvC/48=;
+        h=Date:From:To:Cc:Subject:From;
+        b=EYzlsHPnMiXEP5uyD+JbM3WVPWRGzmWz0BJWxQsgScoeFW9URPVwA8XQ7CAklo8ec
+         gUiIGAlmLTpACLLZt4fqvbHeXxhMc9WPjepLeZQjSLGiPvk3tRtjTI6Hp8vXsXEvhk
+         wjOplBOwy0/KxZ/y6V3opNfJTHmA9llxn2YTswE8=
+Date:   Fri, 20 Sep 2019 13:01:07 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux F2FS Dev Mailing List 
+        <linux-f2fs-devel@lists.sourceforge.net>
+Subject: [GIT PULL] f2fs for 5.4
+Message-ID: <20190920200107.GA57911@jaegeuk-macbookpro.roam.corp.google.com>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-20_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909200162
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus,
 
---=-zBmeUsHIw6iPjGkcXUp7
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Could you please consider this pull request?
 
-On Fri, 2019-09-20 at 16:50 -0300, Leonardo Bras wrote:
-> *** BLURB HERE ***
+The following changes since commit b7e7c85dc7b0ea5ff821756c331489e3b151eed1:
 
-Sorry, something gone terribly wrong with my cover letter.
-I will try to find it and send here, or rewrite it.
+  Merge tag 'arm64-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux (2019-08-16 10:51:47 -0700)
 
-Best regards,
+are available in the Git repository at:
 
---=-zBmeUsHIw6iPjGkcXUp7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+  git://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs.git tags/f2fs-for-5.4
 
------BEGIN PGP SIGNATURE-----
+for you to fetch changes up to fbbf779989d2ef9a51daaa4e53c0b2ecc8c55c4e:
 
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl2FLwgACgkQlQYWtz9S
-ttS4pxAAyLJQGQqLn3/uCt8mF14TTKklTkgtYZYnjrUAkq41RmZdzGrnmqw2Doc6
-a++i7yM121uUavh3aOJjh5lzFIg09k56oq6j0yKgbG6bFv78GxgHeoD18Cha6sma
-H1GVGCBenJ5MlyVWRv5kMYVEzRJrQ0iB4x0mDeLHChjYOf6tvqlHTNfviTW5/vck
-ZuMIrE1XYXjVRwyt6M5IX90gxpck15kz5e+thMr1a0RdXgCpIQSSYfrvcWfhYjQP
-rrPooy7AFBb1HlMgkq9T3KNcvauier39RWnHqcoO6HC9hIW8GwDrA+oG0NhdU06z
-u11JNHWp1o1K/cVpzpU5keDqUq6yypvoMrxsuqUHnc942ZP9TidK1x1BpxlbP/VR
-o7aV7kXjmVPcdLbvzIAtitouyuerZApeC7kh7RcJ8/cz6FE6rQMAvpSc+rT+CJY2
-3s/WH8YjND1+j1/1ronLW9wnFgC9/LFXkU1/uIFcZwLjv/PPVcvdXtuKkauCfByp
-0M5qjbAKpQYmwGPda9i0M26JyUmIqeVv7XEqz6G3EXEpgJFPUU7YvmLtD6lHZr01
-CenwanUxJqI+TCVm1L0dGFq0uhUMUR6BaDKMEtp5Kx5EZF1pXju/OPHMylsQSdHt
-fN8APotYSE0C6exwJp6fV2sYVWzX9X1T1PItn7sZEyoj+fwL4qg=
-=Fz6o
------END PGP SIGNATURE-----
+  f2fs: add a condition to detect overflow in f2fs_ioc_gc_range() (2019-09-17 13:56:15 -0700)
 
---=-zBmeUsHIw6iPjGkcXUp7--
+----------------------------------------------------------------
+f2fs-for-5.4-rc1
 
+In this round, we introduced casefolding support in f2fs, and fixed various bugs
+in individual features such as IO alignment, checkpoint=disable, quota, and
+swapfile.
+
+Enhancement:
+ - support casefolding w/ enhancement in ext4
+ - support fiemap for directory
+ - support FS_IO_GET|SET_FSLABEL
+
+Bug fix:
+ - fix IO stuck during checkpoint=disable
+ - avoid infinite GC loop
+ - fix panic/overflow related to IO alignment feature
+ - fix livelock in swap file
+ - fix discard command leak
+ - disallow dio for atomic_write
+
+----------------------------------------------------------------
+Chao Yu (34):
+      f2fs: introduce {page,io}_is_mergeable() for readability
+      f2fs: fix panic of IO alignment feature
+      f2fs: disallow switching io_bits option during remount
+      f2fs: fix to drop meta/node pages during umount
+      f2fs: fix to avoid tagging SBI_QUOTA_NEED_REPAIR incorrectly
+      f2fs: fix to avoid discard command leak
+      f2fs: support fiemap() for directory inode
+      f2fs: fix to spread f2fs_is_checkpoint_ready()
+      f2fs: fix to detect cp error in f2fs_setxattr()
+      f2fs: fix to handle quota_{on,off} correctly
+      f2fs: disallow direct IO in atomic write
+      f2fs: fix to avoid call kvfree under spinlock
+      f2fs: use wrapped IS_SWAPFILE()
+      f2fs: fix to use more generic EOPNOTSUPP
+      f2fs: use wrapped f2fs_cp_error()
+      f2fs: fix to migrate blocks correctly during defragment
+      f2fs: fix wrong available node count calculation
+      Revert "f2fs: avoid out-of-range memory access"
+      f2fs: fix to avoid data corruption by forbidding SSR overwrite
+      f2fs: support FS_IOC_{GET,SET}FSLABEL
+      f2fs: allocate memory in batch in build_sit_info()
+      f2fs: introduce f2fs_match_name() for cleanup
+      f2fs: optimize case-insensitive lookups
+      f2fs: fix to writeout dirty inode during node flush
+      f2fs: fix wrong error injection path in inc_valid_block_count()
+      f2fs: clean up __bio_alloc()'s parameter
+      f2fs: enhance f2fs_is_checkpoint_ready()'s readability
+      f2fs: add missing documents of reserve_root/resuid/resgid
+      f2fs: fix error path of f2fs_convert_inline_page()
+      f2fs: fix to avoid accessing uninitialized field of inode page in is_alive()
+      f2fs: fix extent corrupotion during directIO in LFS mode
+      f2fs: fix to handle error path correctly in f2fs_map_blocks
+      f2fs: fix to fallback to buffered IO in IO aligned mode
+      f2fs: fix to add missing F2FS_IO_ALIGNED() condition
+
+Daniel Rosenberg (3):
+      fs: Reserve flag for casefolding
+      f2fs: include charset encoding information in the superblock
+      f2fs: Support case-insensitive file name lookups
+
+Goldwyn Rodrigues (1):
+      f2fs: fix inode rwsem regression
+
+Jaegeuk Kim (4):
+      f2fs: fix livelock in swapfile writes
+      f2fs: fix flushing node pages when checkpoint is disabled
+      f2fs: convert inline_data in prior to i_size_write
+      f2fs: avoid infinite GC loop due to stale atomic files
+
+Jia-Ju Bai (1):
+      fs: f2fs: Remove unnecessary checks of SM_I(sbi) in update_general_status()
+
+Lihong Kou (2):
+      f2fs: remove duplicate code in f2fs_file_write_iter
+      f2fs: cleanup the code in build_sit_entries.
+
+Lockywolf (1):
+      f2fs: Add a small clarification to CONFIG_FS_F2FS_FS_SECURITY
+
+Sahitya Tummala (3):
+      f2fs: Fix indefinite loop in f2fs_gc()
+      f2fs: Fix indefinite loop in f2fs_gc()
+      f2fs: add a condition to detect overflow in f2fs_ioc_gc_range()
+
+Surbhi Palande (1):
+      f2fs: check all the data segments against all node ones
+
+YueHaibing (1):
+      f2fs: Fix build error while CONFIG_NLS=m
+
+ Documentation/ABI/testing/sysfs-fs-f2fs |   7 ++
+ Documentation/filesystems/f2fs.txt      |   8 ++
+ fs/f2fs/Kconfig                         |   5 +-
+ fs/f2fs/data.c                          | 104 ++++++++++++------
+ fs/f2fs/debug.c                         |   4 +-
+ fs/f2fs/dir.c                           | 184 ++++++++++++++++++++++++++++++--
+ fs/f2fs/f2fs.h                          |  47 ++++++--
+ fs/f2fs/file.c                          | 162 ++++++++++++++++++++++------
+ fs/f2fs/gc.c                            |  27 ++++-
+ fs/f2fs/hash.c                          |  37 ++++++-
+ fs/f2fs/inline.c                        |  18 +++-
+ fs/f2fs/inode.c                         |  11 +-
+ fs/f2fs/namei.c                         |  54 ++++++----
+ fs/f2fs/node.c                          |  57 +++++++++-
+ fs/f2fs/segment.c                       | 135 ++++++++++++-----------
+ fs/f2fs/segment.h                       |  12 ++-
+ fs/f2fs/super.c                         | 156 +++++++++++++++++++++++++--
+ fs/f2fs/sysfs.c                         |  23 ++++
+ fs/f2fs/xattr.c                         |   6 ++
+ include/linux/f2fs_fs.h                 |  10 +-
+ include/uapi/linux/fs.h                 |   1 +
+ tools/include/uapi/linux/fs.h           |   1 +
+ 22 files changed, 865 insertions(+), 204 deletions(-)
