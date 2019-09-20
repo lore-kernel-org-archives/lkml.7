@@ -7,83 +7,107 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0647CC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 114F2C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D24F0207E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:55:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E45A2207E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:55:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393227AbfITOz2 (ORCPT
+        id S2393248AbfITOzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:55:28 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:44903 "EHLO
+        Fri, 20 Sep 2019 10:55:50 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:46219 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389185AbfITOz1 (ORCPT
+        with ESMTP id S2389185AbfITOzu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 10:55:27 -0400
+        Fri, 20 Sep 2019 10:55:50 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1N2E9Y-1i3w1B3Rhm-013dNt; Fri, 20 Sep 2019 16:55:19 +0200
+ (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MLhsE-1iSrAm1iyG-00Hihn; Fri, 20 Sep 2019 16:55:44 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Vidya Sagar <vidyas@nvidia.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Thierry Reding <treding@nvidia.com>, linux-pci@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: tegra: include linux/pinctrl/consumer.h
-Date:   Fri, 20 Sep 2019 16:55:05 +0200
-Message-Id: <20190920145518.1721180-1-arnd@arndb.de>
+To:     Andy Gross <agross@kernel.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] mbox: qcom: avoid unused-variable warning
+Date:   Fri, 20 Sep 2019 16:55:29 +0200
+Message-Id: <20190920145543.1732316-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:IwQMbPlR2hr9aTYQU1WDWQp/cnWIHD0os/rsPvkzxg5L9g8x8mA
- 2DNVyhrFFzxmek/irSF0HHBeAWbaT4U+mGNlPQqTPhHiwMii3+RpJUelI6QH1xX9lVZ72Wm
- BlfpVF+DfIkabdQBKTXXIadYPXtuwQ6W8+IGUBNBdOupGXJIKp6qUX+oTejZy1l78epJsEQ
- p1hyoFhaumLrR85fK81ZA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:4DDgX0lpUTI=:mBJblij8EOpSFP48bSRQh8
- gK3v16QkRIC56OVlWdDqEYBT7IifzDycka2ZxrNmOq+xVyP1bb8eZHLm05DHNeqI8XsIo6pUB
- H/sEnOHNc8H9CJp81BapaglceHikDfXTuNVTJPt9I+zu5A3fcN8IisPtu0lFHvTZMYO6/Z9Qp
- qX2EBITg9eimJC4DMBEad4T/7jhocR/Lyvx0psF1u3ghhbLuU0bvozUoZO0q6Huo0xDeZC1ZA
- BdFpThncSZ9g/ZHXdZBQ3vFhEt5Tnzhz2BF3Mmi4jiHc24lcqFSiRmjOY5cYaZpFanZQuqlMY
- u+JXl2QOWK9rhjCt9H4BNujUEo9qv20t8OR9P1KcT7SJWzK78abDvRwcFIH9LKUgmrEs6LA9p
- NCl8KN+hSndWm0Qa9jPOa2b8wX940nQAsTZ9+gHV+uSjSMUX79AYcQuvSW2lVcKu6G55w2g/H
- sLYk7odwFBz4zocfPOJ7HspP7DzgZDwXOTnK4fR+4FeXWJm++it0eljp0BHJf+ocNJo3UhpkS
- 5wqC/K5AGAHoZBp/3B3i0E0vlylpG0P9aEp4H+4RzRRYen4oM10OvIT2frGcHFxmFr6puAo8s
- zJ4sBKKL7zSsCJV/rvEGGfheXuxYTuXG7PjcmhPGcZLZngIiu3UVDqh/NlkSXT1YT8escPrCN
- Nu6xSd9tLIe059q4dsYh8XQQcicmI1dJhzi79KMNweENpcQLxvNvUlfYnbdhnaFqhcBzDNB/2
- fZUXfu2yMiPmGVMQS/5fFEjndyjY5yGbAmsOSLoqmheXNtTdnabt5Iz7QjOr+bGsLGCXxRRzH
- 16KAVy4NtulsA9Q7abon4Rq4L/frN3amAZyXHahcasreSXFzn+giCY7BrfaRkBiGNnP+Ab7ha
- wFEmZKoU0RudbuBIgOjg==
+X-Provags-ID: V03:K1:Vyj8IgoELBNWAqG5shQMbymVlAFKmfgJTRKXyjfK2wns8erKnyT
+ EQNR+NWuon0/SrwcQFXP/Q+5UyeoVJRZcWX1KcNGlOGYEZaFOQ0042uCtn/lfMXjkDcR39H
+ Ijabv+hd/DqHd/D5+JgLGmbDmP0jvMZ4DuboWdurVRNStwlZd5Ni6k7zy8U/PRk27arqy0Z
+ ap/PBMmshw7j2WNVCkg4A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:9vhf4jNp1uA=:+keTyOqPFu2N7vGM0j1fp1
+ BCH44pMIIX8ww/IE9WqPXs2NnSFVjfb9Z3ogktOmXOwbUa/xiPIACCfR/zNC6IbWFY+r3JVDK
+ hvVRpQqG7yPZ7z3xSYa0x4R5yOs4BkzVkz3JXJG8ZmkOmhMc+s7T+pbTifuTUaTUbf+Qt9bb0
+ xUW9tXqR6mATVEv/Z5jwtT5+U3o5Fde4Z+k1G+z+uwmmMwdtJ3DkFVZ1p2+BQppC57NYo2GUa
+ y9rfYG+Ec1GswGaaDLJpiPe6ij0J8z9wLKRSJtsEjk1YU+hpKbbE6OoybtRde0z5XbYbKIR5R
+ mzxUX9qZC3ST0XiY4S4XRirF2s5WDrvyrdBs66MU70D5tFK2Ds1tVE+SbzsQNG3zxIPezRO0G
+ 5HE6Xm5HIOPy5lZRHFiDCHGsISFaYzYH5WLx3Uhp1Q92eCpfdJZI7qwgpR76jYUC+BJAiEczT
+ mgWoas4/EtD5zGWcYGdxpox+vwwK9I4uaxsNU266RoJGhilOzQOVBrFZjprhdaPiy8HmtKByC
+ VZh9byJVC7e3KJtHA9lZA073OwaLt9Ny1dV8WHE8jaLE6Ig/yJVEqCETgr+0QKxWTpBGbxTjY
+ TZecPEUcb0egdDeheelJ2awweCfL7SLqczeKFaE8mxaFxRlkttxkRgwSHecnxYW+kIIRsTSDP
+ qWpd2BRqrSgdEB1/yaNf1N9/YQJ8QdWixVMjipOGSyzdTfZOBQcyIfeJMfQHBlrMhmm6mkCH2
+ 9VxIGKBs5/c8NLGgPeEKQpwR7VV48Ml2JiZjYxG5gtvVlD+1rHgdPZDwzA0qepo5EvbuA0NZT
+ WNqCaf2EN/UaENvOH5uO98BzU2Aivi1ODWWMjq2ZsQyyJKgOYpUt+ZWFoo5SbtrFR24mFbZ3Y
+ MB/Jp2IaW9CmGbKJp3FA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Without this, we can run into a build failure:
+Without CONFIG_OF, there is no reference to the apcs_clk_match_table[]
+array, causing a harmless warning:
 
-drivers/pci/controller/dwc/pcie-tegra194.c:1394:8: error: implicit declaration of function 'pinctrl_pm_select_default_state' [-Werror,-Wimplicit-function-declaration]
+drivers/mailbox/qcom-apcs-ipc-mailbox.c:57:28: error: unused variable 'apcs_clk_match_table' [-Werror,-Wunused-variable]
+        const struct of_device_id apcs_clk_match_table[] = {
 
-Fixes: ab2a50e7602b ("PCI: tegra: Add support to configure sideband pins")
+Move the variable out of the variable scope and mark it 'static'
+to avoid the warning (static const variables get silently dropped
+by the compiler), and avoid the on-stack copy at the same time.
+
+Fixes: 78c86458a440 ("mbox: qcom: add APCS child device for QCS404")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/pci/controller/dwc/pcie-tegra194.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index 09ed8e473cff..f89f5acee72d 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -22,6 +22,7 @@
- #include <linux/of_pci.h>
- #include <linux/pci.h>
- #include <linux/phy/phy.h>
-+#include <linux/pinctrl/consumer.h>
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
- #include <linux/random.h>
+diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+index eeebafd546e5..10557a950c2d 100644
+--- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
++++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+@@ -45,6 +45,12 @@ static const struct mbox_chan_ops qcom_apcs_ipc_ops = {
+ 	.send_data = qcom_apcs_ipc_send_data,
+ };
+ 
++static const struct of_device_id apcs_clk_match_table[] = {
++	{ .compatible = "qcom,msm8916-apcs-kpss-global", },
++	{ .compatible = "qcom,qcs404-apcs-apps-global", },
++	{}
++};
++
+ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
+ {
+ 	struct qcom_apcs_ipc *apcs;
+@@ -54,11 +60,6 @@ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
+ 	void __iomem *base;
+ 	unsigned long i;
+ 	int ret;
+-	const struct of_device_id apcs_clk_match_table[] = {
+-		{ .compatible = "qcom,msm8916-apcs-kpss-global", },
+-		{ .compatible = "qcom,qcs404-apcs-apps-global", },
+-		{}
+-	};
+ 
+ 	apcs = devm_kzalloc(&pdev->dev, sizeof(*apcs), GFP_KERNEL);
+ 	if (!apcs)
 -- 
 2.20.0
 
