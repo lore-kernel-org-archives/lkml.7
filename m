@@ -2,120 +2,255 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70395C4CECD
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 545D6C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B8BF21D56
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:05:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2105321D56
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:05:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QHFNHR5P";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ScrLv+aR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405200AbfITIFF (ORCPT
+        id S2408231AbfITIFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 04:05:05 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:36127 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404886AbfITIFF (ORCPT
+        Fri, 20 Sep 2019 04:05:07 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:38034 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404981AbfITIFF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Sep 2019 04:05:05 -0400
-Received: by mail-ed1-f65.google.com with SMTP id h2so5534904edn.3;
-        Fri, 20 Sep 2019 01:05:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GKB2cZsFSODM3FIuz4Y4YZ1vEc5k6RufqQEYaxRbI0w=;
-        b=qssZ7g5N4GQ7we9G9GowQLEHsAeYBpthajNHNMfdpjwWM3CI42L+Y59RfzoSUMLMyX
-         isxmD0xThXBNEu33QcEMe05n9Bbu7KSRopgvC7J1b3KvpRTg8br7L70CKYX5xDt1VSRR
-         bQzfEHqhrohgARd/gWxFix72DEEdysHmLnFfN7Vh/9UrFSGqdOB6alUN/8m0512g45Xd
-         y2LH7jjHxq6LQnxXZ20e/OjWAA2nUb0bgy6KnRMnhMS3KzNgQkFckB6N/uCCpi2oW6Qh
-         KHTjKQOlB/3TRWd2fniB/EZsmIN4aPgO27fa5oo2ooBNjI2uOKbBdQE2d+pfqE2zx2uO
-         QFVQ==
-X-Gm-Message-State: APjAAAUUaidcLDCjiVO6GDeR2lhos6J+7QE/GnaVH8AnG/njKRabgeKf
-        Cdl0n7W6uVxsQcqqkhcEWFE=
-X-Google-Smtp-Source: APXvYqwa+eS8V/8ubME5E0fy+R+976vJecAYytDHWT4EoYhpSFETPExd2G+R6Y8Y8OBdlIRne6gRzg==
-X-Received: by 2002:aa7:d38e:: with SMTP id x14mr21018641edq.102.1568966703382;
-        Fri, 20 Sep 2019 01:05:03 -0700 (PDT)
-Received: from [10.68.32.192] (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.gmail.com with ESMTPSA id h7sm191025edn.73.2019.09.20.01.05.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Sep 2019 01:05:02 -0700 (PDT)
-Subject: Re: [PATCH v3 23/26] memstick: use PCI_STD_NUM_BARS
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Maxim Levitsky <maximlevitsky@gmail.com>,
-        Alex Dubov <oakad@yahoo.com>
-References: <20190916204158.6889-1-efremov@linux.com>
- <20190916204158.6889-24-efremov@linux.com>
- <CAPDyKFoVEMex2_p1M-cFZnGLuwgK0wZk-kL_eZ=eDiT1tjvDGA@mail.gmail.com>
-From:   Denis Efremov <efremov@linux.com>
-Message-ID: <1bbe2bb0-1d3a-9151-eb2a-d2bb2c79250e@linux.com>
-Date:   Fri, 20 Sep 2019 11:05:00 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id C3CBD61790; Fri, 20 Sep 2019 08:05:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568966703;
+        bh=4CzGeif8t/cjtVZRJ3lfesll5hUpgFGEnRYtXtVm/gs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=QHFNHR5PMYY9LqWX6CTrDeMsWuDbvypvdUUkOL7oOUA2eYh5rnfC2V2YXDlx5V8yu
+         H/m1R9lPfp813h4//oUYudleBO36Csrhmn5C3CAw8aFRYJpG0Ic6dIGHvLPGZyECLO
+         15CnBClHzppQFrubgj0wli4HetHU8WY0YkCxssV0=
+Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan@codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DC3176170E;
+        Fri, 20 Sep 2019 08:04:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568966701;
+        bh=4CzGeif8t/cjtVZRJ3lfesll5hUpgFGEnRYtXtVm/gs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ScrLv+aRcQsjQXH2nZ7q/OC1X9Rl5/IX/ZSrjmOdod8pbEUY38tTUZ0+WvehWU/dP
+         yYfzf3XxS/iKPFuOBKaZDPFfybIvfbb3ePVVzqY85vcrnKhALujWlldAY3q3p/M5M9
+         iAjrIKS7QpimMW0L7FKny8urcenS18YdfLaib+MM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DC3176170E
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org,
+        Stephen Boyd <swboyd@chromium.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        bjorn.andersson@linaro.org, Andy Gross <agross@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCHv7 3/3] iommu: arm-smmu-impl: Add sdm845 implementation hook
+Date:   Fri, 20 Sep 2019 13:34:29 +0530
+Message-Id: <3ed0de38b57fda1995d0f231cbcec38c16387a2a.1568966170.git.saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1568966170.git.saiprakash.ranjan@codeaurora.org>
+References: <cover.1568966170.git.saiprakash.ranjan@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFoVEMex2_p1M-cFZnGLuwgK0wZk-kL_eZ=eDiT1tjvDGA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
 
+Add reset hook for sdm845 based platforms to turn off
+the wait-for-safe sequence.
 
-On 20.09.2019 10:42, Ulf Hansson wrote:
-> On Mon, 16 Sep 2019 at 22:47, Denis Efremov <efremov@linux.com> wrote:
->>
->> Use define PCI_STD_NUM_BARS instead of PCI_ROM_RESOURCE for the number of
->> PCI BARs.
->>
->> Cc: Maxim Levitsky <maximlevitsky@gmail.com>
->> Cc: Alex Dubov <oakad@yahoo.com>
->> Cc: Ulf Hansson <ulf.hansson@linaro.org>
->> Signed-off-by: Denis Efremov <efremov@linux.com>
-> 
-> Assuming this depends on other changes in the series?
+Understanding how wait-for-safe logic affects USB and UFS performance
+on MTP845 and DB845 boards:
 
-Yes, the first patch introduce define PCI_STD_NUM_BARS.
+Qcom's implementation of arm,mmu-500 adds a WAIT-FOR-SAFE logic
+to address under-performance issues in real-time clients, such as
+Display, and Camera.
+On receiving an invalidation requests, the SMMU forwards SAFE request
+to these clients and waits for SAFE ack signal from real-time clients.
+The SAFE signal from such clients is used to qualify the start of
+invalidation.
+This logic is controlled by chicken bits, one for each - MDP (display),
+IFE0, and IFE1 (camera), that can be accessed only from secure software
+on sdm845.
 
-> Thus this is
-> probably for PCI maintainers to pick up?
+This configuration, however, degrades the performance of non-real time
+clients, such as USB, and UFS etc. This happens because, with wait-for-safe
+logic enabled the hardware tries to throttle non-real time clients while
+waiting for SAFE ack signals from real-time clients.
 
-Yes, this is for Bjorn's tree.
+On mtp845 and db845 devices, with wait-for-safe logic enabled by the
+bootloaders we see degraded performance of USB and UFS when kernel
+enables the smmu stage-1 translations for these clients.
+Turn off this wait-for-safe logic from the kernel gets us back the perf
+of USB and UFS devices until we re-visit this when we start seeing perf
+issues on display/camera on upstream supported SDM845 platforms.
+The bootloaders on these boards implement secure monitor callbacks to
+handle a specific command - QCOM_SCM_SVC_SMMU_PROGRAM with which the
+logic can be toggled.
 
-> 
-> Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
-> 
-> Kind regards
-> Uffe
-> 
->> ---
->>  drivers/memstick/host/jmb38x_ms.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/memstick/host/jmb38x_ms.c b/drivers/memstick/host/jmb38x_ms.c
->> index 32747425297d..fd281c1d39b1 100644
->> --- a/drivers/memstick/host/jmb38x_ms.c
->> +++ b/drivers/memstick/host/jmb38x_ms.c
->> @@ -848,7 +848,7 @@ static int jmb38x_ms_count_slots(struct pci_dev *pdev)
->>  {
->>         int cnt, rc = 0;
->>
->> -       for (cnt = 0; cnt < PCI_ROM_RESOURCE; ++cnt) {
->> +       for (cnt = 0; cnt < PCI_STD_NUM_BARS; ++cnt) {
->>                 if (!(IORESOURCE_MEM & pci_resource_flags(pdev, cnt)))
->>                         break;
->>
->> --
->> 2.21.0
->>
+There are other boards such as cheza whose bootloaders don't enable this
+logic. Such boards don't implement callbacks to handle the specific SCM
+call so disabling this logic for such boards will be a no-op.
+
+This change is inspired by the downstream change from Patrick Daly
+to address performance issues with display and camera by handling
+this wait-for-safe within separte io-pagetable ops to do TLB
+maintenance. So a big thanks to him for the change and for all the
+offline discussions.
+
+Without this change the UFS reads are pretty slow:
+$ time dd if=/dev/sda of=/dev/zero bs=1048576 count=10 conv=sync
+10+0 records in
+10+0 records out
+10485760 bytes (10.0MB) copied, 22.394903 seconds, 457.2KB/s
+real    0m 22.39s
+user    0m 0.00s
+sys     0m 0.01s
+
+With this change they are back to rock!
+$ time dd if=/dev/sda of=/dev/zero bs=1048576 count=300 conv=sync
+300+0 records in
+300+0 records out
+314572800 bytes (300.0MB) copied, 1.030541 seconds, 291.1MB/s
+real    0m 1.03s
+user    0m 0.00s
+sys     0m 0.54s
+
+Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+---
+ drivers/iommu/Makefile        |  2 +-
+ drivers/iommu/arm-smmu-impl.c |  5 +++-
+ drivers/iommu/arm-smmu-qcom.c | 51 +++++++++++++++++++++++++++++++++++
+ drivers/iommu/arm-smmu.h      |  3 +++
+ 4 files changed, 59 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/iommu/arm-smmu-qcom.c
+
+diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
+index 4f405f926e73..86dadd13b2e6 100644
+--- a/drivers/iommu/Makefile
++++ b/drivers/iommu/Makefile
+@@ -13,7 +13,7 @@ obj-$(CONFIG_MSM_IOMMU) += msm_iommu.o
+ obj-$(CONFIG_AMD_IOMMU) += amd_iommu.o amd_iommu_init.o amd_iommu_quirks.o
+ obj-$(CONFIG_AMD_IOMMU_DEBUGFS) += amd_iommu_debugfs.o
+ obj-$(CONFIG_AMD_IOMMU_V2) += amd_iommu_v2.o
+-obj-$(CONFIG_ARM_SMMU) += arm-smmu.o arm-smmu-impl.o
++obj-$(CONFIG_ARM_SMMU) += arm-smmu.o arm-smmu-impl.o arm-smmu-qcom.o
+ obj-$(CONFIG_ARM_SMMU_V3) += arm-smmu-v3.o
+ obj-$(CONFIG_DMAR_TABLE) += dmar.o
+ obj-$(CONFIG_INTEL_IOMMU) += intel-iommu.o intel-pasid.o
+diff --git a/drivers/iommu/arm-smmu-impl.c b/drivers/iommu/arm-smmu-impl.c
+index 5c87a38620c4..b2fe72a8f019 100644
+--- a/drivers/iommu/arm-smmu-impl.c
++++ b/drivers/iommu/arm-smmu-impl.c
+@@ -109,7 +109,7 @@ static struct arm_smmu_device *cavium_smmu_impl_init(struct arm_smmu_device *smm
+ #define ARM_MMU500_ACR_S2CRB_TLBEN	(1 << 10)
+ #define ARM_MMU500_ACR_SMTNMB_TLBEN	(1 << 8)
+ 
+-static int arm_mmu500_reset(struct arm_smmu_device *smmu)
++int arm_mmu500_reset(struct arm_smmu_device *smmu)
+ {
+ 	u32 reg, major;
+ 	int i;
+@@ -170,5 +170,8 @@ struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu)
+ 				  "calxeda,smmu-secure-config-access"))
+ 		smmu->impl = &calxeda_impl;
+ 
++	if (of_device_is_compatible(smmu->dev->of_node, "qcom,sdm845-smmu-500"))
++		return qcom_smmu_impl_init(smmu);
++
+ 	return smmu;
+ }
+diff --git a/drivers/iommu/arm-smmu-qcom.c b/drivers/iommu/arm-smmu-qcom.c
+new file mode 100644
+index 000000000000..24c071c1d8b0
+--- /dev/null
++++ b/drivers/iommu/arm-smmu-qcom.c
+@@ -0,0 +1,51 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2019, The Linux Foundation. All rights reserved.
++ */
++
++#include <linux/qcom_scm.h>
++
++#include "arm-smmu.h"
++
++struct qcom_smmu {
++	struct arm_smmu_device smmu;
++};
++
++static int qcom_sdm845_smmu500_reset(struct arm_smmu_device *smmu)
++{
++	int ret;
++
++	arm_mmu500_reset(smmu);
++
++	/*
++	 * To address performance degradation in non-real time clients,
++	 * such as USB and UFS, turn off wait-for-safe on sdm845 based boards,
++	 * such as MTP and db845, whose firmwares implement secure monitor
++	 * call handlers to turn on/off the wait-for-safe logic.
++	 */
++	ret = qcom_scm_qsmmu500_wait_safe_toggle(0);
++	if (ret)
++		dev_warn(smmu->dev, "Failed to turn off SAFE logic\n");
++
++	return ret;
++}
++
++static const struct arm_smmu_impl qcom_smmu_impl = {
++	.reset = qcom_sdm845_smmu500_reset,
++};
++
++struct arm_smmu_device *qcom_smmu_impl_init(struct arm_smmu_device *smmu)
++{
++	struct qcom_smmu *qsmmu;
++
++	qsmmu = devm_kzalloc(smmu->dev, sizeof(*qsmmu), GFP_KERNEL);
++	if (!qsmmu)
++		return ERR_PTR(-ENOMEM);
++
++	qsmmu->smmu = *smmu;
++
++	qsmmu->smmu.impl = &qcom_smmu_impl;
++	devm_kfree(smmu->dev, smmu);
++
++	return &qsmmu->smmu;
++}
+diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
+index b19b6cae9b5e..de99a85e140a 100644
+--- a/drivers/iommu/arm-smmu.h
++++ b/drivers/iommu/arm-smmu.h
+@@ -398,5 +398,8 @@ static inline void arm_smmu_writeq(struct arm_smmu_device *smmu, int page,
+ 	arm_smmu_writeq((s), ARM_SMMU_CB((s), (n)), (o), (v))
+ 
+ struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu);
++struct arm_smmu_device *qcom_smmu_impl_init(struct arm_smmu_device *smmu);
++
++int arm_mmu500_reset(struct arm_smmu_device *smmu);
+ 
+ #endif /* _ARM_SMMU_H */
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
+
