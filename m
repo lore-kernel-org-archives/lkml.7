@@ -6,114 +6,144 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63139C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 07:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 745ABC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 07:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AB622086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 07:18:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 403152086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 07:24:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PxlvuUd0"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B64UNnCz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394979AbfITHS2 (ORCPT
+        id S2394999AbfITHYP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 03:18:28 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:33404 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390680AbfITHS1 (ORCPT
+        Fri, 20 Sep 2019 03:24:15 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:43481 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2394988AbfITHYP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 03:18:27 -0400
-Received: by mail-ed1-f67.google.com with SMTP id c4so5444864edl.0
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 00:18:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=BUHblpDIooIrZQuKvaVSkR4gzneP4UJ1DcsQqZl+esY=;
-        b=PxlvuUd0/XaEgntK4rFzZoabSaLZYdKu65/CtEXGWfgiVeEBvKri54p1YtHbV54Vso
-         sabWrBBBMhYzdp7d9KnVvJ/FiP9nwjBPydyvYFnlc7zKZcYqw5CKdFoVfJbkKzEkyW8J
-         CbOHOI8iEMOPf8+cqLKWOimzXm8Ft2DbTDipqB28PvufFkFwN/HwQpvHtkb5hPqIHcos
-         at6f3Y25OcKlt53k4/1F7Xocn9shMsVcmKDZVF/Qf1zQR0/4p7zv4zjgJkoeiz/cOxq8
-         Bsk9EtGiHn+FXXRvu8plA2+/ymlFBMGxhfBebvI67y9BIVOMgwSqDpoC7Orus1cUkvNB
-         UyHQ==
+        Fri, 20 Sep 2019 03:24:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1568964254;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=KVGyEzIpXZFt2w1fAetDgSLPM6b5VQq1fUVZtxklqxg=;
+        b=B64UNnCzGTTPHpxLbwjOahNsOwbcos45jX2YI7sfXBpJxtZXFwez+4aHslURDzapxj44gC
+        ETyVuZ0mGoKudsdsh+uR32EHCwh3x6/90wwBi+XzA32S8EJq38uQPTBzFWq0AsZs3rh7Gm
+        iZEDny/UzA0qPXdyDHYoQxdIXHxx4KA=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-306-lhlbgUHYPvircOrWYN5xoQ-1; Fri, 20 Sep 2019 03:24:12 -0400
+Received: by mail-ed1-f71.google.com with SMTP id s15so2451444edj.1
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 00:24:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BUHblpDIooIrZQuKvaVSkR4gzneP4UJ1DcsQqZl+esY=;
-        b=B84YfZg6+eDbtpgJGIXcYzO90NmIJsSmMZLNJhDhIjwXMu7Alrn9HLW260LfLzictE
-         G9qfcZFRSeY3+P9G6nszrhLjDwAPPpkdtVQEeYH+DK06nZYPtD5l2tuPU931vbWKwK9k
-         D+HpjKS+4KZONGpLaiwhNgn/OVeYZGBQCvGEAKjdU3cm4B7XgvEgs0foqsVhiJlz4VyG
-         l/8YNzsipbwZNFpWMcG/I2+q+tPGQy7ikG9kwRKINaSdiW9sN0UBv2TKeBDLgPYzFdPQ
-         tTcetaPhxSJchgpo5MVsxwa+ajAzoQXd1yz2nrxuCxv6T0AZa6PCazlUbc2r2k/613fR
-         JKGA==
-X-Gm-Message-State: APjAAAX+KnbFkA6TldbThT1x0FzI4IL13njN0B1bGiDIR+FYIX5Ruvjj
-        pOXNoMtPw5hPkrs9TQHlW/wlYg==
-X-Google-Smtp-Source: APXvYqzlWVFt2wqR2XV+/SkmRXHJ3VguPiEFC4D4xWO75dtqYKoxP+71EoOFdi2jld8XfBiJJ9aMHA==
-X-Received: by 2002:a05:6402:17eb:: with SMTP id t11mr19808894edy.97.1568963904689;
-        Fri, 20 Sep 2019 00:18:24 -0700 (PDT)
-Received: from lophozonia ([85.195.192.192])
-        by smtp.gmail.com with ESMTPSA id e13sm55819eje.52.2019.09.20.00.18.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Sep 2019 00:18:24 -0700 (PDT)
-Date:   Fri, 20 Sep 2019 09:18:21 +0200
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Guo Ren <guoren@kernel.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Palmer Dabbelt <palmer@sifive.com>, christoffer.dall@arm.com,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Julien Grall <julien.grall@arm.com>, gary@garyguo.net,
-        linux-riscv@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        Mike Rapoport <rppt@linux.ibm.com>, aou@eecs.berkeley.edu,
-        Arnd Bergmann <arnd@arndb.de>, suzuki.poulose@arm.com,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Anup Patel <anup.Patel@wdc.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        iommu@lists.linux-foundation.org, james.morse@arm.com
-Subject: Re: [PATCH RFC 11/14] arm64: Move the ASID allocator code in a
- separate file
-Message-ID: <20190920071821.GA1229556@lophozonia>
-References: <CAJF2gTSiiiewTLwVAXvPLO7rTSUw1rg8VtFLzANdP2S2EEbTjg@mail.gmail.com>
- <20190624104006.lvm32nahemaqklxc@willie-the-truck>
- <CAJF2gTSC1sGgmiTCgzKUTdPyUZ3LG4H7N8YbMyWr-E+eifGuYg@mail.gmail.com>
- <20190912140256.fwbutgmadpjbjnab@willie-the-truck>
- <CAJF2gTT2c45HRfATF+=zs-HNToFAKgq1inKRmJMV3uPYBo4iVg@mail.gmail.com>
- <CAJF2gTTsHCsSpf1ncVb=ZJS2d=r+AdDi2=5z-REVS=uUg9138A@mail.gmail.com>
- <057a0af3-93f7-271c-170e-4b31e6894c3c@linaro.org>
- <CAJF2gTRbyfrUqAULPqJTXdxx8YOscPqAEuMsoJ+dTNobNrUV1g@mail.gmail.com>
- <20190919151844.GG1013538@lophozonia>
- <CAJF2gTQtk7VhBgUan6WOZgc3UaQzHL8SxMi=yiHG-8eC207BbQ@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=p6OkBuWjoxWL/pIuhPJa4NpzgSq8YM2TDi8732wO4HI=;
+        b=gkOmo7c5psTUlVVCTzV8VB9a7xR6m0mDSlZDJnQLmVt5t4gD9i/pair9mQ2vWlE4YK
+         1QaLPH1HQjfIMf7L2/W0S6PYrk7btyVFWbToOX/D+YDhHrImdFbAAFutMfup6lvSZ5sX
+         /hbS0mMrzIjawDOngRBB2NmtLvF6P3HcwOikU1YRvJ7PGdi0Ui5GyQdkm5EokdW3Tgkb
+         x9f4eVF50WKKKwkGTUNcO8GscRtwvGaP6rxoU3Kxh5Dhk0rxF0y6QHEQdtuiAVyeETTb
+         Vc8jq/pTY6D47+k6GLamaaGv/sZyDKlzJ1so63r9vCul7q/pYGXZaWrzUk9guDaORH3U
+         cTRA==
+X-Gm-Message-State: APjAAAW71iwUO4XScfZ98ul1oRkkowDu4aBpbT8Oe1IwvyoGC+8JkuGr
+        PYk8bdP7mmY/QxJL+VQzi+wbB7XLPzOYqhFMua7i0GcCxPti/S7SnS+A9+R6rjasliO6AcL7ijv
+        +F8G8E0YpDhqxqh468m2mxXd2
+X-Received: by 2002:a17:906:405b:: with SMTP id y27mr18324922ejj.18.1568964250696;
+        Fri, 20 Sep 2019 00:24:10 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwBUYNM3WgAtUt0AspuhWHpC/wlZM4YwF+Ndz/2pXA/cE34PTfQGrvd+x1+P7EUBu4MGo19Ag==
+X-Received: by 2002:a17:906:405b:: with SMTP id y27mr18324896ejj.18.1568964250445;
+        Fri, 20 Sep 2019 00:24:10 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id ha2sm131428ejb.63.2019.09.20.00.24.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Sep 2019 00:24:09 -0700 (PDT)
+Subject: Re: [PATCH v3 2/6] platform/x86: huawei-wmi: Add quirks and module
+ parameters
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ayman Bagabas <ayman.bagabas@gmail.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sinan Kaya <okaya@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        Stuart Hayes <stuart.w.hayes@gmail.com>,
+        Matan Ziv-Av <matan@svgalib.org>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Peng Hao <peng.hao2@zte.com.cn>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mattias Jacobsson <2pi@mok.nu>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190920003938.21617-1-ayman.bagabas@gmail.com>
+ <20190920003938.21617-3-ayman.bagabas@gmail.com>
+ <20190920060812.GB473898@kroah.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <30a363e5-5691-e008-e1e5-55936fa3cd92@redhat.com>
+Date:   Fri, 20 Sep 2019 09:24:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJF2gTQtk7VhBgUan6WOZgc3UaQzHL8SxMi=yiHG-8eC207BbQ@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190920060812.GB473898@kroah.com>
+Content-Language: en-US
+X-MC-Unique: lhlbgUHYPvircOrWYN5xoQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 08:07:38AM +0800, Guo Ren wrote:
-> On Thu, Sep 19, 2019 at 11:18 PM Jean-Philippe Brucker
-> <jean-philippe@linaro.org> wrote:
-> 
-> >
-> > The SMMU does support PCI Virtual Function - an hypervisor can assign a
-> > VF to a guest, and let that guest partition the VF into smaller contexts
-> > by using PASID.  What it can't support is assigning partitions of a PCI
-> > function (VF or PF) to multiple Virtual Machines, since there is a
-> > single S2 PGD per function (in the Stream Table Entry), rather than one
-> > S2 PGD per PASID context.
-> >
-> In my concept, the two sentences "The SMMU does support PCI Virtual
-> Functio" v.s. "What it can't support is assigning partitions of a PCI
-> function (VF or PF) to multiple Virtual Machines" are conflict and I
-> don't want to play naming game :)
+Hi,
 
-That's fine. But to prevent the spread of misinformation: Arm SMMU
-supports PCI Virtual Functions.
+On 20-09-2019 08:08, Greg Kroah-Hartman wrote:
+> On Thu, Sep 19, 2019 at 08:39:07PM -0400, Ayman Bagabas wrote:
+>> Introduce quirks and module parameters. 3 quirks are added:
+>> 1. Fixes reporting brightness keys twice since it's already handled by
+>>     acpi-video.
+>> 2. Some models need a short delay when setting battery thresholds to
+>>     prevent a race condition when two processes read/write. (will be use=
+d later)
+>> 3. Matebook X (2017) handles micmute led through the "legacy" interface
+>>     which is not currently implemented. Use ACPI EC method to control
+>>     this led. (will be used later)
+>>
+>> 2 module parameters are added to enable this short delay and/or report
+>>    brightness keys through this driver.
+>=20
+> module parameters are a pain to manage and handle over time.  Is there
+> any way you can "automatically" figure this out, or use a sysfs file
+> instead?
 
-Thanks,
-Jean
+The patch also adds dmi matches to set the quirks, so the module params
+are there to override those and/or to easily test which are the right optio=
+ns
+with new modules. The normal / expected use-case for everything to be set
+automatically based on the DMI table.
+
+With that said, the module-params should really always override the dmi val=
+ues,
+so I would like to suggest to make the module-params int-s instead of bool-=
+s
+and to do something like this:
+
+static int battery_reset =3D -1;
+static int report_brightness =3D -1;
+
+=09quirks =3D &quirk_unknown;
+=09dmi_check_system(huawei_quirks);
+=09/* If set the module options override the vale from the DMI table */
+=09if (battery_reset !=3D -1)
+=09=09quirks->battery_reset =3D battery_reset;
+=09if (report_brightness !=3D -1)
+=09=09quirks->report_brightness =3D report_brightness;
+
+Regards,
+
+Hans
+
+
