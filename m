@@ -8,64 +8,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D0F2C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 00:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 253B5C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 00:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EDF9214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 00:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E41B221907
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 00:40:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TJWx5Ujz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V8+4qccv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394488AbfITAko (ORCPT
+        id S2394497AbfITAkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 20:40:44 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:35545 "EHLO
+        Thu, 19 Sep 2019 20:40:55 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:33307 "EHLO
         mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388479AbfITAkn (ORCPT
+        with ESMTP id S2388479AbfITAkz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 20:40:43 -0400
-Received: by mail-yw1-f68.google.com with SMTP id r134so1941322ywg.2;
-        Thu, 19 Sep 2019 17:40:43 -0700 (PDT)
+        Thu, 19 Sep 2019 20:40:55 -0400
+Received: by mail-yw1-f68.google.com with SMTP id i188so1524035ywf.0;
+        Thu, 19 Sep 2019 17:40:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=KWVIp469lW4+EScBOPQlrmE0QLON/OsspQQ20Ex+qXI=;
-        b=TJWx5Ujz1nUHCPnZiYE5vbWqh2OhCvxiaw3mjNvnFn/kHa7twQcFDTwcJWRTwcbmJL
-         /POAmfYslqPXUHUYBQKnmekqRIVKikkqJCql1E3ljRHT6FlPYULevyOmVp/cvYthLkxe
-         z8PdhrhhdBQsd9BsDj9t+EC3QdPgLqgERKFN14oQa8syBovQMV7VU3ffkEd98BUNQsJq
-         48AyXEuEmkZBbiQ6oHD3zmGPtwoRUSoJfv1NF+ocUl67lCLuirld4iu+vgLoILBVb09f
-         wf6SDKcEZk4F0WNQSMpZNEnW6NBQ/C04NgGgWxdWQFItsq2NycqBCpEYuuXGXJz8G9SM
-         LXyA==
+        bh=aQSk775q1feKYpb6MaNUDEQvmeqn7p7J8OSj2R1kBy4=;
+        b=V8+4qccvfb89IgNf3gbjHpacnjCwTr5vF2zJAEmZ0zkPYHvUww0DMQFBCKT1lN9+im
+         N1N2OibxW5fyhYjjSX+sPKMLT/55da1hy4N2RsCWmfs1SOc7MLy7YrlwjvTQ/ZsHNe4Z
+         ekAGHGYvXvss/z5jOdQIYu9MoML46mI4byjDx6+pfZWBl3LYnfzdU38F+h1izWZDbLJG
+         YTKGy+gnqU0Jz9+2MVWguzm9VY4a+bcbd0w0bQZJR+bek+ZlHjCNpXB8NREwrYgzgBqn
+         oWEnNI31kTduaGHI+nG/F/wVcyrbEfrO0dDszMmopISiBgNN3u1Q6RUJFPsVNGKO76h5
+         4Kcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=KWVIp469lW4+EScBOPQlrmE0QLON/OsspQQ20Ex+qXI=;
-        b=oHmsRtm1g1DtXqvYlq+34Uhcsb7M19ojjP9CMZyHlqGp6GgCT0p4jowqf767nStmhk
-         xf9OziZox8lMyKoX4Hu+/xgRJMQVQNjuwJ5caK5mJqdRlwMWSgQdNkPeA2ZiXYiFNwP4
-         ao3w9lYOxecdJ2agrQJCGSw8Dz9u1fddNzzUc5WgwtNklNl5nADwfyMcyRaPjdU9CJf8
-         20ouTSzaUZlEnAL8Tr9efCgGrBWx5K8jB25vVOe2g+kQqvlzpCdjdbW4DqRCEbkEcqJ+
-         CGYtlhMlLC9dX7ggindT/qfy8XojftXQHVpympHAnnawMXXxik6KWkmY1/sAQ5ZYLsHF
-         hvKA==
-X-Gm-Message-State: APjAAAVwk0Ungkt31qwbr3JJLiAcQxu+N1Rf9jV/4UlfvolbCgjwW3I5
-        4sNB+ozTj41llIzB/qj+JgmUjh9B1A==
-X-Google-Smtp-Source: APXvYqx0MlhDIAFvnF7mj0bnxiZvkNGncD0IfNRW71zZ6S7GNC3Obb6614/tRMfsOw1evUP8tAoA8w==
-X-Received: by 2002:a81:37c8:: with SMTP id e191mr10232770ywa.142.1568940042616;
-        Thu, 19 Sep 2019 17:40:42 -0700 (PDT)
+        bh=aQSk775q1feKYpb6MaNUDEQvmeqn7p7J8OSj2R1kBy4=;
+        b=ffbefuML+sPgDvcPC3LQvF1atcVSNcXhwi6xNHegDeMgCSztgeXEqzkzu+/9RU5vPZ
+         4hCqM8Z8AdMHbVn8i9Cyn0Gp44jQZ0+G/qlw3Z0oQUkdwLN5CAbHwOPecfkLYgz1mSaM
+         /Dav47/TX6sROCZZMKzWxyo+WkGz74cjIKDqkt5aWMMRLn3MLlxSwaIYIsCxFZOdBCXO
+         DAe3zJnnfQ+ypMZyYwpy/KEdPKNeL/rOHyCsZlqdBlPBd+U/acvt+NsfzFeGjxHj5tEZ
+         R57QBgeR/B8oQzGkMwVrqIdhyJIv5TzcJNB/gEpXOWjyRcUjFon84RRgus+jJKeGRpq9
+         NX5g==
+X-Gm-Message-State: APjAAAUrqHkecAeAdI2/WhVWfAVAomk74dLEivcOSJjfwS5DGLvjN1Ue
+        STazhoQuxKlf5MS35Rv5EA==
+X-Google-Smtp-Source: APXvYqy5mCZ791yHnhfT2O8o8iYehWvwyPf+Y9pE/iSuyebRfrl0y3AwTnNtsNrUlXDASrc9iieyUQ==
+X-Received: by 2002:a81:2b54:: with SMTP id r81mr10547277ywr.163.1568940054097;
+        Thu, 19 Sep 2019 17:40:54 -0700 (PDT)
 Received: from 960.localdomain ([64.192.53.12])
-        by smtp.gmail.com with ESMTPSA id r63sm102802ywg.36.2019.09.19.17.40.41
+        by smtp.gmail.com with ESMTPSA id r63sm102802ywg.36.2019.09.19.17.40.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2019 17:40:42 -0700 (PDT)
+        Thu, 19 Sep 2019 17:40:53 -0700 (PDT)
 From:   Ayman Bagabas <ayman.bagabas@gmail.com>
 To:     Darren Hart <dvhart@infradead.org>,
         Andy Shevchenko <andy@infradead.org>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sinan Kaya <okaya@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ayman Bagabas <ayman.bagabas@gmail.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Takashi Iwai <tiwai@suse.de>,
+        Ayman Bagabas <ayman.bagabas@gmail.com>,
         Stuart Hayes <stuart.w.hayes@gmail.com>,
         Matan Ziv-Av <matan@svgalib.org>,
         "Enrico Weigelt, metux IT consult" <info@metux.net>,
@@ -74,9 +73,9 @@ To:     Darren Hart <dvhart@infradead.org>,
         Krzysztof Kozlowski <krzk@kernel.org>,
         Mattias Jacobsson <2pi@mok.nu>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 4/6] platform/x86: huawei-wmi: Add battery charging thresholds
-Date:   Thu, 19 Sep 2019 20:39:09 -0400
-Message-Id: <20190920003938.21617-5-ayman.bagabas@gmail.com>
+Subject: [PATCH v3 5/6] platform/x86: huawei-wmi: Add fn-lock support
+Date:   Thu, 19 Sep 2019 20:39:10 -0400
+Message-Id: <20190920003938.21617-6-ayman.bagabas@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190920003938.21617-1-ayman.bagabas@gmail.com>
 References: <20190920003938.21617-1-ayman.bagabas@gmail.com>
@@ -87,294 +86,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Control battery charge thresholds through the battery API and driver's
-attributes.
-
-Setting battery charging thresholds can introduce a race condition with
-MACH-WX9 where two or more threads are trying to read/write values
-from/to EC memory.
+Huawei Matebook laptops uses Fn key and toggle to access F1-F12 keys.
+Along with that, there is this feature called fn-lock that inverts the
+behavior of this Fn key and the F1-F12 row.
 
 Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
 ---
- drivers/platform/x86/Kconfig      |   1 +
- drivers/platform/x86/huawei-wmi.c | 212 ++++++++++++++++++++++++++++++
- 2 files changed, 213 insertions(+)
+ drivers/platform/x86/huawei-wmi.c | 85 +++++++++++++++++++++++++++++++
+ 1 file changed, 85 insertions(+)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 61bf180d25c7..0659589e46bb 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1305,6 +1305,7 @@ config INTEL_ATOMISP2_PM
- 
- config HUAWEI_WMI
- 	tristate "Huawei WMI laptop extras driver"
-+	depends on ACPI_BATTERY
- 	depends on ACPI_WMI
- 	depends on INPUT
- 	select INPUT_SPARSEKMAP
 diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
-index 63e79b5f8282..4ca1a6896766 100644
+index 4ca1a6896766..8fc11a296357 100644
 --- a/drivers/platform/x86/huawei-wmi.c
 +++ b/drivers/platform/x86/huawei-wmi.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <linux/acpi.h>
-+#include <linux/delay.h>
- #include <linux/dmi.h>
- #include <linux/input.h>
- #include <linux/input/sparse-keymap.h>
-@@ -13,7 +14,10 @@
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/platform_device.h>
-+#include <linux/power_supply.h>
-+#include <linux/sysfs.h>
- #include <linux/wmi.h>
-+#include <acpi/battery.h>
- 
- /*
-  * Huawei WMI GUIDs
-@@ -54,11 +58,14 @@ struct huawei_wmi_debug {
- };
+@@ -59,6 +59,7 @@ struct huawei_wmi_debug {
  
  struct huawei_wmi {
-+	bool battery_available;
-+
+ 	bool battery_available;
++	bool fn_lock_available;
+ 
  	struct huawei_wmi_debug debug;
  	struct input_dev *idev[2];
- 	struct led_classdev cdev;
- 	struct platform_device *pdev;
- 
-+	struct mutex battery_lock;
- 	struct mutex wmi_lock;
- };
- 
-@@ -306,6 +313,208 @@ static void huawei_wmi_leds_setup(struct device *dev)
- 	devm_led_classdev_register(dev, &huawei->cdev);
+@@ -515,6 +516,88 @@ static void huawei_wmi_battery_exit(struct device *dev)
+ 	}
  }
  
-+/* Battery protection */
++/* Fn lock */
 +
-+static int huawei_wmi_battery_get(int *start, int *end)
++static int huawei_wmi_fn_lock_get(int *on)
 +{
-+	u8 ret[0x100];
++	u8 ret[0x100] = { 0 };
 +	int err, i;
 +
-+	err = huawei_wmi_cmd(BATTERY_THRESH_GET, ret, 0x100);
++	err = huawei_wmi_cmd(FN_LOCK_GET, ret, 0x100);
 +	if (err)
 +		return err;
 +
-+	/* Find the last two non-zero values. Return status is ignored. */
-+	i = 0x100;
++	/* Find the first non-zero value. Return status is ignored. */
++	i = 1;
 +	do {
-+		if (start)
-+			*start = ret[i-1];
-+		if (end)
-+			*end = ret[i];
-+	} while (i > 2 && !ret[i--]);
++		if (on)
++			*on = ret[i] - 1; // -1 undefined, 0 off, 1 on.
++	} while (i < 0x100 && !ret[i++]);
 +
 +	return 0;
 +}
 +
-+static int huawei_wmi_battery_set(int start, int end)
++static int huawei_wmi_fn_lock_set(int on)
 +{
 +	union hwmi_arg arg;
-+	int err;
 +
-+	if (start < 0 || end > 100)
-+		return -EINVAL;
++	arg.cmd = FN_LOCK_SET;
++	arg.args[2] = on + 1; // 0 undefined, 1 off, 2 on.
 +
-+	arg.cmd = BATTERY_THRESH_SET;
-+	arg.args[2] = start;
-+	arg.args[3] = end;
-+
-+	/* This is an edge case were some models turn battery protection
-+	 * off without changing their thresholds values. We clear the
-+	 * values before turning off protection. Sometimes we need a sleep delay to
-+	 * make sure these values make their way to EC memory.
-+	 */
-+	if (quirks && quirks->battery_reset && start == 0 && end == 100) {
-+		err = huawei_wmi_battery_set(0, 0);
-+		if (err)
-+			return err;
-+
-+		msleep(1000);
-+	}
-+
-+	err = huawei_wmi_cmd(arg.cmd, NULL, 0);
-+
-+	return err;
++	return huawei_wmi_cmd(arg.cmd, NULL, 0);
 +}
 +
-+static ssize_t charge_control_start_threshold_show(struct device *dev,
++static ssize_t fn_lock_state_show(struct device *dev,
 +		struct device_attribute *attr,
 +		char *buf)
 +{
-+	int err, start;
++	int err, on;
 +
-+	err = huawei_wmi_battery_get(&start, NULL);
++	err = huawei_wmi_fn_lock_get(&on);
 +	if (err)
 +		return err;
 +
-+	return sprintf(buf, "%d\n", start);
++	return sprintf(buf, "%d\n", on);
 +}
 +
-+static ssize_t charge_control_end_threshold_show(struct device *dev,
-+		struct device_attribute *attr,
-+		char *buf)
-+{
-+	int err, end;
-+
-+	err = huawei_wmi_battery_get(NULL, &end);
-+	if (err)
-+		return err;
-+
-+	return sprintf(buf, "%d\n", end);
-+}
-+
-+static ssize_t charge_control_thresholds_show(struct device *dev,
-+		struct device_attribute *attr,
-+		char *buf)
-+{
-+	int err, start, end;
-+
-+	err = huawei_wmi_battery_get(&start, &end);
-+	if (err)
-+		return err;
-+
-+	return sprintf(buf, "%d %d\n", start, end);
-+}
-+
-+static ssize_t charge_control_start_threshold_store(struct device *dev,
++static ssize_t fn_lock_state_store(struct device *dev,
 +		struct device_attribute *attr,
 +		const char *buf, size_t size)
 +{
-+	int err, start, end;
++	int on, err;
 +
-+	err = huawei_wmi_battery_get(NULL, &end);
-+	if (err)
-+		return err;
-+
-+	if (sscanf(buf, "%d", &start) != 1)
++	if (kstrtoint(buf, 10, &on) ||
++			on < 0 || on > 1)
 +		return -EINVAL;
 +
-+	err = huawei_wmi_battery_set(start, end);
++	err = huawei_wmi_fn_lock_set(on);
 +	if (err)
 +		return err;
 +
 +	return size;
 +}
 +
-+static ssize_t charge_control_end_threshold_store(struct device *dev,
-+		struct device_attribute *attr,
-+		const char *buf, size_t size)
-+{
-+	int err, start, end;
++static DEVICE_ATTR_RW(fn_lock_state);
 +
-+	err = huawei_wmi_battery_get(&start, NULL);
-+	if (err)
-+		return err;
-+
-+	if (sscanf(buf, "%d", &end) != 1)
-+		return -EINVAL;
-+
-+	err = huawei_wmi_battery_set(start, end);
-+	if (err)
-+		return err;
-+
-+	return size;
-+}
-+
-+static ssize_t charge_control_thresholds_store(struct device *dev,
-+		struct device_attribute *attr,
-+		const char *buf, size_t size)
-+{
-+	int err, start, end;
-+
-+	if (sscanf(buf, "%d %d", &start, &end) != 2)
-+		return -EINVAL;
-+
-+	err = huawei_wmi_battery_set(start, end);
-+	if (err)
-+		return err;
-+
-+	return size;
-+}
-+
-+static DEVICE_ATTR_RW(charge_control_start_threshold);
-+static DEVICE_ATTR_RW(charge_control_end_threshold);
-+static DEVICE_ATTR_RW(charge_control_thresholds);
-+
-+static int huawei_wmi_battery_add(struct power_supply *battery)
-+{
-+	/* Huawei laptops come with one battery only */
-+	if (strcmp(battery->desc->name, "BAT") != 1)
-+		return -ENODEV;
-+
-+	device_create_file(&battery->dev, &dev_attr_charge_control_start_threshold);
-+	device_create_file(&battery->dev, &dev_attr_charge_control_end_threshold);
-+
-+	return 0;
-+}
-+
-+static int huawei_wmi_battery_remove(struct power_supply *battery)
-+{
-+	device_remove_file(&battery->dev, &dev_attr_charge_control_start_threshold);
-+	device_remove_file(&battery->dev, &dev_attr_charge_control_end_threshold);
-+
-+	return 0;
-+}
-+
-+static struct acpi_battery_hook huawei_wmi_battery_hook = {
-+	.add_battery = huawei_wmi_battery_add,
-+	.remove_battery = huawei_wmi_battery_remove,
-+	.name = "Huawei Battery Extension"
-+};
-+
-+static void huawei_wmi_battery_setup(struct device *dev)
++static void huawei_wmi_fn_lock_setup(struct device *dev)
 +{
 +	struct huawei_wmi *huawei = dev_get_drvdata(dev);
 +
-+	huawei->battery_available = true;
-+	if (huawei_wmi_battery_get(NULL, NULL)) {
-+		huawei->battery_available = false;
++	huawei->fn_lock_available = true;
++	if (huawei_wmi_fn_lock_get(NULL)) {
++		huawei->fn_lock_available = false;
 +		return;
 +	}
 +
-+	battery_hook_register(&huawei_wmi_battery_hook);
-+	device_create_file(dev, &dev_attr_charge_control_thresholds);
++	device_create_file(dev, &dev_attr_fn_lock_state);
 +}
 +
-+static void huawei_wmi_battery_exit(struct device *dev)
++static void huawei_wmi_fn_lock_exit(struct device *dev)
 +{
-+	struct huawei_wmi *huawei = dev_get_drvdata(dev);
-+
-+	if (huawei->battery_available) {
-+		battery_hook_unregister(&huawei_wmi_battery_hook);
-+		device_remove_file(dev, &dev_attr_charge_control_thresholds);
-+	}
++	if (huawei_wmi->fn_lock_available)
++		device_remove_file(dev, &dev_attr_fn_lock_state);
 +}
 +
  /* Input */
  
  static void huawei_wmi_process_key(struct input_dev *idev, int code)
-@@ -426,8 +635,10 @@ static int huawei_wmi_probe(struct platform_device *pdev)
- 
- 	if (wmi_has_guid(HWMI_METHOD_GUID)) {
- 		mutex_init(&huawei_wmi->wmi_lock);
-+		mutex_init(&huawei_wmi->battery_lock);
+@@ -638,6 +721,7 @@ static int huawei_wmi_probe(struct platform_device *pdev)
+ 		mutex_init(&huawei_wmi->battery_lock);
  
  		huawei_wmi_leds_setup(&pdev->dev);
-+		huawei_wmi_battery_setup(&pdev->dev);
++		huawei_wmi_fn_lock_setup(&pdev->dev);
+ 		huawei_wmi_battery_setup(&pdev->dev);
  	}
  
- 	return 0;
-@@ -445,6 +656,7 @@ static int huawei_wmi_remove(struct platform_device *pdev)
- 	}
+@@ -657,6 +741,7 @@ static int huawei_wmi_remove(struct platform_device *pdev)
  
  	if (wmi_has_guid(HWMI_METHOD_GUID)) {
-+		huawei_wmi_battery_exit(&pdev->dev);
+ 		huawei_wmi_battery_exit(&pdev->dev);
++		huawei_wmi_fn_lock_exit(&pdev->dev);
  	}
  
  	return 0;
