@@ -2,210 +2,181 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ACC9C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C580CC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BB6B206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:55:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B7EC2054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:56:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JojRgbKG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387649AbfITNzI (ORCPT
+        id S2387665AbfITN4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 09:55:08 -0400
-Received: from foss.arm.com ([217.140.110.172]:45112 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728844AbfITNzI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 09:55:08 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 85C741597;
-        Fri, 20 Sep 2019 06:55:07 -0700 (PDT)
-Received: from localhost.localdomain (entos-thunderx2-02.shanghai.arm.com [10.169.40.54])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1A7653F67D;
-        Fri, 20 Sep 2019 06:55:02 -0700 (PDT)
-From:   Jia He <justin.he@arm.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Suzuki Poulose <Suzuki.Poulose@arm.com>
-Cc:     Punit Agrawal <punitagrawal@gmail.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Alex Van Brunt <avanbrunt@nvidia.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Ralph Campbell <rcampbell@nvidia.com>, hejianet@gmail.com,
-        Kaly Xin <Kaly.Xin@arm.com>, nd@arm.com,
-        Jia He <justin.he@arm.com>
-Subject: [PATCH v7 3/3] mm: fix double page fault on arm64 if PTE_AF is cleared
-Date:   Fri, 20 Sep 2019 21:54:37 +0800
-Message-Id: <20190920135437.25622-4-justin.he@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190920135437.25622-1-justin.he@arm.com>
-References: <20190920135437.25622-1-justin.he@arm.com>
+        Fri, 20 Sep 2019 09:56:20 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27914 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727737AbfITN4T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 09:56:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1568987777;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=r+jOBIp7ba0yHIK4tEPcw4cnj60zFLAq56/BryStmgs=;
+        b=JojRgbKGvwGBnrWNur7H/yFUcmYmq1nyYrlNNuiMLdHCTPT3vAo+zGBxzESkrLqAFoOysf
+        Wz7htre43rgV+l2YEXImokfEngWS/tl1B+prN1vD6O9Sm2YmGEbwW2hEBpD1FPsTFbYZ2q
+        ETdsB0FakSZmXaAOaU8WiH9qhO22bd8=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-348-U5_CgNTLOEWp1f6LELh2DQ-1; Fri, 20 Sep 2019 09:56:15 -0400
+Received: by mail-ed1-f72.google.com with SMTP id s29so4244953eds.21
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 06:56:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OQZ80X2IpSpPo25VXl4Y9/0GgF00Rtrbgz84uINzy+Q=;
+        b=pgETzK0syx6/+O8afElOvRQ/oFmN59prXNphKZ1lPFY5VGYdjGOME+tA4wOsHRVLHl
+         sFzOPS0mHtALtJnMufQWElo+Fv9nmGvRYxPyp4lLMFKG9yd8G59+QGZJXXA9YhNvAcnZ
+         KquA8y4tXNlqj4vByeXUERo4p3W2Unuuw+xZN6NTxDf0FPV3Ib0ica7G5rS4HLjxmHIn
+         ZDxZrlwu3VC8wSCKY6LGavvVVGSjXfTTe/SfTKv1g2bSgKL3pgCQKOHx8fWIGiQSMZ7K
+         kkTGzLTWHMbuOpHscvkpFWSZcmi8VtzZu4hn8zAXAdqfC/eTWiD713IXoztB7WXCZbNo
+         l0ew==
+X-Gm-Message-State: APjAAAUvJ2brLeygGhiVfgBbEIiu+2C+Hu0mWYv+dB/YrOx/BpbnBV41
+        qR2l3sfQ8W497ueIwO+3Z8hLDtu+TmqV07MR0iOdT5c5Bcf2wauTX7n2q8ggC3wVFaYYQN71P2h
+        DrLC84Wnlj87La/USzi50y1Fr
+X-Received: by 2002:a05:6402:1ade:: with SMTP id ba30mr16084564edb.304.1568987768712;
+        Fri, 20 Sep 2019 06:56:08 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqy1AEcgEJKD2ZHrH2/XvpO9JWOZsPUPg1K0MTs8/0vvQKBKiDlsga+bM5q1s6vwiCeaKOAlEg==
+X-Received: by 2002:a05:6402:1ade:: with SMTP id ba30mr16084543edb.304.1568987768534;
+        Fri, 20 Sep 2019 06:56:08 -0700 (PDT)
+Received: from dhcp-44-196.space.revspace.nl ([2a0e:5700:4:11:6eb:1143:b8be:2b8])
+        by smtp.gmail.com with ESMTPSA id i30sm342639ede.32.2019.09.20.06.56.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Sep 2019 06:56:07 -0700 (PDT)
+Subject: Re: [PATCH 4.19 16/50] gpiolib: acpi: Add
+ gpiolib_acpi_run_edge_events_on_boot option and blacklist
+To:     Pavel Machek <pavel@denx.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Daniel Drake <drake@endlessm.com>,
+        Ian W MORRISON <ianwmorrison@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+References: <20190918061223.116178343@linuxfoundation.org>
+ <20190918061224.680169319@linuxfoundation.org> <20190919074601.GA6968@amd>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <511ae431-2a0e-6362-094a-988c0f3e0db6@redhat.com>
+Date:   Fri, 20 Sep 2019 15:56:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190919074601.GA6968@amd>
+Content-Language: en-US
+X-MC-Unique: U5_CgNTLOEWp1f6LELh2DQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When we tested pmdk unit test [1] vmmalloc_fork TEST1 in arm64 guest, there
-will be a double page fault in __copy_from_user_inatomic of cow_user_page.
+Hi,
 
-Below call trace is from arm64 do_page_fault for debugging purpose
-[  110.016195] Call trace:
-[  110.016826]  do_page_fault+0x5a4/0x690
-[  110.017812]  do_mem_abort+0x50/0xb0
-[  110.018726]  el1_da+0x20/0xc4
-[  110.019492]  __arch_copy_from_user+0x180/0x280
-[  110.020646]  do_wp_page+0xb0/0x860
-[  110.021517]  __handle_mm_fault+0x994/0x1338
-[  110.022606]  handle_mm_fault+0xe8/0x180
-[  110.023584]  do_page_fault+0x240/0x690
-[  110.024535]  do_mem_abort+0x50/0xb0
-[  110.025423]  el0_da+0x20/0x24
+On 9/19/19 9:46 AM, Pavel Machek wrote:
+> On Wed 2019-09-18 08:18:59, Greg Kroah-Hartman wrote:
+>> From: Hans de Goede <hdegoede@redhat.com>
+>>
+>> commit 61f7f7c8f978b1c0d80e43c83b7d110ca0496eb4 upstream.
+>>
+>> Another day; another DSDT bug we need to workaround...
+>>
+>> Since commit ca876c7483b6 ("gpiolib-acpi: make sure we trigger edge even=
+ts
+>> at least once on boot") we call _AEI edge handlers at boot.
+>>
+>> In some rare cases this causes problems. One example of this is the Mini=
+x
+>> Neo Z83-4 mini PC, this device has a clear DSDT bug where it has some co=
+py
+>> and pasted code for dealing with Micro USB-B connector host/device role
+>> switching, while the mini PC does not even have a micro-USB connector.
+>> This code, which should not be there, messes with the DDC data pin from
+>> the HDMI connector (switching it to GPIO mode) breaking HDMI support.
+>>
+>> To avoid problems like this, this commit adds a new
+>> gpiolib_acpi.run_edge_events_on_boot kernel commandline option, which
+>> allows disabling the running of _AEI edge event handlers at boot.
+>=20
+> So... apparently Windows does _not_ run _AEI edge event handlers at
+> boot, otherwise Minix would realize that fault.
 
-The pte info before __copy_from_user_inatomic is (PTE_AF is cleared):
-[ffff9b007000] pgd=000000023d4f8003, pud=000000023da9b003, pmd=000000023d4b3003, pte=360000298607bd3
+Right, also came the conclusion that Windows likely does not run
+_AEI edge event handlers at boot.
 
-As told by Catalin: "On arm64 without hardware Access Flag, copying from
-user will fail because the pte is old and cannot be marked young. So we
-always end up with zeroed page after fork() + CoW for pfn mappings. we
-don't always have a hardware-managed access flag on arm64."
+> Would it make sense not to do it by default, either?
 
-This patch fix it by calling pte_mkyoung. Also, the parameter is
-changed because vmf should be passed to cow_user_page()
+Well as the commit-msg for the commit which originally added this
+explains, there are at least 2 reasons to run them at boot:
 
-Add a WARN_ON_ONCE when __copy_from_user_inatomic() returns error
-in case there can be some obscure use-case.(by Kirill)
+1) This is necessary on at least some ms surface devices to get
+the initial LID state correct, otherwise the LID will be report
+being closed until the first time it is actually closed +
+opened again. Now this case we can probably quirk ourselves
+out of in some way.
 
-[1] https://github.com/pmem/pmdk/tree/master/src/test/vmmalloc_fork
+2) The other case is Cherry Trail based tablets. The hw on these
+can typically do both USB device and host mode on the tablets
+micro-b or type-c connector. This involves a mux which switches
+the data lines between the host and device controllers inside the
+Cherry Trail SoC. This mux is controlled by an edge-triggered ACPI
+eventhandler connected to the ID pin of the micro-b connector.
 
-Reported-by: Yibo Cai <Yibo.Cai@arm.com>
-Signed-off-by: Jia He <justin.he@arm.com>
----
- mm/memory.c | 67 ++++++++++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 61 insertions(+), 6 deletions(-)
+OOTB Windows only supports host mode, I guess there might be some
+way to get device mode to work under Windows but tablet manufacturers
+do not seem to care about this.
 
-diff --git a/mm/memory.c b/mm/memory.c
-index e2bb51b6242e..3e39e40fee87 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -118,6 +118,13 @@ int randomize_va_space __read_mostly =
- 					2;
- #endif
- 
-+#ifndef arch_faults_on_old_pte
-+static inline bool arch_faults_on_old_pte(void)
-+{
-+	return false;
-+}
-+#endif
-+
- static int __init disable_randmaps(char *s)
- {
- 	randomize_va_space = 0;
-@@ -2140,8 +2147,13 @@ static inline int pte_unmap_same(struct mm_struct *mm, pmd_t *pmd,
- 	return same;
- }
- 
--static inline void cow_user_page(struct page *dst, struct page *src, unsigned long va, struct vm_area_struct *vma)
-+static inline int cow_user_page(struct page *dst, struct page *src,
-+				struct vm_fault *vmf)
- {
-+	struct vm_area_struct *vma = vmf->vma;
-+	struct mm_struct *mm = vma->vm_mm;
-+	unsigned long addr = vmf->address;
-+
- 	debug_dma_assert_idle(src);
- 
- 	/*
-@@ -2151,21 +2163,53 @@ static inline void cow_user_page(struct page *dst, struct page *src, unsigned lo
- 	 * fails, we just zero-fill it. Live with it.
- 	 */
- 	if (unlikely(!src)) {
--		void *kaddr = kmap_atomic(dst);
--		void __user *uaddr = (void __user *)(va & PAGE_MASK);
-+		void *kaddr;
-+		pte_t entry;
-+		void __user *uaddr = (void __user *)(addr & PAGE_MASK);
- 
-+		/* On architectures with software "accessed" bits, we would
-+		 * take a double page fault, so mark it accessed here.
-+		 */
-+		if (arch_faults_on_old_pte() && !pte_young(vmf->orig_pte)) {
-+			vmf->pte = pte_offset_map_lock(mm, vmf->pmd, addr,
-+						       &vmf->ptl);
-+			if (likely(pte_same(*vmf->pte, vmf->orig_pte))) {
-+				entry = pte_mkyoung(vmf->orig_pte);
-+				if (ptep_set_access_flags(vma, addr,
-+							  vmf->pte, entry, 0))
-+					update_mmu_cache(vma, addr, vmf->pte);
-+			} else {
-+				/* Other thread has already handled the fault
-+				 * and we don't need to do anything. If it's
-+				 * not the case, the fault will be triggered
-+				 * again on the same address.
-+				 */
-+				pte_unmap_unlock(vmf->pte, vmf->ptl);
-+				return -1;
-+			}
-+			pte_unmap_unlock(vmf->pte, vmf->ptl);
-+		}
-+
-+		kaddr = kmap_atomic(dst);
- 		/*
- 		 * This really shouldn't fail, because the page is there
- 		 * in the page tables. But it might just be unreadable,
- 		 * in which case we just give up and fill the result with
- 		 * zeroes.
- 		 */
--		if (__copy_from_user_inatomic(kaddr, uaddr, PAGE_SIZE))
-+		if (__copy_from_user_inatomic(kaddr, uaddr, PAGE_SIZE)) {
-+			/* Give a warn in case there can be some obscure
-+			 * use-case
-+			 */
-+			WARN_ON_ONCE(1);
- 			clear_page(kaddr);
-+		}
- 		kunmap_atomic(kaddr);
- 		flush_dcache_page(dst);
- 	} else
--		copy_user_highpage(dst, src, va, vma);
-+		copy_user_highpage(dst, src, addr, vma);
-+
-+	return 0;
- }
- 
- static gfp_t __get_fault_gfp_mask(struct vm_area_struct *vma)
-@@ -2318,7 +2362,18 @@ static vm_fault_t wp_page_copy(struct vm_fault *vmf)
- 				vmf->address);
- 		if (!new_page)
- 			goto oom;
--		cow_user_page(new_page, old_page, vmf->address, vma);
-+
-+		if (cow_user_page(new_page, old_page, vmf)) {
-+			/* COW failed, if the fault was solved by other,
-+			 * it's fine. If not, userspace would re-fault on
-+			 * the same address and we will handle the fault
-+			 * from the second attempt.
-+			 */
-+			put_page(new_page);
-+			if (old_page)
-+				put_page(old_page);
-+			return 0;
-+		}
- 	}
- 
- 	if (mem_cgroup_try_charge_delay(new_page, mm, GFP_KERNEL, &memcg, false))
--- 
-2.17.1
+By default many UEFI firmwares put the mux in host mode during boot,
+independent of the actual ID pin value since they only care about host
+mode and want to support e.g. booting from USB or an external kbd.
+
+By default the ID pin on the micro-b connector is high (pulled up)
+an actual micro-b to host(A-female) cable pulls the ID-pin to gnd,
+a USB-A to micro-B cable such as used to connect the tablet to a PC
+leaves the ID pin floating (pulled high).
+
+So without a host adapter inserted, we boot with the mux in host
+mode, and the ID pin high. Now if the user connects the tablet to
+a PC (or it was connected at boot) the ID pin does not change,
+the mux is not change and device mode does not work since the
+mux is set wrong. The only way to fix this is to force the ID
+pin to change, so that would mean inserting a host-adapter, removing
+it again and then connecting the tablet to a PC.
+
+Running the _AEI handler at boot correctly puts the mux in
+device position fixing this. Almost all Cherry Trall devices
+suffer from this, makig it impossible to quirk our way out of this.
+
+Now arguably we could limit the running of _AEI handlers at boot
+to Cherry Trail, I would not object to that, but the
+Minix Neo Z83-4 mini PC is a Cherry Trail device itself, as
+mentioned in the commit msg, the  troublesome _AEI handler on this
+device is the same ID pin handler which we want to run boot on all
+Cherry Trail tablets. In this mini-pc case it is wrong though since
+the mini-pc does not even have a micro-b connector.
+
+I hope this explains.
+
+Regards,
+
+Hans
 
