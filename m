@@ -2,199 +2,198 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1584C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 03:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F28C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 03:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA65A21928
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 03:02:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TvdMtOJy";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="glf8992B"
+	by mail.kernel.org (Postfix) with ESMTP id 90D5121928
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 03:08:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437103AbfITDCZ (ORCPT
+        id S2437118AbfITDIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 23:02:25 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:60872 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405830AbfITDCZ (ORCPT
+        Thu, 19 Sep 2019 23:08:07 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63116 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2404190AbfITDIH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 23:02:25 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 252AD613A8; Fri, 20 Sep 2019 03:02:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568948544;
-        bh=QIJWG6caLaWwd5v0ncOFpPPGx8GXJqON0TsfQqoQpAA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TvdMtOJy5shV2RGoR6nG5lm8yI26T8CtpMfBA/b5FYDRNFcTFYqRHjg9PAhZ2qd0A
-         /fIb/A2VSFDgSpEav5K8wWkw5aQ4X1n0ElJEv187sgca1V86OYhD4WyxtbdWbwVzai
-         RqDVf0I7UuYp3lIbVZU7gVnuDRqeD8aYyWkTFCQc=
-Received: from codeaurora.org (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pkondeti@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 29F8360735;
-        Fri, 20 Sep 2019 03:02:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568948543;
-        bh=QIJWG6caLaWwd5v0ncOFpPPGx8GXJqON0TsfQqoQpAA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=glf8992BlH0H9MnIHQ0KWiCJMQZfvd+6Eu74U8BOMBHNwj0WoSoOnRbwQILnMGgbc
-         qH2Rs1h7YzIfJ2f3We9gNDko3eIY0zEIZje7CZBDoPJ9HPkpsxMXXhf0yX9JywwKiC
-         dYFOhJLKOgyinPTSugX7IxUnQtCEDn9qKwRAi3dA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 29F8360735
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=pkondeti@codeaurora.org
-Date:   Fri, 20 Sep 2019 08:32:15 +0530
-From:   Pavan Kondeti <pkondeti@codeaurora.org>
-To:     Quentin Perret <qperret@qperret.net>
-Cc:     peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, juri.lelli@redhat.com, rjw@rjwysocki.net,
-        morten.rasmussen@arm.com, valentin.schneider@arm.com,
-        qais.yousef@arm.com, tkjos@google.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched/fair: Speed-up energy-aware wake-ups
-Message-ID: <20190920030215.GA20250@codeaurora.org>
-References: <20190912094404.13802-1-qperret@qperret.net>
+        Thu, 19 Sep 2019 23:08:07 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8K32GnS112296;
+        Thu, 19 Sep 2019 23:07:14 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v4hjc02fe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 Sep 2019 23:07:14 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8K352eH011696;
+        Fri, 20 Sep 2019 03:07:13 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma01wdc.us.ibm.com with ESMTP id 2v3vbttjuy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 20 Sep 2019 03:07:13 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8K37CQv7275148
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 20 Sep 2019 03:07:12 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5AE9CAC068;
+        Fri, 20 Sep 2019 03:07:12 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6591CAC05B;
+        Fri, 20 Sep 2019 03:07:08 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.85.222.171])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Fri, 20 Sep 2019 03:07:08 +0000 (GMT)
+References: <20190913225009.3406-1-prsriva@linux.microsoft.com> <20190913225009.3406-2-prsriva@linux.microsoft.com>
+User-agent: mu4e 1.2.0; emacs 26.2
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     Prakhar Srivastava <prsriva@linux.microsoft.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+        arnd@arndb.de, jean-philippe@linaro.org, allison@lohutok.net,
+        kristina.martsenko@arm.org, yamada.masahiro@socionext.com,
+        duwe@lst.de, mark.rutland@arm.com, tglx@linutronix.de,
+        takahiro.akashi@linaro.org, james.morse@arm.org,
+        catalin.marinas@arm.com, sboyd@kernel.org, zohar@linux.ibm.com
+Subject: Re: [RFC PATCH v1 1/1] Add support for arm64 to carry ima measurement log in kexec_file_load
+In-reply-to: <20190913225009.3406-2-prsriva@linux.microsoft.com>
+Date:   Fri, 20 Sep 2019 00:07:02 -0300
+Message-ID: <87zhiz1x9l.fsf@morokweng.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190912094404.13802-1-qperret@qperret.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-19_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909200033
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Quentin,
 
-On Thu, Sep 12, 2019 at 11:44:04AM +0200, Quentin Perret wrote:
-> From: Quentin Perret <quentin.perret@arm.com>
-> 
-> EAS computes the energy impact of migrating a waking task when deciding
-> on which CPU it should run. However, the current approach is known to
-> have a high algorithmic complexity, which can result in prohibitively
-> high wake-up latencies on systems with complex energy models, such as
-> systems with per-CPU DVFS. On such systems, the algorithm complexity is
-> in O(n^2) (ignoring the cost of searching for performance states in the
-> EM) with 'n' the number of CPUs.
-> 
-> To address this, re-factor the EAS wake-up path to compute the energy
-> 'delta' (with and without the task) on a per-performance domain basis,
-> rather than system-wide, which brings the complexity down to O(n).
-> 
-> No functional changes intended.
-> 
-> Signed-off-by: Quentin Perret <quentin.perret@arm.com>
->  
+Hello Prakhar,
 
-[snip]
+Prakhar Srivastava <prsriva@linux.microsoft.com> writes:
 
->  /*
-> @@ -6381,21 +6367,19 @@ compute_energy(struct task_struct *p, int dst_cpu, struct perf_domain *pd)
->   * other use-cases too. So, until someone finds a better way to solve this,
->   * let's keep things simple by re-using the existing slow path.
->   */
-> -
->  static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
->  {
-> -	unsigned long prev_energy = ULONG_MAX, best_energy = ULONG_MAX;
-> +	unsigned long prev_delta = ULONG_MAX, best_delta = ULONG_MAX;
->  	struct root_domain *rd = cpu_rq(smp_processor_id())->rd;
-> +	unsigned long cpu_cap, util, base_energy = 0;
->  	int cpu, best_energy_cpu = prev_cpu;
-> -	struct perf_domain *head, *pd;
-> -	unsigned long cpu_cap, util;
->  	struct sched_domain *sd;
-> +	struct perf_domain *pd;
->  
->  	rcu_read_lock();
->  	pd = rcu_dereference(rd->pd);
->  	if (!pd || READ_ONCE(rd->overutilized))
->  		goto fail;
-> -	head = pd;
->  
->  	/*
->  	 * Energy-aware wake-up happens on the lowest sched_domain starting
-> @@ -6412,9 +6396,14 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
->  		goto unlock;
->  
->  	for (; pd; pd = pd->next) {
-> -		unsigned long cur_energy, spare_cap, max_spare_cap = 0;
-> +		unsigned long cur_delta, spare_cap, max_spare_cap = 0;
-> +		unsigned long base_energy_pd;
->  		int max_spare_cap_cpu = -1;
->  
-> +		/* Compute the 'base' energy of the pd, without @p */
-> +		base_energy_pd = compute_energy(p, -1, pd);
-> +		base_energy += base_energy_pd;
+> During kexec_file_load, carrying forward the ima measurement log allows
+> a verifying party to get the entire runtime event log since the last
+> full reboot since that is when PCRs were last reset.
+>
+> Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
+> ---
+>  arch/arm64/Kconfig                     |   7 +
+>  arch/arm64/include/asm/ima.h           |  29 ++++
+>  arch/arm64/include/asm/kexec.h         |   5 +
+>  arch/arm64/kernel/Makefile             |   3 +-
+>  arch/arm64/kernel/ima_kexec.c          | 213 +++++++++++++++++++++++++
+>  arch/arm64/kernel/machine_kexec_file.c |   6 +
+>  6 files changed, 262 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm64/include/asm/ima.h
+>  create mode 100644 arch/arm64/kernel/ima_kexec.c
+>
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 3adcec05b1f6..f39b12dbf9e8 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -976,6 +976,13 @@ config KEXEC_VERIFY_SIG
+>  	  verification for the corresponding kernel image type being
+>  	  loaded in order for this to work.
+>
+> +config HAVE_IMA_KEXEC
+> +	bool "Carry over IMA measurement log during kexec_file_load() syscall"
+> +	depends on KEXEC_FILE
+> +	help
+> +	  Select this option to carry over IMA measurement log during
+> +	  kexec_file_load.
 > +
->  		for_each_cpu_and(cpu, perf_domain_span(pd), sched_domain_span(sd)) {
->  			if (!cpumask_test_cpu(cpu, p->cpus_ptr))
->  				continue;
-> @@ -6427,9 +6416,9 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
->  
->  			/* Always use prev_cpu as a candidate. */
->  			if (cpu == prev_cpu) {
-> -				prev_energy = compute_energy(p, prev_cpu, head);
-> -				best_energy = min(best_energy, prev_energy);
-> -				continue;
-> +				prev_delta = compute_energy(p, prev_cpu, pd);
-> +				prev_delta -= base_energy_pd;
-> +				best_delta = min(best_delta, prev_delta);
->  			}
+>  config KEXEC_IMAGE_VERIFY_SIG
+>  	bool "Enable Image signature verification support"
+>  	default y
 
-Earlier, we are not checking the spare capacity for the prev_cpu. Now that the
-continue statement is removed, prev_cpu could also be the max_spare_cap_cpu.
-Actually that makes sense. Because there is no reason why we want to select
-another CPU which has less spare capacity than previous CPU.
+This is not right. As it stands, HAVE_IMA_KEXEC is essentially a synonym
+for IMA_KEXEC.
 
-Is this behavior intentional?
+It's not meant to be user-visible in the config process. Instead, it's
+meant to be selected by the arch Kconfig (probably by the ARM64 config
+symbol) to signal to IMA's Kconfig that it can offer the IMA_KEXEC
+option.
 
-When prev_cpu == max_spare_cap_cpu, we are evaluating the energy again for the
-same CPU below. That could have been skipped by returning prev_cpu when
-prev_cpu == max_spare_cap_cpu.
+I also mentioned in my previous review that config HAVE_IMA_KEXEC should
+be defined in arch/Kconfig, not separately in both arch/arm64/Kconfig
+and arch/powerpc/Kconfig.
 
->  
->  			/*
-> @@ -6445,9 +6434,10 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
->  
->  		/* Evaluate the energy impact of using this CPU. */
->  		if (max_spare_cap_cpu >= 0) {
-> -			cur_energy = compute_energy(p, max_spare_cap_cpu, head);
-> -			if (cur_energy < best_energy) {
-> -				best_energy = cur_energy;
-> +			cur_delta = compute_energy(p, max_spare_cap_cpu, pd);
-> +			cur_delta -= base_energy_pd;
-> +			if (cur_delta < best_delta) {
-> +				best_delta = cur_delta;
->  				best_energy_cpu = max_spare_cap_cpu;
->  			}
->  		}
-> @@ -6459,10 +6449,10 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
->  	 * Pick the best CPU if prev_cpu cannot be used, or if it saves at
->  	 * least 6% of the energy used by prev_cpu.
->  	 */
-> -	if (prev_energy == ULONG_MAX)
-> +	if (prev_delta == ULONG_MAX)
->  		return best_energy_cpu;
->  
-> -	if ((prev_energy - best_energy) > (prev_energy >> 4))
-> +	if ((prev_delta - best_delta) > ((prev_delta + base_energy) >> 4))
->  		return best_energy_cpu;
->  
->  	return prev_cpu;
-> -- 
-> 2.22.1
-> 
+> diff --git a/arch/arm64/include/asm/ima.h b/arch/arm64/include/asm/ima.h
+> new file mode 100644
+> index 000000000000..e23cee84729f
+> --- /dev/null
+> +++ b/arch/arm64/include/asm/ima.h
+> @@ -0,0 +1,29 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _ASM_ARM64_IMA_H
+> +#define _ASM_ARM64_IMA_H
+> +
+> +struct kimage;
+> +
+> +int ima_get_kexec_buffer(void **addr, size_t *size);
+> +int ima_free_kexec_buffer(void);
+> +
+> +#ifdef CONFIG_IMA
+> +void remove_ima_buffer(void *fdt, int chosen_node);
+> +#else
+> +static inline void remove_ima_buffer(void *fdt, int chosen_node) {}
+> +#endif
 
-Thanks,
-Pavan
+I mentioned in my previous review that remove_ima_buffer() should exist
+even if CONFIG_IMA isn't set. Did you arrive at a different conclusion?
 
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+> +
+> +#ifdef CONFIG_IMA_KEXEC
+> +int arch_ima_add_kexec_buffer(struct kimage *image, unsigned long load_addr,
+> +			      size_t size);
+> +
+> +int setup_ima_buffer(const struct kimage *image, void *fdt, int chosen_node);
+> +#else
+> +static inline int setup_ima_buffer(const struct kimage *image, void *fdt,
+> +				   int chosen_node)
+> +{
+> +	remove_ima_buffer(fdt, chosen_node);
+> +	return 0;
+> +}
+> +#endif /* CONFIG_IMA_KEXEC */
+> +#endif /* _ASM_ARM64_IMA_H */
 
+> diff --git a/arch/arm64/kernel/ima_kexec.c b/arch/arm64/kernel/ima_kexec.c
+> new file mode 100644
+> index 000000000000..b14326d541f3
+> --- /dev/null
+> +++ b/arch/arm64/kernel/ima_kexec.c
+
+In the previous patch, you took the powerpc file and made a few
+modifications to fit your needs. This file is now somewhat different
+than the powerpc version, but I don't understand to what purpose. It's
+not different in any significant way.
+
+Based on review comments from your previous patch, I was expecting to
+see code from the powerpc file moved to an arch-independent part of the
+the kernel and possibly adapted so that both arm64 and powerpc could use
+it. Can you explain why you chose this approach instead? What is the
+advantage of having superficially different but basically equivalent
+code in the two architectures?
+
+Actually, there's one change that is significant: instead of a single
+linux,ima-kexec-buffer property holding the start address and size of
+the buffer, ARM64 is now using two properties (linux,ima-kexec-buffer
+and linux,ima-kexec-buffer-end) for the start and end addresses. In my
+opinion, unless there's a good reason for it Linux should be consistent
+accross architectures when possible.
+
+--
+Thiago Jung Bauermann
+IBM Linux Technology Center
