@@ -2,156 +2,162 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC84FC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 18:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1DE2C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 18:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE8582086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 18:58:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T06PkeAM"
+	by mail.kernel.org (Postfix) with ESMTP id CB34E208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 18:59:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406483AbfITS6J (ORCPT
+        id S2406536AbfITS7K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 14:58:09 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:36224 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406417AbfITS6J (ORCPT
+        Fri, 20 Sep 2019 14:59:10 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:53096 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406402AbfITS7J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 14:58:09 -0400
-Received: by mail-qk1-f193.google.com with SMTP id y189so8364192qkc.3
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 11:58:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hr3MeVBdlQG42007SWnObV8sbZ+3LIr/i0LOy/XBd40=;
-        b=T06PkeAM3zCg7WLjhfPgo8tMSc3VoETlqnkSDboSThVcx0bNMpAtjXxQGMHjt5UDXd
-         5z5kbIu8Q/l5MbqRAnYGH0CsFQZmCeJHmOtcpwxRZFf4Hisz7iB6PEZKsIy8FvcVXXNu
-         +Z6Fk+JLWaZYJ09Z+3mAAEHft1ViUFD62vW8ONjL1L7Y89ogbcKIQ6tv/tWU8La3nozG
-         7O6is2Xll025bDAuuV23qN3vsmWmdadvQAnwCNQ5CJ5Ek9BTvgPh4aFZd44TlWijsgeA
-         SS0oo6H57aDSUl4/5c5ZM6Wv036rgUuNIt1H5Y+U9PaLBrSSPlpjCwhEOlMJQmBf+sbd
-         8rYQ==
+        Fri, 20 Sep 2019 14:59:09 -0400
+Received: by mail-io1-f72.google.com with SMTP id g8so11990985iop.19
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 11:59:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hr3MeVBdlQG42007SWnObV8sbZ+3LIr/i0LOy/XBd40=;
-        b=mXj0HA8gGeVKDszaDZCWd3K0+sXbuqiguQzMNBSox+8WwGHJk/8ifNtB6Z7LSFQaGs
-         8Ol0A6QFM1J5UemclrhMA7tBgsN5zLevTeVmF+7/ebrG04GztxlY8qmDwtlVx5C0KRs8
-         uz1kNys/y9O0GFCZ/WRJMYKisbfhw++XjOpcGVBzMdQnVfbjaEHOFZ3nIrVIPoo2VtlD
-         i3NgedmelK91Mhlz5sN9aXigWtXMTj2YY1HtCuWnFCnRAPcvZ4U9/acj+a1arIaig9rX
-         fvnTDw2td/swJlnmsaYa8OFjOqQU3OgFkwiWhLgQAbWSHtZ7MGM6scfGhjYDnDzKFCST
-         rR6A==
-X-Gm-Message-State: APjAAAV5c54wkrbyPVz+uwLKJoMkZp2fSIuL0C9EpqHgqeLgC5h5DVzc
-        Z3/E5UJ2dVLkgfc3H5KNQ1M=
-X-Google-Smtp-Source: APXvYqw6MTa3wppv8MVGLLqqZeaG7jRmRguiVhzM6ZHFt4wjy19LtySsu1prwWUXfIiH6NZU0+eZ6A==
-X-Received: by 2002:a37:ac01:: with SMTP id e1mr5317760qkm.140.1569005888291;
-        Fri, 20 Sep 2019 11:58:08 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([187.65.7.29])
-        by smtp.gmail.com with ESMTPSA id z13sm1263213qkj.34.2019.09.20.11.58.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Sep 2019 11:58:07 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id E629940340; Fri, 20 Sep 2019 15:58:04 -0300 (-03)
-Date:   Fri, 20 Sep 2019 15:58:04 -0300
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        namhyung@kernel.org, kstewart@linuxfoundation.org,
-        gregkh@linuxfoundation.org, jeremie.galarneau@efficios.com,
-        shawn@git.icu, tstoyanov@vmware.com, tglx@linutronix.de,
-        alexey.budankov@linux.intel.com, adrian.hunter@intel.com,
-        songliubraving@fb.com, ravi.bangoria@linux.ibm.com
-Subject: Re: [PATCH V2]Perf:Return error code for perf_session__new function
- on failure
-Message-ID: <20190920185804.GG4865@kernel.org>
-References: <20190822071223.17892.45782.stgit@localhost.localdomain>
- <20190822100718.GD28439@krava>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=fHMyxSwiQcNUowrlP4OwXGhbD4PSsSnYKAbGNNWdWLA=;
+        b=g8PxnyaKv+DVGnN7bJDdCVHz3EFKVYuURNBoZBSYonXt0cwgXfD+vvhWPI+cqQnE70
+         PUBzAHJWOXzMAinV8OxmCArRUF/v8pWw8vrUh1NxMn/NCq3a3wuOURDfoedq2JMBp8A3
+         W1d8tvWccmNTzCn9lW5zILdVwZcDHZQVKTNG9/edjaCVpaGVbuYTLCHSK13afJQgeVA7
+         M1Tn6lVmdJWfHCwX07fMWYK9E3HAgb1EgILOiJl0kBG+4z2O9NWFL41Lsc4ANmnX/ulW
+         emMy84VB9UvS+Owe/J8wzsCgLi7OvcVqjW9QU3L5vaBZ2Bk2WHNXzkIh1R6psKIQYJ4C
+         Y0HQ==
+X-Gm-Message-State: APjAAAWjlh6oXKNWyC24xtnveGYYeJGlOyPmkIh1ri1wlnpqShrbfKH1
+        E19QI42MtFgl72tc0tzZqkrA6C04z3mQadlLPPIBHjONpmSo
+X-Google-Smtp-Source: APXvYqz5/sCdVeuK7ngAhTFRPzQFbcZSs5qN8slbau2sIUwcivybpDVGzUvM2pnS3Al9wCHnQeEEv7jevX1gbbemcbKtR1V5YD9d
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190822100718.GD28439@krava>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Received: by 2002:a6b:f315:: with SMTP id m21mr17837544ioh.12.1569005948028;
+ Fri, 20 Sep 2019 11:59:08 -0700 (PDT)
+Date:   Fri, 20 Sep 2019 11:59:08 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002ed3ab059300aaf1@google.com>
+Subject: BUG: unable to handle kernel paging request in __pm_runtime_resume
+From:   syzbot <syzbot+28ecdc146b8e7def92dd@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
+        len.brown@intel.com, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-usb@vger.kernel.org, pavel@ucw.cz,
+        rjw@rjwysocki.net, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Aug 22, 2019 at 12:07:18PM +0200, Jiri Olsa escreveu:
-> On Thu, Aug 22, 2019 at 12:50:49PM +0530, Mamatha Inamdar wrote:
-> > This Patch is to return error code of perf_new_session function
-> > on failure instead of NULL
-> > ----------------------------------------------
-> > Test Results:
-> > 
-> > Before Fix:
-> > 
-> > $ perf c2c report -input
-> > failed to open nput: No such file or directory
-> > 
-> > $ echo $?
-> > 0
-> > ------------------------------------------
-> > After Fix:
-> > 
-> > $ ./perf c2c report -input
-> > failed to open nput: No such file or directory
-> > 
-> > $ echo $?
-> > 254
-> 
-> [root@krava perf]# ./perf c2c report -input
-> failed to open nput: No such file or directory
-> [root@krava perf]# echo $?
-> 255
-> 
-> hum, not sure why I'm getting 255.. but it looks good now
-> 
-> Reviewed-by: Jiri Olsa <jolsa@redhat.com>
+Hello,
 
-You guys missed this one, that I've corrected in my tree, i.e.
-TEST_ASSERT_VAL expects that second arg to be NULL in case of failure,
-so we need to invert the result of IS_ERR(session) to keep the
-expectation.
+syzbot found the following crash on:
 
-- Arnaldo
+HEAD commit:    e0bd8d79 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=1670fa55600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8847e5384a16f66a
+dashboard link: https://syzkaller.appspot.com/bug?extid=28ecdc146b8e7def92dd
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
-index 7d845d913d7d..4a800499d7c3 100644
---- a/tools/perf/tests/topology.c
-+++ b/tools/perf/tests/topology.c
-@@ -8,6 +8,7 @@
- #include "session.h"
- #include "evlist.h"
- #include "debug.h"
-+#include <linux/err.h>
- 
- #define TEMPL "/tmp/perf-test-XXXXXX"
- #define DATA_SIZE	10
-@@ -39,7 +40,7 @@ static int session_write_header(char *path)
- 	};
- 
- 	session = perf_session__new(&data, false, NULL);
--	TEST_ASSERT_VAL("can't get session", session);
-+	TEST_ASSERT_VAL("can't get session", !IS_ERR(session));
- 
- 	session->evlist = perf_evlist__new_default();
- 	TEST_ASSERT_VAL("can't get evlist", session->evlist);
-@@ -70,7 +71,7 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
- 	int i;
- 
- 	session = perf_session__new(&data, false, NULL);
--	TEST_ASSERT_VAL("can't get session", session);
-+	TEST_ASSERT_VAL("can't get session", !IS_ERR(session));
- 
- 	/* On platforms with large numbers of CPUs process_cpu_topology()
- 	 * might issue an error while reading the perf.data file section
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+28ecdc146b8e7def92dd@syzkaller.appspotmail.com
+
+BUG: unable to handle page fault for address: fffffbfff23530b1
+#PF: supervisor read access in kernel mode
+#PF: error_code(0x0000) - not-present page
+PGD 21ffef067 P4D 21ffef067 PUD 21ffb2067 PMD 0
+Oops: 0000 [#1] SMP KASAN
+CPU: 1 PID: 17297 Comm: syz-executor.5 Not tainted 5.3.0+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:bytes_is_nonzero mm/kasan/generic.c:92 [inline]
+RIP: 0010:memory_is_nonzero mm/kasan/generic.c:109 [inline]
+RIP: 0010:memory_is_poisoned_n mm/kasan/generic.c:135 [inline]
+RIP: 0010:memory_is_poisoned mm/kasan/generic.c:166 [inline]
+RIP: 0010:check_memory_region_inline mm/kasan/generic.c:182 [inline]
+RIP: 0010:check_memory_region+0x117/0x190 mm/kasan/generic.c:192
+Code: 75 2f 49 89 e9 49 29 c1 e9 6c ff ff ff 5b b8 01 00 00 00 5d 41 5c c3  
+4d 85 c9 74 f1 49 01 d9 eb 09 48 83 c0 01 4c 39 c8 74 e3 <80> 38 00 74 f2  
+eb 92 4d 39 c2 74 4b e8 f8 e7 ff ff 31 c0 5b 5d 41
+RSP: 0018:ffff8881c7427710 EFLAGS: 00010086
+RAX: fffffbfff23530b1 RBX: fffffbfff23530b1 RCX: ffffffff8125804b
+RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffffffff91a98588
+RBP: fffffbfff23530b2 R08: 0000000000000001 R09: fffffbfff23530b2
+R10: fffffbfff23530b1 R11: ffffffff91a9858f R12: ba771047467ec365
+R13: 00000000467ec365 R14: 0000000000000003 R15: ffff8881cbca2078
+FS:  00007f1c25a58700(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: fffffbfff23530b1 CR3: 00000001d664d000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  test_bit include/asm-generic/bitops-instrumented.h:237 [inline]
+  __lock_acquire+0x133b/0x3eb0 kernel/locking/lockdep.c:3925
+  lock_acquire+0x127/0x320 kernel/locking/lockdep.c:4487
+  __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+  _raw_spin_lock_irqsave+0x32/0x50 kernel/locking/spinlock.c:159
+  __pm_runtime_resume+0xf5/0x180 drivers/base/power/runtime.c:1077
+  pm_runtime_get_sync include/linux/pm_runtime.h:226 [inline]
+  usb_autopm_get_interface+0x1b/0x50 drivers/usb/core/driver.c:1709
+  usbhid_power+0x7c/0xe0 drivers/hid/usbhid/hid-core.c:1234
+  hid_hw_power include/linux/hid.h:1038 [inline]
+  hidraw_open+0x20d/0x740 drivers/hid/hidraw.c:282
+  chrdev_open+0x219/0x5c0 fs/char_dev.c:414
+  do_dentry_open+0x494/0x1120 fs/open.c:797
+  do_last fs/namei.c:3408 [inline]
+  path_openat+0x1430/0x3f50 fs/namei.c:3525
+  do_filp_open+0x1a1/0x280 fs/namei.c:3555
+  do_sys_open+0x3c0/0x580 fs/open.c:1089
+  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4138f1
+Code: 75 14 b8 02 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 19 00 00 c3 48  
+83 ec 08 e8 0a fa ff ff 48 89 04 24 b8 02 00 00 00 0f 05 <48> 8b 3c 24 48  
+89 c2 e8 53 fa ff ff 48 89 d0 48 83 c4 08 48 3d 01
+RSP: 002b:00007f1c25a577a0 EFLAGS: 00000293 ORIG_RAX: 0000000000000002
+RAX: ffffffffffffffda RBX: 6666666666666667 RCX: 00000000004138f1
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00007f1c25a57850
+RBP: 000000000075bf20 R08: 000000000000000f R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000293 R12: 00007f1c25a586d4
+R13: 00000000004c8df7 R14: 00000000004dff20 R15: 00000000ffffffff
+Modules linked in:
+CR2: fffffbfff23530b1
+---[ end trace 839607b5f3b5bbdf ]---
+RIP: 0010:bytes_is_nonzero mm/kasan/generic.c:92 [inline]
+RIP: 0010:memory_is_nonzero mm/kasan/generic.c:109 [inline]
+RIP: 0010:memory_is_poisoned_n mm/kasan/generic.c:135 [inline]
+RIP: 0010:memory_is_poisoned mm/kasan/generic.c:166 [inline]
+RIP: 0010:check_memory_region_inline mm/kasan/generic.c:182 [inline]
+RIP: 0010:check_memory_region+0x117/0x190 mm/kasan/generic.c:192
+Code: 75 2f 49 89 e9 49 29 c1 e9 6c ff ff ff 5b b8 01 00 00 00 5d 41 5c c3  
+4d 85 c9 74 f1 49 01 d9 eb 09 48 83 c0 01 4c 39 c8 74 e3 <80> 38 00 74 f2  
+eb 92 4d 39 c2 74 4b e8 f8 e7 ff ff 31 c0 5b 5d 41
+RSP: 0018:ffff8881c7427710 EFLAGS: 00010086
+RAX: fffffbfff23530b1 RBX: fffffbfff23530b1 RCX: ffffffff8125804b
+RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffffffff91a98588
+RBP: fffffbfff23530b2 R08: 0000000000000001 R09: fffffbfff23530b2
+R10: fffffbfff23530b1 R11: ffffffff91a9858f R12: ba771047467ec365
+R13: 00000000467ec365 R14: 0000000000000003 R15: ffff8881cbca2078
+FS:  00007f1c25a58700(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: fffffbfff23530b1 CR3: 00000001d664d000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
