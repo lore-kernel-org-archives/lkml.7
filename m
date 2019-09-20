@@ -6,61 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E807C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E01FEC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CD95217F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:10:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCEE52173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:10:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569006631;
-	bh=TGXgCr5SzF0uiSfCQafY5H/T+5sJuBCo6ogXQMYyJ8M=;
+	s=default; t=1569006633;
+	bh=pT4cIq+qbYDvYC6eSboDOcSlbJFd/dK46BWKrrQuBVg=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=A0Vr2HPKkxTypNOfBs81NGuJaClb4+MAqscIMO9UyhSqYRZ7Vr9Zx6MDnMM2cCzCC
-	 RjcU2AeZt3Ulx4gJhkifqBc3HQaOMP9RZGayb1kIp+23ZNcp1Ar5ynnhELPIalos1e
-	 XwwaPeC/ILK03MAvRReLxNBHE3JjfAATdIyxEjAU=
+	b=ly5Kmxs04CE6Blzvzro5abXWnc2MyaW32b0qnYbwjTIVWmrcg9Q5OMYFYpPZzdiC9
+	 lP9HVPUaE7TzIVzkhUCxS/mrMSEgcwZeLggPhsz2XXGfEgxqlDDoFUhcEDiOZfx7xw
+	 kYr8JG/HuzjeXx4Uq94Sfb59smCMAyBXzLLiv7yY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436673AbfITTKa (ORCPT
+        id S2436688AbfITTKc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 15:10:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46316 "EHLO mail.kernel.org"
+        Fri, 20 Sep 2019 15:10:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406842AbfITTK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 15:10:27 -0400
-Subject: Re: [GIT PULL] Hexagon arch maintainer change
+        id S2406870AbfITTK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 15:10:29 -0400
+Subject: Re: [GIT PULL] arm64: Fixes for -rc1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569006626;
-        bh=TGXgCr5SzF0uiSfCQafY5H/T+5sJuBCo6ogXQMYyJ8M=;
+        s=default; t=1569006628;
+        bh=pT4cIq+qbYDvYC6eSboDOcSlbJFd/dK46BWKrrQuBVg=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=yIZG6d9/WRVTBMpvlF4SrDyeUDWOBEyTPJvNrU3RyP0vsyNcEQHLvirbq+i8fGR7c
-         SYuUrF8mt3aEQKRNciWDj2ej6GZNpdoPuIxSGQg/Hxb6SivMsNq0qGyC53zonJ8uDO
-         Hhwi8H3JFV3fY3urbf5JUozPZ7jlGp4P//o9yUPU=
+        b=AfobFpd5wnOH68p49BwHvrCu65OSX5Y3A7MSvqPVOfRin99GT4AXtjqG3ZewXiCJd
+         /4JH5BaDA4AY8vCPUZZf5HzECe2Xif7b5qc1flLQ0bxeQI0KfWSzhs60co9KyqbiTt
+         ItxF+IqWV1nbJ8ZjVjN9RHqhD6NbzcdAvbqbTudE=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190920020427.GA7719@codeaurora.org>
-References: <20190920020427.GA7719@codeaurora.org>
+In-Reply-To: <20190920133703.zor3t4dvwam6uyqj@willie-the-truck>
+References: <20190920133703.zor3t4dvwam6uyqj@willie-the-truck>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190920020427.GA7719@codeaurora.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rkuo/linux-hexagon-kernel.git
- for-linus
-X-PR-Tracked-Commit-Id: 18dd1793a340f8216e22c9295c0c7b95cdae1783
+X-PR-Tracked-Message-Id: <20190920133703.zor3t4dvwam6uyqj@willie-the-truck>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git
+ tags/arm64-fixes
+X-PR-Tracked-Commit-Id: 799c85105233514309b201a2d2d7a7934458c999
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: bb736a5c0e9a2605f11c2bbb60a68f757832da32
-Message-Id: <156900662668.23740.2725582904267103842.pr-tracker-bot@kernel.org>
-Date:   Fri, 20 Sep 2019 19:10:26 +0000
-To:     Richard Kuo <rkuo@codeaurora.org>
-Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-hexagon@vger.kernel.org, bcain@codeaurora.org
+X-PR-Merge-Commit-Id: 8c2b418c3f95a488f5226870eee68574d323f0f8
+Message-Id: <156900662888.23740.6256981181910647860.pr-tracker-bot@kernel.org>
+Date:   Fri, 20 Sep 2019 19:10:28 +0000
+To:     Will Deacon <will@kernel.org>
+Cc:     torvalds@linux-foundation.org, catalin.marinas@arm.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        ndesaulniers@google.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 19 Sep 2019 21:04:27 -0500:
+The pull request you sent on Fri, 20 Sep 2019 14:37:04 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rkuo/linux-hexagon-kernel.git for-linus
+> git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-fixes
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/bb736a5c0e9a2605f11c2bbb60a68f757832da32
+https://git.kernel.org/torvalds/c/8c2b418c3f95a488f5226870eee68574d323f0f8
 
 Thank you!
 
