@@ -2,130 +2,88 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F76C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 09:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66150C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 09:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E58EE2086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 09:37:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=qti.qualcomm.com header.i=@qti.qualcomm.com header.b="QRfB7cZq"
+	by mail.kernel.org (Postfix) with ESMTP id 2FC0F208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 09:38:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568972298;
+	bh=tGK4is/D5yjSmtKMNJsAOY7JysJV6v3B5d+jHSPQihw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UsFS5T+ABXqOzvZjGixqWDLD+Dk8fw+6l4EUhuwrL0sascXiN9OCgi9PGefS2Dfi5
+	 IVEjqAqriAekyPPCRh0jefaHn97BTpMiGq1rM6Mt1VwU0Dczg/dJ20oj+g5KalYF7J
+	 BBjkTy0jJWsMA2M8o/sj//o/DK/PhfsIaEYc0sUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437909AbfITJhV (ORCPT
+        id S2437948AbfITJiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 05:37:21 -0400
-Received: from alexa-out-tai-02.qualcomm.com ([103.229.16.227]:22851 "EHLO
-        alexa-out-tai-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2405989AbfITJhU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 05:37:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=qti.qualcomm.com; i=@qti.qualcomm.com; q=dns/txt;
-  s=qcdkim; t=1568972239; x=1600508239;
-  h=from:to:cc:date:message-id:references:in-reply-to:
-   content-transfer-encoding:mime-version:subject;
-  bh=EjR88SkcwJWQCwJkrAGU5QpwuwVsApv848ZvrfCzvDU=;
-  b=QRfB7cZq7UDTZpy8EP+fnbLjCfnbyFoaECTgvufqQIQIR5A3rqw993/S
-   eFaJU85P5dOOcbkFBY5kgntt8MdkwaTkFqHWXfb+UMvpnUVF2WTVAF5mI
-   iJhdK6UxEM30/fkybUkI/SV4rO3eF/nYgH1JUIt7a/bvH3855aC9Y1X+b
-   o=;
-Subject: RE: [PATCH v3] ath10k: support NET_DETECT WoWLAN feature
-Thread-Topic: [PATCH v3] ath10k: support NET_DETECT WoWLAN feature
-Received: from ironmsg02-tai.qualcomm.com ([10.249.140.7])
-  by alexa-out-tai-02.qualcomm.com with ESMTP; 20 Sep 2019 17:37:18 +0800
-Received: from aptaiexm02b.ap.qualcomm.com ([10.249.150.12])
-  by ironmsg02-tai.qualcomm.com with ESMTP/TLS/AES256-SHA; 20 Sep 2019 17:37:11 +0800
-Received: from aptaiexm02f.ap.qualcomm.com (10.249.150.16) by
- aptaiexm02b.ap.qualcomm.com (10.249.150.12) with Microsoft SMTP Server (TLS)
- id 15.0.1473.3; Fri, 20 Sep 2019 17:37:10 +0800
-Received: from aptaiexm02f.ap.qualcomm.com ([fe80::4152:1436:e436:faa1]) by
- aptaiexm02f.ap.qualcomm.com ([fe80::4152:1436:e436:faa1%19]) with mapi id
- 15.00.1473.005; Fri, 20 Sep 2019 17:37:09 +0800
-From:   Wen Gong <wgong@qti.qualcomm.com>
-To:     "kvalo@codeaurora.org" <kvalo@codeaurora.org>
-CC:     Brian Norris <briannorris@chromium.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        "ath10k@lists.infradead.org" <ath10k@lists.infradead.org>,
-        Wen Gong <wgong@codeaurora.org>
-Thread-Index: AQHVb4WHGd4199NYPUebVxHu5lPNrac0M15w
-Date:   Fri, 20 Sep 2019 09:37:09 +0000
-Message-ID: <29044fb6c3ba43af9a433aeb63f55e41@aptaiexm02f.ap.qualcomm.com>
-References: <1534402113-14337-1-git-send-email-wgong@codeaurora.org>
-        <20181114225910.GA220599@google.com>
-        <CA+ASDXMh7vdfkA5jtJqWEU-g-4Ta5Xvy046zujyASZcESCGhAQ@mail.gmail.com>
-        <87woe5aehr.fsf@kamboji.qca.qualcomm.com>
-        <40854e84bd4b4a9699b60530b1c373ad@aptaiexm02f.ap.qualcomm.com>
- <87pnjvctjh.fsf@codeaurora.org>
-In-Reply-To: <87pnjvctjh.fsf@codeaurora.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.249.136.10]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 20 Sep 2019 05:38:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53960 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405989AbfITJiR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 05:38:17 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 921C92086A;
+        Fri, 20 Sep 2019 09:38:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568972296;
+        bh=tGK4is/D5yjSmtKMNJsAOY7JysJV6v3B5d+jHSPQihw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pin0EAM6iDgkBVW67KjzDhHgn5lVksFzTRsfquXbR3bJHYdq/O5aV471P+JzSmcS6
+         YHKtvlpkzAdl1VYGzcfByN4VuQ4TGD3IU+uGOYlo8hc9sDRuxSD05aPMHw1eu/wEnh
+         h/JzstVetnB6YPglx4zQBqM6UU+z/+zyzbI85BIc=
+Date:   Fri, 20 Sep 2019 10:38:06 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     akpm@linux-foundation.org, mingo@redhat.com, peterz@infradead.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        sean@poorly.run, airlied@linux.ie, daniel@ffwll.ch,
+        dri-devel@lists.freedesktop.org, gregkh@linuxfoundation.org,
+        jslaby@suse.com, viro@zeniv.linux.org.uk,
+        linux-fsdevel@vger.kernel.org, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, intel-gfx@lists.freedesktop.org,
+        tytso@mit.edu, jack@suse.com, linux-ext4@vger.kernel.org,
+        tj@kernel.org, mark@fasheh.com, jlbec@evilplan.or,
+        joseph.qi@linux.alibaba.com, ocfs2-devel@oss.oracle.com,
+        davem@davemloft.net, daniel@iogearbox.net, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, duyuyang@gmail.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, hannes@cmpxchg.org, mhocko@kernel.org,
+        vdavydov.dev@gmail.com, cgroups@vger.kernel.org,
+        linux-mm@kvack.org, alexander.levin@microsoft.com
+Subject: Re: [PATCH -next] treewide: remove unused argument in lock_release()
+Message-ID: <20190920093700.7nfaghxdrmubp2do@willie-the-truck>
+References: <1568909380-32199-1-git-send-email-cai@lca.pw>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1568909380-32199-1-git-send-email-cai@lca.pw>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Kalle Valo <kvalo@codeaurora.org>
-> Sent: Friday, September 20, 2019 3:32 PM
-> To: Wen Gong <wgong@qti.qualcomm.com>
-> Cc: Brian Norris <briannorris@chromium.org>; linux-wireless <linux-
-> wireless@vger.kernel.org>; Linux Kernel <linux-kernel@vger.kernel.org>;
-> ath10k@lists.infradead.org; Wen Gong <wgong@codeaurora.org>
-> Subject: [EXT] Re: [PATCH v3] ath10k: support NET_DETECT WoWLAN feature
->=20
-> >> Wen, can you enable NL80211_FEATURE_SCAN_RANDOM_MAC_ADDR?
-> >> Does firmware
-> >> support that?
-> >
-> > Yes, I test again, it is enabled
-> NL80211_FEATURE_SCAN_RANDOM_MAC_ADDR now.
->=20
-> Sorry, I'm not quite understanding your reply.
->=20
-> But I mixed up the flags. I meant that can we enable
-> NL80211_FEATURE_SCAN_RANDOM_MAC_ADDR in ath10k? Does the
-> firmware
-> releases which have WMI_SERVICE_NLO support
-> NL80211_FEATURE_SCAN_RANDOM_MAC_ADDR as well?
-Kalle,
-I tested with this firmware: https://github.com/kvalo/ath10k-firmware/blob/=
-master/QCA6174/hw3.0/sdio-4.4.1/firmware-sdio-6.bin_WLAN.RMH.4.4.1-00017-QC=
-ARMSWPZ-2
+On Thu, Sep 19, 2019 at 12:09:40PM -0400, Qian Cai wrote:
+> Since the commit b4adfe8e05f1 ("locking/lockdep: Remove unused argument
+> in __lock_release"), @nested is no longer used in lock_release(), so
+> remove it from all lock_release() calls and friends.
+> 
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
 
-In ath10k_mac_register, it has flag WMI_SERVICE_SPOOF_MAC_SUPPORT enabled.
-	if (test_bit(WMI_SERVICE_SPOOF_MAC_SUPPORT, ar->wmi.svc_map)) {
-		ar->hw->wiphy->features |=3D
-			NL80211_FEATURE_SCAN_RANDOM_MAC_ADDR;
-	}
+Although this looks fine to me at a first glance, it might be slightly
+easier to manage if you hit {spin,rwlock,seqcount,mutex,rwsem}_release()
+first with coccinelle scripts, and then hack lock_release() as a final
+patch. That way it's easy to regenerate things if needed.
 
-In ath10k_wow_init, it has flag ATH10K_FW_FEATURE_WOWLAN_SUPPORT, WMI_SERVI=
-CE_WOW, WMI_SERVICE_NLO enabled.
-int ath10k_wow_init(struct ath10k *ar)
-{
-	if (!test_bit(ATH10K_FW_FEATURE_WOWLAN_SUPPORT,
-		      ar->running_fw->fw_file.fw_features))
-		return 0;
+Cheers,
 
-	if (WARN_ON(!test_bit(WMI_SERVICE_WOW, ar->wmi.svc_map)))
-		return -EINVAL;
-
-	if (test_bit(WMI_SERVICE_NLO, ar->wmi.svc_map)) {
-		ar->wow.wowlan_support.flags |=3D WIPHY_WOWLAN_NET_DETECT;
-		ar->wow.wowlan_support.max_nd_match_sets =3D WMI_PNO_MAX_SUPP_NETWORKS;
-	}
-}
->=20
-> --
-> Kalle Valo
+Will
