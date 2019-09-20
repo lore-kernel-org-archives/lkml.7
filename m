@@ -2,186 +2,80 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56856C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65FF9C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ECB3218AE
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:01:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="iFc44Jyz"
+	by mail.kernel.org (Postfix) with ESMTP id 3B5662070C
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:02:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437992AbfITKBs (ORCPT
+        id S2408616AbfITKCh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 06:01:48 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:41824 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437968AbfITKBr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 06:01:47 -0400
-Received: by mail-io1-f67.google.com with SMTP id r26so14772636ioh.8
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 03:01:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=g994BJg/jPAigCOVsri275vhxV1YMwyqa+ZWpEcSJHY=;
-        b=iFc44JyzXlsEdJ8ZGOrWgpTK0QF37LYXPDpneIFX6jIh3j9MM3sAu1JGGTadYRKuwW
-         CGl0Fmrl34Sy+7DxuUlu82SW2IVLCHpQOmoeAApYxtgGdXZ4U4i504sEJ9qWkIE2mR0k
-         gWIeJskW/cZLd2m2sNLkxAFFne9NpN8DuiK+ZshTWQJboqhi3fk5xYVnFyDkbDoGmDam
-         5xiLOm5+J+eEPhm2b+N/5/2Xo/v4KTqIeYmEtXWgDctdq8wzZvJ/nzPPedZwHZKdqTOZ
-         vrp0QrFtQntkesy5Rp7I1O5fqPAz5BGq6ELB/cOVvXCoOkAZYUNmwlxjXXRnSLmzsb8Y
-         /3bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=g994BJg/jPAigCOVsri275vhxV1YMwyqa+ZWpEcSJHY=;
-        b=dSUU8APgN4gJvu68nF5pywNFGkqbe9ghE29IrFxyn1USd7adzY2EpqIen6MULWN8rO
-         oOHJ6BSarOnXXMnMGm8CoTSFaEwHh70Knn8t9JV2Zy1v0JRNcKjZ0kkgMr+IMNFzjdPb
-         JlVgLxyErKElS+aMEjveR49++UzTN1zROA7ijauSZGiYAfvYKX42XcwDeDoantARhiyu
-         4IRrkxjELeuapHdo/vexyTHL1cggKa92nYIMjRxSqQ9+/47luKOKCqGKc41sQLqRSI2l
-         fbDGxlj4Yvio8QKI3PQd5omDoFEy0a3ZfA2O985LUUlI7rkkaM02gmw1knFwPuNS4FDZ
-         NU8A==
-X-Gm-Message-State: APjAAAUo5IW/eGL0CuJTu6ZXyBAhHcyrublS6S0RIjXmKqPkasg+dhZV
-        yz4rKG2g0pKE39tTh4OR32Th8BccI8GgjtweLFF8EQ==
-X-Google-Smtp-Source: APXvYqxfUxvLHOR+Wn2vv6/tsz0PWRvLzPL3QAajZParvvSIWZcYkRXLxLuyaEQmx0JgaIHOXcW/CUZEbaflcc7pARM=
-X-Received: by 2002:a6b:e719:: with SMTP id b25mr11639828ioh.100.1568973705798;
- Fri, 20 Sep 2019 03:01:45 -0700 (PDT)
+        Fri, 20 Sep 2019 06:02:37 -0400
+Received: from mga04.intel.com ([192.55.52.120]:58443 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405850AbfITKCh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 06:02:37 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Sep 2019 03:02:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,528,1559545200"; 
+   d="scan'208";a="202476935"
+Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 20 Sep 2019 03:02:35 -0700
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy@infradead.org>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: [PATCH] platform/x86: i2c-multi-instantiate: Derive the device name from parent
+Date:   Fri, 20 Sep 2019 13:02:33 +0300
+Message-Id: <20190920100233.12829-1-heikki.krogerus@linux.intel.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <20190920090033.19438-1-green.wan@sifive.com>
-In-Reply-To: <20190920090033.19438-1-green.wan@sifive.com>
-From:   Pragnesh Patel <pragnesh.patel@sifive.com>
-Date:   Fri, 20 Sep 2019 15:31:35 +0530
-Message-ID: <CAN8ut8Lfo3zm2mjoiH3o4FSTkHexagwUFT=V3MpgcE=arm5c4g@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] dt-bindings: dmaengine: sf-pdma: add bindins for
- SiFive PDMA
-To:     Green Wan <green.wan@sifive.com>
-Cc:     linux-hackers@sifive.com, Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 2:30 PM Green Wan <green.wan@sifive.com> wrote:
->
-> Add DT bindings document for Platform DMA(PDMA) driver of board,
-> HiFive Unleashed Rev A00.
->
-> Signed-off-by: Green Wan <green.wan@sifive.com>
-> ---
->  .../bindings/dma/sifive,fu540-c000-pdma.yaml  | 55 +++++++++++++++++++
->  MAINTAINERS                                   |  5 ++
->  2 files changed, 60 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
->
-> diff --git a/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml b/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
-> new file mode 100644
-> index 000000000000..3ed015f2b83a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
-> @@ -0,0 +1,55 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/sifive,fu540-c000-pdma.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: SiFive Unleashed Rev C000 Platform DMA
-> +
-> +maintainers:
-> +  - Green Wan <green.wan@sifive.com>
-> +  - Palmer Debbelt <palmer@sifive.com>
-> +  - Paul Walmsley <paul.walmsley@sifive.com>
-> +
-> +description: |
-> +  Platform DMA is a DMA engine of SiFive Unleashed. It supports 4
-> +  channels. Each channel has 2 interrupts. One is for DMA done and
-> +  the other is for DME error.
-> +
-> +  In different SoC, DMA could be attached to different IRQ line.
-> +  DT file need to be changed to meet the difference. For technical
-> +  doc,
-> +
-> +  https://static.dev.sifive.com/FU540-C000-v1.0.pdf
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: sifive,fu540-c000-pdma
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    minItems: 8
-> +    maxItems: 8
+When naming the new devices, instead of using the ACPI ID in
+the name as base, using the parent device's name. That makes
+it possible to support multiple multi-instance i2c devices
+of the same type in the same system.
 
-"make dt_binding_check" should give you the error that interrupts is too short.
+This fixes an issue seen on some Intel Kaby Lake based
+boards:
 
-When you say minItems: 8 then interrupts property should be like this:
-interrupts = <23>, <24>,  <25>,  <26>,  <27>,  <28>,  <29>,  <30>;
+sysfs: cannot create duplicate filename '/devices/pci0000:00/0000:00:15.0/i2c_designware.0/i2c-0/i2c-INT3515-tps6598x.0'
 
-So,  remove the minItems: 8 and change maxItems: 1 for interrupts =
-<23 24 25 26 27 28 29 30>;
+Fixes: 2336dfadfb1e ("platform/x86: i2c-multi-instantiate: Allow to have same slaves")
+Cc: stable@vger.kernel.org
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+---
+ drivers/platform/x86/i2c-multi-instantiate.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +
-> +  '#dma-cells':
-> +    const: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - '#dma-cells'
-> +
-> +examples:
-> +  - |
-> +    dma@3000000 {
-> +      compatible = "sifive,fu540-c000-pdma";
-> +      reg = <0x0 0x3000000 0x0 0x8000>;
-> +      interrupts = <23 24 25 26 27 28 29 30>;
-> +      #dma-cells = <1>;
-> +    };
-> +
-> +...
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 49f75d1b7b51..d0caa09a479e 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -14591,6 +14591,11 @@ F:     drivers/media/usb/siano/
->  F:     drivers/media/usb/siano/
->  F:     drivers/media/mmc/siano/
->
-> +SIFIVE PDMA DRIVER
-> +M:     Green Wan <green.wan@sifive.com>
-> +S:     Maintained
-> +F:     Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
-> +
->  SIFIVE DRIVERS
->  M:     Palmer Dabbelt <palmer@sifive.com>
->  M:     Paul Walmsley <paul.walmsley@sifive.com>
-> --
-> 2.17.1
->
-> --
-> You received this message because you are subscribed to the Google Groups "linux-hackers" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-hackers+unsubscribe@sifive.com.
-> To view this discussion on the web visit https://groups.google.com/a/sifive.com/d/msgid/linux-hackers/20190920090033.19438-1-green.wan%40sifive.com.
+diff --git a/drivers/platform/x86/i2c-multi-instantiate.c b/drivers/platform/x86/i2c-multi-instantiate.c
+index 61fe341a85aa..ea68f6ed66ae 100644
+--- a/drivers/platform/x86/i2c-multi-instantiate.c
++++ b/drivers/platform/x86/i2c-multi-instantiate.c
+@@ -90,7 +90,7 @@ static int i2c_multi_inst_probe(struct platform_device *pdev)
+ 	for (i = 0; i < multi->num_clients && inst_data[i].type; i++) {
+ 		memset(&board_info, 0, sizeof(board_info));
+ 		strlcpy(board_info.type, inst_data[i].type, I2C_NAME_SIZE);
+-		snprintf(name, sizeof(name), "%s-%s.%d", match->id,
++		snprintf(name, sizeof(name), "%s-%s.%d", dev_name(dev),
+ 			 inst_data[i].type, i);
+ 		board_info.dev_name = name;
+ 		switch (inst_data[i].flags & IRQ_RESOURCE_TYPE) {
+-- 
+2.23.0
+
