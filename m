@@ -2,218 +2,163 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C467C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A637FC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED5EA2086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:48:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qG1PAZcU"
+	by mail.kernel.org (Postfix) with ESMTP id 65806208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:51:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569012713;
+	bh=xg2vlVd+lUwNBRO5ewZnZq4NbIRw0nw27U11uZH30fk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=JkYvZgKwOhSIR1Nog09OPwiOzcbu9orVtY33Byxtqk2i44s2hgKnjO770zAp+/AgI
+	 YmIRJWqoODPuLEHk/r1glTSpkHqGOvlv5tiZj8cqIrf0Gn3Mnd11WnHHvMlBE9fn5y
+	 9AV35BXVfXNC/KAxYmknP1VTyJJo//DZWK/BSvds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387526AbfITUsb (ORCPT
+        id S2387681AbfITUvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 16:48:31 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39991 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387435AbfITUsb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 16:48:31 -0400
-Received: by mail-lj1-f194.google.com with SMTP id 7so8324925ljw.7
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 13:48:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=T8An8FHblE+kDgtVFHSjYWnPaCBxTzDv21Ur6auB05g=;
-        b=qG1PAZcUe75GcJB6L6hYulpGLwTWOINwYP/XeLJ2PZIWPE6tjn1V6g7SGVJ9mA7BWp
-         fSIPDrfKR8KVHg/ApCo7JRdi8DMZrx+ieKnZWjvqiSC3rJIRq4u5end22mYU5trW1kX1
-         Av+5sj+GOgzHMDlET8a33+HOP1glQl3smTYMOdQH4K6GdEo6aoUB1mAownQ2PUlGaWIo
-         t2bO+/4d4AKV0AH2vKbT+aZ6qHkz7ZDdgiYmGh3XpzevEHUbvy8aGAxF4Bu1/H1xBuDX
-         K4+mzsERfl1RWb06AOCtL+IsN4bXKUDlUUAV/SJOIKdF/tnITfxBKXgfZauS4xC6qQ3R
-         5OQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=T8An8FHblE+kDgtVFHSjYWnPaCBxTzDv21Ur6auB05g=;
-        b=WGsoloRMa8Q7cBtT4i6mBrvHimAzc9Nhwr74HzZX8FMhJTT+gUvBF3xbBA2gy9zE4+
-         DZSFlhERODPLwd17Bc7krEZ7cR7ntvnGLd6MbDHHZAae3XZNqIKpi3u4OHTVPwx7jsvr
-         N6SBqmZ+wpsvtmoATNvn7OF2po0pT1fzSML1tUeuxx3ZH06rOfgRCDsgbo9ylYqIyKPx
-         KjM2C0/YOd6djrAxhm7kQXFW0GtE6adJneHYtl4Pc7mjeZjmN3nbYVjNAjiYUoAgGDzs
-         0bHwKs1A38rJ8c0WsfqhO55xmvZVwbxPK1NcpNia0awTyQcYRFTppxnLxeuxsDpVkXmT
-         wxBA==
-X-Gm-Message-State: APjAAAVU5ILCs3mbojmDJckszFNrCcX35aIlzdvq1gczekm0lywgfPyI
-        l7Mcs40YkqS4aqRA6E0wiqd4Ig==
-X-Google-Smtp-Source: APXvYqy8VIN09R+o3Z1mR5K3A3l3pyiz4qCgKb3vi3Nj3ujVAVqCg6y44oj3hY0kLJtMZK7tP2l7nA==
-X-Received: by 2002:a2e:9081:: with SMTP id l1mr10283633ljg.33.1569012508896;
-        Fri, 20 Sep 2019 13:48:28 -0700 (PDT)
-Received: from khorivan (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
-        by smtp.gmail.com with ESMTPSA id e21sm714873lfj.10.2019.09.20.13.48.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 20 Sep 2019 13:48:28 -0700 (PDT)
-Date:   Fri, 20 Sep 2019 23:48:26 +0300
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin Lau <kafai@fb.com>, Andrii Nakryiko <andriin@fb.com>,
-        Yonghong Song <yhs@fb.com>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH bpf] libbpf: fix version identification on busybox
-Message-ID: <20190920204824.GC2760@khorivan>
-Mail-Followup-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, Martin Lau <kafai@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>, Yonghong Song <yhs@fb.com>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190919160518.25901-1-ivan.khoronzhuk@linaro.org>
- <CAEf4BzbCjCYr5NMPctDkUggwpehnqZPVBSqZOsd9MvSq6WmnZQ@mail.gmail.com>
- <20190920082204.GC8870@khorivan>
- <CAEf4BzaVuaN3HhMu8W_i9z4n-2zfjqxBXyOEOaQHexxZq7b3qg@mail.gmail.com>
- <20190920183449.GA2760@khorivan>
- <20190920191941.GB2760@khorivan>
+        Fri, 20 Sep 2019 16:51:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54542 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387597AbfITUvw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 16:51:52 -0400
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB17D218AE
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 20:51:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569012711;
+        bh=xg2vlVd+lUwNBRO5ewZnZq4NbIRw0nw27U11uZH30fk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ja/HOdXighvrnJiFLrz4+KK+jUExurZERXM/s9E9gYXmBROOvr2pFDqFILFyC2OWE
+         9WE/Sxa1j7kQq2UZ9XGCw7M8tv8wlhUKChtrC39CVes45zIqidsR1DyWei3GQR5w5I
+         NXNEmgCZY5E7YJX/nIXRHu7kQOw2KxnAWjdOCfvc=
+Received: by mail-wm1-f51.google.com with SMTP id v17so3460286wml.4
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 13:51:50 -0700 (PDT)
+X-Gm-Message-State: APjAAAUyDOT4yoKMxVuYTPo0EadQ2dOLy0Ryft0/gNGsYT4RuYGUIf6/
+        /8lOZUQMBvJF72ypj2/HrSQBcM458sKPTw/swoevVg==
+X-Google-Smtp-Source: APXvYqywYkJ/O57lEsQ+jvss3/ohzrMA8/uB8+mxAxzS3Bfy8j/rWUdJ5qoeAdvcjylTbdAKIxJ5AvFG9fnkwNFUq8U=
+X-Received: by 2002:a1c:1bcf:: with SMTP id b198mr5091632wmb.0.1569012709337;
+ Fri, 20 Sep 2019 13:51:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190920191941.GB2760@khorivan>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190912034421.GA2085@darwi-home-pc> <20190912082530.GA27365@mit.edu>
+ <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+ <20190914122500.GA1425@darwi-home-pc> <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
+ <20190915052242.GG19710@mit.edu> <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
+ <20190918211503.GA1808@darwi-home-pc> <20190918211713.GA2225@darwi-home-pc>
+ <CAHk-=wiCqDiU7SE3FLn2W26MS_voUAuqj5XFa1V_tiGTrrW-zQ@mail.gmail.com>
+ <20190920134609.GA2113@pc> <CALCETrWvE5es3i+to33y6jw=Yf0Tw6ZfV-6QWjZT5v0fo76tWw@mail.gmail.com>
+ <CAHk-=wgW8rN2EVL_Rdn63V9vQO0GkZ=RQFeqqsYJM==8fujpPg@mail.gmail.com>
+ <CALCETrV=4TX2a4uV5t2xOFzv+zM_jnOtMLJna8Vb7uXz6S=wSw@mail.gmail.com>
+ <CAHk-=wjpTWgpo6d24pTv+ubfea_uEomX-sHjjOkdACfV-8Nmkg@mail.gmail.com>
+ <CALCETrUEqjFmPvpcJQwJe3dNbz8eaJ4k3_AV2u0v96MffjLn+g@mail.gmail.com> <CAHk-=whJ3kmcZp=Ws+uXnRB9KokG6nXSQCSuBnerG--jkAfP5w@mail.gmail.com>
+In-Reply-To: <CAHk-=whJ3kmcZp=Ws+uXnRB9KokG6nXSQCSuBnerG--jkAfP5w@mail.gmail.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 20 Sep 2019 13:51:37 -0700
+X-Gmail-Original-Message-ID: <CALCETrXMp3dJaKDm+RQijQEUuPNPmpKWr8Ljf+RqycXChGnKrw@mail.gmail.com>
+Message-ID: <CALCETrXMp3dJaKDm+RQijQEUuPNPmpKWr8Ljf+RqycXChGnKrw@mail.gmail.com>
+Subject: Re: [PATCH RFC v4 1/1] random: WARN on large getrandom() waits and
+ introduce getrandom2()
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 10:19:43PM +0300, Ivan Khoronzhuk wrote:
->On Fri, Sep 20, 2019 at 09:34:51PM +0300, Ivan Khoronzhuk wrote:
->>On Fri, Sep 20, 2019 at 09:41:54AM -0700, Andrii Nakryiko wrote:
->>>On Fri, Sep 20, 2019 at 1:22 AM Ivan Khoronzhuk
->>><ivan.khoronzhuk@linaro.org> wrote:
->>>>
->>>>On Thu, Sep 19, 2019 at 01:02:40PM -0700, Andrii Nakryiko wrote:
->>>>>On Thu, Sep 19, 2019 at 11:22 AM Ivan Khoronzhuk
->>>>><ivan.khoronzhuk@linaro.org> wrote:
->>>>>>
->>>>>>It's very often for embedded to have stripped version of sort in
->>>>>>busybox, when no -V option present. It breaks build natively on target
->>>>>>board causing recursive loop.
->>>>>>
->>>>>>BusyBox v1.24.1 (2019-04-06 04:09:16 UTC) multi-call binary. \
->>>>>>Usage: sort [-nrugMcszbdfimSTokt] [-o FILE] [-k \
->>>>>>start[.offset][opts][,end[.offset][opts]] [-t CHAR] [FILE]...
->>>>>>
->>>>>>Lets modify command a little to avoid -V option.
->>>>>>
->>>>>>Fixes: dadb81d0afe732 ("libbpf: make libbpf.map source of truth for libbpf version")
->>>>>>
->>>>>>Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
->>>>>>---
->>>>>>
->>>>>>Based on bpf/master
->>>>>>
->>>>>> tools/lib/bpf/Makefile | 2 +-
->>>>>> 1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>>
->>>>>>diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
->>>>>>index c6f94cffe06e..a12490ad6215 100644
->>>>>>--- a/tools/lib/bpf/Makefile
->>>>>>+++ b/tools/lib/bpf/Makefile
->>>>>>@@ -3,7 +3,7 @@
->>>>>>
->>>>>> LIBBPF_VERSION := $(shell \
->>>>>>        grep -oE '^LIBBPF_([0-9.]+)' libbpf.map | \
->>>>>>-       sort -rV | head -n1 | cut -d'_' -f2)
->>>>>>+       cut -d'_' -f2 | sort -r | head -n1)
->>>>>
->>>>>You can't just sort alphabetically, because:
->>>>>
->>>>>1.2
->>>>>1.11
->>>>>
->>>>>should be in that order. See discussion on mailing thread for original commit.
->>>>
->>>>if X1.X2.X3, where X = {0,1,....99999}
->>>>Then it can be:
->>>>
->>>>-LIBBPF_VERSION := $(shell \
->>>>-       grep -oE '^LIBBPF_([0-9.]+)' libbpf.map | \
->>>>-       sort -rV | head -n1 | cut -d'_' -f2)
->>>>+_LBPFLIST := $(patsubst %;,%,$(patsubst LIBBPF_%,%,$(filter LIBBPF_%, \
->>>>+           $(shell cat libbpf.map))))
->>>>+_LBPFLIST2 := $(foreach v,$(_LBPFLIST), \
->>>>+               $(subst $() $(),,$(foreach n,$(subst .,$() $(),$(v)), \
->>>>+                       $(shell printf "%05d" $(n)))))
->>>>+_LBPF_VER := $(word $(words $(sort $(_LBPFLIST2))), $(sort $(_LBPFLIST2)))
->>>>+LIBBPF_VERSION := $(patsubst %_$(_LBPF_VER),%,$(filter %_$(_LBPF_VER), \
->>>>+        $(join $(addsuffix _, $(_LBPFLIST)),$(_LBPFLIST2))))
->>>>
->>>>It's bigger but avoids invocations of grep/sort/cut/head, only cat/printf
->>>>, thus -V option also.
->>>>
->>>
->>>No way, this is way too ugly (and still unreliable, if we ever have
->>>X.Y.Z.W or something). I'd rather go with my original approach of
->>Yes, forgot to add
->>X1,X2,X3,...XN, where X = {0,1,....99999} and N = const for all versions.
->>But frankly, 1.0.0 looks too far.
+On Fri, Sep 20, 2019 at 12:51 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 >
->It actually works for any numbs of X1.X2...X100
->but not when you have couple kindof:
->X1.X2.X3
->and
->X1.X2.X3.X4
+> > And the only real question is how to map existing users to these
+> > semantics.  I see two sensible choices:
+> >
+> > 1. 0 means "secure, blocking". I think this is not what we'd do if we
+> > could go back in time and chage the ABI from day 1, but I think it's
+> > actually good enough.  As long as this mode won't deadlock, it's not
+> > *that* bad if programs are using it when they wanted "insecure".
 >
->But, no absolutely any problem to extend this solution to handle all cases,
->by just adding leading 0 to every "transformed version", say limit it to 10
->possible 'dots' (%5*10d) and it will work as clocks. Advantage - mostly make
->functions.
+> It's exactly that "as long as it won't deadlock" that is our current problem.
+>
+> It *does* deadlock.
+>
+> So it can't mean "blocking" in any long-term meaning.
+>
+> It can mean "blocks for up to 15 seconds" or something like that. I'd
+> honestly prefer a smaller number, but I think 15 seconds is an
+> acceptable "your user space is buggy, but we won't make you think the
+> machine hung".
 
-_LBPFLIST := $(subst ;,,$(patsubst LIBBPF_%,%,$(filter LIBBPF_%, \
-	     $(shell cat libbpf.map))))
-_LBPF2 := $(foreach v,$(_LBPFLIST), \
-	  $(subst $() $(),,$(foreach n,$(subst ., ,$(v)), \
-			$(shell printf "%05d" $(n)))))
-_LBPF2 := $(foreach v,$(_LBPF2), $(shell printf "%050s" $(v)))
-_LBPF_VER := $(word $(words $(sort $(_LBPF2))), $(sort $(_LBPF2)))
-LIBBPF_VERSION := $(patsubst %_$(_LBPF_VER),%,$(filter %_$(_LBPF_VER), \
-	 	  $(join $(addsuffix _, $(_LBPFLIST)),$(_LBPF2))))
->
->Here can be couple more solutions with sed, not sure it can look less maniac.
->
->>
->>>fetching the last version in libbpf.map file. See
->>>https://www.spinics.net/lists/netdev/msg592703.html.
->
->Yes it's nice but, no sort, no X1.X2.X3....XN
->
->Main is to solve it for a long time.
->
->>>
->>>>>
->>>>>> LIBBPF_MAJOR_VERSION := $(firstword $(subst ., ,$(LIBBPF_VERSION)))
->>>>>>
->>>>>> MAKEFLAGS += --no-print-directory
->>>>>>--
->>>>>>2.17.1
->>>>>>
->>>>
->>>>--
->>>>Regards,
->>>>Ivan Khoronzhuk
->>
->>-- 
->>Regards,
->>Ivan Khoronzhuk
->
->-- 
->Regards,
->Ivan Khoronzhuk
+To be clear, when I say "blocking", I mean "blocks until we're ready,
+but we make sure we're ready in a moderately timely manner".
 
--- 
-Regards,
-Ivan Khoronzhuk
+Rather than answering everything point by point, here's a updated
+mini-proposal and some thoughts.  There are two families of security
+people that I think we care about.  One is the FIPS or CC or PCI
+crowd, and they might, quite reasonably, demand actual hardware RNGs.
+We should make the hwrng API stop sucking and they should be happy.
+(This means expose an hwrng device node per physical device, IMO.)
+The other is the one who wants getrandom(), etc to be convincingly
+secure and is willing to do some actual analysis.  And I think we can
+make them quite happy like this:
+
+In the kernel, we have two types of requests for random numbers: a
+request for "secure" bytes and a request for "insecure" bytes.
+Requests for "secure" bytes can block or return -EAGAIN.  Requests for
+"insecure" bytes succeed without waiting.  In addition, we have a
+jitter entropy mechanism (maybe the one mjg59 referenced, maybe
+Alexander's -- doesn't really matter) and we *guarantee* that jitter
+entropy, by itself, is enough to get the "secure" generator working
+after, say, 5s of effort.  By this, I mean that, on an idle system, it
+finishes in 5s and, on a fully loaded system, it's allowed to take a
+little while longer but not too much longer.
+
+In other words, I want GRND_SECURE_BLOCKING and /dev/random reads to
+genuinely always work and to genuinely never take much longer than 5s.
+I don't want a special case where they fail.
+
+The exposed user APIs are, subject to bikeshedding that can happen
+later over the actual values, etc:
+
+GRND_SECURE_BLOCKING: returns "secure" output and blocks until it's
+ready.  This never fails, but it also never blocks forever.
+
+GRND_SECURE_NONBLOCKING: same but returns -EAGAIN instead of blocking.
+
+GRND_INSECURE: returns "insecure" output immediately.  I think we do
+need this -- the "secure" mode may take a little while at early boot,
+and libraries that initialize themselves with some randomness really
+do want a way to get some numbers without any delay whatsoever.
+
+0: either the same as GRND_SECURE_BLOCKING plus a warning or the
+"accelerated" version.  The "accelerated" version means wait up to 2s
+for secure numbers and, if there still aren't any, fall back to
+"insecure".
+
+GRND_RANDOM: either the same as 0 or the same as GRND_SECURE_BLOCKING
+but with a warning.  I don't particularly care either way.
+
+I'm okay with a well-defined semantic like I proposed for an
+accelerated mode.  I don't really want to try to define what a
+secure-but-not-as-secure mode means as a separate complication that
+the underlying RNG needs to support forever.  I don't think the
+security folks would like that either.
+
+How does this sound?
