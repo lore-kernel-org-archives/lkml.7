@@ -2,172 +2,113 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B854C4CECD
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5903BC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:56:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 066E7208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:52:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569001966;
-	bh=1nVW0u8uyywS8edWGo4g+NKsuGKiY1Wm8uCUOB6VI7I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Z6MGZH4VE6M0sVCoPqEFo9tIxxTzlsmtAi6+5fkc2Qe9UYf1aLrngLkuol1UN7/Hp
-	 Ls/nseVa3FphOnpy7G7/fJ5r8Bxi9a9pFgZZbu02YDpmTXGcuqLF+JpGBXCNiJXFUv
-	 SGeMe1snnS//NFf+amnDqcgVI48NOGcYfpMJXWT0=
+	by mail.kernel.org (Postfix) with ESMTP id 32B31208C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:56:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="U3SmG6Mq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405568AbfITRwp (ORCPT
+        id S2405830AbfITR4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 13:52:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58938 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392736AbfITRwo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 13:52:44 -0400
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49DC621928
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 17:52:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569001963;
-        bh=1nVW0u8uyywS8edWGo4g+NKsuGKiY1Wm8uCUOB6VI7I=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=S/LPFo4p1KIujc03l9elDZ+9O5DBAbLMASS2RqP7aNVeF1/ySxAvLJ02+EAO0mxGq
-         8lo4NT1IeXacbZ6knqcwfSPkhKnT24k7IEVTrSy8JPhaz1s7GhBpDY2RZZkFLIGSc3
-         FpHyf5f+hPY8VMIQPDn7rSBugtVDVRydRRWezzMs=
-Received: by mail-wr1-f44.google.com with SMTP id l3so7631146wru.7
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 10:52:43 -0700 (PDT)
-X-Gm-Message-State: APjAAAWsLf6TW8GDbR8Aem1xUaNz9OVCwte7n/SMNApSA/vBuRZpNime
-        xLd6ThPzqCSCaAM4CYWdCvottPh2Zd0kjxs1vlzkEg==
-X-Google-Smtp-Source: APXvYqyBpWOKTid9UnrJQovepev+3qeVGshpnybdai3tpKoUsDw+lTDZP6jYIinDA+mi8znUaIQj/oiFxIqvCVsmJoQ=
-X-Received: by 2002:adf:cc0a:: with SMTP id x10mr12735231wrh.195.1569001961606;
- Fri, 20 Sep 2019 10:52:41 -0700 (PDT)
+        Fri, 20 Sep 2019 13:56:38 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:40725 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392426AbfITR4i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 13:56:38 -0400
+Received: by mail-qt1-f194.google.com with SMTP id x5so9637612qtr.7
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 10:56:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=xwXwb0VRr0Y5mbIrCdrhW15Qm4cGAzoeDVJ2lEpfOz8=;
+        b=U3SmG6MqU1G3DvKMpMi11blBiYYiRG4IcOO9Awa0gS87SZtXwHxfRAO+oIJ9MK0/EA
+         Y5Nsta25gV6EmMx5g/TCw3dF35cXtaZf4UJQ2ybwL38/fuf5L0gSLWl/pIgkAy/Tr/9W
+         9lOEUdnL6ZM0CekQcwazwaVgejdB3SGe6ZWzCcI24li08Gqx59nLfW91oHIlP8XTnHGZ
+         8rVb6AExkrDnCzj8p+HKIxY250lw4QXE+FgqHm2qbRqX/YbEWhYwnNj0plotZ8P4mjFL
+         YVQUH4FOhow4YLVAXaWBn0aBFQjADYeLIIcVijsmpWz5SUH2FgLmopUo3+6vwdV+rEDp
+         IaDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=xwXwb0VRr0Y5mbIrCdrhW15Qm4cGAzoeDVJ2lEpfOz8=;
+        b=IVBHz7cpPxeS6YmoDu7Hq6lSQQ/mlXti1uL3NalP4/Yvnbr2a60FALrVOHHqYy/iKr
+         SLxydBZ0V2lBN+LtfpCXNOguMppu833SeQlM1prE4+njfRD1E3jLbHgEln2nQY4L/le+
+         Qmhy9KHo2W80416gWMnwpGdPSxZuwZDAGY9dc7L89saCN5r3aPhDvW4vU0dImSluBdEM
+         1emTZDekmYPBIxGxvY/5ruHSwSgDw8ktSuxT80D/N464GSRRzmNN9OPatUH85c5dPWGZ
+         P53WCEdFPcUaofqVheWaXCPnwyYQVaACzkzGUL9u2b9G8glxBmr7PuW1HRz7XeRs7QK0
+         rzIA==
+X-Gm-Message-State: APjAAAV/PilrhZhxHfXdO5ZZAfqM4nUDC9q88I1hOZj2FDnbe8OZc6nF
+        IxHoVfSTep3AodNzGBMdkTcLxA==
+X-Google-Smtp-Source: APXvYqzUx+S3hfpDDdk07qdwvak3LptBgH6Z52kWxHyuo6TSEFqvvIY8MMZv6cgKWhdxOKPG8VCRTg==
+X-Received: by 2002:ac8:3fd2:: with SMTP id v18mr4595140qtk.73.1569002197003;
+        Fri, 20 Sep 2019 10:56:37 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id e42sm1322992qte.26.2019.09.20.10.56.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Sep 2019 10:56:36 -0700 (PDT)
+Date:   Fri, 20 Sep 2019 10:56:31 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        Johannes Berg <johannes@sipsolutions.net>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jouni Malinen <j@w1.fi>,
+        hostap@lists.infradead.org, openwrt-devel@lists.openwrt.org,
+        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Subject: Re: [PATCH RFC] cfg80211: add new command for reporting wiphy
+ crashes
+Message-ID: <20190920105631.34f10d79@cakuba.netronome.com>
+In-Reply-To: <20190920133708.15313-1-zajec5@gmail.com>
+References: <20190920133708.15313-1-zajec5@gmail.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-References: <20190912034421.GA2085@darwi-home-pc> <20190912082530.GA27365@mit.edu>
- <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
- <20190914122500.GA1425@darwi-home-pc> <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
- <20190915052242.GG19710@mit.edu> <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
- <20190918211503.GA1808@darwi-home-pc> <20190918211713.GA2225@darwi-home-pc>
- <CAHk-=wiCqDiU7SE3FLn2W26MS_voUAuqj5XFa1V_tiGTrrW-zQ@mail.gmail.com>
- <20190920134609.GA2113@pc> <CALCETrWvE5es3i+to33y6jw=Yf0Tw6ZfV-6QWjZT5v0fo76tWw@mail.gmail.com>
- <CAHk-=wgW8rN2EVL_Rdn63V9vQO0GkZ=RQFeqqsYJM==8fujpPg@mail.gmail.com>
-In-Reply-To: <CAHk-=wgW8rN2EVL_Rdn63V9vQO0GkZ=RQFeqqsYJM==8fujpPg@mail.gmail.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Fri, 20 Sep 2019 10:52:30 -0700
-X-Gmail-Original-Message-ID: <CALCETrV=4TX2a4uV5t2xOFzv+zM_jnOtMLJna8Vb7uXz6S=wSw@mail.gmail.com>
-Message-ID: <CALCETrV=4TX2a4uV5t2xOFzv+zM_jnOtMLJna8Vb7uXz6S=wSw@mail.gmail.com>
-Subject: Re: [PATCH RFC v4 1/1] random: WARN on large getrandom() waits and
- introduce getrandom2()
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 9:30 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Fri, Sep 20, 2019 at 7:34 AM Andy Lutomirski <luto@kernel.org> wrote:
-> >
-> > What is this GRND_EXPLICIT thing?
->
-> Your own email gives the explanation:
->
-> > Linus, I disagree that blocking while waiting for randomness is an
-> > error.  Sometimes you want to generate a key
->
-> That's *exactly* why GRND_EXPLICIT needs to be done regardless.
->
-> The keyword there is "Sometimes".
->
-> But people currently use "getrandom(0)" when they DO NOT want a key,
-> they just want some miscellaneous random numbers for some totally
-> non-security-related reason.
->
-> And that will continue. Exactly because the people who do not want a
-> key by definition aren't thinking about it very hard.
+On Fri, 20 Sep 2019 15:37:08 +0200, Rafa=C5=82 Mi=C5=82ecki wrote:
+> From: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
+>=20
+> Hardware or firmware instability may result in unusable wiphy. In such
+> cases usually a hardware reset is needed. To allow a full recovery
+> kernel has to indicate problem to the user space.
+>=20
+> This new nl80211 command lets user space known wiphy has crashed and has
+> been just recovered. When applicable it should result in supplicant or
+> authenticator reconfiguring all interfaces.
+>=20
+> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
+> ---
+> I'd like to use this new cfg80211_crash_report() in brcmfmac after a
+> successful recovery from a FullMAC firmware crash.
+>=20
+> Later on I'd like to modify hostapd to reconfigure wiphy using a
+> previously used setup.
+>=20
+> I'm OpenWrt developer & user and I got annoyed by my devices not auto
+> recovering after various failures. There are things I cannot fix (hw
+> failures or closed fw crashes) but I still expect my devices to get
+> back to operational state as soon as possible on their own.
 
-I fully agree that this is a problem.  It's a problem we brought on
-ourselves because we screwed up the ABI from the beginning.  The
-question is what to do about it that doesn't cause its own set of
-nasty problems.
+Perhaps a slightly larger point, but I think it should be raised -=20
+is there any chance for reusing debugging, reset and recovery work done
+in devlink originally for complex Ethernet devices?
 
-> So GRND_EXPLICIT is there very much to make sure people who want true
-> secure keys will say so, and five years from now we will not have the
-> confusion between "Oh, I wasn't thinking about bootup". Because at a
-> minimum, in the near future getrandom(0) will warn about the
-> ambiguity. Or it will use some questionable jitter entropy that some
-> real key users will look at sideways and go "I don't want that".
+WiFi drivers have been dealing with more complex/FW heavy designs for a
+while so maybe you've grow your own interfaces, and maybe they
+necessarily need to be 802.11-centric, but I'm a little surprised that:
 
-There are programs that call getrandom(0) *today* that expect secure
-output.  openssl does a horrible dance in which it calls getentropy()
-if available and falls back to syscall(__NR_getrandom, buf, buflen, 0)
-otherwise.  We can't break this use case.  Changing the semantics of
-getrandom(0) out from under them seems like the worst kind of ABI
-break -- existing applications will *appear* to continue working but
-will, in fact, become insecure.
-
-IMO, from the beginning, we should have done this:
-
-GRND_INSECURE: insecure.  always works.
-
-GRND_SECURE_BLOCKING: does exactly what it says.
-
-0: -EINVAL.
-
-Using it correctly would be obvious.  Something like GRND_EXPLICIT
-would be a head-scratcher: people would have to look at the man page
-and actually think about it, and it's still easy to get wrong:
-
-getrandom(..., GRND_EXPLICIT): just fscking give me a number.  it
-seems to work and it shuts up the warning
-
-And we're back to square one.
-
-
-I think that, given existing software, we should make two or three
-changes to fix the basic problems here:
-
-1. Add GRND_INSECURE: at least let new applications do the right thing
-going forward.
-
-2. Fix what is arguably a straight up kernel bug, not even an ABI
-issue: when a user program is blocking in getrandom(..., 0), the
-kernel happily sits there doing absolutely nothing and deadlocks the
-system as a result.  This IMO isn't an ABI issue -- it's an
-implementation problem.  How about we make getrandom() (probably
-actually wait_for_random_bytes()) do something useful to try to seed
-the RNG if the system is otherwise not doing IO.
-
-3. Optionally, entirely in user code: Get glibc to add new *library*
-functions: getentropy_secure_blocking() and getentropy_insecure() or
-whatever they want to call them.  Deprecate getentropy().
-
-I think #2 is critical.  Right now, suppose someone has a system that
-neets to do a secure network request (a la Red Hat's Clevis).  I have
-no idea what Clevis actually does, but it wouldn't be particularly
-crazy to do a DH exchange or sign with an EC key to ask some network
-server to help unlock a dm-crypt volume.  If the system does this at
-boot, it needs to use getrandom(..., 0), GRND_EXPLICIT, or whatever,
-because it NEEDS a secure random number.  No about of ABI fiddling
-will change this.  The kernel should *work* in this case rather than
-deadlocking.
-
---Andy
+linux $ git grep devlink -- drivers/net/wireless/
+linux $
