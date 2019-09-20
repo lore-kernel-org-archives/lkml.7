@@ -2,157 +2,153 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B83C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 11:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B21C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 11:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E257207E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 11:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 468762086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 11:57:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=temperror (0-bit key) header.d=phytec.de header.i=@phytec.de header.b="R2H94MLT"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="iCf7o6aM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438327AbfITLwb (ORCPT
+        id S2408793AbfITL5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 07:52:31 -0400
-Received: from mickerik.phytec.de ([195.145.39.210]:48852 "EHLO
-        mickerik.phytec.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438309AbfITLwa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 07:52:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; d=phytec.de; s=a1; c=relaxed/simple;
-        q=dns/txt; i=@phytec.de; t=1568980347; x=1571572347;
-        h=From:Sender:Reply-To:Subject:Date:Message-Id:To:Cc:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=mfFBMMfelPcYt0HozABPa7ZrKOpTUktgFSot938sgWs=;
-        b=R2H94MLTZNypuq+uJsQh0bNajJY5p2BqcJiV1n8TQwNh76MaWNNSesemEjR1ef90
-        4qf8g0S/nmixIfae/jQzx3Za4ubcd5R5oLdAS/M8+nEUarVZKuk/Zrf2V4H0Optw
-        vs0pu2sdxvYKKiI3k/zUQB7kWobGTo+jlXQz0iAUrjA=;
-X-AuditID: c39127d2-e31ff70000001af2-9c-5d84bd7a3605
-Received: from idefix.phytec.de (idefix.phytec.de [172.16.0.10])
-        by mickerik.phytec.de (PHYTEC Mail Gateway) with SMTP id A3.19.06898.A7DB48D5; Fri, 20 Sep 2019 13:52:26 +0200 (CEST)
-Received: from augenblix2.phytec.de ([172.16.0.56])
-          by idefix.phytec.de (IBM Domino Release 9.0.1FP7)
-          with ESMTP id 2019092013522631-76272 ;
-          Fri, 20 Sep 2019 13:52:26 +0200 
-From:   Stefan Riedmueller <s.riedmueller@phytec.de>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Fabio Estevam <festevam@gmail.com>,
-        Andrew Smirnov <andrew.smirnov@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        linux-imx@nxp.com, Stefan Riedmueller <s.riedmueller@phytec.de>
-Subject: [PATCH v2 2/2] dt-bindings: arm: fsl: Add PHYTEC i.MX6 devicetree bindings
-Date:   Fri, 20 Sep 2019 13:52:26 +0200
-Message-Id: <1568980346-385840-2-git-send-email-s.riedmueller@phytec.de>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1568980346-385840-1-git-send-email-s.riedmueller@phytec.de>
-References: <1568980346-385840-1-git-send-email-s.riedmueller@phytec.de>
-X-MIMETrack: Itemize by SMTP Server on Idefix/Phytec(Release 9.0.1FP7|August  17, 2016) at
- 20.09.2019 13:52:26,
-        Serialize by Router on Idefix/Phytec(Release 9.0.1FP7|August  17, 2016) at
- 20.09.2019 13:52:26,
-        Serialize complete at 20.09.2019 13:52:26
-X-TNEFEvaluated: 1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPLMWRmVeSWpSXmKPExsWyRoCBS7dqb0uswfpJZhbNHbYW84+cY7V4
-        eNXfYtPja6wWXb9WMltc3jWHzeJuSyerxdLrF5ksWvceYbf4u30Ti8WLLeIO3B5r5q1h9Ng5
-        6y67x6ZVnWwed67tYfPYvKTeY+O7HUwe/X8NPD5vkgvgiOKySUnNySxLLdK3S+DK+DF/BVvB
-        Z7GK/zc3sDcwThToYuTkkBAwkZi99R5bFyMXh5DADkaJ+fePMkI45xgl3l/bxQxSxSZgJLFg
-        WiMTiC0ioCExpesxO0gRs8BUZonGP0tZQRLCAsES09b/AitiEVCVWNPWwgZi8wp4SPw4dYoV
-        Yp2cxM1znWBDOQU8Jd5fX8wOYgsB1TQdOsUCMlRCoJFJYsWmbcwQDUISpxefZZ7AyLeAkWEV
-        o1BuZnJ2alFmtl5BRmVJarJeSuomRmCgHp6ofmkHY98cj0OMTByMhxglOJiVRHjnmDbFCvGm
-        JFZWpRblxxeV5qQWH2KU5mBREufdwFsSJiSQnliSmp2aWpBaBJNl4uCUamDsefHz9ro8NbFl
-        Z4NCrHYy2i7qSX/Is6VRdefnpIel3t1PZAsrngUr6CZFd4f80PEunv786NE+mbd3Hd+oVPq3
-        zlnaVHEh8l6506YXL6zLl92IS9hbMLN88duqPCedzGntr6YULzoTvN7od7RO+tvN537tSW9h
-        FOzxrJzptkJg1orEr70/j69TYinOSDTUYi4qTgQAW8AidEICAAA=
+        Fri, 20 Sep 2019 07:57:35 -0400
+Received: from mail-eopbgr690072.outbound.protection.outlook.com ([40.107.69.72]:40038
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2404368AbfITL5f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 07:57:35 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AN71WBgrGBfT9m2Pl293Xkgdb8cu74zVVFWzzLDD4KAQL7t6jnzFOH3r7ntPQVVsf/DrB0CQ7PoAWjAHQVbExd4QxbsNXBvSPuf0FpLLRA2Cao78WgoUdji/J4zMFgEuh4uW1JJBqaeoLYxhLboOvqR7QxSyBT7IaKJLYvLqLoLr32fBU+VDy99S2qkcXqVCwCsMsWzLnyrboiVJgPqAMX/m2DEZi2BbDaIi9EsjDLJTbdc/cv08VS+GYTdPC8LIJSRpLZ20WTMQbrN0hiOEXnu5FZ+VCkPwXS/KTLxrXB6QTsY/nAeKs1ZsOnZK35OxiT06Va1VvG694pYFk5cEHQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IwV8eZxnVt2kD0JJdNZIh3a5H6ZSCs86Vo0thaUQXak=;
+ b=SqcJqlNgn/xsQbgW4FpWXDHg7UdeCZMvSg0xDqGkIqrvCXxmtKDdLZOBn0XdYKNa6bCtMrkKXG8vOebFxc2SHrQmTQGLMATaFLJrY8fttIQJqqO8OTs975CCyDjI42dc2aTDfsoPedrST3pRnQmDUb7QtKQqu1dbDrya4tmxlqQO6evxszucHBcVEmf85upzFsEVaGe0TVOcovKgBuKKHtS6GGaYx0hSziIxj6w2u45JA3SAvk53t7t7JHdODDiK38Fn6Zg/7E9mGDfqAUDJ2J7V6wVDtpFI7JNmk16YVTSmIlbc9uQeBfzjSLPyzKov/fsv6LaIVXohZ1Ov7yDCPA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IwV8eZxnVt2kD0JJdNZIh3a5H6ZSCs86Vo0thaUQXak=;
+ b=iCf7o6aM7BF9UZyQEgW4S+2C1IQV+VvG9vN4c93zxn4u/euFvY8UV19xx0RndWiA8BdbFY5vAf3GaEz1n/pjqspJGdKStkKlUtPcpPvJtoBgfJoD2tPq42CuZSW1uCX2noGbOdE09RkKAQY5bhiQ45qESSkpHpj7BIrVtJSY09M=
+Received: from CH2PR02MB7000.namprd02.prod.outlook.com (20.180.9.216) by
+ CH2PR02MB6359.namprd02.prod.outlook.com (52.132.230.25) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.20; Fri, 20 Sep 2019 11:57:31 +0000
+Received: from CH2PR02MB7000.namprd02.prod.outlook.com
+ ([fe80::3515:e3a7:8799:73bd]) by CH2PR02MB7000.namprd02.prod.outlook.com
+ ([fe80::3515:e3a7:8799:73bd%2]) with mapi id 15.20.2284.009; Fri, 20 Sep 2019
+ 11:57:31 +0000
+From:   Radhey Shyam Pandey <radheys@xilinx.com>
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Michal Simek <michals@xilinx.com>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
+Subject: RE: [PATCH v2] ethernet: axienet: Use
+ devm_platform_ioremap_resource() in axienet_probe()
+Thread-Topic: [PATCH v2] ethernet: axienet: Use
+ devm_platform_ioremap_resource() in axienet_probe()
+Thread-Index: AQHVb6bYXz5zcje8nUqkBKSWkFX13Kc0dPsw
+Date:   Fri, 20 Sep 2019 11:57:31 +0000
+Message-ID: <CH2PR02MB70007655B190BCBC9113BD4BC7880@CH2PR02MB7000.namprd02.prod.outlook.com>
+References: <af65355e-c2f8-9142-4d0b-6903f23a98b2@web.de>
+ <CH2PR02MB700047AFFFE08FE5FD563541C78E0@CH2PR02MB7000.namprd02.prod.outlook.com>
+ <604a6376-0298-ebcd-ee84-435945370374@web.de>
+In-Reply-To: <604a6376-0298-ebcd-ee84-435945370374@web.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=radheys@xilinx.com; 
+x-originating-ip: [149.199.50.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2c28388b-9b6c-4d9f-d312-08d73dc1b779
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:CH2PR02MB6359;
+x-ms-traffictypediagnostic: CH2PR02MB6359:|CH2PR02MB6359:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR02MB635999699DA70B28D5330644C7880@CH2PR02MB6359.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1060;
+x-forefront-prvs: 0166B75B74
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(4636009)(346002)(376002)(136003)(366004)(39860400002)(396003)(13464003)(199004)(189003)(305945005)(71190400001)(71200400001)(7736002)(66066001)(966005)(476003)(11346002)(99286004)(74316002)(45080400002)(229853002)(54906003)(6116002)(4326008)(6636002)(478600001)(25786009)(3846002)(2906002)(14454004)(6506007)(5660300002)(53546011)(110136005)(2501003)(446003)(14444005)(81166006)(8936002)(33656002)(86362001)(9686003)(256004)(316002)(486006)(7696005)(66556008)(66476007)(52536014)(66446008)(64756008)(66946007)(76116006)(6436002)(8676002)(6246003)(81156014)(76176011)(6306002)(186003)(2201001)(102836004)(55016002)(26005)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6359;H:CH2PR02MB7000.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: S6EDk92dKaHHQCISktxI+qE4Ki+Y+Q0FJOa2RaEk8ba/UJ7Q/idm7wdUKqN6xfAsQP5rKNJ5HY3/KC+dfCvYXpzSnRRviDdwBEgu3hgcoNlkO08unP0nkHoZTbQOgfeUg+UCdf2SLFYJoK5K9OnjSzfD+OfmN10Tcsw9BKndktUlrsVmPqgvagWiUq9Dx3LQihi2cF52yH0ncs44+w2qtZEPP/P/zAZscbofXMnzz9A9MCxIhjzDYilsIb9IOwzKV1jzC2xkKXtePM5ynPp7dyH4e65Sf/49PyUyW1R/to3zRkZ7raVdFCW0tZh10rEFy3gIz9uCI5EXJ1GKiigdvAiTV4oOZp1B6yK6ATdPP0FQqNJJNjnNyxzu+X7UzGyIadgEaSSELK0E225DPinrPP2uofk5qgR5CC/lohtZWYg=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2c28388b-9b6c-4d9f-d312-08d73dc1b779
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Sep 2019 11:57:31.0780
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ES5bRtQg3KMCJmgzPewHyETqgatPHWWj1CCf4OJ/B8QjKLzL8EpAGofWcfKdBORVd3XwCopHdyK16aChtAvWqA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6359
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add devicetree bindings for i.MX6 based phyCORE-i.MX6, phyBOARD-Mira and
-phyFLEX-i.MX6.
-
-Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
----
-Changes in v2:
- - Use seperate description for each board instead of squashing them into
-   the standard board.
----
- Documentation/devicetree/bindings/arm/fsl.yaml | 37 ++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index c926ff6eac67..7dbb45cebb86 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -116,6 +116,21 @@ properties:
-               - technologic,imx6q-ts7970
-           - const: fsl,imx6q
- 
-+      - description: i.MX6Q PHYTEC phyBOARD-Mira
-+        items:
-+          - enum:
-+              - phytec,imx6q-pbac06-emmc  # PHYTEC phyBOARD-Mira eMMC RDK
-+              - phytec,imx6q-pbac06-nand  # PHYTEC phyBOARD-Mira NAND RDK
-+          - const: phytec,imx6q-pbac06    # PHYTEC phyBOARD-Mira
-+          - const: phytec,imx6qdl-pcm058  # PHYTEC phyCORE-i.MX6
-+          - const: fsl,imx6q
-+
-+      - description: i.MX6Q PHYTEC phyFLEX-i.MX6
-+        items:
-+          - const: phytec,imx6q-pbab01    # PHYTEC phyFLEX carrier board
-+          - const: phytec,imx6q-pfla02    # PHYTEC phyFLEX-i.MX6 Quad
-+          - const: fsl,imx6q
-+
-       - description: i.MX6QP based Boards
-         items:
-           - enum:
-@@ -123,6 +138,13 @@ properties:
-               - fsl,imx6qp-sabresd        # i.MX6 Quad Plus SABRE Smart Device Board
-           - const: fsl,imx6qp
- 
-+      - description: i.MX6QP PHYTEC phyBOARD-Mira
-+        items:
-+          - const: phytec,imx6qp-pbac06-nand
-+          - const: phytec,imx6qp-pbac06   # PHYTEC phyBOARD-Mira
-+          - const: phytec,imx6qdl-pcm058  # PHYTEC phyCORE-i.MX6
-+          - const: fsl,imx6qp
-+
-       - description: i.MX6DL based Boards
-         items:
-           - enum:
-@@ -138,6 +160,21 @@ properties:
-               - ysoft,imx6dl-yapp4-ursa   # i.MX6 Solo Y Soft IOTA Ursa board
-           - const: fsl,imx6dl
- 
-+      - description: i.MX6DL PHYTEC phyBOARD-Mira
-+        items:
-+          - enum:
-+              - phytec,imx6dl-pbac06-emmc # PHYTEC phyBOARD-Mira eMMC RDK
-+              - phytec,imx6dl-pbac06-nand # PHYTEC phyBOARD-Mira NAND RDK
-+          - const: phytec,imx6dl-pbac06   # PHYTEC phyBOARD-Mira
-+          - const: phytec,imx6qdl-pcm058  # PHYTEC phyCORE-i.MX6
-+          - const: fsl,imx6dl
-+
-+      - description: i.MX6DL PHYTEC phyFLEX-i.MX6
-+        items:
-+          - const: phytec,imx6dl-pbab01   # PHYTEC phyFLEX carrier board
-+          - const: phytec,imx6dl-pfla02   # PHYTEC phyFLEX-i.MX6 Quad
-+          - const: fsl,imx6dl
-+
-       - description: i.MX6SL based Boards
-         items:
-           - enum:
--- 
-2.7.4
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNYXJrdXMgRWxmcmluZyA8TWFy
+a3VzLkVsZnJpbmdAd2ViLmRlPg0KPiBTZW50OiBGcmlkYXksIFNlcHRlbWJlciAyMCwgMjAxOSA1
+OjAxIFBNDQo+IFRvOiBuZXRkZXZAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxp
+c3RzLmluZnJhZGVhZC5vcmc7IERhdmlkIFMuDQo+IE1pbGxlciA8ZGF2ZW1AZGF2ZW1sb2Z0Lm5l
+dD47IE1pY2hhbCBTaW1layA8bWljaGFsc0B4aWxpbnguY29tPjsNCj4gUmFkaGV5IFNoeWFtIFBh
+bmRleSA8cmFkaGV5c0B4aWxpbnguY29tPg0KPiBDYzogTEtNTCA8bGludXgta2VybmVsQHZnZXIu
+a2VybmVsLm9yZz47IGtlcm5lbC1qYW5pdG9yc0B2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDog
+W1BBVENIIHYyXSBldGhlcm5ldDogYXhpZW5ldDogVXNlDQo+IGRldm1fcGxhdGZvcm1faW9yZW1h
+cF9yZXNvdXJjZSgpIGluIGF4aWVuZXRfcHJvYmUoKQ0KPiANCj4gRnJvbTogTWFya3VzIEVsZnJp
+bmcgPGVsZnJpbmdAdXNlcnMuc291cmNlZm9yZ2UubmV0Pg0KPiBEYXRlOiBGcmksIDIwIFNlcCAy
+MDE5IDEzOjE3OjAxICswMjAwDQo+IA0KPiBTaW1wbGlmeSB0aGlzIGZ1bmN0aW9uIGltcGxlbWVu
+dGF0aW9uIGJ5IHVzaW5nIHRoZSB3cmFwcGVyIGZ1bmN0aW9uDQo+IOKAnGRldm1fcGxhdGZvcm1f
+aW9yZW1hcF9yZXNvdXJjZeKAnSBpbnN0ZWFkIG9mIGNhbGxpbmcgdGhlIGZ1bmN0aW9ucw0KPiDi
+gJxwbGF0Zm9ybV9nZXRfcmVzb3VyY2XigJ0gYW5kIOKAnGRldm1faW9yZW1hcF9yZXNvdXJjZeKA
+nSBkaXJlY3RseS4NCj4gDQo+ICogVGh1cyByZWR1Y2UgYWxzbyBhIGJpdCBvZiBleGNlcHRpb24g
+aGFuZGxpbmcgY29kZSBoZXJlLg0KPiAqIERlbGV0ZSB0aGUgbG9jYWwgdmFyaWFibGUg4oCccmVz
+4oCdLg0KPiANCj4gVGhpcyBpc3N1ZSB3YXMgZGV0ZWN0ZWQgYnkgdXNpbmcgdGhlIENvY2NpbmVs
+bGUgc29mdHdhcmUuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBNYXJrdXMgRWxmcmluZyA8ZWxmcmlu
+Z0B1c2Vycy5zb3VyY2Vmb3JnZS5uZXQ+DQoNClJldmlld2VkLWJ5OiBSYWRoZXkgU2h5YW0gUGFu
+ZGV5IDxyYWRoZXkuc2h5YW0ucGFuZGV5QHhpbGlueC5jb20+DQoNClRoYW5rcyENCj4gLS0tDQo+
+IA0KPiB2MjoNCj4gRnVydGhlciBjaGFuZ2VzIHdlcmUgcmVxdWVzdGVkIGJ5IFJhZGhleSBTaHlh
+bSBQYW5kZXkuDQo+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL3IvQ0gyUFIwMk1CNzAwMDQ3QUZG
+RkUwOEZFNUZENTYzNTQxQzc4RTBAQw0KPiBIMlBSMDJNQjcwMDAubmFtcHJkMDIucHJvZC5vdXRs
+b29rLmNvbS8NCj4gDQo+ICogVXBkYXRlcyBmb3IgdGhyZWUgbW9kdWxlcyB3ZXJlIHNwbGl0IGlu
+dG8gYSBzZXBhcmF0ZSBwYXRjaCBmb3IgZWFjaCBkcml2ZXIuDQo+ICogVGhlIGNvbW1pdCBkZXNj
+cmlwdGlvbiB3YXMgYWRqdXN0ZWQuDQo+IA0KPiANCj4gIGRyaXZlcnMvbmV0L2V0aGVybmV0L3hp
+bGlueC94aWxpbnhfYXhpZW5ldF9tYWluLmMgfCA5ICstLS0tLS0tLQ0KPiAgMSBmaWxlIGNoYW5n
+ZWQsIDEgaW5zZXJ0aW9uKCspLCA4IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvbmV0L2V0aGVybmV0L3hpbGlueC94aWxpbnhfYXhpZW5ldF9tYWluLmMNCj4gYi9kcml2
+ZXJzL25ldC9ldGhlcm5ldC94aWxpbngveGlsaW54X2F4aWVuZXRfbWFpbi5jDQo+IGluZGV4IDRm
+YzYyN2ZiNGQxMS4uOTI3ODNhYWFhMGEyIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL25ldC9ldGhl
+cm5ldC94aWxpbngveGlsaW54X2F4aWVuZXRfbWFpbi5jDQo+ICsrKyBiL2RyaXZlcnMvbmV0L2V0
+aGVybmV0L3hpbGlueC94aWxpbnhfYXhpZW5ldF9tYWluLmMNCj4gQEAgLTE3ODcsMTQgKzE3ODcs
+NyBAQCBzdGF0aWMgaW50IGF4aWVuZXRfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZQ0KPiAq
+cGRldikNCj4gIAkJb2Zfbm9kZV9wdXQobnApOw0KPiAgCQlscC0+ZXRoX2lycSA9IHBsYXRmb3Jt
+X2dldF9pcnEocGRldiwgMCk7DQo+ICAJfSBlbHNlIHsNCj4gLQkJLyogQ2hlY2sgZm9yIHRoZXNl
+IHJlc291cmNlcyBkaXJlY3RseSBvbiB0aGUgRXRoZXJuZXQgbm9kZS4NCj4gKi8NCj4gLQkJc3Ry
+dWN0IHJlc291cmNlICpyZXMgPSBwbGF0Zm9ybV9nZXRfcmVzb3VyY2UocGRldiwNCj4gLQ0KPiBJ
+T1JFU09VUkNFX01FTSwgMSk7DQo+IC0JCWlmICghcmVzKSB7DQo+IC0JCQlkZXZfZXJyKCZwZGV2
+LT5kZXYsICJ1bmFibGUgdG8gZ2V0IERNQSBtZW1vcnkNCj4gcmVzb3VyY2VcbiIpOw0KPiAtCQkJ
+Z290byBmcmVlX25ldGRldjsNCj4gLQkJfQ0KPiAtCQlscC0+ZG1hX3JlZ3MgPSBkZXZtX2lvcmVt
+YXBfcmVzb3VyY2UoJnBkZXYtPmRldiwgcmVzKTsNCj4gKwkJbHAtPmRtYV9yZWdzID0gZGV2bV9w
+bGF0Zm9ybV9pb3JlbWFwX3Jlc291cmNlKHBkZXYsIDEpOw0KPiAgCQlscC0+cnhfaXJxID0gcGxh
+dGZvcm1fZ2V0X2lycShwZGV2LCAxKTsNCj4gIAkJbHAtPnR4X2lycSA9IHBsYXRmb3JtX2dldF9p
+cnEocGRldiwgMCk7DQo+ICAJCWxwLT5ldGhfaXJxID0gcGxhdGZvcm1fZ2V0X2lycShwZGV2LCAy
+KTsNCj4gLS0NCj4gMi4yMy4wDQoNCg==
