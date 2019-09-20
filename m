@@ -2,87 +2,72 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E2BBC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A10C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60F852086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:07:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C29D72086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:08:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="JW+o+Gt9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390559AbfITPHT (ORCPT
+        id S2391054AbfITPI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 11:07:19 -0400
-Received: from foss.arm.com ([217.140.110.172]:46088 "EHLO foss.arm.com"
+        Fri, 20 Sep 2019 11:08:26 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:57522 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387614AbfITPHT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 11:07:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 73C27337;
-        Fri, 20 Sep 2019 08:07:18 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 144D23F575;
-        Fri, 20 Sep 2019 08:07:17 -0700 (PDT)
-Date:   Fri, 20 Sep 2019 16:07:14 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>, linux-pci@vger.kernel.org,
-        YueHaibing <yuehaibing@huawei.com>, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: tegra: include linux/pinctrl/consumer.h
-Message-ID: <20190920150714.GK9720@e119886-lin.cambridge.arm.com>
-References: <20190920145518.1721180-1-arnd@arndb.de>
+        id S2387614AbfITPIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 11:08:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=P3JIZQUh28xQ7KcAHkcaUqzj0/5saX1Ep2XYOScw4dk=; b=JW+o+Gt9rkq8DmwTJLKstrGyuE
+        byEDABTDl/qpEJmaf8gaahDWpLhdmnUWRQf1xUlgup5HSP5C0D8cLxrVq2MgpyuvPtzgmM3l05DFK
+        Sq+7HEGvE4F6n4ni64DtO2Dy57jL/P9T6TElgYR7mxUHxqZKuvxC4Qo6JLtqSWxnkaSw=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iBKW9-0005qh-G1; Fri, 20 Sep 2019 17:08:17 +0200
+Date:   Fri, 20 Sep 2019 17:08:17 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Pawel Dembicki <paweldembicki@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH 1/2] net: dsa: vsc73xx: Use
+ devm_platform_ioremap_resource() in vsc73xx_platform_probe()
+Message-ID: <20190920150817.GE3530@lunn.ch>
+References: <98fee5f4-1e45-a0c6-2a38-9201b201c6eb@web.de>
+ <dbc78014-6ed4-5080-8208-0a5930a3bf6e@web.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190920145518.1721180-1-arnd@arndb.de>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <dbc78014-6ed4-5080-8208-0a5930a3bf6e@web.de>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 04:55:05PM +0200, Arnd Bergmann wrote:
-> Without this, we can run into a build failure:
+On Fri, Sep 20, 2019 at 04:28:00PM +0200, Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Fri, 20 Sep 2019 15:23:39 +0200
 > 
-> drivers/pci/controller/dwc/pcie-tegra194.c:1394:8: error: implicit declaration of function 'pinctrl_pm_select_default_state' [-Werror,-Wimplicit-function-declaration]
+> Simplify this function implementation by using a known wrapper function.
 > 
-> Fixes: ab2a50e7602b ("PCI: tegra: Add support to configure sideband pins")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
-Thanks for this. Another fix for this came in earlier today:
-
-https://patchwork.ozlabs.org/patch/1165139/
-
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-
-Thanks,
-
-Andrew Murray
-
-> ---
->  drivers/pci/controller/dwc/pcie-tegra194.c | 1 +
->  1 file changed, 1 insertion(+)
+> This issue was detected by using the Coccinelle software.
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> index 09ed8e473cff..f89f5acee72d 100644
-> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> @@ -22,6 +22,7 @@
->  #include <linux/of_pci.h>
->  #include <linux/pci.h>
->  #include <linux/phy/phy.h>
-> +#include <linux/pinctrl/consumer.h>
->  #include <linux/platform_device.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/random.h>
-> -- 
-> 2.20.0
-> 
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+
+    Andrew
