@@ -2,128 +2,178 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9DB0C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 18:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4436DC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 18:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9CE52080F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 18:33:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 198332080F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 18:35:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="E2eibxj8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bqY8uKMY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406591AbfITScp (ORCPT
+        id S2406694AbfITSe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 14:32:45 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33580 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406540AbfITScn (ORCPT
+        Fri, 20 Sep 2019 14:34:59 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45652 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405396AbfITSe6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 14:32:43 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q10so5092929pfl.0
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 11:32:43 -0700 (PDT)
+        Fri, 20 Sep 2019 14:34:58 -0400
+Received: by mail-lj1-f195.google.com with SMTP id q64so7971544ljb.12
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 11:34:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=oyE0lW4jziioV/J2I+7J0Vx8oaL6QC9YS1SJmLa32Os=;
-        b=E2eibxj8my5Dp1jxc+KoYQACiZUC0OFoR9GaGM/J3hIS0zRM4vSRbkysgba9lXdTZL
-         xTdQ7FDQwPL9Ih3+86mwVQMtG0mMaoDjt3NVu9Cwmb7n+GUycQ2UgmVgOZz83WZHf/52
-         /GznKVv8v3jAxGvGSRakY9iH/C3Uciv4mMza8=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pnD+O0ovrq1F6qN8k3Y2ZgHyJhSBoQdXb5evY3Rg4Cc=;
+        b=bqY8uKMYN5NCM6qjXOyTo3GavIiiiafNBzRaCqO4/1LIT9iV6hBLBucLJ/HZJ0OgZD
+         thKmQSPWYASptQ6dsQG3Gy+Mdy4QNYH6K4cmbCjPhmxQKKUrInjNLD3TPtvAfPfvqS5K
+         q7PX3cVnCzRyAjngm6osaoQej4LjswgsZCxIfa1fBukdORMQe3f9qPTu0BSpFBPONZnR
+         6hpPHBSMQoNREbN2MI2EzZSa4MUlvIZ6CpspsjwL0UBJKXK/X3EvVG818MW67iWDk7HD
+         sJrgaFZBw7vcxrXUuQ/6n7DmBSZGus02ZPGRZ+eqido3MD4dUxMb9gqBD+RbsTD8Tfaj
+         zn9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=oyE0lW4jziioV/J2I+7J0Vx8oaL6QC9YS1SJmLa32Os=;
-        b=sfjN4zZkteWvwCo7WFdnEuG5iJU+PMwhuxvTJohdJCwUrI9uA6A/mKfDzk0QxWxZn7
-         E9zT3ou343B9k0XWOFYPHus/ZjUspjy9Ipi+3d3PMZlUyWcEqRJtnOu2vPBp84QZHf/P
-         LvZPXB/zPn7zrrxd4vdPam5CicEeheguljOxI7lgNE7WNnKxC1A7KIcOJ32Tw3lfzk4W
-         LstNyBB1hAgvUxlVEZaD3tK9SCwyS/it//2F2ehGxYrLkyG8iW/R6YYDsurt7MEnUqti
-         2oS1Xf8f3hufu8/wp7AO6mwmifbx79nLVdGztwJoWH5OHcq0KOfoQR0DWux6L+zJE7I8
-         +v1g==
-X-Gm-Message-State: APjAAAWcVKK2ny4Rhp+5q8nP9FNwJRxC9LVpI2xcP1Byr5TZuWPwHLOo
-        2+JcGWOhKNr65XuEnCgb9GnUUg==
-X-Google-Smtp-Source: APXvYqyEpnhnEiGd4gIQfC2yEjPQ+Cs/cq/kw9SdUkcIz7yiWyUxh4iISf5kbtfmrVH3anNGaf7eXg==
-X-Received: by 2002:a62:7d8c:: with SMTP id y134mr19187475pfc.257.1569004363189;
-        Fri, 20 Sep 2019 11:32:43 -0700 (PDT)
-Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id b69sm4436072pfb.132.2019.09.20.11.32.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Sep 2019 11:32:42 -0700 (PDT)
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Andrey Pronin <apronin@chromium.org>, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Alexander Steffen <Alexander.Steffen@infineon.com>,
-        Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh@kernel.org>
-Subject: [PATCH v7 1/6] dt-bindings: tpm: document properties for cr50
-Date:   Fri, 20 Sep 2019 11:32:35 -0700
-Message-Id: <20190920183240.181420-2-swboyd@chromium.org>
-X-Mailer: git-send-email 2.23.0.351.gc4317032e6-goog
-In-Reply-To: <20190920183240.181420-1-swboyd@chromium.org>
-References: <20190920183240.181420-1-swboyd@chromium.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=pnD+O0ovrq1F6qN8k3Y2ZgHyJhSBoQdXb5evY3Rg4Cc=;
+        b=cafqKYH7G6lhhjCeErmjHhwF/5Rk+uT1iPAm07DUfLhocSg9vAUlKOfmzJgF/D74LI
+         WpbO4vZvqf1UhVCYYDCa6my5CsOzfeov4tDr1CfPWAg4yP/KXZd5ubI6nE8NVzUUVcS1
+         h6MunlWBDMlDlYjXw03euIm6II3K4QadEez1LacHtjG94ri7oBEqpbr6AtOCVSlAIr/B
+         xpovVd8XU1OxRfi6xQ5LzaZAro8ni8nRaH4zSXW23DZm3GrMpm6sW4dTEtNsLKHEhTyY
+         TSkFSZaBxQrU0xJl4jjhM4nDjWWmAjlAAANhGP4yNUx8EPlXp9xV9YYKg/YYXe892Afa
+         f5+w==
+X-Gm-Message-State: APjAAAXeI+AzRK42mLwKR+HW0/5ylLu+LtDzQ7crlA7yaJbu2LGOg5NX
+        qLdfiRxRLh+occ/YqKFXAZciNQ==
+X-Google-Smtp-Source: APXvYqxahYm7w9C/AAIYcYbrY1/vHicqz99sVruFFdLm+qfCxiAg/w2zKMWIq5IhGN7dLvCQN49sNg==
+X-Received: by 2002:a2e:a0c5:: with SMTP id f5mr3903494ljm.114.1569004493847;
+        Fri, 20 Sep 2019 11:34:53 -0700 (PDT)
+Received: from khorivan (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
+        by smtp.gmail.com with ESMTPSA id 77sm603953ljj.84.2019.09.20.11.34.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 20 Sep 2019 11:34:53 -0700 (PDT)
+Date:   Fri, 20 Sep 2019 21:34:51 +0300
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin Lau <kafai@fb.com>, Andrii Nakryiko <andriin@fb.com>,
+        Yonghong Song <yhs@fb.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH bpf] libbpf: fix version identification on busybox
+Message-ID: <20190920183449.GA2760@khorivan>
+Mail-Followup-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, Martin Lau <kafai@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>, Yonghong Song <yhs@fb.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190919160518.25901-1-ivan.khoronzhuk@linaro.org>
+ <CAEf4BzbCjCYr5NMPctDkUggwpehnqZPVBSqZOsd9MvSq6WmnZQ@mail.gmail.com>
+ <20190920082204.GC8870@khorivan>
+ <CAEf4BzaVuaN3HhMu8W_i9z4n-2zfjqxBXyOEOaQHexxZq7b3qg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAEf4BzaVuaN3HhMu8W_i9z4n-2zfjqxBXyOEOaQHexxZq7b3qg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Pronin <apronin@chromium.org>
+On Fri, Sep 20, 2019 at 09:41:54AM -0700, Andrii Nakryiko wrote:
+>On Fri, Sep 20, 2019 at 1:22 AM Ivan Khoronzhuk
+><ivan.khoronzhuk@linaro.org> wrote:
+>>
+>> On Thu, Sep 19, 2019 at 01:02:40PM -0700, Andrii Nakryiko wrote:
+>> >On Thu, Sep 19, 2019 at 11:22 AM Ivan Khoronzhuk
+>> ><ivan.khoronzhuk@linaro.org> wrote:
+>> >>
+>> >> It's very often for embedded to have stripped version of sort in
+>> >> busybox, when no -V option present. It breaks build natively on target
+>> >> board causing recursive loop.
+>> >>
+>> >> BusyBox v1.24.1 (2019-04-06 04:09:16 UTC) multi-call binary. \
+>> >> Usage: sort [-nrugMcszbdfimSTokt] [-o FILE] [-k \
+>> >> start[.offset][opts][,end[.offset][opts]] [-t CHAR] [FILE]...
+>> >>
+>> >> Lets modify command a little to avoid -V option.
+>> >>
+>> >> Fixes: dadb81d0afe732 ("libbpf: make libbpf.map source of truth for libbpf version")
+>> >>
+>> >> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+>> >> ---
+>> >>
+>> >> Based on bpf/master
+>> >>
+>> >>  tools/lib/bpf/Makefile | 2 +-
+>> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+>> >>
+>> >> diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
+>> >> index c6f94cffe06e..a12490ad6215 100644
+>> >> --- a/tools/lib/bpf/Makefile
+>> >> +++ b/tools/lib/bpf/Makefile
+>> >> @@ -3,7 +3,7 @@
+>> >>
+>> >>  LIBBPF_VERSION := $(shell \
+>> >>         grep -oE '^LIBBPF_([0-9.]+)' libbpf.map | \
+>> >> -       sort -rV | head -n1 | cut -d'_' -f2)
+>> >> +       cut -d'_' -f2 | sort -r | head -n1)
+>> >
+>> >You can't just sort alphabetically, because:
+>> >
+>> >1.2
+>> >1.11
+>> >
+>> >should be in that order. See discussion on mailing thread for original commit.
+>>
+>> if X1.X2.X3, where X = {0,1,....99999}
+>> Then it can be:
+>>
+>> -LIBBPF_VERSION := $(shell \
+>> -       grep -oE '^LIBBPF_([0-9.]+)' libbpf.map | \
+>> -       sort -rV | head -n1 | cut -d'_' -f2)
+>> +_LBPFLIST := $(patsubst %;,%,$(patsubst LIBBPF_%,%,$(filter LIBBPF_%, \
+>> +           $(shell cat libbpf.map))))
+>> +_LBPFLIST2 := $(foreach v,$(_LBPFLIST), \
+>> +               $(subst $() $(),,$(foreach n,$(subst .,$() $(),$(v)), \
+>> +                       $(shell printf "%05d" $(n)))))
+>> +_LBPF_VER := $(word $(words $(sort $(_LBPFLIST2))), $(sort $(_LBPFLIST2)))
+>> +LIBBPF_VERSION := $(patsubst %_$(_LBPF_VER),%,$(filter %_$(_LBPF_VER), \
+>> +        $(join $(addsuffix _, $(_LBPFLIST)),$(_LBPFLIST2))))
+>>
+>> It's bigger but avoids invocations of grep/sort/cut/head, only cat/printf
+>> , thus -V option also.
+>>
+>
+>No way, this is way too ugly (and still unreliable, if we ever have
+>X.Y.Z.W or something). I'd rather go with my original approach of
+Yes, forgot to add
+X1,X2,X3,...XN, where X = {0,1,....99999} and N = const for all versions.
+But frankly, 1.0.0 looks too far.
 
-Add TPM2.0 PTP FIFO compatible SPI interface for chips with Cr50
-firmware.
+>fetching the last version in libbpf.map file. See
+>https://www.spinics.net/lists/netdev/msg592703.html.
+>
+>> >
+>> >>  LIBBPF_MAJOR_VERSION := $(firstword $(subst ., ,$(LIBBPF_VERSION)))
+>> >>
+>> >>  MAKEFLAGS += --no-print-directory
+>> >> --
+>> >> 2.17.1
+>> >>
+>>
+>> --
+>> Regards,
+>> Ivan Khoronzhuk
 
-Cc: Andrey Pronin <apronin@chromium.org>
-Cc: Duncan Laurie <dlaurie@chromium.org>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Guenter Roeck <groeck@chromium.org>
-Cc: Alexander Steffen <Alexander.Steffen@infineon.com>
-Cc: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Andrey Pronin <apronin@chromium.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
- .../bindings/security/tpm/google,cr50.txt     | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/security/tpm/google,cr50.txt
-
-diff --git a/Documentation/devicetree/bindings/security/tpm/google,cr50.txt b/Documentation/devicetree/bindings/security/tpm/google,cr50.txt
-new file mode 100644
-index 000000000000..cd69c2efdd37
---- /dev/null
-+++ b/Documentation/devicetree/bindings/security/tpm/google,cr50.txt
-@@ -0,0 +1,19 @@
-+* H1 Secure Microcontroller with Cr50 Firmware on SPI Bus.
-+
-+H1 Secure Microcontroller running Cr50 firmware provides several
-+functions, including TPM-like functionality. It communicates over
-+SPI using the FIFO protocol described in the PTP Spec, section 6.
-+
-+Required properties:
-+- compatible: Should be "google,cr50".
-+- spi-max-frequency: Maximum SPI frequency.
-+
-+Example:
-+
-+&spi0 {
-+	tpm@0 {
-+		compatible = "google,cr50";
-+		reg = <0>;
-+		spi-max-frequency = <800000>;
-+	};
-+};
 -- 
-Sent by a computer through tubes
-
+Regards,
+Ivan Khoronzhuk
