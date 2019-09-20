@@ -2,149 +2,108 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3096C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 12:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F96C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 12:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AE8320665
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 12:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3718A20665
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 12:29:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JOzlTELD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GNbjA0OL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408992AbfITM2h (ORCPT
+        id S2408999AbfITM3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 08:28:37 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:42216 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406113AbfITM2g (ORCPT
+        Fri, 20 Sep 2019 08:29:12 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45137 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404619AbfITM3L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 08:28:36 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8KCSXIN097923;
-        Fri, 20 Sep 2019 07:28:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568982513;
-        bh=nE9H3GYPX50OkTC4fJZHCfiqTllBS2vIxWYseW0TEsE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=JOzlTELDzsMA0j69dhIVDLNifj5dO5caECg+SaYHU8VBeFMKDVtx18TfkQP4zwW9r
-         0eP4IPV+erKNz2LUHLNcDYri8BS9q/7wso8M3UJQHx9wj99QKrWkXoT+VHKyNGASt2
-         IAyW3XxD0xFmk5opr6jrDFK7DDdFWJ/Megy9QxBk=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8KCSX1M007557
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 20 Sep 2019 07:28:33 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 20
- Sep 2019 07:28:29 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 20 Sep 2019 07:28:29 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8KCSXtQ027841;
-        Fri, 20 Sep 2019 07:28:33 -0500
-Subject: Re: [PATCH v6 6/9] leds: multicolor: Introduce a multicolor class
- definition
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190917175937.13872-1-dmurphy@ti.com>
- <20190917175937.13872-6-dmurphy@ti.com>
- <ff1d2ede-6bdf-8f73-9e89-0e990cce09a7@gmail.com>
- <e1de10a6-49ad-c7f2-9246-5bee29f58c80@ti.com>
- <045e1988-176c-b5ea-73cb-182b6210a3db@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <b9aa67ce-50f5-c9d8-b3d1-f6eedc133876@ti.com>
-Date:   Fri, 20 Sep 2019 07:31:44 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 20 Sep 2019 08:29:11 -0400
+Received: by mail-lj1-f193.google.com with SMTP id q64so6850145ljb.12
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 05:29:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=zRqTS3V+m+4w0d7L5MeANtoAWhuIONw+ofn7LfLax7M=;
+        b=GNbjA0OLqlXcmqK1epU19sHUETfXuc5bNucGPbu43hbBJRRCHB84gR38mBnRnV4QDn
+         IsLVHtJ/kjm4u7fOP6Xnu/6GT+JJyZBaOnsg6ZJijLJnhT5zeOg9QWCV0kWvAAbLFriF
+         O50eGu7iyy1t1jvOHVL5qWjQ7YgiuPKF6YtZxDRY1ymTQljCalRidsAh/YRtDx13VLkd
+         +ydRU7HEhHJlDDdy5aCCUk5PhtNQ7vpwRDXzpV9Jlwzbs5BcBPrTgXlXehqdant/eC2d
+         PXKCsTgY02l6NJsYzdfLbI6nUsWt8jgtQdnJiUAWfOqwxIWCpigPQVr4pg+cp1Y97Z9Z
+         PmKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=zRqTS3V+m+4w0d7L5MeANtoAWhuIONw+ofn7LfLax7M=;
+        b=h5WqRiZxGnuqF+RwexQCqHw+/3qo75XoT2I6N9KKVz/gAPv46p1sOlxhqpCtpSZR6r
+         W1g4wx+3J1anLmRqyRF0CUjRwD7NcykHViliRYB5gAofZk1KgCIBGgslrT+B5iCchZt5
+         IyOILlOdN5DRVOtOnWlSlZIHcVnUvS0q3vgFEpjtEzjkbdle5yKsMMJTS9cpfyHjJGdQ
+         462W3GshG+KLPlY478HKMqXUuXdUSp1psFTq3wW1IXzxyX33OVgjJVs0xT++KCchPH4z
+         XwBJHZv6nJ1OnKa78/f7tRXWrGSAj0CSAovkO1xYJ09lTr9oTQ1MCxBIIIvwxdo8T3zJ
+         PczQ==
+X-Gm-Message-State: APjAAAU9gLdhAInByaWLl8iES5dnU63JectuV8/sXZbgFYerpR7TmjA3
+        N12bl9D2nnIlJB6F94PiRtE=
+X-Google-Smtp-Source: APXvYqysZ6X7F0kXPqDsa2l37Rkz7d6wWrYJIuXm6C88aYt/3zLc9GrhGdjYqnFW1nniutXZSOKk2A==
+X-Received: by 2002:a2e:6804:: with SMTP id c4mr9364426lja.120.1568982549984;
+        Fri, 20 Sep 2019 05:29:09 -0700 (PDT)
+Received: from uranus.localdomain ([5.18.103.226])
+        by smtp.gmail.com with ESMTPSA id z72sm418739ljb.98.2019.09.20.05.29.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Sep 2019 05:29:08 -0700 (PDT)
+Received: by uranus.localdomain (Postfix, from userid 1000)
+        id ED22E461797; Fri, 20 Sep 2019 15:29:07 +0300 (MSK)
+Date:   Fri, 20 Sep 2019 15:29:07 +0300
+From:   Cyrill Gorcunov <gorcunov@gmail.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Linux MM <linux-mm@kvack.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>
+Subject: [PATCH] mm, memcg: assign shrinker_map before kvfree
+Message-ID: <20190920122907.GG2507@uranus.lan>
 MIME-Version: 1.0
-In-Reply-To: <045e1988-176c-b5ea-73cb-182b6210a3db@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacek
+Currently there is a small gap between fetching pointer, calling
+kvfree and assign its value to nil. In current callgraph it is
+not a problem (since memcg_free_shrinker_maps is running from
+memcg_alloc_shrinker_maps and mem_cgroup_css_free only) still
+this looks suspicious and we can easily eliminate the gap at all.
 
-On 9/19/19 4:32 PM, Jacek Anaszewski wrote:
-> Dan,
->
-> On 9/19/19 3:07 AM, Dan Murphy wrote:
->> Jacek
->>
->> On 9/18/19 4:27 PM, Jacek Anaszewski wrote:
->>> Hi Dan,
->>>
->>> I think Greg's guidance clarified everything nicely -
->>> we will avoid <color> sub-dirs in favour of prefixes
->>> to *intensity and *max_intensity.
->> Yes I will make the change accordingly.  It will simplify the code.
->>> Before you will send an update I have some improvement
->>> ideas regarding the remnants after the previous approach,
->>> where single color intensity update resulted in updating
->>> hardware state. Now the update will happen only on write to
->>> brightness file, so we will not need color_set/color_get ops
->>> anymore.
->> I left those call backs in specifically for the LP50xx. Otherwise the
->> LEDs are only updated when the brightness file is written.
->> The LP50xx has an engine that performs the intensity computation for the
->> specific LED.  So there is no call back to the MC FW for calculating the
->> intensity.
->>
->> The brightness and intensity are written directly to the device and the
->> MCU in the device does all the computations so you have real time update.
-> You can still handle that in brightness_set op. You need to compare
-> which color channels have changed and update them in hardware in
-> addition to setting LEDn_BRIGHTNESS register.
->
-> And yes - even updating a single color will need two operations:
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
+Signed-off-by: Cyrill Gorcunov <gorcunov@gmail.com>
+---
+ mm/memcontrol.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-If we kept the ops then the LP50xx device would only need one operation 
-to the led intensity file to update the color.
-
-> echo 231 >  colors/red_intensity // only cache the color in MC core
-> echo 100 > brightness // do the actual hw update
-And this is the way the LP55xx device works now.
->
-> Note that brightness value doesn't have to be necessarily different
-> from the previous one here, but writing brightness file will be needed
-> to trigger the hw update.
->
->> For the LP55xx device the LEDs are only updated when the brightness file
->> is written.
->>
->> I think we can leave those call backs in if device driver or product
->> development teams would like to use them.
-> I'd not do that - it will be confusing. We can accomplish everything
-> in brightness_set{_blocking} op. It will have also the advantage of
-> same ABI semantics across all devices. Otherwise we would need separate
-> documentation for devices like LP50xx.
-
-OK I am not going to argue this I will just remove the ops even though I 
-don't agree.
-
-Removing the ops will just make the LP50xx driver more complex then what 
-it needs to be.
-
-I will post v8 later today.
-
->
-> I have also another question - what with linear vs logarithmic
-> LP50xx brightness scale? I think we should make both options available
-> to the userspace.
-
-I have no requirements from customers to provide this scaling.
-
-It can be an enhancement to the driver later if we get the request.
-
-Dan
-
+Index: linux-tip.git/mm/memcontrol.c
+===================================================================
+--- linux-tip.git.orig/mm/memcontrol.c
++++ linux-tip.git/mm/memcontrol.c
+@@ -364,9 +364,9 @@ static void memcg_free_shrinker_maps(str
+ 	for_each_node(nid) {
+ 		pn = mem_cgroup_nodeinfo(memcg, nid);
+ 		map = rcu_dereference_protected(pn->shrinker_map, true);
++		rcu_assign_pointer(pn->shrinker_map, NULL);
+ 		if (map)
+ 			kvfree(map);
+-		rcu_assign_pointer(pn->shrinker_map, NULL);
+ 	}
+ }
+ 
