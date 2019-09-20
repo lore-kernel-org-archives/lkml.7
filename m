@@ -2,123 +2,221 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FBB5C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E9A0C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B1C8207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:02:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F1AE207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:03:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="NlRij032"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zO2P626n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405587AbfITRCP (ORCPT
+        id S2405774AbfITRD4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 13:02:15 -0400
-Received: from mail-eopbgr40049.outbound.protection.outlook.com ([40.107.4.49]:19870
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2391920AbfITRCO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 13:02:14 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Q21T6wzkeofIUW2bmPxqfTkgrunswYGsR63CEzj/YRW73xR9wKPUsHgdfwF2NRunttrnv+4iQjPYlVHpSrGZwvATGp9M8hMePvMmiwdNJM58EVkiqeBLpxKO0BPMoEEz0Q1U+Pry3dnEOhyx1x7wHOOwGydhsdypmTif482E4ERU1UR/bgcFOq2R8kZCWI58hosNs6SYIDVVYTubrh55omJem1DUnhgdiiza85l0IGzHvD4WEfDJjcQuhNi2ERDLx3EzMAz0Oi+1XQ3IyDKNLc1D9zBdbgKZBrftLtLpbq2/3kk3ZNJ3+BHNyBLY+u+7UA3wYTU7flcwzSuqddYaDA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VH/aYCDUWGXe5dkFsWpbZr/Y8E9XJis+iFN4JZgOwo4=;
- b=eyxFYm8B7VgaKIs+f6m0pIPW0Xy4SKdKVHmpXNv5z/IqIHYzLrZuRI20bEBBd+bT/yd29IMThZnQqr783/ljBqfDnDAg5T1J9rae4bbWy4XnIkxRoe5sVKC7X+LYyLEqAMfn8BiZF+mOQBqCuxR3cvFyM+b3ll1T7dxdOZmsrC8tHo9dNiah/9tFiSdyK6IejQAKz8pC4wYeALNKrAUSexKG02IuE5rhjX0WR4lstHSLTXxWPOchB/gLZaS+wWKRAG9RQhld211PFhEuUR2KKnIBWqqcfRZbef1sW3OHKEAwp7m6xJbGL8naSUz4TDfSyJ5s5JdWVc1PAYQvoYWiIg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VH/aYCDUWGXe5dkFsWpbZr/Y8E9XJis+iFN4JZgOwo4=;
- b=NlRij032XuSvl+pU5X8dhd41XW3nL+JqN7iX/+ixYIctc4Opeq/xIgzYSNSom9h0Ut6s0v3+aK2hjRBPw7XXyQokbBWw3OUAzRfl/8AzKEaAu1QEcz2xG4x40Btwep+WP9R0iPEyi6pde9J154QLpN7guwO0dgc7lHz6pMv2j4E=
-Received: from AM6PR05MB5288.eurprd05.prod.outlook.com (20.177.198.151) by
- AM6PR05MB6614.eurprd05.prod.outlook.com (20.179.3.148) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.20; Fri, 20 Sep 2019 17:02:11 +0000
-Received: from AM6PR05MB5288.eurprd05.prod.outlook.com
- ([fe80::255f:e232:1ad8:65fb]) by AM6PR05MB5288.eurprd05.prod.outlook.com
- ([fe80::255f:e232:1ad8:65fb%5]) with mapi id 15.20.2284.023; Fri, 20 Sep 2019
- 17:02:11 +0000
-From:   Tal Gilboa <talgi@mellanox.com>
-To:     =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <uwe@kleine-koenig.org>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Arthur Kiyanovski <akiyano@amazon.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [PATCH] dimlib: make DIMLIB a hidden symbol
-Thread-Topic: [PATCH] dimlib: make DIMLIB a hidden symbol
-Thread-Index: AQHVb7e0M+d87C6r+0SKPdjxpO2J/ac0ytMA
-Date:   Fri, 20 Sep 2019 17:02:10 +0000
-Message-ID: <670cc72f-fef0-a8cf-eb03-25fdb608eea8@mellanox.com>
-References: <20190920133115.12802-1-uwe@kleine-koenig.org>
-In-Reply-To: <20190920133115.12802-1-uwe@kleine-koenig.org>
-Accept-Language: he-IL, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [89.139.148.16]
-x-clientproxiedby: PR0P264CA0162.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:100:1b::30) To AM6PR05MB5288.eurprd05.prod.outlook.com
- (2603:10a6:20b:6b::23)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=talgi@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c9b0a4b7-d0f6-4842-80ad-08d73dec46d9
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM6PR05MB6614;
-x-ms-traffictypediagnostic: AM6PR05MB6614:|AM6PR05MB6614:
-x-ms-exchange-purlcount: 1
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR05MB6614CF21D10A3E78D27AA749D2880@AM6PR05MB6614.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0166B75B74
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(39860400002)(376002)(396003)(136003)(189003)(199004)(6436002)(305945005)(14454004)(256004)(14444005)(31686004)(8936002)(81156014)(81166006)(110136005)(316002)(54906003)(66946007)(66446008)(64756008)(66556008)(66476007)(446003)(7736002)(25786009)(476003)(6512007)(4744005)(4326008)(66574012)(6116002)(71190400001)(8676002)(36756003)(66066001)(11346002)(5660300002)(76176011)(386003)(2906002)(966005)(229853002)(486006)(3846002)(6246003)(2616005)(99286004)(53546011)(52116002)(6506007)(6486002)(186003)(478600001)(6306002)(86362001)(102836004)(26005)(71200400001)(31696002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR05MB6614;H:AM6PR05MB5288.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: yfl3fIWirQiU9NAY4xSQwq9rUYprpsEbSibnO7R8RfAyWgdM6RTUdsnZrg8ZDTcf6oU0wqgyzHxpsEJkn3O6qkSIMnsNBeKHhj5G2UDFkmT+ALcOpCUzO6DFsCElacu+bY0yykh+Rnfs9kqnIbYtaUc8GX3VPOMUQknrEp8EG0Ajo72+CU5SfuEP9g4ChwDtqYsznMM+myTOOUiBV4M1IXwZbwybW+1NriOCyNCm1XzQdO2s7QbXZ4DAyOwigahh8M9tRg+Ddu6TQpZr/zo85ham3ciAnyMAU0TaK24GPZbgEb+tn7U6436faHJhDTOGspFekJLHDIbpw3DTR7Hinz8kwdAw2/zEw5KJFaCHIk6hoLhL5bn8VMGuC0uNI8wILzuA6/tdZRFH0K6Jklj8QH3yjbu1v5JatIrXtxS8Iwc=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <287F364375C271469755202CCF2BD768@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 20 Sep 2019 13:03:56 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:44068 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403929AbfITRDz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 13:03:55 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8KH3rB3034497;
+        Fri, 20 Sep 2019 12:03:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568999033;
+        bh=TKIYvFFc8jP8BIIrXBcATu4ILnSrfAHWB7sD1Jm8JTY=;
+        h=From:To:CC:Subject:Date;
+        b=zO2P626nk/Lmr3z0CrIVgG+OtZVqOFjWrfLMak29NZEju7bmkRWyvvY+9QhoueiT/
+         VOx7CkzfdbmrOip2KDmpqKx8b3hewonpiP/IXcZEwViGzLvHvt/Ry3dClFf8YR4hiq
+         vCtg3enO/UMDYSm0pKS2NEE9v/aPuYyFRiKRsHnc=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8KH3rGn094876
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 20 Sep 2019 12:03:53 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 20
+ Sep 2019 12:03:53 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 20 Sep 2019 12:03:48 -0500
+Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8KH3r6s054719;
+        Fri, 20 Sep 2019 12:03:53 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+CC:     Prabhakar Lad <prabhakar.csengg@gmail.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
+Subject: [Patch v3 00/13]  media: am437x-vpfe: overdue maintenance
+Date:   Fri, 20 Sep 2019 12:05:41 -0500
+Message-ID: <20190920170554.29666-1-bparrot@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c9b0a4b7-d0f6-4842-80ad-08d73dec46d9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Sep 2019 17:02:11.0417
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mXhBa14e5VZOh8aPvXfnmWAoNwoctDAWLciGlIB3e8iVWvvhUCKDqewjU+TYpVEbjZpTom9nS7uQu0/lXFwDnA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB6614
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gOS8yMC8yMDE5IDQ6MzEgUE0sIFV3ZSBLbGVpbmUtS8O2bmlnIHdyb3RlOg0KPiBBY2NvcmRp
-bmcgdG8gVGFsIEdpbGJvYSB0aGUgb25seSBiZW5lZml0IGZyb20gRElNIGNvbWVzIGZyb20gYSBk
-cml2ZXINCj4gdGhhdCB1c2VzIGl0LiBTbyBpdCBkb2Vzbid0IG1ha2Ugc2Vuc2UgdG8gbWFrZSB0
-aGlzIHN5bWJvbCB1c2VyIHZpc2libGUsDQo+IGluc3RlYWQgYWxsIGRyaXZlcnMgdGhhdCB1c2Ug
-aXQgc2hvdWxkIHNlbGVjdCBpdCAoYXMgaXMgYWxyZWFkeSB0aGUgY2FzZQ0KPiBBRkFJQ1QpLg0K
-PiANCj4gU2lnbmVkLW9mZi1ieTogVXdlIEtsZWluZS1Lw7ZuaWcgPHV3ZUBrbGVpbmUta29lbmln
-Lm9yZz4NCj4gLS0tDQo+ICAgbGliL0tjb25maWcgfCAzICstLQ0KPiAgIDEgZmlsZSBjaGFuZ2Vk
-LCAxIGluc2VydGlvbigrKSwgMiBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9saWIv
-S2NvbmZpZyBiL2xpYi9LY29uZmlnDQo+IGluZGV4IGNjMDQxMjRlZDhmNy4uOWZlOGEyMWZkMTgz
-IDEwMDY0NA0KPiAtLS0gYS9saWIvS2NvbmZpZw0KPiArKysgYi9saWIvS2NvbmZpZw0KPiBAQCAt
-NTU1LDggKzU1NSw3IEBAIGNvbmZpZyBTSUdOQVRVUkUNCj4gICAJICBJbXBsZW1lbnRhdGlvbiBp
-cyBkb25lIHVzaW5nIEdudVBHIE1QSSBsaWJyYXJ5DQo+ICAgDQo+ICAgY29uZmlnIERJTUxJQg0K
-PiAtCWJvb2wgIkRJTSBsaWJyYXJ5Ig0KPiAtCWRlZmF1bHQgeQ0KPiArCWJvb2wNCj4gICAJaGVs
-cA0KPiAgIAkgIER5bmFtaWMgSW50ZXJydXB0IE1vZGVyYXRpb24gbGlicmFyeS4NCj4gICAJICBJ
-bXBsZW1lbnRzIGFuIGFsZ29yaXRobSBmb3IgZHluYW1pY2FsbHkgY2hhbmdlIENRIG1vZGVyYXRp
-b24gdmFsdWVzDQo+DQpUaGVyZSdzIGEgcGVuZGluZyBzZXJpZXMgdXNpbmcgRElNIHdoaWNoIGRp
-ZG4ndCBhZGQgdGhlIHNlbGVjdCBjbGF1c2UgDQpbMV0uIEFydGh1ciwgRllJLiBPdGhlciB0aGFu
-IHRoYXQgTEdUTS4NCg0KWzFdIGh0dHBzOi8vd3d3Lm1haWwtYXJjaGl2ZS5jb20vbmV0ZGV2QHZn
-ZXIua2VybmVsLm9yZy9tc2czMTQzMDQuaHRtbA0KDQo=
+This patch series is a collection of patches we have been carrying for a
+while.
+
+A few patches do fix actual bug and v4l2-compliance errors/warnings.
+Other are drivers re-work to simplify/clarify the code for easier
+maintenance.
+
+We also include the SPDX Licensing update which seemed to have been
+missed by the global script thus far.
+
+Changes since v2:
+- Rename VPFE_MAX_ACTIVE_FMT to VPFE_NUM_FORMATS and corrected the
+  comments
+- Move the "Remove print_fourcc helper" patch to the end of the series
+  and rebase it on the pending v4l2_fourcc_conv macros patches
+
+Changes since v1:
+- Address review comment from Joe, Hans and Prabhakar
+- Cleaned-up the function entry debug log
+- Split off the pcr change into its own patch
+- Rework/combine two patches but remove code churn
+- fix miscellaneous typos
+
+=============================
+
+v4l2-compliance SHA: 5b168dc8473911227890526bad26553d9e8ff81b, 32 bits
+
+Compliance test for vpfe device /dev/video0:
+
+Driver Info:
+	Driver name      : vpfe
+	Card type        : TI AM437x VPFE
+	Bus info         : platform:vpfe 48326000.vpfe
+	Driver version   : 5.3.0
+	Capabilities     : 0x85200001
+		Vide o Capture
+		Read/Write
+		Streaming
+		Extended Pix Format
+		D evice Capabilities
+	Device Caps      : 0x05200001
+		Video Capt ure
+		Read/Write
+		Streaming
+		Extended Pix Format
+
+Required ioctls:
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video0 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 1 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls (Input 0):
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+	test VIDIOC_QUERYCTRL: OK
+	test VIDIOC_G/S_CTRL: OK
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 3 Private Controls: 0
+
+Format ioctls (Input 0):
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+		fail: v4l2-test-formats.cpp(1419): node->frmsizes_count[pixfmt] > 1
+	test Cropping: FAIL
+	test Composing: OK (Not Supported)
+	test Scaling: OK (Not Supported)
+
+Codec ioctls (Input 0):
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls (Input 0):
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK (Not Supported)
+
+Test input 0:
+
+Streaming ioctls:
+	test read/write: OK
+	test blocking wait: OK
+	test MMAP (no poll): OK                           
+	test MMAP (select): OK                            
+	test MMAP (epoll): OK                             
+	test USERPTR (no poll): OK (Not Supported)
+	test USERPTR (select): OK (Not Supported)
+	test DMABUF: Cannot test, specify --expbuf-device
+
+Total for vpfe device /dev/video0: 51, Succeeded: 50, Failed: 1, Warnings: 0
+============================
+
+Benoit Parrot (12):
+  media: am437x-vpfe: Fix missing first line
+  media: am437x-vpfe: Rework ISR routine for clarity
+  media: am437x-vpfe: Wait for end of frame before tear-down
+  media: am437x-vpfe: fix start streaming error path
+  media: am437x-vpfe: Streamlined vb2 buffer cleanup
+  media: am437x-vpfe: Setting STD to current value is not an error
+  media: am437x-vpfe: Use a per instance format array instead of a
+    static one
+  media: am437x-vpfe: fix function trace debug log
+  media: am437x-vpfe: TRY_FMT ioctl is not really trying anything
+  media: am437x-vpfe: Remove per bus width static data
+  media: am437x-vpfe: Switch to SPDX Licensing
+  media: am437x-vpfe: Remove print_fourcc helper
+
+Dave Gerlach (1):
+  media: am437x-vpfe: Fix suspend path to always handle pinctrl config
+
+ drivers/media/platform/am437x/am437x-vpfe.c   | 880 ++++++++----------
+ drivers/media/platform/am437x/am437x-vpfe.h   |  43 +-
+ .../media/platform/am437x/am437x-vpfe_regs.h  |  10 +-
+ 3 files changed, 406 insertions(+), 527 deletions(-)
+
+-- 
+2.17.1
+
