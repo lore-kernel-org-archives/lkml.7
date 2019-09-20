@@ -2,86 +2,105 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD42AC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 23:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D7FC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 23:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A9D92086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 23:34:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92E78206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 23:36:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569022473;
-	bh=/YosVo+HfPJ1Yw7oV0CNBOb4mub/i8BluEt8xwgoZjI=;
-	h=Date:From:To:Subject:In-Reply-To:References:List-ID:From;
-	b=DbVHO2BTmLIbB5tdpnlYEPh1UAxqhd48vGWFoARRqIybscwmgQtANPJ3+Fhp6OJsL
-	 cCwwxfeEr9Wjia2kJ1raOzRFNcs1lMyfVMMYiGwq/AMyjjmxerlbU64RQuwreUYCJ0
-	 R0mlojxDnZeLjCJP7guBHe4He/1NFBRHuPg0gexM=
+	s=default; t=1569022562;
+	bh=5sglSv+9hSOJc0b2FWY8nQeYj0FpLkqsXtS/3eUTZSE=;
+	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
+	b=PCpmArK+OwLhce5V93hZJPtzj/t6xAYwZAM4mOjn+AVifZED0fqEfKOUxci20+Fjb
+	 3Q//6HWIqpJaGG7Y7ZG6xtXCSd6xxTJC/qjBUAojD8kM27/93aSFFk9zPy7ccQck8I
+	 3ZHO3XU1jREUN3Sdd5mnRTMf/KRAJKKGeBSqDV3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437174AbfITXec (ORCPT
+        id S2437311AbfITXgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 19:34:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46894 "EHLO mail.kernel.org"
+        Fri, 20 Sep 2019 19:36:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404978AbfITXec (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 19:34:32 -0400
-Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        id S2405089AbfITXgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 19:36:01 -0400
+Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 549D520644;
-        Fri, 20 Sep 2019 23:34:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48BBA20644;
+        Fri, 20 Sep 2019 23:36:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569022471;
-        bh=/YosVo+HfPJ1Yw7oV0CNBOb4mub/i8BluEt8xwgoZjI=;
-        h=Date:From:To:Subject:In-Reply-To:References:From;
-        b=riudAg9NPMdG04g2ulcp+aHRAcidmwbPWim4HcWamQR0be66tZ5Q7jYIqkrSEQNxk
-         IpeKbjIdEVvM0bQkVgqZhabasj3FfHRZgs9O1GNmfok9i6Rtz3jDt+qC6BOscGCRMY
-         RUp30OZP4cFAaJzu6FdfaxxgGfL0Hbe9gxesq6HE=
-Date:   Fri, 20 Sep 2019 16:34:30 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH v2 0/4] debug_pagealloc improvements through page_owner
-Message-Id: <20190920163430.4b24cc18d2ae552822a0ffaf@linux-foundation.org>
-In-Reply-To: <20190822160344.716eda34585271fa4a519d4c@linux-foundation.org>
-References: <20190820131828.22684-1-vbabka@suse.cz>
-        <20190822160344.716eda34585271fa4a519d4c@linux-foundation.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        s=default; t=1569022560;
+        bh=5sglSv+9hSOJc0b2FWY8nQeYj0FpLkqsXtS/3eUTZSE=;
+        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
+        b=QoMrsX259uVvKBLBgqFjYCWW1WAj3R7P2E6eLBj5gAyIaMIeiTZjnJfb1ejgaJusJ
+         UkwBwgUAjsyBgNEGV13XM9dZr3pmhCUgchYJf34niV3DUvIrN8ruCbCxuAbZoqAL58
+         4PWBzZepSAwldwciLUi98T3R3UO3RBc/aPRrzFTw=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190920231923.141900-7-brendanhiggins@google.com>
+References: <20190920231923.141900-1-brendanhiggins@google.com> <20190920231923.141900-7-brendanhiggins@google.com>
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
+        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
+        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
+        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
+        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
+        wfg@linux.intel.com, torvalds@linux-foundation.org,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        jpoimboe@redhat.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        peterz@infradead.org, robh@kernel.org, shuah@kernel.org,
+        tytso@mit.edu, yamada.masahiro@socionext.com
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v16 06/19] lib: enable building KUnit in lib/
+User-Agent: alot/0.8.1
+Date:   Fri, 20 Sep 2019 16:35:59 -0700
+Message-Id: <20190920233600.48BBA20644@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 22 Aug 2019 16:03:44 -0700 Andrew Morton <akpm@linux-foundation.org> wrote:
+Quoting Brendan Higgins (2019-09-20 16:19:10)
+> KUnit is a new unit testing framework for the kernel and when used is
+> built into the kernel as a part of it. Add KUnit to the lib Kconfig and
+> Makefile to allow it to be actually built.
+>=20
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> Cc: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Cc: Kees Cook <keescook@chromium.org>
+> ---
+>  lib/Kconfig.debug | 2 ++
+>  lib/Makefile      | 2 ++
+>  2 files changed, 4 insertions(+)
+>=20
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index 5960e2980a8a..5870fbe11e9b 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -2144,4 +2144,6 @@ config IO_STRICT_DEVMEM
+> =20
+>  source "arch/$(SRCARCH)/Kconfig.debug"
+> =20
+> +source "lib/kunit/Kconfig"
+> +
 
-> On Tue, 20 Aug 2019 15:18:24 +0200 Vlastimil Babka <vbabka@suse.cz> wrote:
-> 
-> > v2: also fix THP split handling (added Patch 1) per Kirill
-> > 
-> > The debug_pagealloc functionality serves a similar purpose on the page
-> > allocator level that slub_debug does on the kmalloc level, which is to detect
-> > bad users. One notable feature that slub_debug has is storing stack traces of
-> > who last allocated and freed the object. On page level we track allocations via
-> > page_owner, but that info is discarded when freeing, and we don't track freeing
-> > at all. This series improves those aspects. With both debug_pagealloc and
-> > page_owner enabled, we can then get bug reports such as the example in Patch 4.
-> > 
-> > SLUB debug tracking additionaly stores cpu, pid and timestamp. This could be
-> > added later, if deemed useful enough to justify the additional page_ext
-> > structure size.
-> 
-> Thanks.  I split [1/1] out of the series as a bugfix and turned this
-> into a three-patch series.
-> 
+Perhaps this should go by the "Runtime Testing" part? Before or after.
 
-None of which anyone has yet reviewed :(
-
-
+>  endmenu # Kernel hacking
