@@ -2,140 +2,341 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B54FC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 807E6C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:08:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF4D6205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:07:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vcxVVEjh"
+	by mail.kernel.org (Postfix) with ESMTP id 543A6205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:08:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438009AbfITKHc (ORCPT
+        id S2438023AbfITKIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 06:07:32 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44437 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390997AbfITKHb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 06:07:31 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q21so4157352pfn.11;
-        Fri, 20 Sep 2019 03:07:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=jJNUGZzD6WYdW7WfV7c4VlXWYypeskgZBi3y5u2An+c=;
-        b=vcxVVEjhhAnlFY+dIZQ4WK+YE01JpIpPV6Qi2Y2N4tPD7KDM5GlHoytVeiB6OJpXTo
-         IACh3vdiysSwPoF+NDiBBb8Lumc0vP5opKJRRienBLlmZ98W9iCExr42WCivypqQQOXC
-         S0XpLooJJqwzUKmM508Gr6pl7EI0tArdKNXqlRkUEbjVJ3FnpoTFb/ttp9VXv4bmemTc
-         /3ZkTDN3Yc+xor35jyPzN4lsu1y+xDAuf3opERIsaZ+/7L1Vg/mVghPEuO+0IRkTN2jm
-         HzP1ExW4J3HsrYrKtcyVSpFhM/OSoFcVlywf7iV3DZs82k59dV3kDLd4WuIxkgTrqqfx
-         uOuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=jJNUGZzD6WYdW7WfV7c4VlXWYypeskgZBi3y5u2An+c=;
-        b=hZ5LMMAsuxUAlKv6YM53dkh+ZIpf9lP1LViS8PUQma/V6xGMj6NgcIA/JAbPHPr2Dj
-         UnxnZCJ26l80lVm0Qf5vBe/p1RjFKXqob4ViDFnuHXIGX14U3mqSEFw8+wiNvHUv0A1G
-         zEvtOBVHS16Px+ef4tuRaR/hewEM0sPRaCHnOefAyNkWlsxOxfCIzeOrgRBvqUG10AGh
-         VLFZU8SfCTu/ZSzKQJwNv6N+8kJizXYX3mMHZpCTTUnp8rE592x/kmxdWNWWfxTrGM4m
-         ms6pTw+OxTFUnF7e+G/L7cEwXqjQxsTRlF3xS0hJ2Ba4gt2bVUF8g6+hZ0qAGuggusoU
-         MRpw==
-X-Gm-Message-State: APjAAAW8gWqNQVqORp4uq59+aGDiDWZKZU4IfNJTpQgTVWbMPsVZPZaV
-        k0WYaPVzWIETqI9kZHD68Jd1ve6w
-X-Google-Smtp-Source: APXvYqx79uB+/pgIn5cFXBKIG+GHsHPmX87BRc+n28KQzU+g+ywrrhcAzHmZ2s2ssPMeUS3D/TPidQ==
-X-Received: by 2002:a63:2a87:: with SMTP id q129mr14807014pgq.101.1568974050770;
-        Fri, 20 Sep 2019 03:07:30 -0700 (PDT)
-Received: from localhost.localdomain ([203.205.141.123])
-        by smtp.googlemail.com with ESMTPSA id i10sm1417345pfa.70.2019.09.20.03.07.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 20 Sep 2019 03:07:29 -0700 (PDT)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: [PATCH] KVM: LAPIC: micro-optimize fixed mode ipi delivery
-Date:   Fri, 20 Sep 2019 18:07:18 +0800
-Message-Id: <1568974038-13750-1-git-send-email-wanpengli@tencent.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 20 Sep 2019 06:08:42 -0400
+Received: from foss.arm.com ([217.140.110.172]:43274 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437992AbfITKIm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 06:08:42 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 01D73337;
+        Fri, 20 Sep 2019 03:08:41 -0700 (PDT)
+Received: from e108454-lin.cambridge.arm.com (e108454-lin.cambridge.arm.com [10.1.196.50])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB5C93F575;
+        Fri, 20 Sep 2019 03:08:39 -0700 (PDT)
+From:   Julien Grall <julien.grall@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Cc:     tglx@linutronix.de, bigeasy@linutronix.de, aryabinin@virtuozzo.com,
+        rostedt@goodmis.org, Julien Grall <julien.grall@arm.com>,
+        Andre Przywara <andre.przywara@arm.com>
+Subject: [RFC PATCH] lib/ubsan: Don't seralize UBSAN report
+Date:   Fri, 20 Sep 2019 11:08:35 +0100
+Message-Id: <20190920100835.14999-1-julien.grall@arm.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+At the moment, UBSAN report will be serialized using a spin_lock(). On
+RT-systems, spinlocks are turned to rt_spin_lock and may sleep. This will
+result to the following splat if the undefined behavior is in a context
+that can sleep:
 
-After disabling mwait/halt/pause vmexits, RESCHEDULE_VECTOR and 
-CALL_FUNCTION_SINGLE_VECTOR etc IPI is one of the main remaining
-cause of vmexits observed in product environment which can't be 
-optimized by PV IPIs. This patch is the follow-up on commit 
-0e6d242eccdb (KVM: LAPIC: Micro optimize IPI latency), to optimize 
-redundancy logic before fixed mode ipi is delivered in the fast 
-path.
+[ 6951.484876] BUG: sleeping function called from invalid context at /src/linux/kernel/locking/rtmutex.c:968
+[ 6951.484882] in_atomic(): 1, irqs_disabled(): 128, pid: 3447, name: make
+[ 6951.484884] 1 lock held by make/3447:
+[ 6951.484885]  #0: 000000009a966332 (&mm->mmap_sem){++++}, at: do_page_fault+0x140/0x4f8
+[ 6951.484895] irq event stamp: 6284
+[ 6951.484896] hardirqs last  enabled at (6283): [<ffff000011326520>] _raw_spin_unlock_irqrestore+0x90/0xa0
+[ 6951.484901] hardirqs last disabled at (6284): [<ffff0000113262b0>] _raw_spin_lock_irqsave+0x30/0x78
+[ 6951.484902] softirqs last  enabled at (2430): [<ffff000010088ef8>] fpsimd_restore_current_state+0x60/0xe8
+[ 6951.484905] softirqs last disabled at (2427): [<ffff000010088ec0>] fpsimd_restore_current_state+0x28/0xe8
+[ 6951.484907] Preemption disabled at:
+[ 6951.484907] [<ffff000011324a4c>] rt_mutex_futex_unlock+0x4c/0xb0
+[ 6951.484911] CPU: 3 PID: 3447 Comm: make Tainted: G        W         5.2.14-rt7-01890-ge6e057589653 #911
+[ 6951.484913] Call trace:
+[ 6951.484913]  dump_backtrace+0x0/0x148
+[ 6951.484915]  show_stack+0x14/0x20
+[ 6951.484917]  dump_stack+0xbc/0x104
+[ 6951.484919]  ___might_sleep+0x154/0x210
+[ 6951.484921]  rt_spin_lock+0x68/0xa0
+[ 6951.484922]  ubsan_prologue+0x30/0x68
+[ 6951.484924]  handle_overflow+0x64/0xe0
+[ 6951.484926]  __ubsan_handle_add_overflow+0x10/0x18
+[ 6951.484927]  __lock_acquire+0x1c28/0x2a28
+[ 6951.484929]  lock_acquire+0xf0/0x370
+[ 6951.484931]  _raw_spin_lock_irqsave+0x58/0x78
+[ 6951.484932]  rt_mutex_futex_unlock+0x4c/0xb0
+[ 6951.484933]  rt_spin_unlock+0x28/0x70
+[ 6951.484934]  get_page_from_freelist+0x428/0x2b60
+[ 6951.484936]  __alloc_pages_nodemask+0x174/0x1708
+[ 6951.484938]  alloc_pages_vma+0x1ac/0x238
+[ 6951.484940]  __handle_mm_fault+0x4ac/0x10b0
+[ 6951.484941]  handle_mm_fault+0x1d8/0x3b0
+[ 6951.484942]  do_page_fault+0x1c8/0x4f8
+[ 6951.484943]  do_translation_fault+0xb8/0xe0
+[ 6951.484945]  do_mem_abort+0x3c/0x98
+[ 6951.484946]  el0_da+0x20/0x24
 
-- broadcast handling needs to go slow path, so the delivery mode repair 
-  can be delayed to before slow path.
-- self-IPI will not be intervened by hypervisor any more after APICv is 
-  introduced and the boxes support APICv are popular now. In addition, 
-  kvm_apic_map_get_dest_lapic() can handle the self-IPI, so there is no 
-  need a shortcut for the non-APICv case.
+The spin_lock() will protect against multiple CPUs to output a report
+together, I guess to prevent them to be interleaved. However, they can
+still interleave with other messages (and even splat from __migth_sleep).
 
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+So the lock usefulness seems pretty limited. Rather than trying to
+accomodate RT-system by switching to a raw_spin_lock(), the lock is now
+completely dropped.
+
+Reported-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Julien Grall <julien.grall@arm.com>
 ---
- arch/x86/kvm/irq_comm.c | 6 +++---
- arch/x86/kvm/lapic.c    | 5 -----
- 2 files changed, 3 insertions(+), 8 deletions(-)
+ lib/ubsan.c | 64 ++++++++++++++++++++++---------------------------------------
+ 1 file changed, 23 insertions(+), 41 deletions(-)
 
-diff --git a/arch/x86/kvm/irq_comm.c b/arch/x86/kvm/irq_comm.c
-index 8ecd48d..aa88156 100644
---- a/arch/x86/kvm/irq_comm.c
-+++ b/arch/x86/kvm/irq_comm.c
-@@ -52,15 +52,15 @@ int kvm_irq_delivery_to_apic(struct kvm *kvm, struct kvm_lapic *src,
- 	unsigned long dest_vcpu_bitmap[BITS_TO_LONGS(KVM_MAX_VCPUS)];
- 	unsigned int dest_vcpus = 0;
- 
-+	if (kvm_irq_delivery_to_apic_fast(kvm, src, irq, &r, dest_map))
-+		return r;
-+
- 	if (irq->dest_mode == 0 && irq->dest_id == 0xff &&
- 			kvm_lowest_prio_delivery(irq)) {
- 		printk(KERN_INFO "kvm: apic: phys broadcast and lowest prio\n");
- 		irq->delivery_mode = APIC_DM_FIXED;
+diff --git a/lib/ubsan.c b/lib/ubsan.c
+index e7d31735950d..39d5952c4273 100644
+--- a/lib/ubsan.c
++++ b/lib/ubsan.c
+@@ -140,25 +140,21 @@ static void val_to_string(char *str, size_t size, struct type_descriptor *type,
  	}
+ }
  
--	if (kvm_irq_delivery_to_apic_fast(kvm, src, irq, &r, dest_map))
--		return r;
+-static DEFINE_SPINLOCK(report_lock);
 -
- 	memset(dest_vcpu_bitmap, 0, sizeof(dest_vcpu_bitmap));
+-static void ubsan_prologue(struct source_location *location,
+-			unsigned long *flags)
++static void ubsan_prologue(struct source_location *location)
+ {
+ 	current->in_ubsan++;
+-	spin_lock_irqsave(&report_lock, *flags);
  
- 	kvm_for_each_vcpu(i, vcpu, kvm) {
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index 323bdca..d77fe29 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -955,11 +955,6 @@ bool kvm_irq_delivery_to_apic_fast(struct kvm *kvm, struct kvm_lapic *src,
+ 	pr_err("========================================"
+ 		"========================================\n");
+ 	print_source_location("UBSAN: Undefined behaviour in", location);
+ }
  
- 	*r = -1;
+-static void ubsan_epilogue(unsigned long *flags)
++static void ubsan_epilogue(void)
+ {
+ 	dump_stack();
+ 	pr_err("========================================"
+ 		"========================================\n");
+-	spin_unlock_irqrestore(&report_lock, *flags);
++
+ 	current->in_ubsan--;
+ }
  
--	if (irq->shorthand == APIC_DEST_SELF) {
--		*r = kvm_apic_set_irq(src->vcpu, irq, dest_map);
--		return true;
--	}
+@@ -167,14 +163,13 @@ static void handle_overflow(struct overflow_data *data, void *lhs,
+ {
+ 
+ 	struct type_descriptor *type = data->type;
+-	unsigned long flags;
+ 	char lhs_val_str[VALUE_LENGTH];
+ 	char rhs_val_str[VALUE_LENGTH];
+ 
+ 	if (suppress_report(&data->location))
+ 		return;
+ 
+-	ubsan_prologue(&data->location, &flags);
++	ubsan_prologue(&data->location);
+ 
+ 	val_to_string(lhs_val_str, sizeof(lhs_val_str), type, lhs);
+ 	val_to_string(rhs_val_str, sizeof(rhs_val_str), type, rhs);
+@@ -186,7 +181,7 @@ static void handle_overflow(struct overflow_data *data, void *lhs,
+ 		rhs_val_str,
+ 		type->type_name);
+ 
+-	ubsan_epilogue(&flags);
++	ubsan_epilogue();
+ }
+ 
+ void __ubsan_handle_add_overflow(struct overflow_data *data,
+@@ -214,20 +209,19 @@ EXPORT_SYMBOL(__ubsan_handle_mul_overflow);
+ void __ubsan_handle_negate_overflow(struct overflow_data *data,
+ 				void *old_val)
+ {
+-	unsigned long flags;
+ 	char old_val_str[VALUE_LENGTH];
+ 
+ 	if (suppress_report(&data->location))
+ 		return;
+ 
+-	ubsan_prologue(&data->location, &flags);
++	ubsan_prologue(&data->location);
+ 
+ 	val_to_string(old_val_str, sizeof(old_val_str), data->type, old_val);
+ 
+ 	pr_err("negation of %s cannot be represented in type %s:\n",
+ 		old_val_str, data->type->type_name);
+ 
+-	ubsan_epilogue(&flags);
++	ubsan_epilogue();
+ }
+ EXPORT_SYMBOL(__ubsan_handle_negate_overflow);
+ 
+@@ -235,13 +229,12 @@ EXPORT_SYMBOL(__ubsan_handle_negate_overflow);
+ void __ubsan_handle_divrem_overflow(struct overflow_data *data,
+ 				void *lhs, void *rhs)
+ {
+-	unsigned long flags;
+ 	char rhs_val_str[VALUE_LENGTH];
+ 
+ 	if (suppress_report(&data->location))
+ 		return;
+ 
+-	ubsan_prologue(&data->location, &flags);
++	ubsan_prologue(&data->location);
+ 
+ 	val_to_string(rhs_val_str, sizeof(rhs_val_str), data->type, rhs);
+ 
+@@ -251,58 +244,52 @@ void __ubsan_handle_divrem_overflow(struct overflow_data *data,
+ 	else
+ 		pr_err("division by zero\n");
+ 
+-	ubsan_epilogue(&flags);
++	ubsan_epilogue();
+ }
+ EXPORT_SYMBOL(__ubsan_handle_divrem_overflow);
+ 
+ static void handle_null_ptr_deref(struct type_mismatch_data_common *data)
+ {
+-	unsigned long flags;
 -
- 	rcu_read_lock();
- 	map = rcu_dereference(kvm->arch.apic_map);
+ 	if (suppress_report(data->location))
+ 		return;
  
+-	ubsan_prologue(data->location, &flags);
++	ubsan_prologue(data->location);
+ 
+ 	pr_err("%s null pointer of type %s\n",
+ 		type_check_kinds[data->type_check_kind],
+ 		data->type->type_name);
+ 
+-	ubsan_epilogue(&flags);
++	ubsan_epilogue();
+ }
+ 
+ static void handle_misaligned_access(struct type_mismatch_data_common *data,
+ 				unsigned long ptr)
+ {
+-	unsigned long flags;
+-
+ 	if (suppress_report(data->location))
+ 		return;
+ 
+-	ubsan_prologue(data->location, &flags);
++	ubsan_prologue(data->location);
+ 
+ 	pr_err("%s misaligned address %p for type %s\n",
+ 		type_check_kinds[data->type_check_kind],
+ 		(void *)ptr, data->type->type_name);
+ 	pr_err("which requires %ld byte alignment\n", data->alignment);
+ 
+-	ubsan_epilogue(&flags);
++	ubsan_epilogue();
+ }
+ 
+ static void handle_object_size_mismatch(struct type_mismatch_data_common *data,
+ 					unsigned long ptr)
+ {
+-	unsigned long flags;
+-
+ 	if (suppress_report(data->location))
+ 		return;
+ 
+-	ubsan_prologue(data->location, &flags);
++	ubsan_prologue(data->location);
+ 	pr_err("%s address %p with insufficient space\n",
+ 		type_check_kinds[data->type_check_kind],
+ 		(void *) ptr);
+ 	pr_err("for an object of type %s\n", data->type->type_name);
+-	ubsan_epilogue(&flags);
++	ubsan_epilogue();
+ }
+ 
+ static void ubsan_type_mismatch_common(struct type_mismatch_data_common *data,
+@@ -351,25 +338,23 @@ EXPORT_SYMBOL(__ubsan_handle_type_mismatch_v1);
+ 
+ void __ubsan_handle_out_of_bounds(struct out_of_bounds_data *data, void *index)
+ {
+-	unsigned long flags;
+ 	char index_str[VALUE_LENGTH];
+ 
+ 	if (suppress_report(&data->location))
+ 		return;
+ 
+-	ubsan_prologue(&data->location, &flags);
++	ubsan_prologue(&data->location);
+ 
+ 	val_to_string(index_str, sizeof(index_str), data->index_type, index);
+ 	pr_err("index %s is out of range for type %s\n", index_str,
+ 		data->array_type->type_name);
+-	ubsan_epilogue(&flags);
++	ubsan_epilogue();
+ }
+ EXPORT_SYMBOL(__ubsan_handle_out_of_bounds);
+ 
+ void __ubsan_handle_shift_out_of_bounds(struct shift_out_of_bounds_data *data,
+ 					void *lhs, void *rhs)
+ {
+-	unsigned long flags;
+ 	struct type_descriptor *rhs_type = data->rhs_type;
+ 	struct type_descriptor *lhs_type = data->lhs_type;
+ 	char rhs_str[VALUE_LENGTH];
+@@ -378,7 +363,7 @@ void __ubsan_handle_shift_out_of_bounds(struct shift_out_of_bounds_data *data,
+ 	if (suppress_report(&data->location))
+ 		return;
+ 
+-	ubsan_prologue(&data->location, &flags);
++	ubsan_prologue(&data->location);
+ 
+ 	val_to_string(rhs_str, sizeof(rhs_str), rhs_type, rhs);
+ 	val_to_string(lhs_str, sizeof(lhs_str), lhs_type, lhs);
+@@ -401,18 +386,16 @@ void __ubsan_handle_shift_out_of_bounds(struct shift_out_of_bounds_data *data,
+ 			lhs_str, rhs_str,
+ 			lhs_type->type_name);
+ 
+-	ubsan_epilogue(&flags);
++	ubsan_epilogue();
+ }
+ EXPORT_SYMBOL(__ubsan_handle_shift_out_of_bounds);
+ 
+ 
+ void __ubsan_handle_builtin_unreachable(struct unreachable_data *data)
+ {
+-	unsigned long flags;
+-
+-	ubsan_prologue(&data->location, &flags);
++	ubsan_prologue(&data->location);
+ 	pr_err("calling __builtin_unreachable()\n");
+-	ubsan_epilogue(&flags);
++	ubsan_epilogue();
+ 	panic("can't return from __builtin_unreachable()");
+ }
+ EXPORT_SYMBOL(__ubsan_handle_builtin_unreachable);
+@@ -420,19 +403,18 @@ EXPORT_SYMBOL(__ubsan_handle_builtin_unreachable);
+ void __ubsan_handle_load_invalid_value(struct invalid_value_data *data,
+ 				void *val)
+ {
+-	unsigned long flags;
+ 	char val_str[VALUE_LENGTH];
+ 
+ 	if (suppress_report(&data->location))
+ 		return;
+ 
+-	ubsan_prologue(&data->location, &flags);
++	ubsan_prologue(&data->location);
+ 
+ 	val_to_string(val_str, sizeof(val_str), data->type, val);
+ 
+ 	pr_err("load of value %s is not a valid value for type %s\n",
+ 		val_str, data->type->type_name);
+ 
+-	ubsan_epilogue(&flags);
++	ubsan_epilogue();
+ }
+ EXPORT_SYMBOL(__ubsan_handle_load_invalid_value);
 -- 
-2.7.4
+2.11.0
 
