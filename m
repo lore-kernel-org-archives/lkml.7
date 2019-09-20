@@ -2,182 +2,218 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F75C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C467C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B3402086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:45:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED5EA2086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:48:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qG1PAZcU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387431AbfITUpk (ORCPT
+        id S2387526AbfITUsb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 16:45:40 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36760 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727518AbfITUpk (ORCPT
+        Fri, 20 Sep 2019 16:48:31 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:39991 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387435AbfITUsb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 16:45:40 -0400
-Received: by mail-wr1-f65.google.com with SMTP id y19so8090219wrd.3;
-        Fri, 20 Sep 2019 13:45:37 -0700 (PDT)
+        Fri, 20 Sep 2019 16:48:31 -0400
+Received: by mail-lj1-f194.google.com with SMTP id 7so8324925ljw.7
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 13:48:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=T8An8FHblE+kDgtVFHSjYWnPaCBxTzDv21Ur6auB05g=;
+        b=qG1PAZcUe75GcJB6L6hYulpGLwTWOINwYP/XeLJ2PZIWPE6tjn1V6g7SGVJ9mA7BWp
+         fSIPDrfKR8KVHg/ApCo7JRdi8DMZrx+ieKnZWjvqiSC3rJIRq4u5end22mYU5trW1kX1
+         Av+5sj+GOgzHMDlET8a33+HOP1glQl3smTYMOdQH4K6GdEo6aoUB1mAownQ2PUlGaWIo
+         t2bO+/4d4AKV0AH2vKbT+aZ6qHkz7ZDdgiYmGh3XpzevEHUbvy8aGAxF4Bu1/H1xBuDX
+         K4+mzsERfl1RWb06AOCtL+IsN4bXKUDlUUAV/SJOIKdF/tnITfxBKXgfZauS4xC6qQ3R
+         5OQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dDKMsbuxijXFlLq6eWilir6TdAT/w1I2nrkQyKxFFKQ=;
-        b=Abs1m3KKPGHte+2MuVlJA7Emn8fHtX5wnIR269C2BJQ76jhsgxmRyF5JNp8B7CZPlV
-         mp/jYn08WI6KqEVL19BuSsYhrCKPVAgDrJ3WAZ96rubr+EwQQtkLdc2Vr/WM7KJYQLXb
-         V58Na/DNt7Pq1rrh680rkQMzMCyNZO5vD5/oVk+R8f/hXD9wEW6ufIMS0ueWyk5l+hfY
-         MWBNV0UYx11hrFyX7uW64HSVE1RtWjIXpoREE2K0Ya/np1CyS1uHhdfjk0ulLHLWNcPs
-         g8XD+EMydWfAkgT6A6LbWODqu7sdC1pU/eMk9MnncrM3LKGdYkdPKozaz4a2E/eovjtR
-         AbRA==
-X-Gm-Message-State: APjAAAV9tKM+WEr5aEeZ03oLCk/SFlwhq9J+5bhdONi9RvhiAmUI7Pqi
-        J3hce4Wh0rhCAs8kIO9DXHQ=
-X-Google-Smtp-Source: APXvYqy6t7jOph7kwIiXf0XdHn8gEinjwnTiBpYkdM2eSYkv+J2p7RiyTTY3BRNfEYwZgPktkoL/3Q==
-X-Received: by 2002:a5d:408c:: with SMTP id o12mr13894129wrp.312.1569012336940;
-        Fri, 20 Sep 2019 13:45:36 -0700 (PDT)
-Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
-        by smtp.gmail.com with ESMTPSA id c132sm3104677wme.27.2019.09.20.13.45.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 20 Sep 2019 13:45:36 -0700 (PDT)
-Subject: Re: [PATCH 1/4] softirq: implement IRQ flood detection mechanism
-To:     Long Li <longli@microsoft.com>, Ming Lei <ming.lei@redhat.com>
-Cc:     Jens Axboe <axboe@fb.com>, Hannes Reinecke <hare@suse.com>,
-        John Garry <john.garry@huawei.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        Keith Busch <keith.busch@intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Christoph Hellwig <hch@lst.de>
-References: <6b88719c-782a-4a63-db9f-bf62734a7874@linaro.org>
- <20190903072848.GA22170@ming.t460p>
- <dd96def4-1121-afbe-2431-9e516a06850c@linaro.org>
- <6f3b6557-1767-8c80-f786-1ea667179b39@acm.org>
- <2a8bd278-5384-d82f-c09b-4fce236d2d95@linaro.org>
- <20190905090617.GB4432@ming.t460p>
- <6a36ccc7-24cd-1d92-fef1-2c5e0f798c36@linaro.org>
- <20190906014819.GB27116@ming.t460p>
- <ffefcfa0-09b6-9af5-f94e-8e7ddd2eef16@linaro.org>
- <6eb2a745-7b92-73ce-46f5-cc6a5ef08abc@grimberg.me>
- <20190907000100.GC12290@ming.t460p>
- <f5685543-8cd5-6c6a-5b80-c77ef09c6b3b@grimberg.me>
- <CY4PR21MB0741838CE0C9D52556AA4558CE8E0@CY4PR21MB0741.namprd21.prod.outlook.com>
- <30dc6fa9-ea5e-50d6-56f9-fbc9627d8c29@grimberg.me>
- <CY4PR21MB074168DE7729C131CE4394CCCE880@CY4PR21MB0741.namprd21.prod.outlook.com>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <100d001a-1dda-32ff-fa5e-c18b121444d9@grimberg.me>
-Date:   Fri, 20 Sep 2019 13:45:30 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=T8An8FHblE+kDgtVFHSjYWnPaCBxTzDv21Ur6auB05g=;
+        b=WGsoloRMa8Q7cBtT4i6mBrvHimAzc9Nhwr74HzZX8FMhJTT+gUvBF3xbBA2gy9zE4+
+         DZSFlhERODPLwd17Bc7krEZ7cR7ntvnGLd6MbDHHZAae3XZNqIKpi3u4OHTVPwx7jsvr
+         N6SBqmZ+wpsvtmoATNvn7OF2po0pT1fzSML1tUeuxx3ZH06rOfgRCDsgbo9ylYqIyKPx
+         KjM2C0/YOd6djrAxhm7kQXFW0GtE6adJneHYtl4Pc7mjeZjmN3nbYVjNAjiYUoAgGDzs
+         0bHwKs1A38rJ8c0WsfqhO55xmvZVwbxPK1NcpNia0awTyQcYRFTppxnLxeuxsDpVkXmT
+         wxBA==
+X-Gm-Message-State: APjAAAVU5ILCs3mbojmDJckszFNrCcX35aIlzdvq1gczekm0lywgfPyI
+        l7Mcs40YkqS4aqRA6E0wiqd4Ig==
+X-Google-Smtp-Source: APXvYqy8VIN09R+o3Z1mR5K3A3l3pyiz4qCgKb3vi3Nj3ujVAVqCg6y44oj3hY0kLJtMZK7tP2l7nA==
+X-Received: by 2002:a2e:9081:: with SMTP id l1mr10283633ljg.33.1569012508896;
+        Fri, 20 Sep 2019 13:48:28 -0700 (PDT)
+Received: from khorivan (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
+        by smtp.gmail.com with ESMTPSA id e21sm714873lfj.10.2019.09.20.13.48.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 20 Sep 2019 13:48:28 -0700 (PDT)
+Date:   Fri, 20 Sep 2019 23:48:26 +0300
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin Lau <kafai@fb.com>, Andrii Nakryiko <andriin@fb.com>,
+        Yonghong Song <yhs@fb.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH bpf] libbpf: fix version identification on busybox
+Message-ID: <20190920204824.GC2760@khorivan>
+Mail-Followup-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, Martin Lau <kafai@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>, Yonghong Song <yhs@fb.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190919160518.25901-1-ivan.khoronzhuk@linaro.org>
+ <CAEf4BzbCjCYr5NMPctDkUggwpehnqZPVBSqZOsd9MvSq6WmnZQ@mail.gmail.com>
+ <20190920082204.GC8870@khorivan>
+ <CAEf4BzaVuaN3HhMu8W_i9z4n-2zfjqxBXyOEOaQHexxZq7b3qg@mail.gmail.com>
+ <20190920183449.GA2760@khorivan>
+ <20190920191941.GB2760@khorivan>
 MIME-Version: 1.0
-In-Reply-To: <CY4PR21MB074168DE7729C131CE4394CCCE880@CY4PR21MB0741.namprd21.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190920191941.GB2760@khorivan>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Sep 20, 2019 at 10:19:43PM +0300, Ivan Khoronzhuk wrote:
+>On Fri, Sep 20, 2019 at 09:34:51PM +0300, Ivan Khoronzhuk wrote:
+>>On Fri, Sep 20, 2019 at 09:41:54AM -0700, Andrii Nakryiko wrote:
+>>>On Fri, Sep 20, 2019 at 1:22 AM Ivan Khoronzhuk
+>>><ivan.khoronzhuk@linaro.org> wrote:
+>>>>
+>>>>On Thu, Sep 19, 2019 at 01:02:40PM -0700, Andrii Nakryiko wrote:
+>>>>>On Thu, Sep 19, 2019 at 11:22 AM Ivan Khoronzhuk
+>>>>><ivan.khoronzhuk@linaro.org> wrote:
+>>>>>>
+>>>>>>It's very often for embedded to have stripped version of sort in
+>>>>>>busybox, when no -V option present. It breaks build natively on target
+>>>>>>board causing recursive loop.
+>>>>>>
+>>>>>>BusyBox v1.24.1 (2019-04-06 04:09:16 UTC) multi-call binary. \
+>>>>>>Usage: sort [-nrugMcszbdfimSTokt] [-o FILE] [-k \
+>>>>>>start[.offset][opts][,end[.offset][opts]] [-t CHAR] [FILE]...
+>>>>>>
+>>>>>>Lets modify command a little to avoid -V option.
+>>>>>>
+>>>>>>Fixes: dadb81d0afe732 ("libbpf: make libbpf.map source of truth for libbpf version")
+>>>>>>
+>>>>>>Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+>>>>>>---
+>>>>>>
+>>>>>>Based on bpf/master
+>>>>>>
+>>>>>> tools/lib/bpf/Makefile | 2 +-
+>>>>>> 1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>>
+>>>>>>diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
+>>>>>>index c6f94cffe06e..a12490ad6215 100644
+>>>>>>--- a/tools/lib/bpf/Makefile
+>>>>>>+++ b/tools/lib/bpf/Makefile
+>>>>>>@@ -3,7 +3,7 @@
+>>>>>>
+>>>>>> LIBBPF_VERSION := $(shell \
+>>>>>>        grep -oE '^LIBBPF_([0-9.]+)' libbpf.map | \
+>>>>>>-       sort -rV | head -n1 | cut -d'_' -f2)
+>>>>>>+       cut -d'_' -f2 | sort -r | head -n1)
+>>>>>
+>>>>>You can't just sort alphabetically, because:
+>>>>>
+>>>>>1.2
+>>>>>1.11
+>>>>>
+>>>>>should be in that order. See discussion on mailing thread for original commit.
+>>>>
+>>>>if X1.X2.X3, where X = {0,1,....99999}
+>>>>Then it can be:
+>>>>
+>>>>-LIBBPF_VERSION := $(shell \
+>>>>-       grep -oE '^LIBBPF_([0-9.]+)' libbpf.map | \
+>>>>-       sort -rV | head -n1 | cut -d'_' -f2)
+>>>>+_LBPFLIST := $(patsubst %;,%,$(patsubst LIBBPF_%,%,$(filter LIBBPF_%, \
+>>>>+           $(shell cat libbpf.map))))
+>>>>+_LBPFLIST2 := $(foreach v,$(_LBPFLIST), \
+>>>>+               $(subst $() $(),,$(foreach n,$(subst .,$() $(),$(v)), \
+>>>>+                       $(shell printf "%05d" $(n)))))
+>>>>+_LBPF_VER := $(word $(words $(sort $(_LBPFLIST2))), $(sort $(_LBPFLIST2)))
+>>>>+LIBBPF_VERSION := $(patsubst %_$(_LBPF_VER),%,$(filter %_$(_LBPF_VER), \
+>>>>+        $(join $(addsuffix _, $(_LBPFLIST)),$(_LBPFLIST2))))
+>>>>
+>>>>It's bigger but avoids invocations of grep/sort/cut/head, only cat/printf
+>>>>, thus -V option also.
+>>>>
+>>>
+>>>No way, this is way too ugly (and still unreliable, if we ever have
+>>>X.Y.Z.W or something). I'd rather go with my original approach of
+>>Yes, forgot to add
+>>X1,X2,X3,...XN, where X = {0,1,....99999} and N = const for all versions.
+>>But frankly, 1.0.0 looks too far.
+>
+>It actually works for any numbs of X1.X2...X100
+>but not when you have couple kindof:
+>X1.X2.X3
+>and
+>X1.X2.X3.X4
+>
+>But, no absolutely any problem to extend this solution to handle all cases,
+>by just adding leading 0 to every "transformed version", say limit it to 10
+>possible 'dots' (%5*10d) and it will work as clocks. Advantage - mostly make
+>functions.
 
->>> Sagi,
->>>
->>> Sorry it took a while to bring my system back online.
->>>
->>> With the patch, the IOPS is about the same drop with the 1st patch. I think
->> the excessive context switches are causing the drop in IOPS.
->>>
->>> The following are captured by "perf sched record" for 30 seconds during
->> tests.
->>>
->>> "perf sched latency"
->>> With patch:
->>>     fio:(82)              | 937632.706 ms |  1782255 | avg:    0.209 ms | max:   63.123
->> ms | max at:    768.274023 s
->>>
->>> without patch:
->>>     fio:(82)              |2348323.432 ms |    18848 | avg:    0.295 ms | max:   28.446
->> ms | max at:   6447.310255 s
+_LBPFLIST := $(subst ;,,$(patsubst LIBBPF_%,%,$(filter LIBBPF_%, \
+	     $(shell cat libbpf.map))))
+_LBPF2 := $(foreach v,$(_LBPFLIST), \
+	  $(subst $() $(),,$(foreach n,$(subst ., ,$(v)), \
+			$(shell printf "%05d" $(n)))))
+_LBPF2 := $(foreach v,$(_LBPF2), $(shell printf "%050s" $(v)))
+_LBPF_VER := $(word $(words $(sort $(_LBPF2))), $(sort $(_LBPF2)))
+LIBBPF_VERSION := $(patsubst %_$(_LBPF_VER),%,$(filter %_$(_LBPF_VER), \
+	 	  $(join $(addsuffix _, $(_LBPFLIST)),$(_LBPF2))))
+>
+>Here can be couple more solutions with sed, not sure it can look less maniac.
+>
 >>
->> Without patch means the proposed hard-irq patch?
-> 
-> It means the current upstream code without any patch. But It's prone to soft lockup.
-> 
-> Ming's proposed hard-irq patch gets similar results to "without patch", however it fixes the soft lockup.
-
-Thanks for the clarification.
-
-The problem with what Ming is proposing in my mind (and its an existing
-problem that exists today), is that nvme is taking precedence over
-anything else until it absolutely cannot hog the cpu in hardirq.
-
-In the thread Ming referenced a case where today if the cpu core has a
-net softirq activity it cannot make forward progress. So with Ming's
-suggestion, net softirq will eventually make progress, but it creates an
-inherent fairness issue. Who said that nvme completions should come
-faster then the net rx/tx or another I/O device (or hrtimers or sched
-events...)?
-
-As much as I'd like nvme to complete as soon as possible, I might have
-other activities in the system that are as important if not more. So
-I don't think we can solve this with something that is not cooperative
-or fair with the rest of the system.
-
->> If we are context switching too much, it means the soft-irq operation is not
->> efficient, not necessarily the fact that the completion path is running in soft-
->> irq..
+>>>fetching the last version in libbpf.map file. See
+>>>https://www.spinics.net/lists/netdev/msg592703.html.
+>
+>Yes it's nice but, no sort, no X1.X2.X3....XN
+>
+>Main is to solve it for a long time.
+>
+>>>
+>>>>>
+>>>>>> LIBBPF_MAJOR_VERSION := $(firstword $(subst ., ,$(LIBBPF_VERSION)))
+>>>>>>
+>>>>>> MAKEFLAGS += --no-print-directory
+>>>>>>--
+>>>>>>2.17.1
+>>>>>>
+>>>>
+>>>>--
+>>>>Regards,
+>>>>Ivan Khoronzhuk
 >>
->> Is your kernel compiled with full preemption or voluntary preemption?
-> 
-> The tests are based on Ubuntu 18.04 kernel configuration. Here are the parameters:
-> 
-> # CONFIG_PREEMPT_NONE is not set
-> CONFIG_PREEMPT_VOLUNTARY=y
-> # CONFIG_PREEMPT is not set
+>>-- 
+>>Regards,
+>>Ivan Khoronzhuk
+>
+>-- 
+>Regards,
+>Ivan Khoronzhuk
 
-I see, so it still seems that irq_poll_softirq is still not efficient in
-reaping completions. reaping the completions on its own is pretty much
-the same in hard and soft irq, so its really the scheduling part that is
-creating the overhead (which does not exist in hard irq).
-
-Question:
-when you test with without the patch (completions are coming in 
-hard-irq), do the fio threads that run on the cpu cores that are 
-assigned to the cores that are handling interrupts get substantially lower
-throughput than the rest of the fio threads? I would expect that
-the fio threads that are running on the first 32 cores to get very low
-iops (overpowered by the nvme interrupts) and the rest doing much more
-given that nvme has almost no limits to how much time it can spend on
-processing completions.
-
-If need_resched() is causing us to context switch too aggressively, does 
-changing that to local_softirq_pending() make things better?
---
-diff --git a/lib/irq_poll.c b/lib/irq_poll.c
-index d8eab563fa77..05d524fcaf04 100644
---- a/lib/irq_poll.c
-+++ b/lib/irq_poll.c
-@@ -116,7 +116,7 @@ static void __latent_entropy irq_poll_softirq(struct 
-softirq_action *h)
-                 /*
-                  * If softirq window is exhausted then punt.
-                  */
--               if (need_resched())
-+               if (local_softirq_pending())
-                         break;
-         }
---
-
-Although, this can potentially cause other threads from making forward
-progress.. If it is better, perhaps we also need a time limit as well.
-
-Perhaps we should add statistics/tracing on how many completions we are
-reaping per invocation...
+-- 
+Regards,
+Ivan Khoronzhuk
