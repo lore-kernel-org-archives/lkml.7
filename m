@@ -2,87 +2,113 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01807C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A31C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C35D5208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:34:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=codon.org.uk header.i=@codon.org.uk header.b="POWQbp5e"
+	by mail.kernel.org (Postfix) with ESMTP id 519F321D56
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:43:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569012195;
+	bh=QWMaLTqP3/LxXruIwbroZ/ESvTqpOR3SRfg8+Zftu4A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rYoeE2pnlHkr0foiPIrU21f4Yr7BxszQmIOlt7aWv8Reykm+5oXTP0yHTw1NDalSD
+	 skVEuJXc9Qbp+DoWUbzr2JdI16vkXctipcZkuI0TRY2842Hg/Zw1iLt7TUkjuROs9d
+	 JBZgtDULjFlCt20EkJdqe5V/gRDECorff8hla+dE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730071AbfITUey (ORCPT
+        id S1730095AbfITUnO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 16:34:54 -0400
-Received: from cavan.codon.org.uk ([93.93.128.6]:37083 "EHLO
-        cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728994AbfITUex (ORCPT
+        Fri, 20 Sep 2019 16:43:14 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:34916 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728994AbfITUnN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 16:34:53 -0400
-X-Greylist: delayed 997 seconds by postgrey-1.27 at vger.kernel.org; Fri, 20 Sep 2019 16:34:52 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=codon.org.uk; s=63138784; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=kRB7J4Z1rxbkzW6KajLP7EjJU8aXPe3wlVZKi9gdjP8=; b=POWQbp5eTDGJeeQ57YU37aabB
-        ChHE8qiOp92UivtPZsgJYfG9CVQDVNr4ZjbEcdPdLKWTBlT8XDhn3QHR3yqKbLMuQXHiCvOt94iDv
-        kPAI7CAYYeR2sf7uqNFh0X3X/XQSu7+V1Ru+So2x83Rx+bVtBGevz4s0bStBeS4431St4=;
-Received: from mjg59 by cavan.codon.org.uk with local (Exim 4.89)
-        (envelope-from <mjg59@cavan.codon.org.uk>)
-        id 1iBPLf-0002o2-E8; Fri, 20 Sep 2019 21:17:47 +0100
-Date:   Fri, 20 Sep 2019 21:17:47 +0100
-From:   Matthew Garrett <mjg59@srcf.ucam.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Willy Tarreau <w@1wt.eu>, lkml <linux-kernel@vger.kernel.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>
-Subject: Re: [PATCH RFC v4 1/1] random: WARN on large getrandom() waits and
- introduce getrandom2()
-Message-ID: <20190920201747.kmzx2kjdv2hbljsy@srcf.ucam.org>
-References: <20190918211503.GA1808@darwi-home-pc>
- <20190918211713.GA2225@darwi-home-pc>
- <CAHk-=wiCqDiU7SE3FLn2W26MS_voUAuqj5XFa1V_tiGTrrW-zQ@mail.gmail.com>
- <20190920134609.GA2113@pc>
- <CALCETrWvE5es3i+to33y6jw=Yf0Tw6ZfV-6QWjZT5v0fo76tWw@mail.gmail.com>
- <CAHk-=wgW8rN2EVL_Rdn63V9vQO0GkZ=RQFeqqsYJM==8fujpPg@mail.gmail.com>
- <CALCETrV=4TX2a4uV5t2xOFzv+zM_jnOtMLJna8Vb7uXz6S=wSw@mail.gmail.com>
- <CAHk-=wjpTWgpo6d24pTv+ubfea_uEomX-sHjjOkdACfV-8Nmkg@mail.gmail.com>
- <CALCETrUEqjFmPvpcJQwJe3dNbz8eaJ4k3_AV2u0v96MffjLn+g@mail.gmail.com>
- <CAHk-=whJ3kmcZp=Ws+uXnRB9KokG6nXSQCSuBnerG--jkAfP5w@mail.gmail.com>
+        Fri, 20 Sep 2019 16:43:13 -0400
+Received: by mail-qk1-f193.google.com with SMTP id w2so8686901qkf.2
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 13:43:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=IYIa5ntznE0dmjCmjmfdo8J7Ibu+T8FOVCVdzrpU3Rs=;
+        b=GKWGrElt2tvEmihOLyxf+tMC/itQAV7aN6Wt0DXFZY9PyAp0h+DDhiORelGLCR2gRO
+         PzC4vNgPTJTdmOXuE9k655rd8cQVT0gB96setc4rH3O8mtTJuSlnUhq905YCejiLGy9z
+         brcu/n377xZFaIhwSg+SdpPZrNqVyBjx+50zw5s/uNO8zWMaOpvFbFIWEIaQbAzGvgrx
+         gul4vt1NlMdwb4eAm7/Fp1C4f7VE/kWC4QSLoqP5rO+IgzQFQHoi784L8T6CTeSU2KES
+         p7xBqgp3ND0IF2z/xbtSngzZENnpyzgCQZFOhIuXbWoBqY2YZtRUOyG5fRr5OQX09d65
+         kxCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IYIa5ntznE0dmjCmjmfdo8J7Ibu+T8FOVCVdzrpU3Rs=;
+        b=XIO6GS6s7VEfrk3zXbm+liqBJgViIIhmg25Hl0TOMLLSkSVpB+VLqTRPfh2R8JrIEm
+         Nk3l5ZBZilgCCPYMkamndTgb5VCpc5FaeO6XwGNc/V731uQaJ/ZUddtqgIunJzIRL31F
+         EkIBA1insx4dbWKGQCj1IRpuHMrxGEbDHv/y9osAjOH0NCXHHg3WwiRl/qx1wXYKMnlw
+         fnkPgZNpZDs7rsrmBVZuVBD2+Ld7iK6xwcUtpX+vWU8dADcTE4lR8zGQG7M/L6gSEUSy
+         5jQlHBH2iqwtGfUY73zzxJQ9EaG8kdpfn+WrCZiUaxMyIX73QpR7hJP1EyPysoyjbU0S
+         KUFA==
+X-Gm-Message-State: APjAAAXaBZLTpsLbs5E42QIQkgIukhEzL1weXCEY2fTYdmZ6a5lg1gUu
+        cgT380Oq2H5cYjsUu/1X7x8=
+X-Google-Smtp-Source: APXvYqx+LXB4P+vtWgN15Kr4T8WHI7x/UfPkeML48Xgxp+ygTqKbvtszIKlKPFZdFg7jci15zST4pQ==
+X-Received: by 2002:a05:620a:1335:: with SMTP id p21mr5560686qkj.321.1569012192697;
+        Fri, 20 Sep 2019 13:43:12 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::7520])
+        by smtp.gmail.com with ESMTPSA id y26sm1619402qkj.75.2019.09.20.13.43.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 20 Sep 2019 13:43:11 -0700 (PDT)
+Date:   Fri, 20 Sep 2019 13:43:09 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Marcin Pawlowski <mpawlowski@fb.com>,
+        "Williams, Gerald S" <gerald.s.williams@intel.com>,
+        linux-kernel@vger.kernel.org,
+        Lai Jiangshan <jiangshanlai@gmail.com>
+Subject: [PATCH wq/for-5.4-fixes] workqueue: Fix missing kfree(rescuer) in
+ destroy_workqueue()
+Message-ID: <20190920204309.GA2233839@devbig004.ftw2.facebook.com>
+References: <1569011160.5576.205.camel@lca.pw>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=whJ3kmcZp=Ws+uXnRB9KokG6nXSQCSuBnerG--jkAfP5w@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Mail-From: mjg59@cavan.codon.org.uk
-X-SA-Exim-Scanned: No (on cavan.codon.org.uk); SAEximRunCond expanded to false
+In-Reply-To: <1569011160.5576.205.camel@lca.pw>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 12:51:12PM -0700, Linus Torvalds wrote:
+From 8efe1223d73c218ce7e8b2e0e9aadb974b582d7f Mon Sep 17 00:00:00 2001
+From: Tejun Heo <tj@kernel.org>
+Date: Fri, 20 Sep 2019 13:39:57 -0700
 
-> So we absolutely _will_ come up with some way 0 ends the wait. Whether
-> it's _just_ a timeout, or whether it's jitter-entropy or whatever, it
-> will happen.
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Reported-by: Qian Cai <cai@lca.pw>
+Fixes: def98c84b6cd ("workqueue: Fix spurious sanity check failures in destroy_workqueue()")
+---
+Applied to wq/for-5.4-fixes.
 
-FWIW, Zircon uses the jitter entropy generator to seed the CRNG and 
-documented their findings in 
-https://fuchsia.dev/fuchsia-src/zircon/jitterentropy/config-basic .
+Thanks.
+
+ kernel/workqueue.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 93e20f5330fc..3f067f1d72e3 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -4345,6 +4345,7 @@ void destroy_workqueue(struct workqueue_struct *wq)
+ 
+ 		/* rescuer will empty maydays list before exiting */
+ 		kthread_stop(rescuer->task);
++		kfree(rescuer);
+ 	}
+ 
+ 	/* sanity checks */
 -- 
-Matthew Garrett | mjg59@srcf.ucam.org
+2.17.1
+
