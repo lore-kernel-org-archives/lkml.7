@@ -2,111 +2,85 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17ADBC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 23:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDA6C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 23:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE6012073F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 23:12:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="JeYj3LfQ"
+	by mail.kernel.org (Postfix) with ESMTP id 3F72A2070C
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 23:17:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393436AbfITXMl (ORCPT
+        id S2393954AbfITXRU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 19:12:41 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:60992 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389793AbfITXMk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 19:12:40 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id AC0662F9;
-        Sat, 21 Sep 2019 01:12:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1569021157;
-        bh=rjz1wJjGxXSYjN7ynywAFExyXsol+TYBRcie4ik5QFk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JeYj3LfQ2XRfPhk6Ulsz3ivewW9stOFV7hn8IvUAjrSXWo0UuPGQufLY4KiyICKy+
-         nN4IdpmQgooiW64b5jnvntaP6C7v63g4CaCbYfEfAJKgR4ptfKnNFY7oFw56gjtBfB
-         rOuCz07m5mhlBVKozL75z1u45T/przGI192osQdc=
-Date:   Sat, 21 Sep 2019 02:12:28 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        dri-devel@lists.freedesktop.org,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH 06/11] drm/bridge: ti-tfp410: switch to using
- fwnode_gpiod_get_index()
-Message-ID: <20190920231228.GH12672@pendragon.ideasonboard.com>
-References: <20190911075215.78047-1-dmitry.torokhov@gmail.com>
- <20190911075215.78047-7-dmitry.torokhov@gmail.com>
+        Fri, 20 Sep 2019 19:17:20 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:34726 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391290AbfITXRT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 19:17:19 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
+        id 1iBS8o-0002ql-AR; Sat, 21 Sep 2019 09:16:43 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Sat, 21 Sep 2019 09:16:34 +1000
+Date:   Sat, 21 Sep 2019 09:16:34 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-pci@vger.kernel.org,
+        Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "antoine.tenart@bootlin.com" <antoine.tenart@bootlin.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "pvanleeuwen@insidesecure.com" <pvanleeuwen@insidesecure.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: PCI: Add stub pci_irq_vector and others
+Message-ID: <20190920231634.GA31195@gondor.apana.org.au>
+References: <20190902141910.1080-1-yuehaibing@huawei.com>
+ <20190903014518.20880-1-yuehaibing@huawei.com>
+ <MN2PR20MB29732EEECB217DDDF822EDA5CAB80@MN2PR20MB2973.namprd20.prod.outlook.com>
+ <CAKv+Gu8PVYyA-mzjrhR6r6upMc=xzpAhsbkuKRtb8T2noo_2XQ@mail.gmail.com>
+ <20190904122600.GA28660@gondor.apana.org.au>
+ <20190920194216.GB226476@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190911075215.78047-7-dmitry.torokhov@gmail.com>
+In-Reply-To: <20190920194216.GB226476@google.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
-
-(CC'ing Heikki as the original author of software nodes support)
-
-Thank you for the patch.
-
-On Wed, Sep 11, 2019 at 12:52:10AM -0700, Dmitry Torokhov wrote:
-> Instead of fwnode_get_named_gpiod() that I plan to hide away, let's use
-> the new fwnode_gpiod_get_index() that mimics gpiod_get_index(), bit
-
-s/bit/but/
-
-> works with arbitrary firmware node.
+On Fri, Sep 20, 2019 at 02:42:16PM -0500, Bjorn Helgaas wrote:
+> On Wed, Sep 04, 2019 at 10:26:00PM +1000, Herbert Xu wrote:
+> > On Wed, Sep 04, 2019 at 05:10:34AM -0700, Ard Biesheuvel wrote:
+> > >
+> > > This is the reason we have so many empty static inline functions in
+> > > header files - it ensures that the symbols are declared even if the
+> > > only invocations are from dead code.
+> > 
+> > Does this patch work?
+> > 
+> > ---8<---
+> > This patch adds stub functions pci_alloc_irq_vectors_affinity and
+> > pci_irq_vector when CONFIG_PCI is off so that drivers can use them
+> > without resorting to ifdefs.
+> > 
+> > It also moves the PCI_IRQ_* macros outside of the ifdefs so that
+> > they are always available.
+> > 
+> > Fixes: 625f269a5a7a ("crypto: inside-secure - add support for...")
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> > Reported-by: YueHaibing <yuehaibing@huawei.com>
+> > Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 > 
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Since you've already sent your crypto pull request for v5.4, would you
+> like me to include this in mine?
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-On a side note, as I'm not very familiar with software nodes, I tried to
-see how they are to be used, and it seems they are completely
-undocumented :-( Heikki, is this something that could be fixed ?
-
-> ---
-> 
->  drivers/gpu/drm/bridge/ti-tfp410.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/ti-tfp410.c b/drivers/gpu/drm/bridge/ti-tfp410.c
-> index 61cc2354ef1b..d9c9c9ebad2b 100644
-> --- a/drivers/gpu/drm/bridge/ti-tfp410.c
-> +++ b/drivers/gpu/drm/bridge/ti-tfp410.c
-> @@ -284,8 +284,8 @@ static int tfp410_get_connector_properties(struct tfp410 *dvi)
->  	else
->  		dvi->connector_type = DRM_MODE_CONNECTOR_DVID;
->  
-> -	dvi->hpd = fwnode_get_named_gpiod(&connector_node->fwnode,
-> -					"hpd-gpios", 0, GPIOD_IN, "hpd");
-> +	dvi->hpd = fwnode_gpiod_get_index(&connector_node->fwnode,
-> +					  "hpd", 0, GPIOD_IN, "hpd");
->  	if (IS_ERR(dvi->hpd)) {
->  		ret = PTR_ERR(dvi->hpd);
->  		dvi->hpd = NULL;
-
+That would be great.  Thanks!
 -- 
-Regards,
-
-Laurent Pinchart
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
