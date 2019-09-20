@@ -2,151 +2,96 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FAE6C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:26:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F6DC4CECD
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 568382086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:26:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568986008;
-	bh=l6trHkVRVi4Jtoy88rMW6wbwgrdI8cPoidRU+a4Nsio=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ALHoFSpkypweJex4SYcweDGed21N2qEGIsiWdxT88MaoGUr34hHFPI7vMD7t0+xvl
-	 BS7t7i9qMCsNJ0Aa82FGNbVJMgnej0AUg1zxAdGlBfHkw+GF3vXRw/nHLOBm8eWl17
-	 /EHcgnf1IPNkt1bItASOEXy2H4kWVvcetrQqYFj8=
+	by mail.kernel.org (Postfix) with ESMTP id ACE7E20644
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:27:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727685AbfITN0r (ORCPT
+        id S1727711AbfITN1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 09:26:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33844 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727637AbfITN0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 09:26:47 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3E5A20644;
-        Fri, 20 Sep 2019 13:26:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568986006;
-        bh=l6trHkVRVi4Jtoy88rMW6wbwgrdI8cPoidRU+a4Nsio=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dJwu4kjg0I7EPoOxOCF9/xh8sTyrXKV0lUmPsvj4kB1vxJH9xuOBzn7f5vgJn8R4L
-         gqF/dYYJPT7E+azdmsMGSglPJ61pl62C7tlTsYKAo70ctR53+WA7M71176sFajIWYB
-         PNy0rNBhWw1Zo0iZRd4Gi9Ks4zX+ZGxEL7VfK0Ho=
-Date:   Fri, 20 Sep 2019 08:26:44 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     tiwai@suse.com, Linux PCI <linux-pci@vger.kernel.org>,
-        alsa-devel@alsa-project.org, LKML <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH 1/2] PCI: Add a helper to check Power Resource
- Requirements _PR3 existence
-Message-ID: <20190920132644.GA226476@google.com>
-References: <20190827134756.10807-1-kai.heng.feng@canonical.com>
- <20190909114129.GT103977@google.com>
- <CAAd53p4mc0tgCBiwfZRowr4os_bqDP+7Ko=d+do8OW2aH1Whzg@mail.gmail.com>
+        Fri, 20 Sep 2019 09:27:10 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:32778 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727563AbfITN1K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 09:27:10 -0400
+Received: by mail-qt1-f195.google.com with SMTP id r5so8666884qtd.0;
+        Fri, 20 Sep 2019 06:27:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4Yu0bebIccH+12tZYtfI1e/8Z8n4TfOTtSvrlww5Bbo=;
+        b=ZVgniuPoXwOlgH3C4DwNsS0ondEh2J5yRbSVamOYukONyu8SAoCtoX/T/yceUr7zBF
+         3kzlwt0Zflcc7XDMO5sBTnC2ym2qfgZvPi52BQyojW2Jv4tiSU9kinX2MQabmBCUy3LB
+         49Hyzzh9kpSuRS6ieYXrOzolgkEcAOqaT99rMnWhwi+YQdLvKPzAhD7VkqNFCbh5wnMk
+         hALQruqOhPVTlApXGk18TSKc+Ms+hKql0iyp6AiZNSH8uvflXPKfM0b2qLAmpy5Tsgqx
+         98AFhKa6/ekBcjoRtusZ5kNPu109Z8MKDoy4o/XwesZEZEzwiabvlCvOjFLvLmduof/V
+         PhQg==
+X-Gm-Message-State: APjAAAWKpd8ptyMJqQ0aaMj8G3yomONqu1SglNZfgOPC8qQQoqOkAC8c
+        SlrlKxqK2+orBjpZgHF2KKycq9V759IZZkbl1Fb55x0T
+X-Google-Smtp-Source: APXvYqzOT73jN4OJzz33BF88ETJkuCXtfXjyVPXMdN8s5FG4yTjaUGaOM98SouGMxAu0vPbtC9iDxEMPzgiGyYhNuT8=
+X-Received: by 2002:aed:2842:: with SMTP id r60mr3277241qtd.142.1568986028586;
+ Fri, 20 Sep 2019 06:27:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAd53p4mc0tgCBiwfZRowr4os_bqDP+7Ko=d+do8OW2aH1Whzg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190919140650.1289963-2-arnd@arndb.de> <20190919140917.1290556-1-arnd@arndb.de>
+ <f801a4c1-8fa6-8c14-120c-49c24ec84449@huawei.com>
+In-Reply-To: <f801a4c1-8fa6-8c14-120c-49c24ec84449@huawei.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 20 Sep 2019 15:26:52 +0200
+Message-ID: <CAK8P3a3jCv--VHu9r4ZTnLXXGaCjdJ6royP5LFk_9RCTTRsRBA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] [v2] crypto: hisilicon - allow compile-testing on x86
+To:     John Garry <john.garry@huawei.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Kenneth Lee <liguozhu@hisilicon.com>,
+        Mao Wenan <maowenan@huawei.com>,
+        Hao Fang <fanghao11@huawei.com>,
+        Shiju Jose <shiju.jose@huawei.com>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Rafael]
+On Fri, Sep 20, 2019 at 10:34 AM John Garry <john.garry@huawei.com> wrote:
 
-On Fri, Sep 20, 2019 at 01:23:20PM +0200, Kai-Heng Feng wrote:
-> On Mon, Sep 9, 2019 at 1:41 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-
-> > > +bool pci_pr3_present(struct pci_dev *pdev)
-> > > +{
-> > > +     struct pci_dev *parent_pdev = pci_upstream_bridge(pdev);
-> > > +     struct acpi_device *parent_adev;
-> > > +
-> > > +     if (acpi_disabled)
-> > > +             return false;
-> > > +
-> > > +     if (!parent_pdev)
-> > > +             return false;
-> > > +
-> > > +     parent_adev = ACPI_COMPANION(&parent_pdev->dev);
-> > > +     if (!parent_adev)
-> > > +             return false;
-> > > +
-> > > +     return parent_adev->power.flags.power_resources &&
-> > > +             acpi_has_method(parent_adev->handle, "_PR3");
+> > +     if (!IS_ENABLED(CONFIG_ARM64)) {
+> > +             memcpy_toio(fun_base, src, 16);
+> > +             wmb();
+> > +             return;
+> > +     }
+> > +
+> >       asm volatile("ldp %0, %1, %3\n"
+> >                    "stp %0, %1, %2\n"
+> >                    "dsb sy\n"
 > >
-> > I think this is generally OK, but it doesn't actually check whether
-> > *pdev* has a _PR3; it checks whether pdev's *parent* does.  So does
-> > that mean this is dependent on the GPU topology, i.e., does it assume
-> > that there is an upstream bridge and that power for everything under
-> > that bridge can be managed together?
-> 
-> Yes, the power resource is managed by its upstream port.
-> 
-> > I'm wondering whether the "parent_pdev = pci_upstream_bridge()" part
-> > should be in the caller rather than in pci_pr3_present()?
-> 
-> This will make the function more align to its name, but needs more
-> work from caller side.
-> How about rename the function to pci_upstream_pr3_present()?
+>
+> As I understand, this operation needs to be done atomically. So - even
+> though your change is just for compile testing - the memcpy_to_io() may
+> not do the same thing on other archs, right?
+>
+> I just wonder if it's right to make that change, or at least warn the
+> imaginary user of possible malfunction for !arm64.
 
-I cc'd Rafael because he knows all about how this stuff works, and I
-don't.
+It's probably not necessary here. From what I can tell from the documentation,
+this is only safe on ARMv8.4 or higher anyway, earlier ARMv8.x implementations
+don't guarantee that an stp arrives on the bus in one piece either.
 
-_PR3 is defined in terms of the device itself and the doc (ACPI v6.3,
-sec 7.3.11) doesn't mention any hierarchy.  I assume it would be legal
-for firmware to supply a _PR3 for "pdev" as well as for "parent_pdev"?
+Usually, hardware like this has no hard requirement on an atomic store,
+it just needs the individual bits to arrive in a particular order, and then
+triggers the update on the last bit that gets stored. If that is the case here
+as well, it might actually be better to use two writeq_relaxed() and
+a barrier. This would also solve the endianess issue.
 
-If that is legal, I think it would be appropriate for the caller to
-look up the upstream bridge.  That way this interface could be used
-for both "pdev" and an upstream bridge.  If we look up the bridge
-internally, we would have to add a second interface if we actually
-want to know about _PR3 for the device itself.
-
-> > I can't connect any of the dots from _PR3 through to
-> > "need_eld_notify_link" (whatever "eld" is :)) and the uses of
-> > hda_intel.need_eld_notify_link (and needs_eld_notify_link()).
-> >
-> > But that's beyond the scope of *this* patch and it makes sense that
-> > you do want to discover the _PR3 existence, so I'm fine with this once
-> > we figure out the pdev vs parent question.
-> 
-> Thanks for your review.
-> 
-> Kai-Heng
-> 
-> >
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(pci_pr3_present);
-> > > +
-> > >  /**
-> > >   * pci_add_dma_alias - Add a DMA devfn alias for a device
-> > >   * @dev: the PCI device for which alias is added
-> > > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > > index 82e4cd1b7ac3..9b6f7b67fac9 100644
-> > > --- a/include/linux/pci.h
-> > > +++ b/include/linux/pci.h
-> > > @@ -2348,9 +2348,11 @@ struct irq_domain *pci_host_bridge_acpi_msi_domain(struct pci_bus *bus);
-> > >
-> > >  void
-> > >  pci_msi_register_fwnode_provider(struct fwnode_handle *(*fn)(struct device *));
-> > > +bool pci_pr3_present(struct pci_dev *pdev);
-> > >  #else
-> > >  static inline struct irq_domain *
-> > >  pci_host_bridge_acpi_msi_domain(struct pci_bus *bus) { return NULL; }
-> > > +static bool pci_pr3_present(struct pci_dev *pdev) { return false; }
-> > >  #endif
-> > >
-> > >  #ifdef CONFIG_EEH
-> > > --
-> > > 2.17.1
-> > >
+     Arnd
