@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB645C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:21:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 138E8C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87319208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:21:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3E1421835
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:21:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405235AbfITQVa (ORCPT
+        id S2405275AbfITQVc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 12:21:30 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:52876 "EHLO
+        Fri, 20 Sep 2019 12:21:32 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:52878 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404983AbfITQVT (ORCPT
+        with ESMTP id S2404984AbfITQVU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 12:21:19 -0400
+        Fri, 20 Sep 2019 12:21:20 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iBLei-0004Br-MM; Fri, 20 Sep 2019 18:21:12 +0200
+        id 1iBLeT-00040d-PU; Fri, 20 Sep 2019 18:20:57 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 22EEA1C0E39;
-        Fri, 20 Sep 2019 18:21:02 +0200 (CEST)
-Date:   Fri, 20 Sep 2019 16:21:01 -0000
-From:   "tip-bot2 for Jiri Olsa" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id BFAD71C0DAE;
+        Fri, 20 Sep 2019 18:20:56 +0200 (CEST)
+Date:   Fri, 20 Sep 2019 16:20:56 -0000
+From:   "tip-bot2 for Anju T Sudhakar" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] libperf: Adopt perf_cpu_map__max() function
-Cc:     Jiri Olsa <jolsa@kernel.org>,
+Subject: [tip: perf/urgent] perf kvm stat: Set 'trace_cycles' as default event
+ for 'perf kvm record' in powerpc
+Cc:     Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Joe Mario <jmario@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
+        linuxppc-dev@lists.ozlabs.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20190902121255.536-2-jolsa@kernel.org>
-References: <20190902121255.536-2-jolsa@kernel.org>
+In-Reply-To: <20190718181749.30612-3-anju@linux.vnet.ibm.com>
+References: <20190718181749.30612-3-anju@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Message-ID: <156899646195.24167.8623127758746231981.tip-bot2@tip-bot2>
+Message-ID: <156899645662.24167.1538786694550700474.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -63,107 +66,72 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     4256d434935e9c85a731823be562785494ca364b
-Gitweb:        https://git.kernel.org/tip/4256d434935e9c85a731823be562785494ca364b
-Author:        Jiri Olsa <jolsa@kernel.org>
-AuthorDate:    Mon, 02 Sep 2019 14:12:53 +02:00
+Commit-ID:     2bff2b828502b5e5d5ea5a52643d3542053df03f
+Gitweb:        https://git.kernel.org/tip/2bff2b828502b5e5d5ea5a52643d3542053df03f
+Author:        Anju T Sudhakar <anju@linux.vnet.ibm.com>
+AuthorDate:    Thu, 18 Jul 2019 23:47:49 +05:30
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Tue, 10 Sep 2019 14:33:32 +01:00
+CommitterDate: Fri, 20 Sep 2019 10:28:26 -03:00
 
-libperf: Adopt perf_cpu_map__max() function
+perf kvm stat: Set 'trace_cycles' as default event for 'perf kvm record' in powerpc
 
->From 'perf stat', so that it can be used from multiple places.
+Use 'trace_imc/trace_cycles' as the default event for 'perf kvm record'
+in powerpc.
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
+Reviewed-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Joe Mario <jmario@redhat.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20190902121255.536-2-jolsa@kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Link: http://lore.kernel.org/lkml/20190718181749.30612-3-anju@linux.vnet.ibm.com
+[ Add missing pmu.h header, needed because this patch uses pmu_have_event() ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-stat.c            | 14 +-------------
- tools/perf/lib/cpumap.c              | 12 ++++++++++++
- tools/perf/lib/include/perf/cpumap.h |  1 +
- tools/perf/lib/libperf.map           |  1 +
- 4 files changed, 15 insertions(+), 13 deletions(-)
+ tools/perf/arch/powerpc/util/kvm-stat.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 7e17bf9..5bc0c57 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -822,18 +822,6 @@ static int perf_stat__get_core(struct perf_stat_config *config __maybe_unused,
- 	return cpu_map__get_core(map, cpu, NULL);
- }
+diff --git a/tools/perf/arch/powerpc/util/kvm-stat.c b/tools/perf/arch/powerpc/util/kvm-stat.c
+index ec5b771..9cc1c4a 100644
+--- a/tools/perf/arch/powerpc/util/kvm-stat.c
++++ b/tools/perf/arch/powerpc/util/kvm-stat.c
+@@ -5,6 +5,7 @@
+ #include "util/debug.h"
+ #include "util/evsel.h"
+ #include "util/evlist.h"
++#include "util/pmu.h"
  
--static int cpu_map__get_max(struct perf_cpu_map *map)
--{
--	int i, max = -1;
--
--	for (i = 0; i < map->nr; i++) {
--		if (map->map[i] > max)
--			max = map->map[i];
--	}
--
--	return max;
--}
--
- static int perf_stat__get_aggr(struct perf_stat_config *config,
- 			       aggr_get_id_t get_id, struct perf_cpu_map *map, int idx)
- {
-@@ -928,7 +916,7 @@ static int perf_stat_init_aggr_mode(void)
- 	 * taking the highest cpu number to be the size of
- 	 * the aggregation translate cpumap.
- 	 */
--	nr = cpu_map__get_max(evsel_list->core.cpus);
-+	nr = perf_cpu_map__max(evsel_list->core.cpus);
- 	stat_config.cpus_aggr_map = perf_cpu_map__empty_new(nr + 1);
- 	return stat_config.cpus_aggr_map ? 0 : -ENOMEM;
- }
-diff --git a/tools/perf/lib/cpumap.c b/tools/perf/lib/cpumap.c
-index 1f0e6f3..2ca1faf 100644
---- a/tools/perf/lib/cpumap.c
-+++ b/tools/perf/lib/cpumap.c
-@@ -260,3 +260,15 @@ int perf_cpu_map__idx(struct perf_cpu_map *cpus, int cpu)
+ #include "book3s_hv_exits.h"
+ #include "book3s_hcalls.h"
+@@ -177,8 +178,9 @@ int cpu_isa_init(struct perf_kvm_stat *kvm, const char *cpuid __maybe_unused)
+ /*
+  * Incase of powerpc architecture, pmu registers are programmable
+  * by guest kernel. So monitoring guest via host may not provide
+- * valid samples. It is better to fail the "perf kvm record"
+- * with default "cycles" event to monitor guest in powerpc.
++ * valid samples with default 'cycles' event. It is better to use
++ * 'trace_imc/trace_cycles' event for guest profiling, since it
++ * can track the guest instruction pointer in the trace-record.
+  *
+  * Function to parse the arguments and return appropriate values.
+  */
+@@ -202,8 +204,14 @@ int kvm_add_default_arch_event(int *argc, const char **argv)
  
- 	return -1;
- }
-+
-+int perf_cpu_map__max(struct perf_cpu_map *map)
-+{
-+	int i, max = -1;
-+
-+	for (i = 0; i < map->nr; i++) {
-+		if (map->map[i] > max)
-+			max = map->map[i];
-+	}
-+
-+	return max;
-+}
-diff --git a/tools/perf/lib/include/perf/cpumap.h b/tools/perf/lib/include/perf/cpumap.h
-index 8aa995c..ac9aa49 100644
---- a/tools/perf/lib/include/perf/cpumap.h
-+++ b/tools/perf/lib/include/perf/cpumap.h
-@@ -16,6 +16,7 @@ LIBPERF_API void perf_cpu_map__put(struct perf_cpu_map *map);
- LIBPERF_API int perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx);
- LIBPERF_API int perf_cpu_map__nr(const struct perf_cpu_map *cpus);
- LIBPERF_API bool perf_cpu_map__empty(const struct perf_cpu_map *map);
-+LIBPERF_API int perf_cpu_map__max(struct perf_cpu_map *map);
+ 	parse_options(j, tmp, event_options, NULL, PARSE_OPT_KEEP_UNKNOWN);
+ 	if (!event) {
+-		free(tmp);
+-		return -EINVAL;
++		if (pmu_have_event("trace_imc", "trace_cycles")) {
++			argv[j++] = strdup("-e");
++			argv[j++] = strdup("trace_imc/trace_cycles/");
++			*argc += 2;
++		} else {
++			free(tmp);
++			return -EINVAL;
++		}
+ 	}
  
- #define perf_cpu_map__for_each_cpu(cpu, idx, cpus)		\
- 	for ((idx) = 0, (cpu) = perf_cpu_map__cpu(cpus, idx);	\
-diff --git a/tools/perf/lib/libperf.map b/tools/perf/lib/libperf.map
-index dc4d663..cd0d17b 100644
---- a/tools/perf/lib/libperf.map
-+++ b/tools/perf/lib/libperf.map
-@@ -9,6 +9,7 @@ LIBPERF_0.0.1 {
- 		perf_cpu_map__nr;
- 		perf_cpu_map__cpu;
- 		perf_cpu_map__empty;
-+		perf_cpu_map__max;
- 		perf_thread_map__new_dummy;
- 		perf_thread_map__set_pid;
- 		perf_thread_map__comm;
+ 	free(tmp);
