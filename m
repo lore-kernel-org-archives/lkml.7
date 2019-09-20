@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E323EC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 712F7C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1B9D2080F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:33:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52DCD206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:33:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391567AbfITOdb (ORCPT
+        id S2391510AbfITOd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:33:31 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36352 "EHLO
+        Fri, 20 Sep 2019 10:33:27 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36282 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388242AbfITOZI (ORCPT
+        by vger.kernel.org with ESMTP id S2388204AbfITOZI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Sep 2019 10:25:08 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqL-00051E-3D; Fri, 20 Sep 2019 15:25:05 +0100
+        id 1iBJqK-0004xy-KH; Fri, 20 Sep 2019 15:25:04 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqH-0007zp-SZ; Fri, 20 Sep 2019 15:25:01 +0100
+        id 1iBJqH-0007z6-I8; Fri, 20 Sep 2019 15:25:01 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Ian Abbott" <abbotti@mev.co.uk>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+        syzbot+219f00fb49874dcaea17@syzkaller.appspotmail.com,
+        "Takashi Iwai" <tiwai@suse.de>
 Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.304704907@decadent.org.uk>
+Message-ID: <lsq.1568989415.843775932@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 132/132] staging: comedi: dt282x: fix a null  pointer
- deref on interrupt
+Subject: [PATCH 3.16 123/132] ALSA: line6: Fix write on zero-sized buffer
 In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,47 +55,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ian Abbott <abbotti@mev.co.uk>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit b8336be66dec06bef518030a0df9847122053ec5 upstream.
+commit 3450121997ce872eb7f1248417225827ea249710 upstream.
 
-The interrupt handler `dt282x_interrupt()` causes a null pointer
-dereference for those supported boards that have no analog output
-support.  For these boards, `dev->write_subdev` will be `NULL` and
-therefore the `s_ao` subdevice pointer variable will be `NULL`.  In that
-case, the following call near the end of the interrupt handler results
-in a null pointer dereference:
+LINE6 drivers allocate the buffers based on the value returned from
+usb_maxpacket() calls.  The manipulated device may return zero for
+this, and this results in the kmalloc() with zero size (and it may
+succeed) while the other part of the driver code writes the packet
+data with the fixed size -- which eventually overwrites.
 
-	cfc_handle_events(dev, s_ao);
+This patch adds a simple sanity check for the invalid buffer size for
+avoiding that problem.
 
-[ Upstream equivalent:
-	comedi_handle_events(dev, s_ao);
-  -- IA ]
-
-Fix it by only calling the above function if `s_ao` is valid.
-
-(There are other uses of `s_ao` by the interrupt handler that may or may
-not be reached depending on values of hardware registers.  Trust that
-they are reliable for now.)
-
-Fixes: f21c74fa4cfe ("staging: comedi: dt282x: use cfc_handle_events()")
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-by: syzbot+219f00fb49874dcaea17@syzkaller.appspotmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+[bwh: Backported to 3.16:
+ - Driver doesn't support asymmetrical packet sizes, so only check
+   snd_line6_pcm::max_packet_size
+ - Adjust filename]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/staging/comedi/drivers/dt282x.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/staging/line6/pcm.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/staging/comedi/drivers/dt282x.c
-+++ b/drivers/staging/comedi/drivers/dt282x.c
-@@ -483,7 +483,8 @@ static irqreturn_t dt282x_interrupt(int
- 	}
- #endif
- 	cfc_handle_events(dev, s);
--	cfc_handle_events(dev, s_ao);
-+	if (s_ao)
-+		cfc_handle_events(dev, s_ao);
+--- a/drivers/staging/line6/pcm.c
++++ b/drivers/staging/line6/pcm.c
+@@ -492,6 +492,11 @@ int line6_init_pcm(struct usb_line6 *lin
+ 				usb_rcvisocpipe(line6->usbdev, ep_read), 0),
+ 			usb_maxpacket(line6->usbdev,
+ 				usb_sndisocpipe(line6->usbdev, ep_write), 1));
++	if (!line6pcm->max_packet_size) {
++		dev_err(line6pcm->line6->ifcdev,
++			"cannot get proper max packet size\n");
++		return -EINVAL;
++	}
  
- 	return IRQ_RETVAL(handled);
- }
+ 	line6pcm->properties = properties;
+ 	line6->line6pcm = line6pcm;
 
