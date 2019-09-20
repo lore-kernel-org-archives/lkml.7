@@ -2,222 +2,147 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6258C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59326C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:33:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 759DE218AE
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EE4F207E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:33:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408316AbfITIam (ORCPT
+        id S2437771AbfITIdu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 04:30:42 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:39516 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405437AbfITIai (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 04:30:38 -0400
-Received: from static-dcd-cqq-121001.business.bouyguestelecom.com ([212.194.121.1] helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iBEJC-0007Va-HJ; Fri, 20 Sep 2019 08:30:30 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     keescook@chromium.org, luto@amacapital.net
-Cc:     jannh@google.com, wad@chromium.org, shuah@kernel.org,
-        ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Tyler Hicks <tyhicks@canonical.com>, stable@vger.kernel.org
-Subject: [PATCH v2 3/3] seccomp: test SECCOMP_USER_NOTIF_FLAG_CONTINUE
-Date:   Fri, 20 Sep 2019 10:30:07 +0200
-Message-Id: <20190920083007.11475-4-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190920083007.11475-1-christian.brauner@ubuntu.com>
-References: <20190920083007.11475-1-christian.brauner@ubuntu.com>
+        Fri, 20 Sep 2019 04:33:50 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:49788 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2404945AbfITIdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 04:33:50 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 526151DA269D57266B53;
+        Fri, 20 Sep 2019 16:33:48 +0800 (CST)
+Received: from [127.0.0.1] (10.202.227.179) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Fri, 20 Sep 2019
+ 16:33:39 +0800
+Subject: Re: [PATCH 2/2] [v2] crypto: hisilicon - allow compile-testing on x86
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Zhou Wang <wangzhou1@hisilicon.com>
+References: <20190919140650.1289963-2-arnd@arndb.de>
+ <20190919140917.1290556-1-arnd@arndb.de>
+CC:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Kenneth Lee <liguozhu@hisilicon.com>,
+        Mao Wenan <maowenan@huawei.com>,
+        Hao Fang <fanghao11@huawei.com>,
+        Shiju Jose <shiju.jose@huawei.com>,
+        <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <f801a4c1-8fa6-8c14-120c-49c24ec84449@huawei.com>
+Date:   Fri, 20 Sep 2019 09:33:33 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190919140917.1290556-1-arnd@arndb.de>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.179]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Test whether a syscall can be performed after having been intercepted by
-the seccomp notifier. The test uses dup() and kcmp() since it allows us to
-nicely test whether the dup() syscall actually succeeded by comparing whether
-the fds refer to the same underlying struct file.
+On 19/09/2019 15:09, Arnd Bergmann wrote:
+> To avoid missing arm64 specific warnings that get introduced
+> in this driver, allow compile-testing on all 64-bit architectures.
+>
+> The only actual arm64 specific code in this driver is an open-
+> coded 128 bit MMIO write. On non-arm64 the same can be done
+> using memcpy_toio. What I also noticed is that the mmio store
+> (either one) is not endian-safe, this will only work on little-
+> endian configurations, so I also add a Kconfig dependency on
+> that, regardless of the architecture.
+> Finally, a depenndecy on CONFIG_64BIT is needed because of the
 
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Andy Lutomirski <luto@amacapital.net>
-Cc: Will Drewry <wad@chromium.org>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Martin KaFai Lau <kafai@fb.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: Tycho Andersen <tycho@tycho.ws>
-CC: Tyler Hicks <tyhicks@canonical.com>
-Cc: stable@vger.kernel.org
-Cc: linux-kselftest@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Cc: bpf@vger.kernel.org
----
-/* v2 */
-- Shuah Khan <shuah@kernel.org>:
-  - skip test on missing precondition
+nit: spelling mistake
 
-/* v1 */
-Link: https://lore.kernel.org/r/20190919095903.19370-4-christian.brauner@ubuntu.com
-- Christian Brauner <christian.brauner@ubuntu.com>:
-  - adapt to new flag name SECCOMP_USER_NOTIF_FLAG_CONTINUE
+> writeq().
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+> v2: actually add !CPU_BIG_ENDIAN dependency as described in the
+> changelog
+> ---
+>  drivers/crypto/hisilicon/Kconfig | 9 ++++++---
+>  drivers/crypto/hisilicon/qm.c    | 6 ++++++
+>  2 files changed, 12 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/crypto/hisilicon/Kconfig b/drivers/crypto/hisilicon/Kconfig
+> index ebaf91e0146d..7bfcaa7674fd 100644
+> --- a/drivers/crypto/hisilicon/Kconfig
+> +++ b/drivers/crypto/hisilicon/Kconfig
+> @@ -16,14 +16,15 @@ config CRYPTO_DEV_HISI_SEC
+>
+>  config CRYPTO_DEV_HISI_QM
+>  	tristate
+> -	depends on ARM64 && PCI && PCI_MSI
+> +	depends on ARM64 || COMPILE_TEST
+> +	depends on PCI && PCI_MSI
+>  	help
+>  	  HiSilicon accelerator engines use a common queue management
+>  	  interface. Specific engine driver may use this module.
+>
+>  config CRYPTO_HISI_SGL
+>  	tristate
+> -	depends on ARM64
+> +	depends on ARM64 || COMPILE_TEST
+>  	help
+>  	  HiSilicon accelerator engines use a common hardware scatterlist
+>  	  interface for data format. Specific engine driver may use this
+> @@ -31,7 +32,9 @@ config CRYPTO_HISI_SGL
+>
+>  config CRYPTO_DEV_HISI_ZIP
+>  	tristate "Support for HiSilicon ZIP accelerator"
+> -	depends on ARM64 && PCI && PCI_MSI
+> +	depends on PCI && PCI_MSI
+> +	depends on ARM64 || (COMPILE_TEST && 64BIT)
+> +	depends on !CPU_BIG_ENDIAN || COMPILE_TEST
+>  	select CRYPTO_DEV_HISI_QM
+>  	select CRYPTO_HISI_SGL
+>  	select SG_SPLIT
+> diff --git a/drivers/crypto/hisilicon/qm.c b/drivers/crypto/hisilicon/qm.c
+> index f975c393a603..a8ed699081b7 100644
+> --- a/drivers/crypto/hisilicon/qm.c
+> +++ b/drivers/crypto/hisilicon/qm.c
+> @@ -331,6 +331,12 @@ static void qm_mb_write(struct hisi_qm *qm, const void *src)
+>  	void __iomem *fun_base = qm->io_base + QM_MB_CMD_SEND_BASE;
+>  	unsigned long tmp0 = 0, tmp1 = 0;
+>
 
-/* v0 */
-Link: https://lore.kernel.org/r/20190918084833.9369-5-christian.brauner@ubuntu.com
----
- tools/testing/selftests/seccomp/seccomp_bpf.c | 107 ++++++++++++++++++
- 1 file changed, 107 insertions(+)
+Hi Arnd,
 
-diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
-index e996d7b7fd6e..2519377ebda3 100644
---- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-+++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-@@ -44,6 +44,7 @@
- #include <sys/times.h>
- #include <sys/socket.h>
- #include <sys/ioctl.h>
-+#include <linux/kcmp.h>
- 
- #include <unistd.h>
- #include <sys/syscall.h>
-@@ -167,6 +168,10 @@ struct seccomp_metadata {
- 
- #define SECCOMP_RET_USER_NOTIF 0x7fc00000U
- 
-+#ifndef SECCOMP_USER_NOTIF_FLAG_CONTINUE
-+#define SECCOMP_USER_NOTIF_FLAG_CONTINUE 0x00000001
-+#endif
-+
- #define SECCOMP_IOC_MAGIC		'!'
- #define SECCOMP_IO(nr)			_IO(SECCOMP_IOC_MAGIC, nr)
- #define SECCOMP_IOR(nr, type)		_IOR(SECCOMP_IOC_MAGIC, nr, type)
-@@ -3481,6 +3486,108 @@ TEST(seccomp_get_notif_sizes)
- 	EXPECT_EQ(sizes.seccomp_notif_resp, sizeof(struct seccomp_notif_resp));
- }
- 
-+static int filecmp(pid_t pid1, pid_t pid2, int fd1, int fd2)
-+{
-+#ifdef __NR_kcmp
-+	return syscall(__NR_kcmp, pid1, pid2, KCMP_FILE, fd1, fd2);
-+#else
-+	errno = ENOSYS;
-+	return -1;
-+#endif
-+}
-+
-+TEST(user_notification_continue)
-+{
-+	pid_t pid;
-+	long ret;
-+	int status, listener;
-+	struct seccomp_notif req = {};
-+	struct seccomp_notif_resp resp = {};
-+	struct pollfd pollfd;
-+
-+	ret = prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
-+	ASSERT_EQ(0, ret) {
-+		TH_LOG("Kernel does not support PR_SET_NO_NEW_PRIVS!");
-+	}
-+
-+	listener = user_trap_syscall(__NR_dup, SECCOMP_FILTER_FLAG_NEW_LISTENER);
-+	ASSERT_GE(listener, 0);
-+
-+	pid = fork();
-+	ASSERT_GE(pid, 0);
-+
-+	if (pid == 0) {
-+		int dup_fd, pipe_fds[2];
-+		pid_t self;
-+
-+		ret = pipe(pipe_fds);
-+		if (ret < 0)
-+			exit(1);
-+
-+		dup_fd = dup(pipe_fds[0]);
-+		if (dup_fd < 0)
-+			exit(1);
-+
-+		self = getpid();
-+
-+		ret = filecmp(self, self, pipe_fds[0], dup_fd);
-+		if (ret)
-+			exit(2);
-+
-+		exit(0);
-+	}
-+
-+	pollfd.fd = listener;
-+	pollfd.events = POLLIN | POLLOUT;
-+
-+	EXPECT_GT(poll(&pollfd, 1, -1), 0);
-+	EXPECT_EQ(pollfd.revents, POLLIN);
-+
-+	EXPECT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_RECV, &req), 0);
-+
-+	pollfd.fd = listener;
-+	pollfd.events = POLLIN | POLLOUT;
-+
-+	EXPECT_GT(poll(&pollfd, 1, -1), 0);
-+	EXPECT_EQ(pollfd.revents, POLLOUT);
-+
-+	EXPECT_EQ(req.data.nr, __NR_dup);
-+
-+	resp.id = req.id;
-+	resp.flags = SECCOMP_USER_NOTIF_FLAG_CONTINUE;
-+
-+	/*
-+	 * Verify that setting SECCOMP_USER_NOTIF_FLAG_CONTINUE enforces other
-+	 * args be set to 0.
-+	 */
-+	resp.error = 0;
-+	resp.val = USER_NOTIF_MAGIC;
-+	EXPECT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_SEND, &resp), -1);
-+	EXPECT_EQ(errno, EINVAL);
-+
-+	resp.error = USER_NOTIF_MAGIC;
-+	resp.val = 0;
-+	EXPECT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_SEND, &resp), -1);
-+	EXPECT_EQ(errno, EINVAL);
-+
-+	resp.error = 0;
-+	resp.val = 0;
-+	EXPECT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_SEND, &resp), 0) {
-+		if (errno == EINVAL)
-+			XFAIL(goto skip, "Kernel does not support SECCOMP_USER_NOTIF_FLAG_CONTINUE");
-+	}
-+
-+skip:
-+	EXPECT_EQ(waitpid(pid, &status, 0), pid);
-+	EXPECT_EQ(true, WIFEXITED(status));
-+	EXPECT_EQ(0, WEXITSTATUS(status)) {
-+		if (WEXITSTATUS(status) == 2) {
-+			XFAIL(return, "Kernel does not support kcmp() syscall");
-+			return;
-+		}
-+	}
-+}
-+
- /*
-  * TODO:
-  * - add microbenchmarks
--- 
-2.23.0
+> +	if (!IS_ENABLED(CONFIG_ARM64)) {
+> +		memcpy_toio(fun_base, src, 16);
+> +		wmb();
+> +		return;
+> +	}
+> +
+>  	asm volatile("ldp %0, %1, %3\n"
+>  		     "stp %0, %1, %2\n"
+>  		     "dsb sy\n"
+>
+
+As I understand, this operation needs to be done atomically. So - even 
+though your change is just for compile testing - the memcpy_to_io() may 
+not do the same thing on other archs, right?
+
+I just wonder if it's right to make that change, or at least warn the 
+imaginary user of possible malfunction for !arm64.
+
+Thanks,
+John
+
+
 
