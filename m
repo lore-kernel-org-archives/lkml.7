@@ -2,118 +2,96 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED185C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 00:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2677C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 00:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4DF6217D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 00:21:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D8D021920
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 00:22:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="p1MWiAA5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gurInQH2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394413AbfITAVv (ORCPT
+        id S2394430AbfITAWm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 20:21:51 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:46514 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390178AbfITAVu (ORCPT
+        Thu, 19 Sep 2019 20:22:42 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:33233 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390178AbfITAWm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 20:21:50 -0400
-Received: by mail-qk1-f195.google.com with SMTP id 201so5374752qkd.13
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 17:21:50 -0700 (PDT)
+        Thu, 19 Sep 2019 20:22:42 -0400
+Received: by mail-io1-f65.google.com with SMTP id m11so12253437ioo.0;
+        Thu, 19 Sep 2019 17:22:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=pro9C8zmq7NLgMwYhgr/6LGSa3Q7PkAjnibnN9csKE0=;
-        b=p1MWiAA5FV5GBwt2EIlFX7PlfM/JFWtZLute0zB9YM/osQ/11szyWWaic3ZyQ/SZu0
-         OaIeERsRiVOXxjZTRZHLJmQyAxo/c8IFFvCkTRmHb1sdpA+kVVk0KoyaIEVYpyup26K5
-         8aWcL3YrjS5i9AmbE1j0wwip7zSi2eMDhrjRBRU5JdaJTrZYulLsGCtoAINRRy3XjiTV
-         xYwJG57TEFA7gT7L0LxRvT0Ip0F+GdOmEhF5rw4i7vpn/VKhXQdLw6cr98ORRot5912x
-         L429S8bA/t8FHPSd27P3ogpl3W6I76jDOmk+s8tuFL+HlbVTKBANkA+/RDrhrxeN/aOV
-         hpZw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=ix8+8PqWk+bszyMequ0IxNEn2cRf7X1LNLzbQO5hJo4=;
+        b=gurInQH2B4KY12DNj9lcFFeLvCpBqLxJoud6HXK3Rj9HY2SbYEqDXEZClGMN8TEq+E
+         mnjILhOcTSBSZthvriw44CDhpNFoyKCiIjQPyhJhqYZfAPf55FhqAfEUQebOitvbQDWL
+         SN+2WBo6w47DTiGtKuN9dlmByarSuTghivQbqtICfOSCxtViQghnvN4jqz/RjiUwy43R
+         CrQm7Vw/xxAKwVfJtKliNSdjp+/PkjHJ9B8O9+YXnBdYhdgMFdIg1UqLU7sGpkYGWKNu
+         geJrhJM2W9iarTAU4B+nEcVV5f6bsr7Hlqd/1eR5786SsfQ9JokbltoMVfAx8IWzU3SE
+         DcDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=pro9C8zmq7NLgMwYhgr/6LGSa3Q7PkAjnibnN9csKE0=;
-        b=eFESDWNtbkDFriyjGaSDTfjr5mRXnZ2p/CMHfagzeNB1iGO+NKLI+tBaMcdawtKR7T
-         jj5qqWpGVOSSpoc4paUA1y6CWcdMMd/uiNieT2wD3aOuUhoB2ZNt4SzmyYx4VLAcBaaw
-         eEjdCYECvUHrbQjBc3QuKi6BGrBXY5wJeKn77fuXbjaPPoENNUbRDyygMvhcFB1IKSoR
-         vXh9TH0Ys9XuLlaFTRX0BPErbwscP41nCfN/xy8NJ0mtLsCZ6R/TtQOmc8cDvpw46oO8
-         UK2H6S44YJbpTvGrJ+yC7WKABtvVBl127TYnWktQz0UGLz1rEZV2dUYi/TTbJd38CtOk
-         NDuA==
-X-Gm-Message-State: APjAAAW6JM5qMx31BNLJ2ZjPrkVfZDKB5J2AMw/8jP16uyFDnTdeSvD9
-        2ncQ3cdAMoyZy+rEMFcY5mFhLc2ZpWA=
-X-Google-Smtp-Source: APXvYqyzA42ktG/dDx6jAshGH/zvVqakR5TOxSDRcxunSBtsZ5MhzkJALycMc3DcCWG56RQKg+CuZw==
-X-Received: by 2002:a37:c441:: with SMTP id h1mr589905qkm.16.1568938909826;
-        Thu, 19 Sep 2019 17:21:49 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id e42sm127840qte.26.2019.09.19.17.21.48
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ix8+8PqWk+bszyMequ0IxNEn2cRf7X1LNLzbQO5hJo4=;
+        b=dqanhWDHi6W4hK69riTbOfb5Qg7KC/6j9FrtCj81m7OUiAyzCXrgMrtRZNBeqrSFNG
+         k3Q48IaqvaxCHb/p58Wg5v5EloYNUQ4GyqetKO7cbLOhmoDZE603vdcpiz+D/pBgDgl6
+         VkuCWyqXOOtSuYlLgBUPv0zef64EKx50MD4dGWkRdejk+1DjGEZ90FcdjsN+bupIZDuU
+         OEdMLxi3svCH77ZlDJY3vd2N7iSrpk5aAI35nh9BqbkNiDq6Qi53gFiE9f5GHT1+uQhn
+         rR0YNbusCpMhEjTRXOAUgzJYr7it9rarn6f33QuFWwaECRPcfo6hLqNg7hOTzeeWljqE
+         chwA==
+X-Gm-Message-State: APjAAAVHt0Rr7ae6HPpyC6DGVUuyDbCZoTYPFi9gBRmqlrr9pL0lrUIV
+        Eu/0PMupvC98S3sbSxjkcWs=
+X-Google-Smtp-Source: APXvYqyW7ouuT933iTp+UETyFMPoSGZoiNKIG3UGPHONqZxhqdYc4m2YPkaQWTxriKp9zm/8pE7isA==
+X-Received: by 2002:a05:6602:2543:: with SMTP id j3mr7504138ioe.29.1568938961424;
+        Thu, 19 Sep 2019 17:22:41 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id r138sm658005iod.59.2019.09.19.17.22.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2019 17:21:49 -0700 (PDT)
-Date:   Thu, 19 Sep 2019 17:21:45 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Shannon Nelson <snelson@pensando.io>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Pensando Drivers <drivers@pensando.io>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] ionic: remove useless return code
-Message-ID: <20190919172146.47bc95f4@cakuba.netronome.com>
-In-Reply-To: <6cdb1e21-44d9-bba9-1931-78f7109bff2b@pensando.io>
-References: <20190918195745.2158829-1-arnd@arndb.de>
-        <6cdb1e21-44d9-bba9-1931-78f7109bff2b@pensando.io>
-Organization: Netronome Systems, Ltd.
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 19 Sep 2019 17:22:40 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] NFSv4: fix memory leak if nfs4_begin_drain_session fails
+Date:   Thu, 19 Sep 2019 19:22:30 -0500
+Message-Id: <20190920002232.27477-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Sep 2019 13:46:34 -0700, Shannon Nelson wrote:
-> On 9/18/19 12:57 PM, Arnd Bergmann wrote:
-> > The debugfs function was apparently changed from returning an error code
-> > to a void return, but the return code left in place, causing a warning
-> > from clang:
-> >
-> > drivers/net/ethernet/pensando/ionic/ionic_debugfs.c:60:37: error: expression result unused [-Werror,-Wunused-value]
-> >                              ionic, &identity_fops) ? 0 : -EOPNOTSUPP;
-> >                                                           ^~~~~~~~~~~
-> >
-> > Fixes: fbfb8031533c ("ionic: Add hardware init and device commands")
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > ---
-> >   drivers/net/ethernet/pensando/ionic/ionic_debugfs.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/net/ethernet/pensando/ionic/ionic_debugfs.c b/drivers/net/ethernet/pensando/ionic/ionic_debugfs.c
-> > index 7afc4a365b75..bc03cecf80cc 100644
-> > --- a/drivers/net/ethernet/pensando/ionic/ionic_debugfs.c
-> > +++ b/drivers/net/ethernet/pensando/ionic/ionic_debugfs.c
-> > @@ -57,7 +57,7 @@ DEFINE_SHOW_ATTRIBUTE(identity);
-> >   void ionic_debugfs_add_ident(struct ionic *ionic)
-> >   {
-> >   	debugfs_create_file("identity", 0400, ionic->dentry,
-> > -			    ionic, &identity_fops) ? 0 : -EOPNOTSUPP;
-> > +			    ionic, &identity_fops);
-> >   }
-> >   
-> >   void ionic_debugfs_add_sizes(struct ionic *ionic)  
-> 
-> This has just recently been addressed by Nathan Chancellor 
-> <natechancellor@gmail.com>
+In nfs4_try_migration, if nfs4_begin_drain_session fails the allocated
+memory should be released.
 
-Yup, should be in the net tree now.
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ fs/nfs/nfs4state.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Either way,
-> 
-> Acked-by: Shannon Nelson <snelson@pensando.io>
+diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+index cad4e064b328..124649f12067 100644
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -2096,7 +2096,7 @@ static int nfs4_try_migration(struct nfs_server *server, const struct cred *cred
+ 
+ 	status = nfs4_begin_drain_session(clp);
+ 	if (status != 0)
+-		return status;
++		goto out;
+ 
+ 	status = nfs4_replace_transport(server, locations);
+ 	if (status != 0) {
+-- 
+2.17.1
 
-Thanks for quick reviews!
