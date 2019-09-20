@@ -2,178 +2,104 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A27C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75BFBC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB4D62086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:53:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 465FC2086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:54:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568994848;
+	bh=zLDrH1bjiD0FaVml2s6dPvH5HKK+NUEXFEsWfY1kDG8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FM1OPpP04f7Pi8VLU9dF7Gvse60XFaXYapzjtxmjG/uO2zF4jOrGE8LFWkqEkQ81k
+	 2gPq4T8+w87hQQWcf1HObTmHz46xI+btGCQ8RzdW4UVSvL69pgcaVr9OH3cKCiKULl
+	 X4lJ7RaXikGUc8LnUXRnl1S/ZeTHf/m+r4n2Evu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404668AbfITPx6 (ORCPT
+        id S2404706AbfITPyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 11:53:58 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42046 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2404191AbfITPx5 (ORCPT
+        Fri, 20 Sep 2019 11:54:07 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:41898 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404671AbfITPyG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 11:53:57 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8KFl6MC121393;
-        Fri, 20 Sep 2019 11:53:50 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v51ndgfre-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 20 Sep 2019 11:53:49 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8KFlIvr123010;
-        Fri, 20 Sep 2019 11:53:49 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v51ndgfqt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 20 Sep 2019 11:53:49 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8KFp6xY005075;
-        Fri, 20 Sep 2019 15:53:48 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma01wdc.us.ibm.com with ESMTP id 2v3vbty3xc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 20 Sep 2019 15:53:48 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8KFrhuT54723052
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 20 Sep 2019 15:53:44 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CEBB67805E;
-        Fri, 20 Sep 2019 15:53:43 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1C9E37805C;
-        Fri, 20 Sep 2019 15:53:42 +0000 (GMT)
-Received: from oc4221205838.ibm.com (unknown [9.85.141.73])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Fri, 20 Sep 2019 15:53:41 +0000 (GMT)
-Subject: Re: [PATCH v4 4/4] vfio: pci: Using a device region to retrieve zPCI
- information
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     sebott@linux.ibm.com, gerald.schaefer@de.ibm.com,
-        pasic@linux.ibm.com, borntraeger@de.ibm.com, walling@linux.ibm.com,
-        linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org,
-        joro@8bytes.org, linux-kernel@vger.kernel.org,
-        alex.williamson@redhat.com, kvm@vger.kernel.org,
-        heiko.carstens@de.ibm.com, robin.murphy@arm.com, gor@linux.ibm.com,
-        pmorel@linux.ibm.com
-References: <1567815231-17940-1-git-send-email-mjrosato@linux.ibm.com>
- <1567815231-17940-5-git-send-email-mjrosato@linux.ibm.com>
- <20190919172505.2eb075f8.cohuck@redhat.com>
- <c5c5c46e-371b-5be0-064a-b89195cdc3f6@linux.ibm.com>
- <20190920162607.16198c92.cohuck@redhat.com>
-From:   Matthew Rosato <mjrosato@linux.ibm.com>
-Openpgp: preference=signencrypt
-Message-ID: <f25bfba5-96b0-3072-f082-9592a56edbe2@linux.ibm.com>
-Date:   Fri, 20 Sep 2019 11:53:41 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 20 Sep 2019 11:54:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=zLDrH1bjiD0FaVml2s6dPvH5HKK+NUEXFEsWfY1kDG8=; b=wgkf1wLSxZsRbDLbrQvjuR0V1
+        VqsQPFVu3UU+r6FlfgdK9st2Wglyrogw9fAxJhZXA5aC0+kvs81kFNrg/tTrdeM+fRgHq4sNGLVSf
+        AMVw21lXO5cyePhrCH2h4+tEW8D6uSGyac+KlQZi0WU++YjX/TUFVtUwNmwIZ+3S0eGhQ=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iBLEQ-0002uH-1M; Fri, 20 Sep 2019 15:54:02 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 30BB8274293F; Fri, 20 Sep 2019 16:54:01 +0100 (BST)
+Date:   Fri, 20 Sep 2019 16:54:01 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] spi: atmel: Fix crash when using more than 4 gpio CS
+Message-ID: <20190920155400.GH3822@sirena.co.uk>
+References: <20190919153847.7179-1-gregory.clement@bootlin.com>
+ <20190919160315.GQ3642@sirena.co.uk>
+ <20190919172350.GZ21254@piout.net>
+ <20190920105101.GA3822@sirena.co.uk>
+ <87a7az7zt6.fsf@FE-laptop>
 MIME-Version: 1.0
-In-Reply-To: <20190920162607.16198c92.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-20_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909200144
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="nFBW6CQlri5Qm8JQ"
+Content-Disposition: inline
+In-Reply-To: <87a7az7zt6.fsf@FE-laptop>
+X-Cookie: Stay away from hurricanes for a while.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/20/19 10:26 AM, Cornelia Huck wrote:
-> On Thu, 19 Sep 2019 16:57:10 -0400
-> Matthew Rosato <mjrosato@linux.ibm.com> wrote:
-> 
->> On 9/19/19 11:25 AM, Cornelia Huck wrote:
->>> On Fri,  6 Sep 2019 20:13:51 -0400
->>> Matthew Rosato <mjrosato@linux.ibm.com> wrote:
->>>   
->>>> From: Pierre Morel <pmorel@linux.ibm.com>
->>>>
->>>> We define a new configuration entry for VFIO/PCI, VFIO_PCI_ZDEV
->>>>
->>>> When the VFIO_PCI_ZDEV feature is configured we initialize
->>>> a new device region, VFIO_REGION_SUBTYPE_ZDEV_CLP, to hold
->>>> the information from the ZPCI device the use
->>>>
->>>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
->>>> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
->>>> ---
->>>>  drivers/vfio/pci/Kconfig            |  7 +++
->>>>  drivers/vfio/pci/Makefile           |  1 +
->>>>  drivers/vfio/pci/vfio_pci.c         |  9 ++++
->>>>  drivers/vfio/pci/vfio_pci_private.h | 10 +++++
->>>>  drivers/vfio/pci/vfio_pci_zdev.c    | 85 +++++++++++++++++++++++++++++++++++++
->>>>  5 files changed, 112 insertions(+)
->>>>  create mode 100644 drivers/vfio/pci/vfio_pci_zdev.c
->>>>
->>>> diff --git a/drivers/vfio/pci/Kconfig b/drivers/vfio/pci/Kconfig
->>>> index ac3c1dd..d4562a8 100644
->>>> --- a/drivers/vfio/pci/Kconfig
->>>> +++ b/drivers/vfio/pci/Kconfig
->>>> @@ -45,3 +45,10 @@ config VFIO_PCI_NVLINK2
->>>>  	depends on VFIO_PCI && PPC_POWERNV
->>>>  	help
->>>>  	  VFIO PCI support for P9 Witherspoon machine with NVIDIA V100 GPUs
->>>> +
->>>> +config VFIO_PCI_ZDEV
->>>> +	bool "VFIO PCI Generic for ZPCI devices"
->>>> +	depends on VFIO_PCI && S390
->>>> +	default y
->>>> +	help
->>>> +	  VFIO PCI support for S390 Z-PCI devices  
->>>   
->>> >From that description, I'd have no idea whether I'd want that or not.  
->>> Is there any downside to enabling it?
->>>   
->>
->> :) Not really, you're just getting information from the hardware vs
->> using hard-coded defaults.  The only reason I could think of to turn it
->> off would be if you wanted/needed to restore this hard-coded behavior.
-> 
-> I'm not really sure whether that's worth adding a Kconfig switch for.
-> Won't older versions simply ignore the new region anyway?
-> 
 
-Yes, you have a point here...  This switch showed up in v3 of this
-series when Pierre changed to using a region to pass this info and I
-haven't yet found a 'why' he decided to add the Kconfig switch.  If I
-can't convince myself of a reason to keep it, I'll just remove it from
-the next version.
+--nFBW6CQlri5Qm8JQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> Also, I don't think we have any migration compatibility issues, as
-> vfio-pci devices are not (yet) migrateable anyway.
-> 
->>
->> bool "VFIO PCI support for generic ZPCI devices" ?
-> 
-> "Support zPCI-specific configuration for VFIO PCI" ?
-> 
->>
->> "Support for sharing ZPCI hardware device information between the host
->> and guests." ?
-> 
-> "Enabling this options exposes a region containing hardware
-> configuration for zPCI devices. This enables userspace (e.g. QEMU) to
-> supply proper configuration values instead of hard-coded defaults for
-> zPCI devices passed through via VFIO on s390.
-> 
-> Say Y here."
-> 
-> ?
->
+On Fri, Sep 20, 2019 at 05:27:49PM +0200, Gregory CLEMENT wrote:
 
-Your descriptions are much better - thanks for the feedback!
+> But after going further in the details of the driver, this patch could
+> cause a regression for on the old controllers.
+
+> I also found other issues in this driver in the chip select
+> management. So I will send a new series fixing all of it.
+
+OK, great - glad at least one of us spotted a real problem!
+
+--nFBW6CQlri5Qm8JQ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2E9hgACgkQJNaLcl1U
+h9DuOQf/d1YSSM95RC3kUN0e8uki1dRX6P/DzkwsU8aq/UjqRJWFqJfINJoq/iX2
+Bxv2so1RItyHhc7DeDbguqZd3q7ZoGEIdpydEs0YiCe0ZsIC2WO5oQYbzR+StoUP
+Go9tnNJxG00tYTUoOLSkuFt0oF28j6+IiBOqU028GK0CcCpEY5gK6bdLrO3Yg/bp
+x7dnew+UZGVIqBygo6Gf4o781L0aV9exnr8toNx2meSItYSd53qBOywiLt+olUPB
+i1y7ZIBMFvM/CADLLfgT8u+3bu8q6tVFs7olDfPXfiSqWC9tOzur/x3aDfY4CdQz
+8iOeWl80Sr4wXQgZWxBJGWp6Gz1JHA==
+=vx4t
+-----END PGP SIGNATURE-----
+
+--nFBW6CQlri5Qm8JQ--
