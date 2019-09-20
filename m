@@ -2,186 +2,137 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4614CC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:20:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B765C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 225812086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:20:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C4982086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:20:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jPvq1xo2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393225AbfITQU3 (ORCPT
+        id S2404178AbfITQUf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 12:20:29 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42198 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387644AbfITQU3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 12:20:29 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 49A1918C892A;
-        Fri, 20 Sep 2019 16:20:28 +0000 (UTC)
-Received: from asgard.redhat.com (ovpn-112-68.ams2.redhat.com [10.36.112.68])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CD5CD5D6B0;
-        Fri, 20 Sep 2019 16:20:25 +0000 (UTC)
-Date:   Fri, 20 Sep 2019 18:20:03 +0200
-From:   Eugene Syromiatnikov <esyr@redhat.com>
-To:     John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Frederic Weisbecker <frederic@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] uapi, posix-timers: provide clockid-related macros and
- functions to UAPI
-Message-ID: <20190920162003.GA31301@asgard.redhat.com>
+        Fri, 20 Sep 2019 12:20:35 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42416 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387644AbfITQUf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 12:20:35 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q12so4833679pff.9
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 09:20:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vlNGfK1QkeKihZ4C4Tfs64KHadfyM3q44e2VI4eyD3A=;
+        b=jPvq1xo2VKxr3BDR3r7JrBL+WPTyholNKVawQB0EIuY3oOAFbxYM/uA5HMC2fbYkic
+         N+WbDQvIvyuzqCIEBZvdePa9S1vqkH6K2m+EW/LDDM5YxksbqG7BltCluuCjXA8C6rA7
+         oHUFuiqrNcCKpzeBNyoIFf5CiOpQ7mWVH8K4LjuMdP+70bqDaHmnZ0Meec8zRHOKfRHW
+         WkfhMJuUv5shwWw4+4MZYjOsBWWfUVi91S2tVPqfkpzmI25/3+lVsKK8NU8bZ3jTRK1Q
+         VmeH6eXJojh3Y3TPr80WtGaHCxT9hYoF2HjqaXLkg8KcbvcmXvsnsKXNp1G8WPXDWFwI
+         GALA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vlNGfK1QkeKihZ4C4Tfs64KHadfyM3q44e2VI4eyD3A=;
+        b=HK6s1l4ckytEVddhKjFyTa5eoE44+oA23LgLepVAr6w6f/c15jKD07IVY9/PQ0Zf6A
+         6j6NJYIfocuW4fR9XAkoFxy28JGzq/68poM8jKPX5dB2WUASs28SuahMTdrrReay3o8c
+         ojzSsMv9aaYRSIEvGXERbzRRuJvLOaJF5+dAeyiOpWJwWDpRZcFvo16UhkUtip4PsGQ+
+         qvJafnHntOB/0ArK38QzQrG8GUUzBU9cqZvGd/Lk7ys4QztyJfovuplxqPzAq4Ha4FCs
+         oEbCzeD0HU1duA1oBxH4p40jPPetIxupffxHmge+t/xuHjHwfFbLLpk7ADbzxFqJbtDa
+         JdkQ==
+X-Gm-Message-State: APjAAAX1iHLif5D2h6NTy75IMCruxPJOFjH85YC+U5qhYAAQyywPTrAS
+        HeHhj1G+AtjiTGvD6NkbyQ8SeEtLEi2KqNWJd22Chg==
+X-Google-Smtp-Source: APXvYqwrqKTqYsi8OR1VdueDkW2Mi43aJ5Pj88pR9RVaDL1ha76c1BEGk/C9C4FKe3KucmQ34BVGRHYWuJyH1TnFXko=
+X-Received: by 2002:a17:90a:ff18:: with SMTP id ce24mr5537560pjb.123.1568996432715;
+ Fri, 20 Sep 2019 09:20:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Fri, 20 Sep 2019 16:20:28 +0000 (UTC)
+References: <20190920153951.25762-1-ilie.halip@gmail.com>
+In-Reply-To: <20190920153951.25762-1-ilie.halip@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Fri, 20 Sep 2019 09:20:20 -0700
+Message-ID: <CAKwvOdkvrRgQ7KtGag0yDH+ry7a6=pd5xudrNm9X+5oVu2Z20A@mail.gmail.com>
+Subject: Re: [PATCH] powerpc/pmac/smp: avoid unused-variable warnings
+To:     Ilie Halip <ilie.halip@gmail.com>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As of now, there is no interface exposed for converting pid/fd into
-clockid and vice versa; linuxptp, for example, has been carrying these
-definitions in missing.h header for quite some time[1].
+On Fri, Sep 20, 2019 at 8:41 AM Ilie Halip <ilie.halip@gmail.com> wrote:
+>
+> When building with ppc64_defconfig, the compiler reports
+> that these 2 variables are not used:
+>     warning: unused variable 'core99_l2_cache' [-Wunused-variable]
+>     warning: unused variable 'core99_l3_cache' [-Wunused-variable]
+>
+> They are only used when CONFIG_PPC64 is not defined. Move
+> them into a section which does the same macro check.
+>
+> Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+> Signed-off-by: Ilie Halip <ilie.halip@gmail.com>
 
-[1] https://sourceforge.net/p/linuxptp/code/ci/af380e86/tree/missing.h
+Hi Ilie, thanks for the patch.  LGTM (Please include link tags if your
+link addresses a bug in our bug tracker; it helps us track where/when
+patches land, in case they need to be backported).
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/663
 
-Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
----
- include/linux/posix-timers.h | 47 +-------------------------------------------
- include/uapi/linux/time.h    | 47 ++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 48 insertions(+), 46 deletions(-)
+> ---
+>  arch/powerpc/platforms/powermac/smp.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/powerpc/platforms/powermac/smp.c b/arch/powerpc/platforms/powermac/smp.c
+> index f95fbdee6efe..e44c606f119e 100644
+> --- a/arch/powerpc/platforms/powermac/smp.c
+> +++ b/arch/powerpc/platforms/powermac/smp.c
+> @@ -648,6 +648,10 @@ static void smp_core99_pfunc_tb_freeze(int freeze)
+>
+>  static unsigned int core99_tb_gpio;    /* Timebase freeze GPIO */
+>
+> +/* L2 and L3 cache settings to pass from CPU0 to CPU1 on G4 cpus */
+> +volatile static long int core99_l2_cache;
+> +volatile static long int core99_l3_cache;
+> +
+>  static void smp_core99_gpio_tb_freeze(int freeze)
+>  {
+>         if (freeze)
+> @@ -660,10 +664,6 @@ static void smp_core99_gpio_tb_freeze(int freeze)
+>
+>  #endif /* !CONFIG_PPC64 */
+>
+> -/* L2 and L3 cache settings to pass from CPU0 to CPU1 on G4 cpus */
+> -volatile static long int core99_l2_cache;
+> -volatile static long int core99_l3_cache;
+> -
+>  static void core99_init_caches(int cpu)
+>  {
+>  #ifndef CONFIG_PPC64
+> --
+> 2.17.1
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20190920153951.25762-1-ilie.halip%40gmail.com.
 
-diff --git a/include/linux/posix-timers.h b/include/linux/posix-timers.h
-index 3d10c84..ddc7e6e6 100644
---- a/include/linux/posix-timers.h
-+++ b/include/linux/posix-timers.h
-@@ -4,58 +4,13 @@
- 
- #include <linux/spinlock.h>
- #include <linux/list.h>
-+#include <linux/time.h>
- #include <linux/alarmtimer.h>
- #include <linux/timerqueue.h>
- 
- struct kernel_siginfo;
- struct task_struct;
- 
--/*
-- * Bit fields within a clockid:
-- *
-- * The most significant 29 bits hold either a pid or a file descriptor.
-- *
-- * Bit 2 indicates whether a cpu clock refers to a thread or a process.
-- *
-- * Bits 1 and 0 give the type: PROF=0, VIRT=1, SCHED=2, or FD=3.
-- *
-- * A clockid is invalid if bits 2, 1, and 0 are all set.
-- */
--#define CPUCLOCK_PID(clock)		((pid_t) ~((clock) >> 3))
--#define CPUCLOCK_PERTHREAD(clock) \
--	(((clock) & (clockid_t) CPUCLOCK_PERTHREAD_MASK) != 0)
--
--#define CPUCLOCK_PERTHREAD_MASK	4
--#define CPUCLOCK_WHICH(clock)	((clock) & (clockid_t) CPUCLOCK_CLOCK_MASK)
--#define CPUCLOCK_CLOCK_MASK	3
--#define CPUCLOCK_PROF		0
--#define CPUCLOCK_VIRT		1
--#define CPUCLOCK_SCHED		2
--#define CPUCLOCK_MAX		3
--#define CLOCKFD			CPUCLOCK_MAX
--#define CLOCKFD_MASK		(CPUCLOCK_PERTHREAD_MASK|CPUCLOCK_CLOCK_MASK)
--
--static inline clockid_t make_process_cpuclock(const unsigned int pid,
--		const clockid_t clock)
--{
--	return ((~pid) << 3) | clock;
--}
--static inline clockid_t make_thread_cpuclock(const unsigned int tid,
--		const clockid_t clock)
--{
--	return make_process_cpuclock(tid, clock | CPUCLOCK_PERTHREAD_MASK);
--}
--
--static inline clockid_t fd_to_clockid(const int fd)
--{
--	return make_process_cpuclock((unsigned int) fd, CLOCKFD);
--}
--
--static inline int clockid_to_fd(const clockid_t clk)
--{
--	return ~(clk >> 3);
--}
--
- #ifdef CONFIG_POSIX_TIMERS
- 
- /**
-diff --git a/include/uapi/linux/time.h b/include/uapi/linux/time.h
-index 958932e..41a004c 100644
---- a/include/uapi/linux/time.h
-+++ b/include/uapi/linux/time.h
-@@ -70,4 +70,51 @@ struct itimerval {
-  */
- #define TIMER_ABSTIME			0x01
- 
-+/*
-+ * Bit fields within a clockid:
-+ *
-+ * The most significant 29 bits hold either a pid or a file descriptor.
-+ *
-+ * Bit 2 indicates whether a cpu clock refers to a thread or a process.
-+ *
-+ * Bits 1 and 0 give the type: PROF=0, VIRT=1, SCHED=2, or FD=3.
-+ *
-+ * A clockid is invalid if bits 2, 1, and 0 are all set.
-+ */
-+#define CPUCLOCK_PID(clock)		((pid_t) ~((clock) >> 3))
-+#define CPUCLOCK_PERTHREAD(clock) \
-+	(((clock) & (clockid_t) CPUCLOCK_PERTHREAD_MASK) != 0)
-+
-+#define CPUCLOCK_PERTHREAD_MASK	4
-+#define CPUCLOCK_WHICH(clock)	((clock) & (clockid_t) CPUCLOCK_CLOCK_MASK)
-+#define CPUCLOCK_CLOCK_MASK	3
-+#define CPUCLOCK_PROF		0
-+#define CPUCLOCK_VIRT		1
-+#define CPUCLOCK_SCHED		2
-+#define CPUCLOCK_MAX		3
-+#define CLOCKFD			CPUCLOCK_MAX
-+#define CLOCKFD_MASK		(CPUCLOCK_PERTHREAD_MASK|CPUCLOCK_CLOCK_MASK)
-+
-+static inline clockid_t make_process_cpuclock(const unsigned int pid,
-+		const clockid_t clock)
-+{
-+	return ((~pid) << 3) | clock;
-+}
-+static inline clockid_t make_thread_cpuclock(const unsigned int tid,
-+		const clockid_t clock)
-+{
-+	return make_process_cpuclock(tid, clock | CPUCLOCK_PERTHREAD_MASK);
-+}
-+
-+static inline clockid_t fd_to_clockid(const int fd)
-+{
-+	return make_process_cpuclock((unsigned int) fd, CLOCKFD);
-+}
-+
-+static inline int clockid_to_fd(const clockid_t clk)
-+{
-+	return ~(clk >> 3);
-+}
-+
-+
- #endif /* _UAPI_LINUX_TIME_H */
+
+
 -- 
-2.1.4
-
+Thanks,
+~Nick Desaulniers
