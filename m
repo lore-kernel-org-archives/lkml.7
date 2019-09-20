@@ -2,228 +2,87 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D26AC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4099C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F72E2173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:23:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E34E208C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:23:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568996601;
+	bh=/gY3eyN/99Vwc+rE/mubQe3N1CXXiv7Fbgs2nWfoFDc=;
+	h=References:In-Reply-To:From:Date:Subject:To:List-ID:From;
+	b=e2v2eFe+1xs3PsxHmVp8jxsTcpuQWrCbX0zd1V28gnFOEaxfak/oNurqP1aHsQeZG
+	 VgTzJgiHNQxxKLVQaZcW28Upz6OYNO/uERqyJK12rbaGBuG6vE5iYYMWu5QS0OIVFZ
+	 5ot+rLCf9ZyN1GxwTJRk1YsZaO86DNWwkJanq2/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404822AbfITQVK (ORCPT
+        id S2405756AbfITQXU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 12:21:10 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:52750 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393448AbfITQVJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 12:21:09 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iBLeV-00040u-OQ; Fri, 20 Sep 2019 18:20:59 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 9D1541C0E2C;
-        Fri, 20 Sep 2019 18:20:57 +0200 (CEST)
-Date:   Fri, 20 Sep 2019 16:20:57 -0000
-From:   "tip-bot2 for Srikar Dronamraju" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf stat: Reset previous counts on repeat with interval
-Cc:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Stephane Eranian <eranian@google.com>, stable@vger.kernel.org,
-        #@tip-bot2.tec.linutronix.de, v3.9+@tip-bot2.tec.linutronix.de,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20190904094738.9558-2-srikar@linux.vnet.ibm.com>
-References: <20190904094738.9558-2-srikar@linux.vnet.ibm.com>
+        Fri, 20 Sep 2019 12:23:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41892 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390632AbfITQXO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 12:23:14 -0400
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AB1E208C3;
+        Fri, 20 Sep 2019 16:23:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568996594;
+        bh=/gY3eyN/99Vwc+rE/mubQe3N1CXXiv7Fbgs2nWfoFDc=;
+        h=References:In-Reply-To:From:Date:Subject:To:From;
+        b=I5p+hmb6P8nedLs1fqxO6ODqniyBYw/gRUMEovWLLh1yw3O5O1q0GGiWUqwik8sOA
+         J4KQSaEWgWFGD4nuUdpolKf4JfqyV5QNVcdSxNLyi13n+KU9g7P53wBElx8Z0Shnn5
+         5JMp4vX8nT/yLz1zQIn2jblCh2b9N7frBmft6TGU=
+Received: by mail-ot1-f47.google.com with SMTP id e11so6676220otl.5;
+        Fri, 20 Sep 2019 09:23:14 -0700 (PDT)
+X-Gm-Message-State: APjAAAXqb6XFz9lc+qU4/zc2Umds29HKsDmsGoERllDVbq16GwjpCtOd
+        rKemTjBEATEy+RWSLX+Yk+d3DeEZH6up/rXH63k=
+X-Google-Smtp-Source: APXvYqyo+eHqYY+wd1hJeskVQu73EQIp1tU7G1a9ZEYeGtJO8llZMStv0HcB/C9UjvxekPWe0ZjxxZedr3kEHQe+9Lc=
+X-Received: by 2002:a05:6830:10cc:: with SMTP id z12mr6558999oto.20.1568996593576;
+ Fri, 20 Sep 2019 09:23:13 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <156899645757.24167.10654954672512242730.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20190920162124.7036-1-krzk@kernel.org>
+In-Reply-To: <20190920162124.7036-1-krzk@kernel.org>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Fri, 20 Sep 2019 18:23:00 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPcsSjVoHmCJN_AF8a2gkVN3+kQh4D+J01GnxGmMOZh4Hg@mail.gmail.com>
+Message-ID: <CAJKOXPcsSjVoHmCJN_AF8a2gkVN3+kQh4D+J01GnxGmMOZh4Hg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: watchdog: Convert Samsung SoC
+ watchdog bindings to json-schema
+To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/urgent branch of tip:
+On Fri, 20 Sep 2019 at 18:21, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> Convert Samsung S3C/S5P/Exynos watchdog bindings to DT schema format
+> using json-schema.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+>
+> ---
+>
+> Changes since v1:
+> 1. Indent example with four spaces (more readable),
+> 2. Remove unneeded timeout-sec description and include generic bindings.
 
-Commit-ID:     b63fd11cced17fcb8e133def29001b0f6aaa5e06
-Gitweb:        https://git.kernel.org/tip/b63fd11cced17fcb8e133def29001b0f6aaa5e06
-Author:        Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-AuthorDate:    Wed, 04 Sep 2019 15:17:37 +05:30
-Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Fri, 20 Sep 2019 10:28:26 -03:00
+My bad, this is actually v3.
 
-perf stat: Reset previous counts on repeat with interval
-
-When using 'perf stat' with repeat and interval option, it shows wrong
-values for events.
-
-The wrong values will be shown for the first interval on the second and
-subsequent repetitions.
-
-Without the fix:
-
-  # perf stat -r 3 -I 2000 -e faults -e sched:sched_switch -a sleep 5
-
-     2.000282489                 53      faults
-     2.000282489                513      sched:sched_switch
-     4.005478208              3,721      faults
-     4.005478208              2,666      sched:sched_switch
-     5.025470933                395      faults
-     5.025470933              1,307      sched:sched_switch
-     2.009602825 1,84,46,74,40,73,70,95,47,520      faults 		<------
-     2.009602825 1,84,46,74,40,73,70,95,49,568      sched:sched_switch  <------
-     4.019612206              4,730      faults
-     4.019612206              2,746      sched:sched_switch
-     5.039615484              3,953      faults
-     5.039615484              1,496      sched:sched_switch
-     2.000274620 1,84,46,74,40,73,70,95,47,520      faults		<------
-     2.000274620 1,84,46,74,40,73,70,95,47,520      sched:sched_switch	<------
-     4.000480342              4,282      faults
-     4.000480342              2,303      sched:sched_switch
-     5.000916811              1,322      faults
-     5.000916811              1,064      sched:sched_switch
-  #
-
-prev_raw_counts is allocated when using intervals. This is used when
-calculating the difference in the counts of events when using interval.
-
-The current counts are stored in prev_raw_counts to calculate the
-differences in the next iteration.
-
-On the first interval of the second and subsequent repetitions,
-prev_raw_counts would be the values stored in the last interval of the
-previous repetitions, while the current counts will only be for the
-first interval of the current repetition.
-
-Hence there is a possibility of events showing up as big number.
-
-Fix this by resetting prev_raw_counts whenever perf stat repeats the
-command.
-
-With the fix:
-
-  # perf stat -r 3 -I 2000 -e faults -e sched:sched_switch -a sleep 5
-
-     2.019349347              2,597      faults
-     2.019349347              2,753      sched:sched_switch
-     4.019577372              3,098      faults
-     4.019577372              2,532      sched:sched_switch
-     5.019415481              1,879      faults
-     5.019415481              1,356      sched:sched_switch
-     2.000178813              8,468      faults
-     2.000178813              2,254      sched:sched_switch
-     4.000404621              7,440      faults
-     4.000404621              1,266      sched:sched_switch
-     5.040196079              2,458      faults
-     5.040196079                556      sched:sched_switch
-     2.000191939              6,870      faults
-     2.000191939              1,170      sched:sched_switch
-     4.000414103                541      faults
-     4.000414103                902      sched:sched_switch
-     5.000809863                450      faults
-     5.000809863                364      sched:sched_switch
-  #
-
-Committer notes:
-
-This was broken since the cset introducing the --interval feature, i.e.
---repeat + --interval wasn't tested at that point, add the Fixes tag so
-that automatic scripts can pick this up.
-
-Fixes: 13370a9b5bb8 ("perf stat: Add interval printing")
-Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: stable@vger.kernel.org # v3.9+
-Link: http://lore.kernel.org/lkml/20190904094738.9558-2-srikar@linux.vnet.ibm.com
-[ Fixed up conflicts with libperf, i.e. some perf_{evsel,evlist} lost the 'perf' prefix ]
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/builtin-stat.c |  3 +++
- tools/perf/util/stat.c    | 17 +++++++++++++++++
- tools/perf/util/stat.h    |  1 +
- 3 files changed, 21 insertions(+)
-
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index eece3d1..fa4b148 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1952,6 +1952,9 @@ int cmd_stat(int argc, const char **argv)
- 			fprintf(output, "[ perf stat: executing run #%d ... ]\n",
- 				run_idx + 1);
- 
-+		if (run_idx != 0)
-+			perf_evlist__reset_prev_raw_counts(evsel_list);
-+
- 		status = run_perf_stat(argc, argv, run_idx);
- 		if (forever && status != -1) {
- 			print_counters(NULL, argc, argv);
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index 0657120..fcd5434 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -162,6 +162,15 @@ static void perf_evsel__free_prev_raw_counts(struct evsel *evsel)
- 	evsel->prev_raw_counts = NULL;
- }
- 
-+static void perf_evsel__reset_prev_raw_counts(struct evsel *evsel)
-+{
-+	if (evsel->prev_raw_counts) {
-+		evsel->prev_raw_counts->aggr.val = 0;
-+		evsel->prev_raw_counts->aggr.ena = 0;
-+		evsel->prev_raw_counts->aggr.run = 0;
-+       }
-+}
-+
- static int perf_evsel__alloc_stats(struct evsel *evsel, bool alloc_raw)
- {
- 	int ncpus = perf_evsel__nr_cpus(evsel);
-@@ -212,6 +221,14 @@ void perf_evlist__reset_stats(struct evlist *evlist)
- 	}
- }
- 
-+void perf_evlist__reset_prev_raw_counts(struct evlist *evlist)
-+{
-+	struct evsel *evsel;
-+
-+	evlist__for_each_entry(evlist, evsel)
-+		perf_evsel__reset_prev_raw_counts(evsel);
-+}
-+
- static void zero_per_pkg(struct evsel *counter)
- {
- 	if (counter->per_pkg_mask)
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index 0f9c9f6..edbeb2f 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -193,6 +193,7 @@ void perf_stat__collect_metric_expr(struct evlist *);
- int perf_evlist__alloc_stats(struct evlist *evlist, bool alloc_raw);
- void perf_evlist__free_stats(struct evlist *evlist);
- void perf_evlist__reset_stats(struct evlist *evlist);
-+void perf_evlist__reset_prev_raw_counts(struct evlist *evlist);
- 
- int perf_stat_process_counter(struct perf_stat_config *config,
- 			      struct evsel *counter);
+Best regards,
+Krzysztof
