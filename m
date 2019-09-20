@@ -2,102 +2,183 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E4B3C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59AD1C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53F70218AE
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:20:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nLw1HL3e"
+	by mail.kernel.org (Postfix) with ESMTP id 34E0A206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:21:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395164AbfITIUA (ORCPT
+        id S2395181AbfITIVU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 04:20:00 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:35017 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391319AbfITIUA (ORCPT
+        Fri, 20 Sep 2019 04:21:20 -0400
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:37523 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2395166AbfITIVU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 04:20:00 -0400
-Received: by mail-qt1-f195.google.com with SMTP id m15so7739387qtq.2
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 01:19:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3SocQEUUMkK769LhW2Pd9m5ZQqfoBNJ10901hl/4ay4=;
-        b=nLw1HL3elE8+Sl+dCKaY9ufcrvHnF8x33T1asuG5/yPil0hxbSfwf1Wp4ZcsEm9kKV
-         6lBc0znEAm2vAWbqhqnMjBi3jZsfmj0teBImHoavMyHXPXWJLD7Xo5PowPkCZ+0hmZ9+
-         fxnsAJQ9ihkQJZFVslAaafYyAx3QfmIinfhxhPiyCeb7Dv1hC5dobbi3BFuQZPljAiDH
-         P+xA1GZFp6o4HDRHq2V9L8olN04Lwa7iz6Sn5JUH0GoA+zhoOq5FD+JEXu0/+RCc34nF
-         yyCniL7e/t4BxT8qVfk8q76UZiA8iYPkAQqURVCTZc/oG72GX2Tl/Daro/+anIkcYmC9
-         ST5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3SocQEUUMkK769LhW2Pd9m5ZQqfoBNJ10901hl/4ay4=;
-        b=kW+bbRBfA0akHtc8nBZW0TiyncZH2z4LT2uMlKZUNanZjnib2CA5Ftyb63powdig3F
-         x2VR/metjBUSIqXzXBCwk2flM4aQuQDFok6O6zrh5chkXZuPbA27DoOhYXNtQRhTJrRG
-         0q0EN6gPhdYqehyhmylQYn5Enp5iOq91hMzy+gznav9BQn59Cw/dedRpfZICuGd9U7eC
-         g2zRdLDybgVy7XmKbdrPGO2BpjL9J6iADwKbdjPjWPllN5DS1JkyttM/d1aDjwuVuGyP
-         /1l3+khURtEnRvrBskJ9aCQFSa/Yk/nVVRaSq6dmLrR9sNzNmb5yK7lifpLiojA6UlkL
-         hMLw==
-X-Gm-Message-State: APjAAAWgrPp9BY2rydMKptZFngetcBwtPioIFnuf608jGKU27mSxOr/C
-        wFBimOQadnfkfu4Uw87YBWOdFPg7fR4f8UA+sEfk7A==
-X-Google-Smtp-Source: APXvYqwlO5TN7aw8zddGqA6dfFkWBaGlE6Zgfrdslwr71Wxgag4BouCltVzFfmnE4S6FPXI8LDpPdjgihPX+lyfXNZQ=
-X-Received: by 2002:a0c:f6cd:: with SMTP id d13mr12063122qvo.146.1568967598534;
- Fri, 20 Sep 2019 01:19:58 -0700 (PDT)
+        Fri, 20 Sep 2019 04:21:20 -0400
+Received: from [IPv6:2001:983:e9a7:1:3829:6e33:4e49:c53d] ([IPv6:2001:983:e9a7:1:3829:6e33:4e49:c53d])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id BEAHiU9589D4hBEAIich6r; Fri, 20 Sep 2019 10:21:18 +0200
+Subject: Re: [Patch v2 10/13] media: am437x-vpfe: Remove print_fourcc helper
+To:     Benoit Parrot <bparrot@ti.com>
+Cc:     Prabhakar Lad <prabhakar.csengg@gmail.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190919204125.15254-1-bparrot@ti.com>
+ <20190919204125.15254-11-bparrot@ti.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <455387f7-3211-c032-c6c0-a15100f123d1@xs4all.nl>
+Date:   Fri, 20 Sep 2019 10:21:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190920032437.242187-1-kyletso@google.com> <cb225c94-da97-1b47-48b6-3802dc3eb93b@redhat.com>
-In-Reply-To: <cb225c94-da97-1b47-48b6-3802dc3eb93b@redhat.com>
-From:   Kyle Tso <kyletso@google.com>
-Date:   Fri, 20 Sep 2019 16:19:42 +0800
-Message-ID: <CAGZ6i=3O2zLJMPY5UevjTrJJj7fxpWcn28dZYRptWES74=4Tgg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] tcpm: AMS and Collision Avoidance
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Badhri Jagan Sridharan <badhri@google.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190919204125.15254-11-bparrot@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfJBXcyQDEPz3vjvRHG5J/wyOlEhZJSu1iaUsPL//Szs94xN63PaZWcshZ1tB5HfaA8zQZ1Rw/LfuXCgjWvNHM07tUlXbjVFglSzIEET6gFXqBt8tTkXS
+ 4abSsHaUXQi8D8jQpJmFbraK/ey4Lg5SIEQhMTvqChbN8kVUMNbWKeCjjUetr4XEdthEPq1evqBaUagwDg9/rkkVlpEiu83FNGkm9wR8GDgSL7t4aJUbXgVS
+ JV91IxfMUAzBJ/0xGFppF7CMLY2qdfWJdq5Q4nHhlObkz+YROXy2XAVVjjHGiye4KEqhnA/49Y9C/f4MD2yib2eYkgC2RG1q3VACAGbrPk6C6K8Nzk0ncnVb
+ DkZlrN5lFeFzWtnhLC8q9hs908vzgqJMI2RexZf5OGh35HqFBbTt3YB4W9l+BH2rllXqit8+
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hans,
+On 9/19/19 10:41 PM, Benoit Parrot wrote:
+> print_fourcc helper function was used for debug log to
+> convert a pixel format code into its readable form for display
+> purposes. But since it used a single static buffer to perform
+> the conversion this might lead to display format issue when more
+> than one instance was invoked simultaneously.
+> 
+> It turns out that print_fourcc can be safely replace by using
+> "%4pE" instead and passing the pointer to the fourcc code.
 
-I have tested these on an Android device (ARM64).
-All the swap operations work fine (Power Role/Data Role/Vconn Swap).
-(except for Fast Role Swap because it is still not supported in TCPM)
+If this series is merged:
+
+https://www.mail-archive.com/linux-media@vger.kernel.org/msg149985.html
+
+then this patch needs to be rewritten. So I'll skip this patch for now.
 
 Regards,
-Kyle Tso
 
+	Hans
 
-On Fri, Sep 20, 2019 at 4:02 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi Kyle,
->
-> On 20-09-2019 05:24, Kyle Tso wrote:
-> > *** BLURB HERE ***
-> >
-> > Kyle Tso (2):
-> >    usb: typec: tcpm: AMS and Collision Avoidance
-> >    usb: typec: tcpm: AMS for PD2.0
->
-> May I ask how and on which hardware you have tested this?
->
-> And specifically if you have tested this in combination with pwr-role swapping?
->
-> Regards,
->
-> Hans
->
+> 
+> Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> ---
+>  drivers/media/platform/am437x/am437x-vpfe.c | 42 +++++++--------------
+>  1 file changed, 14 insertions(+), 28 deletions(-)
+> 
+> diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
+> index 605a6bb7e6c2..ad46e037fe89 100644
+> --- a/drivers/media/platform/am437x/am437x-vpfe.c
+> +++ b/drivers/media/platform/am437x/am437x-vpfe.c
+> @@ -221,20 +221,6 @@ static void pix_to_mbus(struct vpfe_device *vpfe,
+>  	v4l2_fill_mbus_format(mbus_fmt, pix_fmt, fmt->code);
+>  }
+>  
+> -/*  Print Four-character-code (FOURCC) */
+> -static char *print_fourcc(u32 fmt)
+> -{
+> -	static char code[5];
+> -
+> -	code[0] = (unsigned char)(fmt & 0xff);
+> -	code[1] = (unsigned char)((fmt >> 8) & 0xff);
+> -	code[2] = (unsigned char)((fmt >> 16) & 0xff);
+> -	code[3] = (unsigned char)((fmt >> 24) & 0xff);
+> -	code[4] = '\0';
+> -
+> -	return code;
+> -}
+> -
+>  static int
+>  cmp_v4l2_format(const struct v4l2_format *lhs, const struct v4l2_format *rhs)
+>  {
+> @@ -696,8 +682,8 @@ static int vpfe_ccdc_set_pixel_format(struct vpfe_ccdc *ccdc, u32 pixfmt)
+>  {
+>  	struct vpfe_device *vpfe = container_of(ccdc, struct vpfe_device, ccdc);
+>  
+> -	vpfe_dbg(1, vpfe, "%s: if_type: %d, pixfmt:%s\n",
+> -		 __func__, ccdc->ccdc_cfg.if_type, print_fourcc(pixfmt));
+> +	vpfe_dbg(1, vpfe, "%s: if_type: %d, pixfmt:%4pE\n",
+> +		 __func__, ccdc->ccdc_cfg.if_type, &pixfmt);
+>  
+>  	if (ccdc->ccdc_cfg.if_type == VPFE_RAW_BAYER) {
+>  		ccdc->ccdc_cfg.bayer.pix_fmt = CCDC_PIXFMT_RAW;
+> @@ -983,8 +969,8 @@ static int vpfe_config_ccdc_image_format(struct vpfe_device *vpfe)
+>  	enum ccdc_frmfmt frm_fmt = CCDC_FRMFMT_INTERLACED;
+>  	int ret = 0;
+>  
+> -	vpfe_dbg(1, vpfe, "pixelformat: %s\n",
+> -		print_fourcc(vpfe->fmt.fmt.pix.pixelformat));
+> +	vpfe_dbg(1, vpfe, "pixelformat: %4pE\n",
+> +		 &vpfe->fmt.fmt.pix.pixelformat);
+>  
+>  	if (vpfe_ccdc_set_pixel_format(&vpfe->ccdc,
+>  			vpfe->fmt.fmt.pix.pixelformat) < 0) {
+> @@ -1392,9 +1378,9 @@ static int __vpfe_get_format(struct vpfe_device *vpfe,
+>  	format->type = vpfe->fmt.type;
+>  
+>  	vpfe_dbg(1, vpfe,
+> -		 "%s: size %dx%d (%s) bytesperline = %d, size = %d, bpp = %d\n",
+> +		 "%s: size %dx%d (%4pE) bytesperline = %d, size = %d, bpp = %d\n",
+>  		 __func__, format->fmt.pix.width, format->fmt.pix.height,
+> -		 print_fourcc(format->fmt.pix.pixelformat),
+> +		 &format->fmt.pix.pixelformat,
+>  		 format->fmt.pix.bytesperline, format->fmt.pix.sizeimage, *bpp);
+>  
+>  	return 0;
+> @@ -1427,9 +1413,9 @@ static int __vpfe_set_format(struct vpfe_device *vpfe,
+>  	format->type = vpfe->fmt.type;
+>  
+>  	vpfe_dbg(1, vpfe,
+> -		 "%s size %dx%d (%s) bytesperline = %d, size = %d, bpp = %d\n",
+> +		 "%s: size %dx%d (%4pE) bytesperline = %d, size = %d, bpp = %d\n",
+>  		 __func__,  format->fmt.pix.width, format->fmt.pix.height,
+> -		 print_fourcc(format->fmt.pix.pixelformat),
+> +		 &format->fmt.pix.pixelformat,
+>  		 format->fmt.pix.bytesperline, format->fmt.pix.sizeimage, *bpp);
+>  
+>  	return 0;
+> @@ -1463,8 +1449,8 @@ static int vpfe_enum_fmt(struct file *file, void  *priv,
+>  
+>  	f->pixelformat = fmt->fourcc;
+>  
+> -	vpfe_dbg(1, vpfe, "%s: mbus index: %d code: %x pixelformat: %s\n",
+> -		 __func__, f->index, fmt->code, print_fourcc(fmt->fourcc));
+> +	vpfe_dbg(1, vpfe, "%s: mbus index: %d code: %x pixelformat: %4pE\n",
+> +		 __func__, f->index, fmt->code, &fmt->fourcc);
+>  
+>  	return 0;
+>  }
+> @@ -1571,8 +1557,8 @@ static int vpfe_enum_size(struct file *file, void  *priv,
+>  	fsize->discrete.width = fse.max_width;
+>  	fsize->discrete.height = fse.max_height;
+>  
+> -	vpfe_dbg(1, vpfe, "%s: index: %d pixformat: %4.4s size: %dx%d\n",
+> -		 __func__, fsize->index, (char *)&fsize->pixel_format,
+> +	vpfe_dbg(1, vpfe, "%s: index: %d pixformat: %4pE size: %dx%d\n",
+> +		 __func__, fsize->index, &fsize->pixel_format,
+>  		 fsize->discrete.width, fsize->discrete.height);
+>  
+>  	return 0;
+> @@ -2242,8 +2228,8 @@ vpfe_async_bound(struct v4l2_async_notifier *notifier,
+>  				continue;
+>  			vpfe->active_fmt[i] = fmt;
+>  			vpfe_dbg(3, vpfe,
+> -				 "matched fourcc: %4.4s code: %04x idx: %d\n",
+> -				 (char *)&fmt->fourcc, mbus_code.code, i);
+> +				 "matched fourcc: %4pE code: %04x idx: %d\n",
+> +				 &fmt->fourcc, mbus_code.code, i);
+>  			vpfe->num_active_fmt = ++i;
+>  		}
+>  	}
+> 
+
