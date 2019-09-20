@@ -2,94 +2,91 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 874F2C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 07:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51CB1C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 07:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ED9D205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 07:46:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568965576;
-	bh=1yZ0DYSLh5xqAj+fIasPisqFTh/IWQdz6nmgz7HE5EA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ds0yD358CyL7sqbr0iIS8EXST7Liq9OpaV/E4hbfjpPgytxQLv7vslUvENwOIDD26
-	 2T6ZHQKEo3Z6vlgwWgKikdD9knv1oddhP8s5/bYfRhmrh8XoVGGnM/hy255ZQ92CEn
-	 wV6Eic/KhhVUuwf9lOQxgjOf037ocrxrkkevLy4s=
+	by mail.kernel.org (Postfix) with ESMTP id 2423E2054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 07:47:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mRkPMjzv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437578AbfITHqP (ORCPT
+        id S2437592AbfITHrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 03:46:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35130 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404836AbfITHqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 03:46:15 -0400
-Received: from localhost (unknown [89.205.140.247])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDC6F2054F;
-        Fri, 20 Sep 2019 07:46:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568965574;
-        bh=1yZ0DYSLh5xqAj+fIasPisqFTh/IWQdz6nmgz7HE5EA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=P31Qlo4gk7+HByBoI78w0V5DQl5SxrCwc6l7P5lLN6+n2vTplKynBMFkBQddGveup
-         lWrlCn9QH8uFozfKqY86Z069nY3e3NlXvqtjS6msuEZVMfRDUeGgFxchMKtirA2df9
-         K6Qz7cph8oqRc/puWtBc73kMw2TEJaBn0ZhtJwWQ=
-Date:   Fri, 20 Sep 2019 09:46:11 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Gregory Nowak <greg@gregn.net>
-Cc:     devel@driverdev.osuosl.org,
-        Simon Dickson <simonhdickson@gmail.com>,
-        okash.khawaja@gmail.com, Didier Spaier <didier@slint.fr>,
-        "Speakup is a screen review system for Linux." 
-        <speakup@linux-speakup.org>, linux-kernel@vger.kernel.org,
-        John Covici <covici@ccs.covici.com>,
-        Samuel Thibault <samuel.thibault@ens-lyon.org>
-Subject: Re: [HELP REQUESTED from the community] Was: Staging status of
- speakup
-Message-ID: <20190920074611.GB518462@kroah.com>
-References: <CAOtcWM0P=w-iBZzwekVrSpp7t2WO9RA5WP956zgDrNKvzA+4ZA@mail.gmail.com>
- <20190915134300.GA552892@kroah.com>
- <CAOtcWM2MD-Z1tg7gdgzrXiv7y62JrV7eHnTgXpv-LFW7zRApjg@mail.gmail.com>
- <20190916134727.4gi6rvz4sm6znrqc@function>
- <20190916141100.GA1595107@kroah.com>
- <20190916223848.GA8679@gregn.net>
- <20190917080118.GC2075173@kroah.com>
- <20190918010351.GA10455@gregn.net>
- <20190918061642.GB1832786@kroah.com>
- <20190918203032.GA3987@gregn.net>
+        Fri, 20 Sep 2019 03:47:46 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:39570 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437580AbfITHrp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 03:47:45 -0400
+Received: by mail-ua1-f65.google.com with SMTP id b14so1929818uap.6
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 00:47:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fxglbnyqNsy9IrMeX1phK/aGWuTchg+w3X2HNfK/9CM=;
+        b=mRkPMjzvPBVfAeCHVbJTYmrEh8uq38ZKVM8E8AFU6NzBMCkin/nd1eIBhx73UcvIPj
+         hZ9cLZl7VRnRHz0r9b+vw/tUY5l1L8pgCBGOVyccwzB3loxNIAfhw8f57iYt1IVFHmMG
+         3ihqT7adb8ixIuRyXLY28hq5ZvJnUjZr99BB8J0MuUtrXiFlrJAhlWPEp5EDSLnkwd6j
+         gjJUOVRjbfeyDNz7/rz7jmEHiaLot6qL149wtDhUGZaREGUjVZZCucZTaTlcf93XPL/+
+         tkpHNvmoPXhsNOFXcMyryFbNn/lRqf4ubcSr7Nk6ZF/pyAtrNhtGObkvcyf+0/vSpDDJ
+         xc4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fxglbnyqNsy9IrMeX1phK/aGWuTchg+w3X2HNfK/9CM=;
+        b=HHrGiCcmSpOzIanZ9/b9KkIZ3zRBnc+LKexEsdlRMfehaZPghPjILwjGj2xqO0zups
+         zLNmqutQoAdrMiLmrZ+fJ4zZ8dxAavozfmCPGKipOIt9TGbonVcyETuKpmiT2KmE116C
+         Yvw18pABJMZTkmbmlTSBCsfZFqhqUanONePKS1wgLwTJXToznWgDlhTXEEFGs/oizMi7
+         BUb0mcVYRUJhSkOIdQrAW6ucIHDbbtvTaJJy7SLX4aCO+V8oqVZ0aBwpXanH8WWs7qjq
+         ILCN0+O4mum06IQkfaSAutfC9bdN4Rt47JVMxWigFv0MUPWxcfLBsZAnXiw5nxsuMGAY
+         rj9w==
+X-Gm-Message-State: APjAAAV0dKNarUwG/ZMfNIrV+8pUcoTVp5oiwn9bQSTGfxiT3kImw58b
+        ehr8JbLWs2x8BkT0UInY9juLsCqP+PnFsHqJUy0GJg==
+X-Google-Smtp-Source: APXvYqyIPD8otiC6oiySJICKUArdhKAFf1jxKg7NkboCvLV7vKR9MnpHuTM4AuE9NqL9JQuhAM9Efy4otC84oobLXJw=
+X-Received: by 2002:ab0:1856:: with SMTP id j22mr8516177uag.19.1568965664676;
+ Fri, 20 Sep 2019 00:47:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190918203032.GA3987@gregn.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190905122112.29672-1-ludovic.Barre@st.com> <940e3ce8-1a4f-7e03-dfec-25330051ea5f@st.com>
+In-Reply-To: <940e3ce8-1a4f-7e03-dfec-25330051ea5f@st.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 20 Sep 2019 09:47:07 +0200
+Message-ID: <CAPDyKFoha6q1CmhLXREz8OAzd4UiBDKpHo46J1PLGMkf8CStpg@mail.gmail.com>
+Subject: Re: [PATCH V6 0/3] mmc: mmci: add busy detect for stm32 sdmmc variant
+To:     Ludovic BARRE <ludovic.barre@st.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 01:30:33PM -0700, Gregory Nowak wrote:
-> > Extra line between each attribute (before the "What:" line) would be
-> > nice.
-> 
-> In a previous post above, you wrote:
-> On Mon, Sep 16, 2019 at 04:11:00PM +0200, Greg Kroah-Hartman wrote:
-> > Anyway, please put the Description: lines without a blank after that,
-> > with the description text starting on that same line.
-> 
-> I understood that to mean that the description text should start on
-> the same line, and the blank lines after the description text should
-> be removed. I've put them back in. Someone more familiar with the
-> speakup code will have to dig into it to resolve the TODO items I
-> suppose.
+On Wed, 18 Sep 2019 at 11:33, Ludovic BARRE <ludovic.barre@st.com> wrote:
+>
+> hi Ulf
+>
+> Just a "gentleman ping" about this series and
+> https://lkml.org/lkml/2019/9/4/747
 
-No problem, this looks good to me.  If someone wants to turn this into a
-patch adding it to the drivers/staging/speakup/ directory, I'll be glad
-to take it and it will allow others to fill in the TODO entries easier.
+Thanks for pinging, I will come to this as soon as I can. September
+has been a busy month, being on the road most of the time.
 
-thanks,
+Apologize for the delays!
 
-greg k-h
+[...]
+
+Kind regards
+Uffe
