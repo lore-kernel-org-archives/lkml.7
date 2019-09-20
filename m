@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC31C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C329C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76C94207E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:32:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CC0D207E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:32:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389978AbfITOce (ORCPT
+        id S1729074AbfITOcj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:32:34 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36508 "EHLO
+        Fri, 20 Sep 2019 10:32:39 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36498 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388284AbfITOZK (ORCPT
+        by vger.kernel.org with ESMTP id S2388283AbfITOZK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Sep 2019 10:25:10 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqN-00051F-Lo; Fri, 20 Sep 2019 15:25:07 +0100
+        id 1iBJqN-000514-G2; Fri, 20 Sep 2019 15:25:07 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqG-0007vo-4H; Fri, 20 Sep 2019 15:25:00 +0100
+        id 1iBJqG-0007wH-CX; Fri, 20 Sep 2019 15:25:00 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,17 +35,18 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Miroslav Lichvar" <mlichvar@redhat.com>,
-        "John Stultz" <john.stultz@linaro.org>,
-        "Prarit Bhargava" <prarit@redhat.com>,
-        "Ondrej Mosnacek" <omosnace@redhat.com>,
-        "Richard Cochran" <richardcochran@gmail.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>
+        netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        "Veaceslav Falico" <vfalico@gmail.com>,
+        "Jarod Wilson" <jarod@redhat.com>,
+        "Jay Vosburgh" <j.vosburgh@gmail.com>,
+        "Andy Gospodarek" <andy@greyhouse.net>,
+        "Jay Vosburgh" <jay.vosburgh@canonical.com>
 Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.865748957@decadent.org.uk>
+Message-ID: <lsq.1568989415.519584410@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 090/132] ntp: Allow TAI-UTC offset to be set to zero
+Subject: [PATCH 3.16 095/132] bonding: fix arp_validate toggling in
+ active-backup mode
 In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,42 +60,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Miroslav Lichvar <mlichvar@redhat.com>
+From: Jarod Wilson <jarod@redhat.com>
 
-commit fdc6bae940ee9eb869e493990540098b8c0fd6ab upstream.
+commit a9b8a2b39ce65df45687cf9ef648885c2a99fe75 upstream.
 
-The ADJ_TAI adjtimex mode sets the TAI-UTC offset of the system clock.
-It is typically set by NTP/PTP implementations and it is automatically
-updated by the kernel on leap seconds. The initial value is zero (which
-applications may interpret as unknown), but this value cannot be set by
-adjtimex. This limitation seems to go back to the original "nanokernel"
-implementation by David Mills.
+There's currently a problem with toggling arp_validate on and off with an
+active-backup bond. At the moment, you can start up a bond, like so:
 
-Change the ADJ_TAI check to accept zero as a valid TAI-UTC offset in
-order to allow setting it back to the initial value.
+modprobe bonding mode=1 arp_interval=100 arp_validate=0 arp_ip_targets=192.168.1.1
+ip link set bond0 down
+echo "ens4f0" > /sys/class/net/bond0/bonding/slaves
+echo "ens4f1" > /sys/class/net/bond0/bonding/slaves
+ip link set bond0 up
+ip addr add 192.168.1.2/24 dev bond0
 
-Fixes: 153b5d054ac2 ("ntp: support for TAI")
-Suggested-by: Ondrej Mosnacek <omosnace@redhat.com>
-Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: John Stultz <john.stultz@linaro.org>
-Cc: Richard Cochran <richardcochran@gmail.com>
-Cc: Prarit Bhargava <prarit@redhat.com>
-Link: https://lkml.kernel.org/r/20190417084833.7401-1-mlichvar@redhat.com
+Pings to 192.168.1.1 work just fine. Now turn on arp_validate:
+
+echo 1 > /sys/class/net/bond0/bonding/arp_validate
+
+Pings to 192.168.1.1 continue to work just fine. Now when you go to turn
+arp_validate off again, the link falls flat on it's face:
+
+echo 0 > /sys/class/net/bond0/bonding/arp_validate
+dmesg
+...
+[133191.911987] bond0: Setting arp_validate to none (0)
+[133194.257793] bond0: bond_should_notify_peers: slave ens4f0
+[133194.258031] bond0: link status definitely down for interface ens4f0, disabling it
+[133194.259000] bond0: making interface ens4f1 the new active one
+[133197.330130] bond0: link status definitely down for interface ens4f1, disabling it
+[133197.331191] bond0: now running without any active interface!
+
+The problem lies in bond_options.c, where passing in arp_validate=0
+results in bond->recv_probe getting set to NULL. This flies directly in
+the face of commit 3fe68df97c7f, which says we need to set recv_probe =
+bond_arp_recv, even if we're not using arp_validate. Said commit fixed
+this in bond_option_arp_interval_set, but missed that we can get to that
+same state in bond_option_arp_validate_set as well.
+
+One solution would be to universally set recv_probe = bond_arp_recv here
+as well, but I don't think bond_option_arp_validate_set has any business
+touching recv_probe at all, and that should be left to the arp_interval
+code, so we can just make things much tidier here.
+
+Fixes: 3fe68df97c7f ("bonding: always set recv_probe to bond_arp_rcv in arp monitor")
+CC: Jay Vosburgh <j.vosburgh@gmail.com>
+CC: Veaceslav Falico <vfalico@gmail.com>
+CC: Andy Gospodarek <andy@greyhouse.net>
+CC: "David S. Miller" <davem@davemloft.net>
+CC: netdev@vger.kernel.org
+Signed-off-by: Jarod Wilson <jarod@redhat.com>
+Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- kernel/time/ntp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/bonding/bond_options.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
---- a/kernel/time/ntp.c
-+++ b/kernel/time/ntp.c
-@@ -588,7 +588,7 @@ static inline void process_adjtimex_mode
- 		time_constant = max(time_constant, 0l);
- 	}
+--- a/drivers/net/bonding/bond_options.c
++++ b/drivers/net/bonding/bond_options.c
+@@ -1068,13 +1068,6 @@ static int bond_option_arp_validate_set(
+ {
+ 	pr_info("%s: Setting arp_validate to %s (%llu)\n",
+ 		bond->dev->name, newval->string, newval->value);
+-
+-	if (bond->dev->flags & IFF_UP) {
+-		if (!newval->value)
+-			bond->recv_probe = NULL;
+-		else if (bond->params.arp_interval)
+-			bond->recv_probe = bond_arp_rcv;
+-	}
+ 	bond->params.arp_validate = newval->value;
  
--	if (txc->modes & ADJ_TAI && txc->constant > 0)
-+	if (txc->modes & ADJ_TAI && txc->constant >= 0)
- 		*time_tai = txc->constant;
- 
- 	if (txc->modes & ADJ_OFFSET)
+ 	return 0;
 
