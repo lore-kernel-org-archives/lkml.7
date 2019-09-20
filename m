@@ -2,112 +2,209 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 931D1C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 547A8C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 670262054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:48:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="cgBWisj/"
+	by mail.kernel.org (Postfix) with ESMTP id 28A9A206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:49:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728592AbfITNst (ORCPT
+        id S2387403AbfITNtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 09:48:49 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:5361 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728494AbfITNst (ORCPT
+        Fri, 20 Sep 2019 09:49:07 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:38648 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728593AbfITNtH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 09:48:49 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d84d8c60000>; Fri, 20 Sep 2019 06:48:54 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 20 Sep 2019 06:48:48 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 20 Sep 2019 06:48:48 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 20 Sep
- 2019 13:48:48 +0000
-Received: from [10.21.132.148] (172.20.13.39) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 20 Sep
- 2019 13:48:45 +0000
-Subject: Re: [PATCH 5.2 000/124] 5.2.17-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20190919214819.198419517@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <968601a3-71ee-f562-df15-263f91933738@nvidia.com>
-Date:   Fri, 20 Sep 2019 14:48:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 20 Sep 2019 09:49:07 -0400
+Received: by mail-io1-f71.google.com with SMTP id a8so10763277ios.5
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 06:49:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=PaouBw0Xbrhu4/nEFLLZtRhOLdajDYekVia1In7uP5g=;
+        b=Nb2f7Ik9zCLVwjuA9bNja9tkhzfg2029pZj69RyEczd84NIQZlR0nvULOCL2Ittp3t
+         7YKANqiiFrXkZ764XTitRe147UhZ5chhOrIRkKtn2WuDQIOrzTnPIC9J3l2ki8BIblkY
+         /1YRk0qwu4YvVJBuUmLGzogqv/m/7Hq+47OU6+oG8enfLQK6dqz/S8WAZYvHScNouuZq
+         xZuacCMf8XeSUvKZNJWg6tW7c6lHvRX3DFPSVi0JnsTyhnFKyeEZEtfV0DCQe3FdRsy/
+         BUy6X7E31WBkIZcVKizVL4g7R+Jm+WXTdiGkxwAMsKUOweU4zy7Jp+Ci8VujYifFQGxR
+         XbOA==
+X-Gm-Message-State: APjAAAVin0D0T0US2ChuwKfcAz6xvZYkFT8rLq/SGThZYmWw7WUjBPy2
+        P8J+5TA3a6UTqwybPKDplYUU31rRvZ7NEbMV5l4TFLXHTiys
+X-Google-Smtp-Source: APXvYqwy9baIWuDtd2Dpg5/2sGsIhjFWlsUqx2obaXg0jlSE5TUwkmZuyMRS1HIKUM/tQVK9LwLdYp61J1eT2lKFgZOR56iOPWGb
 MIME-Version: 1.0
-In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1568987334; bh=2I5U542l/4RuD/2S6pr7XwLcfxiurU49CscvGZ0WcX4=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=cgBWisj/6Kk8eDbx0KwqHfQlz2xluXmDW2P4f4UBXUbw7rvHLIzbvLxPSfpwHlwpD
-         XvPuB9l88oa/rAEPnL8KHlSqsv9vS9MNsDEq6yjX8sWUY4zCRBPem3F6pqq1CXLerL
-         xHHRFoxVrY3SMaWhyuRcd6UeIMLuUBawh18f5zSsY4jVNV22uAm6noFEmRsWrzCL3q
-         2ddd9O2LzHMzn2MCl8785jTRwVY6/1UivjxuepMOx5CCaBT06+OgLb+QRWj7p8nzQW
-         gxbJ0ABCjeXH/OH5IOz0dCRpE0UkVREgM56CRJIBK/qoCwphaGiU49x0gM68n0ohFC
-         m24fFBMLwGuSQ==
+X-Received: by 2002:a5e:cb49:: with SMTP id h9mr14222240iok.307.1568987346106;
+ Fri, 20 Sep 2019 06:49:06 -0700 (PDT)
+Date:   Fri, 20 Sep 2019 06:49:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000006c06df0592fc55ea@google.com>
+Subject: KASAN: slab-out-of-bounds Write in hiddev_ioctl_usage
+From:   syzbot <syzbot+34ee1b45d88571c2fa8b@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, benjamin.tissoires@redhat.com,
+        jikos@kernel.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
-On 19/09/2019 23:01, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.2.17 release.
-> There are 124 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat 21 Sep 2019 09:44:25 PM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.17-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+syzbot found the following crash on:
 
-All tests passing for Tegra ...
+HEAD commit:    e0bd8d79 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=17cb8255600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8847e5384a16f66a
+dashboard link: https://syzkaller.appspot.com/bug?extid=34ee1b45d88571c2fa8b
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1151ee8d600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10ce5909600000
 
-Test results for stable-v5.2:
-    12 builds:	12 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    38 tests:	38 pass, 0 fail
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+34ee1b45d88571c2fa8b@syzkaller.appspotmail.com
 
-Linux version:	5.2.17-rc1-g690411952b3d
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
+==================================================================
+BUG: KASAN: slab-out-of-bounds in hiddev_ioctl_usage.isra.0+0x1251/0x13b0  
+drivers/hid/usbhid/hiddev.c:541
+Write of size 4 at addr ffff8881d59384b4 by task syz-executor819/1731
 
-Cheers
-Jon
+CPU: 1 PID: 1731 Comm: syz-executor819 Not tainted 5.3.0+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  print_address_description+0x6a/0x32c mm/kasan/report.c:351
+  __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
+  kasan_report+0xe/0x12 mm/kasan/common.c:618
+  hiddev_ioctl_usage.isra.0+0x1251/0x13b0 drivers/hid/usbhid/hiddev.c:541
+  hiddev_ioctl+0x7a1/0x1550 drivers/hid/usbhid/hiddev.c:807
+  vfs_ioctl fs/ioctl.c:46 [inline]
+  file_ioctl fs/ioctl.c:509 [inline]
+  do_vfs_ioctl+0xd2d/0x1330 fs/ioctl.c:696
+  ksys_ioctl+0x9b/0xc0 fs/ioctl.c:713
+  __do_sys_ioctl fs/ioctl.c:720 [inline]
+  __se_sys_ioctl fs/ioctl.c:718 [inline]
+  __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:718
+  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x444809
+Code: e8 bc af 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 1b d8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffd4d98f5b8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00000000004002e0 RCX: 0000000000444809
+RDX: 00000000200008c0 RSI: 000000004018480c RDI: 0000000000000004
+RBP: 00000000006cf018 R08: 18c1180b508ac6d9 R09: 00000000004002e0
+R10: 000000000000000f R11: 0000000000000246 R12: 00000000004024b0
+R13: 0000000000402540 R14: 0000000000000000 R15: 0000000000000000
 
--- 
-nvpublic
+Allocated by task 83:
+  save_stack+0x1b/0x80 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc mm/kasan/common.c:493 [inline]
+  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:466
+  kmalloc include/linux/slab.h:557 [inline]
+  kzalloc include/linux/slab.h:748 [inline]
+  hid_register_field drivers/hid/hid-core.c:102 [inline]
+  hid_add_field+0x444/0x11c0 drivers/hid/hid-core.c:277
+  hid_parser_main+0x6ab/0xbf0 drivers/hid/hid-core.c:579
+  hid_open_report+0x372/0x620 drivers/hid/hid-core.c:1202
+  hid_parse include/linux/hid.h:1017 [inline]
+  cmhid_probe+0xdd/0x160 drivers/hid/hid-cmedia.c:117
+  hid_device_probe+0x2be/0x3f0 drivers/hid/hid-core.c:2209
+  really_probe+0x281/0x6d0 drivers/base/dd.c:548
+  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+  __device_attach+0x217/0x360 drivers/base/dd.c:894
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+  device_add+0xae6/0x16f0 drivers/base/core.c:2201
+  hid_add_device+0x33c/0x990 drivers/hid/hid-core.c:2365
+  usbhid_probe+0xa81/0xfa0 drivers/hid/usbhid/hid-core.c:1386
+  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+  really_probe+0x281/0x6d0 drivers/base/dd.c:548
+  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+  __device_attach+0x217/0x360 drivers/base/dd.c:894
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+  device_add+0xae6/0x16f0 drivers/base/core.c:2201
+  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+  really_probe+0x281/0x6d0 drivers/base/dd.c:548
+  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+  __device_attach+0x217/0x360 drivers/base/dd.c:894
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+  device_add+0xae6/0x16f0 drivers/base/core.c:2201
+  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
+  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+  port_event drivers/usb/core/hub.c:5359 [inline]
+  hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
+  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+  kthread+0x318/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+Freed by task 1:
+  save_stack+0x1b/0x80 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:455
+  slab_free_hook mm/slub.c:1423 [inline]
+  slab_free_freelist_hook mm/slub.c:1474 [inline]
+  slab_free mm/slub.c:3016 [inline]
+  kfree+0xe4/0x2f0 mm/slub.c:3957
+  do_new_mount fs/namespace.c:2798 [inline]
+  do_mount+0x69f/0x1af0 fs/namespace.c:3114
+  ksys_mount+0xd7/0x150 fs/namespace.c:3323
+  do_mount_root+0x32/0x1ce init/do_mounts.c:389
+  mount_block_root+0x317/0x5d3 init/do_mounts.c:418
+  mount_root+0x1cd/0x213 init/do_mounts.c:563
+  prepare_namespace+0x1ff/0x23b init/do_mounts.c:622
+  kernel_init_freeable+0x57e/0x596 init/main.c:1211
+  kernel_init+0xd/0x1bf init/main.c:1110
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+The buggy address belongs to the object at ffff8881d59383c0
+  which belongs to the cache kmalloc-256 of size 256
+The buggy address is located 244 bytes inside of
+  256-byte region [ffff8881d59383c0, ffff8881d59384c0)
+The buggy address belongs to the page:
+page:ffffea0007564e00 refcount:1 mapcount:0 mapping:ffff8881da002780  
+index:0x0
+flags: 0x200000000000200(slab)
+raw: 0200000000000200 ffffea0007607e40 0000000b0000000b ffff8881da002780
+raw: 0000000000000000 00000000000c000c 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff8881d5938380: fc fc fc fc fc fc fc fc 00 00 00 00 00 00 00 00
+  ffff8881d5938400: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> ffff8881d5938480: 00 00 00 00 00 fc fc fc fc fc fc fc fc fc fc fc
+                                      ^
+  ffff8881d5938500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  ffff8881d5938580: 00 00 00 00 00 00 00 00 00 00 00 00 00 fc fc fc
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
