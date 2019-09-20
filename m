@@ -2,48 +2,127 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B03C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 11:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA5DC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 11:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADC23207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 11:45:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3102120882
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 11:45:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AXsSUJZ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438229AbfITLpo (ORCPT
+        id S2438247AbfITLp4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 07:45:44 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:34146 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406069AbfITLpo (ORCPT
+        Fri, 20 Sep 2019 07:45:56 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:51394 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438234AbfITLp4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 07:45:44 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iBHK4-00043M-D1; Fri, 20 Sep 2019 11:43:36 +0000
-Date:   Fri, 20 Sep 2019 12:43:36 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Xiaoming Ni <nixiaoming@huawei.com>
-Cc:     dwmw2@infradead.org, dilinger@queued.net, richard@nod.at,
-        houtao1@huawei.com, bbrezillon@kernel.org, daniel.santos@pobox.com,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] jffs2:freely allocate memory when parameters are invalid
-Message-ID: <20190920114336.GM1131@ZenIV.linux.org.uk>
-References: <1568962478-126260-1-git-send-email-nixiaoming@huawei.com>
+        Fri, 20 Sep 2019 07:45:56 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8KBjniL065355;
+        Fri, 20 Sep 2019 06:45:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568979949;
+        bh=BEDtAfL/joofY0lgoqbNbOuUs3KMuDnLnj1scx1TbUs=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=AXsSUJZ8PmVDa/FaDDUY3zbO/D4Sugk4DhZFVPQltzana+q7DiFUQ3sYnaRC2hOD0
+         JDOdXqCvcqbaMmGuE6BTFeHhEzmpdaTRD4XHfEYGGD3vPCtIpppFngBDDzEIda3CDu
+         c9BoPjG/9fX13931HIf8ggf/l07XAF0Spg+9/3p0=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8KBjn4d089246
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 20 Sep 2019 06:45:49 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 20
+ Sep 2019 06:45:49 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 20 Sep 2019 06:45:45 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8KBjn9w055169;
+        Fri, 20 Sep 2019 06:45:49 -0500
+Subject: Re: [PATCH v2 2/5] leds: lm3692x: Don't overwrite return value in
+ error path
+To:     =?UTF-8?Q?Guido_G=c3=bcnther?= <agx@sigxcpu.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <cover.1568957104.git.agx@sigxcpu.org>
+ <e3ee36845c1555bd722807f85329341d5ec9728e.1568957104.git.agx@sigxcpu.org>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <2bde2870-08a3-38b9-9cd7-fee0e2107743@ti.com>
+Date:   Fri, 20 Sep 2019 06:48:59 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1568962478-126260-1-git-send-email-nixiaoming@huawei.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <e3ee36845c1555bd722807f85329341d5ec9728e.1568957104.git.agx@sigxcpu.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 02:54:38PM +0800, Xiaoming Ni wrote:
-> Use kzalloc() to allocate memory in jffs2_fill_super().
-> Freeing memory when jffs2_parse_options() fails will cause
-> use-after-free and double-free in jffs2_kill_sb()
+Guido
 
-... so we are not freeing it there.  What's the problem?
+On 9/20/19 12:27 AM, Guido Günther wrote:
+> The driver currently reports successful initialization on every failure
+> as long as it's able to power off the regulator. Don't check the return
+> value of regulator_disable to avoid that.
+>
+> Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> ---
+>   drivers/leds/leds-lm3692x.c | 7 ++++---
+>   1 file changed, 4 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/leds/leds-lm3692x.c b/drivers/leds/leds-lm3692x.c
+> index 487228c2bed2..31115655f97b 100644
+> --- a/drivers/leds/leds-lm3692x.c
+> +++ b/drivers/leds/leds-lm3692x.c
+> @@ -198,7 +198,7 @@ static int lm3692x_brightness_set(struct led_classdev *led_cdev,
+>   static int lm3692x_init(struct lm3692x_led *led)
+>   {
+>   	int enable_state;
+> -	int ret;
+> +	int ret, ret2;
+>   
+>   	if (led->regulator) {
+>   		ret = regulator_enable(led->regulator);
+> @@ -313,14 +313,15 @@ static int lm3692x_init(struct lm3692x_led *led)
+>   		gpiod_direction_output(led->enable_gpio, 0);
+>   
+>   	if (led->regulator) {
+> -		ret = regulator_disable(led->regulator);
+> -		if (ret)
+> +		ret2 = regulator_disable(led->regulator);
+> +		if (ret2)
+>   			dev_err(&led->client->dev,
+>   				"Failed to disable regulator\n");
+
+s/ret2/reg_ret
+
+Like you did in patch 1 log the error code as well.
+
+If regulator_disabled failed you might want to send that error code but 
+either error returned is fine.
+
+Dan
+
+
+>   	}
+>   
+>   	return ret;
+>   }
+> +
+>   static int lm3692x_probe_dt(struct lm3692x_led *led)
+>   {
+>   	struct fwnode_handle *child = NULL;
