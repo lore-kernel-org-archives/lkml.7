@@ -2,348 +2,135 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FAE8C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 02:17:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8660C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 02:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BDCA207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 02:17:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="XMlmUMI/"
+	by mail.kernel.org (Postfix) with ESMTP id 83136207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 02:18:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394700AbfITCRp (ORCPT
+        id S2437078AbfITCSm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 22:17:45 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:12500 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394689AbfITCRp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 22:17:45 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190920021742epoutp03cbf57c9c7c75f5f671d5b677f9fa8121~GA-L734Nn0707007070epoutp03P
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 02:17:42 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190920021742epoutp03cbf57c9c7c75f5f671d5b677f9fa8121~GA-L734Nn0707007070epoutp03P
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1568945862;
-        bh=YfXLiQy+8jtEZrck5hnFr299ep9mh+np3X2B2i7hquo=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=XMlmUMI/KBbKM4PzW5svqfrLfXd+dYrpaj3ngtNtMnNomxtdU112gzWkWq8zV4cI8
-         4YBRcfdIzw5KR5zBo4l0oll5DmZTYj+EbQDNe/sMqzXZhGTZ4H5j27e8H2XBkub9bK
-         9/wsSa+04yQNY7jBtjpJV8V3inVRNoVZuK9kxmeU=
-Received: from epsnrtp6.localdomain (unknown [182.195.42.167]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20190920021741epcas1p364d774b46fa83d475ea533e38d29bb5b~GA-LWgqtd2381523815epcas1p3M;
-        Fri, 20 Sep 2019 02:17:41 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.154]) by
-        epsnrtp6.localdomain (Postfix) with ESMTP id 46ZHRl0YPbzMqYkd; Fri, 20 Sep
-        2019 02:17:39 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D5.7E.04088.2C6348D5; Fri, 20 Sep 2019 11:17:39 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190920021738epcas1p13648ef89bd3d90cd7a3b7d6c19f0cac8~GA-IMjJk62761127611epcas1p1r;
-        Fri, 20 Sep 2019 02:17:38 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190920021738epsmtrp1e584db6aac356dd50bb0603c188f20c8~GA-ILeTpP0124101241epsmtrp1r;
-        Fri, 20 Sep 2019 02:17:38 +0000 (GMT)
-X-AuditID: b6c32a35-85dff70000000ff8-d4-5d8436c2db4f
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        FF.85.03706.2C6348D5; Fri, 20 Sep 2019 11:17:38 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190920021737epsmtip105f54fafa3b9ced1bce39fc896890de6~GA-H2isNV1323713237epsmtip1n;
-        Fri, 20 Sep 2019 02:17:37 +0000 (GMT)
-Subject: Re: [RFC PATCH v2 04/11] devfreq: exynos-bus: Clean up code
-To:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>,
-        myungjoo.ham@samsung.com, inki.dae@samsung.com,
-        sw0312.kim@samsung.com, georgi.djakov@linaro.org,
-        leonard.crestez@nxp.com, m.szyprowski@samsung.com,
-        b.zolnierkie@samsung.com, krzk@kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <39db18c5-534d-ff72-0a7f-7a838c13fa7a@samsung.com>
-Date:   Fri, 20 Sep 2019 11:22:06 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Thu, 19 Sep 2019 22:18:42 -0400
+Received: from mga12.intel.com ([192.55.52.136]:26559 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437065AbfITCSm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 22:18:42 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Sep 2019 19:18:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,526,1559545200"; 
+   d="scan'208";a="194565338"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by FMSMGA003.fm.intel.com with ESMTP; 19 Sep 2019 19:18:39 -0700
+Date:   Fri, 20 Sep 2019 10:18:21 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/mm: fix return value of p[um]dp_set_access_flags
+Message-ID: <20190920021821.GA8472@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20190919082549.3895-1-richardw.yang@linux.intel.com>
+ <307c9866-c037-5d87-709f-840bdb577283@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190919142236.4071-5-a.swigon@samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrEJsWRmVeSWpSXmKPExsWy7bCmnu5hs5ZYg9cvmSwOHdvKbnF/Xiuj
-        xcYZ61kt5h85x2px5et7NovpezexWUy6P4HF4vz5DewWK+5+ZLXY9Pgaq8XlXXPYLD73HmG0
-        mHF+H5PF2iN32S1uN65gs5gx+SWbg4DHplWdbB53ru1h87jffZzJY/OSeo+N73YweRx8t4fJ
-        o2/LKkaPz5vkAjiism0yUhNTUosUUvOS81My89JtlbyD453jTc0MDHUNLS3MlRTyEnNTbZVc
-        fAJ03TJzgD5QUihLzCkFCgUkFhcr6dvZFOWXlqQqZOQXl9gqpRak5BRYFugVJ+YWl+al6yXn
-        51oZGhgYmQIVJmRnrGmdzl7QbVRxa90RlgbGRepdjJwcEgImEtvn3mbrYuTiEBLYwSix9MIK
-        RgjnE6PE3O/bmUGqhAS+MUqc/VoO0zFv+zMmiKK9jBJ9z5qh2t8zSrxs+cYIUiUs4CIx59RC
-        VpCEiMB/RonTy1aCOcwCnUwSv5/vYAWpYhPQktj/4gYbiM0voChx9cdjsG5eATuJW6u/gdWw
-        CKhKvN3xlB3EFhWIkPj04DArRI2gxMmZT1hAbE4BS4m1886CzWEWEJe49WQ+E4QtL9G8dTYz
-        yGIJgWPsErcWbGKGeMJFYsanf0wQtrDEq+Nb2CFsKYmX/W1QdrXEypNH2CCaOxgltuy/wAqR
-        MJbYv3QyUDMH0AZNifW79CHCihI7f89lhFjMJ/Huaw8rSImEAK9ER5sQRImyxOUHd6HWSkos
-        bu9km8CoNAvJO7OQvDALyQuzEJYtYGRZxSiWWlCcm55abFhgiBzfmxjB6VvLdAfjlHM+hxgF
-        OBiVeHgVyptjhVgTy4orcw8xSnAwK4nwzjFtihXiTUmsrEotyo8vKs1JLT7EaAoM7YnMUqLJ
-        +cDcklcSb2hqZGxsbGFiaGZqaKgkzuuR3hArJJCeWJKanZpakFoE08fEwSnVwNh7Srbgf+uu
-        97dLNEXfZ3S+Fnr7L9m/pMIqU+Wl1pbNZSteBP+vr3vE0bSXZXJBQdr+G5OsfhdeWXN9Vfyu
-        2vIF/zwW86yMypTp23yqn2XDw9qtLnq2Lzfv9PyovlHWa/J3HoGlBc5c7CZnFti53pCo0nL/
-        K/7EkHUDx02LeBedSsvQC/JKHUosxRmJhlrMRcWJAC6coAH1AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrLIsWRmVeSWpSXmKPExsWy7bCSnO4hs5ZYg/ddHBaHjm1lt7g/r5XR
-        YuOM9awW84+cY7W48vU9m8X0vZvYLCbdn8Bicf78BnaLFXc/slpsenyN1eLyrjlsFp97jzBa
-        zDi/j8li7ZG77Ba3G1ewWcyY/JLNQcBj06pONo871/awedzvPs7ksXlJvcfGdzuYPA6+28Pk
-        0bdlFaPH501yARxRXDYpqTmZZalF+nYJXBlrWqezF3QbVdxad4SlgXGRehcjJ4eEgInEvO3P
-        mLoYuTiEBHYzSmw8vJEZIiEpMe3iUSCbA8gWljh8uBii5i2jxNsZnYwgNcICLhJzTi1kBUmI
-        CPxnlHjYdowRxGEW6GSSWLzlBwvc2M2LH4ONZRPQktj/4gYbiM0voChx9cdjsFG8AnYSt1Z/
-        YwWxWQRUJd7ueMoOYosKREgc3jELqkZQ4uTMJywgNqeApcTaeWfB5jALqEv8mXeJGcIWl7j1
-        ZD4ThC0v0bx1NvMERuFZSNpnIWmZhaRlFpKWBYwsqxglUwuKc9Nziw0LDPNSy/WKE3OLS/PS
-        9ZLzczcxgiNZS3MH4+Ul8YcYBTgYlXh4FcqbY4VYE8uKK3MPMUpwMCuJ8M4xbYoV4k1JrKxK
-        LcqPLyrNSS0+xCjNwaIkzvs071ikkEB6YklqdmpqQWoRTJaJg1OqgTGTe9nGF2+LdDouncjL
-        OXNvkcn9x7KT+B4VmftX3JtSEdzE7llcsPaEw1xOkYeSaaLHEs2EsssfzWZRNbtVLzzdeses
-        69M77utHzgjOKYuYNKt/Hs/NsH+eiZHbhRfvLJVLerdwTvIsqdmP7K+Ihj0REz8YN4GvWrll
-        2Zo2CcW6OQ4abb2nkpVYijMSDbWYi4oTAYJDL03gAgAA
-X-CMS-MailID: 20190920021738epcas1p13648ef89bd3d90cd7a3b7d6c19f0cac8
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190919142324eucas1p1638cec2aafbfcaf03cfdfa7d0189143a
-References: <20190919142236.4071-1-a.swigon@samsung.com>
-        <CGME20190919142324eucas1p1638cec2aafbfcaf03cfdfa7d0189143a@eucas1p1.samsung.com>
-        <20190919142236.4071-5-a.swigon@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <307c9866-c037-5d87-709f-840bdb577283@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Artur,
+On Thu, Sep 19, 2019 at 10:25:05AM -0700, Dave Hansen wrote:
+>On 9/19/19 1:25 AM, Wei Yang wrote:
+>> Function p[um]dp_set_access_flags is used with update_mmu_cache_p[um]d
+>> and the return value from p[um]dp_set_access_flags indicates whether it
+>> is necessary to do the cache update.
+>
+>If this change is correct, why was it not applied to
+>ptep_set_access_flags()?  That function has the same form.
+>
 
-On 19. 9. 19. 오후 11:22, Artur Świgoń wrote:
-> From: Artur Świgoń <a.swigon@partner.samsung.com>
-> 
-> This patch adds minor improvements to the exynos-bus driver.
-> 
-> Signed-off-by: Artur Świgoń <a.swigon@partner.samsung.com>
-> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  drivers/devfreq/exynos-bus.c | 66 ++++++++++++++----------------------
->  1 file changed, 25 insertions(+), 41 deletions(-)
-> 
-> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
-> index 60ad4319fd80..8d44810cac69 100644
-> --- a/drivers/devfreq/exynos-bus.c
-> +++ b/drivers/devfreq/exynos-bus.c
-> @@ -15,11 +15,10 @@
->  #include <linux/device.h>
->  #include <linux/export.h>
->  #include <linux/module.h>
-> -#include <linux/of_device.h>
-> +#include <linux/of.h>
->  #include <linux/pm_opp.h>
->  #include <linux/platform_device.h>
->  #include <linux/regulator/consumer.h>
-> -#include <linux/slab.h>
->  
->  #define DEFAULT_SATURATION_RATIO	40
->  
-> @@ -178,7 +177,7 @@ static int exynos_bus_parent_parse_of(struct device_node *np,
->  	struct device *dev = bus->dev;
->  	struct opp_table *opp_table;
->  	const char *vdd = "vdd";
-> -	int i, ret, count, size;
-> +	int i, ret, count;
->  
->  	opp_table = dev_pm_opp_set_regulators(dev, &vdd, 1);
->  	if (IS_ERR(opp_table)) {
-> @@ -201,8 +200,7 @@ static int exynos_bus_parent_parse_of(struct device_node *np,
->  	}
->  	bus->edev_count = count;
->  
-> -	size = sizeof(*bus->edev) * count;
-> -	bus->edev = devm_kzalloc(dev, size, GFP_KERNEL);
-> +	bus->edev = devm_kcalloc(dev, count, sizeof(*bus->edev), GFP_KERNEL);
->  	if (!bus->edev) {
->  		ret = -ENOMEM;
->  		goto err_regulator;
-> @@ -301,10 +299,9 @@ static int exynos_bus_profile_init(struct exynos_bus *bus,
->  	profile->exit = exynos_bus_exit;
->  
->  	ondemand_data = devm_kzalloc(dev, sizeof(*ondemand_data), GFP_KERNEL);
-> -	if (!ondemand_data) {
-> -		ret = -ENOMEM;
-> -		goto err;
-> -	}
-> +	if (!ondemand_data)
-> +		return -ENOMEM;
-> +
->  	ondemand_data->upthreshold = 40;
->  	ondemand_data->downdifferential = 5;
->  
-> @@ -314,8 +311,7 @@ static int exynos_bus_profile_init(struct exynos_bus *bus,
->  						ondemand_data);
->  	if (IS_ERR(bus->devfreq)) {
->  		dev_err(dev, "failed to add devfreq device\n");
-> -		ret = PTR_ERR(bus->devfreq);
-> -		goto err;
-> +		return PTR_ERR(bus->devfreq);
->  	}
->  
->  	/*
-> @@ -325,16 +321,13 @@ static int exynos_bus_profile_init(struct exynos_bus *bus,
->  	ret = exynos_bus_enable_edev(bus);
->  	if (ret < 0) {
->  		dev_err(dev, "failed to enable devfreq-event devices\n");
-> -		goto err;
-> +		return ret;
->  	}
->  
->  	ret = exynos_bus_set_event(bus);
-> -	if (ret < 0) {
-> +	if (ret < 0)
->  		dev_err(dev, "failed to set event to devfreq-event devices\n");
-> -		goto err;
+Thanks, you are right, I missed this point.
 
-Instead of removing 'goto err', just return err as I commented[1] on v1.
-[1] https://lkml.org/lkml/2019/7/26/331
+>BTW, I rather dislike the 'dirty' variable name.  It seems to be
+>indicating whether the fault was a write fault or not and whether we
+>*expect* the dirty bit to be set in 'entry'.
+>
 
-> -	}
->  
-> -err:
->  	return ret;
+I found some comments for ptep_set_access_flags in OLD code, which says
 
-And you just keep 'return ret' or you can change it as 'return 0'.
+/*
+ * We only update the dirty/accessed state if we set
+ * the dirty bit by hand in the kernel, since the hardware
+ * will do the accessed bit for us, and we don't want to
+ * race with other CPU's that might be updating the dirty
+ * bit at the same time.
+ */
 
+I guess this is reason for the naming. Looks currently we use this value in
+some other way.
 
->  }
->  
-> @@ -344,7 +337,6 @@ static int exynos_bus_profile_init_passive(struct exynos_bus *bus,
->  	struct device *dev = bus->dev;
->  	struct devfreq_passive_data *passive_data;
->  	struct devfreq *parent_devfreq;
-> -	int ret = 0;
->  
->  	/* Initialize the struct profile and governor data for passive device */
->  	profile->target = exynos_bus_target;
-> @@ -352,30 +344,26 @@ static int exynos_bus_profile_init_passive(struct exynos_bus *bus,
->  
->  	/* Get the instance of parent devfreq device */
->  	parent_devfreq = devfreq_get_devfreq_by_phandle(dev, 0);
-> -	if (IS_ERR(parent_devfreq)) {
-> -		ret = -EPROBE_DEFER;
-> -		goto err;
-> -	}
-> +	if (IS_ERR(parent_devfreq))
-> +		return -EPROBE_DEFER;
->  
->  	passive_data = devm_kzalloc(dev, sizeof(*passive_data), GFP_KERNEL);
-> -	if (!passive_data) {
-> -		ret = -ENOMEM;
-> -		goto err;
-> -	}
-> +	if (!passive_data)
-> +		return -ENOMEM;
-> +
->  	passive_data->parent = parent_devfreq;
->  
->  	/* Add devfreq device for exynos bus with passive governor */
-> -	bus->devfreq = devm_devfreq_add_device(dev, profile, DEVFREQ_GOV_PASSIVE,
-> +	bus->devfreq = devm_devfreq_add_device(dev, profile,
-> +						DEVFREQ_GOV_PASSIVE,
->  						passive_data);
->  	if (IS_ERR(bus->devfreq)) {
->  		dev_err(dev,
->  			"failed to add devfreq dev with passive governor\n");
-> -		ret = PTR_ERR(bus->devfreq);
-> -		goto err;
-> +		return PTR_ERR(bus->devfreq);
->  	}
->  
-> -err:
-> -	return ret;
-> +	return 0;
->  }
->  
->  static int exynos_bus_probe(struct platform_device *pdev)
-> @@ -393,18 +381,18 @@ static int exynos_bus_probe(struct platform_device *pdev)
->  		return -EINVAL;
->  	}
->  
-> -	bus = devm_kzalloc(&pdev->dev, sizeof(*bus), GFP_KERNEL);
-> +	bus = devm_kzalloc(dev, sizeof(*bus), GFP_KERNEL);
->  	if (!bus)
->  		return -ENOMEM;
->  	mutex_init(&bus->lock);
-> -	bus->dev = &pdev->dev;
-> +	bus->dev = dev;
->  	platform_set_drvdata(pdev, bus);
->  
->  	profile = devm_kzalloc(dev, sizeof(*profile), GFP_KERNEL);
->  	if (!profile)
->  		return -ENOMEM;
->  
-> -	node = of_parse_phandle(dev->of_node, "devfreq", 0);
-> +	node = of_parse_phandle(np, "devfreq", 0);
->  	if (node) {
->  		of_node_put(node);
->  		passive = true;
-> @@ -461,12 +449,10 @@ static int exynos_bus_resume(struct device *dev)
->  	int ret;
->  
->  	ret = exynos_bus_enable_edev(bus);
-> -	if (ret < 0) {
-> +	if (ret < 0)
->  		dev_err(dev, "failed to enable the devfreq-event devices\n");
-> -		return ret;
+>> From current code logic, only when changed && dirty, related page table
+>> entry would be updated. It is not necessary to update cache when the
+>> real page table entry is not changed.
+>
+>This logic doesn't really hold up, though.
+>
+>If we are only writing accessed and/or dirty bits, then we *never* need
+>to flush.  The flush might avoid a stale TLB entry causing an extra page
+>walk by the hardware, but it's probably not ever worth the cost of the
+>flush.
+>
+>Unless there's something weird happening with paravirt, I can't ever see
+>a good reason to flush the TLB when just setting accessed/dirty bits on
+>bare-metal.
+>
+>This seems like a place where a debugging check to validate that only
+>accessed/dirty bits are only being set would be a good idea.
 
-Keep the 'return ret' if error happen as I commented[1] on v1.
-[1] https://lkml.org/lkml/2019/7/26/331
+The function update_mmu_cache_pmd is not for x86, IMHO, since it is empty on
+x86.
 
-> -	}
->  
-> -	return 0;
-> +	return ret;
+I took a look into the definition on powerpc, which is defined in
+arch/powerpc/mm/book3s64/pgtable.c, which preload the content of this HPTE. So
+the cache update here is not TLB flush on x86.
 
-And you just keep 'return 0' or you can change it as 'return ret'.
+And then I compare the definition of ptep_set_access_flags on x86 and powerpc.
+On powerpc, which is defined in arch/powerpc/mm/pgtable.c, update the pte
+without checking *dirty*. This logic make sense to me. So I am confused with
+why on x86 we need to check both *changed* and *dirty*. 
 
->  }
->  
->  static int exynos_bus_suspend(struct device *dev)
-> @@ -475,12 +461,10 @@ static int exynos_bus_suspend(struct device *dev)
->  	int ret;
->  
->  	ret = exynos_bus_disable_edev(bus);
-> -	if (ret < 0) {
-> +	if (ret < 0)
->  		dev_err(dev, "failed to disable the devfreq-event devices\n");
-> -		return ret;
+Then I searched the history, and found commit 8dab5241d06bf may explain
+something.
 
-Keep the 'return ret' if error happen as I commented[1] on v1.
-[1] https://lkml.org/lkml/2019/7/26/331
+The commit log says:
 
-> -	}
->  
-> -	return 0;
-> +	return ret;
+    This patch reworks ptep_set_access_flags() semantics, implementations and
+    callers so that it's now responsible for returning whether an update is
+    necessary or not (basically whether the PTE actually changed).
 
-And you just keep 'return 0' or you can change it as 'return ret'.
+If my understanding is correct, the return value should indicate whether the
+PTE actually changed.
 
->  }
->  #endif
->  
-> 
+But the change introduced in commit 8dab5241d06bf is not doing the exact
+thing on x86. Since we only change PTE only both *dirty* and *change*, just
+return *changed* seems not match the semantics. 
 
+Last but not least, since update_mmu_cache_pmd is empty, even return value is
+not correct, it doesn't break anything.
+
+Hope my understanding is correct.
 
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+Wei Yang
+Help you, Help me
