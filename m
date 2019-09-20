@@ -2,153 +2,123 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE7FBC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FBB5C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 820B720B7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:00:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B1C8207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:02:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="2OJhJbUb"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="NlRij032"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391397AbfITRAd (ORCPT
+        id S2405587AbfITRCP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 13:00:33 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:41692 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388450AbfITRAd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 13:00:33 -0400
-Received: by mail-ed1-f68.google.com with SMTP id f20so7132223edv.8
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 10:00:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CoI9aEF1VTiw5Xhyqba7lfuNeKaTTzmcsltHbdSRkHo=;
-        b=2OJhJbUbpQmn+x3xQD0IdUL9dWYC/YbYOg+H5Rw3+hLXeib7Fw/NkPDuWjgbqZRyhH
-         UhmCvyDveVppNSNLWGUKKRYDph/8hy+GnlI9BVJWv0qh74USl2ktYfyjzTL8u4DiloGy
-         HnmblWT8RimK7hpAAi8c6P5HsIihYVZ8Je0xC3YEpMKV9Yetl1W5YiYuZ+6wOC/Uh2Kr
-         VZ1PH7IUzV63vSz619E375gvI6LfJ7yVXe1yfFLtVhvs0ek4tvLZGZloHPwyM+S9/UZ9
-         gi+hz7IU0w427OYGIpgdEyH0pB9IaeIh59t9zYXHgLMoCPNUG9Oyu/8Emo7f+Ps51Xut
-         LF9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CoI9aEF1VTiw5Xhyqba7lfuNeKaTTzmcsltHbdSRkHo=;
-        b=oYKyYwOxPNm2YjIa+/tBhigTDFqMlcVZiRyLkH3U1FdJg/7rrhzlKhwoP/quPR+mTs
-         8pTOc+uMm+pixaGBDoaW8erpJJcqOxqOmmi5hGmhA3f31dowZbbd08bo6ZkVpzXrORYp
-         SDLJwFehI+Z28eDtmAhNaohetYg7nCSWxDJZaoV9NcCXkEL+O4Lfv5BsMviC+7VyCuMu
-         t7YTF5d/1cI9Hp30VWA3HFbyKAWpSmdc0BB34eqV0jp0Ahei8rH8sMcUExDdQMCouVYQ
-         bPRfn5vPzPggCHAazgZfUe6WHPP8fOn0hjBY93UIN7mkn2/9o4hA7oh88/QfU2sByBPE
-         SsXw==
-X-Gm-Message-State: APjAAAXv95vEk3L9VCO/4DaXOa/x7Zw8EIdDPHWEEJd193os6CfbsfC/
-        Lsae3jeS7t6OlBXgeiGVz2Hr4Q==
-X-Google-Smtp-Source: APXvYqxVUZ2ch3TYcwVRBpaEIcvJMThHoIdj+VR77186UorLBRy6kohaNp2UxH3nVDesW7lAnd7TZg==
-X-Received: by 2002:a17:906:5c49:: with SMTP id c9mr20265396ejr.78.1568998831579;
-        Fri, 20 Sep 2019 10:00:31 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id jr18sm285103ejb.89.2019.09.20.10.00.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 20 Sep 2019 10:00:30 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id DB3CE10140A; Fri, 20 Sep 2019 20:00:30 +0300 (+03)
-Date:   Fri, 20 Sep 2019 20:00:30 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Jia He <justin.he@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Suzuki Poulose <Suzuki.Poulose@arm.com>,
-        Punit Agrawal <punitagrawal@gmail.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Alex Van Brunt <avanbrunt@nvidia.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Ralph Campbell <rcampbell@nvidia.com>, hejianet@gmail.com,
-        Kaly Xin <Kaly.Xin@arm.com>, nd@arm.com
-Subject: Re: [PATCH v7 3/3] mm: fix double page fault on arm64 if PTE_AF is
- cleared
-Message-ID: <20190920170030.bpse5rlpjodbiv62@box>
-References: <20190920135437.25622-1-justin.he@arm.com>
- <20190920135437.25622-4-justin.he@arm.com>
- <20190920155300.GC15392@bombadil.infradead.org>
+        Fri, 20 Sep 2019 13:02:15 -0400
+Received: from mail-eopbgr40049.outbound.protection.outlook.com ([40.107.4.49]:19870
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2391920AbfITRCO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 13:02:14 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Q21T6wzkeofIUW2bmPxqfTkgrunswYGsR63CEzj/YRW73xR9wKPUsHgdfwF2NRunttrnv+4iQjPYlVHpSrGZwvATGp9M8hMePvMmiwdNJM58EVkiqeBLpxKO0BPMoEEz0Q1U+Pry3dnEOhyx1x7wHOOwGydhsdypmTif482E4ERU1UR/bgcFOq2R8kZCWI58hosNs6SYIDVVYTubrh55omJem1DUnhgdiiza85l0IGzHvD4WEfDJjcQuhNi2ERDLx3EzMAz0Oi+1XQ3IyDKNLc1D9zBdbgKZBrftLtLpbq2/3kk3ZNJ3+BHNyBLY+u+7UA3wYTU7flcwzSuqddYaDA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VH/aYCDUWGXe5dkFsWpbZr/Y8E9XJis+iFN4JZgOwo4=;
+ b=eyxFYm8B7VgaKIs+f6m0pIPW0Xy4SKdKVHmpXNv5z/IqIHYzLrZuRI20bEBBd+bT/yd29IMThZnQqr783/ljBqfDnDAg5T1J9rae4bbWy4XnIkxRoe5sVKC7X+LYyLEqAMfn8BiZF+mOQBqCuxR3cvFyM+b3ll1T7dxdOZmsrC8tHo9dNiah/9tFiSdyK6IejQAKz8pC4wYeALNKrAUSexKG02IuE5rhjX0WR4lstHSLTXxWPOchB/gLZaS+wWKRAG9RQhld211PFhEuUR2KKnIBWqqcfRZbef1sW3OHKEAwp7m6xJbGL8naSUz4TDfSyJ5s5JdWVc1PAYQvoYWiIg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VH/aYCDUWGXe5dkFsWpbZr/Y8E9XJis+iFN4JZgOwo4=;
+ b=NlRij032XuSvl+pU5X8dhd41XW3nL+JqN7iX/+ixYIctc4Opeq/xIgzYSNSom9h0Ut6s0v3+aK2hjRBPw7XXyQokbBWw3OUAzRfl/8AzKEaAu1QEcz2xG4x40Btwep+WP9R0iPEyi6pde9J154QLpN7guwO0dgc7lHz6pMv2j4E=
+Received: from AM6PR05MB5288.eurprd05.prod.outlook.com (20.177.198.151) by
+ AM6PR05MB6614.eurprd05.prod.outlook.com (20.179.3.148) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.20; Fri, 20 Sep 2019 17:02:11 +0000
+Received: from AM6PR05MB5288.eurprd05.prod.outlook.com
+ ([fe80::255f:e232:1ad8:65fb]) by AM6PR05MB5288.eurprd05.prod.outlook.com
+ ([fe80::255f:e232:1ad8:65fb%5]) with mapi id 15.20.2284.023; Fri, 20 Sep 2019
+ 17:02:11 +0000
+From:   Tal Gilboa <talgi@mellanox.com>
+To:     =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <uwe@kleine-koenig.org>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Arthur Kiyanovski <akiyano@amazon.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH] dimlib: make DIMLIB a hidden symbol
+Thread-Topic: [PATCH] dimlib: make DIMLIB a hidden symbol
+Thread-Index: AQHVb7e0M+d87C6r+0SKPdjxpO2J/ac0ytMA
+Date:   Fri, 20 Sep 2019 17:02:10 +0000
+Message-ID: <670cc72f-fef0-a8cf-eb03-25fdb608eea8@mellanox.com>
+References: <20190920133115.12802-1-uwe@kleine-koenig.org>
+In-Reply-To: <20190920133115.12802-1-uwe@kleine-koenig.org>
+Accept-Language: he-IL, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [89.139.148.16]
+x-clientproxiedby: PR0P264CA0162.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:100:1b::30) To AM6PR05MB5288.eurprd05.prod.outlook.com
+ (2603:10a6:20b:6b::23)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=talgi@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c9b0a4b7-d0f6-4842-80ad-08d73dec46d9
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM6PR05MB6614;
+x-ms-traffictypediagnostic: AM6PR05MB6614:|AM6PR05MB6614:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR05MB6614CF21D10A3E78D27AA749D2880@AM6PR05MB6614.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 0166B75B74
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(39860400002)(376002)(396003)(136003)(189003)(199004)(6436002)(305945005)(14454004)(256004)(14444005)(31686004)(8936002)(81156014)(81166006)(110136005)(316002)(54906003)(66946007)(66446008)(64756008)(66556008)(66476007)(446003)(7736002)(25786009)(476003)(6512007)(4744005)(4326008)(66574012)(6116002)(71190400001)(8676002)(36756003)(66066001)(11346002)(5660300002)(76176011)(386003)(2906002)(966005)(229853002)(486006)(3846002)(6246003)(2616005)(99286004)(53546011)(52116002)(6506007)(6486002)(186003)(478600001)(6306002)(86362001)(102836004)(26005)(71200400001)(31696002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR05MB6614;H:AM6PR05MB5288.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: yfl3fIWirQiU9NAY4xSQwq9rUYprpsEbSibnO7R8RfAyWgdM6RTUdsnZrg8ZDTcf6oU0wqgyzHxpsEJkn3O6qkSIMnsNBeKHhj5G2UDFkmT+ALcOpCUzO6DFsCElacu+bY0yykh+Rnfs9kqnIbYtaUc8GX3VPOMUQknrEp8EG0Ajo72+CU5SfuEP9g4ChwDtqYsznMM+myTOOUiBV4M1IXwZbwybW+1NriOCyNCm1XzQdO2s7QbXZ4DAyOwigahh8M9tRg+Ddu6TQpZr/zo85ham3ciAnyMAU0TaK24GPZbgEb+tn7U6436faHJhDTOGspFekJLHDIbpw3DTR7Hinz8kwdAw2/zEw5KJFaCHIk6hoLhL5bn8VMGuC0uNI8wILzuA6/tdZRFH0K6Jklj8QH3yjbu1v5JatIrXtxS8Iwc=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <287F364375C271469755202CCF2BD768@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190920155300.GC15392@bombadil.infradead.org>
-User-Agent: NeoMutt/20180716
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c9b0a4b7-d0f6-4842-80ad-08d73dec46d9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Sep 2019 17:02:11.0417
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mXhBa14e5VZOh8aPvXfnmWAoNwoctDAWLciGlIB3e8iVWvvhUCKDqewjU+TYpVEbjZpTom9nS7uQu0/lXFwDnA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB6614
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 08:53:00AM -0700, Matthew Wilcox wrote:
-> On Fri, Sep 20, 2019 at 09:54:37PM +0800, Jia He wrote:
-> > -static inline void cow_user_page(struct page *dst, struct page *src, unsigned long va, struct vm_area_struct *vma)
-> > +static inline int cow_user_page(struct page *dst, struct page *src,
-> > +				struct vm_fault *vmf)
-> >  {
-> 
-> Can we talk about the return type here?
-> 
-> > +			} else {
-> > +				/* Other thread has already handled the fault
-> > +				 * and we don't need to do anything. If it's
-> > +				 * not the case, the fault will be triggered
-> > +				 * again on the same address.
-> > +				 */
-> > +				pte_unmap_unlock(vmf->pte, vmf->ptl);
-> > +				return -1;
-> ...
-> > +	return 0;
-> >  }
-> 
-> So -1 for "try again" and 0 for "succeeded".
-> 
-> > +		if (cow_user_page(new_page, old_page, vmf)) {
-> 
-> Then we use it like a bool.  But it's kind of backwards from a bool because
-> false is success.
-> 
-> > +			/* COW failed, if the fault was solved by other,
-> > +			 * it's fine. If not, userspace would re-fault on
-> > +			 * the same address and we will handle the fault
-> > +			 * from the second attempt.
-> > +			 */
-> > +			put_page(new_page);
-> > +			if (old_page)
-> > +				put_page(old_page);
-> > +			return 0;
-> 
-> And we don't use the return value; in fact we invert it.
-> 
-> Would this make more sense:
-> 
-> static inline bool cow_user_page(struct page *dst, struct page *src,
-> 					struct vm_fault *vmf)
-> ...
-> 				pte_unmap_unlock(vmf->pte, vmf->ptl);
-> 				return false;
-> ...
-> 	return true;
-> ...
-> 		if (!cow_user_page(new_page, old_page, vmf)) {
-> 
-> That reads more sensibly for me.
-
-I like this idea too.
-
--- 
- Kirill A. Shutemov
+T24gOS8yMC8yMDE5IDQ6MzEgUE0sIFV3ZSBLbGVpbmUtS8O2bmlnIHdyb3RlOg0KPiBBY2NvcmRp
+bmcgdG8gVGFsIEdpbGJvYSB0aGUgb25seSBiZW5lZml0IGZyb20gRElNIGNvbWVzIGZyb20gYSBk
+cml2ZXINCj4gdGhhdCB1c2VzIGl0LiBTbyBpdCBkb2Vzbid0IG1ha2Ugc2Vuc2UgdG8gbWFrZSB0
+aGlzIHN5bWJvbCB1c2VyIHZpc2libGUsDQo+IGluc3RlYWQgYWxsIGRyaXZlcnMgdGhhdCB1c2Ug
+aXQgc2hvdWxkIHNlbGVjdCBpdCAoYXMgaXMgYWxyZWFkeSB0aGUgY2FzZQ0KPiBBRkFJQ1QpLg0K
+PiANCj4gU2lnbmVkLW9mZi1ieTogVXdlIEtsZWluZS1Lw7ZuaWcgPHV3ZUBrbGVpbmUta29lbmln
+Lm9yZz4NCj4gLS0tDQo+ICAgbGliL0tjb25maWcgfCAzICstLQ0KPiAgIDEgZmlsZSBjaGFuZ2Vk
+LCAxIGluc2VydGlvbigrKSwgMiBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9saWIv
+S2NvbmZpZyBiL2xpYi9LY29uZmlnDQo+IGluZGV4IGNjMDQxMjRlZDhmNy4uOWZlOGEyMWZkMTgz
+IDEwMDY0NA0KPiAtLS0gYS9saWIvS2NvbmZpZw0KPiArKysgYi9saWIvS2NvbmZpZw0KPiBAQCAt
+NTU1LDggKzU1NSw3IEBAIGNvbmZpZyBTSUdOQVRVUkUNCj4gICAJICBJbXBsZW1lbnRhdGlvbiBp
+cyBkb25lIHVzaW5nIEdudVBHIE1QSSBsaWJyYXJ5DQo+ICAgDQo+ICAgY29uZmlnIERJTUxJQg0K
+PiAtCWJvb2wgIkRJTSBsaWJyYXJ5Ig0KPiAtCWRlZmF1bHQgeQ0KPiArCWJvb2wNCj4gICAJaGVs
+cA0KPiAgIAkgIER5bmFtaWMgSW50ZXJydXB0IE1vZGVyYXRpb24gbGlicmFyeS4NCj4gICAJICBJ
+bXBsZW1lbnRzIGFuIGFsZ29yaXRobSBmb3IgZHluYW1pY2FsbHkgY2hhbmdlIENRIG1vZGVyYXRp
+b24gdmFsdWVzDQo+DQpUaGVyZSdzIGEgcGVuZGluZyBzZXJpZXMgdXNpbmcgRElNIHdoaWNoIGRp
+ZG4ndCBhZGQgdGhlIHNlbGVjdCBjbGF1c2UgDQpbMV0uIEFydGh1ciwgRllJLiBPdGhlciB0aGFu
+IHRoYXQgTEdUTS4NCg0KWzFdIGh0dHBzOi8vd3d3Lm1haWwtYXJjaGl2ZS5jb20vbmV0ZGV2QHZn
+ZXIua2VybmVsLm9yZy9tc2czMTQzMDQuaHRtbA0KDQo=
