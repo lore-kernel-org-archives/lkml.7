@@ -2,173 +2,409 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D5F2C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E48C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C633E218AE
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:18:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="WKhrHeZA"
+	by mail.kernel.org (Postfix) with ESMTP id 0F3FF207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:19:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395144AbfITISr (ORCPT
+        id S2395153AbfITIT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 04:18:47 -0400
-Received: from gateway20.websitewelcome.com ([192.185.63.14]:33271 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390128AbfITISr (ORCPT
+        Fri, 20 Sep 2019 04:19:27 -0400
+Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:37721 "EHLO
+        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389212AbfITIT0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 04:18:47 -0400
-X-Greylist: delayed 1441 seconds by postgrey-1.27 at vger.kernel.org; Fri, 20 Sep 2019 04:18:46 EDT
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id F1F0B400C7B46
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 01:48:34 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id BDkbiVFSM4FKpBDkbiV5oJ; Fri, 20 Sep 2019 02:54:45 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=u2e/2BHw25iG9XmeS+oLxWICM2YK8K1PTSI4WlXyItI=; b=WKhrHeZAwbfaOH9z1HXNkws/kH
-        Z5lp2Fy2YSqkZmXq2ZtieyQq1ZL4ddGfTSGTG1oO/1cKu9H2NRdOs6SLWtQLaG9lg3Et1oTJufmo/
-        hcKEknDefjLJazj2kIJWtpL+Z8HeejXv/xfquNJpha3yHqETDuFEo+fHL/358OQBEv/d68EWVES+g
-        8rQbpFV+hczJ9OuYt7sHQsQUpx386S87KHwzreSll6GNyVpqGbcDPV6ccAC4BPsz089B1+dotZlxz
-        LAElEvNWy8nbWoCZ2ZsCPDlb314HpXcnw6KtuOlhV2x2ntGEbmKyRQXSF4TntDrVi/07fUxkKpSQ+
-        DCEQpNRA==;
-Received: from lfbn-1-12653-249.w90-90.abo.wanadoo.fr ([90.90.196.249]:49830 helo=[192.168.1.21])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1iBDka-001wtw-Ki; Fri, 20 Sep 2019 02:54:44 -0500
-Subject: Re: [PATCH] crypto: talitos - fix missing break in switch statement
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190909052952.GA32131@embeddedor>
- <b2c4faf9-9b10-882d-57db-bcbc3ed2a025@c-s.fr>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <742902ac-0825-95c2-6e34-d70c6d810607@embeddedor.com>
-Date:   Fri, 20 Sep 2019 09:53:23 -0500
+        Fri, 20 Sep 2019 04:19:26 -0400
+Received: from [IPv6:2001:983:e9a7:1:3829:6e33:4e49:c53d] ([IPv6:2001:983:e9a7:1:3829:6e33:4e49:c53d])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id BE8PiU8Dd9D4hBE8QicgR2; Fri, 20 Sep 2019 10:19:23 +0200
+Subject: Re: [Patch v2 08/13] media: am437x-vpfe: Use a per instance format
+ array instead of a static one
+To:     Benoit Parrot <bparrot@ti.com>
+Cc:     Prabhakar Lad <prabhakar.csengg@gmail.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190919204125.15254-1-bparrot@ti.com>
+ <20190919204125.15254-9-bparrot@ti.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <a73280f1-4fc0-2ea2-2611-9e410f3f0689@xs4all.nl>
+Date:   Fri, 20 Sep 2019 10:19:21 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <b2c4faf9-9b10-882d-57db-bcbc3ed2a025@c-s.fr>
+In-Reply-To: <20190919204125.15254-9-bparrot@ti.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 90.90.196.249
-X-Source-L: No
-X-Exim-ID: 1iBDka-001wtw-Ki
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: lfbn-1-12653-249.w90-90.abo.wanadoo.fr ([192.168.1.21]) [90.90.196.249]:49830
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfGi/24L8SbiF9dZMDIWZ+ds8xybd8V2mRGJXHBU5ECha2szMDOEr/shlZNR0YMCtTRxhrOJ3cz4rxiFMuqUCZIqxtuLIbO8AU0VFt4mzVFeql7G8N5Ve
+ YcIydqhmF6kDTw79gpNV15ILybbT5HXONZxmMy4+y50P5K8QbEuyDy+ndB9/giQ+fA4Z8p6vCZlAvVaRC2wR1lOFon5w9aPg6IWKnkfz9Nvke0+v5lMbq/4L
+ MnYAi9hoJBw74wym1RiDFZiOm96iCAFgMcZeaY/k8pflhyqrIFSVMwjJG0pbHUfxf0rxtcX8zXFBjOMsib3VhhdLtOUJrXnHNPEZb6JAho3a5HKwo4TD/09c
+ PT5W92E1GRbbuQPE5vqMt+9QpyJ4u1LC0kZWqyLxmgXB5sX8Gg5INeTIT5Mvw+U26diTpolN
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
-
-Friendly ping:
-
-Who can take this?
-
-Thanks
---
-Gustavo
-
-On 9/10/19 01:06, Christophe Leroy wrote:
+On 9/19/19 10:41 PM, Benoit Parrot wrote:
+> Using a statically defined format array would cause issue when
+> multiple vpfe instance would be connected to sub-device of
+> different capabilities. We need to use an instance based array
+> instead to properly maintain a per port/instance format list.
 > 
+> Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> ---
+>  drivers/media/platform/am437x/am437x-vpfe.c | 110 ++++++++------------
+>  drivers/media/platform/am437x/am437x-vpfe.h |  36 +++++++
+>  2 files changed, 77 insertions(+), 69 deletions(-)
 > 
-> Le 09/09/2019 à 07:29, Gustavo A. R. Silva a écrit :
->> Add missing break statement in order to prevent the code from falling
->> through to case CRYPTO_ALG_TYPE_AHASH.
->>
->> Fixes: aeb4c132f33d ("crypto: talitos - Convert to new AEAD interface")
->> Cc: stable@vger.kernel.org
->> Reported-by: kbuild test robot <lkp@intel.com>
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
+> index 8b218f48428f..569618a52082 100644
+> --- a/drivers/media/platform/am437x/am437x-vpfe.c
+> +++ b/drivers/media/platform/am437x/am437x-vpfe.c
+> @@ -69,31 +69,7 @@ static const struct vpfe_standard vpfe_standards[] = {
+>  	{V4L2_STD_625_50, 720, 576, {54, 59}, 1},
+>  };
+>  
+> -struct bus_format {
+> -	unsigned int width;
+> -	unsigned int bpp;
+> -};
+> -
+> -/*
+> - * struct vpfe_fmt - VPFE media bus format information
+> - * @code: V4L2 media bus format code
+> - * @shifted: V4L2 media bus format code for the same pixel layout but
+> - *	shifted to be 8 bits per pixel. =0 if format is not shiftable.
+> - * @pixelformat: V4L2 pixel format FCC identifier
+> - * @width: Bits per pixel (when transferred over a bus)
+> - * @bpp: Bytes per pixel (when stored in memory)
+> - * @supported: Indicates format supported by subdev
+> - */
+> -struct vpfe_fmt {
+> -	u32 fourcc;
+> -	u32 code;
+> -	struct bus_format l;
+> -	struct bus_format s;
+> -	bool supported;
+> -	u32 index;
+> -};
+> -
+> -static struct vpfe_fmt formats[] = {
+> +static struct vpfe_fmt formats[VPFE_MAX_ACTIVE_FMT] = {
+>  	{
+>  		.fourcc		= V4L2_PIX_FMT_YUYV,
+>  		.code		= MEDIA_BUS_FMT_YUYV8_2X8,
+> @@ -101,7 +77,6 @@ static struct vpfe_fmt formats[] = {
+>  		.l.bpp		= 4,
+>  		.s.width	= 8,
+>  		.s.bpp		= 2,
+> -		.supported	= false,
+>  	}, {
+>  		.fourcc		= V4L2_PIX_FMT_UYVY,
+>  		.code		= MEDIA_BUS_FMT_UYVY8_2X8,
+> @@ -109,7 +84,6 @@ static struct vpfe_fmt formats[] = {
+>  		.l.bpp		= 4,
+>  		.s.width	= 8,
+>  		.s.bpp		= 2,
+> -		.supported	= false,
+>  	}, {
+>  		.fourcc		= V4L2_PIX_FMT_YVYU,
+>  		.code		= MEDIA_BUS_FMT_YVYU8_2X8,
+> @@ -117,7 +91,6 @@ static struct vpfe_fmt formats[] = {
+>  		.l.bpp		= 4,
+>  		.s.width	= 8,
+>  		.s.bpp		= 2,
+> -		.supported	= false,
+>  	}, {
+>  		.fourcc		= V4L2_PIX_FMT_VYUY,
+>  		.code		= MEDIA_BUS_FMT_VYUY8_2X8,
+> @@ -125,7 +98,6 @@ static struct vpfe_fmt formats[] = {
+>  		.l.bpp		= 4,
+>  		.s.width	= 8,
+>  		.s.bpp		= 2,
+> -		.supported	= false,
+>  	}, {
+>  		.fourcc		= V4L2_PIX_FMT_SBGGR8,
+>  		.code		= MEDIA_BUS_FMT_SBGGR8_1X8,
+> @@ -133,7 +105,6 @@ static struct vpfe_fmt formats[] = {
+>  		.l.bpp		= 2,
+>  		.s.width	= 8,
+>  		.s.bpp		= 1,
+> -		.supported	= false,
+>  	}, {
+>  		.fourcc		= V4L2_PIX_FMT_SGBRG8,
+>  		.code		= MEDIA_BUS_FMT_SGBRG8_1X8,
+> @@ -141,7 +112,6 @@ static struct vpfe_fmt formats[] = {
+>  		.l.bpp		= 2,
+>  		.s.width	= 8,
+>  		.s.bpp		= 1,
+> -		.supported	= false,
+>  	}, {
+>  		.fourcc		= V4L2_PIX_FMT_SGRBG8,
+>  		.code		= MEDIA_BUS_FMT_SGRBG8_1X8,
+> @@ -149,7 +119,6 @@ static struct vpfe_fmt formats[] = {
+>  		.l.bpp		= 2,
+>  		.s.width	= 8,
+>  		.s.bpp		= 1,
+> -		.supported	= false,
+>  	}, {
+>  		.fourcc		= V4L2_PIX_FMT_SRGGB8,
+>  		.code		= MEDIA_BUS_FMT_SRGGB8_1X8,
+> @@ -157,7 +126,6 @@ static struct vpfe_fmt formats[] = {
+>  		.l.bpp		= 2,
+>  		.s.width	= 8,
+>  		.s.bpp		= 1,
+> -		.supported	= false,
+>  	}, {
+>  		.fourcc		= V4L2_PIX_FMT_RGB565,
+>  		.code		= MEDIA_BUS_FMT_RGB565_2X8_LE,
+> @@ -165,7 +133,6 @@ static struct vpfe_fmt formats[] = {
+>  		.l.bpp		= 4,
+>  		.s.width	= 8,
+>  		.s.bpp		= 2,
+> -		.supported	= false,
+>  	}, {
+>  		.fourcc		= V4L2_PIX_FMT_RGB565X,
+>  		.code		= MEDIA_BUS_FMT_RGB565_2X8_BE,
+> @@ -173,7 +140,6 @@ static struct vpfe_fmt formats[] = {
+>  		.l.bpp		= 4,
+>  		.s.width	= 8,
+>  		.s.bpp		= 2,
+> -		.supported	= false,
+>  	},
+>  };
+>  
+> @@ -181,13 +147,14 @@ static int
+>  __vpfe_get_format(struct vpfe_device *vpfe,
+>  		  struct v4l2_format *format, unsigned int *bpp);
+>  
+> -static struct vpfe_fmt *find_format_by_code(unsigned int code)
+> +static struct vpfe_fmt *find_format_by_code(struct vpfe_device *vpfe,
+> +					    unsigned int code)
+>  {
+>  	struct vpfe_fmt *fmt;
+>  	unsigned int k;
+>  
+> -	for (k = 0; k < ARRAY_SIZE(formats); k++) {
+> -		fmt = &formats[k];
+> +	for (k = 0; k < vpfe->num_active_fmt; k++) {
+> +		fmt = vpfe->active_fmt[k];
+>  		if (fmt->code == code)
+>  			return fmt;
+>  	}
+> @@ -195,13 +162,14 @@ static struct vpfe_fmt *find_format_by_code(unsigned int code)
+>  	return NULL;
+>  }
+>  
+> -static struct vpfe_fmt *find_format_by_pix(unsigned int pixelformat)
+> +static struct vpfe_fmt *find_format_by_pix(struct vpfe_device *vpfe,
+> +					   unsigned int pixelformat)
+>  {
+>  	struct vpfe_fmt *fmt;
+>  	unsigned int k;
+>  
+> -	for (k = 0; k < ARRAY_SIZE(formats); k++) {
+> -		fmt = &formats[k];
+> +	for (k = 0; k < vpfe->num_active_fmt; k++) {
+> +		fmt = vpfe->active_fmt[k];
+>  		if (fmt->fourcc == pixelformat)
+>  			return fmt;
+>  	}
+> @@ -218,7 +186,7 @@ mbus_to_pix(struct vpfe_device *vpfe,
+>  	unsigned int bus_width = sdinfo->vpfe_param.bus_width;
+>  	struct vpfe_fmt *fmt;
+>  
+> -	fmt = find_format_by_code(mbus->code);
+> +	fmt = find_format_by_code(vpfe, mbus->code);
+>  	if (WARN_ON(fmt == NULL)) {
+>  		pr_err("Invalid mbus code set\n");
+>  		*bpp = 1;
+> @@ -241,12 +209,12 @@ static void pix_to_mbus(struct vpfe_device *vpfe,
+>  {
+>  	struct vpfe_fmt *fmt;
+>  
+> -	fmt = find_format_by_pix(pix_fmt->pixelformat);
+> +	fmt = find_format_by_pix(vpfe, pix_fmt->pixelformat);
+>  	if (!fmt) {
+>  		/* default to first entry */
+>  		vpfe_dbg(3, vpfe, "Invalid pixel code: %x, default used instead\n",
+>  			pix_fmt->pixelformat);
+> -		fmt = &formats[0];
+> +		fmt = vpfe->active_fmt[0];
+>  	}
+>  
+>  	memset(mbus_fmt, 0, sizeof(*mbus_fmt));
+> @@ -1494,8 +1462,7 @@ static int vpfe_enum_fmt(struct file *file, void  *priv,
+>  {
+>  	struct vpfe_device *vpfe = video_drvdata(file);
+>  	struct vpfe_subdev_info *sdinfo;
+> -	struct vpfe_fmt *fmt = NULL;
+> -	unsigned int k;
+> +	struct vpfe_fmt *fmt;
+>  
+>  	vpfe_dbg(2, vpfe, "vpfe_enum_format index:%d\n",
+>  		f->index);
+> @@ -1504,17 +1471,10 @@ static int vpfe_enum_fmt(struct file *file, void  *priv,
+>  	if (!sdinfo->sd)
+>  		return -EINVAL;
+>  
+> -	if (f->index > ARRAY_SIZE(formats))
+> +	if (f->index >= vpfe->num_active_fmt)
+>  		return -EINVAL;
+>  
+> -	for (k = 0; k < ARRAY_SIZE(formats); k++) {
+> -		if (formats[k].index == f->index) {
+> -			fmt = &formats[k];
+> -			break;
+> -		}
+> -	}
+> -	if (!fmt)
+> -		return -EINVAL;
+> +	fmt = vpfe->active_fmt[f->index];
+>  
+>  	f->pixelformat = fmt->fourcc;
+>  
+> @@ -1593,7 +1553,7 @@ static int vpfe_enum_size(struct file *file, void  *priv,
+>  	vpfe_dbg(2, vpfe, "vpfe_enum_size\n");
+>  
+>  	/* check for valid format */
+> -	fmt = find_format_by_pix(fsize->pixel_format);
+> +	fmt = find_format_by_pix(vpfe, fsize->pixel_format);
+>  	if (!fmt) {
+>  		vpfe_dbg(3, vpfe, "Invalid pixel code: %x, default used instead\n",
+>  			fsize->pixel_format);
+> @@ -2281,8 +2241,10 @@ vpfe_async_bound(struct v4l2_async_notifier *notifier,
+>  					       struct vpfe_device, v4l2_dev);
+>  	struct v4l2_subdev_mbus_code_enum mbus_code;
+>  	struct vpfe_subdev_info *sdinfo;
+> +	struct vpfe_fmt *fmt;
+> +	int ret = 0;
+>  	bool found = false;
+> -	int i, j;
+> +	int i, j, k;
+>  
+>  	vpfe_dbg(1, vpfe, "vpfe_async_bound\n");
+>  
+> @@ -2304,27 +2266,37 @@ vpfe_async_bound(struct v4l2_async_notifier *notifier,
+>  
+>  	vpfe->video_dev.tvnorms |= sdinfo->inputs[0].std;
+>  
+> -	/* setup the supported formats & indexes */
+> -	for (j = 0, i = 0; ; ++j) {
+> -		struct vpfe_fmt *fmt;
+> -		int ret;
+> -
+> +	vpfe->num_active_fmt = 0;
+> +	for (j = 0, i = 0; (ret != -EINVAL); ++j) {
+>  		memset(&mbus_code, 0, sizeof(mbus_code));
+>  		mbus_code.index = j;
+>  		mbus_code.which = V4L2_SUBDEV_FORMAT_ACTIVE;
+>  		ret = v4l2_subdev_call(subdev, pad, enum_mbus_code,
+> -			       NULL, &mbus_code);
+> +				       NULL, &mbus_code);
+>  		if (ret)
+> -			break;
+> -
+> -		fmt = find_format_by_code(mbus_code.code);
+> -		if (!fmt)
+>  			continue;
+>  
+> -		fmt->supported = true;
+> -		fmt->index = i++;
+> +		vpfe_dbg(3, vpfe,
+> +			 "subdev %s: code: %04x idx: %d\n",
+> +			 subdev->name, mbus_code.code, j);
+> +
+> +		for (k = 0; k < ARRAY_SIZE(formats); k++) {
+> +			fmt = &formats[k];
+> +			if (mbus_code.code != fmt->code)
+> +				continue;
+> +			vpfe->active_fmt[i] = fmt;
+> +			vpfe_dbg(3, vpfe,
+> +				 "matched fourcc: %4.4s code: %04x idx: %d\n",
+> +				 (char *)&fmt->fourcc, mbus_code.code, i);
+> +			vpfe->num_active_fmt = ++i;
+> +		}
+>  	}
+>  
+> +	if (!i) {
+> +		vpfe_err(vpfe, "No suitable format reported by subdev %s\n",
+> +			 subdev->name);
+> +		return -EINVAL;
+> +	}
+>  	return 0;
+>  }
+>  
+> diff --git a/drivers/media/platform/am437x/am437x-vpfe.h b/drivers/media/platform/am437x/am437x-vpfe.h
+> index 2dde09780215..79a6505c083d 100644
+> --- a/drivers/media/platform/am437x/am437x-vpfe.h
+> +++ b/drivers/media/platform/am437x/am437x-vpfe.h
+> @@ -215,6 +215,39 @@ struct vpfe_ccdc {
+>  	u32 ccdc_ctx[VPFE_REG_END / sizeof(u32)];
+>  };
+>  
+> +/*
+> + * struct bus_format - VPFE bus format information
+> + * width: Bits per pixel (when transferred over a bus)
+> + * bpp: Bytes per pixel (when stored in memory)
+> + */
+> +struct bus_format {
+> +	unsigned int width;
+> +	unsigned int bpp;
+> +};
+> +
+> +/*
+> + * struct vpfe_fmt - VPFE media bus format information
+> + * fourcc: V4L2 pixel format code
+> + * code: V4L2 media bus format code
+> + * l: 10 bit bus format info
+> + * s: 8 bit bus format info
+> + */
+> +struct vpfe_fmt {
+> +	u32 fourcc;
+> +	u32 code;
+> +	struct bus_format l;
+> +	struct bus_format s;
+> +};
+> +
+> +/*
+> + * This value needs to be at least as large as the number of entry in
+> + * formats[].
+> + * When formats[] is modified make sure to adjust this value also.
+> + * Expect compile time warnings if VPFE_MAX_ACTIVE_FMT is smaller then
+> + * the number of elements in formats[].
+> + */
+> +#define VPFE_MAX_ACTIVE_FMT	10
+
+The comment is outdated since this define is used as the size of the formats
+array. So you can't really get into problems.
+
+For the same reason the name is now wrong as well, I'd call it VPFE_NUM_FORMATS.
+
+That's what it actually is.
+
+Regards,
+
+	Hans
+
+> +
+>  struct vpfe_device {
+>  	/* V4l2 specific parameters */
+>  	/* Identifies video device for this channel */
+> @@ -252,6 +285,9 @@ struct vpfe_device {
+>  	struct v4l2_format fmt;
+>  	/* Used to store current bytes per pixel based on current format */
+>  	unsigned int bpp;
+> +	struct vpfe_fmt	*active_fmt[VPFE_MAX_ACTIVE_FMT];
+> +	unsigned int num_active_fmt;
+> +
+>  	/*
+>  	 * used when IMP is chained to store the crop window which
+>  	 * is different from the image window
 > 
-> Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> 
->> ---
->>   drivers/crypto/talitos.c | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/crypto/talitos.c b/drivers/crypto/talitos.c
->> index c9d686a0e805..4818ae427098 100644
->> --- a/drivers/crypto/talitos.c
->> +++ b/drivers/crypto/talitos.c
->> @@ -3140,6 +3140,7 @@ static int talitos_remove(struct platform_device *ofdev)
->>               break;
->>           case CRYPTO_ALG_TYPE_AEAD:
->>               crypto_unregister_aead(&t_alg->algt.alg.aead);
->> +            break;
->>           case CRYPTO_ALG_TYPE_AHASH:
->>               crypto_unregister_ahash(&t_alg->algt.alg.hash);
->>               break;
->>
+
