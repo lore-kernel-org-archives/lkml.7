@@ -2,56 +2,184 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99193C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 505EDC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73E8C2080F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:40:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B38920C01
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:42:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569008541;
+	bh=XfrvLsR7U7GA+FNnD4n8DUE8hu+xicJwQHbsa29aZ1U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BJJboWbvYQRXPSHiKMkstLiSxuyzEAMYW7iCXCkGZYSQ/bdpwtTlIt3sMuBf9xXi2
+	 B1GSTARwKJ/4dknWr/d0n7yKms+qHSUPjVHC8LWctQIwgKV0ugVcOrV+1EDQ2dF+CV
+	 ju0iFSSEdDQ+xOZcDvFJYEDN9UspqyYd8B+MEHkk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729674AbfITTkl (ORCPT
+        id S2436688AbfITTmU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 15:40:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37478 "EHLO mx1.redhat.com"
+        Fri, 20 Sep 2019 15:42:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726089AbfITTkl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 15:40:41 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726215AbfITTmU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 15:42:20 -0400
+Received: from localhost (odyssey.drury.edu [64.22.249.253])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 27477308213F;
-        Fri, 20 Sep 2019 19:40:41 +0000 (UTC)
-Received: from treble (ovpn-123-153.rdu2.redhat.com [10.10.123.153])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4E784614C2;
-        Fri, 20 Sep 2019 19:40:40 +0000 (UTC)
-Date:   Fri, 20 Sep 2019 14:40:35 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Alexey Dobriyan <adobriyan@gmail.com>
-Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] objtool: bump function name limit to 256 characters
-Message-ID: <20190920194035.mwsvz7nyc4peph2j@treble>
-References: <20190920182503.GA15073@avx2>
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FC792080F;
+        Fri, 20 Sep 2019 19:42:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569008538;
+        bh=XfrvLsR7U7GA+FNnD4n8DUE8hu+xicJwQHbsa29aZ1U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bnzn25soggx/Qi7634WAtPzkt9fYU5AfIJlRnndq3hBaRY5YWkq0uGRMrvGlLjGdA
+         6PoEKwY5PlRv34+EEHDUOFSyTcZxwJz5g39O9bJ6UUL2IiF+KoO3PqQyLW0T8NbIS3
+         e0FfebnWaJXtQ16BXflbJVY5LLNIhZ+5PSs7BAFs=
+Date:   Fri, 20 Sep 2019 14:42:16 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-pci@vger.kernel.org,
+        Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "antoine.tenart@bootlin.com" <antoine.tenart@bootlin.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "pvanleeuwen@insidesecure.com" <pvanleeuwen@insidesecure.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: PCI: Add stub pci_irq_vector and others
+Message-ID: <20190920194216.GB226476@google.com>
+References: <20190902141910.1080-1-yuehaibing@huawei.com>
+ <20190903014518.20880-1-yuehaibing@huawei.com>
+ <MN2PR20MB29732EEECB217DDDF822EDA5CAB80@MN2PR20MB2973.namprd20.prod.outlook.com>
+ <CAKv+Gu8PVYyA-mzjrhR6r6upMc=xzpAhsbkuKRtb8T2noo_2XQ@mail.gmail.com>
+ <20190904122600.GA28660@gondor.apana.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190920182503.GA15073@avx2>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Fri, 20 Sep 2019 19:40:41 +0000 (UTC)
+In-Reply-To: <20190904122600.GA28660@gondor.apana.org.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 09:25:03PM +0300, Alexey Dobriyan wrote:
-> Fix the following warning:
+On Wed, Sep 04, 2019 at 10:26:00PM +1000, Herbert Xu wrote:
+> On Wed, Sep 04, 2019 at 05:10:34AM -0700, Ard Biesheuvel wrote:
+> >
+> > This is the reason we have so many empty static inline functions in
+> > header files - it ensures that the symbols are declared even if the
+> > only invocations are from dead code.
 > 
-> net/core/devlink.o: warning: objtool: _ZL31devlink_nl_sb_tc_pool_bind_fillP7sk_buffP7devlinkP12devlink_portP10devlink_sbt20devlink_sb_pool_type15devlink_commandjji.constprop.0.cold(): parent function name exceeds maximum length of 128 characters
+> Does this patch work?
+> 
+> ---8<---
+> This patch adds stub functions pci_alloc_irq_vectors_affinity and
+> pci_irq_vector when CONFIG_PCI is off so that drivers can use them
+> without resorting to ifdefs.
+> 
+> It also moves the PCI_IRQ_* macros outside of the ifdefs so that
+> they are always available.
+> 
+> Fixes: 625f269a5a7a ("crypto: inside-secure - add support for...")
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Reported-by: YueHaibing <yuehaibing@huawei.com>
+> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 
-Hm, since when do we have mangled symbols in the kernel?
+Since you've already sent your crypto pull request for v5.4, would you
+like me to include this in mine?
 
--- 
-Josh
+If you'd rather send it yourself, I'd prefer:
+
+  PCI: Add pci_irq_vector() and other stubs when !CONFIG_PCI
+
+  Add stub functions pci_alloc_irq_vectors_affinity() and
+  pci_irq_vector() when CONFIG_PCI is off so drivers can use them
+  without resorting to ifdefs.
+
+  Also move the PCI_IRQ_* macros outside of the ifdefs so they are
+  always available.
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 9e700d9f9f28..74415ee62211 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -925,6 +925,11 @@ enum {
+>  	PCI_SCAN_ALL_PCIE_DEVS	= 0x00000040,	/* Scan all, not just dev 0 */
+>  };
+>  
+> +#define PCI_IRQ_LEGACY		(1 << 0) /* Allow legacy interrupts */
+> +#define PCI_IRQ_MSI		(1 << 1) /* Allow MSI interrupts */
+> +#define PCI_IRQ_MSIX		(1 << 2) /* Allow MSI-X interrupts */
+> +#define PCI_IRQ_AFFINITY	(1 << 3) /* Auto-assign affinity */
+> +
+>  /* These external functions are only available when PCI support is enabled */
+>  #ifdef CONFIG_PCI
+>  
+> @@ -1408,11 +1413,6 @@ resource_size_t pcibios_window_alignment(struct pci_bus *bus,
+>  int pci_set_vga_state(struct pci_dev *pdev, bool decode,
+>  		      unsigned int command_bits, u32 flags);
+>  
+> -#define PCI_IRQ_LEGACY		(1 << 0) /* Allow legacy interrupts */
+> -#define PCI_IRQ_MSI		(1 << 1) /* Allow MSI interrupts */
+> -#define PCI_IRQ_MSIX		(1 << 2) /* Allow MSI-X interrupts */
+> -#define PCI_IRQ_AFFINITY	(1 << 3) /* Auto-assign affinity */
+> -
+>  /*
+>   * Virtual interrupts allow for more interrupts to be allocated
+>   * than the device has interrupts for. These are not programmed
+> @@ -1517,14 +1517,6 @@ static inline int pci_irq_get_node(struct pci_dev *pdev, int vec)
+>  }
+>  #endif
+>  
+> -static inline int
+> -pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
+> -		      unsigned int max_vecs, unsigned int flags)
+> -{
+> -	return pci_alloc_irq_vectors_affinity(dev, min_vecs, max_vecs, flags,
+> -					      NULL);
+> -}
+> -
+>  /**
+>   * pci_irqd_intx_xlate() - Translate PCI INTx value to an IRQ domain hwirq
+>   * @d: the INTx IRQ domain
+> @@ -1780,8 +1772,29 @@ static inline const struct pci_device_id *pci_match_id(const struct pci_device_i
+>  							 struct pci_dev *dev)
+>  { return NULL; }
+>  static inline bool pci_ats_disabled(void) { return true; }
+> +
+> +static inline int pci_irq_vector(struct pci_dev *dev, unsigned int nr)
+> +{
+> +	return -EINVAL;
+> +}
+> +
+> +static inline int
+> +pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
+> +			       unsigned int max_vecs, unsigned int flags,
+> +			       struct irq_affinity *aff_desc)
+> +{
+> +	return -ENOSPC;
+> +}
+>  #endif /* CONFIG_PCI */
+>  
+> +static inline int
+> +pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
+> +		      unsigned int max_vecs, unsigned int flags)
+> +{
+> +	return pci_alloc_irq_vectors_affinity(dev, min_vecs, max_vecs, flags,
+> +					      NULL);
+> +}
+> +
+>  #ifdef CONFIG_PCI_ATS
+>  /* Address Translation Service */
+>  void pci_ats_init(struct pci_dev *dev);
+> -- 
+> Email: Herbert Xu <herbert@gondor.apana.org.au>
+> Home Page: http://gondor.apana.org.au/~herbert/
+> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
