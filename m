@@ -2,128 +2,119 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C47FC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:52:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79193C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:54:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F65A2054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:52:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FC0C2173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:54:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GeRATcxH"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="pmVBqnE3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728766AbfITNwH (ORCPT
+        id S2387615AbfITNyb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 09:52:07 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:42665 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387539AbfITNvt (ORCPT
+        Fri, 20 Sep 2019 09:54:31 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:5623 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727481AbfITNyb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 09:51:49 -0400
-Received: by mail-ed1-f68.google.com with SMTP id y91so6476581ede.9;
-        Fri, 20 Sep 2019 06:51:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=9gJ7SkH/thEjmGgBZRaPpt7oGSypkEw9l6Q05cUMYTk=;
-        b=GeRATcxHTy4pYbwd4G55V+8VL0Tr3ilwCoklzCKhfTHwVxN96PWWhUZ3dpPbV0qmxa
-         3u1Xjq1biXpY5txqC8Z4cJ8u3qDgrEyDRGzFEf691RzJ7RpLMEF+nLCOnc5izgyeSg9U
-         2sGSTIIF+nu0HWi4I4Fkzb4/lon40N+Mf5/lYv3pWID8Bdz61Id3AqJ2t4O4OM0fSDWR
-         z40KfztRj7V3fSBRa67vzPglGwJJb0Lrf1lPfwkHfx/nH+1sOxyfk0JUPDe/o4KflCKH
-         PizcBxSnzmE1ikmNju+VIXq2YLC+sh/SzRYZTqCrJp5kne3JCbp8F1Zlvh6F08i8VVPL
-         SGqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=9gJ7SkH/thEjmGgBZRaPpt7oGSypkEw9l6Q05cUMYTk=;
-        b=YnP/2rm4LyyIbgh26NXXOb1VvIKVu4yKU7ULCMzmVq5vc9VYsEI6RqyycVXNB04l+P
-         q6bNWr/DqqeR4v6x8Ya5XuCJA9dv+8dcSOpsZTG+IwJrznESP52xuoijcNiIA+OVqiKX
-         mopNOMWaQ0D8I/KkiJ61Ek24fZbFZbCa1pbNpRS6LAkACJifqM9l+OwbE91HWpXPEpiz
-         3RWXICiqbA/489HZFRpjzP5qpS0bAw7CB/L3fkUHi71hH1sVWppLdAStXUJoWUmkej07
-         HNMFKf8uKd6k/J/zVv5wX7ggD2BbQ2+MDNhIJ8y4VS+4BKZzdVmDwnYlDdNvqXmn8+ep
-         ys1A==
-X-Gm-Message-State: APjAAAXfX0eyyDDYJjx8xaa5lstbpm0Judcz1FPyREi1rZjByA+NLNBK
-        EAkrCURKm7Ng+qV8oaRVY5Q=
-X-Google-Smtp-Source: APXvYqz8DkLi0VCqu8RMoU4CkF0E5FbNTWiX0ir6J0K5xoqaq+IYeNMr7QV1ZAZSLxgqKSXTXWHMNA==
-X-Received: by 2002:a17:906:b6d0:: with SMTP id ec16mr19324484ejb.206.1568987507980;
-        Fri, 20 Sep 2019 06:51:47 -0700 (PDT)
-Received: from neopili.qtec.com (cpe.xe-3-0-1-778.vbrnqe10.dk.customer.tdc.net. [80.197.57.18])
-        by smtp.gmail.com with ESMTPSA id t30sm337673edt.91.2019.09.20.06.51.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Sep 2019 06:51:47 -0700 (PDT)
-From:   Ricardo Ribalda Delgado <ricardo@ribalda.com>
-To:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Jacopo Mondi <jacopo@jmondi.org>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Ricardo Ribalda Delgado <ribalda@kernel.org>
-Subject: [PATCH v6 5/7] media: add V4L2_CID_UNIT_CELL_SIZE control
-Date:   Fri, 20 Sep 2019 15:51:35 +0200
-Message-Id: <20190920135137.10052-6-ricardo@ribalda.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190920135137.10052-1-ricardo@ribalda.com>
-References: <20190920135137.10052-1-ricardo@ribalda.com>
+        Fri, 20 Sep 2019 09:54:31 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d84da1c0000>; Fri, 20 Sep 2019 06:54:36 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 20 Sep 2019 06:54:30 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 20 Sep 2019 06:54:30 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 20 Sep
+ 2019 13:54:30 +0000
+Received: from [10.21.132.148] (172.20.13.39) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 20 Sep
+ 2019 13:54:28 +0000
+Subject: Re: [PATCH 5.3 00/21] 5.3.1-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20190919214657.842130855@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <572eca6e-47a9-c554-c6b2-bafd4c5df18b@nvidia.com>
+Date:   Fri, 20 Sep 2019 14:54:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190919214657.842130855@linuxfoundation.org>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1568987676; bh=rA6uREOMyVKXWLc/tYX6zT+dL5UsDGrjU9N5Gg9eBzM=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=pmVBqnE3oHT44sbYsVMaklsBFkmu4Tz39H1ojUSZPSSqnzuxh6+3Oxq1m2iwu+G4U
+         ueZ1UBwTZOmGwIt73wpWHHD4Ft63D3KOSgTWXa3fRiFtMe4mGM/BOafjrQO1z8EwDN
+         MN9Gg5us8/Vbaetv5+LuGYfR0ap72yRtUTjff9kiwX2Um/8sqcHVqmqg2pb2Aag2KB
+         1hR3dSp85VQbvkNBtvnrTFB5UMhs22v2Y+89X5Hgl2MGYPKaC2NZZK+CpVzsJdb7ws
+         ucoausMSOphBA5Q8wP1aO/q4ZZbweuXF+UOAE0AUly3IwR3HqUd+Q5tP3MN3ItIB/+
+         X4sV/84IOFhQQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ricardo Ribalda Delgado <ribalda@kernel.org>
 
-This control returns the unit cell size in nanometres. The struct provides
-the width and the height in separated fields to take into consideration
-asymmetric pixels and/or hardware binning.
-This control is required for automatic calibration of sensors/cameras.
+On 19/09/2019 23:03, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.3.1 release.
+> There are 21 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat 21 Sep 2019 09:44:25 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.1-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.3.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
----
- drivers/media/v4l2-core/v4l2-ctrls.c | 5 +++++
- include/uapi/linux/v4l2-controls.h   | 1 +
- 2 files changed, 6 insertions(+)
+No new regressions* for Tegra ...
 
-diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-index b9a46f536406..f626f9983408 100644
---- a/drivers/media/v4l2-core/v4l2-ctrls.c
-+++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-@@ -996,6 +996,7 @@ const char *v4l2_ctrl_get_name(u32 id)
- 	case V4L2_CID_AUTO_FOCUS_RANGE:		return "Auto Focus, Range";
- 	case V4L2_CID_PAN_SPEED:		return "Pan, Speed";
- 	case V4L2_CID_TILT_SPEED:		return "Tilt, Speed";
-+	case V4L2_CID_UNIT_CELL_SIZE:		return "Unit Cell Size";
- 
- 	/* FM Radio Modulator controls */
- 	/* Keep the order of the 'case's the same as in v4l2-controls.h! */
-@@ -1377,6 +1378,10 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
- 	case V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER:
- 		*type = V4L2_CTRL_TYPE_VP8_FRAME_HEADER;
- 		break;
-+	case V4L2_CID_UNIT_CELL_SIZE:
-+		*type = V4L2_CTRL_TYPE_AREA;
-+		*flags |= V4L2_CTRL_FLAG_READ_ONLY;
-+		break;
- 	default:
- 		*type = V4L2_CTRL_TYPE_INTEGER;
- 		break;
-diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
-index a2669b79b294..5a7bedee2b0e 100644
---- a/include/uapi/linux/v4l2-controls.h
-+++ b/include/uapi/linux/v4l2-controls.h
-@@ -1034,6 +1034,7 @@ enum v4l2_jpeg_chroma_subsampling {
- #define V4L2_CID_TEST_PATTERN_GREENR		(V4L2_CID_IMAGE_SOURCE_CLASS_BASE + 5)
- #define V4L2_CID_TEST_PATTERN_BLUE		(V4L2_CID_IMAGE_SOURCE_CLASS_BASE + 6)
- #define V4L2_CID_TEST_PATTERN_GREENB		(V4L2_CID_IMAGE_SOURCE_CLASS_BASE + 7)
-+#define V4L2_CID_UNIT_CELL_SIZE			(V4L2_CID_IMAGE_SOURCE_CLASS_BASE + 8)
- 
- 
- /* Image processing controls */
+Test results for stable-v5.3:
+    12 builds:	12 pass, 0 fail
+    22 boots:	22 pass, 0 fail
+    38 tests:	37 pass, 1 fail
+
+Linux version:	5.3.1-rc1-g0aa7f3d6baae
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra194-p2972-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra30-cardhu-a04
+
+* Note we had one regression in v5.3 for a warnings test for Tegra194
+  causing the above test failure. This has since been fixed by the
+  following commits [0] but given it is just a warning, I have not
+  bothered CC'ing for stable.
+
+Cheers
+Jon
+
+[0] https://lkml.org/lkml/2019/8/21/602
+
 -- 
-2.23.0
-
+nvpublic
