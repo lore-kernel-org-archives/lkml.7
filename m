@@ -2,117 +2,186 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39728C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 09:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56856C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:01:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 160642080F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 09:59:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ECB3218AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:01:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="iFc44Jyz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437979AbfITJ7u (ORCPT
+        id S2437992AbfITKBs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 05:59:50 -0400
-Received: from 9.mo173.mail-out.ovh.net ([46.105.72.44]:43404 "EHLO
-        9.mo173.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437968AbfITJ7t (ORCPT
+        Fri, 20 Sep 2019 06:01:48 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:41824 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437968AbfITKBr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 05:59:49 -0400
-Received: from player755.ha.ovh.net (unknown [10.109.160.251])
-        by mo173.mail-out.ovh.net (Postfix) with ESMTP id 75CA311A5A6
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 11:41:32 +0200 (CEST)
-Received: from qperret.net (115.ip-51-255-42.eu [51.255.42.115])
-        (Authenticated sender: qperret@qperret.net)
-        by player755.ha.ovh.net (Postfix) with ESMTPSA id EB407A204CAF;
-        Fri, 20 Sep 2019 09:41:19 +0000 (UTC)
-Date:   Fri, 20 Sep 2019 11:41:15 +0200
-From:   Quentin Perret <qperret@qperret.net>
-To:     Pavan Kondeti <pkondeti@codeaurora.org>
-Cc:     peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, juri.lelli@redhat.com, rjw@rjwysocki.net,
-        morten.rasmussen@arm.com, valentin.schneider@arm.com,
-        qais.yousef@arm.com, tkjos@google.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched/fair: Speed-up energy-aware wake-ups
-Message-ID: <20190920094115.GA11503@qperret.net>
-References: <20190912094404.13802-1-qperret@qperret.net>
- <20190920030215.GA20250@codeaurora.org>
+        Fri, 20 Sep 2019 06:01:47 -0400
+Received: by mail-io1-f67.google.com with SMTP id r26so14772636ioh.8
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 03:01:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=g994BJg/jPAigCOVsri275vhxV1YMwyqa+ZWpEcSJHY=;
+        b=iFc44JyzXlsEdJ8ZGOrWgpTK0QF37LYXPDpneIFX6jIh3j9MM3sAu1JGGTadYRKuwW
+         CGl0Fmrl34Sy+7DxuUlu82SW2IVLCHpQOmoeAApYxtgGdXZ4U4i504sEJ9qWkIE2mR0k
+         gWIeJskW/cZLd2m2sNLkxAFFne9NpN8DuiK+ZshTWQJboqhi3fk5xYVnFyDkbDoGmDam
+         5xiLOm5+J+eEPhm2b+N/5/2Xo/v4KTqIeYmEtXWgDctdq8wzZvJ/nzPPedZwHZKdqTOZ
+         vrp0QrFtQntkesy5Rp7I1O5fqPAz5BGq6ELB/cOVvXCoOkAZYUNmwlxjXXRnSLmzsb8Y
+         /3bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=g994BJg/jPAigCOVsri275vhxV1YMwyqa+ZWpEcSJHY=;
+        b=dSUU8APgN4gJvu68nF5pywNFGkqbe9ghE29IrFxyn1USd7adzY2EpqIen6MULWN8rO
+         oOHJ6BSarOnXXMnMGm8CoTSFaEwHh70Knn8t9JV2Zy1v0JRNcKjZ0kkgMr+IMNFzjdPb
+         JlVgLxyErKElS+aMEjveR49++UzTN1zROA7ijauSZGiYAfvYKX42XcwDeDoantARhiyu
+         4IRrkxjELeuapHdo/vexyTHL1cggKa92nYIMjRxSqQ9+/47luKOKCqGKc41sQLqRSI2l
+         fbDGxlj4Yvio8QKI3PQd5omDoFEy0a3ZfA2O985LUUlI7rkkaM02gmw1knFwPuNS4FDZ
+         NU8A==
+X-Gm-Message-State: APjAAAUo5IW/eGL0CuJTu6ZXyBAhHcyrublS6S0RIjXmKqPkasg+dhZV
+        yz4rKG2g0pKE39tTh4OR32Th8BccI8GgjtweLFF8EQ==
+X-Google-Smtp-Source: APXvYqxfUxvLHOR+Wn2vv6/tsz0PWRvLzPL3QAajZParvvSIWZcYkRXLxLuyaEQmx0JgaIHOXcW/CUZEbaflcc7pARM=
+X-Received: by 2002:a6b:e719:: with SMTP id b25mr11639828ioh.100.1568973705798;
+ Fri, 20 Sep 2019 03:01:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190920030215.GA20250@codeaurora.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Ovh-Tracer-Id: 11442520755338894233
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedufedrvddvgddukecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+References: <20190920090033.19438-1-green.wan@sifive.com>
+In-Reply-To: <20190920090033.19438-1-green.wan@sifive.com>
+From:   Pragnesh Patel <pragnesh.patel@sifive.com>
+Date:   Fri, 20 Sep 2019 15:31:35 +0530
+Message-ID: <CAN8ut8Lfo3zm2mjoiH3o4FSTkHexagwUFT=V3MpgcE=arm5c4g@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] dt-bindings: dmaengine: sf-pdma: add bindins for
+ SiFive PDMA
+To:     Green Wan <green.wan@sifive.com>
+Cc:     linux-hackers@sifive.com, Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavan,
+On Fri, Sep 20, 2019 at 2:30 PM Green Wan <green.wan@sifive.com> wrote:
+>
+> Add DT bindings document for Platform DMA(PDMA) driver of board,
+> HiFive Unleashed Rev A00.
+>
+> Signed-off-by: Green Wan <green.wan@sifive.com>
+> ---
+>  .../bindings/dma/sifive,fu540-c000-pdma.yaml  | 55 +++++++++++++++++++
+>  MAINTAINERS                                   |  5 ++
+>  2 files changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml b/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
+> new file mode 100644
+> index 000000000000..3ed015f2b83a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
+> @@ -0,0 +1,55 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/sifive,fu540-c000-pdma.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: SiFive Unleashed Rev C000 Platform DMA
+> +
+> +maintainers:
+> +  - Green Wan <green.wan@sifive.com>
+> +  - Palmer Debbelt <palmer@sifive.com>
+> +  - Paul Walmsley <paul.walmsley@sifive.com>
+> +
+> +description: |
+> +  Platform DMA is a DMA engine of SiFive Unleashed. It supports 4
+> +  channels. Each channel has 2 interrupts. One is for DMA done and
+> +  the other is for DME error.
+> +
+> +  In different SoC, DMA could be attached to different IRQ line.
+> +  DT file need to be changed to meet the difference. For technical
+> +  doc,
+> +
+> +  https://static.dev.sifive.com/FU540-C000-v1.0.pdf
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: sifive,fu540-c000-pdma
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    minItems: 8
+> +    maxItems: 8
 
-On Friday 20 Sep 2019 at 08:32:15 (+0530), Pavan Kondeti wrote:
-> Earlier, we are not checking the spare capacity for the prev_cpu. Now that the
-> continue statement is removed, prev_cpu could also be the max_spare_cap_cpu.
-> Actually that makes sense. Because there is no reason why we want to select
-> another CPU which has less spare capacity than previous CPU.
-> 
-> Is this behavior intentional?
+"make dt_binding_check" should give you the error that interrupts is too short.
 
-The intent was indeed to not compute the energy for another CPU in
-prev_cpu's perf domain if prev_cpu is the one with max spare cap -- it
-is useless to do so since this other CPU cannot 'beat' prev_cpu and
-will never be chosen in the end.
+When you say minItems: 8 then interrupts property should be like this:
+interrupts = <23>, <24>,  <25>,  <26>,  <27>,  <28>,  <29>,  <30>;
 
-But I did miss that we'd end up computing the energy for prev_cpu
-twice ... Harmless but useless. So yeah, let's optimize that case too :)
+So,  remove the minItems: 8 and change maxItems: 1 for interrupts =
+<23 24 25 26 27 28 29 30>;
 
-> When prev_cpu == max_spare_cap_cpu, we are evaluating the energy again for the
-> same CPU below. That could have been skipped by returning prev_cpu when
-> prev_cpu == max_spare_cap_cpu.
-
-Right, something like the patch below ? My test results are still
-looking good with it applied.
-
-Thanks for the careful review,
-Quentin
----
-From 7b8258287f180a2c383ebe397e8129f5f898ffbe Mon Sep 17 00:00:00 2001
-From: Quentin Perret <qperret@qperret.net>
-Date: Fri, 20 Sep 2019 09:07:20 +0100
-Subject: [PATCH] sched/fair: Avoid redundant EAS calculation
-
-The EAS wake-up path computes the system energy for several CPU
-candidates: the CPU with maximum spare capacity in each performance
-domain, and the prev_cpu. However, if prev_cpu also happens to be the
-CPU with maximum spare capacity in its performance domain, the energy
-calculation is still done twice, unnecessarily.
-
-Add a condition to filter out this corner case before doing the energy
-calculation.
-
-Reported-by: Pavan Kondeti <pkondeti@codeaurora.org>
-Signed-off-by: Quentin Perret <qperret@qperret.net>
----
- kernel/sched/fair.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index d4bbf68c3161..7399382bc291 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -6412,7 +6412,7 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
- 		}
- 
- 		/* Evaluate the energy impact of using this CPU. */
--		if (max_spare_cap_cpu >= 0) {
-+		if (max_spare_cap_cpu >= 0 && max_spare_cap_cpu != prev_cpu) {
- 			cur_delta = compute_energy(p, max_spare_cap_cpu, pd);
- 			cur_delta -= base_energy_pd;
- 			if (cur_delta < best_delta) {
--- 
-2.22.1
-
+> +
+> +  '#dma-cells':
+> +    const: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - '#dma-cells'
+> +
+> +examples:
+> +  - |
+> +    dma@3000000 {
+> +      compatible = "sifive,fu540-c000-pdma";
+> +      reg = <0x0 0x3000000 0x0 0x8000>;
+> +      interrupts = <23 24 25 26 27 28 29 30>;
+> +      #dma-cells = <1>;
+> +    };
+> +
+> +...
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 49f75d1b7b51..d0caa09a479e 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -14591,6 +14591,11 @@ F:     drivers/media/usb/siano/
+>  F:     drivers/media/usb/siano/
+>  F:     drivers/media/mmc/siano/
+>
+> +SIFIVE PDMA DRIVER
+> +M:     Green Wan <green.wan@sifive.com>
+> +S:     Maintained
+> +F:     Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
+> +
+>  SIFIVE DRIVERS
+>  M:     Palmer Dabbelt <palmer@sifive.com>
+>  M:     Paul Walmsley <paul.walmsley@sifive.com>
+> --
+> 2.17.1
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-hackers" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-hackers+unsubscribe@sifive.com.
+> To view this discussion on the web visit https://groups.google.com/a/sifive.com/d/msgid/linux-hackers/20190920090033.19438-1-green.wan%40sifive.com.
