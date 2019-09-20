@@ -2,178 +2,161 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC649C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC51BC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2BF12086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:51:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IL2YeVVO"
+	by mail.kernel.org (Postfix) with ESMTP id A80BC2086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:53:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408343AbfITIvN (ORCPT
+        id S2408351AbfITIxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 04:51:13 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:39545 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405346AbfITIvN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 04:51:13 -0400
-Received: by mail-lf1-f67.google.com with SMTP id 72so4468684lfh.6
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 01:51:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=zIK1gtR2VAgqI25bOAo9P0A+M/0NEfNWxEFQpC0ed4g=;
-        b=IL2YeVVOQFHRdWlofI9jH/napiLP/qrH7Ep+y9faHSgo7WQEIKTUdAzpuaQA8SqkY1
-         scHjmFrFGgRc8tQhjHg3NT7myRyx+8zO+VvvFLRWckOHUqWDotd+jCuAZA3HI2eoA+Lt
-         Sj9pi0lv7bBTGFlpxGvCtVQ1PDbnkhLqIkSNL7/0y5GU9rcD3LafVlRyAH5U/U6NL3//
-         BdlSb2lSdTuL2HwmPGUt0UUejIgAtXwu3QAgavvSUCr90mcJh9j/AR/mO4VqIIGmw85P
-         M9X+Akh6tnZ6XoZe+3lLLzJYmjyHgGrBIaIIFK7Uxjz/zJXRsaoXNu3xHKpIggDR3UuZ
-         oSsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zIK1gtR2VAgqI25bOAo9P0A+M/0NEfNWxEFQpC0ed4g=;
-        b=kP1o/aBPFY1scuYB+GdjRu4aICSkKVejCQu36UDbDXjd9dGK3MayOD49FylXpPl6Hx
-         ojJ+Y7TrqATsZyrjbuxwG87dYZHZoguFBtRnUhxlpol6qMhXv4IZhy+bDIqd1EvLOgxT
-         ixbqXO/icfv5r2x1ywZuIwdpAfRHO+ENSKB6MOkUoikAS7pVk3E/G+l7Em1by1QaD4r2
-         D1U70g8KLQ5ozUsTnKFxDOTeeAn8c6ORjaFElfhqdEdn67KOPZGhih9AXF72xBEAIxBF
-         2HHV8LVnfAHAG3Y1zCXnT8B/kfkIr2eqxpa5VWf9GI0hyl52r0b235GGpDelHVbEeGMG
-         B3lg==
-X-Gm-Message-State: APjAAAW7PD+Kvw6IVoHCRhGZkv66nN5jiG7XkNh6g3zrJZUbpNpX4wtQ
-        5cQUADw7sNJqHewGiiSCyOmst0f2CU4Z/lHUnDauIiYJiLk=
-X-Google-Smtp-Source: APXvYqzbbTB32LmFOnnaWg0hpAl48UhlO/D6hLTKcniCdSi+QI6Ez7Rr3AFYweJqmrlLoL0DbkygDkqR35iMC/3w/+s=
-X-Received: by 2002:ac2:48af:: with SMTP id u15mr8312303lfg.75.1568969471206;
- Fri, 20 Sep 2019 01:51:11 -0700 (PDT)
+        Fri, 20 Sep 2019 04:53:36 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:34536 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405494AbfITIxf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 04:53:35 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
+        id 1iBDzj-0002t2-IQ; Fri, 20 Sep 2019 18:10:24 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 20 Sep 2019 18:10:17 +1000
+Date:   Fri, 20 Sep 2019 18:10:17 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Yuehaibing <yuehaibing@huawei.com>,
+        Bjorn Helgaas <bjorn.helgaas@gmail.com>
+Cc:     kbuild test robot <lkp@intel.com>,
+        Pascal van Leeuwen <pvanleeuwen@insidesecure.com>,
+        kbuild-all@01.org, linux-kernel@vger.kernel.org
+Subject: Re: drivers/crypto/inside-secure/safexcel.c:840:9: error: implicit
+ declaration of function 'pci_irq_vector'; did you mean 'rcu_irq_enter'?
+Message-ID: <20190920081016.GA3663@gondor.apana.org.au>
+References: <201909200943.xYWyp0BG%lkp@intel.com>
+ <91bcb10e-ef1a-3979-d597-999552114746@huawei.com>
 MIME-Version: 1.0
-References: <20190919214807.612593061@linuxfoundation.org>
-In-Reply-To: <20190919214807.612593061@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 20 Sep 2019 14:21:00 +0530
-Message-ID: <CA+G9fYsdAOWeRSxnrWOJVaw1tp7QVgOgHw-i58Ek7hknAEq0cA@mail.gmail.com>
-Subject: Re: [PATCH 4.19 00/79] 4.19.75-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <91bcb10e-ef1a-3979-d597-999552114746@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Sep 2019 at 03:43, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.19.75 release.
-> There are 79 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat 21 Sep 2019 09:44:25 PM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.19.75-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.19.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Fri, Sep 20, 2019 at 01:45:21PM +0800, Yuehaibing wrote:
+> Herbert,
+> 
+> This has been fixed in below patch, but I can't find it in linux-next.
+> 
+> https://patchwork.kernel.org/patch/11129983/
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+I'm waiting for Bjorn to ack it.  Bjorn?
 
-Summary
-------------------------------------------------------------------------
+> On 2019/9/20 9:03, kbuild test robot wrote:
+> > Hi Pascal,
+> > 
+> > FYI, the error/warning still remains.
+> > 
+> > tree:   https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux.git master
+> > head:   574cc4539762561d96b456dbc0544d8898bd4c6e
+> > commit: 625f269a5a7a3643771320387e474bd0a61d9654 crypto: inside-secure - add support for PCI based FPGA development board
+> > date:   3 weeks ago
+> > config: sh-allmodconfig (attached as .config)
+> > compiler: sh4-linux-gcc (GCC) 7.4.0
+> > reproduce:
+> >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+> >         chmod +x ~/bin/make.cross
+> >         git checkout 625f269a5a7a3643771320387e474bd0a61d9654
+> >         # save the attached .config to linux build tree
+> >         GCC_VERSION=7.4.0 make.cross ARCH=sh 
+> > 
+> > If you fix the issue, kindly add following tag
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> > 
+> > All errors (new ones prefixed by >>):
+> > 
+> >    drivers/crypto/inside-secure/safexcel.c: In function 'safexcel_request_ring_irq':
+> >>> drivers/crypto/inside-secure/safexcel.c:840:9: error: implicit declaration of function 'pci_irq_vector'; did you mean 'rcu_irq_enter'? [-Werror=implicit-function-declaration]
+> >       irq = pci_irq_vector(pci_pdev, irqid);
+> >             ^~~~~~~~~~~~~~
+> >             rcu_irq_enter
+> >    drivers/crypto/inside-secure/safexcel.c: In function 'safexcel_probe_generic':
+> >>> drivers/crypto/inside-secure/safexcel.c:1043:9: error: implicit declaration of function 'pci_alloc_irq_vectors'; did you mean 'pci_alloc_consistent'? [-Werror=implicit-function-declaration]
+> >       ret = pci_alloc_irq_vectors(pci_pdev,
+> >             ^~~~~~~~~~~~~~~~~~~~~
+> >             pci_alloc_consistent
+> >>> drivers/crypto/inside-secure/safexcel.c:1046:10: error: 'PCI_IRQ_MSI' undeclared (first use in this function); did you mean 'IRQ_MSK'?
+> >              PCI_IRQ_MSI | PCI_IRQ_MSIX);
+> >              ^~~~~~~~~~~
+> >              IRQ_MSK
+> >    drivers/crypto/inside-secure/safexcel.c:1046:10: note: each undeclared identifier is reported only once for each function it appears in
+> >>> drivers/crypto/inside-secure/safexcel.c:1046:24: error: 'PCI_IRQ_MSIX' undeclared (first use in this function); did you mean 'PCI_IRQ_MSI'?
+> >              PCI_IRQ_MSI | PCI_IRQ_MSIX);
+> >                            ^~~~~~~~~~~~
+> >                            PCI_IRQ_MSI
+> >    drivers/crypto/inside-secure/safexcel.c: In function 'safexcel_init':
+> >    drivers/crypto/inside-secure/safexcel.c:1402:6: warning: unused variable 'rc' [-Wunused-variable]
+> >      int rc;
+> >          ^~
+> >    cc1: some warnings being treated as errors
+> > 
+> > vim +840 drivers/crypto/inside-secure/safexcel.c
+> > 
+> >    826	
+> >    827	static int safexcel_request_ring_irq(void *pdev, int irqid,
+> >    828					     int is_pci_dev,
+> >    829					     irq_handler_t handler,
+> >    830					     irq_handler_t threaded_handler,
+> >    831					     struct safexcel_ring_irq_data *ring_irq_priv)
+> >    832	{
+> >    833		int ret, irq;
+> >    834		struct device *dev;
+> >    835	
+> >    836		if (IS_ENABLED(CONFIG_PCI) && is_pci_dev) {
+> >    837			struct pci_dev *pci_pdev = pdev;
+> >    838	
+> >    839			dev = &pci_pdev->dev;
+> >  > 840			irq = pci_irq_vector(pci_pdev, irqid);
+> >    841			if (irq < 0) {
+> >    842				dev_err(dev, "unable to get device MSI IRQ %d (err %d)\n",
+> >    843					irqid, irq);
+> >    844				return irq;
+> >    845			}
+> >    846		} else if (IS_ENABLED(CONFIG_OF)) {
+> >    847			struct platform_device *plf_pdev = pdev;
+> >    848			char irq_name[6] = {0}; /* "ringX\0" */
+> >    849	
+> >    850			snprintf(irq_name, 6, "ring%d", irqid);
+> >    851			dev = &plf_pdev->dev;
+> >    852			irq = platform_get_irq_byname(plf_pdev, irq_name);
+> >    853	
+> >    854			if (irq < 0) {
+> >    855				dev_err(dev, "unable to get IRQ '%s' (err %d)\n",
+> >    856					irq_name, irq);
+> >    857				return irq;
+> >    858			}
+> >    859		}
+> >    860	
+> >    861		ret = devm_request_threaded_irq(dev, irq, handler,
+> >    862						threaded_handler, IRQF_ONESHOT,
+> >    863						dev_name(dev), ring_irq_priv);
+> >    864		if (ret) {
+> >    865			dev_err(dev, "unable to request IRQ %d\n", irq);
+> >    866			return ret;
+> >    867		}
+> >    868	
+> >    869		return irq;
+> >    870	}
+> >    871	
+> > 
+> > ---
+> > 0-DAY kernel test infrastructure                Open Source Technology Center
+> > https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+> > 
 
-kernel: 4.19.75-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.19.y
-git commit: 42a609acc1b2b5a744dd9ad3d3eb6a71906e4bcc
-git describe: v4.19.74-80-g42a609acc1b2
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
-ild/v4.19.74-80-g42a609acc1b2
-
-
-No regressions (compared to build v4.19.74)
-
-No fixes (compared to build v4.19.74)
-
-
-Ran 21908 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* libgpiod
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* network-basic-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-open-posix-tests
-* kvm-unit-tests
-* ssuite
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
