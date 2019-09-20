@@ -2,132 +2,134 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E1CC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E79C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05236208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:37:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="QElejmcM"
+	by mail.kernel.org (Postfix) with ESMTP id F02D92080F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:37:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729632AbfITThH (ORCPT
+        id S2405207AbfITThy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 15:37:07 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:4259 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729598AbfITThG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 15:37:06 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d852a680000>; Fri, 20 Sep 2019 12:37:12 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 20 Sep 2019 12:37:05 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 20 Sep 2019 12:37:05 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 20 Sep
- 2019 19:37:05 +0000
-Received: from [10.110.48.28] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 20 Sep
- 2019 19:37:05 +0000
-Subject: Re: [PATCH 3/3] mm:fix gup_pud_range
-To:     Qiujun Huang <hqjagain@gmail.com>, <akpm@linux-foundation.org>
-CC:     <ira.weiny@intel.com>, <jgg@ziepe.ca>, <dan.j.williams@intel.com>,
-        <rppt@linux.ibm.com>, <aneesh.kumar@linux.ibm.com>,
-        <keith.busch@intel.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1568994684-1425-1-git-send-email-hqjagain@gmail.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <1a162778-41b9-4428-1058-82aaf82314b1@nvidia.com>
-Date:   Fri, 20 Sep 2019 12:37:04 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 20 Sep 2019 15:37:54 -0400
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:49284 "EHLO 1wt.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727165AbfITThx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 15:37:53 -0400
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id x8KJbe98001976;
+        Fri, 20 Sep 2019 21:37:40 +0200
+Date:   Fri, 20 Sep 2019 21:37:40 +0200
+From:   Willy Tarreau <w@1wt.eu>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>
+Subject: Re: [PATCH RFC v4 1/1] random: WARN on large getrandom() waits and
+ introduce getrandom2()
+Message-ID: <20190920193740.GD1889@1wt.eu>
+References: <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
+ <20190918211503.GA1808@darwi-home-pc>
+ <20190918211713.GA2225@darwi-home-pc>
+ <CAHk-=wiCqDiU7SE3FLn2W26MS_voUAuqj5XFa1V_tiGTrrW-zQ@mail.gmail.com>
+ <20190920134609.GA2113@pc>
+ <CALCETrWvE5es3i+to33y6jw=Yf0Tw6ZfV-6QWjZT5v0fo76tWw@mail.gmail.com>
+ <CAHk-=wgW8rN2EVL_Rdn63V9vQO0GkZ=RQFeqqsYJM==8fujpPg@mail.gmail.com>
+ <CALCETrV=4TX2a4uV5t2xOFzv+zM_jnOtMLJna8Vb7uXz6S=wSw@mail.gmail.com>
+ <20190920181216.GA1889@1wt.eu>
+ <CALCETrW_mw0qOR2oqYC0+T6V65c+t+Vdxk5Jb6S+sPTqN6SXfw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1568994684-1425-1-git-send-email-hqjagain@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1569008232; bh=oi8jWpJWJ0tRPrMbAPcI1iFMVvLOMUJvV8DWHfUvSaE=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=QElejmcMr9EsbOUeMc+uMXZK01PdO09YtEhxknTTGQk13YHlLgueX6WAVX0noutEV
-         kI6ePAfKuvItB3Hq1H94VyL8N7eQtu9dknI+rmjK7wD0yZ+AyvcdsA9hH8+QOLg9Xv
-         OwbI4K7UdQN4vojkXzzkhQcTKz9V9wKCOxseBaEzHt8w5kUGbiRT4sACx007iZAe+N
-         wWwfXZkO1uY6BSyqMQASd74utVhPV5FdERtxU2b+acs+msthllgvLLpZK/WYpHvTrg
-         d1wgas5GrReesu4+2KIPZPiOErJpFXuIn0YH0eV5+eZWRv6DbsaRnZQU24bQD1YEIZ
-         OWauQJ4Gcxf3w==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrW_mw0qOR2oqYC0+T6V65c+t+Vdxk5Jb6S+sPTqN6SXfw@mail.gmail.com>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/20/19 8:51 AM, Qiujun Huang wrote:
-> __get_user_pages_fast try to walk the page table but the
-> hugepage pte is replace by hwpoison swap entry by mca path.
+On Fri, Sep 20, 2019 at 12:22:17PM -0700, Andy Lutomirski wrote:
+> Perhaps userland could register a helper that takes over and does
+> something better?
 
-I expect you mean MCE (machine check exception), rather than mca?
+If userland sees the failure it can do whatever the developer/distro
+packager thought suitable for the system facing this condition.
 
-> ...
-> [15798.177437] mce: Uncorrected hardware memory error in
-> 				user-access at 224f1761c0
-> [15798.180171] MCE 0x224f176: Killing pal_main:6784 due to
-> 				hardware memory corruption
-> [15798.180176] MCE 0x224f176: Killing qemu-system-x86:167336
-> 				due to hardware memory corruption
-> ...
-> [15798.180206] BUG: unable to handle kernel
-> [15798.180226] paging request at ffff891200003000
-> [15798.180236] IP: [<ffffffff8106edae>] gup_pud_range+
-> 				0x13e/0x1e0
-> ...
+> But I think the kernel really should do something
+> vaguely reasonable all by itself.
+
+Definitely, that's what Linus' proposal was doing. Sleeping for some time
+is what I call "vaguely reasonable".
+
+> If nothing else, we want the ext4
+> patch that provoked this whole discussion to be applied,
+
+Oh absolutely!
+
+> which means
+> that we need to unbreak userspace somehow, and returning garbage it to
+> is not a good choice.
+
+It depends how it's used. I'd claim that we certainly use randoms for
+other things (such as ASLR/hashtables) *before* using them to generate
+long lived keys thus we can have a bit more time to get some more
+entropy before reaching the point of producing these keys.
+
+> Here are some possible approaches that come to mind:
 > 
-> We need to skip the hwpoison entry in gup_pud_range.
-
-It would be nice if this spelled out a little more clearly what's
-wrong. I think you and Aneesh are saying that the entry is really
-a swap entry, created by the MCE response to a bad page?
-
+> int count;
+> while (crng isn't inited) {
+>   msleep(1);
+> }
 > 
-> Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-> ---
->  mm/gup.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 98f13ab..6157ed9 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -2230,6 +2230,8 @@ static int gup_pud_range(p4d_t p4d, unsigned long addr, unsigned long end,
->  		next = pud_addr_end(addr, end);
->  		if (pud_none(pud))
->  			return 0;
-> +		if (unlikely(!pud_present(pud)))
-> +			return 0;
+> and modify add_timer_randomness() to at least credit a tiny bit to
+> crng_init_cnt.
 
-If the MCE hwpoison behavior puts in swap entries, then it seems like all
-page table walkers would need to check for p*d_present(), and maybe at all
-levels too, right?  
+Without a timeout it's sure we'll still face some situations where
+it blocks forever, which is the current problem.
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+> Or we do something like intentionally triggering readahead on some
+> offset on the root block device.
 
+You don't necessarily have such a device, especially when you're
+in an initramfs. It's precisely where userland can be smarter. When
+the caller is sfdisk for example, it does have more chances to try
+to perform I/O than when it's a tiny http server starting to present
+a configuration page.
 
->  		if (unlikely(pud_huge(pud))) {
->  			if (!gup_huge_pud(pud, pudp, addr, next, flags,
->  					  pages, nr))
-> 
+> We should definitely not trigger *blocking* IO.
+
+I think I agree.
+
+> Also, I wonder if the real problem preventing the RNG from staring up
+> is that the crng_init_cnt threshold is too high.  We have a rather
+> baroque accounting system, and it seems like we can accumulate and
+> credit entropy for a very long time indeed without actually
+> considering ourselves done.
+
+I have no opinion on this, lacking the skills to evaluate the situation.
+What I can say for sure is that I've faced the non-booting issue quite a
+number of times on headless systems, and conversely in the 2.4 era, my
+front reverse-proxy by then had the same SSH key as 89 other machines on
+the net. So there's surely a sweet spot to find between those two extremes.
+I tend to think that waiting *a little bit* for the *first* random is
+acceptable, even 10-15s, by the time the user starts to think about
+pressing the reset button the system might finish to boot. Hashing some
+RAM locations and the RTC when present can also help a little bit. If
+at least my machine by then had combined the RTC's date and time with
+the hash, chances for a key collision would have gone down to one over
+many thousands.
+
+Willy
