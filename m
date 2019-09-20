@@ -2,107 +2,114 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6890AC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 07:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DAE1C4CECD
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 07:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FC10207E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 07:51:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 234F4222CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 07:54:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="iNg4yCYi";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PZH5MrZC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404933AbfITHvE (ORCPT
+        id S2437614AbfITHyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 03:51:04 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:57631 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404904AbfITHvD (ORCPT
+        Fri, 20 Sep 2019 03:54:12 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:55598 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437613AbfITHyL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 03:51:03 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1M4K2r-1iBUnx2Whd-000HEj; Fri, 20 Sep 2019 09:50:48 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Liam Girdwood <lgirdwood@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Jarkko Nikula <jarkko.nikula@bitmer.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: ti: fix SND_SOC_DM365_VOICE_CODEC dependencies
-Date:   Fri, 20 Sep 2019 09:50:18 +0200
-Message-Id: <20190920075046.3210393-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Fri, 20 Sep 2019 03:54:11 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 87FAE61544; Fri, 20 Sep 2019 07:54:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568966050;
+        bh=J9ixUqe5hZvgjP3d9E63RycwkbxkMnQGaECw4yn9tE4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=iNg4yCYi6nJvVA7VKDGqgcKKIDXxTT+DAjnQ29dJ7SLbcCZFy1/MJv215C6R0U282
+         Cpb714yrWX3K6J5vBTTkQ/W5GOY3FGy8tDHaxPP/xp80BMpXVuSBmyUNTS+ZO6qCrh
+         ESCvMEcV8MCRirvsZ2wH2Mb4dtHB2R5X297BMdc4=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 8B7E5602E1;
+        Fri, 20 Sep 2019 07:54:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568966049;
+        bh=J9ixUqe5hZvgjP3d9E63RycwkbxkMnQGaECw4yn9tE4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=PZH5MrZCqbyeRs8OOxV425gJhjvxUQcZ3azcX7C8eV93q9fb6y8xYdtulKffI9moP
+         m0zXJLnolr2rGQV0B3mIN0+FWGJ6VKNCJ1txtvuoH9d9e3LPwBmTawVm+udTcyEPdw
+         H4Ku1Qn3VfL+Vq/2+H8BYLW3c+NgepdxerLO5JFU=
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:EAKPTZ+itukL2iznqTUk5rPIMXBlBv9PWcQDjxKpT9O//vnk5gh
- rAOyC8URZPiUfTgkKlxvXoVXPAwpUOUyBc0xu0jumnINBPwIcw5VCV1whnDmt15T78vaj+V
- KZBJvmieL310Wovz0k/cDx/thz7NXU/w31Vz4vpXtYosVVoU55dDg6Sm1k/LOvm4G84/dYT
- tJTF76m7Jh3v+6ff4FffA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:pklhRZ2wyO4=:XKxLr9F1esW2k/1CYBwAZ1
- p6hU9OeU8jh6CmeIfSMgqs3GHdq17Y9JtBjCI54ia/904VPOE/xlrlfqufyoXbA2kdrJgmzxH
- sUOpcfn86X0zl1zGbd4rWbzgZ8sAaDA+bCVQsVKPn4jTwvkf54irU3EYvaHr7O5DPlYcn1jPE
- sqTlgeoGzmwIAsMiNYAHDhnd2HsogtybRZwkL307fcfIktlVFnDX/lWSsUQ1ivP6swjA2mzB+
- 8LXTwspTBe5slOJELG1qo0uHoluy6sQFZcEp/AEKLwfwevC+dCfijD87ElENqhBFDbZG9E7np
- Sm5u845gRCukKCEiv9MoavuuTZLjLyqNuLWUBkH2WdaJd6bb4zdHZ1i9A5zWoeBtMlPzzkPTJ
- U3SDT0f9r0a0Wlb+DS8d7Z+QD3wSyUBOYzyJdtut/kOPdPMwRCOqremPdwCIs3T8BdO/4N1Ik
- 9U525jwIbditIYdpvm+LfxVqNPfIqKpu8Yh2DYVvvap9NLDkORv0Sm21lrD5Y90cOV7UK71F+
- 3DMvCH9YwvE50r6K1BvcuQLG0zJ8GFzxVSVCE2foMyOQU/dUk9u+5D2mIxhPJ3/6FsUZI93J4
- pttyejLqRP6Up5O/Vjv50dSljBxAwXkOyFHsvruHsHp9Vwx+SoAjhuBebch0iHZc0ZltlABEf
- nGoHWubqzFGasR1GTGiBMuiyo4nlaL/bq8l942kUgP3nFH+bLKC5lFtmH7EyNhvEaN+V35URq
- GSSNJbJK+6VgT3M32QcNabqLLHbtjkjf6R7n7bWJud2XwngeE9BWsfxv5lYgtX8sAEhwGkvPr
- 94/qfrrwSsPKRE3wXXnGYXgyoRHPCBtZrSQ5CuXzEFR4osEHZGUGJaYtE0yrZAql+ifRz3zsQ
- eWcZ83+5KHTe4qoG+ouQ==
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 20 Sep 2019 13:24:09 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCHv6 3/3] iommu: arm-smmu-impl: Add sdm845 implementation
+ hook
+In-Reply-To: <5d83de74.1c69fb81.71c0f.f162@mx.google.com>
+References: <cover.1568712606.git.saiprakash.ranjan@codeaurora.org>
+ <1513424ecec891d19c1aa3c599ec67db7964b6b2.1568712606.git.saiprakash.ranjan@codeaurora.org>
+ <20190919002501.GA20859@builder>
+ <a45e8fb6fe1a8cc914fedbfac65af009@codeaurora.org>
+ <081fff2f5dacfa7b6f5df6364f088045@codeaurora.org>
+ <5d83de74.1c69fb81.71c0f.f162@mx.google.com>
+Message-ID: <8268c9b4002f6b9b1c87fcc16920f57f@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SND_SOC_DM365_VOICE_CODEC is a 'bool' option in a choice statement,
-meaning it cannot be set to =m, but it selects two other drivers
-that we may want to be loadable modules after all:
+On 2019-09-20 01:30, Stephen Boyd wrote:
+> Quoting Sai Prakash Ranjan (2019-09-19 11:54:27)
+>> On 2019-09-19 08:48, Sai Prakash Ranjan wrote:
+>> > On 2019-09-19 05:55, Bjorn Andersson wrote:
+>> >> In the transition to this new design we lost the ability to
+>> >> enable/disable the safe toggle per board, which according to Vivek
+>> >> would result in some issue with Cheza.
+>> >>
+>> >> Can you confirm that this is okay? (Or introduce the DT property for
+>> >> enabling the safe_toggle logic?)
+>> >>
+>> >
+>> > Hmm, I don't remember Vivek telling about any issue on Cheza because
+>> > of this logic.
+>> > But I will test this on Cheza and let you know.
+>> >
+>> 
+>> I tested this on Cheza and no perf degradation nor any other issue is
+>> seen
+>> atleast openly, although I see this below stack dump always with
+>> cant_sleep change added.
+> 
+> The usage of cant_sleep() here is wrong then, and the comment should be
+> removed from the scm API as well because it looks like it's perfectly 
+> OK
+> to call the function from a context that can sleep.
+> 
 
-WARNING: unmet direct dependencies detected for SND_SOC_CQ0093VC
-  Depends on [m]: SOUND [=m] && !UML && SND [=m] && SND_SOC [=m]
-  Selected by [y]:
-  - SND_SOC_DM365_VOICE_CODEC [=y] && <choice>
-  Selected by [m]:
-  - SND_SOC_ALL_CODECS [=m] && SOUND [=m] && !UML && SND [=m] && SND_SOC [=m] && COMPILE_TEST [=y]
+Looking more into this downstream, it says this *can be called in atomic 
+context*
+and not *should be called only in atomic context*. So will remove 
+cant_sleep and
+modify the comment accordingly.
 
-Add an intermediate symbol that sets SND_SOC_CQ0093VC and
-MFD_DAVINCI_VOICECODEC to =m if SND_SOC=m.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- sound/soc/ti/Kconfig | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/sound/soc/ti/Kconfig b/sound/soc/ti/Kconfig
-index 87a9b9dd4e98..29f61053ab62 100644
---- a/sound/soc/ti/Kconfig
-+++ b/sound/soc/ti/Kconfig
-@@ -200,11 +200,18 @@ config SND_SOC_DM365_AIC3X_CODEC
- 
- config SND_SOC_DM365_VOICE_CODEC
- 	bool "Voice Codec - CQ93VC"
--	select MFD_DAVINCI_VOICECODEC
--	select SND_SOC_CQ0093VC
- 	help
- 	  Say Y if you want to add support for SoC On-chip voice codec
- endchoice
- 
-+config SND_SOC_DM365_VOICE_CODEC_MODULE
-+	def_tristate y
-+	depends on SND_SOC_DM365_VOICE_CODEC && SND_SOC
-+	select MFD_DAVINCI_VOICECODEC
-+	select SND_SOC_CQ0093VC
-+	help
-+	  The is an internal symbol needed to ensure that the codec
-+	  and MFD driver can be built as loadable modules if necessary.
-+
- endmenu
- 
 -- 
-2.20.0
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
