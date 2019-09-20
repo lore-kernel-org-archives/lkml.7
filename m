@@ -2,103 +2,370 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3671C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D59EC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9865021A4A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:02:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37B9721A4A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:03:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cPpu0jmG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t+xkNq82"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437702AbfITICl (ORCPT
+        id S2437715AbfITID2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 04:02:41 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:52265 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2391092AbfITICk (ORCPT
+        Fri, 20 Sep 2019 04:03:28 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:35456 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391092AbfITID1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 04:02:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1568966559;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=omv7+mbGxPVf+0lSkKX4kVmao62GbbYXILt4i5WxIAo=;
-        b=cPpu0jmGxZ7lWifVnLxUatezDsGss6+EFGFXoA7lsSaZSsgGjKQZfHqER1u5BjU8crAd/5
-        pk/dJ6TVdhersB1HtWk3QhGTLoRevK/DSsmnFqVVI5U7bkUTPOcLMK3YcstJyF8Uum1r+S
-        4jcNn6Xm+h1ui+6I+5fD+1GH9T4hjng=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-309-IbOgUB2oMHO0_zx6xbCk3w-1; Fri, 20 Sep 2019 04:02:38 -0400
-Received: by mail-ed1-f72.google.com with SMTP id c23so3673611edb.14
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 01:02:38 -0700 (PDT)
+        Fri, 20 Sep 2019 04:03:27 -0400
+Received: by mail-qk1-f196.google.com with SMTP id w2so6444473qkf.2
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 01:03:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jhLFS+BC+Ynq1b9XAAYjJKdJot5q4yeZ13h0Uc3Mmuk=;
+        b=t+xkNq829tg9PSLJ6dmaKwn52hTWOgYXYnUsb323CMrj12pdRWqJleriwvnQbUzW+U
+         Ktbq0jfCViK3aFeX2n4YZiljpdwMwc2Fdch1r5UJIyTU+lfz6ZnMie+qQzfH7+fd3nFY
+         evwtR9WQNSvecXjL/41Kf4mpgr4QPGRovJzsL7eXbWkPPqNuxrZ8phckJmV7de/iOZag
+         218Au+v/rbZQ11MaeNa95BRS5W/J8k5J5m+CNHqvemYRfxVtDcvFMmi2u3ydycpEV9Gu
+         xmN+RjramsozcpT9Fwl1RVqeWr84ehzwr8pH6dVAGOqVf8C8nDAAew4/PJPGki41vGpL
+         L1BQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Y/OJqZHSGkyT8kFjd1lJtlh+ntUpVdhTuyPyBbh3g+w=;
-        b=CyoPc1+6CMKxbCShWIheyxYiCa5Hn6GE4L8Rf1pxAzqullJSCqWQDW6wXY4wWSux4y
-         gEv7a6GD/FoARuT66Lgz37ypoHJWLixLGuyIIDVTNm8kZrip4jyFpDCoGI3ssf+zqLuj
-         GtRElHYA/2O0UEvuMzcKVtJJVr7L1oApqPrLGp9ykcZUoIpwXYA8VuewXBfCUa9WYplk
-         9yTk60OJE4GDp4wc0k8VZbquE92ooB9cT40Xm/q7/RfxMsfzOOo8NSvhsOcnaelxglEH
-         JwZs6r545loZVbnFv9iBJJ6Knsc1DHYb83raJyONCQ2rWFJXXDdHVhLTwryMgVs+9L9W
-         xBow==
-X-Gm-Message-State: APjAAAX1n8cdeZK5pBbdTwmAjs/a/ooJXolqbDFrkZt/dCS0isMqq0km
-        Ui1Nh0SpmCjSMzsG3oL0vQq3IGi7y6jaK8TO8UMrV4s1hRLxn4my8Ly2NZx+2teyElLfFAoq0Or
-        P24Iv8ITNmtm4K/Ct2giMs8H6
-X-Received: by 2002:aa7:d718:: with SMTP id t24mr19310595edq.300.1568966556892;
-        Fri, 20 Sep 2019 01:02:36 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwWaaT9DrifLzV+dSh9GB8CGVoZ5eA0zf6DFmKbqgk48C0ZCbjACBj2Aw5MgUhmUfCQoK1VHg==
-X-Received: by 2002:aa7:d718:: with SMTP id t24mr19310576edq.300.1568966556699;
-        Fri, 20 Sep 2019 01:02:36 -0700 (PDT)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id a50sm192418eda.25.2019.09.20.01.02.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Sep 2019 01:02:35 -0700 (PDT)
-Subject: Re: [PATCH v3 0/2] tcpm: AMS and Collision Avoidance
-To:     Kyle Tso <kyletso@google.com>, linux@roeck-us.net,
-        heikki.krogerus@linux.intel.com, gregkh@linuxfoundation.org
-Cc:     badhri@google.com, Adam.Thomson.Opensource@diasemi.com,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190920032437.242187-1-kyletso@google.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <cb225c94-da97-1b47-48b6-3802dc3eb93b@redhat.com>
-Date:   Fri, 20 Sep 2019 10:02:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jhLFS+BC+Ynq1b9XAAYjJKdJot5q4yeZ13h0Uc3Mmuk=;
+        b=eYdOyndJX9wQgIZ+dt9woKlE8Q1lfrdS1uTs3s3nPBV/gRyuUbbfrWIwNNLArFgQuM
+         BcPHViYZqdZkaVm/FdhWnLW7vYA7OSNFr2zpaJECWxgBTSclTztA0fPW1Foq7ZhD4tlV
+         o+HSMaHymn0Qk26p0KX4LvhgnqcS1NXZE5eoiqwnxx0BgzXfZRrXHmOeuQ5hECDxYrkA
+         cmry9FRi8XT5sax6j7OVhtbiBtqsJr2X+V+QJnEvW4qnCYajztH/uqPZ8ahygo8byvqd
+         Hx0R45wnLZQdR2miYdT1DhEExeeQvWbHZT1eDr4glHttK9XsKKMutja5MtjhlYrIS13s
+         K9zw==
+X-Gm-Message-State: APjAAAU/rXF6Pmp8dCpdxPKKbjX7B24dUUrnFAaYYui07sX/JNZy6WeO
+        XPKsnJSkMVdwSV5f4KUBYjd9vBYuA1Q7NLoNlMQSAw==
+X-Google-Smtp-Source: APXvYqx8Bxei9aKfuIw+2MkZjfRq9Ds3mydCckhQxiiLlMHyCd85TjK4mVrRU+PGtoyOsxdSYCrVoPS7gPKj1BO04AY=
+X-Received: by 2002:a37:d84:: with SMTP id 126mr2214373qkn.407.1568966605243;
+ Fri, 20 Sep 2019 01:03:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190920032437.242187-1-kyletso@google.com>
-Content-Language: en-US
-X-MC-Unique: IbOgUB2oMHO0_zx6xbCk3w-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+References: <000000000000674b3d0592d2015b@google.com> <CACT4Y+YX3yNz7Fc8wUKsVR-rzusqmTnzP6ysZx+=3CzhVHk36w@mail.gmail.com>
+ <20190919170750.GO30224@paulmck-ThinkPad-P72> <CACT4Y+bHcy1ZOstVvSGezs+3Q=jccdWTeikm6mnZiXYCBi+Nyw@mail.gmail.com>
+ <20190919201200.GP30224@paulmck-ThinkPad-P72> <CACT4Y+YdodVKL2h-Z4Svjyd6kug2ORmfiP4jripSC9PpYw4RiA@mail.gmail.com>
+ <CACT4Y+YLZeMSz1F_YEmbNVF=cxBJcOMOC6KNDXCddei49JMs4Q@mail.gmail.com>
+In-Reply-To: <CACT4Y+YLZeMSz1F_YEmbNVF=cxBJcOMOC6KNDXCddei49JMs4Q@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Fri, 20 Sep 2019 10:03:12 +0200
+Message-ID: <CACT4Y+apU3vQXKDYYhx=soj2bNrRyk-V__rk3wB_8OdAMZwLmw@mail.gmail.com>
+Subject: Re: INFO: rcu detected stall in sys_exit_group
+To:     paulmck@kernel.org
+Cc:     syzbot <syzbot+18379f2a19bc62c12565@syzkaller.appspotmail.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>, avagin@gmail.com,
+        Christian Brauner <christian@brauner.io>, dbueso@suse.de,
+        LKML <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>, prsood@codeaurora.org,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tejun Heo <tj@kernel.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kyle,
+On Fri, Sep 20, 2019 at 9:54 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+> >  On Thu, Sep 19, 2019 at 10:12 PM Paul E. McKenney <paulmck@kernel.org> wrote:
+> > >
+> > > On Thu, Sep 19, 2019 at 07:39:03PM +0200, Dmitry Vyukov wrote:
+> > > > On Thu, Sep 19, 2019 at 7:07 PM Paul E. McKenney <paulmck@kernel.org> wrote:
+> > > > >
+> > > > > On Wed, Sep 18, 2019 at 05:05:26PM +0200, Dmitry Vyukov wrote:
+> > > > > > On Wed, Sep 18, 2019 at 1:19 PM syzbot
+> > > > > > <syzbot+18379f2a19bc62c12565@syzkaller.appspotmail.com> wrote:
+> > > > > > >
+> > > > > > > Hello,
+> > > > > > >
+> > > > > > > syzbot found the following crash on:
+> > > > > > >
+> > > > > > > HEAD commit:    a7f89616 Merge branch 'for-5.3-fixes' of git://git.kernel...
+> > > > > > > git tree:       upstream
+> > > > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=15c33079600000
+> > > > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=861a6f31647968de
+> > > > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=18379f2a19bc62c12565
+> > > > > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1066bb85600000
+> > > > > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13e9f75e600000
+> > > > > > >
+> > > > > > > Bisection is inconclusive: the bug happens on the oldest tested release.
+> > > > > > >
+> > > > > > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=154d4969600000
+> > > > > > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=174d4969600000
+> > > > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=134d4969600000
+> > > > > > >
+> > > > > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > > > > > Reported-by: syzbot+18379f2a19bc62c12565@syzkaller.appspotmail.com
+> > > > > > >
+> > > > > > > rcu: INFO: rcu_preempt self-detected stall on CPU
+> > > > > > > rcu:    1-...!: (10499 ticks this GP) idle=63a/1/0x4000000000000002
+> > > > > > > softirq=10978/10978 fqs=0
+> > > > > > >         (t=10501 jiffies g=10601 q=227)
+> > > > > > > rcu: rcu_preempt kthread starved for 10502 jiffies! g10601 f0x0
+> > > > >
+> > > > > The key point is the above line: RCU's grace-period kthread has not
+> > > > > had a chance to run for 10,502 jiffies.
+> > > > >
+> > > > > > > RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=0
+> > > > >
+> > > > > And it is sleeping normally.  The "RCU_GP_WAIT_FQS(5)" says that it was
+> > > > > doing a fixed-time wait, which is normally for three jiffies, but never
+> > > > > 10,000 of them.  Note that this kthread last ran on CPU 0.
+> > > > >
+> > > > > > > rcu: RCU grace-period kthread stack dump:
+> > > > > > > rcu_preempt     I29040    10      2 0x80004000
+> > > > > > > Call Trace:
+> > > > > > >   context_switch kernel/sched/core.c:3254 [inline]
+> > > > > > >   __schedule+0x755/0x1580 kernel/sched/core.c:3880
+> > > > > > >   schedule+0xd9/0x260 kernel/sched/core.c:3947
+> > > > > > >   schedule_timeout+0x486/0xc50 kernel/time/timer.c:1807
+> > > > > > >   rcu_gp_fqs_loop kernel/rcu/tree.c:1611 [inline]
+> > > > > > >   rcu_gp_kthread+0x9b2/0x18c0 kernel/rcu/tree.c:1768
+> > > > > > >   kthread+0x361/0x430 kernel/kthread.c:255
+> > > > > > >   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> > > > >
+> > > > > This stack trace is expected:  The RCU grace-period kthread is doing
+> > > > > a fixed-time wait.  Note that this is a stack trace of this kthread,
+> > > > > not necessarily of the CPU it was last running on.
+> > > > >
+> > > > > > > Sending NMI from CPU 1 to CPUs 0:
+> > > > > > > INFO: NMI handler (nmi_cpu_backtrace_handler) took too long to run: 1.403
+> > > > > > > msecs
+> > > > >
+> > > > > This is surprising.  Is this a guest OS?  If so, is the vCPU for CPU 0
+> > > > > stuck somehow?  Did it get a SIGSTOP or some such?
+> > > > >
+> > > > > Clearly, if CPU 0 isn't running, RCU's grace-period kthread, which was
+> > > > > last seen on CPU 0, might not be doing so well.
+> > > > >
+> > > > > OK, but we eventually did get a stack trace:
+> > > > >
+> > > > > > > NMI backtrace for cpu 0
+> > > > > > > CPU: 0 PID: 10344 Comm: syz-executor933 Not tainted 5.3.0-rc8+ #0
+> > > > > > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > > > > > > Google 01/01/2011
+> > > > > > > RIP: 0010:hhf_dequeue+0x552/0xa20 net/sched/sch_hhf.c:436
+> > > > > > > Code: ff ff 45 31 ff e9 b0 02 00 00 e8 49 05 ac fb 48 8d 43 f0 41 be 01 00
+> > > > > > > 00 00 49 8d 95 c0 02 00 00 48 39 c2 74 34 e8 2e 05 ac fb <49> 8d bd ac 03
+> > > > > > > 00 00 48 89 f8 48 c1 e8 03 42 0f b6 14 20 48 89 f8
+> > > > > > > RSP: 0018:ffff8880ae809038 EFLAGS: 00000206
+> > > > > > > RAX: ffff8880a3970100 RBX: ffff8880a8b1d538 RCX: ffffffff85c66b39
+> > > > > > > RDX: 0000000000000100 RSI: ffffffff85c66fd2 RDI: 0000000000000005
+> > > > > > > RBP: ffff8880ae809088 R08: ffff8880a3970100 R09: 0000000000000000
+> > > > > > > R10: fffffbfff134afaf R11: ffff8880a3970100 R12: dffffc0000000000
+> > > > > > > R13: ffff8880a8b1d240 R14: 0000000000000001 R15: 0000000000000000
+> > > > > > > FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+> > > > > > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > > > > > CR2: 00000000006dab10 CR3: 0000000008c6d000 CR4: 00000000001406f0
+> > > > > > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > > > > > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > > > > > > Call Trace:
+> > > > > > >   <IRQ>
+> > > > > > >   dequeue_skb net/sched/sch_generic.c:258 [inline]
+> > > > > > >   qdisc_restart net/sched/sch_generic.c:361 [inline]
+> > > > > > >   __qdisc_run+0x1e7/0x19d0 net/sched/sch_generic.c:379
+> > > > > > >   __dev_xmit_skb net/core/dev.c:3533 [inline]
+> > > > > > >   __dev_queue_xmit+0x16f1/0x3650 net/core/dev.c:3838
+> > > > > > >   dev_queue_xmit+0x18/0x20 net/core/dev.c:3902
+> > > > > > >   br_dev_queue_push_xmit+0x3f3/0x5c0 net/bridge/br_forward.c:52
+> > > > > > >   NF_HOOK include/linux/netfilter.h:305 [inline]
+> > > > > > >   NF_HOOK include/linux/netfilter.h:299 [inline]
+> > > > > > >   br_forward_finish+0xfa/0x400 net/bridge/br_forward.c:65
+> > > > > > >   NF_HOOK include/linux/netfilter.h:305 [inline]
+> > > > > > >   NF_HOOK include/linux/netfilter.h:299 [inline]
+> > > > > > >   __br_forward+0x641/0xb00 net/bridge/br_forward.c:109
+> > > > > > >   deliver_clone+0x61/0xc0 net/bridge/br_forward.c:125
+> > > > > > >   maybe_deliver+0x2c7/0x390 net/bridge/br_forward.c:181
+> > > > > > >   br_flood+0x13a/0x3d0 net/bridge/br_forward.c:223
+> > > > > > >   br_dev_xmit+0x98c/0x15a0 net/bridge/br_device.c:100
+> > > > > > >   __netdev_start_xmit include/linux/netdevice.h:4406 [inline]
+> > > > > > >   netdev_start_xmit include/linux/netdevice.h:4420 [inline]
+> > > > > > >   xmit_one net/core/dev.c:3280 [inline]
+> > > > > > >   dev_hard_start_xmit+0x1a3/0x9c0 net/core/dev.c:3296
+> > > > > > >   __dev_queue_xmit+0x2b15/0x3650 net/core/dev.c:3869
+> > > > > > >   dev_queue_xmit+0x18/0x20 net/core/dev.c:3902
+> > > > > > >   neigh_hh_output include/net/neighbour.h:500 [inline]
+> > > > > > >   neigh_output include/net/neighbour.h:509 [inline]
+> > > > > > >   ip_finish_output2+0x1726/0x2570 net/ipv4/ip_output.c:228
+> > > > > > >   __ip_finish_output net/ipv4/ip_output.c:308 [inline]
+> > > > > > >   __ip_finish_output+0x5fc/0xb90 net/ipv4/ip_output.c:290
+> > > > > > >   ip_finish_output+0x38/0x1f0 net/ipv4/ip_output.c:318
+> > > > > > >   NF_HOOK_COND include/linux/netfilter.h:294 [inline]
+> > > > > > >   ip_output+0x21f/0x640 net/ipv4/ip_output.c:432
+> > > > > > >   dst_output include/net/dst.h:436 [inline]
+> > > > > > >   ip_local_out+0xbb/0x190 net/ipv4/ip_output.c:125
+> > > > > > >   igmpv3_sendpack+0x1b5/0x2c0 net/ipv4/igmp.c:426
+> > > > > > >   igmpv3_send_cr net/ipv4/igmp.c:721 [inline]
+> > > > > > >   igmp_ifc_timer_expire+0x687/0xa00 net/ipv4/igmp.c:809
+> > > > >
+> > > > > So this stack trace leads me to ask if networking has been hogging
+> > > > > the CPU for the past 10,000 jiffies.  Perhaps there is a corner case
+> > > > > that is not being addressed by the code that is supposed to move
+> > > > > long-term processing from softirq to ksoftirqd?  Or perhaps more
+> > > > > likely, the networking code isn't exiting its softirq handler, thus
+> > > > > preventing the timer softirq handler from running, thus preventing
+> > > > > RCU's grace-period kthread's sleep from ever ending.
+> > > > >
+> > > > > Is this consistent with what you are seeing?
+> > > > >
+> > > > > > This should have been parsed as "INFO: rcu detected stall in
+> > > > > > igmp_ifc_timer_expire" which was already reported:
+> > > > > > https://syzkaller.appspot.com/bug?id=330ce4f7626354cc6444c457c9a5e82d8a8c5055
+> > > > > > So let's do:
+> > > > > > #syz fix: sch_hhf: ensure quantum and hhf_non_hh_weight are non-zero
+> > > > > >
+> > > > > > +Paul, Tetsuo
+> > > > > >
+> > > > > > However, I cannot make sense of this kernel output (nor syzbot).
+> > > > > > Here is full console output:
+> > > > > > https://syzkaller.appspot.com/x/log.txt?x=15c33079600000
+> > > > >
+> > > > > I will bite...  What are all the "executing program" outputs?
+> > > > >
+> > > > > > This is "self-detected stall" which was detected in rcu_gp_kthread (?
+> > > > > > usually these are detected in interrupts, no?)
+> > > > >
+> > > > > They are detected by the scheduling-clock interrupt handler, but
+> > > > > stalls can be generated both at process and at interrupt levels.
+> > > > >
+> > > > > > and then the kthread runs on CPU 1 on top of the igmp_ifc_timer_expire
+> > > > > > handler running in an interrupt (how can a kthread run on the
+> > > > > > interrupt stack?)
+> > > > > > and then it does NMI traceback for CPU 0, but that runs on CPU 1
+> > > > > > (shouldn't NMI traceback run on CPU 0 too?)
+> > > > > >
+> > > > > > Any ideas what exactly happened here and how one can make sense of
+> > > > > > such output to attribute it to some kernel activity that caused the
+> > > > > > stall?
+> > > > >
+> > > > > My best guess based on what I am seeing is that a softirq handler
+> > > > > is running for about ten seconds, which is too long.
+> > > > >
+> > > > > Do you have means for tracking softirq-handler durations?
+> > > >
+> > > > The "executing program" are produced by userspace. Kernel and
+> > > > userspace outputs are multiplexed later to restore order of events.
+> > > > Kernel output is prefixed with "[  351.648071][    C1]".
+> > > >
+> > > > Yes, the networking is stuck dead in an infinite loop. That's a known
+> > > > bug, already fixed by:
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d4d6ec6dac07f263f06d847d6f732d6855522845
+> > > >
+> > > > But I am interested why this report looks not like all other rcu
+> > > > stalls and who should be the parsing logic to conclude that the stall
+> > > > happened in igmp_ifc_timer_expire?
+> > >
+> > > Because the infinite loop happened to prevent the RCU grace-period
+> > > kthread from making progress.  The odds of that are a bit low, so
+> > > most of the stall warnings would look different.
+> >
+> > But isn't it happens in all cases of infinite loops? Yet most other
+> > reports look different and don't mention kthread. What's different
+> > here?
+> > Or is it another case of flaky reporting? We had that other case where
+> > self-stall or remote-stall had the same timeout, so were reported
+> > non-deterministically, or worse intermixed at the same time.
+> >
+> >
+> > > I do expect to be revisiting the RCU CPU stall warning logic at some
+> > > point.  Or are you asking how you could modify a script that figures
+> > > this out?
+> >
+> > Both. Fixing parsing may be easier and will fix all old kernels too.
+> > You know nobody uses kernel HEAD, people use down to 3.18 and maybe
+> > older. You are not going to backport these changes all the way back,
+> > right? :)
+> >
+> > > > Why it's detected by the kthread?
+> > >
+> > > It is not detected by the kthread.  The kthread has been interrupted
+> > > indefinitely by the softirq processing, so is not in a position to
+> > > detect much of anything.  It is instead detected as usual by the
+> > > scheduling-clock interrupt.
+> >
+> > I don't see any rcu-liveness-checking interrupt handler in any
+> > tracebacks. Where is it? Is it useful to traceback the ktread in such
+> > case at all?
+> >
+> > What we do is the following, we find first apic_timer_interrupt on the
+> > current CPU (presumably that the rcu-health-checking interrupt) and
+> > then take the next "anchor" frame after that. This does not work in
+> > this case, because the rcu-health-checking interrupt in missing.
+> >
+> >
+> > > What is different is that the scheduling-clock interrupt detected
+> > > that the grace-period kthread had not been running for an extended
+> > > period of time.  It can detect this because the grace period kthread
+> > > stores timestamps before each activity it undertakes.
+> > >
+> > > >                                   How it runs on top of an interrupt?
+> > >
+> > > It is not running on top of an interrupt.  Its stack was dumped
+> > > separately.
+> >
+> > I see. Usually the first stack is the traceback of the current stack.
+> > So I was confused.
+> >
+> > > > And why one cpu tracebacks another one?
+> > >
+> > > The usual reason is because neither CPU's quiescent state was reported
+> > > to the RCU core, so the stall-warning code dumped both stacks.
+> >
+> > But should the other CPU traceback _itself_? Rather than being traced
+> > back by another CPU?
+> > E.g. see this report:
+> > https://github.com/google/syzkaller/blob/master/pkg/report/testdata/linux/report/350#L61-L83
+> > Here the overall problem was detected by C2, but then C1 traces back itself.
+> >
+> > ... however even in that case C0 and C3 are traced by C2:
+> > https://github.com/google/syzkaller/blob/master/pkg/report/testdata/linux/report/350#L84-L149
+> > I can't understand this...
+> > This makes understanding what happened harder because it's not easy to
+> > exclude things on other CPUs.
+> >
+> >
+> >
+> > >
+> > > My turn.  Why dothere appear to be multiple levels of interrupt, as
+> > > in one interrupt interrupting another interrupt?
+> >
+> > I don't understand the question.
+> > I see 1 apic_timer_interrupt on CPU 0 and 1 apic_timer_interrupt on CPU 1.
+> >
+> > > > As of now syzkaller parsed it as "in sys_exit_group", which lead to
+> > > > the creation of a new bug and another email, which is suboptimal.
+> > >
+> > > I suggest having syzkaller look for something like "rcu: rcu_[a-z]*
+> > > kthread starved for".
+> >
+> > And then what do we need to do to detect this as "in igmp_ifc_timer_expire"?
+>
+> Another thing in this report that confuses me is this:
+> The machine has 2 CPUs. The report contains 2 NMI tracebacks, both for
+> CPU 0 and CPU 1. A CPU generally does not do NMI traceback for itself
+> (right? it could do just traceback). The question is: what CPU the
+> code that prints this runs on then?
 
-On 20-09-2019 05:24, Kyle Tso wrote:
-> *** BLURB HERE ***
->=20
-> Kyle Tso (2):
->    usb: typec: tcpm: AMS and Collision Avoidance
->    usb: typec: tcpm: AMS for PD2.0
-
-May I ask how and on which hardware you have tested this?
-
-And specifically if you have tested this in combination with pwr-role swapp=
-ing?
-
-Regards,
-
-Hans
-
+Oh, I think I start understanding what happened here.
+The rcu-health-checking interrupt which prints all of this is
+rcu_sched_clock_irq, which is at the very bottom of the report (why?
+the current traceback is at the top in all other cases).  It also
+tracebacks itself with "NMI backtrace for cpu 1" message (why? why not
+the normal "Call Trace:"?).
+Then, CPU 1 is in spinlock lock at hhf_change (presumably the timer
+handler on CPU 0 holds the lock).
+So this should have been detected as "spinlock lockup in hhf_change".
