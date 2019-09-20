@@ -2,88 +2,120 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D35CC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC7EC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DE2820665
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1180520882
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:12:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568959933;
+	bh=LFxPD7bXEN0iUHzSgV2IAaqhJMR9jcy71uqdbxqIPmo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Y3iOese0awGotZW3dZMfTrfhZxRqwVCjXyTYYGIMSVj+O2KTBOvUOnnVwqtASGSFH
+	 9ygL39CLgqHD94WdGinT1DLHeQxW/PdpLLZZ4Hh9gyWRq1ORLEK42XsFx5VuYAaDko
+	 EY/v9he8H0X4cDCtGP0bVUBjd6rkk6fVOMEi4670=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394792AbfITGLF (ORCPT
+        id S2390817AbfITGMM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 02:11:05 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2684 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2437237AbfITGI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 02:08:58 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 988F123F9348EDF093F5;
-        Fri, 20 Sep 2019 14:08:56 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 20 Sep 2019 14:08:48 +0800
-From:   Kefeng Wang <wangkefeng.wang@huawei.com>
-To:     Joe Perches <joe@perches.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Alexei Starovoitov" <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Petr Mladek <pmladek@suse.com>, Arnd Bergmann <arnd@arndb.de>,
-        <linux-kernel@vger.kernel.org>
-CC:     <wangkefeng.wang@huawei.com>
-Subject: [PATCH 06/32] sparc: Use pr_warn instead of pr_warning
-Date:   Fri, 20 Sep 2019 14:25:18 +0800
-Message-ID: <20190920062544.180997-7-wangkefeng.wang@huawei.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190920062544.180997-1-wangkefeng.wang@huawei.com>
-References: <20190920062544.180997-1-wangkefeng.wang@huawei.com>
+        Fri, 20 Sep 2019 02:12:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51790 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389655AbfITGMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 02:12:12 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2369F20665;
+        Fri, 20 Sep 2019 06:12:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568959931;
+        bh=LFxPD7bXEN0iUHzSgV2IAaqhJMR9jcy71uqdbxqIPmo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VPUqzg6q9sM0ka6k4geicLtzFC4DJG+pHllGG5x2r85z9Orqm1+AtNmbw90l2ki4V
+         EQzuvzBXyZU9ZNusHhrEERZWTEk77Rb0MC4FOuHcd5eoB1yAByb00w+7EN9eg3Kxwl
+         nDD+yjxYFJcACzDu/0nZvIpNJMG+8RMI8WxBoOgE=
+Date:   Fri, 20 Sep 2019 08:12:09 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
+Cc:     roman.stratiienko@globallogic.com, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH] drm/sun4i: Use vi plane as primary
+Message-ID: <20190920061209.ostddxvzf6xwrmdp@gilmour>
+References: <20190919123703.8545-1-roman.stratiienko@globallogic.com>
+ <20190919171754.x6lq73cctnqsjr4v@gilmour>
+ <104595190.vWb6g8xIPX@jernej-laptop>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="3ylh7nsjnj6zhso3"
+Content-Disposition: inline
+In-Reply-To: <104595190.vWb6g8xIPX@jernej-laptop>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As said in commit f2c2cbcc35d4 ("powerpc: Use pr_warn instead of
-pr_warning"), removing pr_warning so all logging messages use a
-consistent <prefix>_warn style. Let's do it.
 
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
----
- arch/sparc/kernel/smp_64.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+--3ylh7nsjnj6zhso3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/sparc/kernel/smp_64.c b/arch/sparc/kernel/smp_64.c
-index a8275fea4b70..9b4506373353 100644
---- a/arch/sparc/kernel/smp_64.c
-+++ b/arch/sparc/kernel/smp_64.c
-@@ -1673,9 +1673,9 @@ void __init setup_per_cpu_areas(void)
- 					    pcpu_alloc_bootmem,
- 					    pcpu_free_bootmem);
- 		if (rc)
--			pr_warning("PERCPU: %s allocator failed (%d), "
--				   "falling back to page size\n",
--				   pcpu_fc_names[pcpu_chosen_fc], rc);
-+			pr_warn("PERCPU: %s allocator failed (%d), "
-+				"falling back to page size\n",
-+				pcpu_fc_names[pcpu_chosen_fc], rc);
- 	}
- 	if (rc < 0)
- 		rc = pcpu_page_first_chunk(PERCPU_MODULE_RESERVE,
--- 
-2.20.1
+On Thu, Sep 19, 2019 at 08:15:49PM +0200, Jernej =C5=A0krabec wrote:
+> Dne =C4=8Detrtek, 19. september 2019 ob 19:17:54 CEST je Maxime Ripard na=
+pisal(a):
+> > >
+> > > Tested on Android.
+> > >
+> > > Signed-off-by: Roman Stratiienko <roman.stratiienko@globallogic.com>
+> >
+> > It sounds like a workaround more than an actual fix.
+> >
+> > If the VI planes can't use the alpha, then we should just stop
+> > reporting that format.
+> >
+> > Jernej, what do you think?
+>
+> Commit message is misleading. What this commit actually does is moving pr=
+imary
+> plane from first UI plane to bottom most plane, i.e. first VI plane. Howe=
+ver, VI
+> planes are scarce resource, almost all mixers have only one. I wouldn't s=
+et it
+> as primary, because it's the only one which provide support for YUV forma=
+ts.
+> That could be used for example by video player for zero-copy rendering.
+> Probably most apps wouldn't touch it if it was primary (that's usually
+> reserved for window manager, if used).
 
+Yeah, we definitely don't want to use it as primary and prevent the
+video display.
+
+> I left few formats with alpha channel exposed by VI planes, just because =
+they
+> don't have equivalent format without alpha. But I'm fine with removing th=
+em if
+> you all agree on that.
+
+If there's no alpha support, then yeah, we shouldn't expose the format
+at all, and then we can either add the new formats, or just not expose
+them if they are exotic enough.
+
+Maxime
+
+--3ylh7nsjnj6zhso3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXYRtuQAKCRDj7w1vZxhR
+xeqxAP47vhP9Zt2VoOykoxUSb+0IORx7/qZJWXiMTdUUPVILWQEAgu6XBa76F/RH
+QcYmCCHcvowZxHbGSkRFp2//2Y0bsAw=
+=16hs
+-----END PGP SIGNATURE-----
+
+--3ylh7nsjnj6zhso3--
