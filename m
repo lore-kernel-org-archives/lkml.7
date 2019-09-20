@@ -2,341 +2,314 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 807E6C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF46C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 543A6205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:08:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65A7A205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:08:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r7EvXQYj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438023AbfITKIm (ORCPT
+        id S2438036AbfITKIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 06:08:42 -0400
-Received: from foss.arm.com ([217.140.110.172]:43274 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437992AbfITKIm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 06:08:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 01D73337;
-        Fri, 20 Sep 2019 03:08:41 -0700 (PDT)
-Received: from e108454-lin.cambridge.arm.com (e108454-lin.cambridge.arm.com [10.1.196.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB5C93F575;
-        Fri, 20 Sep 2019 03:08:39 -0700 (PDT)
-From:   Julien Grall <julien.grall@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Cc:     tglx@linutronix.de, bigeasy@linutronix.de, aryabinin@virtuozzo.com,
-        rostedt@goodmis.org, Julien Grall <julien.grall@arm.com>,
-        Andre Przywara <andre.przywara@arm.com>
-Subject: [RFC PATCH] lib/ubsan: Don't seralize UBSAN report
-Date:   Fri, 20 Sep 2019 11:08:35 +0100
-Message-Id: <20190920100835.14999-1-julien.grall@arm.com>
-X-Mailer: git-send-email 2.11.0
+        Fri, 20 Sep 2019 06:08:47 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:42782 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438024AbfITKIo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 06:08:44 -0400
+Received: by mail-qt1-f193.google.com with SMTP id w14so3543839qto.9
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 03:08:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KyduHUR/pFwKdJnhMzDJkKlw/SznYjqdRRxhh5G40Jg=;
+        b=r7EvXQYjq7Wio7UbF8QgM/1icqvPF1ZnSEVNGR4JVR0BG6Wl0x6fH6xtaKeUxDsi71
+         wkgEPkPcc0VkVjKgzro+WkV5xUkTFSSRT/Aak6Mw157pQSN917a8NdFb0TZm+seaHKK7
+         hHTQZ1A63vFt7GSPnAZlqpZ9rm6BCWvsd18JUW9njZwbIrJisrI6UYKEPXJ/uSYL1sby
+         HB6HT5CiezEo19rFc/LYAM7FRsfnKYSpPFG9m3+A+q29Lsm8RGijOTpCY89xt+Av7m0H
+         wmuqXYSeK7CLCwYyidprNbJaZpAXVEqqpfBtBlqzlr3LxeRqEWKCdNiNIwBTcawdmsSS
+         JjeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KyduHUR/pFwKdJnhMzDJkKlw/SznYjqdRRxhh5G40Jg=;
+        b=LUmHHaxu4+H6CDGpS5HIRVJ2DX89MIBJC19lKYDdumHRkp47LJx4zWk0B5ufVrTvHP
+         GELtFcyvhxZ6DTMoAhaQNcCeqoFt8IBblQhdSCvfK3cNpnYvo0b5LMXImqpehxYiWUS0
+         KaDHMUsKaVQ/bUQqWl5zngXw1Vs4ep71X9WWvEhU3VMnxqmmVCXQmajMT5fC6wADW2za
+         jx4KNdtQCa9rFcN0dMTin4Lp1BWoaa0wlt2E9ImLz/YylZteso6sSNX+WbgwOD3v0x0d
+         +IT1N49w5NwTlKS+Daz19c0TH+IqLrF3rBJM1XMlM8IfH3n8OYHwGWijhkDRZULjuQKD
+         JtTg==
+X-Gm-Message-State: APjAAAUmwRlcgNSwabbdVp5UtGjGdMMk6umGbrT6QBI1uwRscf7JVsIa
+        jc+zqIY/Z/PfDVVd0HsABqH/WZRvxiTCYD8EoOMxiw==
+X-Google-Smtp-Source: APXvYqws3o5jgB56X/8l4G6e6jj4tzoSyh6unnq51NfW0nRt2hBna89u1fBBU/i10fnIPmzliSsKhpFBKGTShPVyWCE=
+X-Received: by 2002:ac8:2c50:: with SMTP id e16mr2331898qta.257.1568974122036;
+ Fri, 20 Sep 2019 03:08:42 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190920090803.GM30545@localhost> <000000000000174fe60592f893e1@google.com>
+ <20190920100233.GP30545@localhost>
+In-Reply-To: <20190920100233.GP30545@localhost>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Fri, 20 Sep 2019 12:08:30 +0200
+Message-ID: <CACT4Y+a18nm92r889vJNrwq2518FYMV-cOqiKPQ53VwqwK0oMA@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in adu_disconnect
+To:     Johan Hovold <johan@kernel.org>
+Cc:     syzbot <syzbot+0243cb250a51eeefb8cc@syzkaller.appspotmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        dmg@turingmachine.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At the moment, UBSAN report will be serialized using a spin_lock(). On
-RT-systems, spinlocks are turned to rt_spin_lock and may sleep. This will
-result to the following splat if the undefined behavior is in a context
-that can sleep:
+On Fri, Sep 20, 2019 at 12:02 PM Johan Hovold <johan@kernel.org> wrote:
+>
+> On Fri, Sep 20, 2019 at 02:20:00AM -0700, syzbot wrote:
+> > Hello,
+> >
+> > syzbot has tested the proposed patch but the reproducer still triggered
+> > crash:
+> > KASAN: use-after-free Read in adu_interrupt_in_callback
+> >
+> > ==================================================================
+> > BUG: KASAN: use-after-free in __lock_acquire+0x302a/0x3b50
+> > kernel/locking/lockdep.c:3753
+> > Read of size 8 at addr ffff8881cd4d0358 by task kworker/0:6/3051
+> >
+> > CPU: 0 PID: 3051 Comm: kworker/0:6 Not tainted 5.3.0-rc2+ #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > Google 01/01/2011
+> > Workqueue: usb_hub_wq hub_event
+> > Call Trace:
+> >   <IRQ>
+> >   __dump_stack lib/dump_stack.c:77 [inline]
+> >   dump_stack+0xca/0x13e lib/dump_stack.c:113
+> >   print_address_description+0x6a/0x32c mm/kasan/report.c:351
+> >   __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
+> >   kasan_report+0xe/0x12 mm/kasan/common.c:612
+> >   __lock_acquire+0x302a/0x3b50 kernel/locking/lockdep.c:3753
+> >   lock_acquire+0x127/0x320 kernel/locking/lockdep.c:4412
+> >   __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+> >   _raw_spin_lock_irqsave+0x32/0x50 kernel/locking/spinlock.c:159
+> >   adu_interrupt_in_callback+0x77/0x380 drivers/usb/misc/adutux.c:163
+> >   __usb_hcd_giveback_urb+0x1f2/0x470 drivers/usb/core/hcd.c:1757
+> >   usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1822
+> >   dummy_timer+0x120f/0x2fa2 drivers/usb/gadget/udc/dummy_hcd.c:1965
+> >   call_timer_fn+0x179/0x650 kernel/time/timer.c:1322
+> >   expire_timers kernel/time/timer.c:1366 [inline]
+> >   __run_timers kernel/time/timer.c:1685 [inline]
+> >   __run_timers kernel/time/timer.c:1653 [inline]
+> >   run_timer_softirq+0x5cc/0x14b0 kernel/time/timer.c:1698
+> >   __do_softirq+0x221/0x912 kernel/softirq.c:292
+> >   invoke_softirq kernel/softirq.c:373 [inline]
+> >   irq_exit+0x178/0x1a0 kernel/softirq.c:413
+> >   exiting_irq arch/x86/include/asm/apic.h:537 [inline]
+> >   smp_apic_timer_interrupt+0x12f/0x500 arch/x86/kernel/apic/apic.c:1095
+> >   apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:828
+> >   </IRQ>
+> > RIP: 0010:arch_local_irq_restore arch/x86/include/asm/irqflags.h:85 [inline]
+> > RIP: 0010:console_unlock+0xa2a/0xc40 kernel/printk/printk.c:2471
+> > Code: 00 89 ee 48 c7 c7 20 88 d3 86 e8 81 ad 03 00 65 ff 0d 72 a1 d9 7e e9
+> > db f9 ff ff e8 70 a1 15 00 e8 1b cb 1a 00 ff 74 24 30 9d <e9> 18 fe ff ff
+> > e8 5c a1 15 00 48 8d 7d 08 48 89 f8 48 c1 e8 03 42
+> > RSP: 0018:ffff8881cd20f200 EFLAGS: 00000293 ORIG_RAX: ffffffffffffff13
+> > RAX: 0000000000000007 RBX: 0000000000000200 RCX: 0000000000000006
+> > RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff8881ccd8d044
+> > RBP: 0000000000000000 R08: ffff8881ccd8c800 R09: fffffbfff11acd91
+> > R10: fffffbfff11acd90 R11: ffffffff88d66c87 R12: 0000000000000047
+> > R13: dffffc0000000000 R14: ffffffff82909100 R15: ffffffff87077190
+> >   vprintk_emit+0x171/0x3e0 kernel/printk/printk.c:1986
+> >   vprintk_func+0x75/0x113 kernel/printk/printk_safe.c:386
+> >   printk+0xba/0xed kernel/printk/printk.c:2046
+> >   really_probe.cold+0x81/0x13a drivers/base/dd.c:616
+> >   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
+> >   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
+> >   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+> >   __device_attach+0x217/0x360 drivers/base/dd.c:882
+> >   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+> >   device_add+0xae6/0x16f0 drivers/base/core.c:2114
+> >   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+> >   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+> >   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+> >   really_probe+0x281/0x650 drivers/base/dd.c:548
+> >   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
+> >   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
+> >   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+> >   __device_attach+0x217/0x360 drivers/base/dd.c:882
+> >   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+> >   device_add+0xae6/0x16f0 drivers/base/core.c:2114
+> >   usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
+> >   hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+> >   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+> >   port_event drivers/usb/core/hub.c:5359 [inline]
+> >   hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
+> >   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+> >   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+> >   kthread+0x318/0x420 kernel/kthread.c:255
+> >   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> >
+> > Allocated by task 3051:
+> >   save_stack+0x1b/0x80 mm/kasan/common.c:69
+> >   set_track mm/kasan/common.c:77 [inline]
+> >   __kasan_kmalloc mm/kasan/common.c:487 [inline]
+> >   __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:460
+> >   kmalloc include/linux/slab.h:552 [inline]
+> >   kzalloc include/linux/slab.h:748 [inline]
+> >   adu_probe+0x7d/0x6e0 drivers/usb/misc/adutux.c:660
+> >   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+> >   really_probe+0x281/0x650 drivers/base/dd.c:548
+> >   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
+> >   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
+> >   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+> >   __device_attach+0x217/0x360 drivers/base/dd.c:882
+> >   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+> >   device_add+0xae6/0x16f0 drivers/base/core.c:2114
+> >   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+> >   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+> >   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+> >   really_probe+0x281/0x650 drivers/base/dd.c:548
+> >   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
+> >   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
+> >   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+> >   __device_attach+0x217/0x360 drivers/base/dd.c:882
+> >   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+> >   device_add+0xae6/0x16f0 drivers/base/core.c:2114
+> >   usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
+> >   hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+> >   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+> >   port_event drivers/usb/core/hub.c:5359 [inline]
+> >   hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
+> >   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+> >   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+> >   kthread+0x318/0x420 kernel/kthread.c:255
+> >   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> >
+> > Freed by task 3051:
+> >   save_stack+0x1b/0x80 mm/kasan/common.c:69
+> >   set_track mm/kasan/common.c:77 [inline]
+> >   __kasan_slab_free+0x130/0x180 mm/kasan/common.c:449
+> >   slab_free_hook mm/slub.c:1423 [inline]
+> >   slab_free_freelist_hook mm/slub.c:1470 [inline]
+> >   slab_free mm/slub.c:3012 [inline]
+> >   kfree+0xe4/0x2f0 mm/slub.c:3953
+> >   adu_probe+0x5de/0x6e0 drivers/usb/misc/adutux.c:750
+> >   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+> >   really_probe+0x281/0x650 drivers/base/dd.c:548
+> >   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
+> >   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
+> >   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+> >   __device_attach+0x217/0x360 drivers/base/dd.c:882
+> >   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+> >   device_add+0xae6/0x16f0 drivers/base/core.c:2114
+> >   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+> >   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+> >   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+> >   really_probe+0x281/0x650 drivers/base/dd.c:548
+> >   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
+> >   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
+> >   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+> >   __device_attach+0x217/0x360 drivers/base/dd.c:882
+> >   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+> >   device_add+0xae6/0x16f0 drivers/base/core.c:2114
+> >   usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
+> >   hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+> >   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+> >   port_event drivers/usb/core/hub.c:5359 [inline]
+> >   hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
+> >   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+> >   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+> >   kthread+0x318/0x420 kernel/kthread.c:255
+> >   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+>
+> This looks like a separate issue, which should be fixed by a separate
+> patch. Not sure how to tell syzbot that. Dmitry?
 
-[ 6951.484876] BUG: sleeping function called from invalid context at /src/linux/kernel/locking/rtmutex.c:968
-[ 6951.484882] in_atomic(): 1, irqs_disabled(): 128, pid: 3447, name: make
-[ 6951.484884] 1 lock held by make/3447:
-[ 6951.484885]  #0: 000000009a966332 (&mm->mmap_sem){++++}, at: do_page_fault+0x140/0x4f8
-[ 6951.484895] irq event stamp: 6284
-[ 6951.484896] hardirqs last  enabled at (6283): [<ffff000011326520>] _raw_spin_unlock_irqrestore+0x90/0xa0
-[ 6951.484901] hardirqs last disabled at (6284): [<ffff0000113262b0>] _raw_spin_lock_irqsave+0x30/0x78
-[ 6951.484902] softirqs last  enabled at (2430): [<ffff000010088ef8>] fpsimd_restore_current_state+0x60/0xe8
-[ 6951.484905] softirqs last disabled at (2427): [<ffff000010088ec0>] fpsimd_restore_current_state+0x28/0xe8
-[ 6951.484907] Preemption disabled at:
-[ 6951.484907] [<ffff000011324a4c>] rt_mutex_futex_unlock+0x4c/0xb0
-[ 6951.484911] CPU: 3 PID: 3447 Comm: make Tainted: G        W         5.2.14-rt7-01890-ge6e057589653 #911
-[ 6951.484913] Call trace:
-[ 6951.484913]  dump_backtrace+0x0/0x148
-[ 6951.484915]  show_stack+0x14/0x20
-[ 6951.484917]  dump_stack+0xbc/0x104
-[ 6951.484919]  ___might_sleep+0x154/0x210
-[ 6951.484921]  rt_spin_lock+0x68/0xa0
-[ 6951.484922]  ubsan_prologue+0x30/0x68
-[ 6951.484924]  handle_overflow+0x64/0xe0
-[ 6951.484926]  __ubsan_handle_add_overflow+0x10/0x18
-[ 6951.484927]  __lock_acquire+0x1c28/0x2a28
-[ 6951.484929]  lock_acquire+0xf0/0x370
-[ 6951.484931]  _raw_spin_lock_irqsave+0x58/0x78
-[ 6951.484932]  rt_mutex_futex_unlock+0x4c/0xb0
-[ 6951.484933]  rt_spin_unlock+0x28/0x70
-[ 6951.484934]  get_page_from_freelist+0x428/0x2b60
-[ 6951.484936]  __alloc_pages_nodemask+0x174/0x1708
-[ 6951.484938]  alloc_pages_vma+0x1ac/0x238
-[ 6951.484940]  __handle_mm_fault+0x4ac/0x10b0
-[ 6951.484941]  handle_mm_fault+0x1d8/0x3b0
-[ 6951.484942]  do_page_fault+0x1c8/0x4f8
-[ 6951.484943]  do_translation_fault+0xb8/0xe0
-[ 6951.484945]  do_mem_abort+0x3c/0x98
-[ 6951.484946]  el0_da+0x20/0x24
+There is no way, but also no need. There is nothing it can do with that info.
+If you think it's a separate one and you fixed the first one, mail the
+patch with the first fix.
+Optionally, you can fix the second one as well, and then ask it to
+test a patch with 2 fixes (but you will need either to squash them or
+point to a git tree with both commits).
 
-The spin_lock() will protect against multiple CPUs to output a report
-together, I guess to prevent them to be interleaved. However, they can
-still interleave with other messages (and even splat from __migth_sleep).
-
-So the lock usefulness seems pretty limited. Rather than trying to
-accomodate RT-system by switching to a raw_spin_lock(), the lock is now
-completely dropped.
-
-Reported-by: Andre Przywara <andre.przywara@arm.com>
-Signed-off-by: Julien Grall <julien.grall@arm.com>
----
- lib/ubsan.c | 64 ++++++++++++++++++++++---------------------------------------
- 1 file changed, 23 insertions(+), 41 deletions(-)
-
-diff --git a/lib/ubsan.c b/lib/ubsan.c
-index e7d31735950d..39d5952c4273 100644
---- a/lib/ubsan.c
-+++ b/lib/ubsan.c
-@@ -140,25 +140,21 @@ static void val_to_string(char *str, size_t size, struct type_descriptor *type,
- 	}
- }
- 
--static DEFINE_SPINLOCK(report_lock);
--
--static void ubsan_prologue(struct source_location *location,
--			unsigned long *flags)
-+static void ubsan_prologue(struct source_location *location)
- {
- 	current->in_ubsan++;
--	spin_lock_irqsave(&report_lock, *flags);
- 
- 	pr_err("========================================"
- 		"========================================\n");
- 	print_source_location("UBSAN: Undefined behaviour in", location);
- }
- 
--static void ubsan_epilogue(unsigned long *flags)
-+static void ubsan_epilogue(void)
- {
- 	dump_stack();
- 	pr_err("========================================"
- 		"========================================\n");
--	spin_unlock_irqrestore(&report_lock, *flags);
-+
- 	current->in_ubsan--;
- }
- 
-@@ -167,14 +163,13 @@ static void handle_overflow(struct overflow_data *data, void *lhs,
- {
- 
- 	struct type_descriptor *type = data->type;
--	unsigned long flags;
- 	char lhs_val_str[VALUE_LENGTH];
- 	char rhs_val_str[VALUE_LENGTH];
- 
- 	if (suppress_report(&data->location))
- 		return;
- 
--	ubsan_prologue(&data->location, &flags);
-+	ubsan_prologue(&data->location);
- 
- 	val_to_string(lhs_val_str, sizeof(lhs_val_str), type, lhs);
- 	val_to_string(rhs_val_str, sizeof(rhs_val_str), type, rhs);
-@@ -186,7 +181,7 @@ static void handle_overflow(struct overflow_data *data, void *lhs,
- 		rhs_val_str,
- 		type->type_name);
- 
--	ubsan_epilogue(&flags);
-+	ubsan_epilogue();
- }
- 
- void __ubsan_handle_add_overflow(struct overflow_data *data,
-@@ -214,20 +209,19 @@ EXPORT_SYMBOL(__ubsan_handle_mul_overflow);
- void __ubsan_handle_negate_overflow(struct overflow_data *data,
- 				void *old_val)
- {
--	unsigned long flags;
- 	char old_val_str[VALUE_LENGTH];
- 
- 	if (suppress_report(&data->location))
- 		return;
- 
--	ubsan_prologue(&data->location, &flags);
-+	ubsan_prologue(&data->location);
- 
- 	val_to_string(old_val_str, sizeof(old_val_str), data->type, old_val);
- 
- 	pr_err("negation of %s cannot be represented in type %s:\n",
- 		old_val_str, data->type->type_name);
- 
--	ubsan_epilogue(&flags);
-+	ubsan_epilogue();
- }
- EXPORT_SYMBOL(__ubsan_handle_negate_overflow);
- 
-@@ -235,13 +229,12 @@ EXPORT_SYMBOL(__ubsan_handle_negate_overflow);
- void __ubsan_handle_divrem_overflow(struct overflow_data *data,
- 				void *lhs, void *rhs)
- {
--	unsigned long flags;
- 	char rhs_val_str[VALUE_LENGTH];
- 
- 	if (suppress_report(&data->location))
- 		return;
- 
--	ubsan_prologue(&data->location, &flags);
-+	ubsan_prologue(&data->location);
- 
- 	val_to_string(rhs_val_str, sizeof(rhs_val_str), data->type, rhs);
- 
-@@ -251,58 +244,52 @@ void __ubsan_handle_divrem_overflow(struct overflow_data *data,
- 	else
- 		pr_err("division by zero\n");
- 
--	ubsan_epilogue(&flags);
-+	ubsan_epilogue();
- }
- EXPORT_SYMBOL(__ubsan_handle_divrem_overflow);
- 
- static void handle_null_ptr_deref(struct type_mismatch_data_common *data)
- {
--	unsigned long flags;
--
- 	if (suppress_report(data->location))
- 		return;
- 
--	ubsan_prologue(data->location, &flags);
-+	ubsan_prologue(data->location);
- 
- 	pr_err("%s null pointer of type %s\n",
- 		type_check_kinds[data->type_check_kind],
- 		data->type->type_name);
- 
--	ubsan_epilogue(&flags);
-+	ubsan_epilogue();
- }
- 
- static void handle_misaligned_access(struct type_mismatch_data_common *data,
- 				unsigned long ptr)
- {
--	unsigned long flags;
--
- 	if (suppress_report(data->location))
- 		return;
- 
--	ubsan_prologue(data->location, &flags);
-+	ubsan_prologue(data->location);
- 
- 	pr_err("%s misaligned address %p for type %s\n",
- 		type_check_kinds[data->type_check_kind],
- 		(void *)ptr, data->type->type_name);
- 	pr_err("which requires %ld byte alignment\n", data->alignment);
- 
--	ubsan_epilogue(&flags);
-+	ubsan_epilogue();
- }
- 
- static void handle_object_size_mismatch(struct type_mismatch_data_common *data,
- 					unsigned long ptr)
- {
--	unsigned long flags;
--
- 	if (suppress_report(data->location))
- 		return;
- 
--	ubsan_prologue(data->location, &flags);
-+	ubsan_prologue(data->location);
- 	pr_err("%s address %p with insufficient space\n",
- 		type_check_kinds[data->type_check_kind],
- 		(void *) ptr);
- 	pr_err("for an object of type %s\n", data->type->type_name);
--	ubsan_epilogue(&flags);
-+	ubsan_epilogue();
- }
- 
- static void ubsan_type_mismatch_common(struct type_mismatch_data_common *data,
-@@ -351,25 +338,23 @@ EXPORT_SYMBOL(__ubsan_handle_type_mismatch_v1);
- 
- void __ubsan_handle_out_of_bounds(struct out_of_bounds_data *data, void *index)
- {
--	unsigned long flags;
- 	char index_str[VALUE_LENGTH];
- 
- 	if (suppress_report(&data->location))
- 		return;
- 
--	ubsan_prologue(&data->location, &flags);
-+	ubsan_prologue(&data->location);
- 
- 	val_to_string(index_str, sizeof(index_str), data->index_type, index);
- 	pr_err("index %s is out of range for type %s\n", index_str,
- 		data->array_type->type_name);
--	ubsan_epilogue(&flags);
-+	ubsan_epilogue();
- }
- EXPORT_SYMBOL(__ubsan_handle_out_of_bounds);
- 
- void __ubsan_handle_shift_out_of_bounds(struct shift_out_of_bounds_data *data,
- 					void *lhs, void *rhs)
- {
--	unsigned long flags;
- 	struct type_descriptor *rhs_type = data->rhs_type;
- 	struct type_descriptor *lhs_type = data->lhs_type;
- 	char rhs_str[VALUE_LENGTH];
-@@ -378,7 +363,7 @@ void __ubsan_handle_shift_out_of_bounds(struct shift_out_of_bounds_data *data,
- 	if (suppress_report(&data->location))
- 		return;
- 
--	ubsan_prologue(&data->location, &flags);
-+	ubsan_prologue(&data->location);
- 
- 	val_to_string(rhs_str, sizeof(rhs_str), rhs_type, rhs);
- 	val_to_string(lhs_str, sizeof(lhs_str), lhs_type, lhs);
-@@ -401,18 +386,16 @@ void __ubsan_handle_shift_out_of_bounds(struct shift_out_of_bounds_data *data,
- 			lhs_str, rhs_str,
- 			lhs_type->type_name);
- 
--	ubsan_epilogue(&flags);
-+	ubsan_epilogue();
- }
- EXPORT_SYMBOL(__ubsan_handle_shift_out_of_bounds);
- 
- 
- void __ubsan_handle_builtin_unreachable(struct unreachable_data *data)
- {
--	unsigned long flags;
--
--	ubsan_prologue(&data->location, &flags);
-+	ubsan_prologue(&data->location);
- 	pr_err("calling __builtin_unreachable()\n");
--	ubsan_epilogue(&flags);
-+	ubsan_epilogue();
- 	panic("can't return from __builtin_unreachable()");
- }
- EXPORT_SYMBOL(__ubsan_handle_builtin_unreachable);
-@@ -420,19 +403,18 @@ EXPORT_SYMBOL(__ubsan_handle_builtin_unreachable);
- void __ubsan_handle_load_invalid_value(struct invalid_value_data *data,
- 				void *val)
- {
--	unsigned long flags;
- 	char val_str[VALUE_LENGTH];
- 
- 	if (suppress_report(&data->location))
- 		return;
- 
--	ubsan_prologue(&data->location, &flags);
-+	ubsan_prologue(&data->location);
- 
- 	val_to_string(val_str, sizeof(val_str), data->type, val);
- 
- 	pr_err("load of value %s is not a valid value for type %s\n",
- 		val_str, data->type->type_name);
- 
--	ubsan_epilogue(&flags);
-+	ubsan_epilogue();
- }
- EXPORT_SYMBOL(__ubsan_handle_load_invalid_value);
--- 
-2.11.0
-
+> There's is indeed another bug in the driver, which could lead to crashes
+> in the completion handler after clearing the struct usb_device pointer,
+> but possibly also to the above use-after-free if a new device is probed
+> immediately after a disconnect.
+>
+> The below patch addresses both bugs, let's see if that helps.
+>
+> #syz test: https://github.com/google/kasan.git e96407b4
+>
+> Johan
+>
+> From c68eda0c6aae5b233fbd583afbfd3ea15acbc62f Mon Sep 17 00:00:00 2001
+> From: Johan Hovold <johan@kernel.org>
+> Date: Thu, 19 Sep 2019 11:48:38 +0200
+> Subject: [PATCH] USB: adutux: fix use-after-free on disconnect + more
+>
+> FIXME: separate stopping URBs
+>
+> The driver was clearing its struct usb_device pointer, which it uses as
+> an inverted disconnected flag, before deregistering the character device
+> and without serialising against racing release().
+>
+> This could lead to a use-after-free if a racing release() callback
+> observes the cleared pointer and frees the driver data before
+> disconnect() is finished with it.
+>
+> This could also lead to NULL-pointer dereferences in a racing open().
+>
+> Fixes: f08812d5eb8f ("USB: FIx locks and urb->status in adutux (updated)")
+> Reported-by: syzbot+0243cb250a51eeefb8cc@syzkaller.appspotmail.com
+> Cc: stable <stable@vger.kernel.org>     # 2.6.24
+> Signed-off-by: Johan Hovold <johan@kernel.org>
+> ---
+>  drivers/usb/misc/adutux.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/usb/misc/adutux.c b/drivers/usb/misc/adutux.c
+> index 344d523b0502..a6996772745e 100644
+> --- a/drivers/usb/misc/adutux.c
+> +++ b/drivers/usb/misc/adutux.c
+> @@ -762,14 +762,18 @@ static void adu_disconnect(struct usb_interface *interface)
+>
+>         dev = usb_get_intfdata(interface);
+>
+> -       mutex_lock(&dev->mtx);  /* not interruptible */
+> -       dev->udev = NULL;       /* poison */
+>         usb_deregister_dev(interface, &adu_class);
+> -       mutex_unlock(&dev->mtx);
+> +
+> +       usb_poison_urb(dev->interrupt_in_urb);
+> +       usb_poison_urb(dev->interrupt_out_urb);
+>
+>         mutex_lock(&adutux_mutex);
+>         usb_set_intfdata(interface, NULL);
+>
+> +       mutex_lock(&dev->mtx);  /* not interruptible */
+> +       dev->udev = NULL;       /* poison */
+> +       mutex_unlock(&dev->mtx);
+> +
+>         /* if the device is not opened, then we clean up right now */
+>         if (!dev->open_count)
+>                 adu_delete(dev);
+> --
+> 2.23.0
+>
+> --
+> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/20190920100233.GP30545%40localhost.
