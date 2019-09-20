@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB6EBC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 21:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86BF2C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 21:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88C0120820
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 21:26:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61EC920820
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 21:26:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393994AbfITV0E (ORCPT
+        id S2393981AbfITV0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 17:26:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57986 "EHLO mx1.redhat.com"
+        Fri, 20 Sep 2019 17:26:03 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57988 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392508AbfITVZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2393779AbfITVZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Sep 2019 17:25:14 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 902C58980E5;
-        Fri, 20 Sep 2019 21:25:13 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 10B208980EA;
+        Fri, 20 Sep 2019 21:25:14 +0000 (UTC)
 Received: from mail (ovpn-120-159.rdu2.redhat.com [10.10.120.159])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5DA4C1001B2D;
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E76295D6B2;
         Fri, 20 Sep 2019 21:25:13 +0000 (UTC)
 From:   Andrea Arcangeli <aarcange@redhat.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
@@ -34,149 +34,82 @@ Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
         Marcelo Tosatti <mtosatti@redhat.com>,
         Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 13/17] KVM: monolithic: x86: drop the kvm_pmu_ops structure
-Date:   Fri, 20 Sep 2019 17:25:05 -0400
-Message-Id: <20190920212509.2578-14-aarcange@redhat.com>
+Subject: [PATCH 17/17] x86: retpolines: eliminate retpoline from msr event handlers
+Date:   Fri, 20 Sep 2019 17:25:09 -0400
+Message-Id: <20190920212509.2578-18-aarcange@redhat.com>
 In-Reply-To: <20190920212509.2578-1-aarcange@redhat.com>
 References: <20190920212509.2578-1-aarcange@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Fri, 20 Sep 2019 21:25:13 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Fri, 20 Sep 2019 21:25:14 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cleanup after this was finally left fully unused.
+It's enough to check the value and issue the direct call.
+
+After this commit is applied, here the most common retpolines executed
+under a high resolution timer workload in the guest on a VMX host:
+
+[..]
+@[
+    trace_retpoline+1
+    __trace_retpoline+30
+    __x86_indirect_thunk_rax+33
+    do_syscall_64+89
+    entry_SYSCALL_64_after_hwframe+68
+]: 267
+@[]: 2256
+@[
+    trace_retpoline+1
+    __trace_retpoline+30
+    __x86_indirect_thunk_rax+33
+    __kvm_wait_lapic_expire+284
+    vmx_vcpu_run.part.97+1091
+    vcpu_enter_guest+377
+    kvm_arch_vcpu_ioctl_run+261
+    kvm_vcpu_ioctl+559
+    do_vfs_ioctl+164
+    ksys_ioctl+96
+    __x64_sys_ioctl+22
+    do_syscall_64+89
+    entry_SYSCALL_64_after_hwframe+68
+]: 2390
+@[]: 33410
+
+@total: 315707
+
+Note the highest hit above is __delay so probably not worth optimizing
+even if it would be more frequent than 2k hits per sec.
 
 Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
 ---
- arch/x86/include/asm/kvm_host.h |  3 ---
- arch/x86/kvm/pmu.h              | 19 -------------------
- arch/x86/kvm/pmu_amd.c          | 15 ---------------
- arch/x86/kvm/svm.c              |  1 -
- arch/x86/kvm/vmx/pmu_intel.c    | 15 ---------------
- arch/x86/kvm/vmx/vmx.c          |  2 --
- 6 files changed, 55 deletions(-)
+ arch/x86/events/intel/core.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index bd5f4f900288..000d4e5a5664 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1160,9 +1160,6 @@ struct kvm_x86_ops {
- 					   gfn_t offset, unsigned long mask);
- 	int (*write_log_dirty)(struct kvm_vcpu *vcpu);
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 27ee47a7be66..65b383d5e062 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3323,8 +3323,19 @@ static int intel_pmu_hw_config(struct perf_event *event)
+ 	return 0;
+ }
  
--	/* pmu operations of sub-arch */
--	const struct kvm_pmu_ops *pmu_ops;
--
- 	/*
- 	 * Architecture specific hooks for vCPU blocking due to
- 	 * HLT instruction.
-diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-index 09e80e8ee21a..513366c8b794 100644
---- a/arch/x86/kvm/pmu.h
-+++ b/arch/x86/kvm/pmu.h
-@@ -21,23 +21,6 @@ struct kvm_event_hw_type_mapping {
- 
- #include "pmu_ops.h"
- 
--struct kvm_pmu_ops {
--	unsigned (*find_arch_event)(struct kvm_pmu *pmu, u8 event_select,
--				    u8 unit_mask);
--	unsigned (*find_fixed_event)(int idx);
--	bool (*pmc_is_enabled)(struct kvm_pmc *pmc);
--	struct kvm_pmc *(*pmc_idx_to_pmc)(struct kvm_pmu *pmu, int pmc_idx);
--	struct kvm_pmc *(*msr_idx_to_pmc)(struct kvm_vcpu *vcpu, unsigned idx,
--					  u64 *mask);
--	int (*is_valid_msr_idx)(struct kvm_vcpu *vcpu, unsigned idx);
--	bool (*is_valid_msr)(struct kvm_vcpu *vcpu, u32 msr);
--	int (*get_msr)(struct kvm_vcpu *vcpu, u32 msr, u64 *data);
--	int (*set_msr)(struct kvm_vcpu *vcpu, struct msr_data *msr_info);
--	void (*refresh)(struct kvm_vcpu *vcpu);
--	void (*init)(struct kvm_vcpu *vcpu);
--	void (*reset)(struct kvm_vcpu *vcpu);
--};
--
- static inline u64 pmc_bitmask(struct kvm_pmc *pmc)
++#ifdef CONFIG_RETPOLINE
++static struct perf_guest_switch_msr *core_guest_get_msrs(int *nr);
++static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr);
++#endif
++
+ struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr)
  {
- 	struct kvm_pmu *pmu = pmc_to_pmu(pmc);
-@@ -124,6 +107,4 @@ int kvm_vm_ioctl_set_pmu_event_filter(struct kvm *kvm, void __user *argp);
- 
- bool is_vmware_backdoor_pmc(u32 pmc_idx);
- 
--extern struct kvm_pmu_ops intel_pmu_ops;
--extern struct kvm_pmu_ops amd_pmu_ops;
- #endif /* __KVM_X86_PMU_H */
-diff --git a/arch/x86/kvm/pmu_amd.c b/arch/x86/kvm/pmu_amd.c
-index 12d1fa3ba35a..0e01b48b3b0b 100644
---- a/arch/x86/kvm/pmu_amd.c
-+++ b/arch/x86/kvm/pmu_amd.c
-@@ -302,18 +302,3 @@ static void amd_pmu_reset(struct kvm_vcpu *vcpu)
- }
- 
- #include "pmu_amd_ops.c"
--
--struct kvm_pmu_ops amd_pmu_ops = {
--	.find_arch_event = amd_find_arch_event,
--	.find_fixed_event = amd_find_fixed_event,
--	.pmc_is_enabled = amd_pmc_is_enabled,
--	.pmc_idx_to_pmc = amd_pmc_idx_to_pmc,
--	.msr_idx_to_pmc = amd_msr_idx_to_pmc,
--	.is_valid_msr_idx = amd_is_valid_msr_idx,
--	.is_valid_msr = amd_is_valid_msr,
--	.get_msr = amd_pmu_get_msr,
--	.set_msr = amd_pmu_set_msr,
--	.refresh = amd_pmu_refresh,
--	.init = amd_pmu_init,
--	.reset = amd_pmu_reset,
--};
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 5a48beb58083..ca9fd1762519 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -7298,7 +7298,6 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
- 
- 	.sched_in = svm_sched_in,
- 
--	.pmu_ops = &amd_pmu_ops,
- 	.deliver_posted_interrupt = svm_deliver_avic_intr,
- 	.dy_apicv_has_pending_interrupt = svm_dy_apicv_has_pending_interrupt,
- 	.update_pi_irte = svm_update_pi_irte,
-diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-index bfa765842772..e7c1253f47a2 100644
---- a/arch/x86/kvm/vmx/pmu_intel.c
-+++ b/arch/x86/kvm/vmx/pmu_intel.c
-@@ -359,18 +359,3 @@ static void intel_pmu_reset(struct kvm_vcpu *vcpu)
- }
- 
- #include "pmu_intel_ops.c"
--
--struct kvm_pmu_ops intel_pmu_ops = {
--	.find_arch_event = intel_find_arch_event,
--	.find_fixed_event = intel_find_fixed_event,
--	.pmc_is_enabled = intel_pmc_is_enabled,
--	.pmc_idx_to_pmc = intel_pmc_idx_to_pmc,
--	.msr_idx_to_pmc = intel_msr_idx_to_pmc,
--	.is_valid_msr_idx = intel_is_valid_msr_idx,
--	.is_valid_msr = intel_is_valid_msr,
--	.get_msr = intel_pmu_get_msr,
--	.set_msr = intel_pmu_set_msr,
--	.refresh = intel_pmu_refresh,
--	.init = intel_pmu_init,
--	.reset = intel_pmu_reset,
--};
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 09e6a477e06f..ff46008dc514 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7779,8 +7779,6 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
- 	.pre_block = vmx_pre_block,
- 	.post_block = vmx_post_block,
- 
--	.pmu_ops = &intel_pmu_ops,
--
- 	.update_pi_irte = vmx_update_pi_irte,
- 
- #ifdef CONFIG_X86_64
++#ifdef CONFIG_RETPOLINE
++	if (x86_pmu.guest_get_msrs == intel_guest_get_msrs)
++		return intel_guest_get_msrs(nr);
++	else if (x86_pmu.guest_get_msrs == core_guest_get_msrs)
++		return core_guest_get_msrs(nr);
++#endif
+ 	if (x86_pmu.guest_get_msrs)
+ 		return x86_pmu.guest_get_msrs(nr);
+ 	*nr = 0;
