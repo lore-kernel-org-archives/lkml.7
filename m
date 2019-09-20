@@ -2,122 +2,244 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03FC8C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD65FC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE7DA208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:35:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 900E020C01
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:35:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="snLB+6cZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KQxbGU1R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404100AbfITPfS (ORCPT
+        id S2404114AbfITPfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 11:35:18 -0400
-Received: from mail-eopbgr80042.outbound.protection.outlook.com ([40.107.8.42]:16864
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404071AbfITPfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 11:35:17 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AXHq+xAQbrwuQ20h/ZKi8mD9VQGBsO63KnrHxHt8D3mm2fVA/pE/5E5ggBmi+E46Mger77UObY4uSu4RVFQTwj+pgot3Gl9wFuZz5fmpvzKopapdALw7P541/i+jkj07gIhuaF2UJZ921qXw+lLV5i08PID4D9P4z+8qkb9vtqleQKZ/xI1/5hUV7xeVCzh/HFV3lKQH5kj/rIgKHIk5557zTjMsK09yLuMZM0cjS+iMw/SAec4IaqvaURr/iFkIpe5OfiyS1Cxw75R/ENSRV7wodN1aZ6tOmwOGZZb5wTK972oo3WbTrNUYGKCsUDFEGTxqDQBad/f0mRlFqC7eCg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LsiFeYlSNElQ9Qd3tvDYD78AWUCH4sz4eA52gQyBZ6E=;
- b=WuCpwQ9Jcyag9J2Wq8XUruWehpopb/fBFTvJKVB1g3xJlH9Kt0Dqd89gXbo16LI6CIbhQXe8kSkVArqxKOYWcYMME2NZwpIr4axoejvn1sKylqtT+xdMPE/30TCpcLMZiTtHdmaS97KpXJt00yF5wakvbMSpmGjz5ajlJCMo3Da+fi1VmuVbWiluf0nl9WnZHb4qjejP87c/KG1tU4vP18SIpTOKp7H7XFt8f/20QHCGQuSzD1X4YF6qc1Krjz5jdNEt2tMBLU1ug1Nsw9ydjRVNUXSjvBQCrBY089BpIOPFvBOXz/9WWgDuuYgGai7ZptVzYEkSGGu2hZS+zTCWuw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LsiFeYlSNElQ9Qd3tvDYD78AWUCH4sz4eA52gQyBZ6E=;
- b=snLB+6cZ+GHw60sXZ+ZBzSvNDEPnA6Kn+0C9qVjM2JgIggyyz4hPMtcE+7MPRJ103il1DqQDKrFz2ppa2rxqZGQgsA/SYLSqzKHSOXEn8Va6O8Eij/kUv50tzIgFzpr6rfJyDn5blGSAApwp434JZmreTQbr4m7py5xAtHemDvA=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB3792.eurprd04.prod.outlook.com (52.134.16.23) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.23; Fri, 20 Sep 2019 15:35:14 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::70b4:7829:2e8e:1196]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::70b4:7829:2e8e:1196%7]) with mapi id 15.20.2263.023; Fri, 20 Sep 2019
- 15:35:14 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
-CC:     Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 10/12] crypto: caam - populate platform devices last
-Thread-Topic: [PATCH 10/12] crypto: caam - populate platform devices last
-Thread-Index: AQHVYsl10q9huA5nekC38LfZsQ11ew==
-Date:   Fri, 20 Sep 2019 15:35:13 +0000
-Message-ID: <VI1PR0402MB3485D61A50108A58FCAEF20098880@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <20190904023515.7107-1-andrew.smirnov@gmail.com>
- <20190904023515.7107-11-andrew.smirnov@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 82404500-2261-42ba-995a-08d73de0218d
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3792;
-x-ms-traffictypediagnostic: VI1PR0402MB3792:|VI1PR0402MB3792:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB3792A8CF1B04323C8B71040198880@VI1PR0402MB3792.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:494;
-x-forefront-prvs: 0166B75B74
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(136003)(346002)(396003)(376002)(189003)(199004)(14454004)(91956017)(2906002)(81166006)(8676002)(33656002)(8936002)(81156014)(2501003)(6436002)(86362001)(486006)(44832011)(5660300002)(6116002)(446003)(4744005)(229853002)(52536014)(476003)(3846002)(54906003)(26005)(4326008)(186003)(316002)(7736002)(74316002)(110136005)(305945005)(66066001)(71190400001)(71200400001)(7696005)(6246003)(76176011)(9686003)(478600001)(55016002)(76116006)(99286004)(102836004)(256004)(64756008)(66946007)(25786009)(6506007)(66556008)(66446008)(53546011)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3792;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: xOQEnp500Gld/xm8Ma1BaMJsFEoEQBE4pfikPoN68wwwwENk9C870AoaSZsxfHTeDys9/rJ8spzDpqpBVMkuFyyw/PNgK/oMTE4pCZlXtE20/deCwV5P/KclzGTVnUKvVpT16Lf4IioGX8tc66RnxXPBXtzqD6dtL8Nfq0TS9iliZxdEMQrApBPtogp2bW1S4RfWHMR/ig+puFtdjpHBEmtgX/MTutdh/qrr39B0e0J/nHjof7PpssaZJflYq1zyvZ7uTxkOq81O6Is/5nW1Is3P8ZIvb4cgK9OTQNilQiWU8Hg8JSU5JLbmALKzOj0aRewVWMgurKleWlJqLzjMbM1TUbfFnmvGMhx56MnrugtAH27t9mBdsEO4VRshZ9ifKEqV4BHhOcXRK6aDzl2nN3HLTRwscKmqMByhOy+34AE=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 20 Sep 2019 11:35:20 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45741 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404102AbfITPfT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 11:35:19 -0400
+Received: by mail-pg1-f193.google.com with SMTP id 4so4010309pgm.12
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 08:35:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KYYXiwhTHKlZGhQO6s6tMNDr7MAM6pAY3179upZ2BOo=;
+        b=KQxbGU1RiQfdCGtKvn71cIg4ycczc7KD03DnHRQPsmd0aj4xtiTgPgQ3XLWbRkzIJZ
+         3IFxpiksNZFe0pLUs2bLwa2Yp6XiZwQLRWkWiAqPZkPxFmbiZyW8rBBqF7pIoteEKKnc
+         v0ftsjNKmByaOBXLbVZFGjtR2tj20C1XjoZtTp+FAISrP7/d5qbVco1nFORsL31xZlVp
+         4RWA2Adml/s8kQAQH2uvUT78+aSCbiLGTU9DzywOlJOL3W4lQER2KDw5/4h6AnuMl8te
+         gkSiaVPvfGpmmm81sjxn82iPYqapDk/IYCvG4gt3tXfLhAOpr4cFozZdeN7uWMfwVCm0
+         axaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KYYXiwhTHKlZGhQO6s6tMNDr7MAM6pAY3179upZ2BOo=;
+        b=JjHmKQAvhigt42ffGZ1pq6mCiWNpqqX90PojusJobmaIV9guMinVZdehjJJ6JerCks
+         HRgza5UfBaO9lKhcMZD8aGWlv8Mp63Fsfz1LsbTiDRETm7nvbLUB8xpwgYhaHhhjPDoC
+         fgiVE6/IUHJvGz+UZOkavBsPuVT419ShBofZoCwabJPJDkKBAhjuVa6zoI4nUoN0x17W
+         vVlyDXOZSd5pnOf3+1qGcjOvpQugfx6pAyshuJHdqb+uQ3JprR2AbK+oJpqNd9VvBnYw
+         JybCJeMvy6Y5pvd2u6GX6CyTv0VeNEEfnuJt3rFtdIaWHNdQ3VBwVkteQEVhG9TkWrOJ
+         sn1w==
+X-Gm-Message-State: APjAAAX4Vin+2tMsPZyCdeYNknEwp/0o2eA84V3+7N01AtHojjhuKRJX
+        110S2pgLDiCb4P2CLDwi0O2FTpX3rv8+U2A/NfCHwA==
+X-Google-Smtp-Source: APXvYqwzX7kgRz9E1iQ5UZ2ovmhU2m5NM1Ek8i3gbJBhffTeiMOGOkJ/6wyD4uj9P6rGzmly6IdbeRXXq4frR5RXOuk=
+X-Received: by 2002:a63:d20f:: with SMTP id a15mr10870010pgg.130.1568993717722;
+ Fri, 20 Sep 2019 08:35:17 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 82404500-2261-42ba-995a-08d73de0218d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Sep 2019 15:35:13.9062
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: iQYhbREhg7AQr9TkiFFH+t9O1rLKJIa7a8Wm0vwJzaevRRjCK6pCkfQ+DR0rUbygUfrMp6TybaCrevA9oWO5yw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3792
+References: <000000000000f111a20592ab9671@google.com>
+In-Reply-To: <000000000000f111a20592ab9671@google.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Fri, 20 Sep 2019 17:35:06 +0200
+Message-ID: <CAAeHK+znT=Bdy58Vgj+gBR7eNOhhSAPcSu0KXugsmJQBZ3JuLg@mail.gmail.com>
+Subject: Re: KASAN: invalid-free in usbvision_release
+To:     syzbot <syzbot+0350a2346edac2799574@syzkaller.appspotmail.com>
+Cc:     allison@lohutok.net, Hans Verkuil <hverkuil@xs4all.nl>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
+        USB list <linux-usb@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/4/2019 5:35 AM, Andrey Smirnov wrote:=0A=
-> @@ -906,6 +900,13 @@ static int caam_probe(struct platform_device *pdev)=
-=0A=
->  	debugfs_create_blob("tdsk", S_IRUSR | S_IRGRP | S_IROTH, ctrlpriv->ctl,=
-=0A=
->  			    &ctrlpriv->ctl_tdsk_wrap);=0A=
->  #endif=0A=
-> +=0A=
-> +	ret =3D devm_of_platform_populate(dev);=0A=
-> +	if (ret) {=0A=
-> +		dev_err(dev, "JR platform devices creation error\n");=0A=
-> +		return ret;=0A=
-> +	}=0A=
-> +=0A=
->  	return 0;=0A=
->  }=0A=
-This is a bit better:=0A=
-=0A=
-	if (ret)=0A=
-		dev_err(dev, "JR platform devices creation error\n");=0A=
-=0A=
-	return ret;=0A=
-=0A=
-Horia=0A=
+On Mon, Sep 16, 2019 at 3:29 PM syzbot
+<syzbot+0350a2346edac2799574@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    f0df5c1b usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=11caf595600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6633fa4ed00be5
+> dashboard link: https://syzkaller.appspot.com/bug?extid=0350a2346edac2799574
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>
+> Unfortunately, I don't have any reproducer for this crash yet.
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+0350a2346edac2799574@syzkaller.appspotmail.com
+>
+> usb 6-1: usbvision_write_reg: failed: error -2
+> usbvision_set_audio: can't write iopin register for audio switching
+> usb 6-1: usbvision_write_reg: failed: error -19
+> usbvision_audio_off: can't write reg
+> usbvision_radio_close: Final disconnect
+> ==================================================================
+> BUG: KASAN: double-free or invalid-free in usbvision_release+0x13b/0x1c0
+> drivers/media/usb/usbvision/usbvision-video.c:1353
+>
+> CPU: 1 PID: 7362 Comm: v4l_id Not tainted 5.3.0-rc7+ #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Call Trace:
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0xca/0x13e lib/dump_stack.c:113
+>   print_address_description+0x6a/0x32c mm/kasan/report.c:351
+>   kasan_report_invalid_free+0x61/0xa0 mm/kasan/report.c:444
+>   __kasan_slab_free+0x162/0x180 mm/kasan/common.c:434
+>   slab_free_hook mm/slub.c:1423 [inline]
+>   slab_free_freelist_hook mm/slub.c:1474 [inline]
+>   slab_free mm/slub.c:3016 [inline]
+>   kfree+0xe4/0x2f0 mm/slub.c:3957
+>   usbvision_release+0x13b/0x1c0
+> drivers/media/usb/usbvision/usbvision-video.c:1353
+>   usbvision_radio_close.cold+0x6f/0x74
+> drivers/media/usb/usbvision/usbvision-video.c:1125
+>   v4l2_release+0x2e7/0x390 drivers/media/v4l2-core/v4l2-dev.c:455
+>   __fput+0x2d7/0x840 fs/file_table.c:280
+>   task_work_run+0x13f/0x1c0 kernel/task_work.c:113
+>   tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+>   exit_to_usermode_loop+0x1d2/0x200 arch/x86/entry/common.c:163
+>   prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+>   syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
+>   do_syscall_64+0x45f/0x580 arch/x86/entry/common.c:299
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x7f0c157b92b0
+> Code: 40 75 0b 31 c0 48 83 c4 08 e9 0c ff ff ff 48 8d 3d c5 32 08 00 e8 c0
+> 07 02 00 83 3d 45 a3 2b 00 00 75 10 b8 03 00 00 00 0f 05 <48> 3d 01 f0 ff
+> ff 73 31 c3 48 83 ec 08 e8 ce 8a 01 00 48 89 04 24
+> RSP: 002b:00007fff5c949928 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
+> RAX: 0000000000000000 RBX: 0000000000000003 RCX: 00007f0c157b92b0
+> RDX: 00007f0c15a6fdf0 RSI: 0000000000000001 RDI: 0000000000000003
+> RBP: 0000000000000000 R08: 00007f0c15a6fdf0 R09: 000000000000000a
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000400884
+> R13: 00007fff5c949a80 R14: 0000000000000000 R15: 0000000000000000
+>
+> Allocated by task 1995:
+>   save_stack+0x1b/0x80 mm/kasan/common.c:69
+>   set_track mm/kasan/common.c:77 [inline]
+>   __kasan_kmalloc mm/kasan/common.c:493 [inline]
+>   __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:466
+>   kmalloc_array include/linux/slab.h:676 [inline]
+>   usbvision_probe.cold+0xaae/0x1e57
+> drivers/media/usb/usbvision/usbvision-video.c:1484
+>   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+>   really_probe+0x281/0x6d0 drivers/base/dd.c:548
+>   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
+>   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+>   bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:454
+>   __device_attach+0x217/0x360 drivers/base/dd.c:894
+>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+>   device_add+0xae6/0x16f0 drivers/base/core.c:2165
+>   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+>   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+>   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+>   really_probe+0x281/0x6d0 drivers/base/dd.c:548
+>   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
+>   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+>   bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:454
+>   __device_attach+0x217/0x360 drivers/base/dd.c:894
+>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+>   device_add+0xae6/0x16f0 drivers/base/core.c:2165
+>   usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
+>   hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+>   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+>   port_event drivers/usb/core/hub.c:5359 [inline]
+>   hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
+>   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+>   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+>   kthread+0x318/0x420 kernel/kthread.c:255
+>   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+>
+> Freed by task 1995:
+>   save_stack+0x1b/0x80 mm/kasan/common.c:69
+>   set_track mm/kasan/common.c:77 [inline]
+>   __kasan_slab_free+0x130/0x180 mm/kasan/common.c:455
+>   slab_free_hook mm/slub.c:1423 [inline]
+>   slab_free_freelist_hook mm/slub.c:1474 [inline]
+>   slab_free mm/slub.c:3016 [inline]
+>   kfree+0xe4/0x2f0 mm/slub.c:3957
+>   usbvision_release+0x13b/0x1c0
+> drivers/media/usb/usbvision/usbvision-video.c:1353
+>   usbvision_disconnect+0x16c/0x1d0
+> drivers/media/usb/usbvision/usbvision-video.c:1582
+>   usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
+>   __device_release_driver drivers/base/dd.c:1134 [inline]
+>   device_release_driver_internal+0x42f/0x500 drivers/base/dd.c:1165
+>   bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:556
+>   device_del+0x420/0xb10 drivers/base/core.c:2339
+>   usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
+>   usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2199
+>   hub_port_connect drivers/usb/core/hub.c:4949 [inline]
+>   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+>   port_event drivers/usb/core/hub.c:5359 [inline]
+>   hub_event+0x1454/0x3640 drivers/usb/core/hub.c:5441
+>   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+>   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+>   kthread+0x318/0x420 kernel/kthread.c:255
+>   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+>
+> The buggy address belongs to the object at ffff8881d41ad420
+>   which belongs to the cache kmalloc-32 of size 32
+> The buggy address is located 0 bytes inside of
+>   32-byte region [ffff8881d41ad420, ffff8881d41ad440)
+> The buggy address belongs to the page:
+> page:ffffea0007506b40 refcount:1 mapcount:0 mapping:ffff8881da003400
+> index:0x0
+> flags: 0x200000000000200(slab)
+> raw: 0200000000000200 ffffea0007662c40 0000000f0000000f ffff8881da003400
+> raw: 0000000000000000 0000000080550055 00000001ffffffff 0000000000000000
+> page dumped because: kasan: bad access detected
+>
+> Memory state around the buggy address:
+>   ffff8881d41ad300: fb fb fb fb fc fc fb fb fb fb fc fc fb fb fb fb
+>   ffff8881d41ad380: fc fc fb fb fb fb fc fc fb fb fb fb fc fc fb fb
+> > ffff8881d41ad400: fb fb fc fc fb fb fb fb fc fc fb fb fb fb fc fc
+>                                 ^
+>   ffff8881d41ad480: fb fb fb fb fc fc fb fb fb fb fc fc fb fb fb fb
+>   ffff8881d41ad500: fc fc 00 00 00 00 fc fc fb fb fb fb fc fc fb fb
+> ==================================================================
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>
+> --
+> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/000000000000f111a20592ab9671%40google.com.
+
+Most probably the same bug as:
+
+https://syzkaller.appspot.com/bug?extid=7fa38a608b1075dfd634
+
+#syz dup: general protection fault in usb_set_interface
