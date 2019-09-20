@@ -2,138 +2,235 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3034CC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB96C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8D6A208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:31:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28D4720882
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:34:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="KyG6ORLd"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iyrKEjbF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403960AbfITPbD (ORCPT
+        id S2404032AbfITPev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 11:31:03 -0400
-Received: from mout.web.de ([212.227.17.11]:39517 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403864AbfITPbC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 11:31:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1568993452;
-        bh=5b/mPa3MrRD8fSpiMfl28l8+pTOGRpoWPGBs5L7KgIQ=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=KyG6ORLd8Z01/37KxUXUw63lAIirTT0/fJTsVhTz4Yco08SlVE8oSh2DPKf/jUNgC
-         XjfzsOLLLHKBuPNs3FxKLFLxbuNvUbHEbdDT9hZKfKe0p4GSLHE94n6Zj9wZ95GIka
-         O0TYyL3TstmievFJR2H+OIa8R6S1Y0g1SY3/jxCY=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.244.117.22]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0M25B9-1hwZCp1Sl1-00u53h; Fri, 20
- Sep 2019 17:30:52 +0200
-Subject: Re: [0/2] net: dsa: vsc73xx: Adjustments for vsc73xx_platform_probe()
-To:     Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Pawel Dembicki <paweldembicki@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-References: <98fee5f4-1e45-a0c6-2a38-9201b201c6eb@web.de>
- <20190920150924.GG3530@lunn.ch>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <4a220bc4-0340-d54a-70bd-7bea62257b81@web.de>
-Date:   Fri, 20 Sep 2019 17:30:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Fri, 20 Sep 2019 11:34:51 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41484 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404002AbfITPev (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 11:34:51 -0400
+Received: by mail-pg1-f193.google.com with SMTP id s1so2912733pgv.8
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 08:34:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ikl5Mb3HIeo6Y4ysnPANZAn1g4qpy/FTp6bYnOJ2NMM=;
+        b=iyrKEjbFgsHfaoZmM6K1GAW4HDVEj7vjmE8TR9kBJ/6syQhlBzeAlomM2IsfWfXNV7
+         yszol2Q6Ehde9gCprajzmyBgHCGnEu9ZmZxdMsB+GCfdan8IWS7XX+q5ONp2757TqEx5
+         hYbnBj6JWuxafS65sS2Yc3N0cvJBm4+P8MwXy5oPbgN3DZgKorXmvXWt1lgMKVTCl5rY
+         FhuoQGOArsyhQEVhbJIsDtaaLRLNgWw6uLrbihpkUIJkgBM3LiSy8nTMuAdcgg1Sssj0
+         YpnJsMU89iQehBRm06mcsTvhK2NuXuDOmcp6RZggSy7wyxhNbXWXGzR/lBbX/XxEsfq+
+         dPxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ikl5Mb3HIeo6Y4ysnPANZAn1g4qpy/FTp6bYnOJ2NMM=;
+        b=LzsZVKxSPeus8/vq6ESwokFR0kG+T0cyzfnGgLF4kcDpx3pHQVGHH/sixJRLefcS8t
+         cf9eQGKBsT00Ah39ngiSK9ZUnnW8tM029NZplFzRKGargai8O6c2OefSLHVWnUQLu/Bg
+         VJx/vFujp8xBT5ZELlroR5WHJ3hsBbDwE3LyV6c2b+7pkLsXnS/S18DNuSfygiANc+Q4
+         2SgZPhJvULzQK41wXE2FYWlR7GMcgCMAId2eg+Vuak0XZNGzLW7PihOJjqUGetVu5rfA
+         Zd6LRt8lx8VfxHn1IC6UaOUQftGogWFfy7/YrJdWm5IyQJvlKRrrgMbZgs0rGXD2wDQ2
+         /edw==
+X-Gm-Message-State: APjAAAVqlDOfTpzvXtJ0sj8aAigN14WAdkRpAswGBqOo1so+ZpcmzBLm
+        zVqCf7fYGXkI8VVC0t/MXjzsqaz2hk41L66E7xRu1Q==
+X-Google-Smtp-Source: APXvYqzgwbAjmSnuA+xbcZkQ2xJLnHqaKI/0pcB8L2cV8mSdQSd21OepqoFeL4F4a7H1LSMpjc97w2EQg5OJgtoJb8g=
+X-Received: by 2002:a63:d1a:: with SMTP id c26mr11978864pgl.286.1568993689598;
+ Fri, 20 Sep 2019 08:34:49 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190920150924.GG3530@lunn.ch>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Provags-ID: V03:K1:dLCDi7o9FQk8G4jX0Laahb9Yw9uCMao11Khxl20wnlXNhdJ3idi
- zKEEZeJaBG39wk0q8wr7hrGSSW3Tezx4Cea4imnDg4XjcD5xqHFyQWeSBi0pnOH+RtYGrXx
- 3CNBXFv/3g6N/9ALlpX0MggUguL1nbLOW0Ro2HwSIXkEtKMoegKj9zIpFMR13Kzk3Fe8Uf8
- CaRByq/JY+hOQf/pjWnQw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:IUuB6xYZo2k=:xk6QFX/T84fN3V4mH70GEZ
- 9tQ//BSVr0dh17UKAJZJcKlPh43EHmuQXvo3wH5J21j95af8npGKyTq5ahhlx6nNf0Fj67RD2
- i3plv7cu2/mWp0XtkArhPwJzoZEIuXdq3O3RiTCdJY9Y78zzmdI8BL1VhplZvP6TRP+SEazEy
- z7S+tOox3QJK6qoSrVIGUIvwdj7xkxyvxy60aldAARK1NwE+jSTTaxWI4A57IQ4QxlIuCefxi
- geWDc59NGx+BQirMsaDOKvbuhXUslYfhvoYVgDw48FkYWw9vO2TNwENYZTA4Lwy1lxXF+KFgl
- 0zDeTDGlnvz+LS6wcW5TNiTYorFNh5ITmJdqt+g5JZWVWAlSFRzTCDliaLOzyxbq03TCiw2h/
- YoZY72EqG9iKH6iVOKk6nNHZLUBwFEQuPDDO/nB3L2gGVBbC4pTjrsTF3fIkvdzG1glBnRIkv
- ZN0TLPC/rVctGt9dCuYUIdYkySqBHMbts+bGln56WhpGQR8myD+Ul0x7y+zsErhENMrRF9kVA
- GkBA8uBK7Fq3ISrLgq/LLhsMQmfrs/AtM0yWMBVlFXW2HIoqszrQ1V2CzykNc6u2t0VjJvzV6
- Q85AonYmm9Lp3JpOkHIYdxzv/qMUsk+nprUbQaA+uTieEgZ5HSNTAT1VLzSastpmChfFVrSbh
- dsp3X5649SNuHrnJi6sF+IL3lmUTgXW/JI1hnjxPr7x9D3Sx3c49M1/NgHpuzZZNeom7YWVPU
- mKjCHnx8fag1uy7TKNZ4yDb7Pu+dzXXMe/roRbKwNJh7uALbXnvAUy64mRHmUZZw7XhckBmAn
- SkCZNtH7gx42PMzkSA+KbEpAsfW/f5UtnguZL0UvuDYCL0M1XHjVOo6BQpsp4gmVu1WI6m5jp
- pTsaLvJzJlCqKPJ9h7YTMqgoAQdSnbRcjyqbeSMmQJQ1cnVuHkkR8F+9uYKsa+QWzg0kOlWAT
- 07j4YMJJZznX0t42KcjHVLbkikrsu1+J8grwciYo6JVv/9DYYtTEAL0YlY6O4NlZ3mTazP5xB
- 6PJBAQCg6GCHa4bV+Say1sU6iiJlrKWCswCrOLmHFqFlmKHmoCEe4JZ9DLbhWIoOvg0KkifuB
- D4u58ETUPsiDvgTGqxQRRLG1LjeNtit6q4nagxoziHu6aQpAA4ZLKD3H7wLoytgdQrsTPTZ6l
- NCMDZO/7qTYjAgoK6VfOoHBs97Z8XFiIfldYAgvoCkfFBGJzeEOuHwfodLMzXugz3pUN0D4bC
- 8RZqbX/KVwryGUzExuZxFCBygMZFtjx7zPOGfuaTmnL2UWeMWTGawqeS2W+A=
+References: <0000000000001a4e93058ed07733@google.com>
+In-Reply-To: <0000000000001a4e93058ed07733@google.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Fri, 20 Sep 2019 17:34:38 +0200
+Message-ID: <CAAeHK+zNg0uvOpx-1hY3tN+nWJNT_de0BzpOqjj7jrAiKN-6ZA@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Write in usbvision_scratch_alloc
+To:     syzbot <syzbot+fa317310495b601f2c3e@syzkaller.appspotmail.com>
+Cc:     bigeasy@linutronix.de, Hans Verkuil <hverkuil@xs4all.nl>,
+        kjlu@umn.edu, Kate Stewart <kstewart@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
+        USB list <linux-usb@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> netdev is closed at the moment for patch.
+On Mon, Jul 29, 2019 at 1:48 PM syzbot
+<syzbot+fa317310495b601f2c3e@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    6a3599ce usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=14089192600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=700ca426ab83faae
+> dashboard link: https://syzkaller.appspot.com/bug?extid=fa317310495b601f2c3e
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>
+> Unfortunately, I don't have any reproducer for this crash yet.
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+fa317310495b601f2c3e@syzkaller.appspotmail.com
+>
+> ==================================================================
+> BUG: KASAN: use-after-free in usbvision_scratch_alloc+0x8c/0xa0
+> drivers/media/usb/usbvision/usbvision-core.c:350
+> Write of size 8 at addr ffff8881cd2adc00 by task v4l_id/5718
+>
+> CPU: 0 PID: 5718 Comm: v4l_id Not tainted 5.2.0-rc6+ #15
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Call Trace:
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0xca/0x13e lib/dump_stack.c:113
+>   print_address_description+0x67/0x231 mm/kasan/report.c:188
+>   __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:317
+>   kasan_report+0xe/0x20 mm/kasan/common.c:614
+>   usbvision_scratch_alloc+0x8c/0xa0
+> drivers/media/usb/usbvision/usbvision-core.c:350
+>   usbvision_v4l2_open+0x148/0x2f0
+> drivers/media/usb/usbvision/usbvision-video.c:325
+>   v4l2_open+0x1af/0x350 drivers/media/v4l2-core/v4l2-dev.c:423
+>   chrdev_open+0x219/0x5c0 fs/char_dev.c:413
+>   do_dentry_open+0x497/0x1040 fs/open.c:778
+>   do_last fs/namei.c:3416 [inline]
+>   path_openat+0x1430/0x3ff0 fs/namei.c:3533
+>   do_filp_open+0x1a1/0x280 fs/namei.c:3563
+>   do_sys_open+0x3c0/0x580 fs/open.c:1070
+>   do_syscall_64+0xb7/0x560 arch/x86/entry/common.c:301
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x7f655947e120
+> Code: 48 8b 15 1b 4d 2b 00 f7 d8 64 89 02 83 c8 ff c3 90 90 90 90 90 90 90
+> 90 90 90 83 3d d5 a4 2b 00 00 75 10 b8 02 00 00 00 0f 05 <48> 3d 01 f0 ff
+> ff 73 31 c3 48 83 ec 08 e8 5e 8c 01 00 48 89 04 24
+> RSP: 002b:00007ffd1bdddb58 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
+> RAX: ffffffffffffffda RBX: 00007ffd1bdddcb8 RCX: 00007f655947e120
+> RDX: 00007f6559733138 RSI: 0000000000000000 RDI: 00007ffd1bdddf1c
+> RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000400884
+> R13: 00007ffd1bdddcb0 R14: 0000000000000000 R15: 0000000000000000
+>
+> Allocated by task 2779:
+>   save_stack+0x1b/0x80 mm/kasan/common.c:71
+>   set_track mm/kasan/common.c:79 [inline]
+>   __kasan_kmalloc mm/kasan/common.c:489 [inline]
+>   __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:462
+>   kmalloc include/linux/slab.h:547 [inline]
+>   kzalloc include/linux/slab.h:742 [inline]
+>   usbvision_alloc drivers/media/usb/usbvision/usbvision-video.c:1310 [inline]
+>   usbvision_probe.cold+0x586/0x1d69
+> drivers/media/usb/usbvision/usbvision-video.c:1464
+>   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+>   really_probe+0x281/0x660 drivers/base/dd.c:509
+>   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+>   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+>   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+>   __device_attach+0x217/0x360 drivers/base/dd.c:843
+>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+>   device_add+0xae6/0x16f0 drivers/base/core.c:2111
+>   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+>   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+>   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+>   really_probe+0x281/0x660 drivers/base/dd.c:509
+>   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+>   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+>   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+>   __device_attach+0x217/0x360 drivers/base/dd.c:843
+>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+>   device_add+0xae6/0x16f0 drivers/base/core.c:2111
+>   usb_new_device.cold+0x6a4/0xe61 drivers/usb/core/hub.c:2536
+>   hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+>   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+>   port_event drivers/usb/core/hub.c:5359 [inline]
+>   hub_event+0x1abd/0x3550 drivers/usb/core/hub.c:5441
+>   process_one_work+0x905/0x1570 kernel/workqueue.c:2269
+>   process_scheduled_works kernel/workqueue.c:2331 [inline]
+>   worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
+>   kthread+0x30b/0x410 kernel/kthread.c:255
+>   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+>
+> Freed by task 2779:
+>   save_stack+0x1b/0x80 mm/kasan/common.c:71
+>   set_track mm/kasan/common.c:79 [inline]
+>   __kasan_slab_free+0x130/0x180 mm/kasan/common.c:451
+>   slab_free_hook mm/slub.c:1421 [inline]
+>   slab_free_freelist_hook mm/slub.c:1448 [inline]
+>   slab_free mm/slub.c:2994 [inline]
+>   kfree+0xd7/0x280 mm/slub.c:3949
+>   usbvision_release+0x181/0x1c0
+> drivers/media/usb/usbvision/usbvision-video.c:1359
+>   usbvision_disconnect+0x16c/0x1d0
+> drivers/media/usb/usbvision/usbvision-video.c:1582
+>   usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
+>   __device_release_driver drivers/base/dd.c:1081 [inline]
+>   device_release_driver_internal+0x404/0x4c0 drivers/base/dd.c:1112
+>   bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:556
+>   device_del+0x460/0xb80 drivers/base/core.c:2274
+>   usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
+>   usb_disconnect+0x284/0x830 drivers/usb/core/hub.c:2199
+>   hub_port_connect drivers/usb/core/hub.c:4949 [inline]
+>   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+>   port_event drivers/usb/core/hub.c:5359 [inline]
+>   hub_event+0x13bd/0x3550 drivers/usb/core/hub.c:5441
+>   process_one_work+0x905/0x1570 kernel/workqueue.c:2269
+>   process_scheduled_works kernel/workqueue.c:2331 [inline]
+>   worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
+>   kthread+0x30b/0x410 kernel/kthread.c:255
+>   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+>
+> The buggy address belongs to the object at ffff8881cd2ac200
+>   which belongs to the cache kmalloc-8k of size 8192
+> The buggy address is located 6656 bytes inside of
+>   8192-byte region [ffff8881cd2ac200, ffff8881cd2ae200)
+> The buggy address belongs to the page:
+> page:ffffea000734aa00 refcount:1 mapcount:0 mapping:ffff8881dac02400
+> index:0x0 compound_mapcount: 0
+> flags: 0x200000000010200(slab|head)
+> raw: 0200000000010200 dead000000000100 dead000000000200 ffff8881dac02400
+> raw: 0000000000000000 0000000080030003 00000001ffffffff 0000000000000000
+> page dumped because: kasan: bad access detected
+>
+> Memory state around the buggy address:
+>   ffff8881cd2adb00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>   ffff8881cd2adb80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> > ffff8881cd2adc00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>                     ^
+>   ffff8881cd2adc80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>   ffff8881cd2add00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ==================================================================
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-I wonder about this information.
+Most probably the same bug as:
 
+https://syzkaller.appspot.com/bug?extid=7fa38a608b1075dfd634
 
-> Please repost once it reopens, in about 2 weeks time.
-
-I hope that the presented change possibilities can be integrated
-in the near future also without a repetition of this small patch series.
-https://lore.kernel.org/patchwork/project/lkml/list/?series=411271
-
-Regards,
-Markus
+#syz dup: general protection fault in usb_set_interface
