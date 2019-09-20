@@ -2,95 +2,112 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3440CC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 22:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2020C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 22:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE03B20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 22:06:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 947FC208C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 22:07:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PDmNZgbi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fg0uHGtz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730459AbfITWGx (ORCPT
+        id S1730617AbfITWHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 18:06:53 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38795 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727710AbfITWGw (ORCPT
+        Fri, 20 Sep 2019 18:07:40 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:38743 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727811AbfITWHj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 18:06:52 -0400
-Received: by mail-pg1-f194.google.com with SMTP id x10so4588669pgi.5
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 15:06:52 -0700 (PDT)
+        Fri, 20 Sep 2019 18:07:39 -0400
+Received: by mail-vs1-f67.google.com with SMTP id b123so5715021vsb.5
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 15:07:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:to:from:subject:user-agent:date;
-        bh=keJKsM9t+Xigd272OZzAyt226ZPdGo/jAWLvUfQ5wNg=;
-        b=PDmNZgbiTd6S/mK/lf1xKNhWO0cvcN5mV/7OrKAcwgswsVjtZO/yP5Rxa4WR8ULprf
-         9LYMu/N7i83y68aLVXTkYKt6FWU+ZXTvxSkjGQiOuG84tTbEugIBbmhdeGSBXJZl8Ln2
-         /AGFgzojhIFiHJ98HXwuAteqHhtnP4WJiKFZc=
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=03nfbfvsWWjjBwaHeiInD+GImNWbMhv6TdWghMdfSkE=;
+        b=Fg0uHGtz9xrUmln9AWbT87mBPHsSYrvhbyp/Z2l6q5JCSTHmZmnE9NH9JbgABUqdaG
+         gUjQSZgrNY0gvGOAiTX28wb9Vj6Rd+qUyBxBIQ2L4UWajRAzETrapZfKgVIt8Hf+QitM
+         wGvL/Do5izdrq3ar6vEU5LHT87nhE2ihqb9u+Uq3pHX34e51aW7KNC4EOeo31piZB68x
+         Y9wasNwm7hMgASdBb+p7pBu0h6BWMY324irB5UQC6fqLt7K6GZqYYQvAnmSJ35AZW6/0
+         eR7lupLa5YgTGE75XoBK0N+zZaOjCC15N58CwMSQRmjdbBHrvl9QAY1J4zoC1tN0XTH9
+         g/jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:to:from:subject
-         :user-agent:date;
-        bh=keJKsM9t+Xigd272OZzAyt226ZPdGo/jAWLvUfQ5wNg=;
-        b=s57+MwIrPGuferEjZRaGOI3Qju/9mFl2Xnq4iTDY7ZiteFoDnE9mg6CFWpN8aFD1Cp
-         54RltHErgEh8qx+tPxx3HhsUgFtH400Uouz7daVqkIr5DG1qIFTVeTNlvr+oWYEJSM0C
-         sYBuDgKlKPlewqrQOKoZ0yXa/U8PqUpYusZleZWxDE0tcj/Dxg1ufNSJUL/72PB61D8v
-         aGm6aVQ/NMlIOkKeSGQtsSCLCpHMV3cYb9CssPjHm3hnqKUQFX0cFhmKakUXhCyyCGHj
-         LhoEougSqQjyNx+h5WtA6Mbms68S2ixJWjpCuSs7L3w1XWjFKJJIn6x+VfRR2FCVvzD8
-         6+PA==
-X-Gm-Message-State: APjAAAWD7tGoYAr7NbLW9pIHrGBEFuo2l0tV+psODpRAPydjW1yAJ2bG
-        6HU9UBg54N6tUABz3QVNhGE1AA==
-X-Google-Smtp-Source: APXvYqzqp81x+edwioSnkLtQmLPvjwAP5YqR7sWHghyWn8edm5LRXIdWACjo8diBzbx3My46M/XTdw==
-X-Received: by 2002:a17:90a:3d08:: with SMTP id h8mr7295943pjc.12.1569017212156;
-        Fri, 20 Sep 2019 15:06:52 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id w65sm3624680pfb.106.2019.09.20.15.06.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Sep 2019 15:06:51 -0700 (PDT)
-Message-ID: <5d854d7b.1c69fb81.8a4b3.9784@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=03nfbfvsWWjjBwaHeiInD+GImNWbMhv6TdWghMdfSkE=;
+        b=rDe/B3+aETvNEl+I99nR++loGrGMY/2LVYnJC5aybUyVvAMMvI43DxnQlLcvcNN2G/
+         wH4Co6mwRCsRl351flZQngUV9vgQMxXSczrGz8NKkZnLxWOu5phyvNLPnl0oT3bSlIlN
+         dOa8VKxhWK7gK1YEQ1diccCXntY8kb5lTZH6j5pDFHNX2V+BNravABNw1XPRDz/e55h4
+         MbRB5SXInd8M9+LKm2tajoWFFXnY6UbR9cjhXpnD7f33kfdhiSO2JNWRHEMJwinLfoMD
+         rsrf7N6fxT1bEcuy2rZXCwBtgicoY884WNnGQ4bTtpc9ub/Z1AwpaWl1LbxR1r9+bYNP
+         cxzA==
+X-Gm-Message-State: APjAAAXFcsoVXuH6EMbCiE7KHYMppl+W3YjrgkSarct6iSUt18Rullym
+        IzANR/nkipouSlmvM2mm/QZyFz6NDgiOYLyGHsXUPQ==
+X-Google-Smtp-Source: APXvYqyqthmZ/2dM7Axc4UDmIh60LcEGo84Gs0A+ZlbPDaKhFus8SJNw2ooezgIRH2f6v083XtEVhrMYLS8fTXPWU4w=
+X-Received: by 2002:a67:f058:: with SMTP id q24mr4000012vsm.27.1569017256934;
+ Fri, 20 Sep 2019 15:07:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <bab194b89c269f4ab47fecf8292455476fdef604.1569015835.git.amit.kucheria@linaro.org>
-References: <cover.1569015835.git.amit.kucheria@linaro.org> <bab194b89c269f4ab47fecf8292455476fdef604.1569015835.git.amit.kucheria@linaro.org>
-Cc:     linux-pm@vger.kernel.org
-To:     Amit Kucheria <amit.kucheria@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+References: <cover.1569015835.git.amit.kucheria@linaro.org>
+ <f627e66c455f52b5662bef6526d7c72869808401.1569015835.git.amit.kucheria@linaro.org>
+ <5d854c82.1c69fb81.66e1f.96ab@mx.google.com>
+In-Reply-To: <5d854c82.1c69fb81.66e1f.96ab@mx.google.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Fri, 20 Sep 2019 15:07:25 -0700
+Message-ID: <CAHLCerPqEK2sSGGtDj85DH+qCzgtWi4ainuQv8BgQ3-Dgi93BQ@mail.gmail.com>
+Subject: Re: [PATCH v4 09/15] arm64: dts: msm8996: thermal: Add interrupt support
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>, agross@kernel.org,
-        bjorn.andersson@linaro.org, edubezval@gmail.com,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        masneyb@onstation.org
-From:   Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v4 15/15] drivers: thermal: tsens: Add interrupt support
-User-Agent: alot/0.8.1
-Date:   Fri, 20 Sep 2019 15:06:50 -0700
+        Zhang Rui <rui.zhang@intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Brian Masney <masneyb@onstation.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Amit Kucheria (2019-09-20 14:52:30)
-> Depending on the IP version, TSENS supports upper, lower and critical
-> threshold interrupts. We only add support for upper and lower threshold
-> interrupts for now.
->=20
-> TSENSv2 has an irq [status|clear|mask] bit tuple for each sensor while
-> earlier versions only have a single bit per sensor to denote status and
-> clear. These differences are handled transparently by the interrupt
-> handler. At each interrupt, we reprogram the new upper and lower threshold
-> in the .set_trip callback.
->=20
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> ---
+On Fri, Sep 20, 2019 at 3:02 PM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> Quoting Amit Kucheria (2019-09-20 14:52:24)
+> > Register upper-lower interrupts for each of the two tsens controllers.
+> >
+> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/msm8996.dtsi | 60 ++++++++++++++-------------
+> >  1 file changed, 32 insertions(+), 28 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> > index 96c0a481f454..bb763b362c16 100644
+> > --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> > @@ -175,8 +175,8 @@
+> >
+> >         thermal-zones {
+> >                 cpu0-thermal {
+> > -                       polling-delay-passive = <250>;
+> > -                       polling-delay = <1000>;
+> > +                       polling-delay-passive = <0>;
+> > +                       polling-delay = <0>;
+>
+> I thought the plan was to make this unnecessary to change?
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+IMO that change should be part of a different series to the thermal
+core. I've not actually started working on it yet (traveling for the
+next 10 days or so) but plan to do it.
 
+Regards,
+Amit
