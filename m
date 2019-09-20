@@ -2,138 +2,115 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF162C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 23:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D84DC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 23:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C5FE2073F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 23:04:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TBhQiV2/"
+	by mail.kernel.org (Postfix) with ESMTP id 500382086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 23:05:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569020741;
+	bh=nVpUqAlEnUS9wyz/Qv41mAigNGxnJ9yVVurMcY+h8Zk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=fzQcJfQtgiZkss2IBc47SAEGmvjMXHXsXlt98Hbt663f7h5XNZXn5jpLpsXQn/6d8
+	 lCr80MwMnXdxuZgVX5+SR0MD2KZHa8It30L7gOwwji4uT2s7vjeHYo7uYT1V3sVLsU
+	 JJiWRnF/XEkNNPN7oZ8mnw4UtS0ZaJqwVCJeLowU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407003AbfITXEX (ORCPT
+        id S2407023AbfITXFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 19:04:23 -0400
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:44411 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404344AbfITXEX (ORCPT
+        Fri, 20 Sep 2019 19:05:40 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:34558 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407011AbfITXFj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 19:04:23 -0400
-Received: by mail-pf1-f202.google.com with SMTP id b204so5730249pfb.11
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 16:04:22 -0700 (PDT)
+        Fri, 20 Sep 2019 19:05:39 -0400
+Received: by mail-lj1-f195.google.com with SMTP id j19so7079204lja.1
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 16:05:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=5CW8doTfN0jqcSdKfn2ajplx2560aHluoBdOqTHKwzw=;
-        b=TBhQiV2/lvaPXxRNhitN3eKFuLJoAQ74ivFJwziRr7zccuw9rmNDUIkw1AwdkVIyKJ
-         8UcmC1okVCHLi6r3HAdpumWVii+RZHX/nQZ85n431JEd49O/yWtwAkpp4rmgNbCYAOer
-         T6Y2R92tY8ODCFHTlJ1VbN0+At+8THF6dd2o2L0h7TFq8qlmkWy2SXmkoiOmp+rgjDMQ
-         46+bAJ6nnEY4Q/SVNFC028IT7G3xCA7T3vIlKP17xX2cYYRunw2TG2kFPGchefX6G6hZ
-         u9vY7TrWne6mU0gdYMYjj70l1FxzxWVPOSO6UMe/UebaiwED44B+uRpKfO8qmC0LDNGq
-         XBEw==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mtHJRljpIthtHGh3XxE5kG38evjyZkXXa2KwhkF3cfE=;
+        b=Cc5gWnHvSFkt/XOMA27VwmYwG7DVJmBzs0dIyEV6yq14mog53/7iNdQvPU8DH7UYCO
+         WARG7/ZwIOBICzkQ8IQmexLNL7Ke5E6YBstlJKL71nq+d4fqB4s2qSAcsuYAbWAYHSRu
+         k6yu+jXAPxOkH/L5OLNGuUB3Vt3R3U+Wxs+NE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=5CW8doTfN0jqcSdKfn2ajplx2560aHluoBdOqTHKwzw=;
-        b=Egk0RIOITriyIqDQhZNTv7BoUH4zCPAY4BmpkjdSy+pPv3+JxJvf91byvdz606UdQe
-         n2baudelGviwwTVm4oak0GXqQZwhefNekRBYO+h3Ers+3d8Q/ND015qSxCss9HH1KZFo
-         p6X2wbf0FCgD9msuGocwccE6NRDsXiEbc2jqgaNUPsP2Mi5+Q0RR7zD0ACxwULSxAaeR
-         MDP4Hf0IMGy96AsgwMqkwoCysxmiI0z40Nl2QCc8hnaHQJSnHI0jSHSkoCkP0aSD1XAi
-         2w2LEWZ4Q5jhh81p6AHq8ZmvWfQFaPh2H2HhB7+7zdMCxfC54530N8oevgmqig1HDW3l
-         NloQ==
-X-Gm-Message-State: APjAAAXKPk4CYMf0ZL5X5/uT2sBwtrtnZE7c6ipxeAxiELYwR9qEkvgm
-        EDgJfXYkTQvCPFdcNAUq+Urk4vkEEAjD7DItZavilxBdyx3fQZ+TzOAZQn/zzQQZS6czqjZutb7
-        7PB4PzuVy6yaG7rT4/+eHDLE6X5tJN1lmkX8HTjxPPD4fuXAW2E94hRGt/PPs3jYOcN82puDQ
-X-Google-Smtp-Source: APXvYqylD1pwnyxaGfdp+Tla9FMZ6YorG+qx7fuzQpE82uu3ToQTS2PYRlvBnbxHM1dMRZhz2xaykNFuAcGU
-X-Received: by 2002:a63:f1c:: with SMTP id e28mr14088555pgl.360.1569020662080;
- Fri, 20 Sep 2019 16:04:22 -0700 (PDT)
-Date:   Fri, 20 Sep 2019 16:03:56 -0700
-Message-Id: <20190920230356.41420-1-eranian@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.23.0.351.gc4317032e6-goog
-Subject: [PATCH v2] perf record: fix priv level with branch sampling for paranoid=2
-From:   Stephane Eranian <eranian@google.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     peterz@infradead.org, mingo@elte.hu, acme@redhat.com,
-        jolsa@redhat.com, namhyung@kernel.org
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mtHJRljpIthtHGh3XxE5kG38evjyZkXXa2KwhkF3cfE=;
+        b=IEnCzUJtKDNJoy6w2iAuhIv6sSK0cVmSWNNFYhQZQIzohtF8SJUgaNIse1KH41EO9f
+         /l6IfiCoKuLGFWmG7XhzWr5VxPB1hVfM6hDNtfiuGD03Crwo6rinogFsZZAeRgX7livQ
+         upLeZZ3G5SG2jfffVqaXJEo5w04JSIk9+64gXEG5dPILh50AiMh9Q79pTerLNok7Quai
+         3CB71turFWexfcQuvKuk4JwHpsEOwaO19j+pQXo919XdV+mWc5fN45l5sP0HKi3+FnIt
+         b1IM9TXVLtICMMXGWgjpwIf+2n0DA4Ze2SiJLhJ/NaoxQNsuNEa6gSYYnm8GofhYk7oE
+         Gvzg==
+X-Gm-Message-State: APjAAAUi8xWfQ6xYvArT17bM1rEACQdtKnCdsfLqI79prFul79siEKYh
+        MAvgrSDMit2y2fsKksu0rgE6+JCx3aQ=
+X-Google-Smtp-Source: APXvYqwGD05Fiycdt48H3ysUmdVQEs0AA7tc2ot8Fgb1EMHcvDAwdSRwaWIVACzgby+Wt2bPBns4GA==
+X-Received: by 2002:a2e:9eca:: with SMTP id h10mr3222597ljk.32.1569020737143;
+        Fri, 20 Sep 2019 16:05:37 -0700 (PDT)
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
+        by smtp.gmail.com with ESMTPSA id h25sm824768lfj.81.2019.09.20.16.05.34
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Sep 2019 16:05:35 -0700 (PDT)
+Received: by mail-lj1-f181.google.com with SMTP id l21so8583257lje.4
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 16:05:34 -0700 (PDT)
+X-Received: by 2002:a2e:96d3:: with SMTP id d19mr1246398ljj.165.1569020733395;
+ Fri, 20 Sep 2019 16:05:33 -0700 (PDT)
+MIME-Version: 1.0
+References: <156896493723.4334.13340481207144634918.stgit@buzz>
+In-Reply-To: <156896493723.4334.13340481207144634918.stgit@buzz>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 20 Sep 2019 16:05:17 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whmCZvYcR10Pe9fEy912fc8xywbiP9mn054Jg_9+0TqCg@mail.gmail.com>
+Message-ID: <CAHk-=whmCZvYcR10Pe9fEy912fc8xywbiP9mn054Jg_9+0TqCg@mail.gmail.com>
+Subject: Re: [PATCH v2] mm: implement write-behind policy for sequential file writes
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Michal Hocko <mhocko@suse.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Mel Gorman <mgorman@suse.de>,
+        Johannes Weiner <hannes@cmpxchg.org>, Tejun Heo <tj@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that the default perf_events paranoid level is set to 2, a regular user
-cannot monitor kernel level activity anymore. As such, with the following
-cmdline:
+On Fri, Sep 20, 2019 at 12:35 AM Konstantin Khlebnikov
+<khlebnikov@yandex-team.ru> wrote:
+>
+> This patch implements write-behind policy which tracks sequential writes
+> and starts background writeback when file have enough dirty pages.
 
-$ perf record -e cycles date
+Apart from a spelling error ("contigious"), my only reaction is that
+I've wanted this for the multi-file writes, not just for single big
+files.
 
-The perf tool first tries cycles:uk but then falls back to cycles:u
-as can be seen in the perf report --header-only output:
+Yes, single big files may be a simpler and perhaps the "10% effort for
+90% of the gain", and thus the right thing to do, but I do wonder if
+you've looked at simply extending it to cover multiple files when
+people copy a whole directory (or unpack a tar-file, or similar).
 
-  cmdline : /export/hda3/tmp/perf.tip record -e cycles ls
-  event : name = cycles:u, , id = { 436186, ... }
+Now, I hear you say "those are so small these days that it doesn't
+matter". And maybe you're right. But partiocularly for slow media,
+triggering good streaming write behavior has been a problem in the
+past.
 
-This is okay as long as there is way to learn the priv level was changed
-internally by the tool.
+So I'm wondering whether the "writebehind" state should perhaps be
+considered be a process state, rather than "struct file" state, and
+also start triggering for writing smaller files.
 
-But consider a similar example:
+Maybe this was already discussed and people decided that the big-file
+case was so much easier that it wasn't worth worrying about
+writebehind for multiple files.
 
-$ perf record -b -e cycles date
-Error:
-You may not have permission to collect stats.
-
-Consider tweaking /proc/sys/kernel/perf_event_paranoid,
-which controls use of the performance events system by
-unprivileged users (without CAP_SYS_ADMIN).
-...
-
-Why is that treated differently given that the branch sampling inherits the
-priv level of the first event in this case, i.e., cycles:u? It turns out
-that the branch sampling code is more picky and also checks exclude_hv.
-
-In the fallback path, perf record is setting exclude_kernel = 1, but it
-does not change exclude_hv. This does not seem to match the restriction
-imposed by paranoid = 2.
-
-This patch fixes the problem by forcing exclude_hv = 1 in the fallback
-for paranoid=2. With this in place:
-
-$ perf record -b -e cycles date
-  cmdline : /export/hda3/tmp/perf.tip record -b -e cycles ls
-  event : name = cycles:u, , id = { 436847, ... }
-
-And the command succeeds as expected.
-
-V2 fix a white space.
-
-Signed-off-by: Stephane Eranian <eranian@google.com>
----
- tools/perf/util/evsel.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 85825384f9e8..3cbe06fdf7f7 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2811,9 +2811,11 @@ bool perf_evsel__fallback(struct evsel *evsel, int err,
- 		if (evsel->name)
- 			free(evsel->name);
- 		evsel->name = new_name;
--		scnprintf(msg, msgsize,
--"kernel.perf_event_paranoid=%d, trying to fall back to excluding kernel samples", paranoid);
-+		scnprintf(msg, msgsize, "kernel.perf_event_paranoid=%d, trying "
-+			  "to fall back to excluding kernel and hypervisor "
-+			  " samples", paranoid);
- 		evsel->core.attr.exclude_kernel = 1;
-+		evsel->core.attr.exclude_hv     = 1;
-
- 		return true;
- 	}
--- 
-2.23.0.187.g17f5b7556c-goog
-
+            Linus
