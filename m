@@ -2,276 +2,348 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C80ABC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 02:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FAE8C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 02:17:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A4BF21924
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 02:15:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BDCA207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 02:17:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nl1zEzsT"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="XMlmUMI/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394687AbfITCPy (ORCPT
+        id S2394700AbfITCRp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 22:15:54 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:40689 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393877AbfITCPy (ORCPT
+        Thu, 19 Sep 2019 22:17:45 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:12500 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394689AbfITCRp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 22:15:54 -0400
-Received: by mail-io1-f66.google.com with SMTP id h144so12599520iof.7
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 19:15:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sCOoZbEWKtr4nWo019PWhOoBv9r1gayiQ81xDLWsuSA=;
-        b=nl1zEzsTUHhY6oblxscPvt5FsMX9d2aOz63yU4JY4HTxnINusvrNMlUi1Ne9yUwH8G
-         bKRvr4caKaUH8eIew0x0yUeooD+u9iDUfmDj5GnGFm1ItR59VbJVzTfgzNUnzTcONTdo
-         2dIhbeSNWtUBmi2w3PYgApV034BtNBSmZ0oXSUnd7ihoRuTzF8pU4O+77X82CUnPAv0T
-         drgFu1SGTubLMU8EV78J8mImaGlPrv5Rnhh8IDjiArVLGV+V++r2x2YeH7BSiPf5n6SE
-         qAh6VecSoYAEj1Tn714+tUazrFSXDf2bm3JYdF9+msbDgVfSA4hjY2/LUJrkAPvXOgyA
-         noGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sCOoZbEWKtr4nWo019PWhOoBv9r1gayiQ81xDLWsuSA=;
-        b=o5INy3hBRVfVcnCnyQOU+7xPrdFjRPUl4ZteoDgwkfvVYsUcuGhQYLdp2mxAcMD2AJ
-         dzHyqlrs+pwQGKerTLDMwqj0zphbjalXlQ3qQDBnAoZ8JmNLuisD7j+rTIw2PVE6NysE
-         pybKnL1Np7byPQyu45b3VCsslKYkgj+iY0GBhe8QY3SFlbFm1Wx8/sLbo3SHpcPv69AM
-         TKLLPHwhVceN6lbFE8sKkHY8NQqcObka/YXpHXsXwincbGCNQjhwgODfZgtZWIb00aMS
-         4GDi9FSgrUwyFPGxfXuLdOTGEk2pM114gk9LFDmUWC55KzpeCkSDT7mZfbPmOIS9Wx3Q
-         qS2w==
-X-Gm-Message-State: APjAAAXQlGOgKaOmXnsSombaxi4fAil+KE83ZpALyA1WuSfi9ccQCUM9
-        IqAyXgix5QqkGuTJocwc0Luq/YFaQ22WshPb7oU=
-X-Google-Smtp-Source: APXvYqwtgfO3iRhsXm5IaNQKn/JY1x9+u1j59h6R4OKPyLmNYaLU0SzpGpH+aGBGvRXZ81bEjstc0XYe08v2v/Lu0AA=
-X-Received: by 2002:a02:b782:: with SMTP id f2mr16512267jam.48.1568945752953;
- Thu, 19 Sep 2019 19:15:52 -0700 (PDT)
+        Thu, 19 Sep 2019 22:17:45 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190920021742epoutp03cbf57c9c7c75f5f671d5b677f9fa8121~GA-L734Nn0707007070epoutp03P
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 02:17:42 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190920021742epoutp03cbf57c9c7c75f5f671d5b677f9fa8121~GA-L734Nn0707007070epoutp03P
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1568945862;
+        bh=YfXLiQy+8jtEZrck5hnFr299ep9mh+np3X2B2i7hquo=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=XMlmUMI/KBbKM4PzW5svqfrLfXd+dYrpaj3ngtNtMnNomxtdU112gzWkWq8zV4cI8
+         4YBRcfdIzw5KR5zBo4l0oll5DmZTYj+EbQDNe/sMqzXZhGTZ4H5j27e8H2XBkub9bK
+         9/wsSa+04yQNY7jBtjpJV8V3inVRNoVZuK9kxmeU=
+Received: from epsnrtp6.localdomain (unknown [182.195.42.167]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20190920021741epcas1p364d774b46fa83d475ea533e38d29bb5b~GA-LWgqtd2381523815epcas1p3M;
+        Fri, 20 Sep 2019 02:17:41 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.154]) by
+        epsnrtp6.localdomain (Postfix) with ESMTP id 46ZHRl0YPbzMqYkd; Fri, 20 Sep
+        2019 02:17:39 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D5.7E.04088.2C6348D5; Fri, 20 Sep 2019 11:17:39 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190920021738epcas1p13648ef89bd3d90cd7a3b7d6c19f0cac8~GA-IMjJk62761127611epcas1p1r;
+        Fri, 20 Sep 2019 02:17:38 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190920021738epsmtrp1e584db6aac356dd50bb0603c188f20c8~GA-ILeTpP0124101241epsmtrp1r;
+        Fri, 20 Sep 2019 02:17:38 +0000 (GMT)
+X-AuditID: b6c32a35-85dff70000000ff8-d4-5d8436c2db4f
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        FF.85.03706.2C6348D5; Fri, 20 Sep 2019 11:17:38 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190920021737epsmtip105f54fafa3b9ced1bce39fc896890de6~GA-H2isNV1323713237epsmtip1n;
+        Fri, 20 Sep 2019 02:17:37 +0000 (GMT)
+Subject: Re: [RFC PATCH v2 04/11] devfreq: exynos-bus: Clean up code
+To:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>,
+        myungjoo.ham@samsung.com, inki.dae@samsung.com,
+        sw0312.kim@samsung.com, georgi.djakov@linaro.org,
+        leonard.crestez@nxp.com, m.szyprowski@samsung.com,
+        b.zolnierkie@samsung.com, krzk@kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <39db18c5-534d-ff72-0a7f-7a838c13fa7a@samsung.com>
+Date:   Fri, 20 Sep 2019 11:22:06 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <1561112433-5308-1-git-send-email-raymond.smith@arm.com>
- <CAKMK7uEjh+GrSy5AgbVLVQd1S5oJ8KFiWEUmxtMMVdcMSBtdCQ@mail.gmail.com>
- <20190624093233.73f3tcshewlbogli@DESKTOP-E1NTVVP.localdomain>
- <CAKMK7uG02qAqH8MMpE6kzRO99HTjnadTFDrY1vVr9RmAiFPvJA@mail.gmail.com>
- <20190624112301.dmczf2vofxnpzqqi@DESKTOP-E1NTVVP.localdomain> <CAKMK7uEotYyRaa4WqNKRGc0nfwcyGccRpX2YzZmETrPdgXkAKA@mail.gmail.com>
-In-Reply-To: <CAKMK7uEotYyRaa4WqNKRGc0nfwcyGccRpX2YzZmETrPdgXkAKA@mail.gmail.com>
-From:   Qiang Yu <yuq825@gmail.com>
-Date:   Fri, 20 Sep 2019 10:15:41 +0800
-Message-ID: <CAKGbVbvLv6MDYapr5Oo5ZvJh+GV3-LU_ok2a8tpYGWOpw8hBBA@mail.gmail.com>
-Subject: Re: [PATCH] drm/fourcc: Add Arm 16x16 block modifier
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Brian Starkey <Brian.Starkey@arm.com>,
-        Raymond Smith <Raymond.Smith@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        "sean@poorly.run" <sean@poorly.run>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "malidp@foss.arm.com" <malidp@foss.arm.com>, nd <nd@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190919142236.4071-5-a.swigon@samsung.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrEJsWRmVeSWpSXmKPExsWy7bCmnu5hs5ZYg9cvmSwOHdvKbnF/Xiuj
+        xcYZ61kt5h85x2px5et7NovpezexWUy6P4HF4vz5DewWK+5+ZLXY9Pgaq8XlXXPYLD73HmG0
+        mHF+H5PF2iN32S1uN65gs5gx+SWbg4DHplWdbB53ru1h87jffZzJY/OSeo+N73YweRx8t4fJ
+        o2/LKkaPz5vkAjiism0yUhNTUosUUvOS81My89JtlbyD453jTc0MDHUNLS3MlRTyEnNTbZVc
+        fAJ03TJzgD5QUihLzCkFCgUkFhcr6dvZFOWXlqQqZOQXl9gqpRak5BRYFugVJ+YWl+al6yXn
+        51oZGhgYmQIVJmRnrGmdzl7QbVRxa90RlgbGRepdjJwcEgImEtvn3mbrYuTiEBLYwSix9MIK
+        RgjnE6PE3O/bmUGqhAS+MUqc/VoO0zFv+zMmiKK9jBJ9z5qh2t8zSrxs+cYIUiUs4CIx59RC
+        VpCEiMB/RonTy1aCOcwCnUwSv5/vYAWpYhPQktj/4gYbiM0voChx9cdjsG5eATuJW6u/gdWw
+        CKhKvN3xlB3EFhWIkPj04DArRI2gxMmZT1hAbE4BS4m1886CzWEWEJe49WQ+E4QtL9G8dTYz
+        yGIJgWPsErcWbGKGeMJFYsanf0wQtrDEq+Nb2CFsKYmX/W1QdrXEypNH2CCaOxgltuy/wAqR
+        MJbYv3QyUDMH0AZNifW79CHCihI7f89lhFjMJ/Huaw8rSImEAK9ER5sQRImyxOUHd6HWSkos
+        bu9km8CoNAvJO7OQvDALyQuzEJYtYGRZxSiWWlCcm55abFhgiBzfmxjB6VvLdAfjlHM+hxgF
+        OBiVeHgVyptjhVgTy4orcw8xSnAwK4nwzjFtihXiTUmsrEotyo8vKs1JLT7EaAoM7YnMUqLJ
+        +cDcklcSb2hqZGxsbGFiaGZqaKgkzuuR3hArJJCeWJKanZpakFoE08fEwSnVwNh7Srbgf+uu
+        97dLNEXfZ3S+Fnr7L9m/pMIqU+Wl1pbNZSteBP+vr3vE0bSXZXJBQdr+G5OsfhdeWXN9Vfyu
+        2vIF/zwW86yMypTp23yqn2XDw9qtLnq2Lzfv9PyovlHWa/J3HoGlBc5c7CZnFti53pCo0nL/
+        K/7EkHUDx02LeBedSsvQC/JKHUosxRmJhlrMRcWJAC6coAH1AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrLIsWRmVeSWpSXmKPExsWy7bCSnO4hs5ZYg/ddHBaHjm1lt7g/r5XR
+        YuOM9awW84+cY7W48vU9m8X0vZvYLCbdn8Bicf78BnaLFXc/slpsenyN1eLyrjlsFp97jzBa
+        zDi/j8li7ZG77Ba3G1ewWcyY/JLNQcBj06pONo871/awedzvPs7ksXlJvcfGdzuYPA6+28Pk
+        0bdlFaPH501yARxRXDYpqTmZZalF+nYJXBlrWqezF3QbVdxad4SlgXGRehcjJ4eEgInEvO3P
+        mLoYuTiEBHYzSmw8vJEZIiEpMe3iUSCbA8gWljh8uBii5i2jxNsZnYwgNcICLhJzTi1kBUmI
+        CPxnlHjYdowRxGEW6GSSWLzlBwvc2M2LH4ONZRPQktj/4gYbiM0voChx9cdjsFG8AnYSt1Z/
+        YwWxWQRUJd7ueMoOYosKREgc3jELqkZQ4uTMJywgNqeApcTaeWfB5jALqEv8mXeJGcIWl7j1
+        ZD4ThC0v0bx1NvMERuFZSNpnIWmZhaRlFpKWBYwsqxglUwuKc9Nziw0LDPNSy/WKE3OLS/PS
+        9ZLzczcxgiNZS3MH4+Ul8YcYBTgYlXh4FcqbY4VYE8uKK3MPMUpwMCuJ8M4xbYoV4k1JrKxK
+        LcqPLyrNSS0+xCjNwaIkzvs071ikkEB6YklqdmpqQWoRTJaJg1OqgTGTe9nGF2+LdDouncjL
+        OXNvkcn9x7KT+B4VmftX3JtSEdzE7llcsPaEw1xOkYeSaaLHEs2EsssfzWZRNbtVLzzdeses
+        69M77utHzgjOKYuYNKt/Hs/NsH+eiZHbhRfvLJVLerdwTvIsqdmP7K+Ihj0REz8YN4GvWrll
+        2Zo2CcW6OQ4abb2nkpVYijMSDbWYi4oTAYJDL03gAgAA
+X-CMS-MailID: 20190920021738epcas1p13648ef89bd3d90cd7a3b7d6c19f0cac8
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190919142324eucas1p1638cec2aafbfcaf03cfdfa7d0189143a
+References: <20190919142236.4071-1-a.swigon@samsung.com>
+        <CGME20190919142324eucas1p1638cec2aafbfcaf03cfdfa7d0189143a@eucas1p1.samsung.com>
+        <20190919142236.4071-5-a.swigon@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi guys,
+Hi Artur,
 
-I'd like to know the status of this patch? I expect a v2 adding some
-comments/macros about the high bit plan would be enough?
+On 19. 9. 19. 오후 11:22, Artur Świgoń wrote:
+> From: Artur Świgoń <a.swigon@partner.samsung.com>
+> 
+> This patch adds minor improvements to the exynos-bus driver.
+> 
+> Signed-off-by: Artur Świgoń <a.swigon@partner.samsung.com>
+> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/devfreq/exynos-bus.c | 66 ++++++++++++++----------------------
+>  1 file changed, 25 insertions(+), 41 deletions(-)
+> 
+> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
+> index 60ad4319fd80..8d44810cac69 100644
+> --- a/drivers/devfreq/exynos-bus.c
+> +++ b/drivers/devfreq/exynos-bus.c
+> @@ -15,11 +15,10 @@
+>  #include <linux/device.h>
+>  #include <linux/export.h>
+>  #include <linux/module.h>
+> -#include <linux/of_device.h>
+> +#include <linux/of.h>
+>  #include <linux/pm_opp.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/regulator/consumer.h>
+> -#include <linux/slab.h>
+>  
+>  #define DEFAULT_SATURATION_RATIO	40
+>  
+> @@ -178,7 +177,7 @@ static int exynos_bus_parent_parse_of(struct device_node *np,
+>  	struct device *dev = bus->dev;
+>  	struct opp_table *opp_table;
+>  	const char *vdd = "vdd";
+> -	int i, ret, count, size;
+> +	int i, ret, count;
+>  
+>  	opp_table = dev_pm_opp_set_regulators(dev, &vdd, 1);
+>  	if (IS_ERR(opp_table)) {
+> @@ -201,8 +200,7 @@ static int exynos_bus_parent_parse_of(struct device_node *np,
+>  	}
+>  	bus->edev_count = count;
+>  
+> -	size = sizeof(*bus->edev) * count;
+> -	bus->edev = devm_kzalloc(dev, size, GFP_KERNEL);
+> +	bus->edev = devm_kcalloc(dev, count, sizeof(*bus->edev), GFP_KERNEL);
+>  	if (!bus->edev) {
+>  		ret = -ENOMEM;
+>  		goto err_regulator;
+> @@ -301,10 +299,9 @@ static int exynos_bus_profile_init(struct exynos_bus *bus,
+>  	profile->exit = exynos_bus_exit;
+>  
+>  	ondemand_data = devm_kzalloc(dev, sizeof(*ondemand_data), GFP_KERNEL);
+> -	if (!ondemand_data) {
+> -		ret = -ENOMEM;
+> -		goto err;
+> -	}
+> +	if (!ondemand_data)
+> +		return -ENOMEM;
+> +
+>  	ondemand_data->upthreshold = 40;
+>  	ondemand_data->downdifferential = 5;
+>  
+> @@ -314,8 +311,7 @@ static int exynos_bus_profile_init(struct exynos_bus *bus,
+>  						ondemand_data);
+>  	if (IS_ERR(bus->devfreq)) {
+>  		dev_err(dev, "failed to add devfreq device\n");
+> -		ret = PTR_ERR(bus->devfreq);
+> -		goto err;
+> +		return PTR_ERR(bus->devfreq);
+>  	}
+>  
+>  	/*
+> @@ -325,16 +321,13 @@ static int exynos_bus_profile_init(struct exynos_bus *bus,
+>  	ret = exynos_bus_enable_edev(bus);
+>  	if (ret < 0) {
+>  		dev_err(dev, "failed to enable devfreq-event devices\n");
+> -		goto err;
+> +		return ret;
+>  	}
+>  
+>  	ret = exynos_bus_set_event(bus);
+> -	if (ret < 0) {
+> +	if (ret < 0)
+>  		dev_err(dev, "failed to set event to devfreq-event devices\n");
+> -		goto err;
 
-@Raymond & @Brian do you still need another long process to send out a
-v2 patch? If so, I can help to prepare a v2 patch according to your
-previous mail.
+Instead of removing 'goto err', just return err as I commented[1] on v1.
+[1] https://lkml.org/lkml/2019/7/26/331
 
-Thanks,
-Qiang
+> -	}
+>  
+> -err:
+>  	return ret;
 
-On Thu, Jun 27, 2019 at 3:30 AM Daniel Vetter <daniel@ffwll.ch> wrote:
->
-> On Mon, Jun 24, 2019 at 1:23 PM Brian Starkey <Brian.Starkey@arm.com> wrote:
-> >
-> > On Mon, Jun 24, 2019 at 11:58:59AM +0200, Daniel Vetter wrote:
-> > > On Mon, Jun 24, 2019 at 11:32 AM Brian Starkey <Brian.Starkey@arm.com> wrote:
-> > > >
-> > > > Hi Daniel,
-> > > >
-> > > > On Fri, Jun 21, 2019 at 05:27:00PM +0200, Daniel Vetter wrote:
-> > > > > On Fri, Jun 21, 2019 at 12:21 PM Raymond Smith <Raymond.Smith@arm.com> wrote:
-> > > > > >
-> > > > > > Add the DRM_FORMAT_MOD_ARM_16X16_BLOCK_U_INTERLEAVED modifier to
-> > > > > > denote the 16x16 block u-interleaved format used in Arm Utgard and
-> > > > > > Midgard GPUs.
-> > > > > >
-> > > > > > Signed-off-by: Raymond Smith <raymond.smith@arm.com>
-> > > > > > ---
-> > > > > >  include/uapi/drm/drm_fourcc.h | 10 ++++++++++
-> > > > > >  1 file changed, 10 insertions(+)
-> > > > > >
-> > > > > > diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
-> > > > > > index 3feeaa3..8ed7ecf 100644
-> > > > > > --- a/include/uapi/drm/drm_fourcc.h
-> > > > > > +++ b/include/uapi/drm/drm_fourcc.h
-> > > > > > @@ -743,6 +743,16 @@ extern "C" {
-> > > > > >  #define AFBC_FORMAT_MOD_BCH     (1ULL << 11)
-> > > > > >
-> > > > > >  /*
-> > > > > > + * Arm 16x16 Block U-Interleaved modifier
-> > > > > > + *
-> > > > > > + * This is used by Arm Mali Utgard and Midgard GPUs. It divides the image
-> > > > > > + * into 16x16 pixel blocks. Blocks are stored linearly in order, but pixels
-> > > > > > + * in the block are reordered.
-> > > > > > + */
-> > > > > > +#define DRM_FORMAT_MOD_ARM_16X16_BLOCK_U_INTERLEAVED \
-> > > > > > +       fourcc_mod_code(ARM, ((1ULL << 55) | 1))
-> > > > >
-> > > > > This seems to be an extremely random pick for a new number. What's the
-> > > > > thinking here? Aside from "doesnt match any of the afbc combos" ofc.
-> > > > > If you're already up to having thrown away 55bits, then it's not going
-> > > > > to last long really :-)
-> > > > >
-> > > > > I think a good idea would be to reserve a bunch of the high bits as
-> > > > > some form of index (afbc would get index 0 for backwards compat). And
-> > > > > then the lower bits would be for free use for a given index/mode. And
-> > > > > the first mode is probably an enumeration, where possible modes simple
-> > > > > get enumerated without further flags or anything.
-> > > >
-> > > > Yup, that's the plan:
-> > > >
-> > > >         (0 << 55): AFBC
-> > > >         (1 << 55): This "non-category" for U-Interleaved
-> > > >         (1 << 54): Whatever the next category is
-> > > >         (3 << 54): Whatever comes after that
-> > > >         (1 << 53): Maybe we'll get here someday
-> > >
-> > > Uh, so the index would be encoded with least-significant bit first,
-> > > starting from bit55 downwards?
-> >
-> > Yeah.
-> >
-> > > Clever idea, but I think this needs a
-> > > macro (or at least a comment). Not sure there's a ready-made bitmask
-> > > mirror function for this stuff, works case we can hand-code it and
-> > > extend every time we need one more bit encoded. Something like:
-> > >
-> > > MIRROR_U32((u & (BIT(0)) << 31 | (u & BIT(1) << 30 | ...)
-> > >
-> >
-> > Is it really worth it? People can just use the definitions as written
-> > in drm_fourcc.h. I agree that we should have the high bits described
-> > in a comment though.
-> >
-> > > And then shift that to the correct place. Probably want an
-> > >
-> > > ARM_MODIFIER_ENCODE(space_idx, flags) macro which assembles everything.
-> > >
-> > > >         ...
-> > > >
-> > > > I didn't want to explicitly reserve some high bits, because we've no
-> > > > idea how many to reserve. This way, we can assign exactly as many
-> > > > high bits as we need, when we need them. If any of the "modes" start
-> > > > encroaching towards the high bits, we'll have to make a decision at
-> > > > that point.
-> > > >
-> > > > Also, this is the only U-Interleaved format (that I know of), so it's
-> > > > not worth calling bit 55 "The U-Interleaved bit" because that would be
-> > > > a waste of space. It's more like the "misc" bit, but that's not a
-> > > > useful name to enshrine in UAPI.
-> > >
-> > > Yeah that's what I meant. Also better to explicitly reserve this, i.e.
-> > >
-> > > #define ARM_FBC_MODIFIER_SPACE 0
-> > > #define ARM_MISC_MODIFIER_SPACE 1
-> > >
-> > > and then encode with the mirror trickery.
-> > >
-> >
-> > I don't really see the value in that either, it's just giving
-> > userspace the opportunity to depend on more stuff: more future
-> > headaches. So long as the 64-bit values are stable, that should be
-> > enough.
->
-> If you think you need to save the few bits this potentially saves you
-> over just encoding 8bit enum like in Qiang's original patch I think
-> you get to type a few macros and comments ...
->
-> > > > Note that isn't the same as the "not-AFBC bit", because we may well
-> > > > have something in the future which is neither AFBC nor "misc".
-> > > >
-> > > > We've been very careful in our code to enforce all
-> > > > undefined/unrecognised bits to be zero, to ensure that this works.
-> > > >
-> > > > >
-> > > > > The other bit: Would be real good to define the format a bit more
-> > > > > precisely, including the layout within the tile.
-> > > >
-> > > > It's U-Interleaved, obviously ;-)
-> > >
-> > > :-) I mean full code exists in panfrost/lima, so this won't change
-> > > anything really ...
-> >
-> > Yeah, so for us to provide a more detailed description would require
-> > another lengthy loop through our legal approval process, and I'm not
-> > sure we can make a strong business case (which is what we need) for
-> > why this is needed.
-> >
-> > Of course, if someone happens to know the layout and wants to
-> > contribute to this file... Then I don't know how ack/r-b would work in
-> > that case, but I imagine the subsystem maintainer(s) might take issue
-> > with us attempting to block that contribution.
->
-> Well can't really take a modifier without knowing what it's for, I
-> guess this is up to lima/panfrost folks then to figure out :-P
-> -Daniel
->
-> >
-> > Thanks,
-> > -Brian
-> >
-> > >
-> > > Cheers, Daniel
-> > >
-> > > >
-> > > > -Brian
-> > > >
-> > > > >
-> > > > > Also ofc needs acks from lima/panfrost people since I assume they'll
-> > > > > be using this, too.
-> > > > >
-> > > > > Thanks, Daniel
-> > > > >
-> > > > > > +
-> > > > > > +/*
-> > > > > >   * Allwinner tiled modifier
-> > > > > >   *
-> > > > > >   * This tiling mode is implemented by the VPU found on all Allwinner platforms,
-> > > > > > --
-> > > > > > 2.7.4
-> > > > > >
-> > > > >
-> > > > >
-> > > > > --
-> > > > > Daniel Vetter
-> > > > > Software Engineer, Intel Corporation
-> > > > > +41 (0) 79 365 57 48 - http://blog.ffwll.ch
-> > >
-> > >
-> > >
-> > > --
-> > > Daniel Vetter
-> > > Software Engineer, Intel Corporation
-> > > +41 (0) 79 365 57 48 - http://blog.ffwll.ch
->
->
->
-> --
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> +41 (0) 79 365 57 48 - http://blog.ffwll.ch
+And you just keep 'return ret' or you can change it as 'return 0'.
+
+
+>  }
+>  
+> @@ -344,7 +337,6 @@ static int exynos_bus_profile_init_passive(struct exynos_bus *bus,
+>  	struct device *dev = bus->dev;
+>  	struct devfreq_passive_data *passive_data;
+>  	struct devfreq *parent_devfreq;
+> -	int ret = 0;
+>  
+>  	/* Initialize the struct profile and governor data for passive device */
+>  	profile->target = exynos_bus_target;
+> @@ -352,30 +344,26 @@ static int exynos_bus_profile_init_passive(struct exynos_bus *bus,
+>  
+>  	/* Get the instance of parent devfreq device */
+>  	parent_devfreq = devfreq_get_devfreq_by_phandle(dev, 0);
+> -	if (IS_ERR(parent_devfreq)) {
+> -		ret = -EPROBE_DEFER;
+> -		goto err;
+> -	}
+> +	if (IS_ERR(parent_devfreq))
+> +		return -EPROBE_DEFER;
+>  
+>  	passive_data = devm_kzalloc(dev, sizeof(*passive_data), GFP_KERNEL);
+> -	if (!passive_data) {
+> -		ret = -ENOMEM;
+> -		goto err;
+> -	}
+> +	if (!passive_data)
+> +		return -ENOMEM;
+> +
+>  	passive_data->parent = parent_devfreq;
+>  
+>  	/* Add devfreq device for exynos bus with passive governor */
+> -	bus->devfreq = devm_devfreq_add_device(dev, profile, DEVFREQ_GOV_PASSIVE,
+> +	bus->devfreq = devm_devfreq_add_device(dev, profile,
+> +						DEVFREQ_GOV_PASSIVE,
+>  						passive_data);
+>  	if (IS_ERR(bus->devfreq)) {
+>  		dev_err(dev,
+>  			"failed to add devfreq dev with passive governor\n");
+> -		ret = PTR_ERR(bus->devfreq);
+> -		goto err;
+> +		return PTR_ERR(bus->devfreq);
+>  	}
+>  
+> -err:
+> -	return ret;
+> +	return 0;
+>  }
+>  
+>  static int exynos_bus_probe(struct platform_device *pdev)
+> @@ -393,18 +381,18 @@ static int exynos_bus_probe(struct platform_device *pdev)
+>  		return -EINVAL;
+>  	}
+>  
+> -	bus = devm_kzalloc(&pdev->dev, sizeof(*bus), GFP_KERNEL);
+> +	bus = devm_kzalloc(dev, sizeof(*bus), GFP_KERNEL);
+>  	if (!bus)
+>  		return -ENOMEM;
+>  	mutex_init(&bus->lock);
+> -	bus->dev = &pdev->dev;
+> +	bus->dev = dev;
+>  	platform_set_drvdata(pdev, bus);
+>  
+>  	profile = devm_kzalloc(dev, sizeof(*profile), GFP_KERNEL);
+>  	if (!profile)
+>  		return -ENOMEM;
+>  
+> -	node = of_parse_phandle(dev->of_node, "devfreq", 0);
+> +	node = of_parse_phandle(np, "devfreq", 0);
+>  	if (node) {
+>  		of_node_put(node);
+>  		passive = true;
+> @@ -461,12 +449,10 @@ static int exynos_bus_resume(struct device *dev)
+>  	int ret;
+>  
+>  	ret = exynos_bus_enable_edev(bus);
+> -	if (ret < 0) {
+> +	if (ret < 0)
+>  		dev_err(dev, "failed to enable the devfreq-event devices\n");
+> -		return ret;
+
+Keep the 'return ret' if error happen as I commented[1] on v1.
+[1] https://lkml.org/lkml/2019/7/26/331
+
+> -	}
+>  
+> -	return 0;
+> +	return ret;
+
+And you just keep 'return 0' or you can change it as 'return ret'.
+
+>  }
+>  
+>  static int exynos_bus_suspend(struct device *dev)
+> @@ -475,12 +461,10 @@ static int exynos_bus_suspend(struct device *dev)
+>  	int ret;
+>  
+>  	ret = exynos_bus_disable_edev(bus);
+> -	if (ret < 0) {
+> +	if (ret < 0)
+>  		dev_err(dev, "failed to disable the devfreq-event devices\n");
+> -		return ret;
+
+Keep the 'return ret' if error happen as I commented[1] on v1.
+[1] https://lkml.org/lkml/2019/7/26/331
+
+> -	}
+>  
+> -	return 0;
+> +	return ret;
+
+And you just keep 'return 0' or you can change it as 'return ret'.
+
+>  }
+>  #endif
+>  
+> 
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
