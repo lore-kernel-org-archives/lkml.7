@@ -2,104 +2,206 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46321C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 22:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64DA5C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 22:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 033C2208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 22:12:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C3D62086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 22:14:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="ML9qV6DA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nj6dCKWh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390897AbfITWMi (ORCPT
+        id S1730700AbfITWOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 18:12:38 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:40760 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730664AbfITWMh (ORCPT
+        Fri, 20 Sep 2019 18:14:38 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:37253 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728552AbfITWOf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 18:12:37 -0400
-Received: by mail-qk1-f195.google.com with SMTP id y144so8852918qkb.7
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 15:12:37 -0700 (PDT)
+        Fri, 20 Sep 2019 18:14:35 -0400
+Received: by mail-lj1-f193.google.com with SMTP id l21so8509854lje.4
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 15:14:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=TtaAswzBjSF6wMxWcKerHux6S0skNQfq1v3qgj+qOLQ=;
-        b=ML9qV6DApv40vs30j5Ww1BpxaY8zUWpmqEyORE2J9aLqb0mrbwCpr/8zFP3E8FfIx+
-         jnZc1q7FUdGqLUxaBz8/dsHBSPhb3728aS6lh82qf6o3iBevW8mKnnrCJtpjAD1GW/oj
-         grgi1xYz7WM5qcdXXKMfBQGYbeXuc4f5+VkiHrviGYC+SRXdbP4/N/I4xPzMvzgNGXBK
-         QN888PHGKRg/WrbEpXd1zfy7XNIBnN/QrafR5bS3AmU44imk87pkz9LtteWywi0xGvE2
-         2HyIiwCOJAKIvaPpgq7Q3eHV24IBnr4A113RSUyoR+EWyXeAMQLd47deHgBYl78GP6v7
-         qheA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IRz22h3W/afcIJB0BovjnHm3KrpXLfImRjiuM75f0vE=;
+        b=nj6dCKWhmdUQxj5iaCpyF6gklY2n3UMYPwQRJI7eaUvn3ZOJVATTF1m/uWCZktXuBK
+         EXP1s8+6sACOn4WGwErbm+uuBKs58dfMtwRkwDfUAhjW3NPuXwFhkVXgyJTbKKi26pVX
+         wUClQWsT3XolYSWxXhMS1vqwkt/LBd7DI323UTUsm3IcdnJHgZO/RR1X8mmHm3+19EkE
+         XhcvIfV6ncLwpH3w6mf/V/yHGhu0gWQXGzf/qTlB8FGMaUkuAQzCdTAUb61ztfh2c/lB
+         hkR8KQqenaCDUHAnBgK25odGBRZ6vhXKyeLhuF+L8dWU6oS3yp3UsJ3BfBIBO01GGyW1
+         nKAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=TtaAswzBjSF6wMxWcKerHux6S0skNQfq1v3qgj+qOLQ=;
-        b=mZ+SBqQ51ohSKD0Uje0aC/CmSlb85aPjAa34NBBuvFpzsp4fFHijnWKqalIdnsI82R
-         Z1Fc/zRg7wZk32rYQACa+qFseTMndA/HuDI2htwFDU2V+SiWsMF6xXRAOJvJNIQCaShu
-         vRZ3HDF5vpv/FJ28rdw8xuO5eTmYgBq2FVvRkqcyCMahiGLXKvUxJBeu6cSPDD2d9804
-         hfKRIkIKv8bfZn7pWqBvoMtzIpqbZ8HDMFrI58FaVSdVHFSm2nfQgEoilFiN+jl9DgCQ
-         JUtUQ1/DAct5DDx/A4KFfufJaaY+M7WnxghOjx7/EQK2bDx3Wu9zMFX2MxokvNXZRpe7
-         ZFBA==
-X-Gm-Message-State: APjAAAVFEti6nxnMGScJcqMjeAn8qEPOFIwYB6R6i6maVd0csO29uHOo
-        40YtSGN740qXLzmCIkjU2UvtvQ==
-X-Google-Smtp-Source: APXvYqxms1fcAkfl9iLj4czO+Se7cJWT+kkC0zfbS+28Uy5w7H0l/qQW3uiupibrEmDv0CvxJGe2nw==
-X-Received: by 2002:a37:68d0:: with SMTP id d199mr6142641qkc.174.1569017556585;
-        Fri, 20 Sep 2019 15:12:36 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id n192sm1841500qke.9.2019.09.20.15.12.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Sep 2019 15:12:36 -0700 (PDT)
-Date:   Fri, 20 Sep 2019 15:12:30 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Markus Elfring <Markus.Elfring@web.de>,
-        Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Pawel Dembicki <paweldembicki@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [0/2] net: dsa: vsc73xx: Adjustments for
- vsc73xx_platform_probe()
-Message-ID: <20190920151230.0d290654@cakuba.netronome.com>
-In-Reply-To: <5d068275-796d-7d76-ba33-6eb03fb1d7cc@gmail.com>
-References: <98fee5f4-1e45-a0c6-2a38-9201b201c6eb@web.de>
-        <20190920150924.GG3530@lunn.ch>
-        <4a220bc4-0340-d54a-70bd-7bea62257b81@web.de>
-        <5d068275-796d-7d76-ba33-6eb03fb1d7cc@gmail.com>
-Organization: Netronome Systems, Ltd.
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=IRz22h3W/afcIJB0BovjnHm3KrpXLfImRjiuM75f0vE=;
+        b=moJlhW2CoGA12QuYODBH1cUpbjrVvTR66mIn3sKplK4q3nIwFiTjDGhDRix8PY7OmK
+         WJLWsfGgUJ3YZoOG9XamqHUxWbZIWJR4Pkzgj2O/r1lSEKJ1MB6cHqAk52+7HraXNqjD
+         +Gg9APyvyKDX+M4MxrlWzFxhaY6U5pYKyBGSj38sujSq0L5T4lVEu3wxeqlRTlUzAYo/
+         CpILvyaEzbns+WfM4fpyJ2FfUbFy6xn1nZr9WxYLFdjAzcf8MfcwwsyQUU1PE682DDbL
+         NQ1M420fzG3OGLnOCK0fD6qkix410390VH/9y8ObREjF+/a11yN9zv7wVCEBjnJX+0qv
+         JSAg==
+X-Gm-Message-State: APjAAAUbDea6k+XdLAb+L7vYxszV552jOg39QfQuG4cKq1btqY3xetcV
+        TpzBTbOJUYju+cL75+MNFDthBg==
+X-Google-Smtp-Source: APXvYqywLy+KgGcp2RAVw5wnQazdFc1mY+zJWDkhGpK52VsS2JLEAu2nWxraOw89TpoyEj69bsbXLw==
+X-Received: by 2002:a2e:3e07:: with SMTP id l7mr10480272lja.180.1569017671610;
+        Fri, 20 Sep 2019 15:14:31 -0700 (PDT)
+Received: from khorivan (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
+        by smtp.gmail.com with ESMTPSA id c69sm761013ljf.32.2019.09.20.15.14.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 20 Sep 2019 15:14:30 -0700 (PDT)
+Date:   Sat, 21 Sep 2019 01:14:28 +0300
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin Lau <kafai@fb.com>, Andrii Nakryiko <andriin@fb.com>,
+        Yonghong Song <yhs@fb.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH bpf] libbpf: fix version identification on busybox
+Message-ID: <20190920221427.GD2760@khorivan>
+Mail-Followup-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, Martin Lau <kafai@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>, Yonghong Song <yhs@fb.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190919160518.25901-1-ivan.khoronzhuk@linaro.org>
+ <CAEf4BzbCjCYr5NMPctDkUggwpehnqZPVBSqZOsd9MvSq6WmnZQ@mail.gmail.com>
+ <20190920082204.GC8870@khorivan>
+ <CAEf4BzaVuaN3HhMu8W_i9z4n-2zfjqxBXyOEOaQHexxZq7b3qg@mail.gmail.com>
+ <20190920183449.GA2760@khorivan>
+ <20190920191941.GB2760@khorivan>
+ <CAEf4BzZGeY-WD17mq6FTd7Rae_f26j4kBAWCmuppeu4VjZxvUg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAEf4BzZGeY-WD17mq6FTd7Rae_f26j4kBAWCmuppeu4VjZxvUg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Sep 2019 09:36:57 -0700, Florian Fainelli wrote:
-> On 9/20/19 8:30 AM, Markus Elfring wrote:
-> >> netdev is closed at the moment for patch.  
-> > 
-> > I wonder about this information.  
-> 
-> This is covered here:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/networking/netdev-FAQ.rst#n40
-> 
-> and you can skip the reading and check this URL:
-> 
-> http://vger.kernel.org/~davem/net-next.html
+On Fri, Sep 20, 2019 at 02:51:14PM -0700, Andrii Nakryiko wrote:
+>On Fri, Sep 20, 2019 at 12:19 PM Ivan Khoronzhuk
+><ivan.khoronzhuk@linaro.org> wrote:
+>>
+>> On Fri, Sep 20, 2019 at 09:34:51PM +0300, Ivan Khoronzhuk wrote:
+>> >On Fri, Sep 20, 2019 at 09:41:54AM -0700, Andrii Nakryiko wrote:
+>> >>On Fri, Sep 20, 2019 at 1:22 AM Ivan Khoronzhuk
+>> >><ivan.khoronzhuk@linaro.org> wrote:
+>> >>>
+>> >>>On Thu, Sep 19, 2019 at 01:02:40PM -0700, Andrii Nakryiko wrote:
+>> >>>>On Thu, Sep 19, 2019 at 11:22 AM Ivan Khoronzhuk
+>> >>>><ivan.khoronzhuk@linaro.org> wrote:
+>> >>>>>
+>> >>>>> It's very often for embedded to have stripped version of sort in
+>> >>>>> busybox, when no -V option present. It breaks build natively on target
+>> >>>>> board causing recursive loop.
+>> >>>>>
+>> >>>>> BusyBox v1.24.1 (2019-04-06 04:09:16 UTC) multi-call binary. \
+>> >>>>> Usage: sort [-nrugMcszbdfimSTokt] [-o FILE] [-k \
+>> >>>>> start[.offset][opts][,end[.offset][opts]] [-t CHAR] [FILE]...
+>> >>>>>
+>> >>>>> Lets modify command a little to avoid -V option.
+>> >>>>>
+>> >>>>> Fixes: dadb81d0afe732 ("libbpf: make libbpf.map source of truth for libbpf version")
+>> >>>>>
+>> >>>>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+>> >>>>> ---
+>> >>>>>
+>> >>>>> Based on bpf/master
+>> >>>>>
+>> >>>>>  tools/lib/bpf/Makefile | 2 +-
+>> >>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>> >>>>>
+>> >>>>> diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
+>> >>>>> index c6f94cffe06e..a12490ad6215 100644
+>> >>>>> --- a/tools/lib/bpf/Makefile
+>> >>>>> +++ b/tools/lib/bpf/Makefile
+>> >>>>> @@ -3,7 +3,7 @@
+>> >>>>>
+>> >>>>>  LIBBPF_VERSION := $(shell \
+>> >>>>>         grep -oE '^LIBBPF_([0-9.]+)' libbpf.map | \
+>> >>>>> -       sort -rV | head -n1 | cut -d'_' -f2)
+>> >>>>> +       cut -d'_' -f2 | sort -r | head -n1)
+>> >>>>
+>> >>>>You can't just sort alphabetically, because:
+>> >>>>
+>> >>>>1.2
+>> >>>>1.11
+>> >>>>
+>> >>>>should be in that order. See discussion on mailing thread for original commit.
+>> >>>
+>> >>>if X1.X2.X3, where X = {0,1,....99999}
+>> >>>Then it can be:
+>> >>>
+>> >>>-LIBBPF_VERSION := $(shell \
+>> >>>-       grep -oE '^LIBBPF_([0-9.]+)' libbpf.map | \
+>> >>>-       sort -rV | head -n1 | cut -d'_' -f2)
+>> >>>+_LBPFLIST := $(patsubst %;,%,$(patsubst LIBBPF_%,%,$(filter LIBBPF_%, \
+>> >>>+           $(shell cat libbpf.map))))
+>> >>>+_LBPFLIST2 := $(foreach v,$(_LBPFLIST), \
+>> >>>+               $(subst $() $(),,$(foreach n,$(subst .,$() $(),$(v)), \
+>> >>>+                       $(shell printf "%05d" $(n)))))
+>> >>>+_LBPF_VER := $(word $(words $(sort $(_LBPFLIST2))), $(sort $(_LBPFLIST2)))
+>> >>>+LIBBPF_VERSION := $(patsubst %_$(_LBPF_VER),%,$(filter %_$(_LBPF_VER), \
+>> >>>+        $(join $(addsuffix _, $(_LBPFLIST)),$(_LBPFLIST2))))
+>> >>>
+>> >>>It's bigger but avoids invocations of grep/sort/cut/head, only cat/printf
+>> >>>, thus -V option also.
+>> >>>
+>> >>
+>> >>No way, this is way too ugly (and still unreliable, if we ever have
+>> >>X.Y.Z.W or something). I'd rather go with my original approach of
+>> >Yes, forgot to add
+>> >X1,X2,X3,...XN, where X = {0,1,....99999} and N = const for all versions.
+>> >But frankly, 1.0.0 looks too far.
+>>
+>> It actually works for any numbs of X1.X2...X100
+>> but not when you have couple kindof:
+>> X1.X2.X3
+>> and
+>> X1.X2.X3.X4
+>>
+>> But, no absolutely any problem to extend this solution to handle all cases,
+>> by just adding leading 0 to every "transformed version", say limit it to 10
+>> possible 'dots' (%5*10d) and it will work as clocks. Advantage - mostly make
+>> functions.
+>>
+>> Here can be couple more solutions with sed, not sure it can look less maniac.
+>>
+>> >
+>> >>fetching the last version in libbpf.map file. See
+>> >>https://www.spinics.net/lists/netdev/msg592703.html.
+>>
+>> Yes it's nice but, no sort, no X1.X2.X3....XN
+>>
+>> Main is to solve it for a long time.
+>
+>Thinking a bit more about this, I'm even more convinced that we should
+>just go with my original approach: find last section in libbpf.map and
+>extract LIBBPF version from that. That will handle whatever crazy
+>version format we might decide to use (e.g., 1.2.3-experimental).
+>We'll just need to make sure that latest version is the last in
+>libbpf.map, which will just happen naturally. So instead of this
+>Makefile complexity, please can you port back my original approach?
+>Thanks!
 
-Indeed, looks like we have a mix of clean ups of varying clarity here.
-I will just drop all, including the devm_platform_ioremap_resource()
-conversion patches from patchwork for now. 
+I don't insist, placed it for history and to show it can be sorted
+alphabetically, I can live with cross-compilation that I hope goes soon,
+on host no need to worry about this at all. So I better leave this change
+up to you.
 
-Markus, please repost them all once net-next opens. 
-Sorry for inconvenience.
+-- 
+Regards,
+Ivan Khoronzhuk
