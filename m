@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A85BC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F9FC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:36:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B577206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FD34206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:36:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392091AbfITOgY (ORCPT
+        id S2392369AbfITOg1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:36:24 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35864 "EHLO
+        Fri, 20 Sep 2019 10:36:27 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35846 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388065AbfITOZB (ORCPT
+        by vger.kernel.org with ESMTP id S2388053AbfITOZB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Sep 2019 10:25:01 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqE-0004y7-Lm; Fri, 20 Sep 2019 15:24:58 +0100
+        id 1iBJqE-0004x8-1a; Fri, 20 Sep 2019 15:24:58 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqE-0007s6-26; Fri, 20 Sep 2019 15:24:58 +0100
+        id 1iBJqC-0007qt-VA; Fri, 20 Sep 2019 15:24:56 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,17 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        luto@kernel.org, "Peter Zijlstra" <peterz@infradead.org>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        "Randy Dunlap" <rdunlap@infradead.org>,
-        "Ingo Molnar" <mingo@kernel.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>
+        "John Garry" <john.garry@huawei.com>,
+        "Guenter Roeck" <linux@roeck-us.net>,
+        "Kefeng Wang" <wangkefeng.wang@huawei.com>
 Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.600636306@decadent.org.uk>
+Message-ID: <lsq.1568989415.488371457@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 044/132] x86/uaccess: Dont leak the AC flag into
- __put_user() argument evaluation
+Subject: [PATCH 3.16 029/132] hwmon: (pc87427) Use request_muxed_region
+ for Super-IO accesses
 In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,56 +57,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Guenter Roeck <linux@roeck-us.net>
 
-commit 6ae865615fc43d014da2fd1f1bba7e81ee622d1b upstream.
+commit 755a9b0f8aaa5639ba5671ca50080852babb89ce upstream.
 
-The __put_user() macro evaluates it's @ptr argument inside the
-__uaccess_begin() / __uaccess_end() region. While this would normally
-not be expected to be an issue, an UBSAN bug (it ignored -fwrapv,
-fixed in GCC 8+) would transform the @ptr evaluation for:
+Super-IO accesses may fail on a system with no or unmapped LPC bus.
 
-  drivers/gpu/drm/i915/i915_gem_execbuffer.c: if (unlikely(__put_user(offset, &urelocs[r-stack].presumed_offset))) {
+Also, other drivers may attempt to access the LPC bus at the same time,
+resulting in undefined behavior.
 
-into a signed-overflow-UB check and trigger the objtool AC validation.
+Use request_muxed_region() to ensure that IO access on the requested
+address space is supported, and to ensure that access by multiple drivers
+is synchronized.
 
-Finish this commit:
-
-  2a418cf3f5f1 ("x86/uaccess: Don't leak the AC flag into __put_user() value evaluation")
-
-and explicitly evaluate all 3 arguments early.
-
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: luto@kernel.org
-Fixes: 2a418cf3f5f1 ("x86/uaccess: Don't leak the AC flag into __put_user() value evaluation")
-Link: http://lkml.kernel.org/r/20190424072208.695962771@infradead.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-[bwh: Backported to 3.16: adjust context]
+Fixes: ba224e2c4f0a7 ("hwmon: New PC87427 hardware monitoring driver")
+Reported-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Reported-by: John Garry <john.garry@huawei.com>
+Cc: John Garry <john.garry@huawei.com>
+Acked-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/include/asm/uaccess.h | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/hwmon/pc87427.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
---- a/arch/x86/include/asm/uaccess.h
-+++ b/arch/x86/include/asm/uaccess.h
-@@ -422,10 +422,11 @@ do {									\
- #define __put_user_nocheck(x, ptr, size)			\
- ({								\
- 	int __pu_err;						\
--	__typeof__(*(ptr)) __pu_val;				\
--	__pu_val = x;						\
-+	__typeof__(*(ptr)) __pu_val = (x);			\
-+	__typeof__(ptr) __pu_ptr = (ptr);			\
-+	__typeof__(size) __pu_size = (size);			\
- 	__uaccess_begin();					\
--	__put_user_size(__pu_val, (ptr), (size), __pu_err, -EFAULT); \
-+	__put_user_size(__pu_val, __pu_ptr, __pu_size, __pu_err, -EFAULT); \
- 	__uaccess_end();					\
- 	__pu_err;						\
- })
+--- a/drivers/hwmon/pc87427.c
++++ b/drivers/hwmon/pc87427.c
+@@ -106,6 +106,13 @@ static const char *logdev_str[2] = { DRV
+ #define LD_IN		1
+ #define LD_TEMP		1
+ 
++static inline int superio_enter(int sioaddr)
++{
++	if (!request_muxed_region(sioaddr, 2, DRVNAME))
++		return -EBUSY;
++	return 0;
++}
++
+ static inline void superio_outb(int sioaddr, int reg, int val)
+ {
+ 	outb(reg, sioaddr);
+@@ -122,6 +129,7 @@ static inline void superio_exit(int sioa
+ {
+ 	outb(0x02, sioaddr);
+ 	outb(0x02, sioaddr + 1);
++	release_region(sioaddr, 2);
+ }
+ 
+ /*
+@@ -1221,7 +1229,11 @@ static int __init pc87427_find(int sioad
+ {
+ 	u16 val;
+ 	u8 cfg, cfg_b;
+-	int i, err = 0;
++	int i, err;
++
++	err = superio_enter(sioaddr);
++	if (err)
++		return err;
+ 
+ 	/* Identify device */
+ 	val = force_id ? force_id : superio_inb(sioaddr, SIOREG_DEVID);
 
