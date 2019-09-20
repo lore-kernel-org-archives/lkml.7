@@ -2,118 +2,126 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AADAC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9039EC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21E5F20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:54:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568994869;
-	bh=JB/KlavkKYyb6cShAWrH8NzqXSYVIlW2OW86Y+sEVJ4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mL1aI3UgZdc5ye1rjE0eBbJLoCyp961ztUXS1tuv8n3VCGqe2MbOp2pTBt74MUHjs
-	 3X7YX3kyr1qwahY92mcT5RkItzurzg5srwEMJHcTk4BOoCe/axQtDifpHkIhz7bHas
-	 t9w09OAhzjoe7/Ta2QQ1kJId/3jVHYP+k00qPUrY=
+	by mail.kernel.org (Postfix) with ESMTP id 5F6462086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:55:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="YYnvNrsz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404745AbfITPy2 (ORCPT
+        id S2404766AbfITPzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 11:54:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53898 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404729AbfITPy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 11:54:27 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 444BE2086A;
-        Fri, 20 Sep 2019 15:54:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568994867;
-        bh=JB/KlavkKYyb6cShAWrH8NzqXSYVIlW2OW86Y+sEVJ4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bbTzVipQPKINemMAWxR+AAOssChAagB9KRceRQ8GEXxOAeb2qRyxDif3CLPBDf1KH
-         jL28zQC3QpkSwJaIj5BP9MnJ0GCXR4y+pUaFF3ZVzHBTFaKO097I9FvQ+LHhv9/0Qp
-         PLyFaIaqTwkHIPQ/RQjKcMXECZCek5yRZ8OsZKY0=
-Date:   Fri, 20 Sep 2019 16:54:21 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Marco Elver <elver@google.com>
-Cc:     kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>, paulmck@linux.ibm.com,
-        Paul Turner <pjt@google.com>, Daniel Axtens <dja@axtens.net>,
-        Anatol Pomazau <anatol@google.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        stern@rowland.harvard.edu, akiyks@gmail.com, npiggin@gmail.com,
-        boqun.feng@gmail.com, dlustig@nvidia.com, j.alglave@ucl.ac.uk,
-        luc.maranget@inria.fr
-Subject: Re: Kernel Concurrency Sanitizer (KCSAN)
-Message-ID: <20190920155420.rxiflqdrpzinncpy@willie-the-truck>
-References: <CANpmjNPJ_bHjfLZCAPV23AXFfiPiyXXqqu72n6TgWzb2Gnu1eA@mail.gmail.com>
-MIME-Version: 1.0
+        Fri, 20 Sep 2019 11:55:39 -0400
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.82]:10280 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404245AbfITPzj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 11:55:39 -0400
+X-Greylist: delayed 327 seconds by postgrey-1.27 at vger.kernel.org; Fri, 20 Sep 2019 11:55:37 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1568994936;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=uUMbCnYSLXnGdgjLVbP4VbN11g3hGGb6cdy/jR7kWKU=;
+        b=YYnvNrszAMBNzWybl7WI00EEtYBWeVGt0g9xswUI0lSgDvbVY3nxU9Uj0bHS9xq9pi
+        rLgBeZYj2scIo9MGFIfW7AFFh1XEY0f4Zmu9MS75s/p3KQhx6RKsos3O1IRRQDFbyU5k
+        eysXpSbr37FEUr2Wuq6uk/eV0nPnx7WTkERCpvlIeYyg78EcWsPLElOMJ52fmJxjz8/b
+        /Oz7nOo6rDL1Ppv4Xemnb+FEujTJwu2TMIm1cwQr6x3V4PsfCSOIjVDKY7L4DbwYIsU+
+        Ms+cmPgr7LnLAyrb9x8hy8P2DWceoVBnbjRDJUT7a5CoMrFb/oPfb9s6NajusmRuhYrC
+        awAQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGHPrpwDCpeWQ="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 44.27.0 DYNA|AUTH)
+        with ESMTPSA id u036f9v8KFtUpEA
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Fri, 20 Sep 2019 17:55:30 +0200 (CEST)
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNPJ_bHjfLZCAPV23AXFfiPiyXXqqu72n6TgWzb2Gnu1eA@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [Letux-kernel] [PATCH 2/2] DTS: ARM: gta04: introduce legacy spi-cs-high to make display work again
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <96E62EC2-2A3E-4722-A9DE-3F320B0A98B0@goldelico.com>
+Date:   Fri, 20 Sep 2019 17:55:30 +0200
+Cc:     Andreas Kemnade <andreas@kemnade.info>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <9FCCE3A0-6223-44EC-868D-76018B6F5CD5@goldelico.com>
+References: <20190724194259.GA25847@bogus> <2EA06398-E45B-481B-9A26-4DD2E043BF9C@goldelico.com> <CAL_JsqLe_Y9Z6MRt7ojgSVKAb9n95S8j=eGidSVNz2T83j-zPQ@mail.gmail.com> <CACRpkdY0AVnkRa8sV_Z54qfX9SYufvaYYhU0k2+LitXo0sLx2w@mail.gmail.com> <20190831084852.5e726cfa@aktux> <ED6A6797-D1F9-473B-ABFF-B6951A924BC1@goldelico.com> <CACRpkdZQgPVvB=78vOFsHe5n45Vwe4N6JJOcm1_vz5FbAw9CYA@mail.gmail.com> <1624298A-C51B-418A-96C3-EA09367A010D@goldelico.com> <CACRpkdZvpPOM1Ug-=GHf7Z-2VEbJz3Cuo7+0yDFuNm5ShXK8=Q@mail.gmail.com> <7DF102BC-C818-4D27-988F-150C7527E6CC@goldelico.com> <20190920142059.GO5610@atomide.com> <633E7AD9-A909-4619-BBD7-8CFD965FDFF7@goldelico.com> <20190920172947.51c1fdec@aktux> <96E62EC2-2A3E-4722-A9DE-3F320B0A98B0@goldelico.com>
+To:     Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marco,
 
-On Fri, Sep 20, 2019 at 04:18:57PM +0200, Marco Elver wrote:
-> We would like to share a new data-race detector for the Linux kernel:
-> Kernel Concurrency Sanitizer (KCSAN) --
-> https://github.com/google/ktsan/wiki/KCSAN  (Details:
-> https://github.com/google/ktsan/blob/kcsan/Documentation/dev-tools/kcsan.rst)
-> 
-> To those of you who we mentioned at LPC that we're working on a
-> watchpoint-based KTSAN inspired by DataCollider [1], this is it (we
-> renamed it to KCSAN to avoid confusion with KTSAN).
-> [1] http://usenix.org/legacy/events/osdi10/tech/full_papers/Erickson.pdf
+> Am 20.09.2019 um 17:50 schrieb H. Nikolaus Schaller =
+<hns@goldelico.com>:
+>=20
+>=20
+>> Am 20.09.2019 um 17:29 schrieb Andreas Kemnade =
+<andreas@kemnade.info>:
+>>=20
+>> On Fri, 20 Sep 2019 16:54:18 +0200
+>> "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
+>>=20
+>>>> Am 20.09.2019 um 16:20 schrieb Tony Lindgren <tony@atomide.com>:
+>>>>=20
+>>>> * H. Nikolaus Schaller <hns@goldelico.com> [190920 09:19]: =20
+>>>>>> Am 20.09.2019 um 10:55 schrieb Linus Walleij =
+<linus.walleij@linaro.org>:
+>>>>>> I suggest to go both way:
+>>>>>> apply this oneliner and tag for stable so that GTA04 works
+>>>>>> again.
+>>>>>>=20
+>>>>>> Then for the next kernel think about a possible more abitious
+>>>>>> whitelist solution and after adding that remove *all* =
+"spi-cs-high"
+>>>>>> flags from all device trees in the kernel after fixing them
+>>>>>> all up. =20
+>>>>>=20
+>>>>> Ok, that looks like a viable path. =20
+>>>>=20
+>>>> Please repost the oneline so people can ack easily. At least
+>>>> I've already lost track of this thread. =20
+>>>=20
+>>> It is all here:
+>>>=20
+>>> https://patchwork.kernel.org/patch/11035253/
+>>>=20
+>> It is the full one (incl. documentation), not the oneline and does =
+not
+>> apply.
+>=20
+> Looks as if it was sitting too long in the queue and linux-next has =
+changed
+> the basis in the meantime, while v5.3 has not yet.
+>=20
+> Documentation/devicetree/bindings/spi/spi-bus.txt -> =
+spi-controller.yaml
+>=20
+> So it should still apply for v5.3.1 and earlier and we need both =
+versions.
+> One for stable and one for linux-next. I don't know how to handle such =
+cases.
 
-Oh, spiffy!
+Ok, here is a correction of this statement:
 
-> In the coming weeks we're planning to:
-> * Set up a syzkaller instance.
-> * Share the dashboard so that you can see the races that are found.
-> * Attempt to send fixes for some races upstream (if you find that the
-> kcsan-with-fixes branch contains an important fix, please feel free to
-> point it out and we'll prioritize that).
+It applies fine to v5.2 and v5.3 already uses the spi-controller.yaml
 
-Curious: do you take into account things like alignment and/or access size
-when looking at READ_ONCE/WRITE_ONCE? Perhaps you could initially prune
-naturally aligned accesses for which __native_word() is true?
-
-> There are a few open questions:
-> * The big one: most of the reported races are due to unmarked
-> accesses; prioritization or pruning of races to focus initial efforts
-> to fix races might be required. Comments on how best to proceed are
-> welcome. We're aware that these are issues that have recently received
-> attention in the context of the LKMM
-> (https://lwn.net/Articles/793253/).
-
-This one is tricky. What I think we need to avoid is an onslaught of
-patches adding READ_ONCE/WRITE_ONCE without a concrete analysis of the
-code being modified. My worry is that Joe Developer is eager to get their
-first patch into the kernel, so runs this tool and starts spamming
-maintainers with these things to the point that they start ignoring KCSAN
-reports altogether because of the time they take up.
-
-I suppose one thing we could do is to require each new READ_ONCE/WRITE_ONCE
-to have a comment describing the racy access, a bit like we do for memory
-barriers. Another possibility would be to use atomic_t more widely if
-there is genuine concurrency involved.
-
-> * How/when to upstream KCSAN?
-
-Start by posting the patches :)
-
-Will
