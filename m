@@ -2,236 +2,193 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93587C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 22:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D79C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 22:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C7D1208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 22:44:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="UWbPcxKr"
+	by mail.kernel.org (Postfix) with ESMTP id BB122208C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 22:45:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569019502;
+	bh=+u2HI0skstdjb3glWqOntyrhxc7RXPu26XVe9jd07Fc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=T4sof1eQBDyR1B7JmmWpxfb5px6PgQy17Pe24jCM1/bPO/5kov7VTsjxdUIQmubsy
+	 xk7MJ6yu8+i56fCK3/2V1FLUrFiuL5AdPIk41TXtsb2lc1MXyUKQC7TPcoz/UE0ihy
+	 naYSdXCwfFp2JZrlUHQKLqPlcjqalcrUX2isp/cY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393910AbfITWo5 (ORCPT
+        id S2406451AbfITWpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 18:44:57 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:60788 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393815AbfITWo5 (ORCPT
+        Fri, 20 Sep 2019 18:45:02 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:39619 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393855AbfITWo6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 18:44:57 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 67B1A2F9;
-        Sat, 21 Sep 2019 00:44:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1569019495;
-        bh=kQDyvHPUjw3ozJ1+wTwounJvN79D6opBdCaeOTs2x9Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UWbPcxKrMj+hvtXUoCF6cf0fWjZ2vMZVr7HkcGFmJPe4KH71uorDSUFbzJWO8Ynph
-         nxyBKxcUMkvMLBBbwjdkM2m1JP9GTFWuC8HgBfmv1dhgNxDRzlWEEJgZX/wXhPVRRw
-         qRerWEjniRMrDSdIXytqrOQIhM98nYCkO640l9mw=
-Date:   Sat, 21 Sep 2019 01:44:46 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc:     Jacopo Mondi <jacopo@jmondi.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>, geert@linux-m68k.org,
-        horms@verge.net.au, uli+renesas@fpond.eu,
-        VenkataRajesh.Kalakodima@in.bosch.com, airlied@linux.ie,
-        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 6/9] drm: rcar-du: crtc: Enable and disable CMMs
-Message-ID: <20190920224446.GD12672@pendragon.ideasonboard.com>
-References: <20190906135436.10622-1-jacopo+renesas@jmondi.org>
- <20190906135436.10622-7-jacopo+renesas@jmondi.org>
- <bc443263-5f20-f022-34c8-1e521243dec1@ideasonboard.com>
- <20190912080720.bn7bmu2o3gacrpf4@uno.localdomain>
- <a0f0554d-1bb0-fefa-a5d5-a252f7426c36@ideasonboard.com>
- <20190918232336.GB11474@pendragon.ideasonboard.com>
- <96aded2c-f083-6e3d-c07d-f392f52a01b0@ideasonboard.com>
+        Fri, 20 Sep 2019 18:44:58 -0400
+Received: by mail-lf1-f65.google.com with SMTP id 72so6102588lfh.6
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 15:44:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GKUuDO6YOo0r9Dt4w/cxI9Tu6lVFdn1V9F8DKhykytQ=;
+        b=Kl/zSV5hhzVT49bbAiGHnAK2P122IBZjE+QpwN3a9ptugitLNiKFgEkjvUJAFPy4yA
+         j1qvQnw5/ZusJG8Zxho5k5dtJV/gOUtrQJ0v2WclFfrSVNQ6IuFX1I+yu0eZpF6xMiU/
+         /PwDzWilWgoTYlFoB6C14j2XRyqO+E101Fbs8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GKUuDO6YOo0r9Dt4w/cxI9Tu6lVFdn1V9F8DKhykytQ=;
+        b=ksp6A8uBdTYbVSQpeSvKd9RSEyq1HkJ552aIZ7JxfUj5e3KxwmMYWUq9VsOoBQUGBY
+         fqBqkUX3LkGriKFnglpLdIQoUFeK3L8CLWSFhSaHSlmKnUDvDIB7gyJheXDqmZgjhh9J
+         B2r7nCrOfQvMWDMgHlFLmooVUZJQq5uVT05F59OoNfmdf+hQl1EQsmyjSVfoU4YJXQqH
+         nKlqWlMoJhRt/BtNaMsDhrZhKZiWwnSnxKekQHCkB6tAx8yuQPH/O3jB5jw/TIfL4wg6
+         bxOlwxqnaCrY6AB9J2gLxWan83oRFFU7K5g/qv4xWeTjMFmjzllzw0f67YVoywUxIW1n
+         8PPQ==
+X-Gm-Message-State: APjAAAXbSS6j7g9ZPs0mtUWdANljnMZla+7nNrCbY/bdY54Vd+1u2Nba
+        rTUHC/9LWeJ0Bq0O9VNHEeXEjX+g4LQ=
+X-Google-Smtp-Source: APXvYqza3e5+NEMRWhCHSTKouNCED6VMxmh+t4GnKdu6JhMgssnpISSQp9OLpq4zcwexBDpZIphMhw==
+X-Received: by 2002:a19:644c:: with SMTP id b12mr9872375lfj.104.1569019494436;
+        Fri, 20 Sep 2019 15:44:54 -0700 (PDT)
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
+        by smtp.gmail.com with ESMTPSA id t82sm763612lff.58.2019.09.20.15.44.52
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Sep 2019 15:44:52 -0700 (PDT)
+Received: by mail-lj1-f179.google.com with SMTP id y23so8515007lje.9
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 15:44:52 -0700 (PDT)
+X-Received: by 2002:a2e:5b9a:: with SMTP id m26mr10397369lje.90.1569019492155;
+ Fri, 20 Sep 2019 15:44:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <96aded2c-f083-6e3d-c07d-f392f52a01b0@ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190912034421.GA2085@darwi-home-pc> <20190912082530.GA27365@mit.edu>
+ <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+ <20190914122500.GA1425@darwi-home-pc> <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
+ <20190915052242.GG19710@mit.edu> <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
+ <20190918211503.GA1808@darwi-home-pc> <20190918211713.GA2225@darwi-home-pc>
+ <CAHk-=wiCqDiU7SE3FLn2W26MS_voUAuqj5XFa1V_tiGTrrW-zQ@mail.gmail.com>
+ <20190920134609.GA2113@pc> <CALCETrWvE5es3i+to33y6jw=Yf0Tw6ZfV-6QWjZT5v0fo76tWw@mail.gmail.com>
+ <CAHk-=wgW8rN2EVL_Rdn63V9vQO0GkZ=RQFeqqsYJM==8fujpPg@mail.gmail.com>
+ <CALCETrV=4TX2a4uV5t2xOFzv+zM_jnOtMLJna8Vb7uXz6S=wSw@mail.gmail.com>
+ <CAHk-=wjpTWgpo6d24pTv+ubfea_uEomX-sHjjOkdACfV-8Nmkg@mail.gmail.com>
+ <CALCETrUEqjFmPvpcJQwJe3dNbz8eaJ4k3_AV2u0v96MffjLn+g@mail.gmail.com>
+ <CAHk-=whJ3kmcZp=Ws+uXnRB9KokG6nXSQCSuBnerG--jkAfP5w@mail.gmail.com> <CALCETrXMp3dJaKDm+RQijQEUuPNPmpKWr8Ljf+RqycXChGnKrw@mail.gmail.com>
+In-Reply-To: <CALCETrXMp3dJaKDm+RQijQEUuPNPmpKWr8Ljf+RqycXChGnKrw@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 20 Sep 2019 15:44:35 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whz7Okts01ygAP6GZWBvCV7s==CKjghmOp+r+LWketBYQ@mail.gmail.com>
+Message-ID: <CAHk-=whz7Okts01ygAP6GZWBvCV7s==CKjghmOp+r+LWketBYQ@mail.gmail.com>
+Subject: Re: [PATCH RFC v4 1/1] random: WARN on large getrandom() waits and
+ introduce getrandom2()
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kieran,
+On Fri, Sep 20, 2019 at 1:51 PM Andy Lutomirski <luto@kernel.org> wrote:
+>
+> To be clear, when I say "blocking", I mean "blocks until we're ready,
+> but we make sure we're ready in a moderately timely manner".
 
-On Thu, Sep 19, 2019 at 09:08:18AM +0100, Kieran Bingham wrote:
-> On 19/09/2019 00:23, Laurent Pinchart wrote:
-> > On Thu, Sep 12, 2019 at 10:19:30AM +0100, Kieran Bingham wrote:
-> >> On 12/09/2019 09:07, Jacopo Mondi wrote:
-> >>> On Wed, Sep 11, 2019 at 07:40:27PM +0100, Kieran Bingham wrote:
-> >>>> On 06/09/2019 14:54, Jacopo Mondi wrote:
-> >>>>> Enable/disable the CMM associated with a CRTC at CRTC start and stop
-> >>>>> time and enable the CMM unit through the Display Extensional Functions
-> >>>>> register at group setup time.
-> >>>>>
-> >>>>> Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
-> >>>>> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> >>>>> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> >>>>> ---
-> >>>>>  drivers/gpu/drm/rcar-du/rcar_du_crtc.c  | 7 +++++++
-> >>>>>  drivers/gpu/drm/rcar-du/rcar_du_group.c | 8 ++++++++
-> >>>>>  drivers/gpu/drm/rcar-du/rcar_du_regs.h  | 5 +++++
-> >>>>>  3 files changed, 20 insertions(+)
-> >>>>>
-> >>>>> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> >>>>> index 23f1d6cc1719..3dac605c3a67 100644
-> >>>>> --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> >>>>> +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> >>>>> @@ -21,6 +21,7 @@
-> >>>>>  #include <drm/drm_plane_helper.h>
-> >>>>>  #include <drm/drm_vblank.h>
-> >>>>>
-> >>>>> +#include "rcar_cmm.h"
-> >>>>>  #include "rcar_du_crtc.h"
-> >>>>>  #include "rcar_du_drv.h"
-> >>>>>  #include "rcar_du_encoder.h"
-> >>>>> @@ -619,6 +620,9 @@ static void rcar_du_crtc_stop(struct rcar_du_crtc *rcrtc)
-> >>>>>  	if (rcar_du_has(rcrtc->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
-> >>>>>  		rcar_du_vsp_disable(rcrtc);
-> >>>>>
-> >>>>> +	if (rcrtc->cmm)
-> >>>>> +		rcar_cmm_disable(rcrtc->cmm);
-> >>>>> +
-> >>>>>  	/*
-> >>>>>  	 * Select switch sync mode. This stops display operation and configures
-> >>>>>  	 * the HSYNC and VSYNC signals as inputs.
-> >>>>> @@ -686,6 +690,9 @@ static void rcar_du_crtc_atomic_enable(struct drm_crtc *crtc,
-> >>>>>  	}
-> >>>>>
-> >>>>>  	rcar_du_crtc_start(rcrtc);
-> >>>>> +
-> >>>>> +	if (rcrtc->cmm)
-> >>>>> +		rcar_cmm_enable(rcrtc->cmm);
-> >>>>>  }
-> >>>>>
-> >>>>>  static void rcar_du_crtc_atomic_disable(struct drm_crtc *crtc,
-> >>>>> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_group.c b/drivers/gpu/drm/rcar-du/rcar_du_group.c
-> >>>>> index 9eee47969e77..25d0fc125d7a 100644
-> >>>>> --- a/drivers/gpu/drm/rcar-du/rcar_du_group.c
-> >>>>> +++ b/drivers/gpu/drm/rcar-du/rcar_du_group.c
-> >>>>> @@ -147,6 +147,14 @@ static void rcar_du_group_setup(struct rcar_du_group *rgrp)
-> >>>>>
-> >>>>>  	rcar_du_group_setup_pins(rgrp);
-> >>>>>
-> >>>>> +	if (rcar_du_has(rcdu, RCAR_DU_FEATURE_CMM)) {
-> >>>>> +		u32 defr7 = DEFR7_CODE
-> >>>>> +			  | (rgrp->cmms_mask & BIT(1) ? DEFR7_CMME1 : 0)
-> >>>>> +			  | (rgrp->cmms_mask & BIT(0) ? DEFR7_CMME0 : 0);
-> >>>>> +
-> >>>>> +		rcar_du_group_write(rgrp, DEFR7, defr7);
-> >>>>> +	}
-> >>>>> +
-> >>>>
-> >>>> What's the effect here on platforms with a CMM, but with
-> >>>> CONFIG_DRM_RCAR_CMM unset?
-> >>>>
-> >>>> Will this incorrectly configure the DU ?
-> >>>>
-> >>>> Will it stall the display if the DU tries to interact with another
-> >>>> module which is not enabled?
-> >>>
-> >>> I recall I tested that (that's why I had to add stubs for CMM
-> >>> functions, as I had linkage errors otherwise) and thing seems to be
-> >>> fine as the CMM configuration/enblement resolve to an empty function.
-> >>
-> >> Yes, I see the stubs to allow for linkage, but it's the hardware I'm
-> >> concerned about. If it passes the tests and doesn't break then that's
-> >> probably ok ... but I'm really weary that we're enabling a hardware
-> >> pipeline with a disabled component in the middle.
-> >>
-> >>> Would you prefer to have this guarded by an #if IS_ENABLED() ?
-> >>
-> >> I don't think we need a compile time conditional, but I'd say it
-> >> probably needs to be more about whether the CMM has actually probed or not
-> >>
-> >> Aha, and I see that in rcar_du_cmm_init() we already do a
-> >> call to rcar_cmm_init(), which if fails will leave rcdu->cmms[i] as
-> >> NULL. So that's catered for, which results in the rgrp->cmms_mask being
-> >> correctly representative of whether there is a CMM connected or not.
-> > 
-> > Doesn't this result in probe failure ?
-> 
-> I think I mis-spoke above, I didn't mean "if rcar_cmm_init() fails" I
-> meant "if rcar_du_cmm_init() determines there are no connected CMM's or
-> if they are disabled."
-> 
-> If rcar_cmm_init() returns a failure, then yes we will fail to probe.
-> 
-> But I think it's up to rcar_du_cmm_init() to determine if the CMM exists
-> or not (or is enabled) and if that's not a failure case then it should
-> not prevent the probing of the DU.
-> 
-> In fact, I've now seen that if CONFIG_DRM_RCAR_CMM is not enabled,
-> rcar_cmm_init() returns 0, and I think in fact it should return -ENODEV,
-> with an exception on that return value in rcar_du_cmm_init() so that the
-> DU continues with no CMM attached there.
+.. an I want a pony.
 
-I've replied to your other e-mail regarding this, and I agree with you.
+The problem is that you start from an assumption that we simply can't
+seem to do.
 
-> >>  ... so I think that means the ...
-> >>  "if (rcar_du_has(rcdu, RCAR_DU_FEATURE_CMM))" is somewhat redundant:
-> >>
-> >>
-> >> This could be:
-> >>
-> >>   if (rgrp->cmms_mask) {
-> >> 	u32 defr7 = DEFR7_CODE
-> >> 		  | (rgrp->cmms_mask & BIT(1) ? DEFR7_CMME1 : 0)
-> >> 		  | (rgrp->cmms_mask & BIT(0) ? DEFR7_CMME0 : 0);
-> >>
-> >>   rcar_du_group_write(rgrp, DEFR7, defr7);
-> >>
-> >> Or in fact, if we don't mind writing 0 to DEFR7 when there is no CMM
-> >> (which is safe by the looks of things as DEFR7 is available on all
-> >> platforms), then we can even remove the outer conditional, and leave
-> >> this all up to the ternary operators to write the correct value to the
-> >> defr7.
-> >>
-> >> Phew ... net result - your current code *is* safe with the
-> >> CONFIG_DRM_RCAR_CMM option disabled. I'll leave it up to you if you want
-> >> to simplify the code here and remove the RCAR_DU_FEATURE_CMM.
-> >>
-> >> As this RCAR_DU_FEATURE_CMM flag is only checked here, removing it would
-> >> however simplify all of the rcar_du_device_info structures.
-> >>
-> >> So - with or without the _FEATURE_CMM" simplification, this patch looks
-> >> functional and safe so:
-> >>
-> >>
-> >> Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-> >>
-> >>>>>  	if (rcdu->info->gen >= 2) {
-> >>>>>  		rcar_du_group_setup_defr8(rgrp);
-> >>>>>  		rcar_du_group_setup_didsr(rgrp);
-> >>>>> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_regs.h b/drivers/gpu/drm/rcar-du/rcar_du_regs.h
-> >>>>> index bc87f080b170..fb9964949368 100644
-> >>>>> --- a/drivers/gpu/drm/rcar-du/rcar_du_regs.h
-> >>>>> +++ b/drivers/gpu/drm/rcar-du/rcar_du_regs.h
-> >>>>> @@ -197,6 +197,11 @@
-> >>>>>  #define DEFR6_MLOS1		(1 << 2)
-> >>>>>  #define DEFR6_DEFAULT		(DEFR6_CODE | DEFR6_TCNE1)
-> >>>>>
-> >>>>> +#define DEFR7			0x000ec
-> >>>>> +#define DEFR7_CODE		(0x7779 << 16)
-> >>>>> +#define DEFR7_CMME1		BIT(6)
-> >>>>> +#define DEFR7_CMME0		BIT(4)
-> >>>>> +
-> >>>>>  /* -----------------------------------------------------------------------------
-> >>>>>   * R8A7790-only Control Registers
-> >>>>>   */
+> In other words, I want GRND_SECURE_BLOCKING and /dev/random reads to
+> genuinely always work and to genuinely never take much longer than 5s.
+> I don't want a special case where they fail.
 
--- 
-Regards,
+Honestly, if that's the case and we _had_ such a methoc of
+initializing the rng, then I suspect we could just ignore the flags
+entirely, with the possible exception of GRND_NONBLOCK. And even that
+is "possible exception", because once your worst-case is a one-time
+delay of 5s at boot time thing, you might as well consider it
+nonblocking in general.
 
-Laurent Pinchart
+Yes, there are some in-kernel users that really can't afford to do
+even that 5s delay (not just may they be atomic, but more likely it's
+just that we don't want to delay _everything_ by 5s), but they don't
+use the getrandom() system call anyway.
+
+> The exposed user APIs are, subject to bikeshedding that can happen
+> later over the actual values, etc:
+
+So the thing is, you start from the impossible assumption, and _if_
+you hold that assumption then we might as well just keep the existing
+"zero means blocking", because nobody mind.
+
+I'd love to say "yes, we can guarantee good enough entropy for
+everybody in 5s and we don't even need to warn about it, because
+everybody will be comfortable with the state of our entropy at that
+point".
+
+It sounds like a _lovely_ model.
+
+But honestly, it simply sounds unlikely.
+
+Now, there are different kinds of unlikely.
+
+In particular, if you actually have a CPU cycle counter that actually
+runs at least on the same order of magnitude as the CPU frequency -
+then I believe in the jitter entropy more than in many other cases.
+
+Sadly, many platforms don't have that kind of cycle counter.
+
+I've also not seen a hugely believable "yes, the jitter entropy is
+real" paper. Alexander points to the existing jitterentropy crypto
+code, and claims it can fill all our entropy needs in two seconds, but
+there are big caveats:
+
+ (a) that code uses get_random_entropy(), which on a PC is that nice
+fast TSC that we want. On other platforms (or on really old PC's - we
+technically support CPU's still that don't have rdtsc)? It might be
+zero. Every time.
+
+ (b) How was it tested? There are lots of randomness tests, but most
+of them can be fooled with a simple counter through a cryptographic
+hash - which you basically need to do anyway on whatever entropy
+source you have in order to "whiten" it. It's simply _really_ hard to
+decide on entropy.
+
+So it's really easy to make the randomness of some input look really
+good, without any real idea how good it truly is. And maybe it really
+is very very good on one particular machine, and then on another one
+(with either a simpler in-order core or a lower-frequency timestamp
+counter) it might be horrendously bad, and you'll never know,
+
+So I'd love to believe in your simple model. Really. I just don't see
+how to get there reliably.
+
+Matthew Garrettpointed to one analysis on jitterentropy, and that one
+wasn't all that optimistic.
+
+I do think jitterentropy would likely be good enough in practice - at
+least on PC's with a TSC - for the fairly small window at boot and
+getrandom(0). As I mentioned, I don't think it will make anybody
+_happy_, but it might be one of those things where it's a compromise
+that at least works for people, with the key generation people who are
+really unhappy with it having a new option for their case.
+
+And maybe Alexander can convince people that when you run the
+jitterentropy code a hundred billion times, the end result (not the
+random stream from it, but the jitter bits themselves - but I'm not
+even sure how to boil it down) - really is random.
+
+             Linus
