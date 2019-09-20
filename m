@@ -2,174 +2,96 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABC0C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F5FAC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 592462086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:53:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0ED8208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:54:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kABMGi4H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408374AbfITIxs (ORCPT
+        id S2408387AbfITIyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 04:53:48 -0400
-Received: from mx1.emlix.com ([188.40.240.192]:60966 "EHLO mx1.emlix.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405574AbfITIxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 04:53:48 -0400
-Received: from mailer.emlix.com (unknown [81.20.119.6])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx1.emlix.com (Postfix) with ESMTPS id B8BB2602BA;
-        Fri, 20 Sep 2019 10:53:44 +0200 (CEST)
-Subject: Re: [PATCH v4 2/3] dmaengine: imx-sdma: fix dma freezes
-To:     =?UTF-8?Q?Jan_L=c3=bcbbe?= <jlu@pengutronix.de>,
-        linux-kernel@vger.kernel.org
-Cc:     fugang.duan@nxp.com, festevam@gmail.com, s.hauer@pengutronix.de,
-        vkoul@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de,
-        dan.j.williams@intel.com, yibin.gong@nxp.com, shawnguo@kernel.org,
-        dmaengine@vger.kernel.or, linux-arm-kernel@lists.infradead.org,
-        l.stach@pengutronix.de
-References: <20190919142942.12469-1-philipp.puschmann@emlix.com>
- <20190919142942.12469-3-philipp.puschmann@emlix.com>
- <ad87f175496358adb825240f1de609318ed8204c.camel@pengutronix.de>
-From:   Philipp Puschmann <philipp.puschmann@emlix.com>
-Openpgp: preference=signencrypt
-Message-ID: <9305e5ff-f555-3c6e-9e99-36d88edcae0a@emlix.com>
-Date:   Fri, 20 Sep 2019 10:53:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 20 Sep 2019 04:54:46 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:44524 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405038AbfITIyp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 04:54:45 -0400
+Received: by mail-qt1-f196.google.com with SMTP id u40so7753083qth.11
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 01:54:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Api0Y+wH/01dyNLRzM8HsBg+B/morFmjSPtVkLjmI/Q=;
+        b=kABMGi4H+2M2eGBGHfwbOlkRX3An51O1VYIf/eU1q99g9+8P+Zy0ICpmsxfgHbZuv1
+         fXTaZsMR1B3eoyPlR4Y1p29pbk7XmZjCNbBW3kJDBoO7SJgQ5qBEG2HvvlqedA9BONca
+         3gxwQPdEPUEjBIRjERYTCmYjSenKj3EGziZaarpHf7awc8cNfKa1y/VSzYMALqexO74O
+         MPzg6OSfvG6NNNMb9bc8luHIM/fe4UDOLAu/IFqb7JZCaKsbt4oejbPTcdlzG1HeWlRF
+         UfT0YLzzJ8nFcjPI5xjtXaonJLmwL9kX4mRqBh3+kwMv4Eh5ABx+bdUQp3RUE7He14bo
+         WHJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Api0Y+wH/01dyNLRzM8HsBg+B/morFmjSPtVkLjmI/Q=;
+        b=VKt9FANEn5IRqDobUQiYGRkIqswJIG6jnAtZeZposUKbASYp/ixU9g2BvDdrryzDd1
+         u2JF3GU0w4qe1SV2JnlBTD/XIpLNR2FG/meBkp8lgRG/Q8iOJKXYcxSEOB5vFz2bXHmG
+         SRYM0jLMJ1QN/Tm+jzr8ThVnH75hopxpyTRERBaEy9nscFiRGqkYmXgS5yEsoi84btSF
+         D90Xqlp3DYH8k3Xi0RQOFhDUeTV5VdTVMpK4xCer/UTkfza+9I1ZyMAPPduWhNz1l2Z8
+         VJDSQoszDACE3flfMBj+Qpi51XVW4sn1YbDggai7gWdMHM5JXvCvhzhWN62SyEGMMHX6
+         Bq3A==
+X-Gm-Message-State: APjAAAUCDbWg8Y5lmEPnCidbxKPj2cXI4EufiyFLqjQKEZPjI5IXqr1a
+        u7VlXjbll7Al8aL/UaAZHpgClm9caNGPUEr9UtbJWQ==
+X-Google-Smtp-Source: APXvYqxby1MVQ81ts9SMgFhl5eszRFIhQWZZ+1I9dOTghcsQoou2a3lC1IXaWgEJgyhFiiT9WC7iy54wqz+GjKsAjl8=
+X-Received: by 2002:a0c:8a6d:: with SMTP id 42mr12268207qvu.138.1568969684035;
+ Fri, 20 Sep 2019 01:54:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <ad87f175496358adb825240f1de609318ed8204c.camel@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 8bit
+References: <20190920032437.242187-1-kyletso@google.com> <cb225c94-da97-1b47-48b6-3802dc3eb93b@redhat.com>
+ <CAGZ6i=3O2zLJMPY5UevjTrJJj7fxpWcn28dZYRptWES74=4Tgg@mail.gmail.com> <ce0e1163-cb0f-29ef-e071-3c0ee795a7e6@redhat.com>
+In-Reply-To: <ce0e1163-cb0f-29ef-e071-3c0ee795a7e6@redhat.com>
+From:   Kyle Tso <kyletso@google.com>
+Date:   Fri, 20 Sep 2019 16:54:27 +0800
+Message-ID: <CAGZ6i=2=hcLcAT3kHHasapWRDpd5sNL=wenBXuMWaRZKeTEiBA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] tcpm: AMS and Collision Avoidance
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Badhri Jagan Sridharan <badhri@google.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jan,
+On Fri, Sep 20, 2019 at 4:25 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi Kyle,
+>
+> On 20-09-2019 10:19, Kyle Tso wrote:
+> > Hi Hans,
+> >
+> > I have tested these on an Android device (ARM64).
+> > All the swap operations work fine (Power Role/Data Role/Vconn Swap).
+> > (except for Fast Role Swap because it is still not supported in TCPM)
+>
+> May I ask which type-c controller are these devices using?
+>
+> Regards,
+>
+> Hans
+>
 
-Am 19.09.19 um 17:19 schrieb Jan Lübbe:
-> Hi Philipp,
-> 
-> see below...
-> 
-> On Thu, 2019-09-19 at 16:29 +0200, Philipp Puschmann wrote:
->> For some years and since many kernel versions there are reports that the
->> RX UART SDMA channel stops working at some point. The workaround was to
->> disable DMA for RX. This commit tries to fix the problem itself.
->>
->> Due to its license i wasn't able to debug the sdma script itself but it
->> somehow leads to blocking the scheduling of the channel script when a
->> running sdma script does not find any free descriptor in the ring to put
->> its data into.
->>
->> If we detect such a potential case we manually restart the channel.
->>
->> As sdmac->desc is constant we can move desc out of the loop.
->>
->> Fixes: 1ec1e82f2510 ("dmaengine: Add Freescale i.MX SDMA support")
->> Signed-off-by: Philipp Puschmann <philipp.puschmann@emlix.com>
->> Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
->> ---
->>
->> Changelog v4:
->>  - fixed the fixes tag
->>  
->> Changelog v3:
->>  - use correct dma_wmb() instead of dma_wb()
->>  - add fixes tag
->>  
->> Changelog v2:
->>  - clarify comment and commit description
->>
->>  drivers/dma/imx-sdma.c | 21 +++++++++++++++++----
->>  1 file changed, 17 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
->> index e029a2443cfc..a32b5962630e 100644
->> --- a/drivers/dma/imx-sdma.c
->> +++ b/drivers/dma/imx-sdma.c
->> @@ -775,21 +775,23 @@ static void sdma_start_desc(struct sdma_channel *sdmac)
->>  static void sdma_update_channel_loop(struct sdma_channel *sdmac)
->>  {
->>  	struct sdma_buffer_descriptor *bd;
->> -	int error = 0;
->> -	enum dma_status	old_status = sdmac->status;
->> +	struct sdma_desc *desc = sdmac->desc;
->> +	int error = 0, cnt = 0;
->> +	enum dma_status old_status = sdmac->status;
->>  
->>  	/*
->>  	 * loop mode. Iterate over descriptors, re-setup them and
->>  	 * call callback function.
->>  	 */
->> -	while (sdmac->desc) {
->> -		struct sdma_desc *desc = sdmac->desc;
->> +	while (desc) {
->>  
->>  		bd = &desc->bd[desc->buf_tail];
->>  
->>  		if (bd->mode.status & BD_DONE)
->>  			break;
->>  
->> +		cnt++;
->> +
->>  		if (bd->mode.status & BD_RROR) {
->>  			bd->mode.status &= ~BD_RROR;
->>  			sdmac->status = DMA_ERROR;
->> @@ -822,6 +824,17 @@ static void sdma_update_channel_loop(struct sdma_channel *sdmac)
->>  		if (error)
->>  			sdmac->status = old_status;
->>  	}
->> +
->> +	/* In some situations it may happen that the sdma does not found any
->                                                           ^ hasn't
->> +	 * usable descriptor in the ring to put data into. The channel is
->> +	 * stopped then. While there is no specific error condition we can
->> +	 * check for, a necessary condition is that all available buffers for
->> +	 * the current channel have been written to by the sdma script. In
->> +	 * this case and after we have made the buffers available again,
->> +	 * we restart the channel.
->> +	 */
-> 
-> Are you sure we can't miss cases where we only had to make some buffers
-> available again, but the SDMA already ran out of buffers before?
-Think so, yes.
-> 
-> A while ago, I was debugging a similar issue triggered by receiving
-> data with a wrong baud rate, which leads to all descriptors being
-> marked with the error flag very quickly (and the SDMA stalling).
-> I noticed that you can check if the channel is still running by
-> checking the SDMA_H_STATSTOP register & BIT(sdmac->channel).
-
-I think checking for this register is the better approach. Then i could drop the
-cnt variable. And by droppting cnt i would propose to move the check and reenabling
-to the end of the while loop to reenable the channel after freeing first buffer.
-
-> 
-> I also added a flag for the sdmac->flags field to allow stopping the
-> channel from the callback (otherwise it would enable the channel
-> again).
-
-Could memory and compiler ordering a problem here?
-I'm not that into these kind of problems, but is this
-	sdmac->flags &= ~IMX_DMA_ACTIVE;
-  	writel_relaxed(BIT(channel), sdma->regs + SDMA_H_STATSTOP);
-guaranteed to be free of race conditions?
+It's a Type-C/PD controller embedded in Qualcomm PMIC PM8150.
 
 Regards,
-Philipp
-
-> 
-> Attached is my current version of that patch for reference.
-> 
->> +	if (cnt >= desc->num_bd)
->> +		sdma_enable_channel(sdmac->sdma, sdmac->channel);
->>  }
->>  
->>  static void mxc_sdma_handle_channel_normal(struct sdma_channel *data)
+Kyle Tso
