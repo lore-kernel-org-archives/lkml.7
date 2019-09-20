@@ -2,143 +2,117 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E78C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D237CC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE314208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:46:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568994401;
-	bh=elxWGloSRv3ASYlcXrPm+ppmMo+Ut4/gn4DAjWMrH+8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=IVrLv9BYMYgtv+unujAZLFFgdhe8slAOJdZgPCk3NJGStX5RPbFZds3+JkegmxWZO
-	 m/NeJWsyvZWkclpSsxeax0WA5PJ4nE5mrO3vV6CWgGYtwTVz5KwCEVrCc41ATsojzj
-	 x//g0lpADT6ujf8rZGvMTRwD9mOtHn+a4nTwgtok=
+	by mail.kernel.org (Postfix) with ESMTP id A3331208C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:50:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="PZeYjfQ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404321AbfITPql (ORCPT
+        id S2404330AbfITPuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 11:46:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50210 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403863AbfITPqk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 11:46:40 -0400
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8834420C01;
-        Fri, 20 Sep 2019 15:46:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568994399;
-        bh=elxWGloSRv3ASYlcXrPm+ppmMo+Ut4/gn4DAjWMrH+8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=gAbZ+xqVIQY8UQnvHM0Wu7zBURBnoAwiPyPdCm9WaslO4NcbBFZuF2xjNYj2nG392
-         jOasp2MzprS7AjbUUvWe3KWNmQ9j/pnfDgxHUkQw9b2sOw4o7F9nEw4NJTR1q1TSoo
-         X4628ZPdLt7Eyt2tiP4CgoYkdr/Uy+14WbDPPlZg=
-Received: by mail-qt1-f182.google.com with SMTP id d2so9194887qtr.4;
-        Fri, 20 Sep 2019 08:46:39 -0700 (PDT)
-X-Gm-Message-State: APjAAAVjdNCXA8u9bZjAe7acCb8fy8uHc9bJup0ZP+adDvO6/JAzfFVq
-        5QyoEV6BCqVHUN0mFopThgOyrseIRhKcYzwkcg==
-X-Google-Smtp-Source: APXvYqyQfvOnMUg4A6YlCf+5Uk3UhRnNI+FRe9Ei+U0WKO2ZEjIzOjqbEv8VKaVNXUB4GZ5R7ScuCd9eCddpc1VduXA=
-X-Received: by 2002:ac8:31b3:: with SMTP id h48mr4141137qte.300.1568994398652;
- Fri, 20 Sep 2019 08:46:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190907144541.16949-1-krzk@kernel.org> <20190912170145.GA17889@bogus>
- <CAJKOXPfsUw-+yRc=GF+t=1pE7D3dF_wpRUwZpmfLnRbDyEmKeQ@mail.gmail.com>
-In-Reply-To: <CAJKOXPfsUw-+yRc=GF+t=1pE7D3dF_wpRUwZpmfLnRbDyEmKeQ@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 20 Sep 2019 10:46:27 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLtQ4yYJJiUcBrje+6SKiaXTmF-Cej_=ykeWKO+9ytM4Q@mail.gmail.com>
-Message-ID: <CAL_JsqLtQ4yYJJiUcBrje+6SKiaXTmF-Cej_=ykeWKO+9ytM4Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Convert Samsung SoC watchdog
- bindings to json-schema
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
+        Fri, 20 Sep 2019 11:50:12 -0400
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.84]:26533 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403812AbfITPuM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 11:50:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1568994608;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=MnCEgfHZvgWsZRec/fRQjSxgJ/Izm/Pc0S5ceTXJhwY=;
+        b=PZeYjfQ5mmhG74JwVgMg2pc5DX+8oTIjCPFqCi/T9rZR/7U69JiLvvkge8WpL2yUbr
+        Kd24OSvrgqaLsg5scsbUjldf9l1OhnvKryMoHS+sBLMLLO7hFQ2Xme1FuaicCVt3+FV7
+        YQLziMfzf7z0pMvciW/Lh523MmNZoFwlG8A1w6if6vRVb6KSo5550fzMWtO8cGY8+51f
+        L2gbkFljGJxIm3AW1/yWAOzF1KkP4E7tlCUsvPplDHNsrdDszNfWjf26z4UzN05C8L8t
+        IrNHEWl7IYlQ9CBRaGBEaBUCe9wPwMKQwFeSbMd5wgeIqzAQAywyVeqtBjYm006oGLYx
+        lV4w==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGHPrpwDCpeWQ="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 44.27.0 DYNA|AUTH)
+        with ESMTPSA id u036f9v8KFo7pDC
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Fri, 20 Sep 2019 17:50:07 +0200 (CEST)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [Letux-kernel] [PATCH 2/2] DTS: ARM: gta04: introduce legacy spi-cs-high to make display work again
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20190920172947.51c1fdec@aktux>
+Date:   Fri, 20 Sep 2019 17:50:06 +0200
+Cc:     Discussions about the Letux Kernel <letux-kernel@openphoenux.org>,
+        Tony Lindgren <tony@atomide.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Rob Herring <robh@kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <96E62EC2-2A3E-4722-A9DE-3F320B0A98B0@goldelico.com>
+References: <20190724194259.GA25847@bogus> <2EA06398-E45B-481B-9A26-4DD2E043BF9C@goldelico.com> <CAL_JsqLe_Y9Z6MRt7ojgSVKAb9n95S8j=eGidSVNz2T83j-zPQ@mail.gmail.com> <CACRpkdY0AVnkRa8sV_Z54qfX9SYufvaYYhU0k2+LitXo0sLx2w@mail.gmail.com> <20190831084852.5e726cfa@aktux> <ED6A6797-D1F9-473B-ABFF-B6951A924BC1@goldelico.com> <CACRpkdZQgPVvB=78vOFsHe5n45Vwe4N6JJOcm1_vz5FbAw9CYA@mail.gmail.com> <1624298A-C51B-418A-96C3-EA09367A010D@goldelico.com> <CACRpkdZvpPOM1Ug-=GHf7Z-2VEbJz3Cuo7+0yDFuNm5ShXK8=Q@mail.gmail.com> <7DF102BC-C818-4D27-988F-150C7527E6CC@goldelico.com> <20190920142059.GO5610@atomide.com> <633E7AD9-A909-4619-BBD7-8CFD965FDFF7@goldelico.com> <20190920172947.51c1fdec@aktux>
+To:     Andreas Kemnade <andreas@kemnade.info>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 6:26 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> On Fri, 13 Sep 2019 at 16:36, Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Sat, Sep 07, 2019 at 04:45:40PM +0200, Krzysztof Kozlowski wrote:
-> > > Convert Samsung S3C/S5P/Exynos watchdog bindings to DT schema format
-> > > using json-schema.
-> > >
-> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > > ---
-> > >  .../bindings/watchdog/samsung-wdt.txt         | 35 ----------
-> > >  .../bindings/watchdog/samsung-wdt.yaml        | 69 +++++++++++++++++++
-> > >  2 files changed, 69 insertions(+), 35 deletions(-)
-> > >  delete mode 100644 Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
-> > >  create mode 100644 Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml
-> >
-> >
-> > > diff --git a/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml b/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml
-> > > new file mode 100644
-> > > index 000000000000..39f1ca3bc4db
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml
-> > > @@ -0,0 +1,69 @@
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/watchdog/samsung-wdt.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Samsung SoC Watchdog Timer Controller
-> > > +
-> > > +maintainers:
-> > > +  - Krzysztof Kozlowski <krzk@kernel.org>
-> > > +
-> > > +description: |+
-> > > +  The Samsung's Watchdog controller is used for resuming system operation
-> > > +  after a preset amount of time during which the WDT reset event has not
-> > > +  occurred.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    enum:
-> > > +      - samsung,s3c2410-wdt                   # for S3C2410
-> > > +      - samsung,s3c6410-wdt                   # for S3C6410, S5PV210 and Exynos4
-> > > +      - samsung,exynos5250-wdt                # for Exynos5250
-> > > +      - samsung,exynos5420-wdt                # for Exynos5420
-> > > +      - samsung,exynos7-wdt                   # for Exynos7
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  interrupts:
-> > > +    maxItems: 1
-> > > +
-> > > +  samsung,syscon-phandle:
-> > > +    $ref: '/schemas/types.yaml#/definitions/phandle'
-> > > +    description:
-> > > +      Phandle to the PMU system controller node (in case of Exynos5250
-> > > +      and Exynos5420).
-> > > +
-> > > +  timeout-sec:
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > +    description:
-> > > +      Watchdog timeout in seconds.
-> >
-> > We need a common schema for this and the node name.
->
-> Common schema in dt-schema or in Linux kernel bindings? If the latter,
-> I can add it.
 
-In the kernel is fine.
+> Am 20.09.2019 um 17:29 schrieb Andreas Kemnade <andreas@kemnade.info>:
+>=20
+> On Fri, 20 Sep 2019 16:54:18 +0200
+> "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
+>=20
+>>> Am 20.09.2019 um 16:20 schrieb Tony Lindgren <tony@atomide.com>:
+>>>=20
+>>> * H. Nikolaus Schaller <hns@goldelico.com> [190920 09:19]: =20
+>>>>> Am 20.09.2019 um 10:55 schrieb Linus Walleij =
+<linus.walleij@linaro.org>:
+>>>>> I suggest to go both way:
+>>>>> apply this oneliner and tag for stable so that GTA04 works
+>>>>> again.
+>>>>>=20
+>>>>> Then for the next kernel think about a possible more abitious
+>>>>> whitelist solution and after adding that remove *all* =
+"spi-cs-high"
+>>>>> flags from all device trees in the kernel after fixing them
+>>>>> all up. =20
+>>>>=20
+>>>> Ok, that looks like a viable path. =20
+>>>=20
+>>> Please repost the oneline so people can ack easily. At least
+>>> I've already lost track of this thread. =20
+>>=20
+>> It is all here:
+>>=20
+>> https://patchwork.kernel.org/patch/11035253/
+>>=20
+> It is the full one (incl. documentation), not the oneline and does not
+> apply.
 
-Rob
+Looks as if it was sitting too long in the queue and linux-next has =
+changed
+the basis in the meantime, while v5.3 has not yet.
+
+Documentation/devicetree/bindings/spi/spi-bus.txt -> spi-controller.yaml
+
+So it should still apply for v5.3.1 and earlier and we need both =
+versions.
+One for stable and one for linux-next. I don't know how to handle such =
+cases.
+
+BR,
+Nikolaus
+
