@@ -2,122 +2,96 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC35C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 11:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A595C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 11:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79D862086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 11:58:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36DD32086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 11:58:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iemKs8ut"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408804AbfITL6H (ORCPT
+        id S2408818AbfITL6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 07:58:07 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:46996 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404368AbfITL6H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 07:58:07 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 4CA721C0E8ACA61F84EB;
-        Fri, 20 Sep 2019 19:58:02 +0800 (CST)
-Received: from [127.0.0.1] (10.133.217.137) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Fri, 20 Sep 2019
- 19:57:59 +0800
-Subject: Re: [PATCH 07/32] x86: Use pr_warn instead of pr_warning
-To:     Robert Richter <rric@kernel.org>
-CC:     Joe Perches <joe@perches.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Alexei Starovoitov" <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Petr Mladek <pmladek@suse.com>, Arnd Bergmann <arnd@arndb.de>,
-        <linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>
-References: <20190920062544.180997-1-wangkefeng.wang@huawei.com>
- <20190920062544.180997-8-wangkefeng.wang@huawei.com>
- <20190920092850.26usohzmatmqrlor@rric.localdomain>
-From:   Kefeng Wang <wangkefeng.wang@huawei.com>
-Message-ID: <7a517b43-7e86-79ba-5954-dd746c309c87@huawei.com>
-Date:   Fri, 20 Sep 2019 19:57:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 20 Sep 2019 07:58:15 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:46664 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404368AbfITL6O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 07:58:14 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8KBwA4L065674;
+        Fri, 20 Sep 2019 06:58:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568980690;
+        bh=ey0viNTdU+GzdBNr4SUzMtQl3KW8nudMOoaA604+7+c=;
+        h=From:To:CC:Subject:Date;
+        b=iemKs8utd2aXKzYUao7FtZRIt5BpxxYouOflH1fVpdtG1gVit9CBNUu35AFfC0sfr
+         no4ngcqEW9dYhOil8BkoKUV0yjYYZkgaBCA5jj/rfrEwM3WFzoNd7ErQvEWyMHNSK8
+         fQ8rxpKb5cSoQxrEicQF1SLh2E1IY5mnbf/Gr3To=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8KBwAQk098944
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 20 Sep 2019 06:58:10 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 20
+ Sep 2019 06:58:09 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 20 Sep 2019 06:58:10 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8KBw9ZA115013;
+        Fri, 20 Sep 2019 06:58:09 -0500
+From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <dmurphy@ti.com>
+CC:     <tomi.valkeinen@ti.com>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Jean-Jacques Hiblot <jjhiblot@ti.com>
+Subject: [PATCH v4 0/2] leds: tlc591xx: switch to managed LED registration
+Date:   Fri, 20 Sep 2019 13:58:04 +0200
+Message-ID: <20190920115806.14475-1-jjhiblot@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20190920092850.26usohzmatmqrlor@rric.localdomain>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.133.217.137]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This subject of this series used to be "leds: tlc591xx: switch to OF and
+managed API"
 
-On 2019/9/20 17:28, Robert Richter wrote:
-> On 20.09.19 14:25:19, Kefeng Wang wrote:
->> As said in commit f2c2cbcc35d4 ("powerpc: Use pr_warn instead of
->> pr_warning"), removing pr_warning so all logging messages use a
->> consistent <prefix>_warn style. Let's do it.
->>
->> Cc: Ingo Molnar <mingo@redhat.com>
->> Cc: Borislav Petkov <bp@alien8.de>
->> Cc: "H. Peter Anvin" <hpa@zytor.com>
->> Cc: Robert Richter <rric@kernel.org>
->> Cc: Darren Hart <dvhart@infradead.org>
->> Cc: Andy Shevchenko <andy@infradead.org>
->> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
->> ---
->>  arch/x86/kernel/amd_gart_64.c          | 11 ++++---
->>  arch/x86/kernel/apic/apic.c            | 41 ++++++++++++--------------
->>  arch/x86/kernel/setup_percpu.c         |  4 +--
->>  arch/x86/kernel/tboot.c                | 15 +++++-----
->>  arch/x86/kernel/tsc_sync.c             |  8 ++---
->>  arch/x86/kernel/umip.c                 |  6 ++--
->>  arch/x86/mm/kmmio.c                    |  7 ++---
->>  arch/x86/mm/mmio-mod.c                 |  6 ++--
->>  arch/x86/mm/numa_emulation.c           |  4 +--
->>  arch/x86/mm/testmmiotrace.c            |  6 ++--
->>  arch/x86/oprofile/op_x86_model.h       |  6 ++--
-> For oprofile:
->
-> Acked-by: Robert Richter <rric@kernel.org>
->
-> But see below:
->
->>  arch/x86/platform/olpc/olpc-xo15-sci.c |  2 +-
->>  arch/x86/platform/sfi/sfi.c            |  3 +-
->>  arch/x86/xen/setup.c                   |  2 +-
->>  14 files changed, 57 insertions(+), 64 deletions(-)
->>
->> diff --git a/arch/x86/kernel/amd_gart_64.c b/arch/x86/kernel/amd_gart_64.c
->> index a585ea6f686a..53545c9c7cad 100644
->> --- a/arch/x86/kernel/amd_gart_64.c
->> +++ b/arch/x86/kernel/amd_gart_64.c
->> @@ -665,7 +664,7 @@ static __init int init_amd_gatt(struct agp_kern_info *info)
->>  
->>   nommu:
->>  	/* Should not happen anymore */
->> -	pr_warning("PCI-DMA: More than 4GB of RAM and no IOMMU\n"
->> +	pr_warn("PCI-DMA: More than 4GB of RAM and no IOMMU\n"
->>  	       "falling back to iommu=soft.\n");
-> This indentation should be fixed too, while at it.
-Will update later, thanks.
->
->>  	return -1;
->>  }
-> -Robert
->
-> .
->
+This mini-series updates the tlc591xx driver to use the managed API. The
+driver is also modified to pass the initialization data to the LED core
+layer. The goal is to be able to the generic led-backlight [0] driver on
+top of it.
+
+changes in v4:
+- rebased on top of linux-leds/for-5.5
+
+changes in v3:
+- rebased on top of linux-leds/for-next
+- use devm_led_classdev_register_ext() instead of the late
+  devm_of_led_classdev_register()
+- let the LED core assign the names of the LEDs
+
+changes in v2:
+- fixed LED indexing. Previous version did not allow for holes: if n LEDs
+  were used, they had to be led(0) to led(n-1)
+Jean-Jacques Hiblot (2):
+  leds: tlc591xx: simplify driver by using the managed led API
+  leds: tlc591xx: use devm_led_classdev_register_ext()
+
+ drivers/leds/leds-tlc591xx.c | 88 ++++++++++--------------------------
+ 1 file changed, 25 insertions(+), 63 deletions(-)
+
+-- 
+2.17.1
 
