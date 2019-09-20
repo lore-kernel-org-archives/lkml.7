@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40989C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 723ACC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:32:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15558207E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:32:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F964207E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:32:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391076AbfITOcX (ORCPT
+        id S2390119AbfITOc3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:32:23 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36560 "EHLO
+        Fri, 20 Sep 2019 10:32:29 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36538 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388308AbfITOZL (ORCPT
+        by vger.kernel.org with ESMTP id S2388302AbfITOZL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Sep 2019 10:25:11 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqP-0004xe-2O; Fri, 20 Sep 2019 15:25:09 +0100
+        id 1iBJqO-0004y2-Vb; Fri, 20 Sep 2019 15:25:09 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqF-0007vZ-VH; Fri, 20 Sep 2019 15:24:59 +0100
+        id 1iBJqG-0007ve-0n; Fri, 20 Sep 2019 15:25:00 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Mario Limonciello" <mario.limonciello@dell.com>,
+        "Kees Cook" <keescook@chromium.org>,
         "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
-        "Dan Carpenter" <dan.carpenter@oracle.com>
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.837758257@decadent.org.uk>
+Message-ID: <lsq.1568989415.805533588@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 087/132] platform/x86: alienware-wmi: printing the
- wrong error code
+Subject: [PATCH 3.16 088/132] platform/x86: sony-laptop: Fix unintentional
+ fall-through
 In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,32 +57,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-commit 6d1f8b3d75419a8659ac916a1e9543bb3513a882 upstream.
+commit 1cbd7a64959d33e7a2a1fa2bf36a62b350a9fcbd upstream.
 
-The "out_data" variable is uninitialized at the point.  Originally, this
-used to print "status" instead and that seems like the correct thing to
-print.
+It seems that the default case should return AE_CTRL_TERMINATE, instead
+of falling through to case ACPI_RESOURCE_TYPE_END_TAG and returning AE_OK;
+otherwise the line of code at the end of the function is unreachable and
+makes no sense:
 
-Fixes: bc2ef884320b ("alienware-wmi: For WMAX HDMI method, introduce a way to query HDMI cable status")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
+return AE_CTRL_TERMINATE;
+
+This fix is based on the following thread of discussion:
+
+https://lore.kernel.org/patchwork/patch/959782/
+
+Fixes: 33a04454527e ("sony-laptop: Add SNY6001 device handling (sonypi reimplementation)")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/platform/x86/alienware-wmi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/sony-laptop.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/drivers/platform/x86/alienware-wmi.c
-+++ b/drivers/platform/x86/alienware-wmi.c
-@@ -494,7 +494,7 @@ static ssize_t show_hdmi_source(struct d
- 			return scnprintf(buf, PAGE_SIZE,
- 					 "input [gpu] unknown\n");
+--- a/drivers/platform/x86/sony-laptop.c
++++ b/drivers/platform/x86/sony-laptop.c
+@@ -4401,14 +4401,16 @@ sony_pic_read_possible_resource(struct a
+ 			}
+ 			return AE_OK;
+ 		}
++
++	case ACPI_RESOURCE_TYPE_END_TAG:
++		return AE_OK;
++
+ 	default:
+ 		dprintk("Resource %d isn't an IRQ nor an IO port\n",
+ 			resource->type);
++		return AE_CTRL_TERMINATE;
+ 
+-	case ACPI_RESOURCE_TYPE_END_TAG:
+-		return AE_OK;
  	}
--	pr_err("alienware-wmi: unknown HDMI source status: %d\n", out_data);
-+	pr_err("alienware-wmi: unknown HDMI source status: %u\n", status);
- 	return scnprintf(buf, PAGE_SIZE, "input gpu [unknown]\n");
+-	return AE_CTRL_TERMINATE;
  }
  
+ static int sony_pic_possible_resources(struct acpi_device *device)
 
