@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F3E6C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95528C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A2EA2086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B523206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:30:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390712AbfITOa2 (ORCPT
+        id S2390874AbfITOau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:30:28 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36942 "EHLO
+        Fri, 20 Sep 2019 10:30:50 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36930 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388413AbfITOZR (ORCPT
+        by vger.kernel.org with ESMTP id S2388406AbfITOZR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Sep 2019 10:25:17 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqT-0004y7-Ft; Fri, 20 Sep 2019 15:25:13 +0100
+        id 1iBJqT-00051H-LW; Fri, 20 Sep 2019 15:25:13 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqE-0007u2-V8; Fri, 20 Sep 2019 15:24:58 +0100
+        id 1iBJqE-0007sp-FO; Fri, 20 Sep 2019 15:24:58 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Oliver Neukum" <oneukum@suse.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Ladislav Michl" <ladis@linux-mips.org>
+        "Ben Skeggs" <skeggsb@gmail.com>, nouveau@lists.freedesktop.org,
+        "Lyude Paul" <lyude@redhat.com>,
+        "Karol Herbst" <kherbst@redhat.com>,
+        "Bjorn Helgaas" <bhelgaas@google.com>,
+        dri-devel@lists.freedesktop.org
 Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.515677026@decadent.org.uk>
+Message-ID: <lsq.1568989415.980827164@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 068/132] cdc-acm: handle read pipe errors
+Subject: [PATCH 3.16 053/132] PCI: Reset Lenovo ThinkPad P50 nvgpu at boot
+ if necessary
 In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,150 +59,151 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ladislav Michl <ladis@linux-mips.org>
+From: Lyude Paul <lyude@redhat.com>
 
-commit 1aba579f3cf51fd0fe0b4d46cc13823fd1200acb upstream.
+commit e0547c81bfcfad01cbbfa93a5e66bb98ab932f80 upstream.
 
-Read urbs are submitted back only on success, causing read pipe
-running out of urbs after few errors. No more characters can
-be read from tty device then until it is reopened and no errors
-are reported.
-Fix that by always submitting urbs back and clearing stall on
--EPIPE.
+On ThinkPad P50 SKUs with an Nvidia Quadro M1000M instead of the M2000M
+variant, the BIOS does not always reset the secondary Nvidia GPU during
+reboot if the laptop is configured in Hybrid Graphics mode.  The reason is
+unknown, but the following steps and possibly a good bit of patience will
+reproduce the issue:
 
-Signed-off-by: Ladislav Michl <ladis@linux-mips.org>
-Acked-by: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-[bwh: Backported to 3.16: adjust context]
+  1. Boot up the laptop normally in Hybrid Graphics mode
+  2. Make sure nouveau is loaded and that the GPU is awake
+  3. Allow the Nvidia GPU to runtime suspend itself after being idle
+  4. Reboot the machine, the more sudden the better (e.g. sysrq-b may help)
+  5. If nouveau loads up properly, reboot the machine again and go back to
+     step 2 until you reproduce the issue
+
+This results in some very strange behavior: the GPU will be left in exactly
+the same state it was in when the previously booted kernel started the
+reboot.  This has all sorts of bad side effects: for starters, this
+completely breaks nouveau starting with a mysterious EVO channel failure
+that happens well before we've actually used the EVO channel for anything:
+
+  nouveau 0000:01:00.0: disp: chid 0 mthd 0000 data 00000400 00001000 00000002
+
+This causes a timeout trying to bring up the GR ctx:
+
+  nouveau 0000:01:00.0: timeout
+  WARNING: CPU: 0 PID: 12 at drivers/gpu/drm/nouveau/nvkm/engine/gr/ctxgf100.c:1547 gf100_grctx_generate+0x7b2/0x850 [nouveau]
+  Hardware name: LENOVO 20EQS64N0B/20EQS64N0B, BIOS N1EET82W (1.55 ) 12/18/2018
+  Workqueue: events_long drm_dp_mst_link_probe_work [drm_kms_helper]
+  ...
+  nouveau 0000:01:00.0: gr: wait for idle timeout (en: 1, ctxsw: 0, busy: 1)
+  nouveau 0000:01:00.0: gr: wait for idle timeout (en: 1, ctxsw: 0, busy: 1)
+  nouveau 0000:01:00.0: fifo: fault 01 [WRITE] at 0000000000008000 engine 00 [GR] client 15 [HUB/SCC_NB] reason c4 [] on channel -1 [0000000000 unknown]
+
+The GPU never manages to recover.  Booting without loading nouveau causes
+issues as well, since the GPU starts sending spurious interrupts that cause
+other device's IRQs to get disabled by the kernel:
+
+  irq 16: nobody cared (try booting with the "irqpoll" option)
+  ...
+  handlers:
+  [<000000007faa9e99>] i801_isr [i2c_i801]
+  Disabling IRQ #16
+  ...
+  serio: RMI4 PS/2 pass-through port at rmi4-00.fn03
+  i801_smbus 0000:00:1f.4: Timeout waiting for interrupt!
+  i801_smbus 0000:00:1f.4: Transaction timeout
+  rmi4_f03 rmi4-00.fn03: rmi_f03_pt_write: Failed to write to F03 TX register (-110).
+  i801_smbus 0000:00:1f.4: Timeout waiting for interrupt!
+  i801_smbus 0000:00:1f.4: Transaction timeout
+  rmi4_physical rmi4-00: rmi_driver_set_irq_bits: Failed to change enabled interrupts!
+
+This causes the touchpad and sometimes other things to get disabled.
+
+Since this happens without nouveau, we can't fix this problem from nouveau
+itself.
+
+Add a PCI quirk for the specific P50 variant of this GPU.  Make sure the
+GPU is advertising NoReset- so we don't reset the GPU when the machine is
+in Dedicated graphics mode (where the GPU being initialized by the BIOS is
+normal and expected).  Map the GPU MMIO space and read the magic 0x2240c
+register, which will have bit 1 set if the device was POSTed during a
+previous boot.  Once we've confirmed all of this, reset the GPU and
+re-disable it - bringing it back to a healthy state.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=203003
+Link: https://lore.kernel.org/lkml/20190212220230.1568-1-lyude@redhat.com
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Cc: nouveau@lists.freedesktop.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: Karol Herbst <kherbst@redhat.com>
+Cc: Ben Skeggs <skeggsb@gmail.com>
+[bwh: Backported to 3.16:
+ - Use dev_{err,info}() instead of pci_{err,info}()
+ - Adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/class/cdc-acm.c | 60 ++++++++++++++++++++++++++++++-------
- drivers/usb/class/cdc-acm.h |  3 ++
- 2 files changed, 53 insertions(+), 10 deletions(-)
+ drivers/pci/quirks.c | 58 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
 
---- a/drivers/usb/class/cdc-acm.c
-+++ b/drivers/usb/class/cdc-acm.c
-@@ -424,29 +424,41 @@ static void acm_read_bulk_callback(struc
- 	dev_vdbg(&acm->data->dev, "%s - urb %d, len %d\n", __func__,
- 					rb->index, urb->actual_length);
- 
-+	set_bit(rb->index, &acm->read_urbs_free);
-+
- 	if (!acm->dev) {
--		set_bit(rb->index, &acm->read_urbs_free);
- 		dev_dbg(&acm->data->dev, "%s - disconnected\n", __func__);
- 		return;
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -3900,3 +3900,61 @@ void pci_dev_specific_enable_acs(struct
+ 		}
  	}
- 
--	if (urb->status) {
--		set_bit(rb->index, &acm->read_urbs_free);
--		dev_dbg(&acm->data->dev, "%s - non-zero urb status: %d\n",
--							__func__, status);
--		if ((urb->status != -ENOENT) || (urb->actual_length == 0))
--			return;
-+	switch (status) {
-+	case 0:
-+		usb_mark_last_busy(acm->dev);
-+		acm_process_read_urb(acm, urb);
-+		break;
-+	case -EPIPE:
-+		set_bit(EVENT_RX_STALL, &acm->flags);
-+		schedule_work(&acm->work);
-+		return;
-+	case -ENOENT:
-+	case -ECONNRESET:
-+	case -ESHUTDOWN:
-+		dev_dbg(&acm->data->dev,
-+			"%s - urb shutting down with status: %d\n",
-+			__func__, status);
-+		return;
-+	default:
-+		dev_dbg(&acm->data->dev,
-+			"%s - nonzero urb status received: %d\n",
-+			__func__, status);
-+		break;
- 	}
- 
--	usb_mark_last_busy(acm->dev);
--
--	acm_process_read_urb(acm, urb);
- 	/*
- 	 * Unthrottle may run on another CPU which needs to see events
- 	 * in the same order. Submission has an implict barrier
- 	 */
- 	smp_mb__before_atomic();
--	set_bit(rb->index, &acm->read_urbs_free);
- 
- 	/* throttle device if requested by tty */
- 	spin_lock_irqsave(&acm->read_lock, flags);
-@@ -476,16 +488,32 @@ static void acm_write_bulk(struct urb *u
- 	spin_lock_irqsave(&acm->write_lock, flags);
- 	acm_write_done(acm, wb);
- 	spin_unlock_irqrestore(&acm->write_lock, flags);
-+	set_bit(EVENT_TTY_WAKEUP, &acm->flags);
- 	schedule_work(&acm->work);
  }
- 
- static void acm_softint(struct work_struct *work)
- {
-+	int i;
- 	struct acm *acm = container_of(work, struct acm, work);
- 
- 	dev_vdbg(&acm->data->dev, "%s\n", __func__);
- 
--	tty_port_tty_wakeup(&acm->port);
-+	if (test_bit(EVENT_RX_STALL, &acm->flags)) {
-+		if (!(usb_autopm_get_interface(acm->data))) {
-+			for (i = 0; i < acm->rx_buflimit; i++)
-+				usb_kill_urb(acm->read_urbs[i]);
-+			usb_clear_halt(acm->dev, acm->in);
-+			acm_submit_read_urbs(acm, GFP_KERNEL);
-+			usb_autopm_put_interface(acm->data);
-+		}
-+		clear_bit(EVENT_RX_STALL, &acm->flags);
-+	}
 +
-+	if (test_bit(EVENT_TTY_WAKEUP, &acm->flags)) {
-+		tty_port_tty_wakeup(&acm->port);
-+		clear_bit(EVENT_TTY_WAKEUP, &acm->flags);
-+	}
- }
- 
- /*
-@@ -1680,6 +1708,15 @@ static int acm_reset_resume(struct usb_i
- 
- #endif /* CONFIG_PM */
- 
-+static int acm_pre_reset(struct usb_interface *intf)
++/*
++ * On Lenovo Thinkpad P50 SKUs with a Nvidia Quadro M1000M, the BIOS does
++ * not always reset the secondary Nvidia GPU between reboots if the system
++ * is configured to use Hybrid Graphics mode.  This results in the GPU
++ * being left in whatever state it was in during the *previous* boot, which
++ * causes spurious interrupts from the GPU, which in turn causes us to
++ * disable the wrong IRQ and end up breaking the touchpad.  Unsurprisingly,
++ * this also completely breaks nouveau.
++ *
++ * Luckily, it seems a simple reset of the Nvidia GPU brings it back to a
++ * clean state and fixes all these issues.
++ *
++ * When the machine is configured in Dedicated display mode, the issue
++ * doesn't occur.  Fortunately the GPU advertises NoReset+ when in this
++ * mode, so we can detect that and avoid resetting it.
++ */
++static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
 +{
-+	struct acm *acm = usb_get_intfdata(intf);
++	void __iomem *map;
++	int ret;
 +
-+	clear_bit(EVENT_RX_STALL, &acm->flags);
++	if (pdev->subsystem_vendor != PCI_VENDOR_ID_LENOVO ||
++	    pdev->subsystem_device != 0x222e ||
++	    !pdev->reset_fn)
++		return;
 +
-+	return 0;
++	if (pci_enable_device_mem(pdev))
++		return;
++
++	/*
++	 * Based on nvkm_device_ctor() in
++	 * drivers/gpu/drm/nouveau/nvkm/engine/device/base.c
++	 */
++	map = pci_iomap(pdev, 0, 0x23000);
++	if (!map) {
++		dev_err(&pdev->dev, "Can't map MMIO space\n");
++		goto out_disable;
++	}
++
++	/*
++	 * Make sure the GPU looks like it's been POSTed before resetting
++	 * it.
++	 */
++	if (ioread32(map + 0x2240c) & 0x2) {
++		dev_info(&pdev->dev, FW_BUG "GPU left initialized by EFI, resetting\n");
++		ret = pci_reset_function(pdev);
++		if (ret < 0)
++			dev_err(&pdev->dev, "Failed to reset GPU: %d\n", ret);
++	}
++
++	iounmap(map);
++out_disable:
++	pci_disable_device(pdev);
 +}
-+
- #define NOKIA_PCSUITE_ACM_INFO(x) \
- 		USB_DEVICE_AND_INTERFACE_INFO(0x0421, x, \
- 		USB_CLASS_COMM, USB_CDC_SUBCLASS_ACM, \
-@@ -1955,6 +1992,7 @@ static struct usb_driver acm_driver = {
- 	.resume =	acm_resume,
- 	.reset_resume =	acm_reset_resume,
- #endif
-+	.pre_reset =	acm_pre_reset,
- 	.id_table =	acm_ids,
- #ifdef CONFIG_PM
- 	.supports_autosuspend = 1,
---- a/drivers/usb/class/cdc-acm.h
-+++ b/drivers/usb/class/cdc-acm.h
-@@ -102,6 +102,9 @@ struct acm {
- 	spinlock_t write_lock;
- 	struct mutex mutex;
- 	bool disconnected;
-+	unsigned long flags;
-+#		define EVENT_TTY_WAKEUP	0
-+#		define EVENT_RX_STALL	1
- 	struct usb_cdc_line_coding line;		/* bits, stop, parity */
- 	struct work_struct work;			/* work queue entry for line discipline waking up */
- 	unsigned int ctrlin;				/* input control lines (DCD, DSR, RI, break, overruns) */
++DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
++			      PCI_CLASS_DISPLAY_VGA, 8,
++			      quirk_reset_lenovo_thinkpad_p50_nvgpu);
 
