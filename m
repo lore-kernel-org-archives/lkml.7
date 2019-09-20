@@ -2,150 +2,180 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F6CC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 02:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A48C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 02:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C280214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 02:47:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9188214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 02:48:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394754AbfITCrf (ORCPT
+        id S2394759AbfITCsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 22:47:35 -0400
-Received: from mga07.intel.com ([134.134.136.100]:57115 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392034AbfITCrf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 22:47:35 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Sep 2019 19:47:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,527,1559545200"; 
-   d="scan'208";a="194571188"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 19 Sep 2019 19:47:32 -0700
-Received: from [10.226.39.42] (unknown [10.226.39.42])
-        by linux.intel.com (Postfix) with ESMTP id 2798F5802A3;
-        Thu, 19 Sep 2019 19:47:29 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] reset: Reset controller driver for Intel LGM SoC
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        p.zabel@pengutronix.de
-Cc:     "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>,
-        cheol.yong.kim@intel.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, qi-ming.wu@intel.com,
-        robh@kernel.org, Hauke Mehrtens <hauke@hauke-m.de>
-References: <90cc600d6f7ded68f5a618b626bd9cffa5edf5c3.1566531960.git.eswara.kota@linux.intel.com>
- <48b90943-e23d-a27a-c743-f321345c9151@linux.intel.com>
- <CAFBinCD1oKxYm8QD7XfZUWq_HC5A4GLMmLCnZrcRvpTxrKo30w@mail.gmail.com>
- <19719490-178a-18fd-64f2-f77d955897f7@linux.intel.com>
- <CAFBinCDmi4HN4Ayg4T8aKUeu4hrUmVQ+z-hTN-6XMhiOCUcHjg@mail.gmail.com>
- <34336c9a-8e87-8f84-2ae8-032b7967928f@linux.intel.com>
- <CAFBinCDfM3ssHisMBKXZUFkfoAFw51TaUuKt_aBgtD-mN+9fhg@mail.gmail.com>
- <657d796d-cb1b-472d-fe67-f7b9bf12fd79@linux.intel.com>
- <CAFBinCA5sRp1-siqZqJzFL2nuD3BtjrbD65QtpWbnTgtPNXY1A@mail.gmail.com>
- <cebd8f1d-90ab-87e7-9a34-f5c760688ce5@linux.intel.com>
- <CAFBinCCXo50OX6=8Fz-=nRKuELU_fMOCX=z6iwAcw0_Tfgn1ug@mail.gmail.com>
- <da347f1c-864c-7d68-33c8-045e46651f45@linux.intel.com>
- <CAFBinCDhLYmiORvHdZJAN5cuUjc6eWJK5n9Qg26B0dEhhqUqVQ@mail.gmail.com>
- <389f360a-a993-b9a8-4b50-ad87bcfec767@linux.intel.com>
- <CAFBinCBwrTajCrSf-UqZY5gHqUSn0UTmbc_TLPNVZrPyY5jpOA@mail.gmail.com>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <62697250-d2c2-87d5-6206-aac3f6fc2be7@linux.intel.com>
-Date:   Fri, 20 Sep 2019 10:47:28 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        Thu, 19 Sep 2019 22:48:01 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46748 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389923AbfITCsA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 22:48:00 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8K2kRkV084893;
+        Thu, 19 Sep 2019 22:47:44 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v4mdy2upv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 Sep 2019 22:47:44 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8K2imak025454;
+        Fri, 20 Sep 2019 02:47:43 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+        by ppma01wdc.us.ibm.com with ESMTP id 2v3vbttfby-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 20 Sep 2019 02:47:43 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8K2lgpV53018918
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 20 Sep 2019 02:47:42 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8E9D3AE060;
+        Fri, 20 Sep 2019 02:47:42 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8A223AE05C;
+        Fri, 20 Sep 2019 02:47:41 +0000 (GMT)
+Received: from LeoBras (unknown [9.85.172.122])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 20 Sep 2019 02:47:41 +0000 (GMT)
+Message-ID: <5af478e1da6c0b847fbaf3aff6ccce5720e8a23c.camel@linux.ibm.com>
+Subject: Re: [PATCH 1/1] powerpc: kvm: Reduce calls to get current->mm by
+ storing the value locally
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     PaulMackerras <paulus@samba.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 19 Sep 2019 23:47:36 -0300
+In-Reply-To: <20190919222748.20761-1-leonardo@linux.ibm.com>
+References: <20190919222748.20761-1-leonardo@linux.ibm.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-rctJ8lPs1EJcH0JFR0tD"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-In-Reply-To: <CAFBinCBwrTajCrSf-UqZY5gHqUSn0UTmbc_TLPNVZrPyY5jpOA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-19_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=849 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909200030
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Martin,
 
-On 9/20/2019 3:51 AM, Martin Blumenstingl wrote:
-> Hi Dilip,
->
-> (sorry for the late reply)
->
-> On Thu, Sep 12, 2019 at 8:38 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
-> [...]
->> The major difference between the vrx200 and lgm is:
->> 1.) RCU in vrx200 is having multiple register regions wheres RCU in lgm
->> has one single register region.
->> 2.) Register offsets and bit offsets are different.
->>
->> So enhancing the intel-reset-syscon.c to provide compatibility/support
->> for vrx200.
->> Please check the below dtsi binding proposal and let me know your view.
->>
->> rcu0:reset-controller@00000000 {
->>       compatible= "intel,rcu-lgm";
->>       reg = <0x0000000 0x80000>, <reg_set2 size>, <reg_set3 size>,
->> <reg_set4 size>;
-> I'm not sure that I understand what are reg_set2/3/4 for
-> the first resource (0x80000 at 0x0) already covers the whole LGM RCU,
-> so what is the purpose of the other register resources
-Yes, as you said the first register resource is enough for LGM RCU as 
-registers are at one single region. Whereas in older SoCs RCU registers 
-are at different regions, so for that reason reg_set2/3/4 are used.
+--=-rctJ8lPs1EJcH0JFR0tD
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Driver will decide in reading the no. of register resources based on the 
-"struct of_device_id".
+Hello Paul,=20
+I sent this patch, but I have a question:
 
-Regards,
-Dilip
->
->>      intel,global-reset = <0x10 30>;
->>      #reset-cells = <3>;
->> };
->>
->> "#reset-cells":
->>     const:3
->>     description: |
->>       The 1st cell is the reset register offset.
->>       The 2nd cell is the reset set bit offset.
->>       The 3rd cell is the reset status bit offset.
-> I think this will work fine for VRX200 (and even older SoCs)
-> as you have described in your previous emails we can determine the
-> status offset from the reset offset using a simple if/else
->
-> for LGM I like your initial suggestion with #reset-cells = <2> because
-> it's easier to read and write.
->
->> Reset driver takes care of parsing the register address "reg" as per the
->> ".data" structure in struct of_device_id.
->> Reset driver takes care of traversing the status register offset.
-> the differentiation between two and three #reset-cells can also happen
-> based on the struct of_device_id:
-> - the LGM implementation would simply also use the reset bit as status
-> bit (only two cells are needed)
-> - the implementation for earlier SoCs would parse the third cell and
-> use that as status bit
->
-> Philipp, can you please share your opinion on how to move forward with
-> the reset-intel driver from this series?
-> The reset_control_ops from the reset-intel driver are (in my opinion)
-> a bug-fixed and improved version of what we already have in
-> drivers/reset/reset-lantiq.c. The driver is NOT simply copy and paste
-> because the register layout was greatly simplified for the newer SoCs
-> (for which there is reset-intel) compared to the older ones
-> (reset-lantiq).
-> Dilip's suggestion (in my own words) is that you take his new
-> reset-intel driver, then we will work on porting reset-lantiq over to
-> that so in the end we can drop the reset-lantiq driver. This approach
-> means more work for me (as I am probably the one who then has to do
-> the work to port reset-lantiq over to reset-intel). I'm happy to do
-> that work if you think that it's worth following this approach.
-> So I want your opinion on this before I spend any effort on porting
-> reset-lantiq over to reset-intel.
->
->
-> Martin
+On Thu, 2019-09-19 at 19:27 -0300, Leonardo Bras wrote:
+> Reduces the number of calls to get_current() in order to get the value of
+> current->mm by doing it once and storing the value, since it is not
+> supposed to change inside the same process).
+>=20
+> Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
+> ---
+>  arch/powerpc/kvm/book3s_64_mmu_hv.c | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/arch/powerpc/kvm/book3s_64_mmu_hv.c b/arch/powerpc/kvm/book3=
+s_64_mmu_hv.c
+> index 9a75f0e1933b..f2b9aea43216 100644
+> --- a/arch/powerpc/kvm/book3s_64_mmu_hv.c
+> +++ b/arch/powerpc/kvm/book3s_64_mmu_hv.c
+> @@ -508,6 +508,7 @@ int kvmppc_book3s_hv_page_fault(struct kvm_run *run, =
+struct kvm_vcpu *vcpu,
+>  	struct vm_area_struct *vma;
+>  	unsigned long rcbits;
+>  	long mmio_update;
+> +	struct mm_struct *mm;
+> =20
+>  	if (kvm_is_radix(kvm))
+>  		return kvmppc_book3s_radix_page_fault(run, vcpu, ea, dsisr);
+> @@ -584,6 +585,7 @@ int kvmppc_book3s_hv_page_fault(struct kvm_run *run, =
+struct kvm_vcpu *vcpu,
+>  	is_ci =3D false;
+>  	pfn =3D 0;
+>  	page =3D NULL;
+> +	mm =3D current->mm;
+
+Here, current->mm is not always the same as kvm->mm?=20
+
+>  	pte_size =3D PAGE_SIZE;
+>  	writing =3D (dsisr & DSISR_ISSTORE) !=3D 0;
+>  	/* If writing !=3D 0, then the HPTE must allow writing, if we get here =
+*/
+> @@ -592,8 +594,8 @@ int kvmppc_book3s_hv_page_fault(struct kvm_run *run, =
+struct kvm_vcpu *vcpu,
+>  	npages =3D get_user_pages_fast(hva, 1, writing ? FOLL_WRITE : 0, pages)=
+;
+>  	if (npages < 1) {
+>  		/* Check if it's an I/O mapping */
+> -		down_read(&current->mm->mmap_sem);
+> -		vma =3D find_vma(current->mm, hva);
+> +		down_read(&mm->mmap_sem);
+> +		vma =3D find_vma(mm, hva);
+>  		if (vma && vma->vm_start <=3D hva && hva + psize <=3D vma->vm_end &&
+>  		    (vma->vm_flags & VM_PFNMAP)) {
+>  			pfn =3D vma->vm_pgoff +
+> @@ -602,7 +604,7 @@ int kvmppc_book3s_hv_page_fault(struct kvm_run *run, =
+struct kvm_vcpu *vcpu,
+>  			is_ci =3D pte_ci(__pte((pgprot_val(vma->vm_page_prot))));
+>  			write_ok =3D vma->vm_flags & VM_WRITE;
+>  		}
+> -		up_read(&current->mm->mmap_sem);
+> +		up_read(&mm->mmap_sem);
+>  		if (!pfn)
+>  			goto out_put;
+>  	} else {
+> @@ -621,8 +623,7 @@ int kvmppc_book3s_hv_page_fault(struct kvm_run *run, =
+struct kvm_vcpu *vcpu,
+>  			 * hugepage split and collapse.
+>  			 */
+>  			local_irq_save(flags);
+> -			ptep =3D find_current_mm_pte(current->mm->pgd,
+> -						   hva, NULL, NULL);
+> +			ptep =3D find_current_mm_pte(mm->pgd, hva, NULL, NULL);
+>  			if (ptep) {
+>  				pte =3D kvmppc_read_update_linux_pte(ptep, 1);
+>  				if (__pte_write(pte))
+
+Thanks !
+
+--=-rctJ8lPs1EJcH0JFR0tD
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl2EPcgACgkQlQYWtz9S
+ttT92xAAlU6n/TDflKWVfsQt5/FJ3oTfcdrylpi8GIMzLpx5L3G7XRquJ/JEDBKe
+NyqID7oNkE1t3EV3jgazmSEnf6t03k33zM0K813pVGUhOXQMN7pHj3GMGtb7Tqji
+3PC+wN3IB+lH1quvhChiRQYYKnVSHgVZSI8T+dnmCklJJ3kSmIkr2t6IrIqZIShO
+24SJBGXSXtUspknpO3xkxs/CDMn7WoK24jIRrXkv/myInp2rrZG+9NCj1FnA7/4M
+TUXQ2tFCNQk5LHzx0wPS73Z8DqMGGb/goPxs7ODlGLgS+k7sQvz6OLGdAB7/C2kB
+CLDAHhUiSUArXjhv7hiigPZShnCQ0G0MWHjRY2CSHzP4kyoDnd9uQ9DW8zbuiY+D
+YKTbpXS8fYfUKIN3M26BUBWu7HeT6XtJ3rueSQ50VzZDLXeqq765r0Kl4vNdWmCj
+Vx4ZOazQG9OE8yPVfbzqIWAj+nCR9pHQIg98qqiaOw7sdjVyV9fuzuMO68/cAww5
+msZHyag7vcDWxR60I/I9f5k26aoUO+AMokGoPNKUASUZB3+xiHJEWxxhB21QzJXD
+K5STiGz0pyB7IOyGwoIItC/6mVTEIVLI4kqO0yYHbzigUtzWnr7rh9NsbvI5Yp4q
+UA8U8xwvzq4Atc0B+oejql+s6v0cZ7qQG0ah78bmwMXPLfmnu+E=
+=Hdjd
+-----END PGP SIGNATURE-----
+
+--=-rctJ8lPs1EJcH0JFR0tD--
+
