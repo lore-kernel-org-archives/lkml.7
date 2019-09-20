@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E5ABC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A01C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:34:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60C7B206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:34:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26F5C207E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:34:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391630AbfITOeF (ORCPT
+        id S2391653AbfITOeK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:34:05 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36276 "EHLO
+        Fri, 20 Sep 2019 10:34:10 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36292 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388200AbfITOZH (ORCPT
+        by vger.kernel.org with ESMTP id S2388214AbfITOZH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Sep 2019 10:25:07 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqK-000512-Kh; Fri, 20 Sep 2019 15:25:04 +0100
+        id 1iBJqK-00050x-RV; Fri, 20 Sep 2019 15:25:04 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqH-0007za-On; Fri, 20 Sep 2019 15:25:01 +0100
+        id 1iBJqH-0007zf-PR; Fri, 20 Sep 2019 15:25:01 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Kalle Valo" <kvalo@codeaurora.org>,
-        "Dan Carpenter" <dan.carpenter@oracle.com>
+        "Jim Mattson" <jmattson@google.com>,
+        "Paolo Bonzini" <pbonzini@redhat.com>,
+        "Matt Delco" <delco@chromium.org>,
+        syzbot+983c866c3dd6efa3662a@syzkaller.appspotmail.com
 Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.871264820@decadent.org.uk>
+Message-ID: <lsq.1568989415.143749949@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 129/132] ath6kl: add some bounds checking
+Subject: [PATCH 3.16 130/132] KVM: coalesced_mmio: add bounds checking
 In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,58 +57,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Matt Delco <delco@chromium.org>
 
-commit 5d6751eaff672ea77642e74e92e6c0ac7f9709ab upstream.
+commit b60fe990c6b07ef6d4df67bc0530c7c90a62623a upstream.
 
-The "ev->traffic_class" and "reply->ac" variables come from the network
-and they're used as an offset into the wmi->stream_exist_for_ac[] array.
-Those variables are u8 so they can be 0-255 but the stream_exist_for_ac[]
-array only has WMM_NUM_AC (4) elements.  We need to add a couple bounds
-checks to prevent array overflows.
+The first/last indexes are typically shared with a user app.
+The app can change the 'last' index that the kernel uses
+to store the next result.  This change sanity checks the index
+before using it for writing to a potentially arbitrary address.
 
-I also modified one existing check from "if (traffic_class > 3) {" to
-"if (traffic_class >= WMM_NUM_AC) {" just to make them all consistent.
+This fixes CVE-2019-14821.
 
-Fixes: bdcd81707973 (" Add ath6kl cleaned up driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: 5f94c1741bdc ("KVM: Add coalesced MMIO support (common part)")
+Signed-off-by: Matt Delco <delco@chromium.org>
+Signed-off-by: Jim Mattson <jmattson@google.com>
+Reported-by: syzbot+983c866c3dd6efa3662a@syzkaller.appspotmail.com
+[Use READ_ONCE. - Paolo]
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+[bwh: Backported to 3.16:
+ - Use ACCESS_ONCE() instead of READ_ONCE()
+ - kvm_coalesced_mmio_zone::pio field is not supported]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/wireless/ath/ath6kl/wmi.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ virt/kvm/coalesced_mmio.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
---- a/drivers/net/wireless/ath/ath6kl/wmi.c
-+++ b/drivers/net/wireless/ath/ath6kl/wmi.c
-@@ -1155,6 +1155,10 @@ static int ath6kl_wmi_pstream_timeout_ev
- 		return -EINVAL;
+--- a/virt/kvm/coalesced_mmio.c
++++ b/virt/kvm/coalesced_mmio.c
+@@ -39,7 +39,7 @@ static int coalesced_mmio_in_range(struc
+ 	return 1;
+ }
  
- 	ev = (struct wmi_pstream_timeout_event *) datap;
-+	if (ev->traffic_class >= WMM_NUM_AC) {
-+		ath6kl_err("invalid traffic class: %d\n", ev->traffic_class);
-+		return -EINVAL;
-+	}
+-static int coalesced_mmio_has_room(struct kvm_coalesced_mmio_dev *dev)
++static int coalesced_mmio_has_room(struct kvm_coalesced_mmio_dev *dev, u32 last)
+ {
+ 	struct kvm_coalesced_mmio_ring *ring;
+ 	unsigned avail;
+@@ -51,7 +51,7 @@ static int coalesced_mmio_has_room(struc
+ 	 * there is always one unused entry in the buffer
+ 	 */
+ 	ring = dev->kvm->coalesced_mmio_ring;
+-	avail = (ring->first - ring->last - 1) % KVM_COALESCED_MMIO_MAX;
++	avail = (ring->first - last - 1) % KVM_COALESCED_MMIO_MAX;
+ 	if (avail == 0) {
+ 		/* full */
+ 		return 0;
+@@ -65,24 +65,27 @@ static int coalesced_mmio_write(struct k
+ {
+ 	struct kvm_coalesced_mmio_dev *dev = to_mmio(this);
+ 	struct kvm_coalesced_mmio_ring *ring = dev->kvm->coalesced_mmio_ring;
++	__u32 insert;
  
- 	/*
- 	 * When the pstream (fat pipe == AC) timesout, it means there were
-@@ -1496,6 +1500,10 @@ static int ath6kl_wmi_cac_event_rx(struc
- 		return -EINVAL;
+ 	if (!coalesced_mmio_in_range(dev, addr, len))
+ 		return -EOPNOTSUPP;
  
- 	reply = (struct wmi_cac_event *) datap;
-+	if (reply->ac >= WMM_NUM_AC) {
-+		ath6kl_err("invalid AC: %d\n", reply->ac);
-+		return -EINVAL;
-+	}
+ 	spin_lock(&dev->kvm->ring_lock);
  
- 	if ((reply->cac_indication == CAC_INDICATION_ADMISSION_RESP) &&
- 	    (reply->status_code != IEEE80211_TSPEC_STATUS_ADMISS_ACCEPTED)) {
-@@ -2608,7 +2616,7 @@ int ath6kl_wmi_delete_pstream_cmd(struct
- 	u16 active_tsids = 0;
- 	int ret;
- 
--	if (traffic_class > 3) {
-+	if (traffic_class >= WMM_NUM_AC) {
- 		ath6kl_err("invalid traffic class: %d\n", traffic_class);
- 		return -EINVAL;
+-	if (!coalesced_mmio_has_room(dev)) {
++	insert = ACCESS_ONCE(ring->last);
++	if (!coalesced_mmio_has_room(dev, insert) ||
++	    insert >= KVM_COALESCED_MMIO_MAX) {
+ 		spin_unlock(&dev->kvm->ring_lock);
+ 		return -EOPNOTSUPP;
  	}
+ 
+ 	/* copy data in first free entry of the ring */
+ 
+-	ring->coalesced_mmio[ring->last].phys_addr = addr;
+-	ring->coalesced_mmio[ring->last].len = len;
+-	memcpy(ring->coalesced_mmio[ring->last].data, val, len);
++	ring->coalesced_mmio[insert].phys_addr = addr;
++	ring->coalesced_mmio[insert].len = len;
++	memcpy(ring->coalesced_mmio[insert].data, val, len);
+ 	smp_wmb();
+-	ring->last = (ring->last + 1) % KVM_COALESCED_MMIO_MAX;
++	ring->last = (insert + 1) % KVM_COALESCED_MMIO_MAX;
+ 	spin_unlock(&dev->kvm->ring_lock);
+ 	return 0;
+ }
 
