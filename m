@@ -2,161 +2,174 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC51BC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABC0C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A80BC2086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:53:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 592462086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:53:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408351AbfITIxg (ORCPT
+        id S2408374AbfITIxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 04:53:36 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:34536 "EHLO fornost.hmeau.com"
+        Fri, 20 Sep 2019 04:53:48 -0400
+Received: from mx1.emlix.com ([188.40.240.192]:60966 "EHLO mx1.emlix.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405494AbfITIxf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 04:53:35 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1iBDzj-0002t2-IQ; Fri, 20 Sep 2019 18:10:24 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 20 Sep 2019 18:10:17 +1000
-Date:   Fri, 20 Sep 2019 18:10:17 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Yuehaibing <yuehaibing@huawei.com>,
-        Bjorn Helgaas <bjorn.helgaas@gmail.com>
-Cc:     kbuild test robot <lkp@intel.com>,
-        Pascal van Leeuwen <pvanleeuwen@insidesecure.com>,
-        kbuild-all@01.org, linux-kernel@vger.kernel.org
-Subject: Re: drivers/crypto/inside-secure/safexcel.c:840:9: error: implicit
- declaration of function 'pci_irq_vector'; did you mean 'rcu_irq_enter'?
-Message-ID: <20190920081016.GA3663@gondor.apana.org.au>
-References: <201909200943.xYWyp0BG%lkp@intel.com>
- <91bcb10e-ef1a-3979-d597-999552114746@huawei.com>
+        id S2405574AbfITIxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 04:53:48 -0400
+Received: from mailer.emlix.com (unknown [81.20.119.6])
+        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx1.emlix.com (Postfix) with ESMTPS id B8BB2602BA;
+        Fri, 20 Sep 2019 10:53:44 +0200 (CEST)
+Subject: Re: [PATCH v4 2/3] dmaengine: imx-sdma: fix dma freezes
+To:     =?UTF-8?Q?Jan_L=c3=bcbbe?= <jlu@pengutronix.de>,
+        linux-kernel@vger.kernel.org
+Cc:     fugang.duan@nxp.com, festevam@gmail.com, s.hauer@pengutronix.de,
+        vkoul@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de,
+        dan.j.williams@intel.com, yibin.gong@nxp.com, shawnguo@kernel.org,
+        dmaengine@vger.kernel.or, linux-arm-kernel@lists.infradead.org,
+        l.stach@pengutronix.de
+References: <20190919142942.12469-1-philipp.puschmann@emlix.com>
+ <20190919142942.12469-3-philipp.puschmann@emlix.com>
+ <ad87f175496358adb825240f1de609318ed8204c.camel@pengutronix.de>
+From:   Philipp Puschmann <philipp.puschmann@emlix.com>
+Openpgp: preference=signencrypt
+Message-ID: <9305e5ff-f555-3c6e-9e99-36d88edcae0a@emlix.com>
+Date:   Fri, 20 Sep 2019 10:53:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <91bcb10e-ef1a-3979-d597-999552114746@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <ad87f175496358adb825240f1de609318ed8204c.camel@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 01:45:21PM +0800, Yuehaibing wrote:
-> Herbert,
+Hi Jan,
+
+Am 19.09.19 um 17:19 schrieb Jan Lübbe:
+> Hi Philipp,
 > 
-> This has been fixed in below patch, but I can't find it in linux-next.
+> see below...
 > 
-> https://patchwork.kernel.org/patch/11129983/
+> On Thu, 2019-09-19 at 16:29 +0200, Philipp Puschmann wrote:
+>> For some years and since many kernel versions there are reports that the
+>> RX UART SDMA channel stops working at some point. The workaround was to
+>> disable DMA for RX. This commit tries to fix the problem itself.
+>>
+>> Due to its license i wasn't able to debug the sdma script itself but it
+>> somehow leads to blocking the scheduling of the channel script when a
+>> running sdma script does not find any free descriptor in the ring to put
+>> its data into.
+>>
+>> If we detect such a potential case we manually restart the channel.
+>>
+>> As sdmac->desc is constant we can move desc out of the loop.
+>>
+>> Fixes: 1ec1e82f2510 ("dmaengine: Add Freescale i.MX SDMA support")
+>> Signed-off-by: Philipp Puschmann <philipp.puschmann@emlix.com>
+>> Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+>> ---
+>>
+>> Changelog v4:
+>>  - fixed the fixes tag
+>>  
+>> Changelog v3:
+>>  - use correct dma_wmb() instead of dma_wb()
+>>  - add fixes tag
+>>  
+>> Changelog v2:
+>>  - clarify comment and commit description
+>>
+>>  drivers/dma/imx-sdma.c | 21 +++++++++++++++++----
+>>  1 file changed, 17 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+>> index e029a2443cfc..a32b5962630e 100644
+>> --- a/drivers/dma/imx-sdma.c
+>> +++ b/drivers/dma/imx-sdma.c
+>> @@ -775,21 +775,23 @@ static void sdma_start_desc(struct sdma_channel *sdmac)
+>>  static void sdma_update_channel_loop(struct sdma_channel *sdmac)
+>>  {
+>>  	struct sdma_buffer_descriptor *bd;
+>> -	int error = 0;
+>> -	enum dma_status	old_status = sdmac->status;
+>> +	struct sdma_desc *desc = sdmac->desc;
+>> +	int error = 0, cnt = 0;
+>> +	enum dma_status old_status = sdmac->status;
+>>  
+>>  	/*
+>>  	 * loop mode. Iterate over descriptors, re-setup them and
+>>  	 * call callback function.
+>>  	 */
+>> -	while (sdmac->desc) {
+>> -		struct sdma_desc *desc = sdmac->desc;
+>> +	while (desc) {
+>>  
+>>  		bd = &desc->bd[desc->buf_tail];
+>>  
+>>  		if (bd->mode.status & BD_DONE)
+>>  			break;
+>>  
+>> +		cnt++;
+>> +
+>>  		if (bd->mode.status & BD_RROR) {
+>>  			bd->mode.status &= ~BD_RROR;
+>>  			sdmac->status = DMA_ERROR;
+>> @@ -822,6 +824,17 @@ static void sdma_update_channel_loop(struct sdma_channel *sdmac)
+>>  		if (error)
+>>  			sdmac->status = old_status;
+>>  	}
+>> +
+>> +	/* In some situations it may happen that the sdma does not found any
+>                                                           ^ hasn't
+>> +	 * usable descriptor in the ring to put data into. The channel is
+>> +	 * stopped then. While there is no specific error condition we can
+>> +	 * check for, a necessary condition is that all available buffers for
+>> +	 * the current channel have been written to by the sdma script. In
+>> +	 * this case and after we have made the buffers available again,
+>> +	 * we restart the channel.
+>> +	 */
+> 
+> Are you sure we can't miss cases where we only had to make some buffers
+> available again, but the SDMA already ran out of buffers before?
+Think so, yes.
+> 
+> A while ago, I was debugging a similar issue triggered by receiving
+> data with a wrong baud rate, which leads to all descriptors being
+> marked with the error flag very quickly (and the SDMA stalling).
+> I noticed that you can check if the channel is still running by
+> checking the SDMA_H_STATSTOP register & BIT(sdmac->channel).
 
-I'm waiting for Bjorn to ack it.  Bjorn?
+I think checking for this register is the better approach. Then i could drop the
+cnt variable. And by droppting cnt i would propose to move the check and reenabling
+to the end of the while loop to reenable the channel after freeing first buffer.
 
-> On 2019/9/20 9:03, kbuild test robot wrote:
-> > Hi Pascal,
-> > 
-> > FYI, the error/warning still remains.
-> > 
-> > tree:   https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux.git master
-> > head:   574cc4539762561d96b456dbc0544d8898bd4c6e
-> > commit: 625f269a5a7a3643771320387e474bd0a61d9654 crypto: inside-secure - add support for PCI based FPGA development board
-> > date:   3 weeks ago
-> > config: sh-allmodconfig (attached as .config)
-> > compiler: sh4-linux-gcc (GCC) 7.4.0
-> > reproduce:
-> >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> >         chmod +x ~/bin/make.cross
-> >         git checkout 625f269a5a7a3643771320387e474bd0a61d9654
-> >         # save the attached .config to linux build tree
-> >         GCC_VERSION=7.4.0 make.cross ARCH=sh 
-> > 
-> > If you fix the issue, kindly add following tag
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> > 
-> > All errors (new ones prefixed by >>):
-> > 
-> >    drivers/crypto/inside-secure/safexcel.c: In function 'safexcel_request_ring_irq':
-> >>> drivers/crypto/inside-secure/safexcel.c:840:9: error: implicit declaration of function 'pci_irq_vector'; did you mean 'rcu_irq_enter'? [-Werror=implicit-function-declaration]
-> >       irq = pci_irq_vector(pci_pdev, irqid);
-> >             ^~~~~~~~~~~~~~
-> >             rcu_irq_enter
-> >    drivers/crypto/inside-secure/safexcel.c: In function 'safexcel_probe_generic':
-> >>> drivers/crypto/inside-secure/safexcel.c:1043:9: error: implicit declaration of function 'pci_alloc_irq_vectors'; did you mean 'pci_alloc_consistent'? [-Werror=implicit-function-declaration]
-> >       ret = pci_alloc_irq_vectors(pci_pdev,
-> >             ^~~~~~~~~~~~~~~~~~~~~
-> >             pci_alloc_consistent
-> >>> drivers/crypto/inside-secure/safexcel.c:1046:10: error: 'PCI_IRQ_MSI' undeclared (first use in this function); did you mean 'IRQ_MSK'?
-> >              PCI_IRQ_MSI | PCI_IRQ_MSIX);
-> >              ^~~~~~~~~~~
-> >              IRQ_MSK
-> >    drivers/crypto/inside-secure/safexcel.c:1046:10: note: each undeclared identifier is reported only once for each function it appears in
-> >>> drivers/crypto/inside-secure/safexcel.c:1046:24: error: 'PCI_IRQ_MSIX' undeclared (first use in this function); did you mean 'PCI_IRQ_MSI'?
-> >              PCI_IRQ_MSI | PCI_IRQ_MSIX);
-> >                            ^~~~~~~~~~~~
-> >                            PCI_IRQ_MSI
-> >    drivers/crypto/inside-secure/safexcel.c: In function 'safexcel_init':
-> >    drivers/crypto/inside-secure/safexcel.c:1402:6: warning: unused variable 'rc' [-Wunused-variable]
-> >      int rc;
-> >          ^~
-> >    cc1: some warnings being treated as errors
-> > 
-> > vim +840 drivers/crypto/inside-secure/safexcel.c
-> > 
-> >    826	
-> >    827	static int safexcel_request_ring_irq(void *pdev, int irqid,
-> >    828					     int is_pci_dev,
-> >    829					     irq_handler_t handler,
-> >    830					     irq_handler_t threaded_handler,
-> >    831					     struct safexcel_ring_irq_data *ring_irq_priv)
-> >    832	{
-> >    833		int ret, irq;
-> >    834		struct device *dev;
-> >    835	
-> >    836		if (IS_ENABLED(CONFIG_PCI) && is_pci_dev) {
-> >    837			struct pci_dev *pci_pdev = pdev;
-> >    838	
-> >    839			dev = &pci_pdev->dev;
-> >  > 840			irq = pci_irq_vector(pci_pdev, irqid);
-> >    841			if (irq < 0) {
-> >    842				dev_err(dev, "unable to get device MSI IRQ %d (err %d)\n",
-> >    843					irqid, irq);
-> >    844				return irq;
-> >    845			}
-> >    846		} else if (IS_ENABLED(CONFIG_OF)) {
-> >    847			struct platform_device *plf_pdev = pdev;
-> >    848			char irq_name[6] = {0}; /* "ringX\0" */
-> >    849	
-> >    850			snprintf(irq_name, 6, "ring%d", irqid);
-> >    851			dev = &plf_pdev->dev;
-> >    852			irq = platform_get_irq_byname(plf_pdev, irq_name);
-> >    853	
-> >    854			if (irq < 0) {
-> >    855				dev_err(dev, "unable to get IRQ '%s' (err %d)\n",
-> >    856					irq_name, irq);
-> >    857				return irq;
-> >    858			}
-> >    859		}
-> >    860	
-> >    861		ret = devm_request_threaded_irq(dev, irq, handler,
-> >    862						threaded_handler, IRQF_ONESHOT,
-> >    863						dev_name(dev), ring_irq_priv);
-> >    864		if (ret) {
-> >    865			dev_err(dev, "unable to request IRQ %d\n", irq);
-> >    866			return ret;
-> >    867		}
-> >    868	
-> >    869		return irq;
-> >    870	}
-> >    871	
-> > 
-> > ---
-> > 0-DAY kernel test infrastructure                Open Source Technology Center
-> > https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-> > 
+> 
+> I also added a flag for the sdmac->flags field to allow stopping the
+> channel from the callback (otherwise it would enable the channel
+> again).
 
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Could memory and compiler ordering a problem here?
+I'm not that into these kind of problems, but is this
+	sdmac->flags &= ~IMX_DMA_ACTIVE;
+  	writel_relaxed(BIT(channel), sdma->regs + SDMA_H_STATSTOP);
+guaranteed to be free of race conditions?
+
+Regards,
+Philipp
+
+> 
+> Attached is my current version of that patch for reference.
+> 
+>> +	if (cnt >= desc->num_bd)
+>> +		sdma_enable_channel(sdmac->sdma, sdmac->channel);
+>>  }
+>>  
+>>  static void mxc_sdma_handle_channel_normal(struct sdma_channel *data)
