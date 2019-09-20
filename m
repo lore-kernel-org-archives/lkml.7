@@ -2,160 +2,123 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08936C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 18:05:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF1AC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 18:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D339720B7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 18:05:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="qqDM406y"
+	by mail.kernel.org (Postfix) with ESMTP id E0CBB2173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 18:06:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569002801;
+	bh=HDlb3ASxQQ+AQNI8W66Qxj6Ff0cT1tkAnS/DeUrit2Q=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=J0eFkK0BZbAQt3L/+Vrfp3nNxAqagutyhQkOvvZkc1aFSCFhyqqvCaNIHeb8y1PP1
+	 wr2GRJD+vyOn78c6q0S6Fc8+NmKj/zT9lSCvIRZEOEgJcgadVcKlS+Ui4Jsp/TpGor
+	 Vjj8ijRg/vXGab2qtuF9HDQTXQsf4r70jpdmJ/7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406228AbfITSFn (ORCPT
+        id S2406246AbfITSGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 14:05:43 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:64243 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404970AbfITSFm (ORCPT
+        Fri, 20 Sep 2019 14:06:40 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:40581 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389097AbfITSGj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 14:05:42 -0400
+        Fri, 20 Sep 2019 14:06:39 -0400
+Received: by mail-io1-f67.google.com with SMTP id h144so18160387iof.7
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 11:06:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1569002741; x=1600538741;
-  h=from:to:subject:date:message-id:references:in-reply-to:
-   content-id:mime-version:content-transfer-encoding;
-  bh=Qq57UcILh1SOhghoKSNgSrtELHXK6g2x+TAUQTtaa60=;
-  b=qqDM406ye9YVw0/2rYZVowJfSuAevB1rhtpKaC3991Qqxtf/kUH0fp40
-   zpjJn/P0s22YyNKoXUNQ9I5nhQubqXlq6MaU6QrZsEgF5z6xq/R7PYuR0
-   eogucPZ5HAiJI4F8fHUMZr6efUZaogYCFR9ueZMLG2JJxyrLu+CooYeO3
-   Y=;
-X-IronPort-AV: E=Sophos;i="5.64,529,1559520000"; 
-   d="scan'208";a="786106812"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-27fb8269.us-east-1.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 20 Sep 2019 18:05:39 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-27fb8269.us-east-1.amazon.com (Postfix) with ESMTPS id CA506A268C;
-        Fri, 20 Sep 2019 18:05:39 +0000 (UTC)
-Received: from EX13D02EUC003.ant.amazon.com (10.43.164.10) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 20 Sep 2019 18:05:39 +0000
-Received: from EX13D02EUC001.ant.amazon.com (10.43.164.92) by
- EX13D02EUC003.ant.amazon.com (10.43.164.10) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 20 Sep 2019 18:05:38 +0000
-Received: from EX13D02EUC001.ant.amazon.com ([10.43.164.92]) by
- EX13D02EUC001.ant.amazon.com ([10.43.164.92]) with mapi id 15.00.1367.000;
- Fri, 20 Sep 2019 18:05:38 +0000
-From:   "Sironi, Filippo" <sironi@amazon.de>
-To:     "Sironi, Filippo" <sironi@amazon.de>,
-        Joerg Roedel <joro@8bytes.org>,
-        Filippo Sironi via iommu <iommu@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/5] iommu/amd: Hold the domain lock when calling
- iommu_map_page
-Thread-Topic: [PATCH 4/5] iommu/amd: Hold the domain lock when calling
- iommu_map_page
-Thread-Index: AQHVaAAkrSYS8OYDhkK75ZlIzD8IKKc07AAA
-Date:   Fri, 20 Sep 2019 18:05:37 +0000
-Message-ID: <AC63DCD0-5322-4ECB-AB42-829AD4FBDFB9@amazon.de>
-References: <1568137765-20278-1-git-send-email-sironi@amazon.de>
- <1568137765-20278-5-git-send-email-sironi@amazon.de>
-In-Reply-To: <1568137765-20278-5-git-send-email-sironi@amazon.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.166.48]
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <9AFDF0C4A8542241AC6C8B225DF8D1A1@amazon.com>
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=nJi+jkD9qkHLIeHwUoAJGIQIqvA5hcES7DlWqDuq6Uo=;
+        b=M7KNKfCYlTuZYd5fJJ2JsOl9hW194OD55o4viiTNyKlcrYO0rDmZoxtNZd4ZB+KS2y
+         ralsCLv78mEryfEF7fz/DcUaj+6ezd0i2fS+q4+ysIRasL9xeEMWMJveP4Ej8BML7QO0
+         LLV5JfMtSFzBnFdKfTUMeIAxG/AIpg6jr2Kqk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nJi+jkD9qkHLIeHwUoAJGIQIqvA5hcES7DlWqDuq6Uo=;
+        b=XOC+GHUfsP652CcgnKOub0LrYTrju12a91j9DwqZ34hVdhIOX/UrCnz/JXo/A/aC+x
+         t9wDLiMBEgCNPmwwlqTRR/OplmIzZwXr3utPBtgQjQvqJjBhRpDzvhAl+6TFrM0Abv6U
+         SoHOrguNXE+1YbdJ1Z7e2fU2x5HoSbCAvkbND7cNEBvNGdguy8pBOQuTfubghPdISHmF
+         qXVrwsu36blTpNgIt65BuyFEWMNkI+geFnffc4IRDscE/xaiX6cRCmirX+xXT1TeYphI
+         P350ea7vAIWLzXMWX0r+nTZ5R60ivJ8Z1xZQzQrrsV3qStIvmZJSCFYyUds9vWdNsVro
+         /55Q==
+X-Gm-Message-State: APjAAAVJ3Q4Wm6cJgVxNW+NfPlTY99yCpidRFYFSBK2OqoNX7geQhTWR
+        F1nnUyYFGlwJr+mEGN952wUnSQ==
+X-Google-Smtp-Source: APXvYqzcxmufuhpTV8cPIXs3gqKlIndr6SLD+RwC0Nj0QKygB/UhV/bxz2HEf/+9nCsKFuqws5/ZmQ==
+X-Received: by 2002:a6b:7109:: with SMTP id q9mr15165154iog.229.1569002798715;
+        Fri, 20 Sep 2019 11:06:38 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id a26sm2573274iot.46.2019.09.20.11.06.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 20 Sep 2019 11:06:38 -0700 (PDT)
+Subject: Re: [GIT PULL] Kselftest update for Linux 5.4-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Brendan Higgins <brendanhiggins@google.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <be8059f4-8e8f-cd18-0978-a9c861f6396b@linuxfoundation.org>
+ <CAHk-=wgs+UoZWfHGENWSVBd57Z-Vp0Nqe68R6wkDb5zF+cfvDg@mail.gmail.com>
+ <CAKRRn-edxk9Du70A27V=d3Na73fh=fVvGEVsQRGROrQm05YRrA@mail.gmail.com>
+ <CAFd5g45ROPm-1SD5cD772gqESaP3D8RbBhSiJXZzbaA+2hFdHA@mail.gmail.com>
+ <CAHk-=wgMuNLBhJR_nFHrpViHbz2ErQ-fJV6B9o0+wym+Wk+r0w@mail.gmail.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <2474b796-2e38-2e27-06db-4d917e822a26@linuxfoundation.org>
+Date:   Fri, 20 Sep 2019 12:06:37 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAHk-=wgMuNLBhJR_nFHrpViHbz2ErQ-fJV6B9o0+wym+Wk+r0w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 9/20/19 10:51 AM, Linus Torvalds wrote:
+> On Fri, Sep 20, 2019 at 9:35 AM Brendan Higgins
+> <brendanhiggins@google.com> wrote:
+>>
+>> Sorry about that. I am surprised that none of the other reviewers
+>> brought this up.
+> 
+> I think I'm "special".
+> 
+> There was some other similar change a few years ago, which I
+> absolutely hated because of how it broke autocomplete for me. Very few
+> other people seemed to react to it.
+> 
+> Part of it may be that the kernel is almost the _only_ project I work
+> with, so unlike a lot of other developers, I end up having muscle
+> memory for kernel-specific issues.
+> 
+> Auto-completion was also one of the (many) reasons why I hated CVS -
+> having that annoying "CVS" directory there just always annoyed me.
+> There's a reason why git uses a dot-file.
+> 
+> So I just have issues that perhaps other people don't react to as
+> much. And aggressive tab-completion happens to be a thing for me.
+> 
 
+Thanks for explaining. Brendan and I will get this sorted out.
 
-> On 10. Sep 2019, at 19:49, Filippo Sironi <sironi@amazon.de> wrote:
-> =
+Looks like my previous response didn't make it to the kselftest
+and kernel lists.
 
-> iommu_map_page calls into __domain_flush_pages, which requires the
-> domain lock since it traverses the device list, which the lock protects.
-> =
-
-> Signed-off-by: Filippo Sironi <sironi@amazon.de>
-> ---
-> drivers/iommu/amd_iommu.c | 5 +++++
-> 1 file changed, 5 insertions(+)
-> =
-
-> diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-> index d4f25767622e..3714ae5ded31 100644
-> --- a/drivers/iommu/amd_iommu.c
-> +++ b/drivers/iommu/amd_iommu.c
-> @@ -2562,6 +2562,7 @@ static int map_sg(struct device *dev, struct scatte=
-rlist *sglist,
-> 	unsigned long address;
-> 	u64 dma_mask;
-> 	int ret;
-> +	unsigned long flags;
-> =
-
-> 	domain =3D get_domain(dev);
-> 	if (IS_ERR(domain))
-> @@ -2587,7 +2588,9 @@ static int map_sg(struct device *dev, struct scatte=
-rlist *sglist,
-> =
-
-> 			bus_addr  =3D address + s->dma_address + (j << PAGE_SHIFT);
-> 			phys_addr =3D (sg_phys(s) & PAGE_MASK) + (j << PAGE_SHIFT);
-> +			spin_lock_irqsave(&domain->lock, flags);
-> 			ret =3D iommu_map_page(domain, bus_addr, phys_addr, PAGE_SIZE, prot, G=
-FP_ATOMIC);
-> +			spin_unlock_irqrestore(&domain->lock, flags);
-> 			if (ret)
-> 				goto out_unmap;
-> =
-
-> @@ -3095,7 +3098,9 @@ static int amd_iommu_map(struct iommu_domain *dom, =
-unsigned long iova,
-> 		prot |=3D IOMMU_PROT_IW;
-> =
-
-> 	mutex_lock(&domain->api_lock);
-> +	spin_lock(&domain->lock);
-> 	ret =3D iommu_map_page(domain, iova, paddr, page_size, prot, GFP_KERNEL);
-> +	spin_unlock(&domain->lock);
-> 	mutex_unlock(&domain->api_lock);
-
-The spin_lock/spin_unlock aren't the correct choice.
-These should be spin_lock_irqsave and spin_unlock_irqrestore.
-Of course, with the variant Joerg suggested, this isn't a
-problem anymore.
-
-> 	domain_flush_np_cache(domain, iova, page_size);
-> -- =
-
-> 2.7.4
-> =
-
-
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Ralf Herbrich
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
+thanks,
+-- Shuah
 
