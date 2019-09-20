@@ -2,113 +2,216 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC123C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 11:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6789EC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 12:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 831442086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 11:58:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 219B420644
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 12:10:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UGSxoOX2"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="EMtxKU5G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408840AbfITL6W (ORCPT
+        id S2408857AbfITMKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 07:58:22 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:52760 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408806AbfITL6P (ORCPT
+        Fri, 20 Sep 2019 08:10:05 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:47636 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2408844AbfITMKF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 07:58:15 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8KBwCXN068213;
-        Fri, 20 Sep 2019 06:58:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568980692;
-        bh=ZOcqTLVEr3nn+41wnlCxrgM97BsSS51UgwOEyQKYKck=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=UGSxoOX2o9c7Lwca1bKP/XInNcgAei18NKCF9hh7PKaxgevpJxr03D7eCC74Op9kl
-         H+9svBTKJ432XudHbnh2NMwyu3KlNzTgfs3JBnfXLR4ZUXiFcvDCxoScD5yvjwkTn6
-         P+9xib5uoKDn7Jq6hGcxMPwdkR7eWuAq9TLsgw8o=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8KBwCnU099046
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 20 Sep 2019 06:58:12 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 20
- Sep 2019 06:58:12 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 20 Sep 2019 06:58:08 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8KBwBsv063748;
-        Fri, 20 Sep 2019 06:58:12 -0500
-From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <dmurphy@ti.com>
-CC:     <tomi.valkeinen@ti.com>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>
-Subject: [PATCH v4 2/2] leds: tlc591xx: use devm_led_classdev_register_ext()
-Date:   Fri, 20 Sep 2019 13:58:06 +0200
-Message-ID: <20190920115806.14475-3-jjhiblot@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190920115806.14475-1-jjhiblot@ti.com>
-References: <20190920115806.14475-1-jjhiblot@ti.com>
+        Fri, 20 Sep 2019 08:10:05 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6A22E2F9;
+        Fri, 20 Sep 2019 14:10:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1568981401;
+        bh=/8c8aJvwEYFTv+9okLcngO4esqYPdEI/P3khmo6P1kE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EMtxKU5G2BBw6L1K6WnviBgmY09mAyleywNIrJPxf4lBt7SNdROn9H4mjyHTjzffu
+         egtd3BPMLVBWiGttQVSWGuelPZbI3H7fiuG0ubII2JBN1FEnizGxXAPZjP5PyqQ6rz
+         F41i4SPQFChC/lPYjRwdqBKcgO8jg0ZXifx6Rgac=
+Date:   Fri, 20 Sep 2019 15:09:52 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     a.hajda@samsung.com, narmstrong@baylibre.com, jonas@kwiboo.se,
+        jernej.skrabec@siol.net, airlied@linux.ie, daniel@ffwll.ch,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        enric.balletbo@collabora.com
+Subject: Re: [PATCH v2] drm/bridge: analogix-anx78xx: add support for 7808
+ addresses
+Message-ID: <20190920120952.GG12950@pendragon.ideasonboard.com>
+References: <20190920101438.6912-1-masneyb@onstation.org>
+ <20190920104945.GC12950@pendragon.ideasonboard.com>
+ <20190920112859.GA32015@onstation.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190920112859.GA32015@onstation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_led_classdev_register_ext() to pass the fwnode to the LED core.
-The fwnode can then be used by the firmware core to create meaningful
-names.
+Hi Brian,
 
-Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
----
- drivers/leds/leds-tlc591xx.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+On Fri, Sep 20, 2019 at 07:28:59AM -0400, Brian Masney wrote:
+> On Fri, Sep 20, 2019 at 01:49:45PM +0300, Laurent Pinchart wrote:
+> > On Fri, Sep 20, 2019 at 06:14:38AM -0400, Brian Masney wrote:
+> >> According to the downstream Android sources, the anx7808 variants use
+> >> address 0x78 for TX_P0 and the anx781x variants use address 0x70. Since
+> >> the datasheets aren't available for these devices, and we only have the
+> >> downstream kernel sources to look at, let's assume that these addresses
+> >> are fixed based on the model, and pass the i2c addresses to the data
+> >> pointer in the driver's of_match_table.
+> >> 
+> >> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> >> ---
+> >> V1 of this patch with some discussion:
+> >> https://lore.kernel.org/lkml/20190815004854.19860-6-masneyb@onstation.org/
+> >> 
+> >>  drivers/gpu/drm/bridge/analogix-anx78xx.c | 36 +++++++++++++++--------
+> >>  drivers/gpu/drm/bridge/analogix-anx78xx.h |  7 -----
+> >>  2 files changed, 23 insertions(+), 20 deletions(-)
+> >> 
+> >> diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.c b/drivers/gpu/drm/bridge/analogix-anx78xx.c
+> >> index 48adf010816c..e25fae36dbe1 100644
+> >> --- a/drivers/gpu/drm/bridge/analogix-anx78xx.c
+> >> +++ b/drivers/gpu/drm/bridge/analogix-anx78xx.c
+> >> @@ -38,12 +38,20 @@
+> >>  #define AUX_CH_BUFFER_SIZE	16
+> >>  #define AUX_WAIT_TIMEOUT_MS	15
+> >>  
+> >> -static const u8 anx78xx_i2c_addresses[] = {
+> >> -	[I2C_IDX_TX_P0] = TX_P0,
+> >> -	[I2C_IDX_TX_P1] = TX_P1,
+> >> -	[I2C_IDX_TX_P2] = TX_P2,
+> >> -	[I2C_IDX_RX_P0] = RX_P0,
+> >> -	[I2C_IDX_RX_P1] = RX_P1,
+> >> +static const u8 anx7808_i2c_addresses[] = {
+> >> +	[I2C_IDX_TX_P0] = 0x78,
+> >> +	[I2C_IDX_TX_P1] = 0x7a,
+> >> +	[I2C_IDX_TX_P2] = 0x72,
+> >> +	[I2C_IDX_RX_P0] = 0x7e,
+> >> +	[I2C_IDX_RX_P1] = 0x80,
+> >> +};
+> >> +
+> >> +static const u8 anx781x_i2c_addresses[] = {
+> >> +	[I2C_IDX_TX_P0] = 0x70,
+> >> +	[I2C_IDX_TX_P1] = 0x7a,
+> >> +	[I2C_IDX_TX_P2] = 0x72,
+> >> +	[I2C_IDX_RX_P0] = 0x7e,
+> >> +	[I2C_IDX_RX_P1] = 0x80,
+> >>  };
+> > 
+> > If those addresses are really fixed they should have been added to DT,
+> > in order for all fixed I2C addresses used on an I2C bus to be reported
+> > in DT. I guess it's too late now :-/ This seems to be the best we can do
+> > to solve the problem with existing DT. Updating the bindings could
+> > however still be a good idea to make this clear moving forward.
+> 
+> One thing to be aware of is that these addresses are actually divided by
+> two in order to get the real i2c address.
+> 
+> https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/bridge/analogix-anx78xx.c#L1353
+> 
+> I'm not sure why the addresses are represented this way but downstream
+> does this as well. If I recall correctly, 0x77 is the maximum i2c
+> address on a bus, and there's a 0x80 above.
 
-diff --git a/drivers/leds/leds-tlc591xx.c b/drivers/leds/leds-tlc591xx.c
-index bbdaa3148317..8eadb673dc2e 100644
---- a/drivers/leds/leds-tlc591xx.c
-+++ b/drivers/leds/leds-tlc591xx.c
-@@ -186,6 +186,9 @@ tlc591xx_probe(struct i2c_client *client,
- 
- 	for_each_child_of_node(np, child) {
- 		struct tlc591xx_led *led;
-+		struct led_init_data init_data = {};
-+
-+		init_data.fwnode = of_fwnode_handle(child);
- 
- 		err = of_property_read_u32(child, "reg", &reg);
- 		if (err) {
-@@ -200,8 +203,6 @@ tlc591xx_probe(struct i2c_client *client,
- 		led = &priv->leds[reg];
- 
- 		led->active = true;
--		led->ldev.name =
--			of_get_property(child, "label", NULL) ? : child->name;
- 		led->ldev.default_trigger =
- 			of_get_property(child, "linux,default-trigger", NULL);
- 
-@@ -209,7 +210,8 @@ tlc591xx_probe(struct i2c_client *client,
- 		led->led_no = reg;
- 		led->ldev.brightness_set_blocking = tlc591xx_brightness_set;
- 		led->ldev.max_brightness = LED_FULL;
--		err = devm_led_classdev_register(dev, &led->ldev);
-+		err = devm_led_classdev_register_ext(dev, &led->ldev,
-+						     &init_data);
- 		if (err < 0) {
- 			dev_err(dev, "couldn't register LED %s\n",
- 				led->ldev.name);
+Sure, the addresses in DT would be half of the above values :-)
+
+> >>  struct anx78xx_platform_data {
+> >> @@ -1348,6 +1356,7 @@ static int anx78xx_i2c_probe(struct i2c_client *client,
+> >>  	struct anx78xx *anx78xx;
+> >>  	struct anx78xx_platform_data *pdata;
+> >>  	unsigned int i, idl, idh, version;
+> >> +	const u8 *i2c_addresses;
+> >>  	bool found = false;
+> >>  	int err;
+> >>  
+> >> @@ -1387,15 +1396,16 @@ static int anx78xx_i2c_probe(struct i2c_client *client,
+> >>  	}
+> >>  
+> >>  	/* Map slave addresses of ANX7814 */
+> >> +	i2c_addresses = device_get_match_data(&client->dev);
+> >>  	for (i = 0; i < I2C_NUM_ADDRESSES; i++) {
+> >>  		struct i2c_client *i2c_dummy;
+> >>  
+> >>  		i2c_dummy = i2c_new_dummy_device(client->adapter,
+> >> -						 anx78xx_i2c_addresses[i] >> 1);
+> >> +						 i2c_addresses[i] >> 1);
+> >>  		if (IS_ERR(i2c_dummy)) {
+> >>  			err = PTR_ERR(i2c_dummy);
+> >>  			DRM_ERROR("Failed to reserve I2C bus %02x: %d\n",
+> >> -				  anx78xx_i2c_addresses[i], err);
+> >> +				  i2c_addresses[i], err);
+> >>  			goto err_unregister_i2c;
+> >>  		}
+> >>  
+> >> @@ -1405,7 +1415,7 @@ static int anx78xx_i2c_probe(struct i2c_client *client,
+> >>  		if (IS_ERR(anx78xx->map[i])) {
+> >>  			err = PTR_ERR(anx78xx->map[i]);
+> >>  			DRM_ERROR("Failed regmap initialization %02x\n",
+> >> -				  anx78xx_i2c_addresses[i]);
+> >> +				  i2c_addresses[i]);
+> >>  			goto err_unregister_i2c;
+> >>  		}
+> >>  	}
+> >> @@ -1504,10 +1514,10 @@ MODULE_DEVICE_TABLE(i2c, anx78xx_id);
+> >>  
+> >>  #if IS_ENABLED(CONFIG_OF)
+> >>  static const struct of_device_id anx78xx_match_table[] = {
+> >> -	{ .compatible = "analogix,anx7808", },
+> >> -	{ .compatible = "analogix,anx7812", },
+> >> -	{ .compatible = "analogix,anx7814", },
+> >> -	{ .compatible = "analogix,anx7818", },
+> >> +	{ .compatible = "analogix,anx7808", .data = anx7808_i2c_addresses },
+> >> +	{ .compatible = "analogix,anx7812", .data = anx781x_i2c_addresses },
+> >> +	{ .compatible = "analogix,anx7814", .data = anx781x_i2c_addresses },
+> >> +	{ .compatible = "analogix,anx7818", .data = anx781x_i2c_addresses },
+> >>  	{ /* sentinel */ },
+> >>  };
+> >>  MODULE_DEVICE_TABLE(of, anx78xx_match_table);
+> >> diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.h b/drivers/gpu/drm/bridge/analogix-anx78xx.h
+> >> index 25e063bcecbc..8697647709f7 100644
+> >> --- a/drivers/gpu/drm/bridge/analogix-anx78xx.h
+> >> +++ b/drivers/gpu/drm/bridge/analogix-anx78xx.h
+> >> @@ -6,13 +6,6 @@
+> >>  #ifndef __ANX78xx_H
+> >>  #define __ANX78xx_H
+> >>  
+> >> -#define TX_P0				0x70
+> >> -#define TX_P1				0x7a
+> >> -#define TX_P2				0x72
+> >> -
+> >> -#define RX_P0				0x7e
+> >> -#define RX_P1				0x80
+> >> -
+> >>  /***************************************************************/
+> >>  /* Register definition of device address 0x7e                  */
+> >>  /***************************************************************/
+> > 
+> > Should you also rename the headers to mention [RT]X P[012] instead of
+> > the numerical addresses ?
+> 
+> Have #defines for ANX781X_TX_P0, ANX7808_TX_P0, etc in the header file?
+
+No, I mean
+
+-/* Register definition of device address 0x7e                  */
++/* Register definitions for RX P0                              */
+
+or something similar (I'm not sure what P0 means).
+
+> > Apart from that,
+> > 
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
 -- 
-2.17.1
+Regards,
 
+Laurent Pinchart
