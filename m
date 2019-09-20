@@ -2,103 +2,110 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F3CC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 00:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC48C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 00:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1633A21920
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 00:07:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568938075;
-	bh=KAhGCSVOVtUtAdEEuBhsqNfJhp1wcq6UJPR1rEams+Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=KgvoEuhl9MlsgTD35o1JgxhW0XmJxj2nny83aZyyqxhfNItxQrtq+UeCBV0m5QYlq
-	 7ROMgxwBTqBN3yn2YarwBkNZWRZRrDqCJ8CmGCmZSHtMGVMaM16IFpBFucvpWf2zuM
-	 jSIGTj3sB5Lv4v9rnpydmca3itS2aVpH75+eqMQg=
+	by mail.kernel.org (Postfix) with ESMTP id 4FA0C206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 00:11:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LYxfejZO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392076AbfITAHy (ORCPT
+        id S2393119AbfITALX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 20:07:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58922 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388604AbfITAHx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 20:07:53 -0400
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9CBD21920
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 00:07:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568938073;
-        bh=KAhGCSVOVtUtAdEEuBhsqNfJhp1wcq6UJPR1rEams+Q=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=v5PB0HhvLmN/6ZaebrnHpnUH8NPDVNrrZqFQJxlbGHGW5BjN98ufBDZu0YRL8ANiQ
-         BHqOCR3wlr8v5DE9t9rfG9yqZ1DCDNMv6n2DSES9zAB5DSHPlgCTPmZGM6nLPW8pkH
-         s3npw8z3tv+lCr63gyPA3pj9qac4w4UP86/GKnD8=
-Received: by mail-wr1-f52.google.com with SMTP id l11so4927218wrx.5
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 17:07:52 -0700 (PDT)
-X-Gm-Message-State: APjAAAWLSo5V/YeMBuHHBlrQdQsKiFrtKfbj3enTUyaLWOXqLsRN9lX+
-        OvmzS1HWrC/jkceKSfUc6aU1DYktKm8DSZM7xhQ=
-X-Google-Smtp-Source: APXvYqzYKnFXikeBrYgOpER2Qjc+5Diq7t0DgzMJf2ATPzJa1qK18MTpVnoNyg+SDqozE2cOBqwBEvImB62CtwuT4PI=
-X-Received: by 2002:adf:fe0f:: with SMTP id n15mr9371291wrr.343.1568938071266;
- Thu, 19 Sep 2019 17:07:51 -0700 (PDT)
+        Thu, 19 Sep 2019 20:11:23 -0400
+Received: from mail-lj1-f172.google.com ([209.85.208.172]:46672 "EHLO
+        mail-lj1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391048AbfITALX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 20:11:23 -0400
+Received: by mail-lj1-f172.google.com with SMTP id e17so5281925ljf.13
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 17:11:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2QirEQc5qlamFBqqvxkVBnRarU/sj3bjs59u63W/8Eg=;
+        b=LYxfejZOKW0piBxjokV7xP7MYnIEo2xpdVM8iwR8MuqG5goR+tjWkPo9hmpeR9rgPA
+         VGl6j/WtDdCFJhjGvMYx1BO7MZ/BPNJQPD+GeQ0mnlxtL1p/2lR8UlhRdy9IwgC+rvny
+         LcFHaYuW83/7yAlmN38bnVXUOUGbxKeVIcfAg9pQyRel3d7pUp+K6mTtDDpqdyPuqffC
+         gQAVcwoQGGIOl97lImxNESJOUklXk/nPITTQ1CED+EqDxBZEIdNOKJ6wpJrV69XtieAV
+         U4pBWv0YOWYzYUc0t+gipYOgNuAW+QJGDXa5u7kBcAmSUhYi0OEAo6lhLxoNyGuBBhBv
+         Glhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2QirEQc5qlamFBqqvxkVBnRarU/sj3bjs59u63W/8Eg=;
+        b=KI49cUIPEpUOf83azrhnV5auTCGnO5LN7YLQtfR7cDE56MmZxtEoU1FGfLIhLpKG+J
+         5QN2zV41/WaufWFmgQQa0+I8UOHs9EVS4JzBB3ejhZGYnkaABC3HqAm31xTBk8fN5FfO
+         eUJQuIbb19XdYWggaOAL3Xk4J6Qf3M6qRsb87hBY4njIcf6Ub1PgB9kzNPlNVok633mg
+         XQDK+9X21G+tsSytix46I1Jk+sWI9dslwmuXMkA7OTVJnPfeR2dYRXTjrYQ5Ltan9t/r
+         Iy5P1XMGKtnWSoEwONR/vwqnaVF+UlB8Ij87MzlkGN6ngya+0q6BY8MBNr+UaGrDgQZ9
+         Xx7g==
+X-Gm-Message-State: APjAAAXTfiimTA7rNyg5PW4I3HUmi8GSjGC44jMovI2hIM/Zg5NJAMXb
+        nSJt08qutGAUbGo2kpyF4ZZLv0Mh/5KQQvWtYcw=
+X-Google-Smtp-Source: APXvYqwySQBYWwyYZO8gF/0MYjFDLzMMeCGJIZyA0GeH0w63lVsIG0gF26wesF4EguvkavYeQxrt2HdHGcNDRXhw8FE=
+X-Received: by 2002:a2e:9708:: with SMTP id r8mr6797597lji.58.1568938281104;
+ Thu, 19 Sep 2019 17:11:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAJF2gTTmFq3yYa9UrdZRAFwJgC=KmKTe2_NFy_UZBUQovqQJPg@mail.gmail.com>
- <20190619123939.GF7767@fuggles.cambridge.arm.com> <CAJF2gTSiiiewTLwVAXvPLO7rTSUw1rg8VtFLzANdP2S2EEbTjg@mail.gmail.com>
- <20190624104006.lvm32nahemaqklxc@willie-the-truck> <CAJF2gTSC1sGgmiTCgzKUTdPyUZ3LG4H7N8YbMyWr-E+eifGuYg@mail.gmail.com>
- <20190912140256.fwbutgmadpjbjnab@willie-the-truck> <CAJF2gTT2c45HRfATF+=zs-HNToFAKgq1inKRmJMV3uPYBo4iVg@mail.gmail.com>
- <CAJF2gTTsHCsSpf1ncVb=ZJS2d=r+AdDi2=5z-REVS=uUg9138A@mail.gmail.com>
- <057a0af3-93f7-271c-170e-4b31e6894c3c@linaro.org> <CAJF2gTRbyfrUqAULPqJTXdxx8YOscPqAEuMsoJ+dTNobNrUV1g@mail.gmail.com>
- <20190919151844.GG1013538@lophozonia>
-In-Reply-To: <20190919151844.GG1013538@lophozonia>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Fri, 20 Sep 2019 08:07:38 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTQtk7VhBgUan6WOZgc3UaQzHL8SxMi=yiHG-8eC207BbQ@mail.gmail.com>
-Message-ID: <CAJF2gTQtk7VhBgUan6WOZgc3UaQzHL8SxMi=yiHG-8eC207BbQ@mail.gmail.com>
-Subject: Re: [PATCH RFC 11/14] arm64: Move the ASID allocator code in a
- separate file
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Palmer Dabbelt <palmer@sifive.com>, christoffer.dall@arm.com,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Julien Grall <julien.grall@arm.com>, gary@garyguo.net,
-        linux-riscv@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        Mike Rapoport <rppt@linux.ibm.com>, aou@eecs.berkeley.edu,
-        Arnd Bergmann <arnd@arndb.de>, suzuki.poulose@arm.com,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Anup Patel <anup.Patel@wdc.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        iommu@lists.linux-foundation.org, james.morse@arm.com
+References: <CAPM=9txTjip6SonSATB-O38TGX9ituQaw+29PnAkNJ960R1z6g@mail.gmail.com>
+ <CAHk-=wjHDrmx+Rj+oJw5V4mfWjpYzpwcJbqY-L-nvsNW_d8e_g@mail.gmail.com>
+In-Reply-To: <CAHk-=wjHDrmx+Rj+oJw5V4mfWjpYzpwcJbqY-L-nvsNW_d8e_g@mail.gmail.com>
+From:   Dave Airlie <airlied@gmail.com>
+Date:   Fri, 20 Sep 2019 10:11:09 +1000
+Message-ID: <CAPM=9tzLFenqZQo_NQqKd5xPQ5g-5WY+JxTotL7AHk_+6S89ow@mail.gmail.com>
+Subject: Re: [git pull] drm tree for 5.4-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Alexandre Courbot <acourbot@chromium.org>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 11:18 PM Jean-Philippe Brucker
-<jean-philippe@linaro.org> wrote:
-
+> Hmm. My merge isn't identical to that. It's close though. Different
+> order for one #define which might be just from you and me merging
+> different directions.
 >
-> The SMMU does support PCI Virtual Function - an hypervisor can assign a
-> VF to a guest, and let that guest partition the VF into smaller contexts
-> by using PASID.  What it can't support is assigning partitions of a PCI
-> function (VF or PF) to multiple Virtual Machines, since there is a
-> single S2 PGD per function (in the Stream Table Entry), rather than one
-> S2 PGD per PASID context.
+> But I also ended up removing the .gem_prime_export initialization to
+> drm_gem_prime_export, because it's the default if none exists. That's
+> the left-over from
 >
-In my concept, the two sentences "The SMMU does support PCI Virtual
-Functio" v.s. "What it can't support is assigning partitions of a PCI
-function (VF or PF) to multiple Virtual Machines" are conflict and I
-don't want to play naming game :)
+>     3baeeb21983a ("drm/mtk: Drop drm_gem_prime_export/import")
+>
+> after the import stayed around because it got turned into an actually
+> non-default one.
+>
+> I think that both of our merges are right - equivalent but just
+> slightly different.
+>
+> But the reason I'm pointing this out is that I also get the feeling
+> that if it needs that dev->dev_private difference from the default
+> function in prime_import(), wouldn't it need the same for prime_export
+> too?
+>
+> I don't know the code, and I don't know the hardware, but just from a
+> "pattern matching" angle I just wanted to check whether maybe there's
+> need for a mtk_drm_gem_prime_export() wrapper that does that same
+> thing with
+>
+>         struct mtk_drm_private *private = dev->dev_private;
+>
+>         .. use private->dev  instead of dev->dev ..
+>
+> So I'm just asking that somebody that knows that drm/mtk code should
+> double-check that oddity.
 
--- 
-Best Regards
- Guo Ren
+I've cc'ed Alexandre who wrote the import half of this code to look into it.
 
-ML: https://lore.kernel.org/linux-csky/
+I've looked at the other results and it all seems fine to me.
+
+Dave.
