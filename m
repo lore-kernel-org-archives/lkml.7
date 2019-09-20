@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93753C4CECD
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D076CC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A443208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:31:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3834206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:31:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388358AbfITOZN (ORCPT
+        id S2391216AbfITObj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:25:13 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35584 "EHLO
+        Fri, 20 Sep 2019 10:31:39 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36736 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728862AbfITOY5 (ORCPT
+        by vger.kernel.org with ESMTP id S2388353AbfITOZO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 10:24:57 -0400
+        Fri, 20 Sep 2019 10:25:14 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqB-0004ve-FW; Fri, 20 Sep 2019 15:24:55 +0100
+        id 1iBJqQ-00051F-99; Fri, 20 Sep 2019 15:25:10 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqA-0007ow-LD; Fri, 20 Sep 2019 15:24:54 +0100
+        id 1iBJqF-0007ub-Ah; Fri, 20 Sep 2019 15:24:59 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Krzysztof Kozlowski" <krzk@kernel.org>,
-        "Stuart Menefy" <stuart.menefy@mathembedded.com>
+        "Laurentiu Tudor" <laurentiu.tudor@nxp.com>,
+        "Michael Ellerman" <mpe@ellerman.id.au>
 Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.132241599@decadent.org.uk>
+Message-ID: <lsq.1568989415.618609984@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 005/132] ARM: dts: exynos: Fix interrupt for shared
- EINTs on Exynos5260
+Subject: [PATCH 3.16 075/132] powerpc/booke64: set RI in default MSR
 In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,31 +55,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Stuart Menefy <stuart.menefy@mathembedded.com>
+From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-commit b7ed69d67ff0788d8463e599dd5dd1b45c701a7e upstream.
+commit 5266e58d6cd90ac85c187d673093ad9cb649e16d upstream.
 
-Fix the interrupt information for the GPIO lines with a shared EINT
-interrupt.
+Set RI in the default kernel's MSR so that the architected way of
+detecting unrecoverable machine check interrupts has a chance to work.
+This is inline with the MSR setup of the rest of booke powerpc
+architectures configured here.
 
-Fixes: 16d7ff2642e7 ("ARM: dts: add dts files for exynos5260 SoC")
-Signed-off-by: Stuart Menefy <stuart.menefy@mathembedded.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-[bwh: Backported to 3.16: adjust context]
+Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/arm/boot/dts/exynos5260.dtsi | 2 +-
+ arch/powerpc/include/asm/reg_booke.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm/boot/dts/exynos5260.dtsi
-+++ b/arch/arm/boot/dts/exynos5260.dtsi
-@@ -211,7 +211,7 @@
- 			wakeup-interrupt-controller {
- 				compatible = "samsung,exynos4210-wakeup-eint";
- 				interrupt-parent = <&gic>;
--				interrupts = <0 32 0>;
-+				interrupts = <0 48 0>;
- 			};
- 		};
+--- a/arch/powerpc/include/asm/reg_booke.h
++++ b/arch/powerpc/include/asm/reg_booke.h
+@@ -29,7 +29,7 @@
+ #if defined(CONFIG_PPC_BOOK3E_64)
+ #define MSR_64BIT	MSR_CM
  
+-#define MSR_		(MSR_ME | MSR_CE)
++#define MSR_		(MSR_ME | MSR_RI | MSR_CE)
+ #define MSR_KERNEL	(MSR_ | MSR_64BIT)
+ #define MSR_USER32	(MSR_ | MSR_PR | MSR_EE)
+ #define MSR_USER64	(MSR_USER32 | MSR_64BIT)
 
