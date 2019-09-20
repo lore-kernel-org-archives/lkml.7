@@ -2,114 +2,107 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B66FC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 05:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5EF9C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 592112080F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 05:53:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FC542086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:01:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="F5uLX2no";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="X5MFIhya"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Q3u2Mh8g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404697AbfITFx2 (ORCPT
+        id S2408151AbfITGB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 01:53:28 -0400
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:55385 "EHLO
-        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390596AbfITFx2 (ORCPT
+        Fri, 20 Sep 2019 02:01:26 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35518 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404716AbfITGB0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 01:53:28 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id B096155D;
-        Fri, 20 Sep 2019 01:53:26 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Fri, 20 Sep 2019 01:53:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=sYqoSELWDB8JtRDLGnIHP2w4CWUd69D
-        2d/NJIApm9X4=; b=F5uLX2noa80V2YgZkxsR/Ju/5z1IDtVut1FBoQ3K/K2q3mD
-        FE6eXLmDmKqMneAD0c04mrhmY4lp00+nxzO6fDYkLKzKgUfKeryBcERc+HbIFQsz
-        T+DyyH66+F0qBBALece+nVYTr6G8kwe4v9LpXRca9QQ+guy5hDULbhoz1EqYfAMk
-        Lp0IO+LgtNJ74k8ttvSXpu31yYRKy00qqakUSgjvoaI8sDd5K0akorMRsXz4PVGS
-        WChHRRqFcroepQWNK/1Bc2IBkvilH3aUBmLiaI2kuyzmUyRJ2UlYevcoOQSAaDi9
-        rebW2epsehsCl4/f4wR6hQyj5v5cpvTUWAPb8yQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=sYqoSE
-        LWDB8JtRDLGnIHP2w4CWUd69D2d/NJIApm9X4=; b=X5MFIhyam3OwRQGxeEFfqN
-        vbZqP7dsUy3wq0Y2PwKLDdy5Yva5q5pHE5lZOWAUTLh+QnJ+kUk/xDOcjLhdW5gj
-        +u67i2DkQ/kP0zmMvE/8GOO0uD4r9hBaITdSLSBAT7obvobxl99ZMwNkfnS8Rbyq
-        RkF7Nlt9xw7L6EM709+FUgHeyIoYog/VrwVGjd/1AxRA22JIrxXsbmAdfrd67i/o
-        L+tIex7vBBfGGdDq52mkqguAm1sCAjCz6urP72b4vq0QvPdttyuJcazsDjwvune3
-        P42qiZK68dFQwy7WS80Nv8qleKFNQw6LWOEoY9r104qIsVgxMI65KbOoPC3oLNvA
-        ==
-X-ME-Sender: <xms:VWmEXQnLmTqB_ZYGyZLv6wMBigE-jyluAPiu9gh8CJSwdmVLHyeUAw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddugddutddtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
-    rhfuihiivgeptd
-X-ME-Proxy: <xmx:VWmEXddD0WcvobIQxoECsJpegeP3Mx3I0K1CUx3Bd_9afJ_Ghprpgg>
-    <xmx:VWmEXWCeeQLUHUt88jH6xISWu-YyomLDowuhLtkmvtZtUDHpzMEy_w>
-    <xmx:VWmEXUx7umQBGJFWRPFYV9eZAcgRofrJwONCOvswIf4lAfz_7jd1gw>
-    <xmx:VmmEXedHSKeRbg6evgvXPcH7JKpCfkj_PGivqKOqAJFNlJBEDFygZQ>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 1AF35E00A9; Fri, 20 Sep 2019 01:53:25 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-238-g170a812-fmstable-20190913v1
-Mime-Version: 1.0
-Message-Id: <a26c90b8-8f85-4fe5-9dab-d7213f181efd@www.fastmail.com>
-In-Reply-To: <20190919142654.1578823-1-arnd@arndb.de>
-References: <20190919142654.1578823-1-arnd@arndb.de>
-Date:   Fri, 20 Sep 2019 15:24:01 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Arnd Bergmann" <arnd@arndb.de>, "Joel Stanley" <joel@jms.id.au>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: aspeed: ast2500 is ARMv6K
-Content-Type: text/plain
+        Fri, 20 Sep 2019 02:01:26 -0400
+Received: by mail-wm1-f67.google.com with SMTP id y21so945838wmi.0
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 23:01:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KrJRto0V1tQECL7z3O9ZKJjMZZ7EfCuDScReljEVoD0=;
+        b=Q3u2Mh8gz2fE3BJI573A/4KXqhnj4eoXlYMoZGGughIFG6Vb5FrwRq4f2U9S4oq1Vr
+         Hbt9FsxwAgyBIq9a+hMcsz5uxfp8u73hXd7+1A6OV9p60H1OKGviHoiZWKnWNb7g7hfF
+         mYVifC0KgoucYeWRHf5UYbWqoMgIslcMNPW+A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KrJRto0V1tQECL7z3O9ZKJjMZZ7EfCuDScReljEVoD0=;
+        b=kmJh0dhMfY3brYmsJckhXUVWEfWb4Hm6SYhVpCJiZ/hFJVp39s2d6f1I5EOLpoDWrw
+         EFoSVwC9EGp7krzrZHZ6qEhOg5GREKcYsrMg0pqYZxTo6S1Htk+UOv6d8oiUxKqXT5R/
+         2hX6BNFN79M080dMYiZ/GIWKX5urcRZfu/xEHYP+Z/WZhf3n6La4+0kE2NjGGbepHtIe
+         yldsrvY+c65VU+l7Bx2M3i70v5MAiPyxiexT/7L1jLj21qYmgU51e0BSx+83Sa/CTyUF
+         kqAHH1wOQuXfC66XhJfxlxHbxC8k+mXJj2oR9Yvv2jE0PUNLDFblEXVJNi821Z1q/Q6N
+         vxlQ==
+X-Gm-Message-State: APjAAAWUtEie9Q4mJmSPXWVmfyvlItiCMJWg0hBYds5qNVrCTGo2Ok9e
+        uUODZ3342gHKwmOVeUyVlGgUktEu4pNn3wXMFpaNIg==
+X-Google-Smtp-Source: APXvYqzFCzSm0CfSfkwqk1qJj+FBKaMsFKoHb8kBLAJykpfyPHgRhuUNr7Y+6up7GrQ+zsoM2UYZ1XpAH5PFF+zHhXg=
+X-Received: by 2002:a05:600c:217:: with SMTP id 23mr1913029wmi.76.1568959283898;
+ Thu, 19 Sep 2019 23:01:23 -0700 (PDT)
+MIME-Version: 1.0
+References: <1567054348-19685-1-git-send-email-srinath.mannam@broadcom.com>
+ <1567054348-19685-3-git-send-email-srinath.mannam@broadcom.com> <CACRpkdYyHMHknkrH_Gm45tgwv6dgjFxdoeg+Hj_KBWWyQqV1og@mail.gmail.com>
+In-Reply-To: <CACRpkdYyHMHknkrH_Gm45tgwv6dgjFxdoeg+Hj_KBWWyQqV1og@mail.gmail.com>
+From:   Srinath Mannam <srinath.mannam@broadcom.com>
+Date:   Fri, 20 Sep 2019 11:31:12 +0530
+Message-ID: <CABe79T7h7=Y_fMv0n81hTS=nFnpRHXEFZTev-kLQsb6-eCGUdg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpio: iproc-gpio: Handle interrupts for multiple instances
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus,
 
+We have tested patch with your changes, it works fine.
+Thanks a lot for all the help.
 
-On Thu, 19 Sep 2019, at 23:56, Arnd Bergmann wrote:
-> Linux supports both the original ARMv6 level (early ARM1136) and ARMv6K
-> (later ARM1136, ARM1176 and ARM11mpcore).
-> 
-> ast2500 falls into the second categoy, being based on arm1176jzf-s.
-> This is enabled by default when using ARCH_MULTI_V6, so we should
-> not 'select CPU_V6'.
-> 
-> Removing this will lead to more efficient use of atomic instructions.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  arch/arm/mach-aspeed/Kconfig | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/arch/arm/mach-aspeed/Kconfig b/arch/arm/mach-aspeed/Kconfig
-> index a293137f5814..163931a03136 100644
-> --- a/arch/arm/mach-aspeed/Kconfig
-> +++ b/arch/arm/mach-aspeed/Kconfig
-> @@ -26,7 +26,6 @@ config MACH_ASPEED_G4
->  config MACH_ASPEED_G5
->  	bool "Aspeed SoC 5th Generation"
->  	depends on ARCH_MULTI_V6
-> -	select CPU_V6
->  	select PINCTRL_ASPEED_G5 if !CC_IS_CLANG
+Regards,
+Srinath.
 
-Unrelated, but I'm intrigued by this. Looks like I should try compile it with clang
-and fix the fallout.
-
-Andrew
+On Wed, Sep 11, 2019 at 3:13 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Thu, Aug 29, 2019 at 5:52 AM Srinath Mannam
+> <srinath.mannam@broadcom.com> wrote:
+>
+> > From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+> >
+> > When multiple instance of iproc-gpio chips are present, a fix up
+> > message[1] is printed during the probe of second and later instances.
+> >
+> > This issue is because driver sharing same irq_chip data structure
+> > among multiple instances of driver.
+> >
+> > Fix this by allocating irq_chip data structure per instance of
+> > iproc-gpio.
+> >
+> > [1] fix up message addressed by this patch
+> > [  7.862208] gpio gpiochip2: (689d0000.gpio): detected irqchip that
+> >    is shared with multiple gpiochips: please fix the driver.
+> >
+> > Fixes: 616043d58a89 ("pinctrl: Rename gpio driver from cygnus to iproc")
+> > Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+>
+> Patch applied, I had to rewrite it a bit to fit the new code that
+> set up the irqchip when adding the gpio_chip, please check that
+> the result works.
+>
+> Yours,
+> Linus Walleij
