@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 238B2C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D948C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C10A920644
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0092920882
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:09:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437426AbfITGJh (ORCPT
+        id S2437437AbfITGJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 02:09:37 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:58272 "EHLO huawei.com"
+        Fri, 20 Sep 2019 02:09:43 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:58260 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2437371AbfITGJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2437370AbfITGJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Sep 2019 02:09:24 -0400
 Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 15442D47AE718E496D1A;
+        by Forcepoint Email with ESMTP id 071133365529E25470E6;
         Fri, 20 Sep 2019 14:09:22 +0800 (CST)
 Received: from localhost.localdomain.localdomain (10.175.113.25) by
  DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 20 Sep 2019 14:09:13 +0800
+ 14.3.439.0; Fri, 20 Sep 2019 14:09:12 +0800
 From:   Kefeng Wang <wangkefeng.wang@huawei.com>
 To:     Joe Perches <joe@perches.com>,
         Andrew Morton <akpm@linux-foundation.org>,
@@ -39,12 +39,12 @@ To:     Joe Perches <joe@perches.com>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
         Petr Mladek <pmladek@suse.com>, Arnd Bergmann <arnd@arndb.de>,
         <linux-kernel@vger.kernel.org>
-CC:     <wangkefeng.wang@huawei.com>, Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>
-Subject: [PATCH 31/32] tools perf: Renaming pr_warning to pr_warn
-Date:   Fri, 20 Sep 2019 14:25:43 +0800
-Message-ID: <20190920062544.180997-32-wangkefeng.wang@huawei.com>
+CC:     <wangkefeng.wang@huawei.com>, Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        <bpf@vger.kernel.org>
+Subject: [PATCH 30/32] tools lib bpf: Renaming pr_warning to pr_warn
+Date:   Fri, 20 Sep 2019 14:25:42 +0800
+Message-ID: <20190920062544.180997-31-wangkefeng.wang@huawei.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190920062544.180997-1-wangkefeng.wang@huawei.com>
 References: <20190920062544.180997-1-wangkefeng.wang@huawei.com>
@@ -59,1902 +59,2138 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 For kernel logging macro, pr_warning is completely removed and
-replaced by pr_warn, using pr_warn in tools perf for symmetry
+replaced by pr_warn, using pr_warn in tools lib bpf for symmetry
 to kernel logging macro, then we could drop pr_warning in the
 whole linux code.
 
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Martin KaFai Lau <kafai@fb.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Yonghong Song <yhs@fb.com>
+Cc: bpf@vger.kernel.org
 Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
 ---
- tools/perf/arch/x86/util/intel-pt.c      |   2 +-
- tools/perf/builtin-annotate.c            |   7 +-
- tools/perf/builtin-buildid-cache.c       |  28 +++---
- tools/perf/builtin-diff.c                |  12 +--
- tools/perf/builtin-help.c                |  10 +-
- tools/perf/builtin-inject.c              |   8 +-
- tools/perf/builtin-probe.c               |  14 +--
- tools/perf/builtin-record.c              |  10 +-
- tools/perf/builtin-report.c              |   2 +-
- tools/perf/builtin-script.c              |  14 +--
- tools/perf/builtin-stat.c                |  18 ++--
- tools/perf/builtin-timechart.c           |  12 +--
- tools/perf/builtin-top.c                 |   2 +-
- tools/perf/builtin-trace.c               |   8 +-
- tools/perf/lib/internal.h                |   2 +-
- tools/perf/ui/browsers/scripts.c         |   2 +-
- tools/perf/util/bpf-loader.c             |   6 +-
- tools/perf/util/bpf-prologue.c           |   4 +-
- tools/perf/util/callchain.c              |   2 +-
- tools/perf/util/config.c                 |   8 +-
- tools/perf/util/data-convert-bt.c        |   4 +-
- tools/perf/util/data.c                   |   2 +-
- tools/perf/util/debug.c                  |   4 +-
- tools/perf/util/debug.h                  |   2 +-
- tools/perf/util/event.c                  |  14 ++-
- tools/perf/util/evlist.c                 |   4 +-
- tools/perf/util/evsel.c                  |  19 ++--
- tools/perf/util/header.c                 |  20 ++--
- tools/perf/util/jitdump.c                |   4 +-
- tools/perf/util/llvm-utils.c             |  18 ++--
- tools/perf/util/machine.c                |   2 +-
- tools/perf/util/parse-branch-options.c   |   3 +-
- tools/perf/util/perf-hooks.c             |   6 +-
- tools/perf/util/probe-event.c            |  90 +++++++++---------
- tools/perf/util/probe-file.c             |  36 ++++----
- tools/perf/util/probe-finder.c           | 112 +++++++++++------------
- tools/perf/util/record.c                 |  18 ++--
- tools/perf/util/session.c                |   2 +-
- tools/perf/util/srcline.c                |   6 +-
- tools/perf/util/thread-stack.c           |   4 +-
- tools/perf/util/thread_map.c             |   2 +-
- tools/perf/util/trace-event-parse.c      |   2 +-
- tools/perf/util/unwind-libunwind-local.c |   9 +-
- 43 files changed, 272 insertions(+), 282 deletions(-)
+ tools/lib/bpf/btf.c             |  56 +--
+ tools/lib/bpf/btf_dump.c        |  20 +-
+ tools/lib/bpf/libbpf.c          | 652 ++++++++++++++++----------------
+ tools/lib/bpf/libbpf_internal.h |   2 +-
+ tools/lib/bpf/xsk.c             |   4 +-
+ 5 files changed, 363 insertions(+), 371 deletions(-)
 
-diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
-index cb7cf16af79c..701615996bd6 100644
---- a/tools/perf/arch/x86/util/intel-pt.c
-+++ b/tools/perf/arch/x86/util/intel-pt.c
-@@ -529,7 +529,7 @@ static int intel_pt_validate_config(struct perf_pmu *intel_pt_pmu,
- 	 */
- 	if (perf_pmu__scan_file(intel_pt_pmu, "format/pt", "%c", &c) == 1 &&
- 	    !(evsel->core.attr.config & 1)) {
--		pr_warning("pt=0 doesn't make sense, forcing pt=1\n");
-+		pr_warn("pt=0 doesn't make sense, forcing pt=1\n");
- 		evsel->core.attr.config |= 1;
+diff --git a/tools/lib/bpf/btf.c b/tools/lib/bpf/btf.c
+index 1aa189a9112a..801dac6f493d 100644
+--- a/tools/lib/bpf/btf.c
++++ b/tools/lib/bpf/btf.c
+@@ -390,14 +390,14 @@ struct btf *btf__parse_elf(const char *path, struct btf_ext **btf_ext)
+ 	GElf_Ehdr ehdr;
+ 
+ 	if (elf_version(EV_CURRENT) == EV_NONE) {
+-		pr_warning("failed to init libelf for %s\n", path);
++		pr_warn("failed to init libelf for %s\n", path);
+ 		return ERR_PTR(-LIBBPF_ERRNO__LIBELF);
  	}
  
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index 4e4d2e76232e..71dbe17cf0ee 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -267,8 +267,8 @@ static int process_sample_event(struct perf_tool *tool,
- 	int ret = 0;
- 
- 	if (machine__resolve(machine, &al, sample) < 0) {
--		pr_warning("problem processing %d event, skipping it.\n",
--			   event->header.type);
-+		pr_warn("problem processing %d event, skipping it.\n",
-+			event->header.type);
- 		return -1;
+ 	fd = open(path, O_RDONLY);
+ 	if (fd < 0) {
+ 		err = -errno;
+-		pr_warning("failed to open %s: %s\n", path, strerror(errno));
++		pr_warn("failed to open %s: %s\n", path, strerror(errno));
+ 		return ERR_PTR(err);
  	}
  
-@@ -277,8 +277,7 @@ static int process_sample_event(struct perf_tool *tool,
+@@ -405,19 +405,19 @@ struct btf *btf__parse_elf(const char *path, struct btf_ext **btf_ext)
  
- 	if (!al.filtered &&
- 	    perf_evsel__add_sample(evsel, sample, &al, ann, machine)) {
--		pr_warning("problem incrementing symbol count, "
--			   "skipping event\n");
-+		pr_warn("problem incrementing symbol count, skipping event\n");
- 		ret = -1;
+ 	elf = elf_begin(fd, ELF_C_READ, NULL);
+ 	if (!elf) {
+-		pr_warning("failed to open %s as ELF file\n", path);
++		pr_warn("failed to open %s as ELF file\n", path);
+ 		goto done;
  	}
- out_put:
-diff --git a/tools/perf/builtin-buildid-cache.c b/tools/perf/builtin-buildid-cache.c
-index 1a69eb565dc0..0859e3a8cdc3 100644
---- a/tools/perf/builtin-buildid-cache.c
-+++ b/tools/perf/builtin-buildid-cache.c
-@@ -281,11 +281,11 @@ static bool dso__missing_buildid_cache(struct dso *dso, int parm __maybe_unused)
- 		if (errno == ENOENT)
- 			return false;
- 
--		pr_warning("Problems with %s file, consider removing it from the cache\n",
--			   filename);
-+		pr_warn("Problems with %s file, consider removing it from the cache\n",
-+			filename);
- 	} else if (memcmp(dso->build_id, build_id, sizeof(dso->build_id))) {
--		pr_warning("Problems with %s file, consider removing it from the cache\n",
--			   filename);
-+		pr_warn("Problems with %s file, consider removing it from the cache\n",
-+			filename);
+ 	if (!gelf_getehdr(elf, &ehdr)) {
+-		pr_warning("failed to get EHDR from %s\n", path);
++		pr_warn("failed to get EHDR from %s\n", path);
+ 		goto done;
+ 	}
+ 	if (!btf_check_endianness(&ehdr)) {
+-		pr_warning("non-native ELF endianness is not supported\n");
++		pr_warn("non-native ELF endianness is not supported\n");
+ 		goto done;
+ 	}
+ 	if (!elf_rawdata(elf_getscn(elf, ehdr.e_shstrndx), NULL)) {
+-		pr_warning("failed to get e_shstrndx from %s\n", path);
++		pr_warn("failed to get e_shstrndx from %s\n", path);
+ 		goto done;
  	}
  
- 	return true;
-@@ -446,8 +446,8 @@ int cmd_buildid_cache(int argc, const char **argv)
- 							 pos->s);
- 						continue;
- 					}
--					pr_warning("Couldn't add %s: %s\n",
--						   pos->s, str_error_r(errno, sbuf, sizeof(sbuf)));
-+					pr_warn("Couldn't add %s: %s\n",
-+						pos->s, str_error_r(errno, sbuf, sizeof(sbuf)));
- 				}
+@@ -427,29 +427,29 @@ struct btf *btf__parse_elf(const char *path, struct btf_ext **btf_ext)
  
- 			strlist__delete(list);
-@@ -464,8 +464,8 @@ int cmd_buildid_cache(int argc, const char **argv)
- 							 pos->s);
- 						continue;
- 					}
--					pr_warning("Couldn't remove %s: %s\n",
--						   pos->s, str_error_r(errno, sbuf, sizeof(sbuf)));
-+					pr_warn("Couldn't remove %s: %s\n",
-+						pos->s, str_error_r(errno, sbuf, sizeof(sbuf)));
- 				}
- 
- 			strlist__delete(list);
-@@ -482,8 +482,8 @@ int cmd_buildid_cache(int argc, const char **argv)
- 							 pos->s);
- 						continue;
- 					}
--					pr_warning("Couldn't remove %s: %s\n",
--						   pos->s, str_error_r(errno, sbuf, sizeof(sbuf)));
-+					pr_warn("Couldn't remove %s: %s\n",
-+						pos->s, str_error_r(errno, sbuf, sizeof(sbuf)));
- 				}
- 
- 			strlist__delete(list);
-@@ -492,7 +492,7 @@ int cmd_buildid_cache(int argc, const char **argv)
- 
- 	if (purge_all) {
- 		if (build_id_cache__purge_all()) {
--			pr_warning("Couldn't remove some caches. Error: %s.\n",
-+			pr_warn("Couldn't remove some caches. Error: %s.\n",
- 				str_error_r(errno, sbuf, sizeof(sbuf)));
+ 		idx++;
+ 		if (gelf_getshdr(scn, &sh) != &sh) {
+-			pr_warning("failed to get section(%d) header from %s\n",
+-				   idx, path);
++			pr_warn("failed to get section(%d) header from %s\n",
++				idx, path);
+ 			goto done;
  		}
- 	}
-@@ -510,8 +510,8 @@ int cmd_buildid_cache(int argc, const char **argv)
- 							 pos->s);
- 						continue;
- 					}
--					pr_warning("Couldn't update %s: %s\n",
--						   pos->s, str_error_r(errno, sbuf, sizeof(sbuf)));
-+					pr_warn("Couldn't update %s: %s\n",
-+						pos->s, str_error_r(errno, sbuf, sizeof(sbuf)));
- 				}
- 
- 			strlist__delete(list);
-@@ -519,7 +519,7 @@ int cmd_buildid_cache(int argc, const char **argv)
- 	}
- 
- 	if (kcore_filename && build_id_cache__add_kcore(kcore_filename, force))
--		pr_warning("Couldn't add %s\n", kcore_filename);
-+		pr_warn("Couldn't add %s\n", kcore_filename);
- 
- out:
- 	perf_session__delete(session);
-diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
-index 827e4800d862..738a035beb81 100644
---- a/tools/perf/builtin-diff.c
-+++ b/tools/perf/builtin-diff.c
-@@ -394,8 +394,8 @@ static int diff__process_sample_event(struct perf_tool *tool,
- 	}
- 
- 	if (machine__resolve(machine, &al, sample) < 0) {
--		pr_warning("problem processing %d event, skipping it.\n",
--			   event->header.type);
-+		pr_warn("problem processing %d event, skipping it.\n",
-+			event->header.type);
- 		return -1;
- 	}
- 
-@@ -407,15 +407,15 @@ static int diff__process_sample_event(struct perf_tool *tool,
- 	if (compute != COMPUTE_CYCLES) {
- 		if (!hists__add_entry(hists, &al, NULL, NULL, NULL, sample,
- 				      true)) {
--			pr_warning("problem incrementing symbol period, "
--				   "skipping event\n");
-+			pr_warn("problem incrementing symbol period, "
-+				"skipping event\n");
- 			goto out_put;
+ 		name = elf_strptr(elf, ehdr.e_shstrndx, sh.sh_name);
+ 		if (!name) {
+-			pr_warning("failed to get section(%d) name from %s\n",
+-				   idx, path);
++			pr_warn("failed to get section(%d) name from %s\n",
++				idx, path);
+ 			goto done;
  		}
- 	} else {
- 		if (!hists__add_entry_ops(hists, &block_hist_ops, &al, NULL,
- 					  NULL, NULL, sample, true)) {
--			pr_warning("problem incrementing symbol period, "
--				   "skipping event\n");
-+			pr_warn("problem incrementing symbol period, "
-+				"skipping event\n");
- 			goto out_put;
- 		}
- 
-diff --git a/tools/perf/builtin-help.c b/tools/perf/builtin-help.c
-index 3976aebe3677..36c1aa33d72f 100644
---- a/tools/perf/builtin-help.c
-+++ b/tools/perf/builtin-help.c
-@@ -117,7 +117,7 @@ static int check_emacsclient_version(void)
- static void exec_failed(const char *cmd)
- {
- 	char sbuf[STRERR_BUFSIZE];
--	pr_warning("failed to exec '%s': %s", cmd, str_error_r(errno, sbuf, sizeof(sbuf)));
-+	pr_warn("failed to exec '%s': %s", cmd, str_error_r(errno, sbuf, sizeof(sbuf)));
- }
- 
- static void exec_woman_emacs(const char *path, const char *page)
-@@ -218,8 +218,8 @@ static void do_add_man_viewer_info(const char *name,
- 
- static void unsupported_man_viewer(const char *name, const char *var)
- {
--	pr_warning("'%s': path for unsupported man viewer.\n"
--		   "Please consider using 'man.<tool>.%s' instead.", name, var);
-+	pr_warn("'%s': path for unsupported man viewer.\n"
-+		"Please consider using 'man.<tool>.%s' instead.", name, var);
- }
- 
- static int add_man_viewer_path(const char *name,
-@@ -267,7 +267,7 @@ static int add_man_viewer_info(const char *var, const char *value)
- 		return add_man_viewer_cmd(name, subkey - name, value);
- 	}
- 
--	pr_warning("'%s': unsupported man viewer sub key.", subkey);
-+	pr_warn("'%s': unsupported man viewer sub key.", subkey);
- 	return 0;
- }
- 
-@@ -355,7 +355,7 @@ static void exec_viewer(const char *name, const char *page)
- 	else if (info)
- 		exec_man_cmd(info, page);
- 	else
--		pr_warning("'%s': unknown man viewer.", name);
-+		pr_warn("'%s': unknown man viewer.", name);
- }
- 
- static int show_man_page(const char *perf_cmd)
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index c14f40b858bc..c1526b7f288e 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -448,9 +448,9 @@ static int perf_event__inject_buildid(struct perf_tool *tool,
- 				 */
- 			} else {
- #ifdef HAVE_LIBELF_SUPPORT
--				pr_warning("no symbols found in %s, maybe "
--					   "install a debug package?\n",
--					   al.map->dso->long_name);
-+				pr_warn("no symbols found in %s, maybe "
-+					"install a debug package?\n",
-+					al.map->dso->long_name);
- #endif
+ 		if (strcmp(name, BTF_ELF_SEC) == 0) {
+ 			btf_data = elf_getdata(scn, 0);
+ 			if (!btf_data) {
+-				pr_warning("failed to get section(%d, %s) data from %s\n",
+-					   idx, name, path);
++				pr_warn("failed to get section(%d, %s) data from %s\n",
++					idx, name, path);
+ 				goto done;
  			}
- 		}
-@@ -838,7 +838,7 @@ int cmd_inject(int argc, const char **argv)
- 		return -1;
- 
- 	if (zstd_init(&(inject.session->zstd_data), 0) < 0)
--		pr_warning("Decompression initialization failed.\n");
-+		pr_warn("Decompression initialization failed.\n");
- 
- 	if (inject.build_ids) {
- 		/*
-diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
-index 26bc5923e6b5..1f94481fc3bf 100644
---- a/tools/perf/builtin-probe.c
-+++ b/tools/perf/builtin-probe.c
-@@ -182,7 +182,7 @@ static int opt_set_target(const struct option *opt, const char *str,
- 		if (params.uprobes || strchr(str, '/')) {
- 			tmp = nsinfo__realpath(str, params.nsi);
- 			if (!tmp) {
--				pr_warning("Failed to get the absolute path of %s: %m\n", str);
-+				pr_warn("Failed to get the absolute path of %s: %m\n", str);
- 				return ret;
- 			}
- 		} else {
-@@ -211,8 +211,8 @@ static int opt_set_target_ns(const struct option *opt __maybe_unused,
- 		ns_pid = (pid_t)strtol(str, NULL, 10);
- 		if (errno != 0) {
- 			ret = -errno;
--			pr_warning("Failed to parse %s as a pid: %s\n", str,
--				   strerror(errno));
-+			pr_warn("Failed to parse %s as a pid: %s\n", str,
-+				strerror(errno));
- 			return ret;
- 		}
- 		nsip = nsinfo__new(ns_pid);
-@@ -239,8 +239,8 @@ static int opt_show_lines(const struct option *opt,
- 		return 0;
- 
- 	if (params.command == 'L') {
--		pr_warning("Warning: more than one --line options are"
--			   " detected. Only the first one is valid.\n");
-+		pr_warn("Warning: more than one --line options are"
-+			" detected. Only the first one is valid.\n");
- 		return 0;
- 	}
- 
-@@ -408,7 +408,7 @@ static int del_perf_probe_caches(struct strfilter *filter)
  			continue;
- 		if (probe_cache__filter_purge(cache, filter) < 0 ||
- 		    probe_cache__commit(cache) < 0)
--			pr_warning("Failed to remove entries for %s\n", nd->s);
-+			pr_warn("Failed to remove entries for %s\n", nd->s);
- 		probe_cache__delete(cache);
- 	}
- 	return 0;
-@@ -462,7 +462,7 @@ static int perf_del_probe_events(struct strfilter *filter)
- 	}
- 
- 	if (ret == -ENOENT && ret2 == -ENOENT)
--		pr_warning("\"%s\" does not hit any event.\n", str);
-+		pr_warn("\"%s\" does not hit any event.\n", str);
- 	else
- 		ret = 0;
- 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 1447004eee8a..9c30745c3602 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1318,7 +1318,7 @@ static int record__synthesize(struct record *rec, bool tail)
- 	err = perf_event__synthesize_bpf_events(session, process_synthesized_event,
- 						machine, opts);
- 	if (err < 0)
--		pr_warning("Couldn't synthesize bpf events.\n");
-+		pr_warn("Couldn't synthesize bpf events.\n");
- 
- 	err = __machine__synthesize_threads(machine, tool, &opts->target, rec->evlist->core.threads,
- 					    process_synthesized_event, opts->sample_address,
-@@ -1424,7 +1424,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 	 * evlist.
- 	 */
- 	if (rec->tool.ordered_events && !perf_evlist__sample_id_all(rec->evlist)) {
--		pr_warning("WARNING: No sample_id_all support, falling back to unordered processing\n");
-+		pr_warn("WARNING: No sample_id_all support, falling back to unordered processing\n");
- 		rec->tool.ordered_events = false;
- 	}
- 
-@@ -1869,7 +1869,7 @@ static int get_clockid_res(clockid_t clk_id, u64 *res_ns)
- 	if (!clock_getres(clk_id, &res))
- 		*res_ns = res.tv_nsec + res.tv_sec * NSEC_PER_SEC;
- 	else
--		pr_warning("WARNING: Failed to determine specified clock resolution.\n");
-+		pr_warn("WARNING: Failed to determine specified clock resolution.\n");
- 
- 	return 0;
- }
-@@ -1985,7 +1985,7 @@ static void switch_output_size_warn(struct record *rec)
- 		char buf[100];
- 
- 		unit_number__scnprintf(buf, sizeof(buf), wakeup_size);
--		pr_warning("WARNING: switch-output data size lower than "
-+		pr_warn("WARNING: switch-output data size lower than "
- 			   "wakeup kernel buffer size (%s) "
- 			   "expect bigger perf.data sizes\n", buf);
- 	}
-@@ -2372,7 +2372,7 @@ int cmd_record(int argc, const char **argv)
- 	err = -ENOMEM;
- 
- 	if (symbol_conf.kptr_restrict && !perf_evlist__exclude_kernel(rec->evlist))
--		pr_warning(
-+		pr_warn(
- "WARNING: Kernel address maps (/proc/{kallsyms,modules}) are restricted,\n"
- "check /proc/sys/kernel/kptr_restrict and /proc/sys/kernel/perf_event_paranoid.\n\n"
- "Samples in kernel functions may not be resolved if a suitable vmlinux\n"
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index b18fab94d38d..13d496236f6a 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -1277,7 +1277,7 @@ int cmd_report(int argc, const char **argv)
- 		return ret;
- 
- 	if (zstd_init(&(session->zstd_data), 0) < 0)
--		pr_warning("Decompression initialization failed. Reported data may be incomplete.\n");
-+		pr_warn("Decompression initialization failed. Reported data may be incomplete.\n");
- 
- 	if (report.queue_size) {
- 		ordered_events__set_alloc_size(&session->ordered_events,
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index e079b34201f2..b1491d551d0c 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -2678,8 +2678,8 @@ static int parse_output_fields(const struct option *opt __maybe_unused,
- 		}
- 
- 		if (output[type].user_set)
--			pr_warning("Overriding previous field request for %s events.\n",
--				   event_type(type));
-+			pr_warn("Overriding previous field request for %s events.\n",
-+				event_type(type));
- 
- 		/* Don't override defaults for +- */
- 		if (strchr(tok, '+') || strchr(tok, '-'))
-@@ -2703,7 +2703,7 @@ static int parse_output_fields(const struct option *opt __maybe_unused,
- 			goto parse;
- 
- 		if (output_set_by_user())
--			pr_warning("Overriding previous field request for all events.\n");
-+			pr_warn("Overriding previous field request for all events.\n");
- 
- 		for (j = 0; j < OUTPUT_TYPE_MAX; ++j) {
- 			output[j].fields = 0;
-@@ -2750,8 +2750,8 @@ static int parse_output_fields(const struct option *opt __maybe_unused,
- 			 */
- 			for (j = 0; j < OUTPUT_TYPE_MAX; ++j) {
- 				if (output[j].invalid_fields & all_output_options[i].field) {
--					pr_warning("\'%s\' not valid for %s events. Ignoring.\n",
--						   all_output_options[i].str, event_type(j));
-+					pr_warn("\'%s\' not valid for %s events. Ignoring.\n",
-+						all_output_options[i].str, event_type(j));
- 				} else {
- 					if (change == REMOVE) {
- 						output[j].fields &= ~all_output_options[i].field;
-@@ -3292,7 +3292,7 @@ int process_thread_map_event(struct perf_session *session,
- 	struct perf_script *script = container_of(tool, struct perf_script, tool);
- 
- 	if (script->threads) {
--		pr_warning("Extra thread map event, ignoring.\n");
-+		pr_warn("Extra thread map event, ignoring.\n");
- 		return 0;
- 	}
- 
-@@ -3311,7 +3311,7 @@ int process_cpu_map_event(struct perf_session *session,
- 	struct perf_script *script = container_of(tool, struct perf_script, tool);
- 
- 	if (script->cpus) {
--		pr_warning("Extra cpu map event, ignoring.\n");
-+		pr_warn("Extra cpu map event, ignoring.\n");
- 		return 0;
- 	}
- 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 7e17bf9f700a..45b0f3409b09 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -330,7 +330,7 @@ static void read_counters(struct timespec *rs)
- 			pr_debug("failed to read counter %s\n", counter->name);
- 
- 		if (ret == 0 && perf_stat_process_counter(&stat_config, counter))
--			pr_warning("failed to process counter %s\n", counter->name);
-+			pr_warn("failed to process counter %s\n", counter->name);
- 	}
- }
- 
-@@ -1496,7 +1496,7 @@ int process_stat_config_event(struct perf_session *session,
- 
- 	if (perf_cpu_map__empty(st->cpus)) {
- 		if (st->aggr_mode != AGGR_UNSET)
--			pr_warning("warning: processing task data, aggregation mode not set\n");
-+			pr_warn("warning: processing task data, aggregation mode not set\n");
- 		return 0;
- 	}
- 
-@@ -1536,7 +1536,7 @@ int process_thread_map_event(struct perf_session *session,
- 	struct perf_stat *st = container_of(tool, struct perf_stat, tool);
- 
- 	if (st->threads) {
--		pr_warning("Extra thread map event, ignoring.\n");
-+		pr_warn("Extra thread map event, ignoring.\n");
- 		return 0;
- 	}
- 
-@@ -1556,7 +1556,7 @@ int process_cpu_map_event(struct perf_session *session,
- 	struct perf_cpu_map *cpus;
- 
- 	if (st->cpus) {
--		pr_warning("Extra cpu map event, ignoring.\n");
-+		pr_warn("Extra cpu map event, ignoring.\n");
- 		return 0;
- 	}
- 
-@@ -1916,9 +1916,9 @@ int cmd_stat(int argc, const char **argv)
- 			parse_options_usage(stat_usage, stat_options, "timeout", 0);
- 			goto out;
- 		} else
--			pr_warning("timeout < 100ms. "
--				   "The overhead percentage could be high in some cases. "
--				   "Please proceed with caution.\n");
-+			pr_warn("timeout < 100ms. "
-+				"The overhead percentage could be high in some cases. "
-+				"Please proceed with caution.\n");
- 	}
- 	if (timeout && interval) {
- 		pr_err("timeout option is not supported with interval-print.\n");
-@@ -1991,8 +1991,8 @@ int cmd_stat(int argc, const char **argv)
- 							     process_synthesized_event,
- 							     &perf_stat.session->machines.host);
- 		if (err) {
--			pr_warning("Couldn't synthesize the kernel mmap record, harmless, "
--				   "older tools may produce warnings about this file\n.");
-+			pr_warn("Couldn't synthesize the kernel mmap record, harmless, "
-+				"older tools may produce warnings about this file\n.");
- 		}
- 
- 		if (!interval) {
-diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
-index e0e822695a29..0462b01596f3 100644
---- a/tools/perf/builtin-timechart.c
-+++ b/tools/perf/builtin-timechart.c
-@@ -734,8 +734,8 @@ static int pid_begin_io_sample(struct timechart *tchart, int pid, int type,
- 	prev = c->io_samples;
- 
- 	if (prev && prev->start_time && !prev->end_time) {
--		pr_warning("Skip invalid start event: "
--			   "previous event already started!\n");
-+		pr_warn("Skip invalid start event: "
-+			"previous event already started!\n");
- 
- 		/* remove previous event that has been started,
- 		 * we are not sure we will ever get an end for it */
-@@ -767,7 +767,7 @@ static int pid_end_io_sample(struct timechart *tchart, int pid, int type,
- 	struct io_sample *sample, *prev;
- 
- 	if (!c) {
--		pr_warning("Invalid pidcomm!\n");
-+		pr_warn("Invalid pidcomm!\n");
- 		return -1;
- 	}
- 
-@@ -777,13 +777,13 @@ static int pid_end_io_sample(struct timechart *tchart, int pid, int type,
- 		return 0;
- 
- 	if (sample->end_time) {
--		pr_warning("Skip invalid end event: "
--			   "previous event already ended!\n");
-+		pr_warn("Skip invalid end event: "
-+			"previous event already ended!\n");
- 		return 0;
- 	}
- 
- 	if (sample->type != type) {
--		pr_warning("Skip invalid end event: invalid event type!\n");
-+		pr_warn("Skip invalid end event: invalid event type!\n");
- 		return 0;
- 	}
- 
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 726e3f2dd8c7..4651c6aa982b 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -592,7 +592,7 @@ static void perf_top__sort_new_samples(void *arg)
- 	perf_top__resort_hists(t);
- 
- 	if (t->lost || t->drop)
--		pr_warning("Too slow to read ring buffer (change period (-c/-F) or limit CPUs (-C)\n");
-+		pr_warn("Too slow to read ring buffer (change period (-c/-F) or limit CPUs (-C)\n");
- }
- 
- static void stop_top(void)
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 0f633f0d6be8..e3af61695d39 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -1386,9 +1386,9 @@ static char *trace__machine__resolve_kernel_addr(void *vmachine, unsigned long l
- 		return NULL;
- 
- 	if (symbol_conf.kptr_restrict) {
--		pr_warning("Kernel address maps (/proc/{kallsyms,modules}) are restricted.\n\n"
--			   "Check /proc/sys/kernel/kptr_restrict and /proc/sys/kernel/perf_event_paranoid.\n\n"
--			   "Kernel samples will not be resolved.\n");
-+		pr_warn("Kernel address maps (/proc/{kallsyms,modules}) are restricted.\n\n"
-+			"Check /proc/sys/kernel/kptr_restrict and /proc/sys/kernel/perf_event_paranoid.\n\n"
-+			"Kernel samples will not be resolved.\n");
- 		machine->kptr_restrict_warned = true;
- 		return NULL;
- 	}
-@@ -4045,7 +4045,7 @@ static int trace__config(const char *var, const char *value, void *arg)
- 	} else if (!strcmp(var, "trace.show_zeros")) {
- 		bool new_show_zeros = perf_config_bool(var, value);
- 		if (!trace->show_arg_names && !new_show_zeros) {
--			pr_warning("trace.show_zeros has to be set when trace.show_arg_names=no\n");
-+			pr_warn("trace.show_zeros has to be set when trace.show_arg_names=no\n");
- 			goto out;
- 		}
- 		trace->show_zeros = new_show_zeros;
-diff --git a/tools/perf/lib/internal.h b/tools/perf/lib/internal.h
-index dc92f241732e..11292bfab2f0 100644
---- a/tools/perf/lib/internal.h
-+++ b/tools/perf/lib/internal.h
-@@ -11,7 +11,7 @@ do {                            \
- 	libperf_print(level, "libperf: " fmt, ##__VA_ARGS__);     \
- } while (0)
- 
--#define pr_warning(fmt, ...)    __pr(LIBPERF_WARN, fmt, ##__VA_ARGS__)
-+#define pr_warn(fmt, ...)	__pr(LIBPERF_WARN, fmt, ##__VA_ARGS__)
- #define pr_info(fmt, ...)       __pr(LIBPERF_INFO, fmt, ##__VA_ARGS__)
- #define pr_debug(fmt, ...)      __pr(LIBPERF_DEBUG, fmt, ##__VA_ARGS__)
- 
-diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
-index 586a21acc13d..065cb7360a87 100644
---- a/tools/perf/ui/browsers/scripts.c
-+++ b/tools/perf/ui/browsers/scripts.c
-@@ -157,7 +157,7 @@ void run_script(char *cmd)
- 	pr_debug("Running %s\n", cmd);
- 	SLang_reset_tty();
- 	if (system(cmd) < 0)
--		pr_warning("Cannot run %s\n", cmd);
-+		pr_warn("Cannot run %s\n", cmd);
- 	/*
- 	 * SLang doesn't seem to reset the whole terminal, so be more
- 	 * forceful to get back to the original state.
-diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
-index 37283e865352..bc11bb91ab7d 100644
---- a/tools/perf/util/bpf-loader.c
-+++ b/tools/perf/util/bpf-loader.c
-@@ -258,9 +258,9 @@ parse_prog_config_kvpair(const char *config_str, struct perf_probe_event *pev)
- 		*sep = '\0';
- 		equ = strchr(line, '=');
- 		if (!equ) {
--			pr_warning("WARNING: invalid config in BPF object: %s\n",
--				   line);
--			pr_warning("\tShould be 'key=value'.\n");
-+			pr_warn("WARNING: invalid config in BPF object: %s\n",
-+				line);
-+			pr_warn("\tShould be 'key=value'.\n");
- 			goto nextline;
- 		}
- 		*equ = '\0';
-diff --git a/tools/perf/util/bpf-prologue.c b/tools/perf/util/bpf-prologue.c
-index b020a8678eb9..cee4e23325ad 100644
---- a/tools/perf/util/bpf-prologue.c
-+++ b/tools/perf/util/bpf-prologue.c
-@@ -388,8 +388,8 @@ int bpf__gen_prologue(struct probe_trace_arg *args, int nargs,
- 	}
- 
- 	if (nargs > BPF_PROLOGUE_MAX_ARGS) {
--		pr_warning("bpf: prologue: %d arguments are dropped\n",
--			   nargs - BPF_PROLOGUE_MAX_ARGS);
-+		pr_warn("bpf: prologue: %d arguments are dropped\n",
-+			nargs - BPF_PROLOGUE_MAX_ARGS);
- 		nargs = BPF_PROLOGUE_MAX_ARGS;
- 	}
- 
-diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index c14646c1f2eb..d8f3eba6c96c 100644
---- a/tools/perf/util/callchain.c
-+++ b/tools/perf/util/callchain.c
-@@ -568,7 +568,7 @@ fill_node(struct callchain_node *node, struct callchain_cursor *cursor)
- 
- 	node->val_nr = cursor->nr - cursor->pos;
- 	if (!node->val_nr)
--		pr_warning("Warning: empty node in callchain tree\n");
-+		pr_warn("Warning: empty node in callchain tree\n");
- 
- 	cursor_node = callchain_cursor_current(cursor);
- 
-diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
-index 0bc9c4d7fdc5..a0ba50291806 100644
---- a/tools/perf/util/config.c
-+++ b/tools/perf/util/config.c
-@@ -345,9 +345,9 @@ static int perf_parse_long(const char *value, long *ret)
- static void bad_config(const char *name)
- {
- 	if (config_file_name)
--		pr_warning("bad config value for '%s' in %s, ignoring...\n", name, config_file_name);
-+		pr_warn("bad config value for '%s' in %s, ignoring...\n", name, config_file_name);
- 	else
--		pr_warning("bad config value for '%s', ignoring...\n", name);
-+		pr_warn("bad config value for '%s', ignoring...\n", name);
- }
- 
- int perf_config_u64(u64 *dest, const char *name, const char *value)
-@@ -676,7 +676,7 @@ static int perf_config_set__init(struct perf_config_set *set)
- 
- 	user_config = strdup(mkpath("%s/.perfconfig", home));
- 	if (user_config == NULL) {
--		pr_warning("Not enough memory to process %s/.perfconfig, ignoring it.", home);
-+		pr_warn("Not enough memory to process %s/.perfconfig, ignoring it.", home);
- 		goto out;
- 	}
- 
-@@ -689,7 +689,7 @@ static int perf_config_set__init(struct perf_config_set *set)
- 	ret = 0;
- 
- 	if (st.st_uid && (st.st_uid != geteuid())) {
--		pr_warning("File %s not owned by current user or root, ignoring it.", user_config);
-+		pr_warn("File %s not owned by current user or root, ignoring it.", user_config);
- 		goto out_free;
- 	}
- 
-diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-convert-bt.c
-index 0c268449959c..7679f854104f 100644
---- a/tools/perf/util/data-convert-bt.c
-+++ b/tools/perf/util/data-convert-bt.c
-@@ -442,8 +442,8 @@ add_bpf_output_values(struct bt_ctf_event_class *event_class,
- 	int ret;
- 
- 	if (nr_elements * sizeof(u32) != raw_size)
--		pr_warning("Incorrect raw_size (%u) in bpf output event, skip %zu bytes\n",
--			   raw_size, nr_elements * sizeof(u32) - raw_size);
-+		pr_warn("Incorrect raw_size (%u) in bpf output event, skip %zu bytes\n",
-+			raw_size, nr_elements * sizeof(u32) - raw_size);
- 
- 	len_type = bt_ctf_event_class_get_field_by_name(event_class, "raw_len");
- 	len_field = bt_ctf_field_create(len_type);
-diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
-index e75c3a279fe8..9a2c365413c0 100644
---- a/tools/perf/util/data.c
-+++ b/tools/perf/util/data.c
-@@ -380,7 +380,7 @@ int perf_data__switch(struct perf_data *data,
- 	 * original file.
- 	 */
- 	if (rename(data->path, *new_filepath))
--		pr_warning("Failed to rename %s to %s\n", data->path, *new_filepath);
-+		pr_warn("Failed to rename %s to %s\n", data->path, *new_filepath);
- 
- 	if (!at_exit) {
- 		close(data->file.fd);
-diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
-index a1b59bd35519..46cf8dc61df5 100644
---- a/tools/perf/util/debug.c
-+++ b/tools/perf/util/debug.c
-@@ -248,12 +248,12 @@ static int pr_ ## __n ## _wrapper(const char *fmt, ...)	\
- 	return ret;					\
- }
- 
--DEBUG_WRAPPER(warning, 0);
-+DEBUG_WRAPPER(warn, 0);
- DEBUG_WRAPPER(debug, 1);
- 
- void perf_debug_setup(void)
- {
--	libapi_set_print(pr_warning_wrapper, pr_warning_wrapper, pr_debug_wrapper);
-+	libapi_set_print(pr_warn_wrapper, pr_warn_wrapper, pr_debug_wrapper);
- }
- 
- /* Obtain a backtrace and print it to stdout. */
-diff --git a/tools/perf/util/debug.h b/tools/perf/util/debug.h
-index b2deee987ffa..dfe5056a0cb3 100644
---- a/tools/perf/util/debug.h
-+++ b/tools/perf/util/debug.h
-@@ -18,7 +18,7 @@ extern int debug_data_convert;
- 
- #define pr_err(fmt, ...) \
- 	eprintf(0, verbose, pr_fmt(fmt), ##__VA_ARGS__)
--#define pr_warning(fmt, ...) \
-+#define pr_warn(fmt, ...) \
- 	eprintf(0, verbose, pr_fmt(fmt), ##__VA_ARGS__)
- #define pr_info(fmt, ...) \
- 	eprintf(0, verbose, pr_fmt(fmt), ##__VA_ARGS__)
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index f4afbb858ebb..bd0a71808c98 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -149,8 +149,7 @@ static int perf_event__get_comm_ids(pid_t pid, char *comm, size_t len,
- 	n = read(fd, bf, sizeof(bf) - 1);
- 	close(fd);
- 	if (n <= 0) {
--		pr_warning("Couldn't get COMM, tigd and ppid for pid %d\n",
--			   pid);
-+		pr_warn("Couldn't get COMM, tigd and ppid for pid %d\n", pid);
- 		return -1;
- 	}
- 	bf[n] = '\0';
-@@ -378,10 +377,9 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 			break;
- 
- 		if ((rdclock() - t) > timeout) {
--			pr_warning("Reading %s time out. "
--				   "You may want to increase "
--				   "the time limit by --proc-map-timeout\n",
--				   filename);
-+			pr_warn("Reading %s time out. You may want to increase "
-+				"the time limit by --proc-map-timeout\n",
-+				filename);
- 			truncation = true;
- 			goto out;
- 		}
-@@ -1238,8 +1236,8 @@ void perf_event__read_stat_config(struct perf_stat_config *config,
- 		CASE(INTERVAL,  interval)
- #undef CASE
- 		default:
--			pr_warning("unknown stat config term %" PRI_lu64 "\n",
--				   event->data[i].tag);
-+			pr_warn("unknown stat config term %" PRI_lu64 "\n",
-+				event->data[i].tag);
- 		}
- 	}
- }
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 095924aa186b..5a8f62ad990b 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -1802,7 +1802,7 @@ int perf_evlist__add_sb_event(struct evlist **evlist,
- 		return -1;
- 
- 	if (!attr->sample_id_all) {
--		pr_warning("enabling sample_id_all for all side band events\n");
-+		pr_warn("enabling sample_id_all for all side band events\n");
- 		attr->sample_id_all = 1;
- 	}
- 
-@@ -1858,7 +1858,7 @@ static void *perf_evlist__poll_thread(void *arg)
- 				if (evsel && evsel->side_band.cb)
- 					evsel->side_band.cb(event, evsel->side_band.data);
- 				else
--					pr_warning("cannot locate proper evsel for the side band event\n");
-+					pr_warn("cannot locate proper evsel for the side band event\n");
- 
- 				perf_mmap__consume(map);
- 				got_data = true;
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 85825384f9e8..9bf817b66085 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -700,9 +700,9 @@ static void __perf_evsel__config_callchain(struct evsel *evsel,
- 	if (param->record_mode == CALLCHAIN_LBR) {
- 		if (!opts->branch_stack) {
- 			if (attr->exclude_user) {
--				pr_warning("LBR callstack option is only available "
--					   "to get user callchain information. "
--					   "Falling back to framepointers.\n");
-+				pr_warn("LBR callstack option is only available "
-+					"to get user callchain information. "
-+					"Falling back to framepointers.\n");
- 			} else {
- 				perf_evsel__set_sample_bit(evsel, BRANCH_STACK);
- 				attr->branch_sample_type = PERF_SAMPLE_BRANCH_USER |
-@@ -711,8 +711,8 @@ static void __perf_evsel__config_callchain(struct evsel *evsel,
- 							PERF_SAMPLE_BRANCH_NO_FLAGS;
+ 		} else if (btf_ext && strcmp(name, BTF_EXT_ELF_SEC) == 0) {
+ 			btf_ext_data = elf_getdata(scn, 0);
+ 			if (!btf_ext_data) {
+-				pr_warning("failed to get section(%d, %s) data from %s\n",
+-					   idx, name, path);
++				pr_warn("failed to get section(%d, %s) data from %s\n",
++					idx, name, path);
+ 				goto done;
  			}
- 		} else
--			 pr_warning("Cannot use LBR callstack with branch stack. "
--				    "Falling back to framepointers.\n");
-+			 pr_warn("Cannot use LBR callstack with branch stack. "
-+				 "Falling back to framepointers.\n");
+ 			continue;
+@@ -600,9 +600,9 @@ int btf__load(struct btf *btf)
+ 			       log_buf, log_buf_size, false);
+ 	if (btf->fd < 0) {
+ 		err = -errno;
+-		pr_warning("Error loading BTF: %s(%d)\n", strerror(errno), errno);
++		pr_warn("Error loading BTF: %s(%d)\n", strerror(errno), errno);
+ 		if (*log_buf)
+-			pr_warning("%s\n", log_buf);
++			pr_warn("%s\n", log_buf);
+ 		goto done;
  	}
  
- 	if (param->record_mode == CALLCHAIN_DWARF) {
-@@ -721,9 +721,9 @@ static void __perf_evsel__config_callchain(struct evsel *evsel,
- 			perf_evsel__set_sample_bit(evsel, STACK_USER);
- 			if (opts->sample_user_regs && DWARF_MINIMAL_REGS != PERF_REGS_MASK) {
- 				attr->sample_regs_user |= DWARF_MINIMAL_REGS;
--				pr_warning("WARNING: The use of --call-graph=dwarf may require all the user registers, "
--					   "specifying a subset with --user-regs may render DWARF unwinding unreliable, "
--					   "so the minimal registers set (IP, SP) is explicitly forced.\n");
-+				pr_warn("WARNING: The use of --call-graph=dwarf may require all the user registers, "
-+					"specifying a subset with --user-regs may render DWARF unwinding unreliable, "
-+					"so the minimal registers set (IP, SP) is explicitly forced.\n");
- 			} else {
- 				attr->sample_regs_user |= PERF_REGS_MASK;
- 			}
-@@ -1683,8 +1683,7 @@ static bool ignore_missing_thread(struct evsel *evsel,
- 	if (thread_map__remove(threads, thread))
- 		return false;
+@@ -707,8 +707,8 @@ int btf__get_map_kv_tids(const struct btf *btf, const char *map_name,
  
--	pr_warning("WARNING: Ignored open failure for pid %d\n",
--		   ignore_pid);
-+	pr_warn("WARNING: Ignored open failure for pid %d\n", ignore_pid);
- 	return true;
- }
- 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index b0c34dda30a0..c32719a81aa9 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -1235,7 +1235,7 @@ static int memory_node__read(struct memory_node *n, unsigned long idx)
- 
- 	dir = opendir(path);
- 	if (!dir) {
--		pr_warning("failed: cant' open memory sysfs data\n");
-+		pr_warn("failed: cant' open memory sysfs data\n");
- 		return -1;
+ 	if (snprintf(container_name, max_name, "____btf_map_%s", map_name) ==
+ 	    max_name) {
+-		pr_warning("map:%s length of '____btf_map_%s' is too long\n",
+-			   map_name, map_name);
++		pr_warn("map:%s length of '____btf_map_%s' is too long\n",
++			map_name, map_name);
+ 		return -EINVAL;
  	}
  
-@@ -2690,7 +2690,7 @@ static int process_bpf_prog_info(struct feat_fd *ff, void *data __maybe_unused)
- 	int err = -1;
+@@ -721,14 +721,14 @@ int btf__get_map_kv_tids(const struct btf *btf, const char *map_name,
  
- 	if (ff->ph->needs_swap) {
--		pr_warning("interpreting bpf_prog_info from systems with endianity is not yet supported\n");
-+		pr_warn("interpreting bpf_prog_info from systems with endianity is not yet supported\n");
- 		return 0;
+ 	container_type = btf__type_by_id(btf, container_id);
+ 	if (!container_type) {
+-		pr_warning("map:%s cannot find BTF type for container_id:%u\n",
+-			   map_name, container_id);
++		pr_warn("map:%s cannot find BTF type for container_id:%u\n",
++			map_name, container_id);
+ 		return -EINVAL;
  	}
  
-@@ -2710,7 +2710,7 @@ static int process_bpf_prog_info(struct feat_fd *ff, void *data __maybe_unused)
- 			goto out;
- 
- 		if (info_len > sizeof(struct bpf_prog_info)) {
--			pr_warning("detected invalid bpf_prog_info\n");
-+			pr_warn("detected invalid bpf_prog_info\n");
- 			goto out;
- 		}
- 
-@@ -2764,7 +2764,7 @@ static int process_bpf_btf(struct feat_fd *ff, void *data __maybe_unused)
- 	int err = -1;
- 
- 	if (ff->ph->needs_swap) {
--		pr_warning("interpreting btf from systems with endianity is not yet supported\n");
-+		pr_warn("interpreting btf from systems with endianity is not yet supported\n");
- 		return 0;
+ 	if (!btf_is_struct(container_type) || btf_vlen(container_type) < 2) {
+-		pr_warning("map:%s container_name:%s is an invalid container struct\n",
+-			   map_name, container_name);
++		pr_warn("map:%s container_name:%s is an invalid container struct\n",
++			map_name, container_name);
+ 		return -EINVAL;
  	}
  
-@@ -2907,7 +2907,7 @@ static int perf_file_section__fprintf_info(struct perf_file_section *section,
- 		return 0;
- 	}
- 	if (feat >= HEADER_LAST_FEATURE) {
--		pr_warning("unknown feature %d\n", feat);
-+		pr_warn("unknown feature %d\n", feat);
- 		return 0;
- 	}
- 	if (!feat_ops[feat].print)
-@@ -3577,9 +3577,9 @@ int perf_session__read_header(struct perf_session *session)
- 	 * information.  Just warn user and process it as much as it can.
- 	 */
- 	if (f_header.data.size == 0) {
--		pr_warning("WARNING: The %s file's data size field is 0 which is unexpected.\n"
--			   "Was the 'perf record' command properly terminated?\n",
--			   data->file.path);
-+		pr_warn("WARNING: The %s file's data size field is 0 which is unexpected.\n"
-+			"Was the 'perf record' command properly terminated?\n",
-+			data->file.path);
+@@ -737,25 +737,25 @@ int btf__get_map_kv_tids(const struct btf *btf, const char *map_name,
+ 
+ 	key_size = btf__resolve_size(btf, key->type);
+ 	if (key_size < 0) {
+-		pr_warning("map:%s invalid BTF key_type_size\n", map_name);
++		pr_warn("map:%s invalid BTF key_type_size\n", map_name);
+ 		return key_size;
  	}
  
- 	if (f_header.attr_size == 0) {
-@@ -3765,11 +3765,11 @@ int perf_event__process_feature(struct perf_session *session,
- 	u64 feat = fe->feat_id;
- 
- 	if (type < 0 || type >= PERF_RECORD_HEADER_MAX) {
--		pr_warning("invalid record type %d in pipe-mode\n", type);
-+		pr_warn("invalid record type %d in pipe-mode\n", type);
- 		return 0;
- 	}
- 	if (feat == HEADER_RESERVED || feat >= HEADER_LAST_FEATURE) {
--		pr_warning("invalid record type %d in pipe-mode\n", type);
-+		pr_warn("invalid record type %d in pipe-mode\n", type);
- 		return -1;
+ 	if (expected_key_size != key_size) {
+-		pr_warning("map:%s btf_key_type_size:%u != map_def_key_size:%u\n",
+-			   map_name, (__u32)key_size, expected_key_size);
++		pr_warn("map:%s btf_key_type_size:%u != map_def_key_size:%u\n",
++			map_name, (__u32)key_size, expected_key_size);
+ 		return -EINVAL;
  	}
  
-diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
-index b80f29bfc7bb..d815a17f4fc4 100644
---- a/tools/perf/util/jitdump.c
-+++ b/tools/perf/util/jitdump.c
-@@ -91,7 +91,7 @@ jit_emit_elf(char *filename,
- 
- 	fd = open(filename, O_CREAT|O_TRUNC|O_WRONLY, 0644);
- 	if (fd == -1) {
--		pr_warning("cannot create jit ELF %s: %s\n", filename, strerror(errno));
-+		pr_warn("cannot create jit ELF %s: %s\n", filename, strerror(errno));
- 		return -1;
+ 	value_size = btf__resolve_size(btf, value->type);
+ 	if (value_size < 0) {
+-		pr_warning("map:%s invalid BTF value_type_size\n", map_name);
++		pr_warn("map:%s invalid BTF value_type_size\n", map_name);
+ 		return value_size;
  	}
  
-@@ -284,7 +284,7 @@ jit_get_next_entry(struct jit_buf_desc *jd)
- 		return NULL;
- 
- 	if (id >= JIT_CODE_MAX) {
--		pr_warning("next_entry: unknown record type %d, skipping\n", id);
-+		pr_warn("next_entry: unknown record type %d, skipping\n", id);
+ 	if (expected_value_size != value_size) {
+-		pr_warning("map:%s btf_value_type_size:%u != map_def_value_size:%u\n",
+-			   map_name, (__u32)value_size, expected_value_size);
++		pr_warn("map:%s btf_value_type_size:%u != map_def_value_size:%u\n",
++			map_name, (__u32)value_size, expected_value_size);
+ 		return -EINVAL;
  	}
- 	if (bs > jd->bufsize) {
- 		void *n;
-diff --git a/tools/perf/util/llvm-utils.c b/tools/perf/util/llvm-utils.c
-index 55fb4b3b1157..9cbce7f1fedd 100644
---- a/tools/perf/util/llvm-utils.c
-+++ b/tools/perf/util/llvm-utils.c
-@@ -332,7 +332,7 @@ void llvm__get_kbuild_opts(char **kbuild_dir, char **kbuild_include_opts)
  
- 	err = detect_kbuild_dir(kbuild_dir);
- 	if (err) {
--		pr_warning(
-+		pr_warn(
- "WARNING:\tunable to get correct kernel building directory.\n"
- "Hint:\tSet correct kbuild directory using 'kbuild-dir' option in [llvm]\n"
- "     \tsection of ~/.perfconfig or set it to \"\" to suppress kbuild\n"
-@@ -347,7 +347,7 @@ void llvm__get_kbuild_opts(char **kbuild_dir, char **kbuild_include_opts)
- 			     (void **)kbuild_include_opts,
- 			     NULL);
- 	if (err) {
--		pr_warning(
-+		pr_warn(
- "WARNING:\tunable to get kernel include directories from '%s'\n"
- "Hint:\tTry set clang include options using 'clang-bpf-cmd-template'\n"
- "     \toption in [llvm] section of ~/.perfconfig and set 'kbuild-dir'\n"
-@@ -398,29 +398,29 @@ void llvm__dump_obj(const char *path, void *obj_buf, size_t size)
- 	char *p;
+diff --git a/tools/lib/bpf/btf_dump.c b/tools/lib/bpf/btf_dump.c
+index 715967762312..81793ab4b6a1 100644
+--- a/tools/lib/bpf/btf_dump.c
++++ b/tools/lib/bpf/btf_dump.c
+@@ -347,7 +347,7 @@ static int btf_dump_order_type(struct btf_dump *d, __u32 id, bool through_ptr)
+ 		/* type loop, but resolvable through fwd declaration */
+ 		if (btf_is_composite(t) && through_ptr && t->name_off != 0)
+ 			return 0;
+-		pr_warning("unsatisfiable type cycle, id:[%u]\n", id);
++		pr_warn("unsatisfiable type cycle, id:[%u]\n", id);
+ 		return -ELOOP;
+ 	}
  
- 	if (!obj_path) {
--		pr_warning("WARNING: Not enough memory, skip object dumping\n");
-+		pr_warn("WARNING: Not enough memory, skip object dumping\n");
+@@ -537,7 +537,7 @@ static void btf_dump_emit_type(struct btf_dump *d, __u32 id, __u32 cont_id)
+ 	kind = btf_kind(t);
+ 
+ 	if (top_level_def && t->name_off == 0) {
+-		pr_warning("unexpected nameless definition, id:[%u]\n", id);
++		pr_warn("unexpected nameless definition, id:[%u]\n", id);
  		return;
  	}
  
- 	p = strrchr(obj_path, '.');
- 	if (!p || (strcmp(p, ".c") != 0)) {
--		pr_warning("WARNING: invalid llvm source path: '%s', skip object dumping\n",
--			   obj_path);
-+		pr_warn("WARNING: invalid llvm source path: '%s', skip object dumping\n",
-+			obj_path);
- 		goto out;
+@@ -555,8 +555,8 @@ static void btf_dump_emit_type(struct btf_dump *d, __u32 id, __u32 cont_id)
+ 			if (id == cont_id)
+ 				return;
+ 			if (t->name_off == 0) {
+-				pr_warning("anonymous struct/union loop, id:[%u]\n",
+-					   id);
++				pr_warn("anonymous struct/union loop, id:[%u]\n",
++					id);
+ 				return;
+ 			}
+ 			btf_dump_emit_struct_fwd(d, id, t);
+@@ -701,7 +701,7 @@ static int btf_align_of(const struct btf *btf, __u32 id)
+ 		return align;
+ 	}
+ 	default:
+-		pr_warning("unsupported BTF_KIND:%u\n", btf_kind(t));
++		pr_warn("unsupported BTF_KIND:%u\n", btf_kind(t));
+ 		return 1;
+ 	}
+ }
+@@ -969,7 +969,7 @@ static void btf_dump_emit_type_decl(struct btf_dump *d, __u32 id,
+ 			 * chain, restore stack, emit warning, and try to
+ 			 * proceed nevertheless
+ 			 */
+-			pr_warning("not enough memory for decl stack:%d", err);
++			pr_warn("not enough memory for decl stack:%d", err);
+ 			d->decl_stack_cnt = stack_start;
+ 			return;
+ 		}
+@@ -998,8 +998,8 @@ static void btf_dump_emit_type_decl(struct btf_dump *d, __u32 id,
+ 		case BTF_KIND_TYPEDEF:
+ 			goto done;
+ 		default:
+-			pr_warning("unexpected type in decl chain, kind:%u, id:[%u]\n",
+-				   btf_kind(t), id);
++			pr_warn("unexpected type in decl chain, kind:%u, id:[%u]\n",
++				btf_kind(t), id);
+ 			goto done;
+ 		}
+ 	}
+@@ -1224,8 +1224,8 @@ static void btf_dump_emit_type_chain(struct btf_dump *d,
+ 			return;
+ 		}
+ 		default:
+-			pr_warning("unexpected type in decl chain, kind:%u, id:[%u]\n",
+-				   kind, id);
++			pr_warn("unexpected type in decl chain, kind:%u, id:[%u]\n",
++				kind, id);
+ 			return;
+ 		}
+ 
+diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+index e0276520171b..cfec30390603 100644
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -310,8 +310,8 @@ void bpf_program__unload(struct bpf_program *prog)
+ 		for (i = 0; i < prog->instances.nr; i++)
+ 			zclose(prog->instances.fds[i]);
+ 	} else if (prog->instances.nr != -1) {
+-		pr_warning("Internal error: instances.nr is %d\n",
+-			   prog->instances.nr);
++		pr_warn("Internal error: instances.nr is %d\n",
++			prog->instances.nr);
  	}
  
- 	p[1] = 'o';
- 	fp = fopen(obj_path, "wb");
- 	if (!fp) {
--		pr_warning("WARNING: failed to open '%s': %s, skip object dumping\n",
--			   obj_path, strerror(errno));
-+		pr_warn("WARNING: failed to open '%s': %s, skip object dumping\n",
-+			obj_path, strerror(errno));
- 		goto out;
+ 	prog->instances.nr = -1;
+@@ -362,8 +362,8 @@ bpf_program__init(void *data, size_t size, char *section_name, int idx,
+ 	const size_t bpf_insn_sz = sizeof(struct bpf_insn);
+ 
+ 	if (size == 0 || size % bpf_insn_sz) {
+-		pr_warning("corrupted section '%s', size: %zu\n",
+-			   section_name, size);
++		pr_warn("corrupted section '%s', size: %zu\n",
++			section_name, size);
+ 		return -EINVAL;
  	}
  
- 	pr_info("LLVM: dumping %s\n", obj_path);
- 	if (fwrite(obj_buf, size, 1, fp) != 1)
--		pr_warning("WARNING: failed to write to file '%s': %s, skip object dumping\n",
--			   obj_path, strerror(errno));
-+		pr_warn("WARNING: failed to write to file '%s': %s, skip object dumping\n",
-+			obj_path, strerror(errno));
- 	fclose(fp);
+@@ -371,22 +371,22 @@ bpf_program__init(void *data, size_t size, char *section_name, int idx,
+ 
+ 	prog->section_name = strdup(section_name);
+ 	if (!prog->section_name) {
+-		pr_warning("failed to alloc name for prog under section(%d) %s\n",
+-			   idx, section_name);
++		pr_warn("failed to alloc name for prog under section(%d) %s\n",
++			idx, section_name);
+ 		goto errout;
+ 	}
+ 
+ 	prog->pin_name = __bpf_program__pin_name(prog);
+ 	if (!prog->pin_name) {
+-		pr_warning("failed to alloc pin name for prog under section(%d) %s\n",
+-			   idx, section_name);
++		pr_warn("failed to alloc pin name for prog under section(%d) %s\n",
++			idx, section_name);
+ 		goto errout;
+ 	}
+ 
+ 	prog->insns = malloc(size);
+ 	if (!prog->insns) {
+-		pr_warning("failed to alloc insns for prog under section %s\n",
+-			   section_name);
++		pr_warn("failed to alloc insns for prog under section %s\n",
++			section_name);
+ 		goto errout;
+ 	}
+ 	prog->insns_cnt = size / bpf_insn_sz;
+@@ -424,8 +424,8 @@ bpf_object__add_program(struct bpf_object *obj, void *data, size_t size,
+ 		 * is still valid, so don't need special treat for
+ 		 * bpf_close_object().
+ 		 */
+-		pr_warning("failed to alloc a new program under section '%s'\n",
+-			   section_name);
++		pr_warn("failed to alloc a new program under section '%s'\n",
++			section_name);
+ 		bpf_program__exit(&prog);
+ 		return -ENOMEM;
+ 	}
+@@ -465,8 +465,8 @@ bpf_object__init_prog_names(struct bpf_object *obj)
+ 					  obj->efile.strtabidx,
+ 					  sym.st_name);
+ 			if (!name) {
+-				pr_warning("failed to get sym name string for prog %s\n",
+-					   prog->section_name);
++				pr_warn("failed to get sym name string for prog %s\n",
++					prog->section_name);
+ 				return -LIBBPF_ERRNO__LIBELF;
+ 			}
+ 		}
+@@ -475,15 +475,15 @@ bpf_object__init_prog_names(struct bpf_object *obj)
+ 			name = ".text";
+ 
+ 		if (!name) {
+-			pr_warning("failed to find sym for prog %s\n",
+-				   prog->section_name);
++			pr_warn("failed to find sym for prog %s\n",
++				prog->section_name);
+ 			return -EINVAL;
+ 		}
+ 
+ 		prog->name = strdup(name);
+ 		if (!prog->name) {
+-			pr_warning("failed to allocate memory for prog sym %s\n",
+-				   name);
++			pr_warn("failed to allocate memory for prog sym %s\n",
++				name);
+ 			return -ENOMEM;
+ 		}
+ 	}
+@@ -500,7 +500,7 @@ static struct bpf_object *bpf_object__new(const char *path,
+ 
+ 	obj = calloc(1, sizeof(struct bpf_object) + strlen(path) + 1);
+ 	if (!obj) {
+-		pr_warning("alloc memory failed for %s\n", path);
++		pr_warn("alloc memory failed for %s\n", path);
+ 		return ERR_PTR(-ENOMEM);
+ 	}
+ 
+@@ -560,7 +560,7 @@ static int bpf_object__elf_init(struct bpf_object *obj)
+ 	GElf_Ehdr *ep;
+ 
+ 	if (obj_elf_valid(obj)) {
+-		pr_warning("elf init: internal error\n");
++		pr_warn("elf init: internal error\n");
+ 		return -LIBBPF_ERRNO__LIBELF;
+ 	}
+ 
+@@ -578,7 +578,7 @@ static int bpf_object__elf_init(struct bpf_object *obj)
+ 
+ 			err = -errno;
+ 			cp = libbpf_strerror_r(err, errmsg, sizeof(errmsg));
+-			pr_warning("failed to open %s: %s\n", obj->path, cp);
++			pr_warn("failed to open %s: %s\n", obj->path, cp);
+ 			return err;
+ 		}
+ 
+@@ -587,13 +587,13 @@ static int bpf_object__elf_init(struct bpf_object *obj)
+ 	}
+ 
+ 	if (!obj->efile.elf) {
+-		pr_warning("failed to open %s as ELF file\n", obj->path);
++		pr_warn("failed to open %s as ELF file\n", obj->path);
+ 		err = -LIBBPF_ERRNO__LIBELF;
+ 		goto errout;
+ 	}
+ 
+ 	if (!gelf_getehdr(obj->efile.elf, &obj->efile.ehdr)) {
+-		pr_warning("failed to get EHDR from %s\n", obj->path);
++		pr_warn("failed to get EHDR from %s\n", obj->path);
+ 		err = -LIBBPF_ERRNO__FORMAT;
+ 		goto errout;
+ 	}
+@@ -602,7 +602,7 @@ static int bpf_object__elf_init(struct bpf_object *obj)
+ 	/* Old LLVM set e_machine to EM_NONE */
+ 	if (ep->e_type != ET_REL ||
+ 	    (ep->e_machine && ep->e_machine != EM_BPF)) {
+-		pr_warning("%s is not an eBPF object file\n", obj->path);
++		pr_warn("%s is not an eBPF object file\n", obj->path);
+ 		err = -LIBBPF_ERRNO__FORMAT;
+ 		goto errout;
+ 	}
+@@ -624,7 +624,7 @@ static int bpf_object__check_endianness(struct bpf_object *obj)
+ #else
+ # error "Unrecognized __BYTE_ORDER__"
+ #endif
+-	pr_warning("endianness mismatch.\n");
++	pr_warn("endianness mismatch.\n");
+ 	return -LIBBPF_ERRNO__ENDIAN;
+ }
+ 
+@@ -642,7 +642,7 @@ bpf_object__init_kversion(struct bpf_object *obj, void *data, size_t size)
+ 	__u32 kver;
+ 
+ 	if (size != sizeof(kver)) {
+-		pr_warning("invalid kver section in %s\n", obj->path);
++		pr_warn("invalid kver section in %s\n", obj->path);
+ 		return -LIBBPF_ERRNO__FORMAT;
+ 	}
+ 	memcpy(&kver, data, sizeof(kver));
+@@ -684,15 +684,15 @@ static int bpf_object_search_section_size(const struct bpf_object *obj,
+ 
+ 		idx++;
+ 		if (gelf_getshdr(scn, &sh) != &sh) {
+-			pr_warning("failed to get section(%d) header from %s\n",
+-				   idx, obj->path);
++			pr_warn("failed to get section(%d) header from %s\n",
++				idx, obj->path);
+ 			return -EIO;
+ 		}
+ 
+ 		sec_name = elf_strptr(elf, ep->e_shstrndx, sh.sh_name);
+ 		if (!sec_name) {
+-			pr_warning("failed to get section(%d) name from %s\n",
+-				   idx, obj->path);
++			pr_warn("failed to get section(%d) name from %s\n",
++				idx, obj->path);
+ 			return -EIO;
+ 		}
+ 
+@@ -701,8 +701,8 @@ static int bpf_object_search_section_size(const struct bpf_object *obj,
+ 
+ 		data = elf_getdata(scn, 0);
+ 		if (!data) {
+-			pr_warning("failed to get section(%d) data from %s(%s)\n",
+-				   idx, name, obj->path);
++			pr_warn("failed to get section(%d) data from %s(%s)\n",
++				idx, name, obj->path);
+ 			return -EIO;
+ 		}
+ 
+@@ -762,8 +762,8 @@ int bpf_object__variable_offset(const struct bpf_object *obj, const char *name,
+ 		sname = elf_strptr(obj->efile.elf, obj->efile.strtabidx,
+ 				   sym.st_name);
+ 		if (!sname) {
+-			pr_warning("failed to get sym name string for var %s\n",
+-				   name);
++			pr_warn("failed to get sym name string for var %s\n",
++				name);
+ 			return -EIO;
+ 		}
+ 		if (strcmp(name, sname) == 0) {
+@@ -787,7 +787,7 @@ static struct bpf_map *bpf_object__add_map(struct bpf_object *obj)
+ 	new_cap = max((size_t)4, obj->maps_cap * 3 / 2);
+ 	new_maps = realloc(obj->maps, new_cap * sizeof(*obj->maps));
+ 	if (!new_maps) {
+-		pr_warning("alloc maps for object failed\n");
++		pr_warn("alloc maps for object failed\n");
+ 		return ERR_PTR(-ENOMEM);
+ 	}
+ 
+@@ -828,7 +828,7 @@ bpf_object__init_internal_map(struct bpf_object *obj, enum libbpf_map_type type,
+ 		 libbpf_type_to_btf_name[type]);
+ 	map->name = strdup(map_name);
+ 	if (!map->name) {
+-		pr_warning("failed to alloc map name\n");
++		pr_warn("failed to alloc map name\n");
+ 		return -ENOMEM;
+ 	}
+ 	pr_debug("map '%s' (global data): at sec_idx %d, offset %zu.\n",
+@@ -844,7 +844,7 @@ bpf_object__init_internal_map(struct bpf_object *obj, enum libbpf_map_type type,
+ 		*data_buff = malloc(data->d_size);
+ 		if (!*data_buff) {
+ 			zfree(&map->name);
+-			pr_warning("failed to alloc map content buffer\n");
++			pr_warn("failed to alloc map content buffer\n");
+ 			return -ENOMEM;
+ 		}
+ 		memcpy(*data_buff, data->d_buf, data->d_size);
+@@ -906,8 +906,8 @@ static int bpf_object__init_user_maps(struct bpf_object *obj, bool strict)
+ 	if (scn)
+ 		data = elf_getdata(scn, NULL);
+ 	if (!scn || !data) {
+-		pr_warning("failed to get Elf_Data from map section %d\n",
+-			   obj->efile.maps_shndx);
++		pr_warn("failed to get Elf_Data from map section %d\n",
++			obj->efile.maps_shndx);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -934,9 +934,9 @@ static int bpf_object__init_user_maps(struct bpf_object *obj, bool strict)
+ 
+ 	map_def_sz = data->d_size / nr_maps;
+ 	if (!data->d_size || (data->d_size % nr_maps) != 0) {
+-		pr_warning("unable to determine map definition size "
+-			   "section %s, %d maps in %zd bytes\n",
+-			   obj->path, nr_maps, data->d_size);
++		pr_warn("unable to determine map definition size "
++			"section %s, %d maps in %zd bytes\n",
++			obj->path, nr_maps, data->d_size);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -959,8 +959,8 @@ static int bpf_object__init_user_maps(struct bpf_object *obj, bool strict)
+ 		map_name = elf_strptr(obj->efile.elf, obj->efile.strtabidx,
+ 				      sym.st_name);
+ 		if (!map_name) {
+-			pr_warning("failed to get map #%d name sym string for obj %s\n",
+-				   i, obj->path);
++			pr_warn("failed to get map #%d name sym string for obj %s\n",
++				i, obj->path);
+ 			return -LIBBPF_ERRNO__FORMAT;
+ 		}
+ 
+@@ -970,14 +970,14 @@ static int bpf_object__init_user_maps(struct bpf_object *obj, bool strict)
+ 		pr_debug("map '%s' (legacy): at sec_idx %d, offset %zu.\n",
+ 			 map_name, map->sec_idx, map->sec_offset);
+ 		if (sym.st_value + map_def_sz > data->d_size) {
+-			pr_warning("corrupted maps section in %s: last map \"%s\" too small\n",
+-				   obj->path, map_name);
++			pr_warn("corrupted maps section in %s: last map \"%s\" too small\n",
++				obj->path, map_name);
+ 			return -EINVAL;
+ 		}
+ 
+ 		map->name = strdup(map_name);
+ 		if (!map->name) {
+-			pr_warning("failed to alloc map name\n");
++			pr_warn("failed to alloc map name\n");
+ 			return -ENOMEM;
+ 		}
+ 		pr_debug("map %d is \"%s\"\n", i, map->name);
+@@ -1001,10 +1001,10 @@ static int bpf_object__init_user_maps(struct bpf_object *obj, bool strict)
+ 			for (b = ((char *)def) + sizeof(struct bpf_map_def);
+ 			     b < ((char *)def) + map_def_sz; b++) {
+ 				if (*b != 0) {
+-					pr_warning("maps section in %s: \"%s\" "
+-						   "has unrecognized, non-zero "
+-						   "options\n",
+-						   obj->path, map_name);
++					pr_warn("maps section in %s: \"%s\" "
++						"has unrecognized, non-zero "
++						"options\n",
++						obj->path, map_name);
+ 					if (strict)
+ 						return -EINVAL;
+ 				}
+@@ -1048,20 +1048,20 @@ static bool get_map_field_int(const char *map_name, const struct btf *btf,
+ 	const struct btf_type *arr_t;
+ 
+ 	if (!btf_is_ptr(t)) {
+-		pr_warning("map '%s': attr '%s': expected PTR, got %u.\n",
+-			   map_name, name, btf_kind(t));
++		pr_warn("map '%s': attr '%s': expected PTR, got %u.\n",
++			map_name, name, btf_kind(t));
+ 		return false;
+ 	}
+ 
+ 	arr_t = btf__type_by_id(btf, t->type);
+ 	if (!arr_t) {
+-		pr_warning("map '%s': attr '%s': type [%u] not found.\n",
+-			   map_name, name, t->type);
++		pr_warn("map '%s': attr '%s': type [%u] not found.\n",
++			map_name, name, t->type);
+ 		return false;
+ 	}
+ 	if (!btf_is_array(arr_t)) {
+-		pr_warning("map '%s': attr '%s': expected ARRAY, got %u.\n",
+-			   map_name, name, btf_kind(arr_t));
++		pr_warn("map '%s': attr '%s': expected ARRAY, got %u.\n",
++			map_name, name, btf_kind(arr_t));
+ 		return false;
+ 	}
+ 	arr_info = btf_array(arr_t);
+@@ -1089,33 +1089,33 @@ static int bpf_object__init_user_btf_map(struct bpf_object *obj,
+ 	vlen = btf_vlen(var);
+ 
+ 	if (map_name == NULL || map_name[0] == '\0') {
+-		pr_warning("map #%d: empty name.\n", var_idx);
++		pr_warn("map #%d: empty name.\n", var_idx);
+ 		return -EINVAL;
+ 	}
+ 	if ((__u64)vi->offset + vi->size > data->d_size) {
+-		pr_warning("map '%s' BTF data is corrupted.\n", map_name);
++		pr_warn("map '%s' BTF data is corrupted.\n", map_name);
+ 		return -EINVAL;
+ 	}
+ 	if (!btf_is_var(var)) {
+-		pr_warning("map '%s': unexpected var kind %u.\n",
+-			   map_name, btf_kind(var));
++		pr_warn("map '%s': unexpected var kind %u.\n",
++			map_name, btf_kind(var));
+ 		return -EINVAL;
+ 	}
+ 	if (var_extra->linkage != BTF_VAR_GLOBAL_ALLOCATED &&
+ 	    var_extra->linkage != BTF_VAR_STATIC) {
+-		pr_warning("map '%s': unsupported var linkage %u.\n",
+-			   map_name, var_extra->linkage);
++		pr_warn("map '%s': unsupported var linkage %u.\n",
++			map_name, var_extra->linkage);
+ 		return -EOPNOTSUPP;
+ 	}
+ 
+ 	def = skip_mods_and_typedefs(obj->btf, var->type, NULL);
+ 	if (!btf_is_struct(def)) {
+-		pr_warning("map '%s': unexpected def kind %u.\n",
+-			   map_name, btf_kind(var));
++		pr_warn("map '%s': unexpected def kind %u.\n",
++			map_name, btf_kind(var));
+ 		return -EINVAL;
+ 	}
+ 	if (def->size > vi->size) {
+-		pr_warning("map '%s': invalid def size.\n", map_name);
++		pr_warn("map '%s': invalid def size.\n", map_name);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -1124,7 +1124,7 @@ static int bpf_object__init_user_btf_map(struct bpf_object *obj,
+ 		return PTR_ERR(map);
+ 	map->name = strdup(map_name);
+ 	if (!map->name) {
+-		pr_warning("map '%s': failed to alloc map name.\n", map_name);
++		pr_warn("map '%s': failed to alloc map name.\n", map_name);
+ 		return -ENOMEM;
+ 	}
+ 	map->libbpf_type = LIBBPF_MAP_UNSPEC;
+@@ -1140,8 +1140,7 @@ static int bpf_object__init_user_btf_map(struct bpf_object *obj,
+ 		const char *name = btf__name_by_offset(obj->btf, m->name_off);
+ 
+ 		if (!name) {
+-			pr_warning("map '%s': invalid field #%d.\n",
+-				   map_name, i);
++			pr_warn("map '%s': invalid field #%d.\n", map_name, i);
+ 			return -EINVAL;
+ 		}
+ 		if (strcmp(name, "type") == 0) {
+@@ -1171,8 +1170,8 @@ static int bpf_object__init_user_btf_map(struct bpf_object *obj,
+ 			pr_debug("map '%s': found key_size = %u.\n",
+ 				 map_name, sz);
+ 			if (map->def.key_size && map->def.key_size != sz) {
+-				pr_warning("map '%s': conflicting key size %u != %u.\n",
+-					   map_name, map->def.key_size, sz);
++				pr_warn("map '%s': conflicting key size %u != %u.\n",
++					map_name, map->def.key_size, sz);
+ 				return -EINVAL;
+ 			}
+ 			map->def.key_size = sz;
+@@ -1181,26 +1180,26 @@ static int bpf_object__init_user_btf_map(struct bpf_object *obj,
+ 
+ 			t = btf__type_by_id(obj->btf, m->type);
+ 			if (!t) {
+-				pr_warning("map '%s': key type [%d] not found.\n",
+-					   map_name, m->type);
++				pr_warn("map '%s': key type [%d] not found.\n",
++					map_name, m->type);
+ 				return -EINVAL;
+ 			}
+ 			if (!btf_is_ptr(t)) {
+-				pr_warning("map '%s': key spec is not PTR: %u.\n",
+-					   map_name, btf_kind(t));
++				pr_warn("map '%s': key spec is not PTR: %u.\n",
++					map_name, btf_kind(t));
+ 				return -EINVAL;
+ 			}
+ 			sz = btf__resolve_size(obj->btf, t->type);
+ 			if (sz < 0) {
+-				pr_warning("map '%s': can't determine key size for type [%u]: %lld.\n",
+-					   map_name, t->type, sz);
++				pr_warn("map '%s': can't determine key size for type [%u]: %lld.\n",
++					map_name, t->type, sz);
+ 				return sz;
+ 			}
+ 			pr_debug("map '%s': found key [%u], sz = %lld.\n",
+ 				 map_name, t->type, sz);
+ 			if (map->def.key_size && map->def.key_size != sz) {
+-				pr_warning("map '%s': conflicting key size %u != %lld.\n",
+-					   map_name, map->def.key_size, sz);
++				pr_warn("map '%s': conflicting key size %u != %lld.\n",
++					map_name, map->def.key_size, sz);
+ 				return -EINVAL;
+ 			}
+ 			map->def.key_size = sz;
+@@ -1214,8 +1213,8 @@ static int bpf_object__init_user_btf_map(struct bpf_object *obj,
+ 			pr_debug("map '%s': found value_size = %u.\n",
+ 				 map_name, sz);
+ 			if (map->def.value_size && map->def.value_size != sz) {
+-				pr_warning("map '%s': conflicting value size %u != %u.\n",
+-					   map_name, map->def.value_size, sz);
++				pr_warn("map '%s': conflicting value size %u != %u.\n",
++					map_name, map->def.value_size, sz);
+ 				return -EINVAL;
+ 			}
+ 			map->def.value_size = sz;
+@@ -1224,34 +1223,34 @@ static int bpf_object__init_user_btf_map(struct bpf_object *obj,
+ 
+ 			t = btf__type_by_id(obj->btf, m->type);
+ 			if (!t) {
+-				pr_warning("map '%s': value type [%d] not found.\n",
+-					   map_name, m->type);
++				pr_warn("map '%s': value type [%d] not found.\n",
++					map_name, m->type);
+ 				return -EINVAL;
+ 			}
+ 			if (!btf_is_ptr(t)) {
+-				pr_warning("map '%s': value spec is not PTR: %u.\n",
++				pr_warn("map '%s': value spec is not PTR: %u.\n",
+ 					   map_name, btf_kind(t));
+ 				return -EINVAL;
+ 			}
+ 			sz = btf__resolve_size(obj->btf, t->type);
+ 			if (sz < 0) {
+-				pr_warning("map '%s': can't determine value size for type [%u]: %lld.\n",
+-					   map_name, t->type, sz);
++				pr_warn("map '%s': can't determine value size for type [%u]: %lld.\n",
++					map_name, t->type, sz);
+ 				return sz;
+ 			}
+ 			pr_debug("map '%s': found value [%u], sz = %lld.\n",
+ 				 map_name, t->type, sz);
+ 			if (map->def.value_size && map->def.value_size != sz) {
+-				pr_warning("map '%s': conflicting value size %u != %lld.\n",
+-					   map_name, map->def.value_size, sz);
++				pr_warn("map '%s': conflicting value size %u != %lld.\n",
++					map_name, map->def.value_size, sz);
+ 				return -EINVAL;
+ 			}
+ 			map->def.value_size = sz;
+ 			map->btf_value_type_id = t->type;
+ 		} else {
+ 			if (strict) {
+-				pr_warning("map '%s': unknown field '%s'.\n",
+-					   map_name, name);
++				pr_warn("map '%s': unknown field '%s'.\n",
++					map_name, name);
+ 				return -ENOTSUP;
+ 			}
+ 			pr_debug("map '%s': ignoring unknown field '%s'.\n",
+@@ -1260,7 +1259,7 @@ static int bpf_object__init_user_btf_map(struct bpf_object *obj,
+ 	}
+ 
+ 	if (map->def.type == BPF_MAP_TYPE_UNSPEC) {
+-		pr_warning("map '%s': map type isn't specified.\n", map_name);
++		pr_warn("map '%s': map type isn't specified.\n", map_name);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -1283,8 +1282,8 @@ static int bpf_object__init_user_btf_maps(struct bpf_object *obj, bool strict)
+ 	if (scn)
+ 		data = elf_getdata(scn, NULL);
+ 	if (!scn || !data) {
+-		pr_warning("failed to get Elf_Data from map section %d (%s)\n",
+-			   obj->efile.maps_shndx, MAPS_ELF_SEC);
++		pr_warn("failed to get Elf_Data from map section %d (%s)\n",
++			obj->efile.maps_shndx, MAPS_ELF_SEC);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -1301,7 +1300,7 @@ static int bpf_object__init_user_btf_maps(struct bpf_object *obj, bool strict)
+ 	}
+ 
+ 	if (!sec) {
+-		pr_warning("DATASEC '%s' not found.\n", MAPS_ELF_SEC);
++		pr_warn("DATASEC '%s' not found.\n", MAPS_ELF_SEC);
+ 		return -ENOENT;
+ 	}
+ 
+@@ -1445,14 +1444,13 @@ static int bpf_object__init_btf(struct bpf_object *obj,
+ 	if (btf_data) {
+ 		obj->btf = btf__new(btf_data->d_buf, btf_data->d_size);
+ 		if (IS_ERR(obj->btf)) {
+-			pr_warning("Error loading ELF section %s: %d.\n",
+-				   BTF_ELF_SEC, err);
++			pr_warn("Error loading ELF section %s: %d.\n",
++				BTF_ELF_SEC, err);
+ 			goto out;
+ 		}
+ 		err = btf__finalize_data(obj, obj->btf);
+ 		if (err) {
+-			pr_warning("Error finalizing %s: %d.\n",
+-				   BTF_ELF_SEC, err);
++			pr_warn("Error finalizing %s: %d.\n", BTF_ELF_SEC, err);
+ 			goto out;
+ 		}
+ 	}
+@@ -1465,8 +1463,8 @@ static int bpf_object__init_btf(struct bpf_object *obj,
+ 		obj->btf_ext = btf_ext__new(btf_ext_data->d_buf,
+ 					    btf_ext_data->d_size);
+ 		if (IS_ERR(obj->btf_ext)) {
+-			pr_warning("Error loading ELF section %s: %ld. Ignored and continue.\n",
+-				   BTF_EXT_ELF_SEC, PTR_ERR(obj->btf_ext));
++			pr_warn("Error loading ELF section %s: %ld. Ignored and continue.\n",
++				BTF_EXT_ELF_SEC, PTR_ERR(obj->btf_ext));
+ 			obj->btf_ext = NULL;
+ 			goto out;
+ 		}
+@@ -1482,7 +1480,7 @@ static int bpf_object__init_btf(struct bpf_object *obj,
+ 		obj->btf = NULL;
+ 	}
+ 	if (btf_required && !obj->btf) {
+-		pr_warning("BTF is required, but is missing or corrupted.\n");
++		pr_warn("BTF is required, but is missing or corrupted.\n");
+ 		return err == 0 ? -ENOENT : err;
+ 	}
+ 	return 0;
+@@ -1500,8 +1498,8 @@ static int bpf_object__sanitize_and_load_btf(struct bpf_object *obj)
+ 
+ 	err = btf__load(obj->btf);
+ 	if (err) {
+-		pr_warning("Error loading %s into kernel: %d.\n",
+-			   BTF_ELF_SEC, err);
++		pr_warn("Error loading %s into kernel: %d.\n",
++			BTF_ELF_SEC, err);
+ 		btf__free(obj->btf);
+ 		obj->btf = NULL;
+ 		/* btf_ext can't exist without btf, so free it as well */
+@@ -1527,7 +1525,7 @@ static int bpf_object__elf_collect(struct bpf_object *obj, int flags)
+ 
+ 	/* Elf is corrupted/truncated, avoid calling elf_strptr. */
+ 	if (!elf_rawdata(elf_getscn(elf, ep->e_shstrndx), NULL)) {
+-		pr_warning("failed to get e_shstrndx from %s\n", obj->path);
++		pr_warn("failed to get e_shstrndx from %s\n", obj->path);
+ 		return -LIBBPF_ERRNO__FORMAT;
+ 	}
+ 
+@@ -1538,22 +1536,22 @@ static int bpf_object__elf_collect(struct bpf_object *obj, int flags)
+ 
+ 		idx++;
+ 		if (gelf_getshdr(scn, &sh) != &sh) {
+-			pr_warning("failed to get section(%d) header from %s\n",
+-				   idx, obj->path);
++			pr_warn("failed to get section(%d) header from %s\n",
++				idx, obj->path);
+ 			return -LIBBPF_ERRNO__FORMAT;
+ 		}
+ 
+ 		name = elf_strptr(elf, ep->e_shstrndx, sh.sh_name);
+ 		if (!name) {
+-			pr_warning("failed to get section(%d) name from %s\n",
+-				   idx, obj->path);
++			pr_warn("failed to get section(%d) name from %s\n",
++				idx, obj->path);
+ 			return -LIBBPF_ERRNO__FORMAT;
+ 		}
+ 
+ 		data = elf_getdata(scn, 0);
+ 		if (!data) {
+-			pr_warning("failed to get section(%d) data from %s(%s)\n",
+-				   idx, name, obj->path);
++			pr_warn("failed to get section(%d) data from %s(%s)\n",
++				idx, name, obj->path);
+ 			return -LIBBPF_ERRNO__FORMAT;
+ 		}
+ 		pr_debug("section(%d) %s, size %ld, link %d, flags %lx, type=%d\n",
+@@ -1583,8 +1581,8 @@ static int bpf_object__elf_collect(struct bpf_object *obj, int flags)
+ 			btf_ext_data = data;
+ 		} else if (sh.sh_type == SHT_SYMTAB) {
+ 			if (obj->efile.symbols) {
+-				pr_warning("bpf: multiple SYMTAB in %s\n",
+-					   obj->path);
++				pr_warn("bpf: multiple SYMTAB in %s\n",
++					obj->path);
+ 				return -LIBBPF_ERRNO__FORMAT;
+ 			}
+ 			obj->efile.symbols = data;
+@@ -1600,8 +1598,8 @@ static int bpf_object__elf_collect(struct bpf_object *obj, int flags)
+ 					char *cp = libbpf_strerror_r(-err, errmsg,
+ 								     sizeof(errmsg));
+ 
+-					pr_warning("failed to alloc program %s (%s): %s",
+-						   name, obj->path, cp);
++					pr_warn("failed to alloc program %s (%s): %s",
++						name, obj->path, cp);
+ 					return err;
+ 				}
+ 			} else if (strcmp(name, ".data") == 0) {
+@@ -1628,7 +1626,7 @@ static int bpf_object__elf_collect(struct bpf_object *obj, int flags)
+ 			reloc = reallocarray(reloc, nr_reloc + 1,
+ 					     sizeof(*obj->efile.reloc));
+ 			if (!reloc) {
+-				pr_warning("realloc failed\n");
++				pr_warn("realloc failed\n");
+ 				return -ENOMEM;
+ 			}
+ 
+@@ -1646,7 +1644,7 @@ static int bpf_object__elf_collect(struct bpf_object *obj, int flags)
+ 	}
+ 
+ 	if (!obj->efile.strtabidx || obj->efile.strtabidx >= idx) {
+-		pr_warning("Corrupted ELF file: index of strtab invalid\n");
++		pr_warn("Corrupted ELF file: index of strtab invalid\n");
+ 		return -LIBBPF_ERRNO__FORMAT;
+ 	}
+ 	err = bpf_object__init_btf(obj, btf_data, btf_ext_data);
+@@ -1736,7 +1734,7 @@ bpf_program__collect_reloc(struct bpf_program *prog, GElf_Shdr *shdr,
+ 
+ 	prog->reloc_desc = malloc(sizeof(*prog->reloc_desc) * nrels);
+ 	if (!prog->reloc_desc) {
+-		pr_warning("failed to alloc memory in relocation\n");
++		pr_warn("failed to alloc memory in relocation\n");
+ 		return -ENOMEM;
+ 	}
+ 	prog->nr_reloc = nrels;
+@@ -1752,13 +1750,13 @@ bpf_program__collect_reloc(struct bpf_program *prog, GElf_Shdr *shdr,
+ 		GElf_Rel rel;
+ 
+ 		if (!gelf_getrel(data, i, &rel)) {
+-			pr_warning("relocation: failed to get %d reloc\n", i);
++			pr_warn("relocation: failed to get %d reloc\n", i);
+ 			return -LIBBPF_ERRNO__FORMAT;
+ 		}
+ 
+ 		if (!gelf_getsym(symbols, GELF_R_SYM(rel.r_info), &sym)) {
+-			pr_warning("relocation: symbol %"PRIx64" not found\n",
+-				   GELF_R_SYM(rel.r_info));
++			pr_warn("relocation: symbol %"PRIx64" not found\n",
++				GELF_R_SYM(rel.r_info));
+ 			return -LIBBPF_ERRNO__FORMAT;
+ 		}
+ 
+@@ -1775,20 +1773,20 @@ bpf_program__collect_reloc(struct bpf_program *prog, GElf_Shdr *shdr,
+ 			 insn_idx, shdr_idx);
+ 
+ 		if (shdr_idx >= SHN_LORESERVE) {
+-			pr_warning("relocation: not yet supported relo for non-static global \'%s\' variable in special section (0x%x) found in insns[%d].code 0x%x\n",
++			pr_warn("relocation: not yet supported relo for non-static global \'%s\' variable in special section (0x%x) found in insns[%d].code 0x%x\n",
+ 				   name, shdr_idx, insn_idx,
+ 				   insns[insn_idx].code);
+ 			return -LIBBPF_ERRNO__RELOC;
+ 		}
+ 		if (!bpf_object__relo_in_known_section(obj, shdr_idx)) {
+-			pr_warning("Program '%s' contains unrecognized relo data pointing to section %u\n",
+-				   prog->section_name, shdr_idx);
++			pr_warn("Program '%s' contains unrecognized relo data pointing to section %u\n",
++				prog->section_name, shdr_idx);
+ 			return -LIBBPF_ERRNO__RELOC;
+ 		}
+ 
+ 		if (insns[insn_idx].code == (BPF_JMP | BPF_CALL)) {
+ 			if (insns[insn_idx].src_reg != BPF_PSEUDO_CALL) {
+-				pr_warning("incorrect bpf_call opcode\n");
++				pr_warn("incorrect bpf_call opcode\n");
+ 				return -LIBBPF_ERRNO__RELOC;
+ 			}
+ 			prog->reloc_desc[i].type = RELO_CALL;
+@@ -1799,8 +1797,8 @@ bpf_program__collect_reloc(struct bpf_program *prog, GElf_Shdr *shdr,
+ 		}
+ 
+ 		if (insns[insn_idx].code != (BPF_LD | BPF_IMM | BPF_DW)) {
+-			pr_warning("bpf: relocation: invalid relo for insns[%d].code 0x%x\n",
+-				   insn_idx, insns[insn_idx].code);
++			pr_warn("bpf: relocation: invalid relo for insns[%d].code 0x%x\n",
++				insn_idx, insns[insn_idx].code);
+ 			return -LIBBPF_ERRNO__RELOC;
+ 		}
+ 
+@@ -1809,13 +1807,13 @@ bpf_program__collect_reloc(struct bpf_program *prog, GElf_Shdr *shdr,
+ 			type = bpf_object__section_to_libbpf_map_type(obj, shdr_idx);
+ 			if (type != LIBBPF_MAP_UNSPEC) {
+ 				if (GELF_ST_BIND(sym.st_info) == STB_GLOBAL) {
+-					pr_warning("bpf: relocation: not yet supported relo for non-static global \'%s\' variable found in insns[%d].code 0x%x\n",
+-						   name, insn_idx, insns[insn_idx].code);
++					pr_warn("bpf: relocation: not yet supported relo for non-static global \'%s\' variable found in insns[%d].code 0x%x\n",
++						name, insn_idx, insns[insn_idx].code);
+ 					return -LIBBPF_ERRNO__RELOC;
+ 				}
+ 				if (!obj->caps.global_data) {
+-					pr_warning("bpf: relocation: kernel does not support global \'%s\' variable access in insns[%d]\n",
+-						   name, insn_idx);
++					pr_warn("bpf: relocation: kernel does not support global \'%s\' variable access in insns[%d]\n",
++						name, insn_idx);
+ 					return -LIBBPF_ERRNO__RELOC;
+ 				}
+ 			}
+@@ -1836,8 +1834,8 @@ bpf_program__collect_reloc(struct bpf_program *prog, GElf_Shdr *shdr,
+ 			}
+ 
+ 			if (map_idx >= nr_maps) {
+-				pr_warning("bpf relocation: map_idx %d larger than %d\n",
+-					   (int)map_idx, (int)nr_maps - 1);
++				pr_warn("bpf relocation: map_idx %d larger than %d\n",
++					(int)map_idx, (int)nr_maps - 1);
+ 				return -LIBBPF_ERRNO__RELOC;
+ 			}
+ 
+@@ -1964,8 +1962,8 @@ bpf_object__probe_name(struct bpf_object *obj)
+ 	ret = bpf_load_program_xattr(&attr, NULL, 0);
+ 	if (ret < 0) {
+ 		cp = libbpf_strerror_r(errno, errmsg, sizeof(errmsg));
+-		pr_warning("Error in %s():%s(%d). Couldn't load basic 'r0 = 0' BPF program.\n",
+-			   __func__, cp, errno);
++		pr_warn("Error in %s():%s(%d). Couldn't load basic 'r0 = 0' BPF program.\n",
++			__func__, cp, errno);
+ 		return -errno;
+ 	}
+ 	close(ret);
+@@ -2005,8 +2003,8 @@ bpf_object__probe_global_data(struct bpf_object *obj)
+ 	map = bpf_create_map_xattr(&map_attr);
+ 	if (map < 0) {
+ 		cp = libbpf_strerror_r(errno, errmsg, sizeof(errmsg));
+-		pr_warning("Error in %s():%s(%d). Couldn't create simple array map.\n",
+-			   __func__, cp, errno);
++		pr_warn("Error in %s():%s(%d). Couldn't create simple array map.\n",
++			__func__, cp, errno);
+ 		return -errno;
+ 	}
+ 
+@@ -2121,8 +2119,8 @@ bpf_object__populate_internal_map(struct bpf_object *obj, struct bpf_map *map)
+ 		err = bpf_map_freeze(map->fd);
+ 		if (err) {
+ 			cp = libbpf_strerror_r(errno, errmsg, sizeof(errmsg));
+-			pr_warning("Error freezing map(%s) as read-only: %s\n",
+-				   map->name, cp);
++			pr_warn("Error freezing map(%s) as read-only: %s\n",
++				map->name, cp);
+ 			err = 0;
+ 		}
+ 	}
+@@ -2161,8 +2159,8 @@ bpf_object__create_maps(struct bpf_object *obj)
+ 			if (!nr_cpus)
+ 				nr_cpus = libbpf_num_possible_cpus();
+ 			if (nr_cpus < 0) {
+-				pr_warning("failed to determine number of system CPUs: %d\n",
+-					   nr_cpus);
++				pr_warn("failed to determine number of system CPUs: %d\n",
++					nr_cpus);
+ 				err = nr_cpus;
+ 				goto err_out;
+ 			}
+@@ -2190,8 +2188,8 @@ bpf_object__create_maps(struct bpf_object *obj)
+ 				 create_attr.btf_value_type_id)) {
+ 			err = -errno;
+ 			cp = libbpf_strerror_r(err, errmsg, sizeof(errmsg));
+-			pr_warning("Error in bpf_create_map_xattr(%s):%s(%d). Retrying without BTF.\n",
+-				   map->name, cp, err);
++			pr_warn("Error in bpf_create_map_xattr(%s):%s(%d). Retrying without BTF.\n",
++				map->name, cp, err);
+ 			create_attr.btf_fd = 0;
+ 			create_attr.btf_key_type_id = 0;
+ 			create_attr.btf_value_type_id = 0;
+@@ -2206,8 +2204,8 @@ bpf_object__create_maps(struct bpf_object *obj)
+ 			err = -errno;
+ err_out:
+ 			cp = libbpf_strerror_r(err, errmsg, sizeof(errmsg));
+-			pr_warning("failed to create map (name: '%s'): %s(%d)\n",
+-				   map->name, cp, err);
++			pr_warn("failed to create map (name: '%s'): %s(%d)\n",
++				map->name, cp, err);
+ 			for (j = 0; j < i; j++)
+ 				zclose(obj->maps[j].fd);
+ 			return err;
+@@ -2232,8 +2230,8 @@ check_btf_ext_reloc_err(struct bpf_program *prog, int err,
+ 			void *btf_prog_info, const char *info_name)
+ {
+ 	if (err != -ENOENT) {
+-		pr_warning("Error in loading %s for sec %s.\n",
+-			   info_name, prog->section_name);
++		pr_warn("Error in loading %s for sec %s.\n",
++			info_name, prog->section_name);
+ 		return err;
+ 	}
+ 
+@@ -2244,14 +2242,14 @@ check_btf_ext_reloc_err(struct bpf_program *prog, int err,
+ 		 * Some info has already been found but has problem
+ 		 * in the last btf_ext reloc. Must have to error out.
+ 		 */
+-		pr_warning("Error in relocating %s for sec %s.\n",
+-			   info_name, prog->section_name);
++		pr_warn("Error in relocating %s for sec %s.\n",
++			info_name, prog->section_name);
+ 		return err;
+ 	}
+ 
+ 	/* Have problem loading the very first info. Ignore the rest. */
+-	pr_warning("Cannot find %s for main program sec %s. Ignore all %s.\n",
+-		   info_name, prog->section_name, info_name);
++	pr_warn("Cannot find %s for main program sec %s. Ignore all %s.\n",
++		info_name, prog->section_name, info_name);
+ 	return 0;
+ }
+ 
+@@ -2452,7 +2450,7 @@ static int bpf_core_spec_parse(const struct btf *btf,
+ 				return sz;
+ 			spec->offset += access_idx * sz;
+ 		} else {
+-			pr_warning("relo for [%u] %s (at idx %d) captures type [%d] of unexpected kind %d\n",
++			pr_warn("relo for [%u] %s (at idx %d) captures type [%d] of unexpected kind %d\n",
+ 				   type_id, spec_str, i, id, btf_kind(t));
+ 			return -EINVAL;
+ 		}
+@@ -2597,7 +2595,7 @@ static int bpf_core_fields_are_compat(const struct btf *local_btf,
+ 		targ_id = btf_array(targ_type)->type;
+ 		goto recur;
+ 	default:
+-		pr_warning("unexpected kind %d relocated, local [%d], target [%d]\n",
++		pr_warn("unexpected kind %d relocated, local [%d], target [%d]\n",
+ 			   btf_kind(local_type), local_id, targ_id);
+ 		return 0;
+ 	}
+@@ -2804,7 +2802,7 @@ static int bpf_core_reloc_insn(struct bpf_program *prog, int insn_off,
+ 			 bpf_program__title(prog, false),
+ 			 insn_idx, orig_off, new_off);
+ 	} else {
+-		pr_warning("prog '%s': trying to relocate unrecognized insn #%d, code:%x, src:%x, dst:%x, off:%x, imm:%x\n",
++		pr_warn("prog '%s': trying to relocate unrecognized insn #%d, code:%x, src:%x, dst:%x, off:%x, imm:%x\n",
+ 			   bpf_program__title(prog, false),
+ 			   insn_idx, insn->code, insn->src_reg, insn->dst_reg,
+ 			   insn->off, insn->imm);
+@@ -2895,7 +2893,7 @@ static struct btf *bpf_core_find_kernel_btf(void)
+ 		return btf;
+ 	}
+ 
+-	pr_warning("failed to find valid kernel BTF\n");
++	pr_warn("failed to find valid kernel BTF\n");
+ 	return ERR_PTR(-ESRCH);
+ }
+ 
+@@ -3027,8 +3025,8 @@ static int bpf_core_reloc_offset(struct bpf_program *prog,
+ 
+ 	err = bpf_core_spec_parse(local_btf, local_id, spec_str, &local_spec);
+ 	if (err) {
+-		pr_warning("prog '%s': relo #%d: parsing [%d] %s + %s failed: %d\n",
+-			   prog_name, relo_idx, local_id, local_name, spec_str,
++		pr_warn("prog '%s': relo #%d: parsing [%d] %s + %s failed: %d\n",
++			prog_name, relo_idx, local_id, local_name, spec_str,
+ 			   err);
+ 		return -EINVAL;
+ 	}
+@@ -3040,8 +3038,8 @@ static int bpf_core_reloc_offset(struct bpf_program *prog,
+ 	if (!hashmap__find(cand_cache, type_key, (void **)&cand_ids)) {
+ 		cand_ids = bpf_core_find_cands(local_btf, local_id, targ_btf);
+ 		if (IS_ERR(cand_ids)) {
+-			pr_warning("prog '%s': relo #%d: target candidate search failed for [%d] %s: %ld",
+-				   prog_name, relo_idx, local_id, local_name,
++			pr_warn("prog '%s': relo #%d: target candidate search failed for [%d] %s: %ld",
++				prog_name, relo_idx, local_id, local_name,
+ 				   PTR_ERR(cand_ids));
+ 			return PTR_ERR(cand_ids);
+ 		}
+@@ -3064,8 +3062,8 @@ static int bpf_core_reloc_offset(struct bpf_program *prog,
+ 		bpf_core_dump_spec(LIBBPF_DEBUG, &cand_spec);
+ 		libbpf_print(LIBBPF_DEBUG, ": %d\n", err);
+ 		if (err < 0) {
+-			pr_warning("prog '%s': relo #%d: matching error: %d\n",
+-				   prog_name, relo_idx, err);
++			pr_warn("prog '%s': relo #%d: matching error: %d\n",
++				prog_name, relo_idx, err);
+ 			return err;
+ 		}
+ 		if (err == 0)
+@@ -3077,9 +3075,9 @@ static int bpf_core_reloc_offset(struct bpf_program *prog,
+ 			/* if there are many candidates, they should all
+ 			 * resolve to the same offset
+ 			 */
+-			pr_warning("prog '%s': relo #%d: offset ambiguity: %u != %u\n",
+-				   prog_name, relo_idx, cand_spec.offset,
+-				   targ_spec.offset);
++			pr_warn("prog '%s': relo #%d: offset ambiguity: %u != %u\n",
++				prog_name, relo_idx, cand_spec.offset,
++				targ_spec.offset);
+ 			return -EINVAL;
+ 		}
+ 
+@@ -3088,16 +3086,16 @@ static int bpf_core_reloc_offset(struct bpf_program *prog,
+ 
+ 	cand_ids->len = j;
+ 	if (cand_ids->len == 0) {
+-		pr_warning("prog '%s': relo #%d: no matching targets found for [%d] %s + %s\n",
+-			   prog_name, relo_idx, local_id, local_name, spec_str);
++		pr_warn("prog '%s': relo #%d: no matching targets found for [%d] %s + %s\n",
++			prog_name, relo_idx, local_id, local_name, spec_str);
+ 		return -ESRCH;
+ 	}
+ 
+ 	err = bpf_core_reloc_insn(prog, relo->insn_off,
+ 				  local_spec.offset, targ_spec.offset);
+ 	if (err) {
+-		pr_warning("prog '%s': relo #%d: failed to patch insn at offset %d: %d\n",
+-			   prog_name, relo_idx, relo->insn_off, err);
++		pr_warn("prog '%s': relo #%d: failed to patch insn at offset %d: %d\n",
++			prog_name, relo_idx, relo->insn_off, err);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -3122,8 +3120,7 @@ bpf_core_reloc_offsets(struct bpf_object *obj, const char *targ_btf_path)
+ 	else
+ 		targ_btf = bpf_core_find_kernel_btf();
+ 	if (IS_ERR(targ_btf)) {
+-		pr_warning("failed to get target BTF: %ld\n",
+-			   PTR_ERR(targ_btf));
++		pr_warn("failed to get target BTF: %ld\n", PTR_ERR(targ_btf));
+ 		return PTR_ERR(targ_btf);
+ 	}
+ 
+@@ -3142,8 +3139,8 @@ bpf_core_reloc_offsets(struct bpf_object *obj, const char *targ_btf_path)
+ 		}
+ 		prog = bpf_object__find_program_by_title(obj, sec_name);
+ 		if (!prog) {
+-			pr_warning("failed to find program '%s' for CO-RE offset relocation\n",
+-				   sec_name);
++			pr_warn("failed to find program '%s' for CO-RE offset relocation\n",
++				sec_name);
+ 			err = -EINVAL;
+ 			goto out;
+ 		}
+@@ -3155,8 +3152,8 @@ bpf_core_reloc_offsets(struct bpf_object *obj, const char *targ_btf_path)
+ 			err = bpf_core_reloc_offset(prog, rec, i, obj->btf,
+ 						    targ_btf, cand_cache);
+ 			if (err) {
+-				pr_warning("prog '%s': relo #%d: failed to relocate: %d\n",
+-					   sec_name, i, err);
++				pr_warn("prog '%s': relo #%d: failed to relocate: %d\n",
++					sec_name, i, err);
+ 				goto out;
+ 			}
+ 		}
+@@ -3197,21 +3194,21 @@ bpf_program__reloc_text(struct bpf_program *prog, struct bpf_object *obj,
+ 		return -LIBBPF_ERRNO__RELOC;
+ 
+ 	if (prog->idx == obj->efile.text_shndx) {
+-		pr_warning("relo in .text insn %d into off %d\n",
+-			   relo->insn_idx, relo->text_off);
++		pr_warn("relo in .text insn %d into off %d\n",
++			relo->insn_idx, relo->text_off);
+ 		return -LIBBPF_ERRNO__RELOC;
+ 	}
+ 
+ 	if (prog->main_prog_cnt == 0) {
+ 		text = bpf_object__find_prog_by_idx(obj, obj->efile.text_shndx);
+ 		if (!text) {
+-			pr_warning("no .text section found yet relo into text exist\n");
++			pr_warn("no .text section found yet relo into text exist\n");
+ 			return -LIBBPF_ERRNO__RELOC;
+ 		}
+ 		new_cnt = prog->insns_cnt + text->insns_cnt;
+ 		new_insn = reallocarray(prog->insns, new_cnt, sizeof(*insn));
+ 		if (!new_insn) {
+-			pr_warning("oom in prog realloc\n");
++			pr_warn("oom in prog realloc\n");
+ 			return -ENOMEM;
+ 		}
+ 
+@@ -3266,8 +3263,8 @@ bpf_program__relocate(struct bpf_program *prog, struct bpf_object *obj)
+ 			map_idx = prog->reloc_desc[i].map_idx;
+ 
+ 			if (insn_idx + 1 >= (int)prog->insns_cnt) {
+-				pr_warning("relocation out of range: '%s'\n",
+-					   prog->section_name);
++				pr_warn("relocation out of range: '%s'\n",
++					prog->section_name);
+ 				return -LIBBPF_ERRNO__RELOC;
+ 			}
+ 
+@@ -3301,8 +3298,8 @@ bpf_object__relocate(struct bpf_object *obj, const char *targ_btf_path)
+ 	if (obj->btf_ext) {
+ 		err = bpf_object__relocate_core(obj, targ_btf_path);
+ 		if (err) {
+-			pr_warning("failed to perform CO-RE relocations: %d\n",
+-				   err);
++			pr_warn("failed to perform CO-RE relocations: %d\n",
++				err);
+ 			return err;
+ 		}
+ 	}
+@@ -3311,8 +3308,7 @@ bpf_object__relocate(struct bpf_object *obj, const char *targ_btf_path)
+ 
+ 		err = bpf_program__relocate(prog, obj);
+ 		if (err) {
+-			pr_warning("failed to relocate '%s'\n",
+-				   prog->section_name);
++			pr_warn("failed to relocate '%s'\n", prog->section_name);
+ 			return err;
+ 		}
+ 	}
+@@ -3324,7 +3320,7 @@ static int bpf_object__collect_reloc(struct bpf_object *obj)
+ 	int i, err;
+ 
+ 	if (!obj_elf_valid(obj)) {
+-		pr_warning("Internal error: elf object is closed\n");
++		pr_warn("Internal error: elf object is closed\n");
+ 		return -LIBBPF_ERRNO__INTERNAL;
+ 	}
+ 
+@@ -3335,13 +3331,13 @@ static int bpf_object__collect_reloc(struct bpf_object *obj)
+ 		struct bpf_program *prog;
+ 
+ 		if (shdr->sh_type != SHT_REL) {
+-			pr_warning("internal error at %d\n", __LINE__);
++			pr_warn("internal error at %d\n", __LINE__);
+ 			return -LIBBPF_ERRNO__INTERNAL;
+ 		}
+ 
+ 		prog = bpf_object__find_prog_by_idx(obj, idx);
+ 		if (!prog) {
+-			pr_warning("relocation failed: no section(%d)\n", idx);
++			pr_warn("relocation failed: no section(%d)\n", idx);
+ 			return -LIBBPF_ERRNO__RELOC;
+ 		}
+ 
+@@ -3393,7 +3389,7 @@ load_program(struct bpf_program *prog, struct bpf_insn *insns, int insns_cnt,
+ retry_load:
+ 	log_buf = malloc(log_buf_size);
+ 	if (!log_buf)
+-		pr_warning("Alloc log buffer for bpf loader error, continue without log\n");
++		pr_warn("Alloc log buffer for bpf loader error, continue without log\n");
+ 
+ 	ret = bpf_load_program_xattr(&load_attr, log_buf, log_buf_size);
+ 
+@@ -3412,16 +3408,16 @@ load_program(struct bpf_program *prog, struct bpf_insn *insns, int insns_cnt,
+ 	}
+ 	ret = -LIBBPF_ERRNO__LOAD;
+ 	cp = libbpf_strerror_r(errno, errmsg, sizeof(errmsg));
+-	pr_warning("load bpf program failed: %s\n", cp);
++	pr_warn("load bpf program failed: %s\n", cp);
+ 
+ 	if (log_buf && log_buf[0] != '\0') {
+ 		ret = -LIBBPF_ERRNO__VERIFY;
+-		pr_warning("-- BEGIN DUMP LOG ---\n");
+-		pr_warning("\n%s\n", log_buf);
+-		pr_warning("-- END LOG --\n");
++		pr_warn("-- BEGIN DUMP LOG ---\n");
++		pr_warn("\n%s\n", log_buf);
++		pr_warn("-- END LOG --\n");
+ 	} else if (load_attr.insns_cnt >= BPF_MAXINSNS) {
+-		pr_warning("Program too large (%zu insns), at most %d insns\n",
+-			   load_attr.insns_cnt, BPF_MAXINSNS);
++		pr_warn("Program too large (%zu insns), at most %d insns\n",
++			load_attr.insns_cnt, BPF_MAXINSNS);
+ 		ret = -LIBBPF_ERRNO__PROG2BIG;
+ 	} else {
+ 		/* Wrong program type? */
+@@ -3455,14 +3451,14 @@ bpf_program__load(struct bpf_program *prog,
+ 
+ 	if (prog->instances.nr < 0 || !prog->instances.fds) {
+ 		if (prog->preprocessor) {
+-			pr_warning("Internal error: can't load program '%s'\n",
+-				   prog->section_name);
++			pr_warn("Internal error: can't load program '%s'\n",
++				prog->section_name);
+ 			return -LIBBPF_ERRNO__INTERNAL;
+ 		}
+ 
+ 		prog->instances.fds = malloc(sizeof(int));
+ 		if (!prog->instances.fds) {
+-			pr_warning("Not enough memory for BPF fds\n");
++			pr_warn("Not enough memory for BPF fds\n");
+ 			return -ENOMEM;
+ 		}
+ 		prog->instances.nr = 1;
+@@ -3471,8 +3467,8 @@ bpf_program__load(struct bpf_program *prog,
+ 
+ 	if (!prog->preprocessor) {
+ 		if (prog->instances.nr != 1) {
+-			pr_warning("Program '%s' is inconsistent: nr(%d) != 1\n",
+-				   prog->section_name, prog->instances.nr);
++			pr_warn("Program '%s' is inconsistent: nr(%d) != 1\n",
++				prog->section_name, prog->instances.nr);
+ 		}
+ 		err = load_program(prog, prog->insns, prog->insns_cnt,
+ 				   license, kern_version, &fd);
+@@ -3489,8 +3485,8 @@ bpf_program__load(struct bpf_program *prog,
+ 		err = preprocessor(prog, i, prog->insns,
+ 				   prog->insns_cnt, &result);
+ 		if (err) {
+-			pr_warning("Preprocessing the %dth instance of program '%s' failed\n",
+-				   i, prog->section_name);
++			pr_warn("Preprocessing the %dth instance of program '%s' failed\n",
++				i, prog->section_name);
+ 			goto out;
+ 		}
+ 
+@@ -3508,8 +3504,8 @@ bpf_program__load(struct bpf_program *prog,
+ 				   license, kern_version, &fd);
+ 
+ 		if (err) {
+-			pr_warning("Loading the %dth instance of program '%s' failed\n",
+-					i, prog->section_name);
++			pr_warn("Loading the %dth instance of program '%s' failed\n",
++				i, prog->section_name);
+ 			goto out;
+ 		}
+ 
+@@ -3519,8 +3515,7 @@ bpf_program__load(struct bpf_program *prog,
+ 	}
  out:
- 	free(obj_path);
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index b4749d3eed08..e1133b29c99d 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -2346,7 +2346,7 @@ static int thread__resolve_callchain_sample(struct thread *thread,
- 		struct iterations iter[nr];
+ 	if (err)
+-		pr_warning("failed to load program '%s'\n",
+-			   prog->section_name);
++		pr_warn("failed to load program '%s'\n", prog->section_name);
+ 	zfree(&prog->insns);
+ 	prog->insns_cnt = 0;
+ 	return err;
+@@ -3589,8 +3584,7 @@ static bool bpf_prog_type__needs_kver(enum bpf_prog_type type)
+ static int bpf_object__validate(struct bpf_object *obj, bool needs_kver)
+ {
+ 	if (needs_kver && obj->kern_version == 0) {
+-		pr_warning("%s doesn't provide kernel version\n",
+-			   obj->path);
++		pr_warn("%s doesn't provide kernel version\n", obj->path);
+ 		return -LIBBPF_ERRNO__KVERSION;
+ 	}
+ 	return 0;
+@@ -3604,7 +3598,7 @@ __bpf_object__open(const char *path, void *obj_buf, size_t obj_buf_sz,
+ 	int err;
  
- 		if (branch->nr > PERF_MAX_BRANCH_DEPTH) {
--			pr_warning("corrupted branch chain. skipping...\n");
-+			pr_warn("corrupted branch chain. skipping...\n");
- 			goto check_calls;
- 		}
+ 	if (elf_version(EV_CURRENT) == EV_NONE) {
+-		pr_warning("failed to init libelf for %s\n", path);
++		pr_warn("failed to init libelf for %s\n", path);
+ 		return ERR_PTR(-LIBBPF_ERRNO__LIBELF);
+ 	}
  
-diff --git a/tools/perf/util/parse-branch-options.c b/tools/perf/util/parse-branch-options.c
-index bb4aa88c50a8..ffa59286a6ed 100644
---- a/tools/perf/util/parse-branch-options.c
-+++ b/tools/perf/util/parse-branch-options.c
-@@ -68,8 +68,7 @@ int parse_branch_str(const char *str, __u64 *mode)
+@@ -3704,7 +3698,7 @@ int bpf_object__load_xattr(struct bpf_object_load_attr *attr)
+ 		return -EINVAL;
+ 
+ 	if (obj->loaded) {
+-		pr_warning("object should not be loaded twice\n");
++		pr_warn("object should not be loaded twice\n");
+ 		return -EINVAL;
+ 	}
+ 
+@@ -3717,7 +3711,7 @@ int bpf_object__load_xattr(struct bpf_object_load_attr *attr)
+ 	return 0;
+ out:
+ 	bpf_object__unload(obj);
+-	pr_warning("failed to load object '%s'\n", obj->path);
++	pr_warn("failed to load object '%s'\n", obj->path);
+ 	return err;
+ }
+ 
+@@ -3747,13 +3741,13 @@ static int check_path(const char *path)
+ 	dir = dirname(dname);
+ 	if (statfs(dir, &st_fs)) {
+ 		cp = libbpf_strerror_r(errno, errmsg, sizeof(errmsg));
+-		pr_warning("failed to statfs %s: %s\n", dir, cp);
++		pr_warn("failed to statfs %s: %s\n", dir, cp);
+ 		err = -errno;
+ 	}
+ 	free(dname);
+ 
+ 	if (!err && st_fs.f_type != BPF_FS_MAGIC) {
+-		pr_warning("specified path %s is not on BPF FS\n", path);
++		pr_warn("specified path %s is not on BPF FS\n", path);
+ 		err = -EINVAL;
+ 	}
+ 
+@@ -3771,19 +3765,19 @@ int bpf_program__pin_instance(struct bpf_program *prog, const char *path,
+ 		return err;
+ 
+ 	if (prog == NULL) {
+-		pr_warning("invalid program pointer\n");
++		pr_warn("invalid program pointer\n");
+ 		return -EINVAL;
+ 	}
+ 
+ 	if (instance < 0 || instance >= prog->instances.nr) {
+-		pr_warning("invalid prog instance %d of prog %s (max %d)\n",
+-			   instance, prog->section_name, prog->instances.nr);
++		pr_warn("invalid prog instance %d of prog %s (max %d)\n",
++			instance, prog->section_name, prog->instances.nr);
+ 		return -EINVAL;
+ 	}
+ 
+ 	if (bpf_obj_pin(prog->instances.fds[instance], path)) {
+ 		cp = libbpf_strerror_r(errno, errmsg, sizeof(errmsg));
+-		pr_warning("failed to pin program: %s\n", cp);
++		pr_warn("failed to pin program: %s\n", cp);
+ 		return -errno;
+ 	}
+ 	pr_debug("pinned program '%s'\n", path);
+@@ -3801,13 +3795,13 @@ int bpf_program__unpin_instance(struct bpf_program *prog, const char *path,
+ 		return err;
+ 
+ 	if (prog == NULL) {
+-		pr_warning("invalid program pointer\n");
++		pr_warn("invalid program pointer\n");
+ 		return -EINVAL;
+ 	}
+ 
+ 	if (instance < 0 || instance >= prog->instances.nr) {
+-		pr_warning("invalid prog instance %d of prog %s (max %d)\n",
+-			   instance, prog->section_name, prog->instances.nr);
++		pr_warn("invalid prog instance %d of prog %s (max %d)\n",
++			instance, prog->section_name, prog->instances.nr);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -3829,7 +3823,7 @@ static int make_dir(const char *path)
+ 
+ 	if (err) {
+ 		cp = libbpf_strerror_r(-err, errmsg, sizeof(errmsg));
+-		pr_warning("failed to mkdir %s: %s\n", path, cp);
++		pr_warn("failed to mkdir %s: %s\n", path, cp);
+ 	}
+ 	return err;
+ }
+@@ -3843,12 +3837,12 @@ int bpf_program__pin(struct bpf_program *prog, const char *path)
+ 		return err;
+ 
+ 	if (prog == NULL) {
+-		pr_warning("invalid program pointer\n");
++		pr_warn("invalid program pointer\n");
+ 		return -EINVAL;
+ 	}
+ 
+ 	if (prog->instances.nr <= 0) {
+-		pr_warning("no instances of prog %s to pin\n",
++		pr_warn("no instances of prog %s to pin\n",
+ 			   prog->section_name);
+ 		return -EINVAL;
+ 	}
+@@ -3910,12 +3904,12 @@ int bpf_program__unpin(struct bpf_program *prog, const char *path)
+ 		return err;
+ 
+ 	if (prog == NULL) {
+-		pr_warning("invalid program pointer\n");
++		pr_warn("invalid program pointer\n");
+ 		return -EINVAL;
+ 	}
+ 
+ 	if (prog->instances.nr <= 0) {
+-		pr_warning("no instances of prog %s to pin\n",
++		pr_warn("no instances of prog %s to pin\n",
+ 			   prog->section_name);
+ 		return -EINVAL;
+ 	}
+@@ -3957,13 +3951,13 @@ int bpf_map__pin(struct bpf_map *map, const char *path)
+ 		return err;
+ 
+ 	if (map == NULL) {
+-		pr_warning("invalid map pointer\n");
++		pr_warn("invalid map pointer\n");
+ 		return -EINVAL;
+ 	}
+ 
+ 	if (bpf_obj_pin(map->fd, path)) {
+ 		cp = libbpf_strerror_r(errno, errmsg, sizeof(errmsg));
+-		pr_warning("failed to pin map: %s\n", cp);
++		pr_warn("failed to pin map: %s\n", cp);
+ 		return -errno;
+ 	}
+ 
+@@ -3981,7 +3975,7 @@ int bpf_map__unpin(struct bpf_map *map, const char *path)
+ 		return err;
+ 
+ 	if (map == NULL) {
+-		pr_warning("invalid map pointer\n");
++		pr_warn("invalid map pointer\n");
+ 		return -EINVAL;
+ 	}
+ 
+@@ -4002,7 +3996,7 @@ int bpf_object__pin_maps(struct bpf_object *obj, const char *path)
+ 		return -ENOENT;
+ 
+ 	if (!obj->loaded) {
+-		pr_warning("object not yet loaded; load it first\n");
++		pr_warn("object not yet loaded; load it first\n");
+ 		return -ENOENT;
+ 	}
+ 
+@@ -4085,7 +4079,7 @@ int bpf_object__pin_programs(struct bpf_object *obj, const char *path)
+ 		return -ENOENT;
+ 
+ 	if (!obj->loaded) {
+-		pr_warning("object not yet loaded; load it first\n");
++		pr_warn("object not yet loaded; load it first\n");
+ 		return -ENOENT;
+ 	}
+ 
+@@ -4286,7 +4280,7 @@ __bpf_program__iter(const struct bpf_program *p, const struct bpf_object *obj,
+ 			&obj->programs[nr_programs - 1];
+ 
+ 	if (p->obj != obj) {
+-		pr_warning("error: program handler doesn't match object\n");
++		pr_warn("error: program handler doesn't match object\n");
+ 		return NULL;
+ 	}
+ 
+@@ -4349,7 +4343,7 @@ const char *bpf_program__title(const struct bpf_program *prog, bool needs_copy)
+ 	if (needs_copy) {
+ 		title = strdup(title);
+ 		if (!title) {
+-			pr_warning("failed to strdup program title\n");
++			pr_warn("failed to strdup program title\n");
+ 			return ERR_PTR(-ENOMEM);
  		}
- 		if (!br->name) {
- 			ret = -1;
--			pr_warning("unknown branch filter %s,"
--				    " check man page\n", s);
-+			pr_warn("unknown branch filter %s, check man page\n", s);
+ 	}
+@@ -4371,13 +4365,13 @@ int bpf_program__set_prep(struct bpf_program *prog, int nr_instances,
+ 		return -EINVAL;
+ 
+ 	if (prog->instances.nr > 0 || prog->instances.fds) {
+-		pr_warning("Can't set pre-processor after loading\n");
++		pr_warn("Can't set pre-processor after loading\n");
+ 		return -EINVAL;
+ 	}
+ 
+ 	instances_fds = malloc(sizeof(int) * nr_instances);
+ 	if (!instances_fds) {
+-		pr_warning("alloc memory failed for fds\n");
++		pr_warn("alloc memory failed for fds\n");
+ 		return -ENOMEM;
+ 	}
+ 
+@@ -4398,15 +4392,15 @@ int bpf_program__nth_fd(const struct bpf_program *prog, int n)
+ 		return -EINVAL;
+ 
+ 	if (n >= prog->instances.nr || n < 0) {
+-		pr_warning("Can't get the %dth fd from program %s: only %d instances\n",
+-			   n, prog->section_name, prog->instances.nr);
++		pr_warn("Can't get the %dth fd from program %s: only %d instances\n",
++			n, prog->section_name, prog->instances.nr);
+ 		return -EINVAL;
+ 	}
+ 
+ 	fd = prog->instances.fds[n];
+ 	if (fd < 0) {
+-		pr_warning("%dth instance of program '%s' is invalid\n",
+-			   n, prog->section_name);
++		pr_warn("%dth instance of program '%s' is invalid\n",
++			n, prog->section_name);
+ 		return -ENOENT;
+ 	}
+ 
+@@ -4593,7 +4587,7 @@ int libbpf_prog_type_by_name(const char *name, enum bpf_prog_type *prog_type,
+ 		*expected_attach_type = section_names[i].expected_attach_type;
+ 		return 0;
+ 	}
+-	pr_warning("failed to guess program type based on ELF section name '%s'\n", name);
++	pr_warn("failed to guess program type based on ELF section name '%s'\n", name);
+ 	type_names = libbpf_get_type_names(false);
+ 	if (type_names != NULL) {
+ 		pr_info("supported section(type) names are:%s\n", type_names);
+@@ -4620,7 +4614,7 @@ int libbpf_attach_type_by_name(const char *name,
+ 		*attach_type = section_names[i].attach_type;
+ 		return 0;
+ 	}
+-	pr_warning("failed to guess attach type based on ELF section name '%s'\n", name);
++	pr_warn("failed to guess attach type based on ELF section name '%s'\n", name);
+ 	type_names = libbpf_get_type_names(true);
+ 	if (type_names != NULL) {
+ 		pr_info("attachable section(type) names are:%s\n", type_names);
+@@ -4703,11 +4697,11 @@ void bpf_map__set_ifindex(struct bpf_map *map, __u32 ifindex)
+ int bpf_map__set_inner_map_fd(struct bpf_map *map, int fd)
+ {
+ 	if (!bpf_map_type__is_map_in_map(map->def.type)) {
+-		pr_warning("error: unsupported map type\n");
++		pr_warn("error: unsupported map type\n");
+ 		return -EINVAL;
+ 	}
+ 	if (map->inner_map_fd != -1) {
+-		pr_warning("error: inner_map_fd already specified\n");
++		pr_warn("error: inner_map_fd already specified\n");
+ 		return -EINVAL;
+ 	}
+ 	map->inner_map_fd = fd;
+@@ -4727,8 +4721,8 @@ __bpf_map__iter(const struct bpf_map *m, const struct bpf_object *obj, int i)
+ 	e = obj->maps + obj->nr_maps;
+ 
+ 	if ((m < s) || (m >= e)) {
+-		pr_warning("error in %s: map handler doesn't belong to object\n",
+-			   __func__);
++		pr_warn("error in %s: map handler doesn't belong to object\n",
++			 __func__);
+ 		return NULL;
+ 	}
+ 
+@@ -4857,7 +4851,7 @@ int bpf_prog_load_xattr(const struct bpf_prog_load_attr *attr,
+ 	}
+ 
+ 	if (!first_prog) {
+-		pr_warning("object file doesn't contain bpf program\n");
++		pr_warn("object file doesn't contain bpf program\n");
+ 		bpf_object__close(obj);
+ 		return -ENOENT;
+ 	}
+@@ -4916,14 +4910,14 @@ struct bpf_link *bpf_program__attach_perf_event(struct bpf_program *prog,
+ 	int prog_fd, err;
+ 
+ 	if (pfd < 0) {
+-		pr_warning("program '%s': invalid perf event FD %d\n",
+-			   bpf_program__title(prog, false), pfd);
++		pr_warn("program '%s': invalid perf event FD %d\n",
++			bpf_program__title(prog, false), pfd);
+ 		return ERR_PTR(-EINVAL);
+ 	}
+ 	prog_fd = bpf_program__fd(prog);
+ 	if (prog_fd < 0) {
+-		pr_warning("program '%s': can't attach BPF program w/o FD (did you load it?)\n",
+-			   bpf_program__title(prog, false));
++		pr_warn("program '%s': can't attach BPF program w/o FD (did you load it?)\n",
++			bpf_program__title(prog, false));
+ 		return ERR_PTR(-EINVAL);
+ 	}
+ 
+@@ -4936,16 +4930,16 @@ struct bpf_link *bpf_program__attach_perf_event(struct bpf_program *prog,
+ 	if (ioctl(pfd, PERF_EVENT_IOC_SET_BPF, prog_fd) < 0) {
+ 		err = -errno;
+ 		free(link);
+-		pr_warning("program '%s': failed to attach to pfd %d: %s\n",
+-			   bpf_program__title(prog, false), pfd,
++		pr_warn("program '%s': failed to attach to pfd %d: %s\n",
++			bpf_program__title(prog, false), pfd,
+ 			   libbpf_strerror_r(err, errmsg, sizeof(errmsg)));
+ 		return ERR_PTR(err);
+ 	}
+ 	if (ioctl(pfd, PERF_EVENT_IOC_ENABLE, 0) < 0) {
+ 		err = -errno;
+ 		free(link);
+-		pr_warning("program '%s': failed to enable pfd %d: %s\n",
+-			   bpf_program__title(prog, false), pfd,
++		pr_warn("program '%s': failed to enable pfd %d: %s\n",
++			bpf_program__title(prog, false), pfd,
+ 			   libbpf_strerror_r(err, errmsg, sizeof(errmsg)));
+ 		return ERR_PTR(err);
+ 	}
+@@ -5020,9 +5014,9 @@ static int perf_event_open_probe(bool uprobe, bool retprobe, const char *name,
+ 	type = uprobe ? determine_uprobe_perf_type()
+ 		      : determine_kprobe_perf_type();
+ 	if (type < 0) {
+-		pr_warning("failed to determine %s perf type: %s\n",
+-			   uprobe ? "uprobe" : "kprobe",
+-			   libbpf_strerror_r(type, errmsg, sizeof(errmsg)));
++		pr_warn("failed to determine %s perf type: %s\n",
++			uprobe ? "uprobe" : "kprobe",
++			libbpf_strerror_r(type, errmsg, sizeof(errmsg)));
+ 		return type;
+ 	}
+ 	if (retprobe) {
+@@ -5030,10 +5024,9 @@ static int perf_event_open_probe(bool uprobe, bool retprobe, const char *name,
+ 				 : determine_kprobe_retprobe_bit();
+ 
+ 		if (bit < 0) {
+-			pr_warning("failed to determine %s retprobe bit: %s\n",
+-				   uprobe ? "uprobe" : "kprobe",
+-				   libbpf_strerror_r(bit, errmsg,
+-						     sizeof(errmsg)));
++			pr_warn("failed to determine %s retprobe bit: %s\n",
++				uprobe ? "uprobe" : "kprobe",
++				libbpf_strerror_r(bit, errmsg, sizeof(errmsg)));
+ 			return bit;
+ 		}
+ 		attr.config |= 1 << bit;
+@@ -5050,9 +5043,9 @@ static int perf_event_open_probe(bool uprobe, bool retprobe, const char *name,
+ 		      -1 /* group_fd */, PERF_FLAG_FD_CLOEXEC);
+ 	if (pfd < 0) {
+ 		err = -errno;
+-		pr_warning("%s perf_event_open() failed: %s\n",
+-			   uprobe ? "uprobe" : "kprobe",
+-			   libbpf_strerror_r(err, errmsg, sizeof(errmsg)));
++		pr_warn("%s perf_event_open() failed: %s\n",
++			uprobe ? "uprobe" : "kprobe",
++			libbpf_strerror_r(err, errmsg, sizeof(errmsg)));
+ 		return err;
+ 	}
+ 	return pfd;
+@@ -5069,20 +5062,20 @@ struct bpf_link *bpf_program__attach_kprobe(struct bpf_program *prog,
+ 	pfd = perf_event_open_probe(false /* uprobe */, retprobe, func_name,
+ 				    0 /* offset */, -1 /* pid */);
+ 	if (pfd < 0) {
+-		pr_warning("program '%s': failed to create %s '%s' perf event: %s\n",
+-			   bpf_program__title(prog, false),
+-			   retprobe ? "kretprobe" : "kprobe", func_name,
+-			   libbpf_strerror_r(pfd, errmsg, sizeof(errmsg)));
++		pr_warn("program '%s': failed to create %s '%s' perf event: %s\n",
++			bpf_program__title(prog, false),
++			retprobe ? "kretprobe" : "kprobe", func_name,
++			libbpf_strerror_r(pfd, errmsg, sizeof(errmsg)));
+ 		return ERR_PTR(pfd);
+ 	}
+ 	link = bpf_program__attach_perf_event(prog, pfd);
+ 	if (IS_ERR(link)) {
+ 		close(pfd);
+ 		err = PTR_ERR(link);
+-		pr_warning("program '%s': failed to attach to %s '%s': %s\n",
+-			   bpf_program__title(prog, false),
+-			   retprobe ? "kretprobe" : "kprobe", func_name,
+-			   libbpf_strerror_r(err, errmsg, sizeof(errmsg)));
++		pr_warn("program '%s': failed to attach to %s '%s': %s\n",
++			bpf_program__title(prog, false),
++			retprobe ? "kretprobe" : "kprobe", func_name,
++			libbpf_strerror_r(err, errmsg, sizeof(errmsg)));
+ 		return link;
+ 	}
+ 	return link;
+@@ -5100,8 +5093,8 @@ struct bpf_link *bpf_program__attach_uprobe(struct bpf_program *prog,
+ 	pfd = perf_event_open_probe(true /* uprobe */, retprobe,
+ 				    binary_path, func_offset, pid);
+ 	if (pfd < 0) {
+-		pr_warning("program '%s': failed to create %s '%s:0x%zx' perf event: %s\n",
+-			   bpf_program__title(prog, false),
++		pr_warn("program '%s': failed to create %s '%s:0x%zx' perf event: %s\n",
++			bpf_program__title(prog, false),
+ 			   retprobe ? "uretprobe" : "uprobe",
+ 			   binary_path, func_offset,
+ 			   libbpf_strerror_r(pfd, errmsg, sizeof(errmsg)));
+@@ -5111,11 +5104,11 @@ struct bpf_link *bpf_program__attach_uprobe(struct bpf_program *prog,
+ 	if (IS_ERR(link)) {
+ 		close(pfd);
+ 		err = PTR_ERR(link);
+-		pr_warning("program '%s': failed to attach to %s '%s:0x%zx': %s\n",
+-			   bpf_program__title(prog, false),
+-			   retprobe ? "uretprobe" : "uprobe",
+-			   binary_path, func_offset,
+-			   libbpf_strerror_r(err, errmsg, sizeof(errmsg)));
++		pr_warn("program '%s': failed to attach to %s '%s:0x%zx': %s\n",
++			bpf_program__title(prog, false),
++			retprobe ? "uretprobe" : "uprobe",
++			binary_path, func_offset,
++			libbpf_strerror_r(err, errmsg, sizeof(errmsg)));
+ 		return link;
+ 	}
+ 	return link;
+@@ -5149,9 +5142,9 @@ static int perf_event_open_tracepoint(const char *tp_category,
+ 
+ 	tp_id = determine_tracepoint_id(tp_category, tp_name);
+ 	if (tp_id < 0) {
+-		pr_warning("failed to determine tracepoint '%s/%s' perf event ID: %s\n",
+-			   tp_category, tp_name,
+-			   libbpf_strerror_r(tp_id, errmsg, sizeof(errmsg)));
++		pr_warn("failed to determine tracepoint '%s/%s' perf event ID: %s\n",
++			tp_category, tp_name,
++			libbpf_strerror_r(tp_id, errmsg, sizeof(errmsg)));
+ 		return tp_id;
+ 	}
+ 
+@@ -5163,9 +5156,9 @@ static int perf_event_open_tracepoint(const char *tp_category,
+ 		      -1 /* group_fd */, PERF_FLAG_FD_CLOEXEC);
+ 	if (pfd < 0) {
+ 		err = -errno;
+-		pr_warning("tracepoint '%s/%s' perf_event_open() failed: %s\n",
+-			   tp_category, tp_name,
+-			   libbpf_strerror_r(err, errmsg, sizeof(errmsg)));
++		pr_warn("tracepoint '%s/%s' perf_event_open() failed: %s\n",
++			tp_category, tp_name,
++			libbpf_strerror_r(err, errmsg, sizeof(errmsg)));
+ 		return err;
+ 	}
+ 	return pfd;
+@@ -5181,20 +5174,20 @@ struct bpf_link *bpf_program__attach_tracepoint(struct bpf_program *prog,
+ 
+ 	pfd = perf_event_open_tracepoint(tp_category, tp_name);
+ 	if (pfd < 0) {
+-		pr_warning("program '%s': failed to create tracepoint '%s/%s' perf event: %s\n",
+-			   bpf_program__title(prog, false),
+-			   tp_category, tp_name,
+-			   libbpf_strerror_r(pfd, errmsg, sizeof(errmsg)));
++		pr_warn("program '%s': failed to create tracepoint '%s/%s' perf event: %s\n",
++			bpf_program__title(prog, false),
++			tp_category, tp_name,
++			libbpf_strerror_r(pfd, errmsg, sizeof(errmsg)));
+ 		return ERR_PTR(pfd);
+ 	}
+ 	link = bpf_program__attach_perf_event(prog, pfd);
+ 	if (IS_ERR(link)) {
+ 		close(pfd);
+ 		err = PTR_ERR(link);
+-		pr_warning("program '%s': failed to attach to tracepoint '%s/%s': %s\n",
+-			   bpf_program__title(prog, false),
+-			   tp_category, tp_name,
+-			   libbpf_strerror_r(err, errmsg, sizeof(errmsg)));
++		pr_warn("program '%s': failed to attach to tracepoint '%s/%s': %s\n",
++			bpf_program__title(prog, false),
++			tp_category, tp_name,
++			libbpf_strerror_r(err, errmsg, sizeof(errmsg)));
+ 		return link;
+ 	}
+ 	return link;
+@@ -5216,8 +5209,8 @@ struct bpf_link *bpf_program__attach_raw_tracepoint(struct bpf_program *prog,
+ 
+ 	prog_fd = bpf_program__fd(prog);
+ 	if (prog_fd < 0) {
+-		pr_warning("program '%s': can't attach before loaded\n",
+-			   bpf_program__title(prog, false));
++		pr_warn("program '%s': can't attach before loaded\n",
++			bpf_program__title(prog, false));
+ 		return ERR_PTR(-EINVAL);
+ 	}
+ 
+@@ -5230,9 +5223,9 @@ struct bpf_link *bpf_program__attach_raw_tracepoint(struct bpf_program *prog,
+ 	if (pfd < 0) {
+ 		pfd = -errno;
+ 		free(link);
+-		pr_warning("program '%s': failed to attach to raw tracepoint '%s': %s\n",
+-			   bpf_program__title(prog, false), tp_name,
+-			   libbpf_strerror_r(pfd, errmsg, sizeof(errmsg)));
++		pr_warn("program '%s': failed to attach to raw tracepoint '%s': %s\n",
++			bpf_program__title(prog, false), tp_name,
++			libbpf_strerror_r(pfd, errmsg, sizeof(errmsg)));
+ 		return ERR_PTR(pfd);
+ 	}
+ 	link->fd = pfd;
+@@ -5334,7 +5327,7 @@ static void perf_buffer__free_cpu_buf(struct perf_buffer *pb,
+ 		return;
+ 	if (cpu_buf->base &&
+ 	    munmap(cpu_buf->base, pb->mmap_size + pb->page_size))
+-		pr_warning("failed to munmap cpu_buf #%d\n", cpu_buf->cpu);
++		pr_warn("failed to munmap cpu_buf #%d\n", cpu_buf->cpu);
+ 	if (cpu_buf->fd >= 0) {
+ 		ioctl(cpu_buf->fd, PERF_EVENT_IOC_DISABLE, 0);
+ 		close(cpu_buf->fd);
+@@ -5384,8 +5377,8 @@ perf_buffer__open_cpu_buf(struct perf_buffer *pb, struct perf_event_attr *attr,
+ 			      -1, PERF_FLAG_FD_CLOEXEC);
+ 	if (cpu_buf->fd < 0) {
+ 		err = -errno;
+-		pr_warning("failed to open perf buffer event on cpu #%d: %s\n",
+-			   cpu, libbpf_strerror_r(err, msg, sizeof(msg)));
++		pr_warn("failed to open perf buffer event on cpu #%d: %s\n",
++			cpu, libbpf_strerror_r(err, msg, sizeof(msg)));
+ 		goto error;
+ 	}
+ 
+@@ -5395,15 +5388,15 @@ perf_buffer__open_cpu_buf(struct perf_buffer *pb, struct perf_event_attr *attr,
+ 	if (cpu_buf->base == MAP_FAILED) {
+ 		cpu_buf->base = NULL;
+ 		err = -errno;
+-		pr_warning("failed to mmap perf buffer on cpu #%d: %s\n",
+-			   cpu, libbpf_strerror_r(err, msg, sizeof(msg)));
++		pr_warn("failed to mmap perf buffer on cpu #%d: %s\n",
++			cpu, libbpf_strerror_r(err, msg, sizeof(msg)));
+ 		goto error;
+ 	}
+ 
+ 	if (ioctl(cpu_buf->fd, PERF_EVENT_IOC_ENABLE, 0) < 0) {
+ 		err = -errno;
+-		pr_warning("failed to enable perf buffer event on cpu #%d: %s\n",
+-			   cpu, libbpf_strerror_r(err, msg, sizeof(msg)));
++		pr_warn("failed to enable perf buffer event on cpu #%d: %s\n",
++			cpu, libbpf_strerror_r(err, msg, sizeof(msg)));
+ 		goto error;
+ 	}
+ 
+@@ -5463,8 +5456,8 @@ static struct perf_buffer *__perf_buffer__new(int map_fd, size_t page_cnt,
+ 	int err, i;
+ 
+ 	if (page_cnt & (page_cnt - 1)) {
+-		pr_warning("page count should be power of two, but is %zu\n",
+-			   page_cnt);
++		pr_warn("page count should be power of two, but is %zu\n",
++			page_cnt);
+ 		return ERR_PTR(-EINVAL);
+ 	}
+ 
+@@ -5472,14 +5465,14 @@ static struct perf_buffer *__perf_buffer__new(int map_fd, size_t page_cnt,
+ 	err = bpf_obj_get_info_by_fd(map_fd, &map, &map_info_len);
+ 	if (err) {
+ 		err = -errno;
+-		pr_warning("failed to get map info for map FD %d: %s\n",
+-			   map_fd, libbpf_strerror_r(err, msg, sizeof(msg)));
++		pr_warn("failed to get map info for map FD %d: %s\n",
++			map_fd, libbpf_strerror_r(err, msg, sizeof(msg)));
+ 		return ERR_PTR(err);
+ 	}
+ 
+ 	if (map.type != BPF_MAP_TYPE_PERF_EVENT_ARRAY) {
+-		pr_warning("map '%s' should be BPF_MAP_TYPE_PERF_EVENT_ARRAY\n",
+-			   map.name);
++		pr_warn("map '%s' should be BPF_MAP_TYPE_PERF_EVENT_ARRAY\n",
++			map.name);
+ 		return ERR_PTR(-EINVAL);
+ 	}
+ 
+@@ -5499,8 +5492,8 @@ static struct perf_buffer *__perf_buffer__new(int map_fd, size_t page_cnt,
+ 	pb->epoll_fd = epoll_create1(EPOLL_CLOEXEC);
+ 	if (pb->epoll_fd < 0) {
+ 		err = -errno;
+-		pr_warning("failed to create epoll instance: %s\n",
+-			   libbpf_strerror_r(err, msg, sizeof(msg)));
++		pr_warn("failed to create epoll instance: %s\n",
++			libbpf_strerror_r(err, msg, sizeof(msg)));
+ 		goto error;
+ 	}
+ 
+@@ -5519,13 +5512,13 @@ static struct perf_buffer *__perf_buffer__new(int map_fd, size_t page_cnt,
+ 	pb->events = calloc(pb->cpu_cnt, sizeof(*pb->events));
+ 	if (!pb->events) {
+ 		err = -ENOMEM;
+-		pr_warning("failed to allocate events: out of memory\n");
++		pr_warn("failed to allocate events: out of memory\n");
+ 		goto error;
+ 	}
+ 	pb->cpu_bufs = calloc(pb->cpu_cnt, sizeof(*pb->cpu_bufs));
+ 	if (!pb->cpu_bufs) {
+ 		err = -ENOMEM;
+-		pr_warning("failed to allocate buffers: out of memory\n");
++		pr_warn("failed to allocate buffers: out of memory\n");
+ 		goto error;
+ 	}
+ 
+@@ -5548,9 +5541,9 @@ static struct perf_buffer *__perf_buffer__new(int map_fd, size_t page_cnt,
+ 					  &cpu_buf->fd, 0);
+ 		if (err) {
+ 			err = -errno;
+-			pr_warning("failed to set cpu #%d, key %d -> perf FD %d: %s\n",
+-				   cpu, map_key, cpu_buf->fd,
+-				   libbpf_strerror_r(err, msg, sizeof(msg)));
++			pr_warn("failed to set cpu #%d, key %d -> perf FD %d: %s\n",
++				cpu, map_key, cpu_buf->fd,
++				libbpf_strerror_r(err, msg, sizeof(msg)));
  			goto error;
  		}
  
-diff --git a/tools/perf/util/perf-hooks.c b/tools/perf/util/perf-hooks.c
-index e635c594f773..54684faed18d 100644
---- a/tools/perf/util/perf-hooks.c
-+++ b/tools/perf/util/perf-hooks.c
-@@ -25,8 +25,8 @@ void perf_hooks__invoke(const struct perf_hook_desc *desc)
- 		return;
- 
- 	if (sigsetjmp(jmpbuf, 1)) {
--		pr_warning("Fatal error (SEGFAULT) in perf hook '%s'\n",
--			   desc->hook_name);
-+		pr_warn("Fatal error (SEGFAULT) in perf hook '%s'\n",
-+			desc->hook_name);
- 		*(current_perf_hook->p_hook_func) = NULL;
- 	} else {
- 		current_perf_hook = desc;
-@@ -69,7 +69,7 @@ int perf_hooks__set_hook(const char *hook_name,
- 			continue;
- 
- 		if (*(perf_hooks[i]->p_hook_func))
--			pr_warning("Overwrite existing hook: %s\n", hook_name);
-+			pr_warn("Overwrite existing hook: %s\n", hook_name);
- 		*(perf_hooks[i]->p_hook_func) = hook_func;
- 		perf_hooks[i]->hook_ctx = hook_ctx;
- 		return 0;
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index b8e0967c5c21..d1e4a55cf418 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -91,7 +91,7 @@ int init_probe_symbol_maps(bool user_only)
- 	}
- out:
- 	if (ret < 0)
--		pr_warning("Failed to init vmlinux path.\n");
-+		pr_warn("Failed to init vmlinux path.\n");
- 	return ret;
- }
- 
-@@ -240,9 +240,9 @@ static bool kprobe_warn_out_range(const char *symbol, unsigned long address)
- 						false, false);
- 
- 	if (ret == 0 && etext_addr < address)
--		pr_warning("%s is out of .text, skip it.\n", symbol);
-+		pr_warn("%s is out of .text, skip it.\n", symbol);
- 	else if (kprobe_blacklist__listed(address))
--		pr_warning("%s is blacklisted function, skip it.\n", symbol);
-+		pr_warn("%s is blacklisted function, skip it.\n", symbol);
- 	else
- 		return false;
- 
-@@ -475,12 +475,12 @@ static struct debuginfo *open_debuginfo(const char *module, struct nsinfo *nsi,
- 	nsinfo__mountns_enter(nsi, &nsc);
- 	ret = debuginfo__new(path);
- 	if (!ret && !silent) {
--		pr_warning("The %s file has no debug information.\n", path);
-+		pr_warn("The %s file has no debug information.\n", path);
- 		if (!module || !strtailcmp(path, ".ko"))
--			pr_warning("Rebuild with CONFIG_DEBUG_INFO=y, ");
-+			pr_warn("Rebuild with CONFIG_DEBUG_INFO=y, ");
- 		else
--			pr_warning("Rebuild with -g, ");
--		pr_warning("or install an appropriate debuginfo package.\n");
-+			pr_warn("Rebuild with -g, ");
-+		pr_warn("or install an appropriate debuginfo package.\n");
- 	}
- 	nsinfo__mountns_exit(&nsc);
- 	return ret;
-@@ -658,7 +658,7 @@ post_process_offline_probe_trace_events(struct probe_trace_event *tevs,
- 	/* Prepare a map for offline binary */
- 	map = dso__new_map(pathname);
- 	if (!map || get_text_start_address(pathname, &stext, NULL) < 0) {
--		pr_warning("Failed to get ELF symbols for %s\n", pathname);
-+		pr_warn("Failed to get ELF symbols for %s\n", pathname);
- 		return -EINVAL;
- 	}
- 
-@@ -716,7 +716,7 @@ post_process_module_probe_trace_events(struct probe_trace_event *tevs,
- 
- 	map = get_target_map(module, NULL, false);
- 	if (!map || debuginfo__get_text_offset(dinfo, &text_offs, true) < 0) {
--		pr_warning("Failed to get ELF symbols for %s\n", module);
-+		pr_warn("Failed to get ELF symbols for %s\n", module);
- 		return -EINVAL;
- 	}
- 
-@@ -755,7 +755,7 @@ post_process_kernel_probe_trace_events(struct probe_trace_event *tevs,
- 
- 	reloc_sym = kernel_get_ref_reloc_sym();
- 	if (!reloc_sym) {
--		pr_warning("Relocated base symbol is not found!\n");
-+		pr_warn("Relocated base symbol is not found!\n");
- 		return -EINVAL;
- 	}
- 
-@@ -865,14 +865,14 @@ static int try_to_find_probe_trace_events(struct perf_probe_event *pev,
- 	debuginfo__delete(dinfo);
- 
- 	if (ntevs == 0)	{	/* No error but failed to find probe point. */
--		pr_warning("Probe point '%s' not found.\n",
--			   synthesize_perf_probe_point(&pev->point));
-+		pr_warn("Probe point '%s' not found.\n",
-+			synthesize_perf_probe_point(&pev->point));
- 		return -ENOENT;
- 	} else if (ntevs < 0) {
- 		/* Error path : ntevs < 0 */
- 		pr_debug("An error occurred in debuginfo analysis (%d).\n", ntevs);
- 		if (ntevs == -EBADF)
--			pr_warning("Warning: No dwarf info found in the vmlinux - "
-+			pr_warn("Warning: No dwarf info found in the vmlinux - "
- 				"please rebuild kernel with CONFIG_DEBUG_INFO=y.\n");
- 		if (!need_dwarf) {
- 			pr_debug("Trying to use symbols.\n");
-@@ -907,8 +907,8 @@ static int __show_one_line(FILE *fp, int l, bool skip, bool show_num)
- 	return 1;
- error:
- 	if (ferror(fp)) {
--		pr_warning("File read error: %s\n",
--			   str_error_r(errno, sbuf, sizeof(sbuf)));
-+		pr_warn("File read error: %s\n",
-+			str_error_r(errno, sbuf, sizeof(sbuf)));
- 		return -1;
- 	}
- 	return 0;
-@@ -918,7 +918,7 @@ static int _show_one_line(FILE *fp, int l, bool skip, bool show_num)
- {
- 	int rv = __show_one_line(fp, l, skip, show_num);
- 	if (rv == 0) {
--		pr_warning("Source file is shorter than expected.\n");
-+		pr_warn("Source file is shorter than expected.\n");
- 		rv = -1;
- 	}
- 	return rv;
-@@ -957,10 +957,10 @@ static int __show_line_range(struct line_range *lr, const char *module,
- 	}
- 	debuginfo__delete(dinfo);
- 	if (ret == 0 || ret == -ENOENT) {
--		pr_warning("Specified source line is not found.\n");
-+		pr_warn("Specified source line is not found.\n");
- 		return -ENOENT;
- 	} else if (ret < 0) {
--		pr_warning("Debuginfo analysis failed.\n");
-+		pr_warn("Debuginfo analysis failed.\n");
- 		return ret;
- 	}
- 
-@@ -973,7 +973,7 @@ static int __show_line_range(struct line_range *lr, const char *module,
- 		free(tmp);
- 
- 	if (ret < 0) {
--		pr_warning("Failed to find source file path.\n");
-+		pr_warn("Failed to find source file path.\n");
- 		return ret;
- 	}
- 
-@@ -987,8 +987,8 @@ static int __show_line_range(struct line_range *lr, const char *module,
- 
- 	fp = fopen(lr->path, "r");
- 	if (fp == NULL) {
--		pr_warning("Failed to open %s: %s\n", lr->path,
--			   str_error_r(errno, sbuf, sizeof(sbuf)));
-+		pr_warn("Failed to open %s: %s\n", lr->path,
-+			str_error_r(errno, sbuf, sizeof(sbuf)));
- 		return -errno;
- 	}
- 	/* Skip to starting line number */
-@@ -1069,7 +1069,7 @@ static int show_available_vars_at(struct debuginfo *dinfo,
- 			pr_err("Failed to find the address of %s\n", buf);
- 			ret = -ENOENT;
- 		} else
--			pr_warning("Debuginfo analysis failed.\n");
-+			pr_warn("Debuginfo analysis failed.\n");
- 		goto end;
- 	}
- 
-@@ -1150,7 +1150,7 @@ static int try_to_find_probe_trace_events(struct perf_probe_event *pev,
- 				struct probe_trace_event **tevs __maybe_unused)
- {
- 	if (perf_probe_event_need_dwarf(pev)) {
--		pr_warning("Debuginfo-analysis is not supported.\n");
-+		pr_warn("Debuginfo-analysis is not supported.\n");
- 		return -ENOSYS;
- 	}
- 
-@@ -1162,7 +1162,7 @@ int show_line_range(struct line_range *lr __maybe_unused,
- 		    struct nsinfo *nsi __maybe_unused,
- 		    bool user __maybe_unused)
- {
--	pr_warning("Debuginfo-analysis is not supported.\n");
-+	pr_warn("Debuginfo-analysis is not supported.\n");
- 	return -ENOSYS;
- }
- 
-@@ -1170,7 +1170,7 @@ int show_available_vars(struct perf_probe_event *pevs __maybe_unused,
- 			int npevs __maybe_unused,
- 			struct strfilter *filter __maybe_unused)
- {
--	pr_warning("Debuginfo-analysis is not supported.\n");
-+	pr_warn("Debuginfo-analysis is not supported.\n");
- 	return -ENOSYS;
- }
- #endif
-@@ -2620,11 +2620,11 @@ static int get_new_event_name(char *buf, size_t len, const char *base,
- 		goto out;
- 
- 	if (!allow_suffix) {
--		pr_warning("Error: event \"%s\" already exists.\n"
--			   " Hint: Remove existing event by 'perf probe -d'\n"
--			   "       or force duplicates by 'perf probe -f'\n"
--			   "       or set 'force=yes' in BPF source.\n",
--			   buf);
-+		pr_warn("Error: event \"%s\" already exists.\n"
-+			" Hint: Remove existing event by 'perf probe -d'\n"
-+			"       or force duplicates by 'perf probe -f'\n"
-+			"       or set 'force=yes' in BPF source.\n",
-+			buf);
- 		ret = -EEXIST;
- 		goto out;
- 	}
-@@ -2640,7 +2640,7 @@ static int get_new_event_name(char *buf, size_t len, const char *base,
- 			break;
- 	}
- 	if (i == MAX_EVENT_INDEX) {
--		pr_warning("Too many events are on the same function.\n");
-+		pr_warn("Too many events are on the same function.\n");
- 		ret = -ERANGE;
- 	}
- 
-@@ -2649,8 +2649,8 @@ static int get_new_event_name(char *buf, size_t len, const char *base,
- 
- 	/* Final validation */
- 	if (ret >= 0 && !is_c_func_name(buf)) {
--		pr_warning("Internal error: \"%s\" is an invalid event name.\n",
--			   buf);
-+		pr_warn("Internal error: \"%s\" is an invalid event name.\n",
-+			buf);
- 		ret = -EINVAL;
- 	}
- 
-@@ -2665,9 +2665,9 @@ static void warn_uprobe_event_compat(struct probe_trace_event *tev)
- 	struct probe_trace_point *tp = &tev->point;
- 
- 	if (tp->ref_ctr_offset && !uprobe_ref_ctr_is_supported()) {
--		pr_warning("A semaphore is associated with %s:%s and "
--			   "seems your kernel doesn't support it.\n",
--			   tev->group, tev->event);
-+		pr_warn("A semaphore is associated with %s:%s and "
-+			"seems your kernel doesn't support it.\n",
-+			tev->group, tev->event);
- 	}
- 
- 	/* Old uprobe event doesn't support memory dereference */
-@@ -2676,9 +2676,9 @@ static void warn_uprobe_event_compat(struct probe_trace_event *tev)
- 
- 	for (i = 0; i < tev->nargs; i++)
- 		if (strglobmatch(tev->args[i].value, "[$@+-]*")) {
--			pr_warning("Please upgrade your kernel to at least "
--				   "3.14 to have access to feature %s\n",
--				   tev->args[i].value);
-+			pr_warn("Please upgrade your kernel to at least "
-+				"3.14 to have access to feature %s\n",
-+				tev->args[i].value);
- 			break;
- 		}
- out:
-@@ -2809,7 +2809,7 @@ static int __add_probe_trace_events(struct perf_probe_event *pev,
- 		if (!cache ||
- 		    probe_cache__add_entry(cache, pev, tevs, ntevs) < 0 ||
- 		    probe_cache__commit(cache) < 0)
--			pr_warning("Failed to add event to probe cache\n");
-+			pr_warn("Failed to add event to probe cache\n");
- 		probe_cache__delete(cache);
- 	}
- 
-@@ -2924,7 +2924,7 @@ static int find_probe_trace_events_from_map(struct perf_probe_event *pev,
- 			(!pp->retprobe || kretprobe_offset_is_supported())) {
- 		reloc_sym = kernel_get_ref_reloc_sym();
- 		if (!reloc_sym) {
--			pr_warning("Relocated base symbol is not found!\n");
-+			pr_warn("Relocated base symbol is not found!\n");
- 			ret = -EINVAL;
- 			goto out;
- 		}
-@@ -2945,14 +2945,14 @@ static int find_probe_trace_events_from_map(struct perf_probe_event *pev,
- 		tev = (*tevs) + ret;
- 		tp = &tev->point;
- 		if (ret == num_matched_functions) {
--			pr_warning("Too many symbols are listed. Skip it.\n");
-+			pr_warn("Too many symbols are listed. Skip it.\n");
- 			break;
- 		}
- 		ret++;
- 
- 		if (pp->offset > sym->end - sym->start) {
--			pr_warning("Offset %ld is bigger than the size of %s\n",
--				   pp->offset, sym->name);
-+			pr_warn("Offset %ld is bigger than the size of %s\n",
-+				pp->offset, sym->name);
- 			ret = -ENOENT;
- 			goto err_out;
- 		}
-@@ -3323,7 +3323,7 @@ static int convert_to_probe_trace_events(struct perf_probe_event *pev,
- 		} else
- 			ret = convert_exec_to_group(pev->target, &pev->group);
- 		if (ret != 0) {
--			pr_warning("Failed to make a group name.\n");
-+			pr_warn("Failed to make a group name.\n");
- 			return ret;
+@@ -5559,9 +5552,9 @@ static struct perf_buffer *__perf_buffer__new(int map_fd, size_t page_cnt,
+ 		if (epoll_ctl(pb->epoll_fd, EPOLL_CTL_ADD, cpu_buf->fd,
+ 			      &pb->events[i]) < 0) {
+ 			err = -errno;
+-			pr_warning("failed to epoll_ctl cpu #%d perf FD %d: %s\n",
+-				   cpu, cpu_buf->fd,
+-				   libbpf_strerror_r(err, msg, sizeof(msg)));
++			pr_warn("failed to epoll_ctl cpu #%d perf FD %d: %s\n",
++				cpu, cpu_buf->fd,
++				libbpf_strerror_r(err, msg, sizeof(msg)));
+ 			goto error;
  		}
  	}
-diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
-index d13db55a2feb..803ba506a975 100644
---- a/tools/perf/util/probe-file.c
-+++ b/tools/perf/util/probe-file.c
-@@ -42,31 +42,31 @@ static void print_open_warning(int err, bool uprobe)
- 		else
- 			config = "CONFIG_KPROBE_EVENTS";
- 
--		pr_warning("%cprobe_events file does not exist"
--			   " - please rebuild kernel with %s.\n",
--			   uprobe ? 'u' : 'k', config);
-+		pr_warn("%cprobe_events file does not exist"
-+			" - please rebuild kernel with %s.\n",
-+			uprobe ? 'u' : 'k', config);
- 	} else if (err == -ENOTSUP)
--		pr_warning("Tracefs or debugfs is not mounted.\n");
-+		pr_warn("Tracefs or debugfs is not mounted.\n");
- 	else
--		pr_warning("Failed to open %cprobe_events: %s\n",
--			   uprobe ? 'u' : 'k',
--			   str_error_r(-err, sbuf, sizeof(sbuf)));
-+		pr_warn("Failed to open %cprobe_events: %s\n",
-+			uprobe ? 'u' : 'k',
-+			str_error_r(-err, sbuf, sizeof(sbuf)));
- }
- 
- static void print_both_open_warning(int kerr, int uerr)
- {
- 	/* Both kprobes and uprobes are disabled, warn it. */
- 	if (kerr == -ENOTSUP && uerr == -ENOTSUP)
--		pr_warning("Tracefs or debugfs is not mounted.\n");
-+		pr_warn("Tracefs or debugfs is not mounted.\n");
- 	else if (kerr == -ENOENT && uerr == -ENOENT)
--		pr_warning("Please rebuild kernel with CONFIG_KPROBE_EVENTS "
--			   "or/and CONFIG_UPROBE_EVENTS.\n");
-+		pr_warn("Please rebuild kernel with CONFIG_KPROBE_EVENTS "
-+			"or/and CONFIG_UPROBE_EVENTS.\n");
- 	else {
- 		char sbuf[STRERR_BUFSIZE];
--		pr_warning("Failed to open kprobe events: %s.\n",
--			   str_error_r(-kerr, sbuf, sizeof(sbuf)));
--		pr_warning("Failed to open uprobe events: %s.\n",
--			   str_error_r(-uerr, sbuf, sizeof(sbuf)));
-+		pr_warn("Failed to open kprobe events: %s.\n",
-+			str_error_r(-kerr, sbuf, sizeof(sbuf)));
-+		pr_warn("Failed to open uprobe events: %s.\n",
-+			str_error_r(-uerr, sbuf, sizeof(sbuf)));
+@@ -5614,7 +5607,7 @@ perf_buffer__process_record(struct perf_event_header *e, void *ctx)
+ 		break;
  	}
- }
- 
-@@ -238,8 +238,8 @@ int probe_file__add_event(int fd, struct probe_trace_event *tev)
- 	if (!probe_event_dry_run) {
- 		if (write(fd, buf, strlen(buf)) < (int)strlen(buf)) {
- 			ret = -errno;
--			pr_warning("Failed to write event: %s\n",
--				   str_error_r(errno, sbuf, sizeof(sbuf)));
-+			pr_warn("Failed to write event: %s\n",
-+				str_error_r(errno, sbuf, sizeof(sbuf)));
- 		}
+ 	default:
+-		pr_warning("unknown perf sample type %d\n", e->type);
++		pr_warn("unknown perf sample type %d\n", e->type);
+ 		return LIBBPF_PERF_EVENT_ERROR;
  	}
- 	free(buf);
-@@ -276,8 +276,8 @@ static int __del_trace_probe_event(int fd, struct str_node *ent)
+ 	return LIBBPF_PERF_EVENT_CONT;
+@@ -5644,7 +5637,7 @@ int perf_buffer__poll(struct perf_buffer *pb, int timeout_ms)
  
- 	return 0;
- error:
--	pr_warning("Failed to delete event: %s\n",
--		   str_error_r(-ret, buf, sizeof(buf)));
-+	pr_warn("Failed to delete event: %s\n",
-+		str_error_r(-ret, buf, sizeof(buf)));
- 	return ret;
- }
- 
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index 505905fc21c5..2e143c205166 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -260,8 +260,8 @@ static int convert_variable_location(Dwarf_Die *vr_die, Dwarf_Addr addr,
- 	regs = get_dwarf_regstr(regn, machine);
- 	if (!regs) {
- 		/* This should be a bug in DWARF or this tool */
--		pr_warning("Mapping for the register number %u "
--			   "missing on this architecture.\n", regn);
-+		pr_warn("Mapping for the register number %u "
-+			"missing on this architecture.\n", regn);
- 		return -ENOTSUP;
- 	}
- 
-@@ -313,8 +313,8 @@ static int convert_variable_type(Dwarf_Die *vr_die,
- 	}
- 
- 	if (die_get_real_type(vr_die, &type) == NULL) {
--		pr_warning("Failed to get a type information of %s.\n",
--			   dwarf_diename(vr_die));
-+		pr_warn("Failed to get a type information of %s.\n",
-+			dwarf_diename(vr_die));
- 		return -ENOENT;
- 	}
- 
-@@ -326,14 +326,13 @@ static int convert_variable_type(Dwarf_Die *vr_die,
- 		ret = dwarf_tag(&type);
- 		if (ret != DW_TAG_pointer_type &&
- 		    ret != DW_TAG_array_type) {
--			pr_warning("Failed to cast into string: "
--				   "%s(%s) is not a pointer nor array.\n",
--				   dwarf_diename(vr_die), dwarf_diename(&type));
-+			pr_warn("Failed to cast into string: "
-+				"%s(%s) is not a pointer nor array.\n",
-+				dwarf_diename(vr_die), dwarf_diename(&type));
- 			return -EINVAL;
- 		}
- 		if (die_get_real_type(&type, &type) == NULL) {
--			pr_warning("Failed to get a type"
--				   " information.\n");
-+			pr_warn("Failed to get a type information.\n");
- 			return -ENOENT;
- 		}
- 		if (ret == DW_TAG_pointer_type) {
-@@ -342,16 +341,16 @@ static int convert_variable_type(Dwarf_Die *vr_die,
- 			/* Add new reference with offset +0 */
- 			*ref_ptr = zalloc(sizeof(struct probe_trace_arg_ref));
- 			if (*ref_ptr == NULL) {
--				pr_warning("Out of memory error\n");
-+				pr_warn("Out of memory error\n");
- 				return -ENOMEM;
- 			}
- 			(*ref_ptr)->user_access = user_access;
- 		}
- 		if (!die_compare_name(&type, "char") &&
- 		    !die_compare_name(&type, "unsigned char")) {
--			pr_warning("Failed to cast into string: "
--				   "%s is not (unsigned) char *.\n",
--				   dwarf_diename(vr_die));
-+			pr_warn("Failed to cast into string: "
-+				"%s is not (unsigned) char *.\n",
-+				dwarf_diename(vr_die));
- 			return -EINVAL;
- 		}
- 		tvar->type = strdup(cast);
-@@ -387,8 +386,8 @@ static int convert_variable_type(Dwarf_Die *vr_die,
- 	if (ret < 0 || ret >= 16) {
- 		if (ret >= 16)
- 			ret = -E2BIG;
--		pr_warning("Failed to convert variable type: %s\n",
--			   str_error_r(-ret, sbuf, sizeof(sbuf)));
-+		pr_warn("Failed to convert variable type: %s\n",
-+			str_error_r(-ret, sbuf, sizeof(sbuf)));
- 		return ret;
- 	}
- 	tvar->type = strdup(buf);
-@@ -409,7 +408,7 @@ static int convert_variable_fields(Dwarf_Die *vr_die, const char *varname,
- 
- 	pr_debug("converting %s in %s\n", field->name, varname);
- 	if (die_get_real_type(vr_die, &type) == NULL) {
--		pr_warning("Failed to get the type of %s.\n", varname);
-+		pr_warn("Failed to get the type of %s.\n", varname);
- 		return -ENOENT;
- 	}
- 	pr_debug2("Var real type: %s (%x)\n", dwarf_diename(&type),
-@@ -422,7 +421,7 @@ static int convert_variable_fields(Dwarf_Die *vr_die, const char *varname,
- 		memcpy(die_mem, &type, sizeof(*die_mem));
- 		/* Get the type of this array */
- 		if (die_get_real_type(&type, &type) == NULL) {
--			pr_warning("Failed to get the type of %s.\n", varname);
-+			pr_warn("Failed to get the type of %s.\n", varname);
- 			return -ENOENT;
- 		}
- 		pr_debug2("Array real type: %s (%x)\n", dwarf_diename(&type),
-@@ -448,14 +447,14 @@ static int convert_variable_fields(Dwarf_Die *vr_die, const char *varname,
- 		}
- 		/* Get the type pointed by this pointer */
- 		if (die_get_real_type(&type, &type) == NULL) {
--			pr_warning("Failed to get the type of %s.\n", varname);
-+			pr_warn("Failed to get the type of %s.\n", varname);
- 			return -ENOENT;
- 		}
- 		/* Verify it is a data structure  */
- 		tag = dwarf_tag(&type);
- 		if (tag != DW_TAG_structure_type && tag != DW_TAG_union_type) {
--			pr_warning("%s is not a data structure nor a union.\n",
--				   varname);
-+			pr_warn("%s is not a data structure nor a union.\n",
-+				varname);
- 			return -EINVAL;
- 		}
- 
-@@ -469,8 +468,8 @@ static int convert_variable_fields(Dwarf_Die *vr_die, const char *varname,
- 	} else {
- 		/* Verify it is a data structure  */
- 		if (tag != DW_TAG_structure_type && tag != DW_TAG_union_type) {
--			pr_warning("%s is not a data structure nor a union.\n",
--				   varname);
-+			pr_warn("%s is not a data structure nor a union.\n",
-+				varname);
- 			return -EINVAL;
- 		}
- 		if (field->name[0] == '[') {
-@@ -485,15 +484,14 @@ static int convert_variable_fields(Dwarf_Die *vr_die, const char *varname,
- 			return -EINVAL;
- 		}
- 		if (!ref) {
--			pr_warning("Structure on a register is not "
--				   "supported yet.\n");
-+			pr_warn("Structure on a register is not supported yet.\n");
- 			return -ENOTSUP;
- 		}
- 	}
- 
- 	if (die_find_member(&type, field->name, die_mem) == NULL) {
--		pr_warning("%s(type:%s) has no member %s.\n", varname,
--			   dwarf_diename(&type), field->name);
-+		pr_warn("%s(type:%s) has no member %s.\n", varname,
-+			dwarf_diename(&type), field->name);
- 		return -EINVAL;
- 	}
- 
-@@ -503,8 +501,8 @@ static int convert_variable_fields(Dwarf_Die *vr_die, const char *varname,
- 	} else {
- 		ret = die_get_data_member_location(die_mem, &offs);
- 		if (ret < 0) {
--			pr_warning("Failed to get the offset of %s.\n",
--				   field->name);
-+			pr_warn("Failed to get the offset of %s.\n",
-+				field->name);
- 			return ret;
- 		}
- 	}
-@@ -587,8 +585,8 @@ static int find_variable(Dwarf_Die *sc_die, struct probe_finder *pf)
- 		/* Search again in global variables */
- 		if (!die_find_variable_at(&pf->cu_die, pf->pvar->var,
- 						0, &vr_die)) {
--			pr_warning("Failed to find '%s' in this function.\n",
--				   pf->pvar->var);
-+			pr_warn("Failed to find '%s' in this function.\n",
-+				pf->pvar->var);
- 			ret = -ENOENT;
- 		}
- 	}
-@@ -610,18 +608,18 @@ static int convert_to_trace_point(Dwarf_Die *sp_die, Dwfl_Module *mod,
- 
- 	/* Verify the address is correct */
- 	if (dwarf_entrypc(sp_die, &eaddr) != 0) {
--		pr_warning("Failed to get entry address of %s\n",
--			   dwarf_diename(sp_die));
-+		pr_warn("Failed to get entry address of %s\n",
-+			dwarf_diename(sp_die));
- 		return -ENOENT;
- 	}
- 	if (dwarf_highpc(sp_die, &highaddr) != 0) {
--		pr_warning("Failed to get end address of %s\n",
--			   dwarf_diename(sp_die));
-+		pr_warn("Failed to get end address of %s\n",
-+			dwarf_diename(sp_die));
- 		return -ENOENT;
- 	}
- 	if (paddr > highaddr) {
--		pr_warning("Offset specified is greater than size of %s\n",
--			   dwarf_diename(sp_die));
-+		pr_warn("Offset specified is greater than size of %s\n",
-+			dwarf_diename(sp_die));
- 		return -EINVAL;
- 	}
- 
-@@ -630,8 +628,8 @@ static int convert_to_trace_point(Dwarf_Die *sp_die, Dwfl_Module *mod,
- 		/* Try to get the symbol name from symtab */
- 		symbol = dwfl_module_addrsym(mod, paddr, &sym, NULL);
- 		if (!symbol) {
--			pr_warning("Failed to find symbol at 0x%lx\n",
--				   (unsigned long)paddr);
-+			pr_warn("Failed to find symbol at 0x%lx\n",
-+				(unsigned long)paddr);
- 			return -ENOENT;
- 		}
- 		eaddr = sym.st_value;
-@@ -645,8 +643,8 @@ static int convert_to_trace_point(Dwarf_Die *sp_die, Dwfl_Module *mod,
- 	/* Return probe must be on the head of a subprogram */
- 	if (retprobe) {
- 		if (eaddr != paddr) {
--			pr_warning("Failed to find \"%s%%return\",\n"
--				   " because %s is an inlined function and"
-+			pr_warn("Failed to find \"%s%%return\",\n"
-+				" because %s is an inlined function and"
- 				   " has no return point.\n", function,
- 				   function);
- 			return -EINVAL;
-@@ -674,12 +672,11 @@ static int call_probe_finder(Dwarf_Die *sc_die, struct probe_finder *pf)
- 	if (!die_is_func_def(sc_die)) {
- 		if (!die_find_realfunc(&pf->cu_die, pf->addr, &pf->sp_die)) {
- 			if (die_find_tailfunc(&pf->cu_die, pf->addr, &pf->sp_die)) {
--				pr_warning("Ignoring tail call from %s\n",
--						dwarf_diename(&pf->sp_die));
-+				pr_warn("Ignoring tail call from %s\n",
-+					dwarf_diename(&pf->sp_die));
- 				return 0;
- 			} else {
--				pr_warning("Failed to find probe point in any "
--					   "functions.\n");
-+				pr_warn("Failed to find probe point in any functions.\n");
- 				return -ENOENT;
- 			}
- 		}
-@@ -697,8 +694,8 @@ static int call_probe_finder(Dwarf_Die *sc_die, struct probe_finder *pf)
- 		if ((dwarf_cfi_addrframe(pf->cfi_eh, pf->addr, &frame) != 0 &&
- 		     (dwarf_cfi_addrframe(pf->cfi_dbg, pf->addr, &frame) != 0)) ||
- 		    dwarf_frame_cfa(frame, &pf->fb_ops, &nops) != 0) {
--			pr_warning("Failed to get call frame on 0x%jx\n",
--				   (uintmax_t)pf->addr);
-+			pr_warn("Failed to get call frame on 0x%jx\n",
-+				(uintmax_t)pf->addr);
- 			free(frame);
- 			return -ENOENT;
- 		}
-@@ -786,7 +783,7 @@ static int probe_point_line_walker(const char *fname, int lineno,
- 	pf->addr = addr;
- 	sc_die = find_best_scope(pf, &die_mem);
- 	if (!sc_die) {
--		pr_warning("Failed to find scope of probe point.\n");
-+		pr_warn("Failed to find scope of probe point.\n");
- 		return -ENOENT;
- 	}
- 
-@@ -815,8 +812,8 @@ static int find_lazy_match_lines(struct intlist *list,
- 
- 	fp = fopen(fname, "r");
- 	if (!fp) {
--		pr_warning("Failed to open %s: %s\n", fname,
--			   str_error_r(errno, sbuf, sizeof(sbuf)));
-+		pr_warn("Failed to open %s: %s\n", fname,
-+			str_error_r(errno, sbuf, sizeof(sbuf)));
- 		return -errno;
- 	}
- 
-@@ -859,7 +856,7 @@ static int probe_point_lazy_walker(const char *fname, int lineno,
- 	pf->lno = lineno;
- 	sc_die = find_best_scope(pf, &die_mem);
- 	if (!sc_die) {
--		pr_warning("Failed to find scope of probe point.\n");
-+		pr_warn("Failed to find scope of probe point.\n");
- 		return -ENOENT;
- 	}
- 
-@@ -884,7 +881,7 @@ static int find_probe_point_lazy(Dwarf_Die *sp_die, struct probe_finder *pf)
- 		comp_dir = cu_get_comp_dir(&pf->cu_die);
- 		ret = get_real_path(pf->fname, comp_dir, &fpath);
- 		if (ret < 0) {
--			pr_warning("Failed to find source file path.\n");
-+			pr_warn("Failed to find source file path.\n");
- 			return ret;
- 		}
- 
-@@ -943,8 +940,8 @@ static int probe_point_inline_cb(Dwarf_Die *in_die, void *data)
- 	else {
- 		/* Get probe address */
- 		if (dwarf_entrypc(in_die, &addr) != 0) {
--			pr_warning("Failed to get entry address of %s.\n",
--				   dwarf_diename(in_die));
-+			pr_warn("Failed to get entry address of %s.\n",
-+				dwarf_diename(in_die));
- 			return -ENOENT;
- 		}
- 		if (addr == 0) {
-@@ -1257,8 +1254,7 @@ static int add_probe_trace_event(Dwarf_Die *sc_die, struct probe_finder *pf)
- 
- 	/* Check number of tevs */
- 	if (tf->ntevs == tf->max_tevs) {
--		pr_warning("Too many( > %d) probe point found.\n",
--			   tf->max_tevs);
-+		pr_warn("Too many( > %d) probe point found.\n", tf->max_tevs);
- 		return -ERANGE;
- 	}
- 	tev = &tf->tevs[tf->ntevs++];
-@@ -1418,7 +1414,7 @@ static int add_available_vars(Dwarf_Die *sc_die, struct probe_finder *pf)
- 
- 	/* Check number of tevs */
- 	if (af->nvls == af->max_vls) {
--		pr_warning("Too many( > %d) probe point found.\n", af->max_vls);
-+		pr_warn("Too many( > %d) probe point found.\n", af->max_vls);
- 		return -ERANGE;
- 	}
- 	vl = &af->vls[af->nvls++];
-@@ -1544,8 +1540,8 @@ int debuginfo__find_probe_point(struct debuginfo *dbg, unsigned long addr,
- 		addr += baseaddr;
- 	/* Find cu die */
- 	if (!dwarf_addrdie(dbg->dbg, (Dwarf_Addr)addr, &cudie)) {
--		pr_warning("Failed to find debug information for address %lx\n",
--			   addr);
-+		pr_warn("Failed to find debug information for address %lx\n",
-+			addr);
- 		ret = -EINVAL;
- 		goto end;
- 	}
-diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
-index 286fe816c0f3..4843c868f74a 100644
---- a/tools/perf/util/record.c
-+++ b/tools/perf/util/record.c
-@@ -233,11 +233,11 @@ static int record_opts__config_freq(struct record_opts *opts)
- 			       max_rate);
- 			return -1;
- 		} else {
--			pr_warning("warning: Maximum frequency rate (%'u Hz) exceeded, throttling from %'u Hz to %'u Hz.\n"
--				   "         The limit can be raised via /proc/sys/kernel/perf_event_max_sample_rate.\n"
--				   "         The kernel will lower it when perf's interrupts take too long.\n"
--				   "         Use --strict-freq to disable this throttling, refusing to record.\n",
--				   max_rate, opts->freq, max_rate);
-+			pr_warn("warning: Maximum frequency rate (%'u Hz) exceeded, throttling from %'u Hz to %'u Hz.\n"
-+				"         The limit can be raised via /proc/sys/kernel/perf_event_max_sample_rate.\n"
-+				"         The kernel will lower it when perf's interrupts take too long.\n"
-+				"         Use --strict-freq to disable this throttling, refusing to record.\n",
-+				max_rate, opts->freq, max_rate);
- 
- 			opts->freq = max_rate;
- 		}
-@@ -247,10 +247,10 @@ static int record_opts__config_freq(struct record_opts *opts)
- 	 * Default frequency is over current maximum.
- 	 */
- 	if (max_rate < opts->freq) {
--		pr_warning("Lowering default frequency rate to %u.\n"
--			   "Please consider tweaking "
--			   "/proc/sys/kernel/perf_event_max_sample_rate.\n",
--			   max_rate);
-+		pr_warn("Lowering default frequency rate to %u.\n"
-+			"Please consider tweaking "
-+			"/proc/sys/kernel/perf_event_max_sample_rate.\n",
-+			max_rate);
- 		opts->freq = max_rate;
- 	}
- 
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index e9e4a04f15db..c3c950bba720 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -238,7 +238,7 @@ struct perf_session *perf_session__new(struct perf_data *data,
- 		 * kernel MMAP event, in perf_event__process_mmap().
- 		 */
- 		if (perf_session__create_kernel_maps(session) < 0)
--			pr_warning("Cannot read kernel map\n");
-+			pr_warn("Cannot read kernel map\n");
- 	}
- 
- 	/*
-diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-index 6ccf6f6d09df..d770de66ceaf 100644
---- a/tools/perf/util/srcline.c
-+++ b/tools/perf/util/srcline.c
-@@ -290,7 +290,7 @@ static int addr2line(const char *dso_name, u64 addr,
- 
- 	if (a2l == NULL) {
- 		if (!symbol_conf.disable_add2line_warn)
--			pr_warning("addr2line_init failed for %s\n", dso_name);
-+			pr_warn("addr2line_init failed for %s\n", dso_name);
- 		return 0;
- 	}
- 
-@@ -406,12 +406,12 @@ static int addr2line(const char *dso_name, u64 addr,
- 
- 	fp = popen(cmd, "r");
- 	if (fp == NULL) {
--		pr_warning("popen failed for %s\n", dso_name);
-+		pr_warn("popen failed for %s\n", dso_name);
- 		return 0;
- 	}
- 
- 	if (getline(&filename, &len, fp) < 0 || !len) {
--		pr_warning("addr2line has no output for %s\n", dso_name);
-+		pr_warn("addr2line has no output for %s\n", dso_name);
- 		goto out;
- 	}
- 
-diff --git a/tools/perf/util/thread-stack.c b/tools/perf/util/thread-stack.c
-index cd8a948d03ec..2e21f88746d1 100644
---- a/tools/perf/util/thread-stack.c
-+++ b/tools/perf/util/thread-stack.c
-@@ -220,7 +220,7 @@ static int thread_stack__push(struct thread_stack *ts, u64 ret_addr,
- 	if (ts->cnt == ts->sz) {
- 		err = thread_stack__grow(ts);
+ 		err = perf_buffer__process_records(pb, cpu_buf);
  		if (err) {
--			pr_warning("Out of memory: discarding thread stack\n");
-+			pr_warn("Out of memory: discarding thread stack\n");
- 			ts->cnt = 0;
+-			pr_warning("error while processing records: %d\n", err);
++			pr_warn("error while processing records: %d\n", err);
+ 			return err;
  		}
  	}
-@@ -364,7 +364,7 @@ int thread_stack__event(struct thread *thread, int cpu, u32 flags, u64 from_ip,
- 	if (!ts) {
- 		ts = thread_stack__new(thread, cpu, NULL);
- 		if (!ts) {
--			pr_warning("Out of memory: no thread stack\n");
-+			pr_warn("Out of memory: no thread stack\n");
- 			return -ENOMEM;
- 		}
- 		ts->trace_nr = trace_nr;
-diff --git a/tools/perf/util/thread_map.c b/tools/perf/util/thread_map.c
-index c9bfe4696943..e0dea5b46931 100644
---- a/tools/perf/util/thread_map.c
-+++ b/tools/perf/util/thread_map.c
-@@ -355,7 +355,7 @@ static void comm_init(struct perf_thread_map *map, int i)
- 	 * so just warn if we fail for any reason.
- 	 */
- 	if (get_comm(&comm, pid))
--		pr_warning("Couldn't resolve comm name for pid %d\n", pid);
-+		pr_warn("Couldn't resolve comm name for pid %d\n", pid);
+@@ -5841,13 +5834,13 @@ bpf_program__get_prog_info_linear(int fd, __u64 arrays)
+ 		v2 = bpf_prog_info_read_offset_u32(&info_linear->info,
+ 						   desc->count_offset);
+ 		if (v1 != v2)
+-			pr_warning("%s: mismatch in element count\n", __func__);
++			pr_warn("%s: mismatch in element count\n", __func__);
  
- 	map->map[i].comm = comm;
- }
-diff --git a/tools/perf/util/trace-event-parse.c b/tools/perf/util/trace-event-parse.c
-index 5d6bfc70b210..9433bbabcbda 100644
---- a/tools/perf/util/trace-event-parse.c
-+++ b/tools/perf/util/trace-event-parse.c
-@@ -134,7 +134,7 @@ void parse_ftrace_printk(struct tep_handle *pevent,
- 	while (line) {
- 		addr_str = strtok_r(line, ":", &fmt);
- 		if (!addr_str) {
--			pr_warning("printk format with empty entry");
-+			pr_warn("printk format with empty entry");
- 			break;
+ 		v1 = bpf_prog_info_read_offset_u32(&info, desc->size_offset);
+ 		v2 = bpf_prog_info_read_offset_u32(&info_linear->info,
+ 						   desc->size_offset);
+ 		if (v1 != v2)
+-			pr_warning("%s: mismatch in rec size\n", __func__);
++			pr_warn("%s: mismatch in rec size\n", __func__);
+ 	}
+ 
+ 	/* step 7: update info_len and data_len */
+@@ -5915,20 +5908,19 @@ int libbpf_num_possible_cpus(void)
+ 	fd = open(fcpu, O_RDONLY);
+ 	if (fd < 0) {
+ 		error = errno;
+-		pr_warning("Failed to open file %s: %s\n",
+-			   fcpu, strerror(error));
++		pr_warn("Failed to open file %s: %s\n", fcpu, strerror(error));
+ 		return -error;
+ 	}
+ 	len = read(fd, buf, sizeof(buf));
+ 	close(fd);
+ 	if (len <= 0) {
+ 		error = len ? errno : EINVAL;
+-		pr_warning("Failed to read # of possible cpus from %s: %s\n",
+-			   fcpu, strerror(error));
++		pr_warn("Failed to read # of possible cpus from %s: %s\n",
++			fcpu, strerror(error));
+ 		return -error;
+ 	}
+ 	if (len == sizeof(buf)) {
+-		pr_warning("File %s size overflow\n", fcpu);
++		pr_warn("File %s size overflow\n", fcpu);
+ 		return -EOVERFLOW;
+ 	}
+ 	buf[len] = '\0';
+@@ -5939,8 +5931,8 @@ int libbpf_num_possible_cpus(void)
+ 			buf[ir] = '\0';
+ 			n = sscanf(&buf[il], "%u-%u", &start, &end);
+ 			if (n <= 0) {
+-				pr_warning("Failed to get # CPUs from %s\n",
+-					   &buf[il]);
++				pr_warn("Failed to get # CPUs from %s\n",
++					&buf[il]);
+ 				return -EINVAL;
+ 			} else if (n == 1) {
+ 				end = start;
+@@ -5950,7 +5942,7 @@ int libbpf_num_possible_cpus(void)
  		}
- 		addr = strtoull(addr_str, NULL, 16);
-diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
-index ebdbb056510c..5ecb77f289b7 100644
---- a/tools/perf/util/unwind-libunwind-local.c
-+++ b/tools/perf/util/unwind-libunwind-local.c
-@@ -341,11 +341,10 @@ static int read_unwind_spec_debug_frame(struct dso *dso,
- 			}
- 			if (ofs > 0) {
- 				if (dso->symsrc_filename != NULL) {
--					pr_warning(
--						"%s: overwrite symsrc(%s,%s)\n",
--							__func__,
--							dso->symsrc_filename,
--							debuglink);
-+					pr_warn("%s: overwrite symsrc(%s,%s)\n",
-+						__func__,
-+						dso->symsrc_filename,
-+						debuglink);
- 					zfree(&dso->symsrc_filename);
- 				}
- 				dso->symsrc_filename = debuglink;
+ 	}
+ 	if (tmp_cpus <= 0) {
+-		pr_warning("Invalid #CPUs %d from %s\n", tmp_cpus, fcpu);
++		pr_warn("Invalid #CPUs %d from %s\n", tmp_cpus, fcpu);
+ 		return -EINVAL;
+ 	}
+ 
+diff --git a/tools/lib/bpf/libbpf_internal.h b/tools/lib/bpf/libbpf_internal.h
+index 2e83a34f8c79..d2febc3cedc8 100644
+--- a/tools/lib/bpf/libbpf_internal.h
++++ b/tools/lib/bpf/libbpf_internal.h
+@@ -43,7 +43,7 @@ do {				\
+ 	libbpf_print(level, "libbpf: " fmt, ##__VA_ARGS__);	\
+ } while (0)
+ 
+-#define pr_warning(fmt, ...)	__pr(LIBBPF_WARN, fmt, ##__VA_ARGS__)
++#define pr_warn(fmt, ...)	__pr(LIBBPF_WARN, fmt, ##__VA_ARGS__)
+ #define pr_info(fmt, ...)	__pr(LIBBPF_INFO, fmt, ##__VA_ARGS__)
+ #define pr_debug(fmt, ...)	__pr(LIBBPF_DEBUG, fmt, ##__VA_ARGS__)
+ 
+diff --git a/tools/lib/bpf/xsk.c b/tools/lib/bpf/xsk.c
+index 842c4fd55859..90bbe5c7163e 100644
+--- a/tools/lib/bpf/xsk.c
++++ b/tools/lib/bpf/xsk.c
+@@ -311,7 +311,7 @@ static int xsk_load_xdp_prog(struct xsk_socket *xsk)
+ 				   "LGPL-2.1 or BSD-2-Clause", 0, log_buf,
+ 				   log_buf_size);
+ 	if (prog_fd < 0) {
+-		pr_warning("BPF log buffer:\n%s", log_buf);
++		pr_warn("BPF log buffer:\n%s", log_buf);
+ 		return prog_fd;
+ 	}
+ 
+@@ -500,7 +500,7 @@ int xsk_socket__create(struct xsk_socket **xsk_ptr, const char *ifname,
+ 		return -EFAULT;
+ 
+ 	if (umem->refcount) {
+-		pr_warning("Error: shared umems not supported by libbpf.\n");
++		pr_warn("Error: shared umems not supported by libbpf.\n");
+ 		return -EBUSY;
+ 	}
+ 
 -- 
 2.20.1
 
