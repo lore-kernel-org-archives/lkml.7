@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2633FC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13445C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0463A206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9D512086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:33:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391432AbfITOdG (ORCPT
+        id S2391460AbfITOdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:33:06 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36440 "EHLO
+        Fri, 20 Sep 2019 10:33:09 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36420 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388266AbfITOZJ (ORCPT
+        by vger.kernel.org with ESMTP id S2388259AbfITOZJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Sep 2019 10:25:09 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqN-0004xy-7v; Fri, 20 Sep 2019 15:25:07 +0100
+        id 1iBJqH-00051F-U6; Fri, 20 Sep 2019 15:25:02 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqG-0007wz-MZ; Fri, 20 Sep 2019 15:25:00 +0100
+        id 1iBJqH-0007yD-62; Fri, 20 Sep 2019 15:25:01 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Bob Peterson" <rpeterso@redhat.com>
+        "ruippan" <ruippan@tencent.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "yongduan" <yongduan@tencent.com>,
+        "Tyler Hicks" <tyhicks@canonical.com>,
+        "Lidong Chen" <lidongchen@tencent.com>
 Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.156942783@decadent.org.uk>
+Message-ID: <lsq.1568989415.700934050@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 102/132] GFS2: Fix rgrp end rounding problem for
- bsize < page size
+Subject: [PATCH 3.16 112/132] vhost: make sure log_num < in_num
 In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,32 +58,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: yongduan <yongduan@tencent.com>
 
-commit 31dddd9eb9ebae9a2a9b502750e9e481d752180a upstream.
+commit 060423bfdee3f8bc6e2c1bac97de24d5415e2bc4 upstream.
 
-This patch fixes a bug introduced by commit 7005c3e. That patch
-tries to map a vm range for resource groups, but the calculation
-breaks down when the block size is less than the page size.
+The code assumes log_num < in_num everywhere, and that is true as long as
+in_num is incremented by descriptor iov count, and log_num by 1. However
+this breaks if there's a zero sized descriptor.
 
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+As a result, if a malicious guest creates a vring desc with desc.len = 0,
+it may cause the host kernel to crash by overflowing the log array. This
+bug can be triggered during the VM migration.
+
+There's no need to log when desc.len = 0, so just don't increment log_num
+in this case.
+
+Fixes: 3a4d5c94e959 ("vhost_net: a kernel-level virtio server")
+Reviewed-by: Lidong Chen <lidongchen@tencent.com>
+Signed-off-by: ruippan <ruippan@tencent.com>
+Signed-off-by: yongduan <yongduan@tencent.com>
+Acked-by: Michael S. Tsirkin <mst@redhat.com>
+Reviewed-by: Tyler Hicks <tyhicks@canonical.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/gfs2/rgrp.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/vhost/vhost.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/gfs2/rgrp.c
-+++ b/fs/gfs2/rgrp.c
-@@ -926,8 +926,9 @@ static int read_rindex_entry(struct gfs2
- 		goto fail;
- 
- 	rgd->rd_gl->gl_object = rgd;
--	rgd->rd_gl->gl_vm.start = rgd->rd_addr * bsize;
--	rgd->rd_gl->gl_vm.end = rgd->rd_gl->gl_vm.start + (rgd->rd_length * bsize) - 1;
-+	rgd->rd_gl->gl_vm.start = (rgd->rd_addr * bsize) & PAGE_CACHE_MASK;
-+	rgd->rd_gl->gl_vm.end = PAGE_CACHE_ALIGN((rgd->rd_addr +
-+						  rgd->rd_length) * bsize) - 1;
- 	rgd->rd_rgl = (struct gfs2_rgrp_lvb *)rgd->rd_gl->gl_lksb.sb_lvbptr;
- 	rgd->rd_flags &= ~GFS2_RDF_UPTODATE;
- 	if (rgd->rd_data > sdp->sd_max_rg_data)
+--- a/drivers/vhost/vhost.c
++++ b/drivers/vhost/vhost.c
+@@ -1194,7 +1194,7 @@ static int get_indirect(struct vhost_vir
+ 		/* If this is an input descriptor, increment that count. */
+ 		if (desc.flags & VRING_DESC_F_WRITE) {
+ 			*in_num += ret;
+-			if (unlikely(log)) {
++			if (unlikely(log && ret)) {
+ 				log[*log_num].addr = desc.addr;
+ 				log[*log_num].len = desc.len;
+ 				++*log_num;
+@@ -1317,7 +1317,7 @@ int vhost_get_vq_desc(struct vhost_virtq
+ 			/* If this is an input descriptor,
+ 			 * increment that count. */
+ 			*in_num += ret;
+-			if (unlikely(log)) {
++			if (unlikely(log && ret)) {
+ 				log[*log_num].addr = desc.addr;
+ 				log[*log_num].len = desc.len;
+ 				++*log_num;
 
