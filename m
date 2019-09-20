@@ -2,87 +2,191 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2991FC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB6FC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5D2C20644
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:03:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="NO0/kwiM"
+	by mail.kernel.org (Postfix) with ESMTP id D7BAC2067B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:03:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568988237;
+	bh=K9lsB5ULphBbXbCVVVum93smBl4jbswhCzaYTFnOYGU=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=xpvfsEr3/Zr943OGlmMqoey1U1JjT9w/zoD6hDbvolwabtX3QmuczfV4SUYdSfM3R
+	 cG7sB7dCVX3gLsp8IoDOLwilmdfMJMa5x7bCb8d0antBZL5qyEroiSbV53q6S+k9R/
+	 WYOAmTriOK0Soc7bFQtoaYS+yGrIcmxiK1XfjT7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728900AbfITODe (ORCPT
+        id S1728923AbfITOD5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:03:34 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:33262 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728848AbfITODd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 10:03:33 -0400
-Received: by mail-qk1-f195.google.com with SMTP id x134so7455168qkb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 07:03:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:mime-version
-         :content-transfer-encoding;
-        bh=L7RuMAWb39SKa2KSDUpnhn/WYPqF8ZgNcdG8xyngyco=;
-        b=NO0/kwiMlrquEUDojFfFwuhDiadYS5FpTfczDYCVtDyMD1FTwhaYY0o8st6uKTL052
-         HE6nTnD9ZpDARbznFQW24Y2I50WbpveoF6DKZrgLMOwwrq2/Cp67T9txTNLVZ06RdkaV
-         2aQit8GiFY0Xs73/kVBtqrN+dm7jVYs9tbMCDVZRTPzFpcYINjnUwM2EJGAB4dWNJha/
-         7iWiX3NYR1pmwzFWydQC0etnDIlcSG+xsT6aV/K8nXp1Pl+sB5eRa6S0fnf7IGUMpqEw
-         ADbxwZftvl+wcrJLa8zPMBJz4zI7OWLeZd4EIpPeT32AyGyhP4ugiEoTRcTTTnlMTLcT
-         Y3KQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:mime-version
-         :content-transfer-encoding;
-        bh=L7RuMAWb39SKa2KSDUpnhn/WYPqF8ZgNcdG8xyngyco=;
-        b=bwuRR2wte46hjYYw8PpujhKcOHw19f9xY/w/cIltctS/ohNkDbBMhlE0Ek/hHui+dq
-         j9HMfEvBfgUDmzJdlm9LrS+a1Y1rX9Fnu12hvrhQa8P1VVNXiz5nRKR5kyDecSrEtatP
-         BupwugJ8fGl6ny72gf9AdgongOFVoA1MJkljQEm7HZhRARa8/eHAdI7AL5hXjKFoQ5Ku
-         goYPhj01MJlXA1X1aUm3OEptLJO2zLijfs1LgW6GwNVVQUAstqdlmtJOo/14ZbGiJi3U
-         FxtfatlDe3eWld81+Y2UbJm9B8X0lnNy+Z0ZJoDgVedjd7LEhJxmf4Z940xFhrelsv6O
-         ciQQ==
-X-Gm-Message-State: APjAAAWjeF3Kf8rBpzUcOhuQlYMOS18n5vNHKnh5/BHWVQCjMspbFnG4
-        SgWBeH1wWAGxKDkogZEbPdJoBpLTcHs=
-X-Google-Smtp-Source: APXvYqz7xf+uhcLiwlHa/946hKTmZusRDQE6yoga9DQM2zUtnTJu0OL63p57KFHGatmK4OdryW5beg==
-X-Received: by 2002:a37:bd43:: with SMTP id n64mr3931409qkf.130.1568988211117;
-        Fri, 20 Sep 2019 07:03:31 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id w131sm1164185qka.85.2019.09.20.07.03.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 20 Sep 2019 07:03:30 -0700 (PDT)
-Message-ID: <1568988209.5576.199.camel@lca.pw>
-Subject: "Pick the right alignment default when creating dax devices" failed
- to build on powerpc
-From:   Qian Cai <cai@lca.pw>
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Date:   Fri, 20 Sep 2019 10:03:29 -0400
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 20 Sep 2019 10:03:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52442 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727904AbfITOD5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 10:03:57 -0400
+Received: from localhost (unknown [171.76.80.57])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28F9E20644;
+        Fri, 20 Sep 2019 14:03:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568988235;
+        bh=K9lsB5ULphBbXbCVVVum93smBl4jbswhCzaYTFnOYGU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=PRaisUq1LTQ8eqtMtg/A7yQMIoAOCeqiLP4pcXmGM40qAoM6r6sYOHWxi62A7Kkjw
+         q3/KYqN5NZ1/rxsYMJwcUJ6hpIXlvTeeZQbKTzImEAxEA7eFwW8M0/fpMJg6qhyndz
+         9Vxm+nkSsgrKg3GDgCf4SDjyPJm8UauJuMVCL09A=
+Date:   Fri, 20 Sep 2019 19:32:47 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] soundwire updates for v5.4-rc1
+Message-ID: <20190920140247.GX4392@vkoul-mobl>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="hOcCNbCCxyk/YU74"
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The linux-next commit "libnvdimm/dax: Pick the right alignment default when
-creating dax devices" causes powerpc failed to build with this config. Reverted
-it fixed the issue.
 
-ERROR: "hash__has_transparent_hugepage" [drivers/nvdimm/libnvdimm.ko] undefined!
-ERROR: "radix__has_transparent_hugepage" [drivers/nvdimm/libnvdimm.ko]
-undefined!
-make[1]: *** [scripts/Makefile.modpost:93: __modpost] Error 1
-make: *** [Makefile:1305: modules] Error 2
+--hOcCNbCCxyk/YU74
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[1] https://patchwork.kernel.org/patch/11133445/
-[2] https://raw.githubusercontent.com/cailca/linux-mm/master/powerpc.config
+Hi Linus,
+
+Normally soundwire updates go thru Greg (char) but this time around I
+missed the bus to send him due to some stuff.
+
+So with Greg's blessing here is the pull request for soundwire
+subsystem. Please pull to receive these updates.
+
+The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
+
+  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/soundwire.git tags/so=
+undwire-5.4-rc1
+
+for you to fetch changes up to dfcff3f8a5f18a0cfa233522b5647c2e6035fcb5:
+
+  soundwire: stream: make stream name a const pointer (2019-09-04 14:57:28 =
++0530)
+
+----------------------------------------------------------------
+soundwire updates for v5.4-rc1
+
+This includes DT support thanks to Srini and more work done by Intel
+(Pierre) on improving cadence and intel support.
+
+Details:
+ - Add DT bindings and DT support in core
+ - Add debugfs support for soundwire properties
+ - Improvements on streaming handling to core
+ - Improved handling of Cadence module
+ - More updates and improvements to Intel driver
+
+----------------------------------------------------------------
+Andy Shevchenko (1):
+      soundwire: mipi_disco: Switch to use fwnode_property_count_uXX()
+
+Bard Liao (1):
+      soundwire: bus: set initial value to port_status
+
+Bard liao (1):
+      soundwire: include mod_devicetable.h to avoid compiling warnings
+
+Pierre-Louis Bossart (21):
+      soundwire: intel: remove BIOS work-arounds
+      soundwire: cadence_master: simplify bus clash interrupt clear
+      soundwire: bus: split handling of Device0 events
+      soundwire: intel: prevent possible dereference in hw_params
+      soundwire: intel: fix channel number reported by hardware
+      soundwire: cadence_master: revisit interrupt settings
+      soundwire: bus: improve dynamic debug comments for enumeration
+      soundwire: export helpers to find row and column values
+      soundwire: cadence_master: use firmware defaults for frame shape
+      soundwire: stream: fix disable sequence
+      soundwire: stream: remove unnecessary variable initializations
+      soundwire: add new mclk_freq field for properties
+      soundwire: intel: read mclk_freq property from firmware
+      soundwire: cadence_master: make use of mclk_freq property
+      soundwire: intel_init: add kernel module parameter to filter out links
+      soundwire: cadence_master: add kernel parameter to override interrupt=
+ mask
+      soundwire: intel: move shutdown() callback and don't export symbol
+      soundwire: add debugfs support
+      soundwire: cadence_master: add debugfs register dump
+      soundwire: intel: add debugfs register dump
+      soundwire: intel: handle disabled links
+
+Rander Wang (1):
+      soundwire: cadence_master: fix divider setting in clock register
+
+Srinivas Kandagatla (3):
+      dt-bindings: soundwire: add slave bindings
+      soundwire: core: add device tree support for slave devices
+      soundwire: stream: make stream name a const pointer
+
+Vinod Koul (2):
+      soundwire: intel: remove unused variables
+      soundwire: Add compute_params callback
+
+ .../bindings/soundwire/soundwire-controller.yaml   |  82 ++++++++
+ drivers/soundwire/Makefile                         |   4 +
+ drivers/soundwire/bus.c                            |  20 +-
+ drivers/soundwire/bus.h                            |  24 ++-
+ drivers/soundwire/bus_type.c                       |   3 +
+ drivers/soundwire/cadence_master.c                 | 211 +++++++++++++++++=
+----
+ drivers/soundwire/cadence_master.h                 |   6 +-
+ drivers/soundwire/debugfs.c                        | 151 +++++++++++++++
+ drivers/soundwire/intel.c                          | 211 +++++++++++++++++=
+++--
+ drivers/soundwire/intel_init.c                     |  11 ++
+ drivers/soundwire/mipi_disco.c                     |  18 +-
+ drivers/soundwire/slave.c                          |  53 ++++++
+ drivers/soundwire/stream.c                         | 105 ++++++----
+ include/linux/soundwire/sdw.h                      |  20 +-
+ include/linux/soundwire/sdw_intel.h                |   1 +
+ 15 files changed, 819 insertions(+), 101 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/soundwire/soundwire-c=
+ontroller.yaml
+ create mode 100644 drivers/soundwire/debugfs.c
+
+Thanks
+--=20
+~Vinod
+
+--hOcCNbCCxyk/YU74
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJdhNwHAAoJEHwUBw8lI4NHhMgQALL3Eo4wxtF+CKCnu3zjarBZ
+ekJVYsijAz7ZVkbB0UDBYpxfS6Rn2XwqDyIO5KrSlZ+IG3zuKtnHuJ7vW8RtSj/s
+TVdovGu8JDYTEtvJisxaHbPfdq7DZ7GP2vWLh1hfN08ucjAsX/tFCX94w0ul9daD
+9l77q/9PXdwfuV8btCJrzoOKLdD3HyqVZdQgAmfWHzV35ZF2G8G7y+Np6Tjz/U+Z
+OJNxMMoVnG3g6AxGVoNavLUhA7TCRVKfUltXK2drH+Rcww2ouuXAX5dFqUG/UjaP
+bcs02p50RRkbzKmFo0zst3a+FprWkrGkELngSXIbQPZE4T91WkBArk7rNzN7mu64
+wrOevjEiIdMpNvPTIJO3TBHdYlitvbeW0ukn5YnT18FAPSwE2zwOkxUWBrvIXt8F
+R8d1kb9CtoM72KWvH7V/rcEzvNvrcNiy4QiXWK3nK1L86pl9HB1Wz1yuWAI8sX9t
+3Ps27RpJskymMy0tkonVCTzBLiMpYgGPndibSTYL1VeuAanAaqV+yT1wVhbiv2e1
+BgZtUg6OaDjj8nEHrB1bDlMDId89hdFipknMW8mbrtsnSTC7MA8FMGMJsFBymhzK
+8BSsrkBKFzU1OifxSx+zD+kLgguEck2raeNdniRwlwgl1q9JexIunK2IyawMVvCt
+GJ6Zzng7Li85e/4OX8fA
+=dsLL
+-----END PGP SIGNATURE-----
+
+--hOcCNbCCxyk/YU74--
