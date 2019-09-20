@@ -2,113 +2,118 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5903BC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44FA0C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32B31208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:56:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 248212086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:56:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="U3SmG6Mq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A1MLQT7o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405830AbfITR4i (ORCPT
+        id S2405998AbfITR44 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 13:56:38 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:40725 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392426AbfITR4i (ORCPT
+        Fri, 20 Sep 2019 13:56:56 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42272 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405763AbfITR4z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 13:56:38 -0400
-Received: by mail-qt1-f194.google.com with SMTP id x5so9637612qtr.7
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 10:56:37 -0700 (PDT)
+        Fri, 20 Sep 2019 13:56:55 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n14so7639186wrw.9;
+        Fri, 20 Sep 2019 10:56:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=xwXwb0VRr0Y5mbIrCdrhW15Qm4cGAzoeDVJ2lEpfOz8=;
-        b=U3SmG6MqU1G3DvKMpMi11blBiYYiRG4IcOO9Awa0gS87SZtXwHxfRAO+oIJ9MK0/EA
-         Y5Nsta25gV6EmMx5g/TCw3dF35cXtaZf4UJQ2ybwL38/fuf5L0gSLWl/pIgkAy/Tr/9W
-         9lOEUdnL6ZM0CekQcwazwaVgejdB3SGe6ZWzCcI24li08Gqx59nLfW91oHIlP8XTnHGZ
-         8rVb6AExkrDnCzj8p+HKIxY250lw4QXE+FgqHm2qbRqX/YbEWhYwnNj0plotZ8P4mjFL
-         YVQUH4FOhow4YLVAXaWBn0aBFQjADYeLIIcVijsmpWz5SUH2FgLmopUo3+6vwdV+rEDp
-         IaDA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=qY7qcknINsjocYIa/PWR8hBMVXAmwo1bRiEaRDrmyeI=;
+        b=A1MLQT7orfEpdJAAeFcB43DTfvCMWXQdqF6u5I2paCpnLeQ8ftUBK5ec3RxNoRkiNJ
+         rXlYH9KkcvZwZwhw7fM7LD7TlbKEpB0//ID4iumo5QxntYOOdb/ak93gpN03L6R9tBlR
+         5qzGTomTnBnpiHiKZ1mw7mYK05PDOzVHDTdimYJ48HdPbWNszv5ogpxaMaxPQn3QNHrB
+         2DLDlgrj690kVAFVH2k+O2WQdggbEryD1E4TOBiYHR49P0reKFHZX9dhmr5KIJy1ERNe
+         rhyPmYnSOdt427GZGBK7uGb5xGjjQhqH+A1tx1/YJAPolq2wC0969uiAIi7tsiLuMW29
+         LzJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=xwXwb0VRr0Y5mbIrCdrhW15Qm4cGAzoeDVJ2lEpfOz8=;
-        b=IVBHz7cpPxeS6YmoDu7Hq6lSQQ/mlXti1uL3NalP4/Yvnbr2a60FALrVOHHqYy/iKr
-         SLxydBZ0V2lBN+LtfpCXNOguMppu833SeQlM1prE4+njfRD1E3jLbHgEln2nQY4L/le+
-         Qmhy9KHo2W80416gWMnwpGdPSxZuwZDAGY9dc7L89saCN5r3aPhDvW4vU0dImSluBdEM
-         1emTZDekmYPBIxGxvY/5ruHSwSgDw8ktSuxT80D/N464GSRRzmNN9OPatUH85c5dPWGZ
-         P53WCEdFPcUaofqVheWaXCPnwyYQVaACzkzGUL9u2b9G8glxBmr7PuW1HRz7XeRs7QK0
-         rzIA==
-X-Gm-Message-State: APjAAAV/PilrhZhxHfXdO5ZZAfqM4nUDC9q88I1hOZj2FDnbe8OZc6nF
-        IxHoVfSTep3AodNzGBMdkTcLxA==
-X-Google-Smtp-Source: APXvYqzUx+S3hfpDDdk07qdwvak3LptBgH6Z52kWxHyuo6TSEFqvvIY8MMZv6cgKWhdxOKPG8VCRTg==
-X-Received: by 2002:ac8:3fd2:: with SMTP id v18mr4595140qtk.73.1569002197003;
-        Fri, 20 Sep 2019 10:56:37 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id e42sm1322992qte.26.2019.09.20.10.56.35
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qY7qcknINsjocYIa/PWR8hBMVXAmwo1bRiEaRDrmyeI=;
+        b=VJW6CuZfx1NAcWIpQjSw+WjOd8hJZ+NkFWr9hDGQwbujYCf8fLo6gVcl98/JOZxN52
+         SOijr1h306sMpyW7iB2dpKI/eEiTAkz2ROzk8bPxRwM88vrQMD6OV9NDR2WRNZqkCdZV
+         aseltqJdcX6V1W2xppshj0C0cJpTANt/HbzFYnKtXbQ7nNTvF5nzui8SMm5b1lsAlyPm
+         qix/0Hwsg20oJZqZ9a+3ZHQW4GChWEkPOSm9+PcbP5H3qkZpxEMS3Jt/jikAPmrcHn1d
+         /3jG/3OsDlCHhwakTfAFzWZcr/HGF4iMLkvSEJPF/TaLPondOYLZ/EIeXZpHqTuvH4nP
+         TszA==
+X-Gm-Message-State: APjAAAVSnpj5kAghkUG6uCBGjW+ZEJvIcrxaRLZW6rEtf/RYuMDQm7Uk
+        dHSR4bNwrk56TnzYwaHdXbM=
+X-Google-Smtp-Source: APXvYqzmux/n5POtZ8Tlj5SQ4HxM51sUHuQo0RAtj3mEQh6+S5IuGFuuHpB+yZ6mx7J59FYrW2FUcQ==
+X-Received: by 2002:a5d:6306:: with SMTP id i6mr12733499wru.323.1569002213818;
+        Fri, 20 Sep 2019 10:56:53 -0700 (PDT)
+Received: from pc (p200300D06F2D14AFB73B2116C2128354.dip0.t-ipconnect.de. [2003:d0:6f2d:14af:b73b:2116:c212:8354])
+        by smtp.gmail.com with ESMTPSA id t123sm3391702wma.40.2019.09.20.10.56.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Sep 2019 10:56:36 -0700 (PDT)
-Date:   Fri, 20 Sep 2019 10:56:31 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        Johannes Berg <johannes@sipsolutions.net>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jouni Malinen <j@w1.fi>,
-        hostap@lists.infradead.org, openwrt-devel@lists.openwrt.org,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
-Subject: Re: [PATCH RFC] cfg80211: add new command for reporting wiphy
- crashes
-Message-ID: <20190920105631.34f10d79@cakuba.netronome.com>
-In-Reply-To: <20190920133708.15313-1-zajec5@gmail.com>
-References: <20190920133708.15313-1-zajec5@gmail.com>
-Organization: Netronome Systems, Ltd.
+        Fri, 20 Sep 2019 10:56:53 -0700 (PDT)
+Date:   Fri, 20 Sep 2019 19:56:46 +0200
+From:   "Ahmed S. Darwish" <darwish.07@gmail.com>
+To:     Willy Tarreau <w@1wt.eu>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        lkml <linux-kernel@vger.kernel.org>, linux-ext4@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-man@vger.kernel.org
+Subject: Re: [PATCH RFC v4 1/1] random: WARN on large getrandom() waits and
+ introduce getrandom2()
+Message-ID: <20190920175646.GA6969@pc>
+References: <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+ <20190914122500.GA1425@darwi-home-pc>
+ <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
+ <20190915052242.GG19710@mit.edu>
+ <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
+ <20190918211503.GA1808@darwi-home-pc>
+ <20190918211713.GA2225@darwi-home-pc>
+ <CAHk-=wiCqDiU7SE3FLn2W26MS_voUAuqj5XFa1V_tiGTrrW-zQ@mail.gmail.com>
+ <20190920134609.GA2113@pc>
+ <20190920172609.GA1832@1wt.eu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190920172609.GA1832@1wt.eu>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Sep 2019 15:37:08 +0200, Rafa=C5=82 Mi=C5=82ecki wrote:
-> From: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
->=20
-> Hardware or firmware instability may result in unusable wiphy. In such
-> cases usually a hardware reset is needed. To allow a full recovery
-> kernel has to indicate problem to the user space.
->=20
-> This new nl80211 command lets user space known wiphy has crashed and has
-> been just recovered. When applicable it should result in supplicant or
-> authenticator reconfiguring all interfaces.
->=20
-> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
-> ---
-> I'd like to use this new cfg80211_crash_report() in brcmfmac after a
-> successful recovery from a FullMAC firmware crash.
->=20
-> Later on I'd like to modify hostapd to reconfigure wiphy using a
-> previously used setup.
->=20
-> I'm OpenWrt developer & user and I got annoyed by my devices not auto
-> recovering after various failures. There are things I cannot fix (hw
-> failures or closed fw crashes) but I still expect my devices to get
-> back to operational state as soon as possible on their own.
+On Fri, Sep 20, 2019 at 07:26:09PM +0200, Willy Tarreau wrote:
+> Hi Ahmed,
+> 
+> On Fri, Sep 20, 2019 at 03:46:09PM +0200, Ahmed S. Darwish wrote:
+> > Problem is, glibc is still *really* slow in adopting linux syscall
+> > wrappers, so I'm not optimistic about that...
+> >
+> > I still see the new system call as the sanest path, even provided
+> > the cost of a new syscall number..
+> 
+> New syscalls are always a pain to deal with in userland, because when
+> they are introduced, everyone wants them long before they're available
+> in glibc. So userland has to define NR_xxx for each supported arch and
+> to perform the call itself.
+> 
+> With flags adoption is instantaneous. Just #ifndef/#define, check if
+> the flag is supported and that's done. The only valid reason for a new
+> syscall is when the API changes (e.g. one extra arg, a la accept4()),
+> which doesn't seem to be the case here. Otherwise please by all means
+> avoid this in general.
+> 
 
-Perhaps a slightly larger point, but I think it should be raised -=20
-is there any chance for reusing debugging, reset and recovery work done
-in devlink originally for complex Ethernet devices?
+I see. Thanks a lot for the explanation above :)
 
-WiFi drivers have been dealing with more complex/FW heavy designs for a
-while so maybe you've grow your own interfaces, and maybe they
-necessarily need to be 802.11-centric, but I'm a little surprised that:
-
-linux $ git grep devlink -- drivers/net/wireless/
-linux $
+--
+Ahmed Darwish
