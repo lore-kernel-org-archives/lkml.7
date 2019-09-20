@@ -2,82 +2,117 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DEE9C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 09:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39728C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 09:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66E1F2080F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 09:59:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 160642080F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 09:59:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437967AbfITJ7Q (ORCPT
+        id S2437979AbfITJ7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 05:59:16 -0400
-Received: from mga11.intel.com ([192.55.52.93]:55575 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405821AbfITJ7Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 05:59:16 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Sep 2019 02:59:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,528,1559545200"; 
-   d="scan'208";a="178330120"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007.jf.intel.com with ESMTP; 20 Sep 2019 02:59:14 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iBFh3-0006XH-2T; Fri, 20 Sep 2019 12:59:13 +0300
-Date:   Fri, 20 Sep 2019 12:59:13 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     Kristian Klausen <kristian@klausen.dk>, kbuild-all@01.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: drivers/platform/x86/asus-wmi.c:464: undefined reference to
- `battery_hook_unregister'
-Message-ID: <20190920095913.GF2680@smile.fi.intel.com>
-References: <201909201138.uyiNM7oj%lkp@intel.com>
+        Fri, 20 Sep 2019 05:59:50 -0400
+Received: from 9.mo173.mail-out.ovh.net ([46.105.72.44]:43404 "EHLO
+        9.mo173.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437968AbfITJ7t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 05:59:49 -0400
+Received: from player755.ha.ovh.net (unknown [10.109.160.251])
+        by mo173.mail-out.ovh.net (Postfix) with ESMTP id 75CA311A5A6
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 11:41:32 +0200 (CEST)
+Received: from qperret.net (115.ip-51-255-42.eu [51.255.42.115])
+        (Authenticated sender: qperret@qperret.net)
+        by player755.ha.ovh.net (Postfix) with ESMTPSA id EB407A204CAF;
+        Fri, 20 Sep 2019 09:41:19 +0000 (UTC)
+Date:   Fri, 20 Sep 2019 11:41:15 +0200
+From:   Quentin Perret <qperret@qperret.net>
+To:     Pavan Kondeti <pkondeti@codeaurora.org>
+Cc:     peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, juri.lelli@redhat.com, rjw@rjwysocki.net,
+        morten.rasmussen@arm.com, valentin.schneider@arm.com,
+        qais.yousef@arm.com, tkjos@google.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched/fair: Speed-up energy-aware wake-ups
+Message-ID: <20190920094115.GA11503@qperret.net>
+References: <20190912094404.13802-1-qperret@qperret.net>
+ <20190920030215.GA20250@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <201909201138.uyiNM7oj%lkp@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190920030215.GA20250@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Ovh-Tracer-Id: 11442520755338894233
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedufedrvddvgddukecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 11:23:43AM +0800, kbuild test robot wrote:
-> Hi Kristian,
-> 
-> FYI, the error/warning still remains.
-> 
-> tree:   https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   574cc4539762561d96b456dbc0544d8898bd4c6e
-> commit: 7973353e92ee1e7ca3b2eb361a4b7cb66c92abee platform/x86: asus-wmi: Refactor charge threshold to use the battery hooking API
-> date:   10 days ago
-> config: x86_64-randconfig-e001-201937 (attached as .config)
-> compiler: gcc-7 (Debian 7.4.0-13) 7.4.0
-> reproduce:
->         git checkout 7973353e92ee1e7ca3b2eb361a4b7cb66c92abee
->         # save the attached .config to linux build tree
->         make ARCH=x86_64 
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> All errors (new ones prefixed by >>):
+Hi Pavan,
 
-The fix is on its way to linux-next followed by new PR to Linus within couple
-of days.
+On Friday 20 Sep 2019 at 08:32:15 (+0530), Pavan Kondeti wrote:
+> Earlier, we are not checking the spare capacity for the prev_cpu. Now that the
+> continue statement is removed, prev_cpu could also be the max_spare_cap_cpu.
+> Actually that makes sense. Because there is no reason why we want to select
+> another CPU which has less spare capacity than previous CPU.
+> 
+> Is this behavior intentional?
 
+The intent was indeed to not compute the energy for another CPU in
+prev_cpu's perf domain if prev_cpu is the one with max spare cap -- it
+is useless to do so since this other CPU cannot 'beat' prev_cpu and
+will never be chosen in the end.
+
+But I did miss that we'd end up computing the energy for prev_cpu
+twice ... Harmless but useless. So yeah, let's optimize that case too :)
+
+> When prev_cpu == max_spare_cap_cpu, we are evaluating the energy again for the
+> same CPU below. That could have been skipped by returning prev_cpu when
+> prev_cpu == max_spare_cap_cpu.
+
+Right, something like the patch below ? My test results are still
+looking good with it applied.
+
+Thanks for the careful review,
+Quentin
+---
+From 7b8258287f180a2c383ebe397e8129f5f898ffbe Mon Sep 17 00:00:00 2001
+From: Quentin Perret <qperret@qperret.net>
+Date: Fri, 20 Sep 2019 09:07:20 +0100
+Subject: [PATCH] sched/fair: Avoid redundant EAS calculation
+
+The EAS wake-up path computes the system energy for several CPU
+candidates: the CPU with maximum spare capacity in each performance
+domain, and the prev_cpu. However, if prev_cpu also happens to be the
+CPU with maximum spare capacity in its performance domain, the energy
+calculation is still done twice, unnecessarily.
+
+Add a condition to filter out this corner case before doing the energy
+calculation.
+
+Reported-by: Pavan Kondeti <pkondeti@codeaurora.org>
+Signed-off-by: Quentin Perret <qperret@qperret.net>
+---
+ kernel/sched/fair.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index d4bbf68c3161..7399382bc291 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -6412,7 +6412,7 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
+ 		}
+ 
+ 		/* Evaluate the energy impact of using this CPU. */
+-		if (max_spare_cap_cpu >= 0) {
++		if (max_spare_cap_cpu >= 0 && max_spare_cap_cpu != prev_cpu) {
+ 			cur_delta = compute_energy(p, max_spare_cap_cpu, pd);
+ 			cur_delta -= base_energy_pd;
+ 			if (cur_delta < best_delta) {
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.22.1
 
