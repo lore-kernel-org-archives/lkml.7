@@ -2,34 +2,34 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B329C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 21:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6876C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 21:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 501112196E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 21:56:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4D69218AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 21:56:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730501AbfITV4X (ORCPT
+        id S1730222AbfITV4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 17:56:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46942 "EHLO mail.kernel.org"
+        Fri, 20 Sep 2019 17:56:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729702AbfITV4X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730459AbfITV4X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Sep 2019 17:56:23 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B039206C2;
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FC5420B7C;
         Fri, 20 Sep 2019 21:56:22 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92)
         (envelope-from <rostedt@goodmis.org>)
-        id 1iBQt3-0005Gs-CH; Fri, 20 Sep 2019 17:56:21 -0400
-Message-Id: <20190920215311.165260719@goodmis.org>
+        id 1iBQt3-0005Ht-NB; Fri, 20 Sep 2019 17:56:21 -0400
+Message-Id: <20190920215621.597676075@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Fri, 20 Sep 2019 17:53:11 -0400
+Date:   Fri, 20 Sep 2019 17:53:13 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org,
         linux-rt-users <linux-rt-users@vger.kernel.org>
@@ -39,60 +39,88 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         John Kacur <jkacur@redhat.com>,
         Paul Gortmaker <paul.gortmaker@windriver.com>,
         Julia Cartwright <julia@ni.com>,
-        Daniel Wagner <wagi@monom.org>, tom.zanussi@linux.intel.com
-Subject: [RFC][PATCH RT 0/7] Revert of simple work, and backport workqueue rework
+        Daniel Wagner <wagi@monom.org>, tom.zanussi@linux.intel.com,
+        Mike Galbraith <umgwanakikbuti@gmail.com>,
+        Benjamin LaHaise <bcrl@kvack.org>
+Subject: [RFC][PATCH RT 2/7] fs/aio: simple simple work
+References: <20190920215311.165260719@goodmis.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To be able to backport some of the fixes done in upstream RT, I need
-to revert the simple work code and incorporate the work queue rework
-that was done in rt-devel. I originally thought this crashed under
-stress test (as I reported in the stable meeting), but found that
-the system booted a different kernel that had known issues. 4.19-rt with
-these patches have passed all my tests. But before posting an rc1, 
-I was hoping to get some people to look it over and perhaps even test
-it some to make sure there's not any issues here.
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-The reason I'm doing this is that this goes beyond the stable scope
-for 4.19-rt, but I believe it is still necessary.
+[ Upstream commit 1a142116f6435ef070ecebb66d2d599507c10601 ]
 
--- Steve
+|BUG: sleeping function called from invalid context at kernel/locking/rtmutex.c:768
+|in_atomic(): 1, irqs_disabled(): 0, pid: 26, name: rcuos/2
+|2 locks held by rcuos/2/26:
+| #0:  (rcu_callback){.+.+..}, at: [<ffffffff810b1a12>] rcu_nocb_kthread+0x1e2/0x380
+| #1:  (rcu_read_lock_sched){.+.+..}, at: [<ffffffff812acd26>] percpu_ref_kill_rcu+0xa6/0x1c0
+|Preemption disabled at:[<ffffffff810b1a93>] rcu_nocb_kthread+0x263/0x380
+|Call Trace:
+| [<ffffffff81582e9e>] dump_stack+0x4e/0x9c
+| [<ffffffff81077aeb>] __might_sleep+0xfb/0x170
+| [<ffffffff81589304>] rt_spin_lock+0x24/0x70
+| [<ffffffff811c5790>] free_ioctx_users+0x30/0x130
+| [<ffffffff812ace34>] percpu_ref_kill_rcu+0x1b4/0x1c0
+| [<ffffffff810b1a93>] rcu_nocb_kthread+0x263/0x380
+| [<ffffffff8106e046>] kthread+0xd6/0xf0
+| [<ffffffff81591eec>] ret_from_fork+0x7c/0xb0
+
+replace this preempt_disable() friendly swork.
+
+Reported-By: Mike Galbraith <umgwanakikbuti@gmail.com>
+Suggested-by: Benjamin LaHaise <bcrl@kvack.org>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ fs/aio.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/fs/aio.c b/fs/aio.c
+index 911e23087dfb..0c613d805bf1 100644
+--- a/fs/aio.c
++++ b/fs/aio.c
+@@ -121,6 +121,7 @@ struct kioctx {
+ 	long			nr_pages;
+ 
+ 	struct rcu_work		free_rwork;	/* see free_ioctx() */
++	struct kthread_work	free_kwork;	/* see free_ioctx() */
+ 
+ 	/*
+ 	 * signals when all in-flight requests are done
+@@ -606,9 +607,9 @@ static void free_ioctx_reqs(struct percpu_ref *ref)
+  * and ctx->users has dropped to 0, so we know no more kiocbs can be submitted -
+  * now it's safe to cancel any that need to be.
+  */
+-static void free_ioctx_users(struct percpu_ref *ref)
++static void free_ioctx_users_work(struct kthread_work *work)
+ {
+-	struct kioctx *ctx = container_of(ref, struct kioctx, users);
++	struct kioctx *ctx = container_of(work, struct kioctx, free_kwork);
+ 	struct aio_kiocb *req;
+ 
+ 	spin_lock_irq(&ctx->ctx_lock);
+@@ -626,6 +627,14 @@ static void free_ioctx_users(struct percpu_ref *ref)
+ 	percpu_ref_put(&ctx->reqs);
+ }
+ 
++static void free_ioctx_users(struct percpu_ref *ref)
++{
++	struct kioctx *ctx = container_of(ref, struct kioctx, users);
++
++	kthread_init_work(&ctx->free_kwork, free_ioctx_users_work);
++	kthread_schedule_work(&ctx->free_kwork);
++}
++
+ static int ioctx_add_table(struct kioctx *ctx, struct mm_struct *mm)
+ {
+ 	unsigned i, new_nr;
+-- 
+2.20.1
 
 
-
-Daniel Wagner (1):
-      thermal: Defer thermal wakups to threads
-
-Sebastian Andrzej Siewior (3):
-      fs/aio: simple simple work
-      block: blk-mq: move blk_queue_usage_counter_release() into process context
-      workqueue: rework
-
-Steven Rostedt (VMware) (3):
-      revert-aio
-      revert-thermal
-      revert-block
-
-----
- block/blk-core.c                       |  10 +-
- drivers/block/loop.c                   |   2 +-
- drivers/spi/spi-rockchip.c             |   1 -
- drivers/thermal/x86_pkg_temp_thermal.c |  52 +-----
- fs/aio.c                               |  12 +-
- include/linux/blk-cgroup.h             |   2 +-
- include/linux/blkdev.h                 |   4 +-
- include/linux/interrupt.h              |   5 -
- include/linux/kthread-cgroup.h         |  17 --
- include/linux/kthread.h                |  15 +-
- include/linux/swait.h                  |  14 ++
- include/linux/workqueue.h              |   4 -
- init/main.c                            |   1 -
- kernel/irq/manage.c                    |  36 +---
- kernel/kthread.c                       |  14 --
- kernel/sched/core.c                    |   1 +
- kernel/time/hrtimer.c                  |  24 ---
- kernel/workqueue.c                     | 300 ++++++++++++++-------------------
- 18 files changed, 168 insertions(+), 346 deletions(-)
- delete mode 100644 include/linux/kthread-cgroup.h
