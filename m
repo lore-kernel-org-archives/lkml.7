@@ -2,165 +2,101 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A598C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 02:44:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EBC0C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 02:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 208D4217D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 02:44:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7244A217D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 02:45:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="k91bm4Ho"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mU4mom41"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394708AbfITCoi (ORCPT
+        id S2394725AbfITCo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 22:44:38 -0400
-Received: from mail-eopbgr140048.outbound.protection.outlook.com ([40.107.14.48]:50055
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388350AbfITCoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 22:44:38 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hq8lhjoXTKLRWz17v7whL/QuaLGRbwnVk7sc3tWmG0i0YJGaiairq0thP0eCYfAuHHImS6kM3ApqNJoAvx2CL28yh/6HoR/JLYkfaDIyS4oezfqHc1KT6eDa2hR9Q62q7VCjLPpC4Qu/hHDAymfSrHs1jB7n/J3mfS+1jLkIizhGw7l6mzUO9E33fh/+Sn75oZnjNQkX4GLtGz7bFbKiz60WtBpFLghfad9CTw0XGMUkqd3idM2sV/TP83U20NYInpU1neqI9pybKkwsSMfcyxMnS/FtffkSkF7UK538HukY/HsXwTGdw5C7qFszIHkfZQ0z8zbpuKBztodGXoncRQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=r5lyX5pJb+Cu7vIUgQHU76lsQ9j3sWP+prDicFUQKEM=;
- b=cJrCxSEveSYsaxJEXcHaqoliHC/fOO0Axz+LamHfztSyQ7rTMx/3w9zZFd8Y86ThjJ4+gvo/7Q3I2XNPnYnLgQxXa3CLY5n/2BeT+PBAOdkZ/k4l1pHNeAxckN7qlyoRpwvUowcdbsZFhqZ6I2DuLb8SNOEFWTMhy49eSP6vJjnlx89W/thKw6cis2O2sUzY7oXnMGoUiwzSp8Q4KqEjB99A06Ae6Urr9SudYBJmGBCGEJAhJ3KuzK6tohX2UAWMW6rc1O+nL9DnCdSPIEe4a37qjK++ZuJBi4tfP0fR7lTnsS1CfpSFhY4D8PsUJ9oIxgsZkSbzoJwGPVEsSM9GNw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=r5lyX5pJb+Cu7vIUgQHU76lsQ9j3sWP+prDicFUQKEM=;
- b=k91bm4HoQoSyF1tNJ4TyzwdrSxQYxIwqP1fG521HZLNgKo/As7QOjylVhN5PE1fqlVmWuF/dL08bTZoEBV8WalyxPQldPoda+Xmk4FFOHJVByw5pIeOASOKxRFDlmIp+HjIiXuiD6QAwCgfeXubn7+ssySuTPpINJQFIq0NvRyA=
-Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com (52.134.5.23) by
- VI1PR0402MB3712.eurprd04.prod.outlook.com (52.134.15.30) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.20; Fri, 20 Sep 2019 02:44:33 +0000
-Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com
- ([fe80::f919:a62a:998c:6e9a]) by VI1PR0402MB3600.eurprd04.prod.outlook.com
- ([fe80::f919:a62a:998c:6e9a%6]) with mapi id 15.20.2284.009; Fri, 20 Sep 2019
- 02:44:33 +0000
-From:   Andy Duan <fugang.duan@nxp.com>
-To:     Philipp Puschmann <philipp.puschmann@emlix.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Robin Gong <yibin.gong@nxp.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "dmaengine@vger.kernel.or" <dmaengine@vger.kernel.or>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [EXT] [PATCH v4 0/3] Fix UART DMA freezes for i.MX SOCs
-Thread-Topic: [EXT] [PATCH v4 0/3] Fix UART DMA freezes for i.MX SOCs
-Thread-Index: AQHVbvawZ3M9Pccxp0iKGAqRTaAJlKcz3AJg
-Date:   Fri, 20 Sep 2019 02:44:33 +0000
-Message-ID: <VI1PR0402MB36002C1C1E5A48EBA2385406FF880@VI1PR0402MB3600.eurprd04.prod.outlook.com>
-References: <20190919142942.12469-1-philipp.puschmann@emlix.com>
-In-Reply-To: <20190919142942.12469-1-philipp.puschmann@emlix.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=fugang.duan@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e38708cf-f9b0-45be-5cab-08d73d74782b
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3712;
-x-ms-traffictypediagnostic: VI1PR0402MB3712:|VI1PR0402MB3712:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB37123F1C5955607E631DE7A4FF880@VI1PR0402MB3712.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0166B75B74
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(396003)(376002)(39860400002)(366004)(189003)(199004)(54534003)(55016002)(305945005)(478600001)(9686003)(66066001)(26005)(14454004)(6436002)(7736002)(74316002)(6246003)(25786009)(4326008)(256004)(14444005)(7416002)(229853002)(71190400001)(71200400001)(66446008)(11346002)(2501003)(8936002)(446003)(476003)(8676002)(66946007)(64756008)(81156014)(66556008)(81166006)(102836004)(6506007)(186003)(5660300002)(66476007)(86362001)(99286004)(33656002)(7696005)(76176011)(6116002)(486006)(3846002)(52536014)(2906002)(76116006)(54906003)(110136005)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3712;H:VI1PR0402MB3600.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: cpP1fmF+aj2TqdmSXWITrq6I8oXDV11f93uEyN11UOAVr0nt+gqb2mYh8xAy6kz1zfpYMX2USSwHjJJSMWmEciciBq1gAdKl2Df162G2BZKnx6z5eC9rdE3mcpdXPx2AjtzQUA8DaON6FOXIKaiKQidak263+0yd7ZXp5ZanMcLy5R5+r2ThbPdguFeTbqsiyU7q/jodt5xSqYzb8FNI2mOQ8xIKDyIXGmMmILiERT6HBTxgIRK7ZgfR/WaE91x09vzW2YKy+MdgX3yznOf9p/DKSKm9y8jKEz/QPDjHVSyVNcRu0GkkKJvJHo3Z28kkgX7voLQAgWfHy8Ie03TpSVSDOewYH+l9mCQC2xgqSdPZGUYTWwtEoA03c238lRMc7WKg9cH4wNfVR3ot4+zdn1r+5bATweTz9mzG9UFoqRY=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e38708cf-f9b0-45be-5cab-08d73d74782b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Sep 2019 02:44:33.6223
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: LUx0JS+3ci5cSWOyo7OWhbaapN5XMf5UmKSc8MlMP0kP68pAyrFk5jTpQjnB+bPXgU5NhNDG5bVuUEduoHzW0Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3712
+        Thu, 19 Sep 2019 22:44:57 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:33290 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388350AbfITCo4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 22:44:56 -0400
+Received: by mail-io1-f65.google.com with SMTP id m11so12846595ioo.0;
+        Thu, 19 Sep 2019 19:44:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=sq73DcwGjyNmmgxGHw+k0dldxyOr7gBfelRaWt6f/sI=;
+        b=mU4mom415tumOzOlJX5UYVvszXzNI8OeaB9j5CpxyZiC2hZczbAeYMRxgZ2wdNp1Hb
+         e0/S4Jr5p69syNrqQjw78QYV1TCAJbNxLiPKQx0zI38u5U003BD+e+YUVOL3FtPGwFi5
+         1Vl5j/WRznRIe7aRxZBUnewmy6+lsVRp7xy4XAeHhsIeCJp3X9p2oBnvNA13NtXhcmtR
+         3ISLKBi0tuAyGTckZoXvDAblKVIMHsGPVVSGcEPfA2mWiD0heol4yLiLoloKxv4cVgko
+         SYLvGAyGJn1mB/T7D85zgvoFzD9uyiw64xSHQB8Yl6am1d4W/3PS+OjylC1pzKWSyN34
+         d71A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=sq73DcwGjyNmmgxGHw+k0dldxyOr7gBfelRaWt6f/sI=;
+        b=jBYBoEfNQN5JKwJXRqjFxyQNCgsyYDLqJ/Y7N3ICIcjJVsMcDA7EsAvEoJMe5DG+3B
+         Vu9Q8wCKefUKEr6yX2Shz2YfwFpfczqTT7jG8UDvgb2Sye+ccgPvQtIhI0i3WbvGeUWo
+         DNVA1aQ92stajVyyyNThq6mXXpuue+YYLYv/1nn2/JC69dWf/ubwFNcJTCBWFJbBh5Ab
+         lGDPJCLGIsIh1Yd15tlCc9uWwhWyK68QH0xwY0cW9p7u3WWNf5Oi75ex/ixQqXk4GLO4
+         +i67tyzMXdgco9a5hchLx71FWqmxNsAHUEIld7qSezUOpY7E2SXFof6Uk3XQY9KftVWg
+         z1uA==
+X-Gm-Message-State: APjAAAXf7lzk6y4UeYkyX6eW1xHEvc2atjYFrpiv+ubgbxOxjwQV+zL/
+        f+XPqfr0nHjIqNIybsLssD4=
+X-Google-Smtp-Source: APXvYqy1d9AIVd0rkjbrgoInrlqMcm8Ak9F/O7xocoraAdmwNmGsmgzo2PH1zC9UCfF+OqwGymXXMA==
+X-Received: by 2002:a6b:254:: with SMTP id 81mr16130169ioc.17.1568947495860;
+        Thu, 19 Sep 2019 19:44:55 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id b8sm453375ior.49.2019.09.19.19.44.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Sep 2019 19:44:55 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] can: gs_usb: prevent memory leak
+Date:   Thu, 19 Sep 2019 21:44:38 -0500
+Message-Id: <20190920024445.28214-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Philipp Puschmann <philipp.puschmann@emlix.com> Sent: Thursday, Septe=
-mber 19, 2019 10:30 PM
-> For some years and since many kernel versions there are reports that RX
-> UART DMA channel stops working at one point. So far the usual workaround
-> was to disable RX DMA. This patches fix the underlying problem.
->=20
-> When a running sdma script does not find any usable destination buffer to=
- put
-> its data into it just leads to stopping the channel being scheduled again=
-. As
-> solution we manually retrigger the sdma script for this channel and by th=
-is
-> dissolve the freeze.
->=20
-> While this seems to work fine so far, it may come to buffer overruns when=
- the
-> channel - even temporary - is stopped. This case has to be addressed by
-> device drivers by increasing the number of DMA periods.
->=20
-> This patch series was tested with the current kernel and backported to ke=
-rnel
-> 4.15 with a special use case using a WL1837MOD via UART and provoking the
-> hanging of UART RX DMA within seconds after starting a test application. =
-It
-> resulted in well known
->   "Bluetooth: hci0: command 0x0408 tx timeout"
-> errors and complete stop of UART data reception. Our Bluetooth traffic
-> consists of many independent small packets, mostly only a few bytes, caus=
-ing
-> high usage of periods.
->=20
-> Changelog v4:
->  - fixed the fixes tags
->=20
-> Changelog v3:
->  - fixes typo in dma_wmb
->  - add fixes tags
->=20
-> Changelog v2:
->  - adapt title (this patches are not only for i.MX6)
->  - improve some comments and patch descriptions
->  - add a dma_wb() around BD_DONE flag
->  - add Reviewed-by tags
->  - split off  "serial: imx: adapt rx buffer and dma periods"
->=20
-> Philipp Puschmann (3):
->   dmaengine: imx-sdma: fix buffer ownership
->   dmaengine: imx-sdma: fix dma freezes
->   dmaengine: imx-sdma: drop redundant variable
->=20
->  drivers/dma/imx-sdma.c | 32 ++++++++++++++++++++++----------
->  1 file changed, 22 insertions(+), 10 deletions(-)
->=20
-> --
-> 2.23.0
+In gs_can_open if usb_submit_urb fails the allocated urb should be
+released.
 
-The patch set look fine that is really to fix some corner issue from the lo=
-gical view.
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ drivers/net/can/usb/gs_usb.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Reviewed-by: Fugang Duan <fugang.duan@nxp.com>
+diff --git a/drivers/net/can/usb/gs_usb.c b/drivers/net/can/usb/gs_usb.c
+index bd6eb9967630..2f74f6704c12 100644
+--- a/drivers/net/can/usb/gs_usb.c
++++ b/drivers/net/can/usb/gs_usb.c
+@@ -623,6 +623,7 @@ static int gs_can_open(struct net_device *netdev)
+ 					   rc);
+ 
+ 				usb_unanchor_urb(urb);
++				usb_free_urb(urb);
+ 				break;
+ 			}
+ 
+-- 
+2.17.1
+
