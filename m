@@ -7,139 +7,182 @@ X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E71FCC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF5FDC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B00C1208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:51:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD10E208C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:51:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GcxR+Hvz"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UEgIQlBP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393773AbfITRvI (ORCPT
+        id S2404951AbfITRvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 13:51:08 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:41271 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389956AbfITRvI (ORCPT
+        Fri, 20 Sep 2019 13:51:17 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:34674 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390680AbfITRvR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 13:51:08 -0400
-Received: by mail-ot1-f66.google.com with SMTP id g13so6890784otp.8
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 10:51:07 -0700 (PDT)
+        Fri, 20 Sep 2019 13:51:17 -0400
+Received: by mail-oi1-f195.google.com with SMTP id 83so2497599oii.1
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 10:51:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=EvpPydj1iU8UnRZJqqbCnDu9C5EKJs0suXbTn88VB04=;
-        b=GcxR+HvzkXI2nIDk0UXBhXZvmf/lAf6OwYRzeQlPhZdE5Qt1dME4AqiNQrA7sG9hI7
-         0RvOgydID51KqqfXlPuQYPG7ZTCZC16F1Me3VzcyjmWM/wYVSr5W7b/UMOGiFHO+u4lr
-         wl6whGez4/CFR6k7/2A+PNjyQXd61BffSYrvF2c8XXYYmBoHJx9EDPxlb7LN9/7+ljCV
-         oFZURexaaFWGupJRBXjddkIXK9weNdDpMiiC8GzczkyW6sLjtPsYLTNLu9y7+yn4SsJb
-         V061jLr8t6PbPzh2pxwyISRTt+EScUS3u/z2rHiplQM/SvCGkX4wvGzmKdOqXoKMvmWs
-         NRiQ==
+        bh=eTz6yzxiFyHtcxZo7L97GNHOGY6QY7O6TNCJQilZlzU=;
+        b=UEgIQlBPZuG/x9jdC25TMCOjdIAuit0OtbKI7LeWZhf1jNcX4Cf+LAPC2zklx2jgsf
+         +iD2KDdjo+PxvIJIzga/BJoFr9y/LMIo/xvCU4ugOa6fxl1SR1B3E8TSdtLiKNxkgGHP
+         XLPwyhT7PGr9M3J9Q29Yd4iDC/zmEtoidcEkMSHsu6gNcT1s8+lLWT2yhpyFXe5Kd5VQ
+         pCnH9461L0/WDksxLcZTDgw17k1m4YQQfAuzKFuKsM8NVgGWU7vI+XKu1dic8mLIYkCU
+         5Esdvda1jsAPFD1gXQdWDBxJq/TDRW/lIXM5OGS0Mqw2Ynd7o9NQtvIuXVmuPtTllS2j
+         xPbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=EvpPydj1iU8UnRZJqqbCnDu9C5EKJs0suXbTn88VB04=;
-        b=I3BpwM5ppZk8ExQzYXIam8gGhNUkGv8ZdRarSsjbLiF+peR4awk4ck0yTOdCH/ZyCH
-         YvDmWt09DL/ZqYRE4bAT15zOzp0l/EzsUWWdoEKQLnf/CsKspSas4Yoo+9tKHwsBbULH
-         h2hfrfxvU/z97FP6ntQW/+jJTS9K1DBYDD3/k9Yzpzb1bT5veeA0xVgx+NNj5eIGHZJA
-         KHxrSjNGk38eoqvJqXG7QSRkr77mBjOyqzaMoMvQ7ZR8Xa/7QWFimlC5pCXXB9WYZhPL
-         DvATETAGmK015ZNnQQ7exVMwFb5743pQKCj7YgC2S3FA/KO79MUh6sCswLHBzN3dIHOE
-         mg+g==
-X-Gm-Message-State: APjAAAUVuvUNQnevZI/xF/T5ZLswXrzJmeQz1/WR21MpUNzRMdqpxbaV
-        UUs9ZiDPR26mPSbrO1ym9js9Wx8nbRWxg+m6eQMpoGHybjbgdg==
-X-Google-Smtp-Source: APXvYqyzmzVG2xYOq99xUP4w5iy+zJBLZPaNof5TDEw1fhaD8LImfZaxJr5QdDFcZ5u5mQbIB3nZS+1qNgi7NhY+dq0=
-X-Received: by 2002:a9d:68d7:: with SMTP id i23mr5023651oto.23.1569001867060;
- Fri, 20 Sep 2019 10:51:07 -0700 (PDT)
+        bh=eTz6yzxiFyHtcxZo7L97GNHOGY6QY7O6TNCJQilZlzU=;
+        b=EOXT8vmrCZQK8URUAzAugZ0GQmsXE8huYjJvpzzkOqoHkUfe2QsgcvrAeUPuYa9f23
+         988NU8j/ueMd1wdoJPp+lxTjSrR/gyvu+GBNRloB4yu+9bETY7ydn4KdalRkfA19ftwz
+         nQXETZWgv/2cT7k93l48dW7BpNJuB4TtONJPX3DJbWXg2dKZdPzeSbIlvO/D7ZtMIot1
+         dS2bfN4gW50EhAucnFUkyEUcDuOup4YhNpEjqTpU7AVmSGkzoDeG+Ykk1MQYeQcz9gLC
+         t1uNFt9eMxctyNR0krxRtMwCpt12MhmIZm4Ijh1q34/aG736TRK3hI5nJdkjz/k25LI7
+         Mhmw==
+X-Gm-Message-State: APjAAAXrAmOEuaDuLv2CozvijNxeH2ItJyzhNF/gQioNc4KCu0cm2V2S
+        zAq9Fhy0Ik6p8WDKXvtHtBBHFaF9z5K1KZtLozY7g7msIACrv6w4
+X-Google-Smtp-Source: APXvYqzQv14eah59dI7M05mLG3IQ6Y3E2Vd2r36SLtDH09RoY2MnFpEK6sAnb3mKhl+SqOo6gdWOKZhxAk9E6uiHjRo=
+X-Received: by 2002:aca:5510:: with SMTP id j16mr4095393oib.121.1569001876015;
+ Fri, 20 Sep 2019 10:51:16 -0700 (PDT)
 MIME-Version: 1.0
 References: <CANpmjNPJ_bHjfLZCAPV23AXFfiPiyXXqqu72n6TgWzb2Gnu1eA@mail.gmail.com>
- <20190920155420.rxiflqdrpzinncpy@willie-the-truck>
-In-Reply-To: <20190920155420.rxiflqdrpzinncpy@willie-the-truck>
+ <20190920163123.GC55224@lakrids.cambridge.arm.com> <CACT4Y+ZwyBhR8pB7jON8eVObCGbJ54L8Sbz6Wfmy3foHkPb_fA@mail.gmail.com>
+In-Reply-To: <CACT4Y+ZwyBhR8pB7jON8eVObCGbJ54L8Sbz6Wfmy3foHkPb_fA@mail.gmail.com>
 From:   Marco Elver <elver@google.com>
-Date:   Fri, 20 Sep 2019 19:50:55 +0200
-Message-ID: <CANpmjNMfredJzrmjV7Vm_VAeL_O=_mWWKXAMoGoPH=U8VhkS=A@mail.gmail.com>
+Date:   Fri, 20 Sep 2019 19:51:04 +0200
+Message-ID: <CANpmjNM+aEzySwuMDkEvsVaeTooxExuTRAv-nzjhp7npT8a3ag@mail.gmail.com>
 Subject: Re: Kernel Concurrency Sanitizer (KCSAN)
-To:     Will Deacon <will@kernel.org>
-Cc:     kasan-dev <kasan-dev@googlegroups.com>,
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
         Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>, paulmck@linux.ibm.com,
+        Alexander Potapenko <glider@google.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
         Paul Turner <pjt@google.com>, Daniel Axtens <dja@axtens.net>,
         Anatol Pomazau <anatol@google.com>,
+        Will Deacon <willdeacon@google.com>,
         Andrea Parri <parri.andrea@gmail.com>,
-        stern@rowland.harvard.edu, akiyks@gmail.com, npiggin@gmail.com,
-        boqun.feng@gmail.com, dlustig@nvidia.com, j.alglave@ucl.ac.uk,
-        luc.maranget@inria.fr
+        Alan Stern <stern@rowland.harvard.edu>,
+        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Sep 2019 at 17:54, Will Deacon <will@kernel.org> wrote:
+On Fri, 20 Sep 2019 at 18:47, Dmitry Vyukov <dvyukov@google.com> wrote:
 >
-> Hi Marco,
->
-> On Fri, Sep 20, 2019 at 04:18:57PM +0200, Marco Elver wrote:
-> > We would like to share a new data-race detector for the Linux kernel:
-> > Kernel Concurrency Sanitizer (KCSAN) --
-> > https://github.com/google/ktsan/wiki/KCSAN  (Details:
-> > https://github.com/google/ktsan/blob/kcsan/Documentation/dev-tools/kcsan.rst)
+> On Fri, Sep 20, 2019 at 6:31 PM Mark Rutland <mark.rutland@arm.com> wrote:
 > >
-> > To those of you who we mentioned at LPC that we're working on a
-> > watchpoint-based KTSAN inspired by DataCollider [1], this is it (we
-> > renamed it to KCSAN to avoid confusion with KTSAN).
-> > [1] http://usenix.org/legacy/events/osdi10/tech/full_papers/Erickson.pdf
->
-> Oh, spiffy!
->
-> > In the coming weeks we're planning to:
-> > * Set up a syzkaller instance.
-> > * Share the dashboard so that you can see the races that are found.
-> > * Attempt to send fixes for some races upstream (if you find that the
-> > kcsan-with-fixes branch contains an important fix, please feel free to
-> > point it out and we'll prioritize that).
->
-> Curious: do you take into account things like alignment and/or access size
-> when looking at READ_ONCE/WRITE_ONCE? Perhaps you could initially prune
-> naturally aligned accesses for which __native_word() is true?
+> > On Fri, Sep 20, 2019 at 04:18:57PM +0200, Marco Elver wrote:
+> > > We would like to share a new data-race detector for the Linux kernel:
+> > > Kernel Concurrency Sanitizer (KCSAN) --
+> > > https://github.com/google/ktsan/wiki/KCSAN  (Details:
+> > > https://github.com/google/ktsan/blob/kcsan/Documentation/dev-tools/kcsan.rst)
+> >
+> > Nice!
+> >
+> > BTW kcsan_atomic_next() is missing a stub definition in <linux/kcsan.h>
+> > when !CONFIG_KCSAN:
+> >
+> > https://github.com/google/ktsan/commit/a22a093a0f0d0b582c82cdbac4f133a3f61d207c#diff-19d7c475b4b92aab8ba440415ab786ec
+> >
+> > ... and I think the kcsan_{begin,end}_atomic() stubs need to be static
+> > inline too.
 
-Nothing special (other than the normal check if accesses overlap) done
-with size in READ_ONCE/WRITE_ONCE.
+Thanks for catching, fixed and pushed. Feel free to rebase your arm64 branch.
 
-When you say prune naturally aligned && __native_word() accesses, I
-assume you mean _plain_ naturally aligned && __native_word(), right? I
-think this is a slippery slope, because if we start pretending that
-such plain accesses should be treated as atomics, then we will also
-miss e.g. races where the accesses should actually have been protected
-by a mutex.
+> > It looks like this is easy enough to enable on arm64, with the only real
+> > special case being secondary_start_kernel() which we might want to
+> > refactor to allow some portions to be instrumented.
+> >
+> > I pushed the trivial patches I needed to get arm64 booting to my arm64/kcsan
+> > branch:
+> >
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git arm64/kcsan
 
-> > There are a few open questions:
-> > * The big one: most of the reported races are due to unmarked
-> > accesses; prioritization or pruning of races to focus initial efforts
-> > to fix races might be required. Comments on how best to proceed are
-> > welcome. We're aware that these are issues that have recently received
-> > attention in the context of the LKMM
-> > (https://lwn.net/Articles/793253/).
+Cool, thanks for testing!
+
+> > We have some interesting splats at boot time in stop_machine, which
+> > don't seem to have been hit/fixed on x86 yet in the kcsan-with-fixes
+> > branch, e.g.
+> >
+> > [    0.237939] ==================================================================
+> > [    0.239431] BUG: KCSAN: data-race in multi_cpu_stop+0xa8/0x198 and set_state+0x80/0xb0
+> > [    0.241189]
+> > [    0.241606] write to 0xffff00001003bd00 of 4 bytes by task 24 on cpu 3:
+> > [    0.243435]  set_state+0x80/0xb0
+> > [    0.244328]  multi_cpu_stop+0x16c/0x198
+> > [    0.245406]  cpu_stopper_thread+0x170/0x298
+> > [    0.246565]  smpboot_thread_fn+0x40c/0x560
+> > [    0.247696]  kthread+0x1a8/0x1b0
+> > [    0.248586]  ret_from_fork+0x10/0x18
+> > [    0.249589]
+> > [    0.250006] read to 0xffff00001003bd00 of 4 bytes by task 14 on cpu 1:
+> > [    0.251804]  multi_cpu_stop+0xa8/0x198
+> > [    0.252851]  cpu_stopper_thread+0x170/0x298
+> > [    0.254008]  smpboot_thread_fn+0x40c/0x560
+> > [    0.255135]  kthread+0x1a8/0x1b0
+> > [    0.256027]  ret_from_fork+0x10/0x18
+> > [    0.257036]
+> > [    0.257449] Reported by Kernel Concurrency Sanitizer on:
+> > [    0.258918] CPU: 1 PID: 14 Comm: migration/1 Not tainted 5.3.0-00007-g67ab35a199f4-dirty #3
+> > [    0.261241] Hardware name: linux,dummy-virt (DT)
+> > [    0.262517] ==================================================================>
+
+Thanks, the fixes in -with-fixes were ones I only encountered with
+Syzkaller, where I disable KCSAN during boot. I've just added a fix
+for this race and pushed to kcsan-with-fixes.
+
+> > > To those of you who we mentioned at LPC that we're working on a
+> > > watchpoint-based KTSAN inspired by DataCollider [1], this is it (we
+> > > renamed it to KCSAN to avoid confusion with KTSAN).
+> > > [1] http://usenix.org/legacy/events/osdi10/tech/full_papers/Erickson.pdf
+> > >
+> > > In the coming weeks we're planning to:
+> > > * Set up a syzkaller instance.
+> > > * Share the dashboard so that you can see the races that are found.
+> > > * Attempt to send fixes for some races upstream (if you find that the
+> > > kcsan-with-fixes branch contains an important fix, please feel free to
+> > > point it out and we'll prioritize that).
+> > >
+> > > There are a few open questions:
+> > > * The big one: most of the reported races are due to unmarked
+> > > accesses; prioritization or pruning of races to focus initial efforts
+> > > to fix races might be required. Comments on how best to proceed are
+> > > welcome. We're aware that these are issues that have recently received
+> > > attention in the context of the LKMM
+> > > (https://lwn.net/Articles/793253/).
+> >
+> > I think the big risk here is drive-by "fixes" masking the warnings
+> > rather than fixing the actual issue. It's easy for people to suppress a
+> > warning with {READ,WRITE}_ONCE(), so they're liable to do that even the
+> > resulting race isn't benign.
+> >
+> > I don't have a clue how to prevent that, though.
 >
-> This one is tricky. What I think we need to avoid is an onslaught of
-> patches adding READ_ONCE/WRITE_ONCE without a concrete analysis of the
-> code being modified. My worry is that Joe Developer is eager to get their
-> first patch into the kernel, so runs this tool and starts spamming
-> maintainers with these things to the point that they start ignoring KCSAN
-> reports altogether because of the time they take up.
->
-> I suppose one thing we could do is to require each new READ_ONCE/WRITE_ONCE
-> to have a comment describing the racy access, a bit like we do for memory
-> barriers. Another possibility would be to use atomic_t more widely if
-> there is genuine concurrency involved.
-
-Our plan here is to use some of the options in Kconfig.kcsan to limit
-reported volume of races initially, at least for syzbot instances. But
-of course, this will not make the real issue go away, and eventually
-we'll have to deal with all reported races somehow.
-
-Thanks,
--- Marco
+> I think this is mostly orthogonal problem. E.g. for some syzbot bugs I
+> see fixes that also try to simply "shut up" the immediate
+> manifestation with whatever means, e.g. sprinkling some slinlocks. So
+> (1) it's not unique to atomics, (2) presence of READ/WRITE_ONCE will
+> make the reader aware of the fact that this runs concurrently with
+> something else, and then they may ask themselves why this runs
+> concurrently with something when the object is supposed to be private
+> to the thread, and then maybe they re-fix it properly. Whereas if it's
+> completely unmarked, nobody will even notice that this code accesses
+> the object concurrently with other code. So even if READ/WRITE_ONCE
+> was a wrong fix, it's still better to have it rather than not.
