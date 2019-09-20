@@ -2,130 +2,130 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2C4C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A73C7C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFACA208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:27:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568989622;
-	bh=4reO+khlH9f+4DYYFudb45FXnfmDwrBrRKe7ID+l8+Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hjkO7bqweXL5LLQL2i7CFsTmAgpU9dbWoaDVxswB1vQWzJcVeVcGtbup9eTQ0EU8S
-	 kgLSDS/DNy3Qc6ww9F+YRv8HQzOHJs4WHF6RGmebOGlXpbxxnABS30nvlDzLupdO0r
-	 J3XTBBTy45uvY1WkYR3XaJbGmbQz2v0IMv1MDGI0=
+	by mail.kernel.org (Postfix) with ESMTP id 86416207E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:27:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389499AbfITO1B (ORCPT
+        id S2389520AbfITO1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:27:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38694 "EHLO mail.kernel.org"
+        Fri, 20 Sep 2019 10:27:03 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35064 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388909AbfITO0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 10:26:14 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2388913AbfITO0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 10:26:15 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B83972173E;
-        Fri, 20 Sep 2019 14:26:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568989573;
-        bh=4reO+khlH9f+4DYYFudb45FXnfmDwrBrRKe7ID+l8+Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TcP7QIhlOYz8aBXc6I7fUOjSzTyX8s5QzYyODOKQLy6hnrpg+tu1sQAyi4ihDEBff
-         DTUgiUPvzLMZSFgztCb6LCwT5dWujYUElqlYFSTnoGPfMq+pkupkjMe95J6Llnq4h3
-         Z83bnfaV932hVMyYVMnfsdE1Cqor/t/k6+SIrmcA=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 07/31] perf tools: Remove needless builtin.h include directives
-Date:   Fri, 20 Sep 2019 11:25:18 -0300
-Message-Id: <20190920142542.12047-8-acme@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190920142542.12047-1-acme@kernel.org>
-References: <20190920142542.12047-1-acme@kernel.org>
+        by mx1.redhat.com (Postfix) with ESMTPS id 7857F8980F5;
+        Fri, 20 Sep 2019 14:26:14 +0000 (UTC)
+Received: from gondolin (dhcp-192-230.str.redhat.com [10.33.192.230])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B2E2F5D717;
+        Fri, 20 Sep 2019 14:26:10 +0000 (UTC)
+Date:   Fri, 20 Sep 2019 16:26:07 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Matthew Rosato <mjrosato@linux.ibm.com>
+Cc:     sebott@linux.ibm.com, gerald.schaefer@de.ibm.com,
+        pasic@linux.ibm.com, borntraeger@de.ibm.com, walling@linux.ibm.com,
+        linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org,
+        joro@8bytes.org, linux-kernel@vger.kernel.org,
+        alex.williamson@redhat.com, kvm@vger.kernel.org,
+        heiko.carstens@de.ibm.com, robin.murphy@arm.com, gor@linux.ibm.com,
+        pmorel@linux.ibm.com
+Subject: Re: [PATCH v4 4/4] vfio: pci: Using a device region to retrieve
+ zPCI information
+Message-ID: <20190920162607.16198c92.cohuck@redhat.com>
+In-Reply-To: <c5c5c46e-371b-5be0-064a-b89195cdc3f6@linux.ibm.com>
+References: <1567815231-17940-1-git-send-email-mjrosato@linux.ibm.com>
+        <1567815231-17940-5-git-send-email-mjrosato@linux.ibm.com>
+        <20190919172505.2eb075f8.cohuck@redhat.com>
+        <c5c5c46e-371b-5be0-064a-b89195cdc3f6@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Fri, 20 Sep 2019 14:26:14 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+On Thu, 19 Sep 2019 16:57:10 -0400
+Matthew Rosato <mjrosato@linux.ibm.com> wrote:
 
-Now that builtin.h isn't included by any other header, we can check
-where it is really needed, i.e. we can remove it and be sure that it
-isn't being obtained indirectly.
+> On 9/19/19 11:25 AM, Cornelia Huck wrote:
+> > On Fri,  6 Sep 2019 20:13:51 -0400
+> > Matthew Rosato <mjrosato@linux.ibm.com> wrote:
+> >   
+> >> From: Pierre Morel <pmorel@linux.ibm.com>
+> >>
+> >> We define a new configuration entry for VFIO/PCI, VFIO_PCI_ZDEV
+> >>
+> >> When the VFIO_PCI_ZDEV feature is configured we initialize
+> >> a new device region, VFIO_REGION_SUBTYPE_ZDEV_CLP, to hold
+> >> the information from the ZPCI device the use
+> >>
+> >> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> >> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
+> >> ---
+> >>  drivers/vfio/pci/Kconfig            |  7 +++
+> >>  drivers/vfio/pci/Makefile           |  1 +
+> >>  drivers/vfio/pci/vfio_pci.c         |  9 ++++
+> >>  drivers/vfio/pci/vfio_pci_private.h | 10 +++++
+> >>  drivers/vfio/pci/vfio_pci_zdev.c    | 85 +++++++++++++++++++++++++++++++++++++
+> >>  5 files changed, 112 insertions(+)
+> >>  create mode 100644 drivers/vfio/pci/vfio_pci_zdev.c
+> >>
+> >> diff --git a/drivers/vfio/pci/Kconfig b/drivers/vfio/pci/Kconfig
+> >> index ac3c1dd..d4562a8 100644
+> >> --- a/drivers/vfio/pci/Kconfig
+> >> +++ b/drivers/vfio/pci/Kconfig
+> >> @@ -45,3 +45,10 @@ config VFIO_PCI_NVLINK2
+> >>  	depends on VFIO_PCI && PPC_POWERNV
+> >>  	help
+> >>  	  VFIO PCI support for P9 Witherspoon machine with NVIDIA V100 GPUs
+> >> +
+> >> +config VFIO_PCI_ZDEV
+> >> +	bool "VFIO PCI Generic for ZPCI devices"
+> >> +	depends on VFIO_PCI && S390
+> >> +	default y
+> >> +	help
+> >> +	  VFIO PCI support for S390 Z-PCI devices  
+> >   
+> >>From that description, I'd have no idea whether I'd want that or not.  
+> > Is there any downside to enabling it?
+> >   
+> 
+> :) Not really, you're just getting information from the hardware vs
+> using hard-coded defaults.  The only reason I could think of to turn it
+> off would be if you wanted/needed to restore this hard-coded behavior.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-mn7jheex85iw9qo6tlv26hb2@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/bench/numa.c            | 1 -
- tools/perf/bench/sched-messaging.c | 1 -
- tools/perf/bench/sched-pipe.c      | 1 -
- tools/perf/util/jitdump.c          | 1 -
- 4 files changed, 4 deletions(-)
+I'm not really sure whether that's worth adding a Kconfig switch for.
+Won't older versions simply ignore the new region anyway?
 
-diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
-index 62b8ef4bcb1f..5797253b9700 100644
---- a/tools/perf/bench/numa.c
-+++ b/tools/perf/bench/numa.c
-@@ -9,7 +9,6 @@
- /* For the CLR_() macros */
- #include <pthread.h>
- 
--#include "../builtin.h"
- #include <subcmd/parse-options.h>
- #include "../util/cloexec.h"
- 
-diff --git a/tools/perf/bench/sched-messaging.c b/tools/perf/bench/sched-messaging.c
-index c63eb9a46346..6e499b32bf00 100644
---- a/tools/perf/bench/sched-messaging.c
-+++ b/tools/perf/bench/sched-messaging.c
-@@ -12,7 +12,6 @@
- 
- #include "../util/util.h"
- #include <subcmd/parse-options.h>
--#include "../builtin.h"
- #include "bench.h"
- 
- /* Test groups of 20 processes spraying to 20 receivers */
-diff --git a/tools/perf/bench/sched-pipe.c b/tools/perf/bench/sched-pipe.c
-index 35b07f197d48..edd40aafa318 100644
---- a/tools/perf/bench/sched-pipe.c
-+++ b/tools/perf/bench/sched-pipe.c
-@@ -11,7 +11,6 @@
-  */
- #include "../util/util.h"
- #include <subcmd/parse-options.h>
--#include "../builtin.h"
- #include "bench.h"
- 
- #include <unistd.h>
-diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
-index b80f29bfc7bb..00db9957fdb0 100644
---- a/tools/perf/util/jitdump.c
-+++ b/tools/perf/util/jitdump.c
-@@ -27,7 +27,6 @@
- #include "jit.h"
- #include "jitdump.h"
- #include "genelf.h"
--#include "../builtin.h"
- 
- #include <linux/ctype.h>
- #include <linux/zalloc.h>
--- 
-2.21.0
+Also, I don't think we have any migration compatibility issues, as
+vfio-pci devices are not (yet) migrateable anyway.
 
+> 
+> bool "VFIO PCI support for generic ZPCI devices" ?
+
+"Support zPCI-specific configuration for VFIO PCI" ?
+
+> 
+> "Support for sharing ZPCI hardware device information between the host
+> and guests." ?
+
+"Enabling this options exposes a region containing hardware
+configuration for zPCI devices. This enables userspace (e.g. QEMU) to
+supply proper configuration values instead of hard-coded defaults for
+zPCI devices passed through via VFIO on s390.
+
+Say Y here."
+
+?
