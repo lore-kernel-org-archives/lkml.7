@@ -1,160 +1,131 @@
-Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70137C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 23:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65BCAC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 00:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E8C1207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 23:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3277B217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 00:00:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="EG2xaZfd"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YPABTck2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407272AbfITX5o (ORCPT
+        id S2407290AbfIUAAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 19:57:44 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:32988 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407258AbfITX5o (ORCPT
+        Fri, 20 Sep 2019 20:00:06 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:38094 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407171AbfIUAAG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 19:57:44 -0400
-Received: by mail-ot1-f68.google.com with SMTP id g25so7659799otl.0
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 16:57:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=SNZHTXzWFoKdfyj4SStuMD6R3nyVpzOS/PYND2ZV/mU=;
-        b=EG2xaZfdclJq2IuOFaxMmJcqHhFSAUvzcOVxAaowYSI2UPsZnqF3fEyRlK+eD87aa1
-         f9di2GUe07f0vlLec7Elw2l8gHLl8sx4BqttWPPUQ1IpD01ySFme8ZfIq4JjlVMwRr9r
-         O1gTPAfFoAg9QJFADrghcRLE5rk+5nwBsfCPF3xTDbSXVHVGnxT5SRXaH86JD/NEB9rN
-         S07K7bdsME0qmcJ5CoBy0ATRmcFwtJKwaIJ9ef72V5bhz/S6etQJz8ZFldAsUFdPquV9
-         O19plpd/L3TBPobjrgZ0JRxUvnlyAHUSxyYECq8/n43+TZ3Kia1h25hEvN6h6J0mTnWD
-         Z1pQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=SNZHTXzWFoKdfyj4SStuMD6R3nyVpzOS/PYND2ZV/mU=;
-        b=UHkT/tMEl9huGD3G1rCNVEYINmOvDBAyIL+1kmqA0jUp/iuWthXipXZq8PMVVlawk9
-         Bv44Idy09Qt+nRt0CnTXUguS5I1VoqE7zvMXdDY1Pf0z02434EkBQGx5KvndsHySJSeG
-         gWmtsqtBFi+IWd8Dw1cgQKfznTvtoRt5yhM6oPDWIBqcbvaeOdJt/UuHAWxYK6DqG6ni
-         r9Ema/IuasGnEMAUBHV1kuIGxrgKtSvVy4gfNp3Ygf8GUe33B7klyUoeorFXmJEBU+c3
-         YYr8Pkbkqvu8IVIOzmfYZJlDPPY8pdmAOOpN7/GZ2gbuJ8wxUf6ZvhnRWgPJxcERA3jg
-         rF+A==
-X-Gm-Message-State: APjAAAXY30furaE7yU0BkhtVSNkp5ImNjh3u/uIhVNoxTSET0LBmYn1D
-        YGkhfJidl89DrWi+2Y3MzvZEoopqEmjhkIxH1Fz/cqGfW2U=
-X-Google-Smtp-Source: APXvYqyUYCL340Fi0wZXLSZtP6idL/XMJySaz6gMFxZbpUO44FKAPVfR7TlRToS+JVeVKsf60wttWvs/zJYYbqHuPzo=
-X-Received: by 2002:a9d:6014:: with SMTP id h20mr13280117otj.207.1569023863066;
- Fri, 20 Sep 2019 16:57:43 -0700 (PDT)
-MIME-Version: 1.0
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 20 Sep 2019 16:57:31 -0700
-Message-ID: <CAPcyv4g9TpgciDdVpQajSxEYTaHxB4+R9KWF0d=Emt9J7LkAqg@mail.gmail.com>
-Subject: [GIT PULL] libnvdimm for 5.4
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 20 Sep 2019 20:00:06 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8KNxZAW106774;
+        Fri, 20 Sep 2019 23:59:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2019-08-05;
+ bh=LhSuuZ1O24KLtZephMP5Prb2ILpveTttTiJkt7TPQqQ=;
+ b=YPABTck2vDSA96rwpZ0JL7JjbUlwlEqcAH5A3bKBPr0zXIo+kAq+Vzrbdy7eBfGsS4RG
+ CfEzIQmeDvPLBlFrwb6prBRRpC9IA9KKaUS/IQOVA4j4hDHunu8AB7zA1OLne+eDFRyE
+ +pLoaW4/uvEJXuSkvtIN9jjDmC6NtYkpsfSh+TNslkTCDeF2LQz8/U98XhGvS34X3n9X
+ hm5P6+58VtuNytyHjpFvXKpvXP0C17bhU+TKdSVRSrBkYySKN32l4UdbePVepIQFaj/5
+ mNGwq7KQ7IlUviPKknnGAY/7nzI6J3Nm3ezft75WhzXgaEtdtyS7f86HpmE9sGwSLCM1 ag== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2v3vb555cd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 20 Sep 2019 23:59:35 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8KNwhX7125912;
+        Fri, 20 Sep 2019 23:59:35 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2v51vr3pva-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 20 Sep 2019 23:59:34 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8KNxXd9006426;
+        Fri, 20 Sep 2019 23:59:33 GMT
+Received: from ca-common-hq.us.oracle.com (/10.211.9.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 20 Sep 2019 16:59:33 -0700
+From:   Divya Indi <divya.indi@oracle.com>
+To:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org
+Cc:     Divya Indi <divya.indi@oracle.com>, Joe Jin <joe.jin@oracle.com>,
+        Srinivas Eeda <srinivas.eeda@oracle.com>,
+        Aruna Ramakrishna <aruna.ramakrishna@oracle.com>,
+        Manjunath Patil <manjunath.b.patil@oracle.com>
+Subject: [RFC]Sample module for Kernel access to Ftrace instances.
+Date:   Fri, 20 Sep 2019 16:59:25 -0700
+Message-Id: <1569023966-23004-1-git-send-email-divya.indi@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9386 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=821
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909200203
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9386 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=882 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909200203
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus, please pull from:
+[PATCH] tracing: Sample module to demonstrate kernel access to Ftrace
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
-tags/libnvdimm-for-5.4
+Hi,
 
-...to receive some reworks to better support nvdimms on powerpc and an
-nvdimm security interface update.
+This patch is for a sample module to demonstrate the use of APIs that 
+were introduced/exported in order to access Ftrace instances from within the kernel.
 
-There was some last minute build breakage detected in -next so I've
-left a patch that finalizes the powerpc compatibility work and some
-other fixes out of this pull request.  The build fix requires a new
-symbol export that needs an ack from ppc folks, so I'm going to save
-that for a post -rc1 update. "libnvdimm/dax: Pick the right alignment
-default when creating dax devices" not typically something I would
-send during the -rc cycle, but I see no strong reason for it to wait
-until v5.5.
+Please Note: This module is dependent on -
+- commit: f45d122 tracing: Kernel access to Ftrace instances
+- Patches pending review: https://lore.kernel.org/lkml/1565805327-579-1-git-send-email-divya.indi@oracle.com/
 
-The pending fixes for others watching are:
+The sample module creates/lookup a trace array called sample-instance on module load time. 
+We then start a kernel thread(simple-thread) to -
+1) Enable tracing for event "sample_event" to buffer associated with the trace array - "sample-instance".
+2) Start a timer that will disable tracing to this buffer after 5 sec. (Tracing disabled after 5 sec ie at count=4)
+3) Write to the buffer using trace_array_printk()
+4) Stop the kernel thread and destroy the buffer during module unload.
 
-Aneesh Kumar K.V (4):
-      libnvdimm/dax: Pick the right alignment default when creating dax devices
-      mm/nvdimm: Fix endian conversion issues
-      libnvdimm/altmap: Track namespace boundaries in altmap
-      libnvdimm/region: Initialize bad block for volatile namespaces
+A sample output for the same -
 
-Nathan Chancellor (1):
-      libnvdimm/nfit_test: Fix acpi_handle redefinition
+# tracer: nop
+#
+# entries-in-buffer/entries-written: 16/16   #P:4
+#
+#                              _-----=> irqs-off
+#                             / _----=> need-resched
+#                            | / _---=> hardirq/softirq
+#                            || / _--=> preempt-depth
+#                            ||| /     delay
+#           TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
+#              | |       |   ||||       |         |
+ sample-instance-26797 [003] .... 955180.489833: simple_thread: trace_array_printk: count=0
+ sample-instance-26797 [003] .... 955180.489836: sample_event: count value=0 at jiffies=5249940864
+ sample-instance-26797 [003] .... 955181.513722: simple_thread: trace_array_printk: count=1
+ sample-instance-26797 [003] .... 955181.513724: sample_event: count value=1 at jiffies=5249941888
+ sample-instance-26797 [003] .... 955182.537629: simple_thread: trace_array_printk: count=2
+ sample-instance-26797 [003] .... 955182.537631: sample_event: count value=2 at jiffies=5249942912
+ sample-instance-26797 [003] .... 955183.561516: simple_thread: trace_array_printk: count=3
+ sample-instance-26797 [003] .... 955183.561518: sample_event: count value=3 at jiffies=5249943936
+ sample-instance-26797 [003] .... 955184.585423: simple_thread: trace_array_printk: count=4
+ sample-instance-26797 [003] .... 955184.585427: sample_event: count value=4 at jiffies=5249944960
+ sample-instance-26797 [003] .... 955185.609344: simple_thread: trace_array_printk: count=5
+ sample-instance-26797 [003] .... 955186.633241: simple_thread: trace_array_printk: count=6
+ sample-instance-26797 [003] .... 955187.657157: simple_thread: trace_array_printk: count=7
+ sample-instance-26797 [003] .... 955188.681039: simple_thread: trace_array_printk: count=8
+ sample-instance-26797 [003] .... 955189.704937: simple_thread: trace_array_printk: count=9
+ sample-instance-26797 [003] .... 955190.728840: simple_thread: trace_array_printk: count=10
 
----
+Let me know if you have any questions.
 
-The following changes since commit d45331b00ddb179e291766617259261c112db872:
-
-  Linux 5.3-rc4 (2019-08-11 13:26:41 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
-tags/libnvdimm-for-5.4
-
-for you to fetch changes up to 5b26db95fee3f1ce0d096b2de0ac6f3716171093:
-
-  libnvdimm: Use PAGE_SIZE instead of SZ_4K for align check
-(2019-09-05 16:11:14 -0700)
-
-----------------------------------------------------------------
-libnvdimm for 5.4
-
-- Rework the nvdimm core to accommodate architectures with different page
-  sizes and ones that can change supported huge page sizes at boot
-  time rather than a compile time constant.
-
-- Introduce a distinct 'frozen' attribute for the nvdimm security state
-  since it is independent of the locked state.
-
-- Miscellaneous fixups.
-
-----------------------------------------------------------------
-Aneesh Kumar K.V (6):
-      libnvdimm/of_pmem: Provide a unique name for bus provider
-      libnvdimm/pmem: Advance namespace seed for specific probe errors
-      libnvdimm/pfn_dev: Add a build check to make sure we notice when
-struct page size change
-      libnvdimm/pfn_dev: Add page size and struct page size to pfn superblock
-      libnvdimm/label: Remove the dpa align check
-      libnvdimm: Use PAGE_SIZE instead of SZ_4K for align check
-
-Dan Williams (5):
-      tools/testing/nvdimm: Fix fallthrough warning
-      libnvdimm/security: Introduce a 'frozen' attribute
-      libnvdimm/security: Tighten scope of nvdimm->busy vs security operations
-      libnvdimm/security: Consolidate 'security' operations
-      libnvdimm/region: Rewrite _probe_success() to _advance_seeds()
-
-Gustavo A. R. Silva (1):
-      libnvdimm, region: Use struct_size() in kzalloc()
-
- drivers/acpi/nfit/intel.c        |  59 ++++++------
- drivers/nvdimm/bus.c             |  10 +-
- drivers/nvdimm/dimm_devs.c       | 134 ++++++--------------------
- drivers/nvdimm/label.c           |   5 -
- drivers/nvdimm/namespace_devs.c  |  40 ++++++--
- drivers/nvdimm/nd-core.h         |  54 ++++-------
- drivers/nvdimm/nd.h              |   4 +
- drivers/nvdimm/of_pmem.c         |   2 +-
- drivers/nvdimm/pfn.h             |   5 +-
- drivers/nvdimm/pfn_devs.c        |  35 ++++++-
- drivers/nvdimm/pmem.c            |  29 +++++-
- drivers/nvdimm/region_devs.c     |  83 ++++------------
- drivers/nvdimm/security.c        | 199 ++++++++++++++++++++++++++-------------
- include/linux/libnvdimm.h        |   9 +-
- tools/testing/nvdimm/dimm_devs.c |  19 +---
- tools/testing/nvdimm/test/nfit.c |   3 +-
- 16 files changed, 346 insertions(+), 344 deletions(-)
+Thanks,
+Divya
