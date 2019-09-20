@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A90CBC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 09:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B21B7C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 09:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 875E82070C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 09:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93AD621928
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 09:26:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437899AbfITJZ5 (ORCPT
+        id S2437910AbfITJZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 05:25:57 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2694 "EHLO huawei.com"
+        Fri, 20 Sep 2019 05:25:59 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:55894 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2408502AbfITJZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2408505AbfITJZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Sep 2019 05:25:35 -0400
 Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 696D475169ACCDB8F39B;
+        by Forcepoint Email with ESMTP id 94655D4E98180711ED44;
         Fri, 20 Sep 2019 17:25:34 +0800 (CST)
 Received: from huawei.com (10.175.124.28) by DGGEMS406-HUB.china.huawei.com
  (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Fri, 20 Sep 2019
- 17:25:27 +0800
+ 17:25:26 +0800
 From:   Jason Yan <yanaijie@huawei.com>
 To:     <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
         <diana.craciun@nxp.com>, <christophe.leroy@c-s.fr>,
@@ -35,9 +35,9 @@ CC:     <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
         <yebin10@huawei.com>, <thunder.leizhen@huawei.com>,
         <jingxiangfeng@huawei.com>, <zhaohongjiang@huawei.com>,
         <oss@buserror.net>, Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH v7 12/12] powerpc/fsl_booke/32: Document KASLR implementation
-Date:   Fri, 20 Sep 2019 17:45:46 +0800
-Message-ID: <20190920094546.44948-13-yanaijie@huawei.com>
+Subject: [PATCH v7 11/12] powerpc/fsl_booke/kaslr: export offset in VMCOREINFO ELF notes
+Date:   Fri, 20 Sep 2019 17:45:45 +0800
+Message-ID: <20190920094546.44948-12-yanaijie@huawei.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20190920094546.44948-1-yanaijie@huawei.com>
 References: <20190920094546.44948-1-yanaijie@huawei.com>
@@ -50,7 +50,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add document to explain how we implement KASLR for fsl_booke32.
+Like all other architectures such as x86 or arm64, include KASLR offset
+in VMCOREINFO ELF notes to assist in debugging. After this, we can use
+crash --kaslr option to parse vmcore generated from a kaslr kernel.
+
+Note: The crash tool needs to support --kaslr too.
 
 Signed-off-by: Jason Yan <yanaijie@huawei.com>
 Cc: Diana Craciun <diana.craciun@nxp.com>
@@ -61,58 +65,21 @@ Cc: Paul Mackerras <paulus@samba.org>
 Cc: Nicholas Piggin <npiggin@gmail.com>
 Cc: Kees Cook <keescook@chromium.org>
 ---
- Documentation/powerpc/kaslr-booke32.rst | 42 +++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
- create mode 100644 Documentation/powerpc/kaslr-booke32.rst
+ arch/powerpc/kernel/machine_kexec.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/powerpc/kaslr-booke32.rst b/Documentation/powerpc/kaslr-booke32.rst
-new file mode 100644
-index 000000000000..8b259fdfdf03
---- /dev/null
-+++ b/Documentation/powerpc/kaslr-booke32.rst
-@@ -0,0 +1,42 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===========================
-+KASLR for Freescale BookE32
-+===========================
-+
-+The word KASLR stands for Kernel Address Space Layout Randomization.
-+
-+This document tries to explain the implementation of the KASLR for
-+Freescale BookE32. KASLR is a security feature that deters exploit
-+attempts relying on knowledge of the location of kernel internals.
-+
-+Since CONFIG_RELOCATABLE has already supported, what we need to do is
-+map or copy kernel to a proper place and relocate. Freescale Book-E
-+parts expect lowmem to be mapped by fixed TLB entries(TLB1). The TLB1
-+entries are not suitable to map the kernel directly in a randomized
-+region, so we chose to copy the kernel to a proper place and restart to
-+relocate.
-+
-+Entropy is derived from the banner and timer base, which will change every
-+build and boot. This not so much safe so additionally the bootloader may
-+pass entropy via the /chosen/kaslr-seed node in device tree.
-+
-+We will use the first 512M of the low memory to randomize the kernel
-+image. The memory will be split in 64M zones. We will use the lower 8
-+bit of the entropy to decide the index of the 64M zone. Then we chose a
-+16K aligned offset inside the 64M zone to put the kernel in::
-+
-+    KERNELBASE
-+
-+        |-->   64M   <--|
-+        |               |
-+        +---------------+    +----------------+---------------+
-+        |               |....|    |kernel|    |               |
-+        +---------------+    +----------------+---------------+
-+        |                         |
-+        |----->   offset    <-----|
-+
-+                              kernstart_virt_addr
-+
-+To enable KASLR, set CONFIG_RANDOMIZE_BASE = y. If KASLR is enable and you
-+want to disable it at runtime, add "nokaslr" to the kernel cmdline.
+diff --git a/arch/powerpc/kernel/machine_kexec.c b/arch/powerpc/kernel/machine_kexec.c
+index c4ed328a7b96..078fe3d76feb 100644
+--- a/arch/powerpc/kernel/machine_kexec.c
++++ b/arch/powerpc/kernel/machine_kexec.c
+@@ -86,6 +86,7 @@ void arch_crash_save_vmcoreinfo(void)
+ 	VMCOREINFO_STRUCT_SIZE(mmu_psize_def);
+ 	VMCOREINFO_OFFSET(mmu_psize_def, shift);
+ #endif
++	vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());
+ }
+ 
+ /*
 -- 
 2.17.2
 
