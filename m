@@ -2,97 +2,109 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB66C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 03:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7620C4CECD
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 04:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A077218AE
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 03:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD8B821A49
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 04:00:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="S8ckP3TA";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FRHf49tM"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="a2eQU3Ub"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407324AbfITD6M (ORCPT
+        id S1725867AbfITEAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 23:58:12 -0400
-Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:33369 "EHLO
-        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2406268AbfITD6M (ORCPT
+        Fri, 20 Sep 2019 00:00:05 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35961 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725306AbfITEAF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 23:58:12 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id 0864651D;
-        Thu, 19 Sep 2019 23:58:10 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Thu, 19 Sep 2019 23:58:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=AwV62kTNWV1jZgcM4jPwwCG4XtzAi+s
-        qJivMwhaTchc=; b=S8ckP3TAWc1jyzr+qcZAPlqrX8KRAlPRLZKIWSF89qVSmcE
-        D8BPpqg52UK5Vv2M4heoG52ODs17JYWWls0jh1lb3cnHQaC9gL3o3iYe78Dc3wNv
-        1pAh5C9Rtr995F52EAhIf2D+uUcDJbBqv6k19AbWaBVo7SeNsF7c68MHgYS2hgZX
-        DjnjPRh8ZfxXZTyr8xQV1IRTbJKJLCMFIIjEuTrV2KEmangiztW4r1L3Fnidsylk
-        1hIeL0P48hds+PCyrcqeIJYDnFzVBu8T0xxLA8fjTSasi469bT0eBpl9ycEM8dOx
-        S3T83yBYJKf6uO3qHsovZOlWwXF7le2FoTMJjvQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=AwV62k
-        TNWV1jZgcM4jPwwCG4XtzAi+sqJivMwhaTchc=; b=FRHf49tMarkCKSUmMeqRl9
-        5TvM3gJKpOvcZDjmp7HjNRaHAmx2sEFCO8bx8ArOpkQDsssxOaBhF6jbMJfxGc0H
-        Eaq2CIQo2QBaun7iXTlJtunt9SRljS2Wa98t/UK1PWN6sJ5DWd9QAtz5VdmLaDL5
-        lNL+t2TASpVypuUpy6Gagt5wx0boP/CQQPwcnl66O1xzFSN2Ba9174IarvJ+QCZ5
-        GGv4MvKUoPdm9jTZO4ahtikq0qord+LzqklRzuJzVeGfaJIcX0GafRmQaZIOIL90
-        2NiLEcV9KHAeD3EsP6YP/HGwwHgPE+jDV61igL0RhcehhWnUHtmKamrZXRWy1/7w
-        ==
-X-ME-Sender: <xms:UU6EXWncKUZATjzQ6SVbRB_s1Vu0x-lp4Hclj7kEghwwxXWtq5AsfA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddugdejjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghr
-    ufhiiigvpedt
-X-ME-Proxy: <xmx:UU6EXfuWkx0_SGevbBY3kDZos3ksb9bMIlDi1p2762yqs7MPPsbeTg>
-    <xmx:UU6EXZQHoRVXKsIhuxJPSHyfLzrXjPiHK2262XMS2h6M5zuB-lNLEw>
-    <xmx:UU6EXZF6OMpqJDST6zd_srIDGMmC-vTtxvtQNm91c7RdZxSy-i6OZg>
-    <xmx:Uk6EXb0vLp6bK7FaIOmBMOilaAlTtAtEtwXP2hWaIB4dGmZL1yOZuA>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id A3D12E00A9; Thu, 19 Sep 2019 23:58:09 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-238-g170a812-fmstable-20190913v1
-Mime-Version: 1.0
-Message-Id: <14d2f55b-c31e-4c1f-b75f-aff6b4729c80@www.fastmail.com>
-In-Reply-To: <20190919142654.1578823-1-arnd@arndb.de>
-References: <20190919142654.1578823-1-arnd@arndb.de>
-Date:   Fri, 20 Sep 2019 13:28:46 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Arnd Bergmann" <arnd@arndb.de>, "Joel Stanley" <joel@jms.id.au>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: aspeed: ast2500 is ARMv6K
-Content-Type: text/plain
+        Fri, 20 Sep 2019 00:00:05 -0400
+Received: by mail-wr1-f65.google.com with SMTP id y19so5270065wrd.3
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 21:00:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=bYhxAbC1GFuGSLHe3pFEpx4f5zgzfkqdI7JWdaIteJI=;
+        b=a2eQU3UbZbnNoSY3AOO9JtevqKAE3tCzJjJkL/rHXzCXPXc9RAtdJnG+WEg7MFXFcX
+         2eXy0ULnFBQAIH5HLCOaA1QVQc05q0dHwLUt6AluqP8+tmzRa6oTM+Zk5usRb9CZ7C9b
+         B2+VKiHSMgC4KVa4qNpeCGpzcG/pQSpQYIstBJN2hh7XNw4OGHpbpkbIepbnNaBEVI6c
+         dfopqNZbAZybivcNGNPqci2df5gYOsrIspjYX585sgg9gZFNaiE7c00MlrZfnZI6GOy0
+         E0Dw8q/7UNFcIrEj3tCK/uA8MZkjWEoIfFOoW3skscJoZxr3ivbolKmZ5no7lD5iPhrF
+         MCiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=bYhxAbC1GFuGSLHe3pFEpx4f5zgzfkqdI7JWdaIteJI=;
+        b=jk8r7qLAMvEAD0cm0br8nqQfAUYOUcutTxTKOUN8VSOv8qVtfqt0Zox1s1SZv/zsej
+         LbAMGlsDVPumlZf31NwVgXRBBUaP+vVLW+qDwGZYjZ7pzVoRvAPMejsq5sh67q1dUwDz
+         /nHiJY5+Bo5wYZSu/+OxFHC8c4b6wsKFrsc2aREa6y5Oao0SXGhz1JnLUE65c6Z5cHcg
+         wVes4AlMKd9rFyd/1iLkcvGpzqGdb4jjqqHdQp8my9y/qEsDdr94wNGDD1hHKTQw3UP+
+         FizqhCpkqS/DO89Viwm5YYIHUX8T8z4eSFvf8WoCQM1C+VwcGuzBpH8j6Ls4wu3cuw72
+         MR6Q==
+X-Gm-Message-State: APjAAAWnFzC1kQxi5lTbY0LYQ4H8HSbv8/sY7FDel3eFLhBYek6jSjiR
+        2i+uMB83OdZixossQTcy2iNKeQ==
+X-Google-Smtp-Source: APXvYqw2sPttgwbDF05qKJ9AMT+4s0QfMwclj+w3z1tZ1FXCwQUpoe65Y7T6MENvtJ15sdm//5Y8gg==
+X-Received: by 2002:a5d:4251:: with SMTP id s17mr4751983wrr.126.1568952003391;
+        Thu, 19 Sep 2019 21:00:03 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id o19sm768174wro.50.2019.09.19.21.00.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 19 Sep 2019 21:00:02 -0700 (PDT)
+Message-ID: <5d844ec2.1c69fb81.3f53.2d40@mx.google.com>
+Date:   Thu, 19 Sep 2019 21:00:02 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v5.2.16-125-g690411952b3d
+X-Kernelci-Tree: stable-rc
+X-Kernelci-Report-Type: boot
+X-Kernelci-Branch: linux-5.2.y
+In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
+References: <20190919214819.198419517@linuxfoundation.org>
+Subject: Re: [PATCH 5.2 000/124] 5.2.17-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+stable-rc/linux-5.2.y boot: 72 boots: 0 failed, 71 passed with 1 conflict (=
+v5.2.16-125-g690411952b3d)
 
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-5.2.y/kernel/v5.2.16-125-g690411952b3d/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-5.2.y=
+/kernel/v5.2.16-125-g690411952b3d/
 
-On Thu, 19 Sep 2019, at 23:56, Arnd Bergmann wrote:
-> Linux supports both the original ARMv6 level (early ARM1136) and ARMv6K
-> (later ARM1136, ARM1176 and ARM11mpcore).
-> 
-> ast2500 falls into the second categoy, being based on arm1176jzf-s.
-> This is enabled by default when using ARCH_MULTI_V6, so we should
-> not 'select CPU_V6'.
-> 
-> Removing this will lead to more efficient use of atomic instructions.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Tree: stable-rc
+Branch: linux-5.2.y
+Git Describe: v5.2.16-125-g690411952b3d
+Git Commit: 690411952b3d8cab079b16af04292f93643bb864
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 42 unique boards, 16 SoC families, 12 builds out of 209
 
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+Conflicting Boot Failure Detected: (These likely are not failures as other =
+labs are reporting PASS. Needs review.)
+
+arm:
+    omap2plus_defconfig:
+        omap4-panda:
+            lab-baylibre: FAIL (gcc-8)
+            lab-collabora: PASS (gcc-8)
+
+---
+For more info write to <info@kernelci.org>
