@@ -2,132 +2,163 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B348C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 00:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0408C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 00:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7102F206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 00:52:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oeFGdk6H"
+	by mail.kernel.org (Postfix) with ESMTP id AD985206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 00:59:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394526AbfITAwl (ORCPT
+        id S2394538AbfITA7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 20:52:41 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:40418 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390897AbfITAwl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 20:52:41 -0400
-Received: by mail-qk1-f195.google.com with SMTP id y144so5487833qkb.7
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 17:52:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iiu7m8DUVWZxCoLUBSCJNA90YeclA/xM3wyYeZQULiE=;
-        b=oeFGdk6HEZzwtPUIq/2Gsk2c4kXst0Qsqf7PRP+6xzgYwwVjM7riJud/oeBQFSGlFD
-         iglEdfBLfUJ+90FLZSap4PHamyFAMKRZcRmNEngShJXeoFBzy3YrcA7wv7aJbeNK2IgH
-         9XU1Gt+hPw8ktpTaBqac/bO4BhkLmZLFJnKhE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iiu7m8DUVWZxCoLUBSCJNA90YeclA/xM3wyYeZQULiE=;
-        b=lHgEvrevwKBkRz9XU/fThXqjvA8KIgyNgTQ62LVsTZvXZEAkWyObHdKsTUPXFW2+Ro
-         iFElIOBByml9EmqU3Z3yIQeAZIWjzZMAyQfSzzTXbfbO0bIuEoMU/NcmeZyXjWrEgaYW
-         C9m8zkIOf1AevNoPxFJi2tVL98rK0O2N1Hiys7L73PyxnuuO8MrPQAXYcdfi0XfreXx9
-         c51OA6b+il4HyUnD1u53muIVHHAypVc0BHQBgSrUkz6D39gEIBQHmNV7bP0/2O6/JIMO
-         tt+Nkf4fM6vG9Tu+PV3hgsZh+TQrdfLntj56qa9qiTIMvK2xl7gXd41SEhHVREVYRpS7
-         8ETQ==
-X-Gm-Message-State: APjAAAUzQleNMbYFSWbDYYya1U/zF4mgMKTG1f19LmP1vxzxrvEE1I2V
-        qzPY8kCThwb70tEQxfbjI+Qg9pZipLNcPQ==
-X-Google-Smtp-Source: APXvYqyKnxIY1o3JiOfmtTS92EHKNv+8Q7OdKNwVCz3SU/t20AJH6zdBpQfXe4LqW7HHBx3fkWvdOQ==
-X-Received: by 2002:a37:b041:: with SMTP id z62mr728242qke.94.1568940759530;
-        Thu, 19 Sep 2019 17:52:39 -0700 (PDT)
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com. [209.85.222.177])
-        by smtp.gmail.com with ESMTPSA id g10sm233980qkm.38.2019.09.19.17.52.38
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Sep 2019 17:52:38 -0700 (PDT)
-Received: by mail-qk1-f177.google.com with SMTP id u22so1989152qkk.11
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 17:52:38 -0700 (PDT)
-X-Received: by 2002:a37:a00d:: with SMTP id j13mr732778qke.2.1568940757739;
- Thu, 19 Sep 2019 17:52:37 -0700 (PDT)
+        Thu, 19 Sep 2019 20:59:46 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43612 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389293AbfITA7q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 20:59:46 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2C55B81DE7;
+        Fri, 20 Sep 2019 00:59:46 +0000 (UTC)
+Received: from [10.72.12.88] (ovpn-12-88.pek2.redhat.com [10.72.12.88])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4F6D75D9CD;
+        Fri, 20 Sep 2019 00:59:34 +0000 (UTC)
+Subject: Re: [RFC v4 0/3] vhost: introduce mdev based hardware backend
+To:     Tiwei Bie <tiwei.bie@intel.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>, alex.williamson@redhat.com,
+        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, dan.daly@intel.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        lingshan.zhu@intel.com
+References: <20190917010204.30376-1-tiwei.bie@intel.com>
+ <993841ed-942e-c90b-8016-8e7dc76bf13a@redhat.com>
+ <20190917105801.GA24855@___>
+ <fa6957f3-19ad-f351-8c43-65bc8342b82e@redhat.com>
+ <20190918102923-mutt-send-email-mst@kernel.org>
+ <d2efe7e4-cf13-437d-e2dc-e2779fac7d2f@redhat.com>
+ <20190919154552.GA27657@___>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <11bc30a9-1cf5-4a5f-109a-f307d70c35fa@redhat.com>
+Date:   Fri, 20 Sep 2019 08:59:32 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <1534402113-14337-1-git-send-email-wgong@codeaurora.org>
- <20181114225910.GA220599@google.com> <CA+ASDXMh7vdfkA5jtJqWEU-g-4Ta5Xvy046zujyASZcESCGhAQ@mail.gmail.com>
- <87woe5aehr.fsf@kamboji.qca.qualcomm.com>
-In-Reply-To: <87woe5aehr.fsf@kamboji.qca.qualcomm.com>
-From:   Brian Norris <briannorris@chromium.org>
-Date:   Thu, 19 Sep 2019 17:52:26 -0700
-X-Gmail-Original-Message-ID: <CA+ASDXPaw0womrCF98zzUinMTYSxeanK0Rc-0kn56TBEWJ__5w@mail.gmail.com>
-Message-ID: <CA+ASDXPaw0womrCF98zzUinMTYSxeanK0Rc-0kn56TBEWJ__5w@mail.gmail.com>
-Subject: Re: [PATCH v3] ath10k: support NET_DETECT WoWLAN feature
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Wen Gong <wgong@codeaurora.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        ath10k@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190919154552.GA27657@___>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 20 Sep 2019 00:59:46 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(I realize I replied to the v3, not the v4 which was merged.)
 
-On Wed, Sep 18, 2019 at 7:03 AM Kalle Valo <kvalo@codeaurora.org> wrote:
-> Brian Norris <briannorris@chromium.org> writes:
-> > Since Wen has once again suggested I use this patch in other forums,
-> > I'll ping here to note:
-> >
-> > On Wed, Nov 14, 2018 at 2:59 PM Brian Norris <briannorris@chromium.org> wrote:
-> >> You've introduced a regression in 4.20-rc1:
-> >
-> > This regression still survives in the latest tree. Is it fair to just
-> > submit a revert?
+On 2019/9/19 下午11:45, Tiwei Bie wrote:
+> On Thu, Sep 19, 2019 at 09:08:11PM +0800, Jason Wang wrote:
+>> On 2019/9/18 下午10:32, Michael S. Tsirkin wrote:
+>>>>>> So I have some questions:
+>>>>>>
+>>>>>> 1) Compared to method 2, what's the advantage of creating a new vhost char
+>>>>>> device? I guess it's for keep the API compatibility?
+>>>>> One benefit is that we can avoid doing vhost ioctls on
+>>>>> VFIO device fd.
+>>>> Yes, but any benefit from doing this?
+>>> It does seem a bit more modular, but it's certainly not a big deal.
+>> Ok, if we go this way, it could be as simple as provide some callback to
+>> vhost, then vhost can just forward the ioctl through parent_ops.
+>>
+>>>>>> 2) For method 2, is there any easy way for user/admin to distinguish e.g
+>>>>>> ordinary vfio-mdev for vhost from ordinary vfio-mdev?
+>>>>> I think device-api could be a choice.
+>>>> Ok.
+>>>>
+>>>>
+>>>>>> I saw you introduce
+>>>>>> ops matching helper but it's not friendly to management.
+>>>>> The ops matching helper is just to check whether a given
+>>>>> vfio-device is based on a mdev device.
+>>>>>
+>>>>>> 3) A drawback of 1) and 2) is that it must follow vfio_device_ops that
+>>>>>> assumes the parameter comes from userspace, it prevents support kernel
+>>>>>> virtio drivers.
+>>>>>>
+>>>>>> 4) So comes the idea of method 3, since it register a new vhost-mdev driver,
+>>>>>> we can use device specific ops instead of VFIO ones, then we can have a
+>>>>>> common API between vDPA parent and vhost-mdev/virtio-mdev drivers.
+>>>>> As the above draft shows, this requires introducing a new
+>>>>> VFIO device driver. I think Alex's opinion matters here.
+>> Just to clarify, a new type of mdev driver but provides dummy
+>> vfio_device_ops for VFIO to make container DMA ioctl work.
+> I see. Thanks! IIUC, you mean we can provide a very tiny
+> VFIO device driver in drivers/vhost/mdev.c, e.g.:
 >
-> Your description about the problem from an earlier email:
+> static int vfio_vhost_mdev_open(void *device_data)
+> {
+> 	if (!try_module_get(THIS_MODULE))
+> 		return -ENODEV;
+> 	return 0;
+> }
 >
->   "It seems like youre enabling SCHED_SCAN support? But you're not
->    adding the NL80211_FEATURE_SCHED_SCAN_RANDOM_MAC_ADDR feature flag.
->    So it puts us in a tough place on using randomization -- we either
->    can't trust the FEATURE flags, or else we can't use both SCHED_SCAN
->    and scan randomization."
-
-Yeah, maybe I shouldn't have trimmed that context :)
-
-> So essentially the problem is that with firmwares supporting both
-> WMI_SERVICE_NLO and WMI_SERVICE_SPOOF_MAC_SUPPORT ath10k enables
-> NL80211_FEATURE_SCAN_RANDOM_MAC_ADDR, but
-> NL80211_FEATURE_SCHED_SCAN_RANDOM_MAC_ADDR is not enabled which is
-> inconsistent from user space point of view. Is my understanding correct?
-
-Yes, that sounds about right.
-
-> Wen, can you enable NL80211_FEATURE_SCAN_RANDOM_MAC_ADDR? Does firmware
-> support that?
-
-I feel like I've asked him that privately, but asking here might not hurt :D
-
-> If that's not possible, one workaround might to be to not enable
-> NL80211_FEATURE_SCAN_RANDOM_MAC_ADDR if firmware supports
-> WMI_SERVICE_NLO, but of course that would suck big time.
-
-Yeah, that would be strictly worse than the current situation I think.
-SCAN_RANDOM_MAC_ADDRESS is a product requirement for us. At least
-right now, it's possible I could teach a user space to just ignore
-SCHED_SCAN if it doesn't support the appropriate randomization
-features. (I don't want to have to do that, but at least it's
-possible.)
-
-Brian
-
-> Here's the full context in case someone is interested:
+> static void vfio_vhost_mdev_release(void *device_data)
+> {
+> 	module_put(THIS_MODULE);
+> }
 >
-> https://patchwork.kernel.org/patch/10567005/
+> static const struct vfio_device_ops vfio_vhost_mdev_dev_ops = {
+> 	.name		= "vfio-vhost-mdev",
+> 	.open		= vfio_vhost_mdev_open,
+> 	.release	= vfio_vhost_mdev_release,
+> };
+>
+> static int vhost_mdev_probe(struct device *dev)
+> {
+> 	struct mdev_device *mdev = to_mdev_device(dev);
+>
+> 	... Check the mdev device_id proposed in ...
+> 	... https://lkml.org/lkml/2019/9/12/151 ...
+>
+> 	return vfio_add_group_dev(dev, &vfio_vhost_mdev_dev_ops, mdev);
+> }
+>
+> static void vhost_mdev_remove(struct device *dev)
+> {
+> 	vfio_del_group_dev(dev);
+> }
+>
+> static struct mdev_driver vhost_mdev_driver = {
+> 	.name	= "vhost_mdev",
+> 	.probe	= vhost_mdev_probe,
+> 	.remove	= vhost_mdev_remove,
+> };
+>
+> So we can bind above mdev driver to the virtio-mdev compatible
+> mdev devices when we want to use vhost-mdev.
+>
+> After binding above driver to the mdev device, we can setup IOMMU
+> via VFIO and get VFIO device fd of this mdev device, and pass it
+> to vhost fd (/dev/vhost-mdev) with a SET_BACKEND ioctl.
+>
+> Thanks,
+> Tiwei
+
+
+Yes, something like this.
+
+Thanks
+
+
+>> Thanks
+>>
+>>
+>>>> Yes, it is.
+>>>>
+>>>> Thanks
+>>>>
+>>>>
