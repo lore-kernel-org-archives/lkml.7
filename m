@@ -2,107 +2,191 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EACF5C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DCFC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD050205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:18:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="NM6tki/L"
+	by mail.kernel.org (Postfix) with ESMTP id 99EAD205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:20:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbfITNSj (ORCPT
+        id S1727481AbfITNUo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 09:18:39 -0400
-Received: from mail-qt1-f171.google.com ([209.85.160.171]:36236 "EHLO
-        mail-qt1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726924AbfITNSi (ORCPT
+        Fri, 20 Sep 2019 09:20:44 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:49851 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726407AbfITNUn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 09:18:38 -0400
-Received: by mail-qt1-f171.google.com with SMTP id o12so8609932qtf.3
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 06:18:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/zBWVQUMduMEV6S4oIBu6WgtqiwSPYzhbiHGFHy9vHA=;
-        b=NM6tki/LBfV6dT4LIGUY5UfW6c7Qj/qVC68mC8w2mSeEe+B6rOkXnVORyZCKePKFXg
-         eJWFDhizzAfTT++dBCvbzDPb+XTuIQKUijX2DQpb6tFng3hsPDSL5aHyr3WrefAg1BLM
-         W/gxGpDVcCB8Px2kVwKn2t+jfY7fi5UZmNNz/hUeSgF0At4N+0itF4ygt/9ZB9wRyOWa
-         coqARgtzDluJh1VULcieqzJRblXGLABG98sZROfnzTfRE5b0PBoI8Cpo3FlXfJp7Z4+2
-         MaOYLVRCniheNmugEkbt9aYG3vba9UjhgbUkreWfZilRGrNaOJMMFx1O0YSnKlnhpr7r
-         QESA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/zBWVQUMduMEV6S4oIBu6WgtqiwSPYzhbiHGFHy9vHA=;
-        b=OHdNTsDgJJuXoax5V/ci3YgWTa7TP/gn2hlpZhJks4QvLK6Xnd4rYEOGiIbbDeNuXI
-         m6vKPNB30n0HKvX2JY2jYtvjmPlIpXHaPSh+rSYtubHvzI0a5XTAnb6IH3chO/yCEkgS
-         IJzSg9Q6OLltBg4KB3vwZz5N90CxIvprikEm+y6OCabjU+3WssCR01wuVN+HRAY3/UBo
-         cB7k5sGjFgN28v0Fgn4lx9MKjVVMVEAcFUBFfJwLgIUuCdcoJ3lQ9hCLlVMkOC5fB4aC
-         AGMGGiAFNe62V62SA7obhFWpy4LI/+95Oz0BzRCHaYrL0RY5VzKRhhWcksYtq4IdxQWv
-         BqkQ==
-X-Gm-Message-State: APjAAAXb3jA8ai2kHcguQqTVfivDFHrZ1Yv6K74vrKoVyzLVF403uJ9b
-        ZSHHTm1eq3k7N/KAbTmFITPPhQ==
-X-Google-Smtp-Source: APXvYqxIsFgyOBopMmS9+z7fnu+twmn7h4ZA2rMQZMYyKQD/qBcVJREwxOktdQbhEnDGO3ZY+bUuwg==
-X-Received: by 2002:ac8:7159:: with SMTP id h25mr3096004qtp.90.1568985517812;
-        Fri, 20 Sep 2019 06:18:37 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id k54sm1035355qtf.28.2019.09.20.06.18.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 20 Sep 2019 06:18:36 -0700 (PDT)
-Message-ID: <1568985515.5576.195.camel@lca.pw>
-Subject: Re: "arm64: use asm-generic/dma-mapping.h" introduced a kbuild
- warning
-From:   Qian Cai <cai@lca.pw>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Will Deacon <will@kernel.org>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Fri, 20 Sep 2019 09:18:35 -0400
-In-Reply-To: <CAK7LNATa=rzCZkBCDaUCcyo4_1JxsrGQrdUFxPh0Pw3KEu6exA@mail.gmail.com>
-References: <1568898377.5576.186.camel@lca.pw>
-         <CAK7LNATa=rzCZkBCDaUCcyo4_1JxsrGQrdUFxPh0Pw3KEu6exA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 20 Sep 2019 09:20:43 -0400
+Received: from static-dcd-cqq-121001.business.bouyguestelecom.com ([212.194.121.1] helo=localhost.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iBIq1-0002KN-07; Fri, 20 Sep 2019 13:20:41 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>,
+        Will Drewry <wad@chromium.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-um@lists.infradead.org,
+        x86@kernel.org
+Subject: [PATCH] seccomp: remove unused arg from secure_computing()
+Date:   Fri, 20 Sep 2019 15:19:09 +0200
+Message-Id: <20190920131907.6886-1-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-09-20 at 19:24 +0900, Masahiro Yamada wrote:
-> Hi Qian,
-> 
-> On Thu, Sep 19, 2019 at 10:06 PM Qian Cai <cai@lca.pw> wrote:
-> > 
-> > The commit 5489c8e0cf03 ("arm64: use asm-generic/dma-mapping.h") introduced a
-> > kbuild warning,
-> > 
-> > scripts/Makefile.asm-generic:25: redundant generic-y found in
-> > arch/arm64/include/asm/Kbuild: dma-mapping.h
-> > 
-> > 
-> 
-> Which tree did you test?
+While touching seccomp code I realized that the struct seccomp_data
+argument to secure_computing() seems to be unused by all current
+callers. So let's remove it unless there is some subtlety I missed.
+Note, I only tested this on x86.
 
-It was yesterday's linux-next (next-20190918) with this config [1], but it seems
-gone in today's linux-next.
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Will Drewry <wad@chromium.org>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-parisc@vger.kernel.org
+Cc: linux-s390@vger.kernel.org
+Cc: linux-um@lists.infradead.org
+Cc: x86@kernel.org
+---
+ arch/arm/kernel/ptrace.c              | 2 +-
+ arch/arm64/kernel/ptrace.c            | 2 +-
+ arch/parisc/kernel/ptrace.c           | 2 +-
+ arch/s390/kernel/ptrace.c             | 4 ++--
+ arch/um/kernel/skas/syscall.c         | 2 +-
+ arch/x86/entry/vsyscall/vsyscall_64.c | 2 +-
+ include/linux/seccomp.h               | 6 +++---
+ 7 files changed, 10 insertions(+), 10 deletions(-)
 
-[1] https://raw.githubusercontent.com/cailca/linux-mm/master/arm64.config
+diff --git a/arch/arm/kernel/ptrace.c b/arch/arm/kernel/ptrace.c
+index 324352787aea..b606cded90cd 100644
+--- a/arch/arm/kernel/ptrace.c
++++ b/arch/arm/kernel/ptrace.c
+@@ -923,7 +923,7 @@ asmlinkage int syscall_trace_enter(struct pt_regs *regs, int scno)
+ 
+ 	/* Do seccomp after ptrace; syscall may have changed. */
+ #ifdef CONFIG_HAVE_ARCH_SECCOMP_FILTER
+-	if (secure_computing(NULL) == -1)
++	if (secure_computing() == -1)
+ 		return -1;
+ #else
+ 	/* XXX: remove this once OABI gets fixed */
+diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
+index 3cf3b135027e..010a835302d3 100644
+--- a/arch/arm64/kernel/ptrace.c
++++ b/arch/arm64/kernel/ptrace.c
+@@ -1816,7 +1816,7 @@ int syscall_trace_enter(struct pt_regs *regs)
+ 	}
+ 
+ 	/* Do the secure computing after ptrace; failures should be fast. */
+-	if (secure_computing(NULL) == -1)
++	if (secure_computing() == -1)
+ 		return -1;
+ 
+ 	if (test_thread_flag(TIF_SYSCALL_TRACEPOINT))
+diff --git a/arch/parisc/kernel/ptrace.c b/arch/parisc/kernel/ptrace.c
+index 9f6ff7bc06f9..f8c07dcbfb49 100644
+--- a/arch/parisc/kernel/ptrace.c
++++ b/arch/parisc/kernel/ptrace.c
+@@ -342,7 +342,7 @@ long do_syscall_trace_enter(struct pt_regs *regs)
+ 	}
+ 
+ 	/* Do the secure computing check after ptrace. */
+-	if (secure_computing(NULL) == -1)
++	if (secure_computing() == -1)
+ 		return -1;
+ 
+ #ifdef CONFIG_HAVE_SYSCALL_TRACEPOINTS
+diff --git a/arch/s390/kernel/ptrace.c b/arch/s390/kernel/ptrace.c
+index ad71132374f0..ed80bdfbf5fe 100644
+--- a/arch/s390/kernel/ptrace.c
++++ b/arch/s390/kernel/ptrace.c
+@@ -439,7 +439,7 @@ static int poke_user(struct task_struct *child, addr_t addr, addr_t data)
+ long arch_ptrace(struct task_struct *child, long request,
+ 		 unsigned long addr, unsigned long data)
+ {
+-	ptrace_area parea; 
++	ptrace_area parea;
+ 	int copied, ret;
+ 
+ 	switch (request) {
+@@ -856,7 +856,7 @@ asmlinkage long do_syscall_trace_enter(struct pt_regs *regs)
+ 	}
+ 
+ 	/* Do the secure computing check after ptrace. */
+-	if (secure_computing(NULL)) {
++	if (secure_computing()) {
+ 		/* seccomp failures shouldn't expose any additional code. */
+ 		return -1;
+ 	}
+diff --git a/arch/um/kernel/skas/syscall.c b/arch/um/kernel/skas/syscall.c
+index 44bb10785075..fc37259d5971 100644
+--- a/arch/um/kernel/skas/syscall.c
++++ b/arch/um/kernel/skas/syscall.c
+@@ -35,7 +35,7 @@ void handle_syscall(struct uml_pt_regs *r)
+ 		goto out;
+ 
+ 	/* Do the seccomp check after ptrace; failures should be fast. */
+-	if (secure_computing(NULL) == -1)
++	if (secure_computing() == -1)
+ 		goto out;
+ 
+ 	syscall = UPT_SYSCALL_NR(r);
+diff --git a/arch/x86/entry/vsyscall/vsyscall_64.c b/arch/x86/entry/vsyscall/vsyscall_64.c
+index e7c596dea947..b10cbf71a8cc 100644
+--- a/arch/x86/entry/vsyscall/vsyscall_64.c
++++ b/arch/x86/entry/vsyscall/vsyscall_64.c
+@@ -222,7 +222,7 @@ bool emulate_vsyscall(unsigned long error_code,
+ 	 */
+ 	regs->orig_ax = syscall_nr;
+ 	regs->ax = -ENOSYS;
+-	tmp = secure_computing(NULL);
++	tmp = secure_computing();
+ 	if ((!tmp && regs->orig_ax != syscall_nr) || regs->ip != address) {
+ 		warn_bad_vsyscall(KERN_DEBUG, regs,
+ 				  "seccomp tried to change syscall nr or ip");
+diff --git a/include/linux/seccomp.h b/include/linux/seccomp.h
+index 84868d37b35d..03583b6d1416 100644
+--- a/include/linux/seccomp.h
++++ b/include/linux/seccomp.h
+@@ -33,10 +33,10 @@ struct seccomp {
+ 
+ #ifdef CONFIG_HAVE_ARCH_SECCOMP_FILTER
+ extern int __secure_computing(const struct seccomp_data *sd);
+-static inline int secure_computing(const struct seccomp_data *sd)
++static inline int secure_computing(void)
+ {
+ 	if (unlikely(test_thread_flag(TIF_SECCOMP)))
+-		return  __secure_computing(sd);
++		return  __secure_computing(NULL);
+ 	return 0;
+ }
+ #else
+@@ -59,7 +59,7 @@ struct seccomp { };
+ struct seccomp_filter { };
+ 
+ #ifdef CONFIG_HAVE_ARCH_SECCOMP_FILTER
+-static inline int secure_computing(struct seccomp_data *sd) { return 0; }
++static inline int secure_computing(void) { return 0; }
+ #else
+ static inline void secure_computing_strict(int this_syscall) { return; }
+ #endif
+-- 
+2.23.0
 
-> 
-> I tried the latest Linus tree (, which contains 5489c8e0cf03),
-> but I did not see this warning.
-> 
-> 
-> 
