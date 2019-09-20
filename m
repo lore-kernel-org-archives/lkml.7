@@ -2,134 +2,163 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E79C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA9B8C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F02D92080F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:37:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDC4A2080F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:38:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HC9NApN1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405207AbfITThy (ORCPT
+        id S2406211AbfITTi5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 15:37:54 -0400
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:49284 "EHLO 1wt.eu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727165AbfITThx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 15:37:53 -0400
-Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id x8KJbe98001976;
-        Fri, 20 Sep 2019 21:37:40 +0200
-Date:   Fri, 20 Sep 2019 21:37:40 +0200
-From:   Willy Tarreau <w@1wt.eu>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>
-Subject: Re: [PATCH RFC v4 1/1] random: WARN on large getrandom() waits and
- introduce getrandom2()
-Message-ID: <20190920193740.GD1889@1wt.eu>
-References: <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
- <20190918211503.GA1808@darwi-home-pc>
- <20190918211713.GA2225@darwi-home-pc>
- <CAHk-=wiCqDiU7SE3FLn2W26MS_voUAuqj5XFa1V_tiGTrrW-zQ@mail.gmail.com>
- <20190920134609.GA2113@pc>
- <CALCETrWvE5es3i+to33y6jw=Yf0Tw6ZfV-6QWjZT5v0fo76tWw@mail.gmail.com>
- <CAHk-=wgW8rN2EVL_Rdn63V9vQO0GkZ=RQFeqqsYJM==8fujpPg@mail.gmail.com>
- <CALCETrV=4TX2a4uV5t2xOFzv+zM_jnOtMLJna8Vb7uXz6S=wSw@mail.gmail.com>
- <20190920181216.GA1889@1wt.eu>
- <CALCETrW_mw0qOR2oqYC0+T6V65c+t+Vdxk5Jb6S+sPTqN6SXfw@mail.gmail.com>
+        Fri, 20 Sep 2019 15:38:57 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:44931 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbfITTi4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 15:38:56 -0400
+Received: by mail-qk1-f193.google.com with SMTP id u22so4968694qkk.11
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 12:38:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HPiPEiJFgD/jwy0RVx5HWzug8lnmj5MBi1VsVPdTBVQ=;
+        b=HC9NApN1TrPGFCVB87OggyWNs1AVcY6h764RCGQjlS+Vr3ySwHbmDDSctFOQ9GbhHX
+         Bx3GAfac3ec5ZF9H1QoJEZLrtvn/V22hfGhSOiDz3ASpAleqh5D7tIshBUEWvolqOen6
+         qH1TJYtmaZEGQMpuak29tt8haQ00eOWEsX0c+ulO/dNvi4atHxDVyRu/pW62VOF8qNzf
+         OF7U275FwFdFsRN4DwW8GudtwNuyWn4D2XuICsHIgInEuxNktwknk1L0aWGuq5TE+vP4
+         nSYI55z/1CH474O+TDnv3R2M6HJqRFg7yvfNBcABENALc4qTEXeIpQNDoh9eTDPKunnO
+         LyQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HPiPEiJFgD/jwy0RVx5HWzug8lnmj5MBi1VsVPdTBVQ=;
+        b=jw7Cmmx6GD2fdJlbENZhuDrOxums9lymIY6pawRD9Xu5CFRUvLiBcDGeCiykQG0G83
+         td57cVLRWwxireOyYPj3b93pzB4vNLK9D0sVKHTn5wG9u+Qyb6c37HK51T9FEir9qBNS
+         zZp2vJB2BdkuVT8wlU6nRsD4gtwBLIoqrkrhpkdziFV9ePSfCc8I6Y5ySwfTBPgftW7w
+         VDr7WRuP03T4OaCUuEQNuxVQzFbZE1NXuUTYF9aSlGp5YyaVxrsKojfckM0TspGst0pO
+         rSpLY2kJkOkrtKaHK/EsfDzseiyrzM22IR104EM+BY/sU9zkOGGPfV1Nokomh058KvOT
+         4LLQ==
+X-Gm-Message-State: APjAAAUDl596jmYtm2udZ8VXecCN++XgEKbmpG9S+Vl66hKHla0yLsVH
+        XaAzv6Tk60CHOEL/xMBHq+g=
+X-Google-Smtp-Source: APXvYqz3UJlhkYy2p5UEPy/wxS0V0hCOeNmU/B5HObSnsTk4nY0kxeHctie3ZSxV9JnbUOXeS+TqeA==
+X-Received: by 2002:ae9:e20f:: with SMTP id c15mr5486890qkc.122.1569008335673;
+        Fri, 20 Sep 2019 12:38:55 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.95.178.75])
+        by smtp.gmail.com with ESMTPSA id a14sm1541500qkg.59.2019.09.20.12.38.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Sep 2019 12:38:54 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 6F5BB40340; Fri, 20 Sep 2019 16:38:52 -0300 (-03)
+Date:   Fri, 20 Sep 2019 16:38:52 -0300
+To:     Steve MacLean <Steve.MacLean@microsoft.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Changbin Du <changbin.du@intel.com>,
+        Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
+        John Keeping <john@metanate.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Leo Yan <leo.yan@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Brian Robbins <brianrob@microsoft.com>,
+        Tom McDonald <Thomas.McDonald@microsoft.com>,
+        John Salem <josalem@microsoft.com>
+Subject: Re: [PATCH] perf map: fix overlapped map handling
+Message-ID: <20190920193852.GI4865@kernel.org>
+References: <BN8PR21MB136261C1A4BB2C884F10FCECF7880@BN8PR21MB1362.namprd21.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALCETrW_mw0qOR2oqYC0+T6V65c+t+Vdxk5Jb6S+sPTqN6SXfw@mail.gmail.com>
-User-Agent: Mutt/1.6.1 (2016-04-27)
+In-Reply-To: <BN8PR21MB136261C1A4BB2C884F10FCECF7880@BN8PR21MB1362.namprd21.prod.outlook.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 12:22:17PM -0700, Andy Lutomirski wrote:
-> Perhaps userland could register a helper that takes over and does
-> something better?
-
-If userland sees the failure it can do whatever the developer/distro
-packager thought suitable for the system facing this condition.
-
-> But I think the kernel really should do something
-> vaguely reasonable all by itself.
-
-Definitely, that's what Linus' proposal was doing. Sleeping for some time
-is what I call "vaguely reasonable".
-
-> If nothing else, we want the ext4
-> patch that provoked this whole discussion to be applied,
-
-Oh absolutely!
-
-> which means
-> that we need to unbreak userspace somehow, and returning garbage it to
-> is not a good choice.
-
-It depends how it's used. I'd claim that we certainly use randoms for
-other things (such as ASLR/hashtables) *before* using them to generate
-long lived keys thus we can have a bit more time to get some more
-entropy before reaching the point of producing these keys.
-
-> Here are some possible approaches that come to mind:
+Em Fri, Sep 20, 2019 at 07:20:18PM +0000, Steve MacLean escreveu:
+> Whenever an mmap/mmap2 event occurs, the map tree must be updated to add a new
+> entry. If a new map overlaps a previous map, the overlapped section of the
+> previous map is effectively unmapped, but the non-overlapping sections are
+> still valid.
 > 
-> int count;
-> while (crng isn't inited) {
->   msleep(1);
-> }
+> maps__fixup_overlappings() is responsible for creating any new map entries from
+> the previously overlapped map. It optionally creates a before and an after map.
 > 
-> and modify add_timer_randomness() to at least credit a tiny bit to
-> crng_init_cnt.
+> When creating the after map the existing code failed to adjust the map.pgoff.
+> This meant the new after map would incorrectly calculate the file offset
+> for the ip. This results in incorrect symbol name resolution for any ip in the
+> after region.
+> 
+> Make maps__fixup_overlappings() correctly populate map.pgoff.
+> 
+> Add an assert that new mapping matches old mapping at the beginning of
+> the after map.
+> 
+> Signed-off-by: Steve MacLean <Steve.MacLean@Microsoft.com>
+> ---
+>  tools/perf/util/map.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+> index 5b83ed1..73870d7 100644
+> --- a/tools/perf/util/map.c
+> +++ b/tools/perf/util/map.c
+> @@ -1,5 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include "symbol.h"
+> +#include <assert.h>
+>  #include <errno.h>
+>  #include <inttypes.h>
+>  #include <limits.h>
+> @@ -850,6 +851,8 @@ static int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp
+>  			}
+>  
+>  			after->start = map->end;
+> +			after->pgoff = pos->map_ip(pos, map->end);
 
-Without a timeout it's sure we'll still face some situations where
-it blocks forever, which is the current problem.
+So is this equivalent to what __split_vma() does in the kernel, i.e.:
 
-> Or we do something like intentionally triggering readahead on some
-> offset on the root block device.
+        if (new_below)
+                new->vm_end = addr;
+        else {
+                new->vm_start = addr;
+                new->vm_pgoff += ((addr - vma->vm_start) >> PAGE_SHIFT);
+        }
 
-You don't necessarily have such a device, especially when you're
-in an initramfs. It's precisely where userland can be smarter. When
-the caller is sfdisk for example, it does have more chances to try
-to perform I/O than when it's a tiny http server starting to present
-a configuration page.
+where new->vm_pgoff starts equal to the vm_pgoff of the mmap being
+split?
 
-> We should definitely not trigger *blocking* IO.
+- Arnaldo
 
-I think I agree.
+> +			assert(pos->map_ip(pos, map->end) == after->map_ip(after, map->end));
 
-> Also, I wonder if the real problem preventing the RNG from staring up
-> is that the crng_init_cnt threshold is too high.  We have a rather
-> baroque accounting system, and it seems like we can accumulate and
-> credit entropy for a very long time indeed without actually
-> considering ourselves done.
 
-I have no opinion on this, lacking the skills to evaluate the situation.
-What I can say for sure is that I've faced the non-booting issue quite a
-number of times on headless systems, and conversely in the 2.4 era, my
-front reverse-proxy by then had the same SSH key as 89 other machines on
-the net. So there's surely a sweet spot to find between those two extremes.
-I tend to think that waiting *a little bit* for the *first* random is
-acceptable, even 10-15s, by the time the user starts to think about
-pressing the reset button the system might finish to boot. Hashing some
-RAM locations and the RTC when present can also help a little bit. If
-at least my machine by then had combined the RTC's date and time with
-the hash, chances for a key collision would have gone down to one over
-many thousands.
 
-Willy
+>  			__map_groups__insert(pos->groups, after);
+>  			if (verbose >= 2 && !use_browser)
+>  				map__fprintf(after, fp);
+> -- 
+> 2.7.4
+
+-- 
+
+- Arnaldo
