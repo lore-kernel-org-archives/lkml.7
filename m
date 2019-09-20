@@ -2,142 +2,146 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20496C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 04:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62475C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 04:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0D592080F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 04:24:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2475C20C01
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 04:25:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PE6/GJMx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437172AbfITEY0 (ORCPT
+        id S2437184AbfITEZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 00:24:26 -0400
-Received: from mga18.intel.com ([134.134.136.126]:63541 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404405AbfITEYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 00:24:25 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Sep 2019 21:24:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,527,1559545200"; 
-   d="scan'208";a="199622970"
-Received: from dpdk-virtio-tbie-2.sh.intel.com (HELO ___) ([10.67.104.71])
-  by orsmga002.jf.intel.com with ESMTP; 19 Sep 2019 21:24:22 -0700
-Date:   Fri, 20 Sep 2019 12:21:38 +0800
-From:   Tiwei Bie <tiwei.bie@intel.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     mst@redhat.com, alex.williamson@redhat.com,
-        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, dan.daly@intel.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        lingshan.zhu@intel.com
-Subject: Re: [RFC v4 3/3] vhost: introduce mdev based hardware backend
-Message-ID: <20190920042138.GA11868@___>
-References: <20190917010204.30376-1-tiwei.bie@intel.com>
- <20190917010204.30376-4-tiwei.bie@intel.com>
- <0b0f74ba-8958-dd7d-3e98-f7a58b1ec5f7@redhat.com>
+        Fri, 20 Sep 2019 00:25:27 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:36946 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389114AbfITEZ1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 00:25:27 -0400
+Received: by mail-ed1-f66.google.com with SMTP id r4so5118849edy.4;
+        Thu, 19 Sep 2019 21:25:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=c5bLQ44DHFFsF9a/l+fvIthJAUI4IpWyFZ6HUIWlQ5g=;
+        b=PE6/GJMxGendc9vmFm2rfrsD1RIU1p4ZoNxCgjg1+1T2bds+bx+vnQeV2BV8bB1Ezj
+         sS6yqD6MhOkuRGs9TDgbrddAf4b3al3NSj/cEL2PyepIUPXfU2b8rZWTIOc3I6UxG9k3
+         sfD1NsHwjuMO87J1TnlP9dcEOSiE/yFZULAJh2FulfylSaBCBIqKJediE7SLng72ppBR
+         CgMFKUmaXFG0CHp5WO0YxYk+xp5RKbuW/gO4GnVQc70zKkheyQLR9b+ChZQGjYdzNtOO
+         949dxMk+a+BRPrezoJOCm0oIXUJSHsGzLrt167Bnd6sphlSkhJPBDkTiojgaujym+fD3
+         slWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=c5bLQ44DHFFsF9a/l+fvIthJAUI4IpWyFZ6HUIWlQ5g=;
+        b=Z3NRrbPO7ragRuEM2Iie795mIhVLnBMyFdeonB44/vivWDBZ/CswjH8ChSsduB2Jw0
+         /mUx5RvcnJyg7Mtt/oSJ47Ok2w+ZC4H15hcFGhdMTPRXiDunLdkIHxwGs1/15AndR/L0
+         Q9b/CSiSSl0XS1RYKyXRtY3ioJPQGIz9B1ruNrpjBzwtQjyZC4du9bTmfSYXVdmbfjJy
+         iOS2DC2WMB4myn+cg6wJ4AIb87eHZqsWk5AT+6muj9GV4VMpP7kD6suQR0W6muR3vESD
+         UroJ+OxOwKtQ14JIUp1gQ1drdnaTQYWmkQDGvG9MbjOuT4iqPKlXFmWHNf029rWJpLAc
+         n4SQ==
+X-Gm-Message-State: APjAAAUhoZSS3J1n+61vL9Ag7D8XY1WvRZxa3aG5bhPDMtlYdV+29kZP
+        /6Lgudv3YtQQ/Nqoz7VanQ==
+X-Google-Smtp-Source: APXvYqyDgdtkl74lEOF8tJe9DMwo1fx58ulo7VOciTOb+B6z43KJN8vrWu6lIVkGCqCBGzLCSCGWEw==
+X-Received: by 2002:a17:907:20c4:: with SMTP id qq4mr17587171ejb.161.1568953525081;
+        Thu, 19 Sep 2019 21:25:25 -0700 (PDT)
+Received: from localhost (tor2.anonymizer.ccc.de. [217.115.10.132])
+        by smtp.gmail.com with ESMTPSA id qx25sm92713ejb.61.2019.09.19.21.25.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Sep 2019 21:25:24 -0700 (PDT)
+Date:   Fri, 20 Sep 2019 14:25:01 +1000
+From:   Jookia <166291@gmail.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     Xogium <contact@xogium.me>, linux-arch@vger.kernel.org,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux@armlinux.org.uk, mingo@redhat.com, bp@alien8.de,
+        tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
+Subject: Re: [breakage] panic() does not halt arm64 systems under certain
+ conditions
+Message-ID: <20190920042501.GA5516@novena-choice-citizen-recovery.gateway>
+References: <BX1W47JXPMR8.58IYW53H6M5N@dragonstone>
+ <20190917104518.ovg6ivadyst7h76o@willie-the-truck>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0b0f74ba-8958-dd7d-3e98-f7a58b1ec5f7@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190917104518.ovg6ivadyst7h76o@willie-the-truck>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 03:26:30PM +0800, Jason Wang wrote:
-> On 2019/9/17 上午9:02, Tiwei Bie wrote:
-> > diff --git a/drivers/vhost/mdev.c b/drivers/vhost/mdev.c
-> > new file mode 100644
-> > index 000000000000..8c6597aff45e
-> > --- /dev/null
-> > +++ b/drivers/vhost/mdev.c
-> > @@ -0,0 +1,462 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (C) 2018-2019 Intel Corporation.
-> > + */
-> > +
-> > +#include <linux/compat.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/miscdevice.h>
-> > +#include <linux/mdev.h>
-> > +#include <linux/module.h>
-> > +#include <linux/vfio.h>
-> > +#include <linux/vhost.h>
-> > +#include <linux/virtio_mdev.h>
-> > +
-> > +#include "vhost.h"
-> > +
-> > +struct vhost_mdev {
-> > +	struct mutex mutex;
-> > +	struct vhost_dev dev;
-> > +	struct vhost_virtqueue *vqs;
-> > +	int nvqs;
-> > +	u64 state;
-> > +	u64 features;
-> > +	u64 acked_features;
-> > +	struct vfio_group *vfio_group;
-> > +	struct vfio_device *vfio_device;
-> > +	struct mdev_device *mdev;
-> > +};
-> > +
-> > +/*
-> > + * XXX
-> > + * We assume virtio_mdev.ko exposes below symbols for now, as we
-> > + * don't have a proper way to access parent ops directly yet.
-> > + *
-> > + * virtio_mdev_readl()
-> > + * virtio_mdev_writel()
-> > + */
-> > +extern u32 virtio_mdev_readl(struct mdev_device *mdev, loff_t off);
-> > +extern void virtio_mdev_writel(struct mdev_device *mdev, loff_t off, u32 val);
+On Tue, Sep 17, 2019 at 11:45:19AM +0100, Will Deacon wrote:
+> Hi,
 > 
+> [Expanding CC list; original message is here:
+>  https://lore.kernel.org/linux-arm-kernel/BX1W47JXPMR8.58IYW53H6M5N@dragonstone/]
 > 
-> Need to consider a better approach, I feel we should do it through some kind
-> of mdev driver instead of talk to mdev device directly.
-
-Yeah, a better approach is really needed here.
-Besides, we may want a way to allow accessing the mdev
-device_ops proposed in below series outside the
-drivers/vfio/mdev/ directory.
-
-https://lkml.org/lkml/2019/9/12/151
-
-I.e. allow putting mdev drivers outside above directory.
-
-
-> > +
-> > +	for (queue_id = 0; queue_id < m->nvqs; queue_id++) {
-> > +		vq = &m->vqs[queue_id];
-> > +
-> > +		if (!vq->desc || !vq->avail || !vq->used)
-> > +			break;
-> > +
-> > +		virtio_mdev_writel(mdev, VIRTIO_MDEV_QUEUE_NUM, vq->num);
-> > +
-> > +		if (!vhost_translate_ring_addr(vq, (u64)vq->desc,
-> > +					       vhost_get_desc_size(vq, vq->num),
-> > +					       &addr))
-> > +			return -EINVAL;
+> On Mon, Sep 16, 2019 at 09:35:36PM -0400, Xogium wrote:
+> > On arm64 in some situations userspace will continue running even after a
+> > panic. This means any userspace watchdog daemon will continue pinging,
+> > that service managers will keep running and displaying messages in certain
+> > cases, and that it is possible to enter via ssh in the now unstable system
+> > and to do almost anything except reboot/power off and etc. If
+> > CONFIG_PREEMPT=n is set in the kernel's configuration, the issue is fixed.
+> > I have reproduced the very same behavior with linux 4.19, 5.2 and 5.3. On
+> > x86/x86_64 the issue does not seem to be present at all.
 > 
+> I've managed to reproduce this under both 32-bit and 64-bit ARM kernels.
+> The issue is that the infinite loop at the end of panic() can run with
+> preemption enabled (particularly when invoking by echoing 'c' to
+> /proc/sysrq-trigger), so we end up rescheduling user tasks. On x86, this
+> doesn't happen because smp_send_stop() disables the local APIC in
+> native_stop_other_cpus() and so interrupts are effectively masked while
+> spinning.
 > 
-> Interesting, any reason for doing such kinds of translation to HVA? I
-> believe the add should already an IOVA that has been map by VFIO.
+> A straightforward fix is to disable preemption explicitly on the panic()
+> path (diff below), but I've expanded the cc list to see both what others
+> think, but also in case smp_send_stop() is supposed to have the side-effect
+> of disabling interrupt delivery for the local CPU.
+> 
+> Will
+> 
+> --->8
+> 
+> diff --git a/kernel/panic.c b/kernel/panic.c
+> index 057540b6eee9..02d0de31c42d 100644
+> --- a/kernel/panic.c
+> +++ b/kernel/panic.c
+> @@ -179,6 +179,7 @@ void panic(const char *fmt, ...)
+> 	 * after setting panic_cpu) from invoking panic() again.
+> 	 */
+> 	local_irq_disable();
+> +	preempt_disable_notrace();
+>  
+> 	/*
+> 	 * It's possible to come here directly from a panic-assertion and
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-Currently, in the software based vhost-kernel and vhost-user
-backends, QEMU will pass ring addresses as HVA in SET_VRING_ADDR
-ioctl when iotlb isn't enabled. If it's OK to let QEMU pass GPA
-in vhost-mdev in this case, then this translation won't be needed.
+When you run with panic=... it will send you to a loop earlier in the
+panic code before local_irq_disable() is hit, working around the bug.
+A patch like this would make the behaviour the same:
 
-Thanks,
-Tiwei
+diff --git a/kernel/panic.c b/kernel/panic.c
+index 4d9f55bf7d38..92abbb5f8d38 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -331,7 +331,6 @@ void panic(const char *fmt, ...)
+
+        /* Do not scroll important messages printed above */
+        suppress_printk = 1;
+-       local_irq_enable();
+        for (i = 0; ; i += PANIC_TIMER_STEP) {
+                touch_softlockup_watchdog();
+                if (i >= i_next) {
