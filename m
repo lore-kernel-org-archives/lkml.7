@@ -2,95 +2,88 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BEBAC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0647CC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F041207E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:54:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="KLOx5yaN"
+	by mail.kernel.org (Postfix) with ESMTP id D24F0207E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:55:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389095AbfITOyY (ORCPT
+        id S2393227AbfITOz2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:54:24 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:22719 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387967AbfITOyX (ORCPT
+        Fri, 20 Sep 2019 10:55:28 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:44903 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389185AbfITOz1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 10:54:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1568991261;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=zlI+sG/w2ccshOLWrb2MvMajGz31uouLUfoFlWo0kvs=;
-        b=KLOx5yaNVi8t93VCckMAH4sgFd6/aSOXBlggWxb9RcKw0JyH3Nj2XF9KL0RVb56Oj2
-        TOh/w/DSYhi62uTrTcmHcb38NSIebO3ofgP8mQ8NfvEgYcWhLgYfn6sELkLbNJxlwaKf
-        rh9v3S9Qp9sTUdEtlTaCycw+cAV95NfaPCnRSDCdPRz4AcoZsuMNNnzTjflfUqk5PkTN
-        9utmoTrICbw0MCM0BSxnL4xVfoxhQYNz4lo9bYbW+zfbzP5fV8ZLiEjaGwJxEqUJqphM
-        YYEpIqROrbRQQZUPnAElSzQbb1E+t+RyHtWBhtFbGiNw2EB4LwpJ/IpLmXpCCh73NFtE
-        ghiA==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGHPrpwDCpeWQ="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 44.27.0 DYNA|AUTH)
-        with ESMTPSA id u036f9v8KEsJp0V
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Fri, 20 Sep 2019 16:54:19 +0200 (CEST)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [Letux-kernel] [PATCH 2/2] DTS: ARM: gta04: introduce legacy spi-cs-high to make display work again
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20190920142059.GO5610@atomide.com>
-Date:   Fri, 20 Sep 2019 16:54:18 +0200
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, Rob Herring <robh@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>
-Content-Transfer-Encoding: 7bit
-Message-Id: <633E7AD9-A909-4619-BBD7-8CFD965FDFF7@goldelico.com>
-References: <20190724194259.GA25847@bogus> <2EA06398-E45B-481B-9A26-4DD2E043BF9C@goldelico.com> <CAL_JsqLe_Y9Z6MRt7ojgSVKAb9n95S8j=eGidSVNz2T83j-zPQ@mail.gmail.com> <CACRpkdY0AVnkRa8sV_Z54qfX9SYufvaYYhU0k2+LitXo0sLx2w@mail.gmail.com> <20190831084852.5e726cfa@aktux> <ED6A6797-D1F9-473B-ABFF-B6951A924BC1@goldelico.com> <CACRpkdZQgPVvB=78vOFsHe5n45Vwe4N6JJOcm1_vz5FbAw9CYA@mail.gmail.com> <1624298A-C51B-418A-96C3-EA09367A010D@goldelico.com> <CACRpkdZvpPOM1Ug-=GHf7Z-2VEbJz3Cuo7+0yDFuNm5ShXK8=Q@mail.gmail.com> <7DF102BC-C818-4D27-988F-150C7527E6CC@goldelico.com> <20190920142059.GO5610@atomide.com>
-To:     Tony Lindgren <tony@atomide.com>
-X-Mailer: Apple Mail (2.3124)
+        Fri, 20 Sep 2019 10:55:27 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1N2E9Y-1i3w1B3Rhm-013dNt; Fri, 20 Sep 2019 16:55:19 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Vidya Sagar <vidyas@nvidia.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Thierry Reding <treding@nvidia.com>, linux-pci@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: tegra: include linux/pinctrl/consumer.h
+Date:   Fri, 20 Sep 2019 16:55:05 +0200
+Message-Id: <20190920145518.1721180-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:IwQMbPlR2hr9aTYQU1WDWQp/cnWIHD0os/rsPvkzxg5L9g8x8mA
+ 2DNVyhrFFzxmek/irSF0HHBeAWbaT4U+mGNlPQqTPhHiwMii3+RpJUelI6QH1xX9lVZ72Wm
+ BlfpVF+DfIkabdQBKTXXIadYPXtuwQ6W8+IGUBNBdOupGXJIKp6qUX+oTejZy1l78epJsEQ
+ p1hyoFhaumLrR85fK81ZA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:4DDgX0lpUTI=:mBJblij8EOpSFP48bSRQh8
+ gK3v16QkRIC56OVlWdDqEYBT7IifzDycka2ZxrNmOq+xVyP1bb8eZHLm05DHNeqI8XsIo6pUB
+ H/sEnOHNc8H9CJp81BapaglceHikDfXTuNVTJPt9I+zu5A3fcN8IisPtu0lFHvTZMYO6/Z9Qp
+ qX2EBITg9eimJC4DMBEad4T/7jhocR/Lyvx0psF1u3ghhbLuU0bvozUoZO0q6Huo0xDeZC1ZA
+ BdFpThncSZ9g/ZHXdZBQ3vFhEt5Tnzhz2BF3Mmi4jiHc24lcqFSiRmjOY5cYaZpFanZQuqlMY
+ u+JXl2QOWK9rhjCt9H4BNujUEo9qv20t8OR9P1KcT7SJWzK78abDvRwcFIH9LKUgmrEs6LA9p
+ NCl8KN+hSndWm0Qa9jPOa2b8wX940nQAsTZ9+gHV+uSjSMUX79AYcQuvSW2lVcKu6G55w2g/H
+ sLYk7odwFBz4zocfPOJ7HspP7DzgZDwXOTnK4fR+4FeXWJm++it0eljp0BHJf+ocNJo3UhpkS
+ 5wqC/K5AGAHoZBp/3B3i0E0vlylpG0P9aEp4H+4RzRRYen4oM10OvIT2frGcHFxmFr6puAo8s
+ zJ4sBKKL7zSsCJV/rvEGGfheXuxYTuXG7PjcmhPGcZLZngIiu3UVDqh/NlkSXT1YT8escPrCN
+ Nu6xSd9tLIe059q4dsYh8XQQcicmI1dJhzi79KMNweENpcQLxvNvUlfYnbdhnaFqhcBzDNB/2
+ fZUXfu2yMiPmGVMQS/5fFEjndyjY5yGbAmsOSLoqmheXNtTdnabt5Iz7QjOr+bGsLGCXxRRzH
+ 16KAVy4NtulsA9Q7abon4Rq4L/frN3amAZyXHahcasreSXFzn+giCY7BrfaRkBiGNnP+Ab7ha
+ wFEmZKoU0RudbuBIgOjg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Without this, we can run into a build failure:
 
-> Am 20.09.2019 um 16:20 schrieb Tony Lindgren <tony@atomide.com>:
-> 
-> * H. Nikolaus Schaller <hns@goldelico.com> [190920 09:19]:
->>> Am 20.09.2019 um 10:55 schrieb Linus Walleij <linus.walleij@linaro.org>:
->>> I suggest to go both way:
->>> apply this oneliner and tag for stable so that GTA04 works
->>> again.
->>> 
->>> Then for the next kernel think about a possible more abitious
->>> whitelist solution and after adding that remove *all* "spi-cs-high"
->>> flags from all device trees in the kernel after fixing them
->>> all up.
->> 
->> Ok, that looks like a viable path.
-> 
-> Please repost the oneline so people can ack easily. At least
-> I've already lost track of this thread.
+drivers/pci/controller/dwc/pcie-tegra194.c:1394:8: error: implicit declaration of function 'pinctrl_pm_select_default_state' [-Werror,-Wimplicit-function-declaration]
 
-It is all here:
+Fixes: ab2a50e7602b ("PCI: tegra: Add support to configure sideband pins")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/pci/controller/dwc/pcie-tegra194.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-https://patchwork.kernel.org/patch/11035253/
-
-Best regards,
-Nikolaus
+diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+index 09ed8e473cff..f89f5acee72d 100644
+--- a/drivers/pci/controller/dwc/pcie-tegra194.c
++++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+@@ -22,6 +22,7 @@
+ #include <linux/of_pci.h>
+ #include <linux/pci.h>
+ #include <linux/phy/phy.h>
++#include <linux/pinctrl/consumer.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/random.h>
+-- 
+2.20.0
 
