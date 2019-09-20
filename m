@@ -2,113 +2,110 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A31C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5ED7C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 519F321D56
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:43:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569012195;
-	bh=QWMaLTqP3/LxXruIwbroZ/ESvTqpOR3SRfg8+Zftu4A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rYoeE2pnlHkr0foiPIrU21f4Yr7BxszQmIOlt7aWv8Reykm+5oXTP0yHTw1NDalSD
-	 skVEuJXc9Qbp+DoWUbzr2JdI16vkXctipcZkuI0TRY2842Hg/Zw1iLt7TUkjuROs9d
-	 JBZgtDULjFlCt20EkJdqe5V/gRDECorff8hla+dE=
+	by mail.kernel.org (Postfix) with ESMTP id 884FE2086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:43:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V5B9TQ5q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730095AbfITUnO (ORCPT
+        id S1730121AbfITUnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 16:43:14 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:34916 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728994AbfITUnN (ORCPT
+        Fri, 20 Sep 2019 16:43:47 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54177 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730071AbfITUnr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 16:43:13 -0400
-Received: by mail-qk1-f193.google.com with SMTP id w2so8686901qkf.2
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 13:43:13 -0700 (PDT)
+        Fri, 20 Sep 2019 16:43:47 -0400
+Received: by mail-wm1-f67.google.com with SMTP id i16so3844357wmd.3;
+        Fri, 20 Sep 2019 13:43:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=IYIa5ntznE0dmjCmjmfdo8J7Ibu+T8FOVCVdzrpU3Rs=;
-        b=GKWGrElt2tvEmihOLyxf+tMC/itQAV7aN6Wt0DXFZY9PyAp0h+DDhiORelGLCR2gRO
-         PzC4vNgPTJTdmOXuE9k655rd8cQVT0gB96setc4rH3O8mtTJuSlnUhq905YCejiLGy9z
-         brcu/n377xZFaIhwSg+SdpPZrNqVyBjx+50zw5s/uNO8zWMaOpvFbFIWEIaQbAzGvgrx
-         gul4vt1NlMdwb4eAm7/Fp1C4f7VE/kWC4QSLoqP5rO+IgzQFQHoi784L8T6CTeSU2KES
-         p7xBqgp3ND0IF2z/xbtSngzZENnpyzgCQZFOhIuXbWoBqY2YZtRUOyG5fRr5OQX09d65
-         kxCA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=lJRjCM+MHGrkfk6BQUd45RS2LvGotJKtsd5H7I/2Cv4=;
+        b=V5B9TQ5qdvMobLTSBJrbyM69mHlXh+3cZeHCR9zPBSa1zvhkycKe8w0McIhcu+rlCN
+         om8/34+D8gYk03IAjsQEpT2MyGnSIqyMoGlLI+noYkeQDERgqqGQFAnHJyM7l+Hy1Ca+
+         QIGAeT9TuoPXezzOXpYovjL6YT5XOEq+AHT++6W1g8H7JaA/I6j2l/BirEjF31QIrVeA
+         Hgdij+Dg2FKBh2qJEkHNrOsyHhYNV0ofDL55KScvLePBvguOLwrg8YrJksmVrEnKr2fm
+         i+hQ0z0gXwWcR6Sbey1m33ycVV7cfWa9oBb7E0rtz9DjKEJzeFDjl5uRaxK5GnovYsZn
+         3B2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IYIa5ntznE0dmjCmjmfdo8J7Ibu+T8FOVCVdzrpU3Rs=;
-        b=XIO6GS6s7VEfrk3zXbm+liqBJgViIIhmg25Hl0TOMLLSkSVpB+VLqTRPfh2R8JrIEm
-         Nk3l5ZBZilgCCPYMkamndTgb5VCpc5FaeO6XwGNc/V731uQaJ/ZUddtqgIunJzIRL31F
-         EkIBA1insx4dbWKGQCj1IRpuHMrxGEbDHv/y9osAjOH0NCXHHg3WwiRl/qx1wXYKMnlw
-         fnkPgZNpZDs7rsrmBVZuVBD2+Ld7iK6xwcUtpX+vWU8dADcTE4lR8zGQG7M/L6gSEUSy
-         5jQlHBH2iqwtGfUY73zzxJQ9EaG8kdpfn+WrCZiUaxMyIX73QpR7hJP1EyPysoyjbU0S
-         KUFA==
-X-Gm-Message-State: APjAAAXaBZLTpsLbs5E42QIQkgIukhEzL1weXCEY2fTYdmZ6a5lg1gUu
-        cgT380Oq2H5cYjsUu/1X7x8=
-X-Google-Smtp-Source: APXvYqx+LXB4P+vtWgN15Kr4T8WHI7x/UfPkeML48Xgxp+ygTqKbvtszIKlKPFZdFg7jci15zST4pQ==
-X-Received: by 2002:a05:620a:1335:: with SMTP id p21mr5560686qkj.321.1569012192697;
-        Fri, 20 Sep 2019 13:43:12 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::7520])
-        by smtp.gmail.com with ESMTPSA id y26sm1619402qkj.75.2019.09.20.13.43.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 20 Sep 2019 13:43:11 -0700 (PDT)
-Date:   Fri, 20 Sep 2019 13:43:09 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Marcin Pawlowski <mpawlowski@fb.com>,
-        "Williams, Gerald S" <gerald.s.williams@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: [PATCH wq/for-5.4-fixes] workqueue: Fix missing kfree(rescuer) in
- destroy_workqueue()
-Message-ID: <20190920204309.GA2233839@devbig004.ftw2.facebook.com>
-References: <1569011160.5576.205.camel@lca.pw>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=lJRjCM+MHGrkfk6BQUd45RS2LvGotJKtsd5H7I/2Cv4=;
+        b=eouy+geloG6DBdn8uKMdfZzyNrJ3shYED9M0lTTChK8URy1W3L2XU9c2qgc/UKpKXe
+         IkAdYBIJJAMjuYTFC4Dm9CPzgtFpoEcyc/qflWYEc2mLvBn5cc99nM2kKWgWNGuoewFc
+         mkjHSdbUFC40HvNW+Y7Nj7MX5V25UTFfC878RABsOxJpL9+5XrHZBCUu3hmksjjl3XSc
+         pBkghoQAg3F9PFal2H5YHtsr/rOpJL873FfLTfQS/39SRFhh3AIkxxWOIyknJUa0E9gk
+         1il9bRn8lasy0of09FUU0Uz/hIphvkQO4spIjZD5NdqujwuWMKzCqXBMaFzrv7yeIbZR
+         b5zw==
+X-Gm-Message-State: APjAAAUnH3KyKWQLfObxKkEE3jXYUhc9QXqwBAlNWKOgEEetiP3hPsOC
+        UXYzYGi1uFwsgvNK8CfIah7Rk2ic
+X-Google-Smtp-Source: APXvYqxTc3R4l2jC2KuQqqMchy9puDwilHSoT9NsHY7Xs5Ri37HjK5x7wnP71Xt2PgsrVYgDgZx0Ow==
+X-Received: by 2002:a1c:f30d:: with SMTP id q13mr4423497wmq.60.1569012225084;
+        Fri, 20 Sep 2019 13:43:45 -0700 (PDT)
+Received: from [192.168.2.202] (pD9E5A855.dip0.t-ipconnect.de. [217.229.168.85])
+        by smtp.gmail.com with ESMTPSA id z13sm2266965wrq.51.2019.09.20.13.43.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Sep 2019 13:43:44 -0700 (PDT)
+Subject: Re: [PATCH] serdev: Add ACPI devices by ResourceSource field
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Johan Hovold <johan@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-serial@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190919195624.1140941-1-luzmaximilian@gmail.com>
+ <50b016a1-ed4a-b848-4658-a05731727d7e@redhat.com>
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+Message-ID: <ff0588a9-d395-3101-ba01-802e736e86a3@gmail.com>
+Date:   Fri, 20 Sep 2019 22:43:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1569011160.5576.205.camel@lca.pw>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <50b016a1-ed4a-b848-4658-a05731727d7e@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From 8efe1223d73c218ce7e8b2e0e9aadb974b582d7f Mon Sep 17 00:00:00 2001
-From: Tejun Heo <tj@kernel.org>
-Date: Fri, 20 Sep 2019 13:39:57 -0700
+Hi,
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Reported-by: Qian Cai <cai@lca.pw>
-Fixes: def98c84b6cd ("workqueue: Fix spurious sanity check failures in destroy_workqueue()")
----
-Applied to wq/for-5.4-fixes.
+> So as promised I've given this patch a try, unfortunately it breaks
+> existing users of ACPI serdev device instantation.
 
-Thanks.
+I've only had a short look at it so far. As far as I can tell, there are
+two options: Either the device does not match/is being skipped, or there
+are errors (which are currently only reported with dev_dbg, based on the
+pre-patch implementation) causing the search to terminate early. I'll
+keep investigating this and report back once I've got a better
+understanding of the possible sources for this.
 
- kernel/workqueue.c | 1 +
- 1 file changed, 1 insertion(+)
+> I haven't looked why your patch is breakig things, I have a large backlog
+> so I do not have time for that.
 
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 93e20f5330fc..3f067f1d72e3 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -4345,6 +4345,7 @@ void destroy_workqueue(struct workqueue_struct *wq)
- 
- 		/* rescuer will empty maydays list before exiting */
- 		kthread_stop(rescuer->task);
-+		kfree(rescuer);
- 	}
- 
- 	/* sanity checks */
--- 
-2.17.1
+No worries, I'll try to figure this out.
+
+> But if you can provide me with a version of the patch with a bunch of
+> debug printk-s added I'm happy to run that for you.
+
+Thank you for this offer, I will probably come back to it once I have
+more of an idea what could cause the breakage.
+
+Regards,
+
+Maximilian
 
