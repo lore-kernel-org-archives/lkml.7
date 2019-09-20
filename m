@@ -2,110 +2,480 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 492B0C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0413C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D507206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:13:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PC5Rm/MN"
+	by mail.kernel.org (Postfix) with ESMTP id 87722208C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:13:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392137AbfITQNQ (ORCPT
+        id S2392538AbfITQNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 12:13:16 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:37162 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388473AbfITQNQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 12:13:16 -0400
-Received: by mail-qk1-f196.google.com with SMTP id u184so7871128qkd.4
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 09:13:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+KRt2eO4265RvjOZt0uXZpaJi7G2Fc0WrcvWpo7dNLs=;
-        b=PC5Rm/MNlVYG4hAUpVfxggZ29cqeMZ0SbqOzGCvjSO/AEVVluIBPdz4p6e+w2gcUV1
-         JYawH7yifWF5Pp9d09F9f+XcjFDIke/gu7/K5/d0zWBo7og0ocmUSq5dstDe4UJGbFaG
-         wq7GxlinSzw2L3Ljj+tR2FrD7VCUS+JkD07c+XOpKKmO3/wZXbMi4DJUVfiJ1ap517j5
-         W272PKtk7l0n3aFyg4dKNPUOQm1fSqRwKkbNGCl/Pj34yLsdzNuTVfKX75ooJeyDUtNJ
-         bhiMS4SQqvvlvriNSO/HSBGNJABpHrm0C1W/pcAk0wRZT/RvdY1pGLy11GOcNJPAjwm4
-         a0fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+KRt2eO4265RvjOZt0uXZpaJi7G2Fc0WrcvWpo7dNLs=;
-        b=oKH6jaskd2/IjaNGbnkM/nOoovFlHele1sPNeVfPzm0gd42kDXkHMb+Paw93rJJG29
-         IEPORdDjrCWr88B53Klkkd872yhoOQQSX6Fxn3gb4qNatTC687c3V+fJRvk6t2fCNVsJ
-         GeO1RnmXAX0gFv6SREW1qIh4F2vJmOHmFLWNYBuvxe+x7EHfC1tAPUTAySmNnoapvTOn
-         ADF7Wxs4RLIbx7DL24JqP9wtJYgcgX3zojHvvo066JZ7Ott9/rFBIth6Ao7D2IZI90a7
-         rZ/oLCUDyh6WM/Y8ZiVt/c60i8vzX2uPhk3AQtrc4jIJsvrg9Iy6AmsfvGMEMsFZReiN
-         1O1A==
-X-Gm-Message-State: APjAAAXpVY6Hi9nam4MwXs09fwzz8WF85jw0kp1j0+POn/maGRPVSBQm
-        EmZsq4aROpAfIYWIjIJ49xqFTcY05Q4KA0uNvWI=
-X-Google-Smtp-Source: APXvYqwBdbXYB9whMv59Ht+lFG9oCle+iuMEfAA3OUQXDylTx0BKXVaENvwYUBi2YcBlQNBa44m1najM2kKPfflpUfo=
-X-Received: by 2002:ae9:dec2:: with SMTP id s185mr4535890qkf.203.1568995995092;
- Fri, 20 Sep 2019 09:13:15 -0700 (PDT)
+        Fri, 20 Sep 2019 12:13:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:32894 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388473AbfITQNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 12:13:18 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8AF5D308624A;
+        Fri, 20 Sep 2019 16:13:17 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 481D45C1B5;
+        Fri, 20 Sep 2019 16:13:01 +0000 (UTC)
+Date:   Fri, 20 Sep 2019 12:12:58 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     containers@lists.linux-foundation.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     eparis@parisplace.org, Steve Grubb <sgrubb@redhat.com>,
+        omosnace@redhat.com, Paul Moore <paul@paul-moore.com>,
+        nhorman@redhat.com, dwalsh@redhat.com, mpatel@redhat.com
+Subject: Re: [PATCH ghau51/ghau40 v7 04/12] add ausearch containerid support
+Message-ID: <20190920161258.4yffmfnmofdtwtdp@madcap2.tricolour.ca>
+References: <1568856472-10173-1-git-send-email-rgb@redhat.com>
+ <1568856472-10173-5-git-send-email-rgb@redhat.com>
 MIME-Version: 1.0
-References: <20190828073130.83800-1-namhyung@kernel.org> <20190828073130.83800-3-namhyung@kernel.org>
- <20190828144911.GR2263813@devbig004.ftw2.facebook.com> <20190831030321.GA93532@google.com>
- <20190831045815.GE2263813@devbig004.ftw2.facebook.com> <CAPhsuW42ivYU=U5E9jLMWZZgXP_Dv0C_SMFBsiXa53=6bN-=Wg@mail.gmail.com>
- <20190916152325.GD3084169@devbig004.ftw2.facebook.com> <CAPhsuW54+YNkj3fnmS6P0=eEdzZ4YvV7Yv+t-d-OnRNNgxPS+Q@mail.gmail.com>
- <CAM9d7cg_AKCyifV7xDm7sJ4=wgG_K=qu013TSTHqLiCRh9m_pg@mail.gmail.com>
-In-Reply-To: <CAM9d7cg_AKCyifV7xDm7sJ4=wgG_K=qu013TSTHqLiCRh9m_pg@mail.gmail.com>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Fri, 20 Sep 2019 09:13:04 -0700
-Message-ID: <CAPhsuW6zxkKd3ExXj5GCq+4yEWv85qmM9_Weatv4PoVd+aWKDQ@mail.gmail.com>
-Subject: Re: [PATCH 2/9] perf/core: Add PERF_SAMPLE_CGROUP feature
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Tejun Heo <tj@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1568856472-10173-5-git-send-email-rgb@redhat.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Fri, 20 Sep 2019 16:13:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Namhyung,
+On 2019-09-18 21:27, Richard Guy Briggs wrote:
+> Add support to ausearch for searching on the containerid field in
+> records.
 
-On Fri, Sep 20, 2019 at 1:47 AM Namhyung Kim <namhyung@kernel.org> wrote:
->
-> Hello Song,
->
-> On Thu, Sep 19, 2019 at 3:43 PM Song Liu <liu.song.a23@gmail.com> wrote:
->
-> > Sharing some offline discussions with Tejun.
-> >
-> > ino in current kernfs is not a good unique ID for cgroup, because it doesn't
-> > increase monotonically. So we need to improve kernfs.
-> >
-> > For 64-bit, we can make the ino monotonic, and use it as the ID.
-> > For 32-bit, we need to make the ino monotonic. and use <ino> and <gen>
-> > as the 64-bit ID.
->
-> Thanks for the sharing information!  For 32-bit, while the ino itself is not
-> monotonic, gen << 32 + ino is monotonic right?  I think we can use the
-> same logic of kernfs id allocation, but not sure what the problem Tejun
-> mentioned before is.
+Steve, I'm expecting that you may be able to help here on ausearch.  The
+problem is I've modelled this search code on expecting only one value to
+be delivered in the contid= field in CONTAINER_OP and CONTAINER_ID
+records.  In the case of the latter type of record, the value could
+either be a CSV list or a nested list (separated by ^), so the value
+stored in "s->contid" (or l->s.contid) would need to be more complex and
+the check against it no longer a simple equality check but rather a
+parse and check of each listed value for a match.
 
-How would we manage gen here? One way that works is:
-1. make ino monotonic,
-2. increase gen when 32-bit ino overflows
+Do you have a way to do that already in other fields that I could use as
+a current best practice, or shall I work on a method myself?
 
-I think current kernfs id is not monotonic, so it can be reused before overflow.
+The CSV search will be necessary to support network namespace container
+events and the nesting will be necessary only if the nesting feature and
+reporting method are accepted.
 
-Thanks,
-Song
+> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> ---
+>  src/aureport-options.c |   1 +
+>  src/ausearch-llist.c   |   2 +
+>  src/ausearch-llist.h   |   1 +
+>  src/ausearch-match.c   |   3 +
+>  src/ausearch-options.c |  47 +++++++++++-
+>  src/ausearch-options.h |   1 +
+>  src/ausearch-parse.c   | 197 +++++++++++++++++++++++++++++++++++++++++++++++++
+>  7 files changed, 251 insertions(+), 1 deletion(-)
+> 
+> diff --git a/src/aureport-options.c b/src/aureport-options.c
+> index bd847d7d57f0..679c36c00985 100644
+> --- a/src/aureport-options.c
+> +++ b/src/aureport-options.c
+> @@ -62,6 +62,7 @@ const char *event_vmname = NULL;
+>  long long event_exit = 0;
+>  int event_exit_is_set = 0;
+>  int event_ppid = -1, event_session_id = -2;
+> +unsigned long long int event_contid = -1;
+>  int event_debug = 0, event_machine = -1;
+>  
+>  /* These are used by aureport */
+> diff --git a/src/ausearch-llist.c b/src/ausearch-llist.c
+> index ef5503c34fd9..ade727a9e102 100644
+> --- a/src/ausearch-llist.c
+> +++ b/src/ausearch-llist.c
+> @@ -60,6 +60,7 @@ void list_create(llist *l)
+>  	l->s.arch = 0;
+>  	l->s.syscall = 0;
+>  	l->s.session_id = -2;
+> +	l->s.contid = -1;
+>  	l->s.uuid = NULL;
+>  	l->s.vmname = NULL;
+>  	l->s.tuid = NULL;
+> @@ -211,6 +212,7 @@ void list_clear(llist* l)
+>  	l->s.arch = 0;
+>  	l->s.syscall = 0;
+>  	l->s.session_id = -2;
+> +	l->s.contid = -1;
+>  	free(l->s.uuid);
+>  	l->s.uuid = NULL;
+>  	free(l->s.vmname);
+> diff --git a/src/ausearch-llist.h b/src/ausearch-llist.h
+> index 64e4ee1f3694..2d1f52237ce6 100644
+> --- a/src/ausearch-llist.h
+> +++ b/src/ausearch-llist.h
+> @@ -56,6 +56,7 @@ typedef struct
+>    int arch;             // arch
+>    int syscall;          // syscall
+>    uint32_t session_id;  // Login session id
+> +  __u64 contid;         // Container id
+>    long long exit;       // Syscall exit code
+>    int exit_is_set;      // Syscall exit code is valid
+>    char *hostname;       // remote hostname
+> diff --git a/src/ausearch-match.c b/src/ausearch-match.c
+> index 61a11d30a09b..47c12581a963 100644
+> --- a/src/ausearch-match.c
+> +++ b/src/ausearch-match.c
+> @@ -113,6 +113,9 @@ int match(llist *l)
+>  				if ((event_session_id != -2) &&
+>  					(event_session_id != l->s.session_id))
+>  					return 0;
+> +				if ((event_contid != -1) &&
+> +					(event_contid != l->s.contid))
+> +					return 0;
+>  				if (event_exit_is_set) {
+>  					if (l->s.exit_is_set == 0)
+>  						return 0;
+> diff --git a/src/ausearch-options.c b/src/ausearch-options.c
+> index eb483e670957..609718657775 100644
+> --- a/src/ausearch-options.c
+> +++ b/src/ausearch-options.c
+> @@ -60,6 +60,7 @@ int event_syscall = -1, event_machine = -1;
+>  int event_ua = 0, event_ga = 0, event_se = 0;
+>  int just_one = 0;
+>  uint32_t event_session_id = -2;
+> +unsigned long long int event_contid = -1;
+>  long long event_exit = 0;
+>  int event_exit_is_set = 0;
+>  int line_buffered = 0;
+> @@ -88,7 +89,7 @@ struct nv_pair {
+>  
+>  enum { S_EVENT, S_COMM, S_FILENAME, S_ALL_GID, S_EFF_GID, S_GID, S_HELP,
+>  S_HOSTNAME, S_INTERP, S_INFILE, S_MESSAGE_TYPE, S_PID, S_SYSCALL, S_OSUCCESS,
+> -S_TIME_END, S_TIME_START, S_TERMINAL, S_ALL_UID, S_EFF_UID, S_UID, S_LOGINID,
+> +S_TIME_END, S_TIME_START, S_TERMINAL, S_ALL_UID, S_EFF_UID, S_UID, S_LOGINID, S_CONTID,
+>  S_VERSION, S_EXACT_MATCH, S_EXECUTABLE, S_CONTEXT, S_SUBJECT, S_OBJECT,
+>  S_PPID, S_KEY, S_RAW, S_NODE, S_IN_LOGS, S_JUST_ONE, S_SESSION, S_EXIT,
+>  S_LINEBUFFERED, S_UUID, S_VMNAME, S_DEBUG, S_CHECKPOINT, S_ARCH, S_FORMAT,
+> @@ -100,6 +101,7 @@ static struct nv_pair optiontab[] = {
+>  	{ S_EVENT, "--event" },
+>  	{ S_COMM, "-c" },
+>  	{ S_COMM, "--comm" },
+> +	{ S_CONTID, "--contid" },
+>  	{ S_CHECKPOINT, "--checkpoint" },
+>  	{ S_DEBUG, "--debug" },
+>  	{ S_EXIT, "-e" },
+> @@ -197,6 +199,7 @@ static void usage(void)
+>  	"\t-a,--event <Audit event id>\tsearch based on audit event id\n"
+>  	"\t--arch <CPU>\t\t\tsearch based on the CPU architecture\n"
+>  	"\t-c,--comm  <Comm name>\t\tsearch based on command line name\n"
+> +	"\t--contid <audit container id>\tsearch based on the task's audit container id\n"
+>  	"\t--checkpoint <checkpoint file>\tsearch from last complete event\n"
+>  	"\t--debug\t\t\tWrite malformed events that are skipped to stderr\n"
+>  	"\t-e,--exit  <Exit code or errno>\tsearch based on syscall exit code\n"
+> @@ -1182,6 +1185,48 @@ int check_params(int count, char *vars[])
+>  			}
+>  			c++;
+>  			break;
+> +		case S_CONTID:
+> +			if (!optarg) {
+> +				if ((c+1 < count) && vars[c+1])
+> +					optarg = vars[c+1];
+> +				else {
+> +					fprintf(stderr,
+> +						"Argument is required for %s\n",
+> +						vars[c]);
+> +					retval = -1;
+> +					break;
+> +				}
+> +			}
+> +			{
+> +			size_t len = strlen(optarg);
+> +			if (isdigit(optarg[0])) {
+> +				errno = 0;
+> +				event_contid = strtoull(optarg,NULL,0);
+> +				if (errno) {
+> +					fprintf(stderr, 
+> +			"Numeric container ID conversion error (%s) for %s\n",
+> +						strerror(errno), optarg);
+> +					retval = -1;
+> +				}
+> +			} else if (len >= 2 && *(optarg)=='-' &&
+> +					(isdigit(optarg[1]))) {
+> +				errno = 0;
+> +				event_contid = strtoll(optarg, NULL, 0);
+> +				if (errno) {
+> +					retval = -1;
+> +					fprintf(stderr, "Error converting %s\n",
+> +						optarg);
+> +				}
+> +			} else {
+> +				fprintf(stderr, 
+> +			"Container ID is non-numeric and unknown (%s)\n",
+> +						optarg);
+> +				retval = -1;
+> +				break;
+> +			}
+> +			}
+> +			c++;
+> +			break;
+>  		case S_UUID:
+>  			if (!optarg) {
+>  				fprintf(stderr,
+> diff --git a/src/ausearch-options.h b/src/ausearch-options.h
+> index 1372762b4b3e..c03256e36495 100644
+> --- a/src/ausearch-options.h
+> +++ b/src/ausearch-options.h
+> @@ -40,6 +40,7 @@ extern int line_buffered;
+>  extern int event_debug;
+>  extern pid_t event_ppid;
+>  extern uint32_t event_session_id;
+> +extern unsigned long long int event_contid;
+>  extern ilist *event_type;
+>  
+>  /* Data type to govern output format */
+> diff --git a/src/ausearch-parse.c b/src/ausearch-parse.c
+> index 497306dde070..4d48d59caa0f 100644
+> --- a/src/ausearch-parse.c
+> +++ b/src/ausearch-parse.c
+> @@ -52,6 +52,8 @@ static int parse_path(const lnode *n, search_items *s);
+>  static int parse_user(const lnode *n, search_items *s, anode *avc);
+>  static int parse_obj(const lnode *n, search_items *s);
+>  static int parse_login(const lnode *n, search_items *s);
+> +static int parse_container_op(const lnode *n, search_items *s);
+> +static int parse_container_id(const lnode *n, search_items *s);
+>  static int parse_daemon1(const lnode *n, search_items *s);
+>  static int parse_daemon2(const lnode *n, search_items *s);
+>  static int parse_sockaddr(const lnode *n, search_items *s);
+> @@ -113,6 +115,9 @@ int extract_search_items(llist *l)
+>  			case AUDIT_LOGIN:
+>  				ret = parse_login(n, s);
+>  				break;
+> +			case AUDIT_CONTAINER_OP:
+> +				ret = parse_container_op(n, s);
+> +				break;
+>  			case AUDIT_IPC:
+>  			case AUDIT_OBJ_PID:
+>  				ret = parse_obj(n, s);
+> @@ -179,6 +184,9 @@ int extract_search_items(llist *l)
+>  			case AUDIT_TTY:
+>  				ret = parse_tty(n, s);
+>  				break;
+> +			case AUDIT_CONTAINER_ID:
+> +				ret = parse_container_id(n, s);
+> +				break;
+>  			default:
+>  				if (event_debug)
+>  					fprintf(stderr,
+> @@ -1444,6 +1452,195 @@ static int parse_login(const lnode *n, search_items *s)
+>  	return 0;
+>  }
+>  
+> +static int parse_container_op(const lnode *n, search_items *s)
+> +{
+> +	char *ptr, *str, *term = n->message;
+> +
+> +	// skip op
+> +	// skip opid
+> +	// get contid
+> +	if (event_contid != -1) {
+> +		str = strstr(term, "contid=");
+> +		if (str == NULL)
+> +			return 45;
+> +		ptr = str + 7;
+> +		term = strchr(ptr, ' ');
+> +		if (term == NULL)
+> +			return 46;
+> +		*term = 0;
+> +		errno = 0;
+> +		s->contid = strtoull(ptr, NULL, 10);
+> +		if (errno)
+> +			return 47;
+> +		*term = ' ';
+> +	}
+> +	// skip old-contid
+> +	// get pid
+> +	if (event_pid != -1) {
+> +		str = strstr(term, "pid=");
+> +		if (str == NULL)
+> +			return 48;
+> +		ptr = str + 4;
+> +		term = strchr(ptr, ' ');
+> +		if (term == NULL)
+> +			return 49;
+> +		*term = 0;
+> +		errno = 0;
+> +		s->pid = strtoul(ptr, NULL, 10);
+> +		if (errno)
+> +			return 50;
+> +		*term = ' ';
+> +	}
+> +	// get loginuid
+> +	if (event_loginuid != -2 || event_tauid) {
+> +		str = strstr(term, "auid=");
+> +		if (str == NULL) {
+> +			return 51;
+> +		} else
+> +			ptr = str + 5;
+> +		term = strchr(ptr, ' ');
+> +		if (term == NULL)
+> +			return 52;
+> +		*term = 0;
+> +		errno = 0;
+> +		s->loginuid = strtoul(ptr, NULL, 10);
+> +		if (errno)
+> +			return 53;
+> +		*term = ' ';
+> +		s->tauid = lookup_uid("auid", s->loginuid);
+> +	}
+> +	// get uid
+> +	if (event_uid != -1 || event_tuid) {
+> +		str = strstr(term, "uid=");
+> +		if (str == NULL)
+> +			return 54;
+> +		ptr = str + 4;
+> +		term = strchr(ptr, ' ');
+> +		if (term == NULL)
+> +			return 55;
+> +		*term = 0;
+> +		errno = 0;
+> +		s->uid = strtoul(ptr, NULL, 10);
+> +		if (errno)
+> +			return 56;
+> +		*term = ' ';
+> +		s->tuid = lookup_uid("uid", s->uid);
+> +	}
+> +	// skip tty
+> +	// ses
+> +	if (event_session_id != -2 ) {
+> +		str = strstr(term, "ses=");
+> +		if (str == NULL)
+> +			return 57;
+> +		else
+> +			ptr = str + 4;
+> +		term = strchr(ptr, ' ');
+> +		if (term == NULL)
+> +			return 58;
+> +		*term = 0;
+> +		errno = 0;
+> +		s->session_id = strtoul(ptr, NULL, 10);
+> +		if (errno)
+> +			return 59;
+> +		*term = ' ';
+> +	}
+> +	// get subj
+> +	if (event_subject) {
+> +		str = strstr(term, "subj=");
+> +		if (str == NULL)
+> +			return 60;
+> +		ptr = str + 5;
+> +		term = strchr(ptr, ' ');
+> +		if (term == NULL)
+> +			return 61;
+> +		*term = 0;
+> +		if (audit_avc_init(s) == 0) {
+> +			anode an;
+> +
+> +			anode_init(&an);
+> +			an.scontext = strdup(str);
+> +			alist_append(s->avc, &an);
+> +			*term = ' ';
+> +		} else
+> +			return 62;
+> +		*term = ' ';
+> +	}
+> +	// get comm
+> +	if (event_comm) {
+> +		str = strstr(ptr, "comm=");
+> +		if (str == NULL)
+> +			return 63;
+> +		str += 5;
+> +		if (*str == '"') {
+> +			str++;
+> +			term = strchr(str, '"');
+> +			if (term == NULL)
+> +				return 64;
+> +			*term = 0;
+> +			s->comm = strdup(str);
+> +			*term = '"';
+> +		} else 
+> +			s->comm = unescape(str);
+> +	}
+> +	// get exe
+> +	if (event_exe) {
+> +		str = strstr(term, "exe=");
+> +		if (str == NULL)
+> +			return 65;
+> +		str += 4;
+> +		if (*str == '"') {
+> +			str++;
+> +			term = strchr(str, '"');
+> +			if (term == NULL)
+> +				return 66;
+> +			*term = 0;
+> +			s->exe = strdup(str);
+> +			*term = '"';
+> +		} else 
+> +			s->exe = unescape(str);
+> +	}
+> +	// success
+> +	if (event_success != S_UNSET) {
+> +		str = strstr(term, "res=");
+> +		if (str == NULL)
+> +			return 67;
+> +		ptr = str + 4;
+> +		term = strchr(ptr, ' ');
+> +		if (term)
+> +			return 68;
+> +		*term = 0;
+> +		errno = 0;
+> +		s->success = strtoul(ptr, NULL, 10);
+> +		if (errno)
+> +			return 69;
+> +		*term = ' ';
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int parse_container_id(const lnode *n, search_items *s)
+> +{
+> +	char *ptr, *str, *term = n->message;
+> +
+> +	// get contid
+> +	if (event_contid != -1) {
+> +		str = strstr(term, "contid=");
+> +		if (str == NULL)
+> +			return 70;
+> +		ptr = str + 7;
+> +		term = strchr(ptr, ' ');
+> +		if (term == NULL)
+> +			return 71;
+> +		*term = 0;
+> +		errno = 0;
+> +		s->contid = strtoull(ptr, NULL, 10);
+> +		if (errno)
+> +			return 72;
+> +		*term = ' ';
+> +	}
+> +	return 0;
+> +}
+> +
+>  static int parse_daemon1(const lnode *n, search_items *s)
+>  {
+>  	char *ptr, *str, *term, saved, *mptr;
+> -- 
+> 1.8.3.1
+> 
+
+- RGB
+
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
