@@ -2,192 +2,197 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67881C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D5DAC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 374C1208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:29:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B3D9208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:29:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TbHsV8xU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730023AbfITU3f (ORCPT
+        id S1730040AbfITU3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 16:29:35 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:47788 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728379AbfITU3e (ORCPT
+        Fri, 20 Sep 2019 16:29:37 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38903 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728259AbfITU3g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 16:29:34 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8KKRUkP105910;
-        Fri, 20 Sep 2019 16:28:53 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2v53kcn9fr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 20 Sep 2019 16:28:53 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8KKS8FO108104;
-        Fri, 20 Sep 2019 16:28:52 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2v53kcn9fc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 20 Sep 2019 16:28:52 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8KKOi38003907;
-        Fri, 20 Sep 2019 20:28:51 GMT
-Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma04dal.us.ibm.com with ESMTP id 2v3vbuw4t6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 20 Sep 2019 20:28:51 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8KKSnjn50004434
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 20 Sep 2019 20:28:49 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DA540C6057;
-        Fri, 20 Sep 2019 20:28:49 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 79BD1C6055;
-        Fri, 20 Sep 2019 20:28:45 +0000 (GMT)
-Received: from leobras.br.ibm.com (unknown [9.18.235.184])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Fri, 20 Sep 2019 20:28:45 +0000 (GMT)
-Message-ID: <24863d8904c6e05e5dd48cab57db4274675ae654.camel@linux.ibm.com>
-Subject: Re: [PATCH v2 11/11] powerpc/mm/book3s64/pgtable: Uses counting
- method to skip serializing
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     John Hubbard <jhubbard@nvidia.com>, linuxppc-dev@lists.ozlabs.org,
+        Fri, 20 Sep 2019 16:29:36 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 3so3415524wmi.3;
+        Fri, 20 Sep 2019 13:29:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tORgamMeFxE0aKietPttjgWj7GfkU1uIlscm8UxYn2k=;
+        b=TbHsV8xUplJWj/zhKPmdVwqbItDcuJBoTKs2v27AyJ5IqCd0WRdwASOUNB5ekah3Mc
+         1QX2nCJN6lgDKX0XvrL6bVYxz3G8dLmz8/6gLAVD7ioaZd31WptVMV6QTOPBJwecRvZj
+         g6lXFjtZmsTC51S+jfjmb95bWKgCAvfQRV+kZDGTr+6IaRYAOeHSwOuZ71m04ECM+CR/
+         Rnu6h8H4XoSYIHJCDVSO7WQcxdjSBP34MjqJFFMCMYwi+xv8oHbqiiUqwf645LY4nu+L
+         Wl3g5zWXSEIcJAq5u9esPtzOWaDBlfjK91EeEK++R7PrIY+o1f+9j/olzaPHAuju69XG
+         OefQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=tORgamMeFxE0aKietPttjgWj7GfkU1uIlscm8UxYn2k=;
+        b=Z0ksavWWeHCtCSAT/wdFcF6LcEH7U/FnUUu7gDcb7VVSS7ADWzdOVLK6RIJ6KpWw1S
+         Sbkl/egC9ja9TPlhKdtbdvpAL9UTKlPV7+b75ENsw4Ag/s6jEviaO7VXi6dusurPAdkt
+         pmwyP0XG2RBsR/KfjxzPiBNkBf07d/mYSJdwl4KLToqdieOZL5DnPZy3wuZ/GcnqMeB/
+         2ElgoGSlsxVGsAh4dcoFE2oZckZeXhl2xGReZMSgat4u40Ewqmox2V3KSigEZ/UoetHP
+         7dEQQ9efcZMnNwtG1u6oxC86Tx2ym2YEpGtRcpGYeJc30WiRJTDizyBYNW1KPQGMZIcp
+         +nPg==
+X-Gm-Message-State: APjAAAXvta52n68QHoIge4OPWEMDWub0VQifU2GV8Swx+pm9WKjeognQ
+        e5R3lMzs8GDFn8fn7oalQfWqUBgg
+X-Google-Smtp-Source: APXvYqxq1UtJJZIRGU+518luXzWcohyYvza+JO7D9H/jc1l7vOd5AeiuTGIyUndW1LEpxHYrn+yH+A==
+X-Received: by 2002:a1c:9d0b:: with SMTP id g11mr4616942wme.22.1569011372830;
+        Fri, 20 Sep 2019 13:29:32 -0700 (PDT)
+Received: from [192.168.1.19] (chi109.neoplus.adsl.tpnet.pl. [83.31.6.109])
+        by smtp.gmail.com with ESMTPSA id 189sm2808496wmz.19.2019.09.20.13.29.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 20 Sep 2019 13:29:32 -0700 (PDT)
+Subject: Re: [PATCH v4 2/2] leds: tlc591xx: use
+ devm_led_classdev_register_ext()
+To:     Jean-Jacques Hiblot <jjhiblot@ti.com>, pavel@ucw.cz, dmurphy@ti.com
+Cc:     tomi.valkeinen@ti.com, linux-leds@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Richard Fontana <rfontana@redhat.com>,
-        Ganesh Goudar <ganeshgr@linux.ibm.com>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Keith Busch <keith.busch@intel.com>
-Date:   Fri, 20 Sep 2019 17:28:41 -0300
-In-Reply-To: <1b39eaa7-751d-40bc-d3d7-41aaa15be42a@nvidia.com>
-References: <20190920195047.7703-1-leonardo@linux.ibm.com>
-         <20190920195047.7703-12-leonardo@linux.ibm.com>
-         <1b39eaa7-751d-40bc-d3d7-41aaa15be42a@nvidia.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-EbNtHEwclx7KXmENRZAu"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+References: <20190920115806.14475-1-jjhiblot@ti.com>
+ <20190920115806.14475-3-jjhiblot@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <b4387d66-febd-ff20-7b5e-e66e5de8a988@gmail.com>
+Date:   Fri, 20 Sep 2019 22:29:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-20_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909200168
+In-Reply-To: <20190920115806.14475-3-jjhiblot@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jean,
 
---=-EbNtHEwclx7KXmENRZAu
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Thank you for the update.
 
-On Fri, 2019-09-20 at 13:11 -0700, John Hubbard wrote:
-> On 9/20/19 12:50 PM, Leonardo Bras wrote:
-> > Skips slow part of serialize_against_pte_lookup if there is no running
-> > lockless pagetable walk.
-> >=20
-> > Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
-> > ---
-> >  arch/powerpc/mm/book3s64/pgtable.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/arch/powerpc/mm/book3s64/pgtable.c b/arch/powerpc/mm/book3=
-s64/pgtable.c
-> > index 13239b17a22c..41ca30269fa3 100644
-> > --- a/arch/powerpc/mm/book3s64/pgtable.c
-> > +++ b/arch/powerpc/mm/book3s64/pgtable.c
-> > @@ -95,7 +95,8 @@ static void do_nothing(void *unused)
-> >  void serialize_against_pte_lookup(struct mm_struct *mm)
-> >  {
-> >  	smp_mb();
-> > -	smp_call_function_many(mm_cpumask(mm), do_nothing, NULL, 1);
-> > +	if (running_lockless_pgtbl_walk(mm))
-> > +		smp_call_function_many(mm_cpumask(mm), do_nothing, NULL, 1);
->=20
-> Hi,
->=20
-> If you do this, then you are left without any synchronization. So it will
-> have race conditions: a page table walk could begin right after the above
-> check returns "false", and then code such as hash__pmdp_huge_get_and_clea=
-r()
-> will continue on right away, under the false assumption that it has let
-> all the current page table walks complete.
->=20
-> The current code uses either interrupts or RCU to synchronize, and in
-> either case, you end up scheduling something on each CPU. If you remove
-> that entirely, I don't see anything left. ("Pure" atomic counting is not
-> a synchronization technique all by itself.)
->=20
-> thanks,
+On 9/20/19 1:58 PM, Jean-Jacques Hiblot wrote:
+> Use devm_led_classdev_register_ext() to pass the fwnode to the LED core.
+> The fwnode can then be used by the firmware core to create meaningful
+> names.
+> 
+> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+> ---
+>  drivers/leds/leds-tlc591xx.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/leds/leds-tlc591xx.c b/drivers/leds/leds-tlc591xx.c
+> index bbdaa3148317..8eadb673dc2e 100644
+> --- a/drivers/leds/leds-tlc591xx.c
+> +++ b/drivers/leds/leds-tlc591xx.c
+> @@ -186,6 +186,9 @@ tlc591xx_probe(struct i2c_client *client,
+>  
+>  	for_each_child_of_node(np, child) {
+>  		struct tlc591xx_led *led;
+> +		struct led_init_data init_data = {};
+> +
+> +		init_data.fwnode = of_fwnode_handle(child);
+>  
+>  		err = of_property_read_u32(child, "reg", &reg);
+>  		if (err) {
+> @@ -200,8 +203,6 @@ tlc591xx_probe(struct i2c_client *client,
+>  		led = &priv->leds[reg];
+>  
+>  		led->active = true;
+> -		led->ldev.name =
+> -			of_get_property(child, "label", NULL) ? : child->name;
+>  		led->ldev.default_trigger =
+>  			of_get_property(child, "linux,default-trigger", NULL);
+>  
+> @@ -209,7 +210,8 @@ tlc591xx_probe(struct i2c_client *client,
+>  		led->led_no = reg;
+>  		led->ldev.brightness_set_blocking = tlc591xx_brightness_set;
+>  		led->ldev.max_brightness = LED_FULL;
 
-Hello John,
-Thanks for the fast feedback.
+I was asking for removing tabove assignment, but we can always do that
+in the incremental patch.
 
-See, before calling serialize_against_pte_lookup(), there is always an
-update or clear on the pmd. So, if a page table walk begin right after
-the check returns "false", there is no problem, since it will use the
-updated pmd.
+Patch set applied to the for-5.5 branch. Thanks.
 
-Think about serialize, on a process with a bunch of cpus. After you
-check the last processor (wait part), there is no guarantee that the
-first one is not starting a lockless pagetable walk.
+> -		err = devm_led_classdev_register(dev, &led->ldev);
+> +		err = devm_led_classdev_register_ext(dev, &led->ldev,
+> +						     &init_data);
+>  		if (err < 0) {
+>  			dev_err(dev, "couldn't register LED %s\n",
+>  				led->ldev.name);
+> 
 
-The same mechanism protect both methods.
-
-Does it make sense?
-
+-- 
 Best regards,
-Leonardo Bras
-
-
-
---=-EbNtHEwclx7KXmENRZAu
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl2FNnkACgkQlQYWtz9S
-ttSPMw//aJn7kdxYecY+MRvifVWoQyBdJ5umQJcly7LvttzqAl+3S5Q/uZgg75xp
-1Bw5gwlD7/PUEkgryL3CjdYgywmVWZVP9gu+//oyj0wMCeICEgNmaswQdZHgUF4y
-X86VJ2urZ1WSNesqcjoc7P65Q2WjxoBQiRwCAZfBRPaFKxELIc3jg2NuRDiTHPih
-CoKC1167Kzrl3LsEhFUwcTUO6zDMsDCfUY/+I+XeuvBQyQNlV6oazPhxH0XzRj+I
-e2dSZtnVQvzaD1a/GHbWQ4DdIl21kms6yQLVWE24h5voiAd8DloXlIcoL6oiEIeG
-00KWNLd7pcWyZXGWHRG9F7StTkeiRVCcGIut+k3lia9WKeTULC53h9l5JzwIwO5Q
-zVE+rPFuE9myUA8KRKTz4UyoLEpeuZEWD/EE8nRdcyvGYg0Eo7mYopiNb9vewhpi
-9XSsMFmaUR4PS0A64bpByLJE5nzq7vWim4AAEPMMzIa13ey8jaOXgb22NKGfVKVU
-b61o91K/miqsw17iGj+wknw8R6cR7fyWwRKQXJD7aF7zzW6P4acudkPdi/shKSNo
-mIxf6PJ5qyM6AKy8ZWY3fd7SNZBiH/mprXnNFbMDonVBZH/viejZwCce7DN8K8z4
-DBEkCKD1I/q7+QkFfylu/wz3m2gJg+CSCeivgY5wf7XlpZbK0co=
-=98u8
------END PGP SIGNATURE-----
-
---=-EbNtHEwclx7KXmENRZAu--
-
+Jacek Anaszewski
