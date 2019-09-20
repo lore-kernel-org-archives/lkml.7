@@ -2,108 +2,176 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F96C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 12:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2ADC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 12:30:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3718A20665
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 12:29:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64F4B2173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 12:30:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GNbjA0OL"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="g6ERzpJL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408999AbfITM3M (ORCPT
+        id S2409007AbfITMaL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 08:29:12 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:45137 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404619AbfITM3L (ORCPT
+        Fri, 20 Sep 2019 08:30:11 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:36404 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404361AbfITMaL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 08:29:11 -0400
-Received: by mail-lj1-f193.google.com with SMTP id q64so6850145ljb.12
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 05:29:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=zRqTS3V+m+4w0d7L5MeANtoAWhuIONw+ofn7LfLax7M=;
-        b=GNbjA0OLqlXcmqK1epU19sHUETfXuc5bNucGPbu43hbBJRRCHB84gR38mBnRnV4QDn
-         IsLVHtJ/kjm4u7fOP6Xnu/6GT+JJyZBaOnsg6ZJijLJnhT5zeOg9QWCV0kWvAAbLFriF
-         O50eGu7iyy1t1jvOHVL5qWjQ7YgiuPKF6YtZxDRY1ymTQljCalRidsAh/YRtDx13VLkd
-         +ydRU7HEhHJlDDdy5aCCUk5PhtNQ7vpwRDXzpV9Jlwzbs5BcBPrTgXlXehqdant/eC2d
-         PXKCsTgY02l6NJsYzdfLbI6nUsWt8jgtQdnJiUAWfOqwxIWCpigPQVr4pg+cp1Y97Z9Z
-         PmKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=zRqTS3V+m+4w0d7L5MeANtoAWhuIONw+ofn7LfLax7M=;
-        b=h5WqRiZxGnuqF+RwexQCqHw+/3qo75XoT2I6N9KKVz/gAPv46p1sOlxhqpCtpSZR6r
-         W1g4wx+3J1anLmRqyRF0CUjRwD7NcykHViliRYB5gAofZk1KgCIBGgslrT+B5iCchZt5
-         IyOILlOdN5DRVOtOnWlSlZIHcVnUvS0q3vgFEpjtEzjkbdle5yKsMMJTS9cpfyHjJGdQ
-         462W3GshG+KLPlY478HKMqXUuXdUSp1psFTq3wW1IXzxyX33OVgjJVs0xT++KCchPH4z
-         XwBJHZv6nJ1OnKa78/f7tRXWrGSAj0CSAovkO1xYJ09lTr9oTQ1MCxBIIIvwxdo8T3zJ
-         PczQ==
-X-Gm-Message-State: APjAAAU9gLdhAInByaWLl8iES5dnU63JectuV8/sXZbgFYerpR7TmjA3
-        N12bl9D2nnIlJB6F94PiRtE=
-X-Google-Smtp-Source: APXvYqysZ6X7F0kXPqDsa2l37Rkz7d6wWrYJIuXm6C88aYt/3zLc9GrhGdjYqnFW1nniutXZSOKk2A==
-X-Received: by 2002:a2e:6804:: with SMTP id c4mr9364426lja.120.1568982549984;
-        Fri, 20 Sep 2019 05:29:09 -0700 (PDT)
-Received: from uranus.localdomain ([5.18.103.226])
-        by smtp.gmail.com with ESMTPSA id z72sm418739ljb.98.2019.09.20.05.29.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Sep 2019 05:29:08 -0700 (PDT)
-Received: by uranus.localdomain (Postfix, from userid 1000)
-        id ED22E461797; Fri, 20 Sep 2019 15:29:07 +0300 (MSK)
-Date:   Fri, 20 Sep 2019 15:29:07 +0300
-From:   Cyrill Gorcunov <gorcunov@gmail.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Linux MM <linux-mm@kvack.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>
-Subject: [PATCH] mm, memcg: assign shrinker_map before kvfree
-Message-ID: <20190920122907.GG2507@uranus.lan>
+        Fri, 20 Sep 2019 08:30:11 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8KCU2YC033049;
+        Fri, 20 Sep 2019 07:30:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568982602;
+        bh=Ol6M1ir1cCrFdmazeVk2q4bf7wGJSKlf95XAGkQx4QI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=g6ERzpJLElkXyrwSOCdMpa7F1RcjgTNgqoC+4auEB6mhfweL9MVlnHxcYuu4uorgO
+         dEuVOG9IUnsqWNRKO4/gSW/+qnBCev1RV9dpzJs17FOWNY34+cTyDR4HwJd0MT/IOt
+         ADi2t+SMA5Jh6YGisQvtGT3gz+kAI1dnbB7B/1Rs=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8KCU2G7130077
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 20 Sep 2019 07:30:02 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 20
+ Sep 2019 07:30:02 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 20 Sep 2019 07:29:58 -0500
+Received: from [10.250.98.129] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8KCU0tP108372;
+        Fri, 20 Sep 2019 07:30:00 -0500
+Subject: Re: [PATCH v3 2/3] leds: Add control of the voltage/current regulator
+ to the LED core
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <daniel.thompson@linaro.org>
+CC:     <dmurphy@ti.com>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20190717135948.19340-1-jjhiblot@ti.com>
+ <20190717135948.19340-3-jjhiblot@ti.com>
+ <4bd3b558-ea5b-0d2e-16b2-5b2e8bb484d2@gmail.com>
+ <49152281-059c-6006-4c0f-a6be96a12707@ti.com>
+ <928fd71b-d1d3-cbf3-1aed-ae7fa97f6cf0@gmail.com>
+From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
+Message-ID: <ce73712c-8931-9177-fbbf-f42dc3d656e6@ti.com>
+Date:   Fri, 20 Sep 2019 14:29:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <928fd71b-d1d3-cbf3-1aed-ae7fa97f6cf0@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently there is a small gap between fetching pointer, calling
-kvfree and assign its value to nil. In current callgraph it is
-not a problem (since memcg_free_shrinker_maps is running from
-memcg_alloc_shrinker_maps and mem_cgroup_css_free only) still
-this looks suspicious and we can easily eliminate the gap at all.
+Hi Jacek,
 
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
-Signed-off-by: Cyrill Gorcunov <gorcunov@gmail.com>
----
- mm/memcontrol.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 18/07/2019 19:49, Jacek Anaszewski wrote:
+> On 7/18/19 3:31 PM, Jean-Jacques Hiblot wrote:
+>> On 18/07/2019 14:24, Jacek Anaszewski wrote:
+>>> Hi Jean,
+>>>
+>>> Thank you for the updated patch set.
+>>>
+>>> I have some more comments below.
+>>>
+>>> On 7/17/19 3:59 PM, Jean-Jacques Hiblot wrote:
+>>>>    +static bool __led_need_regulator_update(struct led_classdev
+>>>> *led_cdev,
+>>>> +                    int brightness)
+>>>> +{
+>>>> +    bool new_state = (brightness != LED_OFF);
+>>> How about:
+>>>
+>>> bool new_state = !!brightness;
+>> Throughout the code LED_OFF is used when the LED is turned off. I think
+>> it would be more consistent to use it there too.
+> Basically brightness is a scalar and 0 always means off.
+> We treat enum led_brightness as a legacy type - it is no
+> longer valid on the whole its span since LED_FULL = 255
+> was depreciated with addition of max_brightness property.
+>
+> IMHO use of reverse logic here only hinders code analysis.
+>
+>>>> +
+>>>> +    return led_cdev->regulator && led_cdev->regulator_state !=
+>>>> new_state;
+>>>> +}
+>>>> +static int __led_handle_regulator(struct led_classdev *led_cdev,
+>>>> +                int brightness)
+>>>> +{
+>>>> +    int rc;
+>>>> +
+>>>> +    if (__led_need_regulator_update(led_cdev, brightness)) {
+>>>> +
+>>>> +        if (brightness != LED_OFF)
+>>>> +            rc = regulator_enable(led_cdev->regulator);
+>>>> +        else
+>>>> +            rc = regulator_disable(led_cdev->regulator);
+>>>> +        if (rc)
+>>>> +            return rc;
+>>>> +
+>>>> +        led_cdev->regulator_state = (brightness != LED_OFF);
+>>>> +    }
+>>>> +    return 0;
+>>>> +}
+>>> Let's have these function names without leading underscores.
+>> OK.
+>>>>    static int __led_set_brightness(struct led_classdev *led_cdev,
+>>>>                    enum led_brightness value)
+>>>>    {
+>>>> @@ -115,6 +142,8 @@ static void set_brightness_delayed(struct
+>>>> work_struct *ws)
+>>>>        if (ret == -ENOTSUPP)
+>>>>            ret = __led_set_brightness_blocking(led_cdev,
+>>>>                        led_cdev->delayed_set_value);
+>>>> +    __led_handle_regulator(led_cdev, led_cdev->delayed_set_value)
+>>> If you called it from __led_set_brightness() and
+>> We cannot call it from __led_set_brightness() because it is supposed not
+>> to block.
+> You're right. The problematic part is that with regulator handling
+> we cannot treat the whole brightness setting operation uniformly
+> for brightness_set op case, i.e. without mediation of a workqueue.
+>
+> Now you have to fire workqueue in led_set_brightness_nopm()
+> even for brightness_set() op path, if regulator state needs update.
+> This is ugly and can be misleading. Can be also error prone and
+> have non-obvious implications for software blink state transitions.
 
-Index: linux-tip.git/mm/memcontrol.c
-===================================================================
---- linux-tip.git.orig/mm/memcontrol.c
-+++ linux-tip.git/mm/memcontrol.c
-@@ -364,9 +364,9 @@ static void memcg_free_shrinker_maps(str
- 	for_each_node(nid) {
- 		pn = mem_cgroup_nodeinfo(memcg, nid);
- 		map = rcu_dereference_protected(pn->shrinker_map, true);
-+		rcu_assign_pointer(pn->shrinker_map, NULL);
- 		if (map)
- 			kvfree(map);
--		rcu_assign_pointer(pn->shrinker_map, NULL);
- 	}
- }
- 
+Taking your queue I reworked the series to take better care of the 
+concurrency issues.
+
+I believe it's in better shape right now.
+
+>
+> I think we would first need to improve locking between the workqueue
+> and led_timer_function(). I proposed a patch [0] over a year
+> ago.
+
+I tried the patch and get a lot of warning because of triggers on 
+storage devices.
+
+Making led_set_brightness() not callable from a IRQ context, is probably 
+not the right approach anymore.
+
+
+JJ
+
+>
+> Only then we could think of adding another asynchronous dependency
+> to the brightness setting chain.
+>
+> [0] https://lkml.org/lkml/2018/1/17/1144
+>
