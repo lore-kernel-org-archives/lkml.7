@@ -2,109 +2,179 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A5FC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C34C8C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 514FF2073F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:37:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568986630;
-	bh=Z1REnwlO8OtVXuKZT9ND6aimkzzs7Sq8R8i6J4CB3do=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=Mr/ClF31KJyHIkwWKFocJUTNA+XVtkFfTy9AO+A6RdtT3crWXMEI8rjIiHrauOZ7U
-	 PexQbPl3lfjvQRvxTyjJEKIjnI9q1BunpKigrb0XLFn9WDUG1CzYHdyyDdd4nqi0BX
-	 ZHNJ7EwrYjjOMgw1PTmiSslYLrKdcab+WkZpltuE=
+	by mail.kernel.org (Postfix) with ESMTP id 9B266206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:37:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EfzMViMo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727941AbfITNhJ (ORCPT
+        id S1728023AbfITNhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 09:37:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38970 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727337AbfITNhJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 09:37:09 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75FF7206B6;
-        Fri, 20 Sep 2019 13:37:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568986628;
-        bh=Z1REnwlO8OtVXuKZT9ND6aimkzzs7Sq8R8i6J4CB3do=;
-        h=Date:From:To:Cc:Subject:From;
-        b=O3UKzfCC+TsLfehnXsoSMjdrm95806SCnnPQu7FbHexkWf7npPeViwvI2yvjeSZrI
-         X6O4ywvwe3mqFkzfcHDWtWmZJ3rws3x6j9KD9acoLODQY8BcNaGbVFOg5ZB5gm+hTF
-         Yz5NSUnLVv9GI/zhNx95kZhgXtS1VS6jT3exvSCA=
-Date:   Fri, 20 Sep 2019 14:37:04 +0100
-From:   Will Deacon <will@kernel.org>
-To:     torvalds@linux-foundation.org
-Cc:     catalin.marinas@arm.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, ndesaulniers@google.com
-Subject: [GIT PULL] arm64: Fixes for -rc1
-Message-ID: <20190920133703.zor3t4dvwam6uyqj@willie-the-truck>
+        Fri, 20 Sep 2019 09:37:20 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:33039 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727337AbfITNhU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 09:37:20 -0400
+Received: by mail-lf1-f65.google.com with SMTP id y127so5115160lfc.0;
+        Fri, 20 Sep 2019 06:37:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jphzEcSkNncyQXURXy+bMvvSOETA08+BxHJ5z57Bb0M=;
+        b=EfzMViMon0Yh012SQYg8h4xK0JFPuLUGf8hs1IklN8um4D/H4ReoSmHw3ok0fVz8wA
+         ydZvJ9tblvpBVSh29a7WTqMk9IUdC3G8y9/FfinNiNstDyifALTmZzkCRw7WiQEDaBrp
+         tRPJSKJCOj20Ei4e4kXUkdfi2HXwME57FgKE9QNgJHDSK8qBFcZji5mW9Ij/uxtduAZo
+         bGYtLMXFiX6MzgLcHcy3BF2pOpnaIKYVsZO9Jf/uwXkNZLuL5kN4x94Vjyk1r6GTg2c/
+         4U/y8/xo6DFTzBND9j9hKecItPSbnprkm0n3ZA+qqKYjSERd+JQepKHJRit1HW1zH9nA
+         nDiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jphzEcSkNncyQXURXy+bMvvSOETA08+BxHJ5z57Bb0M=;
+        b=iJOCnr5lz1gkSRcRxPmbHH1rDOb0BE9i9cysJIGB/azly/JMkzsnZ5FmbU0r8ug2z9
+         V6FgerQ0cuCgc4Hl6A5oVmLw8p8W8i6ddFHIlkFTBVKOmxiNd4wsTxPtukOReyMvCSPN
+         LNS5JIKSZdGmuO/Vg/FuyfIQPNojcK3yoIGqpp2r4wL/l9w0SGR+MxBHmkoB5pKC3sFg
+         YV+w8ONTVKMzZjyC+Zr5YH8eVpD/D1G7FiyXr1cA+j7pxq3ZVWyycOnNzr1Rflcqjdt9
+         hiA/iWOj2EkbiHICFuD3TwfXSPU0ltfc2nhV2gnxL1PgjQIQ157by/WKR5VfPngzA4mr
+         xUig==
+X-Gm-Message-State: APjAAAWWaFQ/LqJFRHcbOlR0j1El/zTwZH8WQB2xJMI3f5Bay0kvWM8H
+        6Z/ldJ9Drp+r44OXy1awC0w=
+X-Google-Smtp-Source: APXvYqxlzmxdYLzOPpcInVQyKgAS4zc777/kdZlRsQ6Gg/ppqj9M7QdxbhVc99mR+kWGcY6bb23LnQ==
+X-Received: by 2002:a19:4347:: with SMTP id m7mr8570675lfj.146.1568986637463;
+        Fri, 20 Sep 2019 06:37:17 -0700 (PDT)
+Received: from localhost.localdomain (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
+        by smtp.gmail.com with ESMTPSA id b25sm475423ljj.36.2019.09.20.06.37.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 20 Sep 2019 06:37:15 -0700 (PDT)
+From:   =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+To:     Johannes Berg <johannes@sipsolutions.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jouni Malinen <j@w1.fi>,
+        hostap@lists.infradead.org, openwrt-devel@lists.openwrt.org
+Cc:     =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
+Subject: [PATCH RFC] cfg80211: add new command for reporting wiphy crashes
+Date:   Fri, 20 Sep 2019 15:37:08 +0200
+Message-Id: <20190920133708.15313-1-zajec5@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+From: Rafał Miłecki <rafal@milecki.pl>
 
-We've had a few arm64 fixes trickle in this week, so please can you pick
-them up for -rc1? Nothing catastophic, but all things that should be
-addressed.
+Hardware or firmware instability may result in unusable wiphy. In such
+cases usually a hardware reset is needed. To allow a full recovery
+kernel has to indicate problem to the user space.
 
-Cheers,
+This new nl80211 command lets user space known wiphy has crashed and has
+been just recovered. When applicable it should result in supplicant or
+authenticator reconfiguring all interfaces.
 
-Will
+Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+---
+I'd like to use this new cfg80211_crash_report() in brcmfmac after a
+successful recovery from a FullMAC firmware crash.
 
---->8
+Later on I'd like to modify hostapd to reconfigure wiphy using a
+previously used setup.
 
-The following changes since commit e376897f424a1c807779a2635f62eb02d7e382f9:
+I'm OpenWrt developer & user and I got annoyed by my devices not auto
+recovering after various failures. There are things I cannot fix (hw
+failures or closed fw crashes) but I still expect my devices to get
+back to operational state as soon as possible on their own.
+---
+ include/net/cfg80211.h       |  7 +++++++
+ include/uapi/linux/nl80211.h |  2 ++
+ net/wireless/nl80211.c       | 29 +++++++++++++++++++++++++++++
+ 3 files changed, 38 insertions(+)
 
-  arm64: remove __iounmap (2019-09-04 13:12:26 +0100)
+diff --git a/include/net/cfg80211.h b/include/net/cfg80211.h
+index ff45c3e1abff..668fa27c88cc 100644
+--- a/include/net/cfg80211.h
++++ b/include/net/cfg80211.h
+@@ -7437,6 +7437,13 @@ void cfg80211_pmsr_complete(struct wireless_dev *wdev,
+ bool cfg80211_iftype_allowed(struct wiphy *wiphy, enum nl80211_iftype iftype,
+ 			     bool is_4addr, u8 check_swif);
+ 
++/**
++ * cfg80211_crash_report - report crashed wiphy that requires a setup
++ *
++ * @wiphy: the wiphy
++ * @gfp: allocation flags
++ */
++void cfg80211_crash_report(struct wiphy *wiphy, gfp_t gfp);
+ 
+ /* Logging, debugging and troubleshooting/diagnostic helpers. */
+ 
+diff --git a/include/uapi/linux/nl80211.h b/include/uapi/linux/nl80211.h
+index beee59c831a7..9e17feb03849 100644
+--- a/include/uapi/linux/nl80211.h
++++ b/include/uapi/linux/nl80211.h
+@@ -1325,6 +1325,8 @@ enum nl80211_commands {
+ 
+ 	NL80211_CMD_PROBE_MESH_LINK,
+ 
++	NL80211_CMD_CRASH_REPORT,
++
+ 	/* add new commands above here */
+ 
+ 	/* used to define NL80211_CMD_MAX below */
+diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
+index d21b1581a665..d29785fb0676 100644
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -16940,6 +16940,35 @@ void cfg80211_update_owe_info_event(struct net_device *netdev,
+ }
+ EXPORT_SYMBOL(cfg80211_update_owe_info_event);
+ 
++void cfg80211_crash_report(struct wiphy *wiphy, gfp_t gfp)
++{
++	struct cfg80211_registered_device *rdev = wiphy_to_rdev(wiphy);
++	struct sk_buff *msg;
++	void *hdr;
++
++	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, gfp);
++	if (!msg)
++		return;
++
++	hdr = nl80211hdr_put(msg, 0, 0, 0, NL80211_CMD_CRASH_REPORT);
++	if (!hdr)
++		goto nla_put_failure;
++
++	if (nla_put_u32(msg, NL80211_ATTR_WIPHY, rdev->wiphy_idx))
++		goto nla_put_failure;
++
++	genlmsg_end(msg, hdr);
++
++	genlmsg_multicast_netns(&nl80211_fam, wiphy_net(&rdev->wiphy), msg, 0,
++				NL80211_MCGRP_CONFIG, gfp);
++
++	return;
++
++nla_put_failure:
++	nlmsg_free(msg);
++}
++EXPORT_SYMBOL(cfg80211_crash_report);
++
+ /* initialisation/exit functions */
+ 
+ int __init nl80211_init(void)
+-- 
+2.21.0
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-fixes
-
-for you to fetch changes up to 799c85105233514309b201a2d2d7a7934458c999:
-
-  arm64: Fix reference to docs for ARM64_TAGGED_ADDR_ABI (2019-09-18 11:33:20 +0100)
-
-----------------------------------------------------------------
-arm64 fixes for -rc1
-
-- Fix clang build breakage with CONFIG_OPTIMIZE_INLINING=y
-
-- Fix compilation of pointer tagging selftest
-
-- Fix COND_SYSCALL definitions to work with CFI checks
-
-- Fix stale documentation reference in our Kconfig
-
-----------------------------------------------------------------
-Andrey Konovalov (1):
-      selftests, arm64: add kernel headers path for tags_test
-
-Arnd Bergmann (1):
-      arm64: fix unreachable code issue with cmpxchg
-
-Jeremy Cline (1):
-      arm64: Fix reference to docs for ARM64_TAGGED_ADDR_ABI
-
-Sami Tolvanen (1):
-      arm64: fix function types in COND_SYSCALL
-
- arch/arm64/Kconfig                       |  2 +-
- arch/arm64/include/asm/cmpxchg.h         |  6 +++---
- arch/arm64/include/asm/syscall_wrapper.h | 15 ++++++++++++---
- tools/testing/selftests/arm64/Makefile   |  1 +
- 4 files changed, 17 insertions(+), 7 deletions(-)
