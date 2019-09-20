@@ -2,95 +2,113 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE77C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 09:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7919C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 09:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EDBB2070C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 09:29:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A734206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 09:33:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="necAoHoe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E8x50LQQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405931AbfITJ31 (ORCPT
+        id S2405931AbfITJdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 05:29:27 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46486 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390037AbfITJ31 (ORCPT
+        Fri, 20 Sep 2019 05:33:21 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51575 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393257AbfITJdV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 05:29:27 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q5so4088970pfg.13
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 02:29:26 -0700 (PDT)
+        Fri, 20 Sep 2019 05:33:21 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 7so1677497wme.1;
+        Fri, 20 Sep 2019 02:33:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=BKysXkUjJIDiC70dCWkExHMAiHuCTeID2peKi8oJejc=;
-        b=necAoHoe2AbHu+zV2D58A4p6CxwsYKFUkIAZ/KhJAxWQiIrYHLi5aNIfvZeUzMOWJ5
-         gNmJ19ErqfCO2qA1S/M6fgj6+lz5+MmiLwIrbOMcR2mU4v+QF/HFI+QdyrIJ3Yzw+o/z
-         ey3+8Rs6qG3t3RfQYeR4WS9BRChqYlAQcizpeAU/6MzuM0TyriYrcvJqcwV1PyjwVVg9
-         +EUBq+gqPZ3QEVj4TuPjKSG5Njfmy2hXQda3wDH98KBolLjLz5QhK3G+zM2Z/ViWcK9l
-         CzEDyWUg9o5XpIZ/n4n7RNV2oyJBmontSuyFKWedZ3HYFSmmsYx5wfwUxmH1Xpc7IoWu
-         LPxg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=NrUm6zOy/EJ9ibCviGBB/bXjF+HcDw0sqxAwwkPU5YQ=;
+        b=E8x50LQQARW0bDW+w5d63gBizCAHESZUz/7+xvVDGBONbjH2uZkaBWSPPRoSqXsIyY
+         SBKd0OnR0uH1PUHLA9rpkBHS9g+/IX0YamCrah/BSfYOXhQREI0LW2T91fPie7uZ7D2u
+         Te4Oe7Ankb/cMBcHU1u+iBxIMsC3p6Ubec5hTBn3HlKTFPd8bKWjlCQYCPBx+Hxp458+
+         5LBax+bpp+cO1fuocLfVvvSwHfpwRIv955J5Zv3sni/f2kn+eJrFx5uP5F0qQuHBf6kv
+         fpSqyNXq9EMKlufxR9Qr4byxA+Sf18NM3z+PD60GQxCvom2nkx7T02qVDfApj+/hlAOE
+         zwKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BKysXkUjJIDiC70dCWkExHMAiHuCTeID2peKi8oJejc=;
-        b=rmZaDNkSaWvHXQf5cBuXHy70oKjlkcC1+aUVQYhTsmnDopgX0YXpk8ia5MEFOSVa3u
-         GvAdF1Ebe+oeRdqGtURuPMgQkziwFVVGTsTSWFmqkokTLgNLLcbDScYaGYSX/cUZ3wHK
-         rLz4cOvr3u8plYVKFYnRE7NNnVLfwfdY9C1dhHEIvDdRI2hO7t0ZXjBdgHNv+IGQijzU
-         cWASM3Hx50V4wpGOTpDlaUibQGLeFG89sxuMJm3ptZf2g5y1TiGhwNb9GvOMJhcm5sqv
-         s2op5GvIEA18r8+as8dRyizhQw/JggL5LaqjPzviNNgjV2XeG3++19knkNM89OL8cCqG
-         gamw==
-X-Gm-Message-State: APjAAAUBi0gdOC0C423cCFOkym6qqVnenR+STzZi1PHTkK1854wlpeCz
-        SvEsBiB+GhnMxCeCH2LgubM=
-X-Google-Smtp-Source: APXvYqyB2QDLa3h/eKl3m58OnNyKtDHYOCHOUHdb/TjBD45VMltFo5iEGFphWKLYjrn7h3/TnaAYnQ==
-X-Received: by 2002:a17:90a:9409:: with SMTP id r9mr3637574pjo.10.1568971766528;
-        Fri, 20 Sep 2019 02:29:26 -0700 (PDT)
-Received: from localhost ([175.223.11.25])
-        by smtp.gmail.com with ESMTPSA id w6sm3905558pfj.17.2019.09.20.02.29.24
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=NrUm6zOy/EJ9ibCviGBB/bXjF+HcDw0sqxAwwkPU5YQ=;
+        b=sV591coUXDZELvErYj4BM4YuhEyxugw7EBn+t8x8cnWmLEOkGcvLcFg8lSMv3t6oya
+         W0Td/TxGHBuEKHnyuDxMVO1tT1vwhC6diIEuw/RFijxQvDeXsKZMpO1QO5TJEixXSx4X
+         9GAhhiQVwb5wGDDe9ziKebcuZalUM3Oc7x0U5GQwc+qmKcLolP7wXMsTQ+WY36JgvWfs
+         pE511PiHtJP+MhqPxYIE7J8CIESw/Autnu0phnENKrsVOS+dnqtvbXI/JT97Qh+n4O3+
+         1heMI7Chy8uXdR7OJUCHwoEI0/VW3ynP7+/U3fNY9/n4gey91XxQGppxPmXumcdAUZds
+         RHEw==
+X-Gm-Message-State: APjAAAWpNsGkmALumFwTgZvzMmRWQPFhfzIIFOzxapFfu7Ojx5dU3ocX
+        EebULCShFm0Cv7q3bsK0i4cIagjcJ9I=
+X-Google-Smtp-Source: APXvYqyykmr/1lYPAKZgF+2vPkYifML5oM0ue4sQIEA5SMH7KsYZIDn76PKiZEu0yUnlNOcZf+2JTg==
+X-Received: by 2002:a05:600c:114e:: with SMTP id z14mr2470460wmz.134.1568971998305;
+        Fri, 20 Sep 2019 02:33:18 -0700 (PDT)
+Received: from linux-code.mgc.mentorg.com (nat-sch.mentorg.com. [139.181.36.34])
+        by smtp.gmail.com with ESMTPSA id h63sm1760268wmf.15.2019.09.20.02.33.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Sep 2019 02:29:25 -0700 (PDT)
-Date:   Fri, 20 Sep 2019 18:29:22 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc:     Joe Perches <joe@perches.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Petr Mladek <pmladek@suse.com>, Arnd Bergmann <arnd@arndb.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/32] Kill pr_warning in the whole linux code
-Message-ID: <20190920092922.GA15815@jagdpanzerIV>
-References: <20190920062544.180997-1-wangkefeng.wang@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190920062544.180997-1-wangkefeng.wang@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Fri, 20 Sep 2019 02:33:17 -0700 (PDT)
+From:   Srikanth Krishnakar <skrishnakar@gmail.com>
+X-Google-Original-From: Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>
+To:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dvhart@infradead.org, andy@infradead.org, jan.kiszka@siemens.com
+Cc:     Cedric_Hombourger@mentor.com, volker.edenhofer@siemens.com,
+        Srikanth_Krishnakar@mentor.com
+Subject: [PATCH v2] platform/x86: pmc_atom: Add Siemens SIMATIC IPC277E to critclk_systems DMI table
+Date:   Fri, 20 Sep 2019 15:01:56 +0530
+Message-Id: <20190920093156.18885-1-Srikanth_Krishnakar@mentor.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <972f063e-e1da-7248-90ab-e9b12481641d@siemens.com>
+References: <972f063e-e1da-7248-90ab-e9b12481641d@siemens.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (09/20/19 14:25), Kefeng Wang wrote:
-> There are pr_warning and pr_warng to show WARNING level message,
-> most of the code using pr_warn, number based on next-20190919,
+The SIMATIC IPC277E uses the PMC clock for on-board components
+and gets stuck during boot if the clock is disabled. Therefore,
+add this device to the critical systems list.
 
-Looks good to me.
+Tested on SIMATIC IPC277E.
 
-Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
+Reviewed-by: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: Cedric Hombourger <Cedric_Hombourger@mentor.com>
+Signed-off-by: Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>
+---
 
-	-ss
+Suggested for linux-stable v4.14.x and above.
+Depends on ad0d315b4d4e ("platform/x86: pmc_atom: Add Siemens SIMATIC IPC227E to critclk_systems DMI table")
+
+ drivers/platform/x86/pmc_atom.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
+index 9aca5e7ce6d0..07d1b911e72f 100644
+--- a/drivers/platform/x86/pmc_atom.c
++++ b/drivers/platform/x86/pmc_atom.c
+@@ -422,6 +422,13 @@ static const struct dmi_system_id critclk_systems[] = {
+ 			DMI_MATCH(DMI_PRODUCT_VERSION, "6ES7647-8B"),
+ 		},
+ 	},
++	{
++		.ident = "SIMATIC IPC277E",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "SIEMENS AG"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "6AV7882-0"),
++		},
++	},
+ 	{ /*sentinel*/ }
+ };
+ 
+-- 
+2.17.1
+
