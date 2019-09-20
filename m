@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86BF2C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 21:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D61BC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 21:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61EC920820
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 21:26:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1DD920820
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 21:26:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393981AbfITV0D (ORCPT
+        id S2390719AbfITV0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 17:26:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57988 "EHLO mx1.redhat.com"
+        Fri, 20 Sep 2019 17:26:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37392 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393779AbfITVZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 17:25:14 -0400
+        id S2391072AbfITVZN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 17:25:13 -0400
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 10B208980EA;
-        Fri, 20 Sep 2019 21:25:14 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 32F81308123B;
+        Fri, 20 Sep 2019 21:25:13 +0000 (UTC)
 Received: from mail (ovpn-120-159.rdu2.redhat.com [10.10.120.159])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E76295D6B2;
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 15B945D6B2;
         Fri, 20 Sep 2019 21:25:13 +0000 (UTC)
 From:   Andrea Arcangeli <aarcange@redhat.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
@@ -34,82 +34,66 @@ Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
         Marcelo Tosatti <mtosatti@redhat.com>,
         Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 17/17] x86: retpolines: eliminate retpoline from msr event handlers
-Date:   Fri, 20 Sep 2019 17:25:09 -0400
-Message-Id: <20190920212509.2578-18-aarcange@redhat.com>
+Subject: [PATCH 06/17] KVM: monolithic: x86: enable the kvm_pmu_ops external functions
+Date:   Fri, 20 Sep 2019 17:24:58 -0400
+Message-Id: <20190920212509.2578-7-aarcange@redhat.com>
 In-Reply-To: <20190920212509.2578-1-aarcange@redhat.com>
 References: <20190920212509.2578-1-aarcange@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Fri, 20 Sep 2019 21:25:14 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Fri, 20 Sep 2019 21:25:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's enough to check the value and issue the direct call.
-
-After this commit is applied, here the most common retpolines executed
-under a high resolution timer workload in the guest on a VMX host:
-
-[..]
-@[
-    trace_retpoline+1
-    __trace_retpoline+30
-    __x86_indirect_thunk_rax+33
-    do_syscall_64+89
-    entry_SYSCALL_64_after_hwframe+68
-]: 267
-@[]: 2256
-@[
-    trace_retpoline+1
-    __trace_retpoline+30
-    __x86_indirect_thunk_rax+33
-    __kvm_wait_lapic_expire+284
-    vmx_vcpu_run.part.97+1091
-    vcpu_enter_guest+377
-    kvm_arch_vcpu_ioctl_run+261
-    kvm_vcpu_ioctl+559
-    do_vfs_ioctl+164
-    ksys_ioctl+96
-    __x64_sys_ioctl+22
-    do_syscall_64+89
-    entry_SYSCALL_64_after_hwframe+68
-]: 2390
-@[]: 33410
-
-@total: 315707
-
-Note the highest hit above is __delay so probably not worth optimizing
-even if it would be more frequent than 2k hits per sec.
+Plug in the new external functions and their extern declarations in
+the respective kernel modules (kvm-intel and kvm-amd).
 
 Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
 ---
- arch/x86/events/intel/core.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/x86/kvm/pmu.h           | 2 ++
+ arch/x86/kvm/pmu_amd.c       | 2 ++
+ arch/x86/kvm/vmx/pmu_intel.c | 2 ++
+ 3 files changed, 6 insertions(+)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 27ee47a7be66..65b383d5e062 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3323,8 +3323,19 @@ static int intel_pmu_hw_config(struct perf_event *event)
- 	return 0;
+diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
+index 58265f761c3b..a9c2f68a40cc 100644
+--- a/arch/x86/kvm/pmu.h
++++ b/arch/x86/kvm/pmu.h
+@@ -19,6 +19,8 @@ struct kvm_event_hw_type_mapping {
+ 	unsigned event_type;
+ };
+ 
++#include "pmu_ops.h"
++
+ struct kvm_pmu_ops {
+ 	unsigned (*find_arch_event)(struct kvm_pmu *pmu, u8 event_select,
+ 				    u8 unit_mask);
+diff --git a/arch/x86/kvm/pmu_amd.c b/arch/x86/kvm/pmu_amd.c
+index c8388389a3b0..12d1fa3ba35a 100644
+--- a/arch/x86/kvm/pmu_amd.c
++++ b/arch/x86/kvm/pmu_amd.c
+@@ -301,6 +301,8 @@ static void amd_pmu_reset(struct kvm_vcpu *vcpu)
+ 	}
  }
  
-+#ifdef CONFIG_RETPOLINE
-+static struct perf_guest_switch_msr *core_guest_get_msrs(int *nr);
-+static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr);
-+#endif
++#include "pmu_amd_ops.c"
 +
- struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr)
- {
-+#ifdef CONFIG_RETPOLINE
-+	if (x86_pmu.guest_get_msrs == intel_guest_get_msrs)
-+		return intel_guest_get_msrs(nr);
-+	else if (x86_pmu.guest_get_msrs == core_guest_get_msrs)
-+		return core_guest_get_msrs(nr);
-+#endif
- 	if (x86_pmu.guest_get_msrs)
- 		return x86_pmu.guest_get_msrs(nr);
- 	*nr = 0;
+ struct kvm_pmu_ops amd_pmu_ops = {
+ 	.find_arch_event = amd_find_arch_event,
+ 	.find_fixed_event = amd_find_fixed_event,
+diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+index 4dea0e0e7e39..5ef36a75c31e 100644
+--- a/arch/x86/kvm/vmx/pmu_intel.c
++++ b/arch/x86/kvm/vmx/pmu_intel.c
+@@ -358,6 +358,8 @@ static void intel_pmu_reset(struct kvm_vcpu *vcpu)
+ 		pmu->global_ovf_ctrl = 0;
+ }
+ 
++#include "pmu_intel_ops.c"
++
+ struct kvm_pmu_ops intel_pmu_ops = {
+ 	.find_arch_event = intel_find_arch_event,
+ 	.find_fixed_event = intel_find_fixed_event,
