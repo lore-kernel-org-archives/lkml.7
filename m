@@ -2,75 +2,97 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA52C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC7AC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:28:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 283C8208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:28:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1ADB21882
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:28:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569007739;
+	bh=74r8ZJjQIvij0Kl/ZCXuYb2a9V0vrC6gFXaeoFbOTiA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FzbGhiqOr3vqpIxVHhwEtNzaYSGGWLamVFItyPGJUhpKLjbMiBlTvqiAGhPaMiEiq
+	 +jY3GQqtxgA1FdupPElpxIqQKWuFmJyELucrzCxtHi6zx0PuTutU60KEQ7oyLaHwUW
+	 LqfeK5BL2ooKZyC+db+4phmMYQwpesDkeaqMNX1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbfITT2I (ORCPT
+        id S1726804AbfITT27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 15:28:08 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:34878 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726257AbfITT2H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 15:28:07 -0400
-Received: by mail-qt1-f196.google.com with SMTP id m15so9993036qtq.2;
-        Fri, 20 Sep 2019 12:28:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XHTMSzwJkliwgOP7eZyXNvC4MBsPW4A1aJFqBEd8zAQ=;
-        b=N52OJsy0o51lGf/l/GmuR7130d5E5iLIcEiaAjDKQzydlhLNAeXfLqwDSAD9G7J3AT
-         htygPBdd8egAi+hE3UqCjlxhL3VTOEWlFFq4vSxQu4T2TufCJCQGgVIBLCA0/PR/RvRv
-         9q5pWSsxyScMnCCk7375lTw87wLLKzbKddn5brZv4QxF76wA7eafynmAUIKSm+SFij6z
-         t9eaHYKj78dGvKM1K69gMotqpxLdjI3ZIo5m/Ik51x1lloIvhM5s7myVttZqGmGSjIRf
-         EBj1LsBugPnI5vQlCHTpDm9rfOxCqVnYkV1gD+9WwTcWD9N1Fxff9hND2/HAOcL2KbFv
-         7gcQ==
-X-Gm-Message-State: APjAAAXoFMwy8AL0wQlJd0Gir2l3Vx7scVsHacFF7KvtFc7rFloLbVhu
-        gNc7ioFAALA43tQFZ8c2FoNkreI/QauciVqyKM0=
-X-Google-Smtp-Source: APXvYqwWOpxfEuTbjipdTHmB6EfT06OsCibdbejJw96yuSuerdplxAt2quCcZKxMg+fYIYqo4rdAsPypOYpd/xZ9iOA=
-X-Received: by 2002:ac8:342a:: with SMTP id u39mr5115350qtb.7.1569007686519;
- Fri, 20 Sep 2019 12:28:06 -0700 (PDT)
+        Fri, 20 Sep 2019 15:28:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55832 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726234AbfITT26 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 15:28:58 -0400
+Received: from localhost (odyssey.drury.edu [64.22.249.253])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCA4E208C0;
+        Fri, 20 Sep 2019 19:28:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569007738;
+        bh=74r8ZJjQIvij0Kl/ZCXuYb2a9V0vrC6gFXaeoFbOTiA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=H3bcivo4sx/VZkeUBMAfpPoONS2tWRHP8Jw5KVhHP0tQjDJ7esoRgizBDQYCAghgi
+         JGHiHuNrQ7ZEPkbf1SwKY1hqVRf2RnBWQ+jAJNPrNI3Bruxf71MicC+/65s0LvkqXn
+         p+QKnNYX3+iU3kLKFy/NGad4bisMMzg9fSf5utPQ=
+Date:   Fri, 20 Sep 2019 14:28:55 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     lorenzo.pieralisi@arm.com, andrew.murray@arm.com,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, vidyas@nvidia.com,
+        treding@nvidia.com, linux-pci@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] PCI: tegra: Add missing include file
+Message-ID: <20190920192855.GA226906@google.com>
+References: <20190920014807.38288-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-References: <20190920145543.1732316-1-arnd@arndb.de> <20190920164545.68FFB20717@mail.kernel.org>
-In-Reply-To: <20190920164545.68FFB20717@mail.kernel.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 20 Sep 2019 21:27:50 +0200
-Message-ID: <CAK8P3a2j6QG19i3YtRPh7qD4Zr5TiHmK_5=s9mSD2pHVmE99HA@mail.gmail.com>
-Subject: Re: [PATCH] mbox: qcom: avoid unused-variable warning
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190920014807.38288-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 6:45 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> > @@ -54,11 +60,6 @@ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
-> >         void __iomem *base;
-> >         unsigned long i;
-> >         int ret;
-> > -       const struct of_device_id apcs_clk_match_table[] = {
->
-> Does marking it static here work too? It would be nice to limit the
-> scope of this variable to this function instead of making it a global.
-> Also, it might be slightly smaller code size if that works.
+On Fri, Sep 20, 2019 at 09:48:07AM +0800, YueHaibing wrote:
+> Fix build error without CONFIG_PINCTRL
+> 
+> drivers/pci/controller/dwc/pcie-tegra194.c: In function tegra_pcie_config_rp:
+> drivers/pci/controller/dwc/pcie-tegra194.c:1394:8: error: implicit declaration of function pinctrl_pm_select_default_state;
+>  did you mean prandom_seed_full_state? [-Werror=implicit-function-declaration]
+>   ret = pinctrl_pm_select_default_state(dev);
+>         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>         prandom_seed_full_state
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: ab2a50e7602b ("PCI: tegra: Add support to configure sideband pins")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-No, I just tried and the warning returned.
+Thanks, I folded this into ab2a50e7602b (with the include in alpha
+order) and updated my "next" branch.
 
-      Arnd
+> ---
+>  drivers/pci/controller/dwc/pcie-tegra194.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> index 09ed8e4..b219d3b2 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> @@ -28,6 +28,7 @@
+>  #include <linux/reset.h>
+>  #include <linux/resource.h>
+>  #include <linux/types.h>
+> +#include <linux/pinctrl/consumer.h>
+>  #include "pcie-designware.h"
+>  #include <soc/tegra/bpmp.h>
+>  #include <soc/tegra/bpmp-abi.h>
+> -- 
+> 2.7.4
+> 
+> 
