@@ -2,149 +2,280 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D6AC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E219C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2938F20665
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:05:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="UEGHzk2G"
+	by mail.kernel.org (Postfix) with ESMTP id 362B5208C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:05:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbfITNFK (ORCPT
+        id S1727145AbfITNFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 09:05:10 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:39315 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726628AbfITNFK (ORCPT
+        Fri, 20 Sep 2019 09:05:41 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48646 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726223AbfITNFl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 09:05:10 -0400
-Received: by mail-io1-f66.google.com with SMTP id a1so15972157ioc.6
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 06:05:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=V5857UdtPy5LB2Qj3lCJ6EALsf9VjY4ozTOyQCCtBGw=;
-        b=UEGHzk2GzwFGmTZh0bMvpjw+ZTxI4UuQ46JyhNc+Q7HgzhT1dG+11UmOyBzCpzQY4s
-         lk0MHF/15pJ7XjuqR2/lGIxxUGl9/8RAU8Zu5Q4+A87uAvB2t13t+QAbeQO1Q1fw1gBB
-         ZKRFpb6au1iAuYTH0VI59bC2ky2zo+61KNrjyIPqi73XMkKrZgsxPm45Xx+1wRaiL1S2
-         EHtqIVjnodF5mn1wkgbC470zLtNPMNlVg1obE8ddgNMN+j1iSUHapYTYLu1PtWAJJqQJ
-         GQmXaQJEI/B66NhZgBExVjFcbXoSZMcvweZ9GTrE3E9tluhNTRhuaRzM1nZr/e08JnmB
-         1pSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=V5857UdtPy5LB2Qj3lCJ6EALsf9VjY4ozTOyQCCtBGw=;
-        b=BjpbkYRDFf4PAuS3q0UdmI6st99sHXkgAphDmAqa/pE/8AE/9smbxC0GX7T2AT0Ox2
-         QWJ7BSykQTjFMlLtrj0zZ5bdkvxCpIilaLc7Yq4D5ukumXQAZoUF0rBXiNtW3AmNBT+b
-         Rw5KpmAzx/Z0kjP+S4aKXYaTANiWtd3j/m/V+igE4KZ37vW2TB46DIAUpDYrfeQ5cnJJ
-         MhCo+L/CkzqDtl1fejKHvu5s12GnUYAwaKVxL66CKIZPYZiS8yCYoZseuQgwwggALiKt
-         n4i3DN++X6+IRbHn3cRaW8IphcpQnGnL8f/JMREqpH6Lf0zGqMT+KI9IOzY0wZd5fvI5
-         x8Ww==
-X-Gm-Message-State: APjAAAXkCyWcVKMTnDYgeghxcl3TtvMJoYTbuV/C2KZhoOCpqOkg2LGJ
-        6KZnsI+ow22gWeWmATl+z0/e7A==
-X-Google-Smtp-Source: APXvYqz5yXouKOTZlRsl2vibdMPIsushtwZaeMaqyPL5+VKJgbmnNBDavKKhox5RFzmBV1D/zcgCHg==
-X-Received: by 2002:a5e:8218:: with SMTP id l24mr13613162iom.56.1568984709226;
-        Fri, 20 Sep 2019 06:05:09 -0700 (PDT)
-Received: from [192.168.1.50] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id m5sm2293192ioh.69.2019.09.20.06.05.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 20 Sep 2019 06:05:08 -0700 (PDT)
-Subject: Re: [PATCH 2/2] block, bfq: delete "bfq" prefix from cgroup filenames
-To:     Paolo Valente <paolo.valente@linaro.org>, Tejun Heo <tj@kernel.org>
-Cc:     linux-block <linux-block@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        noreply-spamdigest via bfq-iosched 
-        <bfq-iosched@googlegroups.com>,
-        Oleksandr Natalenko <oleksandr@natalenko.name>,
-        cgroups@vger.kernel.org, Angelo Ruocco <angeloruocco90@gmail.com>
-References: <20190917165148.19146-1-paolo.valente@linaro.org>
- <20190917165148.19146-3-paolo.valente@linaro.org>
- <20190917213209.GK3084169@devbig004.ftw2.facebook.com>
- <4D39D2FA-A487-4FAD-A67E-B90750CE0BD4@linaro.org>
- <20190918151948.GL3084169@devbig004.ftw2.facebook.com>
- <4F416823-855F-4091-90B9-92253BF189FA@linaro.org>
- <A87FEC8A-3E1A-4DC8-89F7-5FAF63CF5B47@linaro.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <de7664b1-6f47-8a7b-b231-727336c0ef85@kernel.dk>
-Date:   Fri, 20 Sep 2019 07:05:05 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 20 Sep 2019 09:05:41 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8KD5csG169846
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 09:05:40 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2v4wjtcp11-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 09:05:38 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ldufour@linux.ibm.com>;
+        Fri, 20 Sep 2019 14:05:30 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 20 Sep 2019 14:05:28 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8KD5QVb52363346
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 20 Sep 2019 13:05:26 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A339011C064;
+        Fri, 20 Sep 2019 13:05:26 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CA71811C04C;
+        Fri, 20 Sep 2019 13:05:25 +0000 (GMT)
+Received: from pomme.com (unknown [9.145.3.52])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 20 Sep 2019 13:05:25 +0000 (GMT)
+From:   Laurent Dufour <ldufour@linux.ibm.com>
+To:     mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
+        aneesh.kumar@linux.ibm.com, npiggin@gmail.com,
+        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/2] powperc/mm: read TLB Block Invalidate Characteristics
+Date:   Fri, 20 Sep 2019 15:05:22 +0200
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190920130523.20441-1-ldufour@linux.ibm.com>
+References: <20190920130523.20441-1-ldufour@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <A87FEC8A-3E1A-4DC8-89F7-5FAF63CF5B47@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19092013-0020-0000-0000-0000036F8F43
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19092013-0021-0000-0000-000021C54293
+Message-Id: <20190920130523.20441-2-ldufour@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-20_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909200126
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/20/19 12:58 AM, Paolo Valente wrote:
-> 
-> 
->> Il giorno 18 set 2019, alle ore 18:19, Paolo Valente <paolo.valente@linaro.org> ha scritto:
->>
->>
->>
->>> Il giorno 18 set 2019, alle ore 17:19, Tejun Heo <tj@kernel.org> ha scritto:
->>>
->>> Hello,
->>>
->>> On Wed, Sep 18, 2019 at 07:18:50AM +0200, Paolo Valente wrote:
->>>> A solution that both fulfills userspace request and doesn't break
->>>> anything for hypothetical users of the current interface already made
->>>> it to mainline, and Linus liked it too.  It is:
->>>
->>> Linus didn't like it.  The implementation was a bit nasty.  That was
->>> why it became a subject in the first place.
->>>
->>>> 19e9da9e86c4 ("block, bfq: add weight symlink to the bfq.weight cgroup parameter")
->>>>
->>>> But it was then reverted on Tejun's request to do exactly what we
->>>> don't want do any longer now:
->>>> cf8929885de3 ("cgroup/bfq: revert bfq.weight symlink change")
->>>
->>> Note that the interface was wrong at the time too.
->>>
->>>> So, Jens, Tejun, can we please just revert that revert?
->>>
->>> I think presenting both io.weight and io.bfq.weight interfaces are
->>> probably the best course of action at this point but why does it have
->>> to be a symlink?  What's wrong with just creating another file with
->>> the same backing function?
->>>
->>
->> I think a symlink would be much clearer for users, given the confusion
->> already caused by two names for the same parameter.  But let's hear
->> others' opinion too.
->>
-> 
-> Jens, could you express your opinion on this?  Any solution you and
-> Tejun agree on is ok for me.  Also this new (fourth) possible
-> implementation of this fix, provided that then it is definitely ok for
-> both of you.
+The PAPR document specifies the TLB Block Invalidate Characteristics which
+tells for each pair of segment base page size, actual page size, the size
+of the block the hcall H_BLOCK_REMOVE supports.
 
-Retaining both interfaces is arguably the right solution. It would be
-nice if we didn't have to, but the first bfq variant was incompatible
-with the in-kernel one, so we'll always have that out in the wild.
-Adding everything to stable doesn't work, as we still have existing
-kernels out there with the interface. In fact, in some ways that's
-worse, as you definitely don't want interfaces to change between two
-stable kernels.
+These characteristics are loaded at boot time in a new table hblkr_size.
+The table is separate from the mmu_psize_def because this is specific to
+the pseries platform.
 
-I know it's not ideal, and some better initial planning would have
-made it better, but we have to deal with the situation as it stands
-now.
+A new init function, pseries_lpar_read_hblkrm_characteristics() is added to
+read the characteristics. It is called from pSeries_setup_arch().
 
+Fixes: ba2dd8a26baa ("powerpc/pseries/mm: call H_BLOCK_REMOVE")
+Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
+---
+ arch/powerpc/platforms/pseries/lpar.c    | 139 +++++++++++++++++++++++
+ arch/powerpc/platforms/pseries/pseries.h |   1 +
+ arch/powerpc/platforms/pseries/setup.c   |   1 +
+ 3 files changed, 141 insertions(+)
+
+diff --git a/arch/powerpc/platforms/pseries/lpar.c b/arch/powerpc/platforms/pseries/lpar.c
+index 36b846f6e74e..8dad8d9c9e76 100644
+--- a/arch/powerpc/platforms/pseries/lpar.c
++++ b/arch/powerpc/platforms/pseries/lpar.c
+@@ -56,6 +56,15 @@ EXPORT_SYMBOL(plpar_hcall);
+ EXPORT_SYMBOL(plpar_hcall9);
+ EXPORT_SYMBOL(plpar_hcall_norets);
+ 
++/*
++ * H_BLOCK_REMOVE supported block size for this page size in segment who's base
++ * page size is that page size.
++ *
++ * The first index is the segment base page size, the second one is the actual
++ * page size.
++ */
++static int hblkrm_size[MMU_PAGE_COUNT][MMU_PAGE_COUNT] __ro_after_init;
++
+ #ifdef CONFIG_VIRT_CPU_ACCOUNTING_NATIVE
+ static u8 dtl_mask = DTL_LOG_PREEMPT;
+ #else
+@@ -1311,6 +1320,136 @@ static void do_block_remove(unsigned long number, struct ppc64_tlb_batch *batch,
+ 		(void)call_block_remove(pix, param, true);
+ }
+ 
++/*
++ * TLB Block Invalidate Characteristics
++ *
++ * These characteristics define the size of the block the hcall H_BLOCK_REMOVE
++ * is able to process for each couple segment base page size, actual page size.
++ *
++ * The ibm,get-system-parameter properties is returning a buffer with the
++ * following layout:
++ *
++ * [ 2 bytes size of the RTAS buffer (excluding these 2 bytes) ]
++ * -----------------
++ * TLB Block Invalidate Specifiers:
++ * [ 1 byte LOG base 2 of the TLB invalidate block size being specified ]
++ * [ 1 byte Number of page sizes (N) that are supported for the specified
++ *          TLB invalidate block size ]
++ * [ 1 byte Encoded segment base page size and actual page size
++ *          MSB=0 means 4k segment base page size and actual page size
++ *          MSB=1 the penc value in mmu_psize_def ]
++ * ...
++ * -----------------
++ * Next TLB Block Invalidate Specifiers...
++ * -----------------
++ * [ 0 ]
++ */
++static inline void set_hblkrm_bloc_size(int bpsize, int psize,
++					unsigned int block_size)
++{
++	if (block_size > hblkrm_size[bpsize][psize])
++		hblkrm_size[bpsize][psize] = block_size;
++}
++
++/*
++ * Decode the Encoded segment base page size and actual page size.
++ * PAPR specifies:
++ *   - bit 7 is the L bit
++ *   - bits 0-5 are the penc value
++ * If the L bit is 0, this means 4K segment base page size and actual page size
++ * otherwise the penc value should be read.
++ */
++#define HBLKRM_L_MASK		0x80
++#define HBLKRM_PENC_MASK	0x3f
++static inline void __init check_lp_set_hblkrm(unsigned int lp,
++					      unsigned int block_size)
++{
++	unsigned int bpsize, psize;
++
++	/* First, check the L bit, if not set, this means 4K */
++	if ((lp & HBLKRM_L_MASK) == 0) {
++		set_hblkrm_bloc_size(MMU_PAGE_4K, MMU_PAGE_4K, block_size);
++		return;
++	}
++
++	lp &= HBLKRM_PENC_MASK;
++	for (bpsize = 0; bpsize < MMU_PAGE_COUNT; bpsize++) {
++		struct mmu_psize_def *def = &mmu_psize_defs[bpsize];
++
++		for (psize = 0; psize < MMU_PAGE_COUNT; psize++) {
++			if (def->penc[psize] == lp) {
++				set_hblkrm_bloc_size(bpsize, psize, block_size);
++				return;
++			}
++		}
++	}
++}
++
++#define SPLPAR_TLB_BIC_TOKEN		50
++/*
++ * The size of the TLB Block Invalidate Characteristics is variable. But at the
++ * maximum it will be the number of possible page sizes *2 + 10 bytes.
++ * Currently MMU_PAGE_COUNT is 16, which means 42 bytes. Use a cache line size
++ * (128 bytes) for the buffer to get plenty of space.
++ */
++#define SPLPAR_TLB_BIC_MAXLENGTH	128
++//#warning revoir ce define mpe voudrait que ce soit cach size aligned
++void __init pseries_lpar_read_hblkrm_characteristics(void)
++{
++	unsigned char local_buffer[SPLPAR_TLB_BIC_MAXLENGTH];
++	int call_status, len, idx, bpsize;
++
++	spin_lock(&rtas_data_buf_lock);
++	memset(rtas_data_buf, 0, RTAS_DATA_BUF_SIZE);
++	call_status = rtas_call(rtas_token("ibm,get-system-parameter"), 3, 1,
++				NULL,
++				SPLPAR_TLB_BIC_TOKEN,
++				__pa(rtas_data_buf),
++				RTAS_DATA_BUF_SIZE);
++	memcpy(local_buffer, rtas_data_buf, SPLPAR_TLB_BIC_MAXLENGTH);
++	local_buffer[SPLPAR_TLB_BIC_MAXLENGTH - 1] = '\0';
++	spin_unlock(&rtas_data_buf_lock);
++
++	if (call_status != 0) {
++		pr_warn("%s %s Error calling get-system-parameter (0x%x)\n",
++			__FILE__, __func__, call_status);
++		return;
++	}
++
++	/*
++	 * The first two (2) bytes of the data in the buffer are the length of
++	 * the returned data, not counting these first two (2) bytes.
++	 */
++	len = be16_to_cpu(*((u16 *)local_buffer)) + 2;
++	if (len > SPLPAR_TLB_BIC_MAXLENGTH) {
++		pr_warn("%s too large returned buffer %d", __func__, len);
++		return;
++	}
++
++	idx = 2;
++	while (idx < len) {
++		u8 block_shift = local_buffer[idx++];
++		u32 block_size;
++		unsigned int npsize;
++
++		if (!block_shift)
++			break;
++
++		block_size = 1 << block_shift;
++
++		for (npsize = local_buffer[idx++];
++		     npsize > 0 && idx < len; npsize--)
++			check_lp_set_hblkrm((unsigned int) local_buffer[idx++],
++					    block_size);
++	}
++
++	for (bpsize = 0; bpsize < MMU_PAGE_COUNT; bpsize++)
++		for (idx = 0; idx < MMU_PAGE_COUNT; idx++)
++			if (hblkrm_size[bpsize][idx])
++				pr_info("H_BLOCK_REMOVE supports base psize:%d psize:%d block size:%d",
++					bpsize, idx, hblkrm_size[bpsize][idx]);
++}
++
+ /*
+  * Take a spinlock around flushes to avoid bouncing the hypervisor tlbie
+  * lock.
+diff --git a/arch/powerpc/platforms/pseries/pseries.h b/arch/powerpc/platforms/pseries/pseries.h
+index a6624d4bd9d0..13fa370a87e4 100644
+--- a/arch/powerpc/platforms/pseries/pseries.h
++++ b/arch/powerpc/platforms/pseries/pseries.h
+@@ -112,5 +112,6 @@ static inline unsigned long cmo_get_page_size(void)
+ int dlpar_workqueue_init(void);
+ 
+ void pseries_setup_rfi_flush(void);
++void pseries_lpar_read_hblkrm_characteristics(void);
+ 
+ #endif /* _PSERIES_PSERIES_H */
+diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
+index f8adcd0e4589..0a40201f315f 100644
+--- a/arch/powerpc/platforms/pseries/setup.c
++++ b/arch/powerpc/platforms/pseries/setup.c
+@@ -744,6 +744,7 @@ static void __init pSeries_setup_arch(void)
+ 
+ 	pseries_setup_rfi_flush();
+ 	setup_stf_barrier();
++	pseries_lpar_read_hblkrm_characteristics();
+ 
+ 	/* By default, only probe PCI (can be overridden by rtas_pci) */
+ 	pci_add_flags(PCI_PROBE_ONLY);
 -- 
-Jens Axboe
+2.23.0
 
