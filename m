@@ -2,144 +2,130 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 897AEC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 09:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F76C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 09:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57015207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 09:36:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568972162;
-	bh=QX1X4YX4/Vp+dV8LPaetmKVvcHUG5G4O1YluAd/eVx4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Sx+JmKLYjCKGzx7eUTSkIg/O/cQ+Ytj5MrFzeukf2D+w3AcCbIZIFtNPaGcHkrqr7
-	 oMoGzOTcSo30ljVeDlls3/qIYMuWxVZ76rFNmNctIdBfloaacLlKrfX/4VaAd/3Gos
-	 6/U1xipEVSp+p+AwZvdSdLotUvtx/EKvT+c6c61Y=
+	by mail.kernel.org (Postfix) with ESMTP id E58EE2086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 09:37:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=qti.qualcomm.com header.i=@qti.qualcomm.com header.b="QRfB7cZq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408464AbfITJgB (ORCPT
+        id S2437909AbfITJhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 05:36:01 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45964 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405989AbfITJgB (ORCPT
+        Fri, 20 Sep 2019 05:37:21 -0400
+Received: from alexa-out-tai-02.qualcomm.com ([103.229.16.227]:22851 "EHLO
+        alexa-out-tai-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2405989AbfITJhU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 05:36:01 -0400
-Received: by mail-lj1-f194.google.com with SMTP id q64so6374723ljb.12;
-        Fri, 20 Sep 2019 02:35:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=f++tt9AEak4ryHyla1VUZBcvqIIpAYie6ToiqQj2rhI=;
-        b=NmMFDZVW7dxATF6wDoGTws1qgHH3IiGZea2NY2AfJgRUlmH9xF5OHO0TPY4Bze6XJs
-         guo8WbFEHzMePVvOdtbsMXtwJlMitT33dKDtUlDTvgrKKHhmZhdx1e16MWtCDNaQovO+
-         wxXg2xBx0d8+S1EWxxK/nl4HMmZC/aXxJKAtuRPAmgyFz+IjQUXbUuzMXLPwMNHUOfLo
-         +6adYMoDGxkMe2FduDgvegwirMSMPrHgwuICFwoM++TLrHBTcaIUZF2myrPmbsEq65A+
-         GU08YODa/c/RCPORW3MG9O2V3m26B/scA3tN2yZvjCphLd0AYHqWXiVWN7hPMlVVNRQD
-         jrRg==
-X-Gm-Message-State: APjAAAV0eLIlHE2W9OpiD0uQb/rDxT2EDAZqidTWGElpIzRX1PTxDVN7
-        UxPt1K/txluPbPh2QsE2lxA=
-X-Google-Smtp-Source: APXvYqw2V+eNv9qC04jKLl4ertFGoOFfyP/MSNU/tAS4zqRrYUAemKy51MfMQLrCcm9GUyfZtM0ewA==
-X-Received: by 2002:a2e:9dc9:: with SMTP id x9mr8500901ljj.147.1568972158714;
-        Fri, 20 Sep 2019 02:35:58 -0700 (PDT)
-Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
-        by smtp.gmail.com with ESMTPSA id h12sm301888ljg.24.2019.09.20.02.35.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 20 Sep 2019 02:35:57 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.92.2)
-        (envelope-from <johan@kernel.org>)
-        id 1iBFKX-0001cf-Op; Fri, 20 Sep 2019 11:35:58 +0200
-Date:   Fri, 20 Sep 2019 11:35:57 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Johan Hovold <johan@kernel.org>,
-        syzbot <syzbot+0243cb250a51eeefb8cc@syzkaller.appspotmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        dmg@turingmachine.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: KASAN: use-after-free Read in adu_disconnect
-Message-ID: <20190920093557.GO30545@localhost>
-References: <000000000000d12d24058f5d6b65@google.com>
- <000000000000a12822058fb4f408@google.com>
- <20190920090803.GM30545@localhost>
- <CACT4Y+Yg5wTsMUGRmTwexKUMzi1ZxrH3k3yaMaJvLaEp7qnjSw@mail.gmail.com>
- <20190920092153.GN30545@localhost>
- <CACT4Y+aLCfq_eJ0w9EnWN-kiTR7qxgtq+8osCqdNw7L4NYCASg@mail.gmail.com>
+        Fri, 20 Sep 2019 05:37:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=qti.qualcomm.com; i=@qti.qualcomm.com; q=dns/txt;
+  s=qcdkim; t=1568972239; x=1600508239;
+  h=from:to:cc:date:message-id:references:in-reply-to:
+   content-transfer-encoding:mime-version:subject;
+  bh=EjR88SkcwJWQCwJkrAGU5QpwuwVsApv848ZvrfCzvDU=;
+  b=QRfB7cZq7UDTZpy8EP+fnbLjCfnbyFoaECTgvufqQIQIR5A3rqw993/S
+   eFaJU85P5dOOcbkFBY5kgntt8MdkwaTkFqHWXfb+UMvpnUVF2WTVAF5mI
+   iJhdK6UxEM30/fkybUkI/SV4rO3eF/nYgH1JUIt7a/bvH3855aC9Y1X+b
+   o=;
+Subject: RE: [PATCH v3] ath10k: support NET_DETECT WoWLAN feature
+Thread-Topic: [PATCH v3] ath10k: support NET_DETECT WoWLAN feature
+Received: from ironmsg02-tai.qualcomm.com ([10.249.140.7])
+  by alexa-out-tai-02.qualcomm.com with ESMTP; 20 Sep 2019 17:37:18 +0800
+Received: from aptaiexm02b.ap.qualcomm.com ([10.249.150.12])
+  by ironmsg02-tai.qualcomm.com with ESMTP/TLS/AES256-SHA; 20 Sep 2019 17:37:11 +0800
+Received: from aptaiexm02f.ap.qualcomm.com (10.249.150.16) by
+ aptaiexm02b.ap.qualcomm.com (10.249.150.12) with Microsoft SMTP Server (TLS)
+ id 15.0.1473.3; Fri, 20 Sep 2019 17:37:10 +0800
+Received: from aptaiexm02f.ap.qualcomm.com ([fe80::4152:1436:e436:faa1]) by
+ aptaiexm02f.ap.qualcomm.com ([fe80::4152:1436:e436:faa1%19]) with mapi id
+ 15.00.1473.005; Fri, 20 Sep 2019 17:37:09 +0800
+From:   Wen Gong <wgong@qti.qualcomm.com>
+To:     "kvalo@codeaurora.org" <kvalo@codeaurora.org>
+CC:     Brian Norris <briannorris@chromium.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        "ath10k@lists.infradead.org" <ath10k@lists.infradead.org>,
+        Wen Gong <wgong@codeaurora.org>
+Thread-Index: AQHVb4WHGd4199NYPUebVxHu5lPNrac0M15w
+Date:   Fri, 20 Sep 2019 09:37:09 +0000
+Message-ID: <29044fb6c3ba43af9a433aeb63f55e41@aptaiexm02f.ap.qualcomm.com>
+References: <1534402113-14337-1-git-send-email-wgong@codeaurora.org>
+        <20181114225910.GA220599@google.com>
+        <CA+ASDXMh7vdfkA5jtJqWEU-g-4Ta5Xvy046zujyASZcESCGhAQ@mail.gmail.com>
+        <87woe5aehr.fsf@kamboji.qca.qualcomm.com>
+        <40854e84bd4b4a9699b60530b1c373ad@aptaiexm02f.ap.qualcomm.com>
+ <87pnjvctjh.fsf@codeaurora.org>
+In-Reply-To: <87pnjvctjh.fsf@codeaurora.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.249.136.10]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+aLCfq_eJ0w9EnWN-kiTR7qxgtq+8osCqdNw7L4NYCASg@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 11:28:22AM +0200, Dmitry Vyukov wrote:
-> On Fri, Sep 20, 2019 at 11:21 AM Johan Hovold <johan@kernel.org> wrote:
+> -----Original Message-----
+> From: Kalle Valo <kvalo@codeaurora.org>
+> Sent: Friday, September 20, 2019 3:32 PM
+> To: Wen Gong <wgong@qti.qualcomm.com>
+> Cc: Brian Norris <briannorris@chromium.org>; linux-wireless <linux-
+> wireless@vger.kernel.org>; Linux Kernel <linux-kernel@vger.kernel.org>;
+> ath10k@lists.infradead.org; Wen Gong <wgong@codeaurora.org>
+> Subject: [EXT] Re: [PATCH v3] ath10k: support NET_DETECT WoWLAN feature
+>=20
+> >> Wen, can you enable NL80211_FEATURE_SCAN_RANDOM_MAC_ADDR?
+> >> Does firmware
+> >> support that?
 > >
-> > On Fri, Sep 20, 2019 at 11:13:14AM +0200, Dmitry Vyukov wrote:
-> > > On Fri, Sep 20, 2019 at 11:08 AM Johan Hovold <johan@kernel.org> wrote:
-> > > >
-> > > > On Fri, Aug 09, 2019 at 01:24:04PM -0700, syzbot wrote:
-> > > > > syzbot has found a reproducer for the following crash on:
-> > > > >
-> > > > > HEAD commit:    e96407b4 usb-fuzzer: main usb gadget fuzzer driver
-> > > > > git tree:       https://github.com/google/kasan.git usb-fuzzer
-> > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=13871a4a600000
-> > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=cfa2c18fb6a8068e
-> > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=0243cb250a51eeefb8cc
-> > > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11c4c8e2600000
-> > > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11d80d2c600000
-> > > > >
-> > > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > > > Reported-by: syzbot+0243cb250a51eeefb8cc@syzkaller.appspotmail.com
-> > > > >
-> > > > > usb 1-1: USB disconnect, device number 4
-> > > > > ==================================================================
-> > > > > BUG: KASAN: use-after-free in atomic64_read
-> > > > > include/asm-generic/atomic-instrumented.h:836 [inline]
-> > > > > BUG: KASAN: use-after-free in atomic_long_read
-> > > > > include/asm-generic/atomic-long.h:28 [inline]
-> > > > > BUG: KASAN: use-after-free in __mutex_unlock_slowpath+0x96/0x670
-> > > > > kernel/locking/mutex.c:1211
-> > > > > Read of size 8 at addr ffff8881d1d0aa00 by task kworker/0:1/12
-> > > >
-> > > > Let's resend and retest with commit id from latest report to make sure
-> > > > the patch was actually applied during the last run:
-> > >
-> > > The reply contains:
-> > > patch:          https://syzkaller.appspot.com/x/patch.diff?x=1440268d600000
-> > > that's what's being parsed and applied during testing.
-> >
-> > Thanks for confirming, but I can't seem to find that link in the report
-> > from syzbot:
-> >
-> >         https://lkml.kernel.org/r/000000000000b05ce40592f8521a@google.com
-> >
-> > Is it supposed to be there?
-> 
-> I meant the previous one:
-> https://lore.kernel.org/linux-usb/000000000000d290e00592e5c17d@google.com/
-> 
-> The one that you pointed to indeed does not have a patch (was tested
-> without any patches). But you did not include any in the request, so
-> this WAI.
+> > Yes, I test again, it is enabled
+> NL80211_FEATURE_SCAN_RANDOM_MAC_ADDR now.
+>=20
+> Sorry, I'm not quite understanding your reply.
+>=20
+> But I mixed up the flags. I meant that can we enable
+> NL80211_FEATURE_SCAN_RANDOM_MAC_ADDR in ath10k? Does the
+> firmware
+> releases which have WMI_SERVICE_NLO support
+> NL80211_FEATURE_SCAN_RANDOM_MAC_ADDR as well?
+Kalle,
+I tested with this firmware: https://github.com/kvalo/ath10k-firmware/blob/=
+master/QCA6174/hw3.0/sdio-4.4.1/firmware-sdio-6.bin_WLAN.RMH.4.4.1-00017-QC=
+ARMSWPZ-2
 
-Ok, that was what I thought. I first tried retriggering the test by
-responding to the mail with the patch and a new test directive, but when
-that test failed, I figured the patch had not been applied and that I
-had to include it directly in the mail when retesting.
+In ath10k_mac_register, it has flag WMI_SERVICE_SPOOF_MAC_SUPPORT enabled.
+	if (test_bit(WMI_SERVICE_SPOOF_MAC_SUPPORT, ar->wmi.svc_map)) {
+		ar->hw->wiphy->features |=3D
+			NL80211_FEATURE_SCAN_RANDOM_MAC_ADDR;
+	}
 
-Apparently misremembered someone from google responding to a patch with
-a test directive, but perhaps they also included the patch in that mail.
+In ath10k_wow_init, it has flag ATH10K_FW_FEATURE_WOWLAN_SUPPORT, WMI_SERVI=
+CE_WOW, WMI_SERVICE_NLO enabled.
+int ath10k_wow_init(struct ath10k *ar)
+{
+	if (!test_bit(ATH10K_FW_FEATURE_WOWLAN_SUPPORT,
+		      ar->running_fw->fw_file.fw_features))
+		return 0;
 
-Johan
+	if (WARN_ON(!test_bit(WMI_SERVICE_WOW, ar->wmi.svc_map)))
+		return -EINVAL;
+
+	if (test_bit(WMI_SERVICE_NLO, ar->wmi.svc_map)) {
+		ar->wow.wowlan_support.flags |=3D WIPHY_WOWLAN_NET_DETECT;
+		ar->wow.wowlan_support.max_nd_match_sets =3D WMI_PNO_MAX_SUPP_NETWORKS;
+	}
+}
+>=20
+> --
+> Kalle Valo
