@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 289C8C4CECD
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 176E1C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3E4C206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:31:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECB7B206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:31:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391074AbfITObS (ORCPT
+        id S2391112AbfITObZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:31:18 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36908 "EHLO
+        Fri, 20 Sep 2019 10:31:25 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36800 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388396AbfITOZQ (ORCPT
+        by vger.kernel.org with ESMTP id S2388365AbfITOZO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 10:25:16 -0400
+        Fri, 20 Sep 2019 10:25:14 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqT-000512-DD; Fri, 20 Sep 2019 15:25:13 +0100
+        id 1iBJqR-0004y2-Hm; Fri, 20 Sep 2019 15:25:11 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqE-0007ts-RA; Fri, 20 Sep 2019 15:24:58 +0100
+        id 1iBJqF-0007uH-4Y; Fri, 20 Sep 2019 15:24:59 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Oliver Neukum" <oneukum@suse.de>
+        "Oliver Neukum" <oneukum@suse.com>,
+        "Johan Hovold" <johan@kernel.org>
 Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.70460827@decadent.org.uk>
+Message-ID: <lsq.1568989415.692470111@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 066/132] cdc-acm: fix race between callback and
- unthrottle
+Subject: [PATCH 3.16 071/132] USB: serial: use variable for status
 In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,59 +55,91 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Oliver Neukum <oneukum@suse.de>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit 36e59e0d70d6150e7a2155c54612ea875e88ce8d upstream.
+commit 3161da970d38cd6ed2ba8cadec93874d1d06e11e upstream.
 
-Abn URB may be may marked free only after the buffer has been
-processed or there is a small window during which it could
-be submitted on another CPU and overwrite an unprocessed buffer
+This patch turns status in a variable read once from the URB.
+The long term plan is to deliver status to the callback.
+In addition it makes the code a bit more elegant.
 
-Signed-off-by: Oliver Neukum <oneukum@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-[bwh: Backported to 3.16: adjust context]
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/class/cdc-acm.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/usb/serial/generic.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
---- a/drivers/usb/class/cdc-acm.c
-+++ b/drivers/usb/class/cdc-acm.c
-@@ -419,19 +419,21 @@ static void acm_read_bulk_callback(struc
- 	struct acm_rb *rb = urb->context;
- 	struct acm *acm = rb->instance;
+--- a/drivers/usb/serial/generic.c
++++ b/drivers/usb/serial/generic.c
+@@ -350,6 +350,7 @@ void usb_serial_generic_read_bulk_callba
+ 	struct usb_serial_port *port = urb->context;
+ 	unsigned char *data = urb->transfer_buffer;
  	unsigned long flags;
 +	int status = urb->status;
+ 	int i;
  
- 	dev_vdbg(&acm->data->dev, "%s - urb %d, len %d\n", __func__,
- 					rb->index, urb->actual_length);
--	set_bit(rb->index, &acm->read_urbs_free);
+ 	for (i = 0; i < ARRAY_SIZE(port->read_urbs); ++i) {
+@@ -360,22 +361,22 @@ void usb_serial_generic_read_bulk_callba
  
- 	if (!acm->dev) {
-+		set_bit(rb->index, &acm->read_urbs_free);
- 		dev_dbg(&acm->data->dev, "%s - disconnected\n", __func__);
- 		return;
- 	}
- 
- 	if (urb->status) {
-+		set_bit(rb->index, &acm->read_urbs_free);
- 		dev_dbg(&acm->data->dev, "%s - non-zero urb status: %d\n",
+ 	dev_dbg(&port->dev, "%s - urb %d, len %d\n", __func__, i,
+ 							urb->actual_length);
+-	switch (urb->status) {
++	switch (status) {
+ 	case 0:
+ 		break;
+ 	case -ENOENT:
+ 	case -ECONNRESET:
+ 	case -ESHUTDOWN:
+ 		dev_dbg(&port->dev, "%s - urb stopped: %d\n",
 -							__func__, urb->status);
 +							__func__, status);
- 		if ((urb->status != -ENOENT) || (urb->actual_length == 0))
- 			return;
+ 		return;
+ 	case -EPIPE:
+ 		dev_err(&port->dev, "%s - urb stopped: %d\n",
+-							__func__, urb->status);
++							__func__, status);
+ 		return;
+ 	default:
+ 		dev_dbg(&port->dev, "%s - nonzero urb status: %d\n",
+-							__func__, urb->status);
++							__func__, status);
+ 		goto resubmit;
  	}
-@@ -439,6 +441,12 @@ static void acm_read_bulk_callback(struc
- 	usb_mark_last_busy(acm->dev);
  
- 	acm_process_read_urb(acm, urb);
-+	/*
-+	 * Unthrottle may run on another CPU which needs to see events
-+	 * in the same order. Submission has an implict barrier
-+	 */
-+	smp_mb__before_atomic();
-+	set_bit(rb->index, &acm->read_urbs_free);
+@@ -399,6 +400,7 @@ void usb_serial_generic_write_bulk_callb
+ {
+ 	unsigned long flags;
+ 	struct usb_serial_port *port = urb->context;
++	int status = urb->status;
+ 	int i;
  
- 	/* throttle device if requested by tty */
- 	spin_lock_irqsave(&acm->read_lock, flags);
+ 	for (i = 0; i < ARRAY_SIZE(port->write_urbs); ++i) {
+@@ -410,22 +412,22 @@ void usb_serial_generic_write_bulk_callb
+ 	set_bit(i, &port->write_urbs_free);
+ 	spin_unlock_irqrestore(&port->lock, flags);
+ 
+-	switch (urb->status) {
++	switch (status) {
+ 	case 0:
+ 		break;
+ 	case -ENOENT:
+ 	case -ECONNRESET:
+ 	case -ESHUTDOWN:
+ 		dev_dbg(&port->dev, "%s - urb stopped: %d\n",
+-							__func__, urb->status);
++							__func__, status);
+ 		return;
+ 	case -EPIPE:
+ 		dev_err_console(port, "%s - urb stopped: %d\n",
+-							__func__, urb->status);
++							__func__, status);
+ 		return;
+ 	default:
+ 		dev_err_console(port, "%s - nonzero urb status: %d\n",
+-							__func__, urb->status);
++							__func__, status);
+ 		goto resubmit;
+ 	}
+ 
 
