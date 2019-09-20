@@ -4,47 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E905C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:21:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D37D6C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8F52208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:21:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8881F20C01
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:21:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405165AbfITQV1 (ORCPT
+        id S2405201AbfITQV2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 12:21:27 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:52769 "EHLO
+        Fri, 20 Sep 2019 12:21:28 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:52820 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404704AbfITQVT (ORCPT
+        with ESMTP id S2404896AbfITQVT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Sep 2019 12:21:19 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iBLea-00041A-Vu; Fri, 20 Sep 2019 18:21:05 +0200
+        id 1iBLee-00049E-Tb; Fri, 20 Sep 2019 18:21:09 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 60A6F1C0DAE;
-        Fri, 20 Sep 2019 18:20:58 +0200 (CEST)
-Date:   Fri, 20 Sep 2019 16:20:58 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D74311C0E29;
+        Fri, 20 Sep 2019 18:21:00 +0200 (CEST)
+Date:   Fri, 20 Sep 2019 16:21:00 -0000
 From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf tools: Move event synthesizing routines to
- separate header
+Subject: [tip: perf/urgent] perf tools: Remove util.h from where it is not needed
 Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <tip-yvx9u1mf7baq6cu1abfhbqgs@git.kernel.org>
-References: <tip-yvx9u1mf7baq6cu1abfhbqgs@git.kernel.org>
+In-Reply-To: <tip-9h6dg6lsqe2usyqjh5rrues4@git.kernel.org>
+References: <tip-9h6dg6lsqe2usyqjh5rrues4@git.kernel.org>
 MIME-Version: 1.0
-Message-ID: <156899645832.24167.11926961176919319205.tip-bot2@tip-bot2>
+Message-ID: <156899646076.24167.1780337887772169946.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -60,903 +59,1071 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     ea49e01cfabd73c94a61649cd04fa524a2beff3c
-Gitweb:        https://git.kernel.org/tip/ea49e01cfabd73c94a61649cd04fa524a2beff3c
+Commit-ID:     fb71c86cc804b8f490fce1b9140014043ec41858
+Gitweb:        https://git.kernel.org/tip/fb71c86cc804b8f490fce1b9140014043ec41858
 Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Wed, 18 Sep 2019 11:36:13 -03:00
+AuthorDate:    Tue, 03 Sep 2019 10:56:06 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Fri, 20 Sep 2019 09:19:22 -03:00
+CommitterDate: Fri, 20 Sep 2019 09:19:20 -03:00
 
-perf tools: Move event synthesizing routines to separate header
+perf tools: Remove util.h from where it is not needed
 
-Those are the only routines using the perf_event__handler_t typedef and
-are all related, so move to a separate header to reduce the header
-dependency tree, lots of places were getting event.h and even stdio.h,
-limits.h indirectly, so fix those as well.
+Check that it is not needed and remove, fixing up some fallout for
+places where it was only serving to get something else.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-yvx9u1mf7baq6cu1abfhbqgs@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-9h6dg6lsqe2usyqjh5rrues4@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/x86/util/archinsn.c   |   1 +-
- tools/perf/arch/x86/util/event.c      |   2 +-
- tools/perf/arch/x86/util/machine.c    |   1 +-
- tools/perf/arch/x86/util/tsc.c        |   2 +-
- tools/perf/builtin-inject.c           |   1 +-
- tools/perf/builtin-kvm.c              |   1 +-
- tools/perf/builtin-record.c           |   1 +-
- tools/perf/builtin-stat.c             |   1 +-
- tools/perf/builtin-top.c              |   1 +-
- tools/perf/builtin-trace.c            |   1 +-
- tools/perf/tests/code-reading.c       |   1 +-
- tools/perf/tests/cpumap.c             |   1 +-
- tools/perf/tests/dwarf-unwind.c       |   1 +-
- tools/perf/tests/event_update.c       |   1 +-
- tools/perf/tests/hists_common.c       |   2 +-
- tools/perf/tests/mmap-thread-lookup.c |   2 +-
- tools/perf/tests/sample-parsing.c     |   1 +-
- tools/perf/tests/stat.c               |   1 +-
- tools/perf/tests/thread-map.c         |   1 +-
- tools/perf/ui/stdio/hist.c            |   1 +-
- tools/perf/util/auxtrace.c            |   1 +-
- tools/perf/util/auxtrace.h            |  17 +----
- tools/perf/util/bpf-event.c           |   1 +-
- tools/perf/util/bpf-event.h           |  15 +---
- tools/perf/util/callchain.c           |   1 +-
- tools/perf/util/event.c               |   1 +-
- tools/perf/util/event.h               | 118 +-------------------------
- tools/perf/util/evsel.c               |   1 +-
- tools/perf/util/header.c              |   1 +-
- tools/perf/util/intel-bts.c           |   1 +-
- tools/perf/util/intel-pt.c            |   1 +-
- tools/perf/util/machine.c             |  10 ++-
- tools/perf/util/machine.h             |  15 +---
- tools/perf/util/session.c             |   1 +-
- tools/perf/util/session.h             |   5 +-
- tools/perf/util/stat.c                |   1 +-
- tools/perf/util/synthetic-events.h    | 103 ++++++++++++++++++++++-
- tools/perf/util/tsc.h                 |  14 +---
- 38 files changed, 154 insertions(+), 177 deletions(-)
- create mode 100644 tools/perf/util/synthetic-events.h
+ tools/perf/arch/arm/util/cs-etm.c                      |  2 +-
+ tools/perf/arch/arm64/util/arm-spe.c                   |  2 +-
+ tools/perf/arch/arm64/util/dwarf-regs.c                |  1 +-
+ tools/perf/arch/powerpc/util/dwarf-regs.c              |  1 +-
+ tools/perf/arch/powerpc/util/header.c                  |  1 +-
+ tools/perf/arch/s390/util/machine.c                    |  2 +-
+ tools/perf/arch/x86/tests/intel-cqm.c                  |  1 +-
+ tools/perf/arch/x86/tests/rdpmc.c                      |  2 +-
+ tools/perf/arch/x86/util/intel-bts.c                   |  2 +-
+ tools/perf/arch/x86/util/intel-pt.c                    |  2 +-
+ tools/perf/arch/x86/util/machine.c                     |  2 +-
+ tools/perf/bench/sched-messaging.c                     |  1 +-
+ tools/perf/bench/sched-pipe.c                          |  1 +-
+ tools/perf/builtin-config.c                            |  1 +-
+ tools/perf/builtin-evlist.c                            |  2 +--
+ tools/perf/builtin-report.c                            |  2 +-
+ tools/perf/perf.c                                      |  2 +-
+ tools/perf/tests/clang.c                               |  1 +-
+ tools/perf/tests/dso-data.c                            |  1 +-
+ tools/perf/tests/event-times.c                         |  1 +-
+ tools/perf/tests/llvm.c                                |  1 +-
+ tools/perf/tests/mmap-thread-lookup.c                  |  2 +-
+ tools/perf/tests/parse-events.c                        |  1 +-
+ tools/perf/tests/parse-no-sample-id-all.c              |  2 +--
+ tools/perf/tests/perf-hooks.c                          |  1 +-
+ tools/perf/tests/pmu.c                                 |  1 +-
+ tools/perf/tests/sample-parsing.c                      |  1 +-
+ tools/perf/tests/topology.c                            |  1 +-
+ tools/perf/tests/vmlinux-kallsyms.c                    |  2 +-
+ tools/perf/ui/browser.c                                |  1 +-
+ tools/perf/ui/browsers/annotate.c                      |  1 +-
+ tools/perf/ui/browsers/map.c                           |  1 +-
+ tools/perf/ui/browsers/res_sample.c                    |  2 +-
+ tools/perf/ui/browsers/scripts.c                       |  2 +-
+ tools/perf/ui/gtk/progress.c                           |  1 +-
+ tools/perf/ui/helpline.c                               |  1 +-
+ tools/perf/ui/hist.c                                   |  1 +-
+ tools/perf/ui/setup.c                                  |  2 +-
+ tools/perf/ui/tui/setup.c                              |  2 +-
+ tools/perf/util/annotate.c                             |  2 +-
+ tools/perf/util/auxtrace.c                             |  4 +++-
+ tools/perf/util/branch.c                               |  1 +-
+ tools/perf/util/branch.h                               |  9 ++++++++-
+ tools/perf/util/build-id.c                             |  2 +-
+ tools/perf/util/cloexec.c                              |  2 +-
+ tools/perf/util/cs-etm-decoder/cs-etm-decoder.c        |  1 +-
+ tools/perf/util/cs-etm.c                               |  1 +-
+ tools/perf/util/data.c                                 |  3 ++-
+ tools/perf/util/debug.c                                |  1 +-
+ tools/perf/util/demangle-rust.c                        |  1 +-
+ tools/perf/util/dwarf-regs.c                           |  1 +-
+ tools/perf/util/evlist.c                               |  2 +-
+ tools/perf/util/evsel.c                                |  1 +-
+ tools/perf/util/header.c                               |  3 ++-
+ tools/perf/util/jitdump.c                              |  1 +-
+ tools/perf/util/llvm-utils.c                           |  1 +-
+ tools/perf/util/lzma.c                                 |  2 +-
+ tools/perf/util/perf-hooks.c                           |  1 +-
+ tools/perf/util/record.c                               |  1 +-
+ tools/perf/util/rwsem.c                                |  1 +-
+ tools/perf/util/s390-sample-raw.c                      |  1 +-
+ tools/perf/util/scripting-engines/trace-event-python.c |  1 +-
+ tools/perf/util/session.c                              |  1 +-
+ tools/perf/util/srccode.c                              |  2 +-
+ tools/perf/util/symbol-elf.c                           |  2 ++-
+ tools/perf/util/symbol-minimal.c                       |  3 +--
+ tools/perf/util/symbol.c                               |  2 +-
+ tools/perf/util/target.c                               |  1 +-
+ tools/perf/util/trace-event-info.c                     |  2 +-
+ tools/perf/util/trace-event-read.c                     |  1 +-
+ tools/perf/util/trace-event.c                          |  1 +-
+ tools/perf/util/unwind-libdw.c                         |  1 +-
+ tools/perf/util/unwind-libunwind-local.c               |  1 +-
+ tools/perf/util/vdso.c                                 |  2 +-
+ tools/perf/util/zlib.c                                 |  2 +-
+ 75 files changed, 47 insertions(+), 73 deletions(-)
 
-diff --git a/tools/perf/arch/x86/util/archinsn.c b/tools/perf/arch/x86/util/archinsn.c
-index 9876c7a..3e67915 100644
---- a/tools/perf/arch/x86/util/archinsn.c
-+++ b/tools/perf/arch/x86/util/archinsn.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "../../../../arch/x86/include/asm/insn.h"
- #include "archinsn.h"
-+#include "event.h"
- #include "machine.h"
- #include "thread.h"
- #include "symbol.h"
-diff --git a/tools/perf/arch/x86/util/event.c b/tools/perf/arch/x86/util/event.c
-index a3a0b68..d357c62 100644
---- a/tools/perf/arch/x86/util/event.c
-+++ b/tools/perf/arch/x86/util/event.c
-@@ -3,6 +3,8 @@
- #include <linux/string.h>
- #include <linux/zalloc.h>
+diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+index c32db09..5d120b1 100644
+--- a/tools/perf/arch/arm/util/cs-etm.c
++++ b/tools/perf/arch/arm/util/cs-etm.c
+@@ -25,7 +25,7 @@
+ #include "../../util/evsel.h"
+ #include "../../util/pmu.h"
+ #include "../../util/cs-etm.h"
+-#include "../../util/util.h"
++#include "../../util/util.h" // page_size
+ #include "../../util/session.h"
  
-+#include "../../util/event.h"
-+#include "../../util/synthetic-events.h"
- #include "../../util/machine.h"
- #include "../../util/tool.h"
- #include "../../util/map.h"
+ #include <errno.h>
+diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
+index 4b36469..eebbf31 100644
+--- a/tools/perf/arch/arm64/util/arm-spe.c
++++ b/tools/perf/arch/arm64/util/arm-spe.c
+@@ -16,7 +16,7 @@
+ #include "../../util/evsel.h"
+ #include "../../util/evlist.h"
+ #include "../../util/session.h"
+-#include "../../util/util.h"
++#include "../../util/util.h" // page_size
+ #include "../../util/pmu.h"
+ #include "../../util/debug.h"
+ #include "../../util/auxtrace.h"
+diff --git a/tools/perf/arch/arm64/util/dwarf-regs.c b/tools/perf/arch/arm64/util/dwarf-regs.c
+index b047b88..917b97d 100644
+--- a/tools/perf/arch/arm64/util/dwarf-regs.c
++++ b/tools/perf/arch/arm64/util/dwarf-regs.c
+@@ -11,7 +11,6 @@
+ #include <dwarf-regs.h>
+ #include <linux/ptrace.h> /* for struct user_pt_regs */
+ #include <linux/stringify.h>
+-#include "util.h"
+ 
+ struct pt_regs_dwarfnum {
+ 	const char *name;
+diff --git a/tools/perf/arch/powerpc/util/dwarf-regs.c b/tools/perf/arch/powerpc/util/dwarf-regs.c
+index 4952890..0c4f4ca 100644
+--- a/tools/perf/arch/powerpc/util/dwarf-regs.c
++++ b/tools/perf/arch/powerpc/util/dwarf-regs.c
+@@ -12,7 +12,6 @@
+ #include <linux/ptrace.h>
+ #include <linux/kernel.h>
+ #include <linux/stringify.h>
+-#include "util.h"
+ 
+ struct pt_regs_dwarfnum {
+ 	const char *name;
+diff --git a/tools/perf/arch/powerpc/util/header.c b/tools/perf/arch/powerpc/util/header.c
+index 0b24266..b6b7bc7 100644
+--- a/tools/perf/arch/powerpc/util/header.c
++++ b/tools/perf/arch/powerpc/util/header.c
+@@ -6,7 +6,6 @@
+ #include <string.h>
+ #include <linux/stringify.h>
+ #include "header.h"
+-#include "util.h"
+ 
+ #define mfspr(rn)       ({unsigned long rval; \
+ 			 asm volatile("mfspr %0," __stringify(rn) \
+diff --git a/tools/perf/arch/s390/util/machine.c b/tools/perf/arch/s390/util/machine.c
+index c8c86a0..df099d6 100644
+--- a/tools/perf/arch/s390/util/machine.c
++++ b/tools/perf/arch/s390/util/machine.c
+@@ -2,7 +2,7 @@
+ #include <unistd.h>
+ #include <stdio.h>
+ #include <string.h>
+-#include "util.h"
++#include "util.h" // page_size
+ #include "machine.h"
+ #include "api/fs/fs.h"
+ #include "debug.h"
+diff --git a/tools/perf/arch/x86/tests/intel-cqm.c b/tools/perf/arch/x86/tests/intel-cqm.c
+index 3b5cc33..111c0ab 100644
+--- a/tools/perf/arch/x86/tests/intel-cqm.c
++++ b/tools/perf/arch/x86/tests/intel-cqm.c
+@@ -5,7 +5,6 @@
+ #include "evlist.h"
+ #include "evsel.h"
+ #include "arch-tests.h"
+-#include "util.h"
+ 
+ #include <signal.h>
+ #include <sys/mman.h>
+diff --git a/tools/perf/arch/x86/tests/rdpmc.c b/tools/perf/arch/x86/tests/rdpmc.c
+index 6e67cee..e7640fb 100644
+--- a/tools/perf/arch/x86/tests/rdpmc.c
++++ b/tools/perf/arch/x86/tests/rdpmc.c
+@@ -13,7 +13,7 @@
+ #include "tests/tests.h"
+ #include "cloexec.h"
+ #include "event.h"
+-#include "util.h"
++#include "util.h" // page_size
+ #include "arch-tests.h"
+ 
+ static u64 rdpmc(unsigned int counter)
+diff --git a/tools/perf/arch/x86/util/intel-bts.c b/tools/perf/arch/x86/util/intel-bts.c
+index d263430..090d90e 100644
+--- a/tools/perf/arch/x86/util/intel-bts.c
++++ b/tools/perf/arch/x86/util/intel-bts.c
+@@ -22,7 +22,7 @@
+ #include "../../util/tsc.h"
+ #include "../../util/auxtrace.h"
+ #include "../../util/intel-bts.h"
+-#include "../../util/util.h"
++#include "../../util/util.h" // page_size
+ 
+ #define KiB(x) ((x) * 1024)
+ #define MiB(x) ((x) * 1024 * 1024)
+diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
+index cb7cf16..3d041b8 100644
+--- a/tools/perf/arch/x86/util/intel-pt.c
++++ b/tools/perf/arch/x86/util/intel-pt.c
+@@ -26,7 +26,7 @@
+ #include "../../util/record.h"
+ #include "../../util/target.h"
+ #include "../../util/tsc.h"
+-#include "../../util/util.h"
++#include "../../util/util.h" // page_size
+ #include "../../util/intel-pt.h"
+ 
+ #define KiB(x) ((x) * 1024)
 diff --git a/tools/perf/arch/x86/util/machine.c b/tools/perf/arch/x86/util/machine.c
-index 4241804..f0c2898 100644
+index 1e9ec78..4241804 100644
 --- a/tools/perf/arch/x86/util/machine.c
 +++ b/tools/perf/arch/x86/util/machine.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/types.h>
+@@ -3,7 +3,7 @@
  #include <linux/string.h>
-+#include <limits.h>
  #include <stdlib.h>
  
- #include "../../util/util.h" // page_size
-diff --git a/tools/perf/arch/x86/util/tsc.c b/tools/perf/arch/x86/util/tsc.c
-index c5197a1..2f55afb 100644
---- a/tools/perf/arch/x86/util/tsc.c
-+++ b/tools/perf/arch/x86/util/tsc.c
-@@ -8,6 +8,8 @@
- #include <linux/types.h>
- #include <asm/barrier.h>
- #include "../../../util/debug.h"
-+#include "../../../util/event.h"
-+#include "../../../util/synthetic-events.h"
- #include "../../../util/tsc.h"
+-#include "../../util/util.h"
++#include "../../util/util.h" // page_size
+ #include "../../util/machine.h"
+ #include "../../util/map.h"
+ #include "../../util/symbol.h"
+diff --git a/tools/perf/bench/sched-messaging.c b/tools/perf/bench/sched-messaging.c
+index 6e499b3..97e4a4f 100644
+--- a/tools/perf/bench/sched-messaging.c
++++ b/tools/perf/bench/sched-messaging.c
+@@ -10,7 +10,6 @@
+  *
+  */
  
- int perf_read_tsc_conversion(const struct perf_event_mmap_page *pc,
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index c14f40b..23a76cf 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -21,6 +21,7 @@
- #include "util/auxtrace.h"
- #include "util/jit.h"
- #include "util/symbol.h"
-+#include "util/synthetic-events.h"
- #include "util/thread.h"
- 
+-#include "../util/util.h"
  #include <subcmd/parse-options.h>
-diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-index 0a4fcbe..ac6d6e0 100644
---- a/tools/perf/builtin-kvm.c
-+++ b/tools/perf/builtin-kvm.c
-@@ -17,6 +17,7 @@
+ #include "bench.h"
+ 
+diff --git a/tools/perf/bench/sched-pipe.c b/tools/perf/bench/sched-pipe.c
+index edd40aa..3c88d1f 100644
+--- a/tools/perf/bench/sched-pipe.c
++++ b/tools/perf/bench/sched-pipe.c
+@@ -9,7 +9,6 @@
+  *  http://people.redhat.com/mingo/cfs-scheduler/tools/pipe-test-1m.c
+  * Ported to perf by Hitoshi Mitake <mitake@dcl.info.waseda.ac.jp>
+  */
+-#include "../util/util.h"
+ #include <subcmd/parse-options.h>
+ #include "bench.h"
+ 
+diff --git a/tools/perf/builtin-config.c b/tools/perf/builtin-config.c
+index 42d8157..2603015 100644
+--- a/tools/perf/builtin-config.c
++++ b/tools/perf/builtin-config.c
+@@ -9,7 +9,6 @@
+ 
+ #include "util/cache.h"
+ #include <subcmd/parse-options.h>
+-#include "util/util.h"
  #include "util/debug.h"
- #include "util/tool.h"
- #include "util/stat.h"
-+#include "util/synthetic-events.h"
- #include "util/top.h"
- #include "util/data.h"
- #include "util/ordered-events.h"
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 1447004..907d4d4 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -38,6 +38,7 @@
- #include "util/trigger.h"
- #include "util/perf-hooks.h"
- #include "util/cpu-set-sched.h"
-+#include "util/synthetic-events.h"
- #include "util/time-utils.h"
+ #include "util/config.h"
+ #include <linux/string.h>
+diff --git a/tools/perf/builtin-evlist.c b/tools/perf/builtin-evlist.c
+index 238fa38..294494e 100644
+--- a/tools/perf/builtin-evlist.c
++++ b/tools/perf/builtin-evlist.c
+@@ -5,8 +5,6 @@
+  */
+ #include "builtin.h"
+ 
+-#include "util/util.h"
+-
+ #include <linux/list.h>
+ 
+ #include "perf.h"
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index b18fab9..3047e51 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -48,7 +48,7 @@
+ #include "util/auxtrace.h"
  #include "util/units.h"
- #include "util/bpf-event.h"
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index b55e806..eece3d1 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -61,6 +61,7 @@
- #include "util/tool.h"
- #include "util/string2.h"
- #include "util/metricgroup.h"
-+#include "util/synthetic-events.h"
- #include "util/target.h"
- #include "util/time-utils.h"
- #include "util/top.h"
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 726e3f2..b052470 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -32,6 +32,7 @@
- #include "util/map.h"
- #include "util/session.h"
- #include "util/symbol.h"
-+#include "util/synthetic-events.h"
- #include "util/top.h"
- #include "util/util.h"
- #include <linux/rbtree.h>
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 0f633f0..f0f7350 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -28,6 +28,7 @@
- #include "util/dso.h"
- #include "util/env.h"
+ #include "util/branch.h"
+-#include "util/util.h"
++#include "util/util.h" // perf_tip()
+ #include "ui/ui.h"
+ #include "ui/progress.h"
+ 
+diff --git a/tools/perf/perf.c b/tools/perf/perf.c
+index 1193b92..bb40a10 100644
+--- a/tools/perf/perf.c
++++ b/tools/perf/perf.c
+@@ -20,7 +20,7 @@
+ #include "util/bpf-loader.h"
+ #include "util/debug.h"
  #include "util/event.h"
-+#include "util/synthetic-events.h"
- #include "util/evlist.h"
- #include "util/evswitch.h"
- #include <subcmd/pager.h>
-diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
-index 8d9020c..fd02c1f 100644
---- a/tools/perf/tests/code-reading.c
-+++ b/tools/perf/tests/code-reading.c
-@@ -24,6 +24,7 @@
- #include "symbol.h"
- #include "event.h"
- #include "record.h"
-+#include "util/synthetic-events.h"
- #include "thread.h"
- 
+-#include "util/util.h"
++#include "util/util.h" // page_size, usage()
+ #include "ui/ui.h"
+ #include "perf-sys.h"
+ #include <api/fs/fs.h>
+diff --git a/tools/perf/tests/clang.c b/tools/perf/tests/clang.c
+index ff2711a..2577d3e 100644
+--- a/tools/perf/tests/clang.c
++++ b/tools/perf/tests/clang.c
+@@ -1,6 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
  #include "tests.h"
-diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
-index 39493de..8a0d236 100644
---- a/tools/perf/tests/cpumap.c
-+++ b/tools/perf/tests/cpumap.c
-@@ -3,6 +3,7 @@
- #include <stdio.h>
- #include "cpumap.h"
- #include "event.h"
-+#include "util/synthetic-events.h"
- #include <string.h>
- #include <linux/bitops.h>
- #include <perf/cpumap.h>
-diff --git a/tools/perf/tests/dwarf-unwind.c b/tools/perf/tests/dwarf-unwind.c
-index 4125255..4f4ecbc 100644
---- a/tools/perf/tests/dwarf-unwind.c
-+++ b/tools/perf/tests/dwarf-unwind.c
-@@ -15,6 +15,7 @@
- #include "symbol.h"
- #include "thread.h"
- #include "callchain.h"
-+#include "util/synthetic-events.h"
+-#include "util.h"
+ #include "c++/clang-c.h"
+ #include <linux/kernel.h>
  
- #if defined (__x86_64__) || defined (__i386__) || defined (__powerpc__)
- #include "arch-tests.h"
-diff --git a/tools/perf/tests/event_update.c b/tools/perf/tests/event_update.c
-index 317eb8c..4bb772e 100644
---- a/tools/perf/tests/event_update.c
-+++ b/tools/perf/tests/event_update.c
-@@ -7,6 +7,7 @@
- #include "evsel.h"
- #include "header.h"
+diff --git a/tools/perf/tests/dso-data.c b/tools/perf/tests/dso-data.c
+index a4874d4..627c1aa 100644
+--- a/tools/perf/tests/dso-data.c
++++ b/tools/perf/tests/dso-data.c
+@@ -10,7 +10,6 @@
+ #include <sys/resource.h>
+ #include <api/fs/fs.h>
+ #include "dso.h"
+-#include "util.h"
  #include "machine.h"
-+#include "util/synthetic-events.h"
- #include "tool.h"
+ #include "symbol.h"
+ #include "tests.h"
+diff --git a/tools/perf/tests/event-times.c b/tools/perf/tests/event-times.c
+index d824a72..0228ba4 100644
+--- a/tools/perf/tests/event-times.c
++++ b/tools/perf/tests/event-times.c
+@@ -9,7 +9,6 @@
+ #include "tests.h"
+ #include "evlist.h"
+ #include "evsel.h"
+-#include "util.h"
+ #include "debug.h"
+ #include "parse-events.h"
+ #include "thread_map.h"
+diff --git a/tools/perf/tests/llvm.c b/tools/perf/tests/llvm.c
+index 022e4c9..ae6cda8 100644
+--- a/tools/perf/tests/llvm.c
++++ b/tools/perf/tests/llvm.c
+@@ -7,7 +7,6 @@
+ #include "llvm.h"
  #include "tests.h"
  #include "debug.h"
-diff --git a/tools/perf/tests/hists_common.c b/tools/perf/tests/hists_common.c
-index de110d8..6f34d08 100644
---- a/tools/perf/tests/hists_common.c
-+++ b/tools/perf/tests/hists_common.c
-@@ -2,6 +2,7 @@
- #include <inttypes.h>
- #include "util/debug.h"
- #include "util/dso.h"
-+#include "util/event.h" // struct perf_sample
- #include "util/map.h"
- #include "util/symbol.h"
- #include "util/sort.h"
-@@ -10,6 +11,7 @@
- #include "util/thread.h"
- #include "tests/hists_common.h"
- #include <linux/kernel.h>
-+#include <linux/perf_event.h>
+-#include "util.h"
  
- static struct {
- 	u32 pid;
+ #ifdef HAVE_LIBBPF_SUPPORT
+ static int test__bpf_parsing(void *obj_buf, size_t obj_buf_sz)
 diff --git a/tools/perf/tests/mmap-thread-lookup.c b/tools/perf/tests/mmap-thread-lookup.c
-index f72889c..33b496d 100644
+index 360d70d..f72889c 100644
 --- a/tools/perf/tests/mmap-thread-lookup.c
 +++ b/tools/perf/tests/mmap-thread-lookup.c
-@@ -8,11 +8,13 @@
- #include <stdlib.h>
- #include <stdio.h>
- #include "debug.h"
-+#include "event.h"
- #include "tests.h"
- #include "machine.h"
- #include "thread_map.h"
+@@ -14,7 +14,7 @@
  #include "map.h"
  #include "symbol.h"
-+#include "util/synthetic-events.h"
  #include "thread.h"
- #include "util.h" // page_size
+-#include "util.h"
++#include "util.h" // page_size
  
+ #define THREADS 4
+ 
+diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+index 02ba696..c25c8e7 100644
+--- a/tools/perf/tests/parse-events.c
++++ b/tools/perf/tests/parse-events.c
+@@ -6,7 +6,6 @@
+ #include "tests.h"
+ #include "debug.h"
+ #include "pmu.h"
+-#include "util.h"
+ #include <dirent.h>
+ #include <errno.h>
+ #include <sys/types.h>
+diff --git a/tools/perf/tests/parse-no-sample-id-all.c b/tools/perf/tests/parse-no-sample-id-all.c
+index 8284752..adf3c9c 100644
+--- a/tools/perf/tests/parse-no-sample-id-all.c
++++ b/tools/perf/tests/parse-no-sample-id-all.c
+@@ -1,4 +1,3 @@
+-// SPDX-License-Identifier: GPL-2.0
+ #include <linux/kernel.h>
+ #include <linux/types.h>
+ #include <stddef.h>
+@@ -8,7 +7,6 @@
+ #include "event.h"
+ #include "evlist.h"
+ #include "header.h"
+-#include "util.h"
+ #include "debug.h"
+ 
+ static int process_event(struct evlist **pevlist, union perf_event *event)
+diff --git a/tools/perf/tests/perf-hooks.c b/tools/perf/tests/perf-hooks.c
+index a693bcf..dbc2719 100644
+--- a/tools/perf/tests/perf-hooks.c
++++ b/tools/perf/tests/perf-hooks.c
+@@ -4,7 +4,6 @@
+ 
+ #include "tests.h"
+ #include "debug.h"
+-#include "util.h"
+ #include "perf-hooks.h"
+ 
+ static void sigsegv_handler(int sig __maybe_unused)
+diff --git a/tools/perf/tests/pmu.c b/tools/perf/tests/pmu.c
+index 14a7889..74379ff 100644
+--- a/tools/perf/tests/pmu.c
++++ b/tools/perf/tests/pmu.c
+@@ -1,7 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include "parse-events.h"
+ #include "pmu.h"
+-#include "util.h"
+ #include "tests.h"
+ #include <errno.h>
+ #include <stdio.h>
 diff --git a/tools/perf/tests/sample-parsing.c b/tools/perf/tests/sample-parsing.c
-index e3b965e..3a02426 100644
+index 5fcc068..e3b965e 100644
 --- a/tools/perf/tests/sample-parsing.c
 +++ b/tools/perf/tests/sample-parsing.c
-@@ -12,6 +12,7 @@
+@@ -9,7 +9,6 @@
+ 
+ #include "map_symbol.h"
+ #include "branch.h"
+-#include "util.h"
  #include "event.h"
  #include "evsel.h"
  #include "debug.h"
-+#include "util/synthetic-events.h"
- 
+diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
+index a4f9f51..c963f30 100644
+--- a/tools/perf/tests/topology.c
++++ b/tools/perf/tests/topology.c
+@@ -4,7 +4,6 @@
+ #include <stdio.h>
+ #include <perf/cpumap.h>
  #include "tests.h"
- 
-diff --git a/tools/perf/tests/stat.c b/tools/perf/tests/stat.c
-index cc10b41..c191150 100644
---- a/tools/perf/tests/stat.c
-+++ b/tools/perf/tests/stat.c
-@@ -5,6 +5,7 @@
- #include "stat.h"
- #include "counts.h"
+-#include "util.h"
+ #include "session.h"
+ #include "evlist.h"
  #include "debug.h"
-+#include "util/synthetic-events.h"
- 
- static bool has_term(struct perf_record_stat_config *config,
- 		     u64 tag, u64 val)
-diff --git a/tools/perf/tests/thread-map.c b/tools/perf/tests/thread-map.c
-index 39168c5..28f51c4 100644
---- a/tools/perf/tests/thread-map.c
-+++ b/tools/perf/tests/thread-map.c
-@@ -8,6 +8,7 @@
- #include "thread_map.h"
+diff --git a/tools/perf/tests/vmlinux-kallsyms.c b/tools/perf/tests/vmlinux-kallsyms.c
+index 01f434c..7f28775 100644
+--- a/tools/perf/tests/vmlinux-kallsyms.c
++++ b/tools/perf/tests/vmlinux-kallsyms.c
+@@ -7,7 +7,7 @@
+ #include "dso.h"
+ #include "map.h"
+ #include "symbol.h"
+-#include "util.h"
++#include "util.h" // page_size
+ #include "tests.h"
  #include "debug.h"
- #include "event.h"
-+#include "util/synthetic-events.h"
- #include <linux/zalloc.h>
- #include <perf/event.h>
- 
-diff --git a/tools/perf/ui/stdio/hist.c b/tools/perf/ui/stdio/hist.c
-index 832ca6c..5365606 100644
---- a/tools/perf/ui/stdio/hist.c
-+++ b/tools/perf/ui/stdio/hist.c
-@@ -5,6 +5,7 @@
- 
- #include "../../util/callchain.h"
+ #include "machine.h"
+diff --git a/tools/perf/ui/browser.c b/tools/perf/ui/browser.c
+index f93d40b..781afe4 100644
+--- a/tools/perf/ui/browser.c
++++ b/tools/perf/ui/browser.c
+@@ -1,5 +1,4 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#include "../util/util.h"
+ #include "../util/string2.h"
+ #include "../util/config.h"
+ #include "libslang.h"
+diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+index ac74ed2..82207db 100644
+--- a/tools/perf/ui/browsers/annotate.c
++++ b/tools/perf/ui/browsers/annotate.c
+@@ -2,7 +2,6 @@
+ #include "../browser.h"
+ #include "../helpline.h"
+ #include "../ui.h"
+-#include "../util.h"
+ #include "../../util/annotate.h"
  #include "../../util/debug.h"
-+#include "../../util/event.h"
- #include "../../util/hist.h"
+ #include "../../util/dso.h"
+diff --git a/tools/perf/ui/browsers/map.c b/tools/perf/ui/browsers/map.c
+index 893b065..3d49b91 100644
+--- a/tools/perf/ui/browsers/map.c
++++ b/tools/perf/ui/browsers/map.c
+@@ -5,7 +5,6 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <linux/bitops.h>
+-#include "../../util/util.h"
+ #include "../../util/debug.h"
  #include "../../util/map.h"
- #include "../../util/map_groups.h"
+ #include "../../util/dso.h"
+diff --git a/tools/perf/ui/browsers/res_sample.c b/tools/perf/ui/browsers/res_sample.c
+index f16a38f..76d356a 100644
+--- a/tools/perf/ui/browsers/res_sample.c
++++ b/tools/perf/ui/browsers/res_sample.c
+@@ -7,7 +7,7 @@
+ #include "config.h"
+ #include "time-utils.h"
+ #include "../util.h"
+-#include "../../util/util.h"
++#include "../../util/util.h" // perf_exe()
+ #include "../../perf.h"
+ #include <stdlib.h>
+ #include <string.h>
+diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
+index 3b81075..fc733a6 100644
+--- a/tools/perf/ui/browsers/scripts.c
++++ b/tools/perf/ui/browsers/scripts.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include "../../builtin.h"
+ #include "../../perf.h"
+-#include "../../util/util.h"
++#include "../../util/util.h" // perf_exe()
+ #include "../util.h"
+ #include "../../util/hist.h"
+ #include "../../util/debug.h"
+diff --git a/tools/perf/ui/gtk/progress.c b/tools/perf/ui/gtk/progress.c
+index b6ad885..eea6fcd 100644
+--- a/tools/perf/ui/gtk/progress.c
++++ b/tools/perf/ui/gtk/progress.c
+@@ -3,7 +3,6 @@
+ 
+ #include "gtk.h"
+ #include "../progress.h"
+-#include "util.h"
+ 
+ static GtkWidget *dialog;
+ static GtkWidget *progress;
+diff --git a/tools/perf/ui/helpline.c b/tools/perf/ui/helpline.c
+index e009014..911182b 100644
+--- a/tools/perf/ui/helpline.c
++++ b/tools/perf/ui/helpline.c
+@@ -5,7 +5,6 @@
+ 
+ #include "helpline.h"
+ #include "ui.h"
+-#include "../util/util.h"
+ 
+ char ui_helpline__current[512];
+ 
+diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
+index 3e533de..f736755 100644
+--- a/tools/perf/ui/hist.c
++++ b/tools/perf/ui/hist.c
+@@ -8,7 +8,6 @@
+ #include "../util/callchain.h"
+ #include "../util/debug.h"
+ #include "../util/hist.h"
+-#include "../util/util.h"
+ #include "../util/sort.h"
+ #include "../util/evsel.h"
+ #include "../util/evlist.h"
+diff --git a/tools/perf/ui/setup.c b/tools/perf/ui/setup.c
+index c7a86b4..700335c 100644
+--- a/tools/perf/ui/setup.c
++++ b/tools/perf/ui/setup.c
+@@ -1,11 +1,11 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <pthread.h>
+ #include <dlfcn.h>
++#include <unistd.h>
+ 
+ #include <subcmd/pager.h>
+ #include "../util/debug.h"
+ #include "../util/hist.h"
+-#include "../util/util.h"
+ #include "ui.h"
+ 
+ pthread_mutex_t ui__lock = PTHREAD_MUTEX_INITIALIZER;
+diff --git a/tools/perf/ui/tui/setup.c b/tools/perf/ui/tui/setup.c
+index 56651a4..e9bfe85 100644
+--- a/tools/perf/ui/tui/setup.c
++++ b/tools/perf/ui/tui/setup.c
+@@ -2,13 +2,13 @@
+ #include <signal.h>
+ #include <stdbool.h>
+ #include <stdlib.h>
++#include <unistd.h>
+ #include <linux/kernel.h>
+ #ifdef HAVE_BACKTRACE_SUPPORT
+ #include <execinfo.h>
+ #endif
+ 
+ #include "../../util/debug.h"
+-#include "../../util/util.h"
+ #include "../../perf.h"
+ #include "../browser.h"
+ #include "../helpline.h"
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 1748f52..d441cca 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -14,7 +14,7 @@
+ #include <bpf/btf.h>
+ #include <bpf/libbpf.h>
+ #include <linux/btf.h>
+-#include "util.h"
++#include "util.h" // hex_width()
+ #include "ui/ui.h"
+ #include "sort.h"
+ #include "build-id.h"
 diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index 1c0ff5a..0e8c89c 100644
+index 6f25224..7ec0a6c 100644
 --- a/tools/perf/util/auxtrace.c
 +++ b/tools/perf/util/auxtrace.c
-@@ -32,6 +32,7 @@
- #include "pmu.h"
- #include "evsel.h"
- #include "symbol.h"
-+#include "util/synthetic-events.h"
- #include "thread_map.h"
- #include "asm/bug.h"
- #include "auxtrace.h"
-diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-index 1ed902a..b110aec 100644
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -11,14 +11,13 @@
- #include <errno.h>
- #include <stdbool.h>
- #include <stddef.h>
-+#include <stdio.h> // FILE
- #include <linux/list.h>
- #include <linux/perf_event.h>
- #include <linux/types.h>
- #include <asm/bitsperlong.h>
- #include <asm/barrier.h>
- 
--#include "event.h"
--
- union perf_event;
- struct perf_session;
- struct evlist;
-@@ -27,6 +26,7 @@ struct perf_mmap;
- struct perf_sample;
- struct option;
- struct record_opts;
-+struct perf_record_auxtrace_error;
- struct perf_record_auxtrace_info;
- struct events_stats;
- 
-@@ -525,10 +525,6 @@ void auxtrace_synth_error(struct perf_record_auxtrace_error *auxtrace_error, int
- 			  int code, int cpu, pid_t pid, pid_t tid, u64 ip,
- 			  const char *msg, u64 timestamp);
- 
--int perf_event__synthesize_auxtrace_info(struct auxtrace_record *itr,
--					 struct perf_tool *tool,
--					 struct perf_session *session,
--					 perf_event__handler_t process);
- int perf_event__process_auxtrace_info(struct perf_session *session,
- 				      union perf_event *event);
- s64 perf_event__process_auxtrace(struct perf_session *session,
-@@ -605,15 +601,6 @@ void auxtrace_record__free(struct auxtrace_record *itr __maybe_unused)
- {
- }
- 
--static inline int
--perf_event__synthesize_auxtrace_info(struct auxtrace_record *itr __maybe_unused,
--				     struct perf_tool *tool __maybe_unused,
--				     struct perf_session *session __maybe_unused,
--				     perf_event__handler_t process __maybe_unused)
--{
--	return -EINVAL;
--}
--
- static inline
- int auxtrace_record__options(struct auxtrace_record *itr __maybe_unused,
- 			     struct evlist *evlist __maybe_unused,
-diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
-index 7a3d4b1..f7ed5d1 100644
---- a/tools/perf/util/bpf-event.c
-+++ b/tools/perf/util/bpf-event.c
-@@ -16,6 +16,7 @@
- #include "map.h"
- #include "evlist.h"
- #include "record.h"
-+#include "util/synthetic-events.h"
- 
- #define ptr_to_u64(ptr)    ((__u64)(unsigned long)(ptr))
- 
-diff --git a/tools/perf/util/bpf-event.h b/tools/perf/util/bpf-event.h
-index a01c2fd..81fdc88 100644
---- a/tools/perf/util/bpf-event.h
-+++ b/tools/perf/util/bpf-event.h
-@@ -6,9 +6,9 @@
- #include <linux/rbtree.h>
- #include <pthread.h>
- #include <api/fd/array.h>
--#include "event.h"
- #include <stdio.h>
- 
-+struct bpf_prog_info;
- struct machine;
- union perf_event;
- struct perf_env;
-@@ -33,11 +33,6 @@ struct btf_node {
- #ifdef HAVE_LIBBPF_SUPPORT
- int machine__process_bpf(struct machine *machine, union perf_event *event,
- 			 struct perf_sample *sample);
--
--int perf_event__synthesize_bpf_events(struct perf_session *session,
--				      perf_event__handler_t process,
--				      struct machine *machine,
--				      struct record_opts *opts);
- int bpf_event__add_sb_event(struct evlist **evlist,
- 				 struct perf_env *env);
- void bpf_event__print_bpf_prog_info(struct bpf_prog_info *info,
-@@ -51,14 +46,6 @@ static inline int machine__process_bpf(struct machine *machine __maybe_unused,
- 	return 0;
- }
- 
--static inline int perf_event__synthesize_bpf_events(struct perf_session *session __maybe_unused,
--						    perf_event__handler_t process __maybe_unused,
--						    struct machine *machine __maybe_unused,
--						    struct record_opts *opts __maybe_unused)
--{
--	return 0;
--}
--
- static inline int bpf_event__add_sb_event(struct evlist **evlist __maybe_unused,
- 					  struct perf_env *env __maybe_unused)
- {
-diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index c14646c..9a9b56e 100644
---- a/tools/perf/util/callchain.c
-+++ b/tools/perf/util/callchain.c
-@@ -23,6 +23,7 @@
- 
- #include "debug.h"
- #include "dso.h"
-+#include "event.h"
- #include "hist.h"
- #include "sort.h"
- #include "machine.h"
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index d65ae7c..043a08f 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -32,6 +32,7 @@
- #include "stat.h"
- #include "session.h"
- #include "bpf-event.h"
-+#include "synthetic-events.h"
- #include "tool.h"
- #include "../perf.h"
- 
-diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index 89a2404..a0a0c91 100644
---- a/tools/perf/util/event.h
-+++ b/tools/perf/util/event.h
-@@ -279,95 +279,13 @@ enum {
- 
- void perf_event__print_totals(void);
- 
--struct evlist;
--struct evsel;
--struct perf_session;
--struct perf_tool;
--struct perf_thread_map;
- struct perf_cpu_map;
-+struct perf_record_stat_config;
- struct perf_stat_config;
--struct perf_counts_values;
--
--typedef int (*perf_event__handler_t)(struct perf_tool *tool,
--				     union perf_event *event,
--				     struct perf_sample *sample,
--				     struct machine *machine);
-+struct perf_tool;
- 
--int perf_event__synthesize_stat_events(struct perf_stat_config *config,
--				       struct perf_tool *tool,
--				       struct evlist *evlist,
--				       perf_event__handler_t process,
--				       bool attrs);
--int perf_event__synthesize_attr(struct perf_tool *tool,
--				struct perf_event_attr *attr, u32 ids, u64 *id,
--				perf_event__handler_t process);
--int perf_event__synthesize_attrs(struct perf_tool *tool,
--				 struct evlist *evlist,
--				 perf_event__handler_t process);
--int perf_event__synthesize_build_id(struct perf_tool *tool,
--				    struct dso *pos, u16 misc,
--				    perf_event__handler_t process,
--				    struct machine *machine);
--int perf_event__synthesize_extra_attr(struct perf_tool *tool,
--				      struct evlist *evsel_list,
--				      perf_event__handler_t process,
--				      bool is_pipe);
--int perf_event__synthesize_event_update_cpus(struct perf_tool *tool,
--					     struct evsel *evsel,
--					     perf_event__handler_t process);
--int perf_event__synthesize_event_update_name(struct perf_tool *tool,
--					     struct evsel *evsel,
--					     perf_event__handler_t process);
--int perf_event__synthesize_event_update_scale(struct perf_tool *tool,
--					      struct evsel *evsel,
--					      perf_event__handler_t process);
--int perf_event__synthesize_event_update_unit(struct perf_tool *tool,
--					     struct evsel *evsel,
--					     perf_event__handler_t process);
--int perf_event__synthesize_features(struct perf_tool *tool,
--				    struct perf_session *session,
--				    struct evlist *evlist,
--				    perf_event__handler_t process);
--int perf_event__synthesize_tracing_data(struct perf_tool *tool,
--					int fd, struct evlist *evlist,
--					perf_event__handler_t process);
--int perf_event__synthesize_thread_map(struct perf_tool *tool,
--				      struct perf_thread_map *threads,
--				      perf_event__handler_t process,
--				      struct machine *machine, bool mmap_data);
--int perf_event__synthesize_thread_map2(struct perf_tool *tool,
--				      struct perf_thread_map *threads,
--				      perf_event__handler_t process,
--				      struct machine *machine);
--int perf_event__synthesize_cpu_map(struct perf_tool *tool,
--				   struct perf_cpu_map *cpus,
--				   perf_event__handler_t process,
--				   struct machine *machine);
--int perf_event__synthesize_threads(struct perf_tool *tool,
--				   perf_event__handler_t process,
--				   struct machine *machine, bool mmap_data,
--				   unsigned int nr_threads_synthesize);
--int perf_event__synthesize_kernel_mmap(struct perf_tool *tool,
--				       perf_event__handler_t process,
--				       struct machine *machine);
--int perf_event__synthesize_stat_config(struct perf_tool *tool,
--				       struct perf_stat_config *config,
--				       perf_event__handler_t process,
--				       struct machine *machine);
- void perf_event__read_stat_config(struct perf_stat_config *config,
- 				  struct perf_record_stat_config *event);
--int perf_event__synthesize_stat(struct perf_tool *tool,
--				u32 cpu, u32 thread, u64 id,
--				struct perf_counts_values *count,
--				perf_event__handler_t process,
--				struct machine *machine);
--int perf_event__synthesize_stat_round(struct perf_tool *tool,
--				      u64 time, u64 type,
--				      perf_event__handler_t process,
--				      struct machine *machine);
--int perf_event__synthesize_modules(struct perf_tool *tool,
--				   perf_event__handler_t process,
--				   struct machine *machine);
- 
- int perf_event__process_comm(struct perf_tool *tool,
- 			     union perf_event *event,
-@@ -421,10 +339,6 @@ int perf_event__process_bpf(struct perf_tool *tool,
- 			    union perf_event *event,
- 			    struct perf_sample *sample,
- 			    struct machine *machine);
--int perf_tool__process_synth_event(struct perf_tool *tool,
--				   union perf_event *event,
--				   struct machine *machine,
--				   perf_event__handler_t process);
- int perf_event__process(struct perf_tool *tool,
- 			union perf_event *event,
- 			struct perf_sample *sample,
-@@ -446,34 +360,6 @@ void thread__resolve(struct thread *thread, struct addr_location *al,
- 
- const char *perf_event__name(unsigned int id);
- 
--size_t perf_event__sample_event_size(const struct perf_sample *sample, u64 type,
--				     u64 read_format);
--int perf_event__synthesize_sample(union perf_event *event, u64 type,
--				  u64 read_format,
--				  const struct perf_sample *sample);
--
--pid_t perf_event__synthesize_comm(struct perf_tool *tool,
--				  union perf_event *event, pid_t pid,
--				  perf_event__handler_t process,
--				  struct machine *machine);
--
--int perf_event__synthesize_namespaces(struct perf_tool *tool,
--				      union perf_event *event,
--				      pid_t pid, pid_t tgid,
--				      perf_event__handler_t process,
--				      struct machine *machine);
--
--int perf_event__synthesize_mmap_events(struct perf_tool *tool,
--				       union perf_event *event,
--				       pid_t pid, pid_t tgid,
--				       perf_event__handler_t process,
--				       struct machine *machine,
--				       bool mmap_data);
--
--int perf_event__synthesize_extra_kmaps(struct perf_tool *tool,
--				       perf_event__handler_t process,
--				       struct machine *machine);
--
- size_t perf_event__fprintf_comm(union perf_event *event, FILE *fp);
- size_t perf_event__fprintf_mmap(union perf_event *event, FILE *fp);
- size_t perf_event__fprintf_mmap2(union perf_event *event, FILE *fp);
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 5b40b84..5af025c 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -40,6 +40,7 @@
- #include "trace-event.h"
- #include "stat.h"
- #include "string2.h"
-+#include "util/synthetic-events.h"
- #include "memswap.h"
- #include "util.h"
- #include "../perf-sys.h"
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index d85827d..a4a8342 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -45,6 +45,7 @@
- #include "util.h" // page_size, perf_exe()
- #include "cputopo.h"
- #include "bpf-event.h"
-+#include "util/synthetic-events.h"
+@@ -50,10 +50,12 @@
+ #include "intel-bts.h"
+ #include "arm-spe.h"
+ #include "s390-cpumsf.h"
+-#include "util.h"
++#include "util.h" // page_size
  
  #include <linux/ctype.h>
- #include <internal/lib.h>
-diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
-index 15f87a0..3888d4c 100644
---- a/tools/perf/util/intel-bts.c
-+++ b/tools/perf/util/intel-bts.c
-@@ -28,6 +28,7 @@
- #include "auxtrace.h"
- #include "intel-pt-decoder/intel-pt-insn-decoder.h"
- #include "intel-bts.h"
-+#include "util/synthetic-events.h"
++#include <linux/kernel.h>
+ #include "symbol/kallsyms.h"
++#include <internal/lib.h>
+ 
+ static bool auxtrace__dont_decode(struct perf_session *session)
+ {
+diff --git a/tools/perf/util/branch.c b/tools/perf/util/branch.c
+index 52261e5..2285b1e 100644
+--- a/tools/perf/util/branch.c
++++ b/tools/perf/util/branch.c
+@@ -1,4 +1,3 @@
+-#include "util/util.h"
+ #include "util/map_symbol.h"
+ #include "util/branch.h"
+ #include <linux/kernel.h>
+diff --git a/tools/perf/util/branch.h b/tools/perf/util/branch.h
+index 06f66da..88e00d2 100644
+--- a/tools/perf/util/branch.h
++++ b/tools/perf/util/branch.h
+@@ -1,8 +1,15 @@
+ #ifndef _PERF_BRANCH_H
+ #define _PERF_BRANCH_H 1
+-
++/*
++ * The linux/stddef.h isn't need here, but is needed for __always_inline used
++ * in files included from uapi/linux/perf_event.h such as
++ * /usr/include/linux/swab.h and /usr/include/linux/byteorder/little_endian.h,
++ * detected in at least musl libc, used in Alpine Linux. -acme
++ */
+ #include <stdio.h>
+ #include <stdint.h>
++#include <linux/compiler.h>
++#include <linux/stddef.h>
+ #include <linux/perf_event.h>
+ #include <linux/types.h>
+ 
+diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
+index e5fb777..7928c39 100644
+--- a/tools/perf/util/build-id.c
++++ b/tools/perf/util/build-id.c
+@@ -7,7 +7,7 @@
+  * Copyright (C) 2009, 2010 Red Hat Inc.
+  * Copyright (C) 2009, 2010 Arnaldo Carvalho de Melo <acme@redhat.com>
+  */
+-#include "util.h"
++#include "util.h" // copyfile_ns(), lsdir(), mkdir_p(), rm_rf()
+ #include <dirent.h>
+ #include <errno.h>
+ #include <stdio.h>
+diff --git a/tools/perf/util/cloexec.c b/tools/perf/util/cloexec.c
+index 4e904fc..a12872f 100644
+--- a/tools/perf/util/cloexec.c
++++ b/tools/perf/util/cloexec.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <errno.h>
+ #include <sched.h>
+-#include "util.h"
++#include "util.h" // for sched_getcpu()
+ #include "../perf-sys.h"
+ #include "cloexec.h"
+ #include "event.h"
+diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+index 37d7c49..cd92a99 100644
+--- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
++++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+@@ -17,7 +17,6 @@
+ #include "cs-etm.h"
+ #include "cs-etm-decoder.h"
+ #include "intlist.h"
+-#include "util.h"
+ 
+ /* use raw logging */
+ #ifdef CS_DEBUG_RAW
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index 707afdb..f87b9c1 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -35,7 +35,6 @@
+ #include "thread.h"
+ #include "thread-stack.h"
+ #include <tools/libc_compat.h>
+-#include "util.h"
  
  #define MAX_TIMESTAMP (~0ULL)
  
-diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index 9b56fb7..bcdc035 100644
---- a/tools/perf/util/intel-pt.c
-+++ b/tools/perf/util/intel-pt.c
-@@ -33,6 +33,7 @@
- #include "tsc.h"
- #include "intel-pt.h"
- #include "config.h"
-+#include "util/synthetic-events.h"
- #include "time-utils.h"
+diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
+index e75c3a2..88fba2b 100644
+--- a/tools/perf/util/data.c
++++ b/tools/perf/util/data.c
+@@ -13,9 +13,10 @@
+ #include <dirent.h>
  
- #include "../arch/x86/include/uapi/asm/perf_regs.h"
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index b4749d3..132de5c 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -20,6 +20,7 @@
- #include "symbol.h"
- #include "sort.h"
- #include "strlist.h"
-+#include "util/synthetic-events.h"
- #include "target.h"
- #include "thread.h"
- #include "util.h"
-@@ -2624,6 +2625,15 @@ int __machine__synthesize_threads(struct machine *machine, struct perf_tool *too
- 	return 0;
- }
+ #include "data.h"
+-#include "util.h"
++#include "util.h" // rm_rf_perf_data()
+ #include "debug.h"
+ #include "header.h"
++#include <internal/lib.h>
  
-+int machine__synthesize_threads(struct machine *machine, struct target *target,
-+				struct perf_thread_map *threads, bool data_mmap,
-+				unsigned int nr_threads_synthesize)
-+{
-+	return __machine__synthesize_threads(machine, NULL, target, threads,
-+					     perf_event__process, data_mmap,
-+					     nr_threads_synthesize);
-+}
-+
- pid_t machine__get_current_tid(struct machine *machine, int cpu)
+ static void close_dir(struct perf_data_file *files, int nr)
  {
- 	int nr_cpus = min(machine->env->nr_cpus_online, MAX_NR_CPUS);
-diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-index ffd391a..18e13c0 100644
---- a/tools/perf/util/machine.h
-+++ b/tools/perf/util/machine.h
-@@ -6,7 +6,6 @@
- #include <linux/rbtree.h>
- #include "map_groups.h"
- #include "dsos.h"
--#include "event.h"
+diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
+index a1b59bd..e55114f 100644
+--- a/tools/perf/util/debug.c
++++ b/tools/perf/util/debug.c
+@@ -17,7 +17,6 @@
+ #include "event.h"
+ #include "debug.h"
+ #include "print_binary.h"
+-#include "util.h"
+ #include "target.h"
+ #include "ui/helpline.h"
+ #include "ui/ui.h"
+diff --git a/tools/perf/util/demangle-rust.c b/tools/perf/util/demangle-rust.c
+index 423afbb..a659fc6 100644
+--- a/tools/perf/util/demangle-rust.c
++++ b/tools/perf/util/demangle-rust.c
+@@ -1,6 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <string.h>
+-#include "util.h"
+ #include "debug.h"
+ 
+ #include "demangle-rust.h"
+diff --git a/tools/perf/util/dwarf-regs.c b/tools/perf/util/dwarf-regs.c
+index db55edd..1b49ece 100644
+--- a/tools/perf/util/dwarf-regs.c
++++ b/tools/perf/util/dwarf-regs.c
+@@ -5,7 +5,6 @@
+  * Written by: Masami Hiramatsu <mhiramat@kernel.org>
+  */
+ 
+-#include <util.h>
+ #include <debug.h>
+ #include <dwarf-regs.h>
+ #include <elf.h>
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 095924a..ea9517d 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -16,7 +16,7 @@
+ #include "evsel.h"
+ #include "debug.h"
+ #include "units.h"
+-#include "util.h"
++#include "util.h" // page_size
+ #include "../perf.h"
+ #include "asm/bug.h"
+ #include "bpf-event.h"
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 8582538..c194ec7 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -45,6 +45,7 @@
+ #include "../perf-sys.h"
+ #include "util/parse-branch-options.h"
+ #include <internal/xyarray.h>
++#include <internal/lib.h>
+ 
+ #include <linux/ctype.h>
+ 
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index b0c34dd..d85827d 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -42,11 +42,12 @@
+ #include "tool.h"
+ #include "time-utils.h"
+ #include "units.h"
+-#include "util.h"
++#include "util.h" // page_size, perf_exe()
+ #include "cputopo.h"
+ #include "bpf-event.h"
+ 
+ #include <linux/ctype.h>
++#include <internal/lib.h>
+ 
+ /*
+  * magic2 = "PERFILE2"
+diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
+index 00db995..9f9c6c6 100644
+--- a/tools/perf/util/jitdump.c
++++ b/tools/perf/util/jitdump.c
+@@ -15,7 +15,6 @@
+ #include <linux/stringify.h>
+ 
+ #include "build-id.h"
+-#include "util.h"
+ #include "event.h"
+ #include "debug.h"
+ #include "evlist.h"
+diff --git a/tools/perf/util/llvm-utils.c b/tools/perf/util/llvm-utils.c
+index 55fb4b3..8d04e3d 100644
+--- a/tools/perf/util/llvm-utils.c
++++ b/tools/perf/util/llvm-utils.c
+@@ -8,6 +8,7 @@
+ #include <limits.h>
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <unistd.h>
+ #include <linux/err.h>
+ #include <linux/string.h>
+ #include <linux/zalloc.h>
+diff --git a/tools/perf/util/lzma.c b/tools/perf/util/lzma.c
+index 3974470..39062df 100644
+--- a/tools/perf/util/lzma.c
++++ b/tools/perf/util/lzma.c
+@@ -7,10 +7,10 @@
+ #include <sys/stat.h>
+ #include <fcntl.h>
+ #include "compress.h"
+-#include "util.h"
+ #include "debug.h"
+ #include <string.h>
+ #include <unistd.h>
++#include <internal/lib.h>
+ 
+ #define BUFSIZE 8192
+ 
+diff --git a/tools/perf/util/perf-hooks.c b/tools/perf/util/perf-hooks.c
+index e635c59..7a0ab35 100644
+--- a/tools/perf/util/perf-hooks.c
++++ b/tools/perf/util/perf-hooks.c
+@@ -12,7 +12,6 @@
+ #include <setjmp.h>
+ #include <linux/err.h>
+ #include <linux/kernel.h>
+-#include "util/util.h"
+ #include "util/debug.h"
+ #include "util/perf-hooks.h"
+ 
+diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
+index 286fe81..860c488 100644
+--- a/tools/perf/util/record.c
++++ b/tools/perf/util/record.c
+@@ -10,7 +10,6 @@
+ #include <api/fs/fs.h>
+ #include <subcmd/parse-options.h>
+ #include <perf/cpumap.h>
+-#include "util.h"
+ #include "cloexec.h"
+ #include "record.h"
+ #include "../perf-sys.h"
+diff --git a/tools/perf/util/rwsem.c b/tools/perf/util/rwsem.c
+index 5e52e7b..f3d29d8 100644
+--- a/tools/perf/util/rwsem.c
++++ b/tools/perf/util/rwsem.c
+@@ -1,3 +1,4 @@
++// SPDX-License-Identifier: GPL-2.0
+ #include "util.h"
  #include "rwsem.h"
  
- struct addr_location;
-@@ -252,20 +251,6 @@ int machines__for_each_thread(struct machines *machines,
- 			      int (*fn)(struct thread *thread, void *p),
- 			      void *priv);
+diff --git a/tools/perf/util/s390-sample-raw.c b/tools/perf/util/s390-sample-raw.c
+index 4d9593e..05b43ab 100644
+--- a/tools/perf/util/s390-sample-raw.c
++++ b/tools/perf/util/s390-sample-raw.c
+@@ -22,7 +22,6 @@
+ #include <asm/byteorder.h>
  
--int __machine__synthesize_threads(struct machine *machine, struct perf_tool *tool,
--				  struct target *target, struct perf_thread_map *threads,
--				  perf_event__handler_t process, bool data_mmap,
--				  unsigned int nr_threads_synthesize);
--static inline
--int machine__synthesize_threads(struct machine *machine, struct target *target,
--				struct perf_thread_map *threads, bool data_mmap,
--				unsigned int nr_threads_synthesize)
--{
--	return __machine__synthesize_threads(machine, NULL, target, threads,
--					     perf_event__process, data_mmap,
--					     nr_threads_synthesize);
--}
--
- pid_t machine__get_current_tid(struct machine *machine, int cpu);
- int machine__set_current_tid(struct machine *machine, int cpu, pid_t pid,
- 			     pid_t tid);
+ #include "debug.h"
+-#include "util.h"
+ #include "session.h"
+ #include "evlist.h"
+ #include "color.h"
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+index 666a56e..bb68285 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -37,7 +37,6 @@
+ #include "../dso.h"
+ #include "../callchain.h"
+ #include "../evsel.h"
+-#include "../util.h"
+ #include "../event.h"
+ #include "../thread.h"
+ #include "../comm.h"
 diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 2b583e6..6267613 100644
+index e9e4a04..2b133bc 100644
 --- a/tools/perf/util/session.c
 +++ b/tools/perf/util/session.c
-@@ -29,6 +29,7 @@
- #include "thread-stack.h"
- #include "sample-raw.h"
- #include "stat.h"
-+#include "util/synthetic-events.h"
- #include "util.h"
+@@ -34,6 +34,7 @@
  #include "ui/progress.h"
  #include "../perf.h"
-diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
-index b7aa076..b4c9428 100644
---- a/tools/perf/util/session.h
-+++ b/tools/perf/util/session.h
-@@ -138,9 +138,4 @@ int perf_session__deliver_synth_event(struct perf_session *session,
- int perf_event__process_id_index(struct perf_session *session,
- 				 union perf_event *event);
+ #include "arch/common.h"
++#include <internal/lib.h>
  
--int perf_event__synthesize_id_index(struct perf_tool *tool,
--				    perf_event__handler_t process,
--				    struct evlist *evlist,
--				    struct machine *machine);
--
- #endif /* __PERF_SESSION_H */
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index 2e318d9..46c8a50 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -12,6 +12,7 @@
- #include "target.h"
- #include "evlist.h"
- #include "evsel.h"
-+#include "util/synthetic-events.h"
- #include "thread_map.h"
+ #ifdef HAVE_ZSTD_SUPPORT
+ static int perf_session__process_compressed_event(struct perf_session *session,
+diff --git a/tools/perf/util/srccode.c b/tools/perf/util/srccode.c
+index adfcf1f..b402f9c 100644
+--- a/tools/perf/util/srccode.c
++++ b/tools/perf/util/srccode.c
+@@ -15,7 +15,7 @@
+ #include <string.h>
+ #include "srccode.h"
+ #include "debug.h"
+-#include "util.h"
++#include "util.h" // page_size
+ 
+ #define MAXSRCCACHE (32*1024*1024)
+ #define MAXSRCFILES     64
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index 9428639..8b9199c 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -18,8 +18,10 @@
+ #include "debug.h"
+ #include "util.h"
+ #include <linux/ctype.h>
++#include <linux/kernel.h>
  #include <linux/zalloc.h>
+ #include <symbol/kallsyms.h>
++#include <internal/lib.h>
  
-diff --git a/tools/perf/util/synthetic-events.h b/tools/perf/util/synthetic-events.h
-new file mode 100644
-index 0000000..baead0c
---- /dev/null
-+++ b/tools/perf/util/synthetic-events.h
-@@ -0,0 +1,103 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __PERF_SYNTHETIC_EVENTS_H
-+#define __PERF_SYNTHETIC_EVENTS_H
-+
-+#include <stdbool.h>
-+#include <sys/types.h> // pid_t
-+#include <linux/compiler.h>
-+#include <linux/types.h>
-+
-+struct auxtrace_record;
-+struct dso;
-+struct evlist;
-+struct evsel;
-+struct machine;
-+struct perf_counts_values;
-+struct perf_cpu_map;
-+struct perf_event_attr;
-+struct perf_event_mmap_page;
-+struct perf_sample;
-+struct perf_session;
-+struct perf_stat_config;
-+struct perf_thread_map;
-+struct perf_tool;
-+struct record_opts;
-+struct target;
-+
-+union perf_event;
-+
-+typedef int (*perf_event__handler_t)(struct perf_tool *tool, union perf_event *event,
-+				     struct perf_sample *sample, struct machine *machine);
-+
-+int perf_event__synthesize_attrs(struct perf_tool *tool, struct evlist *evlist, perf_event__handler_t process);
-+int perf_event__synthesize_attr(struct perf_tool *tool, struct perf_event_attr *attr, u32 ids, u64 *id, perf_event__handler_t process);
-+int perf_event__synthesize_build_id(struct perf_tool *tool, struct dso *pos, u16 misc, perf_event__handler_t process, struct machine *machine);
-+int perf_event__synthesize_cpu_map(struct perf_tool *tool, struct perf_cpu_map *cpus, perf_event__handler_t process, struct machine *machine);
-+int perf_event__synthesize_event_update_cpus(struct perf_tool *tool, struct evsel *evsel, perf_event__handler_t process);
-+int perf_event__synthesize_event_update_name(struct perf_tool *tool, struct evsel *evsel, perf_event__handler_t process);
-+int perf_event__synthesize_event_update_scale(struct perf_tool *tool, struct evsel *evsel, perf_event__handler_t process);
-+int perf_event__synthesize_event_update_unit(struct perf_tool *tool, struct evsel *evsel, perf_event__handler_t process);
-+int perf_event__synthesize_extra_attr(struct perf_tool *tool, struct evlist *evsel_list, perf_event__handler_t process, bool is_pipe);
-+int perf_event__synthesize_extra_kmaps(struct perf_tool *tool, perf_event__handler_t process, struct machine *machine);
-+int perf_event__synthesize_features(struct perf_tool *tool, struct perf_session *session, struct evlist *evlist, perf_event__handler_t process);
-+int perf_event__synthesize_id_index(struct perf_tool *tool, perf_event__handler_t process, struct evlist *evlist, struct machine *machine);
-+int perf_event__synthesize_kernel_mmap(struct perf_tool *tool, perf_event__handler_t process, struct machine *machine);
-+int perf_event__synthesize_mmap_events(struct perf_tool *tool, union perf_event *event, pid_t pid, pid_t tgid, perf_event__handler_t process, struct machine *machine, bool mmap_data);
-+int perf_event__synthesize_modules(struct perf_tool *tool, perf_event__handler_t process, struct machine *machine);
-+int perf_event__synthesize_namespaces(struct perf_tool *tool, union perf_event *event, pid_t pid, pid_t tgid, perf_event__handler_t process, struct machine *machine);
-+int perf_event__synthesize_sample(union perf_event *event, u64 type, u64 read_format, const struct perf_sample *sample);
-+int perf_event__synthesize_stat_config(struct perf_tool *tool, struct perf_stat_config *config, perf_event__handler_t process, struct machine *machine);
-+int perf_event__synthesize_stat_events(struct perf_stat_config *config, struct perf_tool *tool, struct evlist *evlist, perf_event__handler_t process, bool attrs);
-+int perf_event__synthesize_stat_round(struct perf_tool *tool, u64 time, u64 type, perf_event__handler_t process, struct machine *machine);
-+int perf_event__synthesize_stat(struct perf_tool *tool, u32 cpu, u32 thread, u64 id, struct perf_counts_values *count, perf_event__handler_t process, struct machine *machine);
-+int perf_event__synthesize_thread_map2(struct perf_tool *tool, struct perf_thread_map *threads, perf_event__handler_t process, struct machine *machine);
-+int perf_event__synthesize_thread_map(struct perf_tool *tool, struct perf_thread_map *threads, perf_event__handler_t process, struct machine *machine, bool mmap_data);
-+int perf_event__synthesize_threads(struct perf_tool *tool, perf_event__handler_t process, struct machine *machine, bool mmap_data, unsigned int nr_threads_synthesize);
-+int perf_event__synthesize_tracing_data(struct perf_tool *tool, int fd, struct evlist *evlist, perf_event__handler_t process);
-+int perf_event__synth_time_conv(const struct perf_event_mmap_page *pc, struct perf_tool *tool, perf_event__handler_t process, struct machine *machine);
-+pid_t perf_event__synthesize_comm(struct perf_tool *tool, union perf_event *event, pid_t pid, perf_event__handler_t process, struct machine *machine);
-+
-+int perf_tool__process_synth_event(struct perf_tool *tool, union perf_event *event, struct machine *machine, perf_event__handler_t process);
-+
-+size_t perf_event__sample_event_size(const struct perf_sample *sample, u64 type, u64 read_format);
-+
-+int __machine__synthesize_threads(struct machine *machine, struct perf_tool *tool,
-+				  struct target *target, struct perf_thread_map *threads,
-+				  perf_event__handler_t process, bool data_mmap,
-+				  unsigned int nr_threads_synthesize);
-+int machine__synthesize_threads(struct machine *machine, struct target *target,
-+				struct perf_thread_map *threads, bool data_mmap,
-+				unsigned int nr_threads_synthesize);
-+
-+#ifdef HAVE_AUXTRACE_SUPPORT
-+int perf_event__synthesize_auxtrace_info(struct auxtrace_record *itr, struct perf_tool *tool,
-+					 struct perf_session *session, perf_event__handler_t process);
-+
-+#else // HAVE_AUXTRACE_SUPPORT
-+
-+#include <errno.h>
-+
-+static inline int
-+perf_event__synthesize_auxtrace_info(struct auxtrace_record *itr __maybe_unused,
-+				     struct perf_tool *tool __maybe_unused,
-+				     struct perf_session *session __maybe_unused,
-+				     perf_event__handler_t process __maybe_unused)
-+{
-+	return -EINVAL;
-+}
-+#endif // HAVE_AUXTRACE_SUPPORT
-+
-+#ifdef HAVE_LIBBPF_SUPPORT
-+int perf_event__synthesize_bpf_events(struct perf_session *session, perf_event__handler_t process,
-+				      struct machine *machine, struct record_opts *opts);
-+#else // HAVE_LIBBPF_SUPPORT
-+static inline int perf_event__synthesize_bpf_events(struct perf_session *session __maybe_unused,
-+						    perf_event__handler_t process __maybe_unused,
-+						    struct machine *machine __maybe_unused,
-+						    struct record_opts *opts __maybe_unused)
-+{
-+	return 0;
-+}
-+#endif // HAVE_LIBBPF_SUPPORT
-+
-+#endif // __PERF_SYNTHETIC_EVENTS_H
-diff --git a/tools/perf/util/tsc.h b/tools/perf/util/tsc.h
-index e0c3af3..3c5a632 100644
---- a/tools/perf/util/tsc.h
-+++ b/tools/perf/util/tsc.h
-@@ -4,13 +4,12 @@
+ #ifndef EM_AARCH64
+ #define EM_AARCH64	183  /* ARM 64 bit */
+diff --git a/tools/perf/util/symbol-minimal.c b/tools/perf/util/symbol-minimal.c
+index 7e2813e..d6e99af 100644
+--- a/tools/perf/util/symbol-minimal.c
++++ b/tools/perf/util/symbol-minimal.c
+@@ -1,8 +1,6 @@
+-// SPDX-License-Identifier: GPL-2.0
+ #include "dso.h"
+ #include "symbol.h"
+ #include "symsrc.h"
+-#include "util.h"
  
- #include <linux/types.h>
+ #include <errno.h>
+ #include <unistd.h>
+@@ -13,6 +11,7 @@
+ #include <byteswap.h>
+ #include <sys/stat.h>
+ #include <linux/zalloc.h>
++#include <internal/lib.h>
  
--#include "event.h"
--
- struct perf_tsc_conversion {
- 	u16 time_shift;
- 	u32 time_mult;
- 	u64 time_zero;
- };
-+
- struct perf_event_mmap_page;
+ static bool check_need_swap(int file_endian)
+ {
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 765c75d..a8f80e4 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -19,7 +19,7 @@
+ #include "build-id.h"
+ #include "cap.h"
+ #include "dso.h"
+-#include "util.h"
++#include "util.h" // lsdir()
+ #include "debug.h"
+ #include "event.h"
+ #include "machine.h"
+diff --git a/tools/perf/util/target.c b/tools/perf/util/target.c
+index e152d2b..a3db13d 100644
+--- a/tools/perf/util/target.c
++++ b/tools/perf/util/target.c
+@@ -6,7 +6,6 @@
+  */
  
- int perf_read_tsc_conversion(const struct perf_event_mmap_page *pc,
-@@ -20,13 +19,4 @@ u64 perf_time_to_tsc(u64 ns, struct perf_tsc_conversion *tc);
- u64 tsc_to_perf_time(u64 cyc, struct perf_tsc_conversion *tc);
- u64 rdtsc(void);
+ #include "target.h"
+-#include "util.h"
  
--struct perf_event_mmap_page;
--struct perf_tool;
--struct machine;
--
--int perf_event__synth_time_conv(const struct perf_event_mmap_page *pc,
--				struct perf_tool *tool,
--				perf_event__handler_t process,
--				struct machine *machine);
--
--#endif
-+#endif // __PERF_TSC_H
+ #include <pwd.h>
+ #include <stdio.h>
+diff --git a/tools/perf/util/trace-event-info.c b/tools/perf/util/trace-event-info.c
+index d63d542..fe07e75 100644
+--- a/tools/perf/util/trace-event-info.c
++++ b/tools/perf/util/trace-event-info.c
+@@ -2,7 +2,7 @@
+ /*
+  * Copyright (C) 2008,2009, Steven Rostedt <srostedt@redhat.com>
+  */
+-#include "util.h"
++#include "util.h" // page_size
+ #include <dirent.h>
+ #include <mntent.h>
+ #include <stdio.h>
+diff --git a/tools/perf/util/trace-event-read.c b/tools/perf/util/trace-event-read.c
+index b6c0db0..8593d3c 100644
+--- a/tools/perf/util/trace-event-read.c
++++ b/tools/perf/util/trace-event-read.c
+@@ -15,7 +15,6 @@
+ #include <unistd.h>
+ #include <errno.h>
+ 
+-#include "util.h"
+ #include "trace-event.h"
+ #include "debug.h"
+ 
+diff --git a/tools/perf/util/trace-event.c b/tools/perf/util/trace-event.c
+index 01b9d89..b3ee651 100644
+--- a/tools/perf/util/trace-event.c
++++ b/tools/perf/util/trace-event.c
+@@ -14,7 +14,6 @@
+ #include <api/fs/fs.h>
+ #include "trace-event.h"
+ #include "machine.h"
+-#include "util.h"
+ 
+ /*
+  * global trace_event object used by trace_event__tp_format
+diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
+index 9ece188..15f6e46 100644
+--- a/tools/perf/util/unwind-libdw.c
++++ b/tools/perf/util/unwind-libdw.c
+@@ -17,7 +17,6 @@
+ #include "event.h"
+ #include "perf_regs.h"
+ #include "callchain.h"
+-#include "util.h"
+ 
+ static char *debuginfo_path;
+ 
+diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
+index ebdbb05..1800887 100644
+--- a/tools/perf/util/unwind-libunwind-local.c
++++ b/tools/perf/util/unwind-libunwind-local.c
+@@ -37,7 +37,6 @@
+ #include "unwind.h"
+ #include "map.h"
+ #include "symbol.h"
+-#include "util.h"
+ #include "debug.h"
+ #include "asm/bug.h"
+ #include "dso.h"
+diff --git a/tools/perf/util/vdso.c b/tools/perf/util/vdso.c
+index e5e6599..ba4b439 100644
+--- a/tools/perf/util/vdso.c
++++ b/tools/perf/util/vdso.c
+@@ -11,7 +11,7 @@
+ 
+ #include "vdso.h"
+ #include "dso.h"
+-#include "util.h"
++#include <internal/lib.h>
+ #include "map.h"
+ #include "symbol.h"
+ #include "machine.h"
+diff --git a/tools/perf/util/zlib.c b/tools/perf/util/zlib.c
+index deb6e69..78d2297 100644
+--- a/tools/perf/util/zlib.c
++++ b/tools/perf/util/zlib.c
+@@ -7,9 +7,9 @@
+ #include <sys/mman.h>
+ #include <zlib.h>
+ #include <linux/compiler.h>
++#include <internal/lib.h>
+ 
+ #include "util/compress.h"
+-#include "util/util.h"
+ 
+ #define CHUNK_SIZE  16384
+ 
