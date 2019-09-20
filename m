@@ -2,149 +2,144 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65070C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 192D4C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 370CA208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:33:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D02302080F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:36:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FO4VR2MD";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oriZ9Ook"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="flicGF8f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393608AbfITKds (ORCPT
+        id S2408662AbfITKge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 06:33:48 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:60566 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393568AbfITKds (ORCPT
+        Fri, 20 Sep 2019 06:36:34 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:60818 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393577AbfITKgd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 06:33:48 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id D6A976155D; Fri, 20 Sep 2019 10:33:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568975626;
-        bh=g58L+Xw7ZxKEMW+27JOU2VAvjhj6honkdYBe73Hc2fI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FO4VR2MD4jSeCuOErInP2yjCbwvVUCVyKXh9z6mtTxhRezGnt4LItZ7yIFirTTLMV
-         ituFDJcsKxlCHET1OB9i6dCK1xPmn8s9kb5ywyD94C08dJKWVZa53MdVRjcAIjTfBR
-         uYhZYmTZ5Qt3I02sc4cbmd7xaUgQ4hbdlf78ifn4=
-Received: from codeaurora.org (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pkondeti@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C037A60240;
-        Fri, 20 Sep 2019 10:33:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568975625;
-        bh=g58L+Xw7ZxKEMW+27JOU2VAvjhj6honkdYBe73Hc2fI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oriZ9OokT5cb1zy5Ejzj97EBIgF0MO6QIrEx4q/AUzS+Iy6b0JJDJY0mVUQJ5vsnr
-         OMBfxUtGdaq8cLBxjuLAj1RX4nsm1GGoDm0nn0bEvFvbT2NKr2qUI5ZH+CSo7R5Eo9
-         MtBWGcvZwyB49TZNgVXmb3L4NfEjNAFcuzQckUp8=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C037A60240
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=pkondeti@codeaurora.org
-Date:   Fri, 20 Sep 2019 16:03:38 +0530
-From:   Pavan Kondeti <pkondeti@codeaurora.org>
-To:     Quentin Perret <qperret@qperret.net>
-Cc:     peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, juri.lelli@redhat.com, rjw@rjwysocki.net,
-        morten.rasmussen@arm.com, valentin.schneider@arm.com,
-        qais.yousef@arm.com, tkjos@google.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched/fair: Speed-up energy-aware wake-ups
-Message-ID: <20190920103338.GB20250@codeaurora.org>
-References: <20190912094404.13802-1-qperret@qperret.net>
- <20190920030215.GA20250@codeaurora.org>
- <20190920094115.GA11503@qperret.net>
+        Fri, 20 Sep 2019 06:36:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=OqnJbMKZf+jB/1frWLHcbvpcFTP1xDtJjx0l4FcIer0=; b=flicGF8fB5EcjyHS/GqpbQwx6
+        gANNgMd5t46ZpYwh6aQHyDhHGInQiibEN9gcoHBE0WvRwl1CsRRqVfgjDWtPVjkHr35ukxm7y2S4J
+        zoOgZAH55fyc4+d1utnGUM/1k+5drU1y2S0oCt3V/kFzcd0G/H9SXCrljTv/1u6X0xOrQS1huvBIo
+        X43PctZ7uHezIXK0rHZDyQEIXaSgsPtmJKLVQCrpeLBX7StJjfBOukRQSwwimjkxJqmfN4dmsuCEb
+        rX1fXdnDiYvy13AC6Vhw/cw/FwFL3vac0B7eiV8tIbEeKBdxMrgZYpwFaaOlJDHiqU/oArEWQ2xQp
+        7cb/sNNqg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:45958)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iBGH5-0003Me-9G; Fri, 20 Sep 2019 11:36:27 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iBGH0-0005jR-6j; Fri, 20 Sep 2019 11:36:22 +0100
+Date:   Fri, 20 Sep 2019 11:36:22 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Baruch Siach <baruch@tkos.co.il>,
+        Fabio Estevam <festevam@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        tinywrkb <tinywrkb@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] ARM: dts: imx6dl: SolidRun: add phy node with 100Mb/s
+ max-speed
+Message-ID: <20190920103622.GL25745@shell.armlinux.org.uk>
+References: <20190917133942.GR25745@shell.armlinux.org.uk>
+ <20190917151707.GV25745@shell.armlinux.org.uk>
+ <20190917153027.GW25745@shell.armlinux.org.uk>
+ <20190917163427.GA1475935@arch-dsk-01>
+ <20190917170419.GX25745@shell.armlinux.org.uk>
+ <20190917171913.GY25745@shell.armlinux.org.uk>
+ <20190917172658.GB9591@lunn.ch>
+ <20190917173728.GZ25745@shell.armlinux.org.uk>
+ <20190917181905.GA25745@shell.armlinux.org.uk>
+ <20190917183934.GJ20778@lunn.ch>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190920094115.GA11503@qperret.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190917183934.GJ20778@lunn.ch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Quentin,
-
-On Fri, Sep 20, 2019 at 11:41:15AM +0200, Quentin Perret wrote:
-> Hi Pavan,
+On Tue, Sep 17, 2019 at 08:39:34PM +0200, Andrew Lunn wrote:
+> > > Well, the _correct_ driver needs to be used for the PHY specific
+> > > features to be properly controlled.  Using the generic driver
+> > > in this situation will not be guaranteed to work.
 > 
-> On Friday 20 Sep 2019 at 08:32:15 (+0530), Pavan Kondeti wrote:
-> > Earlier, we are not checking the spare capacity for the prev_cpu. Now that the
-> > continue statement is removed, prev_cpu could also be the max_spare_cap_cpu.
-> > Actually that makes sense. Because there is no reason why we want to select
-> > another CPU which has less spare capacity than previous CPU.
+> I fully agree about the PHY driver. I'm expect this device is
+> violating c22 when it modifies the advertisement register itself. So
+> all bets are off for the genphy.
+> 
+> > Well, this hasn't worked, but not for the obvious reason.  Register 0x14
+> > is documented as read/write.  Bits 15:6 are reserved, bit 5 is the
+> > smart speed enable, 4:2 configures the attempts, bit 1 sets the link
+> > stable condition, bit 0 is reserved.
 > > 
-> > Is this behavior intentional?
+> > Writing 0x80c results in the register reading back 0x82c.  Writing
+> > 0x800 results in the same.  Writing 0 reads back 0x2c.  Writing 0xffff
+> > seems to prevent packets being passed - and at that point I lost
+> > control so I couldn't see what the result was.
+> > 
+> > There is nothing in the data sheet which suggests that there is any
+> > gating of this register.  So it looks like we're stuck with smartspeed
+> > enabled.
+> > 
+> > So, I think there's only two remaining ways forward - to revert commit
+> > 5502b218e001 to restore the old behaviour, read back the advertisement
+> > from the PHY along with the rest of the status, as I've previously
+> > stated.  It means that phylib will modify phydev->advertising at
+> > random points, just as it modifies phydev->lp_advertising, so locking
+> > may become an issue.  The revert approach is probably best until we
+> > have something working along those lines.
 > 
-> The intent was indeed to not compute the energy for another CPU in
-> prev_cpu's perf domain if prev_cpu is the one with max spare cap -- it
-> is useless to do so since this other CPU cannot 'beat' prev_cpu and
-> will never be chosen in the end.
+> We have a couple of other PHYs which support downshift. We should see
+> if we can follow what they do. What is i think important is that
+> read_status return the correct speed. So we probably cannot use
+> genphy_read_status() as is. Maybe we should split genphy_read_status()
+> into two, so the register reading bit can be done unconditionally by
+> phy drivers for hardware which don't report link down when they
+> should?
 
-Yes. Selecting the prev_cpu is the correct decision.
+I think we need to check how the downshift feature works on other PHYs
+and whether it is enabled there.
 
-> 
-> But I did miss that we'd end up computing the energy for prev_cpu
-> twice ... Harmless but useless. So yeah, let's optimize that case too :)
-> 
-> > When prev_cpu == max_spare_cap_cpu, we are evaluating the energy again for the
-> > same CPU below. That could have been skipped by returning prev_cpu when
-> > prev_cpu == max_spare_cap_cpu.
-> 
-> Right, something like the patch below ? My test results are still
-> looking good with it applied.
-> 
-> Thanks for the careful review,
-> Quentin
-> ---
-> From 7b8258287f180a2c383ebe397e8129f5f898ffbe Mon Sep 17 00:00:00 2001
-> From: Quentin Perret <qperret@qperret.net>
-> Date: Fri, 20 Sep 2019 09:07:20 +0100
-> Subject: [PATCH] sched/fair: Avoid redundant EAS calculation
-> 
-> The EAS wake-up path computes the system energy for several CPU
-> candidates: the CPU with maximum spare capacity in each performance
-> domain, and the prev_cpu. However, if prev_cpu also happens to be the
-> CPU with maximum spare capacity in its performance domain, the energy
-> calculation is still done twice, unnecessarily.
-> 
-> Add a condition to filter out this corner case before doing the energy
-> calculation.
-> 
-> Reported-by: Pavan Kondeti <pkondeti@codeaurora.org>
-> Signed-off-by: Quentin Perret <qperret@qperret.net>
-> ---
->  kernel/sched/fair.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index d4bbf68c3161..7399382bc291 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -6412,7 +6412,7 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
->  		}
->  
->  		/* Evaluate the energy impact of using this CPU. */
-> -		if (max_spare_cap_cpu >= 0) {
-> +		if (max_spare_cap_cpu >= 0 && max_spare_cap_cpu != prev_cpu) {
->  			cur_delta = compute_energy(p, max_spare_cap_cpu, pd);
->  			cur_delta -= base_energy_pd;
->  			if (cur_delta < best_delta) {
-> -- 
-> 2.22.1
-> 
+Looking at the Marvell 88e151x PHYs, they have the feature, but do not
+enable it by default.  If firmware has enabled the feature, phylib will
+incorrectly resolve the link speed based on just the advertisements.
 
-+1. Looks good to me.
+I think the safest way in the case of both PHYs to ascertain the real
+link speed is to read the Specific Status register - register 17 in
+both cases.  The top two bits indicate the negotiated speed resolution
+and bit 13 indicates the duplex.  Bit 11 indicates whether the
+resolution is valid.  This register layout seems to apply to both
+88e151x and AR8035.
+
+The register also contains the pause mode resolution in terms of
+receive or transmit pause enabled, but this is not useful to phylib
+as that is not what phylib wants to know.  However, it probably makes
+sense for phylib to resolve the pause mode negotiation itself rather
+than having that logic in the MAC drivers.
 
 -- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
