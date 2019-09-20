@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BE4C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BDAFC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C1D820B7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:34:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5747D2080F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:34:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391717AbfITOeb (ORCPT
+        id S2391758AbfITOej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:34:31 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36316 "EHLO
+        Fri, 20 Sep 2019 10:34:39 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36300 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388232AbfITOZH (ORCPT
+        by vger.kernel.org with ESMTP id S2388215AbfITOZH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Sep 2019 10:25:07 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqL-00050v-2h; Fri, 20 Sep 2019 15:25:05 +0100
+        id 1iBJqK-00051C-Rg; Fri, 20 Sep 2019 15:25:04 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqH-0007zV-O8; Fri, 20 Sep 2019 15:25:01 +0100
+        id 1iBJqH-0007zR-NL; Fri, 20 Sep 2019 15:25:01 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Marcel Holtmann" <marcel@holtmann.org>,
-        "Jeremy Cline" <jcline@redhat.com>,
-        syzbot+899a33dc0fa0dbaf06a6@syzkaller.appspotmail.com,
-        "Kefeng Wang" <wangkefeng.wang@huawei.com>
+        "Loic Poulain" <loic.poulain@intel.com>,
+        "Marcel Holtmann" <marcel@holtmann.org>
 Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.810725363@decadent.org.uk>
+Message-ID: <lsq.1568989415.915776834@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 128/132] Bluetooth: hci_ldisc: Postpone
- HCI_UART_PROTO_READY bit set in hci_uart_set_proto()
+Subject: [PATCH 3.16 127/132] Bluetooth: hci_ldisc: Fix null pointer
+ derefence in case of early data
 In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,57 +56,92 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
+From: Loic Poulain <loic.poulain@intel.com>
 
-commit 56897b217a1d0a91c9920cb418d6b3fe922f590a upstream.
+commit 84cb3df02aea4b00405521e67c4c67c2d525c364 upstream.
 
-task A:                                task B:
-hci_uart_set_proto                     flush_to_ldisc
- - p->open(hu) -> h5_open  //alloc h5  - receive_buf
- - set_bit HCI_UART_PROTO_READY         - tty_port_default_receive_buf
- - hci_uart_register_dev                 - tty_ldisc_receive_buf
-                                          - hci_uart_tty_receive
-				           - test_bit HCI_UART_PROTO_READY
-				            - h5_recv
- - clear_bit HCI_UART_PROTO_READY             while() {
- - p->open(hu) -> h5_close //free h5
-				              - h5_rx_3wire_hdr
-				               - h5_reset()  //use-after-free
-                                              }
+HCI_UART_PROTO_SET flag is set before hci_uart_set_proto call. If we
+receive data from tty layer during this procedure, proto pointer may
+not be assigned yet, leading to null pointer dereference in rx method
+hci_uart_tty_receive.
 
-It could use ioctl to set hci uart proto, but there is
-a use-after-free issue when hci_uart_register_dev() fail in
-hci_uart_set_proto(), see stack above, fix this by setting
-HCI_UART_PROTO_READY bit only when hci_uart_register_dev()
-return success.
+This patch fixes this issue by introducing HCI_UART_PROTO_READY flag in
+order to avoid any proto operation before proto opening and assignment.
 
-Reported-by: syzbot+899a33dc0fa0dbaf06a6@syzkaller.appspotmail.com
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Reviewed-by: Jeremy Cline <jcline@redhat.com>
+Signed-off-by: Loic Poulain <loic.poulain@intel.com>
 Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/bluetooth/hci_ldisc.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/bluetooth/hci_ldisc.c | 11 +++++++----
+ drivers/bluetooth/hci_uart.h  |  1 +
+ 2 files changed, 8 insertions(+), 4 deletions(-)
 
 --- a/drivers/bluetooth/hci_ldisc.c
 +++ b/drivers/bluetooth/hci_ldisc.c
-@@ -477,15 +477,14 @@ static int hci_uart_set_proto(struct hci
+@@ -225,7 +225,7 @@ static int hci_uart_flush(struct hci_dev
+ 	tty_ldisc_flush(tty);
+ 	tty_driver_flush_buffer(tty);
+ 
+-	if (test_bit(HCI_UART_PROTO_SET, &hu->flags))
++	if (test_bit(HCI_UART_PROTO_READY, &hu->flags))
+ 		hu->proto->flush(hu);
+ 
+ 	return 0;
+@@ -342,7 +342,7 @@ static void hci_uart_tty_close(struct tt
+ 
+ 	cancel_work_sync(&hu->write_work);
+ 
+-	if (test_and_clear_bit(HCI_UART_PROTO_SET, &hu->flags)) {
++	if (test_and_clear_bit(HCI_UART_PROTO_READY, &hu->flags)) {
+ 		if (hdev) {
+ 			if (test_bit(HCI_UART_REGISTERED, &hu->flags))
+ 				hci_unregister_dev(hdev);
+@@ -350,6 +350,7 @@ static void hci_uart_tty_close(struct tt
+ 		}
+ 		hu->proto->close(hu);
+ 	}
++	clear_bit(HCI_UART_PROTO_SET, &hu->flags);
+ 
+ 	kfree(hu);
+ }
+@@ -376,7 +377,7 @@ static void hci_uart_tty_wakeup(struct t
+ 	if (tty != hu->tty)
+ 		return;
+ 
+-	if (test_bit(HCI_UART_PROTO_SET, &hu->flags))
++	if (test_bit(HCI_UART_PROTO_READY, &hu->flags))
+ 		hci_uart_tx_wakeup(hu);
+ }
+ 
+@@ -399,7 +400,7 @@ static void hci_uart_tty_receive(struct
+ 	if (!hu || tty != hu->tty)
+ 		return;
+ 
+-	if (!test_bit(HCI_UART_PROTO_SET, &hu->flags))
++	if (!test_bit(HCI_UART_PROTO_READY, &hu->flags))
+ 		return;
+ 
+ 	spin_lock(&hu->rx_lock);
+@@ -476,9 +477,11 @@ static int hci_uart_set_proto(struct hci
  		return err;
  
  	hu->proto = p;
--	set_bit(HCI_UART_PROTO_READY, &hu->flags);
++	set_bit(HCI_UART_PROTO_READY, &hu->flags);
  
  	err = hci_uart_register_dev(hu);
  	if (err) {
--		clear_bit(HCI_UART_PROTO_READY, &hu->flags);
++		clear_bit(HCI_UART_PROTO_READY, &hu->flags);
  		p->close(hu);
  		return err;
  	}
+--- a/drivers/bluetooth/hci_uart.h
++++ b/drivers/bluetooth/hci_uart.h
+@@ -81,6 +81,7 @@ struct hci_uart {
+ /* HCI_UART proto flag bits */
+ #define HCI_UART_PROTO_SET	0
+ #define HCI_UART_REGISTERED	1
++#define HCI_UART_PROTO_READY	2
  
-+	set_bit(HCI_UART_PROTO_READY, &hu->flags);
- 	return 0;
- }
- 
+ /* TX states  */
+ #define HCI_UART_SENDING	1
 
