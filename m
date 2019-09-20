@@ -2,105 +2,121 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC4C3C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E2ABC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA6B82086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D68142086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:13:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=sentinelone.com header.i=@sentinelone.com header.b="J6IgkrNI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392221AbfITRJz (ORCPT
+        id S1729416AbfITRNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 13:09:55 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:50456 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391955AbfITRJy (ORCPT
+        Fri, 20 Sep 2019 13:13:49 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40798 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726020AbfITRNt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 13:09:54 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 5so3298283wmg.0;
-        Fri, 20 Sep 2019 10:09:53 -0700 (PDT)
+        Fri, 20 Sep 2019 13:13:49 -0400
+Received: by mail-wr1-f67.google.com with SMTP id l3so7502923wru.7
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 10:13:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sentinelone.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IpoN+zJsHYCQ62XlF8eh17xf9pyp/7YrrbP1I7F2ie8=;
+        b=J6IgkrNIAXoo3YOY/K6fNOiHlkWiZZvaeI3PpAXec9FbfPY2XwVyCDVydfdxkeFjoz
+         BL8vCJRUkTZ4m6a9qHkCzvRx+x8pBuJShlQXB79EX5LGX0RcTxgbD3aupm6BhlpVGT5R
+         yQ9jDNTA4DduB6cdGxD2FermDrmnF2sjH/Cn4SlZEGWnLavu0da8KAzkjFWpMvsNE10l
+         KbkWJfUwozPqnflpjUhauqLIARH9su8DyUYk9ZxM3U7aJs15KVQiTWVa3MO7vR4DOB+W
+         xlXTf/5E8TMmtV0ZF45FIKMcpdMBnD1XPdNWpfvZcrd1YN/0PPlvAVrOCgpZ8HEJeKv8
+         to4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=cfxFfQGUkBcjDLVOdYbMW4OGTPS6aOIfBZ/xv+D9EV8=;
-        b=NktxVWczbCF04tpwqXtY8rVRuxRUw6PmudofqxzVOVQ33RpD6jf5L1H4Gkb5eb50dE
-         MhdjwSUDYw++54RgTiwsAN+I7b+OzTYV8WQTRaCV3yvbRCzrBtvv/xEtOIG+9kYecF2u
-         Fldn13McAOdY15XJ+EfGGwQ6VsrBAtvF8K1HJA3EXQrdUi3qYvErEIkN2azkyZheJqlx
-         6nyl6vIqy2Al/kL8wsOXHTMTrXS4bm3Jr74CTu0xGW2YTRLDwLigeBtdINwe+NcVhMrq
-         /3FNHvVueAL4/YcmJG4WJPVw78u54XoFcazhSa+Bz8h63in5vbS5eew8zJVARR2/mVKa
-         zCGg==
-X-Gm-Message-State: APjAAAVudo/Mq8MnM+f0DQcpac6/nUIFIaXuwjGUikMoXTP4puOwIqvS
-        K+Ni67li97374vWjHzgWIWk=
-X-Google-Smtp-Source: APXvYqy8dyp35r2taAzQm5OQLG1ObLmax7stbIj278cwtbNZj3zbQZo+lNJuvh0+dpDPAdbtrpx2fQ==
-X-Received: by 2002:a7b:caa9:: with SMTP id r9mr4516694wml.14.1568999392829;
-        Fri, 20 Sep 2019 10:09:52 -0700 (PDT)
-Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
-        by smtp.gmail.com with ESMTPSA id y3sm3012481wrw.83.2019.09.20.10.09.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 20 Sep 2019 10:09:52 -0700 (PDT)
-Subject: Re: [PATCH 1/4] softirq: implement IRQ flood detection mechanism
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Keith Busch <keith.busch@intel.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        linux-scsi@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Long Li <longli@microsoft.com>,
-        John Garry <john.garry@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-nvme@lists.infradead.org, Jens Axboe <axboe@fb.com>,
+        bh=IpoN+zJsHYCQ62XlF8eh17xf9pyp/7YrrbP1I7F2ie8=;
+        b=a222WM8ECFPBZQ9agwxAfLcq0KcyEs0v4kHMbNz6cbvLeWNTPwJohN25vhFY2lTxTG
+         nafawQ2CBZs02QA+IFOja6+Mk43kCw4mCHGrQQOyRemZMtrgKwqSZANnr6nmOGgrIXSg
+         SXhvWdudmK7/kge/esJFm5EO2CHKaISI4mjxw9ZXN2W/BhTkaWinrjOxxu6yA0woBYiF
+         +9rwzb13MeoRH/adejmRCU95q1nV1xxZbAuAcu0xQ2yQyIXpoxiVZgSRsqDNpd0fKpog
+         s6SE98b6A1yBo64xFe4HjtIXqjbRWc6J1n8Yw/XsH5oU+LAkSXBYTDfGWEetsl2s0MjC
+         iavA==
+X-Gm-Message-State: APjAAAVmMq+3909yS9Y2gGDhK9d85pEe17cU4TiUT6w8ERAzKQQi+kQK
+        Mg7v/Yh0BrlcRGXsc+yld0nyxA==
+X-Google-Smtp-Source: APXvYqxgVBnLeRpGIlIc08M1BCeQcZRXIc707bk1MORs1/jKo8kP+XMffhhNVasZkWSgAllMpuAc/A==
+X-Received: by 2002:a5d:6785:: with SMTP id v5mr13184729wru.9.1568999627033;
+        Fri, 20 Sep 2019 10:13:47 -0700 (PDT)
+Received: from localhost.localdomain (bzq-127-168-31-148.red.bezeqint.net. [31.168.127.148])
+        by smtp.googlemail.com with ESMTPSA id x5sm3598470wrg.69.2019.09.20.10.13.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Sep 2019 10:13:46 -0700 (PDT)
+From:   Roy Ben Shlomo <royb@sentinelone.com>
+Cc:     royb@sentinelone.com, Roy Ben Shlomo <roy.benshlomo@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Christoph Hellwig <hch@lst.de>
-References: <dd96def4-1121-afbe-2431-9e516a06850c@linaro.org>
- <6f3b6557-1767-8c80-f786-1ea667179b39@acm.org>
- <2a8bd278-5384-d82f-c09b-4fce236d2d95@linaro.org>
- <20190905090617.GB4432@ming.t460p>
- <6a36ccc7-24cd-1d92-fef1-2c5e0f798c36@linaro.org>
- <20190906014819.GB27116@ming.t460p>
- <ffefcfa0-09b6-9af5-f94e-8e7ddd2eef16@linaro.org>
- <6eb2a745-7b92-73ce-46f5-cc6a5ef08abc@grimberg.me>
- <20190907000100.GC12290@ming.t460p>
- <f5685543-8cd5-6c6a-5b80-c77ef09c6b3b@grimberg.me>
- <20190918143732.GA19364@ming.t460p>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <1f01c041-cc6e-e27e-7691-63c903d1fed7@grimberg.me>
-Date:   Fri, 20 Sep 2019 10:09:47 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] perf/core: fixing several typos in comments
+Date:   Fri, 20 Sep 2019 20:12:53 +0300
+Message-Id: <20190920171254.31373-1-royb@sentinelone.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190918143732.GA19364@ming.t460p>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Roy Ben Shlomo <roy.benshlomo@gmail.com>
 
->> It seems like we're attempting to stay in irq context for as long as we
->> can instead of scheduling to softirq/thread context if we have more than
->> a minimal amount of work to do. Without at least understanding why
->> softirq/thread degrades us so much this code seems like the wrong
->> approach to me. Interrupt context will always be faster, but it is
->> not a sufficient reason to spend as much time as possible there, is it?
-> 
-> If extra latency is added in IO completion path, this latency will be
-> introduced in the submission path, because the hw queue depth is fixed,
-> which is often small. Especially in case of multiple submission vs.
-> single(shared) completion, the whole hw queue tags can be exhausted
-> easily.
+Fixing typos in a few functions' documentation comments
+Signed-off-by: Roy Ben Shlomo <royb@sentinelone.com>
+---
+ kernel/events/core.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-This is why the patch is reaping the first batch from hard-irq, but only
-if it has more will defer to softirq. So I'm not sure the short QD use
-case applies here...
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 4f08b17d6426..275eae05af20 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2239,7 +2239,7 @@ static void __perf_event_disable(struct perf_event *event,
+  *
+  * If event->ctx is a cloned context, callers must make sure that
+  * every task struct that event->ctx->task could possibly point to
+- * remains valid.  This condition is satisifed when called through
++ * remains valid.  This condition is satisfied when called through
+  * perf_event_for_each_child or perf_event_for_each because they
+  * hold the top-level event's child_mutex, so any descendant that
+  * goes to exit will block in perf_event_exit_event().
+@@ -6054,7 +6054,7 @@ static void perf_sample_regs_intr(struct perf_regs *regs_intr,
+  * Get remaining task size from user stack pointer.
+  *
+  * It'd be better to take stack vma map and limit this more
+- * precisly, but there's no way to get it safely under interrupt,
++ * precisely, but there's no way to get it safely under interrupt,
+  * so using TASK_SIZE as limit.
+  */
+ static u64 perf_ustack_task_size(struct pt_regs *regs)
+@@ -6616,7 +6616,7 @@ void perf_prepare_sample(struct perf_event_header *header,
+ 
+ 	if (sample_type & PERF_SAMPLE_STACK_USER) {
+ 		/*
+-		 * Either we need PERF_SAMPLE_STACK_USER bit to be allways
++		 * Either we need PERF_SAMPLE_STACK_USER bit to be always
+ 		 * processed as the last one or have additional check added
+ 		 * in case new sample type is added, because we could eat
+ 		 * up the rest of the sample size.
+-- 
+2.20.1
 
-> I guess no such effect for networking IO.
-
-Maybe, maybe not...
