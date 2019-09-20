@@ -2,89 +2,82 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F28C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 09:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DEE9C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 09:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEB6B20665
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 09:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66E1F2080F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 09:59:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408587AbfITJsL (ORCPT
+        id S2437967AbfITJ7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 05:48:11 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:43171 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405771AbfITJsK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 05:48:10 -0400
-Received: from mail-wm1-f72.google.com ([209.85.128.72])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <connor.kuehl@canonical.com>)
-        id 1iBFWL-0005Aq-0s
-        for linux-kernel@vger.kernel.org; Fri, 20 Sep 2019 09:48:09 +0000
-Received: by mail-wm1-f72.google.com with SMTP id g82so955965wmg.9
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 02:48:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=B0gRBX2sU0Z6OKmHo7Z4yIU03olB4csImxHyIILBwAA=;
-        b=JC/YpPNc7WOKKAV8XgOhJxswjxjIAgtPkJYkbRcKMSabGYPOPxPNhbIJizxFuQkv+K
-         860kbqFYefiTuRZNdksbIP58N7WOL5o2bbKe/Z6ZvpU0CWAYucd2E8NAY+RWZ1Kgj5i/
-         iLt3/DKdeq2E5qbkf6tOCUzueGTkXpHtBtthsTQXht1vDO7mNNaqQkNhYYGw3FZPkRuf
-         WhWbLMXee7pykufUmnx2DBMGkaHOelgkiB0LnbiojoQVi8lxsoPNr/ASgnqdgS3yPNqO
-         fi7FvKhohb+Wczm8t3diwgtpzty/x6MfyyNdznuOrRi5BN2X8nlVQJiX113m73kgdwAK
-         OPcQ==
-X-Gm-Message-State: APjAAAWysRPp1Z/0BMNFDeupgaJQeFGDLQTzzxRFfz48y+Vb/hOhogms
-        Ir12kX6EFRE5cpGc377gwJON/bpYKGNgAVFBk4V1GQr0NHmGwwDFQw6nJogwcPBpyvshlq5GKiH
-        4hJ0rKmjcZAz5UEdAMxE0iDDunwldkPeTvdz5YU+Shg==
-X-Received: by 2002:a5d:430f:: with SMTP id h15mr11239560wrq.177.1568972888806;
-        Fri, 20 Sep 2019 02:48:08 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxVRY04L0KSUugiU+ntxgo+Wvpl8BGaO0LusgrffrFde1j3tGSNP2BDAc7riJC99gqoaqgZaw==
-X-Received: by 2002:a5d:430f:: with SMTP id h15mr11239545wrq.177.1568972888657;
-        Fri, 20 Sep 2019 02:48:08 -0700 (PDT)
-Received: from canonical.c.hoisthospitality.com (static-dcd-cqq-121001.business.bouyguestelecom.com. [212.194.121.1])
-        by smtp.gmail.com with ESMTPSA id z9sm2104375wrp.26.2019.09.20.02.48.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Sep 2019 02:48:07 -0700 (PDT)
-From:   Connor Kuehl <connor.kuehl@canonical.com>
-To:     Larry.Finger@lwfinger.net, gregkh@linuxfoundation.org,
-        straube.linux@gmail.com, devel@driverdev.osuosl.org
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] staging: rtl8188eu: remove unnecessary self-assignment
-Date:   Fri, 20 Sep 2019 11:48:07 +0200
-Message-Id: <20190920094807.9217-1-connor.kuehl@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 20 Sep 2019 05:59:16 -0400
+Received: from mga11.intel.com ([192.55.52.93]:55575 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405821AbfITJ7Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 05:59:16 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Sep 2019 02:59:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,528,1559545200"; 
+   d="scan'208";a="178330120"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga007.jf.intel.com with ESMTP; 20 Sep 2019 02:59:14 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iBFh3-0006XH-2T; Fri, 20 Sep 2019 12:59:13 +0300
+Date:   Fri, 20 Sep 2019 12:59:13 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     Kristian Klausen <kristian@klausen.dk>, kbuild-all@01.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: drivers/platform/x86/asus-wmi.c:464: undefined reference to
+ `battery_hook_unregister'
+Message-ID: <20190920095913.GF2680@smile.fi.intel.com>
+References: <201909201138.uyiNM7oj%lkp@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201909201138.uyiNM7oj%lkp@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a self-assignment which is redundant. Fix this by removing the
-self-assignment.
+On Fri, Sep 20, 2019 at 11:23:43AM +0800, kbuild test robot wrote:
+> Hi Kristian,
+> 
+> FYI, the error/warning still remains.
+> 
+> tree:   https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   574cc4539762561d96b456dbc0544d8898bd4c6e
+> commit: 7973353e92ee1e7ca3b2eb361a4b7cb66c92abee platform/x86: asus-wmi: Refactor charge threshold to use the battery hooking API
+> date:   10 days ago
+> config: x86_64-randconfig-e001-201937 (attached as .config)
+> compiler: gcc-7 (Debian 7.4.0-13) 7.4.0
+> reproduce:
+>         git checkout 7973353e92ee1e7ca3b2eb361a4b7cb66c92abee
+>         # save the attached .config to linux build tree
+>         make ARCH=x86_64 
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
 
-Addresses-Coverity: ("Self assignment")
+The fix is on its way to linux-next followed by new PR to Linus within couple
+of days.
 
-Signed-off-by: Connor Kuehl <connor.kuehl@canonical.com>
----
- drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c b/drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c
-index 086f98d38cba..57ae0e83dd3e 100644
---- a/drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c
-+++ b/drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c
-@@ -552,7 +552,6 @@ void Hal_ReadAntennaDiversity88E(struct adapter *pAdapter, u8 *PROMContent, bool
- 			pHalData->AntDivCfg = 1; /*  0xC1[3] is ignored. */
- 	} else {
- 		pHalData->AntDivCfg = 0;
--		pHalData->TRxAntDivType = pHalData->TRxAntDivType; /*  The value in the driver setting of device manager. */
- 	}
- 	DBG_88E("EEPROM : AntDivCfg = %x, TRxAntDivType = %x\n", pHalData->AntDivCfg, pHalData->TRxAntDivType);
- }
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
+
 
