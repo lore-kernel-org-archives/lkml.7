@@ -2,274 +2,110 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80CBAC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88881C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F5632086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:51:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568994666;
-	bh=Gk8b96/zmrgvgnCdppmwZEWWClB9i1dZv17q7MLhgfc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=B2WlZk5yPwgwPt21shp2tBl6Wc57vZlOqRmE/gK3QUabd9CtrQoZ6Dnmk8iu/k2ff
-	 gvJiZ7MYztiBZgSbP6LFg+okh1iDpahaYUv6iQyjbufBzxX7K+N4zjlO1Bz0rCA4U7
-	 eZ6o9kkdJ0CEM88I8JWfeaVBcFM/De6BnPxkLs8E=
+	by mail.kernel.org (Postfix) with ESMTP id 5DD5B2086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:51:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D8TdJ0eZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404419AbfITPvF (ORCPT
+        id S2404456AbfITPvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 11:51:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51584 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404366AbfITPvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 11:51:04 -0400
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A256421835;
-        Fri, 20 Sep 2019 15:51:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568994662;
-        bh=Gk8b96/zmrgvgnCdppmwZEWWClB9i1dZv17q7MLhgfc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=OZM0VO15KguCMz8L73yAu9wwfmIvWTtRKsRWtXbjJFKVXMMLe2p8bfBQAQkCKcL2U
-         ZC9RtUZrL5eJL0Hk2B8lfXus6Mb7THpBP0h7NAF9u+kkBEJeVMK5UCXfPgFFwcMQVI
-         OoR623SUjj3mRa2R4ehGSSj+mTawpcia4HoOgbSk=
-Received: by mail-qt1-f181.google.com with SMTP id c3so9160727qtv.10;
-        Fri, 20 Sep 2019 08:51:02 -0700 (PDT)
-X-Gm-Message-State: APjAAAWXGvSPhFcDMnd4THmP6ll6O7mP+E75eYS4Kj3lHCTLtyL1HRen
-        yl9J2Wb3SIHdR9DwrylD1o3W5auVUWbsxSkq9g==
-X-Google-Smtp-Source: APXvYqwMIrqIhbU+PH2zwmKFyZZ7p9gmNZDVfDvJtsMY/FngbKyrGtmiBbkzWBc5h/SVux0vE5Rh9MaGgWH9K6YJIV0=
-X-Received: by 2002:ac8:444f:: with SMTP id m15mr4046894qtn.110.1568994661811;
- Fri, 20 Sep 2019 08:51:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190918173141.4314-1-krzk@kernel.org> <20190918173141.4314-8-krzk@kernel.org>
-In-Reply-To: <20190918173141.4314-8-krzk@kernel.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 20 Sep 2019 10:50:50 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+0ikCageBv3TSwx0tp=ZDkrFwpFVt2gJHWsFe2f-K2pA@mail.gmail.com>
-Message-ID: <CAL_Jsq+0ikCageBv3TSwx0tp=ZDkrFwpFVt2gJHWsFe2f-K2pA@mail.gmail.com>
-Subject: Re: [PATCH v2 8/8] dt-bindings: pwm: Convert Samsung PWM bindings to json-schema
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        linux-amlogic@lists.infradead.org,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        linux-riscv@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 20 Sep 2019 11:51:31 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45727 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404366AbfITPvb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 11:51:31 -0400
+Received: by mail-pl1-f194.google.com with SMTP id u12so3357899pls.12
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 08:51:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=a9/+SgLw8oNthBvjNUOXlSYCITnE6ULq2xe/7PxSFng=;
+        b=D8TdJ0eZLo56jrxmPqeHGtDTxK71Db3O3RkprW0rUp5xPNG1+B1eHTeQrRltVckSWF
+         VPkTMmwvLB4sRoscbyxgkH7mhbyDf02XNyJVH7OwQVQjhKIYWRBmuLbBJPVpDqVHlcnK
+         kIcfXcIoDM9N2LYiP6UNLfIsZDDXywyBoYp3st9tOUZsAuIjfVgk6ohJ/7qF/NQeQHBj
+         JrFcbdmG47Optksq/DXrz6iiKDSLFZK9YX62jdj3Hz2oWG9pVLBC4MCABuCz8ScplEAD
+         zvUQ42sW+uWHw7zH3RQUNXp33lHi7z1Bpkm+DxB5+GycSt+FegrJD43EHBQfrvJGjhxR
+         YT+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=a9/+SgLw8oNthBvjNUOXlSYCITnE6ULq2xe/7PxSFng=;
+        b=hO7YEsBv8BsJybhOxaTiQBS9Yp9VJkuGtW+JR4VOEO5n58cxWmxQG39mGHRDBmuddY
+         cWxJ3NMZO1122QjhtFu6/TsuG8rsaM8ul++MZpTwahvH5IIt7xPscalzII3sR5Vb5qi+
+         nXjlTvd8XiaYtmQno59VSnAWucubnwmGRI4KIA1Ri0HuUo5WMfO4hW91VybP0uy/BnLA
+         84DcG4Gy7nkQf8EN58m6Liw8qY7YmFCRtjEx/1kw2PgbFZR+Z1gJKOQJYBG1RXHt6mXT
+         kw1Y6f48/m1TFTHLb9d1jpGj7eNo1XZyPoJ3l5um0dMJd8n30j3mS/+cvl5wlzQ3B8TD
+         IzGw==
+X-Gm-Message-State: APjAAAVB5KeBerqNFOsmCV8Weuj1wLSnSuwijPyObcBXoceMw5l1dWvb
+        c3m0TD73EGod2lIFoLK5Z3Y=
+X-Google-Smtp-Source: APXvYqxvndhpCMApsjE1tUfROofkiXe1h+7EpvrbdBEDGEpqdoyzYXhe/1Jhv/MZc5NjEevXWQ/8kg==
+X-Received: by 2002:a17:902:b903:: with SMTP id bf3mr18096396plb.1.1568994690390;
+        Fri, 20 Sep 2019 08:51:30 -0700 (PDT)
+Received: from hqjagain.localdomain ([47.56.172.21])
+        by smtp.gmail.com with ESMTPSA id e4sm2422792pff.22.2019.09.20.08.51.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 20 Sep 2019 08:51:29 -0700 (PDT)
+From:   Qiujun Huang <hqjagain@gmail.com>
+To:     akpm@linux-foundation.org
+Cc:     ira.weiny@intel.com, jgg@ziepe.ca, dan.j.williams@intel.com,
+        rppt@linux.ibm.com, hqjagain@gmail.com, jhubbard@nvidia.com,
+        aneesh.kumar@linux.ibm.com, keith.busch@intel.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 3/3] mm:fix gup_pud_range
+Date:   Fri, 20 Sep 2019 23:51:24 +0800
+Message-Id: <1568994684-1425-1-git-send-email-hqjagain@gmail.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 12:32 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> Convert Samsung PWM (S3C, S5P and Exynos SoCs) bindings to DT schema
-> format using json-schema.
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->
-> ---
->
-> Changes since v1:
-> 1. Indent example with four spaces (more readable),
-> 2. Fix samsung,pwm-outputs after review,
-> 3. Remove double-quotes from clock names.
-> ---
->  .../devicetree/bindings/pwm/pwm-samsung.txt   |  51 ---------
->  .../devicetree/bindings/pwm/pwm-samsung.yaml  | 107 ++++++++++++++++++
->  2 files changed, 107 insertions(+), 51 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-samsung.txt
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-samsung.yaml
->
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-samsung.txt b/Documentation/devicetree/bindings/pwm/pwm-samsung.txt
-> deleted file mode 100644
-> index 5538de9c2007..000000000000
-> --- a/Documentation/devicetree/bindings/pwm/pwm-samsung.txt
-> +++ /dev/null
-> @@ -1,51 +0,0 @@
-> -* Samsung PWM timers
-> -
-> -Samsung SoCs contain PWM timer blocks which can be used for system clock source
-> -and clock event timers, as well as to drive SoC outputs with PWM signal. Each
-> -PWM timer block provides 5 PWM channels (not all of them can drive physical
-> -outputs - see SoC and board manual).
-> -
-> -Be aware that the clocksource driver supports only uniprocessor systems.
-> -
-> -Required properties:
-> -- compatible : should be one of following:
-> -    samsung,s3c2410-pwm - for 16-bit timers present on S3C24xx SoCs
-> -    samsung,s3c6400-pwm - for 32-bit timers present on S3C64xx SoCs
-> -    samsung,s5p6440-pwm - for 32-bit timers present on S5P64x0 SoCs
-> -    samsung,s5pc100-pwm - for 32-bit timers present on S5PC100, S5PV210,
-> -                         Exynos4210 rev0 SoCs
-> -    samsung,exynos4210-pwm - for 32-bit timers present on Exynos4210,
-> -                          Exynos4x12, Exynos5250 and Exynos5420 SoCs
-> -- reg: base address and size of register area
-> -- interrupts: list of timer interrupts (one interrupt per timer, starting at
-> -  timer 0)
-> -- clock-names: should contain all following required clock names:
-> -    - "timers" - PWM base clock used to generate PWM signals,
-> -  and any subset of following optional clock names:
-> -    - "pwm-tclk0" - first external PWM clock source,
-> -    - "pwm-tclk1" - second external PWM clock source.
-> -  Note that not all IP variants allow using all external clock sources.
-> -  Refer to SoC documentation to learn which clock source configurations
-> -  are available.
-> -- clocks: should contain clock specifiers of all clocks, which input names
-> -  have been specified in clock-names property, in same order.
-> -- #pwm-cells: should be 3. See pwm.txt in this directory for a description of
-> -  the cells format. The only third cell flag supported by this binding is
-> -  PWM_POLARITY_INVERTED.
-> -
-> -Optional properties:
-> -- samsung,pwm-outputs: list of PWM channels used as PWM outputs on particular
-> -    platform - an array of up to 5 elements being indices of PWM channels
-> -    (from 0 to 4), the order does not matter.
-> -
-> -Example:
-> -       pwm@7f006000 {
-> -               compatible = "samsung,s3c6400-pwm";
-> -               reg = <0x7f006000 0x1000>;
-> -               interrupt-parent = <&vic0>;
-> -               interrupts = <23>, <24>, <25>, <27>, <28>;
-> -               clocks = <&clock 67>;
-> -               clock-names = "timers";
-> -               samsung,pwm-outputs = <0>, <1>;
-> -               #pwm-cells = <3>;
-> -       }
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml b/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml
-> new file mode 100644
-> index 000000000000..06d11faabff6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml
-> @@ -0,0 +1,107 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pwm/pwm-samsung.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Samsung SoC PWM timers
-> +
-> +maintainers:
-> +  - Thierry Reding <thierry.reding@gmail.com>
-> +  - Krzysztof Kozlowski <krzk@kernel.org>
-> +
-> +description: |+
-> +  Samsung SoCs contain PWM timer blocks which can be used for system clock source
-> +  and clock event timers, as well as to drive SoC outputs with PWM signal. Each
-> +  PWM timer block provides 5 PWM channels (not all of them can drive physical
-> +  outputs - see SoC and board manual).
-> +
-> +  Be aware that the clocksource driver supports only uniprocessor systems.
-> +
-> +allOf:
-> +  - $ref: pwm.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - samsung,s3c2410-pwm             # 16-bit, S3C24xx
-> +      - samsung,s3c6400-pwm             # 32-bit, S3C64xx
-> +      - samsung,s5p6440-pwm             # 32-bit, S5P64x0
-> +      - samsung,s5pc100-pwm             # 32-bit, S5PC100, S5PV210, Exynos4210 rev0 SoCs
-> +      - samsung,exynos4210-pwm          # 32-bit, Exynos
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 3
-> +
-> +  clock-names:
-> +    description: |
-> +      Should contain all following required clock names:
-> +      - "timers" - PWM base clock used to generate PWM signals,
-> +      and any subset of following optional clock names:
-> +      - "pwm-tclk0" - first external PWM clock source,
-> +      - "pwm-tclk1" - second external PWM clock source.
-> +      Note that not all IP variants allow using all external clock sources.
-> +      Refer to SoC documentation to learn which clock source configurations
-> +      are available.
-> +    oneOf:
-> +      - items:
-> +        - const: timers
-> +      - items:
-> +        - const: timers
-> +        - const: pwm-tclk0
-> +      - items:
-> +        - const: timers
-> +        - const: pwm-tclk1
-> +      - items:
-> +        - const: timers
-> +        - const: pwm-tclk0
-> +        - const: pwm-tclk1
-> +
-> +  interrupts:
-> +    description:
-> +      One interrupt per timer, starting at timer 0.
-> +    minItems: 1
-> +    maxItems: 5
-> +
-> +  "#pwm-cells":
-> +    description:
-> +      The only third cell flag supported by this binding
-> +      is PWM_POLARITY_INVERTED.
-> +    const: 3
-> +
-> +  samsung,pwm-outputs:
-> +    description:
-> +      A list of PWM channels used as PWM outputs on particular platform.
-> +      It is an array of up to 5 elements being indices of PWM channels
-> +      (from 0 to 4), the order does not matter.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +      - uniqueItems: true
-> +      - items:
-> +          minimum: 0
-> +          maximum: 4
-> +
-> +required:
-> +  - clocks
-> +  - clock-names
-> +  - compatible
-> +  - interrupts
-> +  - "#pwm-cells"
-> +  - reg
+__get_user_pages_fast try to walk the page table but the
+hugepage pte is replace by hwpoison swap entry by mca path.
+...
+[15798.177437] mce: Uncorrected hardware memory error in
+				user-access at 224f1761c0
+[15798.180171] MCE 0x224f176: Killing pal_main:6784 due to
+				hardware memory corruption
+[15798.180176] MCE 0x224f176: Killing qemu-system-x86:167336
+				due to hardware memory corruption
+...
+[15798.180206] BUG: unable to handle kernel
+[15798.180226] paging request at ffff891200003000
+[15798.180236] IP: [<ffffffff8106edae>] gup_pud_range+
+				0x13e/0x1e0
+...
 
-additionalProperties: false
+We need to skip the hwpoison entry in gup_pud_range.
 
-should work here. And in the rng binding too.
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+---
+ mm/gup.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Rob
+diff --git a/mm/gup.c b/mm/gup.c
+index 98f13ab..6157ed9 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -2230,6 +2230,8 @@ static int gup_pud_range(p4d_t p4d, unsigned long addr, unsigned long end,
+ 		next = pud_addr_end(addr, end);
+ 		if (pud_none(pud))
+ 			return 0;
++		if (unlikely(!pud_present(pud)))
++			return 0;
+ 		if (unlikely(pud_huge(pud))) {
+ 			if (!gup_huge_pud(pud, pudp, addr, next, flags,
+ 					  pages, nr))
+-- 
+1.8.3.1
+
