@@ -2,111 +2,172 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D9FC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20885C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF00720882
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E966920882
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:15:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=globallogic.com header.i=@globallogic.com header.b="PoEHNFkO"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="NaEEOLac"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438003AbfITKOo (ORCPT
+        id S2438041AbfITKO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 06:14:44 -0400
-Received: from mail-ed1-f54.google.com ([209.85.208.54]:46625 "EHLO
-        mail-ed1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393353AbfITKOn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 06:14:43 -0400
-Received: by mail-ed1-f54.google.com with SMTP id t3so5820384edw.13
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 03:14:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=globallogic.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Hjasgk/DjD1JUROz7kXE34h90cVJHQtVcYSmt8ORqnM=;
-        b=PoEHNFkOqWu3Zc1DzPXNcCsr139HVIhuZoyA79RX13aymTCwtfWmzKjvn4+iqJpMMo
-         ksODwrQNiOmh/ZFF1ueDRyEqnURsCJwzKTHjQaJyvdbhMgYXilesgm1EoF/I3iYI0B7n
-         2kvU2/LJXzewYw5ZCgll8CFa1R7UEkyZhqu0CCeoYypP7F9pUu+UcRlharVmLm2OWxgo
-         /2s4znvzJsqHW+tT9cs8iUQfpFnWfm47gLPC0vcV2Yc8sdoUbaZJRt0rkbTvx+9cD4Ds
-         3hBFbIXYlv/Cf2OMjDtRrFyCGRCxrXTgTWl7fZ8VzE4saleFN9f4xjW9hRfRdoOY0h7w
-         raTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Hjasgk/DjD1JUROz7kXE34h90cVJHQtVcYSmt8ORqnM=;
-        b=RSeZDw/y6CyA/IWWTVF3r3M0H3dq/go6Kv1IZ38UtB5HOKVStRnhgYXlQN2sfY/pK7
-         2uFTylqMEbBI5KTygQUcLywBFWIIumR2MaemLta/b/Cp08qNAe4rdO7bGIw0Urijznpu
-         psh0A7OwTmy/99Sz/RyKrl5R2XzbYSSHe1OS8CVBq+kvqkBuuqv8xw+Wg6sTL7DBR7uE
-         i3xyV6rjs5eTR736HrOWliyvA3yAlJIPy43XHAdQig+mgovB5D2+Y1VRAbJRaphW7sNI
-         a+BxmE83XCGGdmZNFf/iLTqqHxTnBzihX22/hmPDgon7tkpEt1neB3WwE+bsSOuW2Wq9
-         Hbjw==
-X-Gm-Message-State: APjAAAW0k6Jd2Sg9YGbkowJiOLDF2wqQgDMbKHkhFwkdaa9/82EYdgi8
-        fgrZ9oONHN8lwnyYKGxT+ik9eEywGHiBCoao6otV1w==
-X-Google-Smtp-Source: APXvYqx8/++XVqD15cX3Ink+XcYzh//k998D/dsHETYlNmGKbJTJGg9//ytq/CjW59OyR93N3bNTu/MA1/bWhfBmyZs=
-X-Received: by 2002:a17:906:4c4c:: with SMTP id d12mr18325248ejw.174.1568974482036;
- Fri, 20 Sep 2019 03:14:42 -0700 (PDT)
+        Fri, 20 Sep 2019 06:14:57 -0400
+Received: from onstation.org ([52.200.56.107]:58730 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2438011AbfITKO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 06:14:56 -0400
+Received: from ins7386.corp.homestore.net (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 3B4D93E8F9;
+        Fri, 20 Sep 2019 10:14:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1568974495;
+        bh=nrATIp838hQ69BazPEwmO/C7VQqxDn0AiW5nC34LWsI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=NaEEOLacnAbsGhBumDBk7DRzMXMFuL3Kik2cflKAAnz+j5JGFWqtna+K7OU24W1NJ
+         9Lg2PpiU8d6jjutj3rjceoRuFepRvQNtukkuO1UpnRZif0joii0QH/52wA09RC3kO1
+         PquE9xAISWgkYkuB8OnY+Bb1lPLvcue+4ggmIna4=
+From:   Brian Masney <masneyb@onstation.org>
+To:     a.hajda@samsung.com, narmstrong@baylibre.com,
+        Laurent.pinchart@ideasonboard.com
+Cc:     jonas@kwiboo.se, jernej.skrabec@siol.net, airlied@linux.ie,
+        daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, enric.balletbo@collabora.com
+Subject: [PATCH v2] drm/bridge: analogix-anx78xx: add support for 7808 addresses
+Date:   Fri, 20 Sep 2019 06:14:38 -0400
+Message-Id: <20190920101438.6912-1-masneyb@onstation.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190918110541.38124-1-roman.stratiienko@globallogic.com>
- <9229663.7SG9YZCNdo@jernej-laptop> <20190920062020.zyt5ng6cxtu6muye@gilmour>
-In-Reply-To: <20190920062020.zyt5ng6cxtu6muye@gilmour>
-From:   Roman Stratiienko <roman.stratiienko@globallogic.com>
-Date:   Fri, 20 Sep 2019 13:14:30 +0300
-Message-ID: <CAODwZ7sJ9g4fycde5Yk1sRYW6WuNtsgXOf34GJMma0rKMyc0QQ@mail.gmail.com>
-Subject: Re: drm/sun4i: Add missing pixel formats to the vi layer
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec@siol.net>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 9:20 AM Maxime Ripard <mripard@kernel.org> wrote:
->
-> On Thu, Sep 19, 2019 at 08:53:10PM +0200, Jernej =C5=A0krabec wrote:
-> > Dne sreda, 18. september 2019 ob 13:05:41 CEST je
-> > roman.stratiienko@globallogic.com napisal(a):
-> > > From: Roman Stratiienko <roman.stratiienko@globallogic.com>
-> > >
-> > > According to Allwinner DE2.0 Specification REV 1.0, vi layer supports=
- the
-> > > following pixel formats:  ABGR_8888, ARGB_8888, BGRA_8888, RGBA_8888
-> >
-> > It's true that DE2 VI layers support those formats, but it wouldn't cha=
-nge
-> > anything because alpha blending is not supported by those planes. These
-> > formats were deliberately left out because their counterparts without a=
-lpha
-> > exist, for example ABGR8888 <-> XBGR8888. It would also confuse user, w=
-hich
-> > would expect that alpha blending works if format with alpha channel is
-> > selected.
->
-> I'm not too familiar with the DE2 code, but why is alpha not working
-> if the VI planes support formats with alpha?
+According to the downstream Android sources, the anx7808 variants use
+address 0x78 for TX_P0 and the anx781x variants use address 0x70. Since
+the datasheets aren't available for these devices, and we only have the
+downstream kernel sources to look at, let's assume that these addresses
+are fixed based on the model, and pass the i2c addresses to the data
+pointer in the driver's of_match_table.
 
-Good question. It mentioned in the datasheet
-https://linux-sunxi.org/images/7/7b/Allwinner_DE2.0_Spec_V1.0.pdf
-on page 95: "All ui layers' alpha is useless"
-And my experiments proves it.
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+---
+V1 of this patch with some discussion:
+https://lore.kernel.org/lkml/20190815004854.19860-6-masneyb@onstation.org/
 
-My assumption that vi uses post-processing that cuts out alpha values.
+ drivers/gpu/drm/bridge/analogix-anx78xx.c | 36 +++++++++++++++--------
+ drivers/gpu/drm/bridge/analogix-anx78xx.h |  7 -----
+ 2 files changed, 23 insertions(+), 20 deletions(-)
 
->
-> Thanks!
-> Maxime
+diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.c b/drivers/gpu/drm/bridge/analogix-anx78xx.c
+index 48adf010816c..e25fae36dbe1 100644
+--- a/drivers/gpu/drm/bridge/analogix-anx78xx.c
++++ b/drivers/gpu/drm/bridge/analogix-anx78xx.c
+@@ -38,12 +38,20 @@
+ #define AUX_CH_BUFFER_SIZE	16
+ #define AUX_WAIT_TIMEOUT_MS	15
+ 
+-static const u8 anx78xx_i2c_addresses[] = {
+-	[I2C_IDX_TX_P0] = TX_P0,
+-	[I2C_IDX_TX_P1] = TX_P1,
+-	[I2C_IDX_TX_P2] = TX_P2,
+-	[I2C_IDX_RX_P0] = RX_P0,
+-	[I2C_IDX_RX_P1] = RX_P1,
++static const u8 anx7808_i2c_addresses[] = {
++	[I2C_IDX_TX_P0] = 0x78,
++	[I2C_IDX_TX_P1] = 0x7a,
++	[I2C_IDX_TX_P2] = 0x72,
++	[I2C_IDX_RX_P0] = 0x7e,
++	[I2C_IDX_RX_P1] = 0x80,
++};
++
++static const u8 anx781x_i2c_addresses[] = {
++	[I2C_IDX_TX_P0] = 0x70,
++	[I2C_IDX_TX_P1] = 0x7a,
++	[I2C_IDX_TX_P2] = 0x72,
++	[I2C_IDX_RX_P0] = 0x7e,
++	[I2C_IDX_RX_P1] = 0x80,
+ };
+ 
+ struct anx78xx_platform_data {
+@@ -1348,6 +1356,7 @@ static int anx78xx_i2c_probe(struct i2c_client *client,
+ 	struct anx78xx *anx78xx;
+ 	struct anx78xx_platform_data *pdata;
+ 	unsigned int i, idl, idh, version;
++	const u8 *i2c_addresses;
+ 	bool found = false;
+ 	int err;
+ 
+@@ -1387,15 +1396,16 @@ static int anx78xx_i2c_probe(struct i2c_client *client,
+ 	}
+ 
+ 	/* Map slave addresses of ANX7814 */
++	i2c_addresses = device_get_match_data(&client->dev);
+ 	for (i = 0; i < I2C_NUM_ADDRESSES; i++) {
+ 		struct i2c_client *i2c_dummy;
+ 
+ 		i2c_dummy = i2c_new_dummy_device(client->adapter,
+-						 anx78xx_i2c_addresses[i] >> 1);
++						 i2c_addresses[i] >> 1);
+ 		if (IS_ERR(i2c_dummy)) {
+ 			err = PTR_ERR(i2c_dummy);
+ 			DRM_ERROR("Failed to reserve I2C bus %02x: %d\n",
+-				  anx78xx_i2c_addresses[i], err);
++				  i2c_addresses[i], err);
+ 			goto err_unregister_i2c;
+ 		}
+ 
+@@ -1405,7 +1415,7 @@ static int anx78xx_i2c_probe(struct i2c_client *client,
+ 		if (IS_ERR(anx78xx->map[i])) {
+ 			err = PTR_ERR(anx78xx->map[i]);
+ 			DRM_ERROR("Failed regmap initialization %02x\n",
+-				  anx78xx_i2c_addresses[i]);
++				  i2c_addresses[i]);
+ 			goto err_unregister_i2c;
+ 		}
+ 	}
+@@ -1504,10 +1514,10 @@ MODULE_DEVICE_TABLE(i2c, anx78xx_id);
+ 
+ #if IS_ENABLED(CONFIG_OF)
+ static const struct of_device_id anx78xx_match_table[] = {
+-	{ .compatible = "analogix,anx7808", },
+-	{ .compatible = "analogix,anx7812", },
+-	{ .compatible = "analogix,anx7814", },
+-	{ .compatible = "analogix,anx7818", },
++	{ .compatible = "analogix,anx7808", .data = anx7808_i2c_addresses },
++	{ .compatible = "analogix,anx7812", .data = anx781x_i2c_addresses },
++	{ .compatible = "analogix,anx7814", .data = anx781x_i2c_addresses },
++	{ .compatible = "analogix,anx7818", .data = anx781x_i2c_addresses },
+ 	{ /* sentinel */ },
+ };
+ MODULE_DEVICE_TABLE(of, anx78xx_match_table);
+diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.h b/drivers/gpu/drm/bridge/analogix-anx78xx.h
+index 25e063bcecbc..8697647709f7 100644
+--- a/drivers/gpu/drm/bridge/analogix-anx78xx.h
++++ b/drivers/gpu/drm/bridge/analogix-anx78xx.h
+@@ -6,13 +6,6 @@
+ #ifndef __ANX78xx_H
+ #define __ANX78xx_H
+ 
+-#define TX_P0				0x70
+-#define TX_P1				0x7a
+-#define TX_P2				0x72
+-
+-#define RX_P0				0x7e
+-#define RX_P1				0x80
+-
+ /***************************************************************/
+ /* Register definition of device address 0x7e                  */
+ /***************************************************************/
+-- 
+2.21.0
 
-
-
---=20
-Best regards,
-Roman Stratiienko
-Global Logic Inc.
