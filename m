@@ -2,174 +2,177 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F408C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 12:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D17C3C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 12:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 684DC2073F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 12:50:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="GC+hXvEk"
+	by mail.kernel.org (Postfix) with ESMTP id 8E5A4208C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 12:52:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbfITMuo (ORCPT
+        id S1726619AbfITMwu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 08:50:44 -0400
-Received: from mout.web.de ([212.227.15.14]:32841 "EHLO mout.web.de"
+        Fri, 20 Sep 2019 08:52:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:44314 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726223AbfITMul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 08:50:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1568983836;
-        bh=kEx851ItGCqytQT37a7Mq3kVPSQnaFF1ENrLg9m1LCI=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=GC+hXvEkYtsEpokQhD/AKNHxFAva4d0maGXSd+TAUUvWqFPZDHjIcSgmML0vlDjHH
-         ffLi3xiRDBfOXYOXGRHK2XmupJI0KVx2ZCZXof31rx0Nqk1FHkCylS63fzXwu+1I7m
-         fjDgvCsxw8DrzRvNWFE4mPBnbfNeSNN/rCZzfNWg=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.244.117.22]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0Lrrva-1i3y693aYw-013afw; Fri, 20
- Sep 2019 14:50:35 +0200
-Subject: [PATCH v2] leds-bcm6358: Use devm_platform_ioremap_resource() in
- bcm6358_leds_probe()
-To:     linux-leds@vger.kernel.org,
-        =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-References: <b6ea044c-c483-0de6-67c5-5ea2fa3c85aa@web.de>
- <658bd05d-376d-adfd-64a5-e20f83d7b90a@gmail.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <45982431-f597-29fb-abef-fb2952296f39@web.de>
-Date:   Fri, 20 Sep 2019 14:50:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        id S1726223AbfITMwu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 08:52:50 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8D67D1570;
+        Fri, 20 Sep 2019 05:52:49 -0700 (PDT)
+Received: from [192.168.2.253] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 19D783F67D;
+        Fri, 20 Sep 2019 05:52:46 -0700 (PDT)
+Subject: Re: [PATCH] sched: rt: Make RT capacity aware
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Alessio Balsini <balsini@android.com>,
+        linux-kernel@vger.kernel.org
+References: <20190903103329.24961-1-qais.yousef@arm.com>
+ <20190904072524.09de28aa@oasis.local.home>
+ <20190904154052.ygbhtduzkfj3xs5d@e107158-lin.cambridge.arm.com>
+ <f25c1f61-f246-22c7-e627-4c4d39301af2@arm.com>
+ <20190918145233.kgntor5nb2gmnczd@e107158-lin.cambridge.arm.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <d307c2f6-f16c-4e9e-0476-91d49d115480@arm.com>
+Date:   Fri, 20 Sep 2019 14:52:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <658bd05d-376d-adfd-64a5-e20f83d7b90a@gmail.com>
+In-Reply-To: <20190918145233.kgntor5nb2gmnczd@e107158-lin.cambridge.arm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:CUtzK7SzSSzi+k31lRuFx8QcQXp8c3me6I2s0TfFdWYmIL7uUMv
- x7XmGKpX8hJW6//eg3hTrkOuHZk/Yv7Y8s0T2iQya//Oc5465VLlokk+CVu8NIq2rQw3/K5
- qu2b/8x1jFuflv9QUQirEK2Qp3tlWhyuLBuVSvClOWl8zEpEbKccgwLnfeB+uQFrRCbaLcH
- B2JbpQ1droi7O43l1rmLQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:J53LgZh2STs=:esznt7HvmkiY7U5arsmdof
- UCLq6lSQxOOdaWivhNOEXerTqqjhubaaDc6zteYfpEcx/qPIz8TZsY+hHLzndJS6oBXs2GDwN
- oCv2F7n1geNKEcchAydDidb4Zu331S6v1B13Wpoj4hKMQLb3nSIm9K5JPEHBP9IVIKPqRDUxX
- nDVGJVFPFh+iIiqxhKaj83qdaB5MJsJVy45apyazUOCrRuxrIBWbSZZr0qiyY7hN+z1CXHyiG
- 3Mw7Y1K5gm3ZZpueCNdPGQ9QWOUPzAzK7f7spDPWN82aPjLpfBauDx96C831pV99ZfqKawwZH
- h3QznRKIBd9TNZioGzKIgO09FRewheXrx0iT6QaZJN3I5VYN8+BQ9wJadR+pnBhDqGJv3nj9f
- kJqUvP//LtqXdTheqXLdzJUwAF3vfQ43g9qumV77EWFooeVccdLrfGjwYyQOGL1FQ0g3uXTsS
- ONODnrAiPZgOnH7T2wiorH0Wbqz9nsOX3AgTd8Q+wBo8+XxNIYdeWwMiUqbRk1QMPwNAhqZtM
- RkRgW4NcZfx95YRT9pxVs+BMCX/nHfxmSclD1sfSJomYAAoLosR9hFkZGJuNTx7O0hFxgAkkc
- CBBjlvHdOY+x9XMK0Y83WbYxOmrxpF0k8lsCvBxmevTWq+IvOzf4w2JXcYhW74+B5umJAZ3Tq
- pt/j9ALV/2BSlYKLUXZ7q8cwZok9gp0VtqR8v3QqXETmjuzLXdO90zx+RcS6XP9pIOQCuwHOp
- PVWf7jxtpwqeqcAEz2TWUvghFne7aQsqwKS4ayJr2TflXlg+xCrqVmUc94CEQpPlCe+Vtz2zj
- nhVzg/mzSyrp/+SkjIdUuPEaXkJqdOK/xtlAot/2DBIGAXVZSXe6SYHMqwzQ6oKEgNYYxqc1w
- 9dOaEpgOXk6Bm1RBO4lE0QYX5bRCkcEe+KdLf4mLvNbNd8oAcB5wMxuk68OhZIRyYyt0UoAfe
- Cmj9Prg5O8GAAqY2ZdTMfbLB+4S7HG/h/fq3DPMNp/RX+vHBNTb1I89lNAJWBqm2YQE7LItev
- LvHdopoXllzMMbHERCr2YQrPDsd+ZcSBeAQbsw9ps/l922EjCfOBJyr+ta1C9ofezwJzL8h5w
- ozDGq3bGYCb3n4ciB7Aneb+XC5iylPG6O1Ed6UsdYxc0g1EqUPynZegaSHrxV7CW63fvG1CDC
- wDwPD4wYqP+Eed6H7CRha4QMR28EBPa7tyYO0exx09NBwIOep5VXppBob61uMMT3nITkwptPb
- j06tFUId/HH7Uj0bscyRoxTMWouCBt1vPnrmlIVFX3NGkVCfWRpr5hPUfZd4=
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Fri, 20 Sep 2019 14:44:06 +0200
+On 9/18/19 4:52 PM, Qais Yousef wrote:
+> On 09/13/19 14:30, Dietmar Eggemann wrote:
+>> On 9/4/19 4:40 PM, Qais Yousef wrote:
+>>> On 09/04/19 07:25, Steven Rostedt wrote:
+>>>> On Tue,  3 Sep 2019 11:33:29 +0100
+>>>> Qais Yousef <qais.yousef@arm.com> wrote:
 
-Simplify this function implementation by using a known wrapper function.
+[...]
 
-This issue was detected by using the Coccinelle software.
+>> On a big.LITTLE system (6 CPUs with [446 1024 1024 446 466 466] CPU
+>> capacity vector) I try to trace the handling of the 3rd big task
+>> (big2-2, util_min: 800, util_max: 1024) of an rt-app workload running 3
+>> of them.
+>>
+>> rt_task_fits_capacity() call in:
+>>
+>> tag 1: select_task_rq_rt(), 3-7: 1st till 5th in find_lowest_rq()
+>>
+>> [   37.505325] rt_task_fits_capacity: CPU3 tag=1 [big2-2 285] ret=0
+>> [   37.505882] find_lowest_rq: CPU3 [big2-2 285] tag=1 find_lowest_rq
+>> [   37.506509] CPU3 [big2-2 285] lowest_mask=0,3-5
+>> [   37.507971] rt_task_fits_capacity: CPU3 tag=3 [big2-2 285] ret=0
+>> [   37.508200] rt_task_fits_capacity: CPU3 tag=4 [big2-2 285] ret=0
+>> [   37.509486] rt_task_fits_capacity: CPU0 tag=5 [big2-2 285] ret=0
+>> [   37.510191] rt_task_fits_capacity: CPU3 tag=5 [big2-2 285] ret=0
+>> [   37.511334] rt_task_fits_capacity: CPU4 tag=5 [big2-2 285] ret=0
+>> [   37.512194] rt_task_fits_capacity: CPU5 tag=5 [big2-2 285] ret=0
+>> [   37.513210] rt_task_fits_capacity: CPU0 tag=6 [big2-2 285] ret=0
+>> [   37.514085] rt_task_fits_capacity: CPU3 tag=7 [big2-2 285] ret=0
+>> [   37.514732] --> select_task_rq_rt: CPU3 [big2-2 285] cpu=0
+>>
+>> Since CPU 0,3-5 can't run big2-2, it takes up to the test that the
+>> fitness hasn't changed. In case a capacity-aware (with fallback CPU)
+>> cpupri_find() would have returned a suitable lowest_mask, less work
+>> would have been needed.
+> 
+> rt_task_fits_capacity() is inlined and I'd expect all the data it accesses to
+> be cache hot, so it should be fast.
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
+My concern is not so much runtime but maintenance of the new code. We
+want to integrate a feature 'Asymmetric CPU capacity support' in RT and
+DL sched class which have the same overall design (DL was copied from
+RT). IMHO, the new feature 'Asymmetric CPU capacity support' has to be
+integrated the same way (if possible) to let people understand the
+related code easily.
 
+> I had 2 concerns with using cpupri_find()
+> 
+> 	1. find_lowest_rq() is not the only user
 
-v2:
-Jacek Anaszewski requested to split updates for two modules
-into a separate patch for each driver.
-https://lore.kernel.org/r/658bd05d-376d-adfd-64a5-e20f83d7b90a@gmail.com/
+But the only one calling it with lowest_mask != NULL (like for DL
+find_later_rq() is the only one calling cpudl_find() with later_mask !=
+NULL.
 
+> 	2. The fallback mechanism means we either have to call cpupri_find()
+> 	   twice once to find filtered lowest_rq and the other to return the
+> 	   none filtered version.
 
- drivers/leds/leds-bcm6358.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+This is what I have in mind. (Only compile tested! ... and the 'if
+(cpumask_any(lowest_mask) >= nr_cpu_ids)' condition has to be considered
+as well):
 
-diff --git a/drivers/leds/leds-bcm6358.c b/drivers/leds/leds-bcm6358.c
-index aec285fd21c0..94fefd456ba0 100644
-=2D-- a/drivers/leds/leds-bcm6358.c
-+++ b/drivers/leds/leds-bcm6358.c
-@@ -151,17 +151,12 @@ static int bcm6358_leds_probe(struct platform_device=
- *pdev)
- 	struct device *dev =3D &pdev->dev;
- 	struct device_node *np =3D pdev->dev.of_node;
- 	struct device_node *child;
--	struct resource *mem_r;
- 	void __iomem *mem;
- 	spinlock_t *lock; /* memory lock */
- 	unsigned long val;
- 	u32 clk_div;
+@@ -98,8 +103,26 @@ int cpupri_find(struct cpupri *cp, struct
+task_struct *p,
+                        continue;
 
--	mem_r =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!mem_r)
--		return -EINVAL;
--
--	mem =3D devm_ioremap_resource(dev, mem_r);
-+	mem =3D devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(mem))
- 		return PTR_ERR(mem);
+                if (lowest_mask) {
++                       int cpu, max_cap_cpu = -1;
++                       unsigned long max_cap = 0;
++
+                        cpumask_and(lowest_mask, p->cpus_ptr, vec->mask);
 
-=2D-
-2.23.0
++                       for_each_cpu(cpu, lowest_mask) {
++                               unsigned long cap =
+arch_scale_cpu_capacity(cpu);
++
++                               if (!rt_task_fits_capacity(p, cpu))
++                                       cpumask_clear_cpu(cpu, lowest_mask);
++
++                               if (cap > max_cap) {
++                                       max_cap = cap;
++                                       max_cap_cpu = cpu;
++                               }
++                       }
++
++                       if (cpumask_empty(lowest_mask) && max_cap)
++                               cpumask_set_cpu(max_cap_cpu, lowest_mask);
++
 
+[...]
+
+>> I can't see the
+>>
+>> for_each_domain(cpu, sd) {
+>> 	for_each_cpu_and(best_cpu, lowest_mask, sched_domain_span(sd)) {
+>>                 ...
+>> 	}
+>> }
+>>
+>> other than we want to pick a CPU from the lowest_mask first which is
+>> closer to task_cpu(task).
+>>
+>> Qemu doesn't give me cluster:
+>>
+>> # cat /proc/sys/kernel/sched_domain/cpu0/domain*/name
+>> MC
+> 
+> I'm not sure I get what you're trying to get at here. Can you please elaborate
+> more?
+
+I was referring to this for each scheduler domain snippet:
+
+for_each_domain(cpu, sd) {
+
+}
+
+this would first look for a best_cpu in MC and then in DIE level in the
+original code. I remember that Steven asked about the for_each_cpu_and()
+you introduced here.
+But in case you can test the idea of introducing the changes in
+cpupri_find() you won't have to worry about this anymore.
+
+[...]
