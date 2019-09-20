@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB1F1C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5946DC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFD432086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A7F22086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:38:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392894AbfITOiB (ORCPT
+        id S2392871AbfITOh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:38:01 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35732 "EHLO
+        Fri, 20 Sep 2019 10:37:57 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35762 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388007AbfITOZA (ORCPT
+        by vger.kernel.org with ESMTP id S2388020AbfITOZA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Sep 2019 10:25:00 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqC-0004wf-Sz; Fri, 20 Sep 2019 15:24:56 +0100
+        id 1iBJqD-0004wz-P8; Fri, 20 Sep 2019 15:24:57 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqC-0007q5-I5; Fri, 20 Sep 2019 15:24:56 +0100
+        id 1iBJqC-0007qe-Rj; Fri, 20 Sep 2019 15:24:56 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Mukesh Ojha" <mojha@codeaurora.org>,
-        "Hulk Robot" <hulkci@huawei.com>,
-        "YueHaibing" <yuehaibing@huawei.com>
+        "Vincenzo Frascino" <vincenzo.frascino@arm.com>,
+        "Catalin Marinas" <catalin.marinas@arm.com>,
+        "Will Deacon" <will.deacon@arm.com>, "Jann Horn" <jannh@google.com>
 Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.664709071@decadent.org.uk>
+Message-ID: <lsq.1568989415.890702323@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 019/132] ehea: Fix a copy-paste err in ehea_init_port_res
+Subject: [PATCH 3.16 026/132] arm64: compat: Reduce address limit
 In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,32 +56,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
-commit c8f191282f819ab4e9b47b22a65c6c29734cefce upstream.
+commit d263119387de9975d2acba1dfd3392f7c5979c18 upstream.
 
-pr->tx_bytes should be assigned to tx_bytes other than
-rx_bytes.
+Currently, compat tasks running on arm64 can allocate memory up to
+TASK_SIZE_32 (UL(0x100000000)).
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: ce45b873028f ("ehea: Fixing statistics")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This means that mmap() allocations, if we treat them as returning an
+array, are not compliant with the sections 6.5.8 of the C standard
+(C99) which states that: "If the expression P points to an element of
+an array object and the expression Q points to the last element of the
+same array object, the pointer expression Q+1 compares greater than P".
+
+Redefine TASK_SIZE_32 to address the issue.
+
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Jann Horn <jannh@google.com>
+Reported-by: Jann Horn <jannh@google.com>
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+[will: fixed typo in comment]
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+[bwh: Backported to 3.16: adjust filename]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/ethernet/ibm/ehea/ehea_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/include/asm/memory.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/drivers/net/ethernet/ibm/ehea/ehea_main.c
-+++ b/drivers/net/ethernet/ibm/ehea/ehea_main.c
-@@ -1476,7 +1476,7 @@ static int ehea_init_port_res(struct ehe
+--- a/arch/arm64/include/asm/memory.h
++++ b/arch/arm64/include/asm/memory.h
+@@ -53,7 +53,15 @@
+ #define TASK_SIZE_64		(UL(1) << VA_BITS)
  
- 	memset(pr, 0, sizeof(struct ehea_port_res));
- 
--	pr->tx_bytes = rx_bytes;
-+	pr->tx_bytes = tx_bytes;
- 	pr->tx_packets = tx_packets;
- 	pr->rx_bytes = rx_bytes;
- 	pr->rx_packets = rx_packets;
+ #ifdef CONFIG_COMPAT
++#ifdef CONFIG_ARM64_64K_PAGES
++/*
++ * With CONFIG_ARM64_64K_PAGES enabled, the last page is occupied
++ * by the compat vectors page.
++ */
+ #define TASK_SIZE_32		UL(0x100000000)
++#else
++#define TASK_SIZE_32		(UL(0x100000000) - PAGE_SIZE)
++#endif /* CONFIG_ARM64_64K_PAGES */
+ #define TASK_SIZE		(test_thread_flag(TIF_32BIT) ? \
+ 				TASK_SIZE_32 : TASK_SIZE_64)
+ #define TASK_SIZE_OF(tsk)	(test_tsk_thread_flag(tsk, TIF_32BIT) ? \
 
