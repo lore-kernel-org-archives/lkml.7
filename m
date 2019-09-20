@@ -2,151 +2,128 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE340C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E56C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9447420B7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:22:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=globallogic.com header.i=@globallogic.com header.b="liCM9nAE"
+	by mail.kernel.org (Postfix) with ESMTP id E264120B7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:24:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569011059;
+	bh=sFaOmPWJj56dw23yebZSt8SnxXqc2hBvrsUugoPL25Q=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=aK9o4Wd1mvlrbJCQUapSA/y+yo9HM/bZzPx5Btm2hMYS/yN3DyfpH+AoZbKPnOm0K
+	 cx0lSm9jiy8FppJbvr7r3j9RmYtEiGdA8XDW2g8gDBE+WMDSueyF1JMusXXPCeemz6
+	 /W/lJV2xUSJoIBhcnZwAlBF5B31IfqTPbrx+WfDM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729967AbfITUW6 (ORCPT
+        id S1729986AbfITUYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 16:22:58 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:39338 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729943AbfITUW6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 16:22:58 -0400
-Received: by mail-ed1-f67.google.com with SMTP id a15so4914597edt.6
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 13:22:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=globallogic.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=h7BiFEPr6i2z1i+pS9YVOr9uD6I+CcNi47gOZAMaFAE=;
-        b=liCM9nAEDr7Gr8QClveC6J+S79HCWVXIGBasnLKSVkdl+APVU2MCw2m8v1CzztgsSB
-         jV8amWhYyF85BndLq6ycNdOVYhEKnDdxnISMMcjWcyPgmyg3+ei0CkJ9rDYP2iLFGBr+
-         ugwotT82GAMMg6hf1X2VTCua1p63E28ZZZMDsp0HND2NfbKd3Qjnz+EyRsC5CmfuDFet
-         N8vNNfc8afp+ZyUc2kxRrAA1JIuWerjr/o6qbGIEAh/ww6itLhAqRTw4LmUGNiS7HFsX
-         vTP3C4oksB3bvgUwomMjiIj7ivIhW0RLGWtk09OxGBaldN926WUdbhVw89XBNwTqUXRj
-         1kPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=h7BiFEPr6i2z1i+pS9YVOr9uD6I+CcNi47gOZAMaFAE=;
-        b=XaShinl8qb0k2BNcMTnB0l6QJsTfGA9ksUY/Pmz+kjzGMjoudu+pBvfFiI+RWCuYRN
-         +eYNYfNCu9knXfTQtaY4eLfUKjAdpjpayGkDVwzF535xhk5TVBAS1UnXITw5m0odqfk4
-         57gHzLgIZdHSdI+B0PhW0NyU1E7UVNOxSafV1tML9BrlruMIHVwaHPg35TsryHFPITi7
-         lcMvXFubcV+QrjfgEeR4CG5mXTxHlpXkta1DcBo1dycC0yMPVoRs1KBl27rf1qirpcgR
-         nx9G2CnYIESHnAKRkOO/5E30YqyJFaHm8ZxbqmLj7FSUB/xuxGE6s6a+3vGOHlYmS3QE
-         JymA==
-X-Gm-Message-State: APjAAAXQl2sKRnNsHseFxlcjEhyw7f5fJPW+f/junqKWf93RdOp9UQO3
-        I5IQeiWX2GRzrcRppr2gJ4n+Y2AYhreeY8WW/xDHXg==
-X-Google-Smtp-Source: APXvYqyZ6XcE8G2zZNhRFLWq4H1A60w6Pa1SLGVXlR9A6Djwejt0ptIcJHhDbV4C+IRf0Ac+43I9tOdzbXtBRRJvkOM=
-X-Received: by 2002:a05:6402:1a45:: with SMTP id bf5mr23501603edb.275.1569010975439;
- Fri, 20 Sep 2019 13:22:55 -0700 (PDT)
+        Fri, 20 Sep 2019 16:24:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46406 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729813AbfITUYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 16:24:17 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09F25208C0;
+        Fri, 20 Sep 2019 20:24:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569011056;
+        bh=sFaOmPWJj56dw23yebZSt8SnxXqc2hBvrsUugoPL25Q=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=UmZGcPEdScVMJng+U+b1z9/fAJWTq0QakOKggHWZdNgnn6gE4whIVhLDV5slrJZ5f
+         lZhGNAoWzTJ8usrGfQNCKPBOhKYlVxxj8POQjOF3o9v/migT+y19hkwhgUJRlw0zE4
+         Bh6ZOtjlo6/CY+ABv2d7VRONpOGZhnjFNyu+OWnE=
+Subject: Re: [PATCH] selftests/kselftest/runner.sh: Add 45 second timeout per
+ test
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        shuah <shuah@kernel.org>
+References: <201909191102.97FA56072@keescook>
+ <20190919185525.GD21254@piout.net>
+ <4844c68f-603d-14f2-f976-5bd255268c0d@kernel.org>
+ <201909191411.3FA57CBCF3@keescook>
+From:   shuah <shuah@kernel.org>
+Message-ID: <db388fa4-be5f-454f-7bab-2a837480ca8d@kernel.org>
+Date:   Fri, 20 Sep 2019 14:24:04 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190918110541.38124-1-roman.stratiienko@globallogic.com> <9229663.7SG9YZCNdo@jernej-laptop>
-In-Reply-To: <9229663.7SG9YZCNdo@jernej-laptop>
-From:   Roman Stratiienko <roman.stratiienko@globallogic.com>
-Date:   Fri, 20 Sep 2019 23:22:44 +0300
-Message-ID: <CAODwZ7uonAyhJAwZ+NFm_aHzC1Rzp=NyhQCu1h_85ecRxZ50cw@mail.gmail.com>
-Subject: Re: drm/sun4i: Add missing pixel formats to the vi layer
-To:     =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec@siol.net>
-Cc:     linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <201909191411.3FA57CBCF3@keescook>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 9:53 PM Jernej =C5=A0krabec <jernej.skrabec@siol.ne=
-t> wrote:
->
-> Hi!
->
-> Dne sreda, 18. september 2019 ob 13:05:41 CEST je
-> roman.stratiienko@globallogic.com napisal(a):
-> > From: Roman Stratiienko <roman.stratiienko@globallogic.com>
-> >
-> > According to Allwinner DE2.0 Specification REV 1.0, vi layer supports t=
-he
-> > following pixel formats:  ABGR_8888, ARGB_8888, BGRA_8888, RGBA_8888
->
-> It's true that DE2 VI layers support those formats, but it wouldn't chang=
-e
-> anything because alpha blending is not supported by those planes. These
-> formats were deliberately left out because their counterparts without alp=
-ha
-> exist, for example ABGR8888 <-> XBGR8888. It would also confuse user, whi=
-ch
-> would expect that alpha blending works if format with alpha channel is
-> selected.
->
-> Admittedly some formats with alpha are still reported as supported due to=
- lack
-> of their counterparts without alpha, but I'm fine with removing them for
-> consistency.
+On 9/19/19 3:17 PM, Kees Cook wrote:
+> On Thu, Sep 19, 2019 at 02:09:37PM -0600, shuah wrote:
+>> On 9/19/19 12:55 PM, Alexandre Belloni wrote:
+>>> On 19/09/2019 11:06:44-0700, Kees Cook wrote:
+>>>> Commit a745f7af3cbd ("selftests/harness: Add 30 second timeout per
+>>>> test") solves the problem of kselftest_harness.h-using binary tests
+>>>> possibly hanging forever. However, scripts and other binaries can still
+>>>> hang forever. This adds a global timeout to each test script run.
+>>>>
+>>
+>> Timeout is good, but really tests should not hang. So we have to somehow
+>> indicate that the test needs to be fixed.
+> 
+> Totally agreed, which is why I changed the reporting to call out a
+> "TIMEOUT" instead of just having it enter the general failure noise.
+> 
+>> This timeout is a band-aid and not real solution for the problem. This
+>> arbitrary value doesn't take into account that the test(s) in that
+>> particular directory (TARGET) could be running normally and working
+>> through all the tests.
+> 
+> Even something that looks like it's making progress may still be hung or
+> won't finish in a reasonable amount of time.
+> 
+>> We need some way to differentiate the two cases.
+> 
+> I don't think it's unreasonable to declare that no test should take
+> longer than some default amount of time that can be tweaked via a
+> "settings" file. It gives the framework the option of easily removing
+> tests that take "too long", etc. If the "timeout=..." value was made
+> mandatory for each test directory, then the framework could actually
+> filter based on expected worst-case run time.
+> 
+>>>> To make this configurable (e.g. as needed in the "rtc" test case),
+>>>> include a new per-test-directory "settings" file (similar to "config")
+>>>> that can contain kselftest-specific settings. The first recognized field
+>>>> is "timeout".
+>>>>
+>>>
+>>> Seems good to me. I was also wondering whether this is actually
+>>> reasonable to have tests running for so long. I wanted to discuss that
+>>> at LPC but I missed the session.
+>>>
+>>
+>> There is the individual test times and overall kselftest run time. We
+>> have lots of tests now and it does take long.
+> 
+> This patch seeks to implement a "timeout for a single test from
+> kselftest's perspective". Some "individual" tests have many subtests
+> (e.g. anything built with kselftest_harness.h) giving us the whole
+> subtest issue. I think my solution here is a good middle ground: we
+> specify the max run time for each executed test binary/script.
+> 
+> It's not clear to me if a v2 is needed? Is this patch fine as-is?
+> 
+> Thanks!
+> 
 
-Why not to replace 'A' with 'X' on all relevant formats and map them
-to corresponding index marked with 'A' (that behaves as true 'X' for
-vi)
+v1 is good. I will pull this in for testing. I do like the way it is
+done.
 
->
-> Best regards,
-> Jernej
->
-> >
-> > Signed-off-by: Roman Stratiienko <roman.stratiienko@globallogic.com>
-> > ---
-> >  drivers/gpu/drm/sun4i/sun8i_vi_layer.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
-> > b/drivers/gpu/drm/sun4i/sun8i_vi_layer.c index bd0e6a52d1d8..07c27e6a4b=
-77
-> > 100644
-> > --- a/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
-> > +++ b/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
-> > @@ -404,17 +404,21 @@ static const struct drm_plane_funcs
-> > sun8i_vi_layer_funcs =3D { static const u32 sun8i_vi_layer_formats[] =
-=3D {
-> >       DRM_FORMAT_ABGR1555,
-> >       DRM_FORMAT_ABGR4444,
-> > +     DRM_FORMAT_ABGR8888,
-> >       DRM_FORMAT_ARGB1555,
-> >       DRM_FORMAT_ARGB4444,
-> > +     DRM_FORMAT_ARGB8888,
-> >       DRM_FORMAT_BGR565,
-> >       DRM_FORMAT_BGR888,
-> >       DRM_FORMAT_BGRA5551,
-> >       DRM_FORMAT_BGRA4444,
-> > +     DRM_FORMAT_BGRA8888,
-> >       DRM_FORMAT_BGRX8888,
-> >       DRM_FORMAT_RGB565,
-> >       DRM_FORMAT_RGB888,
-> >       DRM_FORMAT_RGBA4444,
-> >       DRM_FORMAT_RGBA5551,
-> > +     DRM_FORMAT_RGBA8888,
-> >       DRM_FORMAT_RGBX8888,
-> >       DRM_FORMAT_XBGR8888,
-> >       DRM_FORMAT_XRGB8888,
->
->
->
->
-
-
---=20
-Best regards,
-Roman Stratiienko
-Global Logic Inc.
+thanks,
+-- Shuah
