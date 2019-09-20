@@ -2,179 +2,89 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C34C8C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAFF9C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B266206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:37:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EfzMViMo"
+	by mail.kernel.org (Postfix) with ESMTP id 8D462206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:38:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728023AbfITNhU (ORCPT
+        id S1728064AbfITNig (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 09:37:20 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:33039 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727337AbfITNhU (ORCPT
+        Fri, 20 Sep 2019 09:38:36 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:43919 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726835AbfITNif (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 09:37:20 -0400
-Received: by mail-lf1-f65.google.com with SMTP id y127so5115160lfc.0;
-        Fri, 20 Sep 2019 06:37:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jphzEcSkNncyQXURXy+bMvvSOETA08+BxHJ5z57Bb0M=;
-        b=EfzMViMon0Yh012SQYg8h4xK0JFPuLUGf8hs1IklN8um4D/H4ReoSmHw3ok0fVz8wA
-         ydZvJ9tblvpBVSh29a7WTqMk9IUdC3G8y9/FfinNiNstDyifALTmZzkCRw7WiQEDaBrp
-         tRPJSKJCOj20Ei4e4kXUkdfi2HXwME57FgKE9QNgJHDSK8qBFcZji5mW9Ij/uxtduAZo
-         bGYtLMXFiX6MzgLcHcy3BF2pOpnaIKYVsZO9Jf/uwXkNZLuL5kN4x94Vjyk1r6GTg2c/
-         4U/y8/xo6DFTzBND9j9hKecItPSbnprkm0n3ZA+qqKYjSERd+JQepKHJRit1HW1zH9nA
-         nDiA==
+        Fri, 20 Sep 2019 09:38:35 -0400
+Received: by mail-oi1-f196.google.com with SMTP id t84so1747081oih.10;
+        Fri, 20 Sep 2019 06:38:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jphzEcSkNncyQXURXy+bMvvSOETA08+BxHJ5z57Bb0M=;
-        b=iJOCnr5lz1gkSRcRxPmbHH1rDOb0BE9i9cysJIGB/azly/JMkzsnZ5FmbU0r8ug2z9
-         V6FgerQ0cuCgc4Hl6A5oVmLw8p8W8i6ddFHIlkFTBVKOmxiNd4wsTxPtukOReyMvCSPN
-         LNS5JIKSZdGmuO/Vg/FuyfIQPNojcK3yoIGqpp2r4wL/l9w0SGR+MxBHmkoB5pKC3sFg
-         YV+w8ONTVKMzZjyC+Zr5YH8eVpD/D1G7FiyXr1cA+j7pxq3ZVWyycOnNzr1Rflcqjdt9
-         hiA/iWOj2EkbiHICFuD3TwfXSPU0ltfc2nhV2gnxL1PgjQIQ157by/WKR5VfPngzA4mr
-         xUig==
-X-Gm-Message-State: APjAAAWWaFQ/LqJFRHcbOlR0j1El/zTwZH8WQB2xJMI3f5Bay0kvWM8H
-        6Z/ldJ9Drp+r44OXy1awC0w=
-X-Google-Smtp-Source: APXvYqxlzmxdYLzOPpcInVQyKgAS4zc777/kdZlRsQ6Gg/ppqj9M7QdxbhVc99mR+kWGcY6bb23LnQ==
-X-Received: by 2002:a19:4347:: with SMTP id m7mr8570675lfj.146.1568986637463;
-        Fri, 20 Sep 2019 06:37:17 -0700 (PDT)
-Received: from localhost.localdomain (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
-        by smtp.gmail.com with ESMTPSA id b25sm475423ljj.36.2019.09.20.06.37.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 20 Sep 2019 06:37:15 -0700 (PDT)
-From:   =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-To:     Johannes Berg <johannes@sipsolutions.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jouni Malinen <j@w1.fi>,
-        hostap@lists.infradead.org, openwrt-devel@lists.openwrt.org
-Cc:     =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
-Subject: [PATCH RFC] cfg80211: add new command for reporting wiphy crashes
-Date:   Fri, 20 Sep 2019 15:37:08 +0200
-Message-Id: <20190920133708.15313-1-zajec5@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=U7SYpu/IKv9A1L7ri1/PD+Qii7rDc6Mb4V84bwV3zu8=;
+        b=IQ2015M21qbQ/joqpih/7/DGCCTUk8tjWX8s788VR1LRCdYD+r6/maw+BtyX62fXzF
+         HM9Uk9b6KxFmfBPrdiV0OXrYiBrC7qD+juoaeyKUqTUvzRtIs+T2dYmeyW4wcJJd7VLy
+         ywfFV2arFEuclpjG3gdnl2rKh0NNu0jHRenWCONr2u67Ux7zrAQQ0tWCO5TYa/g5wL5R
+         StGNmo6z1aMCzT9aQAKS7P4K4ymKfFKufGdFc3YzVVf4jA+LGLRHa6Aidu/7ZFe91Mi7
+         gEHSvQO06OoXU7N9/p5xlgvY2zrR7mw9HHm8ic/Razgh3bIjdaZxlJRrxzTs5cCE3fzS
+         PI0g==
+X-Gm-Message-State: APjAAAWES4mGnX+4OJhQbBuMbxd2LtIGixP9/kJ+gcs3WIzKCbG6Lzi5
+        KugJ9b7K+QS1Yj3Vlv4y38mexxe9binlA2q3f6g=
+X-Google-Smtp-Source: APXvYqw67ydlVXFpRTDwDbvUAIeUNKLYEQkD97I8eV/GUwXmYJHJyeTNAxbYLZDN4ARUAYp+5lhdOdt3kja0FCIfhP8=
+X-Received: by 2002:aca:f305:: with SMTP id r5mr2816182oih.131.1568986714503;
+ Fri, 20 Sep 2019 06:38:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <d80a685a-c3de-b9c9-ad32-e1da9308c393@web.de>
+In-Reply-To: <d80a685a-c3de-b9c9-ad32-e1da9308c393@web.de>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 20 Sep 2019 15:38:22 +0200
+Message-ID: <CAMuHMdVD4ktoacaqWSRxGehmO3ULrcFXCSTQ=JaxrUWhCTw-Lg@mail.gmail.com>
+Subject: Re: [PATCH] media: platform: Use devm_platform_ioremap_resource() in
+ two functions
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Tiffany Lin <tiffany.lin@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Himanshu Jha <himanshujha199640@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafał Miłecki <rafal@milecki.pl>
+On Wed, Sep 18, 2019 at 11:30 AM Markus Elfring <Markus.Elfring@web.de> wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Wed, 18 Sep 2019 11:20:48 +0200
+>
+> Simplify these function implementations by using a known wrapper function.
+>
+> This issue was detected by using the Coccinelle software.
+>
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
 
-Hardware or firmware instability may result in unusable wiphy. In such
-cases usually a hardware reset is needed. To allow a full recovery
-kernel has to indicate problem to the user space.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-This new nl80211 command lets user space known wiphy has crashed and has
-been just recovered. When applicable it should result in supplicant or
-authenticator reconfiguring all interfaces.
+Gr{oetje,eeting}s,
 
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
----
-I'd like to use this new cfg80211_crash_report() in brcmfmac after a
-successful recovery from a FullMAC firmware crash.
+                        Geert
 
-Later on I'd like to modify hostapd to reconfigure wiphy using a
-previously used setup.
-
-I'm OpenWrt developer & user and I got annoyed by my devices not auto
-recovering after various failures. There are things I cannot fix (hw
-failures or closed fw crashes) but I still expect my devices to get
-back to operational state as soon as possible on their own.
----
- include/net/cfg80211.h       |  7 +++++++
- include/uapi/linux/nl80211.h |  2 ++
- net/wireless/nl80211.c       | 29 +++++++++++++++++++++++++++++
- 3 files changed, 38 insertions(+)
-
-diff --git a/include/net/cfg80211.h b/include/net/cfg80211.h
-index ff45c3e1abff..668fa27c88cc 100644
---- a/include/net/cfg80211.h
-+++ b/include/net/cfg80211.h
-@@ -7437,6 +7437,13 @@ void cfg80211_pmsr_complete(struct wireless_dev *wdev,
- bool cfg80211_iftype_allowed(struct wiphy *wiphy, enum nl80211_iftype iftype,
- 			     bool is_4addr, u8 check_swif);
- 
-+/**
-+ * cfg80211_crash_report - report crashed wiphy that requires a setup
-+ *
-+ * @wiphy: the wiphy
-+ * @gfp: allocation flags
-+ */
-+void cfg80211_crash_report(struct wiphy *wiphy, gfp_t gfp);
- 
- /* Logging, debugging and troubleshooting/diagnostic helpers. */
- 
-diff --git a/include/uapi/linux/nl80211.h b/include/uapi/linux/nl80211.h
-index beee59c831a7..9e17feb03849 100644
---- a/include/uapi/linux/nl80211.h
-+++ b/include/uapi/linux/nl80211.h
-@@ -1325,6 +1325,8 @@ enum nl80211_commands {
- 
- 	NL80211_CMD_PROBE_MESH_LINK,
- 
-+	NL80211_CMD_CRASH_REPORT,
-+
- 	/* add new commands above here */
- 
- 	/* used to define NL80211_CMD_MAX below */
-diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
-index d21b1581a665..d29785fb0676 100644
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -16940,6 +16940,35 @@ void cfg80211_update_owe_info_event(struct net_device *netdev,
- }
- EXPORT_SYMBOL(cfg80211_update_owe_info_event);
- 
-+void cfg80211_crash_report(struct wiphy *wiphy, gfp_t gfp)
-+{
-+	struct cfg80211_registered_device *rdev = wiphy_to_rdev(wiphy);
-+	struct sk_buff *msg;
-+	void *hdr;
-+
-+	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, gfp);
-+	if (!msg)
-+		return;
-+
-+	hdr = nl80211hdr_put(msg, 0, 0, 0, NL80211_CMD_CRASH_REPORT);
-+	if (!hdr)
-+		goto nla_put_failure;
-+
-+	if (nla_put_u32(msg, NL80211_ATTR_WIPHY, rdev->wiphy_idx))
-+		goto nla_put_failure;
-+
-+	genlmsg_end(msg, hdr);
-+
-+	genlmsg_multicast_netns(&nl80211_fam, wiphy_net(&rdev->wiphy), msg, 0,
-+				NL80211_MCGRP_CONFIG, gfp);
-+
-+	return;
-+
-+nla_put_failure:
-+	nlmsg_free(msg);
-+}
-+EXPORT_SYMBOL(cfg80211_crash_report);
-+
- /* initialisation/exit functions */
- 
- int __init nl80211_init(void)
 -- 
-2.21.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
