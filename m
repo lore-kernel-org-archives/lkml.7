@@ -2,111 +2,207 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C955BC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 03:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 970BDC4CECD
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 03:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92F05217D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 03:29:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E5EE2196E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 03:36:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="j6oCpHsX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b/bXOaJR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394215AbfITD3s (ORCPT
+        id S2437127AbfITDgz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 23:29:48 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57934 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390917AbfITD3s (ORCPT
+        Thu, 19 Sep 2019 23:36:55 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46008 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403998AbfITDgz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 23:29:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ETMEGzJM+KCsw/WwZ9tFFZ4suXXVOZT3Pp/x4qDbO20=; b=j6oCpHsXFK0RGqsI61aHSA4bv
-        4GjOdMQ6wNCgdj4fzdMikUgCRlbnFRambj5v/uSl6Dozj2EYyfPzh9kXpIk3ECoUf6S7c2rlF0giS
-        ehHXceArkHVh9EyvJF7fSaCooXb6pNqmNkoYZSR3WO5kW4ozY5LcL/OUgNT4L/k4xWe1cVV72Bty7
-        z09Gh+gZtJDzmuWHnjqlZp4zbwO3krKFsnTxdUBVuYpmjcnaIAdGlEr8RA7KbyAZ8km8mVg/EgBUx
-        pcRK9/pXBH5+nzoFXi9eSyHhkUV+fiNpJ2meLcjya7B5D9SYZWqWPItvUz56bAWHhFM45dTYUuekd
-        wm2DJA71A==;
-Received: from [2601:1c0:6280:3f0::9a1f]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iB9c6-0005ap-BV; Fri, 20 Sep 2019 03:29:42 +0000
-Subject: Re: [PATCH 1/2] soc: ti: big cleanup of Kconfig file
-To:     santosh.shilimkar@oracle.com, LKML <linux-kernel@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>
-Cc:     Olof Johansson <olof@lixom.net>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Sandeep Nair <sandeep_n@ti.com>,
-        Dave Gerlach <d-gerlach@ti.com>, Keerthy <j-keerthy@ti.com>,
-        Tony Lindgren <tony@atomide.com>
-References: <8437a1f9-18f2-dd03-4fea-de5ba71f25c9@infradead.org>
- <97a9a11e-7784-111e-c134-ef88bd6b51ec@oracle.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <7fd80120-1743-302c-ebc4-f5c7e9b0be05@infradead.org>
-Date:   Thu, 19 Sep 2019 20:29:41 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 19 Sep 2019 23:36:55 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y72so3570457pfb.12
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 20:36:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lUYR9AKlw+Jg9fAgp+bo3evKjj5u2pOik0hEjvoOS0w=;
+        b=b/bXOaJR7UYWCi+V3oKX2f3XqiEJ4C3XjD6bwqnfTXN8KE/2m6efJJGExtqcdVuzH7
+         PjH/QPiHNdTWoefXDNhCyCzGEO8WC4dw8meNZF/6W1TJrWpO98qaJMvYM6Y54yAgYeUQ
+         mhi911axepO0/Tb5iRaKWl705pV3Lz6Dw12YWE1r94lKivor6cElZeYmnrVwkYN0Nfvy
+         Y85CYYlhnNr6d8nIXNjhhhizdNI8UHaPDv7mAmZmllIbcxHNCKkH1nx4yhYmIymQ0FZo
+         gMKkQlEEPrkOcTyYI94oqn7/OtFDai7OHYP5V6Rc2Se+WZL/zbkM8D0K2UnGWP3Axj82
+         uKTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lUYR9AKlw+Jg9fAgp+bo3evKjj5u2pOik0hEjvoOS0w=;
+        b=H/0hq7zVeraxe2EENYgZGK5/PzvpbBNIPFFm8KqgsgVvNJH7R1FOq5wUw3gbgsQAzl
+         eVfhbxo8LJu+XCBf/nLUNQVeqnGmAfAULKzkMQ1UJNSLo7w5YGek8crju44p473nXo5r
+         9WkTt2KVXs4r6g5786d+l1KvwhnWq7Fz7nIxiZs7amYkGADjXGpBxGh1TcWBNDeJMWSe
+         09Qme9SbeOJGvF3/8QthOBZLQa417WKQmgbZRGhiyczj55YgLrjq5OLYf4Lbek6nPL73
+         slfUqWN/LgwmrAfgHyOwxH0SYK64nvyDZtOt2RAjHpge6ofcpBdpApfRHwtSwZMQF1Vp
+         gNEQ==
+X-Gm-Message-State: APjAAAUsPJ67p0DZwqpyKlYpGZWKTaKhLFZ40/qtwvOlqYSVRTwCL8tf
+        FSuu9JEOpW8+Zgo/mdVEOpmeyw==
+X-Google-Smtp-Source: APXvYqwYu8Uko2gE0dG/f15yfaYTsBLl2OxEokOTCPqok1ivZmMoaulMDNzzxEQhIao/eOxoz+HN0Q==
+X-Received: by 2002:a62:2ac9:: with SMTP id q192mr14936302pfq.189.1568950614272;
+        Thu, 19 Sep 2019 20:36:54 -0700 (PDT)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id q88sm443897pjq.9.2019.09.19.20.36.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Sep 2019 20:36:53 -0700 (PDT)
+Date:   Thu, 19 Sep 2019 20:36:51 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Murali Nalajala <mnalajal@codeaurora.org>, rafael@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] base: soc: Export soc_device_to_device API
+Message-ID: <20190920033651.GC63675@minitux>
+References: <1568927624-13682-1-git-send-email-mnalajal@codeaurora.org>
+ <20190919213203.GA395325@kroah.com>
+ <20190919215300.GC1418@minitux>
+ <20190919215836.GA426988@kroah.com>
+ <20190919221456.GA63675@minitux>
+ <20190919222525.GA445429@kroah.com>
+ <20190919224017.GB63675@minitux>
+ <20190919224514.GA447028@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <97a9a11e-7784-111e-c134-ef88bd6b51ec@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190919224514.GA447028@kroah.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/19/19 6:14 PM, santosh.shilimkar@oracle.com wrote:
-> On 9/19/19 3:33 PM, Randy Dunlap wrote:
->> From: Randy Dunlap <rdunlap@infradead.org>
->>
->> Cleanup drivers/soc/ti/Kconfig:
->> - delete duplicate words
->> - end sentences with '.'
->> - fix typos/spellos
->> - Subsystem is one word
->> - capitalize acronyms
->> - reflow lines to be <= 80 columns
->>
->> Fixes: 41f93af900a2 ("soc: ti: add Keystone Navigator QMSS driver")
->> Fixes: 88139ed03058 ("soc: ti: add Keystone Navigator DMA support")
->> Fixes: afe761f8d3e9 ("soc: ti: Add pm33xx driver for basic suspend support")
->> Fixes: 5a99ae0092fe ("soc: ti: pm33xx: AM437X: Add rtc_only with ddr in self-refresh support")
->> Fixes: a869b7b30dac ("soc: ti: Add Support for AM654 SoC config option")
->> Fixes: cff377f7897a ("soc: ti: Add Support for J721E SoC config option")
->> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
->> Cc: Olof Johansson <olof@lixom.net>
->> Cc: Santosh Shilimkar <ssantosh@kernel.org>
->> Cc: Sandeep Nair <sandeep_n@ti.com>
->> Cc: Dave Gerlach <d-gerlach@ti.com>
->> Cc: Keerthy <j-keerthy@ti.com>
->> Cc: Tony Lindgren <tony@atomide.com>
->> Cc: linux-kernel@vger.kernel.org
->> Cc: linux-arm-kernel@lists.infradead.org
->> ---
->> @Santosh: MAINTAINERS says that you maintain drivers/soc/ti/*,
->> but there is more that Keystone-related code in that subdirectory
->> now... just in case you want to update that info.
->>
-> Yes am aware there more drivers and so far I have been taking
-> care of everything in drivers/soc/ti/*
+On Thu 19 Sep 15:45 PDT 2019, Greg KH wrote:
 
-OK :)
-
->>   drivers/soc/ti/Kconfig |   20 ++++++++++----------
->>   1 file changed, 10 insertions(+), 10 deletions(-)
->>
-> Patch looks fine to me. Do you want me to pick this up ?
+> On Thu, Sep 19, 2019 at 03:40:17PM -0700, Bjorn Andersson wrote:
+> > On Thu 19 Sep 15:25 PDT 2019, Greg KH wrote:
+> > 
+> > > On Thu, Sep 19, 2019 at 03:14:56PM -0700, Bjorn Andersson wrote:
+> > > > On Thu 19 Sep 14:58 PDT 2019, Greg KH wrote:
+> > > > 
+> > > > > On Thu, Sep 19, 2019 at 02:53:00PM -0700, Bjorn Andersson wrote:
+> > > > > > On Thu 19 Sep 14:32 PDT 2019, Greg KH wrote:
+> > > > > > 
+> > > > > > > On Thu, Sep 19, 2019 at 02:13:44PM -0700, Murali Nalajala wrote:
+> > > > > > > > If the soc drivers want to add custom sysfs entries it needs to
+> > > > > > > > access "dev" field in "struct soc_device". This can be achieved
+> > > > > > > > by "soc_device_to_device" API. Soc drivers which are built as a
+> > > > > > > > module they need above API to be exported. Otherwise one can
+> > > > > > > > observe compilation issues.
+> > > > > > > > 
+> > > > > > > > Signed-off-by: Murali Nalajala <mnalajal@codeaurora.org>
+> > > > > > > > ---
+> > > > > > > >  drivers/base/soc.c | 1 +
+> > > > > > > >  1 file changed, 1 insertion(+)
+> > > > > > > > 
+> > > > > > > > diff --git a/drivers/base/soc.c b/drivers/base/soc.c
+> > > > > > > > index 7c0c5ca..4ad52f6 100644
+> > > > > > > > --- a/drivers/base/soc.c
+> > > > > > > > +++ b/drivers/base/soc.c
+> > > > > > > > @@ -41,6 +41,7 @@ struct device *soc_device_to_device(struct soc_device *soc_dev)
+> > > > > > > >  {
+> > > > > > > >  	return &soc_dev->dev;
+> > > > > > > >  }
+> > > > > > > > +EXPORT_SYMBOL_GPL(soc_device_to_device);
+> > > > > > > >  
+> > > > > > > >  static umode_t soc_attribute_mode(struct kobject *kobj,
+> > > > > > > >  				struct attribute *attr,
+> > > > > > > 
+> > > > > > > What in-kernel driver needs this?
+> > > > > > > 
+> > > > > > 
+> > > > > > Half of the drivers interacting with the soc driver calls this API,
+> > > > > > several of these I see no reason for being builtin (e.g.
+> > > > > > ux500 andversatile). So I think this patch makes sense to allow us to
+> > > > > > build these as modules.
+> > > > > > 
+> > > > > > > Is linux-next breaking without this?
+> > > > > > > 
+> > > > > > 
+> > > > > > No, we postponed the addition of any sysfs attributes in the Qualcomm
+> > > > > > socinfo driver.
+> > > > > > 
+> > > > > > > We don't export things unless we have a user of the export.
+> > > > > > > 
+> > > > > > > Also, adding "custom" sysfs attributes is almost always not the correct
+> > > > > > > thing to do at all.  The driver should be doing it, by setting up the
+> > > > > > > attribute group properly so that the driver core can do it automatically
+> > > > > > > for it.
+> > > > > > > 
+> > > > > > > No driver should be doing individual add/remove of sysfs files.  If it
+> > > > > > > does so, it is almost guaranteed to be doing it incorrectly and racing
+> > > > > > > userspace.
+> > > > > > > 
+> > > > > > 
+> > > > > > The problem here is that the attributes are expected to be attached to
+> > > > > > the soc driver, which is separate from the platform-specific drivers. So
+> > > > > > there's no way to do platform specific attributes the right way.
+> > > > > > 
+> > > > > > > And yes, there's loads of in-kernel examples of doing this wrong, I've
+> > > > > > > been working on fixing that up, look at the patches now in Linus's tree
+> > > > > > > for platform and USB drivers that do this as examples of how to do it
+> > > > > > > right.
+> > > > > > > 
+> > > > > > 
+> > > > > > Agreed, this patch should not be used as an approval for any crazy
+> > > > > > attributes; but it's necessary in order to extend the soc device's
+> > > > > > attributes, per the current design.
+> > > > > 
+> > > > > Wait, no, let's not let the "current design" remain if it is broken!
+> > > > > 
+> > > > > Why can't the soc driver handle the attributes properly so that the
+> > > > > individual driver doesn't have to do the create/remove?
+> > > > > 
+> > > > 
+> > > > The custom attributes that these drivers want to add to the common ones
+> > > > are known in advance, so I presume we could have them passed into
+> > > > soc_device_register() and registered together with the common
+> > > > attributes...
+> > > > 
+> > > > It sounds like it's worth a prototype.
+> > > 
+> > > Do you have an in-kernel example I can look at to get an idea of what is
+> > > needed here?
+> > > 
+> > 
+> > realview_soc_probe(), in drivers/soc/versatile/soc-realview.c,
+> > implements the current mechanism of acquiring the soc's struct device
+> > and then issuing a few device_create_file calls on that.
+> 
+> That looks to be a trivial driver to fix up.  Look at 6d03c140db2e
+> ("USB: phy: fsl-usb: convert platform driver to use dev_groups") as an
+> example of how to do this.
 > 
 
-Yes, please.
+The difference between the two cases is that in the fsl-usb case it's
+attributes of the device itself, while in the soc case the realview-soc
+driver (or the others doing this) calls soc_device_register() to
+register a new (dangling) soc device, which it then adds its attributes
+onto.
 
--- 
-~Randy
+We can't use dev_groups, because the soc_device (soc.c) isn't actually a
+driver and the list of attributes is a combination of things from soc.c
+and e.g. soc-realview.c.
+
+But if we pass a struct attribute_group into soc_device_register() and
+then have that register both groups using dev.groups, this should be
+much cleaner at least.
+
+> Also gotta love the total lack of error checking when calling
+> device_create_file() in that driver :(
+> 
+
+That's how we roll in the shire...
+
+Regards,
+Bjorn
