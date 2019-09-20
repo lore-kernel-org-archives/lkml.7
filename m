@@ -2,436 +2,229 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D16FC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 12:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ACAAC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 12:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5963220644
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 12:11:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EF37208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 12:15:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ma3+o1E7"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="uxLcmLKz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408871AbfITMLt (ORCPT
+        id S2408889AbfITMPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 08:11:49 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:54364 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408843AbfITMLt (ORCPT
+        Fri, 20 Sep 2019 08:15:30 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:36185 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2408843AbfITMP3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 08:11:49 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8KCBlMv071581;
-        Fri, 20 Sep 2019 07:11:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568981507;
-        bh=lUBk0rNPlNjqtV2xOqtnjPf8s8aVwRiUvLSJUBPJ8jE=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=Ma3+o1E78pWO+0U/GQp3iXd2VEkmeTA32XpR9OmhrOrZ+Kdh8r1ggmLnzW9qQFWEO
-         9zT9T8RlWw8RS6piPHcF4NP9xC+xyVBPihXuS+l7VvWKEPLfIHVcGGMMjYR+6oanps
-         HA49VAE+JhiyQsUJygJ2sy90xmhU1Z2Lns0k7P9E=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8KCBlpY109687
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 20 Sep 2019 07:11:47 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 20
- Sep 2019 07:11:46 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 20 Sep 2019 07:11:42 -0500
-Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with SMTP id x8KCBkLV084318;
-        Fri, 20 Sep 2019 07:11:46 -0500
-Date:   Fri, 20 Sep 2019 07:13:54 -0500
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-CC:     Prabhakar Lad <prabhakar.csengg@gmail.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [Patch v2 08/13] media: am437x-vpfe: Use a per instance format
- array instead of a static one
-Message-ID: <20190920121354.gxgo4denb6wowbyw@ti.com>
-References: <20190919204125.15254-1-bparrot@ti.com>
- <20190919204125.15254-9-bparrot@ti.com>
- <a73280f1-4fc0-2ea2-2611-9e410f3f0689@xs4all.nl>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <a73280f1-4fc0-2ea2-2611-9e410f3f0689@xs4all.nl>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 20 Sep 2019 08:15:29 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190920121527euoutp024216b19907adff0ea6450b8276d82fde~GJJGK56SW2978829788euoutp023
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 12:15:27 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190920121527euoutp024216b19907adff0ea6450b8276d82fde~GJJGK56SW2978829788euoutp023
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1568981727;
+        bh=tX5jVwMHMpIeMs2o0N1LffP2nPaWeoVSu75Ha/QQEvE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=uxLcmLKzE5qXFNLfcgWnvN3zekSvm2yCzawEKD0Nf/MCf3oXemriI+x5q5nLSJ8pl
+         VB5xbJryBfMB4mJtVtaENbV59iE9Iu5nra+Nwrs6vfiElVZFxO3euCtaarkxvyKDt7
+         r/1Et+dXJ2yYrW88nJhOSy3Zss+TBCIyV4SOaBWE=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190920121526eucas1p254a2394a82fbc200acd33fa0d7a2c0af~GJJFKNRvT1857318573eucas1p28;
+        Fri, 20 Sep 2019 12:15:26 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 81.55.04309.ED2C48D5; Fri, 20
+        Sep 2019 13:15:26 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190920121525eucas1p27562c205c41200221540b720c9084fb4~GJJEM1F791035610356eucas1p2N;
+        Fri, 20 Sep 2019 12:15:25 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190920121525eusmtrp221d95f0f41c2c2c77447b03c6e7a1577~GJJD7jcHx1406614066eusmtrp2D;
+        Fri, 20 Sep 2019 12:15:25 +0000 (GMT)
+X-AuditID: cbfec7f4-ae1ff700000010d5-89-5d84c2dec1fe
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 08.CA.04117.DD2C48D5; Fri, 20
+        Sep 2019 13:15:25 +0100 (BST)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190920121524eusmtip2eeb5da43d4ed2b6d212a5a37e3d5aa97~GJJDXXtVU1487014870eusmtip2j;
+        Fri, 20 Sep 2019 12:15:24 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+Cc:     Maciej Falkowski <m.falkowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: [PATCH 1/2] ARM: dts: exynos: split phandle in dmas property
+Date:   Fri, 20 Sep 2019 14:14:30 +0200
+Message-Id: <20190920121431.31678-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <CAL_JsqJ=QWk07y=h7dHFiRrKuE7NGoUr50bu3kiOC+YU8qS9jg@mail.gmail.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA0WSfUhTUQDFu3vbe09p8ZqaFw2NQYn5lVH0IpOEhJFGH/4RZDNnPqbppuw5
+        P6FMrXSESRDaNDUy06lrLR1q86O5Ws5w2sRSck2wWqEQToplaM6n9t/vnHsO53K5OMJr4Pjh
+        6dIcSiYVZfJRT7bujcsSZjOUCQ/UNRPktHqUQ06MG1jk/dk5lGwwrkmLRYORvybKWaS1tw4l
+        ayz9LNJeqkbJDuMMRj75MM4ib/YZMXJo/jbnBFegcZaggvb6diDoUc5gAq2qAhVUdqqAwKkN
+        OIte9IxKpTLTcylZRHSyZ9qIzYFl6/3z7S1/OMVA66MAHjgkDkGDWY8ogCfOI1oAVHybQhmx
+        BGDNWOOGcAJ4d2KRvVmxjk9vVJ4CaLxhZm1VVP31wJ1CiUioWFCgbvYmrsHhqcdsdwghvrOg
+        1dnFUQAc9yJiYceS3J1hE3uhQf8bcdtc4jhccZ1nxgJhm2YQcbMHcQ42VWrXtyDRjMGv5jIW
+        EzoJdc0KDsNe8IepE2N4N1ztadgolAI4O9qBMeIOgNaSGsCkjsEh0/j6hRAiGD7rjWDsGFix
+        1I25bUjsgB8XdrptZA3v6aoRxubC8ls8Jr0PKk3qrdlXY+8RhgXQoXZizPs0AbjqmudUgUDl
+        /7FGAFTAl5LTEjFFH5RSeeG0SELLpeLwK1kSLVj7NiMrpqVu0Ps3xQAIHPC3c/fklQp5HFEu
+        XSAxAIgjfG9u3eESIY+bKioopGRZl2XyTIo2AH+czfflFm2zJ/IIsSiHyqCobEq2ecrCPfyK
+        gQT3T2pdULTHDQgtjY0G07LsJxqbGhXyueuLOFw37Zh85Ii/0G4ObTg6lR/UNuSMjrHJfZ67
+        hq8nZOyi33bVLldPFi6eITUvW9/1VRUNXh0bCEuoHQy2Lb9AP80FhSqFqpWCgAch9tPeyUH6
+        15WquNJT0qToI8PxtsRLUSkPcT6bThNF7kdktOgf5WoeMTIDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpgkeLIzCtJLcpLzFFi42I5/e/4Pd27h1piDWa95be4te4cq8WVi4eY
+        LKY+fMJmMf8IkHv+/AZ2i29XOpgsLu+aw2Yx4/w+JosHzevYLNYeuctusfT6RSaL1r1H2C0O
+        v2lndeD12PC5ic1jzbw1jB47Z91l99i0qpPNo2/LKkaPz5vkAtii9GyK8ktLUhUy8otLbJWi
+        DS2M9AwtLfSMTCz1DI3NY62MTJX07WxSUnMyy1KL9O0S9DJO33vBXrBHuuLBil+sDYybRLsY
+        OTkkBEwkLl+8xdzFyMUhJLCUUWLrkS2sEAkZiZPTGqBsYYk/17rYIIo+MUqcXARRxCZgKNH1
+        FiIhItDEKLHx30kWEIdZ4COTRMuTe4xdjBwcwgKuEmu/lII0sAioShza850ZJMwrYCvx72cQ
+        xAJ5idUbDjCD2JwCgRJL+jYxgdhCAgESO288ZJvAyLeAkWEVo0hqaXFuem6xkV5xYm5xaV66
+        XnJ+7iZGYOhvO/Zzyw7GrnfBhxgFOBiVeHgVyptjhVgTy4orcw8xSnAwK4nwzjFtihXiTUms
+        rEotyo8vKs1JLT7EaAp000RmKdHkfGBc5pXEG5oamltYGpobmxubWSiJ83YIHIwREkhPLEnN
+        Tk0tSC2C6WPi4JRqYKz7f+Z7yebGK3+ZTkwoDzJfrLRZhy/x/MWL7TeDbzzNy/Q9HC09RWIl
+        q51PzzaDl2Gtt42eS60KOrl6fkNd8qkzJmm3hFM3//Lru22ufeZKoen0/jbWJaafTki+Zd+o
+        bKk/e/3S57q285b1T/vOeijrW16Tgn9ij4TEfPPpqZF3D3LedzS780KJpTgj0VCLuag4EQAU
+        sYCikwIAAA==
+X-CMS-MailID: 20190920121525eucas1p27562c205c41200221540b720c9084fb4
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190920121525eucas1p27562c205c41200221540b720c9084fb4
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190920121525eucas1p27562c205c41200221540b720c9084fb4
+References: <CAL_JsqJ=QWk07y=h7dHFiRrKuE7NGoUr50bu3kiOC+YU8qS9jg@mail.gmail.com>
+        <CGME20190920121525eucas1p27562c205c41200221540b720c9084fb4@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hans Verkuil <hverkuil@xs4all.nl> wrote on Fri [2019-Sep-20 10:19:21 +0200]:
-> On 9/19/19 10:41 PM, Benoit Parrot wrote:
-> > Using a statically defined format array would cause issue when
-> > multiple vpfe instance would be connected to sub-device of
-> > different capabilities. We need to use an instance based array
-> > instead to properly maintain a per port/instance format list.
-> > 
-> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> > ---
-> >  drivers/media/platform/am437x/am437x-vpfe.c | 110 ++++++++------------
-> >  drivers/media/platform/am437x/am437x-vpfe.h |  36 +++++++
-> >  2 files changed, 77 insertions(+), 69 deletions(-)
-> > 
-> > diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
-> > index 8b218f48428f..569618a52082 100644
-> > --- a/drivers/media/platform/am437x/am437x-vpfe.c
-> > +++ b/drivers/media/platform/am437x/am437x-vpfe.c
-> > @@ -69,31 +69,7 @@ static const struct vpfe_standard vpfe_standards[] = {
-> >  	{V4L2_STD_625_50, 720, 576, {54, 59}, 1},
-> >  };
-> >  
-> > -struct bus_format {
-> > -	unsigned int width;
-> > -	unsigned int bpp;
-> > -};
-> > -
-> > -/*
-> > - * struct vpfe_fmt - VPFE media bus format information
-> > - * @code: V4L2 media bus format code
-> > - * @shifted: V4L2 media bus format code for the same pixel layout but
-> > - *	shifted to be 8 bits per pixel. =0 if format is not shiftable.
-> > - * @pixelformat: V4L2 pixel format FCC identifier
-> > - * @width: Bits per pixel (when transferred over a bus)
-> > - * @bpp: Bytes per pixel (when stored in memory)
-> > - * @supported: Indicates format supported by subdev
-> > - */
-> > -struct vpfe_fmt {
-> > -	u32 fourcc;
-> > -	u32 code;
-> > -	struct bus_format l;
-> > -	struct bus_format s;
-> > -	bool supported;
-> > -	u32 index;
-> > -};
-> > -
-> > -static struct vpfe_fmt formats[] = {
-> > +static struct vpfe_fmt formats[VPFE_MAX_ACTIVE_FMT] = {
-> >  	{
-> >  		.fourcc		= V4L2_PIX_FMT_YUYV,
-> >  		.code		= MEDIA_BUS_FMT_YUYV8_2X8,
-> > @@ -101,7 +77,6 @@ static struct vpfe_fmt formats[] = {
-> >  		.l.bpp		= 4,
-> >  		.s.width	= 8,
-> >  		.s.bpp		= 2,
-> > -		.supported	= false,
-> >  	}, {
-> >  		.fourcc		= V4L2_PIX_FMT_UYVY,
-> >  		.code		= MEDIA_BUS_FMT_UYVY8_2X8,
-> > @@ -109,7 +84,6 @@ static struct vpfe_fmt formats[] = {
-> >  		.l.bpp		= 4,
-> >  		.s.width	= 8,
-> >  		.s.bpp		= 2,
-> > -		.supported	= false,
-> >  	}, {
-> >  		.fourcc		= V4L2_PIX_FMT_YVYU,
-> >  		.code		= MEDIA_BUS_FMT_YVYU8_2X8,
-> > @@ -117,7 +91,6 @@ static struct vpfe_fmt formats[] = {
-> >  		.l.bpp		= 4,
-> >  		.s.width	= 8,
-> >  		.s.bpp		= 2,
-> > -		.supported	= false,
-> >  	}, {
-> >  		.fourcc		= V4L2_PIX_FMT_VYUY,
-> >  		.code		= MEDIA_BUS_FMT_VYUY8_2X8,
-> > @@ -125,7 +98,6 @@ static struct vpfe_fmt formats[] = {
-> >  		.l.bpp		= 4,
-> >  		.s.width	= 8,
-> >  		.s.bpp		= 2,
-> > -		.supported	= false,
-> >  	}, {
-> >  		.fourcc		= V4L2_PIX_FMT_SBGGR8,
-> >  		.code		= MEDIA_BUS_FMT_SBGGR8_1X8,
-> > @@ -133,7 +105,6 @@ static struct vpfe_fmt formats[] = {
-> >  		.l.bpp		= 2,
-> >  		.s.width	= 8,
-> >  		.s.bpp		= 1,
-> > -		.supported	= false,
-> >  	}, {
-> >  		.fourcc		= V4L2_PIX_FMT_SGBRG8,
-> >  		.code		= MEDIA_BUS_FMT_SGBRG8_1X8,
-> > @@ -141,7 +112,6 @@ static struct vpfe_fmt formats[] = {
-> >  		.l.bpp		= 2,
-> >  		.s.width	= 8,
-> >  		.s.bpp		= 1,
-> > -		.supported	= false,
-> >  	}, {
-> >  		.fourcc		= V4L2_PIX_FMT_SGRBG8,
-> >  		.code		= MEDIA_BUS_FMT_SGRBG8_1X8,
-> > @@ -149,7 +119,6 @@ static struct vpfe_fmt formats[] = {
-> >  		.l.bpp		= 2,
-> >  		.s.width	= 8,
-> >  		.s.bpp		= 1,
-> > -		.supported	= false,
-> >  	}, {
-> >  		.fourcc		= V4L2_PIX_FMT_SRGGB8,
-> >  		.code		= MEDIA_BUS_FMT_SRGGB8_1X8,
-> > @@ -157,7 +126,6 @@ static struct vpfe_fmt formats[] = {
-> >  		.l.bpp		= 2,
-> >  		.s.width	= 8,
-> >  		.s.bpp		= 1,
-> > -		.supported	= false,
-> >  	}, {
-> >  		.fourcc		= V4L2_PIX_FMT_RGB565,
-> >  		.code		= MEDIA_BUS_FMT_RGB565_2X8_LE,
-> > @@ -165,7 +133,6 @@ static struct vpfe_fmt formats[] = {
-> >  		.l.bpp		= 4,
-> >  		.s.width	= 8,
-> >  		.s.bpp		= 2,
-> > -		.supported	= false,
-> >  	}, {
-> >  		.fourcc		= V4L2_PIX_FMT_RGB565X,
-> >  		.code		= MEDIA_BUS_FMT_RGB565_2X8_BE,
-> > @@ -173,7 +140,6 @@ static struct vpfe_fmt formats[] = {
-> >  		.l.bpp		= 4,
-> >  		.s.width	= 8,
-> >  		.s.bpp		= 2,
-> > -		.supported	= false,
-> >  	},
-> >  };
-> >  
-> > @@ -181,13 +147,14 @@ static int
-> >  __vpfe_get_format(struct vpfe_device *vpfe,
-> >  		  struct v4l2_format *format, unsigned int *bpp);
-> >  
-> > -static struct vpfe_fmt *find_format_by_code(unsigned int code)
-> > +static struct vpfe_fmt *find_format_by_code(struct vpfe_device *vpfe,
-> > +					    unsigned int code)
-> >  {
-> >  	struct vpfe_fmt *fmt;
-> >  	unsigned int k;
-> >  
-> > -	for (k = 0; k < ARRAY_SIZE(formats); k++) {
-> > -		fmt = &formats[k];
-> > +	for (k = 0; k < vpfe->num_active_fmt; k++) {
-> > +		fmt = vpfe->active_fmt[k];
-> >  		if (fmt->code == code)
-> >  			return fmt;
-> >  	}
-> > @@ -195,13 +162,14 @@ static struct vpfe_fmt *find_format_by_code(unsigned int code)
-> >  	return NULL;
-> >  }
-> >  
-> > -static struct vpfe_fmt *find_format_by_pix(unsigned int pixelformat)
-> > +static struct vpfe_fmt *find_format_by_pix(struct vpfe_device *vpfe,
-> > +					   unsigned int pixelformat)
-> >  {
-> >  	struct vpfe_fmt *fmt;
-> >  	unsigned int k;
-> >  
-> > -	for (k = 0; k < ARRAY_SIZE(formats); k++) {
-> > -		fmt = &formats[k];
-> > +	for (k = 0; k < vpfe->num_active_fmt; k++) {
-> > +		fmt = vpfe->active_fmt[k];
-> >  		if (fmt->fourcc == pixelformat)
-> >  			return fmt;
-> >  	}
-> > @@ -218,7 +186,7 @@ mbus_to_pix(struct vpfe_device *vpfe,
-> >  	unsigned int bus_width = sdinfo->vpfe_param.bus_width;
-> >  	struct vpfe_fmt *fmt;
-> >  
-> > -	fmt = find_format_by_code(mbus->code);
-> > +	fmt = find_format_by_code(vpfe, mbus->code);
-> >  	if (WARN_ON(fmt == NULL)) {
-> >  		pr_err("Invalid mbus code set\n");
-> >  		*bpp = 1;
-> > @@ -241,12 +209,12 @@ static void pix_to_mbus(struct vpfe_device *vpfe,
-> >  {
-> >  	struct vpfe_fmt *fmt;
-> >  
-> > -	fmt = find_format_by_pix(pix_fmt->pixelformat);
-> > +	fmt = find_format_by_pix(vpfe, pix_fmt->pixelformat);
-> >  	if (!fmt) {
-> >  		/* default to first entry */
-> >  		vpfe_dbg(3, vpfe, "Invalid pixel code: %x, default used instead\n",
-> >  			pix_fmt->pixelformat);
-> > -		fmt = &formats[0];
-> > +		fmt = vpfe->active_fmt[0];
-> >  	}
-> >  
-> >  	memset(mbus_fmt, 0, sizeof(*mbus_fmt));
-> > @@ -1494,8 +1462,7 @@ static int vpfe_enum_fmt(struct file *file, void  *priv,
-> >  {
-> >  	struct vpfe_device *vpfe = video_drvdata(file);
-> >  	struct vpfe_subdev_info *sdinfo;
-> > -	struct vpfe_fmt *fmt = NULL;
-> > -	unsigned int k;
-> > +	struct vpfe_fmt *fmt;
-> >  
-> >  	vpfe_dbg(2, vpfe, "vpfe_enum_format index:%d\n",
-> >  		f->index);
-> > @@ -1504,17 +1471,10 @@ static int vpfe_enum_fmt(struct file *file, void  *priv,
-> >  	if (!sdinfo->sd)
-> >  		return -EINVAL;
-> >  
-> > -	if (f->index > ARRAY_SIZE(formats))
-> > +	if (f->index >= vpfe->num_active_fmt)
-> >  		return -EINVAL;
-> >  
-> > -	for (k = 0; k < ARRAY_SIZE(formats); k++) {
-> > -		if (formats[k].index == f->index) {
-> > -			fmt = &formats[k];
-> > -			break;
-> > -		}
-> > -	}
-> > -	if (!fmt)
-> > -		return -EINVAL;
-> > +	fmt = vpfe->active_fmt[f->index];
-> >  
-> >  	f->pixelformat = fmt->fourcc;
-> >  
-> > @@ -1593,7 +1553,7 @@ static int vpfe_enum_size(struct file *file, void  *priv,
-> >  	vpfe_dbg(2, vpfe, "vpfe_enum_size\n");
-> >  
-> >  	/* check for valid format */
-> > -	fmt = find_format_by_pix(fsize->pixel_format);
-> > +	fmt = find_format_by_pix(vpfe, fsize->pixel_format);
-> >  	if (!fmt) {
-> >  		vpfe_dbg(3, vpfe, "Invalid pixel code: %x, default used instead\n",
-> >  			fsize->pixel_format);
-> > @@ -2281,8 +2241,10 @@ vpfe_async_bound(struct v4l2_async_notifier *notifier,
-> >  					       struct vpfe_device, v4l2_dev);
-> >  	struct v4l2_subdev_mbus_code_enum mbus_code;
-> >  	struct vpfe_subdev_info *sdinfo;
-> > +	struct vpfe_fmt *fmt;
-> > +	int ret = 0;
-> >  	bool found = false;
-> > -	int i, j;
-> > +	int i, j, k;
-> >  
-> >  	vpfe_dbg(1, vpfe, "vpfe_async_bound\n");
-> >  
-> > @@ -2304,27 +2266,37 @@ vpfe_async_bound(struct v4l2_async_notifier *notifier,
-> >  
-> >  	vpfe->video_dev.tvnorms |= sdinfo->inputs[0].std;
-> >  
-> > -	/* setup the supported formats & indexes */
-> > -	for (j = 0, i = 0; ; ++j) {
-> > -		struct vpfe_fmt *fmt;
-> > -		int ret;
-> > -
-> > +	vpfe->num_active_fmt = 0;
-> > +	for (j = 0, i = 0; (ret != -EINVAL); ++j) {
-> >  		memset(&mbus_code, 0, sizeof(mbus_code));
-> >  		mbus_code.index = j;
-> >  		mbus_code.which = V4L2_SUBDEV_FORMAT_ACTIVE;
-> >  		ret = v4l2_subdev_call(subdev, pad, enum_mbus_code,
-> > -			       NULL, &mbus_code);
-> > +				       NULL, &mbus_code);
-> >  		if (ret)
-> > -			break;
-> > -
-> > -		fmt = find_format_by_code(mbus_code.code);
-> > -		if (!fmt)
-> >  			continue;
-> >  
-> > -		fmt->supported = true;
-> > -		fmt->index = i++;
-> > +		vpfe_dbg(3, vpfe,
-> > +			 "subdev %s: code: %04x idx: %d\n",
-> > +			 subdev->name, mbus_code.code, j);
-> > +
-> > +		for (k = 0; k < ARRAY_SIZE(formats); k++) {
-> > +			fmt = &formats[k];
-> > +			if (mbus_code.code != fmt->code)
-> > +				continue;
-> > +			vpfe->active_fmt[i] = fmt;
-> > +			vpfe_dbg(3, vpfe,
-> > +				 "matched fourcc: %4.4s code: %04x idx: %d\n",
-> > +				 (char *)&fmt->fourcc, mbus_code.code, i);
-> > +			vpfe->num_active_fmt = ++i;
-> > +		}
-> >  	}
-> >  
-> > +	if (!i) {
-> > +		vpfe_err(vpfe, "No suitable format reported by subdev %s\n",
-> > +			 subdev->name);
-> > +		return -EINVAL;
-> > +	}
-> >  	return 0;
-> >  }
-> >  
-> > diff --git a/drivers/media/platform/am437x/am437x-vpfe.h b/drivers/media/platform/am437x/am437x-vpfe.h
-> > index 2dde09780215..79a6505c083d 100644
-> > --- a/drivers/media/platform/am437x/am437x-vpfe.h
-> > +++ b/drivers/media/platform/am437x/am437x-vpfe.h
-> > @@ -215,6 +215,39 @@ struct vpfe_ccdc {
-> >  	u32 ccdc_ctx[VPFE_REG_END / sizeof(u32)];
-> >  };
-> >  
-> > +/*
-> > + * struct bus_format - VPFE bus format information
-> > + * width: Bits per pixel (when transferred over a bus)
-> > + * bpp: Bytes per pixel (when stored in memory)
-> > + */
-> > +struct bus_format {
-> > +	unsigned int width;
-> > +	unsigned int bpp;
-> > +};
-> > +
-> > +/*
-> > + * struct vpfe_fmt - VPFE media bus format information
-> > + * fourcc: V4L2 pixel format code
-> > + * code: V4L2 media bus format code
-> > + * l: 10 bit bus format info
-> > + * s: 8 bit bus format info
-> > + */
-> > +struct vpfe_fmt {
-> > +	u32 fourcc;
-> > +	u32 code;
-> > +	struct bus_format l;
-> > +	struct bus_format s;
-> > +};
-> > +
-> > +/*
-> > + * This value needs to be at least as large as the number of entry in
-> > + * formats[].
-> > + * When formats[] is modified make sure to adjust this value also.
-> > + * Expect compile time warnings if VPFE_MAX_ACTIVE_FMT is smaller then
-> > + * the number of elements in formats[].
-> > + */
-> > +#define VPFE_MAX_ACTIVE_FMT	10
-> 
-> The comment is outdated since this define is used as the size of the formats
-> array. So you can't really get into problems.
-> 
-> For the same reason the name is now wrong as well, I'd call it VPFE_NUM_FORMATS.
-> 
-> That's what it actually is.
+From: Maciej Falkowski <m.falkowski@samsung.com>
 
-Hmm, I guess you are right, I'll change it.
+Change representation of phandle array as then
+dt-schema counts number of its items properly.
 
-Benoit
+Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+ arch/arm/boot/dts/exynos5250.dtsi | 14 +++++++-------
+ arch/arm/boot/dts/exynos5410.dtsi |  6 +++---
+ arch/arm/boot/dts/exynos5420.dtsi | 14 +++++++-------
+ 3 files changed, 17 insertions(+), 17 deletions(-)
 
-> 
-> Regards,
-> 
-> 	Hans
-> 
-> > +
-> >  struct vpfe_device {
-> >  	/* V4l2 specific parameters */
-> >  	/* Identifies video device for this channel */
-> > @@ -252,6 +285,9 @@ struct vpfe_device {
-> >  	struct v4l2_format fmt;
-> >  	/* Used to store current bytes per pixel based on current format */
-> >  	unsigned int bpp;
-> > +	struct vpfe_fmt	*active_fmt[VPFE_MAX_ACTIVE_FMT];
-> > +	unsigned int num_active_fmt;
-> > +
-> >  	/*
-> >  	 * used when IMP is chained to store the crop window which
-> >  	 * is different from the image window
-> > 
-> 
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+index fc966c10cf49..44fdaad68f7c 100644
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -586,9 +586,9 @@
+ 			compatible = "samsung,s5pv210-i2s";
+ 			status = "disabled";
+ 			reg = <0x03830000 0x100>;
+-			dmas = <&pdma0 10
+-				&pdma0 9
+-				&pdma0 8>;
++			dmas = <&pdma0 10>,
++				<&pdma0 9>,
++				<&pdma0 8>;
+ 			dma-names = "tx", "rx", "tx-sec";
+ 			clocks = <&clock_audss EXYNOS_I2S_BUS>,
+ 				<&clock_audss EXYNOS_I2S_BUS>,
+@@ -606,8 +606,8 @@
+ 			compatible = "samsung,s3c6410-i2s";
+ 			status = "disabled";
+ 			reg = <0x12D60000 0x100>;
+-			dmas = <&pdma1 12
+-				&pdma1 11>;
++			dmas = <&pdma1 12>,
++				<&pdma1 11>;
+ 			dma-names = "tx", "rx";
+ 			clocks = <&clock CLK_I2S1>, <&clock CLK_DIV_I2S1>;
+ 			clock-names = "iis", "i2s_opclk0";
+@@ -621,8 +621,8 @@
+ 			compatible = "samsung,s3c6410-i2s";
+ 			status = "disabled";
+ 			reg = <0x12D70000 0x100>;
+-			dmas = <&pdma0 12
+-				&pdma0 11>;
++			dmas = <&pdma0 12>,
++				<&pdma0 11>;
+ 			dma-names = "tx", "rx";
+ 			clocks = <&clock CLK_I2S2>, <&clock CLK_DIV_I2S2>;
+ 			clock-names = "iis", "i2s_opclk0";
+diff --git a/arch/arm/boot/dts/exynos5410.dtsi b/arch/arm/boot/dts/exynos5410.dtsi
+index e6f78b1cee7c..a4b03d4c3de5 100644
+--- a/arch/arm/boot/dts/exynos5410.dtsi
++++ b/arch/arm/boot/dts/exynos5410.dtsi
+@@ -222,9 +222,9 @@
+ 		audi2s0: i2s@3830000 {
+ 			compatible = "samsung,exynos5420-i2s";
+ 			reg = <0x03830000 0x100>;
+-			dmas = <&pdma0 10
+-				&pdma0 9
+-				&pdma0 8>;
++			dmas = <&pdma0 10>,
++				<&pdma0 9>,
++				<&pdma0 8>;
+ 			dma-names = "tx", "rx", "tx-sec";
+ 			clocks = <&clock_audss EXYNOS_I2S_BUS>,
+ 				<&clock_audss EXYNOS_I2S_BUS>,
+diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+index 7d51e0f4ab79..2c131ad78c09 100644
+--- a/arch/arm/boot/dts/exynos5420.dtsi
++++ b/arch/arm/boot/dts/exynos5420.dtsi
+@@ -434,9 +434,9 @@
+ 		i2s0: i2s@3830000 {
+ 			compatible = "samsung,exynos5420-i2s";
+ 			reg = <0x03830000 0x100>;
+-			dmas = <&adma 0
+-				&adma 2
+-				&adma 1>;
++			dmas = <&adma 0>,
++				<&adma 2>,
++				<&adma 1>;
+ 			dma-names = "tx", "rx", "tx-sec";
+ 			clocks = <&clock_audss EXYNOS_I2S_BUS>,
+ 				<&clock_audss EXYNOS_I2S_BUS>,
+@@ -455,8 +455,8 @@
+ 		i2s1: i2s@12d60000 {
+ 			compatible = "samsung,exynos5420-i2s";
+ 			reg = <0x12D60000 0x100>;
+-			dmas = <&pdma1 12
+-				&pdma1 11>;
++			dmas = <&pdma1 12>,
++				<&pdma1 11>;
+ 			dma-names = "tx", "rx";
+ 			clocks = <&clock CLK_I2S1>, <&clock CLK_SCLK_I2S1>;
+ 			clock-names = "iis", "i2s_opclk0";
+@@ -471,8 +471,8 @@
+ 		i2s2: i2s@12d70000 {
+ 			compatible = "samsung,exynos5420-i2s";
+ 			reg = <0x12D70000 0x100>;
+-			dmas = <&pdma0 12
+-				&pdma0 11>;
++			dmas = <&pdma0 12>,
++				<&pdma0 11>;
+ 			dma-names = "tx", "rx";
+ 			clocks = <&clock CLK_I2S2>, <&clock CLK_SCLK_I2S2>;
+ 			clock-names = "iis", "i2s_opclk0";
+-- 
+2.17.1
+
+
+
