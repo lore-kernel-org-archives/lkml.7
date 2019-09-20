@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26354C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:35:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE54C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07DE82080F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:35:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED5BA2086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:35:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392232AbfITOff (ORCPT
+        id S2392254AbfITOfi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:35:35 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36014 "EHLO
+        Fri, 20 Sep 2019 10:35:38 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36018 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388109AbfITOZD (ORCPT
+        by vger.kernel.org with ESMTP id S2388112AbfITOZD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Sep 2019 10:25:03 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqH-0004y2-0T; Fri, 20 Sep 2019 15:25:01 +0100
+        id 1iBJqG-0004xe-Qu; Fri, 20 Sep 2019 15:25:00 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqE-0007tE-JM; Fri, 20 Sep 2019 15:24:58 +0100
+        id 1iBJqE-0007sf-Be; Fri, 20 Sep 2019 15:24:58 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Kalle Valo" <kvalo@codeaurora.org>,
-        "Hulk Robot" <hulkci@huawei.com>,
-        "YueHaibing" <yuehaibing@huawei.com>
+        "Coly Li" <colyli@suse.de>, "Jens Axboe" <axboe@kernel.dk>,
+        "Hannes Reinecke" <hare@suse.com>
 Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.263901161@decadent.org.uk>
+Message-ID: <lsq.1568989415.117364865@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 058/132] at76c50x-usb: Don't register led_trigger if
- usb_register_driver failed
+Subject: [PATCH 3.16 051/132] bcache: never set KEY_PTRS of journal key to
+ 0 in journal_reclaim()
 In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,88 +56,93 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Coly Li <colyli@suse.de>
 
-commit 09ac2694b0475f96be895848687ebcbba97eeecf upstream.
+commit 1bee2addc0c8470c8aaa65ef0599eeae96dd88bc upstream.
 
-Syzkaller report this:
+In journal_reclaim() ja->cur_idx of each cache will be update to
+reclaim available journal buckets. Variable 'int n' is used to count how
+many cache is successfully reclaimed, then n is set to c->journal.key
+by SET_KEY_PTRS(). Later in journal_write_unlocked(), a for_each_cache()
+loop will write the jset data onto each cache.
 
-[ 1213.468581] BUG: unable to handle kernel paging request at fffffbfff83bf338
-[ 1213.469530] #PF error: [normal kernel read fault]
-[ 1213.469530] PGD 237fe4067 P4D 237fe4067 PUD 237e60067 PMD 1c868b067 PTE 0
-[ 1213.473514] Oops: 0000 [#1] SMP KASAN PTI
-[ 1213.473514] CPU: 0 PID: 6321 Comm: syz-executor.0 Tainted: G         C        5.1.0-rc3+ #8
-[ 1213.473514] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-[ 1213.473514] RIP: 0010:strcmp+0x31/0xa0
-[ 1213.473514] Code: 00 00 00 00 fc ff df 55 53 48 83 ec 08 eb 0a 84 db 48 89 ef 74 5a 4c 89 e6 48 89 f8 48 89 fa 48 8d 6f 01 48 c1 e8 03 83 e2 07 <42> 0f b6 04 28 38 d0 7f 04 84 c0 75 50 48 89 f0 48 89 f2 0f b6 5d
-[ 1213.473514] RSP: 0018:ffff8881f2b7f950 EFLAGS: 00010246
-[ 1213.473514] RAX: 1ffffffff83bf338 RBX: ffff8881ea6f7240 RCX: ffffffff825350c6
-[ 1213.473514] RDX: 0000000000000000 RSI: ffffffffc1ee19c0 RDI: ffffffffc1df99c0
-[ 1213.473514] RBP: ffffffffc1df99c1 R08: 0000000000000001 R09: 0000000000000004
-[ 1213.473514] R10: 0000000000000000 R11: ffff8881de353f00 R12: ffff8881ee727900
-[ 1213.473514] R13: dffffc0000000000 R14: 0000000000000001 R15: ffffffffc1eeaaf0
-[ 1213.473514] FS:  00007fa66fa01700(0000) GS:ffff8881f7200000(0000) knlGS:0000000000000000
-[ 1213.473514] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 1213.473514] CR2: fffffbfff83bf338 CR3: 00000001ebb9e005 CR4: 00000000007606f0
-[ 1213.473514] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[ 1213.473514] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[ 1213.473514] PKRU: 55555554
-[ 1213.473514] Call Trace:
-[ 1213.473514]  led_trigger_register+0x112/0x3f0
-[ 1213.473514]  led_trigger_register_simple+0x7a/0x110
-[ 1213.473514]  ? 0xffffffffc1c10000
-[ 1213.473514]  at76_mod_init+0x77/0x1000 [at76c50x_usb]
-[ 1213.473514]  do_one_initcall+0xbc/0x47d
-[ 1213.473514]  ? perf_trace_initcall_level+0x3a0/0x3a0
-[ 1213.473514]  ? kasan_unpoison_shadow+0x30/0x40
-[ 1213.473514]  ? kasan_unpoison_shadow+0x30/0x40
-[ 1213.473514]  do_init_module+0x1b5/0x547
-[ 1213.473514]  load_module+0x6405/0x8c10
-[ 1213.473514]  ? module_frob_arch_sections+0x20/0x20
-[ 1213.473514]  ? kernel_read_file+0x1e6/0x5d0
-[ 1213.473514]  ? find_held_lock+0x32/0x1c0
-[ 1213.473514]  ? cap_capable+0x1ae/0x210
-[ 1213.473514]  ? __do_sys_finit_module+0x162/0x190
-[ 1213.473514]  __do_sys_finit_module+0x162/0x190
-[ 1213.473514]  ? __ia32_sys_init_module+0xa0/0xa0
-[ 1213.473514]  ? __mutex_unlock_slowpath+0xdc/0x690
-[ 1213.473514]  ? wait_for_completion+0x370/0x370
-[ 1213.473514]  ? vfs_write+0x204/0x4a0
-[ 1213.473514]  ? do_syscall_64+0x18/0x450
-[ 1213.473514]  do_syscall_64+0x9f/0x450
-[ 1213.473514]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[ 1213.473514] RIP: 0033:0x462e99
-[ 1213.473514] Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-[ 1213.473514] RSP: 002b:00007fa66fa00c58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-[ 1213.473514] RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-[ 1213.473514] RDX: 0000000000000000 RSI: 0000000020000300 RDI: 0000000000000003
-[ 1213.473514] RBP: 00007fa66fa00c70 R08: 0000000000000000 R09: 0000000000000000
-[ 1213.473514] R10: 0000000000000000 R11: 0000000000000246 R12: 00007fa66fa016bc
-[ 1213.473514] R13: 00000000004bcefa R14: 00000000006f6fb0 R15: 0000000000000004
+The problem is, if all jouranl buckets on each cache is full, the
+following code in journal_reclaim(),
 
-If usb_register failed, no need to call led_trigger_register_simple.
+529 for_each_cache(ca, c, iter) {
+530       struct journal_device *ja = &ca->journal;
+531       unsigned int next = (ja->cur_idx + 1) % ca->sb.njournal_buckets;
+532
+533       /* No space available on this device */
+534       if (next == ja->discard_idx)
+535               continue;
+536
+537       ja->cur_idx = next;
+538       k->ptr[n++] = MAKE_PTR(0,
+539                         bucket_to_sector(c, ca->sb.d[ja->cur_idx]),
+540                         ca->sb.nr_this_dev);
+541 }
+542
+543 bkey_init(k);
+544 SET_KEY_PTRS(k, n);
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 1264b951463a ("at76c50x-usb: add driver")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-[bwh: Backported to 3.16: adjust filename]
+If there is no available bucket to reclaim, the if() condition at line
+534 will always true, and n remains 0. Then at line 544, SET_KEY_PTRS()
+will set KEY_PTRS field of c->journal.key to 0.
+
+Setting KEY_PTRS field of c->journal.key to 0 is wrong. Because in
+journal_write_unlocked() the journal data is written in following loop,
+
+649	for (i = 0; i < KEY_PTRS(k); i++) {
+650-671		submit journal data to cache device
+672	}
+
+If KEY_PTRS field is set to 0 in jouranl_reclaim(), the journal data
+won't be written to cache device here. If system crahed or rebooted
+before bkeys of the lost journal entries written into btree nodes, data
+corruption will be reported during bcache reload after rebooting the
+system.
+
+Indeed there is only one cache in a cache set, there is no need to set
+KEY_PTRS field in journal_reclaim() at all. But in order to keep the
+for_each_cache() logic consistent for now, this patch fixes the above
+problem by not setting 0 KEY_PTRS of journal key, if there is no bucket
+available to reclaim.
+
+Signed-off-by: Coly Li <colyli@suse.de>
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/wireless/at76c50x-usb.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/md/bcache/journal.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
---- a/drivers/net/wireless/at76c50x-usb.c
-+++ b/drivers/net/wireless/at76c50x-usb.c
-@@ -2582,8 +2582,8 @@ static int __init at76_mod_init(void)
- 	if (result < 0)
- 		printk(KERN_ERR DRIVER_NAME
- 		       ": usb_register failed (status %d)\n", result);
--
--	led_trigger_register_simple("at76_usb-tx", &ledtrig_tx);
-+	else
-+		led_trigger_register_simple("at76_usb-tx", &ledtrig_tx);
- 	return result;
- }
+--- a/drivers/md/bcache/journal.c
++++ b/drivers/md/bcache/journal.c
+@@ -507,11 +507,11 @@ static void journal_reclaim(struct cache
+ 				  ca->sb.nr_this_dev);
+ 	}
  
+-	bkey_init(k);
+-	SET_KEY_PTRS(k, n);
+-
+-	if (n)
++	if (n) {
++		bkey_init(k);
++		SET_KEY_PTRS(k, n);
+ 		c->journal.blocks_free = c->sb.bucket_size >> c->block_bits;
++	}
+ out:
+ 	if (!journal_full(&c->journal))
+ 		__closure_wake_up(&c->journal.wait);
+@@ -635,6 +635,9 @@ static void journal_write_unlocked(struc
+ 		ca->journal.seq[ca->journal.cur_idx] = w->data->seq;
+ 	}
+ 
++	/* If KEY_PTRS(k) == 0, this jset gets lost in air */
++	BUG_ON(i == 0);
++
+ 	atomic_dec_bug(&fifo_back(&c->journal.pin));
+ 	bch_journal_next(&c->journal);
+ 	journal_reclaim(c);
 
