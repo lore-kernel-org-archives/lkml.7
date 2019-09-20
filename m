@@ -6,60 +6,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87548C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 07:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05194C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 07:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 603C8222CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 07:55:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC6E6222CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 07:55:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437649AbfITHzD (ORCPT
+        id S2437662AbfITHzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 03:55:03 -0400
-Received: from mout.perfora.net ([74.208.4.197]:39083 "EHLO mout.perfora.net"
+        Fri, 20 Sep 2019 03:55:08 -0400
+Received: from mout.perfora.net ([74.208.4.197]:58371 "EHLO mout.perfora.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437613AbfITHzC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 03:55:02 -0400
+        id S2437650AbfITHzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 03:55:05 -0400
 Received: from marcel-nb-toradex-int.cardiotech.int ([81.221.138.184]) by
  mrelay.perfora.net (mreueus001 [74.208.5.2]) with ESMTPSA (Nemesis) id
- 0MGPxO-1iOTHF1O7c-00DD9w; Fri, 20 Sep 2019 09:54:25 +0200
+ 0LvjHG-1i7uKf0Dqm-017VAu; Fri, 20 Sep 2019 09:54:29 +0200
 From:   Marcel Ziswiler <marcel@ziswiler.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     devicetree@vger.kernel.org, info@logictechno.com,
         j.bauer@endrich.com, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org,
         Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH v1 1/2] dt-bindings: add vendor prefix for logic technologies limited
-Date:   Fri, 20 Sep 2019 09:54:10 +0200
-Message-Id: <20190920075411.15735-1-marcel@ziswiler.com>
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+Subject: [PATCH v1 2/2] drm/panel: simple: add display timings for logic technologies displays
+Date:   Fri, 20 Sep 2019 09:54:11 +0200
+Message-Id: <20190920075411.15735-2-marcel@ziswiler.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190920075411.15735-1-marcel@ziswiler.com>
+References: <20190920075411.15735-1-marcel@ziswiler.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:aQ4xStQWFccokTsnwpMEsTr19zszagYxLLJLxeRBk1kzhDNkFOH
- OrZ9Z8sDaQaaZb6xOeD/vWutzISjM1DTSh6UJYijeN+XiP8EdCOrEZKWF4hkg3spLLizROy
- +UkbkPMgL/DS0gbg2ANuzNFBui2iNVF5anESWW8FarmZZ4NeB+dZ2ZvBrrkJWq4sLiJJGAl
- 7MVJ0O27AFsX/SdKp+C2g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:PwRLMrILxo4=:PGyhiCBnO2wa5RDaAzVr3D
- X73wKMW9ke5Dk/nwMKjw89XtApvNKHMmMqWcTxv1fICC4wiCoZH7FsEeDy77pEWtKR4Neq4lD
- rS4styjUA87UXWbHVl6pjHuHQzdCpUDE0vkQYSYgy2xjbqSfibf+XTi6mOaKnO2hSTe0jwH7h
- fC3QuknNBvnUPwYZ3N/32JXAkJgsQAq6S3pt/TVK3NNSIgI2I1ptheSYL+vrvw1OX40wznRGh
- yriEpDCjBPM45qowDdzQrU/VnnYKbVEf99WQb1HYVQrcqKutrLHE5xzPZ97BIEWC0El3LU+uh
- Yl+zT2/Hp7Nz4XdrJ4ZWQ7Mj2+6+Dni1uCnaV+FOSQsoO+AdzVNuS6kqsDifoVy/Moeww/0lK
- QE28vmRQsQ5pk/Gk5vcQ6z8xvgSs+k2DwawGRKbCcsqX68J/12xIfGKw8i3AqLgnevtRv5yvo
- ttY8qimSw3nZ2RZ7OzcNuEer3MqD8W5tUlNkZhvmMhChfboEfuWZtn1b6tzw6I4YMyT4OVtHS
- PqPFbQGX7YlgYJgRakdNFgFtueHOGf7+h7flMYQ0PCaESgQWxz3T2+7pwCsjvNQ8cDtQIyDep
- 6Cb91WcfVDN0ZGJczFtXo2m7M1ctl/ds39f5TESiKcgEufncwNkSeKxlRytJVhpABmL4AuKCV
- lrZD/Oc6ZT3q/ZRFF3bMajtfkTVrUa/xEQOjhdy+UbVrHCopY77Vi5qNF/A5fl9V0GsXTRZd1
- NCZWSFUCKuGypZab2x3tcAJc1YAr7fHcJB2XIbsUfYwEof/KLOCiPE/hwItHMS6wrEY1ElbDH
- ReFNUWIqGWaJOtsrx++YUVbSCXN1T6zz/Pr3rNVtvRIMWgzsOrtxMrwUIEin9w95w0mF5T/Z5
- 1o4nFqCpM7GCpMaHV/+z/FxXqHdA4qSMKZ/nAjPYg=
+X-Provags-ID: V03:K1:sLEHM5ID9bpkaIBR8unNP/vrUtJPExDKWaW13ABHK2a71XWqLsr
+ 9qVh9qGuJ6urbc4F+rb9guOpFZI2OTT/ZAACP/2LblYf8A5Rk50zBO7sqeoC8QOqsjYFpD6
+ c3JAPZ/k39M5eZxNfowloFsS+vRMB/5bnAUB5rnta/VVlglsy2TQ/fy6X8LuzIcRM8tSn+Y
+ Fecd3RLQm40vB+PcKaAyw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:rM8OH6nkw0Q=:u7QyUop3rCQyx8mtBudJSK
+ sLtrcTa50J82vAPT3ZHfV7s3KdJNwisv4bHEB97pIjmZWTdA85VAi7HpTDrWiHPHvAVsRVhhM
+ la2JqoHOW1xPoJkhDkF1D8L/8OJSsC+q88k+apPVW7iDgj7uQKOStPUWwrdOnqDdku+H6Cz8M
+ 3ZR/6uDkjrnbL099c+FLZ/ISydfZmy8nKmTIWV7kJyd6rJFMDRwKneqsTXXjYWwYfDlsxDu9D
+ 04vQzA0rZkiro21l11XNtMarayek2+pj1seTBGKwthh1sqCEXboR5SyuWqNJnlKWKUnEkcXg1
+ bvXKYT2hQidjQepOSDdp8dU5TJFFJXsj/4T+vyiewWg6KuXj2MP+qrIWEXV8iBEGS5TrlUH0F
+ +tWx4H8kT8dyVowBAhBqMTxRy8cWGyni2sxqVgxedA1h2tTZWxp2Nek1r1M4ozFpofirFW8Hv
+ PFlKYuvPlb/DFGfeOl4Lxd8+4gM+l+mOovj3PgbBrJII0mE7AEafzAFp7XWWyycMD627ae1v/
+ 9hb2gXk9Unr/OYgsvL61/WeI+A/nohPspp03pheosvy0rxGIaRs6e8+hzocFt1dapowf/XOOq
+ 8/P+vUMtH1PxTXUXbh6bTGfJQLbIW4YiugbyRuAHGX40q/gmEPaLbglpjksYv3szmDA2L/FhL
+ ye/FpF/uRLrFyg94PW43L5qu4/4wGvK8U/MSdDN15GtIuMwacmMoW1CT16jxhUeT9mOWFURUI
+ LyD5/fsSFdfgLFX+Y1GootShu+XClMwIYQyciMb49NqQF1gtwc88ehh9iPAMZ0+14D7Fi5/M9
+ zlgA3atxSiRyxKAYWRdNIYal785/I4XDRQrOcqTiZsOBc7wcB7axjgB33n+Ct4rw87O9NVwrG
+ w6DBSzdSXnXfDQgFPRhpt4IkN+/Hnn2lfCf4gweZc=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -67,33 +65,114 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
-Add vendor prefix for Logic Technologies Limited [1] which is a Chinese
-display manufacturer e.g. distributed by German Endrich Bauelemente
-Vertriebs GmbH [2].
+Add display timings for the following 3 display panels manufactured by
+Logic Technologies Limited:
 
-[1] https://logictechno.com/contact-us/
-[2] https://www.endrich.com/isi50_isi30_tft-displays/lt170410-1whc_isi30
+- LT161010-2NHC e.g. as found in the Toradex Capacitive Touch Display
+  7" Parallel [1]
+- LT161010-2NHR e.g. as found in the Toradex Resistive Touch Display 7"
+  Parallel [2]
+- LT170410-2WHC e.g. as found in the Toradex Capacitive Touch Display
+  10.1" LVDS [3]
+
+Those panels may also be distributed by Endrich Bauelemente Vertriebs
+GmbH [4].
+
+[1] https://docs.toradex.com/104497-7-inch-parallel-capacitive-touch-display-800x480-datasheet.pdf
+[2] https://docs.toradex.com/104498-7-inch-parallel-resistive-touch-display-800x480.pdf
+[3] https://docs.toradex.com/105952-10-1-inch-lvds-capacitive-touch-display-1280x800-datasheet.pdf
+[4] https://www.endrich.com/isi50_isi30_tft-displays/lt170410-1whc_isi30
 
 Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
 ---
 
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/panel/panel-simple.c | 65 ++++++++++++++++++++++++++++
+ 1 file changed, 65 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 967e78c5ec0a..1441146f394f 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -541,6 +541,8 @@ patternProperties:
-     description: Linear Technology Corporation
-   "^logicpd,.*":
-     description: Logic PD, Inc.
-+  "^logictechno,.*":
-+    description: Logic Technologies Limited
-   "^longcheer,.*":
-     description: Longcheer Technology (Shanghai) Co., Ltd.
-   "^lsi,.*":
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 28fa6ba7b767..42bd0de25167 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -2034,6 +2034,62 @@ static const struct panel_desc lg_lp129qe = {
+ 	},
+ };
+ 
++static const struct display_timing logictechno_lt161010_2nh_timing = {
++	.pixelclock = { 26400000, 33300000, 46800000 },
++	.hactive = { 800, 800, 800 },
++	.hfront_porch = { 16, 210, 354 },
++	.hback_porch = { 46, 46, 46 },
++	.hsync_len = { 1, 20, 40 },
++	.vactive = { 480, 480, 480 },
++	.vfront_porch = { 7, 22, 147 },
++	.vback_porch = { 23, 23, 23 },
++	.vsync_len = { 1, 10, 20 },
++	.flags = DISPLAY_FLAGS_HSYNC_LOW | DISPLAY_FLAGS_VSYNC_LOW |
++		 DISPLAY_FLAGS_DE_HIGH | DISPLAY_FLAGS_PIXDATA_POSEDGE |
++		 DISPLAY_FLAGS_SYNC_POSEDGE,
++};
++
++static const struct panel_desc logictechno_lt161010_2nh = {
++	.timings = &logictechno_lt161010_2nh_timing,
++	.num_timings = 1,
++	.size = {
++		.width = 154,
++		.height = 86,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
++	.bus_flags = DRM_BUS_FLAG_DE_HIGH |
++		     DRM_BUS_FLAG_PIXDATA_SAMPLE_NEGEDGE |
++		     DRM_BUS_FLAG_SYNC_SAMPLE_NEGEDGE,
++};
++
++static const struct display_timing logictechno_lt170410_2whc_timing = {
++	.pixelclock = { 68900000, 71100000, 7340000 },
++	.hactive = { 1280, 1280, 1280 },
++	.hfront_porch = { 23, 60, 71 },
++	.hback_porch = { 23, 60, 71 },
++	.hsync_len = { 15, 40, 47 },
++	.vactive = { 800, 800, 800 },
++	.vfront_porch = { 5, 7, 10 },
++	.vback_porch = { 5, 7, 10 },
++	.vsync_len = { 6, 9, 12 },
++	.flags = DISPLAY_FLAGS_HSYNC_LOW | DISPLAY_FLAGS_VSYNC_LOW |
++		 DISPLAY_FLAGS_DE_HIGH | DISPLAY_FLAGS_PIXDATA_POSEDGE |
++		 DISPLAY_FLAGS_SYNC_POSEDGE,
++};
++
++static const struct panel_desc logictechno_lt170410_2whc = {
++	.timings = &logictechno_lt170410_2whc_timing,
++	.num_timings = 1,
++	.size = {
++		.width = 217,
++		.height = 136,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
++	.bus_flags = DRM_BUS_FLAG_DE_HIGH |
++		     DRM_BUS_FLAG_PIXDATA_SAMPLE_NEGEDGE |
++		     DRM_BUS_FLAG_SYNC_SAMPLE_NEGEDGE,
++};
++
+ static const struct drm_display_mode mitsubishi_aa070mc01_mode = {
+ 	.clock = 30400,
+ 	.hdisplay = 800,
+@@ -3264,6 +3320,15 @@ static const struct of_device_id platform_of_match[] = {
+ 	}, {
+ 		.compatible = "lg,lp129qe",
+ 		.data = &lg_lp129qe,
++	}, {
++		.compatible = "logictechno,lt161010-2nhc",
++		.data = &logictechno_lt161010_2nh,
++	}, {
++		.compatible = "logictechno,lt161010-2nhr",
++		.data = &logictechno_lt161010_2nh,
++	}, {
++		.compatible = "logictechno,lt170410-2whc",
++		.data = &logictechno_lt170410_2whc,
+ 	}, {
+ 		.compatible = "mitsubishi,aa070mc01-ca1",
+ 		.data = &mitsubishi_aa070mc01,
 -- 
 2.21.0
 
