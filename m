@@ -2,143 +2,144 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9195DC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:58:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B01C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 730AF2067B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D216C20644
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:03:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728862AbfITN6Y (ORCPT
+        id S1728592AbfITODK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 09:58:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55192 "EHLO mx1.redhat.com"
+        Fri, 20 Sep 2019 10:03:10 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54170 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728023AbfITN6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 09:58:23 -0400
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727904AbfITODJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 10:03:09 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C1D418553A
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 13:58:22 +0000 (UTC)
-Received: by mail-wm1-f72.google.com with SMTP id l3so1254712wmf.8
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 06:58:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=spCZuDFD0EPU5ozujvfnvvEa34kbUMxIApAez+Dggu8=;
-        b=SwI24LyMO1KQgwtxNIVm3bIRWlJJblWO8Z4+VfXtjnQd3lQ5vV3xgcdd9uLOfVs6PF
-         vYMCGMx5zrRDxDc5scWuuR5B90Lfot1BOpHKtL7g3PznQJrGwcDJvl+nyldXUI5WIw3o
-         8DuXpT3lQWN6zniWNEKlSq1oBt1hDSQpblhxnECkp4LfyyGeixWGQ7bk4LCy8+HZHn8H
-         TkeSBfi/avxombXLCYV9ayZz9fKk3dLb2h8E30sfibHMYGdCV2TdbxUKpHIErr5vGHhi
-         kBn5ZNkxuHjbrEw0dFoUtiaJL9R19f/x/nWLElVfYe4aAtw+ggY8Od/z4nwINwN4HHm2
-         nWHA==
-X-Gm-Message-State: APjAAAW6OCq+6fsSoQ94gRVsGKmJ1L0y6MTz+5NlL/BXtNVRWN+7AJ5W
-        G1fppjpDnb4XrnUhxM0C9LGfM+bYyhmrgAd0CRsFf+lJXCkmWGy81FGW3JMS9dbbwOEZLp4CKvB
-        givTfXaT//6rFiuIDi9iXnZsx
-X-Received: by 2002:a05:600c:241:: with SMTP id 1mr3641701wmj.162.1568987901451;
-        Fri, 20 Sep 2019 06:58:21 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxaL42VK6Hbg90QmZTlVy0wuDzSPLddZwEiO+ZOepAYrKU0ro0hZ5/EONlchkImHxvmp3T81A==
-X-Received: by 2002:a05:600c:241:: with SMTP id 1mr3641679wmj.162.1568987901220;
-        Fri, 20 Sep 2019 06:58:21 -0700 (PDT)
-Received: from localhost.localdomain (nat-pool-mxp-t.redhat.com. [149.6.153.186])
-        by smtp.gmail.com with ESMTPSA id r6sm1834884wmh.38.2019.09.20.06.58.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Sep 2019 06:58:20 -0700 (PDT)
-Date:   Fri, 20 Sep 2019 15:58:17 +0200
-From:   Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Jakub Kicinski <kubakici@wp.pl>, Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mt7601u: phy: simplify zero check on val
-Message-ID: <20190920135817.GC6456@localhost.localdomain>
-References: <20190920125414.15507-1-colin.king@canonical.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id F3067C047B68;
+        Fri, 20 Sep 2019 14:03:08 +0000 (UTC)
+Received: from gondolin (dhcp-192-230.str.redhat.com [10.33.192.230])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 485445C1B5;
+        Fri, 20 Sep 2019 14:03:01 +0000 (UTC)
+Date:   Fri, 20 Sep 2019 16:02:58 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Matthew Rosato <mjrosato@linux.ibm.com>
+Cc:     sebott@linux.ibm.com, gerald.schaefer@de.ibm.com,
+        pasic@linux.ibm.com, borntraeger@de.ibm.com, walling@linux.ibm.com,
+        linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org,
+        joro@8bytes.org, linux-kernel@vger.kernel.org,
+        alex.williamson@redhat.com, kvm@vger.kernel.org,
+        heiko.carstens@de.ibm.com, robin.murphy@arm.com, gor@linux.ibm.com,
+        pmorel@linux.ibm.com
+Subject: Re: [PATCH v4 3/4] vfio: zpci: defining the VFIO headers
+Message-ID: <20190920160258.70631905.cohuck@redhat.com>
+In-Reply-To: <0a62aba7-578a-6875-da4d-13e8b145cf9b@linux.ibm.com>
+References: <1567815231-17940-1-git-send-email-mjrosato@linux.ibm.com>
+        <1567815231-17940-4-git-send-email-mjrosato@linux.ibm.com>
+        <20190919172009.71b1c246.cohuck@redhat.com>
+        <0a62aba7-578a-6875-da4d-13e8b145cf9b@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="i7F3eY7HS/tUJxUd"
-Content-Disposition: inline
-In-Reply-To: <20190920125414.15507-1-colin.king@canonical.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Fri, 20 Sep 2019 14:03:09 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 19 Sep 2019 16:55:57 -0400
+Matthew Rosato <mjrosato@linux.ibm.com> wrote:
 
---i7F3eY7HS/tUJxUd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On 9/19/19 11:20 AM, Cornelia Huck wrote:
+> > On Fri,  6 Sep 2019 20:13:50 -0400
+> > Matthew Rosato <mjrosato@linux.ibm.com> wrote:
+> >   
+> >> From: Pierre Morel <pmorel@linux.ibm.com>
+> >>
+> >> We define a new device region in vfio.h to be able to
+> >> get the ZPCI CLP information by reading this region from
+> >> userland.
+> >>
+> >> We create a new file, vfio_zdev.h to define the structure
+> >> of the new region we defined in vfio.h
+> >>
+> >> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> >> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
+> >> ---
+> >>  include/uapi/linux/vfio.h      |  1 +
+> >>  include/uapi/linux/vfio_zdev.h | 35 +++++++++++++++++++++++++++++++++++
+> >>  2 files changed, 36 insertions(+)
+> >>  create mode 100644 include/uapi/linux/vfio_zdev.h
 
-> From: Colin Ian King <colin.king@canonical.com>
->=20
-> Currently the zero check on val to break out of a loop
-> is a little obscure.  Replace the val is zero and break check
-> with a loop while value is non-zero.
->=20
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/net/wireless/mediatek/mt7601u/phy.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
->=20
-> diff --git a/drivers/net/wireless/mediatek/mt7601u/phy.c b/drivers/net/wi=
-reless/mediatek/mt7601u/phy.c
-> index 06f5702ab4bd..4e0e473caae1 100644
-> --- a/drivers/net/wireless/mediatek/mt7601u/phy.c
-> +++ b/drivers/net/wireless/mediatek/mt7601u/phy.c
-> @@ -213,9 +213,7 @@ int mt7601u_wait_bbp_ready(struct mt7601u_dev *dev)
-> =20
->  	do {
->  		val =3D mt7601u_bbp_rr(dev, MT_BBP_REG_VERSION);
-> -		if (val && ~val)
-> -			break;
+> >> diff --git a/include/uapi/linux/vfio_zdev.h b/include/uapi/linux/vfio_zdev.h
+> >> new file mode 100644
+> >> index 0000000..55e0d6d
+> >> --- /dev/null
+> >> +++ b/include/uapi/linux/vfio_zdev.h
+> >> @@ -0,0 +1,35 @@
+> >> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+> >> +/*
+> >> + * Region definition for ZPCI devices
+> >> + *
+> >> + * Copyright IBM Corp. 2019
+> >> + *
+> >> + * Author(s): Pierre Morel <pmorel@linux.ibm.com>
+> >> + */
+> >> +
+> >> +#ifndef _VFIO_ZDEV_H_
+> >> +#define _VFIO_ZDEV_H_
+> >> +
+> >> +#include <linux/types.h>
+> >> +
+> >> +/**
+> >> + * struct vfio_region_zpci_info - ZPCI information.  
+> > 
+> > Hm... probably should also get some more explanation. E.g. is that
+> > derived from a hardware structure?
+> >   
+> 
+> The structure itself is not mapped 1:1 to a hardware structure, but it
+> does serve as a collection of information that was derived from other
+> hardware structures.
+> 
+> "Used for passing hardware feature information about a zpci device
+> between the host and guest" ?
 
-I think this is not correct since (not considering the cast) we should break
-=66rom the loop if val !=3D 0 and val !=3D 0xff, so the right approach I gu=
-ess is:
+"zPCI specific hardware feature information for a device"?
 
-diff --git a/drivers/net/wireless/mediatek/mt7601u/phy.c b/drivers/net/wire=
-less/mediatek/mt7601u/phy.c
-index 06f5702ab4bd..d863ab4a66c9 100644
---- a/drivers/net/wireless/mediatek/mt7601u/phy.c
-+++ b/drivers/net/wireless/mediatek/mt7601u/phy.c
-@@ -213,7 +213,7 @@ int mt7601u_wait_bbp_ready(struct mt7601u_dev *dev)
-=20
- 	do {
- 		val =3D mt7601u_bbp_rr(dev, MT_BBP_REG_VERSION);
--		if (val && ~val)
-+		if (val && val !=3D 0xff)
- 			break;
- 	} while (--i);
+Are we reasonably sure that this is complete for now? I'm not sure if
+expanding this structure would work; adding another should always be
+possible, though (if a bit annoying).
 
-> -	} while (--i);
-> +	} while (val && --i);
-> =20
->  	if (!i) {
->  		dev_err(dev->dev, "Error: BBP is not ready\n");
-> --=20
-> 2.20.1
->=20
+> 
+> >> + *
+> >> + */
+> >> +struct vfio_region_zpci_info {
+> >> +	__u64 dasm;
+> >> +	__u64 start_dma;
+> >> +	__u64 end_dma;
+> >> +	__u64 msi_addr;
+> >> +	__u64 flags;
+> >> +	__u16 pchid;
+> >> +	__u16 mui;
+> >> +	__u16 noi;
+> >> +	__u16 maxstbl;
+> >> +	__u8 version;
+> >> +	__u8 gid;
+> >> +#define VFIO_PCI_ZDEV_FLAGS_REFRESH 1
+> >> +	__u8 util_str[];
+> >> +} __packed;
+> >> +
+> >> +#endif  
+> > 
+> >   
+> 
 
---i7F3eY7HS/tUJxUd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCXYTa9wAKCRA6cBh0uS2t
-rETyAP42WJmgG0YWFN4dtvNtHUZL2FS46W+Tt/OXQTdrQfEfYQEA6DLVOjMTQzuG
-hmE5irsv5UEh9sDb73OcIUNJYu7aPAg=
-=LFi7
------END PGP SIGNATURE-----
-
---i7F3eY7HS/tUJxUd--
