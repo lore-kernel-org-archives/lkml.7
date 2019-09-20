@@ -2,141 +2,116 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 827A5C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2085C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6442220882
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:39:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6A06208C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:41:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pj8jIhS3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392857AbfITPjQ (ORCPT
+        id S2392989AbfITPlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 11:39:16 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:34933 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391054AbfITPjQ (ORCPT
+        Fri, 20 Sep 2019 11:41:02 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37038 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392871AbfITPlB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 11:39:16 -0400
-X-Originating-IP: 86.207.98.53
-Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id AE20FFF811;
-        Fri, 20 Sep 2019 15:39:12 +0000 (UTC)
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Subject: [PATCH] clk: at91: avoid sleeping early
-Date:   Fri, 20 Sep 2019 17:39:06 +0200
-Message-Id: <20190920153906.20887-1-alexandre.belloni@bootlin.com>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Fri, 20 Sep 2019 11:41:01 -0400
+Received: by mail-wm1-f66.google.com with SMTP id f16so2718724wmb.2
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 08:41:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=G9rxy00ZIE0J9oTLHWg18q2mcebTff8MKdbRpMtgQiE=;
+        b=pj8jIhS3MfHDWFaGUFRN0DWdCEPx48aiDB3T/KuVJk5bF+IcXQEO/QYOz+DHCfj5wU
+         nZnXcBdqoATCpnSRKTiuAJNg247vXe9s4w4rwRUPdO3pYXp0MpwUePpLFlRpcGwzPuHg
+         GMYTRrq4+ukC+Fn/jik5sdMRQJ1C8Iuyn0fQUGniCUt0pRFH8Fvub/l60Uhfcy9DigqX
+         lUAayDhrDwN+/stHfcbu5mh8CikB0K+XlDa58+NXltWpcR6jW0WksiTn/6ZMYe8ewWQ8
+         jTD29XgSPIZj2bxYPJ4rdEFpG43y6bMAGMINN6ZnoP0XNpbFw3Qj9Qr9gE7MweNpBFem
+         TUOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=G9rxy00ZIE0J9oTLHWg18q2mcebTff8MKdbRpMtgQiE=;
+        b=V/5nBP7uYSsw6fmCdudKNDc2krdOsIBbxmlZKBxsidoi/pA/xKbcMPeuJaQakDSDGk
+         oSK6LgtkjhqAD281GKfZPwdLaKjKmILkHptwgph2ADbTLlbewjkPk0wdkLZcjvTqiUF2
+         dMyi7tZX99aZwVePTQUtUMaEOR0Hs8/CvoVnzWVrT0v6WOgMnoXdYWD6aJT9JE2VD1pv
+         EgiCuMCC8785W4ON8FpxkhwvHI8K0+DrOcWNlavMPeWPx93uYpcYIyVQY9b9EvZ6Ckfo
+         9ZuvhQaExLy7yCaPaYIsQV2HFa4hmlEu9NR9l2VXHVIbEk1RHO+HnWB0+XPx6FcbmifP
+         LwgA==
+X-Gm-Message-State: APjAAAX9TEKf909wzKesABhEo8qw9+tXKMPEXxm4ukvhqsEtnzR1/ilA
+        ZjW2nL2KlaLfp9N/dVLcgH4=
+X-Google-Smtp-Source: APXvYqyB2XK1sqdhE1BqdnoRFRwpnohUADqLVaHceuij08hty0iZggkbHEgIzc81lHxQ+Tgpkw9YJQ==
+X-Received: by 2002:a1c:60c1:: with SMTP id u184mr3871598wmb.32.1568994059713;
+        Fri, 20 Sep 2019 08:40:59 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:a58:8166:7500:adc0:6801:a7c2:8ba2])
+        by smtp.gmail.com with ESMTPSA id x129sm3249186wmg.8.2019.09.20.08.40.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Sep 2019 08:40:58 -0700 (PDT)
+From:   Ilie Halip <ilie.halip@gmail.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        clang-built-linux@googlegroups.com,
+        Ilie Halip <ilie.halip@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] powerpc/pmac/smp: avoid unused-variable warnings
+Date:   Fri, 20 Sep 2019 18:39:51 +0300
+Message-Id: <20190920153951.25762-1-ilie.halip@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is not allowed to sleep to early in the boot process and this may lead
-to kernel issues if the bootloader didn't prepare the slow clock and main
-clock.
+When building with ppc64_defconfig, the compiler reports
+that these 2 variables are not used:
+    warning: unused variable 'core99_l2_cache' [-Wunused-variable]
+    warning: unused variable 'core99_l3_cache' [-Wunused-variable]
 
-This results in the following error and dump stack on the AriettaG25:
-   bad: scheduling from the idle thread!
+They are only used when CONFIG_PPC64 is not defined. Move
+them into a section which does the same macro check.
 
-Ensure it is possible to sleep, else simply have a delay.
-
-Reported-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Ilie Halip <ilie.halip@gmail.com>
 ---
+ arch/powerpc/platforms/powermac/smp.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Note that this was already discussed a while ago and Arnd said this approach was
-reasonable:
-  https://lore.kernel.org/lkml/6120818.MyeJZ74hYa@wuerfel/
-
- drivers/clk/at91/clk-main.c |  5 ++++-
- drivers/clk/at91/sckc.c     | 20 ++++++++++++++++----
- 2 files changed, 20 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/clk/at91/clk-main.c b/drivers/clk/at91/clk-main.c
-index f607ee702c83..ccd48e7a3d74 100644
---- a/drivers/clk/at91/clk-main.c
-+++ b/drivers/clk/at91/clk-main.c
-@@ -293,7 +293,10 @@ static int clk_main_probe_frequency(struct regmap *regmap)
- 		regmap_read(regmap, AT91_CKGR_MCFR, &mcfr);
- 		if (mcfr & AT91_PMC_MAINRDY)
- 			return 0;
--		usleep_range(MAINF_LOOP_MIN_WAIT, MAINF_LOOP_MAX_WAIT);
-+		if (system_state < SYSTEM_RUNNING)
-+			udelay(MAINF_LOOP_MIN_WAIT);
-+		else
-+			usleep_range(MAINF_LOOP_MIN_WAIT, MAINF_LOOP_MAX_WAIT);
- 	} while (time_before(prep_time, timeout));
+diff --git a/arch/powerpc/platforms/powermac/smp.c b/arch/powerpc/platforms/powermac/smp.c
+index f95fbdee6efe..e44c606f119e 100644
+--- a/arch/powerpc/platforms/powermac/smp.c
++++ b/arch/powerpc/platforms/powermac/smp.c
+@@ -648,6 +648,10 @@ static void smp_core99_pfunc_tb_freeze(int freeze)
  
- 	return -ETIMEDOUT;
-diff --git a/drivers/clk/at91/sckc.c b/drivers/clk/at91/sckc.c
-index 9bfe9a28294a..fac0ca56d42d 100644
---- a/drivers/clk/at91/sckc.c
-+++ b/drivers/clk/at91/sckc.c
-@@ -76,7 +76,10 @@ static int clk_slow_osc_prepare(struct clk_hw *hw)
+ static unsigned int core99_tb_gpio;	/* Timebase freeze GPIO */
  
- 	writel(tmp | osc->bits->cr_osc32en, sckcr);
++/* L2 and L3 cache settings to pass from CPU0 to CPU1 on G4 cpus */
++volatile static long int core99_l2_cache;
++volatile static long int core99_l3_cache;
++
+ static void smp_core99_gpio_tb_freeze(int freeze)
+ {
+ 	if (freeze)
+@@ -660,10 +664,6 @@ static void smp_core99_gpio_tb_freeze(int freeze)
  
--	usleep_range(osc->startup_usec, osc->startup_usec + 1);
-+	if (system_state < SYSTEM_RUNNING)
-+		udelay(osc->startup_usec);
-+	else
-+		usleep_range(osc->startup_usec, osc->startup_usec + 1);
+ #endif /* !CONFIG_PPC64 */
  
- 	return 0;
- }
-@@ -187,7 +190,10 @@ static int clk_slow_rc_osc_prepare(struct clk_hw *hw)
- 
- 	writel(readl(sckcr) | osc->bits->cr_rcen, sckcr);
- 
--	usleep_range(osc->startup_usec, osc->startup_usec + 1);
-+	if (system_state < SYSTEM_RUNNING)
-+		udelay(osc->startup_usec);
-+	else
-+		usleep_range(osc->startup_usec, osc->startup_usec + 1);
- 
- 	return 0;
- }
-@@ -288,7 +294,10 @@ static int clk_sam9x5_slow_set_parent(struct clk_hw *hw, u8 index)
- 
- 	writel(tmp, sckcr);
- 
--	usleep_range(SLOWCK_SW_TIME_USEC, SLOWCK_SW_TIME_USEC + 1);
-+	if (system_state < SYSTEM_RUNNING)
-+		udelay(SLOWCK_SW_TIME_USEC);
-+	else
-+		usleep_range(SLOWCK_SW_TIME_USEC, SLOWCK_SW_TIME_USEC + 1);
- 
- 	return 0;
- }
-@@ -533,7 +542,10 @@ static int clk_sama5d4_slow_osc_prepare(struct clk_hw *hw)
- 		return 0;
- 	}
- 
--	usleep_range(osc->startup_usec, osc->startup_usec + 1);
-+	if (system_state < SYSTEM_RUNNING)
-+		udelay(osc->startup_usec);
-+	else
-+		usleep_range(osc->startup_usec, osc->startup_usec + 1);
- 	osc->prepared = true;
- 
- 	return 0;
+-/* L2 and L3 cache settings to pass from CPU0 to CPU1 on G4 cpus */
+-volatile static long int core99_l2_cache;
+-volatile static long int core99_l3_cache;
+-
+ static void core99_init_caches(int cpu)
+ {
+ #ifndef CONFIG_PPC64
 -- 
-2.21.0
+2.17.1
 
