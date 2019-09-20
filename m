@@ -2,54 +2,64 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF72C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E04C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57F342086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:28:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D1372086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:28:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568989703;
-	bh=/0iyHNcbMoxxci1l9/vd5LKP750yRWtHIsGXZyGBAuk=;
+	s=default; t=1568989708;
+	bh=Kp0F9xN2DY9KI2mFHvBUHu7JeaG+dR9flgRLbMMsFb8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M9TWKN1vktStdiDVqzfE4jkMMKVnF1HsCCc+TAZx10bNKVdSuO45CKwMx5taD/QRx
-	 sV8o4XusRHxgSuJl0rAGDS+nhZH+8RZscsdhwx2iM+PjkqHzaGHz2DN+XYPQu1YoNm
-	 T5G3UT/4oDI0j2xYVbX1NyCe20UuZTdKzcyCpCJs=
+	b=aVaPnAAfp7Yh67fh+KReIFO5VYa8kz+RjmADqsYdYV6k1zn79C7jp5Xwnli2VJ2v5
+	 nT5FYKNHM1o2thnn1E8SbRL+wSIo0KctWc4enOH2re8eZwYCfm7ltDadLQ8VZVTtHO
+	 PKDIx6BRs9S1vMfiZFHIE/+SexZkomoM4J4Q+dDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389558AbfITO1G (ORCPT
+        id S2390188AbfITO21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:27:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38768 "EHLO mail.kernel.org"
+        Fri, 20 Sep 2019 10:28:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388936AbfITO0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 10:26:16 -0400
+        id S2389512AbfITO1D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 10:27:03 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AD6D21A4A;
-        Fri, 20 Sep 2019 14:26:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8516920C01;
+        Fri, 20 Sep 2019 14:26:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568989576;
-        bh=/0iyHNcbMoxxci1l9/vd5LKP750yRWtHIsGXZyGBAuk=;
+        s=default; t=1568989621;
+        bh=Kp0F9xN2DY9KI2mFHvBUHu7JeaG+dR9flgRLbMMsFb8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d1NMhSDabIhOCpTDnkNGBj7MU8z9t/bQaFiBnY7KhKf+zi9UGoEQuFBIv79w069Yq
-         CfD7hy5r1DEI2CZFLV+7dWoUitEoiII0OhodKXF1/x6DLJWNhCnEK4u2M29u1+tPqO
-         mZraI+dpnEiBlo3sPefvt96nlsSscie6Sj9tHRDc=
+        b=1lSu7XTlBVMrUGwrNJPF4Yo0VlQiHn6c3t/fp8gHGWeFTRgN6STBo/62eT6oHpd1M
+         PbV/gcUXgJ3n/nH/yj5N4zUzfuklV6gJ2+GhauH/X8P6ti73rOSJpaTCanS5NTWjAA
+         3JYqJC7UBv+it6c8rTlzyHNUNO6evNCz6FDzFoYY=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 08/31] perf debug: No need to include ui/util.h
-Date:   Fri, 20 Sep 2019 11:25:19 -0300
-Message-Id: <20190920142542.12047-9-acme@kernel.org>
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        devicetree@vger.kernel.org,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>, Joe Perches <joe@perches.com>,
+        linux-acpi@vger.kernel.org, linux-trace-devel@vger.kernel.org,
+        Petr Mladek <pmladek@suse.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 25/31] tools lib traceevent: Convert remaining %p[fF] users to %p[sS]
+Date:   Fri, 20 Sep 2019 11:25:36 -0300
+Message-Id: <20190920142542.12047-26-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190920142542.12047-1-acme@kernel.org>
 References: <20190920142542.12047-1-acme@kernel.org>
@@ -60,63 +70,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-Nothing from that file is used in util/debug.h, it is only needed in
-some places that get it indirectly via including util/debug.h, remove
-that entanglement.
+There are no in-kernel %p[fF] users left. Convert the traceevent tool,
+too, to align with the kernel.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: devicetree@vger.kernel.org
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Joe Perches <joe@perches.com>
+Cc: linux-acpi@vger.kernel.org
+Cc: linux-trace-devel@vger.kernel.org
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-hn9v4jdova2nt018fqsjyzun@git.kernel.org
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Rafael J. Wysocki <rafael@kernel.org>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Link: http://lore.kernel.org/lkml/20190918133419.7969-2-sakari.ailus@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/browsers/scripts.c | 1 +
- tools/perf/ui/gtk/setup.c        | 3 ++-
- tools/perf/util/debug.h          | 2 +-
- 3 files changed, 4 insertions(+), 2 deletions(-)
+ .../Documentation/libtraceevent-func_apis.txt  | 10 +++++-----
+ tools/lib/traceevent/event-parse.c             | 18 ++++++++++++++----
+ 2 files changed, 19 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
-index 586a21acc13d..3b81075b8da8 100644
---- a/tools/perf/ui/browsers/scripts.c
-+++ b/tools/perf/ui/browsers/scripts.c
-@@ -2,6 +2,7 @@
- #include "../../builtin.h"
- #include "../../perf.h"
- #include "../../util/util.h"
-+#include "../util.h"
- #include "../../util/hist.h"
- #include "../../util/debug.h"
- #include "../../util/symbol.h"
-diff --git a/tools/perf/ui/gtk/setup.c b/tools/perf/ui/gtk/setup.c
-index 1a2616b97b5c..f5eee4d66873 100644
---- a/tools/perf/ui/gtk/setup.c
-+++ b/tools/perf/ui/gtk/setup.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "gtk.h"
--#include "../../util/debug.h"
-+#include <linux/compiler.h>
-+#include "../util.h"
+diff --git a/tools/lib/traceevent/Documentation/libtraceevent-func_apis.txt b/tools/lib/traceevent/Documentation/libtraceevent-func_apis.txt
+index 38bfea30a5f6..f6aca0df2151 100644
+--- a/tools/lib/traceevent/Documentation/libtraceevent-func_apis.txt
++++ b/tools/lib/traceevent/Documentation/libtraceevent-func_apis.txt
+@@ -59,12 +59,12 @@ parser context.
  
- extern struct perf_error_ops perf_gtk_eops;
+ The _tep_register_function()_ function registers a function name mapped to an
+ address and (optional) module. This mapping is used in case the function tracer
+-or events have "%pF" or "%pS" parameter in its format string. It is common to
+-pass in the kallsyms function names with their corresponding addresses with this
++or events have "%pS" parameter in its format string. It is common to pass in
++the kallsyms function names with their corresponding addresses with this
+ function. The _tep_ argument is the trace event parser context. The _name_ is
+-the name of the function, the string is copied internally. The _addr_ is
+-the start address of the function. The _mod_ is the kernel module
+-the function may be in (NULL for none).
++the name of the function, the string is copied internally. The _addr_ is the
++start address of the function. The _mod_ is the kernel module the function may
++be in (NULL for none).
  
-diff --git a/tools/perf/util/debug.h b/tools/perf/util/debug.h
-index b2deee987ffa..d25ae1c4cee9 100644
---- a/tools/perf/util/debug.h
-+++ b/tools/perf/util/debug.h
-@@ -3,9 +3,9 @@
- #ifndef __PERF_DEBUG_H
- #define __PERF_DEBUG_H
+ The _tep_register_print_string()_ function  registers a string by the address
+ it was stored in the kernel. Some strings internal to the kernel with static
+diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
+index bb22238debfe..6f842af4550b 100644
+--- a/tools/lib/traceevent/event-parse.c
++++ b/tools/lib/traceevent/event-parse.c
+@@ -4367,10 +4367,20 @@ static struct tep_print_arg *make_bprint_args(char *fmt, void *data, int size, s
+ 					switch (*ptr) {
+ 					case 's':
+ 					case 'S':
+-					case 'f':
+-					case 'F':
+ 					case 'x':
+ 						break;
++					case 'f':
++					case 'F':
++						/*
++						 * Pre-5.5 kernels use %pf and
++						 * %pF for printing symbols
++						 * while kernels since 5.5 use
++						 * %pfw for fwnodes. So check
++						 * %p[fF] isn't followed by 'w'.
++						 */
++						if (ptr[1] != 'w')
++							break;
++						/* fall through */
+ 					default:
+ 						/*
+ 						 * Older kernels do not process
+@@ -4487,12 +4497,12 @@ get_bprint_format(void *data, int size __maybe_unused,
  
-+#include <stdarg.h>
- #include <stdbool.h>
- #include <linux/compiler.h>
--#include "../ui/util.h"
+ 	printk = find_printk(tep, addr);
+ 	if (!printk) {
+-		if (asprintf(&format, "%%pf: (NO FORMAT FOUND at %llx)\n", addr) < 0)
++		if (asprintf(&format, "%%ps: (NO FORMAT FOUND at %llx)\n", addr) < 0)
+ 			return NULL;
+ 		return format;
+ 	}
  
- extern int verbose;
- extern bool quiet, dump_trace;
+-	if (asprintf(&format, "%s: %s", "%pf", printk->printk) < 0)
++	if (asprintf(&format, "%s: %s", "%ps", printk->printk) < 0)
+ 		return NULL;
+ 
+ 	return format;
 -- 
 2.21.0
 
