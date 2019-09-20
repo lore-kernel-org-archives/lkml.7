@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB01C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B9E0C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:30:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A13120882
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:30:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D6CF2080F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:30:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388708AbfITOZs (ORCPT
+        id S2388688AbfITOZr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:25:48 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36048 "EHLO
+        Fri, 20 Sep 2019 10:25:47 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36016 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388130AbfITOZE (ORCPT
+        by vger.kernel.org with ESMTP id S2388111AbfITOZD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 10:25:04 -0400
+        Fri, 20 Sep 2019 10:25:03 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqH-00050x-Kn; Fri, 20 Sep 2019 15:25:01 +0100
+        id 1iBJqG-0004xX-NJ; Fri, 20 Sep 2019 15:25:00 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqG-0007xX-SI; Fri, 20 Sep 2019 15:25:00 +0100
+        id 1iBJqE-0007sa-Ap; Fri, 20 Sep 2019 15:24:58 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Arik Nemtsov" <arik@wizery.com>,
-        "Arik Nemtsov" <arikx.nemtsov@intel.com>,
-        "Johannes Berg" <johannes.berg@intel.com>
+        "Liang Chen" <liangchen.linux@gmail.com>,
+        "Jens Axboe" <axboe@kernel.dk>, "Coly Li" <colyli@suse.de>
 Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.140009400@decadent.org.uk>
+Message-ID: <lsq.1568989415.722999903@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 107/132] mac80211: add API to request TDLS operation
- from userspace
+Subject: [PATCH 3.16 050/132] bcache: fix a race between cache register
+ and cacheset unregister
 In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,82 +56,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Arik Nemtsov <arik@wizery.com>
+From: Liang Chen <liangchen.linux@gmail.com>
 
-commit c887f0d3a03283cb6fe2c32aae62229bebd3fa32 upstream.
+commit a4b732a248d12cbdb46999daf0bf288c011335eb upstream.
 
-Write a mac80211 to the cfg80211 API for requesting a userspace TDLS
-operation. Define TDLS specific reason codes that can be used here.
+There is a race between cache device register and cache set unregister.
+For an already registered cache device, register_bcache will call
+bch_is_open to iterate through all cachesets and check every cache
+there. The race occurs if cache_set_free executes at the same time and
+clears the caches right before ca is dereferenced in bch_is_open_cache.
+To close the race, let's make sure the clean up work is protected by
+the bch_register_lock as well.
 
-Signed-off-by: Arik Nemtsov <arikx.nemtsov@intel.com>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+This issue can be reproduced as follows,
+while true; do echo /dev/XXX> /sys/fs/bcache/register ; done&
+while true; do echo 1> /sys/block/XXX/bcache/set/unregister ; done &
+
+and results in the following oops,
+
+[  +0.000053] BUG: unable to handle kernel NULL pointer dereference at 0000000000000998
+[  +0.000457] #PF error: [normal kernel read fault]
+[  +0.000464] PGD 800000003ca9d067 P4D 800000003ca9d067 PUD 3ca9c067 PMD 0
+[  +0.000388] Oops: 0000 [#1] SMP PTI
+[  +0.000269] CPU: 1 PID: 3266 Comm: bash Not tainted 5.0.0+ #6
+[  +0.000346] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.0-2.fc28 04/01/2014
+[  +0.000472] RIP: 0010:register_bcache+0x1829/0x1990 [bcache]
+[  +0.000344] Code: b0 48 83 e8 50 48 81 fa e0 e1 10 c0 0f 84 a9 00 00 00 48 89 c6 48 89 ca 0f b7 ba 54 04 00 00 4c 8b 82 60 0c 00 00 85 ff 74 2f <49> 3b a8 98 09 00 00 74 4e 44 8d 47 ff 31 ff 49 c1 e0 03 eb 0d
+[  +0.000839] RSP: 0018:ffff92ee804cbd88 EFLAGS: 00010202
+[  +0.000328] RAX: ffffffffc010e190 RBX: ffff918b5c6b5000 RCX: ffff918b7d8e0000
+[  +0.000399] RDX: ffff918b7d8e0000 RSI: ffffffffc010e190 RDI: 0000000000000001
+[  +0.000398] RBP: ffff918b7d318340 R08: 0000000000000000 R09: ffffffffb9bd2d7a
+[  +0.000385] R10: ffff918b7eb253c0 R11: ffffb95980f51200 R12: ffffffffc010e1a0
+[  +0.000411] R13: fffffffffffffff2 R14: 000000000000000b R15: ffff918b7e232620
+[  +0.000384] FS:  00007f955bec2740(0000) GS:ffff918b7eb00000(0000) knlGS:0000000000000000
+[  +0.000420] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  +0.000801] CR2: 0000000000000998 CR3: 000000003cad6000 CR4: 00000000001406e0
+[  +0.000837] Call Trace:
+[  +0.000682]  ? _cond_resched+0x10/0x20
+[  +0.000691]  ? __kmalloc+0x131/0x1b0
+[  +0.000710]  kernfs_fop_write+0xfa/0x170
+[  +0.000733]  __vfs_write+0x2e/0x190
+[  +0.000688]  ? inode_security+0x10/0x30
+[  +0.000698]  ? selinux_file_permission+0xd2/0x120
+[  +0.000752]  ? security_file_permission+0x2b/0x100
+[  +0.000753]  vfs_write+0xa8/0x1a0
+[  +0.000676]  ksys_write+0x4d/0xb0
+[  +0.000699]  do_syscall_64+0x3a/0xf0
+[  +0.000692]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Signed-off-by: Liang Chen <liangchen.linux@gmail.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- include/linux/ieee80211.h |  3 +++
- include/net/mac80211.h    | 13 +++++++++++++
- net/mac80211/tdls.c       | 17 +++++++++++++++++
- 3 files changed, 33 insertions(+)
+ drivers/md/bcache/super.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/linux/ieee80211.h
-+++ b/include/linux/ieee80211.h
-@@ -1621,6 +1621,9 @@ enum ieee80211_reasoncode {
- 	WLAN_REASON_INVALID_RSN_IE_CAP = 22,
- 	WLAN_REASON_IEEE8021X_FAILED = 23,
- 	WLAN_REASON_CIPHER_SUITE_REJECTED = 24,
-+	/* TDLS (802.11z) */
-+	WLAN_REASON_TDLS_TEARDOWN_UNREACHABLE = 25,
-+	WLAN_REASON_TDLS_TEARDOWN_UNSPECIFIED = 26,
- 	/* 802.11e */
- 	WLAN_REASON_DISASSOC_UNSPECIFIED_QOS = 32,
- 	WLAN_REASON_DISASSOC_QAP_NO_BANDWIDTH = 33,
---- a/include/net/mac80211.h
-+++ b/include/net/mac80211.h
-@@ -4815,4 +4815,17 @@ int ieee80211_parse_p2p_noa(const struct
-  */
- void ieee80211_update_p2p_noa(struct ieee80211_noa_data *data, u32 tsf);
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -1364,6 +1364,7 @@ static void cache_set_free(struct closur
+ 	bch_btree_cache_free(c);
+ 	bch_journal_free(c);
  
-+/**
-+ * ieee80211_tdls_oper - request userspace to perform a TDLS operation
-+ * @vif: virtual interface
-+ * @peer: the peer's destination address
-+ * @oper: the requested TDLS operation
-+ * @reason_code: reason code for the operation, valid for TDLS teardown
-+ * @gfp: allocation flags
-+ *
-+ * See cfg80211_tdls_oper_request().
-+ */
-+void ieee80211_tdls_oper_request(struct ieee80211_vif *vif, const u8 *peer,
-+				 enum nl80211_tdls_operation oper,
-+				 u16 reason_code, gfp_t gfp);
- #endif /* MAC80211_H */
---- a/net/mac80211/tdls.c
-+++ b/net/mac80211/tdls.c
-@@ -8,6 +8,7 @@
-  */
++	mutex_lock(&bch_register_lock);
+ 	for_each_cache(ca, c, i)
+ 		if (ca) {
+ 			ca->set = NULL;
+@@ -1386,7 +1387,6 @@ static void cache_set_free(struct closur
+ 		mempool_destroy(c->search);
+ 	kfree(c->devices);
  
- #include <linux/ieee80211.h>
-+#include <net/cfg80211.h>
- #include "ieee80211_i.h"
+-	mutex_lock(&bch_register_lock);
+ 	list_del(&c->list);
+ 	mutex_unlock(&bch_register_lock);
  
- static void ieee80211_tdls_add_ext_capab(struct sk_buff *skb)
-@@ -323,3 +324,19 @@ int ieee80211_tdls_oper(struct wiphy *wi
- 
- 	return 0;
- }
-+
-+void ieee80211_tdls_oper_request(struct ieee80211_vif *vif, const u8 *peer,
-+				 enum nl80211_tdls_operation oper,
-+				 u16 reason_code, gfp_t gfp)
-+{
-+	struct ieee80211_sub_if_data *sdata = vif_to_sdata(vif);
-+
-+	if (vif->type != NL80211_IFTYPE_STATION || !vif->bss_conf.assoc) {
-+		sdata_err(sdata, "Discarding TDLS oper %d - not STA or disconnected\n",
-+			  oper);
-+		return;
-+	}
-+
-+	cfg80211_tdls_oper_request(sdata->dev, peer, oper, reason_code, gfp);
-+}
-+EXPORT_SYMBOL(ieee80211_tdls_oper_request);
 
