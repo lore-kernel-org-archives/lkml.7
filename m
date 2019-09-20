@@ -2,166 +2,138 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C47C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 764BBC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 102142086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:50:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BA12208C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 08:50:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OrC2POuj"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="lVqbg1WO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408329AbfITIud (ORCPT
+        id S2437876AbfITIuj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 04:50:33 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:54124 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2405464AbfITIub (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 04:50:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1568969430;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bMQmh6bt7SEPSQlVPTv16Vvaa2lPPh/g7BO6VdZsR2I=;
-        b=OrC2POujZ9AHzUHHPamKocojspzt6ksxjCbV/6kvH4zucp37znf75z2699I2Cbphqsl360
-        yu8I1kcKSzdHpGyOaOWP13zjnp01HNnfzsBgd4PJ/5HUZHhtW4C3CKmuW3qpUfmjqjYvRv
-        2gcIpHTvE0+kXHQicU4paipYCM+CNL8=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-138-tG_AqsCuM6ervK2CTzzq5g-1; Fri, 20 Sep 2019 04:50:28 -0400
-Received: by mail-ed1-f71.google.com with SMTP id s15so2589262edj.1
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 01:50:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uphOpbAgrdy43BfB/41YtawX2S+90uCA4NiyJq9P2Bw=;
-        b=WwQW0qYZzM12Yq8eN6IpNFhLrV7sZwNusIwHEFajXTwbsZx8Z5qqRU1UI1eQcZBdgj
-         Saa9ybLsP4ESCJmR3or/+wRd1FNHpBQcaAJ0E+FIswNgo1oTHZaODk0LIjKMhWjyEg0+
-         lIQ47qEmZ3EyDjFkAN3coX3Yp8ZV3yUncnfI+fjVsq3UFuhshb+Eh1zysU8xVrthTLIk
-         6IjWh433KhioWh03LSrAYKV4M7/v/LlO7GWQ4KMCJtL4w8Qxn5OFXTRqwdvIZ9gL+heF
-         M7HR2eqEiwmXS4MQdpi1X567+a73glj/eufRA/SrAEobK3o3vNDZBr86eMXDN5OuR8Q8
-         KhXA==
-X-Gm-Message-State: APjAAAVhdwZmLpFLm02M2BnWegj7Vv3QQs/k9uUpgbXAXToEoXcTCxxO
-        XFKfqV5iXTIxTEcBWrlmuHKq2Iu7VQhx7OFcQv0a+HVsEXyU6rciz89hTloiJy4wuvJtY/b1iRH
-        m0JUERccFEisZ1fDx5vZXHJdj
-X-Received: by 2002:a17:906:e290:: with SMTP id gg16mr7984103ejb.176.1568969426870;
-        Fri, 20 Sep 2019 01:50:26 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxm86r4nDmfGip9Js8Gt2Qa8FhAg8sYxIqzoTYIfqodB2gnkK5U+MAWev/tBSho/seaeE31pg==
-X-Received: by 2002:a17:906:e290:: with SMTP id gg16mr7984089ejb.176.1568969426677;
-        Fri, 20 Sep 2019 01:50:26 -0700 (PDT)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id z39sm210440edd.46.2019.09.20.01.50.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Sep 2019 01:50:25 -0700 (PDT)
-Subject: Re: [PATCH] serdev: Add ACPI devices by ResourceSource field
-To:     Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Johan Hovold <johan@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-serial@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190919195624.1140941-1-luzmaximilian@gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <79c9533f-882d-f2b2-b6f3-b94fa49b4367@redhat.com>
-Date:   Fri, 20 Sep 2019 10:50:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
-MIME-Version: 1.0
-In-Reply-To: <20190919195624.1140941-1-luzmaximilian@gmail.com>
+        Fri, 20 Sep 2019 04:50:39 -0400
+Received: from mail-eopbgr80083.outbound.protection.outlook.com ([40.107.8.83]:46380
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2405234AbfITIui (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 04:50:38 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eHrAYpbJ7yM1A7ebyppihakOEJkUqH6B7Dz6SoINgHi/Zv0CwbxvnH7MhDk13vQEDeSbzS+p2Bh6w4acPY4XEosS7xpFkp80XoFgjRFRZKBzIx/KsaAD9D9ke1Eu/DAfyngaWyFSo0KRtGAh3Q4nMZ/qQ4hnb5tQZbfB7IbVpLoFueiL18QH/THynsVWWsEnVAc+gwZZVCsgbIYIgEOwR0RUd+c70MujjrTxyN44IKAnKspt4dcAvBQr/QQLpL4uaxf9ga5p+TtC6weE3IqI19mRUs9YCXZY2ToteGCxryAEPPDzxxCpfQNUdXdpyUrOPw8ANyXqz4+pT3qTIS1X7A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TL6lnL4ivLzmv6u+ZIQrRcMDG88TCOHTE/3mxQXKiwM=;
+ b=AMAocfLfk1xtmGHfF6q/FLtNUrltlTBp8CMj1+WBkQGV1J61vhjIFvZ3EeJByaIoYJZzJ9DQz0afBkI3yr4jysKWFA/qMepb6usA8znprebe82Fl8zKLHrwAJqJ54lvuUiuIB6vm8vJJfzJh/8F4gNY1/2vygNY+p4kmPyDdRHHySZ2AuHF0YZj+7cYIhVMIH2lvZuceD3Hyf1LyIgy7LKdIGFA686DVNO3bvs9C8vVCy5EuPRKWMXAV8GqQnTgmhwilwsev23SeKd8+HUM/KUH1D7Z1TZhTo1W0i6tVEvwnDQdjBKQlJjs1rbfGJSq65rflqSu5+VuWf0+zx/r2Nw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TL6lnL4ivLzmv6u+ZIQrRcMDG88TCOHTE/3mxQXKiwM=;
+ b=lVqbg1WOJr+jBTbsbFDDfHrEciHPFoBJ/Ot6PfgYKS70W7X+SbdrdwC1nyR2GE91D7pNC3UNaf3uXJOGadoNZPdSAI7F815TBMVbCicYcHpIkNFqYdEenRXeMRrdhf4d6YjkZ/CKM3pm1aR+hQuSrCJfvovKrj1A/ckd2XDyu+o=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3769.eurprd04.prod.outlook.com (52.134.71.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.23; Fri, 20 Sep 2019 08:49:54 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::8958:299c:bc54:2a38]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::8958:299c:bc54:2a38%7]) with mapi id 15.20.2284.023; Fri, 20 Sep 2019
+ 08:49:54 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
+        <u.kleine-koenig@pengutronix.de>
+CC:     Aisheng Dong <aisheng.dong@nxp.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH] pwm: mxs: use devm_platform_ioremap_resource() to
+ simplify code
+Thread-Topic: [PATCH] pwm: mxs: use devm_platform_ioremap_resource() to
+ simplify code
+Thread-Index: AQHVPQnp3vOphZGlaUm/vNIIqkC+RKbPuYMAgDQEZACABe0wAIAq+wHQ
+Date:   Fri, 20 Sep 2019 08:49:53 +0000
+Message-ID: <DB3PR0402MB39167A2F613F92FD8CA145C8F5880@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <20190718013205.24919-1-Anson.Huang@nxp.com>
+ <AM0PR04MB42116F0753C9C6A619A2D8EC80C80@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <DB3PR0402MB3916423A6E334EDD4C06B884F5AB0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <20190824002634.nfrhof3kpsrcc742@pengutronix.de>
+In-Reply-To: <20190824002634.nfrhof3kpsrcc742@pengutronix.de>
+Accept-Language: en-US
 Content-Language: en-US
-X-MC-Unique: tG_AqsCuM6ervK2CTzzq5g-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 07061f5f-f715-474f-565b-08d73da781b0
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3769;
+x-ms-traffictypediagnostic: DB3PR0402MB3769:|DB3PR0402MB3769:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0402MB37696F556964CDA727F32685F5880@DB3PR0402MB3769.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1417;
+x-forefront-prvs: 0166B75B74
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(366004)(346002)(39860400002)(376002)(199004)(189003)(966005)(478600001)(14454004)(45080400002)(476003)(6246003)(11346002)(4326008)(486006)(44832011)(33656002)(446003)(256004)(229853002)(86362001)(6436002)(6116002)(3846002)(71190400001)(71200400001)(25786009)(55016002)(6306002)(9686003)(2906002)(54906003)(66446008)(316002)(66556008)(64756008)(76176011)(5660300002)(52536014)(76116006)(6506007)(74316002)(66946007)(66476007)(7696005)(99286004)(81166006)(8676002)(81156014)(8936002)(66066001)(186003)(26005)(6916009)(305945005)(102836004)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3769;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: YF5rfLm8nm0DAaXgU4dJt02tSJJBT0o6vkKNS3eimk+9pstyTcFxm4fY9ymJP58bSSsV2z7AvH+mkh+tJ+Sd1jU4eaptLrqqzXI/3QbnwFX7oRqnlTpoTAnL5qLFfgvCZE0zRy2VBj6u5vMLFjZVtE4IKTcs5BCGJC2e21Vnz6VzF9CghgtQr+xBYZDrsL5DqiRMuAsRNmxQjjv5wEuWw2dzavmQkdXUGCEGse20gGbIajWOkLbKPx99H+gTgf0L3FRfl/J36puHU+nEaxwX5//2LRppLPQeHhLRQjsv55OXRraKp4HEygR5Qw7dU1oOVbQM3QXMfZ9NIsfmGF+EuwxNHpeiQQXapTw3hhPwP8OIa9ExsylvwWFgmLLP6pXTBa0PX5Fcve7AiXQRF/qC/0eyfP8FqaCXzz/EOJSclyg=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 07061f5f-f715-474f-565b-08d73da781b0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Sep 2019 08:49:53.9125
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: BjxKXvqIQXyws/gKRPInHRn6dHDR2bV1gENa7RYuilusZUfnuGtd+/1TvcdRqwZ/2e+/Oi+nynElNGseljR+3w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3769
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maximilian,
-
-Interesting patch. Some comments about the i2c situation below.
-
-Also I will give this a test-run on some of the existing devices
-which rely on the instantiation of serdev devices for ACPI
-devices which are childs of the uart device.
-
-On 19-09-2019 21:56, Maximilian Luz wrote:
-> When registering a serdev controller, ACPI needs to be checked for
-> devices attached to it. Currently, all immediate children of the ACPI
-> node of the controller are assumed to be UART client devices for this
-> controller. Furthermore, these devices are not searched elsewhere.
->=20
-> This is incorrect: Similar to SPI and I2C devices, the UART client
-> device definition (via UARTSerialBusV2) can reside anywhere in the ACPI
-> namespace as resource definition inside the _CRS method and points to
-> the controller via its ResourceSource field. This field may either
-> contain a fully qualified or relative path, indicating the controller
-> device. To address this, we need to walk over the whole ACPI namespace,
-> looking at each resource definition, and match the client device to the
-> controller via this field.
->=20
-> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
-> ---
-> This patch is similar to the the implementations in drivers/spi/spi.c
-> (see commit 4c3c59544f33e97cf8557f27e05a9904ead16363) and
-> drivers/i2c/i2c-core-acpi.c. However, I think that there may be an
-> issues with these two implementations: Both walk over the whole ACPI
-> namespace, but only match the first SPI or I2C resource (respectively),
-> so I think there may be problems when multiple SPI or I2C resources are
-> defined under the same ACPI device node (as in second or third SPI/I2C
-> resource definitions being ignored).
-
-Right, so from the i2c side of things, the story with multiple
-I2cSerialBusV2 resources is that normally we want to instantiate
-only 1 kernel "struct device" for 1 ACPI "Device()" definition.
-
-If a single I2C chip/device listens on multiple addresses then
-usually the other addresses can be derived from the first one and
-the device-driver can get a handle to access the other addresses by
-using e.g. i2c_new_dummy or i2c_new_secondary_device.
-
-With that said of course there are exceptions where vendors get
-creative and put multiple I2cSerialBusV2 resources in a single
-ACPI "Device()" even though they point to separate chips.
-
-For this we have some special handling in:
-drivers/platform/x86/i2c-multi-instantiate.c
-
-Also note how drivers/platform/x86/i2c-multi-instantiate.c maps the
-original ACPI HID as e.g. "BSG1160" to per device match strings,
-because if there are multiple I2cSerialBusV2 resources and they
-point to separate chips, then we need something to get the right
-driver to bind to each I2cSerialBusV2 address, so the normal
-modalias of e.g. acpi:BSG1160 is no good, we need a different modalias
-for each I2cSerialBusV2 address.
-
-Another way of looking at this is a typical _CRS for a device with
-*SerialBusV2 resources will also have 1 or more Interrupt resources
-and 1 or more GPIO resources. We are not instantiating separate
-"struct device"-s in the kernel for each of those, since all the
-resources together describe a single device, so we instantiate e.g.
-an i2c_client and then the i2c_driver's probe method calls e.g.
-platform_get_irq() to get the IRQ(s).
-
-Given the above I think you may want to also limit your patch to
-only instantiate a "struct device" for the first UARTSerialBusV2
-in an ACPI "Device()"'s  .
-
-I hope this sheds some clarity on the (muddy) situation wrt
-I2cSerialBusV2 handling.
-
-Regards,
-
-Hans
-
+UGluZy4uLiwgMSBtb250aCBwYXNzZWQsIE5PVCBzdXJlIHdoYXQgaXMgdGhlIGxhdGVzdCBzdGF0
+dXMuDQoNCkFuc29uDQoNCj4gT24gVHVlLCBBdWcgMjAsIDIwMTkgYXQgMDU6NTY6NDBBTSArMDAw
+MCwgQW5zb24gSHVhbmcgd3JvdGU6DQo+ID4gR2VudGxlIHBpbmcuLi4NCj4gDQo+IE15IGltcHJl
+c3Npb25bMV0gaXMgdGhhdCBUaGllcnJ5IGNvbGxlY3RzIHBhdGNoZXMgaW4gYnVsayBvbmNlIG9y
+IHR3aWNlIHBlcg0KPiByZWxlYXNlIGN5Y2xlLiBUaGUgbGFzdCB0d28gc3VjaCBidWxrcyB3ZXJl
+IGJldHdlZW4gNS4yLXJjNiBhbmQNCj4gNS4yLXJjNyBhbmQgaW4gdGhlIDUuMiBtZXJnZSB3aW5k
+b3cuIFNvIGdpdmVuIHdlJ3JlIGF0IHY1LjMtcmM1IG5vdyBJIGV4cGVjdA0KPiBzb21lIGFjdGlv
+biBzb29uIDotKQ0KPiANCj4gPiA+ID4gRnJvbTogQW5zb24uSHVhbmdAbnhwLmNvbSA8QW5zb24u
+SHVhbmdAbnhwLmNvbT4NCj4gPiA+ID4gU2VudDogVGh1cnNkYXksIEp1bHkgMTgsIDIwMTkgOToz
+MiBBTQ0KPiA+ID4gPg0KPiA+ID4gPiBVc2UgdGhlIG5ldyBoZWxwZXIgZGV2bV9wbGF0Zm9ybV9p
+b3JlbWFwX3Jlc291cmNlKCkgd2hpY2ggd3JhcHMNCj4gPiA+ID4gdGhlDQo+ID4gPiA+IHBsYXRm
+b3JtX2dldF9yZXNvdXJjZSgpIGFuZCBkZXZtX2lvcmVtYXBfcmVzb3VyY2UoKSB0b2dldGhlciwg
+dG8NCj4gPiA+ID4gc2ltcGxpZnkgdGhlIGNvZGUuDQo+ID4gPiA+DQo+ID4gPiA+IFNpZ25lZC1v
+ZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+ID4NCj4gPiA+IFJl
+dmlld2VkLWJ5OiBEb25nIEFpc2hlbmcgPGFpc2hlbmcuZG9uZ0BueHAuY29tPg0KPiANCj4gQWNr
+ZWQtYnk6IFV3ZSBLbGVpbmUtS8O2bmlnIDx1LmtsZWluZS1rb2VuaWdAcGVuZ3V0cm9uaXguZGU+
+DQo+IA0KPiBCZXN0IHJlZ2FyZHMNCj4gVXdlDQo+IA0KPiBbMV0gZnJvbSBnaXQgbG9nIC0tY29t
+bWl0dGVyPVRoaWVycnkgLS1mb3JtYXQ9JWNpIGRyaXZlcnMvcHdtIHwgY3V0IC1kXCAgLWYxIHwN
+Cj4gdW5pcSAtYw0KPiAtLQ0KPiBQZW5ndXRyb25peCBlLksuICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgfCBVd2UgS2xlaW5lLUvDtm5pZyAgICAgICAgICAgIHwNCj4gSW5kdXN0cmlhbCBMaW51
+eCBTb2x1dGlvbnMgICAgICAgICAgICAgICAgIHwNCj4gaHR0cHM6Ly9ldXIwMS5zYWZlbGlua3Mu
+cHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHAlM0ElMkYlMkZ3d3cucA0KPiBlbmd1dHJv
+bml4LmRlJTJGJmFtcDtkYXRhPTAyJTdDMDElN0NhbnNvbi5odWFuZyU0MG54cC5jb20lN0MzNA0K
+PiBlZDc4ZTViOTA2NDJlNjE3M2QwOGQ3MjgyOWJjNjUlN0M2ODZlYTFkM2JjMmI0YzZmYTkyY2Q5
+OWM1YzMwMTYzDQo+IDUlN0MwJTdDMCU3QzYzNzAyMjAzMjAyNjc1NTMxMCZhbXA7c2RhdGE9Uk0w
+RGpOOUIlMkZvbXhTU2xHcA0KPiBhZHhYNTB5WWVzTmpPQUZUWGFnaGt4eU9DUSUzRCZhbXA7cmVz
+ZXJ2ZWQ9MCAgfA0K
