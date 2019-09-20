@@ -6,84 +6,67 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 982E0C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 12:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 419B4C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 12:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B81420665
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 12:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D63F20665
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 12:22:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408958AbfITMVV (ORCPT
+        id S2408968AbfITMWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 08:21:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:44126 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406276AbfITMVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 08:21:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C784328;
-        Fri, 20 Sep 2019 05:21:20 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 599B73F67D;
-        Fri, 20 Sep 2019 05:21:19 -0700 (PDT)
-Date:   Fri, 20 Sep 2019 13:21:17 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: Re: [RFC patch 04/15] arm64/entry: Use generic syscall entry function
-Message-ID: <20190920122116.GA21231@arrakis.emea.arm.com>
-References: <20190919150314.054351477@linutronix.de>
- <20190919150808.830764150@linutronix.de>
+        Fri, 20 Sep 2019 08:22:04 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:43764 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2406276AbfITMWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 08:22:04 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 9B838EC4FBE89CAAA15E;
+        Fri, 20 Sep 2019 20:22:02 +0800 (CST)
+Received: from [127.0.0.1] (10.57.88.168) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Fri, 20 Sep 2019
+ 20:21:54 +0800
+Subject: Re: [PATCH] jffs2:freely allocate memory when parameters are invalid
+To:     Al Viro <viro@zeniv.linux.org.uk>
+CC:     <dwmw2@infradead.org>, <dilinger@queued.net>, <richard@nod.at>,
+        <houtao1@huawei.com>, <bbrezillon@kernel.org>,
+        <daniel.santos@pobox.com>, <linux-mtd@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1568962478-126260-1-git-send-email-nixiaoming@huawei.com>
+ <20190920114336.GM1131@ZenIV.linux.org.uk>
+From:   Xiaoming Ni <nixiaoming@huawei.com>
+Message-ID: <206f8d57-dad9-26c3-6bf6-1d000f5698d4@huawei.com>
+Date:   Fri, 20 Sep 2019 20:21:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190919150808.830764150@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190920114336.GM1131@ZenIV.linux.org.uk>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.57.88.168]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 05:03:18PM +0200, Thomas Gleixner wrote:
->  #ifdef CONFIG_ARM64_ERRATUM_1463225
-> @@ -97,19 +97,16 @@ static void el0_svc_common(struct pt_reg
->  
->  	regs->orig_x0 = regs->regs[0];
->  	regs->syscallno = scno;
-> +	/* Set default error number */
-> +	regs->regs[0] = -ENOSYS;
 
-I think this corrupts the first argument of all valid syscalls.
-SC_ARM64_REGS_TO_ARGS uses regs[0] instead of orig_x0. ptrace should be
-fine since it calls syscall_get_arguments() which uses orig_x0.
 
-We could change the SC_ARM64_REGS_TO_ARGS macro though (in theory there
-shouldn't be any performance hit as it's already cached).
+On 2019/9/20 19:43, Al Viro wrote:
+> On Fri, Sep 20, 2019 at 02:54:38PM +0800, Xiaoming Ni wrote:
+>> Use kzalloc() to allocate memory in jffs2_fill_super().
+>> Freeing memory when jffs2_parse_options() fails will cause
+>> use-after-free and double-free in jffs2_kill_sb()
+> 
+> ... so we are not freeing it there.  What's the problem?
 
->  
->  	cortex_a76_erratum_1463225_svc_handler();
->  	local_daif_restore(DAIF_PROCCTX);
->  	user_exit();
->  
-> -	if (has_syscall_work(flags)) {
-> -		/* set default errno for user-issued syscall(-1) */
-> -		if (scno == NO_SYSCALL)
-> -			regs->regs[0] = -ENOSYS;
-> -		scno = syscall_trace_enter(regs);
-> -		if (scno == NO_SYSCALL)
-> -			goto trace_exit;
-> -	}
-> +	scno = syscall_enter_from_usermode(regs, scno);
-> +	if (scno == NO_SYSCALL)
-> +		goto trace_exit;
->  
->  	invoke_syscall(regs, scno, sc_nr, syscall_table);
+No code logic issues, no memory leaks
 
--- 
-Catalin
+But there is too much code logic between memory allocation and free,
+which is difficult to understand.
+
+The modified code is easier to understand.
+
+thanks
+
+Xiaoming Ni
+
