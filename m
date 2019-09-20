@@ -2,300 +2,462 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6490DC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F528C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31E07208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:02:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568973760;
-	bh=q0+WwVxFVYOBe1bzOQvjTCz58Ih+FW9HTK2zTIoctsk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TOXg2YYY3L+UOHtvY4AQuFbTaGo3tsUOhQAT3K3syzOpv7cfpbnDhFu9FcmYECHgZ
-	 4YWBOiMBafdaOaZ82dC2h7Gx8Vc4HwogfBqrllY6PRCgPuY2xtBReD8N36XERgVUAU
-	 GUu86o4RN7M5IrdX/DdKsC1C9tOKZEhXRBHFXAl4=
+	by mail.kernel.org (Postfix) with ESMTP id EF07F2070C
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:04:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="h/ivjOuD";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="h/ivjOuD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408627AbfITKCi (ORCPT
+        id S2393353AbfITKED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 06:02:38 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:46648 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405821AbfITKCh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 06:02:37 -0400
-Received: by mail-lf1-f66.google.com with SMTP id t8so4582395lfc.13;
-        Fri, 20 Sep 2019 03:02:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=E623j+nt7XQE/wklHqBHR6f+nP+m665/hNZVcK3I0a4=;
-        b=DusCc2wrnCdg8UhMS309PbrwRGp+IuPANdp6rg4NN7yo2dLy74isXhe6hk3B27ZNCJ
-         OruTKoXQnwx7J0XS3915ISUvBwB9GQbBrSR/WrfiAH5G9WOVScoRh5N3VWT4Q2aS1J8K
-         t5j1Qt4Ug0ZPIubhYphx1MX+UrPW71G/Ilx0zq7a/qzHTaDaWQRZ5XAZ0BDLdYw6gCrp
-         GhstNS2MnItpJjSOqBjkjOi8XD2QWLJ1q4aTUuonMHATpe2R0StiNmpZ/f7MWTfpwkrZ
-         0O+ppVGZSddGZ7x3kmoaSBX1ziwHqsfgY2RQaf96GFkiG9gfU8UWUbPRGW1kuvWDWJcf
-         YnWg==
-X-Gm-Message-State: APjAAAW+61sqctNs9E0z2XrXFjIljJ7GNI1K0swVf/2s16zb9KIOl/yh
-        tX0NAeh809Zern6cym9La54=
-X-Google-Smtp-Source: APXvYqypbSOPNHNXKQ+yYU7zs71GuyvRN9Vs7lv+5nnlZCQZZfcCVUBJJ73NXdOfhr3GwrCB6T85+g==
-X-Received: by 2002:a19:c7d3:: with SMTP id x202mr8217235lff.124.1568973754175;
-        Fri, 20 Sep 2019 03:02:34 -0700 (PDT)
-Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
-        by smtp.gmail.com with ESMTPSA id m25sm322038ljg.35.2019.09.20.03.02.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 20 Sep 2019 03:02:33 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.92.2)
-        (envelope-from <johan@kernel.org>)
-        id 1iBFkH-0003jG-B1; Fri, 20 Sep 2019 12:02:34 +0200
-Date:   Fri, 20 Sep 2019 12:02:33 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     syzbot <syzbot+0243cb250a51eeefb8cc@syzkaller.appspotmail.com>
-Cc:     andreyknvl@google.com, dmg@turingmachine.org,
-        gregkh@linuxfoundation.org, johan@kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: KASAN: use-after-free Read in adu_disconnect
-Message-ID: <20190920100233.GP30545@localhost>
-References: <20190920090803.GM30545@localhost>
- <000000000000174fe60592f893e1@google.com>
+        Fri, 20 Sep 2019 06:04:03 -0400
+Received: from mail-eopbgr60080.outbound.protection.outlook.com ([40.107.6.80]:36327
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389030AbfITKEC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 06:04:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WnbFxFW2m+gzv4CHTDOHyozsyKgab27QRIOAGibnx0I=;
+ b=h/ivjOuDVWeVfXY3HzzfF26fQWeGoncd2Gxyk9YIAKkrZXbebVNL4Ei5BoKxcbug0yEMYrvezsqFYMmbDGHOxx+/ntgphD/vIUXfvxrBBSPWySOUUJ0R+zuJEmLDymCVR8h+j8SqbIThr7KboG8GuWU8qJu1QyApaCAaT9k2qd8=
+Received: from VE1PR08CA0026.eurprd08.prod.outlook.com (2603:10a6:803:104::39)
+ by VI1PR0802MB2286.eurprd08.prod.outlook.com (2603:10a6:800:9e::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2263.21; Fri, 20 Sep
+ 2019 10:03:51 +0000
+Received: from VE1EUR03FT004.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e09::208) by VE1PR08CA0026.outlook.office365.com
+ (2603:10a6:803:104::39) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2284.21 via Frontend
+ Transport; Fri, 20 Sep 2019 10:03:51 +0000
+Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
+ header.from=arm.com;
+Received-SPF: TempError (protection.outlook.com: error in processing during
+ lookup of arm.com: DNS Timeout)
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ VE1EUR03FT004.mail.protection.outlook.com (10.152.18.106) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.20 via Frontend Transport; Fri, 20 Sep 2019 10:03:50 +0000
+Received: ("Tessian outbound fd4ad9e68831:v31"); Fri, 20 Sep 2019 10:03:46 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: f233540e18bf7854
+X-CR-MTA-TID: 64aa7808
+Received: from be450001e679.2 (ip-172-16-0-2.eu-west-1.compute.internal [104.47.6.56])
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id BBFA21BB-CB2A-4D05-A2FD-0876FB77D10D.1;
+        Fri, 20 Sep 2019 10:03:41 +0000
+Received: from EUR02-VE1-obe.outbound.protection.outlook.com (mail-ve1eur02lp2056.outbound.protection.outlook.com [104.47.6.56])
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id be450001e679.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Fri, 20 Sep 2019 10:03:41 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SZO8rpAOAqI8+9bKoIQCO4KgP/RXNw8ywR3SwC60Lsoa5dt6p+YFJ24biuAAmKdvUEbeKXfMzQSAmeKhOVZEgWnIPe0qbsvaw+F42meIEdC8Zp3f7+G0xXgaCU+sS28u/3DDfWKki+p/z46wfP9XZNWedMGcg8s/f9AAiGmu/Mbcpk2ORY5cr3L56wVkHqo/ri9IgevB1N6qKcmVHJ669UVAsl1U2aO4wI2yR1XpK25EevmunEQ/HuT9at97y5B+eizp3Mc72WafdZUhtt3xZptMCDKUWET5dsOzRRy16Dt3dwoENkNbwHv/Uebu3jyePg+2x4Rf79eLfI7T1BTdsw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WnbFxFW2m+gzv4CHTDOHyozsyKgab27QRIOAGibnx0I=;
+ b=Mo0wVCZlspshU/tgZwwBN0zaarcEhT9EnOt+I/4zPY3BJsuLdPFiiIq/BtJ8cfASOII+7v5GctRVec92Z4nt9Z/HQtdiX7IEoyf7JP+gqmPeA5xhis9oHa5aJ2kiN0Nm+UCmrUK/2i3Xr1w6+e6vp8dHTHYAsLIwl3fBGCwag9nSzHBBWkJ3HLQv0zWVahB7ha3vvSzZWoioSo/X3KC0tTH7B1qGPNIpBBfLcdmQGXUJ7HqQds0eHpojiqP1GuJG0yEP1hieKnxe32zTRQvHVDOA3/zjdg/ehyFHNoBDRvPoZ+HDaLtlMngwsWl8fOb6sEXq4C3uZ3UhYcfYD0/hig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WnbFxFW2m+gzv4CHTDOHyozsyKgab27QRIOAGibnx0I=;
+ b=h/ivjOuDVWeVfXY3HzzfF26fQWeGoncd2Gxyk9YIAKkrZXbebVNL4Ei5BoKxcbug0yEMYrvezsqFYMmbDGHOxx+/ntgphD/vIUXfvxrBBSPWySOUUJ0R+zuJEmLDymCVR8h+j8SqbIThr7KboG8GuWU8qJu1QyApaCAaT9k2qd8=
+Received: from VI1PR08MB4078.eurprd08.prod.outlook.com (20.178.127.92) by
+ VI1PR08MB3134.eurprd08.prod.outlook.com (52.133.15.27) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.14; Fri, 20 Sep 2019 10:03:38 +0000
+Received: from VI1PR08MB4078.eurprd08.prod.outlook.com
+ ([fe80::f164:4d79:79f:dc6f]) by VI1PR08MB4078.eurprd08.prod.outlook.com
+ ([fe80::f164:4d79:79f:dc6f%7]) with mapi id 15.20.2263.023; Fri, 20 Sep 2019
+ 10:03:38 +0000
+From:   Mihail Atanassov <Mihail.Atanassov@arm.com>
+To:     "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
+CC:     Liviu Dudau <Liviu.Dudau@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        nd <nd@arm.com>
+Subject: Re: [PATCH] drm/komeda: Adds output-color format/depth support
+Thread-Topic: [PATCH] drm/komeda: Adds output-color format/depth support
+Thread-Index: AQHVb5fml3iiEtk+MEOqXjNduhm+kKc0VieA
+Date:   Fri, 20 Sep 2019 10:03:38 +0000
+Message-ID: <2379631.WB1HUilIrr@e123338-lin>
+References: <20190920094329.17513-1-lowry.li@arm.com>
+In-Reply-To: <20190920094329.17513-1-lowry.li@arm.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [217.140.106.55]
+x-clientproxiedby: LO2P265CA0365.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:a3::17) To VI1PR08MB4078.eurprd08.prod.outlook.com
+ (2603:10a6:803:e5::28)
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=Mihail.Atanassov@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-Correlation-Id: 315cdb95-1943-489e-722e-08d73db1d5d8
+X-MS-Office365-Filtering-HT: Tenant
+X-Microsoft-Antispam-Untrusted: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR08MB3134;
+X-MS-TrafficTypeDiagnostic: VI1PR08MB3134:|VI1PR08MB3134:|VI1PR0802MB2286:
+x-ms-exchange-transport-forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR0802MB228635971490E2771CB42E0B8F880@VI1PR0802MB2286.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+x-ms-oob-tlc-oobclassifiers: OLM:8273;OLM:8273;
+x-forefront-prvs: 0166B75B74
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(7916004)(4636009)(136003)(376002)(396003)(346002)(39860400002)(366004)(189003)(199004)(11346002)(6512007)(76176011)(9686003)(3846002)(33716001)(6116002)(52116002)(99286004)(71190400001)(71200400001)(5660300002)(2906002)(14444005)(256004)(446003)(476003)(6636002)(305945005)(478600001)(316002)(7736002)(64756008)(66556008)(229853002)(66476007)(14454004)(6862004)(66946007)(6436002)(81166006)(81156014)(8676002)(102836004)(8936002)(386003)(6506007)(54906003)(26005)(4326008)(25786009)(6486002)(66066001)(6246003)(86362001)(486006)(30864003)(66446008)(186003)(39026011);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR08MB3134;H:VI1PR08MB4078.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info-Original: IaxiZy5ZGiN3UFkdO/d63cj/WvTPl1JENJeuwKwdsB3giRwLbNnZerGya2gUoIsmIiEYi4fXblDcgw2GUMrFi8bIDlFARVdeKEbnmQLrjLkjLDr1sNVlKfoDH41bTQGxoaWZBIOLTdOAIrcJczLPaKwWkudBaOIgPfOLIFuKGm6Ptr/Ze3t4XdAebZZXSE+kmPa3TvFIQgAswnmywxxlHGHm6CNIzTejLDGRBcEWnwH/pR9t03aJvcdIlZlyzVfclZ7TK75AHpn3i7nTEEQKnVR4Tid/bHzaVlbdgRFPwPpobjo6JHO5f4fEmcMoc3sg/GsgZV4r7AIB8Ep3PWfLKyIw+yxOas9BdFFBFS1v1bfr9iYeLoHxPxP0CQDC8yNeihQBwlZ9x7C1zstXiLk3FQD5isxwstRdt/PaonGDtQI=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <EB502D627E23AF409CF74324F32DF28F@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000174fe60592f893e1@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3134
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Mihail.Atanassov@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: VE1EUR03FT004.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(7916004)(4636009)(136003)(39860400002)(396003)(346002)(376002)(199004)(189003)(4326008)(6636002)(6512007)(9686003)(316002)(6862004)(126002)(54906003)(81166006)(6486002)(305945005)(70586007)(229853002)(6246003)(22756006)(14454004)(70206006)(26826003)(11346002)(7736002)(336012)(446003)(8676002)(36906005)(23726003)(3846002)(50466002)(356004)(63350400001)(486006)(5660300002)(25786009)(76176011)(99286004)(476003)(478600001)(86362001)(66066001)(81156014)(6116002)(102836004)(26005)(76130400001)(8746002)(2906002)(97756001)(186003)(46406003)(47776003)(386003)(14444005)(6506007)(33716001)(30864003)(8936002)(39026011);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0802MB2286;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:TempError;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;MX:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 20da21f5-afa2-4434-a312-08d73db1ceba
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(710020)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0802MB2286;
+NoDisclaimer: True
+X-Forefront-PRVS: 0166B75B74
+X-Microsoft-Antispam-Message-Info: FcdoLIoh7tkWCBO0HceiseSfKDKUUrLjIAPUrFHhAPnoRcPSSRu4ylg2KCBCSoAkD8GZsilOelTOgPMsYyYFo+dJ8Gcvtkqrsg6z+EyTWrsw/mZvMToMeM0BTnvZpj8vT612Iis9YnyCAu76zd3YiCcMcEjmBJ21yoP+iG2Df3YYx2cLcGx9k9PKKJUA4fyhlooyr8MNrHXunVIYrgIFOmYH1jZA76vrJ3dUoHswiTo9xUfmvT9tVGUsfGEFuEI0pqis9OLcYmhtPA+BFPJ9+pWQbFFGZ/jz9Cui7cUpmeY+ym6e9E+wPswEqJTKvYVaD1ejrHtmVbpRdUSFTnveJ8HAp0Lf/ag1KC7GCNF4U4u9xYJkS2bsuN2v2s9/UvR3NlS1FrgZnD5h2Ob7kvHQXwrYnCqmObsQZ5gPbnHP1gg=
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Sep 2019 10:03:50.1391
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 315cdb95-1943-489e-722e-08d73db1d5d8
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0802MB2286
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 02:20:00AM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot has tested the proposed patch but the reproducer still triggered  
-> crash:
-> KASAN: use-after-free Read in adu_interrupt_in_callback
-> 
-> ==================================================================
-> BUG: KASAN: use-after-free in __lock_acquire+0x302a/0x3b50  
-> kernel/locking/lockdep.c:3753
-> Read of size 8 at addr ffff8881cd4d0358 by task kworker/0:6/3051
-> 
-> CPU: 0 PID: 3051 Comm: kworker/0:6 Not tainted 5.3.0-rc2+ #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-> Google 01/01/2011
-> Workqueue: usb_hub_wq hub_event
-> Call Trace:
->   <IRQ>
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0xca/0x13e lib/dump_stack.c:113
->   print_address_description+0x6a/0x32c mm/kasan/report.c:351
->   __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
->   kasan_report+0xe/0x12 mm/kasan/common.c:612
->   __lock_acquire+0x302a/0x3b50 kernel/locking/lockdep.c:3753
->   lock_acquire+0x127/0x320 kernel/locking/lockdep.c:4412
->   __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
->   _raw_spin_lock_irqsave+0x32/0x50 kernel/locking/spinlock.c:159
->   adu_interrupt_in_callback+0x77/0x380 drivers/usb/misc/adutux.c:163
->   __usb_hcd_giveback_urb+0x1f2/0x470 drivers/usb/core/hcd.c:1757
->   usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1822
->   dummy_timer+0x120f/0x2fa2 drivers/usb/gadget/udc/dummy_hcd.c:1965
->   call_timer_fn+0x179/0x650 kernel/time/timer.c:1322
->   expire_timers kernel/time/timer.c:1366 [inline]
->   __run_timers kernel/time/timer.c:1685 [inline]
->   __run_timers kernel/time/timer.c:1653 [inline]
->   run_timer_softirq+0x5cc/0x14b0 kernel/time/timer.c:1698
->   __do_softirq+0x221/0x912 kernel/softirq.c:292
->   invoke_softirq kernel/softirq.c:373 [inline]
->   irq_exit+0x178/0x1a0 kernel/softirq.c:413
->   exiting_irq arch/x86/include/asm/apic.h:537 [inline]
->   smp_apic_timer_interrupt+0x12f/0x500 arch/x86/kernel/apic/apic.c:1095
->   apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:828
->   </IRQ>
-> RIP: 0010:arch_local_irq_restore arch/x86/include/asm/irqflags.h:85 [inline]
-> RIP: 0010:console_unlock+0xa2a/0xc40 kernel/printk/printk.c:2471
-> Code: 00 89 ee 48 c7 c7 20 88 d3 86 e8 81 ad 03 00 65 ff 0d 72 a1 d9 7e e9  
-> db f9 ff ff e8 70 a1 15 00 e8 1b cb 1a 00 ff 74 24 30 9d <e9> 18 fe ff ff  
-> e8 5c a1 15 00 48 8d 7d 08 48 89 f8 48 c1 e8 03 42
-> RSP: 0018:ffff8881cd20f200 EFLAGS: 00000293 ORIG_RAX: ffffffffffffff13
-> RAX: 0000000000000007 RBX: 0000000000000200 RCX: 0000000000000006
-> RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff8881ccd8d044
-> RBP: 0000000000000000 R08: ffff8881ccd8c800 R09: fffffbfff11acd91
-> R10: fffffbfff11acd90 R11: ffffffff88d66c87 R12: 0000000000000047
-> R13: dffffc0000000000 R14: ffffffff82909100 R15: ffffffff87077190
->   vprintk_emit+0x171/0x3e0 kernel/printk/printk.c:1986
->   vprintk_func+0x75/0x113 kernel/printk/printk_safe.c:386
->   printk+0xba/0xed kernel/printk/printk.c:2046
->   really_probe.cold+0x81/0x13a drivers/base/dd.c:616
->   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
->   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
->   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x217/0x360 drivers/base/dd.c:882
->   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
->   device_add+0xae6/0x16f0 drivers/base/core.c:2114
->   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
->   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
->   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
->   really_probe+0x281/0x650 drivers/base/dd.c:548
->   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
->   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
->   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x217/0x360 drivers/base/dd.c:882
->   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
->   device_add+0xae6/0x16f0 drivers/base/core.c:2114
->   usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
->   hub_port_connect drivers/usb/core/hub.c:5098 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
->   port_event drivers/usb/core/hub.c:5359 [inline]
->   hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
->   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
->   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
->   kthread+0x318/0x420 kernel/kthread.c:255
->   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> 
-> Allocated by task 3051:
->   save_stack+0x1b/0x80 mm/kasan/common.c:69
->   set_track mm/kasan/common.c:77 [inline]
->   __kasan_kmalloc mm/kasan/common.c:487 [inline]
->   __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:460
->   kmalloc include/linux/slab.h:552 [inline]
->   kzalloc include/linux/slab.h:748 [inline]
->   adu_probe+0x7d/0x6e0 drivers/usb/misc/adutux.c:660
->   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
->   really_probe+0x281/0x650 drivers/base/dd.c:548
->   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
->   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
->   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x217/0x360 drivers/base/dd.c:882
->   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
->   device_add+0xae6/0x16f0 drivers/base/core.c:2114
->   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
->   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
->   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
->   really_probe+0x281/0x650 drivers/base/dd.c:548
->   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
->   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
->   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x217/0x360 drivers/base/dd.c:882
->   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
->   device_add+0xae6/0x16f0 drivers/base/core.c:2114
->   usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
->   hub_port_connect drivers/usb/core/hub.c:5098 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
->   port_event drivers/usb/core/hub.c:5359 [inline]
->   hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
->   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
->   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
->   kthread+0x318/0x420 kernel/kthread.c:255
->   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> 
-> Freed by task 3051:
->   save_stack+0x1b/0x80 mm/kasan/common.c:69
->   set_track mm/kasan/common.c:77 [inline]
->   __kasan_slab_free+0x130/0x180 mm/kasan/common.c:449
->   slab_free_hook mm/slub.c:1423 [inline]
->   slab_free_freelist_hook mm/slub.c:1470 [inline]
->   slab_free mm/slub.c:3012 [inline]
->   kfree+0xe4/0x2f0 mm/slub.c:3953
->   adu_probe+0x5de/0x6e0 drivers/usb/misc/adutux.c:750
->   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
->   really_probe+0x281/0x650 drivers/base/dd.c:548
->   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
->   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
->   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x217/0x360 drivers/base/dd.c:882
->   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
->   device_add+0xae6/0x16f0 drivers/base/core.c:2114
->   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
->   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
->   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
->   really_probe+0x281/0x650 drivers/base/dd.c:548
->   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
->   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
->   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x217/0x360 drivers/base/dd.c:882
->   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
->   device_add+0xae6/0x16f0 drivers/base/core.c:2114
->   usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
->   hub_port_connect drivers/usb/core/hub.c:5098 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
->   port_event drivers/usb/core/hub.c:5359 [inline]
->   hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
->   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
->   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
->   kthread+0x318/0x420 kernel/kthread.c:255
->   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Hi Lowry,
 
-This looks like a separate issue, which should be fixed by a separate
-patch. Not sure how to tell syzbot that. Dmitry?
+On Friday, 20 September 2019 10:43:47 BST Lowry Li (Arm Technology China) w=
+rote:
+> From: "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
+>=20
+> Sets color_depth according to connector->bpc.
+> Adds a new optional DT attribute "color-format" to represent a
 
-There's is indeed another bug in the driver, which could lead to crashes
-in the completion handler after clearing the struct usb_device pointer,
-but possibly also to the above use-after-free if a new device is probed
-immediately after a disconnect.
+I don't see the hunk with the updated doc for the DT binding.
 
-The below patch addresses both bugs, let's see if that helps.
+> preferred color formats for a specific pipeline, and the select order
+> is:
+> 	YCRCB420 > YCRCB422 > YCRCB444 > RGB444
+> The color-format can be anyone of these 4 format, one color-format not
+> only represent one format, but also include the lower formats, like
+>=20
+> color-format         preferred_color_formats
+> YCRCB420        YCRCB420 > YCRCB422 > YCRCB444 > RGB444
+> YCRCB422        YCRCB422 > YCRCB444 > RGB444
+> YCRCB444        YCRCB444 > RGB444
+> RGB444          RGB444
+>=20
+> Then the final color_format is calculated by 3 steps:
+> 1. calculate HW available formats.
+>   avail_formats =3D connector_color_formats & improc->color_formats;
+> 2. filter out un-preferred format.
+>   avail_formats &=3D preferred_color_formats;
+> 3. select the final format according to the preferred order.
+>   color_format =3D BIT(__fls(aval_formats));
+>=20
+> Changes since v1:
+> Rebased to the drm-misc-next branch.
+>=20
+> Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
+> ---
+>  .../arm/display/komeda/d71/d71_component.c    | 15 ++++++++-
+>  .../gpu/drm/arm/display/komeda/komeda_crtc.c  | 27 ++++++++++++++++
+>  .../gpu/drm/arm/display/komeda/komeda_dev.c   | 32 ++++++++++++++++++-
+>  .../gpu/drm/arm/display/komeda/komeda_kms.h   |  2 ++
+>  .../drm/arm/display/komeda/komeda_pipeline.h  |  3 ++
+>  .../display/komeda/komeda_pipeline_state.c    | 31 ++++++++++++++++++
+>  .../arm/display/komeda/komeda_wb_connector.c  |  5 +++
+>  7 files changed, 113 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c b/dri=
+vers/gpu/drm/arm/display/komeda/d71/d71_component.c
+> index c3d29c0b051b..7b374a3b911e 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
+> @@ -944,13 +944,26 @@ static void d71_improc_update(struct komeda_compone=
+nt *c,
+>  {
+>  	struct komeda_improc_state *st =3D to_improc_st(state);
+>  	u32 __iomem *reg =3D c->reg;
+> -	u32 index;
+> +	u32 index, mask =3D 0, ctrl =3D 0;
+> =20
+>  	for_each_changed_input(state, index)
+>  		malidp_write32(reg, BLK_INPUT_ID0 + index * 4,
+>  			       to_d71_input_id(state, index));
+> =20
+>  	malidp_write32(reg, BLK_SIZE, HV_SIZE(st->hsize, st->vsize));
+> +	malidp_write32(reg, IPS_DEPTH, st->color_depth);
+> +
+> +	mask |=3D IPS_CTRL_YUV | IPS_CTRL_CHD422 | IPS_CTRL_CHD420;
+> +
+> +	/* config color format */
+> +	if (st->color_format =3D=3D DRM_COLOR_FORMAT_YCRCB420)
+> +		ctrl |=3D IPS_CTRL_YUV | IPS_CTRL_CHD422 | IPS_CTRL_CHD420;
+> +	else if (st->color_format =3D=3D DRM_COLOR_FORMAT_YCRCB422)
+> +		ctrl |=3D IPS_CTRL_YUV | IPS_CTRL_CHD422;
+> +	else if (st->color_format =3D=3D DRM_COLOR_FORMAT_YCRCB444)
+> +		ctrl |=3D IPS_CTRL_YUV;
+> +
+> +	malidp_write32_mask(reg, BLK_CONTROL, mask, ctrl);
+>  }
+> =20
+>  static void d71_improc_dump(struct komeda_component *c, struct seq_file =
+*sf)
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c b/drivers/g=
+pu/drm/arm/display/komeda/komeda_crtc.c
+> index 624d257da20f..38d5cb20e908 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
+> @@ -18,6 +18,33 @@
+>  #include "komeda_dev.h"
+>  #include "komeda_kms.h"
+> =20
+> +void komeda_crtc_get_color_config(struct drm_crtc_state *crtc_st,
+> +				  u32 *color_depths, u32 *color_formats)
+> +{
+> +	struct drm_connector *conn;
+> +	struct drm_connector_state *conn_st;
+> +	u32 conn_color_formats =3D ~0u;
+> +	int i, min_bpc =3D 31, conn_bpc =3D 0;
+> +
+> +	for_each_new_connector_in_state(crtc_st->state, conn, conn_st, i) {
+> +		if (conn_st->crtc !=3D crtc_st->crtc)
+> +			continue;
+> +
+> +		conn_bpc =3D conn->display_info.bpc ? conn->display_info.bpc : 8;
+> +		conn_color_formats &=3D conn->display_info.color_formats;
+> +
+> +		if (conn_bpc < min_bpc)
+> +			min_bpc =3D conn_bpc;
+> +	}
+> +
+> +	/* connector doesn't config any color_format, use RGB444 as default */
+> +	if (conn_color_formats =3D=3D 0)
+> +		conn_color_formats =3D DRM_COLOR_FORMAT_RGB444;
+> +
+> +	*color_depths =3D GENMASK(conn_bpc, 0);
+> +	*color_formats =3D conn_color_formats;
+> +}
+> +
+>  static void komeda_crtc_update_clock_ratio(struct komeda_crtc_state *kcr=
+tc_st)
+>  {
+>  	u64 pxlclk, aclk;
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c b/drivers/gp=
+u/drm/arm/display/komeda/komeda_dev.c
+> index 9cbcd56e54cd..bee4633cdd9f 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
+> @@ -113,12 +113,34 @@ static struct attribute_group komeda_sysfs_attr_gro=
+up =3D {
+>  	.attrs =3D komeda_sysfs_entries,
+>  };
+> =20
+> +static int to_color_format(const char *str)
+> +{
+> +	int format;
+> +
+> +	if (!strncmp(str, "RGB444", 7)) {
+> +		format =3D DRM_COLOR_FORMAT_RGB444;
+> +	} else if (!strncmp(str, "YCRCB444", 9)) {
+> +		format =3D DRM_COLOR_FORMAT_YCRCB444;
+> +	} else if (!strncmp(str, "YCRCB422", 9)) {
+> +		format =3D DRM_COLOR_FORMAT_YCRCB422;
+> +	} else if (!strncmp(str, "YCRCB420", 9)) {
+> +		format =3D DRM_COLOR_FORMAT_YCRCB420;
+> +	} else {
+> +		DRM_WARN("invalid color_format: %s, please set it to RGB444, YCRCB444,=
+ YCRCB422 or YCRCB420\n",
+> +			 str);
+> +		format =3D DRM_COLOR_FORMAT_RGB444;
+> +	}
+> +
+> +	return format;
+> +}
+> +
+>  static int komeda_parse_pipe_dt(struct komeda_dev *mdev, struct device_n=
+ode *np)
+>  {
+>  	struct komeda_pipeline *pipe;
+>  	struct clk *clk;
+>  	u32 pipe_id;
+> -	int ret =3D 0;
+> +	int ret =3D 0, color_format;
+> +	const char *str;
+> =20
+>  	ret =3D of_property_read_u32(np, "reg", &pipe_id);
+>  	if (ret !=3D 0 || pipe_id >=3D mdev->n_pipelines)
+> @@ -133,6 +155,14 @@ static int komeda_parse_pipe_dt(struct komeda_dev *m=
+dev, struct device_node *np)
+>  	}
+>  	pipe->pxlclk =3D clk;
+> =20
+> +	/* fetch DT configured color-format, if not set, use RGB444 */
+> +	if (!of_property_read_string(np, "color-format", &str))
+> +		color_format =3D to_color_format(str);
+> +	else
+> +		color_format =3D DRM_COLOR_FORMAT_RGB444;
+> +
+> +	pipe->improc->preferred_color_formats =3D (color_format << 1) - 1;
+> +
+>  	/* enum ports */
+>  	pipe->of_output_links[0] =3D
+>  		of_graph_get_remote_node(np, KOMEDA_OF_PORT_OUTPUT, 0);
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_kms.h b/drivers/gp=
+u/drm/arm/display/komeda/komeda_kms.h
+> index 45c498e15e7a..456f3c435719 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_kms.h
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_kms.h
+> @@ -166,6 +166,8 @@ static inline bool has_flip_h(u32 rot)
+>  		return !!(rotation & DRM_MODE_REFLECT_X);
+>  }
+> =20
+> +void komeda_crtc_get_color_config(struct drm_crtc_state *crtc_st,
+> +				  u32 *color_depths, u32 *color_formats);
+>  unsigned long komeda_crtc_get_aclk(struct komeda_crtc_state *kcrtc_st);
+> =20
+>  int komeda_kms_setup_crtcs(struct komeda_kms_dev *kms, struct komeda_dev=
+ *mdev);
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h b/drive=
+rs/gpu/drm/arm/display/komeda/komeda_pipeline.h
+> index a7a84e66549d..910d279ae48d 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
+> @@ -315,6 +315,8 @@ struct komeda_splitter_state {
+>  struct komeda_improc {
+>  	struct komeda_component base;
+>  	u32 supported_color_formats;  /* DRM_RGB/YUV444/YUV420*/
+> +	/* the preferred order is from MSB to LSB YUV420 --> RGB444 */
+> +	u32 preferred_color_formats;
+>  	u32 supported_color_depths; /* BIT(8) | BIT(10)*/
+>  	u8 supports_degamma : 1;
+>  	u8 supports_csc : 1;
+> @@ -323,6 +325,7 @@ struct komeda_improc {
+> =20
+>  struct komeda_improc_state {
+>  	struct komeda_component_state base;
+> +	u8 color_format, color_depth;
+>  	u16 hsize, vsize;
+>  };
+> =20
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c b=
+/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
+> index ea26bc9c2d00..5526731f5a33 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
+> @@ -743,6 +743,7 @@ komeda_improc_validate(struct komeda_improc *improc,
+>  		       struct komeda_data_flow_cfg *dflow)
+>  {
+>  	struct drm_crtc *crtc =3D kcrtc_st->base.crtc;
+> +	struct drm_crtc_state *crtc_st =3D &kcrtc_st->base;
+>  	struct komeda_component_state *c_st;
+>  	struct komeda_improc_state *st;
+> =20
+> @@ -756,6 +757,36 @@ komeda_improc_validate(struct komeda_improc *improc,
+>  	st->hsize =3D dflow->in_w;
+>  	st->vsize =3D dflow->in_h;
+> =20
+> +	if (drm_atomic_crtc_needs_modeset(crtc_st)) {
+> +		u32 output_depths, output_formats;
+> +		u32 avail_depths, avail_formats;
+> +
+> +		komeda_crtc_get_color_config(crtc_st, &output_depths,
+> +					     &output_formats);
+> +
+> +		avail_depths =3D output_depths & improc->supported_color_depths;
+> +		if (avail_depths =3D=3D 0) {
+> +			DRM_DEBUG_ATOMIC("No available color depths, conn depths: 0x%x & disp=
+lay: 0x%x\n",
+> +					 output_depths,
+> +					 improc->supported_color_depths);
+> +			return -EINVAL;
+> +		}
+> +
+> +		avail_formats =3D output_formats &
+> +				improc->supported_color_formats &
+> +				improc->preferred_color_formats;
+> +		if (avail_formats =3D=3D 0) {
+> +			DRM_DEBUG_ATOMIC("No available color_formats, conn formats 0x%x & dis=
+play: 0x%x & preferred: 0x%x\n",
+> +					 output_formats,
+> +					 improc->supported_color_formats,
+> +					 improc->preferred_color_formats);
+> +			return -EINVAL;
+> +		}
+> +
+> +		st->color_depth =3D __fls(avail_depths);
+> +		st->color_format =3D BIT(__fls(avail_formats));
+> +	}
+> +
+>  	komeda_component_add_input(&st->base, &dflow->input, 0);
+>  	komeda_component_set_output(&dflow->input, &improc->base, 0);
+> =20
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c b/d=
+rivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c
+> index 617e1f7b8472..49e5469ba48e 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c
+> @@ -142,6 +142,7 @@ static int komeda_wb_connector_add(struct komeda_kms_=
+dev *kms,
+>  	struct komeda_dev *mdev =3D kms->base.dev_private;
+>  	struct komeda_wb_connector *kwb_conn;
+>  	struct drm_writeback_connector *wb_conn;
+> +	struct drm_display_info *info;
+>  	u32 *formats, n_formats =3D 0;
+>  	int err;
+> =20
+> @@ -171,6 +172,10 @@ static int komeda_wb_connector_add(struct komeda_kms=
+_dev *kms,
+> =20
+>  	drm_connector_helper_add(&wb_conn->base, &komeda_wb_conn_helper_funcs);
+> =20
+> +	info =3D &kwb_conn->base.base.display_info;
+> +	info->bpc =3D __fls(kcrtc->master->improc->supported_color_depths);
+> +	info->color_formats =3D kcrtc->master->improc->supported_color_formats;
+> +
+>  	kcrtc->wb_conn =3D kwb_conn;
+> =20
+>  	return 0;
+>=20
 
-#syz test: https://github.com/google/kasan.git e96407b4
 
-Johan
+--=20
+Mihail
 
-From c68eda0c6aae5b233fbd583afbfd3ea15acbc62f Mon Sep 17 00:00:00 2001
-From: Johan Hovold <johan@kernel.org>
-Date: Thu, 19 Sep 2019 11:48:38 +0200
-Subject: [PATCH] USB: adutux: fix use-after-free on disconnect + more
 
-FIXME: separate stopping URBs
-
-The driver was clearing its struct usb_device pointer, which it uses as
-an inverted disconnected flag, before deregistering the character device
-and without serialising against racing release().
-
-This could lead to a use-after-free if a racing release() callback
-observes the cleared pointer and frees the driver data before
-disconnect() is finished with it.
-
-This could also lead to NULL-pointer dereferences in a racing open().
-
-Fixes: f08812d5eb8f ("USB: FIx locks and urb->status in adutux (updated)")
-Reported-by: syzbot+0243cb250a51eeefb8cc@syzkaller.appspotmail.com
-Cc: stable <stable@vger.kernel.org>     # 2.6.24
-Signed-off-by: Johan Hovold <johan@kernel.org>
----
- drivers/usb/misc/adutux.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/usb/misc/adutux.c b/drivers/usb/misc/adutux.c
-index 344d523b0502..a6996772745e 100644
---- a/drivers/usb/misc/adutux.c
-+++ b/drivers/usb/misc/adutux.c
-@@ -762,14 +762,18 @@ static void adu_disconnect(struct usb_interface *interface)
- 
- 	dev = usb_get_intfdata(interface);
- 
--	mutex_lock(&dev->mtx);	/* not interruptible */
--	dev->udev = NULL;	/* poison */
- 	usb_deregister_dev(interface, &adu_class);
--	mutex_unlock(&dev->mtx);
-+
-+	usb_poison_urb(dev->interrupt_in_urb);
-+	usb_poison_urb(dev->interrupt_out_urb);
- 
- 	mutex_lock(&adutux_mutex);
- 	usb_set_intfdata(interface, NULL);
- 
-+	mutex_lock(&dev->mtx);	/* not interruptible */
-+	dev->udev = NULL;	/* poison */
-+	mutex_unlock(&dev->mtx);
-+
- 	/* if the device is not opened, then we clean up right now */
- 	if (!dev->open_count)
- 		adu_delete(dev);
--- 
-2.23.0
 
