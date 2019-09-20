@@ -2,238 +2,202 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E4E6C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83CE4C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61D2720882
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:35:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FEB32080F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:42:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="ZPi0iS9h";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="Ys3m/lxP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437489AbfITGfa (ORCPT
+        id S2437498AbfITGmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 02:35:30 -0400
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:57736 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389232AbfITGfa (ORCPT
+        Fri, 20 Sep 2019 02:42:23 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:49672 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2437403AbfITGmX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 02:35:30 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=teawaterz@linux.alibaba.com;NM=1;PH=DS;RN=26;SR=0;TI=SMTPD_---0TcrUSCY_1568961310;
-Received: from localhost(mailfrom:teawaterz@linux.alibaba.com fp:SMTPD_---0TcrUSCY_1568961310)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 20 Sep 2019 14:35:14 +0800
-From:   Hui Zhu <teawaterz@linux.alibaba.com>
-To:     sjenning@redhat.com, ddstreet@ieee.org, akpm@linux-foundation.org,
-        mhocko@suse.com, willy@infradead.org, chris@chris-wilson.co.uk,
-        hannes@cmpxchg.org, ziqian.lzq@antfin.com, osandov@fb.com,
-        ying.huang@intel.com, aryabinin@virtuozzo.com, vovoy@chromium.org,
-        richard.weiyang@gmail.com, jgg@ziepe.ca, dan.j.williams@intel.com,
-        rppt@linux.ibm.com, jglisse@redhat.com, b.zolnierkie@samsung.com,
-        axboe@kernel.dk, dennis@kernel.org, josef@toxicpanda.com,
-        tj@kernel.org, oleg@redhat.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Cc:     Hui Zhu <teawaterz@linux.alibaba.com>
-Subject: [RFC v2] zswap: Add CONFIG_ZSWAP_IO_SWITCH to handle swap IO issue
-Date:   Fri, 20 Sep 2019 14:35:07 +0800
-Message-Id: <1568961307-32419-1-git-send-email-teawaterz@linux.alibaba.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 20 Sep 2019 02:42:23 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8K6eoUc011977;
+        Thu, 19 Sep 2019 23:42:09 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=B+zvqKx38jbpkiB6iH65mT/csKiQIoctEdj4BwINfKo=;
+ b=ZPi0iS9h1sew8BMxg0VoX6+AleG+J3TsUEZd3s27BAqGgyUffSD89J54W0nYADhGBIJn
+ 0S5MO1+csckLh6r5Q8CtpIa/ZDX8YbpPiVOuqWMaW7IqvvFxOkhee+1E8W91KRMn7tXJ
+ ZyaE77bMucidkwjSuhDqbG8Ufe6usYoh+PK0CUm4T3xOqKk0JqOgbLf5F5BukdULyTJn
+ a9bqXzmu9CfdIzHDBv17rT8mMcyu9XFrOwURG4sA8/d6butx722kfAIdI9Ko10X6cHxn
+ vQRhbnsvqJ3wVKQQyUFMkoqtn0ShS14PNRcF28QwKQKDEPGiOMXPe675c9u4ILqVWzQU Uw== 
+Received: from sc-exch03.marvell.com ([199.233.58.183])
+        by mx0b-0016f401.pphosted.com with ESMTP id 2v3vcfpy27-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 19 Sep 2019 23:42:09 -0700
+Received: from SC-EXCH03.marvell.com (10.93.176.83) by SC-EXCH03.marvell.com
+ (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 19 Sep
+ 2019 23:42:07 -0700
+Received: from NAM05-BY2-obe.outbound.protection.outlook.com (104.47.50.57) by
+ SC-EXCH03.marvell.com (10.93.176.83) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Thu, 19 Sep 2019 23:42:07 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BVht/ZTygTp9ixOdYXSmWxCb+wGudVKGFbHAWfy+z8fsSgzKAtsSEgJmqztvAEzB6mOhQ/lb7kb7LaWL2Pw4w9ntr1dMSmk0B41yiPiJsUsQF3nUB7zyEXG73UCrzXOD3QsoUPRt7rIzPTnB+TO9PDUJNZGaDwf1NPb58tqYIB0mJ9ej+mWwu7j9WDTXQdSJGbq1ki7Rvh7IE4HFq1N/MhRrDbhQ67fKYM61AJT1se3uDLrdgufBSuYcGZjz+MlZemr3L02MXKkvD2nUWiM7t9sj3Iw6S5dD/AqGBEi+hXbtVEfvEQ9H046OvNRnmx+HjBAX/F0+yxWfHIAzpMNWnQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=B+zvqKx38jbpkiB6iH65mT/csKiQIoctEdj4BwINfKo=;
+ b=Q2yDyPQETLNGm7iyu8fJIwFqlSsOK/S9WJzQ/6WpwxmrYVfDP7UzDsgqTXOKMJCdEzD58c1JyvOun4EORtSUtwHbYflhVLdRVM+IEcwyewtf7KaxUokSAuTFGVdfSNSGilKT9hdgowxbPcJAglGqKiF86J3M6botSoFMJ3ZYaGbwy3g2Z+zM2NRxk15d4GdaJn5xOW3oyUX03fDbH6visMUsky8h7owYK6Fy5OOL7jFYeYEsBaSbAeBgTzUahi11uOlWCr7I1KClbWj9u7kn0TNL6+fOYkkhjwVkwwzQ+E8KBngnQlnXU34iGNaaZrSGrQr1G44BQpMLGNal7+4OVQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=B+zvqKx38jbpkiB6iH65mT/csKiQIoctEdj4BwINfKo=;
+ b=Ys3m/lxP2VyFuv44bpbjQfgMjSk1flByl2suwQbfIU5eYnIaIeqSsG0kCk+vsdC0KcY5ZdvZ3iK5jicoapZSyEvPVPtUPfG/ccA9bp6kcl3AV1y6DkwVP3sS3CZnppOlG2/yOWeN2fN50Ihd0y52fTTR4ic6WvGlNKyXL//0duE=
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.238.217) by
+ MN2PR18MB2799.namprd18.prod.outlook.com (20.179.22.74) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.20; Fri, 20 Sep 2019 06:42:06 +0000
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::8162:62e8:aeeb:ec7b]) by MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::8162:62e8:aeeb:ec7b%3]) with mapi id 15.20.2263.023; Fri, 20 Sep 2019
+ 06:42:06 +0000
+From:   Robert Richter <rrichter@marvell.com>
+To:     Hanna Hawa <hhhawa@amazon.com>
+CC:     "bp@alien8.de" <bp@alien8.de>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dwmw@amazon.co.uk" <dwmw@amazon.co.uk>,
+        "benh@amazon.com" <benh@amazon.com>,
+        "ronenk@amazon.com" <ronenk@amazon.com>,
+        "talel@amazon.com" <talel@amazon.com>,
+        "jonnyc@amazon.com" <jonnyc@amazon.com>,
+        "hanochu@amazon.com" <hanochu@amazon.com>
+Subject: Re: [PATCH v3 1/2] edac: Add an API for edac device to report for
+ multiple errors
+Thread-Topic: [PATCH v3 1/2] edac: Add an API for edac device to report for
+ multiple errors
+Thread-Index: AQHVb36EykX7q7YxkEG2nId0bF/CGQ==
+Date:   Fri, 20 Sep 2019 06:42:05 +0000
+Message-ID: <20190920064155.f3xeqzobiud5hvxf@rric.localdomain>
+References: <20190919171713.8060-1-hhhawa@amazon.com>
+ <20190919171713.8060-2-hhhawa@amazon.com>
+In-Reply-To: <20190919171713.8060-2-hhhawa@amazon.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR05CA0342.eurprd05.prod.outlook.com
+ (2603:10a6:7:92::37) To MN2PR18MB3408.namprd18.prod.outlook.com
+ (2603:10b6:208:16c::25)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [31.208.96.227]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5a487e78-7b85-430f-ee1f-08d73d95a6db
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB2799;
+x-ms-traffictypediagnostic: MN2PR18MB2799:
+x-microsoft-antispam-prvs: <MN2PR18MB2799C5A2B4E39831993CC191D9880@MN2PR18MB2799.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 0166B75B74
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(366004)(376002)(39860400002)(136003)(199004)(189003)(6116002)(66066001)(7416002)(86362001)(3846002)(4326008)(99286004)(229853002)(8676002)(6916009)(81156014)(2906002)(54906003)(8936002)(81166006)(316002)(66476007)(66556008)(64756008)(66946007)(66446008)(5660300002)(71190400001)(71200400001)(11346002)(476003)(6246003)(446003)(6436002)(486006)(6486002)(1076003)(14454004)(478600001)(53546011)(6506007)(386003)(102836004)(52116002)(256004)(76176011)(186003)(7736002)(305945005)(9686003)(6512007)(25786009)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2799;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Y8f2lAqpbfKhICf9b9IyfaYvKYgw8exCm6McnRf7lsQXgEfS8XMTAdPNI8Ag81B9Bi/rKauZapfo2GEU3/244MMYg3fJPOiWNHMUG0taRm7rOTqMwy1oO1iPnXVgO7unvdLQBK7Ss+GwYxJpgz5OMoxwETfVxu4rckb6Cp4+6b5BKJHz21clyyOTOZNqzR2uErygxDZnc+03PYjiWTFPTmjblT6B8x7dULgm51qXmRWYWKt7cfsC9ex1z9/4RYJ7AM8s2KLA3JBZHURLxD9v0gufI7uKFOsYBrP6imRhc4opZMVoOhWHuumTNjoow1A2bDlXf1nOUS/JczY6X2tyqegWz6sXLZa77XkSz03sZyX4SJrq4Kxc+w9AezMdnneAhUBaQQ0kOefQofbPH41x/ghVfJ3mYWigtF1n9k1sg6E=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <4643F7B24759F747990E32FE51562174@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5a487e78-7b85-430f-ee1f-08d73d95a6db
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Sep 2019 06:42:05.8725
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mEpZZYuKKAHmMD5uqHvqF5lmiyEwQ0LvSuqiVKbbsO/QqcEvZW4F2zYn8+NxcAMYkml8uHV4zjlvGYUJeYybQg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2799
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-20_01:2019-09-19,2019-09-20 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the second version of this patch.  The previous version is in
-https://lkml.org/lkml/2019/9/11/935
-I updated the commit introduction and Kconfig  because it is not clear.
+On 19.09.19 18:17:12, Hanna Hawa wrote:
+> Add an API for EDAC device to report multiple errors with same type.
+>=20
+> Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
 
-Currently, I use a VM that has 2 CPUs, 4G memory and 4G swap file.
-I found that swap will affect the IO performance when it is running.
-So I open zswap to handle it because it just use CPU cycles but not
-disk IO.
+With the change below it looks good to me:
 
-It work OK but I found that zswap is slower than normal swap in this
-VM.  zswap is about 300M/s and normal swap is about 500M/s. (The reason
-is disk inside VM has fscache in host machine.)
-So open zswap is make memory shrinker slower but good for IO performance
-in this VM.
-So I just want zswap work when the disk of the swap file is under high
-IO load.
+Acked-by: Robert Richter <rrichter@marvell.com>
 
-This commit is designed for this idea.
-It add two parameters read_in_flight_limit and write_in_flight_limit to
-zswap.
-In zswap_frontswap_store, pages will be stored to zswap only when
-the IO in flight number of swap device is bigger than
-zswap_read_in_flight_limit or zswap_write_in_flight_limit
-when zswap is enabled.
-Then the zswap just work when the IO in flight number of swap device
-is low.
+Thanks,
 
-Signed-off-by: Hui Zhu <teawaterz@linux.alibaba.com>
----
- include/linux/swap.h |  3 +++
- mm/Kconfig           | 18 +++++++++++++++++
- mm/page_io.c         | 16 +++++++++++++++
- mm/zswap.c           | 55 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 92 insertions(+)
+-Robert
 
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index de2c67a..82b621f 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -389,6 +389,9 @@ extern void end_swap_bio_write(struct bio *bio);
- extern int __swap_writepage(struct page *page, struct writeback_control *wbc,
- 	bio_end_io_t end_write_func);
- extern int swap_set_page_dirty(struct page *page);
-+#ifdef CONFIG_ZSWAP_IO_SWITCH
-+extern void swap_io_in_flight(struct page *page, unsigned int inflight[2]);
-+#endif
- 
- int add_swap_extent(struct swap_info_struct *sis, unsigned long start_page,
- 		unsigned long nr_pages, sector_t start_block);
-diff --git a/mm/Kconfig b/mm/Kconfig
-index 56cec63..5408d65 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -546,6 +546,24 @@ config ZSWAP
- 	  they have not be fully explored on the large set of potential
- 	  configurations and workloads that exist.
- 
-+config ZSWAP_IO_SWITCH
-+	bool "Compressed cache for swap pages according to the IO status"
-+	depends on ZSWAP
-+	def_bool n
-+	help
-+	  This function help the system that normal swap speed is higher
-+	  than zswap speed to handle the swap IO issue.
-+	  For example, a VM that is disk device is not set cache config or
-+	  set cache=writeback.
-+
-+	  This function make zswap just work when the disk of the swap file
-+	  is under high IO load.
-+	  It add two parameters read_in_flight_limit and write_in_flight_limit to
-+	  zswap.  When zswap is enabled, pages will be stored to zswap only
-+	  when the IO in flight number of swap device is bigger than
-+	  zswap_read_in_flight_limit or zswap_write_in_flight_limit.
-+	  If unsure, say "n".
-+
- config ZPOOL
- 	tristate "Common API for compressed memory storage"
- 	help
-diff --git a/mm/page_io.c b/mm/page_io.c
-index 24ee600..e66b050 100644
---- a/mm/page_io.c
-+++ b/mm/page_io.c
-@@ -434,3 +434,19 @@ int swap_set_page_dirty(struct page *page)
- 		return __set_page_dirty_no_writeback(page);
- 	}
- }
-+
-+#ifdef CONFIG_ZSWAP_IO_SWITCH
-+void swap_io_in_flight(struct page *page, unsigned int inflight[2])
-+{
-+	struct swap_info_struct *sis = page_swap_info(page);
-+
-+	if (!sis->bdev) {
-+		inflight[0] = 0;
-+		inflight[1] = 0;
-+		return;
-+	}
-+
-+	part_in_flight_rw(bdev_get_queue(sis->bdev), sis->bdev->bd_part,
-+					  inflight);
-+}
-+#endif
-diff --git a/mm/zswap.c b/mm/zswap.c
-index 0e22744..1255645 100644
---- a/mm/zswap.c
-+++ b/mm/zswap.c
-@@ -62,6 +62,13 @@ static u64 zswap_reject_compress_poor;
- static u64 zswap_reject_alloc_fail;
- /* Store failed because the entry metadata could not be allocated (rare) */
- static u64 zswap_reject_kmemcache_fail;
-+#ifdef CONFIG_ZSWAP_IO_SWITCH
-+/* Store failed because zswap_read_in_flight_limit or
-+ * zswap_write_in_flight_limit is bigger than IO in flight number of
-+ * swap device
-+ */
-+static u64 zswap_reject_io;
-+#endif
- /* Duplicate store was encountered (rare) */
- static u64 zswap_duplicate_entry;
- 
-@@ -114,6 +121,22 @@ static bool zswap_same_filled_pages_enabled = true;
- module_param_named(same_filled_pages_enabled, zswap_same_filled_pages_enabled,
- 		   bool, 0644);
- 
-+#ifdef CONFIG_ZSWAP_IO_SWITCH
-+/* zswap will not try to store the page if zswap_read_in_flight_limit is
-+ * bigger than IO read in flight number of swap device
-+ */
-+static unsigned int zswap_read_in_flight_limit;
-+module_param_named(read_in_flight_limit, zswap_read_in_flight_limit,
-+		   uint, 0644);
-+
-+/* zswap will not try to store the page if zswap_write_in_flight_limit is
-+ * bigger than IO write in flight number of swap device
-+ */
-+static unsigned int zswap_write_in_flight_limit;
-+module_param_named(write_in_flight_limit, zswap_write_in_flight_limit,
-+		   uint, 0644);
-+#endif
-+
- /*********************************
- * data structures
- **********************************/
-@@ -1009,6 +1032,34 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
- 		goto reject;
- 	}
- 
-+#ifdef CONFIG_ZSWAP_IO_SWITCH
-+	if (zswap_read_in_flight_limit || zswap_write_in_flight_limit) {
-+		unsigned int inflight[2];
-+		bool should_swap = false;
-+
-+		swap_io_in_flight(page, inflight);
-+
-+		if (zswap_write_in_flight_limit &&
-+			inflight[1] < zswap_write_in_flight_limit)
-+			should_swap = true;
-+
-+		if (zswap_read_in_flight_limit &&
-+			(should_swap ||
-+			 (!should_swap && !zswap_write_in_flight_limit))) {
-+			if (inflight[0] < zswap_read_in_flight_limit)
-+				should_swap = true;
-+			else
-+				should_swap = false;
-+		}
-+
-+		if (should_swap) {
-+			zswap_reject_io++;
-+			ret = -EIO;
-+			goto reject;
-+		}
-+	}
-+#endif
-+
- 	/* reclaim space if needed */
- 	if (zswap_is_full()) {
- 		zswap_pool_limit_hit++;
-@@ -1264,6 +1315,10 @@ static int __init zswap_debugfs_init(void)
- 			   zswap_debugfs_root, &zswap_reject_kmemcache_fail);
- 	debugfs_create_u64("reject_compress_poor", 0444,
- 			   zswap_debugfs_root, &zswap_reject_compress_poor);
-+#ifdef CONFIG_ZSWAP_IO_SWITCH
-+	debugfs_create_u64("reject_io", 0444,
-+			   zswap_debugfs_root, &zswap_reject_io);
-+#endif
- 	debugfs_create_u64("written_back_pages", 0444,
- 			   zswap_debugfs_root, &zswap_written_back_pages);
- 	debugfs_create_u64("duplicate_entry", 0444,
--- 
-2.7.4
+> ---
+>  drivers/edac/edac_device.c | 62 ++++++++++++++++++++++++++------------
+>  drivers/edac/edac_device.h | 40 ++++++++++++++++++++++++
+>  2 files changed, 82 insertions(+), 20 deletions(-)
+>=20
+> diff --git a/drivers/edac/edac_device.c b/drivers/edac/edac_device.c
+> index 65cf2b9355c4..866934f2bcb0 100644
+> --- a/drivers/edac/edac_device.c
+> +++ b/drivers/edac/edac_device.c
+> @@ -555,12 +555,16 @@ static inline int edac_device_get_panic_on_ue(struc=
+t edac_device_ctl_info
+>  	return edac_dev->panic_on_ue;
+>  }
+> =20
+> -void edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
+> -			int inst_nr, int block_nr, const char *msg)
+> +void __edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
+> +			     unsigned int count, int inst_nr, int block_nr,
+> +			     const char *msg)
+>  {
+>  	struct edac_device_instance *instance;
+>  	struct edac_device_block *block =3D NULL;
+> =20
+> +	if (!count)
+> +		return;
+> +
 
+Those checks should be moved to the *_count() variants of both
+functions.
+
+[...]
+
+> +static inline void edac_device_handle_ce_count(struct edac_device_ctl_in=
+fo *edac_dev,
+> +					       unsigned int count, int inst_nr,
+> +					       int block_nr, const char *msg)
+> +{
+
+	if (count)
+		...
+
+> +	__edac_device_handle_ce(edac_dev, count, inst_nr, block_nr, msg);
+> +}
+> +
+> +static inline void edac_device_handle_ue_count(struct edac_device_ctl_in=
+fo *edac_dev,
+> +					       unsigned int count, int inst_nr,
+> +					       int block_nr, const char *msg)
+> +{
+
+Here too.
+
+> +	__edac_device_handle_ue(edac_dev, count, inst_nr, block_nr, msg);
+> +}
