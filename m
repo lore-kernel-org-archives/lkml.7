@@ -1,133 +1,202 @@
-Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8331C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 23:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 794E2C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 00:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8038820C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 23:55:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42E56217D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 00:05:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mb0zuXXO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436862AbfISXzZ (ORCPT
+        id S2408079AbfITAF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 19:55:25 -0400
-Received: from mga18.intel.com ([134.134.136.126]:22723 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436849AbfISXzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 19:55:25 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Sep 2019 16:55:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,526,1559545200"; 
-   d="scan'208";a="338820974"
-Received: from spandruv-mobl3.jf.intel.com ([10.255.93.177])
-  by orsmga004.jf.intel.com with ESMTP; 19 Sep 2019 16:55:22 -0700
-Message-ID: <f5fde2bc758cc15fdb575f52c2138bb67aa514b7.camel@linux.intel.com>
-Subject: Re: [PATCH 1/2] x86,sched: Add support for frequency invariance
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Giovanni Gherdovich <ggherdovich@suse.cz>, tglx@linutronix.de,
-        mingo@redhat.com, peterz@infradead.org, bp@suse.de,
-        lenb@kernel.org, rjw@rjwysocki.net
-Cc:     x86@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mgorman@techsingularity.net,
-        matt@codeblueprint.co.uk, viresh.kumar@linaro.org,
-        juri.lelli@redhat.com, pjt@google.com, vincent.guittot@linaro.org,
-        qperret@qperret.net, dietmar.eggemann@arm.com
-Date:   Thu, 19 Sep 2019 16:55:22 -0700
-In-Reply-To: <1568730426.3329.3.camel@suse.cz>
-References: <20190909024216.5942-1-ggherdovich@suse.cz>
-         <20190909024216.5942-2-ggherdovich@suse.cz>
-         <4226d5f460604a8130f8079b74ef3fb1d60009d7.camel@linux.intel.com>
-         <1568730426.3329.3.camel@suse.cz>
+        Thu, 19 Sep 2019 20:05:29 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:46912 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404681AbfITAF3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 20:05:29 -0400
+Received: by mail-ua1-f68.google.com with SMTP id m21so1666632ual.13;
+        Thu, 19 Sep 2019 17:05:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=QkUwz5xhRo/9F03n5Bte1Vs+BpiUIhnebbo6RmVEJCo=;
+        b=mb0zuXXO/KC+zwN2J28aOzAKQ0IqXXLFdTY2w15Rsm+Rb6i6hlEy6RSgGxSbqfM1Y1
+         i+hKv5LIqT0M3cWK6IrUXOgiAZEJtnvP6E3DCCOsds1w5AD1zFQqJJaXAWkvnppN1J3m
+         u1/a0frdNND4TQ4LuwvWcUZshwig3f1P+2iJx1NLaowos67GFNTXTM+xEOqaP3LFGN0Z
+         2xHjLS7KzVEnH5tTi8YHxT6QVYxxkoW8LJw1tJWBaF8xzQcijO5RkIWI77oTMyYoteSQ
+         mYvFkn/S2t8vHk8lrCEk0te3STsM2ppdeC9QfsjwBNf/6Bwckyljqj6G2i7l2MV7JMIW
+         yNwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=QkUwz5xhRo/9F03n5Bte1Vs+BpiUIhnebbo6RmVEJCo=;
+        b=ua2ho7zZ81+9NmHEZZ1PzxewG4aBKRKliN/U4+E/0Mr0USOF1h/AmFUMnC0krSgZgr
+         k377wBROykv4KUCx8XhLh4NycC2GCga2Qq7oSF8hATXVG2svJfgs9SgC/gJ0tE249mxU
+         zoTjZcbUlozkbCjv/cV/oP5v7I/vuIwrDQCysArwmlSpUNuTjlOn1/mEpzB7ZUSlymkx
+         yElIuyG/5h5M/2b8JdeuIF2ioEEXJEAoflvlm1raqrW2kdEk0wt5w/z4qvUyeSj60wpV
+         ObtPBXuoZ1Uq6nNn9lNM/M66NEqWoT14J6w8Q7JRo83b/R3o/mI0RAMiRR7ZEJfoFHcd
+         KyRA==
+X-Gm-Message-State: APjAAAXCnq4yUKkg1EPGW9pVv2OLdNpBsDbjHN1RONQOJOtD+9v8/1iz
+        +T/HxpvFL9pulbwdIz2NJ4hgGA/tECr7+w2Nh2k=
+X-Google-Smtp-Source: APXvYqzWFeN82a7ivnSWhCyirgskp8rj3ehrKDRc8JWhj3hT8rf8PKbZJUkogOPRht2T5ymsjVoV6Pgdup3xVtIANAA=
+X-Received: by 2002:ab0:224e:: with SMTP id z14mr5425489uan.36.1568937925776;
+ Thu, 19 Sep 2019 17:05:25 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190919224458.91422-1-matthew.cover@stackpath.com>
+In-Reply-To: <20190919224458.91422-1-matthew.cover@stackpath.com>
+From:   Matt Cover <werekraken@gmail.com>
+Date:   Thu, 19 Sep 2019 17:05:14 -0700
+Message-ID: <CAGyo_hrkUPxBAOttpo+xqcUHr89i2N5BOV4_rYFh=dRPkYVPGA@mail.gmail.com>
+Subject: Re: [RFC {net,iproute2}-next 0/2] Introduce an eBPF hookpoint for tx
+ queue selection in the XPS (Transmit Packet Steering) code.
+To:     davem@davemloft.net, ast@kernel.org, daniel@iogearbox.net,
+        kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
+        nikolay@cumulusnetworks.com, sd@queasysnail.net,
+        sbrivio@redhat.com, vincent@bernat.ch, kda@linux-powerpc.org,
+        Matthew Cover <matthew.cover@stackpath.com>, jiri@mellanox.com,
+        Eric Dumazet <edumazet@google.com>, pabeni@redhat.com,
+        idosch@mellanox.com, petrm@mellanox.com, f.fainelli@gmail.com,
+        stephen@networkplumber.org, dsahern@gmail.com,
+        christian@brauner.io, jakub.kicinski@netronome.com,
+        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        johannes.berg@intel.com, mkubecek@suse.cz, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        Jason Wang <jasowang@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-3.fc28) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-09-17 at 16:27 +0200, Giovanni Gherdovich wrote:
-> Hello Srinivas,
-> 
-> On Fri, 2019-09-13 at 15:52 -0700, Srinivas Pandruvada wrote:
-> > On Mon, 2019-09-09 at 04:42 +0200, Giovanni Gherdovich wrote:
-> > 
-> > ...
-> > 
-> > > +
-> > > +/*
-> > > + * APERF/MPERF frequency ratio computation.
-> > > + *
-> > > + * The scheduler wants to do frequency invariant accounting and
-> > > needs a <1
-> > > + * ratio to account for the 'current' frequency, corresponding
-> > > to
-> > > + * freq_curr / freq_max.
-> > 
-> > I thought this is no longer the restriction and Vincent did some
-> > work
-> > to remove this restriction. 
-> 
-> If you're referring to the patch
-> 
->   23127296889f "sched/fair: Update scale invariance of PELT"
-> 
-> merged in v5.2, I'm familiar with that and from my understanding you
-> still
-> want a <1 scaling factor. This is my recalling of the patch:
-> 
-> Vincent was studying some synthetic traces and realized that util_avg
-> reported
-> by PELT didn't quite match the result you'd get computing the formula
-> with pen
-> and paper (theoretical value). To address this he changed where the
-> scaling
-> factor is applied in the PELT formula.
-> 
-> At some point when accumulating the PELT sums, you'll have to measure
-> the time
-> 'delta' since you last updated PELT. What we have after Vincent's
-> change is
-> that this time length 'delta' gets itself scaled by the
-> freq_curr/freq_max
-> ratio:
-> 
->     delta = time since last PELT update
->     delta *= freq_percent
-> 
-> In this way time goes at "wall clock speed" only when you're running
-> at max
-> capacitiy, and goes "slower" (from the PELT point of view) if we're
-> running at
-> a lower frequency. I don't think Vincent had in mind a faster-than-
-> wall-clock
-> PELT time (which you'd get w/ freq_percent>1).
-> 
-> Speaking of which, Srinivas, do you have any opinion and/or
-> requirement about
-> this? I confusely remember Peter Zijlstra saying (more than a year
-> ago, now)
-> that you would like an unclipped freq_curr/freq_max ratio, and may
-> not be
-> happy with this patch clipping it to 1 when freq_curr >
-> 4_cores_turbo. If
-> that's the case, could you elaborate on this?
-> Ignore that if it doesn't make sense, I may be mis-remembering.
-I was thinking of power efficiency use case particularly for Atom like
-platforms, 1C max as you observed is more efficient.
+On Thu, Sep 19, 2019 at 3:45 PM Matthew Cover <werekraken@gmail.com> wrote:
+>
+> WORK IN PROGRESS:
+>   * bpf program loading works!
+>   * txq steering via bpf program return code works!
+>   * bpf program unloading not working.
+>   * bpf program attached query not working.
+>
+> This patch set provides a bpf hookpoint with goals similar to, but a more
+> generic implementation than, TUNSETSTEERINGEBPF; userspace supplied tx queue
+> selection policy.
+>
+> TUNSETSTEERINGEBPF is a useful bpf hookpoint, but has some drawbacks.
+>
+> First, it only works on tun/tap devices.
+>
+> Second, there is no way in the current TUNSETSTEERINGEBPF implementation
+> to bail out or load a noop bpf prog and fallback to the no prog tx queue
+> selection method.
+>
+> Third, the TUNSETSTEERINGEBPF interface seems to require possession of existing
+> or creation of new queues/fds.
+>
+> This most naturally fits in the "wire" implementation since possession of fds
+> is ensured. However, it also means the various "wire" implementations (e.g.
+> qemu) have to all be made aware of TUNSETSTEERINGEBPF and expose an interface
+> to load/unload a bpf prog (or provide a mechanism to pass an fd to another
+> program).
+>
+> Alternatively, you can spin up an extra queue and immediately disable via
+> IFF_DETACH_QUEUE, but this seems unsafe; packets could be enqueued to this
+> extra file descriptor which is part of our bpf prog loader, not our "wire".
+>
+> Placing this in the XPS code and leveraging iproute2 and rtnetlink to provide
+> our bpf prog loader in a similar manner to xdp gives us a nice way to separate
+> the tap "wire" and the loading of tx queue selection policy. It also lets us
+> use this hookpoint for any device traversing XPS.
+>
+> This patch only introduces the new hookpoint to the XPS code and will not yet
+> be used by tun/tap devices using the intree tun.ko (which implements an
+> .ndo_select_queue and does not traverse the XPS code).
+>
+> In a future patch set, we can optionally refactor tun.ko to traverse this call
+> to bpf_prog_run_clear_cb() and bpf prog storage. tun/tap devices could then
+> leverage iproute2 as a generic loader. The TUNSETSTEERINGEBPF interface could
+> at this point be optionally deprecated/removed.
+>
+> Both patches in this set have been tested using a rebuilt tun.ko with no
+> .ndo_select_queue.
+>
+>   sed -i '/\.ndo_select_queue.*=/d' drivers/net/tun.c
+>
+> The tap device was instantiated using tap_mq_pong.c, supporting scripts, and
+> wrapping service found here:
+>
+>   https://github.com/stackpath/rxtxcpu/tree/v1.2.6/helpers
+>
+> The bpf prog source and test scripts can be found here:
+>
+>   https://github.com/werekraken/xps_ebpf
+>
+> In nstxq, netsniff-ng using PACKET_FANOUT_QM is leveraged to check the
+> queue_mapping.
+>
+> With no prog loaded, the tx queue selection is adhering our xps_cpus
+> configuration.
+>
+>   [vagrant@localhost ~]$ grep . /sys/class/net/tap0/queues/tx-*/xps_cpus; ./nstxq; sudo timeout 1 cat /sys/kernel/debug/tracing/trace_pipe;
+>   /sys/class/net/tap0/queues/tx-0/xps_cpus:1
+>   /sys/class/net/tap0/queues/tx-1/xps_cpus:2
+>   cpu0: ping: 64 bytes from 169.254.254.1: icmp_seq=1 ttl=64 time=0.146 ms
+>   cpu0: qm0:  > tap0 98 Unknown => Unknown IPv4 169.254.254.2/169.254.254.1 Len 84 Type 8 Code 0
+>   cpu1: ping: 64 bytes from 169.254.254.1: icmp_seq=1 ttl=64 time=0.121 ms
+>   cpu1: qm1:  > tap0 98 Unknown => Unknown IPv4 169.254.254.2/169.254.254.1 Len 84 Type 8 Code 0
+>
+> With a return 0 bpg prog, our tx queue is 0 (despite xps_cpus).
+>
+>   [vagrant@localhost ~]$ sudo ip link set dev tap0 xps obj hello0.o sec hello && { ./nstxq; sudo timeout 1 cat /sys/kernel/debug/tracing/trace_pipe; }
+>   cpu0: ping: 64 bytes from 169.254.254.1: icmp_seq=1 ttl=64 time=0.160 ms
+>   cpu0: qm0:  > tap0 98 Unknown => Unknown IPv4 169.254.254.2/169.254.254.1 Len 84 Type 8 Code 0
+>   cpu1: ping: 64 bytes from 169.254.254.1: icmp_seq=1 ttl=64 time=0.124 ms
+>   cpu1: qm0:  > tap0 98 Unknown => Unknown IPv4 169.254.254.2/169.254.254.1 Len 84 Type 8 Code 0
+>               ping-4852  [000] ....  2691.633260: 0: xps (RET 0): Hello, World!
+>               ping-4869  [001] ....  2695.753588: 0: xps (RET 0): Hello, World!
+>
+> With a return 1 bpg prog, our tx queue is 1.
+>
+>   [vagrant@localhost ~]$ sudo ip link set dev tap0 xps obj hello1.o sec hello && { ./nstxq; sudo timeout 1 cat /sys/kernel/debug/tracing/trace_pipe; }
+>   cpu0: ping: 64 bytes from 169.254.254.1: icmp_seq=1 ttl=64 time=0.193 ms
+>   cpu0: qm1:  > tap0 98 Unknown => Unknown IPv4 169.254.254.2/169.254.254.1 Len 84 Type 8 Code 0
+>   cpu1: ping: 64 bytes from 169.254.254.1: icmp_seq=1 ttl=64 time=0.135 ms
+>   cpu1: qm1:  > tap0 98 Unknown => Unknown IPv4 169.254.254.2/169.254.254.1 Len 84 Type 8 Code 0
+>               ping-4894  [000] ....  2710.652080: 0: xps (RET 1): Hello, World!
+>               ping-4911  [001] ....  2714.774608: 0: xps (RET 1): Hello, World!
+>
+> With a return 2 bpg prog, our tx queue is 0 (we only have 2 tx queues).
+>
+>   [vagrant@localhost ~]$ sudo ip link set dev tap0 xps obj hello2.o sec hello && { ./nstxq; sudo timeout 1 cat /sys/kernel/debug/tracing/trace_pipe; }
+>   cpu0: ping: 64 bytes from 169.254.254.1: icmp_seq=1 ttl=64 time=1.20 ms
+>   cpu0: qm0:  > tap0 98 Unknown => Unknown IPv4 169.254.254.2/169.254.254.1 Len 84 Type 8 Code 0
+>   cpu1: ping: 64 bytes from 169.254.254.1: icmp_seq=1 ttl=64 time=0.986 ms
+>   cpu1: qm0:  > tap0 98 Unknown => Unknown IPv4 169.254.254.2/169.254.254.1 Len 84 Type 8 Code 0
+>               ping-4936  [000] ....  2729.442668: 0: xps (RET 2): Hello, World!
+>               ping-4953  [001] ....  2733.614558: 0: xps (RET 2): Hello, World!
+>
+> With a return -1 bpf prog, our tx queue selection is once again determined by
+> xps_cpus. Any negative return should work the same and provides a nice
+> mechanism to bail out or have a noop bpf prog at this hookpoint.
+>
+>   [vagrant@localhost ~]$ sudo ip link set dev tap0 xps obj hello_neg1.o sec hello && { ./nstxq; sudo timeout 1 cat /sys/kernel/debug/tracing/trace_pipe; }
+>   cpu0: ping: 64 bytes from 169.254.254.1: icmp_seq=1 ttl=64 time=0.628 ms
+>   cpu0: qm0:  > tap0 98 Unknown => Unknown IPv4 169.254.254.2/169.254.254.1 Len 84 Type 8 Code 0
+>   cpu1: ping: 64 bytes from 169.254.254.1: icmp_seq=1 ttl=64 time=0.322 ms
+>   cpu1: qm1:  > tap0 98 Unknown => Unknown IPv4 169.254.254.2/169.254.254.1 Len 84 Type 8 Code 0
+>               ping-4981  [000] ....  2763.510760: 0: xps (RET -1): Hello, World!
+>               ping-4998  [001] ....  2767.632583: 0: xps (RET -1): Hello, World!
+>
+> bpf prog unloading is not yet working and neither does `ip link show` report
+> when an "xps" bpf prog is attached. This is my first time touching iproute2 or
+> rtnetlink, so it may be something obvious to those more familiar.
 
-But now sched deadline code is using  arch_scale_freq_capacity(() to
-calculate dl_se->runtime, where closer to deterministic value with all
-cores, may be better, which will be scaled with base_freq. 
-
-Thanks,
-Srinivas
-
+Adding Jason... sorry for missing that the first time.
