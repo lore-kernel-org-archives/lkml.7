@@ -7,50 +7,43 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A839EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:22:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97242C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70E872173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:22:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 793572173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:22:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405140AbfITQV0 (ORCPT
+        id S2405108AbfITQVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 12:21:26 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:52865 "EHLO
+        Fri, 20 Sep 2019 12:21:24 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:52850 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404965AbfITQVS (ORCPT
+        with ESMTP id S2404943AbfITQVR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 12:21:18 -0400
+        Fri, 20 Sep 2019 12:21:17 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iBLeT-00040e-PO; Fri, 20 Sep 2019 18:20:57 +0200
+        id 1iBLei-00048W-9J; Fri, 20 Sep 2019 18:21:12 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id EA51B1C0DF4;
-        Fri, 20 Sep 2019 18:20:56 +0200 (CEST)
-Date:   Fri, 20 Sep 2019 16:20:56 -0000
-From:   "tip-bot2 for Anju T Sudhakar" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 93DCE1C0E33;
+        Fri, 20 Sep 2019 18:21:00 +0200 (CEST)
+Date:   Fri, 20 Sep 2019 16:21:00 -0000
+From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf kvm: Add arch neutral function to choose
- event for perf kvm record
-Cc:     Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+Subject: [tip: perf/urgent] perf probe: Add missing build-id.h header.
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linuxppc-dev@lists.ozlabs.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20190718181749.30612-2-anju@linux.vnet.ibm.com>
-References: <20190718181749.30612-2-anju@linux.vnet.ibm.com>
+In-Reply-To: <tip-7u3sf4j5huhi3mqa1q77524b@git.kernel.org>
+References: <tip-7u3sf4j5huhi3mqa1q77524b@git.kernel.org>
 MIME-Version: 1.0
-Message-ID: <156899645688.24167.9735365574301898952.tip-bot2@tip-bot2>
+Message-ID: <156899646055.24167.4075828663931632576.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -66,133 +59,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     124eb5f82bf9395419b20205c4dcc1b8fcda7f29
-Gitweb:        https://git.kernel.org/tip/124eb5f82bf9395419b20205c4dcc1b8fcda7f29
-Author:        Anju T Sudhakar <anju@linux.vnet.ibm.com>
-AuthorDate:    Thu, 18 Jul 2019 23:47:48 +05:30
+Commit-ID:     36f3f450a8dc02d9ba0d31bc31d5b329759ed855
+Gitweb:        https://git.kernel.org/tip/36f3f450a8dc02d9ba0d31bc31d5b329759ed855
+Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate:    Tue, 10 Sep 2019 16:16:27 +01:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Fri, 20 Sep 2019 10:28:26 -03:00
+CommitterDate: Fri, 20 Sep 2019 09:19:20 -03:00
 
-perf kvm: Add arch neutral function to choose event for perf kvm record
+perf probe: Add missing build-id.h header.
 
-'perf kvm record' uses 'cycles'(if the user did not specify any event)
-as the default event to profile the guest.
+It uses things defined in that header and was getting it only
+indirectly, thru dso.h, fix it.
 
-This will not provide any proper samples from the guest incase of
-powerpc architecture, since in powerpc the PMUs are controlled by the
-guest rather than the host.
-
-Patch adds a function to pick an arch specific event for 'perf kvm
-record', instead of selecting 'cycles' as a default event for all
-architectures.
-
-For powerpc this function checks for any user specified event, and if
-there isn't any it returns invalid instead of proceeding with 'cycles'
-event.
-
-Signed-off-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
-Reviewed-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: linuxppc-dev@lists.ozlabs.org
-Link: http://lore.kernel.org/lkml/20190718181749.30612-2-anju@linux.vnet.ibm.com
+Link: https://lkml.kernel.org/n/tip-7u3sf4j5huhi3mqa1q77524b@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/powerpc/util/kvm-stat.c | 37 ++++++++++++++++++++++++-
- tools/perf/builtin-kvm.c                | 12 +++++++-
- tools/perf/util/kvm-stat.h              |  1 +-
- 3 files changed, 49 insertions(+), 1 deletion(-)
+ tools/perf/util/probe-file.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/arch/powerpc/util/kvm-stat.c b/tools/perf/arch/powerpc/util/kvm-stat.c
-index f0dbf7b..ec5b771 100644
---- a/tools/perf/arch/powerpc/util/kvm-stat.c
-+++ b/tools/perf/arch/powerpc/util/kvm-stat.c
-@@ -8,6 +8,7 @@
- 
- #include "book3s_hv_exits.h"
- #include "book3s_hcalls.h"
-+#include <subcmd/parse-options.h>
- 
- #define NR_TPS 4
- 
-@@ -172,3 +173,39 @@ int cpu_isa_init(struct perf_kvm_stat *kvm, const char *cpuid __maybe_unused)
- 
- 	return ret;
- }
-+
-+/*
-+ * Incase of powerpc architecture, pmu registers are programmable
-+ * by guest kernel. So monitoring guest via host may not provide
-+ * valid samples. It is better to fail the "perf kvm record"
-+ * with default "cycles" event to monitor guest in powerpc.
-+ *
-+ * Function to parse the arguments and return appropriate values.
-+ */
-+int kvm_add_default_arch_event(int *argc, const char **argv)
-+{
-+	const char **tmp;
-+	bool event = false;
-+	int i, j = *argc;
-+
-+	const struct option event_options[] = {
-+		OPT_BOOLEAN('e', "event", &event, NULL),
-+		OPT_END()
-+	};
-+
-+	tmp = calloc(j + 1, sizeof(char *));
-+	if (!tmp)
-+		return -EINVAL;
-+
-+	for (i = 0; i < j; i++)
-+		tmp[i] = argv[i];
-+
-+	parse_options(j, tmp, event_options, NULL, PARSE_OPT_KEEP_UNKNOWN);
-+	if (!event) {
-+		free(tmp);
-+		return -EINVAL;
-+	}
-+
-+	free(tmp);
-+	return 0;
-+}
-diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-index 2b822be..6e3e366 100644
---- a/tools/perf/builtin-kvm.c
-+++ b/tools/perf/builtin-kvm.c
-@@ -1514,11 +1514,21 @@ perf_stat:
- }
- #endif /* HAVE_KVM_STAT_SUPPORT */
- 
-+int __weak kvm_add_default_arch_event(int *argc __maybe_unused,
-+					const char **argv __maybe_unused)
-+{
-+	return 0;
-+}
-+
- static int __cmd_record(const char *file_name, int argc, const char **argv)
- {
--	int rec_argc, i = 0, j;
-+	int rec_argc, i = 0, j, ret;
- 	const char **rec_argv;
- 
-+	ret = kvm_add_default_arch_event(&argc, argv);
-+	if (ret)
-+		return -EINVAL;
-+
- 	rec_argc = argc + 2;
- 	rec_argv = calloc(rec_argc + 1, sizeof(char *));
- 	rec_argv[i++] = strdup("record");
-diff --git a/tools/perf/util/kvm-stat.h b/tools/perf/util/kvm-stat.h
-index 8fd6ec2..6f0fa05 100644
---- a/tools/perf/util/kvm-stat.h
-+++ b/tools/perf/util/kvm-stat.h
-@@ -148,4 +148,5 @@ extern const char *kvm_entry_trace;
- extern const char *kvm_exit_trace;
- #endif /* HAVE_KVM_STAT_SUPPORT */
- 
-+extern int kvm_add_default_arch_event(int *argc, const char **argv);
- #endif /* __PERF_KVM_STAT_H */
+diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
+index d13db55..b659466 100644
+--- a/tools/perf/util/probe-file.c
++++ b/tools/perf/util/probe-file.c
+@@ -16,6 +16,7 @@
+ #include "strlist.h"
+ #include "strfilter.h"
+ #include "debug.h"
++#include "build-id.h"
+ #include "dso.h"
+ #include "color.h"
+ #include "symbol.h"
