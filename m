@@ -6,63 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FF4C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E807C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA20920C01
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CD95217F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:10:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569006626;
-	bh=uyNAdBCu5CbKsqLeXTyFFz8TOheWev6oBYpTbWZIkmw=;
+	s=default; t=1569006631;
+	bh=TGXgCr5SzF0uiSfCQafY5H/T+5sJuBCo6ogXQMYyJ8M=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=tJ/NlRiDLpMCsTaV2qggPnimt4oqbt8bW+3cxhrL/pPVzmHHuuoaVpxahLRmgeDIa
-	 Vl4i1DOT5vavC3I5bxcbMfZGBm32L+2Xby8HkEr4RYBH4iGL/yKM6J0TDzMkNGJpJs
-	 Dip4HKYjPXFxaeOCm9Uw1pe3dYZavS1m56Mp2jlM=
+	b=A0Vr2HPKkxTypNOfBs81NGuJaClb4+MAqscIMO9UyhSqYRZ7Vr9Zx6MDnMM2cCzCC
+	 RjcU2AeZt3Ulx4gJhkifqBc3HQaOMP9RZGayb1kIp+23ZNcp1Ar5ynnhELPIalos1e
+	 XwwaPeC/ILK03MAvRReLxNBHE3JjfAATdIyxEjAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406835AbfITTKZ (ORCPT
+        id S2436673AbfITTKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 15:10:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46274 "EHLO mail.kernel.org"
+        Fri, 20 Sep 2019 15:10:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406793AbfITTKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 15:10:25 -0400
-Subject: Re: [GIT PULL] kgdb changes v5.4-rc1
+        id S2406842AbfITTK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 15:10:27 -0400
+Subject: Re: [GIT PULL] Hexagon arch maintainer change
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569006624;
-        bh=uyNAdBCu5CbKsqLeXTyFFz8TOheWev6oBYpTbWZIkmw=;
+        s=default; t=1569006626;
+        bh=TGXgCr5SzF0uiSfCQafY5H/T+5sJuBCo6ogXQMYyJ8M=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=gDjRVbEdCJqF78opSQwtFIEF9SvuRIDH9IcT1QyOKIUR3FBUjJh1g+0aKdIyK4gAR
-         Lcq1SH80hniCdIqRVAhfavRpvJPV8Svsg0vVNdh/1Xxwvd0zKPTVVZSsacwzAXiBJN
-         MK6bxxVByhTOkLegRkJzFXTSZwIiic65rDwRXDV8=
+        b=yIZG6d9/WRVTBMpvlF4SrDyeUDWOBEyTPJvNrU3RyP0vsyNcEQHLvirbq+i8fGR7c
+         SYuUrF8mt3aEQKRNciWDj2ej6GZNpdoPuIxSGQg/Hxb6SivMsNq0qGyC53zonJ8uDO
+         Hhwi8H3JFV3fY3urbf5JUozPZ7jlGp4P//o9yUPU=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190919155946.htzamn3s3ovw7ujh@holly.lan>
-References: <20190919155946.htzamn3s3ovw7ujh@holly.lan>
+In-Reply-To: <20190920020427.GA7719@codeaurora.org>
+References: <20190920020427.GA7719@codeaurora.org>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190919155946.htzamn3s3ovw7ujh@holly.lan>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/danielt/linux.git/
- tags/kgdb-5.4-rc1
-X-PR-Tracked-Commit-Id: d8a050f5a3e8242242df6430d5980c142350e461
+X-PR-Tracked-Message-Id: <20190920020427.GA7719@codeaurora.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rkuo/linux-hexagon-kernel.git
+ for-linus
+X-PR-Tracked-Commit-Id: 18dd1793a340f8216e22c9295c0c7b95cdae1783
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 3207598ab00e0fb06c8d73c9ae567afa4847e70e
-Message-Id: <156900662464.23740.6086724197373122353.pr-tracker-bot@kernel.org>
-Date:   Fri, 20 Sep 2019 19:10:24 +0000
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Nadav Amit <namit@vmware.com>
+X-PR-Merge-Commit-Id: bb736a5c0e9a2605f11c2bbb60a68f757832da32
+Message-Id: <156900662668.23740.2725582904267103842.pr-tracker-bot@kernel.org>
+Date:   Fri, 20 Sep 2019 19:10:26 +0000
+To:     Richard Kuo <rkuo@codeaurora.org>
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-hexagon@vger.kernel.org, bcain@codeaurora.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 19 Sep 2019 16:59:46 +0100:
+The pull request you sent on Thu, 19 Sep 2019 21:04:27 -0500:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/danielt/linux.git/ tags/kgdb-5.4-rc1
+> git://git.kernel.org/pub/scm/linux/kernel/git/rkuo/linux-hexagon-kernel.git for-linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/3207598ab00e0fb06c8d73c9ae567afa4847e70e
+https://git.kernel.org/torvalds/c/bb736a5c0e9a2605f11c2bbb60a68f757832da32
 
 Thank you!
 
