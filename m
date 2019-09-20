@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BAE2C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 655E1C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 223672080F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:36:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 397B62080F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:37:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568990217;
-	bh=mXSu3yZoOBiiXKChRyUnZ8uuktrSKvYCEZu71UFxXJE=;
+	s=default; t=1568990221;
+	bh=48YHBcgZFu1F8D2WFbpxkLRezHZiaeSa/tHcV9zv9WI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QPpg/ykS1ERkVzEzqRpEW+/vdYTqNP0kdsLLxjjID5omIbl2PTJ9uTRHzoYq1YQOd
-	 EV902RXcNu6K4+Qd6pJNyTaPFCKliPyFyWwU/Rtfhp1mzgSe5juisdPN/1lZQeXsZ1
-	 lZN8U2gukJvw5eSOzUY4Lzy/3a22JvpoisQCi4Ww=
+	b=FdwowZN7MBKdAPEDre9EReET2DeCbsTWt8UYef8gtlM5lOh7dTQGFhaelcN4u2cQL
+	 eVYncYY/l1zeUH//8pzOeT6ni2qsi+IPZw2DtPfOQrCVF4nQtnYusOqiIhfWX50Hot
+	 VPsAqtzBQZ2dusntOw7Lud7ayXkldcSLjR0QkGd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392566AbfITOgp (ORCPT
+        id S1726098AbfITOhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:36:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48924 "EHLO mail.kernel.org"
+        Fri, 20 Sep 2019 10:37:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392399AbfITOge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 10:36:34 -0400
+        id S2392496AbfITOgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 10:36:38 -0400
 Received: from localhost (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4E9E21882;
-        Fri, 20 Sep 2019 14:36:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 739D22196E;
+        Fri, 20 Sep 2019 14:36:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568990194;
-        bh=mXSu3yZoOBiiXKChRyUnZ8uuktrSKvYCEZu71UFxXJE=;
+        s=default; t=1568990197;
+        bh=48YHBcgZFu1F8D2WFbpxkLRezHZiaeSa/tHcV9zv9WI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eQtJVKJIF5krjrRZo2IniY0+jhafN9a+/m1u8fbUsegHo1w1xKOJONvPoHO04eKGr
-         y89lVmlP2zsgu9qjDxUCYy76TtL0DR57ZMar5+4ey/nWS99yS2CQs7Cw7eQEVk9vee
-         zL4Vtrlk4V8xgE8YfwOKBvqtbp7yVn8a2oKG7zKo=
+        b=YbsVw4SDrXKVLW2Ro5x3VmOWumryYqEkpKnfpuvWi8L9E0zkTp9UaYB6MlnmwWN/k
+         apCt+7Mxms39DF7fLnYteSStWhKluhjNyjnSXQKcBv9Qc56sTqe6nIqqRM9m/BrfUf
+         VoGe5XyS9dTNhxoIAchcfvTruCdz8IOnRdOQLwX8=
 From:   Andy Lutomirski <luto@kernel.org>
 To:     Theodore Tso <tytso@google.com>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
@@ -55,9 +55,9 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         Ext4 Developers List <linux-ext4@vger.kernel.org>,
         linux-man <linux-man@vger.kernel.org>,
         Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH v2 2/7] random: Add GRND_INSECURE to return best-effort non-cryptographic bytes
-Date:   Fri, 20 Sep 2019 07:36:24 -0700
-Message-Id: <f38025d4ade72489cbf0faa887f8d850cad3846b.1568990048.git.luto@kernel.org>
+Subject: [PATCH v2 7/7] random: Remove kernel.random.read_wakeup_threshold
+Date:   Fri, 20 Sep 2019 07:36:29 -0700
+Message-Id: <66b16acf2953fc033abc9641b9cf43d23e75a8e9.1568990048.git.luto@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1568990048.git.luto@kernel.org>
 References: <cover.1568990048.git.luto@kernel.org>
@@ -68,56 +68,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+It has no effect any more, so remove it.  We can revert this if
+there is some user code that expects to be able to set this sysctl.
+
 Signed-off-by: Andy Lutomirski <luto@kernel.org>
 ---
- drivers/char/random.c       | 11 +++++++++--
- include/uapi/linux/random.h |  2 ++
- 2 files changed, 11 insertions(+), 2 deletions(-)
+ drivers/char/random.c | 18 +-----------------
+ 1 file changed, 1 insertion(+), 17 deletions(-)
 
 diff --git a/drivers/char/random.c b/drivers/char/random.c
-index d152612e08fc..acabb870f222 100644
+index 99fea5cc29a8..2a284f30cac4 100644
 --- a/drivers/char/random.c
 +++ b/drivers/char/random.c
-@@ -2122,7 +2122,14 @@ SYSCALL_DEFINE3(getrandom, char __user *, buf, size_t, count,
- {
- 	int ret;
+@@ -369,12 +369,6 @@
+ #define ENTROPY_SHIFT 3
+ #define ENTROPY_BITS(r) ((r)->entropy_count >> ENTROPY_SHIFT)
  
--	if (flags & ~(GRND_NONBLOCK|GRND_RANDOM))
-+	if (flags & ~(GRND_NONBLOCK|GRND_RANDOM|GRND_INSECURE))
-+		return -EINVAL;
-+
-+	/*
-+	 * Requesting insecure and blocking randomness at the same time makes
-+	 * no sense.
-+	 */
-+	if ((flags & (GRND_INSECURE|GRND_RANDOM)) == (GRND_INSECURE|GRND_RANDOM))
- 		return -EINVAL;
+-/*
+- * The minimum number of bits of entropy before we wake up a read on
+- * /dev/random.  Should be enough to do a significant reseed.
+- */
+-static int random_read_wakeup_bits = 64;
+-
+ /*
+  * If the entropy count falls under this number of bits, then we
+  * should wake up processes which are selecting or polling on write
+@@ -1982,8 +1976,7 @@ SYSCALL_DEFINE3(getrandom, char __user *, buf, size_t, count,
  
- 	if (count > INT_MAX)
-@@ -2131,7 +2138,7 @@ SYSCALL_DEFINE3(getrandom, char __user *, buf, size_t, count,
- 	if (flags & GRND_RANDOM)
- 		return _random_read(flags & GRND_NONBLOCK, buf, count);
+ #include <linux/sysctl.h>
  
--	if (!crng_ready()) {
-+	if (!(flags & GRND_INSECURE) && !crng_ready()) {
- 		if (flags & GRND_NONBLOCK)
- 			return -EAGAIN;
- 		ret = wait_for_random_bytes();
-diff --git a/include/uapi/linux/random.h b/include/uapi/linux/random.h
-index 26ee91300e3e..c092d20088d3 100644
---- a/include/uapi/linux/random.h
-+++ b/include/uapi/linux/random.h
-@@ -49,8 +49,10 @@ struct rand_pool_info {
-  *
-  * GRND_NONBLOCK	Don't block and return EAGAIN instead
-  * GRND_RANDOM		Use the /dev/random pool instead of /dev/urandom
-+ * GRND_INSECURE	Return non-cryptographic random bytes
-  */
- #define GRND_NONBLOCK	0x0001
- #define GRND_RANDOM	0x0002
-+#define GRND_INSECURE	0x0004
- 
- #endif /* _UAPI_LINUX_RANDOM_H */
+-static int min_read_thresh = 8, min_write_thresh;
+-static int max_read_thresh = OUTPUT_POOL_WORDS * 32;
++static int min_write_thresh;
+ static int max_write_thresh = INPUT_POOL_WORDS * 32;
+ static int random_min_urandom_seed = 60;
+ static char sysctl_bootid[16];
+@@ -2058,15 +2051,6 @@ struct ctl_table random_table[] = {
+ 		.proc_handler	= proc_do_entropy,
+ 		.data		= &input_pool.entropy_count,
+ 	},
+-	{
+-		.procname	= "read_wakeup_threshold",
+-		.data		= &random_read_wakeup_bits,
+-		.maxlen		= sizeof(int),
+-		.mode		= 0644,
+-		.proc_handler	= proc_dointvec_minmax,
+-		.extra1		= &min_read_thresh,
+-		.extra2		= &max_read_thresh,
+-	},
+ 	{
+ 		.procname	= "write_wakeup_threshold",
+ 		.data		= &random_write_wakeup_bits,
 -- 
 2.21.0
 
