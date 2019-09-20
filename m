@@ -2,205 +2,136 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7916C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 04:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59FEFC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 04:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEDD0217D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 04:01:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EgUFX0Vj";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fuPwKVsg"
+	by mail.kernel.org (Postfix) with ESMTP id 2FFB120882
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 04:06:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726417AbfITEBA (ORCPT
+        id S1726845AbfITEGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 00:01:00 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:59020 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbfITEA7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 00:00:59 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 052526118C; Fri, 20 Sep 2019 04:00:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568952058;
-        bh=AIK0J5ogWhXcwUg2uYgcVFaQol74vgG+i08Ed7lID8w=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=EgUFX0VjBqUu1Czv9Gy5G6Ai/JXuvctgFYX8nOsrQP7bGryZut2RWkKc+lXsIvqJw
-         X6vehAJVFBEjYCHP56QBqHyeXrzT8sgy4EsRzkpgEpYDpeIAWFZyUURclzzHd9Ibyf
-         wu7y3Fkxyeb7N5OOGpMciu/R+Lg6EwdsOmVDcZUM=
-Received: from [10.206.28.9] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tdas@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DE237613A3;
-        Fri, 20 Sep 2019 04:00:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568952057;
-        bh=AIK0J5ogWhXcwUg2uYgcVFaQol74vgG+i08Ed7lID8w=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=fuPwKVsg8qhEumAD189eaRUzvVyUM8cpbHU2SaEnCDL5o6s78TNmRrTFurEt+1T38
-         BeLNp7DhB6Knv3DLyhx+LRcEsj6bCnn07nCeCX/sEP+xnAKRhlReJ/u93lIQ9SPy85
-         nGOeG/0yzeW3GGtS0jhITZL5JSJlMuPxl5uD069U=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DE237613A3
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-Subject: Re: [PATCH v3 3/3] clk: qcom: Add Global Clock controller (GCC)
- driver for SC7180
-To:     Rajendra Nayak <rnayak@codeaurora.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>, robh+dt@kernel.org
-Cc:     David Brown <david.brown@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <20190918095018.17979-1-tdas@codeaurora.org>
- <20190918095018.17979-4-tdas@codeaurora.org>
- <74643831-1a58-e279-aca3-8753f5fcbe04@codeaurora.org>
-From:   Taniya Das <tdas@codeaurora.org>
-Message-ID: <28d2670d-a8bb-50d6-2154-79278db64bca@codeaurora.org>
-Date:   Fri, 20 Sep 2019 09:30:51 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 20 Sep 2019 00:06:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:40678 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726464AbfITEGL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 00:06:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 08718337;
+        Thu, 19 Sep 2019 21:06:10 -0700 (PDT)
+Received: from [10.162.40.137] (p8cg001049571a15.blr.arm.com [10.162.40.137])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 85C4F3F67D;
+        Thu, 19 Sep 2019 21:05:57 -0700 (PDT)
+Subject: Re: [PATCH V2 2/2] mm/pgtable/debug: Add test validating architecture
+ page table helpers
+To:     Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+References: <1568268173-31302-1-git-send-email-anshuman.khandual@arm.com>
+ <1568268173-31302-3-git-send-email-anshuman.khandual@arm.com>
+ <ab0ca38b-1e4f-b636-f8b4-007a15903984@c-s.fr>
+ <502c497a-9bf1-7d2e-95f2-cfebcd9cf1d9@arm.com>
+ <95ed9d92-dd43-4c45-2e52-738aed7f2fb5@c-s.fr>
+ <f872e6f4-a5cb-069d-2034-78961930cb9f@arm.com>
+ <64504101-d9dd-f273-02f9-e9a8b178eecc@c-s.fr>
+ <20190918202243.37e709df@thinkpad>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <5a6045af-bcfb-12c2-0f4a-3b49a905ec4d@arm.com>
+Date:   Fri, 20 Sep 2019 09:36:12 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <74643831-1a58-e279-aca3-8753f5fcbe04@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190918202243.37e709df@thinkpad>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rajendra,
 
-Please pick the patch in the series : 
-https://patchwork.kernel.org/patch/11150013/
 
-On 9/19/2019 4:38 PM, Rajendra Nayak wrote:
-> []..
+On 09/18/2019 11:52 PM, Gerald Schaefer wrote:
+> On Wed, 18 Sep 2019 18:26:03 +0200
+> Christophe Leroy <christophe.leroy@c-s.fr> wrote:
 > 
->> +static struct clk_rcg_dfs_data gcc_dfs_clocks[] = {
->> +    DEFINE_RCG_DFS(gcc_qupv3_wrap0_s0_clk_src),
->> +    DEFINE_RCG_DFS(gcc_qupv3_wrap0_s1_clk_src),
->> +    DEFINE_RCG_DFS(gcc_qupv3_wrap0_s2_clk_src),
->> +    DEFINE_RCG_DFS(gcc_qupv3_wrap0_s3_clk_src),
->> +    DEFINE_RCG_DFS(gcc_qupv3_wrap0_s4_clk_src),
->> +    DEFINE_RCG_DFS(gcc_qupv3_wrap0_s5_clk_src),
->> +    DEFINE_RCG_DFS(gcc_qupv3_wrap1_s0_clk_src),
->> +    DEFINE_RCG_DFS(gcc_qupv3_wrap1_s1_clk_src),
->> +    DEFINE_RCG_DFS(gcc_qupv3_wrap1_s2_clk_src),
->> +    DEFINE_RCG_DFS(gcc_qupv3_wrap1_s3_clk_src),
->> +    DEFINE_RCG_DFS(gcc_qupv3_wrap1_s4_clk_src),
->> +    DEFINE_RCG_DFS(gcc_qupv3_wrap1_s5_clk_src),
->> +};
-> 
-> this fails to build..
-> 
-> In file included from drivers/clk/qcom/gcc-sc7180.c:17:0:
-> drivers/clk/qcom/gcc-sc7180.c:2429:17: error: 
-> ‘gcc_qupv3_wrap0_s0_clk_src_src’ undeclared here (not in a function)
->    DEFINE_RCG_DFS(gcc_qupv3_wrap0_s0_clk_src),
->                   ^
-> drivers/clk/qcom/clk-rcg.h:171:12: note: in definition of macro 
-> ‘DEFINE_RCG_DFS’
->    { .rcg = &r##_src, .init = &r##_init }
->              ^
-> drivers/clk/qcom/gcc-sc7180.c:2430:17: error: 
-> ‘gcc_qupv3_wrap0_s1_clk_src_src’ undeclared here (not in a function)
->    DEFINE_RCG_DFS(gcc_qupv3_wrap0_s1_clk_src),
->                   ^
-> drivers/clk/qcom/clk-rcg.h:171:12: note: in definition of macro 
-> ‘DEFINE_RCG_DFS’
->    { .rcg = &r##_src, .init = &r##_init }
->              ^
-> Perhaps you should drop _src here and in the clk_init_data names.
-> 
->> +
->> +static const struct regmap_config gcc_sc7180_regmap_config = {
->> +    .reg_bits = 32,
->> +    .reg_stride = 4,
->> +    .val_bits = 32,
->> +    .max_register = 0x18208c,
->> +    .fast_io = true,
->> +};
->> +
->> +static const struct qcom_cc_desc gcc_sc7180_desc = {
->> +    .config = &gcc_sc7180_regmap_config,
->> +    .clk_hws = gcc_sc7180_hws,
->> +    .num_clk_hws = ARRAY_SIZE(gcc_sc7180_hws),
->> +    .clks = gcc_sc7180_clocks,
->> +    .num_clks = ARRAY_SIZE(gcc_sc7180_clocks),
->> +    .resets = gcc_sc7180_resets,
->> +    .num_resets = ARRAY_SIZE(gcc_sc7180_resets),
->> +    .gdscs = gcc_sc7180_gdscs,
->> +    .num_gdscs = ARRAY_SIZE(gcc_sc7180_gdscs),
->> +};
->> +
->> +static const struct of_device_id gcc_sc7180_match_table[] = {
->> +    { .compatible = "qcom,gcc-sc7180" },
->> +    { }
->> +};
->> +MODULE_DEVICE_TABLE(of, gcc_sc7180_match_table);
->> +
->> +static int gcc_sc7180_probe(struct platform_device *pdev)
->> +{
->> +    struct regmap *regmap;
->> +    int ret;
->> +
->> +    regmap = qcom_cc_map(pdev, &gcc_sc7180_desc);
->> +    if (IS_ERR(regmap))
->> +        return PTR_ERR(regmap);
->> +
->> +    /*
->> +     * Disable the GPLL0 active input to MM blocks, NPU
->> +     * and GPU via MISC registers.
->> +     */
->> +    regmap_update_bits(regmap, GCC_MMSS_MISC, 0x3, 0x3);
->> +    regmap_update_bits(regmap, GCC_NPU_MISC, 0x3, 0x3);
->> +    regmap_update_bits(regmap, GCC_GPU_MISC, 0x3, 0x3);
->> +
->> +    ret = qcom_cc_register_rcg_dfs(regmap, gcc_dfs_clocks,
->> +                    ARRAY_SIZE(gcc_dfs_clocks));
->> +    if (ret)
->> +        return ret;
->> +
->> +    return qcom_cc_really_probe(pdev, &gcc_sc7180_desc, regmap);
->> +}
->> +
->> +static struct platform_driver gcc_sc7180_driver = {
->> +    .probe = gcc_sc7180_probe,
->> +    .driver = {
->> +        .name = "gcc-sc7180",
->> +        .of_match_table = gcc_sc7180_match_table,
->> +    },
->> +};
->> +
->> +static int __init gcc_sc7180_init(void)
->> +{
->> +    return platform_driver_register(&gcc_sc7180_driver);
->> +}
->> +subsys_initcall(gcc_sc7180_init);
->> +
->> +static void __exit gcc_sc7180_exit(void)
->> +{
->> +    platform_driver_unregister(&gcc_sc7180_driver);
->> +}
->> +module_exit(gcc_sc7180_exit);
->> +
->> +MODULE_DESCRIPTION("QTI GCC SC7180 Driver");
->> +MODULE_LICENSE("GPL v2");
->> -- 
->> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
->> of the Code Aurora Forum, hosted by the  Linux Foundation.
+> [..] 
+>> My suggestion was not to completely drop the #ifdef but to do like you 
+>> did in pgd_clear_tests() for instance, ie to add the following test on 
+>> top of the function:
+>>
+>> 	if (mm_pud_folded(mm) || is_defined(__ARCH_HAS_5LEVEL_HACK))
+>> 		return;
 >>
 > 
+> Ah, very nice, this would also fix the remaining issues for s390. Since
+> we have dynamic page table folding, neither __PAGETABLE_PXX_FOLDED nor
+> __ARCH_HAS_XLEVEL_HACK is defined, but mm_pxx_folded() will work.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
+Like Christophe mentioned earlier on the other thread, we will convert
+all __PGTABLE_PXX_FOLDED checks as mm_pxx_folded() but looks like 
+ARCH_HAS_[4 and 5]LEVEL_HACK macros will still be around. Will respin
+the series with all agreed upon changes first and probably we can then
+discuss pending issues from there.
 
---
+> 
+> mm_alloc() returns with a 3-level page table by default on s390, so we
+> will run into issues in p4d_clear/populate_tests(), and also at the end
+> with p4d/pud_free() (double free).
+> 
+> So, adding the mm_pud_folded() check to p4d_clear/populate_tests(),
+> and also adding mm_p4d/pud_folded() checks at the end before calling> p4d/pud_free(), would make it all work on s390.
+
+Atleast p4d_clear/populate_tests() tests will be taken care.
+
+> 
+> BTW, regarding p4d/pud_free(), I'm not sure if we should rather check
+> the folding inside our s390 functions, similar to how we do it for
+> p4d/pud_free_tlb(), instead of relying on not being called for folded
+> p4d/pud. So far, I see no problem with this behavior, all callers of
+> p4d/pud_free() should be fine because of our folding check within
+> p4d/pud_present/none(). But that doesn't mean that it is correct not
+> to check for the folding inside p4d/pud_free(). At least, with this
+> test module we do now have a caller of p4d/pud_free() on potentially
+> folded entries, so instead of adding pxx_folded() checks to this
+> test module, we could add them to our p4d/pud_free() functions.
+> Any thoughts on this?
+Agreed, it seems better to do the check inside p4d/pud_free() functions.
