@@ -2,191 +2,91 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DCFC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E01C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99EAD205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96FBE205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:21:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="fxPVgGWK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbfITNUo (ORCPT
+        id S1727518AbfITNVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 09:20:44 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:49851 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726407AbfITNUn (ORCPT
+        Fri, 20 Sep 2019 09:21:17 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:47098 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726807AbfITNVR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 09:20:43 -0400
-Received: from static-dcd-cqq-121001.business.bouyguestelecom.com ([212.194.121.1] helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iBIq1-0002KN-07; Fri, 20 Sep 2019 13:20:41 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kees Cook <keescook@chromium.org>,
-        Will Drewry <wad@chromium.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-um@lists.infradead.org,
-        x86@kernel.org
-Subject: [PATCH] seccomp: remove unused arg from secure_computing()
-Date:   Fri, 20 Sep 2019 15:19:09 +0200
-Message-Id: <20190920131907.6886-1-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.23.0
+        Fri, 20 Sep 2019 09:21:17 -0400
+Received: by mail-ed1-f65.google.com with SMTP id t3so6334930edw.13
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 06:21:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KjJoWbq/s+cOzpzxNWtJ0sKe7VWYvgH4sW4C23WObhw=;
+        b=fxPVgGWKizyrOEFDCOd/qx1Fk29RR580Y2UsEIfskOD2uHubzUmk+Ay8eOxuaR/uSv
+         vY1gF357MrawvE8daiEyUwrNqC3FzGuT0TOXGR56mW8CDQUSKkDjZDAdv4TQvTH6zJ9J
+         ZDVyLyo/01zn+lu7DYEtPfl+M9xTLDV/6+CBeKxQr0BL6UW0NjuZcLkL8o6yyr+UuZIR
+         0WikGrLbRc6EOmmStWm4t5Tnbi1yDCxPRLuIFbTGpv1oRS5VeRwQQw5Szfmsrc7T32+n
+         nH7nP1QrNHpdeYKRXYTrEEfesfO20P+i7ZoD8t8xTQR+KqvIYUdnZfZFv2+SS6kStPHT
+         17qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KjJoWbq/s+cOzpzxNWtJ0sKe7VWYvgH4sW4C23WObhw=;
+        b=m+CZAhOo2gDMcFU2FoikHPhyIRJFaVwxjZf6KvP18JPHn4q75jG+PwuitLX/cB+LKR
+         PRknAm5+ZWXogL4U0lWfqXui05G9652r1UZzN8pWMsCfC+iX54bb3CY4HOmX2rqBpkmH
+         I+7WX1rK7fDcHq7FLPhRHu3AbmLXmKIlskoMW336sldY/QU+ggG1bRX4SQP1yB0cXXCU
+         Obch9/zrGB7t4f0SUwO7JB9s1udbXGIgPFvKTWD3Eb81J1q7RkLlXEh7SX4aJQ0U1Ijw
+         hpfAkEOOF3SgF+Y4zcsdq0FUtBWktUPkUPAAP+7+eMxUEMlcg1yNcdZ3tirM9abYW7/v
+         YfOQ==
+X-Gm-Message-State: APjAAAV3lPrrYxBRUAmyKV7YkU5xbF5EgSx3ZwY4qz6i+/2/trBAaXW0
+        ZOx11G88MR0wCdBV852nt7gZmA==
+X-Google-Smtp-Source: APXvYqxsduZAapMWzwVstniHqOLgxY6tQ8bBUkyTVS6n0fTA0P4mN1lEnIS0KNudn6P9i9Ko1H475g==
+X-Received: by 2002:a50:f00c:: with SMTP id r12mr22051477edl.274.1568985675740;
+        Fri, 20 Sep 2019 06:21:15 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id a22sm226608ejs.17.2019.09.20.06.21.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 20 Sep 2019 06:21:15 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id AB09D1006ED; Fri, 20 Sep 2019 16:21:14 +0300 (+03)
+Date:   Fri, 20 Sep 2019 16:21:14 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Cyrill Gorcunov <gorcunov@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>
+Subject: Re: [PATCH] mm, memcg: assign shrinker_map before kvfree
+Message-ID: <20190920132114.ofzphp53vqqjb3fs@box>
+References: <20190920122907.GG2507@uranus.lan>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190920122907.GG2507@uranus.lan>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While touching seccomp code I realized that the struct seccomp_data
-argument to secure_computing() seems to be unused by all current
-callers. So let's remove it unless there is some subtlety I missed.
-Note, I only tested this on x86.
+On Fri, Sep 20, 2019 at 03:29:07PM +0300, Cyrill Gorcunov wrote:
+> Currently there is a small gap between fetching pointer, calling
+> kvfree and assign its value to nil. In current callgraph it is
+> not a problem (since memcg_free_shrinker_maps is running from
+> memcg_alloc_shrinker_maps and mem_cgroup_css_free only) still
+> this looks suspicious and we can easily eliminate the gap at all.
 
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Will Drewry <wad@chromium.org>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-parisc@vger.kernel.org
-Cc: linux-s390@vger.kernel.org
-Cc: linux-um@lists.infradead.org
-Cc: x86@kernel.org
----
- arch/arm/kernel/ptrace.c              | 2 +-
- arch/arm64/kernel/ptrace.c            | 2 +-
- arch/parisc/kernel/ptrace.c           | 2 +-
- arch/s390/kernel/ptrace.c             | 4 ++--
- arch/um/kernel/skas/syscall.c         | 2 +-
- arch/x86/entry/vsyscall/vsyscall_64.c | 2 +-
- include/linux/seccomp.h               | 6 +++---
- 7 files changed, 10 insertions(+), 10 deletions(-)
+With this logic it will still look suspicious since you don't wait a grace
+period before freeing the map.
 
-diff --git a/arch/arm/kernel/ptrace.c b/arch/arm/kernel/ptrace.c
-index 324352787aea..b606cded90cd 100644
---- a/arch/arm/kernel/ptrace.c
-+++ b/arch/arm/kernel/ptrace.c
-@@ -923,7 +923,7 @@ asmlinkage int syscall_trace_enter(struct pt_regs *regs, int scno)
- 
- 	/* Do seccomp after ptrace; syscall may have changed. */
- #ifdef CONFIG_HAVE_ARCH_SECCOMP_FILTER
--	if (secure_computing(NULL) == -1)
-+	if (secure_computing() == -1)
- 		return -1;
- #else
- 	/* XXX: remove this once OABI gets fixed */
-diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
-index 3cf3b135027e..010a835302d3 100644
---- a/arch/arm64/kernel/ptrace.c
-+++ b/arch/arm64/kernel/ptrace.c
-@@ -1816,7 +1816,7 @@ int syscall_trace_enter(struct pt_regs *regs)
- 	}
- 
- 	/* Do the secure computing after ptrace; failures should be fast. */
--	if (secure_computing(NULL) == -1)
-+	if (secure_computing() == -1)
- 		return -1;
- 
- 	if (test_thread_flag(TIF_SYSCALL_TRACEPOINT))
-diff --git a/arch/parisc/kernel/ptrace.c b/arch/parisc/kernel/ptrace.c
-index 9f6ff7bc06f9..f8c07dcbfb49 100644
---- a/arch/parisc/kernel/ptrace.c
-+++ b/arch/parisc/kernel/ptrace.c
-@@ -342,7 +342,7 @@ long do_syscall_trace_enter(struct pt_regs *regs)
- 	}
- 
- 	/* Do the secure computing check after ptrace. */
--	if (secure_computing(NULL) == -1)
-+	if (secure_computing() == -1)
- 		return -1;
- 
- #ifdef CONFIG_HAVE_SYSCALL_TRACEPOINTS
-diff --git a/arch/s390/kernel/ptrace.c b/arch/s390/kernel/ptrace.c
-index ad71132374f0..ed80bdfbf5fe 100644
---- a/arch/s390/kernel/ptrace.c
-+++ b/arch/s390/kernel/ptrace.c
-@@ -439,7 +439,7 @@ static int poke_user(struct task_struct *child, addr_t addr, addr_t data)
- long arch_ptrace(struct task_struct *child, long request,
- 		 unsigned long addr, unsigned long data)
- {
--	ptrace_area parea; 
-+	ptrace_area parea;
- 	int copied, ret;
- 
- 	switch (request) {
-@@ -856,7 +856,7 @@ asmlinkage long do_syscall_trace_enter(struct pt_regs *regs)
- 	}
- 
- 	/* Do the secure computing check after ptrace. */
--	if (secure_computing(NULL)) {
-+	if (secure_computing()) {
- 		/* seccomp failures shouldn't expose any additional code. */
- 		return -1;
- 	}
-diff --git a/arch/um/kernel/skas/syscall.c b/arch/um/kernel/skas/syscall.c
-index 44bb10785075..fc37259d5971 100644
---- a/arch/um/kernel/skas/syscall.c
-+++ b/arch/um/kernel/skas/syscall.c
-@@ -35,7 +35,7 @@ void handle_syscall(struct uml_pt_regs *r)
- 		goto out;
- 
- 	/* Do the seccomp check after ptrace; failures should be fast. */
--	if (secure_computing(NULL) == -1)
-+	if (secure_computing() == -1)
- 		goto out;
- 
- 	syscall = UPT_SYSCALL_NR(r);
-diff --git a/arch/x86/entry/vsyscall/vsyscall_64.c b/arch/x86/entry/vsyscall/vsyscall_64.c
-index e7c596dea947..b10cbf71a8cc 100644
---- a/arch/x86/entry/vsyscall/vsyscall_64.c
-+++ b/arch/x86/entry/vsyscall/vsyscall_64.c
-@@ -222,7 +222,7 @@ bool emulate_vsyscall(unsigned long error_code,
- 	 */
- 	regs->orig_ax = syscall_nr;
- 	regs->ax = -ENOSYS;
--	tmp = secure_computing(NULL);
-+	tmp = secure_computing();
- 	if ((!tmp && regs->orig_ax != syscall_nr) || regs->ip != address) {
- 		warn_bad_vsyscall(KERN_DEBUG, regs,
- 				  "seccomp tried to change syscall nr or ip");
-diff --git a/include/linux/seccomp.h b/include/linux/seccomp.h
-index 84868d37b35d..03583b6d1416 100644
---- a/include/linux/seccomp.h
-+++ b/include/linux/seccomp.h
-@@ -33,10 +33,10 @@ struct seccomp {
- 
- #ifdef CONFIG_HAVE_ARCH_SECCOMP_FILTER
- extern int __secure_computing(const struct seccomp_data *sd);
--static inline int secure_computing(const struct seccomp_data *sd)
-+static inline int secure_computing(void)
- {
- 	if (unlikely(test_thread_flag(TIF_SECCOMP)))
--		return  __secure_computing(sd);
-+		return  __secure_computing(NULL);
- 	return 0;
- }
- #else
-@@ -59,7 +59,7 @@ struct seccomp { };
- struct seccomp_filter { };
- 
- #ifdef CONFIG_HAVE_ARCH_SECCOMP_FILTER
--static inline int secure_computing(struct seccomp_data *sd) { return 0; }
-+static inline int secure_computing(void) { return 0; }
- #else
- static inline void secure_computing_strict(int this_syscall) { return; }
- #endif
 -- 
-2.23.0
-
+ Kirill A. Shutemov
