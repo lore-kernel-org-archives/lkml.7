@@ -2,294 +2,138 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9133C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 04:09:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0346CC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 04:18:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6742B217D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 04:09:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE6B320820
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 04:18:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t+0UPmc6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ThCjkrH4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437129AbfITEJW (ORCPT
+        id S2437154AbfITESn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 00:09:22 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36828 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726933AbfITEJW (ORCPT
+        Fri, 20 Sep 2019 00:18:43 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44776 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437143AbfITESm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 00:09:22 -0400
-Received: by mail-pl1-f196.google.com with SMTP id f19so2586326plr.3
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 21:09:21 -0700 (PDT)
+        Fri, 20 Sep 2019 00:18:42 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q21so3630313pfn.11
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 21:18:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=0oUa+nPUEvwigLfR3fD8q9hrkFh2FBtsVieYBDhI8lY=;
-        b=t+0UPmc6wGPCQgjN9ywEuN9WkeB4yE3EoKdnC8or0/CUcF7IpBsa4Rt0AeodxY9H26
-         Sbke6hm2L/NupFGFy45tfdG3STwZqZf7Ua8kaKoewEJuk32RIYTE+pQPSgKJWoWpjJaf
-         aC3BrfxI1C39ZD82M4DZGnVpeuO0VgypfiNmkLPu+MG6qaofXd5+96VqCG4juHyl7ZcZ
-         vXXlBYVzt5WYfFy4groT8mAqQFms1w7IKufmCEOhiviYQVBboiVIAQjvndEfaOJNt6je
-         yNELpJlBttA3BHjldBXrP+4GDVTQe3C1frBIjoOBib3P/wCY8v/25hqcWrINtPnfQDib
-         mtWQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ru2v+D3BKbQXHdK6oP95hVcWGBqQtKaZoxkk1jRrl3c=;
+        b=ThCjkrH4kiDFaNcLiNv9F0iKG0xVuSZ5dPOxeJ12Zy9AY0v5Y9JcXLe2NoLcuXN1wG
+         YjKxU+pkNhMTdjdgtQDBl53PR9Z7SYZEnwrqHX4n9nwvXY87zGEdiPw6P7iet+aySL0K
+         iuWDRjO3p87DvY+s2FXSsiPLzUQvE18a1Rx19aGIohSyV0ZHzTdgiCEB/+GvYekjCoxt
+         Jf2vhgLxnbGpTWdGvNotMYAwah4YJMRZUU1f9XWFf3aZ2371urcOKgcVVY8HT5TLHYGt
+         RwVFQMRmvDeSpk4s70Ph61nTqHGZKp7qeaoXVd859t5emyIW7rJ3/kYwcVW/CZYSZCH5
+         OnvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=0oUa+nPUEvwigLfR3fD8q9hrkFh2FBtsVieYBDhI8lY=;
-        b=IgOkyHauaflRnqqjgy7RbpBeMkmfRrWxsm8yIjWRDa+XKhcFLLJanHM/Zn3hYuud3V
-         57hcevY6s2EJaNN9RrMkReM/4MySrphsCLfTaKVjwiqFVyRCZ5zTOAXMJmlm0k5fwxJj
-         i3caru21kJhY6J+QZlNsHmDKcuDQaqQDGG0khF7V3vONpuwrdz4dI+V9FHcjU5o7Is9R
-         mhzyjfsFZemXdXtEnavRT5eSuvAoHFIrkjfKnNsoVZosWi1muyO624WP/zLp0KduRbds
-         DFp63VSZwKDLYKAgOTgqpm8IAk+gryXnGtH1CVViyg8ktc5UOKu7v69Q72+U9q0C0TWN
-         W/rQ==
-X-Gm-Message-State: APjAAAX+n8nBu3Gjz4br0cTyG8oTq/B7p/GjvJPNPXdmiQbA8zz/DFJp
-        3oGKLbg5BsSfIco11qvQlOK2Ai8CvTQ=
-X-Google-Smtp-Source: APXvYqzH4t1yaoaVE0lE/1Nd2Gz2y6Q1Kf1m10aa38+RZcv73Em0v3I7/rmIsWDBianbHj/CqX5Avg==
-X-Received: by 2002:a17:902:8a88:: with SMTP id p8mr14449000plo.152.1568952560554;
-        Thu, 19 Sep 2019 21:09:20 -0700 (PDT)
-Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id d5sm610016pfa.180.2019.09.19.21.09.18
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ru2v+D3BKbQXHdK6oP95hVcWGBqQtKaZoxkk1jRrl3c=;
+        b=FlVJGfqAA9bHFEPxb0Ls2IUqWPusiYLd7b+QZ1qDBKgxtE3Hf2fQxFezrvg0aepTBo
+         Nqq4s3pnnDT4uILsA5kR5PrEM7hRpxHdvn8s7u8t8pM5v0dPFTyidxoEyY8Jfk/D7c5P
+         zFhWIPFxCGeCSyPEa5sOgkTUxqdkGoJFf0g20dc4PAjXifoi7XHV7DRDaudjDGs0cO4j
+         b7equiQfQJ5Wp4AtzaZ+H3TJWT75gaDk2/lFzFktij9uihO5sAFdBFGOHm820Bx1fcGL
+         K/vu2ZmzM43agBZO4JbOJx0DJaaiFgCAe3+P/hxymX/wiNF18As+dFyvT0fUb2osbEOd
+         Ph+w==
+X-Gm-Message-State: APjAAAWyHjVSzO9JdzBqon4bPCr0mYVBZrh0aRKhbukD4Nzd3FbWEpsa
+        zPlnSrqtNj5WIKPmDzpIRr/54w==
+X-Google-Smtp-Source: APXvYqzC40kwIHyJCN0QeAIgIN72Gz3Na3N0346y1z8Cs+IkEP1lODWimL7yqyqRjtmUhUim2iD4Kg==
+X-Received: by 2002:a17:90a:ba94:: with SMTP id t20mr2124125pjr.8.1568953121564;
+        Thu, 19 Sep 2019 21:18:41 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id h6sm612459pfg.123.2019.09.19.21.18.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2019 21:09:19 -0700 (PDT)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Matt Redfearn <matt.redfearn@thinci.com>,
-        Xinliang Liu <z.liuxinliang@hisilicon.com>,
-        Rongrong Zou <zourongrong@gmail.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Sean Paul <seanpaul@chromium.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-Subject: [PATCH v2] drm: kirin: Fix dsi probe/attach logic
-Date:   Fri, 20 Sep 2019 04:09:15 +0000
-Message-Id: <20190920040915.73599-1-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Thu, 19 Sep 2019 21:18:40 -0700 (PDT)
+Date:   Thu, 19 Sep 2019 21:18:38 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     ohad@wizery.com, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rpmsg: glink: Fix channel memory leak
+Message-ID: <20190920041838.GE1746@tuxbook-pro>
+References: <20190919100540.28159-1-srinivas.kandagatla@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190919100540.28159-1-srinivas.kandagatla@linaro.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 83f35bc3a852 ("drm/bridge: adv7511: Attach to DSI
-host at probe time") landed in -next the HiKey board would fail
-to boot, looping:
+On Thu 19 Sep 03:05 PDT 2019, Srinivas Kandagatla wrote:
 
-  adv7511 2-0039: failed to find dsi host
+> If we stop and start the dsp while channel is open then there is a leak
+> in the driver as the refcount is not accounted for the open.
+> 
+> This patch checks if the channel is open while running cleanup code
+> and does an extra kref_put to account for open which would ensure
+> that channel does not leak.
+> 
+> Originally detected by kmemleak:
+>   backtrace:
+>     [<ffffff80088b74d8>] kmemleak_alloc+0x50/0x84
+>     [<ffffff80081ddbc8>] kmem_cache_alloc_trace+0xd4/0x178
+>     [<ffffff80086b8bd0>] qcom_glink_alloc_channel+0x34/0x148
+>     [<ffffff80086b8038>] qcom_glink_work+0x3b0/0x664
+>     [<ffffff80080c3da8>] process_one_work+0x160/0x2f8
+>     [<ffffff80080c4198>] worker_thread+0x1e8/0x2d4
+>     [<ffffff80080c8b24>] kthread+0x128/0x138
+>     [<ffffff80080845b4>] ret_from_fork+0x10/0x18
+>     [<ffffffffffffffff>] 0xffffffffffffffff
+> unreferenced object 0xffffffc02cf5ed80 (size 128):
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  drivers/rpmsg/qcom_glink_native.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
+> index dc7d3d098fd3..38a10dcc2029 100644
+> --- a/drivers/rpmsg/qcom_glink_native.c
+> +++ b/drivers/rpmsg/qcom_glink_native.c
+> @@ -1660,8 +1660,13 @@ void qcom_glink_native_remove(struct qcom_glink *glink)
+>  
+>  	spin_lock_irqsave(&glink->idr_lock, flags);
+>  	/* Release any defunct local channels, waiting for close-ack */
+> -	idr_for_each_entry(&glink->lcids, channel, cid)
+> +	idr_for_each_entry(&glink->lcids, channel, cid) {
+> +		if (channel->rcid)
 
-messages over and over. Andrzej Hajda suggested this is due to a
-circular dependency issue, and that the adv7511 change is
-correcting the improper order used earlier.
+Thanks for the patch Srinivas! I looked at it in your tree as I was
+coming up with the fixes for the problems I hit in my testing the other
+day.
 
-Unfortunately this means the DSI drivers that use adv7511 need
-to also need to be updated to use the proper ordering to
-continue to work.
+But, there is a window between qcom_glink_rx_open() assigning
+channel->rcid and where rpmsg_dev_probe() will invoke
+qcom_glink_create_remote(), which adds the channel to lcids, i.e. where
+we would leak the channel. So I instead picked Chris' patch (3/6 in my
+series), which will clean up the channel in this case as well.
 
-This patch tries to reorder the initialization to register the
-dsi_host first, and then call component_add via dsi_host_attach,
-instead of doing that at probe time.
+Regards,
+Bjorn
 
-This seems to resolve the issue with the HiKey board.
-
-Cc: Andrzej Hajda <a.hajda@samsung.com>
-Cc: Matt Redfearn <matt.redfearn@thinci.com>
-Cc: Xinliang Liu <z.liuxinliang@hisilicon.com>
-Cc: Rongrong Zou <zourongrong@gmail.com>
-Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Jonas Karlman <jonas@kwiboo.se>
-Cc: Jernej Skrabec <jernej.skrabec@siol.net>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: David Airlie <airlied@linux.ie>,
-Cc: Sean Paul <seanpaul@chromium.org>
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Cc: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-Fixes: 83f35bc3a852 ("drm/bridge: adv7511: Attach to DSI host at probe time")
-Signed-off-by: John Stultz <john.stultz@linaro.org>
-Change-Id: Ia42345f81b4955a732d0251f1d1ddb118f885299
----
-v2: Reordered platform_set_drvdata and dsi_host_init, suggested
-    by Andrzej
-
-Note: I'm really not super familiar with the DSI code here,
-and am mostly just trying to refactor the existing code in a
-similar fashion to the suggested dw-mipi-dsi-rockchip.c
-implementation. Careful review would be greatly appreciated!
----
- drivers/gpu/drm/hisilicon/kirin/dw_drm_dsi.c | 107 +++++++++----------
- 1 file changed, 52 insertions(+), 55 deletions(-)
-
-diff --git a/drivers/gpu/drm/hisilicon/kirin/dw_drm_dsi.c b/drivers/gpu/drm/hisilicon/kirin/dw_drm_dsi.c
-index 5bf8138941de..0ddf22a8be0f 100644
---- a/drivers/gpu/drm/hisilicon/kirin/dw_drm_dsi.c
-+++ b/drivers/gpu/drm/hisilicon/kirin/dw_drm_dsi.c
-@@ -79,6 +79,7 @@ struct dsi_hw_ctx {
- };
- 
- struct dw_dsi {
-+	struct device *dev;
- 	struct drm_encoder encoder;
- 	struct drm_bridge *bridge;
- 	struct mipi_dsi_host host;
-@@ -724,51 +725,6 @@ static int dw_drm_encoder_init(struct device *dev,
- 	return 0;
- }
- 
--static int dsi_host_attach(struct mipi_dsi_host *host,
--			   struct mipi_dsi_device *mdsi)
--{
--	struct dw_dsi *dsi = host_to_dsi(host);
--
--	if (mdsi->lanes < 1 || mdsi->lanes > 4) {
--		DRM_ERROR("dsi device params invalid\n");
--		return -EINVAL;
--	}
--
--	dsi->lanes = mdsi->lanes;
--	dsi->format = mdsi->format;
--	dsi->mode_flags = mdsi->mode_flags;
--
--	return 0;
--}
--
--static int dsi_host_detach(struct mipi_dsi_host *host,
--			   struct mipi_dsi_device *mdsi)
--{
--	/* do nothing */
--	return 0;
--}
--
--static const struct mipi_dsi_host_ops dsi_host_ops = {
--	.attach = dsi_host_attach,
--	.detach = dsi_host_detach,
--};
--
--static int dsi_host_init(struct device *dev, struct dw_dsi *dsi)
--{
--	struct mipi_dsi_host *host = &dsi->host;
--	int ret;
--
--	host->dev = dev;
--	host->ops = &dsi_host_ops;
--	ret = mipi_dsi_host_register(host);
--	if (ret) {
--		DRM_ERROR("failed to register dsi host\n");
--		return ret;
--	}
--
--	return 0;
--}
--
- static int dsi_bridge_init(struct drm_device *dev, struct dw_dsi *dsi)
- {
- 	struct drm_encoder *encoder = &dsi->encoder;
-@@ -796,10 +752,6 @@ static int dsi_bind(struct device *dev, struct device *master, void *data)
- 	if (ret)
- 		return ret;
- 
--	ret = dsi_host_init(dev, dsi);
--	if (ret)
--		return ret;
--
- 	ret = dsi_bridge_init(drm_dev, dsi);
- 	if (ret)
- 		return ret;
-@@ -817,13 +769,22 @@ static const struct component_ops dsi_ops = {
- 	.unbind	= dsi_unbind,
- };
- 
--static int dsi_parse_dt(struct platform_device *pdev, struct dw_dsi *dsi)
-+static int dsi_host_attach(struct mipi_dsi_host *host,
-+			   struct mipi_dsi_device *mdsi)
- {
--	struct dsi_hw_ctx *ctx = dsi->ctx;
--	struct device_node *np = pdev->dev.of_node;
--	struct resource *res;
-+	struct dw_dsi *dsi = host_to_dsi(host);
-+	struct device_node *np = dsi->dev->of_node;
- 	int ret;
- 
-+	if (mdsi->lanes < 1 || mdsi->lanes > 4) {
-+		DRM_ERROR("dsi device params invalid\n");
-+		return -EINVAL;
-+	}
-+
-+	dsi->lanes = mdsi->lanes;
-+	dsi->format = mdsi->format;
-+	dsi->mode_flags = mdsi->mode_flags;
-+
- 	/*
- 	 * Get the endpoint node. In our case, dsi has one output port1
- 	 * to which the external HDMI bridge is connected.
-@@ -832,6 +793,42 @@ static int dsi_parse_dt(struct platform_device *pdev, struct dw_dsi *dsi)
- 	if (ret)
- 		return ret;
- 
-+	return component_add(dsi->dev, &dsi_ops);
-+}
-+
-+static int dsi_host_detach(struct mipi_dsi_host *host,
-+			   struct mipi_dsi_device *mdsi)
-+{
-+	/* do nothing */
-+	return 0;
-+}
-+
-+static const struct mipi_dsi_host_ops dsi_host_ops = {
-+	.attach = dsi_host_attach,
-+	.detach = dsi_host_detach,
-+};
-+
-+static int dsi_host_init(struct device *dev, struct dw_dsi *dsi)
-+{
-+	struct mipi_dsi_host *host = &dsi->host;
-+	int ret;
-+
-+	host->dev = dev;
-+	host->ops = &dsi_host_ops;
-+	ret = mipi_dsi_host_register(host);
-+	if (ret) {
-+		DRM_ERROR("failed to register dsi host\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int dsi_parse_dt(struct platform_device *pdev, struct dw_dsi *dsi)
-+{
-+	struct dsi_hw_ctx *ctx = dsi->ctx;
-+	struct resource *res;
-+
- 	ctx->pclk = devm_clk_get(&pdev->dev, "pclk");
- 	if (IS_ERR(ctx->pclk)) {
- 		DRM_ERROR("failed to get pclk clock\n");
-@@ -862,6 +859,7 @@ static int dsi_probe(struct platform_device *pdev)
- 	}
- 	dsi = &data->dsi;
- 	ctx = &data->ctx;
-+	dsi->dev = &pdev->dev;
- 	dsi->ctx = ctx;
- 
- 	ret = dsi_parse_dt(pdev, dsi);
-@@ -869,8 +867,7 @@ static int dsi_probe(struct platform_device *pdev)
- 		return ret;
- 
- 	platform_set_drvdata(pdev, data);
--
--	return component_add(&pdev->dev, &dsi_ops);
-+	return dsi_host_init(&pdev->dev, dsi);
- }
- 
- static int dsi_remove(struct platform_device *pdev)
--- 
-2.17.1
-
+> +			kref_put(&channel->refcount,
+> +				 qcom_glink_channel_release);
+> +
+>  		kref_put(&channel->refcount, qcom_glink_channel_release);
+> +	}
+>  
+>  	/* Release any defunct local channels, waiting for close-req */
+>  	idr_for_each_entry(&glink->rcids, channel, cid)
+> -- 
+> 2.21.0
+> 
