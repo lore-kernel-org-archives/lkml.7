@@ -2,110 +2,167 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88881C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF00C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:52:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DD5B2086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:51:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ABFF2086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:52:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D8TdJ0eZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q3wbxwPd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404456AbfITPvb (ORCPT
+        id S2404484AbfITPwU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 11:51:31 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:45727 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404366AbfITPvb (ORCPT
+        Fri, 20 Sep 2019 11:52:20 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:47071 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404459AbfITPwU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 11:51:31 -0400
-Received: by mail-pl1-f194.google.com with SMTP id u12so3357899pls.12
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 08:51:30 -0700 (PDT)
+        Fri, 20 Sep 2019 11:52:20 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q5so4756714pfg.13
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 08:52:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=a9/+SgLw8oNthBvjNUOXlSYCITnE6ULq2xe/7PxSFng=;
-        b=D8TdJ0eZLo56jrxmPqeHGtDTxK71Db3O3RkprW0rUp5xPNG1+B1eHTeQrRltVckSWF
-         VPkTMmwvLB4sRoscbyxgkH7mhbyDf02XNyJVH7OwQVQjhKIYWRBmuLbBJPVpDqVHlcnK
-         kIcfXcIoDM9N2LYiP6UNLfIsZDDXywyBoYp3st9tOUZsAuIjfVgk6ohJ/7qF/NQeQHBj
-         JrFcbdmG47Optksq/DXrz6iiKDSLFZK9YX62jdj3Hz2oWG9pVLBC4MCABuCz8ScplEAD
-         zvUQ42sW+uWHw7zH3RQUNXp33lHi7z1Bpkm+DxB5+GycSt+FegrJD43EHBQfrvJGjhxR
-         YT+g==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6wvEOmwOEcZ49FFGK9qnRLbvko/xufe/W/eA5BYL058=;
+        b=q3wbxwPdMMlC9bfXpwiwY3HG8Kn4lhezKrR/ZYi99YDSahMR9SCVikMbFWg4Rd7ar9
+         ymf5yubkoGb8vlcXDpTnRnKQAnefZOuql/8o/TsmAqMQsFokMpSOZsUN61NtFr/mMHUW
+         xWdTBkWiYGQMzgm+J9PKrVDlCQrNJKdQO/dWiJsxqCz9P8Dout5AM6jIgeIrdasbN4+a
+         t1HS2q13bIxlazCr7V5Tbp26aavvKhZG4ovjeOnJ9YGmuvJOK3eRSLVVCqOj4v4QKGFs
+         tg31ois0rjgJjb8Hu8Iv196wmgM4iS+Mf9NHnSqw4DKzwp+Ug5yY+l72oXEsAlikZ0qV
+         hKsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=a9/+SgLw8oNthBvjNUOXlSYCITnE6ULq2xe/7PxSFng=;
-        b=hO7YEsBv8BsJybhOxaTiQBS9Yp9VJkuGtW+JR4VOEO5n58cxWmxQG39mGHRDBmuddY
-         cWxJ3NMZO1122QjhtFu6/TsuG8rsaM8ul++MZpTwahvH5IIt7xPscalzII3sR5Vb5qi+
-         nXjlTvd8XiaYtmQno59VSnAWucubnwmGRI4KIA1Ri0HuUo5WMfO4hW91VybP0uy/BnLA
-         84DcG4Gy7nkQf8EN58m6Liw8qY7YmFCRtjEx/1kw2PgbFZR+Z1gJKOQJYBG1RXHt6mXT
-         kw1Y6f48/m1TFTHLb9d1jpGj7eNo1XZyPoJ3l5um0dMJd8n30j3mS/+cvl5wlzQ3B8TD
-         IzGw==
-X-Gm-Message-State: APjAAAVB5KeBerqNFOsmCV8Weuj1wLSnSuwijPyObcBXoceMw5l1dWvb
-        c3m0TD73EGod2lIFoLK5Z3Y=
-X-Google-Smtp-Source: APXvYqxvndhpCMApsjE1tUfROofkiXe1h+7EpvrbdBEDGEpqdoyzYXhe/1Jhv/MZc5NjEevXWQ/8kg==
-X-Received: by 2002:a17:902:b903:: with SMTP id bf3mr18096396plb.1.1568994690390;
-        Fri, 20 Sep 2019 08:51:30 -0700 (PDT)
-Received: from hqjagain.localdomain ([47.56.172.21])
-        by smtp.gmail.com with ESMTPSA id e4sm2422792pff.22.2019.09.20.08.51.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 20 Sep 2019 08:51:29 -0700 (PDT)
-From:   Qiujun Huang <hqjagain@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     ira.weiny@intel.com, jgg@ziepe.ca, dan.j.williams@intel.com,
-        rppt@linux.ibm.com, hqjagain@gmail.com, jhubbard@nvidia.com,
-        aneesh.kumar@linux.ibm.com, keith.busch@intel.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] mm:fix gup_pud_range
-Date:   Fri, 20 Sep 2019 23:51:24 +0800
-Message-Id: <1568994684-1425-1-git-send-email-hqjagain@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6wvEOmwOEcZ49FFGK9qnRLbvko/xufe/W/eA5BYL058=;
+        b=GmkOMD2dSUclAfCHre29cbiOy7ECYtqqRcvw2DDB6esEy7kjCrYfCuuevHLaTPEkSx
+         7mpKnul9JNg1VLQ/8Vnf8+/1RMhmA1+pADgrOhscQHpx4Or6R59I3R9p7f3G5v2g+ze6
+         /8/jnPUBvafwEyvb6v9C4FOqlda2H5UbIzzIpLK3NmAv07xVBkJd/+UbQrBEaiXGBbAt
+         id19E12ogf114utFDytso8de7cyOQkeCiyaVuQM0xPg9Mx7PGOkpx9+KFiBT9u+sf/bw
+         Ea4xG1HyTSFEbwwiQZeTZxVAeICqDbfvSZKJM3svvqH6yH5H3KCGLydraviuvoH8rqRR
+         tUJg==
+X-Gm-Message-State: APjAAAX6BS5BiGa6BZqf2MU8ILzkPH166OK7G16HpB3jEqL2faJ7BJOi
+        PqloK+O+6EvN/B/ZHnejsHkR1nMr5AbkxCQ2PeVzIg==
+X-Google-Smtp-Source: APXvYqyRG7I6bo+Vh0DYqw6zU79dbfBvMTaH8Cuuuo9DV08tKLdkUOvpwyoFsCX/kpu23mP+jTtxBvjlkczLxeVw0KM=
+X-Received: by 2002:a17:90a:c255:: with SMTP id d21mr5540380pjx.129.1568994738851;
+ Fri, 20 Sep 2019 08:52:18 -0700 (PDT)
+MIME-Version: 1.0
+References: <00000000000047e8e70592ebfd00@google.com>
+In-Reply-To: <00000000000047e8e70592ebfd00@google.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Fri, 20 Sep 2019 17:52:07 +0200
+Message-ID: <CAAeHK+y5k9xDr-=RO=aoFycw-ceR_ev6EnrkrAX1_7YWs+FRyw@mail.gmail.com>
+Subject: Re: general protection fault in close_rio
+To:     syzbot <syzbot+ffb8ab77a232a91eb24d@syzkaller.appspotmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__get_user_pages_fast try to walk the page table but the
-hugepage pte is replace by hwpoison swap entry by mca path.
-...
-[15798.177437] mce: Uncorrected hardware memory error in
-				user-access at 224f1761c0
-[15798.180171] MCE 0x224f176: Killing pal_main:6784 due to
-				hardware memory corruption
-[15798.180176] MCE 0x224f176: Killing qemu-system-x86:167336
-				due to hardware memory corruption
-...
-[15798.180206] BUG: unable to handle kernel
-[15798.180226] paging request at ffff891200003000
-[15798.180236] IP: [<ffffffff8106edae>] gup_pud_range+
-				0x13e/0x1e0
-...
+On Thu, Sep 19, 2019 at 8:19 PM syzbot
+<syzbot+ffb8ab77a232a91eb24d@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    e0bd8d79 usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=10c403c9600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=8847e5384a16f66a
+> dashboard link: https://syzkaller.appspot.com/bug?extid=ffb8ab77a232a91eb24d
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>
+> Unfortunately, I don't have any reproducer for this crash yet.
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+ffb8ab77a232a91eb24d@syzkaller.appspotmail.com
+>
+> kasan: CONFIG_KASAN_INLINE enabled
+> kasan: GPF could be caused by NULL-ptr deref or user memory access
+> general protection fault: 0000 [#1] SMP KASAN
+> CPU: 0 PID: 18871 Comm: syz-executor.4 Not tainted 5.3.0+ #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> RIP: 0010:dev_name include/linux/device.h:1342 [inline]
+> RIP: 0010:__dev_printk+0x3a/0x203 drivers/base/core.c:3335
+> Code: 89 f5 53 e8 6f ab d1 fe 48 85 ed 0f 84 bc 01 00 00 e8 61 ab d1 fe 48
+> 8d 7d 50 b8 ff ff 37 00 48 89 fa 48 c1 e0 2a 48 c1 ea 03 <80> 3c 02 00 74
+> 05 e8 12 62 f8 fe 4c 8b 7d 50 4d 85 ff 75 27 e8 34
+> RSP: 0018:ffff8881d5fe7cf8 EFLAGS: 00010206
+> RAX: dffffc0000000000 RBX: ffffed103abfcfa6 RCX: ffffffff8388846d
+> RDX: 000000000000001e RSI: ffffffff826c929f RDI: 00000000000000f0
+> RBP: 00000000000000a0 R08: ffff8881b2c7b000 R09: fffffbfff0e586ed
+> R10: ffff8881d5fe7e28 R11: ffffffff872c3767 R12: ffffffff85f2b0e0
+> R13: ffff8881d5fe7d50 R14: ffff8881ca3eaa08 R15: ffffffff83888440
+> FS:  0000555556264940(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000001b2e82d000 CR3: 00000001caefb000 CR4: 00000000001406f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>   _dev_info+0xd7/0x109 drivers/base/core.c:3381
+>   close_rio.cold+0x1f/0x24 drivers/usb/misc/rio500.c:96
+>   __fput+0x2d7/0x840 fs/file_table.c:280
+>   task_work_run+0x13f/0x1c0 kernel/task_work.c:113
+>   tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+>   exit_to_usermode_loop+0x1d2/0x200 arch/x86/entry/common.c:163
+>   prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+>   syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
+>   do_syscall_64+0x45f/0x580 arch/x86/entry/common.c:300
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x4135d1
+> Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48
+> 83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48
+> 89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
+> RSP: 002b:00007ffe720c0770 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+> RAX: 0000000000000000 RBX: 0000000000000006 RCX: 00000000004135d1
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000005
+> RBP: 0000000000000001 R08: ffffffff81160fc4 R09: 000000004679f032
+> R10: 00007ffe720c0850 R11: 0000000000000293 R12: 000000000075c9a0
+> R13: 000000000075c9a0 R14: 0000000000760ec0 R15: 000000000075bfd4
+> Modules linked in:
+> ---[ end trace a70ef99560251cf4 ]---
+> RIP: 0010:dev_name include/linux/device.h:1342 [inline]
+> RIP: 0010:__dev_printk+0x3a/0x203 drivers/base/core.c:3335
+> Code: 89 f5 53 e8 6f ab d1 fe 48 85 ed 0f 84 bc 01 00 00 e8 61 ab d1 fe 48
+> 8d 7d 50 b8 ff ff 37 00 48 89 fa 48 c1 e0 2a 48 c1 ea 03 <80> 3c 02 00 74
+> 05 e8 12 62 f8 fe 4c 8b 7d 50 4d 85 ff 75 27 e8 34
+> RSP: 0018:ffff8881d5fe7cf8 EFLAGS: 00010206
+> RAX: dffffc0000000000 RBX: ffffed103abfcfa6 RCX: ffffffff8388846d
+> RDX: 000000000000001e RSI: ffffffff826c929f RDI: 00000000000000f0
+> RBP: 00000000000000a0 R08: ffff8881b2c7b000 R09: fffffbfff0e586ed
+> R10: ffff8881d5fe7e28 R11: ffffffff872c3767 R12: ffffffff85f2b0e0
+> R13: ffff8881d5fe7d50 R14: ffff8881ca3eaa08 R15: ffffffff83888440
+> FS:  0000555556264940(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000001b2e82d000 CR3: 00000001caefb000 CR4: 00000000001406f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-We need to skip the hwpoison entry in gup_pud_range.
+Most probably the same bug:
 
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
----
- mm/gup.c | 2 ++
- 1 file changed, 2 insertions(+)
+https://syzkaller.appspot.com/bug?extid=745b0dff8028f9488eba
 
-diff --git a/mm/gup.c b/mm/gup.c
-index 98f13ab..6157ed9 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -2230,6 +2230,8 @@ static int gup_pud_range(p4d_t p4d, unsigned long addr, unsigned long end,
- 		next = pud_addr_end(addr, end);
- 		if (pud_none(pud))
- 			return 0;
-+		if (unlikely(!pud_present(pud)))
-+			return 0;
- 		if (unlikely(pud_huge(pud))) {
- 			if (!gup_huge_pud(pud, pudp, addr, next, flags,
- 					  pages, nr))
--- 
-1.8.3.1
-
+#syz dup: KASAN: invalid-free in disconnect_rio (2)
