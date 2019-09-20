@@ -2,139 +2,211 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 534FCC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43180C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29A5E20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:12:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YUxS8rzK"
+	by mail.kernel.org (Postfix) with ESMTP id 1907E208C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 20:12:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728744AbfITUMW (ORCPT
+        id S1729584AbfITUMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 16:12:22 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:46256 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726094AbfITUMV (ORCPT
+        Fri, 20 Sep 2019 16:12:49 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27908 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726094AbfITUMs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 16:12:21 -0400
-Received: by mail-qt1-f193.google.com with SMTP id u22so10052076qtq.13
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 13:12:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=t1DVA3vKOlm/AZ8L4zulEE1hMXuljgOJAsGAyVpUvUI=;
-        b=YUxS8rzK+f0gbi1Cu0GWV0MhZV0YpDvHEnfJ4R8mcMrXdyvN91fGs0GZgDxvaGqP/m
-         KpoMUYs+uf0bq4QbaK9tVHYnq16V1te91foBq4Qnk6EdJi9dXmaVjil+q5LdeIdWgppR
-         UujYQE/f8DTiORI37BMmMNemWvW1tl3Vf5qTRc/feiWdPr1yMbJkG8AwT+fjyt4M67jL
-         7btY37HOE/cfp8/BA1Rjf11cLr9Yv1P76R2jUQNTph0AdSUCDPBvn+Ncs33PCrsiqGEf
-         Zdm0/Ik8AUEMg9tShfWSUnr6VwNcKH3rC/IuxqZ9okbs7uRHiOAzAMrjb5HDyAekYvOl
-         SmFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=t1DVA3vKOlm/AZ8L4zulEE1hMXuljgOJAsGAyVpUvUI=;
-        b=QoZn45abjglGzAfHqZzVoH8jiJX3gQ3ieKEmwUUuDqDmAe0ByUYg9Ef+eJ8jgogjnB
-         AVH93YKtmq0hytyOTcRtRz3ZHmhk6MgC1F80EgHcPSqbjx8O1AKE8Wtu3OMlsDfM/643
-         Ea2dmi9136FOmD/SbbmpO7S/mExCZI1tk59uYLsCY9iGnO9+EUPvdeUF8mMYN5NnPGal
-         2Q0OkIriUNLGogMlLTQo+139yq3xbvmBqzZqBHsJnN2gnfB89SwttPwfl0CapIVZHPyH
-         u2R0DtSlInrkavTUBs8aytWHCfZsxPXZst7/RkPD8rXPPStow69qIAYfqUCA1SO7lyz+
-         n0Rw==
-X-Gm-Message-State: APjAAAUTXAMCcFkNgclSomiba9epnbnDn9X9THfrOQfw9zcKs1dGjxQJ
-        4J3yS9hZF3XQ8UMCtOiEPgmbR1KSrgYZyrE5N+PMVQ==
-X-Google-Smtp-Source: APXvYqz/pNz6cRXqH8bTMfzVNZ+nlOMnGpp+f52AX7IwmjRsndWr0wWX0fLW2Hnxw2cuDZB95eiTwEgdZSrpMiawh30=
-X-Received: by 2002:ad4:44e2:: with SMTP id p2mr14478831qvt.126.1569010340743;
- Fri, 20 Sep 2019 13:12:20 -0700 (PDT)
+        Fri, 20 Sep 2019 16:12:48 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8KKBp49107401;
+        Fri, 20 Sep 2019 16:12:14 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v55dx8k2e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 20 Sep 2019 16:12:14 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8KKBsfE107895;
+        Fri, 20 Sep 2019 16:12:14 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v55dx8k1r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 20 Sep 2019 16:12:14 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8KKAGVB020744;
+        Fri, 20 Sep 2019 20:12:13 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma04dal.us.ibm.com with ESMTP id 2v3vbuw0x5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 20 Sep 2019 20:12:13 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8KKCB4C50004354
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 20 Sep 2019 20:12:11 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ECBBDC6059;
+        Fri, 20 Sep 2019 20:12:10 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 921CFC6055;
+        Fri, 20 Sep 2019 20:12:06 +0000 (GMT)
+Received: from leobras.br.ibm.com (unknown [9.18.235.184])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri, 20 Sep 2019 20:12:06 +0000 (GMT)
+Message-ID: <1f5d9380418ad8bb90c6bbdac34716c650b917a0.camel@linux.ibm.com>
+Subject: Re: [PATCH v2 00/11] Introduces new count-based method for
+ monitoring lockless pagetable wakls
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        Ganesh Goudar <ganeshgr@linux.ibm.com>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Keith Busch <keith.busch@intel.com>
+Date:   Fri, 20 Sep 2019 17:12:00 -0300
+In-Reply-To: <20190920195047.7703-1-leonardo@linux.ibm.com>
+References: <20190920195047.7703-1-leonardo@linux.ibm.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-nucwkzcjL6z05I66cwMm"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-References: <cover.1568239378.git.amit.kucheria@linaro.org>
- <8f539b28c25d22b8f515c131cd6b24c309f7ca90.1568239378.git.amit.kucheria@linaro.org>
- <20190913101239.GB2559@bogus>
-In-Reply-To: <20190913101239.GB2559@bogus>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Fri, 20 Sep 2019 13:12:09 -0700
-Message-ID: <CAP245DUykhQ0OCs=BvM6nYD63NoBndn=vGUFEJ=DK7tEXp_=KQ@mail.gmail.com>
-Subject: Re: [PATCH 3/4] arm64: Kconfig: Fix VEXPRESS driver dependencies
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lists LAKML <linux-arm-kernel@lists.infradead.org>,
-        arm-soc <arm@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>, Will Deacon <will@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-20_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909200165
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 3:12 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
->
-> On Thu, Sep 12, 2019 at 03:48:47AM +0530, Amit Kucheria wrote:
-> > Push various VEXPRESS drivers behind ARCH_VEXPRESS dependency so that it
-> > doesn't get enabled by default on other platforms.
-> >
->
-> I couldn't understand the motivation for these changes from the cover letter.
 
-Yes, the cover letter for this series needs to be a lot better. Sorry.
-In summary, I found a bunch of drivers in defconfig that were getting
-called in early_initcall and core_initcall even when the platform or
-COMPILE_TEST was not enabled. So I was just trying to ring fence some
-of those drivers as a proof of concept to see if these changes were
-acceptable upstream.
+--=-nucwkzcjL6z05I66cwMm
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Let me try again with a better cover letter and using the pattern Arnd
-suggested elsewhere.
+If a process (qemu) with a lot of CPUs (128) try to munmap() a large
+chunk of memory (496GB) mapped with THP, it takes an average of 275
+seconds, which can cause a lot of problems to the load (in qemu case,
+the guest will lock for this time).
 
-> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > ---
-> >  drivers/bus/Kconfig           | 2 +-
-> >  drivers/clk/versatile/Kconfig | 4 ++--
-> >  2 files changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
-> > index d80e8d70bf10..b2b1beee9953 100644
-> > --- a/drivers/bus/Kconfig
-> > +++ b/drivers/bus/Kconfig
-> > @@ -166,7 +166,7 @@ config UNIPHIER_SYSTEM_BUS
-> >
-> >  config VEXPRESS_CONFIG
-> >       bool "Versatile Express configuration bus"
-> > -     default y if ARCH_VEXPRESS
-> > +     depends on ARCH_VEXPRESS
-> >       depends on ARM || ARM64
-> >       depends on OF
-> >       select REGMAP
-> > diff --git a/drivers/clk/versatile/Kconfig b/drivers/clk/versatile/Kconfig
-> > index ac766855ba16..826750292c1e 100644
-> > --- a/drivers/clk/versatile/Kconfig
-> > +++ b/drivers/clk/versatile/Kconfig
-> > @@ -5,8 +5,8 @@ config ICST
-> >  config COMMON_CLK_VERSATILE
-> >       bool "Clock driver for ARM Reference designs"
-> >       depends on ARCH_INTEGRATOR || ARCH_REALVIEW || \
-> > -             ARCH_VERSATILE || ARCH_VEXPRESS || ARM64 || \
-> > -             COMPILE_TEST
-> > +             ARCH_VERSATILE || ARCH_VEXPRESS || COMPILE_TEST
-> > +     depends on ARM64
->
-> This will break 32-bit platforms.
->
-> --
-> Regards,
-> Sudeep
+Trying to find the source of this bug, I found out most of this time is
+spent on serialize_against_pte_lookup(). This function will take a lot
+of time in smp_call_function_many() if there is more than a couple CPUs
+running the user process. Since it has to happen to all THP mapped, it
+will take a very long time for large amounts of memory.
+
+By the docs, serialize_against_pte_lookup() is needed in order to avoid
+pmd_t to pte_t casting inside find_current_mm_pte(), or any lockless
+pagetable walk, to happen concurrently with THP splitting/collapsing.
+
+It does so by calling a do_nothing() on each CPU in mm->cpu_bitmap[],
+after interrupts are re-enabled.=20
+Since, interrupts are (usually) disabled during lockless pagetable
+walk, and serialize_against_pte_lookup will only return after
+interrupts are enabled, it is protected.
+
+So, by what I could understand, if there is no lockless pagetable walk
+running, there is no need to call serialize_against_pte_lookup().
+
+So, to avoid the cost of running serialize_against_pte_lookup(), I
+propose a counter that keeps track of how many find_current_mm_pte()
+are currently running, and if there is none, just skip=20
+smp_call_function_many().
+
+The related functions are:
+start_lockless_pgtbl_walk(mm)
+	Insert before starting any lockless pgtable walk
+end_lockless_pgtbl_walk(mm)
+	Insert after the end of any lockless pgtable walk
+	(Mostly after the ptep is last used)
+running_lockless_pgtbl_walk(mm)
+	Returns the number of lockless pgtable walks running
+
+
+On my workload (qemu), I could see munmap's time reduction from 275
+seconds to 418ms.
+
+> Leonardo Bras (11):
+>   powerpc/mm: Adds counting method to monitor lockless pgtable walks
+>   asm-generic/pgtable: Adds dummy functions to monitor lockless pgtable
+>     walks
+>   mm/gup: Applies counting method to monitor gup_pgd_range
+>   powerpc/mce_power: Applies counting method to monitor lockless pgtbl
+>     walks
+>   powerpc/perf: Applies counting method to monitor lockless pgtbl walks
+>   powerpc/mm/book3s64/hash: Applies counting method to monitor lockless
+>     pgtbl walks
+>   powerpc/kvm/e500: Applies counting method to monitor lockless pgtbl
+>     walks
+>   powerpc/kvm/book3s_hv: Applies counting method to monitor lockless
+>     pgtbl walks
+>   powerpc/kvm/book3s_64: Applies counting method to monitor lockless
+>     pgtbl walks
+>   powerpc/book3s_64: Enables counting method to monitor lockless pgtbl
+>     walk
+>   powerpc/mm/book3s64/pgtable: Uses counting method to skip serializing
+>=20
+>  arch/powerpc/include/asm/book3s/64/mmu.h     |  3 +++
+>  arch/powerpc/include/asm/book3s/64/pgtable.h |  5 +++++
+>  arch/powerpc/kernel/mce_power.c              | 13 ++++++++++---
+>  arch/powerpc/kvm/book3s_64_mmu_hv.c          |  2 ++
+>  arch/powerpc/kvm/book3s_64_mmu_radix.c       | 20 ++++++++++++++++++--
+>  arch/powerpc/kvm/book3s_64_vio_hv.c          |  4 ++++
+>  arch/powerpc/kvm/book3s_hv_nested.c          |  8 ++++++++
+>  arch/powerpc/kvm/book3s_hv_rm_mmu.c          |  9 ++++++++-
+>  arch/powerpc/kvm/e500_mmu_host.c             |  4 ++++
+>  arch/powerpc/mm/book3s64/hash_tlb.c          |  2 ++
+>  arch/powerpc/mm/book3s64/hash_utils.c        |  7 +++++++
+>  arch/powerpc/mm/book3s64/mmu_context.c       |  1 +
+>  arch/powerpc/mm/book3s64/pgtable.c           | 20 +++++++++++++++++++-
+>  arch/powerpc/perf/callchain.c                |  5 ++++-
+>  include/asm-generic/pgtable.h                |  9 +++++++++
+>  mm/gup.c                                     |  4 ++++
+>  16 files changed, 108 insertions(+), 8 deletions(-)
+>=20
+
+--=-nucwkzcjL6z05I66cwMm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl2FMpAACgkQlQYWtz9S
+ttQJDRAAm7UrD3Hn32mqNVvo0il+czdU8CD0TY9JTgwQVy5w623VhAlNK0RSqdbX
+NN6XebcOau//QQleUrXseAf4kuniMJZn62qDeUj0wcQMaVqSlpqF7+4KDIINVS7K
+WbymiNSCTGFYDG7575+kcBPn3baKWV6EoGe80qmd5DTXN5W5pBKbfHqJ36u/rEZA
+cKzVlDLOHxvQ/VopYSydx4wl3T+CcUziVNf3ooT83ktwOHUcGRMfFLsuAMK3Ws5P
+fLUbK4iWQgda8DH4pvDb9ZtfH/01+lqR7VJSUu9fDbtis5JNRt7TxwglPN3zf1vw
+eF4p75mlIIxk6KM7/kCksSqn6ZBiHS5ldehaYaKWwsuM4leTP32TYMOB7woOOgDL
+xW/KNxja+CuFhoIt3dsSDwFWAYwt3cSPsCtgYgiN4t2CkWZQaw+W+6j2wBYg7SPn
+iGg04qGNDr3Um3OklxU8GHgbkPmBKZ2Yjhxx9mdf0sLoF9//o3td3BrqP8sw4AXK
+bBnixpOpbVnTvUbK1sc1PyxEJ5qMmmS9kE2I05ysIKHvSPMoDZiXwW92MesXotoi
+2Rocc4T0UP0tzTunADdc9iq2d8egHa1r9LjL49sP1FPNYUbYkeEJTjXyIXS07qVe
+sdQgYcZZ7NwvR0ZASqJCM2yKQBxMQ+Iv3pyUjXFyySlwhS2nSQk=
+=F3zh
+-----END PGP SIGNATURE-----
+
+--=-nucwkzcjL6z05I66cwMm--
+
