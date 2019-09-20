@@ -2,177 +2,219 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E661EC4CECD
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43742C4CECD
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB7B120882
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:48:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1030C2067B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:50:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lbD1WO7y"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="XCdvMWtk";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="Q+63ldO+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732626AbfITGsw (ORCPT
+        id S2437501AbfITGt7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 02:48:52 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:46291 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732505AbfITGsv (ORCPT
+        Fri, 20 Sep 2019 02:49:59 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:40892 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2403959AbfITGt6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 02:48:51 -0400
-Received: by mail-lj1-f193.google.com with SMTP id e17so5928940ljf.13
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 23:48:48 -0700 (PDT)
+        Fri, 20 Sep 2019 02:49:58 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8K6jYRZ015484;
+        Thu, 19 Sep 2019 23:49:50 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=XLEEbJ0/H+QSuLwssREOhaf/504LOqI6+G3xPsfWAjA=;
+ b=XCdvMWtkQGut9NMap+4vUH5UTbHjKT146CQ++YhitC2V/ijBYJJNrBPD8TbiCw9c0yfE
+ P+4DJpa4Vsihb8Ql95HjT+OdAeJzErbqt6is7FWE4XGk1Li7/4abDHE0p8ut8qLbER7J
+ CRicZGNvrapZu+LHw2o1U1bIXkAM0FQtcdvWT2N+G8rp1vn8H/QtN0rfU+Arc/OHKSVS
+ ZEnIG4aE5ALy3O0/tzlxJEoQLNe7+WRvtZHDAa8Qsx9/oc1WYMfnkeg5k4uDfyuL3+n5
+ eKqOiVVTycdCZf/zy080mPI4+EPyJmP9n5Y4pnItPG5xHih7r1ox7WUlk3BjM1/LmUUT cg== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0b-0016f401.pphosted.com with ESMTP id 2v3vcfpyt2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 19 Sep 2019 23:49:50 -0700
+Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 19 Sep
+ 2019 23:49:48 -0700
+Received: from NAM05-CO1-obe.outbound.protection.outlook.com (104.47.48.54) by
+ SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Thu, 19 Sep 2019 23:49:48 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bfGRttUWaGSw7zRGx/NYztW2nTiqln9wpl9/RezO56PgJDLw1Y8kYKKQ8ADkdkcSiNtrEjj14NGbX+0PC9jEAVVGpsJF14crSwbSjA3S3f+KHKxz1vClRLD2z7ItHYGS6coH/GfRcVqON0gEUHIOCvxDobRWB1MJV6d8XQWu6vJA20drDWyqcSrgjfvWkxo5BOKMxkyJ05zS4DNDuo518WdT/FFxZy2GJsQ/oCaSZraOKZzPvV6fenivEcAEBw1RZ33J6NY0HtqzywPaEw5YUTYeU7mXVRvsw/mpWw2i97wgjEXRVDMUi34P2QMBN372mxlX6ktywxkAe2f+CkVetw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XLEEbJ0/H+QSuLwssREOhaf/504LOqI6+G3xPsfWAjA=;
+ b=mslC6Hb8jCvPRBAvfI6kWQ4wN61e+mxtXvq2vizfPdawPdiyoE4EbdHwZlD1rhUn/QqCPP41whpxnIvSlBNabQaah4i4hl7Ai0PmGuRbrGsFM0+yJj5QVmM3TxilIVEhhAH5lZGtCftlBRZV5HnU/GLktuXtaQjKTFlvZ0SoBmUu4rtw0ZKQhYKGyvUJAk+rx2lO77YTCOJQzYr1scFwggsi6Mb2R08bpCiFm8P2cLCNTHfDD7pH3iSLOEvhbjLaTM0+Qu01TLlctUXd31O3BosYezCoOIE7Sc2xM3CcOsELmYvSyve4M+HwFsAy7iD3bl7dNjx3NBnZHIiA9CSbiA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=173BRYZ9x6alpIPcRk5BJ9zuLWX/VdslH4Vu4ViMU1Y=;
-        b=lbD1WO7yB7R0dOyl7OmpRWseR1LK7WwUOgSugKroU0fSXGSeZ1Dlk+VAzDSRFbQVwD
-         SlblZ8+sDwPbsEmvVhpD/mPFN4SYlJcFbDpH8IUpKLWcCKWL7jHVSbCFuiMlWdrO7KRU
-         xdDi4MZTA/kevzKBc7/hdNiR903uJlSS3kWLhDpFI3kALsHwFlFnlEEnCBKrswZA5pGb
-         AJbPp12YrXk2nCYfRDOeA2BwZ7moqQi4LWb0RGLx/WDCzgbF7gUcM+amuBLaoCv+Cg3s
-         oZReIH4ghk6uP4WtG5+DTOmAzBfQ80GUrSipGL3XPQKGl/Ww0nCHHAHNfN13/37lCqS0
-         Frqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=173BRYZ9x6alpIPcRk5BJ9zuLWX/VdslH4Vu4ViMU1Y=;
-        b=Bxgc6uTnKAhY0tRhZRtxHgherCRd9zVKxcIOQ/p0dYyDHZO17L5oqEfzOknS2TWG8y
-         La2Oo4ePjQ1cvyKPsDQhlNTK38pVhBjvPyJ5Raxs68rpJs9Lz55EfMNLMrMTJ+HSzqYy
-         gsPXZCm/v16ByNsuOyANIUQZhYwQk6H0RWN6r1BCYfLgKTNVwsaHjD8J/eLi/w96un6N
-         FBsm+51emBZVrA/xARItaEkaegumMzAEpAnROXrBB6u0nZh47nLIO8o9dzFa2raJ0BBq
-         rEibOHZlXH+O531qjmu+iqJghQj5dBa6rWXP/n5FmRJ8TyRQSJCQPcJgohgnTpIJv4X8
-         Khcw==
-X-Gm-Message-State: APjAAAWAdPF0P18oW34GXhuaxug/h75HCpAXawTWBjd3rBkY4ghY307Y
-        hMz4KuMnUXRJ44F2bgJpgz7NYrn6RYTV7va+GuVLKw==
-X-Google-Smtp-Source: APXvYqy/EI/T6YZeS+T/wiUshJbbv0BS+oknh5gi9c07Kohq2IOkrIK8RpvPqb0wVdusqLrUrRHO6ouMOf3JGWpsZ1c=
-X-Received: by 2002:a2e:a178:: with SMTP id u24mr7912665ljl.149.1568962127988;
- Thu, 19 Sep 2019 23:48:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190919214800.519074117@linuxfoundation.org>
-In-Reply-To: <20190919214800.519074117@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 20 Sep 2019 12:18:36 +0530
-Message-ID: <CA+G9fYuxXBBPU6HfQBa+zhQRzTS+DzUcXvw4zt6-Fz_fBS0wiQ@mail.gmail.com>
-Subject: Re: [PATCH 4.9 00/74] 4.9.194-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
+ d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XLEEbJ0/H+QSuLwssREOhaf/504LOqI6+G3xPsfWAjA=;
+ b=Q+63ldO+AaOawM/7HJIEG6A808PFhDRzShyKEw299dqarF5fMk/R3QQxMNu2SFcbNRSfFh0odCloMd3a+RWSsc28avfBreRYhmLpDCfMUb2h8OOKKsLIs9sud+z4UNnjr30JqfIvyRE8YorQ7KM7OP38UPvo4TyLd6aF0dBEXAk=
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.238.217) by
+ MN2PR18MB2432.namprd18.prod.outlook.com (20.179.84.32) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.23; Fri, 20 Sep 2019 06:49:46 +0000
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::8162:62e8:aeeb:ec7b]) by MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::8162:62e8:aeeb:ec7b%3]) with mapi id 15.20.2263.023; Fri, 20 Sep 2019
+ 06:49:45 +0000
+From:   Robert Richter <rrichter@marvell.com>
+To:     Hanna Hawa <hhhawa@amazon.com>
+CC:     "bp@alien8.de" <bp@alien8.de>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dwmw@amazon.co.uk" <dwmw@amazon.co.uk>,
+        "benh@amazon.com" <benh@amazon.com>,
+        "ronenk@amazon.com" <ronenk@amazon.com>,
+        "talel@amazon.com" <talel@amazon.com>,
+        "jonnyc@amazon.com" <jonnyc@amazon.com>,
+        "hanochu@amazon.com" <hanochu@amazon.com>
+Subject: Re: [PATCH v3 2/2] edac: move edac_device_handle_*() API functions to
+ header
+Thread-Topic: [PATCH v3 2/2] edac: move edac_device_handle_*() API functions
+ to header
+Thread-Index: AQHVb3+WHFNLttAdVEqF33Cg+Ln7bQ==
+Date:   Fri, 20 Sep 2019 06:49:45 +0000
+Message-ID: <20190920064937.owwv5n663kwmnbb7@rric.localdomain>
+References: <20190919171713.8060-1-hhhawa@amazon.com>
+ <20190919171713.8060-3-hhhawa@amazon.com>
+In-Reply-To: <20190919171713.8060-3-hhhawa@amazon.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR05CA0137.eurprd05.prod.outlook.com
+ (2603:10a6:7:28::24) To MN2PR18MB3408.namprd18.prod.outlook.com
+ (2603:10b6:208:16c::25)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [31.208.96.227]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d508bdac-309e-4ee6-1418-08d73d96b920
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB2432;
+x-ms-traffictypediagnostic: MN2PR18MB2432:
+x-microsoft-antispam-prvs: <MN2PR18MB2432B1D36757C687E86D03DDD9880@MN2PR18MB2432.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 0166B75B74
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(376002)(346002)(396003)(39860400002)(136003)(189003)(199004)(66066001)(3846002)(71200400001)(305945005)(71190400001)(186003)(26005)(7416002)(316002)(4326008)(6916009)(7736002)(102836004)(6506007)(256004)(53546011)(66446008)(64756008)(386003)(66556008)(66476007)(25786009)(66946007)(9686003)(6512007)(52116002)(6246003)(76176011)(99286004)(478600001)(81156014)(486006)(6436002)(86362001)(2906002)(6486002)(14454004)(8936002)(8676002)(81166006)(476003)(229853002)(54906003)(11346002)(5660300002)(1076003)(446003)(6116002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2432;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: QR1SjkToGuEiKsZ9x7cpAKgkpFg357jIQ58w5p8ytQE0HjplAjeEjXokZEIbR/Pqa/tqb1hYLhw7063yr0fP+XV0lr9iXEoUaigQLO+Cd9rxdij9J7bCeAyBXKmPJ5yfy+9riG2tWhCxDbEHzGpog1U/doQEKnw6sR2Jtbb9laU8F/MGkG6CmOCG7/bPIVcony+CtnsIluy1k5tcYDO7OzIwG+0LrLendqseDdfRYlHpxT09UfmNu1vD7e3X5CpjD6eWr8B4tB/ZzB1WqHyYCNP7eUXc0FZsUzv85bpFDBueE7n4u7cWdX6wGfG8uIouxHNSNazIUzujFgdDq7dQNeUSAp30qTxyHLGFqao3i9xrLOXDcV0BwnzQWdvi94tTqGMDnO+fIAAXGsi8VxGUj3YRGZXnw6YAZPfUAu8mpuk=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <0302A7159C9B82458BA77E0CB1092993@namprd18.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: d508bdac-309e-4ee6-1418-08d73d96b920
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Sep 2019 06:49:45.8259
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: L6x+JgOqrWH8u6pod+368Pm57PQ7jm53Kf/hun0rwH3tqs8wuX4cbt7H3GLDOX6Wuk6E++28EoVM43wrqOvu3Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2432
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-20_01:2019-09-19,2019-09-20 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Sep 2019 at 03:50, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.9.194 release.
-> There are 74 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat 21 Sep 2019 09:44:25 PM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.9.194-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.9.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On 19.09.19 18:17:13, Hanna Hawa wrote:
+> Move edac_device_handle_*() functions from source file to header file as
+> inline funtcion that use the new API with single error.
+>=20
+> Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+With the changes below it looks good to me:
 
-Summary
-------------------------------------------------------------------------
+Acked-by: Robert Richter <rrichter@marvell.com>
 
-kernel: 4.9.194-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.9.y
-git commit: febb363e252bd50629d7efc675ba30286a33f209
-git describe: v4.9.193-75-gfebb363e252b
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
-ld/v4.9.193-75-gfebb363e252b
+Thanks,
 
+-Robert
 
-No regressions (compared to build v4.9.193)
+> diff --git a/drivers/edac/edac_device.h b/drivers/edac/edac_device.h
+> index 30dc5f5979c8..796ea134a691 100644
+> --- a/drivers/edac/edac_device.h
+> +++ b/drivers/edac/edac_device.h
+> @@ -285,29 +285,6 @@ extern int edac_device_add_device(struct edac_device=
+_ctl_info *edac_dev);
+>   */
+>  extern struct edac_device_ctl_info *edac_device_del_device(struct device=
+ *dev);
+> =20
+> -/**
+> - * edac_device_handle_ue():
+> - *	perform a common output and handling of an 'edac_dev' UE event
+> - *
+> - * @edac_dev: pointer to struct &edac_device_ctl_info
+> - * @inst_nr: number of the instance where the UE error happened
+> - * @block_nr: number of the block where the UE error happened
+> - * @msg: message to be printed
+> - */
+> -extern void edac_device_handle_ue(struct edac_device_ctl_info *edac_dev,
+> -				int inst_nr, int block_nr, const char *msg);
+> -/**
+> - * edac_device_handle_ce():
+> - *	perform a common output and handling of an 'edac_dev' CE event
+> - *
+> - * @edac_dev: pointer to struct &edac_device_ctl_info
+> - * @inst_nr: number of the instance where the CE error happened
+> - * @block_nr: number of the block where the CE error happened
+> - * @msg: message to be printed
+> - */
+> -extern void edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
+> -				int inst_nr, int block_nr, const char *msg);
+> -
 
+Just put in the inline replacement here.
 
-No fixes (compared to build v4.9.193)
+>  /**
+>   * edac_device_alloc_index: Allocate a unique device index number
+>   *
+> @@ -357,4 +334,18 @@ static inline void edac_device_handle_ue_count(struc=
+t edac_device_ctl_info *edac
+>  {
+>  	__edac_device_handle_ue(edac_dev, count, inst_nr, block_nr, msg);
+>  }
+> +
+> +static inline void edac_device_handle_ce(struct edac_device_ctl_info *ed=
+ac_dev,
+> +					 int inst_nr, int block_nr,
 
-Ran 21866 total tests in the following environments and test suites.
+No need for this linebreak.
 
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
+> +					 const char *msg)
+> +{
+> +	__edac_device_handle_ce(edac_dev, 1, inst_nr, block_nr, msg);
+> +}
+> +
+> +static inline void edac_device_handle_ue(struct edac_device_ctl_info *ed=
+ac_dev,
+> +					 int inst_nr, int block_nr,
 
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* network-basic-tests
-* perf
-* kvm-unit-tests
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* ssuite
+Same here.
 
---=20
-Linaro LKFT
-https://lkft.linaro.org
+> +					 const char *msg)
+> +{
+> +	__edac_device_handle_ue(edac_dev, 1, inst_nr, block_nr, msg);
+> +}
+>  #endif
+> --=20
+> 2.17.1
+>=20
