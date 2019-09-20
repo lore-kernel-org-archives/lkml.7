@@ -5,111 +5,143 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC16BC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A64ECC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:06:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F7C4208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 772A020644
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:06:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568959527;
-	bh=X7t/VZSp6LudvbPeX6l74ReA7A/d8L11/pSeOs2po1A=;
+	s=default; t=1568959576;
+	bh=0NS6Av10YtD0Vn0fLDttwo6ERRmj/WxyxPOpGzccm0c=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LaZaq6CoUYHuDFPNg9oCWExU/zr3ORO768uv2+QUvm7vc9p5ZATsYb3yD0pMd/Mcl
-	 LqKZ0KsXzmwWwju8R21XY2EkeSQqR49WvLl/Tmqp0M1nPhSGqaghhAjBHyP9loEyjE
-	 BRUv/hsokC0eF8pLWxb/haM7dsKL3+aQ60WfE9N4=
+	b=neauRf9p0jIMLBnk29O0jVafQZftUbmRXJWi7BeXsBTWhNswOEsnjqmX9Kuenw/2u
+	 1eRX6eEwOkMnpYpv5/rTRf5WxnLGz9OFl3ciRXHQZ7hGTmGq4U/0Z2a1N4BoyRN0b3
+	 GOdSPjnLgDm4BrqsNoetzyAZAr/yTCKH471i7oP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408242AbfITGF0 (ORCPT
+        id S2408254AbfITGGO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 02:05:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46520 "EHLO mail.kernel.org"
+        Fri, 20 Sep 2019 02:06:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408232AbfITGF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 02:05:26 -0400
+        id S2408243AbfITGGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 02:06:07 -0400
 Received: from localhost (unknown [145.15.244.23])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A179D20882;
-        Fri, 20 Sep 2019 06:05:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B657920640;
+        Fri, 20 Sep 2019 06:06:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568959525;
-        bh=X7t/VZSp6LudvbPeX6l74ReA7A/d8L11/pSeOs2po1A=;
+        s=default; t=1568959566;
+        bh=0NS6Av10YtD0Vn0fLDttwo6ERRmj/WxyxPOpGzccm0c=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Oi+BknRY202JsDjyAQXI0SXV4CWWmY1cnDooz/gwqyHNCYimNCZANRM+89t7UTpcp
-         uKwuE6Egkbqu/yPTj3mQa63LQCMSCXzzb1v9//VKXBL1UvoMUZ/C9VQIronA6ODsWq
-         QKaIUW/AUYezFpHJXtfpDb5IWkfEKhW3NPnbuwJg=
-Date:   Fri, 20 Sep 2019 08:04:54 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Nixiaoming <nixiaoming@huawei.com>
-Cc:     "penberg@cs.helsinki.fi" <penberg@cs.helsinki.fi>,
-        "jslaby@suse.com" <jslaby@suse.com>,
-        "nico@fluxnic.net" <nico@fluxnic.net>,
-        "textshell@uchuujin.de" <textshell@uchuujin.de>,
-        "sam@ravnborg.org" <sam@ravnborg.org>,
-        "daniel.vetter@ffwll.ch" <daniel.vetter@ffwll.ch>,
-        "mpatocka@redhat.com" <mpatocka@redhat.com>,
-        "ghalat@redhat.com" <ghalat@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Yangyingliang <yangyingliang@huawei.com>,
-        yuehaibing <yuehaibing@huawei.com>,
-        Zengweilin <zengweilin@huawei.com>
-Subject: Re: [PATCH] tty:vt: Add check the return value of kzalloc to avoid
- oops
-Message-ID: <20190920060454.GB473496@kroah.com>
-References: <1568884695-56789-1-git-send-email-nixiaoming@huawei.com>
- <20190919092933.GA2684163@kroah.com>
- <E490CD805F7529488761C40FD9D26EF12AE5F4FA@dggemm507-mbx.china.huawei.com>
+        b=cZUnqBsqeAcrrp6oAT+sVt0Vr/Z+1icFMFxfXMY2VMlYMLc3pJ7xe8AiD3TBmFoc2
+         pIpDBOMgx6CsrRYb4AYkn6O2mfG+EMOAIyhqT1NsWtpVTGOogSJEmbptNhS9d+k18/
+         2V7drzjSyRAUs0+w09CZveLw+HgVXYv3L1cbSNHY=
+Date:   Fri, 20 Sep 2019 08:05:07 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     devel@driverdev.osuosl.org, kjlu@umn.edu,
+        linux-kernel@vger.kernel.org, emamd001@umn.edu,
+        Nishka Dasgupta <nishkadg.linux@gmail.com>, smccaman@umn.edu,
+        Colin Ian King <colin.king@canonical.com>
+Subject: Re: [PATCH] staging: rtl8192u: fix multiple memory leaks on error
+ path
+Message-ID: <20190920060507.GD473496@kroah.com>
+References: <20190920025137.29407-1-navid.emamdoost@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <E490CD805F7529488761C40FD9D26EF12AE5F4FA@dggemm507-mbx.china.huawei.com>
+In-Reply-To: <20190920025137.29407-1-navid.emamdoost@gmail.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 02:29:49AM +0000, Nixiaoming wrote:
-> On 2019/9/19 17:30, Greg KH wrote:
-> > On Thu, Sep 19, 2019 at 05:18:15PM +0800, Xiaoming Ni wrote:
-> >> Using kzalloc() to allocate memory in function con_init(), but not
-> >> checking the return value, there is a risk of null pointer references
-> >> oops.
-> >>
-> >> Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
-> >
-> > We keep having this be "reported" 
-> >
-> >> ---
-> >>  drivers/tty/vt/vt.c | 18 ++++++++++++++++++
-> >>  1 file changed, 18 insertions(+)
-> >>
-> >> diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-> >> index 34aa39d..db83e52 100644
-> >> --- a/drivers/tty/vt/vt.c
-> >> +++ b/drivers/tty/vt/vt.c
-> >> @@ -3357,15 +3357,33 @@ static int __init con_init(void)
-> >>  
-> >>  	for (currcons = 0; currcons < MIN_NR_CONSOLES; currcons++) {
-> >>  		vc_cons[currcons].d = vc = kzalloc(sizeof(struct vc_data), GFP_NOWAIT);
-> >> +		if (unlikely(!vc)) {
-> >> +			pr_warn("%s:failed to allocate memory for the %u vc\n",
-> >> +					__func__, currcons);
-> >> +			break;
-> >> +		}
-> >
-> > At init, this really can not happen.  Have you see it ever happen?
+On Thu, Sep 19, 2019 at 09:51:33PM -0500, Navid Emamdoost wrote:
+> In rtl8192_tx on error handling path allocated urbs and also skb should
+> be released.
 > 
-> I did not actually observe the null pointer here.
-> I am confused when I see the code allocated here without check the return value.
-> Small memory allocation failures are difficult to occur during system initialization
-> But is it not safe enough if the code is not judged?
-> Also if the memory allocation failure is not allowed here, is it better to add the __GFP_NOFAIL flags?
+> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> ---
+>  drivers/staging/rtl8192u/r8192U_core.c | 17 ++++++++++++-----
+>  1 file changed, 12 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/staging/rtl8192u/r8192U_core.c b/drivers/staging/rtl8192u/r8192U_core.c
+> index fe1f279ca368..b62b03802b1b 100644
+> --- a/drivers/staging/rtl8192u/r8192U_core.c
+> +++ b/drivers/staging/rtl8192u/r8192U_core.c
+> @@ -1422,7 +1422,7 @@ short rtl8192_tx(struct net_device *dev, struct sk_buff *skb)
+>  		(struct tx_fwinfo_819x_usb *)(skb->data + USB_HWDESC_HEADER_LEN);
+>  	struct usb_device *udev = priv->udev;
+>  	int pend;
+> -	int status;
+> +	int status, rt = -1;
+>  	struct urb *tx_urb = NULL, *tx_urb_zero = NULL;
+>  	unsigned int idx_pipe;
+>  
+> @@ -1566,8 +1566,10 @@ short rtl8192_tx(struct net_device *dev, struct sk_buff *skb)
+>  		}
+>  		if (bSend0Byte) {
+>  			tx_urb_zero = usb_alloc_urb(0, GFP_ATOMIC);
+> -			if (!tx_urb_zero)
+> -				return -ENOMEM;
+> +			if (!tx_urb_zero) {
+> +				rt = -ENOMEM;
+> +				goto error;
+> +			}
+>  			usb_fill_bulk_urb(tx_urb_zero, udev,
+>  					  usb_sndbulkpipe(udev, idx_pipe),
+>  					  &zero, 0, tx_zero_isr, dev);
+> @@ -1577,7 +1579,7 @@ short rtl8192_tx(struct net_device *dev, struct sk_buff *skb)
+>  					 "Error TX URB for zero byte %d, error %d",
+>  					 atomic_read(&priv->tx_pending[tcb_desc->queue_index]),
+>  					 status);
+> -				return -1;
+> +				goto error;
+>  			}
+>  		}
+>  		netif_trans_update(dev);
+> @@ -1588,7 +1590,12 @@ short rtl8192_tx(struct net_device *dev, struct sk_buff *skb)
+>  	RT_TRACE(COMP_ERR, "Error TX URB %d, error %d",
+>  		 atomic_read(&priv->tx_pending[tcb_desc->queue_index]),
+>  		 status);
+> -	return -1;
+> +
+> +error:
+> +	dev_kfree_skb_any(skb);
+> +	usb_free_urb(tx_urb);
+> +	usb_free_urb(tx_urb_zero);
+> +	return rt;
+>  }
+>  
+>  static short rtl8192_usb_initendpoints(struct net_device *dev)
+> -- 
+> 2.17.1
+> 
+> _______________________________________________
+> devel mailing list
+> devel@linuxdriverproject.org
+> http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel
 
-See my response to Nicolas, but yes, that would be a good way to handle
-this.
+
+Hi,
+
+This is the friendly semi-automated patch-bot of Greg Kroah-Hartman.
+You have sent him a patch that has triggered this response.
+
+Right now, the development tree you have sent a patch for is "closed"
+due to the timing of the merge window.  Don't worry, the patch(es) you
+have sent are not lost, and will be looked at after the merge window is
+over (after the -rc1 kernel is released by Linus).
+
+So thank you for your patience and your patches will be reviewed at this
+later time, you do not have to do anything further, this is just a short
+note to let you know the patch status and so you don't worry they didn't
+make it through.
 
 thanks,
 
-greg k-h
+greg k-h's patch email bot
