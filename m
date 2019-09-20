@@ -2,99 +2,151 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF3EC4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C54C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:25:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE936208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EA7C20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:25:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568996637;
-	bh=SDWrzZuVG71v0J2X6nPbnKE1kFEZUtHXnpXPTYAQdcM=;
-	h=References:In-Reply-To:From:Date:Subject:To:List-ID:From;
-	b=ce3WiTTmFl+QIEW7oEozNuxZHEDHFhYDSk/sStRV2qZ/5kyUANH9oBNT8kYiONsab
-	 0okEhHQjWQA0fbQK+0S+7yr6y++vARSermHwYX75+c7xexo8Xco28xiERoM+kbhxav
-	 hCBKBXa1Gr4pk0HVw22Av98p4pO1o4EsEyHIrMM0=
+	s=default; t=1568996704;
+	bh=2l1I33Xe5hDz42o1/ZVvgVgbND3Hlh/p+Y+TYnwAq4s=;
+	h=From:To:Subject:Date:List-ID:From;
+	b=gKZpoS+VEdsdAdkl5IBYF/qxELhnWcMM5nHGyq0Ibsh5S7mrMf428bfzDoPbBnIAI
+	 /Hgyy2ldRqGCb/tXV37ldxBX6UjwQnKZt6A/qtWqyYHIyZ8piquj7jowHnbaInb6DU
+	 /9dAfd0yeiAygdGfjdKDeANIvW3ZTwn8v+8qrFHY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393629AbfITQX5 (ORCPT
+        id S2392791AbfITQZD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 12:23:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42530 "EHLO mail.kernel.org"
+        Fri, 20 Sep 2019 12:25:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388479AbfITQX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 12:23:56 -0400
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+        id S2388479AbfITQZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 12:25:03 -0400
+Received: from localhost.localdomain (unknown [194.230.155.145])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6B5721882;
-        Fri, 20 Sep 2019 16:23:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 807A92086A;
+        Fri, 20 Sep 2019 16:24:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568996635;
-        bh=SDWrzZuVG71v0J2X6nPbnKE1kFEZUtHXnpXPTYAQdcM=;
-        h=References:In-Reply-To:From:Date:Subject:To:From;
-        b=Y0NPYxXS5lxvCc5BrOJBS+38DHx4Vw4tGLuccuPjWhQHZjLN1+SP2QJbwffe6Fo6R
-         SGaBxYr0YFTOcZZ74KP24FDLyP9h6k+pQ2VXu9tF4gCqFBfBD4s3DyPTPENUcLZ1/t
-         wlNhYEZpL/2F2pyw54AFDUqkleli+20BjzwXfEhY=
-Received: by mail-ot1-f52.google.com with SMTP id g13so6665160otp.8;
-        Fri, 20 Sep 2019 09:23:54 -0700 (PDT)
-X-Gm-Message-State: APjAAAUCuy/u1YNhM7UeufgJOQkz3xHxAarqU3FarpNdvQ8qgvTl0NPW
-        aJJ0pKtxXvVhqUHS4LjkIkKkYoDrCP9QP9RJFjQ=
-X-Google-Smtp-Source: APXvYqzVXOyysg9607AyFbe3o2oRNE6mFVRauJhZAfa1N2RVl6I/Rt2f5iakVGo4VwLzm014Px6jKLwO2nAgy6rn4nA=
-X-Received: by 2002:a9d:6c9a:: with SMTP id c26mr12313571otr.241.1568996634274;
- Fri, 20 Sep 2019 09:23:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190918173141.4314-1-krzk@kernel.org> <20190918173141.4314-5-krzk@kernel.org>
-In-Reply-To: <20190918173141.4314-5-krzk@kernel.org>
+        s=default; t=1568996701;
+        bh=2l1I33Xe5hDz42o1/ZVvgVgbND3Hlh/p+Y+TYnwAq4s=;
+        h=From:To:Subject:Date:From;
+        b=KkqN5G+B13H0f1DxC21Q1GnYExFCi/itCMzpdYagApC/n9y4To3XoVVFhpK8kmKc+
+         wX7n2c7FrZmy0i0Lt4Q424i0cX/DXG8yTJ/QPMoYvWkjfgHnbzC1JLRl7Jt4ET1nE9
+         awdxdOLhY+71PiYKDUH01RXku/zvk+eI9Vra/Tf0=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Fri, 20 Sep 2019 18:23:41 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPfQFg5wC-JcHUs8btYJRfpC=NW2FOpWTHkTD6zekzHV0A@mail.gmail.com>
-Message-ID: <CAJKOXPfQFg5wC-JcHUs8btYJRfpC=NW2FOpWTHkTD6zekzHV0A@mail.gmail.com>
-Subject: Re: [PATCH v2 5/8] dt-bindings: watchdog: Convert Samsung SoC
- watchdog bindings to json-schema
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>, linux-pwm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-riscv@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-crypto@vger.kernel.org, linux-watchdog@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] ARM: dts: exynos: Rename Multi Core Timer node to just timer
+Date:   Fri, 20 Sep 2019 18:24:55 +0200
+Message-Id: <20190920162456.7294-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Sep 2019 at 19:32, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> Convert Samsung S3C/S5P/Exynos watchdog bindings to DT schema format
-> using json-schema.
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->
-> ---
->
-> Changes since v1:
-> 1. Indent example with four spaces (more readable),
-> 2. Remove unneeded timeout-sec description.
+The device node name should reflect generic class of a device so rename
+the Multi Core Timer node from "mct" to "timer".  This will be also in
+sync with upcoming DT schema.  No functional change.
 
-Superseded by v3 (although named v2...).
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ arch/arm/boot/dts/exynos3250.dtsi | 2 +-
+ arch/arm/boot/dts/exynos4210.dtsi | 2 +-
+ arch/arm/boot/dts/exynos4412.dtsi | 2 +-
+ arch/arm/boot/dts/exynos5250.dtsi | 2 +-
+ arch/arm/boot/dts/exynos5260.dtsi | 2 +-
+ arch/arm/boot/dts/exynos54xx.dtsi | 2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
 
-Best regards,
-Krzysztof
+diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
+index 784818490376..d122fb52d3d4 100644
+--- a/arch/arm/boot/dts/exynos3250.dtsi
++++ b/arch/arm/boot/dts/exynos3250.dtsi
+@@ -265,7 +265,7 @@
+ 					(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+ 		};
+ 
+-		mct@10050000 {
++		timer@10050000 {
+ 			compatible = "samsung,exynos4210-mct";
+ 			reg = <0x10050000 0x800>;
+ 			interrupts = <GIC_SPI 218 IRQ_TYPE_LEVEL_HIGH>,
+diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
+index f220716239db..6d3f19562aab 100644
+--- a/arch/arm/boot/dts/exynos4210.dtsi
++++ b/arch/arm/boot/dts/exynos4210.dtsi
+@@ -106,7 +106,7 @@
+ 			arm,data-latency = <2 2 1>;
+ 		};
+ 
+-		mct: mct@10050000 {
++		mct: timer@10050000 {
+ 			compatible = "samsung,exynos4210-mct";
+ 			reg = <0x10050000 0x800>;
+ 			interrupt-parent = <&mct_map>;
+diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
+index d20db2dfe8e2..8b6d5875c75d 100644
+--- a/arch/arm/boot/dts/exynos4412.dtsi
++++ b/arch/arm/boot/dts/exynos4412.dtsi
+@@ -243,7 +243,7 @@
+ 			clock-names = "aclk200", "aclk400_mcuisp";
+ 		};
+ 
+-		mct@10050000 {
++		timer@10050000 {
+ 			compatible = "samsung,exynos4412-mct";
+ 			reg = <0x10050000 0x800>;
+ 			interrupt-parent = <&mct_map>;
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+index fc966c10cf49..7a01349317a3 100644
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -233,7 +233,7 @@
+ 			power-domains = <&pd_mau>;
+ 		};
+ 
+-		mct@101c0000 {
++		timer@101c0000 {
+ 			compatible = "samsung,exynos4210-mct";
+ 			reg = <0x101C0000 0x800>;
+ 			interrupt-controller;
+diff --git a/arch/arm/boot/dts/exynos5260.dtsi b/arch/arm/boot/dts/exynos5260.dtsi
+index 3581b57fbbf7..b0811dbbb362 100644
+--- a/arch/arm/boot/dts/exynos5260.dtsi
++++ b/arch/arm/boot/dts/exynos5260.dtsi
+@@ -180,7 +180,7 @@
+ 			reg = <0x10000000 0x100>;
+ 		};
+ 
+-		mct: mct@100b0000 {
++		mct: timer@100b0000 {
+ 			compatible = "samsung,exynos4210-mct";
+ 			reg = <0x100B0000 0x1000>;
+ 			clocks = <&fin_pll>, <&clock_peri PERI_CLK_MCT>;
+diff --git a/arch/arm/boot/dts/exynos54xx.dtsi b/arch/arm/boot/dts/exynos54xx.dtsi
+index 9c3b63b7cac6..247d23872384 100644
+--- a/arch/arm/boot/dts/exynos54xx.dtsi
++++ b/arch/arm/boot/dts/exynos54xx.dtsi
+@@ -64,7 +64,7 @@
+ 			};
+ 		};
+ 
+-		mct: mct@101c0000 {
++		mct: timer@101c0000 {
+ 			compatible = "samsung,exynos4210-mct";
+ 			reg = <0x101c0000 0xb00>;
+ 			interrupt-parent = <&mct_map>;
+-- 
+2.17.1
+
