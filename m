@@ -2,98 +2,105 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D115C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70814C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:45:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A36D207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:44:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C5B6207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:45:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TI4eCWvd"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UTCz5T9p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404845AbfITRoU (ORCPT
+        id S2404866AbfITRpc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 13:44:20 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59552 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390815AbfITRoU (ORCPT
+        Fri, 20 Sep 2019 13:45:32 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:41947 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390815AbfITRpc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 13:44:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ovMe4y08y+gJOUTLRDBs5kzt3uw/f1wh2n3/aAOTSH8=; b=TI4eCWvdrtlynBAhXhZtUpOBT
-        QAaskZ2qjph7sZvTc+x8DV86O59QRR6rCD8ysQlK453rEZb2U6KhHoWrZ/HwXfSX+JSeTQCwk60iC
-        GnGoiLCsT5ytQPL2zMgcw63VrpKV7/LYkjAthz6i2qoQ04wmktHLl5K/7yNYRqtEAwgO7sdlLyzTN
-        15S6FrVCBqzTbxQwtOMaZpYBsm1WKjG3QpGH/VebcVMEqFux3EDt453f+YrPQaAJI6afj79/B+Imn
-        vkuqKKvJYrgEijh83IY0ivaxTNNrIotpP0uXKWl4znYg26ntu8K0VPfdh820Uk7W8YXSzVsElkV+x
-        Sv1SzI6QQ==;
-Received: from [2601:1c0:6280:3f0::9a1f]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iBMx9-0001gi-Vw; Fri, 20 Sep 2019 17:44:20 +0000
-Subject: Re: [PATCH v8 0/9] Multicolor FW v8 update
-To:     Dan Murphy <dmurphy@ti.com>, jacek.anaszewski@gmail.com,
-        pavel@ucw.cz
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190920174139.30079-1-dmurphy@ti.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <01ff2638-8952-e8a3-0c59-ac87f63d24c0@infradead.org>
-Date:   Fri, 20 Sep 2019 10:44:19 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 20 Sep 2019 13:45:32 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q7so4974203pfh.8
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 10:45:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mMjUKUF3cIfdwdDd6wOmWCRURy4vMFjlEXHfVSbHKE0=;
+        b=UTCz5T9pTipG2ai3Jg0Q2nLrumMBsZhbBYDBqQeWIwPKw467MxwPADbkU5ZxAPXYak
+         gGE21KA0GUnOPMfpGHJpRyhexqtvhqj0uJOLTqERkxIRPfJMYpNTm/TmON/hiroMJHZK
+         ApBSGFBG7cqHEJ3fNcDkvNO9VtiV+V0XGfwSc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mMjUKUF3cIfdwdDd6wOmWCRURy4vMFjlEXHfVSbHKE0=;
+        b=V6ymIw8goTPKEWcMR7C76hliH0YSalYUVlEKQiSx9B897psI7mc33ZbWT6DL+Xjqha
+         H1w32Yiqr5hpv7LVPGueCpqMekmLAQzWihtWFexxm0/xLsn16Atzn/ch76O9V/lAeunF
+         qb7XYHIQvYpatIJj6S3CeOD3Pmlsjtjvg5A/I/MYjOMGffn+1FwXzy4njKFl92IKGLLe
+         saUatWLJBHeI0Ldm0lVaBJj3b0w+DtTOg1DP2UBIvDkc7eKPLB74yk20ichFHGJzE9zd
+         9hCriWW3rPlKFGsg4SD37+Xtc/hRH4F/3aZE/PSh7Bc1WiuaGP4s0d7pW25bkzcMWxYK
+         RLRw==
+X-Gm-Message-State: APjAAAWiwfcGdI5GzprwQr4dN1QM1xIyKRoyVCrMuiQadaDvRONvtiee
+        Bl4CA3h8blAB6hLZ+GY7hjby6Q==
+X-Google-Smtp-Source: APXvYqw7hLLTq624hJAfLh5Bf90XWkrLIfcdhQSjveXlcb9vAIQZKYDDx0Gne0UGshnbMBfiEZFPRg==
+X-Received: by 2002:a17:90a:d0c4:: with SMTP id y4mr6213248pjw.116.1569001531394;
+        Fri, 20 Sep 2019 10:45:31 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id p189sm2492672pga.2.2019.09.20.10.45.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Sep 2019 10:45:30 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Jason Wessel <jason.wessel@windriver.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Will Deacon <will@kernel.org>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Greg KH <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>
+Subject: [PATCH] MAINTAINERS: kgdb: Add myself as a reviewer for kgdb/kdb
+Date:   Fri, 20 Sep 2019 10:44:47 -0700
+Message-Id: <20190920104404.1.I237e68e8825e2d6ac26f8e847f521fe2fcc3705a@changeid>
+X-Mailer: git-send-email 2.23.0.351.gc4317032e6-goog
 MIME-Version: 1.0
-In-Reply-To: <20190920174139.30079-1-dmurphy@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/20/19 10:41 AM, Dan Murphy wrote:
-> Hello
-> 
-> Per request I removed the ops structure.  But there is a potential need for some
-> device drivers to have a call back that sets the intesity of the LED color
-> without modifying the hardware register.  The hardware registers are only updated
-> when the brightness_set<op> is called.  The need arises with the LP50xx chip
-> series where the chip has 2 control knobs to modify the output current to the
-> LED.  In most cases drivers only have a single brightness register for a given
-> iOUT pin.  But the LP50xx has a brightness register that controls cluster
-> brightness and individual registers to control the monochrome LED intensity.
-> 
-> The set_color_brightness call back has been simplified in the LP50xx device
-> driver so that it can cache the LED intensity in it's stack for a specific color
-> as opposed to having to call back into the MC FW for the current intensity which
-> made the driver complex.
+I'm interested in kdb / kgdb and have sent various fixes over the
+years.  I'd like to get CCed on patches so I can be aware of them and
+also help review.
 
-"FW" historically means either firmware or firewire.
-Please spell out framework in the future.
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
-> Once the set_brightness<op> is called the driver can set the brightness and then
-> set the LED intensity registers if the driver has that ability.
-> 
-> Dan
-> 
-> Dan Murphy (9):
->   leds: multicolor: Add sysfs interface definition
->   documention: leds: Add multicolor class documentation
->   dt: bindings: Add multicolor class dt bindings documention
->   dt-bindings: leds: Add multicolor ID to the color ID list
->   leds: Add multicolor ID to the color ID list
->   leds: multicolor: Introduce a multicolor class definition
->   dt: bindings: lp50xx: Introduce the lp50xx family of RGB drivers
->   leds: lp50xx: Add the LP50XX family of the RGB LED driver
->   leds: Update the lp55xx to use the multi color framework
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-
-Thanks.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c740cf3f93ef..d243c70fc8ce 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9052,6 +9052,7 @@ F:	security/keys/
+ KGDB / KDB /debug_core
+ M:	Jason Wessel <jason.wessel@windriver.com>
+ M:	Daniel Thompson <daniel.thompson@linaro.org>
++R:	Douglas Anderson <dianders@chromium.org>
+ W:	http://kgdb.wiki.kernel.org/
+ L:	kgdb-bugreport@lists.sourceforge.net
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/jwessel/kgdb.git
 -- 
-~Randy
+2.23.0.351.gc4317032e6-goog
+
