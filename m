@@ -2,88 +2,108 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B84C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 21:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D86C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 21:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D10720B7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 21:22:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569014536;
-	bh=c8bKi5gxH/slUGOKQqLHUtK90XeqzDTtSmwbWANAwRw=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=OU0Vq5gYoigZhsJJhLY7Lci4iNQuPPiEALJt+UU3lBnD39yIHQpGyR/bxQzd5jpKW
-	 UOl0+zXKOetCdOLUhOcNvXaZOI6e8mmZrQJPmuPghmqlwGpKqY4yWPtGR0VwWShb9D
-	 3TaZPjxac5DGAZZsK6haFNTQBRc47ROHyRAezCBM=
+	by mail.kernel.org (Postfix) with ESMTP id 2C6EA20820
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 21:25:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730148AbfITVWP (ORCPT
+        id S2392396AbfITVZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 17:22:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34872 "EHLO mail.kernel.org"
+        Fri, 20 Sep 2019 17:25:13 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57976 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725842AbfITVWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 17:22:15 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1729784AbfITVZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 17:25:12 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03A2220820;
-        Fri, 20 Sep 2019 21:22:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569014534;
-        bh=c8bKi5gxH/slUGOKQqLHUtK90XeqzDTtSmwbWANAwRw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=qtxRmAA1kVflFC7NmXe8AeO3HJErM2DLot+79QH/xvek+t+RtehYCzwTulonynkIZ
-         P9HP6fLZjc7hm3zdM3XAWmDZt1I3I+PLKP2AjfpYGa/jWxTqRVu5TBygq28JepZsGw
-         3MfwkYHm5bFINBcO2vg28BdP/VfzQRwwkYe66LuU=
-Subject: Re: [PATCH 4.14 00/59] 4.14.146-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        by mx1.redhat.com (Postfix) with ESMTPS id 80B048980F5;
+        Fri, 20 Sep 2019 21:25:12 +0000 (UTC)
+Received: from mail (ovpn-120-159.rdu2.redhat.com [10.10.120.159])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0833B10013D9;
+        Fri, 20 Sep 2019 21:25:10 +0000 (UTC)
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190919214755.852282682@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <390db9a4-9ecd-576a-0a67-ec7ccda79edc@kernel.org>
-Date:   Fri, 20 Sep 2019 15:22:13 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+Subject: [PATCH 01/17] x86: spec_ctrl: fix SPEC_CTRL initialization after kexec
+Date:   Fri, 20 Sep 2019 17:24:53 -0400
+Message-Id: <20190920212509.2578-2-aarcange@redhat.com>
+In-Reply-To: <20190920212509.2578-1-aarcange@redhat.com>
+References: <20190920212509.2578-1-aarcange@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190919214755.852282682@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Fri, 20 Sep 2019 21:25:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/19/19 4:03 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.146 release.
-> There are 59 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat 21 Sep 2019 09:44:25 PM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.146-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+We can't assume the SPEC_CTRL msr is zero at boot because it could be
+left enabled by a previous kernel booted with
+spec_store_bypass_disable=on.
 
-Compiled and booted on my test system. No dmesg regressions.
+Without this fix a boot with spec_store_bypass_disable=on followed by
+a kexec boot with spec_store_bypass_disable=off would erroneously and
+unexpectedly leave bit 2 set in SPEC_CTRL.
 
-thanks,
--- Shuah
+Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
+---
+ arch/x86/include/asm/msr-index.h |  2 ++
+ arch/x86/kernel/cpu/bugs.c       | 20 +++++++++++++++++++-
+ 2 files changed, 21 insertions(+), 1 deletion(-)
 
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index 20ce682a2540..3ba95728a6fe 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -47,6 +47,8 @@
+ #define SPEC_CTRL_STIBP			BIT(SPEC_CTRL_STIBP_SHIFT)	/* STIBP mask */
+ #define SPEC_CTRL_SSBD_SHIFT		2	   /* Speculative Store Bypass Disable bit */
+ #define SPEC_CTRL_SSBD			BIT(SPEC_CTRL_SSBD_SHIFT)	/* Speculative Store Bypass Disable */
++#define SPEC_CTRL_ALL			(SPEC_CTRL_IBRS|SPEC_CTRL_STIBP| \
++					 SPEC_CTRL_SSBD) /* all known bits */
+ 
+ #define MSR_IA32_PRED_CMD		0x00000049 /* Prediction Command */
+ #define PRED_CMD_IBPB			BIT(0)	   /* Indirect Branch Prediction Barrier */
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index 91c2561b905f..e3922dcf252f 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -92,8 +92,26 @@ void __init check_bugs(void)
+ 	 * have unknown values. AMD64_LS_CFG MSR is cached in the early AMD
+ 	 * init code as it is not enumerated and depends on the family.
+ 	 */
+-	if (boot_cpu_has(X86_FEATURE_MSR_SPEC_CTRL))
++	if (boot_cpu_has(X86_FEATURE_MSR_SPEC_CTRL)) {
+ 		rdmsrl(MSR_IA32_SPEC_CTRL, x86_spec_ctrl_base);
++		/*
++		 * Clear the non reserved bits from x86_spec_ctrl_base
++		 * to fix kexec. Otherwise for example SSBD could be
++		 * left enabled despite booting with
++		 * spec_store_bypass_disable=off because SSBD would be
++		 * erroneously mistaken as a reserved bit set by the
++		 * BIOS when in fact it was set by a previous kernel
++		 * booted with spec_store_bypass_disable=on. Careful
++		 * however not to write SPEC_CTRL unnecessarily to
++		 * keep the virt MSR intercept enabled as long as
++		 * possible.
++		 */
++		if (x86_spec_ctrl_base & SPEC_CTRL_ALL) {
++			/* all known bits must not be set at boot, clear it */
++			x86_spec_ctrl_base &= ~SPEC_CTRL_ALL;
++			wrmsrl(MSR_IA32_SPEC_CTRL, x86_spec_ctrl_base);
++		}
++	}
+ 
+ 	/* Allow STIBP in MSR_SPEC_CTRL if supported */
+ 	if (boot_cpu_has(X86_FEATURE_STIBP))
