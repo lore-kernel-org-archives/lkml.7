@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BC2C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA7AC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DB5F207E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:25:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBE1C207E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:25:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388559AbfITOZc (ORCPT
+        id S2388574AbfITOZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:25:32 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35698 "EHLO
+        Fri, 20 Sep 2019 10:25:35 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35758 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387889AbfITOZA (ORCPT
+        by vger.kernel.org with ESMTP id S2388019AbfITOZA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Sep 2019 10:25:00 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqC-0004wb-Sc; Fri, 20 Sep 2019 15:24:56 +0100
+        id 1iBJqD-0004x2-PA; Fri, 20 Sep 2019 15:24:57 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqC-0007pv-GY; Fri, 20 Sep 2019 15:24:56 +0100
+        id 1iBJqC-0007qi-TX; Fri, 20 Sep 2019 15:24:56 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "Andrew Vasquez" <andrewv@marvell.com>,
-        "Himanshu Madhani" <hmadhani@marvell.com>
+        "YueHaibing" <yuehaibing@huawei.com>,
+        "Robert Jarzmik" <robert.jarzmik@free.fr>
 Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.752694848@decadent.org.uk>
+Message-ID: <lsq.1568989415.912264975@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 017/132] scsi: qla2xxx: Fix incorrect region-size
- setting in optrom SYSFS routines
+Subject: [PATCH 3.16 027/132] ARM: pxa: ssp: Fix "WARNING: invalid free of
+ devm_ allocated data"
 In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,42 +56,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Andrew Vasquez <andrewv@marvell.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-commit 5cbdae10bf11f96e30b4d14de7b08c8b490e903c upstream.
+commit 9ee8578d953023cc57e7e736ae48502c707c0210 upstream.
 
-Commit e6f77540c067 ("scsi: qla2xxx: Fix an integer overflow in sysfs
-code") incorrectly set 'optrom_region_size' to 'start+size', which can
-overflow option-rom boundaries when 'start' is non-zero.  Continue setting
-optrom_region_size to the proper adjusted value of 'size'.
+Since commit 1c459de1e645 ("ARM: pxa: ssp: use devm_ functions")
+kfree, iounmap, clk_put etc are not needed anymore in remove path.
 
-Fixes: e6f77540c067 ("scsi: qla2xxx: Fix an integer overflow in sysfs code")
-Signed-off-by: Andrew Vasquez <andrewv@marvell.com>
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 1c459de1e645 ("ARM: pxa: ssp: use devm_ functions")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+[ commit message spelling fix ]
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/scsi/qla2xxx/qla_attr.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/plat-pxa/ssp.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
---- a/drivers/scsi/qla2xxx/qla_attr.c
-+++ b/drivers/scsi/qla2xxx/qla_attr.c
-@@ -423,7 +423,7 @@ qla2x00_sysfs_write_optrom_ctl(struct fi
- 		}
+--- a/arch/arm/plat-pxa/ssp.c
++++ b/arch/arm/plat-pxa/ssp.c
+@@ -232,18 +232,12 @@ static int pxa_ssp_probe(struct platform
  
- 		ha->optrom_region_start = start;
--		ha->optrom_region_size = start + size;
-+		ha->optrom_region_size = size;
+ static int pxa_ssp_remove(struct platform_device *pdev)
+ {
+-	struct resource *res;
+ 	struct ssp_device *ssp;
  
- 		ha->optrom_state = QLA_SREADING;
- 		ha->optrom_buffer = vmalloc(ha->optrom_region_size);
-@@ -495,7 +495,7 @@ qla2x00_sysfs_write_optrom_ctl(struct fi
- 		}
+ 	ssp = platform_get_drvdata(pdev);
+ 	if (ssp == NULL)
+ 		return -ENODEV;
  
- 		ha->optrom_region_start = start;
--		ha->optrom_region_size = start + size;
-+		ha->optrom_region_size = size;
- 
- 		ha->optrom_state = QLA_SWRITING;
- 		ha->optrom_buffer = vmalloc(ha->optrom_region_size);
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	release_mem_region(res->start, resource_size(res));
+-
+-	clk_put(ssp->clk);
+-
+ 	mutex_lock(&ssp_lock);
+ 	list_del(&ssp->node);
+ 	mutex_unlock(&ssp_lock);
 
