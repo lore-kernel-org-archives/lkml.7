@@ -2,102 +2,87 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB61AC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E2BBC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB6922086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:03:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60F852086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:07:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390473AbfITPDD (ORCPT
+        id S2390559AbfITPHT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 11:03:03 -0400
-Received: from mga06.intel.com ([134.134.136.31]:20443 "EHLO mga06.intel.com"
+        Fri, 20 Sep 2019 11:07:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:46088 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387693AbfITPDC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 11:03:02 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Sep 2019 08:03:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,528,1559545200"; 
-   d="scan'208";a="387632241"
-Received: from eergin-mobl.ger.corp.intel.com (HELO localhost) ([10.252.40.12])
-  by fmsmga005.fm.intel.com with ESMTP; 20 Sep 2019 08:02:58 -0700
-Date:   Fri, 20 Sep 2019 18:02:57 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Vanya Lazeev <ivan.lazeev@gmail.com>
-Cc:     Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] tpm_crb: fix fTPM on AMD Zen+ CPUs
-Message-ID: <20190920150257.GF9578@linux.intel.com>
-References: <20190914171743.22786-1-ivan.lazeev@gmail.com>
- <20190916055130.GA7925@linux.intel.com>
- <20190916200029.GA27567@hv-1.home>
- <20190917190950.GG10244@linux.intel.com>
- <20190917205402.GA2500@hv-1.home>
+        id S2387614AbfITPHT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 11:07:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 73C27337;
+        Fri, 20 Sep 2019 08:07:18 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 144D23F575;
+        Fri, 20 Sep 2019 08:07:17 -0700 (PDT)
+Date:   Fri, 20 Sep 2019 16:07:14 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>, linux-pci@vger.kernel.org,
+        YueHaibing <yuehaibing@huawei.com>, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: tegra: include linux/pinctrl/consumer.h
+Message-ID: <20190920150714.GK9720@e119886-lin.cambridge.arm.com>
+References: <20190920145518.1721180-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190917205402.GA2500@hv-1.home>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190920145518.1721180-1-arnd@arndb.de>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 11:54:03PM +0300, Vanya Lazeev wrote:
-> On Tue, Sep 17, 2019 at 10:10:13PM +0300, Jarkko Sakkinen wrote:
-> > On Mon, Sep 16, 2019 at 11:00:30PM +0300, Vanya Lazeev wrote:
-> > > On Mon, Sep 16, 2019 at 08:51:30AM +0300, Jarkko Sakkinen wrote:
-> > > > On Sat, Sep 14, 2019 at 08:17:44PM +0300, ivan.lazeev@gmail.com wrote:
-> > > > > +	struct list_head acpi_resources, crb_resources;
-> > > > 
-> > > > Please do not create crb_resources. I said this already last time.
-> > > 
-> > > But then, if I'm not mistaken, it will be impossible to track pointers
-> > > to multiple remaped regions. In this particular case, it
-> > > doesn't matter, because both buffers are in different ACPI regions,
-> > > and using acpi_resources only to fix buffer will be enough.
-> > > However, this creates incosistency between single- and
-> > > multiple-region cases: in the latter iobase field of struct crb_priv
-> > > doesn't make any difference. Am I understanding the situation correctly?
-> > > Will such fix be ok?
-> > 
-> > So why you need to track pointers other than in initialization as devm
-> > will take care of freeing them. Just trying to understand the problem.
-> >
+On Fri, Sep 20, 2019 at 04:55:05PM +0200, Arnd Bergmann wrote:
+> Without this, we can run into a build failure:
 > 
-> We need to know, which ioremap'ed address assign to control area, command
-> and response buffer, based on which ACPI region contains each of them.
-> Is there any method of getting remapped address for the raw one after
-> resouce containing it has been allocated?
-> And what do you mean by initialization? crb_resources lives only in
-> crb_map_io, which seems to run only once.
+> drivers/pci/controller/dwc/pcie-tegra194.c:1394:8: error: implicit declaration of function 'pinctrl_pm_select_default_state' [-Werror,-Wimplicit-function-declaration]
+> 
+> Fixes: ab2a50e7602b ("PCI: tegra: Add support to configure sideband pins")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Aah, I see.
+Thanks for this. Another fix for this came in earlier today:
 
-Well at leat we want the dynamic allocation away from the callback e.g.
-use a fixed array:
+https://patchwork.ozlabs.org/patch/1165139/
 
-#define TPM_CRB_MAX_RESOURCES 4 /* Or however many you need */
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 
-struct list_head acpi_res_list;
-struct acpi_resource *acpi_res_array[TPM_CRB_MAX_RESOURCES];
-void __iomem *iobase_array[TPM_CRB_MAX_RESOURCES];
+Thanks,
 
-If there are more resources than the constant you could issue a warning
-to klog but still try top continue initialization.
+Andrew Murray
 
-PS. Use for new symbols TPM_CRB_ and tpm_crb_ prefixes. Because of
-easier tracing of TPM code I want to move to this naming over time.
-
-/Jarkko
+> ---
+>  drivers/pci/controller/dwc/pcie-tegra194.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> index 09ed8e473cff..f89f5acee72d 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/of_pci.h>
+>  #include <linux/pci.h>
+>  #include <linux/phy/phy.h>
+> +#include <linux/pinctrl/consumer.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/random.h>
+> -- 
+> 2.20.0
+> 
