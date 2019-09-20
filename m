@@ -2,207 +2,342 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 970BDC4CECD
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 03:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84478C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 03:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E5EE2196E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 03:36:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42306214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 03:39:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b/bXOaJR"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="d7/wX9zA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437127AbfITDgz (ORCPT
+        id S2406848AbfITDj0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 23:36:55 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46008 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403998AbfITDgz (ORCPT
+        Thu, 19 Sep 2019 23:39:26 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:19802 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403998AbfITDjZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 23:36:55 -0400
-Received: by mail-pf1-f195.google.com with SMTP id y72so3570457pfb.12
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 20:36:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lUYR9AKlw+Jg9fAgp+bo3evKjj5u2pOik0hEjvoOS0w=;
-        b=b/bXOaJR7UYWCi+V3oKX2f3XqiEJ4C3XjD6bwqnfTXN8KE/2m6efJJGExtqcdVuzH7
-         PjH/QPiHNdTWoefXDNhCyCzGEO8WC4dw8meNZF/6W1TJrWpO98qaJMvYM6Y54yAgYeUQ
-         mhi911axepO0/Tb5iRaKWl705pV3Lz6Dw12YWE1r94lKivor6cElZeYmnrVwkYN0Nfvy
-         Y85CYYlhnNr6d8nIXNjhhhizdNI8UHaPDv7mAmZmllIbcxHNCKkH1nx4yhYmIymQ0FZo
-         gMKkQlEEPrkOcTyYI94oqn7/OtFDai7OHYP5V6Rc2Se+WZL/zbkM8D0K2UnGWP3Axj82
-         uKTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lUYR9AKlw+Jg9fAgp+bo3evKjj5u2pOik0hEjvoOS0w=;
-        b=H/0hq7zVeraxe2EENYgZGK5/PzvpbBNIPFFm8KqgsgVvNJH7R1FOq5wUw3gbgsQAzl
-         eVfhbxo8LJu+XCBf/nLUNQVeqnGmAfAULKzkMQ1UJNSLo7w5YGek8crju44p473nXo5r
-         9WkTt2KVXs4r6g5786d+l1KvwhnWq7Fz7nIxiZs7amYkGADjXGpBxGh1TcWBNDeJMWSe
-         09Qme9SbeOJGvF3/8QthOBZLQa417WKQmgbZRGhiyczj55YgLrjq5OLYf4Lbek6nPL73
-         slfUqWN/LgwmrAfgHyOwxH0SYK64nvyDZtOt2RAjHpge6ofcpBdpApfRHwtSwZMQF1Vp
-         gNEQ==
-X-Gm-Message-State: APjAAAUsPJ67p0DZwqpyKlYpGZWKTaKhLFZ40/qtwvOlqYSVRTwCL8tf
-        FSuu9JEOpW8+Zgo/mdVEOpmeyw==
-X-Google-Smtp-Source: APXvYqwYu8Uko2gE0dG/f15yfaYTsBLl2OxEokOTCPqok1ivZmMoaulMDNzzxEQhIao/eOxoz+HN0Q==
-X-Received: by 2002:a62:2ac9:: with SMTP id q192mr14936302pfq.189.1568950614272;
-        Thu, 19 Sep 2019 20:36:54 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id q88sm443897pjq.9.2019.09.19.20.36.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2019 20:36:53 -0700 (PDT)
-Date:   Thu, 19 Sep 2019 20:36:51 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Murali Nalajala <mnalajal@codeaurora.org>, rafael@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] base: soc: Export soc_device_to_device API
-Message-ID: <20190920033651.GC63675@minitux>
-References: <1568927624-13682-1-git-send-email-mnalajal@codeaurora.org>
- <20190919213203.GA395325@kroah.com>
- <20190919215300.GC1418@minitux>
- <20190919215836.GA426988@kroah.com>
- <20190919221456.GA63675@minitux>
- <20190919222525.GA445429@kroah.com>
- <20190919224017.GB63675@minitux>
- <20190919224514.GA447028@kroah.com>
+        Thu, 19 Sep 2019 23:39:25 -0400
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x8K3dGbl010388;
+        Fri, 20 Sep 2019 12:39:17 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x8K3dGbl010388
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1568950758;
+        bh=Ux/+iRV8UXofy4VWEWSRig3D3i20pzILOBR3KJZal+U=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=d7/wX9zAwcfTuu07KxjHoyk4bbERSOh4FgmHRt21bpzP6MCp8YC9Hvsjb1CXx5vnt
+         SkazDf6AhRTThJuOimK1bg+PA+C/IYBVDexvSrTovxq/9v7B7e1gib4Ch+FxyQq3Pj
+         uilyVtvzCzcdSAAt+9vp7+KWh8eZ/u7ZZX4KoblUI4lYxkUc7yYismt+9DrOeGzQFF
+         wFHdCzfBWRglGE+qWOjiPnO9hYb/9BnmtCibRYNmYBHcJ3RNGi9LuYAuJQpmGoL992
+         9XaYgqXjNlWeaVfaBt6A0IYubg2XzwIfFWj70fl5+xcT4xeIo/Gyzl7LTuFiTqR4g8
+         TXGXLe60BZ8uw==
+X-Nifty-SrcIP: [209.85.217.45]
+Received: by mail-vs1-f45.google.com with SMTP id v19so3785717vsv.3;
+        Thu, 19 Sep 2019 20:39:17 -0700 (PDT)
+X-Gm-Message-State: APjAAAUQ9WPQD1uCm3612Py6k9pXrfEa6KX6Vvdh0IANv05rIa3GkvkO
+        qVxWrA4XxI3EvAMyhdUgtvq9NSO+h1DPhux6LAs=
+X-Google-Smtp-Source: APXvYqyr35uZy7o2A+2HvnWPchBCPKo8RtIq3Uyc/JpMaNOK+V7GLgMOmsFNT+zvzuRgsvloNhoAJj1cGwrYXK4XCqI=
+X-Received: by 2002:a67:1a41:: with SMTP id a62mr1218203vsa.54.1568950756091;
+ Thu, 19 Sep 2019 20:39:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190919224514.GA447028@kroah.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <CAK7LNARsoed86dY75b_HNXXkCXRAKdMUGaEWUUca4BuGaZCwcg@mail.gmail.com>
+ <20190917150902.GA4116@linux-8ccs> <CAK7LNAR_8atC3M9gGQ=DBwzFG52PVuNaFVAzAr32TKxTwDCLug@mail.gmail.com>
+ <20190917180136.GA10376@linux-8ccs> <20190917181636.7sngz5lrldx34rth@willie-the-truck>
+ <20190917184844.GA15149@linux-8ccs>
+In-Reply-To: <20190917184844.GA15149@linux-8ccs>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 20 Sep 2019 12:38:40 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARxmDwu4QmV3bRBtptu-jUaHum=hHaia11-vmOd2ZkeKw@mail.gmail.com>
+Message-ID: <CAK7LNARxmDwu4QmV3bRBtptu-jUaHum=hHaia11-vmOd2ZkeKw@mail.gmail.com>
+Subject: Re: [GIT PULL] Kbuild updates for v5.4-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Matthias Maennich <maennich@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jessica Yu <jeyu@kernel.org>
+Content-Type: multipart/mixed; boundary="0000000000007d17a50592f3d000"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 19 Sep 15:45 PDT 2019, Greg KH wrote:
+--0000000000007d17a50592f3d000
+Content-Type: text/plain; charset="UTF-8"
 
-> On Thu, Sep 19, 2019 at 03:40:17PM -0700, Bjorn Andersson wrote:
-> > On Thu 19 Sep 15:25 PDT 2019, Greg KH wrote:
-> > 
-> > > On Thu, Sep 19, 2019 at 03:14:56PM -0700, Bjorn Andersson wrote:
-> > > > On Thu 19 Sep 14:58 PDT 2019, Greg KH wrote:
-> > > > 
-> > > > > On Thu, Sep 19, 2019 at 02:53:00PM -0700, Bjorn Andersson wrote:
-> > > > > > On Thu 19 Sep 14:32 PDT 2019, Greg KH wrote:
-> > > > > > 
-> > > > > > > On Thu, Sep 19, 2019 at 02:13:44PM -0700, Murali Nalajala wrote:
-> > > > > > > > If the soc drivers want to add custom sysfs entries it needs to
-> > > > > > > > access "dev" field in "struct soc_device". This can be achieved
-> > > > > > > > by "soc_device_to_device" API. Soc drivers which are built as a
-> > > > > > > > module they need above API to be exported. Otherwise one can
-> > > > > > > > observe compilation issues.
-> > > > > > > > 
-> > > > > > > > Signed-off-by: Murali Nalajala <mnalajal@codeaurora.org>
-> > > > > > > > ---
-> > > > > > > >  drivers/base/soc.c | 1 +
-> > > > > > > >  1 file changed, 1 insertion(+)
-> > > > > > > > 
-> > > > > > > > diff --git a/drivers/base/soc.c b/drivers/base/soc.c
-> > > > > > > > index 7c0c5ca..4ad52f6 100644
-> > > > > > > > --- a/drivers/base/soc.c
-> > > > > > > > +++ b/drivers/base/soc.c
-> > > > > > > > @@ -41,6 +41,7 @@ struct device *soc_device_to_device(struct soc_device *soc_dev)
-> > > > > > > >  {
-> > > > > > > >  	return &soc_dev->dev;
-> > > > > > > >  }
-> > > > > > > > +EXPORT_SYMBOL_GPL(soc_device_to_device);
-> > > > > > > >  
-> > > > > > > >  static umode_t soc_attribute_mode(struct kobject *kobj,
-> > > > > > > >  				struct attribute *attr,
-> > > > > > > 
-> > > > > > > What in-kernel driver needs this?
-> > > > > > > 
-> > > > > > 
-> > > > > > Half of the drivers interacting with the soc driver calls this API,
-> > > > > > several of these I see no reason for being builtin (e.g.
-> > > > > > ux500 andversatile). So I think this patch makes sense to allow us to
-> > > > > > build these as modules.
-> > > > > > 
-> > > > > > > Is linux-next breaking without this?
-> > > > > > > 
-> > > > > > 
-> > > > > > No, we postponed the addition of any sysfs attributes in the Qualcomm
-> > > > > > socinfo driver.
-> > > > > > 
-> > > > > > > We don't export things unless we have a user of the export.
-> > > > > > > 
-> > > > > > > Also, adding "custom" sysfs attributes is almost always not the correct
-> > > > > > > thing to do at all.  The driver should be doing it, by setting up the
-> > > > > > > attribute group properly so that the driver core can do it automatically
-> > > > > > > for it.
-> > > > > > > 
-> > > > > > > No driver should be doing individual add/remove of sysfs files.  If it
-> > > > > > > does so, it is almost guaranteed to be doing it incorrectly and racing
-> > > > > > > userspace.
-> > > > > > > 
-> > > > > > 
-> > > > > > The problem here is that the attributes are expected to be attached to
-> > > > > > the soc driver, which is separate from the platform-specific drivers. So
-> > > > > > there's no way to do platform specific attributes the right way.
-> > > > > > 
-> > > > > > > And yes, there's loads of in-kernel examples of doing this wrong, I've
-> > > > > > > been working on fixing that up, look at the patches now in Linus's tree
-> > > > > > > for platform and USB drivers that do this as examples of how to do it
-> > > > > > > right.
-> > > > > > > 
-> > > > > > 
-> > > > > > Agreed, this patch should not be used as an approval for any crazy
-> > > > > > attributes; but it's necessary in order to extend the soc device's
-> > > > > > attributes, per the current design.
-> > > > > 
-> > > > > Wait, no, let's not let the "current design" remain if it is broken!
-> > > > > 
-> > > > > Why can't the soc driver handle the attributes properly so that the
-> > > > > individual driver doesn't have to do the create/remove?
-> > > > > 
-> > > > 
-> > > > The custom attributes that these drivers want to add to the common ones
-> > > > are known in advance, so I presume we could have them passed into
-> > > > soc_device_register() and registered together with the common
-> > > > attributes...
-> > > > 
-> > > > It sounds like it's worth a prototype.
-> > > 
-> > > Do you have an in-kernel example I can look at to get an idea of what is
-> > > needed here?
-> > > 
-> > 
-> > realview_soc_probe(), in drivers/soc/versatile/soc-realview.c,
-> > implements the current mechanism of acquiring the soc's struct device
-> > and then issuing a few device_create_file calls on that.
-> 
-> That looks to be a trivial driver to fix up.  Look at 6d03c140db2e
-> ("USB: phy: fsl-usb: convert platform driver to use dev_groups") as an
-> example of how to do this.
-> 
+Hi Linus,
 
-The difference between the two cases is that in the fsl-usb case it's
-attributes of the device itself, while in the soc case the realview-soc
-driver (or the others doing this) calls soc_device_register() to
-register a new (dangling) soc device, which it then adds its attributes
-onto.
+On Wed, Sep 18, 2019 at 3:48 AM Jessica Yu <jeyu@kernel.org> wrote:
+>
+> +++ Will Deacon [17/09/19 19:16 +0100]:
+> >Hi Jessica,
+> >
+> >On Tue, Sep 17, 2019 at 08:01:36PM +0200, Jessica Yu wrote:
+> >> Yikes, I did not catch Stephen Rothwell's email about pausing the
+> >> linux-next releases from Sept 5 until Sept 30
+> >> (https://lore.kernel.org/linux-next/20190904233443.3f73c46b@canb.auug.org.au/).
+> >>
+> >> The modules-next namespace patches have been in since last Tuesday,
+> >> and my original plan was for them to catch at least a week of
+> >> linux-next time before sending the pull request. :-/ But that did not
+> >> happen due to the above.
+> >>
+> >> So Linus, in light of the above realization, I'd say at this time - I
+> >> will still formally send a pull request with the merge conflicts
+> >> resolved with either solution #2 or #3, but merge at your own
+> >> discretion, it's fine to delay to the following release if you're
+> >> uncomfortable.
+> >
+> >FWIW, when I've run into unexpected merge conflicts with other trees in the
+> >past, I've found that it's usually sufficient just to include the resolution
+> >as an inline diff in the pull request, rather than try to munge the tree
+> >with merges or rebases.  Linus is pretty good at figuring it out, and with a
+> >resolution to compare with, the damage is limited. The downside of the merge
+> >is that it's fiddly to extract the changes and see what's actually being
+> >pulled.
+> >
+> >Also, it's not like the kbuild stuff has been in -next for ages, so this
+> >would've been a late and messy conflict regardless.
+>
+> Hi Will!
+>
+> Thanks a lot for the advice :-) The inline diff sounds like a good
+> idea. This is I believe only the second tree conflict I've encountered
+> so far so the tips are much appreciated.
+>
+> Jessica
 
-We can't use dev_groups, because the soc_device (soc.c) isn't actually a
-driver and the list of attributes is a combination of things from soc.c
-and e.g. soc-realview.c.
 
-But if we pass a struct attribute_group into soc_device_register() and
-then have that register both groups using dev.groups, this should be
-much cleaner at least.
+How should we handle this?
 
-> Also gotta love the total lack of error checking when calling
-> device_create_file() in that driver :(
-> 
+If you pull this against the latest of your tree,
+you will end up with manual merge for the following files:
 
-That's how we roll in the shire...
+scripts/link-vmlinux.sh
+drivers/gpu/drm/amd/display/dc/calcs/Makefile
+drivers/gpu/drm/amd/display/dc/dml/Makefile
+drivers/gpu/drm/amd/display/dc/dsc/Makefile
 
-Regards,
-Bjorn
+
+They are solved in linux-next,
+but I also double-checked it just in case.
+
+I think the next-20190917 is correct,
+but I noticed two things:
+
+
+[1] linux-next modified the hashbang of scripts/link-vmlinux.sh
+    (/bin/sh -> /bin/bash), but this change is unneeded
+
+[2] I fixed up drivers/gpu/drm/amd/display/dc/dcn21/Makefile too.
+    This is a non-obvious conflict, and not available in linux-next.
+    I caught it in my build testing.
+
+
+I solved the merge conflicts by myself,
+and I attached the diff file.  (merge-diff.txt)
+
+
+If you do not want to cope with those merge conflicts at all,
+I will drop the three commits (8959e39272   54b8ae66ae  69a94abb82),
+and I will re-send a pull request, which you will be able to pull cleanly.
+I will rebase the offending 3 commits on top of your tree later.
+
+
+Which do you prefer?
+Please let me know your thought.
+
+Thanks.
+
+
+--
+Best Regards
+Masahiro Yamada
+
+--0000000000007d17a50592f3d000
+Content-Type: text/plain; charset="US-ASCII"; name="merge-diff.txt"
+Content-Disposition: attachment; filename="merge-diff.txt"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k0rkhioz0>
+X-Attachment-Id: f_k0rkhioz0
+
+Y29tbWl0IGEzMjY4YjlmMzgxMWQ2NTFkOTljNDc0YjYyOGJkMzBlYjJlZWFkN2IKTWVyZ2U6IDU3
+NGNjNDUzOTc2MiA3NzU2NGE0ODI5ZWYKQXV0aG9yOiBNYXNhaGlybyBZYW1hZGEgPHlhbWFkYS5t
+YXNhaGlyb0Bzb2Npb25leHQuY29tPgpEYXRlOiAgIEZyaSBTZXAgMjAgMTE6NDM6MTEgMjAxOSAr
+MDkwMAoKICAgIE1lcmdlIHRhZyAna2J1aWxkLXY1LjQnIG9mIGdpdDovL2dpdC5rZXJuZWwub3Jn
+L3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9tYXNhaGlyb3kvbGludXgta2J1aWxkIGludG8gbWVy
+Z2UtdGVzdAogICAgCiAgICBLYnVpbGQgdXBkYXRlcyBmb3IgdjUuNAogICAgCiAgICAgLSBhZGQg
+bW9kcG9zdCB3YXJuIGV4cG9ydGVkIHN5bWJvbHMgbWFya2VkIGFzICdzdGF0aWMnIGJlY2F1c2Ug
+J3N0YXRpYycKICAgICAgIGFuZCBFWFBPUlRfU1lNQk9MIGlzIGFuIG9kZCBjb21iaW5hdGlvbgog
+ICAgCiAgICAgLSBicmVhayB0aGUgYnVpbGQgZWFybHkgaWYgZ29sZCBsaW5rZXIgaXMgdXNlZAog
+ICAgCiAgICAgLSBvcHRpbWl6ZSB0aGUgQmlzb24gcnVsZSB0byBwcm9kdWNlIC5jIGFuZCAuaCBm
+aWxlcyBieSBhIHNpbmdsZQogICAgICAgcGF0dGVybiBydWxlCiAgICAKICAgICAtIGhhbmRsZSBQ
+UkVFTVBUX1JUIGluIHRoZSBtb2R1bGUgdmVybWFnaWMgYW5kIFVUU19WRVJTSU9OCiAgICAKICAg
+ICAtIHdhcm4gQ09ORklHIG9wdGlvbnMgbGVha2VkIHRvIHRoZSB1c2VyLXNwYWNlIGV4Y2VwdCBl
+eGlzdGluZyBvbmVzCiAgICAKICAgICAtIG1ha2Ugc2luZ2xlIHRhcmdldHMgd29yayBwcm9wZXJs
+eQogICAgCiAgICAgLSByZWJ1aWxkIG1vZHVsZXMgd2hlbiBtb2R1bGUgbGlua2VyIHNjcmlwdHMg
+YXJlIHVwZGF0ZWQKICAgIAogICAgIC0gc3BsaXQgdGhlIG1vZHVsZSBmaW5hbCBsaW5rIHN0YWdl
+IGludG8gc2NyaXB0cy9NYWtlZmlsZS5tb2RmaW5hbAogICAgCiAgICAgLSBmaXggdGhlIG1pc3Nl
+ZCBlcnJvciBjb2RlIGluIG1lcmdlX2NvbmZpZy5zaAogICAgCiAgICAgLSBpbXByb3ZlIHRoZSBl
+cnJvciBtZXNzYWdlIGRpc3BsYXllZCBvbiB0aGUgYXR0ZW1wdCBvZiB0aGUgTz0gYnVpbGQKICAg
+ICAgIGluIHVuY2xlYW4gc291cmNlIHRyZWUKICAgIAogICAgIC0gcmVtb3ZlICdjbGVhbi1kaXJz
+JyBzeW50YXgKICAgIAogICAgIC0gZGlzYWJsZSAtV2ltcGxpY2l0LWZhbGx0aHJvdWdoIHdhcm5p
+bmcgZm9yIENsYW5nCiAgICAKICAgICAtIGFkZCBDT05GSUdfQ0NfT1BUSU1JWkVfRk9SX1NJWkVf
+TzMgZm9yIEFSQwogICAgCiAgICAgLSByZW1vdmUgQVJDSF97Q1BQLEEsQ31GTEFHUyB2YXJpYWJs
+ZXMKICAgIAogICAgIC0gYWRkICQoQkFTSCkgdG8gcnVuIGJhc2ggc2NyaXB0cwogICAgCiAgICAg
+LSBjaGFuZ2UgKkNGTEFHU188YmFzZXRhcmdldD4ubyB0byB0YWtlIHRoZSByZWxhdGl2ZSBwYXRo
+IHRvICQob2JqKQogICAgICAgaW5zdGVhZCBvZiB0aGUgYmFzZW5hbWUKICAgIAogICAgIC0gc3Rv
+cCBzdXBwcmVzc2luZyBDbGFuZydzIC1XdW51c2VkLWZ1bmN0aW9uIHdhcm5pbmdzIHdoZW4gVz0x
+CiAgICAKICAgICAtIGZpeCBsaW51eC9leHBvcnQuaCB0byBhdm9pZCBnZW5rc3ltcyBjYWxjdWxh
+dGluZyBDUkMgb2YgdHJpbW1lZAogICAgICAgZXhwb3J0ZWQgc3ltYm9scwogICAgCiAgICAgLSBt
+aXNjIGNsZWFudXBzCgpkaWZmIC0tY2MgYXJjaC9pYTY0L0tjb25maWcKaW5kZXggOTcxMWNmNzMw
+OTI5LDNkZWFkMTE2YTZkNy4uNjg1YTNkZjEyNmNhCi0tLSBhL2FyY2gvaWE2NC9LY29uZmlnCisr
+KyBiL2FyY2gvaWE2NC9LY29uZmlnCkBAQCAtMTAsMTUgLTEwLDE0ICsxMCwxNiBAQEAgY29uZmln
+IElBNgogIAlib29sCiAgCXNlbGVjdCBBUkNIX01JR0hUX0hBVkVfUENfUEFSUE9SVAogIAlzZWxl
+Y3QgQVJDSF9NSUdIVF9IQVZFX1BDX1NFUklPCiAtCXNlbGVjdCBBQ1BJIGlmICghSUE2NF9IUF9T
+SU0pCiAtCXNlbGVjdCBBUkNIX1NVUFBPUlRTX0FDUEkgaWYgKCFJQTY0X0hQX1NJTSkKICsJc2Vs
+ZWN0IEFDUEkKICsJc2VsZWN0IEFDUElfTlVNQSBpZiBOVU1BCiArCXNlbGVjdCBBUkNIX1NVUFBP
+UlRTX0FDUEkKICAJc2VsZWN0IEFDUElfU1lTVEVNX1BPV0VSX1NUQVRFU19TVVBQT1JUIGlmIEFD
+UEkKICAJc2VsZWN0IEFSQ0hfTUlHSFRfSEFWRV9BQ1BJX1BEQyBpZiBBQ1BJCiAtCXNlbGVjdCBG
+T1JDRV9QQ0kgaWYgKCFJQTY0X0hQX1NJTSkKICsJc2VsZWN0IEZPUkNFX1BDSQogIAlzZWxlY3Qg
+UENJX0RPTUFJTlMgaWYgUENJCiArCXNlbGVjdCBQQ0lfTVNJCiAgCXNlbGVjdCBQQ0lfU1lTQ0FM
+TCBpZiBQQ0kKKyAJc2VsZWN0IEhBVkVfQVNNX01PRFZFUlNJT05TCiAgCXNlbGVjdCBIQVZFX1VO
+U1RBQkxFX1NDSEVEX0NMT0NLCiAgCXNlbGVjdCBIQVZFX0VYSVRfVEhSRUFECiAgCXNlbGVjdCBI
+QVZFX0lERQpkaWZmIC0tY2MgYXJjaC9yaXNjdi9NYWtlZmlsZQppbmRleCA0ZjBhM2QyMDE4ZDIs
+NDI2ZDk4OTEyNWE4Li5mNWU5MTQyMTAyNDUKLS0tIGEvYXJjaC9yaXNjdi9NYWtlZmlsZQorKysg
+Yi9hcmNoL3Jpc2N2L01ha2VmaWxlCkBAQCAtNTIsMTEgLTUyLDggKzUyLDExIEBAQCBpZmVxICgk
+KENPTkZJR19DTU9ERUxfTUVEQU5ZKSx5CiAgCUtCVUlMRF9DRkxBR1MgKz0gLW1jbW9kZWw9bWVk
+YW55CiAgZW5kaWYKICBpZmVxICgkKENPTkZJR19NT0RVTEVfU0VDVElPTlMpLHkpCi0gCUtCVUlM
+RF9MREZMQUdTX01PRFVMRSArPSAtVCAkKHNyY3RyZWUpL2FyY2gvcmlzY3Yva2VybmVsL21vZHVs
+ZS5sZHMKKyAJS0JVSUxEX0xEU19NT0RVTEUgKz0gJChzcmN0cmVlKS9hcmNoL3Jpc2N2L2tlcm5l
+bC9tb2R1bGUubGRzCiAgZW5kaWYKICtpZmVxICgkKENPTkZJR19QRVJGX0VWRU5UUykseSkKICsg
+ICAgICAgIEtCVUlMRF9DRkxBR1MgKz0gLWZuby1vbWl0LWZyYW1lLXBvaW50ZXIKICtlbmRpZgog
+IAogIEtCVUlMRF9DRkxBR1NfTU9EVUxFICs9ICQoY2FsbCBjYy1vcHRpb24sLW1uby1yZWxheCkK
+ICAKZGlmZiAtLWNjIGRyaXZlcnMvZ3B1L2RybS9hbWQvZGlzcGxheS9kYy9jYWxjcy9NYWtlZmls
+ZQppbmRleCAxNjYxNGQ3M2E1ZmMsZDkzMGRmNjM3NzJjLi45ODU2MzNjMDhhMjYKLS0tIGEvZHJp
+dmVycy9ncHUvZHJtL2FtZC9kaXNwbGF5L2RjL2NhbGNzL01ha2VmaWxlCisrKyBiL2RyaXZlcnMv
+Z3B1L2RybS9hbWQvZGlzcGxheS9kYy9jYWxjcy9NYWtlZmlsZQpAQEAgLTMyLDEzIC0zMiw5ICsz
+MiwxMyBAQEAgZW5kaQogIAogIGNhbGNzX2NjZmxhZ3MgOj0gLW1oYXJkLWZsb2F0IC1tc3NlICQo
+Y2Nfc3RhY2tfYWxpZ24pCiAgCiAraWZkZWYgQ09ORklHX0NDX0lTX0NMQU5HCiArY2FsY3NfY2Nm
+bGFncyArPSAtbXNzZTIKICtlbmRpZgogKwotIENGTEFHU19kY25fY2FsY3MubyA6PSAkKGNhbGNz
+X2NjZmxhZ3MpCi0gQ0ZMQUdTX2Rjbl9jYWxjX2F1dG8ubyA6PSAkKGNhbGNzX2NjZmxhZ3MpCi0g
+Q0ZMQUdTX2Rjbl9jYWxjX21hdGgubyA6PSAkKGNhbGNzX2NjZmxhZ3MpIC1Xbm8tdGF1dG9sb2dp
+Y2FsLWNvbXBhcmUKKyBDRkxBR1NfJChBTUREQUxQQVRIKS9kYy9jYWxjcy9kY25fY2FsY3MubyA6
+PSAkKGNhbGNzX2NjZmxhZ3MpCisgQ0ZMQUdTXyQoQU1EREFMUEFUSCkvZGMvY2FsY3MvZGNuX2Nh
+bGNfYXV0by5vIDo9ICQoY2FsY3NfY2NmbGFncykKKyBDRkxBR1NfJChBTUREQUxQQVRIKS9kYy9j
+YWxjcy9kY25fY2FsY19tYXRoLm8gOj0gJChjYWxjc19jY2ZsYWdzKSAtV25vLXRhdXRvbG9naWNh
+bC1jb21wYXJlCiAgCiAgQldfQ0FMQ1MgPSBkY2VfY2FsY3MubyBid19maXhlZC5vIGN1c3RvbV9m
+bG9hdC5vCiAgCmRpZmYgLS1jYyBkcml2ZXJzL2dwdS9kcm0vYW1kL2Rpc3BsYXkvZGMvZGNuMjAv
+TWFrZWZpbGUKaW5kZXggZjU3YTNiMjgxNDA4LDgzNjM1YWQ5MTI0ZS4uMmIzOTljZmE3MmU2Ci0t
+LSBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvZGlzcGxheS9kYy9kY24yMC9NYWtlZmlsZQorKysgYi9k
+cml2ZXJzL2dwdS9kcm0vYW1kL2Rpc3BsYXkvZGMvZGNuMjAvTWFrZWZpbGUKQEBAIC0xNiwxMiAt
+MTYsOCArMTYsMTIgQEBAIGVsc2UgaWZuZXEgKCQoY2FsbCBjYy1vcHRpb24sIC1tc3RhY2stYQog
+IAljY19zdGFja19hbGlnbiA6PSAtbXN0YWNrLWFsaWdubWVudD0xNgogIGVuZGlmCiAgCi0gQ0ZM
+QUdTX2RjbjIwX3Jlc291cmNlLm8gOj0gLW1oYXJkLWZsb2F0IC1tc3NlICQoY2Nfc3RhY2tfYWxp
+Z24pCisgQ0ZMQUdTXyQoQU1EREFMUEFUSCkvZGMvZGNuMjAvZGNuMjBfcmVzb3VyY2UubyA6PSAt
+bWhhcmQtZmxvYXQgLW1zc2UgJChjY19zdGFja19hbGlnbikKICAKICtpZmRlZiBDT05GSUdfQ0Nf
+SVNfQ0xBTkcKICtDRkxBR1NfZGNuMjBfcmVzb3VyY2UubyArPSAtbXNzZTIKICtlbmRpZgogKwog
+IEFNRF9EQUxfRENOMjAgPSAkKGFkZHByZWZpeCAkKEFNRERBTFBBVEgpL2RjL2RjbjIwLywkKERD
+TjIwKSkKICAKICBBTURfRElTUExBWV9GSUxFUyArPSAkKEFNRF9EQUxfRENOMjApCmRpZmYgLS1j
+YyBkcml2ZXJzL2dwdS9kcm0vYW1kL2Rpc3BsYXkvZGMvZGNuMjEvTWFrZWZpbGUKaW5kZXggYjJi
+MzkwOTBmYjU3LDAwMDAwMDAwMDAwMC4uOGNkOWRlOGIxYTdhCm1vZGUgMTAwNjQ0LDAwMDAwMC4u
+MTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvZGlzcGxheS9kYy9kY24yMS9NYWtlZmls
+ZQorKysgYi9kcml2ZXJzL2dwdS9kcm0vYW1kL2Rpc3BsYXkvZGMvZGNuMjEvTWFrZWZpbGUKQEBA
+IC0xLDEwIC0xLDAgKzEsMTAgQEBACiArIwogKyMgTWFrZWZpbGUgZm9yIERDTjIxLgogKwogK0RD
+TjIxID0gZGNuMjFfaHVicC5vIGRjbjIxX2h1YmJ1Yi5vIGRjbjIxX3Jlc291cmNlLm8KICsKLSBD
+RkxBR1NfZGNuMjFfcmVzb3VyY2UubyA6PSAtbWhhcmQtZmxvYXQgLW1zc2UgLW1wcmVmZXJyZWQt
+c3RhY2stYm91bmRhcnk9NAorK0NGTEFHU18kKEFNRERBTFBBVEgpL2RjL2RjbjIxL2RjbjIxX3Jl
+c291cmNlLm8gOj0gLW1oYXJkLWZsb2F0IC1tc3NlIC1tcHJlZmVycmVkLXN0YWNrLWJvdW5kYXJ5
+PTQKICsKICtBTURfREFMX0RDTjIxID0gJChhZGRwcmVmaXggJChBTUREQUxQQVRIKS9kYy9kY24y
+MS8sJChEQ04yMSkpCiArCiArQU1EX0RJU1BMQVlfRklMRVMgKz0gJChBTURfREFMX0RDTjIxKQpk
+aWZmIC0tY2MgZHJpdmVycy9ncHUvZHJtL2FtZC9kaXNwbGF5L2RjL2RtbC9NYWtlZmlsZQppbmRl
+eCBhZjJhODY0YTZkYTAsODM3OTJlMmMwZjBlLi41YjJhNjViNDI0MDMKLS0tIGEvZHJpdmVycy9n
+cHUvZHJtL2FtZC9kaXNwbGF5L2RjL2RtbC9NYWtlZmlsZQorKysgYi9kcml2ZXJzL2dwdS9kcm0v
+YW1kL2Rpc3BsYXkvZGMvZG1sL01ha2VmaWxlCkBAQCAtMzIsMjkgLTMyLDE2ICszMiwyNiBAQEAg
+ZW5kaQogIAogIGRtbF9jY2ZsYWdzIDo9IC1taGFyZC1mbG9hdCAtbXNzZSAkKGNjX3N0YWNrX2Fs
+aWduKQogIAogK2lmZGVmIENPTkZJR19DQ19JU19DTEFORwogK2RtbF9jY2ZsYWdzICs9IC1tc3Nl
+MgogK2VuZGlmCiArCi0gQ0ZMQUdTX2Rpc3BsYXlfbW9kZV9saWIubyA6PSAkKGRtbF9jY2ZsYWdz
+KQorIENGTEFHU18kKEFNRERBTFBBVEgpL2RjL2RtbC9kaXNwbGF5X21vZGVfbGliLm8gOj0gJChk
+bWxfY2NmbGFncykKICAKICBpZmRlZiBDT05GSUdfRFJNX0FNRF9EQ19EQ04yXzAKLSBDRkxBR1Nf
+ZGlzcGxheV9tb2RlX3ZiYS5vIDo9ICQoZG1sX2NjZmxhZ3MpCi0gQ0ZMQUdTX2Rpc3BsYXlfbW9k
+ZV92YmFfMjAubyA6PSAkKGRtbF9jY2ZsYWdzKQotIENGTEFHU19kaXNwbGF5X3JxX2RsZ19jYWxj
+XzIwLm8gOj0gJChkbWxfY2NmbGFncykKLSBDRkxBR1NfZGlzcGxheV9tb2RlX3ZiYV8yMHYyLm8g
+Oj0gJChkbWxfY2NmbGFncykKLSBDRkxBR1NfZGlzcGxheV9ycV9kbGdfY2FsY18yMHYyLm8gOj0g
+JChkbWxfY2NmbGFncykKKyBDRkxBR1NfJChBTUREQUxQQVRIKS9kYy9kbWwvZGlzcGxheV9tb2Rl
+X3ZiYS5vIDo9ICQoZG1sX2NjZmxhZ3MpCisgQ0ZMQUdTXyQoQU1EREFMUEFUSCkvZGMvZG1sL2Rj
+bjIwL2Rpc3BsYXlfbW9kZV92YmFfMjAubyA6PSAkKGRtbF9jY2ZsYWdzKQorIENGTEFHU18kKEFN
+RERBTFBBVEgpL2RjL2RtbC9kY24yMC9kaXNwbGF5X3JxX2RsZ19jYWxjXzIwLm8gOj0gJChkbWxf
+Y2NmbGFncykKKytDRkxBR1NfJChBTUREQUxQQVRIKS9kYy9kbWwvZGNuMjAvZGlzcGxheV9tb2Rl
+X3ZiYV8yMHYyLm8gOj0gJChkbWxfY2NmbGFncykKKytDRkxBR1NfJChBTUREQUxQQVRIKS9kYy9k
+bWwvZGNuMjAvZGlzcGxheV9ycV9kbGdfY2FsY18yMHYyLm8gOj0gJChkbWxfY2NmbGFncykKICtl
+bmRpZgogK2lmZGVmIENPTkZJR19EUk1fQU1EX0RDX0RDTjJfMQotIENGTEFHU19kaXNwbGF5X21v
+ZGVfdmJhXzIxLm8gOj0gJChkbWxfY2NmbGFncykKLSBDRkxBR1NfZGlzcGxheV9ycV9kbGdfY2Fs
+Y18yMS5vIDo9ICQoZG1sX2NjZmxhZ3MpCisrQ0ZMQUdTXyQoQU1EREFMUEFUSCkvZGMvZG1sL2Rj
+bjIxL2Rpc3BsYXlfbW9kZV92YmFfMjEubyA6PSAkKGRtbF9jY2ZsYWdzKQorK0NGTEFHU18kKEFN
+RERBTFBBVEgpL2RjL2RtbC9kY24yMS9kaXNwbGF5X3JxX2RsZ19jYWxjXzIxLm8gOj0gJChkbWxf
+Y2NmbGFncykKICBlbmRpZgotIGlmZGVmIENPTkZJR19EUk1fQU1EX0RDTjNBRwotIENGTEFHU19k
+aXNwbGF5X21vZGVfdmJhXzNhZy5vIDo9ICQoZG1sX2NjZmxhZ3MpCi0gZW5kaWYKLSBDRkxBR1Nf
+ZG1sMV9kaXNwbGF5X3JxX2RsZ19jYWxjLm8gOj0gJChkbWxfY2NmbGFncykKLSBDRkxBR1NfZGlz
+cGxheV9ycV9kbGdfaGVscGVycy5vIDo9ICQoZG1sX2NjZmxhZ3MpCi0gQ0ZMQUdTX2RtbF9jb21t
+b25fZGVmcy5vIDo9ICQoZG1sX2NjZmxhZ3MpCisgQ0ZMQUdTXyQoQU1EREFMUEFUSCkvZGMvZG1s
+L2RtbDFfZGlzcGxheV9ycV9kbGdfY2FsYy5vIDo9ICQoZG1sX2NjZmxhZ3MpCisgQ0ZMQUdTXyQo
+QU1EREFMUEFUSCkvZGMvZG1sL2Rpc3BsYXlfcnFfZGxnX2hlbHBlcnMubyA6PSAkKGRtbF9jY2Zs
+YWdzKQorIENGTEFHU18kKEFNRERBTFBBVEgpL2RjL2RtbC9kbWxfY29tbW9uX2RlZnMubyA6PSAk
+KGRtbF9jY2ZsYWdzKQogIAogIERNTCA9IGRpc3BsYXlfbW9kZV9saWIubyBkaXNwbGF5X3JxX2Rs
+Z19oZWxwZXJzLm8gZG1sMV9kaXNwbGF5X3JxX2RsZ19jYWxjLm8gXAogIAlkbWxfY29tbW9uX2Rl
+ZnMubwpkaWZmIC0tY2MgZHJpdmVycy9ncHUvZHJtL2FtZC9kaXNwbGF5L2RjL2RzYy9NYWtlZmls
+ZQppbmRleCAxN2RiNjAzZjJkMWYsYzM5MjJkNmU3Njk2Li5iNDU2Y2QyM2M2ZmEKLS0tIGEvZHJp
+dmVycy9ncHUvZHJtL2FtZC9kaXNwbGF5L2RjL2RzYy9NYWtlZmlsZQorKysgYi9kcml2ZXJzL2dw
+dS9kcm0vYW1kL2Rpc3BsYXkvZGMvZHNjL01ha2VmaWxlCkBAQCAtOSwxNCAtOSw5ICs5LDEzIEBA
+QCBlbmRpCiAgCiAgZHNjX2NjZmxhZ3MgOj0gLW1oYXJkLWZsb2F0IC1tc3NlICQoY2Nfc3RhY2tf
+YWxpZ24pCiAgCiAraWZkZWYgQ09ORklHX0NDX0lTX0NMQU5HCiArZHNjX2NjZmxhZ3MgKz0gLW1z
+c2UyCiArZW5kaWYKICsKLSBDRkxBR1NfcmNfY2FsYy5vIDo9ICQoZHNjX2NjZmxhZ3MpCi0gQ0ZM
+QUdTX3JjX2NhbGNfZHBpLm8gOj0gJChkc2NfY2NmbGFncykKLSBDRkxBR1NfY29kZWNfbWFpbl9h
+bWQubyA6PSAkKGRzY19jY2ZsYWdzKQotIENGTEFHU19kY19kc2MubyA6PSAkKGRzY19jY2ZsYWdz
+KQorIENGTEFHU18kKEFNRERBTFBBVEgpL2RjL2RzYy9yY19jYWxjLm8gOj0gJChkc2NfY2NmbGFn
+cykKKyBDRkxBR1NfJChBTUREQUxQQVRIKS9kYy9kc2MvcmNfY2FsY19kcGkubyA6PSAkKGRzY19j
+Y2ZsYWdzKQorIENGTEFHU18kKEFNRERBTFBBVEgpL2RjL2RzYy9kY19kc2MubyA6PSAkKGRzY19j
+Y2ZsYWdzKQogIAogIERTQyA9IGRjX2RzYy5vIHJjX2NhbGMubyByY19jYWxjX2RwaS5vCiAgCmRp
+ZmYgLS1jYyBzY3JpcHRzL2xpbmstdm1saW51eC5zaAppbmRleCA4YzU5OTcwYTA5ZGMsMjQzOGE5
+ZmFmM2YxLi5mYzY1NmNlNWU1OTQKLS0tIGEvc2NyaXB0cy9saW5rLXZtbGludXguc2gKKysrIGIv
+c2NyaXB0cy9saW5rLXZtbGludXguc2gKQEBAIC01NiwxNyAtNTYsMTQgKzU2LDE4IEBAQCBtb2Rw
+b3N0X2xpbmsoCiAgfQogIAogICMgTGluayBvZiB2bWxpbnV4CiAtIyAkezF9IC0gb3B0aW9uYWwg
+ZXh0cmEgLm8gZmlsZXMKIC0jICR7Mn0gLSBvdXRwdXQgZmlsZQogKyMgJHsxfSAtIG91dHB1dCBm
+aWxlCiArIyAkezJ9LCAkezN9LCAuLi4gLSBvcHRpb25hbCBleHRyYSAubyBmaWxlcwogIHZtbGlu
+dXhfbGluaygpCiAgewogLQlpbmZvIExEICR7Mn0KKysJaW5mbyBMRCAkezF9CiAgCWxvY2FsIGxk
+cz0iJHtvYmp0cmVlfS8ke0tCVUlMRF9MRFN9IgogKwlsb2NhbCBvdXRwdXQ9JHsxfQogIAlsb2Nh
+bCBvYmplY3RzCiAgCiArCSMgc2tpcCBvdXRwdXQgZmlsZSBhcmd1bWVudAogKwlzaGlmdAogKwog
+IAlpZiBbICIke1NSQ0FSQ0h9IiAhPSAidW0iIF07IHRoZW4KICAJCW9iamVjdHM9Ii0td2hvbGUt
+YXJjaGl2ZQkJCVwKICAJCQkke0tCVUlMRF9WTUxJTlVYX09CSlN9CQkJXApAQEAgLTE1Nyw2IC0x
+MzksMTggKzE1OCwxOCBAQEAga2FsbHN5bXMoCiAgCSR7Q0N9ICR7YWZsYWdzfSAtYyAtbyAkezJ9
+ICR7YWZpbGV9CiAgfQogIAorICMgUGVyZm9ybSBvbmUgc3RlcCBpbiBrYWxsc3ltcyBnZW5lcmF0
+aW9uLCBpbmNsdWRpbmcgdGVtcG9yYXJ5IGxpbmtpbmcgb2YKKyAjIHZtbGludXguCisga2FsbHN5
+bXNfc3RlcCgpCisgeworIAlrYWxsc3ltc29fcHJldj0ke2thbGxzeW1zb30KKyAJa2FsbHN5bXNv
+PS50bXBfa2FsbHN5bXMkezF9Lm8KKyAJa2FsbHN5bXNfdm1saW51eD0udG1wX3ZtbGludXgkezF9
+CisgCiAtCXZtbGludXhfbGluayAiJHtrYWxsc3ltc29fcHJldn0iICR7a2FsbHN5bXNfdm1saW51
+eH0KKysJdm1saW51eF9saW5rICR7a2FsbHN5bXNfdm1saW51eH0gIiR7a2FsbHN5bXNvX3ByZXZ9
+IiAke2J0Zl92bWxpbnV4X2Jpbl9vfQorIAlrYWxsc3ltcyAke2thbGxzeW1zX3ZtbGludXh9ICR7
+a2FsbHN5bXNvfQorIH0KKyAKICAjIENyZWF0ZSBtYXAgZmlsZSB3aXRoIGFsbCBzeW1ib2xzIGZy
+b20gJHsxfQogICMgU2VlIG1rc3ltYXAgZm9yIGFkZGl0aW9uYWwgZGV0YWlscwogIG1rc3lzbWFw
+KCkKQEBAIC0yMzUsMTQgLTIyOCw4ICsyNDgsMTUgQEBAICR7TUFLRX0gLWYgIiR7c3JjdHJlZX0v
+c2NyaXB0cy9NYWtlZmlsZQogIGluZm8gTU9ESU5GTyBtb2R1bGVzLmJ1aWx0aW4ubW9kaW5mbwog
+ICR7T0JKQ09QWX0gLWogLm1vZGluZm8gLU8gYmluYXJ5IHZtbGludXgubyBtb2R1bGVzLmJ1aWx0
+aW4ubW9kaW5mbwogIAogK2J0Zl92bWxpbnV4X2Jpbl9vPSIiCiAraWYgWyAtbiAiJHtDT05GSUdf
+REVCVUdfSU5GT19CVEZ9IiBdOyB0aGVuCiArCWlmIGdlbl9idGYgLnRtcF92bWxpbnV4LmJ0ZiAu
+YnRmLnZtbGludXguYmluLm8gOyB0aGVuCiArCQlidGZfdm1saW51eF9iaW5fbz0uYnRmLnZtbGlu
+dXguYmluLm8KICsJZmkKICtmaQogKwogIGthbGxzeW1zbz0iIgorIGthbGxzeW1zb19wcmV2PSIi
+CiAga2FsbHN5bXNfdm1saW51eD0iIgogIGlmIFsgLW4gIiR7Q09ORklHX0tBTExTWU1TfSIgXTsg
+dGhlbgogIApAQEAgLTI5Myw4IC0yNjgsMTEgKzI5NSw3IEBAQAogIAlmaQogIGZpCiAgCi0gaW5m
+byBMRCB2bWxpbnV4CiAtdm1saW51eF9saW5rICIke2thbGxzeW1zb30iIHZtbGludXgKIC0KIC1p
+ZiBbIC1uICIke0NPTkZJR19ERUJVR19JTkZPX0JURn0iIF07IHRoZW4KIC0JZ2VuX2J0ZiB2bWxp
+bnV4CiAtZmkKICt2bWxpbnV4X2xpbmsgdm1saW51eCAiJHtrYWxsc3ltc299IiAiJHtidGZfdm1s
+aW51eF9iaW5fb30iCiAgCiAgaWYgWyAtbiAiJHtDT05GSUdfQlVJTERUSU1FX0VYVEFCTEVfU09S
+VH0iIF07IHRoZW4KICAJaW5mbyBTT1JURVggdm1saW51eAo=
+--0000000000007d17a50592f3d000--
