@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3FAC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6369C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCDD2208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:25:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A894F208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:25:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388766AbfITOZv (ORCPT
+        id S2388816AbfITOZz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:25:51 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36110 "EHLO
+        Fri, 20 Sep 2019 10:25:55 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36130 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388145AbfITOZE (ORCPT
+        by vger.kernel.org with ESMTP id S2388148AbfITOZE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Sep 2019 10:25:04 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqH-00051J-Rd; Fri, 20 Sep 2019 15:25:01 +0100
+        id 1iBJqH-00050v-Nn; Fri, 20 Sep 2019 15:25:01 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqH-0007yN-8o; Fri, 20 Sep 2019 15:25:01 +0100
+        id 1iBJqG-0007xS-Ra; Fri, 20 Sep 2019 15:25:00 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Mathias Payer" <mathias.payer@nebelwelt.net>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Hui Peng" <benquike@gmail.com>, "Takashi Iwai" <tiwai@suse.de>
+        "Sushant Kumar Mishra" <sushant.mishra@redpinesignals.com>,
+        "Kalle Valo" <kvalo@codeaurora.org>,
+        "Sanjay Konduri" <sanjay.konduri@redpinesignals.com>
 Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.723106414@decadent.org.uk>
+Message-ID: <lsq.1568989415.538287908@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 114/132] ALSA: usb-audio: Fix a stack buffer overflow
- bug in check_input_term
+Subject: [PATCH 3.16 106/132] rsi: add fix for crash during assertions
 In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,102 +56,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Hui Peng <benquike@gmail.com>
+From: Sanjay Konduri <sanjay.konduri@redpinesignals.com>
 
-commit 19bce474c45be69a284ecee660aa12d8f1e88f18 upstream.
+commit abd39c6ded9db53aa44c2540092bdd5fb6590fa8 upstream.
 
-`check_input_term` recursively calls itself with input from
-device side (e.g., uac_input_terminal_descriptor.bCSourceID)
-as argument (id). In `check_input_term`, if `check_input_term`
-is called with the same `id` argument as the caller, it triggers
-endless recursive call, resulting kernel space stack overflow.
+Observed crash in some scenarios when assertion has occurred,
+this is because hw structure is freed and is tried to get
+accessed in some functions where null check is already
+present. So, avoided the crash by making the hw to NULL after
+freeing.
 
-This patch fixes the bug by adding a bitmap to `struct mixer_build`
-to keep track of the checked ids and stop the execution if some id
-has been checked (similar to how parse_audio_unit handles unitid
-argument).
-
-Reported-by: Hui Peng <benquike@gmail.com>
-Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
-Signed-off-by: Hui Peng <benquike@gmail.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-[bwh: Backported to 3.16: adjust context]
+Signed-off-by: Sanjay Konduri <sanjay.konduri@redpinesignals.com>
+Signed-off-by: Sushant Kumar Mishra <sushant.mishra@redpinesignals.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- sound/usb/mixer.c | 29 ++++++++++++++++++++++++-----
- 1 file changed, 24 insertions(+), 5 deletions(-)
+ drivers/net/wireless/rsi/rsi_91x_mac80211.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -81,6 +81,7 @@ struct mixer_build {
- 	unsigned char *buffer;
- 	unsigned int buflen;
- 	DECLARE_BITMAP(unitbitmap, MAX_ID_ELEMS);
-+	DECLARE_BITMAP(termbitmap, MAX_ID_ELEMS);
- 	struct usb_audio_term oterm;
- 	const struct usbmix_name_map *map;
- 	const struct usbmix_selector_map *selector_map;
-@@ -685,15 +686,24 @@ static int get_term_name(struct mixer_bu
-  * parse the source unit recursively until it reaches to a terminal
-  * or a branched unit.
-  */
--static int check_input_term(struct mixer_build *state, int id,
-+static int __check_input_term(struct mixer_build *state, int id,
- 			    struct usb_audio_term *term)
- {
- 	int err;
- 	void *p1;
-+	unsigned char *hdr;
+--- a/drivers/net/wireless/rsi/rsi_91x_mac80211.c
++++ b/drivers/net/wireless/rsi/rsi_91x_mac80211.c
+@@ -199,6 +199,7 @@ void rsi_mac80211_detach(struct rsi_hw *
+ 		ieee80211_stop_queues(hw);
+ 		ieee80211_unregister_hw(hw);
+ 		ieee80211_free_hw(hw);
++		adapter->hw = NULL;
+ 	}
  
- 	memset(term, 0, sizeof(*term));
--	while ((p1 = find_audio_control_unit(state, id)) != NULL) {
--		unsigned char *hdr = p1;
-+	for (;;) {
-+		/* a loop in the terminal chain? */
-+		if (test_and_set_bit(id, state->termbitmap))
-+			return -EINVAL;
-+
-+		p1 = find_audio_control_unit(state, id);
-+		if (!p1)
-+			break;
-+
-+		hdr = p1;
- 		term->id = id;
- 		switch (hdr[2]) {
- 		case UAC_INPUT_TERMINAL:
-@@ -711,7 +721,7 @@ static int check_input_term(struct mixer
- 				term->name = d->iTerminal;
- 
- 				/* call recursively to get the clock selectors */
--				err = check_input_term(state, d->bCSourceID, term);
-+				err = __check_input_term(state, d->bCSourceID, term);
- 				if (err < 0)
- 					return err;
- 			}
-@@ -734,7 +744,7 @@ static int check_input_term(struct mixer
- 		case UAC2_CLOCK_SELECTOR: {
- 			struct uac_selector_unit_descriptor *d = p1;
- 			/* call recursively to retrieve the channel info */
--			err = check_input_term(state, d->baSourceID[0], term);
-+			err = __check_input_term(state, d->baSourceID[0], term);
- 			if (err < 0)
- 				return err;
- 			term->type = d->bDescriptorSubtype << 16; /* virtual type */
-@@ -781,6 +791,15 @@ static int check_input_term(struct mixer
- 	return -ENODEV;
- }
- 
-+
-+static int check_input_term(struct mixer_build *state, int id,
-+			    struct usb_audio_term *term)
-+{
-+	memset(term, 0, sizeof(*term));
-+	memset(state->termbitmap, 0, sizeof(state->termbitmap));
-+	return __check_input_term(state, id, term);
-+}
-+
- /*
-  * Feature Unit
-  */
+ 	rsi_remove_dbgfs(adapter);
 
