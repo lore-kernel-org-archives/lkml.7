@@ -2,74 +2,103 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A04C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 21:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9744C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 21:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7A912086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 21:26:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C350020820
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 21:27:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387524AbfITVZM (ORCPT
+        id S1730198AbfITV1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 17:25:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51034 "EHLO mx1.redhat.com"
+        Fri, 20 Sep 2019 17:27:52 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46416 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730149AbfITVZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 17:25:12 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        id S1728362AbfITV1v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 17:27:51 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 80A1C18C4270;
-        Fri, 20 Sep 2019 21:25:12 +0000 (UTC)
-Received: from mail (ovpn-120-159.rdu2.redhat.com [10.10.120.159])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 239AA1001B2D;
-        Fri, 20 Sep 2019 21:25:10 +0000 (UTC)
-From:   Andrea Arcangeli <aarcange@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
+        by mx1.redhat.com (Postfix) with ESMTPS id 3039D18CB8EF;
+        Fri, 20 Sep 2019 21:27:51 +0000 (UTC)
+Received: from localhost (unknown [10.18.25.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4756E5DA8D;
+        Fri, 20 Sep 2019 21:27:47 +0000 (UTC)
+Date:   Fri, 20 Sep 2019 17:27:46 -0400
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     Milan Broz <gmazyland@gmail.com>
+Cc:     Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
+        dm-devel@redhat.com, Alasdair Kergon <agk@redhat.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 03/17] KVM: monolithic: x86: handle the request_immediate_exit variation
-Date:   Fri, 20 Sep 2019 17:24:55 -0400
-Message-Id: <20190920212509.2578-4-aarcange@redhat.com>
-In-Reply-To: <20190920212509.2578-1-aarcange@redhat.com>
-References: <20190920212509.2578-1-aarcange@redhat.com>
+Subject: Re: dm-crypt error when CONFIG_CRYPTO_AUTHENC is disabled
+Message-ID: <20190920212746.GA22061@redhat.com>
+References: <20190920154434.GA923@gandi.net>
+ <20190920173707.GA21143@redhat.com>
+ <13e25b01-f344-ea1d-8f6c-9d0a60eb1e0f@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Fri, 20 Sep 2019 21:25:12 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <13e25b01-f344-ea1d-8f6c-9d0a60eb1e0f@gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.63]); Fri, 20 Sep 2019 21:27:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-request_immediate_exit is one of those few cases where the pointer to
-function of the method isn't fixed at build time and it requires
-special handling because hardware_setup() may override it at runtime.
+On Fri, Sep 20 2019 at  3:21pm -0400,
+Milan Broz <gmazyland@gmail.com> wrote:
 
-Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
----
- arch/x86/kvm/vmx/vmx_ops.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+> On 20/09/2019 19:37, Mike Snitzer wrote:
+> > On Fri, Sep 20 2019 at 11:44am -0400,
+> > Thibaut Sautereau <thibaut.sautereau@clip-os.org> wrote:
+> > 
+> >> Hi,
+> >>
+> >> I just got a dm-crypt "crypt: Error allocating crypto tfm" error when
+> >> trying to "cryptsetup open" a volume. I found out that it was only
+> >> happening when I disabled CONFIG_CRYPTO_AUTHENC.
+> >>
+> >> drivers/md/dm-crypt.c includes the crypto/authenc.h header and seems to
+> >> use some CRYPTO_AUTHENC-related stuff. Therefore, shouldn't
+> >> CONFIG_DM_CRYPT select CONFIG_CRYPTO_AUTHENC?
+> > 
+> > Yes, it looks like commit ef43aa38063a6 ("dm crypt: add cryptographic
+> > data integrity protection (authenticated encryption)") should've added
+> > 'select CRYPTO_AUTHENC' to dm-crypt's Kconfig.  I'll let Milan weigh-in
+> > but that seems like the right way forward.
+> 
+> No, I don't this so. It is like you use some algorithm that is just not compiled-in,
+> or it is disabled in the current state (because of FIPS mode od so) - it fails
+> to initialize it.
+> 
+> I think we should not force dm-crypt to depend on AEAD - most users
+> do not use authenticated encryption, it is perfectly ok to keep this compiled out.
+> 
+> I do not see any principal difference from disabling any other crypto
+> (if you disable XTS mode, it fails to open device that uses it).
+> 
+> IMO the current config dependence is ok.
 
-diff --git a/arch/x86/kvm/vmx/vmx_ops.c b/arch/x86/kvm/vmx/vmx_ops.c
-index cdcad73935d9..25d441432901 100644
---- a/arch/x86/kvm/vmx/vmx_ops.c
-+++ b/arch/x86/kvm/vmx/vmx_ops.c
-@@ -498,7 +498,10 @@ int kvm_x86_ops_check_nested_events(struct kvm_vcpu *vcpu, bool external_intr)
- 
- void kvm_x86_ops_request_immediate_exit(struct kvm_vcpu *vcpu)
- {
--	vmx_request_immediate_exit(vcpu);
-+	if (likely(enable_preemption_timer))
-+		vmx_request_immediate_exit(vcpu);
-+	else
-+		__kvm_request_immediate_exit(vcpu);
- }
- 
- void kvm_x86_ops_sched_in(struct kvm_vcpu *kvm, int cpu)
+That is a good point.  I hadn't considered the kernel compiles just fine
+without CRYPTO_AUTHENC.. which it clearly does.
+
+SO I retract the question/thought of updating the Kconfig for dm-crypt
+in my previous mail.
+
+Though in hindsight: wonder whether the dm-integrity based dm-crypt
+authenticated encryption support should have been exposed as a proper
+CONFIG option within the DM_CRYPT section?  Rather than lean on the
+crypto subsystem to happily stub out the dm-crypt AEAD and AUTHENC
+related code dm-crypt could've established #ifdef boundaries for that
+code.
+
+I'm open to suggestions and/or confirmation that the way things are now
+is perfectly fine.  But I do see this report as something that should
+drive some improvement.
+
+Mike
