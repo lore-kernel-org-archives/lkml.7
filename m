@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22ADBC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 032EFC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:31:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00133206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDE9C206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:30:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390918AbfITOax (ORCPT
+        id S2390952AbfITOa6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:30:53 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36964 "EHLO
+        Fri, 20 Sep 2019 10:30:58 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36960 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388424AbfITOZR (ORCPT
+        by vger.kernel.org with ESMTP id S2388425AbfITOZR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Sep 2019 10:25:17 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqT-00050v-Kp; Fri, 20 Sep 2019 15:25:13 +0100
+        id 1iBJqT-00050x-LV; Fri, 20 Sep 2019 15:25:13 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqE-0007sQ-8D; Fri, 20 Sep 2019 15:24:58 +0100
+        id 1iBJqE-0007su-G0; Fri, 20 Sep 2019 15:24:58 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Dan Carpenter" <dan.carpenter@oracle.com>,
-        "kbuild test robot" <lkp@intel.com>,
-        "Liu Bo" <bo.liu@linux.alibaba.com>,
-        "Miklos Szeredi" <mszeredi@redhat.com>
+        "Johan Hedberg" <johan.hedberg@intel.com>,
+        "Marcel Holtmann" <marcel@holtmann.org>
 Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.483469251@decadent.org.uk>
+Message-ID: <lsq.1568989415.203002686@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 048/132] fuse: fallocate: fix return with locked inode
+Subject: [PATCH 3.16 054/132] Bluetooth: Align minimum encryption key size
+ for LE and BR/EDR connections
 In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,33 +56,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Miklos Szeredi <mszeredi@redhat.com>
+From: Marcel Holtmann <marcel@holtmann.org>
 
-commit 35d6fcbb7c3e296a52136347346a698a35af3fda upstream.
+commit d5bb334a8e171b262e48f378bd2096c0ea458265 upstream.
 
-Do the proper cleanup in case the size check fails.
+The minimum encryption key size for LE connections is 56 bits and to
+align LE with BR/EDR, enforce 56 bits of minimum encryption key size for
+BR/EDR connections as well.
 
-Tested with xfstests:generic/228
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Fixes: 0cbade024ba5 ("fuse: honor RLIMIT_FSIZE in fuse_file_fallocate")
-Cc: Liu Bo <bo.liu@linux.alibaba.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/fuse/file.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/net/bluetooth/hci_core.h | 3 +++
+ net/bluetooth/hci_conn.c         | 8 ++++++++
+ 2 files changed, 11 insertions(+)
 
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -3021,7 +3021,7 @@ static long fuse_file_fallocate(struct f
- 	    offset + length > i_size_read(inode)) {
- 		err = inode_newsize_ok(inode, offset + length);
- 		if (err)
--			return err;
-+			goto out;
- 	}
+--- a/include/net/bluetooth/hci_core.h
++++ b/include/net/bluetooth/hci_core.h
+@@ -142,6 +142,9 @@ struct oob_data {
  
- 	if (!(mode & FALLOC_FL_KEEP_SIZE))
+ #define HCI_MAX_SHORT_NAME_LENGTH	10
+ 
++/* Min encryption key size to match with SMP */
++#define HCI_MIN_ENC_KEY_SIZE		7
++
+ /* Default LE RPA expiry time, 15 minutes */
+ #define HCI_DEFAULT_RPA_TIMEOUT		(15 * 60)
+ 
+--- a/net/bluetooth/hci_conn.c
++++ b/net/bluetooth/hci_conn.c
+@@ -868,6 +868,14 @@ int hci_conn_check_link_mode(struct hci_
+ 	if (hci_conn_ssp_enabled(conn) && !(conn->link_mode & HCI_LM_ENCRYPT))
+ 		return 0;
+ 
++	/* The minimum encryption key size needs to be enforced by the
++	 * host stack before establishing any L2CAP connections. The
++	 * specification in theory allows a minimum of 1, but to align
++	 * BR/EDR and LE transports, a minimum of 7 is chosen.
++	 */
++	if (conn->enc_key_size < HCI_MIN_ENC_KEY_SIZE)
++		return 0;
++
+ 	return 1;
+ }
+ 
 
