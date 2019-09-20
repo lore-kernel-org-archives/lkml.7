@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19073C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 21:25:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E867DC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 21:25:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBC4B20820
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 21:25:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B895420820
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 21:25:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393894AbfITVZX (ORCPT
+        id S2393874AbfITVZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 17:25:23 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50848 "EHLO mx1.redhat.com"
+        Fri, 20 Sep 2019 17:25:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59086 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393804AbfITVZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 17:25:16 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        id S2393803AbfITVZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 17:25:15 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 075EF3082A6C;
-        Fri, 20 Sep 2019 21:25:16 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id CC9175D66B;
+        Fri, 20 Sep 2019 21:25:15 +0000 (UTC)
 Received: from mail (ovpn-120-159.rdu2.redhat.com [10.10.120.159])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DC83C5F7D5;
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 421EB60BE2;
         Fri, 20 Sep 2019 21:25:13 +0000 (UTC)
 From:   Andrea Arcangeli <aarcange@redhat.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
@@ -34,61 +34,41 @@ Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
         Marcelo Tosatti <mtosatti@redhat.com>,
         Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 15/17] KVM: retpolines: x86: eliminate retpoline from vmx.c exit handlers
-Date:   Fri, 20 Sep 2019 17:25:07 -0400
-Message-Id: <20190920212509.2578-16-aarcange@redhat.com>
+Subject: [PATCH 09/17] KVM: monolithic: x86: remove kvm.ko
+Date:   Fri, 20 Sep 2019 17:25:01 -0400
+Message-Id: <20190920212509.2578-10-aarcange@redhat.com>
 In-Reply-To: <20190920212509.2578-1-aarcange@redhat.com>
 References: <20190920212509.2578-1-aarcange@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Fri, 20 Sep 2019 21:25:16 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Fri, 20 Sep 2019 21:25:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's enough to check the exit value and issue a direct call to avoid
-the retpoline for all the common vmexit reasons.
+This removes kvm.ko and it links and duplicates all kvm.ko objects to
+both kvm-amd and kvm-intel.
 
 Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 24 ++++++++++++++++++++++--
- 1 file changed, 22 insertions(+), 2 deletions(-)
+ arch/x86/kvm/Makefile | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index a6e597025011..9aa73e216df2 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -5866,9 +5866,29 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu)
- 	}
+diff --git a/arch/x86/kvm/Makefile b/arch/x86/kvm/Makefile
+index 31ecf7a76d5a..68b81f381369 100644
+--- a/arch/x86/kvm/Makefile
++++ b/arch/x86/kvm/Makefile
+@@ -12,9 +12,8 @@ kvm-y			+= x86.o mmu.o emulate.o i8259.o irq.o lapic.o \
+ 			   i8254.o ioapic.o irq_comm.o cpuid.o pmu.o mtrr.o \
+ 			   hyperv.o page_track.o debugfs.o
  
- 	if (exit_reason < kvm_vmx_max_exit_handlers
--	    && kvm_vmx_exit_handlers[exit_reason])
-+	    && kvm_vmx_exit_handlers[exit_reason]) {
-+#ifdef CONFIG_RETPOLINE
-+		if (exit_reason == EXIT_REASON_MSR_WRITE)
-+			return handle_wrmsr(vcpu);
-+		else if (exit_reason == EXIT_REASON_PREEMPTION_TIMER)
-+			return handle_preemption_timer(vcpu);
-+		else if (exit_reason == EXIT_REASON_PENDING_INTERRUPT)
-+			return handle_interrupt_window(vcpu);
-+		else if (exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT)
-+			return handle_external_interrupt(vcpu);
-+		else if (exit_reason == EXIT_REASON_HLT)
-+			return handle_halt(vcpu);
-+		else if (exit_reason == EXIT_REASON_PAUSE_INSTRUCTION)
-+			return handle_pause(vcpu);
-+		else if (exit_reason == EXIT_REASON_MSR_READ)
-+			return handle_rdmsr(vcpu);
-+		else if (exit_reason == EXIT_REASON_CPUID)
-+			return handle_cpuid(vcpu);
-+		else if (exit_reason == EXIT_REASON_EPT_MISCONFIG)
-+			return handle_ept_misconfig(vcpu);
-+#endif
- 		return kvm_vmx_exit_handlers[exit_reason](vcpu);
--	else {
-+	} else {
- 		vcpu_unimpl(vcpu, "vmx: unexpected exit reason 0x%x\n",
- 				exit_reason);
- 		dump_vmcs();
+-kvm-intel-y		+= vmx/vmx.o vmx/vmenter.o vmx/pmu_intel.o vmx/vmcs12.o vmx/evmcs.o vmx/nested.o
+-kvm-amd-y		+= svm.o pmu_amd.o
++kvm-intel-y		+= vmx/vmx.o vmx/vmenter.o vmx/pmu_intel.o vmx/vmcs12.o vmx/evmcs.o vmx/nested.o $(kvm-y)
++kvm-amd-y		+= svm.o pmu_amd.o $(kvm-y)
+ 
+-obj-$(CONFIG_KVM)	+= kvm.o
+ obj-$(CONFIG_KVM_INTEL)	+= kvm-intel.o
+ obj-$(CONFIG_KVM_AMD)	+= kvm-amd.o
