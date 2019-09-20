@@ -2,206 +2,90 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89EE6C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED65CC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C7A92086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C479C2080F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:17:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403814AbfITPOq (ORCPT
+        id S2391672AbfITPRp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 11:14:46 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11356 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387614AbfITPOp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 11:14:45 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8KFEE2U022014;
-        Fri, 20 Sep 2019 11:14:37 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v4y8angeg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 20 Sep 2019 11:14:37 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8KFECYs021796;
-        Fri, 20 Sep 2019 11:14:36 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v4y8angdu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 20 Sep 2019 11:14:36 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8KFB389010798;
-        Fri, 20 Sep 2019 15:14:35 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma04dal.us.ibm.com with ESMTP id 2v3vbutjsd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 20 Sep 2019 15:14:35 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8KFEVa758786272
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 20 Sep 2019 15:14:31 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 39C9078060;
-        Fri, 20 Sep 2019 15:14:31 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4FC877805C;
-        Fri, 20 Sep 2019 15:14:29 +0000 (GMT)
-Received: from oc4221205838.ibm.com (unknown [9.85.141.73])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Fri, 20 Sep 2019 15:14:29 +0000 (GMT)
-Subject: Re: [PATCH v4 3/4] vfio: zpci: defining the VFIO headers
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     sebott@linux.ibm.com, gerald.schaefer@de.ibm.com,
-        pasic@linux.ibm.com, borntraeger@de.ibm.com, walling@linux.ibm.com,
-        linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org,
-        joro@8bytes.org, linux-kernel@vger.kernel.org,
-        alex.williamson@redhat.com, kvm@vger.kernel.org,
-        heiko.carstens@de.ibm.com, robin.murphy@arm.com, gor@linux.ibm.com,
-        pmorel@linux.ibm.com
-References: <1567815231-17940-1-git-send-email-mjrosato@linux.ibm.com>
- <1567815231-17940-4-git-send-email-mjrosato@linux.ibm.com>
- <20190919172009.71b1c246.cohuck@redhat.com>
- <0a62aba7-578a-6875-da4d-13e8b145cf9b@linux.ibm.com>
- <20190920160258.70631905.cohuck@redhat.com>
-From:   Matthew Rosato <mjrosato@linux.ibm.com>
-Openpgp: preference=signencrypt
-Message-ID: <86647083-7f94-44aa-8856-103836906f36@linux.ibm.com>
-Date:   Fri, 20 Sep 2019 11:14:28 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 20 Sep 2019 11:17:45 -0400
+Received: from foss.arm.com ([217.140.110.172]:46260 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387520AbfITPRo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 11:17:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BE67E337;
+        Fri, 20 Sep 2019 08:17:43 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 693133F575;
+        Fri, 20 Sep 2019 08:17:42 -0700 (PDT)
+Date:   Fri, 20 Sep 2019 16:17:36 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     andrew.murray@arm.com, bhelgaas@google.com,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, vidyas@nvidia.com,
+        treding@nvidia.com, linux-pci@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 -next] PCI: tegra: Add missing include file
+Message-ID: <20190920151736.GA10172@e121166-lin.cambridge.arm.com>
+References: <20190920014807.38288-1-yuehaibing@huawei.com>
+ <20190920103925.34404-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20190920160258.70631905.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-20_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909200142
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190920103925.34404-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/20/19 10:02 AM, Cornelia Huck wrote:
-> On Thu, 19 Sep 2019 16:55:57 -0400
-> Matthew Rosato <mjrosato@linux.ibm.com> wrote:
+On Fri, Sep 20, 2019 at 06:39:25PM +0800, YueHaibing wrote:
+> Fix build error without CONFIG_PINCTRL
 > 
->> On 9/19/19 11:20 AM, Cornelia Huck wrote:
->>> On Fri,  6 Sep 2019 20:13:50 -0400
->>> Matthew Rosato <mjrosato@linux.ibm.com> wrote:
->>>   
->>>> From: Pierre Morel <pmorel@linux.ibm.com>
->>>>
->>>> We define a new device region in vfio.h to be able to
->>>> get the ZPCI CLP information by reading this region from
->>>> userland.
->>>>
->>>> We create a new file, vfio_zdev.h to define the structure
->>>> of the new region we defined in vfio.h
->>>>
->>>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
->>>> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
->>>> ---
->>>>  include/uapi/linux/vfio.h      |  1 +
->>>>  include/uapi/linux/vfio_zdev.h | 35 +++++++++++++++++++++++++++++++++++
->>>>  2 files changed, 36 insertions(+)
->>>>  create mode 100644 include/uapi/linux/vfio_zdev.h
+> drivers/pci/controller/dwc/pcie-tegra194.c: In function tegra_pcie_config_rp:
+> drivers/pci/controller/dwc/pcie-tegra194.c:1394:8: error: implicit declaration of function pinctrl_pm_select_default_state;
+>  did you mean prandom_seed_full_state? [-Werror=implicit-function-declaration]
+>   ret = pinctrl_pm_select_default_state(dev);
+>         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>         prandom_seed_full_state
 > 
->>>> diff --git a/include/uapi/linux/vfio_zdev.h b/include/uapi/linux/vfio_zdev.h
->>>> new file mode 100644
->>>> index 0000000..55e0d6d
->>>> --- /dev/null
->>>> +++ b/include/uapi/linux/vfio_zdev.h
->>>> @@ -0,0 +1,35 @@
->>>> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
->>>> +/*
->>>> + * Region definition for ZPCI devices
->>>> + *
->>>> + * Copyright IBM Corp. 2019
->>>> + *
->>>> + * Author(s): Pierre Morel <pmorel@linux.ibm.com>
->>>> + */
->>>> +
->>>> +#ifndef _VFIO_ZDEV_H_
->>>> +#define _VFIO_ZDEV_H_
->>>> +
->>>> +#include <linux/types.h>
->>>> +
->>>> +/**
->>>> + * struct vfio_region_zpci_info - ZPCI information.  
->>>
->>> Hm... probably should also get some more explanation. E.g. is that
->>> derived from a hardware structure?
->>>   
->>
->> The structure itself is not mapped 1:1 to a hardware structure, but it
->> does serve as a collection of information that was derived from other
->> hardware structures.
->>
->> "Used for passing hardware feature information about a zpci device
->> between the host and guest" ?
-> 
-> "zPCI specific hardware feature information for a device"?
-> 
-> Are we reasonably sure that this is complete for now? I'm not sure if
-> expanding this structure would work; adding another should always be
-> possible, though (if a bit annoying).
-> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: ab2a50e7602b ("PCI: tegra: Add support to configure sideband pins")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> Reviewed-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> v2: keep alphabetical order
+> ---
+>  drivers/pci/controller/dwc/pcie-tegra194.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-I think trying to make the structure expandable would be best...  If we
-allow arbitrary-sized reads of the info, and only add new fields onto
-the end it should be OK, no? (older qemu doesn't get the info it doesn't
-ask for / understand)....  But I guess that's not compatible with having
-util_str[] size being defined dynamically.  Another caveat would be if
-CLP_UTIL_STR_LEN were to grow in size in the future, and assuming
-util_str[] was no longer at the end of the structure, I guess the
-additional data would have to end up in a
-util_str2[CLP_UTIL_STR_LEN_NEW-CLP_UTIL_STR_LEN_OLD]...  To explain what
-I mean, something like:
+Squashed in the original commit and pushed out pci/tegra
+again.
 
-struct vfio_region_zpci_info {
-	<..>
-	__u8 util_str[CLP_UTIL_STR_LEN_OLD];
-	/* END OF V1 */
-	__u8 foo;
-	/* END OF V2 */
-	__u8 util_str2[CLP_UTIL_STR_LEN_NEW-CLP_UTIL_STR_LEN_OLD];
-	/* END OF V3 */
-} __packed;
+Thanks,
+Lorenzo
 
-
->>
->>>> + *
->>>> + */
->>>> +struct vfio_region_zpci_info {
->>>> +	__u64 dasm;
->>>> +	__u64 start_dma;
->>>> +	__u64 end_dma;
->>>> +	__u64 msi_addr;
->>>> +	__u64 flags;
->>>> +	__u16 pchid;
->>>> +	__u16 mui;
->>>> +	__u16 noi;
->>>> +	__u16 maxstbl;
->>>> +	__u8 version;
->>>> +	__u8 gid;
->>>> +#define VFIO_PCI_ZDEV_FLAGS_REFRESH 1
->>>> +	__u8 util_str[];
->>>> +} __packed;
->>>> +
->>>> +#endif  
->>>
->>>   
->>
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> index 09ed8e4..f89f5ac 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/of_pci.h>
+>  #include <linux/pci.h>
+>  #include <linux/phy/phy.h>
+> +#include <linux/pinctrl/consumer.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/random.h>
+> -- 
+> 2.7.4
 > 
-
+> 
