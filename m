@@ -2,132 +2,107 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA68C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 07:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69785C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 07:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47F882086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 07:27:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A38E208C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 07:29:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395021AbfITH1z (ORCPT
+        id S2395033AbfITH3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 03:27:55 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36782 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390633AbfITH1y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 03:27:54 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0D66C2A09B2;
-        Fri, 20 Sep 2019 07:27:54 +0000 (UTC)
-Received: from [10.36.117.220] (ovpn-117-220.ams2.redhat.com [10.36.117.220])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E12DE60606;
-        Fri, 20 Sep 2019 07:27:45 +0000 (UTC)
-To:     Will Deacon <will@kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Zhangfei Gao <zhangfei.gao@gmail.com>,
-        Andrew Jones <drjones@redhat.com>,
-        "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Subject: Plumber VFIO/IOMMU/PCI "Dual Stage SMMUv3 Status" Follow-up
-Message-ID: <51ed9586-9973-4811-2cda-a2356fb3a1b4@redhat.com>
-Date:   Fri, 20 Sep 2019 09:27:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Fri, 20 Sep 2019 07:27:54 +0000 (UTC)
+        Fri, 20 Sep 2019 03:29:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48034 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390633AbfITH3N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 03:29:13 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DEAC0AFB7;
+        Fri, 20 Sep 2019 07:29:09 +0000 (UTC)
+Date:   Fri, 20 Sep 2019 09:29:06 +0200
+Message-ID: <s5hlfujo27x.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ayman Bagabas <ayman.bagabas@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sinan Kaya <okaya@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Stuart Hayes <stuart.w.hayes@gmail.com>,
+        Matan Ziv-Av <matan@svgalib.org>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Peng Hao <peng.hao2@zte.com.cn>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mattias Jacobsson <2pi@mok.nu>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/6] platform/x86: huawei-wmi: Add quirks and module parameters
+In-Reply-To: <30a363e5-5691-e008-e1e5-55936fa3cd92@redhat.com>
+References: <20190920003938.21617-1-ayman.bagabas@gmail.com>
+        <20190920003938.21617-3-ayman.bagabas@gmail.com>
+        <20190920060812.GB473898@kroah.com>
+        <30a363e5-5691-e008-e1e5-55936fa3cd92@redhat.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Will,
+On Fri, 20 Sep 2019 09:24:08 +0200,
+Hans de Goede wrote:
+> 
+> Hi,
+> 
+> On 20-09-2019 08:08, Greg Kroah-Hartman wrote:
+> > On Thu, Sep 19, 2019 at 08:39:07PM -0400, Ayman Bagabas wrote:
+> >> Introduce quirks and module parameters. 3 quirks are added:
+> >> 1. Fixes reporting brightness keys twice since it's already handled by
+> >>     acpi-video.
+> >> 2. Some models need a short delay when setting battery thresholds to
+> >>     prevent a race condition when two processes read/write. (will be used later)
+> >> 3. Matebook X (2017) handles micmute led through the "legacy" interface
+> >>     which is not currently implemented. Use ACPI EC method to control
+> >>     this led. (will be used later)
+> >>
+> >> 2 module parameters are added to enable this short delay and/or report
+> >>    brightness keys through this driver.
+> >
+> > module parameters are a pain to manage and handle over time.  Is there
+> > any way you can "automatically" figure this out, or use a sysfs file
+> > instead?
+> 
+> The patch also adds dmi matches to set the quirks, so the module params
+> are there to override those and/or to easily test which are the right options
+> with new modules. The normal / expected use-case for everything to be set
+> automatically based on the DMI table.
+> 
+> With that said, the module-params should really always override the dmi values,
+> so I would like to suggest to make the module-params int-s instead of bool-s
+> and to do something like this:
+> 
+> static int battery_reset = -1;
+> static int report_brightness = -1;
+> 
+> 	quirks = &quirk_unknown;
+> 	dmi_check_system(huawei_quirks);
+> 	/* If set the module options override the vale from the DMI table */
+> 	if (battery_reset != -1)
+> 		quirks->battery_reset = battery_reset;
+> 	if (report_brightness != -1)
+> 		quirks->report_brightness = report_brightness;
 
-As a follow-up of the VFIO/IOMMU/PCI "Dual Stage SMMUv3 Status"
-session, please find some further justifications about the
-SMMUv3 nested stage enablement series.
+... and use "bint" for module_param() type.
 
-In the text below, I only talk about use cases featuring
-VFIO assigned devices where the physical IOMMU is actually
-involved.
 
-The virtio-iommu solution, as currently specified, is expected
-to work efficiently as long as guest IOMMU mappings are static.
-This hopefully actually corresponds to the DPDK use case.
-The overhead of trapping on each MAP/UNMAP is then close to 0.
+thanks,
 
-I see 2 main use cases where guest uses dynamic mappings:
-  1) native drivers using DMA ops are used on the guest
-  2) shared virtual address on guest.
-
-1) can be addressed with current virtio-iommu spec. However
-the performance will be very poor: it behaves as Intel IOMMU
-with the driver operating with caching mode and strict mode
-set (80% perf downgrade is observed versus no iommu). This use
-case can be tested very easily. Dual stage implementation
-should bring much better results here.
-
-2) natural implementation for that is nested. Jean planned
-to introduce extensions to the current virtio-iommu spec to
-setup stage 1 config. As far as I understand this will require
-the exact same SMMUv3 driver modifications I introduced in
-my series. If this happens, after the specification process,
-the virtio-iommu driver upgrade, the virtio-iommu QEMU device
-upgrade, we will face the same problematics as the ones
-encountered in my series. This use case cannot be tested
-easily. There are in-flight series to support substream IDs
-in the SMMU driver and SVA/ARM but none of that code is
-upstream. Also I don't know if there is any PASID capable
-device easily available at the moment. So during the uC you
-said you would prefer this use case to be addressed first
-but according to me, this brings a lot of extra complexity
-and dependencies and the above series are also stalled due to
-that exact same issue.
-
-HW nested paging should satisfy all use cases including
-guest static mappings. At the moment it is difficult to
-run comparative benchmarks. First you may know virtio-iommu
-also suffer some FW integration delays, its QEMU VFIO
-integration needs to be rebased. Also I have access to
-some systems that feature a dual stage SMMUv3 but I am
-not sure their cache/TLB structures are dimensionned for
-exercising the 2 stages (that's a chicken and egg issue:
-no SW integration, no HW).
-
-If you consider those use cases are not sufficient to
-invest time now, I have no problem pausing this development.
-We can re-open the topic later when actual users show up,
-are interested to review and test with production HW and
-workloads.
-
-Of course if there are any people/company interested in
-getting this upstream in a decent timeframe, that's the right
-moment to let us know!
-
-Thanks
-
-Eric
-
-References:
-[1] [PATCH v9 00/11] SMMUv3 Nested Stage Setup (IOMMU part)
-https://patchwork.kernel.org/cover/11039871/
-[2] [PATCH v9 00/14] SMMUv3 Nested Stage Setup (VFIO part)
-https://patchwork.kernel.org/cover/11039995/
-
+Takashi
