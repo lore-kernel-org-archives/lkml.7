@@ -2,159 +2,212 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59CB1C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D4EC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EEEF20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:52:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="m/Dmg/JW"
+	by mail.kernel.org (Postfix) with ESMTP id 3AFBA20C01
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:52:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729861AbfITTwe (ORCPT
+        id S1728040AbfITTwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 15:52:34 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:38557 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729829AbfITTwb (ORCPT
+        Fri, 20 Sep 2019 15:52:36 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:12822 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729820AbfITTwc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 15:52:31 -0400
-Received: by mail-pf1-f195.google.com with SMTP id h195so5212028pfe.5
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 12:52:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=gcNXvtSyWvuQ5LByHh2uePUN26jQ3PokWQXYeNMdTRo=;
-        b=m/Dmg/JW+4n89iQLkwR9YixMDIeVf27zFQCHMeU2vrr/Vf/mPOfxnNvPfe3OPGVCIb
-         JgAPKsXQJhnD7tFI5MlKzN2xVjy8lP1etFfFQJ6uqTzpoQ2zt6AqXypDzmNHpc8wPlxV
-         crjt8+KJWIThyAPCT4EQPrvHrdHbinVspic5j9BKz5RbkcHdT9crv3tv4qpn/aE9eA1n
-         PMBQ0OAdva2QoUZMRO40b1D4dh+MZ0oPBPl/uwt1PjK41QI5n4GP65bK/tOOocfdaOPb
-         fW7AswBfwe7B/XRzdJs+JsavsZIwjqyEid+QSgHJFI3Ye2MQDRaVklFCyYyobPXtLX0a
-         K9pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=gcNXvtSyWvuQ5LByHh2uePUN26jQ3PokWQXYeNMdTRo=;
-        b=ICeLVFOmtR1dL2noB+miocN39MeYc7SFABIc7oWjv9WZ8ZfaSt0XvMcHFp2SvEc0tR
-         AOXj9uZIGqMNDiz/gsZeuvZNMRnfrATy+UEd/F4kq7b4WkODEGm+aeDZBnnooF2zPVrz
-         gmGoBUyEPv2stWoDa+LG8EWDQjwr02e4HnIe2KfPTbzcqxphC9WdynagayREUNCWngkU
-         hbJh5vKtq4nT02tMswIVl4m/WUlMqozVZyDZubt2PcbDTh+dcNFFa+NgKVjIZ7MLF16P
-         WW23AOIn41R7lYhmmu4dqcGVdru6kJh/GtG3V2Tol3fqUFNrU26z/AcMrbGOXS2yLt3J
-         0dOw==
-X-Gm-Message-State: APjAAAX2MIGs9cmh4gdADLrd3EE35HtaSXikIf2dbsVs8ibqUmK35adh
-        kq/o7c8+IRxQdT+tYM/8qHncHg==
-X-Google-Smtp-Source: APXvYqxtb4M5gtpX7qWD4dcjCAwsr874h41gGdjXYxHCsHqxUWbY1aFs2BvIpYyEDF4qF+PsPWIWvw==
-X-Received: by 2002:a62:cb:: with SMTP id 194mr20209663pfa.130.1569009150487;
-        Fri, 20 Sep 2019 12:52:30 -0700 (PDT)
-Received: from ?IPv6:2600:1010:b006:e11f:c970:783e:78af:e8f5? ([2600:1010:b006:e11f:c970:783e:78af:e8f5])
-        by smtp.gmail.com with ESMTPSA id c20sm5107273pfd.122.2019.09.20.12.52.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Sep 2019 12:52:29 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH RFC v4 1/1] random: WARN on large getrandom() waits and introduce getrandom2()
-Date:   Fri, 20 Sep 2019 12:52:28 -0700
-Message-Id: <C5BE6F0F-15B1-404B-A490-5B4E5C8C61A0@amacapital.net>
-References: <20190920193740.GD1889@1wt.eu>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>
-In-Reply-To: <20190920193740.GD1889@1wt.eu>
-To:     Willy Tarreau <w@1wt.eu>
-X-Mailer: iPhone Mail (17A577)
+        Fri, 20 Sep 2019 15:52:32 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8KJltZV016030;
+        Fri, 20 Sep 2019 15:52:01 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v53r5k7h3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 20 Sep 2019 15:52:01 -0400
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8KJlvvv016077;
+        Fri, 20 Sep 2019 15:52:00 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v53r5k7gj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 20 Sep 2019 15:51:59 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8KJoHQc020841;
+        Fri, 20 Sep 2019 19:52:00 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma01wdc.us.ibm.com with ESMTP id 2v3vbu0npf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 20 Sep 2019 19:51:59 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8KJpvkX45089086
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 20 Sep 2019 19:51:57 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5393A7805C;
+        Fri, 20 Sep 2019 19:51:57 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B99F37805E;
+        Fri, 20 Sep 2019 19:51:52 +0000 (GMT)
+Received: from LeoBras.aus.stglabs.ibm.com (unknown [9.18.235.184])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri, 20 Sep 2019 19:51:52 +0000 (GMT)
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc:     Leonardo Bras <leonardo@linux.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        Ganesh Goudar <ganeshgr@linux.ibm.com>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Keith Busch <keith.busch@intel.com>
+Subject: [PATCH v2 08/11] powerpc/kvm/book3s_hv: Applies counting method to monitor lockless pgtbl walks
+Date:   Fri, 20 Sep 2019 16:50:44 -0300
+Message-Id: <20190920195047.7703-9-leonardo@linux.ibm.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190920195047.7703-1-leonardo@linux.ibm.com>
+References: <20190920195047.7703-1-leonardo@linux.ibm.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-20_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=939 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909200161
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Applies the counting-based method for monitoring all book3s_hv related
+functions that do lockless pagetable walks.
 
+Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
+---
+ arch/powerpc/kvm/book3s_hv_nested.c | 8 ++++++++
+ arch/powerpc/kvm/book3s_hv_rm_mmu.c | 9 ++++++++-
+ 2 files changed, 16 insertions(+), 1 deletion(-)
 
-> On Sep 20, 2019, at 12:37 PM, Willy Tarreau <w@1wt.eu> wrote:
->=20
-> =EF=BB=BFOn Fri, Sep 20, 2019 at 12:22:17PM -0700, Andy Lutomirski wrote:
->> Perhaps userland could register a helper that takes over and does
->> something better?
->=20
-> If userland sees the failure it can do whatever the developer/distro
-> packager thought suitable for the system facing this condition.
->=20
->> But I think the kernel really should do something
->> vaguely reasonable all by itself.
->=20
-> Definitely, that's what Linus' proposal was doing. Sleeping for some time
-> is what I call "vaguely reasonable".
-
-I don=E2=80=99t buy it. We have existing programs that can deadlock on boot.=
- Just throwing -EAGAIN at them in a syscall that didn=E2=80=99t previously b=
-lock does not strike me as reasonable.
-
->=20
->> If nothing else, we want the ext4
->> patch that provoked this whole discussion to be applied,
->=20
-> Oh absolutely!
->=20
->> which means
->> that we need to unbreak userspace somehow, and returning garbage it to
->> is not a good choice.
->=20
-> It depends how it's used. I'd claim that we certainly use randoms for
-> other things (such as ASLR/hashtables) *before* using them to generate
-> long lived keys thus we can have a bit more time to get some more
-> entropy before reaching the point of producing these keys.
-
-The problem is that we don=E2=80=99t know what userspace is doing with the o=
-utput from getrandom(..., 0), so I think we have to be conservative. New ker=
-nels need to work with old user code. It=E2=80=99s okay if they=E2=80=99re s=
-lower to boot than they could be.
-
->=20
->> Here are some possible approaches that come to mind:
->>=20
->> int count;
->> while (crng isn't inited) {
->>  msleep(1);
->> }
->>=20
->> and modify add_timer_randomness() to at least credit a tiny bit to
->> crng_init_cnt.
->=20
-> Without a timeout it's sure we'll still face some situations where
-> it blocks forever, which is the current problem.
-
-The point is that we keep the timer running by looping like this, which shou=
-ld cause add_timer_randomness() to get called continuously, which should pre=
-vent the deadlock.  I assume the deadlock is because we go into nohz-idle an=
-d we sit there with nothing happening at all.
-
->=20
->> Or we do something like intentionally triggering readahead on some
->> offset on the root block device.
->=20
-> You don't necessarily have such a device, especially when you're
-> in an initramfs. It's precisely where userland can be smarter. When
-> the caller is sfdisk for example, it does have more chances to try
-> to perform I/O than when it's a tiny http server starting to present
-> a configuration page.
-
-What I mean is: allow user code to register a usermode helper that helps get=
- entropy. Or just convince distros to bundle some useful daemon that starts a=
-t early boot and lives in the initramfs.
+diff --git a/arch/powerpc/kvm/book3s_hv_nested.c b/arch/powerpc/kvm/book3s_hv_nested.c
+index 735e0ac6f5b2..ed68e57af3a3 100644
+--- a/arch/powerpc/kvm/book3s_hv_nested.c
++++ b/arch/powerpc/kvm/book3s_hv_nested.c
+@@ -804,6 +804,7 @@ static void kvmhv_update_nest_rmap_rc(struct kvm *kvm, u64 n_rmap,
+ 		return;
+ 
+ 	/* Find the pte */
++	start_lockless_pgtbl_walk(kvm->mm);
+ 	ptep = __find_linux_pte(gp->shadow_pgtable, gpa, NULL, &shift);
+ 	/*
+ 	 * If the pte is present and the pfn is still the same, update the pte.
+@@ -815,6 +816,7 @@ static void kvmhv_update_nest_rmap_rc(struct kvm *kvm, u64 n_rmap,
+ 		__radix_pte_update(ptep, clr, set);
+ 		kvmppc_radix_tlbie_page(kvm, gpa, shift, lpid);
+ 	}
++	end_lockless_pgtbl_walk(kvm->mm);
+ }
+ 
+ /*
+@@ -854,10 +856,12 @@ static void kvmhv_remove_nest_rmap(struct kvm *kvm, u64 n_rmap,
+ 		return;
+ 
+ 	/* Find and invalidate the pte */
++	start_lockless_pgtbl_walk(kvm->mm);
+ 	ptep = __find_linux_pte(gp->shadow_pgtable, gpa, NULL, &shift);
+ 	/* Don't spuriously invalidate ptes if the pfn has changed */
+ 	if (ptep && pte_present(*ptep) && ((pte_val(*ptep) & mask) == hpa))
+ 		kvmppc_unmap_pte(kvm, ptep, gpa, shift, NULL, gp->shadow_lpid);
++	end_lockless_pgtbl_walk(kvm->mm);
+ }
+ 
+ static void kvmhv_remove_nest_rmap_list(struct kvm *kvm, unsigned long *rmapp,
+@@ -921,6 +925,7 @@ static bool kvmhv_invalidate_shadow_pte(struct kvm_vcpu *vcpu,
+ 	int shift;
+ 
+ 	spin_lock(&kvm->mmu_lock);
++	start_lockless_pgtbl_walk(kvm->mm);
+ 	ptep = __find_linux_pte(gp->shadow_pgtable, gpa, NULL, &shift);
+ 	if (!shift)
+ 		shift = PAGE_SHIFT;
+@@ -928,6 +933,7 @@ static bool kvmhv_invalidate_shadow_pte(struct kvm_vcpu *vcpu,
+ 		kvmppc_unmap_pte(kvm, ptep, gpa, shift, NULL, gp->shadow_lpid);
+ 		ret = true;
+ 	}
++	end_lockless_pgtbl_walk(kvm->mm);
+ 	spin_unlock(&kvm->mmu_lock);
+ 
+ 	if (shift_ret)
+@@ -1362,11 +1368,13 @@ static long int __kvmhv_nested_page_fault(struct kvm_run *run,
+ 	/* See if can find translation in our partition scoped tables for L1 */
+ 	pte = __pte(0);
+ 	spin_lock(&kvm->mmu_lock);
++	start_lockless_pgtbl_walk(kvm->mm);
+ 	pte_p = __find_linux_pte(kvm->arch.pgtable, gpa, NULL, &shift);
+ 	if (!shift)
+ 		shift = PAGE_SHIFT;
+ 	if (pte_p)
+ 		pte = *pte_p;
++	end_lockless_pgtbl_walk(kvm->mm);
+ 	spin_unlock(&kvm->mmu_lock);
+ 
+ 	if (!pte_present(pte) || (writing && !(pte_val(pte) & _PAGE_WRITE))) {
+diff --git a/arch/powerpc/kvm/book3s_hv_rm_mmu.c b/arch/powerpc/kvm/book3s_hv_rm_mmu.c
+index 63e0ce91e29d..53ca67492211 100644
+--- a/arch/powerpc/kvm/book3s_hv_rm_mmu.c
++++ b/arch/powerpc/kvm/book3s_hv_rm_mmu.c
+@@ -258,6 +258,7 @@ long kvmppc_do_h_enter(struct kvm *kvm, unsigned long flags,
+ 	 * If called in real mode we have MSR_EE = 0. Otherwise
+ 	 * we disable irq above.
+ 	 */
++	start_lockless_pgtbl_walk(kvm->mm);
+ 	ptep = __find_linux_pte(pgdir, hva, NULL, &hpage_shift);
+ 	if (ptep) {
+ 		pte_t pte;
+@@ -311,6 +312,7 @@ long kvmppc_do_h_enter(struct kvm *kvm, unsigned long flags,
+ 		ptel &= ~(HPTE_R_W|HPTE_R_I|HPTE_R_G);
+ 		ptel |= HPTE_R_M;
+ 	}
++	end_lockless_pgtbl_walk(kvm->mm);
+ 
+ 	/* Find and lock the HPTEG slot to use */
+  do_insert:
+@@ -886,10 +888,15 @@ static int kvmppc_get_hpa(struct kvm_vcpu *vcpu, unsigned long gpa,
+ 	hva = __gfn_to_hva_memslot(memslot, gfn);
+ 
+ 	/* Try to find the host pte for that virtual address */
++	start_lockless_pgtbl_walk(kvm->mm);
+ 	ptep = __find_linux_pte(vcpu->arch.pgdir, hva, NULL, &shift);
+-	if (!ptep)
++	if (!ptep) {
++		end_lockless_pgtbl_walk(kvm->mm);
+ 		return H_TOO_HARD;
++	}
+ 	pte = kvmppc_read_update_linux_pte(ptep, writing);
++	end_lockless_pgtbl_walk(kvm->mm);
++
+ 	if (!pte_present(pte))
+ 		return H_TOO_HARD;
+ 
+-- 
+2.20.1
 
