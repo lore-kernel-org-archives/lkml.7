@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 042A2C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C8CC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D01AE208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7B332080F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:25:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388168AbfITOZE (ORCPT
+        id S2388254AbfITOZI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:25:04 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35578 "EHLO
+        Fri, 20 Sep 2019 10:25:08 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35592 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728921AbfITOY5 (ORCPT
+        by vger.kernel.org with ESMTP id S1728923AbfITOY5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Sep 2019 10:24:57 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqB-0004vo-M4; Fri, 20 Sep 2019 15:24:55 +0100
+        id 1iBJqA-0004va-Rk; Fri, 20 Sep 2019 15:24:54 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqA-0007p1-Rt; Fri, 20 Sep 2019 15:24:54 +0100
+        id 1iBJqA-0007od-8Z; Fri, 20 Sep 2019 15:24:54 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Dan Carpenter" <dan.carpenter@oracle.com>,
-        "Hans Verkuil" <hverkuil-cisco@xs4all.nl>,
-        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>
+        "Geert Uytterhoeven" <geert+renesas@glider.be>,
+        "Mark Brown" <broonie@kernel.org>
 Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.719233316@decadent.org.uk>
+Message-ID: <lsq.1568989415.278574693@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 006/132] media: wl128x: Fix an error code in
- fm_download_firmware()
+Subject: [PATCH 3.16 001/132] spi: rspi: Fix register initialization while
+ runtime-suspended
 In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,34 +56,108 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-commit ef4bb63dc1f7213c08e13f6943c69cd27f69e4a3 upstream.
+commit 42bdaaece121b3bb50fd4d1203d6d0170279f9fa upstream.
 
-We forgot to set "ret" on this error path.
+The Renesas RSPI/QSPI driver performs SPI controller register
+initialization in its spi_operations.setup() callback, without calling
+pm_runtime_get_sync() first, which may cause spurious failures.
 
-Fixes: e8454ff7b9a4 ("[media] drivers:media:radio: wl128x: FM Driver Common sources")
+So far this went unnoticed, as this SPI controller is typically used
+with a single SPI NOR FLASH containing the boot loader:
+  1. If the device's module clock is still enabled (left enabled by the
+     bootloader, and not yet disabled by the clk_disable_unused() late
+     initcall), register initialization succeeds,
+  2. If the device's module clock is disabled, register writes don't
+     seem to cause lock-ups or crashes.
+     Data received in the first SPI message may be corrupted, though.
+     Subsequent SPI messages seem to be OK.
+     E.g. on r8a7791/koelsch, one bit is lost while receiving the 6th
+     byte of the JEDEC ID for the s25fl512s FLASH, corrupting that byte
+     and all later bytes.  But until commit a2126b0a010905e5 ("mtd:
+     spi-nor: refine Spansion S25FL512S ID"), the 6th byte was not
+     considered for FLASH identification.
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fix this by moving all initialization from the .setup() to the
+.prepare_message() callback.  The latter is always called after the
+device has been runtime-resumed by the SPI core.
+
+This also makes the driver follow the rule that .setup() must not change
+global driver state or register values, as that might break a transfer
+in progress.
+
+Fixes: 490c97747d5dc77d ("spi: rspi: Add runtime PM support, using spi core auto_runtime_pm")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+[bwh: Backported to 3.16: s/(controller|ctlr)/master/g]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/media/radio/wl128x/fmdrv_common.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/spi/spi-rspi.c | 39 ++++++++++++++++-----------------------
+ 1 file changed, 16 insertions(+), 23 deletions(-)
 
---- a/drivers/media/radio/wl128x/fmdrv_common.c
-+++ b/drivers/media/radio/wl128x/fmdrv_common.c
-@@ -1278,8 +1278,9 @@ static int fm_download_firmware(struct f
+--- a/drivers/spi/spi-rspi.c
++++ b/drivers/spi/spi-rspi.c
+@@ -726,28 +726,6 @@ static int qspi_transfer_one(struct spi_
+ 	}
+ }
  
- 		switch (action->type) {
- 		case ACTION_SEND_COMMAND:	/* Send */
--			if (fmc_send_cmd(fmdev, 0, 0, action->data,
--						action->size, NULL, NULL))
-+			ret = fmc_send_cmd(fmdev, 0, 0, action->data,
-+					   action->size, NULL, NULL);
-+			if (ret)
- 				goto rel_fw;
+-static int rspi_setup(struct spi_device *spi)
+-{
+-	struct rspi_data *rspi = spi_master_get_devdata(spi->master);
+-
+-	rspi->max_speed_hz = spi->max_speed_hz;
+-
+-	rspi->spcmd = SPCMD_SSLKP;
+-	if (spi->mode & SPI_CPOL)
+-		rspi->spcmd |= SPCMD_CPOL;
+-	if (spi->mode & SPI_CPHA)
+-		rspi->spcmd |= SPCMD_CPHA;
+-
+-	/* CMOS output mode and MOSI signal from previous transfer */
+-	rspi->sppcr = 0;
+-	if (spi->mode & SPI_LOOP)
+-		rspi->sppcr |= SPPCR_SPLP;
+-
+-	set_config_register(rspi, 8);
+-
+-	return 0;
+-}
+-
+ static u16 qspi_transfer_mode(const struct spi_transfer *xfer)
+ {
+ 	if (xfer->tx_buf)
+@@ -817,8 +795,24 @@ static int rspi_prepare_message(struct s
+ 				struct spi_message *msg)
+ {
+ 	struct rspi_data *rspi = spi_master_get_devdata(master);
++	struct spi_device *spi = msg->spi;
+ 	int ret;
  
- 			cmd_cnt++;
++	rspi->max_speed_hz = spi->max_speed_hz;
++
++	rspi->spcmd = SPCMD_SSLKP;
++	if (spi->mode & SPI_CPOL)
++		rspi->spcmd |= SPCMD_CPOL;
++	if (spi->mode & SPI_CPHA)
++		rspi->spcmd |= SPCMD_CPHA;
++
++	/* CMOS output mode and MOSI signal from previous transfer */
++	rspi->sppcr = 0;
++	if (spi->mode & SPI_LOOP)
++		rspi->sppcr |= SPPCR_SPLP;
++
++	set_config_register(rspi, 8);
++
+ 	if (msg->spi->mode &
+ 	    (SPI_TX_DUAL | SPI_TX_QUAD | SPI_RX_DUAL | SPI_RX_QUAD)) {
+ 		/* Setup sequencer for messages with multiple transfer modes */
+@@ -1119,7 +1113,6 @@ static int rspi_probe(struct platform_de
+ 	init_waitqueue_head(&rspi->wait);
+ 
+ 	master->bus_num = pdev->id;
+-	master->setup = rspi_setup;
+ 	master->auto_runtime_pm = true;
+ 	master->transfer_one = ops->transfer_one;
+ 	master->prepare_message = rspi_prepare_message;
 
