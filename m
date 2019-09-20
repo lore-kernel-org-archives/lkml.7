@@ -2,200 +2,112 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A095BC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 22:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 465B7C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 22:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74D552080F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 22:49:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 146682080F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 22:51:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="nGDtt8Xv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XxpsH7YC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406536AbfITWtk (ORCPT
+        id S2406732AbfITWvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 18:49:40 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:60844 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406254AbfITWtk (ORCPT
+        Fri, 20 Sep 2019 18:51:49 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:37177 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406570AbfITWvs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 18:49:40 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2CE252F9;
-        Sat, 21 Sep 2019 00:49:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1569019778;
-        bh=MXdyC92nZxPWNwpEC220/y38MMTZ88P8BeKNptk7oi4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nGDtt8XvhbiVcDVzUPuwbMH2FhknLah2kmir5+F17VCWD9D0jtItgogS4JbFAttEq
-         pHbUpRRxtaWpYhTK1GK1+5zoZEGXSDwxjfp6tIOB38Y3D54XxUcTt4cJbxYqiMT9kf
-         DnNIF+ZFGA6wTDcD42WG599MqqeLIBYbk/k6YBDs=
-Date:   Sat, 21 Sep 2019 01:49:29 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     daniel@ffwll.ch
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
-        horms@verge.net.au, uli+renesas@fpond.eu,
-        VenkataRajesh.Kalakodima@in.bosch.com, airlied@linux.ie,
-        koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 8/9] drm: rcar-du: kms: Update CMM in atomic commit
- tail
-Message-ID: <20190920224929.GE12672@pendragon.ideasonboard.com>
-References: <20190906135436.10622-1-jacopo+renesas@jmondi.org>
- <20190906135436.10622-9-jacopo+renesas@jmondi.org>
+        Fri, 20 Sep 2019 18:51:48 -0400
+Received: by mail-pl1-f195.google.com with SMTP id b10so3860265plr.4;
+        Fri, 20 Sep 2019 15:51:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0P3XLXQhDOk6yT8L9UZqipY6hQ6gvzDoPp4owKec9vk=;
+        b=XxpsH7YCa/PUyweMsFxZ83TPOyD0WUZjPit3c8pITmQgtwko6irwDaxc9pADFQztvC
+         4U90FTq1tsr90gbU3BH0dXMjgwrxN9irMCPTc5p97PU3oec9/cqWzdg6C2yhY/HsfNln
+         aScdV6JxcUYSWR5y5Hv9upvbjhCmXfYVsD9tu4NY5ITzk7+s1hqedARflggKmV1Dur7v
+         fiOu8/6RUGHJEhmjdorBPStTRSD4Ln8RO9iV39xPXYgVi3HpcU5c3nwZPcYP/tfnsq7x
+         oh49U2WdVkdA819mAvnTSbQQg3Gu+tax53st1QAbHmpdvq4sxTse2UtHV/IylCvTkm9n
+         Q3vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0P3XLXQhDOk6yT8L9UZqipY6hQ6gvzDoPp4owKec9vk=;
+        b=mNivWr3hPxn9ZEYMye0BafcMw2KmUWGF1X96XFjbhNe0BuTh5TXOpwtq2VYivcGSb8
+         LbneMsikX5qjRU5QdJMl+boupADVgKqG6zezefGs9VDUDSQh74obVVoQU3YX/tf26qOu
+         DxNhnBN7XcSt2RC4a2/PqjqOJKYgYywSDbDfJCcDWdE3yBPXDcRi9ZZBwJe5Jcc3xHZf
+         ccFogUhmUYTkKQwWkdJCQtPuL8J/cGfnQqMbSZ0W57TO7Rb8VYxpc5I8B4AUX9v0b7wJ
+         xsFhJ/UqimlNal1dUMH4s8GjpjmXRERYtXKNotVoA1cJW46DeHoUq3HT19fl1GkvivyP
+         Dcrw==
+X-Gm-Message-State: APjAAAW4yH/iOttwx3D/bzpxTvuCPmuIMghK/4fyBxc6lYj5beCbO2ZX
+        zvW3bgzBvrNK2Qn4Jv9cTHc=
+X-Google-Smtp-Source: APXvYqxuXYaN7Iqu31wZ7eEfynHGlkievoHDsqLPDXtQ855SljuXpLCmyBe3bDgUiLJ0h23ehjlQAQ==
+X-Received: by 2002:a17:902:fe91:: with SMTP id x17mr19665279plm.106.1569019907795;
+        Fri, 20 Sep 2019 15:51:47 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id g24sm2039646pfi.81.2019.09.20.15.51.46
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 20 Sep 2019 15:51:47 -0700 (PDT)
+Date:   Fri, 20 Sep 2019 15:50:58 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
+        lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, lars@metafoo.de
+Subject: Re: [PATCH V3 3/4] ASoC: pcm_dmaengine: Extract
+ snd_dmaengine_pcm_refine_runtime_hwparams
+Message-ID: <20190920225055.GB21389@Asurada-Nvidia.nvidia.com>
+References: <cover.1568861098.git.shengjiu.wang@nxp.com>
+ <57e3bda7b94fecf94d17f2eacf1c6beebcac74ff.1568861098.git.shengjiu.wang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190906135436.10622-9-jacopo+renesas@jmondi.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <57e3bda7b94fecf94d17f2eacf1c6beebcac74ff.1568861098.git.shengjiu.wang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
+On Thu, Sep 19, 2019 at 08:11:41PM +0800, Shengjiu Wang wrote:
+> When set the runtime hardware parameters, we may need to query
+> the capability of DMA to complete the parameters.
+> 
+> This patch is to Extract this operation from
+> dmaengine_pcm_set_runtime_hwparams function to a separate function
+> snd_dmaengine_pcm_refine_runtime_hwparams, that other components
+> which need this feature can call this function.
+> 
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-On Fri, Sep 06, 2019 at 03:54:35PM +0200, Jacopo Mondi wrote:
-> Update CMM settings at in the atomic commit tail helper method.
-> The CMM is updated with new gamma values provided to the driver
-> in the GAMMA_LUT blob property.
-> 
-> When resuming from system suspend, the DU driver is responsible for
-> reprogramming and enabling the CMM unit if it was in use at the time the
-> system entered the suspend state.  Force the color_mgmt_changed flag to
-> true if the DRM gamma lut color transformation property was set in the
-> CRTC state duplicated at suspend time, as the CMM gets reprogrammed only
-> if said flag is active in the rcar_du_atomic_commit_update_cmm() method.
-> 
-> Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> ---
-> 
-> Daniel could you have a look if resume bits are worth being moved to the
-> DRM core? The color_mgmt_changed flag is set to false when the state is
-> duplicated if I read the code correctly, but when this happens in a
-> suspend/resume sequence its value should probably be restored to true if
-> any color management property was set in the crtc state when system entered
-> suspend.
+> @@ -145,58 +140,15 @@ static int dmaengine_pcm_set_runtime_hwparams(struct snd_pcm_substream *substrea
 
-Gentle ping on this.
+> +	ret = snd_dmaengine_pcm_refine_runtime_hwparams(substream,
+> +							dma_data,
+> +							&hw,
+> +							chan);
+> +	if (ret)
+> +		return ret;
+>  
+>  	return snd_soc_set_runtime_hwparams(substream, &hw);
+> +
+> }
 
-> ---
-> 
->  drivers/gpu/drm/rcar-du/rcar_du_drv.c | 20 ++++++++++++++
->  drivers/gpu/drm/rcar-du/rcar_du_kms.c | 38 +++++++++++++++++++++++++++
->  2 files changed, 58 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_drv.c b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-> index 018480a8f35c..d1003d31cfaf 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-> +++ b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-> @@ -17,6 +17,7 @@
->  #include <linux/slab.h>
->  #include <linux/wait.h>
-> 
-> +#include <drm/drm_atomic.h>
->  #include <drm/drm_atomic_helper.h>
->  #include <drm/drm_fb_cma_helper.h>
->  #include <drm/drm_fb_helper.h>
-> @@ -482,6 +483,25 @@ static int rcar_du_pm_suspend(struct device *dev)
->  static int rcar_du_pm_resume(struct device *dev)
->  {
->  	struct rcar_du_device *rcdu = dev_get_drvdata(dev);
-> +	struct drm_atomic_state *state = rcdu->ddev->mode_config.suspend_state;
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < rcdu->num_crtcs; ++i) {
-> +		struct drm_crtc *crtc = &rcdu->crtcs[i].crtc;
-> +		struct drm_crtc_state *crtc_state;
-> +
-> +		crtc_state = drm_atomic_get_new_crtc_state(state, crtc);
-> +		if (!crtc_state)
-> +			continue;
-> +
-> +		/*
-> +		 * Force re-enablement of CMM after system resume if any
-> +		 * of the DRM color transformation properties was set in
-> +		 * the state saved at system suspend time.
-> +		 */
-> +		if (crtc_state->gamma_lut)
-> +			crtc_state->color_mgmt_changed = true;
-> +	}
-> 
->  	return drm_mode_config_helper_resume(rcdu->ddev);
->  }
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_kms.c b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> index 294630e56992..fc30fff0eb8d 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> +++ b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> @@ -22,6 +22,7 @@
->  #include <linux/of_platform.h>
->  #include <linux/wait.h>
-> 
-> +#include "rcar_cmm.h"
->  #include "rcar_du_crtc.h"
->  #include "rcar_du_drv.h"
->  #include "rcar_du_encoder.h"
-> @@ -368,6 +369,40 @@ rcar_du_fb_create(struct drm_device *dev, struct drm_file *file_priv,
->   * Atomic Check and Update
->   */
-> 
-> +static void rcar_du_atomic_commit_update_cmm(struct drm_crtc *crtc,
-> +					     struct drm_crtc_state *old_state)
-> +{
-> +	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
-> +	struct rcar_cmm_config cmm_config = {};
-> +	struct device *dev = rcrtc->dev->dev;
-> +	struct drm_property_blob *lut_blob;
-> +
-> +	if (!rcrtc->cmm || !crtc->state->color_mgmt_changed)
-> +		return;
-> +
-> +	if (!crtc->state->gamma_lut) {
-> +		cmm_config.lut.enable = false;
-> +		rcar_cmm_setup(rcrtc->cmm, &cmm_config);
-> +		return;
-> +	}
-> +
-> +	lut_blob = crtc->state->gamma_lut;
-> +	if (lut_blob->length != (CM2_LUT_SIZE * sizeof(struct drm_color_lut))) {
-> +		/*
-> +		 * We only accept fully populated LUT tables;
-> +		 * be loud here, otherwise the CMM gets silently ignored.
-> +		 */
-> +		dev_err(dev, "invalid gamma lut size of %lu bytes\n",
-> +			lut_blob->length);
-> +		return;
-> +	}
-> +
-> +	cmm_config.lut.enable = true;
-> +	cmm_config.lut.table = (struct drm_color_lut *)lut_blob->data;
-> +
-> +	rcar_cmm_setup(rcrtc->cmm, &cmm_config);
-> +}
-> +
->  static int rcar_du_atomic_check(struct drm_device *dev,
->  				struct drm_atomic_state *state)
->  {
-> @@ -410,6 +445,9 @@ static void rcar_du_atomic_commit_tail(struct drm_atomic_state *old_state)
->  			rcdu->dpad1_source = rcrtc->index;
->  	}
-> 
-> +	for_each_old_crtc_in_state(old_state, crtc, crtc_state, i)
-> +		rcar_du_atomic_commit_update_cmm(crtc, crtc_state);
-> +
->  	/* Apply the atomic update. */
->  	drm_atomic_helper_commit_modeset_disables(dev, old_state);
->  	drm_atomic_helper_commit_planes(dev, old_state,
+Just a nit, why add a line here? :)
 
--- 
-Regards,
+The rest looks good to me, not sure whether the name "refine"
+would be the best one though, would like to wait for opinions
+from others.
 
-Laurent Pinchart
+Thanks
