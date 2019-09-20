@@ -2,200 +2,93 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FBAC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29716C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8A9B2173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:42:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="kWpv/wvv"
+	by mail.kernel.org (Postfix) with ESMTP id 022432080F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 13:42:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbfITNmj (ORCPT
+        id S1728267AbfITNmt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 09:42:39 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:34716 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726924AbfITNmi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 09:42:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=xBchC21co1zSoAA232XoJcRl/YGG2YtjdTp+sQB4kOU=; b=kWpv/wvvqybuA9gJqkZMShqqR
-        V7SElLbkefrx1lTEaEbPafBqUmi3tODqq71K9VLs6XdoXOtRoUHN7DWRQhWKghSabT9BzWFzcUoAc
-        Ia3zii3x5bTkTcQfkvKXatbAH3JI3i+oFQCud0xT8/IxJg0jOn7JkRoHhb2+d3aMX0b53vW+LFW7w
-        fnWHtKPNKd08uge+YTUIQMtmVXFJKoalOwu6jo65aKYinLJmQPuxyiU8+8LaujWRVsIgBovQsEO25
-        R/rSrdxVH2yZzqmjGRXS2gAksl4YHw6ys+YKuL7Xufywy55womoXyJ3eWaUbbEAjjfKjsR7wLP/tW
-        HnXE8I4gA==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:41870)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iBJAz-00048q-TJ; Fri, 20 Sep 2019 14:42:22 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iBJAt-0005ql-Vd; Fri, 20 Sep 2019 14:42:15 +0100
-Date:   Fri, 20 Sep 2019 14:42:15 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     tinywrkb <tinywrkb@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>,
-        Baruch Siach <baruch@tkos.co.il>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        open list <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: imx6dl: SolidRun: add phy node with 100Mb/s
- max-speed
-Message-ID: <20190920134215.GM25745@shell.armlinux.org.uk>
-References: <20190917124101.GA1200564@arch-dsk-01>
- <20190917125434.GH20778@lunn.ch>
- <20190917133253.GA1210141@arch-dsk-01>
- <20190917133942.GR25745@shell.armlinux.org.uk>
- <20190917151707.GV25745@shell.armlinux.org.uk>
- <20190917153027.GW25745@shell.armlinux.org.uk>
- <20190917163427.GA1475935@arch-dsk-01>
- <20190917170419.GX25745@shell.armlinux.org.uk>
- <20190917171913.GY25745@shell.armlinux.org.uk>
- <20190917214201.GB25745@shell.armlinux.org.uk>
+        Fri, 20 Sep 2019 09:42:49 -0400
+Received: from foss.arm.com ([217.140.110.172]:44866 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726924AbfITNmr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 09:42:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 63A791570;
+        Fri, 20 Sep 2019 06:42:47 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 43D923F67D;
+        Fri, 20 Sep 2019 06:42:46 -0700 (PDT)
+Subject: Re: "arm64: use asm-generic/dma-mapping.h" introduced a kbuild
+ warning
+To:     Qian Cai <cai@lca.pw>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Will Deacon <will@kernel.org>, Christoph Hellwig <hch@lst.de>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+References: <1568898377.5576.186.camel@lca.pw>
+ <CAK7LNATa=rzCZkBCDaUCcyo4_1JxsrGQrdUFxPh0Pw3KEu6exA@mail.gmail.com>
+ <1568985515.5576.195.camel@lca.pw>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <32e53c34-6cc5-6231-6069-3b782f5d2cf0@arm.com>
+Date:   Fri, 20 Sep 2019 14:42:42 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190917214201.GB25745@shell.armlinux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1568985515.5576.195.camel@lca.pw>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 10:42:01PM +0100, Russell King - ARM Linux admin wrote:
-> On Tue, Sep 17, 2019 at 06:19:13PM +0100, Russell King - ARM Linux admin wrote:
-> > whether you can get the link to come up at all.  You might need to see
-> > whether wiggling the RJ45 helps (I've had that sort of thing with some
-> > cables.)
-> > 
-> > You might also need "ethtool -s eth0 advertise ffcf" after trying that
-> > if it doesn't work to take the gigabit speeds out of the advertisement.
-> > 
-> > Thanks.
-> > 
-> >  drivers/net/phy/at803x.c | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> > 
-> > diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
-> > index b3893347804d..85cf4a4a5e81 100644
-> > --- a/drivers/net/phy/at803x.c
-> > +++ b/drivers/net/phy/at803x.c
-> > @@ -296,6 +296,11 @@ static int at803x_config_init(struct phy_device *phydev)
-> >  	if (ret < 0)
-> >  		return ret;
-> >  
-> > +	/* Disable smartspeed */
-> > +	ret = phy_modify(phydev, 0x14, BIT(5), 0);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> >  	/* The RX and TX delay default is:
-> >  	 *   after HW reset: RX delay enabled and TX delay disabled
-> >  	 *   after SW reset: RX delay enabled, while TX delay retains the
+On 20/09/2019 14:18, Qian Cai wrote:
+> On Fri, 2019-09-20 at 19:24 +0900, Masahiro Yamada wrote:
+>> Hi Qian,
+>>
+>> On Thu, Sep 19, 2019 at 10:06 PM Qian Cai <cai@lca.pw> wrote:
+>>>
+>>> The commit 5489c8e0cf03 ("arm64: use asm-generic/dma-mapping.h") introduced a
+>>> kbuild warning,
+>>>
+>>> scripts/Makefile.asm-generic:25: redundant generic-y found in
+>>> arch/arm64/include/asm/Kbuild: dma-mapping.h
+>>>
+>>>
+>>
+>> Which tree did you test?
 > 
-> Hi,
+> It was yesterday's linux-next (next-20190918) with this config [1], but it seems
+> gone in today's linux-next.
+
+There was a conflict in dma-mapping.h between the arm64 tree and the 
+dma-mapping tree (where that commit deleted it) - looks like -next must 
+have just resolved it the wrong way that day.
+
+Robin.
+
+> [1] https://raw.githubusercontent.com/cailca/linux-mm/master/arm64.config
 > 
-> Could you try this patch instead - it seems that the PHY needs to be
-> soft-reset for the write to take effect, and _even_ for the clearance
-> of the bit to become visible in the register.
+>>
+>> I tried the latest Linus tree (, which contains 5489c8e0cf03),
+>> but I did not see this warning.
+>>
+>>
+>>
 > 
-> I'm not expecting this on its own to solve anything, but it should at
-> least mean that the at803x doesn't modify the advertisement registers
-> itself.  It may mean that the link doesn't even come up without forcing
-> the advertisement via the ethtool command I mentioned before.
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 > 
-> Thanks.
-> 
->  drivers/net/phy/at803x.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
-> index b3893347804d..69a58c0e6b42 100644
-> --- a/drivers/net/phy/at803x.c
-> +++ b/drivers/net/phy/at803x.c
-> @@ -296,6 +296,16 @@ static int at803x_config_init(struct phy_device *phydev)
->  	if (ret < 0)
->  		return ret;
->  
-> +	/* Disable smartspeed */
-> +	ret = phy_modify(phydev, 0x14, BIT(5), 0);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	/* Must soft-reset the PHY for smartspeed disable to take effect */
-> +	ret = genphy_soft_reset(phydev);
-> +	if (ret < 0)
-> +		return ret;
-> +
->  	/* The RX and TX delay default is:
->  	 *   after HW reset: RX delay enabled and TX delay disabled
->  	 *   after SW reset: RX delay enabled, while TX delay retains the
-
-Bad news I'm afraid.  It looks like the AR8035 has a bug in it.
-Disabling the SmartSpeed feature appears to make register 9, the
-1000BASET control register, read-only.
-
-For example:
-
-Reading 0x0009=0x0200
-Writing 0x0014=0x082c	<= smartspeed enabled
-Writing 0x0000=0xb100	<= soft reset
-Writing 0x0009=0x0600
-Reading 0x0009=0x0600	<= it took the value
-
-Reading 0x0009=0x0600
-Writing 0x0014=0x080c	<= smartspeed disabled
-Writing 0x0000=0xb100	<= soft reset
-Writing 0x0009=0x0200
-Reading 0x0009=0x0600	<= it ignored the write
-
-Reading 0x0009=0x0600
-Writing 0x0014=0x082c	<= smartspeed enabled
-Writing 0x0000=0xb100	<= soft reset
-Writing 0x0009=0x0200
-Reading 0x0009=0x0200	<= it took the value
-
-If it's going to make register 9 read-only when smartspeed is disabled,
-then that's another failure mode and autonegotiation cockup just
-waiting to happen - which I spotted when trying to configure the
-advertisement using ethtool, and finding that it was impossible to stop
-1000baseT/Full being advertised.
-
-I think the only sane approach - at least until we have something more
-reasonable in place - is to base the negotiation result off what is
-actually stored in the PHY registers at the time the link comes up, and
-not on the cached versions of what we should be advertising.
-
-5502b218e001 has caused this regression, and where we are now after
-more than a week of trying to come up with some fix for this
-regression, the only solution that seems to work without introducing
-more failures is to revert that commit.
-
-Adding Heiner (original commit author), Florian, David and netdev.
-
-Thoughts?
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
