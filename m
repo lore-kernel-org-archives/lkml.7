@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A41C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5769FC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E4E0206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38DD9206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:33:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391622AbfITOdt (ORCPT
+        id S2391606AbfITOdr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:33:49 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36340 "EHLO
+        Fri, 20 Sep 2019 10:33:47 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36332 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388238AbfITOZH (ORCPT
+        by vger.kernel.org with ESMTP id S2388235AbfITOZH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Sep 2019 10:25:07 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqM-0004xX-3Q; Fri, 20 Sep 2019 15:25:06 +0100
+        id 1iBJqL-00051F-2b; Fri, 20 Sep 2019 15:25:05 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqH-0007ym-CS; Fri, 20 Sep 2019 15:25:01 +0100
+        id 1iBJqH-0007yw-FZ; Fri, 20 Sep 2019 15:25:01 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "Oliver Neukum" <oneukum@suse.com>,
         "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "kbuild test robot" <lkp@intel.com>,
-        "Alan Stern" <stern@rowland.harvard.edu>
+        syzbot+a0cbdbd6d169020c8959@syzkaller.appspotmail.com
 Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.935204598@decadent.org.uk>
+Message-ID: <lsq.1568989415.19241258@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 119/132] media: usb: siano: Fix false-positive
- "uninitialized variable" warning
+Subject: [PATCH 3.16 121/132] USB: sisusbvga: fix oops in error path of
+ sisusb_probe
 In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,31 +57,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit 45457c01171fd1488a7000d1751c06ed8560ee38 upstream.
+commit 9a5729f68d3a82786aea110b1bfe610be318f80a upstream.
 
-GCC complains about an apparently uninitialized variable recently
-added to smsusb_init_device().  It's a false positive, but to silence
-the warning this patch adds a trivial initialization.
+The pointer used to log a failure of usb_register_dev() must
+be set before the error is logged.
 
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-by: kbuild test robot <lkp@intel.com>
+v2: fix that minor is not available before registration
+
+Signed-off-by: oliver Neukum <oneukum@suse.com>
+Reported-by: syzbot+a0cbdbd6d169020c8959@syzkaller.appspotmail.com
+Fixes: 7b5cd5fefbe02 ("USB: SisUSB2VGA: Convert printk to dev_* macros")
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/media/usb/siano/smsusb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/misc/sisusbvga/sisusb.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
---- a/drivers/media/usb/siano/smsusb.c
-+++ b/drivers/media/usb/siano/smsusb.c
-@@ -359,7 +359,7 @@ static int smsusb_init_device(struct usb
- 	struct smsdevice_params_t params;
- 	struct smsusb_device_t *dev;
- 	int i, rc;
--	int in_maxp;
-+	int in_maxp = 0;
+--- a/drivers/usb/misc/sisusbvga/sisusb.c
++++ b/drivers/usb/misc/sisusbvga/sisusb.c
+@@ -3093,6 +3093,13 @@ static int sisusb_probe(struct usb_inter
  
- 	/* create device object */
- 	dev = kzalloc(sizeof(struct smsusb_device_t), GFP_KERNEL);
+ 	mutex_init(&(sisusb->lock));
+ 
++	sisusb->sisusb_dev = dev;
++	sisusb->vrambase   = SISUSB_PCI_MEMBASE;
++	sisusb->mmiobase   = SISUSB_PCI_MMIOBASE;
++	sisusb->mmiosize   = SISUSB_PCI_MMIOSIZE;
++	sisusb->ioportbase = SISUSB_PCI_IOPORTBASE;
++	/* Everything else is zero */
++
+ 	/* Register device */
+ 	if ((retval = usb_register_dev(intf, &usb_sisusb_class))) {
+ 		dev_err(&sisusb->sisusb_dev->dev, "Failed to get a minor for device %d\n",
+@@ -3101,13 +3108,7 @@ static int sisusb_probe(struct usb_inter
+ 		goto error_1;
+ 	}
+ 
+-	sisusb->sisusb_dev = dev;
+-	sisusb->minor      = intf->minor;
+-	sisusb->vrambase   = SISUSB_PCI_MEMBASE;
+-	sisusb->mmiobase   = SISUSB_PCI_MMIOBASE;
+-	sisusb->mmiosize   = SISUSB_PCI_MMIOSIZE;
+-	sisusb->ioportbase = SISUSB_PCI_IOPORTBASE;
+-	/* Everything else is zero */
++	sisusb->minor = intf->minor;
+ 
+ 	/* Allocate buffers */
+ 	sisusb->ibufsize = SISUSB_IBUF_SIZE;
 
