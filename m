@@ -2,88 +2,82 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAB8C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 21:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D95DCC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 21:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2866F20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 21:28:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C0CB2086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 21:34:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569014925;
-	bh=Iuvqw5we8caGe6LGqVMVAPtBvPYKodaDUEwUZjdxw9c=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=ayIo5wXALT7XumAHufzYUI3X2epuRZc7UjVkNg902mmgSTnBr+ilCvbMOslnz2kti
-	 Gbh5lHoBsQsjGq87FdoLR71YsHOHWgBHmKsJeN1Oq+At/XAY92dCmGX/alsjSxfV6b
-	 fsMYFPUvb/P56mQ7svpsi6SsWUMq4Vw4aXrm8KDk=
+	s=default; t=1569015275;
+	bh=qSkVdMFviHv9GATIp3bGtPpX5gymfYN8MGrr/PyDBj4=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=w/Nf4gu3tjP79amJVWmD0qUCVmzNaLvfqmnK+3NWAMgsdjkpRxVjAnWHT2VZ1dc+6
+	 4henMThDTiq+7gcYel9zFjDrQ2ttp5cvUqydmyHxE+2PRx/LoGHvyMXcPR2RGJQNUC
+	 oWEGfo8YH9YWdoLpugqkqOuLmJPZjOjPGFWA7Fr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730222AbfITV2o (ORCPT
+        id S1730259AbfITVef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 17:28:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37798 "EHLO mail.kernel.org"
+        Fri, 20 Sep 2019 17:34:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727952AbfITV2o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 17:28:44 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1730095AbfITVee (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 17:34:34 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0377D2080F;
-        Fri, 20 Sep 2019 21:28:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 688A02080F;
+        Fri, 20 Sep 2019 21:34:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569014923;
-        bh=Iuvqw5we8caGe6LGqVMVAPtBvPYKodaDUEwUZjdxw9c=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Uip1B6ghWH1LbFbKofmDP3xQgf9bd8aUqplb9/sHl1MDltNQrf5KqKqfru9eDK+cV
-         3nQeDyP1DqSMTdDFkoFeogwbRixSBOPX9qTlnhSDNnXp96UoE/xBllcVXKe2HaVPXu
-         kVXoVjair/ucXPvOivknJMUg2MxSwlLINYFuxBnY=
-Subject: Re: [PATCH 4.9 00/74] 4.9.194-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        s=default; t=1569015274;
+        bh=qSkVdMFviHv9GATIp3bGtPpX5gymfYN8MGrr/PyDBj4=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=A7ED/31/xY/0osDez3scJGuUxWCLCXj1SoSE3quqJUkoQ9f3/Pec8JQ8tc5GSCJO5
+         9AmjPvOE/eWbqk/I5fLgT6lmmJuKITefI0q+hMjPP+HCCNtQMXxBwrcjRUchMrJ18z
+         uFJh9N+7gS8IUKjVxB1fS3QxK+A/pCMFe6SGWZPQ=
+Date:   Fri, 20 Sep 2019 23:34:04 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Johannes Berg <johannes@sipsolutions.net>
+cc:     Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190919214800.519074117@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <c5c99be2-0b4b-3edb-dfea-232dcaddf5a2@kernel.org>
-Date:   Fri, 20 Sep 2019 15:28:42 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+Subject: Re: [PATCH v5.1-rc] iwlwifi: make locking in iwl_mvm_tx_mpdu()
+ BH-safe
+In-Reply-To: <nycvar.YFH.7.76.1909111301510.473@cbobk.fhfr.pm>
+Message-ID: <nycvar.YFH.7.76.1909202333450.1459@cbobk.fhfr.pm>
+References: <nycvar.YFH.7.76.1904151300160.9803@cbobk.fhfr.pm>  <24e05607b902e811d1142e3bd345af021fd3d077.camel@sipsolutions.net>  <nycvar.YFH.7.76.1904151328270.9803@cbobk.fhfr.pm> <01d55c5cf513554d9cbdee0b14f9360a8df859c8.camel@sipsolutions.net>
+ <nycvar.YFH.7.76.1909111238470.473@cbobk.fhfr.pm> <nycvar.YFH.7.76.1909111301510.473@cbobk.fhfr.pm>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20190919214800.519074117@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/19/19 4:03 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.9.194 release.
-> There are 74 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat 21 Sep 2019 09:44:25 PM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.194-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+On Wed, 11 Sep 2019, Jiri Kosina wrote:
 
-Compiled and booted on my test system. No dmesg regressions.
+> > From: Jiri Kosina <jkosina@suse.cz>
+> > Subject: [PATCH] iwlwifi: make locking in iwl_mvm_tx_mpdu() BH-safe
+> 
+> Hm, scratch that, that might actually spuriously enable BHs if called from 
+> contexts that already did disabled BHs.
+> 
+> So what solution would you prefer here? Just stick another par of 
+> bh_disable() / bh_enable() somewhere to the wake_txs() -> 
+> iwl_mvm_mac_itxq_xmit() -> iwl_mvm_tx_skb() -> iwl_mvm_tx_mpdu() path?
 
-thanks,
--- Shuah
+Ping? This seems to be still the case.
+
+Thanks,
+
+-- 
+Jiri Kosina
+SUSE Labs
 
