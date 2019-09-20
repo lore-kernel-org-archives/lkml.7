@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A62C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 756D8C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B918C207E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:36:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4986D2080F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:36:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568990211;
-	bh=X4irArokqxNk8ds89THjZ+EOtSp5mEI9ypOKtb4645w=;
+	s=default; t=1568990215;
+	bh=Xa5lUKuEKR/Mj/s8RMBKL11PjH1zbgHgXvtpnqsOn+I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mB69UKiLLOg+BXge3cWzUSA7DKhSP+CKaX9Cs7Fi3p4iLV9V3aXe+LgYgWZl/SKSg
-	 jLgD/BcNjseo7RgJ//21p89KW+xjLc8dZjbdGoZ6y6oJl6GnbXTH3XaTewOmZ9FNOv
-	 yolc56b8xlMzHseE9E7VQr/lPwzUVLEzOZ2Rc2as=
+	b=MsOxt1D4ZcEfiV8wfL96vhcmq8FP2riX1MtFU6wdbEabvBGpPx1besL/QEGeXmjWN
+	 fVlyl+kNOcyZGn5xyqu+wyvHUfxOwkycCHLczgWEPOc+Hgs/0jn5lKOLeK9DvIgz6e
+	 Fxna4++J61nXsONdBxN2EQHF0F7NXOXyhnsbLFVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392660AbfITOgu (ORCPT
+        id S2392596AbfITOgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:36:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49058 "EHLO mail.kernel.org"
+        Fri, 20 Sep 2019 10:36:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392475AbfITOgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 10:36:37 -0400
+        id S2392458AbfITOgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 10:36:36 -0400
 Received: from localhost (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C76E92190F;
-        Fri, 20 Sep 2019 14:36:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E418218AE;
+        Fri, 20 Sep 2019 14:36:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568990196;
-        bh=X4irArokqxNk8ds89THjZ+EOtSp5mEI9ypOKtb4645w=;
+        s=default; t=1568990195;
+        bh=Xa5lUKuEKR/Mj/s8RMBKL11PjH1zbgHgXvtpnqsOn+I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w/himErLA2djSrkVZuIRWCSYP46YJO2FotcSuYSnWM0qBfJcKrF3eA6lZYsRCc87Y
-         yWyN+wCxGxQizegWWXjUgCLZP60zTOU9fYOjvPVohxLQAlVfzKjbgqLZULH7ZsxLYr
-         JWEB99pST3yZWavwK9bBbioPeZezo9VWyoy2QWSA=
+        b=auASqbp4NCulMrJTRWJf4LXFic5L3p2Gu4oJq2LL2f3fV73TmO42qvMn2dWsLhK9F
+         MjiEpJRwZt6kibtZIcQ4MDifqQP0W8evATN3Gv3RtlyE1yqvijE+wVc6bAkmYkbejj
+         Gkn0WW+2L5mgdqW2IWy87j1sHFInWcULd3gzy8AQ=
 From:   Andy Lutomirski <luto@kernel.org>
 To:     Theodore Tso <tytso@google.com>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
@@ -55,9 +55,9 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         Ext4 Developers List <linux-ext4@vger.kernel.org>,
         linux-man <linux-man@vger.kernel.org>,
         Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH v2 6/7] random: Delete code to pull data into pools
-Date:   Fri, 20 Sep 2019 07:36:28 -0700
-Message-Id: <67ba15c4b1737623f3b9d968a252094051781835.1568990048.git.luto@kernel.org>
+Subject: [PATCH v2 4/7] random: Make /dev/random be almost like /dev/urandom
+Date:   Fri, 20 Sep 2019 07:36:26 -0700
+Message-Id: <b3108e0defc82daee3f14a0c794464b6e74c5e71.1568990048.git.luto@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1568990048.git.luto@kernel.org>
 References: <cover.1568990048.git.luto@kernel.org>
@@ -68,94 +68,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no pool that pulls, so it was just dead code.
+This patch changes the read semantics of /dev/random to be the same
+as /dev/urandom except that reads will block until the CRNG is
+ready.
+
+None of the cleanups that this enables have been done yet.  As a
+result, this gives a warning about an unused function.
 
 Signed-off-by: Andy Lutomirski <luto@kernel.org>
 ---
- drivers/char/random.c | 40 ----------------------------------------
- 1 file changed, 40 deletions(-)
+ drivers/char/random.c | 55 +++++++++++--------------------------------
+ 1 file changed, 14 insertions(+), 41 deletions(-)
 
 diff --git a/drivers/char/random.c b/drivers/char/random.c
-index 4521138231ed..99fea5cc29a8 100644
+index 1ad2c7eaf675..29a158d9353c 100644
 --- a/drivers/char/random.c
 +++ b/drivers/char/random.c
-@@ -528,10 +528,8 @@ struct entropy_store {
- 	const struct poolinfo *poolinfo;
- 	__u32 *pool;
- 	const char *name;
--	struct entropy_store *pull;
+@@ -354,7 +354,6 @@
+ #define INPUT_POOL_WORDS	(1 << (INPUT_POOL_SHIFT-5))
+ #define OUTPUT_POOL_SHIFT	10
+ #define OUTPUT_POOL_WORDS	(1 << (OUTPUT_POOL_SHIFT-5))
+-#define SEC_XFER_SIZE		512
+ #define EXTRACT_SIZE		10
  
- 	/* read-write data: */
--	unsigned long last_pulled;
- 	spinlock_t lock;
- 	unsigned short add_ptr;
- 	unsigned short input_rotate;
-@@ -1347,41 +1345,6 @@ EXPORT_SYMBOL_GPL(add_disk_randomness);
-  *
-  *********************************************************************/
  
--/*
-- * This utility inline function is responsible for transferring entropy
-- * from the primary pool to the secondary extraction pool. We make
-- * sure we pull enough for a 'catastrophic reseed'.
-- */
--static void _xfer_secondary_pool(struct entropy_store *r, size_t nbytes);
--static void xfer_secondary_pool(struct entropy_store *r, size_t nbytes)
+@@ -803,7 +802,6 @@ static void credit_entropy_bits(struct entropy_store *r, int nbits)
+ 		if (entropy_bits >= random_read_wakeup_bits &&
+ 		    wq_has_sleeper(&random_read_wait)) {
+ 			wake_up_interruptible(&random_read_wait);
+-			kill_fasync(&fasync, SIGIO, POLL_IN);
+ 		}
+ 		/* If the input pool is getting full, and the blocking
+ 		 * pool has room, send some entropy to the blocking
+@@ -1031,6 +1029,7 @@ static void crng_reseed(struct crng_state *crng, struct entropy_store *r)
+ 		crng_init = 2;
+ 		process_random_ready_list();
+ 		wake_up_interruptible(&crng_init_wait);
++		kill_fasync(&fasync, SIGIO, POLL_IN);
+ 		pr_notice("random: crng init done\n");
+ 		if (unseeded_warning.missed) {
+ 			pr_notice("random: %d get_random_xx warning(s) missed "
+@@ -1921,43 +1920,6 @@ void rand_initialize_disk(struct gendisk *disk)
+ }
+ #endif
+ 
+-static ssize_t
+-_random_read(int nonblock, char __user *buf, size_t nbytes)
 -{
--	if (!r->pull ||
--	    r->entropy_count >= (nbytes << (ENTROPY_SHIFT + 3)) ||
--	    r->entropy_count > r->poolinfo->poolfracbits)
--		return;
+-	ssize_t n;
 -
--	_xfer_secondary_pool(r, nbytes);
+-	if (nbytes == 0)
+-		return 0;
+-
+-	nbytes = min_t(size_t, nbytes, SEC_XFER_SIZE);
+-	while (1) {
+-		n = extract_entropy_user(&blocking_pool, buf, nbytes);
+-		if (n < 0)
+-			return n;
+-		trace_random_read(n*8, (nbytes-n)*8,
+-				  ENTROPY_BITS(&blocking_pool),
+-				  ENTROPY_BITS(&input_pool));
+-		if (n > 0)
+-			return n;
+-
+-		/* Pool is (near) empty.  Maybe wait and retry. */
+-		if (nonblock)
+-			return -EAGAIN;
+-
+-		wait_event_interruptible(random_read_wait,
+-		    blocking_pool.initialized &&
+-		    (ENTROPY_BITS(&input_pool) >= random_read_wakeup_bits));
+-		if (signal_pending(current))
+-			return -ERESTARTSYS;
+-	}
 -}
 -
--static void _xfer_secondary_pool(struct entropy_store *r, size_t nbytes)
+-static ssize_t
+-random_read(struct file *file, char __user *buf, size_t nbytes, loff_t *ppos)
 -{
--	__u32	tmp[OUTPUT_POOL_WORDS];
--
--	int bytes = nbytes;
--
--	/* pull at least as much as a wakeup */
--	bytes = max_t(int, bytes, random_read_wakeup_bits / 8);
--	/* but never more than the buffer size */
--	bytes = min_t(int, bytes, sizeof(tmp));
--
--	trace_xfer_secondary_pool(r->name, bytes * 8, nbytes * 8,
--				  ENTROPY_BITS(r), ENTROPY_BITS(r->pull));
--	bytes = extract_entropy(r->pull, tmp, bytes,
--				random_read_wakeup_bits / 8, 0);
--	mix_pool_bytes(r, tmp, bytes);
--	credit_entropy_bits(r, bytes*8);
+-	return _random_read(file->f_flags & O_NONBLOCK, buf, nbytes);
 -}
 -
- /*
-  * This function decides how many bytes to actually take from the
-  * given pool, and also debits the entropy count accordingly.
-@@ -1545,7 +1508,6 @@ static ssize_t extract_entropy(struct entropy_store *r, void *buf,
- 			spin_unlock_irqrestore(&r->lock, flags);
- 			trace_extract_entropy(r->name, EXTRACT_SIZE,
- 					      ENTROPY_BITS(r), _RET_IP_);
--			xfer_secondary_pool(r, EXTRACT_SIZE);
- 			extract_buf(r, tmp);
- 			spin_lock_irqsave(&r->lock, flags);
- 			memcpy(r->last_data, tmp, EXTRACT_SIZE);
-@@ -1554,7 +1516,6 @@ static ssize_t extract_entropy(struct entropy_store *r, void *buf,
- 	}
+ static ssize_t
+ urandom_read(struct file *file, char __user *buf, size_t nbytes, loff_t *ppos)
+ {
+@@ -1981,15 +1943,26 @@ urandom_read(struct file *file, char __user *buf, size_t nbytes, loff_t *ppos)
+ 	return ret;
+ }
  
- 	trace_extract_entropy(r->name, nbytes, ENTROPY_BITS(r), _RET_IP_);
--	xfer_secondary_pool(r, nbytes);
- 	nbytes = account(r, nbytes, min, reserved);
++static ssize_t
++random_read(struct file *file, char __user *buf, size_t nbytes, loff_t *ppos)
++{
++	int ret;
++
++	ret = wait_for_random_bytes();
++	if (ret != 0)
++		return ret;
++	return urandom_read(file, buf, nbytes, ppos);
++}
++
+ static __poll_t
+ random_poll(struct file *file, poll_table * wait)
+ {
+ 	__poll_t mask;
  
- 	return _extract_entropy(r, buf, nbytes, fips_enabled);
-@@ -1765,7 +1726,6 @@ static void __init init_std_data(struct entropy_store *r)
- 	ktime_t now = ktime_get_real();
- 	unsigned long rv;
- 
--	r->last_pulled = jiffies;
- 	mix_pool_bytes(r, &now, sizeof(now));
- 	for (i = r->poolinfo->poolbytes; i > 0; i -= sizeof(rv)) {
- 		if (!arch_get_random_seed_long(&rv) &&
+-	poll_wait(file, &random_read_wait, wait);
++	poll_wait(file, &crng_init_wait, wait);
+ 	poll_wait(file, &random_write_wait, wait);
+ 	mask = 0;
+-	if (ENTROPY_BITS(&input_pool) >= random_read_wakeup_bits)
++	if (crng_ready())
+ 		mask |= EPOLLIN | EPOLLRDNORM;
+ 	if (ENTROPY_BITS(&input_pool) < random_write_wakeup_bits)
+ 		mask |= EPOLLOUT | EPOLLWRNORM;
 -- 
 2.21.0
 
