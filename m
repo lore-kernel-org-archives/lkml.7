@@ -2,203 +2,234 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B69AC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F0AC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC9F6208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:49:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dGZBTHNq"
+	by mail.kernel.org (Postfix) with ESMTP id BCFAB2173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:51:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569009096;
+	bh=aMvAeQtBhOA1b26ULafsZpV6g11dLlCr/Ml2//wce+M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=cWDYadra8r7x0kw1ze+w6iDAkkqD8zAfisGqHhAYzKLi4icPOgdGH89MFScqqKTjr
+	 CFZUzVCuTJ8uSITqK+w0nLb5F4A4tIPFI4M25/y9ioIGAkoaXZloBdbE2W9fkotQl6
+	 GuJKZslWmYoZlBCXDOchMJ5eVLIs7IHGSovTvO0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436776AbfITTtH (ORCPT
+        id S1729766AbfITTvg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 15:49:07 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34083 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726807AbfITTtG (ORCPT
+        Fri, 20 Sep 2019 15:51:36 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35836 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727400AbfITTvf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 15:49:06 -0400
-Received: by mail-wr1-f65.google.com with SMTP id a11so7997794wrx.1;
-        Fri, 20 Sep 2019 12:49:04 -0700 (PDT)
+        Fri, 20 Sep 2019 15:51:35 -0400
+Received: by mail-lj1-f195.google.com with SMTP id m7so8223973lji.2
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 12:51:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Ke4QhjeEO2DgspR7pQqxAUwab6i64hfQ9ueBUqC4Yyo=;
-        b=dGZBTHNqqk6bSLhBfvJqx2a0CGqtoWnVZnahs9MmiwUyJjzdcUGexFyEXX7ni5bpJa
-         7hncGAJK5jOkTOsMEAjIlzZzklo39n3+21t0wLNHNzDP5JsoyaMW50JQTE16B7HSX5SI
-         nKiIspYsWTF8w/nksqnPuvuBO/Ks3vxpZe0BsM5vkDT2uJSUK3nnvPFv2GZWMx5nXPKA
-         t4WcXL12CaNor6c201AcXJME3MUE4tTGAJJdAtQD0jCAVsPUSYBxiz5i2vhH/nhY1rZe
-         bTs5yTx8TX25Mcv1a8poYkXLhZ6wtErWexi2YrEHFE/saYqcdoxQxenwwzRObTB2sO0/
-         mbaQ==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=T/KRNd6WnVd1TN8iGmZGtSrb5q1ExNfe/4Yl0euZMS0=;
+        b=iAXp/EtQxpgvqEzrvvxqiOyQr7c9BVQXW9AqVrmJ1uutftSkoOvoPGmu0/aiukB8Eh
+         a4oRgtofk+kMsCJx0F/+Q7WlMYD9WpnDU1zVcsFNFP16vWm2XLFfmQumCUclks6ozIfb
+         3NBzrIVS9HrmA+u9BOyxaHHk9xq0ckXcDd5Vk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Ke4QhjeEO2DgspR7pQqxAUwab6i64hfQ9ueBUqC4Yyo=;
-        b=N/8uFqq2eJHMVsPNBfocgdgbjIYfzRR8VPT7HUmbkLOEGiEQrprCsPp4Z3mbKceKuk
-         qFvQOvDe0z6HOzrUOdBzgNJCFSCSbfheCFX5vI4lt5EaaPRfGH0xiwFk3I0Jxyqlpbad
-         rY28hvG3ZGV4XxTNuhBcSwXb+/sPvGPHfzGCptMNn3Vq7DHztyWpA1gc0I8t5p+7+0bD
-         jokKDPHcZvyZfHx0EA4AbaEUpz9om3QpC2wrnb13Bw1+ZT/tzPSUAkPBVzfRoACX8HGI
-         htNnCO4G+ZYeZYXXx0C4edjTR6T9sBsqx/Os7PookRmU2hWhH4ncl4edTEIxQTc1CYaw
-         Zi5A==
-X-Gm-Message-State: APjAAAU+rNCzqNn/pJbFAvaZEmXKEqWtpfhf80aTAjedx5W14aPLs0gV
-        M2dUjNUdo897Px6HM5IU/cH/ZsXE
-X-Google-Smtp-Source: APXvYqzLL+kNVKNjREPcxk9XoUj7ByNkCJEEQYswR7dgdYUkYPbhYpxDoVHBFTS7g0atFVZKRtjAtA==
-X-Received: by 2002:a05:6000:1281:: with SMTP id f1mr12913262wrx.247.1569008943329;
-        Fri, 20 Sep 2019 12:49:03 -0700 (PDT)
-Received: from [192.168.1.19] (chi109.neoplus.adsl.tpnet.pl. [83.31.6.109])
-        by smtp.gmail.com with ESMTPSA id y3sm13569774wmg.2.2019.09.20.12.49.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 20 Sep 2019 12:49:02 -0700 (PDT)
-Subject: Re: [PATCH v2] leds-bcm6328: Use devm_platform_ioremap_resource() in
- bcm6328_leds_probe()
-To:     Markus Elfring <Markus.Elfring@web.de>, linux-leds@vger.kernel.org,
-        =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, Pavel Machek <pavel@ucw.cz>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-References: <b6ea044c-c483-0de6-67c5-5ea2fa3c85aa@web.de>
- <658bd05d-376d-adfd-64a5-e20f83d7b90a@gmail.com>
- <bd063a0e-d541-b95f-add1-90edde0acf50@web.de>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- mQINBFWjfaEBEADd66EQbd6yd8YjG0kbEDT2QIkx8C7BqMXR8AdmA1OMApbfSvEZFT1D/ECR
- eWFBS8XtApKQx1xAs1j5z70k3zebk2eeNs5ahxi6vM4Qh89vBM46biSKeeX5fLcv7asmGb/a
- FnHPAfQaKFyG/Bj9V+//ef67hpjJWR3s74C6LZCFLcbZM0z/wTH+baA5Jwcnqr4h/ygosvhP
- X3gkRzJLSFYekmEv+WHieeKXLrJdsUPUvPJTZtvi3ELUxHNOZwX2oRJStWpmL2QGMwPokRNQ
- 29GvnueQdQrIl2ylhul6TSrClMrKZqOajDFng7TLgvNfyVZE8WQwmrkTrdzBLfu3kScjE14Q
- Volq8OtQpTsw5570D4plVKh2ahlhrwXdneSot0STk9Dh1grEB/Jfw8dknvqkdjALUrrM45eF
- FM4FSMxIlNV8WxueHDss9vXRbCUxzGw37Ck9JWYo0EpcpcvwPf33yntYCbnt+RQRjv7vy3w5
- osVwRR4hpbL/fWt1AnZ+RvbP4kYSptOCPQ+Pp1tCw16BOaPjtlqSTcrlD2fo2IbaB5D21SUa
- IsdZ/XkD+V2S9jCrN1yyK2iKgxtDoUkWiqlfRgH2Ep1tZtb4NLF/S0oCr7rNLO7WbqLZQh1q
- ShfZR16h7YW//1/NFwnyCVaG1CP/L/io719dPWgEd/sVSKT2TwARAQABtC1KYWNlayBBbmFz
- emV3c2tpIDxqYWNlay5hbmFzemV3c2tpQGdtYWlsLmNvbT6JAlgEEwEIAEICGwMHCwkIBwMC
- AQYVCAIJCgsDFgIBAh4BAheABQkJZgNMFiEEvx38ClaPBfeVdXCQvWpQHLeLfCYFAl05/9sC
- GQEACgkQvWpQHLeLfCarMQ/9FN/WqJdN2tf6xkP0RFyS4ft0sT04zkOCFfOMxs8mZ+KZoMU+
- X3a+fEppDL7xgRFpHyGaEel7lSi1eqtzsqZ5JiHbDS1Ht1G8TtATb8q8id68qeSeW2mfzaLQ
- 98NPELGfUXFoUqUQkG5z2p92UrGF4Muj1vOIW93pwvE4uDpNsl+jriwHomLtjIUoZtIRjGfZ
- RCyUQI0vi5LYzXCebuzAjGD7Jh2YAp7fDGrv3qTq8sX+DUJ4H/+I8PiL+jXKkEeppqIhlBJJ
- l4WcgggMu3c2uljYDuqRYghte33BXyCPAocfO2/sN+yJRUTVuRFlOxUk4srz/W8SQDwOAwtK
- V7TzdyF1/jOGBxWwS13EjMb4u3XwPMzcPlEQNdIqz76NFmJ99xYEvgkAmFmRioxuBTRv8Fs1
- c1jQ00WWJ5vezqY6lccdDroPalXWeFzfPjIhKbV3LAYTlqv0It75GW9+0TBhPqdTM15DrCVX
- B7Ues7UnD5FBtWwewTnwr+cu8te449VDMzN2I+a9YKJ1s6uZmzh5HnuKn6tAfGyQh8MujSOM
- lZrNHrRsIsLXOjeGVa84Qk/watEcOoyQ7d+YaVosU0OCZl0GldvbGp1z2u8cd2N/HJ7dAgFh
- Q7dtGXmdXpt2WKQvTvQXhIrCWVQErNYbDZDD2V0TZtlPBaZP4fkUDkvH+Sy5Ag0EVaN9oQEQ
- AMPNymBNoCWc13U6qOztXrIKBVsLGZXq/yOaR2n7gFbFACD0TU7XuH2UcnwvNR+uQFwSrRqa
- EczX2V6iIy2CITXKg5Yvg12yn09gTmafuoIyKoU16XvC3aZQQ2Bn3LO2sRP0j/NuMD9GlO37
- pHCVRpI2DPxFE39TMm1PLbHnDG8+lZql+dpNwWw8dDaRgyXx2Le542CcTBT52VCeeWDtqd2M
- wOr4LioYlfGfAqmwcwucBdTEBUxklQaOR3VbJQx6ntI2oDOBlNGvjnVDzZe+iREd5l40l+Oj
- TaiWvBGXkv6OI+wx5TFPp+BM6ATU+6UzFRTUWbj+LqVA/JMqYHQp04Y4H5GtjbHCa8abRvBw
- IKEvpwTyWZlfXPtp8gRlNmxYn6gQlTyEZAWodXwE7CE+KxNnq7bPHeLvrSn8bLNK682PoTGr
- 0Y00bguYLfyvEwuDYek1/h9YSXtHaCR3CEj4LU1B561G1j7FVaeYbX9bKBAoy/GxAW8J5O1n
- mmw7FnkSHuwO/QDe0COoO0QZ620Cf9IBWYHW4m2M2yh5981lUaiMcNM2kPgsJFYloFo2XGn6
- lWU9BrWjEoNDhHZtF+yaPEuwjZo6x/3E2Tu3E5Jj0VpVcE9U1Zq/fquDY79l2RJn5ENogOs5
- +Pi0GjVpEYQVWfm0PTCxNPOzOzGR4QB3BNFvABEBAAGJAiUEGAEIAA8FAlWjfaECGwwFCQlm
- AYAACgkQvWpQHLeLfCZqGxAAlWBWVvjU6xj70GwengiqYZwmW1i8gfS4TNibQT/KRq0zkBnE
- wgKwXRbVoW38pYVuGa5x/JDQMJDrLAJ0wrCOS3XxbSHCWOl/k2ZD9OaxUeXq6N+OmGTzfrYv
- PUvWS1Hy04q9AD1dIaMNruZQmvnRfkOk2UDncDIg0166/NTHiYI09H5mpWGpHn/2aT6dmpVw
- uoM9/rHlF5s5qAAo95tZ0QW2BtIceG9/rbYlL57waSMPF49awvwLQX5RhWoF8mPS5LsBrXXK
- hmizIsn40tLbi2RtWjzDWgZYitqmmqijeCnDvISN4qJ/nCLO4DjiSGs59w5HR+l0nwePDhOC
- A4RYZqS1e2Clx1VSkDXFpL3egabcIsqK7CZ6a21r8lXVpo4RnMlQsmXZTnRx4SajFvX7PrRg
- /02C811fLfh2r5O5if8sKQ6BKKlHpuuioqfj/w9z3B0aQ71e4n1zNJBO1kcdznikPLAbr7jG
- gkBUXT1yJiwpTfRQr5y2Uo12IJsKxohnNFVYtK8X/R6S0deKPjrZWvAkllgIPcHjMi2Va8yw
- KTj/JgcpUO5KN906Pf7ywZISe7Kbcc/qnE0YjPPSqFOvoeZvHe6EZCMW9+xZsaipvlqpByQV
- UHnVg09K9YFvjUBsBPdC8ef6YwgfR9o6AnPmxl0oMUIXkCCC5c99fzJY/k+JAq0EGAEIACAW
- IQS/HfwKVo8F95V1cJC9alAct4t8JgUCWwqKhgIbAgCBCRC9alAct4t8JnYgBBkWCAAdFiEE
- FMMcSshOZf56bfAEYhBsURv0pdsFAlsKioYACgkQYhBsURv0pdvELgD/U+y3/hsz0bIjMQJY
- 0LLxM/rFY9Vz1L43+lQHXjL3MPsA/1lNm5sailsY7aFBVJxAzTa8ZAGWBdVaGo6KCvimDB8G
- 7joP/jx+oGOmdRogs7mG//H+w9DTnBfPpnfkeiiokGYo/+huWO5V0Ac9tTqZeFc//t/YuYJn
- wWvS0Rx+KL0fT3eh9BQo47uF4yDiZIiWLNh4Agpup1MUSVsz4MjD0lW6ghtnLcGlIgoVHW0v
- tPW1m9jATYyJSOG/MC1iDrcYcp9uVYn5tKfkEeQNspuG6iSfS0q3tajPKnT1nJxMTxVOD2RW
- EIGfaV9Scrou92VD/eC+/8INRsiWS93j3hOKIAV5XRNINFqtzkagPYAP8r6wksjSjh01fSTB
- p5zxjfsIwWDDzDrqgzwv83CvrLXRV3OlG1DNUDYA52qJr47paH5QMWmHW5TNuoBX8qb6RW/H
- M3DzPgT+l+r1pPjMPfvL1t7civZUoPuNzoyFpQRj6TvWi2bGGMQKryeYksXG2zi2+avMFnLe
- lOxGdUZ7jn1SJ6Abba5WL3VrXCP+TUE6bZLgfw8kYa8QSXP3ysyeMI0topHFntBZ8a0KXBNs
- qqFCBWmTHXfwsfW0VgBmRtPO7eXVBybjJ1VXKR2RZxwSq/GoNXh/yrRXQxbcpZ+QP3/Tttsb
- FdKciZ4u3ts+5UwYra0BRuvb51RiZR2wRNnUeBnXWagJVTlG7RHBO/2jJOE6wrcdCMjs0Iiw
- PNWmiVoZA930TvHA5UeGENxdGqo2MvMdRJ54YaIR
-Message-ID: <72d7c197-e5ca-d51e-4c36-016147ce3d1c@gmail.com>
-Date:   Fri, 20 Sep 2019 21:49:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=T/KRNd6WnVd1TN8iGmZGtSrb5q1ExNfe/4Yl0euZMS0=;
+        b=O3inYnNpQdaL0S2dHB8rXVauBxvCG9V//owIFti/PFDrEZzw5oMxqTJ94i9Du3/+Id
+         rXooEXaayxcKH2hzb8hAnmMXDN60+DWbdkhxShJk31KrZYP5lfJqMS51ZtoLtpaWMJeq
+         ivdq2oXNraAec3KSy356beNzY8PdCl7MlE0u7ywLCq5KsviDOvWHxBlbt1kBe14IgxWu
+         0dVpeHS26+uxVQrLOJ4u+WpDWgMBdftKXu66m6HhbBiZzIqN5PUYbtyqWdlGeOC9s9SI
+         H50jOUu53Zf4B955Igeon26kmOFaUO4laVn+wZBXp65djbKVEuirIAvYOG9UcOWLubOG
+         Kv2Q==
+X-Gm-Message-State: APjAAAXxuQeaADa8aC5OAiIJ4TBWpx4xKsOXZ2UG3+HMewu0OleOLT3u
+        COEeviwR7YJfH27prnKHjCJ/A/uptSI=
+X-Google-Smtp-Source: APXvYqzaqyRO2TTFgJEPF3JM+ok2znklkGj/CfA9nmCNnW1x0cUFBlry86Lx3Qw/to5CiOubsMm/dw==
+X-Received: by 2002:a2e:934f:: with SMTP id m15mr10262038ljh.101.1569009092358;
+        Fri, 20 Sep 2019 12:51:32 -0700 (PDT)
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
+        by smtp.gmail.com with ESMTPSA id e7sm669120lfn.12.2019.09.20.12.51.30
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Sep 2019 12:51:30 -0700 (PDT)
+Received: by mail-lj1-f175.google.com with SMTP id l21so8227258lje.4
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 12:51:30 -0700 (PDT)
+X-Received: by 2002:a2e:9854:: with SMTP id e20mr10431173ljj.72.1569009089004;
+ Fri, 20 Sep 2019 12:51:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <bd063a0e-d541-b95f-add1-90edde0acf50@web.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190912034421.GA2085@darwi-home-pc> <20190912082530.GA27365@mit.edu>
+ <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+ <20190914122500.GA1425@darwi-home-pc> <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
+ <20190915052242.GG19710@mit.edu> <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
+ <20190918211503.GA1808@darwi-home-pc> <20190918211713.GA2225@darwi-home-pc>
+ <CAHk-=wiCqDiU7SE3FLn2W26MS_voUAuqj5XFa1V_tiGTrrW-zQ@mail.gmail.com>
+ <20190920134609.GA2113@pc> <CALCETrWvE5es3i+to33y6jw=Yf0Tw6ZfV-6QWjZT5v0fo76tWw@mail.gmail.com>
+ <CAHk-=wgW8rN2EVL_Rdn63V9vQO0GkZ=RQFeqqsYJM==8fujpPg@mail.gmail.com>
+ <CALCETrV=4TX2a4uV5t2xOFzv+zM_jnOtMLJna8Vb7uXz6S=wSw@mail.gmail.com>
+ <CAHk-=wjpTWgpo6d24pTv+ubfea_uEomX-sHjjOkdACfV-8Nmkg@mail.gmail.com> <CALCETrUEqjFmPvpcJQwJe3dNbz8eaJ4k3_AV2u0v96MffjLn+g@mail.gmail.com>
+In-Reply-To: <CALCETrUEqjFmPvpcJQwJe3dNbz8eaJ4k3_AV2u0v96MffjLn+g@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 20 Sep 2019 12:51:12 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whJ3kmcZp=Ws+uXnRB9KokG6nXSQCSuBnerG--jkAfP5w@mail.gmail.com>
+Message-ID: <CAHk-=whJ3kmcZp=Ws+uXnRB9KokG6nXSQCSuBnerG--jkAfP5w@mail.gmail.com>
+Subject: Re: [PATCH RFC v4 1/1] random: WARN on large getrandom() waits and
+ introduce getrandom2()
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Markus,
+On Fri, Sep 20, 2019 at 12:12 PM Andy Lutomirski <luto@kernel.org> wrote:
+>
+> The problem is that new programs will have to try the new flag value
+> and, if it returns -EINVAL, fall back to 0.  This isn't so great.
 
-Thank you for the updated patch set.
+Don't be silly.
 
-Applied to the for-5.5 branch.
+Of course they will do that, but so what? With a new kernel, they'll
+get the behavior they expect. And with an old kernel, they'll get the
+behavior they expect.
 
-Best regards,
-Jacek Anaszewski
+They'd never fall back to to "0 means something I didn't want",
+exactly because we'd make this new flag be the first change.
 
-On 9/20/19 2:40 PM, Markus Elfring wrote:
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Fri, 20 Sep 2019 14:30:31 +0200
-> 
-> Simplify this function implementation by using a known wrapper function.
-> 
-> This issue was detected by using the Coccinelle software.
-> 
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-> ---
-> 
-> 
-> v2:
-> 
-> Jacek Anaszewski requested to split updates for two modules
-> 
-> into a separate patch for each driver.
-> 
-> https://lore.kernel.org/r/658bd05d-376d-adfd-64a5-e20f83d7b90a@gmail.com/
-> 
-> 
-> 
->  drivers/leds/leds-bcm6328.c | 7 +------
->  1 file changed, 1 insertion(+), 6 deletions(-)
-> 
-> diff --git a/drivers/leds/leds-bcm6328.c b/drivers/leds/leds-bcm6328.c
-> index c50d34e2b098..42e1b7598c3a 100644
-> --- a/drivers/leds/leds-bcm6328.c
-> +++ b/drivers/leds/leds-bcm6328.c
-> @@ -346,16 +346,11 @@ static int bcm6328_leds_probe(struct platform_device *pdev)
->  	struct device *dev = &pdev->dev;
->  	struct device_node *np = pdev->dev.of_node;
->  	struct device_node *child;
-> -	struct resource *mem_r;
->  	void __iomem *mem;
->  	spinlock_t *lock; /* memory lock */
->  	unsigned long val, *blink_leds, *blink_delay;
-> 
-> -	mem_r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	if (!mem_r)
-> -		return -EINVAL;
-> -
-> -	mem = devm_ioremap_resource(dev, mem_r);
-> +	mem = devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(mem))
->  		return PTR_ERR(mem);
-> 
-> --
-> 2.23.0
-> 
-> 
+> Wait, are you suggesting that 0 means invoke jitter-entropy or
+> whatever and GRND_SECURE_BLOCKING means not wait forever and deadlock?
+>  That's no good -- people will want to continue using 0 because the
+> behavior is better.
 
+I assume that "not wait forever" was meant to be "wait forever".
+
+So the one thing we have to do is break the "0 waits forever".  I
+guarantee that will happen. I will override Ted if he just NAk's it,
+because we simply _cannot_ continue with it.
+
+So we absolutely _will_ come up with some way 0 ends the wait. Whether
+it's _just_ a timeout, or whether it's jitter-entropy or whatever, it
+will happen.
+
+But we'll also make getrandom(0) do the annoying warning, because it's
+just ambiguous. And I suspect you'll find that a lot of security
+people don't really like jitter-entropy, at least not in whatever
+cut-down format we'll likely have to use in the kernel.
+
+And we'll also have to make getrandom(0) be really _timely_. Security
+people would likely rather wait for minutes before they are happy with
+it. But because it's a boot constraint as things are now, it will not
+just be jitter-entropy, it will be _accelerated_ jitter-entropy in 15
+seconds or whatever, and since it can't use up all of CPU time, it's
+realistically more like "15 second timeout, but less of actual CPU
+time for jitter".
+
+We can try to be clever with a background thread and a lot of
+yielding(), so that if the CPU is actually idle we'll get most of that
+15 seconds for whatever jitter, but end result is that it's still
+accelerated.
+
+Do I believe we can do a good job in that kind of timeframe?
+Absolutely. The whole point should be that it's still "good enough",
+and as has been pointed out, that same jitter entropy that people are
+worried about is just done in user space right now instead.
+
+But do I believe that security people would prefer a non-accelerated
+GRND_SECURE_BLOCKING? Yes I do. That doesn't mean that
+GRND_SECURE_BLOCKING shouldn't use jitter entropy too, but it doesn't
+need the same kind of "let's hurry this up because it might be during
+early boot and block things".
+
+That said, if we can all convince everybody (hah!) that jitter entropy
+in the kernel would be sufficient, then we can make the whole point
+entirely moot, and just say "we'll just change crng_wait() to do
+jitter entropy instead and be done with it. Then any getrandom() user
+will just basically wait for a (very limited) time and the system will
+be happy.
+
+If that is the case we wouldn't need new flags at all. But I don't
+think you can make everybody agree to that, which is why I suspect
+we'll need the new flag, and I'll just take the heat for saying "0 is
+now off limits, because it does this thing that a lot of people
+dislike".
+
+> IMO this is confusing.  The GRND_RANDOM flag was IMO a mistake and
+> should just be retired.  Let's enumerate useful cases and then give
+> them sane values.
+
+
+That's basically what I'm doing. I enumerate the new values.
+
+But the enumerations have hidden meaning, because the actual bits do
+matter. The GRND_EXPLICIT bit isn't supposed to be used by any user,
+but it has the value it has because it makes old kernels return
+-EINVAL.
+
+But if people hate the bit names, we can just do an enum and be done with it:
+
+   enum grnd_flags {
+      GRND_NONBLOCK = 1,
+      GRND_RANDOM, // Don't use!
+      GRND_RANDOM_NONBLOCK, // Don't use
+      GRND_UNUSED,
+      GRND_INSECURE,
+      GRND_SECURE_BLOCKING,
+      GRND_SECURE_NONBLOCKING,
+  };
+
+but the values now have a _hidden_ pattern (because we currently have
+that "| GRND_NONBLOCK" pattern that I want to make sure still
+continues to work, rather than give unexpected behavior in case
+somebody continues to use it).
+
+So the _only_ difference between the above and what I suggested is
+that I made the bit pattern explicit rather than hidden in the value.
+
+> And the only real question is how to map existing users to these
+> semantics.  I see two sensible choices:
+>
+> 1. 0 means "secure, blocking". I think this is not what we'd do if we
+> could go back in time and chage the ABI from day 1, but I think it's
+> actually good enough.  As long as this mode won't deadlock, it's not
+> *that* bad if programs are using it when they wanted "insecure".
+
+It's exactly that "as long as it won't deadlock" that is our current problem.
+
+It *does* deadlock.
+
+So it can't mean "blocking" in any long-term meaning.
+
+It can mean "blocks for up to 15 seconds" or something like that. I'd
+honestly prefer a smaller number, but I think 15 seconds is an
+acceptable "your user space is buggy, but we won't make you think the
+machine hung".
+
+> 2. 0 means "secure, blocking, but warn".  Some new value means
+> "secure, blocking, don't warn".  The problem is that new applications
+> will have to fall back to 0 to continue supporting old kernels.
+
+The same comment about blocking.
+
+Maybe you came in in the middle, and didn't see the whole "reduced IO
+patterns means that boot blocks forever" part of the original problem.
+
+THAT is why 0 will absolutely change behaviour.
+
+                Linus
