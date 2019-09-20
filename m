@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C2C1C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E5EEC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1F2420B7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:37:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A9B12080F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:37:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392846AbfITOho (ORCPT
+        id S2392857AbfITOhq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:37:44 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35784 "EHLO
+        Fri, 20 Sep 2019 10:37:46 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35780 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388032AbfITOZA (ORCPT
+        by vger.kernel.org with ESMTP id S2388030AbfITOZA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Sep 2019 10:25:00 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqD-0004xB-VW; Fri, 20 Sep 2019 15:24:58 +0100
+        id 1iBJqD-0004xA-Vq; Fri, 20 Sep 2019 15:24:58 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqD-0007r8-1Z; Fri, 20 Sep 2019 15:24:57 +0100
+        id 1iBJqD-0007r3-0m; Fri, 20 Sep 2019 15:24:57 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,12 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Guenter Roeck" <linux@roeck-us.net>
+        "Kefeng Wang" <wangkefeng.wang@huawei.com>,
+        "Guenter Roeck" <linux@roeck-us.net>,
+        "John Garry" <john.garry@huawei.com>
 Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.512197110@decadent.org.uk>
+Message-ID: <lsq.1568989415.232465047@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 032/132] hwmon: (w83627hf) Use request_muxed_region
+Subject: [PATCH 3.16 031/132] hwmon: (smsc47m1) Use request_muxed_region
  for Super-IO accesses
 In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
@@ -57,7 +59,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Guenter Roeck <linux@roeck-us.net>
 
-commit e95fd518d05bfc087da6fcdea4900a57cfb083bd upstream.
+commit d6410408ad2a798c4cc685252c1baa713be0ad69 upstream.
 
 Super-IO accesses may fail on a system with no or unmapped LPC bus.
 
@@ -68,102 +70,76 @@ Use request_muxed_region() to ensure that IO access on the requested
 address space is supported, and to ensure that access by multiple drivers
 is synchronized.
 
-Fixes: b72656dbc491 ("hwmon: (w83627hf) Stop using globals for I/O port numbers")
+Fixes: 8d5d45fb1468 ("I2C: Move hwmon drivers (2/3)")
+Reported-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Reported-by: John Garry <john.garry@huawei.com>
+Cc: John Garry <john.garry@huawei.com>
+Acked-by: John Garry <john.garry@huawei.com>
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/hwmon/w83627hf.c | 42 +++++++++++++++++++++++++++++++++++-----
- 1 file changed, 37 insertions(+), 5 deletions(-)
+ drivers/hwmon/smsc47m1.c | 28 +++++++++++++++++++---------
+ 1 file changed, 19 insertions(+), 9 deletions(-)
 
---- a/drivers/hwmon/w83627hf.c
-+++ b/drivers/hwmon/w83627hf.c
-@@ -130,17 +130,23 @@ superio_select(struct w83627hf_sio_data
- 	outb(ld,  sio->sioaddr + 1);
- }
+--- a/drivers/hwmon/smsc47m1.c
++++ b/drivers/hwmon/smsc47m1.c
+@@ -73,16 +73,21 @@ superio_inb(int reg)
+ /* logical device for fans is 0x0A */
+ #define superio_select() superio_outb(0x07, 0x0A)
  
 -static inline void
 +static inline int
- superio_enter(struct w83627hf_sio_data *sio)
+ superio_enter(void)
  {
-+	if (!request_muxed_region(sio->sioaddr, 2, DRVNAME))
++	if (!request_muxed_region(REG, 2, DRVNAME))
 +		return -EBUSY;
 +
- 	outb(0x87, sio->sioaddr);
- 	outb(0x87, sio->sioaddr);
-+
+ 	outb(0x55, REG);
 +	return 0;
  }
  
  static inline void
- superio_exit(struct w83627hf_sio_data *sio)
+ superio_exit(void)
  {
- 	outb(0xAA, sio->sioaddr);
-+	release_region(sio->sioaddr, 2);
+ 	outb(0xAA, REG);
++	release_region(REG, 2);
  }
  
- #define W627_DEVID 0x52
-@@ -1273,7 +1279,7 @@ static DEVICE_ATTR(name, S_IRUGO, show_n
- static int __init w83627hf_find(int sioaddr, unsigned short *addr,
- 				struct w83627hf_sio_data *sio_data)
+ #define SUPERIO_REG_ACT		0x30
+@@ -495,8 +500,12 @@ static int __init smsc47m1_find(struct s
  {
--	int err = -ENODEV;
+ 	u8 val;
+ 	unsigned short addr;
 +	int err;
- 	u16 val;
- 
- 	static __initconst char *const names[] = {
-@@ -1285,7 +1291,11 @@ static int __init w83627hf_find(int sioa
- 	};
- 
- 	sio_data->sioaddr = sioaddr;
--	superio_enter(sio_data);
-+	err = superio_enter(sio_data);
++
++	err = superio_enter();
 +	if (err)
 +		return err;
-+
-+	err = -ENODEV;
- 	val = force_id ? force_id : superio_inb(sio_data, DEVID);
- 	switch (val) {
- 	case W627_DEVID:
-@@ -1639,9 +1649,21 @@ static int w83627thf_read_gpio5(struct p
- 	struct w83627hf_sio_data *sio_data = dev_get_platdata(&pdev->dev);
- 	int res = 0xff, sel;
  
--	superio_enter(sio_data);
-+	if (superio_enter(sio_data)) {
-+		/*
-+		 * Some other driver reserved the address space for itself.
-+		 * We don't want to fail driver instantiation because of that,
-+		 * so display a warning and keep going.
-+		 */
-+		dev_warn(&pdev->dev,
-+			 "Can not read VID data: Failed to enable SuperIO access\n");
-+		return res;
-+	}
-+
- 	superio_select(sio_data, W83627HF_LD_GPIO5);
+-	superio_enter();
+ 	val = force_id ? force_id : superio_inb(SUPERIO_REG_DEVID);
  
-+	res = 0xff;
-+
- 	/* Make sure these GPIO pins are enabled */
- 	if (!(superio_inb(sio_data, W83627THF_GPIO5_EN) & (1<<3))) {
- 		dev_dbg(&pdev->dev, "GPIO5 disabled, no VID function\n");
-@@ -1672,7 +1694,17 @@ static int w83687thf_read_vid(struct pla
- 	struct w83627hf_sio_data *sio_data = dev_get_platdata(&pdev->dev);
- 	int res = 0xff;
+ 	/*
+@@ -572,13 +581,14 @@ static int __init smsc47m1_find(struct s
+ static void smsc47m1_restore(const struct smsc47m1_sio_data *sio_data)
+ {
+ 	if ((sio_data->activate & 0x01) == 0) {
+-		superio_enter();
+-		superio_select();
+-
+-		pr_info("Disabling device\n");
+-		superio_outb(SUPERIO_REG_ACT, sio_data->activate);
+-
+-		superio_exit();
++		if (!superio_enter()) {
++			superio_select();
++			pr_info("Disabling device\n");
++			superio_outb(SUPERIO_REG_ACT, sio_data->activate);
++			superio_exit();
++		} else {
++			pr_warn("Failed to disable device\n");
++		}
+ 	}
+ }
  
--	superio_enter(sio_data);
-+	if (superio_enter(sio_data)) {
-+		/*
-+		 * Some other driver reserved the address space for itself.
-+		 * We don't want to fail driver instantiation because of that,
-+		 * so display a warning and keep going.
-+		 */
-+		dev_warn(&pdev->dev,
-+			 "Can not read VID data: Failed to enable SuperIO access\n");
-+		return res;
-+	}
-+
- 	superio_select(sio_data, W83627HF_LD_HWM);
- 
- 	/* Make sure these GPIO pins are enabled */
 
