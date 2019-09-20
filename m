@@ -2,124 +2,86 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F10C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 23:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD42AC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 23:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B2E82080F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 23:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A9D92086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 23:34:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569022237;
-	bh=WnMayVa2/XDvHL1e+7jmVvQ/LflCEEfThR3A/O6WAe0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BPQQbOPVcvi0zcZPYY9F/DZ5dxa73CwDrApXyD2pTyH1uuy67k5diro4G0oPX4Dr6
-	 /mpYQ2coOLSQXRcj91CkINNSrUYXHn3nusvuBP5mj/DnhOdjUlQpuyaH/ZCPzDsG9Z
-	 uT70fkqL7gVu3KFCfH7NABmH1wjKI0QLhZ4nnAvE=
+	s=default; t=1569022473;
+	bh=/YosVo+HfPJ1Yw7oV0CNBOb4mub/i8BluEt8xwgoZjI=;
+	h=Date:From:To:Subject:In-Reply-To:References:List-ID:From;
+	b=DbVHO2BTmLIbB5tdpnlYEPh1UAxqhd48vGWFoARRqIybscwmgQtANPJ3+Fhp6OJsL
+	 cCwwxfeEr9Wjia2kJ1raOzRFNcs1lMyfVMMYiGwq/AMyjjmxerlbU64RQuwreUYCJ0
+	 R0mlojxDnZeLjCJP7guBHe4He/1NFBRHuPg0gexM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437019AbfITXag (ORCPT
+        id S2437174AbfITXec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 19:30:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46522 "EHLO mail.kernel.org"
+        Fri, 20 Sep 2019 19:34:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404972AbfITXaf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 19:30:35 -0400
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2404978AbfITXec (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 19:34:32 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB9EB2196E
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 23:30:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 549D520644;
+        Fri, 20 Sep 2019 23:34:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569022234;
-        bh=WnMayVa2/XDvHL1e+7jmVvQ/LflCEEfThR3A/O6WAe0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=MDD97AOK7h1yXKTkH80poLtBNE96X2T5kJ98AMCn2EJoMnuaKS+R8hY1QSnwRhIw6
-         n8/ucSaPzuQvrsD9Uz3Oo9KrMF4/WwiIGoBzcPKEcrHGmFD/tw6nOOADNtLx9N982o
-         YldrD65lYj0eN1ent3+i64cVSojAaqSDLXJqAZaU=
-Received: by mail-wr1-f44.google.com with SMTP id i18so8295502wru.11
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 16:30:33 -0700 (PDT)
-X-Gm-Message-State: APjAAAVoVz3yIg32gwvrr5sfIzT8UmJqk/Qij/nt6cTG4IAmHOZ6XZoL
-        ulcuZ9bKlNAxtEi3BCsMv/5GA5GDCi4F8B2HCCS9Jg==
-X-Google-Smtp-Source: APXvYqzX4CwBJfqfTYtsfZiWbwOGIEcas93ymXw8ez4QvH3rwZ04YTXpTAYLf/0PldtRhMHifaqzsBGLqgFhr6R4V4Q=
-X-Received: by 2002:a5d:4c92:: with SMTP id z18mr12974870wrs.111.1569022232290;
- Fri, 20 Sep 2019 16:30:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190912034421.GA2085@darwi-home-pc> <20190912082530.GA27365@mit.edu>
- <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
- <20190914122500.GA1425@darwi-home-pc> <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
- <20190915052242.GG19710@mit.edu> <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
- <20190918211503.GA1808@darwi-home-pc> <20190918211713.GA2225@darwi-home-pc>
- <CAHk-=wiCqDiU7SE3FLn2W26MS_voUAuqj5XFa1V_tiGTrrW-zQ@mail.gmail.com>
- <20190920134609.GA2113@pc> <CALCETrWvE5es3i+to33y6jw=Yf0Tw6ZfV-6QWjZT5v0fo76tWw@mail.gmail.com>
- <CAHk-=wgW8rN2EVL_Rdn63V9vQO0GkZ=RQFeqqsYJM==8fujpPg@mail.gmail.com>
- <CALCETrV=4TX2a4uV5t2xOFzv+zM_jnOtMLJna8Vb7uXz6S=wSw@mail.gmail.com>
- <CAHk-=wjpTWgpo6d24pTv+ubfea_uEomX-sHjjOkdACfV-8Nmkg@mail.gmail.com>
- <CALCETrUEqjFmPvpcJQwJe3dNbz8eaJ4k3_AV2u0v96MffjLn+g@mail.gmail.com>
- <CAHk-=whJ3kmcZp=Ws+uXnRB9KokG6nXSQCSuBnerG--jkAfP5w@mail.gmail.com>
- <CALCETrXMp3dJaKDm+RQijQEUuPNPmpKWr8Ljf+RqycXChGnKrw@mail.gmail.com> <CAHk-=whz7Okts01ygAP6GZWBvCV7s==CKjghmOp+r+LWketBYQ@mail.gmail.com>
-In-Reply-To: <CAHk-=whz7Okts01ygAP6GZWBvCV7s==CKjghmOp+r+LWketBYQ@mail.gmail.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Fri, 20 Sep 2019 16:30:20 -0700
-X-Gmail-Original-Message-ID: <CALCETrWCjGHKnKikj+YVw22Ufpmnh1TCdGPjG2RL-qzsF=wisA@mail.gmail.com>
-Message-ID: <CALCETrWCjGHKnKikj+YVw22Ufpmnh1TCdGPjG2RL-qzsF=wisA@mail.gmail.com>
-Subject: Re: [PATCH RFC v4 1/1] random: WARN on large getrandom() waits and
- introduce getrandom2()
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        s=default; t=1569022471;
+        bh=/YosVo+HfPJ1Yw7oV0CNBOb4mub/i8BluEt8xwgoZjI=;
+        h=Date:From:To:Subject:In-Reply-To:References:From;
+        b=riudAg9NPMdG04g2ulcp+aHRAcidmwbPWim4HcWamQR0be66tZ5Q7jYIqkrSEQNxk
+         IpeKbjIdEVvM0bQkVgqZhabasj3FfHRZgs9O1GNmfok9i6Rtz3jDt+qC6BOscGCRMY
+         RUp30OZP4cFAaJzu6FdfaxxgGfL0Hbe9gxesq6HE=
+Date:   Fri, 20 Sep 2019 16:34:30 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH v2 0/4] debug_pagealloc improvements through page_owner
+Message-Id: <20190920163430.4b24cc18d2ae552822a0ffaf@linux-foundation.org>
+In-Reply-To: <20190822160344.716eda34585271fa4a519d4c@linux-foundation.org>
+References: <20190820131828.22684-1-vbabka@suse.cz>
+        <20190822160344.716eda34585271fa4a519d4c@linux-foundation.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 3:44 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Fri, Sep 20, 2019 at 1:51 PM Andy Lutomirski <luto@kernel.org> wrote:
-> >
-> > To be clear, when I say "blocking", I mean "blocks until we're ready,
-> > but we make sure we're ready in a moderately timely manner".
->
-> .. an I want a pony.
->
-> The problem is that you start from an assumption that we simply can't
-> seem to do.
+On Thu, 22 Aug 2019 16:03:44 -0700 Andrew Morton <akpm@linux-foundation.org> wrote:
 
-Eh, fair enough, I wasn't thinking about platforms without fast clocks.
+> On Tue, 20 Aug 2019 15:18:24 +0200 Vlastimil Babka <vbabka@suse.cz> wrote:
+> 
+> > v2: also fix THP split handling (added Patch 1) per Kirill
+> > 
+> > The debug_pagealloc functionality serves a similar purpose on the page
+> > allocator level that slub_debug does on the kmalloc level, which is to detect
+> > bad users. One notable feature that slub_debug has is storing stack traces of
+> > who last allocated and freed the object. On page level we track allocations via
+> > page_owner, but that info is discarded when freeing, and we don't track freeing
+> > at all. This series improves those aspects. With both debug_pagealloc and
+> > page_owner enabled, we can then get bug reports such as the example in Patch 4.
+> > 
+> > SLUB debug tracking additionaly stores cpu, pid and timestamp. This could be
+> > added later, if deemed useful enough to justify the additional page_ext
+> > structure size.
+> 
+> Thanks.  I split [1/1] out of the series as a bugfix and turned this
+> into a three-patch series.
+> 
 
-I'm very nervous about allowing getrandom(..., 0) to fail with
--EAGAIN, though.  On a very, very brief search, I didn't find any
-programs that would incorrectly assume it worked, but I can easily
-imagine programs crashing, and that might be bad, too.  At the end of
-the day, most user programmers who call getrandom() really did notice
-that we flubbed the ABI, and either they were too lazy to fall back to
-/dev/urandom, or they didn't want to for some reason, or they
-genuinely want the blocking behavior.  And people who work with little
-embedded systems without good clocks that basically can't generate
-random numbers already know this, and they have little scripts to help
-out.
+None of which anyone has yet reviewed :(
 
-So I think that just improving the
-getrandom()-is-blocking-on-x86-and-arm behavior, adding GRND_INSECURE
-and GRND_SECURE_BLOCKING, and adding the warning if 0 is passed is
-good enough.  I suppose we could also have separate
-GRND_SECURE_BLOCKING and GRND_SECURE_BLOCK_FOREVER.  We could also say
-that, if you want to block forever, you should poll() on /dev/random
-(with my patches applied, where this actually does what users would
-want).
 
---Andy
