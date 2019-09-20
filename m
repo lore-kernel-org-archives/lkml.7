@@ -2,83 +2,109 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E19D9C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C8FBC4CECD
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDDFF20640
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DBE3207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:49:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408701AbfITKqW (ORCPT
+        id S2408720AbfITKtA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 06:46:22 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2698 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732138AbfITKqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 06:46:21 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id EDE72A0D9F2F7E1AE577;
-        Fri, 20 Sep 2019 18:46:18 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Fri, 20 Sep 2019
- 18:46:12 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <lorenzo.pieralisi@arm.com>, <andrew.murray@arm.com>,
-        <bhelgaas@google.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <vidyas@nvidia.com>,
-        <yuehaibing@huawei.com>, <treding@nvidia.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 -next] PCI: tegra: Add missing include file
-Date:   Fri, 20 Sep 2019 18:39:25 +0800
-Message-ID: <20190920103925.34404-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-In-Reply-To: <20190920014807.38288-1-yuehaibing@huawei.com>
-References: <20190920014807.38288-1-yuehaibing@huawei.com>
+        Fri, 20 Sep 2019 06:49:00 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:31183 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2408705AbfITKtA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 06:49:00 -0400
+X-UUID: ae8f3706e87c4cb793d76c5bada37fc8-20190920
+X-UUID: ae8f3706e87c4cb793d76c5bada37fc8-20190920
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <miles.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 235144964; Fri, 20 Sep 2019 18:48:52 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 20 Sep 2019 18:48:49 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 20 Sep 2019 18:48:48 +0800
+From:   Miles Chen <miles.chen@mediatek.com>
+To:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
+        Miles Chen <miles.chen@mediatek.com>
+Subject: [PATCH] mm: slub: print_hex_dump() with DUMP_PREFIX_OFFSET
+Date:   Fri, 20 Sep 2019 18:48:49 +0800
+Message-ID: <20190920104849.32504-1-miles.chen@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix build error without CONFIG_PINCTRL
+Since commit ad67b74d2469d9b8 ("printk: hash addresses printed with %p"),
+The use DUMP_PREFIX_OFFSET instead of DUMP_PREFIX_ADDRESS with
+print_hex_dump() can generate more useful messages.
 
-drivers/pci/controller/dwc/pcie-tegra194.c: In function tegra_pcie_config_rp:
-drivers/pci/controller/dwc/pcie-tegra194.c:1394:8: error: implicit declaration of function pinctrl_pm_select_default_state;
- did you mean prandom_seed_full_state? [-Werror=implicit-function-declaration]
-  ret = pinctrl_pm_select_default_state(dev);
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        prandom_seed_full_state
+In the following example, it's easier get the offset of incorrect poison
+value with DUMP_PREFIX_OFFSET.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: ab2a50e7602b ("PCI: tegra: Add support to configure sideband pins")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Vidya Sagar <vidyas@nvidia.com>
+Before:
+Object 00000000e817b73b: 00 00 00 00 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object 00000000816f4601: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object 00000000169d2bb8: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object 00000000f4c38716: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object 00000000917e3491: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object 00000000c0e33738: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object 000000001755ddd1: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+
+After:
+Object 00000000: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object 00000010: 63 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object 00000020: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object 00000030: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b a5
+
+I think it might be worth to convert all DUMP_PREFIX_ADDRESS to
+DUMP_PREFIX_OFFSET for the whole Linux kernel.
+
+$ git grep 'DUMP_PREFIX_ADDRESS' | cut -f1 -d"/" | sort | uniq -c
+3 arch
+140 drivers
+12 fs
+1 include
+5 lib
+2 mm
+
+Signed-off-by: Miles Chen <miles.chen@mediatek.com>
 ---
-v2: keep alphabetical order
----
- drivers/pci/controller/dwc/pcie-tegra194.c | 1 +
- 1 file changed, 1 insertion(+)
+ mm/slub.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index 09ed8e4..f89f5ac 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -22,6 +22,7 @@
- #include <linux/of_pci.h>
- #include <linux/pci.h>
- #include <linux/phy/phy.h>
-+#include <linux/pinctrl/consumer.h>
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
- #include <linux/random.h>
+diff --git a/mm/slub.c b/mm/slub.c
+index 8834563cdb4b..89d91c1eb33d 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -528,7 +528,7 @@ static void print_section(char *level, char *text, u8 *addr,
+ 			  unsigned int length)
+ {
+ 	metadata_access_enable();
+-	print_hex_dump(level, text, DUMP_PREFIX_ADDRESS, 16, 1, addr,
++	print_hex_dump(level, text, DUMP_PREFIX_OFFSET, 16, 1, addr,
+ 			length, 1);
+ 	metadata_access_disable();
+ }
 -- 
-2.7.4
-
+2.18.0
 
