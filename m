@@ -2,181 +2,428 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37187C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 11:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4636AC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 11:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBA6B208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 11:30:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="bsXxou1F"
+	by mail.kernel.org (Postfix) with ESMTP id 0E692207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 11:32:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438229AbfITLa5 (ORCPT
+        id S2438236AbfITLca (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 07:30:57 -0400
-Received: from mout.web.de ([212.227.15.4]:51299 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438181AbfITLa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 07:30:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1568979037;
-        bh=6u/lrL0YjFWeNKufdCoJnqJ/iIRy/jFjcRoEoLmbNRg=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=bsXxou1FKiQZZOXDYnHT2F3sFl4uBqiUv5k4bjUI2VFQQEsaisZymicPD2v1g21EB
-         tbn79Nlql7TKrJeVUeG4yHm7dMvTmh4dKQPxRNsszBKeBESnOhmJO2g01njMhaLDmN
-         MIRiUfrTgWyzWXcI+jVw1lPrbMJRNCTgqaQ8YvIw=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.244.117.22]) by smtp.web.de (mrweb001
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0LnBTZ-1hhh7g28R3-00hKw8; Fri, 20
- Sep 2019 13:30:37 +0200
-Subject: [PATCH v2] ethernet: axienet: Use devm_platform_ioremap_resource() in
- axienet_probe()
-To:     netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Michal Simek <michals@xilinx.com>,
-        Radhey Shyam Pandey <radheys@xilinx.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-References: <af65355e-c2f8-9142-4d0b-6903f23a98b2@web.de>
- <CH2PR02MB700047AFFFE08FE5FD563541C78E0@CH2PR02MB7000.namprd02.prod.outlook.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
- +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
- mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
- lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
- YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
- GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
- rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
- 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
- jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
- BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
- cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
- Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
- g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
- OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
- CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
- LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
- sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
- kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
- i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
- g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
- q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
- NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
- nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
- 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
- 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
- wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
- riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
- DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
- fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
- 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
- xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
- qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
- Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
- Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
- +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
- hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
- /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
- tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
- qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
- Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
- x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
- pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <604a6376-0298-ebcd-ee84-435945370374@web.de>
-Date:   Fri, 20 Sep 2019 13:30:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Fri, 20 Sep 2019 07:32:30 -0400
+Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:47853 "EHLO
+        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2408667AbfITLca (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 07:32:30 -0400
+Received: from [IPv6:2001:983:e9a7:1:3829:6e33:4e49:c53d] ([IPv6:2001:983:e9a7:1:3829:6e33:4e49:c53d])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id BH9FisbYnz6EABH9GiylOx; Fri, 20 Sep 2019 13:32:27 +0200
+Subject: Re: [PATCH v2] media: vimc: fla: Add virtual flash subdevice
+To:     =?UTF-8?Q?Lucas_A=2e_M=2e_Magalh=c3=a3es?= <lucmaga@gmail.com>,
+        linux-media@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, helen.koike@collabora.com,
+        edusbarretto@gmail.com, lkcamp@lists.libreplanetbr.org
+References: <20190915184419.32184-1-lucmaga@gmail.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <f9670de6-5586-0067-936e-87ebf8a20609@xs4all.nl>
+Date:   Fri, 20 Sep 2019 13:32:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <CH2PR02MB700047AFFFE08FE5FD563541C78E0@CH2PR02MB7000.namprd02.prod.outlook.com>
+In-Reply-To: <20190915184419.32184-1-lucmaga@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:6SRgYF57pdwisiSOfQg1UlbC32Jh8S0JVlx+KF5kzO9pVIQbQ2K
- iRjI+uMuwp2Dh6DhZKSc9QSQhmgk96hR1spxlpNLq+TUzfYzhB4EjgMoHGWTKwAO4thnf0p
- S4WbEy8DT62mC5yIO7GvaDBYoSDLgX2svhNSxlA3dvG5V6r0oElMxaCowKGsZZZwIowAmaI
- 8kwv2IqrC5n/HAqzYkGUw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:qeu4r5QVVrQ=:yP+b0esX9R5pV6FoUHsJbD
- 5b4yGkvMRHiG45WlgYxnYfewaZT5f9DkNHWpTJ62I5Yb/X55s+NsebxepbvNVAuWD0pf56obg
- iFIIJNWDoNtaElbJvySPOp2kL5UkytO0jKkkxEPZwyzQY5+s2wG98WDvl5gIL5vj7j5hIE80m
- ta7HosB+bLPJ8o0aoX9z2UtU0Tjw56jLFWhxpvmlE90usD6DNxrQrPJdvSt5oEQiPGs5hvBtA
- evxtiFwv8kV0YRBJr35RdzqqVfhQyzMPYGgoVWPAa6K4qurQhTfYJXGS8h/baUz24Qbx4uf3C
- GIpuvz+RscL06kHJHcVo7laCFPOr5e3MwYz5jZtR1JMWdBpBUtugEIQJrkGnLfZiIsG+10IBl
- HAmxT149FTFmZ0JWIwj+TgyK7Xo8bcnhMT0r+VFp6UD1zMfvntHdmK/Lb97tcad5Opos5U3OZ
- bRHBO9yaCr0RAq89eVFMaYIltua95IXBL3hXhYHONUOX6ckfTqEGgXtq52RE6KTolskMQoT7p
- S3FMajIeg3Ys7BdZde5InniIaNPtMZ6UMJiAtfUMEzPr2o5HRCv0XiMxAe4eHBMJ5IKXnqjO2
- TFn101EXT0PaJsJ4y8ty0T6PRrxpVFNkphq3OaH2hpU5ljweCvANAUPvzpflmvrsWaViInBz4
- 3Y1jXDLrQevanKpOrJXJMkqnlLcIx1kbPFii+pk8VOKQMle9HlTJvCs4gv6wiB+76ZjX8jmr6
- 2NgFXmefu/aDRvKjqjZNYlltDw+jPYpTZhD84Ezf9ata7kREcQTyBYH+eG25v25l0CuQBfYKJ
- Rh7EFNFm5hGXfiTLXcjiGlOQWeWDHVZ0PPc631jp68UOcm1eRDEp1ksAKQclz6TzLTTkNXgob
- 9rTKCNu4JuCJz1QrX/eln19HttnDNv6sUDYliuUif9VKN//nvvM1EOc6DvhhvsWA5ClqIdPa5
- A70ZMr1cRAUTcSGSF33Htzrr3tk6c84ERnV82t8ESgv32jE5YjUKwmpG1CgeW2Yv8xU7r0PbG
- akZhmFxsjhIeMxP8Hj/R+2HB2L2vx6K5FOx1C8AXCNzbm6Okjx3EHKyU4ml0/Ie33o9a9oep+
- hSWjZmBfQPhqOPPamOX689V0COjHw3fTT/s748wW+NLX6PzQ/DYjW/2cuC27f3fucZHQ0IMF5
- 9tLxeg0u9myVvyKX/iiB+/DJBETdiPrb0sx6EkgI98fSgQloKCgJPgBHTWIjNtW5vCZBYZ5et
- +jj/4zviV3UETxY/XkZ4ndw7x15L69SXps8UeS90nn7FDhgJHzv19NVyW4P0=
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfJVrI6xX7kau+dyOk91gQIwjxYSmXIcrZJo5Qnq0SBiXJa+T/HiguUb7QFvWefXEsBo+MxfTwva9GXrysIOWcywXcm7mi+AgAMt0VMDK1OAZPa23j4Dp
+ lIjPksCdgdi1MM5KMtPyFXMeEez5xtr3TlUeQqn13QeFmiKsUJ/BxapjyZTOBX2LeaKIMrX8emszjV9rsOEeoKU6ynDh3FJ5Z6gqWcnUXB/PWE2kzLWorM8G
+ 8rxa4pc5nFVrK2NmUB9NVTOdgxfkO8NIhktClJW22tsLzvo26Jsps0gKC5MErS8N0YiuvrtDZ1k9QMY+FjyaeJyxfXniZfeWGVWDdL1bKO/PDqnZ+Mqfp+wh
+ zu4N2pbImAHcC58dYLjhyXF0NLs830okrtw/rkuPLpC1ByQbCuk4gGAHZ/MKw1EemZKdaf8174Nmbp3d0uF6PuyBuvc2NxoZhFv8u4hGBFeE5HXFflc=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Fri, 20 Sep 2019 13:17:01 +0200
+On 9/15/19 8:44 PM, Lucas A. M. Magalhães wrote:
+> From: Lucas A. M. Magalhaes <lucmaga@gmail.com>
+> 
+> Add a virtual subdevice to simulate the flash control API.
+> Those are the supported controls:
+> v4l2-ctl -d /dev/v4l-subdev6 -L
+> Flash Controls
+> 
+>                        led_mode 0x009c0901 (menu)   : min=0 max=2 default=0 value=0
+>                                 0: Off
+>                                 1: Flash
+>                                 2: Torch
+>                   strobe_source 0x009c0902 (menu)   : min=0 max=1 default=0 value=0
+>                                 0: Software
+>                                 1: External
+>                          strobe 0x009c0903 (button) : flags=write-only, execute-on-write
+>                     stop_strobe 0x009c0904 (button) : flags=write-only, execute-on-write
+>                   strobe_status 0x009c0905 (bool)   : default=0 value=0 flags=read-only
+>                  strobe_timeout 0x009c0906 (int)    : min=1 max=10 step=1 default=10 value=10
+>            intensity_flash_mode 0x009c0907 (int)    : min=0 max=255 step=1 default=255 value=255
+>            intensity_torch_mode 0x009c0908 (int)    : min=0 max=255 step=1 default=255 value=255
+>             intensity_indicator 0x009c0909 (int)    : min=0 max=255 step=1 default=255 value=255
+>                          faults 0x009c090a (bitmask): max=0x00000002 default=0x00000000 value=0x00000000
+> 
+> Co-authored-by: Eduardo Barretto <edusbarretto@gmail.com>
+> Signed-off-by: Eduardo Barretto <edusbarretto@gmail.com>
+> Signed-off-by: Lucas A. M. Magalhães <lucmaga@gmail.com>
+> 
+> ---
+> Hi,
+> 
+> This patch depends on the patch series
+>         "Collapse vimc into single monolithic driver" version 4.
+> 
+> Changes in v2:
+> 	- Fix v4l2-complience errors
+> 	- Add V4L2_CID_FLASH_STROBE_STATUS behavior
+> 	- Add V4L2_CID_FLASH_STROBE restrictions
+> 	- Remove vimc_fla_g_volatile_ctrl
+> 	- Remove unnecessarie V4L2_CID_FLASH_CLASS
+> 	- Change varables names
+> 	- Changes to apply over v4 of patch
+> 		"Collapse vimc into single monolithic driver"
+> ---
+>  drivers/media/platform/vimc/Makefile      |   2 +-
+>  drivers/media/platform/vimc/vimc-common.c |   2 +
+>  drivers/media/platform/vimc/vimc-common.h |   4 +
+>  drivers/media/platform/vimc/vimc-core.c   |   5 +
+>  drivers/media/platform/vimc/vimc-flash.c  | 200 ++++++++++++++++++++++
+>  5 files changed, 212 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/media/platform/vimc/vimc-flash.c
+> 
+> diff --git a/drivers/media/platform/vimc/Makefile b/drivers/media/platform/vimc/Makefile
+> index a53b2b532e9f..e759bbb04b14 100644
+> --- a/drivers/media/platform/vimc/Makefile
+> +++ b/drivers/media/platform/vimc/Makefile
+> @@ -1,6 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  vimc-y := vimc-core.o vimc-common.o vimc-streamer.o vimc-capture.o \
+> -		vimc-debayer.o vimc-scaler.o vimc-sensor.o
+> +		vimc-debayer.o vimc-scaler.o vimc-sensor.o vimc-flash.o
+>  
+>  obj-$(CONFIG_VIDEO_VIMC) += vimc.o
+>  
+> diff --git a/drivers/media/platform/vimc/vimc-common.c b/drivers/media/platform/vimc/vimc-common.c
+> index a3120f4f7a90..cb786de75573 100644
+> --- a/drivers/media/platform/vimc/vimc-common.c
+> +++ b/drivers/media/platform/vimc/vimc-common.c
+> @@ -203,6 +203,8 @@ struct media_pad *vimc_pads_init(u16 num_pads, const unsigned long *pads_flag)
+>  	struct media_pad *pads;
+>  	unsigned int i;
+>  
+> +	if (!num_pads)
+> +		return NULL;
+>  	/* Allocate memory for the pads */
+>  	pads = kcalloc(num_pads, sizeof(*pads), GFP_KERNEL);
+>  	if (!pads)
+> diff --git a/drivers/media/platform/vimc/vimc-common.h b/drivers/media/platform/vimc/vimc-common.h
+> index 236412ad7548..a1fbbc8066d3 100644
+> --- a/drivers/media/platform/vimc/vimc-common.h
+> +++ b/drivers/media/platform/vimc/vimc-common.h
+> @@ -169,6 +169,10 @@ struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
+>  				     const char *vcfg_name);
+>  void vimc_sen_rm(struct vimc_device *vimc, struct vimc_ent_device *ved);
+>  
+> +struct vimc_ent_device *vimc_fla_add(struct vimc_device *vimc,
+> +				     const char *vcfg_name);
+> +void vimc_fla_rm(struct vimc_device *vimc, struct vimc_ent_device *ved);
+> +
+>  /**
+>   * vimc_pads_init - initialize pads
+>   *
+> diff --git a/drivers/media/platform/vimc/vimc-core.c b/drivers/media/platform/vimc/vimc-core.c
+> index a1218578cb9a..312723b4ed8a 100644
+> --- a/drivers/media/platform/vimc/vimc-core.c
+> +++ b/drivers/media/platform/vimc/vimc-core.c
+> @@ -91,6 +91,11 @@ static struct vimc_ent_config ent_config[] = {
+>  		.add = vimc_cap_add,
+>  		.rm = vimc_cap_rm,
+>  	},
+> +	{
+> +		.name = "Flash Controller",
+> +		.add = vimc_fla_add,
+> +		.rm = vimc_fla_rm,
+> +	}
+>  };
+>  
+>  static const struct vimc_ent_link ent_links[] = {
+> diff --git a/drivers/media/platform/vimc/vimc-flash.c b/drivers/media/platform/vimc/vimc-flash.c
+> new file mode 100644
+> index 000000000000..637e7d0a5919
+> --- /dev/null
+> +++ b/drivers/media/platform/vimc/vimc-flash.c
+> @@ -0,0 +1,200 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * vimc-flash.c Virtual Media Controller Driver
+> + *
+> + * Copyright (C) 2019
+> + * Contributors: Lucas A. M. Magalhães <lamm@lucmaga.dev>
+> + *               Eduardo Barretto <edusbarretto@gmail.com>
+> + *
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/kthread.h>
+> +#include <linux/sched.h>
+> +#include <linux/vmalloc.h>
+> +#include <media/v4l2-ctrls.h>
+> +#include <media/v4l2-event.h>
+> +#include <media/v4l2-subdev.h>
+> +
+> +#include "vimc-common.h"
+> +
+> +#define VIMC_FLASH_TIMEOUT_STEP 10000
+> +#define VIMC_FLASH_TIMEOUT_MAX 50000000
 
-Simplify this function implementation by using the wrapper function
-=E2=80=9Cdevm_platform_ioremap_resource=E2=80=9D instead of calling the fu=
-nctions
-=E2=80=9Cplatform_get_resource=E2=80=9D and =E2=80=9Cdevm_ioremap_resource=
-=E2=80=9D directly.
+What's the time unit for these defines? Just make that part of the name,
+e.g. VIMC_FLASH_TIMEOUT_MS_STEP (or NS or US, whatever the unit is).
 
-* Thus reduce also a bit of exception handling code here.
-* Delete the local variable =E2=80=9Cres=E2=80=9D.
+> +
+> +struct vimc_fla_device {
+> +	struct vimc_ent_device ved;
+> +	struct v4l2_subdev sd;
+> +	struct v4l2_ctrl_handler hdl;
+> +	int strobe_source;
+> +	bool is_strobe;
+> +	int led_mode;
+> +	int indicator_intensity;
+> +	int torch_intensity;
+> +	int flash_intensity;
+> +	u64 timeout;
+> +	u64 last_strobe;
+> +	struct task_struct *kthread;
+> +};
+> +
+> +void vimc_fla_set_strobe_status(struct v4l2_ctrl_handler *hdl, bool value){
 
-This issue was detected by using the Coccinelle software.
+Please use proper coding style, so { should be on a new line...
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
+> +	struct v4l2_ctrl *c;
 
-v2:
-Further changes were requested by Radhey Shyam Pandey.
-https://lore.kernel.org/r/CH2PR02MB700047AFFFE08FE5FD563541C78E0@CH2PR02MB=
-7000.namprd02.prod.outlook.com/
+...and add an empty line between variable declarations and the following code.
 
-* Updates for three modules were split into a separate patch for each driv=
-er.
-* The commit description was adjusted.
+> +	c = v4l2_ctrl_find(hdl, V4L2_CID_FLASH_STROBE_STATUS);
+> +	if (!c) return;
 
+'return' should be on the next line.
 
- drivers/net/ethernet/xilinx/xilinx_axienet_main.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+> +	v4l2_ctrl_s_ctrl(c, value);
+> +
 
-diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/n=
-et/ethernet/xilinx/xilinx_axienet_main.c
-index 4fc627fb4d11..92783aaaa0a2 100644
-=2D-- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-+++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-@@ -1787,14 +1787,7 @@ static int axienet_probe(struct platform_device *pd=
-ev)
- 		of_node_put(np);
- 		lp->eth_irq =3D platform_get_irq(pdev, 0);
- 	} else {
--		/* Check for these resources directly on the Ethernet node. */
--		struct resource *res =3D platform_get_resource(pdev,
--							     IORESOURCE_MEM, 1);
--		if (!res) {
--			dev_err(&pdev->dev, "unable to get DMA memory resource\n");
--			goto free_netdev;
--		}
--		lp->dma_regs =3D devm_ioremap_resource(&pdev->dev, res);
-+		lp->dma_regs =3D devm_platform_ioremap_resource(pdev, 1);
- 		lp->rx_irq =3D platform_get_irq(pdev, 1);
- 		lp->tx_irq =3D platform_get_irq(pdev, 0);
- 		lp->eth_irq =3D platform_get_irq(pdev, 2);
-=2D-
-2.23.0
+no spurious empty line at the end.
 
+> +}
+
+How about this:
+
+static void vimc_fla_set_strobe_status(struct v4l2_ctrl_handler *hdl, bool value)
+{
+	struct v4l2_ctrl *c = v4l2_ctrl_find(hdl, V4L2_CID_FLASH_STROBE_STATUS);
+
+	if (c)
+		v4l2_ctrl_s_ctrl(c, value);
+}
+
+Even better: just store the V4L2_CID_FLASH_STROBE_STATUS v4l2_ctrl pointer in
+struct vimc_fla_device when the control is created and use that pointer directly.
+
+> +
+> +static int vimc_fla_strobe_thread(void *data)
+> +{
+> +	struct vimc_fla_device *vfla = data;
+
+empty line
+
+> +	vimc_fla_set_strobe_status(&vfla->hdl, vfla->is_strobe);
+
+Hmm, this really boils down to a simple:
+
+	v4l2_ctrl_s_ctrl(vfla->strobe_status_ctrl, 1);
+
+So you don't need the vimc_fla_set_strobe_status at all.
+
+> +	vfla->last_strobe = ktime_get_ns();
+> +	while(vfla->is_strobe &&
+
+space after 'while'.
+
+Please run 'checkpatch.pl --strict' over your patch!
+
+> +		vfla->last_strobe + vfla->timeout > ktime_get_ns()){
+> +		msleep_interruptible(VIMC_FLASH_TIMEOUT_STEP/1000);
+> +	}
+> +	vimc_fla_set_strobe_status(&vfla->hdl, false);
+> +	return 0;
+> +}
+> +
+> +static int vimc_fla_s_ctrl(struct v4l2_ctrl *c)
+> +{
+> +
+> +	struct vimc_fla_device *vfla =
+> +		container_of(c->handler, struct vimc_fla_device, hdl);
+> +
+> +	switch (c->id) {
+> +	case V4L2_CID_FLASH_LED_MODE:
+> +		vfla->led_mode = c->val;
+> +		return 0;
+> +	case V4L2_CID_FLASH_STROBE_SOURCE:
+> +		vfla->strobe_source = c->val;
+> +		return 0;
+> +	case V4L2_CID_FLASH_STROBE:
+> +		if (vfla->led_mode != V4L2_FLASH_LED_MODE_FLASH ||
+> +		    vfla->strobe_source != V4L2_FLASH_STROBE_SOURCE_SOFTWARE){
+> +			return -EILSEQ;
+> +		}
+> +		vfla->is_strobe = true;
+> +		vfla->kthread = kthread_run(vimc_fla_strobe_thread, vfla, "vimc-flash thread");
+
+What if the thread is already running?
+
+I wonder what existing flash drivers do if V4L2_CID_FLASH_STROBE is called
+repeatedly. Perhaps returning EBUSY if strobe is still active makes sense here.
+
+It would also be a nice feature if keeping the strobe on for more than X seconds
+would create a V4L2_FLASH_FAULT_LED_OVER_TEMPERATURE fault.
+
+> +		return 0;
+> +	case V4L2_CID_FLASH_STROBE_STATUS:
+> +		vfla->is_strobe = c->val;
+> +		return 0;
+> +	case V4L2_CID_FLASH_STROBE_STOP:
+> +		vfla->is_strobe = false;
+> +		return 0;
+> +	case V4L2_CID_FLASH_TIMEOUT:
+> +		vfla->timeout = c->val;
+> +		return 0;
+> +	case V4L2_CID_FLASH_INTENSITY:
+> +		vfla->flash_intensity = c->val;
+> +		return 0;
+> +	case V4L2_CID_FLASH_TORCH_INTENSITY:
+> +		vfla->torch_intensity = c->val;
+> +		return 0;
+> +	case V4L2_CID_FLASH_INDICATOR_INTENSITY:
+> +		vfla->indicator_intensity = c->val;
+> +		return 0;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static const struct v4l2_ctrl_ops vimc_fla_ctrl_ops = {
+> +	.s_ctrl = vimc_fla_s_ctrl,
+> +};
+> +
+> +static const struct v4l2_subdev_core_ops vimc_fla_core_ops = {
+> +	.subscribe_event = v4l2_ctrl_subdev_subscribe_event,
+> +	.unsubscribe_event = v4l2_event_subdev_unsubscribe,
+> +};
+> +
+> +static const struct v4l2_subdev_ops vimc_fla_ops = {
+> +	.core = &vimc_fla_core_ops,
+> +};
+> +
+> +/* initialize device */
+> +struct vimc_ent_device *vimc_fla_add(struct vimc_device *vimc,
+> +				     const char *vcfg_name)
+> +{
+> +	struct v4l2_device *v4l2_dev = &vimc->v4l2_dev;
+> +	struct vimc_fla_device *vfla;
+> +	int ret;
+> +
+> +	/* Allocate the vfla struct */
+> +	vfla = kzalloc(sizeof(*vfla), GFP_KERNEL);
+> +	if (!vfla)
+> +		return NULL;
+> +
+> +	v4l2_ctrl_handler_init(&vfla->hdl, 4);
+> +
+> +	v4l2_ctrl_new_std_menu(&vfla->hdl, &vimc_fla_ctrl_ops,
+> +			       V4L2_CID_FLASH_LED_MODE,
+> +			       V4L2_FLASH_LED_MODE_TORCH, ~0x7,
+> +			       V4L2_FLASH_LED_MODE_NONE);
+> +	v4l2_ctrl_new_std_menu(&vfla->hdl, &vimc_fla_ctrl_ops,
+> +			       V4L2_CID_FLASH_STROBE_SOURCE, 0x1, ~0x3,
+> +			       V4L2_FLASH_STROBE_SOURCE_SOFTWARE);
+> +	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
+> +			  V4L2_CID_FLASH_STROBE, 0, 0, 0, 0);
+> +	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
+> +			  V4L2_CID_FLASH_STROBE_STOP, 0, 0, 0, 0);
+> +	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
+> +			  V4L2_CID_FLASH_TIMEOUT, 0,
+> +			  VIMC_FLASH_TIMEOUT_MAX,
+> +			  VIMC_FLASH_TIMEOUT_STEP,
+> +			  VIMC_FLASH_TIMEOUT_STEP);
+> +	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
+> +			  V4L2_CID_FLASH_TORCH_INTENSITY, 0, 255, 1, 255);
+> +	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
+> +			  V4L2_CID_FLASH_INTENSITY, 0, 255, 1, 255);
+> +	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
+> +			  V4L2_CID_FLASH_INDICATOR_INTENSITY, 0, 255, 1, 255);
+
+Can you look at existing flash drivers and copy the min/max/step/def values?
+
+The values here are rather arbitrary. It would be nice if it was a bit more
+realistic.
+
+> +	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
+> +			  V4L2_CID_FLASH_STROBE_STATUS, 0, 1, 1, 0);
+> +	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
+> +			  V4L2_CID_FLASH_FAULT, 0,
+> +			  V4L2_FLASH_FAULT_TIMEOUT, 0, 0);
+> +	vfla->sd.ctrl_handler = &vfla->hdl;
+> +	if (vfla->hdl.error) {
+> +		ret = vfla->hdl.error;
+> +		goto err_free_vfla;
+> +	}
+> +
+> +	/* Initialize ved and sd */
+> +	ret = vimc_ent_sd_register(&vfla->ved, &vfla->sd, v4l2_dev,
+> +				   vcfg_name,
+> +				   MEDIA_ENT_F_FLASH, 0, NULL,
+> +				   NULL, &vimc_fla_ops);
+> +	if (ret)
+> +		goto err_free_hdl;
+> +
+> +	/* Initialize standard values */
+> +	vfla->indicator_intensity = 0;
+> +	vfla->torch_intensity = 0;
+> +	vfla->flash_intensity = 0;
+> +	vfla->is_strobe = false;
+> +	vfla->timeout = 0;
+> +	vfla->last_strobe = 0;
+> +	vfla->led_mode = V4L2_FLASH_LED_MODE_NONE;
+> +
+> +	return &vfla->ved;
+> +
+> +err_free_hdl:
+> +	v4l2_ctrl_handler_free(&vfla->hdl);
+> +err_free_vfla:
+> +	kfree(vfla);
+> +
+> +	return NULL;
+> +}
+> +
+> +void vimc_fla_rm(struct vimc_device *vimc, struct vimc_ent_device *ved)
+> +{
+> +	struct vimc_fla_device *vfla;
+> +
+> +	if (!ved)
+> +		return;
+> +
+> +	vfla = container_of(ved, struct vimc_fla_device, ved);
+> +	vimc_ent_sd_unregister(ved, &vfla->sd);
+> +}
+> 
+
+Regards,
+
+	Hans
