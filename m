@@ -5,57 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BF0C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF8EC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 857E420B7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:04:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90C5E208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 17:04:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pQDp70Mo"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FZzWDaGs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406222AbfITREo (ORCPT
+        id S2406177AbfITREz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 13:04:44 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:44082 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404122AbfITREA (ORCPT
+        Fri, 20 Sep 2019 13:04:55 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:39312 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405588AbfITRD4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 13:04:00 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8KH3vPa034509;
-        Fri, 20 Sep 2019 12:03:57 -0500
+        Fri, 20 Sep 2019 13:03:56 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8KH3t4s101456;
+        Fri, 20 Sep 2019 12:03:55 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568999037;
-        bh=0S3XWkeoKQY64i4zH0hGmMh3PZ2jhiw8o3Vh/+6Z4rk=;
+        s=ti-com-17Q1; t=1568999035;
+        bh=L+sPKUKH06o+2bCBaoKbYjJxrNj69PQvI6LssiKHDZw=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=pQDp70Mo3gf+yrCj5p7c9akvXSYYBcdLj3klbXKMbxsuXZDczhjv8DzQiPX7J7XW6
-         V/VONKuic0DvYdYsUFdQoYs+O5KmU3qwSreXegZ4WdeXpiocEM1l5bgroxxax+w/74
-         6W+dc7hn2P6iXaideRWhkWo9fX7HzshUWOUkLSXI=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8KH3vuj094904
+        b=FZzWDaGsTQM3Dydlqk05fxQWm5Q7C1npzM2sqtp3dhQeR3BesszXZaHEtK9Wg3wUE
+         CQF4hiOHVE4903XK+GwftMYA72fdSutlpdlAgkmaIFgxHSORCFpLOl4zVA5iBWQin6
+         oG3RywrxoNw+uAln/fD5afad9IRLYtviBvAS+9TU=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8KH3txI102382
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 20 Sep 2019 12:03:57 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 20 Sep 2019 12:03:55 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 20
- Sep 2019 12:03:52 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ Sep 2019 12:03:51 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 20 Sep 2019 12:03:52 -0500
+ Frontend Transport; Fri, 20 Sep 2019 12:03:55 -0500
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8KH3r6w054719;
-        Fri, 20 Sep 2019 12:03:57 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8KH3r6u054719;
+        Fri, 20 Sep 2019 12:03:55 -0500
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>
 CC:     Prabhakar Lad <prabhakar.csengg@gmail.com>,
         <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v3 04/13] media: am437x-vpfe: Wait for end of frame before tear-down
-Date:   Fri, 20 Sep 2019 12:05:45 -0500
-Message-ID: <20190920170554.29666-5-bparrot@ti.com>
+        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>,
+        Jyri Sarha <jsarha@ti.com>
+Subject: [Patch v3 02/13] media: am437x-vpfe: Fix missing first line
+Date:   Fri, 20 Sep 2019 12:05:43 -0500
+Message-ID: <20190920170554.29666-3-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190920170554.29666-1-bparrot@ti.com>
 References: <20190920170554.29666-1-bparrot@ti.com>
@@ -67,157 +68,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We were originally attempting to stop all processing as soon
-as possible, but the in-progress DMA operation cannot be canceled.
-This led to the module being in a busy state and prevented proper
-power management functionality.
-
-The existing implementation would attempt to clean things up by waiting
-up to 50ms. However when receiving video frame at 15fps or lower,
-it meant an inter frame arrival rate of 66.6 ms or higher.
-In such cases upon tear down the following message could be seen:
-omap_hwmod: vpfe0: _wait_target_disable failed
-
-This patch fixes this issue by adding a stopping state where
-we would wait for the next Vsync before disabling the hardware.
+Previous generation of this driver were hard coded to handle
+encoder/decoder where the first line never contains any data and
+was therefore always skipped, however when dealing with actual
+camera sensors the first line is always present.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
 ---
- drivers/media/platform/am437x/am437x-vpfe.c | 52 ++++++++++-----------
- drivers/media/platform/am437x/am437x-vpfe.h |  3 ++
- 2 files changed, 29 insertions(+), 26 deletions(-)
+ drivers/media/platform/am437x/am437x-vpfe.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
 diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
-index 13bf4b32b40b..66df87d310a2 100644
+index a3d22f90e64c..1521c072f3e3 100644
 --- a/drivers/media/platform/am437x/am437x-vpfe.c
 +++ b/drivers/media/platform/am437x/am437x-vpfe.c
-@@ -441,40 +441,25 @@ static void vpfe_ccdc_restore_defaults(struct vpfe_ccdc *ccdc)
- 
- static int vpfe_ccdc_close(struct vpfe_ccdc *ccdc, struct device *dev)
- {
--	int dma_cntl, i, pcr;
-+	struct vpfe_device *vpfe = container_of(ccdc, struct vpfe_device, ccdc);
-+	u32 dma_cntl, pcr;
- 
--	/* If the CCDC module is still busy wait for it to be done */
--	for (i = 0; i < 10; i++) {
--		usleep_range(5000, 6000);
--		pcr = vpfe_reg_read(ccdc, VPFE_PCR);
--		if (!pcr)
--			break;
-+	pcr = vpfe_reg_read(ccdc, VPFE_PCR);
-+	if (pcr)
-+		vpfe_dbg(1, vpfe, "VPFE_PCR is still set (%x)", pcr);
- 
--		/* make sure it it is disabled */
--		vpfe_pcr_enable(ccdc, 0);
--	}
-+	dma_cntl = vpfe_reg_read(ccdc, VPFE_DMA_CNTL);
-+	if ((dma_cntl & VPFE_DMA_CNTL_OVERFLOW))
-+		vpfe_dbg(1, vpfe, "VPFE_DMA_CNTL_OVERFLOW is still set (%x)",
-+			 dma_cntl);
- 
- 	/* Disable CCDC by resetting all register to default POR values */
- 	vpfe_ccdc_restore_defaults(ccdc);
- 
--	/* if DMA_CNTL overflow bit is set. Clear it
--	 *  It appears to take a while for this to become quiescent ~20ms
--	 */
--	for (i = 0; i < 10; i++) {
--		dma_cntl = vpfe_reg_read(ccdc, VPFE_DMA_CNTL);
--		if (!(dma_cntl & VPFE_DMA_CNTL_OVERFLOW))
--			break;
--
--		/* Clear the overflow bit */
--		vpfe_reg_write(ccdc, dma_cntl, VPFE_DMA_CNTL);
--		usleep_range(5000, 6000);
--	}
--
- 	/* Disabled the module at the CONFIG level */
- 	vpfe_config_enable(ccdc, 0);
- 
- 	pm_runtime_put_sync(dev);
--
- 	return 0;
- }
- 
-@@ -1303,6 +1288,9 @@ static void vpfe_handle_interlaced_irq(struct vpfe_device *vpfe,
- 			if (vpfe->cur_frm != vpfe->next_frm)
- 				vpfe_process_buffer_complete(vpfe);
- 
-+			if (vpfe->stopping)
-+				return;
-+
- 			/*
- 			 * based on whether the two fields are stored
- 			 * interleave or separately in memory,
-@@ -1341,7 +1329,7 @@ static irqreturn_t vpfe_isr(int irq, void *dev)
- {
- 	struct vpfe_device *vpfe = (struct vpfe_device *)dev;
- 	enum v4l2_field field = vpfe->fmt.fmt.pix.field;
--	int intr_status;
-+	int intr_status, stopping = vpfe->stopping;
- 
- 	intr_status = vpfe_reg_read(&vpfe->ccdc, VPFE_IRQ_STS);
- 
-@@ -1352,9 +1340,13 @@ static irqreturn_t vpfe_isr(int irq, void *dev)
- 		} else {
- 			vpfe_handle_interlaced_irq(vpfe, field);
- 		}
-+		if (stopping) {
-+			vpfe->stopping = false;
-+			complete(&vpfe->capture_stop);
-+		}
- 	}
- 
--	if (intr_status & VPFE_VDINT1) {
-+	if (intr_status & VPFE_VDINT1 && !stopping) {
- 		if (field == V4L2_FIELD_NONE &&
- 		    vpfe->cur_frm == vpfe->next_frm)
- 			vpfe_schedule_next_buffer(vpfe);
-@@ -1980,6 +1972,9 @@ static int vpfe_start_streaming(struct vb2_queue *vq, unsigned int count)
- 
- 	vpfe_attach_irq(vpfe);
- 
-+	vpfe->stopping = false;
-+	init_completion(&vpfe->capture_stop);
-+
- 	if (vpfe->ccdc.ccdc_cfg.if_type == VPFE_RAW_BAYER)
- 		vpfe_ccdc_config_raw(&vpfe->ccdc);
- 	else
-@@ -2032,6 +2027,11 @@ static void vpfe_stop_streaming(struct vb2_queue *vq)
- 
- 	vpfe_pcr_enable(&vpfe->ccdc, 0);
- 
-+	/* Wait for the last frame to be captured */
-+	vpfe->stopping = true;
-+	wait_for_completion_timeout(&vpfe->capture_stop,
-+				    msecs_to_jiffies(250));
-+
- 	vpfe_detach_irq(vpfe);
- 
- 	sdinfo = vpfe->current_subdev;
-diff --git a/drivers/media/platform/am437x/am437x-vpfe.h b/drivers/media/platform/am437x/am437x-vpfe.h
-index 4678285f34c6..2dde09780215 100644
---- a/drivers/media/platform/am437x/am437x-vpfe.h
-+++ b/drivers/media/platform/am437x/am437x-vpfe.h
-@@ -23,6 +23,7 @@
- 
- #include <linux/am437x-vpfe.h>
- #include <linux/clk.h>
-+#include <linux/completion.h>
- #include <linux/device.h>
- #include <linux/io.h>
- #include <linux/i2c.h>
-@@ -270,6 +271,8 @@ struct vpfe_device {
- 	 */
- 	u32 field_off;
- 	struct vpfe_ccdc ccdc;
-+	int stopping;
-+	struct completion capture_stop;
- };
- 
- #endif	/* AM437X_VPFE_H */
+@@ -345,13 +345,9 @@ static void vpfe_ccdc_setwin(struct vpfe_ccdc *ccdc,
+ 	if (frm_fmt == CCDC_FRMFMT_INTERLACED) {
+ 		vert_nr_lines = (image_win->height >> 1) - 1;
+ 		vert_start >>= 1;
+-		/* Since first line doesn't have any data */
+-		vert_start += 1;
+ 		/* configure VDINT0 */
+ 		val = (vert_start << VPFE_VDINT_VDINT0_SHIFT);
+ 	} else {
+-		/* Since first line doesn't have any data */
+-		vert_start += 1;
+ 		vert_nr_lines = image_win->height - 1;
+ 		/*
+ 		 * configure VDINT0 and VDINT1. VDINT1 will be at half
 -- 
 2.17.1
 
