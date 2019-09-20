@@ -2,134 +2,122 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BF3C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 18:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 252F1C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 18:31:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19BF52070C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 18:29:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F39CD2070C
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 18:31:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="okqPnLwc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gJQ6pdk6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436476AbfITS35 (ORCPT
+        id S2436496AbfITSbX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 14:29:57 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39584 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406366AbfITS34 (ORCPT
+        Fri, 20 Sep 2019 14:31:23 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:33048 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406515AbfITSbW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 14:29:56 -0400
-Received: by mail-pf1-f196.google.com with SMTP id v4so442208pff.6
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 11:29:56 -0700 (PDT)
+        Fri, 20 Sep 2019 14:31:22 -0400
+Received: by mail-qk1-f194.google.com with SMTP id x134so8320127qkb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 11:31:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=su37uabqeDyNPGVbSy4LqMylRvJekDBMIJQOmAbSrms=;
-        b=okqPnLwcRVFAFawtFpNAsOM/l6PAjdVUI4aWBFLH6PcKUlwJPqfVibKuhiLaiEvyjX
-         YF3vdcFzm7VQGbWu8A1tmTfWurx0OPEZRuO0HCKGaCCaas0wF0nNqk71cq8AmBT9tCfv
-         cvAI8wimfyvmpY7+b9mDlhkTr+z95vp6N7iSCSpPu9L+UbGYirqBsaMxfA6CpV7EqYvi
-         g7IgYjddC3+CAWtIVG2TORJCXBBiZL0DUy1lNplzldwBX8vlKQ12d5acnX5K/atIF2cg
-         16Suk191AECRxh3jGrkh/Gm7hxi1wY7zn0I2TfuJYtkDAo33tKLNzHxAThuUFgY3qINM
-         xLpA==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2lNQY02XZiW/7zD9ydR22Y5cya+wo/HYqbRdJENNudM=;
+        b=gJQ6pdk6pcIK4nCkT47MTAb09/eCw09Bp1OhrPNM6/ftlDmZ2qGPjsvuQydmTYBfaJ
+         s+eOHbu3mDTyC4LNoSCa9Kl/hPoA1/FoCY6uOosKKCbrOCcTPfOcz/pe0P/T4TD9EqHW
+         K0hFWM23r7R4+91Jme2Tenrt7/AsjOZIrgjxfD4MMDD1xlc+jzBPPzg8+W8BfrCJLloZ
+         dX2sAlWMb4pEs9fHr0GcMDCvS+Aarlioeh/1E2NggQO4BVeghiPsqo3Wlc3NC7/TiG/p
+         +krLd3llJa2M63pVp+EylZpSZWLdSAyPXKeWrnO+0cw+XMSU3fzqO2jidzpcUTbn0NAC
+         7p4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=su37uabqeDyNPGVbSy4LqMylRvJekDBMIJQOmAbSrms=;
-        b=eevJ5yFywnbX9KwjQFEXWmWXgl3rqqPUHnMuLP9AXgW0vnjTizr52w2dalQ+djoMOW
-         lpJd81oqnQ6CcUifTDN6fdqkpGLBaLP6pcrnsR9lzOuaACZ62btX4pUy82It+t9AMX4y
-         OcWxu/gMIkQ1JDTVgaGnhMhee+hBM55AhHY7wGjSdubV7mcNA+oTJnZyoCox91DckvIw
-         kJtQMdq5UKAq23Q1mlhE0m9jpRLOVGyPkewvVn5sfkR37F1cp9tl0lPz1tTXnF2gE8rb
-         vmXRnvZPU7gkSGJpvoqtwqN26UGrcDT4BoDpS3XdZ099Ta8oCvM+Naj2ub65VwgmQAcf
-         hLUg==
-X-Gm-Message-State: APjAAAVAQtOB1ESTozekEFz0u5kJySRRYg6h9GyQCPhF/MV7zValkp0B
-        a6rFPAdn9+ygWgetoxJU+pgGYQ==
-X-Google-Smtp-Source: APXvYqw+IQcWT5VEowqn7ypP2rDJ8xYsWnAzjXoY3fTO9SwtB8M9afvxyLB0ZPbfNcYita9kGI3xpg==
-X-Received: by 2002:a62:1888:: with SMTP id 130mr19342667pfy.72.1569004195553;
-        Fri, 20 Sep 2019 11:29:55 -0700 (PDT)
-Received: from ?IPv6:2600:1010:b006:e11f:c970:783e:78af:e8f5? ([2600:1010:b006:e11f:c970:783e:78af:e8f5])
-        by smtp.gmail.com with ESMTPSA id 74sm2391968pfy.78.2019.09.20.11.29.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Sep 2019 11:29:54 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH RFC v4 1/1] random: WARN on large getrandom() waits and introduce getrandom2()
-Date:   Fri, 20 Sep 2019 11:29:52 -0700
-Message-Id: <7D3731D2-348F-4561-A52D-AA7DAAEE258B@amacapital.net>
-References: <78a4b774-ef6b-62cb-57db-8e1ff8d29f72@gmail.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>
-In-Reply-To: <78a4b774-ef6b-62cb-57db-8e1ff8d29f72@gmail.com>
-To:     "Alexander E. Patrakov" <patrakov@gmail.com>
-X-Mailer: iPhone Mail (17A577)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2lNQY02XZiW/7zD9ydR22Y5cya+wo/HYqbRdJENNudM=;
+        b=HwbgkZnK4aBhystG2SqI2KZAhCOAzImuGZskbK1yVwbEt1VIi76p3nzHRI3TOrbPHP
+         QxOKm9rz+ssHOcpv/fkbItU4V+LnwNLVJu3jiKo6zSlRYu3VEHDB27NAZtbQXqNL95Xl
+         ZX6Q9Yop9N/JBb0DQjFOrPXrZI73H0WV7U6vHS7+AW+kmDNq47PT/NNoHteK86XW+RoZ
+         +CQnyDvwYSCIUZEFF2QQAbcgawtS+6Z42DWtxUXj/BIDGdqPrhXIC0xhFrfTGp0jkCBx
+         9yqyQedZVq5+hU6wAzcsOpUMgzWHd0WbttREWOSq+qbHv5sB6XKnvdG+exgPA6tLOydn
+         PNqg==
+X-Gm-Message-State: APjAAAX1/AEkk+h/o7p6fkMtn8oNmNL9Z2u6UkG/EmwuVKN3hgBdvT9/
+        2cxOb77pGjTldIMgt72WP+4=
+X-Google-Smtp-Source: APXvYqzB3AHLJb66GsMnakU04sDD3acLCTO8gwpALfVh3f4VaE9KcyDTGwD7tuCjQODybA6EikL7Pg==
+X-Received: by 2002:ae9:e411:: with SMTP id q17mr5175888qkc.494.1569004281965;
+        Fri, 20 Sep 2019 11:31:21 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([187.65.7.29])
+        by smtp.gmail.com with ESMTPSA id l129sm1358303qkd.84.2019.09.20.11.31.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Sep 2019 11:31:21 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 2CFDD40340; Fri, 20 Sep 2019 15:31:18 -0300 (-03)
+Date:   Fri, 20 Sep 2019 15:31:18 -0300
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Wang Nan <wangnan0@huawei.com>, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [BUGFIX PATCH] perf/probe: Fix to clear tev->nargs in
+ clear_probe_trace_event()
+Message-ID: <20190920183118.GE4865@kernel.org>
+References: <156856587999.25775.5145779959474477595.stgit@devnote2>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <156856587999.25775.5145779959474477595.stgit@devnote2>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Mon, Sep 16, 2019 at 01:44:40AM +0900, Masami Hiramatsu escreveu:
+> Since add_probe_trace_event() can reuse tf->tevs[i] after
+> calling clear_probe_trace_event(), this can make perf-probe
+> crash if the 1st attempt of probe event finding fails to find
+> an event argument, and the 2nd attempt fails to find probe point.
+> 
+> E.g.
+>   $ perf probe -D "task_pid_nr tsk"
+>   Failed to find 'tsk' in this function.
+>   Failed to get entry address of warn_bad_vsyscall
+>   Segmentation fault (core dumped)
 
+Thanks, tested and applied!
 
-> On Sep 20, 2019, at 11:15 AM, Alexander E. Patrakov <patrakov@gmail.com> w=
-rote:
->=20
-> =EF=BB=BF20.09.2019 22:52, Andy Lutomirski =D0=BF=D0=B8=D1=88=D0=B5=D1=82:=
+- Arnaldo
+ 
+> 
+> Fixes: 092b1f0b5f9f ("perf probe: Clear probe_trace_event when add_probe_trace_event() fails")
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: Wang Nan <wangnan0@huawei.com>
+> ---
+>  tools/perf/util/probe-event.c |    1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+> index b8e0967c5c21..91cab5f669d2 100644
+> --- a/tools/perf/util/probe-event.c
+> +++ b/tools/perf/util/probe-event.c
+> @@ -2331,6 +2331,7 @@ void clear_probe_trace_event(struct probe_trace_event *tev)
+>  		}
+>  	}
+>  	zfree(&tev->args);
+> +	tev->nargs = 0;
+>  }
+>  
+>  struct kprobe_blacklist_node {
 
->> I think that, given existing software, we should make two or three
->> changes to fix the basic problems here:
->> 1. Add GRND_INSECURE: at least let new applications do the right thing
->> going forward.
->> 2. Fix what is arguably a straight up kernel bug, not even an ABI
->> issue: when a user program is blocking in getrandom(..., 0), the
->> kernel happily sits there doing absolutely nothing and deadlocks the
->> system as a result.  This IMO isn't an ABI issue -- it's an
->> implementation problem.  How about we make getrandom() (probably
->> actually wait_for_random_bytes()) do something useful to try to seed
->> the RNG if the system is otherwise not doing IO.
->> 3. Optionally, entirely in user code: Get glibc to add new *library*
->> functions: getentropy_secure_blocking() and getentropy_insecure() or
->> whatever they want to call them.  Deprecate getentropy().
->> I think #2 is critical.  Right now, suppose someone has a system that
->> neets to do a secure network request (a la Red Hat's Clevis).  I have
->> no idea what Clevis actually does, but it wouldn't be particularly
->> crazy to do a DH exchange or sign with an EC key to ask some network
->> server to help unlock a dm-crypt volume.  If the system does this at
->> boot, it needs to use getrandom(..., 0), GRND_EXPLICIT, or whatever,
->> because it NEEDS a secure random number.  No about of ABI fiddling
->> will change this.  The kernel should *work* in this case rather than
->> deadlocking.
->=20
-> Let me express a little bit of disagreement with the logic here.
->=20
-> I do agree that #2 is critical, and the Clevis use case is a perfect examp=
-le why it is important. I doubt that it is solvable without trusting jitter e=
-ntropy, or without provoking a dummy read on a random block device, just for=
- timings, or maybe some other interaction with the external world - but Will=
-y already said "it seems fishy". However, _if_ it is solved, then we don't n=
-eed GRND_INSECURE, because solving #2 is equivalent to magically making secu=
-re random numbers always available.
->=20
->=20
+-- 
 
-I beg to differ. There is a big difference between =E2=80=9Cdo your best *ri=
-ght now*=E2=80=9D and =E2=80=9Cgive me a real secure result in a vaguely tim=
-ely manner=E2=80=9D.
-
-For example, the former is useful for ASLR or hash table randomization. The l=
-atter is not.=
+- Arnaldo
