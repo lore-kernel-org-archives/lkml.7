@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25541C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B3E7C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:37:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC34A20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:37:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CA18208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:37:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392760AbfITOhY (ORCPT
+        id S2392813AbfITOhg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:37:24 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35894 "EHLO
+        Fri, 20 Sep 2019 10:37:36 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35788 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388075AbfITOZB (ORCPT
+        by vger.kernel.org with ESMTP id S2388031AbfITOZA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 10:25:01 -0400
+        Fri, 20 Sep 2019 10:25:00 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqE-0004xJ-1W; Fri, 20 Sep 2019 15:24:58 +0100
+        id 1iBJqE-0004x6-1e; Fri, 20 Sep 2019 15:24:58 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqD-0007rS-5L; Fri, 20 Sep 2019 15:24:57 +0100
+        id 1iBJqC-0007qo-UQ; Fri, 20 Sep 2019 15:24:56 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Herbert Xu" <herbert@gondor.apana.org.au>,
-        "Eric Biggers" <ebiggers@google.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+        "John Garry" <john.garry@huawei.com>,
+        "Kefeng Wang" <wangkefeng.wang@huawei.com>,
+        "Guenter Roeck" <linux@roeck-us.net>
 Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.620662485@decadent.org.uk>
+Message-ID: <lsq.1568989415.32155718@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 036/132] crypto: salsa20 - don't access already-freed
- walk.iv
+Subject: [PATCH 3.16 028/132] hwmon: (f71805f) Use request_muxed_region
+ for Super-IO accesses
 In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,42 +57,87 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Biggers <ebiggers@google.com>
+From: Guenter Roeck <linux@roeck-us.net>
 
-commit edaf28e996af69222b2cb40455dbb5459c2b875a upstream.
+commit 73e6ff71a7ea924fb7121d576a2d41e3be3fc6b5 upstream.
 
-If the user-provided IV needs to be aligned to the algorithm's
-alignmask, then skcipher_walk_virt() copies the IV into a new aligned
-buffer walk.iv.  But skcipher_walk_virt() can fail afterwards, and then
-if the caller unconditionally accesses walk.iv, it's a use-after-free.
+Super-IO accesses may fail on a system with no or unmapped LPC bus.
 
-salsa20-generic doesn't set an alignmask, so currently it isn't affected
-by this despite unconditionally accessing walk.iv.  However this is more
-subtle than desired, and it was actually broken prior to the alignmask
-being removed by commit b62b3db76f73 ("crypto: salsa20-generic - cleanup
-and convert to skcipher API").
+Unable to handle kernel paging request at virtual address ffffffbffee0002e
+pgd = ffffffc1d68d4000
+[ffffffbffee0002e] *pgd=0000000000000000, *pud=0000000000000000
+Internal error: Oops: 94000046 [#1] PREEMPT SMP
+Modules linked in: f71805f(+) hwmon
+CPU: 3 PID: 1659 Comm: insmod Not tainted 4.5.0+ #88
+Hardware name: linux,dummy-virt (DT)
+task: ffffffc1f6665400 ti: ffffffc1d6418000 task.ti: ffffffc1d6418000
+PC is at f71805f_find+0x6c/0x358 [f71805f]
 
-Since salsa20-generic does not update the IV and does not need any IV
-alignment, update it to use req->iv instead of walk.iv.
+Also, other drivers may attempt to access the LPC bus at the same time,
+resulting in undefined behavior.
 
-Fixes: 2407d60872dd ("[CRYPTO] salsa20: Salsa20 stream cipher")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Use request_muxed_region() to ensure that IO access on the requested
+address space is supported, and to ensure that access by multiple
+drivers is synchronized.
+
+Fixes: e53004e20a58e ("hwmon: New f71805f driver")
+Reported-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Reported-by: John Garry <john.garry@huawei.com>
+Cc: John Garry <john.garry@huawei.com>
+Acked-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- crypto/salsa20_generic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hwmon/f71805f.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
---- a/crypto/salsa20_generic.c
-+++ b/crypto/salsa20_generic.c
-@@ -186,7 +186,7 @@ static int encrypt(struct blkcipher_desc
- 	blkcipher_walk_init(&walk, dst, src, nbytes);
- 	err = blkcipher_walk_virt_block(desc, &walk, 64);
+--- a/drivers/hwmon/f71805f.c
++++ b/drivers/hwmon/f71805f.c
+@@ -96,17 +96,23 @@ superio_select(int base, int ld)
+ 	outb(ld, base + 1);
+ }
  
--	salsa20_ivsetup(ctx, walk.iv);
-+	salsa20_ivsetup(ctx, desc->info);
+-static inline void
++static inline int
+ superio_enter(int base)
+ {
++	if (!request_muxed_region(base, 2, DRVNAME))
++		return -EBUSY;
++
+ 	outb(0x87, base);
+ 	outb(0x87, base);
++
++	return 0;
+ }
  
- 	while (walk.nbytes >= 64) {
- 		salsa20_encrypt_bytes(ctx, walk.dst.virt.addr,
+ static inline void
+ superio_exit(int base)
+ {
+ 	outb(0xaa, base);
++	release_region(base, 2);
+ }
+ 
+ /*
+@@ -1562,7 +1568,7 @@ exit:
+ static int __init f71805f_find(int sioaddr, unsigned short *address,
+ 			       struct f71805f_sio_data *sio_data)
+ {
+-	int err = -ENODEV;
++	int err;
+ 	u16 devid;
+ 
+ 	static const char * const names[] = {
+@@ -1570,8 +1576,11 @@ static int __init f71805f_find(int sioad
+ 		"F71872F/FG or F71806F/FG",
+ 	};
+ 
+-	superio_enter(sioaddr);
++	err = superio_enter(sioaddr);
++	if (err)
++		return err;
+ 
++	err = -ENODEV;
+ 	devid = superio_inw(sioaddr, SIO_REG_MANID);
+ 	if (devid != SIO_FINTEK_ID)
+ 		goto exit;
 
