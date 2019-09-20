@@ -2,96 +2,102 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2677C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 00:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B8CAC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 00:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D8D021920
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 00:22:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gurInQH2"
+	by mail.kernel.org (Postfix) with ESMTP id 1EB7D20C01
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 00:32:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394430AbfITAWm (ORCPT
+        id S2394215AbfITAcG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 20:22:42 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:33233 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390178AbfITAWm (ORCPT
+        Thu, 19 Sep 2019 20:32:06 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:33192 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391700AbfITAcG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 20:22:42 -0400
-Received: by mail-io1-f65.google.com with SMTP id m11so12253437ioo.0;
-        Thu, 19 Sep 2019 17:22:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=ix8+8PqWk+bszyMequ0IxNEn2cRf7X1LNLzbQO5hJo4=;
-        b=gurInQH2B4KY12DNj9lcFFeLvCpBqLxJoud6HXK3Rj9HY2SbYEqDXEZClGMN8TEq+E
-         mnjILhOcTSBSZthvriw44CDhpNFoyKCiIjQPyhJhqYZfAPf55FhqAfEUQebOitvbQDWL
-         SN+2WBo6w47DTiGtKuN9dlmByarSuTghivQbqtICfOSCxtViQghnvN4jqz/RjiUwy43R
-         CrQm7Vw/xxAKwVfJtKliNSdjp+/PkjHJ9B8O9+YXnBdYhdgMFdIg1UqLU7sGpkYGWKNu
-         geJrhJM2W9iarTAU4B+nEcVV5f6bsr7Hlqd/1eR5786SsfQ9JokbltoMVfAx8IWzU3SE
-         DcDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ix8+8PqWk+bszyMequ0IxNEn2cRf7X1LNLzbQO5hJo4=;
-        b=dqanhWDHi6W4hK69riTbOfb5Qg7KC/6j9FrtCj81m7OUiAyzCXrgMrtRZNBeqrSFNG
-         k3Q48IaqvaxCHb/p58Wg5v5EloYNUQ4GyqetKO7cbLOhmoDZE603vdcpiz+D/pBgDgl6
-         VkuCWyqXOOtSuYlLgBUPv0zef64EKx50MD4dGWkRdejk+1DjGEZ90FcdjsN+bupIZDuU
-         OEdMLxi3svCH77ZlDJY3vd2N7iSrpk5aAI35nh9BqbkNiDq6Qi53gFiE9f5GHT1+uQhn
-         rR0YNbusCpMhEjTRXOAUgzJYr7it9rarn6f33QuFWwaECRPcfo6hLqNg7hOTzeeWljqE
-         chwA==
-X-Gm-Message-State: APjAAAVHt0Rr7ae6HPpyC6DGVUuyDbCZoTYPFi9gBRmqlrr9pL0lrUIV
-        Eu/0PMupvC98S3sbSxjkcWs=
-X-Google-Smtp-Source: APXvYqyW7ouuT933iTp+UETyFMPoSGZoiNKIG3UGPHONqZxhqdYc4m2YPkaQWTxriKp9zm/8pE7isA==
-X-Received: by 2002:a05:6602:2543:: with SMTP id j3mr7504138ioe.29.1568938961424;
-        Thu, 19 Sep 2019 17:22:41 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id r138sm658005iod.59.2019.09.19.17.22.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2019 17:22:40 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] NFSv4: fix memory leak if nfs4_begin_drain_session fails
-Date:   Thu, 19 Sep 2019 19:22:30 -0500
-Message-Id: <20190920002232.27477-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Thu, 19 Sep 2019 20:32:06 -0400
+Received: from [10.200.157.35] (unknown [131.107.174.35])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 021A920B718D;
+        Thu, 19 Sep 2019 17:32:04 -0700 (PDT)
+Subject: Re: [RFC PATCH v1 1/1] Add support for arm64 to carry ima measurement
+ log in kexec_file_load
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>
+Cc:     mark.rutland@arm.com, jean-philippe@linaro.org, arnd@arndb.de,
+        takahiro.akashi@linaro.org, sboyd@kernel.org,
+        catalin.marinas@arm.com, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org, yamada.masahiro@socionext.com,
+        kristina.martsenko@arm.org, duwe@lst.de, allison@lohutok.net,
+        james.morse@arm.org, linux-integrity@vger.kernel.org,
+        tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
+References: <20190913225009.3406-1-prsriva@linux.microsoft.com>
+ <20190913225009.3406-2-prsriva@linux.microsoft.com>
+ <1568816111.16709.68.camel@linux.ibm.com>
+ <1568841696.4733.3.camel@linux.ibm.com>
+ <871rwd2ay8.fsf@morokweng.localdomain>
+From:   Prakhar Srivastava <prsriva@linux.microsoft.com>
+Message-ID: <ed2dc633-c691-6789-9c70-e7d37f436a49@linux.microsoft.com>
+Date:   Thu, 19 Sep 2019 17:32:04 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <871rwd2ay8.fsf@morokweng.localdomain>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In nfs4_try_migration, if nfs4_begin_drain_session fails the allocated
-memory should be released.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- fs/nfs/nfs4state.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-index cad4e064b328..124649f12067 100644
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -2096,7 +2096,7 @@ static int nfs4_try_migration(struct nfs_server *server, const struct cred *cred
- 
- 	status = nfs4_begin_drain_session(clp);
- 	if (status != 0)
--		return status;
-+		goto out;
- 
- 	status = nfs4_replace_transport(server, locations);
- 	if (status != 0) {
--- 
-2.17.1
+On 9/18/2019 8:59 PM, Thiago Jung Bauermann wrote:
+> Mimi Zohar <zohar@linux.ibm.com> writes:
+>
+>> On Wed, 2019-09-18 at 10:15 -0400, Mimi Zohar wrote:
+>>
+>>>> +	uint64_t tmp_start, tmp_end;
+>>>> +
+>>>> +	propStart = of_find_property(of_chosen, "linux,ima-kexec-buffer",
+>>>> +				     NULL);
+>>>> +	if (propStart) {
+>>>> +		tmp_start = fdt64_to_cpu(*((const fdt64_t *) propStart));
+>>>> +		ret = of_remove_property(of_chosen, propStart);
+>>>> +		if (!ret) {
+>>>> +			return ret;
+>>>> +		}
+>>>> +
+>>>> +		propEnd = of_find_property(of_chosen,
+>>>> +					   "linux,ima-kexec-buffer-end", NULL);
+>>>> +		if (!propEnd) {
+>>>> +			return -EINVAL;
+>>>> +		}
+>>>> +
+>>>> +		tmp_end = fdt64_to_cpu(*((const fdt64_t *) propEnd));
+>>>> +
+>>>> +		ret = of_remove_property(of_chosen, propEnd);
+>>>> +		if (!ret) {
+>>>> +			return ret;
+>>>> +		}
+>>> There seems to be quite a bit of code duplication in this function and
+>>> in ima_get_kexec_buffer().  It could probably be cleaned up with some
+>>> refactoring.
+>> Sorry, my mistake.  One calls of_get_property(), while the other calls
+>> of_find_property().
+> of_get_property() is a thin wrapper around of_find_property(), so if
+> that's the only difference I think they can still be merged.
+
+I will move to using of_get_property and see if i can reduce the code 
+further.
+
+Also address other comments by Mimi in my next iteration.
+
+Thanks,
+
+Prakhar Srivastava
 
