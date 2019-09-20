@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2085C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D168C4CECD
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9902720644
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C39020882
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:09:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437244AbfITGI6 (ORCPT
+        id S2437255AbfITGJA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 02:08:58 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2745 "EHLO huawei.com"
+        Fri, 20 Sep 2019 02:09:00 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:57434 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2408280AbfITGIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 02:08:53 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 9BAFBE8CC058B90DA027;
-        Fri, 20 Sep 2019 14:08:51 +0800 (CST)
+        id S2437238AbfITGI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 02:08:58 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id D5BBF1A011B828F47726;
+        Fri, 20 Sep 2019 14:08:56 +0800 (CST)
 Received: from localhost.localdomain.localdomain (10.175.113.25) by
  DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 20 Sep 2019 14:08:43 +0800
+ 14.3.439.0; Fri, 20 Sep 2019 14:08:46 +0800
 From:   Kefeng Wang <wangkefeng.wang@huawei.com>
 To:     Joe Perches <joe@perches.com>,
         Andrew Morton <akpm@linux-foundation.org>,
@@ -39,10 +39,13 @@ To:     Joe Perches <joe@perches.com>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
         Petr Mladek <pmladek@suse.com>, Arnd Bergmann <arnd@arndb.de>,
         <linux-kernel@vger.kernel.org>
-CC:     <wangkefeng.wang@huawei.com>
-Subject: [PATCH 01/32] alpha: Use pr_warn instead of pr_warning
-Date:   Fri, 20 Sep 2019 14:25:13 +0800
-Message-ID: <20190920062544.180997-2-wangkefeng.wang@huawei.com>
+CC:     <wangkefeng.wang@huawei.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>
+Subject: [PATCH 04/32] riscv: Use pr_warn instead of pr_warning
+Date:   Fri, 20 Sep 2019 14:25:16 +0800
+Message-ID: <20190920062544.180997-5-wangkefeng.wang@huawei.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190920062544.180997-1-wangkefeng.wang@huawei.com>
 References: <20190920062544.180997-1-wangkefeng.wang@huawei.com>
@@ -60,35 +63,29 @@ As said in commit f2c2cbcc35d4 ("powerpc: Use pr_warn instead of
 pr_warning"), removing pr_warning so all logging messages use a
 consistent <prefix>_warn style. Let's do it.
 
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Palmer Dabbelt <palmer@sifive.com>
+Cc: Albert Ou <aou@eecs.berkeley.edu>
 Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
 ---
- arch/alpha/kernel/perf_event.c | 4 ++--
+ arch/riscv/kernel/module.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/alpha/kernel/perf_event.c b/arch/alpha/kernel/perf_event.c
-index 4341ccf5c0c4..e7a59d927d78 100644
---- a/arch/alpha/kernel/perf_event.c
-+++ b/arch/alpha/kernel/perf_event.c
-@@ -824,7 +824,7 @@ static void alpha_perf_event_irq_handler(unsigned long la_ptr,
- 	if (unlikely(la_ptr >= alpha_pmu->num_pmcs)) {
- 		/* This should never occur! */
- 		irq_err_count++;
--		pr_warning("PMI: silly index %ld\n", la_ptr);
-+		pr_warn("PMI: silly index %ld\n", la_ptr);
- 		wrperfmon(PERFMON_CMD_ENABLE, cpuc->idx_mask);
- 		return;
- 	}
-@@ -847,7 +847,7 @@ static void alpha_perf_event_irq_handler(unsigned long la_ptr,
- 	if (unlikely(!event)) {
- 		/* This should never occur! */
- 		irq_err_count++;
--		pr_warning("PMI: No event at index %d!\n", idx);
-+		pr_warn("PMI: No event at index %d!\n", idx);
- 		wrperfmon(PERFMON_CMD_ENABLE, cpuc->idx_mask);
- 		return;
- 	}
+diff --git a/arch/riscv/kernel/module.c b/arch/riscv/kernel/module.c
+index 70bb94ae61c5..b7401858d872 100644
+--- a/arch/riscv/kernel/module.c
++++ b/arch/riscv/kernel/module.c
+@@ -315,8 +315,8 @@ int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
+ 			/* Ignore unresolved weak symbol */
+ 			if (ELF_ST_BIND(sym->st_info) == STB_WEAK)
+ 				continue;
+-			pr_warning("%s: Unknown symbol %s\n",
+-				   me->name, strtab + sym->st_name);
++			pr_warn("%s: Unknown symbol %s\n",
++				me->name, strtab + sym->st_name);
+ 			return -ENOENT;
+ 		}
+ 
 -- 
 2.20.1
 
