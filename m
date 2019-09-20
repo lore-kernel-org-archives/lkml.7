@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05341C4CECD
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E4EC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9F2620644
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:09:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFBD520644
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:09:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437403AbfITGJ2 (ORCPT
+        id S2437414AbfITGJc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 02:09:28 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2749 "EHLO huawei.com"
+        Fri, 20 Sep 2019 02:09:32 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2748 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2392619AbfITGJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2392616AbfITGJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Sep 2019 02:09:18 -0400
 Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id F27D9C0E51C70EB92622;
+        by Forcepoint Email with ESMTP id EAD6A9302630B049D224;
         Fri, 20 Sep 2019 14:09:16 +0800 (CST)
 Received: from localhost.localdomain.localdomain (10.175.113.25) by
  DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 20 Sep 2019 14:09:06 +0800
+ 14.3.439.0; Fri, 20 Sep 2019 14:09:07 +0800
 From:   Kefeng Wang <wangkefeng.wang@huawei.com>
 To:     Joe Perches <joe@perches.com>,
         Andrew Morton <akpm@linux-foundation.org>,
@@ -39,12 +39,10 @@ To:     Joe Perches <joe@perches.com>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
         Petr Mladek <pmladek@suse.com>, Arnd Bergmann <arnd@arndb.de>,
         <linux-kernel@vger.kernel.org>
-CC:     <wangkefeng.wang@huawei.com>, Christoph Hellwig <hch@lst.de>,
-        "Marek Szyprowski" <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: [PATCH 24/32] dma-debug: Use pr_warn instead of pr_warning
-Date:   Fri, 20 Sep 2019 14:25:36 +0800
-Message-ID: <20190920062544.180997-25-wangkefeng.wang@huawei.com>
+CC:     <wangkefeng.wang@huawei.com>, Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH 25/32] trace: Use pr_warn instead of pr_warning
+Date:   Fri, 20 Sep 2019 14:25:37 +0800
+Message-ID: <20190920062544.180997-26-wangkefeng.wang@huawei.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190920062544.180997-1-wangkefeng.wang@huawei.com>
 References: <20190920062544.180997-1-wangkefeng.wang@huawei.com>
@@ -62,27 +60,34 @@ As said in commit f2c2cbcc35d4 ("powerpc: Use pr_warn instead of
 pr_warning"), removing pr_warning so all logging messages use a
 consistent <prefix>_warn style. Let's do it.
 
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ingo Molnar <mingo@redhat.com>
 Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
 ---
- kernel/dma/debug.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/trace_benchmark.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/dma/debug.c b/kernel/dma/debug.c
-index 099002d84f46..a26170469543 100644
---- a/kernel/dma/debug.c
-+++ b/kernel/dma/debug.c
-@@ -161,7 +161,7 @@ static inline void dump_entry_trace(struct dma_debug_entry *entry)
+diff --git a/kernel/trace/trace_benchmark.c b/kernel/trace/trace_benchmark.c
+index 80e0b2aca703..2e9a4746ea85 100644
+--- a/kernel/trace/trace_benchmark.c
++++ b/kernel/trace/trace_benchmark.c
+@@ -178,14 +178,14 @@ static int benchmark_event_kthread(void *arg)
+ int trace_benchmark_reg(void)
  {
- #ifdef CONFIG_STACKTRACE
- 	if (entry) {
--		pr_warning("Mapped at:\n");
-+		pr_warn("Mapped at:\n");
- 		stack_trace_print(entry->stack_entries, entry->stack_len, 0);
+ 	if (!ok_to_run) {
+-		pr_warning("trace benchmark cannot be started via kernel command line\n");
++		pr_warn("trace benchmark cannot be started via kernel command line\n");
+ 		return -EBUSY;
  	}
- #endif
+ 
+ 	bm_event_thread = kthread_run(benchmark_event_kthread,
+ 				      NULL, "event_benchmark");
+ 	if (IS_ERR(bm_event_thread)) {
+-		pr_warning("trace benchmark failed to create kernel thread\n");
++		pr_warn("trace benchmark failed to create kernel thread\n");
+ 		return PTR_ERR(bm_event_thread);
+ 	}
+ 
 -- 
 2.20.1
 
