@@ -2,91 +2,87 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51CB1C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 07:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9772DC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 07:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2423E2054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 07:47:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mRkPMjzv"
+	by mail.kernel.org (Postfix) with ESMTP id 712602054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 07:48:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437592AbfITHrq (ORCPT
+        id S2437604AbfITHsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 03:47:46 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:39570 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437580AbfITHrp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 03:47:45 -0400
-Received: by mail-ua1-f65.google.com with SMTP id b14so1929818uap.6
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 00:47:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fxglbnyqNsy9IrMeX1phK/aGWuTchg+w3X2HNfK/9CM=;
-        b=mRkPMjzvPBVfAeCHVbJTYmrEh8uq38ZKVM8E8AFU6NzBMCkin/nd1eIBhx73UcvIPj
-         hZ9cLZl7VRnRHz0r9b+vw/tUY5l1L8pgCBGOVyccwzB3loxNIAfhw8f57iYt1IVFHmMG
-         3ihqT7adb8ixIuRyXLY28hq5ZvJnUjZr99BB8J0MuUtrXiFlrJAhlWPEp5EDSLnkwd6j
-         gjJUOVRjbfeyDNz7/rz7jmEHiaLot6qL149wtDhUGZaREGUjVZZCucZTaTlcf93XPL/+
-         tkpHNvmoPXhsNOFXcMyryFbNn/lRqf4ubcSr7Nk6ZF/pyAtrNhtGObkvcyf+0/vSpDDJ
-         xc4Q==
+        Fri, 20 Sep 2019 03:48:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36566 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437580AbfITHsF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 03:48:05 -0400
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D71DA811DC
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 07:48:04 +0000 (UTC)
+Received: by mail-wm1-f70.google.com with SMTP id k9so833973wmb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 00:48:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fxglbnyqNsy9IrMeX1phK/aGWuTchg+w3X2HNfK/9CM=;
-        b=HHrGiCcmSpOzIanZ9/b9KkIZ3zRBnc+LKexEsdlRMfehaZPghPjILwjGj2xqO0zups
-         zLNmqutQoAdrMiLmrZ+fJ4zZ8dxAavozfmCPGKipOIt9TGbonVcyETuKpmiT2KmE116C
-         Yvw18pABJMZTkmbmlTSBCsfZFqhqUanONePKS1wgLwTJXToznWgDlhTXEEFGs/oizMi7
-         BUb0mcVYRUJhSkOIdQrAW6ucIHDbbtvTaJJy7SLX4aCO+V8oqVZ0aBwpXanH8WWs7qjq
-         ILCN0+O4mum06IQkfaSAutfC9bdN4Rt47JVMxWigFv0MUPWxcfLBsZAnXiw5nxsuMGAY
-         rj9w==
-X-Gm-Message-State: APjAAAV0dKNarUwG/ZMfNIrV+8pUcoTVp5oiwn9bQSTGfxiT3kImw58b
-        ehr8JbLWs2x8BkT0UInY9juLsCqP+PnFsHqJUy0GJg==
-X-Google-Smtp-Source: APXvYqyIPD8otiC6oiySJICKUArdhKAFf1jxKg7NkboCvLV7vKR9MnpHuTM4AuE9NqL9JQuhAM9Efy4otC84oobLXJw=
-X-Received: by 2002:ab0:1856:: with SMTP id j22mr8516177uag.19.1568965664676;
- Fri, 20 Sep 2019 00:47:44 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GKORzqIRH8UFUe4Xtmmfu6KCmszYBGYE6BwrxWii7Vw=;
+        b=RvjXeXalP7U6BgX0g3ChcHI2hqxmpsjV510ftitSeOAVVUUBHzrBifja3dPqY2ktze
+         0jb0fZSNCqPg+QZlaGlCiOHrndTZs4CMXMMgdmbodQ8C5izUOXMgi1stKtxUepdGX7Of
+         NNm0wgGNggJKzPJ8pB9SmGB0up3Kypghhss2oCMbk0qvdLDWcX/VRkK5brUOFXhIrwEU
+         Eb4Yoq4gEfPgFTlip6YQ0LkwTlwS2Sx+Jujp7yIBwnl+MAj/q4+fc0zU6fC1gLG1FpXG
+         XN0GujpIArA1QK8O9c0pPiD2m5fMkN1uKZ1ddWxeo64VR2mkHzTfwK/AFKvdjVrSOosB
+         mZyg==
+X-Gm-Message-State: APjAAAVXDwuyjj7f418k+S2a38bn4+DrCxPZDdr0400W1RCNG33m5TTk
+        BxR02hzXlxt4OOVA0zqOD+5+WpUD+aLXhPubQBm0wSjdm3zeR+rEZmlix4BemJaH3a31XchOQdb
+        EPIuDwtWOKv3syDlh9VK6KRTv
+X-Received: by 2002:a5d:4d42:: with SMTP id a2mr11317093wru.89.1568965683591;
+        Fri, 20 Sep 2019 00:48:03 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqydSp1q3IPC5Ee/GOcfWjH/pT4DM0fXSnx1nHrzzgH37xFQc+n72/iPZHmbuMH5HvPeGLyqsQ==
+X-Received: by 2002:a5d:4d42:: with SMTP id a2mr11317074wru.89.1568965683377;
+        Fri, 20 Sep 2019 00:48:03 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:c46c:2acb:d8d2:21d8? ([2001:b07:6468:f312:c46c:2acb:d8d2:21d8])
+        by smtp.gmail.com with ESMTPSA id w125sm1665640wmg.32.2019.09.20.00.48.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Sep 2019 00:48:02 -0700 (PDT)
+Subject: Re: [RFC 0/2] kvm: Use host timekeeping in guest.
+To:     Suleiman Souhlal <suleiman@google.com>, rkrcmar@redhat.com,
+        tglx@linutronix.de
+Cc:     john.stultz@linaro.org, sboyd@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+References: <20190920062713.78503-1-suleiman@google.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <1ec0b238-61a7-8353-026e-3a2ee23e6240@redhat.com>
+Date:   Fri, 20 Sep 2019 09:48:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190905122112.29672-1-ludovic.Barre@st.com> <940e3ce8-1a4f-7e03-dfec-25330051ea5f@st.com>
-In-Reply-To: <940e3ce8-1a4f-7e03-dfec-25330051ea5f@st.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 20 Sep 2019 09:47:07 +0200
-Message-ID: <CAPDyKFoha6q1CmhLXREz8OAzd4UiBDKpHo46J1PLGMkf8CStpg@mail.gmail.com>
-Subject: Re: [PATCH V6 0/3] mmc: mmci: add busy detect for stm32 sdmmc variant
-To:     Ludovic BARRE <ludovic.barre@st.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190920062713.78503-1-suleiman@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Sep 2019 at 11:33, Ludovic BARRE <ludovic.barre@st.com> wrote:
->
-> hi Ulf
->
-> Just a "gentleman ping" about this series and
-> https://lkml.org/lkml/2019/9/4/747
+On 20/09/19 08:27, Suleiman Souhlal wrote:
+> To do that, I am changing kvmclock to request to the host to copy
+> its timekeeping parameters (mult, base, cycle_last, etc), so that
+> the guest timekeeper can use the same values, so that time can
+> be synchronized between the guest and the host.
+> 
+> Any suggestions or feedback would be highly appreciated.
 
-Thanks for pinging, I will come to this as soon as I can. September
-has been a busy month, being on the road most of the time.
+I'm not a timekeeping maintainer, but I don't think the
+kernel/time/timekeeping.c changes are acceptable.
 
-Apologize for the delays!
+Is the PTP driver not enough?
 
-[...]
-
-Kind regards
-Uffe
+Paolo
