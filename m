@@ -2,63 +2,64 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB8EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 23:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C01C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 23:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D93121928
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 23:20:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC28A21928
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 23:20:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LQExcKL7"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RSowU+Bc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437195AbfITXUr (ORCPT
+        id S2437211AbfITXUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 19:20:47 -0400
-Received: from mail-vk1-f202.google.com ([209.85.221.202]:36502 "EHLO
-        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437129AbfITXU2 (ORCPT
+        Fri, 20 Sep 2019 19:20:54 -0400
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:40991 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437099AbfITXUW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 19:20:28 -0400
-Received: by mail-vk1-f202.google.com with SMTP id p63so3382302vkf.3
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 16:20:27 -0700 (PDT)
+        Fri, 20 Sep 2019 19:20:22 -0400
+Received: by mail-pf1-f201.google.com with SMTP id g15so5764876pfb.8
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 16:20:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=MoRZNBML3FTd+qJUWWEzRGurc6zGA2PFJ4YYMmhYq8w=;
-        b=LQExcKL7au0xN94dOBkv9WqVESixMPnVgfYYyl3JdYrP+RhFwyOjcPqC47o6b4XnFD
-         vOZ1wDFupUcnWyraJqXKOfa+ELZc2hDz4QRK9RGkMWfkIwI2LVtYlBWe185UAXsGsyw2
-         l30lrFz0X7SrRrkdcZuCh2tHZbcnPp9s+eDi3eEpqj9p4LkwoJhqOw5EvODTf4a2NFfd
-         lrMOgSeJjRg7U+NJ1KYqedj9D469fRwtefTh2nzrQFseuIirpltAgbXukw8nnHXrs+1F
-         y3FU6peqxJdrcB8/zlbRi8pTAR62sXvEbGUbKo5dHaRIOqpNmrW+Lk1AZuiTOf+sqeHq
-         UdLQ==
+        bh=YkxNaR1uwV/SnBbh2Y1RJPogz/KLgiHTDO7RE/pY9h4=;
+        b=RSowU+BcIgAo8n0SX1VEPwAygI3W6kn50Uvi8cHhHK77+6DDeJpMPmhrPmmof2cQ91
+         KqEyO4UjIYETm7Hd6FifCn3jumgIALpx35K3uL7P1om6WsN9xTiBGhqM0GDnuXLxQeQm
+         hxbVwrMRvuC39gL/Gkl+2Myz1lKbeCJXpyfz5Fpa7CKyLrzivFQZCVgj9JHiLqjsO8u4
+         ec8VBN0tkJ3fcYUQ8wZdI8Icj6UWHiU/PrmBVDUk1DOwq4uiOZaUDGunNoNNUKW56c3e
+         HcVQkF9a6REMyu6SSCC7Ja44BuUu7e76uMhzsF81CMVBnTk4RoxZOWtqo7fgAPUF7FIP
+         ONsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=MoRZNBML3FTd+qJUWWEzRGurc6zGA2PFJ4YYMmhYq8w=;
-        b=p9ea6KC+vAygI2brhkqXjzC1t6x4Ct900DRq8nqKznhtMTsdlxcR4GqcgSYOYSzkbk
-         +v4JAcKV1Em+LZdeKSVV2fdpHOrLoiVOwDB9zhKqs5J5MLtBG+febyw2osXAJ6KzIVvs
-         WeYMFg2aipLGPhAmx5cGu3p1WvIiRZSQ6hEQcbHXvbPy5cOsPQIjPn9LI9WcfcE6KmgF
-         8Om5C+MvP4b678Pa6SHASz5kLlKOAQiFpQKCSec2lgcK4gKBAxWtUZRBc2oAAJonecoJ
-         iCdzQIA0t8DhpFgokG3rMyix6Qmm/qoW/SayknNPkcyDatAcPyDF+ymgSokRKWSjlG/F
-         OHSQ==
-X-Gm-Message-State: APjAAAXDkw1NhwzCC9YT1+pgQXuOVMMuM3I43roK89xqJKXlB6iAsSw8
-        FTMtNMn3c8qKjDjyIzwNmGrF3ySrIcksAVMOIVr4Vw==
-X-Google-Smtp-Source: APXvYqxh/XF6EytvpXAuTcB9MuYEzT/8a/KnTWph0g1pmyC4nP+EoE7doCRcqlYeBa5vwa4tY18HJyf7BxU4c7Ppp38TYg==
-X-Received: by 2002:a1f:c2c3:: with SMTP id s186mr1332248vkf.88.1569021626260;
- Fri, 20 Sep 2019 16:20:26 -0700 (PDT)
-Date:   Fri, 20 Sep 2019 16:19:21 -0700
+        bh=YkxNaR1uwV/SnBbh2Y1RJPogz/KLgiHTDO7RE/pY9h4=;
+        b=JcXmjESv0aj9muc8O3KXdchKKjTpawtIdBBdzeQg1ie/e5ENnzzAMMtDAis9AQuUrW
+         T41paRjKKdNed6pJbekzwBHF7tgZMCp+/IXLGc90JIsmHFlJVxweyBuIGpVIIDNA6av9
+         FM8dBO2tpf96jNQbqifdv95ST1FhBIyApyUwroxr/mB5g6n+0bPC2UXfM7mZPuF4xwcD
+         lhrFVhRBNJg0IBDJuxRGkHArc6H2dWSoVelUJu+YhKOp/XzedcovNqZjzOPIzWPM1qnL
+         I8zcEhIt3Z6E0aNoqiz4aRAUUvvlrqo/Gk+S9yukKLUKpkQZPO4BRoBY7diQWNEqVoga
+         oS1Q==
+X-Gm-Message-State: APjAAAW9uKbH2ccIsE9S7ISExBd3uWS/o2g0FqHhnv47OQKpA4c86kMm
+        4nP96Tu4j9vq/i4qyU8BbK4Lo0eSh63sU+aCDQRRjw==
+X-Google-Smtp-Source: APXvYqz2FUMCJCuclAnAK2M/LfnnFAyySjIqLjhYfiwxmmUx0dkwHhJJLyNqBG1+1uetgLVnJ9U9WdevBfMeIWMNl2RqgA==
+X-Received: by 2002:a63:4d4b:: with SMTP id n11mr4040912pgl.409.1569021620451;
+ Fri, 20 Sep 2019 16:20:20 -0700 (PDT)
+Date:   Fri, 20 Sep 2019 16:19:19 -0700
 In-Reply-To: <20190920231923.141900-1-brendanhiggins@google.com>
-Message-Id: <20190920231923.141900-18-brendanhiggins@google.com>
+Message-Id: <20190920231923.141900-16-brendanhiggins@google.com>
 Mime-Version: 1.0
 References: <20190920231923.141900-1-brendanhiggins@google.com>
 X-Mailer: git-send-email 2.23.0.351.gc4317032e6-goog
-Subject: [PATCH v16 17/19] kernel/sysctl-test: Add null pointer test for sysctl.c:proc_dointvec()
+Subject: [PATCH v16 15/19] Documentation: kunit: add documentation for KUnit
 From:   Brendan Higgins <brendanhiggins@google.com>
 To:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
         jpoimboe@redhat.com, keescook@google.com,
@@ -77,466 +78,1013 @@ Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
         mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
         richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
         wfg@linux.intel.com, torvalds@linux-foundation.org,
-        Iurii Zaikin <yzaikin@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>
+        Brendan Higgins <brendanhiggins@google.com>,
+        Felix Guo <felixguoxiuping@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Iurii Zaikin <yzaikin@google.com>
+Add documentation for KUnit, the Linux kernel unit testing framework.
+- Add intro and usage guide for KUnit
+- Add API reference
 
-KUnit tests for initialized data behavior of proc_dointvec that is
-explicitly checked in the code. Includes basic parsing tests including
-int min/max overflow.
-
-Signed-off-by: Iurii Zaikin <yzaikin@google.com>
+Signed-off-by: Felix Guo <felixguoxiuping@gmail.com>
 Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
 Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
 Reviewed-by: Stephen Boyd <sboyd@kernel.org>
 ---
- kernel/Makefile      |   2 +
- kernel/sysctl-test.c | 392 +++++++++++++++++++++++++++++++++++++++++++
- lib/Kconfig.debug    |  11 ++
- 3 files changed, 405 insertions(+)
- create mode 100644 kernel/sysctl-test.c
+ Documentation/dev-tools/index.rst           |   1 +
+ Documentation/dev-tools/kunit/api/index.rst |  16 +
+ Documentation/dev-tools/kunit/api/test.rst  |  11 +
+ Documentation/dev-tools/kunit/faq.rst       |  62 +++
+ Documentation/dev-tools/kunit/index.rst     |  79 +++
+ Documentation/dev-tools/kunit/start.rst     | 180 ++++++
+ Documentation/dev-tools/kunit/usage.rst     | 576 ++++++++++++++++++++
+ 7 files changed, 925 insertions(+)
+ create mode 100644 Documentation/dev-tools/kunit/api/index.rst
+ create mode 100644 Documentation/dev-tools/kunit/api/test.rst
+ create mode 100644 Documentation/dev-tools/kunit/faq.rst
+ create mode 100644 Documentation/dev-tools/kunit/index.rst
+ create mode 100644 Documentation/dev-tools/kunit/start.rst
+ create mode 100644 Documentation/dev-tools/kunit/usage.rst
 
-diff --git a/kernel/Makefile b/kernel/Makefile
-index ef0d95a190b4..63e9ea6122c2 100644
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -113,6 +113,8 @@ obj-$(CONFIG_TORTURE_TEST) += torture.o
- obj-$(CONFIG_HAS_IOMEM) += iomem.o
- obj-$(CONFIG_RSEQ) += rseq.o
+diff --git a/Documentation/dev-tools/index.rst b/Documentation/dev-tools/index.rst
+index b0522a4dd107..09dee10d2592 100644
+--- a/Documentation/dev-tools/index.rst
++++ b/Documentation/dev-tools/index.rst
+@@ -24,6 +24,7 @@ whole; patches welcome!
+    gdb-kernel-debugging
+    kgdb
+    kselftest
++   kunit/index
  
-+obj-$(CONFIG_SYSCTL_KUNIT_TEST) += sysctl-test.o
-+
- obj-$(CONFIG_GCC_PLUGIN_STACKLEAK) += stackleak.o
- KASAN_SANITIZE_stackleak.o := n
- KCOV_INSTRUMENT_stackleak.o := n
-diff --git a/kernel/sysctl-test.c b/kernel/sysctl-test.c
+ 
+ .. only::  subproject and html
+diff --git a/Documentation/dev-tools/kunit/api/index.rst b/Documentation/dev-tools/kunit/api/index.rst
 new file mode 100644
-index 000000000000..2a63241a8453
+index 000000000000..9b9bffe5d41a
 --- /dev/null
-+++ b/kernel/sysctl-test.c
-@@ -0,0 +1,392 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * KUnit test of proc sysctl.
-+ */
++++ b/Documentation/dev-tools/kunit/api/index.rst
+@@ -0,0 +1,16 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+#include <kunit/test.h>
-+#include <linux/sysctl.h>
++=============
++API Reference
++=============
++.. toctree::
 +
-+#define KUNIT_PROC_READ 0
-+#define KUNIT_PROC_WRITE 1
++	test
 +
-+static int i_zero;
-+static int i_one_hundred = 100;
++This section documents the KUnit kernel testing API. It is divided into the
++following sections:
 +
-+/*
-+ * Test that proc_dointvec will not try to use a NULL .data field even when the
-+ * length is non-zero.
-+ */
-+static void sysctl_test_api_dointvec_null_tbl_data(struct kunit *test)
-+{
-+	struct ctl_table null_data_table = {
-+		.procname = "foo",
-+		/*
-+		 * Here we are testing that proc_dointvec behaves correctly when
-+		 * we give it a NULL .data field. Normally this would point to a
-+		 * piece of memory where the value would be stored.
-+		 */
-+		.data		= NULL,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec,
-+		.extra1		= &i_zero,
-+		.extra2         = &i_one_hundred,
++================================= ==============================================
++:doc:`test`                       documents all of the standard testing API
++                                  excluding mocking or mocking related features.
++================================= ==============================================
+diff --git a/Documentation/dev-tools/kunit/api/test.rst b/Documentation/dev-tools/kunit/api/test.rst
+new file mode 100644
+index 000000000000..aaa97f17e5b3
+--- /dev/null
++++ b/Documentation/dev-tools/kunit/api/test.rst
+@@ -0,0 +1,11 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++========
++Test API
++========
++
++This file documents all of the standard testing API excluding mocking or mocking
++related features.
++
++.. kernel-doc:: include/kunit/test.h
++   :internal:
+diff --git a/Documentation/dev-tools/kunit/faq.rst b/Documentation/dev-tools/kunit/faq.rst
+new file mode 100644
+index 000000000000..bf2095112d89
+--- /dev/null
++++ b/Documentation/dev-tools/kunit/faq.rst
+@@ -0,0 +1,62 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++==========================
++Frequently Asked Questions
++==========================
++
++How is this different from Autotest, kselftest, etc?
++====================================================
++KUnit is a unit testing framework. Autotest, kselftest (and some others) are
++not.
++
++A `unit test <https://martinfowler.com/bliki/UnitTest.html>`_ is supposed to
++test a single unit of code in isolation, hence the name. A unit test should be
++the finest granularity of testing and as such should allow all possible code
++paths to be tested in the code under test; this is only possible if the code
++under test is very small and does not have any external dependencies outside of
++the test's control like hardware.
++
++There are no testing frameworks currently available for the kernel that do not
++require installing the kernel on a test machine or in a VM and all require
++tests to be written in userspace and run on the kernel under test; this is true
++for Autotest, kselftest, and some others, disqualifying any of them from being
++considered unit testing frameworks.
++
++Does KUnit support running on architectures other than UML?
++===========================================================
++
++Yes, well, mostly.
++
++For the most part, the KUnit core framework (what you use to write the tests)
++can compile to any architecture; it compiles like just another part of the
++kernel and runs when the kernel boots. However, there is some infrastructure,
++like the KUnit Wrapper (``tools/testing/kunit/kunit.py``) that does not support
++other architectures.
++
++In short, this means that, yes, you can run KUnit on other architectures, but
++it might require more work than using KUnit on UML.
++
++For more information, see :ref:`kunit-on-non-uml`.
++
++What is the difference between a unit test and these other kinds of tests?
++==========================================================================
++Most existing tests for the Linux kernel would be categorized as an integration
++test, or an end-to-end test.
++
++- A unit test is supposed to test a single unit of code in isolation, hence the
++  name. A unit test should be the finest granularity of testing and as such
++  should allow all possible code paths to be tested in the code under test; this
++  is only possible if the code under test is very small and does not have any
++  external dependencies outside of the test's control like hardware.
++- An integration test tests the interaction between a minimal set of components,
++  usually just two or three. For example, someone might write an integration
++  test to test the interaction between a driver and a piece of hardware, or to
++  test the interaction between the userspace libraries the kernel provides and
++  the kernel itself; however, one of these tests would probably not test the
++  entire kernel along with hardware interactions and interactions with the
++  userspace.
++- An end-to-end test usually tests the entire system from the perspective of the
++  code under test. For example, someone might write an end-to-end test for the
++  kernel by installing a production configuration of the kernel on production
++  hardware with a production userspace and then trying to exercise some behavior
++  that depends on interactions between the hardware, the kernel, and userspace.
+diff --git a/Documentation/dev-tools/kunit/index.rst b/Documentation/dev-tools/kunit/index.rst
+new file mode 100644
+index 000000000000..26ffb46bdf99
+--- /dev/null
++++ b/Documentation/dev-tools/kunit/index.rst
+@@ -0,0 +1,79 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++=========================================
++KUnit - Unit Testing for the Linux Kernel
++=========================================
++
++.. toctree::
++	:maxdepth: 2
++
++	start
++	usage
++	api/index
++	faq
++
++What is KUnit?
++==============
++
++KUnit is a lightweight unit testing and mocking framework for the Linux kernel.
++These tests are able to be run locally on a developer's workstation without a VM
++or special hardware.
++
++KUnit is heavily inspired by JUnit, Python's unittest.mock, and
++Googletest/Googlemock for C++. KUnit provides facilities for defining unit test
++cases, grouping related test cases into test suites, providing common
++infrastructure for running tests, and much more.
++
++Get started now: :doc:`start`
++
++Why KUnit?
++==========
++
++A unit test is supposed to test a single unit of code in isolation, hence the
++name. A unit test should be the finest granularity of testing and as such should
++allow all possible code paths to be tested in the code under test; this is only
++possible if the code under test is very small and does not have any external
++dependencies outside of the test's control like hardware.
++
++Outside of KUnit, there are no testing frameworks currently
++available for the kernel that do not require installing the kernel on a test
++machine or in a VM and all require tests to be written in userspace running on
++the kernel; this is true for Autotest, and kselftest, disqualifying
++any of them from being considered unit testing frameworks.
++
++KUnit addresses the problem of being able to run tests without needing a virtual
++machine or actual hardware with User Mode Linux. User Mode Linux is a Linux
++architecture, like ARM or x86; however, unlike other architectures it compiles
++to a standalone program that can be run like any other program directly inside
++of a host operating system; to be clear, it does not require any virtualization
++support; it is just a regular program.
++
++KUnit is fast. Excluding build time, from invocation to completion KUnit can run
++several dozen tests in only 10 to 20 seconds; this might not sound like a big
++deal to some people, but having such fast and easy to run tests fundamentally
++changes the way you go about testing and even writing code in the first place.
++Linus himself said in his `git talk at Google
++<https://gist.github.com/lorn/1272686/revisions#diff-53c65572127855f1b003db4064a94573R874>`_:
++
++	"... a lot of people seem to think that performance is about doing the
++	same thing, just doing it faster, and that is not true. That is not what
++	performance is all about. If you can do something really fast, really
++	well, people will start using it differently."
++
++In this context Linus was talking about branching and merging,
++but this point also applies to testing. If your tests are slow, unreliable, are
++difficult to write, and require a special setup or special hardware to run,
++then you wait a lot longer to write tests, and you wait a lot longer to run
++tests; this means that tests are likely to break, unlikely to test a lot of
++things, and are unlikely to be rerun once they pass. If your tests are really
++fast, you run them all the time, every time you make a change, and every time
++someone sends you some code. Why trust that someone ran all their tests
++correctly on every change when you can just run them yourself in less time than
++it takes to read their test log?
++
++How do I use it?
++================
++
++*   :doc:`start` - for new users of KUnit
++*   :doc:`usage` - for a more detailed explanation of KUnit features
++*   :doc:`api/index` - for the list of KUnit APIs used for testing
+diff --git a/Documentation/dev-tools/kunit/start.rst b/Documentation/dev-tools/kunit/start.rst
+new file mode 100644
+index 000000000000..6dc229e46bb3
+--- /dev/null
++++ b/Documentation/dev-tools/kunit/start.rst
+@@ -0,0 +1,180 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++===============
++Getting Started
++===============
++
++Installing dependencies
++=======================
++KUnit has the same dependencies as the Linux kernel. As long as you can build
++the kernel, you can run KUnit.
++
++KUnit Wrapper
++=============
++Included with KUnit is a simple Python wrapper that helps format the output to
++easily use and read KUnit output. It handles building and running the kernel, as
++well as formatting the output.
++
++The wrapper can be run with:
++
++.. code-block:: bash
++
++   ./tools/testing/kunit/kunit.py run
++
++Creating a kunitconfig
++======================
++The Python script is a thin wrapper around Kbuild as such, it needs to be
++configured with a ``kunitconfig`` file. This file essentially contains the
++regular Kernel config, with the specific test targets as well.
++
++.. code-block:: bash
++
++	git clone -b master https://kunit.googlesource.com/kunitconfig $PATH_TO_KUNITCONFIG_REPO
++	cd $PATH_TO_LINUX_REPO
++	ln -s $PATH_TO_KUNIT_CONFIG_REPO/kunitconfig kunitconfig
++
++You may want to add kunitconfig to your local gitignore.
++
++Verifying KUnit Works
++---------------------
++
++To make sure that everything is set up correctly, simply invoke the Python
++wrapper from your kernel repo:
++
++.. code-block:: bash
++
++	./tools/testing/kunit/kunit.py
++
++.. note::
++   You may want to run ``make mrproper`` first.
++
++If everything worked correctly, you should see the following:
++
++.. code-block:: bash
++
++	Generating .config ...
++	Building KUnit Kernel ...
++	Starting KUnit Kernel ...
++
++followed by a list of tests that are run. All of them should be passing.
++
++.. note::
++   Because it is building a lot of sources for the first time, the ``Building
++   kunit kernel`` step may take a while.
++
++Writing your first test
++=======================
++
++In your kernel repo let's add some code that we can test. Create a file
++``drivers/misc/example.h`` with the contents:
++
++.. code-block:: c
++
++	int misc_example_add(int left, int right);
++
++create a file ``drivers/misc/example.c``:
++
++.. code-block:: c
++
++	#include <linux/errno.h>
++
++	#include "example.h"
++
++	int misc_example_add(int left, int right)
++	{
++		return left + right;
++	}
++
++Now add the following lines to ``drivers/misc/Kconfig``:
++
++.. code-block:: kconfig
++
++	config MISC_EXAMPLE
++		bool "My example"
++
++and the following lines to ``drivers/misc/Makefile``:
++
++.. code-block:: make
++
++	obj-$(CONFIG_MISC_EXAMPLE) += example.o
++
++Now we are ready to write the test. The test will be in
++``drivers/misc/example-test.c``:
++
++.. code-block:: c
++
++	#include <kunit/test.h>
++	#include "example.h"
++
++	/* Define the test cases. */
++
++	static void misc_example_add_test_basic(struct kunit *test)
++	{
++		KUNIT_EXPECT_EQ(test, 1, misc_example_add(1, 0));
++		KUNIT_EXPECT_EQ(test, 2, misc_example_add(1, 1));
++		KUNIT_EXPECT_EQ(test, 0, misc_example_add(-1, 1));
++		KUNIT_EXPECT_EQ(test, INT_MAX, misc_example_add(0, INT_MAX));
++		KUNIT_EXPECT_EQ(test, -1, misc_example_add(INT_MAX, INT_MIN));
++	}
++
++	static void misc_example_test_failure(struct kunit *test)
++	{
++		KUNIT_FAIL(test, "This test never passes.");
++	}
++
++	static struct kunit_case misc_example_test_cases[] = {
++		KUNIT_CASE(misc_example_add_test_basic),
++		KUNIT_CASE(misc_example_test_failure),
++		{}
 +	};
-+	/*
-+	 * proc_dointvec expects a buffer in user space, so we allocate one. We
-+	 * also need to cast it to __user so sparse doesn't get mad.
-+	 */
-+	void __user *buffer = (void __user *)kunit_kzalloc(test, sizeof(int),
-+							   GFP_USER);
-+	size_t len;
-+	loff_t pos;
 +
-+	/*
-+	 * We don't care what the starting length is since proc_dointvec should
-+	 * not try to read because .data is NULL.
-+	 */
-+	len = 1234;
-+	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&null_data_table,
-+					       KUNIT_PROC_READ, buffer, &len,
-+					       &pos));
-+	KUNIT_EXPECT_EQ(test, (size_t)0, len);
-+
-+	/*
-+	 * See above.
-+	 */
-+	len = 1234;
-+	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&null_data_table,
-+					       KUNIT_PROC_WRITE, buffer, &len,
-+					       &pos));
-+	KUNIT_EXPECT_EQ(test, (size_t)0, len);
-+}
-+
-+/*
-+ * Similar to the previous test, we create a struct ctrl_table that has a .data
-+ * field that proc_dointvec cannot do anything with; however, this time it is
-+ * because we tell proc_dointvec that the size is 0.
-+ */
-+static void sysctl_test_api_dointvec_table_maxlen_unset(struct kunit *test)
-+{
-+	int data = 0;
-+	struct ctl_table data_maxlen_unset_table = {
-+		.procname = "foo",
-+		.data		= &data,
-+		/*
-+		 * So .data is no longer NULL, but we tell proc_dointvec its
-+		 * length is 0, so it still shouldn't try to use it.
-+		 */
-+		.maxlen		= 0,
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec,
-+		.extra1		= &i_zero,
-+		.extra2         = &i_one_hundred,
++	static struct kunit_suite misc_example_test_suite = {
++		.name = "misc-example",
++		.test_cases = misc_example_test_cases,
 +	};
-+	void __user *buffer = (void __user *)kunit_kzalloc(test, sizeof(int),
-+							   GFP_USER);
-+	size_t len;
-+	loff_t pos;
++	kunit_test_suite(misc_example_test_suite);
 +
-+	/*
-+	 * As before, we don't care what buffer length is because proc_dointvec
-+	 * cannot do anything because its internal .data buffer has zero length.
-+	 */
-+	len = 1234;
-+	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&data_maxlen_unset_table,
-+					       KUNIT_PROC_READ, buffer, &len,
-+					       &pos));
-+	KUNIT_EXPECT_EQ(test, (size_t)0, len);
++Now add the following to ``drivers/misc/Kconfig``:
 +
-+	/*
-+	 * See previous comment.
-+	 */
-+	len = 1234;
-+	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&data_maxlen_unset_table,
-+					       KUNIT_PROC_WRITE, buffer, &len,
-+					       &pos));
-+	KUNIT_EXPECT_EQ(test, (size_t)0, len);
-+}
++.. code-block:: kconfig
 +
-+/*
-+ * Here we provide a valid struct ctl_table, but we try to read and write from
-+ * it using a buffer of zero length, so it should still fail in a similar way as
-+ * before.
-+ */
-+static void sysctl_test_api_dointvec_table_len_is_zero(struct kunit *test)
-+{
-+	int data = 0;
-+	/* Good table. */
-+	struct ctl_table table = {
-+		.procname = "foo",
-+		.data		= &data,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec,
-+		.extra1		= &i_zero,
-+		.extra2         = &i_one_hundred,
++	config MISC_EXAMPLE_TEST
++		bool "Test for my example"
++		depends on MISC_EXAMPLE && KUNIT
++
++and the following to ``drivers/misc/Makefile``:
++
++.. code-block:: make
++
++	obj-$(CONFIG_MISC_EXAMPLE_TEST) += example-test.o
++
++Now add it to your ``kunitconfig``:
++
++.. code-block:: none
++
++	CONFIG_MISC_EXAMPLE=y
++	CONFIG_MISC_EXAMPLE_TEST=y
++
++Now you can run the test:
++
++.. code-block:: bash
++
++	./tools/testing/kunit/kunit.py
++
++You should see the following failure:
++
++.. code-block:: none
++
++	...
++	[16:08:57] [PASSED] misc-example:misc_example_add_test_basic
++	[16:08:57] [FAILED] misc-example:misc_example_test_failure
++	[16:08:57] EXPECTATION FAILED at drivers/misc/example-test.c:17
++	[16:08:57] 	This test never passes.
++	...
++
++Congrats! You just wrote your first KUnit test!
++
++Next Steps
++==========
++*   Check out the :doc:`usage` page for a more
++    in-depth explanation of KUnit.
+diff --git a/Documentation/dev-tools/kunit/usage.rst b/Documentation/dev-tools/kunit/usage.rst
+new file mode 100644
+index 000000000000..c6e69634e274
+--- /dev/null
++++ b/Documentation/dev-tools/kunit/usage.rst
+@@ -0,0 +1,576 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++===========
++Using KUnit
++===========
++
++The purpose of this document is to describe what KUnit is, how it works, how it
++is intended to be used, and all the concepts and terminology that are needed to
++understand it. This guide assumes a working knowledge of the Linux kernel and
++some basic knowledge of testing.
++
++For a high level introduction to KUnit, including setting up KUnit for your
++project, see :doc:`start`.
++
++Organization of this document
++=============================
++
++This document is organized into two main sections: Testing and Isolating
++Behavior. The first covers what a unit test is and how to use KUnit to write
++them. The second covers how to use KUnit to isolate code and make it possible
++to unit test code that was otherwise un-unit-testable.
++
++Testing
++=======
++
++What is KUnit?
++--------------
++
++"K" is short for "kernel" so "KUnit" is the "(Linux) Kernel Unit Testing
++Framework." KUnit is intended first and foremost for writing unit tests; it is
++general enough that it can be used to write integration tests; however, this is
++a secondary goal. KUnit has no ambition of being the only testing framework for
++the kernel; for example, it does not intend to be an end-to-end testing
++framework.
++
++What is Unit Testing?
++---------------------
++
++A `unit test <https://martinfowler.com/bliki/UnitTest.html>`_ is a test that
++tests code at the smallest possible scope, a *unit* of code. In the C
++programming language that's a function.
++
++Unit tests should be written for all the publicly exposed functions in a
++compilation unit; so that is all the functions that are exported in either a
++*class* (defined below) or all functions which are **not** static.
++
++Writing Tests
++-------------
++
++Test Cases
++~~~~~~~~~~
++
++The fundamental unit in KUnit is the test case. A test case is a function with
++the signature ``void (*)(struct kunit *test)``. It calls a function to be tested
++and then sets *expectations* for what should happen. For example:
++
++.. code-block:: c
++
++	void example_test_success(struct kunit *test)
++	{
++	}
++
++	void example_test_failure(struct kunit *test)
++	{
++		KUNIT_FAIL(test, "This test never passes.");
++	}
++
++In the above example ``example_test_success`` always passes because it does
++nothing; no expectations are set, so all expectations pass. On the other hand
++``example_test_failure`` always fails because it calls ``KUNIT_FAIL``, which is
++a special expectation that logs a message and causes the test case to fail.
++
++Expectations
++~~~~~~~~~~~~
++An *expectation* is a way to specify that you expect a piece of code to do
++something in a test. An expectation is called like a function. A test is made
++by setting expectations about the behavior of a piece of code under test; when
++one or more of the expectations fail, the test case fails and information about
++the failure is logged. For example:
++
++.. code-block:: c
++
++	void add_test_basic(struct kunit *test)
++	{
++		KUNIT_EXPECT_EQ(test, 1, add(1, 0));
++		KUNIT_EXPECT_EQ(test, 2, add(1, 1));
++	}
++
++In the above example ``add_test_basic`` makes a number of assertions about the
++behavior of a function called ``add``; the first parameter is always of type
++``struct kunit *``, which contains information about the current test context;
++the second parameter, in this case, is what the value is expected to be; the
++last value is what the value actually is. If ``add`` passes all of these
++expectations, the test case, ``add_test_basic`` will pass; if any one of these
++expectations fail, the test case will fail.
++
++It is important to understand that a test case *fails* when any expectation is
++violated; however, the test will continue running, potentially trying other
++expectations until the test case ends or is otherwise terminated. This is as
++opposed to *assertions* which are discussed later.
++
++To learn about more expectations supported by KUnit, see :doc:`api/test`.
++
++.. note::
++   A single test case should be pretty short, pretty easy to understand,
++   focused on a single behavior.
++
++For example, if we wanted to properly test the add function above, we would
++create additional tests cases which would each test a different property that an
++add function should have like this:
++
++.. code-block:: c
++
++	void add_test_basic(struct kunit *test)
++	{
++		KUNIT_EXPECT_EQ(test, 1, add(1, 0));
++		KUNIT_EXPECT_EQ(test, 2, add(1, 1));
++	}
++
++	void add_test_negative(struct kunit *test)
++	{
++		KUNIT_EXPECT_EQ(test, 0, add(-1, 1));
++	}
++
++	void add_test_max(struct kunit *test)
++	{
++		KUNIT_EXPECT_EQ(test, INT_MAX, add(0, INT_MAX));
++		KUNIT_EXPECT_EQ(test, -1, add(INT_MAX, INT_MIN));
++	}
++
++	void add_test_overflow(struct kunit *test)
++	{
++		KUNIT_EXPECT_EQ(test, INT_MIN, add(INT_MAX, 1));
++	}
++
++Notice how it is immediately obvious what all the properties that we are testing
++for are.
++
++Assertions
++~~~~~~~~~~
++
++KUnit also has the concept of an *assertion*. An assertion is just like an
++expectation except the assertion immediately terminates the test case if it is
++not satisfied.
++
++For example:
++
++.. code-block:: c
++
++	static void mock_test_do_expect_default_return(struct kunit *test)
++	{
++		struct mock_test_context *ctx = test->priv;
++		struct mock *mock = ctx->mock;
++		int param0 = 5, param1 = -5;
++		const char *two_param_types[] = {"int", "int"};
++		const void *two_params[] = {&param0, &param1};
++		const void *ret;
++
++		ret = mock->do_expect(mock,
++				      "test_printk", test_printk,
++				      two_param_types, two_params,
++				      ARRAY_SIZE(two_params));
++		KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ret);
++		KUNIT_EXPECT_EQ(test, -4, *((int *) ret));
++	}
++
++In this example, the method under test should return a pointer to a value, so
++if the pointer returned by the method is null or an errno, we don't want to
++bother continuing the test since the following expectation could crash the test
++case. `ASSERT_NOT_ERR_OR_NULL(...)` allows us to bail out of the test case if
++the appropriate conditions have not been satisfied to complete the test.
++
++Test Suites
++~~~~~~~~~~~
++
++Now obviously one unit test isn't very helpful; the power comes from having
++many test cases covering all of your behaviors. Consequently it is common to
++have many *similar* tests; in order to reduce duplication in these closely
++related tests most unit testing frameworks provide the concept of a *test
++suite*, in KUnit we call it a *test suite*; all it is is just a collection of
++test cases for a unit of code with a set up function that gets invoked before
++every test cases and then a tear down function that gets invoked after every
++test case completes.
++
++Example:
++
++.. code-block:: c
++
++	static struct kunit_case example_test_cases[] = {
++		KUNIT_CASE(example_test_foo),
++		KUNIT_CASE(example_test_bar),
++		KUNIT_CASE(example_test_baz),
++		{}
 +	};
-+	void __user *buffer = (void __user *)kunit_kzalloc(test, sizeof(int),
-+							   GFP_USER);
-+	/*
-+	 * However, now our read/write buffer has zero length.
-+	 */
-+	size_t len = 0;
-+	loff_t pos;
 +
-+	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, KUNIT_PROC_READ, buffer,
-+					       &len, &pos));
-+	KUNIT_EXPECT_EQ(test, (size_t)0, len);
-+
-+	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, KUNIT_PROC_WRITE, buffer,
-+					       &len, &pos));
-+	KUNIT_EXPECT_EQ(test, (size_t)0, len);
-+}
-+
-+/*
-+ * Test that proc_dointvec refuses to read when the file position is non-zero.
-+ */
-+static void sysctl_test_api_dointvec_table_read_but_position_set(
-+		struct kunit *test)
-+{
-+	int data = 0;
-+	/* Good table. */
-+	struct ctl_table table = {
-+		.procname = "foo",
-+		.data		= &data,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec,
-+		.extra1		= &i_zero,
-+		.extra2         = &i_one_hundred,
++	static struct kunit_suite example_test_suite = {
++		.name = "example",
++		.init = example_test_init,
++		.exit = example_test_exit,
++		.test_cases = example_test_cases,
 +	};
-+	void __user *buffer = (void __user *)kunit_kzalloc(test, sizeof(int),
-+							   GFP_USER);
-+	/*
-+	 * We don't care about our buffer length because we start off with a
-+	 * non-zero file position.
-+	 */
-+	size_t len = 1234;
-+	/*
-+	 * proc_dointvec should refuse to read into the buffer since the file
-+	 * pos is non-zero.
-+	 */
-+	loff_t pos = 1;
++	kunit_test_suite(example_test_suite);
 +
-+	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, KUNIT_PROC_READ, buffer,
-+					       &len, &pos));
-+	KUNIT_EXPECT_EQ(test, (size_t)0, len);
-+}
++In the above example the test suite, ``example_test_suite``, would run the test
++cases ``example_test_foo``, ``example_test_bar``, and ``example_test_baz``,
++each would have ``example_test_init`` called immediately before it and would
++have ``example_test_exit`` called immediately after it.
++``kunit_test_suite(example_test_suite)`` registers the test suite with the
++KUnit test framework.
 +
-+/*
-+ * Test that we can read a two digit number in a sufficiently size buffer.
-+ * Nothing fancy.
-+ */
-+static void sysctl_test_dointvec_read_happy_single_positive(struct kunit *test)
-+{
-+	int data = 0;
-+	/* Good table. */
-+	struct ctl_table table = {
-+		.procname = "foo",
-+		.data		= &data,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec,
-+		.extra1		= &i_zero,
-+		.extra2         = &i_one_hundred,
++.. note::
++   A test case will only be run if it is associated with a test suite.
++
++For a more information on these types of things see the :doc:`api/test`.
++
++Isolating Behavior
++==================
++
++The most important aspect of unit testing that other forms of testing do not
++provide is the ability to limit the amount of code under test to a single unit.
++In practice, this is only possible by being able to control what code gets run
++when the unit under test calls a function and this is usually accomplished
++through some sort of indirection where a function is exposed as part of an API
++such that the definition of that function can be changed without affecting the
++rest of the code base. In the kernel this primarily comes from two constructs,
++classes, structs that contain function pointers that are provided by the
++implementer, and architecture specific functions which have definitions selected
++at compile time.
++
++Classes
++-------
++
++Classes are not a construct that is built into the C programming language;
++however, it is an easily derived concept. Accordingly, pretty much every project
++that does not use a standardized object oriented library (like GNOME's GObject)
++has their own slightly different way of doing object oriented programming; the
++Linux kernel is no exception.
++
++The central concept in kernel object oriented programming is the class. In the
++kernel, a *class* is a struct that contains function pointers. This creates a
++contract between *implementers* and *users* since it forces them to use the
++same function signature without having to call the function directly. In order
++for it to truly be a class, the function pointers must specify that a pointer
++to the class, known as a *class handle*, be one of the parameters; this makes
++it possible for the member functions (also known as *methods*) to have access
++to member variables (more commonly known as *fields*) allowing the same
++implementation to have multiple *instances*.
++
++Typically a class can be *overridden* by *child classes* by embedding the
++*parent class* in the child class. Then when a method provided by the child
++class is called, the child implementation knows that the pointer passed to it is
++of a parent contained within the child; because of this, the child can compute
++the pointer to itself because the pointer to the parent is always a fixed offset
++from the pointer to the child; this offset is the offset of the parent contained
++in the child struct. For example:
++
++.. code-block:: c
++
++	struct shape {
++		int (*area)(struct shape *this);
 +	};
-+	size_t len = 4;
-+	loff_t pos = 0;
-+	char *buffer = kunit_kzalloc(test, len, GFP_USER);
-+	char __user *user_buffer = (char __user *)buffer;
-+	/* Store 13 in the data field. */
-+	*((int *)table.data) = 13;
 +
-+	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, KUNIT_PROC_READ,
-+					       user_buffer, &len, &pos));
-+	KUNIT_ASSERT_EQ(test, (size_t)3, len);
-+	buffer[len] = '\0';
-+	/* And we read 13 back out. */
-+	KUNIT_EXPECT_STREQ(test, "13\n", buffer);
-+}
-+
-+/*
-+ * Same as previous test, just now with negative numbers.
-+ */
-+static void sysctl_test_dointvec_read_happy_single_negative(struct kunit *test)
-+{
-+	int data = 0;
-+	/* Good table. */
-+	struct ctl_table table = {
-+		.procname = "foo",
-+		.data		= &data,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec,
-+		.extra1		= &i_zero,
-+		.extra2         = &i_one_hundred,
++	struct rectangle {
++		struct shape parent;
++		int length;
++		int width;
 +	};
-+	size_t len = 5;
-+	loff_t pos = 0;
-+	char *buffer = kunit_kzalloc(test, len, GFP_USER);
-+	char __user *user_buffer = (char __user *)buffer;
-+	*((int *)table.data) = -16;
 +
-+	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, KUNIT_PROC_READ,
-+					       user_buffer, &len, &pos));
-+	KUNIT_ASSERT_EQ(test, (size_t)4, len);
-+	buffer[len] = '\0';
-+	KUNIT_EXPECT_STREQ(test, "-16\n", (char *)buffer);
-+}
++	int rectangle_area(struct shape *this)
++	{
++		struct rectangle *self = container_of(this, struct shape, parent);
 +
-+/*
-+ * Test that a simple positive write works.
-+ */
-+static void sysctl_test_dointvec_write_happy_single_positive(struct kunit *test)
-+{
-+	int data = 0;
-+	/* Good table. */
-+	struct ctl_table table = {
-+		.procname = "foo",
-+		.data		= &data,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec,
-+		.extra1		= &i_zero,
-+		.extra2         = &i_one_hundred,
++		return self->length * self->width;
 +	};
-+	char input[] = "9";
-+	size_t len = sizeof(input) - 1;
-+	loff_t pos = 0;
-+	char *buffer = kunit_kzalloc(test, len, GFP_USER);
-+	char __user *user_buffer = (char __user *)buffer;
 +
-+	memcpy(buffer, input, len);
++	void rectangle_new(struct rectangle *self, int length, int width)
++	{
++		self->parent.area = rectangle_area;
++		self->length = length;
++		self->width = width;
++	}
 +
-+	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, KUNIT_PROC_WRITE,
-+					       user_buffer, &len, &pos));
-+	KUNIT_EXPECT_EQ(test, sizeof(input) - 1, len);
-+	KUNIT_EXPECT_EQ(test, sizeof(input) - 1, (size_t)pos);
-+	KUNIT_EXPECT_EQ(test, 9, *((int *)table.data));
-+}
++In this example (as in most kernel code) the operation of computing the pointer
++to the child from the pointer to the parent is done by ``container_of``.
 +
-+/*
-+ * Same as previous test, but now with negative numbers.
-+ */
-+static void sysctl_test_dointvec_write_happy_single_negative(struct kunit *test)
-+{
-+	int data = 0;
-+	struct ctl_table table = {
-+		.procname = "foo",
-+		.data		= &data,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec,
-+		.extra1		= &i_zero,
-+		.extra2         = &i_one_hundred,
++Faking Classes
++~~~~~~~~~~~~~~
++
++In order to unit test a piece of code that calls a method in a class, the
++behavior of the method must be controllable, otherwise the test ceases to be a
++unit test and becomes an integration test.
++
++A fake just provides an implementation of a piece of code that is different than
++what runs in a production instance, but behaves identically from the standpoint
++of the callers; this is usually done to replace a dependency that is hard to
++deal with, or is slow.
++
++A good example for this might be implementing a fake EEPROM that just stores the
++"contents" in an internal buffer. For example, let's assume we have a class that
++represents an EEPROM:
++
++.. code-block:: c
++
++	struct eeprom {
++		ssize_t (*read)(struct eeprom *this, size_t offset, char *buffer, size_t count);
++		ssize_t (*write)(struct eeprom *this, size_t offset, const char *buffer, size_t count);
 +	};
-+	char input[] = "-9";
-+	size_t len = sizeof(input) - 1;
-+	loff_t pos = 0;
-+	char *buffer = kunit_kzalloc(test, len, GFP_USER);
-+	char __user *user_buffer = (char __user *)buffer;
 +
-+	memcpy(buffer, input, len);
++And we want to test some code that buffers writes to the EEPROM:
 +
-+	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, KUNIT_PROC_WRITE,
-+					       user_buffer, &len, &pos));
-+	KUNIT_EXPECT_EQ(test, sizeof(input) - 1, len);
-+	KUNIT_EXPECT_EQ(test, sizeof(input) - 1, (size_t)pos);
-+	KUNIT_EXPECT_EQ(test, -9, *((int *)table.data));
-+}
++.. code-block:: c
 +
-+/*
-+ * Test that writing a value smaller than the minimum possible value is not
-+ * allowed.
-+ */
-+static void sysctl_test_api_dointvec_write_single_less_int_min(
-+		struct kunit *test)
-+{
-+	int data = 0;
-+	struct ctl_table table = {
-+		.procname = "foo",
-+		.data		= &data,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec,
-+		.extra1		= &i_zero,
-+		.extra2         = &i_one_hundred,
++	struct eeprom_buffer {
++		ssize_t (*write)(struct eeprom_buffer *this, const char *buffer, size_t count);
++		int flush(struct eeprom_buffer *this);
++		size_t flush_count; /* Flushes when buffer exceeds flush_count. */
 +	};
-+	size_t max_len = 32, len = max_len;
-+	loff_t pos = 0;
-+	char *buffer = kunit_kzalloc(test, max_len, GFP_USER);
-+	char __user *user_buffer = (char __user *)buffer;
-+	unsigned long abs_of_less_than_min = (unsigned long)INT_MAX
-+					     - (INT_MAX + INT_MIN) + 1;
 +
-+	/*
-+	 * We use this rigmarole to create a string that contains a value one
-+	 * less than the minimum accepted value.
-+	 */
-+	KUNIT_ASSERT_LT(test,
-+			(size_t)snprintf(buffer, max_len, "-%lu",
-+					 abs_of_less_than_min),
-+			max_len);
++	struct eeprom_buffer *new_eeprom_buffer(struct eeprom *eeprom);
++	void destroy_eeprom_buffer(struct eeprom *eeprom);
 +
-+	KUNIT_EXPECT_EQ(test, -EINVAL, proc_dointvec(&table, KUNIT_PROC_WRITE,
-+						     user_buffer, &len, &pos));
-+	KUNIT_EXPECT_EQ(test, max_len, len);
-+	KUNIT_EXPECT_EQ(test, 0, *((int *)table.data));
-+}
++We can easily test this code by *faking out* the underlying EEPROM:
 +
-+/*
-+ * Test that writing the maximum possible value works.
-+ */
-+static void sysctl_test_api_dointvec_write_single_greater_int_max(
-+		struct kunit *test)
-+{
-+	int data = 0;
-+	struct ctl_table table = {
-+		.procname = "foo",
-+		.data		= &data,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec,
-+		.extra1		= &i_zero,
-+		.extra2         = &i_one_hundred,
++.. code-block:: c
++
++	struct fake_eeprom {
++		struct eeprom parent;
++		char contents[FAKE_EEPROM_CONTENTS_SIZE];
 +	};
-+	size_t max_len = 32, len = max_len;
-+	loff_t pos = 0;
-+	char *buffer = kunit_kzalloc(test, max_len, GFP_USER);
-+	char __user *user_buffer = (char __user *)buffer;
-+	unsigned long greater_than_max = (unsigned long)INT_MAX + 1;
 +
-+	KUNIT_ASSERT_GT(test, greater_than_max, (unsigned long)INT_MAX);
-+	KUNIT_ASSERT_LT(test, (size_t)snprintf(buffer, max_len, "%lu",
-+					       greater_than_max),
-+			max_len);
-+	KUNIT_EXPECT_EQ(test, -EINVAL, proc_dointvec(&table, KUNIT_PROC_WRITE,
-+						     user_buffer, &len, &pos));
-+	KUNIT_ASSERT_EQ(test, max_len, len);
-+	KUNIT_EXPECT_EQ(test, 0, *((int *)table.data));
-+}
++	ssize_t fake_eeprom_read(struct eeprom *parent, size_t offset, char *buffer, size_t count)
++	{
++		struct fake_eeprom *this = container_of(parent, struct fake_eeprom, parent);
 +
-+static struct kunit_case sysctl_test_cases[] = {
-+	KUNIT_CASE(sysctl_test_api_dointvec_null_tbl_data),
-+	KUNIT_CASE(sysctl_test_api_dointvec_table_maxlen_unset),
-+	KUNIT_CASE(sysctl_test_api_dointvec_table_len_is_zero),
-+	KUNIT_CASE(sysctl_test_api_dointvec_table_read_but_position_set),
-+	KUNIT_CASE(sysctl_test_dointvec_read_happy_single_positive),
-+	KUNIT_CASE(sysctl_test_dointvec_read_happy_single_negative),
-+	KUNIT_CASE(sysctl_test_dointvec_write_happy_single_positive),
-+	KUNIT_CASE(sysctl_test_dointvec_write_happy_single_negative),
-+	KUNIT_CASE(sysctl_test_api_dointvec_write_single_less_int_min),
-+	KUNIT_CASE(sysctl_test_api_dointvec_write_single_greater_int_max),
-+	{}
-+};
++		count = min(count, FAKE_EEPROM_CONTENTS_SIZE - offset);
++		memcpy(buffer, this->contents + offset, count);
 +
-+static struct kunit_suite sysctl_test_suite = {
-+	.name = "sysctl_test",
-+	.test_cases = sysctl_test_cases,
-+};
++		return count;
++	}
 +
-+kunit_test_suite(sysctl_test_suite);
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 5870fbe11e9b..d9a6a45ba7aa 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -1965,6 +1965,17 @@ config TEST_SYSCTL
- 
- 	  If unsure, say N.
- 
-+config SYSCTL_KUNIT_TEST
-+	bool "KUnit test for sysctl"
-+	depends on KUNIT
-+	help
-+	  This builds the proc sysctl unit test, which runs on boot.
-+	  Tests the API contract and implementation correctness of sysctl.
-+	  For more information on KUnit and unit tests in general please refer
-+	  to the KUnit documentation in Documentation/dev-tools/kunit/.
++	ssize_t fake_eeprom_write(struct eeprom *this, size_t offset, const char *buffer, size_t count)
++	{
++		struct fake_eeprom *this = container_of(parent, struct fake_eeprom, parent);
 +
-+	  If unsure, say N.
++		count = min(count, FAKE_EEPROM_CONTENTS_SIZE - offset);
++		memcpy(this->contents + offset, buffer, count);
 +
- config TEST_UDELAY
- 	tristate "udelay test driver"
- 	help
++		return count;
++	}
++
++	void fake_eeprom_init(struct fake_eeprom *this)
++	{
++		this->parent.read = fake_eeprom_read;
++		this->parent.write = fake_eeprom_write;
++		memset(this->contents, 0, FAKE_EEPROM_CONTENTS_SIZE);
++	}
++
++We can now use it to test ``struct eeprom_buffer``:
++
++.. code-block:: c
++
++	struct eeprom_buffer_test {
++		struct fake_eeprom *fake_eeprom;
++		struct eeprom_buffer *eeprom_buffer;
++	};
++
++	static void eeprom_buffer_test_does_not_write_until_flush(struct kunit *test)
++	{
++		struct eeprom_buffer_test *ctx = test->priv;
++		struct eeprom_buffer *eeprom_buffer = ctx->eeprom_buffer;
++		struct fake_eeprom *fake_eeprom = ctx->fake_eeprom;
++		char buffer[] = {0xff};
++
++		eeprom_buffer->flush_count = SIZE_MAX;
++
++		eeprom_buffer->write(eeprom_buffer, buffer, 1);
++		KUNIT_EXPECT_EQ(test, fake_eeprom->contents[0], 0);
++
++		eeprom_buffer->write(eeprom_buffer, buffer, 1);
++		KUNIT_EXPECT_EQ(test, fake_eeprom->contents[1], 0);
++
++		eeprom_buffer->flush(eeprom_buffer);
++		KUNIT_EXPECT_EQ(test, fake_eeprom->contents[0], 0xff);
++		KUNIT_EXPECT_EQ(test, fake_eeprom->contents[1], 0xff);
++	}
++
++	static void eeprom_buffer_test_flushes_after_flush_count_met(struct kunit *test)
++	{
++		struct eeprom_buffer_test *ctx = test->priv;
++		struct eeprom_buffer *eeprom_buffer = ctx->eeprom_buffer;
++		struct fake_eeprom *fake_eeprom = ctx->fake_eeprom;
++		char buffer[] = {0xff};
++
++		eeprom_buffer->flush_count = 2;
++
++		eeprom_buffer->write(eeprom_buffer, buffer, 1);
++		KUNIT_EXPECT_EQ(test, fake_eeprom->contents[0], 0);
++
++		eeprom_buffer->write(eeprom_buffer, buffer, 1);
++		KUNIT_EXPECT_EQ(test, fake_eeprom->contents[0], 0xff);
++		KUNIT_EXPECT_EQ(test, fake_eeprom->contents[1], 0xff);
++	}
++
++	static void eeprom_buffer_test_flushes_increments_of_flush_count(struct kunit *test)
++	{
++		struct eeprom_buffer_test *ctx = test->priv;
++		struct eeprom_buffer *eeprom_buffer = ctx->eeprom_buffer;
++		struct fake_eeprom *fake_eeprom = ctx->fake_eeprom;
++		char buffer[] = {0xff, 0xff};
++
++		eeprom_buffer->flush_count = 2;
++
++		eeprom_buffer->write(eeprom_buffer, buffer, 1);
++		KUNIT_EXPECT_EQ(test, fake_eeprom->contents[0], 0);
++
++		eeprom_buffer->write(eeprom_buffer, buffer, 2);
++		KUNIT_EXPECT_EQ(test, fake_eeprom->contents[0], 0xff);
++		KUNIT_EXPECT_EQ(test, fake_eeprom->contents[1], 0xff);
++		/* Should have only flushed the first two bytes. */
++		KUNIT_EXPECT_EQ(test, fake_eeprom->contents[2], 0);
++	}
++
++	static int eeprom_buffer_test_init(struct kunit *test)
++	{
++		struct eeprom_buffer_test *ctx;
++
++		ctx = kunit_kzalloc(test, sizeof(*ctx), GFP_KERNEL);
++		KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx);
++
++		ctx->fake_eeprom = kunit_kzalloc(test, sizeof(*ctx->fake_eeprom), GFP_KERNEL);
++		KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx->fake_eeprom);
++		fake_eeprom_init(ctx->fake_eeprom);
++
++		ctx->eeprom_buffer = new_eeprom_buffer(&ctx->fake_eeprom->parent);
++		KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx->eeprom_buffer);
++
++		test->priv = ctx;
++
++		return 0;
++	}
++
++	static void eeprom_buffer_test_exit(struct kunit *test)
++	{
++		struct eeprom_buffer_test *ctx = test->priv;
++
++		destroy_eeprom_buffer(ctx->eeprom_buffer);
++	}
++
++.. _kunit-on-non-uml:
++
++KUnit on non-UML architectures
++==============================
++
++By default KUnit uses UML as a way to provide dependencies for code under test.
++Under most circumstances KUnit's usage of UML should be treated as an
++implementation detail of how KUnit works under the hood. Nevertheless, there
++are instances where being able to run architecture specific code, or test
++against real hardware is desirable. For these reasons KUnit supports running on
++other architectures.
++
++Running existing KUnit tests on non-UML architectures
++-----------------------------------------------------
++
++There are some special considerations when running existing KUnit tests on
++non-UML architectures:
++
++*   Hardware may not be deterministic, so a test that always passes or fails
++    when run under UML may not always do so on real hardware.
++*   Hardware and VM environments may not be hermetic. KUnit tries its best to
++    provide a hermetic environment to run tests; however, it cannot manage state
++    that it doesn't know about outside of the kernel. Consequently, tests that
++    may be hermetic on UML may not be hermetic on other architectures.
++*   Some features and tooling may not be supported outside of UML.
++*   Hardware and VMs are slower than UML.
++
++None of these are reasons not to run your KUnit tests on real hardware; they are
++only things to be aware of when doing so.
++
++The biggest impediment will likely be that certain KUnit features and
++infrastructure may not support your target environment. For example, at this
++time the KUnit Wrapper (``tools/testing/kunit/kunit.py``) does not work outside
++of UML. Unfortunately, there is no way around this. Using UML (or even just a
++particular architecture) allows us to make a lot of assumptions that make it
++possible to do things which might otherwise be impossible.
++
++Nevertheless, all core KUnit framework features are fully supported on all
++architectures, and using them is straightforward: all you need to do is to take
++your kunitconfig, your Kconfig options for the tests you would like to run, and
++merge them into whatever config your are using for your platform. That's it!
++
++For example, let's say you have the following kunitconfig:
++
++.. code-block:: none
++
++	CONFIG_KUNIT=y
++	CONFIG_KUNIT_EXAMPLE_TEST=y
++
++If you wanted to run this test on an x86 VM, you might add the following config
++options to your ``.config``:
++
++.. code-block:: none
++
++	CONFIG_KUNIT=y
++	CONFIG_KUNIT_EXAMPLE_TEST=y
++	CONFIG_SERIAL_8250=y
++	CONFIG_SERIAL_8250_CONSOLE=y
++
++All these new options do is enable support for a common serial console needed
++for logging.
++
++Next, you could build a kernel with these tests as follows:
++
++
++.. code-block:: bash
++
++	make ARCH=x86 olddefconfig
++	make ARCH=x86
++
++Once you have built a kernel, you could run it on QEMU as follows:
++
++.. code-block:: bash
++
++	qemu-system-x86_64 -enable-kvm \
++			   -m 1024 \
++			   -kernel arch/x86_64/boot/bzImage \
++			   -append 'console=ttyS0' \
++			   --nographic
++
++Interspersed in the kernel logs you might see the following:
++
++.. code-block:: none
++
++	TAP version 14
++		# Subtest: example
++		1..1
++		# example_simple_test: initializing
++		ok 1 - example_simple_test
++	ok 1 - example
++
++Congratulations, you just ran a KUnit test on the x86 architecture!
++
++Writing new tests for other architectures
++-----------------------------------------
++
++The first thing you must do is ask yourself whether it is necessary to write a
++KUnit test for a specific architecture, and then whether it is necessary to
++write that test for a particular piece of hardware. In general, writing a test
++that depends on having access to a particular piece of hardware or software (not
++included in the Linux source repo) should be avoided at all costs.
++
++Even if you only ever plan on running your KUnit test on your hardware
++configuration, other people may want to run your tests and may not have access
++to your hardware. If you write your test to run on UML, then anyone can run your
++tests without knowing anything about your particular setup, and you can still
++run your tests on your hardware setup just by compiling for your architecture.
++
++.. important::
++   Always prefer tests that run on UML to tests that only run under a particular
++   architecture, and always prefer tests that run under QEMU or another easy
++   (and monitarily free) to obtain software environment to a specific piece of
++   hardware.
++
++Nevertheless, there are still valid reasons to write an architecture or hardware
++specific test: for example, you might want to test some code that really belongs
++in ``arch/some-arch/*``. Even so, try your best to write the test so that it
++does not depend on physical hardware: if some of your test cases don't need the
++hardware, only require the hardware for tests that actually need it.
++
++Now that you have narrowed down exactly what bits are hardware specific, the
++actual procedure for writing and running the tests is pretty much the same as
++writing normal KUnit tests. One special caveat is that you have to reset
++hardware state in between test cases; if this is not possible, you may only be
++able to run one test case per invocation.
++
++.. TODO(brendanhiggins@google.com): Add an actual example of an architecture
++   dependent KUnit test.
 -- 
 2.23.0.351.gc4317032e6-goog
 
