@@ -2,152 +2,125 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3658C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 298DEC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB1DC20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:52:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568994764;
-	bh=XJa+LkH9lOhKf++sHgy7yt7iaIxAXylRQSqs/CJ1/DI=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=mkJ00ewHuca+k1ZbmQHQxkSjwxxst3AGE3DPFm+Xlsv53QtnVjebXg949TnDE3K9V
-	 M4UE1yVUYYGZ0mjKJdHU+FZpG2TOB0Wdgny2+TSSs5CbBblW/g3egtGiYCfBBAdg6e
-	 z64fEAgzH9uLNbPKrrt1LWDH6bZhRCnpxz0Ce+as=
+	by mail.kernel.org (Postfix) with ESMTP id F1A7E20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 15:53:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hETyHfgl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404504AbfITPwo (ORCPT
+        id S2404535AbfITPxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 11:52:44 -0400
-Received: from foss.arm.com ([217.140.110.172]:46664 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404366AbfITPwo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 11:52:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 27AB1337;
-        Fri, 20 Sep 2019 08:52:43 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 02D853F575;
-        Fri, 20 Sep 2019 08:52:41 -0700 (PDT)
-Subject: Re: [PATCH 2/3] genirq/irqdomain: Re-check mapping after associate in
- irq_create_mapping()
-To:     "Sverdlin, Alexander (Nokia - DE/Ulm)" <alexander.sverdlin@nokia.com>,
+        Fri, 20 Sep 2019 11:53:04 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47280 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404366AbfITPxD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 11:53:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ehfHqKGq02VDpyHgsdO6CgZKeSAkHux13i46LeTOUmM=; b=hETyHfglQKP6WR4B6RG5ZmaQD
+        95C2f8tvVoss9pKS2CCwzh/44MR1IyzmMPxDliQc4yCQ4itL0mJex15dHhpw1ucGzyvOIO7o/jsr7
+        jofX0RjUj16USAEJCkU3VblfmrZvkT5X3grzhzOtxns4zR2HeKwp0ROGCYgr/6BZWsnrt9hrMJC3U
+        bETYi0g+1ASXehjzUWv0+6FhtyBB+Nw3ivPf83z/RYRa49ay5KeoJIdddaB1O9dxBB6XaaxuRiInX
+        rHEQfzmMWnXGaWIFmspCPjhFUtiTIqXfCX4myMqxSQyzp0jeHAhd2Ls8a2bZrR+3pzmi6iObihOnT
+        tQ1driPtQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iBLDQ-0003vK-Bt; Fri, 20 Sep 2019 15:53:00 +0000
+Date:   Fri, 20 Sep 2019 08:53:00 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Jia He <justin.he@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Suzuki Poulose <Suzuki.Poulose@arm.com>,
+        Punit Agrawal <punitagrawal@gmail.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Alex Van Brunt <avanbrunt@nvidia.com>,
+        Robin Murphy <robin.murphy@arm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Grant Likely <grant.likely@secretlab.ca>
-Cc:     Mark Brown <broonie@opensource.wolfsonmicro.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        "Glavinic-Pecotic, Matija (EXT - DE/Ulm)" 
-        <matija.glavinic-pecotic.ext@nokia.com>,
-        "Adamski, Krzysztof (Nokia - PL/Wroclaw)" 
-        <krzysztof.adamski@nokia.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-References: <20190912094343.5480-1-alexander.sverdlin@nokia.com>
- <20190912094343.5480-3-alexander.sverdlin@nokia.com>
-From:   Marc Zyngier <maz@kernel.org>
-Organization: Approximate
-Message-ID: <2c02b9d5-2394-7dcb-ee89-9950c6071dd1@kernel.org>
-Date:   Fri, 20 Sep 2019 16:52:37 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Ralph Campbell <rcampbell@nvidia.com>, hejianet@gmail.com,
+        Kaly Xin <Kaly.Xin@arm.com>, nd@arm.com
+Subject: Re: [PATCH v7 3/3] mm: fix double page fault on arm64 if PTE_AF is
+ cleared
+Message-ID: <20190920155300.GC15392@bombadil.infradead.org>
+References: <20190920135437.25622-1-justin.he@arm.com>
+ <20190920135437.25622-4-justin.he@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190912094343.5480-3-alexander.sverdlin@nokia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190920135437.25622-4-justin.he@arm.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/09/2019 10:44, Sverdlin, Alexander (Nokia - DE/Ulm) wrote:
-> From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
-> 
-> If two irq_create_mapping() calls perform a mapping of the same hwirq on
-> two CPU cores in parallel they both will get 0 from irq_find_mapping(),
-> both will allocate unique virq using irq_domain_alloc_descs() and both
-> will finally irq_domain_associate() it. Giving different virq numbers
-> to their callers.
-> 
-> In practice the first caller is usually an interrupt controller driver and
-> the seconds is some device requesting the interrupt providede by the above
-> interrupt controller.
+On Fri, Sep 20, 2019 at 09:54:37PM +0800, Jia He wrote:
+> -static inline void cow_user_page(struct page *dst, struct page *src, unsigned long va, struct vm_area_struct *vma)
+> +static inline int cow_user_page(struct page *dst, struct page *src,
+> +				struct vm_fault *vmf)
+>  {
 
-I disagree with this "In practice". An irqchip controller should *very
-rarely* call irq_create_mapping on its own. It usually indicates some
-level of brokenness, unless the mapped interrupt is exposed by the
-irqchip itself (the GIC maintenance interrupt, for example).
+Can we talk about the return type here?
 
-> In this case either the interrupt controller driver configures virq which
-> is not the one being "associated" with hwirq, or the "slave" device
-> requests the virq which is never being triggered.
+> +			} else {
+> +				/* Other thread has already handled the fault
+> +				 * and we don't need to do anything. If it's
+> +				 * not the case, the fault will be triggered
+> +				 * again on the same address.
+> +				 */
+> +				pte_unmap_unlock(vmf->pte, vmf->ptl);
+> +				return -1;
+...
+> +	return 0;
+>  }
 
-Why should the interrupt controller configure that interrupt? On any
-sane platform, the mapping should be created by the user of the
-interrupt, and not by the provider.
+So -1 for "try again" and 0 for "succeeded".
 
-This doesn't mean we shouldn't fix the irqdomain races, but I tend to
-disagree with the analysis here.
+> +		if (cow_user_page(new_page, old_page, vmf)) {
 
-> 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
-> ---
->  kernel/irq/irqdomain.c | 13 +++++--------
->  1 file changed, 5 insertions(+), 8 deletions(-)
-> 
-> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-> index 7bc07b6..176f2cc 100644
-> --- a/kernel/irq/irqdomain.c
-> +++ b/kernel/irq/irqdomain.c
-> @@ -675,13 +675,6 @@ unsigned int irq_create_mapping(struct irq_domain *domain,
->  
->  	of_node = irq_domain_get_of_node(domain);
->  
-> -	/* Check if mapping already exists */
-> -	virq = irq_find_mapping(domain, hwirq);
-> -	if (virq) {
-> -		pr_debug("-> existing mapping on virq %d\n", virq);
-> -		return virq;
-> -	}
-> -
->  	/* Allocate a virtual interrupt number */
->  	virq = irq_domain_alloc_descs(-1, 1, hwirq, of_node_to_nid(of_node), NULL);
->  	if (virq <= 0) {
-> @@ -691,7 +684,11 @@ unsigned int irq_create_mapping(struct irq_domain *domain,
->  
->  	if (irq_domain_associate(domain, virq, hwirq)) {
->  		irq_free_desc(virq);
-> -		return 0;
-> +
-> +		virq = irq_find_mapping(domain, hwirq);
-> +		if (virq)
-> +			pr_debug("-> existing mapping on virq %d\n", virq);
+Then we use it like a bool.  But it's kind of backwards from a bool because
+false is success.
 
-I'd rather you limit this second irq_find_mapping() to cases where we're
-sure we've found a duplicate:
+> +			/* COW failed, if the fault was solved by other,
+> +			 * it's fine. If not, userspace would re-fault on
+> +			 * the same address and we will handle the fault
+> +			 * from the second attempt.
+> +			 */
+> +			put_page(new_page);
+> +			if (old_page)
+> +				put_page(old_page);
+> +			return 0;
 
-	ret = irq_domain_associate(domain, virq, hwirq);
-	if (ret) {
-		irq_free_desc(virq);
-		if (ret == -EEXIST)
-			return irq_find_mapping(domain, hwirq);
+And we don't use the return value; in fact we invert it.
 
-		return 0;
-	}
+Would this make more sense:
 
-> +		return virq;
->  	}
->  
->  	pr_debug("irq %lu on domain %s mapped to virtual irq %u\n",
-> 
+static inline bool cow_user_page(struct page *dst, struct page *src,
+					struct vm_fault *vmf)
+...
+				pte_unmap_unlock(vmf->pte, vmf->ptl);
+				return false;
+...
+	return true;
+...
+		if (!cow_user_page(new_page, old_page, vmf)) {
 
-Thanks,
-
-	M.
--- 
-Jazz is not dead, it just smells funny...
+That reads more sensibly for me.  We could also go with returning a
+vm_fault_t, but that would be more complex than needed today, I think.
