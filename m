@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C9AC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C139BC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:21:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8C95208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:21:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ED0F208C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:21:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404973AbfITQVR (ORCPT
+        id S2405080AbfITQVW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 12:21:17 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:52765 "EHLO
+        Fri, 20 Sep 2019 12:21:22 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:52824 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404669AbfITQVK (ORCPT
+        with ESMTP id S2404900AbfITQVO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 12:21:10 -0400
+        Fri, 20 Sep 2019 12:21:14 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iBLeW-00043b-Jc; Fri, 20 Sep 2019 18:21:00 +0200
+        id 1iBLef-00049y-RF; Fri, 20 Sep 2019 18:21:09 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C25A41C0E29;
-        Fri, 20 Sep 2019 18:20:58 +0200 (CEST)
-Date:   Fri, 20 Sep 2019 16:20:58 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 42D891C0E35;
+        Fri, 20 Sep 2019 18:21:01 +0200 (CEST)
+Date:   Fri, 20 Sep 2019 16:21:01 -0000
 From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf sched: Add missing event.h include directive
+Subject: [tip: perf/urgent] perf debug: No need to include ui/util.h
 Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <tip-e1cdt9557ctpvs3jb9c16qe6@git.kernel.org>
-References: <tip-e1cdt9557ctpvs3jb9c16qe6@git.kernel.org>
+In-Reply-To: <tip-hn9v4jdova2nt018fqsjyzun@git.kernel.org>
+References: <tip-hn9v4jdova2nt018fqsjyzun@git.kernel.org>
 MIME-Version: 1.0
-Message-ID: <156899645875.24167.16434855381356143772.tip-bot2@tip-bot2>
+Message-ID: <156899646121.24167.2365512853018232857.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,36 +59,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     f12be047d981bb802d8cf78eb220db3ee97f0513
-Gitweb:        https://git.kernel.org/tip/f12be047d981bb802d8cf78eb220db3ee97f0513
+Commit-ID:     b22bb139dcb370cd3a7f3c5ae29d55bb69235ace
+Gitweb:        https://git.kernel.org/tip/b22bb139dcb370cd3a7f3c5ae29d55bb69235ace
 Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Wed, 18 Sep 2019 10:11:20 -03:00
+AuthorDate:    Tue, 03 Sep 2019 09:57:50 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Fri, 20 Sep 2019 09:19:22 -03:00
+CommitterDate: Fri, 20 Sep 2019 09:19:20 -03:00
 
-perf sched: Add missing event.h include directive
+perf debug: No need to include ui/util.h
 
-We use what is defined there, were getting it by luck, indirectly, fix
-it.
+Nothing from that file is used in util/debug.h, it is only needed in
+some places that get it indirectly via including util/debug.h, remove
+that entanglement.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-e1cdt9557ctpvs3jb9c16qe6@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-hn9v4jdova2nt018fqsjyzun@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-sched.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/ui/browsers/scripts.c | 1 +
+ tools/perf/ui/gtk/setup.c        | 3 ++-
+ tools/perf/util/debug.h          | 2 +-
+ 3 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 511e19a..f0b828c 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -24,6 +24,7 @@
- #include "util/trace-event.h"
+diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
+index 586a21a..3b81075 100644
+--- a/tools/perf/ui/browsers/scripts.c
++++ b/tools/perf/ui/browsers/scripts.c
+@@ -2,6 +2,7 @@
+ #include "../../builtin.h"
+ #include "../../perf.h"
+ #include "../../util/util.h"
++#include "../util.h"
+ #include "../../util/hist.h"
+ #include "../../util/debug.h"
+ #include "../../util/symbol.h"
+diff --git a/tools/perf/ui/gtk/setup.c b/tools/perf/ui/gtk/setup.c
+index 1a2616b..f5eee4d 100644
+--- a/tools/perf/ui/gtk/setup.c
++++ b/tools/perf/ui/gtk/setup.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include "gtk.h"
+-#include "../../util/debug.h"
++#include <linux/compiler.h>
++#include "../util.h"
  
- #include "util/debug.h"
-+#include "util/event.h"
+ extern struct perf_error_ops perf_gtk_eops;
  
- #include <linux/kernel.h>
- #include <linux/log2.h>
+diff --git a/tools/perf/util/debug.h b/tools/perf/util/debug.h
+index b2deee9..d25ae1c 100644
+--- a/tools/perf/util/debug.h
++++ b/tools/perf/util/debug.h
+@@ -3,9 +3,9 @@
+ #ifndef __PERF_DEBUG_H
+ #define __PERF_DEBUG_H
+ 
++#include <stdarg.h>
+ #include <stdbool.h>
+ #include <linux/compiler.h>
+-#include "../ui/util.h"
+ 
+ extern int verbose;
+ extern bool quiet, dump_trace;
