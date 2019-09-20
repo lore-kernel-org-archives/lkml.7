@@ -2,209 +2,181 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45617C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 11:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37187C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 11:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FF17205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 11:29:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBA6B208C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 11:30:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="coSPH0JZ"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="bsXxou1F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438212AbfITL3D (ORCPT
+        id S2438229AbfITLa5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 07:29:03 -0400
-Received: from onstation.org ([52.200.56.107]:58894 "EHLO onstation.org"
+        Fri, 20 Sep 2019 07:30:57 -0400
+Received: from mout.web.de ([212.227.15.4]:51299 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438189AbfITL3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 07:29:02 -0400
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 4BAA73E8F9;
-        Fri, 20 Sep 2019 11:29:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1568978941;
-        bh=qz5V3O8mmkYwYewQSbmrN4vi8/CHAjVo9CVjGgW/4/o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=coSPH0JZjgJDJSdAr6ZhHpnbbvIdyBwQXq9kT+fCQuZRAq0Z2uakYYMHYd8A7LuQM
-         +KCR5YdC4lSjBWF0+TURt55a86vGCg8bMw6BHKnVBRXCa4DHtSNrkXX65Bu9Yphhu+
-         JYk9VHUQ9CBAdtItMNYq/0NLLmyDgBD1hM6KjLNM=
-Date:   Fri, 20 Sep 2019 07:28:59 -0400
-From:   Brian Masney <masneyb@onstation.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     a.hajda@samsung.com, narmstrong@baylibre.com, jonas@kwiboo.se,
-        jernej.skrabec@siol.net, airlied@linux.ie, daniel@ffwll.ch,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        enric.balletbo@collabora.com
-Subject: Re: [PATCH v2] drm/bridge: analogix-anx78xx: add support for 7808
- addresses
-Message-ID: <20190920112859.GA32015@onstation.org>
-References: <20190920101438.6912-1-masneyb@onstation.org>
- <20190920104945.GC12950@pendragon.ideasonboard.com>
+        id S2438181AbfITLa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 07:30:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1568979037;
+        bh=6u/lrL0YjFWeNKufdCoJnqJ/iIRy/jFjcRoEoLmbNRg=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=bsXxou1FKiQZZOXDYnHT2F3sFl4uBqiUv5k4bjUI2VFQQEsaisZymicPD2v1g21EB
+         tbn79Nlql7TKrJeVUeG4yHm7dMvTmh4dKQPxRNsszBKeBESnOhmJO2g01njMhaLDmN
+         MIRiUfrTgWyzWXcI+jVw1lPrbMJRNCTgqaQ8YvIw=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.244.117.22]) by smtp.web.de (mrweb001
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0LnBTZ-1hhh7g28R3-00hKw8; Fri, 20
+ Sep 2019 13:30:37 +0200
+Subject: [PATCH v2] ethernet: axienet: Use devm_platform_ioremap_resource() in
+ axienet_probe()
+To:     netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Michal Simek <michals@xilinx.com>,
+        Radhey Shyam Pandey <radheys@xilinx.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+References: <af65355e-c2f8-9142-4d0b-6903f23a98b2@web.de>
+ <CH2PR02MB700047AFFFE08FE5FD563541C78E0@CH2PR02MB7000.namprd02.prod.outlook.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <604a6376-0298-ebcd-ee84-435945370374@web.de>
+Date:   Fri, 20 Sep 2019 13:30:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190920104945.GC12950@pendragon.ideasonboard.com>
+In-Reply-To: <CH2PR02MB700047AFFFE08FE5FD563541C78E0@CH2PR02MB7000.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:6SRgYF57pdwisiSOfQg1UlbC32Jh8S0JVlx+KF5kzO9pVIQbQ2K
+ iRjI+uMuwp2Dh6DhZKSc9QSQhmgk96hR1spxlpNLq+TUzfYzhB4EjgMoHGWTKwAO4thnf0p
+ S4WbEy8DT62mC5yIO7GvaDBYoSDLgX2svhNSxlA3dvG5V6r0oElMxaCowKGsZZZwIowAmaI
+ 8kwv2IqrC5n/HAqzYkGUw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:qeu4r5QVVrQ=:yP+b0esX9R5pV6FoUHsJbD
+ 5b4yGkvMRHiG45WlgYxnYfewaZT5f9DkNHWpTJ62I5Yb/X55s+NsebxepbvNVAuWD0pf56obg
+ iFIIJNWDoNtaElbJvySPOp2kL5UkytO0jKkkxEPZwyzQY5+s2wG98WDvl5gIL5vj7j5hIE80m
+ ta7HosB+bLPJ8o0aoX9z2UtU0Tjw56jLFWhxpvmlE90usD6DNxrQrPJdvSt5oEQiPGs5hvBtA
+ evxtiFwv8kV0YRBJr35RdzqqVfhQyzMPYGgoVWPAa6K4qurQhTfYJXGS8h/baUz24Qbx4uf3C
+ GIpuvz+RscL06kHJHcVo7laCFPOr5e3MwYz5jZtR1JMWdBpBUtugEIQJrkGnLfZiIsG+10IBl
+ HAmxT149FTFmZ0JWIwj+TgyK7Xo8bcnhMT0r+VFp6UD1zMfvntHdmK/Lb97tcad5Opos5U3OZ
+ bRHBO9yaCr0RAq89eVFMaYIltua95IXBL3hXhYHONUOX6ckfTqEGgXtq52RE6KTolskMQoT7p
+ S3FMajIeg3Ys7BdZde5InniIaNPtMZ6UMJiAtfUMEzPr2o5HRCv0XiMxAe4eHBMJ5IKXnqjO2
+ TFn101EXT0PaJsJ4y8ty0T6PRrxpVFNkphq3OaH2hpU5ljweCvANAUPvzpflmvrsWaViInBz4
+ 3Y1jXDLrQevanKpOrJXJMkqnlLcIx1kbPFii+pk8VOKQMle9HlTJvCs4gv6wiB+76ZjX8jmr6
+ 2NgFXmefu/aDRvKjqjZNYlltDw+jPYpTZhD84Ezf9ata7kREcQTyBYH+eG25v25l0CuQBfYKJ
+ Rh7EFNFm5hGXfiTLXcjiGlOQWeWDHVZ0PPc631jp68UOcm1eRDEp1ksAKQclz6TzLTTkNXgob
+ 9rTKCNu4JuCJz1QrX/eln19HttnDNv6sUDYliuUif9VKN//nvvM1EOc6DvhhvsWA5ClqIdPa5
+ A70ZMr1cRAUTcSGSF33Htzrr3tk6c84ERnV82t8ESgv32jE5YjUKwmpG1CgeW2Yv8xU7r0PbG
+ akZhmFxsjhIeMxP8Hj/R+2HB2L2vx6K5FOx1C8AXCNzbm6Okjx3EHKyU4ml0/Ie33o9a9oep+
+ hSWjZmBfQPhqOPPamOX689V0COjHw3fTT/s748wW+NLX6PzQ/DYjW/2cuC27f3fucZHQ0IMF5
+ 9tLxeg0u9myVvyKX/iiB+/DJBETdiPrb0sx6EkgI98fSgQloKCgJPgBHTWIjNtW5vCZBYZ5et
+ +jj/4zviV3UETxY/XkZ4ndw7x15L69SXps8UeS90nn7FDhgJHzv19NVyW4P0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 01:49:45PM +0300, Laurent Pinchart wrote:
-> Hi Brian,
-> 
-> Thank you for the patch.
-> 
-> On Fri, Sep 20, 2019 at 06:14:38AM -0400, Brian Masney wrote:
-> > According to the downstream Android sources, the anx7808 variants use
-> > address 0x78 for TX_P0 and the anx781x variants use address 0x70. Since
-> > the datasheets aren't available for these devices, and we only have the
-> > downstream kernel sources to look at, let's assume that these addresses
-> > are fixed based on the model, and pass the i2c addresses to the data
-> > pointer in the driver's of_match_table.
-> > 
-> > Signed-off-by: Brian Masney <masneyb@onstation.org>
-> > ---
-> > V1 of this patch with some discussion:
-> > https://lore.kernel.org/lkml/20190815004854.19860-6-masneyb@onstation.org/
-> > 
-> >  drivers/gpu/drm/bridge/analogix-anx78xx.c | 36 +++++++++++++++--------
-> >  drivers/gpu/drm/bridge/analogix-anx78xx.h |  7 -----
-> >  2 files changed, 23 insertions(+), 20 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.c b/drivers/gpu/drm/bridge/analogix-anx78xx.c
-> > index 48adf010816c..e25fae36dbe1 100644
-> > --- a/drivers/gpu/drm/bridge/analogix-anx78xx.c
-> > +++ b/drivers/gpu/drm/bridge/analogix-anx78xx.c
-> > @@ -38,12 +38,20 @@
-> >  #define AUX_CH_BUFFER_SIZE	16
-> >  #define AUX_WAIT_TIMEOUT_MS	15
-> >  
-> > -static const u8 anx78xx_i2c_addresses[] = {
-> > -	[I2C_IDX_TX_P0] = TX_P0,
-> > -	[I2C_IDX_TX_P1] = TX_P1,
-> > -	[I2C_IDX_TX_P2] = TX_P2,
-> > -	[I2C_IDX_RX_P0] = RX_P0,
-> > -	[I2C_IDX_RX_P1] = RX_P1,
-> > +static const u8 anx7808_i2c_addresses[] = {
-> > +	[I2C_IDX_TX_P0] = 0x78,
-> > +	[I2C_IDX_TX_P1] = 0x7a,
-> > +	[I2C_IDX_TX_P2] = 0x72,
-> > +	[I2C_IDX_RX_P0] = 0x7e,
-> > +	[I2C_IDX_RX_P1] = 0x80,
-> > +};
-> > +
-> > +static const u8 anx781x_i2c_addresses[] = {
-> > +	[I2C_IDX_TX_P0] = 0x70,
-> > +	[I2C_IDX_TX_P1] = 0x7a,
-> > +	[I2C_IDX_TX_P2] = 0x72,
-> > +	[I2C_IDX_RX_P0] = 0x7e,
-> > +	[I2C_IDX_RX_P1] = 0x80,
-> >  };
-> 
-> If those addresses are really fixed they should have been added to DT,
-> in order for all fixed I2C addresses used on an I2C bus to be reported
-> in DT. I guess it's too late now :-/ This seems to be the best we can do
-> to solve the problem with existing DT. Updating the bindings could
-> however still be a good idea to make this clear moving forward.
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Fri, 20 Sep 2019 13:17:01 +0200
 
-One thing to be aware of is that these addresses are actually divided by
-two in order to get the real i2c address.
+Simplify this function implementation by using the wrapper function
+=E2=80=9Cdevm_platform_ioremap_resource=E2=80=9D instead of calling the fu=
+nctions
+=E2=80=9Cplatform_get_resource=E2=80=9D and =E2=80=9Cdevm_ioremap_resource=
+=E2=80=9D directly.
 
-https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/bridge/analogix-anx78xx.c#L1353
+* Thus reduce also a bit of exception handling code here.
+* Delete the local variable =E2=80=9Cres=E2=80=9D.
 
-I'm not sure why the addresses are represented this way but downstream
-does this as well. If I recall correctly, 0x77 is the maximum i2c
-address on a bus, and there's a 0x80 above.
+This issue was detected by using the Coccinelle software.
 
-> 
-> >  struct anx78xx_platform_data {
-> > @@ -1348,6 +1356,7 @@ static int anx78xx_i2c_probe(struct i2c_client *client,
-> >  	struct anx78xx *anx78xx;
-> >  	struct anx78xx_platform_data *pdata;
-> >  	unsigned int i, idl, idh, version;
-> > +	const u8 *i2c_addresses;
-> >  	bool found = false;
-> >  	int err;
-> >  
-> > @@ -1387,15 +1396,16 @@ static int anx78xx_i2c_probe(struct i2c_client *client,
-> >  	}
-> >  
-> >  	/* Map slave addresses of ANX7814 */
-> > +	i2c_addresses = device_get_match_data(&client->dev);
-> >  	for (i = 0; i < I2C_NUM_ADDRESSES; i++) {
-> >  		struct i2c_client *i2c_dummy;
-> >  
-> >  		i2c_dummy = i2c_new_dummy_device(client->adapter,
-> > -						 anx78xx_i2c_addresses[i] >> 1);
-> > +						 i2c_addresses[i] >> 1);
-> >  		if (IS_ERR(i2c_dummy)) {
-> >  			err = PTR_ERR(i2c_dummy);
-> >  			DRM_ERROR("Failed to reserve I2C bus %02x: %d\n",
-> > -				  anx78xx_i2c_addresses[i], err);
-> > +				  i2c_addresses[i], err);
-> >  			goto err_unregister_i2c;
-> >  		}
-> >  
-> > @@ -1405,7 +1415,7 @@ static int anx78xx_i2c_probe(struct i2c_client *client,
-> >  		if (IS_ERR(anx78xx->map[i])) {
-> >  			err = PTR_ERR(anx78xx->map[i]);
-> >  			DRM_ERROR("Failed regmap initialization %02x\n",
-> > -				  anx78xx_i2c_addresses[i]);
-> > +				  i2c_addresses[i]);
-> >  			goto err_unregister_i2c;
-> >  		}
-> >  	}
-> > @@ -1504,10 +1514,10 @@ MODULE_DEVICE_TABLE(i2c, anx78xx_id);
-> >  
-> >  #if IS_ENABLED(CONFIG_OF)
-> >  static const struct of_device_id anx78xx_match_table[] = {
-> > -	{ .compatible = "analogix,anx7808", },
-> > -	{ .compatible = "analogix,anx7812", },
-> > -	{ .compatible = "analogix,anx7814", },
-> > -	{ .compatible = "analogix,anx7818", },
-> > +	{ .compatible = "analogix,anx7808", .data = anx7808_i2c_addresses },
-> > +	{ .compatible = "analogix,anx7812", .data = anx781x_i2c_addresses },
-> > +	{ .compatible = "analogix,anx7814", .data = anx781x_i2c_addresses },
-> > +	{ .compatible = "analogix,anx7818", .data = anx781x_i2c_addresses },
-> >  	{ /* sentinel */ },
-> >  };
-> >  MODULE_DEVICE_TABLE(of, anx78xx_match_table);
-> > diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.h b/drivers/gpu/drm/bridge/analogix-anx78xx.h
-> > index 25e063bcecbc..8697647709f7 100644
-> > --- a/drivers/gpu/drm/bridge/analogix-anx78xx.h
-> > +++ b/drivers/gpu/drm/bridge/analogix-anx78xx.h
-> > @@ -6,13 +6,6 @@
-> >  #ifndef __ANX78xx_H
-> >  #define __ANX78xx_H
-> >  
-> > -#define TX_P0				0x70
-> > -#define TX_P1				0x7a
-> > -#define TX_P2				0x72
-> > -
-> > -#define RX_P0				0x7e
-> > -#define RX_P1				0x80
-> > -
-> >  /***************************************************************/
-> >  /* Register definition of device address 0x7e                  */
-> >  /***************************************************************/
-> 
-> Should you also rename the headers to mention [RT]X P[012] instead of
-> the numerical addresses ?
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
 
-Have #defines for ANX781X_TX_P0, ANX7808_TX_P0, etc in the header file?
+v2:
+Further changes were requested by Radhey Shyam Pandey.
+https://lore.kernel.org/r/CH2PR02MB700047AFFFE08FE5FD563541C78E0@CH2PR02MB=
+7000.namprd02.prod.outlook.com/
 
-> 
-> Apart from that,
-> 
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+* Updates for three modules were split into a separate patch for each driv=
+er.
+* The commit description was adjusted.
 
-Thanks,
 
-Brian
+ drivers/net/ethernet/xilinx/xilinx_axienet_main.c | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
+
+diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/n=
+et/ethernet/xilinx/xilinx_axienet_main.c
+index 4fc627fb4d11..92783aaaa0a2 100644
+=2D-- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
++++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+@@ -1787,14 +1787,7 @@ static int axienet_probe(struct platform_device *pd=
+ev)
+ 		of_node_put(np);
+ 		lp->eth_irq =3D platform_get_irq(pdev, 0);
+ 	} else {
+-		/* Check for these resources directly on the Ethernet node. */
+-		struct resource *res =3D platform_get_resource(pdev,
+-							     IORESOURCE_MEM, 1);
+-		if (!res) {
+-			dev_err(&pdev->dev, "unable to get DMA memory resource\n");
+-			goto free_netdev;
+-		}
+-		lp->dma_regs =3D devm_ioremap_resource(&pdev->dev, res);
++		lp->dma_regs =3D devm_platform_ioremap_resource(pdev, 1);
+ 		lp->rx_irq =3D platform_get_irq(pdev, 1);
+ 		lp->tx_irq =3D platform_get_irq(pdev, 0);
+ 		lp->eth_irq =3D platform_get_irq(pdev, 2);
+=2D-
+2.23.0
+
