@@ -2,105 +2,67 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B74C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B786C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37A2D208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:22:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 580862086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:23:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438080AbfITKWV (ORCPT
+        id S2408658AbfITKXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 06:22:21 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:64307 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408646AbfITKWU (ORCPT
+        Fri, 20 Sep 2019 06:23:24 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:51967 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405917AbfITKXY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 06:22:20 -0400
-Received: from fsav103.sakura.ne.jp (fsav103.sakura.ne.jp [27.133.134.230])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x8KAMIXt020858;
-        Fri, 20 Sep 2019 19:22:18 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav103.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav103.sakura.ne.jp);
- Fri, 20 Sep 2019 19:22:18 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav103.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126227201116.bbtec.net [126.227.201.116])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x8KAMC9B020534
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Fri, 20 Sep 2019 19:22:18 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: INFO: rcu detected stall in sys_exit_group
-To:     Dmitry Vyukov <dvyukov@google.com>, paulmck@kernel.org,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     syzbot <syzbot+18379f2a19bc62c12565@syzkaller.appspotmail.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>, avagin@gmail.com,
-        Christian Brauner <christian@brauner.io>, dbueso@suse.de,
-        LKML <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, prsood@codeaurora.org,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>, Tejun Heo <tj@kernel.org>
-References: <000000000000674b3d0592d2015b@google.com>
- <CACT4Y+YX3yNz7Fc8wUKsVR-rzusqmTnzP6ysZx+=3CzhVHk36w@mail.gmail.com>
- <20190919170750.GO30224@paulmck-ThinkPad-P72>
- <CACT4Y+bHcy1ZOstVvSGezs+3Q=jccdWTeikm6mnZiXYCBi+Nyw@mail.gmail.com>
- <20190919201200.GP30224@paulmck-ThinkPad-P72>
- <CACT4Y+YdodVKL2h-Z4Svjyd6kug2ORmfiP4jripSC9PpYw4RiA@mail.gmail.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <46269171-ff57-8afd-f36b-40e6519b6557@i-love.sakura.ne.jp>
-Date:   Fri, 20 Sep 2019 19:22:10 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 20 Sep 2019 06:23:24 -0400
+Received: from [5.158.153.55] (helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iBG4M-0006uo-Ru; Fri, 20 Sep 2019 12:23:19 +0200
+Date:   Fri, 20 Sep 2019 12:23:12 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+cc:     Suleiman Souhlal <suleiman@google.com>, rkrcmar@redhat.com,
+        john.stultz@linaro.org, sboyd@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [RFC 0/2] kvm: Use host timekeeping in guest.
+In-Reply-To: <1ec0b238-61a7-8353-026e-3a2ee23e6240@redhat.com>
+Message-ID: <alpine.DEB.2.21.1909201221070.1858@nanos.tec.linutronix.de>
+References: <20190920062713.78503-1-suleiman@google.com> <1ec0b238-61a7-8353-026e-3a2ee23e6240@redhat.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <CACT4Y+YdodVKL2h-Z4Svjyd6kug2ORmfiP4jripSC9PpYw4RiA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Calling printk() people.
+On Fri, 20 Sep 2019, Paolo Bonzini wrote:
 
-On 2019/09/20 16:50, Dmitry Vyukov wrote:
->>>                                   How it runs on top of an interrupt?
->>
->> It is not running on top of an interrupt.  Its stack was dumped
->> separately.
+> On 20/09/19 08:27, Suleiman Souhlal wrote:
+> > To do that, I am changing kvmclock to request to the host to copy
+> > its timekeeping parameters (mult, base, cycle_last, etc), so that
+> > the guest timekeeper can use the same values, so that time can
+> > be synchronized between the guest and the host.
+> > 
+> > Any suggestions or feedback would be highly appreciated.
 > 
-> I see. Usually the first stack is the traceback of the current stack.
-> So I was confused.
-> 
->>> And why one cpu tracebacks another one?
->>
->> The usual reason is because neither CPU's quiescent state was reported
->> to the RCU core, so the stall-warning code dumped both stacks.
-> 
-> But should the other CPU traceback _itself_? Rather than being traced
-> back by another CPU?
-> E.g. see this report:
-> https://github.com/google/syzkaller/blob/master/pkg/report/testdata/linux/report/350#L61-L83
-> Here the overall problem was detected by C2, but then C1 traces back itself.
-> 
-> ... however even in that case C0 and C3 are traced by C2:
-> https://github.com/google/syzkaller/blob/master/pkg/report/testdata/linux/report/350#L84-L149
-> I can't understand this...
-> This makes understanding what happened harder because it's not easy to
-> exclude things on other CPUs.
+> I'm not a timekeeping maintainer, but I don't think the
+> kernel/time/timekeeping.c changes are acceptable.
 
-I think this should be
-https://github.com/google/syzkaller/blob/master/pkg/report/testdata/linux/report/350#L84-L172
-than #L84-L149 .
+Indeed. #ifdef WHATEVERTHEHECK does not go anywhere. If at all this needs
+to be a runtime switch, but I have yet to understand the whole picture of
+this.
 
-Is the reason these lines have "[    C2]" is that these lines were flushed (printk_caller_id()
-was called) from log_output() from vprintk_store() from vprintk_emit() from vprintk_deferred()
- from printk_deferred() from printk_safe_flush_line() from __printk_safe_flush() from
-printk_safe_flush() from printk_safe_flush_on_panic() from panic() ?
+Thanks,
 
+	tglx
