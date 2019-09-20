@@ -2,234 +2,184 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F0AC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7671C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCFAB2173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:51:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569009096;
-	bh=aMvAeQtBhOA1b26ULafsZpV6g11dLlCr/Ml2//wce+M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=cWDYadra8r7x0kw1ze+w6iDAkkqD8zAfisGqHhAYzKLi4icPOgdGH89MFScqqKTjr
-	 CFZUzVCuTJ8uSITqK+w0nLb5F4A4tIPFI4M25/y9ioIGAkoaXZloBdbE2W9fkotQl6
-	 GuJKZslWmYoZlBCXDOchMJ5eVLIs7IHGSovTvO0E=
+	by mail.kernel.org (Postfix) with ESMTP id 87687208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:51:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729766AbfITTvg (ORCPT
+        id S1729785AbfITTvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 15:51:36 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35836 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727400AbfITTvf (ORCPT
+        Fri, 20 Sep 2019 15:51:53 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34424 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726794AbfITTvx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 15:51:35 -0400
-Received: by mail-lj1-f195.google.com with SMTP id m7so8223973lji.2
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 12:51:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=T/KRNd6WnVd1TN8iGmZGtSrb5q1ExNfe/4Yl0euZMS0=;
-        b=iAXp/EtQxpgvqEzrvvxqiOyQr7c9BVQXW9AqVrmJ1uutftSkoOvoPGmu0/aiukB8Eh
-         a4oRgtofk+kMsCJx0F/+Q7WlMYD9WpnDU1zVcsFNFP16vWm2XLFfmQumCUclks6ozIfb
-         3NBzrIVS9HrmA+u9BOyxaHHk9xq0ckXcDd5Vk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=T/KRNd6WnVd1TN8iGmZGtSrb5q1ExNfe/4Yl0euZMS0=;
-        b=O3inYnNpQdaL0S2dHB8rXVauBxvCG9V//owIFti/PFDrEZzw5oMxqTJ94i9Du3/+Id
-         rXooEXaayxcKH2hzb8hAnmMXDN60+DWbdkhxShJk31KrZYP5lfJqMS51ZtoLtpaWMJeq
-         ivdq2oXNraAec3KSy356beNzY8PdCl7MlE0u7ywLCq5KsviDOvWHxBlbt1kBe14IgxWu
-         0dVpeHS26+uxVQrLOJ4u+WpDWgMBdftKXu66m6HhbBiZzIqN5PUYbtyqWdlGeOC9s9SI
-         H50jOUu53Zf4B955Igeon26kmOFaUO4laVn+wZBXp65djbKVEuirIAvYOG9UcOWLubOG
-         Kv2Q==
-X-Gm-Message-State: APjAAAXxuQeaADa8aC5OAiIJ4TBWpx4xKsOXZ2UG3+HMewu0OleOLT3u
-        COEeviwR7YJfH27prnKHjCJ/A/uptSI=
-X-Google-Smtp-Source: APXvYqzaqyRO2TTFgJEPF3JM+ok2znklkGj/CfA9nmCNnW1x0cUFBlry86Lx3Qw/to5CiOubsMm/dw==
-X-Received: by 2002:a2e:934f:: with SMTP id m15mr10262038ljh.101.1569009092358;
-        Fri, 20 Sep 2019 12:51:32 -0700 (PDT)
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
-        by smtp.gmail.com with ESMTPSA id e7sm669120lfn.12.2019.09.20.12.51.30
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Sep 2019 12:51:30 -0700 (PDT)
-Received: by mail-lj1-f175.google.com with SMTP id l21so8227258lje.4
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 12:51:30 -0700 (PDT)
-X-Received: by 2002:a2e:9854:: with SMTP id e20mr10431173ljj.72.1569009089004;
- Fri, 20 Sep 2019 12:51:29 -0700 (PDT)
+        Fri, 20 Sep 2019 15:51:53 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8KJm141039068;
+        Fri, 20 Sep 2019 15:51:22 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v50uetuk4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 20 Sep 2019 15:51:22 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8KJnH6A042230;
+        Fri, 20 Sep 2019 15:51:22 -0400
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v50uetujg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 20 Sep 2019 15:51:21 -0400
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8KJoHqe015546;
+        Fri, 20 Sep 2019 19:51:20 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma05wdc.us.ibm.com with ESMTP id 2v3vbu8p2f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 20 Sep 2019 19:51:20 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8KJpJPZ54788488
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 20 Sep 2019 19:51:19 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2EE4278060;
+        Fri, 20 Sep 2019 19:51:19 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 931697805E;
+        Fri, 20 Sep 2019 19:51:14 +0000 (GMT)
+Received: from LeoBras.aus.stglabs.ibm.com (unknown [9.18.235.184])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri, 20 Sep 2019 19:51:14 +0000 (GMT)
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc:     Leonardo Bras <leonardo@linux.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        Ganesh Goudar <ganeshgr@linux.ibm.com>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Keith Busch <keith.busch@intel.com>
+Subject: [PATCH v2 01/11] powerpc/mm: Adds counting method to monitor lockless pgtable walks
+Date:   Fri, 20 Sep 2019 16:50:37 -0300
+Message-Id: <20190920195047.7703-2-leonardo@linux.ibm.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190920195047.7703-1-leonardo@linux.ibm.com>
+References: <20190920195047.7703-1-leonardo@linux.ibm.com>
 MIME-Version: 1.0
-References: <20190912034421.GA2085@darwi-home-pc> <20190912082530.GA27365@mit.edu>
- <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
- <20190914122500.GA1425@darwi-home-pc> <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
- <20190915052242.GG19710@mit.edu> <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
- <20190918211503.GA1808@darwi-home-pc> <20190918211713.GA2225@darwi-home-pc>
- <CAHk-=wiCqDiU7SE3FLn2W26MS_voUAuqj5XFa1V_tiGTrrW-zQ@mail.gmail.com>
- <20190920134609.GA2113@pc> <CALCETrWvE5es3i+to33y6jw=Yf0Tw6ZfV-6QWjZT5v0fo76tWw@mail.gmail.com>
- <CAHk-=wgW8rN2EVL_Rdn63V9vQO0GkZ=RQFeqqsYJM==8fujpPg@mail.gmail.com>
- <CALCETrV=4TX2a4uV5t2xOFzv+zM_jnOtMLJna8Vb7uXz6S=wSw@mail.gmail.com>
- <CAHk-=wjpTWgpo6d24pTv+ubfea_uEomX-sHjjOkdACfV-8Nmkg@mail.gmail.com> <CALCETrUEqjFmPvpcJQwJe3dNbz8eaJ4k3_AV2u0v96MffjLn+g@mail.gmail.com>
-In-Reply-To: <CALCETrUEqjFmPvpcJQwJe3dNbz8eaJ4k3_AV2u0v96MffjLn+g@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 20 Sep 2019 12:51:12 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whJ3kmcZp=Ws+uXnRB9KokG6nXSQCSuBnerG--jkAfP5w@mail.gmail.com>
-Message-ID: <CAHk-=whJ3kmcZp=Ws+uXnRB9KokG6nXSQCSuBnerG--jkAfP5w@mail.gmail.com>
-Subject: Re: [PATCH RFC v4 1/1] random: WARN on large getrandom() waits and
- introduce getrandom2()
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-20_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909200161
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 12:12 PM Andy Lutomirski <luto@kernel.org> wrote:
->
-> The problem is that new programs will have to try the new flag value
-> and, if it returns -EINVAL, fall back to 0.  This isn't so great.
+It's necessary to monitor lockless pagetable walks, in order to avoid doing
+THP splitting/collapsing during them.
 
-Don't be silly.
+Some methods rely on local_irq_{save,restore}, but that can be slow on
+cases with a lot of cpus are used for the process.
 
-Of course they will do that, but so what? With a new kernel, they'll
-get the behavior they expect. And with an old kernel, they'll get the
-behavior they expect.
+In order to speedup some cases, I propose a refcount-based approach, that
+counts the number of lockless pagetable	walks happening on the process.
 
-They'd never fall back to to "0 means something I didn't want",
-exactly because we'd make this new flag be the first change.
+This method does not exclude the current irq-oriented method. It works as a
+complement to skip unnecessary waiting.
 
-> Wait, are you suggesting that 0 means invoke jitter-entropy or
-> whatever and GRND_SECURE_BLOCKING means not wait forever and deadlock?
->  That's no good -- people will want to continue using 0 because the
-> behavior is better.
+start_lockless_pgtbl_walk(mm)
+	Insert before starting any lockless pgtable walk
+end_lockless_pgtbl_walk(mm)
+	Insert after the end of any lockless pgtable walk
+	(Mostly after the ptep is last used)
+running_lockless_pgtbl_walk(mm)
+	Returns the number of lockless pgtable walks running
 
-I assume that "not wait forever" was meant to be "wait forever".
+Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
+---
+ arch/powerpc/include/asm/book3s/64/mmu.h |  3 +++
+ arch/powerpc/mm/book3s64/mmu_context.c   |  1 +
+ arch/powerpc/mm/book3s64/pgtable.c       | 17 +++++++++++++++++
+ 3 files changed, 21 insertions(+)
 
-So the one thing we have to do is break the "0 waits forever".  I
-guarantee that will happen. I will override Ted if he just NAk's it,
-because we simply _cannot_ continue with it.
+diff --git a/arch/powerpc/include/asm/book3s/64/mmu.h b/arch/powerpc/include/asm/book3s/64/mmu.h
+index 23b83d3593e2..13b006e7dde4 100644
+--- a/arch/powerpc/include/asm/book3s/64/mmu.h
++++ b/arch/powerpc/include/asm/book3s/64/mmu.h
+@@ -116,6 +116,9 @@ typedef struct {
+ 	/* Number of users of the external (Nest) MMU */
+ 	atomic_t copros;
+ 
++	/* Number of running instances of lockless pagetable walk*/
++	atomic_t lockless_pgtbl_walk_count;
++
+ 	struct hash_mm_context *hash_context;
+ 
+ 	unsigned long vdso_base;
+diff --git a/arch/powerpc/mm/book3s64/mmu_context.c b/arch/powerpc/mm/book3s64/mmu_context.c
+index 2d0cb5ba9a47..3dd01c0ca5be 100644
+--- a/arch/powerpc/mm/book3s64/mmu_context.c
++++ b/arch/powerpc/mm/book3s64/mmu_context.c
+@@ -200,6 +200,7 @@ int init_new_context(struct task_struct *tsk, struct mm_struct *mm)
+ #endif
+ 	atomic_set(&mm->context.active_cpus, 0);
+ 	atomic_set(&mm->context.copros, 0);
++	atomic_set(&mm->context.lockless_pgtbl_walk_count, 0);
+ 
+ 	return 0;
+ }
+diff --git a/arch/powerpc/mm/book3s64/pgtable.c b/arch/powerpc/mm/book3s64/pgtable.c
+index 7d0e0d0d22c4..13239b17a22c 100644
+--- a/arch/powerpc/mm/book3s64/pgtable.c
++++ b/arch/powerpc/mm/book3s64/pgtable.c
+@@ -98,6 +98,23 @@ void serialize_against_pte_lookup(struct mm_struct *mm)
+ 	smp_call_function_many(mm_cpumask(mm), do_nothing, NULL, 1);
+ }
+ 
++void start_lockless_pgtbl_walk(struct mm_struct *mm)
++{
++	atomic_inc(&mm->context.lockless_pgtbl_walk_count);
++}
++EXPORT_SYMBOL(start_lockless_pgtbl_walk);
++
++void end_lockless_pgtbl_walk(struct mm_struct *mm)
++{
++	atomic_dec(&mm->context.lockless_pgtbl_walk_count);
++}
++EXPORT_SYMBOL(end_lockless_pgtbl_walk);
++
++int running_lockless_pgtbl_walk(struct mm_struct *mm)
++{
++	return atomic_read(&mm->context.lockless_pgtbl_walk_count);
++}
++
+ /*
+  * We use this to invalidate a pmdp entry before switching from a
+  * hugepte to regular pmd entry.
+-- 
+2.20.1
 
-So we absolutely _will_ come up with some way 0 ends the wait. Whether
-it's _just_ a timeout, or whether it's jitter-entropy or whatever, it
-will happen.
-
-But we'll also make getrandom(0) do the annoying warning, because it's
-just ambiguous. And I suspect you'll find that a lot of security
-people don't really like jitter-entropy, at least not in whatever
-cut-down format we'll likely have to use in the kernel.
-
-And we'll also have to make getrandom(0) be really _timely_. Security
-people would likely rather wait for minutes before they are happy with
-it. But because it's a boot constraint as things are now, it will not
-just be jitter-entropy, it will be _accelerated_ jitter-entropy in 15
-seconds or whatever, and since it can't use up all of CPU time, it's
-realistically more like "15 second timeout, but less of actual CPU
-time for jitter".
-
-We can try to be clever with a background thread and a lot of
-yielding(), so that if the CPU is actually idle we'll get most of that
-15 seconds for whatever jitter, but end result is that it's still
-accelerated.
-
-Do I believe we can do a good job in that kind of timeframe?
-Absolutely. The whole point should be that it's still "good enough",
-and as has been pointed out, that same jitter entropy that people are
-worried about is just done in user space right now instead.
-
-But do I believe that security people would prefer a non-accelerated
-GRND_SECURE_BLOCKING? Yes I do. That doesn't mean that
-GRND_SECURE_BLOCKING shouldn't use jitter entropy too, but it doesn't
-need the same kind of "let's hurry this up because it might be during
-early boot and block things".
-
-That said, if we can all convince everybody (hah!) that jitter entropy
-in the kernel would be sufficient, then we can make the whole point
-entirely moot, and just say "we'll just change crng_wait() to do
-jitter entropy instead and be done with it. Then any getrandom() user
-will just basically wait for a (very limited) time and the system will
-be happy.
-
-If that is the case we wouldn't need new flags at all. But I don't
-think you can make everybody agree to that, which is why I suspect
-we'll need the new flag, and I'll just take the heat for saying "0 is
-now off limits, because it does this thing that a lot of people
-dislike".
-
-> IMO this is confusing.  The GRND_RANDOM flag was IMO a mistake and
-> should just be retired.  Let's enumerate useful cases and then give
-> them sane values.
-
-
-That's basically what I'm doing. I enumerate the new values.
-
-But the enumerations have hidden meaning, because the actual bits do
-matter. The GRND_EXPLICIT bit isn't supposed to be used by any user,
-but it has the value it has because it makes old kernels return
--EINVAL.
-
-But if people hate the bit names, we can just do an enum and be done with it:
-
-   enum grnd_flags {
-      GRND_NONBLOCK = 1,
-      GRND_RANDOM, // Don't use!
-      GRND_RANDOM_NONBLOCK, // Don't use
-      GRND_UNUSED,
-      GRND_INSECURE,
-      GRND_SECURE_BLOCKING,
-      GRND_SECURE_NONBLOCKING,
-  };
-
-but the values now have a _hidden_ pattern (because we currently have
-that "| GRND_NONBLOCK" pattern that I want to make sure still
-continues to work, rather than give unexpected behavior in case
-somebody continues to use it).
-
-So the _only_ difference between the above and what I suggested is
-that I made the bit pattern explicit rather than hidden in the value.
-
-> And the only real question is how to map existing users to these
-> semantics.  I see two sensible choices:
->
-> 1. 0 means "secure, blocking". I think this is not what we'd do if we
-> could go back in time and chage the ABI from day 1, but I think it's
-> actually good enough.  As long as this mode won't deadlock, it's not
-> *that* bad if programs are using it when they wanted "insecure".
-
-It's exactly that "as long as it won't deadlock" that is our current problem.
-
-It *does* deadlock.
-
-So it can't mean "blocking" in any long-term meaning.
-
-It can mean "blocks for up to 15 seconds" or something like that. I'd
-honestly prefer a smaller number, but I think 15 seconds is an
-acceptable "your user space is buggy, but we won't make you think the
-machine hung".
-
-> 2. 0 means "secure, blocking, but warn".  Some new value means
-> "secure, blocking, don't warn".  The problem is that new applications
-> will have to fall back to 0 to continue supporting old kernels.
-
-The same comment about blocking.
-
-Maybe you came in in the middle, and didn't see the whole "reduced IO
-patterns means that boot blocks forever" part of the original problem.
-
-THAT is why 0 will absolutely change behaviour.
-
-                Linus
