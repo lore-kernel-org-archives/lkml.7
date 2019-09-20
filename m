@@ -2,96 +2,114 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94323C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49BC5C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C6CE2080F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:36:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="jToWQaO4"
+	by mail.kernel.org (Postfix) with ESMTP id 240072080F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 10:39:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408678AbfITKgy (ORCPT
+        id S2408690AbfITKjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 06:36:54 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:37001 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408666AbfITKgy (ORCPT
+        Fri, 20 Sep 2019 06:39:17 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:35520 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2408680AbfITKjR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 06:36:54 -0400
-Received: by mail-lj1-f194.google.com with SMTP id l21so6605378lje.4
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 03:36:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=WxAeg0E408eZYRG3jaSU6/idFxhNoNTLxowg0akgOcw=;
-        b=jToWQaO4D6xEhMK9/TNQMuFGKbY+7smm/ghe2egGrXdgjp9a7IGN72Xca35sidyhok
-         kpaz5ralL1igV0259f/lzjwYwXol6ELi4hsyuVxNEYVOpGaHccZb94sqyxfKUys9yHdc
-         D8Z0qlL7ecKdViFW2QPE7WhExVxQVCD6UVTCI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WxAeg0E408eZYRG3jaSU6/idFxhNoNTLxowg0akgOcw=;
-        b=mvAcrgjcfjAbmtcMG0LCUbPn0cqWThirUunk8y2m5UJLbbewt9XLLATcftiqyJGlw6
-         HHVZYpZKRp2nzXNBqg4rp2pcmHvJrGWTZEN8cYxkGiFxj75yxiyFaPkOmaNMZULPTPC8
-         XbvFNy7eKKNfw+zXP1hbWYIuwufO7Vxx16Mu17OpyZAslZiTJvh38QEm7PABz85xTtsH
-         kORAPIDZ+tQQwH++yVER8dekUF3nWJK6RDjSBONxZZ62fmxph1Ot8F5v4IUqOSpv9RqM
-         JKSHo9vh+AvosK1Fv0oljdlJn6JqxQszaAkhia58asQdUZJrhFrnLaisM+FERuDr665A
-         lI9g==
-X-Gm-Message-State: APjAAAW2kgBRdq65pQlMHAoVzC1+7JoHu7a7JRp67luYckR4TncjkHvC
-        cJyY9hWICpIdmur9Bl+aF5sqj9j9ZTZg6rNH
-X-Google-Smtp-Source: APXvYqxKkShwoINlCHvbgRna0mCpBj60DPtHn9mUmlUHjnbq1INmrrmDP4/wXchRCyQvKEe49i4U8Q==
-X-Received: by 2002:a2e:934f:: with SMTP id m15mr8826326ljh.101.1568975811966;
-        Fri, 20 Sep 2019 03:36:51 -0700 (PDT)
-Received: from [172.16.11.28] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id y22sm400931lfb.75.2019.09.20.03.36.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 20 Sep 2019 03:36:51 -0700 (PDT)
-Subject: Re: [PATCH 1/5] backlight: pwm_bl: fix cie1913 comments and constant
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190919140620.32407-1-linux@rasmusvillemoes.dk>
- <20190920101405.yuu4bymublj45kd4@holly.lan>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <fe846ffb-857e-fda2-1277-3ca49ffc0d7a@rasmusvillemoes.dk>
-Date:   Fri, 20 Sep 2019 12:36:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 20 Sep 2019 06:39:17 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id ECDC73C04C0;
+        Fri, 20 Sep 2019 12:39:13 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 7f23A7y2QV3m; Fri, 20 Sep 2019 12:39:08 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 25BE23C057F;
+        Fri, 20 Sep 2019 12:39:08 +0200 (CEST)
+Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Fri, 20 Sep
+ 2019 12:39:07 +0200
+Date:   Fri, 20 Sep 2019 12:39:04 +0200
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Balasubramani Vivekanandan 
+        <balasubramani_vivekanandan@mentor.com>, <fweisbec@gmail.com>,
+        <tglx@linutronix.de>, <mingo@kernel.org>
+CC:     <erosca@de.adit-jv.com>, <linux-kernel@vger.kernel.org>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [PATCH V1 0/1] tick: broadcast-hrtimer: Fix a race in bc_set_next
+Message-ID: <20190920103904.GA16207@vmlxhi-102.adit-jv.com>
+References: <20190918144138.24839-1-balasubramani_vivekanandan@mentor.com>
 MIME-Version: 1.0
-In-Reply-To: <20190920101405.yuu4bymublj45kd4@holly.lan>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190918144138.24839-1-balasubramani_vivekanandan@mentor.com>
+User-Agent: Mutt/1.12.1+40 (7f8642d4ee82) (2019-06-28)
+X-Originating-IP: [10.72.93.184]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/09/2019 12.14, Daniel Thompson wrote:
-> Hi Rasmus
++linux-renesas-soc
+
+In hope that the issue reported in [1] was seen by other members of
+Renesas community.
+
+[1] https://lkml.org/lkml/2019/9/18/711
+
+On Wed, Sep 18, 2019 at 04:41:37PM +0200, Balasubramani Vivekanandan wrote:
+> I was investigating a rcu stall warning on ARM64 Renesas Rcar3
+> platform. On analysis I found that rcu stall warning was because the
+> rcu_preempt kthread was starved of cpu time. rcu_preempt was blocked in
+> the function schedule_timeout() and never woken up. On further
+> investigation I found that local timer interrupts were not happening on
+> the cpu where the rcu_preempt kthread was blocked. So the rcu_preempt
+> was not woken up after timeout.
+> I continued my analysis to debug why the timer failed on the cpu. I
+> found that when cpu goes through idle state cycle, the timer failure
+> happens. When the cpu enters the idle state it subscribes to the tick
+> broadcast clock and shutsdown the local timer. Then on exit from idle
+> state the local timer is programmed to fire interrupts. But I found that
+> the during the error scenario, cpu fails to program the local timer on
+> exit from idle state. The below code in
+> __tick_broadcast_oneshot_control() is where the idle code exit path goes
+> through and fails to program the timer hardware
 > 
-> Has something gone wrong with the mail out for this patch set. I didn't
-> get a covering letter or patch 5/5?
+> now = ktime_get();
+> if (dev->next_event <= now) {
+> 	cpumask_set_cpu(cpu, tick_broadcast_force_mask);
+> 		goto out;
+> }
+> 
+> The value in next_event will be earlier than current time because the
+> tick broadcast clock did not wake up the cpu on its subcribed
+> timeout. Later when the cpu is woken up due to some other event this
+> condition will arise. After the cpu woken up, any further timeout
+> requests by any task on the cpu might fail to program the timer
+> hardware because the value in next_event will be earlier than the
+> current time.
+> Then I focussed on why the tick broadcast clock failed to wake up the
+> cpu. I noticed a race condition in the hrtimer based tick broadcast
+> clock. The race condition results in a condition where the tick
+> broadcast hrtimer is never restarted. I have created a patch to fix the
+> race condition. Please review 
+> 
+> Balasubramani Vivekanandan (1):
+>   tick: broadcast-hrtimer: Fix a race in bc_set_next
+> 
+>  kernel/time/tick-broadcast-hrtimer.c | 58 ++++++++++++++++++++++------
+>  kernel/time/tick-broadcast.c         |  2 +
+>  2 files changed, 48 insertions(+), 12 deletions(-)
+> 
+> -- 
+> 2.17.1
+> 
 
-Sorry about that. I should have included a cover letter so you'd know
-that patch 5 wasn't directly related to the other patches.
-
-https://lore.kernel.org/lkml/20190919140620.32407-5-linux@rasmusvillemoes.dk/
-
-I was removing the now unused int_pow() function, but Andy has told me
-there are new users in -next, so it's moot. Only the first four patches
-are relevant.
-
-Thanks,
-Rasmus
+-- 
+Best Regards,
+Eugeniu
