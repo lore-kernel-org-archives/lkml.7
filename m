@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13445C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B445BC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9D512086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:33:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 921C6206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:33:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391460AbfITOdJ (ORCPT
+        id S2391493AbfITOdN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:33:09 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36420 "EHLO
+        Fri, 20 Sep 2019 10:33:13 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36396 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388259AbfITOZJ (ORCPT
+        by vger.kernel.org with ESMTP id S2388255AbfITOZI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 10:25:09 -0400
+        Fri, 20 Sep 2019 10:25:08 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqH-00051F-U6; Fri, 20 Sep 2019 15:25:02 +0100
+        id 1iBJqM-0004y2-FS; Fri, 20 Sep 2019 15:25:06 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqH-0007yD-62; Fri, 20 Sep 2019 15:25:01 +0100
+        id 1iBJqH-0007yc-B1; Fri, 20 Sep 2019 15:25:01 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "ruippan" <ruippan@tencent.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "yongduan" <yongduan@tencent.com>,
-        "Tyler Hicks" <tyhicks@canonical.com>,
-        "Lidong Chen" <lidongchen@tencent.com>
+        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>,
+        "Oliver Neukum" <oneukum@suse.com>,
+        "Hans Verkuil" <hverkuil-cisco@xs4all.nl>,
+        syzbot+0c90fc937c84f97d0aa6@syzkaller.appspotmail.com
 Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.700934050@decadent.org.uk>
+Message-ID: <lsq.1568989415.91336269@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 112/132] vhost: make sure log_num < in_num
+Subject: [PATCH 3.16 117/132] media: cpia2_usb: first wake up, then free
+ in disconnect
 In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,52 +58,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: yongduan <yongduan@tencent.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit 060423bfdee3f8bc6e2c1bac97de24d5415e2bc4 upstream.
+commit eff73de2b1600ad8230692f00bc0ab49b166512a upstream.
 
-The code assumes log_num < in_num everywhere, and that is true as long as
-in_num is incremented by descriptor iov count, and log_num by 1. However
-this breaks if there's a zero sized descriptor.
+Kasan reported a use after free in cpia2_usb_disconnect()
+It first freed everything and then woke up those waiting.
+The reverse order is correct.
 
-As a result, if a malicious guest creates a vring desc with desc.len = 0,
-it may cause the host kernel to crash by overflowing the log array. This
-bug can be triggered during the VM migration.
+Fixes: 6c493f8b28c67 ("[media] cpia2: major overhaul to get it in a working state again")
 
-There's no need to log when desc.len = 0, so just don't increment log_num
-in this case.
-
-Fixes: 3a4d5c94e959 ("vhost_net: a kernel-level virtio server")
-Reviewed-by: Lidong Chen <lidongchen@tencent.com>
-Signed-off-by: ruippan <ruippan@tencent.com>
-Signed-off-by: yongduan <yongduan@tencent.com>
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
-Reviewed-by: Tyler Hicks <tyhicks@canonical.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-[bwh: Backported to 3.16: adjust context]
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Reported-by: syzbot+0c90fc937c84f97d0aa6@syzkaller.appspotmail.com
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/vhost/vhost.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/media/usb/cpia2/cpia2_usb.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/vhost/vhost.c
-+++ b/drivers/vhost/vhost.c
-@@ -1194,7 +1194,7 @@ static int get_indirect(struct vhost_vir
- 		/* If this is an input descriptor, increment that count. */
- 		if (desc.flags & VRING_DESC_F_WRITE) {
- 			*in_num += ret;
--			if (unlikely(log)) {
-+			if (unlikely(log && ret)) {
- 				log[*log_num].addr = desc.addr;
- 				log[*log_num].len = desc.len;
- 				++*log_num;
-@@ -1317,7 +1317,7 @@ int vhost_get_vq_desc(struct vhost_virtq
- 			/* If this is an input descriptor,
- 			 * increment that count. */
- 			*in_num += ret;
--			if (unlikely(log)) {
-+			if (unlikely(log && ret)) {
- 				log[*log_num].addr = desc.addr;
- 				log[*log_num].len = desc.len;
- 				++*log_num;
+--- a/drivers/media/usb/cpia2/cpia2_usb.c
++++ b/drivers/media/usb/cpia2/cpia2_usb.c
+@@ -884,7 +884,6 @@ static void cpia2_usb_disconnect(struct
+ 	cpia2_unregister_camera(cam);
+ 	v4l2_device_disconnect(&cam->v4l2_dev);
+ 	mutex_unlock(&cam->v4l2_lock);
+-	v4l2_device_put(&cam->v4l2_dev);
+ 
+ 	if(cam->buffers) {
+ 		DBG("Wakeup waiting processes\n");
+@@ -897,6 +896,8 @@ static void cpia2_usb_disconnect(struct
+ 	DBG("Releasing interface\n");
+ 	usb_driver_release_interface(&cpia2_driver, intf);
+ 
++	v4l2_device_put(&cam->v4l2_dev);
++
+ 	LOG("CPiA2 camera disconnected.\n");
+ }
+ 
 
