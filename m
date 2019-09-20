@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 723ACC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC31C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F964207E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:32:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76C94207E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:32:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390119AbfITOc3 (ORCPT
+        id S2389978AbfITOce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:32:29 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36538 "EHLO
+        Fri, 20 Sep 2019 10:32:34 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36508 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388302AbfITOZL (ORCPT
+        by vger.kernel.org with ESMTP id S2388284AbfITOZK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 10:25:11 -0400
+        Fri, 20 Sep 2019 10:25:10 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqO-0004y2-Vb; Fri, 20 Sep 2019 15:25:09 +0100
+        id 1iBJqN-00051F-Lo; Fri, 20 Sep 2019 15:25:07 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqG-0007ve-0n; Fri, 20 Sep 2019 15:25:00 +0100
+        id 1iBJqG-0007vo-4H; Fri, 20 Sep 2019 15:25:00 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Kees Cook" <keescook@chromium.org>,
-        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+        "Miroslav Lichvar" <mlichvar@redhat.com>,
+        "John Stultz" <john.stultz@linaro.org>,
+        "Prarit Bhargava" <prarit@redhat.com>,
+        "Ondrej Mosnacek" <omosnace@redhat.com>,
+        "Richard Cochran" <richardcochran@gmail.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>
 Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.805533588@decadent.org.uk>
+Message-ID: <lsq.1568989415.865748957@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 088/132] platform/x86: sony-laptop: Fix unintentional
- fall-through
+Subject: [PATCH 3.16 090/132] ntp: Allow TAI-UTC offset to be set to zero
 In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,50 +59,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+From: Miroslav Lichvar <mlichvar@redhat.com>
 
-commit 1cbd7a64959d33e7a2a1fa2bf36a62b350a9fcbd upstream.
+commit fdc6bae940ee9eb869e493990540098b8c0fd6ab upstream.
 
-It seems that the default case should return AE_CTRL_TERMINATE, instead
-of falling through to case ACPI_RESOURCE_TYPE_END_TAG and returning AE_OK;
-otherwise the line of code at the end of the function is unreachable and
-makes no sense:
+The ADJ_TAI adjtimex mode sets the TAI-UTC offset of the system clock.
+It is typically set by NTP/PTP implementations and it is automatically
+updated by the kernel on leap seconds. The initial value is zero (which
+applications may interpret as unknown), but this value cannot be set by
+adjtimex. This limitation seems to go back to the original "nanokernel"
+implementation by David Mills.
 
-return AE_CTRL_TERMINATE;
+Change the ADJ_TAI check to accept zero as a valid TAI-UTC offset in
+order to allow setting it back to the initial value.
 
-This fix is based on the following thread of discussion:
-
-https://lore.kernel.org/patchwork/patch/959782/
-
-Fixes: 33a04454527e ("sony-laptop: Add SNY6001 device handling (sonypi reimplementation)")
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: 153b5d054ac2 ("ntp: support for TAI")
+Suggested-by: Ondrej Mosnacek <omosnace@redhat.com>
+Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: John Stultz <john.stultz@linaro.org>
+Cc: Richard Cochran <richardcochran@gmail.com>
+Cc: Prarit Bhargava <prarit@redhat.com>
+Link: https://lkml.kernel.org/r/20190417084833.7401-1-mlichvar@redhat.com
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/platform/x86/sony-laptop.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ kernel/time/ntp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -4401,14 +4401,16 @@ sony_pic_read_possible_resource(struct a
- 			}
- 			return AE_OK;
- 		}
-+
-+	case ACPI_RESOURCE_TYPE_END_TAG:
-+		return AE_OK;
-+
- 	default:
- 		dprintk("Resource %d isn't an IRQ nor an IO port\n",
- 			resource->type);
-+		return AE_CTRL_TERMINATE;
- 
--	case ACPI_RESOURCE_TYPE_END_TAG:
--		return AE_OK;
+--- a/kernel/time/ntp.c
++++ b/kernel/time/ntp.c
+@@ -588,7 +588,7 @@ static inline void process_adjtimex_mode
+ 		time_constant = max(time_constant, 0l);
  	}
--	return AE_CTRL_TERMINATE;
- }
  
- static int sony_pic_possible_resources(struct acpi_device *device)
+-	if (txc->modes & ADJ_TAI && txc->constant > 0)
++	if (txc->modes & ADJ_TAI && txc->constant >= 0)
+ 		*time_tai = txc->constant;
+ 
+ 	if (txc->modes & ADJ_OFFSET)
 
