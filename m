@@ -2,150 +2,204 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9631C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51352C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79FFC20C01
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:01:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18F74206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 16:03:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CCA7MsxH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S0YTY/qi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729303AbfITQBk (ORCPT
+        id S1729331AbfITQDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 12:01:40 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:11671 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727529AbfITQBk (ORCPT
+        Fri, 20 Sep 2019 12:03:20 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:46958 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729225AbfITQDU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 12:01:40 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d84f7e90000>; Fri, 20 Sep 2019 09:01:45 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 20 Sep 2019 09:01:39 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 20 Sep 2019 09:01:39 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 20 Sep
- 2019 16:01:39 +0000
-Received: from [10.21.132.148] (172.20.13.39) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 20 Sep
- 2019 16:01:37 +0000
-Subject: Re: [PATCH 5.3 00/21] 5.3.1-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>, <torvalds@linux-foundation.org>,
-        <akpm@linux-foundation.org>, <linux@roeck-us.net>,
-        <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20190919214657.842130855@linuxfoundation.org>
- <572eca6e-47a9-c554-c6b2-bafd4c5df18b@nvidia.com>
- <20190920142432.GA601228@kroah.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <773b556a-acc2-c3e0-14e6-956a6d0b3bed@nvidia.com>
-Date:   Fri, 20 Sep 2019 17:01:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 20 Sep 2019 12:03:20 -0400
+Received: by mail-yb1-f194.google.com with SMTP id t2so2805274ybo.13;
+        Fri, 20 Sep 2019 09:03:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uf8TUqP7EYlLwV20qdPvpJcwERJyBXGKd4AgAHrl2p0=;
+        b=S0YTY/qiLC+vt0AhlB24j9SXlB5qQANaiZ7IgOv7gKjdnkoWuHf4dGtC0BdEWSLDgd
+         bPbiDUGqppVuqMF0cFnHvd0X3XUu7cakbWL4gn7wNyo4FTrVTN2Yu2YdxPqcfdDXQ5BI
+         /JeGcvcC3fw0BaoUiCoKLrSwPgPlI0Xtu4AXaaASuSeR3ZFoGCMKBR3aoU2rYpGxO4jR
+         lghl5orMDYR1lE1kYRCQHc0ekknAtvpsnR37s34+b6D2x9HlW727aNHp7SDBWtTOtGNG
+         1KFSTc1ZmSqj8eRXrBj5vnIwiZ98F8SPntU69qce2I0LIoPpDI1uY50Hmcm3OvzVlRFY
+         r0pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uf8TUqP7EYlLwV20qdPvpJcwERJyBXGKd4AgAHrl2p0=;
+        b=BXed1s8DwnUtaK9+NFGm47KiRf6xzjFC5ESmIUW94i0Dh08vvxvTBsjc3g7tokpd1J
+         UdFWvpufuPw9VK3nri5TKUc/D9m4eypARPYeZORrL5NeAbGvGSBXUMFHddlRigUGZiza
+         3M6qSFeUf/RiH+ItJZY6V43c3zsTw6cyHq+Af9eIbAzY/G4UJlJrmmBAk5TjiUnuRTKl
+         ZKi69tb+X7vpv2GS7UrCY12zm2PUTdjbxNfclLIBw5IhgWE0wLajA/x273MB7m4ncCss
+         32CplpWWWrGHdJt1qSz7kfRCR7oua19EM23TH2QiW628hgedfexELqdvj+85cMgbOfnr
+         o9Dw==
+X-Gm-Message-State: APjAAAV83/96mtgyn+TujNhNXDnTA31ilLvh7HNDxQgF7WiLUIS1wdRP
+        vZUmDLPoeHC81hlJx+lYyQ==
+X-Google-Smtp-Source: APXvYqxd0Ha1HvHrCr+lz/dx9T0Eq8M4K/ZmObuDOU8PNAwZ9iWTpLNYlf9vcMWeUlkwhya03kwvTQ==
+X-Received: by 2002:a25:4dc2:: with SMTP id a185mr11177731ybb.209.1568995398504;
+        Fri, 20 Sep 2019 09:03:18 -0700 (PDT)
+Received: from localhost.localdomain ([12.156.111.130])
+        by smtp.gmail.com with ESMTPSA id 207sm518086ywu.106.2019.09.20.09.03.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Sep 2019 09:03:17 -0700 (PDT)
+From:   Ayman Bagabas <ayman.bagabas@gmail.com>
+To:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sinan Kaya <okaya@kernel.org>, Takashi Iwai <tiwai@suse.de>,
+        Ayman Bagabas <ayman.bagabas@gmail.com>,
+        Stuart Hayes <stuart.w.hayes@gmail.com>,
+        Matan Ziv-Av <matan@svgalib.org>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Peng Hao <peng.hao2@zte.com.cn>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mattias Jacobsson <2pi@mok.nu>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/6] platform/x86: Huawei WMI laptop extras driver
+Date:   Fri, 20 Sep 2019 12:02:33 -0400
+Message-Id: <20190920160250.12510-1-ayman.bagabas@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20190920142432.GA601228@kroah.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1568995305; bh=EPR13tILB3K8Yx+WgxSj+hc46Ns/lHPYAWSp7VVIJJI=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=CCA7MsxHdNMhwXukhCp4TyXgwfOTT/a9Miro5qHbLhq2Nf8Uz3EXaKHNt/ItQULwy
-         1LFJqJdei6sM5d4zidDc3lQuFuoxeLN8z3AAnsLR3Rdl7XZycFLdZ6nUQS2OnlwrMt
-         kCoFTxvhjy3lsn1IDXexckeTADH8HZFqpuhwv29Q3bBPEV6YVLAvZVKaTBHbme/0Gb
-         Rcaje/gXs5YssoOUteszu8MKBR9rDZlERZV2tdAdW6LsP8tD+KMmXazL4Gzzto6a6H
-         q7k+1Z3L4D3ANzswapSTLsm4hS5gS0sJKj3V4OQXcne/XHXh2xLMxnmilViGQdGf4+
-         zoyXAHQpAVSDQ==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Changes in v4:
+* Use int and bint for module params.
 
-On 20/09/2019 15:24, Greg Kroah-Hartman wrote:
-> On Fri, Sep 20, 2019 at 02:54:26PM +0100, Jon Hunter wrote:
->>
->> On 19/09/2019 23:03, Greg Kroah-Hartman wrote:
->>> This is the start of the stable review cycle for the 5.3.1 release.
->>> There are 21 patches in this series, all will be posted as a response
->>> to this one.  If anyone has any issues with these being applied, please
->>> let me know.
->>>
->>> Responses should be made by Sat 21 Sep 2019 09:44:25 PM UTC.
->>> Anything received after that time might be too late.
->>>
->>> The whole patch series can be found in one patch at:
->>> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.1-rc1.gz
->>> or in the git tree and branch at:
->>> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.3.y
->>> and the diffstat can be found below.
->>>
->>> thanks,
->>>
->>> greg k-h
->>
->> No new regressions* for Tegra ...
->>
->> Test results for stable-v5.3:
->>     12 builds:	12 pass, 0 fail
->>     22 boots:	22 pass, 0 fail
->>     38 tests:	37 pass, 1 fail
->>
->> Linux version:	5.3.1-rc1-g0aa7f3d6baae
->> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
->>                 tegra194-p2972-0000, tegra20-ventana,
->>                 tegra210-p2371-2180, tegra30-cardhu-a04
->>
->> * Note we had one regression in v5.3 for a warnings test for Tegra194
->>   causing the above test failure. This has since been fixed by the
->>   following commits [0] but given it is just a warning, I have not
->>   bothered CC'ing for stable.
->>
->> Cheers
->> Jon
->>
->> [0] https://lkml.org/lkml/2019/8/21/602
-> 
-> I'll be glad to take this in stable for 5.3.y, what is the git commit
-> id?
+Changes in v3:
+* Kconfig changes
+* Fix NULL cast to int warning.
+* Add ACPI_BATTERY as a dependency.
 
-OK, that would be great. The IDs are ...
+Changes in v2:
+* Use battery charge control API.
 
-commit 763719771e84b8c8c2f53af668cdc905faa608de
-Author: Jon Hunter <jonathanh@nvidia.com>
-Date:   Wed Aug 21 16:02:40 2019 +0100
+This patch series introduce changes to huawei-wmi driver that includes:
+* Move to platform driver
+* Implement driver quirks and parameters
+* Implement WMI management interface
+* Add micmute LED support through WMI
+* Add battery charging protection support through WMI
+* Add fn-lock support through WMI
+* Add a debugfs interface to WMI
 
-    clocksource/drivers/timer-of: Do not warn on deferred probe
+# Move to platform driver
+
+The current driver offers hotkeys and micmute led support only. With
+these changes, a platform driver makes more sense since it handles these
+changes pretty nicely.
+
+# Implement WMI management interface
+
+Huawei Matebook laptops come with two WMI interfaces. The first being
+WMI0 which is considered "legacy" and AFAIK only found on the Matebook X
+released in 2017. The second has a UID of "HWMI" and is found in pretty
+much all models with a slight difference in implementation except for
+the Matebook X (2017). Since this model has two interfaces, some aspects
+are controlled through the legacy interface and some through the other
+interface. Currently, the legacy interface is not fully implemented and
+is only used for hotkeys and further debugging has to be done.
+
+The WMI interface takes a 64 bit integer, although uses 32 bits most of
+the time, and returns a 256-260 bytes buffer consists of either one ACPI
+buffer of 260 bytes, in the case of Matebook X (2017), or one ACPI
+package of two buffers, one with 4 bytes, and the other with 256 bytes.
+We only care about the latter 256 buffer in both cases since the 4 bytes
+always return zeros. The first byte of this 256 buffer always has the
+return status where 1 indicated error. Some models require calling the
+WMI interface twice to execute a command.
+
+# Add micmute LED support through WMI
+
+After implementing the WMI interface, micmute LED can be controlled
+easily. Models with the legacy interface fall back to ACPI EC method
+control since the legacy interface is not implemented.
+
+# Add battery charging protection support through WMI
+
+Most models, that has the WMI interface, are capable of battery
+protection where it can control battery charging thresholds and limits
+charging the battery to certain values.
+
+# Add fn-lock support through WMI
+
+The behavior of hotkeys is not the same among all models. Some models
+require fn-lock to do things like `Ctrl-Ins` or `Alt-PrtSc`. By default,
+hotkeys behave as special keys (media keys, Ins, etc), but if a modifier
+is used (ctrl, alt, shift) these keys behave as F1-F12 keys. If the Fn
+key is toggled on, the hotkeys with or without a modifier, behave as
+F1-F12 keys. This makes it impossible to use a modifier and `PrtSc` or
+`Ins`.
+
+Now, some models fix this by excluding `PrtSc` and `Ins` keys from being
+treated as F11 and F12 keys with the use of a modifier. However, some
+models do not, and fixes this by the so called fn-lock.
+
+Fn-lock inverts the behavior of the top row from special keys to F1-F12
+keys. So a modifier and a special key would be possible which make
+things like `Alt-Ins` possible. Now, with fn-lock we would have 4 modes:
+
+* Fn-key off & fn-lock off - hotkeys treated as special keys using a
+  modifier gives F1-F12 keys.
+* Fn-key on & fn-lock off - hotkeys treated as F1-F12 keys and using a
+  modifier gives F1-F12.
+* Fn-key off & fn-lock on - hotkeys are treated as F1-F12 keys and using
+  a modifier gives special keys.
+* Fn-key on & fn-lock on - hotkeys are treated as special keys and using
+  a modifier gives special keys.
+
+# Implement driver quirks and parameters
+
+The driver introduces 3 quirks and 2 parameters that can change the
+driver's behavior. These quirks being as:
+1. Fixes reporting brightness keys twice since it's already handled by
+   acpi-video.
+2. Some models need a short delay when setting battery thresholds to
+   prevent a race condition when two processes read/write.
+3. Matebook X (2017) handles micmute led through the "legacy" interface
+   which is not currently implemented. Use ACPI EC method to control
+   this led.
+
+and the 2 parameters can enforce the behavior of quirk 1 & 2.
+
+# Add a debugfs interface to WMI
+
+An interface to the WMI management interface that allows easier
+debugging.
+
+Ayman Bagabas (6):
+  platform/x86: huawei-wmi: Move to platform driver
+  platform/x86: huawei-wmi: Add quirks and module parameters
+  platform/x86: huawei-wmi: Implement huawei wmi management
+  platform/x86: huawei-wmi: Add battery charging thresholds
+  platform/x86: huawei-wmi: Add fn-lock support
+  platform/x86: huawei-wmi: Add debugfs support
+
+ drivers/platform/x86/Kconfig      |   8 +-
+ drivers/platform/x86/huawei-wmi.c | 874 ++++++++++++++++++++++++++----
+ 2 files changed, 786 insertions(+), 96 deletions(-)
 
 
-commit 14e019df1e64c8b19ce8e0b3da25b6f40c8716be
-Author: Jon Hunter <jonathanh@nvidia.com>
-Date:   Wed Aug 21 16:02:41 2019 +0100
-
-    clocksource/drivers: Do not warn on probe defer
-
-
-> Also, thanks for testing all of these and letting me know.
-
-No problem!
-
-Cheers
-Jon
-
+base-commit: 288b9117de5cc1b7fb80f54b7c17deed6f018641
 -- 
-nvpublic
+2.21.0
+
