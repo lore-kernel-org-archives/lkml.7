@@ -2,105 +2,158 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D7FC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 23:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 180A5C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 23:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92E78206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 23:36:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3F9321835
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 23:38:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569022562;
-	bh=5sglSv+9hSOJc0b2FWY8nQeYj0FpLkqsXtS/3eUTZSE=;
-	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
-	b=PCpmArK+OwLhce5V93hZJPtzj/t6xAYwZAM4mOjn+AVifZED0fqEfKOUxci20+Fjb
-	 3Q//6HWIqpJaGG7Y7ZG6xtXCSd6xxTJC/qjBUAojD8kM27/93aSFFk9zPy7ccQck8I
-	 3ZHO3XU1jREUN3Sdd5mnRTMf/KRAJKKGeBSqDV3w=
+	s=default; t=1569022722;
+	bh=Wik4rfMbhEVpjZ+F5SEOzlR8nFOtVPD464Wph4SfE/E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qfVIO3pzbAQaKhaCeflCzdp9/1DcIl76TXqtweauGvPH8mRLNbWGfj3Y0/SbzlhA3
+	 QT/ZXF6/V20ABS4mOb28S3ZAIH0qAKXURFUSzZmhgrnqXBNMTBjlG/bzBo08vfD16n
+	 vUDCtcRgXnpLF476JLMoagHw4o/YklkpBLTYL1i8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437311AbfITXgB (ORCPT
+        id S2437322AbfITXim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 19:36:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47022 "EHLO mail.kernel.org"
+        Fri, 20 Sep 2019 19:38:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405089AbfITXgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 19:36:01 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2404536AbfITXil (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 19:38:41 -0400
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48BBA20644;
-        Fri, 20 Sep 2019 23:36:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A63D32173E
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 23:38:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569022560;
-        bh=5sglSv+9hSOJc0b2FWY8nQeYj0FpLkqsXtS/3eUTZSE=;
-        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
-        b=QoMrsX259uVvKBLBgqFjYCWW1WAj3R7P2E6eLBj5gAyIaMIeiTZjnJfb1ejgaJusJ
-         UkwBwgUAjsyBgNEGV13XM9dZr3pmhCUgchYJf34niV3DUvIrN8ruCbCxuAbZoqAL58
-         4PWBzZepSAwldwciLUi98T3R3UO3RBc/aPRrzFTw=
-Content-Type: text/plain; charset="utf-8"
+        s=default; t=1569022720;
+        bh=Wik4rfMbhEVpjZ+F5SEOzlR8nFOtVPD464Wph4SfE/E=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=BxTUe8X6zyMWJfD9dsW4dtgB9EbBzKhDuHrHZKp2lrQQSF0vql8cEHjkMIirhzaz6
+         y3fwatUw5tGZhjNWTLBFW3SyQ+T6ZA0d507TB4AbuemO4eTDLNmDLRxMn9ejyCQce9
+         Aqji2n1FFGa/p/8vHkOxgTpismORUclFURS4a5c4=
+Received: by mail-wm1-f43.google.com with SMTP id 7so4118309wme.1
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 16:38:40 -0700 (PDT)
+X-Gm-Message-State: APjAAAWMLncXYLZMISK2jgUdQk7EALfyHQ1gOTHuEp0ZshDrXbXsYS1v
+        XA6QmsDY8AIh34PChq0LNzcr5CDRPoezcCjffPF8RQ==
+X-Google-Smtp-Source: APXvYqybrxDHlJMFvoR9P/n6cEFiVjlH/cMiyx1q8imMAGyv/bfcWbKQkMLNmHx9YXEy0qPdX2hwoYoU/AoVAGVTR9U=
+X-Received: by 2002:a1c:5f0b:: with SMTP id t11mr5224781wmb.76.1569022719184;
+ Fri, 20 Sep 2019 16:38:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190920231923.141900-7-brendanhiggins@google.com>
-References: <20190920231923.141900-1-brendanhiggins@google.com> <20190920231923.141900-7-brendanhiggins@google.com>
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
-        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
-        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
-        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
-        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
-        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
-        wfg@linux.intel.com, torvalds@linux-foundation.org,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>
-To:     Brendan Higgins <brendanhiggins@google.com>,
-        frowand.list@gmail.com, gregkh@linuxfoundation.org,
-        jpoimboe@redhat.com, keescook@google.com,
-        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
-        peterz@infradead.org, robh@kernel.org, shuah@kernel.org,
-        tytso@mit.edu, yamada.masahiro@socionext.com
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v16 06/19] lib: enable building KUnit in lib/
-User-Agent: alot/0.8.1
-Date:   Fri, 20 Sep 2019 16:35:59 -0700
-Message-Id: <20190920233600.48BBA20644@mail.kernel.org>
+References: <20190919150314.054351477@linutronix.de> <20190919150808.521907403@linutronix.de>
+In-Reply-To: <20190919150808.521907403@linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 20 Sep 2019 16:38:28 -0700
+X-Gmail-Original-Message-ID: <CALCETrXB92rZqHMyhSULWVY3Q5=t9q4N9aZFCTn4k0DMNPJfMQ@mail.gmail.com>
+Message-ID: <CALCETrXB92rZqHMyhSULWVY3Q5=t9q4N9aZFCTn4k0DMNPJfMQ@mail.gmail.com>
+Subject: Re: [RFC patch 01/15] entry: Provide generic syscall entry functionality
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Brendan Higgins (2019-09-20 16:19:10)
-> KUnit is a new unit testing framework for the kernel and when used is
-> built into the kernel as a part of it. Add KUnit to the lib Kconfig and
-> Makefile to allow it to be actually built.
->=20
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> Cc: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Cc: Kees Cook <keescook@chromium.org>
+On Thu, Sep 19, 2019 at 8:09 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> On syscall entry certain work needs to be done conditionally like tracing,
+> seccomp etc. This code is duplicated in all architectures.
+>
+> Provide a generic version.
+>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 > ---
->  lib/Kconfig.debug | 2 ++
->  lib/Makefile      | 2 ++
->  2 files changed, 4 insertions(+)
->=20
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index 5960e2980a8a..5870fbe11e9b 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -2144,4 +2144,6 @@ config IO_STRICT_DEVMEM
-> =20
->  source "arch/$(SRCARCH)/Kconfig.debug"
-> =20
-> +source "lib/kunit/Kconfig"
+>  arch/Kconfig                 |    3 +
+>  include/linux/entry-common.h |  122 +++++++++++++++++++++++++++++++++++++++++++
+>  kernel/Makefile              |    1
+>  kernel/entry/Makefile        |    3 +
+>  kernel/entry/common.c        |   33 +++++++++++
+>  5 files changed, 162 insertions(+)
+>
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -27,6 +27,9 @@ config HAVE_IMA_KEXEC
+>  config HOTPLUG_SMT
+>         bool
+>
+> +config GENERIC_ENTRY
+> +       bool
 > +
+>  config OPROFILE
+>         tristate "OProfile system profiling"
+>         depends on PROFILING
+> --- /dev/null
+> +++ b/include/linux/entry-common.h
+> @@ -0,0 +1,122 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __LINUX_ENTRYCOMMON_H
+> +#define __LINUX_ENTRYCOMMON_H
+> +
+> +#include <linux/tracehook.h>
+> +#include <linux/syscalls.h>
+> +#include <linux/seccomp.h>
+> +#include <linux/sched.h>
+> +#include <linux/audit.h>
+> +
+> +#include <asm/entry-common.h>
+> +
+> +/*
+> + * Define dummy _TIF work flags if not defined by the architecture or for
+> + * disabled functionality.
+> + */
+> +#ifndef _TIF_SYSCALL_TRACE
+> +# define _TIF_SYSCALL_TRACE            (0)
+> +#endif
+> +
+> +#ifndef _TIF_SYSCALL_EMU
+> +# define _TIF_SYSCALL_EMU              (0)
+> +#endif
+> +
+> +#ifndef _TIF_SYSCALL_TRACEPOINT
+> +# define _TIF_SYSCALL_TRACEPOINT       (0)
+> +#endif
+> +
+> +#ifndef _TIF_SECCOMP
+> +# define _TIF_SECCOMP                  (0)
+> +#endif
+> +
+> +#ifndef _TIF_AUDIT
+> +# define _TIF_AUDIT                    (0)
+> +#endif
 
-Perhaps this should go by the "Runtime Testing" part? Before or after.
+I'm wondering if these should be __TIF (double-underscore) or
+MAYBE_TIF_ or something to avoid errors where people do flags |=
+TIF_WHATEVER and get surprised.
 
->  endmenu # Kernel hacking
+> +/**
+> + * syscall_enter_from_usermode - Check and handle work before invoking
+> + *                              a syscall
+> + * @regs:      Pointer to currents pt_regs
+> + * @syscall:   The syscall number
+> + *
+> + * Invoked from architecture specific syscall entry code with interrupts
+> + * enabled.
+> + *
+> + * Returns: The original or a modified syscall number
+> + */
+
+Maybe document that it can return -1 to skip the syscall and that, if
+this happens, it may use syscall_set_error() or
+syscall_set_return_value() first.  If neither of those is called and
+-1 is returned, then the syscall will fail with ENOSYS.
