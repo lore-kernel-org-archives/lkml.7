@@ -2,110 +2,100 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8D2C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 03:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75529C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 03:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C6232196E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 03:17:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C1E02196E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 03:19:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="W6sz7fe2"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="Hvl3PU0D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406247AbfITDRd (ORCPT
+        id S2406421AbfITDTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 23:17:33 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:2790 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405721AbfITDRd (ORCPT
+        Thu, 19 Sep 2019 23:19:43 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38638 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405721AbfITDTn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 23:17:33 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d8444d20000>; Thu, 19 Sep 2019 20:17:38 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 19 Sep 2019 20:17:32 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 19 Sep 2019 20:17:32 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 20 Sep
- 2019 03:17:32 +0000
-Received: from [10.25.73.234] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 20 Sep
- 2019 03:17:28 +0000
-Subject: Re: [PATCH -next] PCI: tegra: Add missing include file
-To:     YueHaibing <yuehaibing@huawei.com>, <lorenzo.pieralisi@arm.com>,
-        <andrew.murray@arm.com>, <bhelgaas@google.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <treding@nvidia.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190920014807.38288-1-yuehaibing@huawei.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <1c864f34-a2a2-0057-5768-ed992871e927@nvidia.com>
-Date:   Fri, 20 Sep 2019 08:47:25 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 19 Sep 2019 23:19:43 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 3so659971wmi.3
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 20:19:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=Wb4nM1o4hpn6TDve7X6UVxGQm0c4ZWpt+c+J43uiITo=;
+        b=Hvl3PU0DmAUtGenROsMmH19sJFDTdjVFgG+cHDvKlCf58x6tHbKCC/IE+dEKfzwikW
+         A35SH6S4k8T6B+fcqKLnm5yWEZnH1y1bvpGXicLgCqoBSi63/+ggmTtCNBfMtWDMXAK3
+         gXUauMeVu49ne9UTr3PqJVdxa/5ubhGB2kD2fOhpc4OUv3BozzQCxYNWFGV7axMngTsS
+         ZJowKq4kPwtH2Br7iVski9nkLfOYmGir5uExX2z3M8CKBch9h4VKU/DuoZGEiKozHXzp
+         4TCfR14oSXQ6YuqDbkQRaW4OY1H6RtpO/NyL/TwQ0qLa/xZFbSf+r9L7snJFz0fWhs3X
+         3Aaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=Wb4nM1o4hpn6TDve7X6UVxGQm0c4ZWpt+c+J43uiITo=;
+        b=DA4S9Ybi2Z8M+WodHBwjFfhGEyzBycx9yveqxxWlQTAO+ROBVd1TkTMZWZwPhKTh+i
+         JM+u5tis0Mye1xhTZn6nz7z3T5y/zM5GT/VEhfEbml3sndj9ZQuuVcf0fs4LL075m/FJ
+         EFXFMMR8+CwIbSYxIyaICTTJiittmyboQniTDWJnbjpIVhgGUp/3w2moZaU1/JLcsS2f
+         /C3rhwHj+xkJ3N0LckZP9jToiuNn+j5mqmW2F1RgOBnvUWx0stxr5mCXhXEstNoc7p3J
+         RSjIygeFkwfS0ACMZale72t87SvtdPTrnkqm/70RkU4kLOJW3md/LpAnMO3UWoveFtFr
+         ENuA==
+X-Gm-Message-State: APjAAAW50dzxGprDGiW9HsdU9SUBgxZD3oxkcDDbzebBXS9LQDha6AWJ
+        KhI7U2mEWwKkw1xGAzFyjNl8tg==
+X-Google-Smtp-Source: APXvYqxLG4yddaJ4TMKUnPcZN7QCG7Rp9rvQWBQml/CUzUfeVDBIlpv5Lh+3mTePhAJbQ+9Am0GkAA==
+X-Received: by 2002:a1c:6508:: with SMTP id z8mr1220641wmb.93.1568949580917;
+        Thu, 19 Sep 2019 20:19:40 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id d193sm619920wmd.0.2019.09.19.20.19.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 19 Sep 2019 20:19:39 -0700 (PDT)
+Message-ID: <5d84454b.1c69fb81.d3c01.21c2@mx.google.com>
+Date:   Thu, 19 Sep 2019 20:19:39 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20190920014807.38288-1-yuehaibing@huawei.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1568949458; bh=8VvBMAhlupWkjElUkwb5koZLPZoxvhNO2s04Qy7oytM=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=W6sz7fe2uDVN07YAbgnFgJb3HF358KpMHAQbbem2SPN6jA5NUEYJnoW/WHNOmQ4PS
-         9fyoFu0ALAb+MznhImWLXoxxwnCDSXA4rId7LXJev0UoFIkcmz55Tfo6q7Ygomr2nX
-         V0rEPqBllQuhQp81uijYKDezBK+/9s82+KWYnu3f9eBQP6p8PJQF0PlKjvi5YyJI5i
-         +VP7yoyd1p4JN7aoXIymClSPm4zLSpK60gQq4W6xeuBuTTTCK7kwlGdltCLstkQebI
-         EzHh4x6vdNIJIvpxaEsv9w1dImQJ0sVaqY9fqzE3jwyDR5z0oOPa2qim0zdf+IjgMd
-         UO4SwdagAdu0Q==
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v4.9.193-75-gfebb363e252b
+X-Kernelci-Tree: stable-rc
+X-Kernelci-Report-Type: boot
+X-Kernelci-Branch: linux-4.9.y
+In-Reply-To: <20190919214800.519074117@linuxfoundation.org>
+References: <20190919214800.519074117@linuxfoundation.org>
+Subject: Re: [PATCH 4.9 00/74] 4.9.194-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/20/2019 7:18 AM, YueHaibing wrote:
-> Fix build error without CONFIG_PINCTRL
-> 
-> drivers/pci/controller/dwc/pcie-tegra194.c: In function tegra_pcie_config_rp:
-> drivers/pci/controller/dwc/pcie-tegra194.c:1394:8: error: implicit declaration of function pinctrl_pm_select_default_state;
->   did you mean prandom_seed_full_state? [-Werror=implicit-function-declaration]
->    ret = pinctrl_pm_select_default_state(dev);
->          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->          prandom_seed_full_state
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: ab2a50e7602b ("PCI: tegra: Add support to configure sideband pins")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->   drivers/pci/controller/dwc/pcie-tegra194.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> index 09ed8e4..b219d3b2 100644
-> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> @@ -28,6 +28,7 @@
->   #include <linux/reset.h>
->   #include <linux/resource.h>
->   #include <linux/types.h>
-> +#include <linux/pinctrl/consumer.h>
->   #include "pcie-designware.h"
->   #include <soc/tegra/bpmp.h>
->   #include <soc/tegra/bpmp-abi.h>
-> 
+stable-rc/linux-4.9.y boot: 54 boots: 0 failed, 54 passed (v4.9.193-75-gfeb=
+b363e252b)
 
-Thanks for pushing this change.
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-4.9.y/kernel/v4.9.193-75-gfebb363e252b/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.9.y=
+/kernel/v4.9.193-75-gfebb363e252b/
 
-Reviewed-by: Vidya Sagar <vidyas@nvidia.com>
+Tree: stable-rc
+Branch: linux-4.9.y
+Git Describe: v4.9.193-75-gfebb363e252b
+Git Commit: febb363e252bd50629d7efc675ba30286a33f209
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 24 unique boards, 14 SoC families, 10 builds out of 197
+
+---
+For more info write to <info@kernelci.org>
