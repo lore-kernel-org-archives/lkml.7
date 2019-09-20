@@ -2,171 +2,113 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FFEC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:20:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B7DC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16327205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:20:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45C9C205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 19:21:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Cm+40xSZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a3VFKP3p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729507AbfITTUW (ORCPT
+        id S1726442AbfITTVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 15:20:22 -0400
-Received: from mail-eopbgr750115.outbound.protection.outlook.com ([40.107.75.115]:43800
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725869AbfITTUV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 15:20:21 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PntwezEus3IQhcol8M5Edb79tTG73VjaKSArPHBIlwV5Pz3iXcV+9KypR93QzV+OtStLVXy5hit6YJPxqEnzuLMfkNt/GbFXM/gKmV5bOgAAa/nE1gOa7ebPzbyiVCx8QJrBHdrtYrr3aeYB9qXDi+2qZJvobeM0TZIOcfgYEEu9FsQ+lfh3tWyZCVfbVSsUxbs8q21PpYc0QrqmbPvja3vlcaOn02U6YWEb3pfppZedGHct9yPotWRpPMjJM5ZHuhrqo88bpAY7nf5qR7s5iJc4SNxegVR5BoDq21qhYqZDhGoulvweSHrJ6mCFm0dzEJ1a/9n2AVR7RULYh1FJNQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AL0Qfy7YaUhhdLtqJrDq+kFso747FyI74iE57dXvZDg=;
- b=UGhwrR0x7zkrQvMbrBAkMKnHgvCQkpBZsSBCcdErYse7+5gQcrTdBOxnrUDirK8uUl9aeJ4UiWVQVEeZeBMObeDSuiZN5TYgzm/g1mCFNzN3b7am0iTJTrASpBtgXHCVDdK6PoWocEicqIuJMBh9hSfJE9LuCecLP6KK1HcTh2WV2ad69KLLWEiY+fY1aQ1vrpzbh+NK6eCRwRF2tt82rC3CBas6Z28VfLHdPtyT1whvVYSchF1tICSAPXDYizutrYC/JXuidDYxMO8tIAprI5NEitB11J3E/I7AYk85913py3w1Je7T/BDpwcU8SoMaM52nygMBpPemb6Sur9rMlg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AL0Qfy7YaUhhdLtqJrDq+kFso747FyI74iE57dXvZDg=;
- b=Cm+40xSZ0F+aIhs6WdqWV7AwbJSLOCsPKP2QLYsmQhH4oyi77gorUpiFDZi0ZGGFNyIeM5eFNxOqxtB09bgRGEZb33v8Q2pcFKsiGnqr4QTeXE+veYG7V4IkYfofPMZAWf1dzoWvgYUpKcudHt/brgbMfgWqMrHZJ8m/x5sW+cI=
-Received: from BN8PR21MB1362.namprd21.prod.outlook.com (20.179.76.155) by
- BN8PR21MB1250.namprd21.prod.outlook.com (20.179.74.27) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.11; Fri, 20 Sep 2019 19:20:19 +0000
-Received: from BN8PR21MB1362.namprd21.prod.outlook.com
- ([fe80::4506:fd59:ba74:46d]) by BN8PR21MB1362.namprd21.prod.outlook.com
- ([fe80::4506:fd59:ba74:46d%7]) with mapi id 15.20.2284.009; Fri, 20 Sep 2019
- 19:20:19 +0000
-From:   Steve MacLean <Steve.MacLean@microsoft.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Changbin Du <changbin.du@intel.com>,
-        Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
-        John Keeping <john@metanate.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Leo Yan <leo.yan@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Brian Robbins <brianrob@microsoft.com>,
-        Tom McDonald <Thomas.McDonald@microsoft.com>,
-        John Salem <josalem@microsoft.com>
-Subject: [PATCH] perf map: fix overlapped map handling
-Thread-Topic: [PATCH] perf map: fix overlapped map handling
-Thread-Index: AdVv5y6SzPv23L21QnSQJe3E6wWQgA==
-Date:   Fri, 20 Sep 2019 19:20:18 +0000
-Message-ID: <BN8PR21MB136261C1A4BB2C884F10FCECF7880@BN8PR21MB1362.namprd21.prod.outlook.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=stmaclea@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-20T19:20:17.8175398Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=4481e280-18db-41f0-b60b-edd25023ba1e;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Steve.MacLean@microsoft.com; 
-x-originating-ip: [24.163.126.65]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 48baf6d2-034b-4cd7-144f-08d73dff9321
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BN8PR21MB1250;
-x-ms-traffictypediagnostic: BN8PR21MB1250:|BN8PR21MB1250:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN8PR21MB12501946576AF9C588E56D11F7880@BN8PR21MB1250.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0166B75B74
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(39860400002)(136003)(346002)(376002)(366004)(199004)(189003)(6506007)(186003)(7696005)(52536014)(5660300002)(74316002)(25786009)(8990500004)(66446008)(10090500001)(305945005)(3846002)(7736002)(486006)(8676002)(4326008)(64756008)(66946007)(66556008)(102836004)(476003)(76116006)(14454004)(6436002)(86362001)(256004)(6116002)(33656002)(8936002)(66066001)(55016002)(81156014)(107886003)(99286004)(26005)(66476007)(66574012)(71200400001)(81166006)(478600001)(71190400001)(110136005)(22452003)(2906002)(2501003)(10290500003)(7416002)(54906003)(9686003)(316002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR21MB1250;H:BN8PR21MB1362.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 6JbZPMSQL/DdTJiYAjF32XKhCUaFr12oxmUT/DbJhN7hvaYBevN2LrQGI6w6KCafavNbg360Ybtf6prluUAktjWGJ5KCEjtnEXfqm1+8sRYhNxVacp8t78jU56C1kk9ixCq2uWlL+2Xr/2Znwv6x4pG7c1SIRio+Y1Mbg1zyGshmPH6FfrAL3xzKCFB0y4v+d8pYL3yEen3y771o2YKP4l4R8H9CWjVkANuU3LahXYkdlN1cZ3oc9HliKVjZEi6cDeQqo5tAIrp9wsBERqQZrOX0TiH/DOPfHwus7SLcjkVUOVSj3Ju3+h4ydsFezzrsvumzHLCI7X8YP4RKNfjffr5LYtCQvN7hKi6CJADcPTxaJurIL/Jtg/f/7ZDlViGX8y9KN6fm10NW9ow+kTZ4ug2bmDXDXxjyhaM6dPFz2rs=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 20 Sep 2019 15:21:38 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41685 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725869AbfITTVi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 15:21:38 -0400
+Received: by mail-wr1-f68.google.com with SMTP id h7so7864370wrw.8
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 12:21:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=PJyeClMQVfNi5aFiPW4+LQNcu88byDAQ1TqGQo4z/1g=;
+        b=a3VFKP3pP7MsgoR9+U3VItQ4jCWJoGV9jijSEb+eqgTlAziNCCnavHxtgIFsD5J95R
+         g/cCazSjQSATWLk0WQEygPus1eLmpmmfRaw1bYPrh6OI5CGl3HB65VzcLNMDcEIk690x
+         8B5uS9XkRPcKshYWtDUR5DyJ1dZGPD2JjFeY4PEKM9J6xg0Yp9Bzn3Kl3Ofli6LThZXx
+         NHZkfo903VKQS/izbH1VPZTgb5gNPYBkesO0p4bO8ubWOmKDaqxdAoUBTcyWgaTycd8s
+         ROznvdCjMZdGL2EOcBN1jlgyYbRASLU0gv/+7ZIBchCqwYQrvJDQjdoazEv7kBFZpabQ
+         HsAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PJyeClMQVfNi5aFiPW4+LQNcu88byDAQ1TqGQo4z/1g=;
+        b=L5IztBSFpbIZs9Lg//4EEANZ2zVQgrL8vGX7rsMxAzZxBMTh7fxtP+2t+l7UNrdXk5
+         a6NbZpSA8VZqORNR5nbNWCuKb7ZmfJ1XuUEUYyB88YBn8SgIZgzDY05wde2ZDuq9xOwT
+         NU7mxdY35PaUUry9FAAFgflJeYKqITQfeEP5pk9bOX5Q+u6ancC952gwmP3wjlUo3V4d
+         8CGReBwsoYs0ApPjl6zzyIy2tb7XHnvyF230OQUubAgieUMbyXV6d2MMTcqe0rP+ZabY
+         CzUdwu32PS+TyIy85oiiqDOfU9lo79mgFpp8id8HwKRQX9GZYSFn2lLv8Nbd12xxjZ/V
+         4cHw==
+X-Gm-Message-State: APjAAAVYdKjL82wwWQMgwjVcznV/Rqsw6f0xJ2h50kfNjoDJOwfCmdbU
+        Ik//YDNwJGV6tIeQlFPtnSU2P1bA
+X-Google-Smtp-Source: APXvYqziOU8XeRx1ViKOkNnAeYNxQKqLPgBJKUiE52oKkbZ40GHXI1ev8ZeIJvOvn1qG3Edkg03rmA==
+X-Received: by 2002:a5d:5352:: with SMTP id t18mr13608922wrv.72.1569007295889;
+        Fri, 20 Sep 2019 12:21:35 -0700 (PDT)
+Received: from [192.168.2.28] (39.35.broadband4.iol.cz. [85.71.35.39])
+        by smtp.gmail.com with ESMTPSA id o9sm4917013wrh.46.2019.09.20.12.21.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Sep 2019 12:21:35 -0700 (PDT)
+Subject: Re: dm-crypt error when CONFIG_CRYPTO_AUTHENC is disabled
+To:     Mike Snitzer <snitzer@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@clip-os.org>
+Cc:     dm-devel@redhat.com, Alasdair Kergon <agk@redhat.com>,
+        linux-kernel@vger.kernel.org
+References: <20190920154434.GA923@gandi.net>
+ <20190920173707.GA21143@redhat.com>
+From:   Milan Broz <gmazyland@gmail.com>
+Openpgp: preference=signencrypt
+Message-ID: <13e25b01-f344-ea1d-8f6c-9d0a60eb1e0f@gmail.com>
+Date:   Fri, 20 Sep 2019 21:21:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 48baf6d2-034b-4cd7-144f-08d73dff9321
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Sep 2019 19:20:18.8359
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: GzGcI/W0Nj8VYdCTrGfuP1PDMo6eSdjGyzYvBW4/qQFJVMJKM7aIC6ttEISiQXWrxEtqLsj6eNMyGV4jtc0oQA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR21MB1250
+In-Reply-To: <20190920173707.GA21143@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Whenever an mmap/mmap2 event occurs, the map tree must be updated to add a =
-new
-entry. If a new map overlaps a previous map, the overlapped section of the
-previous map is effectively unmapped, but the non-overlapping sections are
-still valid.
+On 20/09/2019 19:37, Mike Snitzer wrote:
+> On Fri, Sep 20 2019 at 11:44am -0400,
+> Thibaut Sautereau <thibaut.sautereau@clip-os.org> wrote:
+> 
+>> Hi,
+>>
+>> I just got a dm-crypt "crypt: Error allocating crypto tfm" error when
+>> trying to "cryptsetup open" a volume. I found out that it was only
+>> happening when I disabled CONFIG_CRYPTO_AUTHENC.
+>>
+>> drivers/md/dm-crypt.c includes the crypto/authenc.h header and seems to
+>> use some CRYPTO_AUTHENC-related stuff. Therefore, shouldn't
+>> CONFIG_DM_CRYPT select CONFIG_CRYPTO_AUTHENC?
+> 
+> Yes, it looks like commit ef43aa38063a6 ("dm crypt: add cryptographic
+> data integrity protection (authenticated encryption)") should've added
+> 'select CRYPTO_AUTHENC' to dm-crypt's Kconfig.  I'll let Milan weigh-in
+> but that seems like the right way forward.
 
-maps__fixup_overlappings() is responsible for creating any new map entries =
-from
-the previously overlapped map. It optionally creates a before and an after =
-map.
+No, I don't this so. It is like you use some algorithm that is just not compiled-in,
+or it is disabled in the current state (because of FIPS mode od so) - it fails
+to initialize it.
 
-When creating the after map the existing code failed to adjust the map.pgof=
-f.
-This meant the new after map would incorrectly calculate the file offset
-for the ip. This results in incorrect symbol name resolution for any ip in =
-the
-after region.
+I think we should not force dm-crypt to depend on AEAD - most users
+do not use authenticated encryption, it is perfectly ok to keep this compiled out.
 
-Make maps__fixup_overlappings() correctly populate map.pgoff.
+I do not see any principal difference from disabling any other crypto
+(if you disable XTS mode, it fails to open device that uses it).
 
-Add an assert that new mapping matches old mapping at the beginning of
-the after map.
+IMO the current config dependence is ok.
 
-Signed-off-by: Steve MacLean <Steve.MacLean@Microsoft.com>
----
- tools/perf/util/map.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index 5b83ed1..73870d7 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "symbol.h"
-+#include <assert.h>
- #include <errno.h>
- #include <inttypes.h>
- #include <limits.h>
-@@ -850,6 +851,8 @@ static int maps__fixup_overlappings(struct maps *maps, =
-struct map *map, FILE *fp
- 			}
-=20
- 			after->start =3D map->end;
-+			after->pgoff =3D pos->map_ip(pos, map->end);
-+			assert(pos->map_ip(pos, map->end) =3D=3D after->map_ip(after, map->end)=
-);
- 			__map_groups__insert(pos->groups, after);
- 			if (verbose >=3D 2 && !use_browser)
- 				map__fprintf(after, fp);
---=20
-2.7.4
-
+Milan
