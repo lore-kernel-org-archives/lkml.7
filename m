@@ -7,119 +7,109 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F8E2C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 05:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B66FC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 05:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDD512080F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 05:51:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 592112080F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 05:53:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="NwUzUyXe"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="F5uLX2no";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="X5MFIhya"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392601AbfITFvd (ORCPT
+        id S2404697AbfITFx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 01:51:33 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:44822 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392557AbfITFvc (ORCPT
+        Fri, 20 Sep 2019 01:53:28 -0400
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:55385 "EHLO
+        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390596AbfITFx2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 01:51:32 -0400
-Received: by mail-qt1-f196.google.com with SMTP id u40so7313075qth.11
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 22:51:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NlvPOwDHP1C+DxH46ciGbIQ82Gp/fdmy+p/JFJtAVTI=;
-        b=NwUzUyXe+el4peKjNQG4O79OvKdtXAG8r0J4SNnG7hpdxb5bj+ErhCHnYWmyZwpfrR
-         yYzgALwnMwMJu8WsDBxH4j3WjHqbrCW/fchFpQkTd/gTlkJku2wHf4JyAWd8/MnooPSZ
-         qdIovw70JerTxtUcOENkNn1/HzmKUPXpnvjVM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NlvPOwDHP1C+DxH46ciGbIQ82Gp/fdmy+p/JFJtAVTI=;
-        b=At7ygweJnq3QZ6hDdfdUsbpKltkjS6hfMLLbD9Joud00o8wpP0Zp+JEb7wQL6/jHSK
-         tk4ZqwhEP0M7/Vy8HFBmjm5MVPh70M+VzMNU76O7YgdV66KRZumyo/r53RTjdjKqODjX
-         09wc9kOwFM5xBaAowRgekJ/5wb5inZnd+XcBxF2EPyPw3bKZ+p7pWc19UMt2sK3HN88v
-         mxjfejjIU3bKQ15fwiBS8IXFJBws0w/6f588m7cKfF/F+E5da8e7UvPu/po24l4ucuMu
-         nK84bGmvC5odxLgoEXqXp2SKUnCE56EyhOr5GiAud8RdnwzCwDgGSwp1ARVpNCfl2Nhc
-         Iqhw==
-X-Gm-Message-State: APjAAAXjfmD83v2DoVOQlvP5zdZsEAm/OUNc1Vjpnq1zjbd5ueuWR/UP
-        MWsJB5f+MBZ99W7DdZ+V71nfDvtYl0s09qLXhsV4rgZN
-X-Google-Smtp-Source: APXvYqw8YKLoRzDRPZmO4NDOIYrRQ0VYcNB8pOGBy4Dn4po2+LJmGgZJC1+QZHzwPn1XmvwamosioDNR5Hr2A+ZYVOY=
-X-Received: by 2002:ac8:2e94:: with SMTP id h20mr1491513qta.234.1568958691283;
- Thu, 19 Sep 2019 22:51:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190919142654.1578823-1-arnd@arndb.de>
+        Fri, 20 Sep 2019 01:53:28 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id B096155D;
+        Fri, 20 Sep 2019 01:53:26 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Fri, 20 Sep 2019 01:53:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm3; bh=sYqoSELWDB8JtRDLGnIHP2w4CWUd69D
+        2d/NJIApm9X4=; b=F5uLX2noa80V2YgZkxsR/Ju/5z1IDtVut1FBoQ3K/K2q3mD
+        FE6eXLmDmKqMneAD0c04mrhmY4lp00+nxzO6fDYkLKzKgUfKeryBcERc+HbIFQsz
+        T+DyyH66+F0qBBALece+nVYTr6G8kwe4v9LpXRca9QQ+guy5hDULbhoz1EqYfAMk
+        Lp0IO+LgtNJ74k8ttvSXpu31yYRKy00qqakUSgjvoaI8sDd5K0akorMRsXz4PVGS
+        WChHRRqFcroepQWNK/1Bc2IBkvilH3aUBmLiaI2kuyzmUyRJ2UlYevcoOQSAaDi9
+        rebW2epsehsCl4/f4wR6hQyj5v5cpvTUWAPb8yQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=sYqoSE
+        LWDB8JtRDLGnIHP2w4CWUd69D2d/NJIApm9X4=; b=X5MFIhyam3OwRQGxeEFfqN
+        vbZqP7dsUy3wq0Y2PwKLDdy5Yva5q5pHE5lZOWAUTLh+QnJ+kUk/xDOcjLhdW5gj
+        +u67i2DkQ/kP0zmMvE/8GOO0uD4r9hBaITdSLSBAT7obvobxl99ZMwNkfnS8Rbyq
+        RkF7Nlt9xw7L6EM709+FUgHeyIoYog/VrwVGjd/1AxRA22JIrxXsbmAdfrd67i/o
+        L+tIex7vBBfGGdDq52mkqguAm1sCAjCz6urP72b4vq0QvPdttyuJcazsDjwvune3
+        P42qiZK68dFQwy7WS80Nv8qleKFNQw6LWOEoY9r104qIsVgxMI65KbOoPC3oLNvA
+        ==
+X-ME-Sender: <xms:VWmEXQnLmTqB_ZYGyZLv6wMBigE-jyluAPiu9gh8CJSwdmVLHyeUAw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddugddutddtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
+    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
+    rhfuihiivgeptd
+X-ME-Proxy: <xmx:VWmEXddD0WcvobIQxoECsJpegeP3Mx3I0K1CUx3Bd_9afJ_Ghprpgg>
+    <xmx:VWmEXWCeeQLUHUt88jH6xISWu-YyomLDowuhLtkmvtZtUDHpzMEy_w>
+    <xmx:VWmEXUx7umQBGJFWRPFYV9eZAcgRofrJwONCOvswIf4lAfz_7jd1gw>
+    <xmx:VmmEXedHSKeRbg6evgvXPcH7JKpCfkj_PGivqKOqAJFNlJBEDFygZQ>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 1AF35E00A9; Fri, 20 Sep 2019 01:53:25 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.7-238-g170a812-fmstable-20190913v1
+Mime-Version: 1.0
+Message-Id: <a26c90b8-8f85-4fe5-9dab-d7213f181efd@www.fastmail.com>
 In-Reply-To: <20190919142654.1578823-1-arnd@arndb.de>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Fri, 20 Sep 2019 05:51:18 +0000
-Message-ID: <CACPK8XcsegR5R0nkiZ-UEMgCqNMggCXjAr2N-6J1S6mEhGLrBQ@mail.gmail.com>
+References: <20190919142654.1578823-1-arnd@arndb.de>
+Date:   Fri, 20 Sep 2019 15:24:01 +0930
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Arnd Bergmann" <arnd@arndb.de>, "Joel Stanley" <joel@jms.id.au>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] ARM: aspeed: ast2500 is ARMv6K
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Andrew Jeffery <andrew@aj.id.au>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 19 Sep 2019 at 14:27, Arnd Bergmann <arnd@arndb.de> wrote:
->
+
+
+On Thu, 19 Sep 2019, at 23:56, Arnd Bergmann wrote:
 > Linux supports both the original ARMv6 level (early ARM1136) and ARMv6K
 > (later ARM1136, ARM1176 and ARM11mpcore).
->
+> 
 > ast2500 falls into the second categoy, being based on arm1176jzf-s.
 > This is enabled by default when using ARCH_MULTI_V6, so we should
 > not 'select CPU_V6'.
->
+> 
 > Removing this will lead to more efficient use of atomic instructions.
-
-Wow, nice find.
-
->
+> 
 > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
 >  arch/arm/mach-aspeed/Kconfig | 1 -
 >  1 file changed, 1 deletion(-)
->
+> 
 > diff --git a/arch/arm/mach-aspeed/Kconfig b/arch/arm/mach-aspeed/Kconfig
 > index a293137f5814..163931a03136 100644
 > --- a/arch/arm/mach-aspeed/Kconfig
 > +++ b/arch/arm/mach-aspeed/Kconfig
 > @@ -26,7 +26,6 @@ config MACH_ASPEED_G4
 >  config MACH_ASPEED_G5
->         bool "Aspeed SoC 5th Generation"
->         depends on ARCH_MULTI_V6
-> -       select CPU_V6
->         select PINCTRL_ASPEED_G5 if !CC_IS_CLANG
+>  	bool "Aspeed SoC 5th Generation"
+>  	depends on ARCH_MULTI_V6
+> -	select CPU_V6
+>  	select PINCTRL_ASPEED_G5 if !CC_IS_CLANG
 
-I can't find any trees with !CC_IS_CLANG here. Is there a problem
-building our pinmux driver with Clang?
+Unrelated, but I'm intrigued by this. Looks like I should try compile it with clang
+and fix the fallout.
 
-I tested with this patch:
-
---- a/arch/arm/mach-aspeed/Kconfig
-+++ b/arch/arm/mach-aspeed/Kconfig
-@@ -25,8 +25,8 @@ config MACH_ASPEED_G4
-
- config MACH_ASPEED_G5
-        bool "Aspeed SoC 5th Generation"
-+       # This implies ARMv6K which covers the ARM1176
-        depends on ARCH_MULTI_V6
--       select CPU_V6
-        select PINCTRL_ASPEED_G5
-        select FTTMR010_TIMER
-        help
-
-If you want to apply that as a fix for 5.4 I would be happy with that.
-
-Fixes: 8c2ed9bcfbeb ("arm: Add Aspeed machine")
-Reviewed-by: Joel Stanley <joel@jms.id.au>
-
-Cheers,
-
-Joel
+Andrew
