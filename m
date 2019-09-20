@@ -2,138 +2,115 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45AA1C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:24:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2192FC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22908207E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:24:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E239420C01
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:24:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568989478;
+	bh=/kEOe6iIjAq0AE1gdlHbwtYLINqv36CWSrQAhIyQfJw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jFHcIMDsJypbck/ubjFLRGCV9qqcDfxQJlICWVXHdompt67VRQKpS8H5hvElSZPZG
+	 0EFLeF9uOxCCumH/ZjWWIXiiGhG+2jCZaAcsP5YDgtxxhCqfOUJUk+60+WpZLeOFnH
+	 5GN3OL5M46/SIKDIXkgFfndugXONECBCKtm41iKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387937AbfITOYa (ORCPT
+        id S2387967AbfITOYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:24:30 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58612 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387915AbfITOY3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 10:24:29 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8KE8e4o014172;
-        Fri, 20 Sep 2019 10:24:24 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v4yr0aajw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 20 Sep 2019 10:24:23 -0400
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8KE9GZR016762;
-        Fri, 20 Sep 2019 10:24:23 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v4yr0aajc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 20 Sep 2019 10:24:23 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8KEDbp5004074;
-        Fri, 20 Sep 2019 14:24:22 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma01dal.us.ibm.com with ESMTP id 2v3vbua63b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 20 Sep 2019 14:24:22 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8KEOJdQ52756922
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 20 Sep 2019 14:24:19 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BC6FEAE05F;
-        Fri, 20 Sep 2019 14:24:19 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 550F1AE062;
-        Fri, 20 Sep 2019 14:24:19 +0000 (GMT)
-Received: from [9.85.205.180] (unknown [9.85.205.180])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 20 Sep 2019 14:24:19 +0000 (GMT)
-Subject: Re: [PATCH v6 04/10] s390: vfio-ap: filter CRYCB bits for unavailable
- queue devices
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        cohuck@redhat.com, mjrosato@linux.ibm.com, pmorel@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        jjherne@linux.ibm.com
-References: <1568410018-10833-1-git-send-email-akrowiak@linux.ibm.com>
- <1568410018-10833-5-git-send-email-akrowiak@linux.ibm.com>
- <20190919123434.28a29c00.pasic@linux.ibm.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Message-ID: <3c81ae10-79fc-d845-571f-66cb84e1227a@linux.ibm.com>
-Date:   Fri, 20 Sep 2019 10:24:19 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Fri, 20 Sep 2019 10:24:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36880 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387938AbfITOYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 10:24:35 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 273F72080F;
+        Fri, 20 Sep 2019 14:24:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568989474;
+        bh=/kEOe6iIjAq0AE1gdlHbwtYLINqv36CWSrQAhIyQfJw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aH6T/cI5l18ilkRUUjq9bDjrGWFbwM6iUDIT1rY/PKyFXiN95AlnEXDDSUuRalZl2
+         FOmB4g02JDEINxGDe9cKI+rgRSeTRI/qwCqoe2fY9b/nUm/CZpHg1x9EFrWWtDHyIa
+         jrClhMudeuRqcEUsmY8+O3icEoUaSEve8rGSY+n4=
+Date:   Fri, 20 Sep 2019 16:24:32 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 5.3 00/21] 5.3.1-stable review
+Message-ID: <20190920142432.GA601228@kroah.com>
+References: <20190919214657.842130855@linuxfoundation.org>
+ <572eca6e-47a9-c554-c6b2-bafd4c5df18b@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20190919123434.28a29c00.pasic@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-20_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909200136
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <572eca6e-47a9-c554-c6b2-bafd4c5df18b@nvidia.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/19/19 6:34 AM, Halil Pasic wrote:
-> On Fri, 13 Sep 2019 17:26:52 -0400
-> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+On Fri, Sep 20, 2019 at 02:54:26PM +0100, Jon Hunter wrote:
 > 
->> +static void vfio_ap_mdev_get_crycb_matrix(struct ap_matrix_mdev *matrix_mdev)
->> +{
->> +	unsigned long apid, apqi;
->> +	unsigned long masksz = BITS_TO_LONGS(AP_DEVICES) *
->> +			       sizeof(unsigned long);
->> +
->> +	memset(matrix_mdev->crycb.apm, 0, masksz);
->> +	memset(matrix_mdev->crycb.apm, 0, masksz);
->> +	memcpy(matrix_mdev->crycb.adm, matrix_mdev->matrix.adm, masksz);
->> +
->> +	for_each_set_bit_inv(apid, matrix_mdev->matrix.apm,
->> +			     matrix_mdev->matrix.apm_max + 1) {
->> +		for_each_set_bit_inv(apqi, matrix_mdev->matrix.aqm,
->> +				     matrix_mdev->matrix.aqm_max + 1) {
->> +			if (vfio_ap_find_queue(AP_MKQID(apid, apqi))) {
->> +				if (!test_bit_inv(apid, matrix_mdev->crycb.apm))
->> +					set_bit_inv(apid,
->> +						    matrix_mdev->crycb.apm);
->> +				if (!test_bit_inv(apqi, matrix_mdev->crycb.aqm))
->> +					set_bit_inv(apqi,
->> +						    matrix_mdev->crycb.aqm);
->> +			}
->> +		}
->> +	}
->> +}
+> On 19/09/2019 23:03, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.3.1 release.
+> > There are 21 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Sat 21 Sep 2019 09:44:25 PM UTC.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.1-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.3.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
 > 
-> Even with the discussed typo fixed (zero crycb.aqm) this procedure does
-> not make sense to me. :(
+> No new regressions* for Tegra ...
 > 
-> If in doubt please consider the following example:
-> matrix_mdev->matrix.apm and matrix_mdev->matrix.aqm have both just bits
-> 0 and 1 set (i.e. first byte 0xC0 the rest of the bytes 0x0). Queues
-> bound to the vfio_ap driver (0,0), (0,1), (1,0); not bound to vfio_ap is
-> however (1,1). If I read this correctly this filtering logic would grant
-> access to (1,1) which seems to contradict with the stated intention.
+> Test results for stable-v5.3:
+>     12 builds:	12 pass, 0 fail
+>     22 boots:	22 pass, 0 fail
+>     38 tests:	37 pass, 1 fail
+> 
+> Linux version:	5.3.1-rc1-g0aa7f3d6baae
+> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+>                 tegra194-p2972-0000, tegra20-ventana,
+>                 tegra210-p2371-2180, tegra30-cardhu-a04
+> 
+> * Note we had one regression in v5.3 for a warnings test for Tegra194
+>   causing the above test failure. This has since been fixed by the
+>   following commits [0] but given it is just a warning, I have not
+>   bothered CC'ing for stable.
+> 
+> Cheers
+> Jon
+> 
+> [0] https://lkml.org/lkml/2019/8/21/602
 
-Yep, I see your point. I'll have to rework this code.
+I'll be glad to take this in stable for 5.3.y, what is the git commit
+id?
+
+Also, thanks for testing all of these and letting me know.
+
+greg k-h
 
 > 
-> Regards,
-> Halil
-> 
-> 
-> 
-
+> -- 
+> nvpublic
