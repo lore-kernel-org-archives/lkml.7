@@ -5,60 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B12C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 23:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8755FC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 23:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9BE62086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 23:44:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ACE521907
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 23:52:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XSaBvr71"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C3ZFMMtv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407233AbfITXow (ORCPT
+        id S2407252AbfITXw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 19:44:52 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38404 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407211AbfITXou (ORCPT
+        Fri, 20 Sep 2019 19:52:27 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:32812 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393954AbfITXw1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 19:44:50 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w10so3918827plq.5
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 16:44:50 -0700 (PDT)
+        Fri, 20 Sep 2019 19:52:27 -0400
+Received: by mail-pl1-f193.google.com with SMTP id d22so2618569pls.0
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 16:52:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=lqDIHj9lZasR/zDtsnve221vNIVF3/3BuxETCeMHCc4=;
-        b=XSaBvr71r6CXxRkl47+im5CtQOOiRKY/iuu1X/oF7O0195aBtQdo4E6H31j2DRdwMB
-         s+h2SbgX6KwCSKPN/vksW+oTjyn/PocXCe2Kbp7D50FyleyNJKKiDms9wE4+010NuDGz
-         Tq75Lq2/Of0H+EgT6rh/B7HmjzNMrYZDTILOvyQjFxsnvmyOoLNZmh4oqM1yuhhFP8pe
-         sRZaN6hX2UO3lPWFmdzLQbJnBe69O1mU2qIHiv3K3roTU3fxgbwZK3OKCga8hxSzWAhk
-         hBJHVhNvM+mzWFILJB/Im3xuyQ/V1FTP6vSQ4wkxN1OHoJdGyrC0V7kg/MssknjtxoVt
-         FgJg==
+        bh=8eg0Go6Vco6zmrMokIuCHT90eNcEj+1gkgwUozbRoOU=;
+        b=C3ZFMMtvPf81TgLhiSeEgf2YDVeBRSaHW0FNEf+k4vFeia1DmItLwfEBHoOIfODtlF
+         gEyN20SdH4KLHWwmhavoas54tR7qUqGUNdwwesdSM+wK3SyllrG5IxRh96WXtnnrfY7d
+         pWKppGT1A1o2nr1VJ5fMakqYDf8QR5Hd9B9Tr6251H/ZqxARqyg4FG/IYVzwg6lZHgw9
+         KjiL/8lm/frPH5jhCZqRRWZnbSsN2mWbWgq5azfITpuYNj1mNqmc8FRarPSRhSul8KEc
+         RmmD1CROxNKOEtIbX+4Fprl/YK9aZC0HXh6DiK9VVU/3W0qEmA2PmqxFFb9ET+vFYLUq
+         AVCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=lqDIHj9lZasR/zDtsnve221vNIVF3/3BuxETCeMHCc4=;
-        b=o5nTMGChkx6w77IfOi+PRD0og9Nd7CLSQfVqu8pkzKUCJL4FrMcwpRIVZVqNE84BUJ
-         jVCSG/AA81R+Lez89CLj3oTpTSOmL0j0MCvyAJg06MCyb/N1dJNUccQEUDYSgIjAAnB3
-         K+xG8siaKV2mh7yvbnsPj9e3wngffSCBnNLUi4J+6TUlojxkCexM78vYgvPwncO7pv1X
-         ZTQTWEnxnqCTvVpKev92+OZ/yT8OlgiR6W1wHDCsCwUh7U25JaoFt3LhHCKwoJFx8mqv
-         UtRi5sNuhrL2CSkxzAoTxGsf3jaN8FgYqR8+NJLUb1kkdEu8UkF6iO4PaE9va82hD6+s
-         LP7g==
-X-Gm-Message-State: APjAAAWjB4WNsyMOwW2hcn5ZZwmmgKTLkGABANl2+MSP5yc0ERxLhYl+
-        KzjS2UbIYBE1Kup/yipm9uJpi3oQNgnGDLza2oLQDQ==
-X-Google-Smtp-Source: APXvYqyNiRlbO6R3uG9HEH5vDFWKxf6oFNbwaLwTM4FngoMH0rrK0KW2vni8a9ARb9jmWGlDeibYyIhP8RN53cwInWk=
-X-Received: by 2002:a17:902:ff0e:: with SMTP id f14mr19947847plj.325.1569023089386;
- Fri, 20 Sep 2019 16:44:49 -0700 (PDT)
+        bh=8eg0Go6Vco6zmrMokIuCHT90eNcEj+1gkgwUozbRoOU=;
+        b=p32SVS8p9WgKjaGAomruFJz+N/dAgSVLXLOArIsYY5Pb2/Us5JjVtWwN0YY6mCvVpd
+         tejMAo28ZSciLNP+pkI/R5jRF427zG//hUc3rgVGXJ4vQr3xqtu++YRNK0mk1C4NeFqr
+         GTCbQI8Nx8JJU50LWtDsQmPtWXNU49zhd8/EHTXw0SH0YmzQQjdKf+LPFl9psjmvhtvK
+         wKnJ7tU+lRam1avvoHuTffi4Fq5vL6T0+56G2MeV/Jp7iS/rAIpNC9mHXWt5LyGAEQX5
+         4hjZDikbPjSK3Gq0SDxsEvT6FHxcPNpGQFvmCWmt704TFg/gSkdrZlk0tCeUQLTDeFTw
+         NCQA==
+X-Gm-Message-State: APjAAAVKQxftcFWxpPOb4co/0sbIU4I3Rk/eK85hXwiZbexhg3efbCWw
+        c1EHALCMoqxyNOj7AfXQl0jfEa9TwMDXjswfMEHReg==
+X-Google-Smtp-Source: APXvYqxVNfOs4Ho/5kXpPZVj8oP5ezLhr8UaD2UCudmwUKwPDFfSFY4+sFjwQIeK+urY5OGR284WgAH5zN0eWfy9OQU=
+X-Received: by 2002:a17:902:169:: with SMTP id 96mr18912291plb.297.1569023545999;
+ Fri, 20 Sep 2019 16:52:25 -0700 (PDT)
 MIME-Version: 1.0
 References: <20190920231923.141900-1-brendanhiggins@google.com>
  <20190920231923.141900-7-brendanhiggins@google.com> <20190920233600.48BBA20644@mail.kernel.org>
-In-Reply-To: <20190920233600.48BBA20644@mail.kernel.org>
+ <CAFd5g46pndA_gOD9i8M5e5fb8x4mSL9mcgMDujN7XufeFs8bmQ@mail.gmail.com>
+In-Reply-To: <CAFd5g46pndA_gOD9i8M5e5fb8x4mSL9mcgMDujN7XufeFs8bmQ@mail.gmail.com>
 From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Fri, 20 Sep 2019 16:44:38 -0700
-Message-ID: <CAFd5g46pndA_gOD9i8M5e5fb8x4mSL9mcgMDujN7XufeFs8bmQ@mail.gmail.com>
+Date:   Fri, 20 Sep 2019 16:52:14 -0700
+Message-ID: <CAFd5g44E9Z=wRLarzcirAMudQ5=_3d4gnYfAwM9T2XB+sr+_qg@mail.gmail.com>
 Subject: Re: [PATCH v16 06/19] lib: enable building KUnit in lib/
 To:     Stephen Boyd <sboyd@kernel.org>
 Cc:     Frank Rowand <frowand.list@gmail.com>,
@@ -107,36 +108,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 4:36 PM Stephen Boyd <sboyd@kernel.org> wrote:
+On Fri, Sep 20, 2019 at 4:44 PM Brendan Higgins
+<brendanhiggins@google.com> wrote:
 >
-> Quoting Brendan Higgins (2019-09-20 16:19:10)
-> > KUnit is a new unit testing framework for the kernel and when used is
-> > built into the kernel as a part of it. Add KUnit to the lib Kconfig and
-> > Makefile to allow it to be actually built.
+> On Fri, Sep 20, 2019 at 4:36 PM Stephen Boyd <sboyd@kernel.org> wrote:
 > >
-> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> > Cc: Randy Dunlap <rdunlap@infradead.org>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > Cc: Kees Cook <keescook@chromium.org>
-> > ---
-> >  lib/Kconfig.debug | 2 ++
-> >  lib/Makefile      | 2 ++
-> >  2 files changed, 4 insertions(+)
+> > Quoting Brendan Higgins (2019-09-20 16:19:10)
+> > > KUnit is a new unit testing framework for the kernel and when used is
+> > > built into the kernel as a part of it. Add KUnit to the lib Kconfig and
+> > > Makefile to allow it to be actually built.
+> > >
+> > > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> > > Cc: Randy Dunlap <rdunlap@infradead.org>
+> > > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > > Cc: Kees Cook <keescook@chromium.org>
+> > > ---
+> > >  lib/Kconfig.debug | 2 ++
+> > >  lib/Makefile      | 2 ++
+> > >  2 files changed, 4 insertions(+)
+> > >
+> > > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> > > index 5960e2980a8a..5870fbe11e9b 100644
+> > > --- a/lib/Kconfig.debug
+> > > +++ b/lib/Kconfig.debug
+> > > @@ -2144,4 +2144,6 @@ config IO_STRICT_DEVMEM
+> > >
+> > >  source "arch/$(SRCARCH)/Kconfig.debug"
+> > >
+> > > +source "lib/kunit/Kconfig"
+> > > +
 > >
-> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> > index 5960e2980a8a..5870fbe11e9b 100644
-> > --- a/lib/Kconfig.debug
-> > +++ b/lib/Kconfig.debug
-> > @@ -2144,4 +2144,6 @@ config IO_STRICT_DEVMEM
-> >
-> >  source "arch/$(SRCARCH)/Kconfig.debug"
-> >
-> > +source "lib/kunit/Kconfig"
-> > +
->
-> Perhaps this should go by the "Runtime Testing" part? Before or after.
+> > Perhaps this should go by the "Runtime Testing" part? Before or after.
 
-Yeah, that probably makes sense.
+Now I am actually thinking that it should be a menuconfig...
 
-> >  endmenu # Kernel hacking
+> > >  endmenu # Kernel hacking
