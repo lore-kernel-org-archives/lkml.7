@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F00C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0220C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9348D2080F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:34:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DB8F207E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 14:34:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391747AbfITOeh (ORCPT
+        id S2392137AbfITOev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 10:34:37 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36304 "EHLO
+        Fri, 20 Sep 2019 10:34:51 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36232 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388221AbfITOZH (ORCPT
+        by vger.kernel.org with ESMTP id S2388188AbfITOZG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 10:25:07 -0400
+        Fri, 20 Sep 2019 10:25:06 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqK-0004y7-GH; Fri, 20 Sep 2019 15:25:04 +0100
+        id 1iBJqJ-0004y2-TZ; Fri, 20 Sep 2019 15:25:03 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iBJqH-0007yX-AI; Fri, 20 Sep 2019 15:25:01 +0100
+        id 1iBJqG-0007x8-NO; Fri, 20 Sep 2019 15:25:00 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        syzbot+35f04d136fc975a70da4@syzkaller.appspotmail.com,
-        "Oliver Neukum" <oneukum@suse.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+        "Bob Peterson" <rpeterso@redhat.com>
 Date:   Fri, 20 Sep 2019 15:23:35 +0100
-Message-ID: <lsq.1568989415.637410494@decadent.org.uk>
+Message-ID: <lsq.1568989415.69803285@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 116/132] USB: rio500: refuse more than one device at
- a time
+Subject: [PATCH 3.16 103/132] GFS2: don't set rgrp gl_object until it's
+ inserted into rgrp tree
 In-Reply-To: <lsq.1568989414.954567518@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,81 +55,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Bob Peterson <rpeterso@redhat.com>
 
-commit 3864d33943b4a76c6e64616280e98d2410b1190f upstream.
+commit 36e4ad0316c017d5b271378ed9a1c9a4b77fab5f upstream.
 
-This driver is using a global variable. It cannot handle more than
-one device at a time. The issue has been existing since the dawn
-of the driver.
+Before this patch, function read_rindex_entry would set a rgrp
+glock's gl_object pointer to itself before inserting the rgrp into
+the rgrp rbtree. The problem is: if another process was also reading
+the rgrp in, and had already inserted its newly created rgrp, then
+the second call to read_rindex_entry would overwrite that value,
+then return a bad return code to the caller. Later, other functions
+would reference the now-freed rgrp memory by way of gl_object.
+In some cases, that could result in gfs2_rgrp_brelse being called
+twice for the same rgrp: once for the failed attempt and once for
+the "real" rgrp release. Eventually the kernel would panic.
+There are also a number of other things that could go wrong when
+a kernel module is accessing freed storage. For example, this could
+result in rgrp corruption because the fake rgrp would point to a
+fake bitmap in memory too, causing gfs2_inplace_reserve to search
+some random memory for free blocks, and find some, since we were
+never setting rgd->rd_bits to NULL before freeing it.
 
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Reported-by: syzbot+35f04d136fc975a70da4@syzkaller.appspotmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This patch fixes the problem by not setting gl_object until we
+have successfully inserted the rgrp into the rbtree. Also, it sets
+rd_bits to NULL as it frees them, which will ensure any accidental
+access to the wrong rgrp will result in a kernel panic rather than
+file system corruption, which is preferred.
+
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/misc/rio500.c | 24 ++++++++++++++++++------
- 1 file changed, 18 insertions(+), 6 deletions(-)
-
---- a/drivers/usb/misc/rio500.c
-+++ b/drivers/usb/misc/rio500.c
-@@ -464,15 +464,23 @@ static int probe_rio(struct usb_interfac
- {
- 	struct usb_device *dev = interface_to_usbdev(intf);
- 	struct rio_usb_data *rio = &rio_instance;
--	int retval;
-+	int retval = 0;
+--- a/fs/gfs2/rgrp.c
++++ b/fs/gfs2/rgrp.c
+@@ -731,6 +731,7 @@ void gfs2_clear_rgrpd(struct gfs2_sbd *s
  
--	dev_info(&intf->dev, "USB Rio found at address %d\n", dev->devnum);
-+	mutex_lock(&rio500_mutex);
-+	if (rio->present) {
-+		dev_info(&intf->dev, "Second USB Rio at address %d refused\n", dev->devnum);
-+		retval = -EBUSY;
-+		goto bail_out;
-+	} else {
-+		dev_info(&intf->dev, "USB Rio found at address %d\n", dev->devnum);
+ 		gfs2_free_clones(rgd);
+ 		kfree(rgd->rd_bits);
++		rgd->rd_bits = NULL;
+ 		return_all_reservations(rgd);
+ 		kmem_cache_free(gfs2_rgrpd_cachep, rgd);
+ 	}
+@@ -925,10 +926,6 @@ static int read_rindex_entry(struct gfs2
+ 	if (error)
+ 		goto fail;
+ 
+-	rgd->rd_gl->gl_object = rgd;
+-	rgd->rd_gl->gl_vm.start = (rgd->rd_addr * bsize) & PAGE_CACHE_MASK;
+-	rgd->rd_gl->gl_vm.end = PAGE_CACHE_ALIGN((rgd->rd_addr +
+-						  rgd->rd_length) * bsize) - 1;
+ 	rgd->rd_rgl = (struct gfs2_rgrp_lvb *)rgd->rd_gl->gl_lksb.sb_lvbptr;
+ 	rgd->rd_flags &= ~GFS2_RDF_UPTODATE;
+ 	if (rgd->rd_data > sdp->sd_max_rg_data)
+@@ -936,14 +933,20 @@ static int read_rindex_entry(struct gfs2
+ 	spin_lock(&sdp->sd_rindex_spin);
+ 	error = rgd_insert(rgd);
+ 	spin_unlock(&sdp->sd_rindex_spin);
+-	if (!error)
++	if (!error) {
++		rgd->rd_gl->gl_object = rgd;
++		rgd->rd_gl->gl_vm.start = (rgd->rd_addr * bsize) & PAGE_MASK;
++		rgd->rd_gl->gl_vm.end = PAGE_ALIGN((rgd->rd_addr +
++						    rgd->rd_length) * bsize) - 1;
+ 		return 0;
 +	}
  
- 	retval = usb_register_dev(intf, &usb_rio_class);
- 	if (retval) {
- 		dev_err(&dev->dev,
- 			"Not able to get a minor for this device.\n");
--		return -ENOMEM;
-+		retval = -ENOMEM;
-+		goto bail_out;
- 	}
+ 	error = 0; /* someone else read in the rgrp; free it and ignore it */
+ 	gfs2_glock_put(rgd->rd_gl);
  
- 	rio->rio_dev = dev;
-@@ -481,7 +489,8 @@ static int probe_rio(struct usb_interfac
- 		dev_err(&dev->dev,
- 			"probe_rio: Not enough memory for the output buffer\n");
- 		usb_deregister_dev(intf, &usb_rio_class);
--		return -ENOMEM;
-+		retval = -ENOMEM;
-+		goto bail_out;
- 	}
- 	dev_dbg(&intf->dev, "obuf address:%p\n", rio->obuf);
- 
-@@ -490,7 +499,8 @@ static int probe_rio(struct usb_interfac
- 			"probe_rio: Not enough memory for the input buffer\n");
- 		usb_deregister_dev(intf, &usb_rio_class);
- 		kfree(rio->obuf);
--		return -ENOMEM;
-+		retval = -ENOMEM;
-+		goto bail_out;
- 	}
- 	dev_dbg(&intf->dev, "ibuf address:%p\n", rio->ibuf);
- 
-@@ -498,8 +508,10 @@ static int probe_rio(struct usb_interfac
- 
- 	usb_set_intfdata (intf, rio);
- 	rio->present = 1;
-+bail_out:
-+	mutex_unlock(&rio500_mutex);
- 
--	return 0;
-+	return retval;
+ fail:
+ 	kfree(rgd->rd_bits);
++	rgd->rd_bits = NULL;
+ 	kmem_cache_free(gfs2_rgrpd_cachep, rgd);
+ 	return error;
  }
- 
- static void disconnect_rio(struct usb_interface *intf)
 
