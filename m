@@ -6,88 +6,91 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFF3C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59322C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC3C020882
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BA392196E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 06:58:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437506AbfITGyy (ORCPT
+        id S2394858AbfITG6i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 02:54:54 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:52306 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388940AbfITGyw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 02:54:52 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id E8F15104D6EE93A55342;
-        Fri, 20 Sep 2019 14:54:50 +0800 (CST)
-Received: from use12-sp2.huawei.com (10.67.189.174) by
- DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 20 Sep 2019 14:54:42 +0800
-From:   Xiaoming Ni <nixiaoming@huawei.com>
-To:     <dwmw2@infradead.org>, <dilinger@queued.net>, <richard@nod.at>,
-        <houtao1@huawei.com>, <viro@zeniv.linux.org.uk>,
-        <bbrezillon@kernel.org>, <daniel.santos@pobox.com>
-CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <nixiaoming@huawei.com>
-Subject: [PATCH] jffs2:freely allocate memory when parameters are invalid
-Date:   Fri, 20 Sep 2019 14:54:38 +0800
-Message-ID: <1568962478-126260-1-git-send-email-nixiaoming@huawei.com>
-X-Mailer: git-send-email 1.8.5.6
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.189.174]
-X-CFilter-Loop: Reflected
+        Fri, 20 Sep 2019 02:58:38 -0400
+Received: from mail.thundersoft.com ([114.242.213.61]:56366 "EHLO
+        mail2.thundersoft.com" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
+        with ESMTP id S2389176AbfITG6h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 02:58:37 -0400
+Received: from localhost (unknown [192.168.122.240])
+        by mail2.thundersoft.com (Postfix) with ESMTPA id 031BA1520AFD;
+        Fri, 20 Sep 2019 14:58:34 +0800 (CST)
+From:   shifu0704@thundersoft.com
+To:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, linux-kernel@vger.kernel.org,
+        alsa-devel@alsa-project.org, robh+dt@kernel.org
+Cc:     dmurphy@ti.com, navada@ti.com,
+        Frank Shi <shifu0704@thundersoft.com>
+Subject: [PATCH v7] dt-bindings: ASoC: Add tas2770 smart PA dt bindings
+Date:   Fri, 20 Sep 2019 14:58:28 +0800
+Message-Id: <1568962709-19185-1-git-send-email-shifu0704@thundersoft.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use kzalloc() to allocate memory in jffs2_fill_super().
-Freeing memory when jffs2_parse_options() fails will cause
-use-after-free and double-free in jffs2_kill_sb()
+From: Frank Shi <shifu0704@thundersoft.com>
 
-Reference: commit 92e2921f7eee6345 ("jffs2: free jffs2_sb_info through
- jffs2_kill_sb()")
+Add tas2770 smart PA dt bindings
 
-This makes the code difficult to understand
-the code path between memory allocation and free is too long
-
-The reason for this problem is:
-Before the jffs2_parse_options() check,
-"sb->s_fs_info = c;" has been executed,
-so jffs2_sb_info has been assigned to super_block.
-
-we can move "sb->s_fs_info = c;" to the success branch of the
-function jffs2_parse_options() and free jffs2_sb_info in the failure branch
-make the code easier to understand.
-
-Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
+Signed-off-by: Frank Shi <shifu0704@thundersoft.com>
 ---
- fs/jffs2/super.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/sound/tas2770.txt          | 37 ++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/tas2770.txt
 
-diff --git a/fs/jffs2/super.c b/fs/jffs2/super.c
-index af4aa65..bbdae72 100644
---- a/fs/jffs2/super.c
-+++ b/fs/jffs2/super.c
-@@ -280,11 +280,13 @@ static int jffs2_fill_super(struct super_block *sb, void *data, int silent)
- 
- 	c->mtd = sb->s_mtd;
- 	c->os_priv = sb;
--	sb->s_fs_info = c;
- 
- 	ret = jffs2_parse_options(c, data);
--	if (ret)
-+	if (ret) {
-+		kfree(c);
- 		return -EINVAL;
-+	}
-+	sb->s_fs_info = c;
- 
- 	/* Initialize JFFS2 superblock locks, the further initialization will
- 	 * be done later */
+diff --git a/Documentation/devicetree/bindings/sound/tas2770.txt b/Documentation/devicetree/bindings/sound/tas2770.txt
+new file mode 100644
+index 0000000..ede6bb3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/tas2770.txt
+@@ -0,0 +1,37 @@
++Texas Instruments TAS2770 Smart PA
++
++The TAS2770 is a mono, digital input Class-D audio amplifier optimized for
++efficiently driving high peak power into small loudspeakers.
++Integrated speaker voltage and current sense provides for
++real time monitoring of loudspeaker behavior.
++
++Required properties:
++
++ - compatible:	   - Should contain "ti,tas2770".
++ - reg:		       - The i2c address. Should contain <0x4c>, <0x4d>,<0x4e>, or <0x4f>.
++ - #address-cells  - Should be <1>.
++ - #size-cells     - Should be <0>.
++ - ti,asi-format:  - Sets TDM RX capture edge. 0->Rising; 1->Falling.
++ - ti,imon-slot-no:- TDM TX current sense time slot.
++ - ti,vmon-slot-no:- TDM TX voltage sense time slot.
++
++Optional properties:
++
++- interrupt-parent: the phandle to the interrupt controller which provides
++                     the interrupt.
++- interrupts: interrupt specification for data-ready.
++
++Examples:
++
++    tas2770@4c {
++                compatible = "ti,tas2770";
++                reg = <0x4c>;
++                #address-cells = <1>;
++                #size-cells = <0>;
++                interrupt-parent = <&msm_gpio>;
++                interrupts = <97 0>;
++                ti,asi-format = <0>;
++                ti,imon-slot-no = <0>;
++                ti,vmon-slot-no = <2>;
++        };
++
 -- 
-1.8.5.6
+2.7.4
 
