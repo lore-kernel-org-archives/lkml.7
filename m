@@ -2,390 +2,177 @@ Return-Path: <SRS0=vU+5=XP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DC34C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 12:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E60AAC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 12:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56F982086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 12:33:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A888A2086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Sep 2019 12:40:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="HnbF0iht"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="LIdeEt4U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726116AbfITMdV (ORCPT
+        id S1726413AbfITMkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 08:33:21 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:42446 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbfITMdV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 08:33:21 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190920123317euoutp0262a0ddc445e635a81fb8610dd35de48f~GJYqt-5RS0755807558euoutp02E
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 12:33:17 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190920123317euoutp0262a0ddc445e635a81fb8610dd35de48f~GJYqt-5RS0755807558euoutp02E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1568982797;
-        bh=An6IFMuJWXuwxVdiKy4QPVNtQOtB1Ur8iinVcxvRah0=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=HnbF0ihtYIDj9GE+YpUHwUz21XCPLbiEMowDsOpKSyvXOdMlUk+TtEoQUVzFFXbR8
-         HL58BSjGkkQkx4NwWUxgzfkICnqLEY7btRpFHTVkiRkX9/p9Y7nj9FCyVetoX5YYFn
-         vwUlhSa8CxAKsVkGI1XYobLw1F0YJLyzJVBz3gJY=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190920123316eucas1p207d0dd477e1eae59f3abdcd8a8c3c27e~GJYp1YaAX0105301053eucas1p2S;
-        Fri, 20 Sep 2019 12:33:16 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 61.66.04374.C07C48D5; Fri, 20
-        Sep 2019 13:33:16 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190920123315eucas1p13573d58c030e7e256076cd083b689f07~GJYoyD08J1369713697eucas1p1Q;
-        Fri, 20 Sep 2019 12:33:15 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190920123315eusmtrp212a53bf7a8cfae7995daa57de35d78b5~GJYoxXv-72446524465eusmtrp2c;
-        Fri, 20 Sep 2019 12:33:15 +0000 (GMT)
-X-AuditID: cbfec7f5-4f7ff70000001116-0c-5d84c70ccb87
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id A4.2D.04117.B07C48D5; Fri, 20
-        Sep 2019 13:33:15 +0100 (BST)
-Received: from [106.120.51.15] (unknown [106.120.51.15]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190920123315eusmtip1ef618e539e4ccf61fed544f7348fd629~GJYoNFyJe0063900639eusmtip1G;
-        Fri, 20 Sep 2019 12:33:15 +0000 (GMT)
-Subject: Re: [PATCH v3] dt-bindings: sound: Convert Samsung I2S controller
- to dt-schema
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
-        Maciej Falkowski <m.falkowski@samsung.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <68ec938a-29b5-0c07-3a5e-771d6ce587b4@samsung.com>
-Date:   Fri, 20 Sep 2019 14:33:13 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
-        Thunderbird/60.9.0
+        Fri, 20 Sep 2019 08:40:33 -0400
+Received: from mout.web.de ([212.227.15.4]:50819 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726276AbfITMkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 08:40:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1568983226;
+        bh=ICllt23EDlAXp0ZD2T14az/Ixb5oynPLqxBTWxzBQOA=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=LIdeEt4UUUC5pdjjfA2+/Y2czYz3KAQqgcCTqaEuBB4BWTVRH7eVq6whFh8pGte0n
+         3iNWkui4SNeb/ihrtFhgcfkbEFa5TMgCtWBr1RDSmLJDi3ZJ4drhJfx9OIkhuoiswr
+         T1U4NvVaX0zvqeg57UqtCAIhiwQE5vg2h25i1YVM=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.244.117.22]) by smtp.web.de (mrweb002
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MDxSJ-1iQT131OvP-00HNWp; Fri, 20
+ Sep 2019 14:40:26 +0200
+Subject: [PATCH v2] leds-bcm6328: Use devm_platform_ioremap_resource() in
+ bcm6328_leds_probe()
+To:     linux-leds@vger.kernel.org,
+        =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+References: <b6ea044c-c483-0de6-67c5-5ea2fa3c85aa@web.de>
+ <658bd05d-376d-adfd-64a5-e20f83d7b90a@gmail.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <bd063a0e-d541-b95f-add1-90edde0acf50@web.de>
+Date:   Fri, 20 Sep 2019 14:40:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-In-Reply-To: <20190920122616.GA26862@pi3>
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <658bd05d-376d-adfd-64a5-e20f83d7b90a@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTcRT2t7v7cDm7TmMHnRXDBKN89ICLpWQU7J8gsIIyyak3Nbcpm5oW
-        lO/HFC0p0iWuAvORLhExNRKa4hJzywdagi8QDMuslpW5rG1Xy/++75zvnO98cChMNIh7U0mq
-        NFatkiukhIDf0b9q2e9myo8OnjFImEmDGWfGho085u7cPMHo++zUYmklme9jxTxmtLuGYKos
-        PTxmNs9AMHUTwzym4EUfyfR+LMKPuclarbmErLm2Gcm6dFOkrK2phJCVtzchmbVt52niguBo
-        PKtIymDVQeExgsQPuhY89c6ZzCFtJ5GNTBFa5EoBfQg+90/xtEhAiegGBJU5gzhHviFomFvG
-        OGJF0Nm+zNscMec/3lDVIzCv20iOLCHoGF/hO1Se9HnIqcgjHNiLDoCJ3z+cExh9G4P7ZSXO
-        BkGHgHZJ68RCOhxyFqpxB+bTe2CyW0868A46GqZ/mjBO4wED1fNOA1f70ormNedJGL0Lni3V
-        YBwWw+S83pkI6EkS2ovf49zdJ6BgaJzksCcsmto3sAT+dG0O5CGYM7eQHClDMJpbhTjVEeg1
-        Dds3UXaLAHjaHcSVI6CiSMt3lIF2h7dLHtwR7lDZcQ/jykIoLhRxan/QmQz/bF++GcFuIalu
-        SzTdlji6LXF0/30fIH4TErPpGmUCqzmoYq8GauRKTboqITAuRdmG7C82uG5a6UQ9tlgjoikk
-        dRPK+vOjRbg8Q5OlNCKgMKmXsOZwbrRIGC/PusaqUy6p0xWsxoh8KL5ULLzuMhslohPkaWwy
-        y6ay6s0uj3L1zkZiW+6jVxKXm4ryLin5/Mspv3grXjlyOfakn3dThDbZZthXGpldGhPY//V4
-        Q/3uwrBPfVOJHWdXuyIFdeqHfuFPon6JdcbtfO/pcwuvZxddBg6sbWMu3pAQvlfKggvyBxvD
-        MFtjSIQ+wC2mWqkAr9qZuOnhKB9JqLvvO1deZqi/lK9JlIfsxdQa+V+wlSL/XgMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrNIsWRmVeSWpSXmKPExsVy+t/xu7rcx1tiDVbsVbK4te4cq8WVi4eY
-        LKY+fMJmMf8IkHv+/AZ2i29XOpgsLu+aw2Yx4/w+JosHzevYLJZev8hk0br3CLvF4TftrA48
-        Hhs+N7F5rJm3htFj56y77B6bVnWyefRtWcXo8XmTXABblJ5NUX5pSapCRn5xia1StKGFkZ6h
-        pYWekYmlnqGxeayVkamSvp1NSmpOZllqkb5dgl7G61lrWQumhFSc7drB1sB43LGLkZNDQsBE
-        4lzLMlYQW0hgKaPE1v1lEHEZiZPTGlghbGGJP9e62LoYuYBqXjNKfFmwDywhLBApseFHBzuI
-        LSKgKXH973dWkCJmgcnMEu93nmaF6PjOKDF7RQtYFZuAoUTXW5BRnBy8AnYSjc9ngk1iEVCV
-        uLVrPlANB4eoQKzEpr1mECWCEidnPmEBsTmBFvSv+c0EYjMLmEnM2/yQGcKWl9j+dg6ULS5x
-        68l8pgmMQrOQtM9C0jILScssJC0LGFlWMYqklhbnpucWG+kVJ+YWl+al6yXn525iBEbstmM/
-        t+xg7HoXfIhRgINRiYfX41hLrBBrYllxZe4hRgkOZiUR3jmmTbFCvCmJlVWpRfnxRaU5qcWH
-        GE2BfpvILCWanA9MJnkl8YamhuYWlobmxubGZhZK4rwdAgdjhATSE0tSs1NTC1KLYPqYODil
-        Ghg5Lhe1Ff47cfio9yfZBYHMapn9E+b9DbJQtNfn7Ar6WnHtapzI2UuNnLGdhe1JB5deilss
-        xmTcpv51weeAqkKucnXl1g+/82c0XRLPc13Ss8W40HBBX2fNcl4THs7N86xKJLZonvBcdEGq
-        NCxEurvyYWyt5P/Ze+LXHGSdrKji8Yv9GcenZCWW4oxEQy3mouJEAPmhlqvuAgAA
-X-CMS-MailID: 20190920123315eucas1p13573d58c030e7e256076cd083b689f07
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190920115200eucas1p2253a3eb13373061ef8aa39131c98a319
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190920115200eucas1p2253a3eb13373061ef8aa39131c98a319
-References: <CAL_JsqJ=QWk07y=h7dHFiRrKuE7NGoUr50bu3kiOC+YU8qS9jg@mail.gmail.com>
-        <CGME20190920115200eucas1p2253a3eb13373061ef8aa39131c98a319@eucas1p2.samsung.com>
-        <20190920113540.30687-1-m.szyprowski@samsung.com>
-        <20190920122616.GA26862@pi3>
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:RHnbqsOlm3xcH1RayjvghUe7cW515Z/Q+qe9QxCcwNz6+7fyQzk
+ RbMnFVwK5wC/O92V4TOk2HUNedx5qlry6TeEHns3EANzUL1/WK0gha1HHHrJFV9KmVYz75y
+ 0gMJ1tDa50dvY1xy0C8SqlZB503maNHeYA2i5OtESnzPelU15n1R4I4njR5Mg4f9sx4HRnb
+ pR6YJpOGSdA2bCVeJK4Lg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:VNwMEYDc2Pk=:9uqeraGyMZ6/NMYDE5M5P0
+ K2NZzLrww39WejQ7JjdGePxt/F0GBPemIHvziNZginE0d5qrUOcT9OCnoXPskwhY6bhc96nnw
+ Tw1yWVnXJB9Ildfy3xxxy71UMQsh4lRMGmcJT2N6r2ZS9E/vtcYWb7+EkEMP5dnBopl4ygTrN
+ Iac3QjwJaB2sOtz2AnWGWxqCwBF5Upna/f5jLSFP4W4z8F4HM5B822KL7ufE3Vm/15zMcoAGr
+ LZWJ2AqToPezeSPDTt/cWyYnvfgfHfL8jPJY1yoMfY7ZWHs1+t07e1d0dxhBOBQ/Cn1iNDfEE
+ vJzL52wC4NVs/5zlMX6hQ9X6ge+GwXVlInPUgJmsqgkFX68sqJW59hPUmerM88CP0fPFkA6mE
+ 3ATzby0VydlM5PGDUJUtkHiO9JskFhmtjeuUdEGKlR65a7sH+cisg3gqzx+W3pwqAULmEgmcP
+ n59aUDF7sS/4Bdmg1+ruI4D3+jSIHhF4mXGx3xJ09HjxjW/fyxTEqbMAxX/mR0/hA2crkYwYO
+ JT2pzNF2GhZeLvw/cZFbmOz0gX4SGaZEM4EZAFwKlZI70ow8XxHqLR2UZdXCf8ViiT1KG1YtW
+ R+blkw70JEUUJ718fCPYcMo/cQTCn8ZUUyr2C5gqUkd7Nm5lw7/PVjM08V1GUxfnwgADpy3UB
+ Zd0ILxnSQpxAlNIbGww/kbHM+kL/hrhCU8IXBkOmnebqOSJrrlq+zbGYTgIb3ANM7ovw4Wrwv
+ o8/ntBeN1SWvont/Fc5fWW641H/97uJ+fccMXDMKNvaUwAl3W2aSdCwA3xNZ9vXDLFOx+NWar
+ CH5hu5IuYLNkuz6FouSRDhvzjkapWcNP7EX8lFKTjaGQYDm2DVUg1CYfMUJvXze7aSju9k0RY
+ wiDBNm3eGIpuIUqJGGm8Vz2ZwKzNYO+yymGkhXHnMp8NWeG9iR0TcCc2JfY8Ug56xoUEMvZbW
+ A87Dnr+qYzB+gEp8FLbS/fLonKU7erSJEAFVvlmGZop0NkNPfYx8YKd0eYbXFftj4SRwGzrT0
+ B/FivRPZIelfy4THS7eGcAozGPzEgVZFSwaJoUz4aRM2qhhHJP166erkwXCKvkAPafhppLyfh
+ aRco4M/A+60HuiteF30dkXU+MY/BNfx7oVNEZvoAcRrd7u0pAhbFHB9Hq5XblZL6JZwVOO3UN
+ nsmwMj3dPm7WWC8KXEUFuYM322vQKirRp1GYvlIUFPh0fo1VV2VoK2grr8A6GT9PbGZcqnMXX
+ cCele0tkF98350QasKxitECejKIHeLFIi319TjelJDIeC9XKJ+3Id0w9o2X0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Fri, 20 Sep 2019 14:30:31 +0200
 
-On 20.09.2019 14:26, Krzysztof Kozlowski wrote:
-> On Fri, Sep 20, 2019 at 01:35:40PM +0200, Marek Szyprowski wrote:
->> From: Maciej Falkowski <m.falkowski@samsung.com>
->>
->> Convert Samsung I2S controller to newer dt-schema format.
->>
->> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
->> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
->> ---
->> v3:
->> - Removed quotation marks from strings in compatible property
->> - Added min/max items to dmas property
->> - Removed unneeded description from dma-names property
->> - Added specific dma-names
->> - Added clock description
->> - Added include directive to examples to use clock macros directly
-> Guys, please stop attaching new versions of entire patchset to existing
-> discussions with in-reply-to. Entire V2 was attached to V1. V3 is
-> attached here. On some mail clients (GMail) this does not mark entire
-> thread unread at it looks like someone just commented about something.
-> Some other clients, e.g. mbsynsc with GMail, do not sync entire thread
-> so new version looks like reply-to but attached to nothing (missing
-> context). Not mentioning that you need additional effort on your side to
-> copy+paste the in-reply-to ID.
->
->> ---
->>   .../devicetree/bindings/sound/samsung-i2s.txt |  84 -----------
->>   .../bindings/sound/samsung-i2s.yaml           | 135 ++++++++++++++++++
->>   2 files changed, 135 insertions(+), 84 deletions(-)
->>   delete mode 100644 Documentation/devicetree/bindings/sound/samsung-i2s.txt
->>   create mode 100644 Documentation/devicetree/bindings/sound/samsung-i2s.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/sound/samsung-i2s.txt b/Documentation/devicetree/bindings/sound/samsung-i2s.txt
->> deleted file mode 100644
->> index a88cb00fa096..000000000000
->> --- a/Documentation/devicetree/bindings/sound/samsung-i2s.txt
->> +++ /dev/null
->> @@ -1,84 +0,0 @@
->> -* Samsung I2S controller
->> -
->> -Required SoC Specific Properties:
->> -
->> -- compatible : should be one of the following.
->> -   - samsung,s3c6410-i2s: for 8/16/24bit stereo I2S.
->> -   - samsung,s5pv210-i2s: for 8/16/24bit multichannel(5.1) I2S with
->> -     secondary fifo, s/w reset control and internal mux for root clk src.
->> -   - samsung,exynos5420-i2s: for 8/16/24bit multichannel(5.1) I2S for
->> -     playback, stereo channel capture, secondary fifo using internal
->> -     or external dma, s/w reset control, internal mux for root clk src
->> -     and 7.1 channel TDM support for playback. TDM (Time division multiplexing)
->> -     is to allow transfer of multiple channel audio data on single data line.
->> -   - samsung,exynos7-i2s: with all the available features of exynos5 i2s,
->> -     exynos7 I2S has 7.1 channel TDM support for capture, secondary fifo
->> -     with only external dma and more no.of root clk sampling frequencies.
->> -   - samsung,exynos7-i2s1: I2S1 on previous samsung platforms supports
->> -     stereo channels. exynos7 i2s1 upgraded to 5.1 multichannel with
->> -     slightly modified bit offsets.
->> -
->> -- reg: physical base address of the controller and length of memory mapped
->> -  region.
->> -- dmas: list of DMA controller phandle and DMA request line ordered pairs.
->> -- dma-names: identifier string for each DMA request line in the dmas property.
->> -  These strings correspond 1:1 with the ordered pairs in dmas.
->> -- clocks: Handle to iis clock and RCLK source clk.
->> -- clock-names:
->> -  i2s0 uses some base clocks from CMU and some are from audio subsystem internal
->> -  clock controller. The clock names for i2s0 should be "iis", "i2s_opclk0" and
->> -  "i2s_opclk1" as shown in the example below.
->> -  i2s1 and i2s2 uses clocks from CMU. The clock names for i2s1 and i2s2 should
->> -  be "iis" and "i2s_opclk0".
->> -  "iis" is the i2s bus clock and i2s_opclk0, i2s_opclk1 are sources of the root
->> -  clk. i2s0 has internal mux to select the source of root clk and i2s1 and i2s2
->> -  doesn't have any such mux.
-> I think you still miss this description of clocks and Sylwester asked for it.
->
->> -- #clock-cells: should be 1, this property must be present if the I2S device
->> -  is a clock provider in terms of the common clock bindings, described in
->> -  ../clock/clock-bindings.txt.
->> -- clock-output-names (deprecated): from the common clock bindings, names of
->> -  the CDCLK I2S output clocks, suggested values are "i2s_cdclk0", "i2s_cdclk1",
->> -  "i2s_cdclk3" for the I2S0, I2S1, I2S2 devices respectively.
-> You missed this. If you decide to remove deprecated properties, then
-> make it in separate patach. You described this patch as pure conversion
-> so I expect no logical/functional changes.
->
->> -
->> -There are following clocks available at the I2S device nodes:
->> - CLK_I2S_CDCLK    - the CDCLK (CODECLKO) gate clock,
->> - CLK_I2S_RCLK_PSR - the RCLK prescaler divider clock (corresponding to the
->> -		    IISPSR register),
->> - CLK_I2S_RCLK_SRC - the RCLKSRC mux clock (corresponding to RCLKSRC bit in
->> -		    IISMOD register).
->> -
->> -Refer to the SoC datasheet for availability of the above clocks.
->> -The CLK_I2S_RCLK_PSR and CLK_I2S_RCLK_SRC clocks are usually only available
->> -in the IIS Multi Audio Interface.
->> -
->> -Note: Old DTs may not have the #clock-cells property and then not use the I2S
->> -node as a clock supplier.
->> -
->> -Optional SoC Specific Properties:
->> -
->> -- samsung,idma-addr: Internal DMA register base address of the audio
->> -  sub system(used in secondary sound source).
->> -- pinctrl-0: Should specify pin control groups used for this controller.
->> -- pinctrl-names: Should contain only one value - "default".
->> -- #sound-dai-cells: should be 1.
->> -
->> -
->> -Example:
->> -
->> -i2s0: i2s@3830000 {
->> -	compatible = "samsung,s5pv210-i2s";
->> -	reg = <0x03830000 0x100>;
->> -	dmas = <&pdma0 10
->> -		&pdma0 9
->> -		&pdma0 8>;
->> -	dma-names = "tx", "rx", "tx-sec";
->> -	clocks = <&clock_audss EXYNOS_I2S_BUS>,
->> -		<&clock_audss EXYNOS_I2S_BUS>,
->> -		<&clock_audss EXYNOS_SCLK_I2S>;
->> -	clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
->> -	#clock-cells = <1>;
->> -	samsung,idma-addr = <0x03000000>;
->> -	pinctrl-names = "default";
->> -	pinctrl-0 = <&i2s0_bus>;
->> -	#sound-dai-cells = <1>;
->> -};
->> diff --git a/Documentation/devicetree/bindings/sound/samsung-i2s.yaml b/Documentation/devicetree/bindings/sound/samsung-i2s.yaml
->> new file mode 100644
->> index 000000000000..20ae5da7f798
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/sound/samsung-i2s.yaml
->> @@ -0,0 +1,135 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/sound/samsung-i2s.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Samsung SoC I2S controller
->> +
->> +maintainers:
->> +  - Krzysztof Kozlowski <krzk@kernel.org>
->> +  - Sylwester Nawrocki <s.nawrocki@samsung.com>
->> +
->> +properties:
->> +  compatible:
->> +    description: |
->> +      samsung,s3c6410-i2s: for 8/16/24bit stereo I2S.
->> +
->> +      samsung,s5pv210-i2s: for 8/16/24bit multichannel(5.1) I2S with
->> +      secondary fifo, s/w reset control and internal mux for root clk src.
->> +
->> +      samsung,exynos5420-i2s: for 8/16/24bit multichannel(5.1) I2S for
->> +      playback, stereo channel capture, secondary fifo using internal
->> +      or external dma, s/w reset control, internal mux for root clk src
->> +      and 7.1 channel TDM support for playback. TDM (Time division multiplexing)
->> +      is to allow transfer of multiple channel audio data on single data line.
->> +
->> +      samsung,exynos7-i2s: with all the available features of exynos5 i2s.
->> +      exynos7 I2S has 7.1 channel TDM support for capture, secondary fifo
->> +      with only external dma and more no.of root clk sampling frequencies.
->> +
->> +      samsung,exynos7-i2s1: I2S1 on previous samsung platforms supports
->> +      stereo channels. exynos7 i2s1 upgraded to 5.1 multichannel with
->> +      slightly modified bit offsets.
->> +    enum:
->> +      - samsung,s3c6410-i2s
->> +      - samsung,s5pv210-i2s
->> +      - samsung,exynos5420-i2s
->> +      - samsung,exynos7-i2s
->> +      - samsung,exynos7-i2s1
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  dmas:
->> +    minItems: 2
->> +    maxItems: 3
->> +
->> +  dma-names:
->> +    oneOf:
->> +      - items:
->> +          - const: tx
->> +          - const: rx
->> +      - items:
->> +          - const: tx
->> +          - const: rx
->> +          - const: tx-sec
->> +
->> +  clocks:
->> +    minItems: 1
->> +    maxItems: 3
->> +    description: |
->> +      There are following clocks available at the I2S device nodes:
->> +      CLK_I2S_CDCLK:
->> +      the CDCLK (CODECLKO) gate clock.
->> +
->> +      CLK_I2S_RCLK_PSR:
->> +      RCLK prescaler divider clock corresponding to the IISPSR register.
->> +
->> +      CLK_I2S_RCLK_SRC:
->> +      RCLKSRC mux clock corresponding to RCLKSRC bit in IISMOD register.
->> +
->> +  clock-names:
->> +    oneOf:
->> +      - items:
->> +          - const: iis
->> +      - items:
->> +          - const: iis
->> +          - const: i2s_opclk0
->> +      - items:
->> +          - const: iis
->> +          - const: i2s_opclk0
->> +          - const: i2s_opclk1
->> +    description: |
->> +      "iis" is the i2s bus clock.
->> +      For i2s1 and i2s2 - "iis", "i2s_opclk0"
->> +      For i2s0 - "iis", "i2s_opclk0", "i2s_opclk1"
->> +
->> +  "#clock-cells":
->> +    const: 1
->> +
->> +  samsung,idma-addr:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description: |
->> +      Internal DMA register base address of the audio
->> +      sub system(used in secondary sound source).
->> +
->> +  pinctrl-0:
->> +    description: Should specify pin control groups used for this controller.
->> +
->> +  pinctrl-names:
->> +    const: default
->> +
->> +  "#sound-dai-cells":
->> +    const: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - dmas
->> +  - dma-names
->> +  - clocks
->> +  - clock-names
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/clock/exynos-audss-clk.h>
-> Does it really work? When I tried, it was failing... If you look up at
-> resulting DTS example it is wrong.
+Simplify this function implementation by using a known wrapper function.
 
-In which way it was wrong? We checked and it was correctly propagated to 
-the example dts. It also compiled fine without errors. The only minor 
-issue was that the include was generated inside the root node, but for 
-the clock definitions this doesn't matter, but it makes the example 
-easier to understand.
+This issue was detected by using the Coccinelle software.
 
- > ...
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+
+v2:
+
+Jacek Anaszewski requested to split updates for two modules
+
+into a separate patch for each driver.
+
+https://lore.kernel.org/r/658bd05d-376d-adfd-64a5-e20f83d7b90a@gmail.com/
+
+
+
+ drivers/leds/leds-bcm6328.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
+
+diff --git a/drivers/leds/leds-bcm6328.c b/drivers/leds/leds-bcm6328.c
+index c50d34e2b098..42e1b7598c3a 100644
+=2D-- a/drivers/leds/leds-bcm6328.c
++++ b/drivers/leds/leds-bcm6328.c
+@@ -346,16 +346,11 @@ static int bcm6328_leds_probe(struct platform_device=
+ *pdev)
+ 	struct device *dev =3D &pdev->dev;
+ 	struct device_node *np =3D pdev->dev.of_node;
+ 	struct device_node *child;
+-	struct resource *mem_r;
+ 	void __iomem *mem;
+ 	spinlock_t *lock; /* memory lock */
+ 	unsigned long val, *blink_leds, *blink_delay;
+
+-	mem_r =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (!mem_r)
+-		return -EINVAL;
+-
+-	mem =3D devm_ioremap_resource(dev, mem_r);
++	mem =3D devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(mem))
+ 		return PTR_ERR(mem);
+
+=2D-
+2.23.0
 
