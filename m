@@ -2,112 +2,166 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1388C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 09:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F39C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 10:01:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7898F208C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 09:09:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DC95217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 10:01:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SkyMdLbV"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="EZ5XJ0OV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394076AbfIUJJE (ORCPT
+        id S2407316AbfIUKBE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Sep 2019 05:09:04 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37747 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392557AbfIUJJE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Sep 2019 05:09:04 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y5so6149995pfo.4
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Sep 2019 02:09:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=LKS6iRhORtVWtWzPRk2V93JoQAB4JDX0z138KY8j8Ak=;
-        b=SkyMdLbVZeuAeURGdY/fK7VUmGBH5duim15ZdpccY6a9VaRa7ysYDVaA7VUcqecynC
-         NSpY6XX7eKwmBaeUoQsRnsl8Ko0gjuRoRIAfs8u3KYHs5i2OYzOw/fFTozNtkUaCu2uQ
-         yNNr+zvypRK5jh7JvO6BN0ixVJ+hDH1K+zQEW1ntYn0IoTebzEtKHcjp1P948b9Mwn5K
-         FZwnxU3syHnu79tDtL0nisC7ArTpimgR+i6/Y1d2xBOG+X3gSt6oxZptCPjK9AUW2rlQ
-         f2zDP2C8ZNKIQHotlvns49lEBLnfHOyh03czL/hGG2EChz39ihxw7K/DIedL8LuJxDrb
-         zehQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=LKS6iRhORtVWtWzPRk2V93JoQAB4JDX0z138KY8j8Ak=;
-        b=isFTe0cRyOExfCY9sP0hn2Iwoy8RwdniEM2zAfm9BPe9buJzcMt+zqQPLd04Fjuijo
-         GdXqMeYfRdPajYq2PIxXKRSnKszHxdEFyV8StH43cB+G3mVCd9sXYss7DnmEyMVex887
-         Zeyiv0ysvMys4maD7OEDmswoH7H3kY0wgYWIL9zzzDgvGgPx97eL/zXjqgNZKX8C19iW
-         nqlBHohFocOk2RSNaWNmcFx5wLorLe0H0B5Rn/FwIzTuFAH1JoU/zYDx332+Zfrh4X0t
-         6dwaNIiVhEyFT87M0rhL7KY4vsFgs3s8i0AunupMX9tQ52Vf2eDRW8pI06CjFBJ7K2vl
-         n2Ow==
-X-Gm-Message-State: APjAAAVxPYdjPRMQsJZu+RxTGYsj94fJRDUJ9n/YY4jgX9O9zoNALRRM
-        rCr4Aqp7QqzvN6J/V/ra9xe6MQ==
-X-Google-Smtp-Source: APXvYqyDG2iSDN+jBYdCL3+alE/9Xq3bNU+YDf3e+OZLkMg4U9lsu0+pJcxGpuPE3fYiB4Uxvo8gvQ==
-X-Received: by 2002:a63:6a81:: with SMTP id f123mr19648574pgc.348.1569056941451;
-        Sat, 21 Sep 2019 02:09:01 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id w69sm6951409pgd.91.2019.09.21.02.08.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Sep 2019 02:09:00 -0700 (PDT)
-Date:   Sat, 21 Sep 2019 02:08:59 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Miles Chen <miles.chen@mediatek.com>
-cc:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com
-Subject: Re: [PATCH] mm: slub: print_hex_dump() with DUMP_PREFIX_OFFSET
-In-Reply-To: <20190920104849.32504-1-miles.chen@mediatek.com>
-Message-ID: <alpine.DEB.2.21.1909210207240.259613@chino.kir.corp.google.com>
-References: <20190920104849.32504-1-miles.chen@mediatek.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sat, 21 Sep 2019 06:01:04 -0400
+Received: from mout.web.de ([217.72.192.78]:59627 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405440AbfIUKBE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Sep 2019 06:01:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1569060054;
+        bh=9om8hD/kLaf9e9fQUs6omNYsjXudzvqtIiKV5m1awsY=;
+        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
+        b=EZ5XJ0OVva5N4xddt9Ox+uofQUZw+jafS918t7wQPFSWdh/bznObMAPipk03KjwSU
+         tFkYEqcaa8gaZ/gfeVQnAVklnxcp+s0os4H7Rl8qjEnb30a2+UUFIbqrZnK8qxoldC
+         /7+xlAH/QrhdrxmOd8LyeWna0etzWVddTy2IJp+E=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.244.64.44]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LilNJ-1hd6rI3brx-00cxvm; Sat, 21
+ Sep 2019 12:00:53 +0200
+To:     linux-rtc@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Biwen Li <biwen.li@nxp.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] rtc: fsl-ftm-alarm: Use devm_platform_ioremap_resource() in
+ ftm_rtc_probe()
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <4552ef52-f218-93b1-6dfa-668d137676f8@web.de>
+Date:   Sat, 21 Sep 2019 12:00:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:PdS6VDi89nQ5MEz616+aD8BLYHe8fFIFFttx8Q1QfI/O1vGuHJ/
+ stDZ13wS8Kf6tTtIcRB8rpHjD1N+oua420FVjfOKbccUv498P8vc6AFzxfjJc19qeU7XqG1
+ 8yj68XIMfbL0Mb60u/pzMqzpomX+tHpFQcrFNtfrsNX5K0Ti1liCEwp1LNqB0Dk2XZoOhI0
+ DoqhWWiFB0qiBdABqJm9g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:MVTIGAREZiM=:yZXRK+m9tX1/qFF2DIp1du
+ z7+IADNwTWEHEEHESJz9ZrCtxecvnS6o1qLLxx75laDVRHhjPDR0lwThuOAc+9BmA0IY6EzOu
+ kZaouoaTQWBtuhf5123va1ixRzMCvVr6K8STObVub0IdbEBHugl4pozrj1r84yAC+4bhrtZYr
+ CYFc539Zd3NteFJ1qifqDI6FVWqLye4iW90+zZBDLvEnD1mO6p/CyaQhJziSSD+V8N5sXTGo9
+ HfEB9lUnOQ/Y+Og02RHUeS3GyXKSJQnAQrDdewpqovbSgxMiVa94OUTXCkv0YHl0X5bF0XRO5
+ JFJFL20xqMzpr3FUsi0l7sScIh5x2i6PRc0RFdY8UAH9tKy75JyZPKH9ui0yzquxmQWQQtqKG
+ 3pTCwOalgXemerM1sMsatdiC8ZAEGOS9G7o6zoUceKah1OpktIFzUnU48ZBG3eMVAH4YvaSUi
+ +9RkTcsQFiAKInSsZdPs3VHeu2wwImkGA+aTloI1hYeaIczj9PUe+Cp0fhUV5jNcb+Q81crlE
+ 3R74fxtMkvvHi2XMI81SZ0HRX5mADAMbCIisB3RdPROXwafz5dklgCNVuljt5kVziC5fpdVAQ
+ RfHfYah58O6KDlzUAUT7sXod9WeMDJuUhNLytxrmhkqdQ7pEdw29XaaklnMP7T+RG63N/c0Zs
+ xZqPMQU6yyVBFHDUTH8nJQoCnh3h1+RZz2ZWTs9boO631dSnuNTFpykM+/ZSNgPXBEo7bIjEw
+ WPTge+x59lH6p8RwN10n+Nf1hoOhxrrKbOc4YfWmL5/oAqipeAE9kaJbEzx4rFkEhRRP9aKla
+ a2kvPs+ZpCgxPoaLiZ84KN0OPbOLtWX0Im7MsbaGjgZenkuB1Xha2hII7ncOsqk+1JqZ24Tca
+ vGQI1IiOHJIAmeFS7nRuURNdxHNLQUFvXPxVNxB6E3REQDBDQbqEFeCrwQCB/F91mmR064/8G
+ EZsqE2GGFLbqOg5GXuxAdMJeLW7iCJgvzNfErOX5boZuO+vAx680BSXwMzprhGFreJB3LoU7Y
+ 3WWzo4dc8yIylUbUnvcRxSp1qeFHw1c7LwZNGrcMCijZ/VOIqS/u4zI/5+6B2/NlM/PXPMk+8
+ ibd8iUEC6o3uUDXClqwO1hm8Ws2AfGbfxRQSupX+RHYkdwiT7B3ao+dK73EZGBOv+2dflWVsV
+ hO2U+VehsQJqDAEwNEnM3c70Y6hhIrCYP4bmD05jg9UB/ZzZhvKNxSFynOP5XVZZQUvd+TCRS
+ dwpts4k8nOCIuUD7/f+pL5x2RWDdPFDlbbLh+G6ctrNeqbaFtP4L21vtVAoE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Sep 2019, Miles Chen wrote:
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Sat, 21 Sep 2019 11:49:01 +0200
 
-> Since commit ad67b74d2469d9b8 ("printk: hash addresses printed with %p"),
-> The use DUMP_PREFIX_OFFSET instead of DUMP_PREFIX_ADDRESS with
-> print_hex_dump() can generate more useful messages.
-> 
-> In the following example, it's easier get the offset of incorrect poison
-> value with DUMP_PREFIX_OFFSET.
-> 
-> Before:
-> Object 00000000e817b73b: 00 00 00 00 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-> Object 00000000816f4601: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-> Object 00000000169d2bb8: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-> Object 00000000f4c38716: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-> Object 00000000917e3491: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-> Object 00000000c0e33738: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-> Object 000000001755ddd1: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-> 
-> After:
-> Object 00000000: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-> Object 00000010: 63 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-> Object 00000020: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-> Object 00000030: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b a5
-> 
-> I think it might be worth to convert all DUMP_PREFIX_ADDRESS to
-> DUMP_PREFIX_OFFSET for the whole Linux kernel.
-> 
+Simplify this function implementation by using a known wrapper function.
 
-I agree it looks nicer for poisoning, I'm not sure that every caller of 
-print_section() is the same, however.  For example trace() seems better 
-off as DUMP_PREFIX_ADDRESS since it already specifies the address of the 
-object being allocated or freed and offset here wouldn't really be useful, 
-no?
+This issue was detected by using the Coccinelle software.
+
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/rtc/rtc-fsl-ftm-alarm.c | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
+
+diff --git a/drivers/rtc/rtc-fsl-ftm-alarm.c b/drivers/rtc/rtc-fsl-ftm-ala=
+rm.c
+index 8df2075af9a2..b83f7afa8311 100644
+=2D-- a/drivers/rtc/rtc-fsl-ftm-alarm.c
++++ b/drivers/rtc/rtc-fsl-ftm-alarm.c
+@@ -248,7 +248,6 @@ static const struct rtc_class_ops ftm_rtc_ops =3D {
+ static int ftm_rtc_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *np =3D pdev->dev.of_node;
+-	struct resource *r;
+ 	int irq;
+ 	int ret;
+ 	struct ftm_rtc *rtc;
+@@ -265,13 +264,7 @@ static int ftm_rtc_probe(struct platform_device *pdev=
+)
+ 	if (IS_ERR(rtc->rtc_dev))
+ 		return PTR_ERR(rtc->rtc_dev);
+
+-	r =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (!r) {
+-		dev_err(&pdev->dev, "cannot get resource for rtc\n");
+-		return -ENODEV;
+-	}
+-
+-	rtc->base =3D devm_ioremap_resource(&pdev->dev, r);
++	rtc->base =3D devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(rtc->base)) {
+ 		dev_err(&pdev->dev, "cannot ioremap resource for rtc\n");
+ 		return PTR_ERR(rtc->base);
+=2D-
+2.23.0
+
