@@ -2,225 +2,173 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB48C49ED7
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 10:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D5DC49ED7
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 11:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ABD6217F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 10:55:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MJzSDEWw"
+	by mail.kernel.org (Postfix) with ESMTP id A16E8208C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 11:08:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437749AbfIUKzU (ORCPT
+        id S2407547AbfIULII (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Sep 2019 06:55:20 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50445 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407449AbfIUKzT (ORCPT
+        Sat, 21 Sep 2019 07:08:08 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:33596 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407531AbfIULIH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Sep 2019 06:55:19 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 5so5009973wmg.0;
-        Sat, 21 Sep 2019 03:55:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Uws/t6BglFHhG735K622EFKuAGq3v8qgTlRHs9SU1QI=;
-        b=MJzSDEWwnnckSo0hw9ps1r8ygJzpXECoX4pUawSKjpvxh5P88Ku+sToeltSrwkhj/t
-         5/uC3hPeXuDNGeQAkYrQSQzVFO2oI2y9MacXTx+JtIsAEFkSeekiAzW/swpUyC1vQTxp
-         J+KzKKQMTQlGloJT+pBuPes0JpNmmLWHDgi4OJDcyJCKTJgnHRHcXkG/UeHXaNJyMwS6
-         pYs8fPSMsaMKJEfcR2sxBZ7syQaNgfUoXQpBVAYcNFPBHamvgt/TTSyZf6beWdpeGpFm
-         lgnG1IzMZHmZ3wZRTs1buYpinPt6pvIWChKJcIf4vA4fDJbieBQWwFQvmvqrrhW1RTlK
-         hJyA==
+        Sat, 21 Sep 2019 07:08:07 -0400
+Received: by mail-io1-f71.google.com with SMTP id g15so15039922ioc.0
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Sep 2019 04:08:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Uws/t6BglFHhG735K622EFKuAGq3v8qgTlRHs9SU1QI=;
-        b=ObI2D9fCJkFTpcJRniaJ4OvI1okRDbMoc2J1ljFLzrdCTrI52PAhhz6bwuMM+nisFF
-         XoP7IjrIUBWEqUNV3opKU8VI1516ItLzD2L0GFMI+0JLVRd/q5LdimkQDa/vGUuRtjXH
-         rHAN6bbuwc/8QAoGTXKHKlRV11hNxsa1sHTtwogyCRLy0zmDHgHfDMaLn+vm/NhT6f9a
-         DhGJPEAtzY5a24cZCR48GsRSjVjFZk+l8+bxak1mxOGUMl53HQt1k1ZRFDmAixX90LXy
-         lvGNO9On3Q3++qSoGe+LXsiZJplFF3NMVvUeZuEAF+EBEU/YW+pP3yYDxZEovy8hwi+b
-         cVcw==
-X-Gm-Message-State: APjAAAV/t/+gs7QfIlAIORcwqa00zJ3f+ST2xSZJZoA2ah08o5QWoSoG
-        wt1l4bOTTESKzH028ges0LbkmZjA
-X-Google-Smtp-Source: APXvYqze4hNfrxXmuUPxM03Y6LXxq5Rizj+smRAdfxE8BhsI2uGBjOVcI4hbcvSUD66GjGXmpf8CTw==
-X-Received: by 2002:a1c:e90b:: with SMTP id q11mr6752283wmc.19.1569063314437;
-        Sat, 21 Sep 2019 03:55:14 -0700 (PDT)
-Received: from [192.168.1.19] (blb134.neoplus.adsl.tpnet.pl. [83.28.195.134])
-        by smtp.gmail.com with ESMTPSA id r18sm6146883wme.48.2019.09.21.03.55.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 21 Sep 2019 03:55:13 -0700 (PDT)
-Subject: Re: [PATCH v8 1/9] leds: multicolor: Add sysfs interface definition
-To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190920174139.30079-1-dmurphy@ti.com>
- <20190920174139.30079-2-dmurphy@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <ea294ad4-d340-3677-eab0-6138968cfe0e@gmail.com>
-Date:   Sat, 21 Sep 2019 12:55:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=tF9f8HOEBFZsHatB6N83NPRUGAJJLyixjeU8/8LJXm4=;
+        b=lyNcRVW8f1w5zE6HS0EWtJII3HQV/MpjOSvC19EP/c661+M+jB5uLwsxu5vzOAE9Ni
+         cgam57+MwXuiZHCnW+vgY8AlS7830nHKe8VWXbMetzdNF9A9YdX7BCQJYhkXtJqlcLxY
+         EGgpJ3P2Z4cRATtgI17AdUNgOb9aGpin/z9f4SPCcxNGvZ58PZ2fIYHKNl81s6gdBXMj
+         /uPKCf0t5CZZ3C9WlrkIfuEXQsBAgWHxOg2ziKBqIigmqUvzBctPik5SDRo7WSwR43Ef
+         W1ukgpt+l6D6NBeEOczOAJAw7DSiMiLNxXscl+tl9GugMD0BMkmrRgU6qbIiVzE91eeT
+         dq8A==
+X-Gm-Message-State: APjAAAWSbG4wQg8FF3a5/gQwcD3AAUl8lYA9XfPAQ3kLroGvCMYcffmP
+        UuMlVlH08zyTy9nVF9ZSCkfwYat+0DiVGI8wEZqG4yFX20nN
+X-Google-Smtp-Source: APXvYqz2E9lE2ch/Yc+UShmraCJxnaDt71HrKNYbk+7XMRMwlIAxM2581WQ5gTNz7aEMfIRNjJJmPGmV+vNRR9kXTAqBFE06FYUM
 MIME-Version: 1.0
-In-Reply-To: <20190920174139.30079-2-dmurphy@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6638:1f5:: with SMTP id t21mr24158548jaq.119.1569064085756;
+ Sat, 21 Sep 2019 04:08:05 -0700 (PDT)
+Date:   Sat, 21 Sep 2019 04:08:05 -0700
+In-Reply-To: <000000000000727bd10590c9cf6c@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007626af05930e33d7@google.com>
+Subject: Re: KASAN: use-after-free Read in rxrpc_release_call
+From:   syzbot <syzbot+eed305768ece6682bb7f@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, dhowells@redhat.com,
+        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan,
+syzbot has found a reproducer for the following crash on:
 
-On 9/20/19 7:41 PM, Dan Murphy wrote:
-> Add a documentation of LED Multicolor LED class specific
-> sysfs attributes.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  .../ABI/testing/sysfs-class-led-multicolor    | 43 +++++++++++++++++++
->  1 file changed, 43 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-class-led-multicolor b/Documentation/ABI/testing/sysfs-class-led-multicolor
-> new file mode 100644
-> index 000000000000..39fc73becfec
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-class-led-multicolor
-> @@ -0,0 +1,43 @@
-> +What:		/sys/class/leds/<led>/brightness
-> +Date:		Sept 2019
-> +KernelVersion:	5.5
-> +Contact:	Dan Murphy <dmurphy@ti.com>
-> +Description:	read/write
-> +		Writing to this file will update all LEDs within the group to a
-> +		calculated percentage of what each color LED intensity is set
-> +		to. The percentage is calculated via the equation below:
-> +
-> +		led_brightness = requested_value * led_color_intensity/led_color_max_intensity
+HEAD commit:    f97c81dc Merge tag 'armsoc-late' of git://git.kernel.org/p..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=110c16a1600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=61f948934213449f
+dashboard link: https://syzkaller.appspot.com/bug?extid=eed305768ece6682bb7f
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16cf8ea1600000
 
-How about:
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+eed305768ece6682bb7f@syzkaller.appspotmail.com
 
-led_brightness = brightness * <color>_intensity/<color>_max_intensity
+==================================================================
+BUG: KASAN: use-after-free in rxrpc_release_call+0x3f3/0x540  
+net/rxrpc/call_object.c:493
+Read of size 8 at addr ffff88809cea9450 by task syz-executor.2/15263
 
-> +
-> +		For additional details please refer to
-> +		Documentation/leds/leds-class-multicolor.rst.
-> +
-> +		The value of the color is from 0 to
-> +		/sys/class/leds/<led>/max_brightness.
-> +
-> +What:		/sys/class/leds/<led>/colors/<led_color>_intensity
+CPU: 1 PID: 15263 Comm: syz-executor.2 Not tainted 5.3.0+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x1d8/0x2f8 lib/dump_stack.c:113
+  print_address_description+0x75/0x5b0 mm/kasan/report.c:351
+  __kasan_report+0x14b/0x1c0 mm/kasan/report.c:482
+  kasan_report+0x26/0x50 mm/kasan/common.c:618
+  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+  rxrpc_release_call+0x3f3/0x540 net/rxrpc/call_object.c:493
+  rxrpc_release_calls_on_socket+0x6b7/0x7e0 net/rxrpc/call_object.c:523
+  rxrpc_release_sock net/rxrpc/af_rxrpc.c:897 [inline]
+  rxrpc_release+0x2dc/0x460 net/rxrpc/af_rxrpc.c:927
+  __sock_release net/socket.c:590 [inline]
+  sock_close+0xe1/0x260 net/socket.c:1268
+  __fput+0x2e4/0x740 fs/file_table.c:280
+  ____fput+0x15/0x20 fs/file_table.c:313
+  task_work_run+0x17e/0x1b0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop arch/x86/entry/common.c:163 [inline]
+  prepare_exit_to_usermode+0x459/0x580 arch/x86/entry/common.c:194
+  syscall_return_slowpath+0x113/0x4a0 arch/x86/entry/common.c:274
+  do_syscall_64+0x11f/0x1c0 arch/x86/entry/common.c:300
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4136f1
+Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48  
+83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48  
+89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
+RSP: 002b:00007ffe548af320 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 0000000000000004 RCX: 00000000004136f1
+RDX: 0000000000000001 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 0000000000000000 R08: ffffffffffffffff R09: ffffffffffffffff
+R10: 00007ffe548af400 R11: 0000000000000293 R12: 000000000075bfc8
+R13: 000000000018139a R14: 00000000007608b0 R15: 000000000075bfd4
 
-s/led_color/color/
+Allocated by task 15276:
+  save_stack mm/kasan/common.c:69 [inline]
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc+0x11c/0x1b0 mm/kasan/common.c:493
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:507
+  kmem_cache_alloc_trace+0x221/0x2f0 mm/slab.c:3550
+  kmalloc include/linux/slab.h:552 [inline]
+  kzalloc include/linux/slab.h:748 [inline]
+  rxrpc_alloc_connection+0x79/0x490 net/rxrpc/conn_object.c:41
+  rxrpc_alloc_client_connection net/rxrpc/conn_client.c:176 [inline]
+  rxrpc_get_client_conn net/rxrpc/conn_client.c:339 [inline]
+  rxrpc_connect_call+0xb30/0x2c40 net/rxrpc/conn_client.c:697
+  rxrpc_new_client_call+0x6d5/0xb60 net/rxrpc/call_object.c:289
+  rxrpc_new_client_call_for_sendmsg net/rxrpc/sendmsg.c:595 [inline]
+  rxrpc_do_sendmsg+0xf2b/0x19b0 net/rxrpc/sendmsg.c:652
+  rxrpc_sendmsg+0x5eb/0x8b0 net/rxrpc/af_rxrpc.c:585
+  sock_sendmsg_nosec net/socket.c:637 [inline]
+  sock_sendmsg net/socket.c:657 [inline]
+  ___sys_sendmsg+0x60d/0x910 net/socket.c:2311
+  __sys_sendmmsg+0x239/0x470 net/socket.c:2413
+  __do_sys_sendmmsg net/socket.c:2442 [inline]
+  __se_sys_sendmmsg net/socket.c:2439 [inline]
+  __x64_sys_sendmmsg+0xa0/0xb0 net/socket.c:2439
+  do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-> +Date:		Sept 2019
-> +KernelVersion:	5.5
-> +Contact:	Dan Murphy <dmurphy@ti.com>
-> +Description:	read/write
-> +		The led_color directory is dynamically created based on the
-> +		colors defined by the registrar of the class.
-> +		The value for the led_color is defined in the
-> +		include/dt-bindings/leds/common.h. There is one directory per
-> +		color presented.  The intensity file is created under each
-> +		led_color directory and controls the individual LED color
-> +		setting.
+Freed by task 9:
+  save_stack mm/kasan/common.c:69 [inline]
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_slab_free+0x12a/0x1e0 mm/kasan/common.c:455
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:463
+  __cache_free mm/slab.c:3425 [inline]
+  kfree+0x115/0x200 mm/slab.c:3756
+  rxrpc_destroy_connection+0x1ec/0x240 net/rxrpc/conn_object.c:372
+  __rcu_reclaim kernel/rcu/rcu.h:222 [inline]
+  rcu_do_batch kernel/rcu/tree.c:2157 [inline]
+  rcu_core+0x843/0x1050 kernel/rcu/tree.c:2377
+  rcu_core_si+0x9/0x10 kernel/rcu/tree.c:2386
+  __do_softirq+0x333/0x7c4 arch/x86/include/asm/paravirt.h:766
 
-We no longer have led_color directories so this description needs
-to be adjusted.
+The buggy address belongs to the object at ffff88809cea9200
+  which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 592 bytes inside of
+  1024-byte region [ffff88809cea9200, ffff88809cea9600)
+The buggy address belongs to the page:
+page:ffffea000273aa00 refcount:1 mapcount:0 mapping:ffff8880aa400c40  
+index:0x0 compound_mapcount: 0
+flags: 0x1fffc0000010200(slab|head)
+raw: 01fffc0000010200 ffffea00026b4908 ffffea0002a64588 ffff8880aa400c40
+raw: 0000000000000000 ffff88809cea8000 0000000100000007 0000000000000000
+page dumped because: kasan: bad access detected
 
-And I'd not mention where the colors are defined. This is documentation
-for the user, who does not need to know about implementation details.
+Memory state around the buggy address:
+  ffff88809cea9300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff88809cea9380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ffff88809cea9400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                  ^
+  ffff88809cea9480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff88809cea9500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
 
-> +
-> +		The value of the color is from 0 to
-> +		/sys/class/leds/<led>/colors/<led_color>_max_intensity.
-> +
-> +What:		/sys/class/leds/<led>/colors/<led_color>_max_intensity
-> +Date:		Sept 2019
-> +KernelVersion:	5.5
-> +Contact:	Dan Murphy <dmurphy@ti.com>
-> +Description:	read only
-> +		Maximum intensity level for the LED color, default is
-> +		255 (LED_FULL).
-
-Mentioning the default value here is pointless IMO. Userspace cannot
-change it anyway.
-
-> +
-> +		If the LED does not support different intensity levels, this
-> +		should be 1.
-> 
-
-This is less relevant for MC class, and also it is rather obvious.
-I'd skip this sentence.
-
--- 
-Best regards,
-Jacek Anaszewski
