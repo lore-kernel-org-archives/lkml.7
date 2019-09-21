@@ -2,171 +2,191 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F7B3C49ED7
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 06:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B075DC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 06:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 160B020882
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 06:56:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D7E02054F
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 06:56:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="evkEodFP"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="aKoeW6NU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731072AbfIUG4E (ORCPT
+        id S2437623AbfIUG4Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Sep 2019 02:56:04 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45045 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726451AbfIUG4D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Sep 2019 02:56:03 -0400
-Received: by mail-wr1-f68.google.com with SMTP id i18so8790524wru.11
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 23:56:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=G+3UPEhERrKETlk0FsuOwaqKLSxXjoLtJQ8TkFpUanQ=;
-        b=evkEodFPsQCy9q6aV3S9m0L2g7DE6Jx4M0MnI0imvyxJMf176t1gVqZYI3GQbP0Ww9
-         2lD47ST6Shv9mG6w0mER4CKLC+uBdRfcdMal7Qqp21MqL2IOZry3tch/Or5s+nez9jo/
-         x4Zc6AW2/ZdQ4WTW3QnN994vYcNDJtJm/Lj98TlUV42VFytLSWzKJTK7qCUT7ONxKX8l
-         18O9Hax99+RMyOmpzbHROpEnGpRuL3tItse+yn0TYvtYP6y3dUNF4GpyLMWcYN3KXAda
-         8dH9eS2f50YIRSPt3C6QxBRVCBBqZISO60GiNPJ22ZdB1/6Oyi3FrNQH0N+z43kOn5CF
-         NPYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=G+3UPEhERrKETlk0FsuOwaqKLSxXjoLtJQ8TkFpUanQ=;
-        b=cbMV/FyvQR0ASl5og3h32OudbH3dxw5FTdEbAb1uD+INSw3sS/mlj+NfH1r/Vl98O6
-         v7iEPF+h2YYc+RH1eaBcld/aeNOfdObxkSv5qBs5b0WZKiHc+m0R5y4kdjsLNmJ0PToH
-         XzUgMoYuIR5RylVY/qHlDHjDCp93huPxnaPa+28WxeNmxm5rbm4ULpOsIln3JrxoVsS6
-         tlDpVTd1Ulmgu+JvN0x5lL4l+nwGciGLhC7lY6cqR+Qv1BnHWnYszMDmRrLJr+zTVKRL
-         /hnR5Rnv9vJIP7xQQ2sGNSv0j8VfjS3lGlNOov6N60iAQ+BdZsfJxV/XkEhsWzizjwnv
-         Zhhg==
-X-Gm-Message-State: APjAAAWmiZMFssJuBwcaoG9E4UdScIbQOPG6Pyd3+/+D9j5uWbS3eAdw
-        EechVLIYiN7tpODLULerGFHS7Q==
-X-Google-Smtp-Source: APXvYqxdZx+s8oTyrgehe/A1WhysotelpvIxih1/tgzaNr0jhrn7B0FxHmF/LqmoiE/tJ4KwzD7I9A==
-X-Received: by 2002:adf:f008:: with SMTP id j8mr15366854wro.75.1569048961373;
-        Fri, 20 Sep 2019 23:56:01 -0700 (PDT)
-Received: from [192.168.0.102] (146-241-16-18.dyn.eolo.it. [146.241.16.18])
-        by smtp.gmail.com with ESMTPSA id q15sm7958160wrg.65.2019.09.20.23.55.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 20 Sep 2019 23:56:00 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH 2/2] block, bfq: delete "bfq" prefix from cgroup filenames
-From:   Paolo Valente <paolo.valente@linaro.org>
-In-Reply-To: <de7664b1-6f47-8a7b-b231-727336c0ef85@kernel.dk>
-Date:   Sat, 21 Sep 2019 08:55:53 +0200
-Cc:     Tejun Heo <tj@kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        noreply-spamdigest via bfq-iosched 
-        <bfq-iosched@googlegroups.com>,
-        Oleksandr Natalenko <oleksandr@natalenko.name>,
-        cgroups@vger.kernel.org, Angelo Ruocco <angeloruocco90@gmail.com>
+        Sat, 21 Sep 2019 02:56:16 -0400
+Received: from mail-eopbgr1320128.outbound.protection.outlook.com ([40.107.132.128]:6126
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728865AbfIUG4P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Sep 2019 02:56:15 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VWv6XMcA/CsBCkuTRSQTHRdUgUoUjP3ZsJMTH/XhbXwts8M7F4BSuz8XTJu+PCr5s38N9pKJ05xbM5psfyCrDYYEQ0Rm8rLR+gIWUUec2CntzHIydiM9/8jU97J4OzbDF/JXpA93sW8A3SEtruCAtYBOJEiZaJWDd7MSR+/2evyaPdsiflaF9xUTrLAfKyfpi2Xh50kyKNVRkXQxO+9xCtNR/Lgeg+JBpUSjOQT5AszLdWUaS1rW0AU6fjXnD1KM5Xo03FwADh1UXuKBE9VQnV6YrgxAhECrHReCLpVISGFdr8fLNeLRnJEaeAIFyc7dSe5MajW2fc1D0glmxg4P/Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pZ1YMaSMqYcjvsDV326jsZkOahmM/bqbC2EWNgU8dvA=;
+ b=V4SFWwem/6HSQNGJXDHI4fQ1n+A2QlrJGTx3VTAnHoMR1dIA83IOkVeBsT6l7xl0sewJ/k0PD0sqEgT9YvTWo6OTPXTrFCiOri1Ds4FEEpLuBuf1hy3h5uGWP43Rbi/VDiR3vkx2gonpRpTkV4Z9YVTpIC418uvO1OI2nLT/0qM3uyQ9tT4g8KvR9H3EBmvY5V7Xz6HS/hlGZ1Nf5Xc7aQ2Y20saX06FUWgco664QwoBjxe/3eCCXgkqseT3L0v3d9csuFSfSakVd+GA6ciV7y24KepAUtuFnGTJhou6aEYhL3H45fa1C4y6nX/txal2clsWOBJr+uJc6klWGwocsA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pZ1YMaSMqYcjvsDV326jsZkOahmM/bqbC2EWNgU8dvA=;
+ b=aKoeW6NUvpkMYr/O6toHJi7OfIpA5Vw6Ts7+fSUc0fnXT4/ba5HV3Okj7zUEtGyf8MEczflUDdHVG/WKrq96PQhRxvasR3degNE5+Lht6ZRAjK5itgGYfZt3cGzBoGlQdtgpKuRfqY/0l08t7EVfSboac016JqHs0A9Bz+MEXgs=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0121.APCP153.PROD.OUTLOOK.COM (10.170.188.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.3; Sat, 21 Sep 2019 06:56:05 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::fc44:a784:73e6:c1c2]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::fc44:a784:73e6:c1c2%8]) with mapi id 15.20.2305.011; Sat, 21 Sep 2019
+ 06:56:05 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: RE: [PATCH] Input: hyperv-keyboard: Add the support of hibernation
+Thread-Topic: [PATCH] Input: hyperv-keyboard: Add the support of hibernation
+Thread-Index: AQHVbwXQRPtGDntMcU+sv4R8q5dPMac1q4Vg
+Date:   Sat, 21 Sep 2019 06:56:04 +0000
+Message-ID: <PU1P153MB016914A7C827CA35D7FEB66ABF8B0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <1568244975-66795-1-git-send-email-decui@microsoft.com>
+ <20190919161752.GS237523@dtor-ws>
+In-Reply-To: <20190919161752.GS237523@dtor-ws>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-21T06:56:02.6456740Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=0b53eb3e-4c5d-47b9-a0ce-d9a5b854d83d;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:7f70:54b9:c9c3:20f2:72c9]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 451547b9-7cec-4dca-42b5-08d73e60c5ad
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: PU1P153MB0121:|PU1P153MB0121:
+x-ms-exchange-transport-forked: True
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <PU1P153MB012177465E2764334002DAB5BF8B0@PU1P153MB0121.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:2150;
+x-forefront-prvs: 0167DB5752
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(396003)(136003)(376002)(39860400002)(366004)(54534003)(189003)(199004)(66446008)(22452003)(486006)(52536014)(74316002)(66476007)(66556008)(86362001)(305945005)(8990500004)(76116006)(33656002)(5660300002)(7736002)(66946007)(64756008)(6916009)(10090500001)(2351001)(476003)(76176011)(4326008)(6436002)(446003)(2501003)(966005)(7696005)(11346002)(55016002)(25786009)(6306002)(5640700003)(186003)(71190400001)(256004)(229853002)(14454004)(9686003)(14444005)(10290500003)(46003)(316002)(71200400001)(478600001)(54906003)(102836004)(6506007)(1361003)(6246003)(81156014)(107886003)(2906002)(6116002)(99286004)(8936002)(81166006)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0121;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: DULxSz2P3QqQXZ1KwQ4CrN/51JAHFM7ZZ14sfSR5jAc2mccE9fXopZhiLiHyK6F3busyeFXwWNFD97Cx5GVejdY4L2Jyz+1VloLrirLTfw47zl4cQl7SEGFzYOymeanS2QV9oXzooxPJgOMULRv8LJOMadP6lh6x+xf8M0vh4BZ2pDPsjOHzXilFY3W5H3abea32UI/fvfBOOv6Swf0DPicWvgUvSACPMRS770L6EVldgglwzKHPJ6EAjJSQIwHV/LYMK6WlqtYbZc5pZwVzgLWtgrNjxMARzyoZmP+/e49ZjdcBKJZVEWIwlYIK+3l+23xE1TjgRq3hFdwg6chIOvKlQxz0iJwTW5WQgaXxSV45fPSpFfAhxxeLwh2ktKFQXkM1Hn6BpHT2b6/KdDhAH+XS00YYnbYZgImCWCA/zIQ=
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <FE1AEF80-F07F-42DE-A979-BC5AE72B25A1@linaro.org>
-References: <20190917165148.19146-1-paolo.valente@linaro.org>
- <20190917165148.19146-3-paolo.valente@linaro.org>
- <20190917213209.GK3084169@devbig004.ftw2.facebook.com>
- <4D39D2FA-A487-4FAD-A67E-B90750CE0BD4@linaro.org>
- <20190918151948.GL3084169@devbig004.ftw2.facebook.com>
- <4F416823-855F-4091-90B9-92253BF189FA@linaro.org>
- <A87FEC8A-3E1A-4DC8-89F7-5FAF63CF5B47@linaro.org>
- <de7664b1-6f47-8a7b-b231-727336c0ef85@kernel.dk>
-To:     Jens Axboe <axboe@kernel.dk>
-X-Mailer: Apple Mail (2.3445.104.8)
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 451547b9-7cec-4dca-42b5-08d73e60c5ad
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Sep 2019 06:56:04.6955
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kkHp83C7cIOtqvAsigtKIVt/Kz1xa6pXR+LWUIaxfjQJuqqGQGPcHE7l6uAsE0qMZEYFbygbOxgIWZV17nd6vA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0121
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> Il giorno 20 set 2019, alle ore 15:05, Jens Axboe <axboe@kernel.dk> ha =
-scritto:
+> From: dmitry.torokhov@gmail.com <dmitry.torokhov@gmail.com>
+> Sent: Thursday, September 19, 2019 9:18 AM
 >=20
-> On 9/20/19 12:58 AM, Paolo Valente wrote:
->>=20
->>=20
->>> Il giorno 18 set 2019, alle ore 18:19, Paolo Valente =
-<paolo.valente@linaro.org> ha scritto:
->>>=20
->>>=20
->>>=20
->>>> Il giorno 18 set 2019, alle ore 17:19, Tejun Heo <tj@kernel.org> ha =
-scritto:
->>>>=20
->>>> Hello,
->>>>=20
->>>> On Wed, Sep 18, 2019 at 07:18:50AM +0200, Paolo Valente wrote:
->>>>> A solution that both fulfills userspace request and doesn't break
->>>>> anything for hypothetical users of the current interface already =
-made
->>>>> it to mainline, and Linus liked it too.  It is:
->>>>=20
->>>> Linus didn't like it.  The implementation was a bit nasty.  That =
-was
->>>> why it became a subject in the first place.
->>>>=20
->>>>> 19e9da9e86c4 ("block, bfq: add weight symlink to the bfq.weight =
-cgroup parameter")
->>>>>=20
->>>>> But it was then reverted on Tejun's request to do exactly what we
->>>>> don't want do any longer now:
->>>>> cf8929885de3 ("cgroup/bfq: revert bfq.weight symlink change")
->>>>=20
->>>> Note that the interface was wrong at the time too.
->>>>=20
->>>>> So, Jens, Tejun, can we please just revert that revert?
->>>>=20
->>>> I think presenting both io.weight and io.bfq.weight interfaces are
->>>> probably the best course of action at this point but why does it =
-have
->>>> to be a symlink?  What's wrong with just creating another file with
->>>> the same backing function?
->>>>=20
->>>=20
->>> I think a symlink would be much clearer for users, given the =
-confusion
->>> already caused by two names for the same parameter.  But let's hear
->>> others' opinion too.
->>>=20
->>=20
->> Jens, could you express your opinion on this?  Any solution you and
->> Tejun agree on is ok for me.  Also this new (fourth) possible
->> implementation of this fix, provided that then it is definitely ok =
-for
->> both of you.
+> Hi Dexuan,
 >=20
-> Retaining both interfaces is arguably the right solution.
-
-So you also are voting for BFQ to create two files, instead of having a
-symlink, aren't you?  I just want to be certain before submitting one
-more solution.
-
-Looking forward to your confirmation,
-Paolo
-
-> It would be
-> nice if we didn't have to, but the first bfq variant was incompatible
-> with the in-kernel one, so we'll always have that out in the wild.
-> Adding everything to stable doesn't work, as we still have existing
-> kernels out there with the interface. In fact, in some ways that's
-> worse, as you definitely don't want interfaces to change between two
-> stable kernels.
+> On Wed, Sep 11, 2019 at 11:36:20PM +0000, Dexuan Cui wrote:
+> > We need hv_kbd_pm_notify() to make sure the pm_wakeup_hard_event()
+> call
+> > does not prevent the system from entering hibernation: the hibernation
+> > is a relatively long process, which can be aborted by the call
+> > pm_wakeup_hard_event(), which is invoked upon keyboard events.
+> >
+> > diff --git a/drivers/input/serio/hyperv-keyboard.c
+> b/drivers/input/serio/hyperv-keyboard.c
+> > index 88ae7c2..277dc4c 100644
+> > --- a/drivers/input/serio/hyperv-keyboard.c
+> > +++ b/drivers/input/serio/hyperv-keyboard.c
+> > @@ -10,6 +10,7 @@
+> >  #include <linux/hyperv.h>
+> >  #include <linux/serio.h>
+> >  #include <linux/slab.h>
+> > +#include <linux/suspend.h>
+> >
+> >  /*
+> >   * Current version 1.0
+> > @@ -95,6 +96,9 @@ struct hv_kbd_dev {
+> >  	struct completion wait_event;
+> >  	spinlock_t lock; /* protects 'started' field */
+> >  	bool started;
+> > +
+> > +	struct notifier_block pm_nb;
+> > +	bool hibernation_in_progress;
 >=20
-> I know it's not ideal, and some better initial planning would have
-> made it better, but we have to deal with the situation as it stands
-> now.
+> Why do you use notifier block instead of exposing proper PM methods if
+> you want to support hibernation?
 >=20
-> --=20
-> Jens Axboe
+> Dmitry
 
+Hi,
+In the patch I do implement hv_kbd_suspend() and hv_kbd_resume(), and
+add them into the hv_kbd_drv struct:
+
+@@ -416,6 +472,8 @@ static struct  hv_driver hv_kbd_drv =3D {
+        .id_table =3D id_table,
+        .probe =3D hv_kbd_probe,
+        .remove =3D hv_kbd_remove,
++       .suspend =3D hv_kbd_suspend,
++       .resume =3D hv_kbd_resume,
+
+The .suspend and .resume callbacks are inroduced by another patch (which
+uses the dev_pm_ops struct):
+271b2224d42f ("Drivers: hv: vmbus: Implement suspend/resume for VSC drivers=
+ for hibernation")
+(which is on the Hyper-V tree's hyperv-next branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git/commit/?h=
+=3Dhyperv-next&id=3D271b2224d42f88870e6b060924ee374871c131fc )
+
+The only purpose of the notifier is to set the variable=20
+kbd_dev->hibernation_in_progress to true during the hibernation process.
+
+As I explained in the changelog, the hibernation is a long process (which
+can take 10+ seconds), during which the user may unintentionally touch
+the keyboard, causing key up/down events, which are still handled by
+hv_kbd_on_receive(), which calls pm_wakeup_hard_event(), which
+calls some other functions which increase the global counter
+"pm_abort_suspend", and hence pm_wakeup_pending() becomes true.
+
+pm_wakeup_pending() is tested in a lot of places in the suspend
+process and eventually an unintentional keystroke (or mouse movement,
+when it comes to the Hyper-V mouse driver drivers/hid/hid-hyperv.c)
+causes the whole hibernation process to be aborted. Usually this
+behavior is not expected by the user, I think.
+
+So, I use the notifier to set the flag variable and with it the driver can
+know when it should not call pm_wakeup_hard_event().
+
+Thanks,
+-- Dexuan
