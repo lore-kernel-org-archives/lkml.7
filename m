@@ -2,251 +2,321 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20331C4360D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 15:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37028C4740C
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 15:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9A7C217F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 15:13:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0314120C01
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 15:13:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="tSf36BVW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JeCbkADf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438165AbfIUPNJ (ORCPT
+        id S2407653AbfIUPNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Sep 2019 11:13:09 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33145 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438061AbfIUPMu (ORCPT
+        Sat, 21 Sep 2019 11:13:32 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53573 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404388AbfIUPNb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Sep 2019 11:12:50 -0400
-Received: by mail-wr1-f67.google.com with SMTP id b9so9642010wrs.0;
-        Sat, 21 Sep 2019 08:12:48 -0700 (PDT)
+        Sat, 21 Sep 2019 11:13:31 -0400
+Received: by mail-wm1-f66.google.com with SMTP id i16so5382000wmd.3;
+        Sat, 21 Sep 2019 08:13:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+ELKKDirjp0oZPBJ44VpnYEwyvsV3MSi9kYfRjT4vis=;
-        b=tSf36BVWvtXx+VPiJbvevWv9xlJ1MUcJK4nZLS1qWGYNLxNoHdV/7xgWGIod4J18ne
-         9bpfamIpQ6rlDAewCfWEch+b3DIMg12XG5ZiLs5/C2Cx4Z4YXWyux/iDi3msAT3US/ry
-         Pko0MtDG5LmeNd2zARa2loDVGhCAdgexNmZIFqU/PEPNVQoAX3MRPpvpkC28NZvuzL4c
-         kXztKPpRiaAru9syL6RcQ0CwNAiCFbJsDJw0PD9/k3hWR9kV34MPf2RssSYirgiJeucn
-         TGFOqWe5OeaVg9FWH83tY5HoV0MCZYvjWWXH6jLnsZbeeTEcrI6HCBFonKgTt96aczaY
-         T4Lg==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3w0CkgQU7acNUdB8CaudSHCE+jo9UgNKa2Vnd8Ve9RM=;
+        b=JeCbkADfDYOkAsTD3eSZXg0BwcQbfEOyzY+L4OCeWVZaNTt+ER6lGrrU0spFtVYaGH
+         4gI9sI+xtxVqZb2mnBFAox3+GkwWSAUlOfwqXtCNpOestjlo7WtteKfO2Oa6r7AwF86J
+         zhAJmm+79ivvbLovsn/djwuj89GGP7iW/bvpUBMxQseBhvjzeY2EeZzHiyEnTzfFwTmL
+         HD36zz5hz+eUslKEnt5MK289eQ7Wf8hTFkt2IkyU0T7gnNFTDOpzUMlle9YxR7cOJcxr
+         GlHwDJ8H7E/ZXS6gJOeutPSu0Or5+rRfCgoexYHk61s9FaghaEf4Ig16XlhHvBDnrrj+
+         9fmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+ELKKDirjp0oZPBJ44VpnYEwyvsV3MSi9kYfRjT4vis=;
-        b=kQ7tOER15cvrpQpUHTS5XbBnOFzjp91uGjPE1qkmJR28fue4avOngDHXisov5fCWD4
-         d7Sx/XCXmfafvARu13bR1bYZIiYiazh947pvkV08RCUMlzKCk3Mw90ej1GGiXT+oTyka
-         m1UvlN+oWyBEDrA16Gub2b8hVi+sBhElS2vw/wa7SPeS1J8aD9N+RyuaRObYoLlC0UMh
-         ZCMS2xoxZkjibwxIFABqf+NZ0Gbm8akzS1qWoUAHi8oDsqSzA7GkF34C0hubYWGyiW4S
-         5YQfBcazXzNv/xV8v0LqKcgZgKH7S75jXN5lH1GPbYjhXFwuRVQc1HZqRyPUPg8ZTto7
-         YQMQ==
-X-Gm-Message-State: APjAAAUGPtAtAge7kQIqqbkyonHb99GXMDGYScAz3mpGCFQoBS8vlnqi
-        yacBIszEqxbz5Fhk2eOliqo=
-X-Google-Smtp-Source: APXvYqwx45owz2FGuyA/qiPoL6+BJkR2g+Q1oinww/HO5IBtLhd+znAWfPtMJt/w4Y6dclBVZlf0Og==
-X-Received: by 2002:a5d:5403:: with SMTP id g3mr15302198wrv.338.1569078767754;
-        Sat, 21 Sep 2019 08:12:47 -0700 (PDT)
-Received: from blackbox.darklights.net (p200300F133CE0B0028BAA8C744A6F562.dip0.t-ipconnect.de. [2003:f1:33ce:b00:28ba:a8c7:44a6:f562])
-        by smtp.googlemail.com with ESMTPSA id y186sm10712491wmb.41.2019.09.21.08.12.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Sep 2019 08:12:46 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     narmstrong@baylibre.com, jbrunet@baylibre.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-amlogic@lists.infradead.org,
-        devicetree@vger.kernel.org, khilman@baylibre.com
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 3/5] clk: meson: meson8b: change references to the XTAL clock to use the name
-Date:   Sat, 21 Sep 2019 17:12:21 +0200
-Message-Id: <20190921151223.768842-4-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190921151223.768842-1-martin.blumenstingl@googlemail.com>
-References: <20190921151223.768842-1-martin.blumenstingl@googlemail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=3w0CkgQU7acNUdB8CaudSHCE+jo9UgNKa2Vnd8Ve9RM=;
+        b=DfbCnq95JR1BMxNje9c9MNuiDCznihg/KKt0SmEHDrfgrmmYUUH2AhRA1vHCrMoaNp
+         gLHitM7DoR/ipYLYVL0t9OkjnJCI/Zyu1qvk2xFGp8XCwEHAIWonq+mYMuD6iFIBydXJ
+         Ds9A3qj942+E5m0p7cap0BVVQWJpGxAJXAyGZn5ZFEu8orPIYjDXDdnlbONZ+wnIPaDB
+         Q66Hqj+2InRu+vRXYKe+X2cod9aPnyRTS7QV4SqLIZP4dw1y87TMGgQtjxbzLrgCKyUe
+         Eo8wUcxP+k44wlQtDu+bfJCjU3CStMCSlysBNEOdV3QTwhNSAs6Tnrh+dx/3XJEUazRa
+         BOiw==
+X-Gm-Message-State: APjAAAXrgFhjXXOajFqC2Gg4IWQ7mVejiI7l4cWb64jjxvGuOmxr6gnJ
+        ZYQcwuUfKstzNFiD5qnD32jLiJH6
+X-Google-Smtp-Source: APXvYqwXws8nTF8BbLVuXdAgChNxeHf2xDqsPupltNayCTrIQaZ4NJEiI7+Pw+QZNvSc2qY1+uhYFQ==
+X-Received: by 2002:a1c:c189:: with SMTP id r131mr7525025wmf.153.1569078807133;
+        Sat, 21 Sep 2019 08:13:27 -0700 (PDT)
+Received: from [192.168.1.19] (blb134.neoplus.adsl.tpnet.pl. [83.28.195.134])
+        by smtp.gmail.com with ESMTPSA id v64sm5753727wmf.12.2019.09.21.08.13.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 21 Sep 2019 08:13:26 -0700 (PDT)
+Subject: Re: [PATCH v8 7/9] dt: bindings: lp50xx: Introduce the lp50xx family
+ of RGB drivers
+To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
+Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190920174139.30079-1-dmurphy@ti.com>
+ <20190920174139.30079-8-dmurphy@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <73a95bac-7433-5b06-5701-c742307aa004@gmail.com>
+Date:   Sat, 21 Sep 2019 17:13:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190920174139.30079-8-dmurphy@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The XTAL clock is an actual crystal which is mounted on the PCB. Thus
-the meson8b clock controller driver should not provide the XTAL clock.
+Dan,
 
-The meson8b clock controller driver must not use references to
-the meson8b_xtal clock anymore before we can provide the XTAL clock
-via OF. Replace the references to the meson8b_xtal.hw by using
-clk_parent_data.name = "xtal" (along with index = -1) because this works
-regardless how the XTAL clock is registered (either as fixed-clock in
-the .dtb or - if missing - when registered in the meson8b clock
-controller driver).
+On 9/20/19 7:41 PM, Dan Murphy wrote:
+> Introduce the bindings for the Texas Instruments LP5036, LP5030, LP5024,
+> LP5018, LP5012 and LP5009 RGB LED device driver.  The LP5036/30/24/18/12/9
+> can control RGB LEDs individually or as part of a control bank group.
+> These devices have the ability to adjust the mixing control for the RGB
+> LEDs to obtain different colors independent of the overall brightness of
+> the LED grouping.
+> 
+> Datasheet:
+> http://www.ti.com/lit/ds/symlink/lp5012.pdf
+> http://www.ti.com/lit/ds/symlink/lp5024.pdf
+> http://www.ti.com/lit/ds/symlink/lp5036.pdf
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  .../devicetree/bindings/leds/leds-lp50xx.txt  | 148 ++++++++++++++++++
+>  1 file changed, 148 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/leds-lp50xx.txt b/Documentation/devicetree/bindings/leds/leds-lp50xx.txt
+> new file mode 100644
+> index 000000000000..9d05f43042e0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-lp50xx.txt
+> @@ -0,0 +1,148 @@
+> +* Texas Instruments - LP5009/12/18/24/30/36 RGB LED driver
+> +
+> +The LP50XX is multi-channel, I2C RGB LED Drivers that can group RGB LEDs into
+> +a LED group or control them individually.
+> +
+> +The difference in these RGB LED drivers is the number of supported RGB modules.
+> +
+> +Required parent properties:
+> +	- compatible:
+> +		"ti,lp5009"
+> +		"ti,lp5012"
+> +		"ti,lp5018"
+> +		"ti,lp5024"
+> +		"ti,lp5030"
+> +		"ti,lp5036"
+> +	- reg :  I2C slave address
+> +		lp5009/12 - 0x28
+> +		lp5018/24 - 0x28
+> +		lp5030/36 - 0x30
+> +	- #address-cells : 1
+> +	- #size-cells : 0
+> +
+> +Optional parent properties:
+> +	- enable-gpios : gpio pin to enable/disable the device.
+> +	- vled-supply : LED supply
+> +
+> +Required child properties:
+> +	- #address-cells : 1
+> +	- #size-cells : 0
+> +	- reg : This is the LED module number.
+> +	- color : see Documentation/devicetree/bindings/leds/common.txt
+> +	- function : see Documentation/devicetree/bindings/leds/common.txt
+> +
+> +Required child properties only is LED modules will be banked:
+> +	- ti,led-bank : This property denotes the LED module numbers that will
+> +			be controlled as a single RGB cluster.  Each LED module
+> +			number will be controlled by a single LED class instance.
+> +			There can only be one instance of the ti,led-bank
+> +			property for each device node.
+> +
+> +Required grandchildren properties:
+> +	- reg : A single entry denoting the LED module that controls
+> +		the RGB cluster.
+> +	- color : see Documentation/devicetree/bindings/leds/leds-multicolor.txt
+> +	- led-sources : see Documentation/devicetree/bindings/leds/common.txt
+> +
+> +The LED outputs associated with the LED modules are defined in Table 1 of the
+> +corresponding data sheets.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- drivers/clk/meson/meson8b.c | 73 ++++++++++++++++++++-----------------
- 1 file changed, 39 insertions(+), 34 deletions(-)
+We must enclose this information here.
 
-diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
-index d376f80e806d..b785b67baf2b 100644
---- a/drivers/clk/meson/meson8b.c
-+++ b/drivers/clk/meson/meson8b.c
-@@ -97,8 +97,9 @@ static struct clk_regmap meson8b_fixed_pll_dco = {
- 	.hw.init = &(struct clk_init_data){
- 		.name = "fixed_pll_dco",
- 		.ops = &meson_clk_pll_ro_ops,
--		.parent_hws = (const struct clk_hw *[]) {
--			&meson8b_xtal.hw
-+		.parent_data = &(const struct clk_parent_data) {
-+			.name = "xtal",
-+			.index = -1,
- 		},
- 		.num_parents = 1,
- 	},
-@@ -162,8 +163,9 @@ static struct clk_regmap meson8b_hdmi_pll_dco = {
- 		/* sometimes also called "HPLL" or "HPLL PLL" */
- 		.name = "hdmi_pll_dco",
- 		.ops = &meson_clk_pll_ro_ops,
--		.parent_hws = (const struct clk_hw *[]) {
--			&meson8b_xtal.hw
-+		.parent_data = &(const struct clk_parent_data) {
-+			.name = "xtal",
-+			.index = -1,
- 		},
- 		.num_parents = 1,
- 	},
-@@ -237,8 +239,9 @@ static struct clk_regmap meson8b_sys_pll_dco = {
- 	.hw.init = &(struct clk_init_data){
- 		.name = "sys_pll_dco",
- 		.ops = &meson_clk_pll_ops,
--		.parent_hws = (const struct clk_hw *[]) {
--			&meson8b_xtal.hw
-+		.parent_data = &(const struct clk_parent_data) {
-+			.name = "xtal",
-+			.index = -1,
- 		},
- 		.num_parents = 1,
- 	},
-@@ -631,9 +634,9 @@ static struct clk_regmap meson8b_cpu_in_sel = {
- 	.hw.init = &(struct clk_init_data){
- 		.name = "cpu_in_sel",
- 		.ops = &clk_regmap_mux_ops,
--		.parent_hws = (const struct clk_hw *[]) {
--			&meson8b_xtal.hw,
--			&meson8b_sys_pll.hw,
-+		.parent_data = (const struct clk_parent_data[]) {
-+			{ .name = "xtal", .index = -1, },
-+			{ .hw = &meson8b_sys_pll.hw, },
- 		},
- 		.num_parents = 2,
- 		.flags = (CLK_SET_RATE_PARENT |
-@@ -736,9 +739,9 @@ static struct clk_regmap meson8b_cpu_clk = {
- 	.hw.init = &(struct clk_init_data){
- 		.name = "cpu_clk",
- 		.ops = &clk_regmap_mux_ops,
--		.parent_hws = (const struct clk_hw *[]) {
--			&meson8b_xtal.hw,
--			&meson8b_cpu_scale_out_sel.hw,
-+		.parent_data = (const struct clk_parent_data[]) {
-+			{ .name = "xtal", .index = -1, },
-+			{ .hw = &meson8b_cpu_scale_out_sel.hw, },
- 		},
- 		.num_parents = 2,
- 		.flags = (CLK_SET_RATE_PARENT |
-@@ -758,12 +761,12 @@ static struct clk_regmap meson8b_nand_clk_sel = {
- 		.name = "nand_clk_sel",
- 		.ops = &clk_regmap_mux_ops,
- 		/* FIXME all other parents are unknown: */
--		.parent_hws = (const struct clk_hw *[]) {
--			&meson8b_fclk_div4.hw,
--			&meson8b_fclk_div3.hw,
--			&meson8b_fclk_div5.hw,
--			&meson8b_fclk_div7.hw,
--			&meson8b_xtal.hw,
-+		.parent_data = (const struct clk_parent_data[]) {
-+			{ .hw = &meson8b_fclk_div4.hw, },
-+			{ .hw = &meson8b_fclk_div3.hw, },
-+			{ .hw = &meson8b_fclk_div5.hw, },
-+			{ .hw = &meson8b_fclk_div7.hw, },
-+			{ .name = "xtal", .index = -1, },
- 		},
- 		.num_parents = 5,
- 		.flags = CLK_SET_RATE_PARENT,
-@@ -1721,8 +1724,9 @@ static struct clk_regmap meson8b_hdmi_sys_sel = {
- 		.name = "hdmi_sys_sel",
- 		.ops = &clk_regmap_mux_ro_ops,
- 		/* FIXME: all other parents are unknown */
--		.parent_hws = (const struct clk_hw *[]) {
--			&meson8b_xtal.hw
-+		.parent_data = &(const struct clk_parent_data) {
-+			.name = "xtal",
-+			.index = -1,
- 		},
- 		.num_parents = 1,
- 		.flags = CLK_SET_RATE_NO_REPARENT,
-@@ -1767,14 +1771,14 @@ static struct clk_regmap meson8b_hdmi_sys = {
-  * muxed by a glitch-free switch on Meson8b and Meson8m2. Meson8 only
-  * has mali_0 and no glitch-free mux.
-  */
--static const struct clk_hw *meson8b_mali_0_1_parent_hws[] = {
--	&meson8b_xtal.hw,
--	&meson8b_mpll2.hw,
--	&meson8b_mpll1.hw,
--	&meson8b_fclk_div7.hw,
--	&meson8b_fclk_div4.hw,
--	&meson8b_fclk_div3.hw,
--	&meson8b_fclk_div5.hw,
-+static const struct clk_parent_data meson8b_mali_0_1_parent_data[] = {
-+	{ .name = "xtal", .index = -1, },
-+	{ .hw = &meson8b_mpll2.hw, },
-+	{ .hw = &meson8b_mpll1.hw, },
-+	{ .hw = &meson8b_fclk_div7.hw, },
-+	{ .hw = &meson8b_fclk_div4.hw, },
-+	{ .hw = &meson8b_fclk_div3.hw, },
-+	{ .hw = &meson8b_fclk_div5.hw, },
- };
- 
- static u32 meson8b_mali_0_1_mux_table[] = { 0, 2, 3, 4, 5, 6, 7 };
-@@ -1789,8 +1793,8 @@ static struct clk_regmap meson8b_mali_0_sel = {
- 	.hw.init = &(struct clk_init_data){
- 		.name = "mali_0_sel",
- 		.ops = &clk_regmap_mux_ops,
--		.parent_hws = meson8b_mali_0_1_parent_hws,
--		.num_parents = ARRAY_SIZE(meson8b_mali_0_1_parent_hws),
-+		.parent_data = meson8b_mali_0_1_parent_data,
-+		.num_parents = ARRAY_SIZE(meson8b_mali_0_1_parent_data),
- 		/*
- 		 * Don't propagate rate changes up because the only changeable
- 		 * parents are mpll1 and mpll2 but we need those for audio and
-@@ -1844,8 +1848,8 @@ static struct clk_regmap meson8b_mali_1_sel = {
- 	.hw.init = &(struct clk_init_data){
- 		.name = "mali_1_sel",
- 		.ops = &clk_regmap_mux_ops,
--		.parent_hws = meson8b_mali_0_1_parent_hws,
--		.num_parents = ARRAY_SIZE(meson8b_mali_0_1_parent_hws),
-+		.parent_data = meson8b_mali_0_1_parent_data,
-+		.num_parents = ARRAY_SIZE(meson8b_mali_0_1_parent_data),
- 		/*
- 		 * Don't propagate rate changes up because the only changeable
- 		 * parents are mpll1 and mpll2 but we need those for audio and
-@@ -1944,8 +1948,9 @@ static struct clk_regmap meson8m2_gp_pll_dco = {
- 	.hw.init = &(struct clk_init_data){
- 		.name = "gp_pll_dco",
- 		.ops = &meson_clk_pll_ops,
--		.parent_hws = (const struct clk_hw *[]) {
--			&meson8b_xtal.hw
-+		.parent_data = &(const struct clk_parent_data) {
-+			.name = "xtal",
-+			.index = -1,
- 		},
- 		.num_parents = 1,
- 	},
+> +
+> +LP5009 - 2 Total RGB cluster LED outputs 0-1
+> +LP5012 - 4 Total RGB cluster LED outputs 0-3
+> +LP5018 - 6 Total RGB cluster LED outputs 0-5
+> +LP5024 - 8 Total RGB cluster LED outputs 0-7
+> +LP5030 - 10 Total RGB cluster LED outputs 0-9
+> +LP5036 - 12 Total RGB cluster LED outputs 0-11
+> +
+> +Optional child properties:
+> +	- label : see Documentation/devicetree/bindings/leds/common.txt
+> +	- linux,default-trigger :
+> +	   see Documentation/devicetree/bindings/leds/common.txt
+> +
+> +Examples:
+> +led-controller@29 {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	compatible = "ti,lp5024";
+> +	reg = <0x29>;
+> +	enable-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
+> +	vled-supply = <&vmmcsd_fixed>;
+> +
+> +	multi-led@1 {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		reg = <1>;
+> +		color = <LED_COLOR_ID_MULTI>;
+> +		function = LED_FUNCTION_STATUS;
+> +
+> +		led@3 {
+> +			reg = <3>;
+> +			color = <LED_COLOR_ID_RED>;
+> +		};
+> +
+> +		led@4 {
+> +			reg = <4>;
+> +			color = <LED_COLOR_ID_GREEN>;
+> +		};
+> +
+> +		led@5 {
+> +			reg = <5>;
+> +			color = <LED_COLOR_ID_BLUE>;
+> +		};
+> +	};
+> +
+> +	multi-led@2 {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		reg = <2>;
+> +		color = <LED_COLOR_ID_MULTI>;
+> +		function = LED_FUNCTION_STANDBY;
+> +		ti,led-bank = <2 3 5>;
+> +
+> +		led@6 {
+> +			reg = <0x6>;
+> +			color = <LED_COLOR_ID_RED>;
+> +			led-sources = <6 9 15>;
+> +		};
+> +
+> +		led@7 {
+> +			reg = <0x7>;
+> +			color = <LED_COLOR_ID_GREEN>;
+> +			led-sources = <7 10 16>;
+> +		};
+> +
+> +		led@8 {
+> +			reg = <0x8>;
+> +			color = <LED_COLOR_ID_BLUE>;
+> +			led-sources = <8 11 17>;
+> +		};
+> +	};
+> +
+> +	multi-led@4 {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		reg = <4>;
+> +		color = <LED_COLOR_ID_MULTI>;
+> +		function = LED_FUNCTION_ACTIVITY;
+> +
+> +		led@12 {
+> +			reg = <12>;
+> +			color = <LED_COLOR_ID_RED>;
+> +		};
+> +
+> +		led@13 {
+> +			reg = <13>;
+> +			color = <LED_COLOR_ID_GREEN>;
+> +		};
+> +
+> +		led@14 {
+> +			reg = <14>;
+> +			color = <LED_COLOR_ID_BLUE>;
+> +		};
+> +	};
+> +};
+> +
+> +For more product information please see the link below:
+> +http://www.ti.com/lit/ds/symlink/lp5012.pdf
+> +http://www.ti.com/lit/ds/symlink/lp5024.pdf
+> +http://www.ti.com/lit/ds/symlink/lp5036.pdf
+> 
+
 -- 
-2.23.0
-
+Best regards,
+Jacek Anaszewski
