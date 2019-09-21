@@ -5,172 +5,317 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA93C49ED7
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 12:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1DEC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 12:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0748320717
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 12:24:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AA8D20717
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 12:28:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="ojvGTqdF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OLartO1p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437885AbfIUMYZ (ORCPT
+        id S2437891AbfIUM2Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Sep 2019 08:24:25 -0400
-Received: from mout.web.de ([212.227.17.12]:56103 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437867AbfIUMYY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Sep 2019 08:24:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1569068659;
-        bh=+zSC1wMM+rSyr33ylEkXpwyC1pR57yGZDDXbuIvTSBo=;
-        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
-        b=ojvGTqdFsTrqpoNA9uwU98N8p6T2r/4oz51LXh9GMdKHbQsprKeVIPWZBt08jabjX
-         nhlrXuTPnVnxFNwIdNyBgVXxYYfxOnDoZ5nqD/SZKfmtj0B80auTd88CUi8100F0xW
-         XTaGKrqx6t/hcG81GmMgVC9JboqSJ11gVcci8qY4=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.244.64.44]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MhDgb-1iXydf3zhB-00MMs0; Sat, 21
- Sep 2019 14:24:19 +0200
-To:     linux-spi@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>,
-        Mark Brown <broonie@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Daniel Schwierzeck <daniel.schwierzeck@gmail.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] spi: lantiq-ssc: Use devm_platform_ioremap_resource() in
- lantiq_ssc_probe()
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <230495a7-b754-bc6a-05e0-059a6b6c643d@web.de>
-Date:   Sat, 21 Sep 2019 14:24:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Sat, 21 Sep 2019 08:28:25 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33428 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405509AbfIUM2Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Sep 2019 08:28:24 -0400
+Received: by mail-wr1-f68.google.com with SMTP id b9so9388475wrs.0;
+        Sat, 21 Sep 2019 05:28:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qY++H/6bC+crAOcHGOjbvUQJCImSpPgL+H6ie/AS2M0=;
+        b=OLartO1p61zM6BGKC/lSrAFaS8NJjJv6aqBvnUKEZb5m+RPMB57UBXms5TeCmhhNQP
+         wlSWPB6DBREN+q4ziS1wS89IRmo3KuYBIs+g8tOuQALXcsIEzTNi5LydyhLW/BOjOjV/
+         6iVBgJJvAt1eQIos6FVmUeW8fd1Lcb1J76XaN622N8I3w0BRUicVvhoABNa6VNqOI38w
+         kZe6sTZ720PpK6fXhyhrGBs3rf5xZgue25cXxKeGro61JRQlgqc9tM1B1KeyfoGoT7fW
+         Q9GGDhg3yJlU0raA6MRczXdRtaka52ZTFXAvjkO61dD/CZE5kTcS0RgsB7pM3ByDidjA
+         Bapg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=qY++H/6bC+crAOcHGOjbvUQJCImSpPgL+H6ie/AS2M0=;
+        b=iQxFPqcoxF8SyWSC/Mcm8Ixs+/L6KxBZY5VLEPvpkHkfbtCRL7AOUPoQWFeosv+SWP
+         7o/NGKxkgbd91DXXT+NeWB51bXLR5s5iqA74fHyDT1E5Z01ZactJJlA9SkRvPK93ttw/
+         Tjwhe5GdbCqB0LnVT8AkF+zOkbD5u+W3GRRvIT/hXMDHKR0D3rKuiijcAuhNQ05OqVgW
+         xjsXh85knWfe2qfvWP+/2IlLXtIfyu/lYEv5uNPlSlP2tw2Wz5fQ5RU/X/EZv5Tu389/
+         5y4FSsOoldYjd+sQNccihTsiRWdbY2AvasyWLsvTXV/EeQirrrLoV7R9QJcNAqIFMus5
+         1Oyw==
+X-Gm-Message-State: APjAAAXu4kAmsI8dBEaMe37S4xpmNusyvwyixiPci99dwt90dMMpuRdh
+        UjS1oMrAa/IvW4Ec3STxqurx6dBO
+X-Google-Smtp-Source: APXvYqw4JmhH8n17AGVEdlP3/4vXo0XQPnBKsq2tn7jiSFVF7ZUxNn2sATqCiyaLVF9aMyvxbJpM2A==
+X-Received: by 2002:adf:dc4b:: with SMTP id m11mr16290099wrj.269.1569068899136;
+        Sat, 21 Sep 2019 05:28:19 -0700 (PDT)
+Received: from [192.168.1.19] (blb134.neoplus.adsl.tpnet.pl. [83.28.195.134])
+        by smtp.gmail.com with ESMTPSA id z6sm4088909wro.16.2019.09.21.05.28.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 21 Sep 2019 05:28:18 -0700 (PDT)
+Subject: Re: [PATCH v8 2/9] documention: leds: Add multicolor class
+ documentation
+To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
+Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190920174139.30079-1-dmurphy@ti.com>
+ <20190920174139.30079-3-dmurphy@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <2f2d40d7-aa4f-a38d-19a7-425a111adb64@gmail.com>
+Date:   Sat, 21 Sep 2019 14:28:16 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20190920174139.30079-3-dmurphy@ti.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:ytj4SpcnxbW+WSbZ7z+12cwwGMDKrkFldtNhtI/KOwfwh+ZFViz
- adIIHQM5eS9eFfM4hX9YDeDEnBLXGFdKmEmAWsjmuJJrCmCltxGNyEoxmblnibuqyAdnR0j
- h++hyOAV+Q6NRybyhKpHO+xaat7YnhtycgtaUKkM8cyNE2St1ELdoxO6JqFXouoDMd3zvXE
- nV1HSNhwyVTbMMyTS9AIw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:9nCNjGV6FUU=:KMnczZEYmIDJHPZ43aKguE
- vhkLOCKd3D6XWuiJaCYOQnjQ/EHb4Z/rFBu6j2DlTvwE+BAENjQxwYIHhG+SIXJzTOPigoYG9
- Et4lB8yHx0MbdQ9RJQKKlDa3qSnLD4bl2PC9DetwTE3gKnCReqvgIGLecZMJoOwhztc4+e0M7
- UihcvV7ZlcHR+BgMnCA0hFVU0mDk3RShYrRU7wJ+koT7bcSY1BqewFI8EBjY7A3EPdygSrldo
- bYeEAcJ+4Ae4rjGYxnIegp38ZY6MKcHBQ+AYuEk2ly86Wajwuz5uodvH8VmPFvzUKAIUhCw8i
- 5Vj4f9YcWzFXc0FXzJ+RC88gKIlsqErh3/42+a34QD5dClqQahic2bLsc6QWPlSd/uYlKg2xs
- VH0OY8daCjPLbPyh6w79S96KDCwSKO5p+Z6fclX8kzlclM2XRNoUX7qaQneGgoR1b0bxbYIZq
- g+d9XIhVBSkLc6AGAOvO8X4mROMYki2niTZWk3t3u+k+6x0m6QHgj/+Sp1gDvsYtMZUMGUaaO
- EMSy3CAfCme3QI0S6sBcO0DpN9M29aPqgqp+PbTvdotgr3VC6LGqrv+FZ0mbaWZ/pv+n4S5oe
- RvD4OZt9LvQHoQLMdUq+25C/QXpjH+WSVOlxQ8z7+qLZAIRFa1z1e6DjvP+LMorSt1+zJuZZC
- Gse7CVozuGP6uSX1ZyxbMrC0AOnUIM9AmCTv5MPWgl672U1xzSh1SevmAwJ7j5NkcUQ2m5JTk
- 4BuQo1I5Hw1ZofBDu8Sir/JA0D61MAeGQ7bA77Sk37fK5lUKgrWcGcCw5clR2i/iJ8Qmuq0ch
- vMfCO/XRm4hXst4bUfnHY/SOA/dObY81KuzB90RpNAbnGOnBZeHmDMQE3cTW09aNVMXhp8UHW
- APUhW66Ji3oUCkFOOuyza+XpiWbG4CB/iu2DPuGEIh1Xjh4rJE7I8lp7LMUyyG+RNx5pDKArP
- Mzj5hXoNRsp3aQh/qZO5y8W5XiKe/KnebgiIFXXPPoxBulzk48jKzEE7NV+2tXp15SfszOoK1
- 01Vto97hDJ5U66XzCEcM2SDoDklyVG4tt1znGPJ/lH3j19E4IKkctPftq4hcBSPRiA1BZf/Ow
- KIqNoBqRTH9Io0esz61GOZ3mMXC1kZOWm5qrQs+exfsW12f+q3rImfOyVtm0wkzzJO0YHYkt7
- Wu6O73cF0QMqqH49PJEvmy7yo5Yf1pTQbwQ7yTKtarX0YLUSMzVa/42zNuai01Grd0zmmbkmK
- rLlcBjmbp5XksNBPPktJ7o4ocgDDWpBBQqgqm44vWxvZnOhwX2XhqyRb9qW0=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Sat, 21 Sep 2019 14:16:49 +0200
+Dan,
 
-Simplify this function implementation by using a known wrapper function.
+On 9/20/19 7:41 PM, Dan Murphy wrote:
+> Add the support documentation on the multicolor LED framework.
+> This document defines the directores and file generated by the
 
-This issue was detected by using the Coccinelle software.
+Now there will be one directory created.
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/spi/spi-lantiq-ssc.c | 10 +---------
- 1 file changed, 1 insertion(+), 9 deletions(-)
+Apart from that - all documentation should go in the same patch
+as the feature being added. So patches 1,2 and 3 should be melded
+together.
 
-diff --git a/drivers/spi/spi-lantiq-ssc.c b/drivers/spi/spi-lantiq-ssc.c
-index 9dfe8b04e688..1fd7ee53d451 100644
-=2D-- a/drivers/spi/spi-lantiq-ssc.c
-+++ b/drivers/spi/spi-lantiq-ssc.c
-@@ -797,7 +797,6 @@ static int lantiq_ssc_probe(struct platform_device *pd=
-ev)
- {
- 	struct device *dev =3D &pdev->dev;
- 	struct spi_master *master;
--	struct resource *res;
- 	struct lantiq_ssc_spi *spi;
- 	const struct lantiq_ssc_hwcfg *hwcfg;
- 	const struct of_device_id *match;
-@@ -812,12 +811,6 @@ static int lantiq_ssc_probe(struct platform_device *p=
-dev)
- 	}
- 	hwcfg =3D match->data;
+> multicolor framework.  It also documents usage.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  Documentation/leds/index.rst                 |  1 +
+>  Documentation/leds/leds-class-multicolor.rst | 91 ++++++++++++++++++++
+>  2 files changed, 92 insertions(+)
+>  create mode 100644 Documentation/leds/leds-class-multicolor.rst
+> 
+> diff --git a/Documentation/leds/index.rst b/Documentation/leds/index.rst
+> index 060f4e485897..bc70c6aa7138 100644
+> --- a/Documentation/leds/index.rst
+> +++ b/Documentation/leds/index.rst
+> @@ -9,6 +9,7 @@ LEDs
+>  
+>     leds-class
+>     leds-class-flash
+> +   leds-class-multicolor
+>     ledtrig-oneshot
+>     ledtrig-transient
+>     ledtrig-usbport
+> diff --git a/Documentation/leds/leds-class-multicolor.rst b/Documentation/leds/leds-class-multicolor.rst
+> new file mode 100644
+> index 000000000000..063c9a411a1d
+> --- /dev/null
+> +++ b/Documentation/leds/leds-class-multicolor.rst
+> @@ -0,0 +1,91 @@
+> +====================================
+> +Multi Color LED handling under Linux
+> +====================================
+> +
+> +Description
+> +===========
+> +There are varying monochrome LED colors available for application.  These
+> +LEDs can be used as a single use case LED or can be mixed with other color
+> +LEDs to produce the full spectrum of color.  
 
--	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!res) {
--		dev_err(dev, "failed to get resources\n");
--		return -ENXIO;
--	}
--
- 	rx_irq =3D platform_get_irq_byname(pdev, LTQ_SPI_RX_IRQ_NAME);
- 	if (rx_irq < 0)
- 		return -ENXIO;
-@@ -839,8 +832,7 @@ static int lantiq_ssc_probe(struct platform_device *pd=
-ev)
- 	spi->dev =3D dev;
- 	spi->hwcfg =3D hwcfg;
- 	platform_set_drvdata(pdev, spi);
--
--	spi->regbase =3D devm_ioremap_resource(dev, res);
-+	spi->regbase =3D devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(spi->regbase)) {
- 		err =3D PTR_ERR(spi->regbase);
- 		goto err_master_put;
-=2D-
-2.23.0
+I'd say it won't be the most frequent use case. We can expect rather
+compound RGB, RGBA[UV] etc. LED elements being connected to iouts of
+multi color LED controllers like LP50xx. TI mentions RGB LEDs in its
+application notes for instance. I'd mention that in the first place
+and leave what you have above as another use case.
 
+> Color LEDs that are grouped
+> +can be presented under a single LED node with individual color control.
+
+Let's skip "with individual color control". This is rather a means for
+keeping backward compatibility. Main goal of the MC class is multi color
+control. We can elaborate on how individual control can be achieved,
+namely one needs to set brightness to max and then can use
+the whole 0-<color>_max_intensity intensity scale for given iout.
+But his can be implied from the information provided below.
+
+> +The multicolor class groups these LEDs and allows dynamically setting the value
+
+What does "dynamically" stand for here? I assume you thought of altering
+colors without changing global brightness, but now it is not the case.
+
+> +of a single LED or setting the intensity values of the LEDs in the group and
+> +updating the LEDs virtually simultaneously.
+
+I propose below instead of the above three lines:
+
+The multi color class groups these LEDs and allows controlling two
+aspects of the final combined color: hue and lightness. The former is
+controlled via <color>_intensity files and the latter is controlled
+via brightness file.
+
+For more details on hue and lightness notions please refer to
+https://en.wikipedia.org/wiki/CIECAM02.
+
+Note that intensity files only cache the written value and the actual
+change of hardware state occurs upon writing brightness file. This
+allows for changing many factors of the perceived color in a virtually
+unnoticeable way for the human observer.
+
+> +Multicolor Class Control
+> +========================
+> +The multicolor class presents the LED groups under a directory called "colors".
+> +This directory is a child under the LED parent node created by the led_class
+> +framework.  The led_class framework is documented in led-class.rst within this
+> +documentation directory.
+> +
+> +Each colored LED will have two files created under the colors directory
+> +<led_color>_intensity and <led_color>_max_intensity. These files will contain
+
+s/led_color/color/
+
+> +one of LED_COLOR_ID_* definitions from the header
+> +include/dt-bindings/leds/common.h.
+> +
+> +Directory Layout Example
+> +========================
+> +root:/sys/class/leds/rgb:grouped_leds# ls -lR colors/
+> +-rw-rwxr-- 1 root root 4096 Jul 7 03:10 red_max_intensity
+> +--w--wx-w- 1 root root 4096 Jul 7 03:10 red_intensity
+> +-rw-rwxr-- 1 root root 4096 Jul 7 03:10 green_max_intensity
+> +--w--wx-w- 1 root root 4096 Jul 7 03:10 green_intensity
+> +-rw-rwxr-- 1 root root 4096 Jul 7 03:10 blue_max_intensity
+> +--w--wx-w- 1 root root 4096 Jul 7 03:10 blue_intensity
+> +
+> +Multicolor Class Brightness Control
+> +===================================
+> +The multiclor class framework will calculate each monochrome LEDs intensity.
+> +
+> +The brightness level for each LED is calculated based on the color LED
+> +intensity setting divided by the color LED max intensity setting multiplied by
+> +the requested value.
+
+s/value/brightness/
+
+> +
+> +led_brightness = requested_value * led_color_intensity/led_color_max_intensity
+
+led_brightness = brightness * <color>_intensity/<color>_max_intensity
+
+> +
+> +Example:
+> +Three LEDs are present in the group as defined in "Directory Layout Example"
+> +within this document.
+> +
+> +A user first writes the color LED brightness file with the brightness level that
+> +is necessary to achieve a blueish violet output from the RGB LED group.
+> +
+> +echo 138 > /sys/class/leds/rgb:grouped_leds/red_intensity
+> +echo 43 > /sys/class/leds/rgb:grouped_leds/green_intensity
+> +echo 226 > /sys/class/leds/rgb:grouped_leds/blue_intensity
+> +
+> +red -
+> +	intensity = 138
+> +	max_intensity = 255
+> +green -
+> +	intensity = 43
+> +	max_intensity = 255
+> +blue -
+> +	intensity = 226
+> +	max_intensity = 255
+> +
+> +The user can control the brightness of that RGB group by writing the parent
+> +'brightness' control.  Assuming a parent max_brightness of 255 the user may want
+> +to dim the LED color group to half.  The user would write a value of 128 to the
+> +parent brightness file then the values written to each LED will be adjusted
+> +base on this value
+> +
+> +cat /sys/class/leds/rgb:grouped_leds/max_brightness
+> +255
+> +echo 128 > /sys/class/leds/rgb:grouped_leds/brightness
+> +
+> +adjusted_red_value = 128 * 138/255 = 69
+> +adjusted_green_value = 128 * 43/255 = 21
+> +adjusted_blue_value = 128 * 226/255 = 113
+> +
+> +Reading the parent brightness file will return the current brightness value of
+> +the color LED group.
+> +
+> +cat /sys/class/leds/rgb:grouped_leds/max_brightness
+> +255
+> +
+> +echo 128 > /sys/class/leds/rgb:grouped_leds/brightness
+> +
+> +cat /sys/class/leds/rgb:grouped_leds/max_brightness
+
+s/max_brightness/brightness/
+
+> +128
+> 
+
+-- 
+Best regards,
+Jacek Anaszewski
