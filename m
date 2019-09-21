@@ -2,84 +2,272 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF60C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 00:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D84CCC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 00:19:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A441B21835
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 00:13:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569024822;
-	bh=17JRz2amHdxSVooJ13gPyptXnx8eAB3apkUDMD7W4vc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=GYXIV1qvOaNLxTK+iE+2IGugoTjKCuAVaMBFQqY0tkxVhiJGsErDa3udgRGWyuWuB
-	 oeMGGwwO3QFsnq5YS/4H4hZ9oTld2ZJkmH9G/VnxbR2SoDlRqNIlvbe7MlnrHwgdae
-	 h/R7coykxTm48citpw4jg9LmPn1WXrBRJdJNsJ14=
+	by mail.kernel.org (Postfix) with ESMTP id 97A7B2184C
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 00:19:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mziq7dsM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729441AbfIUANl (ORCPT
+        id S1730422AbfIUATF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 20:13:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54350 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727951AbfIUANl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 20:13:41 -0400
-Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C1C820C01;
-        Sat, 21 Sep 2019 00:13:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569024820;
-        bh=17JRz2amHdxSVooJ13gPyptXnx8eAB3apkUDMD7W4vc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Zrz20NN7PFy5ZN41xCLt4x7O4O9oeDirT1iTE0v4ix1M/eqKK/K6n9xtKke+NhQi5
-         /CjnzAS03Lwaq/qIadmBqnYx8xzIEBNDNjXy6fGUElfwbGhcZ/b89kHAzvXvNkGAAX
-         HHRialNwDAHXLcgewgKIGPYXNfy8dWIU0DG4fTTo=
-Date:   Fri, 20 Sep 2019 17:13:40 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Joel Savitz <jsavitz@redhat.com>, linux-kernel@vger.kernel.org,
-        Rafael Aquini <aquini@redhat.com>,
-        David Rientjes <rientjes@google.com>, linux-mm@kvack.org
-Subject: Re: [RESEND PATCH v2] mm/oom_killer: Add task UID to info message
- on an oom kill
-Message-Id: <20190920171340.7591fd2899a06b5e7c390b76@linux-foundation.org>
-In-Reply-To: <20190613082318.GB9343@dhcp22.suse.cz>
-References: <1560362273-534-1-git-send-email-jsavitz@redhat.com>
-        <20190613082318.GB9343@dhcp22.suse.cz>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+        Fri, 20 Sep 2019 20:19:05 -0400
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:34819 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729985AbfIUATF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 20:19:05 -0400
+Received: by mail-pf1-f201.google.com with SMTP id r7so5856915pfg.2
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 17:19:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=b333+3kU3sNm1guAvj5VAE2cIf3fv45+vyYGNDAuAeE=;
+        b=mziq7dsMElwEKnE1Z7ti79XMqDY7c/2K4hTPRgTcmt/uJm/FDpfsCztwZ+w7qdA7QX
+         cWIcYpMvZF7XU/Rai8qNzBCPmLM2rxwmmvuSrQuQMwc4RCMB7u1BKdHPTgV7SOyIkILM
+         /+9JuZoYISDytzawuH6Le9KixbEBfpczjFPyVSf3MN2EM7va18p+Olf0W59MQ2epAu17
+         odPXBt1H/hj3PfMx0DjDYB5fZFKAYtIWifJ9zBeXZFJHtaqddA5d38/t9wwEVKr1WXUJ
+         ODGP0GLzVruYjTn89kr0c6Ut7CUY4DjD5fA+eVGK4t1QxMX6OoN0Y65y4ZTEKZqdKkMB
+         5i3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=b333+3kU3sNm1guAvj5VAE2cIf3fv45+vyYGNDAuAeE=;
+        b=M8fWyg4xmVeSgckwHpdgTDUcfPVqMLqrJlkdWG0uR18Zq3ZmdpcfbEbCbnEB6z9oYe
+         dGWBhtSzkRXcULdHWu4AKCFsAABxDPsGoQprwFYujys9dtj3nlEKRJf6n9qz3fDss1aP
+         Rtn5WAXKz0qSqRn7YSefv7U0v798kbgbWLbbcGgm46LetwWb8VBHnnJM94oBgwKGom8h
+         t9ShPM2qkK3nTQPQ+lWUvgHfm/KqUKWnxuHRcoosy1xwsYD9BoneKLMfEyckI0nslnPD
+         JwdhQhsncVlHe3t8Eu55ZnPLzjMq3lBSiswL0MwB+r4V++743i9vgP2efw8xDoRBDTyT
+         WZrg==
+X-Gm-Message-State: APjAAAVR/SepsckYVkhmbJWGsW27JzX73m3AskbZos4j5im0Hadlftbo
+        1sh1aYOnGVPkIpPxIFm8OQspr5QjNy3RChfLu7RGWA==
+X-Google-Smtp-Source: APXvYqw8GLoMb6Kss29cJO37f73z8953oOCu04U9qJiShjXq1nWZykvaYDEc/VJlamPMqIFZnL5bLBONGJcNWXQKydKvZw==
+X-Received: by 2002:a65:4002:: with SMTP id f2mr18079221pgp.447.1569025143686;
+ Fri, 20 Sep 2019 17:19:03 -0700 (PDT)
+Date:   Fri, 20 Sep 2019 17:18:36 -0700
+Message-Id: <20190921001855.200947-1-brendanhiggins@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Mailer: git-send-email 2.23.0.351.gc4317032e6-goog
+Subject: [PATCH v17 00/19] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        jpoimboe@redhat.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        peterz@infradead.org, robh@kernel.org, sboyd@kernel.org,
+        shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
+        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
+        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
+        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
+        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
+        wfg@linux.intel.com, torvalds@linux-foundation.org,
+        Brendan Higgins <brendanhiggins@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Jun 2019 10:23:18 +0200 Michal Hocko <mhocko@kernel.org> wrote:
+## TL;DR
 
-> On Wed 12-06-19 13:57:53, Joel Savitz wrote:
-> > In the event of an oom kill, useful information about the killed
-> > process is printed to dmesg. Users, especially system administrators,
-> > will find it useful to immediately see the UID of the process.
-> 
-> Could you be more specific please? We already print uid when dumping
-> eligible tasks so it is not overly hard to find that information in the
-> oom report. Well, except when dumping of eligible tasks is disabled. Is
-> this what you are after?
-> 
-> Please always be specific about usecases in the changelog. A terse
-> statement that something is useful doesn't tell much very often.
-> 
+This revision addresses comments from Linus[1] and Randy[2], by moving
+top level `kunit/` directory to `lib/kunit/` and likewise moves top
+level Kconfig entry under lib/Kconfig.debug, so the KUnit submenu now
+shows up under the "Kernel Hacking" menu.
 
-<crickets?>
+As a consequence of this, I rewrote patch 06/18 (kbuild: enable building
+KUnit), and now needs to be re-acked/reviewed.
 
-I'll add this to the chagnelog:
+## Background
 
-: We already print uid when dumping eligible tasks so it is not overly hard
-: to find that information in the oom report.  However this information is
-: unavailable then dumping of eligible tasks is disabled.
+This patch set proposes KUnit, a lightweight unit testing and mocking
+framework for the Linux kernel.
+
+Unlike Autotest and kselftest, KUnit is a true unit testing framework;
+it does not require installing the kernel on a test machine or in a VM
+(however, KUnit still allows you to run tests on test machines or in VMs
+if you want[3]) and does not require tests to be written in userspace
+running on a host kernel. Additionally, KUnit is fast: From invocation
+to completion KUnit can run several dozen tests in about a second.
+Currently, the entire KUnit test suite for KUnit runs in under a second
+from the initial invocation (build time excluded).
+
+KUnit is heavily inspired by JUnit, Python's unittest.mock, and
+Googletest/Googlemock for C++. KUnit provides facilities for defining
+unit test cases, grouping related test cases into test suites, providing
+common infrastructure for running tests, mocking, spying, and much more.
+
+### What's so special about unit testing?
+
+A unit test is supposed to test a single unit of code in isolation,
+hence the name. There should be no dependencies outside the control of
+the test; this means no external dependencies, which makes tests orders
+of magnitudes faster. Likewise, since there are no external dependencies,
+there are no hoops to jump through to run the tests. Additionally, this
+makes unit tests deterministic: a failing unit test always indicates a
+problem. Finally, because unit tests necessarily have finer granularity,
+they are able to test all code paths easily solving the classic problem
+of difficulty in exercising error handling code.
+
+### Is KUnit trying to replace other testing frameworks for the kernel?
+
+No. Most existing tests for the Linux kernel are end-to-end tests, which
+have their place. A well tested system has lots of unit tests, a
+reasonable number of integration tests, and some end-to-end tests. KUnit
+is just trying to address the unit test space which is currently not
+being addressed.
+
+### More information on KUnit
+
+There is a bunch of documentation near the end of this patch set that
+describes how to use KUnit and best practices for writing unit tests.
+For convenience I am hosting the compiled docs here[4].
+
+Additionally for convenience, I have applied these patches to a
+branch[5]. The repo may be cloned with:
+git clone https://kunit.googlesource.com/linux
+This patchset is on the kunit/initial/v5.3/v17 branch.
+
+## History since v15
+
+### v17
+
+ - Addressed comments on 06/19 (lib: enable building KUnit in lib/) from
+   Stephen Boyd by moving KUnit submenu ahead of Runtime Testing
+   submenu.
+
+### v16
+
+ - Addressed comments from Linus Torvalds by moving all kunit/ paths to
+   lib/kunit/.
+ - Addressed comments by Randy Dunlap by moving KUnit Kconfig under
+   lib/Kconfig.debug so the KUnit submenu shows up under the "Kernel
+   Hacking" menu.
+
+[1] https://www.lkml.org/lkml/2019/9/20/696
+[2] https://www.lkml.org/lkml/2019/9/20/738
+[3] https://google.github.io/kunit-docs/third_party/kernel/docs/usage.html#kunit-on-non-uml-architectures
+[4] https://google.github.io/kunit-docs/third_party/kernel/docs/
+[5] https://kunit.googlesource.com/linux/+/kunit/initial/v5.3/v17
+
+---
+
+Avinash Kondareddy (1):
+  kunit: test: add tests for KUnit managed resources
+
+Brendan Higgins (16):
+  kunit: test: add KUnit test runner core
+  kunit: test: add test resource management API
+  kunit: test: add string_stream a std::stream like string builder
+  kunit: test: add assertion printing library
+  kunit: test: add the concept of expectations
+  lib: enable building KUnit in lib/
+  kunit: test: add initial tests
+  objtool: add kunit_try_catch_throw to the noreturn list
+  kunit: test: add support for test abort
+  kunit: test: add tests for kunit test abort
+  kunit: test: add the concept of assertions
+  kunit: defconfig: add defconfigs for building KUnit tests
+  Documentation: kunit: add documentation for KUnit
+  MAINTAINERS: add entry for KUnit the unit testing framework
+  MAINTAINERS: add proc sysctl KUnit test to PROC SYSCTL section
+  kunit: fix failure to build without printk
+
+Felix Guo (1):
+  kunit: tool: add Python wrappers for running KUnit tests
+
+Iurii Zaikin (1):
+  kernel/sysctl-test: Add null pointer test for sysctl.c:proc_dointvec()
+
+ Documentation/dev-tools/index.rst             |    1 +
+ Documentation/dev-tools/kunit/api/index.rst   |   16 +
+ Documentation/dev-tools/kunit/api/test.rst    |   11 +
+ Documentation/dev-tools/kunit/faq.rst         |   62 +
+ Documentation/dev-tools/kunit/index.rst       |   79 +
+ Documentation/dev-tools/kunit/start.rst       |  180 ++
+ Documentation/dev-tools/kunit/usage.rst       |  576 +++++++
+ MAINTAINERS                                   |   13 +
+ arch/um/configs/kunit_defconfig               |    3 +
+ include/kunit/assert.h                        |  356 ++++
+ include/kunit/string-stream.h                 |   51 +
+ include/kunit/test.h                          | 1490 +++++++++++++++++
+ include/kunit/try-catch.h                     |   75 +
+ kernel/Makefile                               |    2 +
+ kernel/sysctl-test.c                          |  392 +++++
+ lib/Kconfig.debug                             |   13 +
+ lib/Makefile                                  |    2 +
+ lib/kunit/Kconfig                             |   38 +
+ lib/kunit/Makefile                            |    9 +
+ lib/kunit/assert.c                            |  141 ++
+ lib/kunit/example-test.c                      |   88 +
+ lib/kunit/string-stream-test.c                |   52 +
+ lib/kunit/string-stream.c                     |  217 +++
+ lib/kunit/test-test.c                         |  331 ++++
+ lib/kunit/test.c                              |  478 ++++++
+ lib/kunit/try-catch.c                         |  118 ++
+ tools/objtool/check.c                         |    1 +
+ tools/testing/kunit/.gitignore                |    3 +
+ tools/testing/kunit/configs/all_tests.config  |    3 +
+ tools/testing/kunit/kunit.py                  |  136 ++
+ tools/testing/kunit/kunit_config.py           |   66 +
+ tools/testing/kunit/kunit_kernel.py           |  149 ++
+ tools/testing/kunit/kunit_parser.py           |  310 ++++
+ tools/testing/kunit/kunit_tool_test.py        |  206 +++
+ .../test_is_test_passed-all_passed.log        |   32 +
+ .../test_data/test_is_test_passed-crash.log   |   69 +
+ .../test_data/test_is_test_passed-failure.log |   36 +
+ .../test_is_test_passed-no_tests_run.log      |   75 +
+ .../test_output_isolated_correctly.log        |  106 ++
+ .../test_data/test_read_from_file.kconfig     |   17 +
+ 40 files changed, 6003 insertions(+)
+ create mode 100644 Documentation/dev-tools/kunit/api/index.rst
+ create mode 100644 Documentation/dev-tools/kunit/api/test.rst
+ create mode 100644 Documentation/dev-tools/kunit/faq.rst
+ create mode 100644 Documentation/dev-tools/kunit/index.rst
+ create mode 100644 Documentation/dev-tools/kunit/start.rst
+ create mode 100644 Documentation/dev-tools/kunit/usage.rst
+ create mode 100644 arch/um/configs/kunit_defconfig
+ create mode 100644 include/kunit/assert.h
+ create mode 100644 include/kunit/string-stream.h
+ create mode 100644 include/kunit/test.h
+ create mode 100644 include/kunit/try-catch.h
+ create mode 100644 kernel/sysctl-test.c
+ create mode 100644 lib/kunit/Kconfig
+ create mode 100644 lib/kunit/Makefile
+ create mode 100644 lib/kunit/assert.c
+ create mode 100644 lib/kunit/example-test.c
+ create mode 100644 lib/kunit/string-stream-test.c
+ create mode 100644 lib/kunit/string-stream.c
+ create mode 100644 lib/kunit/test-test.c
+ create mode 100644 lib/kunit/test.c
+ create mode 100644 lib/kunit/try-catch.c
+ create mode 100644 tools/testing/kunit/.gitignore
+ create mode 100644 tools/testing/kunit/configs/all_tests.config
+ create mode 100755 tools/testing/kunit/kunit.py
+ create mode 100644 tools/testing/kunit/kunit_config.py
+ create mode 100644 tools/testing/kunit/kunit_kernel.py
+ create mode 100644 tools/testing/kunit/kunit_parser.py
+ create mode 100755 tools/testing/kunit/kunit_tool_test.py
+ create mode 100644 tools/testing/kunit/test_data/test_is_test_passed-all_passed.log
+ create mode 100644 tools/testing/kunit/test_data/test_is_test_passed-crash.log
+ create mode 100644 tools/testing/kunit/test_data/test_is_test_passed-failure.log
+ create mode 100644 tools/testing/kunit/test_data/test_is_test_passed-no_tests_run.log
+ create mode 100644 tools/testing/kunit/test_data/test_output_isolated_correctly.log
+ create mode 100644 tools/testing/kunit/test_data/test_read_from_file.kconfig
+
+-- 
+2.23.0.351.gc4317032e6-goog
 
