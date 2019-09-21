@@ -2,82 +2,95 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFBAC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 01:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E71E5C49ED7
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 01:11:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBE3B20C01
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 01:00:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBCAC2086A
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 01:11:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="C9fUgKAK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394127AbfIUBAK (ORCPT
+        id S1730495AbfIUBLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 21:00:10 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41728 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394077AbfIUBAJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 21:00:09 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 22530308FC4B;
-        Sat, 21 Sep 2019 01:00:09 +0000 (UTC)
-Received: from optiplex-lnx (ovpn-125-22.rdu2.redhat.com [10.10.125.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0DCE31001281;
-        Sat, 21 Sep 2019 01:00:07 +0000 (UTC)
-Date:   Fri, 20 Sep 2019 21:00:05 -0400
-From:   Rafael Aquini <aquini@redhat.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Michal Hocko <mhocko@kernel.org>, Joel Savitz <jsavitz@redhat.com>,
-        linux-kernel@vger.kernel.org, David Rientjes <rientjes@google.com>,
-        linux-mm@kvack.org
-Subject: Re: [RESEND PATCH v2] mm/oom_killer: Add task UID to info message on
- an oom kill
-Message-ID: <20190921010005.GC15594@optiplex-lnx>
-References: <1560362273-534-1-git-send-email-jsavitz@redhat.com>
- <20190613082318.GB9343@dhcp22.suse.cz>
- <20190920171340.7591fd2899a06b5e7c390b76@linux-foundation.org>
+        Fri, 20 Sep 2019 21:11:49 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:34458 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727442AbfIUBLs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 21:11:48 -0400
+Received: by mail-qk1-f194.google.com with SMTP id q203so9230141qke.1
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 18:11:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=wScDWZ1k3aPENhb3eEVkRi/0sjaCyiUXHzXtGguOYj4=;
+        b=C9fUgKAKLuFZ5eYdFogOcuLYgGoPE6fBHeCy3fhnBwQuOjFIAgb7Q/8mjeTNpaSRPa
+         3YGZO6X8hSRN/TZYDJd+85WwGdD1wEVrdDSe1ChdSI/sHLhfzhDU/K9bjWhaYUxX1MiU
+         E7qRRNuqEhPr2B6qK/WqqDQCSCgZkHiKhs0QTMqjNFpCPvtS3l4gzZB0hRxE0EIqqmzY
+         /5BkuJGyMNjibVreiqGXg7vMCF91V4mgy+YMv6Fz6C2giLOBrBt2lon0x3bSwDKN4YI4
+         asbEbHkCwFcJfGu/+9alnZ8ssyY4Qa4gjn0b4PTf4d0STZSxw+HVC7sY+HfkBi8Fb+hj
+         BMGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=wScDWZ1k3aPENhb3eEVkRi/0sjaCyiUXHzXtGguOYj4=;
+        b=LIBOfd4jTvGez/11IL6NcGcb768IXwRa/nlbFbehmwornz+OPAmhKUN8eRjAMvIWX4
+         s7loJ5AD+AEHrg8Qw214U7MmwNW1hwycGLJGtilTSrzIkYa0It14pN8GwcikGUsrSuWU
+         QORihiZTSJvNNacXUamqTT3/8S1HGPDdPXm7rdGvTfQPqu7WEKAAU9mF+khaPCUKrHh0
+         ee85Bex1llZmAoBU3FZSRSglDm0YDotyj2GlL4nZEB4/NOKD7+7G2DLanLjOdmkj1M36
+         2hTbJ9b9BDeIOWLpRsUy63DLw0aBlI4TrFaXdmo7CEnvUOwfakFuROLsoopiedcpgWuh
+         N+2w==
+X-Gm-Message-State: APjAAAUs9Cqqwq94H9wWCNYCdMhxr0oKocdM4GLbdjyNioJnezSovRu2
+        roLi6yULy92a/1JpJsiUQLEAZw==
+X-Google-Smtp-Source: APXvYqzPzAoyhVSr2yw7qD8UFqINaJlHLTqpF4q2nC0TaLGgX2csgV8CNN97qn6WuIocY/suiVN8CA==
+X-Received: by 2002:a37:4a0c:: with SMTP id x12mr6315388qka.23.1569028306086;
+        Fri, 20 Sep 2019 18:11:46 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id c26sm2233930qtk.93.2019.09.20.18.11.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Sep 2019 18:11:45 -0700 (PDT)
+Date:   Fri, 20 Sep 2019 18:11:41 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <davem@davemloft.net>,
+        <robh+dt@kernel.org>, <peppe.cavallaro@st.com>,
+        <alexandre.torgue@st.com>, <andrew@lunn.ch>, <f.fainelli@gmail.com>
+Subject: Re: [PATCH] dt-bindings: net: dwmac: fix 'mac-mode' type
+Message-ID: <20190920181141.52cfee67@cakuba.netronome.com>
+In-Reply-To: <20190917103052.13456-1-alexandru.ardelean@analog.com>
+References: <20190917103052.13456-1-alexandru.ardelean@analog.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190920171340.7591fd2899a06b5e7c390b76@linux-foundation.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Sat, 21 Sep 2019 01:00:09 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 05:13:40PM -0700, Andrew Morton wrote:
-> On Thu, 13 Jun 2019 10:23:18 +0200 Michal Hocko <mhocko@kernel.org> wrote:
+On Tue, 17 Sep 2019 13:30:52 +0300, Alexandru Ardelean wrote:
+> The 'mac-mode' property is similar to 'phy-mode' and 'phy-connection-type',
+> which are enums of mode strings.
 > 
-> > On Wed 12-06-19 13:57:53, Joel Savitz wrote:
-> > > In the event of an oom kill, useful information about the killed
-> > > process is printed to dmesg. Users, especially system administrators,
-> > > will find it useful to immediately see the UID of the process.
-> > 
-> > Could you be more specific please? We already print uid when dumping
-> > eligible tasks so it is not overly hard to find that information in the
-> > oom report. Well, except when dumping of eligible tasks is disabled. Is
-> > this what you are after?
-> > 
-> > Please always be specific about usecases in the changelog. A terse
-> > statement that something is useful doesn't tell much very often.
-> > 
+> The 'dwmac' driver supports almost all modes declared in the 'phy-mode'
+> enum (except for 1 or 2). But in general, there may be a case where
+> 'mac-mode' becomes more generic and is moved as part of phylib or netdev.
 > 
-> <crickets?>
-> I'll add this to the chagnelog:
+> In any case, the 'mac-mode' field should be made an enum, and it also makes
+> sense to just reference the 'phy-connection-type' from
+> 'ethernet-controller.yaml'. That will also make it more future-proof for new
+> modes.
 > 
-> : We already print uid when dumping eligible tasks so it is not overly hard
-> : to find that information in the oom report.  However this information is
-> : unavailable then dumping of eligible tasks is disabled.
-                ^^^^ 
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-Thanks Andrew! just a minor nit there: 's/then/when/'
+Applied, thank you!
 
-
-Acked-by: Rafael Aquini <aquini@redhat.com>
-> 
+FWIW I had to add the Fixes tag by hand, either ozlabs patchwork or my
+git-pw doesn't have the automagic handling there, yet.
