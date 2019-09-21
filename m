@@ -2,166 +2,327 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F39C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 10:01:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C14B8C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 10:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DC95217F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 10:01:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98E0D21835
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 10:01:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="EZ5XJ0OV"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Fjk5VEoH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407316AbfIUKBE (ORCPT
+        id S2407428AbfIUKBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Sep 2019 06:01:04 -0400
-Received: from mout.web.de ([217.72.192.78]:59627 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405440AbfIUKBE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Sep 2019 06:01:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1569060054;
-        bh=9om8hD/kLaf9e9fQUs6omNYsjXudzvqtIiKV5m1awsY=;
-        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
-        b=EZ5XJ0OVva5N4xddt9Ox+uofQUZw+jafS918t7wQPFSWdh/bznObMAPipk03KjwSU
-         tFkYEqcaa8gaZ/gfeVQnAVklnxcp+s0os4H7Rl8qjEnb30a2+UUFIbqrZnK8qxoldC
-         /7+xlAH/QrhdrxmOd8LyeWna0etzWVddTy2IJp+E=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.244.64.44]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LilNJ-1hd6rI3brx-00cxvm; Sat, 21
- Sep 2019 12:00:53 +0200
-To:     linux-rtc@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Biwen Li <biwen.li@nxp.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] rtc: fsl-ftm-alarm: Use devm_platform_ioremap_resource() in
- ftm_rtc_probe()
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <4552ef52-f218-93b1-6dfa-668d137676f8@web.de>
-Date:   Sat, 21 Sep 2019 12:00:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Sat, 21 Sep 2019 06:01:37 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:34145 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407333AbfIUKBg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Sep 2019 06:01:36 -0400
+Received: by mail-ot1-f67.google.com with SMTP id m19so6437433otp.1
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Sep 2019 03:01:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=IH+HLtM3m/3AdPUwWj10yu5azF09YSyrzk+IE7lz+/c=;
+        b=Fjk5VEoH5TXP2GebQ8rtvVO7k9C2SXvanErm1z29Ux6o9KEmemDWy4J5YavIqS1uhz
+         ciEkXtoyKr9e0ZEDCPCY3hR1EHJw+u2cLLz+NLb4Mue3jxoRiONck0rrPTK9sSX7DgAA
+         0oSzI8Gky1LOekb3pThUJsHuuLUvQ5ZW4Nd06XqXZwjZwjoc/McC+6yjy9/gujgon9Mn
+         4l+iuQeFGCkuofllZWdd9TewxT7mZmI0dGTmdqTOKUh7U9WyN3+YUXgIG7hxs+vHZFap
+         ZeZMaadQmZPnKHajASa834VOs1nMVjtUJfOU4eaHrEtjrU3cqmRHqtgGhWFAcZ5SsHyw
+         9JiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=IH+HLtM3m/3AdPUwWj10yu5azF09YSyrzk+IE7lz+/c=;
+        b=Gj+1dpEuy1hFZVdB95ColbuXFVjXjusBDcvc7BaENBwlLRKfaOU3GbD5TZNtZHm02D
+         JyFJPTr6oWd8I1lZ0mOGGdZp9aCn7LAq2Am7j3CpAr/Vf6ROo7dquHE1/P+Yq1cAirXg
+         yS7Chu4scT+tFTPhPhjmBxJwjGjAuTBUVQCdaxPxY1hnqgpcKAFq0Eb7OMfVxZIqCOV3
+         tUWWN8W0UX5HruCbTxt/Nse8tfsNdrbVhLvwB3Z6LSdEmbbYa0Jzk21bU3h+T2okqv5j
+         yWJjfO+1uX8RnqfCDNykoTDFFDbwWzP9wtRo5YjkGg+ea9adJUFT5lqBMVZ8yAHVtyfP
+         UxQg==
+X-Gm-Message-State: APjAAAVok9wdB+79DtiQOir4Bj+JlyCKdIem48nS79BuzsYE4tQOnNoC
+        4aE29sUnOB5lTPldQWa7kSfGnA==
+X-Google-Smtp-Source: APXvYqzpSdwksOxrecA2OELNPx8yrVtpI8N9Oju4ihq+H1WOvzlOgo63k6TAq41Ye4rLUkc7UInGjg==
+X-Received: by 2002:a05:6830:1e2b:: with SMTP id t11mr4492721otr.119.1569060094783;
+        Sat, 21 Sep 2019 03:01:34 -0700 (PDT)
+Received: from localhost (184.sub-174-206-23.myvzw.com. [174.206.23.184])
+        by smtp.gmail.com with ESMTPSA id l17sm1309105oic.24.2019.09.21.03.01.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Sep 2019 03:01:34 -0700 (PDT)
+Date:   Sat, 21 Sep 2019 03:01:27 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Anup Patel <Anup.Patel@wdc.com>
+cc:     Palmer Dabbelt <palmer@sifive.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim K <rkrcmar@redhat.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexander Graf <graf@amazon.com>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Anup Patel <anup@brainfault.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 02/21] RISC-V: Add bitmap reprensenting ISA features
+ common across CPUs
+In-Reply-To: <20190904161245.111924-4-anup.patel@wdc.com>
+Message-ID: <alpine.DEB.2.21.9999.1909210245000.2030@viisi.sifive.com>
+References: <20190904161245.111924-1-anup.patel@wdc.com> <20190904161245.111924-4-anup.patel@wdc.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:PdS6VDi89nQ5MEz616+aD8BLYHe8fFIFFttx8Q1QfI/O1vGuHJ/
- stDZ13wS8Kf6tTtIcRB8rpHjD1N+oua420FVjfOKbccUv498P8vc6AFzxfjJc19qeU7XqG1
- 8yj68XIMfbL0Mb60u/pzMqzpomX+tHpFQcrFNtfrsNX5K0Ti1liCEwp1LNqB0Dk2XZoOhI0
- DoqhWWiFB0qiBdABqJm9g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:MVTIGAREZiM=:yZXRK+m9tX1/qFF2DIp1du
- z7+IADNwTWEHEEHESJz9ZrCtxecvnS6o1qLLxx75laDVRHhjPDR0lwThuOAc+9BmA0IY6EzOu
- kZaouoaTQWBtuhf5123va1ixRzMCvVr6K8STObVub0IdbEBHugl4pozrj1r84yAC+4bhrtZYr
- CYFc539Zd3NteFJ1qifqDI6FVWqLye4iW90+zZBDLvEnD1mO6p/CyaQhJziSSD+V8N5sXTGo9
- HfEB9lUnOQ/Y+Og02RHUeS3GyXKSJQnAQrDdewpqovbSgxMiVa94OUTXCkv0YHl0X5bF0XRO5
- JFJFL20xqMzpr3FUsi0l7sScIh5x2i6PRc0RFdY8UAH9tKy75JyZPKH9ui0yzquxmQWQQtqKG
- 3pTCwOalgXemerM1sMsatdiC8ZAEGOS9G7o6zoUceKah1OpktIFzUnU48ZBG3eMVAH4YvaSUi
- +9RkTcsQFiAKInSsZdPs3VHeu2wwImkGA+aTloI1hYeaIczj9PUe+Cp0fhUV5jNcb+Q81crlE
- 3R74fxtMkvvHi2XMI81SZ0HRX5mADAMbCIisB3RdPROXwafz5dklgCNVuljt5kVziC5fpdVAQ
- RfHfYah58O6KDlzUAUT7sXod9WeMDJuUhNLytxrmhkqdQ7pEdw29XaaklnMP7T+RG63N/c0Zs
- xZqPMQU6yyVBFHDUTH8nJQoCnh3h1+RZz2ZWTs9boO631dSnuNTFpykM+/ZSNgPXBEo7bIjEw
- WPTge+x59lH6p8RwN10n+Nf1hoOhxrrKbOc4YfWmL5/oAqipeAE9kaJbEzx4rFkEhRRP9aKla
- a2kvPs+ZpCgxPoaLiZ84KN0OPbOLtWX0Im7MsbaGjgZenkuB1Xha2hII7ncOsqk+1JqZ24Tca
- vGQI1IiOHJIAmeFS7nRuURNdxHNLQUFvXPxVNxB6E3REQDBDQbqEFeCrwQCB/F91mmR064/8G
- EZsqE2GGFLbqOg5GXuxAdMJeLW7iCJgvzNfErOX5boZuO+vAx680BSXwMzprhGFreJB3LoU7Y
- 3WWzo4dc8yIylUbUnvcRxSp1qeFHw1c7LwZNGrcMCijZ/VOIqS/u4zI/5+6B2/NlM/PXPMk+8
- ibd8iUEC6o3uUDXClqwO1hm8Ws2AfGbfxRQSupX+RHYkdwiT7B3ao+dK73EZGBOv+2dflWVsV
- hO2U+VehsQJqDAEwNEnM3c70Y6hhIrCYP4bmD05jg9UB/ZzZhvKNxSFynOP5XVZZQUvd+TCRS
- dwpts4k8nOCIuUD7/f+pL5x2RWDdPFDlbbLh+G6ctrNeqbaFtP4L21vtVAoE=
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Sat, 21 Sep 2019 11:49:01 +0200
+Hi Anup,
 
-Simplify this function implementation by using a known wrapper function.
+Thanks for changing this to use a bitmap.  A few comments below -
 
-This issue was detected by using the Coccinelle software.
+On Wed, 4 Sep 2019, Anup Patel wrote:
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/rtc/rtc-fsl-ftm-alarm.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+> This patch adds riscv_isa bitmap which represents Host ISA features
+> common across all Host CPUs. The riscv_isa is not same as elf_hwcap
+> because elf_hwcap will only have ISA features relevant for user-space
+> apps whereas riscv_isa will have ISA features relevant to both kernel
+> and user-space apps.
+> 
+> One of the use-case for riscv_isa bitmap is in KVM hypervisor where
+> we will use it to do following operations:
+> 
+> 1. Check whether hypervisor extension is available
+> 2. Find ISA features that need to be virtualized (e.g. floating
+>    point support, vector extension, etc.)
+> 
+> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> Reviewed-by: Alexander Graf <graf@amazon.com>
+> ---
+>  arch/riscv/include/asm/hwcap.h | 26 +++++++++++
+>  arch/riscv/kernel/cpufeature.c | 79 ++++++++++++++++++++++++++++++++--
+>  2 files changed, 102 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
+> index 7ecb7c6a57b1..9b657375aa51 100644
+> --- a/arch/riscv/include/asm/hwcap.h
+> +++ b/arch/riscv/include/asm/hwcap.h
+> @@ -8,6 +8,7 @@
+>  #ifndef __ASM_HWCAP_H
+>  #define __ASM_HWCAP_H
+>  
+> +#include <linux/bits.h>
+>  #include <uapi/asm/hwcap.h>
+>  
+>  #ifndef __ASSEMBLY__
+> @@ -22,5 +23,30 @@ enum {
+>  };
+>  
+>  extern unsigned long elf_hwcap;
+> +
+> +#define RISCV_ISA_EXT_a		('a' - 'a')
+> +#define RISCV_ISA_EXT_c		('c' - 'a')
+> +#define RISCV_ISA_EXT_d		('d' - 'a')
+> +#define RISCV_ISA_EXT_f		('f' - 'a')
+> +#define RISCV_ISA_EXT_h		('h' - 'a')
+> +#define RISCV_ISA_EXT_i		('i' - 'a')
+> +#define RISCV_ISA_EXT_m		('m' - 'a')
+> +#define RISCV_ISA_EXT_s		('s' - 'a')
+> +#define RISCV_ISA_EXT_u		('u' - 'a')
+> +#define RISCV_ISA_EXT_zicsr	(('z' - 'a') + 1)
+> +#define RISCV_ISA_EXT_zifencei	(('z' - 'a') + 2)
+> +#define RISCV_ISA_EXT_zam	(('z' - 'a') + 3)
+> +#define RISCV_ISA_EXT_ztso	(('z' - 'a') + 4)
 
-diff --git a/drivers/rtc/rtc-fsl-ftm-alarm.c b/drivers/rtc/rtc-fsl-ftm-ala=
-rm.c
-index 8df2075af9a2..b83f7afa8311 100644
-=2D-- a/drivers/rtc/rtc-fsl-ftm-alarm.c
-+++ b/drivers/rtc/rtc-fsl-ftm-alarm.c
-@@ -248,7 +248,6 @@ static const struct rtc_class_ops ftm_rtc_ops =3D {
- static int ftm_rtc_probe(struct platform_device *pdev)
- {
- 	struct device_node *np =3D pdev->dev.of_node;
--	struct resource *r;
- 	int irq;
- 	int ret;
- 	struct ftm_rtc *rtc;
-@@ -265,13 +264,7 @@ static int ftm_rtc_probe(struct platform_device *pdev=
-)
- 	if (IS_ERR(rtc->rtc_dev))
- 		return PTR_ERR(rtc->rtc_dev);
+If we add the Z extensions here, it's probably best if we drop Zam from 
+this list.  The rationale is, as maintainers, we're planning to hold off 
+on merging any support for extensions or modules that aren't in the 
+"frozen" or "ratified" states, and according to the RISC-V specs, Zicsr, 
+Zifencei, and Ztso are all either frozen or ratified.  However, see 
+below -
 
--	r =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!r) {
--		dev_err(&pdev->dev, "cannot get resource for rtc\n");
--		return -ENODEV;
--	}
--
--	rtc->base =3D devm_ioremap_resource(&pdev->dev, r);
-+	rtc->base =3D devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(rtc->base)) {
- 		dev_err(&pdev->dev, "cannot ioremap resource for rtc\n");
- 		return PTR_ERR(rtc->base);
-=2D-
-2.23.0
+> +
+> +#define RISCV_ISA_EXT_MAX	256
+> +
+> +unsigned long riscv_isa_extension_base(const unsigned long *isa_bitmap);
+> +
+> +#define riscv_isa_extension_mask(ext) BIT_MASK(RISCV_ISA_EXT_##ext)
+> +
+> +bool __riscv_isa_extension_available(const unsigned long *isa_bitmap, int bit);
+> +#define riscv_isa_extension_available(isa_bitmap, ext)	\
+> +	__riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_##ext)
+> +
+>  #endif
+>  #endif
+> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+> index b1ade9a49347..4ce71ce5e290 100644
+> --- a/arch/riscv/kernel/cpufeature.c
+> +++ b/arch/riscv/kernel/cpufeature.c
+> @@ -6,21 +6,64 @@
+>   * Copyright (C) 2017 SiFive
+>   */
+>  
+> +#include <linux/bitmap.h>
+>  #include <linux/of.h>
+>  #include <asm/processor.h>
+>  #include <asm/hwcap.h>
+>  #include <asm/smp.h>
+>  
+>  unsigned long elf_hwcap __read_mostly;
+> +
+> +/* Host ISA bitmap */
+> +static DECLARE_BITMAP(riscv_isa, RISCV_ISA_EXT_MAX) __read_mostly;
+> +
+>  #ifdef CONFIG_FPU
+>  bool has_fpu __read_mostly;
+>  #endif
+>  
+> +/**
+> + * riscv_isa_extension_base - Get base extension word
+> + *
+> + * @isa_bitmap ISA bitmap to use
+> + * @returns base extension word as unsigned long value
+> + *
+> + * NOTE: If isa_bitmap is NULL then Host ISA bitmap will be used.
+> + */
 
+Am happy to see comments that can be automatically parsed, but could you 
+reformat them into kernel-doc format? 
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/doc-guide/kernel-doc.rst
+
+> +unsigned long riscv_isa_extension_base(const unsigned long *isa_bitmap)
+> +{
+> +	if (!isa_bitmap)
+> +		return riscv_isa[0];
+> +	return isa_bitmap[0];
+> +}
+> +EXPORT_SYMBOL_GPL(riscv_isa_extension_base);
+> +
+> +/**
+> + * __riscv_isa_extension_available - Check whether given extension
+> + * is available or not
+> + *
+> + * @isa_bitmap ISA bitmap to use
+> + * @bit bit position of the desired extension
+> + * @returns true or false
+> + *
+> + * NOTE: If isa_bitmap is NULL then Host ISA bitmap will be used.
+> + */
+
+Same comment as above.
+
+> +bool __riscv_isa_extension_available(const unsigned long *isa_bitmap, int bit)
+> +{
+> +	const unsigned long *bmap = (isa_bitmap) ? isa_bitmap : riscv_isa;
+> +
+> +	if (bit >= RISCV_ISA_EXT_MAX)
+> +		return false;
+> +
+> +	return test_bit(bit, bmap) ? true : false;
+> +}
+> +EXPORT_SYMBOL_GPL(__riscv_isa_extension_available);
+> +
+>  void riscv_fill_hwcap(void)
+>  {
+>  	struct device_node *node;
+>  	const char *isa;
+> -	size_t i;
+> +	char print_str[BITS_PER_LONG+1];
+> +	size_t i, j, isa_len;
+>  	static unsigned long isa2hwcap[256] = {0};
+>  
+>  	isa2hwcap['i'] = isa2hwcap['I'] = COMPAT_HWCAP_ISA_I;
+> @@ -32,8 +75,11 @@ void riscv_fill_hwcap(void)
+>  
+>  	elf_hwcap = 0;
+>  
+> +	bitmap_zero(riscv_isa, RISCV_ISA_EXT_MAX);
+> +
+>  	for_each_of_cpu_node(node) {
+>  		unsigned long this_hwcap = 0;
+> +		unsigned long this_isa = 0;
+>  
+>  		if (riscv_of_processor_hartid(node) < 0)
+>  			continue;
+> @@ -43,8 +89,20 @@ void riscv_fill_hwcap(void)
+>  			continue;
+>  		}
+>  
+> -		for (i = 0; i < strlen(isa); ++i)
+> +		i = 0;
+> +		isa_len = strlen(isa);
+> +#if defined(CONFIG_32BIT)
+> +		if (!strncmp(isa, "rv32", 4))
+> +			i += 4;
+> +#elif defined(CONFIG_64BIT)
+> +		if (!strncmp(isa, "rv64", 4))
+> +			i += 4;
+> +#endif
+> +		for (; i < isa_len; ++i) {
+>  			this_hwcap |= isa2hwcap[(unsigned char)(isa[i])];
+> +			if ('a' <= isa[i] && isa[i] <= 'z')
+> +				this_isa |= (1UL << (isa[i] - 'a'));
+
+Continuing from the earlier comment, this code won't properly handle the X 
+and Z prefix extensions.  So maybe for the time being, we should just drop 
+the lines mentioned earlier that imply that we can parse Z-prefix 
+extensions, and change this line so it ignores X and Z letters?
+
+Then a subsequent patch can add support for more complicated extension 
+string parsing.
+
+
+> +		}
+>  
+>  		/*
+>  		 * All "okay" hart should have same isa. Set HWCAP based on
+> @@ -55,6 +113,11 @@ void riscv_fill_hwcap(void)
+>  			elf_hwcap &= this_hwcap;
+>  		else
+>  			elf_hwcap = this_hwcap;
+> +
+> +		if (riscv_isa[0])
+> +			riscv_isa[0] &= this_isa;
+> +		else
+> +			riscv_isa[0] = this_isa;
+>  	}
+>  
+>  	/* We don't support systems with F but without D, so mask those out
+> @@ -64,7 +127,17 @@ void riscv_fill_hwcap(void)
+>  		elf_hwcap &= ~COMPAT_HWCAP_ISA_F;
+>  	}
+>  
+> -	pr_info("elf_hwcap is 0x%lx\n", elf_hwcap);
+> +	memset(print_str, 0, sizeof(print_str));
+> +	for (i = 0, j = 0; i < BITS_PER_LONG; i++)
+> +		if (riscv_isa[0] & BIT_MASK(i))
+> +			print_str[j++] = (char)('a' + i);
+> +	pr_info("riscv: ISA extensions %s\n", print_str);
+> +
+> +	memset(print_str, 0, sizeof(print_str));
+> +	for (i = 0, j = 0; i < BITS_PER_LONG; i++)
+> +		if (elf_hwcap & BIT_MASK(i))
+> +			print_str[j++] = (char)('a' + i);
+> +	pr_info("riscv: ELF capabilities %s\n", print_str);
+>  
+>  #ifdef CONFIG_FPU
+>  	if (elf_hwcap & (COMPAT_HWCAP_ISA_F | COMPAT_HWCAP_ISA_D))
+> -- 
+> 2.17.1
+> 
+> 
+
+
+- Paul
