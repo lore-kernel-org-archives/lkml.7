@@ -2,155 +2,108 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F4DC4740C
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 14:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE70C4740A
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 15:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB5E62184C
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 14:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6644217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 15:04:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n35lnfvx"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="U4wBRIWk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394259AbfIUO6N (ORCPT
+        id S2394272AbfIUPEf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Sep 2019 10:58:13 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41450 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390556AbfIUO6N (ORCPT
+        Sat, 21 Sep 2019 11:04:35 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34208 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394261AbfIUPEe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Sep 2019 10:58:13 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q7so6431378pfh.8;
-        Sat, 21 Sep 2019 07:58:12 -0700 (PDT)
+        Sat, 21 Sep 2019 11:04:34 -0400
+Received: by mail-wm1-f67.google.com with SMTP id y135so11620319wmc.1;
+        Sat, 21 Sep 2019 08:04:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to;
-        bh=rMu789LD1T8uU9KacNFi9FCRB7xCR3S38zLi0aGwMPk=;
-        b=n35lnfvxCsApW2kK/lMjVc0YEBMnaP2lRsh3iZP3PqPJ2tV3sg11DolTl/kk9xyJde
-         /ha5P/doLG5uKhkPQNY5bQt/JkPdzdAEqzqk3AkVfHXePMgjGLWFzx80KbrzYnZ78z7s
-         oKFHDgAnjMCs0loyHFt1jjasbEjPENOE1nLRi9OkT3p6vUCxrLXzpNR/BOoFSGI+z9Y7
-         4OaVoqk3tj5sFv/99bVXIE/7qHl3U+ulaMA5oy3DSGu7oxcstDO/eXPyv6MwtrqODYPG
-         U1QjzItNO/Fqx18aXt3H2HDvTec+8NdgrenBqnlI0CejEldxq1YFrwkqsWEk6G5YoH8C
-         mdXA==
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LGv9DZLsLql8R0RI6uFoY3WPJO94bAE/bq+K0Di3JjU=;
+        b=U4wBRIWkDsI4icvUsrtiriqteXBT0yMa+Xqw/3INETjgirlcoMtLUbdTCSP/DZ1ZQ5
+         21NjqIWk1uACxeE90JxDe/JQtX/5AJS2ZBTdwW3Hh2d1YyXU37iLuTPWkHV/wW2yxqN8
+         SuKZ2PkqY6F97Z0iSvzZRzGLw4aBw+f6y1ndSn6NHGGEmy59WJqlmOE84SXbrgFZKjOL
+         WKi5zMpjOjVQJA6pwb6INga0YJ1/wIhO8Vu88eNkS4mB6LZZd1CiqWWxOav2KD2rHvx3
+         V+GroTZC78nbo6KpCUinANLvJ0Gih6krhAtwkot15FwCBluKGKarVySBPS762dMsV6KA
+         Uh1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to;
-        bh=rMu789LD1T8uU9KacNFi9FCRB7xCR3S38zLi0aGwMPk=;
-        b=izd/ZohTSYNTXe4yKXd8tFo99/ktHj0JfJNs615xVOLjgopJ1mbI3j5ZHOsh+9sn+C
-         A9if4zpUTfdzIXP8iFIuopdgT3HvNwd22aAqNMpVotwOik1YI07Lb3AtkTri5qZni/74
-         dAHr5m/M9Fw9sOQkeuIxXCA+y2NYs+THJJG5gTudXUGV8rBXjIpyklcCbX1+rYNWPpG5
-         8Or1AVCylBjOR5F5iiVfjlt58bvedDywTXA03d8BDt1TmI+qDVKMVp6ItP6jFsf235qt
-         wGYmWYC0O5Xf7ekk6nGiJFOIKbapInz3VeHofzX+B/7baPxVEP8z5Epvz0x6KUoohN3S
-         60rA==
-X-Gm-Message-State: APjAAAViIAeo2KwNqVZVaAYGR45ldqvfDZ1N/6LHtBq9TmFVDh/K4itA
-        CzJOA+wBcWIbXBlkkU3/GOI=
-X-Google-Smtp-Source: APXvYqzq1rGaqCGeV44c1S06GyiRUKXeYke/1wz8RtK+UwfNjVz8EIJCJF0JnYuM5kiFHQQ1VUVAJA==
-X-Received: by 2002:a63:2224:: with SMTP id i36mr12763638pgi.135.1569077891943;
-        Sat, 21 Sep 2019 07:58:11 -0700 (PDT)
-Received: from satendra-MM061.ib-wrb304n.setup.in ([103.82.150.67])
-        by smtp.gmail.com with ESMTPSA id r185sm5933695pfr.68.2019.09.21.07.58.03
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LGv9DZLsLql8R0RI6uFoY3WPJO94bAE/bq+K0Di3JjU=;
+        b=UI5JILsZS0b2W2FN8zgihEJOlR8WhWpLnUB1F2LHBAPtLY1+Dlq8zoXi5L1KB+9AyA
+         Ei3/c1GCB8kp1qIQSQFZxdIWSuF4bRpBC+zh2KGFxWLxH+NOQBlEbKhEvBILK2KQ591m
+         v2hoBogaAziFM/xsKE7WvUHhBb/xDA+UueBQn7ytniQPnH5T0VTj5W9kqTUAHyGONv7w
+         XxHZgRNOgd6/izUfeyHGLIIlbRqZmmWkEJdU4xLeC85wUxSvhd3ejnw6fVBkAZTRD9M3
+         NYvPLtmoIeEHSW910mUD2cMoy0g+sAjRqTj0IXFHhNOq0HZsFSyNbrbkKOEPt7lKFInl
+         3OgQ==
+X-Gm-Message-State: APjAAAXcUyvlQKDOBLDqw5Bwhzl3THAAfBjnjZZkCJSrj2Cx3aAW1alr
+        9yWEDTrZgd3CK7XeUps/S8k=
+X-Google-Smtp-Source: APXvYqynjJRqs2bHOp/DdMfbh05bDAD/XBKHx85KCLbrsN0bIXyPSuRIggxSw4x+yHMqdHzbOENSfw==
+X-Received: by 2002:a1c:c789:: with SMTP id x131mr7235719wmf.20.1569078272512;
+        Sat, 21 Sep 2019 08:04:32 -0700 (PDT)
+Received: from blackbox.darklights.net (p200300F133CE0B0028BAA8C744A6F562.dip0.t-ipconnect.de. [2003:f1:33ce:b00:28ba:a8c7:44a6:f562])
+        by smtp.googlemail.com with ESMTPSA id r20sm10987422wrg.61.2019.09.21.08.04.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Sep 2019 07:58:10 -0700 (PDT)
-From:   Satendra Singh Thakur <sst2005@gmail.com>
-To:     dan.j.williams@intel.com, vkoul@kernel.org, jun.nie@linaro.org,
-        shawnguo@kernel.org, agross@kernel.org, sean.wang@mediatek.com,
-        matthias.bgg@gmail.com, maxime.ripard@bootlin.com, wens@csie.org,
-        lars@metafoo.de, afaerber@suse.de, manivannan.sadhasivam@linaro.org
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, satendrasingh.thakur@hcl.com,
-        Satendra Singh Thakur <sst2005@gmail.com>
-Subject: Re: Re: [PATCH 0/9] added helper macros to remove duplicate code from probe functions of the platform drivers
-Date:   Sat, 21 Sep 2019 20:27:26 +0530
-Message-Id: <2356e29bca5bdfa901534bb32a2782185eb0415f.1568909689.git.sst2005@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190918102715.GO4392@vkoul-mobl>
+        Sat, 21 Sep 2019 08:04:31 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     narmstrong@baylibre.com, jbrunet@baylibre.com,
+        linux-amlogic@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 1/1] clk: meson: gxbb: let sar_adc_clk_div set the parent clock rate
+Date:   Sat, 21 Sep 2019 17:04:11 +0200
+Message-Id: <20190921150411.767290-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 3:57 PM, Vinod Koul wrote:
-> On 15-09-19, 12:30, Satendra Singh Thakur wrote:
-> > 1. For most of the platform drivers's probe include following steps
-> > 
-> > -memory allocation for driver's private structure
-> > -getting io resources
-> > -io remapping resources
-> > -getting irq number
-> > -registering irq
-> > -setting driver's private data
-> > -getting clock
-> > -preparing and enabling clock
->
-> And we have perfect set of APIs for these tasks!
-Hi Vinod,
-Thanks for the comments.
-You are right, we already have set of APIs for these tasks.
-The proposed macros combine the very same APIs to remove 
-duplicate/redundant code.
-A new driver author can use these macros to easily write probe 
-function without having to worry about signatures of internal APIs.
-In the past, people have combined some of them e.g.
-a) clk_prepare_enable combines clk_prepare and clk_enable
-b) devm_platform_ioremap_resource combines
-platform_get_resource (for type IORESOURCE_MEM)
-and devm_ioremap_resource
-c) module_platform_driver macro encompasses module_init/exit 
-and driver_register/unregister functions.
-The basic idea is to simplyfy coding.
-> > 2. We have defined a set of macros to combine some or all of
-> > the above mentioned steps. This will remove redundant/duplicate
-> > code in drivers' probe functions of platform drivers.
-> 
-> Why, how does it help and you do realize it also introduces bugs
-This will make probe function shorter by removing repeated code.
-This will also reduce bugs caused due to improper handling
-of failure cases because of these reasons:
-a) If the developer calls each API individualy one might miss
-proper handling of the failure for some API; Whereas the macro
-properly handles failure of each API.
-b) Macros are devres compatible which leaves less room for
-memory leaks.
+The meson-saradc driver manually sets the input clock for
+sar_adc_clk_sel. Update the GXBB clock driver (which is used on GXBB,
+GXL and GXM) so the rate settings on sar_adc_clk_div are propagated up
+to sar_adc_clk_sel which will let the common clock framework select the
+best matching parent clock if we want that.
 
-Yes, the macros which enable clock and request irqs
-might cause bugs if they are not used carefully.
-For instance, enabling the clock or requesting the irq
-earlier than actually required. So, the macros with _clk
-and _irq, _all suffix should be used carefully.
+This makes sar_adc_clk_div consistent with the axg-aoclk and g12a-aoclk
+drivers, which both also specify CLK_SET_RATE_PARENT.
 
-Please let me know if I miss any specific type of bug
-here.
-> 
-> > devm_platform_probe_helper(pdev, priv, clk_name);
-> > devm_platform_probe_helper_clk(pdev, priv, clk_name);
-> > devm_platform_probe_helper_irq(pdev, priv, clk_name,
-> > irq_hndlr, irq_flags, irq_name, irq_devid);
-> > devm_platform_probe_helper_all(pdev, priv, clk_name,
-> > irq_hndlr, irq_flags, irq_name, irq_devid);
-> > devm_platform_probe_helper_all_data(pdev, priv, clk_name,
-> > irq_hndlr, irq_flags, irq_name, irq_devid);
-> > 
-> > 3. Code is made devres compatible (wherever required)
-> > The functions: clk_get, request_irq, kzalloc, platform_get_resource
-> > are replaced with their devm_* counterparts.
-> 
-> We already have devres APIs for people to use!
-Yes, we have devres APIs and many drivers do use them.
-But still there are many which don't use them.
-The proposed macros provides just another way to use devres APIs.
-> > 
-> > 4. Few bugs are also fixed.
-> 
-> Which ones..?
-The bug is that the failure of request_irq 
-is not handled properly in mtk-hsdma.c. This is fixed in patch [5/9].
-https://lkml.org/lkml/2019/9/15/35
+Fixes: 33d0fcdfe0e870 ("clk: gxbb: add the SAR ADC clocks and expose them")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+This is a small consistency fix which I found while debugging an
+unrelated problem.
 
-Please let me know if I am missing something here.
-Thanks
--Satendra 
+ drivers/clk/meson/gxbb.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/clk/meson/gxbb.c b/drivers/clk/meson/gxbb.c
+index 7cfb998eeb3e..1f9c056e684c 100644
+--- a/drivers/clk/meson/gxbb.c
++++ b/drivers/clk/meson/gxbb.c
+@@ -935,6 +935,7 @@ static struct clk_regmap gxbb_sar_adc_clk_div = {
+ 			&gxbb_sar_adc_clk_sel.hw
+ 		},
+ 		.num_parents = 1,
++		.flags = CLK_SET_RATE_PARENT,
+ 	},
+ };
+ 
+-- 
+2.23.0
 
