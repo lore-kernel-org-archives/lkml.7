@@ -2,89 +2,82 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2591C49ED7
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 06:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AB4C49ED7
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 06:17:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F25120882
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 06:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FF8D21835
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 06:17:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730967AbfIUGHl (ORCPT
+        id S2407170AbfIUGRt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Sep 2019 02:07:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45896 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730891AbfIUGHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Sep 2019 02:07:21 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 37FF518C4269;
-        Sat, 21 Sep 2019 06:07:18 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-116-24.ams2.redhat.com [10.36.116.24])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D86AB5D9C9;
-        Sat, 21 Sep 2019 06:07:13 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>
-Subject: Re: [PATCH RFC v4 1/1] random: WARN on large getrandom() waits and introduce getrandom2()
-References: <20190912034421.GA2085@darwi-home-pc>
-        <20190912082530.GA27365@mit.edu>
-        <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
-        <20190914122500.GA1425@darwi-home-pc>
-        <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
-        <20190915052242.GG19710@mit.edu>
-        <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
-        <20190918211503.GA1808@darwi-home-pc>
-        <20190918211713.GA2225@darwi-home-pc>
-        <CAHk-=wiCqDiU7SE3FLn2W26MS_voUAuqj5XFa1V_tiGTrrW-zQ@mail.gmail.com>
-        <20190920134609.GA2113@pc>
-        <CALCETrWvE5es3i+to33y6jw=Yf0Tw6ZfV-6QWjZT5v0fo76tWw@mail.gmail.com>
-        <CAHk-=wgW8rN2EVL_Rdn63V9vQO0GkZ=RQFeqqsYJM==8fujpPg@mail.gmail.com>
-        <CALCETrV=4TX2a4uV5t2xOFzv+zM_jnOtMLJna8Vb7uXz6S=wSw@mail.gmail.com>
-        <CAHk-=wjpTWgpo6d24pTv+ubfea_uEomX-sHjjOkdACfV-8Nmkg@mail.gmail.com>
-Date:   Sat, 21 Sep 2019 08:07:12 +0200
-In-Reply-To: <CAHk-=wjpTWgpo6d24pTv+ubfea_uEomX-sHjjOkdACfV-8Nmkg@mail.gmail.com>
-        (Linus Torvalds's message of "Fri, 20 Sep 2019 11:09:53 -0700")
-Message-ID: <87blvefai7.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        Sat, 21 Sep 2019 02:17:49 -0400
+Received: from smtp08.smtpout.orange.fr ([80.12.242.130]:22809 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731003AbfIUGRt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Sep 2019 02:17:49 -0400
+Received: from localhost.localdomain ([93.22.38.188])
+        by mwinf5d68 with ME
+        id 46Hj2100d43Zwrh036HkQu; Sat, 21 Sep 2019 08:17:45 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 21 Sep 2019 08:17:45 +0200
+X-ME-IP: 93.22.38.188
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     khc@pm.waw.pl, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] hdlc: Simplify code in 'pvc_xmit()'
+Date:   Sat, 21 Sep 2019 08:17:38 +0200
+Message-Id: <20190921061738.25326-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Sat, 21 Sep 2019 06:07:18 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Linus Torvalds:
+Use __skb_pad instead of rewriting it, this saves some LoC.
 
-> Violently agreed. And that's kind of what the GRND_EXPLICIT is really
-> aiming for.
->
-> However, it's worth noting that nobody should ever use GRND_EXPLICIT
-> directly. That's just the name for the bit. The actual users would use
-> GRND_INSECURE or GRND_SECURE.
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+Compile tested only.
+---
+ drivers/net/wan/hdlc_fr.c | 14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
 
-Should we switch glibc's getentropy to GRND_EXPLICIT?  Or something
-else?
+diff --git a/drivers/net/wan/hdlc_fr.c b/drivers/net/wan/hdlc_fr.c
+index 9acad651ea1f..30f20b667c8b 100644
+--- a/drivers/net/wan/hdlc_fr.c
++++ b/drivers/net/wan/hdlc_fr.c
+@@ -414,16 +414,12 @@ static netdev_tx_t pvc_xmit(struct sk_buff *skb, struct net_device *dev)
+ 		if (dev->type == ARPHRD_ETHER) {
+ 			int pad = ETH_ZLEN - skb->len;
+ 			if (pad > 0) { /* Pad the frame with zeros */
+-				int len = skb->len;
+-				if (skb_tailroom(skb) < pad)
+-					if (pskb_expand_head(skb, 0, pad,
+-							     GFP_ATOMIC)) {
+-						dev->stats.tx_dropped++;
+-						dev_kfree_skb(skb);
+-						return NETDEV_TX_OK;
+-					}
++				if (__skb_pad(skb, pad, false) < 0) {
++					dev->stats.tx_dropped++;
++					dev_kfree_skb(skb);
++					return NETDEV_TX_OK;
++				}
+ 				skb_put(skb, pad);
+-				memset(skb->data + len, 0, pad);
+ 			}
+ 			skb->protocol = cpu_to_be16(ETH_P_802_3);
+ 		}
+-- 
+2.20.1
 
-I don't think we want to print a kernel warning for this function.
-
-Thanks,
-Florian
