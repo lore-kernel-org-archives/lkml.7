@@ -2,103 +2,117 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE27CC4360D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 19:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B51C4740A
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 20:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC0D42184C
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 19:39:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sVl1kwWe"
+	by mail.kernel.org (Postfix) with ESMTP id 396D821882
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 20:22:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726055AbfIUTjp (ORCPT
+        id S1726136AbfIUUWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Sep 2019 15:39:45 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40000 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfIUTjo (ORCPT
+        Sat, 21 Sep 2019 16:22:14 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:54553 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726077AbfIUUWO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Sep 2019 15:39:44 -0400
-Received: by mail-pf1-f193.google.com with SMTP id x127so6645504pfb.7;
-        Sat, 21 Sep 2019 12:39:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=olEdqj55RZspGaLOfNT6x2Xafj6rXEsyo6pBhMNSYRE=;
-        b=sVl1kwWe3KUr8pOL/7xoGQ85SnKJOAhFhwwVNwtyDDNFzTrEGhMtrmzWIpxYDDSOIO
-         HCtVQAJfUQ2q0H9vnlRRsnqMPU9zGLL2VZfLm0ZSEmiAh8/gYduoMRNDGWc52r4R19iN
-         dLys3ah8YvW+XGrTl9zkk4ruHESoWSvXN2sWEzJ2s/ndO6v65VinGQ8wm+NbWiC0m2PE
-         fxlw+67SzKAz8AaVQ/zisarFZxjda0jpMvyp5ZUpKcYFyUeDGEHU0sb6E1NMVdnUIwOz
-         8H0dOv3OWAz2VNhHuIaiWsIQVBcsGga2atJj5wlnCsT/W0IpNHg0bejbWxcOQ6xrxSk+
-         msbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=olEdqj55RZspGaLOfNT6x2Xafj6rXEsyo6pBhMNSYRE=;
-        b=seDpfSJ1kMg4dS+Bj9CZYq9HGVWjgDmqwV1ULzThF6sxs4wWneQcot3IcxiDG9rV2R
-         9Ei6fGzT3f/pqef+SrqGCFMyNwJysi3E82wOgDklscQeh3ag24QjaOT0hb4q9YvzBLt5
-         yhG8NMXzxdzTakWaXRJA7IDLKyLgzbVjHpw2bvXtoKsbQDi5rEU/d8kcuTQuZ45FvgLz
-         pQBML9AQkZEzLQI0EFOHLz4HhBoy2rjJiY5rgyf27pSQ3w7pP8S7Zm1RsZpCgwmMYoO/
-         slUO3/vPghKcy0ljIK9AMTadfXKa4PUYApdv8tEcvbwHCxOBsNd5FDmHtgQolEL9t+pK
-         y8uw==
-X-Gm-Message-State: APjAAAXp/KOul8ZKWQJnd5WWl7gjCqir5kSkyreYW5sn6/gii/KoqsVc
-        eDQwUBTH4VRT5qhInxfF2jLtU1DRt7A=
-X-Google-Smtp-Source: APXvYqypIUrSeX2XATTvjcJuzyz85wgt6dKjlQQ5vIah2BQrbr2JIsLQJVkERviyK/Wr+Y0baIBjsg==
-X-Received: by 2002:a17:90a:3086:: with SMTP id h6mr11846362pjb.1.1569094783200;
-        Sat, 21 Sep 2019 12:39:43 -0700 (PDT)
-Received: from [10.230.28.130] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id c16sm7164041pja.2.2019.09.21.12.39.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 21 Sep 2019 12:39:42 -0700 (PDT)
-Subject: Re: [PATCH] net: dsa: Use the correct style for SPDX License
- Identifier
-To:     Nishad Kamdar <nishadkamdar@gmail.com>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190921134522.GA3575@nishad>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <ce3b968a-df4c-8d07-6b7b-167a069da3ef@gmail.com>
-Date:   Sat, 21 Sep 2019 12:39:41 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Sat, 21 Sep 2019 16:22:14 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 47D1480315; Sat, 21 Sep 2019 22:21:56 +0200 (CEST)
+Date:   Sat, 21 Sep 2019 22:22:10 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Artemy Kovalyov <artemyko@mellanox.com>,
+        Yossi Itigin <yosefe@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Steve Wise <swise@opengridcomputing.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        =?iso-8859-1?Q?H=E5kon?= Bugge <haakon.bugge@oracle.com>
+Subject: Re: [PATCH 4.19 03/79] RDMA/restrack: Release task struct which was
+ hold by CM_ID object
+Message-ID: <20190921202209.GA14868@amd>
+References: <20190919214807.612593061@linuxfoundation.org>
+ <20190919214808.101726182@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <20190921134522.GA3575@nishad>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="IJpNTDwzlM2Ie8A6"
+Content-Disposition: inline
+In-Reply-To: <20190919214808.101726182@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--IJpNTDwzlM2Ie8A6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 9/21/2019 6:45 AM, Nishad Kamdar wrote:
-> This patch corrects the SPDX License Identifier style
-> in header file for Distributed Switch Architecture drivers.
-> For C header files Documentation/process/license-rules.rst
-> mandates C-like comments (opposed to C source files where
-> C++ style should be used)
-> 
-> Changes made by using a script provided by Joe Perches here:
-> https://lkml.org/lkml/2019/2/7/46.
-> 
-> Suggested-by: Joe Perches <joe@perches.com>
-> Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+Hi!
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+> commit ed7a01fd3fd77f40b4ef2562b966a5decd8928d2 upstream.
+>=20
+> Tracking CM_ID resource is performed in two stages: creation of cm_id
+> and connecting it to the cma_dev. It is needed because rdma-cm protocol
+> exports two separate user-visible calls rdma_create_id and
+> rdma_accept.
+=2E..
+
+Mainline says this needs additional fix, fe9bc1644918aa1d, see below.
+
+> --- a/drivers/infiniband/core/restrack.c
+> +++ b/drivers/infiniband/core/restrack.c
+> @@ -209,7 +209,7 @@ void rdma_restrack_del(struct rdma_restr
+>  	struct ib_device *dev;
+> =20
+>  	if (!res->valid)
+> -		return;
+> +		goto out;
+> =20
+>  	dev =3D res_to_dev(res);
+>  	if (!dev)
+#                 return;
+
+This test does return, does it need to go through 'goto out', too? (I
+see it should not happen, but...)
+
+> @@ -222,8 +222,10 @@ void rdma_restrack_del(struct rdma_restr
+>  	down_write(&dev->res.rwsem);
+>  	hash_del(&res->node);
+>  	res->valid =3D false;
+> +	up_write(&dev->res.rwsem);
+> +
+> +out:
+>  	if (res->task)
+>  		put_task_struct(res->task);
+> -	up_write(&dev->res.rwsem);
+>  }
+
+Mainline says res->task =3D NULL is needed there, see fe9bc1644918aa1d.
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--IJpNTDwzlM2Ie8A6
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl2GhnEACgkQMOfwapXb+vI1JQCgg8/N6Ipu7I1fdlTvtVIoGM/9
+wGkAn0omzraV89eMjfMK7WXaKd2GibGn
+=ayIv
+-----END PGP SIGNATURE-----
+
+--IJpNTDwzlM2Ie8A6--
