@@ -2,168 +2,106 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB6CBC4360D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 19:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 570DCC4360D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 19:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98DAA20644
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 19:04:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="lMXPUD9a"
+	by mail.kernel.org (Postfix) with ESMTP id 32A2D2196E
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 19:07:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732340AbfIUTEM (ORCPT
+        id S1732362AbfIUTHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Sep 2019 15:04:12 -0400
-Received: from mout.web.de ([217.72.192.78]:34625 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729044AbfIUTEL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Sep 2019 15:04:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1569092640;
-        bh=7Tg1Yc39xzenqYSWdGNeeQlOnwRtZ7+BVwsmOwCoArU=;
-        h=X-UI-Sender-Class:To:From:Subject:Cc:Date;
-        b=lMXPUD9aS0bSdfDOiBmIhvCbQkBpwgjTyzC8BqkWJXKrsSbNKWrxG0U/pBzKrOM1j
-         /I3OIM2JZkV/obLjf5TQQ3sY1FkEKHf1L8ywadzYN3x+4x00FFIRZkAkLns/VCkMNi
-         z503MfBeMoklAH/N3N8buHoIM/jJ65wrjM90t+Es=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.244.64.44]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LmLoU-1hc90U0WKg-00a0LR; Sat, 21
- Sep 2019 21:04:00 +0200
-To:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        Arto Merilainen <amerilainen@nvidia.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        Sat, 21 Sep 2019 15:07:13 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:60584 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727106AbfIUTHN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Sep 2019 15:07:13 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 8458B2002D;
+        Sat, 21 Sep 2019 21:07:09 +0200 (CEST)
+Date:   Sat, 21 Sep 2019 21:07:08 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        adam.ford@logicpd.com, Thierry Reding <thierry.reding@gmail.com>,
         David Airlie <airlied@linux.ie>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] drm/tegra: vic: Use devm_platform_ioremap_resource() in
- vic_probe()
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org, Andrew Chew <achew@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>
-Message-ID: <50adb1d3-93fc-44c1-9988-02036911ee46@web.de>
-Date:   Sat, 21 Sep 2019 21:03:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] dt-bindings: Add Logic PD Type 28 display panel
+Message-ID: <20190921190708.GB32133@ravnborg.org>
+References: <20190917161214.2913-1-aford173@gmail.com>
+ <20190917161214.2913-2-aford173@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Ear2+ZWGYZCCOHo5WiDNX1An9lw8SlgPmVPGUU67jagu+Q6vgqo
- LST35OMQIlbcoByW4YRUhS2CUCe6GDvw54vJWWmxNqza7W0tfrHudq5o8w6gRuEI0if8eW+
- p5nT1++FD7YT0CLbacTWCUeGJp8+2IPtGDEWz3kaDytZvkJ/E9vWPquD8aUlJX4E0TejUSS
- ITdVgBF3ICrXzoyhCOBTw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:CaCKB7VbyaI=:L103ETXJzBvExrNjH4GQcn
- 4yVUJK9oKnpiZ1TMMAo9MGZa4iKDIKUntUPr36Ac3sbv+y5eLhVWx3AmtP5a7da91mJjdScJZ
- j3a2DGJjyKMe+WyDX4Xg+HWx0WrSr+2M+x1EjQHabp/rmnSIYOdiNEDu9wB8oXE37pQTW+GAZ
- a7CEVjyRt2tsE6LStHAOq7v0PNIDTZF2GX1D0HmW124DrHs7p2G9B609Z35fh90iyCPNXvhV4
- jxI2HEemUtGdTgJK0e+xphtHdSH8KgrXQ5gvQFdIjEEeH/N+2o/uSW+uprX9uGHUDY87Zq2Pz
- DHvHkeU0p3QXfU+dYksTBIRRh3fOKN/lYn114L7uLOuI9tlfACc8kAF/mPeZ7P59im9Is48wj
- iqCc8OVeUVGHSWtC95/7519D4f8Sm2cjJ3/rtuIrfB9uPxiTOVRO2/fD67hgdzR1tSK/qpwxn
- cK67Ch+JhuD1tZT8ZPaZgcmqDvqSxK7Rq8IO9qkp8p2ZWhvK1Qw+YBJe1Efopxn1w8bS/NGdQ
- Gz1fSlhgGJEVO8kLJFnOs2NJZicvs7Rs5XpsYnZdLM8gEfGOFIhZrUnZbZjMkCocOU1CxMBMv
- RauJcDvID1KZLzYqF/YUxS7AbEX4eNFQ1AjIW8JnYjvM8DjgMusKEBlOI+oAVAMNEhJlgY7xa
- 8bKwpbGz0lF1BcfsmPtKZXOI8KjkXnsYLlRKzNhvVvNpBA8l5WeWPdXiuQSknwNgJERJ1GbcM
- iYSxwq5HR4S0G3d8oF0ymYgNOQgbRohDR7k4/76af5RprZpfMKRIb4BDCbaBoMd55TlpjfEU3
- nFKgUrHoZCmzHXq0I4i08R1gWqmZPKEddq36DljQTwe/p26CcjRcoYjUayDhQB4v2oIdW2vjj
- HAQU1G6+SQDK+kM1Ef4blT+Iatez0xbUn+xJl2y9OvShqBWOsa4AuVvX3HX5j4G7HGmWYG/BG
- PeTgvNJ91aERNC+Txrt1x7btOZiAOyim3ALQJqpdo52sFNVY2jOHOb3kDYocR51SrxoATiQ5a
- Xty38xK3aSPdonAWxGpbts+vkVym7+kr7+InBH/2VXtcu4AnYz0iGP4jRtrX+82sLjlIPIDHE
- 34BekncIIH0USu0hgYc9N9rNHGS4a+ViywJv6mZpq9Dw4tz9uxSGMlbXru+5M86g55gew1fSY
- etTATE8jxylzx0wqx/QQLYwHlziCwWkVMXSuw9jqoIBqgHNiwvpimo/4ToCURiplF2E4wT+G7
- mM4fOe9YBZqc0m8LNVsSwMdPMv3jn6F+Gu72OiPgrz1AFKV+UPIYq/c7cRl8=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190917161214.2913-2-aford173@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pGLkceISAAAA:8
+        a=TaQvIJAheEgyp50s76YA:9 a=CjuIK1q_8ugA:10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Sat, 21 Sep 2019 20:51:52 +0200
+Hi Adam.
 
-Simplify this function implementation by using a known wrapper function.
+Good with even more panels.
+But for new bindings please use meta-schema (.yaml) format.
+This is what we use for new bindings as it allows better
+validation.
 
-This issue was detected by using the Coccinelle software.
+	Sam
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/gpu/drm/tegra/vic.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+On Tue, Sep 17, 2019 at 11:12:12AM -0500, Adam Ford wrote:
+> This patch adds documentation of device tree bindings for the WVGA panel
+> Logic PD Type 28 display.
+> 
+> Signed-off-by: Adam Ford <aford173@gmail.com>
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/logicpd,type28.txt b/Documentation/devicetree/bindings/display/panel/logicpd,type28.txt
+> new file mode 100644
+> index 000000000000..829fc5210e06
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/logicpd,type28.txt
+> @@ -0,0 +1,26 @@
+> +Logic PD Type 28 4.3" WQVGA TFT LCD panel
+> +
+> +This binding is compatible with the simple-panel binding, which is specified
+> +in simple-panel.txt in this directory.
+> +
+> +Required properties:
+> +- compatible: should be "logicpd,type28"
+> +
+> +Optional properties:
+> +- power-supply: regulator to provide the supply voltage
+> +- enable-gpios: GPIO pin to enable or disable the panel
+> +- backlight: phandle of the backlight device attached to the panel
+Is it correct that these are optional for the descrivbed panel?
 
-diff --git a/drivers/gpu/drm/tegra/vic.c b/drivers/gpu/drm/tegra/vic.c
-index cd0399fd8c63..bc72d326588b 100644
-=2D-- a/drivers/gpu/drm/tegra/vic.c
-+++ b/drivers/gpu/drm/tegra/vic.c
-@@ -370,7 +370,6 @@ static int vic_probe(struct platform_device *pdev)
- {
- 	struct device *dev =3D &pdev->dev;
- 	struct host1x_syncpt **syncpts;
--	struct resource *regs;
- 	struct vic *vic;
- 	int err;
-
-@@ -384,13 +383,7 @@ static int vic_probe(struct platform_device *pdev)
- 	if (!syncpts)
- 		return -ENOMEM;
-
--	regs =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!regs) {
--		dev_err(&pdev->dev, "failed to get registers\n");
--		return -ENXIO;
--	}
--
--	vic->regs =3D devm_ioremap_resource(dev, regs);
-+	vic->regs =3D devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(vic->regs))
- 		return PTR_ERR(vic->regs);
-
-=2D-
-2.23.0
-
+> +
+> +Optional nodes:
+> +- Video port for RGB input.
+> +
+> +Example:
+> +	lcd0: display {
+> +		compatible = "logicpd,type28";
+> +		enable-gpios = <&gpio5 27 GPIO_ACTIVE_HIGH>;
+> +		port {
+> +			lcd_in: endpoint {
+> +				remote-endpoint = <&dpi_out>;
+> +			};
+> +		};
+> +	};
+> -- 
+> 2.17.1
