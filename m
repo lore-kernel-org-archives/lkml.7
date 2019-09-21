@@ -2,146 +2,167 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 296CCC49ED7
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 10:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61FF0C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 10:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05D83208C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 10:27:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D85A217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 10:48:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="GrIiA3Dj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437743AbfIUK1C (ORCPT
+        id S2407519AbfIUKsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Sep 2019 06:27:02 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:57052 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731118AbfIUK1B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Sep 2019 06:27:01 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id D436A1EC664417B2B364;
-        Sat, 21 Sep 2019 18:26:59 +0800 (CST)
-Received: from [127.0.0.1] (10.63.139.185) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Sat, 21 Sep 2019
- 18:26:49 +0800
-Subject: Re: [PATCH 2/2] [v2] crypto: hisilicon - allow compile-testing on x86
-To:     John Garry <john.garry@huawei.com>, Arnd Bergmann <arnd@arndb.de>
-References: <20190919140650.1289963-2-arnd@arndb.de>
- <20190919140917.1290556-1-arnd@arndb.de>
- <f801a4c1-8fa6-8c14-120c-49c24ec84449@huawei.com>
- <CAK8P3a3jCv--VHu9r4ZTnLXXGaCjdJ6royP5LFk_9RCTTRsRBA@mail.gmail.com>
- <CAK8P3a1AgZePpZdYXh2w1BHAJZZbAjZjN8MZyVS4bPo4gVVgPg@mail.gmail.com>
- <531214d6-2caf-2963-0f57-2cd615a18762@huawei.com>
-CC:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Kenneth Lee <liguozhu@hisilicon.com>,
-        Mao Wenan <maowenan@huawei.com>,
-        "Hao Fang" <fanghao11@huawei.com>,
-        Shiju Jose <shiju.jose@huawei.com>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Will Deacon <will@kernel.org>
-From:   Zhou Wang <wangzhou1@hisilicon.com>
-Message-ID: <5D85FAEC.9060607@hisilicon.com>
-Date:   Sat, 21 Sep 2019 18:26:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.5.1
+        Sat, 21 Sep 2019 06:48:42 -0400
+Received: from mout.web.de ([217.72.192.78]:45379 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2407271AbfIUKsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Sep 2019 06:48:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1569062907;
+        bh=2KlsMu3Yr2Jz4vFlxK+RT/uUmCETBSIvHkQo4xghl4k=;
+        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
+        b=GrIiA3DjUajilEfhe5yVl4eIU+wnpy1sYdprmgb44hZhhAhJZyZhnIzl731LMsHN3
+         JrTwGgCQZ4jCA728IZnelIW5nPFQQxxhhrUK7PkY7y32xu0+6j3KcJFBHqrnIPDYjI
+         /S3QTiLZnoeMcieXXLSIE8l4fpREGvtrUjOCA9wo=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.244.64.44]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MHp4r-1iCRDa12jd-003a1n; Sat, 21
+ Sep 2019 12:48:27 +0200
+To:     linux-rtc@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Miodrag Dinic <miodrag.dinic@mips.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Aleksandar Markovic <aleksandar.markovic@imgtec.com>,
+        Goran Ferenc <goran.ferenc@imgtec.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] rtc: goldfish: Use devm_platform_ioremap_resource() in
+ goldfish_rtc_probe()
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <5ecfcf43-d6b2-1a38-dee8-b8806f30bc83@web.de>
+Date:   Sat, 21 Sep 2019 12:48:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-In-Reply-To: <531214d6-2caf-2963-0f57-2cd615a18762@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.63.139.185]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:N3NnE9ynw+TLhydFjG05ejJtWADOH98Ta018iGgzSfvz22KdUvQ
+ 4zSis1r5kI05XgdZC2hMkLO/j14fGQ8145XvWJCz8uBr6yT5dtdITzkK6jSWfuo95bkrlaK
+ 60JJD3Ldde6GEYrwNxlzIYaqDMGUqNOwRzAiX5cRmnArBbgnSibs5UM21j+6z8tn80mOoOT
+ HRw/9CQgm4BrQWvO4iYHA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:FWNLfKQZnz8=:VyeVERNzXzFkFT0eIX8teI
+ dh5T2rfIfvprA+WFE6zAJL8EnmlfYB2dnsLfe4S9q59EHxTu+esN8Ebh7YCrji4E/f3ZD2ajG
+ WLy2G75+QX+MskCh9urUyP2LfCa+pd2v0b1QtkDdNnK3kd7eRtfk0UsTndHxwM0myrAhGi52o
+ UxLzLjznKC8DYzSYHfplUn3tBjq+brycnzfO/H2R0PujNDwFhCYmRfxOVg/463cukVk5w9FS3
+ 8aNisxxhR3W3IRMCZamo/SnOGQzArk6jOdqwyrMcFf0qd2+I3qAjlXomH50shApAacABF6XLk
+ 4VIxft9d0YDQx8W/0ZDmz3qlhVZnsX7C1imjuIiTdQtcw//zKiuCnGfyo9CHH0V9gxjYNeRkf
+ yQ1fwJu9UJSR6Hv+zxAUCBPWv0N/WFhem0ZK1F2glWhr4T2aLFUayJgvBN/amC2WkF4hN1E4W
+ aZwJCmxlIRYeOLeC3VSdWpKCikPFIKbM+OJu/BoNu5PsuC3U3r999Lm+fEfJE7F6DxvddOsLl
+ Xk62153sI3H+JkRjQW5S7SrRse26CLuyFSFEKk1BiDs8FiLtlJT9IeE27+chCn/NKmNxnU8tf
+ 2/l4ykgHrRNOX1LinacPlxDTJoci5o32gy5q7QfpCr6gyZqp1zU5MWhqOvSWGL/vAz90zu3jy
+ uopzVhzAcmRR+PwZN7U6/QDNytiOhPzExqD21SdCtU4BfYBptx4jHazS3OTcSFvkx46HhbZVH
+ 0uGzGpMaLZ4HrSinxtL6J9kOJOAF7yKujS8xBE6G64hKXOIXq/N0V3/uQkBpFfEjTYAJRjEof
+ Aa/9TUfjDZ63hZEGCuNb6KhTS+FPFLa9gQIxkU3OsIH0WGENZMV2tZNpkUATnlXj3oqwyGKYn
+ x6h1U9gIiczIj9mL63CgtSgKD6w6/ujfuP4tIFzeuVSCyJtrsNCdmXMhJZr0k2yYAy28vOX2I
+ A+9FHpjNoftxaQ9AEE1G3vEOeFIh9YvvLq1B1OohDTHb2f2tkzFGax9rAmlO6QnglbHLXqvqT
+ C0FEC62xAPy7ISSP6owhvD+6AakJVilZ9xAHpz7uB2mzeNWas+FO33mTEFCL5TrUo8rtxie1r
+ 6LJRlmTGbqVkrWZiz9CCiZwv6stLJi6NKlOOULIyPf/3U1uGzEQ0TUoUFZfj5knDwy76kLaOY
+ Nkogm+NwHWL/dl5QrCi3IL1jUV2g03JwxGjwGE4KPuYrQD3oOAlUswiNlPpHbV1kQopkYkM7Z
+ MqCWGC5VX9tN0r1lV64XZFN02tEokKe9kob8CngvRJcGww1KZER3RSrcdEcE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/9/20 22:16, John Garry wrote:
-> On 20/09/2019 14:36, Arnd Bergmann wrote:
->> On Fri, Sep 20, 2019 at 3:26 PM Arnd Bergmann <arnd@arndb.de> wrote:
->>>
->>> On Fri, Sep 20, 2019 at 10:34 AM John Garry <john.garry@huawei.com> wrote:
->>>
->>>>> +     if (!IS_ENABLED(CONFIG_ARM64)) {
->>>>> +             memcpy_toio(fun_base, src, 16);
->>>>> +             wmb();
->>>>> +             return;
->>>>> +     }
->>>>> +
->>>>>       asm volatile("ldp %0, %1, %3\n"
->>>>>                    "stp %0, %1, %2\n"
->>>>>                    "dsb sy\n"
->>>>>
->>>>
->>>> As I understand, this operation needs to be done atomically. So - even
->>>> though your change is just for compile testing - the memcpy_to_io() may
->>>> not do the same thing on other archs, right?
->>>>
->>>> I just wonder if it's right to make that change, or at least warn the
->>>> imaginary user of possible malfunction for !arm64.
->>>
-> 
-> Hi Arnd,
-> 
->>> It's probably not necessary here. From what I can tell from the documentation,
->>> this is only safe on ARMv8.4 or higher anyway, earlier ARMv8.x implementations
->>> don't guarantee that an stp arrives on the bus in one piece either.
->>>
->>> Usually, hardware like this has no hard requirement on an atomic store,
->>> it just needs the individual bits to arrive in a particular order, and then
->>> triggers the update on the last bit that gets stored. If that is the case here
->>> as well, it might actually be better to use two writeq_relaxed() and
->>> a barrier. This would also solve the endianess issue.
->>
->> See also https://lkml.org/lkml/2018/1/26/554 for a previous attempt
->> to introduce 128-bit MMIO accessors, this got rejected since they
->> are not atomic even on ARMv8.4.
-> 
-> So this is proprietary IP integrated with a proprietary ARMv8 implementation,
-> so there could be a tight coupling, the like of which Will mentioned in that thread,
-> but I'm doubtful.
-> 
-> I'm looking at the electronically translated documentation on this HW, and it reads
-> "The Mailbox operation performed by the CPU cannot be interleaved", and then tells
-> that software should lock against concurrent accesses or alternatively use a 128-bit
-> access. So it seems that the 128b op used is only to guarantee software is atomic.
-> 
-> Wang Zhou can confirm my understanding
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Sat, 21 Sep 2019 12:20:11 +0200
 
-We have to do a 128bit atomic write here to trigger a mailbox. The reason is
-that one QM hardware entity in one accelerator servers QM mailbox MMIO interfaces in
-related PF and VFs.
+Simplify this function implementation by using a known wrapper function.
 
-A mutex can not lock different processing flows in different functions.
+This issue was detected by using the Coccinelle software.
 
-As Arnd mentioned, v8.4 extends the support for 16 bytes atomic stp to some kinds of
-normal memory, but for device memory, it is still implementation defined. For this
-SoC(Kunpeng920) which has QM/ZIP, if the address is 128bit aligned, stp will be atomic.
-The offset of QM mailbox is 128bit aligned, so it is safe here.
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/rtc/rtc-goldfish.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-Best,
-Zhou
+diff --git a/drivers/rtc/rtc-goldfish.c b/drivers/rtc/rtc-goldfish.c
+index 1a3420ee6a4d..cb6b0ad7ec3f 100644
+=2D-- a/drivers/rtc/rtc-goldfish.c
++++ b/drivers/rtc/rtc-goldfish.c
+@@ -165,7 +165,6 @@ static const struct rtc_class_ops goldfish_rtc_ops =3D=
+ {
+ static int goldfish_rtc_probe(struct platform_device *pdev)
+ {
+ 	struct goldfish_rtc *rtcdrv;
+-	struct resource *r;
+ 	int err;
 
-> 
-> If true, I see that we seem to be already guaranteeing mutual exclusion in qm_mb(),
-> in taking a mutex.
-> 
-> Thanks,
-> John
-> 
-> 
->>
->>     Arnd
->>
->> .
->>
-> 
-> 
-> 
-> .
-> 
+ 	rtcdrv =3D devm_kzalloc(&pdev->dev, sizeof(*rtcdrv), GFP_KERNEL);
+@@ -173,12 +172,7 @@ static int goldfish_rtc_probe(struct platform_device =
+*pdev)
+ 		return -ENOMEM;
+
+ 	platform_set_drvdata(pdev, rtcdrv);
+-
+-	r =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (!r)
+-		return -ENODEV;
+-
+-	rtcdrv->base =3D devm_ioremap_resource(&pdev->dev, r);
++	rtcdrv->base =3D devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(rtcdrv->base))
+ 		return -ENODEV;
+
+=2D-
+2.23.0
 
