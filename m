@@ -2,470 +2,146 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D799EC49ED7
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 10:23:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 296CCC49ED7
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 10:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 785E4208C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 10:23:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I5U+HrVg"
+	by mail.kernel.org (Postfix) with ESMTP id 05D83208C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 10:27:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437701AbfIUKXT (ORCPT
+        id S2437743AbfIUK1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Sep 2019 06:23:19 -0400
-Received: from mail-wr1-f41.google.com ([209.85.221.41]:33469 "EHLO
-        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407524AbfIUKXT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Sep 2019 06:23:19 -0400
-Received: by mail-wr1-f41.google.com with SMTP id b9so9192482wrs.0
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Sep 2019 03:23:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=twvI4M3FlUB+nesQ3Gr/CSH5n5uFvc1DnucjMK56czU=;
-        b=I5U+HrVgxpbqNhF/fGj2EBZQFFklGG0AqZS4p50vv79SiBS5c/cWYwyqHJmJo2rbgI
-         ccA5KN1BPsWA61ZP4eA/FlefQo4P6CMoEr1qC/0XqMPBVRhEPhjnMsFxMIZYKsys6cr3
-         PZt2KMfKP82wvngn+COXT69VFk+z4x0ySx6J4tCyeWkq9yXcZcFn6cIlSUiaiGCJHSqg
-         uK9YyuqWCNUPdmqeJLHmDJsrPEdbJ+/1bPY20pCG5M2ugLV4I9Z9by5OMvgASIm6Kpzj
-         +0M94Hnh3L9ud6XULSYFWN/nIr0dyBr//coezGqBhUbWIg8qUgLubh/lkEo9R0SMXci3
-         RWwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=twvI4M3FlUB+nesQ3Gr/CSH5n5uFvc1DnucjMK56czU=;
-        b=jz4eHVxLFcMByoZsd2Nd2CjNzjElH7SdxX5Q1ZvhPi39RThlNBeratzVivU2UAvsZL
-         yawjO30e/S5K3wtFkzA6m1jch7KaqriQrMUTeiriyVzh+i59U3RDzaAja+X8Bo/TL3e+
-         Goki2fBDzr14iGaTTS5fip9JWExbUp7TtzpEhwnWPhY2r3dFX1dUjd+aTGxOv/BwUZZ4
-         VA+hhlfcbssSGYATZgmkX0zsSrNtM2lSONu920VSBPs4SEhIsGg9dw89uwcNnsZ/skC4
-         txY9sZe23kDdpNXhnnYZpz/ZVOV+NZGK5SQx1/t2V6Tpajh/0RL/eeZKhpJAddJgRkue
-         r1og==
-X-Gm-Message-State: APjAAAW9o0gqsT1hKXijr3vxIz4+Okrdsp9LiwhZwTfRyrwTxUdVTV5r
-        hHbwDiALuqlCGvd9/iRHnnc=
-X-Google-Smtp-Source: APXvYqy/3r7K0cnZK7rcsyDqfgvdmTadPttDei1Gfi/H2FzXxSWzC2hW9nVkld7ojRSSBZsy/I12rw==
-X-Received: by 2002:adf:ed05:: with SMTP id a5mr14893808wro.35.1569061395190;
-        Sat, 21 Sep 2019 03:23:15 -0700 (PDT)
-Received: from narunkot.lan (97e01db8.skybroadband.com. [151.224.29.184])
-        by smtp.gmail.com with ESMTPSA id r9sm6870287wra.19.2019.09.21.03.23.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Sep 2019 03:23:14 -0700 (PDT)
-From:   Okash Khawaja <okash.khawaja@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Samuel Thibault <samuel.thibault@ens-lyon.org>,
-        Gregory Nowak <greg@gregn.net>, linux-kernel@vger.kernel.org
-Cc:     Jiri Slaby <jslaby@suse.com>, William Hubbs <w.d.hubbs@gmail.com>,
-        Chris Brannon <chris@the-brannons.com>,
-        Kirk Reiser <kirk@reisers.ca>,
-        John Covici <covici@ccs.covici.com>,
-        devel@driverdev.osuosl.org, speakup@linux-speakup.org,
-        Okash Khawaja <okash.khawaja@gmail.com>
-Subject: [PATCH] staging: speakup: document sysfs attributes
-Date:   Sat, 21 Sep 2019 11:22:14 +0100
-Message-Id: <20190921102214.2983-1-okash.khawaja@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Sat, 21 Sep 2019 06:27:02 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:57052 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731118AbfIUK1B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Sep 2019 06:27:01 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id D436A1EC664417B2B364;
+        Sat, 21 Sep 2019 18:26:59 +0800 (CST)
+Received: from [127.0.0.1] (10.63.139.185) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Sat, 21 Sep 2019
+ 18:26:49 +0800
+Subject: Re: [PATCH 2/2] [v2] crypto: hisilicon - allow compile-testing on x86
+To:     John Garry <john.garry@huawei.com>, Arnd Bergmann <arnd@arndb.de>
+References: <20190919140650.1289963-2-arnd@arndb.de>
+ <20190919140917.1290556-1-arnd@arndb.de>
+ <f801a4c1-8fa6-8c14-120c-49c24ec84449@huawei.com>
+ <CAK8P3a3jCv--VHu9r4ZTnLXXGaCjdJ6royP5LFk_9RCTTRsRBA@mail.gmail.com>
+ <CAK8P3a1AgZePpZdYXh2w1BHAJZZbAjZjN8MZyVS4bPo4gVVgPg@mail.gmail.com>
+ <531214d6-2caf-2963-0f57-2cd615a18762@huawei.com>
+CC:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Kenneth Lee <liguozhu@hisilicon.com>,
+        Mao Wenan <maowenan@huawei.com>,
+        "Hao Fang" <fanghao11@huawei.com>,
+        Shiju Jose <shiju.jose@huawei.com>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Will Deacon <will@kernel.org>
+From:   Zhou Wang <wangzhou1@hisilicon.com>
+Message-ID: <5D85FAEC.9060607@hisilicon.com>
+Date:   Sat, 21 Sep 2019 18:26:52 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <531214d6-2caf-2963-0f57-2cd615a18762@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.63.139.185]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Speakup exposes a set of sysfs attributes under
-/sys/accessibility/speakup/ for user-space to interact with and
-configure speakup's kernel modules. This patch describes those
-attributes. Some attributes either lack a description or contain
-incomplete description. They are marked wit TODO.
+On 2019/9/20 22:16, John Garry wrote:
+> On 20/09/2019 14:36, Arnd Bergmann wrote:
+>> On Fri, Sep 20, 2019 at 3:26 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>>>
+>>> On Fri, Sep 20, 2019 at 10:34 AM John Garry <john.garry@huawei.com> wrote:
+>>>
+>>>>> +     if (!IS_ENABLED(CONFIG_ARM64)) {
+>>>>> +             memcpy_toio(fun_base, src, 16);
+>>>>> +             wmb();
+>>>>> +             return;
+>>>>> +     }
+>>>>> +
+>>>>>       asm volatile("ldp %0, %1, %3\n"
+>>>>>                    "stp %0, %1, %2\n"
+>>>>>                    "dsb sy\n"
+>>>>>
+>>>>
+>>>> As I understand, this operation needs to be done atomically. So - even
+>>>> though your change is just for compile testing - the memcpy_to_io() may
+>>>> not do the same thing on other archs, right?
+>>>>
+>>>> I just wonder if it's right to make that change, or at least warn the
+>>>> imaginary user of possible malfunction for !arm64.
+>>>
+> 
+> Hi Arnd,
+> 
+>>> It's probably not necessary here. From what I can tell from the documentation,
+>>> this is only safe on ARMv8.4 or higher anyway, earlier ARMv8.x implementations
+>>> don't guarantee that an stp arrives on the bus in one piece either.
+>>>
+>>> Usually, hardware like this has no hard requirement on an atomic store,
+>>> it just needs the individual bits to arrive in a particular order, and then
+>>> triggers the update on the last bit that gets stored. If that is the case here
+>>> as well, it might actually be better to use two writeq_relaxed() and
+>>> a barrier. This would also solve the endianess issue.
+>>
+>> See also https://lkml.org/lkml/2018/1/26/554 for a previous attempt
+>> to introduce 128-bit MMIO accessors, this got rejected since they
+>> are not atomic even on ARMv8.4.
+> 
+> So this is proprietary IP integrated with a proprietary ARMv8 implementation,
+> so there could be a tight coupling, the like of which Will mentioned in that thread,
+> but I'm doubtful.
+> 
+> I'm looking at the electronically translated documentation on this HW, and it reads
+> "The Mailbox operation performed by the CPU cannot be interleaved", and then tells
+> that software should lock against concurrent accesses or alternatively use a 128-bit
+> access. So it seems that the 128b op used is only to guarantee software is atomic.
+> 
+> Wang Zhou can confirm my understanding
 
-Authored-by: Gregory Nowak <greg@gregn.net>
-Submitted-by: Okash Khawaja <okash.khawaja@gmail.com>
----
- drivers/staging/speakup/sysfs-driver-speakup | 369 +++++++++++++++++++
- 1 file changed, 369 insertions(+)
- create mode 100644 drivers/staging/speakup/sysfs-driver-speakup
+We have to do a 128bit atomic write here to trigger a mailbox. The reason is
+that one QM hardware entity in one accelerator servers QM mailbox MMIO interfaces in
+related PF and VFs.
 
-diff --git a/drivers/staging/speakup/sysfs-driver-speakup b/drivers/staging/speakup/sysfs-driver-speakup
-new file mode 100644
-index 000000000000..be3f5d6962e9
---- /dev/null
-+++ b/drivers/staging/speakup/sysfs-driver-speakup
-@@ -0,0 +1,369 @@
-+What:		/sys/accessibility/speakup/attrib_bleep
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Beeps the PC speaker when there is an attribute change such as
-+		foreground or background color when using speakup review
-+		commands. One = on, zero = off.
-+
-+What:		/sys/accessibility/speakup/bell_pos
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	This works much like a typewriter bell. If for example 72 is
-+		echoed to bell_pos, it will beep the PC speaker when typing on
-+		a line past character 72.
-+
-+What:		/sys/accessibility/speakup/bleeps
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	This controls whether one hears beeps through the PC speaker
-+		when using speakup's review commands.
-+		TODO: what values does it accept?
-+
-+What:		/sys/accessibility/speakup/bleep_time
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	This controls the duration of the PC speaker beeps speakup
-+		produces.
-+		TODO: What are the units? Jiffies?
-+
-+What:		/sys/accessibility/speakup/cursor_time
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	This controls cursor delay when using arrow keys. When a
-+		connection is very slow, with the default setting, when moving
-+		with  the arrows, or backspacing etc. speakup says the incorrect
-+		characters. Set this to a higher value to adjust for the delay
-+		and better synchronisation between cursor position and speech.
-+
-+What:		/sys/accessibility/speakup/delimiters
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Delimit a word from speakup.
-+		TODO: add more info
-+
-+What:		/sys/accessibility/speakup/ex_num
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	TODO:
-+
-+What:		/sys/accessibility/speakup/key_echo
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Controls if speakup speaks keys when they are typed. One = on,
-+		zero = off or don't echo keys.
-+
-+What:		/sys/accessibility/speakup/keymap
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Speakup keymap remaps keys to Speakup functions.
-+		It uses a binary
-+		format. A special program called genmap is needed to compile a
-+		textual  keymap into the binary format which is then loaded into
-+		/sys/accessibility/speakup/keymap.
-+
-+What:		/sys/accessibility/speakup/no_interrupt
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Controls if typing interrupts output from speakup. With
-+		no_interrupt set to zero, typing on the keyboard will interrupt
-+		speakup if for example
-+		the say screen command is used before the
-+		entire screen  is read.
-+		With no_interrupt set to one, if the say
-+		screen command is used, and one then types on the keyboard,
-+		speakup will continue to say the whole screen regardless until
-+		it finishes.
-+
-+What:		/sys/accessibility/speakup/punc_all
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	This is a list of all the punctuation speakup should speak when
-+		punc_level is set to four.
-+
-+What:		/sys/accessibility/speakup/punc_level
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Controls the level of punctuation spoken as the screen is
-+		displayed, not reviewed. Levels range from zero no punctuation,
-+		to four, all punctuation. One corresponds to punc_some, two
-+		corresponds to punc_most, and three as well as four both
-+		correspond to punc_all. Some hardware synthesizers may have
-+		different levels each corresponding to  three and four for
-+		punc_level. Also note that if punc_level is set to zero, and
-+		key_echo is set to one, typed punctuation is still spoken as it
-+		is typed.
-+
-+What:		/sys/accessibility/speakup/punc_most
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	This is a list of all the punctuation speakup should speak when
-+		punc_level is set to two.
-+
-+What:		/sys/accessibility/speakup/punc_some
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	This is a list of all the punctuation speakup should speak when
-+		punc_level is set to one.
-+
-+What:		/sys/accessibility/speakup/reading_punc
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Almost the same as punc_level, the differences being that
-+		reading_punc controls the level of punctuation when reviewing
-+		the screen with speakup's screen review commands. The other
-+		difference is that reading_punc set to three speaks punc_all,
-+		and reading_punc set to four speaks all punctuation, including
-+		spaces.
-+
-+What:		/sys/accessibility/speakup/repeats
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	A list of characters speakup repeats. Normally, when there are
-+		more than three characters in a row, speakup
-+		just reads three of
-+		those characters. For example, "......" would be read as dot,
-+		dot, dot. If a . is added to the list of characters in repeats,
-+		"......" would be read as dot, dot, dot, times six.
-+
-+What:		/sys/accessibility/speakup/say_control
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	If set to one, speakup speaks shift, alt and control when those
-+		keys are pressed. If say_control is set to zero, shift, ctrl,
-+		and alt are not spoken when they are pressed.
-+
-+What:		/sys/accessibility/speakup/say_word_ctl
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	TODO:
-+
-+What:		/sys/accessibility/speakup/silent
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	TODO:
-+
-+What:		/sys/accessibility/speakup/spell_delay
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	This controls how fast a word is spelled
-+		when speakup's say word
-+		review command is pressed twice quickly to speak the current
-+		word being reviewed. Zero just speaks the letters one after
-+		another, while values one through four
-+		seem to introduce more of
-+		a pause between the spelling of each letter by speakup.
-+
-+What:		/sys/accessibility/speakup/synth
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Gets or sets the synthesizer driver currently in use. Reading
-+		synth returns the synthesizer driver currently in use. Writing
-+		synth switches to the given synthesizer driver, provided it is
-+		either built into the kernel, or already loaded as a module.
-+
-+What:		/sys/accessibility/speakup/synth_direct
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Sends whatever is written to synth_direct
-+		directly to the speech synthesizer in use, bypassing speakup.
-+		This could be used to make the synthesizer speak
-+		a string, or to
-+		send control sequences to the synthesizer to change how the
-+		synthesizer behaves.
-+
-+What:		/sys/accessibility/speakup/version
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Reading version returns the version of speakup, and the version
-+		of the synthesizer driver currently in use.
-+
-+What:		/sys/accessibility/speakup/i18n/announcements
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	This file contains various general announcements, most of which
-+		cannot be categorized.  You will find messages such as "You
-+		killed Speakup", "I'm alive", "leaving help", "parked",
-+		"unparked", and others. You will also find the names of the
-+		screen edges and cursor tracking modes here.
-+
-+What:		/sys/accessibility/speakup/i18n/chartab
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	TODO
-+
-+What:		/sys/accessibility/speakup/i18n/ctl_keys
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Here, you will find names of control keys.  These are used with
-+		Speakup's say_control feature.
-+
-+What:		/sys/accessibility/speakup/i18n/function_names
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Here, you will find a list of names for Speakup functions.
-+		These are used by the help system.  For example, suppose that
-+		you have activated help mode, and you pressed
-+		keypad 3.  Speakup
-+		says: "keypad 3 is character, say next."
-+		The message "character, say next" names a Speakup function, and
-+		it comes from this function_names file.
-+
-+What:		/sys/accessibility/speakup/i18n/states
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	This file contains names for key states.
-+		Again, these are part of the help system.  For instance, if you
-+		had pressed speakup + keypad 3, you would hear:
-+		"speakup keypad 3 is go to bottom edge."
-+		The speakup key is depressed, so the name of the key state is
-+		speakup.
-+		This part of the message comes from the states collection.
-+
-+What:		/sys/accessibility/speakup/i18n/characters
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Through this sys entry, Speakup gives you the ability to change
-+		how Speakup pronounces a given character. You could, for
-+		example, change how some punctuation characters are spoken. You
-+		can even change how Speakup will pronounce certain letters. For
-+		further details see '12.  Changing the Pronunciation of
-+		Characters' in Speakup User's Guide (file spkguide.txt in
-+		source).
-+
-+What:		/sys/accessibility/speakup/i18n/colors
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	When you use the "say attributes" function, Speakup says the
-+		name of the foreground and background colors.  These names come
-+		from the i18n/colors file.
-+
-+What:		/sys/accessibility/speakup/i18n/formatted
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	This group of messages contains embedded formatting codes, to
-+		specify the type and width of displayed data.  If you change
-+		these, you must preserve all of the formatting codes, and they
-+		must appear in the order used by the default messages.
-+
-+What:		/sys/accessibility/speakup/i18n/key_names
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Again, key_names is used by Speakup's help system.  In the
-+		previous example, Speakup said that you pressed "keypad 3."
-+		This name came from the key_names file.
-+
-+What:		/sys/accessibility/speakup/<synth-name>/
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	In `/sys/accessibility/speakup` is a directory corresponding to
-+		the synthesizer driver currently in use (E.G) `soft` for the
-+		soft driver. This directory contains files which control the
-+		speech synthesizer itself,
-+		as opposed to controlling the speakup
-+		screen reader. The parameters in this directory have the same
-+		names and functions across all
-+		supported synthesizers. The range
-+		of values for freq, pitch, rate, and vol is the same for all
-+		supported synthesizers, with the given range being internally
-+		mapped by the driver to  more or less fit the range of values
-+		supported for a given parameter by the individual synthesizer.
-+		Below is a description of values and  parameters for soft
-+		synthesizer, which is currently the most commonly used.
-+
-+What:		/sys/accessibility/speakup/soft/caps_start
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	This is the string that is sent to the synthesizer to cause it
-+		to start speaking uppercase letters. For the soft synthesizer
-+		and most others, this causes the pitch of the voice to rise
-+		above the currently set pitch.
-+
-+What:		/sys/accessibility/speakup/soft/caps_stop
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	This is the string sent to the synthesizer to cause it to stop
-+		speaking uppercase letters. In the case of the soft synthesizer
-+		and most others, this returns the pitch of the voice
-+		down to the
-+		currently set pitch.
-+
-+What:		/sys/accessibility/speakup/soft/delay_time
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	TODO:
-+
-+What:		/sys/accessibility/speakup/soft/direct
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Controls if punctuation is spoken by speakup, or by the
-+		synthesizer.
-+		For example, speakup speaks ">" as "greater", while
-+		the espeak synthesizer used by the soft driver speaks "greater
-+		than". Zero lets speakup speak the punctuation. One lets the
-+		synthesizer itself speak punctuation.
-+
-+What:		/sys/accessibility/speakup/soft/freq
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Gets or sets the frequency of the speech synthesizer. Range is
-+		0-9.
-+
-+What:		/sys/accessibility/speakup/soft/full_time
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	TODO:
-+
-+What:		/sys/accessibility/speakup/soft/jiffy_delta
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	This controls how many jiffys the kernel gives to the
-+		synthesizer. Setting this too high can make a system unstable,
-+		or even crash it.
-+
-+What:		/sys/accessibility/speakup/soft/pitch
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Gets or sets the pitch of the synthesizer. The range is 0-9.
-+
-+What:		/sys/accessibility/speakup/soft/punct
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Gets or sets the amount of punctuation spoken by the
-+		synthesizer. The range for the soft driver seems to be 0-2.
-+		TODO: How is this related to speakup's punc_level, or
-+		reading_punc.
-+
-+What:		/sys/accessibility/speakup/soft/rate
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Gets or sets the rate of the synthesizer. Range is from zero
-+		slowest, to nine fastest.
-+
-+What:		/sys/accessibility/speakup/soft/tone
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Gets or sets the tone of the speech synthesizer. The range for
-+		the soft driver seems to be 0-2. This seems to make no
-+		difference if using espeak and the espeakup connector.
-+		TODO: does espeakup support different tonalities?
-+
-+What:		/sys/accessibility/speakup/soft/trigger_time
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	TODO:
-+
-+What:		/sys/accessibility/speakup/soft/voice
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Gets or sets the voice used by the synthesizer if the
-+		synthesizer can speak in more than one voice. The range for the
-+		soft driver is 0-7. Note that while espeak supports multiple
-+		voices, this parameter will not set the voice when the espeakup
-+		connector is used  between speakup and espeak.
-+
-+What:		/sys/accessibility/speakup/soft/vol
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Gets or sets the volume of the speech synthesizer. Range is 0-9,
-+		with zero being the softest, and nine being the loudest.
-+
--- 
-2.21.0
+A mutex can not lock different processing flows in different functions.
+
+As Arnd mentioned, v8.4 extends the support for 16 bytes atomic stp to some kinds of
+normal memory, but for device memory, it is still implementation defined. For this
+SoC(Kunpeng920) which has QM/ZIP, if the address is 128bit aligned, stp will be atomic.
+The offset of QM mailbox is 128bit aligned, so it is safe here.
+
+Best,
+Zhou
+
+> 
+> If true, I see that we seem to be already guaranteeing mutual exclusion in qm_mb(),
+> in taking a mutex.
+> 
+> Thanks,
+> John
+> 
+> 
+>>
+>>     Arnd
+>>
+>> .
+>>
+> 
+> 
+> 
+> .
+> 
 
