@@ -2,170 +2,82 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D46B8C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 01:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1ADBC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 01:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB22C21835
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 01:54:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=draconx-ca.20150623.gappssmtp.com header.i=@draconx-ca.20150623.gappssmtp.com header.b="SU6Xnngd"
+	by mail.kernel.org (Postfix) with ESMTP id 880A52086A
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 01:55:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437209AbfIUBya (ORCPT
+        id S2437310AbfIUBzx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 21:54:30 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:46029 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437018AbfIUBy3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 21:54:29 -0400
-Received: by mail-lj1-f194.google.com with SMTP id q64so8715574ljb.12
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 18:54:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=draconx-ca.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc;
-        bh=6FUJB9iC+bvrTtNriAO1ARI5RLS9whH28zugV601iio=;
-        b=SU6Xnngd2bMY4WuCnPThYobViQS/n90H3Y4wRz1VD7MnEZSh4dIoiArZHgVk0bwsop
-         g0D/18YIqKKYtfltsk1zhFeG94ov+vTZAXQD2xU0iZvEdsCu1G3isURpq/QGCbXwzk7r
-         6NJh01KDU96fiFppPgcf8ycm9e4wcTDq1eIuHEyAsjxrNldG4tWROh8jaNEiPje92Vd/
-         DPJTvH7HCnZRxLLoHQ6/nLPoqjBY/39blm0ERcZxcHOgoe/oPP9Pm8NFla13KJlEWSMc
-         A5TG6vwe1Ebh3BTf69/kIh4ZaaXSGot4qfqE3d0lTFjaEF4V0Nu6tr6jeoZea/f3awN9
-         Qqkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc;
-        bh=6FUJB9iC+bvrTtNriAO1ARI5RLS9whH28zugV601iio=;
-        b=uDMLZf4rhKdEPeh3Y1UGAhKwEl+u7yAn9q+1becq+TzlXS/ZsRpriJT0YhpmtBVrwi
-         5bXTnBnKId1XdshmqFoZpPeTBILixqMBVXz67kxXCg8Ivn3EmZpvBAbZiKByXeyVKqEZ
-         CIwf/SgZdiL8EJebf5T5FiRLjg3Smk/JOls5+no9/Id1nF8saIB5BaoN/ABsNv1uVdQ8
-         9MUK58k5QrG3kK1zqCj0NDIgQsQUQfXfVQvKAtqS4PThy4c5xN/6hwdwtl4dxJgjN2hU
-         KbRNOvzm+aOK5Zprrbn7TPxwQu5QM7zzjFmmqG/Gk02+lS3gFEUSubn0h8sfziT64Xdj
-         n8ZQ==
-X-Gm-Message-State: APjAAAVQh9GJfugPRy+NKNHAS99OcnTdNjZ0cpjerbZGnFrLD9HEyPmy
-        zTR6mbt+L0xIvxl099Q4PEyVPtCQE+Fko4pifkkBTw==
-X-Google-Smtp-Source: APXvYqz25ZajIAVDPYXMWHUWQHF0/Gr4jIqpIJTLb/owuzbh79A+y8hCPRgGr6UowJIGXA9mkPnDYMXmqoY7b32xwl8=
-X-Received: by 2002:a2e:5b9a:: with SMTP id m26mr10711008lje.90.1569030866534;
- Fri, 20 Sep 2019 18:54:26 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 2002:a2e:534c:0:0:0:0:0 with HTTP; Fri, 20 Sep 2019 18:54:25
- -0700 (PDT)
-X-Originating-IP: [24.53.243.131]
-In-Reply-To: <c573ebd9d835e2bf2d2b2a4dcb682b6d913b0c5e.camel@hammerspace.com>
-References: <CADyTPExOnxS+FS6Uqoxu3jNWRy93SQri4Xo1+00aiiVru8XDkg@mail.gmail.com>
- <c573ebd9d835e2bf2d2b2a4dcb682b6d913b0c5e.camel@hammerspace.com>
-From:   Nick Bowler <nbowler@draconx.ca>
-Date:   Fri, 20 Sep 2019 21:54:25 -0400
-Message-ID: <CADyTPEwUjbV3icj7YD1a5fgzE_t0fpF0Mj9v-fLKywPwKki+Mg@mail.gmail.com>
-Subject: Re: PROBLEM: nfs? crash in Linux 5.3 (possible regression)
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 20 Sep 2019 21:55:53 -0400
+Received: from out1.zte.com.cn ([202.103.147.172]:38614 "EHLO mxct.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437018AbfIUBzw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 21:55:52 -0400
+Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
+        by Forcepoint Email with ESMTPS id 3C6878FF3F0438D8E6E6;
+        Sat, 21 Sep 2019 09:55:50 +0800 (CST)
+Received: from notes_smtp.zte.com.cn (notessmtp.zte.com.cn [10.30.1.239])
+        by mse-fl1.zte.com.cn with ESMTP id x8L1ta04061200;
+        Sat, 21 Sep 2019 09:55:36 +0800 (GMT-8)
+        (envelope-from zhang.lin16@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019092109561847-3748946 ;
+          Sat, 21 Sep 2019 09:56:18 +0800 
+From:   zhanglin <zhang.lin16@zte.com.cn>
+To:     paul@paul-moore.com
+Cc:     sds@tycho.nsa.gov, eparis@parisplace.org, selinux@vger.kernel.org,
+        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
+        wang.yi59@zte.com.cn, jiang.xuexin@zte.com.cn,
+        zhanglin <zhang.lin16@zte.com.cn>
+Subject: [PATCH] selinux: Remove load size limit
+Date:   Sat, 21 Sep 2019 09:57:15 +0800
+Message-Id: <1569031035-12354-1-git-send-email-zhang.lin16@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-09-21 09:56:18,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-09-21 09:55:42,
+        Serialize complete at 2019-09-21 09:55:42
+X-MAIL: mse-fl1.zte.com.cn x8L1ta04061200
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/20/19, Trond Myklebust <trondmy@hammerspace.com> wrote:
-> On Fri, 2019-09-20 at 14:23 -0400, Nick Bowler wrote:
->> Not sure how reproducible this is.  Since I've never seen a crash
->> like this before it may be a regression compared to, say, Linux 4.19
->> but I am not certain because this particular machine is brand new so
->> I don't have experience with older kernels on it...
+Load size was limited to 64MB, this was legacy limitation due to vmalloc()
+which was removed a while ago.
 
-So it actually seems pretty reliably reproducible, 4 attempts to compile
-Linux on Linux 5.3 and all four crash the same way, although there's
-definitely some randomness here...
+Limiting load size to 64MB is both pointless and affects real world use
+cases.
 
-On the other hand, I cannot reproduce if I install Linux 5.2 so it does
-seem like a regression in 5.3.  I will see how well bisecting goes...
+Signed-off-by: zhanglin <zhang.lin16@zte.com.cn>
+---
+ security/selinux/selinuxfs.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
->> [  796.050025] BUG: kernel NULL pointer dereference, address:
->> 0000000000000014
->> [  796.051280] #PF: supervisor read access in kernel mode
->> [  796.053063] #PF: error_code(0x0000) - not-present page
->> [  796.054636] PGD 0 P4D 0
->> [  796.055688] Oops: 0000 [#1] PREEMPT SMP
->> [  796.056768] CPU: 2 PID: 190 Comm: kworker/2:2 Tainted: G        W
->>       5.3.0 #6
->> [  796.057953] Hardware name: To Be Filled By O.E.M. To Be Filled By
->> O.E.M./B450 Gaming-ITX/ac, BIOS P3.30 05/17/2019
->> [  796.059329] Workqueue: events key_garbage_collector
->> [  796.060623] RIP: 0010:keyring_gc_check_iterator+0x27/0x30
->
-> That would be the keyring garbage collector, not NFS.
->
-> Cced keyrings@vger.kernel.org
->
->
->> [  796.061845] Code: 44 00 00 48 83 e7 fc b8 01 00 00 00 f6 87 80 00
->> 00 00 21 75 19 48 8b 57 58 48 39 16 7c 05 48 85 d2 7f 0b 48 8b 87 a0
->> 00 00 00 <0f> b6 40 14 c3 0f 1f 40 00 48 83 e7 fc e9 27 eb ff ff 0f
->> 1f
->> 80 00
->> [  796.064638] RSP: 0018:ffffb40fc0757df8 EFLAGS: 00010282
->> [  796.066058] RAX: 0000000000000000 RBX: ffffa14338caed80 RCX:
->> ffffb40fc0757e40
->> [  796.067531] RDX: ffffa1433ae85558 RSI: ffffb40fc0757e40 RDI:
->> ffffa1433ae85500
->> [  796.069014] RBP: ffffb40fc0757e40 R08: 0000000000000000 R09:
->> 000000000000000f
->> [  796.070513] R10: 8080808080808080 R11: 0000000000000001 R12:
->> ffffffffa4cd6180
->> [  796.072025] R13: ffffa14338caee10 R14: ffffa14338caedf0 R15:
->> ffffa1433ffeff00
->> [  796.073567] FS:  0000000000000000(0000) GS:ffffa14340480000(0000)
->> knlGS:0000000000000000
->> [  796.075171] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> [  796.076785] CR2: 0000000000000014 CR3: 0000000747ce6000 CR4:
->> 00000000003406e0
->> [  796.078445] Call Trace:
->> [  796.080091]  assoc_array_subtree_iterate+0x55/0x100
->> [  796.081770]  keyring_gc+0x3f/0x80
->> [  796.083447]  key_garbage_collector+0x330/0x3d0
->> [  796.085155]  process_one_work+0x1cb/0x320
->> [  796.086869]  worker_thread+0x28/0x3c0
->> [  796.088603]  ? process_one_work+0x320/0x320
->> [  796.090335]  kthread+0x106/0x120
->> [  796.092053]  ? kthread_create_on_node+0x40/0x40
->> [  796.093810]  ret_from_fork+0x1f/0x30
->> [  796.095569] Modules linked in: sha1_ssse3 sha1_generic cbc cts
->> rpcsec_gss_krb5 auth_rpcgss nfsv4 nfs lockd grace ext4 crc16 mbcache
->> jbd2 iwlmvm mac80211 libarc4 amdgpu iwlwifi snd_hda_codec_realtek
->> snd_hda_codec_generic kvm_amd gpu_sched kvm snd_hda_codec_hdmi
->> drm_kms_helper irqbypass k10temp syscopyarea sysfillrect sysimgblt
->> fb_sys_fops video ttm cfg80211 snd_hda_intel snd_hda_codec drm
->> snd_hwdep rfkill snd_hda_core backlight snd_pcm evdev snd_timer snd
->> soundcore efivarfs dm_crypt hid_generic igb hwmon i2c_algo_bit sr_mod
->> cdrom sunrpc dm_mod
->> [  796.104033] CR2: 0000000000000014
->> [  796.106304] ---[ end trace 695aee10f9202347 ]---
->> [  796.108585] RIP: 0010:keyring_gc_check_iterator+0x27/0x30
->> [  796.110894] Code: 44 00 00 48 83 e7 fc b8 01 00 00 00 f6 87 80 00
->> 00 00 21 75 19 48 8b 57 58 48 39 16 7c 05 48 85 d2 7f 0b 48 8b 87 a0
->> 00 00 00 <0f> b6 40 14 c3 0f 1f 40 00 48 83 e7 fc e9 27 eb ff ff 0f
->> 1f
->> 80 00
->> [  796.115773] RSP: 0018:ffffb40fc0757df8 EFLAGS: 00010282
->> [  796.118209] RAX: 0000000000000000 RBX: ffffa14338caed80 RCX:
->> ffffb40fc0757e40
->> [  796.120683] RDX: ffffa1433ae85558 RSI: ffffb40fc0757e40 RDI:
->> ffffa1433ae85500
->> [  796.123176] RBP: ffffb40fc0757e40 R08: 0000000000000000 R09:
->> 000000000000000f
->> [  796.125668] R10: 8080808080808080 R11: 0000000000000001 R12:
->> ffffffffa4cd6180
->> [  796.128104] R13: ffffa14338caee10 R14: ffffa14338caedf0 R15:
->> ffffa1433ffeff00
->> [  796.130493] FS:  0000000000000000(0000) GS:ffffa14340480000(0000)
->> knlGS:0000000000000000
->> [  796.132923] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> [  796.135266] CR2: 0000000000000014 CR3: 0000000747ce6000 CR4:
->> 00000000003406e0
->
+diff --git a/security/selinux/selinuxfs.c b/security/selinux/selinuxfs.c
+index f3a5a138a096..4249400e9712 100644
+--- a/security/selinux/selinuxfs.c
++++ b/security/selinux/selinuxfs.c
+@@ -549,10 +549,6 @@ static ssize_t sel_write_load(struct file *file, const char __user *buf,
+ 	if (*ppos != 0)
+ 		goto out;
+ 
+-	length = -EFBIG;
+-	if (count > 64 * 1024 * 1024)
+-		goto out;
+-
+ 	length = -ENOMEM;
+ 	data = vmalloc(count);
+ 	if (!data)
+-- 
+2.17.1
+
