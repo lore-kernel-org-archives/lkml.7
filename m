@@ -2,174 +2,624 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BED2C4360D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 18:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E48C4360D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 18:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46CF7205F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 18:21:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90D2120820
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 18:31:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="ZW3oouM1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dzSb6QiA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732331AbfIUSVD (ORCPT
+        id S2387517AbfIUSbl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Sep 2019 14:21:03 -0400
-Received: from mout.web.de ([212.227.17.11]:53419 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727776AbfIUSVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Sep 2019 14:21:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1569090026;
-        bh=JbHXXipkDs96r6sC02uR3t1qJZ+VGIW8Ril0kxJ0PzY=;
-        h=X-UI-Sender-Class:To:From:Subject:Cc:Date;
-        b=ZW3oouM1CrAGJuOPrNyHS9MFGdNV0IPOac4UxXC3tp9PWb41uLH31nfS8wp0WNLQX
-         vZTttsTfsVwNjuDe+nl8HwcAWUqsNAPKIETBhoZmiZvoeEdf3BBzSjsrOchFVbWQ+2
-         Zbo7DWPiFgdoHsAmXCHkbFbzw2BJdpTy+omWHXG8=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.244.64.44]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MAvGa-1iJPUT36k0-009v4y; Sat, 21
- Sep 2019 20:20:25 +0200
-To:     dri-devel@lists.freedesktop.org,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Matt Redfearn <matt.redfearn@thinci.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Nickey Yang <nickey.yang@rock-chips.com>,
-        Philippe Cornu <philippe.cornu@st.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        =?UTF-8?Q?Yannick_Fertr=c3=a9?= <yannick.fertre@st.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] drm/bridge/synopsys: dsi: Use
- devm_platform_ioremap_resource() in __dw_mipi_dsi_probe()
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Message-ID: <e0d7b7d7-3e89-8b3f-04ed-0b14806e66f7@web.de>
-Date:   Sat, 21 Sep 2019 20:20:20 +0200
+        Sat, 21 Sep 2019 14:31:41 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:59123 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727776AbfIUSbk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Sep 2019 14:31:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1569090698;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=iMmYES6cWXo2cRJYFaJL8taRp6QpSJhtp34kC7n+WxY=;
+        b=dzSb6QiANKvtBUJqmo+IRJ3y8U9Tuoli/V5ZomaDRVT4HpRQZU4I66s7Bj0+Zb5SjvhxY3
+        jXlWNmw/usmBPxGLdZGPmTCV79s+bVm/JL5rdN7wAxFadfzlqyBGHKKinFCD8MuljOLhz8
+        w+OE29PuvC3BqR1WIjkzBxZvHKQXT6w=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-214-7vk_NkHeMuuGhhuAXc503w-1; Sat, 21 Sep 2019 14:31:37 -0400
+Received: by mail-ed1-f70.google.com with SMTP id s3so6309092edr.15
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Sep 2019 11:31:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8S1IygJkwFJfElv+IibkE5fK/CX3MkZNXGql4mGIWVQ=;
+        b=uVE3HK5YS1jRbX/f37mdsax101KVW3WMXTGFSFu4ePPXKb5lDWWhcR42TSx/oJX3HM
+         m8qyikRaUKWAuE8jva/HOPDFL8LyM6tDQ83a2wl0Ig1ZRogAmGxRXckYgXHZ867MMZJW
+         9tNqFMMfB2dIR16Bwt7Uho3bAyQcQJY6hrP9WsxbIazsUTXUZn0lIU9XHnFeSwkN5Wbw
+         YVJet9zWweEo0WVzwLmOsEJvLu18AY2Zg4I5frv6nGmFOx/KZqmIhDz5nUPB1q4cNoly
+         7czcfVe6JV7G4zOPFE/efqCeKE2gNbkSUMWOUU9AQov/ttWAn/oKeGFED+NZb3E78ck1
+         5WPQ==
+X-Gm-Message-State: APjAAAW4My/stfsZDB//Vw2LLz720ogP2HzbtiS7JKsESvNZgT5nb6cF
+        JQDRPRHKsL9taq40Y4rVA1xDECoVrOieKw6Qa24gQq4BxJsWO716mdsc7QOjjYfxCjZdaeEGzvA
+        qYzx3yLIQyKElGG/1zFiJkHEb
+X-Received: by 2002:a50:f00c:: with SMTP id r12mr28778411edl.274.1569090695556;
+        Sat, 21 Sep 2019 11:31:35 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwFk3z1ot23jHQCWOjp3DxlmCDcY1LWitV3RPzTfIKpf/Z1su3YMxU7KsWZGrRqAbpsnS3ZGg==
+X-Received: by 2002:a50:f00c:: with SMTP id r12mr28778403edl.274.1569090695302;
+        Sat, 21 Sep 2019 11:31:35 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id t9sm575885eji.26.2019.09.21.11.31.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 21 Sep 2019 11:31:34 -0700 (PDT)
+Subject: Re: [PATCH v5 1/1] platform/x86/intel_cht_int33fe: Split code to USB
+ Micro-B and Type-C variants
+To:     Yauhen Kharuzhy <jekhor@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        platform-driver-x86@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Andy Shevchenko <andy@infradead.org>
+References: <20190920223356.6622-1-jekhor@gmail.com>
+ <20190920223356.6622-2-jekhor@gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <1cca117d-1951-0335-1aef-ac994c3c757b@redhat.com>
+Date:   Sat, 21 Sep 2019 20:31:32 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190920223356.6622-2-jekhor@gmail.com>
 Content-Language: en-US
+X-MC-Unique: 7vk_NkHeMuuGhhuAXc503w-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:/X5KSMYfk/y84AhbFArCNipUfcIqSR5iWevq/uIhXNqC3wOtX/m
- GNs5JyUPr25PmxwhO6/pi2z+47h1ZiD01UqE1/gd/idvfZp4svdI/0bTRbewif2ZYOa7q0Z
- mjD5As+bci/qG/FyAlfwbjxdYbIXXfDDKZqMFtCiAXp9OrHeMZZ/SwXfSBXYzZ28Lfakyuz
- QKz8exAhD7iTKsVysQCBg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:teElU5MMyxs=:W/i7Ym1W9SHfwEjXpO4QQg
- /MTSSib2zlx2KV96suXxIoWwYpUCs666C8W4IyYtNtros1AhbXmgd3nIc7LfijulzB6RNMR65
- +ihjgSOHcsQg8SVv6IHEM1cevUvc64b2QBzN9kqq5m3Vxdji9+Ct3/TY2fNYqw+2edVsq0di9
- ra6ehb1Kyl4MJzNZ0DIgv/UbcMNMAM0Y/rmrtUDIWi7l4X6SHyC8n6x0exVKdOXZ7e3bOSqWU
- PxYbODMhd3rvT9aBP+Yr5bDkzkhmRY2cG9pZzsuUfn5oQDx44LCLJIkngY1Wx+zr28BpXssKF
- UDEivMCG7cv+DgIQ6UfZsaS4EImAjHFQcCPvtKGH9qhRfKntK2LOEgohfnvrTLtAncnSuxqwn
- jZqBwkFzDm8E5zpqBcP3h6GkkBILJnNk8WnMjg4DksOWA0wJKaJwF9tHiR51IvUxxtpH5MMiC
- GUAyB10jq3x65IukJn/UA2sN4Zy6SDa3DiN5H5OxEeqDfKfNPi5spZj7CNrqIzdYLCfuANjfJ
- qPLnMFj/7LzQJZA48MD4kOTxGCrv1phtfxIbtA/iSFyqJe7+MXx6YEhSaf/UJzZ/OA3PEpJ9i
- Xl09otpZgugMqBFAkimp0BtpTVhfgMqRt4Fzuzgaiw5FJilWsWCIyfSg2dOR+fyLkYP5v1x2q
- BZz3KZX2aUHJgBnU38+8V1mvdwwRJreDyhrQ3d1xYiEQ6mzXtfn27LAeojMrSIP8LRHdjBwpd
- L+D3bQCuGUP0O7+Vv6T6DW1KyhPsL2H3a1yNXQa6LgFkq/OV70iQ1CA2x4BU5JoEf2dne+2Gl
- 1379uWnFh2Bv0k5Iirp6fntlfWk7+/WZBOPgThOhvwZV35LxpnIIXg2ZDY6eZ+XnrczuB8pNI
- NZMpWFzUVz/me/7eWy/RGy3xjjZbblCSCh+fiKrRjgfxtaR3aK/n19E6N6RcLL1D6AQ7MVxoJ
- op/47SoTe1LKeg56EOADgTShjwmvL1++9LkN+elzMUD4QE8IDKgu1Di+wHS+OBWYc8+XH/04T
- Rd3t4fueWJyoyr8OhFHthVhMLIX7oEgzzH8CarmG8bsLIwjHU5Iawp4cTkUYyy8C379XM9JNw
- PmULOrExJMV7t0DxF+apR15atBrZx86iLxIPEjIq19/bEqeafcLzPHvZBY8wb2Iah95z+7pEJ
- G16MKEukDvZUhfebtlEAsRdinqC83+1fOKM6MwL8h0d3jPCL6rHKNCCrMj/WlzyByx5gtZyoa
- ISPDYQFOGIsGQ6N8zLZNSawka79dasf9BLjhvGdyvA29tbA40J8U5z+x4Yvw=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Sat, 21 Sep 2019 20:04:08 +0200
+Hi,
 
-Simplify this function implementation by using a known wrapper function.
+On 21-09-2019 00:33, Yauhen Kharuzhy wrote:
+> Existing intel_cht_int33fe ACPI pseudo-device driver assumes that
+> hardware has Type-C connector and register related devices described as
+> I2C connections in the _CRS resource.
+>=20
+> There is at least one hardware (Lenovo Yoga Book YB1-91L/F) with Micro-B
+> USB connector exists. It has INT33FE device in the DSDT table but
+> there are only two I2C connection described: PMIC and BQ27452 battery
+> fuel gauge.
+>=20
+> Splitting existing INT33FE driver allow to maintain code for USB Micro-B
+> (or AB) connector variant separately and make it simpler.
+>=20
+> Split driver to intel_cht_int33fe_common.c and
+> intel_cht_int33fe_{microb,typec}.c. Compile all this sources to one .ko
+> module to make user experience easier.
+>=20
+> Signed-off-by: Yauhen Kharuzhy <jekhor@gmail.com>
 
-This issue was detected by using the Coccinelle software.
+This version still works for me on my typec device:
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+Tested-by: Hans de Goede <hdegoede@redhat.com>
 
-diff --git a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c b/drivers/gpu/d=
-rm/bridge/synopsys/dw-mipi-dsi.c
-index 675442bfc1bd..6ada149af9ef 100644
-=2D-- a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
-+++ b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
-@@ -981,7 +981,6 @@ __dw_mipi_dsi_probe(struct platform_device *pdev,
- 	struct device *dev =3D &pdev->dev;
- 	struct reset_control *apb_rst;
- 	struct dw_mipi_dsi *dsi;
--	struct resource *res;
- 	int ret;
+The code also looks good to me:
 
- 	dsi =3D devm_kzalloc(dev, sizeof(*dsi), GFP_KERNEL);
-@@ -997,11 +996,7 @@ __dw_mipi_dsi_probe(struct platform_device *pdev,
- 	}
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
- 	if (!plat_data->base) {
--		res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
--		if (!res)
--			return ERR_PTR(-ENODEV);
--
--		dsi->base =3D devm_ioremap_resource(dev, res);
-+		dsi->base =3D devm_platform_ioremap_resource(pdev, 0);
- 		if (IS_ERR(dsi->base))
- 			return ERR_PTR(-ENODEV);
+Regards,
 
-=2D-
-2.23.0
+Hans
+
+
+
+> ---
+>   drivers/platform/x86/Kconfig                  |  10 +-
+>   drivers/platform/x86/Makefile                 |   4 +
+>   .../platform/x86/intel_cht_int33fe_common.c   | 147 ++++++++++++++++++
+>   .../platform/x86/intel_cht_int33fe_common.h   |  41 +++++
+>   .../platform/x86/intel_cht_int33fe_microb.c   |  57 +++++++
+>   ...ht_int33fe.c =3D> intel_cht_int33fe_typec.c} |  78 +---------
+>   6 files changed, 265 insertions(+), 72 deletions(-)
+>   create mode 100644 drivers/platform/x86/intel_cht_int33fe_common.c
+>   create mode 100644 drivers/platform/x86/intel_cht_int33fe_common.h
+>   create mode 100644 drivers/platform/x86/intel_cht_int33fe_microb.c
+>   rename drivers/platform/x86/{intel_cht_int33fe.c =3D> intel_cht_int33fe=
+_typec.c} (82%)
+>=20
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 1b67bb578f9f..e9e5aa791caf 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -930,14 +930,20 @@ config INTEL_CHT_INT33FE
+>   =09  This driver add support for the INT33FE ACPI device found on
+>   =09  some Intel Cherry Trail devices.
+>  =20
+> +=09  There are two kinds of INT33FE ACPI device possible: for hardware
+> +=09  with USB Type-C and Micro-B connectors. This driver supports both.
+> +
+>   =09  The INT33FE ACPI device has a CRS table with I2cSerialBusV2
+> -=09  resources for 3 devices: Maxim MAX17047 Fuel Gauge Controller,
+> +=09  resources for Fuel Gauge Controller and (in the Type-C variant)
+>   =09  FUSB302 USB Type-C Controller and PI3USB30532 USB switch.
+>   =09  This driver instantiates i2c-clients for these, so that standard
+>   =09  i2c drivers for these chips can bind to the them.
+>  =20
+>   =09  If you enable this driver it is advised to also select
+> -=09  CONFIG_TYPEC_FUSB302=3Dm and CONFIG_BATTERY_MAX17042=3Dm.
+> +=09  CONFIG_BATTERY_BQ27XXX=3Dm or CONFIG_BATTERY_BQ27XXX_I2C=3Dm for Mi=
+cro-B
+> +=09  device and CONFIG_TYPEC_FUSB302=3Dm and CONFIG_BATTERY_MAX17042=3Dm
+> +=09  for Type-C device.
+> +
+>  =20
+>   config INTEL_INT0002_VGPIO
+>   =09tristate "Intel ACPI INT0002 Virtual GPIO driver"
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefil=
+e
+> index 415104033060..216d3b6fd6a7 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -61,6 +61,10 @@ obj-$(CONFIG_TOSHIBA_BT_RFKILL)=09+=3D toshiba_bluetoo=
+th.o
+>   obj-$(CONFIG_TOSHIBA_HAPS)=09+=3D toshiba_haps.o
+>   obj-$(CONFIG_TOSHIBA_WMI)=09+=3D toshiba-wmi.o
+>   obj-$(CONFIG_INTEL_CHT_INT33FE)=09+=3D intel_cht_int33fe.o
+> +intel_cht_int33fe-objs=09=09:=3D intel_cht_int33fe_common.o \
+> +=09=09=09=09   intel_cht_int33fe_typec.o \
+> +=09=09=09=09   intel_cht_int33fe_microb.o
+> +
+>   obj-$(CONFIG_INTEL_INT0002_VGPIO) +=3D intel_int0002_vgpio.o
+>   obj-$(CONFIG_INTEL_HID_EVENT)=09+=3D intel-hid.o
+>   obj-$(CONFIG_INTEL_VBTN)=09+=3D intel-vbtn.o
+> diff --git a/drivers/platform/x86/intel_cht_int33fe_common.c b/drivers/pl=
+atform/x86/intel_cht_int33fe_common.c
+> new file mode 100644
+> index 000000000000..42dd11623f56
+> --- /dev/null
+> +++ b/drivers/platform/x86/intel_cht_int33fe_common.c
+> @@ -0,0 +1,147 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Common code for Intel Cherry Trail ACPI INT33FE pseudo device drivers
+> + * (USB Micro-B and Type-C connector variants).
+> + *
+> + * Copyright (c) 2019 Yauhen Kharuzhy <jekhor@gmail.com>
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/i2c.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +
+> +#include "intel_cht_int33fe_common.h"
+> +
+> +#define EXPECTED_PTYPE=09=094
+> +
+> +static int cht_int33fe_i2c_res_filter(struct acpi_resource *ares, void *=
+data)
+> +{
+> +=09struct acpi_resource_i2c_serialbus *sb;
+> +=09int *count =3D data;
+> +
+> +=09if (i2c_acpi_get_i2c_resource(ares, &sb))
+> +=09=09(*count)++;
+> +
+> +=09return 1;
+> +}
+> +
+> +static int cht_int33fe_count_i2c_clients(struct device *dev)
+> +{
+> +=09struct acpi_device *adev;
+> +=09LIST_HEAD(resource_list);
+> +=09int count =3D 0;
+> +
+> +=09adev =3D ACPI_COMPANION(dev);
+> +=09if (!adev)
+> +=09=09return -EINVAL;
+> +
+> +=09acpi_dev_get_resources(adev, &resource_list,
+> +=09=09=09       cht_int33fe_i2c_res_filter, &count);
+> +
+> +=09acpi_dev_free_resource_list(&resource_list);
+> +
+> +=09return count;
+> +}
+> +
+> +static int cht_int33fe_check_hw_type(struct device *dev)
+> +{
+> +=09unsigned long long ptyp;
+> +=09acpi_status status;
+> +=09int ret;
+> +
+> +=09status =3D acpi_evaluate_integer(ACPI_HANDLE(dev), "PTYP", NULL, &pty=
+p);
+> +=09if (ACPI_FAILURE(status)) {
+> +=09=09dev_err(dev, "Error getting PTYPE\n");
+> +=09=09return -ENODEV;
+> +=09}
+> +
+> +=09/*
+> +=09 * The same ACPI HID is used for different configurations check PTYP
+> +=09 * to ensure that we are dealing with the expected config.
+> +=09 */
+> +=09if (ptyp !=3D EXPECTED_PTYPE)
+> +=09=09return -ENODEV;
+> +
+> +=09/* Check presence of INT34D3 (hardware-rev 3) expected for ptype =3D=
+=3D 4 */
+> +=09if (!acpi_dev_present("INT34D3", "1", 3)) {
+> +=09=09dev_err(dev, "Error PTYPE =3D=3D %d, but no INT34D3 device\n",
+> +=09=09=09EXPECTED_PTYPE);
+> +=09=09return -ENODEV;
+> +=09}
+> +
+> +=09ret =3D cht_int33fe_count_i2c_clients(dev);
+> +=09if (ret < 0)
+> +=09=09return ret;
+> +
+> +=09switch (ret) {
+> +=09case 2:
+> +=09=09return INT33FE_HW_MICROB;
+> +=09case 4:
+> +=09=09return INT33FE_HW_TYPEC;
+> +=09default:
+> +=09=09return -ENODEV;
+> +=09}
+> +}
+> +
+> +static int cht_int33fe_probe(struct platform_device *pdev)
+> +{
+> +=09struct cht_int33fe_data *data;
+> +=09struct device *dev =3D &pdev->dev;
+> +=09int ret;
+> +
+> +=09ret =3D cht_int33fe_check_hw_type(dev);
+> +=09if (ret < 0)
+> +=09=09return ret;
+> +
+> +=09data =3D devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+> +=09if (!data)
+> +=09=09return -ENOMEM;
+> +
+> +=09data->dev =3D dev;
+> +
+> +=09switch (ret) {
+> +=09case INT33FE_HW_MICROB:
+> +=09=09data->probe =3D cht_int33fe_microb_probe;
+> +=09=09data->remove =3D cht_int33fe_microb_remove;
+> +=09=09break;
+> +
+> +=09case INT33FE_HW_TYPEC:
+> +=09=09data->probe =3D cht_int33fe_typec_probe;
+> +=09=09data->remove =3D cht_int33fe_typec_remove;
+> +=09=09break;
+> +=09}
+> +
+> +=09platform_set_drvdata(pdev, data);
+> +
+> +=09return data->probe(data);
+> +}
+> +
+> +static int cht_int33fe_remove(struct platform_device *pdev)
+> +{
+> +=09struct cht_int33fe_data *data =3D platform_get_drvdata(pdev);
+> +
+> +=09return data->remove(data);
+> +}
+> +
+> +static const struct acpi_device_id cht_int33fe_acpi_ids[] =3D {
+> +=09{ "INT33FE", },
+> +=09{ }
+> +};
+> +MODULE_DEVICE_TABLE(acpi, cht_int33fe_acpi_ids);
+> +
+> +static struct platform_driver cht_int33fe_driver =3D {
+> +=09.driver=09=3D {
+> +=09=09.name =3D "Intel Cherry Trail ACPI INT33FE driver",
+> +=09=09.acpi_match_table =3D ACPI_PTR(cht_int33fe_acpi_ids),
+> +=09},
+> +=09.probe =3D cht_int33fe_probe,
+> +=09.remove =3D cht_int33fe_remove,
+> +};
+> +
+> +module_platform_driver(cht_int33fe_driver);
+> +
+> +MODULE_DESCRIPTION("Intel Cherry Trail ACPI INT33FE pseudo device driver=
+");
+> +MODULE_AUTHOR("Yauhen Kharuzhy <jekhor@gmail.com>");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/platform/x86/intel_cht_int33fe_common.h b/drivers/pl=
+atform/x86/intel_cht_int33fe_common.h
+> new file mode 100644
+> index 000000000000..03cd45f4e8cb
+> --- /dev/null
+> +++ b/drivers/platform/x86/intel_cht_int33fe_common.h
+> @@ -0,0 +1,41 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Common code for Intel Cherry Trail ACPI INT33FE pseudo device drivers
+> + * (USB Micro-B and Type-C connector variants), header file
+> + *
+> + * Copyright (c) 2019 Yauhen Kharuzhy <jekhor@gmail.com>
+> + */
+> +
+> +#ifndef _INTEL_CHT_INT33FE_COMMON_H
+> +#define _INTEL_CHT_INT33FE_COMMON_H
+> +
+> +#include <linux/device.h>
+> +#include <linux/fwnode.h>
+> +#include <linux/i2c.h>
+> +
+> +enum int33fe_hw_type {
+> +=09INT33FE_HW_MICROB,
+> +=09INT33FE_HW_TYPEC,
+> +};
+> +
+> +struct cht_int33fe_data {
+> +=09struct device *dev;
+> +
+> +=09int (*probe)(struct cht_int33fe_data *data);
+> +=09int (*remove)(struct cht_int33fe_data *data);
+> +
+> +=09struct i2c_client *battery_fg;
+> +
+> +=09/* Type-C only */
+> +=09struct i2c_client *fusb302;
+> +=09struct i2c_client *pi3usb30532;
+> +
+> +=09struct fwnode_handle *dp;
+> +};
+> +
+> +int cht_int33fe_microb_probe(struct cht_int33fe_data *data);
+> +int cht_int33fe_microb_remove(struct cht_int33fe_data *data);
+> +int cht_int33fe_typec_probe(struct cht_int33fe_data *data);
+> +int cht_int33fe_typec_remove(struct cht_int33fe_data *data);
+> +
+> +#endif /* _INTEL_CHT_INT33FE_COMMON_H */
+> diff --git a/drivers/platform/x86/intel_cht_int33fe_microb.c b/drivers/pl=
+atform/x86/intel_cht_int33fe_microb.c
+> new file mode 100644
+> index 000000000000..20b11e0d9a75
+> --- /dev/null
+> +++ b/drivers/platform/x86/intel_cht_int33fe_microb.c
+> @@ -0,0 +1,57 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Intel Cherry Trail ACPI INT33FE pseudo device driver for devices with
+> + * USB Micro-B connector (e.g. without of FUSB302 USB Type-C controller)
+> + *
+> + * Copyright (C) 2019 Yauhen Kharuzhy <jekhor@gmail.com>
+> + *
+> + * At least one Intel Cherry Trail based device which ship with Windows =
+10
+> + * (Lenovo YogaBook YB1-X91L/F tablet), have this weird INT33FE ACPI dev=
+ice
+> + * with a CRS table with 2 I2cSerialBusV2 resources, for 2 different chi=
+ps
+> + * attached to various i2c busses:
+> + * 1. The Whiskey Cove PMIC, which is also described by the INT34D3 ACPI=
+ device
+> + * 2. TI BQ27542 Fuel Gauge Controller
+> + *
+> + * So this driver is a stub / pseudo driver whose only purpose is to
+> + * instantiate i2c-client for battery fuel gauge, so that standard i2c d=
+river
+> + * for these chip can bind to the it.
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/i2c.h>
+> +#include <linux/module.h>
+> +#include <linux/pci.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/slab.h>
+> +#include <linux/usb/pd.h>
+> +
+> +#include "intel_cht_int33fe_common.h"
+> +
+> +static const char * const bq27xxx_suppliers[] =3D { "bq25890-charger" };
+> +
+> +static const struct property_entry bq27xxx_props[] =3D {
+> +=09PROPERTY_ENTRY_STRING_ARRAY("supplied-from", bq27xxx_suppliers),
+> +=09{ }
+> +};
+> +
+> +int cht_int33fe_microb_probe(struct cht_int33fe_data *data)
+> +{
+> +=09struct device *dev =3D data->dev;
+> +=09struct i2c_board_info board_info;
+> +
+> +=09memset(&board_info, 0, sizeof(board_info));
+> +=09strscpy(board_info.type, "bq27542", ARRAY_SIZE(board_info.type));
+> +=09board_info.dev_name =3D "bq27542";
+> +=09board_info.properties =3D bq27xxx_props;
+> +=09data->battery_fg =3D i2c_acpi_new_device(dev, 1, &board_info);
+> +
+> +=09return PTR_ERR_OR_ZERO(data->battery_fg);
+> +}
+> +
+> +int cht_int33fe_microb_remove(struct cht_int33fe_data *data)
+> +{
+> +=09i2c_unregister_device(data->battery_fg);
+> +
+> +=09return 0;
+> +}
+> diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/=
+x86/intel_cht_int33fe_typec.c
+> similarity index 82%
+> rename from drivers/platform/x86/intel_cht_int33fe.c
+> rename to drivers/platform/x86/intel_cht_int33fe_typec.c
+> index 1d5d877b9582..2d097fc2dd46 100644
+> --- a/drivers/platform/x86/intel_cht_int33fe.c
+> +++ b/drivers/platform/x86/intel_cht_int33fe_typec.c
+> @@ -17,17 +17,15 @@
+>    * for these chips can bind to the them.
+>    */
+>  =20
+> -#include <linux/acpi.h>
+>   #include <linux/i2c.h>
+>   #include <linux/interrupt.h>
+> -#include <linux/module.h>
+>   #include <linux/pci.h>
+>   #include <linux/platform_device.h>
+>   #include <linux/regulator/consumer.h>
+>   #include <linux/slab.h>
+>   #include <linux/usb/pd.h>
+>  =20
+> -#define EXPECTED_PTYPE=09=094
+> +#include "intel_cht_int33fe_common.h"
+>  =20
+>   enum {
+>   =09INT33FE_NODE_FUSB302,
+> @@ -38,14 +36,6 @@ enum {
+>   =09INT33FE_NODE_MAX,
+>   };
+>  =20
+> -struct cht_int33fe_data {
+> -=09struct i2c_client *max17047;
+> -=09struct i2c_client *fusb302;
+> -=09struct i2c_client *pi3usb30532;
+> -
+> -=09struct fwnode_handle *dp;
+> -};
+> -
+>   static const struct software_node nodes[];
+>  =20
+>   static const struct software_node_ref_args pi3usb30532_ref =3D {
+> @@ -251,43 +241,20 @@ cht_int33fe_register_max17047(struct device *dev, s=
+truct cht_int33fe_data *data)
+>   =09strlcpy(board_info.type, "max17047", I2C_NAME_SIZE);
+>   =09board_info.dev_name =3D "max17047";
+>   =09board_info.fwnode =3D fwnode;
+> -=09data->max17047 =3D i2c_acpi_new_device(dev, 1, &board_info);
+> +=09data->battery_fg =3D i2c_acpi_new_device(dev, 1, &board_info);
+>  =20
+> -=09return PTR_ERR_OR_ZERO(data->max17047);
+> +=09return PTR_ERR_OR_ZERO(data->battery_fg);
+>   }
+>  =20
+> -static int cht_int33fe_probe(struct platform_device *pdev)
+> +int cht_int33fe_typec_probe(struct cht_int33fe_data *data)
+>   {
+> -=09struct device *dev =3D &pdev->dev;
+> +=09struct device *dev =3D data->dev;
+>   =09struct i2c_board_info board_info;
+> -=09struct cht_int33fe_data *data;
+>   =09struct fwnode_handle *fwnode;
+>   =09struct regulator *regulator;
+> -=09unsigned long long ptyp;
+> -=09acpi_status status;
+>   =09int fusb302_irq;
+>   =09int ret;
+>  =20
+> -=09status =3D acpi_evaluate_integer(ACPI_HANDLE(dev), "PTYP", NULL, &pty=
+p);
+> -=09if (ACPI_FAILURE(status)) {
+> -=09=09dev_err(dev, "Error getting PTYPE\n");
+> -=09=09return -ENODEV;
+> -=09}
+> -
+> -=09/*
+> -=09 * The same ACPI HID is used for different configurations check PTYP
+> -=09 * to ensure that we are dealing with the expected config.
+> -=09 */
+> -=09if (ptyp !=3D EXPECTED_PTYPE)
+> -=09=09return -ENODEV;
+> -
+> -=09/* Check presence of INT34D3 (hardware-rev 3) expected for ptype =3D=
+=3D 4 */
+> -=09if (!acpi_dev_present("INT34D3", "1", 3)) {
+> -=09=09dev_err(dev, "Error PTYPE =3D=3D %d, but no INT34D3 device\n",
+> -=09=09=09EXPECTED_PTYPE);
+> -=09=09return -ENODEV;
+> -=09}
+> -
+>   =09/*
+>   =09 * We expect the WC PMIC to be paired with a TI bq24292i charger-IC.
+>   =09 * We check for the bq24292i vbus regulator here, this has 2 purpose=
+s:
+> @@ -317,10 +284,6 @@ static int cht_int33fe_probe(struct platform_device =
+*pdev)
+>   =09=09return fusb302_irq;
+>   =09}
+>  =20
+> -=09data =3D devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+> -=09if (!data)
+> -=09=09return -ENOMEM;
+> -
+>   =09ret =3D cht_int33fe_add_nodes(data);
+>   =09if (ret)
+>   =09=09return ret;
+> @@ -365,15 +328,13 @@ static int cht_int33fe_probe(struct platform_device=
+ *pdev)
+>   =09=09goto out_unregister_fusb302;
+>   =09}
+>  =20
+> -=09platform_set_drvdata(pdev, data);
+> -
+>   =09return 0;
+>  =20
+>   out_unregister_fusb302:
+>   =09i2c_unregister_device(data->fusb302);
+>  =20
+>   out_unregister_max17047:
+> -=09i2c_unregister_device(data->max17047);
+> +=09i2c_unregister_device(data->battery_fg);
+>  =20
+>   out_remove_nodes:
+>   =09cht_int33fe_remove_nodes(data);
+> @@ -381,36 +342,13 @@ static int cht_int33fe_probe(struct platform_device=
+ *pdev)
+>   =09return ret;
+>   }
+>  =20
+> -static int cht_int33fe_remove(struct platform_device *pdev)
+> +int cht_int33fe_typec_remove(struct cht_int33fe_data *data)
+>   {
+> -=09struct cht_int33fe_data *data =3D platform_get_drvdata(pdev);
+> -
+>   =09i2c_unregister_device(data->pi3usb30532);
+>   =09i2c_unregister_device(data->fusb302);
+> -=09i2c_unregister_device(data->max17047);
+> +=09i2c_unregister_device(data->battery_fg);
+>  =20
+>   =09cht_int33fe_remove_nodes(data);
+>  =20
+>   =09return 0;
+>   }
+> -
+> -static const struct acpi_device_id cht_int33fe_acpi_ids[] =3D {
+> -=09{ "INT33FE", },
+> -=09{ }
+> -};
+> -MODULE_DEVICE_TABLE(acpi, cht_int33fe_acpi_ids);
+> -
+> -static struct platform_driver cht_int33fe_driver =3D {
+> -=09.driver=09=3D {
+> -=09=09.name =3D "Intel Cherry Trail ACPI INT33FE driver",
+> -=09=09.acpi_match_table =3D ACPI_PTR(cht_int33fe_acpi_ids),
+> -=09},
+> -=09.probe =3D cht_int33fe_probe,
+> -=09.remove =3D cht_int33fe_remove,
+> -};
+> -
+> -module_platform_driver(cht_int33fe_driver);
+> -
+> -MODULE_DESCRIPTION("Intel Cherry Trail ACPI INT33FE pseudo device driver=
+");
+> -MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
+> -MODULE_LICENSE("GPL v2");
+>=20
 
