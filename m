@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF7DCC4360D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 15:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E8AC49ED7
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 15:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6EC3208C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 15:18:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1921208C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 15:18:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="AwdZfkWa"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="E2NvMrxJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438133AbfIUPSx (ORCPT
+        id S2438156AbfIUPSy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Sep 2019 11:18:53 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40395 "EHLO
+        Sat, 21 Sep 2019 11:18:54 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38171 "EHLO
         mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392043AbfIUPSu (ORCPT
+        with ESMTP id S2389472AbfIUPSw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Sep 2019 11:18:50 -0400
-Received: by mail-wr1-f65.google.com with SMTP id l3so9591654wru.7;
-        Sat, 21 Sep 2019 08:18:49 -0700 (PDT)
+        Sat, 21 Sep 2019 11:18:52 -0400
+Received: by mail-wr1-f65.google.com with SMTP id l11so9606734wrx.5;
+        Sat, 21 Sep 2019 08:18:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=0VvVyYbylhhn27lwnpj3kEDmecswF/DtGt6I7xL1THE=;
-        b=AwdZfkWa2Zgunj0RMms1Csk0t/Bg4v/uFPqVU7GERZOhx5a+rh7P2KefE2ys3mgPqu
-         8sp95P0w1G334sr3PxEdxmIvH2QCvBrTN8aHPLl2ln2VNjMp6QF5U41qAzgt07Vt3jNK
-         etQuibrNO5D+4kjr6tb1quq6zE7UmuiM+whDQ0Pt/ca8TCmboJA/I8j3/SW2Rd1eHr5v
-         Bt+60xkXfqkCmntTrq5oeWVgY5ZLULnV9aLK4uBFGEQAh9bMJLtL+wlSnXiPM1WCpoU/
-         JDdwt0avJHJ+mwWhE5P5hFn29PnNssxuJtf25y/JaSPcy2boWyrnXBP8saOOd30Vdqz+
-         NHWA==
+        bh=tL9H2pw8VcVH+/HrGAKtJB8z0yBrLzroNdJ39zlPsf4=;
+        b=E2NvMrxJwSJxDTHoMuEVvpjk5eoEdywakfkz3KI/elTbseQesn7NRfAf+J7nh+CuoX
+         xckU3BUNGb+wvWirb6Ew+me7AR5ygjNMH8FkvpiqBRBzciZ5mys67+1u3y/a3rrBMcY8
+         e7Et+4g23Rualkpxz6oJO0VphLBV+d6Omyj5KQ+umIna6XI7spwO0+1oT2vu/RrCUj0k
+         2huU7C8thkD/bGYP4U+wW2Fn/rsKM8lncqNW4r9cxpHWFoJZtGlgraGFxz9EogFZrdfv
+         cVYOk4lQMTbozxPXEYxzsmnopEblu26mkFSeAKcH7a7peVmSX2HM+c+4yFu4oPvyIbaC
+         mKKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=0VvVyYbylhhn27lwnpj3kEDmecswF/DtGt6I7xL1THE=;
-        b=Q4Ei4hDgrQluqeCKdGK/ey8uA0hLUurNL6Zy4kAkpFUWoIOaKDvh7vsTiLKkLe+uYX
-         FSnaiMh045EQBs3fAiIAukUfKNDHJtKSZRhIoTMeK1jsJjvaop3fT3s/JqV+3XzT3emP
-         jbyncNQl3dTOvZsnBZro1zZLJuriC0DxUINGCwl0ZlT0Tj9UhvXIT012+br8C7IW+/Zc
-         KivgCN7ZPbrF3QvG1cgoMXZpDZ/4CX/EbPLp4L49zo4baPoleg9IL8QItKzZXa2kWEGb
-         jSeZqVVXvcbNrU5PvXsBEq+ZfpX9oLn+fV8LMGn1ClNgI90CxKJ9/w4IWfv5xm16EIx3
-         /evg==
-X-Gm-Message-State: APjAAAX8UPF4Dx0AkWNTv5Sn+5i06RX2A3D2hciWyU1DRdr8OvrdckGc
-        3NEPiBW5zoaXrNderoxkkbo=
-X-Google-Smtp-Source: APXvYqzjLsxL6Hb5gWpypNfZmMuuKIqU6e8iKaQeFtNzeVg/UC9EEacsUopb1O4+mKK7gli1ftsl7g==
-X-Received: by 2002:a5d:6885:: with SMTP id h5mr16181417wru.92.1569079128474;
-        Sat, 21 Sep 2019 08:18:48 -0700 (PDT)
+        bh=tL9H2pw8VcVH+/HrGAKtJB8z0yBrLzroNdJ39zlPsf4=;
+        b=cv4K+bbyxG720J6HU54iODVLzSvIdODaghGZHf9zr21XwD8TJgDamQJXZW2IRSAXHv
+         ZzOeQoifDRnwZnUXbGnOc9HQokBZan9hE4znB8urY1Jud7VJiUF9gNaK+WbzyJxaCvSP
+         dlcXQEQEBkdItYoy3G1Supcm9qS6ujLqOx11/3sOJ5yTonn7HTdhb+pig4JHVDFGBLy2
+         /JstAdjSg5kH7WCFWISSJAm7s+WOEMp7ClhiAgWczpBB0Ld7vk64sp1ZBvJy1dM8pwmS
+         O0Rh1p0OF3iW5JDLww4Oym+kk/1WjkZMLThg3StTfdX8QMzJ05odE/bVWwOAAMzkz7j4
+         9d/w==
+X-Gm-Message-State: APjAAAVxmwaMFiPKnn0HmRbq7137ozi+sE+LmZc82YD6cIm4NqBT/YjX
+        qBhdkLrNgIE0TWr+BMqHOus=
+X-Google-Smtp-Source: APXvYqzFIz37+RJLiSRJg6Togsnn6KnEGn+RMKSBinwFDfuqF0wDYCcbcEWm1MA9Goj5aB/ivwIIUQ==
+X-Received: by 2002:a5d:4307:: with SMTP id h7mr3178723wrq.393.1569079129875;
+        Sat, 21 Sep 2019 08:18:49 -0700 (PDT)
 Received: from blackbox.darklights.net (p200300F133CE0B0028BAA8C744A6F562.dip0.t-ipconnect.de. [2003:f1:33ce:b00:28ba:a8c7:44a6:f562])
-        by smtp.googlemail.com with ESMTPSA id c6sm6003120wrb.60.2019.09.21.08.18.47
+        by smtp.googlemail.com with ESMTPSA id c6sm6003120wrb.60.2019.09.21.08.18.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Sep 2019 08:18:47 -0700 (PDT)
+        Sat, 21 Sep 2019 08:18:49 -0700 (PDT)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To:     narmstrong@baylibre.com, jbrunet@baylibre.com, robh+dt@kernel.org,
         mark.rutland@arm.com, linux-amlogic@lists.infradead.org,
@@ -64,9 +64,9 @@ To:     narmstrong@baylibre.com, jbrunet@baylibre.com, robh+dt@kernel.org,
 Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-clk@vger.kernel.org,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 1/6] dt-bindings: clock: add the Amlogic Meson8 DDR clock controller binding
-Date:   Sat, 21 Sep 2019 17:18:30 +0200
-Message-Id: <20190921151835.770263-2-martin.blumenstingl@googlemail.com>
+Subject: [PATCH 2/6] clk: meson: add a driver for the Meson8/8b/8m2 DDR clock controller
+Date:   Sat, 21 Sep 2019 17:18:31 +0200
+Message-Id: <20190921151835.770263-3-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190921151835.770263-1-martin.blumenstingl@googlemail.com>
 References: <20190921151835.770263-1-martin.blumenstingl@googlemail.com>
@@ -77,90 +77,216 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Amlogic Meson8, Meson8b and Meson8m2 SoCs have a DDR clock controller in
-the MMCBUS registers. There is no public documentation on this, but the
-GPL u-boot sources from the Amlogic BSP show that:
-- it uses the same XTAL input as the main clock controller
-- it contains a PLL which seems to be implemented just like the other
-  PLLs in this SoC
-- there is a power-of-two PLL post-divider
+The Meson8/Meson8b/Meson8m2 SoCs embed a DDR clock controller in the
+MMCBUS registers. There is no public documentation, but the u-boot GPL
+sources from the Amlogic BSP show that the DDR clock controller is
+identical on all three SoCs:
+  #define CFG_DDR_CLK 792
+  #define CFG_PLL_M (((CFG_DDR_CLK/12)*12)/24)
+  #define CFG_PLL_N 1
+  #define CFG_PLL_OD 1
 
-Add the documentation and header file for this DDR clock controller.
+  // from set_ddr_clock:
+  t_ddr_pll_cntl= (CFG_PLL_OD << 16)|(CFG_PLL_N<<9)|(CFG_PLL_M<<0)
+  writel(timing_reg->t_ddr_pll_cntl|(1<<29),AM_DDR_PLL_CNTL);
+  writel(readl(AM_DDR_PLL_CNTL) & (~(1<<29)),AM_DDR_PLL_CNTL);
+
+  // from hx_ddr_power_down_enter: shut down DDR PLL
+  writel(readl(AM_DDR_PLL_CNTL)|(1<<30),AM_DDR_PLL_CNTL);
+
+  do { ... } while((readl(AM_DDR_PLL_CNTL)&(1<<31))==0)
+
+This translates to:
+- AM_DDR_PLL_CNTL[29] is the reset bit
+- AM_DDR_PLL_CNTL[30] is the enable bit
+- AM_DDR_PLL_CNTL[31] is the lock bit
+- AM_DDR_PLL_CNTL[8:0] is the m value (assuming the width is 9 bits
+  based on the start of the n value)
+- AM_DDR_PLL_CNTL[13:9] is the n value (assuming the width is 5 bits
+  based on the start of the od)
+- AM_DDR_PLL_CNTL[17:16] is the od (assuming the width is 2 bits based
+  on other PLLs on this SoC)
+
+Add a driver for this PLL setup because it's used as one of the inputs
+of the audio clocks. There may be more clocks inside that clock
+controller - those can be added in subsequent patches.
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- .../clock/amlogic,meson8-ddr-clkc.yaml        | 50 +++++++++++++++++++
- include/dt-bindings/clock/meson8-ddr-clkc.h   |  4 ++
- 2 files changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/amlogic,meson8-ddr-clkc.yaml
- create mode 100644 include/dt-bindings/clock/meson8-ddr-clkc.h
+ drivers/clk/meson/Makefile     |   2 +-
+ drivers/clk/meson/meson8-ddr.c | 153 +++++++++++++++++++++++++++++++++
+ 2 files changed, 154 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/clk/meson/meson8-ddr.c
 
-diff --git a/Documentation/devicetree/bindings/clock/amlogic,meson8-ddr-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,meson8-ddr-clkc.yaml
+diff --git a/drivers/clk/meson/Makefile b/drivers/clk/meson/Makefile
+index 3939f218587a..6eca2a406ee3 100644
+--- a/drivers/clk/meson/Makefile
++++ b/drivers/clk/meson/Makefile
+@@ -18,4 +18,4 @@ obj-$(CONFIG_COMMON_CLK_AXG) += axg.o axg-aoclk.o
+ obj-$(CONFIG_COMMON_CLK_AXG_AUDIO) += axg-audio.o
+ obj-$(CONFIG_COMMON_CLK_GXBB) += gxbb.o gxbb-aoclk.o
+ obj-$(CONFIG_COMMON_CLK_G12A) += g12a.o g12a-aoclk.o
+-obj-$(CONFIG_COMMON_CLK_MESON8B) += meson8b.o
++obj-$(CONFIG_COMMON_CLK_MESON8B) += meson8b.o meson8-ddr.o
+diff --git a/drivers/clk/meson/meson8-ddr.c b/drivers/clk/meson/meson8-ddr.c
 new file mode 100644
-index 000000000000..bf3ca5888485
+index 000000000000..64ab4c27cce0
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/amlogic,meson8-ddr-clkc.yaml
-@@ -0,0 +1,50 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/amlogic,meson8-ddr-clkc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/clk/meson/meson8-ddr.c
+@@ -0,0 +1,153 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Amlogic Meson8 DDR clock controller
++ *
++ * Copyright (C) 2019 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
++ */
 +
-+title: Amlogic DDR Clock Controller Device Tree Bindings
++#include <dt-bindings/clock/meson8-ddr-clkc.h>
 +
-+maintainers:
-+  - Martin Blumenstingl <martin.blumenstingl@googlemail.com>
++#include <linux/platform_device.h>
++#include <linux/mfd/syscon.h>
++#include <linux/of_device.h>
++#include <linux/slab.h>
 +
-+properties:
-+  compatible:
-+    enum:
-+      - amlogic,meson8-ddr-clkc
-+      - amlogic,meson8b-ddr-clkc
++#include "clk-regmap.h"
++#include "clk-pll.h"
 +
-+  reg:
-+    maxItems: 1
++#define AM_DDR_PLL_CNTL			0x00
++#define AM_DDR_PLL_CNTL1		0x04
++#define AM_DDR_PLL_CNTL2		0x08
++#define AM_DDR_PLL_CNTL3		0x0c
++#define AM_DDR_PLL_CNTL4		0x10
++#define AM_DDR_PLL_STS			0x14
++#define DDR_CLK_CNTL			0x18
++#define DDR_CLK_STS			0x1c
 +
-+  clocks:
-+    maxItems: 1
++static struct clk_regmap meson8_ddr_pll_dco = {
++	.data = &(struct meson_clk_pll_data){
++		.en = {
++			.reg_off = AM_DDR_PLL_CNTL,
++			.shift   = 30,
++			.width   = 1,
++		},
++		.m = {
++			.reg_off = AM_DDR_PLL_CNTL,
++			.shift   = 0,
++			.width   = 9,
++		},
++		.n = {
++			.reg_off = AM_DDR_PLL_CNTL,
++			.shift   = 9,
++			.width   = 5,
++		},
++		.l = {
++			.reg_off = AM_DDR_PLL_CNTL,
++			.shift   = 31,
++			.width   = 1,
++		},
++		.rst = {
++			.reg_off = AM_DDR_PLL_CNTL,
++			.shift   = 29,
++			.width   = 1,
++		},
++	},
++	.hw.init = &(struct clk_init_data){
++		.name = "ddr_pll_dco",
++		.ops = &meson_clk_pll_ro_ops,
++		.parent_data = &(const struct clk_parent_data) {
++			.fw_name = "xtal",
++		},
++		.num_parents = 1,
++	},
++};
 +
-+  clock-names:
-+    items:
-+      - const: xtal
++static struct clk_regmap meson8_ddr_pll = {
++	.data = &(struct clk_regmap_div_data){
++		.offset = AM_DDR_PLL_CNTL,
++		.shift = 16,
++		.width = 2,
++		.flags = CLK_DIVIDER_POWER_OF_TWO,
++	},
++	.hw.init = &(struct clk_init_data){
++		.name = "ddr_pll",
++		.ops = &clk_regmap_divider_ro_ops,
++		.parent_hws = (const struct clk_hw *[]) {
++			&meson8_ddr_pll_dco.hw
++		},
++		.num_parents = 1,
++	},
++};
 +
-+  "#clock-cells":
-+    const: 1
++static struct clk_hw_onecell_data meson8_ddr_clk_hw_onecell_data = {
++	.hws = {
++		[DDR_CLKID_DDR_PLL_DCO]		= &meson8_ddr_pll_dco.hw,
++		[DDR_CLKID_DDR_PLL]		= &meson8_ddr_pll.hw,
++	},
++	.num = 2,
++};
 +
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - "#clock-cells"
++static struct clk_regmap *const meson8_ddr_clk_regmaps[] = {
++	&meson8_ddr_pll_dco,
++	&meson8_ddr_pll,
++};
 +
-+additionalProperties: false
++static const struct regmap_config meson8_ddr_clkc_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 32,
++	.reg_stride = 4,
++	.fast_io = true,
++};
 +
-+examples:
-+  - |
-+    ddr_clkc: clock-controller@400 {
-+      compatible = "amlogic,meson8-ddr-clkc";
-+      reg = <0x400 0x20>;
-+      clocks = <&xtal>;
-+      clock-names = "xtal";
-+      #clock-cells = <1>;
-+    };
++static int meson8_ddr_clkc_probe(struct platform_device *pdev)
++{
++	struct regmap *regmap;
++	struct resource *res;
++	void __iomem *base;
++	struct clk_hw *hw;
++	int ret, i;
 +
-+...
-diff --git a/include/dt-bindings/clock/meson8-ddr-clkc.h b/include/dt-bindings/clock/meson8-ddr-clkc.h
-new file mode 100644
-index 000000000000..a8e0fa2987ab
---- /dev/null
-+++ b/include/dt-bindings/clock/meson8-ddr-clkc.h
-@@ -0,0 +1,4 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(base))
++		return PTR_ERR(base);
 +
-+#define DDR_CLKID_DDR_PLL_DCO			0
-+#define DDR_CLKID_DDR_PLL			1
++	regmap = devm_regmap_init_mmio(&pdev->dev, base,
++				       &meson8_ddr_clkc_regmap_config);
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
++
++	/* Populate regmap */
++	for (i = 0; i < ARRAY_SIZE(meson8_ddr_clk_regmaps); i++)
++		meson8_ddr_clk_regmaps[i]->map = regmap;
++
++	/* Register all clks */
++	for (i = 0; i < meson8_ddr_clk_hw_onecell_data.num; i++) {
++		hw = meson8_ddr_clk_hw_onecell_data.hws[i];
++
++		ret = devm_clk_hw_register(&pdev->dev, hw);
++		if (ret) {
++			dev_err(&pdev->dev, "Clock registration failed\n");
++			return ret;
++		}
++	}
++
++	return devm_of_clk_add_hw_provider(&pdev->dev, of_clk_hw_onecell_get,
++					   &meson8_ddr_clk_hw_onecell_data);
++}
++
++static const struct of_device_id meson8_ddr_clkc_match_table[] = {
++	{ .compatible = "amlogic,meson8-ddr-clkc" },
++	{ .compatible = "amlogic,meson8b-ddr-clkc" },
++	{ /* sentinel */ },
++};
++
++static struct platform_driver meson8_ddr_clkc_driver = {
++	.probe		= meson8_ddr_clkc_probe,
++	.driver		= {
++		.name	= "meson8-ddr-clkc",
++		.of_match_table = meson8_ddr_clkc_match_table,
++	},
++};
++
++builtin_platform_driver(meson8_ddr_clkc_driver);
 -- 
 2.23.0
 
