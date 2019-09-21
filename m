@@ -2,95 +2,102 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B156CC4740C
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 19:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0871C4360D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 19:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 886C221835
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 19:21:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569093671;
-	bh=j0to6bgCUsZE0XxIyWSeuw/6QHjOGtUvrMcN8EFYmK4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e0Ks5joTBzwEQXy5PNMb3CjutdDYNSjQvi/Yz+1Z2hv6o01iMDUPmoRyoYhB6syUK
-	 ZiduEPNft+ZYp4oAg+Zu748ZrH5Xb6ZoNimmyusk/fAh7C3szp/ldhY8o+1VMMqlsE
-	 g97qPZ41Y/R/oDxxma3UJocNKcIcew6m75xkCIdg=
+	by mail.kernel.org (Postfix) with ESMTP id A0A592184C
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 19:39:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c2KNtru5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388183AbfIUTVK (ORCPT
+        id S1727021AbfIUTj3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Sep 2019 15:21:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49462 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387853AbfIUTVK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Sep 2019 15:21:10 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D9EF206B6;
-        Sat, 21 Sep 2019 19:21:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569093669;
-        bh=j0to6bgCUsZE0XxIyWSeuw/6QHjOGtUvrMcN8EFYmK4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=omT7YqoxJ29+diKTG/rBh1gGynceLLK2NZmgblVXO3coic6tCvrRB5ytdBKVflgBA
-         u+4oyWS9arHhMrhVca2GO8gHA4nez5FhP4TgjliLUKDJYnmUpYbj4fkDVHa681R/X+
-         FmY9A/cmEtGWeZsIGc/om28tQKqrETrOFvPpUAKE=
-Date:   Sat, 21 Sep 2019 15:21:08 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Tom Zanussi <zanussi@kernel.org>, linux-kernel@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>,
-        Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        stable@vger.kernel.org
-Subject: Re: [for-next][PATCH 3/8] tracing: Make sure variable reference
- alias has correct var_ref_idx
-Message-ID: <20190921192108.GB8171@sasha-vm>
-References: <20190919232359.825502403@goodmis.org>
- <20190921120618.DF81120665@mail.kernel.org>
- <20190921082035.4fc9ccc5@oasis.local.home>
+        Sat, 21 Sep 2019 15:39:29 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:43223 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbfIUTj3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Sep 2019 15:39:29 -0400
+Received: by mail-pf1-f195.google.com with SMTP id a2so6638202pfo.10;
+        Sat, 21 Sep 2019 12:39:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=omljAw/L3GlDUEULdQ29ows91lLPktIC2ep28HmSHbI=;
+        b=c2KNtru5DaqrEwv/IPrf+VupRkcxkybVG9KAZayh1pic31XW2SFRW2NH7HTTl1turV
+         jGn+dE6HnB7e3/hej1XmPD/gK5/lxRuKMgtn2RNvQEjnkCVqwSrX+VzXHorPelA+wc2f
+         8T6s9Cbo3jp8TwAO1rIIEohpHQsOlUHnNh+9wWbcxZAS7K3e6hfctw7JpDoXLDAO+z3R
+         yOCH+hiN09ZnAbuLnob3lAncfXYTSEGewCWAFt0dloQOPtAL7vst18x/dBiyldESI5Rc
+         lVI8lYNkrhsBsgrKXhKbLwTji+exx4zdctb6HesDaA3HKCBssiGFwywA/3v7XPlzI7Fj
+         bsFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=omljAw/L3GlDUEULdQ29ows91lLPktIC2ep28HmSHbI=;
+        b=XPwxjXfp4gZoj9TKgzmd8DpyfPB4aRLlghXzzN8Ci431j60nvHEKyyhxynVoXkjgzw
+         uO0S7wGChVediogxf+jJ1GfiRscmQNePGg7iccwPLZzMXmKdlX6Wvnq+eqH9Usko+Rjx
+         L7XIfxxF9YULkfpDBhZlKZXlRChle6eHqSArkc9vM7Rk1xR+5AtVp4ZrOdEcYLFLnrR6
+         COH/2SqT9VXM7RfJd2D67iNi60Hy38zCgQplZe1mCOivU7SZ9KHgBHEcam2XN1deezxX
+         hwhPNE2FXhKDwN+XL0wvQGJ71yhy1/lygqGLLsUdH46pMFp5gTDKqVA1a73adqiauecA
+         LIeg==
+X-Gm-Message-State: APjAAAUrgYweNs2B1sYCuGm0IAgLfKGA5wDAv6RPUQBViJkPPubx2uVI
+        3Y0ti3EuRC3syCXPqj0WKSThdmuMYLU=
+X-Google-Smtp-Source: APXvYqwzqjzDSgvTsUzNJVQNCX82JRE8erzFWOFIfAtQ86IQiaHPdpeQMYB3bwThfu7gAnUzEh4prg==
+X-Received: by 2002:a17:90a:b001:: with SMTP id x1mr11947550pjq.114.1569094767995;
+        Sat, 21 Sep 2019 12:39:27 -0700 (PDT)
+Received: from [10.230.28.130] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id a17sm6558688pfc.26.2019.09.21.12.39.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 21 Sep 2019 12:39:27 -0700 (PDT)
+Subject: Re: [PATCH] net: dsa: b53: Use the correct style for SPDX License
+ Identifier
+To:     Nishad Kamdar <nishadkamdar@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190921133011.GA2994@nishad>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <75c07fb7-61de-4cb8-8ac1-26b19a660890@gmail.com>
+Date:   Sat, 21 Sep 2019 12:39:25 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190921082035.4fc9ccc5@oasis.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190921133011.GA2994@nishad>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 21, 2019 at 08:20:35AM -0400, Steven Rostedt wrote:
->On Sat, 21 Sep 2019 12:06:18 +0000
->Sasha Levin <sashal@kernel.org> wrote:
->
->> Hi,
->>
->> [This is an automated email]
->>
->> This commit has been processed because it contains a "Fixes:" tag,
->> fixing commit: .
->>
->> The bot has tested the following trees: v5.2.16, v4.19.74, v4.14.145, v4.9.193, v4.4.193.
->
->
->The fixes tag is 7e8b88a30b085 which was added to mainline in 4.17.
->According to this email, it applies fine to 5.2 and 4.19, but fails on
->4.14 and earlier. As the commit was added in 4.17 that makes perfect
->sense. Can you update your scripts to test when the fixes commit was
->added, and not send spam about it not applying to stable trees where
->it's not applicable.
-
-The script already does that. What happened here is that it got confused
-with your previous "Fixes:" statement in the commit message and went
-haywire.
-
-I thought that something like this shouldn't happen because I grep for
-"^fixes:", but looks like something is broken. I'll go fix that...
 
 
---
-Thanks,
-Sasha
+On 9/21/2019 6:30 AM, Nishad Kamdar wrote:
+> This patch corrects the SPDX License Identifier style
+> in header file for Broadcom BCM53xx managed switch driver.
+> For C header files Documentation/process/license-rules.rst
+> mandates C-like comments (opposed to C source files where
+> C++ style should be used)
+> 
+> Changes made by using a script provided by Joe Perches here:
+> https://lkml.org/lkml/2019/2/7/46.
+> 
+> Suggested-by: Joe Perches <joe@perches.com>
+> Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
