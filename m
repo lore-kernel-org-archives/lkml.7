@@ -2,81 +2,103 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCAEC49ED7
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 05:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7FFC49ED7
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 05:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0FE421835
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 05:07:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569042445;
-	bh=Oi+G6QQSYRyQJ3cHgjKZHOmPHM0UIQ5lIi+trckwR/s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UmHQZ17xjFNBUBBLSHV7Us9HKjqXBE1jJc6lmvww9z3lXbx3Qhr9edGl7sRfa6wd0
-	 F8i9ABAswk/OI7nQ1ihkQo3Z9O39e4LH22WVXtHBkUGY7AT6i9oewqLjuOoNGpQ7il
-	 VIJ1C5p9ifiq6Dr5NO0g0kio42K6mvmBDKqfE0fU=
+	by mail.kernel.org (Postfix) with ESMTP id A87A12184C
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 05:58:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EjF6wjlc";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cWlzKUfG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730828AbfIUFHY (ORCPT
+        id S1730898AbfIUF6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Sep 2019 01:07:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54676 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725888AbfIUFHY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Sep 2019 01:07:24 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Sat, 21 Sep 2019 01:58:00 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:37472 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730832AbfIUF6A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Sep 2019 01:58:00 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 7D43C613A3; Sat, 21 Sep 2019 05:57:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1569045479;
+        bh=w9bocaMK07bA6RbZkz/42TCpHEi65s53ZBFGd9Ga/MA=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=EjF6wjlcCi5IIBGvVfhLMIYtKsLD8QyACEI7CArnRMTjIOhsvFCuvHawTZP7Widzd
+         O7v366ssM4T6MdmeyU1cbq+I9jUMcEf3jIN5XUBjk9oImaJwn5DQrcSYSG3iBTYKg2
+         TlG2y0/Tf9Ck0H66Aytla3mCFOXQKNoc1p1Q+BrY=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FF242054F;
-        Sat, 21 Sep 2019 05:07:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569042443;
-        bh=Oi+G6QQSYRyQJ3cHgjKZHOmPHM0UIQ5lIi+trckwR/s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=F6xUGkjUTlcGPHcAUGx4HQyZgWcwodqbL3YhXcx1Bdgdr6nlGfdMBDw1/lOQrZNnP
-         jTAN/LrMp9EDDfea8lwy1eXfv7ErlpKWr1o7+gUsHy2T5jYrhkCBmqprBV/Si/V0yB
-         EFNLTEcYL3+1aTZ6kubmnAMWvBcDs+UBVQ5f0DQY=
-Date:   Sat, 21 Sep 2019 07:07:21 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Jason Wessel <jason.wessel@windriver.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Will Deacon <will@kernel.org>,
-        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>
-Subject: Re: [PATCH] MAINTAINERS: kgdb: Add myself as a reviewer for kgdb/kdb
-Message-ID: <20190921050721.GA992668@kroah.com>
-References: <20190920104404.1.I237e68e8825e2d6ac26f8e847f521fe2fcc3705a@changeid>
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D14D961196;
+        Sat, 21 Sep 2019 05:57:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1569045478;
+        bh=w9bocaMK07bA6RbZkz/42TCpHEi65s53ZBFGd9Ga/MA=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=cWlzKUfGdItoaGOtH8EuZ3udfmzSkuqyGffjCXDX3PzstiKOhYxi1t8/GurajvtOw
+         EU/z42Z2+cN0Iw+AsIlYmkRPZ9v+SH+KWFAuWnNMAtM656AxohYAeYl/XcEHSTz3u/
+         gD+CUyjntL24iavhpUzavKyA2iL1QZjfo4ZYO/KM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D14D961196
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190920104404.1.I237e68e8825e2d6ac26f8e847f521fe2fcc3705a@changeid>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH -net] zd1211rw: zd_usb: Use "%zu" to format size_t
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190919091532.24951-1-geert@linux-m68k.org>
+References: <20190919091532.24951-1-geert@linux-m68k.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Daniel Drake <dsd@gentoo.org>,
+        Ulrich Kunitz <kune@deine-taler.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190921055759.7D43C613A3@smtp.codeaurora.org>
+Date:   Sat, 21 Sep 2019 05:57:59 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 10:44:47AM -0700, Douglas Anderson wrote:
-> I'm interested in kdb / kgdb and have sent various fixes over the
-> years.  I'd like to get CCed on patches so I can be aware of them and
-> also help review.
+Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+
+> On 32-bit:
 > 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+>     drivers/net/wireless/zydas/zd1211rw/zd_usb.c: In function ‘check_read_regs’:
+>     drivers/net/wireless/zydas/zd1211rw/zd_def.h:18:25: warning: format ‘%ld’ expects argument of type ‘long int’, but argument 6 has type ‘size_t’ {aka ‘unsigned int’} [-Wformat=]
+>       dev_printk(level, dev, "%s() " fmt, __func__, ##args)
+> 			     ^~~~~~~
+>     drivers/net/wireless/zydas/zd1211rw/zd_def.h:22:4: note: in expansion of macro ‘dev_printk_f’
+> 	dev_printk_f(KERN_DEBUG, dev, fmt, ## args)
+> 	^~~~~~~~~~~~
+>     drivers/net/wireless/zydas/zd1211rw/zd_usb.c:1635:3: note: in expansion of macro ‘dev_dbg_f’
+>        dev_dbg_f(zd_usb_dev(usb),
+>        ^~~~~~~~~
+>     drivers/net/wireless/zydas/zd1211rw/zd_usb.c:1636:51: note: format string is defined here
+> 	 "error: actual length %d less than expected %ld\n",
+> 						     ~~^
+> 						     %d
+> 
+> Fixes: 84b0b66352470e64 ("zd1211rw: zd_usb: Use struct_size() helper")
+> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-Thanks for this.
+Patch applied to wireless-drivers.git, thanks.
 
-There was discussion at Plumbers about just dropping kgdb as some people
-didn't think it was being actively maintained or that it even still
-worked.  Thanks for refuting that :)
+6355592e6b55 zd1211rw: zd_usb: Use "%zu" to format size_t
 
-greg k-h
+-- 
+https://patchwork.kernel.org/patch/11151959/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
