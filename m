@@ -8,114 +8,113 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE467C49ED7
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 13:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DAAC49ED7
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 13:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85D7C208C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 13:05:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 156122080F
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 13:15:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="CJjuHNf0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aEQ/uRYv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437932AbfIUNFa (ORCPT
+        id S2394128AbfIUNPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Sep 2019 09:05:30 -0400
-Received: from mail-m973.mail.163.com ([123.126.97.3]:51948 "EHLO
-        mail-m973.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405958AbfIUNFa (ORCPT
+        Sat, 21 Sep 2019 09:15:15 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55755 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389497AbfIUNPP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Sep 2019 09:05:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=w0t/w
-        YDFIo3k1zk7BQGWh+CvPwbHogEVFBzHqTKZ5w0=; b=CJjuHNf0ggvPC7hWoYCCK
-        VZMFFp7n8GrCeR+XFutCXHDMxS0LSp1z465CtQF5k/IE99lJXQur2+u3mNcFZ6s4
-        +1SDpMXabasf+0oHrYaQnTTTrNoxF5wLwrw+Wk2r5B5chbOWxQOYf3XaoftfYJVN
-        0BXGFWlM6LRPA7lTtTWNJk=
-Received: from localhost.localdomain (unknown [101.206.228.127])
-        by smtp3 (Coremail) with SMTP id G9xpCgD3ps_3H4Zd6P8gAw--.89S2;
-        Sat, 21 Sep 2019 21:04:57 +0800 (CST)
-From:   Yu Chen <33988979@163.com>
-To:     rmk+kernel@armlinux.org.uk, linux@armlinux.org.uk
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        yu.chen3@zte.com.cn
-Subject: [PATCH] arm: export memblock_reserve()d regions via /proc/iomem
-Date:   Sat, 21 Sep 2019 21:02:49 +0800
-Message-Id: <1569070969-5168-1-git-send-email-33988979@163.com>
-X-Mailer: git-send-email 2.7.4
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: G9xpCgD3ps_3H4Zd6P8gAw--.89S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7ur4rAr1UKFW7AFW7Kry3Jwb_yoW8tw1kpw
-        47Zw1Ygr48Gr1xXa93Ar1UuFs5Z3WIvrW3WrW3trWfZa1Dtr17Jr10qryj9Fyav3yxKr1a
-        vr1vyFWI93yUJaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j-4SrUUUUU=
-X-Originating-IP: [101.206.228.127]
-X-CM-SenderInfo: attzmmqzxzqiywtou0bp/1tbiKxk3slQHRUSb3AAAsi
+        Sat, 21 Sep 2019 09:15:15 -0400
+Received: by mail-wm1-f68.google.com with SMTP id a6so5187805wma.5;
+        Sat, 21 Sep 2019 06:15:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=CUIiObmZUoLOjlcmGuE4Z8qsrk1peXb9nnaXkFScf1o=;
+        b=aEQ/uRYvCsbX944pwrZC5Zi5+pI6s/P143IvpXdlQXMblp/gr0TEwvb4/jIY8KcTPb
+         h+OCadPSshMmMPvaxG+aDklS4bI+8UV1JUuif5+/cH6ND7u1pCPlRypNjKUUSwZlcfVY
+         fmOmGc8jEjdrmt2rxdLStr2mvlAdNsGDr/SrNSboflvindXVGUKuxoMwkhXbfAgD7kXD
+         ds2xaFd7dONWCaZm0mLYpGcfY18vZi6cbUNr7JCDZAZ7y8bfR+bZaJZLCL3MaN0W9/8b
+         tqoH4C7+jAVoy4HWXeff+DTBMlGe4VHPROBfJn0KzOOWdKjEpBrMct/Vjc06IqQSo+hy
+         Tt8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=CUIiObmZUoLOjlcmGuE4Z8qsrk1peXb9nnaXkFScf1o=;
+        b=hUOwraT4lbTUFS6aNrfbjM1SZ4BL2cbGbao6vbsmzUqbxzlBeocHgDlqP+Ela9dKDk
+         i3VF3y/glfzCwX6+0sju/htBGlpexK78vSwedTby2TNX2co5fflIbMtkrgHqE9UqcEs2
+         CPvRzQW4/4q21E/sQXVS5QpySgS8nBsp6z3sy3Dlji+Lz9avOLs4cKdWlLKd70Rkd2Kr
+         jeCNxDq9hl1dUOGOZGePSUcARIFlX78MvYzFShcxT5VvP/uMZdXqnNT6ZYZ+HWoaMHVT
+         s363UtIoNjwZG+juRixGLl/Srn/I/ug6AISprvtePdT1qIV6/vX/eIKzdbemD1NxL+1R
+         Nbyg==
+X-Gm-Message-State: APjAAAWldX3f3coGyQJTAnEu7hjgcEM7AbBwGPg/7DjfWGw6twpXUVAu
+        rzD+EzdiN1lqEBt/CLa8tpacgHWi0eLtBA==
+X-Google-Smtp-Source: APXvYqwjrERzxUIeZTPWyTYAXdg1ZTPDKGaLOeQoXI2vdua+67gV4Ml3mGFKjPE7ijQS8GUVUSa4Hw==
+X-Received: by 2002:a05:600c:295d:: with SMTP id n29mr6713359wmd.36.1569071712994;
+        Sat, 21 Sep 2019 06:15:12 -0700 (PDT)
+Received: from apple.sigmaris.info ([84.93.172.212])
+        by smtp.gmail.com with ESMTPSA id g11sm5676349wmh.45.2019.09.21.06.15.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sat, 21 Sep 2019 06:15:12 -0700 (PDT)
+From:   Hugh Cole-Baker <sigmaris@gmail.com>
+To:     devicetree@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Akash Gajjar <Akash_Gajjar@mentor.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Hugh Cole-Baker <sigmaris@gmail.com>
+Subject: [PATCH] arm64: dts: rockchip: fix Rockpro64 RK808 interrupt line
+Date:   Sat, 21 Sep 2019 14:14:57 +0100
+Message-Id: <20190921131457.36258-1-sigmaris@gmail.com>
+X-Mailer: git-send-email 2.17.2 (Apple Git-113)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yu Chen <yu.chen3@zte.com.cn>
+Fix the pinctrl and interrupt specifier for RK808 to use GPIO3_B2. On the
+Rockpro64 schematic [1] page 16, it shows GPIO3_B2 used for the interrupt
+line PMIC_INT_L from the RK808, and there's a note which translates as:
+"PMU termination GPIO1_C5 changed to this".
 
-memblock reserved regions are not reported via /proc/iomem on ARM, kexec's
-user-space doesn't know about memblock_reserve()d regions and thus
-possible for kexec to overwrite with the new kernel or initrd.
+Tested by setting an RTC wakealarm and checking /proc/interrupts counters.
+Without this patch, neither the rockchip_gpio_irq counter for the RK808,
+nor the RTC alarm counter increment when the alarm time is reached.
+With this patch, both interrupt counters increment by 1 as expected.
 
-[    0.000000] Booting Linux on physical CPU 0xf00
-[    0.000000] Linux version 4.9.115-rt93-dirty (yuchen@localhost.localdomain) (gcc version 6.2.0 (ZTE Embsys-TSP V3.07.2
-0) ) #62 SMP PREEMPT Fri Sep 20 10:39:29 CST 2019
-[    0.000000] CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=30c5387d
-[    0.000000] CPU: div instructions available: patching division code
-[    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
-[    0.000000] OF: fdt:Machine model: LS1021A TWR Board
-[    0.000000] INITRD: 0x80f7f000+0x03695e40 overlaps in-use memory region - disabling initrd
+[1] http://files.pine64.org/doc/rockpro64/rockpro64_v21-SCH.pdf
 
-Signed-off-by: Yu Chen <yu.chen3@zte.com.cn>
-Reviewed-by: Junhua Huang <huang.junhua@zte.com.cn>
+Fixes: e4f3fb4 ("arm64: dts: rockchip: add initial dts support for Rockpro64")
+Signed-off-by: Hugh Cole-Baker <sigmaris@gmail.com>
 ---
- arch/arm/kernel/setup.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
-index d0a464e..606d1ac 100644
---- a/arch/arm/kernel/setup.c
-+++ b/arch/arm/kernel/setup.c
-@@ -911,6 +911,34 @@ static void __init request_standard_resources(const struct machine_desc *mdesc)
- 		request_resource(&ioport_resource, &lp2);
- }
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+index 0401d4ec1f45..c27d8a6ae1c5 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+@@ -247,8 +247,8 @@
+ 	rk808: pmic@1b {
+ 		compatible = "rockchip,rk808";
+ 		reg = <0x1b>;
+-		interrupt-parent = <&gpio1>;
+-		interrupts = <21 IRQ_TYPE_LEVEL_LOW>;
++		interrupt-parent = <&gpio3>;
++		interrupts = <10 IRQ_TYPE_LEVEL_LOW>;
+ 		#clock-cells = <1>;
+ 		clock-output-names = "xin32k", "rk808-clkout2";
+ 		pinctrl-names = "default";
+@@ -574,7 +574,7 @@
  
-+static int __init reserve_memblock_reserved_regions(void)
-+{
-+	u64 i, j;
-+
-+	for (i = 0; i < num_standard_resources; ++i) {
-+		struct resource *mem = &standard_resources[i];
-+		phys_addr_t r_start, r_end, mem_size = resource_size(mem);
-+
-+		if (!memblock_is_region_reserved(mem->start, mem_size))
-+			continue;
-+
-+		for_each_reserved_mem_region(j, &r_start, &r_end) {
-+			resource_size_t start, end;
-+
-+			start = max(PFN_PHYS(PFN_DOWN(r_start)), mem->start);
-+			end = min(PFN_PHYS(PFN_UP(r_end)) - 1, mem->end);
-+
-+			if (start > mem->end || end < mem->start)
-+				continue;
-+
-+			reserve_region_with_split(mem, start, end, "reserved");
-+		}
-+	}
-+
-+	return 0;
-+}
-+arch_initcall(reserve_memblock_reserved_regions);
-+
- #if defined(CONFIG_VGA_CONSOLE) || defined(CONFIG_DUMMY_CONSOLE) || \
-     defined(CONFIG_EFI)
- struct screen_info screen_info = {
+ 	pmic {
+ 		pmic_int_l: pmic-int-l {
+-			rockchip,pins = <1 RK_PC5 RK_FUNC_GPIO &pcfg_pull_up>;
++			rockchip,pins = <3 RK_PB2 RK_FUNC_GPIO &pcfg_pull_up>;
+ 		};
+ 
+ 		vsel1_gpio: vsel1-gpio {
 -- 
-2.7.4
+2.17.2 (Apple Git-113)
 
