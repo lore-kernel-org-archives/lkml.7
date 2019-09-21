@@ -2,103 +2,106 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7FFC49ED7
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 05:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A58FC49ED7
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 06:00:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A87A12184C
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 05:58:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CDD22184C
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 06:00:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EjF6wjlc";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cWlzKUfG"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="e9F2FhzK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730898AbfIUF6A (ORCPT
+        id S1730941AbfIUGAq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Sep 2019 01:58:00 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:37472 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730832AbfIUF6A (ORCPT
+        Sat, 21 Sep 2019 02:00:46 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:37850 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726451AbfIUGAp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Sep 2019 01:58:00 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 7D43C613A3; Sat, 21 Sep 2019 05:57:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569045479;
-        bh=w9bocaMK07bA6RbZkz/42TCpHEi65s53ZBFGd9Ga/MA=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=EjF6wjlcCi5IIBGvVfhLMIYtKsLD8QyACEI7CArnRMTjIOhsvFCuvHawTZP7Widzd
-         O7v366ssM4T6MdmeyU1cbq+I9jUMcEf3jIN5XUBjk9oImaJwn5DQrcSYSG3iBTYKg2
-         TlG2y0/Tf9Ck0H66Aytla3mCFOXQKNoc1p1Q+BrY=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D14D961196;
-        Sat, 21 Sep 2019 05:57:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569045478;
-        bh=w9bocaMK07bA6RbZkz/42TCpHEi65s53ZBFGd9Ga/MA=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=cWlzKUfGdItoaGOtH8EuZ3udfmzSkuqyGffjCXDX3PzstiKOhYxi1t8/GurajvtOw
-         EU/z42Z2+cN0Iw+AsIlYmkRPZ9v+SH+KWFAuWnNMAtM656AxohYAeYl/XcEHSTz3u/
-         gD+CUyjntL24iavhpUzavKyA2iL1QZjfo4ZYO/KM=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D14D961196
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Sat, 21 Sep 2019 02:00:45 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8L603gp125363;
+        Sat, 21 Sep 2019 06:00:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
+ bh=SMoq7TZ0NiQ8MxwG7eDaPmFmoJSB00R5hX+Hdmm23DU=;
+ b=e9F2FhzKB9HwNYraob4tnlRcxJM+Iso37WuafIE7+YVkeoJeiQHf6Q7roNQxj183DXr0
+ x4Jp6awk1sfeBi+bFs+UHVkmllwANrVTLEcnaYEO660MuCbh45eI4+HZUrJ01SNkSSpA
+ YquicE8QOhZAeW0Ex6LRkFIPb+ZcUbG2KM2pxsFWy5DkWTjab+Czs0tfinvebnnjk/J4
+ Um5i1AbYjvTQeCmodOTY5Nvx6ifKBxha4wtoEWzCuhxr92wDkXTAYJ2hdXfjG4X9EqM+
+ u6UGO7ax8yxnx3yRXFfrXEzfjka09psln+ZEvKg6TC1nL8WBNjJ5OE1hPaFJV474AU6t eQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2v5b9t87wc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 21 Sep 2019 06:00:40 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8L5wc19114889;
+        Sat, 21 Sep 2019 06:00:40 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2v59x8vpp5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 21 Sep 2019 06:00:39 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8L60csn018213;
+        Sat, 21 Sep 2019 06:00:38 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 21 Sep 2019 06:00:37 +0000
+Date:   Sat, 21 Sep 2019 09:00:31 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Song Liu <song@kernel.org>, NeilBrown <neilb@suse.de>
+Cc:     linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH] md/raid0: Fix an error message in raid0_make_request()
+Message-ID: <20190921060031.GB18726@mwanda>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH -net] zd1211rw: zd_usb: Use "%zu" to format size_t
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20190919091532.24951-1-geert@linux-m68k.org>
-References: <20190919091532.24951-1-geert@linux-m68k.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Daniel Drake <dsd@gentoo.org>,
-        Ulrich Kunitz <kune@deine-taler.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190921055759.7D43C613A3@smtp.codeaurora.org>
-Date:   Sat, 21 Sep 2019 05:57:59 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9386 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909210065
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9386 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909210066
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+The first argument to WARN() is supposed to be a condition.  The
+original code will just print the mdname() instead of the full warning
+message.
 
-> On 32-bit:
-> 
->     drivers/net/wireless/zydas/zd1211rw/zd_usb.c: In function ‘check_read_regs’:
->     drivers/net/wireless/zydas/zd1211rw/zd_def.h:18:25: warning: format ‘%ld’ expects argument of type ‘long int’, but argument 6 has type ‘size_t’ {aka ‘unsigned int’} [-Wformat=]
->       dev_printk(level, dev, "%s() " fmt, __func__, ##args)
-> 			     ^~~~~~~
->     drivers/net/wireless/zydas/zd1211rw/zd_def.h:22:4: note: in expansion of macro ‘dev_printk_f’
-> 	dev_printk_f(KERN_DEBUG, dev, fmt, ## args)
-> 	^~~~~~~~~~~~
->     drivers/net/wireless/zydas/zd1211rw/zd_usb.c:1635:3: note: in expansion of macro ‘dev_dbg_f’
->        dev_dbg_f(zd_usb_dev(usb),
->        ^~~~~~~~~
->     drivers/net/wireless/zydas/zd1211rw/zd_usb.c:1636:51: note: format string is defined here
-> 	 "error: actual length %d less than expected %ld\n",
-> 						     ~~^
-> 						     %d
-> 
-> Fixes: 84b0b66352470e64 ("zd1211rw: zd_usb: Use struct_size() helper")
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Fixes: c84a1372df92 ("md/raid0: avoid RAID0 data corruption due to layout confusion.")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ drivers/md/raid0.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Patch applied to wireless-drivers.git, thanks.
-
-6355592e6b55 zd1211rw: zd_usb: Use "%zu" to format size_t
-
+diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
+index f61693e59684..3956ea502f97 100644
+--- a/drivers/md/raid0.c
++++ b/drivers/md/raid0.c
+@@ -615,7 +615,7 @@ static bool raid0_make_request(struct mddev *mddev, struct bio *bio)
+ 		tmp_dev = map_sector(mddev, zone, sector, &sector);
+ 		break;
+ 	default:
+-		WARN("md/raid0:%s: Invalid layout\n", mdname(mddev));
++		WARN(1, "md/raid0:%s: Invalid layout\n", mdname(mddev));
+ 		bio_io_error(bio);
+ 		return true;
+ 	}
 -- 
-https://patchwork.kernel.org/patch/11151959/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.20.1
 
