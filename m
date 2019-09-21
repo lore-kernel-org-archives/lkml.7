@@ -2,81 +2,113 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F217FC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 00:44:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B37A8C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 00:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9388217F9
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 00:44:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569026692;
-	bh=Te/m6/7GJlv2oDlu3hgb6EgQIQM9jUE/siwDpYLg5hE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LHhLG4a5cNOUxaPwGLFFfxRbl4nDs+eyIGEyA5BA30RCFh8Btjr/8iJpchv1nC6sA
-	 xJR4TbqWWYpBtcIV+2TyFRLasv9e9dx7JGOVvUtEyOmi7sMllUHwVJ5dD7KwwYcBH3
-	 6kz9w+qX+6jUYqY7GBauxEX66/NfVbfUwN6KKo/o=
+	by mail.kernel.org (Postfix) with ESMTP id 7E325217F9
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 00:57:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="j2lBIcHR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394081AbfIUAou (ORCPT
+        id S2394099AbfIUA5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 20:44:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42282 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389377AbfIUAou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 20:44:50 -0400
-Received: from localhost (lfbn-ncy-1-150-155.w83-194.abo.wanadoo.fr [83.194.232.155])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9A6D217F5;
-        Sat, 21 Sep 2019 00:44:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569026689;
-        bh=Te/m6/7GJlv2oDlu3hgb6EgQIQM9jUE/siwDpYLg5hE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=juD0b7fgFedKIs6LWD3J6/PIqf9qQw6cGJFk/AWUZ6Z+kb+d/XS1i4gc+Ppsq9KfZ
-         ZPxQ9T8KuRO3BoQodu/Xjf10T4PHl/mbbaugxIsj4mFfbcv31DDj/Pd58ZYLOJqEpU
-         mpAQCchnkOdbXxwMZiiuasNM9h0et2gK84jvA9fk=
-Date:   Sat, 21 Sep 2019 02:44:46 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [patch 3/6] posix-cpu-timers: Restrict timer_create() permissions
-Message-ID: <20190921004445.GB6449@lenoir>
-References: <20190905120339.561100423@linutronix.de>
- <20190905120539.888798188@linutronix.de>
+        Fri, 20 Sep 2019 20:57:48 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49654 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389377AbfIUA5s (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 20:57:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ibKah86qfJa+k7wrtX/Du4Ejsuh4uymIntvn8KtXEOo=; b=j2lBIcHRUzKotrDDjaCr3Es/Y
+        3oxst3DhVtyBg8hw3D3m5QvuBlTGE7SyrkgEEduKdThMdszPFe0vYYjZD2eodFN/2jBMNGP0Fgg+l
+        fhfuDAkfwOuWLUEyLR2hWcdAxdBQ2e0A9Mgt3np6mNwbXFC4A6B6j/1m9zA7u683hPW0r6Lr85a/h
+        KS5lJuA5uAwffcmVLsJzjNRF2sMKR81uYT85YH12xPS6MXXDon8VuqysLuxHos02SmhxV+kIjIs4t
+        DbTW5+MwbJXxNBdQVb6lrvt/ae35QOzCMfMoztxEzTfp9kM+xwE5GZkp+rGMHv5hmomPiYpBntUAW
+        j5GvEe7Xw==;
+Received: from [2601:1c0:6280:3f0::9a1f]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iBTic-0000Ce-8n; Sat, 21 Sep 2019 00:57:46 +0000
+Subject: Re: pci: endpoint test BUG
+To:     Hillf Danton <hdanton@sina.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190916020630.1584-1-hdanton@sina.com>
+ <20190916112246.GA6693@e121166-lin.cambridge.arm.com>
+ <815ad936-8b98-0931-89f7-b97922a7c77d@ti.com>
+ <20190920152026.GC10172@e121166-lin.cambridge.arm.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <c1e7862c-d61d-6ecd-f70c-73870f343940@infradead.org>
+Date:   Fri, 20 Sep 2019 17:57:45 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190905120539.888798188@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190920152026.GC10172@e121166-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 02:03:42PM +0200, Thomas Gleixner wrote:
-> Right now there is no restriction at all to attach a Posix CPU timer to any
-> process in the system. Per thread CPU timers are limited to be created by
-> threads in the same thread group.
+On 9/20/19 5:38 PM, Hillf Danton wrote:
+>>Kishon, Hillf, can you turn it into a patch and send it asap please ?
 > 
-> Timers can be used to observe activity of tasks and also impose overhead on
-> the process to which they are attached because that process needs to do the
-> fine grained CPU time accounting.
+>  
 > 
-> Limit the ability to attach timers to a process by checking whether the
-> task which is creating the timer has permissions to attach ptrace on the
-> target process.
+> What was sent a couple of days before,
 > 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+>  
+> 
+> To: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> Cc: linux-pci <linux-pci@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+> 
+> Subject: [PATCH] PCI: endpoint: Fix uaf on unregistering driver
+> 
+> ...
+> 
+>  
+> 
+> Fixes: ef1433f717a2 ("PCI: endpoint: Create configfs entry for each pci_epf_device_id table entry")
+> 
+> Reported-and-tested-by: Randy Dunlap <rdunlap@infradead.org>
+> 
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> 
+> Cc: Dan Carpenter <dan.carpenter@oracle.com>
+> 
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> 
+> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> 
+> Cc: Andrey Konovalov <andreyknvl@google.com>
+> 
+> Signed-off-by: Hillf Danton <hdanton@sina.com>
+> 
+> ---
+> 
+>  
+> 
+> and it is certain that <lorenzo.pieralisi@arm.com> is on the Cc list.
+> 
+>  
+> 
+> It will be resent if no one saw the message.
 
-Makes sense. I hope no serious user currently rely on that lack of
-restriction. Let's just apply and wait for complains if any.
+I didn't see it and I can't find it on lore.kernel.org/linux-pci/.
 
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+-- 
+~Randy
