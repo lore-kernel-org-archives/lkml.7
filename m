@@ -5,164 +5,106 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F176C49ED7
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 13:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D126C49ED7
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 13:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 218E420C01
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 13:40:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCDF12070C
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 13:45:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="pHAVdobH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="myJaWfPF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394228AbfIUNkp (ORCPT
+        id S2394243AbfIUNpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Sep 2019 09:40:45 -0400
-Received: from mout.web.de ([212.227.17.11]:45101 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394165AbfIUNko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Sep 2019 09:40:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1569073239;
-        bh=n8hG64qo0b1FTqu8LVo1QtX1Ic9Wgl5C3AZxhcpCf6U=;
-        h=X-UI-Sender-Class:To:From:Subject:Cc:Date;
-        b=pHAVdobHXNhAIMUi1UzmKCFv864gtGFazqK65vx7lAvMiGx6UFulMSDEs8aGUUI74
-         C+bAivYYIBz+sLKHYGwjqwjBKRdISqNEqLBlEg70387RPDO3NDR5qakAy4hm0a1H7h
-         O0qADRwzVS8sUm07Oo+sCOu2vfhQAAOb+CFMqALo=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.244.64.44]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LilJB-1hdyyA0D1R-00cuuF; Sat, 21
- Sep 2019 15:40:39 +0200
-To:     linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Max Filippov <jcmvbkbc@gmail.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] spi: xtensa-xtfpga: Use devm_platform_ioremap_resource() in
- xtfpga_spi_probe()
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Message-ID: <178bb78e-714f-645f-d819-5732870c4272@web.de>
-Date:   Sat, 21 Sep 2019 15:40:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Sat, 21 Sep 2019 09:45:35 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38771 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394165AbfIUNpe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Sep 2019 09:45:34 -0400
+Received: by mail-pg1-f195.google.com with SMTP id x10so5426311pgi.5;
+        Sat, 21 Sep 2019 06:45:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=Jampd5QY3jFhxyqLwQVEL6NDlN7nbV5HR8jQMKngBSY=;
+        b=myJaWfPFcB/VrUw59ASvwqkPpI6QMhrdY3JKtWbX0VBlOwaLQ8c1obt+Aw8gMje9/n
+         GPGM8Vs4fExyRZCo+KKCaxHEthyiXyKyeypkqDX6rPhlmYe97tD4xkZfoLuLGQ8Phx3W
+         rSaAyAX1EtOlTciYWfec2XPHZqd7PDi+7eptyDMXzJBLK+Y427R1srGj+S6iZu/KJtGL
+         rVHzoR2khMOs8AnxozLi5HegTw0DeSZcY34hAr/n2IFqnWHzOZCQUu+n4yhxeL2nTrC1
+         /hfDrBWVFtQ2rUJoy5pEzD2n5BX5j1uV3WYMW3kEWZ/ihl12/BRZXQ7Z4dQTW6QSp8Si
+         6dbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=Jampd5QY3jFhxyqLwQVEL6NDlN7nbV5HR8jQMKngBSY=;
+        b=gCppLxzQfJ5bZhtXZsixb81eRrpNeqCL2AZTjB+j0oYdng0/gWXrhyCM7YEjt1Trsu
+         G5G8NKYZuJ2gykNHRO8sCYE/F5+HzRPmC2hc3ykhRmGg2aWTi+zIVcM7cCyRhRY7zNMl
+         xeJZTB26jBsqvpevyBLr4eWoeql5T0QctVPYlCZCMcihqNjsEVzOdrld+meTAgEyJB9J
+         sDRKccj7QW8f0FxqxH+9w+eEzBODvZEXMsjddGY7Fwo3gBuqv6z9r7RCKa3nR29+Gohq
+         WQlSpJyqUfwKn54bfGQFrSpe0G2q+UG+90OiVbLqriik6OM6Jxe8Q4B0qFxO6YUMHzhA
+         vT8Q==
+X-Gm-Message-State: APjAAAWNo/ctuSn6iVs31dMYtZ6sKPMTqVhPbyKhc+AAzgBlh7ASmqYY
+        fJpdAGbezh3r6g0UuY4IOR4=
+X-Google-Smtp-Source: APXvYqylbOMNWzPXkQCyx1fdsnM9gzLcWS/ReJPYB/LwereZThQ7ooEHZnY1Cm+JwTFl0NYK0AiCaQ==
+X-Received: by 2002:a62:870a:: with SMTP id i10mr23043761pfe.259.1569073533602;
+        Sat, 21 Sep 2019 06:45:33 -0700 (PDT)
+Received: from nishad ([106.51.235.3])
+        by smtp.gmail.com with ESMTPSA id o64sm5543682pjb.24.2019.09.21.06.45.29
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 21 Sep 2019 06:45:33 -0700 (PDT)
+Date:   Sat, 21 Sep 2019 19:15:25 +0530
+From:   Nishad Kamdar <nishadkamdar@gmail.com>
+To:     Hauke Mehrtens <hauke@hauke-m.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] net: dsa: Use the correct style for SPDX License Identifier
+Message-ID: <20190921134522.GA3575@nishad>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:q9fUZ1U9yec7EIOvmhZTHcJuoy3N8lqdynht22stsooOhVB9O6Z
- Nq4VGKa/GQfkbb6h76H5iYZKrdp5nMBmTE4X48M10qESevv2bqdeGaHNPwtjHEOZj7RanTS
- 9PLo+KqTwqNxBrZrtfn2fTL4c1prFqLowI8hTzZxh+8XyrPjpCYr/Eit1oYMxTlZXa2kVGF
- W4XUFGNIpi1bgYjcpDO7w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:SRNDSBcUT2I=:L1dx8VSnXNHHpYSgcznlDH
- 5KK5ALjsRvcCIrI6sB9xvKhBgt13gjO0PZp5xP9J30zuoKWzYCNvW+1dlC8ZxgHETDdbVAkyb
- LaLwxNonH39R0BIcBitpK+wObJ0dlYi+497XZqky01OCt7QQhnVl+jvQj4IHnZfsy/a5sJuP3
- KPtb0MZMf4cuC7mAe/SCQrmgWZjNK7lhtcUBHU8iQ47XLtNOFTquJehenz4wjX7cXf39hvKuK
- TifM5+SDNAGzztNzqdqoFejFi8MRtOOUnmrS4XbtQQjBJfUKWMk/E1mKR0mS02Z3H+Z3RonyQ
- 2yapTmrMaxATRPpwzfp+p+uCFf//DnIHAQFUEv/d5R3wHHeSfMUeF5ZRqX1yAKdnLmEptZt1Q
- 5JKo8Sx8fdotjMt49GQi5MxtqU9RJ5b981MUxdxQB9YsxQnv2z/NTOvzCR4zesPURdGS+Y1QS
- hJDIZJgJOp7/NHbceGKkh6K1xYlfd8xLycr7irQme08FpjQiHaK97g+GYgh8aFOUUVgWqGW1j
- 2vMZ6jTAkXwgX9zgQg1ukpXQ+dx8FkDKbQYqyDq4mdRsiTsjRJGEEPIiKMjurgvWvghPLNWYS
- fSUSF5028k4fC4B7MhOHl9LCf9qVab+26bd5q+b5jVk8wqPcpK/ZHdMRnkxRKutrfpR4Kt1Gy
- /R4HfAce5d37l+pXmuzACLzSFpB0kgRsCiMUTzX9+EFjlt6GB0jKal8zr4fHShrdZ9dJL8Ikc
- 0Jha1k6N/njV9SZkDKby/KwBWQWMU4gD37IhJtntzirmWJTd4d9+1C3FrQCYCIS+dO8yxOg00
- ZC+9bKqdcFK3iuFhVIf1WEd8DglkHc1Ms33EHAh81ipwjv1mfvjQV9Hw5fyo3rdho9YSbRUAd
- 2QU0X3z0c1LLLZDJipIIbhbA4pgfkApeTd0X4ocWsneXBPTfNcKLIApaahx743YL4YNgohzpd
- EYaB1pKkz3m2ZXK+SiTHLJ1QkQA19ES7UgjsXpeJi2FB5xKABln7sE9BzsaAUZmTM3t92YeLz
- Kk3flQ+f3N0OPem7FnzqxL8eR20KcFqW9J2c+l+d09woZQLo2Ata6dOsXsjMUH2fddHw3wFhb
- fHG1sXiG57msQeYhgqFyUfnLdZBwK65E3JmQfx41horiAqlAgvsbh7uyaEeZvic3U/icYd/dq
- PrRMjtMwMlL/imV0gsXJoHXN40A9Xywfp9tZN1kAnoI9x0xCDL3/0ckUe3wYifok9nRZJw39R
- G0hKFEJEGgQFPlozDxoa4ej2SQ+K/eBRkLAOWAr/E3bFRjXn81WSKnW+W4Io=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Sat, 21 Sep 2019 15:35:08 +0200
+This patch corrects the SPDX License Identifier style
+in header file for Distributed Switch Architecture drivers.
+For C header files Documentation/process/license-rules.rst
+mandates C-like comments (opposed to C source files where
+C++ style should be used)
 
-Simplify this function implementation by using a known wrapper function.
+Changes made by using a script provided by Joe Perches here:
+https://lkml.org/lkml/2019/2/7/46.
 
-This issue was detected by using the Coccinelle software.
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+---
+ drivers/net/dsa/lantiq_pce.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/spi/spi-xtensa-xtfpga.c | 10 +---------
- 1 file changed, 1 insertion(+), 9 deletions(-)
-
-diff --git a/drivers/spi/spi-xtensa-xtfpga.c b/drivers/spi/spi-xtensa-xtfp=
-ga.c
-index 86516eb1e143..fc2b5eb7d614 100644
-=2D-- a/drivers/spi/spi-xtensa-xtfpga.c
-+++ b/drivers/spi/spi-xtensa-xtfpga.c
-@@ -80,7 +80,6 @@ static void xtfpga_spi_chipselect(struct spi_device *spi=
-, int is_on)
- static int xtfpga_spi_probe(struct platform_device *pdev)
- {
- 	struct xtfpga_spi *xspi;
--	struct resource *mem;
- 	int ret;
- 	struct spi_master *master;
-
-@@ -97,14 +96,7 @@ static int xtfpga_spi_probe(struct platform_device *pde=
-v)
- 	xspi->bitbang.master =3D master;
- 	xspi->bitbang.chipselect =3D xtfpga_spi_chipselect;
- 	xspi->bitbang.txrx_word[SPI_MODE_0] =3D xtfpga_spi_txrx_word;
--
--	mem =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!mem) {
--		dev_err(&pdev->dev, "No memory resource\n");
--		ret =3D -ENODEV;
--		goto err;
--	}
--	xspi->regs =3D devm_ioremap_resource(&pdev->dev, mem);
-+	xspi->regs =3D devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(xspi->regs)) {
- 		ret =3D PTR_ERR(xspi->regs);
- 		goto err;
-=2D-
-2.23.0
+diff --git a/drivers/net/dsa/lantiq_pce.h b/drivers/net/dsa/lantiq_pce.h
+index 180663138e75..e2be31f3672a 100644
+--- a/drivers/net/dsa/lantiq_pce.h
++++ b/drivers/net/dsa/lantiq_pce.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * PCE microcode extracted from UGW 7.1.1 switch api
+  *
+-- 
+2.17.1
 
