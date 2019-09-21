@@ -2,85 +2,60 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD72FC4360D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 17:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB097C4360D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 17:07:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B020A20820
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 17:04:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ux3fQc91"
+	by mail.kernel.org (Postfix) with ESMTP id 893A020820
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 17:07:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407852AbfIUREC (ORCPT
+        id S2407854AbfIURHC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Sep 2019 13:04:02 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:32977 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406192AbfIUREC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Sep 2019 13:04:02 -0400
-Received: by mail-wr1-f67.google.com with SMTP id b9so9802847wrs.0;
-        Sat, 21 Sep 2019 10:04:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=55amjIu2TF3CCD9dfZQ7gR+oWC1rkKKs0l26DxHMq2I=;
-        b=ux3fQc910IEW3PhTVTjkp+MKFpIHLHjhin61mmPdzaqD9j6z9Bh1v+6QQIXhqsn8V8
-         vVfT0zEhnayS+nlKVow11xrXEVvHHaOoIYgkv8AtvQxY3lmoQfBeBb5JiJdi8VyPToTs
-         NLuqLWTcx2RzwPnzxqQLXxG0IMIm5org8JvP4E7mNyF9PqH1roOYKkWrcqcdQJqnc7qC
-         ufHm0YBE23Z2ijPma0C33C6dO3u9XbnhjtvuoOGEjl0outphR/3WsHkHiy1NDb3QG/Mz
-         40zZlD5ILulJelu3ipm5lWBQq8oPrUvBdrfdzIlPjhMp9yFomWqEAHOb+UVp1PfkgfiX
-         hMfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=55amjIu2TF3CCD9dfZQ7gR+oWC1rkKKs0l26DxHMq2I=;
-        b=ogHo4SrgaMV6B8OgeUYqKDmcAoKfuA2BWSkF73Eujm6B0HroP2ptgY4fbdWKHyAC8D
-         XLUl+3X+rBcMpG8G9Xamp/o9e5an6iND3cSO5QYj4af7bXs+u/dV3fePdX8tYP2UiOrW
-         8AsmZceI+tXcNyScx7bBZD0wOkDqp5I2rlNit6NIVSl5GkOJbk9Rml5cdHfRPWdnZ/5S
-         AzpeEj366dGF/30kRTRPGoKGZkuxCHGV6T+ODhfv0S2gxHETDRAqJ4iXyCJ+pVC0GQSk
-         jjEN99Aje4bVfvxqOTLpdfNMVUaxBGxyXT3QI5z7asxH/zRLH/IqjwSt5BFHHP3l/L1U
-         1fTw==
-X-Gm-Message-State: APjAAAULq3IfaH1nLc9+1lCs6kC3J+11Klr880JVjUbtiAiLPnu3Q6vz
-        aauGHdpwwpa150haGwvRG7LOmKF0
-X-Google-Smtp-Source: APXvYqxFL84KLpSZMc5/N059+0hlyRMOj1E0IZ+6Y7dGH/TmX232EhUn0HdzjZ8RYcOqvPmaKLSWRw==
-X-Received: by 2002:adf:de08:: with SMTP id b8mr14928562wrm.200.1569085439582;
-        Sat, 21 Sep 2019 10:03:59 -0700 (PDT)
-Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id t14sm5136519wrs.6.2019.09.21.10.03.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 21 Sep 2019 10:03:59 -0700 (PDT)
-Date:   Sat, 21 Sep 2019 19:03:57 +0200
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     mjpeg-users@lists.sourceforge.net, linux-media@vger.kernel.org,
-        mchehab@kernel.org, laurent.pinchart@ideasonboard.com
-Cc:     linux-kernel@vger.kernel.org
-Subject: bringing back media/zoran driver
-Message-ID: <20190921170357.GA26626@Red>
+        Sat, 21 Sep 2019 13:07:02 -0400
+Received: from gentwo.org ([3.19.106.255]:54060 "EHLO gentwo.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731103AbfIURHC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Sep 2019 13:07:02 -0400
+X-Greylist: delayed 371 seconds by postgrey-1.27 at vger.kernel.org; Sat, 21 Sep 2019 13:07:02 EDT
+Received: by gentwo.org (Postfix, from userid 1002)
+        id 546873EEB4; Sat, 21 Sep 2019 17:00:51 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+        by gentwo.org (Postfix) with ESMTP id 5325B3E86F;
+        Sat, 21 Sep 2019 17:00:51 +0000 (UTC)
+Date:   Sat, 21 Sep 2019 17:00:51 +0000 (UTC)
+From:   cl@linux.com
+X-X-Sender: cl@ip-172-31-20-140.us-east-2.compute.internal
+To:     David Rientjes <rientjes@google.com>
+cc:     Miles Chen <miles.chen@mediatek.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com
+Subject: Re: [PATCH] mm: slub: print_hex_dump() with DUMP_PREFIX_OFFSET
+In-Reply-To: <alpine.DEB.2.21.1909210207240.259613@chino.kir.corp.google.com>
+Message-ID: <alpine.DEB.2.21.1909211659470.27404@ip-172-31-20-140.us-east-2.compute.internal>
+References: <20190920104849.32504-1-miles.chen@mediatek.com> <alpine.DEB.2.21.1909210207240.259613@chino.kir.corp.google.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hello
+On Sat, 21 Sep 2019, David Rientjes wrote:
 
-I am the owner of a zoran based DC10+ card.
-I am in the need of using it since yesterday and I found that its driver was removed.
+> I agree it looks nicer for poisoning, I'm not sure that every caller of
+> print_section() is the same, however.  For example trace() seems better
+> off as DUMP_PREFIX_ADDRESS since it already specifies the address of the
+> object being allocated or freed and offset here wouldn't really be useful,
+> no?
 
-Reverting the removing patch made to a temporary working situation.
+The address is printed earlier before the object dump. Maybe that is
+sufficient and we could even reduce the number of digits further to have
+the display more compact? In this case two hex digits would do the trick.
 
-If I understand correctly, it was removed due to lack of vb2 convertion.
-If I am able to do this vb2 conversion, does bring it back in mainline will be posssible ?
-In that case I am ready to assume to be the maintainer if needed.
-
-Regards
