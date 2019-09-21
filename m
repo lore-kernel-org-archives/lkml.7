@@ -5,164 +5,222 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61FF0C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 10:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB48C49ED7
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 10:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D85A217F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 10:48:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ABD6217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 10:55:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="GrIiA3Dj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MJzSDEWw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407519AbfIUKsm (ORCPT
+        id S2437749AbfIUKzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Sep 2019 06:48:42 -0400
-Received: from mout.web.de ([217.72.192.78]:45379 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407271AbfIUKsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Sep 2019 06:48:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1569062907;
-        bh=2KlsMu3Yr2Jz4vFlxK+RT/uUmCETBSIvHkQo4xghl4k=;
-        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
-        b=GrIiA3DjUajilEfhe5yVl4eIU+wnpy1sYdprmgb44hZhhAhJZyZhnIzl731LMsHN3
-         JrTwGgCQZ4jCA728IZnelIW5nPFQQxxhhrUK7PkY7y32xu0+6j3KcJFBHqrnIPDYjI
-         /S3QTiLZnoeMcieXXLSIE8l4fpREGvtrUjOCA9wo=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.244.64.44]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MHp4r-1iCRDa12jd-003a1n; Sat, 21
- Sep 2019 12:48:27 +0200
-To:     linux-rtc@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Miodrag Dinic <miodrag.dinic@mips.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Aleksandar Markovic <aleksandar.markovic@imgtec.com>,
-        Goran Ferenc <goran.ferenc@imgtec.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] rtc: goldfish: Use devm_platform_ioremap_resource() in
- goldfish_rtc_probe()
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <5ecfcf43-d6b2-1a38-dee8-b8806f30bc83@web.de>
-Date:   Sat, 21 Sep 2019 12:48:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Sat, 21 Sep 2019 06:55:20 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50445 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407449AbfIUKzT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Sep 2019 06:55:19 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 5so5009973wmg.0;
+        Sat, 21 Sep 2019 03:55:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Uws/t6BglFHhG735K622EFKuAGq3v8qgTlRHs9SU1QI=;
+        b=MJzSDEWwnnckSo0hw9ps1r8ygJzpXECoX4pUawSKjpvxh5P88Ku+sToeltSrwkhj/t
+         5/uC3hPeXuDNGeQAkYrQSQzVFO2oI2y9MacXTx+JtIsAEFkSeekiAzW/swpUyC1vQTxp
+         J+KzKKQMTQlGloJT+pBuPes0JpNmmLWHDgi4OJDcyJCKTJgnHRHcXkG/UeHXaNJyMwS6
+         pYs8fPSMsaMKJEfcR2sxBZ7syQaNgfUoXQpBVAYcNFPBHamvgt/TTSyZf6beWdpeGpFm
+         lgnG1IzMZHmZ3wZRTs1buYpinPt6pvIWChKJcIf4vA4fDJbieBQWwFQvmvqrrhW1RTlK
+         hJyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Uws/t6BglFHhG735K622EFKuAGq3v8qgTlRHs9SU1QI=;
+        b=ObI2D9fCJkFTpcJRniaJ4OvI1okRDbMoc2J1ljFLzrdCTrI52PAhhz6bwuMM+nisFF
+         XoP7IjrIUBWEqUNV3opKU8VI1516ItLzD2L0GFMI+0JLVRd/q5LdimkQDa/vGUuRtjXH
+         rHAN6bbuwc/8QAoGTXKHKlRV11hNxsa1sHTtwogyCRLy0zmDHgHfDMaLn+vm/NhT6f9a
+         DhGJPEAtzY5a24cZCR48GsRSjVjFZk+l8+bxak1mxOGUMl53HQt1k1ZRFDmAixX90LXy
+         lvGNO9On3Q3++qSoGe+LXsiZJplFF3NMVvUeZuEAF+EBEU/YW+pP3yYDxZEovy8hwi+b
+         cVcw==
+X-Gm-Message-State: APjAAAV/t/+gs7QfIlAIORcwqa00zJ3f+ST2xSZJZoA2ah08o5QWoSoG
+        wt1l4bOTTESKzH028ges0LbkmZjA
+X-Google-Smtp-Source: APXvYqze4hNfrxXmuUPxM03Y6LXxq5Rizj+smRAdfxE8BhsI2uGBjOVcI4hbcvSUD66GjGXmpf8CTw==
+X-Received: by 2002:a1c:e90b:: with SMTP id q11mr6752283wmc.19.1569063314437;
+        Sat, 21 Sep 2019 03:55:14 -0700 (PDT)
+Received: from [192.168.1.19] (blb134.neoplus.adsl.tpnet.pl. [83.28.195.134])
+        by smtp.gmail.com with ESMTPSA id r18sm6146883wme.48.2019.09.21.03.55.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 21 Sep 2019 03:55:13 -0700 (PDT)
+Subject: Re: [PATCH v8 1/9] leds: multicolor: Add sysfs interface definition
+To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
+Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190920174139.30079-1-dmurphy@ti.com>
+ <20190920174139.30079-2-dmurphy@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ mQINBFWjfaEBEADd66EQbd6yd8YjG0kbEDT2QIkx8C7BqMXR8AdmA1OMApbfSvEZFT1D/ECR
+ eWFBS8XtApKQx1xAs1j5z70k3zebk2eeNs5ahxi6vM4Qh89vBM46biSKeeX5fLcv7asmGb/a
+ FnHPAfQaKFyG/Bj9V+//ef67hpjJWR3s74C6LZCFLcbZM0z/wTH+baA5Jwcnqr4h/ygosvhP
+ X3gkRzJLSFYekmEv+WHieeKXLrJdsUPUvPJTZtvi3ELUxHNOZwX2oRJStWpmL2QGMwPokRNQ
+ 29GvnueQdQrIl2ylhul6TSrClMrKZqOajDFng7TLgvNfyVZE8WQwmrkTrdzBLfu3kScjE14Q
+ Volq8OtQpTsw5570D4plVKh2ahlhrwXdneSot0STk9Dh1grEB/Jfw8dknvqkdjALUrrM45eF
+ FM4FSMxIlNV8WxueHDss9vXRbCUxzGw37Ck9JWYo0EpcpcvwPf33yntYCbnt+RQRjv7vy3w5
+ osVwRR4hpbL/fWt1AnZ+RvbP4kYSptOCPQ+Pp1tCw16BOaPjtlqSTcrlD2fo2IbaB5D21SUa
+ IsdZ/XkD+V2S9jCrN1yyK2iKgxtDoUkWiqlfRgH2Ep1tZtb4NLF/S0oCr7rNLO7WbqLZQh1q
+ ShfZR16h7YW//1/NFwnyCVaG1CP/L/io719dPWgEd/sVSKT2TwARAQABtC1KYWNlayBBbmFz
+ emV3c2tpIDxqYWNlay5hbmFzemV3c2tpQGdtYWlsLmNvbT6JAlgEEwEIAEICGwMHCwkIBwMC
+ AQYVCAIJCgsDFgIBAh4BAheABQkJZgNMFiEEvx38ClaPBfeVdXCQvWpQHLeLfCYFAl05/9sC
+ GQEACgkQvWpQHLeLfCarMQ/9FN/WqJdN2tf6xkP0RFyS4ft0sT04zkOCFfOMxs8mZ+KZoMU+
+ X3a+fEppDL7xgRFpHyGaEel7lSi1eqtzsqZ5JiHbDS1Ht1G8TtATb8q8id68qeSeW2mfzaLQ
+ 98NPELGfUXFoUqUQkG5z2p92UrGF4Muj1vOIW93pwvE4uDpNsl+jriwHomLtjIUoZtIRjGfZ
+ RCyUQI0vi5LYzXCebuzAjGD7Jh2YAp7fDGrv3qTq8sX+DUJ4H/+I8PiL+jXKkEeppqIhlBJJ
+ l4WcgggMu3c2uljYDuqRYghte33BXyCPAocfO2/sN+yJRUTVuRFlOxUk4srz/W8SQDwOAwtK
+ V7TzdyF1/jOGBxWwS13EjMb4u3XwPMzcPlEQNdIqz76NFmJ99xYEvgkAmFmRioxuBTRv8Fs1
+ c1jQ00WWJ5vezqY6lccdDroPalXWeFzfPjIhKbV3LAYTlqv0It75GW9+0TBhPqdTM15DrCVX
+ B7Ues7UnD5FBtWwewTnwr+cu8te449VDMzN2I+a9YKJ1s6uZmzh5HnuKn6tAfGyQh8MujSOM
+ lZrNHrRsIsLXOjeGVa84Qk/watEcOoyQ7d+YaVosU0OCZl0GldvbGp1z2u8cd2N/HJ7dAgFh
+ Q7dtGXmdXpt2WKQvTvQXhIrCWVQErNYbDZDD2V0TZtlPBaZP4fkUDkvH+Sy5Ag0EVaN9oQEQ
+ AMPNymBNoCWc13U6qOztXrIKBVsLGZXq/yOaR2n7gFbFACD0TU7XuH2UcnwvNR+uQFwSrRqa
+ EczX2V6iIy2CITXKg5Yvg12yn09gTmafuoIyKoU16XvC3aZQQ2Bn3LO2sRP0j/NuMD9GlO37
+ pHCVRpI2DPxFE39TMm1PLbHnDG8+lZql+dpNwWw8dDaRgyXx2Le542CcTBT52VCeeWDtqd2M
+ wOr4LioYlfGfAqmwcwucBdTEBUxklQaOR3VbJQx6ntI2oDOBlNGvjnVDzZe+iREd5l40l+Oj
+ TaiWvBGXkv6OI+wx5TFPp+BM6ATU+6UzFRTUWbj+LqVA/JMqYHQp04Y4H5GtjbHCa8abRvBw
+ IKEvpwTyWZlfXPtp8gRlNmxYn6gQlTyEZAWodXwE7CE+KxNnq7bPHeLvrSn8bLNK682PoTGr
+ 0Y00bguYLfyvEwuDYek1/h9YSXtHaCR3CEj4LU1B561G1j7FVaeYbX9bKBAoy/GxAW8J5O1n
+ mmw7FnkSHuwO/QDe0COoO0QZ620Cf9IBWYHW4m2M2yh5981lUaiMcNM2kPgsJFYloFo2XGn6
+ lWU9BrWjEoNDhHZtF+yaPEuwjZo6x/3E2Tu3E5Jj0VpVcE9U1Zq/fquDY79l2RJn5ENogOs5
+ +Pi0GjVpEYQVWfm0PTCxNPOzOzGR4QB3BNFvABEBAAGJAiUEGAEIAA8FAlWjfaECGwwFCQlm
+ AYAACgkQvWpQHLeLfCZqGxAAlWBWVvjU6xj70GwengiqYZwmW1i8gfS4TNibQT/KRq0zkBnE
+ wgKwXRbVoW38pYVuGa5x/JDQMJDrLAJ0wrCOS3XxbSHCWOl/k2ZD9OaxUeXq6N+OmGTzfrYv
+ PUvWS1Hy04q9AD1dIaMNruZQmvnRfkOk2UDncDIg0166/NTHiYI09H5mpWGpHn/2aT6dmpVw
+ uoM9/rHlF5s5qAAo95tZ0QW2BtIceG9/rbYlL57waSMPF49awvwLQX5RhWoF8mPS5LsBrXXK
+ hmizIsn40tLbi2RtWjzDWgZYitqmmqijeCnDvISN4qJ/nCLO4DjiSGs59w5HR+l0nwePDhOC
+ A4RYZqS1e2Clx1VSkDXFpL3egabcIsqK7CZ6a21r8lXVpo4RnMlQsmXZTnRx4SajFvX7PrRg
+ /02C811fLfh2r5O5if8sKQ6BKKlHpuuioqfj/w9z3B0aQ71e4n1zNJBO1kcdznikPLAbr7jG
+ gkBUXT1yJiwpTfRQr5y2Uo12IJsKxohnNFVYtK8X/R6S0deKPjrZWvAkllgIPcHjMi2Va8yw
+ KTj/JgcpUO5KN906Pf7ywZISe7Kbcc/qnE0YjPPSqFOvoeZvHe6EZCMW9+xZsaipvlqpByQV
+ UHnVg09K9YFvjUBsBPdC8ef6YwgfR9o6AnPmxl0oMUIXkCCC5c99fzJY/k+JAq0EGAEIACAW
+ IQS/HfwKVo8F95V1cJC9alAct4t8JgUCWwqKhgIbAgCBCRC9alAct4t8JnYgBBkWCAAdFiEE
+ FMMcSshOZf56bfAEYhBsURv0pdsFAlsKioYACgkQYhBsURv0pdvELgD/U+y3/hsz0bIjMQJY
+ 0LLxM/rFY9Vz1L43+lQHXjL3MPsA/1lNm5sailsY7aFBVJxAzTa8ZAGWBdVaGo6KCvimDB8G
+ 7joP/jx+oGOmdRogs7mG//H+w9DTnBfPpnfkeiiokGYo/+huWO5V0Ac9tTqZeFc//t/YuYJn
+ wWvS0Rx+KL0fT3eh9BQo47uF4yDiZIiWLNh4Agpup1MUSVsz4MjD0lW6ghtnLcGlIgoVHW0v
+ tPW1m9jATYyJSOG/MC1iDrcYcp9uVYn5tKfkEeQNspuG6iSfS0q3tajPKnT1nJxMTxVOD2RW
+ EIGfaV9Scrou92VD/eC+/8INRsiWS93j3hOKIAV5XRNINFqtzkagPYAP8r6wksjSjh01fSTB
+ p5zxjfsIwWDDzDrqgzwv83CvrLXRV3OlG1DNUDYA52qJr47paH5QMWmHW5TNuoBX8qb6RW/H
+ M3DzPgT+l+r1pPjMPfvL1t7civZUoPuNzoyFpQRj6TvWi2bGGMQKryeYksXG2zi2+avMFnLe
+ lOxGdUZ7jn1SJ6Abba5WL3VrXCP+TUE6bZLgfw8kYa8QSXP3ysyeMI0topHFntBZ8a0KXBNs
+ qqFCBWmTHXfwsfW0VgBmRtPO7eXVBybjJ1VXKR2RZxwSq/GoNXh/yrRXQxbcpZ+QP3/Tttsb
+ FdKciZ4u3ts+5UwYra0BRuvb51RiZR2wRNnUeBnXWagJVTlG7RHBO/2jJOE6wrcdCMjs0Iiw
+ PNWmiVoZA930TvHA5UeGENxdGqo2MvMdRJ54YaIR
+Message-ID: <ea294ad4-d340-3677-eab0-6138968cfe0e@gmail.com>
+Date:   Sat, 21 Sep 2019 12:55:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20190920174139.30079-2-dmurphy@ti.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:N3NnE9ynw+TLhydFjG05ejJtWADOH98Ta018iGgzSfvz22KdUvQ
- 4zSis1r5kI05XgdZC2hMkLO/j14fGQ8145XvWJCz8uBr6yT5dtdITzkK6jSWfuo95bkrlaK
- 60JJD3Ldde6GEYrwNxlzIYaqDMGUqNOwRzAiX5cRmnArBbgnSibs5UM21j+6z8tn80mOoOT
- HRw/9CQgm4BrQWvO4iYHA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:FWNLfKQZnz8=:VyeVERNzXzFkFT0eIX8teI
- dh5T2rfIfvprA+WFE6zAJL8EnmlfYB2dnsLfe4S9q59EHxTu+esN8Ebh7YCrji4E/f3ZD2ajG
- WLy2G75+QX+MskCh9urUyP2LfCa+pd2v0b1QtkDdNnK3kd7eRtfk0UsTndHxwM0myrAhGi52o
- UxLzLjznKC8DYzSYHfplUn3tBjq+brycnzfO/H2R0PujNDwFhCYmRfxOVg/463cukVk5w9FS3
- 8aNisxxhR3W3IRMCZamo/SnOGQzArk6jOdqwyrMcFf0qd2+I3qAjlXomH50shApAacABF6XLk
- 4VIxft9d0YDQx8W/0ZDmz3qlhVZnsX7C1imjuIiTdQtcw//zKiuCnGfyo9CHH0V9gxjYNeRkf
- yQ1fwJu9UJSR6Hv+zxAUCBPWv0N/WFhem0ZK1F2glWhr4T2aLFUayJgvBN/amC2WkF4hN1E4W
- aZwJCmxlIRYeOLeC3VSdWpKCikPFIKbM+OJu/BoNu5PsuC3U3r999Lm+fEfJE7F6DxvddOsLl
- Xk62153sI3H+JkRjQW5S7SrRse26CLuyFSFEKk1BiDs8FiLtlJT9IeE27+chCn/NKmNxnU8tf
- 2/l4ykgHrRNOX1LinacPlxDTJoci5o32gy5q7QfpCr6gyZqp1zU5MWhqOvSWGL/vAz90zu3jy
- uopzVhzAcmRR+PwZN7U6/QDNytiOhPzExqD21SdCtU4BfYBptx4jHazS3OTcSFvkx46HhbZVH
- 0uGzGpMaLZ4HrSinxtL6J9kOJOAF7yKujS8xBE6G64hKXOIXq/N0V3/uQkBpFfEjTYAJRjEof
- Aa/9TUfjDZ63hZEGCuNb6KhTS+FPFLa9gQIxkU3OsIH0WGENZMV2tZNpkUATnlXj3oqwyGKYn
- x6h1U9gIiczIj9mL63CgtSgKD6w6/ujfuP4tIFzeuVSCyJtrsNCdmXMhJZr0k2yYAy28vOX2I
- A+9FHpjNoftxaQ9AEE1G3vEOeFIh9YvvLq1B1OohDTHb2f2tkzFGax9rAmlO6QnglbHLXqvqT
- C0FEC62xAPy7ISSP6owhvD+6AakJVilZ9xAHpz7uB2mzeNWas+FO33mTEFCL5TrUo8rtxie1r
- 6LJRlmTGbqVkrWZiz9CCiZwv6stLJi6NKlOOULIyPf/3U1uGzEQ0TUoUFZfj5knDwy76kLaOY
- Nkogm+NwHWL/dl5QrCi3IL1jUV2g03JwxGjwGE4KPuYrQD3oOAlUswiNlPpHbV1kQopkYkM7Z
- MqCWGC5VX9tN0r1lV64XZFN02tEokKe9kob8CngvRJcGww1KZER3RSrcdEcE=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Sat, 21 Sep 2019 12:20:11 +0200
+Dan,
 
-Simplify this function implementation by using a known wrapper function.
+On 9/20/19 7:41 PM, Dan Murphy wrote:
+> Add a documentation of LED Multicolor LED class specific
+> sysfs attributes.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  .../ABI/testing/sysfs-class-led-multicolor    | 43 +++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-class-led-multicolor b/Documentation/ABI/testing/sysfs-class-led-multicolor
+> new file mode 100644
+> index 000000000000..39fc73becfec
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-class-led-multicolor
+> @@ -0,0 +1,43 @@
+> +What:		/sys/class/leds/<led>/brightness
+> +Date:		Sept 2019
+> +KernelVersion:	5.5
+> +Contact:	Dan Murphy <dmurphy@ti.com>
+> +Description:	read/write
+> +		Writing to this file will update all LEDs within the group to a
+> +		calculated percentage of what each color LED intensity is set
+> +		to. The percentage is calculated via the equation below:
+> +
+> +		led_brightness = requested_value * led_color_intensity/led_color_max_intensity
 
-This issue was detected by using the Coccinelle software.
+How about:
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/rtc/rtc-goldfish.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+led_brightness = brightness * <color>_intensity/<color>_max_intensity
 
-diff --git a/drivers/rtc/rtc-goldfish.c b/drivers/rtc/rtc-goldfish.c
-index 1a3420ee6a4d..cb6b0ad7ec3f 100644
-=2D-- a/drivers/rtc/rtc-goldfish.c
-+++ b/drivers/rtc/rtc-goldfish.c
-@@ -165,7 +165,6 @@ static const struct rtc_class_ops goldfish_rtc_ops =3D=
- {
- static int goldfish_rtc_probe(struct platform_device *pdev)
- {
- 	struct goldfish_rtc *rtcdrv;
--	struct resource *r;
- 	int err;
+> +
+> +		For additional details please refer to
+> +		Documentation/leds/leds-class-multicolor.rst.
+> +
+> +		The value of the color is from 0 to
+> +		/sys/class/leds/<led>/max_brightness.
+> +
+> +What:		/sys/class/leds/<led>/colors/<led_color>_intensity
 
- 	rtcdrv =3D devm_kzalloc(&pdev->dev, sizeof(*rtcdrv), GFP_KERNEL);
-@@ -173,12 +172,7 @@ static int goldfish_rtc_probe(struct platform_device =
-*pdev)
- 		return -ENOMEM;
+s/led_color/color/
 
- 	platform_set_drvdata(pdev, rtcdrv);
--
--	r =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!r)
--		return -ENODEV;
--
--	rtcdrv->base =3D devm_ioremap_resource(&pdev->dev, r);
-+	rtcdrv->base =3D devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(rtcdrv->base))
- 		return -ENODEV;
+> +Date:		Sept 2019
+> +KernelVersion:	5.5
+> +Contact:	Dan Murphy <dmurphy@ti.com>
+> +Description:	read/write
+> +		The led_color directory is dynamically created based on the
+> +		colors defined by the registrar of the class.
+> +		The value for the led_color is defined in the
+> +		include/dt-bindings/leds/common.h. There is one directory per
+> +		color presented.  The intensity file is created under each
+> +		led_color directory and controls the individual LED color
+> +		setting.
 
-=2D-
-2.23.0
+We no longer have led_color directories so this description needs
+to be adjusted.
 
+And I'd not mention where the colors are defined. This is documentation
+for the user, who does not need to know about implementation details.
+
+> +
+> +		The value of the color is from 0 to
+> +		/sys/class/leds/<led>/colors/<led_color>_max_intensity.
+> +
+> +What:		/sys/class/leds/<led>/colors/<led_color>_max_intensity
+> +Date:		Sept 2019
+> +KernelVersion:	5.5
+> +Contact:	Dan Murphy <dmurphy@ti.com>
+> +Description:	read only
+> +		Maximum intensity level for the LED color, default is
+> +		255 (LED_FULL).
+
+Mentioning the default value here is pointless IMO. Userspace cannot
+change it anyway.
+
+> +
+> +		If the LED does not support different intensity levels, this
+> +		should be 1.
+> 
+
+This is less relevant for MC class, and also it is rather obvious.
+I'd skip this sentence.
+
+-- 
+Best regards,
+Jacek Anaszewski
