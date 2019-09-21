@@ -2,90 +2,155 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0FAC4360D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 14:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F4DC4740C
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 14:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F3992073F
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 14:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB5E62184C
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 14:58:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="yBP2+Gcp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n35lnfvx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394250AbfIUOvw (ORCPT
+        id S2394259AbfIUO6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Sep 2019 10:51:52 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:51044 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390272AbfIUOvw (ORCPT
+        Sat, 21 Sep 2019 10:58:13 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41450 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390556AbfIUO6N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Sep 2019 10:51:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=5uEWlv+YZPMagviqGoaCOmaRhzAaU16AabXiiu/WTp8=; b=yBP2+Gcp6981oNkmo+8auN+bN
-        PFtE88xelUYFBkMpwNFnM5GQcBN+rG0tOygO8bNBi8ACy5C5uozoMseWibUQUyUI3tHJyQIJ3IPyF
-        5DKHK9whSHlzY/eUsG32qrffEiZ6g2OPr6pKwPo2tx1biRltQWhrySB1pzpRzkrhOIrkmc153GnON
-        8x7iSRwF32WkIfI0cbkdH/QTCmYx2fIJtZdSOQ4n9UbCstr1Ou5a+u1ElCKXe0286koGCOxhhkiwl
-        QEPzmbHTzEEq+L7vr7T8aU+Qid+Laq9uA8egaQ7I/YK6krxq5eL/vTcg/yygTuO1KyjKsWvH/2q36
-        Vucz1INFg==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:34782)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iBgjg-0001wh-Jz; Sat, 21 Sep 2019 15:51:44 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iBgja-0006qg-Uf; Sat, 21 Sep 2019 15:51:38 +0100
-Date:   Sat, 21 Sep 2019 15:51:38 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Yu Chen <33988979@163.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        yu.chen3@zte.com.cn
-Subject: Re: [PATCH] arm: export memblock_reserve()d regions via /proc/iomem
-Message-ID: <20190921145138.GN25745@shell.armlinux.org.uk>
-References: <1569070969-5168-1-git-send-email-33988979@163.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1569070969-5168-1-git-send-email-33988979@163.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sat, 21 Sep 2019 10:58:13 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q7so6431378pfh.8;
+        Sat, 21 Sep 2019 07:58:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to;
+        bh=rMu789LD1T8uU9KacNFi9FCRB7xCR3S38zLi0aGwMPk=;
+        b=n35lnfvxCsApW2kK/lMjVc0YEBMnaP2lRsh3iZP3PqPJ2tV3sg11DolTl/kk9xyJde
+         /ha5P/doLG5uKhkPQNY5bQt/JkPdzdAEqzqk3AkVfHXePMgjGLWFzx80KbrzYnZ78z7s
+         oKFHDgAnjMCs0loyHFt1jjasbEjPENOE1nLRi9OkT3p6vUCxrLXzpNR/BOoFSGI+z9Y7
+         4OaVoqk3tj5sFv/99bVXIE/7qHl3U+ulaMA5oy3DSGu7oxcstDO/eXPyv6MwtrqODYPG
+         U1QjzItNO/Fqx18aXt3H2HDvTec+8NdgrenBqnlI0CejEldxq1YFrwkqsWEk6G5YoH8C
+         mdXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to;
+        bh=rMu789LD1T8uU9KacNFi9FCRB7xCR3S38zLi0aGwMPk=;
+        b=izd/ZohTSYNTXe4yKXd8tFo99/ktHj0JfJNs615xVOLjgopJ1mbI3j5ZHOsh+9sn+C
+         A9if4zpUTfdzIXP8iFIuopdgT3HvNwd22aAqNMpVotwOik1YI07Lb3AtkTri5qZni/74
+         dAHr5m/M9Fw9sOQkeuIxXCA+y2NYs+THJJG5gTudXUGV8rBXjIpyklcCbX1+rYNWPpG5
+         8Or1AVCylBjOR5F5iiVfjlt58bvedDywTXA03d8BDt1TmI+qDVKMVp6ItP6jFsf235qt
+         wGYmWYC0O5Xf7ekk6nGiJFOIKbapInz3VeHofzX+B/7baPxVEP8z5Epvz0x6KUoohN3S
+         60rA==
+X-Gm-Message-State: APjAAAViIAeo2KwNqVZVaAYGR45ldqvfDZ1N/6LHtBq9TmFVDh/K4itA
+        CzJOA+wBcWIbXBlkkU3/GOI=
+X-Google-Smtp-Source: APXvYqzq1rGaqCGeV44c1S06GyiRUKXeYke/1wz8RtK+UwfNjVz8EIJCJF0JnYuM5kiFHQQ1VUVAJA==
+X-Received: by 2002:a63:2224:: with SMTP id i36mr12763638pgi.135.1569077891943;
+        Sat, 21 Sep 2019 07:58:11 -0700 (PDT)
+Received: from satendra-MM061.ib-wrb304n.setup.in ([103.82.150.67])
+        by smtp.gmail.com with ESMTPSA id r185sm5933695pfr.68.2019.09.21.07.58.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Sep 2019 07:58:10 -0700 (PDT)
+From:   Satendra Singh Thakur <sst2005@gmail.com>
+To:     dan.j.williams@intel.com, vkoul@kernel.org, jun.nie@linaro.org,
+        shawnguo@kernel.org, agross@kernel.org, sean.wang@mediatek.com,
+        matthias.bgg@gmail.com, maxime.ripard@bootlin.com, wens@csie.org,
+        lars@metafoo.de, afaerber@suse.de, manivannan.sadhasivam@linaro.org
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, satendrasingh.thakur@hcl.com,
+        Satendra Singh Thakur <sst2005@gmail.com>
+Subject: Re: Re: [PATCH 0/9] added helper macros to remove duplicate code from probe functions of the platform drivers
+Date:   Sat, 21 Sep 2019 20:27:26 +0530
+Message-Id: <2356e29bca5bdfa901534bb32a2782185eb0415f.1568909689.git.sst2005@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190918102715.GO4392@vkoul-mobl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 21, 2019 at 09:02:49PM +0800, Yu Chen wrote:
-> From: Yu Chen <yu.chen3@zte.com.cn>
+On Wed, Sep 18, 2019 at 3:57 PM, Vinod Koul wrote:
+> On 15-09-19, 12:30, Satendra Singh Thakur wrote:
+> > 1. For most of the platform drivers's probe include following steps
+> > 
+> > -memory allocation for driver's private structure
+> > -getting io resources
+> > -io remapping resources
+> > -getting irq number
+> > -registering irq
+> > -setting driver's private data
+> > -getting clock
+> > -preparing and enabling clock
+>
+> And we have perfect set of APIs for these tasks!
+Hi Vinod,
+Thanks for the comments.
+You are right, we already have set of APIs for these tasks.
+The proposed macros combine the very same APIs to remove 
+duplicate/redundant code.
+A new driver author can use these macros to easily write probe 
+function without having to worry about signatures of internal APIs.
+In the past, people have combined some of them e.g.
+a) clk_prepare_enable combines clk_prepare and clk_enable
+b) devm_platform_ioremap_resource combines
+platform_get_resource (for type IORESOURCE_MEM)
+and devm_ioremap_resource
+c) module_platform_driver macro encompasses module_init/exit 
+and driver_register/unregister functions.
+The basic idea is to simplyfy coding.
+> > 2. We have defined a set of macros to combine some or all of
+> > the above mentioned steps. This will remove redundant/duplicate
+> > code in drivers' probe functions of platform drivers.
 > 
-> memblock reserved regions are not reported via /proc/iomem on ARM, kexec's
-> user-space doesn't know about memblock_reserve()d regions and thus
-> possible for kexec to overwrite with the new kernel or initrd.
+> Why, how does it help and you do realize it also introduces bugs
+This will make probe function shorter by removing repeated code.
+This will also reduce bugs caused due to improper handling
+of failure cases because of these reasons:
+a) If the developer calls each API individualy one might miss
+proper handling of the failure for some API; Whereas the macro
+properly handles failure of each API.
+b) Macros are devres compatible which leaves less room for
+memory leaks.
 
-Many reserved regions come from the kernel allocating memory during
-boot.  We don't want to prevent kexec re-using those regions.
+Yes, the macros which enable clock and request irqs
+might cause bugs if they are not used carefully.
+For instance, enabling the clock or requesting the irq
+earlier than actually required. So, the macros with _clk
+and _irq, _all suffix should be used carefully.
 
-> [    0.000000] Booting Linux on physical CPU 0xf00
-> [    0.000000] Linux version 4.9.115-rt93-dirty (yuchen@localhost.localdomain) (gcc version 6.2.0 (ZTE Embsys-TSP V3.07.2
-> 0) ) #62 SMP PREEMPT Fri Sep 20 10:39:29 CST 2019
-> [    0.000000] CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=30c5387d
-> [    0.000000] CPU: div instructions available: patching division code
-> [    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
-> [    0.000000] OF: fdt:Machine model: LS1021A TWR Board
-> [    0.000000] INITRD: 0x80f7f000+0x03695e40 overlaps in-use memory region - disabling initrd
+Please let me know if I miss any specific type of bug
+here.
+> 
+> > devm_platform_probe_helper(pdev, priv, clk_name);
+> > devm_platform_probe_helper_clk(pdev, priv, clk_name);
+> > devm_platform_probe_helper_irq(pdev, priv, clk_name,
+> > irq_hndlr, irq_flags, irq_name, irq_devid);
+> > devm_platform_probe_helper_all(pdev, priv, clk_name,
+> > irq_hndlr, irq_flags, irq_name, irq_devid);
+> > devm_platform_probe_helper_all_data(pdev, priv, clk_name,
+> > irq_hndlr, irq_flags, irq_name, irq_devid);
+> > 
+> > 3. Code is made devres compatible (wherever required)
+> > The functions: clk_get, request_irq, kzalloc, platform_get_resource
+> > are replaced with their devm_* counterparts.
+> 
+> We already have devres APIs for people to use!
+Yes, we have devres APIs and many drivers do use them.
+But still there are many which don't use them.
+The proposed macros provides just another way to use devres APIs.
+> > 
+> > 4. Few bugs are also fixed.
+> 
+> Which ones..?
+The bug is that the failure of request_irq 
+is not handled properly in mtk-hsdma.c. This is fixed in patch [5/9].
+https://lkml.org/lkml/2019/9/15/35
 
-Is the overlapping region one that is marked as reserved in DT?
-Where is the reserved region that overlaps the initrd coming from?
+Please let me know if I am missing something here.
+Thanks
+-Satendra 
 
-Thanks.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
