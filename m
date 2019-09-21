@@ -6,65 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E08F8C4360D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 17:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D53C0C4360D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 17:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB53F21835
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 17:10:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABEBE21882
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 17:10:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569085823;
-	bh=EStalLVlkrFkvERQtdrDZSLsXj8Di/QwCb/l6m8W8Bs=;
+	s=default; t=1569085826;
+	bh=X3ChYO6Yy8BrnxGAHIzP9TnfaZ+Db/XODFDKYpDbltY=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=wZT/CQmoUI+yeUN8LZ9R2cDh3SLKg8bqZDw7g5nitpV/HWKSiDIXvQUUDOUKe+HCd
-	 a/t4W76hvYIw7S8cp3teZjj9rFmFcMpVHRDxxp2TDm1XiJMI7H87skf6RytD512iRl
-	 6ns0BS8SzwBs9NulaLRIU9M7Zd/kiHsp6I7ly91g=
+	b=YAAOoPExAMH1QCOh22pAbEgspt1X4b0Pth/y4SZu4EDhOnyGoDgovuZSDbKcAbdkx
+	 4o4n+nRspT/CKD/zNcpUB/rDVtSJE/GWLM4yL28YQOoXomnCx+Ue0mwHvnjkON0/f4
+	 jbQVKA/8fKeTfuRfSE2F0xg3egI1Mbav5gBDo5x0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731128AbfIURKW (ORCPT
+        id S1731157AbfIURKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Sep 2019 13:10:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44800 "EHLO mail.kernel.org"
+        Sat, 21 Sep 2019 13:10:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726465AbfIURKW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Sep 2019 13:10:22 -0400
-Subject: Re: [GIT PULL] printk for 5.4
+        id S1726465AbfIURKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Sep 2019 13:10:23 -0400
+Subject: Re: [GIT PULL] gcc-plugins update for v5.4-rc1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569085822;
-        bh=EStalLVlkrFkvERQtdrDZSLsXj8Di/QwCb/l6m8W8Bs=;
+        s=default; t=1569085823;
+        bh=X3ChYO6Yy8BrnxGAHIzP9TnfaZ+Db/XODFDKYpDbltY=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=u0U/a7u90qr20rRY92QE3M6ngVS2vGMfg21m2ZwJjU77+ttu33RvdSnE1+z/m4+/k
-         IM07mZG3F1GwQJBoDZSpRxxuYrSLlJ2fw4mbzmPB4dfsBZC3wFWzMgCqYjmUJI+eF2
-         3yeQditcHbCNQxejnPhQsu5WYu0PL2Ffc9hjHaMA=
+        b=wD6JIiWgfbYplorDYtonOLCOJ3CAjzVd9NsbCZv5w5ZVWTaGgkEG8RQJDGVHWB5dw
+         olsZgwXeM2ij+TKJ1V3qJiQUq75U0GYmByGxpkTPTkFRcUux59x4ioAf99GvX9PXp2
+         u3+4yDFgQbTaWs3dcCzE0+dbv0qy7c+4RQMB9+0I=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190916112431.jsts2owcco5pg4jg@pathway.suse.cz>
-References: <20190916112431.jsts2owcco5pg4jg@pathway.suse.cz>
+In-Reply-To: <201909161443.8AB608118@keescook>
+References: <201909161443.8AB608118@keescook>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190916112431.jsts2owcco5pg4jg@pathway.suse.cz>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pmladek/printk
- tags/printk-for-5.4
-X-PR-Tracked-Commit-Id: ae88de56a1893bdccc7b5af8c12556de649d675e
+X-PR-Tracked-Message-Id: <201909161443.8AB608118@keescook>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git
+ tags/gcc-plugins-v5.4-rc1
+X-PR-Tracked-Commit-Id: 60f2c82ed20bde57c362e66f796cf9e0e38a6dbb
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 56c1e8343494f0a315c99964ea1a952478394a8d
-Message-Id: <156908582197.8665.6078284819252997115.pr-tracker-bot@kernel.org>
-Date:   Sat, 21 Sep 2019 17:10:21 +0000
-To:     Petr Mladek <pmladek@suse.com>
+X-PR-Merge-Commit-Id: 56c631f5aec35117b0b5862a09a447a72dfbd678
+Message-Id: <156908582306.8665.1441954801716173630.pr-tracker-bot@kernel.org>
+Date:   Sat, 21 Sep 2019 17:10:23 +0000
+To:     Kees Cook <keescook@chromium.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org
+        linux-kernel@vger.kernel.org, Joonwon Kang <kjw1627@gmail.com>,
+        Kees Cook <keescook@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 16 Sep 2019 13:24:31 +0200:
+The pull request you sent on Mon, 16 Sep 2019 14:44:54 -0700:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/pmladek/printk tags/printk-for-5.4
+> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/gcc-plugins-v5.4-rc1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/56c1e8343494f0a315c99964ea1a952478394a8d
+https://git.kernel.org/torvalds/c/56c631f5aec35117b0b5862a09a447a72dfbd678
 
 Thank you!
 
