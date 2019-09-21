@@ -2,155 +2,288 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8163DC49ED7
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 06:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C1C2C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 06:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B7A4208C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 06:31:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="BI5a+GuF"
+	by mail.kernel.org (Postfix) with ESMTP id 4298221882
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 06:34:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569047689;
+	bh=GVqz0sPZlfjMmSQRw7qcptkVS72c5Ovs2yLm5B/q0Io=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=FfbEhJdgsqMjZs08J5PapKzIKcXmqBiboc40yRZVRD3zms3Ea2tKJAxHpgiJgciGK
+	 9Ar1uaEdopAf4Kr7EOKh/ZBhP0PVE2gOI/OwVv8aILX/+CNsmPFPKnfnMrKLhmDRD6
+	 g5vQT4Kgv8ckHR176c2H7Pu0a90l5i8cC4NHLelk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731045AbfIUGb0 (ORCPT
+        id S2407129AbfIUGes (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Sep 2019 02:31:26 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:63707 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729346AbfIUGbZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Sep 2019 02:31:25 -0400
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x8L6V3co010207;
-        Sat, 21 Sep 2019 15:31:03 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x8L6V3co010207
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1569047463;
-        bh=I2MuW03AliQw/gaYqV9LysZAy2kLY2LmxSGuO1+KXSA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=BI5a+GuFu55tec5avj/1Y+0ePxka/rxrCS8vR+x9WORJGDyeQfdbR/oe/f1x170xo
-         c/eLvydjxVJscY8Ea3CcruiTMeVRnOl2NApzdLbooVtWZ9Dos5P0BZIhAd7X4AHXL+
-         g2ee0HZVovnTSX27iO8g3J5QCOVaAi7aXGSlY5pFGXKChSoQf8VQUDd+udTuJnaXb6
-         1t78cq7/4ecJwk6lZVM3lRJxgbfEIK3WaPbFMGAaja7TBSNDigK5fI+uYb1SM/XfJq
-         DadroPJKs3Q5DDLnKeIxDl+s74jMNkimbYwxDV9fefDUykfmUpUI1Uk+JCmxRyXCQn
-         tyyeckXSbp2Xw==
-X-Nifty-SrcIP: [209.85.221.170]
-Received: by mail-vk1-f170.google.com with SMTP id q186so2043722vkb.0;
-        Fri, 20 Sep 2019 23:31:03 -0700 (PDT)
-X-Gm-Message-State: APjAAAUis8hFdn7Bb9jrxJqHz6vPV3TJ4DVJcIleM1x8KP1LtKg7IByT
-        CL6pRQeW0TNu/2KX+bNHmk8ICn2TDCVbnCpB47g=
-X-Google-Smtp-Source: APXvYqx+/dL8nburdX1VqaeNQP8WSs8ZCkOLM2bBvOWhD93+WGpKH8Xgg6seoQYhLdNlViSC1GyWRHsEdIPzBuoapnc=
-X-Received: by 2002:a1f:294a:: with SMTP id p71mr10664037vkp.74.1569047462532;
- Fri, 20 Sep 2019 23:31:02 -0700 (PDT)
+        Sat, 21 Sep 2019 02:34:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58372 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731026AbfIUGes (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Sep 2019 02:34:48 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4E5A208C0;
+        Sat, 21 Sep 2019 06:34:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569047686;
+        bh=GVqz0sPZlfjMmSQRw7qcptkVS72c5Ovs2yLm5B/q0Io=;
+        h=Date:From:To:Cc:Subject:From;
+        b=z+uc7d1q4l9978d3e4XeQrdXtB7qJ7JF/aZPyo/HowyX/MLBlS5ep2in357h6ZUZt
+         rqWMqePA7GPu1aARmaO2HkBFoKq2gspCYEqfF2NDMCGh6BTmjVAB1XFtqLs5O9iQyl
+         KhwtXkyhFbbOZhH9+8I9kBGezjiUznU9Jg8oUI2I=
+Date:   Sat, 21 Sep 2019 08:34:43 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Linux 4.4.194
+Message-ID: <20190921063443.GA1071236@kroah.com>
 MIME-Version: 1.0
-References: <1569006062-17862-1-git-send-email-jhugo@codeaurora.org>
-In-Reply-To: <1569006062-17862-1-git-send-email-jhugo@codeaurora.org>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 21 Sep 2019 15:30:25 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATHu6M8zKQi4O30Dvijg0zi8Lvxv6EBbWOE+H_s=E6m+Q@mail.gmail.com>
-Message-ID: <CAK7LNATHu6M8zKQi4O30Dvijg0zi8Lvxv6EBbWOE+H_s=E6m+Q@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: binrpm-pkg: Propagate O= to rpmbuild
-To:     Jeffrey Hugo <jhugo@codeaurora.org>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jeffrey,
+I'm announcing the release of the 4.4.194 kernel.
 
-On Sat, Sep 21, 2019 at 4:01 AM Jeffrey Hugo <jhugo@codeaurora.org> wrote:
->
-> If the user specifies O= to indicate a specific output directory for the
-> build, rpmbuild does not honor this, and will use its default, which could
-> be the user's home directory.  In cases where the user has limited home
-> directory space, this could cause the build to outright fail.
->
-> In the case of the binrpm-pkg target, redefine the top directory for output
-> to be what the user specified in O=, thus the user will find a "rpmbuild"
-> subdirectory in that location with all of the RPM artifacts.
->
-> This does not apply to rpm-pkg, since we already cannot handle creating
-> the source tarball out of tree.
->
-> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+All users of the 4.4 kernel series must upgrade.
 
+The updated 4.4.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.4.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
 
-binrpm-pkg creates intermediate build artifacts in $(objtree)/,
-but puts only the final .rpm into ${HOME}/rpmbuild/RPMS/${ARCH}/.
+thanks,
 
-It has worked like that since a long time before
-probably in order to respect the default of rpmbuild.
+greg k-h
 
+------------
 
-If you change this behavior, it should be consistent.
-The 'rpmbuild' should be always located in the kernel tree
-instead of the user's home directory.
+ Makefile                                   |    2 -
+ arch/arc/configs/axs101_defconfig          |    1 
+ arch/arc/configs/axs103_defconfig          |    1 
+ arch/arc/configs/axs103_smp_defconfig      |    1 
+ arch/arc/configs/nsim_700_defconfig        |    1 
+ arch/arc/configs/nsim_hs_defconfig         |    1 
+ arch/arc/configs/nsim_hs_smp_defconfig     |    1 
+ arch/arc/configs/nsimosci_defconfig        |    1 
+ arch/arc/configs/nsimosci_hs_defconfig     |    1 
+ arch/arc/configs/nsimosci_hs_smp_defconfig |    1 
+ arch/arc/kernel/traps.c                    |    1 
+ arch/arm/mach-omap2/omap4-common.c         |    3 +
+ arch/arm/mm/init.c                         |    3 +
+ arch/mips/Kconfig                          |    3 -
+ arch/mips/include/asm/netlogic/xlr/fmn.h   |    2 -
+ arch/mips/include/asm/smp.h                |   12 ++++++
+ arch/mips/sibyte/common/Makefile           |    1 
+ arch/mips/sibyte/common/dma.c              |   14 -------
+ arch/mips/vdso/Makefile                    |    4 +-
+ arch/s390/kvm/interrupt.c                  |   10 +++++
+ arch/s390/kvm/kvm-s390.c                   |    2 -
+ arch/s390/net/bpf_jit_comp.c               |   12 +++---
+ arch/x86/Makefile                          |    1 
+ arch/x86/include/asm/bootparam_utils.h     |    1 
+ arch/x86/kernel/apic/io_apic.c             |    8 +++-
+ arch/x86/kvm/vmx.c                         |    7 ++-
+ arch/x86/kvm/x86.c                         |    7 +++
+ drivers/atm/Kconfig                        |    2 -
+ drivers/base/core.c                        |   53 ++++++++++++++++++++++++++++-
+ drivers/block/floppy.c                     |    4 +-
+ drivers/clk/rockchip/clk-mmc-phase.c       |    4 --
+ drivers/crypto/talitos.c                   |   29 +++++++++++++++
+ drivers/dma/omap-dma.c                     |    4 +-
+ drivers/isdn/capi/capi.c                   |   10 ++++-
+ drivers/media/usb/dvb-usb/technisat-usb2.c |   21 +++++------
+ drivers/media/usb/tm6000/tm6000-dvb.c      |    3 +
+ drivers/net/ethernet/marvell/sky2.c        |    7 +++
+ drivers/net/ethernet/seeq/sgiseeq.c        |    7 ++-
+ drivers/net/tun.c                          |   16 ++++++--
+ drivers/net/usb/cdc_ether.c                |   13 +++++--
+ drivers/net/usb/r8152.c                    |    5 ++
+ drivers/net/wireless/mwifiex/ie.c          |    3 +
+ drivers/net/wireless/mwifiex/uap_cmd.c     |    9 ++++
+ drivers/net/xen-netfront.c                 |    2 -
+ drivers/tty/serial/atmel_serial.c          |    1 
+ drivers/tty/serial/sprd_serial.c           |    2 -
+ drivers/usb/core/config.c                  |   12 ++++--
+ fs/btrfs/tree-log.c                        |    6 +--
+ fs/cifs/connect.c                          |   22 ++++++++++++
+ fs/nfs/nfs4file.c                          |   12 +++---
+ fs/nfs/pagelist.c                          |    2 -
+ fs/nfs/proc.c                              |    7 ++-
+ include/uapi/linux/isdn/capicmd.h          |    1 
+ kernel/irq/resend.c                        |    2 +
+ net/bridge/br_mdb.c                        |    2 -
+ net/core/dev.c                             |    2 +
+ net/ipv4/tcp_input.c                       |    2 -
+ net/ipv6/ping.c                            |    2 -
+ net/netfilter/nf_conntrack_ftp.c           |    2 -
+ net/sched/sch_generic.c                    |    6 ++-
+ net/sched/sch_hhf.c                        |    2 -
+ net/sctp/protocol.c                        |    2 -
+ net/sctp/sm_sideeffect.c                   |    2 -
+ net/tipc/name_distr.c                      |    3 +
+ security/keys/request_key_auth.c           |    6 +++
+ tools/power/x86/turbostat/turbostat.c      |    2 -
+ virt/kvm/coalesced_mmio.c                  |   17 +++++----
+ 67 files changed, 300 insertions(+), 111 deletions(-)
 
-But, doing so might give impact to other users who
-rely on having 'rpmbuild' in the home directory.
-I have to hear opinions from others
-if this change is desired.
+Alan Stern (1):
+      USB: usbcore: Fix slab-out-of-bounds bug during device reset
 
-Meanwhile, if you are unhappy with that, one solution is to use RPMOPTS.
-RPMOPTS exists to tweak the default behavior.
+Alexey Brodkin (1):
+      ARC: configs: Remove CONFIG_INITRAMFS_SOURCE from defconfigs
 
+Bjørn Mork (1):
+      cdc_ether: fix rndis support for Mediatek based smartphones
 
-Thanks.
+Christophe JAILLET (4):
+      ipv6: Fix the link time qualifier of 'ping_v6_proc_exit_net()'
+      sctp: Fix the link time qualifier of 'sctp_ctrlsock_exit()'
+      Kconfig: Fix the reference to the IDT77105 Phy driver in the description of ATM_NICSTAR_USE_IDT77105
+      net: seeq: Fix the function used to release some memory in an error handling path
 
+Christophe Leroy (2):
+      crypto: talitos - check AES key size
+      crypto: talitos - check data blocksize in ablkcipher.
 
-> ---
->  scripts/Makefile.package | 12 +++++++++---
->  1 file changed, 9 insertions(+), 3 deletions(-)
->
-> diff --git a/scripts/Makefile.package b/scripts/Makefile.package
-> index 56eadcc..aab0711 100644
-> --- a/scripts/Makefile.package
-> +++ b/scripts/Makefile.package
-> @@ -21,7 +21,7 @@ include $(srctree)/scripts/Kbuild.include
->  # - Use /. to avoid tar packing just the symlink
->
->  # Note that the rpm-pkg target cannot be used with KBUILD_OUTPUT,
-> -# but the binrpm-pkg target can; for some reason O= gets ignored.
-> +# but the binrpm-pkg target can
->
->  # Remove hyphens since they have special meaning in RPM filenames
->  KERNELPATH := kernel-$(subst -,_,$(KERNELRELEASE))
-> @@ -33,6 +33,12 @@ TAR_CONTENT := $(KBUILD_ALLDIRS) .config .scmversion Makefile \
->                 Kbuild Kconfig COPYING $(wildcard localversion*)
->  MKSPEC     := $(srctree)/scripts/package/mkspec
->
-> +RPM_OUTDIR :=
-> +ifneq ($(objtree),$(srctree))
-> +# Using absolute path as relative path will cause parts of rpmbuild to fail
-> +        RPM_OUTDIR := --define "_topdir $(abs_objtree)/rpmbuild"
-> +endif
-> +
->  quiet_cmd_src_tar = TAR     $(2).tar.gz
->        cmd_src_tar = \
->  if test "$(objtree)" != "$(srctree)"; then \
-> @@ -65,8 +71,8 @@ PHONY += binrpm-pkg
->  binrpm-pkg:
->         $(MAKE) -f $(srctree)/Makefile
->         $(CONFIG_SHELL) $(MKSPEC) prebuilt > $(objtree)/binkernel.spec
-> -       +rpmbuild $(RPMOPTS) --define "_builddir $(objtree)" --target \
-> -               $(UTS_MACHINE) -bb $(objtree)/binkernel.spec
-> +       +rpmbuild $(RPMOPTS) --define "_builddir $(objtree)" $(RPM_OUTDIR) \
-> +               --target $(UTS_MACHINE) -bb $(objtree)/binkernel.spec
->
->  PHONY += deb-pkg
->  deb-pkg:
-> --
-> Qualcomm Technologies, Inc. is a member of the
-> Code Aurora Forum, a Linux Foundation Collaborative Project.
->
+Chunyan Zhang (1):
+      serial: sprd: correct the wrong sequence of arguments
 
+Cong Wang (2):
+      sch_hhf: ensure quantum and hhf_non_hh_weight are non-zero
+      net_sched: let qdisc_put() accept NULL pointer
 
---
-Best Regards
-Masahiro Yamada
+Corey Minyard (1):
+      x86/boot: Add missing bootparam that breaks boot on some platforms
+
+Dan Carpenter (1):
+      cifs: Use kzfree() to zero out the password
+
+Dongli Zhang (1):
+      xen-netfront: do not assume sk_buff_head list is empty in error handling
+
+Doug Berger (1):
+      ARM: 8874/1: mm: only adjust sections of valid mm structures
+
+Douglas Anderson (1):
+      clk: rockchip: Don't yell about bad mmc phases when getting
+
+Eric Biggers (1):
+      isdn/capi: check message length in capi_write()
+
+Filipe Manana (1):
+      Btrfs: fix assertion failure during fsync and use of stale transaction
+
+Fuqian Huang (1):
+      KVM: x86: work around leak of uninitialized stack contents
+
+Greg Kroah-Hartman (2):
+      Revert "MIPS: SiByte: Enable swiotlb for SWARM, LittleSur and BigSur"
+      Linux 4.4.194
+
+Hillf Danton (1):
+      keys: Fix missing null pointer check in request_key_auth_describe()
+
+Ilya Leoshkevich (2):
+      s390/bpf: fix lcgr instruction encoding
+      s390/bpf: use 32-bit index for tail calls
+
+Jann Horn (1):
+      floppy: fix usercopy direction
+
+Linus Torvalds (1):
+      x86/build: Add -Wnoaddress-of-packed-member to REALMODE_CFLAGS, to silence GCC9 build warning
+
+Matt Delco (1):
+      KVM: coalesced_mmio: add bounds checking
+
+Muchun Song (1):
+      driver core: Fix use-after-free and double free on glue directory
+
+Naoya Horiguchi (1):
+      tools/power turbostat: fix buffer overrun
+
+Neal Cardwell (1):
+      tcp: fix tcp_ecn_withdraw_cwr() to clear TCP_ECN_QUEUE_CWR
+
+Nicolas Dichtel (1):
+      bridge/mdb: remove wrong use of NLM_F_MULTI
+
+Paolo Bonzini (1):
+      KVM: nVMX: handle page fault in vmread
+
+Paul Burton (3):
+      MIPS: VDSO: Prevent use of smp_processor_id()
+      MIPS: VDSO: Use same -m%-float cflag as the kernel proper
+      MIPS: netlogic: xlr: Remove erroneous check in nlm_fmn_send()
+
+Prashant Malani (1):
+      r8152: Set memory to all 0xFFs on failed reg reads
+
+Razvan Stefanescu (1):
+      tty/serial: atmel: reschedule TX after RX was started
+
+Ronnie Sahlberg (1):
+      cifs: set domainName when a domain-key is used in multiuser
+
+Sean Young (2):
+      media: tm6000: double free if usb disconnect while streaming
+      media: technisat-usb2: break out of loop at end of buffer
+
+Subash Abhinov Kasiviswanathan (1):
+      net: Fix null de-reference of device refcount
+
+Takashi Iwai (1):
+      sky2: Disable MSI on yet another ASUS boards (P6Xxxx)
+
+Thomas Gleixner (1):
+      x86/apic: Fix arch_dynirq_lower_bound() bug for DT enabled machines
+
+Thomas Huth (1):
+      KVM: s390: Do not leak kernel stack data in the KVM_S390_INTERRUPT ioctl
+
+Thomas Jarosch (1):
+      netfilter: nf_conntrack_ftp: Fix debug output
+
+Tony Lindgren (1):
+      ARM: OMAP2+: Fix omap4 errata warning on other SoCs
+
+Trond Myklebust (4):
+      NFSv4: Fix return values for nfs4_file_open()
+      NFS: Fix initialisation of I/O result struct in nfs_pgio_rpcsetup
+      NFSv2: Fix eof handling
+      NFSv2: Fix write regression
+
+Vineet Gupta (1):
+      ARC: export "abort" for modules
+
+Wen Huang (1):
+      mwifiex: Fix three heap overflow at parsing element in cfg80211_ap_settings
+
+Wenwen Wang (1):
+      dmaengine: ti: omap-dma: Add cleanup in omap_dma_probe()
+
+Xin Long (2):
+      sctp: use transport pf_retrans in sctp_do_8_2_transport_strike
+      tipc: add NULL pointer check before calling kfree_rcu
+
+Yang Yingliang (1):
+      tun: fix use-after-free when register netdev failed
+
+Yunfeng Ye (1):
+      genirq: Prevent NULL pointer dereference in resend_irqs()
+
