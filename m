@@ -2,70 +2,112 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFFCC4360D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 18:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C6FC4740C
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 18:15:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA76321907
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 18:15:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6146821907
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 18:15:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569089732;
-	bh=ti+qmkfQ9p0whpjxawYmXFHbQHdzcbzIxQ1CN/5lKgE=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=G6XDn8OHNYrbQqhStmi7U4wYzcbE0QWqpgI1Mi+l/lkr9i3ffKHzvAIVGtVxqqhRO
-	 d4rj/XWDQszSj5R+p4ZAYge3mxTsBZpUU3FnbUrnHmPpexrlpo4q0ufp1GaTOx7hfA
-	 OhmzaXtz4ksDzDMJA9aQyTcqxAvuQ6+QCrJyDYF0=
+	s=default; t=1569089736;
+	bh=2I/lXwkOsDHIBlp5SP8bOsaaK9/9GpXDgRx0ZCTnUeA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=g6OaZ0rCPWbExP0nnn2/DL2NXm5cJlHSSg4L/26EYFW4siI8jJLBsyC9fIwufNZR1
+	 lNb4K78cNT9Czcb50wBAcHH7OmHA3yn2xA+VRyKlgZj7OvkeP+tMyuwBEY5wCe2SNk
+	 JJxSSUxt5N6+7axQ9Nc0/c30xGfxW7rbc1K+q8SY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731854AbfIUSPa (ORCPT
+        id S1731877AbfIUSPf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Sep 2019 14:15:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34382 "EHLO mail.kernel.org"
+        Sat, 21 Sep 2019 14:15:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731797AbfIUSP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Sep 2019 14:15:26 -0400
-Subject: Re: [GIT PULL] UML updates for 5.4-rc1
+        id S1731865AbfIUSPd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Sep 2019 14:15:33 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7C3D2196E;
+        Sat, 21 Sep 2019 18:15:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569089726;
-        bh=ti+qmkfQ9p0whpjxawYmXFHbQHdzcbzIxQ1CN/5lKgE=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=vvNlErjJnBddxcWBmx5kwH/BudZAnGh33g2ofQeEyWEQhe3c58C4ETB+wtb0Tyw8b
-         t8idsbdOTujH+8mkRtVYjwAOF0ecuoUqrGkdl8BMYTLx40S3Cc3KGXeLKEvQsCGqjy
-         iqSXudSt/yLifqlMj5lmtdU69H4lIX6YfT/A4Jb4=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <466534311.3528.1569051399653.JavaMail.zimbra@nod.at>
-References: <466534311.3528.1569051399653.JavaMail.zimbra@nod.at>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <466534311.3528.1569051399653.JavaMail.zimbra@nod.at>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rw/uml.git
- tags/for-linus-5.4-rc1
-X-PR-Tracked-Commit-Id: 73625ed66389d4c620520058d828f43a93ab4d0c
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 9dca3432ee063b70a4cfb3f0857d0aeef7b84fa8
-Message-Id: <156908972643.32474.17755196014521384085.pr-tracker-bot@kernel.org>
-Date:   Sat, 21 Sep 2019 18:15:26 +0000
-To:     Richard Weinberger <richard@nod.at>
-Cc:     torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-um <linux-um@lists.infradead.org>,
-        anton ivanov <anton.ivanov@cambridgegreys.com>
+        s=default; t=1569089733;
+        bh=2I/lXwkOsDHIBlp5SP8bOsaaK9/9GpXDgRx0ZCTnUeA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=LKhOhL298udbPmTIRj+3TyLSzDTQ4Hynw0/vM4rSjPxQzDGTiBddDcMT20wGwINlK
+         MQf4TvtopzRh9p2xukOyNzz77A824siYeE6v9cBOgVYhucglDh9kit2NiM8X6fimhg
+         A4zB75B9QbB/sO+YZmX0ghqmhrRANXPj6f0EzYcc=
+Date:   Sat, 21 Sep 2019 19:15:27 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Cc:     "navid.emamdoost@gmail.com" <navid.emamdoost@gmail.com>,
+        "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
+        "emamd001@umn.edu" <emamd001@umn.edu>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "smccaman@umn.edu" <smccaman@umn.edu>,
+        "kjlu@umn.edu" <kjlu@umn.edu>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>
+Subject: Re: [PATCH v2] iio: imu: adis16400: fix memory leak
+Message-ID: <20190921191527.4a6606d4@archlinux>
+In-Reply-To: <3438e843e2304e22456b4ea83796f1118564b3f4.camel@analog.com>
+References: <76a7c8d43f8c03a0549d157bbf278b515cfbc047.camel@analog.com>
+        <20190919155636.3241-1-navid.emamdoost@gmail.com>
+        <3438e843e2304e22456b4ea83796f1118564b3f4.camel@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat, 21 Sep 2019 09:36:39 +0200 (CEST):
+On Fri, 20 Sep 2019 06:46:05 +0000
+"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rw/uml.git tags/for-linus-5.4-rc1
+> On Thu, 2019-09-19 at 10:56 -0500, Navid Emamdoost wrote:
+> > In adis_update_scan_mode_burst, if adis->buffer allocation fails release
+> > the adis->xfer.
+> > 
+> > v2: set adis->xfer = NULL to avoid any potential double free.
+> >   
+> 
+> Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Applied to the fixes-togreg branch of iio.git.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/9dca3432ee063b70a4cfb3f0857d0aeef7b84fa8
+Thanks,
 
-Thank you!
+Jonathan
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+> 
+> > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> > ---
+> >  drivers/iio/imu/adis_buffer.c | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/iio/imu/adis_buffer.c
+> > b/drivers/iio/imu/adis_buffer.c
+> > index 9ac8356d9a95..78fe83c1f4fe 100644
+> > --- a/drivers/iio/imu/adis_buffer.c
+> > +++ b/drivers/iio/imu/adis_buffer.c
+> > @@ -35,8 +35,11 @@ static int adis_update_scan_mode_burst(struct iio_dev
+> > *indio_dev,
+> >  		return -ENOMEM;
+> >  
+> >  	adis->buffer = kzalloc(burst_length + sizeof(u16), GFP_KERNEL);
+> > -	if (!adis->buffer)
+> > +	if (!adis->buffer) {
+> > +		kfree(adis->xfer);
+> > +		adis->xfer = NULL;
+> >  		return -ENOMEM;
+> > +	}
+> >  
+> >  	tx = adis->buffer + burst_length;
+> >  	tx[0] = ADIS_READ_REG(adis->burst->reg_cmd);  
+
