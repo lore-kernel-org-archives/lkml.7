@@ -2,96 +2,125 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26304C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 03:11:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC91C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 03:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F016A217F9
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 03:11:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A17521835
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 03:32:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="D/1QOhYy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730820AbfIUDLU (ORCPT
+        id S2407041AbfIUDcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 23:11:20 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:46996 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726571AbfIUDLT (ORCPT
+        Fri, 20 Sep 2019 23:32:25 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:57450 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730800AbfIUDcZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 23:11:19 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iBVnp-0007l7-Nf; Sat, 21 Sep 2019 03:11:18 +0000
-Date:   Sat, 21 Sep 2019 04:11:17 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [RFC] microoptimizing hlist_add_{before,behind}
-Message-ID: <20190921031117.GA22426@ZenIV.linux.org.uk>
-References: <20190920231233.GP1131@ZenIV.linux.org.uk>
+        Fri, 20 Sep 2019 23:32:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=c1M/zfRrJYyk5NNSwiCtP5Tyw5TICxN7E3pYvG8jzDY=; b=D/1QOhYywb0nCoLJiPG1VrKwg
+        I2rGAAZQEKgTupl0LO8eXzv2EVoJ09kRgpZ63k7cj+oeE3dyiLbPRJqsCrvfPVHfOva4PJ01u6EWY
+        dmIKINRzjzd4bnqqGHrrOnO7bZTC0ySKUg4vdAZmNui2KCfryYLLwDiuNw5KsVwCl57KH5YE1lxDa
+        550Cq9adFvvveEiG2hHeeZUHoDVQK8TwzGWs7xi3zpVTzSt4vuspTA1mVuDGon26LU9qyhJY8M/p2
+        Ol97cTjByxxmEVX/3vc4H6SDCAlejRScyCQM5Apt+QLmmv1hGTtVtzFWJWOff/2ZC4lwCa6RuxLid
+        1gJnCOCWA==;
+Received: from [2601:1c0:6280:3f0::9a1f]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iBW8E-0004YP-F9; Sat, 21 Sep 2019 03:32:22 +0000
+Subject: Re: pci: endpoint test BUG
+To:     Hillf Danton <hdanton@sina.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190916020630.1584-1-hdanton@sina.com>
+ <20190916112246.GA6693@e121166-lin.cambridge.arm.com>
+ <815ad936-8b98-0931-89f7-b97922a7c77d@ti.com>
+ <20190920152026.GC10172@e121166-lin.cambridge.arm.com>
+ <c1e7862c-d61d-6ecd-f70c-73870f343940@infradead.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <ca8d59d1-df3f-b6fe-37cb-ba3e3bed0440@infradead.org>
+Date:   Fri, 20 Sep 2019 20:32:21 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190920231233.GP1131@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <c1e7862c-d61d-6ecd-f70c-73870f343940@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 21, 2019 at 12:12:33AM +0100, Al Viro wrote:
-> 	Neither hlist_add_before() nor hlist_add_behind() should ever
-> be called with both arguments pointing to the same hlist_node.
-> However, gcc doesn't know that, so it ends up with pointless reloads.
-> AFAICS, the following generates better code, is obviously equivalent
-> in case when arguments are different and actually even in case when
-> they are same, the end result is identical (if the hlist hadn't been
-> corrupted even earlier than that).
+On 9/20/19 7:04 PM, Hillf Danton wrote:
+>> 
 > 
-> 	Objections?
+>>> It will be resent if no one saw the message.
 > 
-> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+>> 
+> 
+>> I didn't see it and I can't find it on lore.kernel.org/linux-pci/.
+> 
+>> 
+> 
+> Respin, git send-email works/jj/pci-epf-uaf.txt
+> 
+> ...
+> 
+> From: Hillf Danton <hdanton@sina.com>
+> 
+> To: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> Cc: linux-pci <linux-pci@vger.kernel.org>,
+> 
+>         LKML <linux-kernel@vger.kernel.org>,
+> 
+>         Randy Dunlap <rdunlap@infradead.org>,
+> 
+>         Al Viro <viro@zeniv.linux.org.uk>,
+> 
+>         Dan Carpenter <dan.carpenter@oracle.com>,
+> 
+>         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+> 
+>         Kishon Vijay Abraham I <kishon@ti.com>,
+> 
+>         Andrey Konovalov <andreyknvl@google.com>,
+> 
+>         Hillf Danton <hdanton@sina.com>
+> 
+> Subject: [PATCH] PCI: endpoint: Fix uaf on unregistering driver
+> 
+> Date: Sat, 21 Sep 2019 09:58:28 +0800
+> 
+> Message-Id: <20190921015828.15644-1-hdanton@sina.com>
+> 
+> MIME-Version: 1.0
+> 
+> Content-Transfer-Encoding: 8bit
+> 
+>  
+> 
+> Result: 250
+> 
+>  
+> 
+> And let me know you see it.
 
-*gyah*
+No, not seeing the patch in my Inbox nor on lore.kernel.org.
 
-git diff >/tmp/y1
-<build>
-<fix a braino>
-<test>
-scp-out /tmp/y1
-<send mail with the original diff>
-<several hours later: reread the sent mail>
+It's a mystery to me.
 
-My apologies ;-/  Correct diff follows:
-
-diff --git a/include/linux/list.h b/include/linux/list.h
-index 85c92555e31f..5c84383675bc 100644
---- a/include/linux/list.h
-+++ b/include/linux/list.h
-@@ -793,21 +793,21 @@ static inline void hlist_add_head(struct hlist_node *n, struct hlist_head *h)
- static inline void hlist_add_before(struct hlist_node *n,
- 					struct hlist_node *next)
- {
--	n->pprev = next->pprev;
-+	struct hlist_node **p = n->pprev = next->pprev;
- 	n->next = next;
- 	next->pprev = &n->next;
--	WRITE_ONCE(*(n->pprev), n);
-+	WRITE_ONCE(*p, n);
- }
- 
- static inline void hlist_add_behind(struct hlist_node *n,
- 				    struct hlist_node *prev)
- {
--	n->next = prev->next;
-+	struct hlist_node *p = n->next = prev->next;
- 	prev->next = n;
- 	n->pprev = &prev->next;
- 
--	if (n->next)
--		n->next->pprev  = &n->next;
-+	if (p)
-+		p->pprev  = &n->next;
- }
- 
- /* after that we'll appear to be on some hlist and hlist_del will work */
+-- 
+~Randy
