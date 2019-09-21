@@ -2,137 +2,89 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 381E5C49ED7
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 13:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 222FAC49ED7
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 13:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 034CB2080F
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 13:47:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="SJas1X8N"
+	by mail.kernel.org (Postfix) with ESMTP id F20702080F
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 13:51:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437907AbfIUNr2 (ORCPT
+        id S2437951AbfIUNvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Sep 2019 09:47:28 -0400
-Received: from conuserg-08.nifty.com ([210.131.2.75]:58497 "EHLO
-        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394165AbfIUNr1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Sep 2019 09:47:27 -0400
-Received: from grover.flets-west.jp (softbank126021098169.bbtec.net [126.21.98.169]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id x8LDktRD010507;
-        Sat, 21 Sep 2019 22:46:56 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x8LDktRD010507
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1569073616;
-        bh=5xK4mZcFYP3ny+MZeQAf2c3rhdo7t2J/7fDHiLRieNc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=SJas1X8NoFJ85mQNC+VMMlxMm5DsBKgz8PlYbi6nAJDoG2rLDF5DUGpVb2bPKhy20
-         CPzJm5+9qLjI4jnYr07t1tRGcEGPQ7mFaPMK4ETqhQZoUmGq5r9gvbTKjD/FLDi5G1
-         q2Ltzb4oCvWMSXwYyxBWAiXyzfAeDlWTVTuoFUyr/92k5DXBPLFfsAfrtWMT+dYPMP
-         UrKwUxoL22NbdPgPULzQ2MrHluPT01kiYVNFCI18zjK9O3SL1SDFUvQfL21wDcdhj3
-         tRRgWg+ii5G5yYPnnnIKRqPREONhriO6Zu7WSAPod7Vvo+hmY5NEvR3gAZ30tYs3CS
-         +c70FVcZya/dw==
-X-Nifty-SrcIP: [126.21.98.169]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        netfilter-devel@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] netfilter: use __u8 instead of uint8_t in uapi header
-Date:   Sat, 21 Sep 2019 22:46:48 +0900
-Message-Id: <20190921134648.1259-1-yamada.masahiro@socionext.com>
+        Sat, 21 Sep 2019 09:51:08 -0400
+Received: from foss.arm.com ([217.140.110.172]:55568 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437919AbfIUNvH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Sep 2019 09:51:07 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0419A1570;
+        Sat, 21 Sep 2019 06:51:07 -0700 (PDT)
+Received: from localhost.localdomain (entos-thunderx2-02.shanghai.arm.com [10.169.40.54])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C57413F67D;
+        Sat, 21 Sep 2019 06:51:01 -0700 (PDT)
+From:   Jia He <justin.he@arm.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Suzuki Poulose <Suzuki.Poulose@arm.com>
+Cc:     Punit Agrawal <punitagrawal@gmail.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Alex Van Brunt <avanbrunt@nvidia.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Ralph Campbell <rcampbell@nvidia.com>, hejianet@gmail.com,
+        Kaly Xin <Kaly.Xin@arm.com>, nd@arm.com,
+        Jia He <justin.he@arm.com>
+Subject: [PATCH v8 0/3] fix double page fault on arm64
+Date:   Sat, 21 Sep 2019 21:50:51 +0800
+Message-Id: <20190921135054.142360-1-justin.he@arm.com>
 X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CONFIG_UAPI_HEADER_TEST=y, exported headers are compile-tested to
-make sure they can be included from user-space.
+When we tested pmdk unit test vmmalloc_fork TEST1 in arm64 guest, there
+will be a double page fault in __copy_from_user_inatomic of cow_user_page.
 
-Currently, linux/netfilter_bridge/ebtables.h is excluded from the test
-coverage. To make it join the compile-test, we need to fix the build
-errors attached below.
+As told by Catalin: "On arm64 without hardware Access Flag, copying from
+user will fail because the pte is old and cannot be marked young. So we
+always end up with zeroed page after fork() + CoW for pfn mappings. we
+don't always have a hardware-managed access flag on arm64."
 
-For a case like this, we decided to use __u{8,16,32,64} variable types
-in this discussion:
+Changes
+v8: change cow_user_page's return type (Matthew)
+v7: s/pte_spinlock/pte_offset_map_lock (Kirill)
+v6: fix error case of returning with spinlock taken (Catalin)
+    move kmap_atomic to avoid handling kunmap_atomic
+v5: handle the case correctly when !pte_same
+    fix kbuild test failed
+v4: introduce cpu_has_hw_af (Suzuki)
+    bail out if !pte_same (Kirill)
+v3: add vmf->ptl lock/unlock (Kirill A. Shutemov)
+    add arch_faults_on_old_pte (Matthew, Catalin)
+v2: remove FAULT_FLAG_WRITE when setting pte access flag (Catalin)
 
-  https://lkml.org/lkml/2019/6/5/18
+Jia He (3):
+  arm64: cpufeature: introduce helper cpu_has_hw_af()
+  arm64: mm: implement arch_faults_on_old_pte() on arm64
+  mm: fix double page fault on arm64 if PTE_AF is cleared
 
-Build log:
+ arch/arm64/include/asm/cpufeature.h | 10 +++++
+ arch/arm64/include/asm/pgtable.h    | 12 ++++++
+ mm/memory.c                         | 67 ++++++++++++++++++++++++++---
+ 3 files changed, 83 insertions(+), 6 deletions(-)
 
-  CC      usr/include/linux/netfilter_bridge/ebtables.h.s
-In file included from <command-line>:32:0:
-./usr/include/linux/netfilter_bridge/ebtables.h:126:4: error: unknown type name ‘uint8_t’
-    uint8_t revision;
-    ^~~~~~~
-./usr/include/linux/netfilter_bridge/ebtables.h:139:4: error: unknown type name ‘uint8_t’
-    uint8_t revision;
-    ^~~~~~~
-./usr/include/linux/netfilter_bridge/ebtables.h:152:4: error: unknown type name ‘uint8_t’
-    uint8_t revision;
-    ^~~~~~~
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
- include/uapi/linux/netfilter_bridge/ebtables.h | 6 +++---
- usr/include/Makefile                           | 1 -
- 2 files changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/include/uapi/linux/netfilter_bridge/ebtables.h b/include/uapi/linux/netfilter_bridge/ebtables.h
-index 3b86c14ea49d..8076c940ffeb 100644
---- a/include/uapi/linux/netfilter_bridge/ebtables.h
-+++ b/include/uapi/linux/netfilter_bridge/ebtables.h
-@@ -123,7 +123,7 @@ struct ebt_entry_match {
- 	union {
- 		struct {
- 			char name[EBT_EXTENSION_MAXNAMELEN];
--			uint8_t revision;
-+			__u8 revision;
- 		};
- 		struct xt_match *match;
- 	} u;
-@@ -136,7 +136,7 @@ struct ebt_entry_watcher {
- 	union {
- 		struct {
- 			char name[EBT_EXTENSION_MAXNAMELEN];
--			uint8_t revision;
-+			__u8 revision;
- 		};
- 		struct xt_target *watcher;
- 	} u;
-@@ -149,7 +149,7 @@ struct ebt_entry_target {
- 	union {
- 		struct {
- 			char name[EBT_EXTENSION_MAXNAMELEN];
--			uint8_t revision;
-+			__u8 revision;
- 		};
- 		struct xt_target *target;
- 	} u;
-diff --git a/usr/include/Makefile b/usr/include/Makefile
-index 77e0a0cd972a..faba1e5c3873 100644
---- a/usr/include/Makefile
-+++ b/usr/include/Makefile
-@@ -37,7 +37,6 @@ header-test- += linux/hdlc/ioctl.h
- header-test- += linux/ivtv.h
- header-test- += linux/kexec.h
- header-test- += linux/matroxfb.h
--header-test- += linux/netfilter_bridge/ebtables.h
- header-test- += linux/netfilter_ipv4/ipt_LOG.h
- header-test- += linux/netfilter_ipv6/ip6t_LOG.h
- header-test- += linux/nfc.h
 -- 
 2.17.1
 
