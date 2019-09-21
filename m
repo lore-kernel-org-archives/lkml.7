@@ -2,110 +2,103 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B66C4360D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 19:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F87DC4740C
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 19:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C602A2073F
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 19:09:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57587218AE
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 19:10:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732415AbfIUTJq (ORCPT
+        id S2387883AbfIUTKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Sep 2019 15:09:46 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:60638 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725838AbfIUTJq (ORCPT
+        Sat, 21 Sep 2019 15:10:15 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:45236 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732340AbfIUTKP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Sep 2019 15:09:46 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 887AA2002D;
-        Sat, 21 Sep 2019 21:09:42 +0200 (CEST)
-Date:   Sat, 21 Sep 2019 21:09:41 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        adam.ford@logicpd.com, Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] ARM: logicpd-torpedo-37xx-devkit-28: Reference new
- DRM panel
-Message-ID: <20190921190941.GD32133@ravnborg.org>
-References: <20190917161214.2913-1-aford173@gmail.com>
- <20190917161214.2913-3-aford173@gmail.com>
+        Sat, 21 Sep 2019 15:10:15 -0400
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1iBkIF-0004QF-LF; Sat, 21 Sep 2019 19:39:39 +0100
+Received: from ben by deadeye with local (Exim 4.92.1)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1iBkIF-000402-Dw; Sat, 21 Sep 2019 19:39:39 +0100
+Message-ID: <0f95821e580f5dc8d4805c8246da88059c776dee.camel@decadent.org.uk>
+Subject: Re: [PATCH 3.16 114/132] ALSA: usb-audio: Fix a stack buffer
+ overflow bug in check_input_term
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     Hui Peng <benquike@gmail.com>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     akpm@linux-foundation.org, kda@linux-powerpc.org,
+        mathias.payer@nebelwelt.net, gregkh@linuxfoundation.org,
+        tiwai@suse.de
+Date:   Sat, 21 Sep 2019 19:39:34 +0100
+In-Reply-To: <94525609-b88e-cc24-dfe5-9db470e105ef@gmail.com>
+References: <lsq.1568989415.723106414@decadent.org.uk>
+         <94525609-b88e-cc24-dfe5-9db470e105ef@gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-z5SbhgLXkyBYomEAs86a"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190917161214.2913-3-aford173@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pGLkceISAAAA:8
-        a=7gkXJVJtAAAA:8 a=4bu5KDIevAQmuqN_AgEA:9 a=CjuIK1q_8ugA:10
-        a=E9Po1WZjFZOl8hwRPBS3:22
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adam.
 
-On Tue, Sep 17, 2019 at 11:12:13AM -0500, Adam Ford wrote:
-> With the removal of the panel-dpi from the omap drivers, the
-> LCD no longer works.  This patch points the device tree to
-> a newly created panel named "logicpd,type28"
-> 
-> Fixes: 8bf4b1621178 ("drm/omap: Remove panel-dpi driver")
-> 
-> Signed-off-by: Adam Ford <aford173@gmail.com>
-Looks good.
-One nit below.
+--=-z5SbhgLXkyBYomEAs86a
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-With this addressed:
+On Fri, 2019-09-20 at 21:26 -0400, Hui Peng wrote:
+> I want to confirm the patches.
+>=20
+> Which version of GCC do you use to compile 3.16?
+>=20
+> I tried gcc-4.8, it seems that the built kernel can not be boot by qemu.
+[...]
 
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
+For my own limited testing, I build for x86 with gcc 4.9.  Debian's
+packages are built with gcc 4.8 (arm) or 4.9 (x86).
 
-	Sam
-> 
-> diff --git a/arch/arm/boot/dts/logicpd-torpedo-37xx-devkit-28.dts b/arch/arm/boot/dts/logicpd-torpedo-37xx-devkit-28.dts
-> index 07ac99b9cda6..00c426bd51a0 100644
-> --- a/arch/arm/boot/dts/logicpd-torpedo-37xx-devkit-28.dts
-> +++ b/arch/arm/boot/dts/logicpd-torpedo-37xx-devkit-28.dts
-> @@ -11,22 +11,8 @@
->  #include "logicpd-torpedo-37xx-devkit.dts"
->  
->  &lcd0 {
-> -
-> +	/* This isn't the exact LCD, but the timings meet spec */
-> +	/* To make it work, set CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK=4 */
-> +	compatible = "logicpd,type28";
->  	label = "28";
-You left this property - but us it documented and what use has it?
+Guenter Roeck does build and boot tests on multiple architectures using
+a variety of (mostly quite recent) compiler versions.
 
-> -
-> -	panel-timing {
-> -		clock-frequency = <9000000>;
-> -		hactive = <480>;
-> -		vactive = <272>;
-> -		hfront-porch = <3>;
-> -		hback-porch = <2>;
-> -		hsync-len = <42>;
-> -		vback-porch = <3>;
-> -		vfront-porch = <2>;
-> -		vsync-len = <11>;
-> -		hsync-active = <1>;
-> -		vsync-active = <1>;
-> -		de-active = <1>;
-> -		pixelclk-active = <0>;
-> -	};
->  };
-> -- 
-> 2.17.1
+Ben.
+
+--=20
+Ben Hutchings
+If the facts do not conform to your theory, they must be disposed of.
+
+
+
+--=-z5SbhgLXkyBYomEAs86a
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl2GbmYACgkQ57/I7JWG
+EQl7Gw//T0vF2dKtK49fz0Vtyw2GduhCf9QWwUmQcCWQK1E+TEPFJuYACOGYNu+w
+YMW+LBE9IuQs+nVfhX7QfcSKcFox9pp56aiiR+UVNvba5q8NPLtE6ITAdkrFE/qa
+f2hxxxnpZk5w2R38o7JBYcs9/Oc+DgrySiN1DnQjZr9nuRDtpXPx7wlqqwiYpNHo
+MK+nY/2aGl2XvTA2eIBe2TgYorUaKGtobbItbXQHjji6gAi62SpskQa3FGqF9v3A
+h5aA9tHR8rXBAGI15x0Jb3FTzBuDgcjYGlMRV+PRdMZztLN+JQITqziTGVEtiaWO
+uOmLyF+sOJYqwuBSMmYUl+Yy2aGf5Wr1/zM6+D0zKuPx5vjFz1VFREvqXoo80TJl
+5L4xe2bFYZPTLs8ya87+xEWDdKQ4fGRBhfiuYhjkgCsJUAYbeenDimoY85q9929j
+kRtulAK9XSvhhtv6YKvSb3WoEQlO1K1tJNNaWathBkf1TXeQeS3j0FA/p9T9RjpC
+IOxOgQZa7B9kqa1waDSQFXC8NX08URqUcUZTL5La+dZvV2KIBgUUE9tXjIdKA7bB
+U2qUYNbEUQ+coAbzgN7r8i/hISAJBBzVtgQzTcw6RDThYcuTAHav/BC91/3Hgka4
++cfPCW+HlVgnH2uur4w8iEa9GJYr4LiwfYp1ihGMNytFnvnQFIc=
+=2R6D
+-----END PGP SIGNATURE-----
+
+--=-z5SbhgLXkyBYomEAs86a--
