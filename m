@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FB5C4360D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 15:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2100DC4360D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 15:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DE762086A
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 15:13:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF2D321835
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 15:16:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438175AbfIUPN6 (ORCPT
+        id S2394258AbfIUPQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Sep 2019 11:13:58 -0400
-Received: from mga17.intel.com ([192.55.52.151]:63263 "EHLO mga17.intel.com"
+        Sat, 21 Sep 2019 11:16:36 -0400
+Received: from mga07.intel.com ([134.134.136.100]:29678 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407664AbfIUPN6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Sep 2019 11:13:58 -0400
+        id S2389472AbfIUPQg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Sep 2019 11:16:36 -0400
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Sep 2019 08:13:55 -0700
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Sep 2019 08:16:33 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,532,1559545200"; 
-   d="gz'50?scan'50,208,50";a="187385630"
+   d="gz'50?scan'50,208,50";a="188645830"
 Received: from xsang-optiplex-9020.sh.intel.com (HELO xsang-OptiPlex-9020) ([10.239.159.135])
-  by fmsmga008.fm.intel.com with ESMTP; 21 Sep 2019 08:13:53 -0700
-Date:   Sat, 21 Sep 2019 23:19:46 +0800
+  by fmsmga007.fm.intel.com with ESMTP; 21 Sep 2019 08:16:31 -0700
+Date:   Sat, 21 Sep 2019 23:22:24 +0800
 From:   kbuild test robot <lkp@intel.com>
 To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
 Cc:     kbuild-all@01.org, Thierry Reding <thierry.reding@gmail.com>,
@@ -39,10 +39,10 @@ Cc:     kbuild-all@01.org, Thierry Reding <thierry.reding@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH 5/5] lib/math: remove int_pow()
-Message-ID: <20190921151946.GG13091@xsang-OptiPlex-9020>
+Message-ID: <20190921152224.GH13091@xsang-OptiPlex-9020>
 Reply-To: kbuild test robot <lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="AGZzQgpsuUlWC1xT"
+Content-Type: multipart/mixed; boundary="CEUtFxTsmBsHRLs3"
 Content-Disposition: inline
 In-Reply-To: <20190919140620.32407-5-linux@rasmusvillemoes.dk>
 user-agent: NeoMutt/20170113 (1.7.2)
@@ -52,7 +52,7 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---AGZzQgpsuUlWC1xT
+--CEUtFxTsmBsHRLs3
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
@@ -145,7 +145,7 @@ vim +/int_pow +94 drivers/iio/common/hid-sensors/hid-sensor-attributes.c
 0-DAY kernel test infrastructure                Open Source Technology Center
 https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
---AGZzQgpsuUlWC1xT
+--CEUtFxTsmBsHRLs3
 Content-Type: application/gzip; name=".config.gz"
 Content-Description: .config.gz
 Content-Disposition: attachment; filename=".config.gz"
@@ -743,4 +743,4 @@ Rv1IHGew7JSLntaAvBtyC+elVWNq5qMaZSKLd67GihBucYBeezRizB18gvExXtTgzlHzGm/u
 82758vGjcLHBTWELF3UGioP+aHlWgQJ1rGLzEdZMMSk92LmYhyIz3AfZGEWL302DGullPhGk
 KDHEoAQOzP9Cz6oYADrcC4tsree8JkjK9ZzhXtKDhQu9RADhLxrYaYTF8gEA
 
---AGZzQgpsuUlWC1xT--
+--CEUtFxTsmBsHRLs3--
