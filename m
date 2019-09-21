@@ -2,550 +2,358 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A93C4740C
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 23:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3043C4740C
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 23:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6026208C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 23:10:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B69EC2089E
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 23:57:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="sa1goZNy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MAsMpA6Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbfIUXKl (ORCPT
+        id S1726905AbfIUX5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Sep 2019 19:10:41 -0400
-Received: from mail-eopbgr720097.outbound.protection.outlook.com ([40.107.72.97]:11536
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726760AbfIUXKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Sep 2019 19:10:40 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ts3mAW1G+E+H54XP/FkXKgYdynxfAzraLf/VJg4XG9xuE5Aq/FwuLOL4nLQqOtLZ1OOARjzECRmvyaqVbFTMV5Ld5cn8MVXosg+wfYngMxbtGQvOHxbCwnhiHYWCU9jJgYiCAZPIME/t8EL1vivCjVxrdC6Bxb5m0COKQjiixtaJORCdxakktirA/ItvPj6sQ9iZBw/ERqD8tN/m6T4dOCvyFQxY77B9tQf00ieMxKOhAUVMD1jhWP8oYNZ1ci2/zNcFhi9uYgye6PHwYS+6x2kWXTeyqYWh2jwn1ild9xggKYloacBR2kLLLJaqJFA4KiHRKL5UTIUr2uOURQkZtw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ma2PkF50iLTt5a4/lAB0dMvuymxflH71RoPOn4E4Wuc=;
- b=h9DQEQ5ZlbVod0n0dfVL+G7q657m7hRXQmwuHjLEnJeIgFdyICbvAuBCxP+AT0fjKvsZbsbIYtyKZrsYjQBkfWAw8771DLYAWic/7K92KXSywB7F/U08Q4CfRGin4jD3/JdrkbOLP2TSS9xcvvZXui3dztArXSFwHHFqHQRYZzH8Ss9C38GWCPtkn2kOIZdFnOy7UPraywNWZXrybjBma636MrtLsM6/ClA+fRAzDf7QdzkulvLu+VrtC3FD+BrVCiHraUAQbE9QBSSa34ixOHkMyDTYDVf4tF7DCpGmdRZnes6PT9CWcuTVhDATGpoxe9qjiW4+lRG45wUjUcpFfA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wavecomp.com; dmarc=pass action=none header.from=mips.com;
- dkim=pass header.d=mips.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ma2PkF50iLTt5a4/lAB0dMvuymxflH71RoPOn4E4Wuc=;
- b=sa1goZNyefLdeHDNWS2rwwvzMnPpiVcj5bqpxIwleyhO/sdzXsGzy8bOkQRHnZBsaQCZ1fyAhoFa0BoBcq9RfDtvpj3B56t9YRzfkyr9KhV/uMHrxCqq9uwWigIH8mXUdcuh2IHPj97oA1fmTeEEnSUdvSsj9d0wSFOupmWeOvY=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
- MWHPR2201MB1200.namprd22.prod.outlook.com (10.174.169.163) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.20; Sat, 21 Sep 2019 23:10:30 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::f9e8:5e8c:7194:fad3]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::f9e8:5e8c:7194:fad3%11]) with mapi id 15.20.2284.009; Sat, 21 Sep
- 2019 23:10:24 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-Subject: [GIT PULL] MIPS changes
-Thread-Topic: [GIT PULL] MIPS changes
-Thread-Index: AQHVcNG/aPrQthixek+Bc74k1+lS1A==
-Date:   Sat, 21 Sep 2019 23:10:24 +0000
-Message-ID: <20190921231022.kawfomtmka737arq@pburton-laptop>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR01CA0014.prod.exchangelabs.com (2603:10b6:a02:80::27)
- To MWHPR2201MB1277.namprd22.prod.outlook.com (2603:10b6:301:18::12)
-user-agent: NeoMutt/20180716
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2601:646:8a00:9810:9d6:9cca:ff8c:efe0]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6fd6e11e-3401-4f15-07b8-08d73ee8e207
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(49563074)(7193020);SRVR:MWHPR2201MB1200;
-x-ms-traffictypediagnostic: MWHPR2201MB1200:
-x-microsoft-antispam-prvs: <MWHPR2201MB120082BE638878EA05A94F7CC18B0@MWHPR2201MB1200.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0167DB5752
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(366004)(376002)(346002)(136003)(189003)(199004)(6486002)(6436002)(186003)(42882007)(81166006)(476003)(71200400001)(386003)(256004)(25786009)(14444005)(8936002)(5660300002)(2906002)(7736002)(66556008)(66476007)(99936001)(54906003)(64756008)(66616009)(8676002)(81156014)(71190400001)(305945005)(44832011)(6916009)(30864003)(52116002)(14454004)(66946007)(66446008)(99286004)(486006)(33716001)(58126008)(9686003)(6116002)(102836004)(4326008)(508600001)(46003)(6506007)(1076003)(6512007);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1200;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: +XQSyOVYmLIuSHoPa1XHvtWzsk5Jq81MI57UTI3DtzwtBthmWWcSjAEEgNOrB+pJztipG9AE9ZmPZr1jjf1O7J0d3Ohc3I6gLuDzfdIfinvP5SRHUmy5FOFCDy20wJy3ZE7C/iTPfRFiwc6k58Xnoj3CM3o30j0Co6EKNPXa1jHD8iXDiFzQbHiMZjF7WwLMpz6dZVrK0wbUFvkLT/onMQsAiFFIQy0DUw3IH2lXXgDuS5O7c1AB8pDqptsSEfw8NiH7w5MeA/7rvYYflQNlmtCblwi5JWwT9CenuUm3WvnJR0DDYXs/BXe1kEZ1UupQF32y5Nipvj7HJl5w1SRIOJg9wskkrY3DBAZgK0du5yXf/2/YkTw7PKhmnfr6XpxBgojXFQIpCQM+FFftULtz6c7BX6LurJWvUWiqAlBm/PM=
-x-ms-exchange-transport-forked: True
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="eqg4wsr35upu7sev"
+        Sat, 21 Sep 2019 19:57:11 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:45969 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726873AbfIUX5L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Sep 2019 19:57:11 -0400
+Received: by mail-pl1-f195.google.com with SMTP id u12so4840284pls.12;
+        Sat, 21 Sep 2019 16:57:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wFxsbjbphTDZBrxMQjimUMRPZiRt8Y19uxPrqCS0lwQ=;
+        b=MAsMpA6ZLXzYAVKtPqxG82w0tUPyrA+uHcfCg7hc6qz7k2hbHdGcq7NT0cdLfq+g4s
+         7wJu9IXWfNwyX+jChXxRk7MZEjoTHVWGTmhZrPgZM9b6czBdu8xrwQbv0MVcYkLgSAHJ
+         fZ4t4PW2w08ZoejFtpBuQ5SN9ZMibWDz/ogKDRRouvCvprvEEvPFvmE1MaLqf77+3mnY
+         IDL9FXzq+aVEbo80UAYIqaTTSYKVv7/pNYmuaUd3aNPHjzTNeRhZ7/307J0baxF6gV34
+         9KNcCdn2NfqfXfuf+vw352zlFfYx0gnV2qxcCihFpdFNi8EoPClMSqlIzk5cc+i+KnTy
+         y+SA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wFxsbjbphTDZBrxMQjimUMRPZiRt8Y19uxPrqCS0lwQ=;
+        b=DEobnqBmlKbEwIsyJWkLN/laZPdvUfgiYtPn5LwvHZ11Vz8wN2bGiZin3Wib7wZMuf
+         O/fXMoIkoTs2InYHFDi0bPLrdcbYNu8sU2xAU6ObPAoWZPQJVfGyeOzrrytbmNX5bEEm
+         tTPCm7pVpZPE51gH7VqpdEtQ4jBwL6rUHKzY4pAkye/vedGKNHtRrn9I21jldSpP/5t8
+         /rHdBOWoJmtvRYLsOer/oGgyNb57ab+hoWdN0atXSuu4m9VlrGX56hcVSEpRXMWxb4+G
+         vEPJDETRzvhn7McAG9VskCDaMI9hLgfkT0dLTi7eey3CNtXFk04sF7f2MjEwBwbR36Br
+         89aQ==
+X-Gm-Message-State: APjAAAV5epu41FhGPa6AwBDtXlxtE+ABqbso7R7PskHZlGDlcWBYBRlR
+        eB8vNPR4LH36Q8pRrWNKDzU=
+X-Google-Smtp-Source: APXvYqxZrC0dTyXVuTHwZCXAij6lsQvtDMduKtZPdPjNo1YcMZltAZwoqb9eh/Q+QIkJ8mwqsSGXeQ==
+X-Received: by 2002:a17:902:aa03:: with SMTP id be3mr25194879plb.84.1569110229927;
+        Sat, 21 Sep 2019 16:57:09 -0700 (PDT)
+Received: from [192.168.43.210] (mobile-166-177-248-155.mycingular.net. [166.177.248.155])
+        by smtp.gmail.com with ESMTPSA id c64sm9618895pfc.19.2019.09.21.16.57.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 21 Sep 2019 16:57:09 -0700 (PDT)
+Subject: Re: [RFC v3 18/19] of: unittest: split out a couple of test cases
+ from unittest
+To:     Rob Herring <robh@kernel.org>,
+        Brendan Higgins <brendanhiggins@google.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>, shuah@kernel.org,
+        Joel Stanley <joel@jms.id.au>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joe Perches <joe@perches.com>, brakmo@fb.com,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        linux-um@lists.infradead.org, Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Knut Omang <knut.omang@oracle.com>
+References: <20181128193636.254378-1-brendanhiggins@google.com>
+ <20181128193636.254378-19-brendanhiggins@google.com>
+ <990bfc7d-dc5e-d8d3-c151-9b321ff2ac10@gmail.com>
+ <CAFd5g45tOGgf_sKGYRC=fpnTBKGaG=8frbQdgZ3ZTkQFyTfP5A@mail.gmail.com>
+ <88fe0546-7850-5bb4-9673-b1aef2dccb3e@gmail.com>
+ <CAFd5g444f-FBq4x3U7BL-EY+bFxP0rsJhJ14=mjOi89PhMkURg@mail.gmail.com>
+ <0e311e88-c4d4-e98d-1720-53a04bd526fc@gmail.com>
+ <CAFd5g44NTZoSAJPMvXP2xvJgn7m5QoV-KJu2AMrr67+eL+CKrQ@mail.gmail.com>
+ <d9f7e000-4cac-a35a-3ff9-60130e12ebea@gmail.com>
+ <72cd1c5b-6f68-73ad-c8fd-f3a3268a0529@gmail.com>
+ <CAFd5g46UU9wk+F6A5wnKYYtYKmmtv__SaY8eg6v-T9xUjsoxhA@mail.gmail.com>
+ <bb5bcd3d-a09a-cfbe-c7fa-16e5eb75b0e4@gmail.com>
+ <CAFd5g448xQLOJwVYU5Zmu4+OPWuboiWZPhBvK6au8Pgm5B9haQ@mail.gmail.com>
+ <CAL_JsqLxPZ2TyKv3M=a9r4_Vh+aOQRXgETwbBvf7xsBVisZN9w@mail.gmail.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <cba984c8-3c2a-91c1-610d-04e35e2172be@gmail.com>
+Date:   Sat, 21 Sep 2019 16:57:00 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6fd6e11e-3401-4f15-07b8-08d73ee8e207
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Sep 2019 23:10:24.4529
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: srQIqMgGE2Wx1C8qAa8Rzovs32fa3neCzVY5xZ+v4LPMAVkGMMorRD/myOMa9TBi/Q5+XVzb535kiMIkiL22fQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1200
+In-Reply-To: <CAL_JsqLxPZ2TyKv3M=a9r4_Vh+aOQRXgETwbBvf7xsBVisZN9w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---eqg4wsr35upu7sev
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 9/20/19 9:57 AM, Rob Herring wrote:
+> Following up from LPC discussions...
+> 
+> On Thu, Mar 21, 2019 at 8:30 PM Brendan Higgins
+> <brendanhiggins@google.com> wrote:
+>>
+>> On Thu, Mar 21, 2019 at 5:22 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>>>
+>>> On 2/27/19 7:52 PM, Brendan Higgins wrote:
+>>>> On Wed, Feb 20, 2019 at 12:45 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>>>>>
+>>>>> On 2/18/19 2:25 PM, Frank Rowand wrote:
+>>>>>> On 2/15/19 2:56 AM, Brendan Higgins wrote:
+>>>>>>> On Thu, Feb 14, 2019 at 6:05 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>>>>>>>>
+>>>>>>>> On 2/14/19 4:56 PM, Brendan Higgins wrote:
+>>>>>>>>> On Thu, Feb 14, 2019 at 3:57 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>>>>>>>>>>
+>>>>>>>>>> On 12/5/18 3:54 PM, Brendan Higgins wrote:
+>>>>>>>>>>> On Tue, Dec 4, 2018 at 2:58 AM Frank Rowand <frowand.list@gmail.com> wrote:
+>> < snip >
+>>>>>
+>>>>> In the base version, the order of execution of the test code requires
+>>>>> bouncing back and forth between the test functions and the coding of
+>>>>> of_test_find_node_by_name_cases[].
+>>>>
+>>>> You shouldn't need to bounce back and forth because the order in which
+>>>> the tests run shouldn't matter.
+>>>
+>>> If one can't guarantee total independence of all of the tests, with no
+>>> side effects, then yes.  But that is not my world.  To make that
+>>> guarantee, I would need to be able to run just a single test in an
+>>> entire test run.
+>>>
+>>> I actually want to make side effects possible.  Whether from other
+>>> tests or from live kernel code that is accessing the live devicetree.
+>>> Any extra stress makes me happier.
+>>>
+>>> I forget the exact term that has been tossed around, but to me the
+>>> devicetree unittests are more like system validation, release tests,
+>>> acceptance tests, and stress tests.  Not unit tests in the philosophy
+>>> of KUnit.
+>>
+>> Ah, I understand. I thought that they were actually trying to be unit
+>> tests; that pretty much voids this discussion then. Integration tests
+>> and end to end tests are valuable as long as that is actually what you
+>> are trying to do.
+> 
+> There's a mixture. There's a whole bunch of tests that are basically
+> just testing various DT APIs and use a static DT. Those are all unit
+> tests IMO.
+> 
+> Then there's all the overlay tests Frank has added. I guess some of
+> those are not unittests in the strictest sense. Regardless, if we're
+> reporting test results, we should align our reporting with what will
+> become the rest of the kernel.
 
-Hi Linus,
+The last time I talked to you at lpc, I was still resisting moving the
+DT unittests to the kunit framework.  But I think I am on board now.
 
-Here are the main MIPS changes for v5.4; please pull.
+Brendan agreed to accept a kunit patch from me (when I write it) to enable
+the DT unittests to report # of tests run and # of tests passed/failed,
+as is currently the case.
 
-My apologies that this is arriving at the end of the week; a combination
-of travel & discovering a MIPS32 page table handling issue later than
-would have been ideal delayed things.
-
-There are a number of minor merge conflicts with current master, my
-suggested resolutions are as follows:
-
-diff --cc Documentation/mips/index.rst
-index fd9023c8a89f,321b4794f3b8..3616fb872af3
---- a/Documentation/mips/index.rst
-+++ b/Documentation/mips/index.rst
-@@@ -1,17 -1,11 +1,18 @@@
-  .. SPDX-License-Identifier: GPL-2.0
- =20
- -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
- -MIPS-specific Documentation
- -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
- +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
- +MIPS architecture
- +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
- =20
-  .. toctree::
- -   :maxdepth: 1
- -   :numbered:
- +   :maxdepth: 2
- =20
- +   au1xxx_ide
-+    ingenic-tcu
- +
- +.. only::  subproject and html
- +
- +   Indices
- +   =3D=3D=3D=3D=3D=3D=3D
- +
- +   * :ref:`genindex`
-diff --cc arch/mips/Kconfig
-index 904c096fa4da,2f7c050e8cde..cc8e2b1032a5
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@@ -43,8 -44,7 +44,8 @@@ config MIP
-        select HAVE_ARCH_MMAP_RND_COMPAT_BITS if MMU && COMPAT
-        select HAVE_ARCH_SECCOMP_FILTER
-        select HAVE_ARCH_TRACEHOOK
--       select HAVE_ARCH_TRANSPARENT_HUGEPAGE if CPU_SUPPORTS_HUGEPAGES && =
-64BIT
-+       select HAVE_ARCH_TRANSPARENT_HUGEPAGE if CPU_SUPPORTS_HUGEPAGES
- +      select HAVE_ASM_MODVERSIONS
-        select HAVE_EBPF_JIT if (!CPU_MICROMIPS)
-        select HAVE_CONTEXT_TRACKING
-        select HAVE_COPY_THREAD_TLS
-diff --cc drivers/video/fbdev/Makefile
-index aab7155884ea,49502d6256cb..aa6352798cf4
---- a/drivers/video/fbdev/Makefile
-+++ b/drivers/video/fbdev/Makefile
-@@@ -116,7 -116,7 +116,6 @@@ obj-y                             +=3D om
-  obj-$(CONFIG_XEN_FBDEV_FRONTEND)  +=3D xen-fbfront.o
-  obj-$(CONFIG_FB_CARMINE)          +=3D carminefb.o
-  obj-$(CONFIG_FB_MB862XX)        +=3D mb862xx/
-- obj-$(CONFIG_FB_JZ4740)                 +=3D jz4740_fb.o
- -obj-$(CONFIG_FB_NUC900)           +=3D nuc900fb.o
-  obj-$(CONFIG_FB_PUV3_UNIGFX)      +=3D fb-puv3.o
-  obj-$(CONFIG_FB_HYPERV)                 +=3D hyperv_fb.o
-  obj-$(CONFIG_FB_OPENCORES)      +=3D ocfb.o
-
-Thanks,
-    Paul
+Brendan also agreed that null initialization and clean up would be ok
+for the DT unittests.  But that he does not want that model to be
+frequently used.  (You mention this idea later in the email I am
+replying to.)
 
 
-The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
+> 
+>>> I do see the value of pure unit tests, and there are rare times that
+>>> my devicetree use case might be better served by that approach.  But
+>>> if so, it is very easy for me to add a simple pure test when debugging.
+>>> My general use case does not map onto this model.
+>>
+>> Why do you think it is rare that you would actually want unit tests?
+> 
+> I don't. We should have a unittest (or multiple) for every single DT
+> API call and that should be a requirement to add any new APIs.
+> 
+>> I mean, if you don't get much code churn, then maybe it's not going to
+>> provide you a ton of value to immediately go and write a bunch of unit
+>> tests right now, but I can't think of a single time where it's hurt.
+>> Unit tests, from my experience, are usually the easiest tests to
+>> maintain, and the most helpful when I am developing.
+>>
+>> Maybe I need to understand your use case better.
+>>
+>>>
+>>>
+>>>>>
+>>>>> In the frank version the order of execution of the test code is obvious.
+>>>>
+>>>> So I know we were arguing before over whether order *does* matter in
+>>>> some of the other test cases (none in the example that you or I
+>>>> posted), but wouldn't it be better if the order of execution didn't
+>>>> matter? If you don't allow a user to depend on the execution of test
+>>>> cases, then arguably these test case dependencies would never form and
+>>>> the order wouldn't matter.
+>>>
+>>> Reality intrudes.  Order does matter.
+>>>
+>>>
+>>>>>
+>>>>> It is possible that a test function could be left out of
+>>>>> of_test_find_node_by_name_cases[], in error.  This will result in a compile
+>>>>> warning (I think warning instead of error, but I have not verified that)
+>>>>> so it might be caught or it might be overlooked.
+>>>>>
+>>>>> The base version is 265 lines.  The frank version is 208 lines, 57 lines
+>>>>> less.  Less is better.
+>>>>
+>>>> I agree that less is better, but there are different kinds of less to
+>>>> consider. I prefer less logic in a function to fewer lines overall.
+>>>>
+>>>> It seems we are in agreement that test cases should be small and
+>>>> simple, so I won't dwell on that point any longer. I agree that the
+>>>
+>>> As a general guide for simple unit tests, sure.
+>>>
+>>> For my case, no.  Reality intrudes.
+>>>
+>>> KUnit has a nice architectural view of what a unit test should be.
+>>
+>> Cool, I am glad you think so! That actually means a lot to me. I was
+>> afraid I wasn't conveying the idea properly and that was the root of
+>> this debate.
+>>
+>>>
+>>> The existing devicetree "unittests" are not such unit tests.  They
+>>> simply share the same name.
+>>>
+>>> The devicetree unittests do not fit into a clean:
+>>>   - initialize
+>>>   - do one test
+>>>   - clean up
+>>> model.
+> 
+> Initialize being static and clean-up being NULL still fits into this model.
+> 
+>>> Trying to force them into that model will not work.  The initialize
+>>> is not a simple, easy to decompose thing.  And trying to decompose
+>>> it can actually make the code more complex and messier.
+>>>
+>>> Clean up can NOT occur, because part of my test validation is looking
+>>> at the state of the device tree after the tests complete, viewed
+>>> through the /proc/device-tree/ interface.
+> 
+> Well, that's pretty ugly to have the test in the kernel and the
+> validation in userspace. I can see why you do, but that seems like a
+> problem in how those tests are defined and run.
 
-  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
+Yes it is ugly.  Any good suggestions on a better solution?
 
-are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git tags/mips_5.4
+> 
+>> Again, if they are not actually intended to be unit tests, then I
+>> think that is fine.
+>>
+>> < snip >
+>>
+>>>> Compare the test cases for adding of_test_dynamic_basic,
+>>>> of_test_dynamic_add_existing_property,
+>>>> of_test_dynamic_modify_existing_property, and
+>>>> of_test_dynamic_modify_non_existent_property to the originals. My
+>>>> version is much longer overall, but I think is still much easier to
+>>>> understand. I can say from when I was trying to split this up in the
+>>>> first place, it was not obvious what properties were expected to be
+>>>> populated as a precondition for a given test case (except the first
+>>>> one of course). Whereas, in my version, it is immediately obvious what
+>>>> the preconditions are for a test case. I think you can apply this same
+>>>> logic to the examples you provided, in frank version, I don't
+>>>> immediately know if one test cases does something that is a
+>>>> precondition for another test case.
+>>>
+>>> Yes, that is a real problem in the current code, but easily fixed
+>>> with comments.
+>>
+>> I think it is best when you don't need comments, but in this case, I
+>> think I have to agree with you.
+>>
+>>>
+>>>
+>>>> My version also makes it easier to run a test case entirely by itself
+>>>> which is really valuable for debugging purposes. A common thing that
+>>>> happens when you have lots of unit tests is something breaks and lots
+>>>> of tests fail. If the test cases are good, there should be just a
+>>>> couple (ideally one) test cases that directly assert the violated
+>>>> property; those are the test cases you actually want to focus on, the
+>>>> rest are noise for the purposes of that breakage. In my version, it is
+>>>> much easier to turn off the test cases that you don't care about and
+>>>> then focus in on the ones that exercise the violated property.
+>>>>
+>>>> Now I know that, hermeticity especially, but other features as well
+>>>> (test suite summary, error on unused test case function, etc) are not
+>>>> actually in KUnit as it is under consideration here. Maybe it would be
+>>>> best to save these last two patches (18/19, and 19/19) until I have
+>>>> these other features checked in and reconsider them then?
+>>>
+>>> Thanks for leaving 18/19 and 19/19 off in v4.
+>>
+>> Sure, no problem. It was pretty clear that it was a waste of both of
+>> our times to continue discussing those at this juncture. :-)
+>>
+>> Do you still want me to try to convert the DT not-exactly-unittest to
+>> KUnit? I would kind of prefer (I don't feel *super* strongly about the
+>> matter) we don't call it that since I was intending for it to be the
+>> flagship initial example, but I certainly don't mind trying to clean
+>> this patch up to get it up to snuff. It's really just a question of
+>> whether it is worth it to you.
+> 
+> I still want to see this happen at least for the parts that are
+> clearly unit tests. And for the parts that aren't, Frank should move
+> them out of of/unittest.c.
+> 
+> So how to move forward? Convert tests one by one? Take a first swag at
+> what are unit tests and aren't?
 
-for you to fetch changes up to 05d013a0366d50f4f0dbebf8c1b22b42020bf49a:
+By the end of lpc I decided that I would go ahead and take a shot at
+modifying the DT unittests to use the kunit framework.  So I am
+volunteering me to do the work.  This has an additional benefit of
+testing whether someone like me can successfully follow the
+documentation.
 
-  MIPS: Detect bad _PFN_SHIFT values (2019-09-20 14:55:07 -0700)
+It looked like there was a good chance that kunit would get accepted in
+the merge window, so I was going to do the DT unittest work based on
+-rc1.  I see that Brenden has submitted a couple more versions after
+the merge window opened.  I think that kunit will be stable enough
+after -rc1 (even if not yet merged by Linus) that I will be comfortable
+doing the work on top of the latest patch series at the close of the
+merge window.
 
-----------------------------------------------------------------
-Main MIPS changes for v5.4:
 
-- boot_mem_map is removed, providing a nice cleanup made possible by the
-  recent removal of bootmem.
+> 
+> Brendan, do you still have DT unittest patches that work with current kunit?
 
-- Some fixes to atomics, in general providing compiler barriers for
-  smp_mb__{before,after}_atomic plus fixes specific to Loongson CPUs or
-  MIPS32 systems using cmpxchg64().
+I never saw a version of the DT unittest patches that worked.  I was watching
+and waiting before doing a serious review of the DT unittest portion of the
+kunit patch series.
 
-- Conversion to the new generic VDSO infrastructure courtesy of Vincenzo
-  Frascino.
+-Frank
 
-- Removal of undefined behavior in set_io_port_base(), fixing the
-  behavior of some MIPS kernel configurations when built with recent
-  clang versions.
+> 
+> Rob
+> 
 
-- Initial MIPS32 huge page support, functional on at least Ingenic SoCs.
-
-- pte_special() is now supported for some configurations, allowing among
-  other things generic fast GUP to be used.
-
-- Miscellaneous fixes & cleanups.
-
-And platform specific changes:
-
-- Major improvements to Ingenic SoC support from Paul Cercueil, mostly
-  enabled by the inclusion of the new TCU (timer-counter unit) drivers
-  he's spent a very patient year or so working on. Plus some fixes for
-  X1000 SoCs from Zhou Yanjie.
-
-- Netgear R6200 v1 systems are now supported by the bcm47xx platform.
-
-- DT updates for BMIPS, Lantiq & Microsemi Ocelot systems.
-
-----------------------------------------------------------------
-Antoine Tenart (2):
-      MIPS: dts: mscc: describe the PTP register range
-      MIPS: dts: mscc: describe the PTP ready interrupt
-
-Arnd Bergmann (1):
-      mips: fix vdso32 build, again
-
-Christoph Hellwig (1):
-      mips: remove ioremap_cachable
-
-Christophe JAILLET (1):
-      MIPS: Octeon: Fix a typo in #define OCTOEN_SERIAL_LEN
-
-Daniel Silsby (5):
-      MIPS: Disallow CPU_SUPPORTS_HUGEPAGES for XPA,EVA
-      MIPS: Add partial 32-bit huge page support
-      MIPS: Decouple CPU_SUPPORTS_HUGEPAGES from 64BIT
-      MIPS: ingenic: Add support for huge pages
-      MIPS: Undefine PMD_ORDER for 32-bit builds
-
-Dmitry Korotin (1):
-      MIPS: pte_special()/pte_mkspecial() support
-
-Edward Matijevi=C4=87 (1):
-      MIPS: BCM47XX: Add support for Netgear R6200 V1
-
-Fabian Mewes (1):
-      MIPS: Kconfig: remove HAVE_LATENCYTOP_SUPPORT
-
-Firoz Khan (1):
-      mips: remove nargs from __SYSCALL
-
-Florian Fainelli (2):
-      firmware: bcm47xx_nvram: Correct size_t printf format
-      firmware: bcm47xx_nvram: Allow COMPILE_TEST
-
-Hauke Mehrtens (1):
-      MIPS: ralink: deactivate PCI support for SOC_MT7621
-
-Jiaxun Yang (9):
-      MIPS: OCTEON: Drop boot_mem_map
-      MIPS: fw: Record prom memory
-      MIPS: malta: Drop prom_free_prom_memory
-      MIPS: msp: Record prom memory
-      MIPS: ip22: Drop addr_is_ram
-      MIPS: xlp: Drop boot_mem_map
-      MIPS: mm: Drop boot_mem_map
-      MIPS: init: Drop boot_mem_map
-      MIPS: Treat Loongson Extensions as ASEs
-
-Jonas Gorski (1):
-      MIPS: BMIPS: add clock controller nodes
-
-Martin Blumenstingl (1):
-      MIPS: lantiq: update the clock alias' for the mainline PCIe PHY driver
-
-Nathan Chancellor (3):
-      MIPS: Don't use bc_false uninitialized in __mm_isBranchInstr
-      MIPS/ptrace: Update mips_get_syscall_arg's return type
-      MIPS: tlbex: Explicitly cast _PAGE_NO_EXEC to a boolean
-
-Nick Desaulniers (1):
-      mips: avoid explicit UB in assignment of mips_io_port_base
-
-Paul Burton (15):
-      MIPS: Remove unused R4300 CPU support
-      MIPS: Remove unused R5432 CPU support
-      MIPS: Remove unused R5432_CP0_INTERRUPT_WAR
-      MIPS: Remove unused R8000 CPU support
-      MIPS: octeon: Remove cpu_has_saa
-      MIPS: octeon: Remove ARCH_HAS_IRQ_PER_CPU
-      Merge branch 'ingenic-tcu-v5.4' into mips-next
-      MIPS: mm: Fix highmem compile
-      MIPS: Fix build with CONFIG_PROC_VMCORE=3Dy
-      MIPS: Select R3k-style TLB in Kconfig
-      MIPS: tlbex: Simplify r3k check
-      MIPS: tlbex: Remove cpu_has_local_ebase
-      MIPS: Drop Loongson _CACHE_* definitions
-      MIPS: Disable pte_special() for MIPS32 with RiXi
-      MIPS: Detect bad _PFN_SHIFT values
-
-Paul Cercueil (27):
-      MIPS: Rename JZRISC to XBURST
-      MIPS: Decode config3 register on Ingenic SoCs
-      MIPS: DTS: jz4740: Add node for the MMC driver
-      MIPS: qi_lb60: Move MMC configuration to devicetree
-      MIPS: DTS: jz4740: Add missing nodes
-      MIPS: qi_lb60: Migrate to devicetree
-      MIPS: configs: LB60: update defconfig
-      ASoC: jz4740: Drop lb60 board code
-      video/fbdev: Drop JZ4740 driver
-      dma: Drop JZ4740 driver
-      mtd: rawnand: Drop obsolete JZ4740 NAND driver
-      power/supply: Drop obsolete JZ4740 driver
-      hwmon: Drop obsolete JZ4740 driver
-      MIPS: jz4740: Drop dead code
-      dt-bindings: ingenic: Add DT bindings for TCU clocks
-      doc: Add doc for the Ingenic TCU hardware
-      dt-bindings: Add doc for the Ingenic TCU drivers
-      mfd/syscon: Add device_node_to_regmap()
-      clk: ingenic: Add driver for the TCU clocks
-      irqchip: Add irq-ingenic-tcu driver
-      clocksource: Add a new timer-ingenic driver
-      clk: jz4740: Add TCU clock
-      MIPS: jz4740: Add DTS nodes for the TCU drivers
-      MIPS: qi_lb60: Reduce system timer and clocksource to 750 kHz
-      MIPS: CI20: Reduce system timer and clocksource to 3 MHz
-      MIPS: GCW0: Reduce system timer and clocksource to 750 kHz
-      MIPS: jz4740: Drop obsolete code
-
-Peter Zijlstra (3):
-      mips/atomic: Fix cmpxchg64 barriers
-      mips/atomic: Fix loongson_llsc_mb() wreckage
-      mips/atomic: Fix smp_mb__{before,after}_atomic()
-
-Stephen Boyd (1):
-      MIPS: Remove dev_err() usage after platform_get_irq()
-
-Thomas Bogendoerfer (1):
-      MIPS: PCI: refactor ioc3 special handling
-
-Vincenzo Frascino (6):
-      mips: Add support for generic vDSO
-      mips: Add clock_getres entry point
-      mips: Add clock_gettime64 entry point
-      mips: vdso: Fix source path
-      mips: vdso: Fix flip/flop vdso building bug
-      mips: compat: vdso: Use legacy syscalls as fallback
-
-YueHaibing (2):
-      irqchip/irq-ingenic-tcu: Fix COMPILE_TEST building
-      MIPS: Octeon: remove duplicated include from dma-octeon.c
-
-Zhou Yanjie (3):
-      MIPS: X1000: Add X1000 system type.
-      MIPS: Ingenic: Fix bugs when detecting X1000's L2 cache.
-      MIPS: Ingenic: Disable broken BTB lookup optimization.
-
- .../devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt |  22 -
- .../devicetree/bindings/timer/ingenic,tcu.txt      | 137 ++++
- .../bindings/watchdog/ingenic,jz4740-wdt.txt       |  17 -
- Documentation/index.rst                            |   1 +
- Documentation/mips/index.rst                       |  11 +
- Documentation/mips/ingenic-tcu.rst                 |  71 +++
- arch/mips/Kconfig                                  |  65 +-
- arch/mips/Makefile                                 |   4 -
- arch/mips/bcm47xx/board.c                          |   1 +
- arch/mips/bcm47xx/buttons.c                        |  10 +
- arch/mips/boot/dts/brcm/bcm3368.dtsi               |  12 +-
- arch/mips/boot/dts/brcm/bcm63268.dtsi              |  12 +-
- arch/mips/boot/dts/brcm/bcm6328.dtsi               |   6 +
- arch/mips/boot/dts/brcm/bcm6358.dtsi               |  12 +-
- arch/mips/boot/dts/brcm/bcm6362.dtsi               |  12 +-
- arch/mips/boot/dts/brcm/bcm6368.dtsi               |  12 +-
- arch/mips/boot/dts/ingenic/ci20.dts                |   7 +
- arch/mips/boot/dts/ingenic/gcw0.dts                |  10 +
- arch/mips/boot/dts/ingenic/jz4740.dtsi             | 127 +++-
- arch/mips/boot/dts/ingenic/jz4770.dtsi             |  21 +
- arch/mips/boot/dts/ingenic/jz4780.dtsi             |  23 +
- arch/mips/boot/dts/ingenic/qi_lb60.dts             | 325 ++++++++++
- arch/mips/boot/dts/mscc/ocelot.dtsi                |   7 +-
- arch/mips/cavium-octeon/dma-octeon.c               |  16 +-
- arch/mips/cavium-octeon/setup.c                    |   3 +-
- arch/mips/configs/qi_lb60_defconfig                |  44 +-
- arch/mips/fw/arc/memory.c                          |  24 +-
- arch/mips/include/asm/addrspace.h                  |   9 -
- arch/mips/include/asm/atomic.h                     |  19 +-
- arch/mips/include/asm/barrier.h                    |  44 +-
- arch/mips/include/asm/bitops.h                     |  47 +-
- arch/mips/include/asm/bootinfo.h                   |  17 +-
- arch/mips/include/asm/cmpxchg.h                    |  18 +-
- arch/mips/include/asm/cpu-features.h               |  19 +-
- arch/mips/include/asm/cpu-type.h                   |  15 +-
- arch/mips/include/asm/cpu.h                        |  19 +-
- arch/mips/include/asm/io.h                         |  21 +-
- arch/mips/include/asm/mach-bcm47xx/bcm47xx_board.h |   1 +
- .../asm/mach-cavium-octeon/cpu-feature-overrides.h |   9 -
- arch/mips/include/asm/mach-cavium-octeon/war.h     |   1 -
- .../include/asm/mach-dec/cpu-feature-overrides.h   |   1 -
- arch/mips/include/asm/mach-generic/war.h           |   1 -
- arch/mips/include/asm/mach-ip22/war.h              |   1 -
- arch/mips/include/asm/mach-ip27/war.h              |   1 -
- arch/mips/include/asm/mach-ip28/war.h              |   1 -
- arch/mips/include/asm/mach-ip32/war.h              |   1 -
- arch/mips/include/asm/mach-jz4740/gpio.h           |  15 -
- arch/mips/include/asm/mach-jz4740/jz4740_fb.h      |  58 --
- arch/mips/include/asm/mach-jz4740/jz4740_mmc.h     |  12 -
- arch/mips/include/asm/mach-jz4740/platform.h       |  26 -
- .../asm/mach-loongson64/cpu-feature-overrides.h    |   1 -
- arch/mips/include/asm/mach-malta/war.h             |   1 -
- arch/mips/include/asm/mach-pmcs-msp71xx/war.h      |   1 -
- arch/mips/include/asm/mach-rc32434/war.h           |   1 -
- arch/mips/include/asm/mach-rm/war.h                |   1 -
- arch/mips/include/asm/mach-sibyte/war.h            |   1 -
- arch/mips/include/asm/mach-tx49xx/war.h            |   1 -
- arch/mips/include/asm/mipsregs.h                   |   4 +
- arch/mips/include/asm/module.h                     |   6 -
- arch/mips/include/asm/octeon/octeon.h              |   4 +-
- arch/mips/include/asm/pgtable-32.h                 |  62 +-
- arch/mips/include/asm/pgtable-bits.h               |  34 +-
- arch/mips/include/asm/pgtable.h                    |  20 +-
- arch/mips/include/asm/syscall.h                    |  21 +-
- arch/mips/include/asm/vdso.h                       |  78 +--
- arch/mips/include/asm/vdso/gettimeofday.h          | 222 +++++++
- arch/mips/{ =3D> include/asm}/vdso/vdso.h            |  16 +-
- arch/mips/include/asm/vdso/vsyscall.h              |  43 ++
- arch/mips/include/asm/war.h                        |  13 -
- arch/mips/jz4740/Makefile                          |   7 +-
- arch/mips/jz4740/board-qi_lb60.c                   | 523 ----------------
- arch/mips/jz4740/platform.c                        | 250 --------
- arch/mips/jz4740/prom.c                            |   5 -
- arch/mips/jz4740/setup.c                           |   7 +-
- arch/mips/jz4740/time.c                            | 151 +----
- arch/mips/kernel/branch.c                          |   2 +-
- arch/mips/kernel/cpu-probe.c                       |  53 +-
- arch/mips/kernel/genex.S                           |   3 -
- arch/mips/kernel/idle.c                            |   3 +-
- arch/mips/kernel/proc.c                            |   4 +
- arch/mips/kernel/scall32-o32.S                     |   2 +-
- arch/mips/kernel/scall64-n32.S                     |   2 +-
- arch/mips/kernel/scall64-n64.S                     |   2 +-
- arch/mips/kernel/scall64-o32.S                     |   2 +-
- arch/mips/kernel/setup.c                           | 357 +++--------
- arch/mips/kernel/syscall.c                         |   1 +
- arch/mips/kernel/syscalls/syscalltbl.sh            |   4 +-
- arch/mips/kernel/vdso.c                            |  37 +-
- arch/mips/lantiq/xway/sysctrl.c                    |  16 +-
- arch/mips/mm/Makefile                              |   6 +-
- arch/mips/mm/c-r4k.c                               |   2 -
- arch/mips/mm/init.c                                |  98 ++-
- arch/mips/mm/pgtable-32.c                          |  20 +
- arch/mips/mm/sc-mips.c                             |  27 +-
- arch/mips/mm/tlb-r8k.c                             | 239 -------
- arch/mips/mm/tlbex.c                               |  63 +-
- arch/mips/mti-malta/malta-memory.c                 |  11 -
- arch/mips/netlogic/xlp/setup.c                     |  12 +-
- arch/mips/pci/pci-xtalk-bridge.c                   | 167 ++---
- arch/mips/pmcs-msp71xx/msp_prom.c                  |  22 +-
- arch/mips/ralink/Kconfig                           |   1 -
- arch/mips/ralink/timer.c                           |   4 +-
- arch/mips/sgi-ip22/ip28-berr.c                     |  20 +-
- arch/mips/vdso/Makefile                            |  41 +-
- arch/mips/vdso/config-n32-o32-env.c                |  19 +
- arch/mips/vdso/elf.S                               |   2 +-
- arch/mips/vdso/sigreturn.S                         |   2 +-
- arch/mips/vdso/vdso.lds.S                          |   4 +
- arch/mips/vdso/vgettimeofday.c                     |  58 ++
- drivers/clk/ingenic/Kconfig                        |  10 +-
- drivers/clk/ingenic/Makefile                       |   1 +
- drivers/clk/ingenic/jz4740-cgu.c                   |   6 +
- drivers/clk/ingenic/tcu.c                          | 474 ++++++++++++++
- drivers/clocksource/Kconfig                        |  11 +
- drivers/clocksource/Makefile                       |   1 +
- drivers/clocksource/ingenic-timer.c                | 356 +++++++++++
- drivers/dma/Kconfig                                |   6 -
- drivers/dma/Makefile                               |   1 -
- drivers/dma/dma-jz4740.c                           | 623 -----------------=
---
- drivers/firmware/broadcom/Kconfig                  |   2 +-
- drivers/firmware/broadcom/bcm47xx_nvram.c          |   4 +-
- drivers/hwmon/Kconfig                              |  10 -
- drivers/hwmon/Makefile                             |   1 -
- drivers/hwmon/jz4740-hwmon.c                       | 135 ----
- drivers/irqchip/Kconfig                            |  12 +
- drivers/irqchip/Makefile                           |   1 +
- drivers/irqchip/irq-ingenic-tcu.c                  | 182 ++++++
- drivers/mfd/syscon.c                               |  46 +-
- drivers/mtd/nand/raw/ingenic/Kconfig               |   7 -
- drivers/mtd/nand/raw/ingenic/Makefile              |   1 -
- drivers/mtd/nand/raw/ingenic/jz4740_nand.c         | 536 ----------------
- drivers/power/supply/Kconfig                       |  11 -
- drivers/power/supply/Makefile                      |   1 -
- drivers/power/supply/jz4740-battery.c              | 421 -------------
- drivers/video/fbdev/Kconfig                        |   9 -
- drivers/video/fbdev/Makefile                       |   1 -
- drivers/video/fbdev/jz4740_fb.c                    | 690 -----------------=
-----
- include/dt-bindings/clock/ingenic,tcu.h            |  20 +
- include/dt-bindings/clock/jz4740-cgu.h             |   1 +
- include/linux/mfd/syscon.h                         |   6 +
- sound/soc/jz4740/Kconfig                           |  25 +-
- sound/soc/jz4740/Makefile                          |   5 -
- sound/soc/jz4740/qi_lb60.c                         | 106 ----
- 143 files changed, 2921 insertions(+), 4948 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pw=
-m.txt
- create mode 100644 Documentation/devicetree/bindings/timer/ingenic,tcu.txt
- delete mode 100644 Documentation/devicetree/bindings/watchdog/ingenic,jz47=
-40-wdt.txt
- create mode 100644 Documentation/mips/index.rst
- create mode 100644 Documentation/mips/ingenic-tcu.rst
- delete mode 100644 arch/mips/include/asm/mach-jz4740/gpio.h
- delete mode 100644 arch/mips/include/asm/mach-jz4740/jz4740_fb.h
- delete mode 100644 arch/mips/include/asm/mach-jz4740/jz4740_mmc.h
- delete mode 100644 arch/mips/include/asm/mach-jz4740/platform.h
- create mode 100644 arch/mips/include/asm/vdso/gettimeofday.h
- rename arch/mips/{ =3D> include/asm}/vdso/vdso.h (77%)
- create mode 100644 arch/mips/include/asm/vdso/vsyscall.h
- delete mode 100644 arch/mips/jz4740/board-qi_lb60.c
- delete mode 100644 arch/mips/jz4740/platform.c
- delete mode 100644 arch/mips/mm/tlb-r8k.c
- create mode 100644 arch/mips/vdso/config-n32-o32-env.c
- create mode 100644 arch/mips/vdso/vgettimeofday.c
- create mode 100644 drivers/clk/ingenic/tcu.c
- create mode 100644 drivers/clocksource/ingenic-timer.c
- delete mode 100644 drivers/dma/dma-jz4740.c
- delete mode 100644 drivers/hwmon/jz4740-hwmon.c
- create mode 100644 drivers/irqchip/irq-ingenic-tcu.c
- delete mode 100644 drivers/mtd/nand/raw/ingenic/jz4740_nand.c
- delete mode 100644 drivers/power/supply/jz4740-battery.c
- delete mode 100644 drivers/video/fbdev/jz4740_fb.c
- create mode 100644 include/dt-bindings/clock/ingenic,tcu.h
- delete mode 100644 sound/soc/jz4740/qi_lb60.c
-
---eqg4wsr35upu7sev
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYIAB0WIQRgLjeFAZEXQzy86/s+p5+stXUA3QUCXYat3gAKCRA+p5+stXUA
-3RttAP9bEqLbMl3jx1kSHl1cLPwzFbr2y8TCT0VLWTv15sfo5AD/YqoQnQizVtfL
-6O6Rjw6dIEsTWqZVLbFgxZ7wzUV2hQs=
-=sz/v
------END PGP SIGNATURE-----
-
---eqg4wsr35upu7sev--
