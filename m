@@ -2,125 +2,102 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC91C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 03:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BB6C49ED7
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 04:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A17521835
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 03:32:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E2C3217F9
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 04:13:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="D/1QOhYy"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f2gy/qwj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407041AbfIUDcZ (ORCPT
+        id S1726005AbfIUENp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 23:32:25 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57450 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730800AbfIUDcZ (ORCPT
+        Sat, 21 Sep 2019 00:13:45 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:56355 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725440AbfIUENp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 23:32:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=c1M/zfRrJYyk5NNSwiCtP5Tyw5TICxN7E3pYvG8jzDY=; b=D/1QOhYywb0nCoLJiPG1VrKwg
-        I2rGAAZQEKgTupl0LO8eXzv2EVoJ09kRgpZ63k7cj+oeE3dyiLbPRJqsCrvfPVHfOva4PJ01u6EWY
-        dmIKINRzjzd4bnqqGHrrOnO7bZTC0ySKUg4vdAZmNui2KCfryYLLwDiuNw5KsVwCl57KH5YE1lxDa
-        550Cq9adFvvveEiG2hHeeZUHoDVQK8TwzGWs7xi3zpVTzSt4vuspTA1mVuDGon26LU9qyhJY8M/p2
-        Ol97cTjByxxmEVX/3vc4H6SDCAlejRScyCQM5Apt+QLmmv1hGTtVtzFWJWOff/2ZC4lwCa6RuxLid
-        1gJnCOCWA==;
-Received: from [2601:1c0:6280:3f0::9a1f]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iBW8E-0004YP-F9; Sat, 21 Sep 2019 03:32:22 +0000
-Subject: Re: pci: endpoint test BUG
-To:     Hillf Danton <hdanton@sina.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190916020630.1584-1-hdanton@sina.com>
- <20190916112246.GA6693@e121166-lin.cambridge.arm.com>
- <815ad936-8b98-0931-89f7-b97922a7c77d@ti.com>
- <20190920152026.GC10172@e121166-lin.cambridge.arm.com>
- <c1e7862c-d61d-6ecd-f70c-73870f343940@infradead.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <ca8d59d1-df3f-b6fe-37cb-ba3e3bed0440@infradead.org>
-Date:   Fri, 20 Sep 2019 20:32:21 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <c1e7862c-d61d-6ecd-f70c-73870f343940@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Sat, 21 Sep 2019 00:13:45 -0400
+Received: by mail-pf1-f202.google.com with SMTP id m25so6075819pfa.23
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 21:13:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=kHBqDHMjSO8qTU9fcbWkd49WIUWFo+41tMM5TfeDLnM=;
+        b=f2gy/qwjI3Q4nnPYDutHrdK5ttNNQYZ9Z/rrMpAoix6jxyCoiWrwt4NOhQkBTF6dmp
+         emLJSq6XFMbhSwju6NtyEixPB2Wx5xfqNp84oV6vJq8jrCHplwsDG/M2vSDWVQJPzR/S
+         MdGDLtTcG2CnmQ4CoYYQ1W076ZMK1FLpDPepVZ/9r9ux1L1sUqxgAXc3BQK/PRGXnNP3
+         tKUPugk9grx8dkXe6vKCS23zmNvapA3Q3EFa7vnTEf+e2qTS4JRL2D+d/wupUJ4PmThL
+         0gtr5F3iV4r3IJZhOMdz5PbATEna8+sPiduibm8CrvmTLOYO3MpNVjMcLnbli9GLcOl6
+         SEBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=kHBqDHMjSO8qTU9fcbWkd49WIUWFo+41tMM5TfeDLnM=;
+        b=PKHiDlR5t3p1XClsYedksTL3a3Xzio49dnvJ+ZmbSllIg+GEl130cwIa0w/8n50HEj
+         i3l0+YgIHMoCX8jiTx+BmO1gmv+/GpJops+jahQu9HSs/Dh+56FIqR2c7ruBHh0NbOQr
+         5LsJUtm89BEhSxEXj7PUPcge3N49BXPJj8vaPmqL+R7dmGyd5jsz7QHeQ76K+TS3NM4r
+         kxG/xIawlsXK05dBP6BAKlI5gKb6g2ZQZ0f0dEjXyZxd1o5FPHPZcb4QTTWPrhZD6P/M
+         F+grJ06V9/DrH6o0iV1p0qnva4y6tMBUzgNqAdgZFuv6X/Qq3XuWu3E0zP1Ia/43IdxT
+         cIgg==
+X-Gm-Message-State: APjAAAVpBjsuBmsT9DPMLXQA/CnzaA5IYfoipGy7EcgPePpg/XSDcOUd
+        qdyt8Ea9cUuMSfpmkeZhBQG82I28uLo3
+X-Google-Smtp-Source: APXvYqzjM7I8IBxCa27oLt5CbjPBYC7K0TQHMGaY8Dr6+AKYAj/zTzqL7245VfUYpwiMRDwWKG9WCsToN0Lx
+X-Received: by 2002:a63:1f23:: with SMTP id f35mr17289025pgf.298.1569039224007;
+ Fri, 20 Sep 2019 21:13:44 -0700 (PDT)
+Date:   Fri, 20 Sep 2019 21:13:27 -0700
+Message-Id: <20190921041327.155054-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.351.gc4317032e6-goog
+Subject: [PATCH] perf docs: Allow man page date to be specified
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/20/19 7:04 PM, Hillf Danton wrote:
->> 
-> 
->>> It will be resent if no one saw the message.
-> 
->> 
-> 
->> I didn't see it and I can't find it on lore.kernel.org/linux-pci/.
-> 
->> 
-> 
-> Respin, git send-email works/jj/pci-epf-uaf.txt
-> 
-> ...
-> 
-> From: Hillf Danton <hdanton@sina.com>
-> 
-> To: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> Cc: linux-pci <linux-pci@vger.kernel.org>,
-> 
->         LKML <linux-kernel@vger.kernel.org>,
-> 
->         Randy Dunlap <rdunlap@infradead.org>,
-> 
->         Al Viro <viro@zeniv.linux.org.uk>,
-> 
->         Dan Carpenter <dan.carpenter@oracle.com>,
-> 
->         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-> 
->         Kishon Vijay Abraham I <kishon@ti.com>,
-> 
->         Andrey Konovalov <andreyknvl@google.com>,
-> 
->         Hillf Danton <hdanton@sina.com>
-> 
-> Subject: [PATCH] PCI: endpoint: Fix uaf on unregistering driver
-> 
-> Date: Sat, 21 Sep 2019 09:58:28 +0800
-> 
-> Message-Id: <20190921015828.15644-1-hdanton@sina.com>
-> 
-> MIME-Version: 1.0
-> 
-> Content-Transfer-Encoding: 8bit
-> 
->  
-> 
-> Result: 250
-> 
->  
-> 
-> And let me know you see it.
+With this change if a perf_date parameter is provided to asciidoc
+then it will override the default date written to the man page metadata.
+Without this change, or if the perf_date isn't specified, then the
+current date is written to the metadata. Having this parameter allows
+the metadata to be constant if builds happen on different dates. The
+name of the parameter is intended to be consistent with the existing
+perf_version parameter.
 
-No, not seeing the patch in my Inbox nor on lore.kernel.org.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/Documentation/asciidoc.conf | 3 +++
+ 1 file changed, 3 insertions(+)
 
-It's a mystery to me.
-
+diff --git a/tools/perf/Documentation/asciidoc.conf b/tools/perf/Documentation/asciidoc.conf
+index 356b23a40339..2b62ba1e72b7 100644
+--- a/tools/perf/Documentation/asciidoc.conf
++++ b/tools/perf/Documentation/asciidoc.conf
+@@ -71,6 +71,9 @@ ifdef::backend-docbook[]
+ [header]
+ template::[header-declarations]
+ <refentry>
++ifdef::perf_date[]
++<refentryinfo><date>{perf_date}</date></refentryinfo>
++endif::perf_date[]
+ <refmeta>
+ <refentrytitle>{mantitle}</refentrytitle>
+ <manvolnum>{manvolnum}</manvolnum>
 -- 
-~Randy
+2.23.0.351.gc4317032e6-goog
+
