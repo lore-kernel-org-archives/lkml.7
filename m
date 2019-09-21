@@ -2,87 +2,126 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4C6C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 01:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA6F9C49ED7
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 01:35:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3756A20882
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 01:25:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EB3D21882
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 01:35:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NKu9iWsO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730653AbfIUBY2 (ORCPT
+        id S1730750AbfIUBfd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 21:24:28 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:35632 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730608AbfIUBY2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 21:24:28 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 6A9ED10FCBC2F5B5A952;
-        Sat, 21 Sep 2019 09:24:26 +0800 (CST)
-Received: from [127.0.0.1] (10.177.31.14) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Sat, 21 Sep 2019
- 09:24:18 +0800
-Subject: Re: [PATCH] jffs2:freely allocate memory when parameters are invalid
-To:     Richard Weinberger <richard.weinberger@gmail.com>,
-        Xiaoming Ni <nixiaoming@huawei.com>
-CC:     Al Viro <viro@zeniv.linux.org.uk>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Richard Weinberger <richard@nod.at>, <dilinger@queued.net>,
-        LKML <linux-kernel@vger.kernel.org>, <daniel.santos@pobox.com>,
-        <linux-mtd@lists.infradead.org>,
-        David Woodhouse <dwmw2@infradead.org>
-References: <1568962478-126260-1-git-send-email-nixiaoming@huawei.com>
- <20190920114336.GM1131@ZenIV.linux.org.uk>
- <206f8d57-dad9-26c3-6bf6-1d000f5698d4@huawei.com>
- <20190920124532.GN1131@ZenIV.linux.org.uk>
- <20190920125442.GA20754@ZenIV.linux.org.uk>
- <eb679ad2-4020-951c-e4d1-60cb059a5ca8@huawei.com>
- <CAFLxGvzeLTVfA17DMEi5tSkzkUgJncjX5oHWe207x7bfUtugtw@mail.gmail.com>
-From:   Hou Tao <houtao1@huawei.com>
-Message-ID: <b2425bd2-38e9-cb9b-4151-94891f3a71d1@huawei.com>
-Date:   Sat, 21 Sep 2019 09:24:17 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.8.0
+        Fri, 20 Sep 2019 21:35:33 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:37715 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730577AbfIUBfd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 21:35:33 -0400
+Received: by mail-pg1-f193.google.com with SMTP id c17so4836350pgg.4;
+        Fri, 20 Sep 2019 18:35:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=cG6pK6g8mILCzIeCbPb83Sm/c/ST2SxJA3L6TFupHl0=;
+        b=NKu9iWsOkkBwgHTLaSBHWNDWLV9++0u0BS489h3vpsGDnao600EqYfdRM/8b8YoYpq
+         71cXRyNlzG1OX/km32DK9qa2WjqW15uvViB5GOS/9p1da+1Jg+CIpUw5k1juH8WHBXxp
+         QXEtzqlZarOkF3H3xMXaXYiIsNTkuCwvGGwBabWX9v4qJQ6IYgN4jXQKdr5EBPbZ3eaB
+         No/yV3ZGtih53Yt+Eb66iKxtSa4M0UlI5BCSAI0oKdPswNgABm7zu1AB9GwJX/StUyGG
+         7nrBu+AQSXf7g+hB3tJJhiyl75Hs/bTn0UUwcp5LVI5EmgriZr3uSGQUP7hBM+696NZi
+         1iLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cG6pK6g8mILCzIeCbPb83Sm/c/ST2SxJA3L6TFupHl0=;
+        b=MBhmTEYJGo1SMX+c+pYSjmVxV94vFmLOhQUlSF6VkI7d/YMKznYdNTMd5v/ALohi6S
+         +udYJN/BCMmLQXxWYbNlqbcfDBux1oDVP1ooKrfNvgaAV4Yd9m6dv2+sk2HZin3aM5Om
+         kf0MxR6SPoVN2tJrb/00hVbV9WloPwOOE7P/fMGnjtWwjGBYQk2babiE1I7FOehNxKsF
+         KA/8+WF++K7eW6FsLn2HWQUjZ7so6neHlf2z3O3MZ7rh7d+gtl9Ssqkye3edH89XkvFM
+         zir1XOWZtH9rnrCfODgLxXipXqVqYKL/KU9LFKMDM8UCwZleYyhyEBzQ9DAp3JEClGT/
+         EJgw==
+X-Gm-Message-State: APjAAAVQ6spjIIVWu9vnZw9rzHUM4Dyvjkjr0y5sIuFmvR0redBb1QB5
+        NP2Y2p/SrdlkpgZ8sO8gbNM=
+X-Google-Smtp-Source: APXvYqyPlEP4WZSv/rpR6LZ9eXZKEP1/q7+IhkP5qRwObubTv846muFCmkT+juqInEAsfUlnz1M+ng==
+X-Received: by 2002:aa7:8d4b:: with SMTP id s11mr21137720pfe.132.1569029732581;
+        Fri, 20 Sep 2019 18:35:32 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id w6sm6339926pfj.17.2019.09.20.18.35.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 20 Sep 2019 18:35:31 -0700 (PDT)
+Subject: Re: [PATCH 3.16 000/132] 3.16.74-rc1 review
+To:     Ben Hutchings <ben@decadent.org.uk>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        Denis Kirjanov <kda@linux-powerpc.org>
+References: <lsq.1568989414.954567518@decadent.org.uk>
+ <20190920200423.GA26056@roeck-us.net>
+ <8dbced01558cd8d4a1d4f058010e7d63e5f6810e.camel@decadent.org.uk>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <63537eba-48f6-a394-f220-45b4ad543dee@roeck-us.net>
+Date:   Fri, 20 Sep 2019 18:35:29 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAFLxGvzeLTVfA17DMEi5tSkzkUgJncjX5oHWe207x7bfUtugtw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <8dbced01558cd8d4a1d4f058010e7d63e5f6810e.camel@decadent.org.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.31.14]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Richard,
-
-On 2019/9/20 22:38, Richard Weinberger wrote:
-> On Fri, Sep 20, 2019 at 4:14 PM Xiaoming Ni <nixiaoming@huawei.com> wrote:
->> I still think this is easier to understand:
->>  Free the memory allocated by the current function in the failed branch
+On 9/20/19 2:16 PM, Ben Hutchings wrote:
+> On Fri, 2019-09-20 at 13:04 -0700, Guenter Roeck wrote:
+>> On Fri, Sep 20, 2019 at 03:23:34PM +0100, Ben Hutchings wrote:
+>>> This is the start of the stable review cycle for the 3.16.74 release.
+>>> There are 132 patches in this series, which will be posted as responses
+>>> to this one.  If anyone has any issues with these being applied, please
+>>> let me know.
+>>>
+>>> Responses should be made by Mon Sep 23 20:00:00 UTC 2019.
+>>> Anything received after that time might be too late.
+>>>
+>>
+>> Build results:
+>> 	total: 136 pass: 135 fail: 1
+>> Failed builds:
+>> 	arm:allmodconfig
+>> Qemu test results:
+>> 	total: 229 pass: 229 fail: 0
+>>
+>> Build errors in arm:allmodconfig are along the line of
+>>
+>> In file included from include/linux/printk.h:5,
+>>                   from include/linux/kernel.h:13,
+>>                   from include/linux/clk.h:16,
+>>                   from drivers/gpu/drm/tilcdc/tilcdc_drv.h:21,
+>>                   from drivers/gpu/drm/tilcdc/tilcdc_drv.c:20:
+>> include/linux/init.h:343:7: error: 'cleanup_module'
+>> 	specifies less restrictive attribute than its target 'tilcdc_drm_fini': 'cold'
+>>
+>> In addition to a few errors like that, there are literally thousands
+>> of similar warnings.
 > 
-> Please note that jffs2 is in "odd fixes only" maintenance mode.
-> Therefore patches like this cannot be processed.
+> It looks like this is triggered by you switching arm builds from gcc 8
+> to 9, rather than by any code change.
 > 
-> On my never ending review queue are some other jffs2 patches which
-> seem to address
-> real problems. These go first.
-> 
-> I see that many patches come form Huawei, maybe one of you can help
-> maintaining jffs2?
-> Reviews, tests, etc.. are very welcome!
-> 
-In Huawei we use jffs2 broadly in our products to support filesystem on raw
-NOR flash and NAND flash, so fixing the bugs in jffs2 means a lot to us.
 
-Although I have not read all of jffs2 code thoroughly, I had find and "fixed"
-some bugs in jffs2 and I am willing to do any help in the jffs2 community. Maybe
-we can start by testing and reviewing the pending patches in patch work ?
+After reverting to gcc 8.3.0 for arm, I get:
 
-Regards,
-Tao
+Build results:
+	total: 136 pass: 136 fail: 0
+Qemu test results:
+	total: 229 pass: 229 fail: 0
 
+Sorry for the noise.
+
+Guenter
