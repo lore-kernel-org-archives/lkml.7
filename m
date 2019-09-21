@@ -2,92 +2,150 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25AFBC4360D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 18:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B61CC4740A
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 18:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F32BB21835
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 18:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48E0A208C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 18:46:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="QX7r75rs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729034AbfIUSpU (ORCPT
+        id S1732312AbfIUSqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Sep 2019 14:45:20 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2764 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728438AbfIUSpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Sep 2019 14:45:19 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id C8D3E833CB90D33ABA42;
-        Sun, 22 Sep 2019 02:45:15 +0800 (CST)
-Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
- (10.3.19.213) with Microsoft SMTP Server (TLS) id 14.3.439.0; Sun, 22 Sep
- 2019 02:45:10 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Chao Yu <yuchao0@huawei.com>, <linux-erofs@lists.ozlabs.org>
-CC:     LKML <linux-kernel@vger.kernel.org>, Chao Yu <chao@kernel.org>,
-        Miao Xie <miaoxie@huawei.com>, Fang Wei <fangwei1@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v2] erofs: fix erofs_get_meta_page locking by a cleanup
-Date:   Sun, 22 Sep 2019 02:43:55 +0800
-Message-ID: <20190921184355.149928-1-gaoxiang25@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190921073035.209811-1-gaoxiang25@huawei.com>
-References: <20190921073035.209811-1-gaoxiang25@huawei.com>
+        Sat, 21 Sep 2019 14:46:32 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36108 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731877AbfIUSqb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Sep 2019 14:46:31 -0400
+Received: by mail-pg1-f194.google.com with SMTP id h17so3108351pgb.3
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Sep 2019 11:46:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=gZgapyHyH+z8gwryep0g9GJqqxSOwZDa0VOuFSFTh7U=;
+        b=QX7r75rsGufPXqaJn18X+USDCtCeYN76gTDDFNm5TdsuF6FBvbBVxQg+DxpRdjxNsE
+         4qezjRwMSeWooIBocQtJA7D00B2Y2USSXSUCqo1JUx6MmHxhWB205zTOnz4Ic07jtGQT
+         Hv2utAWctZKnJNCD4yIOt3WslfIwfh/0GiVQK5m1UQKoiMD14V/IB0XWmfMV6BecCHtZ
+         ex0xLYCEquo7rHDOHfvpMneGxRpOX0IGoh6NQVUBvUW0pp1GO3dKd2vfW1FOBgLUf4HB
+         bHjaH7kML3sYvyNXA+Q1S/8BXg7qJ87ukBBJbpFMmv9BZAv0c0ffaI/quD7NYmOa9KBQ
+         HjcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=gZgapyHyH+z8gwryep0g9GJqqxSOwZDa0VOuFSFTh7U=;
+        b=l1q43o+Ly08HaDqshy6LPnR/D49KoY4JmwLQvCYbdTkqoPARgiuSLa2ild6BjlU5u8
+         l79PdCnqLLdEGlE4UX1R8SOxK0YC+ECnQ1zy/IrC33llNDf+0pbyGweDzO/rM3dR3SCA
+         XEPHK4uE2bZGoICKauFy6CNMAJF9FXsjLOslZ1vXxKDeh3QtFv9GUNlX5sz7IeoWHq/4
+         kw93GKio6u+P+CgpRKlMltE3OSXG2pBa3PhvypQsTqrmLzwkluTqFSrZ5m4YrPWOdboX
+         2OsX7pWVUlxl7iyVS5CK06K6Agb7fsxYVTkc8r7OFxk44Ej/Wdl7KtTKAo/29d8AwInR
+         0WtA==
+X-Gm-Message-State: APjAAAVwulQu0iZJtgDwdyyNjZSGZEf587RDkZpNnDLRXHkwZwHziSFD
+        uv2Xsc2QJ2U1vmxplYyOgEl2XA==
+X-Google-Smtp-Source: APXvYqzhw4Or80vd1JWPD+/gJBS1uUISAWYzm4nXN1BXmGT5xEQKlE1LbadZGcLKUXuZZAU5ZTSiXQ==
+X-Received: by 2002:a62:2787:: with SMTP id n129mr24547914pfn.45.1569091588773;
+        Sat, 21 Sep 2019 11:46:28 -0700 (PDT)
+Received: from cakuba.netronome.com (c-73-202-202-92.hsd1.ca.comcast.net. [73.202.202.92])
+        by smtp.gmail.com with ESMTPSA id 62sm10472395pfg.164.2019.09.21.11.46.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Sep 2019 11:46:28 -0700 (PDT)
+Date:   Sat, 21 Sep 2019 11:46:24 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, davem@davemloft.net,
+        robh+dt@kernel.org, peppe.cavallaro@st.com,
+        alexandre.torgue@st.com, andrew@lunn.ch
+Subject: Re: [PATCH] dt-bindings: net: dwmac: fix 'mac-mode' type
+Message-ID: <20190921114624.453e4b32@cakuba.netronome.com>
+In-Reply-To: <f189cdbc-b399-7700-a39a-ba185df4af49@gmail.com>
+References: <20190917103052.13456-1-alexandru.ardelean@analog.com>
+        <20190920181141.52cfee67@cakuba.netronome.com>
+        <f189cdbc-b399-7700-a39a-ba185df4af49@gmail.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.140.130.215]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After doing more drop_caches stress test on
-our products, I found the mistake introduced by
-a very recent cleanup [1].
+On Fri, 20 Sep 2019 20:02:58 -0700, Florian Fainelli wrote:
+> On 9/20/2019 6:11 PM, Jakub Kicinski wrote:
+> > On Tue, 17 Sep 2019 13:30:52 +0300, Alexandru Ardelean wrote: =20
+> >> The 'mac-mode' property is similar to 'phy-mode' and 'phy-connection-t=
+ype',
+> >> which are enums of mode strings.
+> >>
+> >> The 'dwmac' driver supports almost all modes declared in the 'phy-mode'
+> >> enum (except for 1 or 2). But in general, there may be a case where
+> >> 'mac-mode' becomes more generic and is moved as part of phylib or netd=
+ev.
+> >>
+> >> In any case, the 'mac-mode' field should be made an enum, and it also =
+makes
+> >> sense to just reference the 'phy-connection-type' from
+> >> 'ethernet-controller.yaml'. That will also make it more future-proof f=
+or new
+> >> modes.
+> >>
+> >> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com> =20
+> >=20
+> > Applied, thank you!
+> >=20
+> > FWIW I had to add the Fixes tag by hand, either ozlabs patchwork or my
+> > git-pw doesn't have the automagic handling there, yet. =20
+>=20
+> AFAICT the ozlabs patchwork instance does not do it, but if you have
+> patchwork administrative rights (the jango administration panel I mean)
+> then it is simple to add the regular expression to the list of tags that
+> patchwork already recognized. Had tried getting that included by
+> default, but it also counted all of those tags and therefore was not
+> particularly fine grained:
+>=20
+> https://lists.ozlabs.org/pipermail/patchwork/2017-January/003910.html
 
-The current rule is that "erofs_get_meta_page"
-should be returned with page locked (although
-it's mostly unnecessary for read-only fs after
-pages are PG_uptodate), but a fix should be
-done for this.
+Curious, it did seem to have counted the Fixes in the 'F' field on the
+web UI but git-pw didn't pull it down =F0=9F=A4=94
 
-[1] https://lore.kernel.org/r/20190904020912.63925-26-gaoxiang25@huawei.com
-Fixes: 618f40ea026b ("erofs: use read_cache_page_gfp for erofs_get_meta_page")
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
----
-changelog from v1:
- - type of return value should be struct page *.
+linux$ git checkout 92974a1d006ad8b30d53047c70974c9e065eb7df
+Note: checking out '92974a1d006ad8b30d53047c70974c9e065eb7df'.
+[...]
+linux$ git pw patch apply 1163199 --signoff
+11:41 linux$ git show
+commit ac964661384b93ff3c9839c6d56f293195d54b4e (HEAD)
+Author: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Date:   Tue Sep 17 13:30:52 2019 +0300
 
- fs/erofs/data.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+    dt-bindings: net: dwmac: fix 'mac-mode' type
+   =20
+    The 'mac-mode' property is similar to 'phy-mode' and 'phy-connection-ty=
+pe',
+    which are enums of mode strings.
+   =20
+    The 'dwmac' driver supports almost all modes declared in the 'phy-mode'
+    enum (except for 1 or 2). But in general, there may be a case where
+    'mac-mode' becomes more generic and is moved as part of phylib or netde=
+v.
+   =20
+    In any case, the 'mac-mode' field should be made an enum, and it also m=
+akes
+    sense to just reference the 'phy-connection-type' from
+    'ethernet-controller.yaml'. That will also make it more future-proof fo=
+r new
+    modes.
+   =20
+    Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+    Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+    Reviewed-by: Rob Herring <robh@kernel.org>
+    Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-index 8a9fcbd0e8ac..fc3a8d8064f8 100644
---- a/fs/erofs/data.c
-+++ b/fs/erofs/data.c
-@@ -34,11 +34,15 @@ static void erofs_readendio(struct bio *bio)
- 
- struct page *erofs_get_meta_page(struct super_block *sb, erofs_blk_t blkaddr)
- {
--	struct inode *const bd_inode = sb->s_bdev->bd_inode;
--	struct address_space *const mapping = bd_inode->i_mapping;
-+	struct address_space *const mapping = sb->s_bdev->bd_inode->i_mapping;
-+	struct page *page;
- 
--	return read_cache_page_gfp(mapping, blkaddr,
-+	page = read_cache_page_gfp(mapping, blkaddr,
- 				   mapping_gfp_constraint(mapping, ~__GFP_FS));
-+	/* should already be PageUptodate */
-+	if (!IS_ERR(page))
-+		lock_page(page);
-+	return page;
- }
- 
- static int erofs_map_blocks_flatmode(struct inode *inode,
--- 
-2.17.1
-
+11:41 linux$=20
