@@ -2,109 +2,137 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D126C49ED7
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 13:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 381E5C49ED7
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 13:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCDF12070C
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 13:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 034CB2080F
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 13:47:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="myJaWfPF"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="SJas1X8N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394243AbfIUNpf (ORCPT
+        id S2437907AbfIUNr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Sep 2019 09:45:35 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38771 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394165AbfIUNpe (ORCPT
+        Sat, 21 Sep 2019 09:47:28 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:58497 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394165AbfIUNr1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Sep 2019 09:45:34 -0400
-Received: by mail-pg1-f195.google.com with SMTP id x10so5426311pgi.5;
-        Sat, 21 Sep 2019 06:45:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=Jampd5QY3jFhxyqLwQVEL6NDlN7nbV5HR8jQMKngBSY=;
-        b=myJaWfPFcB/VrUw59ASvwqkPpI6QMhrdY3JKtWbX0VBlOwaLQ8c1obt+Aw8gMje9/n
-         GPGM8Vs4fExyRZCo+KKCaxHEthyiXyKyeypkqDX6rPhlmYe97tD4xkZfoLuLGQ8Phx3W
-         rSaAyAX1EtOlTciYWfec2XPHZqd7PDi+7eptyDMXzJBLK+Y427R1srGj+S6iZu/KJtGL
-         rVHzoR2khMOs8AnxozLi5HegTw0DeSZcY34hAr/n2IFqnWHzOZCQUu+n4yhxeL2nTrC1
-         /hfDrBWVFtQ2rUJoy5pEzD2n5BX5j1uV3WYMW3kEWZ/ihl12/BRZXQ7Z4dQTW6QSp8Si
-         6dbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=Jampd5QY3jFhxyqLwQVEL6NDlN7nbV5HR8jQMKngBSY=;
-        b=gCppLxzQfJ5bZhtXZsixb81eRrpNeqCL2AZTjB+j0oYdng0/gWXrhyCM7YEjt1Trsu
-         G5G8NKYZuJ2gykNHRO8sCYE/F5+HzRPmC2hc3ykhRmGg2aWTi+zIVcM7cCyRhRY7zNMl
-         xeJZTB26jBsqvpevyBLr4eWoeql5T0QctVPYlCZCMcihqNjsEVzOdrld+meTAgEyJB9J
-         sDRKccj7QW8f0FxqxH+9w+eEzBODvZEXMsjddGY7Fwo3gBuqv6z9r7RCKa3nR29+Gohq
-         WQlSpJyqUfwKn54bfGQFrSpe0G2q+UG+90OiVbLqriik6OM6Jxe8Q4B0qFxO6YUMHzhA
-         vT8Q==
-X-Gm-Message-State: APjAAAWNo/ctuSn6iVs31dMYtZ6sKPMTqVhPbyKhc+AAzgBlh7ASmqYY
-        fJpdAGbezh3r6g0UuY4IOR4=
-X-Google-Smtp-Source: APXvYqylbOMNWzPXkQCyx1fdsnM9gzLcWS/ReJPYB/LwereZThQ7ooEHZnY1Cm+JwTFl0NYK0AiCaQ==
-X-Received: by 2002:a62:870a:: with SMTP id i10mr23043761pfe.259.1569073533602;
-        Sat, 21 Sep 2019 06:45:33 -0700 (PDT)
-Received: from nishad ([106.51.235.3])
-        by smtp.gmail.com with ESMTPSA id o64sm5543682pjb.24.2019.09.21.06.45.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 21 Sep 2019 06:45:33 -0700 (PDT)
-Date:   Sat, 21 Sep 2019 19:15:25 +0530
-From:   Nishad Kamdar <nishadkamdar@gmail.com>
-To:     Hauke Mehrtens <hauke@hauke-m.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] net: dsa: Use the correct style for SPDX License Identifier
-Message-ID: <20190921134522.GA3575@nishad>
+        Sat, 21 Sep 2019 09:47:27 -0400
+Received: from grover.flets-west.jp (softbank126021098169.bbtec.net [126.21.98.169]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id x8LDktRD010507;
+        Sat, 21 Sep 2019 22:46:56 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x8LDktRD010507
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1569073616;
+        bh=5xK4mZcFYP3ny+MZeQAf2c3rhdo7t2J/7fDHiLRieNc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=SJas1X8NoFJ85mQNC+VMMlxMm5DsBKgz8PlYbi6nAJDoG2rLDF5DUGpVb2bPKhy20
+         CPzJm5+9qLjI4jnYr07t1tRGcEGPQ7mFaPMK4ETqhQZoUmGq5r9gvbTKjD/FLDi5G1
+         q2Ltzb4oCvWMSXwYyxBWAiXyzfAeDlWTVTuoFUyr/92k5DXBPLFfsAfrtWMT+dYPMP
+         UrKwUxoL22NbdPgPULzQ2MrHluPT01kiYVNFCI18zjK9O3SL1SDFUvQfL21wDcdhj3
+         tRRgWg+ii5G5yYPnnnIKRqPREONhriO6Zu7WSAPod7Vvo+hmY5NEvR3gAZ30tYs3CS
+         +c70FVcZya/dw==
+X-Nifty-SrcIP: [126.21.98.169]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        netfilter-devel@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] netfilter: use __u8 instead of uint8_t in uapi header
+Date:   Sat, 21 Sep 2019 22:46:48 +0900
+Message-Id: <20190921134648.1259-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch corrects the SPDX License Identifier style
-in header file for Distributed Switch Architecture drivers.
-For C header files Documentation/process/license-rules.rst
-mandates C-like comments (opposed to C source files where
-C++ style should be used)
+When CONFIG_UAPI_HEADER_TEST=y, exported headers are compile-tested to
+make sure they can be included from user-space.
 
-Changes made by using a script provided by Joe Perches here:
-https://lkml.org/lkml/2019/2/7/46.
+Currently, linux/netfilter_bridge/ebtables.h is excluded from the test
+coverage. To make it join the compile-test, we need to fix the build
+errors attached below.
 
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+For a case like this, we decided to use __u{8,16,32,64} variable types
+in this discussion:
+
+  https://lkml.org/lkml/2019/6/5/18
+
+Build log:
+
+  CC      usr/include/linux/netfilter_bridge/ebtables.h.s
+In file included from <command-line>:32:0:
+./usr/include/linux/netfilter_bridge/ebtables.h:126:4: error: unknown type name ‘uint8_t’
+    uint8_t revision;
+    ^~~~~~~
+./usr/include/linux/netfilter_bridge/ebtables.h:139:4: error: unknown type name ‘uint8_t’
+    uint8_t revision;
+    ^~~~~~~
+./usr/include/linux/netfilter_bridge/ebtables.h:152:4: error: unknown type name ‘uint8_t’
+    uint8_t revision;
+    ^~~~~~~
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
- drivers/net/dsa/lantiq_pce.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/dsa/lantiq_pce.h b/drivers/net/dsa/lantiq_pce.h
-index 180663138e75..e2be31f3672a 100644
---- a/drivers/net/dsa/lantiq_pce.h
-+++ b/drivers/net/dsa/lantiq_pce.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * PCE microcode extracted from UGW 7.1.1 switch api
-  *
+ include/uapi/linux/netfilter_bridge/ebtables.h | 6 +++---
+ usr/include/Makefile                           | 1 -
+ 2 files changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/include/uapi/linux/netfilter_bridge/ebtables.h b/include/uapi/linux/netfilter_bridge/ebtables.h
+index 3b86c14ea49d..8076c940ffeb 100644
+--- a/include/uapi/linux/netfilter_bridge/ebtables.h
++++ b/include/uapi/linux/netfilter_bridge/ebtables.h
+@@ -123,7 +123,7 @@ struct ebt_entry_match {
+ 	union {
+ 		struct {
+ 			char name[EBT_EXTENSION_MAXNAMELEN];
+-			uint8_t revision;
++			__u8 revision;
+ 		};
+ 		struct xt_match *match;
+ 	} u;
+@@ -136,7 +136,7 @@ struct ebt_entry_watcher {
+ 	union {
+ 		struct {
+ 			char name[EBT_EXTENSION_MAXNAMELEN];
+-			uint8_t revision;
++			__u8 revision;
+ 		};
+ 		struct xt_target *watcher;
+ 	} u;
+@@ -149,7 +149,7 @@ struct ebt_entry_target {
+ 	union {
+ 		struct {
+ 			char name[EBT_EXTENSION_MAXNAMELEN];
+-			uint8_t revision;
++			__u8 revision;
+ 		};
+ 		struct xt_target *target;
+ 	} u;
+diff --git a/usr/include/Makefile b/usr/include/Makefile
+index 77e0a0cd972a..faba1e5c3873 100644
+--- a/usr/include/Makefile
++++ b/usr/include/Makefile
+@@ -37,7 +37,6 @@ header-test- += linux/hdlc/ioctl.h
+ header-test- += linux/ivtv.h
+ header-test- += linux/kexec.h
+ header-test- += linux/matroxfb.h
+-header-test- += linux/netfilter_bridge/ebtables.h
+ header-test- += linux/netfilter_ipv4/ipt_LOG.h
+ header-test- += linux/netfilter_ipv6/ip6t_LOG.h
+ header-test- += linux/nfc.h
 -- 
 2.17.1
 
