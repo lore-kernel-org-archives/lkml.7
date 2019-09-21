@@ -2,97 +2,81 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1236C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 05:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCAEC49ED7
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 05:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DB4521835
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 05:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0FE421835
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 05:07:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569042373;
-	bh=YF3Qv8ESbhf9Psy2qnudwd6B64q2W/ztM80hmhTkxqo=;
+	s=default; t=1569042445;
+	bh=Oi+G6QQSYRyQJ3cHgjKZHOmPHM0UIQ5lIi+trckwR/s=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AAcmx9pI8RXFKOTLarOrtO5z5uI1ftEFuLkLi2orayNV4KKPy749V/n+GTSn9R5bv
-	 jAZUmdzpmypUmkMexEGTLw/D9ITAAAQf001thSG+Wu+3sK15wrHwq7nWW2yYkPZfxB
-	 VJXlzW2jngAYX1vomhxd5JzqYdFvG48hkqlG1NWo=
+	b=UmHQZ17xjFNBUBBLSHV7Us9HKjqXBE1jJc6lmvww9z3lXbx3Qhr9edGl7sRfa6wd0
+	 F8i9ABAswk/OI7nQ1ihkQo3Z9O39e4LH22WVXtHBkUGY7AT6i9oewqLjuOoNGpQ7il
+	 VIJ1C5p9ifiq6Dr5NO0g0kio42K6mvmBDKqfE0fU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729257AbfIUFGM (ORCPT
+        id S1730828AbfIUFHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Sep 2019 01:06:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54058 "EHLO mail.kernel.org"
+        Sat, 21 Sep 2019 01:07:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725888AbfIUFGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Sep 2019 01:06:12 -0400
+        id S1725888AbfIUFHY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Sep 2019 01:07:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F26AF2054F;
-        Sat, 21 Sep 2019 05:06:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FF242054F;
+        Sat, 21 Sep 2019 05:07:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569042371;
-        bh=YF3Qv8ESbhf9Psy2qnudwd6B64q2W/ztM80hmhTkxqo=;
+        s=default; t=1569042443;
+        bh=Oi+G6QQSYRyQJ3cHgjKZHOmPHM0UIQ5lIi+trckwR/s=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=i3S0t2rIADTH7Wdc5mjCYpsZa/Ob0zPvPzg+KrkjgC8kntsTIWo7h5vuYJBo+HPaF
-         gS9bspZrXs02zUmumVkiuRupFoPuzp3+6Wgdv3OFMR7jSadY7UtOXHtcQTXKmtYi0c
-         Kh9F0cE1MVhwT2nqLDgzErrtrW1fq7luZKX8c6Zk=
-Date:   Sat, 21 Sep 2019 07:06:09 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Subject: Re: [PATCH 5.3 00/21] 5.3.1-stable review
-Message-ID: <20190921050609.GD991717@kroah.com>
-References: <20190919214657.842130855@linuxfoundation.org>
- <CA+G9fYtPMOK8WzhpQTMBZTtz3T9Hzf2aOusFDJF0cr0bKKo6cA@mail.gmail.com>
+        b=F6xUGkjUTlcGPHcAUGx4HQyZgWcwodqbL3YhXcx1Bdgdr6nlGfdMBDw1/lOQrZNnP
+         jTAN/LrMp9EDDfea8lwy1eXfv7ErlpKWr1o7+gUsHy2T5jYrhkCBmqprBV/Si/V0yB
+         EFNLTEcYL3+1aTZ6kubmnAMWvBcDs+UBVQ5f0DQY=
+Date:   Sat, 21 Sep 2019 07:07:21 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Jason Wessel <jason.wessel@windriver.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Will Deacon <will@kernel.org>,
+        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>
+Subject: Re: [PATCH] MAINTAINERS: kgdb: Add myself as a reviewer for kgdb/kdb
+Message-ID: <20190921050721.GA992668@kroah.com>
+References: <20190920104404.1.I237e68e8825e2d6ac26f8e847f521fe2fcc3705a@changeid>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYtPMOK8WzhpQTMBZTtz3T9Hzf2aOusFDJF0cr0bKKo6cA@mail.gmail.com>
+In-Reply-To: <20190920104404.1.I237e68e8825e2d6ac26f8e847f521fe2fcc3705a@changeid>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 08:11:35PM +0530, Naresh Kamboju wrote:
-> On Fri, 20 Sep 2019 at 03:36, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 5.3.1 release.
-> > There are 21 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Sat 21 Sep 2019 09:44:25 PM UTC.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.1-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.3.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
-> >
+On Fri, Sep 20, 2019 at 10:44:47AM -0700, Douglas Anderson wrote:
+> I'm interested in kdb / kgdb and have sent various fixes over the
+> years.  I'd like to get CCed on patches so I can be aware of them and
+> also help review.
 > 
-> Results from Linaro’s test farm.
-> No regressions on arm64, arm, x86_64, and i386.
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-Nice to see 5.3.0 pass everything :)
+Thanks for this.
 
-Thanks for testing all of these and letting me know.
+There was discussion at Plumbers about just dropping kgdb as some people
+didn't think it was being actively maintained or that it even still
+worked.  Thanks for refuting that :)
 
 greg k-h
