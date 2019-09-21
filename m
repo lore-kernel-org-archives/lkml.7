@@ -4,80 +4,81 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1ADBC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 01:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 545C0C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 01:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 880A52086A
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 01:55:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 300AF2086A
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 01:56:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437310AbfIUBzx (ORCPT
+        id S2437427AbfIUB4s convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 21:55:53 -0400
-Received: from out1.zte.com.cn ([202.103.147.172]:38614 "EHLO mxct.zte.com.cn"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437018AbfIUBzw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 21:55:52 -0400
-Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
-        by Forcepoint Email with ESMTPS id 3C6878FF3F0438D8E6E6;
-        Sat, 21 Sep 2019 09:55:50 +0800 (CST)
-Received: from notes_smtp.zte.com.cn (notessmtp.zte.com.cn [10.30.1.239])
-        by mse-fl1.zte.com.cn with ESMTP id x8L1ta04061200;
-        Sat, 21 Sep 2019 09:55:36 +0800 (GMT-8)
-        (envelope-from zhang.lin16@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019092109561847-3748946 ;
-          Sat, 21 Sep 2019 09:56:18 +0800 
-From:   zhanglin <zhang.lin16@zte.com.cn>
-To:     paul@paul-moore.com
-Cc:     sds@tycho.nsa.gov, eparis@parisplace.org, selinux@vger.kernel.org,
-        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
-        wang.yi59@zte.com.cn, jiang.xuexin@zte.com.cn,
-        zhanglin <zhang.lin16@zte.com.cn>
-Subject: [PATCH] selinux: Remove load size limit
-Date:   Sat, 21 Sep 2019 09:57:15 +0800
-Message-Id: <1569031035-12354-1-git-send-email-zhang.lin16@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-09-21 09:56:18,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-09-21 09:55:42,
-        Serialize complete at 2019-09-21 09:55:42
-X-MAIL: mse-fl1.zte.com.cn x8L1ta04061200
+        Fri, 20 Sep 2019 21:56:48 -0400
+Received: from sender2-pp-o92.zoho.com.cn ([163.53.93.251]:25411 "EHLO
+        sender2-pp-o92.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2437018AbfIUB4s (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Sep 2019 21:56:48 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1569030999; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=YFOQ8/rHVTQlLmsfUKxwD/HKr3aI8kncS1BAgGg4t00psmsMGA0CLTSBtSstyIRuE57k0FUBoGD/GySXVf3RvGoA+6OE9JVy88oZM7nsV9+d+h9BRoPkvrjW7m0/hX72K96fksCFUpKced0GEBavmp1MKWI1Tcso/Pmtc2IVhVo=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1569030999; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To:ARC-Authentication-Results; 
+        bh=U/wMbNMp4BbaqUckWeT2SBc3ztTx39P1i8YQ9Wzd5yo=; 
+        b=oxwOy4Ae/RJGeO3RdPpHAE/bfQoRIHcR9NiTYf+ZG1XofSzlcc4zBz/iYarz6Ue0GXUcWR9mXCTXug6RjDo707b2yteOU2mHWJwbc/Dp4zH/M2KsSnLYeuAyuUP510BWoH4NDWKK4aUxG0Tw5lPnCRHF/BE8FxZGVB+ew6wO3E4=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        dkim=pass  header.i=zoho.com.cn;
+        spf=pass  smtp.mailfrom=cgxu519@zoho.com.cn;
+        dmarc=pass header.from=<cgxu519@zoho.com.cn> header.from=<cgxu519@zoho.com.cn>
+Received: from localhost.localdomain.localdomain (113.116.156.204 [113.116.156.204]) by mx.zoho.com.cn
+        with SMTPS id 1569030996721696.1129061703754; Sat, 21 Sep 2019 09:56:36 +0800 (CST)
+From:   Chengguang Xu <cgxu519@zoho.com.cn>
+To:     jack@suse.com
+Cc:     linux-kernel@vger.kernel.org, Chengguang Xu <cgxu519@zoho.com.cn>
+Message-ID: <20190921015628.54335-1-cgxu519@zoho.com.cn>
+Subject: [PATCH] quota: code cleanup for hash bits calculation
+Date:   Sat, 21 Sep 2019 09:56:28 +0800
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8BIT
+X-ZohoCNMailClient: External
+Content-Type: text/plain; charset=utf8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Load size was limited to 64MB, this was legacy limitation due to vmalloc()
-which was removed a while ago.
+Code cleanup for hash bits calculation by
+calling rounddown_pow_of_two() and ilog2()
 
-Limiting load size to 64MB is both pointless and affects real world use
-cases.
-
-Signed-off-by: zhanglin <zhang.lin16@zte.com.cn>
+Signed-off-by: Chengguang Xu <cgxu519@zoho.com.cn>
 ---
- security/selinux/selinuxfs.c | 4 ----
- 1 file changed, 4 deletions(-)
+ fs/quota/dquot.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/security/selinux/selinuxfs.c b/security/selinux/selinuxfs.c
-index f3a5a138a096..4249400e9712 100644
---- a/security/selinux/selinuxfs.c
-+++ b/security/selinux/selinuxfs.c
-@@ -549,10 +549,6 @@ static ssize_t sel_write_load(struct file *file, const char __user *buf,
- 	if (*ppos != 0)
- 		goto out;
+diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
+index 6e826b454082..679dd3b5db70 100644
+--- a/fs/quota/dquot.c
++++ b/fs/quota/dquot.c
+@@ -2983,13 +2983,9 @@ static int __init dquot_init(void)
  
--	length = -EFBIG;
--	if (count > 64 * 1024 * 1024)
--		goto out;
--
- 	length = -ENOMEM;
- 	data = vmalloc(count);
- 	if (!data)
+ 	/* Find power-of-two hlist_heads which can fit into allocation */
+ 	nr_hash = (1UL << order) * PAGE_SIZE / sizeof(struct hlist_head);
+-	dq_hash_bits = 0;
+-	do {
+-		dq_hash_bits++;
+-	} while (nr_hash >> dq_hash_bits);
+-	dq_hash_bits--;
++	nr_hash = rounddown_pow_of_two(nr_hash);
++	dq_hash_bits = ilog2(nr_hash);
+ 
+-	nr_hash = 1UL << dq_hash_bits;
+ 	dq_hash_mask = nr_hash - 1;
+ 	for (i = 0; i < nr_hash; i++)
+ 		INIT_HLIST_HEAD(dquot_hash + i);
 -- 
-2.17.1
+2.21.0
+
+
 
