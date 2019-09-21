@@ -2,191 +2,141 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B075DC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 06:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF21C49ED7
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 06:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D7E02054F
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 06:56:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="aKoeW6NU"
+	by mail.kernel.org (Postfix) with ESMTP id EA5D62073F
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 06:58:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437623AbfIUG4Q (ORCPT
+        id S2437644AbfIUG6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Sep 2019 02:56:16 -0400
-Received: from mail-eopbgr1320128.outbound.protection.outlook.com ([40.107.132.128]:6126
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728865AbfIUG4P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Sep 2019 02:56:15 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VWv6XMcA/CsBCkuTRSQTHRdUgUoUjP3ZsJMTH/XhbXwts8M7F4BSuz8XTJu+PCr5s38N9pKJ05xbM5psfyCrDYYEQ0Rm8rLR+gIWUUec2CntzHIydiM9/8jU97J4OzbDF/JXpA93sW8A3SEtruCAtYBOJEiZaJWDd7MSR+/2evyaPdsiflaF9xUTrLAfKyfpi2Xh50kyKNVRkXQxO+9xCtNR/Lgeg+JBpUSjOQT5AszLdWUaS1rW0AU6fjXnD1KM5Xo03FwADh1UXuKBE9VQnV6YrgxAhECrHReCLpVISGFdr8fLNeLRnJEaeAIFyc7dSe5MajW2fc1D0glmxg4P/Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pZ1YMaSMqYcjvsDV326jsZkOahmM/bqbC2EWNgU8dvA=;
- b=V4SFWwem/6HSQNGJXDHI4fQ1n+A2QlrJGTx3VTAnHoMR1dIA83IOkVeBsT6l7xl0sewJ/k0PD0sqEgT9YvTWo6OTPXTrFCiOri1Ds4FEEpLuBuf1hy3h5uGWP43Rbi/VDiR3vkx2gonpRpTkV4Z9YVTpIC418uvO1OI2nLT/0qM3uyQ9tT4g8KvR9H3EBmvY5V7Xz6HS/hlGZ1Nf5Xc7aQ2Y20saX06FUWgco664QwoBjxe/3eCCXgkqseT3L0v3d9csuFSfSakVd+GA6ciV7y24KepAUtuFnGTJhou6aEYhL3H45fa1C4y6nX/txal2clsWOBJr+uJc6klWGwocsA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pZ1YMaSMqYcjvsDV326jsZkOahmM/bqbC2EWNgU8dvA=;
- b=aKoeW6NUvpkMYr/O6toHJi7OfIpA5Vw6Ts7+fSUc0fnXT4/ba5HV3Okj7zUEtGyf8MEczflUDdHVG/WKrq96PQhRxvasR3degNE5+Lht6ZRAjK5itgGYfZt3cGzBoGlQdtgpKuRfqY/0l08t7EVfSboac016JqHs0A9Bz+MEXgs=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0121.APCP153.PROD.OUTLOOK.COM (10.170.188.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.3; Sat, 21 Sep 2019 06:56:05 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2%8]) with mapi id 15.20.2305.011; Sat, 21 Sep 2019
- 06:56:05 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: RE: [PATCH] Input: hyperv-keyboard: Add the support of hibernation
-Thread-Topic: [PATCH] Input: hyperv-keyboard: Add the support of hibernation
-Thread-Index: AQHVbwXQRPtGDntMcU+sv4R8q5dPMac1q4Vg
-Date:   Sat, 21 Sep 2019 06:56:04 +0000
-Message-ID: <PU1P153MB016914A7C827CA35D7FEB66ABF8B0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <1568244975-66795-1-git-send-email-decui@microsoft.com>
- <20190919161752.GS237523@dtor-ws>
-In-Reply-To: <20190919161752.GS237523@dtor-ws>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-21T06:56:02.6456740Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=0b53eb3e-4c5d-47b9-a0ce-d9a5b854d83d;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:7f70:54b9:c9c3:20f2:72c9]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 451547b9-7cec-4dca-42b5-08d73e60c5ad
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: PU1P153MB0121:|PU1P153MB0121:
-x-ms-exchange-transport-forked: True
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <PU1P153MB012177465E2764334002DAB5BF8B0@PU1P153MB0121.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:2150;
-x-forefront-prvs: 0167DB5752
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(396003)(136003)(376002)(39860400002)(366004)(54534003)(189003)(199004)(66446008)(22452003)(486006)(52536014)(74316002)(66476007)(66556008)(86362001)(305945005)(8990500004)(76116006)(33656002)(5660300002)(7736002)(66946007)(64756008)(6916009)(10090500001)(2351001)(476003)(76176011)(4326008)(6436002)(446003)(2501003)(966005)(7696005)(11346002)(55016002)(25786009)(6306002)(5640700003)(186003)(71190400001)(256004)(229853002)(14454004)(9686003)(14444005)(10290500003)(46003)(316002)(71200400001)(478600001)(54906003)(102836004)(6506007)(1361003)(6246003)(81156014)(107886003)(2906002)(6116002)(99286004)(8936002)(81166006)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0121;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: DULxSz2P3QqQXZ1KwQ4CrN/51JAHFM7ZZ14sfSR5jAc2mccE9fXopZhiLiHyK6F3busyeFXwWNFD97Cx5GVejdY4L2Jyz+1VloLrirLTfw47zl4cQl7SEGFzYOymeanS2QV9oXzooxPJgOMULRv8LJOMadP6lh6x+xf8M0vh4BZ2pDPsjOHzXilFY3W5H3abea32UI/fvfBOOv6Swf0DPicWvgUvSACPMRS770L6EVldgglwzKHPJ6EAjJSQIwHV/LYMK6WlqtYbZc5pZwVzgLWtgrNjxMARzyoZmP+/e49ZjdcBKJZVEWIwlYIK+3l+23xE1TjgRq3hFdwg6chIOvKlQxz0iJwTW5WQgaXxSV45fPSpFfAhxxeLwh2ktKFQXkM1Hn6BpHT2b6/KdDhAH+XS00YYnbYZgImCWCA/zIQ=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sat, 21 Sep 2019 02:58:30 -0400
+Received: from cc-smtpout1.netcologne.de ([89.1.8.211]:55772 "EHLO
+        cc-smtpout1.netcologne.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728865AbfIUG63 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Sep 2019 02:58:29 -0400
+Received: from cc-smtpin1.netcologne.de (cc-smtpin1.netcologne.de [89.1.8.201])
+        by cc-smtpout1.netcologne.de (Postfix) with ESMTP id 0B712133F8;
+        Sat, 21 Sep 2019 08:58:25 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by cc-smtpin1.netcologne.de (Postfix) with ESMTP id F1C5411E87;
+        Sat, 21 Sep 2019 08:58:24 +0200 (CEST)
+Received: from [87.78.146.192] (helo=cc-smtpin1.netcologne.de)
+        by localhost with ESMTP (eXpurgate 4.6.0)
+        (envelope-from <kurt@garloff.de>)
+        id 5d85ca10-5e31-7f0000012729-7f000001c64a-1
+        for <multiple-recipients>; Sat, 21 Sep 2019 08:58:24 +0200
+Received: from nas2.garloff.de (xdsl-87-78-146-192.nc.de [87.78.146.192])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by cc-smtpin1.netcologne.de (Postfix) with ESMTPSA;
+        Sat, 21 Sep 2019 08:58:23 +0200 (CEST)
+Received: from [192.168.155.202] (ap3.garloff.de [192.168.155.14])
+        by nas2.garloff.de (Postfix) with ESMTPSA id 5E7F2B3B0C79;
+        Sat, 21 Sep 2019 08:58:22 +0200 (CEST)
+Subject: IOMMU vs Ryzen embedded EMMC controller
+References: <643f99a4-4613-50af-57e4-5ea6ac975314@garloff.de>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Shah Nehal-Bakulchandra <Nehal-bakulchandra.Shah@amd.com>
+From:   Kurt Garloff <kurt@garloff.de>
+X-Forwarded-Message-Id: <643f99a4-4613-50af-57e4-5ea6ac975314@garloff.de>
+Message-ID: <47da1247-fbc1-fe50-041c-3808b0e140bf@garloff.de>
+Date:   Sat, 21 Sep 2019 08:58:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.0
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 451547b9-7cec-4dca-42b5-08d73e60c5ad
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Sep 2019 06:56:04.6955
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: kkHp83C7cIOtqvAsigtKIVt/Kz1xa6pXR+LWUIaxfjQJuqqGQGPcHE7l6uAsE0qMZEYFbygbOxgIWZV17nd6vA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0121
+In-Reply-To: <643f99a4-4613-50af-57e4-5ea6ac975314@garloff.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: dmitry.torokhov@gmail.com <dmitry.torokhov@gmail.com>
-> Sent: Thursday, September 19, 2019 9:18 AM
->=20
-> Hi Dexuan,
->=20
-> On Wed, Sep 11, 2019 at 11:36:20PM +0000, Dexuan Cui wrote:
-> > We need hv_kbd_pm_notify() to make sure the pm_wakeup_hard_event()
-> call
-> > does not prevent the system from entering hibernation: the hibernation
-> > is a relatively long process, which can be aborted by the call
-> > pm_wakeup_hard_event(), which is invoked upon keyboard events.
-> >
-> > diff --git a/drivers/input/serio/hyperv-keyboard.c
-> b/drivers/input/serio/hyperv-keyboard.c
-> > index 88ae7c2..277dc4c 100644
-> > --- a/drivers/input/serio/hyperv-keyboard.c
-> > +++ b/drivers/input/serio/hyperv-keyboard.c
-> > @@ -10,6 +10,7 @@
-> >  #include <linux/hyperv.h>
-> >  #include <linux/serio.h>
-> >  #include <linux/slab.h>
-> > +#include <linux/suspend.h>
-> >
-> >  /*
-> >   * Current version 1.0
-> > @@ -95,6 +96,9 @@ struct hv_kbd_dev {
-> >  	struct completion wait_event;
-> >  	spinlock_t lock; /* protects 'started' field */
-> >  	bool started;
-> > +
-> > +	struct notifier_block pm_nb;
-> > +	bool hibernation_in_progress;
->=20
-> Why do you use notifier block instead of exposing proper PM methods if
-> you want to support hibernation?
->=20
-> Dmitry
-
 Hi,
-In the patch I do implement hv_kbd_suspend() and hv_kbd_resume(), and
-add them into the hv_kbd_drv struct:
 
-@@ -416,6 +472,8 @@ static struct  hv_driver hv_kbd_drv =3D {
-        .id_table =3D id_table,
-        .probe =3D hv_kbd_probe,
-        .remove =3D hv_kbd_remove,
-+       .suspend =3D hv_kbd_suspend,
-+       .resume =3D hv_kbd_resume,
+     
 
-The .suspend and .resume callbacks are inroduced by another patch (which
-uses the dev_pm_ops struct):
-271b2224d42f ("Drivers: hv: vmbus: Implement suspend/resume for VSC drivers=
- for hibernation")
-(which is on the Hyper-V tree's hyperv-next branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git/commit/?h=
-=3Dhyperv-next&id=3D271b2224d42f88870e6b060924ee374871c131fc )
+enabling the IOMMU on my Ryzen v1605b (UDOO Bolt v8) does result in a non-working EMMC driver.
+Without enabling IOMMU, it works like a charm.
+ From my POV this needs fixing, and I consider this a bug.
 
-The only purpose of the notifier is to set the variable=20
-kbd_dev->hibernation_in_progress to true during the hibernation process.
+I looked into sdhci to see whether the right dma_map_sg() calls are missing, but they are there. The sdhci driver appears to do the right thing.
+It seems that the EMMC controller is not considered and reported as PCI device while it still goes through the PCI IOMMU :-O
 
-As I explained in the changelog, the hibernation is a long process (which
-can take 10+ seconds), during which the user may unintentionally touch
-the keyboard, causing key up/down events, which are still handled by
-hv_kbd_on_receive(), which calls pm_wakeup_hard_event(), which
-calls some other functions which increase the global counter
-"pm_abort_suspend", and hence pm_wakeup_pending() becomes true.
+Here is what happens on loading the sdhci-acpi driver on kernel 5.3:
 
-pm_wakeup_pending() is tested in a lot of places in the suspend
-process and eventually an unintentional keystroke (or mouse movement,
-when it comes to the Hyper-V mouse driver drivers/hid/hid-hyperv.c)
-causes the whole hibernation process to be aborted. Usually this
-behavior is not expected by the user, I think.
+[12916.740148] mmc0: ADMA error
+[12916.740154] mmc0: sdhci: ============ SDHCI REGISTER DUMP ===========
+[12916.740163] mmc0: sdhci: Sys addr:  0x00000000 | Version:  0x00001002
+[12916.740170] mmc0: sdhci: Blk size:  0x00007200 | Blk cnt:  0x00000001
+[12916.740179] mmc0: sdhci: Argument:  0x00000000 | Trn mode: 0x00000013
+[12916.740184] AMD-Vi: Event logged [IO_PAGE_FAULT device=00:13.1 domain=0x0000 address=0x6f2163200 flags=0x0050]
+[12916.740193] mmc0: sdhci: Present:   0xf1ff0000 | Host ctl: 0x00000019
+[12916.740202] mmc0: sdhci: Power:     0x0000000f | Blk gap:  0x00000000
+[12916.740211] mmc0: sdhci: Wake-up:   0x00000000 | Clock:    0x0000f447
+[12916.740219] mmc0: sdhci: Timeout:   0x0000000a | Int stat: 0x00000000
+[12916.740226] mmc0: sdhci: Int enab:  0x03ff000b | Sig enab: 0x03ff000b
+[12916.740232] mmc0: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00000000
+[12916.740239] mmc0: sdhci: Caps:      0x71fec8b2 | Caps_1:   0x00000577
+[12916.740246] mmc0: sdhci: Cmd:       0x0000083a | Max curr: 0x00c80064
+[12916.740253] mmc0: sdhci: Resp[0]:   0x00000700 | Resp[1]:  0xffffffff
+[12916.740259] mmc0: sdhci: Resp[2]:   0x328f5903 | Resp[3]:  0x00d00f00
+[12916.740264] mmc0: sdhci: Host ctl2: 0x00000000
+[12916.740273] mmc0: sdhci: ADMA Err:  0x00000001 | ADMA Ptr: 0x00000006f2163200
+[12916.740274] mmc0: sdhci: ============================================
+[12916.740337] mmc0: error -5 whilst initialising MMC card
 
-So, I use the notifier to set the flag variable and with it the driver can
-know when it should not call pm_wakeup_hard_event().
+As you can see, from an IOMMU perspective, this is PCI device 00:13.1.
+However, from a kernel perspective, it's not on the PCI bus and does not require IOMMU translation, but rather just direct DMA mapping.
 
-Thanks,
--- Dexuan
+
+linux@udookurt(/):~/linux-53/drivers/mmc/host [0]$ sudo /sbin/lspci
+00:00.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Raven/Raven2 Root Complex
+00:00.2 IOMMU: Advanced Micro Devices, Inc. [AMD] Raven/Raven2 IOMMU
+00:01.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 17h (Models 00h-1fh) PCIe Dummy Host Bridge
+00:01.1 PCI bridge: Advanced Micro Devices, Inc. [AMD] Raven/Raven2 PCIe GPP Bridge [6:0]
+00:01.2 PCI bridge: Advanced Micro Devices, Inc. [AMD] Raven/Raven2 PCIe GPP Bridge [6:0]
+00:01.6 PCI bridge: Advanced Micro Devices, Inc. [AMD] Raven/Raven2 PCIe GPP Bridge [6:0]
+00:01.7 PCI bridge: Advanced Micro Devices, Inc. [AMD] Raven/Raven2 PCIe GPP Bridge [6:0]
+00:08.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 17h (Models 00h-1fh) PCIe Dummy Host Bridge
+00:08.1 PCI bridge: Advanced Micro Devices, Inc. [AMD] Raven/Raven2 Internal PCIe GPP Bridge 0 to Bus A
+00:08.2 PCI bridge: Advanced Micro Devices, Inc. [AMD] Raven/Raven2 Internal PCIe GPP Bridge 0 to Bus B
+00:14.0 SMBus: Advanced Micro Devices, Inc. [AMD] FCH SMBus Controller (rev 61)
+00:14.3 ISA bridge: Advanced Micro Devices, Inc. [AMD] FCH LPC Bridge (rev 51)
+00:18.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Raven/Raven2 Device 24: Function 0
+00:18.1 Host bridge: Advanced Micro Devices, Inc. [AMD] Raven/Raven2 Device 24: Function 1
+00:18.2 Host bridge: Advanced Micro Devices, Inc. [AMD] Raven/Raven2 Device 24: Function 2
+00:18.3 Host bridge: Advanced Micro Devices, Inc. [AMD] Raven/Raven2 Device 24: Function 3
+00:18.4 Host bridge: Advanced Micro Devices, Inc. [AMD] Raven/Raven2 Device 24: Function 4
+00:18.5 Host bridge: Advanced Micro Devices, Inc. [AMD] Raven/Raven2 Device 24: Function 5
+00:18.6 Host bridge: Advanced Micro Devices, Inc. [AMD] Raven/Raven2 Device 24: Function 6
+00:18.7 Host bridge: Advanced Micro Devices, Inc. [AMD] Raven/Raven2 Device 24: Function 7
+01:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd NVMe SSD Controller SM981/PM981/PM983
+03:00.0 Network controller: Intel Corporation Dual Band Wireless-AC 3168NGW [Stone Peak] (rev 10)
+04:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller (rev 0c)
+05:00.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI] Raven Ridge [Radeon Vega Series / Radeon Vega Mobile Series] (rev 83)
+05:00.1 Audio device: Advanced Micro Devices, Inc. [AMD/ATI] Raven/Raven2/Fenghuang HDMI/DP Audio Controller
+05:00.2 Encryption controller: Advanced Micro Devices, Inc. [AMD] Family 17h (Models 10h-1fh) Platform Security Processor
+05:00.3 USB controller: Advanced Micro Devices, Inc. [AMD] Raven USB 3.1
+05:00.4 USB controller: Advanced Micro Devices, Inc. [AMD] Raven USB 3.1
+05:00.5 Multimedia controller: Advanced Micro Devices, Inc. [AMD] Raven/Raven2/FireFlight/Renoir Audio Processor
+05:00.6 Audio device: Advanced Micro Devices, Inc. [AMD] Family 17h (Models 10h-1fh) HD Audio Controller
+05:00.7 Non-VGA unclassified device: Advanced Micro Devices, Inc. [AMD] Raven/Raven2/Renoir Non-Sensor Fusion Hub KMDF driver
+06:00.0 SATA controller: Advanced Micro Devices, Inc. [AMD] FCH SATA Controller [AHCI mode] (rev 61)
+
+Looks like we'd need some quirks to actually create a pci_device handle for the embedded AMD eMMC controller?
+Thoughts?
+
+PS: Please copy me on responses, I'm off LKML for half a decade now :-O
+
+-- 
+Kurt Garloff<kurt@garloff.de>
+Cologne, Germany
+
