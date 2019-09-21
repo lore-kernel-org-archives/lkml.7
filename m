@@ -2,166 +2,133 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 492CCC4360D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 16:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 691C9C4360D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 16:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D15921835
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 16:47:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 365E2208C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 16:58:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="a7a+cked"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vB3Xtmqp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407810AbfIUQrY (ORCPT
+        id S2407815AbfIUQ6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Sep 2019 12:47:24 -0400
-Received: from mout.web.de ([212.227.17.11]:40061 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407736AbfIUQrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Sep 2019 12:47:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1569084401;
-        bh=VUVk13mdIUuMlRF55b+yf9VzEN/rt7FIag9gQ7yHvvQ=;
-        h=X-UI-Sender-Class:To:From:Subject:Cc:Date;
-        b=a7a+cked8wXeIf3EPnXl7PvX4eEeRHzUb6L1srpbb7MlvpLINB02aK4DwQHarnvuB
-         UyNVj/05felNEjC9/2z23aOMVoVRi1QR5SZAA+uplssDaHeU4xP4jLTu3aStBt/09p
-         EzBk1uxjkjzrvxjmeT03Do7QXarQwrZPdncGHfac=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.244.64.44]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MHowb-1iD6Vg1oQ1-003hfK; Sat, 21
- Sep 2019 18:46:41 +0200
-To:     linux-edac@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Borislav Petkov <bp@alien8.de>,
-        James Morse <james.morse@arm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Robert Richter <rrichter@marvell.com>,
-        Stefan Schaeckeler <sschaeck@cisco.com>,
-        Tony Luck <tony.luck@intel.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] EDAC: Aspeed: Use devm_platform_ioremap_resource() in
- aspeed_probe()
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Message-ID: <baabb9e9-a1b2-3a04-9fb6-aa632de5f722@web.de>
-Date:   Sat, 21 Sep 2019 18:46:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Sat, 21 Sep 2019 12:58:50 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40807 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407792AbfIUQ6t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Sep 2019 12:58:49 -0400
+Received: by mail-pg1-f196.google.com with SMTP id w10so5572349pgj.7
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Sep 2019 09:58:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=q69Kv4s8NdbI7NNyGxPLpjBZIhyfFsGnwWZiB8RZWwo=;
+        b=vB3Xtmqp22xIsej92uD7rfQHDIfaHKAMsoZqfQ2q8dyQnJHlAflnDdUXOMe+PsJbna
+         okioIRakrgDGSOgub0SEh0r6noXIEehzdnXutxhOf4VsL986zIIck0RHIzYBRygb8ENq
+         acj+KSB1oRU+QfUl7L2ZlhQ41gCURQzl4V0wiiWIbXJvBnFHxY9CdmnSLMcnW7IGLLgT
+         yZDFVFE2iOYNVKDV/TS6L/9XWBKcBr7xqagUDNQNqzcAyP1nLAujv+Otlj13vfaHTX7g
+         mdpDuaqVEODe77OebYibAFxdJBYR7SZcHBkllCnRriCZQuZgnpY884/+F5bJNO95ufo2
+         C28Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=q69Kv4s8NdbI7NNyGxPLpjBZIhyfFsGnwWZiB8RZWwo=;
+        b=se4k85b61qeOHx1s+wz1iT/D/FVr/gni9bTuF+wx1GpIIqs1BULMHee+ex6UkmGUHd
+         gBVj2BmMOg5T6CXn+SOwVwOM0kqsMQjniWCmvaG5NL8cz0W5jMKbgA4zSIwUGQG7GZt1
+         Xx/tj3RS9FeqOPn2dDHSq0a347vTKNw5BhvMfl01Uk3sPSUB0GGYkRJ4gnzwlXfRq8yu
+         EPfAgZ9doe3dPepKz4SX7pitmGpKwljzblg6Kf5ORyvKhDx1z+t37TKC1dcX1d7ifCrq
+         7sAfXJXH5xQLwNadWXOqIBDu9r0qH24tdBenwPZ0LMWxA1K6G7KWfEEK0a2I99wM6yiT
+         NKkA==
+X-Gm-Message-State: APjAAAW5ml2bls3ChOOsVxIkcfdUNxoOUjL+TbMwkCM5vaC2qns5akqW
+        3BDr8YhgThFgSZRA+i9J4lMnry1kUU0=
+X-Google-Smtp-Source: APXvYqwQPsLb3MLTmsb026IX+IZkqAVLtMHNy+kmWtQQyb/2p/fmJ12W753iNAi9Oe8BIWe2G3xjeA==
+X-Received: by 2002:a17:90a:5aa1:: with SMTP id n30mr10959977pji.82.1569085128882;
+        Sat, 21 Sep 2019 09:58:48 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id 16sm7362155pfn.35.2019.09.21.09.58.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Sep 2019 09:58:48 -0700 (PDT)
+Date:   Sat, 21 Sep 2019 09:58:45 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>, Suman Anna <s-anna@ti.com>
+Subject: [GIT PULL] remoteproc updates for v5.4
+Message-ID: <20190921165845.GA6693@tuxbook-pro>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:gq8XlCdUOHM8oIbnPHW7UAQIq6Z5GsKadnkCt5VEwli0lbxdNOF
- LIEuJRSDw9nn014aM1FIr+hnU/EJ1QAKjxQpIjtmKrvezGfZiXoDqhy8MsYX4y8gMXPbpr7
- 2iseSo6skajlINOGRWd9slaRrg5HfQBKDa5IJB+MoWn/YKa9V8/3ERs8WoDFMQIPx4aYGFY
- jt/c+YYhfT34FpG8ceg0g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:QD/ph56ifWQ=:/g/6NYAoFeNETfJu6fX7VS
- yn7MsENZLO5jL/NPUXnYL49deoepaWh1gAnlH7bfAfWhjdXhTzlxlT6LeHZN4Gvcv+FGJNqIh
- cBbErHIvZRio1nj661HYY8qumbm6DxIk/D78rAPQVwqG7AnXQTS+n/2G17Wwbrt/FzBJFCGMe
- rmWNGon4D6St8JoTWKZN1gVhOjXhhf1RvtGJy3+g/LkF0k0f80+Earfc+zUAe271eqlbx81+/
- xO0XTHBVJvP0akZ5bpvhUCmLfg758MKNzybwWoq6BelHJqM5Kk7FL5t1QYbsnC+5GGvW/obt0
- 0/axzCrdf8h1uJyvS4LA5743Nmr6CG4YhJLU2pTjyPthFIEBmRhyUvl83WNqDpXt9y45XTDxq
- REbrOo2xUHgEt0tJLnNTraDVth7we3apsvVWXpLHRKJ4Dl3y8UsY0eRbC6Ymz50hMpUywS0Cu
- 0flG2jjub/fgacbn/bSDTEH/Xmq70wSYwGsnMkpFeSc14/J0WUxCJDIDbSb483Lio8mI6Nwny
- M8E8Y+aEmByNN0XGvSl6XLN/2FnvVZdxbJj0pgymi60TpQ53NAYw64PDCOmCT4bqiNjvUrale
- 2mdF6Wr2viDdQdjWVhyCribam/x8aVF7f6UKg9zHACE3gyAY4IVBu/gnWfUpG5wG26JqHGmJz
- MW6bwlKZ79A6Uh39J+qPIleohoIPUjVhaUgWvyyGVCODtBpDnKF3to5Rrix5crd0A6EgfNu4U
- UzqeM8Gu8xc0nF0/YX5+lhiGVSVAXmwePtNW0o/Lpkul93GvSSS8FbzhayMr4I3oszHLqex/b
- LeRd9FXoqGXP10AcJsRgAC9hjZa994yo5+rqlPdQvopZtbC/9xwV9gyoS1oTNQA2YmKzKy4uN
- o6kAoL0VM6jxCSzi+hk6s9StbOyvATxvHuqbYIc/N6tRvXClElZ0km/KbCj1BC4uRwXg5Cs9b
- RCMCVnRWullrMulBboLB0dnQ6VvRWQXZrH3AtW79MJE4reyYfypt02h0UWGoKv7gLORQos1K8
- 626gvwTYRI2D9A/TIp6OYznRexUDCgcCCKMOz8sWjU/MJpu9gA9FUH8dcgQRYq6DNl9G8MloK
- NOD2Wjlsz9cZ8+l7KPSvaK/B+s/ra1EFDQKHZ47k65r1pnGRK+qPjyVtTzDmLPfhQltcQCYbA
- Jh8Cr9S0FACTfdZ9Ivhna1bXV4GpLjogzQX0BtgztHAUvTDS3L4ivVFdLGFarWEDmsd0bEUHz
- IJOAKR8uvOIMe1DC5xISRdkJVnX9ZMuxkqRy826yvPuO5mMl5NGEdk6SdQRM=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Sat, 21 Sep 2019 18:32:46 +0200
+Hi Linus,
 
-Simplify this function implementation by using a known wrapper function.
+I've finally moved my trees to kernel.org, please pull this and the
+coming rpmsg request from their new location.
 
-This issue was detected by using the Coccinelle software.
+Regards,
+Bjorn
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/edac/aspeed_edac.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
 
-diff --git a/drivers/edac/aspeed_edac.c b/drivers/edac/aspeed_edac.c
-index 5634437bb39d..09a9e3de9595 100644
-=2D-- a/drivers/edac/aspeed_edac.c
-+++ b/drivers/edac/aspeed_edac.c
-@@ -281,16 +281,11 @@ static int aspeed_probe(struct platform_device *pdev=
-)
- 	struct device *dev =3D &pdev->dev;
- 	struct edac_mc_layer layers[2];
- 	struct mem_ctl_info *mci;
--	struct resource *res;
- 	void __iomem *regs;
- 	u32 reg04;
- 	int rc;
+  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
 
--	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!res)
--		return -ENOENT;
--
--	regs =3D devm_ioremap_resource(dev, res);
-+	regs =3D devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(regs))
- 		return PTR_ERR(regs);
+are available in the Git repository at:
 
-=2D-
-2.23.0
+  https://git.kernel.org/pub/scm/linux/kernel/git/andersson/remoteproc tags/rproc-v5.4
 
+for you to fetch changes up to 150997fac770c37b12459ec52fdf67a5dc1366f5:
+
+  MAINTAINERS: remoteproc: update git tree location (2019-08-26 23:16:44 -0700)
+
+----------------------------------------------------------------
+remoteproc updates for v5.4
+
+This exposes the remoteproc's name in sysfs, allows stm32 to enter
+platform standby and provides bug fixes for stm32 and Qualcomm's modem
+remoteproc drivers. Finally it updates MAINTAINERS to reflect the move
+to kernel.org.
+
+----------------------------------------------------------------
+Bjorn Andersson (2):
+      remoteproc: qcom: Move glink_ssr notification after stop
+      MAINTAINERS: remoteproc: update git tree location
+
+Fabien Dessenne (2):
+      remoteproc: stm32: clear MCU PDDS at firmware start
+      remoteproc: stm32: manage the get_irq probe defer case
+
+Sibi Sankar (1):
+      remoteproc: qcom: q6v5-mss: fixup q6v5_pds_enable error handling
+
+Stephen Boyd (1):
+      remoteproc: Remove dev_err() usage after platform_get_irq()
+
+Suman Anna (1):
+      remoteproc: Add a sysfs interface for name
+
+ Documentation/ABI/testing/sysfs-class-remoteproc | 10 +++++++
+ MAINTAINERS                                      |  2 +-
+ drivers/remoteproc/da8xx_remoteproc.c            |  4 +--
+ drivers/remoteproc/keystone_remoteproc.c         |  4 ---
+ drivers/remoteproc/qcom_common.c                 |  4 +--
+ drivers/remoteproc/qcom_q6v5.c                   | 35 ++++--------------------
+ drivers/remoteproc/qcom_q6v5_mss.c               |  4 +--
+ drivers/remoteproc/remoteproc_sysfs.c            | 11 ++++++++
+ drivers/remoteproc/stm32_rproc.c                 | 14 ++++++++++
+ 9 files changed, 46 insertions(+), 42 deletions(-)
