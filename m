@@ -2,125 +2,170 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B95C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 01:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D46B8C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 01:54:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4265217F9
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 01:50:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB22C21835
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 01:54:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="ivuU0aup"
+	dkim=pass (2048-bit key) header.d=draconx-ca.20150623.gappssmtp.com header.i=@draconx-ca.20150623.gappssmtp.com header.b="SU6Xnngd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436989AbfIUBt7 (ORCPT
+        id S2437209AbfIUBya (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 21:49:59 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:35755 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730495AbfIUBt7 (ORCPT
+        Fri, 20 Sep 2019 21:54:30 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46029 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437018AbfIUBy3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 21:49:59 -0400
-Received: by mail-qk1-f196.google.com with SMTP id w2so9279409qkf.2
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 18:49:58 -0700 (PDT)
+        Fri, 20 Sep 2019 21:54:29 -0400
+Received: by mail-lj1-f194.google.com with SMTP id q64so8715574ljb.12
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 18:54:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=FeqXKSmrKgPryn0IKpLutsFyfvdRW6HQixGEpZvfgYU=;
-        b=ivuU0aupOrzdi7aeGFvRG+9Q3gOwo6HMwbTO14y4SlF1WyIBCE+57GfqAHOw+lUQNQ
-         jEMvvu+KrSwrWkJ5+eZ/9PYnzCjdBjHiy8uTCBKoeCDnMhNwF6dZpNgXBY5r7T4owBbM
-         EA0K8+wMK4rHF1/vxDvcQDsSwmZBHP1nuikZUcVTg3/Q3rsfpShMNT1x9JOrJeFtz5Kk
-         +Qy7UVrTd3xw0loXH5qn8im1RW1PS8pR3pwMkb8I7C7OXNrTba5jbEQSVRuDV2vzdB3K
-         5Q64RQUiX0CKWeZCuc56VQRMD0L0bohoDOJR1xt5QwYSG1SxIatvOnoNAVu/9snFMqX1
-         P+Ow==
+        d=draconx-ca.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=6FUJB9iC+bvrTtNriAO1ARI5RLS9whH28zugV601iio=;
+        b=SU6Xnngd2bMY4WuCnPThYobViQS/n90H3Y4wRz1VD7MnEZSh4dIoiArZHgVk0bwsop
+         g0D/18YIqKKYtfltsk1zhFeG94ov+vTZAXQD2xU0iZvEdsCu1G3isURpq/QGCbXwzk7r
+         6NJh01KDU96fiFppPgcf8ycm9e4wcTDq1eIuHEyAsjxrNldG4tWROh8jaNEiPje92Vd/
+         DPJTvH7HCnZRxLLoHQ6/nLPoqjBY/39blm0ERcZxcHOgoe/oPP9Pm8NFla13KJlEWSMc
+         A5TG6vwe1Ebh3BTf69/kIh4ZaaXSGot4qfqE3d0lTFjaEF4V0Nu6tr6jeoZea/f3awN9
+         Qqkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=FeqXKSmrKgPryn0IKpLutsFyfvdRW6HQixGEpZvfgYU=;
-        b=QMOtNll/dcWkJlhZMm5IIqUbbwWvlLX6Myg9/mI8EA6QFmfRNZJQ8JcscrGaNZs/Cg
-         g2tI8/gQIY8iOPwcE8CXQc4MrN5o3f20pIQG6CKLH6DZd+JxcsZaob7WNdvg9teXJg0N
-         nTeN/XYNxsD2dHVJhkSZ3oEA91pJ9mqh/e46DSta0eG45SdpnLEpTJ5PbZEpDR8wFDpy
-         yA1VVyd9kvWC0mvypTDKmrk9UxVS/loLXnxaGRvV89VQV15yYr1t+H3LhsX0rRVScK9r
-         KDiy/8yivsRGoFSE6DXr6kvC3uDL2CegPu6hWBOQ0+EcVkvrZuVsQNENwtokOiAFWaGy
-         c4NQ==
-X-Gm-Message-State: APjAAAUxhokrMJgYgSuOQ67Yl/zMdPPDJa5AaIQXzKzYhjCpGtFhMf0N
-        85wmbK3yJj2EV10Du0tv0iU7Lw==
-X-Google-Smtp-Source: APXvYqy3TI36UEKri6vTjhOUCqw4ubZxj6nMjgp2ss02bQkJ8QlGCRYx405pw6P7fPjs52t18v2LGg==
-X-Received: by 2002:a05:620a:13c5:: with SMTP id g5mr7077761qkl.475.1569030598344;
-        Fri, 20 Sep 2019 18:49:58 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id 200sm1764206qkf.65.2019.09.20.18.49.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Sep 2019 18:49:57 -0700 (PDT)
-Date:   Fri, 20 Sep 2019 18:49:51 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        Manish Chopra <manishc@marvell.com>,
-        GR-Linux-NIC-Dev@marvell.com,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drivers/net: release skb on failure
-Message-ID: <20190920184642.3c36d26b@cakuba.netronome.com>
-In-Reply-To: <20190918044521.14953-1-navid.emamdoost@gmail.com>
-References: <20190918044521.14953-1-navid.emamdoost@gmail.com>
-Organization: Netronome Systems, Ltd.
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc;
+        bh=6FUJB9iC+bvrTtNriAO1ARI5RLS9whH28zugV601iio=;
+        b=uDMLZf4rhKdEPeh3Y1UGAhKwEl+u7yAn9q+1becq+TzlXS/ZsRpriJT0YhpmtBVrwi
+         5bXTnBnKId1XdshmqFoZpPeTBILixqMBVXz67kxXCg8Ivn3EmZpvBAbZiKByXeyVKqEZ
+         CIwf/SgZdiL8EJebf5T5FiRLjg3Smk/JOls5+no9/Id1nF8saIB5BaoN/ABsNv1uVdQ8
+         9MUK58k5QrG3kK1zqCj0NDIgQsQUQfXfVQvKAtqS4PThy4c5xN/6hwdwtl4dxJgjN2hU
+         KbRNOvzm+aOK5Zprrbn7TPxwQu5QM7zzjFmmqG/Gk02+lS3gFEUSubn0h8sfziT64Xdj
+         n8ZQ==
+X-Gm-Message-State: APjAAAVQh9GJfugPRy+NKNHAS99OcnTdNjZ0cpjerbZGnFrLD9HEyPmy
+        zTR6mbt+L0xIvxl099Q4PEyVPtCQE+Fko4pifkkBTw==
+X-Google-Smtp-Source: APXvYqz25ZajIAVDPYXMWHUWQHF0/Gr4jIqpIJTLb/owuzbh79A+y8hCPRgGr6UowJIGXA9mkPnDYMXmqoY7b32xwl8=
+X-Received: by 2002:a2e:5b9a:: with SMTP id m26mr10711008lje.90.1569030866534;
+ Fri, 20 Sep 2019 18:54:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Received: by 2002:a2e:534c:0:0:0:0:0 with HTTP; Fri, 20 Sep 2019 18:54:25
+ -0700 (PDT)
+X-Originating-IP: [24.53.243.131]
+In-Reply-To: <c573ebd9d835e2bf2d2b2a4dcb682b6d913b0c5e.camel@hammerspace.com>
+References: <CADyTPExOnxS+FS6Uqoxu3jNWRy93SQri4Xo1+00aiiVru8XDkg@mail.gmail.com>
+ <c573ebd9d835e2bf2d2b2a4dcb682b6d913b0c5e.camel@hammerspace.com>
+From:   Nick Bowler <nbowler@draconx.ca>
+Date:   Fri, 20 Sep 2019 21:54:25 -0400
+Message-ID: <CADyTPEwUjbV3icj7YD1a5fgzE_t0fpF0Mj9v-fLKywPwKki+Mg@mail.gmail.com>
+Subject: Re: PROBLEM: nfs? crash in Linux 5.3 (possible regression)
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Sep 2019 23:45:21 -0500, Navid Emamdoost wrote:
-> In ql_run_loopback_test, ql_lb_send does not release skb when fails. So
-> it must be released before returning.
-> 
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> ---
->  drivers/net/ethernet/qlogic/qlge/qlge_ethtool.c | 4 +++-
+On 9/20/19, Trond Myklebust <trondmy@hammerspace.com> wrote:
+> On Fri, 2019-09-20 at 14:23 -0400, Nick Bowler wrote:
+>> Not sure how reproducible this is.  Since I've never seen a crash
+>> like this before it may be a regression compared to, say, Linux 4.19
+>> but I am not certain because this particular machine is brand new so
+>> I don't have experience with older kernels on it...
 
-Thanks for the patch, this driver has been moved, please see
+So it actually seems pretty reliably reproducible, 4 attempts to compile
+Linux on Linux 5.3 and all four crash the same way, although there's
+definitely some randomness here...
 
-commit 955315b0dc8c8641311430f40fbe53990ba40e33
-Author: Benjamin Poirier <bpoirier@suse.com>
-Date:   Tue Jul 23 15:14:13 2019 +0900
+On the other hand, I cannot reproduce if I install Linux 5.2 so it does
+seem like a regression in 5.3.  I will see how well bisecting goes...
 
-    qlge: Move drivers/net/ethernet/qlogic/qlge/ to
-    drivers/staging/qlge/ 
-    The hardware has been declared EOL by the vendor more than 5 years
-    ago. What's more relevant to the Linux kernel is that the quality
-    of this driver is not on par with many other mainline drivers.
-    
-    Cc: Manish Chopra <manishc@marvell.com>
-    Message-id: <20190617074858.32467-1-bpoirier@suse.com>
-    Signed-off-by: Benjamin Poirier <bpoirier@suse.com>
-    Signed-off-by: David S. Miller <davem@davemloft.net>
-
-Could you rebase, and send the new version to GregKH as he is the
-stable maintainer?
-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/qlogic/qlge/qlge_ethtool.c b/drivers/net/ethernet/qlogic/qlge/qlge_ethtool.c
-> index a6886cc5654c..d539b71b2a5c 100644
-> --- a/drivers/net/ethernet/qlogic/qlge/qlge_ethtool.c
-> +++ b/drivers/net/ethernet/qlogic/qlge/qlge_ethtool.c
-> @@ -544,8 +544,10 @@ static int ql_run_loopback_test(struct ql_adapter *qdev)
->  		skb_put(skb, size);
->  		ql_create_lb_frame(skb, size);
->  		rc = ql_lb_send(skb, qdev->ndev);
-> -		if (rc != NETDEV_TX_OK)
-> +		if (rc != NETDEV_TX_OK) {
-> +			dev_kfree_skb_any(skb);
->  			return -EPIPE;
-> +		}
->  		atomic_inc(&qdev->lb_count);
->  	}
->  	/* Give queue time to settle before testing results. */
-
+>> [  796.050025] BUG: kernel NULL pointer dereference, address:
+>> 0000000000000014
+>> [  796.051280] #PF: supervisor read access in kernel mode
+>> [  796.053063] #PF: error_code(0x0000) - not-present page
+>> [  796.054636] PGD 0 P4D 0
+>> [  796.055688] Oops: 0000 [#1] PREEMPT SMP
+>> [  796.056768] CPU: 2 PID: 190 Comm: kworker/2:2 Tainted: G        W
+>>       5.3.0 #6
+>> [  796.057953] Hardware name: To Be Filled By O.E.M. To Be Filled By
+>> O.E.M./B450 Gaming-ITX/ac, BIOS P3.30 05/17/2019
+>> [  796.059329] Workqueue: events key_garbage_collector
+>> [  796.060623] RIP: 0010:keyring_gc_check_iterator+0x27/0x30
+>
+> That would be the keyring garbage collector, not NFS.
+>
+> Cced keyrings@vger.kernel.org
+>
+>
+>> [  796.061845] Code: 44 00 00 48 83 e7 fc b8 01 00 00 00 f6 87 80 00
+>> 00 00 21 75 19 48 8b 57 58 48 39 16 7c 05 48 85 d2 7f 0b 48 8b 87 a0
+>> 00 00 00 <0f> b6 40 14 c3 0f 1f 40 00 48 83 e7 fc e9 27 eb ff ff 0f
+>> 1f
+>> 80 00
+>> [  796.064638] RSP: 0018:ffffb40fc0757df8 EFLAGS: 00010282
+>> [  796.066058] RAX: 0000000000000000 RBX: ffffa14338caed80 RCX:
+>> ffffb40fc0757e40
+>> [  796.067531] RDX: ffffa1433ae85558 RSI: ffffb40fc0757e40 RDI:
+>> ffffa1433ae85500
+>> [  796.069014] RBP: ffffb40fc0757e40 R08: 0000000000000000 R09:
+>> 000000000000000f
+>> [  796.070513] R10: 8080808080808080 R11: 0000000000000001 R12:
+>> ffffffffa4cd6180
+>> [  796.072025] R13: ffffa14338caee10 R14: ffffa14338caedf0 R15:
+>> ffffa1433ffeff00
+>> [  796.073567] FS:  0000000000000000(0000) GS:ffffa14340480000(0000)
+>> knlGS:0000000000000000
+>> [  796.075171] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> [  796.076785] CR2: 0000000000000014 CR3: 0000000747ce6000 CR4:
+>> 00000000003406e0
+>> [  796.078445] Call Trace:
+>> [  796.080091]  assoc_array_subtree_iterate+0x55/0x100
+>> [  796.081770]  keyring_gc+0x3f/0x80
+>> [  796.083447]  key_garbage_collector+0x330/0x3d0
+>> [  796.085155]  process_one_work+0x1cb/0x320
+>> [  796.086869]  worker_thread+0x28/0x3c0
+>> [  796.088603]  ? process_one_work+0x320/0x320
+>> [  796.090335]  kthread+0x106/0x120
+>> [  796.092053]  ? kthread_create_on_node+0x40/0x40
+>> [  796.093810]  ret_from_fork+0x1f/0x30
+>> [  796.095569] Modules linked in: sha1_ssse3 sha1_generic cbc cts
+>> rpcsec_gss_krb5 auth_rpcgss nfsv4 nfs lockd grace ext4 crc16 mbcache
+>> jbd2 iwlmvm mac80211 libarc4 amdgpu iwlwifi snd_hda_codec_realtek
+>> snd_hda_codec_generic kvm_amd gpu_sched kvm snd_hda_codec_hdmi
+>> drm_kms_helper irqbypass k10temp syscopyarea sysfillrect sysimgblt
+>> fb_sys_fops video ttm cfg80211 snd_hda_intel snd_hda_codec drm
+>> snd_hwdep rfkill snd_hda_core backlight snd_pcm evdev snd_timer snd
+>> soundcore efivarfs dm_crypt hid_generic igb hwmon i2c_algo_bit sr_mod
+>> cdrom sunrpc dm_mod
+>> [  796.104033] CR2: 0000000000000014
+>> [  796.106304] ---[ end trace 695aee10f9202347 ]---
+>> [  796.108585] RIP: 0010:keyring_gc_check_iterator+0x27/0x30
+>> [  796.110894] Code: 44 00 00 48 83 e7 fc b8 01 00 00 00 f6 87 80 00
+>> 00 00 21 75 19 48 8b 57 58 48 39 16 7c 05 48 85 d2 7f 0b 48 8b 87 a0
+>> 00 00 00 <0f> b6 40 14 c3 0f 1f 40 00 48 83 e7 fc e9 27 eb ff ff 0f
+>> 1f
+>> 80 00
+>> [  796.115773] RSP: 0018:ffffb40fc0757df8 EFLAGS: 00010282
+>> [  796.118209] RAX: 0000000000000000 RBX: ffffa14338caed80 RCX:
+>> ffffb40fc0757e40
+>> [  796.120683] RDX: ffffa1433ae85558 RSI: ffffb40fc0757e40 RDI:
+>> ffffa1433ae85500
+>> [  796.123176] RBP: ffffb40fc0757e40 R08: 0000000000000000 R09:
+>> 000000000000000f
+>> [  796.125668] R10: 8080808080808080 R11: 0000000000000001 R12:
+>> ffffffffa4cd6180
+>> [  796.128104] R13: ffffa14338caee10 R14: ffffa14338caedf0 R15:
+>> ffffa1433ffeff00
+>> [  796.130493] FS:  0000000000000000(0000) GS:ffffa14340480000(0000)
+>> knlGS:0000000000000000
+>> [  796.132923] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> [  796.135266] CR2: 0000000000000014 CR3: 0000000747ce6000 CR4:
+>> 00000000003406e0
+>
