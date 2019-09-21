@@ -2,128 +2,116 @@ Return-Path: <SRS0=64FT=XQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1B2C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 02:04:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7262DC49ED7
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 03:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EC8B20882
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 02:04:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 494F8217F9
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Sep 2019 03:03:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r4zN/DrZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FxJnbU/8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437632AbfIUCEu (ORCPT
+        id S2405167AbfIUDDC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Sep 2019 22:04:50 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:45502 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437587AbfIUCEu (ORCPT
+        Fri, 20 Sep 2019 23:03:02 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:35933 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730800AbfIUDDB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Sep 2019 22:04:50 -0400
-Received: by mail-pl1-f194.google.com with SMTP id u12so4023924pls.12
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Sep 2019 19:04:49 -0700 (PDT)
+        Fri, 20 Sep 2019 23:03:01 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 67so7848713oto.3;
+        Fri, 20 Sep 2019 20:03:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4HorIcxvAeYR90hn18suy/4zO4DegTzvuyZdzOASANM=;
-        b=r4zN/DrZc8ATtRCTZ92cWaGhlPyXK2A8r2K59trA4kT/Fjfwbda3rsFDb885kkj0hu
-         JUHiKmg3Uhgif2wsoPG0mFobB3MnUH8HH0jqc/zvdmhOWPb7lfmi0JJgPSrb1EzRNXCs
-         +dwKgyWaECDAbIEitn2szBynKUz+kPpa5ZKkJ/kHd73PTO6VElNeyKn7xQ9fCPjK+QeO
-         GQ4FtDH4hnacidh9hwM7bXZueI5BRusFW2OyTo8KTnc7vCWXB60B4heybW/oo/ZN/Vuz
-         QYrPvCo/R1LaAptvrX7cggHW9fEZ9f4zDEGcr7EBO9f9uTuhPNyhbO/xl/g61I3+QTLa
-         y1cA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=6gFD/fDRv/9BVI9TlIlHkBgJAj7cIjjTmLQI72YYXcA=;
+        b=FxJnbU/8qi91ikGeF2YAGu5W/1MPutptBXbL8re5lWxx+cWXoxbobbRKcumzlelA6P
+         WpFRjCVPALLTnqdzLBJfXl8lnQaWmpU/dHbVxodCDPiMuCZd2uxztCJmV3yPRfnarKFd
+         iKPRuSkJEU50iPEaxqL5HbCQOi7iUlUxXNzuQUFeR5565ICTrAxsLp1JDJh70H57rTGJ
+         KNRyJkGgxvzdv1T5gSG6AMZqr6PuBpAYmrcCoiF9GEnl4FnSD0zWOr1IrlPgSrMFBFyi
+         Oq5O1FjToa/c+/3UeUn0ClVH4hD9td56yn9fnRHoTCM2SR7YNB3sVdK0y7LGGNTsu4fr
+         kItA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4HorIcxvAeYR90hn18suy/4zO4DegTzvuyZdzOASANM=;
-        b=EuThMphlBkZXNYxL9XyNUEu9p9jDdeEKDjo/lD2OG5Io2VUZM7+CAn4NSPbENJxWsD
-         t1i0ozHeat2JJtbnb9AHsDcwxg1m7Lt/RrjdhIToEvRSKKPYPRNl/Cx4wWLF0uiEseVE
-         CmpkZrtbaJNk+U07zWXDq/715HpOQ86tB+axLIK0GPLSFFEqdoNXRup3vzzcCjajeqJ5
-         QZhq8QWYSKn5dacx0mjMdqnGyoGJ0lInKpC79+jv5iQjSbJaJUQPo5AIEtnzSkKgwldf
-         QrN7YCuxBzKWJDdm1hiddI6tsu6YPd3IUpdDigca2Oke/P4S+NGNOOxVOGs60t3u+gmI
-         5xZg==
-X-Gm-Message-State: APjAAAV5dY5Bl6dU6Hl3jth4QZ2n6QM4IWHQmVVTwnlG11DBPrHypCwC
-        wmWvikl/5hzELD5HiZZnJME=
-X-Google-Smtp-Source: APXvYqxXA13/PaF8bmDkXEXSSTmcx55EixwcSBcjJ3sbggQn1nKRthE5pdjpTQ5S4VtpZR2XzRo+zQ==
-X-Received: by 2002:a17:902:8a81:: with SMTP id p1mr19531274plo.71.1569031489622;
-        Fri, 20 Sep 2019 19:04:49 -0700 (PDT)
-Received: from mail.google.com ([207.148.65.56])
-        by smtp.gmail.com with ESMTPSA id d24sm3825652pfn.86.2019.09.20.19.04.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 20 Sep 2019 19:04:49 -0700 (PDT)
-Date:   Sat, 21 Sep 2019 02:04:45 +0000
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Changbin Du <changbin.du@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf: add support for logging debug messages to file
-Message-ID: <20190921020444.qtrsqxweuyoeomzq@mail.google.com>
-References: <20190915102740.24209-1-changbin.du@gmail.com>
- <20190920205356.GA1041@krava>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6gFD/fDRv/9BVI9TlIlHkBgJAj7cIjjTmLQI72YYXcA=;
+        b=Z78K2ILDW7W4+qkl1HDI34D/Df1dRbmU9AAz8UdLFzf1aOObswQLyKGHvOQdx7KYtE
+         vtrS49NqUOcej2b1D/iY5RR+9k7Q/nlME4ZTTT3LcAbtGHBwqgVm03LT9uszBFEGtDpI
+         pMCiJMTpYXaIEQvNyHv7UeqYTn03L5cppN0ERFEbmlAzoq02qjHYk2M/2/2rHWK7nRzQ
+         75b05v8G6Wf29VjiixUBr0Y589ch7Bt/abaYd6EHwDSt0BtqQgy2qZrgt54MrGrhyZ+V
+         TkLRj6mQVq+o9Px3rcfJn6Qz/B2TAbWLE+XC+x+nbmw6yuvLt+knBHlGWViCFHN3U647
+         5AJA==
+X-Gm-Message-State: APjAAAWL14xnd7me+tsFbCWhpDHLvdZQY4i673MH5tntSLnaovjXg3Tf
+        Ir6GRngAomsMHKcCwYi/FyxT6gGhENA=
+X-Google-Smtp-Source: APXvYqyXPVkDY7hQglG0MvS65/Unv3MrmHtIShSvZEG+9S/nXwMYGG5g6aOny/42LS499QCusEQFug==
+X-Received: by 2002:a05:6830:10d8:: with SMTP id z24mr2271108oto.281.1569034980487;
+        Fri, 20 Sep 2019 20:03:00 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id o184sm1244843oia.28.2019.09.20.20.02.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Sep 2019 20:02:58 -0700 (PDT)
+Subject: Re: [PATCH] dt-bindings: net: dwmac: fix 'mac-mode' type
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, davem@davemloft.net,
+        robh+dt@kernel.org, peppe.cavallaro@st.com,
+        alexandre.torgue@st.com, andrew@lunn.ch
+References: <20190917103052.13456-1-alexandru.ardelean@analog.com>
+ <20190920181141.52cfee67@cakuba.netronome.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <f189cdbc-b399-7700-a39a-ba185df4af49@gmail.com>
+Date:   Fri, 20 Sep 2019 20:02:58 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190920205356.GA1041@krava>
-User-Agent: NeoMutt/20180716-508-7c9a6d
+In-Reply-To: <20190920181141.52cfee67@cakuba.netronome.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 10:53:56PM +0200, Jiri Olsa wrote:
-> On Sun, Sep 15, 2019 at 06:27:40PM +0800, Changbin Du wrote:
-> > When in TUI mode, it is impossible to show all the debug messages to
-> > console. This make it hard to debug perf issues using debug messages.
-> > This patch adds support for logging debug messages to file to resolve
-> > this problem.
-> > 
-> > The usage is:
-> > perf -debug verbose=2 --debug file=1 COMMAND
-> > 
-> > And the path of log file is '~/perf.log'.
-> > 
-> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> > ---
-> >  tools/perf/Documentation/perf.txt |  4 +++-
-> >  tools/perf/util/debug.c           | 20 ++++++++++++++++++++
-> >  2 files changed, 23 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/perf/Documentation/perf.txt b/tools/perf/Documentation/perf.txt
-> > index 401f0ed67439..45db7b22d1a5 100644
-> > --- a/tools/perf/Documentation/perf.txt
-> > +++ b/tools/perf/Documentation/perf.txt
-> > @@ -16,7 +16,8 @@ OPTIONS
-> >  	Setup debug variable (see list below) in value
-> >  	range (0, 10). Use like:
-> >  	  --debug verbose   # sets verbose = 1
-> > -	  --debug verbose=2 # sets verbose = 2
-> > +	  --debug verbose=2 --debug file=1
-> > +	                    # sets verbose = 2 and save log to file
-> 
-> it's variable already, why not allow to pass the path directly like:
-> 
->   --debug file=~/perf.log
-> 
-> would be great if we won't need to use --debug twice and allow:
-> 
->   --debug verbose=2,file=perf.log
->
-This could be done, but first we need to change the option parsing code
-first. will do it later.
 
-> jirka
 
+On 9/20/2019 6:11 PM, Jakub Kicinski wrote:
+> On Tue, 17 Sep 2019 13:30:52 +0300, Alexandru Ardelean wrote:
+>> The 'mac-mode' property is similar to 'phy-mode' and 'phy-connection-type',
+>> which are enums of mode strings.
+>>
+>> The 'dwmac' driver supports almost all modes declared in the 'phy-mode'
+>> enum (except for 1 or 2). But in general, there may be a case where
+>> 'mac-mode' becomes more generic and is moved as part of phylib or netdev.
+>>
+>> In any case, the 'mac-mode' field should be made an enum, and it also makes
+>> sense to just reference the 'phy-connection-type' from
+>> 'ethernet-controller.yaml'. That will also make it more future-proof for new
+>> modes.
+>>
+>> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> 
+> Applied, thank you!
+> 
+> FWIW I had to add the Fixes tag by hand, either ozlabs patchwork or my
+> git-pw doesn't have the automagic handling there, yet.
+
+AFAICT the ozlabs patchwork instance does not do it, but if you have
+patchwork administrative rights (the jango administration panel I mean)
+then it is simple to add the regular expression to the list of tags that
+patchwork already recognized. Had tried getting that included by
+default, but it also counted all of those tags and therefore was not
+particularly fine grained:
+
+https://lists.ozlabs.org/pipermail/patchwork/2017-January/003910.html
 -- 
-Cheers,
-Changbin Du
+Florian
