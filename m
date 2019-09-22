@@ -4,63 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9345DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD44C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A20820882
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:11:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1748520882
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:11:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179485;
-	bh=x3CIsCXcVinP9qVLbt8vSkv0DvTQeBfbKhDw/hdnX+M=;
+	s=default; t=1569179493;
+	bh=7xF1xYmOlay9Ze+szq0md9RS0t+LoDPP2wL641ILDTA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nHuz/2szgJ/fQscrYw5yiI079q1cN0OBBmdBR2CA8uZlEQqTkMB7M9m66j4JtHbSe
-	 fXhFjtV2Fz+8vPVM/dgzIDd7UIGWmJSFu4WPACvouTxgl9hodUQz0nvqkNppPY0S6W
-	 FVQ6es+uG7Ru0hI8CzMVTTef5MPypZWP2lEbQw2w=
+	b=Rj8rzHnemOV3dTdqicLa4D6LNvjH0zE4wmHY3eQdioUVOquZ/GfaG/Sw6toOUc3W+
+	 YWohtCKyzkpstzQLXIddikR7sEIf6QVajZ769srygUxVkmgNT6/qnroeFHnFdpAP1/
+	 98fQg6jxqaEPHAZr5L8wnK+aDwSiV4QP2HbjrBiM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730584AbfIVTLY (ORCPT
+        id S1730613AbfIVTLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:11:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33132 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:11:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408241AbfIVS6a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:58:30 -0400
+        id S2438777AbfIVS61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:58:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9331021D7F;
-        Sun, 22 Sep 2019 18:58:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F06DC21D7C;
+        Sun, 22 Sep 2019 18:58:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178709;
-        bh=x3CIsCXcVinP9qVLbt8vSkv0DvTQeBfbKhDw/hdnX+M=;
+        s=default; t=1569178706;
+        bh=7xF1xYmOlay9Ze+szq0md9RS0t+LoDPP2wL641ILDTA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kbsGXuUtUHSQQgXDHPr/bVXpFZHrV4Vdl9D5Mx3uING/JIYePQBLs6fud+IWxAjS9
-         VyU+c3hr0P9EeA0vOrf3OaPgF7UlQPYlxaYuN97tsE6Y0vnI5R/RZirw5qJhPijhAk
-         0i+XP7Tvgte2y/nUP2z5AWmTG+bTxaLVa0NLebws=
+        b=zccrUJANy8z7Qrv4/YsqHkcCTZtQRvJLEsqqmeg1tMuGoQ+8x6d/Or1ONp+4Q96uA
+         5iQ/QEKgzOI2KGFV9scXF0cbY6NR/q5uLl/VU87c+heEsTbWlOCeskZzuPkZx+X1/G
+         zQYrKkdcr4RaW135p6Isox/3oXxFFl1qgfZpVqkM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>,
-        Ilya Ledvich <ilya@compulab.co.il>,
-        Igor Grinberg <grinberg@compulab.co.il>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
         Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 44/89] ARM: dts: imx7d: cl-som-imx7: make ethernet work again
-Date:   Sun, 22 Sep 2019 14:56:32 -0400
-Message-Id: <20190922185717.3412-44-sashal@kernel.org>
+        Steve Longerbeam <slongerbeam@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 4.14 42/89] media: imx: mipi csi-2: Don't fail if initial state times-out
+Date:   Sun, 22 Sep 2019 14:56:30 -0400
+Message-Id: <20190922185717.3412-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185717.3412-1-sashal@kernel.org>
 References: <20190922185717.3412-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -69,74 +64,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: André Draszik <git@andred.net>
+From: Ezequiel Garcia <ezequiel@collabora.com>
 
-[ Upstream commit 9846a4524ac90b63496580b7ad50674b40d92a8f ]
+[ Upstream commit 0d5078c7172c46db6c58718d817b9fcf769554b4 ]
 
-Recent changes to the atheros at803x driver caused
-ethernet to stop working on this board.
-In particular commit 6d4cd041f0af
-("net: phy: at803x: disable delay only for RGMII mode")
-and commit cd28d1d6e52e
-("net: phy: at803x: Disable phy delay for RGMII mode")
-fix the AR8031 driver to configure the phy's (RX/TX)
-delays as per the 'phy-mode' in the device tree.
+Not all sensors will be able to guarantee a proper initial state.
+This may be either because the driver is not properly written,
+or (probably unlikely) because the hardware won't support it.
 
-This now prevents ethernet from working on this board.
+While the right solution in the former case is to fix the sensor
+driver, the real world not always allows right solutions, due to lack
+of available documentation and support on these sensors.
 
-It used to work before those commits, because the
-AR8031 comes out of reset with RX delay enabled, and
-the at803x driver didn't touch the delay configuration
-at all when "rgmii" mode was selected, and because
-arch/arm/mach-imx/mach-imx7d.c:ar8031_phy_fixup()
-unconditionally enables TX delay.
+Let's relax this requirement, and allow the driver to support stream start,
+even if the sensor initial sequence wasn't the expected.
 
-Since above commits ar8031_phy_fixup() also has no
-effect anymore, and the end-result is that all delays
-are disabled in the phy, no ethernet.
+Also improve the warning message to better explain the problem and provide
+a hint that the sensor driver needs to be fixed.
 
-Update the device tree to restore functionality.
-
-Signed-off-by: André Draszik <git@andred.net>
-CC: Ilya Ledvich <ilya@compulab.co.il>
-CC: Igor Grinberg <grinberg@compulab.co.il>
-CC: Rob Herring <robh+dt@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>
-CC: Shawn Guo <shawnguo@kernel.org>
-CC: Sascha Hauer <s.hauer@pengutronix.de>
-CC: Pengutronix Kernel Team <kernel@pengutronix.de>
-CC: Fabio Estevam <festevam@gmail.com>
-CC: NXP Linux Team <linux-imx@nxp.com>
-CC: devicetree@vger.kernel.org
-CC: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Reviewed-by: Steve Longerbeam <slongerbeam@gmail.com>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/staging/media/imx/imx6-mipi-csi2.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-index 3cc1fb9ce4418..60a28281d3d16 100644
---- a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-+++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-@@ -43,7 +43,7 @@
- 			  <&clks IMX7D_ENET1_TIME_ROOT_CLK>;
- 	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
- 	assigned-clock-rates = <0>, <100000000>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- 	phy-handle = <&ethphy0>;
- 	fsl,magic-packet;
- 	status = "okay";
-@@ -69,7 +69,7 @@
- 			  <&clks IMX7D_ENET2_TIME_ROOT_CLK>;
- 	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
- 	assigned-clock-rates = <0>, <100000000>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- 	phy-handle = <&ethphy1>;
- 	fsl,magic-packet;
- 	status = "okay";
+diff --git a/drivers/staging/media/imx/imx6-mipi-csi2.c b/drivers/staging/media/imx/imx6-mipi-csi2.c
+index 5061f3f524fd5..c28f65c5427d1 100644
+--- a/drivers/staging/media/imx/imx6-mipi-csi2.c
++++ b/drivers/staging/media/imx/imx6-mipi-csi2.c
+@@ -247,7 +247,7 @@ static int __maybe_unused csi2_dphy_wait_ulp(struct csi2_dev *csi2)
+ }
+ 
+ /* Waits for low-power LP-11 state on data and clock lanes. */
+-static int csi2_dphy_wait_stopstate(struct csi2_dev *csi2)
++static void csi2_dphy_wait_stopstate(struct csi2_dev *csi2)
+ {
+ 	u32 mask, reg;
+ 	int ret;
+@@ -258,11 +258,9 @@ static int csi2_dphy_wait_stopstate(struct csi2_dev *csi2)
+ 	ret = readl_poll_timeout(csi2->base + CSI2_PHY_STATE, reg,
+ 				 (reg & mask) == mask, 0, 500000);
+ 	if (ret) {
+-		v4l2_err(&csi2->sd, "LP-11 timeout, phy_state = 0x%08x\n", reg);
+-		return ret;
++		v4l2_warn(&csi2->sd, "LP-11 wait timeout, likely a sensor driver bug, expect capture failures.\n");
++		v4l2_warn(&csi2->sd, "phy_state = 0x%08x\n", reg);
+ 	}
+-
+-	return 0;
+ }
+ 
+ /* Wait for active clock on the clock lane. */
+@@ -320,9 +318,7 @@ static int csi2_start(struct csi2_dev *csi2)
+ 	csi2_enable(csi2, true);
+ 
+ 	/* Step 5 */
+-	ret = csi2_dphy_wait_stopstate(csi2);
+-	if (ret)
+-		goto err_assert_reset;
++	csi2_dphy_wait_stopstate(csi2);
+ 
+ 	/* Step 6 */
+ 	ret = v4l2_subdev_call(csi2->src_sd, video, s_stream, 1);
 -- 
 2.20.1
 
