@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E4CC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8853CC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFAEB21D56
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:53:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60F9A21BE5
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:53:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178381;
-	bh=JynpDT/gW2P7z3FNimWG7u5TDUQgbp30m34PxCe32QM=;
+	s=default; t=1569178385;
+	bh=wxlemXqcQli902QZT0OQcLMn5GX/KD1gd3Ig9+iAhYs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z3gRk8DnVaA8iISu29UALuUr6CPNcgcsTh29j0CGZGi3FV+QVq3YBk39ZaWj60B7d
-	 Pj7aLlriBEw68JpIm8yZMPIb5DGKDRqi2ocaEdf82EDDxT6ep+lTSsUBd7MIT3u2um
-	 XgImQ7cpnYSxNH/xBQZlUfo4+iZWtAKamAAGHL+w=
+	b=yCBXgouY+34+Ny5+CzfJ/XzXuPt/bQ5Z0kIGRJxJmSYanDoLBsP74pEuLqI39uK6U
+	 2imejRURql1q1ldHOV+jqbBF42ECS97tNJbjKFTJerOfZVu2HxEIQaHzRQuNK0pq1o
+	 mePMBUkIL6/ceVae+/dElBBu9uB+iWinfKBIC/GY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389430AbfIVSw7 (ORCPT
+        id S2404214AbfIVSxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:52:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51738 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:53:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407944AbfIVSwh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:52:37 -0400
+        id S2407963AbfIVSwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:52:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 134B721479;
-        Sun, 22 Sep 2019 18:52:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D67BD208C2;
+        Sun, 22 Sep 2019 18:52:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178356;
-        bh=JynpDT/gW2P7z3FNimWG7u5TDUQgbp30m34PxCe32QM=;
+        s=default; t=1569178361;
+        bh=wxlemXqcQli902QZT0OQcLMn5GX/KD1gd3Ig9+iAhYs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hTEUvRCDbYRsNJuoCUoDqpj+RJ1jBT6dmfrK/umV5m7HcJdNwGpk8QKfX6XpHmqpz
-         r94M6SilCzg0TNkFk887ZLtetL2ONHvIs5fe+vvrgYZkoonkZ0wZGFTUSezBDkzbk3
-         wS4d8g8LybdNBOFpRP/Htgx1j1xLD5nB49nsjHq4=
+        b=0seUIyHkQbzN5alItw2ZUZ6O4elu5a8DlSYE4Jz1ogrY/l3CRqVcNJM/mAdizJCqW
+         0mBc1u2fHdA++Y0rdVPqvhy58TgsFKZt2MaKB5W2kx8GsFQoRgi4Rqhoa12daRVRPQ
+         AycXShyNzrF86kNdYGMdGEGpSRuGvrnweTbfgZZY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kamil Konieczny <k.konieczny@partner.samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 111/185] PM / devfreq: exynos-bus: Correct clock enable sequence
-Date:   Sun, 22 Sep 2019 14:48:09 -0400
-Message-Id: <20190922184924.32534-111-sashal@kernel.org>
+Cc:     "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 115/185] media: saa7134: fix terminology around saa7134_i2c_eeprom_md7134_gate()
+Date:   Sun, 22 Sep 2019 14:48:13 -0400
+Message-Id: <20190922184924.32534-115-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -61,99 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kamil Konieczny <k.konieczny@partner.samsung.com>
+From: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
 
-[ Upstream commit 2c2b20e0da89c76759ee28c6824413ab2fa3bfc6 ]
+[ Upstream commit 9d802222a3405599d6e1984d9324cddf592ea1f4 ]
 
-Regulators should be enabled before clocks to avoid h/w hang. This
-require change in exynos_bus_probe() to move exynos_bus_parse_of()
-after exynos_bus_parent_parse_of() and change in error handling.
-Similar change is needed in exynos_bus_exit() where clock should be
-disabled before regulators.
+saa7134_i2c_eeprom_md7134_gate() function and the associated comment uses
+an inverted i2c gate open / closed terminology.
+Let's fix this.
 
-Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+[hverkuil-cisco@xs4all.nl: fix alignment checkpatch warning]
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/exynos-bus.c | 31 +++++++++++++++++--------------
- 1 file changed, 17 insertions(+), 14 deletions(-)
+ drivers/media/pci/saa7134/saa7134-i2c.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
-index d9f377912c104..7c06df8bd74fe 100644
---- a/drivers/devfreq/exynos-bus.c
-+++ b/drivers/devfreq/exynos-bus.c
-@@ -191,11 +191,10 @@ static void exynos_bus_exit(struct device *dev)
- 	if (ret < 0)
- 		dev_warn(dev, "failed to disable the devfreq-event devices\n");
+diff --git a/drivers/media/pci/saa7134/saa7134-i2c.c b/drivers/media/pci/saa7134/saa7134-i2c.c
+index 493b1858815fb..04e85765373ec 100644
+--- a/drivers/media/pci/saa7134/saa7134-i2c.c
++++ b/drivers/media/pci/saa7134/saa7134-i2c.c
+@@ -342,7 +342,11 @@ static const struct i2c_client saa7134_client_template = {
  
--	if (bus->regulator)
--		regulator_disable(bus->regulator);
--
- 	dev_pm_opp_of_remove_table(dev);
- 	clk_disable_unprepare(bus->clk);
-+	if (bus->regulator)
-+		regulator_disable(bus->regulator);
- }
+ /* ----------------------------------------------------------- */
  
- /*
-@@ -383,6 +382,7 @@ static int exynos_bus_probe(struct platform_device *pdev)
- 	struct exynos_bus *bus;
- 	int ret, max_state;
- 	unsigned long min_freq, max_freq;
-+	bool passive = false;
+-/* On Medion 7134 reading EEPROM needs DVB-T demod i2c gate open */
++/*
++ * On Medion 7134 reading the SAA7134 chip config EEPROM needs DVB-T
++ * demod i2c gate closed due to an address clash between this EEPROM
++ * and the demod one.
++ */
+ static void saa7134_i2c_eeprom_md7134_gate(struct saa7134_dev *dev)
+ {
+ 	u8 subaddr = 0x7, dmdregval;
+@@ -359,14 +363,14 @@ static void saa7134_i2c_eeprom_md7134_gate(struct saa7134_dev *dev)
  
- 	if (!np) {
- 		dev_err(dev, "failed to find devicetree node\n");
-@@ -396,27 +396,27 @@ static int exynos_bus_probe(struct platform_device *pdev)
- 	bus->dev = &pdev->dev;
- 	platform_set_drvdata(pdev, bus);
+ 	ret = i2c_transfer(&dev->i2c_adap, i2cgatemsg_r, 2);
+ 	if ((ret == 2) && (dmdregval & 0x2)) {
+-		pr_debug("%s: DVB-T demod i2c gate was left closed\n",
++		pr_debug("%s: DVB-T demod i2c gate was left open\n",
+ 			 dev->name);
  
--	/* Parse the device-tree to get the resource information */
--	ret = exynos_bus_parse_of(np, bus);
--	if (ret < 0)
--		return ret;
--
- 	profile = devm_kzalloc(dev, sizeof(*profile), GFP_KERNEL);
--	if (!profile) {
--		ret = -ENOMEM;
--		goto err;
--	}
-+	if (!profile)
-+		return -ENOMEM;
- 
- 	node = of_parse_phandle(dev->of_node, "devfreq", 0);
- 	if (node) {
- 		of_node_put(node);
--		goto passive;
-+		passive = true;
- 	} else {
- 		ret = exynos_bus_parent_parse_of(np, bus);
-+		if (ret < 0)
-+			return ret;
+ 		data[0] = subaddr;
+ 		data[1] = (dmdregval & ~0x2);
+ 		if (i2c_transfer(&dev->i2c_adap, i2cgatemsg_w, 1) != 1)
+-			pr_err("%s: EEPROM i2c gate open failure\n",
+-			  dev->name);
++			pr_err("%s: EEPROM i2c gate close failure\n",
++			       dev->name);
  	}
- 
-+	/* Parse the device-tree to get the resource information */
-+	ret = exynos_bus_parse_of(np, bus);
- 	if (ret < 0)
--		goto err;
-+		goto err_reg;
-+
-+	if (passive)
-+		goto passive;
- 
- 	/* Initialize the struct profile and governor data for parent device */
- 	profile->polling_ms = 50;
-@@ -507,6 +507,9 @@ static int exynos_bus_probe(struct platform_device *pdev)
- err:
- 	dev_pm_opp_of_remove_table(dev);
- 	clk_disable_unprepare(bus->clk);
-+err_reg:
-+	if (!passive)
-+		regulator_disable(bus->regulator);
- 
- 	return ret;
  }
+ 
 -- 
 2.20.1
 
