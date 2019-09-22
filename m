@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E7DC49ED7
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9293C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3B772186A
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:11:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A00A1206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:11:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179468;
-	bh=44rgQTh2Yc+Xc1QrGStJl2qwKe7VSYF3ttp8sId0wsc=;
+	s=default; t=1569179471;
+	bh=BmCxRh3AFZo6roUst32OqGMBUYL85uQbOxwAP4cI02Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KqIJGZgT/Jk//eJajUlc+OvLHUYFuFmukVbzUjeea4U38L/sOtPnBZW3KegyLWVVR
-	 omJZxolf738Gt7UtSW4PEg+1Rf0Yi1J0uWjeBiQpSKlHWjWOsGTCedev9NgIubwVWT
-	 jMsBs08mlsJuFYwqI8rJjWhzi63sU/mGpApUBbJs=
+	b=d1mM71REUiCDTF9FLisJC/YBm7e384wyICX5XIwWL6vXIIOCT/TMqooa6ERDIsNIu
+	 E+d3BAlI52Yb2dszLjgzsCLj6Vt4oOQ2ONERbOm9/4rFmElcA2tofRgHcXNpQBi91a
+	 2/u33vJN4RyxaSl6uRpQy07tfFb2StsgvNZjhzis=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438797AbfIVS6f (ORCPT
+        id S2395514AbfIVTLK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:58:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33172 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:11:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408250AbfIVS6b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:58:31 -0400
+        id S2438792AbfIVS6f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:58:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 865E4206C2;
-        Sun, 22 Sep 2019 18:58:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D33B821928;
+        Sun, 22 Sep 2019 18:58:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178710;
-        bh=44rgQTh2Yc+Xc1QrGStJl2qwKe7VSYF3ttp8sId0wsc=;
+        s=default; t=1569178714;
+        bh=BmCxRh3AFZo6roUst32OqGMBUYL85uQbOxwAP4cI02Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vOvVm1Z1iZVMmzTx1jGkejTKl7lVsPGsH39KMojcxdgnVdjcHW5hxCYe8aOWPbHBK
-         Ea5dXVMEYzg2Z/XCGczGf5t1HWjodypO2j8oDQiT0ByhDd8BKxkRXvEMPPI2MAsMr+
-         hsRTwJ45o+xya58+WClxBPnI/B2CCUTkF+6FR4vs=
+        b=l60MwoFVrSzw3xsVGdG31G3hn0zih2Gt5vnro8XCdLmPOqdFF9ioN+KGQtLMdttUc
+         66H0b6DiGf3zelD+igN8ZD/ee3N+dBLBfoUHOf/KARsXCPmt6pKvrTt+QyRK8HMlr3
+         tfZWNyw38iWhoD7JE7rM7N0ZObx1CIOOBasZDoIU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        syzbot+2d4fc2a0c45ad8da7e99@syzkaller.appspotmail.com,
+Cc:     Wenwen Wang <wenwen@cs.uga.edu>, Sean Young <sean@mess.org>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 45/89] media: radio/si470x: kill urb on error
-Date:   Sun, 22 Sep 2019 14:56:33 -0400
-Message-Id: <20190922185717.3412-45-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 48/89] media: dvb-core: fix a memory leak bug
+Date:   Sun, 22 Sep 2019 14:56:36 -0400
+Message-Id: <20190922185717.3412-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185717.3412-1-sashal@kernel.org>
 References: <20190922185717.3412-1-sashal@kernel.org>
@@ -60,57 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit 0d616f2a3fdbf1304db44d451d9f07008556923b ]
+[ Upstream commit fcd5ce4b3936242e6679875a4d3c3acfc8743e15 ]
 
-In the probe() function radio->int_in_urb was not killed if an
-error occurred in the probe sequence. It was also missing in
-the disconnect.
+In dvb_create_media_entity(), 'dvbdev->entity' is allocated through
+kzalloc(). Then, 'dvbdev->pads' is allocated through kcalloc(). However, if
+kcalloc() fails, the allocated 'dvbdev->entity' is not deallocated, leading
+to a memory leak bug. To fix this issue, free 'dvbdev->entity' before
+returning -ENOMEM.
 
-This caused this syzbot issue:
-
-https://syzkaller.appspot.com/bug?extid=2d4fc2a0c45ad8da7e99
-
-Reported-and-tested-by: syzbot+2d4fc2a0c45ad8da7e99@syzkaller.appspotmail.com
-
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Signed-off-by: Sean Young <sean@mess.org>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/radio/si470x/radio-si470x-usb.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/media/dvb-core/dvbdev.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/radio/si470x/radio-si470x-usb.c b/drivers/media/radio/si470x/radio-si470x-usb.c
-index c311f9951d806..aec528f52ca12 100644
---- a/drivers/media/radio/si470x/radio-si470x-usb.c
-+++ b/drivers/media/radio/si470x/radio-si470x-usb.c
-@@ -737,7 +737,7 @@ static int si470x_usb_driver_probe(struct usb_interface *intf,
- 	/* start radio */
- 	retval = si470x_start_usb(radio);
- 	if (retval < 0)
--		goto err_all;
-+		goto err_buf;
+diff --git a/drivers/media/dvb-core/dvbdev.c b/drivers/media/dvb-core/dvbdev.c
+index 41aad0f99d73c..ba3c68fb9676b 100644
+--- a/drivers/media/dvb-core/dvbdev.c
++++ b/drivers/media/dvb-core/dvbdev.c
+@@ -316,8 +316,10 @@ static int dvb_create_media_entity(struct dvb_device *dvbdev,
+ 	if (npads) {
+ 		dvbdev->pads = kcalloc(npads, sizeof(*dvbdev->pads),
+ 				       GFP_KERNEL);
+-		if (!dvbdev->pads)
++		if (!dvbdev->pads) {
++			kfree(dvbdev->entity);
+ 			return -ENOMEM;
++		}
+ 	}
  
- 	/* set initial frequency */
- 	si470x_set_freq(radio, 87.5 * FREQ_MUL); /* available in all regions */
-@@ -752,6 +752,8 @@ static int si470x_usb_driver_probe(struct usb_interface *intf,
- 
- 	return 0;
- err_all:
-+	usb_kill_urb(radio->int_in_urb);
-+err_buf:
- 	kfree(radio->buffer);
- err_ctrl:
- 	v4l2_ctrl_handler_free(&radio->hdl);
-@@ -825,6 +827,7 @@ static void si470x_usb_driver_disconnect(struct usb_interface *intf)
- 	mutex_lock(&radio->lock);
- 	v4l2_device_disconnect(&radio->v4l2_dev);
- 	video_unregister_device(&radio->videodev);
-+	usb_kill_urb(radio->int_in_urb);
- 	usb_set_intfdata(intf, NULL);
- 	mutex_unlock(&radio->lock);
- 	v4l2_device_put(&radio->v4l2_dev);
+ 	switch (type) {
 -- 
 2.20.1
 
