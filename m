@@ -4,48 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 530E3C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F196C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:31:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17520206B6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07F63206B6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:31:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180709;
-	bh=qzhzxhxwZtPw9WUK7gM1IqcV5+m1vRHorMTFT6SbNOo=;
+	s=default; t=1569180712;
+	bh=1XALEhAKuCd7LzKwV2e9wuvt2c6ap39x/F2yqvgyk8k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lLz3KF5jITMFwJVaWN4qZ2zDb4EmUGUuJI7Ab503xm8cPAD/gxE+bp9wC99Y5IfyJ
-	 ETj41Md2lKUu6ACw2ANxsXWPg4Me9AN4O+Chh+yxmXargjEOOAddw/byxgAylaB52c
-	 cljoeB7b1Q5ZL1wO/5hBe/fqF05iowjZf3YbS9S8=
+	b=q9Yev72q9iadhIWk1GeDJS73AIPriFrvdNvICXkHa5kzFSyNhM828SoPqI75KAZk6
+	 w8BwmOEkQWoVHZMVuGqC5/rL6Bt2I6NeBKn+9JHO2RSy8aXAIt1NaECqoHIjDgWTsk
+	 SoEzmB+yGUIwvad1pn7AaXV7DcQGay+Q/3aDBrhU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388171AbfIVTbs (ORCPT
+        id S2391741AbfIVSsn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:31:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45678 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:48:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391571AbfIVSso (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:48:44 -0400
+        id S2391571AbfIVSsX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:48:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 899FA21A4C;
-        Sun, 22 Sep 2019 18:48:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B2AB21479;
+        Sun, 22 Sep 2019 18:48:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178124;
-        bh=qzhzxhxwZtPw9WUK7gM1IqcV5+m1vRHorMTFT6SbNOo=;
+        s=default; t=1569178103;
+        bh=1XALEhAKuCd7LzKwV2e9wuvt2c6ap39x/F2yqvgyk8k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tGIMy4vp4WpJAB9MEtErxkZ3Ahs+R1ynH+rG9KI3sfI80fHNJBKAQZVWs0SpY1JeN
-         YVCe+UBvEXOFtDJrTwjEObMcyMXEWy1TQicdAhAdxbXnomVou3GTsX/ynC4JhAaxX4
-         LzVUxpnpD9Zo/cw9Hbvx0+STwSnImo3ulYmwUhfk=
+        b=BxaEZ+9+bLlwTvOAcJQBNP+Jpadeo8PGKa8cx5lYeVNWVI4Gz826dAbv7MTf9LdVa
+         wTn5GTbdQLEMxWdcpVpQTgrUOEgycRJNSf7Euc5XibbZuzcpoCbjIGASzoIlMQB2Ro
+         0yGe01aX7+6ZnCo9+FJfW4QQrZ9f3jenB5rXLQvs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jackie Liu <liuyun01@kylinos.cn>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 178/203] io_uring: fix wrong sequence setting logic
-Date:   Sun, 22 Sep 2019 14:43:24 -0400
-Message-Id: <20190922184350.30563-178-sashal@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 164/203] kprobes: Prohibit probing on BUG() and WARN() address
+Date:   Sun, 22 Sep 2019 14:43:10 -0400
+Message-Id: <20190922184350.30563-164-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -58,51 +66,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jackie Liu <liuyun01@kylinos.cn>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 8776f3fa15a5cd213c4dfab7ddaf557983374ea6 ]
+[ Upstream commit e336b4027775cb458dc713745e526fa1a1996b2a ]
 
-Sqo_thread will get sqring in batches, which will cause
-ctx->cached_sq_head to be added in batches. if one of these
-sqes is set with the DRAIN flag, then he will never get a
-chance to process, and finally sqo_thread will not exit.
+Since BUG() and WARN() may use a trap (e.g. UD2 on x86) to
+get the address where the BUG() has occurred, kprobes can not
+do single-step out-of-line that instruction. So prohibit
+probing on such address.
 
-Fixes: de0617e4671 ("io_uring: add support for marking commands as draining")
-Signed-off-by: Jackie Liu <liuyun01@kylinos.cn>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Without this fix, if someone put a kprobe on WARN(), the
+kernel will crash with invalid opcode error instead of
+outputing warning message, because kernel can not find
+correct bug address.
+
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Acked-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+Cc: David S . Miller <davem@davemloft.net>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Naveen N . Rao <naveen.n.rao@linux.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/156750890133.19112.3393666300746167111.stgit@devnote2
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/io_uring.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ include/linux/bug.h | 5 +++++
+ kernel/kprobes.c    | 3 ++-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index cfb48bd088e12..06d048341fa41 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -288,6 +288,7 @@ struct io_ring_ctx {
- struct sqe_submit {
- 	const struct io_uring_sqe	*sqe;
- 	unsigned short			index;
-+	u32				sequence;
- 	bool				has_user;
- 	bool				needs_lock;
- 	bool				needs_fixed_file;
-@@ -2040,7 +2041,7 @@ static int io_req_set_file(struct io_ring_ctx *ctx, const struct sqe_submit *s,
+diff --git a/include/linux/bug.h b/include/linux/bug.h
+index fe5916550da8c..f639bd0122f39 100644
+--- a/include/linux/bug.h
++++ b/include/linux/bug.h
+@@ -47,6 +47,11 @@ void generic_bug_clear_once(void);
  
- 	if (flags & IOSQE_IO_DRAIN) {
- 		req->flags |= REQ_F_IO_DRAIN;
--		req->sequence = ctx->cached_sq_head - 1;
-+		req->sequence = s->sequence;
- 	}
+ #else	/* !CONFIG_GENERIC_BUG */
  
- 	if (!io_op_needs_file(s->sqe))
-@@ -2247,6 +2248,7 @@ static bool io_get_sqring(struct io_ring_ctx *ctx, struct sqe_submit *s)
- 	if (head < ctx->sq_entries) {
- 		s->index = head;
- 		s->sqe = &ctx->sq_sqes[head];
-+		s->sequence = ctx->cached_sq_head;
- 		ctx->cached_sq_head++;
- 		return true;
++static inline void *find_bug(unsigned long bugaddr)
++{
++	return NULL;
++}
++
+ static inline enum bug_trap_type report_bug(unsigned long bug_addr,
+ 					    struct pt_regs *regs)
+ {
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index d9770a5393c89..ebe8315a756a2 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -1514,7 +1514,8 @@ static int check_kprobe_address_safe(struct kprobe *p,
+ 	/* Ensure it is not in reserved area nor out of text */
+ 	if (!kernel_text_address((unsigned long) p->addr) ||
+ 	    within_kprobe_blacklist((unsigned long) p->addr) ||
+-	    jump_label_text_reserved(p->addr, p->addr)) {
++	    jump_label_text_reserved(p->addr, p->addr) ||
++	    find_bug((unsigned long)p->addr)) {
+ 		ret = -EINVAL;
+ 		goto out;
  	}
 -- 
 2.20.1
