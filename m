@@ -4,55 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BA7C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F1DC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E62121479
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:57:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0B0C206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:57:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178672;
-	bh=lQFsJo/ifnDFbQ6bmQ5/++QOotlYuVYGBuf+IwxkEQs=;
+	s=default; t=1569178675;
+	bh=Xl2elV2ZT10DYuQvJd9qDHbzliuUMTkiEbjCUrmdKss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QTtcwr6mKtetO4Xx1CvgUUrh3emxltYBxSg1Og1ZpUgB+hALu1OFRiZtBXcUgSZgg
-	 vhkkFSNayjKRledSNu1ntaoj4tPqPRUTtPDrogj3S/UJfEV/j1UHgYUxDRCc2EYVea
-	 2rWCoRo9XmTBE+bjxdspMh73UgvYFhQeYzp2g+aA=
+	b=L0QFKclW2RtQT6zhPx/2SF1i5KdhVUwSRYRnclkj54ubue7uc2NlqbAw4KoRA6LAR
+	 IwGSuTY9t/E3s01abBLQk4uYspKqsTWkRAFkG9ujdET/aNhUSiZAakkzqlb1rqi6dP
+	 +ZqWCtSABGohkLf+OOsw/jVLr7HkUsH7phgAhh40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438670AbfIVS5v (ORCPT
+        id S2438684AbfIVS5y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:57:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60228 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:57:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404906AbfIVS5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:57:37 -0400
+        id S2394818AbfIVS5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:57:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AFCB21D7C;
-        Sun, 22 Sep 2019 18:57:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86A122186A;
+        Sun, 22 Sep 2019 18:57:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178657;
-        bh=lQFsJo/ifnDFbQ6bmQ5/++QOotlYuVYGBuf+IwxkEQs=;
+        s=default; t=1569178659;
+        bh=Xl2elV2ZT10DYuQvJd9qDHbzliuUMTkiEbjCUrmdKss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zTwMEjq4BlsdMgfVg1TrOlQcEd1m8cJxlzENm+o5s38B5XDSILjndTpSlYj/+Op6T
-         xrMAVN3O8e1jvnszZhm1ae57r7QQsuGl+5HU+uVCpEnakl4jVSSOVRJ+9uEm9A5WAV
-         wGJcCS3gox0VbyP0/ZeFXFQtHrCT6yXeysvEKaGk=
+        b=LwuhuxXlFqqL5voTO+C0DZdBhwzCAFtSdlM/k6+mPRNKpPnPcb5Icj6jRILJONDAA
+         fTqlEYce2oyg3ioQN+rS3lj0QfFWu9Vn/iIa/JMf2oYe5M+p9i2UXt2tBxOt74G8l1
+         3+ZmbiuMnm9BG0pPiJM8wvfAcP4talHi5nEljTbo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+Cc:     Juri Lelli <juri.lelli@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
+        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Tejun Heo <tj@kernel.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 11/89] sched/fair: Fix imbalance due to CPU affinity
-Date:   Sun, 22 Sep 2019 14:55:59 -0400
-Message-Id: <20190922185717.3412-11-sashal@kernel.org>
+        Thomas Gleixner <tglx@linutronix.de>, lizefan@huawei.com,
+        longman@redhat.com, luca.abeni@santannapisa.it,
+        rostedt@goodmis.org, Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 12/89] sched/core: Fix CPU controller for !RT_GROUP_SCHED
+Date:   Sun, 22 Sep 2019 14:56:00 -0400
+Message-Id: <20190922185717.3412-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185717.3412-1-sashal@kernel.org>
 References: <20190922185717.3412-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,64 +67,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Guittot <vincent.guittot@linaro.org>
+From: Juri Lelli <juri.lelli@redhat.com>
 
-[ Upstream commit f6cad8df6b30a5d2bbbd2e698f74b4cafb9fb82b ]
+[ Upstream commit a07db5c0865799ebed1f88be0df50c581fb65029 ]
 
-The load_balance() has a dedicated mecanism to detect when an imbalance
-is due to CPU affinity and must be handled at parent level. In this case,
-the imbalance field of the parent's sched_group is set.
+On !CONFIG_RT_GROUP_SCHED configurations it is currently not possible to
+move RT tasks between cgroups to which CPU controller has been attached;
+but it is oddly possible to first move tasks around and then make them
+RT (setschedule to FIFO/RR).
 
-The description of sg_imbalanced() gives a typical example of two groups
-of 4 CPUs each and 4 tasks each with a cpumask covering 1 CPU of the first
-group and 3 CPUs of the second group. Something like:
+E.g.:
 
-	{ 0 1 2 3 } { 4 5 6 7 }
-	        *     * * *
+  # mkdir /sys/fs/cgroup/cpu,cpuacct/group1
+  # chrt -fp 10 $$
+  # echo $$ > /sys/fs/cgroup/cpu,cpuacct/group1/tasks
+  bash: echo: write error: Invalid argument
+  # chrt -op 0 $$
+  # echo $$ > /sys/fs/cgroup/cpu,cpuacct/group1/tasks
+  # chrt -fp 10 $$
+  # cat /sys/fs/cgroup/cpu,cpuacct/group1/tasks
+  2345
+  2598
+  # chrt -p 2345
+  pid 2345's current scheduling policy: SCHED_FIFO
+  pid 2345's current scheduling priority: 10
 
-But the load_balance fails to fix this UC on my octo cores system
-made of 2 clusters of quad cores.
+Also, as Michal noted, it is currently not possible to enable CPU
+controller on unified hierarchy with !CONFIG_RT_GROUP_SCHED (if there
+are any kernel RT threads in root cgroup, they can't be migrated to the
+newly created CPU controller's root in cgroup_update_dfl_csses()).
 
-Whereas the load_balance is able to detect that the imbalanced is due to
-CPU affinity, it fails to fix it because the imbalance field is cleared
-before letting parent level a chance to run. In fact, when the imbalance is
-detected, the load_balance reruns without the CPU with pinned tasks. But
-there is no other running tasks in the situation described above and
-everything looks balanced this time so the imbalance field is immediately
-cleared.
+Existing code comes with a comment saying the "we don't support RT-tasks
+being in separate groups". Such comment is however stale and belongs to
+pre-RT_GROUP_SCHED times. Also, it doesn't make much sense for
+!RT_GROUP_ SCHED configurations, since checks related to RT bandwidth
+are not performed at all in these cases.
 
-The imbalance field should not be cleared if there is no other task to move
-when the imbalance is detected.
+Make moving RT tasks between CPU controller groups viable by removing
+special case check for RT (and DEADLINE) tasks.
 
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Michal Koutný <mkoutny@suse.com>
+Reviewed-by: Daniel Bristot de Oliveira <bristot@redhat.com>
+Acked-by: Tejun Heo <tj@kernel.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/1561996022-28829-1-git-send-email-vincent.guittot@linaro.org
+Cc: lizefan@huawei.com
+Cc: longman@redhat.com
+Cc: luca.abeni@santannapisa.it
+Cc: rostedt@goodmis.org
+Link: https://lkml.kernel.org/r/20190719063455.27328-1-juri.lelli@redhat.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/fair.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ kernel/sched/core.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index c298d47888ed8..808db3566ddbc 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -8359,9 +8359,10 @@ static int load_balance(int this_cpu, struct rq *this_rq,
- out_balanced:
- 	/*
- 	 * We reach balance although we may have faced some affinity
--	 * constraints. Clear the imbalance flag if it was set.
-+	 * constraints. Clear the imbalance flag only if other tasks got
-+	 * a chance to move and fix the imbalance.
- 	 */
--	if (sd_parent) {
-+	if (sd_parent && !(env.flags & LBF_ALL_PINNED)) {
- 		int *group_imbalance = &sd_parent->groups->sgc->imbalance;
- 
- 		if (*group_imbalance)
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index ff128e281d1c6..3d24d401b9d42 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -6342,10 +6342,6 @@ static int cpu_cgroup_can_attach(struct cgroup_taskset *tset)
+ #ifdef CONFIG_RT_GROUP_SCHED
+ 		if (!sched_rt_can_attach(css_tg(css), task))
+ 			return -EINVAL;
+-#else
+-		/* We don't support RT-tasks being in separate groups */
+-		if (task->sched_class != &fair_sched_class)
+-			return -EINVAL;
+ #endif
+ 		/*
+ 		 * Serialize against wake_up_new_task() such that if its
 -- 
 2.20.1
 
