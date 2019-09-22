@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C70C5C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F32C8C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1A3D21D56
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:48:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C594621A4C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:48:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178104;
-	bh=3iuTUPH38z8GhXhGf0ZoFLJizgr0/Dx+jX0EiSbp/nM=;
+	s=default; t=1569178107;
+	bh=almqlEgrShZjlwAf+YmnkiSQmi+dQpvSMs4EOo+e5No=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EgZj9CwFIfGbACxIXjwdfo/4g3zVcC+xlPFTnsfFl2Z5eIhvGJuVrv4NaNJPOiYf5
-	 +jMnqcpA/upuxisCKfLeUOdFBR9pEDNeeD4Q3h88vu06aRElfIr0Ocj0ubyix4ptYs
-	 Nuxu7cfjHheJPa8gNKzMCp6GYNKtABZE0I2uyBIU=
+	b=AaIIhciEKPidn9/a7TPiaSSZoR4YhAgVmyYdgQgtBz0pmXLWFVaPvqtXExxNqtTZD
+	 cJBx1bnZkqtuWt508g9MfZPYM8ShzyNs9EYBfa0kEK2IW+NUZCzEvwPZijaUKmGng/
+	 sqEdTMv/UvYmEYCkcdoygKECUGiGQ342WupGHuMM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391577AbfIVSsY (ORCPT
+        id S2391600AbfIVSs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:48:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44832 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:48:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391407AbfIVSsI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:48:08 -0400
+        id S2391457AbfIVSsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:48:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A961521479;
-        Sun, 22 Sep 2019 18:48:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62CED214D9;
+        Sun, 22 Sep 2019 18:48:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178088;
-        bh=3iuTUPH38z8GhXhGf0ZoFLJizgr0/Dx+jX0EiSbp/nM=;
+        s=default; t=1569178092;
+        bh=almqlEgrShZjlwAf+YmnkiSQmi+dQpvSMs4EOo+e5No=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cSaoWX25ci8rfOV4unhzsgdZQY8J3oHC4aHX9D4uLw5uLE2Q/KvjFB5hM9r++ToKL
-         /gqtdXHi/lBZFSmI/bO2uWsmr8fktluW5L14IsogrbbjQtndP0MHM1uZx33EGwATDA
-         KaHPhhVzQ0h5pAK8Ut6guE3ZXtb1fyzRf3EOTvB8=
+        b=QkRy1uRaR94eQnmAMR5IVLLqDYmcInUxGH0x03M2YeYtQm9PGEVuAaNIyweFtfVi0
+         ajGvoFtdhS2hHNcH82MoFx3JB1WBhjIFo16pCNwLfeP63QMZEHq9EuVCJ2foTqIYNP
+         vfnWor40iwiM/k7E1QWKr2Ug5eKyUAVNSOeVb4xk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 155/203] ARM: dts: exynos: Mark LDO10 as always-on on Peach Pit/Pi Chromebooks
-Date:   Sun, 22 Sep 2019 14:43:01 -0400
-Message-Id: <20190922184350.30563-155-sashal@kernel.org>
+Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 157/203] ACPI: custom_method: fix memory leaks
+Date:   Sun, 22 Sep 2019 14:43:03 -0400
+Message-Id: <20190922184350.30563-157-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -59,58 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit 5b0eeeaa37615df37a9a30929b73e9defe61ca84 ]
+[ Upstream commit 03d1571d9513369c17e6848476763ebbd10ec2cb ]
 
-Commit aff138bf8e37 ("ARM: dts: exynos: Add TMU nodes regulator supply
-for Peach boards") assigned LDO10 to Exynos Thermal Measurement Unit,
-but it turned out that it supplies also some other critical parts and
-board freezes/crashes when it is turned off.
+In cm_write(), 'buf' is allocated through kzalloc(). In the following
+execution, if an error occurs, 'buf' is not deallocated, leading to memory
+leaks. To fix this issue, free 'buf' before returning the error.
 
-The mentioned commit made Exynos TMU a consumer of that regulator and in
-typical case Exynos TMU driver keeps it enabled from early boot. However
-there are such configurations (example is multi_v7_defconfig), in which
-some of the regulators are compiled as modules and are not available
-from early boot. In such case it may happen that LDO10 is turned off by
-regulator core, because it has no consumers yet (in this case consumer
-drivers cannot get it, because the supply regulators for it are not yet
-available). This in turn causes the board to crash. This patch restores
-'always-on' property for the LDO10 regulator.
-
-Fixes: aff138bf8e37 ("ARM: dts: exynos: Add TMU nodes regulator supply for Peach boards")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Fixes: 526b4af47f44 ("ACPI: Split out custom_method functionality into an own driver")
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/exynos5420-peach-pit.dts | 1 +
- arch/arm/boot/dts/exynos5800-peach-pi.dts  | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/acpi/custom_method.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-index f78db6809cca4..9eb48cabcca45 100644
---- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
-+++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-@@ -440,6 +440,7 @@
- 				regulator-name = "vdd_ldo10";
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
- 				regulator-state-mem {
- 					regulator-off-in-suspend;
- 				};
-diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-index e0f470fe54c81..4398f2d1fe881 100644
---- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
-+++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-@@ -440,6 +440,7 @@
- 				regulator-name = "vdd_ldo10";
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
- 				regulator-state-mem {
- 					regulator-off-in-suspend;
- 				};
+diff --git a/drivers/acpi/custom_method.c b/drivers/acpi/custom_method.c
+index b2ef4c2ec955d..fd66a736621cf 100644
+--- a/drivers/acpi/custom_method.c
++++ b/drivers/acpi/custom_method.c
+@@ -49,8 +49,10 @@ static ssize_t cm_write(struct file *file, const char __user * user_buf,
+ 	if ((*ppos > max_size) ||
+ 	    (*ppos + count > max_size) ||
+ 	    (*ppos + count < count) ||
+-	    (count > uncopied_bytes))
++	    (count > uncopied_bytes)) {
++		kfree(buf);
+ 		return -EINVAL;
++	}
+ 
+ 	if (copy_from_user(buf + (*ppos), user_buf, count)) {
+ 		kfree(buf);
+@@ -70,6 +72,7 @@ static ssize_t cm_write(struct file *file, const char __user * user_buf,
+ 		add_taint(TAINT_OVERRIDDEN_ACPI_TABLE, LOCKDEP_NOW_UNRELIABLE);
+ 	}
+ 
++	kfree(buf);
+ 	return count;
+ }
+ 
 -- 
 2.20.1
 
