@@ -2,82 +2,147 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E6AC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 16:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE8F8C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 17:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA7A620820
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 16:49:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB8EA206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 17:03:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VCTb0/EA"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=akdev.xyz header.i=alex@akdev.xyz header.b="A0Q4j9Q/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388126AbfIVQt2 (ORCPT
+        id S2388095AbfIVRDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 12:49:28 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44067 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387795AbfIVQt1 (ORCPT
+        Sun, 22 Sep 2019 13:03:15 -0400
+Received: from sender4-op-o15.zoho.com ([136.143.188.15]:17518 "EHLO
+        sender4-op-o15.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387795AbfIVRDP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 12:49:27 -0400
-Received: by mail-pg1-f193.google.com with SMTP id g3so4925566pgs.11;
-        Sun, 22 Sep 2019 09:49:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Wm6PJBsN37XhpKJFJa4+Hrg+E3W65pYxtn8YOPxmArE=;
-        b=VCTb0/EA6Tzp8+07Ff4T8bGU+w/8ZMPzXU3k5iIFjRk2XuUMKXKj7uN2nuz9Vj3vC0
-         sevvMwDdyxzGEMZVqPju/jP5FlSRHmVSy6Gmv0HzYxzqEjY9PYH1QkPlfNWacSYNuk0H
-         EUZ1Xav+2wOpeLVnS94GOgNmBiyhYk7NyvehejOi6CMsLhzeP8FBhc35mtevv6l88eul
-         qos7oDM+1zeBMvUEHER7jkkxF5lGWdll9jFQnO8+6uaXEHmbyOmd7UisUuvBdgyp8rbA
-         UuQoZRVzc7K1pdsNwpwwfc9rtJOPcOZpKj7vC2ZSmUI1TxZfBSi67+K8boKST6QFeuw2
-         e1XA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Wm6PJBsN37XhpKJFJa4+Hrg+E3W65pYxtn8YOPxmArE=;
-        b=cu84DtIBSKtwRO40YikinS3vSRW0247M3oRQNcnClRTVKG1sz9KIXwplhKgeJglcYI
-         FDf6ba55NbnVIEA75pPxsMFwVecSqk6AJqcQuBCKwXelC5/g37oHNG8o97UKX95QFqHn
-         bf7tA2seAQkBMAhHFFOJY76ag8sc7ymodnh9et5FGHXVD3ku9GqsreLNfvJuTK4e8zNb
-         KdpzaGxabYiv92KBeew1QhFi3MnzsX//e0cBkBYNaCKWcABlAYv3NrHOZXPLIqExEUiH
-         IcFxtnnn/ryL0VNvgYFYViYRSq4lDxAR/z1nVICN3I4DN6QpUJotpxwYg68VTVRlBf6v
-         0z7g==
-X-Gm-Message-State: APjAAAWdFXYjBPK0Q9XaiJ+aHXhtatqOrm+kbi3uVMGqIUjG3VQBYIsi
-        03vOra2YL6xMfwr8n7pI7A8=
-X-Google-Smtp-Source: APXvYqzRZaZyV3ysOmoGeMiD5itNz07YGm8hcT7ruDiNx2VozXKa2TlDorvKVWxElXooE2uDuTL8oQ==
-X-Received: by 2002:a62:db84:: with SMTP id f126mr29943440pfg.25.1569170966903;
-        Sun, 22 Sep 2019 09:49:26 -0700 (PDT)
-Received: from SD ([2409:4041:2e8b:6e6f:acd5:5ade:157f:5f8f])
-        by smtp.gmail.com with ESMTPSA id o64sm8978093pjb.24.2019.09.22.09.49.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Sep 2019 09:49:26 -0700 (PDT)
-Date:   Sun, 22 Sep 2019 22:19:15 +0530
-From:   Saiyam Doshi <saiyamdoshi.in@gmail.com>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     ludovic.desroches@microchip.com, ulf.hansson@linaro.org,
-        nicolas.ferre@microchip.com, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mmc: host: atmel-mci: assign false/true to bool variable
-Message-ID: <20190922164915.GA5589@SD>
-References: <20190918172823.GA28786@SD>
- <20190918180112.GR21254@piout.net>
+        Sun, 22 Sep 2019 13:03:15 -0400
+X-Greylist: delayed 911 seconds by postgrey-1.27 at vger.kernel.org; Sun, 22 Sep 2019 13:03:14 EDT
+ARC-Seal: i=1; a=rsa-sha256; t=1569170855; cv=none; 
+        d=zoho.com; s=zohoarc; 
+        b=WFig74vLMu+XHYEloXsjvZ07TUJN+d/aOzKfALCgPi+pMOpWIEhcITAklpfc9JAosy/UUukTjM0lLhQen8b622sH53nZ8EY93BlKu/GnuWa3ls7RSCdJKZSLuuFDxBZS0Y9CdWFspAzSYjTnJMLvMWxQUC8QJfk6amLHHbmcRd4=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
+        t=1569170855; h=Content-Type:Cc:Date:From:MIME-Version:Message-ID:Subject:To:ARC-Authentication-Results; 
+        bh=ouXD4BPk46j/EG0Djm0iTXK1i7gnPkmpqq+yXhTdxOw=; 
+        b=kQLE+z0y8j6r5+pomGL7XBahD3ZdnKpUPkeyCVuCo1qJIdfiiem9Rt0EnBMaat1XoRLT9rmvYwaeAH4q2PdYrdBr1+nSIpO73Mk4tere+hsNdTCJDKukdDXgw81u4h+SRNQrA3f4h/2+nMzYYqGIWhQDcKan5npjuQ6SEYrwFdg=
+ARC-Authentication-Results: i=1; mx.zoho.com;
+        dkim=pass  header.i=akdev.xyz;
+        spf=pass  smtp.mailfrom=alex@akdev.xyz;
+        dmarc=pass header.from=<alex@akdev.xyz> header.from=<alex@akdev.xyz>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1569170855;
+        s=akdev; d=akdev.xyz; i=alex@akdev.xyz;
+        h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type;
+        l=2765; bh=ouXD4BPk46j/EG0Djm0iTXK1i7gnPkmpqq+yXhTdxOw=;
+        b=A0Q4j9Q/Boxhd/E8o8thpdDcFE9G98nLQ5ikSw8rNWg96rv7A/Wd+ar+gyV4vTMT
+        Wn97lyS4sqyhz+JIZhXyZ2tvs2bB6eI7QRfuIFz0ZXd2WL3jlP02vzhSNWQ4QXp7OwQ
+        V6smcStL5qyuLwzPKaTfZ8b8oQi2F5gpD/VLxZyU=
+Received: from home0.donatello.akdev.xyz (toroon0628w-lp140-06-70-29-14-208.dsl.bell.ca [70.29.14.208]) by mx.zohomail.com
+        with SMTPS id 1569170853302706.4286020481102; Sun, 22 Sep 2019 09:47:33 -0700 (PDT)
+Date:   Sun, 22 Sep 2019 12:47:30 -0400
+From:   Alex <alex@akdev.xyz>
+To:     linux-kernel@vger.kernel.org
+Cc:     namhyung@kernel.org, jolsa@redhat.com,
+        alexander.shishkin@linux.intel.com, mark.rutland@arm.com,
+        acme@kernel.org, mingo@redhat.com, peterz@infradead.org
+Subject: [PATCH] perf: save RAM when filtering events
+Message-ID: <20190922164730.GA16336@home0.donatello.akdev.xyz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190918180112.GR21254@piout.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 08:01:12PM +0200, Alexandre Belloni wrote:
-> More useful than information than info on semantic patching, it would be
-> good to have info on why you feel this is necessary.
+The code mentioned wanting to use an implementation of log10() in the dvb
+drivers. I am not aware why that specific implementation is mentioned.
+I used the implementation found in `math.h`.
 
-Sure, will update the changelog and resend.
+I tested this patch passing 200 syscalls to filter on a `perf trace -e ${syscalls} ls`
+call. You can see the commands used and a snipped of the valgrind results here:
+https://termbin.com/k4of
+
+Before: 61,910,110 bytes allocated
+After:  61,907,045 bytes allocated
+
+perf used to allocate space in excess to build the filtering expressions.
+now perf only allocates the space necessary and not more.
+
+Signed-off-by: Alex Diaz <alex@akdev.xyz>
+---
+ tools/perf/util/string.c  | 25 ++++++++++++++++++++-----
+ tools/perf/util/string2.h |  2 ++
+ 2 files changed, 22 insertions(+), 5 deletions(-)
+
+diff --git a/tools/perf/util/string.c b/tools/perf/util/string.c
+index 52603876c548..4c3913a9e7e7 100644
+--- a/tools/perf/util/string.c
++++ b/tools/perf/util/string.c
+@@ -3,6 +3,7 @@
+ #include <linux/kernel.h>
+ #include <linux/string.h>
+ #include <stdlib.h>
++#include <math.h>
+
+ #include <linux/ctype.h>
+
+@@ -209,15 +210,29 @@ int strtailcmp(const char *s1, const char *s2)
+         return 0;
+ }
+
+-char *asprintf_expr_inout_ints(const char *var, bool in, size_t nints, int *ints)
++size_t calc_expr_buffer_size(const char *var, size_t nints, int *ints)
+ {
+         /*
+-        * FIXME: replace this with an expression using log10() when we
+-        * find a suitable implementation, maybe the one in the dvb drivers...
++        * Calculate the buffer for the expression:
+          *
+-        * "%s == %d || " = log10(MAXINT) * 2 + 8 chars for the operators
++        * "%s == %d || "
++        * length: strlen(var) + strlen(" == ") + log10(n) + strlen(" || ") + 1
+          */
+-       size_t size = nints * 28 + 1; /* \0 */
++       size_t size = 0;
++       size_t num_len = 0;
++       const size_t var_len = strlen(var);
++
++       for (size_t i = 0; i < nints; ++i) {
++               num_len = (ints[i] == 0) ? 1 : log10(ints[i]);
++               size += var_len + num_len + 9;
++       }
++
++       return size;
++}
++
++char *asprintf_expr_inout_ints(const char *var, bool in, size_t nints, int *ints)
++{
++       size_t size = calc_expr_buffer_size(var, nints, ints);
+         size_t i, printed = 0;
+         char *expr = malloc(size);
+
+diff --git a/tools/perf/util/string2.h b/tools/perf/util/string2.h
+index 708805f5573e..28fbc782ad54 100644
+--- a/tools/perf/util/string2.h
++++ b/tools/perf/util/string2.h
+@@ -20,6 +20,8 @@ static inline bool strisglob(const char *str)
+ }
+ int strtailcmp(const char *s1, const char *s2);
+
++size_t calc_expr_buffer_size(const char *var, size_t nints, int *ints);
++
+ char *asprintf_expr_inout_ints(const char *var, bool in, size_t nints, int *ints);
+
+ static inline char *asprintf_expr_in_ints(const char *var, size_t nints, int *ints)
+--
+2.21.0
+
+
