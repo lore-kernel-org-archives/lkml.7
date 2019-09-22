@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEFE8C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5ABCC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE91B206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:11:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BCFA206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:11:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179462;
-	bh=XT86kEpiNU0DwRGGQv65OB+v1DaHSodQuRRLnE4WgMo=;
+	s=default; t=1569179466;
+	bh=ZD0XjW10YGaxOGClqFSscyyezkVzBpPiqFTkIEhmeN4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JXzOMwmLAtgHHT2A/FWkmEy0GXgsgYoukIARC5iiPz15C462yUxW7aD/r8BVl6bLU
-	 1KUWu+8uIbNZA/kbQmzsaYbEGcy3qhH/p8lshKylaVIEPei+pt8FT/C5nU3TNpNhZd
-	 hNCaEnLHtjKyDcScRS2rZXx+2/7fO+AhZ83nfAbc=
+	b=BQFHyb1uS2toOt5WOUUxPay05mQoHV5gF/tGID8UIQsoaxx0FXOdp+F2l947Jno+e
+	 hBQROpXfkobgFfMrF1vd+eAhIKI1mFq5SsWqDFsadh+EURf8cW6KgpMC1E4leNAn/q
+	 ehgSrLaIt24E+I+4uLuLCbPPES/No4hm8dtKLu7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394903AbfIVS6i (ORCPT
+        id S2395493AbfIVTLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:58:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33222 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:11:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408257AbfIVS6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:58:32 -0400
+        id S2394899AbfIVS6i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:58:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19DD321479;
-        Sun, 22 Sep 2019 18:58:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E809821479;
+        Sun, 22 Sep 2019 18:58:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178711;
-        bh=XT86kEpiNU0DwRGGQv65OB+v1DaHSodQuRRLnE4WgMo=;
+        s=default; t=1569178717;
+        bh=ZD0XjW10YGaxOGClqFSscyyezkVzBpPiqFTkIEhmeN4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xmAt50+sQH7cGmnZZCrUjzS/gUKpldxFIiYzjJXBi+rjcOOr8OfeXBM1uM024FJWh
-         +eozDlzUX6PhB0ncInraRoHLeOPABoLwwu0Pxfq4+1oUWnZAd2xE5pnvYLFJK/FhGn
-         bBPFP0kAX15hkc83MCB2DIrES0RfiK6X5StqvnCo=
+        b=rnPcgWbeqo91SKxDlULEe0Xc8WXZIrYnY2PydQrfQrUXr9WOoGx6/xsH2hnWZF4Gy
+         wiG96hj8LNJeznazyov44U/xMSPwWMdVu0e2FpGKdGSMz6yLWb6UusikDLyz4tRV4u
+         DvAqDBEQf5JLjXQzUaINOSJ1a2KwQwrLHfeYdXFM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        syzbot+79d18aac4bf1770dd050@syzkaller.appspotmail.com,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 46/89] media: hdpvr: add terminating 0 at end of string
-Date:   Sun, 22 Sep 2019 14:56:34 -0400
-Message-Id: <20190922185717.3412-46-sashal@kernel.org>
+Cc:     Yazen Ghannam <yazen.ghannam@amd.com>,
+        Borislav Petkov <bp@suse.de>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 50/89] EDAC/amd64: Recognize DRAM device type ECC capability
+Date:   Sun, 22 Sep 2019 14:56:38 -0400
+Message-Id: <20190922185717.3412-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185717.3412-1-sashal@kernel.org>
 References: <20190922185717.3412-1-sashal@kernel.org>
@@ -60,37 +63,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+From: Yazen Ghannam <yazen.ghannam@amd.com>
 
-[ Upstream commit 8b8900b729e4f31f12ac1127bde137c775c327e6 ]
+[ Upstream commit f8be8e5680225ac9caf07d4545f8529b7395327f ]
 
-dev->usbc_buf was passed as argument for %s, but it was not safeguarded
-by a terminating 0.
+AMD Family 17h systems support x4 and x16 DRAM devices. However, the
+device type is not checked when setting mci.edac_ctl_cap.
 
-This caused this syzbot issue:
+Set the appropriate capability flag based on the device type.
 
-https://syzkaller.appspot.com/bug?extid=79d18aac4bf1770dd050
+Default to x8 DRAM device when neither the x4 or x16 bits are set.
 
-Reported-and-tested-by: syzbot+79d18aac4bf1770dd050@syzkaller.appspotmail.com
+ [ bp: reverse cpk_en check to save an indentation level. ]
 
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 2d09d8f301f5 ("EDAC, amd64: Determine EDAC MC capabilities on Fam17h")
+Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+Cc: James Morse <james.morse@arm.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Tony Luck <tony.luck@intel.com>
+Link: https://lkml.kernel.org/r/20190821235938.118710-3-Yazen.Ghannam@amd.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/hdpvr/hdpvr-core.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/edac/amd64_edac.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/usb/hdpvr/hdpvr-core.c b/drivers/media/usb/hdpvr/hdpvr-core.c
-index 416092c47ef40..dd82948b1cb05 100644
---- a/drivers/media/usb/hdpvr/hdpvr-core.c
-+++ b/drivers/media/usb/hdpvr/hdpvr-core.c
-@@ -141,6 +141,7 @@ static int device_authorization(struct hdpvr_device *dev)
+diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
+index 667f5ba0403c0..35b847b51bfa9 100644
+--- a/drivers/edac/amd64_edac.c
++++ b/drivers/edac/amd64_edac.c
+@@ -3101,12 +3101,15 @@ static bool ecc_enabled(struct pci_dev *F3, u16 nid)
+ static inline void
+ f17h_determine_edac_ctl_cap(struct mem_ctl_info *mci, struct amd64_pvt *pvt)
+ {
+-	u8 i, ecc_en = 1, cpk_en = 1;
++	u8 i, ecc_en = 1, cpk_en = 1, dev_x4 = 1, dev_x16 = 1;
  
- 	dev->fw_ver = dev->usbc_buf[1];
+ 	for (i = 0; i < NUM_UMCS; i++) {
+ 		if (pvt->umc[i].sdp_ctrl & UMC_SDP_INIT) {
+ 			ecc_en &= !!(pvt->umc[i].umc_cap_hi & UMC_ECC_ENABLED);
+ 			cpk_en &= !!(pvt->umc[i].umc_cap_hi & UMC_ECC_CHIPKILL_CAP);
++
++			dev_x4  &= !!(pvt->umc[i].dimm_cfg & BIT(6));
++			dev_x16 &= !!(pvt->umc[i].dimm_cfg & BIT(7));
+ 		}
+ 	}
  
-+	dev->usbc_buf[46] = '\0';
- 	v4l2_info(&dev->v4l2_dev, "firmware version 0x%x dated %s\n",
- 			  dev->fw_ver, &dev->usbc_buf[2]);
+@@ -3114,8 +3117,15 @@ f17h_determine_edac_ctl_cap(struct mem_ctl_info *mci, struct amd64_pvt *pvt)
+ 	if (ecc_en) {
+ 		mci->edac_ctl_cap |= EDAC_FLAG_SECDED;
+ 
+-		if (cpk_en)
++		if (!cpk_en)
++			return;
++
++		if (dev_x4)
+ 			mci->edac_ctl_cap |= EDAC_FLAG_S4ECD4ED;
++		else if (dev_x16)
++			mci->edac_ctl_cap |= EDAC_FLAG_S16ECD16ED;
++		else
++			mci->edac_ctl_cap |= EDAC_FLAG_S8ECD8ED;
+ 	}
+ }
  
 -- 
 2.20.1
