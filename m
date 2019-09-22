@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3635CC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:38:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC4DC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06C8820644
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:38:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D02F20644
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:38:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569181101;
-	bh=9YTmjz6JzHxwcmKGl0VJUGsFdEfzvM/9GRS2tB2FdWA=;
+	s=default; t=1569181108;
+	bh=jUA7/qGpkPZLB6Bq0rXE8/podl03XvX8nzplVpOsin4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LJ4xR+WbpNtkP076YeJ8cC3Vmylgp0Iqfm3bqWIVydf+SN4qhzQbenDrA2+R2c3Lc
-	 9D/GneN4ne7itYv1AXr46xToGFYU1noakCYsDMcLVdH+vL0EtGvQrWZY1v+97uby9V
-	 BCevwnYiEd6+L2SYrvbSz8uIubny2Nexv1UXrQgI=
+	b=VaHzCHUVjIfrlCQdhWFDPySLeLurDmNfOijye7nD/6OyY5e/2E2xomF77HPN5LUof
+	 9AWGhJ/PWAKwljs6rMFHNHm8XvHdjSC5QQcXwBH2CvDNybgVgr8ErU9yED0qFod4B+
+	 Tzawfw9n4euyIUeg2/P8+8ZAjJK/GWNW0u/TctHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439277AbfIVTiT (ORCPT
+        id S2439288AbfIVTi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:38:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41234 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:38:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389327AbfIVSpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:45:33 -0400
+        id S2389279AbfIVSp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:45:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41CC721907;
-        Sun, 22 Sep 2019 18:45:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 991F621907;
+        Sun, 22 Sep 2019 18:45:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569177933;
-        bh=9YTmjz6JzHxwcmKGl0VJUGsFdEfzvM/9GRS2tB2FdWA=;
+        s=default; t=1569177928;
+        bh=jUA7/qGpkPZLB6Bq0rXE8/podl03XvX8nzplVpOsin4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wXx/I+Pzd1I3UMD1EXv3xtw2AVHodeg/5y3S2GEX+8JKzBjysfZLBplAPwQY0DQ8k
-         IE2A8bLGBsfhX17946OsOZNbYf8NsTBjYP+zZHcQU6CYrDLeTKd5efrHRaMRSiDBT6
-         Z1BiHpl22JYrtbZ4mhzQm6PrcQ3aztf9g5C/khEw=
+        b=uN/dxcyB8av3AX2/sRRqaZr8K7F4HVKFIsh2mayp05vDVR2uJ7NtCdTDSciV/0bBq
+         HADB1h7Z77iybO1v5vfXWI2gQa2xDQHeRhN1QosAUNne87sfuBrOzuKkfbUOqFUFsg
+         Pt3IT/f526bbQXWMnZiu1WDJN/nAzuChYK3p/ESg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.3 043/203] soc: amlogic: meson-clk-measure: protect measure with a mutex
-Date:   Sun, 22 Sep 2019 14:41:09 -0400
-Message-Id: <20190922184350.30563-43-sashal@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 039/203] cpuidle: teo: Allow tick to be stopped if PM QoS is used
+Date:   Sun, 22 Sep 2019 14:41:05 -0400
+Message-Id: <20190922184350.30563-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -61,67 +58,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-[ Upstream commit 3a760d986568b67d1f8411dab64608075817b90d ]
+[ Upstream commit cab09f3d2d2a0a6cb3dfb678660d67a2c3764f50 ]
 
-In order to protect clock measuring when multiple process asks for
-a measure, protect the main measure function with mutexes.
+The TEO goveror prevents the scheduler tick from being stopped (unless
+stopped already) if there is a PM QoS latency constraint for the given
+CPU and the target residency of the deepest idle state matching that
+constraint is below the tick boundary.
 
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+However, that is problematic if CPUs with PM QoS latency constraints
+are idle for long times, because it effectively causes the tick to
+run on them all the time which is wasteful.  [It is also confusing
+and questionable if they are full dynticks CPUs.]
+
+To address that issue, modify the TEO governor to carry out the
+entire search for the most suitable idle state (from the target
+residency perspective) even if a latency constraint is present,
+to allow it to determine the expected idle duration in all cases.
+
+Also, when using the last several measured idle duration values
+to refine the idle state selection, make it compare those values
+with the current expected idle duration value (instead of
+comparing them with the target residency of the idle state
+selected so far) which should prevent the tick from being
+retained when it makes sense to stop it sometimes (especially
+in the presence of PM QoS latency constraints).
+
+Fixes: b26bf6ab716f ("cpuidle: New timer events oriented governor for tickless systems")
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/amlogic/meson-clk-measure.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/cpuidle/governors/teo.c | 32 ++++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/soc/amlogic/meson-clk-measure.c b/drivers/soc/amlogic/meson-clk-measure.c
-index 19d4cbc93a17a..c470e24f1dfa6 100644
---- a/drivers/soc/amlogic/meson-clk-measure.c
-+++ b/drivers/soc/amlogic/meson-clk-measure.c
-@@ -11,6 +11,8 @@
- #include <linux/debugfs.h>
- #include <linux/regmap.h>
+diff --git a/drivers/cpuidle/governors/teo.c b/drivers/cpuidle/governors/teo.c
+index 7d05efdbd3c66..12d9e6cecf1de 100644
+--- a/drivers/cpuidle/governors/teo.c
++++ b/drivers/cpuidle/governors/teo.c
+@@ -242,7 +242,7 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
+ 	struct teo_cpu *cpu_data = per_cpu_ptr(&teo_cpus, dev->cpu);
+ 	int latency_req = cpuidle_governor_latency_req(dev->cpu);
+ 	unsigned int duration_us, count;
+-	int max_early_idx, idx, i;
++	int max_early_idx, constraint_idx, idx, i;
+ 	ktime_t delta_tick;
  
-+static DEFINE_MUTEX(measure_lock);
+ 	if (cpu_data->last_state >= 0) {
+@@ -257,6 +257,7 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
+ 
+ 	count = 0;
+ 	max_early_idx = -1;
++	constraint_idx = drv->state_count;
+ 	idx = -1;
+ 
+ 	for (i = 0; i < drv->state_count; i++) {
+@@ -286,16 +287,8 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
+ 		if (s->target_residency > duration_us)
+ 			break;
+ 
+-		if (s->exit_latency > latency_req) {
+-			/*
+-			 * If we break out of the loop for latency reasons, use
+-			 * the target residency of the selected state as the
+-			 * expected idle duration to avoid stopping the tick
+-			 * as long as that target residency is low enough.
+-			 */
+-			duration_us = drv->states[idx].target_residency;
+-			goto refine;
+-		}
++		if (s->exit_latency > latency_req && constraint_idx > i)
++			constraint_idx = i;
+ 
+ 		idx = i;
+ 
+@@ -321,7 +314,13 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
+ 		duration_us = drv->states[idx].target_residency;
+ 	}
+ 
+-refine:
++	/*
++	 * If there is a latency constraint, it may be necessary to use a
++	 * shallower idle state than the one selected so far.
++	 */
++	if (constraint_idx < idx)
++		idx = constraint_idx;
 +
- #define MSR_CLK_DUTY		0x0
- #define MSR_CLK_REG0		0x4
- #define MSR_CLK_REG1		0x8
-@@ -360,6 +362,10 @@ static int meson_measure_id(struct meson_msr_id *clk_msr_id,
- 	unsigned int val;
- 	int ret;
+ 	if (idx < 0) {
+ 		idx = 0; /* No states enabled. Must use 0. */
+ 	} else if (idx > 0) {
+@@ -331,13 +330,12 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
  
-+	ret = mutex_lock_interruptible(&measure_lock);
-+	if (ret)
-+		return ret;
-+
- 	regmap_write(priv->regmap, MSR_CLK_REG0, 0);
+ 		/*
+ 		 * Count and sum the most recent idle duration values less than
+-		 * the target residency of the state selected so far, find the
+-		 * max.
++		 * the current expected idle duration value.
+ 		 */
+ 		for (i = 0; i < INTERVALS; i++) {
+ 			unsigned int val = cpu_data->intervals[i];
  
- 	/* Set measurement duration */
-@@ -377,8 +383,10 @@ static int meson_measure_id(struct meson_msr_id *clk_msr_id,
+-			if (val >= drv->states[idx].target_residency)
++			if (val >= duration_us)
+ 				continue;
  
- 	ret = regmap_read_poll_timeout(priv->regmap, MSR_CLK_REG0,
- 				       val, !(val & MSR_BUSY), 10, 10000);
--	if (ret)
-+	if (ret) {
-+		mutex_unlock(&measure_lock);
- 		return ret;
-+	}
- 
- 	/* Disable */
- 	regmap_update_bits(priv->regmap, MSR_CLK_REG0, MSR_ENABLE, 0);
-@@ -386,6 +394,8 @@ static int meson_measure_id(struct meson_msr_id *clk_msr_id,
- 	/* Get the value in multiple of gate time counts */
- 	regmap_read(priv->regmap, MSR_CLK_REG2, &val);
- 
-+	mutex_unlock(&measure_lock);
-+
- 	if (val >= MSR_VAL_MASK)
- 		return -EINVAL;
- 
+ 			count++;
+@@ -356,8 +354,10 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
+ 			 * would be too shallow.
+ 			 */
+ 			if (!(tick_nohz_tick_stopped() && avg_us < TICK_USEC)) {
+-				idx = teo_find_shallower_state(drv, dev, idx, avg_us);
+ 				duration_us = avg_us;
++				if (drv->states[idx].target_residency > avg_us)
++					idx = teo_find_shallower_state(drv, dev,
++								       idx, avg_us);
+ 			}
+ 		}
+ 	}
 -- 
 2.20.1
 
