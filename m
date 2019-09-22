@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB3E0C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A56C4740C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:52:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 971192190F
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:52:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 072C1208C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:52:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178371;
-	bh=9YTmjz6JzHxwcmKGl0VJUGsFdEfzvM/9GRS2tB2FdWA=;
+	s=default; t=1569178375;
+	bh=6Ktj9zXXi9b3bAjU5OSe3uz1uAckroEcPDIgl37r6dk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JlsNQoHh5q6N+stMtbIZ7k7H4MZOKvlLe0qqVFh7YIQ08+hBUFnuSlJljwpTZlW0c
-	 i+GqvSzIzGjcgx2Jra8M5ZWQ6W5hWBf0mgT+BhLuMesbdc2Fb0Dk5t/FdQ7RECzbot
-	 S8KtwYcB92WPnmad3mDUack9mglQPLKAtVdHiWqU=
+	b=j6P3UBkTnwWDWyrH/FGMJ8MJ+LIkf990esdu47T/dUqj/00evJ4jbwPHq+6p+Ia73
+	 Ae6izeBDfLQlx4qznPSsQg2I3AfNbyXp73fR8SpH0gDYAJZ43xcXJ+jmv7WcxDfp01
+	 WJKtiBevhhxFvkODJuxMJ5hG6nqqBVTPH+VseetU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393112AbfIVSwu (ORCPT
+        id S2393196AbfIVSwy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:52:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47894 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:52:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404219AbfIVSuk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:50:40 -0400
+        id S2407951AbfIVSwj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:52:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51BB821479;
-        Sun, 22 Sep 2019 18:50:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7B272190F;
+        Sun, 22 Sep 2019 18:52:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178240;
-        bh=9YTmjz6JzHxwcmKGl0VJUGsFdEfzvM/9GRS2tB2FdWA=;
+        s=default; t=1569178358;
+        bh=6Ktj9zXXi9b3bAjU5OSe3uz1uAckroEcPDIgl37r6dk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cTsUlD4p7mfjT8zHw9ySvTy3bgPoVNItK0n3CmnwCYuhZdhnK/z5HrFdi7vo5GlyH
-         XtmztjKmrkAvZUYmITTogZBGkBg5ToCQFmX4wc/wkwAS0ycCNCJ4AZVduWdTEV0H0w
-         62dw1hV+5ADrbF/Y7BGKfORxBlC5PPJTV4mK8f4k=
+        b=nRqTN3aa9ZdL3Bf0BSBuNaXRGdJktWG5ShIE0eo5Q+9uw3KCaOpceWLseGJ7SmwJ/
+         D5MAxBDIlkRUWZhJhfRwDa1w+NjO9fZ6J2AWpKawPIWqaM/NvmcXEJYehYwkzlZ7sE
+         AWVhIPwpK1RyIP0YehKDrJu+kDD5Sl7qad5aGZRU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.2 035/185] soc: amlogic: meson-clk-measure: protect measure with a mutex
-Date:   Sun, 22 Sep 2019 14:46:53 -0400
-Message-Id: <20190922184924.32534-35-sashal@kernel.org>
+Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 113/185] media: saa7146: add cleanup in hexium_attach()
+Date:   Sun, 22 Sep 2019 14:48:11 -0400
+Message-Id: <20190922184924.32534-113-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -61,66 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit 3a760d986568b67d1f8411dab64608075817b90d ]
+[ Upstream commit 42e64117d3b4a759013f77bbcf25ab6700e55de7 ]
 
-In order to protect clock measuring when multiple process asks for
-a measure, protect the main measure function with mutexes.
+If saa7146_register_device() fails, no cleanup is executed, leading to
+memory/resource leaks. To fix this issue, perform necessary cleanup work
+before returning the error.
 
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/amlogic/meson-clk-measure.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/media/pci/saa7146/hexium_gemini.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/soc/amlogic/meson-clk-measure.c b/drivers/soc/amlogic/meson-clk-measure.c
-index 19d4cbc93a17a..c470e24f1dfa6 100644
---- a/drivers/soc/amlogic/meson-clk-measure.c
-+++ b/drivers/soc/amlogic/meson-clk-measure.c
-@@ -11,6 +11,8 @@
- #include <linux/debugfs.h>
- #include <linux/regmap.h>
- 
-+static DEFINE_MUTEX(measure_lock);
-+
- #define MSR_CLK_DUTY		0x0
- #define MSR_CLK_REG0		0x4
- #define MSR_CLK_REG1		0x8
-@@ -360,6 +362,10 @@ static int meson_measure_id(struct meson_msr_id *clk_msr_id,
- 	unsigned int val;
- 	int ret;
- 
-+	ret = mutex_lock_interruptible(&measure_lock);
-+	if (ret)
-+		return ret;
-+
- 	regmap_write(priv->regmap, MSR_CLK_REG0, 0);
- 
- 	/* Set measurement duration */
-@@ -377,8 +383,10 @@ static int meson_measure_id(struct meson_msr_id *clk_msr_id,
- 
- 	ret = regmap_read_poll_timeout(priv->regmap, MSR_CLK_REG0,
- 				       val, !(val & MSR_BUSY), 10, 10000);
--	if (ret)
-+	if (ret) {
-+		mutex_unlock(&measure_lock);
+diff --git a/drivers/media/pci/saa7146/hexium_gemini.c b/drivers/media/pci/saa7146/hexium_gemini.c
+index dca20a3d98e25..f962269306707 100644
+--- a/drivers/media/pci/saa7146/hexium_gemini.c
++++ b/drivers/media/pci/saa7146/hexium_gemini.c
+@@ -292,6 +292,9 @@ static int hexium_attach(struct saa7146_dev *dev, struct saa7146_pci_extension_d
+ 	ret = saa7146_register_device(&hexium->video_dev, dev, "hexium gemini", VFL_TYPE_GRABBER);
+ 	if (ret < 0) {
+ 		pr_err("cannot register capture v4l2 device. skipping.\n");
++		saa7146_vv_release(dev);
++		i2c_del_adapter(&hexium->i2c_adapter);
++		kfree(hexium);
  		return ret;
-+	}
- 
- 	/* Disable */
- 	regmap_update_bits(priv->regmap, MSR_CLK_REG0, MSR_ENABLE, 0);
-@@ -386,6 +394,8 @@ static int meson_measure_id(struct meson_msr_id *clk_msr_id,
- 	/* Get the value in multiple of gate time counts */
- 	regmap_read(priv->regmap, MSR_CLK_REG2, &val);
- 
-+	mutex_unlock(&measure_lock);
-+
- 	if (val >= MSR_VAL_MASK)
- 		return -EINVAL;
+ 	}
  
 -- 
 2.20.1
