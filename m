@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DA6C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 979D4C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9F9F21BE5
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FCAF208C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:01:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178878;
-	bh=74yDVWR/ILsO2aE70U+M2wJKsF551xYFuOmbv1Er/4I=;
+	s=default; t=1569178883;
+	bh=/KhXoajcaFdtR7vR0vC+wUAKUGLFw6dl2D8gkPyfZZc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=or0U8I8iL8dp5R7kR7ZXLurLtaW54e+OJuIFK3nK5yiD+x7vgONpkZ+TJX3Xd/IdB
-	 604rl6rYIL5y7g1uxCdAIxUJdpJJk0z4IX24cLVe3XHbQc9NRQlWtBnHDmJ+JeLqqT
-	 Wq1kIANE7CFruvr4pj+UdmVomAFPMTgzMXUWHirU=
+	b=0Cg2ZNW8KK4G9kooEdr9yH3o6pp3i5DSyoQoodI3Rr/CSR6SiTULeAKu/oxz06Bwy
+	 CjjO13MakF3CSqlpnlcZRAx3OeMuXi6bJhMbZY370njWgK3lRuLyXdDzLkUmrYiTmZ
+	 64L9OotDrYgD8dW104wQYaKkWbzsjnt7RRouwdMA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395297AbfIVTBQ (ORCPT
+        id S2395333AbfIVTBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:01:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37214 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:01:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395261AbfIVTBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 15:01:09 -0400
+        id S2395296AbfIVTBS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 15:01:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC49B2070C;
-        Sun, 22 Sep 2019 19:01:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9FFB214D9;
+        Sun, 22 Sep 2019 19:01:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178868;
-        bh=74yDVWR/ILsO2aE70U+M2wJKsF551xYFuOmbv1Er/4I=;
+        s=default; t=1569178876;
+        bh=/KhXoajcaFdtR7vR0vC+wUAKUGLFw6dl2D8gkPyfZZc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j4OqDAeZgXjdpT9jkj3bgH888VEDmIfLUYGVzbxEiIIhsNbJZzRXUgut/blteUqB7
-         AQCb5KgWdS2qwIsphULi73vqIhW/5qGrbu1LJdkLoO47AZ3H0qizNdGq15HoBMOfk4
-         UT5uBtDOAYy+YhB5Np8XRYNUBnQoq3Uz0mHwTeUw=
+        b=dMNwZLRYZl1dvrazlErEHU/hdMK3iW/Kr9NKPNWO96b0OZALbpmje8MIW42sShYWi
+         9fePjy5s/0S6eMvdj10z5Bmi9nWhER3NUeQd+RDX8/Rn8yX6NOou13hks2jq3iXGAz
+         WAgFJvsOOg3I1xZhDK3IgnNuL5ubpDLCliGADRAo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nick Stoughton <nstoughton@logitech.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-leds@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 04/44] leds: leds-lp5562 allow firmware files up to the maximum length
-Date:   Sun, 22 Sep 2019 15:00:22 -0400
-Message-Id: <20190922190103.4906-4-sashal@kernel.org>
+Cc:     Grzegorz Halat <ghalat@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Don Zickus <dzickus@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 09/44] x86/reboot: Always use NMI fallback when shutdown via reboot vector IPI fails
+Date:   Sun, 22 Sep 2019 15:00:27 -0400
+Message-Id: <20190922190103.4906-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922190103.4906-1-sashal@kernel.org>
 References: <20190922190103.4906-1-sashal@kernel.org>
@@ -60,41 +60,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Stoughton <nstoughton@logitech.com>
+From: Grzegorz Halat <ghalat@redhat.com>
 
-[ Upstream commit ed2abfebb041473092b41527903f93390d38afa7 ]
+[ Upstream commit 747d5a1bf293dcb33af755a6d285d41b8c1ea010 ]
 
-Firmware files are in ASCII, using 2 hex characters per byte. The
-maximum length of a firmware string is therefore
+A reboot request sends an IPI via the reboot vector and waits for all other
+CPUs to stop. If one or more CPUs are in critical regions with interrupts
+disabled then the IPI is not handled on those CPUs and the shutdown hangs
+if native_stop_other_cpus() is called with the wait argument set.
 
-16 (commands) * 2 (bytes per command) * 2 (characters per byte) = 64
+Such a situation can happen when one CPU was stopped within a lock held
+section and another CPU is trying to acquire that lock with interrupts
+disabled. There are other scenarios which can cause such a lockup as well.
 
-Fixes: ff45262a85db ("leds: add new LP5562 LED driver")
-Signed-off-by: Nick Stoughton <nstoughton@logitech.com>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+In theory the shutdown should be attempted by an NMI IPI after the timeout
+period elapsed. Though the wait loop after sending the reboot vector IPI
+prevents this. It checks the wait request argument and the timeout. If wait
+is set, which is true for sys_reboot() then it won't fall through to the
+NMI shutdown method after the timeout period has finished.
+
+This was an oversight when the NMI shutdown mechanism was added to handle
+the 'reboot IPI is not working' situation. The mechanism was added to deal
+with stuck panic shutdowns, which do not have the wait request set, so the
+'wait request' case was probably not considered.
+
+Remove the wait check from the post reboot vector IPI wait loop and enforce
+that the wait loop in the NMI fallback path is invoked even if NMI IPIs are
+disabled or the registration of the NMI handler fails. That second wait
+loop will then hang if not all CPUs shutdown and the wait argument is set.
+
+[ tglx: Avoid the hard to parse line break in the NMI fallback path,
+  	add comments and massage the changelog ]
+
+Fixes: 7d007d21e539 ("x86/reboot: Use NMI to assist in shutting down if IRQ fails")
+Signed-off-by: Grzegorz Halat <ghalat@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Don Zickus <dzickus@redhat.com>
+Link: https://lkml.kernel.org/r/20190628122813.15500-1-ghalat@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/leds/leds-lp5562.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/x86/kernel/smp.c | 46 +++++++++++++++++++++++++------------------
+ 1 file changed, 27 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/leds/leds-lp5562.c b/drivers/leds/leds-lp5562.c
-index 0360c59dbdc91..fc8b2e7bcfef6 100644
---- a/drivers/leds/leds-lp5562.c
-+++ b/drivers/leds/leds-lp5562.c
-@@ -263,7 +263,11 @@ static void lp5562_firmware_loaded(struct lp55xx_chip *chip)
- {
- 	const struct firmware *fw = chip->fw;
+diff --git a/arch/x86/kernel/smp.c b/arch/x86/kernel/smp.c
+index 12c8286206ce2..6a0ba9d09b0ed 100644
+--- a/arch/x86/kernel/smp.c
++++ b/arch/x86/kernel/smp.c
+@@ -176,6 +176,12 @@ asmlinkage __visible void smp_reboot_interrupt(void)
+ 	irq_exit();
+ }
  
--	if (fw->size > LP5562_PROGRAM_LENGTH) {
-+	/*
-+	 * the firmware is encoded in ascii hex character, with 2 chars
-+	 * per byte
-+	 */
-+	if (fw->size > (LP5562_PROGRAM_LENGTH * 2)) {
- 		dev_err(&chip->cl->dev, "firmware data size overflow: %zu\n",
- 			fw->size);
- 		return;
++static int register_stop_handler(void)
++{
++	return register_nmi_handler(NMI_LOCAL, smp_stop_nmi_callback,
++				    NMI_FLAG_FIRST, "smp_stop");
++}
++
+ static void native_stop_other_cpus(int wait)
+ {
+ 	unsigned long flags;
+@@ -209,39 +215,41 @@ static void native_stop_other_cpus(int wait)
+ 		apic->send_IPI_allbutself(REBOOT_VECTOR);
+ 
+ 		/*
+-		 * Don't wait longer than a second if the caller
+-		 * didn't ask us to wait.
++		 * Don't wait longer than a second for IPI completion. The
++		 * wait request is not checked here because that would
++		 * prevent an NMI shutdown attempt in case that not all
++		 * CPUs reach shutdown state.
+ 		 */
+ 		timeout = USEC_PER_SEC;
+-		while (num_online_cpus() > 1 && (wait || timeout--))
++		while (num_online_cpus() > 1 && timeout--)
+ 			udelay(1);
+ 	}
+-	
+-	/* if the REBOOT_VECTOR didn't work, try with the NMI */
+-	if ((num_online_cpus() > 1) && (!smp_no_nmi_ipi))  {
+-		if (register_nmi_handler(NMI_LOCAL, smp_stop_nmi_callback,
+-					 NMI_FLAG_FIRST, "smp_stop"))
+-			/* Note: we ignore failures here */
+-			/* Hope the REBOOT_IRQ is good enough */
+-			goto finish;
+-
+-		/* sync above data before sending IRQ */
+-		wmb();
+ 
+-		pr_emerg("Shutting down cpus with NMI\n");
++	/* if the REBOOT_VECTOR didn't work, try with the NMI */
++	if (num_online_cpus() > 1) {
++		/*
++		 * If NMI IPI is enabled, try to register the stop handler
++		 * and send the IPI. In any case try to wait for the other
++		 * CPUs to stop.
++		 */
++		if (!smp_no_nmi_ipi && !register_stop_handler()) {
++			/* Sync above data before sending IRQ */
++			wmb();
+ 
+-		apic->send_IPI_allbutself(NMI_VECTOR);
++			pr_emerg("Shutting down cpus with NMI\n");
+ 
++			apic->send_IPI_allbutself(NMI_VECTOR);
++		}
+ 		/*
+-		 * Don't wait longer than a 10 ms if the caller
+-		 * didn't ask us to wait.
++		 * Don't wait longer than 10 ms if the caller didn't
++		 * reqeust it. If wait is true, the machine hangs here if
++		 * one or more CPUs do not reach shutdown state.
+ 		 */
+ 		timeout = USEC_PER_MSEC * 10;
+ 		while (num_online_cpus() > 1 && (wait || timeout--))
+ 			udelay(1);
+ 	}
+ 
+-finish:
+ 	local_irq_save(flags);
+ 	disable_local_APIC();
+ 	mcheck_cpu_clear(this_cpu_ptr(&cpu_info));
 -- 
 2.20.1
 
