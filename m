@@ -2,60 +2,58 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC6D0C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:11:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA5DC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4CA1206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:11:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15A9F20882
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:12:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179516;
-	bh=YguYYRHa7pxbgWOAPbbpBNA7eGUgBYUkdSRQ4YqKIUY=;
+	s=default; t=1569179521;
+	bh=F+BBISY2usXO5Kw7pU45xxt7mQnQUjIjnV1fz2gbs68=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VUn0bAy6KFki/1SmDe0DXk5DvzfNs2p9mPKEckmcBmQwHXDqL4Xe1BWOB3Yimixov
-	 neU8jxX54LGUZ+/neQjPrddDo3+Y9nlhXGi341xs8wWFtfZav9RzdpwYf3E06t2Qs4
-	 zAmCaBBuGlkB46BLdN4YqtGwpA/Fl0a5QnrITn/w=
+	b=afrbyCRrEZSJX0mBiZVLm3N4n9+dhUyBsyAlL0kItHRKYU+jGeFMxlFsIqPHn80XK
+	 PvBSPmwZFqyPT80J7Q9ppxQGzpW6tLy3nU3gUJNGH99XnxYMtsfx4vvz8tvbvsW4UP
+	 kHx1cphAfH/igv7SiMYJp7rLbrTreu+jpT/BW1uo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394875AbfIVS6Q (ORCPT
+        id S2436636AbfIVTL7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:58:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60900 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:11:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391760AbfIVS6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:58:13 -0400
+        id S2394870AbfIVS6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:58:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBEF3214D9;
-        Sun, 22 Sep 2019 18:58:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CEAE214D9;
+        Sun, 22 Sep 2019 18:58:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178692;
-        bh=YguYYRHa7pxbgWOAPbbpBNA7eGUgBYUkdSRQ4YqKIUY=;
+        s=default; t=1569178695;
+        bh=F+BBISY2usXO5Kw7pU45xxt7mQnQUjIjnV1fz2gbs68=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IGd6IpIRzqHgGQBZCOnZCK+1dnF8gfN4LY5I5SbNfQni/YDpaIbvt+QD9nDw5ejcY
-         qlBXjM7MJ9xtGIJmfyAU1+Y66UWDnrZ5ikj78xN/6zD5Ed5WQ/nt9DM5iT4pe/sxN2
-         lRE/KaOopHkZi+sQm0bmDq8B8MXME5rDfyvtjJQo=
+        b=cvy6CmwykOO6F9rgVKgCOJ16ZaJZcZORsGf4n/LbFNDNhGYfLs+b5Zb2dpOvXl3nv
+         d4Xi3YYB5TTsOwZEu2XBkN8jitg+pub73getyQwmmmLKHt8wrrGVu9n9Bn9VsAwhS5
+         jFB1NJL4garArkPBtXB6DGHRLcOMvlV38pOYkv68=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
-        <lclaudio@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Taeung Song <treeze.taeung@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 33/89] perf test vfs_getname: Disable ~/.perfconfig to get default output
-Date:   Sun, 22 Sep 2019 14:56:21 -0400
-Message-Id: <20190922185717.3412-33-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 35/89] media: fdp1: Reduce FCP not found message level to debug
+Date:   Sun, 22 Sep 2019 14:56:23 -0400
+Message-Id: <20190922185717.3412-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185717.3412-1-sashal@kernel.org>
 References: <20190922185717.3412-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -64,74 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 4fe94ce1c6ba678b5f12b94bb9996eea4fc99e85 ]
+[ Upstream commit 4fd22938569c14f6092c05880ca387409d78355f ]
 
-To get the expected output we have to ignore whatever changes the user
-has in its ~/.perfconfig file, so set PERF_CONFIG to /dev/null to
-achieve that.
+When support for the IPMMU is not enabled, the FDP driver may be
+probe-deferred multiple times, causing several messages to be printed
+like:
 
-Before:
+    rcar_fdp1 fe940000.fdp1: FCP not found (-517)
+    rcar_fdp1 fe944000.fdp1: FCP not found (-517)
 
-  # egrep 'trace|show_' ~/.perfconfig
-  [trace]
-  	show_zeros = yes
-  	show_duration = no
-  	show_timestamp = no
-  	show_arg_names = no
-  	show_prefix = yes
-  # echo $PERF_CONFIG
+Fix this by reducing the message level to debug level, as is done in the
+VSP1 driver.
 
-  # perf test "trace + vfs_getname"
-  70: Check open filename arg using perf trace + vfs_getname: FAILED!
-  # export PERF_CONFIG=/dev/null
-  # perf test "trace + vfs_getname"
-  70: Check open filename arg using perf trace + vfs_getname: Ok
-  #
-
-After:
-
-  # egrep 'trace|show_' ~/.perfconfig
-  [trace]
-  	show_zeros = yes
-  	show_duration = no
-  	show_timestamp = no
-  	show_arg_names = no
-  	show_prefix = yes
-  # echo $PERF_CONFIG
-
-  # perf test "trace + vfs_getname"
-  70: Check open filename arg using perf trace + vfs_getname: Ok
-  #
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Taeung Song <treeze.taeung@gmail.com>
-Link: https://lkml.kernel.org/n/tip-3up27pexg5i3exuzqrvt4m8u@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 4710b752e029f3f8 ("[media] v4l: Add Renesas R-Car FDP1 Driver")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/tests/shell/trace+probe_vfs_getname.sh | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/media/platform/rcar_fdp1.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/shell/trace+probe_vfs_getname.sh b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-index 2a9ef080efd02..a8a516dec4ed2 100755
---- a/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-@@ -30,6 +30,10 @@ if [ $err -ne 0 ] ; then
- 	exit $err
- fi
- 
-+# Do not use whatever ~/.perfconfig file, it may change the output
-+# via trace.{show_timestamp,show_prefix,etc}
-+export PERF_CONFIG=/dev/null
-+
- trace_open_vfs_getname
- err=$?
- rm -f ${file}
+diff --git a/drivers/media/platform/rcar_fdp1.c b/drivers/media/platform/rcar_fdp1.c
+index a889332d5d309..d8d406c79cfa1 100644
+--- a/drivers/media/platform/rcar_fdp1.c
++++ b/drivers/media/platform/rcar_fdp1.c
+@@ -2310,7 +2310,7 @@ static int fdp1_probe(struct platform_device *pdev)
+ 		fdp1->fcp = rcar_fcp_get(fcp_node);
+ 		of_node_put(fcp_node);
+ 		if (IS_ERR(fdp1->fcp)) {
+-			dev_err(&pdev->dev, "FCP not found (%ld)\n",
++			dev_dbg(&pdev->dev, "FCP not found (%ld)\n",
+ 				PTR_ERR(fdp1->fcp));
+ 			return PTR_ERR(fdp1->fcp);
+ 		}
 -- 
 2.20.1
 
