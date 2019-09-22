@@ -7,60 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47817C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A49C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:35:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E22120B7C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:35:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55E7D20B7C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:35:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180931;
-	bh=Obtjp4ZwBmT/y2TVxxCzMnVGIK54jgwwUKhCZT0umyM=;
+	s=default; t=1569180934;
+	bh=laBXdjhEBj/+X/JVTuEkEsHnRzQeu89qrZqIqosxvkg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=txIy/6dMWZGXFwf2cCX4pnqgoImvd+iYoXUK7dxpVV+WsY04UcOUz0bBhergrbzBa
-	 SyMZGw7Q4kfBrVuQswt0IYjdwuZ9Pi+50TB53lh41GvjI9HbergUI+n+ByJyugR2MR
-	 +LD6EkF5QhpNZFVffBCXFo4Ykgz+2dvjmr3FpA/4=
+	b=2fvU7TI8hw+IJmFMGWErF9KIYnQEaZg2QtnIUyZQCEuqNNkzZKbpCxslUKbwD0Cd9
+	 juBCUfA7BjepbtznTFg3R+/monZPHmvS+D3faNcBBRV02ls8g6eU0519+qlYqcLm49
+	 QGpc7xPncGp54u2a6git97bO5aNeSvcOYVbBLjHU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390230AbfIVSqr (ORCPT
+        id S2390200AbfIVSqq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:46:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42970 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:46:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390057AbfIVSqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:46:42 -0400
+        id S2390149AbfIVSqn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:46:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D46C6208C2;
-        Sun, 22 Sep 2019 18:46:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEFA1214AF;
+        Sun, 22 Sep 2019 18:46:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178001;
-        bh=Obtjp4ZwBmT/y2TVxxCzMnVGIK54jgwwUKhCZT0umyM=;
+        s=default; t=1569178002;
+        bh=laBXdjhEBj/+X/JVTuEkEsHnRzQeu89qrZqIqosxvkg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wo2+l2ko6hl07Ck97ORlyh+Cks+oMevLoSAELWdw8L9XLWBMLPr4GF+UYuIVnlAFw
-         tIUterq1w8susn0/WH+s+Z1QWxYCMPGEkqZ+hjpAv+2X2oCRmzMeGRDoSqYnik1t2v
-         7SbsVXF6P+wDijtSHLtlHDR5jA508tMkDjUqPxUc=
+        b=0cjrGVl0lewtS1m9wU/GdJHd0XJoWK56G1vpc80YJzufgkGjN3JFjQnOBM7l/p2jW
+         a5u/zQa1A6/JnD+r7cu7WhE5jTT/eneGJToYABRJk2H15y02YRHzQaLDYPvF791a0L
+         /keOVVhk3Wnn6WyARXPjujcuR8Zsf9ceM+fcV3SI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>,
-        Ilya Ledvich <ilya@compulab.co.il>,
-        Igor Grinberg <grinberg@compulab.co.il>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 090/203] ARM: dts: imx7d: cl-som-imx7: make ethernet work again
-Date:   Sun, 22 Sep 2019 14:41:56 -0400
-Message-Id: <20190922184350.30563-90-sashal@kernel.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-soc@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 091/203] arm64: dts: qcom: qcs404-evb: Mark WCSS clocks protected
+Date:   Sun, 22 Sep 2019 14:41:57 -0400
+Message-Id: <20190922184350.30563-91-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -69,74 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: André Draszik <git@andred.net>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-[ Upstream commit 9846a4524ac90b63496580b7ad50674b40d92a8f ]
+[ Upstream commit 54d895bea43c94f31304d59f82d755b7f4b59e7c ]
 
-Recent changes to the atheros at803x driver caused
-ethernet to stop working on this board.
-In particular commit 6d4cd041f0af
-("net: phy: at803x: disable delay only for RGMII mode")
-and commit cd28d1d6e52e
-("net: phy: at803x: Disable phy delay for RGMII mode")
-fix the AR8031 driver to configure the phy's (RX/TX)
-delays as per the 'phy-mode' in the device tree.
+'7d0c76bdf227 ("clk: qcom: Add WCSS gcc clock control for QCS404")'
+introduces two new clocks to gcc. These are not used before
+clk_disable_unused() and as such the clock framework tries to disable
+them.
 
-This now prevents ethernet from working on this board.
+But on the EVB these registers are only accessible through TrustZone, so
+these clocks must be marked as "protected" to prevent the clock code
+from touching them.
 
-It used to work before those commits, because the
-AR8031 comes out of reset with RX delay enabled, and
-the at803x driver didn't touch the delay configuration
-at all when "rgmii" mode was selected, and because
-arch/arm/mach-imx/mach-imx7d.c:ar8031_phy_fixup()
-unconditionally enables TX delay.
+Numerical values are used as the constants are not yet available in a
+common tree.
 
-Since above commits ar8031_phy_fixup() also has no
-effect anymore, and the end-result is that all delays
-are disabled in the phy, no ethernet.
-
-Update the device tree to restore functionality.
-
-Signed-off-by: André Draszik <git@andred.net>
-CC: Ilya Ledvich <ilya@compulab.co.il>
-CC: Igor Grinberg <grinberg@compulab.co.il>
-CC: Rob Herring <robh+dt@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>
-CC: Shawn Guo <shawnguo@kernel.org>
-CC: Sascha Hauer <s.hauer@pengutronix.de>
-CC: Pengutronix Kernel Team <kernel@pengutronix.de>
-CC: Fabio Estevam <festevam@gmail.com>
-CC: NXP Linux Team <linux-imx@nxp.com>
-CC: devicetree@vger.kernel.org
-CC: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
+Reported-by: Mark Brown <broonie@kernel.org>
+Reported-by: Niklas Cassel <niklas.cassel@linaro.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-index e61567437d73c..62d5e9a4a7818 100644
---- a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-+++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-@@ -44,7 +44,7 @@
- 			  <&clks IMX7D_ENET1_TIME_ROOT_CLK>;
- 	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
- 	assigned-clock-rates = <0>, <100000000>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- 	phy-handle = <&ethphy0>;
- 	fsl,magic-packet;
- 	status = "okay";
-@@ -70,7 +70,7 @@
- 			  <&clks IMX7D_ENET2_TIME_ROOT_CLK>;
- 	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
- 	assigned-clock-rates = <0>, <100000000>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- 	phy-handle = <&ethphy1>;
- 	fsl,magic-packet;
- 	status = "okay";
+diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+index 11c0a7137823d..db6df76e97a1a 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+@@ -61,7 +61,9 @@
+ 	protected-clocks = <GCC_BIMC_CDSP_CLK>,
+ 			   <GCC_CDSP_CFG_AHB_CLK>,
+ 			   <GCC_CDSP_BIMC_CLK_SRC>,
+-			   <GCC_CDSP_TBU_CLK>;
++			   <GCC_CDSP_TBU_CLK>,
++			   <141>, /* GCC_WCSS_Q6_AHB_CLK */
++			   <142>; /* GCC_WCSS_Q6_AXIM_CLK */
+ };
+ 
+ &pms405_spmi_regulators {
 -- 
 2.20.1
 
