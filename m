@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E1BC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C0CCC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FBF620644
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:39:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E738220644
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:39:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569181159;
-	bh=Nxw5aOhWfTdOiyaoeE7XsDYMnNJhhdM1ju1U9Tc3byo=;
+	s=default; t=1569181168;
+	bh=Ln47ydx473W+6KQNzCPk61eWAr9+pKosg4/WQNSro/g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=htx6gZKQ6j0EZp+XF+o4onDLWtrFRXEFP0UzkLSf+uhoI+nW7rI/UCoQIb9t1yENN
-	 pJ4MMybkMXHtbBzvzW1tPIjQF+axaO3pcyZRuhOIjUUQfUcKv7JHAX9/dS7B6sjq6E
-	 7DqeyRoLv1BF7YcODXUVVyADAwAtRjI9BjWXtbj4=
+	b=Y0HaUaEVLg7B7M7K0a9zAZ6+gwX0XdsY5D7qlHWXv1dPQgUOwXTC/4GGkiPuoJvJU
+	 jdbmy4Hz29sffB9Pr8vhZFsiHgL9X17E2bBmEQAaZGgLn8utaRAaOXQYmMR6nH6Ifd
+	 4mifEx4Lb/lrOBJRQikzIImH5SllqxHaV6+N165s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388961AbfIVSpE (ORCPT
+        id S2439332AbfIVTj1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:45:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40532 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:39:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388689AbfIVSpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:45:03 -0400
+        id S2388616AbfIVSn6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:43:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B472C20882;
-        Sun, 22 Sep 2019 18:45:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 621C8214D9;
+        Sun, 22 Sep 2019 18:43:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569177901;
-        bh=Nxw5aOhWfTdOiyaoeE7XsDYMnNJhhdM1ju1U9Tc3byo=;
+        s=default; t=1569177838;
+        bh=Ln47ydx473W+6KQNzCPk61eWAr9+pKosg4/WQNSro/g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=elv/uXWK3lC0byJegVJfHJgv2JZW5LnZi6EQjJ7nkUE36Um7tqWpAsz1C79wUtlK6
-         eqZKiCknJOdOKyRoazj1VnyaB7rqw/VAqmH2Kcle9cpYNPWpaPGXQ5zZDa/dDe0LIU
-         p9BNlP0ZAXxxvvaNPQAm2CMu05ne2t8qYtn99yew=
+        b=ii0moMhrug07139OND8kC4wBVUCaggoSVyG7O3Y1sBLAPaCZG0Nf3FhvFKj2YyaQy
+         34Ui//CFcZWXghHRc+JYspGOMwdc7RM8NYZNrQnXS+5REZNZFyD0+/dr2DH8YWaHCD
+         8XeDumDORq8FGfomOoT4UvCC+PCodwaRHxnnJ9nw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vandana BN <bnvandana@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 019/203] media: vivid:add sanity check to avoid divide error and set value to 1 if 0.
-Date:   Sun, 22 Sep 2019 14:40:45 -0400
-Message-Id: <20190922184350.30563-19-sashal@kernel.org>
+Cc:     Axel Lin <axel.lin@ingics.com>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 006/203] regulator: lm363x: Fix n_voltages setting for lm36274
+Date:   Sun, 22 Sep 2019 14:40:32 -0400
+Message-Id: <20190922184350.30563-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,112 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vandana BN <bnvandana@gmail.com>
+From: Axel Lin <axel.lin@ingics.com>
 
-[ Upstream commit aa9c2182c45421d54ed27c2a1765f7adedce291b ]
+[ Upstream commit 962f170d9344e5d9edb3903971c591f42d55e226 ]
 
-Syzbot reported divide error in vivid_thread_vid_cap, which has been
-seen only once and does not have a reproducer.
-This patch adds sanity checks for the
-denominator value with WARN_ON if it is 0 and replaces it with 1.
+According to the datasheet http://www.ti.com/lit/ds/symlink/lm36274.pdf:
+Table 23. VPOS Bias Register Field Descriptions VPOS[5:0]:
+VPOS voltage (50-mV steps): VPOS = 4 V + (Code × 50 mV), 6.5 V max
+000000 = 4 V
+000001 = 4.05 V
+:
+011110 = 5.5 V (Default)
+:
+110010 = 6.5 V
+110011 to 111111 map to 6.5 V
 
-divide error: 0000 [#1] PREEMPT SMP KASAN
-kobject: 'tx-0' (0000000017161f7f): kobject_uevent_env
-CPU: 0 PID: 23689 Comm: vivid-003-vid-c Not tainted 5.0.0-rc4+ #58
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-Google 01/01/2011
-RIP: 0010:vivid_cap_update_frame_period
-drivers/media/platform/vivid/vivid-kthread-cap.c:661 [inline]
-RIP: 0010:vivid_thread_vid_cap+0x221/0x284
-drivers/media/platform/vivid/vivid-kthread-cap.c:789
-Code: 48 c1 e9 03 0f b6 0c 11 48 89 f2 48 69 c0 00 ca 9a 3b 83 c2 03 38
-ca
-7c 08 84 c9 0f 85 f0 1e 00 00 41 8b 8f 24 64 00 00 31 d2 <48> f7 f1 49
-89
-c4 48 89 c3 49 8d 87 28 64 00 00 48 89 c2 48 89 45
-RSP: 0018:ffff88808b4afd68 EFLAGS: 00010246
-kobject: 'tx-0' (0000000017161f7f): fill_kobj_path: path
-= '/devices/virtual/net/gre0/queues/tx-0'
-RAX: 000000de5a6f8e00 RBX: 0000000100047b22 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: 0000000000000004 RDI: 0000000000000004
-RBP: ffff88808b4aff00 R08: ffff88804862e1c0 R09: ffffffff89997008
-R10: ffffffff89997010 R11: 0000000000000001 R12: 00000000fffffffc
-R13: ffff8880a17e0500 R14: ffff88803e40f760 R15: ffff8882182b0140
-FS:  0000000000000000(0000) GS:ffff8880ae800000(0000)
-knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000004cdc90 CR3: 000000005d827000 CR4: 00000000001426f0
-Call Trace:
-kobject: 'gretap0' (00000000d7549098): kobject_add_internal: parent:
-'net',
-set: 'devices'
-kobject: 'loop2' (0000000094ed4ee4): kobject_uevent_env
-kobject: 'loop2' (0000000094ed4ee4): fill_kobj_path: path
-= '/devices/virtual/block/loop2'
-  kthread+0x357/0x430 kernel/kthread.c:246
-kobject: 'gretap0' (00000000d7549098): kobject_uevent_env
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-Modules linked in:
-kobject: 'gretap0' (00000000d7549098): fill_kobj_path: path
-= '/devices/virtual/net/gretap0'
----[ end trace bc5c8b25b64d768f ]---
-kobject: 'loop1' (0000000032036b86): kobject_uevent_env
-RIP: 0010:vivid_cap_update_frame_period
-drivers/media/platform/vivid/vivid-kthread-cap.c:661 [inline]
-RIP: 0010:vivid_thread_vid_cap+0x221/0x2840
-drivers/media/platform/vivid/vivid-kthread-cap.c:789
-kobject: 'loop1' (0000000032036b86): fill_kobj_path: path
-= '/devices/virtual/block/loop1'
-Code: 48 c1 e9 03 0f b6 0c 11 48 89 f2 48 69 c0 00 ca 9a 3b 83 c2 03 38
-ca
-7c 08 84 c9 0f 85 f0 1e 00 00 41 8b 8f 24 64 00 00 31 d2 <48> f7 f1 49
-89
-c4 48 89 c3 49 8d 87 28 64 00 00 48 89 c2 48 89 45
-kobject: 'loop0' (00000000dd9927c3): kobject_uevent_env
-RSP: 0018:ffff88808b4afd68 EFLAGS: 00010246
-RAX: 000000de5a6f8e00 RBX: 0000000100047b22 RCX: 0000000000000000
-kobject: 'queues' (000000007ed20666): kobject_add_internal:
-parent: 'gretap0', set: '<NULL>'
-RDX: 0000000000000000 RSI: 0000000000000004 RDI: 0000000000000004
-RBP: ffff88808b4aff00 R08: ffff88804862e1c0 R09: ffffffff89997008
-kobject: 'loop0' (00000000dd9927c3): fill_kobj_path: path
-= '/devices/virtual/block/loop0'
-R10: ffffffff89997010 R11: 0000000000000001 R12: 00000000fffffffc
-kobject: 'queues' (000000007ed20666): kobject_uevent_env
-R13: ffff8880a17e0500 R14: ffff88803e40f760 R15: ffff8882182b0140
-FS:  0000000000000000(0000) GS:ffff8880ae800000(0000)
-knlGS:0000000000000000
-kobject: 'loop5' (00000000a41f9e79): kobject_uevent_env
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-kobject: 'queues' (000000007ed20666): kobject_uevent_env: filter
-function
-caused the event to drop!
-CR2: 00000000004cdc90 CR3: 000000005d827000 CR4: 00000000001426f0
-kobject: 'loop5' (00000000a41f9e79): fill_kobj_path: path
-= '/devices/virtual/block/loop5'
+So the LM36274_LDO_VSEL_MAX should be 0b110010 (0x32).
+The valid selectors are 0 ... LM36274_LDO_VSEL_MAX, n_voltages should be
+LM36274_LDO_VSEL_MAX + 1. Similarly, the n_voltages should be
+LM36274_BOOST_VSEL_MAX + 1 for LM36274_BOOST.
 
-Reported-by: syz...@syzkaller.appspotmail.com
-Signed-off-by: Vandana BN <bnvandana@gmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: bff5e8071533 ("regulator: lm363x: Add support for LM36274")
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Link: https://lore.kernel.org/r/20190626132632.32629-2-axel.lin@ingics.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/vivid/vivid-kthread-cap.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/regulator/lm363x-regulator.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/platform/vivid/vivid-kthread-cap.c b/drivers/media/platform/vivid/vivid-kthread-cap.c
-index 6cf495a7d5cc1..ed466d737a90d 100644
---- a/drivers/media/platform/vivid/vivid-kthread-cap.c
-+++ b/drivers/media/platform/vivid/vivid-kthread-cap.c
-@@ -658,6 +658,8 @@ static void vivid_cap_update_frame_period(struct vivid_dev *dev)
- 	u64 f_period;
+diff --git a/drivers/regulator/lm363x-regulator.c b/drivers/regulator/lm363x-regulator.c
+index e4a27d63bf901..4b9f618b07e97 100644
+--- a/drivers/regulator/lm363x-regulator.c
++++ b/drivers/regulator/lm363x-regulator.c
+@@ -36,7 +36,7 @@
  
- 	f_period = (u64)dev->timeperframe_vid_cap.numerator * 1000000000;
-+	if (WARN_ON(dev->timeperframe_vid_cap.denominator == 0))
-+		dev->timeperframe_vid_cap.denominator = 1;
- 	do_div(f_period, dev->timeperframe_vid_cap.denominator);
- 	if (dev->field_cap == V4L2_FIELD_ALTERNATE)
- 		f_period >>= 1;
+ /* LM36274 */
+ #define LM36274_BOOST_VSEL_MAX		0x3f
+-#define LM36274_LDO_VSEL_MAX		0x34
++#define LM36274_LDO_VSEL_MAX		0x32
+ #define LM36274_VOLTAGE_MIN		4000000
+ 
+ /* Common */
+@@ -226,7 +226,7 @@ static const struct regulator_desc lm363x_regulator_desc[] = {
+ 		.of_match	= "vboost",
+ 		.id             = LM36274_BOOST,
+ 		.ops            = &lm363x_boost_voltage_table_ops,
+-		.n_voltages     = LM36274_BOOST_VSEL_MAX,
++		.n_voltages     = LM36274_BOOST_VSEL_MAX + 1,
+ 		.min_uV         = LM36274_VOLTAGE_MIN,
+ 		.uV_step        = LM363X_STEP_50mV,
+ 		.type           = REGULATOR_VOLTAGE,
+@@ -239,7 +239,7 @@ static const struct regulator_desc lm363x_regulator_desc[] = {
+ 		.of_match	= "vpos",
+ 		.id             = LM36274_LDO_POS,
+ 		.ops            = &lm363x_regulator_voltage_table_ops,
+-		.n_voltages     = LM36274_LDO_VSEL_MAX,
++		.n_voltages     = LM36274_LDO_VSEL_MAX + 1,
+ 		.min_uV         = LM36274_VOLTAGE_MIN,
+ 		.uV_step        = LM363X_STEP_50mV,
+ 		.type           = REGULATOR_VOLTAGE,
+@@ -254,7 +254,7 @@ static const struct regulator_desc lm363x_regulator_desc[] = {
+ 		.of_match	= "vneg",
+ 		.id             = LM36274_LDO_NEG,
+ 		.ops            = &lm363x_regulator_voltage_table_ops,
+-		.n_voltages     = LM36274_LDO_VSEL_MAX,
++		.n_voltages     = LM36274_LDO_VSEL_MAX + 1,
+ 		.min_uV         = LM36274_VOLTAGE_MIN,
+ 		.uV_step        = LM363X_STEP_50mV,
+ 		.type           = REGULATOR_VOLTAGE,
 -- 
 2.20.1
 
