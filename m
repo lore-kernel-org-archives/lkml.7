@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB5B0C4740C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3059CC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6442208C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BEBF2184D
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:56:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178591;
-	bh=he2fSWT0lK2X9kFtyxSOoobrU3yzNlikOysYtfV1KiE=;
+	s=default; t=1569178593;
+	bh=c8ysKJtao1KcacX3fRizhQK4DzSImpA272TnIqkAwe4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y9Qr16lj1nJCwtJtd/lfYqbYY3s19k4Mhtda5sHQGJKl3kW5Q4cDh0SRBiKJ8YR36
-	 yXbFgBLz9nE1zJ+g6BaS5GChnPNr/3KbGzw1Ci6tPnlAaWeA+DWsjWKdyEATM1Lm2f
-	 2jM4anF2CdWI/1S/yHv0PT4Ze/qzPYHneDvTQI6Y=
+	b=HgMor9j3PQ1oVPqKbdsmyVgEaQY3q6Tjhj5mtL8frqxxq2JK0bz8aCYUs+ydn3C/A
+	 mjhCq8sQEBsm+yBdOcqpQhHLBFdOgTzsuWzZlnDO5J3oEFOpz93Or2AHtgfbkaQtdF
+	 0vrkhFudvbRpMgexP+2/AmP7TgVSdtmjYXhmPdtc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394594AbfIVS4a (ORCPT
+        id S2408194AbfIVS4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:56:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58438 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:56:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438577AbfIVS4Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:56:25 -0400
+        id S2438580AbfIVS40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:56:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E24A621907;
-        Sun, 22 Sep 2019 18:56:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE04321D7A;
+        Sun, 22 Sep 2019 18:56:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178584;
-        bh=he2fSWT0lK2X9kFtyxSOoobrU3yzNlikOysYtfV1KiE=;
+        s=default; t=1569178585;
+        bh=c8ysKJtao1KcacX3fRizhQK4DzSImpA272TnIqkAwe4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K9CE6vm9IBFqLVoxQo8D3rPsgZWBvCkCdp7f07fM8j7A1pvTIzE37F3Hu1KUqRrfx
-         zpHASmMlebjU3DX2GkRynPattzryWj8f2MMl+ARVTlOdGmVjShVEAl3XQj2LksOzcO
-         bya9lQcjZrZndQYVq7EILl/sLhC4ZwxQWOt3vQk4=
+        b=n3rOPxgLnfbabzXwvmvk/iTjv57in/9AJeAMqkBLZLHXUyVxJmPFJCb5M5rbe2SOx
+         RX/lAAMg7P+wVcGuV55uD1Md77MDq1Bm5fkwcwiMjCinMPu560vjcL6eXJ8JTyDti3
+         zQZOiwxEd/aIWnRpN6cVdQxVaaix9kPkdaap5Jpk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 093/128] ALSA: firewire-motu: add support for MOTU 4pre
-Date:   Sun, 22 Sep 2019 14:53:43 -0400
-Message-Id: <20190922185418.2158-93-sashal@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 094/128] arm64: lse: Make ARM64_LSE_ATOMICS depend on JUMP_LABEL
+Date:   Sun, 22 Sep 2019 14:53:44 -0400
+Message-Id: <20190922185418.2158-94-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
 References: <20190922185418.2158-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -58,91 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+From: Will Deacon <will@kernel.org>
 
-[ Upstream commit 6af86bdb8ad41f4cf1292d3b10857dc322758328 ]
+[ Upstream commit b32baf91f60fb9c7010bff87e68132f2ce31d9a8 ]
 
-MOTU 4pre was launched in 2012 by MOTU, Inc. This commit allows userspace
-applications can transmit and receive PCM frames and MIDI messages for
-this model via ALSA PCM interface and RawMidi/Sequencer interfaces.
+Support for LSE atomic instructions (CONFIG_ARM64_LSE_ATOMICS) relies on
+a static key to select between the legacy LL/SC implementation which is
+available on all arm64 CPUs and the super-duper LSE implementation which
+is available on CPUs implementing v8.1 and later.
 
-The device supports MOTU protocol version 3. Unlike the other devices, the
-device is simply designed. The size of data block is fixed to 10 quadlets
-during available sampling rates (44.1 - 96.0 kHz). Each data block
-includes 1 source packet header, 2 data chunks for messages, 8 data chunks
-for PCM samples and 2 data chunks for padding to quadlet alignment. The
-device has no MIDI, optical, BNC and AES/EBU interfaces.
+Unfortunately, when building a kernel with CONFIG_JUMP_LABEL disabled
+(e.g. because the toolchain doesn't support 'asm goto'), the static key
+inside the atomics code tries to use atomics itself. This results in a
+mess of circular includes and a build failure:
 
-Like support for the other MOTU devices, the quality of playback sound
-is not enough good with periodical noise yet.
+In file included from ./arch/arm64/include/asm/lse.h:11,
+                 from ./arch/arm64/include/asm/atomic.h:16,
+                 from ./include/linux/atomic.h:7,
+                 from ./include/asm-generic/bitops/atomic.h:5,
+                 from ./arch/arm64/include/asm/bitops.h:26,
+                 from ./include/linux/bitops.h:19,
+                 from ./include/linux/kernel.h:12,
+                 from ./include/asm-generic/bug.h:18,
+                 from ./arch/arm64/include/asm/bug.h:26,
+                 from ./include/linux/bug.h:5,
+                 from ./include/linux/page-flags.h:10,
+                 from kernel/bounds.c:10:
+./include/linux/jump_label.h: In function ‘static_key_count’:
+./include/linux/jump_label.h:254:9: error: implicit declaration of function ‘atomic_read’ [-Werror=implicit-function-declaration]
+  return atomic_read(&key->enabled);
+         ^~~~~~~~~~~
 
-$ python2 crpp < ~/git/am-config-rom/motu/motu-4pre.img
-               ROM header and bus information block
-               -----------------------------------------------------------------
-400  041078cc  bus_info_length 4, crc_length 16, crc 30924
-404  31333934  bus_name "1394"
-408  20ff7000  irmc 0, cmc 0, isc 1, bmc 0, cyc_clk_acc 255, max_rec 7 (256)
-40c  0001f200  company_id 0001f2     |
-410  000a41c5  device_id 00000a41c5  | EUI-64 0001f200000a41c5
+[ ... more of the same ... ]
 
-               root directory
-               -----------------------------------------------------------------
-414  0004ef04  directory_length 4, crc 61188
-418  030001f2  vendor
-41c  0c0083c0  node capabilities per IEEE 1394
-420  d1000002  --> unit directory at 428
-424  8d000005  --> eui-64 leaf at 438
+Since LSE atomic instructions are not critical to the operation of the
+kernel, make them depend on JUMP_LABEL at compile time.
 
-               unit directory at 428
-               -----------------------------------------------------------------
-428  0003ceda  directory_length 3, crc 52954
-42c  120001f2  specifier id
-430  13000045  version
-434  17103800  model
-
-               eui-64 leaf at 438
-               -----------------------------------------------------------------
-438  0002d248  leaf_length 2, crc 53832
-43c  0001f200  company_id 0001f2     |
-440  000a41c5  device_id 00000a41c5  | EUI-64 0001f200000a41c5
-
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/firewire/motu/motu.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/arm64/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/firewire/motu/motu.c b/sound/firewire/motu/motu.c
-index 743015e87a960..e240fdfcae31d 100644
---- a/sound/firewire/motu/motu.c
-+++ b/sound/firewire/motu/motu.c
-@@ -255,6 +255,17 @@ static const struct snd_motu_spec motu_audio_express = {
- 	.analog_out_ports = 4,
- };
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index e3ebece79617b..36b3de45c97e1 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -1073,6 +1073,7 @@ config ARM64_PAN
  
-+static const struct snd_motu_spec motu_4pre = {
-+	.name = "4pre",
-+	.protocol = &snd_motu_protocol_v3,
-+	.flags = SND_MOTU_SPEC_SUPPORT_CLOCK_X2 |
-+		 SND_MOTU_SPEC_TX_MICINST_CHUNK |
-+		 SND_MOTU_SPEC_TX_RETURN_CHUNK |
-+		 SND_MOTU_SPEC_RX_SEPARETED_MAIN,
-+	.analog_in_ports = 2,
-+	.analog_out_ports = 2,
-+};
-+
- #define SND_MOTU_DEV_ENTRY(model, data)			\
- {							\
- 	.match_flags	= IEEE1394_MATCH_VENDOR_ID |	\
-@@ -272,6 +283,7 @@ static const struct ieee1394_device_id motu_id_table[] = {
- 	SND_MOTU_DEV_ENTRY(0x000015, &motu_828mk3),	/* FireWire only. */
- 	SND_MOTU_DEV_ENTRY(0x000035, &motu_828mk3),	/* Hybrid. */
- 	SND_MOTU_DEV_ENTRY(0x000033, &motu_audio_express),
-+	SND_MOTU_DEV_ENTRY(0x000045, &motu_4pre),
- 	{ }
- };
- MODULE_DEVICE_TABLE(ieee1394, motu_id_table);
+ config ARM64_LSE_ATOMICS
+ 	bool "Atomic instructions"
++	depends on JUMP_LABEL
+ 	default y
+ 	help
+ 	  As part of the Large System Extensions, ARMv8.1 introduces new
 -- 
 2.20.1
 
