@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A99E4C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:10:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B0CC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 782B8208C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:10:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0495820882
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:10:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179422;
-	bh=6zN0BPRuzQ+gz17i1e6J1yVdZVHtkVgXr07yaO4CRXw=;
+	s=default; t=1569179429;
+	bh=9cNmSG+W4yU/6HibVlgFVTnxhQ0T/DC3B8nRXvYnKec=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GBHkfSn1D8Jp5P03KrcBVlyG14o59MnBYi2vbFMP+IahvGCMYkUwAIH9iSeuGwBLS
-	 6efiNizJdF/8JaYSEnz/mZuMW1DKXq+sQnbIfWmGqJubpCl1732q8ux7ZoJbGlwzBp
-	 yCOTygieMs8iEoedYiVSEORkcrLfpiEhar6M4BrI=
+	b=QB4EY5qvYBjL7TqRo5BeeRUsIDlKEw7//cV6CSxjmx/rScOBHmfaIKP3dDhmrrkDI
+	 lGNm5JuO7HgEMWrrkzrutC/8xkIBuy1eXSu6Erb3aZW43v2xTH//qsQGU/9i4hkoSc
+	 H6IJFp8sWrC3FXys1kmQHCoyvFEWI0lMnh+yquto=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730574AbfIVTKV (ORCPT
+        id S2395438AbfIVTK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:10:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33682 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:10:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391797AbfIVS6v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:58:51 -0400
+        id S2438804AbfIVS6p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:58:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B38D208C2;
-        Sun, 22 Sep 2019 18:58:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8101C208C2;
+        Sun, 22 Sep 2019 18:58:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178730;
-        bh=6zN0BPRuzQ+gz17i1e6J1yVdZVHtkVgXr07yaO4CRXw=;
+        s=default; t=1569178725;
+        bh=9cNmSG+W4yU/6HibVlgFVTnxhQ0T/DC3B8nRXvYnKec=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VObd+m4RSK4N1JgzpSFYSujoutQjQm3Sdw/5PUw6Hxcx7DWVUoBNCNk+sVzG8qTCq
-         /EwVX+j9DNBkmjlMA/xLGulb4QMG56fhIpFBvlREobpcckHB83wcjD7CPwrqNFbsDq
-         bkcaUw6gX9Vqw7HFtg9gWbYeqhsD5Q+W7/VTo95Y=
+        b=mvRFnLRJQkY57hc99TZeciiZ4k9HiLdFNvmeB01QQZgMlI+YDzDfwIEe7kcI5GJBn
+         Z7jp3ozSlcrfinO9DPyqQw6+R+7C/tS1vHRbhkz5NUvzliiq17XfaFlK7XVK5ICjo5
+         5iM3YNQudC034n0op+8kNxB3uPjDhl+qy0IcW1G4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        Daniel Drake <drake@endlessm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 60/89] ASoC: es8316: fix headphone mixer volume table
-Date:   Sun, 22 Sep 2019 14:56:48 -0400
-Message-Id: <20190922185717.3412-60-sashal@kernel.org>
+Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 56/89] media: cpia2_usb: fix memory leaks
+Date:   Sun, 22 Sep 2019 14:56:44 -0400
+Message-Id: <20190922185717.3412-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185717.3412-1-sashal@kernel.org>
 References: <20190922185717.3412-1-sashal@kernel.org>
@@ -60,58 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit f972d02fee2496024cfd6f59021c9d89d54922a6 ]
+[ Upstream commit 1c770f0f52dca1a2323c594f01f5ec6f1dddc97f ]
 
-This patch fix setting table of Headphone mixer volume.
-Current code uses 4 ... 7 values but these values are prohibited.
+In submit_urbs(), 'cam->sbuf[i].data' is allocated through kmalloc_array().
+However, it is not deallocated if the following allocation for urbs fails.
+To fix this issue, free 'cam->sbuf[i].data' if usb_alloc_urb() fails.
 
-Correct settings are the following:
-  0000 -12dB
-  0001 -10.5dB
-  0010 -9dB
-  0011 -7.5dB
-  0100 -6dB
-  1000 -4.5dB
-  1001 -3dB
-  1010 -1.5dB
-  1011 0dB
-
-Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Reviewed-by: Daniel Drake <drake@endlessm.com>
-Link: https://lore.kernel.org/r/20190826153900.25969-1-katsuhiro@katsuster.net
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/es8316.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/media/usb/cpia2/cpia2_usb.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/sound/soc/codecs/es8316.c b/sound/soc/codecs/es8316.c
-index da2d353af5ba2..949dbdc0445e4 100644
---- a/sound/soc/codecs/es8316.c
-+++ b/sound/soc/codecs/es8316.c
-@@ -46,7 +46,10 @@ static const SNDRV_CTL_TLVD_DECLARE_DB_SCALE(adc_vol_tlv, -9600, 50, 1);
- static const SNDRV_CTL_TLVD_DECLARE_DB_SCALE(alc_max_gain_tlv, -650, 150, 0);
- static const SNDRV_CTL_TLVD_DECLARE_DB_SCALE(alc_min_gain_tlv, -1200, 150, 0);
- static const SNDRV_CTL_TLVD_DECLARE_DB_SCALE(alc_target_tlv, -1650, 150, 0);
--static const SNDRV_CTL_TLVD_DECLARE_DB_SCALE(hpmixer_gain_tlv, -1200, 150, 0);
-+static const SNDRV_CTL_TLVD_DECLARE_DB_RANGE(hpmixer_gain_tlv,
-+	0, 4, TLV_DB_SCALE_ITEM(-1200, 150, 0),
-+	8, 11, TLV_DB_SCALE_ITEM(-450, 150, 0),
-+);
+diff --git a/drivers/media/usb/cpia2/cpia2_usb.c b/drivers/media/usb/cpia2/cpia2_usb.c
+index 0964ff556f4ec..91b9eaa9b2ad7 100644
+--- a/drivers/media/usb/cpia2/cpia2_usb.c
++++ b/drivers/media/usb/cpia2/cpia2_usb.c
+@@ -684,6 +684,10 @@ static int submit_urbs(struct camera_data *cam)
+ 		if (!urb) {
+ 			for (j = 0; j < i; j++)
+ 				usb_free_urb(cam->sbuf[j].urb);
++			for (j = 0; j < NUM_SBUF; j++) {
++				kfree(cam->sbuf[j].data);
++				cam->sbuf[j].data = NULL;
++			}
+ 			return -ENOMEM;
+ 		}
  
- static const SNDRV_CTL_TLVD_DECLARE_DB_RANGE(adc_pga_gain_tlv,
- 	0, 0, TLV_DB_SCALE_ITEM(-350, 0, 0),
-@@ -84,7 +87,7 @@ static const struct snd_kcontrol_new es8316_snd_controls[] = {
- 	SOC_DOUBLE_TLV("Headphone Playback Volume", ES8316_CPHP_ICAL_VOL,
- 		       4, 0, 3, 1, hpout_vol_tlv),
- 	SOC_DOUBLE_TLV("Headphone Mixer Volume", ES8316_HPMIX_VOL,
--		       0, 4, 7, 0, hpmixer_gain_tlv),
-+		       0, 4, 11, 0, hpmixer_gain_tlv),
- 
- 	SOC_ENUM("Playback Polarity", dacpol),
- 	SOC_DOUBLE_R_TLV("DAC Playback Volume", ES8316_DAC_VOLL,
 -- 
 2.20.1
 
