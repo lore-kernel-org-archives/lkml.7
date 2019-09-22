@@ -2,229 +2,116 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49354C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E14EC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 132A820830
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:09:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hy7HGYJ+"
+	by mail.kernel.org (Postfix) with ESMTP id 1EA272070C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:24:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569176680;
+	bh=SC+4JmpvkcCRN5UD4A0vbPx5V59YHre4Q76emoB1AhU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=kzVqGruaNSYEXTDPgJ6yyhTp7G7bxeAhHaqLoXSGOn9TE7I9KgbA0mrtsX0ArEy8n
+	 AJOLygLBSWks5ntpPTU13eDzL+0FA3D3a9XHJJFpdfLHNyY5HS/DInknDzDwMQtAOp
+	 wHikfW1aSjOI5nTemEeatfYGPszAThSv00iQjtFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388555AbfIVSJD (ORCPT
+        id S2388524AbfIVSYj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:09:03 -0400
-Received: from mail-oi1-f182.google.com ([209.85.167.182]:37016 "EHLO
-        mail-oi1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387966AbfIVSJC (ORCPT
+        Sun, 22 Sep 2019 14:24:39 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:40688 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388240AbfIVSYi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:09:02 -0400
-Received: by mail-oi1-f182.google.com with SMTP id i16so5790112oie.4;
-        Sun, 22 Sep 2019 11:09:01 -0700 (PDT)
+        Sun, 22 Sep 2019 14:24:38 -0400
+Received: by mail-lj1-f194.google.com with SMTP id 7so11526841ljw.7
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Sep 2019 11:24:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=w1aly3xaiclnpeyBBRUqNQPFH6qbmtCKDeHxfQo/a/s=;
-        b=Hy7HGYJ+81nCS/fKnOT6Q+VUpp/Jcv9sjxKgdKWW1kD3cJ1cID34fTsUKbGnqeAWJF
-         zkfAxzbEH/LFdqfUJWgigJPe+JuefBmoMH/egCllTB6sXhLFob7s9lTS2JKRGSFlqo8X
-         93WbUqlkBk6KHThASdV9MjySL2yeeTi3h4xv9qxMesoAhNgklv/RaEv2pD5BGKJygsQP
-         MoDO0RULhKyCzMHHQObU7pyl25ZTdq05CZX56Pj1nBmqGw2jl77hrOQGTR+lb//ipIZ2
-         oHfWXzFxceZNrR7LGjzHU4JSs6nmH9bXeHdvQmhzN3thbkaPJwrVJKOYzRRM9z5fPa0i
-         atbA==
+        bh=zCaniXiQG6Rf5PSnFKP6/rRWss/Ze+zbdtLs92wKBHI=;
+        b=YXjTzvIjcre1wO3unIiG+6x4LsJhfBlbPF7k3LeHzyl6u5yZol3KpxHb4DRI+miaBB
+         nBwB3DUgq8gtpHh/CIgt9VfIJIi8uYcDZeslJXbAoWx1iZGWd7j7FwIV0y/FRUX8fOYE
+         XFKupDRYi7UvTnnFW1H7PtrQ5vcUkXRxBW0b8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=w1aly3xaiclnpeyBBRUqNQPFH6qbmtCKDeHxfQo/a/s=;
-        b=ZESxVthRqo0HmnZ57NHpQBm3c2IOoGXkny5K4tWyPQzawyvwQKQip9a4QsZfANr5Uq
-         Vn1Hty1o74k4hkpon+nGtMfksji6XxMcixdJx30bQa4UgD5BDDdPF+3l0x1yWhtXcdnr
-         SIo459OELvrmfn8+8FYcw9yzOu/c0/zvxwgLy802PPJhrGtGBbPK4M9Rc1DnEsSl3+2H
-         15IvGnOvBlAH4BroWJ1l0ug8FFSQkhJpl/HHu9M1sfKeTPr4Kyojz5/wJAcGNaj/T/HD
-         KzgYquFSTGHnmGgGiSUjRfDbtWZasjSANGKyQ9q209H6eJ0tQVm/410J/KXvI4loRXH1
-         gOOw==
-X-Gm-Message-State: APjAAAVEZd252m2R9OmBQ9wgBk0WR4T5/OizNqQkL1/9lG2kWrcFhxUP
-        SHslpwj4QRofOg2W0KOA+LOd92RVwUlT7u2FJ8g=
-X-Google-Smtp-Source: APXvYqxqZm1+anm4ox/p1+ry2zm5txPlhbVid5aaGm0NBsE2Z4ezK78SOytBnDmRL1/xZpRgsY5mWCu8jCU4QLrEtCM=
-X-Received: by 2002:aca:b2c4:: with SMTP id b187mr10933940oif.93.1569175741327;
- Sun, 22 Sep 2019 11:09:01 -0700 (PDT)
+        bh=zCaniXiQG6Rf5PSnFKP6/rRWss/Ze+zbdtLs92wKBHI=;
+        b=Mfa3laiOcLzqnXkTkTkoO2Y6uMs53+fk6Y3v0ofQ2HXSN2z7z6y88nAxZRTSui8G4V
+         +K7P6DBT6WPqz3teQH54IuQxgjPnkoNeAY/FQwL4SFhno0yfVYwEdYJqL9EO2sVk2dJS
+         qFfL+ZHfXcSOQhKK/qLHpO8l/Px81zoxT/QCz4O6e1lxtvgFDLHcIXv7LoD+v4ksowXm
+         RSNWHsETiDjLothtY8gVVUrL/ZwIQQi0E2/EYCxm+fYJFHrShDr22aXOa9mf0VAKQwk6
+         x+1zRpR4vzygwNqb8DHbbXcBgF12QpSYBEB8SwTAzLoc1EIPGH4rRNWXywRCIiFBGvsg
+         mA/w==
+X-Gm-Message-State: APjAAAXNA+vPHjI6Y10G5AqsZsTH5fkFX7s7lcuiaQdrv+rt+Hp2ZcM7
+        gzx4ztB6fzwEO/Pfp2RWvZxW/vGruWM=
+X-Google-Smtp-Source: APXvYqwOgwSjbMZMI/OxSAvK/dHPTF7pRklHnNyyz48rUdPkncR/3sPbeDvx0kCX31gM2tWa0FKAJg==
+X-Received: by 2002:a2e:5418:: with SMTP id i24mr15185018ljb.126.1569176674622;
+        Sun, 22 Sep 2019 11:24:34 -0700 (PDT)
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
+        by smtp.gmail.com with ESMTPSA id o15sm1715052lff.22.2019.09.22.11.24.32
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 22 Sep 2019 11:24:33 -0700 (PDT)
+Received: by mail-lj1-f180.google.com with SMTP id y3so10118355ljj.6
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Sep 2019 11:24:32 -0700 (PDT)
+X-Received: by 2002:a2e:9854:: with SMTP id e20mr15722836ljj.72.1569176671894;
+ Sun, 22 Sep 2019 11:24:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190920170554.29666-1-bparrot@ti.com>
-In-Reply-To: <20190920170554.29666-1-bparrot@ti.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Sun, 22 Sep 2019 19:08:34 +0100
-Message-ID: <CA+V-a8sUnhCaxr8EwBuY+-PBMtRcFWVx_33mtZcdqoRGEAwABQ@mail.gmail.com>
-Subject: Re: [Patch v3 00/13] media: am437x-vpfe: overdue maintenance
-To:     Benoit Parrot <bparrot@ti.com>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        linux-media <linux-media@vger.kernel.org>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <20190922152809.GA27554@linux-8ccs>
+In-Reply-To: <20190922152809.GA27554@linux-8ccs>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 22 Sep 2019 11:24:15 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjBYuEf8XCBCNvf0vHf0RatNR308k+CO05UbwYnyTEL=w@mail.gmail.com>
+Message-ID: <CAHk-=wjBYuEf8XCBCNvf0vHf0RatNR308k+CO05UbwYnyTEL=w@mail.gmail.com>
+Subject: Re: [GIT PULL] Modules updates for v5.4
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     Matthias Maennich <maennich@google.com>,
+        Martijn Coenen <maco@android.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 6:03 PM Benoit Parrot <bparrot@ti.com> wrote:
+On Sun, Sep 22, 2019 at 8:28 AM Jessica Yu <jeyu@kernel.org> wrote:
 >
-> This patch series is a collection of patches we have been carrying for a
-> while.
->
-> A few patches do fix actual bug and v4l2-compliance errors/warnings.
-> Other are drivers re-work to simplify/clarify the code for easier
-> maintenance.
->
-> We also include the SPDX Licensing update which seemed to have been
-> missed by the global script thus far.
->
-> Changes since v2:
-> - Rename VPFE_MAX_ACTIVE_FMT to VPFE_NUM_FORMATS and corrected the
->   comments
-> - Move the "Remove print_fourcc helper" patch to the end of the series
->   and rebase it on the pending v4l2_fourcc_conv macros patches
->
-> Changes since v1:
-> - Address review comment from Joe, Hans and Prabhakar
-> - Cleaned-up the function entry debug log
-> - Split off the pcr change into its own patch
-> - Rework/combine two patches but remove code churn
-> - fix miscellaneous typos
->
-> =============================
->
-> v4l2-compliance SHA: 5b168dc8473911227890526bad26553d9e8ff81b, 32 bits
->
-> Compliance test for vpfe device /dev/video0:
->
-> Driver Info:
->         Driver name      : vpfe
->         Card type        : TI AM437x VPFE
->         Bus info         : platform:vpfe 48326000.vpfe
->         Driver version   : 5.3.0
->         Capabilities     : 0x85200001
->                 Vide o Capture
->                 Read/Write
->                 Streaming
->                 Extended Pix Format
->                 D evice Capabilities
->         Device Caps      : 0x05200001
->                 Video Capt ure
->                 Read/Write
->                 Streaming
->                 Extended Pix Format
->
-> Required ioctls:
->         test VIDIOC_QUERYCAP: OK
->
-> Allow for multiple opens:
->         test second /dev/video0 open: OK
->         test VIDIOC_QUERYCAP: OK
->         test VIDIOC_G/S_PRIORITY: OK
->         test for unlimited opens: OK
->
-> Debug ioctls:
->         test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
->         test VIDIOC_LOG_STATUS: OK
->
-> Input ioctls:
->         test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
->         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->         test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
->         test VIDIOC_ENUMAUDIO: OK (Not Supported)
->         test VIDIOC_G/S/ENUMINPUT: OK
->         test VIDIOC_G/S_AUDIO: OK (Not Supported)
->         Inputs: 1 Audio Inputs: 0 Tuners: 0
->
-> Output ioctls:
->         test VIDIOC_G/S_MODULATOR: OK (Not Supported)
->         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->         test VIDIOC_ENUMAUDOUT: OK (Not Supported)
->         test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
->         test VIDIOC_G/S_AUDOUT: OK (Not Supported)
->         Outputs: 0 Audio Outputs: 0 Modulators: 0
->
-> Input/Output configuration ioctls:
->         test VIDIOC_ENUM/G/S/QUERY_STD: OK
->         test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
->         test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
->         test VIDIOC_G/S_EDID: OK (Not Supported)
->
-> Control ioctls (Input 0):
->         test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
->         test VIDIOC_QUERYCTRL: OK
->         test VIDIOC_G/S_CTRL: OK
->         test VIDIOC_G/S/TRY_EXT_CTRLS: OK
->         test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
->         test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
->         Standard Controls: 3 Private Controls: 0
->
-> Format ioctls (Input 0):
->         test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
->         test VIDIOC_G/S_PARM: OK
->         test VIDIOC_G_FBUF: OK (Not Supported)
->         test VIDIOC_G_FMT: OK
->         test VIDIOC_TRY_FMT: OK
->         test VIDIOC_S_FMT: OK
->         test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
->                 fail: v4l2-test-formats.cpp(1419): node->frmsizes_count[pixfmt] > 1
->         test Cropping: FAIL
->         test Composing: OK (Not Supported)
->         test Scaling: OK (Not Supported)
->
-> Codec ioctls (Input 0):
->         test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
->         test VIDIOC_G_ENC_INDEX: OK (Not Supported)
->         test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
->
-> Buffer ioctls (Input 0):
->         test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
->         test VIDIOC_EXPBUF: OK
->         test Requests: OK (Not Supported)
->
-> Test input 0:
->
-> Streaming ioctls:
->         test read/write: OK
->         test blocking wait: OK
->         test MMAP (no poll): OK
->         test MMAP (select): OK
->         test MMAP (epoll): OK
->         test USERPTR (no poll): OK (Not Supported)
->         test USERPTR (select): OK (Not Supported)
->         test DMABUF: Cannot test, specify --expbuf-device
->
-> Total for vpfe device /dev/video0: 51, Succeeded: 50, Failed: 1, Warnings: 0
-> ============================
->
-> Benoit Parrot (12):
->   media: am437x-vpfe: Fix missing first line
->   media: am437x-vpfe: Rework ISR routine for clarity
->   media: am437x-vpfe: Wait for end of frame before tear-down
->   media: am437x-vpfe: fix start streaming error path
->   media: am437x-vpfe: Streamlined vb2 buffer cleanup
->   media: am437x-vpfe: Setting STD to current value is not an error
->   media: am437x-vpfe: Use a per instance format array instead of a
->     static one
->   media: am437x-vpfe: fix function trace debug log
->   media: am437x-vpfe: TRY_FMT ioctl is not really trying anything
->   media: am437x-vpfe: Remove per bus width static data
->   media: am437x-vpfe: Switch to SPDX Licensing
->   media: am437x-vpfe: Remove print_fourcc helper
->
-> Dave Gerlach (1):
->   media: am437x-vpfe: Fix suspend path to always handle pinctrl config
->
->  drivers/media/platform/am437x/am437x-vpfe.c   | 880 ++++++++----------
->  drivers/media/platform/am437x/am437x-vpfe.h   |  43 +-
->  .../media/platform/am437x/am437x-vpfe_regs.h  |  10 +-
->  3 files changed, 406 insertions(+), 527 deletions(-)
->
+> The main bulk of this pull request introduces a new exported symbol
+> namespaces feature.
 
-Acked-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+Hmm.
 
-Cheers,
---Prabhakar Lad
+So I merged this, and felt that I tested my merge resolution fairly
+well, and then pushed it out.
+
+But during more extensive testing for special cases, I notice that
+MODULE_IMPORT_NS() does not work at all when modules are disabled.
+
+In particular, it causes errors like this:
+
+  drivers/usb/storage/uas.c:1222:1: warning: data definition has no
+type or storage class
+   1222 | MODULE_IMPORT_NS(USB_STORAGE);
+        | ^~~~~~~~~~~~~~~~
+
+because without modules, MODULE_IMPORT_NS() doesn't get #define'd at all.
+
+This is not a merge error - it's an error in the original.
+
+Tssk. I hate finding stupid bugs like this myself. Particularly when I
+find them quickly from a simple "what if" test.
+
+Yes, some of it goes to just bad luck with linux-next, but some of
+this is simply people not thinking about different cases.
+
+Tssk tssk.
+
+                   Linus
