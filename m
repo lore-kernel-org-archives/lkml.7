@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89488C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 530E3C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 614F420640
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:31:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17520206B6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:31:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180703;
-	bh=SSaj6SjOpAnKNqQCHy7fYhMvKgjaL7iwdNhua4vxOJw=;
+	s=default; t=1569180709;
+	bh=qzhzxhxwZtPw9WUK7gM1IqcV5+m1vRHorMTFT6SbNOo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eADwf3megdBsHv6KX4+littLtWKucJE/lXeLKj4E7x1IZ57d45C774/V33GsWPnD8
-	 O43EArVZ4CNYxiy+ohamxZakymMGAzwfROq6cRyX08YVWgWzPNVM9mP/IFzPl1XIXB
-	 3jas7eLObrs9NqeWx/eR7k6MYofcSVEw5KYk43uU=
+	b=lLz3KF5jITMFwJVaWN4qZ2zDb4EmUGUuJI7Ab503xm8cPAD/gxE+bp9wC99Y5IfyJ
+	 ETj41Md2lKUu6ACw2ANxsXWPg4Me9AN4O+Chh+yxmXargjEOOAddw/byxgAylaB52c
+	 cljoeB7b1Q5ZL1wO/5hBe/fqF05iowjZf3YbS9S8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437780AbfIVTbm (ORCPT
+        id S2388171AbfIVTbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:31:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45706 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:31:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388572AbfIVSsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:48:46 -0400
+        id S2391571AbfIVSso (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:48:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0C9221479;
-        Sun, 22 Sep 2019 18:48:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 899FA21A4C;
+        Sun, 22 Sep 2019 18:48:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178125;
-        bh=SSaj6SjOpAnKNqQCHy7fYhMvKgjaL7iwdNhua4vxOJw=;
+        s=default; t=1569178124;
+        bh=qzhzxhxwZtPw9WUK7gM1IqcV5+m1vRHorMTFT6SbNOo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vJOq3bnABPctGin9tD6xHT0t948f756sDrphNLZ62717vyLSjHO0bOy+ILFCoaVJJ
-         6gzfuacgZIVQOAMdVG/M15B6c/um0tGdiT/8uVbetjHLSAOXwixmtoNMGIh7xDErQy
-         167Yb67Bv04cbwxud2fxGUD0ICK2y+byxSl8I/do=
+        b=tGIMy4vp4WpJAB9MEtErxkZ3Ahs+R1ynH+rG9KI3sfI80fHNJBKAQZVWs0SpY1JeN
+         YVCe+UBvEXOFtDJrTwjEObMcyMXEWy1TQicdAhAdxbXnomVou3GTsX/ynC4JhAaxX4
+         LzVUxpnpD9Zo/cw9Hbvx0+STwSnImo3ulYmwUhfk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hou Tao <houtao1@huawei.com>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 179/203] block: make rq sector size accessible for block stats
-Date:   Sun, 22 Sep 2019 14:43:25 -0400
-Message-Id: <20190922184350.30563-179-sashal@kernel.org>
+Cc:     Jackie Liu <liuyun01@kylinos.cn>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 178/203] io_uring: fix wrong sequence setting logic
+Date:   Sun, 22 Sep 2019 14:43:24 -0400
+Message-Id: <20190922184350.30563-178-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -60,125 +58,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hou Tao <houtao1@huawei.com>
+From: Jackie Liu <liuyun01@kylinos.cn>
 
-[ Upstream commit 3d24430694077313c75c6b89f618db09943621e4 ]
+[ Upstream commit 8776f3fa15a5cd213c4dfab7ddaf557983374ea6 ]
 
-Currently rq->data_len will be decreased by partial completion or
-zeroed by completion, so when blk_stat_add() is invoked, data_len
-will be zero and there will never be samples in poll_cb because
-blk_mq_poll_stats_bkt() will return -1 if data_len is zero.
+Sqo_thread will get sqring in batches, which will cause
+ctx->cached_sq_head to be added in batches. if one of these
+sqes is set with the DRAIN flag, then he will never get a
+chance to process, and finally sqo_thread will not exit.
 
-We could move blk_stat_add() back to __blk_mq_complete_request(),
-but that would make the effort of trying to call ktime_get_ns()
-once in vain. Instead we can reuse throtl_size field, and use
-it for both block stats and block throttle, and adjust the
-logic in blk_mq_poll_stats_bkt() accordingly.
-
-Fixes: 4bc6339a583c ("block: move blk_stat_add() to __blk_mq_end_request()")
-Tested-by: Pavel Begunkov <asml.silence@gmail.com>
-Signed-off-by: Hou Tao <houtao1@huawei.com>
+Fixes: de0617e4671 ("io_uring: add support for marking commands as draining")
+Signed-off-by: Jackie Liu <liuyun01@kylinos.cn>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-mq.c         | 11 +++++------
- block/blk-throttle.c   |  3 ++-
- include/linux/blkdev.h | 15 ++++++++++++---
- 3 files changed, 19 insertions(+), 10 deletions(-)
+ fs/io_uring.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index a38ebb2a380c2..9b56428cad0e7 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -44,12 +44,12 @@ static void blk_mq_poll_stats_fn(struct blk_stat_callback *cb);
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index cfb48bd088e12..06d048341fa41 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -288,6 +288,7 @@ struct io_ring_ctx {
+ struct sqe_submit {
+ 	const struct io_uring_sqe	*sqe;
+ 	unsigned short			index;
++	u32				sequence;
+ 	bool				has_user;
+ 	bool				needs_lock;
+ 	bool				needs_fixed_file;
+@@ -2040,7 +2041,7 @@ static int io_req_set_file(struct io_ring_ctx *ctx, const struct sqe_submit *s,
  
- static int blk_mq_poll_stats_bkt(const struct request *rq)
- {
--	int ddir, bytes, bucket;
-+	int ddir, sectors, bucket;
- 
- 	ddir = rq_data_dir(rq);
--	bytes = blk_rq_bytes(rq);
-+	sectors = blk_rq_stats_sectors(rq);
- 
--	bucket = ddir + 2*(ilog2(bytes) - 9);
-+	bucket = ddir + 2 * ilog2(sectors);
- 
- 	if (bucket < 0)
- 		return -1;
-@@ -330,6 +330,7 @@ static struct request *blk_mq_rq_ctx_init(struct blk_mq_alloc_data *data,
- 	else
- 		rq->start_time_ns = 0;
- 	rq->io_start_time_ns = 0;
-+	rq->stats_sectors = 0;
- 	rq->nr_phys_segments = 0;
- #if defined(CONFIG_BLK_DEV_INTEGRITY)
- 	rq->nr_integrity_segments = 0;
-@@ -673,9 +674,7 @@ void blk_mq_start_request(struct request *rq)
- 
- 	if (test_bit(QUEUE_FLAG_STATS, &q->queue_flags)) {
- 		rq->io_start_time_ns = ktime_get_ns();
--#ifdef CONFIG_BLK_DEV_THROTTLING_LOW
--		rq->throtl_size = blk_rq_sectors(rq);
--#endif
-+		rq->stats_sectors = blk_rq_sectors(rq);
- 		rq->rq_flags |= RQF_STATS;
- 		rq_qos_issue(q, rq);
+ 	if (flags & IOSQE_IO_DRAIN) {
+ 		req->flags |= REQ_F_IO_DRAIN;
+-		req->sequence = ctx->cached_sq_head - 1;
++		req->sequence = s->sequence;
  	}
-diff --git a/block/blk-throttle.c b/block/blk-throttle.c
-index 8ab6c81532236..ee74bffe3504d 100644
---- a/block/blk-throttle.c
-+++ b/block/blk-throttle.c
-@@ -2246,7 +2246,8 @@ void blk_throtl_stat_add(struct request *rq, u64 time_ns)
- 	struct request_queue *q = rq->q;
- 	struct throtl_data *td = q->td;
  
--	throtl_track_latency(td, rq->throtl_size, req_op(rq), time_ns >> 10);
-+	throtl_track_latency(td, blk_rq_stats_sectors(rq), req_op(rq),
-+			     time_ns >> 10);
- }
- 
- void blk_throtl_bio_endio(struct bio *bio)
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 1ef375dafb1c1..ae51050c50949 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -202,9 +202,12 @@ struct request {
- #ifdef CONFIG_BLK_WBT
- 	unsigned short wbt_flags;
- #endif
--#ifdef CONFIG_BLK_DEV_THROTTLING_LOW
--	unsigned short throtl_size;
--#endif
-+	/*
-+	 * rq sectors used for blk stats. It has the same value
-+	 * with blk_rq_sectors(rq), except that it never be zeroed
-+	 * by completion.
-+	 */
-+	unsigned short stats_sectors;
- 
- 	/*
- 	 * Number of scatter-gather DMA addr+len pairs after
-@@ -903,6 +906,7 @@ static inline struct request_queue *bdev_get_queue(struct block_device *bdev)
-  * blk_rq_err_bytes()		: bytes left till the next error boundary
-  * blk_rq_sectors()		: sectors left in the entire request
-  * blk_rq_cur_sectors()		: sectors left in the current segment
-+ * blk_rq_stats_sectors()	: sectors of the entire request used for stats
-  */
- static inline sector_t blk_rq_pos(const struct request *rq)
- {
-@@ -931,6 +935,11 @@ static inline unsigned int blk_rq_cur_sectors(const struct request *rq)
- 	return blk_rq_cur_bytes(rq) >> SECTOR_SHIFT;
- }
- 
-+static inline unsigned int blk_rq_stats_sectors(const struct request *rq)
-+{
-+	return rq->stats_sectors;
-+}
-+
- #ifdef CONFIG_BLK_DEV_ZONED
- static inline unsigned int blk_rq_zone_no(struct request *rq)
- {
+ 	if (!io_op_needs_file(s->sqe))
+@@ -2247,6 +2248,7 @@ static bool io_get_sqring(struct io_ring_ctx *ctx, struct sqe_submit *s)
+ 	if (head < ctx->sq_entries) {
+ 		s->index = head;
+ 		s->sqe = &ctx->sq_sqes[head];
++		s->sequence = ctx->cached_sq_head;
+ 		ctx->cached_sq_head++;
+ 		return true;
+ 	}
 -- 
 2.20.1
 
