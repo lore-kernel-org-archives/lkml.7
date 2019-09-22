@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A83C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E257AC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAC82206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:07:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD51820882
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:07:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179276;
-	bh=ayteBREQZV/hF1aHaNivq1OSei/Y0xGRZWb82f0JZwM=;
+	s=default; t=1569179278;
+	bh=khJUX06VjxDazzhaxeyGfY+sLuklaDw3Cw25F/QPmIs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s86DyDdXD2iAFZuB0/yIZdrrDlr+P4iqma7wuilvJC4Kc7zp8i8Q/eyweA6A9fZd+
-	 WQLevx2FrbmCFqz2X8E7PFhrdNq4QWIND06ck/pFvAayvXvLtNw60CFFAydSsHypDM
-	 DrmoVq7umN2MVfJ8ide/pWBXshnFbhKyYijGcu5Q=
+	b=SYJj/4S6g/jRAwYmc/OKhtOVIh9wKqw14AgP+UPJ5p/gEDTWllwxzrIG2msw1Hbc0
+	 KxiV8g8Be54sPR/jUBo7Bl11WYSHFb9WdNglGj4S+TMAco4iyV+i5ymeUdcDQJ2/0P
+	 fsHPJ1YG26wIbn0e2jL/tHq7C1V2x7aly3/w+4xU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730387AbfIVTH4 (ORCPT
+        id S2406158AbfIVS74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:07:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35372 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:59:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408288AbfIVS75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:59:57 -0400
+        id S2438903AbfIVS7u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:59:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BD7E21479;
-        Sun, 22 Sep 2019 18:59:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66B24206C2;
+        Sun, 22 Sep 2019 18:59:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178796;
-        bh=ayteBREQZV/hF1aHaNivq1OSei/Y0xGRZWb82f0JZwM=;
+        s=default; t=1569178789;
+        bh=khJUX06VjxDazzhaxeyGfY+sLuklaDw3Cw25F/QPmIs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UNeUarwtSRpz09i4njgGa2SGrTHa9lbJ+HCOCj9jJzqvIu/ToHCQieGl7crWRywnN
-         wSUC1bDkhIso3+lHtdVe5GXEdzIqRvxVjuqO+6nIX4M2nEjDn+209n4EHpHxutJ3wi
-         BwXzaukbX3Vv9ofUOJmzA2ly0l52vezjVFDQvfLA=
+        b=q4CMZOhcEmUcGRV8J/4rzRWAqyv5nwzifIbhBO0NtcuvdUwVnc9n8THNGenF/3Fek
+         KZdWqVZjabSogdAashgaExSGEsWoZxzz4n6BB4ZSwqcw9JYU2/cobyBpHGIKNwMCdD
+         YN0Uw3I4WcpWLIEZstbntdNddGRHxFQlDJjpDWRE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ard van Breemen <ard@kwaak.net>, Takashi Iwai <tiwai@suse.de>,
+Cc:     Grzegorz Halat <ghalat@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Don Zickus <dzickus@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 17/60] ALSA: usb-audio: Skip bSynchAddress endpoint check if it is invalid
-Date:   Sun, 22 Sep 2019 14:58:50 -0400
-Message-Id: <20190922185934.4305-17-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 11/60] x86/reboot: Always use NMI fallback when shutdown via reboot vector IPI fails
+Date:   Sun, 22 Sep 2019 14:58:44 -0400
+Message-Id: <20190922185934.4305-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185934.4305-1-sashal@kernel.org>
 References: <20190922185934.4305-1-sashal@kernel.org>
@@ -58,37 +60,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard van Breemen <ard@kwaak.net>
+From: Grzegorz Halat <ghalat@redhat.com>
 
-[ Upstream commit 1b34121d9f26d272b0b2334209af6b6fc82d4bf1 ]
+[ Upstream commit 747d5a1bf293dcb33af755a6d285d41b8c1ea010 ]
 
-The Linux kernel assumes that get_endpoint(alts,0) and
-get_endpoint(alts,1) are eachothers feedback endpoints.
-To reassure that validity it will test bsynchaddress to comply with that
-assumption. But if the bsyncaddress is 0 (invalid), it will flag that as
-a wrong assumption and return an error.
-Fix: Skip the test if bSynchAddress is 0.
-Note: those with a valid bSynchAddress should have a code quirck added.
+A reboot request sends an IPI via the reboot vector and waits for all other
+CPUs to stop. If one or more CPUs are in critical regions with interrupts
+disabled then the IPI is not handled on those CPUs and the shutdown hangs
+if native_stop_other_cpus() is called with the wait argument set.
 
-Signed-off-by: Ard van Breemen <ard@kwaak.net>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Such a situation can happen when one CPU was stopped within a lock held
+section and another CPU is trying to acquire that lock with interrupts
+disabled. There are other scenarios which can cause such a lockup as well.
+
+In theory the shutdown should be attempted by an NMI IPI after the timeout
+period elapsed. Though the wait loop after sending the reboot vector IPI
+prevents this. It checks the wait request argument and the timeout. If wait
+is set, which is true for sys_reboot() then it won't fall through to the
+NMI shutdown method after the timeout period has finished.
+
+This was an oversight when the NMI shutdown mechanism was added to handle
+the 'reboot IPI is not working' situation. The mechanism was added to deal
+with stuck panic shutdowns, which do not have the wait request set, so the
+'wait request' case was probably not considered.
+
+Remove the wait check from the post reboot vector IPI wait loop and enforce
+that the wait loop in the NMI fallback path is invoked even if NMI IPIs are
+disabled or the registration of the NMI handler fails. That second wait
+loop will then hang if not all CPUs shutdown and the wait argument is set.
+
+[ tglx: Avoid the hard to parse line break in the NMI fallback path,
+  	add comments and massage the changelog ]
+
+Fixes: 7d007d21e539 ("x86/reboot: Use NMI to assist in shutting down if IRQ fails")
+Signed-off-by: Grzegorz Halat <ghalat@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Don Zickus <dzickus@redhat.com>
+Link: https://lkml.kernel.org/r/20190628122813.15500-1-ghalat@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/pcm.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kernel/smp.c | 46 +++++++++++++++++++++++++------------------
+ 1 file changed, 27 insertions(+), 19 deletions(-)
 
-diff --git a/sound/usb/pcm.c b/sound/usb/pcm.c
-index 497bad9f27898..9bc995f9b4e17 100644
---- a/sound/usb/pcm.c
-+++ b/sound/usb/pcm.c
-@@ -470,6 +470,7 @@ static int set_sync_endpoint(struct snd_usb_substream *subs,
+diff --git a/arch/x86/kernel/smp.c b/arch/x86/kernel/smp.c
+index 2863ad3066921..33ba47c44816b 100644
+--- a/arch/x86/kernel/smp.c
++++ b/arch/x86/kernel/smp.c
+@@ -181,6 +181,12 @@ asmlinkage __visible void smp_reboot_interrupt(void)
+ 	irq_exit();
+ }
+ 
++static int register_stop_handler(void)
++{
++	return register_nmi_handler(NMI_LOCAL, smp_stop_nmi_callback,
++				    NMI_FLAG_FIRST, "smp_stop");
++}
++
+ static void native_stop_other_cpus(int wait)
+ {
+ 	unsigned long flags;
+@@ -214,39 +220,41 @@ static void native_stop_other_cpus(int wait)
+ 		apic->send_IPI_allbutself(REBOOT_VECTOR);
+ 
+ 		/*
+-		 * Don't wait longer than a second if the caller
+-		 * didn't ask us to wait.
++		 * Don't wait longer than a second for IPI completion. The
++		 * wait request is not checked here because that would
++		 * prevent an NMI shutdown attempt in case that not all
++		 * CPUs reach shutdown state.
+ 		 */
+ 		timeout = USEC_PER_SEC;
+-		while (num_online_cpus() > 1 && (wait || timeout--))
++		while (num_online_cpus() > 1 && timeout--)
+ 			udelay(1);
  	}
- 	ep = get_endpoint(alts, 1)->bEndpointAddress;
- 	if (get_endpoint(alts, 0)->bLength >= USB_DT_ENDPOINT_AUDIO_SIZE &&
-+	    get_endpoint(alts, 0)->bSynchAddress != 0 &&
- 	    ((is_playback && ep != (unsigned int)(get_endpoint(alts, 0)->bSynchAddress | USB_DIR_IN)) ||
- 	     (!is_playback && ep != (unsigned int)(get_endpoint(alts, 0)->bSynchAddress & ~USB_DIR_IN)))) {
- 		dev_err(&dev->dev,
+-	
+-	/* if the REBOOT_VECTOR didn't work, try with the NMI */
+-	if ((num_online_cpus() > 1) && (!smp_no_nmi_ipi))  {
+-		if (register_nmi_handler(NMI_LOCAL, smp_stop_nmi_callback,
+-					 NMI_FLAG_FIRST, "smp_stop"))
+-			/* Note: we ignore failures here */
+-			/* Hope the REBOOT_IRQ is good enough */
+-			goto finish;
+-
+-		/* sync above data before sending IRQ */
+-		wmb();
+ 
+-		pr_emerg("Shutting down cpus with NMI\n");
++	/* if the REBOOT_VECTOR didn't work, try with the NMI */
++	if (num_online_cpus() > 1) {
++		/*
++		 * If NMI IPI is enabled, try to register the stop handler
++		 * and send the IPI. In any case try to wait for the other
++		 * CPUs to stop.
++		 */
++		if (!smp_no_nmi_ipi && !register_stop_handler()) {
++			/* Sync above data before sending IRQ */
++			wmb();
+ 
+-		apic->send_IPI_allbutself(NMI_VECTOR);
++			pr_emerg("Shutting down cpus with NMI\n");
+ 
++			apic->send_IPI_allbutself(NMI_VECTOR);
++		}
+ 		/*
+-		 * Don't wait longer than a 10 ms if the caller
+-		 * didn't ask us to wait.
++		 * Don't wait longer than 10 ms if the caller didn't
++		 * reqeust it. If wait is true, the machine hangs here if
++		 * one or more CPUs do not reach shutdown state.
+ 		 */
+ 		timeout = USEC_PER_MSEC * 10;
+ 		while (num_online_cpus() > 1 && (wait || timeout--))
+ 			udelay(1);
+ 	}
+ 
+-finish:
+ 	local_irq_save(flags);
+ 	disable_local_APIC();
+ 	mcheck_cpu_clear(this_cpu_ptr(&cpu_info));
 -- 
 2.20.1
 
