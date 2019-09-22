@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F7DFC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43639C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FFE621A4A
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:56:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CA8621D79
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:56:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178602;
-	bh=wKwjfWM+JCA0f7UO0uWQrgxnwNMKaVWWUO0lVQf5ynI=;
+	s=default; t=1569178605;
+	bh=57zbMiVngujYeilxbGZGmOy0krEqRQDQymwGIukHjns=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SSsZlCpDyFeDSOqfemhu8co2/K8TLivdhU+NYvz0BbzntvbXUAiyvMLtX6mjbDuPx
-	 thyIHKnPc5L7jagQXD4lV2ZveJBAtQzh2RY33UVNwbHF6Qbsi9XF7j8H/GAAY40LBK
-	 gVQWltNGMGZTawZYbjU49fNqIbEpVQylGHOnSoZY=
+	b=hG321J61LFlGu8Yrc3cFK7cwOjowit9nFdaXXzi3RItrkE/mZumF9Os/iFvNhI0K0
+	 +QMP1/2P7KlNSFn3Egm0GcqXp3EjVEMkmq+7RKOACbbnpSsqXT9tsrZOsgbrRMGrV1
+	 Hvcid1Vfvmyun+s026D19eR8ezRjmzsNdEJMCxec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408224AbfIVS4l (ORCPT
+        id S2408232AbfIVS4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:56:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57064 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:56:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438482AbfIVSzl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:55:41 -0400
+        id S2408190AbfIVS4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:56:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 605B821D6C;
-        Sun, 22 Sep 2019 18:55:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DFE121D7A;
+        Sun, 22 Sep 2019 18:56:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178540;
-        bh=wKwjfWM+JCA0f7UO0uWQrgxnwNMKaVWWUO0lVQf5ynI=;
+        s=default; t=1569178600;
+        bh=57zbMiVngujYeilxbGZGmOy0krEqRQDQymwGIukHjns=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e9m5ZlB59n6Rl9Aq9jJzRdbDT7S6gGGvtvSs6Iqod04xMAfQI0yPaFvP07r6DvHde
-         ugTyARNjKr9AU0PEs9SyA00kPvJEHdh4wuI71VeSnvd0JWsbtUyfSGnBUvB3XSZq/4
-         96txWG0Lm7pQNN+hHwkh3GL2nCwJ2w/V8UZm2Nas=
+        b=KIMJuJGN1OpE2oXwZw1Y+5BCmNRDEGsggmFUTHHpit0YfXz+LBCK3X6gRDgJ8pr5p
+         lqL+OJVfV9CF8qSTuBfkA67OjbJcWi08KiI5wfo2CMULakyEU/53nAsLyRjhOyewe0
+         xK0SEuIReBFfpA0nu2U36VPUxhNf0O9JKiJvhXlw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Agner <stefan.agner@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 060/128] ARM: dts: imx7-colibri: disable HS400
-Date:   Sun, 22 Sep 2019 14:53:10 -0400
-Message-Id: <20190922185418.2158-60-sashal@kernel.org>
+Cc:     Yufen Yu <yuyufen@huawei.com>, NeilBrown <neilb@suse.de>,
+        Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 104/128] md/raid1: fail run raid1 array when active disk less than one
+Date:   Sun, 22 Sep 2019 14:53:54 -0400
+Message-Id: <20190922185418.2158-104-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
 References: <20190922185418.2158-1-sashal@kernel.org>
@@ -61,42 +59,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Agner <stefan.agner@toradex.com>
+From: Yufen Yu <yuyufen@huawei.com>
 
-[ Upstream commit a95fbda08ee20cd063ce5826e0df95a2c22ea8c5 ]
+[ Upstream commit 07f1a6850c5d5a65c917c3165692b5179ac4cb6b ]
 
-Force HS200 by masking bit 63 of the SDHCI capability register.
-The i.MX ESDHC driver uses SDHCI_QUIRK2_CAPS_BIT63_FOR_HS400. With
-that the stack checks bit 63 to descide whether HS400 is available.
-Using sdhci-caps-mask allows to mask bit 63. The stack then selects
-HS200 as operating mode.
+When run test case:
+  mdadm -CR /dev/md1 -l 1 -n 4 /dev/sd[a-d] --assume-clean --bitmap=internal
+  mdadm -S /dev/md1
+  mdadm -A /dev/md1 /dev/sd[b-c] --run --force
 
-This prevents rare communication errors with minimal effect on
-performance:
-	sdhci-esdhc-imx 30b60000.usdhc: warning! HS400 strobe DLL
-		status REF not lock!
+  mdadm --zero /dev/sda
+  mdadm /dev/md1 -a /dev/sda
 
-Signed-off-by: Stefan Agner <stefan.agner@toradex.com>
-Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
-Reviewed-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+  echo offline > /sys/block/sdc/device/state
+  echo offline > /sys/block/sdb/device/state
+  sleep 5
+  mdadm -S /dev/md1
+
+  echo running > /sys/block/sdb/device/state
+  echo running > /sys/block/sdc/device/state
+  mdadm -A /dev/md1 /dev/sd[a-c] --run --force
+
+mdadm run fail with kernel message as follow:
+[  172.986064] md: kicking non-fresh sdb from array!
+[  173.004210] md: kicking non-fresh sdc from array!
+[  173.022383] md/raid1:md1: active with 0 out of 4 mirrors
+[  173.022406] md1: failed to create bitmap (-5)
+
+In fact, when active disk in raid1 array less than one, we
+need to return fail in raid1_run().
+
+Reviewed-by: NeilBrown <neilb@suse.de>
+Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx7-colibri.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/md/raid1.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
-index 895fbde4d4333..c1ed83131b495 100644
---- a/arch/arm/boot/dts/imx7-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx7-colibri.dtsi
-@@ -323,6 +323,7 @@
- 	vmmc-supply = <&reg_module_3v3>;
- 	vqmmc-supply = <&reg_DCDC3>;
- 	non-removable;
-+	sdhci-caps-mask = <0x80000000 0x0>;
- };
+diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+index 54010675df9a5..6929d110d8048 100644
+--- a/drivers/md/raid1.c
++++ b/drivers/md/raid1.c
+@@ -3105,6 +3105,13 @@ static int raid1_run(struct mddev *mddev)
+ 		    !test_bit(In_sync, &conf->mirrors[i].rdev->flags) ||
+ 		    test_bit(Faulty, &conf->mirrors[i].rdev->flags))
+ 			mddev->degraded++;
++	/*
++	 * RAID1 needs at least one disk in active
++	 */
++	if (conf->raid_disks - mddev->degraded < 1) {
++		ret = -EINVAL;
++		goto abort;
++	}
  
- &iomuxc {
+ 	if (conf->raid_disks - mddev->degraded == 1)
+ 		mddev->recovery_cp = MaxSector;
+@@ -3138,8 +3145,12 @@ static int raid1_run(struct mddev *mddev)
+ 	ret =  md_integrity_register(mddev);
+ 	if (ret) {
+ 		md_unregister_thread(&mddev->thread);
+-		raid1_free(mddev, conf);
++		goto abort;
+ 	}
++	return 0;
++
++abort:
++	raid1_free(mddev, conf);
+ 	return ret;
+ }
+ 
 -- 
 2.20.1
 
