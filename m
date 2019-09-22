@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63084C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71626C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38B63206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:14:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40B39214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:14:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179685;
-	bh=fLXXfy+8DeSWD+W67ibSeRkxDybWu5Ovr0GanZ2/0q4=;
+	s=default; t=1569179698;
+	bh=fArfNnT5vFYjofUn+0euUGANcA1sp8AW4rWpRpsRnTw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1QYIy8uKjNJSD64EyGVPM3qGamzU3x8eKC/KNjfHnJ2jToaUAUp6zn73GV22XV8Xv
-	 3pcyipqTz0fgQYeBitNZz+D/hMGPS89fMmMCHWUoTmpvfFH8OzI6IMcOKQt3JAlkHd
-	 O90fZ75IB2wNqta2QmyRBvt5NK8SIIXHb/OxJEWE=
+	b=vvHBUhB/UZa4A5xTwlL0MjqE59eV4g98e7VpmRY84+Vnt2jFUusg1mWTWU139cdsv
+	 b067L8jjdhVlGHiwKdK+1nLkW6m5bumNM5v5o/h0oum0KyhZxkHfBxbH6k6pjCjALG
+	 CgBCKI+ZIxeLrrkSo90Iw7g+V5KMj66oyb17vX3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436902AbfIVTOo (ORCPT
+        id S2395415AbfIVTO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:14:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59224 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:14:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394680AbfIVS4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:56:54 -0400
+        id S2392303AbfIVS4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:56:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0554E21D6C;
-        Sun, 22 Sep 2019 18:56:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EB1421A4A;
+        Sun, 22 Sep 2019 18:56:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178613;
-        bh=fLXXfy+8DeSWD+W67ibSeRkxDybWu5Ovr0GanZ2/0q4=;
+        s=default; t=1569178606;
+        bh=fArfNnT5vFYjofUn+0euUGANcA1sp8AW4rWpRpsRnTw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W9fbgKuB4KX8xGliBEL4jkFH2ur187pWM8tpaT7CGzcFU1BoXueKgwT1FLO++HqNS
-         Lbvbu7wFl/ByJrn4bMSaiotunrwS+PbbL6rdXYwZd3OtAnTSECTbrhw0Tu+yccnngR
-         B7XfVbQ1kL6tMJMSf+xo5GnSQsOYrDSaDRFeBZ+I=
+        b=1XaqySEose42bVf+IxZYY+19yg3mba5r3d7TmEEY5sG7xzGnJxfPD5aIIGz8nCdki
+         /ypzr3IKABEL64HGc9EKDi5fUColxpV0JAukxsUSrY3Tk5NtDYhK6tL+/qg7gmqd/V
+         nfODgnVLlDCrA5F6M8PEFenN0FLlYmaqjlogpYSc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Arthur She <arthur.she@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
+Cc:     Marc Zyngier <maz@kernel.org>, Jiaxing Luo <luojiaxing@huawei.com>,
+        John Garry <john.garry@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 113/128] ASoC: dmaengine: Make the pcm->name equal to pcm->id if the name is not set
-Date:   Sun, 22 Sep 2019 14:54:03 -0400
-Message-Id: <20190922185418.2158-113-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 108/128] irqchip/gic-v3-its: Fix LPI release for Multi-MSI devices
+Date:   Sun, 22 Sep 2019 14:53:58 -0400
+Message-Id: <20190922185418.2158-108-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
 References: <20190922185418.2158-1-sashal@kernel.org>
@@ -60,44 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+From: Marc Zyngier <maz@kernel.org>
 
-[ Upstream commit 2ec42f3147e1610716f184b02e65d7f493eed925 ]
+[ Upstream commit c9c96e30ecaa0aafa225aa1a5392cb7db17c7a82 ]
 
-Some tools use the snd_pcm_info_get_name() to try to identify PCMs or for
-other purposes.
+When allocating a range of LPIs for a Multi-MSI capable device,
+this allocation extended to the closest power of 2.
 
-Currently it is left empty with the dmaengine-pcm, in this case copy the
-pcm->id string as pcm->name.
+But on the release path, the interrupts are released one by
+one. This results in not releasing the "extra" range, leaking
+the its_device. Trying to reprobe the device will then fail.
 
-For example IGT is using this to find the HDMI PCM for testing audio on it.
+Fix it by releasing the LPIs the same way we allocate them.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Reported-by: Arthur She <arthur.she@linaro.org>
-Link: https://lore.kernel.org/r/20190906055524.7393-1-peter.ujfalusi@ti.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 8208d1708b88 ("irqchip/gic-v3-its: Align PCI Multi-MSI allocation on their size")
+Reported-by: Jiaxing Luo <luojiaxing@huawei.com>
+Tested-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/f5e948aa-e32f-3f74-ae30-31fee06c2a74@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-generic-dmaengine-pcm.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/irqchip/irq-gic-v3-its.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/sound/soc/soc-generic-dmaengine-pcm.c b/sound/soc/soc-generic-dmaengine-pcm.c
-index 30e791a533528..232df04ca5866 100644
---- a/sound/soc/soc-generic-dmaengine-pcm.c
-+++ b/sound/soc/soc-generic-dmaengine-pcm.c
-@@ -313,6 +313,12 @@ static int dmaengine_pcm_new(struct snd_soc_pcm_runtime *rtd)
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index 9ba73e11757d9..e7549a2b1482b 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -2514,14 +2514,13 @@ static void its_irq_domain_free(struct irq_domain *domain, unsigned int virq,
+ 	struct its_node *its = its_dev->its;
+ 	int i;
  
- 		if (!dmaengine_pcm_can_report_residue(dev, pcm->chan[i]))
- 			pcm->flags |= SND_DMAENGINE_PCM_FLAG_NO_RESIDUE;
++	bitmap_release_region(its_dev->event_map.lpi_map,
++			      its_get_event_id(irq_domain_get_irq_data(domain, virq)),
++			      get_count_order(nr_irqs));
 +
-+		if (rtd->pcm->streams[i].pcm->name[0] == '\0') {
-+			strncpy(rtd->pcm->streams[i].pcm->name,
-+				rtd->pcm->streams[i].pcm->id,
-+				sizeof(rtd->pcm->streams[i].pcm->name));
-+		}
+ 	for (i = 0; i < nr_irqs; i++) {
+ 		struct irq_data *data = irq_domain_get_irq_data(domain,
+ 								virq + i);
+-		u32 event = its_get_event_id(data);
+-
+-		/* Mark interrupt index as unused */
+-		clear_bit(event, its_dev->event_map.lpi_map);
+-
+ 		/* Nuke the entry in the domain */
+ 		irq_domain_reset_irq_data(data);
  	}
- 
- 	return 0;
 -- 
 2.20.1
 
