@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC12EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACBD3C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3A9221BE5
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8862521A4A
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:54:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178439;
-	bh=9tdpQ5MRKMrYml1SMjDNx+7OaO3nSLGYFfNcKHsiyus=;
+	s=default; t=1569178443;
+	bh=9qfmsiCNaEBBbVAUBNjUeGmGxH7qdzSy+RWQqBp7ZR0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cNWTdgd1jnwJmWOVzFR8E+Tw4md3C2ZkKE0Er+Ktizlr63DwR37wlTgJpQYZOb7Cd
-	 /gyFbSyvOON9ML13DAV4gl5XiWrVifrbAYQXErLcT8q4pP8qJb5gZmCQ2CjPjyLDsv
-	 O1kTaY2PMbZvVoTt6nsB8vWapXGxHRC3DdvNsouA=
+	b=pvUdn4xDwpnXay/v6uPsVBfkI2l/yr//vnwzZru8pqjqDO7VGndjcDtIRxu5xVC8V
+	 SUlv5JMhe9taUsFZo9SkR8/UVqC35z31ma1QZcS7HHx7e5bT0R7+MewNwtgwA0eKmd
+	 hzeBMigL9YtXOMV9TCs3QkOl1E46mBSeWGOlARpE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394476AbfIVSx7 (ORCPT
+        id S2394497AbfIVSyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:53:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53630 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:54:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394356AbfIVSxi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:53:38 -0400
+        id S2394365AbfIVSxk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:53:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9788F21D56;
-        Sun, 22 Sep 2019 18:53:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE58B21BE5;
+        Sun, 22 Sep 2019 18:53:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178418;
-        bh=9tdpQ5MRKMrYml1SMjDNx+7OaO3nSLGYFfNcKHsiyus=;
+        s=default; t=1569178419;
+        bh=9qfmsiCNaEBBbVAUBNjUeGmGxH7qdzSy+RWQqBp7ZR0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hANXvmHKk5eh9LKgk04E5ky98ADlXLQVTyk7wzq+k3oVc89QO75mfFQqd1/4QoPfN
-         QiHqsucIOlxbd1n0Li5ilZ9B5iujZWY8x77Hu6BPXyVaA2DjWu5UCeGTEL5Ll1a6ig
-         Q4+ojAbJeIOq1sJhO79sjwLhNEdhmzPxB5VqdkoI=
+        b=FIG4dywTqiNk1sIwFl0BLRYknqc0QznwxK02EvomckPAL4NB7XK5iAc2g9Icin0rK
+         LdHngd4P9qwfDqzfeJVxKLvR1qD3b1LqxbbvsyfV4vPJN4smOdWcWdEdb3zj7CfRcF
+         p+MZX+Cf1lUgvuOdyFQpW83PXMlrSmZynCqKPH9I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "M. Vefa Bicakci" <m.v.b@runbox.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 156/185] platform/x86: intel_pmc_core: Do not ioremap RAM
-Date:   Sun, 22 Sep 2019 14:48:54 -0400
-Message-Id: <20190922184924.32534-156-sashal@kernel.org>
+Cc:     Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 157/185] ASoC: es8316: support fixed and variable both clock rates
+Date:   Sun, 22 Sep 2019 14:48:55 -0400
+Message-Id: <20190922184924.32534-157-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -60,61 +59,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "M. Vefa Bicakci" <m.v.b@runbox.com>
+From: Katsuhiro Suzuki <katsuhiro@katsuster.net>
 
-[ Upstream commit 7d505758b1e556cdf65a5e451744fe0ae8063d17 ]
+[ Upstream commit ebe02a5b9ef05e3b812af3d628cdf6206d9ba610 ]
 
-On a Xen-based PVH virtual machine with more than 4 GiB of RAM,
-intel_pmc_core fails initialization with the following warning message
-from the kernel, indicating that the driver is attempting to ioremap
-RAM:
+This patch supports some type of machine drivers that set 0 to mclk
+when sound device goes to idle state. After applied this patch,
+sysclk == 0 means there is no constraint of sound rate and other
+values will set constraints which is derived by sysclk setting.
 
-  ioremap on RAM at 0x00000000fe000000 - 0x00000000fe001fff
-  WARNING: CPU: 1 PID: 434 at arch/x86/mm/ioremap.c:186 __ioremap_caller.constprop.0+0x2aa/0x2c0
-...
-  Call Trace:
-   ? pmc_core_probe+0x87/0x2d0 [intel_pmc_core]
-   pmc_core_probe+0x87/0x2d0 [intel_pmc_core]
+Original code refuses sysclk == 0 setting. But some boards and SoC
+(such as RockPro64 and RockChip I2S) has connected SoC MCLK out to
+ES8316 MCLK in. In this case, SoC side I2S will choose suitable
+frequency of MCLK such as fs * mclk-fs when user starts playing or
+capturing.
 
-This issue appears to manifest itself because of the following fallback
-mechanism in the driver:
+Bad scenario as follows (mclk-fs = 256):
+  - Initialize sysclk by correct value (Ex. 12.288MHz)
+    - ES8316 set constraints of PCM rate by sysclk
+      48kHz (1/256), 32kHz (1/384), 30.720kHz (1/400),
+      24kHz (1/512), 16kHz (1/768), 12kHz (1/1024)
+  - Play 48kHz sound, it's acceptable
+  - Sysclk is not changed
 
-	if (lpit_read_residency_count_address(&slp_s0_addr))
-		pmcdev->base_addr = PMC_BASE_ADDR_DEFAULT;
+  - Play 32kHz sound, it's acceptable
+  - Set sysclk by 8.192MHz (= fs * mclk-fs = 32k * 256)
+    - ES8316 set constraints of PCM rate by sysclk
+      32kHz (1/256), 21.33kHz (1/384), 20.48kHz (1/400),
+      16kHz (1/512), 10.66kHz (1/768), 8kHz (1/1024)
 
-The validity of address PMC_BASE_ADDR_DEFAULT (i.e., 0xFE000000) is not
-verified by the driver, which is what this patch introduces. With this
-patch, if address PMC_BASE_ADDR_DEFAULT is in RAM, then the driver will
-not attempt to ioremap the aforementioned address.
+  - Play 48kHz again, but it's NOT acceptable because constraints
+    list does not allow 48kHz
 
-Signed-off-by: M. Vefa Bicakci <m.v.b@runbox.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Link: https://lore.kernel.org/r/20190907163653.9382-2-katsuhiro@katsuster.net
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel_pmc_core.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ sound/soc/codecs/es8316.c | 35 ++++++++++++++++++++---------------
+ 1 file changed, 20 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index be6cda89dcf5b..01a530e2f8017 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -882,10 +882,14 @@ static int pmc_core_probe(struct platform_device *pdev)
- 	if (pmcdev->map == &spt_reg_map && !pci_dev_present(pmc_pci_ids))
- 		pmcdev->map = &cnp_reg_map;
+diff --git a/sound/soc/codecs/es8316.c b/sound/soc/codecs/es8316.c
+index 96d04896193f2..c47b3c4bb06c7 100644
+--- a/sound/soc/codecs/es8316.c
++++ b/sound/soc/codecs/es8316.c
+@@ -368,8 +368,12 @@ static int es8316_set_dai_sysclk(struct snd_soc_dai *codec_dai,
  
--	if (lpit_read_residency_count_address(&slp_s0_addr))
-+	if (lpit_read_residency_count_address(&slp_s0_addr)) {
- 		pmcdev->base_addr = PMC_BASE_ADDR_DEFAULT;
--	else
+ 	es8316->sysclk = freq;
+ 
+-	if (freq == 0)
++	if (freq == 0) {
++		es8316->sysclk_constraints.list = NULL;
++		es8316->sysclk_constraints.count = 0;
 +
-+		if (page_is_ram(PHYS_PFN(pmcdev->base_addr)))
-+			return -ENODEV;
-+	} else {
- 		pmcdev->base_addr = slp_s0_addr - pmcdev->map->slp_s0_offset;
+ 		return 0;
 +	}
  
- 	pmcdev->regbase = ioremap(pmcdev->base_addr,
- 				  pmcdev->map->regmap_length);
+ 	/* Limit supported sample rates to ones that can be autodetected
+ 	 * by the codec running in slave mode.
+@@ -444,17 +448,10 @@ static int es8316_pcm_startup(struct snd_pcm_substream *substream,
+ 	struct snd_soc_component *component = dai->component;
+ 	struct es8316_priv *es8316 = snd_soc_component_get_drvdata(component);
+ 
+-	if (es8316->sysclk == 0) {
+-		dev_err(component->dev, "No sysclk provided\n");
+-		return -EINVAL;
+-	}
+-
+-	/* The set of sample rates that can be supported depends on the
+-	 * MCLK supplied to the CODEC.
+-	 */
+-	snd_pcm_hw_constraint_list(substream->runtime, 0,
+-				   SNDRV_PCM_HW_PARAM_RATE,
+-				   &es8316->sysclk_constraints);
++	if (es8316->sysclk_constraints.list)
++		snd_pcm_hw_constraint_list(substream->runtime, 0,
++					   SNDRV_PCM_HW_PARAM_RATE,
++					   &es8316->sysclk_constraints);
+ 
+ 	return 0;
+ }
+@@ -466,11 +463,19 @@ static int es8316_pcm_hw_params(struct snd_pcm_substream *substream,
+ 	struct snd_soc_component *component = dai->component;
+ 	struct es8316_priv *es8316 = snd_soc_component_get_drvdata(component);
+ 	u8 wordlen = 0;
++	int i;
+ 
+-	if (!es8316->sysclk) {
+-		dev_err(component->dev, "No MCLK configured\n");
+-		return -EINVAL;
++	/* Validate supported sample rates that are autodetected from MCLK */
++	for (i = 0; i < NR_SUPPORTED_MCLK_LRCK_RATIOS; i++) {
++		const unsigned int ratio = supported_mclk_lrck_ratios[i];
++
++		if (es8316->sysclk % ratio != 0)
++			continue;
++		if (es8316->sysclk / ratio == params_rate(params))
++			break;
+ 	}
++	if (i == NR_SUPPORTED_MCLK_LRCK_RATIOS)
++		return -EINVAL;
+ 
+ 	switch (params_format(params)) {
+ 	case SNDRV_PCM_FORMAT_S16_LE:
 -- 
 2.20.1
 
