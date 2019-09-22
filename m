@@ -2,108 +2,196 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCEB2C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41CF9C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:08:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A93A220882
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:08:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179288;
-	bh=qOgqvqjCkUD8COe5UC9OHjXjf/iIdtSx/nJitqT3eqk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tHySOwVsGipCKoepZf1atsHMhfxlHkwomfPlrDPx5rHUM0ty5oM5rkGB/T3h587j3
-	 k2nQHdwT4wY7NB+7SjDvH6CmnmTc2X5RfTQ8IdeOA6h2spgijGwlp3RVb7SUXw/hdU
-	 7b0GdrJQBNz/Fui8SJspUh5wmT3Zh2F16zFix7O0=
+	by mail.kernel.org (Postfix) with ESMTP id 11BEB2184D
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:08:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A5w0lOOi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436570AbfIVTIH (ORCPT
+        id S2394628AbfIVTIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:08:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35294 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438919AbfIVS7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:59:53 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B5D821907;
-        Sun, 22 Sep 2019 18:59:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178792;
-        bh=qOgqvqjCkUD8COe5UC9OHjXjf/iIdtSx/nJitqT3eqk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EMcL5/q+SOhJEUvuor1Cv0VV/uwVpKEuR7+NjvL8xY9gkrJba7I2uOqOKhW4js3ps
-         s4099hJCx2wwo8VyN3dnYfZhYfPfg/i4i17KEy4cVBGifzHfwd0Koyk/4y3RasYkdI
-         4Fb4sKaqyUrUDsYZ64O88lQvyGPVDarPE/meJAnw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>, Takashi Iwai <tiwai@suse.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 14/60] ALSA: i2c: ak4xxx-adda: Fix a possible null pointer dereference in build_adc_controls()
-Date:   Sun, 22 Sep 2019 14:58:47 -0400
-Message-Id: <20190922185934.4305-14-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190922185934.4305-1-sashal@kernel.org>
-References: <20190922185934.4305-1-sashal@kernel.org>
+        Sun, 22 Sep 2019 15:08:15 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34988 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393940AbfIVTIN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 15:08:13 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 205so7670532pfw.2;
+        Sun, 22 Sep 2019 12:08:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=j6ihdIbEezb6H/uIwxr2v6+zkYRv2caNc+xhgdDtRXQ=;
+        b=A5w0lOOiaLMZXHPxikGhEOSTfhr1n2Ew1OmTFFD9NDyT+E9JHjZokik/1GRBxb7umo
+         gKMYTBXdwX4tXnDnOP3IEIjqKRwtwF5cjDJ+SrwnBIFHbsb8g15mNcfTfEx1SSphoJNi
+         XJLKbSy3I1Mf5Tn2hWUsMzHHBhVKis4Jn+R+5Ox/eAOuQdAl2rz32GOCeQAblZcICe6v
+         yN0LOe2/Hw4hUYCbJIiFpaXVnY7EOvVqkdWsvGYv7CpLWfqh3XzERP7wrJdBacrdT0AV
+         W2pryA/XYRChTTrqUXA0dipaxjeVXASXiVLG2XsqtXRpBGZ2CN2lP4rsREZNs+gpFt1A
+         ayqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=j6ihdIbEezb6H/uIwxr2v6+zkYRv2caNc+xhgdDtRXQ=;
+        b=qIUAo5TC0Qz8CrPS96DEdCkTNEYBUyQubHb52WtvjH42Q9vjM2v29jWNJmJPfkbDxi
+         KaFMRYEKXefdETqZtnKvfS8OfFVQLQKbaY3g0EDbSdKK2xtiUWVT3cuMvnxf+MzDb001
+         2mZOg25ADtBRYH0nWGM38Tbr/sLNi+ru4j4Z5/Lh+e4ojs7zw2TB5yPKA/Sl1xwv6h6t
+         jr30UB5M9sP6VxMUukRFlGYEicaABPw824C8jMEFa8MhGZPrpQ60fI29G1MZQtAAE3ML
+         ezFFauq5cCDujbKXdQjcfaFGu0apMFKAQSZfx2ahOYMVI36c8k6phjHjDU9xE0CCy5Uu
+         oEnw==
+X-Gm-Message-State: APjAAAU6AZfb8hi4eJL3Yz0jozb3vcCeicwjJhX1GmHv1wT2qGkZ8kl+
+        f/RoCH43ca2ucXIJ/xROwLN1kcBYU/0=
+X-Google-Smtp-Source: APXvYqxmtiztMzG+4DPbL6NnXBHk3TmKqs0UNOa6z+LVEnLYUvwELIJZ6Cfel81bmwtktrvay//rYQ==
+X-Received: by 2002:a63:d909:: with SMTP id r9mr25741098pgg.381.1569179291974;
+        Sun, 22 Sep 2019 12:08:11 -0700 (PDT)
+Received: from [10.230.28.130] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id fa24sm3565152pjb.13.2019.09.22.12.08.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 22 Sep 2019 12:08:11 -0700 (PDT)
+Subject: Re: [PATCH v2 5/5] irqchip/irq-bcm7038-l1: Support brcm,int-fwd-mask
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Cernekee <cernekee@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:BROADCOM BMIPS MIPS ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:BROADCOM BMIPS MIPS ARCHITECTURE" 
+        <linux-mips@vger.kernel.org>
+References: <20190913191542.9908-1-f.fainelli@gmail.com>
+ <20190913191542.9908-6-f.fainelli@gmail.com> <20190922133805.2cdf2d99@why>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <260e61b8-a083-743e-43fc-70b9ea644e0e@gmail.com>
+Date:   Sun, 22 Sep 2019 12:08:10 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+In-Reply-To: <20190922133805.2cdf2d99@why>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 2127c01b7f63b06a21559f56a8c81a3c6535bd1a ]
 
-In build_adc_controls(), there is an if statement on line 773 to check
-whether ak->adc_info is NULL:
-    if (! ak->adc_info ||
-        ! ak->adc_info[mixer_ch].switch_name)
+On 9/22/2019 5:38 AM, Marc Zyngier wrote:
+> On Fri, 13 Sep 2019 12:15:42 -0700
+> Florian Fainelli <f.fainelli@gmail.com> wrote:
+> 
+>> On some specific chips like 7211 we need to leave some interrupts
+>> untouched/forwarded to the VPU which is another agent in the system
+>> making use of that interrupt controller hardware (goes to both ARM GIC
+>> and VPU L1 interrupt controller). Make that possible by using the
+>> existing brcm,int-fwd-mask property.
+>>
+>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+>> ---
+>>  drivers/irqchip/irq-bcm7038-l1.c | 15 +++++++++++++--
+>>  1 file changed, 13 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
+>> index 0673a44bbdc2..811a34201dd4 100644
+>> --- a/drivers/irqchip/irq-bcm7038-l1.c
+>> +++ b/drivers/irqchip/irq-bcm7038-l1.c
+>> @@ -44,6 +44,7 @@ struct bcm7038_l1_chip {
+>>  	struct list_head	list;
+>>  	u32			wake_mask[MAX_WORDS];
+>>  #endif
+>> +	u32			irq_fwd_mask[MAX_WORDS];
+>>  	u8			affinity[MAX_WORDS * IRQS_PER_WORD];
+>>  };
+>>  
+>> @@ -265,6 +266,7 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
+>>  	resource_size_t sz;
+>>  	struct bcm7038_l1_cpu *cpu;
+>>  	unsigned int i, n_words, parent_irq;
+>> +	int ret;
+>>  
+>>  	if (of_address_to_resource(dn, idx, &res))
+>>  		return -EINVAL;
+>> @@ -278,6 +280,14 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
+>>  	else if (intc->n_words != n_words)
+>>  		return -EINVAL;
+>>  
+>> +	ret = of_property_read_u32_array(dn , "brcm,int-fwd-mask",
+> 
+> What is the exact meaning of "fwd"? Forward? FirmWare Dementia?
 
-When ak->adc_info is NULL, it is used on line 792:
-    knew.name = ak->adc_info[mixer_ch].selector_name;
+Here it is meant to be "forward", we have defined this property name
+before for irq-bcm7120-l2.c and felt like reusing the same name to avoid
+multiplying properties would be appropriate, see patch #4. If you prefer
+something named brcm,firmware-configured-mask, let me know.
 
-Thus, a possible null-pointer dereference may occur.
+> 
+>> +					 intc->irq_fwd_mask, n_words);
+>> +	if (ret != 0 && ret != -EINVAL) {
+>> +		/* property exists but has the wrong number of words */
+>> +		pr_err("invalid brcm,int-fwd-mask property\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>>  	cpu = intc->cpus[idx] = kzalloc(sizeof(*cpu) + n_words * sizeof(u32),
+>>  					GFP_KERNEL);
+>>  	if (!cpu)
+>> @@ -288,8 +298,9 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
+>>  		return -ENOMEM;
+>>  
+>>  	for (i = 0; i < n_words; i++) {
+>> -		l1_writel(0xffffffff, cpu->map_base + reg_mask_set(intc, i));
+>> -		cpu->mask_cache[i] = 0xffffffff;
+>> +		l1_writel(0xffffffff & ~intc->irq_fwd_mask[i],
+>> +			  cpu->map_base + reg_mask_set(intc, i));
+>> +		cpu->mask_cache[i] = 0xffffffff & ~intc->irq_fwd_mask[i];
+> 
+> I seem to remember that (0xffffffff & whatever) == whatever, as long as
+> 'whatever' is a 32bit quantity. So what it this for?
 
-To fix this bug, referring to lines 773 and 774, ak->adc_info
-and ak->adc_info[mixer_ch].selector_name are checked before being used.
+It is 0xffff_ffff & ~whatever here. In the absence of this property
+being specified, the data is all zeroed out, so we would have
+0xffff_ffff & 0xffff_ffff which is 0xffff_ffff. If this property is
+specified, we would have one more or bits set, and it would be e.g.:
+0x100 so we would have 0xffff_ffff & ~(0x100) = 0xffff_feff which is
+what we would want here to preserve whatever the firmware has already
+configured. In hindsight, it may be safer to make sure no one in Linux
+can actually map that interrupt, so we would need something like this in
+addition to what we already have in this patch:
 
-This bug is found by a static analysis tool STCheck written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/i2c/other/ak4xxx-adda.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/sound/i2c/other/ak4xxx-adda.c b/sound/i2c/other/ak4xxx-adda.c
-index bf377dc192aa7..d33e02c317129 100644
---- a/sound/i2c/other/ak4xxx-adda.c
-+++ b/sound/i2c/other/ak4xxx-adda.c
-@@ -789,11 +789,12 @@ static int build_adc_controls(struct snd_akm4xxx *ak)
- 				return err;
- 
- 			memset(&knew, 0, sizeof(knew));
--			knew.name = ak->adc_info[mixer_ch].selector_name;
--			if (!knew.name) {
-+			if (!ak->adc_info ||
-+				!ak->adc_info[mixer_ch].selector_name) {
- 				knew.name = "Capture Channel";
- 				knew.index = mixer_ch + ak->idx_offset * 2;
--			}
-+			} else
-+				knew.name = ak->adc_info[mixer_ch].selector_name;
- 
- 			knew.iface = SNDRV_CTL_ELEM_IFACE_MIXER;
- 			knew.info = ak4xxx_capture_source_info;
+diff --git a/drivers/irqchip/irq-bcm7038-l1.c
+b/drivers/irqchip/irq-bcm7038-l1.c
+index fc75c61233aa..558e74be0d60 100644
+--- a/drivers/irqchip/irq-bcm7038-l1.c
++++ b/drivers/irqchip/irq-bcm7038-l1.c
+@@ -300,6 +300,14 @@ static struct irq_chip bcm7038_l1_irq_chip = {
+ static int bcm7038_l1_map(struct irq_domain *d, unsigned int virq,
+                          irq_hw_number_t hw_irq)
+ {
++       struct bcm7038_l1_chip *intc = d->host_data;
++       int i;
++
++       for (i = 0; i < intc->n_words; i++) {
++               if (intc->irq_fwd_mask[i] & BIT(hw_irq))
++                       return -EINVAL;
++       }
++
+        irq_set_chip_and_handler(virq, &bcm7038_l1_irq_chip,
+handle_level_irq);
+        irq_set_chip_data(virq, d->host_data);
+        irqd_set_single_target(irq_desc_get_irq_data(irq_to_desc(virq)));
 -- 
-2.20.1
-
+Florian
