@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51501C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC13BC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2126C214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7B8C214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:48:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178078;
-	bh=n0YP2zWRVCxk4rF17AJs7NMY8AhDufGUs2cq5yP0HdI=;
+	s=default; t=1569178080;
+	bh=Dp16fsSU8hxNbAKOIIQ6JCkszM+DVXRU4bOKtGvh95U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f5MNCktziHXJRvBqsU0ccm5Jc2L4yj/qc8G75+HwGIgx5oDP4vEjm2Cth10ZTHV1V
-	 NGbQJzAl3V7/efsDQt32oxBSn84TTc02Hx3HCJt+DB0jeWnP2FSuYuvuiczxcKO+lf
-	 7kXf9YktulResb1dz/LohyeQrcIUfqRpRjvzvWko=
+	b=wDRpXTK2ZSzN84XGYUsj0J77Sd43Ab6r1YCVHm7+UWbNSmPjsWStaNcSvF2jeozPx
+	 kdp6M3uUHnb3Qkz5crlfFsTvVafO+B+sraYkqInnBllNO+vaNOYGsBp+WrZA671apj
+	 3bIExLPOmh2zSmqjiU34oItrqajavV4bJvg8eMjE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391270AbfIVSr5 (ORCPT
+        id S2391310AbfIVSsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:47:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44352 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:48:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391165AbfIVSrs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:47:48 -0400
+        id S2391193AbfIVSrv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:47:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F15C2186A;
-        Sun, 22 Sep 2019 18:47:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1569C21D6C;
+        Sun, 22 Sep 2019 18:47:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178068;
-        bh=n0YP2zWRVCxk4rF17AJs7NMY8AhDufGUs2cq5yP0HdI=;
+        s=default; t=1569178070;
+        bh=Dp16fsSU8hxNbAKOIIQ6JCkszM+DVXRU4bOKtGvh95U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MSX8+Oh+JsILnGqh8pFgizAoBKEUohZSur/eMkgrjf0/QwIqqBqB6+YOwow4fYsDu
-         u6OEUdEXbBUiHZx4g5Hf7BKZcT8+loM+ooEsYedaIS8klpiOvBMf6JP/ZNVAaR5/iA
-         6gQgCp5znYU4mf9OLzEY4CYHUs8T1sbpsQP1rygA=
+        b=hkfgBwx2NXsnsmnUm9AoDGV5lyna6DX8gmbNk4ffuYBcLicja20Tonj6rtvSjojbL
+         9obZ3TwY7lUKoDOzBTIPNpee/a+Z4ALQfT5aHQ1BYKfRHeaLaW8MkYlUeQiNZzBUjV
+         jFNd0sfq9qhAu1dVxH9nKV4qsJlsyzoiqYkMK/w4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrew Murray <andrew.murray@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 141/203] jump_label: Don't warn on __exit jump entries
-Date:   Sun, 22 Sep 2019 14:42:47 -0400
-Message-Id: <20190922184350.30563-141-sashal@kernel.org>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.3 143/203] ASoC: fsl_ssi: Fix clock control issue in master mode
+Date:   Sun, 22 Sep 2019 14:42:49 -0400
+Message-Id: <20190922184350.30563-143-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -60,51 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Murray <andrew.murray@arm.com>
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-[ Upstream commit 8f35eaa5f2de020073a48ad51112237c5932cfcc ]
+[ Upstream commit 696d05225cebffd172008d212657be90e823eac0 ]
 
-On architectures that discard .exit.* sections at runtime, a
-warning is printed for each jump label that is used within an
-in-kernel __exit annotated function:
+The test case is
+arecord -Dhw:0 -d 10 -f S16_LE -r 48000 -c 2 temp.wav &
+aplay -Dhw:0 -d 30 -f S16_LE -r 48000 -c 2 test.wav
 
-can't patch jump_label at ehci_hcd_cleanup+0x8/0x3c
-WARNING: CPU: 0 PID: 1 at kernel/jump_label.c:410 __jump_label_update+0x12c/0x138
+There will be error after end of arecord:
+aplay: pcm_write:2051: write error: Input/output error
 
-As these functions will never get executed (they are free'd along
-with the rest of initmem) - we do not need to patch them and should
-not display any warnings.
+Capture and Playback work in parallel in master mode, one
+substream stops, the other substream is impacted, the
+reason is that clock is disabled wrongly.
 
-The warning is displayed because the test required to satisfy
-jump_entry_is_init is based on init_section_contains (__init_begin to
-__init_end) whereas the test in __jump_label_update is based on
-init_kernel_text (_sinittext to _einittext) via kernel_text_address).
+The clock's reference count is not increased when second
+substream starts, the hw_param() function returns in the
+beginning because first substream is enabled, then in end
+of first substream, the hw_free() disables the clock.
 
-Fixes: 19483677684b ("jump_label: Annotate entries that operate on __init code earlier")
-Signed-off-by: Andrew Murray <andrew.murray@arm.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+This patch is to move the clock enablement to the place
+before checking of the device enablement in hw_param().
+
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Link: https://lore.kernel.org/r/1567012817-12625-1-git-send-email-shengjiu.wang@nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/jump_label.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ sound/soc/fsl/fsl_ssi.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/kernel/jump_label.c b/kernel/jump_label.c
-index df3008419a1d0..cdb3ffab128b6 100644
---- a/kernel/jump_label.c
-+++ b/kernel/jump_label.c
-@@ -407,7 +407,9 @@ static bool jump_label_can_update(struct jump_entry *entry, bool init)
- 		return false;
+diff --git a/sound/soc/fsl/fsl_ssi.c b/sound/soc/fsl/fsl_ssi.c
+index fa862af25c1a3..085855f9b08d4 100644
+--- a/sound/soc/fsl/fsl_ssi.c
++++ b/sound/soc/fsl/fsl_ssi.c
+@@ -799,15 +799,6 @@ static int fsl_ssi_hw_params(struct snd_pcm_substream *substream,
+ 	u32 wl = SSI_SxCCR_WL(sample_size);
+ 	int ret;
  
- 	if (!kernel_text_address(jump_entry_code(entry))) {
--		WARN_ONCE(1, "can't patch jump_label at %pS", (void *)jump_entry_code(entry));
-+		WARN_ONCE(!jump_entry_is_init(entry),
-+			  "can't patch jump_label at %pS",
-+			  (void *)jump_entry_code(entry));
- 		return false;
+-	/*
+-	 * SSI is properly configured if it is enabled and running in
+-	 * the synchronous mode; Note that AC97 mode is an exception
+-	 * that should set separate configurations for STCCR and SRCCR
+-	 * despite running in the synchronous mode.
+-	 */
+-	if (ssi->streams && ssi->synchronous)
+-		return 0;
+-
+ 	if (fsl_ssi_is_i2s_master(ssi)) {
+ 		ret = fsl_ssi_set_bclk(substream, dai, hw_params);
+ 		if (ret)
+@@ -823,6 +814,15 @@ static int fsl_ssi_hw_params(struct snd_pcm_substream *substream,
+ 		}
  	}
  
++	/*
++	 * SSI is properly configured if it is enabled and running in
++	 * the synchronous mode; Note that AC97 mode is an exception
++	 * that should set separate configurations for STCCR and SRCCR
++	 * despite running in the synchronous mode.
++	 */
++	if (ssi->streams && ssi->synchronous)
++		return 0;
++
+ 	if (!fsl_ssi_is_ac97(ssi)) {
+ 		/*
+ 		 * Keep the ssi->i2s_net intact while having a local variable
 -- 
 2.20.1
 
