@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD91FC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:51:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85719C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B851521D7B
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:51:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60B8121D79
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:51:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178270;
-	bh=sQXkXt8R38QkmXVe1OI/saT7LbNFH+7CrxACz0uYLK4=;
+	s=default; t=1569178275;
+	bh=QfMwwp7k4LX8qa7VmAQXWyOp4djjbtF2k0Y/KYrJ/lo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SJdhyJ1Wf7xD6F9HH/bZd+gUrgEwh8miFZmJ3FEnKba+7gSZJOR2vAKTQ+B+dUyZr
-	 W9p1KkeoYaaEI08KBMYKTLUANlnr6OUrtVUeCmyF636/eS/vH868Wz3a9lKqabSouk
-	 e6KkxD+smMaxMeKC/VPljKal+36vYl1LzJ3vGWlg=
+	b=UMHNggbeSUfzlI/gQcUqNdKUAx1VP32S34qsk7B/4m/8MzRBpqL4C1ITnkhdRw94e
+	 1P+s76NIpYoEJow+R/UsltJ8TMiorZNQRYf2FLR2/a72eQhl7gcRKKP9UzGegGHhct
+	 FtOunnoiVQGf0IO2g03Br36Tr1nNz6k3SDP/gOGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729211AbfIVSvI (ORCPT
+        id S1729269AbfIVSvO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:51:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48598 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:51:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727868AbfIVSvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:51:04 -0400
+        id S1729176AbfIVSvH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:51:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADC1021D7B;
-        Sun, 22 Sep 2019 18:51:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 376B22190F;
+        Sun, 22 Sep 2019 18:51:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178263;
-        bh=sQXkXt8R38QkmXVe1OI/saT7LbNFH+7CrxACz0uYLK4=;
+        s=default; t=1569178266;
+        bh=QfMwwp7k4LX8qa7VmAQXWyOp4djjbtF2k0Y/KYrJ/lo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iFwppHk0eAI+dOMz/23J0CRP+QaLTrNTUX3gLfTUwBhH0nCLaPw+mKwkFZ/Fe/g69
-         ZH+rqCielRnxvJJlZVmGSfX94ojsMq0s4PwgQrjz8rBt4ucPkUjue6+BCGn9yEyjcA
-         T85R50DuQ4crx4YjrEw5cuODYiwCjfzCbbK8aKRo=
+        b=rLWa4xfH6ANW5T9puqIwT32Boi65BJH7BPoM17J8EJKzTIWYdlYROOZk9NtqeWOtM
+         L/yGALH24TyeOUVk0Bhm/P5exiQX6iEskY2+6tqZiK6NRiB3hLKplMzf89arCS1/BE
+         ijXHuUpnsPq/jeUBv0/Mf79TpTRx/pRRnRphUAJc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luke Mujica <lukemujica@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 051/185] perf tools: Fix paths in include statements
-Date:   Sun, 22 Sep 2019 14:47:09 -0400
-Message-Id: <20190922184924.32534-51-sashal@kernel.org>
+Cc:     Xiaofei Tan <tanxiaofei@huawei.com>,
+        James Morse <james.morse@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-efi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 053/185] efi: cper: print AER info of PCIe fatal error
+Date:   Sun, 22 Sep 2019 14:47:11 -0400
+Message-Id: <20190922184924.32534-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -63,92 +60,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luke Mujica <lukemujica@google.com>
+From: Xiaofei Tan <tanxiaofei@huawei.com>
 
-[ Upstream commit 2b75863b0845764529e01014a5c90664d8044cbe ]
+[ Upstream commit b194a77fcc4001dc40aecdd15d249648e8a436d1 ]
 
-These paths point to the wrong location but still work because they get
-picked up by a -I flag that happens to direct to the correct file. Fix
-paths to lead to the actual file location without help from include
-flags.
+AER info of PCIe fatal error is not printed in the current driver.
+Because APEI driver will panic directly for fatal error, and can't
+run to the place of printing AER info.
 
-Signed-off-by: Luke Mujica <lukemujica@google.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20190719202253.220261-1-lukemujica@google.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+An example log is as following:
+{763}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 11
+{763}[Hardware Error]: event severity: fatal
+{763}[Hardware Error]:  Error 0, type: fatal
+{763}[Hardware Error]:   section_type: PCIe error
+{763}[Hardware Error]:   port_type: 0, PCIe end point
+{763}[Hardware Error]:   version: 4.0
+{763}[Hardware Error]:   command: 0x0000, status: 0x0010
+{763}[Hardware Error]:   device_id: 0000:82:00.0
+{763}[Hardware Error]:   slot: 0
+{763}[Hardware Error]:   secondary_bus: 0x00
+{763}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x10fb
+{763}[Hardware Error]:   class_code: 000002
+Kernel panic - not syncing: Fatal hardware error!
+
+This issue was imported by the patch, '37448adfc7ce ("aerdrv: Move
+cper_print_aer() call out of interrupt context")'. To fix this issue,
+this patch adds print of AER info in cper_print_pcie() for fatal error.
+
+Here is the example log after this patch applied:
+{24}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 10
+{24}[Hardware Error]: event severity: fatal
+{24}[Hardware Error]:  Error 0, type: fatal
+{24}[Hardware Error]:   section_type: PCIe error
+{24}[Hardware Error]:   port_type: 0, PCIe end point
+{24}[Hardware Error]:   version: 4.0
+{24}[Hardware Error]:   command: 0x0546, status: 0x4010
+{24}[Hardware Error]:   device_id: 0000:01:00.0
+{24}[Hardware Error]:   slot: 0
+{24}[Hardware Error]:   secondary_bus: 0x00
+{24}[Hardware Error]:   vendor_id: 0x15b3, device_id: 0x1019
+{24}[Hardware Error]:   class_code: 000002
+{24}[Hardware Error]:   aer_uncor_status: 0x00040000, aer_uncor_mask: 0x00000000
+{24}[Hardware Error]:   aer_uncor_severity: 0x00062010
+{24}[Hardware Error]:   TLP Header: 000000c0 01010000 00000001 00000000
+Kernel panic - not syncing: Fatal hardware error!
+
+Fixes: 37448adfc7ce ("aerdrv: Move cper_print_aer() call out of interrupt context")
+Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
+Reviewed-by: James Morse <james.morse@arm.com>
+[ardb: put parens around terms of && operator]
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/arch/x86/util/kvm-stat.c | 4 ++--
- tools/perf/arch/x86/util/tsc.c      | 6 +++---
- tools/perf/ui/helpline.c            | 4 ++--
- tools/perf/ui/util.c                | 2 +-
- 4 files changed, 8 insertions(+), 8 deletions(-)
+ drivers/firmware/efi/cper.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/tools/perf/arch/x86/util/kvm-stat.c b/tools/perf/arch/x86/util/kvm-stat.c
-index 865a9762f22ef..3f84403c0983a 100644
---- a/tools/perf/arch/x86/util/kvm-stat.c
-+++ b/tools/perf/arch/x86/util/kvm-stat.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <errno.h>
--#include "../../util/kvm-stat.h"
--#include "../../util/evsel.h"
-+#include "../../../util/kvm-stat.h"
-+#include "../../../util/evsel.h"
- #include <asm/svm.h>
- #include <asm/vmx.h>
- #include <asm/kvm.h>
-diff --git a/tools/perf/arch/x86/util/tsc.c b/tools/perf/arch/x86/util/tsc.c
-index 950539f9a4f77..b1eb963b4a6e1 100644
---- a/tools/perf/arch/x86/util/tsc.c
-+++ b/tools/perf/arch/x86/util/tsc.c
-@@ -5,10 +5,10 @@
- #include <linux/stddef.h>
- #include <linux/perf_event.h>
+diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
+index 8fa977c7861f9..addf0749dd8b6 100644
+--- a/drivers/firmware/efi/cper.c
++++ b/drivers/firmware/efi/cper.c
+@@ -390,6 +390,21 @@ static void cper_print_pcie(const char *pfx, const struct cper_sec_pcie *pcie,
+ 		printk(
+ 	"%s""bridge: secondary_status: 0x%04x, control: 0x%04x\n",
+ 	pfx, pcie->bridge.secondary_status, pcie->bridge.control);
++
++	/* Fatal errors call __ghes_panic() before AER handler prints this */
++	if ((pcie->validation_bits & CPER_PCIE_VALID_AER_INFO) &&
++	    (gdata->error_severity & CPER_SEV_FATAL)) {
++		struct aer_capability_regs *aer;
++
++		aer = (struct aer_capability_regs *)pcie->aer_info;
++		printk("%saer_uncor_status: 0x%08x, aer_uncor_mask: 0x%08x\n",
++		       pfx, aer->uncor_status, aer->uncor_mask);
++		printk("%saer_uncor_severity: 0x%08x\n",
++		       pfx, aer->uncor_severity);
++		printk("%sTLP Header: %08x %08x %08x %08x\n", pfx,
++		       aer->header_log.dw0, aer->header_log.dw1,
++		       aer->header_log.dw2, aer->header_log.dw3);
++	}
+ }
  
--#include "../../perf.h"
-+#include "../../../perf.h"
- #include <linux/types.h>
--#include "../../util/debug.h"
--#include "../../util/tsc.h"
-+#include "../../../util/debug.h"
-+#include "../../../util/tsc.h"
- 
- int perf_read_tsc_conversion(const struct perf_event_mmap_page *pc,
- 			     struct perf_tsc_conversion *tc)
-diff --git a/tools/perf/ui/helpline.c b/tools/perf/ui/helpline.c
-index b3c421429ed44..54bcd08df87e3 100644
---- a/tools/perf/ui/helpline.c
-+++ b/tools/perf/ui/helpline.c
-@@ -3,10 +3,10 @@
- #include <stdlib.h>
- #include <string.h>
- 
--#include "../debug.h"
-+#include "../util/debug.h"
- #include "helpline.h"
- #include "ui.h"
--#include "../util.h"
-+#include "../util/util.h"
- 
- char ui_helpline__current[512];
- 
-diff --git a/tools/perf/ui/util.c b/tools/perf/ui/util.c
-index 63bf06e80ab9d..9ed76e88a3e4c 100644
---- a/tools/perf/ui/util.c
-+++ b/tools/perf/ui/util.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "util.h"
--#include "../debug.h"
-+#include "../util/debug.h"
- 
- 
- /*
+ static void cper_print_tstamp(const char *pfx,
 -- 
 2.20.1
 
