@@ -2,255 +2,171 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 314C9C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 12:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56CBEC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 12:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9C7C205F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 12:31:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569155505;
-	bh=zNDAKtPon8Lt8sr+LcjhwObyJUwwGU94CrJCBl5FVUs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=tMqdTA45xXGmWNf0MrLlPHPuuM6NbNK55+nsvY/xCn1KbrGOYnX25O/gZ8BO7cftP
-	 GUsVg0f0G1YzQBCqE4Lomkeekye0pTFD7uuv5SpAizzu2eGTA5yzOeSe7BuAwuuaE5
-	 RuqxxbyGNshvdvpaVxZX6ENf+RRj7+gjw4oHNrwQ=
+	by mail.kernel.org (Postfix) with ESMTP id 2859A208C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 12:37:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbfIVMbS (ORCPT
+        id S1728954AbfIVMhk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 08:31:18 -0400
-Received: from inca-roads.misterjones.org ([213.251.177.50]:43505 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728863AbfIVMbR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 08:31:17 -0400
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
-        (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iC11C-0003oU-OU; Sun, 22 Sep 2019 14:31:11 +0200
-Date:   Sun, 22 Sep 2019 13:31:08 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Justin Chen <justinpopo6@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Cernekee <cernekee@gmail.com>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        bcm-kernel-feedback-list@broadcom.com (open list:BROADCOM BMIPS MIPS
-        ARCHITECTURE),
-        linux-mips@vger.kernel.org (open list:BROADCOM BMIPS MIPS ARCHITECTURE)
-Subject: Re: [PATCH v2 1/5] irqchip/irq-bcm7038-l1: Add PM support
-Message-ID: <20190922133108.09211a17@why>
-In-Reply-To: <20190913191542.9908-2-f.fainelli@gmail.com>
-References: <20190913191542.9908-1-f.fainelli@gmail.com>
-        <20190913191542.9908-2-f.fainelli@gmail.com>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 22 Sep 2019 08:37:40 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35002 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728920AbfIVMhk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 08:37:40 -0400
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4987481F10
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Sep 2019 12:37:39 +0000 (UTC)
+Received: by mail-qt1-f200.google.com with SMTP id f15so14110380qth.6
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Sep 2019 05:37:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ZIZ6PVJwNqKV66/6V0eWwKczW/IuITxJoofGCnfWMcw=;
+        b=c77fwRyiUNrtR8+yFhC7EXaqOrYZz5Gw9FhjmAf465ElCz3M4juYhLZgexeV7osHUp
+         BVAOuInf7Qg6mFQG2WwPYXiYJofPHfZI0Dc9NzYAfnf57k3Ka86jyCMfwibCnrxPnrz6
+         OrECtmVo58DEGgd8blx7WUGR40MZDV8KF88kCxTY7sldrvmcB2bxc2TpqWFRDjHFYHgF
+         iBuMEpJKnBjCj5JFA5chKNFetIlWSx1TXmKU3msLY6i+qiG7fzVh5fVdjKt65Bq9HBnX
+         ztBUHvj5zT+O8zDS90C4QB2IazrIZC6xxzi7ZRsSeASA803GWkB8aQaynDDuEk+Zx7td
+         3e+Q==
+X-Gm-Message-State: APjAAAVHRSptOR6FsvXxYCt0LjLErAsf+LEMwhjyfinS7sszCzwdO9aU
+        v5gZT6PHZ4nD9KL9UzsHjOrE9ersPbJYc5JPtvIO09zwp6MgaKwG3n35f26pU3SSqZCryd3boOq
+        4Z5EFJ7Cg5V7bPShV/5Q+Qf/3
+X-Received: by 2002:a0c:b0cb:: with SMTP id p11mr20902506qvc.216.1569155858544;
+        Sun, 22 Sep 2019 05:37:38 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzCmU3TskOEyZFzEQEVup/JmX+POAXnjml1Z6r35N3M5NYpi2V6FhRyoe8OlTiMpNbNUDXHPA==
+X-Received: by 2002:a0c:b0cb:: with SMTP id p11mr20902486qvc.216.1569155858290;
+        Sun, 22 Sep 2019 05:37:38 -0700 (PDT)
+Received: from redhat.com (bzq-79-176-40-226.red.bezeqint.net. [79.176.40.226])
+        by smtp.gmail.com with ESMTPSA id w18sm3976903qts.44.2019.09.22.05.37.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Sep 2019 05:37:37 -0700 (PDT)
+Date:   Sun, 22 Sep 2019 08:37:30 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Matthew Cover <werekraken@gmail.com>
+Cc:     davem@davemloft.net, ast@kernel.org, daniel@iogearbox.net,
+        kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
+        jasowang@redhat.com, edumazet@google.com, sdf@google.com,
+        matthew.cover@stackpath.com, mail@timurcelik.de, pabeni@redhat.com,
+        nicolas.dichtel@6wind.com, wangli39@baidu.com,
+        lifei.shirley@bytedance.com, tglx@linutronix.de,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH net-next] tuntap: Fallback to automq on
+ TUNSETSTEERINGEBPF prog negative return
+Message-ID: <20190922080326-mutt-send-email-mst@kernel.org>
+References: <20190920185843.4096-1-matthew.cover@stackpath.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: f.fainelli@gmail.com, linux-kernel@vger.kernel.org, justinpopo6@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, cernekee@gmail.com, devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-mips@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190920185843.4096-1-matthew.cover@stackpath.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 13 Sep 2019 12:15:38 -0700
-Florian Fainelli <f.fainelli@gmail.com> wrote:
+On Fri, Sep 20, 2019 at 11:58:43AM -0700, Matthew Cover wrote:
+> Treat a negative return from a TUNSETSTEERINGEBPF bpf prog as a signal
+> to fallback to tun_automq_select_queue() for tx queue selection.
+> 
+> Compilation of this exact patch was tested.
+> 
+> For functional testing 3 additional printk()s were added.
+> 
+> Functional testing results (on 2 txq tap device):
+> 
+>   [Fri Sep 20 18:33:27 2019] ========== tun no prog ==========
+>   [Fri Sep 20 18:33:27 2019] tuntap: tun_ebpf_select_queue() returned '-1'
+>   [Fri Sep 20 18:33:27 2019] tuntap: tun_automq_select_queue() ran
+>   [Fri Sep 20 18:33:27 2019] ========== tun prog -1 ==========
+>   [Fri Sep 20 18:33:27 2019] tuntap: bpf_prog_run_clear_cb() returned '-1'
+>   [Fri Sep 20 18:33:27 2019] tuntap: tun_ebpf_select_queue() returned '-1'
+>   [Fri Sep 20 18:33:27 2019] tuntap: tun_automq_select_queue() ran
+>   [Fri Sep 20 18:33:27 2019] ========== tun prog 0 ==========
+>   [Fri Sep 20 18:33:27 2019] tuntap: bpf_prog_run_clear_cb() returned '0'
+>   [Fri Sep 20 18:33:27 2019] tuntap: tun_ebpf_select_queue() returned '0'
+>   [Fri Sep 20 18:33:27 2019] ========== tun prog 1 ==========
+>   [Fri Sep 20 18:33:27 2019] tuntap: bpf_prog_run_clear_cb() returned '1'
+>   [Fri Sep 20 18:33:27 2019] tuntap: tun_ebpf_select_queue() returned '1'
+>   [Fri Sep 20 18:33:27 2019] ========== tun prog 2 ==========
+>   [Fri Sep 20 18:33:27 2019] tuntap: bpf_prog_run_clear_cb() returned '2'
+>   [Fri Sep 20 18:33:27 2019] tuntap: tun_ebpf_select_queue() returned '0'
+> 
+> Signed-off-by: Matthew Cover <matthew.cover@stackpath.com>
 
-> From: Justin Chen <justinpopo6@gmail.com>
-> 
-> The current l1 controller does not mask any interrupts when dropping
-> into suspend. This mean we can receive unexpected wake up sources.
-> Modified MIPS l1 controller to mask the all non-wake interrupts before
-> dropping into suspend.
-> 
-> Signed-off-by: Justin Chen <justinpopo6@gmail.com>
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+
+Could you add a bit more motivation data here?
+1. why is this a good idea
+2. how do we know existing userspace does not rely on existing behaviour
+3. why doesn't userspace need a way to figure out whether it runs on a kernel with and
+   without this patch
+
+
+thanks,
+MST
+
 > ---
->  drivers/irqchip/irq-bcm7038-l1.c | 98 ++++++++++++++++++++++++++++++++
->  1 file changed, 98 insertions(+)
+>  drivers/net/tun.c | 20 +++++++++++---------
+>  1 file changed, 11 insertions(+), 9 deletions(-)
 > 
-> diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
-> index fc75c61233aa..f5e4ff5251ab 100644
-> --- a/drivers/irqchip/irq-bcm7038-l1.c
-> +++ b/drivers/irqchip/irq-bcm7038-l1.c
-> @@ -27,6 +27,7 @@
->  #include <linux/types.h>
->  #include <linux/irqchip.h>
->  #include <linux/irqchip/chained_irq.h>
-> +#include <linux/syscore_ops.h>
->  
->  #define IRQS_PER_WORD		32
->  #define REG_BYTES_PER_IRQ_WORD	(sizeof(u32) * 4)
-> @@ -39,6 +40,10 @@ struct bcm7038_l1_chip {
->  	unsigned int		n_words;
->  	struct irq_domain	*domain;
->  	struct bcm7038_l1_cpu	*cpus[NR_CPUS];
-> +#ifdef CONFIG_PM_SLEEP
-> +	struct list_head	list;
-> +	u32			wake_mask[MAX_WORDS];
-> +#endif
->  	u8			affinity[MAX_WORDS * IRQS_PER_WORD];
->  };
->  
-> @@ -47,6 +52,17 @@ struct bcm7038_l1_cpu {
->  	u32			mask_cache[0];
->  };
->  
-> +/*
-> + * We keep a list of bcm7038_l1_chip used for suspend/resume. This hack is
-> + * used because the struct chip_type suspend/resume hooks are not called
-> + * unless chip_type is hooked onto a generic_chip. Since this driver does
-> + * not use generic_chip, we need to manually hook our resume/suspend to
-> + * syscore_ops.
-> + */
-> +#ifdef CONFIG_PM_SLEEP
-> +static LIST_HEAD(bcm7038_l1_intcs_list);
-> +#endif
-
-nit: this could be moved down to be close to the rest of the PM_SLEEP
-ifdefery.
-
-> +
->  /*
->   * STATUS/MASK_STATUS/MASK_SET/MASK_CLEAR are packed one right after another:
->   *
-> @@ -287,6 +303,77 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
->  	return 0;
+> diff --git a/drivers/net/tun.c b/drivers/net/tun.c
+> index aab0be4..173d159 100644
+> --- a/drivers/net/tun.c
+> +++ b/drivers/net/tun.c
+> @@ -583,35 +583,37 @@ static u16 tun_automq_select_queue(struct tun_struct *tun, struct sk_buff *skb)
+>  	return txq;
 >  }
 >  
-> +#ifdef CONFIG_PM_SLEEP
-> +static int bcm7038_l1_suspend(void)
-> +{
-> +	struct bcm7038_l1_chip *intc;
-> +	unsigned long flags;
-> +	int boot_cpu, word;
-> +
-> +	/* Wakeup interrupt should only come from the boot cpu */
-> +	boot_cpu = cpu_logical_map(smp_processor_id());
-
-What guarantees that you're actually running on the boot CPU at this
-point? If that's actually the case, why isn't cpu_logical_map(0) enough?
-
-> +
-> +	list_for_each_entry(intc, &bcm7038_l1_intcs_list, list) {
-> +		raw_spin_lock_irqsave(&intc->lock, flags);
-
-And if this can only run on a single CPU, what's the purpose of this
-lock?
-
-> +		for (word = 0; word < intc->n_words; word++) {
-> +			l1_writel(~intc->wake_mask[word],
-> +				intc->cpus[boot_cpu]->map_base +
-> +				reg_mask_set(intc, word));
-> +			l1_writel(intc->wake_mask[word],
-> +				intc->cpus[boot_cpu]->map_base +
-> +				reg_mask_clr(intc, word));
-
-nit: Please don't split the write address across two lines, it makes it
-harder to read.
-
-> +		}
-> +		raw_spin_unlock_irqrestore(&intc->lock, flags);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void bcm7038_l1_resume(void)
-> +{
-> +	struct bcm7038_l1_chip *intc;
-> +	unsigned long flags;
-> +	int boot_cpu, word;
-> +
-> +	boot_cpu = cpu_logical_map(smp_processor_id());
-> +
-> +	list_for_each_entry(intc, &bcm7038_l1_intcs_list, list) {
-> +		raw_spin_lock_irqsave(&intc->lock, flags);
-> +		for (word = 0; word < intc->n_words; word++) {
-> +			l1_writel(intc->cpus[boot_cpu]->mask_cache[word],
-> +				intc->cpus[boot_cpu]->map_base +
-> +				reg_mask_set(intc, word));
-> +			l1_writel(~intc->cpus[boot_cpu]->mask_cache[word],
-> +				intc->cpus[boot_cpu]->map_base +
-> +				reg_mask_clr(intc, word));
-> +		}
-> +		raw_spin_unlock_irqrestore(&intc->lock, flags);
-> +	}
-> +}
-> +
-> +static struct syscore_ops bcm7038_l1_syscore_ops = {
-> +	.suspend	= bcm7038_l1_suspend,
-> +	.resume		= bcm7038_l1_resume,
-> +};
-> +
-> +static int bcm7038_l1_set_wake(struct irq_data *d, unsigned int on)
-> +{
-> +	struct bcm7038_l1_chip *intc = irq_data_get_irq_chip_data(d);
-> +	unsigned long flags;
-> +	u32 word = d->hwirq / IRQS_PER_WORD;
-> +	u32 mask = BIT(d->hwirq % IRQS_PER_WORD);
-> +
-> +	raw_spin_lock_irqsave(&intc->lock, flags);
-> +	if (on)
-> +		intc->wake_mask[word] |= mask;
-> +	else
-> +		intc->wake_mask[word] &= ~mask;
-> +	raw_spin_unlock_irqrestore(&intc->lock, flags);
-> +
-> +	return 0;
-> +}
-> +#endif
-> +
->  static struct irq_chip bcm7038_l1_irq_chip = {
->  	.name			= "bcm7038-l1",
->  	.irq_mask		= bcm7038_l1_mask,
-> @@ -295,6 +382,9 @@ static struct irq_chip bcm7038_l1_irq_chip = {
->  #ifdef CONFIG_SMP
->  	.irq_cpu_offline	= bcm7038_l1_cpu_offline,
->  #endif
-> +#ifdef CONFIG_PM_SLEEP
-> +	.irq_set_wake		= bcm7038_l1_set_wake,
-> +#endif
->  };
+> -static u16 tun_ebpf_select_queue(struct tun_struct *tun, struct sk_buff *skb)
+> +static int tun_ebpf_select_queue(struct tun_struct *tun, struct sk_buff *skb)
+>  {
+>  	struct tun_prog *prog;
+>  	u32 numqueues;
+> -	u16 ret = 0;
+> +	int ret = -1;
 >  
->  static int bcm7038_l1_map(struct irq_domain *d, unsigned int virq,
-> @@ -340,6 +430,14 @@ int __init bcm7038_l1_of_init(struct device_node *dn,
->  		goto out_unmap;
->  	}
+>  	numqueues = READ_ONCE(tun->numqueues);
+>  	if (!numqueues)
+>  		return 0;
 >  
-> +#ifdef CONFIG_PM_SLEEP
-> +	/* Add bcm7038_l1_chip into a list */
-> +	INIT_LIST_HEAD(&intc->list);
-> +	list_add_tail(&intc->list, &bcm7038_l1_intcs_list);
-
-No locking to manipulate this list? Is that safe?
-
-> +
-> +	register_syscore_ops(&bcm7038_l1_syscore_ops);
-
-Do you really register the syscore_ops for each and every L1 irqchip?
-
-> +#endif
-> +
->  	pr_info("registered BCM7038 L1 intc (%pOF, IRQs: %d)\n",
->  		dn, IRQS_PER_WORD * intc->n_words);
+> +	rcu_read_lock();
+>  	prog = rcu_dereference(tun->steering_prog);
+>  	if (prog)
+>  		ret = bpf_prog_run_clear_cb(prog->prog, skb);
+> +	rcu_read_unlock();
 >  
-
-Thanks,
-
-	M.
--- 
-Without deviation from the norm, progress is not possible.
+> -	return ret % numqueues;
+> +	if (ret >= 0)
+> +		ret %= numqueues;
+> +
+> +	return ret;
+>  }
+>  
+>  static u16 tun_select_queue(struct net_device *dev, struct sk_buff *skb,
+>  			    struct net_device *sb_dev)
+>  {
+>  	struct tun_struct *tun = netdev_priv(dev);
+> -	u16 ret;
+> +	int ret;
+>  
+> -	rcu_read_lock();
+> -	if (rcu_dereference(tun->steering_prog))
+> -		ret = tun_ebpf_select_queue(tun, skb);
+> -	else
+> +	ret = tun_ebpf_select_queue(tun, skb);
+> +	if (ret < 0)
+>  		ret = tun_automq_select_queue(tun, skb);
+> -	rcu_read_unlock();
+>  
+>  	return ret;
+>  }
+> -- 
+> 1.8.3.1
