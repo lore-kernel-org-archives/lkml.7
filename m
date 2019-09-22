@@ -4,52 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B58AAC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:11:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9345DC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D61A206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:11:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A20820882
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:11:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179481;
-	bh=++ww0M8FldhONH/sKfUkcOspcDTMgTrhuVQH5MzsDWA=;
+	s=default; t=1569179485;
+	bh=x3CIsCXcVinP9qVLbt8vSkv0DvTQeBfbKhDw/hdnX+M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UCOoRBFyIBw6IuY54MpUyCcKghzXvU2deKghuyMIqoTHe56Qswxk9pP4cPvNFaZUY
-	 RYEn69spUkdmRd93t9ifgej3OBluK6jjXTJf4mFOIxC8zCqIecYQHPUIQomYrgkUmT
-	 bB96rqwMeGIx/roM6ospRipzf6asyuTNL01Uk7hE=
+	b=nHuz/2szgJ/fQscrYw5yiI079q1cN0OBBmdBR2CA8uZlEQqTkMB7M9m66j4JtHbSe
+	 fXhFjtV2Fz+8vPVM/dgzIDd7UIGWmJSFu4WPACvouTxgl9hodUQz0nvqkNppPY0S6W
+	 FVQ6es+uG7Ru0hI8CzMVTTef5MPypZWP2lEbQw2w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408259AbfIVS6c (ORCPT
+        id S1730584AbfIVTLY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:58:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33066 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:11:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438787AbfIVS62 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:58:28 -0400
+        id S2408241AbfIVS6a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:58:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7842721479;
-        Sun, 22 Sep 2019 18:58:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9331021D7F;
+        Sun, 22 Sep 2019 18:58:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178707;
-        bh=++ww0M8FldhONH/sKfUkcOspcDTMgTrhuVQH5MzsDWA=;
+        s=default; t=1569178709;
+        bh=x3CIsCXcVinP9qVLbt8vSkv0DvTQeBfbKhDw/hdnX+M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SeEdSE7vhDJmDe8YTjCU2OISgdA3zbMWAnhunvLn6Pa9Vn8p9LfJaiQ8dqlo2BXgk
-         ENx6iggTYc+typBeEOIwoapl/z0R86MqrpFB0ZsuVcy0+rbZO8w6crdFhtBSxnF9qz
-         USnEeMWbwZdDl6zCseRITbur0QcgvF6Mm0JI+YgY=
+        b=kbsGXuUtUHSQQgXDHPr/bVXpFZHrV4Vdl9D5Mx3uING/JIYePQBLs6fud+IWxAjS9
+         VyU+c3hr0P9EeA0vOrf3OaPgF7UlQPYlxaYuN97tsE6Y0vnI5R/RZirw5qJhPijhAk
+         0i+XP7Tvgte2y/nUP2z5AWmTG+bTxaLVa0NLebws=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, kbuild test robot <lkp@intel.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 43/89] net: lpc-enet: fix printk format strings
-Date:   Sun, 22 Sep 2019 14:56:31 -0400
-Message-Id: <20190922185717.3412-43-sashal@kernel.org>
+Cc:     =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>,
+        Ilya Ledvich <ilya@compulab.co.il>,
+        Igor Grinberg <grinberg@compulab.co.il>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 44/89] ARM: dts: imx7d: cl-som-imx7: make ethernet work again
+Date:   Sun, 22 Sep 2019 14:56:32 -0400
+Message-Id: <20190922185717.3412-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185717.3412-1-sashal@kernel.org>
 References: <20190922185717.3412-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -58,62 +69,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: André Draszik <git@andred.net>
 
-[ Upstream commit de6f97b2bace0e2eb6c3a86e124d1e652a587b56 ]
+[ Upstream commit 9846a4524ac90b63496580b7ad50674b40d92a8f ]
 
-compile-testing this driver on other architectures showed
-multiple warnings:
+Recent changes to the atheros at803x driver caused
+ethernet to stop working on this board.
+In particular commit 6d4cd041f0af
+("net: phy: at803x: disable delay only for RGMII mode")
+and commit cd28d1d6e52e
+("net: phy: at803x: Disable phy delay for RGMII mode")
+fix the AR8031 driver to configure the phy's (RX/TX)
+delays as per the 'phy-mode' in the device tree.
 
-  drivers/net/ethernet/nxp/lpc_eth.c: In function 'lpc_eth_drv_probe':
-  drivers/net/ethernet/nxp/lpc_eth.c:1337:19: warning: format '%d' expects argument of type 'int', but argument 4 has type 'resource_size_t {aka long long unsigned int}' [-Wformat=]
+This now prevents ethernet from working on this board.
 
-  drivers/net/ethernet/nxp/lpc_eth.c:1342:19: warning: format '%x' expects argument of type 'unsigned int', but argument 4 has type 'dma_addr_t {aka long long unsigned int}' [-Wformat=]
+It used to work before those commits, because the
+AR8031 comes out of reset with RX delay enabled, and
+the at803x driver didn't touch the delay configuration
+at all when "rgmii" mode was selected, and because
+arch/arm/mach-imx/mach-imx7d.c:ar8031_phy_fixup()
+unconditionally enables TX delay.
 
-Use format strings that work on all architectures.
+Since above commits ar8031_phy_fixup() also has no
+effect anymore, and the end-result is that all delays
+are disabled in the phy, no ethernet.
 
-Link: https://lore.kernel.org/r/20190809144043.476786-10-arnd@arndb.de
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Update the device tree to restore functionality.
+
+Signed-off-by: André Draszik <git@andred.net>
+CC: Ilya Ledvich <ilya@compulab.co.il>
+CC: Igor Grinberg <grinberg@compulab.co.il>
+CC: Rob Herring <robh+dt@kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>
+CC: Shawn Guo <shawnguo@kernel.org>
+CC: Sascha Hauer <s.hauer@pengutronix.de>
+CC: Pengutronix Kernel Team <kernel@pengutronix.de>
+CC: Fabio Estevam <festevam@gmail.com>
+CC: NXP Linux Team <linux-imx@nxp.com>
+CC: devicetree@vger.kernel.org
+CC: linux-arm-kernel@lists.infradead.org
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/nxp/lpc_eth.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/nxp/lpc_eth.c b/drivers/net/ethernet/nxp/lpc_eth.c
-index 08381ef8bdb48..41d30f55c946b 100644
---- a/drivers/net/ethernet/nxp/lpc_eth.c
-+++ b/drivers/net/ethernet/nxp/lpc_eth.c
-@@ -1371,13 +1371,14 @@ static int lpc_eth_drv_probe(struct platform_device *pdev)
- 	pldat->dma_buff_base_p = dma_handle;
- 
- 	netdev_dbg(ndev, "IO address space     :%pR\n", res);
--	netdev_dbg(ndev, "IO address size      :%d\n", resource_size(res));
-+	netdev_dbg(ndev, "IO address size      :%zd\n",
-+			(size_t)resource_size(res));
- 	netdev_dbg(ndev, "IO address (mapped)  :0x%p\n",
- 			pldat->net_base);
- 	netdev_dbg(ndev, "IRQ number           :%d\n", ndev->irq);
--	netdev_dbg(ndev, "DMA buffer size      :%d\n", pldat->dma_buff_size);
--	netdev_dbg(ndev, "DMA buffer P address :0x%08x\n",
--			pldat->dma_buff_base_p);
-+	netdev_dbg(ndev, "DMA buffer size      :%zd\n", pldat->dma_buff_size);
-+	netdev_dbg(ndev, "DMA buffer P address :%pad\n",
-+			&pldat->dma_buff_base_p);
- 	netdev_dbg(ndev, "DMA buffer V address :0x%p\n",
- 			pldat->dma_buff_base_v);
- 
-@@ -1424,8 +1425,8 @@ static int lpc_eth_drv_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_out_unregister_netdev;
- 
--	netdev_info(ndev, "LPC mac at 0x%08x irq %d\n",
--	       res->start, ndev->irq);
-+	netdev_info(ndev, "LPC mac at 0x%08lx irq %d\n",
-+	       (unsigned long)res->start, ndev->irq);
- 
- 	phydev = ndev->phydev;
- 
+diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
+index 3cc1fb9ce4418..60a28281d3d16 100644
+--- a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
++++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
+@@ -43,7 +43,7 @@
+ 			  <&clks IMX7D_ENET1_TIME_ROOT_CLK>;
+ 	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
+ 	assigned-clock-rates = <0>, <100000000>;
+-	phy-mode = "rgmii";
++	phy-mode = "rgmii-id";
+ 	phy-handle = <&ethphy0>;
+ 	fsl,magic-packet;
+ 	status = "okay";
+@@ -69,7 +69,7 @@
+ 			  <&clks IMX7D_ENET2_TIME_ROOT_CLK>;
+ 	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
+ 	assigned-clock-rates = <0>, <100000000>;
+-	phy-mode = "rgmii";
++	phy-mode = "rgmii-id";
+ 	phy-handle = <&ethphy1>;
+ 	fsl,magic-packet;
+ 	status = "okay";
 -- 
 2.20.1
 
