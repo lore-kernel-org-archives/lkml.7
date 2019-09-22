@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E350C4740C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 484C6C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FE50206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:03:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16CB52070C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:03:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179010;
-	bh=22NbU2ULCWVXqeZj+g5k5KVDG+WB3nR9I3dWlexGVM0=;
+	s=default; t=1569179013;
+	bh=Hqe7t7JdnTuFCKufE3feuDa7ql1gu7k9tS6OpgdrodE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hX2n9KaWvMRkmuRgwNu5efhIjWT8jy6iURcoVnwk659+3TdYYzo+uPaTd/E/6qOIJ
-	 q8j2sCRWo0chwx/h+ttYZkPqDlWP55K7jnoBXOpGvKosbrYYjG4NI3ricAuiWNRSEt
-	 RJd5hYe2NKuRk6RnFl8U4gjr3LseJBsPjJEvYjLs=
+	b=pKQLDjDXlDXFQGbOU0YbmcXNtabYWwK/aYycRJ9cJ4CM0RVw3s9m4wOeLxZFuOFfu
+	 Uet5QuwRs4ABXFBOxoVzYodNkoE7MbrVhddN4RlmjD8BZ9BxI4lJwJytTOI29zrJF6
+	 lr9GKzWVwXklpl4v9+Gn1SpWK7HG21R4jre2pbqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395320AbfIVTBy (ORCPT
+        id S2395021AbfIVTDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:01:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38040 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:03:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2439036AbfIVTBp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 15:01:45 -0400
+        id S2395338AbfIVTBz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 15:01:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9847214AF;
-        Sun, 22 Sep 2019 19:01:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA438206C2;
+        Sun, 22 Sep 2019 19:01:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178905;
-        bh=22NbU2ULCWVXqeZj+g5k5KVDG+WB3nR9I3dWlexGVM0=;
+        s=default; t=1569178915;
+        bh=Hqe7t7JdnTuFCKufE3feuDa7ql1gu7k9tS6OpgdrodE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qu2Q5S/isS3RX/swXVWK5S2Bc2U4zXx/pV4JIPR+S2RfEPsYF/pliiG1REK5nXPs6
-         T4pYYiXZmmxrdiCUGhqljcgo1Jm0sTwhEv99QJVVL2WL/TuKVphLwAEuezqDRKDCYQ
-         GMZtBdSfopIydKmfNtij77QxH6Gi++JNDNgIrb+E=
+        b=nE2rW1Fei+EWfMYO3rA8iBBJD12Oaf2X0lO97cJaqQsmeB+vgck+6NDEJEc4aTOqc
+         b1wHlLWe1zv+WGt34lc//bsHgm7NYmM23Nk/V9PlH5lRpJEH2kz7nFjCCei8TgVcjE
+         uOeRPd00tLTv0Z+1vyyJOwgGPnmALxRgLwNbYRpA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 26/44] media: saa7146: add cleanup in hexium_attach()
-Date:   Sun, 22 Sep 2019 15:00:44 -0400
-Message-Id: <20190922190103.4906-26-sashal@kernel.org>
+Cc:     Wang Shenran <shenran268@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 33/44] hwmon: (acpi_power_meter) Change log level for 'unsafe software power cap'
+Date:   Sun, 22 Sep 2019 15:00:51 -0400
+Message-Id: <20190922190103.4906-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922190103.4906-1-sashal@kernel.org>
 References: <20190922190103.4906-1-sashal@kernel.org>
@@ -60,35 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Wang Shenran <shenran268@gmail.com>
 
-[ Upstream commit 42e64117d3b4a759013f77bbcf25ab6700e55de7 ]
+[ Upstream commit 6e4d91aa071810deac2cd052161aefb376ecf04e ]
 
-If saa7146_register_device() fails, no cleanup is executed, leading to
-memory/resource leaks. To fix this issue, perform necessary cleanup work
-before returning the error.
+At boot time, the acpi_power_meter driver logs the following error level
+message: "Ignoring unsafe software power cap". Having read about it from
+a few sources, it seems that the error message can be quite misleading.
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+While the message can imply that Linux is ignoring the fact that the
+system is operating in potentially dangerous conditions, the truth is
+the driver found an ACPI_PMC object that supports software power
+capping. The driver simply decides not to use it, perhaps because it
+doesn't support the object.
+
+The best solution is probably changing the log level from error to warning.
+All sources I have found, regarding the error, have downplayed its
+significance. There is not much of a reason for it to be on error level,
+while causing potential confusions or misinterpretations.
+
+Signed-off-by: Wang Shenran <shenran268@gmail.com>
+Link: https://lore.kernel.org/r/20190724080110.6952-1-shenran268@gmail.com
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/pci/saa7146/hexium_gemini.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/hwmon/acpi_power_meter.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/pci/saa7146/hexium_gemini.c b/drivers/media/pci/saa7146/hexium_gemini.c
-index d4b3ce8282856..343cd75fcd8d1 100644
---- a/drivers/media/pci/saa7146/hexium_gemini.c
-+++ b/drivers/media/pci/saa7146/hexium_gemini.c
-@@ -304,6 +304,9 @@ static int hexium_attach(struct saa7146_dev *dev, struct saa7146_pci_extension_d
- 	ret = saa7146_register_device(&hexium->video_dev, dev, "hexium gemini", VFL_TYPE_GRABBER);
- 	if (ret < 0) {
- 		pr_err("cannot register capture v4l2 device. skipping.\n");
-+		saa7146_vv_release(dev);
-+		i2c_del_adapter(&hexium->i2c_adapter);
-+		kfree(hexium);
- 		return ret;
- 	}
+diff --git a/drivers/hwmon/acpi_power_meter.c b/drivers/hwmon/acpi_power_meter.c
+index 579bdf93be433..e27f7e12c05bb 100644
+--- a/drivers/hwmon/acpi_power_meter.c
++++ b/drivers/hwmon/acpi_power_meter.c
+@@ -693,8 +693,8 @@ static int setup_attrs(struct acpi_power_meter_resource *resource)
+ 
+ 	if (resource->caps.flags & POWER_METER_CAN_CAP) {
+ 		if (!can_cap_in_hardware()) {
+-			dev_err(&resource->acpi_dev->dev,
+-				"Ignoring unsafe software power cap!\n");
++			dev_warn(&resource->acpi_dev->dev,
++				 "Ignoring unsafe software power cap!\n");
+ 			goto skip_unsafe_cap;
+ 		}
  
 -- 
 2.20.1
