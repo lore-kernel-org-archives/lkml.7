@@ -4,48 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DAEFC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5348FC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D65B220882
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:22:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AF0120869
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:22:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180163;
-	bh=PO6/JpMM8870A6I/uwuOSfPrmhKU+aElITomc83RwyQ=;
+	s=default; t=1569180167;
+	bh=gDoMJ/kb/DKmiZLAj1iPf+wvICmVlOUmxNJiEv9/iT8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dm38XIFJSPhWK+yG+8g8/cbDz5F4tLfk/FBgzmkrlYps76vFoCrAePXx9LNGALav5
-	 C4SWC3GqSotmwerWYbi7itzLgznjp4XlfsfobhaS80C8XvugTFL60oW7gWJfNBEgVo
-	 K+tME9BW0hnK0Si/eIlUgnGgh+w790QJkqbFxolY=
+	b=yThqGQ0gB3vERSd0vys8wZCx/IZiyHxTK5X6iY+dmZWzGQl0oJwFiZxKfTYAZZ0yg
+	 nUoaWMdH+7ViISHOh/T412M5Pu3VCdSQkpgS9Hum8+VFf4OSGCEQ8aDxKagGxvXdmC
+	 kTI2pAxVsuCF1yqrFW0LNViFj1yH2Y2gSWVoJsb0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731187AbfIVTWl (ORCPT
+        id S2394371AbfIVSxl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:22:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53752 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:53:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392719AbfIVSxn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:53:43 -0400
+        id S2390552AbfIVSxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:53:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36C7E21E6F;
-        Sun, 22 Sep 2019 18:53:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 180D421D6C;
+        Sun, 22 Sep 2019 18:53:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178422;
-        bh=PO6/JpMM8870A6I/uwuOSfPrmhKU+aElITomc83RwyQ=;
+        s=default; t=1569178394;
+        bh=gDoMJ/kb/DKmiZLAj1iPf+wvICmVlOUmxNJiEv9/iT8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E44EBEOHy2JfECF+sGqZkVypqFKbMGXljdpfmzN/zMM+WVsbpbDadbBjmZLQviHW3
-         61BK5K/flzmx425t3x2MVNQeyWYlaCOFosknFYe5JPq8hK3kjvK8tJ/Tfr9mBYV5cm
-         DmfNKnBgAX5gzHSyoIRg8fOQUXJaXvmUpzWWZJZ4=
+        b=CHQRw9m8gH9Hig9NhIZCmiyD58uffScUIC6qXcOsgkOIWoYpBXDM2X5lNSajEXizd
+         oLk+N+sClfUq7RVNk5SpXp8C00L6saZrXaalBGXdNxK1YenBXLi3UJdyd97uuO/Xan
+         jcCxUcj0g49LHLlySUf+t70/OSrhTDTauxirCVWY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jackie Liu <liuyun01@kylinos.cn>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 160/185] io_uring: fix wrong sequence setting logic
-Date:   Sun, 22 Sep 2019 14:48:58 -0400
-Message-Id: <20190922184924.32534-160-sashal@kernel.org>
+Cc:     Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        Patrick McLean <chutzpah@gentoo.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 139/185] libtraceevent: Change users plugin directory
+Date:   Sun, 22 Sep 2019 14:48:37 -0400
+Message-Id: <20190922184924.32534-139-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -58,52 +65,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jackie Liu <liuyun01@kylinos.cn>
+From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 
-[ Upstream commit 8776f3fa15a5cd213c4dfab7ddaf557983374ea6 ]
+[ Upstream commit e97fd1383cd77c467d2aed7fa4e596789df83977 ]
 
-Sqo_thread will get sqring in batches, which will cause
-ctx->cached_sq_head to be added in batches. if one of these
-sqes is set with the DRAIN flag, then he will never get a
-chance to process, and finally sqo_thread will not exit.
+To be compliant with XDG user directory layout, the user's plugin
+directory is changed from ~/.traceevent/plugins to
+~/.local/lib/traceevent/plugins/
 
-Fixes: de0617e4671 ("io_uring: add support for marking commands as draining")
-Signed-off-by: Jackie Liu <liuyun01@kylinos.cn>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Suggested-by: Patrick McLean <chutzpah@gentoo.org>
+Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Patrick McLean <chutzpah@gentoo.org>
+Cc: linux-trace-devel@vger.kernel.org
+Link: https://lore.kernel.org/linux-trace-devel/20190313144206.41e75cf8@patrickm/
+Link: http://lore.kernel.org/linux-trace-devel/20190801074959.22023-4-tz.stoyanov@gmail.com
+Link: http://lore.kernel.org/lkml/20190805204355.344622683@goodmis.org
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/io_uring.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/lib/traceevent/Makefile       | 6 +++---
+ tools/lib/traceevent/event-plugin.c | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 03cd8f5bba850..701936f2bde39 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -288,6 +288,7 @@ struct io_ring_ctx {
- struct sqe_submit {
- 	const struct io_uring_sqe	*sqe;
- 	unsigned short			index;
-+	u32				sequence;
- 	bool				has_user;
- 	bool				needs_lock;
- 	bool				needs_fixed_file;
-@@ -1894,7 +1895,7 @@ static int io_req_set_file(struct io_ring_ctx *ctx, const struct sqe_submit *s,
+diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
+index 3292c290654f6..86ce17a1f7fb6 100644
+--- a/tools/lib/traceevent/Makefile
++++ b/tools/lib/traceevent/Makefile
+@@ -62,15 +62,15 @@ set_plugin_dir := 1
  
- 	if (flags & IOSQE_IO_DRAIN) {
- 		req->flags |= REQ_F_IO_DRAIN;
--		req->sequence = ctx->cached_sq_head - 1;
-+		req->sequence = s->sequence;
- 	}
+ # Set plugin_dir to preffered global plugin location
+ # If we install under $HOME directory we go under
+-# $(HOME)/.traceevent/plugins
++# $(HOME)/.local/lib/traceevent/plugins
+ #
+ # We dont set PLUGIN_DIR in case we install under $HOME
+ # directory, because by default the code looks under:
+-# $(HOME)/.traceevent/plugins by default.
++# $(HOME)/.local/lib/traceevent/plugins by default.
+ #
+ ifeq ($(plugin_dir),)
+ ifeq ($(prefix),$(HOME))
+-override plugin_dir = $(HOME)/.traceevent/plugins
++override plugin_dir = $(HOME)/.local/lib/traceevent/plugins
+ set_plugin_dir := 0
+ else
+ override plugin_dir = $(libdir)/traceevent/plugins
+diff --git a/tools/lib/traceevent/event-plugin.c b/tools/lib/traceevent/event-plugin.c
+index 8ca28de9337a5..e1f7ddd5a6cf0 100644
+--- a/tools/lib/traceevent/event-plugin.c
++++ b/tools/lib/traceevent/event-plugin.c
+@@ -18,7 +18,7 @@
+ #include "event-utils.h"
+ #include "trace-seq.h"
  
- 	if (!io_op_needs_file(s->sqe))
-@@ -2050,6 +2051,7 @@ static bool io_get_sqring(struct io_ring_ctx *ctx, struct sqe_submit *s)
- 	if (head < ctx->sq_entries) {
- 		s->index = head;
- 		s->sqe = &ctx->sq_sqes[head];
-+		s->sequence = ctx->cached_sq_head;
- 		ctx->cached_sq_head++;
- 		return true;
- 	}
+-#define LOCAL_PLUGIN_DIR ".traceevent/plugins"
++#define LOCAL_PLUGIN_DIR ".local/lib/traceevent/plugins/"
+ 
+ static struct registered_plugin_options {
+ 	struct registered_plugin_options	*next;
 -- 
 2.20.1
 
