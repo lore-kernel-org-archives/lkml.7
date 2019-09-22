@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B18F7C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7071DC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8549420673
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:21:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 492F920673
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:21:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180073;
-	bh=3QEuHgZ2Axi0TM9464gbP86SLlv2W824zU50pvrmm+A=;
+	s=default; t=1569180076;
+	bh=leYeD/s84fzCzJiLxlqZC7v0m9tHRmhR+GFQopj0SIY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZQ3DYpzJI8Nbfn3bEBFbOSJPbNGkxL+NQTdyuXVrwEbw8WaxTk1cZ9a3lmmAvFx+g
-	 C12CqlTE8m4S/VagfJaPXT7hdDhr/yBdhRhlkwLmmrZkhlVvi4/D1Ul9SbdiOMEQD/
-	 8vxo3DdNkRYBEDnEBsjxRFlhPfQzE96pt6dRetFw=
+	b=J2HEYKP2T7qVyGr8MbRoaf5dpJhDogzzeXmUL9YvMiycgKkX/feNglrbBMiWs+8Uv
+	 kjzrn9IBmM1AOjhwNXiNJGPcNZ5bqwAf/RqD+ZuRaei+rJIu9vFptunwwbIkQlOTFY
+	 Mm4EbNFTY146jH9wKtYlrUC49Gmnnoh+a9Xr3I5Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbfIVTVM (ORCPT
+        id S2404038AbfIVSyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:21:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54686 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:54:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404280AbfIVSyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:54:15 -0400
+        id S2394397AbfIVSxq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:53:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD94821BE5;
-        Sun, 22 Sep 2019 18:54:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1060208C2;
+        Sun, 22 Sep 2019 18:53:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178453;
-        bh=3QEuHgZ2Axi0TM9464gbP86SLlv2W824zU50pvrmm+A=;
+        s=default; t=1569178425;
+        bh=leYeD/s84fzCzJiLxlqZC7v0m9tHRmhR+GFQopj0SIY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h5eglXp4A2GuKf0Mk/UeV9broeHCpGDYdDQmKt+X8nBFsYobYALdx0uQyQ3PAMoQ4
-         mK0p+4Hb2E5tMHMMQ7lX9aHDv98bBXjEIlyib7+WMyEjgrq13ccxLrp58BtRdG3ifR
-         kCEoMOHd8BnN8g71GKudB7nkiTfmLYFq8UZtEbNE=
+        b=mjOSn/2RWN9NQ5WWtbSNZYq+ukrMtxRC4aHm5TUYLljQsTEXO6Kl5DKLulmsjr5RQ
+         u4KF1gox1saNclTWYgRCc7+pC2xowjtB1rSJHPu+0Wbt63k8zNx7Rp1k1zkF3v5Ju6
+         /VcTRd6R6qPzAbG1wHsy/7nunHi9orOaBv8YpTGA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qu Wenruo <wqu@suse.com>, Nikolay Borisov <nborisov@suse.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 184/185] btrfs: Detect unbalanced tree with empty leaf before crashing btree operations
-Date:   Sun, 22 Sep 2019 14:49:22 -0400
-Message-Id: <20190922184924.32534-184-sashal@kernel.org>
+Cc:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 162/185] raid5: don't set STRIPE_HANDLE to stripe which is in batch list
+Date:   Sun, 22 Sep 2019 14:49:00 -0400
+Message-Id: <20190922184924.32534-162-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -59,128 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 
-[ Upstream commit 62fdaa52a3d00a875da771719b6dc537ca79fce1 ]
+[ Upstream commit 6ce220dd2f8ea71d6afc29b9a7524c12e39f374a ]
 
-[BUG]
-With crafted image, btrfs will panic at btree operations:
+If stripe in batch list is set with STRIPE_HANDLE flag, then the stripe
+could be set with STRIPE_ACTIVE by the handle_stripe function. And if
+error happens to the batch_head at the same time, break_stripe_batch_list
+is called, then below warning could happen (the same report in [1]), it
+means a member of batch list was set with STRIPE_ACTIVE.
 
-  kernel BUG at fs/btrfs/ctree.c:3894!
-  invalid opcode: 0000 [#1] SMP PTI
-  CPU: 0 PID: 1138 Comm: btrfs-transacti Not tainted 5.0.0-rc8+ #9
-  RIP: 0010:__push_leaf_left+0x6b6/0x6e0
-  RSP: 0018:ffffc0bd4128b990 EFLAGS: 00010246
-  RAX: 0000000000000000 RBX: ffffa0a4ab8f0e38 RCX: 0000000000000000
-  RDX: ffffa0a280000000 RSI: 0000000000000000 RDI: ffffa0a4b3814000
-  RBP: ffffc0bd4128ba38 R08: 0000000000001000 R09: ffffc0bd4128b948
-  R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000240
-  R13: ffffa0a4b556fb60 R14: ffffa0a4ab8f0af0 R15: ffffa0a4ab8f0af0
-  FS: 0000000000000000(0000) GS:ffffa0a4b7a00000(0000) knlGS:0000000000000000
-  CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 00007f2461c80020 CR3: 000000022b32a006 CR4: 00000000000206f0
-  Call Trace:
-  ? _cond_resched+0x1a/0x50
-  push_leaf_left+0x179/0x190
-  btrfs_del_items+0x316/0x470
-  btrfs_del_csums+0x215/0x3a0
-  __btrfs_free_extent.isra.72+0x5a7/0xbe0
-  __btrfs_run_delayed_refs+0x539/0x1120
-  btrfs_run_delayed_refs+0xdb/0x1b0
-  btrfs_commit_transaction+0x52/0x950
-  ? start_transaction+0x94/0x450
-  transaction_kthread+0x163/0x190
-  kthread+0x105/0x140
-  ? btrfs_cleanup_transaction+0x560/0x560
-  ? kthread_destroy_worker+0x50/0x50
-  ret_from_fork+0x35/0x40
-  Modules linked in:
-  ---[ end trace c2425e6e89b5558f ]---
+[7028915.431770] stripe state: 2001
+[7028915.431815] ------------[ cut here ]------------
+[7028915.431828] WARNING: CPU: 18 PID: 29089 at drivers/md/raid5.c:4614 break_stripe_batch_list+0x203/0x240 [raid456]
+[...]
+[7028915.431879] CPU: 18 PID: 29089 Comm: kworker/u82:5 Tainted: G           O    4.14.86-1-storage #4.14.86-1.2~deb9
+[7028915.431881] Hardware name: Supermicro SSG-2028R-ACR24L/X10DRH-iT, BIOS 3.1 06/18/2018
+[7028915.431888] Workqueue: raid5wq raid5_do_work [raid456]
+[7028915.431890] task: ffff9ab0ef36d7c0 task.stack: ffffb72926f84000
+[7028915.431896] RIP: 0010:break_stripe_batch_list+0x203/0x240 [raid456]
+[7028915.431898] RSP: 0018:ffffb72926f87ba8 EFLAGS: 00010286
+[7028915.431900] RAX: 0000000000000012 RBX: ffff9aaa84a98000 RCX: 0000000000000000
+[7028915.431901] RDX: 0000000000000000 RSI: ffff9ab2bfa15458 RDI: ffff9ab2bfa15458
+[7028915.431902] RBP: ffff9aaa8fb4e900 R08: 0000000000000001 R09: 0000000000002eb4
+[7028915.431903] R10: 00000000ffffffff R11: 0000000000000000 R12: ffff9ab1736f1b00
+[7028915.431904] R13: 0000000000000000 R14: ffff9aaa8fb4e900 R15: 0000000000000001
+[7028915.431906] FS:  0000000000000000(0000) GS:ffff9ab2bfa00000(0000) knlGS:0000000000000000
+[7028915.431907] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[7028915.431908] CR2: 00007ff953b9f5d8 CR3: 0000000bf4009002 CR4: 00000000003606e0
+[7028915.431909] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[7028915.431910] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[7028915.431910] Call Trace:
+[7028915.431923]  handle_stripe+0x8e7/0x2020 [raid456]
+[7028915.431930]  ? __wake_up_common_lock+0x89/0xc0
+[7028915.431935]  handle_active_stripes.isra.58+0x35f/0x560 [raid456]
+[7028915.431939]  raid5_do_work+0xc6/0x1f0 [raid456]
 
-[CAUSE]
-The offending csum tree looks like this:
+Also commit 59fc630b8b5f9f ("RAID5: batch adjacent full stripe write")
+said "If a stripe is added to batch list, then only the first stripe
+of the list should be put to handle_list and run handle_stripe."
 
-  checksum tree key (CSUM_TREE ROOT_ITEM 0)
-  node 29741056 level 1 items 14 free 107 generation 19 owner CSUM_TREE
-	  ...
-	  key (EXTENT_CSUM EXTENT_CSUM 85975040) block 29630464 gen 17
-	  key (EXTENT_CSUM EXTENT_CSUM 89911296) block 29642752 gen 17 <<<
-	  key (EXTENT_CSUM EXTENT_CSUM 92274688) block 29646848 gen 17
-	  ...
+So don't set STRIPE_HANDLE to stripe which is already in batch list,
+otherwise the stripe could be put to handle_list and run handle_stripe,
+then the above warning could be triggered.
 
-  leaf 29630464 items 6 free space 1 generation 17 owner CSUM_TREE
-	  item 0 key (EXTENT_CSUM EXTENT_CSUM 85975040) itemoff 3987 itemsize 8
-		  range start 85975040 end 85983232 length 8192
-	  ...
-  leaf 29642752 items 0 free space 3995 generation 17 owner 0
-		      ^ empty leaf            invalid owner ^
+[1]. https://www.spinics.net/lists/raid/msg62552.html
 
-  leaf 29646848 items 1 free space 602 generation 17 owner CSUM_TREE
-	  item 0 key (EXTENT_CSUM EXTENT_CSUM 92274688) itemoff 627 itemsize 3368
-		  range start 92274688 end 95723520 length 3448832
-
-So we have a corrupted csum tree where one tree leaf is completely
-empty, causing unbalanced btree, thus leading to unexpected btree
-balance error.
-
-[FIX]
-For this particular case, we handle it in two directions to catch it:
-- Check if the tree block is empty through btrfs_verify_level_key()
-  So that invalid tree blocks won't be read out through
-  btrfs_search_slot() and its variants.
-
-- Check 0 tree owner in tree checker
-  NO tree is using 0 as its tree owner, detect it and reject at tree
-  block read time.
-
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202821
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/disk-io.c      | 10 ++++++++++
- fs/btrfs/tree-checker.c |  6 ++++++
- 2 files changed, 16 insertions(+)
+ drivers/md/raid5.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
-index deb74a8c191a4..6d26d38a2e12c 100644
---- a/fs/btrfs/disk-io.c
-+++ b/fs/btrfs/disk-io.c
-@@ -423,6 +423,16 @@ int btrfs_verify_level_key(struct extent_buffer *eb, int level,
- 	 */
- 	if (btrfs_header_generation(eb) > fs_info->last_trans_committed)
- 		return 0;
-+
-+	/* We have @first_key, so this @eb must have at least one item */
-+	if (btrfs_header_nritems(eb) == 0) {
-+		btrfs_err(fs_info,
-+		"invalid tree nritems, bytenr=%llu nritems=0 expect >0",
-+			  eb->start);
-+		WARN_ON(IS_ENABLED(CONFIG_BTRFS_DEBUG));
-+		return -EUCLEAN;
-+	}
-+
- 	if (found_level)
- 		btrfs_node_key_to_cpu(eb, &found_key, 0);
- 	else
-diff --git a/fs/btrfs/tree-checker.c b/fs/btrfs/tree-checker.c
-index d83adda6c090a..9634cae1e1b1d 100644
---- a/fs/btrfs/tree-checker.c
-+++ b/fs/btrfs/tree-checker.c
-@@ -991,6 +991,12 @@ static int check_leaf(struct extent_buffer *leaf, bool check_item_data)
- 				    owner);
- 			return -EUCLEAN;
- 		}
-+		/* Unknown tree */
-+		if (owner == 0) {
-+			generic_err(leaf, 0,
-+				"invalid owner, root 0 is not defined");
-+			return -EUCLEAN;
-+		}
- 		return 0;
- 	}
+diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+index da94cbaa1a9ed..8d2811e436b93 100644
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -5719,7 +5719,8 @@ static bool raid5_make_request(struct mddev *mddev, struct bio * bi)
+ 				do_flush = false;
+ 			}
  
+-			set_bit(STRIPE_HANDLE, &sh->state);
++			if (!sh->batch_head)
++				set_bit(STRIPE_HANDLE, &sh->state);
+ 			clear_bit(STRIPE_DELAYED, &sh->state);
+ 			if ((!sh->batch_head || sh == sh->batch_head) &&
+ 			    (bi->bi_opf & REQ_SYNC) &&
 -- 
 2.20.1
 
