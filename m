@@ -2,55 +2,60 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E276AC4740C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49CB3C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBA93206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:18:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EBB6206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:18:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179904;
-	bh=pqNJ8pNu97tfTX6kEisVmJXTZF0n5AhEugcUW9k3lp0=;
+	s=default; t=1569179910;
+	bh=RqFa86+ysUK3w9+oA6+iwf3Z60j/QVf4cHLrqJuUrvY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pqv8/6okLewBqONjPTWExvAMjO0f0g+2XDUVTmW6pzkEw/ep3cQg2weTIDHsbDjGT
-	 XkbMa+sDvGCxQZmLnotlTe0L0W8pVxcLgZabSz01Lpet2Au+jDC2qKA2tMFggzS8cX
-	 2Bd6UaRHMt/iJ54RqRhUf4JB9r5jCv8WUenZqhwM=
+	b=BeD33ZsvV869eezv2luKlQCcule0RxleFCFGcTMhfoC6O+SYudWJ8kZ51P8jd16o0
+	 I4CexchQiIFNf+0IUB/T2TKuGhxMuYqAnS0iVTC64JI3k0QKCHGlOFTamr7Mc/W+fz
+	 E6GgWi1Yhr1mU51Ru0PU5qyCw8BuC0dzKZE8vAkc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408095AbfIVSzR (ORCPT
+        id S2406477AbfIVTS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:55:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56040 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:18:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437417AbfIVSzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:55:07 -0400
+        id S2408090AbfIVSzS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:55:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E928E208C2;
-        Sun, 22 Sep 2019 18:55:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F4D72190F;
+        Sun, 22 Sep 2019 18:55:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178506;
-        bh=pqNJ8pNu97tfTX6kEisVmJXTZF0n5AhEugcUW9k3lp0=;
+        s=default; t=1569178517;
+        bh=RqFa86+ysUK3w9+oA6+iwf3Z60j/QVf4cHLrqJuUrvY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y6waaDr81pgDPlc2s1Je2fOD7IM3nGP7uEz2NaryisZCQxdmfzSl9gmVI6cWmI2gs
-         99UanaZeo3258oR+0JURFueVekSGrsVJH9aym4R3p6t/7jlFrQAZr+EGMrdpyjqYm2
-         Jkj9GUnNS4s69JvnOu3T6T4WUsRrNCUxVUuNsUOU=
+        b=n9TnnQNM9tGGdGmFXqPME82AKz5LayVjOmD0slbObaQEUwn3S/ZC5IeKzq9kxmzjV
+         C760K5OkzTsgacgflZ4nQNAUrlgqhYSjc2RQQg03o1DeY1odHnBhMMaZDImsolXTfS
+         WfsTLaPPKa++ziI8MELhCB52k6c4NVRV+a5Nk4ps=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephen Douthit <stephend@silicom-usa.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-edac@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 038/128] EDAC, pnd2: Fix ioremap() size in dnv_rd_reg()
-Date:   Sun, 22 Sep 2019 14:52:48 -0400
-Message-Id: <20190922185418.2158-38-sashal@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
+        <lclaudio@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Taeung Song <treeze.taeung@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 044/128] perf config: Honour $PERF_CONFIG env var to specify alternate .perfconfig
+Date:   Sun, 22 Sep 2019 14:52:54 -0400
+Message-Id: <20190922185418.2158-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
 References: <20190922185418.2158-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,65 +64,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Douthit <stephend@silicom-usa.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-[ Upstream commit 29a3388bfcce7a6d087051376ea02bf8326a957b ]
+[ Upstream commit 61a461fcbd62d42c29a1ea6a9cc3838ad9f49401 ]
 
-Depending on how BIOS has marked the reserved region containing the 32KB
-MCHBAR you can get warnings like:
+We had this comment in Documentation/perf_counter/config.c, i.e. since
+when we got this from the git sources, but never really did that
+getenv("PERF_CONFIG"), do it now as I need to disable whatever
+~/.perfconfig root has so that tests parsing tool output are done for
+the expected default output or that we specify an alternate config file
+that when read will make the tools produce expected output.
 
-resource sanity check: requesting [mem 0xfed10000-0xfed1ffff], which spans more than reserved [mem 0xfed10000-0xfed17fff]
-caller dnv_rd_reg+0xc8/0x240 [pnd2_edac] mapping multiple BARs
-
-Not all of the mmio regions used in dnv_rd_reg() are the same size.  The
-MCHBAR window is 32KB and the sideband ports are 64KB.  Pass the correct
-size to ioremap() depending on which resource we're reading from.
-
-Signed-off-by: Stephen Douthit <stephend@silicom-usa.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Taeung Song <treeze.taeung@gmail.com>
+Fixes: 078006012401 ("perf_counter tools: add in basic glue from Git")
+Link: https://lkml.kernel.org/n/tip-jo209zac9rut0dz1rqvbdlgm@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/pnd2_edac.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ tools/perf/perf.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/edac/pnd2_edac.c b/drivers/edac/pnd2_edac.c
-index 903a4f1fadcc3..0153c730750e5 100644
---- a/drivers/edac/pnd2_edac.c
-+++ b/drivers/edac/pnd2_edac.c
-@@ -268,11 +268,14 @@ static u64 get_sideband_reg_base_addr(void)
- 	}
- }
+diff --git a/tools/perf/perf.c b/tools/perf/perf.c
+index a11cb006f9682..80f8ae8b13666 100644
+--- a/tools/perf/perf.c
++++ b/tools/perf/perf.c
+@@ -439,6 +439,9 @@ int main(int argc, const char **argv)
  
-+#define DNV_MCHBAR_SIZE  0x8000
-+#define DNV_SB_PORT_SIZE 0x10000
- static int dnv_rd_reg(int port, int off, int op, void *data, size_t sz, char *name)
- {
- 	struct pci_dev *pdev;
- 	char *base;
- 	u64 addr;
-+	unsigned long size;
+ 	srandom(time(NULL));
  
- 	if (op == 4) {
- 		pdev = pci_get_device(PCI_VENDOR_ID_INTEL, 0x1980, NULL);
-@@ -287,15 +290,17 @@ static int dnv_rd_reg(int port, int off, int op, void *data, size_t sz, char *na
- 			addr = get_mem_ctrl_hub_base_addr();
- 			if (!addr)
- 				return -ENODEV;
-+			size = DNV_MCHBAR_SIZE;
- 		} else {
- 			/* MMIO via sideband register base address */
- 			addr = get_sideband_reg_base_addr();
- 			if (!addr)
- 				return -ENODEV;
- 			addr += (port << 16);
-+			size = DNV_SB_PORT_SIZE;
- 		}
- 
--		base = ioremap((resource_size_t)addr, 0x10000);
-+		base = ioremap((resource_size_t)addr, size);
- 		if (!base)
- 			return -ENODEV;
- 
++	/* Setting $PERF_CONFIG makes perf read _only_ the given config file. */
++	config_exclusive_filename = getenv("PERF_CONFIG");
++
+ 	err = perf_config(perf_default_config, NULL);
+ 	if (err)
+ 		return err;
 -- 
 2.20.1
 
