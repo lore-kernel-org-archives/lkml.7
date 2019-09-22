@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF24C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77038C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42DC4206B6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:34:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C9DE20640
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:34:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180853;
-	bh=17ENxLHu3L2mMH6u0ZNP5nKyjgrAqv2BiX847xF1hn4=;
+	s=default; t=1569180856;
+	bh=ewPq7fQ+Kpl7Nb7d8O0y/srjFnu8XZRUFHNrMK6wO+8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PXp+uoHHyHcDpZbgdkDk6f3MluG/dMKl978uPQycC/uBykBZn5YVHBH4sJhWD96iv
-	 p4KuvDqg9I7Jr0c3UCUV+nG+BrmL70sB5fksTkLlOqx3o7eXLkhU/JTQHePeXWgIWj
-	 GDytR0in84r3UI7jQt6OgsQSja5Gy1L3dqF6D//Y=
+	b=e/T6Ms7c3vtdLGpvFADqlZXcKjerkBfKqTGUJBVA35wyX3l0paiw58u+phaxo7Rv4
+	 ogpRGXP/5g4HGcg+WlY0QvXs1kKxKSTz5PXjHGHfYksJZi7pZe0yHJaJ0agjYzp2yb
+	 6IrDAu2MniHLgq2/RU4A4luQQeSAPGUDkH16b0dM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390734AbfIVSrV (ORCPT
+        id S2438660AbfIVTeP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:47:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43594 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:34:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390622AbfIVSrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:47:13 -0400
+        id S2390724AbfIVSrU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:47:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 733BA206C2;
-        Sun, 22 Sep 2019 18:47:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76C69206C2;
+        Sun, 22 Sep 2019 18:47:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178032;
-        bh=17ENxLHu3L2mMH6u0ZNP5nKyjgrAqv2BiX847xF1hn4=;
+        s=default; t=1569178040;
+        bh=ewPq7fQ+Kpl7Nb7d8O0y/srjFnu8XZRUFHNrMK6wO+8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eTCfbK4p4ElIq2aa2C1zz1onLA3gB/JncJpPeL6McUcBK3DFrlp9PbIHkku0d2h4g
-         mAkD/XydC2sMO5U5/aahyLOApxthsZF+a1gqe8nsqAMl3utZgfbn28ApCHA2KL9hhG
-         8oOQcEg60aFjLrQUZO3ANxNrCkWX+7GkDcoQfYkE=
+        b=vAnZ2xM34JG/kNW0/loLz30FCB0QJPjMy1dKhvzhTWh3kwhjuJxYcj/aVinq0ExJq
+         M/ItD1u/9fgmyxFOm5dZw+g1x/X4cOp7+vOMZGZ+vo4ZanTCBG2LkyCDHGycSAgmjz
+         flLp+kwy6LtLhcHoI+REC0huj1EW3VvbF2jBxHLI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yazen Ghannam <yazen.ghannam@amd.com>,
-        Borislav Petkov <bp@suse.de>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 114/203] EDAC/amd64: Recognize DRAM device type ECC capability
-Date:   Sun, 22 Sep 2019 14:42:20 -0400
-Message-Id: <20190922184350.30563-114-sashal@kernel.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Keerthy <j-keerthy@ti.com>, Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 120/203] ARM: OMAP2+: move platform-specific asm-offset.h to arch/arm/mach-omap2
+Date:   Sun, 22 Sep 2019 14:42:26 -0400
+Message-Id: <20190922184350.30563-120-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -63,69 +59,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yazen Ghannam <yazen.ghannam@amd.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[ Upstream commit f8be8e5680225ac9caf07d4545f8529b7395327f ]
+[ Upstream commit ccf4975dca233b1d6a74752d6ab35c239edc0d58 ]
 
-AMD Family 17h systems support x4 and x16 DRAM devices. However, the
-device type is not checked when setting mci.edac_ctl_cap.
+<generated/ti-pm-asm-offsets.h> is only generated and included by
+arch/arm/mach-omap2/, so it does not need to reside in the globally
+visible include/generated/.
 
-Set the appropriate capability flag based on the device type.
+I renamed it to arch/arm/mach-omap2/pm-asm-offsets.h since the prefix
+'ti-' is just redundant in mach-omap2/.
 
-Default to x8 DRAM device when neither the x4 or x16 bits are set.
+My main motivation of this change is to avoid the race condition for
+the parallel build (-j) when CONFIG_IKHEADERS is enabled.
 
- [ bp: reverse cpk_en check to save an indentation level. ]
+When it is enabled, all the headers under include/ are archived into
+kernel/kheaders_data.tar.xz and exposed in the sysfs.
 
-Fixes: 2d09d8f301f5 ("EDAC, amd64: Determine EDAC MC capabilities on Fam17h")
-Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
-Cc: James Morse <james.morse@arm.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Tony Luck <tony.luck@intel.com>
-Link: https://lkml.kernel.org/r/20190821235938.118710-3-Yazen.Ghannam@amd.com
+In the parallel build, we have no idea in which order files are built.
+
+ - If ti-pm-asm-offsets.h is built before kheaders_data.tar.xz,
+   the header will be included in the archive. Probably nobody will
+   use it, but it is harmless except that it will increase the archive
+   size needlessly.
+
+ - If kheaders_data.tar.xz is built before ti-pm-asm-offsets.h,
+   the header will not be included in the archive. However, in the next
+   build, the archive will be re-generated to include the newly-found
+   ti-pm-asm-offsets.h. This is not nice from the build system point
+   of view.
+
+ - If ti-pm-asm-offsets.h and kheaders_data.tar.xz are built at the
+   same time, the corrupted header might be included in the archive,
+   which does not look nice either.
+
+This commit fixes the race.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Tested-by: Keerthy <j-keerthy@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/amd64_edac.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ arch/arm/mach-omap2/.gitignore  | 1 +
+ arch/arm/mach-omap2/Makefile    | 5 +++--
+ arch/arm/mach-omap2/sleep33xx.S | 2 +-
+ arch/arm/mach-omap2/sleep43xx.S | 2 +-
+ 4 files changed, 6 insertions(+), 4 deletions(-)
+ create mode 100644 arch/arm/mach-omap2/.gitignore
 
-diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
-index dd60cf5a3d969..ffe56a8fe39da 100644
---- a/drivers/edac/amd64_edac.c
-+++ b/drivers/edac/amd64_edac.c
-@@ -3150,12 +3150,15 @@ static bool ecc_enabled(struct pci_dev *F3, u16 nid)
- static inline void
- f17h_determine_edac_ctl_cap(struct mem_ctl_info *mci, struct amd64_pvt *pvt)
- {
--	u8 i, ecc_en = 1, cpk_en = 1;
-+	u8 i, ecc_en = 1, cpk_en = 1, dev_x4 = 1, dev_x16 = 1;
+diff --git a/arch/arm/mach-omap2/.gitignore b/arch/arm/mach-omap2/.gitignore
+new file mode 100644
+index 0000000000000..79a8d6ea71520
+--- /dev/null
++++ b/arch/arm/mach-omap2/.gitignore
+@@ -0,0 +1 @@
++pm-asm-offsets.h
+diff --git a/arch/arm/mach-omap2/Makefile b/arch/arm/mach-omap2/Makefile
+index 6006505516219..21c6d4bca3c0f 100644
+--- a/arch/arm/mach-omap2/Makefile
++++ b/arch/arm/mach-omap2/Makefile
+@@ -223,9 +223,10 @@ obj-y					+= omap_phy_internal.o
  
- 	for_each_umc(i) {
- 		if (pvt->umc[i].sdp_ctrl & UMC_SDP_INIT) {
- 			ecc_en &= !!(pvt->umc[i].umc_cap_hi & UMC_ECC_ENABLED);
- 			cpk_en &= !!(pvt->umc[i].umc_cap_hi & UMC_ECC_CHIPKILL_CAP);
-+
-+			dev_x4  &= !!(pvt->umc[i].dimm_cfg & BIT(6));
-+			dev_x16 &= !!(pvt->umc[i].dimm_cfg & BIT(7));
- 		}
- 	}
+ obj-$(CONFIG_MACH_OMAP2_TUSB6010)	+= usb-tusb6010.o
  
-@@ -3163,8 +3166,15 @@ f17h_determine_edac_ctl_cap(struct mem_ctl_info *mci, struct amd64_pvt *pvt)
- 	if (ecc_en) {
- 		mci->edac_ctl_cap |= EDAC_FLAG_SECDED;
+-include/generated/ti-pm-asm-offsets.h: arch/arm/mach-omap2/pm-asm-offsets.s FORCE
++$(obj)/pm-asm-offsets.h: $(obj)/pm-asm-offsets.s FORCE
+ 	$(call filechk,offsets,__TI_PM_ASM_OFFSETS_H__)
  
--		if (cpk_en)
-+		if (!cpk_en)
-+			return;
-+
-+		if (dev_x4)
- 			mci->edac_ctl_cap |= EDAC_FLAG_S4ECD4ED;
-+		else if (dev_x16)
-+			mci->edac_ctl_cap |= EDAC_FLAG_S16ECD16ED;
-+		else
-+			mci->edac_ctl_cap |= EDAC_FLAG_S8ECD8ED;
- 	}
- }
+-$(obj)/sleep33xx.o $(obj)/sleep43xx.o: include/generated/ti-pm-asm-offsets.h
++$(obj)/sleep33xx.o $(obj)/sleep43xx.o: $(obj)/pm-asm-offsets.h
+ 
+ targets += pm-asm-offsets.s
++clean-files += pm-asm-offsets.h
+diff --git a/arch/arm/mach-omap2/sleep33xx.S b/arch/arm/mach-omap2/sleep33xx.S
+index 68fee339d3f12..dc221249bc22c 100644
+--- a/arch/arm/mach-omap2/sleep33xx.S
++++ b/arch/arm/mach-omap2/sleep33xx.S
+@@ -6,7 +6,6 @@
+  *	Dave Gerlach, Vaibhav Bedia
+  */
+ 
+-#include <generated/ti-pm-asm-offsets.h>
+ #include <linux/linkage.h>
+ #include <linux/platform_data/pm33xx.h>
+ #include <linux/ti-emif-sram.h>
+@@ -15,6 +14,7 @@
+ 
+ #include "iomap.h"
+ #include "cm33xx.h"
++#include "pm-asm-offsets.h"
+ 
+ #define AM33XX_CM_CLKCTRL_MODULESTATE_DISABLED			0x00030000
+ #define AM33XX_CM_CLKCTRL_MODULEMODE_DISABLE			0x0003
+diff --git a/arch/arm/mach-omap2/sleep43xx.S b/arch/arm/mach-omap2/sleep43xx.S
+index c1f4e4852644e..90d2907a2eb27 100644
+--- a/arch/arm/mach-omap2/sleep43xx.S
++++ b/arch/arm/mach-omap2/sleep43xx.S
+@@ -6,7 +6,6 @@
+  *	Dave Gerlach, Vaibhav Bedia
+  */
+ 
+-#include <generated/ti-pm-asm-offsets.h>
+ #include <linux/linkage.h>
+ #include <linux/ti-emif-sram.h>
+ #include <linux/platform_data/pm33xx.h>
+@@ -19,6 +18,7 @@
+ #include "iomap.h"
+ #include "omap-secure.h"
+ #include "omap44xx.h"
++#include "pm-asm-offsets.h"
+ #include "prm33xx.h"
+ #include "prcm43xx.h"
  
 -- 
 2.20.1
