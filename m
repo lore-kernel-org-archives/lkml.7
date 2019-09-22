@@ -4,133 +4,144 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77350C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 12:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 592C4C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 13:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D2732067B
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 12:38:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FDC1208C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 13:19:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569155893;
-	bh=+O9Ivp1Vd6e/eVeN15wo6TgJGsLgXbHn4t4fBVj0LDk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=PKdh2Ylb/p7E97lQlchgGFgIoP+hchp9C279uqd20W5F1u64wpLqlMN5aCJCxUDB5
-	 4VzyBIGjYj6Pnjv4E/pOYiq2pYuRn1b3R9ONXHKklEx6NANYS/eoIsnvSrcdA3tkQB
-	 of12uld3JjSA3ybMUdDhuuOBcW5laVH/zA3D1BsY=
+	s=default; t=1569158385;
+	bh=uXJA1WEPwLkYZYaYcHaGm0191fkWYeUnl7ENiDbfUJU=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=vZDdHfeCn4fngD2dsCWP5ge004krTs5d7xlmBeN0H/NMBJgkOR7m/jYcI+Sl6bv2C
+	 6LZ1ezBlAlo8bh/wQwYCryYcBOjYXdVHgkpQgLLak6QZcIROeh6kX+C7anu5KHvljP
+	 kf+roJA8d1hkzxRX+SSRZ7RjBL3VtjxHhV/Jnej0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729005AbfIVMiM (ORCPT
+        id S1728902AbfIVNTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 08:38:12 -0400
-Received: from inca-roads.misterjones.org ([213.251.177.50]:45505 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728826AbfIVMiM (ORCPT
+        Sun, 22 Sep 2019 09:19:44 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:42668 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728764AbfIVNTn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 08:38:12 -0400
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
-        (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iC17v-0003vt-Fm; Sun, 22 Sep 2019 14:38:07 +0200
-Date:   Sun, 22 Sep 2019 13:38:05 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Cernekee <cernekee@gmail.com>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        bcm-kernel-feedback-list@broadcom.com (open list:BROADCOM BMIPS MIPS
-        ARCHITECTURE),
-        linux-mips@vger.kernel.org (open list:BROADCOM BMIPS MIPS ARCHITECTURE)
-Subject: Re: [PATCH v2 5/5] irqchip/irq-bcm7038-l1: Support
- brcm,int-fwd-mask
-Message-ID: <20190922133805.2cdf2d99@why>
-In-Reply-To: <20190913191542.9908-6-f.fainelli@gmail.com>
-References: <20190913191542.9908-1-f.fainelli@gmail.com>
-        <20190913191542.9908-6-f.fainelli@gmail.com>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 22 Sep 2019 09:19:43 -0400
+Received: by mail-qt1-f196.google.com with SMTP id w14so9684916qto.9;
+        Sun, 22 Sep 2019 06:19:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=uNO9UuhB7M6CiHUosVbc5HEwCkGc2F4p4dUUxU7OnMc=;
+        b=itpkqRQ470AT0lxjFU6H1qesOezH2PykkOk8ndMezitG9w40XDq6VJxR+lqRz725JD
+         Tt4+jzcyvcpeAswV0svLaY9Kq6dXmTMlHTGdA0lZ/Rt2xpDQ3Ei3AV5YXAbiYgB2Chi4
+         jYLbwZyzYoh+AkIqhy82hFHhym1+ZzT5mjqk6W3CkFsxnPc44QytwTjXzLEYSxo0gXD+
+         b+GOM4hsikKQtDgorfRcuc6IQ/oNTAcWtVove+2txD43As2MD7yPvLfIOat0cbxwZyxb
+         hrdgVqf6Ca9O+vB2RZW/Ya5PPvBNXEbzDa2rPIE01TQ4CgPZ8WkTjHb0kv/7Wdf0JbjV
+         +aEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=uNO9UuhB7M6CiHUosVbc5HEwCkGc2F4p4dUUxU7OnMc=;
+        b=OPsTsh/5WKePaR+mP1z62ViCHSSKTGU1sm0v6XBWd0OXMmzcTBvlXeKu1rwygeQRyy
+         g7n12g6nhIVq/5LPIt5UyywGQIQ1Rr1eiLLtoLkECAtI5+Klf65FQXmV0RrR3Jcd3f2G
+         t29YsNEkHFJeVPqSRVpyAGBYKfVF52dQx1RtZoTkk3x7xKJSfHQ2HNvtNByDacII2lGk
+         xT1AdNwBOzfzYbjC2WgzvVTGAjpM+5WlvuKHjVLsCApohR6h0m0Wk+wvq/t3tLRf64ZZ
+         XQqxSEwMdGsp/MdIj1If8/9i7TtGhTqGxc88ckLv0qYbEF0ZoKdMdXAFUMesmN2OBN6r
+         HIWQ==
+X-Gm-Message-State: APjAAAUMpIksxg1fOSZ80hO8PYuXadO/YoBWeTxbWXRtNiwMIjzpMnfC
+        ryoyRHJ2K5Xyc1zRE0Mga0w=
+X-Google-Smtp-Source: APXvYqzQE7aMzabm+ubBc3vvlI/+LrGJVWqwJUXtLS3LnJXSQfAaKw/kU5+qkfLDOpZP1CbA796Kyw==
+X-Received: by 2002:ad4:5552:: with SMTP id v18mr20777945qvy.185.1569158380829;
+        Sun, 22 Sep 2019 06:19:40 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::34ed])
+        by smtp.gmail.com with ESMTPSA id d133sm4414760qkg.31.2019.09.22.06.19.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 22 Sep 2019 06:19:39 -0700 (PDT)
+Date:   Sun, 22 Sep 2019 06:19:36 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] FUSE: fix beyond-end-of-page access in fuse_parse_cache()
+Message-ID: <20190922131936.GE2233839@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: f.fainelli@gmail.com, linux-kernel@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, cernekee@gmail.com, devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-mips@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 13 Sep 2019 12:15:42 -0700
-Florian Fainelli <f.fainelli@gmail.com> wrote:
+With DEBUG_PAGEALLOC on, the following triggers.
 
-> On some specific chips like 7211 we need to leave some interrupts
-> untouched/forwarded to the VPU which is another agent in the system
-> making use of that interrupt controller hardware (goes to both ARM GIC
-> and VPU L1 interrupt controller). Make that possible by using the
-> existing brcm,int-fwd-mask property.
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  drivers/irqchip/irq-bcm7038-l1.c | 15 +++++++++++++--
->  1 file changed, 13 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
-> index 0673a44bbdc2..811a34201dd4 100644
-> --- a/drivers/irqchip/irq-bcm7038-l1.c
-> +++ b/drivers/irqchip/irq-bcm7038-l1.c
-> @@ -44,6 +44,7 @@ struct bcm7038_l1_chip {
->  	struct list_head	list;
->  	u32			wake_mask[MAX_WORDS];
->  #endif
-> +	u32			irq_fwd_mask[MAX_WORDS];
->  	u8			affinity[MAX_WORDS * IRQS_PER_WORD];
->  };
->  
-> @@ -265,6 +266,7 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
->  	resource_size_t sz;
->  	struct bcm7038_l1_cpu *cpu;
->  	unsigned int i, n_words, parent_irq;
-> +	int ret;
->  
->  	if (of_address_to_resource(dn, idx, &res))
->  		return -EINVAL;
-> @@ -278,6 +280,14 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
->  	else if (intc->n_words != n_words)
->  		return -EINVAL;
->  
-> +	ret = of_property_read_u32_array(dn , "brcm,int-fwd-mask",
+  BUG: unable to handle page fault for address: ffff88859367c000
+  #PF: supervisor read access in kernel mode
+  #PF: error_code(0x0000) - not-present page
+  PGD 3001067 P4D 3001067 PUD 406d3a8067 PMD 406d30c067 PTE 800ffffa6c983060
+  Oops: 0000 [#1] SMP DEBUG_PAGEALLOC
+  CPU: 38 PID: 3110657 Comm: python2.7
+  RIP: 0010:fuse_readdir+0x88f/0xe7a [fuse]
+  Code: 49 8b 4d 08 49 39 4e 60 0f 84 44 04 00 00 48 8b 43 08 43 8d 1c 3c 4d 01 7e 68 49 89 dc 48 03 5c 24 38 49 89 46 60 8b 44 24 30 <8b> 4b 10 44 29 e0 48 89 ca 48 83 c1 1f 48 83 e1 f8 83 f8 17 49 89
+  RSP: 0018:ffffc90035edbde0 EFLAGS: 00010286
+  RAX: 0000000000001000 RBX: ffff88859367bff0 RCX: 0000000000000000
+  RDX: 0000000000000000 RSI: ffff88859367bfed RDI: 0000000000920907
+  RBP: ffffc90035edbe90 R08: 000000000000014b R09: 0000000000000004
+  R10: ffff88859367b000 R11: 0000000000000000 R12: 0000000000000ff0
+  R13: ffffc90035edbee0 R14: ffff889fb8546180 R15: 0000000000000020
+  FS:  00007f80b5f4a740(0000) GS:ffff889fffa00000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: ffff88859367c000 CR3: 0000001c170c2001 CR4: 00000000003606e0
+  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  Call Trace:
+   iterate_dir+0x122/0x180
+   __x64_sys_getdents+0xa6/0x140
+   do_syscall_64+0x42/0x100
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-What is the exact meaning of "fwd"? Forward? FirmWare Dementia?
+faddr2line says
 
-> +					 intc->irq_fwd_mask, n_words);
-> +	if (ret != 0 && ret != -EINVAL) {
-> +		/* property exists but has the wrong number of words */
-> +		pr_err("invalid brcm,int-fwd-mask property\n");
-> +		return -EINVAL;
-> +	}
-> +
->  	cpu = intc->cpus[idx] = kzalloc(sizeof(*cpu) + n_words * sizeof(u32),
->  					GFP_KERNEL);
->  	if (!cpu)
-> @@ -288,8 +298,9 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
->  		return -ENOMEM;
->  
->  	for (i = 0; i < n_words; i++) {
-> -		l1_writel(0xffffffff, cpu->map_base + reg_mask_set(intc, i));
-> -		cpu->mask_cache[i] = 0xffffffff;
-> +		l1_writel(0xffffffff & ~intc->irq_fwd_mask[i],
-> +			  cpu->map_base + reg_mask_set(intc, i));
-> +		cpu->mask_cache[i] = 0xffffffff & ~intc->irq_fwd_mask[i];
+  fuse_readdir+0x88f/0x38fc9b:
+  fuse_parse_cache at /builddir/build/BUILD/kernel-5.2.9-1992_g2c63931edbb0/fs/fuse/readdir.c:375
+  (inlined by) fuse_readdir_cached at /builddir/build/BUILD/kernel-5.2.9-1992_g2c63931edbb0/fs/fuse/readdir.c:524
+  (inlined by) fuse_readdir at /builddir/build/BUILD/kernel-5.2.9-1992_g2c63931edbb0/fs/fuse/readdir.c:562
 
-I seem to remember that (0xffffffff & whatever) == whatever, as long as
-'whatever' is a 32bit quantity. So what it this for?
+It's in fuse_parse_cache().  %rbx (ffff88859367bff0) is fuse_dirent
+pointer - addr + offset.  FUSE_DIRENT_SIZE() is trying to dereference
+namelen off of it but that derefs into the next page which is disabled
+by pagealloc debug causing a PF.
 
-	M.
--- 
-Without deviation from the norm, progress is not possible.
+This is caused by dirent->namelen being accessed before ensuring that
+there's enough bytes in the page for the dirent.  Fix it by pushing
+down reclen calculation.
+
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Fixes: 5d7bc7e8680c ("fuse: allow using readdir cache")
+Cc: stable@vger.kernel.org # v4.20+
+---
+ fs/fuse/readdir.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/fs/fuse/readdir.c b/fs/fuse/readdir.c
+index 574d03f8a573..b2da3de6a78e 100644
+--- a/fs/fuse/readdir.c
++++ b/fs/fuse/readdir.c
+@@ -372,11 +372,13 @@ static enum fuse_parse_result fuse_parse_cache(struct fuse_file *ff,
+ 	for (;;) {
+ 		struct fuse_dirent *dirent = addr + offset;
+ 		unsigned int nbytes = size - offset;
+-		size_t reclen = FUSE_DIRENT_SIZE(dirent);
++		size_t reclen;
+ 
+ 		if (nbytes < FUSE_NAME_OFFSET || !dirent->namelen)
+ 			break;
+ 
++		reclen = FUSE_DIRENT_SIZE(dirent); /* derefs ->namelen */
++
+ 		if (WARN_ON(dirent->namelen > FUSE_NAME_MAX))
+ 			return FOUND_ERR;
+ 		if (WARN_ON(reclen > nbytes))
