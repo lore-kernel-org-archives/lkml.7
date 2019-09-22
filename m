@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 888AEC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0DEDC49ED7
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59F5520640
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:34:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D549206B6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:34:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180843;
-	bh=AR8xkLta58mWfwbBEqsTYV291X1xSKFmHu7uqW2tgpM=;
+	s=default; t=1569180846;
+	bh=9m2JYGkvWDmA0P2yVuAEtBW885OyXdy4d9jpcGwBEes=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OeAMbxi+OW9eL5H6pmrdFlgNafOVOeaYw+c/s0D9vDOUwgAlXh/5vCcr87gHH7oni
-	 zAyRQNnHmX+H/m4SO8Zip6rxLibRXWTe24eSRKwoxDphf3rgpwTt3cEbTotMh+17l0
-	 JhU3ZHFcEDVOhqtKCw8RIkLtiMveeSJzvjG/8h6o=
+	b=lEklj/HThCgDZKWtFZ4DVvTSzxPWdv9NEu4x5+tQWoj7u8c/u7iBkiaKFLrxgEqTa
+	 ivzNdjoXO4FOUTgyOuBOPtyf6MQeyv6FcnRoyQyIiCvNWPvQDvURlnhl8oW7wbvgnG
+	 V5rqGBFU9s1sz0tC/EQzRwlLf2S5SjDOLHN6Hz04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390858AbfIVSr2 (ORCPT
+        id S2390821AbfIVSr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:47:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43800 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:47:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390735AbfIVSrW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:47:22 -0400
+        id S2390674AbfIVSrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:47:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7DA9214AF;
-        Sun, 22 Sep 2019 18:47:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9FAC214D9;
+        Sun, 22 Sep 2019 18:47:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178041;
-        bh=AR8xkLta58mWfwbBEqsTYV291X1xSKFmHu7uqW2tgpM=;
+        s=default; t=1569178037;
+        bh=9m2JYGkvWDmA0P2yVuAEtBW885OyXdy4d9jpcGwBEes=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=09RsGzXwm+6KnfspheuweePQyHD6CDuHkMCGW1JLPFUtHRb85vxs7EbWqpws527pa
-         Q8o4Fiu9bfMkRxlXOMggcZ2RQGkGzj5PI8afBe+0mOacU78f+9lH3E5RL1RQjcNz5L
-         fCHiHfy1rv0z4acCe3D1t5yER8kLmrux3JysADFo=
+        b=ArSizjlrmrp3YjwwHKIwV+LTEmMxhUWF2ZRPjWo7fM23t7RsIfgPWyfuxHvglxl8l
+         mUxXeKfk0+WQqZOV1ZKPwaTcjpKWXqF5uzv8MO69HtrOilXFCkeVnISiFqswZ79lYb
+         UdsuL9BQV/5koQAvGpwiXcgao6bBPLa/1cmAw6LQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leonard Crestez <leonard.crestez@nxp.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 121/203] PM / devfreq: passive: Use non-devm notifiers
-Date:   Sun, 22 Sep 2019 14:42:27 -0400
-Message-Id: <20190922184350.30563-121-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 118/203] soc: renesas: Enable ARM_ERRATA_754322 for affected Cortex-A9
+Date:   Sun, 22 Sep 2019 14:42:24 -0400
+Message-Id: <20190922184350.30563-118-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -60,67 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leonard Crestez <leonard.crestez@nxp.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 0ef7c7cce43f6ecc2b96d447e69b2900a9655f7c ]
+[ Upstream commit 2eced4607a1e6f51f928ae3e521fe02be5cb7d23 ]
 
-The devfreq passive governor registers and unregisters devfreq
-transition notifiers on DEVFREQ_GOV_START/GOV_STOP using devm wrappers.
+ARM Erratum 754322 affects Cortex-A9 revisions r2p* and r3p*.
 
-If devfreq itself is registered with devm then a warning is triggered on
-rmmod from devm_devfreq_unregister_notifier. Call stack looks like this:
+Automatically enable support code to mitigate the erratum when compiling
+a kernel for any of the affected Renesas SoCs:
+  - RZ/A1: r3p0,
+  - R-Mobile A1: r2p4,
+  - R-Car M1A: r2p2-00rel0,
+  - R-Car H1: r3p0,
+  - SH-Mobile AG5: r2p2.
 
-	devm_devfreq_unregister_notifier+0x30/0x40
-	devfreq_passive_event_handler+0x4c/0x88
-	devfreq_remove_device.part.8+0x6c/0x9c
-	devm_devfreq_dev_release+0x18/0x20
-	release_nodes+0x1b0/0x220
-	devres_release_all+0x78/0x84
-	device_release_driver_internal+0x100/0x1c0
-	driver_detach+0x4c/0x90
-	bus_remove_driver+0x7c/0xd0
-	driver_unregister+0x2c/0x58
-	platform_driver_unregister+0x10/0x18
-	imx_devfreq_platdrv_exit+0x14/0xd40 [imx_devfreq]
+EMMA Mobile EV2 (r1p3) and RZ/A2 (r4p1) are not affected.
 
-This happens because devres_release_all will first remove all the nodes
-into a separate todo list so the nested devres_release from
-devm_devfreq_unregister_notifier won't find anything.
-
-Fix the warning by calling the non-devm APIS for frequency notification.
-Using devm wrappers is not actually useful for a governor anyway: it
-relies on the devfreq core to correctly match the GOV_START/GOV_STOP
-notifications.
-
-Fixes: 996133119f57 ("PM / devfreq: Add new passive governor")
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/governor_passive.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/soc/renesas/Kconfig | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/devfreq/governor_passive.c b/drivers/devfreq/governor_passive.c
-index 58308948b8637..da485477065c5 100644
---- a/drivers/devfreq/governor_passive.c
-+++ b/drivers/devfreq/governor_passive.c
-@@ -165,12 +165,12 @@ static int devfreq_passive_event_handler(struct devfreq *devfreq,
- 			p_data->this = devfreq;
+diff --git a/drivers/soc/renesas/Kconfig b/drivers/soc/renesas/Kconfig
+index 2bbf49e5d4418..9583c542c47f7 100644
+--- a/drivers/soc/renesas/Kconfig
++++ b/drivers/soc/renesas/Kconfig
+@@ -55,6 +55,7 @@ config ARCH_EMEV2
  
- 		nb->notifier_call = devfreq_passive_notifier_call;
--		ret = devm_devfreq_register_notifier(dev, parent, nb,
-+		ret = devfreq_register_notifier(parent, nb,
- 					DEVFREQ_TRANSITION_NOTIFIER);
- 		break;
- 	case DEVFREQ_GOV_STOP:
--		devm_devfreq_unregister_notifier(dev, parent, nb,
--					DEVFREQ_TRANSITION_NOTIFIER);
-+		WARN_ON(devfreq_unregister_notifier(parent, nb,
-+					DEVFREQ_TRANSITION_NOTIFIER));
- 		break;
- 	default:
- 		break;
+ config ARCH_R7S72100
+ 	bool "RZ/A1H (R7S72100)"
++	select ARM_ERRATA_754322
+ 	select PM
+ 	select PM_GENERIC_DOMAINS
+ 	select RENESAS_OSTM
+@@ -78,6 +79,7 @@ config ARCH_R8A73A4
+ config ARCH_R8A7740
+ 	bool "R-Mobile A1 (R8A77400)"
+ 	select ARCH_RMOBILE
++	select ARM_ERRATA_754322
+ 	select RENESAS_INTC_IRQPIN
+ 
+ config ARCH_R8A7743
+@@ -105,10 +107,12 @@ config ARCH_R8A77470
+ config ARCH_R8A7778
+ 	bool "R-Car M1A (R8A77781)"
+ 	select ARCH_RCAR_GEN1
++	select ARM_ERRATA_754322
+ 
+ config ARCH_R8A7779
+ 	bool "R-Car H1 (R8A77790)"
+ 	select ARCH_RCAR_GEN1
++	select ARM_ERRATA_754322
+ 	select HAVE_ARM_SCU if SMP
+ 	select HAVE_ARM_TWD if SMP
+ 	select SYSC_R8A7779
+@@ -152,6 +156,7 @@ config ARCH_R9A06G032
+ config ARCH_SH73A0
+ 	bool "SH-Mobile AG5 (R8A73A00)"
+ 	select ARCH_RMOBILE
++	select ARM_ERRATA_754322
+ 	select HAVE_ARM_SCU if SMP
+ 	select HAVE_ARM_TWD if SMP
+ 	select RENESAS_INTC_IRQPIN
 -- 
 2.20.1
 
