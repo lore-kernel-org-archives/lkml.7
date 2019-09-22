@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12126C4740C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1BC5C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D411C2054F
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:30:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4D9A2054F
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:30:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180635;
-	bh=seL4JwafJp8UZCv4oDKz5AUomDKOVrqUXEXpQSwlfAk=;
+	s=default; t=1569180644;
+	bh=BfTwByiLBOEtLAiKrDFm0+a1C2cPRfgHJQH9uMU+AJg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Br3koXzxt1urMVxtjlSxtSTFvCGyixP9vvH50l117UUKNz/BvHdeGOGEL2vULjRVj
-	 U4s3zEjzUxf6oMWZeOkcYJAA7Rh/QWZEe1xxKdRg8tauvG5tTYtV+NJXB1/tFTd9Ex
-	 xIv2x9m9hDYq0L9bNvPer0nuUeWlCHAMBc5Y5Ic8=
+	b=Fo8VNIrt/LcCrAU4Wyre8UTfK3ObBjW5GpQACASh27bu5sQ1rSdNHKFM6CMH7KQms
+	 5W7FDZdViGbfQZWpV7HnM80QYUcSDg1FHoGwRcLwp5XHtEtSTuP4len92aG5+1bTtr
+	 TgzfA8TvXsbgRfk7AcCnFwzTSZsC/KRdCAS8zI/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392130AbfIVStO (ORCPT
+        id S2394460AbfIVTak (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:49:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45856 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:30:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391849AbfIVSsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:48:54 -0400
+        id S2392103AbfIVStO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:49:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E179421A4C;
-        Sun, 22 Sep 2019 18:48:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 594FF208C2;
+        Sun, 22 Sep 2019 18:49:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178133;
-        bh=seL4JwafJp8UZCv4oDKz5AUomDKOVrqUXEXpQSwlfAk=;
+        s=default; t=1569178153;
+        bh=BfTwByiLBOEtLAiKrDFm0+a1C2cPRfgHJQH9uMU+AJg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R/e9FwQ1MW20+xas3O2McVpbTs5r+RJarKz9bVNGYm2fWzvZvJ40F+8/rlHI2Sex1
-         Rie02hHJFXPOqRcGfbRLYCwgrs10JfHWprV1aVQ0Ghfbv6EMT+Ca5zyjODhg+Ey0GD
-         RxGThTUv2J2q85sHA6IRJZGo3+t+1Y3XOVqJFShM=
+        b=CqDreZYtQnCS3hIesWW+cCH4z+LduxQLbiFAuninchOD8BNydttvpvM49nk/1j3Pn
+         Bjn+OZu1DkvM8xmZuFQBOwxvU42L2ww3HoFSm326SyzOZCKvskv8bYS8lkcFB6Mx9r
+         XTDMOU8gg06k9tFPOxaoxK6hPXLBLtUxbfzA9F34=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 185/203] mmc: dw_mmc: Re-store SDIO IRQs mask at system resume
-Date:   Sun, 22 Sep 2019 14:43:31 -0400
-Message-Id: <20190922184350.30563-185-sashal@kernel.org>
+Cc:     Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 199/203] btrfs: delayed-inode: Kill the BUG_ON() in btrfs_delete_delayed_dir_index()
+Date:   Sun, 22 Sep 2019 14:43:45 -0400
+Message-Id: <20190922184350.30563-199-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -60,46 +58,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ulf Hansson <ulf.hansson@linaro.org>
+From: Qu Wenruo <wqu@suse.com>
 
-[ Upstream commit 7c526608d5afb62cbc967225e2ccaacfdd142e9d ]
+[ Upstream commit 933c22a7512c5c09b1fdc46b557384efe8d03233 ]
 
-In cases when SDIO IRQs have been enabled, runtime suspend is prevented by
-the driver. However, this still means dw_mci_runtime_suspend|resume() gets
-called during system suspend/resume, via pm_runtime_force_suspend|resume().
-This means during system suspend/resume, the register context of the dw_mmc
-device most likely loses its register context, even in cases when SDIO IRQs
-have been enabled.
+There is one report of fuzzed image which leads to BUG_ON() in
+btrfs_delete_delayed_dir_index().
 
-To re-enable the SDIO IRQs during system resume, the dw_mmc driver
-currently relies on the mmc core to re-enable the SDIO IRQs when it resumes
-the SDIO card, but this isn't the recommended solution. Instead, it's
-better to deal with this locally in the dw_mmc driver, so let's do that.
+Although that fuzzed image can already be addressed by enhanced
+extent-tree error handler, it's still better to hunt down more BUG_ON().
 
-Tested-by: Matthias Kaehlcke <mka@chromium.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+This patch will hunt down two BUG_ON()s in
+btrfs_delete_delayed_dir_index():
+- One for error from btrfs_delayed_item_reserve_metadata()
+  Instead of BUG_ON(), we output an error message and free the item.
+  And return the error.
+  All callers of this function handles the error by aborting current
+  trasaction.
+
+- One for possible EEXIST from __btrfs_add_delayed_deletion_item()
+  That function can return -EEXIST.
+  We already have a good enough error message for that, only need to
+  clean up the reserved metadata space and allocated item.
+
+To help above cleanup, also modifiy __btrfs_remove_delayed_item() called
+in btrfs_release_delayed_item(), to skip unassociated item.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203253
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/dw_mmc.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ fs/btrfs/delayed-inode.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-index eea52e2c5a0ce..79c55c7b4afd9 100644
---- a/drivers/mmc/host/dw_mmc.c
-+++ b/drivers/mmc/host/dw_mmc.c
-@@ -3460,6 +3460,10 @@ int dw_mci_runtime_resume(struct device *dev)
- 	/* Force setup bus to guarantee available clock output */
- 	dw_mci_setup_bus(host->slot, true);
+diff --git a/fs/btrfs/delayed-inode.c b/fs/btrfs/delayed-inode.c
+index 43fdb2992956a..6858a05606dd3 100644
+--- a/fs/btrfs/delayed-inode.c
++++ b/fs/btrfs/delayed-inode.c
+@@ -474,6 +474,9 @@ static void __btrfs_remove_delayed_item(struct btrfs_delayed_item *delayed_item)
+ 	struct rb_root_cached *root;
+ 	struct btrfs_delayed_root *delayed_root;
  
-+	/* Re-enable SDIO interrupts. */
-+	if (sdio_irq_claimed(host->slot->mmc))
-+		__dw_mci_enable_sdio_irq(host->slot, 1);
-+
- 	/* Now that slots are all setup, we can enable card detect */
- 	dw_mci_enable_cd(host);
++	/* Not associated with any delayed_node */
++	if (!delayed_item->delayed_node)
++		return;
+ 	delayed_root = delayed_item->delayed_node->root->fs_info->delayed_root;
  
+ 	BUG_ON(!delayed_root);
+@@ -1525,7 +1528,12 @@ int btrfs_delete_delayed_dir_index(struct btrfs_trans_handle *trans,
+ 	 * we have reserved enough space when we start a new transaction,
+ 	 * so reserving metadata failure is impossible.
+ 	 */
+-	BUG_ON(ret);
++	if (ret < 0) {
++		btrfs_err(trans->fs_info,
++"metadata reservation failed for delayed dir item deltiona, should have been reserved");
++		btrfs_release_delayed_item(item);
++		goto end;
++	}
+ 
+ 	mutex_lock(&node->mutex);
+ 	ret = __btrfs_add_delayed_deletion_item(node, item);
+@@ -1534,7 +1542,8 @@ int btrfs_delete_delayed_dir_index(struct btrfs_trans_handle *trans,
+ 			  "err add delayed dir index item(index: %llu) into the deletion tree of the delayed node(root id: %llu, inode id: %llu, errno: %d)",
+ 			  index, node->root->root_key.objectid,
+ 			  node->inode_id, ret);
+-		BUG();
++		btrfs_delayed_item_release_metadata(dir->root, item);
++		btrfs_release_delayed_item(item);
+ 	}
+ 	mutex_unlock(&node->mutex);
+ end:
 -- 
 2.20.1
 
