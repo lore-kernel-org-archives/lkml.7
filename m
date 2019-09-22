@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E6B8C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADCA3C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:24:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAD92214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:24:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84DA420869
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:24:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180289;
-	bh=J2I7SM7bMsl2OQ6fr2CABIWGTg6EorLiy5htaNXQeuo=;
+	s=default; t=1569180292;
+	bh=V0RnYzcQU1XuCrNHFEnrM5GjrBtSWIbwGLuJ+vIGQHc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XwME4WhFBcDuezhPg8Ar49JwfqlaFrqz9i/1sHInwPKPW5pDfDDUEJSc1M1dBdAWh
-	 qbVX/X6dx+u2Y9q3rcbYXKgZX+GkBMAB6lMz5tN9rsiI2Iy41PsRVRywLFDkHqkGHK
-	 t44mZ5wn3BoV60PNyplX6BGrj8FiTZgSJKHnlG2Q=
+	b=P9lnqysO2NKxg+8PwZxVvbJ+vCj6/Sd3jYE1KZ7RyK7sPtS/A1M2tkpV2vrxhUuv5
+	 DifuQh5CRf3ucPQlx1Gy3p2UXpqvg/zBO14ub6eyfB+H2CqzGKafjL0JnbEDi0gcmh
+	 AZnuTpYp1muuO3SRKVxaiw2jzB29SsC7xjx6iLwA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407980AbfIVSwp (ORCPT
+        id S1731456AbfIVTYv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:52:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51582 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:24:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407920AbfIVSwc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:52:32 -0400
+        id S2407969AbfIVSwo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:52:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5B3A2190F;
-        Sun, 22 Sep 2019 18:52:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DF332190F;
+        Sun, 22 Sep 2019 18:52:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178351;
-        bh=J2I7SM7bMsl2OQ6fr2CABIWGTg6EorLiy5htaNXQeuo=;
+        s=default; t=1569178363;
+        bh=V0RnYzcQU1XuCrNHFEnrM5GjrBtSWIbwGLuJ+vIGQHc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i2FKOsrpFEH5b2PgV1WDbOq3YQARZux3T/pxnbQ2yyl2ZpGRd95uE+49JgMaVKe3k
-         yjsh4l9NC43ppmJv4SVaqc3yXvFaTqihj/r003cU4Yf0c337A8wxv9pFfT/DEShLJu
-         oBsTWxj8+K8M80OifZx4U6psFyRmP0s/FI6w2uGQ=
+        b=VV1ABf3LDQBQiUOgKB85wSf5L5Lnjn8Bbo0FfznFmGM/EZF4M+HuhTlYa+Tj7ahIV
+         hA/dcp578O1JU/nwih0SgdqmmAP4gaVwvVoIneH5YxLHfC05iEDTdtOfKkXl5JuwD0
+         lANs+w0NzMtx13sDusVi9STa1gxEtW4aXw3H5Ug8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 108/185] PM / devfreq: Fix kernel oops on governor module load
-Date:   Sun, 22 Sep 2019 14:48:06 -0400
-Message-Id: <20190922184924.32534-108-sashal@kernel.org>
+Cc:     Benjamin Peterson <benjamin@python.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 116/185] perf trace beauty ioctl: Fix off-by-one error in cmd->string table
+Date:   Sun, 22 Sep 2019 14:48:14 -0400
+Message-Id: <20190922184924.32534-116-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -60,44 +63,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ezequiel Garcia <ezequiel@collabora.com>
+From: Benjamin Peterson <benjamin@python.org>
 
-[ Upstream commit 7544fd7f384591038646d3cd9efb311ab4509e24 ]
+[ Upstream commit b92675f4a9c02dd78052645597dac9e270679ddf ]
 
-A bit unexpectedly (but still documented), request_module may
-return a positive value, in case of a modprobe error.
-This is currently causing issues in the devfreq framework.
+While tracing a program that calls isatty(3), I noticed that strace
+reported TCGETS for the request argument of the underlying ioctl(2)
+syscall while perf trace reported TCSETS. strace is corrrect. The bug in
+perf was due to the tty ioctl beauty table starting at 0x5400 rather
+than 0x5401.
 
-When a request_module exits with a positive value, we currently
-return that via ERR_PTR. However, because the value is positive,
-it's not a ERR_VALUE proper, and is therefore treated as a
-valid struct devfreq_governor pointer, leading to a kernel oops.
+Committer testing:
 
-Fix this by returning -EINVAL if request_module returns a positive
-value.
+  Using augmented_raw_syscalls.o and settings to make 'perf trace'
+  use strace formatting, i.e. with this in ~/.perfconfig
 
-Fixes: b53b0128052ff ("PM / devfreq: Fix static checker warning in try_then_request_governor")
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+  # cat ~/.perfconfig
+  [trace]
+	add_events = /home/acme/git/linux/tools/perf/examples/bpf/augmented_raw_syscalls.c
+	show_zeros = yes
+	show_duration = no
+	no_inherit = yes
+	show_timestamp = no
+	show_arg_names = no
+	args_alignment = 40
+	show_prefix = yes
+
+  # strace -e ioctl stty > /dev/null
+  ioctl(0, TCGETS, {B38400 opost isig icanon echo ...}) = 0
+  ioctl(1, TIOCGWINSZ, 0x7fff8a9b0860)    = -1 ENOTTY (Inappropriate ioctl for device)
+  ioctl(1, TCGETS, 0x7fff8a9b0540)        = -1 ENOTTY (Inappropriate ioctl for device)
+  +++ exited with 0 +++
+  #
+
+Before:
+
+  # perf trace -e ioctl stty > /dev/null
+  ioctl(0, TCSETS, 0x7fff2cf79f20)        = 0
+  ioctl(1, TIOCSWINSZ, 0x7fff2cf79f40)    = -1 ENOTTY (Inappropriate ioctl for device)
+  ioctl(1, TCSETS, 0x7fff2cf79c20)        = -1 ENOTTY (Inappropriate ioctl for device)
+  #
+
+After:
+
+  # perf trace -e ioctl stty > /dev/null
+  ioctl(0, TCGETS, 0x7ffed0763920)        = 0
+  ioctl(1, TIOCGWINSZ, 0x7ffed0763940)    = -1 ENOTTY (Inappropriate ioctl for device)
+  ioctl(1, TCGETS, 0x7ffed0763620)        = -1 ENOTTY (Inappropriate ioctl for device)
+  #
+
+Signed-off-by: Benjamin Peterson <benjamin@python.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Fixes: 1cc47f2d46206d67285aea0ca7e8450af571da13 ("perf trace beauty ioctl: Improve 'cmd' beautifier")
+Link: http://lkml.kernel.org/r/20190823033625.18814-1-benjamin@python.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/devfreq.c | 2 +-
+ tools/perf/trace/beauty/ioctl.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-index ab22bf8a12d69..a0e19802149fc 100644
---- a/drivers/devfreq/devfreq.c
-+++ b/drivers/devfreq/devfreq.c
-@@ -254,7 +254,7 @@ static struct devfreq_governor *try_then_request_governor(const char *name)
- 		/* Restore previous state before return */
- 		mutex_lock(&devfreq_list_lock);
- 		if (err)
--			return ERR_PTR(err);
-+			return (err < 0) ? ERR_PTR(err) : ERR_PTR(-EINVAL);
- 
- 		governor = find_devfreq_governor(name);
- 	}
+diff --git a/tools/perf/trace/beauty/ioctl.c b/tools/perf/trace/beauty/ioctl.c
+index 52242fa4072b0..e19eb6ea361d7 100644
+--- a/tools/perf/trace/beauty/ioctl.c
++++ b/tools/perf/trace/beauty/ioctl.c
+@@ -21,7 +21,7 @@
+ static size_t ioctl__scnprintf_tty_cmd(int nr, int dir, char *bf, size_t size)
+ {
+ 	static const char *ioctl_tty_cmd[] = {
+-	"TCGETS", "TCSETS", "TCSETSW", "TCSETSF", "TCGETA", "TCSETA", "TCSETAW",
++	[_IOC_NR(TCGETS)] = "TCGETS", "TCSETS", "TCSETSW", "TCSETSF", "TCGETA", "TCSETA", "TCSETAW",
+ 	"TCSETAF", "TCSBRK", "TCXONC", "TCFLSH", "TIOCEXCL", "TIOCNXCL", "TIOCSCTTY",
+ 	"TIOCGPGRP", "TIOCSPGRP", "TIOCOUTQ", "TIOCSTI", "TIOCGWINSZ", "TIOCSWINSZ",
+ 	"TIOCMGET", "TIOCMBIS", "TIOCMBIC", "TIOCMSET", "TIOCGSOFTCAR", "TIOCSSOFTCAR",
 -- 
 2.20.1
 
