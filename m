@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C37C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1629BC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4204220673
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:21:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D73492067B
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:21:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180062;
-	bh=01/b3bViCNm6jZBCBwJsYl/9WvWajsU4eHQQh4EqkJs=;
+	s=default; t=1569180066;
+	bh=8zGTGHMcYcZ5vPDHzmRtC8gsvJEvulmKyj4ydCxN5i8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bp9VVZtHA6fJ8hnnmli7qGAc2cDc2APWdOgTEA31S5bVYRr2oiJ0LSH/SxoYYV1k6
-	 aXbp3peGRbbqHAV1dWQpjExSzsUxzBtyQZ1zY3IpzNme/LYe1J8MQqqZo9AvxR6EJI
-	 +QoqBfZgp9pgQLnx1tkf/kimDdzKTy4mgmn5sW64=
+	b=IH9mJK2NWV6PHSKEyEftlJAyw4aQm60l4IDKZYekE8N8smpcxExSNnRh16TbKFTc9
+	 uPeG8pQQ6Biv7K5mbkbK+kWrqUAMJEmuGL7OwWzaDPnovpiZCucjYIcnLWA5Aeu3Fp
+	 McQHYk5sAixbijpvLUr6UJrXteY8jAlE+zHWlix8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbfIVTVB (ORCPT
+        id S2394506AbfIVSyT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:21:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54870 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:54:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404384AbfIVSyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:54:23 -0400
+        id S2394433AbfIVSxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:53:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30CE021D56;
-        Sun, 22 Sep 2019 18:54:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3E0A2190F;
+        Sun, 22 Sep 2019 18:53:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178462;
-        bh=01/b3bViCNm6jZBCBwJsYl/9WvWajsU4eHQQh4EqkJs=;
+        s=default; t=1569178431;
+        bh=8zGTGHMcYcZ5vPDHzmRtC8gsvJEvulmKyj4ydCxN5i8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=geeeA0c86kSIheTJQAJE/7kRTf5wpsEjdyP1J502IaPYRQHiYCwwnrZiw7i9hc6cN
-         Y+I28N8AueRz0AJZsUoN/FSRV+5IyLRnPD3cakL1UO+yBcp48DMjeiNZTgTMt5bDWZ
-         3mF2dU0GXYIeBCh+Xb/zzpK9z+Z08HmZrbIiA/N8=
+        b=D+T8lTtoNL73gugQWN8N9OVN11sNyTpevH5+cCSxutj0luBrdUAwcexJxSrNeNorU
+         2vWOwdK8Utm7LR+KJL/+LEkdmrLnRZC2M4WwZ8HUho7Bhiej8XtVXxgbT+yYEVeXQj
+         JVqC16ClBwpe3KFru4f8Ev/GKUyPFK9gFw1iRjYo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lucas Stach <l.stach@pengutronix.de>,
-        "Andrew F . Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 003/128] ASoC: tlv320aic31xx: suppress error message for EPROBE_DEFER
-Date:   Sun, 22 Sep 2019 14:52:13 -0400
-Message-Id: <20190922185418.2158-3-sashal@kernel.org>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 167/185] mmc: dw_mmc: Re-store SDIO IRQs mask at system resume
+Date:   Sun, 22 Sep 2019 14:49:05 -0400
+Message-Id: <20190922184924.32534-167-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
-References: <20190922185418.2158-1-sashal@kernel.org>
+In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
+References: <20190922184924.32534-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,47 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-[ Upstream commit b7e814deae33eb30f8f8c6528e8e69b107978d88 ]
+[ Upstream commit 7c526608d5afb62cbc967225e2ccaacfdd142e9d ]
 
-Both the supplies and reset GPIO might need a probe deferral for the
-resource to be available. Don't print a error message in that case, as
-it is a normal operating condition.
+In cases when SDIO IRQs have been enabled, runtime suspend is prevented by
+the driver. However, this still means dw_mci_runtime_suspend|resume() gets
+called during system suspend/resume, via pm_runtime_force_suspend|resume().
+This means during system suspend/resume, the register context of the dw_mmc
+device most likely loses its register context, even in cases when SDIO IRQs
+have been enabled.
 
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Acked-by: Andrew F. Davis <afd@ti.com>
-Link: https://lore.kernel.org/r/20190719143637.2018-1-l.stach@pengutronix.de
-Signed-off-by: Mark Brown <broonie@kernel.org>
+To re-enable the SDIO IRQs during system resume, the dw_mmc driver
+currently relies on the mmc core to re-enable the SDIO IRQs when it resumes
+the SDIO card, but this isn't the recommended solution. Instead, it's
+better to deal with this locally in the dw_mmc driver, so let's do that.
+
+Tested-by: Matthias Kaehlcke <mka@chromium.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/tlv320aic31xx.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/mmc/host/dw_mmc.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/sound/soc/codecs/tlv320aic31xx.c b/sound/soc/codecs/tlv320aic31xx.c
-index bf92d36b8f8ab..3c75dcf917417 100644
---- a/sound/soc/codecs/tlv320aic31xx.c
-+++ b/sound/soc/codecs/tlv320aic31xx.c
-@@ -1441,7 +1441,8 @@ static int aic31xx_i2c_probe(struct i2c_client *i2c,
- 	aic31xx->gpio_reset = devm_gpiod_get_optional(aic31xx->dev, "reset",
- 						      GPIOD_OUT_LOW);
- 	if (IS_ERR(aic31xx->gpio_reset)) {
--		dev_err(aic31xx->dev, "not able to acquire gpio\n");
-+		if (PTR_ERR(aic31xx->gpio_reset) != -EPROBE_DEFER)
-+			dev_err(aic31xx->dev, "not able to acquire gpio\n");
- 		return PTR_ERR(aic31xx->gpio_reset);
- 	}
+diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+index 60c3a06e3469a..45c3490546839 100644
+--- a/drivers/mmc/host/dw_mmc.c
++++ b/drivers/mmc/host/dw_mmc.c
+@@ -3482,6 +3482,10 @@ int dw_mci_runtime_resume(struct device *dev)
+ 	/* Force setup bus to guarantee available clock output */
+ 	dw_mci_setup_bus(host->slot, true);
  
-@@ -1452,7 +1453,9 @@ static int aic31xx_i2c_probe(struct i2c_client *i2c,
- 				      ARRAY_SIZE(aic31xx->supplies),
- 				      aic31xx->supplies);
- 	if (ret) {
--		dev_err(aic31xx->dev, "Failed to request supplies: %d\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(aic31xx->dev,
-+				"Failed to request supplies: %d\n", ret);
- 		return ret;
- 	}
++	/* Re-enable SDIO interrupts. */
++	if (sdio_irq_claimed(host->slot->mmc))
++		__dw_mci_enable_sdio_irq(host->slot, 1);
++
+ 	/* Now that slots are all setup, we can enable card detect */
+ 	dw_mci_enable_cd(host);
  
 -- 
 2.20.1
