@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1AFC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DC1C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08961206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE9FA206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:16:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179807;
-	bh=06yTpw5L3yxHHbkzrBL/O9Pyp9ibvAP5y0E2ZisKh+Y=;
+	s=default; t=1569179811;
+	bh=sByufSALIAPF6n01zQQTJHouuIvhtjNGtpPcRB30gDQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=19o4t3FT/zPzmfPIrYtPYZ7J/x3MvQDDPWYuBPMmqL/BKo3ZH5gmzyLRitv4l7fgQ
-	 T8DVTRbTKAQAVLUVXRKxZpJPuCxQ+lQRVycWNuFVlfscaxZB0ZNq3NS2fqlNHjZl3j
-	 /rAEYSZhto+0pQ9z7ZraFuJ/UjNeztAmJWzZPjH0=
+	b=sowBEf7A8YQZpvLozzuxd3RFP9LhOtPEBk1qknxSDn5ckRwcAwrRxktrNND/Nl9L6
+	 hDzBlHDGCRrjnlxlZFaQ2IBaEIeOKxT1pAgYZDlHPQV/oHtoKe22YphHbYLwIAhNGQ
+	 7ebnfaVubLiGUDCISxhAHVJp/jsN/q7eWdXVS9/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408150AbfIVS4C (ORCPT
+        id S2393062AbfIVTQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:56:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57498 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:16:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729424AbfIVSzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:55:54 -0400
+        id S2408141AbfIVS4B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:56:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4CAC21D7A;
-        Sun, 22 Sep 2019 18:55:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63ADE21D7C;
+        Sun, 22 Sep 2019 18:56:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178553;
-        bh=06yTpw5L3yxHHbkzrBL/O9Pyp9ibvAP5y0E2ZisKh+Y=;
+        s=default; t=1569178561;
+        bh=sByufSALIAPF6n01zQQTJHouuIvhtjNGtpPcRB30gDQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sst6LMc35nBuQLWwhLsmvNXdvbcMp/1tHzFOmIC80vDg2d4fU7utKr1mBNc4RaceR
-         SmMU0W3iVmWWwB81U2D+teTsYx7IMrISR2QCj2M9ZKhSPPc3rtxlp6UxtjEpMrI6W6
-         ao4su9ew7S1NgtlWsr/k8jGmC4Ul6WyleLoLLaiY=
+        b=mV4/9LFn2aCohXfeforTbwvjyUWo+XT3qsnxHIjO0fYyOpqqoL2eLx7UgEAxW/p9b
+         LCQSsotgwK8TQrZo/eKfclRzI8QF36aKFrO2We3Q3xBvr52alis46f3MQL4KngXuUp
+         oJq8yB5sDUJem6xK2ZlDU03ueJfrr03FaUcfmc5c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sean Young <sean@mess.org>,
-        syzbot+8a8f48672560c8ca59dd@syzkaller.appspotmail.com,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 069/128] media: dvb-frontends: use ida for pll number
-Date:   Sun, 22 Sep 2019 14:53:19 -0400
-Message-Id: <20190922185418.2158-69-sashal@kernel.org>
+Cc:     Leonard Crestez <leonard.crestez@nxp.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 075/128] PM / devfreq: passive: Use non-devm notifiers
+Date:   Sun, 22 Sep 2019 14:53:25 -0400
+Message-Id: <20190922185418.2158-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
 References: <20190922185418.2158-1-sashal@kernel.org>
@@ -60,219 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Young <sean@mess.org>
+From: Leonard Crestez <leonard.crestez@nxp.com>
 
-[ Upstream commit c268e7adea52be0093de1164c425f3c8d8927770 ]
+[ Upstream commit 0ef7c7cce43f6ecc2b96d447e69b2900a9655f7c ]
 
-KASAN: global-out-of-bounds Read in dvb_pll_attach
+The devfreq passive governor registers and unregisters devfreq
+transition notifiers on DEVFREQ_GOV_START/GOV_STOP using devm wrappers.
 
-Syzbot reported global-out-of-bounds Read in dvb_pll_attach, while
-accessing id[dvb_pll_devcount], because dvb_pll_devcount was 65,
-that is more than size of 'id' which is DVB_PLL_MAX(64).
+If devfreq itself is registered with devm then a warning is triggered on
+rmmod from devm_devfreq_unregister_notifier. Call stack looks like this:
 
-Rather than increasing dvb_pll_devcount every time, use ida so that
-numbers are allocated correctly. This does mean that no more than
-64 devices can be attached at the same time, but this is more than
-sufficient.
+	devm_devfreq_unregister_notifier+0x30/0x40
+	devfreq_passive_event_handler+0x4c/0x88
+	devfreq_remove_device.part.8+0x6c/0x9c
+	devm_devfreq_dev_release+0x18/0x20
+	release_nodes+0x1b0/0x220
+	devres_release_all+0x78/0x84
+	device_release_driver_internal+0x100/0x1c0
+	driver_detach+0x4c/0x90
+	bus_remove_driver+0x7c/0xd0
+	driver_unregister+0x2c/0x58
+	platform_driver_unregister+0x10/0x18
+	imx_devfreq_platdrv_exit+0x14/0xd40 [imx_devfreq]
 
-usb 1-1: dvb_usb_v2: will pass the complete MPEG2 transport stream to the
-software demuxer
-dvbdev: DVB: registering new adapter (774 Friio White ISDB-T USB2.0)
-usb 1-1: media controller created
-dvbdev: dvb_create_media_entity: media entity 'dvb-demux' registered.
-tc90522 0-0018: Toshiba TC90522 attached.
-usb 1-1: DVB: registering adapter 0 frontend 0 (Toshiba TC90522 ISDB-T
-module)...
-dvbdev: dvb_create_media_entity: media entity 'Toshiba TC90522 ISDB-T
-module' registered.
-==================================================================
-BUG: KASAN: global-out-of-bounds in dvb_pll_attach+0x6c5/0x830
-drivers/media/dvb-frontends/dvb-pll.c:798
-Read of size 4 at addr ffffffff89c9e5e0 by task kworker/0:1/12
+This happens because devres_release_all will first remove all the nodes
+into a separate todo list so the nested devres_release from
+devm_devfreq_unregister_notifier won't find anything.
 
-CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.2.0-rc6+ #13
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  print_address_description+0x67/0x231 mm/kasan/report.c:188
-  __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:317
-  kasan_report+0xe/0x20 mm/kasan/common.c:614
-  dvb_pll_attach+0x6c5/0x830 drivers/media/dvb-frontends/dvb-pll.c:798
-  dvb_pll_probe+0xfe/0x174 drivers/media/dvb-frontends/dvb-pll.c:877
-  i2c_device_probe+0x790/0xaa0 drivers/i2c/i2c-core-base.c:389
-  really_probe+0x281/0x660 drivers/base/dd.c:509
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:843
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2111
-  i2c_new_client_device+0x5b3/0xc40 drivers/i2c/i2c-core-base.c:778
-  i2c_new_device+0x19/0x50 drivers/i2c/i2c-core-base.c:821
-  dvb_module_probe+0xf9/0x220 drivers/media/dvb-core/dvbdev.c:985
-  friio_tuner_attach+0x125/0x1d0 drivers/media/usb/dvb-usb-v2/gl861.c:536
-  dvb_usbv2_adapter_frontend_init
-drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:675 [inline]
-  dvb_usbv2_adapter_init drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:804
-[inline]
-  dvb_usbv2_init drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:865 [inline]
-  dvb_usbv2_probe.cold+0x24dc/0x255d
-drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:980
-  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-  really_probe+0x281/0x660 drivers/base/dd.c:509
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:843
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2111
-  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
-  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-  really_probe+0x281/0x660 drivers/base/dd.c:509
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:843
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2111
-  usb_new_device.cold+0x8c1/0x1016 drivers/usb/core/hub.c:2534
-  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
-  port_event drivers/usb/core/hub.c:5350 [inline]
-  hub_event+0x1ada/0x3590 drivers/usb/core/hub.c:5432
-  process_one_work+0x905/0x1570 kernel/workqueue.c:2269
-  process_scheduled_works kernel/workqueue.c:2331 [inline]
-  worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
-  kthread+0x30b/0x410 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Fix the warning by calling the non-devm APIS for frequency notification.
+Using devm wrappers is not actually useful for a governor anyway: it
+relies on the devfreq core to correctly match the GOV_START/GOV_STOP
+notifications.
 
-The buggy address belongs to the variable:
-  id+0x100/0x120
-
-Memory state around the buggy address:
-  ffffffff89c9e480: fa fa fa fa 00 00 fa fa fa fa fa fa 00 00 00 00
-  ffffffff89c9e500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> ffffffff89c9e580: 00 00 00 00 00 00 00 00 00 00 00 00 fa fa fa fa
-                                                        ^
-  ffffffff89c9e600: 04 fa fa fa fa fa fa fa 04 fa fa fa fa fa fa fa
-  ffffffff89c9e680: 04 fa fa fa fa fa fa fa 04 fa fa fa fa fa fa fa
-==================================================================
-
-Reported-by: syzbot+8a8f48672560c8ca59dd@syzkaller.appspotmail.com
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 996133119f57 ("PM / devfreq: Add new passive governor")
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/dvb-frontends/dvb-pll.c | 40 ++++++++++++++++-----------
- 1 file changed, 24 insertions(+), 16 deletions(-)
+ drivers/devfreq/governor_passive.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/dvb-frontends/dvb-pll.c b/drivers/media/dvb-frontends/dvb-pll.c
-index 29836c1a40e98..ee830c76e4b30 100644
---- a/drivers/media/dvb-frontends/dvb-pll.c
-+++ b/drivers/media/dvb-frontends/dvb-pll.c
-@@ -18,6 +18,7 @@
+diff --git a/drivers/devfreq/governor_passive.c b/drivers/devfreq/governor_passive.c
+index 3bc29acbd54e8..22fd41b4c1098 100644
+--- a/drivers/devfreq/governor_passive.c
++++ b/drivers/devfreq/governor_passive.c
+@@ -168,12 +168,12 @@ static int devfreq_passive_event_handler(struct devfreq *devfreq,
+ 			p_data->this = devfreq;
  
- #include <linux/slab.h>
- #include <linux/module.h>
-+#include <linux/idr.h>
- #include <linux/dvb/frontend.h>
- #include <asm/types.h>
- 
-@@ -43,8 +44,7 @@ struct dvb_pll_priv {
- };
- 
- #define DVB_PLL_MAX 64
--
--static unsigned int dvb_pll_devcount;
-+static DEFINE_IDA(pll_ida);
- 
- static int debug;
- module_param(debug, int, 0644);
-@@ -796,6 +796,7 @@ struct dvb_frontend *dvb_pll_attach(struct dvb_frontend *fe, int pll_addr,
- 	struct dvb_pll_priv *priv = NULL;
- 	int ret;
- 	const struct dvb_pll_desc *desc;
-+	int nr;
- 
- 	b1 = kmalloc(1, GFP_KERNEL);
- 	if (!b1)
-@@ -804,9 +805,14 @@ struct dvb_frontend *dvb_pll_attach(struct dvb_frontend *fe, int pll_addr,
- 	b1[0] = 0;
- 	msg.buf = b1;
- 
--	if ((id[dvb_pll_devcount] > DVB_PLL_UNDEFINED) &&
--	    (id[dvb_pll_devcount] < ARRAY_SIZE(pll_list)))
--		pll_desc_id = id[dvb_pll_devcount];
-+	nr = ida_simple_get(&pll_ida, 0, DVB_PLL_MAX, GFP_KERNEL);
-+	if (nr < 0) {
-+		kfree(b1);
-+		return NULL;
-+	}
-+
-+	if (id[nr] > DVB_PLL_UNDEFINED && id[nr] < ARRAY_SIZE(pll_list))
-+		pll_desc_id = id[nr];
- 
- 	BUG_ON(pll_desc_id < 1 || pll_desc_id >= ARRAY_SIZE(pll_list));
- 
-@@ -817,24 +823,20 @@ struct dvb_frontend *dvb_pll_attach(struct dvb_frontend *fe, int pll_addr,
- 			fe->ops.i2c_gate_ctrl(fe, 1);
- 
- 		ret = i2c_transfer (i2c, &msg, 1);
--		if (ret != 1) {
--			kfree(b1);
--			return NULL;
--		}
-+		if (ret != 1)
-+			goto out;
- 		if (fe->ops.i2c_gate_ctrl)
- 			     fe->ops.i2c_gate_ctrl(fe, 0);
- 	}
- 
- 	priv = kzalloc(sizeof(struct dvb_pll_priv), GFP_KERNEL);
--	if (!priv) {
--		kfree(b1);
--		return NULL;
--	}
-+	if (!priv)
-+		goto out;
- 
- 	priv->pll_i2c_address = pll_addr;
- 	priv->i2c = i2c;
- 	priv->pll_desc = desc;
--	priv->nr = dvb_pll_devcount++;
-+	priv->nr = nr;
- 
- 	memcpy(&fe->ops.tuner_ops, &dvb_pll_tuner_ops,
- 	       sizeof(struct dvb_tuner_ops));
-@@ -867,6 +869,11 @@ struct dvb_frontend *dvb_pll_attach(struct dvb_frontend *fe, int pll_addr,
- 	kfree(b1);
- 
- 	return fe;
-+out:
-+	kfree(b1);
-+	ida_simple_remove(&pll_ida, nr);
-+
-+	return NULL;
- }
- EXPORT_SYMBOL(dvb_pll_attach);
- 
-@@ -903,9 +910,10 @@ dvb_pll_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 
- static int dvb_pll_remove(struct i2c_client *client)
- {
--	struct dvb_frontend *fe;
-+	struct dvb_frontend *fe = i2c_get_clientdata(client);
-+	struct dvb_pll_priv *priv = fe->tuner_priv;
- 
--	fe = i2c_get_clientdata(client);
-+	ida_simple_remove(&pll_ida, priv->nr);
- 	dvb_pll_release(fe);
- 	return 0;
- }
+ 		nb->notifier_call = devfreq_passive_notifier_call;
+-		ret = devm_devfreq_register_notifier(dev, parent, nb,
++		ret = devfreq_register_notifier(parent, nb,
+ 					DEVFREQ_TRANSITION_NOTIFIER);
+ 		break;
+ 	case DEVFREQ_GOV_STOP:
+-		devm_devfreq_unregister_notifier(dev, parent, nb,
+-					DEVFREQ_TRANSITION_NOTIFIER);
++		WARN_ON(devfreq_unregister_notifier(parent, nb,
++					DEVFREQ_TRANSITION_NOTIFIER));
+ 		break;
+ 	default:
+ 		break;
 -- 
 2.20.1
 
