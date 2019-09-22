@@ -2,102 +2,104 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F5DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A103C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5238D20882
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:06:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179200;
-	bh=yboTTV9U5Hi5WqFc52skmFm/H4w+dx7z0bgyguhUBWo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kx7JwiOcSo4BOPzHwTan25EmDINzbRmXFWop6muF1TGdf+Oxa+cwowMrqfwDUFoUO
-	 mETJXuYc5ugQHLBcplrvlri+hEHh/I8VLy1qZ//+sDRHed7gPfb0WTfJT3gcxW4ecI
-	 3qcuEFHbbUblyjge6O2n/2J6bk3R8bVZS7JjEZE4=
+	by mail.kernel.org (Postfix) with ESMTP id 70B1320882
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:06:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436719AbfIVTFl (ORCPT
+        id S1730208AbfIVTGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:05:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36694 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395181AbfIVTAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 15:00:47 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B76B208C2;
-        Sun, 22 Sep 2019 19:00:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178846;
-        bh=yboTTV9U5Hi5WqFc52skmFm/H4w+dx7z0bgyguhUBWo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oaemmIGK6mAYV2NPcf/7vn4LTfToTs3HvEVFnpHhL7e2CztOZWuPsIvcr/DwdwnY7
-         jHW0vUgzqyTt5p9lbKXqkeA0WRQp1zZ1rE055skU1oJizgC5kdcJVxynNx5GuEiFLa
-         uUE/0SBDDAlethzsOrqiqkR1KJgupKW8FH9WY8Qw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Arthur She <arthur.she@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 52/60] ASoC: dmaengine: Make the pcm->name equal to pcm->id if the name is not set
-Date:   Sun, 22 Sep 2019 14:59:25 -0400
-Message-Id: <20190922185934.4305-52-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190922185934.4305-1-sashal@kernel.org>
-References: <20190922185934.4305-1-sashal@kernel.org>
+        Sun, 22 Sep 2019 15:06:43 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:58321 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2439182AbfIVTFo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 15:05:44 -0400
+X-Originating-IP: 90.65.161.137
+Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 0162360006;
+        Sun, 22 Sep 2019 19:05:42 +0000 (UTC)
+Date:   Sun, 22 Sep 2019 21:05:42 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Nick Crews <ncrews@chromium.org>, bleung@chromium.org,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        enric.balletbo@collabora.com, linux-kernel@vger.kernel.org,
+        dlaurie@chromium.org
+Subject: Re: [PATCH v2 1/2] rtc: wilco-ec: Remove yday and wday calculations
+Message-ID: <20190922190542.GC3185@piout.net>
+References: <20190916181215.501-1-ncrews@chromium.org>
+ <20190922161306.GA1999@bug>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190922161306.GA1999@bug>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+On 22/09/2019 18:13:06+0200, Pavel Machek wrote:
+> On Mon 2019-09-16 12:12:15, Nick Crews wrote:
+> > The tm_yday and tm_wday fields are not used by userspace,
+> > so since they aren't needed within the driver, don't
+> > bother calculating them. This is especially needed since
+> > the rtc_year_days() call was crashing if the HW returned
+> > an invalid time.
+> > 
+> > Signed-off-by: Nick Crews <ncrews@chromium.org>
+> > ---
+> >  drivers/rtc/rtc-wilco-ec.c | 4 ----
+> >  1 file changed, 4 deletions(-)
+> > 
+> > diff --git a/drivers/rtc/rtc-wilco-ec.c b/drivers/rtc/rtc-wilco-ec.c
+> > index 8ad4c4e6d557..e84faa268caf 100644
+> > --- a/drivers/rtc/rtc-wilco-ec.c
+> > +++ b/drivers/rtc/rtc-wilco-ec.c
+> > @@ -110,10 +110,6 @@ static int wilco_ec_rtc_read(struct device *dev, struct rtc_time *tm)
+> >  	tm->tm_mday	= rtc.day;
+> >  	tm->tm_mon	= rtc.month - 1;
+> >  	tm->tm_year	= rtc.year + (rtc.century * 100) - 1900;
+> > -	tm->tm_yday	= rtc_year_days(tm->tm_mday, tm->tm_mon, tm->tm_year);
+> > -
+> > -	/* Don't compute day of week, we don't need it. */
+> > -	tm->tm_wday = -1;
+> >  
+> >  	return 0;
+> 
+> Are you sure? It would be bad to pass unititialized memory to userspace...
+> 
 
-[ Upstream commit 2ec42f3147e1610716f184b02e65d7f493eed925 ]
+This problem doesn't exist because userspace is passing the memory, not
+the other way around.
 
-Some tools use the snd_pcm_info_get_name() to try to identify PCMs or for
-other purposes.
+> If userspace does not need those fields, why are they there?
+> 
 
-Currently it is left empty with the dmaengine-pcm, in this case copy the
-pcm->id string as pcm->name.
+This is coming from struct tm, it is part of C89 but I think I was not
+born when this decision was made. man rtc properly reports that those
+fields are unused and no userspace tools are actually making use of
+them. Nobody cares about the broken down representation of the time.
+What is done is use the ioctl then mktime to have a UNIX timestamp.
 
-For example IGT is using this to find the HDMI PCM for testing audio on it.
+"The mktime function ignores the specified contents of the tm_wday,
+tm_yday, tm_gmtoff, and tm_zone members of the broken-down time
+structure. It uses the values of the other components to determine the
+calendar time; it’s permissible for these components to have
+unnormalized values outside their normal ranges. The last thing that
+mktime does is adjust the components of the brokentime structure,
+including the members that were initially ignored."
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Reported-by: Arthur She <arthur.she@linaro.org>
-Link: https://lore.kernel.org/r/20190906055524.7393-1-peter.ujfalusi@ti.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/soc/soc-generic-dmaengine-pcm.c | 6 ++++++
- 1 file changed, 6 insertions(+)
 
-diff --git a/sound/soc/soc-generic-dmaengine-pcm.c b/sound/soc/soc-generic-dmaengine-pcm.c
-index 6cef3977507ae..67d22b4baeb05 100644
---- a/sound/soc/soc-generic-dmaengine-pcm.c
-+++ b/sound/soc/soc-generic-dmaengine-pcm.c
-@@ -312,6 +312,12 @@ static int dmaengine_pcm_new(struct snd_soc_pcm_runtime *rtd)
- 
- 		if (!dmaengine_pcm_can_report_residue(dev, pcm->chan[i]))
- 			pcm->flags |= SND_DMAENGINE_PCM_FLAG_NO_RESIDUE;
-+
-+		if (rtd->pcm->streams[i].pcm->name[0] == '\0') {
-+			strncpy(rtd->pcm->streams[i].pcm->name,
-+				rtd->pcm->streams[i].pcm->id,
-+				sizeof(rtd->pcm->streams[i].pcm->name));
-+		}
- 	}
- 
- 	return 0;
 -- 
-2.20.1
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
