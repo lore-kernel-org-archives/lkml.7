@@ -2,51 +2,54 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4C5C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C08C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AFF72054F
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:26:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 340F120578
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:26:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180360;
-	bh=S2zNVlmqja7JUe4yh3eRIVAzXvsxaHQuJ0G0lZeEYmc=;
+	s=default; t=1569180365;
+	bh=J857V+s2eCUvaCpjWd7tdKg18VSQm5KUn4SWhVl283w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RxeWHM3nkrCmyrH7uiggreVwxGXumIiiWllegaK5XZhGJ/oUCZSVMcbm+PrbwfnR0
-	 eCZ9BFd7iIhWiRh7MhI/N+oIHYpKlC1M0j05dxDVCuBG5MZYWfdVlAVpaxk2i6r9Mj
-	 vWsj1b5pUOVaP1dhA0GKnl8im63LiV+Eh0KOr/hQ=
+	b=uZy0SJmMqdl26gHtygFYICEf3dkR4R0BfGL7WkWmJLx6Vft6PI9vlPo7yKSFGAlii
+	 bZju12onCEvWqWI7XCgECaMhd7ijNsXWvUFDImI/bEN86srFBm7P/OCWjaGSQA+/lq
+	 YtZ9Gc0hAbMT+S00W7PzEpTUbYLv3KwPLMXEqBoA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727584AbfIVTZ7 (ORCPT
+        id S1731516AbfIVT0E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:25:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50596 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:26:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392955AbfIVSwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:52:05 -0400
+        id S2406813AbfIVSwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:52:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6726B21479;
-        Sun, 22 Sep 2019 18:52:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9F3F21A4A;
+        Sun, 22 Sep 2019 18:52:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178325;
-        bh=S2zNVlmqja7JUe4yh3eRIVAzXvsxaHQuJ0G0lZeEYmc=;
+        s=default; t=1569178322;
+        bh=J857V+s2eCUvaCpjWd7tdKg18VSQm5KUn4SWhVl283w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VWvCIdGlQayVIYv93hJE42IqBKz7M5m3RSR36UbUlJK/hELZSsSPIswAjWmNMX7Ka
-         A9zuBMp5bDRGjeGf7Lv0YGFzbO04EpFh+Hn7mxPpSKYUkEvLv9/f9gMWukpl6uDMQO
-         GSAoDLHwlEGshql87LE0FjpSMMsnT6eC3Uy5VPv0=
+        b=A7bNsMHHjh7GQ9GZi7b9iO85cm4xdGeV6A7FYicmrvaAhGamHumEg4DDky5R4Msf4
+         m7NpfgOPzUj6aYZaiKx9MZxo0BSZLFvL1MrzBb/GgAC7bbqyXhvc0Uf7kKgloeYwSS
+         1KzBk503MLsrXF0NzgwpnpKisRgIMGB6jx2O6mzg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 090/185] ASoC: mchp-i2s-mcc: Wait for RX/TX RDY only if controller is running
-Date:   Sun, 22 Sep 2019 14:47:48 -0400
-Message-Id: <20190922184924.32534-90-sashal@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-riscv@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.2 088/185] tools headers: Fixup bitsperlong per arch includes
+Date:   Sun, 22 Sep 2019 14:47:46 -0400
+Message-Id: <20190922184924.32534-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -59,74 +62,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-[ Upstream commit 0f6fc97501b790c971b11b52a654009d21c45238 ]
+[ Upstream commit 42fc2e9ef9603a7948aaa4ffd8dfb94b30294ad8 ]
 
-Since hw_free() can be called multiple times and not just after a stop
-trigger command, we should check whether the RX or TX ready interrupt was
-truly enabled previously. For this, we assure that the condition of the
-wait event is always true, except when RX/TX interrupts are enabled.
+We were getting the file by luck, from one of the paths in -I, fix it to
+get it from the proper place:
 
-Fixes: 7e0cdf545a55 ("ASoC: mchp-i2s-mcc: add driver for I2SC Multi-Channel Controller")
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Link: https://lore.kernel.org/r/20190820162411.24836-3-codrin.ciubotariu@microchip.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+  $ cd tools/include/uapi/asm/
+  [acme@quaco asm]$ grep include bitsperlong.h
+  #include "../../arch/x86/include/uapi/asm/bitsperlong.h"
+  #include "../../arch/arm64/include/uapi/asm/bitsperlong.h"
+  #include "../../arch/powerpc/include/uapi/asm/bitsperlong.h"
+  #include "../../arch/s390/include/uapi/asm/bitsperlong.h"
+  #include "../../arch/sparc/include/uapi/asm/bitsperlong.h"
+  #include "../../arch/mips/include/uapi/asm/bitsperlong.h"
+  #include "../../arch/ia64/include/uapi/asm/bitsperlong.h"
+  #include "../../arch/riscv/include/uapi/asm/bitsperlong.h"
+  #include "../../arch/alpha/include/uapi/asm/bitsperlong.h"
+  #include <asm-generic/bitsperlong.h>
+  $ ls -la ../../arch/x86/include/uapi/asm/bitsperlong.h
+  ls: cannot access '../../arch/x86/include/uapi/asm/bitsperlong.h': No such file or directory
+  $ ls -la ../../../arch/*/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 237 ../../../arch/alpha/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 841 ../../../arch/arm64/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 966 ../../../arch/hexagon/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 234 ../../../arch/ia64/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 100 ../../../arch/microblaze/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 244 ../../../arch/mips/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 352 ../../../arch/parisc/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 312 ../../../arch/powerpc/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 353 ../../../arch/riscv/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 292 ../../../arch/s390/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 323 ../../../arch/sparc/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 320 ../../../arch/x86/include/uapi/asm/bitsperlong.h
+  $
+
+Found while fixing some other problem, before it was escaping the
+tools/ chroot and using stuff in the kernel sources:
+
+    CC       /tmp/build/perf/util/find_bit.o
+In file included from /git/linux/tools/include/../../arch/x86/include/uapi/asm/bitsperlong.h:11,
+                 from /git/linux/tools/include/uapi/asm/bitsperlong.h:3,
+                 from /git/linux/tools/include/linux/bits.h:6,
+                 from /git/linux/tools/include/linux/bitops.h:13,
+                 from ../lib/find_bit.c:17:
+
+  # cd /git/linux/tools/include/../../arch/x86/include/uapi/asm/
+  # pwd
+  /git/linux/arch/x86/include/uapi/asm
+  #
+
+Now it is getting the one we want it to, i.e. the one inside tools/:
+
+    CC       /tmp/build/perf/util/find_bit.o
+  In file included from /git/linux/tools/arch/x86/include/uapi/asm/bitsperlong.h:11,
+                   from /git/linux/tools/include/linux/bits.h:6,
+                   from /git/linux/tools/include/linux/bitops.h:13,
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-8f8cfqywmf6jk8a3ucr0ixhu@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/atmel/mchp-i2s-mcc.c | 28 ++++++++++++++++------------
- 1 file changed, 16 insertions(+), 12 deletions(-)
+ tools/include/uapi/asm/bitsperlong.h | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/sound/soc/atmel/mchp-i2s-mcc.c b/sound/soc/atmel/mchp-i2s-mcc.c
-index 86495883ca3f1..8272915fa09b9 100644
---- a/sound/soc/atmel/mchp-i2s-mcc.c
-+++ b/sound/soc/atmel/mchp-i2s-mcc.c
-@@ -686,22 +686,24 @@ static int mchp_i2s_mcc_hw_free(struct snd_pcm_substream *substream,
- 		err = wait_event_interruptible_timeout(dev->wq_txrdy,
- 						       dev->tx_rdy,
- 						       msecs_to_jiffies(500));
-+		if (err == 0) {
-+			dev_warn_once(dev->dev,
-+				      "Timeout waiting for Tx ready\n");
-+			regmap_write(dev->regmap, MCHP_I2SMCC_IDRA,
-+				     MCHP_I2SMCC_INT_TXRDY_MASK(dev->channels));
-+			dev->tx_rdy = 1;
-+		}
- 	} else {
- 		err = wait_event_interruptible_timeout(dev->wq_rxrdy,
- 						       dev->rx_rdy,
- 						       msecs_to_jiffies(500));
--	}
--
--	if (err == 0) {
--		u32 idra;
--
--		dev_warn_once(dev->dev, "Timeout waiting for %s\n",
--			      is_playback ? "Tx ready" : "Rx ready");
--		if (is_playback)
--			idra = MCHP_I2SMCC_INT_TXRDY_MASK(dev->channels);
--		else
--			idra = MCHP_I2SMCC_INT_RXRDY_MASK(dev->channels);
--		regmap_write(dev->regmap, MCHP_I2SMCC_IDRA, idra);
-+		if (err == 0) {
-+			dev_warn_once(dev->dev,
-+				      "Timeout waiting for Rx ready\n");
-+			regmap_write(dev->regmap, MCHP_I2SMCC_IDRA,
-+				     MCHP_I2SMCC_INT_RXRDY_MASK(dev->channels));
-+			dev->rx_rdy = 1;
-+		}
- 	}
- 
- 	if (!mchp_i2s_mcc_is_running(dev)) {
-@@ -809,6 +811,8 @@ static int mchp_i2s_mcc_dai_probe(struct snd_soc_dai *dai)
- 
- 	init_waitqueue_head(&dev->wq_txrdy);
- 	init_waitqueue_head(&dev->wq_rxrdy);
-+	dev->tx_rdy = 1;
-+	dev->rx_rdy = 1;
- 
- 	snd_soc_dai_init_dma_data(dai, &dev->playback, &dev->capture);
- 
+diff --git a/tools/include/uapi/asm/bitsperlong.h b/tools/include/uapi/asm/bitsperlong.h
+index 57aaeaf8e1920..edba4d93e9e6a 100644
+--- a/tools/include/uapi/asm/bitsperlong.h
++++ b/tools/include/uapi/asm/bitsperlong.h
+@@ -1,22 +1,22 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ #if defined(__i386__) || defined(__x86_64__)
+-#include "../../arch/x86/include/uapi/asm/bitsperlong.h"
++#include "../../../arch/x86/include/uapi/asm/bitsperlong.h"
+ #elif defined(__aarch64__)
+-#include "../../arch/arm64/include/uapi/asm/bitsperlong.h"
++#include "../../../arch/arm64/include/uapi/asm/bitsperlong.h"
+ #elif defined(__powerpc__)
+-#include "../../arch/powerpc/include/uapi/asm/bitsperlong.h"
++#include "../../../arch/powerpc/include/uapi/asm/bitsperlong.h"
+ #elif defined(__s390__)
+-#include "../../arch/s390/include/uapi/asm/bitsperlong.h"
++#include "../../../arch/s390/include/uapi/asm/bitsperlong.h"
+ #elif defined(__sparc__)
+-#include "../../arch/sparc/include/uapi/asm/bitsperlong.h"
++#include "../../../arch/sparc/include/uapi/asm/bitsperlong.h"
+ #elif defined(__mips__)
+-#include "../../arch/mips/include/uapi/asm/bitsperlong.h"
++#include "../../../arch/mips/include/uapi/asm/bitsperlong.h"
+ #elif defined(__ia64__)
+-#include "../../arch/ia64/include/uapi/asm/bitsperlong.h"
++#include "../../../arch/ia64/include/uapi/asm/bitsperlong.h"
+ #elif defined(__riscv)
+-#include "../../arch/riscv/include/uapi/asm/bitsperlong.h"
++#include "../../../arch/riscv/include/uapi/asm/bitsperlong.h"
+ #elif defined(__alpha__)
+-#include "../../arch/alpha/include/uapi/asm/bitsperlong.h"
++#include "../../../arch/alpha/include/uapi/asm/bitsperlong.h"
+ #else
+ #include <asm-generic/bitsperlong.h>
+ #endif
 -- 
 2.20.1
 
