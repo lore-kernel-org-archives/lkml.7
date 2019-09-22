@@ -7,45 +7,44 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AAEDC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD1F6C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2C4E20882
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:21:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7840214D9
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:21:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180086;
-	bh=BfTwByiLBOEtLAiKrDFm0+a1C2cPRfgHJQH9uMU+AJg=;
+	s=default; t=1569180097;
+	bh=Q/NK56j/ghdmHEJTxu2BwpA78enXAjTw55znvF1Vb/A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=paKMFllX/tj9W4Ob3zoJVBjjByHpz7QjufjeB+8Ot3QJWl9VxJSINDuaMJOvZmgMJ
-	 ijJVmm16E6vIcQH2/JTYtdiDLgWN26LD5x3RuUbCWBJS3a+fQTQjIdWVGWKNBubA4z
-	 l5VUUJ7a+RAQvNddgZDNO6V5Yw2JaebutLOpEOyk=
+	b=JdmXxCVvnkjVdQ685tb+AQF1Ssh3deVDQsl5U0s2iYI218Ffu/7fnx2rNsLAWVC3k
+	 Hn26knxXppdX7w3phrmYWtGC+Mb3crf1suF9wp42638ptq5zE8bx5BPSt6sIWs+k3v
+	 4cnyGDJPN+GxLFPpyHgnq51ieZ0aPY3ik7G9qaJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731022AbfIVTVZ (ORCPT
+        id S1726298AbfIVTVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:21:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54614 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:21:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393707AbfIVSyL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:54:11 -0400
+        id S2391440AbfIVSyG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:54:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7643921A4A;
-        Sun, 22 Sep 2019 18:54:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB71321479;
+        Sun, 22 Sep 2019 18:54:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178450;
-        bh=BfTwByiLBOEtLAiKrDFm0+a1C2cPRfgHJQH9uMU+AJg=;
+        s=default; t=1569178446;
+        bh=Q/NK56j/ghdmHEJTxu2BwpA78enXAjTw55znvF1Vb/A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ESWEDCZoX0g/7DbhYDPqfdCXJCqSjGXsbUiNXc9XTiQq0g2OuSHriL4E8lqBP2yyN
-         4AkKEAdP6T+nFW5r3mdusK2R9JFFAc86+Fo6Ct59lpO3eWt5urkflO8yGGj5iRYd7j
-         wCzPyEyPw8gQKkDHbcPVXUjvZKnFmi7Ox6cXzor8=
+        b=ZtbzO3hjm/XD7OetxYFPOONCemfPa2SmC977u8LnuLCyLtT0nS3CGb8TNTU9SHh6J
+         8sQr7dS/vTfJ0PdOt4QZQT32XbQ9B+Z9txgBj9zu2QYjZsleMIXycdhJ6lrITA4D8o
+         qcBz0Zny5nNbAfFm1tVYr0LGcYMXF3EBo1Np3ryU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 181/185] btrfs: delayed-inode: Kill the BUG_ON() in btrfs_delete_delayed_dir_index()
-Date:   Sun, 22 Sep 2019 14:49:19 -0400
-Message-Id: <20190922184924.32534-181-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 178/185] ALSA: hda/realtek - Blacklist PC beep for Lenovo ThinkCentre M73/93
+Date:   Sun, 22 Sep 2019 14:49:16 -0400
+Message-Id: <20190922184924.32534-178-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -58,79 +57,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 933c22a7512c5c09b1fdc46b557384efe8d03233 ]
+[ Upstream commit 051c78af14fcd74a22b5af45548ad9d588247cc7 ]
 
-There is one report of fuzzed image which leads to BUG_ON() in
-btrfs_delete_delayed_dir_index().
+Lenovo ThinkCentre M73 and M93 don't seem to have a proper beep
+although the driver tries to probe and set up blindly.
+Blacklist these machines for suppressing the beep creation.
 
-Although that fuzzed image can already be addressed by enhanced
-extent-tree error handler, it's still better to hunt down more BUG_ON().
-
-This patch will hunt down two BUG_ON()s in
-btrfs_delete_delayed_dir_index():
-- One for error from btrfs_delayed_item_reserve_metadata()
-  Instead of BUG_ON(), we output an error message and free the item.
-  And return the error.
-  All callers of this function handles the error by aborting current
-  trasaction.
-
-- One for possible EEXIST from __btrfs_add_delayed_deletion_item()
-  That function can return -EEXIST.
-  We already have a good enough error message for that, only need to
-  clean up the reserved metadata space and allocated item.
-
-To help above cleanup, also modifiy __btrfs_remove_delayed_item() called
-in btrfs_release_delayed_item(), to skip unassociated item.
-
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203253
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204635
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/delayed-inode.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ sound/pci/hda/patch_realtek.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/btrfs/delayed-inode.c b/fs/btrfs/delayed-inode.c
-index 43fdb2992956a..6858a05606dd3 100644
---- a/fs/btrfs/delayed-inode.c
-+++ b/fs/btrfs/delayed-inode.c
-@@ -474,6 +474,9 @@ static void __btrfs_remove_delayed_item(struct btrfs_delayed_item *delayed_item)
- 	struct rb_root_cached *root;
- 	struct btrfs_delayed_root *delayed_root;
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 1bec62720374d..d223a79ac934f 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -1058,6 +1058,9 @@ static const struct snd_pci_quirk beep_white_list[] = {
+ 	SND_PCI_QUIRK(0x1043, 0x834a, "EeePC", 1),
+ 	SND_PCI_QUIRK(0x1458, 0xa002, "GA-MA790X", 1),
+ 	SND_PCI_QUIRK(0x8086, 0xd613, "Intel", 1),
++	/* blacklist -- no beep available */
++	SND_PCI_QUIRK(0x17aa, 0x309e, "Lenovo ThinkCentre M73", 0),
++	SND_PCI_QUIRK(0x17aa, 0x30a3, "Lenovo ThinkCentre M93", 0),
+ 	{}
+ };
  
-+	/* Not associated with any delayed_node */
-+	if (!delayed_item->delayed_node)
-+		return;
- 	delayed_root = delayed_item->delayed_node->root->fs_info->delayed_root;
- 
- 	BUG_ON(!delayed_root);
-@@ -1525,7 +1528,12 @@ int btrfs_delete_delayed_dir_index(struct btrfs_trans_handle *trans,
- 	 * we have reserved enough space when we start a new transaction,
- 	 * so reserving metadata failure is impossible.
- 	 */
--	BUG_ON(ret);
-+	if (ret < 0) {
-+		btrfs_err(trans->fs_info,
-+"metadata reservation failed for delayed dir item deltiona, should have been reserved");
-+		btrfs_release_delayed_item(item);
-+		goto end;
-+	}
- 
- 	mutex_lock(&node->mutex);
- 	ret = __btrfs_add_delayed_deletion_item(node, item);
-@@ -1534,7 +1542,8 @@ int btrfs_delete_delayed_dir_index(struct btrfs_trans_handle *trans,
- 			  "err add delayed dir index item(index: %llu) into the deletion tree of the delayed node(root id: %llu, inode id: %llu, errno: %d)",
- 			  index, node->root->root_key.objectid,
- 			  node->inode_id, ret);
--		BUG();
-+		btrfs_delayed_item_release_metadata(dir->root, item);
-+		btrfs_release_delayed_item(item);
- 	}
- 	mutex_unlock(&node->mutex);
- end:
 -- 
 2.20.1
 
