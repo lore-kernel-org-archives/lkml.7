@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A9DAC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E540C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1239020882
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:20:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1348D20882
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:20:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180022;
-	bh=vJKFOdMHhMYIRmfZn3Kky3KbozDQMjZPWqMyn6/4Bbg=;
+	s=default; t=1569180027;
+	bh=q1F/PL9JH2Pgit/X0ETfmM9LtIBLM1x7XmdLoELO7aU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FcAB2O+VStHd48zpiq/vTKBVfAZT/I/83lPvjtWtLxqDF8oHdW9HATN/7sxgwRuZS
-	 0/HJTEmiasUr8jwvgIvWIoPALYu1FZTXMBNlIW1Q2UDIdKzuHIA/u+95rUU7vOhsXz
-	 YTFZUyw4mEwfqdtrTBf0il2+FepTgzoGxrNThshw=
+	b=ZccnO6B8zI5tzEt2wP3g1PRPXub58PJFR23FbpPi4dFQ0z+NIjgWJ59kkyjvpDQ/d
+	 4NB2Id9mxh1mSaO1sSUSb+dn5Iz0A9Hkm4PQlfZJO6hlIJz5p9sPAU5mvIuXKgBWue
+	 I+SQRgDFXDOCJlyuSqSYAPcqwHzOa6BwvarcXeBA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437519AbfIVTUR (ORCPT
+        id S2407986AbfIVSyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:20:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55188 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:54:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394523AbfIVSyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:54:35 -0400
+        id S2391017AbfIVSyJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:54:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37F302190F;
-        Sun, 22 Sep 2019 18:54:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10C7A2190F;
+        Sun, 22 Sep 2019 18:54:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178475;
-        bh=vJKFOdMHhMYIRmfZn3Kky3KbozDQMjZPWqMyn6/4Bbg=;
+        s=default; t=1569178447;
+        bh=q1F/PL9JH2Pgit/X0ETfmM9LtIBLM1x7XmdLoELO7aU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S8vDGg+QyRPFBpMxiC3aFxJyz7zHaQlkeElaPg7c0Wgr9Y5+LqKQdQuSaQVq8OAFd
-         TqacpDupGQ0aWKRQSPZqzuPYCZLoojov+b6Wk8JZYxkZPDolKtlH2WwuA3F0PbO70+
-         KGti7dwgJCCWNaUJrcLSntkme81lTKPXJDnkxnAA=
+        b=WVpcbu2h3/2JnxOr2FGRYvEgoufs57LZORnKtdBD5Py1MZktynxsrupTWmnN6B5iI
+         qT+NBVP+mXzZVACSmyyVMPlPeNqDbj9SaYOlW/6P5Au8QCk/RVJKCinU9Lmdxtk2BV
+         ZFD0xZ6lVmCu54r/kJZIxuByrftk/D0pEW3kdD3g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 013/128] media: i2c: ov5640: Check for devm_gpiod_get_optional() error
-Date:   Sun, 22 Sep 2019 14:52:23 -0400
-Message-Id: <20190922185418.2158-13-sashal@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        kbuild test robot <lkp@intel.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 5.2 179/185] iommu/amd: Override wrong IVRS IOAPIC on Raven Ridge systems
+Date:   Sun, 22 Sep 2019 14:49:17 -0400
+Message-Id: <20190922184924.32534-179-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
-References: <20190922185418.2158-1-sashal@kernel.org>
+In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
+References: <20190922184924.32534-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,41 +61,192 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 8791a102ce579346cea9d2f911afef1c1985213c ]
+[ Upstream commit 93d051550ee02eaff9a2541d825605a7bd778027 ]
 
-The power down and reset GPIO are optional, but the return value
-from devm_gpiod_get_optional() needs to be checked and propagated
-in the case of error, so that probe deferral can work.
+Raven Ridge systems may have malfunction touchpad or hang at boot if
+incorrect IVRS IOAPIC is provided by BIOS.
 
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Users already found correct "ivrs_ioapic=" values, let's put them inside
+kernel to workaround buggy BIOS.
+
+BugLink: https://bugs.launchpad.net/bugs/1795292
+BugLink: https://bugs.launchpad.net/bugs/1837688
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/ov5640.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/iommu/Makefile           |  2 +-
+ drivers/iommu/amd_iommu.h        | 14 +++++
+ drivers/iommu/amd_iommu_init.c   |  5 +-
+ drivers/iommu/amd_iommu_quirks.c | 92 ++++++++++++++++++++++++++++++++
+ 4 files changed, 111 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/iommu/amd_iommu.h
+ create mode 100644 drivers/iommu/amd_iommu_quirks.c
 
-diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
-index d5c0ffc55d46a..a3bbef682fb8e 100644
---- a/drivers/media/i2c/ov5640.c
-+++ b/drivers/media/i2c/ov5640.c
-@@ -2787,9 +2787,14 @@ static int ov5640_probe(struct i2c_client *client,
- 	/* request optional power down pin */
- 	sensor->pwdn_gpio = devm_gpiod_get_optional(dev, "powerdown",
- 						    GPIOD_OUT_HIGH);
-+	if (IS_ERR(sensor->pwdn_gpio))
-+		return PTR_ERR(sensor->pwdn_gpio);
+diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
+index 8c71a15e986b5..826a5bbe0d09b 100644
+--- a/drivers/iommu/Makefile
++++ b/drivers/iommu/Makefile
+@@ -10,7 +10,7 @@ obj-$(CONFIG_IOMMU_IO_PGTABLE_LPAE) += io-pgtable-arm.o
+ obj-$(CONFIG_IOMMU_IOVA) += iova.o
+ obj-$(CONFIG_OF_IOMMU)	+= of_iommu.o
+ obj-$(CONFIG_MSM_IOMMU) += msm_iommu.o
+-obj-$(CONFIG_AMD_IOMMU) += amd_iommu.o amd_iommu_init.o
++obj-$(CONFIG_AMD_IOMMU) += amd_iommu.o amd_iommu_init.o amd_iommu_quirks.o
+ obj-$(CONFIG_AMD_IOMMU_DEBUGFS) += amd_iommu_debugfs.o
+ obj-$(CONFIG_AMD_IOMMU_V2) += amd_iommu_v2.o
+ obj-$(CONFIG_ARM_SMMU) += arm-smmu.o
+diff --git a/drivers/iommu/amd_iommu.h b/drivers/iommu/amd_iommu.h
+new file mode 100644
+index 0000000000000..12d540d9b59b0
+--- /dev/null
++++ b/drivers/iommu/amd_iommu.h
+@@ -0,0 +1,14 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
 +
- 	/* request optional reset pin */
- 	sensor->reset_gpio = devm_gpiod_get_optional(dev, "reset",
- 						     GPIOD_OUT_HIGH);
-+	if (IS_ERR(sensor->reset_gpio))
-+		return PTR_ERR(sensor->reset_gpio);
++#ifndef AMD_IOMMU_H
++#define AMD_IOMMU_H
++
++int __init add_special_device(u8 type, u8 id, u16 *devid, bool cmd_line);
++
++#ifdef CONFIG_DMI
++void amd_iommu_apply_ivrs_quirks(void);
++#else
++static void amd_iommu_apply_ivrs_quirks(void) { }
++#endif
++
++#endif
+diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
+index 07d84dbab564e..6469f51282427 100644
+--- a/drivers/iommu/amd_iommu_init.c
++++ b/drivers/iommu/amd_iommu_init.c
+@@ -30,6 +30,7 @@
+ #include <asm/irq_remapping.h>
  
- 	v4l2_i2c_subdev_init(&sensor->sd, client, &ov5640_subdev_ops);
+ #include <linux/crash_dump.h>
++#include "amd_iommu.h"
+ #include "amd_iommu_proto.h"
+ #include "amd_iommu_types.h"
+ #include "irq_remapping.h"
+@@ -997,7 +998,7 @@ static void __init set_dev_entry_from_acpi(struct amd_iommu *iommu,
+ 	set_iommu_for_device(iommu, devid);
+ }
  
+-static int __init add_special_device(u8 type, u8 id, u16 *devid, bool cmd_line)
++int __init add_special_device(u8 type, u8 id, u16 *devid, bool cmd_line)
+ {
+ 	struct devid_map *entry;
+ 	struct list_head *list;
+@@ -1148,6 +1149,8 @@ static int __init init_iommu_from_acpi(struct amd_iommu *iommu,
+ 	if (ret)
+ 		return ret;
+ 
++	amd_iommu_apply_ivrs_quirks();
++
+ 	/*
+ 	 * First save the recommended feature enable bits from ACPI
+ 	 */
+diff --git a/drivers/iommu/amd_iommu_quirks.c b/drivers/iommu/amd_iommu_quirks.c
+new file mode 100644
+index 0000000000000..c235f79b7a200
+--- /dev/null
++++ b/drivers/iommu/amd_iommu_quirks.c
+@@ -0,0 +1,92 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++
++/*
++ * Quirks for AMD IOMMU
++ *
++ * Copyright (C) 2019 Kai-Heng Feng <kai.heng.feng@canonical.com>
++ */
++
++#ifdef CONFIG_DMI
++#include <linux/dmi.h>
++
++#include "amd_iommu.h"
++
++#define IVHD_SPECIAL_IOAPIC		1
++
++struct ivrs_quirk_entry {
++	u8 id;
++	u16 devid;
++};
++
++enum {
++	DELL_INSPIRON_7375 = 0,
++	DELL_LATITUDE_5495,
++	LENOVO_IDEAPAD_330S_15ARR,
++};
++
++static const struct ivrs_quirk_entry ivrs_ioapic_quirks[][3] __initconst = {
++	/* ivrs_ioapic[4]=00:14.0 ivrs_ioapic[5]=00:00.2 */
++	[DELL_INSPIRON_7375] = {
++		{ .id = 4, .devid = 0xa0 },
++		{ .id = 5, .devid = 0x2 },
++		{}
++	},
++	/* ivrs_ioapic[4]=00:14.0 */
++	[DELL_LATITUDE_5495] = {
++		{ .id = 4, .devid = 0xa0 },
++		{}
++	},
++	/* ivrs_ioapic[32]=00:14.0 */
++	[LENOVO_IDEAPAD_330S_15ARR] = {
++		{ .id = 32, .devid = 0xa0 },
++		{}
++	},
++	{}
++};
++
++static int __init ivrs_ioapic_quirk_cb(const struct dmi_system_id *d)
++{
++	const struct ivrs_quirk_entry *i;
++
++	for (i = d->driver_data; i->id != 0 && i->devid != 0; i++)
++		add_special_device(IVHD_SPECIAL_IOAPIC, i->id, (u16 *)&i->devid, 0);
++
++	return 0;
++}
++
++static const struct dmi_system_id ivrs_quirks[] __initconst = {
++	{
++		.callback = ivrs_ioapic_quirk_cb,
++		.ident = "Dell Inspiron 7375",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 7375"),
++		},
++		.driver_data = (void *)&ivrs_ioapic_quirks[DELL_INSPIRON_7375],
++	},
++	{
++		.callback = ivrs_ioapic_quirk_cb,
++		.ident = "Dell Latitude 5495",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Latitude 5495"),
++		},
++		.driver_data = (void *)&ivrs_ioapic_quirks[DELL_LATITUDE_5495],
++	},
++	{
++		.callback = ivrs_ioapic_quirk_cb,
++		.ident = "Lenovo ideapad 330S-15ARR",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "81FB"),
++		},
++		.driver_data = (void *)&ivrs_ioapic_quirks[LENOVO_IDEAPAD_330S_15ARR],
++	},
++	{}
++};
++
++void __init amd_iommu_apply_ivrs_quirks(void)
++{
++	dmi_check_system(ivrs_quirks);
++}
++#endif
 -- 
 2.20.1
 
