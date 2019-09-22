@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC593C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65441C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B419F20644
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31D2B206B6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:38:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569181113;
-	bh=Khkr7SUx3By7seMEzLt/dW27p0v3MIpa+M+qZfVLF/E=;
+	s=default; t=1569181116;
+	bh=unuKwpicSk29FKeSUfdYaEpXIULrQ/T9E4PrM81Rjt0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yOU3FDY00q/w1WYmuL/O+Oy+bg2jwIZ7IsD74foXxk8LiCWkPk4C3rD1wMLWGJs9R
-	 RhgHc0O1uzNcATdpZLxhOgjxjKyvxCGqcazQteXN6ei4kZf9AjiGWOsyDPyIKDybAo
-	 dLCVN5QOqyjXI0a2mIZ/va+QYwVGAvyTQs//vSYw=
+	b=aa1HTN1wyINGrNbnZ03iq5phjkkVcbIcbJcG4pgC6zCmyqSOe2iCW44KZ8dFD0rrR
+	 iKlZPBTmGIOuGmIX1reiiendETEXvaAe5SPBotQHNxkck8pWWAN4QQFKKLPGczsE15
+	 ca0NvId8/Mo2j97gc6zlKGbiQOVkpSikcKclnLB8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389224AbfIVSpZ (ORCPT
+        id S2389195AbfIVSpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:45:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41048 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389181AbfIVSpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 22 Sep 2019 14:45:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40956 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389127AbfIVSpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:45:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97C182186A;
-        Sun, 22 Sep 2019 18:45:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 432FC21928;
+        Sun, 22 Sep 2019 18:45:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569177923;
-        bh=Khkr7SUx3By7seMEzLt/dW27p0v3MIpa+M+qZfVLF/E=;
+        s=default; t=1569177918;
+        bh=unuKwpicSk29FKeSUfdYaEpXIULrQ/T9E4PrM81Rjt0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PCyIMHiCljLKLtzhm81UA8D081Sx576IOEyWLmcdTBKDOWhFjAYaHG1cEt4BiMWs/
-         TIBox6JWQZzEeJ3Cq6IE+Y9qEEU+xOyBb4PGoJXxXQQA4CXx4cjOHsAmr7L4xSyV4S
-         4ea5kdvx58t5LOWAEF6ZryerMA2Lk6RBmBG0T9Rw=
+        b=nJujqEl6i6ZyMs839k/CVh3MJoppZQWFJGksMBhcNrCZtWidRmcBc5ovG06MPhj/C
+         EOOXPDNI2+kAuNdgm9eSP/gziIvak52SMeiAtEsAfqWrno4cGLAJ0S/iTQygbWiEJY
+         BRlZYmUWGm1+c78bL3pkAbdATh0yR1/fqg/5PL2Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 035/203] rcu: Add destroy_work_on_stack() to match INIT_WORK_ONSTACK()
-Date:   Sun, 22 Sep 2019 14:41:01 -0400
-Message-Id: <20190922184350.30563-35-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 031/203] x86/apic: Soft disable APIC before initializing it
+Date:   Sun, 22 Sep 2019 14:40:57 -0400
+Message-Id: <20190922184350.30563-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -59,52 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@linux.ibm.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit fbad01af8c3bb9618848abde8054ab7e0c2330fe ]
+[ Upstream commit 2640da4cccf5cc613bf26f0998b9e340f4b5f69c ]
 
-The synchronize_rcu_expedited() function has an INIT_WORK_ONSTACK(),
-but lacks the corresponding destroy_work_on_stack().  This commit
-therefore adds destroy_work_on_stack().
+If the APIC was already enabled on entry of setup_local_APIC() then
+disabling it soft via the SPIV register makes a lot of sense.
 
-Reported-by: Andrea Arcangeli <aarcange@redhat.com>
-Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
-Acked-by: Andrea Arcangeli <aarcange@redhat.com>
+That masks all LVT entries and brings it into a well defined state.
+
+Otherwise previously enabled LVTs which are not touched in the setup
+function stay unmasked and might surprise the just booting kernel.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20190722105219.068290579@linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/rcu/tree_exp.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/x86/kernel/apic/apic.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
-index af7e7b9c86afa..513b403b683b7 100644
---- a/kernel/rcu/tree_exp.h
-+++ b/kernel/rcu/tree_exp.h
-@@ -792,6 +792,7 @@ static int rcu_print_task_exp_stall(struct rcu_node *rnp)
-  */
- void synchronize_rcu_expedited(void)
- {
-+	bool boottime = (rcu_scheduler_active == RCU_SCHEDULER_INIT);
- 	struct rcu_exp_work rew;
- 	struct rcu_node *rnp;
- 	unsigned long s;
-@@ -817,7 +818,7 @@ void synchronize_rcu_expedited(void)
- 		return;  /* Someone else did our work for us. */
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 436d462dde715..ad0d5ced82b30 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -1583,6 +1583,14 @@ static void setup_local_APIC(void)
+ 		return;
+ 	}
  
- 	/* Ensure that load happens before action based on it. */
--	if (unlikely(rcu_scheduler_active == RCU_SCHEDULER_INIT)) {
-+	if (unlikely(boottime)) {
- 		/* Direct call during scheduler init and early_initcalls(). */
- 		rcu_exp_sel_wait_wake(s);
- 	} else {
-@@ -835,5 +836,8 @@ void synchronize_rcu_expedited(void)
- 
- 	/* Let the next expedited grace period start. */
- 	mutex_unlock(&rcu_state.exp_mutex);
++	/*
++	 * If this comes from kexec/kcrash the APIC might be enabled in
++	 * SPIV. Soft disable it before doing further initialization.
++	 */
++	value = apic_read(APIC_SPIV);
++	value &= ~APIC_SPIV_APIC_ENABLED;
++	apic_write(APIC_SPIV, value);
 +
-+	if (likely(!boottime))
-+		destroy_work_on_stack(&rew.rew_work);
- }
- EXPORT_SYMBOL_GPL(synchronize_rcu_expedited);
+ #ifdef CONFIG_X86_32
+ 	/* Pound the ESR really hard over the head with a big hammer - mbligh */
+ 	if (lapic_is_integrated() && apic->disable_esr) {
 -- 
 2.20.1
 
