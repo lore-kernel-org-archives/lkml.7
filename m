@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F8AEC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 131C0C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0FF721D56
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:50:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEBA02196E
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:50:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178221;
-	bh=dojeDYxDcSaMAmdiQPqZM0xxtY9cfX6MMKaYkfr+Zbw=;
+	s=default; t=1569178223;
+	bh=VR7Qr2sSZDvvWUGGowSu7a6WGDqx1uqcGdlqRG8+qwM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PXHpJdzUAQsEisgd/IQORLbpaPVrVZDv1zBZlCIBwdn2RZh7vPdEZ+7H/cA6esLRs
-	 GcTMGvMPOUHXX5RVqb1L2F2tsxCoc4UyGOhZWLAq5ZBltY/1TsqYubgJqBAzAcI5Ud
-	 FI2H1X5D4wcQsoQXNiqrqedVhjgbGlcRG/qJ5BRk=
+	b=EGYmk8B4LIOgaz0gdwEpOkc1sFumiwyrBRR4vdSzKvOPDGQQE8AyZIE0RLv+Annm+
+	 NHLVEZMvESNLVMrp0Dj8hwIvFr11CbUBpJiLchgXeGMCxUkcKMG6CSxTDS8sDO1N4A
+	 e6evH1pCeDLi78WOn3psAntsPIS/HIcxHvFBJuoU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403756AbfIVSuU (ORCPT
+        id S2403859AbfIVSuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:50:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47126 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:50:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392761AbfIVSuL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:50:11 -0400
+        id S2392876AbfIVSuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:50:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACE2D214AF;
-        Sun, 22 Sep 2019 18:50:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79740214AF;
+        Sun, 22 Sep 2019 18:50:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178210;
-        bh=dojeDYxDcSaMAmdiQPqZM0xxtY9cfX6MMKaYkfr+Zbw=;
+        s=default; t=1569178218;
+        bh=VR7Qr2sSZDvvWUGGowSu7a6WGDqx1uqcGdlqRG8+qwM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gFtlAUfCxDmLKpk94ZtRbCh4hSt0PVYQW3tMdJF20mRmyvibz13TumUjpZgp67Jbt
-         +oFcCMBAgqVme5JZh/TCcY2k2IsD2Ak6qYLWWDQhsisISCwDOevHi+t5ir16811ERd
-         +1XWx3t5ZEDhDiSha2cO1G94XwGVSHft1w5pUQaQ=
+        b=WPQpV4ZyMkoe0gDkq3OA66eGwKBJRtEDhtaJfC5zy8iRa85Ffu5AbYiX9D3TeiSWK
+         g63HkV6caYw2gGbblEkPZkwQepSaGJ9vD7qv7O+XnHIi7mvFiH9Czj5zS4ahspdOmg
+         SI6Qs/CEURbYfKnMSRwusQS7d4pUBbOR5e1AQBC4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Tretter <m.tretter@pengutronix.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 017/185] media: vb2: reorder checks in vb2_poll()
-Date:   Sun, 22 Sep 2019 14:46:35 -0400
-Message-Id: <20190922184924.32534-17-sashal@kernel.org>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 022/185] sched/fair: Fix imbalance due to CPU affinity
+Date:   Sun, 22 Sep 2019 14:46:40 -0400
+Message-Id: <20190922184924.32534-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -60,61 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Tretter <m.tretter@pengutronix.de>
+From: Vincent Guittot <vincent.guittot@linaro.org>
 
-[ Upstream commit 8d86a15649957c182e90fa2b1267c16699bc12f1 ]
+[ Upstream commit f6cad8df6b30a5d2bbbd2e698f74b4cafb9fb82b ]
 
-When reaching the end of stream, V4L2 clients may expect the
-V4L2_EOS_EVENT before being able to dequeue the last buffer, which has
-the V4L2_BUF_FLAG_LAST flag set.
+The load_balance() has a dedicated mecanism to detect when an imbalance
+is due to CPU affinity and must be handled at parent level. In this case,
+the imbalance field of the parent's sched_group is set.
 
-If the vb2_poll() function first checks for events and afterwards if
-buffers are available, a driver can queue the V4L2_EOS_EVENT event and
-return the buffer after the check for events but before the check for
-buffers. This causes vb2_poll() to signal that the buffer with
-V4L2_BUF_FLAG_LAST can be read without the V4L2_EOS_EVENT being
-available.
+The description of sg_imbalanced() gives a typical example of two groups
+of 4 CPUs each and 4 tasks each with a cpumask covering 1 CPU of the first
+group and 3 CPUs of the second group. Something like:
 
-First, check for available buffers and afterwards for events to ensure
-that if vb2_poll() signals POLLIN | POLLRDNORM for the
-V4L2_BUF_FLAG_LAST buffer, it also signals POLLPRI for the
-V4L2_EOS_EVENT.
+	{ 0 1 2 3 } { 4 5 6 7 }
+	        *     * * *
 
-Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+But the load_balance fails to fix this UC on my octo cores system
+made of 2 clusters of quad cores.
+
+Whereas the load_balance is able to detect that the imbalanced is due to
+CPU affinity, it fails to fix it because the imbalance field is cleared
+before letting parent level a chance to run. In fact, when the imbalance is
+detected, the load_balance reruns without the CPU with pinned tasks. But
+there is no other running tasks in the situation described above and
+everything looks balanced this time so the imbalance field is immediately
+cleared.
+
+The imbalance field should not be cleared if there is no other task to move
+when the imbalance is detected.
+
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/1561996022-28829-1-git-send-email-vincent.guittot@linaro.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/common/videobuf2/videobuf2-v4l2.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ kernel/sched/fair.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/media/common/videobuf2/videobuf2-v4l2.c
-index fb9ac7696fc6e..bd9bfeee385fb 100644
---- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
-+++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
-@@ -872,17 +872,19 @@ EXPORT_SYMBOL_GPL(vb2_queue_release);
- __poll_t vb2_poll(struct vb2_queue *q, struct file *file, poll_table *wait)
- {
- 	struct video_device *vfd = video_devdata(file);
--	__poll_t res = 0;
-+	__poll_t res;
-+
-+	res = vb2_core_poll(q, file, wait);
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index b07672e793a81..f72bf8122fe4e 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -9319,9 +9319,10 @@ static int load_balance(int this_cpu, struct rq *this_rq,
+ out_balanced:
+ 	/*
+ 	 * We reach balance although we may have faced some affinity
+-	 * constraints. Clear the imbalance flag if it was set.
++	 * constraints. Clear the imbalance flag only if other tasks got
++	 * a chance to move and fix the imbalance.
+ 	 */
+-	if (sd_parent) {
++	if (sd_parent && !(env.flags & LBF_ALL_PINNED)) {
+ 		int *group_imbalance = &sd_parent->groups->sgc->imbalance;
  
- 	if (test_bit(V4L2_FL_USES_V4L2_FH, &vfd->flags)) {
- 		struct v4l2_fh *fh = file->private_data;
- 
- 		poll_wait(file, &fh->wait, wait);
- 		if (v4l2_event_pending(fh))
--			res = EPOLLPRI;
-+			res |= EPOLLPRI;
- 	}
- 
--	return res | vb2_core_poll(q, file, wait);
-+	return res;
- }
- EXPORT_SYMBOL_GPL(vb2_poll);
- 
+ 		if (*group_imbalance)
 -- 
 2.20.1
 
