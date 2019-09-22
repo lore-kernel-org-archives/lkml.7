@@ -2,97 +2,143 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4383AC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 22:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA00C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 22:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C8AD208C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 22:27:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E626208C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 22:29:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="LGqOAQrD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CzA6rUVQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388556AbfIVW1h (ORCPT
+        id S1730018AbfIVW3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 18:27:37 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:41983 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726382AbfIVW1g (ORCPT
+        Sun, 22 Sep 2019 18:29:21 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:41240 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729883AbfIVW3U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 18:27:36 -0400
-Received: by mail-io1-f66.google.com with SMTP id r26so28879504ioh.8
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Sep 2019 15:27:36 -0700 (PDT)
+        Sun, 22 Sep 2019 18:29:20 -0400
+Received: by mail-wr1-f65.google.com with SMTP id h7so11838011wrw.8;
+        Sun, 22 Sep 2019 15:29:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=hImOzMJ05KmBv4g1KzY6JsfY72PzUxGoGBvm1paBJpM=;
-        b=LGqOAQrDCH7KD0IkMFNMW57vSH55x+6WbDjd+go1NQvZ9dUbZq/P8FVdunL40Hde4j
-         2vjuAIMWnuCjHR4/pgoOyWvSSlh8IA/OFZnDV3Mv+7twIMdSIc1Z6X57Uj6bPn6orJuQ
-         +2zQy8jS4pFoMfk9EVpO2Pgg2XN+zaNhWWaeairm6fQz0eWyUwSPTWWRiOuilW+ltgsM
-         Uic0to6pKBNioMBtARf8M26aP7qmc9AqrVgQs41vDHouCR5T0fSnKnJor93xoaEP7LKw
-         8r9EtllMMhHvjvK7TD93tWAZqqev2J++wziySKgO5Aj1IWl+nkOmU25P0vYlR7hzA/6q
-         Ob7g==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9F/+/m59W3Dcig0n0hbTlhgv2402meDrVVrsrjXeJKw=;
+        b=CzA6rUVQzQuRmiGW/YjIwozCjvGCOHLdNL5i5iEYLdhUc7lGGrFaSeJIXSBerLbFdM
+         9iAaZr0TCMQCQ8nuUzho7il+2IhMIMJrS4D4oZzNGUjBgPx7U1D2Ds4ELZ9rhoL2f35W
+         DnCkQ6TUDXbNP1vJIrMOeEYnr1mPsRTCcxmHmZXztOSEmi0Hf1fLT0XtKXrXblnXaXND
+         h4UEKs1UeRL0eamP9ftN8JkT6+lJDy6hDXe9o7RY3AspaX09fH8RnOSaSbuSjItaaWeF
+         /Cin3FasCqlFphbmO7kj4gZ6bbde+r2oE73bPXG5CBIDUvR0+Mj1VwcUE9y0ikcqfWdX
+         7weQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=hImOzMJ05KmBv4g1KzY6JsfY72PzUxGoGBvm1paBJpM=;
-        b=ZquTQKHQro+/QlHKD5mcT0v1r4FbZ3eRZ/kFGGQbkQnhQJsCDn0n46yo2hffslxBOP
-         SesYiP8pRTR74e+Sn1hS7Soff7ih7K9ryR4+8Al3fW5tFAwxjdFiAftpGdDzDdNSQgvy
-         S5TkRzgocjAh5+4BCq15f4PoLvxUHCGv3M6xcQ1kXpGUxizD2j0065fE87jczO73pbg6
-         GUD1jZqYFH68O8snvY3sG6TRNyW8uxfxPV613pCbw2QA3TiJ2lYE0OC5/PR76a5AJWA2
-         HTVlEc7WGnPMsfXG5a4od7fnRxDi3Ghe+QLIpB50D7wCtEyfVSGBdn+i33Adn/eNpwyK
-         uaXw==
-X-Gm-Message-State: APjAAAUmlhI0j+vAEW73KZrM8F+sWwaugFUhhUGAaXpWJyAS2jMzjn6Q
-        ENjDSQGso02pYR0x2LgRUJsYYl9B+x4=
-X-Google-Smtp-Source: APXvYqyC8GFMaLszqNzF5bZkrveNmENlCSweZt7S0Z8Fa1QnU/6Bl4atw0oHwiEOelkywLGWoSjI5w==
-X-Received: by 2002:a63:358a:: with SMTP id c132mr26480848pga.32.1569189406117;
-        Sun, 22 Sep 2019 14:56:46 -0700 (PDT)
-Received: from cakuba.netronome.com (c-73-202-202-92.hsd1.ca.comcast.net. [73.202.202.92])
-        by smtp.gmail.com with ESMTPSA id e192sm10967639pfh.83.2019.09.22.14.56.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Sep 2019 14:56:45 -0700 (PDT)
-Date:   Sun, 22 Sep 2019 14:56:42 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-Cc:     netdev@vger.kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] net: stmmac: selftests: Flow Control test can also
- run with ASYM Pause
-Message-ID: <20190922145642.55453135@cakuba.netronome.com>
-In-Reply-To: <f35fa5a51f52fc1ef17a0a9ecd470e2a6792b3f8.1568887745.git.joabreu@synopsys.com>
-References: <f35fa5a51f52fc1ef17a0a9ecd470e2a6792b3f8.1568887745.git.joabreu@synopsys.com>
-Organization: Netronome Systems, Ltd.
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9F/+/m59W3Dcig0n0hbTlhgv2402meDrVVrsrjXeJKw=;
+        b=GoU0j6P2afCTCEh5xXXrpA5ogtxjHRNk/Smi2Z6lPaOWw3BN0MI87J8JHNt5HICyJb
+         slSGLKJdo6PatJONaSQ1iIb6AOL1ab5dHn1m7LNMRtaS5Z/pCZSib7S2Gc3y1YK2YtXn
+         jENQtUYDffnKfGnEChEkScSGZQBDiIVWtwnvztsiOcJayo1h6ooshKnLw1/AomOadZTh
+         N7ukG5jEoaYeFFun5iaPGrNnZ4Duj0XJa0qqkhZ1zPtrOxBALqSH2zKENORWclgCP8A7
+         lrXYsAUJBkDRqF2ZVbk/qLP82ydv7uJSsXUL4G0tB/TUhxQAVxpy6VECuA1mOzLfEDK9
+         uvkQ==
+X-Gm-Message-State: APjAAAXBK2YHhUyoR6bix4mRnsQw4iEGtDKZM8cm8kzfedXmPq7MM35m
+        2ONBSq8S2x2cF1Xo1Nru29IErXH+
+X-Google-Smtp-Source: APXvYqz803890ifCAZk3zmRNKNz51yt4V6yZulA5FDFsi8VDPkNULWIzAdGIBSzq2/cUEe4aYmufiw==
+X-Received: by 2002:a5d:6a09:: with SMTP id m9mr7608305wru.12.1569191357572;
+        Sun, 22 Sep 2019 15:29:17 -0700 (PDT)
+Received: from [192.168.2.202] (pD9EA35A6.dip0.t-ipconnect.de. [217.234.53.166])
+        by smtp.gmail.com with ESMTPSA id c10sm15870791wrf.58.2019.09.22.15.29.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 22 Sep 2019 15:29:16 -0700 (PDT)
+Subject: Re: [PATCH] serdev: Add ACPI devices by ResourceSource field
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Johan Hovold <johan@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-serial@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190919195624.1140941-1-luzmaximilian@gmail.com>
+ <50b016a1-ed4a-b848-4658-a05731727d7e@redhat.com>
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+Message-ID: <4c2cc8b7-8541-0912-3162-399777dc8dd2@gmail.com>
+Date:   Mon, 23 Sep 2019 00:29:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <50b016a1-ed4a-b848-4658-a05731727d7e@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 19 Sep 2019 12:09:49 +0200, Jose Abreu wrote:
-> The Flow Control selftest is also available with ASYM Pause. Lets add
-> this check to the test and fix eventual false positive failures.
+Hi all,
+
+On 9/20/19 5:00 PM, Hans de Goede wrote:
+> So as promised I've given this patch a try, unfortunately it breaks
+> existing users of ACPI serdev device instantation.
 > 
-> Fixes: 091810dbded9 ("net: stmmac: Introduce selftests support")
-> Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+> After adding this patch "ls /sys/bus/serial/devices" is empty,
+> where as before it gives:
+> 
+> [root@dhcp-45-50 ~]# ls -l /sys/bus/serial/devices/
+> total 0
+> lrwxrwxrwx. 1 root root 0 Sep 20 16:43 serial0 -> ../../../devices/pci0000:00/8086228A:00/serial0
+> lrwxrwxrwx. 1 root root 0 Sep 20 16:43 serial0-0 -> ../../../devices/pci0000:00/8086228A:00/serial0/serial0-0
+> 
+> And since the serdev is missing bluetooth does not work.
 
-Hi Jose! 
+Thanks to some testing by Hans, it turns out that the reason for this is
+that acpi_walk_resources fails with AE_AML_INVALID_RESOURCE_TYPE for a
+specific device. If anyone is interested, the _CRS of the device in
+question is
 
-Thanks for the patch it looks good, seems like you posted it from 
-a slightly different email address than was used for signoff:
+     Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
+     {
+         Name (NAM, Buffer (0x14)
+         {
+             "\\_SB.PCI0.SDHB.BRC1"
+         })
+         Name (SPB, Buffer (0x0C)
+         {
+             /* 0000 */  0x8E, 0x1D, 0x00, 0x01, 0x00, 0xC0, 0x02, 0x00,
+             /* 0008 */  0x00, 0x01, 0x00, 0x00
+         })
+         Name (END, ResourceTemplate ()
+         {
+         })
+         Concatenate (SPB, NAM, Local0)
+         Concatenate (Local0, END, Local1)
+         Return (Local1)
+     }
 
-From: Jose Abreu <Jose.Abreu@synopsys.com>
-vs
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+To solve this, I propose ignoring errors that occur when evaluating the
+_CRS method. Note that with the previously discussed change for v2,
+where we will only look at the first device in _CRS, we should be able
+to handle errors from the actual serdev device allocation separately
+(and only ignore AML evaluation errors).
 
-Could you please fix and repost? Automation may get upset otherwise.
+Further, I think it might also make sense to move the status and
+already-enumerated checks out of acpi_serdev_register_device to before
+looking at _CRS. On one hand, this might save us from unnecessarily
+checking the _CRS on devices that are not present, but on the other
+hand, moving the status check may cause more AML code execution, as we'd
+be checking the status of every device, even if it doesn't have a _CRS.
+Maybe a better solution would be something like: Check if device has
+already been enumerated, then check for _CRS presence, then for
+status/device-presence, and finally look at _CRS contents and
+potentially allocate serdev client?
+
+Regards,
+
+Maximilian
