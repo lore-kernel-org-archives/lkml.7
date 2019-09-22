@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B84C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35195C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A38720830
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1E9120640
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:35:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180939;
-	bh=wKwjfWM+JCA0f7UO0uWQrgxnwNMKaVWWUO0lVQf5ynI=;
+	s=default; t=1569180946;
+	bh=thp0v92/daGty3u6r809Bx87o5vEqDZeOIipXflwc3w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jyq6xWX/EEObiGqF3s6YbuH/O/Qm8l7ADMpyP2CCWPezY9W+/oSL4GoG1MTnLkykd
-	 xMKIdL2Moqla5BQL1eStsZ2ofveLHUILBH2NVRl77muNtmZUqrgutz/ZBnXZSZFkUc
-	 XH6FYKQv1K/q4OdImW2RWg2/jU1GtqZ9u2t9H4Uk=
+	b=t6k3ywVvZllG9f0ox0Y8AJKt8FMBiA69iwmfxXySgA93uVcADsDxvZccggMer4jry
+	 rAz9/V4+Xc9UspI8yHuHYD0bjvOYPotyzoo+wIniNfDSjR1alUxVML1656pW81Rq1i
+	 oqZaJv/xqdH8DVHJdiLMX/G6QpeU0DCJLTpxkOik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439171AbfIVTfi (ORCPT
+        id S2439186AbfIVTfp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:35:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43032 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:35:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390151AbfIVSqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:46:44 -0400
+        id S2390088AbfIVSqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:46:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D1582186A;
-        Sun, 22 Sep 2019 18:46:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1103720830;
+        Sun, 22 Sep 2019 18:46:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178003;
-        bh=wKwjfWM+JCA0f7UO0uWQrgxnwNMKaVWWUO0lVQf5ynI=;
+        s=default; t=1569177996;
+        bh=thp0v92/daGty3u6r809Bx87o5vEqDZeOIipXflwc3w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bFeFvjxFilITo/mmq/qhX1aUs2SkKh+jquYUnjlsHOvOI7vLZluetdeZIBdngc8mq
-         oO2lU8U2o3izoK2Fuv8L7cS+l7IUAfp0MfZTv7EhGe2aM9ftH2SicRbSzl1aedV1Ix
-         4+xWRPOynRDyCsinfhjyctQYf+Bzj/Ch70r5cioU=
+        b=uObstzXv4P9fqdcE2Es/yY8OVDb3MP4fTbgHtihjpPX6jt/DHIYhnjevnh4R8/qgU
+         x6Z4Qw91OLzIgMcOYkKAFVU8F82wOVlPY/99Q5JyIxcJ4vZwq6bZWImMuXnOkyeZ3d
+         Jl4pNMVb5VFiIiHkKa8tQj8r6ikD0z4uiwdh1538=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Agner <stefan.agner@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 092/203] ARM: dts: imx7-colibri: disable HS400
-Date:   Sun, 22 Sep 2019 14:41:58 -0400
-Message-Id: <20190922184350.30563-92-sashal@kernel.org>
+Cc:     Jiaxin Yu <jiaxin.yu@mediatek.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 087/203] ASoC: mediatek: mt6358: add delay after dmic clock on
+Date:   Sun, 22 Sep 2019 14:41:53 -0400
+Message-Id: <20190922184350.30563-87-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -61,42 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Agner <stefan.agner@toradex.com>
+From: Jiaxin Yu <jiaxin.yu@mediatek.com>
 
-[ Upstream commit a95fbda08ee20cd063ce5826e0df95a2c22ea8c5 ]
+[ Upstream commit ccb1fa21ef58a2ac15519bb878470762e967e8b3 ]
 
-Force HS200 by masking bit 63 of the SDHCI capability register.
-The i.MX ESDHC driver uses SDHCI_QUIRK2_CAPS_BIT63_FOR_HS400. With
-that the stack checks bit 63 to descide whether HS400 is available.
-Using sdhci-caps-mask allows to mask bit 63. The stack then selects
-HS200 as operating mode.
+Most dmics produce a high level when they receive clock. The difference
+between power-on and memory record time is about 10ms, but the dmic
+needs 50ms to output normal data.
 
-This prevents rare communication errors with minimal effect on
-performance:
-	sdhci-esdhc-imx 30b60000.usdhc: warning! HS400 strobe DLL
-		status REF not lock!
+This commit add 100ms delay after SoC output clock so that we can cut
+off the pop noise at the beginning.
 
-Signed-off-by: Stefan Agner <stefan.agner@toradex.com>
-Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
-Reviewed-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Jiaxin Yu <jiaxin.yu@mediatek.com>
+Link: https://lore.kernel.org/r/1564980997-11359-1-git-send-email-jiaxin.yu@mediatek.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx7-colibri.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/codecs/mt6358.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
-index 895fbde4d4333..c1ed83131b495 100644
---- a/arch/arm/boot/dts/imx7-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx7-colibri.dtsi
-@@ -323,6 +323,7 @@
- 	vmmc-supply = <&reg_module_3v3>;
- 	vqmmc-supply = <&reg_DCDC3>;
- 	non-removable;
-+	sdhci-caps-mask = <0x80000000 0x0>;
- };
+diff --git a/sound/soc/codecs/mt6358.c b/sound/soc/codecs/mt6358.c
+index 50b3fc5457ea7..cab208aa22a77 100644
+--- a/sound/soc/codecs/mt6358.c
++++ b/sound/soc/codecs/mt6358.c
+@@ -1730,6 +1730,10 @@ static int mt6358_dmic_enable(struct mt6358_priv *priv)
  
- &iomuxc {
+ 	/* UL turn on */
+ 	regmap_write(priv->regmap, MT6358_AFE_UL_SRC_CON0_L, 0x0003);
++
++	/* Prevent pop noise form dmic hw */
++	msleep(100);
++
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
