@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88BCAC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F13A7C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:19:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C945214D9
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:19:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C135C214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:19:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179977;
-	bh=A7bB2lRTeqg19DskxmH6x0oHCi3rj0FsE/t+ZNh3yVU=;
+	s=default; t=1569179980;
+	bh=CQg4llB20lc/ODXXWRGsZEH6sxP9m4w2YL2WQYMk5UM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jP0e+XFY5zgi1zjhWgHuK8mRMDTOKKWZtRnsEzGKjfHnf87Ng2CIzmNbkAQt03aln
-	 PIZXkYbE7Yx6WW4N8rZXuKNZaPRoJGV2YeR31jxp2PkZpBHN4aQFelZ/G+xidpLjtP
-	 I8J9Q3b1j8dVRXi5f4q9EMJ0ZRVATJdRcK2i5EAY=
+	b=LegxJORIqW0XuS33hEBnjEDIjJTbO3zP/GhXh8jJ4yFc00sqAAGxIevjsKd7qU2fQ
+	 SYggzjmm8TeatL8F00nqg8+PJ3zb39VDBdiEjSedBN0kARTw76whK7EKibC0XkAO4n
+	 o6Mzs2tt4DaqVITdozRuFZNFnLe0xKn/15SRPV6c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394269AbfIVTTg (ORCPT
+        id S1728670AbfIVSyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:19:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55592 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:54:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729201AbfIVSyu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:54:50 -0400
+        id S2404396AbfIVSyY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:54:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B708F21D7B;
-        Sun, 22 Sep 2019 18:54:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36E72208C2;
+        Sun, 22 Sep 2019 18:54:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178489;
-        bh=A7bB2lRTeqg19DskxmH6x0oHCi3rj0FsE/t+ZNh3yVU=;
+        s=default; t=1569178464;
+        bh=CQg4llB20lc/ODXXWRGsZEH6sxP9m4w2YL2WQYMk5UM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JYrF/De/gOmhL1YcHpncN594O1oQwzLyaQ56bu0j/01wY0m+vck+5IHZOw7X2aoPv
-         D39S1a2MtH2YmqgoI28F9DPFK3W9XMs3f2yfTYL2Lq8Ny/0NvJXHuMvw2hwa6/CPEe
-         xhVvYptUw+GBU034r4SObXEqLGeflAHzP38Si56Y=
+        b=MyHmkrohLp/b0kyZ7xpN/LpmRs4c11sLuu+wtxG1qTp7zWaARtWZ1WgAMsbfm+D6a
+         bBwYEf3Vr6LoRauihlJtiEIrUJEPMSxZNmou7OIISU5nGhTXqbjL1126uo0coxU2pY
+         3Fi5qbstJ4FZC/GuNjSAgjZ0dQEydIfCR255hWig=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oliver Neukum <oneukum@suse.com>,
-        syzbot+01a77b82edaa374068e1@syzkaller.appspotmail.com,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 024/128] media: iguanair: add sanity checks
-Date:   Sun, 22 Sep 2019 14:52:34 -0400
-Message-Id: <20190922185418.2158-24-sashal@kernel.org>
+Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 004/128] ASoC: sgtl5000: Fix of unmute outputs on probe
+Date:   Sun, 22 Sep 2019 14:52:14 -0400
+Message-Id: <20190922185418.2158-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
 References: <20190922185418.2158-1-sashal@kernel.org>
@@ -61,59 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 
-[ Upstream commit ab1cbdf159beba7395a13ab70bc71180929ca064 ]
+[ Upstream commit 631bc8f0134ae9620d86a96b8c5f9445d91a2dca ]
 
-The driver needs to check the endpoint types, too, as opposed
-to the number of endpoints. This also requires moving the check earlier.
+To enable "zero cross detect" for ADC/HP, change
+HP_ZCD_EN/ADC_ZCD_EN bits only instead of writing the whole
+CHIP_ANA_CTRL register.
 
-Reported-by: syzbot+01a77b82edaa374068e1@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Reviewed-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Reviewed-by: Igor Opaniuk <igor.opaniuk@toradex.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Link: https://lore.kernel.org/r/20190719100524.23300-6-oleksandr.suvorov@toradex.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/rc/iguanair.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ sound/soc/codecs/sgtl5000.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/rc/iguanair.c b/drivers/media/rc/iguanair.c
-index 7daac8bab83b0..6f3030b2054d0 100644
---- a/drivers/media/rc/iguanair.c
-+++ b/drivers/media/rc/iguanair.c
-@@ -424,6 +424,10 @@ static int iguanair_probe(struct usb_interface *intf,
- 	int ret, pipein, pipeout;
- 	struct usb_host_interface *idesc;
+diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
+index 60764f6201b19..f9817029bffbb 100644
+--- a/sound/soc/codecs/sgtl5000.c
++++ b/sound/soc/codecs/sgtl5000.c
+@@ -1280,6 +1280,7 @@ static int sgtl5000_probe(struct snd_soc_component *component)
+ 	int ret;
+ 	u16 reg;
+ 	struct sgtl5000_priv *sgtl5000 = snd_soc_component_get_drvdata(component);
++	unsigned int zcd_mask = SGTL5000_HP_ZCD_EN | SGTL5000_ADC_ZCD_EN;
  
-+	idesc = intf->altsetting;
-+	if (idesc->desc.bNumEndpoints < 2)
-+		return -ENODEV;
-+
- 	ir = kzalloc(sizeof(*ir), GFP_KERNEL);
- 	rc = rc_allocate_device(RC_DRIVER_IR_RAW);
- 	if (!ir || !rc) {
-@@ -438,18 +442,13 @@ static int iguanair_probe(struct usb_interface *intf,
- 	ir->urb_in = usb_alloc_urb(0, GFP_KERNEL);
- 	ir->urb_out = usb_alloc_urb(0, GFP_KERNEL);
+ 	/* power up sgtl5000 */
+ 	ret = sgtl5000_set_power_regs(component);
+@@ -1305,9 +1306,8 @@ static int sgtl5000_probe(struct snd_soc_component *component)
+ 	reg = ((sgtl5000->lrclk_strength) << SGTL5000_PAD_I2S_LRCLK_SHIFT | 0x5f);
+ 	snd_soc_component_write(component, SGTL5000_CHIP_PAD_STRENGTH, reg);
  
--	if (!ir->buf_in || !ir->packet || !ir->urb_in || !ir->urb_out) {
-+	if (!ir->buf_in || !ir->packet || !ir->urb_in || !ir->urb_out ||
-+	    !usb_endpoint_is_int_in(&idesc->endpoint[0].desc) ||
-+	    !usb_endpoint_is_int_out(&idesc->endpoint[1].desc)) {
- 		ret = -ENOMEM;
- 		goto out;
- 	}
+-	snd_soc_component_write(component, SGTL5000_CHIP_ANA_CTRL,
+-			SGTL5000_HP_ZCD_EN |
+-			SGTL5000_ADC_ZCD_EN);
++	snd_soc_component_update_bits(component, SGTL5000_CHIP_ANA_CTRL,
++		zcd_mask, zcd_mask);
  
--	idesc = intf->altsetting;
--
--	if (idesc->desc.bNumEndpoints < 2) {
--		ret = -ENODEV;
--		goto out;
--	}
--
- 	ir->rc = rc;
- 	ir->dev = &intf->dev;
- 	ir->udev = udev;
+ 	snd_soc_component_update_bits(component, SGTL5000_CHIP_MIC_CTRL,
+ 			SGTL5000_BIAS_R_MASK,
 -- 
 2.20.1
 
