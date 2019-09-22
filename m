@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92DC0C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6892BC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:02:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60AAA214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:02:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42EF4206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:02:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178945;
-	bh=ajS824LenRlv1kgE8cKvjNmdtuc51nUxbHZHmDxrsXo=;
+	s=default; t=1569178949;
+	bh=57TMLNQQ6YTr7rtXTwnbCE6W7TeG9GeUU2KIoRcYhjM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tjwVwmKMn24aiRT1MHiVN7vPy1hdjtyfQdrshTja8rhxNvGjlsQRgE7tQpD7AwkbO
-	 YinyEwTV3elRKn7DS/IYMm+Y4zXSijR+fDr1IWjSQiJr8xrxrrIjzi2qed78qKVBSX
-	 9U4jXcHTx2w1Xlif0UKUGGauX/HA+K2m/pc+o6gc=
+	b=pScYjEkp+T83Nv/aE0SE4wX5Mz+aaQYqa8Qby2tuolNUkzff9G3wdSfQujAWS1YXq
+	 8KMiSXI80tErSNQTkp6+VobB9MjsuVCD3McOnwvnEWQmc4pMyedg/ZBzL7af2b7J33
+	 r4mCyLkUGymTOQ7IC/vl3WjRHczezURBeM1rCgtA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439112AbfIVTCN (ORCPT
+        id S1726102AbfIVTC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:02:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38454 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:02:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395399AbfIVTCF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 15:02:05 -0400
+        id S2439103AbfIVTCN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 15:02:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55E6221BE5;
-        Sun, 22 Sep 2019 19:02:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 761F9214D9;
+        Sun, 22 Sep 2019 19:02:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178925;
-        bh=ajS824LenRlv1kgE8cKvjNmdtuc51nUxbHZHmDxrsXo=;
+        s=default; t=1569178932;
+        bh=57TMLNQQ6YTr7rtXTwnbCE6W7TeG9GeUU2KIoRcYhjM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wKQJ40a89Uj4iNW4es61h5fg29BxC/VUv8rbjLFt69IJEtxjgx2Wpx+UiC0MWTgi7
-         mZYBr5kIDIgmNgInSphIjX/C67MRaaNCAhtVh9xgQO+Ph0LkGHTZVspVyDNw47OF8j
-         V3KSJC9v57DXpIIewP4qxpGR8U+EXzJUl3Kfn4I8=
+        b=Ux+m6CYpj7PI9dewJRP9/WHAr++9vNFO2nQ4DR9Rl4yGSqlmbHDr2jjRLl1khL96/
+         bw66f1/WwdLi5c4qKu5MJKmZX3VW8VXU7gYO6zUIrox483IxcB7BhT42WhfAfkRyTb
+         ggoDWJxczdcm/nE6dz16vQR7zG+TUBls/N6zzN4U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Arthur She <arthur.she@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 39/44] ASoC: dmaengine: Make the pcm->name equal to pcm->id if the name is not set
-Date:   Sun, 22 Sep 2019 15:00:57 -0400
-Message-Id: <20190922190103.4906-39-sashal@kernel.org>
+Cc:     Qu Wenruo <wqu@suse.com>, Jungyeon Yoon <jungyeon.yoon@gmail.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 44/44] btrfs: extent-tree: Make sure we only allocate extents from block groups with the same type
+Date:   Sun, 22 Sep 2019 15:01:02 -0400
+Message-Id: <20190922190103.4906-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922190103.4906-1-sashal@kernel.org>
 References: <20190922190103.4906-1-sashal@kernel.org>
@@ -60,44 +59,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+From: Qu Wenruo <wqu@suse.com>
 
-[ Upstream commit 2ec42f3147e1610716f184b02e65d7f493eed925 ]
+[ Upstream commit 2a28468e525f3924efed7f29f2bc5a2926e7e19a ]
 
-Some tools use the snd_pcm_info_get_name() to try to identify PCMs or for
-other purposes.
+[BUG]
+With fuzzed image and MIXED_GROUPS super flag, we can hit the following
+BUG_ON():
 
-Currently it is left empty with the dmaengine-pcm, in this case copy the
-pcm->id string as pcm->name.
+  kernel BUG at fs/btrfs/delayed-ref.c:491!
+  invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
+  CPU: 0 PID: 1849 Comm: sync Tainted: G           O      5.2.0-custom #27
+  RIP: 0010:update_existing_head_ref.cold+0x44/0x46 [btrfs]
+  Call Trace:
+   add_delayed_ref_head+0x20c/0x2d0 [btrfs]
+   btrfs_add_delayed_tree_ref+0x1fc/0x490 [btrfs]
+   btrfs_free_tree_block+0x123/0x380 [btrfs]
+   __btrfs_cow_block+0x435/0x500 [btrfs]
+   btrfs_cow_block+0x110/0x240 [btrfs]
+   btrfs_search_slot+0x230/0xa00 [btrfs]
+   ? __lock_acquire+0x105e/0x1e20
+   btrfs_insert_empty_items+0x67/0xc0 [btrfs]
+   alloc_reserved_file_extent+0x9e/0x340 [btrfs]
+   __btrfs_run_delayed_refs+0x78e/0x1240 [btrfs]
+   ? kvm_clock_read+0x18/0x30
+   ? __sched_clock_gtod_offset+0x21/0x50
+   btrfs_run_delayed_refs.part.0+0x4e/0x180 [btrfs]
+   btrfs_run_delayed_refs+0x23/0x30 [btrfs]
+   btrfs_commit_transaction+0x53/0x9f0 [btrfs]
+   btrfs_sync_fs+0x7c/0x1c0 [btrfs]
+   ? __ia32_sys_fdatasync+0x20/0x20
+   sync_fs_one_sb+0x23/0x30
+   iterate_supers+0x95/0x100
+   ksys_sync+0x62/0xb0
+   __ia32_sys_sync+0xe/0x20
+   do_syscall_64+0x65/0x240
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-For example IGT is using this to find the HDMI PCM for testing audio on it.
+[CAUSE]
+This situation is caused by several factors:
+- Fuzzed image
+  The extent tree of this fs missed one backref for extent tree root.
+  So we can allocated space from that slot.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Reported-by: Arthur She <arthur.she@linaro.org>
-Link: https://lore.kernel.org/r/20190906055524.7393-1-peter.ujfalusi@ti.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+- MIXED_BG feature
+  Super block has MIXED_BG flag.
+
+- No mixed block groups exists
+  All block groups are just regular ones.
+
+This makes data space_info->block_groups[] contains metadata block
+groups.  And when we reserve space for data, we can use space in
+metadata block group.
+
+Then we hit the following file operations:
+
+- fallocate
+  We need to allocate data extents.
+  find_free_extent() choose to use the metadata block to allocate space
+  from, and choose the space of extent tree root, since its backref is
+  missing.
+
+  This generate one delayed ref head with is_data = 1.
+
+- extent tree update
+  We need to update extent tree at run_delayed_ref time.
+
+  This generate one delayed ref head with is_data = 0, for the same
+  bytenr of old extent tree root.
+
+Then we trigger the BUG_ON().
+
+[FIX]
+The quick fix here is to check block_group->flags before using it.
+
+The problem can only happen for MIXED_GROUPS fs. Regular filesystems
+won't have space_info with DATA|METADATA flag, and no way to hit the
+bug.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203255
+Reported-by: Jungyeon Yoon <jungyeon.yoon@gmail.com>
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-generic-dmaengine-pcm.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ fs/btrfs/extent-tree.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/sound/soc/soc-generic-dmaengine-pcm.c b/sound/soc/soc-generic-dmaengine-pcm.c
-index 6fd1906af3873..fe65754c2e504 100644
---- a/sound/soc/soc-generic-dmaengine-pcm.c
-+++ b/sound/soc/soc-generic-dmaengine-pcm.c
-@@ -301,6 +301,12 @@ static int dmaengine_pcm_new(struct snd_soc_pcm_runtime *rtd)
- 
- 		if (!dmaengine_pcm_can_report_residue(dev, pcm->chan[i]))
- 			pcm->flags |= SND_DMAENGINE_PCM_FLAG_NO_RESIDUE;
+diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
+index df2bb4b61a00d..4c316ca3ee785 100644
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -7168,6 +7168,14 @@ static noinline int find_free_extent(struct btrfs_root *orig_root,
+ 			 */
+ 			if ((flags & extra) && !(block_group->flags & extra))
+ 				goto loop;
 +
-+		if (rtd->pcm->streams[i].pcm->name[0] == '\0') {
-+			strncpy(rtd->pcm->streams[i].pcm->name,
-+				rtd->pcm->streams[i].pcm->id,
-+				sizeof(rtd->pcm->streams[i].pcm->name));
-+		}
- 	}
++			/*
++			 * This block group has different flags than we want.
++			 * It's possible that we have MIXED_GROUP flag but no
++			 * block group is mixed.  Just skip such block group.
++			 */
++			btrfs_release_block_group(block_group, delalloc);
++			continue;
+ 		}
  
- 	return 0;
+ have_block_group:
 -- 
 2.20.1
 
