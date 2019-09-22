@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C69C2C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16269C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9385620640
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D88EA20640
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:31:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180690;
-	bh=/F0eqdyJKABuAv6cUV90z+rRaHqrSXh+R+pUYfvNIeM=;
+	s=default; t=1569180694;
+	bh=UcXwOX4Q3s/OeMb0P6GUol/4vmnAyQo333LJD65XGZo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ku2FlstxdR/YCqbx8BhYZL1nxpJgqP7jrRvY/3zG8Yc1cGvMdL5aFdj8HoncS2GZe
-	 D8gNPBRRFJ8qy/muaIGkostqrh7EzJBI+5Z5W9q3DTTRJtVBubOP1RdHfNd2mECFhy
-	 3c180SvS3vKiPDNShSdLIKH+1r5V1HbC7tGyxB2M=
+	b=vf+j+Y1A+k2XDdFNZIMs8xy5cQeDEvIQ4zy/yh5q4uBqdeV555G3o91T+hue3eIh6
+	 mw0aNqrG/Zk1pu4LDKvPgU9N5LwJnPmgtZ1E6lgjhCbOxevGyZ4jlO+FjAsfpnLIxO
+	 +ES+/bXu6xPcfqyA/SM6qa5baihJeFPf2J19iXXc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731458AbfIVTb3 (ORCPT
+        id S2391786AbfIVSss (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:31:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45778 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:48:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391802AbfIVSsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:48:50 -0400
+        id S2391532AbfIVSs0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:48:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD41321D71;
-        Sun, 22 Sep 2019 18:48:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB9BE2186A;
+        Sun, 22 Sep 2019 18:48:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178129;
-        bh=/F0eqdyJKABuAv6cUV90z+rRaHqrSXh+R+pUYfvNIeM=;
+        s=default; t=1569178105;
+        bh=UcXwOX4Q3s/OeMb0P6GUol/4vmnAyQo333LJD65XGZo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P06yKy7AMcLsqCYwNzDXEDODLsuVeSam+In8JhOhMNdug2ZhJcu7f2vd7fpIqSU8c
-         4Wm8ICy2PZ48/vgevmDxSyhAaoTCd5q19F5x80mYsG8VOBndh66u2Y7aWp0hh4zKvK
-         PUx1Ev6aw5yMS4Nb9V4dbWwHYKF4B7f86sHG53QE=
+        b=l1qFw5+2N2xTmzeVqr/dGplC12K5lk2Jl5o7tkzOUFDtAqxTKGn/4UPTxFlhi+gX+
+         FZc8p4iVph/jPLoTdqes76R2C1rKqH3GUlXmDgxTI/EvkRQJGTAf65PdECRs1Hqd9s
+         J0pG2DxnqcxVNCZMNi65VnKMA1fgoNXkLoCri1UQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miles Chen <miles.chen@mediatek.com>,
-        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 182/203] sched/psi: Correct overly pessimistic size calculation
-Date:   Sun, 22 Sep 2019 14:43:28 -0400
-Message-Id: <20190922184350.30563-182-sashal@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Marc Zyngier <maz@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-riscv@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.3 166/203] irqchip/sifive-plic: set max threshold for ignored handlers
+Date:   Sun, 22 Sep 2019 14:43:12 -0400
+Message-Id: <20190922184350.30563-166-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -62,84 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miles Chen <miles.chen@mediatek.com>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit 4adcdcea717cb2d8436bef00dd689aa5bc76f11b ]
+[ Upstream commit 9ce06497c2722a0f9109e4cc3ce35b7a69617886 ]
 
-When passing a equal or more then 32 bytes long string to psi_write(),
-psi_write() copies 31 bytes to its buf and overwrites buf[30]
-with '\0'. Which makes the input string 1 byte shorter than
-it should be.
+When running in M-mode, the S-mode plic handlers are still listed in the
+device tree.  Ignore them by setting the maximum threshold.
 
-Fix it by copying sizeof(buf) bytes when nbytes >= sizeof(buf).
-
-This does not cause problems in normal use case like:
-"some 500000 10000000" or "full 500000 10000000" because they
-are less than 32 bytes in length.
-
-	/* assuming nbytes == 35 */
-	char buf[32];
-
-	buf_size = min(nbytes, (sizeof(buf) - 1)); /* buf_size = 31 */
-	if (copy_from_user(buf, user_buf, buf_size))
-		return -EFAULT;
-
-	buf[buf_size - 1] = '\0'; /* buf[30] = '\0' */
-
-Before:
-
- %cd /proc/pressure/
- %echo "123456789|123456789|123456789|1234" > memory
- [   22.473497] nbytes=35,buf_size=31
- [   22.473775] 123456789|123456789|123456789| (print 30 chars)
- %sh: write error: Invalid argument
-
- %echo "123456789|123456789|123456789|1" > memory
- [   64.916162] nbytes=32,buf_size=31
- [   64.916331] 123456789|123456789|123456789| (print 30 chars)
- %sh: write error: Invalid argument
-
-After:
-
- %cd /proc/pressure/
- %echo "123456789|123456789|123456789|1234" > memory
- [  254.837863] nbytes=35,buf_size=32
- [  254.838541] 123456789|123456789|123456789|1 (print 31 chars)
- %sh: write error: Invalid argument
-
- %echo "123456789|123456789|123456789|1" > memory
- [ 9965.714935] nbytes=32,buf_size=32
- [ 9965.715096] 123456789|123456789|123456789|1 (print 31 chars)
- %sh: write error: Invalid argument
-
-Also remove the superfluous parentheses.
-
-Signed-off-by: Miles Chen <miles.chen@mediatek.com>
-Cc: <linux-mediatek@lists.infradead.org>
-Cc: <wsd_upstream@mediatek.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190912103452.13281-1-miles.chen@mediatek.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Acked-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/psi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/irqchip/irq-sifive-plic.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-index 6e52b67b420e7..517e3719027e6 100644
---- a/kernel/sched/psi.c
-+++ b/kernel/sched/psi.c
-@@ -1198,7 +1198,7 @@ static ssize_t psi_write(struct file *file, const char __user *user_buf,
- 	if (static_branch_likely(&psi_disabled))
- 		return -EOPNOTSUPP;
+diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
+index cf755964f2f8b..c72c036aea768 100644
+--- a/drivers/irqchip/irq-sifive-plic.c
++++ b/drivers/irqchip/irq-sifive-plic.c
+@@ -244,6 +244,7 @@ static int __init plic_init(struct device_node *node,
+ 		struct plic_handler *handler;
+ 		irq_hw_number_t hwirq;
+ 		int cpu, hartid;
++		u32 threshold = 0;
  
--	buf_size = min(nbytes, (sizeof(buf) - 1));
-+	buf_size = min(nbytes, sizeof(buf));
- 	if (copy_from_user(buf, user_buf, buf_size))
- 		return -EFAULT;
+ 		if (of_irq_parse_one(node, i, &parent)) {
+ 			pr_err("failed to parse parent for context %d.\n", i);
+@@ -266,10 +267,16 @@ static int __init plic_init(struct device_node *node,
+ 			continue;
+ 		}
  
++		/*
++		 * When running in M-mode we need to ignore the S-mode handler.
++		 * Here we assume it always comes later, but that might be a
++		 * little fragile.
++		 */
+ 		handler = per_cpu_ptr(&plic_handlers, cpu);
+ 		if (handler->present) {
+ 			pr_warn("handler already present for context %d.\n", i);
+-			continue;
++			threshold = 0xffffffff;
++			goto done;
+ 		}
+ 
+ 		handler->present = true;
+@@ -279,8 +286,9 @@ static int __init plic_init(struct device_node *node,
+ 		handler->enable_base =
+ 			plic_regs + ENABLE_BASE + i * ENABLE_PER_HART;
+ 
++done:
+ 		/* priority must be > threshold to trigger an interrupt */
+-		writel(0, handler->hart_base + CONTEXT_THRESHOLD);
++		writel(threshold, handler->hart_base + CONTEXT_THRESHOLD);
+ 		for (hwirq = 1; hwirq <= nr_irqs; hwirq++)
+ 			plic_toggle(handler, hwirq, 0);
+ 		nr_handlers++;
 -- 
 2.20.1
 
