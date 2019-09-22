@@ -4,59 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71CABC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 863B4C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AC1C206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:22:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C423214D9
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:22:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180127;
-	bh=6udvi2yLiVhB84Voc7+vk5tUjJuKiJpMivh3EZYLisI=;
+	s=default; t=1569180131;
+	bh=kEqj6OLGPamqmRohSMQQqEmFs4DfR7akg0YU+5Kzct8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O2t7o/qdmlKHHmYLIerQhKD8EcDSt6PmC7/PRrFAuDU0VJvaq7iuPidMkDVCvv9el
-	 Ze+8GTzW+1bzX1LP2tiJs45z9oIcO9MZbnKYl7xvm07Mtu8YSL0SYPDaOW4nBNtPwx
-	 u4MGz7v9ZZMW3pDjsfIX2RAyoIu0wHBlmjI29XDM=
+	b=ZRqJgmDO9gOSyt8E4nehYRuAktbfwR2DWqod7l2v4BdOnrHXpZ/2UlJ1isYRcVCfg
+	 oNrcVJh2Ec5/SbukA2NoEHB7/h8hqzC/1pokhMghcUB4h8YsL0kbiQ4uVPO9jHqd3L
+	 4XyYr+poZmjdohbu3OHubeHmuhYwH0jA9C/sb1pE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394462AbfIVSx4 (ORCPT
+        id S2390586AbfIVTWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:53:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53534 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:22:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394340AbfIVSxg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:53:36 -0400
+        id S2394454AbfIVSx4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:53:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9486921D6C;
-        Sun, 22 Sep 2019 18:53:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2A6321479;
+        Sun, 22 Sep 2019 18:53:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178415;
-        bh=6udvi2yLiVhB84Voc7+vk5tUjJuKiJpMivh3EZYLisI=;
+        s=default; t=1569178435;
+        bh=kEqj6OLGPamqmRohSMQQqEmFs4DfR7akg0YU+5Kzct8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E0hpY0IWdTK0ffNeNeVN0fI7JKqvS8HvFsWXZ4MxEyqEuxULla6HHyclRiT82D9Sl
-         Pu8vAsXyMg9ZaDUFlAKPkKdlIhP/p+3DVEhqXt+xuh3hRCrddTIx8yzO1EfN4Hp2sY
-         Luif7y/aZdAvxr9+gj3M0dNMT3XjLIxkj7L92fXg=
+        b=x0wD0rWHW83eFG39gnL4uo9cdyA+0HYdLKKI/U4KMylO8IVeMcBLXcF9s8dWisyrq
+         gqucsasXGsn20yP1CcQyksQ3bsWWrucnI6agdZ6g0eoTrf87QOo0druNx5J3N8D1w0
+         e8BfuFY6/6UrSwR5dsath1Y9AIWnoRdBvHTHPhmg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Austin Kim <austindh.kim@gmail.com>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Hedi Berriche <hedi.berriche@hpe.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mike Travis <mike.travis@hpe.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Thomas Gleixner <tglx@linutronix.de>, allison@lohutok.net,
-        andy@infradead.org, armijn@tjaldur.nl, bp@alien8.de,
-        dvhart@infradead.org, gregkh@linuxfoundation.org, hpa@zytor.com,
-        kjlu@umn.edu, platform-driver-x86@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 154/185] x86/platform/uv: Fix kmalloc() NULL check routine
-Date:   Sun, 22 Sep 2019 14:48:52 -0400
-Message-Id: <20190922184924.32534-154-sashal@kernel.org>
+Cc:     Sean Young <sean@mess.org>,
+        syzbot+eaaaf38a95427be88f4b@syzkaller.appspotmail.com,
+        Kees Cook <keescook@chromium.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 170/185] media: technisat-usb2: break out of loop at end of buffer
+Date:   Sun, 22 Sep 2019 14:49:08 -0400
+Message-Id: <20190922184924.32534-170-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -69,57 +61,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Austin Kim <austindh.kim@gmail.com>
+From: Sean Young <sean@mess.org>
 
-[ Upstream commit 864b23f0169d5bff677e8443a7a90dfd6b090afc ]
+[ Upstream commit 0c4df39e504bf925ab666132ac3c98d6cbbe380b ]
 
-The result of kmalloc() should have been checked ahead of below statement:
+Ensure we do not access the buffer beyond the end if no 0xff byte
+is encountered.
 
-	pqp = (struct bau_pq_entry *)vp;
-
-Move BUG_ON(!vp) before above statement.
-
-Signed-off-by: Austin Kim <austindh.kim@gmail.com>
-Cc: Dimitri Sivanich <dimitri.sivanich@hpe.com>
-Cc: Hedi Berriche <hedi.berriche@hpe.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mike Travis <mike.travis@hpe.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Russ Anderson <russ.anderson@hpe.com>
-Cc: Steve Wahl <steve.wahl@hpe.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: allison@lohutok.net
-Cc: andy@infradead.org
-Cc: armijn@tjaldur.nl
-Cc: bp@alien8.de
-Cc: dvhart@infradead.org
-Cc: gregkh@linuxfoundation.org
-Cc: hpa@zytor.com
-Cc: kjlu@umn.edu
-Cc: platform-driver-x86@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190905232951.GA28779@LGEARND20B15
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reported-by: syzbot+eaaaf38a95427be88f4b@syzkaller.appspotmail.com
+Signed-off-by: Sean Young <sean@mess.org>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/platform/uv/tlb_uv.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/media/usb/dvb-usb/technisat-usb2.c | 22 ++++++++++------------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
 
-diff --git a/arch/x86/platform/uv/tlb_uv.c b/arch/x86/platform/uv/tlb_uv.c
-index 0c7dfec4acac8..5a66d73620ce4 100644
---- a/arch/x86/platform/uv/tlb_uv.c
-+++ b/arch/x86/platform/uv/tlb_uv.c
-@@ -1815,9 +1815,9 @@ static void pq_init(int node, int pnode)
+diff --git a/drivers/media/usb/dvb-usb/technisat-usb2.c b/drivers/media/usb/dvb-usb/technisat-usb2.c
+index c659e18b358b8..676d233d46d53 100644
+--- a/drivers/media/usb/dvb-usb/technisat-usb2.c
++++ b/drivers/media/usb/dvb-usb/technisat-usb2.c
+@@ -608,10 +608,9 @@ static int technisat_usb2_frontend_attach(struct dvb_usb_adapter *a)
+ static int technisat_usb2_get_ir(struct dvb_usb_device *d)
+ {
+ 	struct technisat_usb2_state *state = d->priv;
+-	u8 *buf = state->buf;
+-	u8 *b;
+-	int ret;
+ 	struct ir_raw_event ev;
++	u8 *buf = state->buf;
++	int i, ret;
  
- 	plsize = (DEST_Q_SIZE + 1) * sizeof(struct bau_pq_entry);
- 	vp = kmalloc_node(plsize, GFP_KERNEL, node);
--	pqp = (struct bau_pq_entry *)vp;
--	BUG_ON(!pqp);
-+	BUG_ON(!vp);
+ 	buf[0] = GET_IR_DATA_VENDOR_REQUEST;
+ 	buf[1] = 0x08;
+@@ -647,26 +646,25 @@ static int technisat_usb2_get_ir(struct dvb_usb_device *d)
+ 		return 0; /* no key pressed */
  
-+	pqp = (struct bau_pq_entry *)vp;
- 	cp = (char *)pqp + 31;
- 	pqp = (struct bau_pq_entry *)(((unsigned long)cp >> 5) << 5);
+ 	/* decoding */
+-	b = buf+1;
  
+ #if 0
+ 	deb_rc("RC: %d ", ret);
+-	debug_dump(b, ret, deb_rc);
++	debug_dump(buf + 1, ret, deb_rc);
+ #endif
+ 
+ 	ev.pulse = 0;
+-	while (1) {
+-		ev.pulse = !ev.pulse;
+-		ev.duration = (*b * FIRMWARE_CLOCK_DIVISOR * FIRMWARE_CLOCK_TICK) / 1000;
+-		ir_raw_event_store(d->rc_dev, &ev);
+-
+-		b++;
+-		if (*b == 0xff) {
++	for (i = 1; i < ARRAY_SIZE(state->buf); i++) {
++		if (buf[i] == 0xff) {
+ 			ev.pulse = 0;
+ 			ev.duration = 888888*2;
+ 			ir_raw_event_store(d->rc_dev, &ev);
+ 			break;
+ 		}
++
++		ev.pulse = !ev.pulse;
++		ev.duration = (buf[i] * FIRMWARE_CLOCK_DIVISOR *
++			       FIRMWARE_CLOCK_TICK) / 1000;
++		ir_raw_event_store(d->rc_dev, &ev);
+ 	}
+ 
+ 	ir_raw_event_handle(d->rc_dev);
 -- 
 2.20.1
 
