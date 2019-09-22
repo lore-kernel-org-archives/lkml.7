@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A41C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF61C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15D30206B6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:37:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67A01206B6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:37:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569181047;
-	bh=c0HS9vBTQOn2wgK3HorCqLxirZgXOoitDmt8CKIkcZw=;
+	s=default; t=1569181053;
+	bh=BhJwqG++4J9wEY2L8CXnAV4u3Z2d3St1190j766FZvE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WydwFh54Y1dyilPxjBVkIKCeQjDO0Vhq4A8uPPOFGRJEdgMV5pk5k7THYkx9QYd/C
-	 olpLWKDHYR7YDlxa90EuvpDAsacEimryU242rxzE0vYHXLXAGY5tN0M05HkbMr1Ikb
-	 axJ/Y0bCRiaElQ5xDvRo8aSZG7Lcbmr8mzmGpgO0=
+	b=RcWB+gbim7a6Z+blMo4j4VU827GWdr/+eGniSbZ6OKxcAM/uzpO+qgV3KgjkBUAy1
+	 v45p/QJ7mEg3vjXE/2Ym8A51bExLqpMNyTVg2kVvNWG9TjCDRpg3tD3QgGYD6jem5i
+	 2zGGjX690OtC3KPytR9VCmKMq8NEqq1OanIBUEx8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389519AbfIVSpr (ORCPT
+        id S2439272AbfIVThc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:45:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41432 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:37:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389547AbfIVSpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:45:43 -0400
+        id S2389588AbfIVSpr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:45:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1101D2196E;
-        Sun, 22 Sep 2019 18:45:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B961D20830;
+        Sun, 22 Sep 2019 18:45:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569177942;
-        bh=c0HS9vBTQOn2wgK3HorCqLxirZgXOoitDmt8CKIkcZw=;
+        s=default; t=1569177946;
+        bh=BhJwqG++4J9wEY2L8CXnAV4u3Z2d3St1190j766FZvE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ViMI0aGE88mihPcGM+NypivROnrHv0YwbayqhUv7FAQbKgCBLqNqeBlRhhDchsRi9
-         Uj+DONrqmVxeL0DKaYG+0WZMcVvQucVR3gPAee9VdFXviIK7Cd69TuKxAQArBw1HRS
-         O5oqBS+aBLzs4vEGF9PEZer5D6+YxBuPMaqcl18M=
+        b=1lMdRP75UG5V9xtGKJQ9mWYBgtgvzgZibQ8BMh27FB72G4g1v2FS84iuu7wCsvLGD
+         xopA+W4/t87gbqUAI7Xctq0kHmSEt+bVfphJs6foYZB6XgPXfdBhIf80V979Kyxi4q
+         LUyN1wnLB3Vz5CwYyCT+4EspieEFIwS1us9u2wrY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guoqing Jiang <jgq516@gmail.com>,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Song Liu <songliubraving@fb.com>,
-        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 051/203] md: don't call spare_active in md_reap_sync_thread if all member devices can't work
-Date:   Sun, 22 Sep 2019 14:41:17 -0400
-Message-Id: <20190922184350.30563-51-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 5.3 054/203] media: staging: tegra-vde: Fix build error
+Date:   Sun, 22 Sep 2019 14:41:20 -0400
+Message-Id: <20190922184350.30563-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -60,43 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guoqing Jiang <jgq516@gmail.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 0d8ed0e9bf9643f27f4816dca61081784dedb38d ]
+[ Upstream commit 6b2265975239ab655069d796b822835a593e1cc7 ]
 
-When add one disk to array, the md_reap_sync_thread is responsible
-to activate the spare and set In_sync flag for the new member in
-spare_active().
+If IOMMU_SUPPORT is not set, and COMPILE_TEST is y,
+IOMMU_IOVA may be set to m. So building will fails:
 
-But if raid1 has one member disk A, and disk B is added to the array.
-Then we offline A before all the datas are synchronized from A to B,
-obviously B doesn't have the latest data as A, but B is still marked
-with In_sync flag.
+drivers/staging/media/tegra-vde/iommu.o: In function `tegra_vde_iommu_map':
+iommu.c:(.text+0x41): undefined reference to `alloc_iova'
+iommu.c:(.text+0x56): undefined reference to `__free_iova'
 
-So let's not call spare_active under the condition, otherwise B is
-still showed with 'U' state which is not correct.
+Select IOMMU_IOVA while COMPILE_TEST is set to fix this.
 
-Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Suggested-by: Dmitry Osipenko <digetx@gmail.com>
+Fixes: b301f8de1925 ("media: staging: media: tegra-vde: Add IOMMU support")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/md.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/staging/media/tegra-vde/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 24638ccedce42..fd62be3ca2871 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -9043,7 +9043,8 @@ void md_reap_sync_thread(struct mddev *mddev)
- 	/* resync has finished, collect result */
- 	md_unregister_thread(&mddev->sync_thread);
- 	if (!test_bit(MD_RECOVERY_INTR, &mddev->recovery) &&
--	    !test_bit(MD_RECOVERY_REQUESTED, &mddev->recovery)) {
-+	    !test_bit(MD_RECOVERY_REQUESTED, &mddev->recovery) &&
-+	    mddev->degraded != mddev->raid_disks) {
- 		/* success...*/
- 		/* activate any spares */
- 		if (mddev->pers->spare_active(mddev)) {
+diff --git a/drivers/staging/media/tegra-vde/Kconfig b/drivers/staging/media/tegra-vde/Kconfig
+index 2e7f644ae5911..ba49ea50b8c0b 100644
+--- a/drivers/staging/media/tegra-vde/Kconfig
++++ b/drivers/staging/media/tegra-vde/Kconfig
+@@ -3,7 +3,7 @@ config TEGRA_VDE
+ 	tristate "NVIDIA Tegra Video Decoder Engine driver"
+ 	depends on ARCH_TEGRA || COMPILE_TEST
+ 	select DMA_SHARED_BUFFER
+-	select IOMMU_IOVA if IOMMU_SUPPORT
++	select IOMMU_IOVA if (IOMMU_SUPPORT || COMPILE_TEST)
+ 	select SRAM
+ 	help
+ 	    Say Y here to enable support for the NVIDIA Tegra video decoder
 -- 
 2.20.1
 
