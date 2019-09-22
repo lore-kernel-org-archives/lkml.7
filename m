@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB74C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B57FC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B360220644
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:37:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D371E20644
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:38:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569181070;
-	bh=3OtjawS5Quoj0m9+HxUvXsST9CRqFPfbZPNEu3y/zwY=;
+	s=default; t=1569181080;
+	bh=/U8E39KaJHPuCt55oqs9aksyUmQx9j4P9V5W2MqI1Vw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o9AkP53f+Ez4PPoNhmvJRz82H9UTdhbEzJ0ls8kcN2yGOU1GhSTH3Q81+udG5eauO
-	 MrSrdXQPOr7gtsUbZkhy/gU7YjKjiZGLnEGfTt0YCxJlcHYgQtQnRj69Ksq+yyLUzR
-	 An+R1/Fvb497BJVbZXM9Nx4/StpO+Fn+kVyoIsCU=
+	b=qXIT45k72EkgcwWdhuWYFJg91k5ybGc0tO13G4d+io0scYPDU9h31hwQiO0rd8C5X
+	 7hAb7jKtRLMOHqDeNK+kwhqd82Ona2rkgn/lLvPTdQiMvSO0SFsH34hqxetDH2CLa9
+	 ekD+awRkL4lRqmCUeVSGxjaEfyGJfQEMBBIRgVYc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406863AbfIVTht (ORCPT
+        id S2389447AbfIVSpj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:37:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41330 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:45:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389488AbfIVSpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:45:40 -0400
+        id S2389320AbfIVSpc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:45:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93EE6206C2;
-        Sun, 22 Sep 2019 18:45:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 130FE206C2;
+        Sun, 22 Sep 2019 18:45:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569177939;
-        bh=3OtjawS5Quoj0m9+HxUvXsST9CRqFPfbZPNEu3y/zwY=;
+        s=default; t=1569177931;
+        bh=/U8E39KaJHPuCt55oqs9aksyUmQx9j4P9V5W2MqI1Vw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M2EQHUOcI0omIH6MQE0Q6uebxmm4EYUncmlofu7ur9GUzUFM21ZVc9ljpG3KrZEpD
-         UAI3WHyfdgyFCwpm5qRle0sGZg0d8XBRas9K/K1fAq2Q+hfb/jA7h4dVrWQliCXbGa
-         nOSrbdupLr0r/oNUYhoE4dW+VoyaVXnpvwdMvIPY=
+        b=LZbwd8I6iIvnkwexRsYzR5p8va2+X5uX37rsth1/vBiLR5kYsk4R3PlNnb61FDYRX
+         g31A+fSETvK2bPtkod1C4QOmZNZ79zMJcdGeqrBEXRZMEiUSfGvMlSrcJDVlNPivTu
+         TrePFY29v/Mb3vXYxMW2nGQ40wbewpQHDTZLeFFk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Leon Kong <Leon.KONG@cn.bosch.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 048/203] ASoC: rsnd: don't call clk_get_rate() under atomic context
-Date:   Sun, 22 Sep 2019 14:41:14 -0400
-Message-Id: <20190922184350.30563-48-sashal@kernel.org>
+Cc:     Junhua Huang <huang.junhua@zte.com.cn>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 042/203] arm64: mm: free the initrd reserved memblock in a aligned manner
+Date:   Sun, 22 Sep 2019 14:41:08 -0400
+Message-Id: <20190922184350.30563-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -60,87 +58,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+From: Junhua Huang <huang.junhua@zte.com.cn>
 
-[ Upstream commit 06e8f5c842f2dbb232897ba967ea7b422745c271 ]
+[ Upstream commit 13776f9d40a028a245bb766269e360f5b7a62721 ]
 
-ADG is using clk_get_rate() under atomic context, thus, we might
-have scheduling issue.
-To avoid this issue, we need to get/keep clk rate under
-non atomic context.
+We should free the initrd reserved memblock in an aligned manner,
+because the initrd reserves the memblock in an aligned manner
+in arm64_memblock_init().
+Otherwise there are some fragments in memblock_reserved regions
+after free_initrd_mem(). e.g.:
+/sys/kernel/debug/memblock # cat reserved
+   0: 0x0000000080080000..0x00000000817fafff
+   1: 0x0000000083400000..0x0000000083ffffff
+   2: 0x0000000090000000..0x000000009000407f
+   3: 0x00000000b0000000..0x00000000b000003f
+   4: 0x00000000b26184ea..0x00000000b2618fff
+The fragments like the ranges from b0000000 to b000003f and
+from b26184ea to b2618fff should be freed.
 
-We need to handle ADG as special device at Renesas Sound driver.
-From SW point of view, we want to impletent it as
-rsnd_mod_ops :: prepare, but it makes code just complicate.
+And we can do free_reserved_area() after memblock_free(),
+as free_reserved_area() calls __free_pages(), once we've done
+that it could be allocated somewhere else,
+but memblock and iomem still say this is reserved memory.
 
-To avoid complicated code/patch, this patch adds new clk_rate[] array,
-and keep clk IN rate when rsnd_adg_clk_enable() was called.
-
-Reported-by: Leon Kong <Leon.KONG@cn.bosch.com>
-Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Tested-by: Leon Kong <Leon.KONG@cn.bosch.com>
-Link: https://lore.kernel.org/r/87v9vb0xkp.wl-kuninori.morimoto.gx@renesas.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 05c58752f9dc ("arm64: To remove initrd reserved area entry from memblock")
+Signed-off-by: Junhua Huang <huang.junhua@zte.com.cn>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sh/rcar/adg.c | 21 +++++++++++++++------
- 1 file changed, 15 insertions(+), 6 deletions(-)
+ arch/arm64/mm/init.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/sh/rcar/adg.c b/sound/soc/sh/rcar/adg.c
-index fce4e050a9b70..b9aacf3d3b29c 100644
---- a/sound/soc/sh/rcar/adg.c
-+++ b/sound/soc/sh/rcar/adg.c
-@@ -30,6 +30,7 @@ struct rsnd_adg {
- 	struct clk *clkout[CLKOUTMAX];
- 	struct clk_onecell_data onecell;
- 	struct rsnd_mod mod;
-+	int clk_rate[CLKMAX];
- 	u32 flags;
- 	u32 ckr;
- 	u32 rbga;
-@@ -114,9 +115,9 @@ static void __rsnd_adg_get_timesel_ratio(struct rsnd_priv *priv,
- 	unsigned int val, en;
- 	unsigned int min, diff;
- 	unsigned int sel_rate[] = {
--		clk_get_rate(adg->clk[CLKA]),	/* 0000: CLKA */
--		clk_get_rate(adg->clk[CLKB]),	/* 0001: CLKB */
--		clk_get_rate(adg->clk[CLKC]),	/* 0010: CLKC */
-+		adg->clk_rate[CLKA],	/* 0000: CLKA */
-+		adg->clk_rate[CLKB],	/* 0001: CLKB */
-+		adg->clk_rate[CLKC],	/* 0010: CLKC */
- 		adg->rbga_rate_for_441khz,	/* 0011: RBGA */
- 		adg->rbgb_rate_for_48khz,	/* 0100: RBGB */
- 	};
-@@ -302,7 +303,7 @@ int rsnd_adg_clk_query(struct rsnd_priv *priv, unsigned int rate)
- 	 * AUDIO_CLKA/AUDIO_CLKB/AUDIO_CLKC/AUDIO_CLKI.
- 	 */
- 	for_each_rsnd_clk(clk, adg, i) {
--		if (rate == clk_get_rate(clk))
-+		if (rate == adg->clk_rate[i])
- 			return sel_table[i];
- 	}
- 
-@@ -369,10 +370,18 @@ void rsnd_adg_clk_control(struct rsnd_priv *priv, int enable)
- 
- 	for_each_rsnd_clk(clk, adg, i) {
- 		ret = 0;
--		if (enable)
-+		if (enable) {
- 			ret = clk_prepare_enable(clk);
--		else
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index f3c795278def0..b1ee6cb4b17fc 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -570,8 +570,12 @@ void free_initmem(void)
+ #ifdef CONFIG_BLK_DEV_INITRD
+ void __init free_initrd_mem(unsigned long start, unsigned long end)
+ {
++	unsigned long aligned_start, aligned_end;
 +
-+			/*
-+			 * We shouldn't use clk_get_rate() under
-+			 * atomic context. Let's keep it when
-+			 * rsnd_adg_clk_enable() was called
-+			 */
-+			adg->clk_rate[i] = clk_get_rate(adg->clk[i]);
-+		} else {
- 			clk_disable_unprepare(clk);
-+		}
++	aligned_start = __virt_to_phys(start) & PAGE_MASK;
++	aligned_end = PAGE_ALIGN(__virt_to_phys(end));
++	memblock_free(aligned_start, aligned_end - aligned_start);
+ 	free_reserved_area((void *)start, (void *)end, 0, "initrd");
+-	memblock_free(__virt_to_phys(start), end - start);
+ }
+ #endif
  
- 		if (ret < 0)
- 			dev_warn(dev, "can't use clk %d\n", i);
 -- 
 2.20.1
 
