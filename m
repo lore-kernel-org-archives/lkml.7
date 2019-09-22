@@ -2,191 +2,164 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D54C4740C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 11:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4FE0C4740C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 11:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AF0A20644
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 11:26:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569151562;
-	bh=xuk54b7a9huOoDiaj0tyIMpOlx6yrmchtiwZGlBhgTA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ce7Uu6lehOWOqJFknig2dEEwuwYH24qfDWMiQQGye1uXKv7FlKQe/7iVoqeQue6QH
-	 pr5qGKqk+twZhTSxiv9Yii3QK3KWgHWHAyGnFpIk/VUUbWN8v69Y1OSMqB3PzE+9OQ
-	 L2XFhF4+y4KMU5Dmmvq6Go7/s9HWY822UrYAJJLQ=
+	by mail.kernel.org (Postfix) with ESMTP id 96EC5208C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 11:31:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="EAhfm2pN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728547AbfIVL0B (ORCPT
+        id S1728553AbfIVLbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 07:26:01 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55940 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728182AbfIVL0B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 07:26:01 -0400
-Received: by mail-wm1-f67.google.com with SMTP id a6so6759126wma.5;
-        Sun, 22 Sep 2019 04:25:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hI/6ZrFUtuVVe3JujYBRlhWLKvB3/VNdoJv8xZNq3C4=;
-        b=TTG6ArSidhY9sojTMa+qjmlEeVu87EXujKjiwnOmrgvzD+7nBcnhwwxpp5FfApw0M5
-         N46BFiYQvtsuMvkBXfgdHipDwHWY094rLvsmGguaakMjJbFhGp3F8p50ClTXc/862mUs
-         AnWfYOqcR3cnNaqwJ1CjPgd22I3Qs996rewSnmmfsiSQz51J8Kht/XOVyJmhMBF1cqL9
-         r7k9oFa8GY60WcII1iry1Dj+fC55l/JrWkJsLZhrl9nGUlKkzi/FnPsB59ntQ74Zayzh
-         S99O1tg74qFHte/ovCdG7nY1jlaCLu4QikUwyQ0PGMR2YQEuTxDLemsvrXxrDQ1YWo4p
-         cBvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hI/6ZrFUtuVVe3JujYBRlhWLKvB3/VNdoJv8xZNq3C4=;
-        b=b8wLuDL3aSeNk8wXAErbmScaPPYSsH7qzJJTogWFhzsIOElssewbXWjPtWJxCuFYLr
-         LxVosvp7UUTWV2RdQ4Rpl/xv2uvu4BCcq07hzwN6ND4Petk0y3qlWOpsHPLQNBV0OYjX
-         F0c/iyV4NAyDKpQKHpvoeTu8G7ZKdeeztcvt4igRCc6wm3kQn/+Y3faCIkK+IQ7ppbLg
-         AFEJ/c6O9HK011M2xmxHIGOFCcXl3jykHBIgL7TpfCT+cSHWG1an2zshXvzYTEriQcio
-         n/KndodrG21gQFCBU1EVlnwVGg9qAEtKKbQq7Ly+HhFoShiGWZq2gYvdaQM/Zbpf6EVC
-         3YvA==
-X-Gm-Message-State: APjAAAUlNlp4CBlCWPhCUohmIYgv7kpMwlImtcAOT3bi5fXA93UzNS8b
-        3YigftSiDeMLsnn8LKPV8fw=
-X-Google-Smtp-Source: APXvYqyMadmk+dV8RSERKdngK+3FjCtdstHO9wmgik253xpK8MW+SlzWmId6qbFUEqjLwD2d0nkG7g==
-X-Received: by 2002:a7b:cbd6:: with SMTP id n22mr10722850wmi.39.1569151558485;
-        Sun, 22 Sep 2019 04:25:58 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id f143sm10169316wme.40.2019.09.22.04.25.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Sep 2019 04:25:57 -0700 (PDT)
-Date:   Sun, 22 Sep 2019 13:25:55 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] Kselftest update for Linux 5.4-rc1
-Message-ID: <20190922112555.GB122003@gmail.com>
-References: <be8059f4-8e8f-cd18-0978-a9c861f6396b@linuxfoundation.org>
- <CAHk-=wgs+UoZWfHGENWSVBd57Z-Vp0Nqe68R6wkDb5zF+cfvDg@mail.gmail.com>
- <CAKRRn-edxk9Du70A27V=d3Na73fh=fVvGEVsQRGROrQm05YRrA@mail.gmail.com>
- <CAFd5g45ROPm-1SD5cD772gqESaP3D8RbBhSiJXZzbaA+2hFdHA@mail.gmail.com>
- <CAHk-=wgMuNLBhJR_nFHrpViHbz2ErQ-fJV6B9o0+wym+Wk+r0w@mail.gmail.com>
+        Sun, 22 Sep 2019 07:31:09 -0400
+Received: from mout.web.de ([217.72.192.78]:59089 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726129AbfIVLbI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 07:31:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1569151844;
+        bh=kC76RXvfJTy1HZUekXpbmi7oxCJC1XxnD+EiRjMIZvo=;
+        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
+        b=EAhfm2pN+jW523GMafYEw+FVFzrL4bDED1EDqskmS/0ccx3hWzDCk5iiOmtFXjNQw
+         rYYqvjVDcEmOVI7lkWjsp6B11mizPO8Zk1C1VVQ+1R9lXuAK/sRaVyzGTq6BBHsliA
+         4vCzdx4VR6X0O9s4WfsVyAZpqKIKg/xuLX+tb/ho=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.244.8.78]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0M9os0-1iN1ch460m-00B38s; Sun, 22
+ Sep 2019 13:30:44 +0200
+To:     dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] dmaengine: owl: Use devm_platform_ioremap_resource() in
+ owl_dma_probe()
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <d36b6a6c-2e3d-8d68-6ddc-969a377ca3b2@web.de>
+Date:   Sun, 22 Sep 2019 13:30:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgMuNLBhJR_nFHrpViHbz2ErQ-fJV6B9o0+wym+Wk+r0w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:DjgGZJ2CdVmeeHm5b7Ehe3aT2ACCFpE86w/u10/ZvEVJMvN2S6B
+ sL85AWmfmP8feL8NN/2F8OEGGmyFkFcJHKAIfAqMcIKiW7Gbvk//O27IEr4BpaqXIqqVeMo
+ WUXy8jpHqE+eO7/Nof2Wdtq7zO5iq7puvnHjKBq3q4D+XQ9XPj0HY7bhoAKJ5TTQfRNhp9p
+ yp4viTOfuHIy9mHlgJESQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:npTUmH/GVX4=:5D9q1T1bl9fyv+TyBzQAU+
+ ZiitkRZYzVCQ3nsO34CA9gWtb6jNdFs+o70D0dKiiFS1FFw9FNVnZ4nCTbrn24yHv+wW6yJy5
+ hGyhnZA+uSE265JUawOoJeupEDdd176i/SbHbbp+sXX7YYf2CnlDT9o7nhEJyhDlQJIWCMooz
+ ckxIjDcvBmb7xEJDqsHKbTd8g6RxodBUIDt4megD2k576r0Ew14ua9B5W/USY8GEf9Z0jOwBM
+ 3SyBEeT2wIwdfptJigYbEyoM5Fhb7saueupsO7ctJ6oZFDASPqFdSHO95r9GMSzCJ8NjHxiIH
+ wNRltuRzrOWRRq0P7ue58HdWNOLmOMm7xIAhTGvVsFvvi93CJoTImJCgA1nvgyngq+JnZJSg/
+ HmSZCg7/d95me2LeltV1iBcoMuZ3qG9EX4Nw+r1Xvz/iTZjoh7mv3+MhP1lBznAgB3wJK/9YT
+ dr37SikcxFcKN5X4VvrtPST+SsFiPLdARcnGfD8VKXFkyvmuVJZD48l+QGhzErXdwtPdFcteM
+ hJ07hn4MJlgSzjNsUqTlRktzIlKZabnm9hm1bGBd7DiWvROmU0mrIKAohgIrQ/YuXoAGGp3IO
+ 0zc68nzoq9CgRaTCIiJGHMVxZKtyjwH7o5mSpBAgyKxNUHVYjwj3EvIuPVVdpZW0isK+BP8e/
+ 4L/vEpgSV6KTzRYHohFRxDMLH4/xcvldSK4V4ojzHNKCgSC/Po22hYft13f8Dr9OXJQKzBV2s
+ INOfEjY0qBTJ0ntW0eonT59OZqtNvE/2R3own8+kqg9voxTQkkWXxroG6ScAD7HKltvdJPH8F
+ AqCfj6KfYkOYuDfvUR//LR1K0jHeJWaHpwgG/2bhq3pm23NC6S2/8firTs7RLyiEUkM7o8S3/
+ upaN/TsxdoTTr8Dqu0cVUkX2ZGns+tfxnSNIjXwVWCwc5280cdygy7ITk+GTvf0E+FTbgCyCW
+ dE+jga4OrEww/0Bb0xxEkabxnAbr084XQ3XDVD2Mc1GcyXpTXZa7ZDdGjo20K03i9cR5zLQGt
+ qU6vdaXTaCMr63M3DZj1kmJaxIi8liwSVkP6Y8V9Mb/M6d+3wIHGpR+t14xe8oxrN9siL9Dhf
+ r3VtV7eMguF33rg+Ovi0MNN2b4oAVhoyU3EiL6slzkgTr5sNoJyn3TsNgb2cKKdfc+oRBLLVS
+ inRnrC81nWDI6TKF1UGI+RwQj2h7hXNuH6HgfINnAD3EmCRE58uJHk1vx5ytgUMRB0kFCSUIQ
+ 95N0UoVTZ9pxXShp2gOs08QNR2etXuQKIrI4bFBWgn9lzTAnUyfE5uG3amCA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Sun, 22 Sep 2019 13:23:54 +0200
 
-* Linus Torvalds <torvalds@linux-foundation.org> wrote:
+Simplify this function implementation by using a known wrapper function.
 
-> On Fri, Sep 20, 2019 at 9:35 AM Brendan Higgins
-> <brendanhiggins@google.com> wrote:
-> >
-> > Sorry about that. I am surprised that none of the other reviewers
-> > brought this up.
-> 
-> I think I'm "special".
-> 
-> There was some other similar change a few years ago, which I
-> absolutely hated because of how it broke autocomplete for me. Very few
-> other people seemed to react to it.
+This issue was detected by using the Coccinelle software.
 
-FWIW, I am obsessively sensitive to autocomplete and overall source code 
-file hieararchy and nomenclature details as well, so it's not just you.
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/dma/owl-dma.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-Beyond the muscle memory aspect, nonsensical naming and inanely flat file 
-hierarchies annoy kernel developers and makes it harder for newbies to 
-understand the kernel source as well.
+diff --git a/drivers/dma/owl-dma.c b/drivers/dma/owl-dma.c
+index 90bbcef99ef8..023f951189a7 100644
+=2D-- a/drivers/dma/owl-dma.c
++++ b/drivers/dma/owl-dma.c
+@@ -1045,18 +1045,13 @@ static int owl_dma_probe(struct platform_device *p=
+dev)
+ {
+ 	struct device_node *np =3D pdev->dev.of_node;
+ 	struct owl_dma *od;
+-	struct resource *res;
+ 	int ret, i, nr_channels, nr_requests;
 
-The less clutter, the more organization, the better - and there's very 
-few valid technical reasons to add any new files or directories to the 
-top level directory - we should probably *remove* quite a few.
+ 	od =3D devm_kzalloc(&pdev->dev, sizeof(*od), GFP_KERNEL);
+ 	if (!od)
+ 		return -ENOMEM;
 
-For example 'firmware/' was recently moved to drivers/firmware/, and in a 
-similar fashion about a third of the remaining 22 directories should 
-probably be moved too:
+-	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (!res)
+-		return -EINVAL;
+-
+-	od->base =3D devm_ioremap_resource(&pdev->dev, res);
++	od->base =3D devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(od->base))
+ 		return PTR_ERR(od->base);
 
-  drwxr-xr-x    arch
-  drwxr-xr-x    block
-  drwxr-xr-x    certs           # move to build/certs/ dir
-  drwxr-xr-x    crypto          # move to kernel/crypto/ or security/crypto/
-  drwxr-xr-x    Documentation
-  drwxr-xr-x    drivers
-  drwxr-xr-x    fs
-  drwxr-xr-x    include
-  drwxr-xr-x    init
-  drwxr-xr-x    ipc             # move to kernel/ipc/
-  drwxr-xr-x    kernel
-  drwxr-xr-x    lib
-  drwxr-xr-x    LICENSES
-  drwxr-xr-x    mm
-  drwxr-xr-x    net
-  drwxr-xr-x    samples         # move to Documentation/samples/
-  drwxr-xr-x    scripts         # move to build/scripts/
-  drwxr-xr-x    security
-  drwxr-xr-x    sound           # move to drivers/sound/
-  drwxr-xr-x    tools
-  drwxr-xr-x    usr             # move to build/usr/
-  drwxr-xr-x    virt            # move to the already existing drivers/virt/
+=2D-
+2.23.0
 
-  -rw-r--r--    COPYING
-  -rw-r--r--    CREDITS
-  -rw-r--r--    Kbuild
-  -rw-r--r--    Kconfig
-  -rw-r--r--    MAINTAINERS
-  -rw-r--r--    Makefile
-  -rw-r--r--    README
-
-There's a few borderline ones:
-
- - 'block' could in principle move to drivers/block/core/ but it's fine 
-   at the top level too I think.
-
- - 'init' could in principle be moved to kernel/init/ - but it's not 
-   wrong at the top level either.
-
-The remaining top level hierarchy would look pretty sweet and short:
-
-  drwxr-xr-x    arch
-  drwxr-xr-x    block
-  drwxr-xr-x    build             # new
-  drwxr-xr-x    Documentation
-  drwxr-xr-x    drivers
-  drwxr-xr-x    fs
-  drwxr-xr-x    include
-  drwxr-xr-x    init
-  drwxr-xr-x    kernel
-  drwxr-xr-x    lib
-  drwxr-xr-x    LICENSES
-  drwxr-xr-x    mm
-  drwxr-xr-x    net
-  drwxr-xr-x    security
-  drwxr-xr-x    tools
-
-  -rw-r--r--    COPYING
-  -rw-r--r--    CREDITS
-  -rw-r--r--    Kbuild
-  -rw-r--r--    Kconfig
-  -rw-r--r--    MAINTAINERS
-  -rw-r--r--    Makefile
-  -rw-r--r--    README
-
-I'm volunteering to do this (in a scripted, repeatable, reviewable, 
-tweakable and "easy to execute in a quiet moment" fashion), although
-I also expect you to balk at the churn. :-)
-
-Thanks,
-
-	Ingo
