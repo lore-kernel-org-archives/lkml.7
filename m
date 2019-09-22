@@ -7,45 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C94C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:54:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F5AC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:54:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 052EC21D79
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:54:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DA6421D6C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:54:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178486;
-	bh=LBxEdC86jqvCyJyf6tEuS0mbCPOX+3ZovXYKemhrgeo=;
+	s=default; t=1569178493;
+	bh=oQUUreUDYQHQk1iKn9p/xFlfXzQbV7DA5p78Im2qQj0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yyx4yOgwS8nW+hGMgVmkidmzvbLE8326yNxRUexAq374IK227F3YfqwDemcXgaNnx
-	 lappX3qldxfMZ/k0/Zii8C2jSGID12SWl83rO6l7iKrTCVn9qw0qrLAuguocTbP3EE
-	 kaX8sRUd1H2p0+j+Dw2ZC7PreNR3eN9v++JLvyG8=
+	b=qvX6K7XccnT/Q7hixQr7+JJraLugTSW1jf9Qs36vy458HAmbwMF8+IUHfrRcucCvw
+	 ThxZyN+T8TWOoUMAHRElN6O8/ussuggKaTo8G+XjP3qYNzZCERMiU49C0wST9K2wUd
+	 Wn7SaWAJmVVWKxGGINvrraiQ+UQ6JsMZu859EAj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408017AbfIVSyp (ORCPT
+        id S2408045AbfIVSyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:54:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54836 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:54:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404370AbfIVSyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:54:22 -0400
+        id S2405054AbfIVSy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:54:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CE1021BE5;
-        Sun, 22 Sep 2019 18:54:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F91921A4A;
+        Sun, 22 Sep 2019 18:54:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178461;
-        bh=LBxEdC86jqvCyJyf6tEuS0mbCPOX+3ZovXYKemhrgeo=;
+        s=default; t=1569178466;
+        bh=oQUUreUDYQHQk1iKn9p/xFlfXzQbV7DA5p78Im2qQj0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cMSD12UaaM/KLA2Yx8zDIuWo/SgMr+hlyf0XYAUzrDl0A1kwnQPS3JlBNoiCbSeph
-         cmf/SLgC0XLNlwc3xn0+BUgNaJlOFrRwOUytebR1p/BnEOQqc004NMO7kLRuyfXOKQ
-         Qai8Yq9pHwA7idlAbfyFkTCbYBKBNVv7e5Yc0y1M=
+        b=oayiUhjSnBaGl0axoIJUmZ//d3IWUfhB/CcXHatn58Hf2rLT1exxe+WIkBYU4M7sX
+         j4U9MJCk5fOWC4yErPcgnnARoGdhHCI7wUodXh74ZXxqzlcPzBlfyfAhuwZkkpD9mu
+         SqOHoXtILyUhNEKUGVQrMBIwb1yt7tPCFI2zripc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Axel Lin <axel.lin@ingics.com>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 002/128] regulator: lm363x: Fix off-by-one n_voltages for lm3632 ldo_vpos/ldo_vneg
-Date:   Sun, 22 Sep 2019 14:52:12 -0400
-Message-Id: <20190922185418.2158-2-sashal@kernel.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Ian Jackson <ian.jackson@citrix.com>,
+        Julien Grall <julien.grall@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 006/128] firmware: qcom_scm: Use proper types for dma mappings
+Date:   Sun, 22 Sep 2019 14:52:16 -0400
+Message-Id: <20190922185418.2158-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
 References: <20190922185418.2158-1-sashal@kernel.org>
@@ -58,50 +63,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Axel Lin <axel.lin@ingics.com>
+From: Stephen Boyd <swboyd@chromium.org>
 
-[ Upstream commit 1e2cc8c5e0745b545d4974788dc606d678b6e564 ]
+[ Upstream commit 6e37ccf78a53296c6c7bf426065762c27829eb84 ]
 
-According to the datasheet https://www.ti.com/lit/ds/symlink/lm3632a.pdf
-Table 20. VPOS Bias Register Field Descriptions VPOS[5:0]
-Sets the Positive Display Bias (LDO) Voltage (50 mV per step)
-000000: 4 V
-000001: 4.05 V
-000010: 4.1 V
-....................
-011101: 5.45 V
-011110: 5.5 V (Default)
-011111: 5.55 V
-....................
-100111: 5.95 V
-101000: 6 V
-Note: Codes 101001 to 111111 map to 6 V
+We need to use the proper types and convert between physical addresses
+and dma addresses here to avoid mismatch warnings. This is especially
+important on systems with a different size for dma addresses and
+physical addresses. Otherwise, we get the following warning:
 
-The LM3632_LDO_VSEL_MAX should be 0b101000 (0x28), so the maximum voltage
-can match the datasheet.
+  drivers/firmware/qcom_scm.c: In function "qcom_scm_assign_mem":
+  drivers/firmware/qcom_scm.c:469:47: error: passing argument 3 of "dma_alloc_coherent" from incompatible pointer type [-Werror=incompatible-pointer-types]
 
-Fixes: 3a8d1a73a037 ("regulator: add LM363X driver")
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Link: https://lore.kernel.org/r/20190626132632.32629-1-axel.lin@ingics.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+We also fix the size argument to dma_free_coherent() because that size
+doesn't need to be aligned after it's already aligned on the allocation
+size. In fact, dma debugging expects the same arguments to be passed to
+both the allocation and freeing sides of the functions so changing the
+size is incorrect regardless.
+
+Reported-by: Ian Jackson <ian.jackson@citrix.com>
+Cc: Ian Jackson <ian.jackson@citrix.com>
+Cc: Julien Grall <julien.grall@arm.com>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
+Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/lm363x-regulator.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/firmware/qcom_scm.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/lm363x-regulator.c b/drivers/regulator/lm363x-regulator.c
-index b615a413ca9f6..27c0a67cfd0e2 100644
---- a/drivers/regulator/lm363x-regulator.c
-+++ b/drivers/regulator/lm363x-regulator.c
-@@ -33,7 +33,7 @@
+diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+index e778af766fae3..98c987188835b 100644
+--- a/drivers/firmware/qcom_scm.c
++++ b/drivers/firmware/qcom_scm.c
+@@ -18,6 +18,7 @@
+ #include <linux/init.h>
+ #include <linux/cpumask.h>
+ #include <linux/export.h>
++#include <linux/dma-direct.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/module.h>
+ #include <linux/types.h>
+@@ -449,6 +450,7 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+ 	phys_addr_t mem_to_map_phys;
+ 	phys_addr_t dest_phys;
+ 	phys_addr_t ptr_phys;
++	dma_addr_t ptr_dma;
+ 	size_t mem_to_map_sz;
+ 	size_t dest_sz;
+ 	size_t src_sz;
+@@ -466,9 +468,10 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+ 	ptr_sz = ALIGN(src_sz, SZ_64) + ALIGN(mem_to_map_sz, SZ_64) +
+ 			ALIGN(dest_sz, SZ_64);
  
- /* LM3632 */
- #define LM3632_BOOST_VSEL_MAX		0x26
--#define LM3632_LDO_VSEL_MAX		0x29
-+#define LM3632_LDO_VSEL_MAX		0x28
- #define LM3632_VBOOST_MIN		4500000
- #define LM3632_VLDO_MIN			4000000
+-	ptr = dma_alloc_coherent(__scm->dev, ptr_sz, &ptr_phys, GFP_KERNEL);
++	ptr = dma_alloc_coherent(__scm->dev, ptr_sz, &ptr_dma, GFP_KERNEL);
+ 	if (!ptr)
+ 		return -ENOMEM;
++	ptr_phys = dma_to_phys(__scm->dev, ptr_dma);
  
+ 	/* Fill source vmid detail */
+ 	src = ptr;
+@@ -498,7 +501,7 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+ 
+ 	ret = __qcom_scm_assign_mem(__scm->dev, mem_to_map_phys, mem_to_map_sz,
+ 				    ptr_phys, src_sz, dest_phys, dest_sz);
+-	dma_free_coherent(__scm->dev, ALIGN(ptr_sz, SZ_64), ptr, ptr_phys);
++	dma_free_coherent(__scm->dev, ptr_sz, ptr, ptr_dma);
+ 	if (ret) {
+ 		dev_err(__scm->dev,
+ 			"Assign memory protection call failed %d.\n", ret);
 -- 
 2.20.1
 
