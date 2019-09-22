@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A3EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C53C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 378E92054F
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:27:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE3D82054F
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:27:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180453;
-	bh=TCzrj21DePjZetssjICk3LSvp+6XekcD+3nP3eSbAjo=;
+	s=default; t=1569180456;
+	bh=e6HrPHm9mHRsCTtvzt4/Np6paexRy6vP8uDN+UsN+Qk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o2TGZYoVbw5aM1YQLqnM04u4v5TkKPs8ZXg9r5OMwZnTCmpUOWsWF2eifrzNoOeii
-	 kQq/wDYEWd53EUNAPQcjHFsscdTEUF9K42rxEHVYFIu1YNrc+KBdRXkuysGunj5jRS
-	 4j8mREZByh2J63/2ntJw9DV/cjepMYwNncUe7O0s=
+	b=Va8K4FBNz80mun6BYh8rcTNWEp73jixHFwDUfE8zHSGbGVJlqEsM5ni/Ws8HUplv3
+	 2XbLQs/hIKn9ILu7pDrA4gS4ErU8eKiub4RnOeGFarjTmKW4/aYs6ZUkSYUmhgDOYF
+	 4TFRkTZMPmNLwVH35qz9SUICSzDV344hV8vXNd8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729246AbfIVSvN (ORCPT
+        id S1731591AbfIVT1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:51:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48644 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:27:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729170AbfIVSvF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:51:05 -0400
+        id S1729229AbfIVSvL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:51:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C87D208C2;
-        Sun, 22 Sep 2019 18:51:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F225E2190F;
+        Sun, 22 Sep 2019 18:51:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178264;
-        bh=TCzrj21DePjZetssjICk3LSvp+6XekcD+3nP3eSbAjo=;
+        s=default; t=1569178270;
+        bh=e6HrPHm9mHRsCTtvzt4/Np6paexRy6vP8uDN+UsN+Qk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sDYWQYMO5brs7uGt7Av5naZMW1atDW0dhE/4xUw/pF3SJ7FHsmYb1OTPUGL2fXcMN
-         izFHDqYdG5smOcN8bB4nTJj+D0pPegvL3qhUApPoqxLyMqEel5abMO1esyuY1RmjtP
-         tEEMkHVmYPMXsK4U40eb9Y3aMI4P82+iLfXAeK0Q=
+        b=cT0KNZA/EW6t0xLpFKejqd1lXuNvFk2gfuf67lQMSKuA9/SG1MQrDqk1siARPI6Se
+         55z1KHsZtnN2lnpSGvW7RPo5uFRGSHpnEQWM07xnBY9uHL3Wq5Z8v3IycrH/Xpjumd
+         qbbJrKxeVwFvbBXE7AscTKeJ+KRBeWH03f7WdMeQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephen Douthit <stephend@silicom-usa.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-edac@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 052/185] EDAC, pnd2: Fix ioremap() size in dnv_rd_reg()
-Date:   Sun, 22 Sep 2019 14:47:10 -0400
-Message-Id: <20190922184924.32534-52-sashal@kernel.org>
+Cc:     zhengbin <zhengbin13@huawei.com>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 057/185] blk-mq: Fix memory leak in blk_mq_init_allocated_queue error handling
+Date:   Sun, 22 Sep 2019 14:47:15 -0400
+Message-Id: <20190922184924.32534-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -59,65 +58,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Douthit <stephend@silicom-usa.com>
+From: zhengbin <zhengbin13@huawei.com>
 
-[ Upstream commit 29a3388bfcce7a6d087051376ea02bf8326a957b ]
+[ Upstream commit 73d9c8d4c0017e21e1ff519474ceb1450484dc9a ]
 
-Depending on how BIOS has marked the reserved region containing the 32KB
-MCHBAR you can get warnings like:
+If blk_mq_init_allocated_queue->elevator_init_mq fails, need to release
+the previously requested resources.
 
-resource sanity check: requesting [mem 0xfed10000-0xfed1ffff], which spans more than reserved [mem 0xfed10000-0xfed17fff]
-caller dnv_rd_reg+0xc8/0x240 [pnd2_edac] mapping multiple BARs
-
-Not all of the mmio regions used in dnv_rd_reg() are the same size.  The
-MCHBAR window is 32KB and the sideband ports are 64KB.  Pass the correct
-size to ioremap() depending on which resource we're reading from.
-
-Signed-off-by: Stephen Douthit <stephend@silicom-usa.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
+Fixes: d34849913819 ("blk-mq-sched: allow setting of default IO scheduler")
+Signed-off-by: zhengbin <zhengbin13@huawei.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/pnd2_edac.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ block/blk-mq.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/edac/pnd2_edac.c b/drivers/edac/pnd2_edac.c
-index ca25f8fe57ef3..1ad538baaa4a9 100644
---- a/drivers/edac/pnd2_edac.c
-+++ b/drivers/edac/pnd2_edac.c
-@@ -260,11 +260,14 @@ static u64 get_sideband_reg_base_addr(void)
- 	}
- }
- 
-+#define DNV_MCHBAR_SIZE  0x8000
-+#define DNV_SB_PORT_SIZE 0x10000
- static int dnv_rd_reg(int port, int off, int op, void *data, size_t sz, char *name)
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 68106a41f90d2..f934e8afe5b43 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -2853,6 +2853,8 @@ static unsigned int nr_hw_queues(struct blk_mq_tag_set *set)
+ struct request_queue *blk_mq_init_allocated_queue(struct blk_mq_tag_set *set,
+ 						  struct request_queue *q)
  {
- 	struct pci_dev *pdev;
- 	char *base;
- 	u64 addr;
-+	unsigned long size;
++	int ret = -ENOMEM;
++
+ 	/* mark the queue as mq asap */
+ 	q->mq_ops = set->ops;
  
- 	if (op == 4) {
- 		pdev = pci_get_device(PCI_VENDOR_ID_INTEL, 0x1980, NULL);
-@@ -279,15 +282,17 @@ static int dnv_rd_reg(int port, int off, int op, void *data, size_t sz, char *na
- 			addr = get_mem_ctrl_hub_base_addr();
- 			if (!addr)
- 				return -ENODEV;
-+			size = DNV_MCHBAR_SIZE;
- 		} else {
- 			/* MMIO via sideband register base address */
- 			addr = get_sideband_reg_base_addr();
- 			if (!addr)
- 				return -ENODEV;
- 			addr += (port << 16);
-+			size = DNV_SB_PORT_SIZE;
- 		}
+@@ -2914,17 +2916,18 @@ struct request_queue *blk_mq_init_allocated_queue(struct blk_mq_tag_set *set,
+ 	blk_mq_map_swqueue(q);
  
--		base = ioremap((resource_size_t)addr, 0x10000);
-+		base = ioremap((resource_size_t)addr, size);
- 		if (!base)
- 			return -ENODEV;
+ 	if (!(set->flags & BLK_MQ_F_NO_SCHED)) {
+-		int ret;
+-
+ 		ret = elevator_init_mq(q);
+ 		if (ret)
+-			return ERR_PTR(ret);
++			goto err_tag_set;
+ 	}
  
+ 	return q;
+ 
++err_tag_set:
++	blk_mq_del_queue_tag_set(q);
+ err_hctxs:
+ 	kfree(q->queue_hw_ctx);
++	q->nr_hw_queues = 0;
+ err_sys_init:
+ 	blk_mq_sysfs_deinit(q);
+ err_poll:
 -- 
 2.20.1
 
