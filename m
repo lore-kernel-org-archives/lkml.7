@@ -7,49 +7,44 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F54C4740C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 10:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 119B0C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 10:52:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE5892070C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 10:52:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E19C3208C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 10:52:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728422AbfIVKwj (ORCPT
+        id S1728448AbfIVKwl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 06:52:39 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:55565 "EHLO
+        Sun, 22 Sep 2019 06:52:41 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:55568 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728370AbfIVKwi (ORCPT
+        with ESMTP id S1728361AbfIVKwk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 06:52:38 -0400
+        Sun, 22 Sep 2019 06:52:40 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iBzTd-0000v8-Bv; Sun, 22 Sep 2019 12:52:25 +0200
+        id 1iBzTe-0000vE-T0; Sun, 22 Sep 2019 12:52:27 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E63311C0E22;
-        Sun, 22 Sep 2019 12:52:24 +0200 (CEST)
-Date:   Sun, 22 Sep 2019 10:52:24 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 52F3C1C0DEE;
+        Sun, 22 Sep 2019 12:52:25 +0200 (CEST)
+Date:   Sun, 22 Sep 2019 10:52:25 -0000
 From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] tools arch x86: Sync asm/cpufeatures.h with the
+Subject: [tip: perf/urgent] tools uapi asm-generic: Sync unistd.h with the
  kernel sources
 Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        Gayatri Kammela <gayatri.kammela@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <tip-pq63abgknsaeov23p80d8gjv@git.kernel.org>
-References: <tip-pq63abgknsaeov23p80d8gjv@git.kernel.org>
+In-Reply-To: <tip-hpnjuyjzoudltqe7dvbokqdt@git.kernel.org>
+References: <tip-hpnjuyjzoudltqe7dvbokqdt@git.kernel.org>
 MIME-Version: 1.0
-Message-ID: <156914954486.24167.16035963049459550059.tip-bot2@tip-bot2>
+Message-ID: <156914954529.24167.15440163405295467233.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -65,78 +60,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     40f1c039c7c6de913ee04eac585102e2fce7f6f7
-Gitweb:        https://git.kernel.org/tip/40f1c039c7c6de913ee04eac585102e2fce7f6f7
+Commit-ID:     9846f1366489e1a30d871a5c3198b14394365be7
+Gitweb:        https://git.kernel.org/tip/9846f1366489e1a30d871a5c3198b14394365be7
 Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Fri, 20 Sep 2019 15:00:49 -03:00
+AuthorDate:    Fri, 20 Sep 2019 14:52:24 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Fri, 20 Sep 2019 15:00:49 -03:00
+CommitterDate: Fri, 20 Sep 2019 14:59:28 -03:00
 
-tools arch x86: Sync asm/cpufeatures.h with the kernel sources
+tools uapi asm-generic: Sync unistd.h with the kernel sources
 
-To pick up the changes from:
+To pick the change from:
 
-  b4dd4f6e3648 ("x86/vmware: Add a header file for hypercall definitions")
-  f36cf386e3fe ("x86/speculation/swapgs: Exclude ATOMs from speculation through SWAPGS")
-  be261ffce6f1 ("x86: Remove X86_FEATURE_MFENCE_RDTSC")
-  018ebca8bd70 ("x86/cpufeatures: Enable a new AVX512 CPU feature")
+  78e05972c5e6 ("ipc: fix semtimedop for generic 32-bit architectures")
 
-These don't cause any changes in tooling, just silences this perf build
+Which doesn't trigger any change in tooling and silences this perf build
 warning:
 
-  Warning: Kernel ABI header at 'tools/arch/x86/include/asm/cpufeatures.h' differs from latest version at 'arch/x86/include/asm/cpufeatures.h'
-  diff -u tools/arch/x86/include/asm/cpufeatures.h arch/x86/include/asm/cpufeatures.h
-
-To clarify, updating those files cause these bits of tools/perf to rebuild:
-
-  CC       /tmp/build/perf/bench/mem-memcpy-x86-64-asm.o
-  CC       /tmp/build/perf/bench/mem-memset-x86-64-asm.o
-  INSTALL  GTK UI
-  LD       /tmp/build/perf/bench/perf-in.o
-
-Those use just:
-
-  $ grep FEATURE tools/arch/x86/lib/mem*.S
-  tools/arch/x86/lib/memcpy_64.S:	ALTERNATIVE_2 "jmp memcpy_orig", "", X86_FEATURE_REP_GOOD, \
-  tools/arch/x86/lib/memcpy_64.S:		      "jmp memcpy_erms", X86_FEATURE_ERMS
-  tools/arch/x86/lib/memset_64.S:	ALTERNATIVE_2 "jmp memset_orig", "", X86_FEATURE_REP_GOOD, \
-  tools/arch/x86/lib/memset_64.S:		      "jmp memset_erms", X86_FEATURE_ERMS
-  $
-
-I.e. none of the feature defines added/removed by the patches above.
+  Warning: Kernel ABI header at 'tools/include/uapi/asm-generic/unistd.h' differs from latest version at 'include/uapi/asm-generic/unistd.h'
+  diff -u tools/include/uapi/asm-generic/unistd.h include/uapi/asm-generic/unistd.h
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Gayatri Kammela <gayatri.kammela@intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Thomas Hellstrom <thellstrom@vmware.com>
-Link: https://lkml.kernel.org/n/tip-pq63abgknsaeov23p80d8gjv@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-hpnjuyjzoudltqe7dvbokqdt@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/arch/x86/include/asm/cpufeatures.h | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/include/uapi/asm-generic/unistd.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/arch/x86/include/asm/cpufeatures.h b/tools/arch/x86/include/asm/cpufeatures.h
-index 5171b9c..0652d3e 100644
---- a/tools/arch/x86/include/asm/cpufeatures.h
-+++ b/tools/arch/x86/include/asm/cpufeatures.h
-@@ -231,6 +231,8 @@
- #define X86_FEATURE_VMMCALL		( 8*32+15) /* Prefer VMMCALL to VMCALL */
- #define X86_FEATURE_XENPV		( 8*32+16) /* "" Xen paravirtual guest */
- #define X86_FEATURE_EPT_AD		( 8*32+17) /* Intel Extended Page Table access-dirty bit */
-+#define X86_FEATURE_VMCALL		( 8*32+18) /* "" Hypervisor supports the VMCALL instruction */
-+#define X86_FEATURE_VMW_VMMCALL		( 8*32+19) /* "" VMware prefers VMMCALL hypercall instruction */
- 
- /* Intel-defined CPU features, CPUID level 0x00000007:0 (EBX), word 9 */
- #define X86_FEATURE_FSGSBASE		( 9*32+ 0) /* RDFSBASE, WRFSBASE, RDGSBASE, WRGSBASE instructions*/
-@@ -354,6 +356,7 @@
- /* Intel-defined CPU features, CPUID level 0x00000007:0 (EDX), word 18 */
- #define X86_FEATURE_AVX512_4VNNIW	(18*32+ 2) /* AVX-512 Neural Network Instructions */
- #define X86_FEATURE_AVX512_4FMAPS	(18*32+ 3) /* AVX-512 Multiply Accumulation Single precision */
-+#define X86_FEATURE_AVX512_VP2INTERSECT (18*32+ 8) /* AVX-512 Intersect for D/Q */
- #define X86_FEATURE_MD_CLEAR		(18*32+10) /* VERW clears CPU buffers */
- #define X86_FEATURE_TSX_FORCE_ABORT	(18*32+13) /* "" TSX_FORCE_ABORT */
- #define X86_FEATURE_PCONFIG		(18*32+18) /* Intel PCONFIG */
+diff --git a/tools/include/uapi/asm-generic/unistd.h b/tools/include/uapi/asm-generic/unistd.h
+index 1be0e79..1fc8faa 100644
+--- a/tools/include/uapi/asm-generic/unistd.h
++++ b/tools/include/uapi/asm-generic/unistd.h
+@@ -569,7 +569,7 @@ __SYSCALL(__NR_semget, sys_semget)
+ __SC_COMP(__NR_semctl, sys_semctl, compat_sys_semctl)
+ #if defined(__ARCH_WANT_TIME32_SYSCALLS) || __BITS_PER_LONG != 32
+ #define __NR_semtimedop 192
+-__SC_COMP(__NR_semtimedop, sys_semtimedop, sys_semtimedop_time32)
++__SC_3264(__NR_semtimedop, sys_semtimedop_time32, sys_semtimedop)
+ #endif
+ #define __NR_semop 193
+ __SYSCALL(__NR_semop, sys_semop)
