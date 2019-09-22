@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC13BC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99FBAC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7B8C214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:48:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 711ED21A4C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:48:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178080;
-	bh=Dp16fsSU8hxNbAKOIIQ6JCkszM+DVXRU4bOKtGvh95U=;
+	s=default; t=1569178084;
+	bh=L1K4pFSWiGXddrGuntvqMf6aFH0zGkbfckIzZT0ushM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wDRpXTK2ZSzN84XGYUsj0J77Sd43Ab6r1YCVHm7+UWbNSmPjsWStaNcSvF2jeozPx
-	 kdp6M3uUHnb3Qkz5crlfFsTvVafO+B+sraYkqInnBllNO+vaNOYGsBp+WrZA671apj
-	 3bIExLPOmh2zSmqjiU34oItrqajavV4bJvg8eMjE=
+	b=kUpCi10IOrfxmAKIe0lQlxvC8vzedfhk+CILbalzm+DeAVQMAKvjirIe6joHn/Z7D
+	 MxaLtetfJig7+fAbsHyPAsyNLCjxGU9YhgxBO5LhfczJouO/MZxeOZ5dlGW0GahBD2
+	 445tC7kvQrbRfCwMq3V7DSu5qkgpHv+hGy1qBSqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391310AbfIVSsA (ORCPT
+        id S2391356AbfIVSsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:48:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44438 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:48:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391193AbfIVSrv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:47:51 -0400
+        id S2391269AbfIVSr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:47:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1569C21D6C;
-        Sun, 22 Sep 2019 18:47:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A6C121BE5;
+        Sun, 22 Sep 2019 18:47:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178070;
-        bh=Dp16fsSU8hxNbAKOIIQ6JCkszM+DVXRU4bOKtGvh95U=;
+        s=default; t=1569178077;
+        bh=L1K4pFSWiGXddrGuntvqMf6aFH0zGkbfckIzZT0ushM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hkfgBwx2NXsnsmnUm9AoDGV5lyna6DX8gmbNk4ffuYBcLicja20Tonj6rtvSjojbL
-         9obZ3TwY7lUKoDOzBTIPNpee/a+Z4ALQfT5aHQ1BYKfRHeaLaW8MkYlUeQiNZzBUjV
-         jFNd0sfq9qhAu1dVxH9nKV4qsJlsyzoiqYkMK/w4=
+        b=aUUvrQoufL/fRPFcT7+fvLDJcdyyjuUwiy6RhXPCBri+3/bZzSBjL2fqOPndpXjjh
+         Z3vLPfdHzPHUWgYnqBdHE+lEeRfMDrCD21/HoSXcNbX87FOXFevoQUGL0aImuvzbvs
+         wBn6s6srkied7N6u9A6UF/81fQ9IjWwU6ZoxyliA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.3 143/203] ASoC: fsl_ssi: Fix clock control issue in master mode
-Date:   Sun, 22 Sep 2019 14:42:49 -0400
-Message-Id: <20190922184350.30563-143-sashal@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 148/203] arm64: lse: Make ARM64_LSE_ATOMICS depend on JUMP_LABEL
+Date:   Sun, 22 Sep 2019 14:42:54 -0400
+Message-Id: <20190922184350.30563-148-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,73 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
+From: Will Deacon <will@kernel.org>
 
-[ Upstream commit 696d05225cebffd172008d212657be90e823eac0 ]
+[ Upstream commit b32baf91f60fb9c7010bff87e68132f2ce31d9a8 ]
 
-The test case is
-arecord -Dhw:0 -d 10 -f S16_LE -r 48000 -c 2 temp.wav &
-aplay -Dhw:0 -d 30 -f S16_LE -r 48000 -c 2 test.wav
+Support for LSE atomic instructions (CONFIG_ARM64_LSE_ATOMICS) relies on
+a static key to select between the legacy LL/SC implementation which is
+available on all arm64 CPUs and the super-duper LSE implementation which
+is available on CPUs implementing v8.1 and later.
 
-There will be error after end of arecord:
-aplay: pcm_write:2051: write error: Input/output error
+Unfortunately, when building a kernel with CONFIG_JUMP_LABEL disabled
+(e.g. because the toolchain doesn't support 'asm goto'), the static key
+inside the atomics code tries to use atomics itself. This results in a
+mess of circular includes and a build failure:
 
-Capture and Playback work in parallel in master mode, one
-substream stops, the other substream is impacted, the
-reason is that clock is disabled wrongly.
+In file included from ./arch/arm64/include/asm/lse.h:11,
+                 from ./arch/arm64/include/asm/atomic.h:16,
+                 from ./include/linux/atomic.h:7,
+                 from ./include/asm-generic/bitops/atomic.h:5,
+                 from ./arch/arm64/include/asm/bitops.h:26,
+                 from ./include/linux/bitops.h:19,
+                 from ./include/linux/kernel.h:12,
+                 from ./include/asm-generic/bug.h:18,
+                 from ./arch/arm64/include/asm/bug.h:26,
+                 from ./include/linux/bug.h:5,
+                 from ./include/linux/page-flags.h:10,
+                 from kernel/bounds.c:10:
+./include/linux/jump_label.h: In function ‘static_key_count’:
+./include/linux/jump_label.h:254:9: error: implicit declaration of function ‘atomic_read’ [-Werror=implicit-function-declaration]
+  return atomic_read(&key->enabled);
+         ^~~~~~~~~~~
 
-The clock's reference count is not increased when second
-substream starts, the hw_param() function returns in the
-beginning because first substream is enabled, then in end
-of first substream, the hw_free() disables the clock.
+[ ... more of the same ... ]
 
-This patch is to move the clock enablement to the place
-before checking of the device enablement in hw_param().
+Since LSE atomic instructions are not critical to the operation of the
+kernel, make them depend on JUMP_LABEL at compile time.
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Link: https://lore.kernel.org/r/1567012817-12625-1-git-send-email-shengjiu.wang@nxp.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/fsl_ssi.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ arch/arm64/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/fsl/fsl_ssi.c b/sound/soc/fsl/fsl_ssi.c
-index fa862af25c1a3..085855f9b08d4 100644
---- a/sound/soc/fsl/fsl_ssi.c
-+++ b/sound/soc/fsl/fsl_ssi.c
-@@ -799,15 +799,6 @@ static int fsl_ssi_hw_params(struct snd_pcm_substream *substream,
- 	u32 wl = SSI_SxCCR_WL(sample_size);
- 	int ret;
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 3adcec05b1f67..27405ac94228b 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -1263,6 +1263,7 @@ config ARM64_PAN
  
--	/*
--	 * SSI is properly configured if it is enabled and running in
--	 * the synchronous mode; Note that AC97 mode is an exception
--	 * that should set separate configurations for STCCR and SRCCR
--	 * despite running in the synchronous mode.
--	 */
--	if (ssi->streams && ssi->synchronous)
--		return 0;
--
- 	if (fsl_ssi_is_i2s_master(ssi)) {
- 		ret = fsl_ssi_set_bclk(substream, dai, hw_params);
- 		if (ret)
-@@ -823,6 +814,15 @@ static int fsl_ssi_hw_params(struct snd_pcm_substream *substream,
- 		}
- 	}
- 
-+	/*
-+	 * SSI is properly configured if it is enabled and running in
-+	 * the synchronous mode; Note that AC97 mode is an exception
-+	 * that should set separate configurations for STCCR and SRCCR
-+	 * despite running in the synchronous mode.
-+	 */
-+	if (ssi->streams && ssi->synchronous)
-+		return 0;
-+
- 	if (!fsl_ssi_is_ac97(ssi)) {
- 		/*
- 		 * Keep the ssi->i2s_net intact while having a local variable
+ config ARM64_LSE_ATOMICS
+ 	bool "Atomic instructions"
++	depends on JUMP_LABEL
+ 	default y
+ 	help
+ 	  As part of the Large System Extensions, ARMv8.1 introduces new
 -- 
 2.20.1
 
