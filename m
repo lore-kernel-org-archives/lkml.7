@@ -4,57 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF44C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E63C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5737F21D6C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:46:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B07D4214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:46:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569177996;
-	bh=hSOnlNHgMmVVWoFTLPvhL+Kt+46qjHL1MEcfw3YPfwg=;
+	s=default; t=1569178000;
+	bh=jKwoBq+Gu6aMJLrH40ZDGEDu3NwN+bC42hFxiIttA+0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c/r4YgUolVZAogZE6Rn2rpSOlt7yodfEfJGgxx5SL74wLDq8kP2gzZL8OSerr4+Zh
-	 DTcZBxmIRb+DSC3EV9HQCnXGijXgVZ9sF8Olk4B+VLWB1LxjbEShsCkNhXBnyLYzqM
-	 C3tDQ7/wMJH9BUHHCsG4DTjbfmuLRqTXDunGmoRg=
+	b=nut2rnOex/uSaD7oQKVswmBY0/placUUbffmaCuM0ugzm9evUVpX8f/M6I1a54tTZ
+	 yRRCYrYPqCStwd3/s6Sc8dEiugdhy9TlRLNiqWqPNaZQAys4uzNpYLDa5K9Px3L8sN
+	 iUeyCQACIQWFxDtmhmth5vcPv+Z+8SGr73Dg+dH8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390064AbfIVSqf (ORCPT
+        id S2390124AbfIVSqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:46:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42514 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:46:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389931AbfIVSq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:46:26 -0400
+        id S2390029AbfIVSqc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:46:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AAD720830;
-        Sun, 22 Sep 2019 18:46:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C10421907;
+        Sun, 22 Sep 2019 18:46:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569177985;
-        bh=hSOnlNHgMmVVWoFTLPvhL+Kt+46qjHL1MEcfw3YPfwg=;
+        s=default; t=1569177991;
+        bh=jKwoBq+Gu6aMJLrH40ZDGEDu3NwN+bC42hFxiIttA+0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gNxD/qCHq+a5Ld3b687hsaRruH5EkVEHj0OyC+JuP550V/J7qVKC7G0RRInOF97Bn
-         zdtZzrKGrcDHjYQFdY6M4JmKsZzt4iRd5oCit5zTIv/Qz/B5khu11CnZFMrdYnKn1z
-         IiLDgJ1VtypzPql8m+2kKBrP9P314wzFssVLjNiQ=
+        b=jggfUd8NS1DTOerGOkJA5PVxDznjKXX/60vgrtiBUEWWNtXauDQHWnQcvrIHAhjBa
+         Df5FdRBLn3c7+RI1Y1stpGaZJzgt7UjEa9BedobKSO/NpN1HGEBu1/6ulIyMc53MTo
+         rVJ5BUygdiFfAgu6lJ8z7B+9BaR9Q/ObFqwoGsPQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Igor Lubashev <ilubashe@akamai.com>, Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 079/203] perf ftrace: Use CAP_SYS_ADMIN instead of euid==0
-Date:   Sun, 22 Sep 2019 14:41:45 -0400
-Message-Id: <20190922184350.30563-79-sashal@kernel.org>
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 083/203] media: i2c: ov5645: Fix power sequence
+Date:   Sun, 22 Sep 2019 14:41:49 -0400
+Message-Id: <20190922184350.30563-83-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -67,59 +63,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Igor Lubashev <ilubashe@akamai.com>
+From: Ezequiel Garcia <ezequiel@collabora.com>
 
-[ Upstream commit c766f3df635de14295e410c6dd5410bc416c24a0 ]
+[ Upstream commit 092e8eb90a7dc7dd210cd4e2ea36075d0a7f96af ]
 
-The kernel requires CAP_SYS_ADMIN instead of euid==0 to mount debugfs
-for ftrace.  Make perf do the same.
+This is mostly a port of Jacopo's fix:
 
-Signed-off-by: Igor Lubashev <ilubashe@akamai.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: James Morris <jmorris@namei.org>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/bd8763b72ed4d58d0b42d44fbc7eb474d32e53a3.1565188228.git.ilubashe@akamai.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+  commit aa4bb8b8838ffcc776a79f49a4d7476b82405349
+  Author: Jacopo Mondi <jacopo@jmondi.org>
+  Date:   Fri Jul 6 05:51:52 2018 -0400
+
+  media: ov5640: Re-work MIPI startup sequence
+
+In the OV5645 case, the changes are:
+
+- At set_power(1) time power up MIPI Tx/Rx and set data and clock lanes in
+  LP11 during 'sleep' and 'idle' with MIPI clock in non-continuous mode.
+- At set_power(0) time power down MIPI Tx/Rx (in addition to the current
+  power down of regulators and clock gating).
+- At s_stream time enable/disable the MIPI interface output.
+
+With this commit the sensor is able to enter LP-11 mode during power up,
+as expected by some CSI-2 controllers.
+
+Many thanks to Fabio Estevam for his help debugging this issue.
+
+Tested-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-ftrace.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/media/i2c/ov5645.c | 26 ++++++++++++++++++--------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index 0193128104056..10971255fd2dc 100644
---- a/tools/perf/builtin-ftrace.c
-+++ b/tools/perf/builtin-ftrace.c
-@@ -13,6 +13,7 @@
- #include <signal.h>
- #include <fcntl.h>
- #include <poll.h>
-+#include <linux/capability.h>
+diff --git a/drivers/media/i2c/ov5645.c b/drivers/media/i2c/ov5645.c
+index 124c8df046337..58972c884705c 100644
+--- a/drivers/media/i2c/ov5645.c
++++ b/drivers/media/i2c/ov5645.c
+@@ -45,6 +45,8 @@
+ #define		OV5645_CHIP_ID_HIGH_BYTE	0x56
+ #define OV5645_CHIP_ID_LOW		0x300b
+ #define		OV5645_CHIP_ID_LOW_BYTE		0x45
++#define OV5645_IO_MIPI_CTRL00		0x300e
++#define OV5645_PAD_OUTPUT00		0x3019
+ #define OV5645_AWB_MANUAL_CONTROL	0x3406
+ #define		OV5645_AWB_MANUAL_ENABLE	BIT(0)
+ #define OV5645_AEC_PK_MANUAL		0x3503
+@@ -55,6 +57,7 @@
+ #define		OV5645_ISP_VFLIP		BIT(2)
+ #define OV5645_TIMING_TC_REG21		0x3821
+ #define		OV5645_SENSOR_MIRROR		BIT(1)
++#define OV5645_MIPI_CTRL00		0x4800
+ #define OV5645_PRE_ISP_TEST_SETTING_1	0x503d
+ #define		OV5645_TEST_PATTERN_MASK	0x3
+ #define		OV5645_SET_TEST_PATTERN(x)	((x) & OV5645_TEST_PATTERN_MASK)
+@@ -121,7 +124,6 @@ static const struct reg_value ov5645_global_init_setting[] = {
+ 	{ 0x3503, 0x07 },
+ 	{ 0x3002, 0x1c },
+ 	{ 0x3006, 0xc3 },
+-	{ 0x300e, 0x45 },
+ 	{ 0x3017, 0x00 },
+ 	{ 0x3018, 0x00 },
+ 	{ 0x302e, 0x0b },
+@@ -350,7 +352,10 @@ static const struct reg_value ov5645_global_init_setting[] = {
+ 	{ 0x3a1f, 0x14 },
+ 	{ 0x0601, 0x02 },
+ 	{ 0x3008, 0x42 },
+-	{ 0x3008, 0x02 }
++	{ 0x3008, 0x02 },
++	{ OV5645_IO_MIPI_CTRL00, 0x40 },
++	{ OV5645_MIPI_CTRL00, 0x24 },
++	{ OV5645_PAD_OUTPUT00, 0x70 }
+ };
  
- #include "debug.h"
- #include <subcmd/parse-options.h>
-@@ -21,6 +22,7 @@
- #include "target.h"
- #include "cpumap.h"
- #include "thread_map.h"
-+#include "util/cap.h"
- #include "util/config.h"
+ static const struct reg_value ov5645_setting_sxga[] = {
+@@ -737,13 +742,9 @@ static int ov5645_s_power(struct v4l2_subdev *sd, int on)
+ 				goto exit;
+ 			}
  
- 
-@@ -281,7 +283,7 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
- 		.events = POLLIN,
- 	};
- 
--	if (geteuid() != 0) {
-+	if (!perf_cap__capable(CAP_SYS_ADMIN)) {
- 		pr_err("ftrace only works for root!\n");
- 		return -1;
+-			ret = ov5645_write_reg(ov5645, OV5645_SYSTEM_CTRL0,
+-					       OV5645_SYSTEM_CTRL0_STOP);
+-			if (ret < 0) {
+-				ov5645_set_power_off(ov5645);
+-				goto exit;
+-			}
++			usleep_range(500, 1000);
+ 		} else {
++			ov5645_write_reg(ov5645, OV5645_IO_MIPI_CTRL00, 0x58);
+ 			ov5645_set_power_off(ov5645);
+ 		}
  	}
+@@ -1049,11 +1050,20 @@ static int ov5645_s_stream(struct v4l2_subdev *subdev, int enable)
+ 			dev_err(ov5645->dev, "could not sync v4l2 controls\n");
+ 			return ret;
+ 		}
++
++		ret = ov5645_write_reg(ov5645, OV5645_IO_MIPI_CTRL00, 0x45);
++		if (ret < 0)
++			return ret;
++
+ 		ret = ov5645_write_reg(ov5645, OV5645_SYSTEM_CTRL0,
+ 				       OV5645_SYSTEM_CTRL0_START);
+ 		if (ret < 0)
+ 			return ret;
+ 	} else {
++		ret = ov5645_write_reg(ov5645, OV5645_IO_MIPI_CTRL00, 0x40);
++		if (ret < 0)
++			return ret;
++
+ 		ret = ov5645_write_reg(ov5645, OV5645_SYSTEM_CTRL0,
+ 				       OV5645_SYSTEM_CTRL0_STOP);
+ 		if (ret < 0)
 -- 
 2.20.1
 
