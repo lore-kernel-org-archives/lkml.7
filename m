@@ -2,53 +2,55 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A689CC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43814C4740C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7199920869
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:20:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C8F320673
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:20:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180052;
-	bh=XgrJTEr1zHVb1qydoT2TySsbUVaRZlc38KN9JrnviyM=;
+	s=default; t=1569180059;
+	bh=ojZaI59rGscmaBaQB30rUvc3ZhjI8pWc/WzGjg+wLPk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CwWiGDZiZdToQebXT+VbMXLIeZSAsYoqmV1UWsxYtE8XoOrmHfNs5vTNTcJhqihjT
-	 AjW4I+KgEs2pj8icxxwoZgmQJhZ5IsYwHv/q/iwIa1/hXACTRqs6WQflnnxFgq4NUB
-	 TbyUO/DyNJjjFgZnU92EYjdk1D2eZ+56dy5MKV5A=
+	b=IrbcSZ+aYz7c/xXOXoze0eZjhjI2CAyVqrIWlQQmN5MEgtP+F7PV9sjKA1lg3Mccm
+	 CPe5eLn4L6Apg7Bq2nPcYT5cFJoleZc+8fLgqLXGAOvdGYdUM5y0+8mFm56lG2xb06
+	 i9jRv2ljeiEvPSBbtrRbNsdBdiX5rAJe0oHe1gho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731009AbfIVTUv (ORCPT
+        id S2404582AbfIVSyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:20:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54988 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:54:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405189AbfIVSy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:54:28 -0400
+        id S2394473AbfIVSx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:53:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09A1921BE5;
-        Sun, 22 Sep 2019 18:54:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D95321479;
+        Sun, 22 Sep 2019 18:53:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178467;
-        bh=XgrJTEr1zHVb1qydoT2TySsbUVaRZlc38KN9JrnviyM=;
+        s=default; t=1569178438;
+        bh=ojZaI59rGscmaBaQB30rUvc3ZhjI8pWc/WzGjg+wLPk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UoUStBkOQ1PE276fEKKOc7AcA+90zVjhs75lfq2vpqLMiJa0Iczeqc8lViv7OAkE7
-         5Zd70yusr4a2F4zkEKGRMSObO/3Qx2Aqy5nBQ60viPLU/+tK66kJDZZ9tTjxcE2vS/
-         R8sPpTjFMk61aR7E5YfNXuanNQCl86fWI/6hqCPE=
+        b=I8xQ0bP2V5xle2k+wYikun2TL6lmMtoq/KPNYxpzEzq6eNJN8bcc6sVcu3ij9pKtw
+         LEi2jGkgJ2dR6UUIE3sVrP2kFMiVcnKatHKr2zek9R9JtHADk89UJl63PtyhMWii/3
+         TSASzY8rZp+LucZOWsGzTXnbLdbmfkudEMfK/ubg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Wahren <wahrenst@gmx.net>, Vinod Koul <vkoul@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 007/128] dmaengine: bcm2835: Print error in case setting DMA mask fails
-Date:   Sun, 22 Sep 2019 14:52:17 -0400
-Message-Id: <20190922185418.2158-7-sashal@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 172/185] e1000e: add workaround for possible stalled packet
+Date:   Sun, 22 Sep 2019 14:49:10 -0400
+Message-Id: <20190922184924.32534-172-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
-References: <20190922185418.2158-1-sashal@kernel.org>
+In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
+References: <20190922184924.32534-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,37 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Wahren <wahrenst@gmx.net>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 72503b25ee363827aafffc3e8d872e6a92a7e422 ]
+[ Upstream commit e5e9a2ecfe780975820e157b922edee715710b66 ]
 
-During enabling of the RPi 4, we found out that the driver doesn't provide
-a helpful error message in case setting DMA mask fails. So add one.
+This works around a possible stalled packet issue, which may occur due to
+clock recovery from the PCH being too slow, when the LAN is transitioning
+from K1 at 1G link speed.
 
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-Link: https://lore.kernel.org/r/1563297318-4900-1-git-send-email-wahrenst@gmx.net
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204057
+
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/bcm2835-dma.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/intel/e1000e/ich8lan.c | 10 ++++++++++
+ drivers/net/ethernet/intel/e1000e/ich8lan.h |  2 +-
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
-index 2b11d967acd02..9d782cc95c6a0 100644
---- a/drivers/dma/bcm2835-dma.c
-+++ b/drivers/dma/bcm2835-dma.c
-@@ -898,8 +898,10 @@ static int bcm2835_dma_probe(struct platform_device *pdev)
- 		pdev->dev.dma_mask = &pdev->dev.coherent_dma_mask;
+diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.c b/drivers/net/ethernet/intel/e1000e/ich8lan.c
+index cdae0efde8e64..7998a73b6a0fa 100644
+--- a/drivers/net/ethernet/intel/e1000e/ich8lan.c
++++ b/drivers/net/ethernet/intel/e1000e/ich8lan.c
+@@ -1429,6 +1429,16 @@ static s32 e1000_check_for_copper_link_ich8lan(struct e1000_hw *hw)
+ 			else
+ 				phy_reg |= 0xFA;
+ 			e1e_wphy_locked(hw, I217_PLL_CLOCK_GATE_REG, phy_reg);
++
++			if (speed == SPEED_1000) {
++				hw->phy.ops.read_reg_locked(hw, HV_PM_CTRL,
++							    &phy_reg);
++
++				phy_reg |= HV_PM_CTRL_K1_CLK_REQ;
++
++				hw->phy.ops.write_reg_locked(hw, HV_PM_CTRL,
++							     phy_reg);
++			}
+ 		}
+ 		hw->phy.ops.release(hw);
  
- 	rc = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
--	if (rc)
-+	if (rc) {
-+		dev_err(&pdev->dev, "Unable to set DMA mask\n");
- 		return rc;
-+	}
+diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.h b/drivers/net/ethernet/intel/e1000e/ich8lan.h
+index eb09c755fa172..1502895eb45dd 100644
+--- a/drivers/net/ethernet/intel/e1000e/ich8lan.h
++++ b/drivers/net/ethernet/intel/e1000e/ich8lan.h
+@@ -210,7 +210,7 @@
  
- 	od = devm_kzalloc(&pdev->dev, sizeof(*od), GFP_KERNEL);
- 	if (!od)
+ /* PHY Power Management Control */
+ #define HV_PM_CTRL		PHY_REG(770, 17)
+-#define HV_PM_CTRL_PLL_STOP_IN_K1_GIGA	0x100
++#define HV_PM_CTRL_K1_CLK_REQ		0x200
+ #define HV_PM_CTRL_K1_ENABLE		0x4000
+ 
+ #define I217_PLL_CLOCK_GATE_REG	PHY_REG(772, 28)
 -- 
 2.20.1
 
