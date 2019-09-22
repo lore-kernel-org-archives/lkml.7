@@ -2,171 +2,244 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A88DC4740C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 11:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93677C4740C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 11:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11CB520B7C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 11:15:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="p6KVUwmD"
+	by mail.kernel.org (Postfix) with ESMTP id 6839920830
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 11:20:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728507AbfIVLP0 (ORCPT
+        id S1728534AbfIVLUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 07:15:26 -0400
-Received: from mout.web.de ([217.72.192.78]:32975 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728304AbfIVLP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 07:15:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1569150854;
-        bh=HuSS/Nsmyiy+vIY6/zgMOHSKw4ilNpjLipl2kbPtCcw=;
-        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
-        b=p6KVUwmDPn4qI48673CO2xPXKnvjrHqoRUVYNggR4CW9T0e7apUUbMRZiimWrRXZR
-         6Muje6+f1yneAZN6tNmWnRlitjO75FvOYYUzkH5Ue3W9ubQZUtw8dRUPLN3UfXOARx
-         N50IwpGkpeq2ZWnudNYhbzxmMGwW2wTNnLpGeSUs=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.244.8.78]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MIN2h-1iCGvy3Hah-0048JC; Sun, 22
- Sep 2019 13:14:13 +0200
-To:     dmaengine@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Long Cheng <long.cheng@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] dmaengine: mediatek: Use devm_platform_ioremap_resource() in
- mtk_uart_apdma_probe()
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <366e776c-8760-eeb7-c248-7380c9f4fd34@web.de>
-Date:   Sun, 22 Sep 2019 13:14:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Sun, 22 Sep 2019 07:20:55 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:53559 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbfIVLUz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 07:20:55 -0400
+Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 5D2AD240008;
+        Sun, 22 Sep 2019 11:20:52 +0000 (UTC)
+Date:   Sun, 22 Sep 2019 13:20:52 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] RTC for 5.4
+Message-ID: <20190922112052.GA22547@piout.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:mIx0kndBCm9PK7nwYec+TCvEc8ha5HPNssCT96eBiG2moCEQroz
- 2Uv9dJfWfkMuf2jKFstVCfpsNb7CSfY5gTEDo5u+3lkXgb1EViJMgltiRfwvkFgy0MMqPx0
- 52jDxwoHa6x9lUFaZfRwdu8NB38VQsCSlI7eAg9ncr/t6KUasHNJsVLDl1YH9/YAeN5u20x
- D30UZ2z4h6V+b8TOEPCXQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+YCwXgrbzpU=:X5LnqEYcMCnLddjynce+x/
- SLLuBpQpACUF8VkPIs8VC4HyrG5EN5OscdhHky+X+5vCj316ycBkpKvztxIrosd4fVKRg82ci
- ylDs0YjOFNZwUC/G1wJ7/d3ivxXl3HV7bx7z+rBtmUtlW/2h4lfzryje5sHBPZS/Y930ui5g6
- yMGA6wLz+K0JNMzlxIizxJulvv5XF1w1CvBgacdWsscS3SvUovsnD3Zx8g0u452Ov49OgeTIq
- V86NgD2e9xj6uTIhHKDC326mGAoBZ2ee9Aw3/JZh9ZcwWy/MLl1CxBn/6aoFP1u3eCHjEefJs
- HuZ6+m4fnLfazO6TXbukR2pj7H82+BFt1RiE5Uo5f3AFfYPHlJCke2lo6aLclwErsL3Y7Id8d
- SXeGqJg4ueH1n5kAjnnGcNGhhol0LfcMu7vSk/WgfxhFSSywPlKQFBQOj8Q222pN1NL2OeNPg
- g1QJXLJDP7iGGm1weopL6NGwYuCxkQxCZUlpSFPT1ex6vi/NRxXdvX1eZYaupPDnhtxrvIuUc
- 1kxk8BoTCmcW9AIQi7SAD1yEUP3VXW7ZYDmOOEw3NtakL5KQp9X5hHw3nocR/npQJ0z3Ml+Rl
- Y5DdRlZe0IzbRD5GLFF8s9GLehY2zDMG+Z6glRNHVZwb9pGFxRv2H2Js8935v71/YdC+1kZ+y
- FQ3NXf3+b1bbAFc0jxA6Q3gJ7pv7d7jTVcmHN1eZlOsvHJ0pIVMmfQdO7E9BFdy6JgeFGnR8v
- G7IuFXcMUwOhTmRojPdWoVEAsMEVrTeSJBYrYgRSRNFcLxaqB2sY35A65bAmfuns32Uz0kQhx
- 2jt5Z6ZTWzJBFnKirEZDonGlShXbp+VaR8PQlnWsGiZHpgdxa6qLhN9mTCb5kMwyXi8YGby6c
- EAFWke3kGzuz4HJTyIcRQzT0xJGkRhOmToNQzXEv9FogK8DrTC6Ct82molH+mxHPdyFyZ8kTi
- yktnwEEAUTJRxv2KpgBJt1fc/lZaUW9lYpbWgrUKzdpqqEr2BJJrV+vXMPpzI8tr91cCC9ve6
- SLHazyBYJLhgah3n99BKoUcqxZq0yghhEg0LsMCr3ylsDca2jZObvo5+OpCd59/5VItED7tkd
- +yk4OD7zSavQF/ev9o3jYUmPKMnlyxGot2WrxBIrO/CASBIOm7n4edc40XmucJzWXr9VPQLPu
- gJDF7akjZuhLq1mPrN5kZ9tjRgKVrwMplwTM854rbEd+F6m55dLVJZ9W2gVtJJvFKczVJPYWx
- LsHrskQg/y5xWWR4YvVX/ndAK62hrpsdd+N+HlPR1wtbUCDaLoGoQATrIKiY=
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Sun, 22 Sep 2019 13:07:41 +0200
+Hello Linus,
 
-Simplify this function implementation by using a known wrapper function.
+Here is the pull-request for the RTC subsystem for 5.4.
 
-This issue was detected by using the Coccinelle software.
+Two new drivers and the new pcf2127 feature make the bulk of the
+additions. The rest are the usual fixes and new features.
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/dma/mediatek/mtk-uart-apdma.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
 
-diff --git a/drivers/dma/mediatek/mtk-uart-apdma.c b/drivers/dma/mediatek/=
-mtk-uart-apdma.c
-index f40051d6aecb..c20e6bd4e298 100644
-=2D-- a/drivers/dma/mediatek/mtk-uart-apdma.c
-+++ b/drivers/dma/mediatek/mtk-uart-apdma.c
-@@ -475,7 +475,6 @@ static int mtk_uart_apdma_probe(struct platform_device=
- *pdev)
- 	struct device_node *np =3D pdev->dev.of_node;
- 	struct mtk_uart_apdmadev *mtkd;
- 	int bit_mask =3D 32, rc;
--	struct resource *res;
- 	struct mtk_chan *c;
- 	unsigned int i;
+  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
 
-@@ -532,13 +531,7 @@ static int mtk_uart_apdma_probe(struct platform_devic=
-e *pdev)
- 			goto err_no_dma;
- 		}
+are available in the Git repository at:
 
--		res =3D platform_get_resource(pdev, IORESOURCE_MEM, i);
--		if (!res) {
--			rc =3D -ENODEV;
--			goto err_no_dma;
--		}
--
--		c->base =3D devm_ioremap_resource(&pdev->dev, res);
-+		c->base =3D devm_platform_ioremap_resource(pdev, i);
- 		if (IS_ERR(c->base)) {
- 			rc =3D PTR_ERR(c->base);
- 			goto err_no_dma;
-=2D-
-2.23.0
+  git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git tags/rtc-5.4
 
+for you to fetch changes up to b99a3120f9a30e1429d8d634e18da8dff93340c6:
+
+  rtc: meson: mark PM functions as __maybe_unused (2019-09-10 16:14:15 +0200)
+
+----------------------------------------------------------------
+RTC for 5.4
+
+Subsystem:
+ - add debug message when registration fails
+
+New drivers:
+ - Amlogic Virtual Wake
+ - Freescale FlexTimer Module alarm
+
+Drivers:
+ - remove superfluous error messages
+ - convert to i2c_new_dummy_device and devm_i2c_new_dummy_device
+ - Remove dev_err() usage after platform_get_irq()
+ - Set RTC range for: pcf2123, pcf8563, snvs.
+ - pcf2127: tamper detection and watchdog support
+ - pcf85363: fix regmap issue
+ - sun6i: H6 support
+ - remove w90x900/nuc900 driver
+
+----------------------------------------------------------------
+Alejandro González (1):
+      rtc: sun6i: Allow using as wakeup source from suspend
+
+Alexandre Belloni (19):
+      rtc: pcf2123: don't use weekday alarm
+      rtc; pcf2123: fix possible alarm race condition
+      rtc: pcf2123: implement .alarm_irq_enable
+      rtc: pcf2123: stop using dev.platform_data
+      rtc: pcf2123: rename struct and variables
+      rtc: pcf2123: remove useless error path goto
+      rtc: pcf2123: convert to devm_rtc_allocate_device
+      rtc: pcf2123: let the core handle range offsetting
+      rtc: pcf2123: add proper compatible string
+      rtc: class: add debug message when registration fails
+      rtc: remove superfluous error message
+      rtc: ds1672: remove unnecessary check
+      rtc: snvs: set range
+      rtc: snvs: switch to rtc_time64_to_tm/rtc_tm_to_time64
+      rtc: pcf8563: add Epson RTC8564 compatible
+      rtc: pcf8563: add Microcrystal RV8564 compatible
+      rtc: pcf8563: convert to devm_rtc_allocate_device
+      rtc: pcf8563: remove useless indirection
+      rtc: pcf8563: let the core handle range offsetting
+
+Anson Huang (3):
+      rtc: mxc_v2: use devm_platform_ioremap_resource() to simplify code
+      rtc: imxdi: use devm_platform_ioremap_resource() to simplify code
+      rtc: snvs: fix possible race condition
+
+Arnd Bergmann (2):
+      rtc: remove w90x900/nuc900 driver
+      rtc: meson: mark PM functions as __maybe_unused
+
+Baolin Wang (1):
+      rtc: sc27xx: Remove clearing SPRD_RTC_POWEROFF_ALM_FLAG flag
+
+Bastian Krause (1):
+      dt-bindings: rtc: ds1307: add rx8130 compatible
+
+Biwen Li (3):
+      dt-bindings: rtc: add bindings for FlexTimer Module
+      rtc: fsl-ftm-alarm: add FTM alarm driver
+      rtc: pcf85363/pcf85263: fix regmap error in set_time
+
+Bruno Thomsen (6):
+      rtc: pcf2127: convert to devm_rtc_allocate_device
+      rtc: pcf2127: cleanup register and bit defines
+      rtc: pcf2127: bugfix: read rtc disables watchdog
+      rtc: pcf2127: add watchdog feature support
+      rtc: pcf2127: add tamper detection support
+      rtc: pcf2127: bugfix: watchdog build dependency
+
+Dan Carpenter (1):
+      rtc: rv3029: revert error handling patch to rv3029_eeprom_write()
+
+Fuqian Huang (1):
+      rtc: mxc: use spin_lock_irqsave instead of spin_lock_irq in IRQ context
+
+Kevin Hilman (1):
+      dt-bindings: rtc: new binding for Amlogic VRTC
+
+Matti Vaittinen (1):
+      rtc: bd70528: fix driver dependencies
+
+Maxime Ripard (1):
+      dt-bindings: rtc: Remove the PCF8563 from the trivial RTCs
+
+Neil Armstrong (1):
+      rtc: Add Amlogic Virtual Wake RTC
+
+Ondrej Jirman (2):
+      dt-bindings: rtc: sun6i: Add compatible for H6 RTC
+      rtc: sun6i: Add support for H6 RTC
+
+Stephen Boyd (1):
+      rtc: Remove dev_err() usage after platform_get_irq()
+
+Wolfram Sang (6):
+      rtc: isl12026: convert to i2c_new_dummy_device
+      rtc: max77686: convert to i2c_new_dummy_device
+      rtc: s35390a: convert to i2c_new_dummy_device
+      rtc: s5m: convert to i2c_new_dummy_device
+      rtc: max77686: convert to devm_i2c_new_dummy_device()
+      rtc: s35390a: convert to devm_i2c_new_dummy_device()
+
+ .../bindings/rtc/allwinner,sun6i-a31-rtc.yaml      |  13 +
+ .../devicetree/bindings/rtc/nxp,rtc-2123.txt       |   4 +-
+ Documentation/devicetree/bindings/rtc/pcf8563.txt  |   4 +-
+ .../devicetree/bindings/rtc/rtc-ds1307.txt         |   1 +
+ .../devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt  |  36 ++
+ .../devicetree/bindings/rtc/rtc-meson-vrtc.txt     |  22 ++
+ .../devicetree/bindings/rtc/trivial-rtc.yaml       |   2 -
+ MAINTAINERS                                        |   1 +
+ drivers/rtc/Kconfig                                |  42 ++-
+ drivers/rtc/Makefile                               |   3 +-
+ drivers/rtc/class.c                                |   4 +-
+ drivers/rtc/rtc-88pm80x.c                          |   6 +-
+ drivers/rtc/rtc-88pm860x.c                         |   4 +-
+ drivers/rtc/rtc-ab-eoz9.c                          |  24 +-
+ drivers/rtc/rtc-ac100.c                            |  14 +-
+ drivers/rtc/rtc-armada38x.c                        |  12 +-
+ drivers/rtc/rtc-asm9260.c                          |   4 +-
+ drivers/rtc/rtc-aspeed.c                           |   7 +-
+ drivers/rtc/rtc-at91rm9200.c                       |   4 +-
+ drivers/rtc/rtc-at91sam9.c                         |   4 +-
+ drivers/rtc/rtc-bd70528.c                          |  11 +-
+ drivers/rtc/rtc-brcmstb-waketimer.c                |   4 +-
+ drivers/rtc/rtc-cadence.c                          |  13 +-
+ drivers/rtc/rtc-davinci.c                          |   4 +-
+ drivers/rtc/rtc-ds1305.c                           |   7 +-
+ drivers/rtc/rtc-ds1672.c                           |   3 -
+ drivers/rtc/rtc-fsl-ftm-alarm.c                    | 337 ++++++++++++++++++
+ drivers/rtc/rtc-imx-sc.c                           |   4 +-
+ drivers/rtc/rtc-imxdi.c                            |   4 +-
+ drivers/rtc/rtc-isl12026.c                         |   6 +-
+ drivers/rtc/rtc-jz4740.c                           |   8 +-
+ drivers/rtc/rtc-max77686.c                         |  26 +-
+ drivers/rtc/rtc-meson-vrtc.c                       | 155 +++++++++
+ drivers/rtc/rtc-mt6397.c                           |   4 +-
+ drivers/rtc/rtc-mt7622.c                           |   1 -
+ drivers/rtc/rtc-mxc.c                              |   5 +-
+ drivers/rtc/rtc-mxc_v2.c                           |   4 +-
+ drivers/rtc/rtc-nuc900.c                           | 271 ---------------
+ drivers/rtc/rtc-pcf2123.c                          | 136 ++++----
+ drivers/rtc/rtc-pcf2127.c                          | 380 ++++++++++++++++++---
+ drivers/rtc/rtc-pcf85363.c                         |   7 +-
+ drivers/rtc/rtc-pcf8563.c                          |  48 ++-
+ drivers/rtc/rtc-pic32.c                            |   4 +-
+ drivers/rtc/rtc-pm8xxx.c                           |   4 +-
+ drivers/rtc/rtc-puv3.c                             |  12 +-
+ drivers/rtc/rtc-pxa.c                              |   8 +-
+ drivers/rtc/rtc-rk808.c                            |   6 +-
+ drivers/rtc/rtc-rv3028.c                           |   3 +-
+ drivers/rtc/rtc-rv3029c2.c                         |  16 +-
+ drivers/rtc/rtc-rv8803.c                           |   3 +-
+ drivers/rtc/rtc-s35390a.c                          |  56 +--
+ drivers/rtc/rtc-s3c.c                              |   8 +-
+ drivers/rtc/rtc-s5m.c                              |   6 +-
+ drivers/rtc/rtc-sc27xx.c                           |   7 +-
+ drivers/rtc/rtc-sd3078.c                           |   4 +-
+ drivers/rtc/rtc-snvs.c                             |  25 +-
+ drivers/rtc/rtc-spear.c                            |   4 +-
+ drivers/rtc/rtc-stm32.c                            |   1 -
+ drivers/rtc/rtc-sun6i.c                            |  74 +++-
+ drivers/rtc/rtc-sunxi.c                            |  14 +-
+ drivers/rtc/rtc-tegra.c                            |   8 +-
+ drivers/rtc/rtc-tps6586x.c                         |   5 +-
+ drivers/rtc/rtc-tps65910.c                         |   8 +-
+ drivers/rtc/rtc-vt8500.c                           |   4 +-
+ drivers/rtc/rtc-xgene.c                            |   4 +-
+ drivers/rtc/rtc-zynqmp.c                           |   8 +-
+ 66 files changed, 1214 insertions(+), 727 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-meson-vrtc.txt
+ create mode 100644 drivers/rtc/rtc-fsl-ftm-alarm.c
+ create mode 100644 drivers/rtc/rtc-meson-vrtc.c
+ delete mode 100644 drivers/rtc/rtc-nuc900.c
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
