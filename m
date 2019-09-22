@@ -2,97 +2,135 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 098CCC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 20:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 122D0C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 20:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C618B20869
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 20:13:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=deutnet.info header.i=@deutnet.info header.b="lB+pkqsq"
+	by mail.kernel.org (Postfix) with ESMTP id DA5C020882
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 20:25:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569183957;
+	bh=lnqz5lNN8HlaQXC31DrIw2TCWk6wgsRyvy3CZVgtWTc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eCKETiWKNjNCevndMhj+0HexvhEQz6ZIxeuCfcvSt9hxRMUf8xRPzcPv3PM7lm9wy
+	 IutS1IkbVzIw5CtAysc/COnfJ7TFH9llDNft/ewoNhz/dGH0CIeeTWCXDHNsQk/5dP
+	 ox49xOwhwI1BJrsJ7k/hpzJuRP+h/AZ93aSFAChY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389560AbfIVUNK (ORCPT
+        id S1731873AbfIVUZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 16:13:10 -0400
-Received: from srv1.deutnet.info ([116.203.153.70]:44692 "EHLO
-        srv1.deutnet.info" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388723AbfIVUNJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 16:13:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deutnet.info; s=default; h=In-Reply-To:Message-ID:Subject:Cc:To:From:Date;
-         bh=/BP8hOWE8SJ76SRf1RmiWyLqtKvXhcXYW4oao3LZWlU=; b=lB+pkqsq5ngXh/Zi0/7wsCsa8
-        aW8g0qd9xLSsT8X3lvyYzVZ7cu596Ipc06stOJO1ZO1DJPVNBhuD2aAgGj667hmdGmGvXP+i7UeZA
-        XtOwM5f6dCpQ4t53xgNOKRHtnlPoyWOBAgowbNcuBr7DPs2Qw3REE+Mlm4h+V+mPA/t1Z29jrOICc
-        mtz33a/XSXrEcWEFTgkV0py/nt6I8ndDz1s/p0jhkywFk9FdP8/sYX4+CI5F+Ax12m+FlHElkr88h
-        0eJkbucaqCoetZME+8FV41AZf4NSNJ84QWmuq2BvRpfzTPw/P5eosTjiMvcmyAz1eX7md6176ienE
-        +kSORIMMA==;
-Received: from [2001:bc8:3dc9::1] (helo=localhost)
-        by srv1.deutnet.info with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <agriveaux@deutnet.info>)
-        id 1iC8EE-0007u8-5c; Sun, 22 Sep 2019 22:13:06 +0200
-Received: from agriveaux by localhost with local (Exim 4.92)
-        (envelope-from <agriveaux@deutnet.info>)
-        id 1iC8ED-007vfi-Qc; Sun, 22 Sep 2019 22:13:05 +0200
-Date:   Sun, 22 Sep 2019 22:13:05 +0200
-From:   Alexandre GRIVEAUX <agriveaux@deutnet.info>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, ralf@linux-mips.org,
-        paul.burton@mips.com, jhogan@kernel.org, agriveaux@deutnet.info
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH 4/4] MIPS: JZ4780: DTS: Add CPU nodes
-Message-ID: <d4f2225005f6d8a92eec05bb64e7fe937ead8ccc.1569181001.git.agriveaux@deutnet.info>
-References: <cover.1569181001.git.agriveaux@deutnet.info>
+        Sun, 22 Sep 2019 16:25:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55332 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726188AbfIVUZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 16:25:55 -0400
+Received: from localhost (unknown [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FC8D20644;
+        Sun, 22 Sep 2019 20:25:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569183954;
+        bh=lnqz5lNN8HlaQXC31DrIw2TCWk6wgsRyvy3CZVgtWTc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ibZz2JCL3uR8hlgXpw/VtXngL3ZrNRKUQ/xD+kGXti6yM7K8SIqoKHZLUniGtRqx9
+         FSJ8FFs6FHIdmAkeiPSbOVm22um6wDn5KwDLSfXqcSWOBTJLUtclqjkTYNAAjzosSC
+         4gB9gziS74ERqlQ6GxTg8vjqFoXQyymEDLrCxUJM=
+Date:   Sun, 22 Sep 2019 22:25:44 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Austin Kim <austindh.kim@gmail.com>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Hedi Berriche <hedi.berriche@hpe.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mike Travis <mike.travis@hpe.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Thomas Gleixner <tglx@linutronix.de>, allison@lohutok.net,
+        andy@infradead.org, armijn@tjaldur.nl, bp@alien8.de,
+        dvhart@infradead.org, hpa@zytor.com, kjlu@umn.edu,
+        platform-driver-x86@vger.kernel.org, Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH AUTOSEL 5.3 169/203] x86/platform/uv: Fix kmalloc() NULL
+ check routine
+Message-ID: <20190922202544.GA2719513@kroah.com>
+References: <20190922184350.30563-1-sashal@kernel.org>
+ <20190922184350.30563-169-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1569181001.git.agriveaux@deutnet.info>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190922184350.30563-169-sashal@kernel.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The JZ4780 have 2 core, adding to DT.
+On Sun, Sep 22, 2019 at 02:43:15PM -0400, Sasha Levin wrote:
+> From: Austin Kim <austindh.kim@gmail.com>
+> 
+> [ Upstream commit 864b23f0169d5bff677e8443a7a90dfd6b090afc ]
+> 
+> The result of kmalloc() should have been checked ahead of below statement:
+> 
+> 	pqp = (struct bau_pq_entry *)vp;
+> 
+> Move BUG_ON(!vp) before above statement.
+> 
+> Signed-off-by: Austin Kim <austindh.kim@gmail.com>
+> Cc: Dimitri Sivanich <dimitri.sivanich@hpe.com>
+> Cc: Hedi Berriche <hedi.berriche@hpe.com>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Mike Travis <mike.travis@hpe.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Russ Anderson <russ.anderson@hpe.com>
+> Cc: Steve Wahl <steve.wahl@hpe.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: allison@lohutok.net
+> Cc: andy@infradead.org
+> Cc: armijn@tjaldur.nl
+> Cc: bp@alien8.de
+> Cc: dvhart@infradead.org
+> Cc: gregkh@linuxfoundation.org
+> Cc: hpa@zytor.com
+> Cc: kjlu@umn.edu
+> Cc: platform-driver-x86@vger.kernel.org
+> Link: https://lkml.kernel.org/r/20190905232951.GA28779@LGEARND20B15
+> Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  arch/x86/platform/uv/tlb_uv.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/platform/uv/tlb_uv.c b/arch/x86/platform/uv/tlb_uv.c
+> index 20c389a91b803..5f0a96bf27a1f 100644
+> --- a/arch/x86/platform/uv/tlb_uv.c
+> +++ b/arch/x86/platform/uv/tlb_uv.c
+> @@ -1804,9 +1804,9 @@ static void pq_init(int node, int pnode)
+>  
+>  	plsize = (DEST_Q_SIZE + 1) * sizeof(struct bau_pq_entry);
+>  	vp = kmalloc_node(plsize, GFP_KERNEL, node);
+> -	pqp = (struct bau_pq_entry *)vp;
+> -	BUG_ON(!pqp);
+> +	BUG_ON(!vp);
+>  
+> +	pqp = (struct bau_pq_entry *)vp;
+>  	cp = (char *)pqp + 31;
+>  	pqp = (struct bau_pq_entry *)(((unsigned long)cp >> 5) << 5);
+>  
 
-Signed-off-by: Alexandre GRIVEAUX <agriveaux@deutnet.info>
----
- arch/mips/boot/dts/ingenic/jz4780.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+How did this even get merged in the first place?  I thought a number of
+us complained about it.
 
-diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-index f928329b034b..9c7346724f1f 100644
---- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-@@ -7,6 +7,23 @@
- 	#size-cells = <1>;
- 	compatible = "ingenic,jz4780";
- 
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			compatible = "ingenic,jz4780";
-+			device_type = "cpu";
-+			reg = <0>;
-+		};
-+
-+		cpu@1 {
-+			compatible = "ingenic,jz4780";
-+			device_type = "cpu";
-+			reg = <1>;
-+		};
-+	};
-+
- 	cpuintc: interrupt-controller {
- 		#address-cells = <0>;
- 		#interrupt-cells = <1>;
--- 
-2.20.1
+This isn't any change in code, and the original is just fine, the author
+didn't realize how C works :(
 
+Please drop this.
+
+thanks,
+
+greg k-h
