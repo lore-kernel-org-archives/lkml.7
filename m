@@ -2,128 +2,156 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 116E0C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 14:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21096C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 15:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9A0320640
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 14:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1B9020882
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 15:05:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lPtk0fOb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387423AbfIVOrL (ORCPT
+        id S2387446AbfIVPDn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 10:47:11 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49390 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729072AbfIVOrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 10:47:10 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0CC2110CC1E3;
-        Sun, 22 Sep 2019 14:47:10 +0000 (UTC)
-Received: from krava (ovpn-204-75.brq.redhat.com [10.40.204.75])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 8713319C78;
-        Sun, 22 Sep 2019 14:47:06 +0000 (UTC)
-Date:   Sun, 22 Sep 2019 16:47:05 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Stephane Eranian <eranian@google.com>,
-        Song Liu <songliubraving@fb.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>
-Subject: Re: [RFC 00/73] libperf: Add sampling interface
-Message-ID: <20190922144705.GA17104@krava>
-References: <20190913132355.21634-1-jolsa@kernel.org>
+        Sun, 22 Sep 2019 11:03:43 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:33800 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729089AbfIVPDm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 11:03:42 -0400
+Received: by mail-lf1-f68.google.com with SMTP id r22so8211081lfm.1
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Sep 2019 08:03:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=//yhO9YShfBboqEeYtnHpLNW0sjYFlBd1DBOZAf6ZMo=;
+        b=lPtk0fOb3hEIvdkQnGRXg7FDSJ+82hQroxY0q39ANwS7ua5/lCtb+8+lkfcxC1rwNY
+         Yg3lay9o3vk6BHjkB2eoJ49IMOm69kAsEcY8C4wDlim66erQ2DMu9kuYBkhVS6TSWbRp
+         29w99xbe83yqegN/U0H70IgrnH6PQEXL79EtmavEeoK+i9YTL9/xolsSUHSsjrUvqE1x
+         465yVUp3CFTq303W0DTysrvwmUJLo+EsIvtY7dvkiaTnGmc72epOuTiulbD9VKYrcM2t
+         Z4FfBb8ywM0TPRQ62r81f5dTV+nnPXgAEdCRanmNMe62NxzLnQb/VOuGFn7+b9j8XQmQ
+         3QmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=//yhO9YShfBboqEeYtnHpLNW0sjYFlBd1DBOZAf6ZMo=;
+        b=WmP3js2UyNzOb/zUWi5bPTHT9qDZOlXa0LJEX+BcPjfbUMTpQBtigfZqNVQM9va483
+         p5r2OCowrEcWsQmvO7wKAzuJGftATks+4DasVxP0m2crLPjS1DvZ7CzDUw9502ulvdWb
+         5YCXZFE1O1LjguGMTqCqKypZmp8Wu3en/nObzpmK7Ctdzlbl8atB7nDrI6X5ZkctxpBx
+         FZzPh1n5D26h8OE6wW/0Wedf4FblC8jwYG9S5c1oqByH1Sz7+G34JVOvUkIihp1R/aeV
+         MTHFr5+dATmt5nQr0IRDOJsV0WIxeDbuG4QposM1OWFVqjZP+5fontT7RJ52KH/my3mn
+         YDQA==
+X-Gm-Message-State: APjAAAXmKe8L2cQ6tEd5KJo1iS2AEJRUKbQ96y7RvN5sbyQb59b9N7Sb
+        hE0pBKDThhR126h99+7TFQtJCJ7WFM0=
+X-Google-Smtp-Source: APXvYqwlVZznU5PXwYxaPEiFTjZg/Zqbe/WoB69ERAcBk3UfNmyN12eh8kjPjeCkoxTsfzD0QpWulQ==
+X-Received: by 2002:a19:f111:: with SMTP id p17mr14289342lfh.187.1569164620514;
+        Sun, 22 Sep 2019 08:03:40 -0700 (PDT)
+Received: from pc-sasha.localdomain ([95.47.123.158])
+        by smtp.gmail.com with ESMTPSA id e29sm1696477ljb.105.2019.09.22.08.03.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Sep 2019 08:03:37 -0700 (PDT)
+From:   Alexander Kapshuk <alexander.kapshuk@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, Alexander Kapshuk <alexander.kapshuk@gmail.com>,
+        kbuild test robot <lkp@intel.com>
+Subject: [PATCH RESEND] gen-insn-attr-x86.awk: Fix regexp warnings
+Date:   Sun, 22 Sep 2019 18:03:28 +0300
+Message-Id: <20190922150328.6722-1-alexander.kapshuk@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190922083342.GO13569@xsang-OptiPlex-9020>
+References: <20190922083342.GO13569@xsang-OptiPlex-9020>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190913132355.21634-1-jolsa@kernel.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.65]); Sun, 22 Sep 2019 14:47:10 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 03:22:42PM +0200, Jiri Olsa wrote:
-> hi,
-> sending changes for exporting basic sampling interface
-> in libperf. It's now possible to use following code in
-> applications via libperf:
-> 
-> --- (example is without error checks for simplicity)
-> 
->   struct perf_event_attr attr = {
->           .type             = PERF_TYPE_TRACEPOINT,
->           .sample_period    = 1,
->           .wakeup_watermark = 1,
->           .disabled         = 1,
->   };
->   /* ... setup attr */
-> 
->   cpus = perf_cpu_map__new(NULL);
-> 
->   evlist = perf_evlist__new();
->   evsel  = perf_evsel__new(&attr);
->   perf_evlist__add(evlist, evsel);
-> 
->   perf_evlist__set_maps(evlist, cpus, NULL);
-> 
->   err = perf_evlist__open(evlist);
->   err = perf_evlist__mmap(evlist, 4);
-> 
->   err = perf_evlist__enable(evlist);
-> 
->   /* ... monitored area, plus all the other cpus */
-> 
->   err = perf_evlist__disable(evlist);
-> 
->   perf_evlist__for_each_mmap(evlist, map) {
->           if (perf_mmap__read_init(map) < 0)
->                   continue;
-> 
->           while ((event = perf_mmap__read_event(map)) != NULL) {
->                   perf_mmap__consume(map);
->           }
-> 
->           perf_mmap__read_done(map);
->   }
-> 
->   perf_evlist__delete(evlist);
->   perf_cpu_map__put(cpus);
-> 
-> --- (end)
-> 
-> Nothing is carved in stone so far, the interface is exported
-> as is available in perf now and we can change it as we want.
-> 
-> New tests are added in test-evlist.c to do thread and cpu based
-> sampling.
-> 
-> All the functionality should not change, however there's considerable
-> mmap code rewrite, so would be great if guys could run your usual
-> workloads to see if all is fine.. so far so good in my tests ;-)
-> 
-> It's also available in here:
->   git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
->   perf/lib
+This patch fixes the regexp warnings shown below:
+GEN      /home/sasha/torvalds/tools/objtool/arch/x86/lib/inat-tables.c
+awk: ../arch/x86/tools/gen-insn-attr-x86.awk:260: warning: regexp escape sequence `\:' is not a known regexp operator
+awk: ../arch/x86/tools/gen-insn-attr-x86.awk:350: (FILENAME=../arch/x86/lib/x86-opcode-map.txt FNR=41) warning: regexp escape sequence `\&' is not a known regexp operator
 
-hi,
-I rebased the branch to latest Arnaldo's perf/core branch
+The ':' and '&' characters need not escaping when used in string constants
+as part of regular expressions.
 
-jirka
+[Test-run]
+awk -f arch/x86/tools/gen-insn-attr-x86.awk \
+	arch/x86/lib/x86-opcode-map.txt >../tmp/inat-tables.c
+
+diff arch/x86/lib/inat-tables.c ~/tmp/inat-tables.c; echo $?
+0
+
+awk -f tools/arch/x86/tools/gen-insn-attr-x86.awk \
+	tools/arch/x86/lib/x86-opcode-map.txt >../tmp/inat-tables.c
+
+diff tools/objtool/arch/x86/lib/inat-tables.c ~/tmp/inat-tables.c; echo $?
+0
+
+[Debugging output]
+DBG:ext:(66&F2)
+DBG:match(ext, ...):(66&F2)
+DBG:match(..., lprefix3_expr):\((F2|!F3|66&F2)\)
+
+Signed-off-by: Alexander Kapshuk <alexander.kapshuk@gmail.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+---
+ arch/x86/tools/gen-insn-attr-x86.awk       | 4 ++--
+ tools/arch/x86/tools/gen-insn-attr-x86.awk | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/tools/gen-insn-attr-x86.awk b/arch/x86/tools/gen-insn-attr-x86.awk
+index b02a36b2c14f..a42015b305f4 100644
+--- a/arch/x86/tools/gen-insn-attr-x86.awk
++++ b/arch/x86/tools/gen-insn-attr-x86.awk
+@@ -69,7 +69,7 @@ BEGIN {
+
+ 	lprefix1_expr = "\\((66|!F3)\\)"
+ 	lprefix2_expr = "\\(F3\\)"
+-	lprefix3_expr = "\\((F2|!F3|66\\&F2)\\)"
++	lprefix3_expr = "\\((F2|!F3|66&F2)\\)"
+ 	lprefix_expr = "\\((66|F2|F3)\\)"
+ 	max_lprefix = 4
+
+@@ -257,7 +257,7 @@ function convert_operands(count,opnd,       i,j,imm,mod)
+ 	return add_flags(imm, mod)
+ }
+
+-/^[0-9a-f]+\:/ {
++/^[0-9a-f]+:/ {
+ 	if (NR == 1)
+ 		next
+ 	# get index
+diff --git a/tools/arch/x86/tools/gen-insn-attr-x86.awk b/tools/arch/x86/tools/gen-insn-attr-x86.awk
+index b02a36b2c14f..a42015b305f4 100644
+--- a/tools/arch/x86/tools/gen-insn-attr-x86.awk
++++ b/tools/arch/x86/tools/gen-insn-attr-x86.awk
+@@ -69,7 +69,7 @@ BEGIN {
+
+ 	lprefix1_expr = "\\((66|!F3)\\)"
+ 	lprefix2_expr = "\\(F3\\)"
+-	lprefix3_expr = "\\((F2|!F3|66\\&F2)\\)"
++	lprefix3_expr = "\\((F2|!F3|66&F2)\\)"
+ 	lprefix_expr = "\\((66|F2|F3)\\)"
+ 	max_lprefix = 4
+
+@@ -257,7 +257,7 @@ function convert_operands(count,opnd,       i,j,imm,mod)
+ 	return add_flags(imm, mod)
+ }
+
+-/^[0-9a-f]+\:/ {
++/^[0-9a-f]+:/ {
+ 	if (NR == 1)
+ 		next
+ 	# get index
+--
+2.23.0
+
