@@ -7,124 +7,122 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8222DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 166A4C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:58:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CD4D208C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2AFC21907
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:58:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178689;
-	bh=/mKR2Aj0YnNxM7Y42TKtxzacGVHLJvIRIb7cpYpcFKM=;
+	s=default; t=1569178692;
+	bh=KpdvbdqjFZl7t9TvgQ75IP6VOKP7crKkEw9fyKZUXiI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uLOJNiqe9iMffo7IlM39KpFbo0VchjbIXBKqHLNzU/H1cNoUaXyYrUJXGXcLiJXla
-	 E8Vlu8kE84C/czOoLXMwYBWGbcr9QddHZhAY89h0wJZ2qk7tu5l/KV7lOMgLmDstCN
-	 YBPy10MnBKYup0NZ0ouCCt3/ujpV2cp+Sua2px3g=
+	b=cOzgvfYJju3UkltThPZsN72MZNpiatZEfNiZe6ZJw8hWPgveayDGwpsthaq0SAlaw
+	 xb+sKeVhx7tUPTZkM/Ncsv7dzfGovJmxfXqaoeLX3i2+Tyi/aKo6ksgT2DtNeAnJ1Y
+	 HcKpf2KEY8PdIBH1PdlHYAsa+mY09x0AFAINXGfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407142AbfIVS6I (ORCPT
+        id S2438751AbfIVS6L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:58:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60556 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:58:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438685AbfIVS5z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:57:55 -0400
+        id S2438705AbfIVS6B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:58:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DBFA2184D;
-        Sun, 22 Sep 2019 18:57:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D50D2186A;
+        Sun, 22 Sep 2019 18:57:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178674;
-        bh=/mKR2Aj0YnNxM7Y42TKtxzacGVHLJvIRIb7cpYpcFKM=;
+        s=default; t=1569178681;
+        bh=KpdvbdqjFZl7t9TvgQ75IP6VOKP7crKkEw9fyKZUXiI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0U8KOYb2MMbBUMU4mJzX64DOQo4sMg/vBpYrWL/yOReGXD2eiBBK9HuNim8SN8PvF
-         9Ere8PvvxZxnRqSlXz8KuY3bIl6NYqvs0p3Iz4tOoakhEXcADXF5NlGVJLmqchfpad
-         tz/8Z9IZQZ2xzH+aYqrUO8qCB4okLem8QApX9nTs=
+        b=vtPzQgHq2+qjNy8NLQWpxrRVXMHIjUhJqC6MCThvWy6aXyMee7+1VzgdevfTSTd0G
+         BkufEuhLyUCWFxYbPrs1bh5/L3Jeg7+87oqC1vrxES9hm+xZ/XTPsh27Yv5BzB4m+s
+         WwzkspoKVGHee+h89rosgMWqNuUNT6u6P/Y9iGaI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yufen Yu <yuyufen@huawei.com>, Song Liu <songliubraving@fb.com>,
-        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 24/89] md/raid1: end bio when the device faulty
-Date:   Sun, 22 Sep 2019 14:56:12 -0400
-Message-Id: <20190922185717.3412-24-sashal@kernel.org>
+Cc:     =?UTF-8?q?Valdis=20Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
+        linux-edac@vger.kernel.org, x86@kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 27/89] RAS: Fix prototype warnings
+Date:   Sun, 22 Sep 2019 14:56:15 -0400
+Message-Id: <20190922185717.3412-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185717.3412-1-sashal@kernel.org>
 References: <20190922185717.3412-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yufen Yu <yuyufen@huawei.com>
+From: Valdis Klētnieks <valdis.kletnieks@vt.edu>
 
-[ Upstream commit eeba6809d8d58908b5ed1b5ceb5fcb09a98a7cad ]
+[ Upstream commit 0a54b809a3a2c31e1055b45b03708eb730222be1 ]
 
-When write bio return error, it would be added to conf->retry_list
-and wait for raid1d thread to retry write and acknowledge badblocks.
+When building with C=2 and/or W=1, legitimate warnings are issued about
+missing prototypes:
 
-In narrow_write_error(), the error bio will be split in the unit of
-badblock shift (such as one sector) and raid1d thread issues them
-one by one. Until all of the splited bio has finished, raid1d thread
-can go on processing other things, which is time consuming.
+    CHECK   drivers/ras/debugfs.c
+  drivers/ras/debugfs.c:4:15: warning: symbol 'ras_debugfs_dir' was not declared. Should it be static?
+  drivers/ras/debugfs.c:8:5: warning: symbol 'ras_userspace_consumers' was not declared. Should it be static?
+  drivers/ras/debugfs.c:38:12: warning: symbol 'ras_add_daemon_trace' was not declared. Should it be static?
+  drivers/ras/debugfs.c:54:13: warning: symbol 'ras_debugfs_init' was not declared. Should it be static?
+    CC      drivers/ras/debugfs.o
+  drivers/ras/debugfs.c:8:5: warning: no previous prototype for 'ras_userspace_consumers' [-Wmissing-prototypes]
+      8 | int ras_userspace_consumers(void)
+        |     ^~~~~~~~~~~~~~~~~~~~~~~
+  drivers/ras/debugfs.c:38:12: warning: no previous prototype for 'ras_add_daemon_trace' [-Wmissing-prototypes]
+     38 | int __init ras_add_daemon_trace(void)
+        |            ^~~~~~~~~~~~~~~~~~~~
+  drivers/ras/debugfs.c:54:13: warning: no previous prototype for 'ras_debugfs_init' [-Wmissing-prototypes]
+     54 | void __init ras_debugfs_init(void)
+        |             ^~~~~~~~~~~~~~~~
 
-But, there is a scene for error handling that is not necessary.
-When the device has been set faulty, flush_bio_list() may end
-bios in pending_bio_list with error status. Since these bios
-has not been issued to the device actually, error handlding to
-retry write and acknowledge badblocks make no sense.
+Provide the proper includes.
 
-Even without that scene, when the device is faulty, badblocks info
-can not be written out to the device. Thus, we also no need to
-handle the error IO.
+ [ bp: Take care of the same warnings for cec.c too. ]
 
-Signed-off-by: Yufen Yu <yuyufen@huawei.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: linux-edac@vger.kernel.org
+Cc: x86@kernel.org
+Link: http://lkml.kernel.org/r/7168.1565218769@turing-police
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/raid1.c | 26 ++++++++++++++------------
- 1 file changed, 14 insertions(+), 12 deletions(-)
+ drivers/ras/cec.c     | 1 +
+ drivers/ras/debugfs.c | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index 31c4391f6a62b..762d21c84774a 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -435,19 +435,21 @@ static void raid1_end_write_request(struct bio *bio)
- 		    /* We never try FailFast to WriteMostly devices */
- 		    !test_bit(WriteMostly, &rdev->flags)) {
- 			md_error(r1_bio->mddev, rdev);
--			if (!test_bit(Faulty, &rdev->flags))
--				/* This is the only remaining device,
--				 * We need to retry the write without
--				 * FailFast
--				 */
--				set_bit(R1BIO_WriteError, &r1_bio->state);
--			else {
--				/* Finished with this branch */
--				r1_bio->bios[mirror] = NULL;
--				to_put = bio;
--			}
--		} else
-+		}
-+
-+		/*
-+		 * When the device is faulty, it is not necessary to
-+		 * handle write error.
-+		 * For failfast, this is the only remaining device,
-+		 * We need to retry the write without FailFast.
-+		 */
-+		if (!test_bit(Faulty, &rdev->flags))
- 			set_bit(R1BIO_WriteError, &r1_bio->state);
-+		else {
-+			/* Finished with this branch */
-+			r1_bio->bios[mirror] = NULL;
-+			to_put = bio;
-+		}
- 	} else {
- 		/*
- 		 * Set R1BIO_Uptodate in our master bio, so that we
+diff --git a/drivers/ras/cec.c b/drivers/ras/cec.c
+index 97cf40a522be3..02e65bdbadcae 100644
+--- a/drivers/ras/cec.c
++++ b/drivers/ras/cec.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/mm.h>
+ #include <linux/gfp.h>
++#include <linux/ras.h>
+ #include <linux/kernel.h>
+ 
+ #include <asm/mce.h>
+diff --git a/drivers/ras/debugfs.c b/drivers/ras/debugfs.c
+index 501603057dffe..12a161377f4f8 100644
+--- a/drivers/ras/debugfs.c
++++ b/drivers/ras/debugfs.c
+@@ -1,4 +1,6 @@
+ #include <linux/debugfs.h>
++#include <linux/ras.h>
++#include "debugfs.h"
+ 
+ struct dentry *ras_debugfs_dir;
+ 
 -- 
 2.20.1
 
