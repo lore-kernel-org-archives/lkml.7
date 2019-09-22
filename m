@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC9EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28705C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 183B420882
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:07:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8BE9206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:07:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179221;
-	bh=fDOgN/V7NzxO0VMh+Nd6y7W61naiUhNP+roMN4RfvuA=;
+	s=default; t=1569179232;
+	bh=5OwVZHXWuvHqX+dLeHJvdMc7LTL+ap8gQNGEwG9O8mk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fkp/oVS72rSb2VlM522arCiAhJVedVvsD+erP8NwoRlGPGap+6X1yymabBI+3DBu8
-	 R1PwZvl5Xz5UfKgcJYIFUkAKXq5vICI2dQAsCQR1vUCbqKDdiAau5ME/hySqxkglla
-	 y5h0RpJGGb4yENyV6ROWdupHeSrWP+f/4LdcOYho=
+	b=DPVWR2DOiXeVqGZXOcU2zYYrtKqF8Zro7X2Hp71m8kpqJbYrlZXJTlOI08OqDz/OI
+	 cJ4qBVl/a18/hsVVbZDlneLkmsvtrFpo7XNgyMKTHgMpNiNqUZBFzyz5jyGBwQofU2
+	 Hk2fEOiFvOqGuplk2yLolA6wF3UaEagmLh2QCIGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730241AbfIVTG7 (ORCPT
+        id S1730275AbfIVTHK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:06:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36002 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:07:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395144AbfIVTAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 15:00:21 -0400
+        id S2394628AbfIVTAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 15:00:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D2F0206C2;
-        Sun, 22 Sep 2019 19:00:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02BE9208C2;
+        Sun, 22 Sep 2019 19:00:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178821;
-        bh=fDOgN/V7NzxO0VMh+Nd6y7W61naiUhNP+roMN4RfvuA=;
+        s=default; t=1569178814;
+        bh=5OwVZHXWuvHqX+dLeHJvdMc7LTL+ap8gQNGEwG9O8mk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HzbJB4LAvfHX+zQzoQTQiPI1loT/dHWFz23kDeXD2zPHQh1DHjeYkbw5GK2YtIy+n
-         kOh7f3dHPqsQf7ykjQulpiRWvsycxMvXnZddoruxtenabS8TbpjAt7HEQ7L/qV91zi
-         E7KXzlBpEdM9hfO5NIyovAtxWJKW/sMhGkdoFtto=
+        b=aWQmZIUbgVqhLwBaf8VtSX3wus3eeS+YBDDfInRMANHzkAsV5Q3vYxvHSd8TJZ2jm
+         XGBJn71XHZEOKvqU6A6zK+HB3GnfIQnCdWPv+2IvSJrqakqF2l1WiyUuH+Y2cBdXpK
+         IPSeYciCNl51tz9mfywygJvDzhhuazP+tdiu2qEE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        syzbot+2d4fc2a0c45ad8da7e99@syzkaller.appspotmail.com,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 33/60] media: saa7146: add cleanup in hexium_attach()
-Date:   Sun, 22 Sep 2019 14:59:06 -0400
-Message-Id: <20190922185934.4305-33-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 28/60] media: radio/si470x: kill urb on error
+Date:   Sun, 22 Sep 2019 14:59:01 -0400
+Message-Id: <20190922185934.4305-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185934.4305-1-sashal@kernel.org>
 References: <20190922185934.4305-1-sashal@kernel.org>
@@ -60,36 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-[ Upstream commit 42e64117d3b4a759013f77bbcf25ab6700e55de7 ]
+[ Upstream commit 0d616f2a3fdbf1304db44d451d9f07008556923b ]
 
-If saa7146_register_device() fails, no cleanup is executed, leading to
-memory/resource leaks. To fix this issue, perform necessary cleanup work
-before returning the error.
+In the probe() function radio->int_in_urb was not killed if an
+error occurred in the probe sequence. It was also missing in
+the disconnect.
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+This caused this syzbot issue:
+
+https://syzkaller.appspot.com/bug?extid=2d4fc2a0c45ad8da7e99
+
+Reported-and-tested-by: syzbot+2d4fc2a0c45ad8da7e99@syzkaller.appspotmail.com
+
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/pci/saa7146/hexium_gemini.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/media/radio/si470x/radio-si470x-usb.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/pci/saa7146/hexium_gemini.c b/drivers/media/pci/saa7146/hexium_gemini.c
-index f5fc8bcbd14b1..be85a2c4318e7 100644
---- a/drivers/media/pci/saa7146/hexium_gemini.c
-+++ b/drivers/media/pci/saa7146/hexium_gemini.c
-@@ -304,6 +304,9 @@ static int hexium_attach(struct saa7146_dev *dev, struct saa7146_pci_extension_d
- 	ret = saa7146_register_device(&hexium->video_dev, dev, "hexium gemini", VFL_TYPE_GRABBER);
- 	if (ret < 0) {
- 		pr_err("cannot register capture v4l2 device. skipping.\n");
-+		saa7146_vv_release(dev);
-+		i2c_del_adapter(&hexium->i2c_adapter);
-+		kfree(hexium);
- 		return ret;
- 	}
+diff --git a/drivers/media/radio/si470x/radio-si470x-usb.c b/drivers/media/radio/si470x/radio-si470x-usb.c
+index 4b132c29f2900..1d045a8c29e21 100644
+--- a/drivers/media/radio/si470x/radio-si470x-usb.c
++++ b/drivers/media/radio/si470x/radio-si470x-usb.c
+@@ -742,7 +742,7 @@ static int si470x_usb_driver_probe(struct usb_interface *intf,
+ 	/* start radio */
+ 	retval = si470x_start_usb(radio);
+ 	if (retval < 0)
+-		goto err_all;
++		goto err_buf;
  
+ 	/* set initial frequency */
+ 	si470x_set_freq(radio, 87.5 * FREQ_MUL); /* available in all regions */
+@@ -757,6 +757,8 @@ static int si470x_usb_driver_probe(struct usb_interface *intf,
+ 
+ 	return 0;
+ err_all:
++	usb_kill_urb(radio->int_in_urb);
++err_buf:
+ 	kfree(radio->buffer);
+ err_ctrl:
+ 	v4l2_ctrl_handler_free(&radio->hdl);
+@@ -830,6 +832,7 @@ static void si470x_usb_driver_disconnect(struct usb_interface *intf)
+ 	mutex_lock(&radio->lock);
+ 	v4l2_device_disconnect(&radio->v4l2_dev);
+ 	video_unregister_device(&radio->videodev);
++	usb_kill_urb(radio->int_in_urb);
+ 	usb_set_intfdata(intf, NULL);
+ 	mutex_unlock(&radio->lock);
+ 	v4l2_device_put(&radio->v4l2_dev);
 -- 
 2.20.1
 
