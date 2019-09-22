@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9CBC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E9FC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6D64206B6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:33:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B7C420640
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:33:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180824;
-	bh=0DwUbrY2gMUOyVzwXRowA3D8idnT6qABSLQ/kcuTbkY=;
+	s=default; t=1569180830;
+	bh=d6AmPNfDAj8KGd/fgbph9jyrUnZ5/VpvIL6yT6NRvUs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iZTTo8L6SJsQPv3wBFSGG1K3RTD36B/gG4Pjqv6huZ+NxmsEHWFUnyxQQ5uv96oDQ
-	 kEU9eiHvi04bXkCh4N6h28YhcbxAP7Lb5cva7QWPkIaeQ8tPlYb8eIiD9nQTnF5/Q/
-	 eTKRUJG9pLMgjx7+9xi1eFwLyE0y/uECkscAfTUA=
+	b=NmOkG7/AoER+AoKtCKjZzUfRz9XO/kAfrognFxdlbSHiUYrQwLciSJ+5poFcwpBxB
+	 +mC0EUEQ7k+6Zw33qsYskpWBOA+zMFZeWj5sa1aibMja0YVQhLx820a27zjWj7sQwY
+	 2K56YbtisXqJBCWA7s5oOqczC4AxDgypc+cNcr10=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438331AbfIVTdn (ORCPT
+        id S2390917AbfIVSra (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:33:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43982 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:47:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390965AbfIVSrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:47:32 -0400
+        id S2390789AbfIVSrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:47:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34434214AF;
-        Sun, 22 Sep 2019 18:47:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DDBD206C2;
+        Sun, 22 Sep 2019 18:47:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178052;
-        bh=0DwUbrY2gMUOyVzwXRowA3D8idnT6qABSLQ/kcuTbkY=;
+        s=default; t=1569178043;
+        bh=d6AmPNfDAj8KGd/fgbph9jyrUnZ5/VpvIL6yT6NRvUs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BMIXjIdgm8dpurdyoGZFCVK+1tqqdzaoXQBxG9GpgNkQZmV66yPe5Zu3UHY4YbOtd
-         wQkNyTomqyoC+mTGpF7Xp+ono/VTJxiTgNbQn0ZL5abICKEgEgR0r98Oecu9P0SSzb
-         EDciRs/wpEqHlrE614nrJ+lnMi950d2QOE0U6j6c=
+        b=iCv0aNI6m1T3PPTkxuodTGMuEW7LGFeItc82VeeDWPVyVY6P5ygGEnVFa+xOH88LP
+         nD9O0yWe2ueEsCDdE7DCWAYytce7vlricyAC1IT7KBXmKLF1+7jmKa6IrH0oDi5Us4
+         9Yo8PytjMaIxVCX5naHMl0VRk17o5fP1fOUXQrAo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 129/203] perf script: Fix memory leaks in list_scripts()
-Date:   Sun, 22 Sep 2019 14:42:35 -0400
-Message-Id: <20190922184350.30563-129-sashal@kernel.org>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 123/203] media: cec-notifier: clear cec_adap in cec_notifier_unregister
+Date:   Sun, 22 Sep 2019 14:42:29 -0400
+Message-Id: <20190922184350.30563-123-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -63,46 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-[ Upstream commit 3b4acbb92dbda4829e021e5c6d5410658849fa1c ]
+[ Upstream commit 14d5511691e5290103bc480998bc322e68f139d4 ]
 
-In case memory resources for *buf* and *paths* were allocated, jump to
-*out* and release them before return.
+If cec_notifier_cec_adap_unregister() is called before
+cec_unregister_adapter() then everything is OK (and this is the
+case today). But if it is the other way around, then
+cec_notifier_unregister() is called first, and that doesn't
+set n->cec_adap to NULL.
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Addresses-Coverity-ID: 1444328 ("Resource leak")
-Fixes: 6f3da20e151f ("perf report: Support builtin perf script in scripts menu")
-Link: http://lkml.kernel.org/r/20190408162748.GA21008@embeddedor
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+So if e.g. cec_notifier_set_phys_addr() is called after
+cec_notifier_unregister() but before cec_unregister_adapter()
+then n->cec_adap points to an unregistered and likely deleted
+cec adapter. So just set n->cec_adap->notifier and n->cec_adap
+to NULL for rubustness.
+
+Eventually cec_notifier_unregister will disappear and this will
+be simplified substantially.
+
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/ui/browsers/scripts.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/media/cec/cec-notifier.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
-index 4d565cc14076c..0355d4aaf2eed 100644
---- a/tools/perf/ui/browsers/scripts.c
-+++ b/tools/perf/ui/browsers/scripts.c
-@@ -131,8 +131,10 @@ static int list_scripts(char *script_name, bool *custom,
- 		int key = ui_browser__input_window("perf script command",
- 				"Enter perf script command line (without perf script prefix)",
- 				script_args, "", 0);
--		if (key != K_ENTER)
--			return -1;
-+		if (key != K_ENTER) {
-+			ret = -1;
-+			goto out;
-+		}
- 		sprintf(script_name, "%s script %s", perf, script_args);
- 	} else if (choice < num + max_std) {
- 		strcpy(script_name, paths[choice]);
+diff --git a/drivers/media/cec/cec-notifier.c b/drivers/media/cec/cec-notifier.c
+index 52a867bde15fd..4d82a5522072e 100644
+--- a/drivers/media/cec/cec-notifier.c
++++ b/drivers/media/cec/cec-notifier.c
+@@ -218,6 +218,8 @@ void cec_notifier_unregister(struct cec_notifier *n)
+ 
+ 	mutex_lock(&n->lock);
+ 	n->callback = NULL;
++	n->cec_adap->notifier = NULL;
++	n->cec_adap = NULL;
+ 	mutex_unlock(&n->lock);
+ 	cec_notifier_put(n);
+ }
 -- 
 2.20.1
 
