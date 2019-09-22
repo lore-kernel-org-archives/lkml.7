@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1E2C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC9EC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E30BA20882
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:06:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 183B420882
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:07:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179216;
-	bh=ErDtY2kpllQvvj4z6lp/isxmwDgPqnbmLsd+yvJXw78=;
+	s=default; t=1569179221;
+	bh=fDOgN/V7NzxO0VMh+Nd6y7W61naiUhNP+roMN4RfvuA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dAfyFYStFWicbfnec0TTfqalxgjjCjTgKtTu8GFlBND657zXkT4s3AB/RkIJxRK85
-	 FnHO6B4y4F8LT9sCYKwz0Yp/7nY5Do5PakL5+JNIOhoextT1pST02+/lPgTPQozzWa
-	 KOeRvHeOxCwLw5o11xYiynaRFcoSAX3FZwZjADSQ=
+	b=Fkp/oVS72rSb2VlM522arCiAhJVedVvsD+erP8NwoRlGPGap+6X1yymabBI+3DBu8
+	 R1PwZvl5Xz5UfKgcJYIFUkAKXq5vICI2dQAsCQR1vUCbqKDdiAau5ME/hySqxkglla
+	 y5h0RpJGGb4yENyV6ROWdupHeSrWP+f/4LdcOYho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395155AbfIVTAX (ORCPT
+        id S1730241AbfIVTG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:00:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35878 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:06:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395109AbfIVTAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 15:00:16 -0400
+        id S2395144AbfIVTAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 15:00:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 617E7206C2;
-        Sun, 22 Sep 2019 19:00:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D2F0206C2;
+        Sun, 22 Sep 2019 19:00:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178816;
-        bh=ErDtY2kpllQvvj4z6lp/isxmwDgPqnbmLsd+yvJXw78=;
+        s=default; t=1569178821;
+        bh=fDOgN/V7NzxO0VMh+Nd6y7W61naiUhNP+roMN4RfvuA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rJb0B5/wZ3qcIa2c7flh9OTg4oupcstvvVmSN8carhhBwOB7UwnLnXWIc1DJvKTNf
-         JKena2JH1QncpKclpYn5qXKra70VM2s09zZOypWy4PaVVEGg8SkQLwggvDuN5cnmfP
-         FvR3M8Ccyz9SSYmDpwLXixxHZ4G4Gw6XBlvaLFIQ=
+        b=HzbJB4LAvfHX+zQzoQTQiPI1loT/dHWFz23kDeXD2zPHQh1DHjeYkbw5GK2YtIy+n
+         kOh7f3dHPqsQf7ykjQulpiRWvsycxMvXnZddoruxtenabS8TbpjAt7HEQ7L/qV91zi
+         E7KXzlBpEdM9hfO5NIyovAtxWJKW/sMhGkdoFtto=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        syzbot+79d18aac4bf1770dd050@syzkaller.appspotmail.com,
+Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 29/60] media: hdpvr: add terminating 0 at end of string
-Date:   Sun, 22 Sep 2019 14:59:02 -0400
-Message-Id: <20190922185934.4305-29-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 33/60] media: saa7146: add cleanup in hexium_attach()
+Date:   Sun, 22 Sep 2019 14:59:06 -0400
+Message-Id: <20190922185934.4305-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185934.4305-1-sashal@kernel.org>
 References: <20190922185934.4305-1-sashal@kernel.org>
@@ -60,37 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit 8b8900b729e4f31f12ac1127bde137c775c327e6 ]
+[ Upstream commit 42e64117d3b4a759013f77bbcf25ab6700e55de7 ]
 
-dev->usbc_buf was passed as argument for %s, but it was not safeguarded
-by a terminating 0.
+If saa7146_register_device() fails, no cleanup is executed, leading to
+memory/resource leaks. To fix this issue, perform necessary cleanup work
+before returning the error.
 
-This caused this syzbot issue:
-
-https://syzkaller.appspot.com/bug?extid=79d18aac4bf1770dd050
-
-Reported-and-tested-by: syzbot+79d18aac4bf1770dd050@syzkaller.appspotmail.com
-
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/hdpvr/hdpvr-core.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/pci/saa7146/hexium_gemini.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/media/usb/hdpvr/hdpvr-core.c b/drivers/media/usb/hdpvr/hdpvr-core.c
-index 7b34108f6587e..99171b912a2d8 100644
---- a/drivers/media/usb/hdpvr/hdpvr-core.c
-+++ b/drivers/media/usb/hdpvr/hdpvr-core.c
-@@ -143,6 +143,7 @@ static int device_authorization(struct hdpvr_device *dev)
- 
- 	dev->fw_ver = dev->usbc_buf[1];
- 
-+	dev->usbc_buf[46] = '\0';
- 	v4l2_info(&dev->v4l2_dev, "firmware version 0x%x dated %s\n",
- 			  dev->fw_ver, &dev->usbc_buf[2]);
+diff --git a/drivers/media/pci/saa7146/hexium_gemini.c b/drivers/media/pci/saa7146/hexium_gemini.c
+index f5fc8bcbd14b1..be85a2c4318e7 100644
+--- a/drivers/media/pci/saa7146/hexium_gemini.c
++++ b/drivers/media/pci/saa7146/hexium_gemini.c
+@@ -304,6 +304,9 @@ static int hexium_attach(struct saa7146_dev *dev, struct saa7146_pci_extension_d
+ 	ret = saa7146_register_device(&hexium->video_dev, dev, "hexium gemini", VFL_TYPE_GRABBER);
+ 	if (ret < 0) {
+ 		pr_err("cannot register capture v4l2 device. skipping.\n");
++		saa7146_vv_release(dev);
++		i2c_del_adapter(&hexium->i2c_adapter);
++		kfree(hexium);
+ 		return ret;
+ 	}
  
 -- 
 2.20.1
