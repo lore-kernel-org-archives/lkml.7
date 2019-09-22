@@ -2,112 +2,103 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9322DC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7538C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AF6821D7A
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:56:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="gvDMJyi0"
+	by mail.kernel.org (Postfix) with ESMTP id 91E7E21D6C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:56:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569178615;
+	bh=oxUGfmRL9iGpIDJ2pCNJq5o2xCvzlbFrr0Q4xmMQX0s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pzttAQ+spIAE8tZhniZtOjmoL3UcxXkQO25lqjsgShi6inZsI83UreVfp3Lt117uz
+	 zznhjcKV20FoXjIwp2yRn0EiPcF72H8yXQrh3RJjGWKCyowTcI4GEiG10TGxG4+CdK
+	 4MtXtNUMkJr6VOVNrzw4GUg9fvHyELvtvSW2Mc5I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394664AbfIVS4v (ORCPT
+        id S2394695AbfIVS4z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Sun, 22 Sep 2019 14:56:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59112 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2394660AbfIVS4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 22 Sep 2019 14:56:51 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41526 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394635AbfIVS4s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:56:48 -0400
-Received: by mail-io1-f68.google.com with SMTP id r26so28122286ioh.8
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Sep 2019 11:56:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sAqbwyBTLJzoUSUpLlDoNowzK2mKFjnFSGx3ns38mRA=;
-        b=gvDMJyi0VYg2HDyTVTX871MrmgdptlPi80DlT2OFZ/09lG+cgJHqYoQ3pfp4GMxki9
-         Q+Mys2JCRTWBll+dWcfNXkhZsNQlrxWYX1XJExoD6GmxfgUvFwJoyV/5OStqxsgOgyyF
-         3y57mn0MbPeAD8DB5iq4Fnvx2UQhUocf4p3ko=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sAqbwyBTLJzoUSUpLlDoNowzK2mKFjnFSGx3ns38mRA=;
-        b=nPaIyTlZIIHJqfudLyVcWXVltKL2EOctrFkWRwMOo8myfDugwfTm+0ek7MVsgi+IN5
-         TzxIcwC/nM8pdzUuqWdHLu0gmWH8zQ9VG1ag8FQnveufY/eSF0BgH6WaSn+fFgez81uK
-         dHTv5IUo6uSMe7J3fEMTb69PrK2riDW8wBWbCFR570X/pP/FvZFSEJZdiHNyJqqRLqXT
-         YFZYCFd1J+Tgd3FRY1tOVifp957UVQ0hYiqGgXPxk84fHMzhdnwewXT1DsnVtKWYT9u9
-         ro4p+lfNFTtaHH9wqpkmOUc6yOX9/LWovN/sEOUAZrIgSoXxKTZpg6X2oDShA8ErDOT6
-         S/4A==
-X-Gm-Message-State: APjAAAVzRj+lO9GUQuUEoEMjThOrd+VJGSDrqk9z0vqyTZAX4o8DnqCs
-        AhowFqsSjxrpfm1z5GRmRuIbYoBrZpgOedjcCEkPww==
-X-Google-Smtp-Source: APXvYqxzkhJ6AasAGq0IVSL9MC0OHG+zVFKC5bbGePpkO+jPZmyxNT5A7a6uwF9+BwM7wd8tFr917EWYOp/RcO8JFcg=
-X-Received: by 2002:a6b:5d18:: with SMTP id r24mr31400776iob.285.1569178607349;
- Sun, 22 Sep 2019 11:56:47 -0700 (PDT)
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CBF92184D;
+        Sun, 22 Sep 2019 18:56:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569178610;
+        bh=oxUGfmRL9iGpIDJ2pCNJq5o2xCvzlbFrr0Q4xmMQX0s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Y9g4ElcegDn+uMLL9wcAbFaAONj7LJHGlE9VuXpic03kSXNvgvWEJufn7QDL4wLkC
+         +H72aadCmzjQz9HxS2dIsIyPOANmpAxXPB3nTPZhi+WG1GDMUchHaPo8ONPRVn8gjN
+         tp6dSDDyN34Yin1m7knWsHAHfFEcZWvveaTPfI3Y=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Gayatri Kammela <gayatri.kammela@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 110/128] x86/cpu: Add Tiger Lake to Intel family
+Date:   Sun, 22 Sep 2019 14:54:00 -0400
+Message-Id: <20190922185418.2158-110-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
+References: <20190922185418.2158-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20190922131936.GE2233839@devbig004.ftw2.facebook.com>
-In-Reply-To: <20190922131936.GE2233839@devbig004.ftw2.facebook.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Sun, 22 Sep 2019 20:56:36 +0200
-Message-ID: <CAJfpegsO3gepyyQUhY15gE=nqBW5hL1G4wUM+Yj2CvLf83Sw0Q@mail.gmail.com>
-Subject: Re: [PATCH] FUSE: fix beyond-end-of-page access in fuse_parse_cache()
-To:     Tejun Heo <tj@kernel.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 22, 2019 at 3:19 PM Tejun Heo <tj@kernel.org> wrote:
->
-> With DEBUG_PAGEALLOC on, the following triggers.
->
->   BUG: unable to handle page fault for address: ffff88859367c000
->   #PF: supervisor read access in kernel mode
->   #PF: error_code(0x0000) - not-present page
->   PGD 3001067 P4D 3001067 PUD 406d3a8067 PMD 406d30c067 PTE 800ffffa6c983060
->   Oops: 0000 [#1] SMP DEBUG_PAGEALLOC
->   CPU: 38 PID: 3110657 Comm: python2.7
->   RIP: 0010:fuse_readdir+0x88f/0xe7a [fuse]
->   Code: 49 8b 4d 08 49 39 4e 60 0f 84 44 04 00 00 48 8b 43 08 43 8d 1c 3c 4d 01 7e 68 49 89 dc 48 03 5c 24 38 49 89 46 60 8b 44 24 30 <8b> 4b 10 44 29 e0 48 89 ca 48 83 c1 1f 48 83 e1 f8 83 f8 17 49 89
->   RSP: 0018:ffffc90035edbde0 EFLAGS: 00010286
->   RAX: 0000000000001000 RBX: ffff88859367bff0 RCX: 0000000000000000
->   RDX: 0000000000000000 RSI: ffff88859367bfed RDI: 0000000000920907
->   RBP: ffffc90035edbe90 R08: 000000000000014b R09: 0000000000000004
->   R10: ffff88859367b000 R11: 0000000000000000 R12: 0000000000000ff0
->   R13: ffffc90035edbee0 R14: ffff889fb8546180 R15: 0000000000000020
->   FS:  00007f80b5f4a740(0000) GS:ffff889fffa00000(0000) knlGS:0000000000000000
->   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->   CR2: ffff88859367c000 CR3: 0000001c170c2001 CR4: 00000000003606e0
->   DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->   DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->   Call Trace:
->    iterate_dir+0x122/0x180
->    __x64_sys_getdents+0xa6/0x140
->    do_syscall_64+0x42/0x100
->    entry_SYSCALL_64_after_hwframe+0x44/0xa9
->
-> faddr2line says
->
->   fuse_readdir+0x88f/0x38fc9b:
->   fuse_parse_cache at /builddir/build/BUILD/kernel-5.2.9-1992_g2c63931edbb0/fs/fuse/readdir.c:375
->   (inlined by) fuse_readdir_cached at /builddir/build/BUILD/kernel-5.2.9-1992_g2c63931edbb0/fs/fuse/readdir.c:524
->   (inlined by) fuse_readdir at /builddir/build/BUILD/kernel-5.2.9-1992_g2c63931edbb0/fs/fuse/readdir.c:562
->
-> It's in fuse_parse_cache().  %rbx (ffff88859367bff0) is fuse_dirent
-> pointer - addr + offset.  FUSE_DIRENT_SIZE() is trying to dereference
-> namelen off of it but that derefs into the next page which is disabled
-> by pagealloc debug causing a PF.
->
-> This is caused by dirent->namelen being accessed before ensuring that
-> there's enough bytes in the page for the dirent.  Fix it by pushing
-> down reclen calculation.
+From: Gayatri Kammela <gayatri.kammela@intel.com>
 
-Thanks, applied.
+[ Upstream commit 6e1c32c5dbb4b90eea8f964c2869d0bde050dbe0 ]
 
-Miklos
+Add the model numbers/CPUIDs of Tiger Lake mobile and desktop to the
+Intel family.
+
+Suggested-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190905193020.14707-2-tony.luck@intel.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/include/asm/intel-family.h | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+index aebedbaf52607..5d0b72f281402 100644
+--- a/arch/x86/include/asm/intel-family.h
++++ b/arch/x86/include/asm/intel-family.h
+@@ -58,6 +58,9 @@
+ #define INTEL_FAM6_ICELAKE_MOBILE	0x7E
+ #define INTEL_FAM6_ICELAKE_NNPI		0x9D
+ 
++#define INTEL_FAM6_TIGERLAKE_L		0x8C
++#define INTEL_FAM6_TIGERLAKE		0x8D
++
+ /* "Small Core" Processors (Atom) */
+ 
+ #define INTEL_FAM6_ATOM_BONNELL		0x1C /* Diamondville, Pineview */
+-- 
+2.20.1
+
