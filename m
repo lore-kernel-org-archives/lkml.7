@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56802C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:18:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F860C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27F0C2053B
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:18:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 082EC2053B
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:18:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179928;
-	bh=2ZDyCA/W82QMIcVj4QKv0dW3+M4TLs0nbEMoSYY3yjc=;
+	s=default; t=1569179930;
+	bh=QxwfXe+/+15AzX8GC/b3QQmGn58a1gt4LpsnXXULnUs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JrYjpMNb6UcAxrRuxbleeEmoLWDkyAMd0tkzwX9PK/S0W/yt2L1aS18oEZmxXiUX5
-	 fNnCTNDyb/rdz9HuNGcgrl9JLVUmHEcv2w27R44MNzT7/ppN9RQQ+e1Itdr2GNuAWn
-	 M0Yx3PheRx8XT/6/Lhmu1AeBeGSrL5xkoYfY9aO4=
+	b=04eVOB6+H3hwT6/gwRx+e3szmsNfYyT3gW1Fm2skTO+2T8+e9O+qvTUjZJQCGvgTo
+	 q+d7DokYeo7vePktyj0dM0fklHM+9aga2ahD6Z1laz/+DO5FwTHF3Xb9E5O0DlyPWS
+	 eRraIMwAn5OxIc2yrE3uxQCHjpDBRNmEwJgnezPI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437196AbfIVTSr (ORCPT
+        id S2437338AbfIVSzE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:18:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56002 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:55:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405645AbfIVSzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:55:05 -0400
+        id S2408044AbfIVSyw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:54:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD69B21479;
-        Sun, 22 Sep 2019 18:55:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DD9721479;
+        Sun, 22 Sep 2019 18:54:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178504;
-        bh=2ZDyCA/W82QMIcVj4QKv0dW3+M4TLs0nbEMoSYY3yjc=;
+        s=default; t=1569178491;
+        bh=QxwfXe+/+15AzX8GC/b3QQmGn58a1gt4LpsnXXULnUs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kdyzX8gYyZAg6DdE0zIRNsPeJ9niog/fSUlmtf8OaW2kochFEAMddhbdLI2LBVR/b
-         1n6t/Cddt3nk0z1KyFnKBXCm5oW1EOr6y0IRfcpacD8IR4uuWMkoXCRMXAy/uMqrDS
-         cVvVnleoRGQphDBFohVrL46I49lS0PsoM0gsz0eg=
+        b=0RDdP75GNWllWTsHCJdV7TslvwHWKQ7tlHyWR4vBuEcDJSvegNehXXBBh2j2pkxQh
+         rrNM6PmQL7JithIAjhoeXX/+DDKYmTgAwAve5CLeUUub4MduBxPCcnYz0Ohxw/01Nz
+         EA4veQt3gai7wyaLWBMQIYOnUfwm7ehvCdQWdh7M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiri Slaby <jslaby@suse.cz>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 036/128] ACPI / processor: don't print errors for processorIDs == 0xff
-Date:   Sun, 22 Sep 2019 14:52:46 -0400
-Message-Id: <20190922185418.2158-36-sashal@kernel.org>
+Cc:     Ard van Breemen <ard@kwaak.net>, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 026/128] ALSA: usb-audio: Skip bSynchAddress endpoint check if it is invalid
+Date:   Sun, 22 Sep 2019 14:52:36 -0400
+Message-Id: <20190922185418.2158-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
 References: <20190922185418.2158-1-sashal@kernel.org>
@@ -59,66 +58,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Slaby <jslaby@suse.cz>
+From: Ard van Breemen <ard@kwaak.net>
 
-[ Upstream commit 2c2b005f549544c13ef4cfb0e4842949066889bc ]
+[ Upstream commit 1b34121d9f26d272b0b2334209af6b6fc82d4bf1 ]
 
-Some platforms define their processors in this manner:
-    Device (SCK0)
-    {
-	Name (_HID, "ACPI0004" /* Module Device */)  // _HID: Hardware ID
-	Name (_UID, "CPUSCK0")  // _UID: Unique ID
-	Processor (CP00, 0x00, 0x00000410, 0x06){}
-	Processor (CP01, 0x02, 0x00000410, 0x06){}
-	Processor (CP02, 0x04, 0x00000410, 0x06){}
-	Processor (CP03, 0x06, 0x00000410, 0x06){}
-	Processor (CP04, 0x01, 0x00000410, 0x06){}
-	Processor (CP05, 0x03, 0x00000410, 0x06){}
-	Processor (CP06, 0x05, 0x00000410, 0x06){}
-	Processor (CP07, 0x07, 0x00000410, 0x06){}
-	Processor (CP08, 0xFF, 0x00000410, 0x06){}
-	Processor (CP09, 0xFF, 0x00000410, 0x06){}
-	Processor (CP0A, 0xFF, 0x00000410, 0x06){}
-	Processor (CP0B, 0xFF, 0x00000410, 0x06){}
-...
+The Linux kernel assumes that get_endpoint(alts,0) and
+get_endpoint(alts,1) are eachothers feedback endpoints.
+To reassure that validity it will test bsynchaddress to comply with that
+assumption. But if the bsyncaddress is 0 (invalid), it will flag that as
+a wrong assumption and return an error.
+Fix: Skip the test if bSynchAddress is 0.
+Note: those with a valid bSynchAddress should have a code quirck added.
 
-The processors marked as 0xff are invalid, there are only 8 of them in
-this case.
-
-So do not print an error on ids == 0xff, just print an info message.
-Actually, we could return ENODEV even on the first CPU with ID 0xff, but
-ACPI spec does not forbid the 0xff value to be a processor ID. Given
-0xff could be a correct one, we would break working systems if we
-returned ENODEV.
-
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Ard van Breemen <ard@kwaak.net>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/acpi_processor.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ sound/usb/pcm.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
-index fc447410ae4d1..a448cdf567188 100644
---- a/drivers/acpi/acpi_processor.c
-+++ b/drivers/acpi/acpi_processor.c
-@@ -282,9 +282,13 @@ static int acpi_processor_get_info(struct acpi_device *device)
+diff --git a/sound/usb/pcm.c b/sound/usb/pcm.c
+index 35c57a4204a8a..13ea63c959d39 100644
+--- a/sound/usb/pcm.c
++++ b/sound/usb/pcm.c
+@@ -464,6 +464,7 @@ static int set_sync_endpoint(struct snd_usb_substream *subs,
  	}
- 
- 	if (acpi_duplicate_processor_id(pr->acpi_id)) {
--		dev_err(&device->dev,
--			"Failed to get unique processor _UID (0x%x)\n",
--			pr->acpi_id);
-+		if (pr->acpi_id == 0xff)
-+			dev_info_once(&device->dev,
-+				"Entry not well-defined, consider updating BIOS\n");
-+		else
-+			dev_err(&device->dev,
-+				"Failed to get unique processor _UID (0x%x)\n",
-+				pr->acpi_id);
- 		return -ENODEV;
- 	}
- 
+ 	ep = get_endpoint(alts, 1)->bEndpointAddress;
+ 	if (get_endpoint(alts, 0)->bLength >= USB_DT_ENDPOINT_AUDIO_SIZE &&
++	    get_endpoint(alts, 0)->bSynchAddress != 0 &&
+ 	    ((is_playback && ep != (unsigned int)(get_endpoint(alts, 0)->bSynchAddress | USB_DIR_IN)) ||
+ 	     (!is_playback && ep != (unsigned int)(get_endpoint(alts, 0)->bSynchAddress & ~USB_DIR_IN)))) {
+ 		dev_err(&dev->dev,
 -- 
 2.20.1
 
