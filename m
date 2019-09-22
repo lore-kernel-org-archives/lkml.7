@@ -7,60 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C3CC49ED7
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F497C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 033C12184D
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:00:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7505421BE5
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:00:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178821;
-	bh=I1yTz26Uus0FX8pVRrSS7YkMuXv5RAm6lTosyJbGcuo=;
+	s=default; t=1569178828;
+	bh=p68INXkclvLGmBIJXQaku3HvUMATg5Q2YwTxVLJ28T8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tzGSpDk7hzW0upfDthpfjYW4633Loii2bN58pods12g7TzbUCrsh5t1sBAvMo6Qxd
-	 UO2uCtMaU7/BQiQh74bAVNWbaV9Zy/kwcfriMmjDnsCbclzQc4r37oBsEg37fWSyIq
-	 /TAbbNzoYI4Ctal+UhHR+yU+lZ31Unculb8RIQg4=
+	b=nxS0BlhQSUEb0Ks1GByDlaQH3xOzmsRVi3lBupECylbOhfOZsuCWIkZm7N955/CD7
+	 LLSHO7n9Gz5bGeoq2YiZCxFBF5KrD4dqhC4UH/0rds4zShG5yoszf5WLiPn2VwuVK7
+	 IahfLVjkAvgC8qUXrTX19ckbhhQfdqIZkoD9YzDM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395139AbfIVTAU (ORCPT
+        id S2395190AbfIVTA1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:00:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35794 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:00:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390661AbfIVTAO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 15:00:14 -0400
+        id S2395131AbfIVTAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 15:00:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21E022186A;
-        Sun, 22 Sep 2019 19:00:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 064B121D81;
+        Sun, 22 Sep 2019 19:00:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178813;
-        bh=I1yTz26Uus0FX8pVRrSS7YkMuXv5RAm6lTosyJbGcuo=;
+        s=default; t=1569178818;
+        bh=p68INXkclvLGmBIJXQaku3HvUMATg5Q2YwTxVLJ28T8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MqWmSvhdh5eKwodKx8JhmIDqPrCfVtz3zW/vqpGOpKdw9ux8BNfnxO9cJOOj6sSk2
-         AMM0QA0SvQKfQlXa9fUz3H9sP7k0Bd59j0vJuBnDrUPE5J3y7Ts2J+cMPGOjmRPRjc
-         K1EnQj7P+kZef2wLuM4exEWh8GxvBS90bGdHy1kk=
+        b=SsOCLasekDhLNfISphav7gxNoGgKCon+iGcwkkcd0Rf3q0UUq3e0ibGqxyONowLOc
+         yioAIWAyiElmQTNZfTO3GLrPMwYEP6KBCG0hgESiOYaSZx2r7EVhZw4kPEvIQPmkzP
+         F+3lqqppMVd6S0gfa/F77nTZjwV8w6EmOgwOXMwg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>,
-        Ilya Ledvich <ilya@compulab.co.il>,
-        Igor Grinberg <grinberg@compulab.co.il>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 27/60] ARM: dts: imx7d: cl-som-imx7: make ethernet work again
-Date:   Sun, 22 Sep 2019 14:59:00 -0400
-Message-Id: <20190922185934.4305-27-sashal@kernel.org>
+Cc:     Leonard Crestez <leonard.crestez@nxp.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 31/60] PM / devfreq: passive: Use non-devm notifiers
+Date:   Sun, 22 Sep 2019 14:59:04 -0400
+Message-Id: <20190922185934.4305-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185934.4305-1-sashal@kernel.org>
 References: <20190922185934.4305-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -69,74 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: André Draszik <git@andred.net>
+From: Leonard Crestez <leonard.crestez@nxp.com>
 
-[ Upstream commit 9846a4524ac90b63496580b7ad50674b40d92a8f ]
+[ Upstream commit 0ef7c7cce43f6ecc2b96d447e69b2900a9655f7c ]
 
-Recent changes to the atheros at803x driver caused
-ethernet to stop working on this board.
-In particular commit 6d4cd041f0af
-("net: phy: at803x: disable delay only for RGMII mode")
-and commit cd28d1d6e52e
-("net: phy: at803x: Disable phy delay for RGMII mode")
-fix the AR8031 driver to configure the phy's (RX/TX)
-delays as per the 'phy-mode' in the device tree.
+The devfreq passive governor registers and unregisters devfreq
+transition notifiers on DEVFREQ_GOV_START/GOV_STOP using devm wrappers.
 
-This now prevents ethernet from working on this board.
+If devfreq itself is registered with devm then a warning is triggered on
+rmmod from devm_devfreq_unregister_notifier. Call stack looks like this:
 
-It used to work before those commits, because the
-AR8031 comes out of reset with RX delay enabled, and
-the at803x driver didn't touch the delay configuration
-at all when "rgmii" mode was selected, and because
-arch/arm/mach-imx/mach-imx7d.c:ar8031_phy_fixup()
-unconditionally enables TX delay.
+	devm_devfreq_unregister_notifier+0x30/0x40
+	devfreq_passive_event_handler+0x4c/0x88
+	devfreq_remove_device.part.8+0x6c/0x9c
+	devm_devfreq_dev_release+0x18/0x20
+	release_nodes+0x1b0/0x220
+	devres_release_all+0x78/0x84
+	device_release_driver_internal+0x100/0x1c0
+	driver_detach+0x4c/0x90
+	bus_remove_driver+0x7c/0xd0
+	driver_unregister+0x2c/0x58
+	platform_driver_unregister+0x10/0x18
+	imx_devfreq_platdrv_exit+0x14/0xd40 [imx_devfreq]
 
-Since above commits ar8031_phy_fixup() also has no
-effect anymore, and the end-result is that all delays
-are disabled in the phy, no ethernet.
+This happens because devres_release_all will first remove all the nodes
+into a separate todo list so the nested devres_release from
+devm_devfreq_unregister_notifier won't find anything.
 
-Update the device tree to restore functionality.
+Fix the warning by calling the non-devm APIS for frequency notification.
+Using devm wrappers is not actually useful for a governor anyway: it
+relies on the devfreq core to correctly match the GOV_START/GOV_STOP
+notifications.
 
-Signed-off-by: André Draszik <git@andred.net>
-CC: Ilya Ledvich <ilya@compulab.co.il>
-CC: Igor Grinberg <grinberg@compulab.co.il>
-CC: Rob Herring <robh+dt@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>
-CC: Shawn Guo <shawnguo@kernel.org>
-CC: Sascha Hauer <s.hauer@pengutronix.de>
-CC: Pengutronix Kernel Team <kernel@pengutronix.de>
-CC: Fabio Estevam <festevam@gmail.com>
-CC: NXP Linux Team <linux-imx@nxp.com>
-CC: devicetree@vger.kernel.org
-CC: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: 996133119f57 ("PM / devfreq: Add new passive governor")
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/devfreq/governor_passive.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-index 2051306008534..72d1b8209f5e6 100644
---- a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-+++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-@@ -43,7 +43,7 @@
- 			  <&clks IMX7D_ENET1_TIME_ROOT_CLK>;
- 	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
- 	assigned-clock-rates = <0>, <100000000>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- 	phy-handle = <&ethphy0>;
- 	fsl,magic-packet;
- 	status = "okay";
-@@ -69,7 +69,7 @@
- 			  <&clks IMX7D_ENET2_TIME_ROOT_CLK>;
- 	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
- 	assigned-clock-rates = <0>, <100000000>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- 	phy-handle = <&ethphy1>;
- 	fsl,magic-packet;
- 	status = "okay";
+diff --git a/drivers/devfreq/governor_passive.c b/drivers/devfreq/governor_passive.c
+index 5be96b2249e72..8e889fd805b58 100644
+--- a/drivers/devfreq/governor_passive.c
++++ b/drivers/devfreq/governor_passive.c
+@@ -168,12 +168,12 @@ static int devfreq_passive_event_handler(struct devfreq *devfreq,
+ 			p_data->this = devfreq;
+ 
+ 		nb->notifier_call = devfreq_passive_notifier_call;
+-		ret = devm_devfreq_register_notifier(dev, parent, nb,
++		ret = devfreq_register_notifier(parent, nb,
+ 					DEVFREQ_TRANSITION_NOTIFIER);
+ 		break;
+ 	case DEVFREQ_GOV_STOP:
+-		devm_devfreq_unregister_notifier(dev, parent, nb,
+-					DEVFREQ_TRANSITION_NOTIFIER);
++		WARN_ON(devfreq_unregister_notifier(parent, nb,
++					DEVFREQ_TRANSITION_NOTIFIER));
+ 		break;
+ 	default:
+ 		break;
 -- 
 2.20.1
 
