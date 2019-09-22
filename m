@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77772C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B58AAC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47E7120882
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:11:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D61A206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:11:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179473;
-	bh=H9nDv0dyyzuB3pj03Cz7cuoEJgES4iw7fleVU+6Tv5k=;
+	s=default; t=1569179481;
+	bh=++ww0M8FldhONH/sKfUkcOspcDTMgTrhuVQH5MzsDWA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GyuDbb5fssBY/nzrA7z0FadHJeS7p/K9NPVDtALZIC7rbVwyZEr8bCvePYrMBmLcj
-	 p6OuFv6YF7N75Zp+MK8UVq9vxlYabWOtMmaCZ+Pe8mt6nD0HgNSjQKhKg27Fq3voIW
-	 wkn/qAwGe1FyE6TFrK/hc1t1lzPej+SUH/2IYiFU=
+	b=UCOoRBFyIBw6IuY54MpUyCcKghzXvU2deKghuyMIqoTHe56Qswxk9pP4cPvNFaZUY
+	 RYEn69spUkdmRd93t9ifgej3OBluK6jjXTJf4mFOIxC8zCqIecYQHPUIQomYrgkUmT
+	 bB96rqwMeGIx/roM6ospRipzf6asyuTNL01Uk7hE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395558AbfIVTLM (ORCPT
+        id S2408259AbfIVS6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:11:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33248 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:58:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408265AbfIVS6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:58:33 -0400
+        id S2438787AbfIVS62 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:58:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 524CB2184D;
-        Sun, 22 Sep 2019 18:58:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7842721479;
+        Sun, 22 Sep 2019 18:58:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178713;
-        bh=H9nDv0dyyzuB3pj03Cz7cuoEJgES4iw7fleVU+6Tv5k=;
+        s=default; t=1569178707;
+        bh=++ww0M8FldhONH/sKfUkcOspcDTMgTrhuVQH5MzsDWA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ozeUYrY8PFy5HjAjxZmCCyuD+1GZUlpFQblifzQN9QsgzCjNxzz8HKxp4RB2W0JMt
-         X1fIrlmtVkZh5JPEF2497LJ1+rUEFsBZVCtkBQ5Rkb0th0WI+9vEa4ux5wygIyGzEm
-         ymocgW3h/hNVZphFm1Tq8dZbwa5nsBrertzI+zIU=
+        b=SeEdSE7vhDJmDe8YTjCU2OISgdA3zbMWAnhunvLn6Pa9Vn8p9LfJaiQ8dqlo2BXgk
+         ENx6iggTYc+typBeEOIwoapl/z0R86MqrpFB0ZsuVcy0+rbZO8w6crdFhtBSxnF9qz
+         USnEeMWbwZdDl6zCseRITbur0QcgvF6Mm0JI+YgY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Christie <mchristi@redhat.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org, nbd@other.debian.org
-Subject: [PATCH AUTOSEL 4.14 47/89] nbd: add missing config put
-Date:   Sun, 22 Sep 2019 14:56:35 -0400
-Message-Id: <20190922185717.3412-47-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, kbuild test robot <lkp@intel.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 43/89] net: lpc-enet: fix printk format strings
+Date:   Sun, 22 Sep 2019 14:56:31 -0400
+Message-Id: <20190922185717.3412-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185717.3412-1-sashal@kernel.org>
 References: <20190922185717.3412-1-sashal@kernel.org>
@@ -60,46 +58,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Christie <mchristi@redhat.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 887e975c4172d0d5670c39ead2f18ba1e4ec8133 ]
+[ Upstream commit de6f97b2bace0e2eb6c3a86e124d1e652a587b56 ]
 
-Fix bug added with the patch:
+compile-testing this driver on other architectures showed
+multiple warnings:
 
-commit 8f3ea35929a0806ad1397db99a89ffee0140822a
-Author: Josef Bacik <josef@toxicpanda.com>
-Date:   Mon Jul 16 12:11:35 2018 -0400
+  drivers/net/ethernet/nxp/lpc_eth.c: In function 'lpc_eth_drv_probe':
+  drivers/net/ethernet/nxp/lpc_eth.c:1337:19: warning: format '%d' expects argument of type 'int', but argument 4 has type 'resource_size_t {aka long long unsigned int}' [-Wformat=]
 
-    nbd: handle unexpected replies better
+  drivers/net/ethernet/nxp/lpc_eth.c:1342:19: warning: format '%x' expects argument of type 'unsigned int', but argument 4 has type 'dma_addr_t {aka long long unsigned int}' [-Wformat=]
 
-where if the timeout handler runs when the completion path is and we fail
-to grab the mutex in the timeout handler we will leave a config reference
-and cannot free the config later.
+Use format strings that work on all architectures.
 
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Mike Christie <mchristi@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Link: https://lore.kernel.org/r/20190809144043.476786-10-arnd@arndb.de
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/nbd.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/nxp/lpc_eth.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index b77e9281c039d..e4b049f281f50 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -340,8 +340,10 @@ static enum blk_eh_timer_return nbd_xmit_timeout(struct request *req,
- 	}
- 	config = nbd->config;
+diff --git a/drivers/net/ethernet/nxp/lpc_eth.c b/drivers/net/ethernet/nxp/lpc_eth.c
+index 08381ef8bdb48..41d30f55c946b 100644
+--- a/drivers/net/ethernet/nxp/lpc_eth.c
++++ b/drivers/net/ethernet/nxp/lpc_eth.c
+@@ -1371,13 +1371,14 @@ static int lpc_eth_drv_probe(struct platform_device *pdev)
+ 	pldat->dma_buff_base_p = dma_handle;
  
--	if (!mutex_trylock(&cmd->lock))
-+	if (!mutex_trylock(&cmd->lock)) {
-+		nbd_config_put(nbd);
- 		return BLK_EH_RESET_TIMER;
-+	}
+ 	netdev_dbg(ndev, "IO address space     :%pR\n", res);
+-	netdev_dbg(ndev, "IO address size      :%d\n", resource_size(res));
++	netdev_dbg(ndev, "IO address size      :%zd\n",
++			(size_t)resource_size(res));
+ 	netdev_dbg(ndev, "IO address (mapped)  :0x%p\n",
+ 			pldat->net_base);
+ 	netdev_dbg(ndev, "IRQ number           :%d\n", ndev->irq);
+-	netdev_dbg(ndev, "DMA buffer size      :%d\n", pldat->dma_buff_size);
+-	netdev_dbg(ndev, "DMA buffer P address :0x%08x\n",
+-			pldat->dma_buff_base_p);
++	netdev_dbg(ndev, "DMA buffer size      :%zd\n", pldat->dma_buff_size);
++	netdev_dbg(ndev, "DMA buffer P address :%pad\n",
++			&pldat->dma_buff_base_p);
+ 	netdev_dbg(ndev, "DMA buffer V address :0x%p\n",
+ 			pldat->dma_buff_base_v);
  
- 	if (config->num_connections > 1) {
- 		dev_err_ratelimited(nbd_to_dev(nbd),
+@@ -1424,8 +1425,8 @@ static int lpc_eth_drv_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto err_out_unregister_netdev;
+ 
+-	netdev_info(ndev, "LPC mac at 0x%08x irq %d\n",
+-	       res->start, ndev->irq);
++	netdev_info(ndev, "LPC mac at 0x%08lx irq %d\n",
++	       (unsigned long)res->start, ndev->irq);
+ 
+ 	phydev = ndev->phydev;
+ 
 -- 
 2.20.1
 
