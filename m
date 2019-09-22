@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D7AC4740C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CCB9C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:20:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA6CA206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:20:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01853206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:20:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180042;
-	bh=IdPVXuf60uazzp9fR+CWv/TnPQCSTaI5VKp7xvYvocI=;
+	s=default; t=1569180046;
+	bh=8RTrsxUPtiQV8fJJjQUR1PBXXKK19v9iUcCIGPA+was=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kmwoZn8wM3Ope+KtVuTOY9q2cdZNSwCiJrXUcezT/Edzwi6jPBccObPukYkAEi8c9
-	 UCTZUcwnEIokxxnAJa1INHy8U7OhHs2g/dEpxnzadZ8eBjWey6BbQdcu0Ektg0wjhQ
-	 lR+cCkRFGs1NnQYmoaJGkOEg9fjhIY4Rg94xzzsU=
+	b=Da7y577JLGjAULdreD/eTS34v1iwGX12qmYI8n/xBa8UCLmFRe9mg/pCauKC6BTXi
+	 E+N/JgraLcbP8imHLnou1OHGS7V/VWcJVWEU3osHVkfNs82Id5A6Fw+IIWPS/CFMGk
+	 7SZTy70GDZGaTqX6kUr+JNd11DXnNDYaKfY7UDTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730965AbfIVTUm (ORCPT
+        id S2405592AbfIVSya (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:20:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55082 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394507AbfIVSya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 22 Sep 2019 14:54:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54272 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2394496AbfIVSyD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:54:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B151208C2;
-        Sun, 22 Sep 2019 18:54:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB3AD2190F;
+        Sun, 22 Sep 2019 18:54:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178470;
-        bh=IdPVXuf60uazzp9fR+CWv/TnPQCSTaI5VKp7xvYvocI=;
+        s=default; t=1569178442;
+        bh=8RTrsxUPtiQV8fJJjQUR1PBXXKK19v9iUcCIGPA+was=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PDidnxaw/GAzfo175uquIRnHCBKjhFcLCuRZPc4Jx9ybtBgPrCoyN6GDHGdqJcc9h
-         lkdeMbY1aduveJLVmiZ8jmFWSOwMzqNOURc7GX5Qy6DILnkW6+EQZ49cR4h8nrMW+6
-         k2jlkFayICAt2Qq+JnC06ZgcAtsxUgvBhzURBbnc=
+        b=f/+IMPD8l4moNEUc1mUfH9TMtzVOWheIsAZBSqXlnWulxvyita3thhQ56cco+wJ/r
+         4A+vu/Ya/M4t3ms25xNIaotGGeyS3vU7mAYHOZ2KYoyGnihiJO7H0/mLeFU0IHhj35
+         q8ftte+bWGFr/opRnpTqvVnBM8HRx/60+qvOwock=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 009/128] media: dib0700: fix link error for dibx000_i2c_set_speed
-Date:   Sun, 22 Sep 2019 14:52:19 -0400
-Message-Id: <20190922185418.2158-9-sashal@kernel.org>
+Cc:     Ahzo <Ahzo@tutanota.com>, Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.2 175/185] drm/amd/powerplay/smu7: enforce minimal VBITimeout (v2)
+Date:   Sun, 22 Sep 2019 14:49:13 -0400
+Message-Id: <20190922184924.32534-175-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
-References: <20190922185418.2158-1-sashal@kernel.org>
+In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
+References: <20190922184924.32534-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,67 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Ahzo <Ahzo@tutanota.com>
 
-[ Upstream commit 765bb8610d305ee488b35d07e2a04ae52fb2df9c ]
+[ Upstream commit f659bb6dae58c113805f92822e4c16ddd3156b79 ]
 
-When CONFIG_DVB_DIB9000 is disabled, we can still compile code that
-now fails to link against dibx000_i2c_set_speed:
+This fixes screen corruption/flickering on 75 Hz displays.
 
-drivers/media/usb/dvb-usb/dib0700_devices.o: In function `dib01x0_pmu_update.constprop.7':
-dib0700_devices.c:(.text.unlikely+0x1c9c): undefined reference to `dibx000_i2c_set_speed'
+v2: make print statement debug only (Alex)
 
-The call sites are both through dib01x0_pmu_update(), which gets passed
-an 'i2c' pointer from dib9000_get_i2c_master(), which has returned
-NULL. Checking this pointer seems to be a good idea anyway, and it avoids
-the link failure in most cases.
-
-Sean Young found another case that is not fixed by that, where certain
-gcc versions leave an unused function in place that causes the link error,
-but adding an explict IS_ENABLED() check also solves this.
-
-Fixes: b7f54910ce01 ("V4L/DVB (4647): Added module for DiB0700 based devices")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=102646
+Reviewed-by: Evan Quan <evan.quan@amd.com>
+Signed-off-by: Ahzo <Ahzo@tutanota.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/dvb-usb/dib0700_devices.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/media/usb/dvb-usb/dib0700_devices.c b/drivers/media/usb/dvb-usb/dib0700_devices.c
-index 091389fdf89ee..c8d79502827b7 100644
---- a/drivers/media/usb/dvb-usb/dib0700_devices.c
-+++ b/drivers/media/usb/dvb-usb/dib0700_devices.c
-@@ -2442,9 +2442,13 @@ static int dib9090_tuner_attach(struct dvb_usb_adapter *adap)
- 		8, 0x0486,
- 	};
+diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
+index 048757e8f4949..d1919d343cce4 100644
+--- a/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
++++ b/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
+@@ -4064,6 +4064,11 @@ static int smu7_program_display_gap(struct pp_hwmgr *hwmgr)
  
-+	if (!IS_ENABLED(CONFIG_DVB_DIB9000))
-+		return -ENODEV;
- 	if (dvb_attach(dib0090_fw_register, adap->fe_adap[0].fe, i2c, &dib9090_dib0090_config) == NULL)
- 		return -ENODEV;
- 	i2c = dib9000_get_i2c_master(adap->fe_adap[0].fe, DIBX000_I2C_INTERFACE_GPIO_1_2, 0);
-+	if (!i2c)
-+		return -ENODEV;
- 	if (dib01x0_pmu_update(i2c, data_dib190, 10) != 0)
- 		return -ENODEV;
- 	dib0700_set_i2c_speed(adap->dev, 1500);
-@@ -2520,10 +2524,14 @@ static int nim9090md_tuner_attach(struct dvb_usb_adapter *adap)
- 		0, 0x00ef,
- 		8, 0x0406,
- 	};
-+	if (!IS_ENABLED(CONFIG_DVB_DIB9000))
-+		return -ENODEV;
- 	i2c = dib9000_get_tuner_interface(adap->fe_adap[0].fe);
- 	if (dvb_attach(dib0090_fw_register, adap->fe_adap[0].fe, i2c, &nim9090md_dib0090_config[0]) == NULL)
- 		return -ENODEV;
- 	i2c = dib9000_get_i2c_master(adap->fe_adap[0].fe, DIBX000_I2C_INTERFACE_GPIO_1_2, 0);
-+	if (!i2c)
-+		return -ENODEV;
- 	if (dib01x0_pmu_update(i2c, data_dib190, 10) < 0)
- 		return -ENODEV;
+ 	data->frame_time_x2 = frame_time_in_us * 2 / 100;
  
++	if (data->frame_time_x2 < 280) {
++		pr_debug("%s: enforce minimal VBITimeout: %d -> 280\n", __func__, data->frame_time_x2);
++		data->frame_time_x2 = 280;
++	}
++
+ 	display_gap2 = pre_vbi_time_in_us * (ref_clock / 100);
+ 
+ 	cgs_write_ind_register(hwmgr->device, CGS_IND_REG__SMC, ixCG_DISPLAY_GAP_CNTL2, display_gap2);
 -- 
 2.20.1
 
