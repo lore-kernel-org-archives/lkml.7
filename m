@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF1C4C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7327C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B81D21D56
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:54:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83FB221A4A
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:54:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178474;
-	bh=GSS11zVS5sAZCAm/t7b3x4fHnf3ZmTKbpHI1jMi/XZQ=;
+	s=default; t=1569178478;
+	bh=wcMVuAqbMTHTWZ9CBU+HlR2sUqfwj8hv95CeiKNkwOY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q4k7nxKTgDjuzZ/h69j9HPg76Q7XGiEe+w3nqK9X7ldVW8zUYgzZ1c0vsdbDiXoHO
-	 LOVAk93N927MxsAl1rdtk5C+PDVUJIdZP1MZhEt7ZTq7ONwcAojoj4yBtcqKxA0jry
-	 HHb4GH1hgZch8XHD+R+hz1D+K1yLqHPYoUvydc8g=
+	b=JqKqFAMd0ltA+wli/peCDBYyttka/sENvBOWAFHURqLDCsoQp3riY4JeZdkBehkNm
+	 2Irr9M5W+hvEApn3Mgc1uSW/XrrYfxZt53Y606mJqtgymWoU4yBCZZ2PbZds8/Xw8i
+	 YZnKq6WfDv9RrqCLO+N2RJ4P0NT8CNbEdfy5ZElk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407995AbfIVSye (ORCPT
+        id S2394534AbfIVSyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:54:34 -0400
+        Sun, 22 Sep 2019 14:54:37 -0400
 Received: from mail.kernel.org ([198.145.29.99]:54538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393701AbfIVSyJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:54:09 -0400
+        id S2403988AbfIVSyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:54:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3882121479;
-        Sun, 22 Sep 2019 18:54:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8657B2190F;
+        Sun, 22 Sep 2019 18:54:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178449;
-        bh=GSS11zVS5sAZCAm/t7b3x4fHnf3ZmTKbpHI1jMi/XZQ=;
+        s=default; t=1569178451;
+        bh=wcMVuAqbMTHTWZ9CBU+HlR2sUqfwj8hv95CeiKNkwOY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oXlMrOI6CGXh7DhAxkY3+SHYsvMcB3j67BbZ2uBP3IwO9qubeODNMUhroVdNLyN8J
-         bSPS82kr+1YYc8nhg9V8koEIQplDmUizIIjNaLtbk67Zxu+TCmtZVX5/gIjKpQwuHq
-         G8FeRDzgV+a0xwBQtbZcbBByD+BokKPMX0WTG8SY=
+        b=Nq5hI1XAJ0d8QmW9sRN07d/gKo4WOHSzg5pwWym+4o/L4FpvzOmDTB2qTuHHM15yM
+         VLkN9U3xxl0/z+ICAbWdgdpPT+dWpE2VzykL5vGjfIpMHdfvs9R4jNdxQmFDkVtx8f
+         erp7RKliHEh7FAxPtv9/+jLShadUzs1MXH2YwdmM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oliver Neukum <oneukum@suse.com>,
-        syzbot+74c65761783d66a9c97c@syzkaller.appspotmail.com,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 180/185] zd1211rw: remove false assertion from zd_mac_clear()
-Date:   Sun, 22 Sep 2019 14:49:18 -0400
-Message-Id: <20190922184924.32534-180-sashal@kernel.org>
+Cc:     Qu Wenruo <wqu@suse.com>, Jungyeon Yoon <jungyeon.yoon@gmail.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 182/185] btrfs: extent-tree: Make sure we only allocate extents from block groups with the same type
+Date:   Sun, 22 Sep 2019 14:49:20 -0400
+Message-Id: <20190922184924.32534-182-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -61,33 +59,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Qu Wenruo <wqu@suse.com>
 
-[ Upstream commit 7a2eb7367fdea72e448d1a847aa857f6caf8ea2f ]
+[ Upstream commit 2a28468e525f3924efed7f29f2bc5a2926e7e19a ]
 
-The function is called before the lock which is asserted was ever used.
-Just remove it.
+[BUG]
+With fuzzed image and MIXED_GROUPS super flag, we can hit the following
+BUG_ON():
 
-Reported-by: syzbot+74c65761783d66a9c97c@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+  kernel BUG at fs/btrfs/delayed-ref.c:491!
+  invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
+  CPU: 0 PID: 1849 Comm: sync Tainted: G           O      5.2.0-custom #27
+  RIP: 0010:update_existing_head_ref.cold+0x44/0x46 [btrfs]
+  Call Trace:
+   add_delayed_ref_head+0x20c/0x2d0 [btrfs]
+   btrfs_add_delayed_tree_ref+0x1fc/0x490 [btrfs]
+   btrfs_free_tree_block+0x123/0x380 [btrfs]
+   __btrfs_cow_block+0x435/0x500 [btrfs]
+   btrfs_cow_block+0x110/0x240 [btrfs]
+   btrfs_search_slot+0x230/0xa00 [btrfs]
+   ? __lock_acquire+0x105e/0x1e20
+   btrfs_insert_empty_items+0x67/0xc0 [btrfs]
+   alloc_reserved_file_extent+0x9e/0x340 [btrfs]
+   __btrfs_run_delayed_refs+0x78e/0x1240 [btrfs]
+   ? kvm_clock_read+0x18/0x30
+   ? __sched_clock_gtod_offset+0x21/0x50
+   btrfs_run_delayed_refs.part.0+0x4e/0x180 [btrfs]
+   btrfs_run_delayed_refs+0x23/0x30 [btrfs]
+   btrfs_commit_transaction+0x53/0x9f0 [btrfs]
+   btrfs_sync_fs+0x7c/0x1c0 [btrfs]
+   ? __ia32_sys_fdatasync+0x20/0x20
+   sync_fs_one_sb+0x23/0x30
+   iterate_supers+0x95/0x100
+   ksys_sync+0x62/0xb0
+   __ia32_sys_sync+0xe/0x20
+   do_syscall_64+0x65/0x240
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+[CAUSE]
+This situation is caused by several factors:
+- Fuzzed image
+  The extent tree of this fs missed one backref for extent tree root.
+  So we can allocated space from that slot.
+
+- MIXED_BG feature
+  Super block has MIXED_BG flag.
+
+- No mixed block groups exists
+  All block groups are just regular ones.
+
+This makes data space_info->block_groups[] contains metadata block
+groups.  And when we reserve space for data, we can use space in
+metadata block group.
+
+Then we hit the following file operations:
+
+- fallocate
+  We need to allocate data extents.
+  find_free_extent() choose to use the metadata block to allocate space
+  from, and choose the space of extent tree root, since its backref is
+  missing.
+
+  This generate one delayed ref head with is_data = 1.
+
+- extent tree update
+  We need to update extent tree at run_delayed_ref time.
+
+  This generate one delayed ref head with is_data = 0, for the same
+  bytenr of old extent tree root.
+
+Then we trigger the BUG_ON().
+
+[FIX]
+The quick fix here is to check block_group->flags before using it.
+
+The problem can only happen for MIXED_GROUPS fs. Regular filesystems
+won't have space_info with DATA|METADATA flag, and no way to hit the
+bug.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203255
+Reported-by: Jungyeon Yoon <jungyeon.yoon@gmail.com>
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/zydas/zd1211rw/zd_mac.c | 1 -
- 1 file changed, 1 deletion(-)
+ fs/btrfs/extent-tree.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/net/wireless/zydas/zd1211rw/zd_mac.c b/drivers/net/wireless/zydas/zd1211rw/zd_mac.c
-index da7e63fca9f57..a9999d10ae81f 100644
---- a/drivers/net/wireless/zydas/zd1211rw/zd_mac.c
-+++ b/drivers/net/wireless/zydas/zd1211rw/zd_mac.c
-@@ -223,7 +223,6 @@ void zd_mac_clear(struct zd_mac *mac)
- {
- 	flush_workqueue(zd_workqueue);
- 	zd_chip_clear(&mac->chip);
--	lockdep_assert_held(&mac->lock);
- 	ZD_MEMCLEAR(mac, sizeof(struct zd_mac));
- }
+diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
+index b8f4720879021..37865929fdc22 100644
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -7875,6 +7875,14 @@ static noinline int find_free_extent(struct btrfs_fs_info *fs_info,
+ 			 */
+ 			if ((flags & extra) && !(block_group->flags & extra))
+ 				goto loop;
++
++			/*
++			 * This block group has different flags than we want.
++			 * It's possible that we have MIXED_GROUP flag but no
++			 * block group is mixed.  Just skip such block group.
++			 */
++			btrfs_release_block_group(block_group, delalloc);
++			continue;
+ 		}
  
+ have_block_group:
 -- 
 2.20.1
 
