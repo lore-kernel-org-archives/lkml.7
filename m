@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 020A4C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F31DC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:43:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D308D21479
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:43:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C7C8214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:43:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569177834;
-	bh=m8Rkj3Qzx71o5Y0r+L+LsH76roXPq/OBkz76e2xoE40=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=y55jWWFzzNwHfcamI1NjzwE4DU1YO3HEM79LP4hi1TugiWNSICtWdW/M4ekEW1OWe
-	 Utje7lIiNweT+YD+Xb8Le9cOZ1d+O+E4eNPSJa7W4xrIqm2QchCD4U7UqZxqjl5nAe
-	 sku5HfOhICfqAwLU+PnuVwj5pmygJm25cvPr71e8=
+	s=default; t=1569177836;
+	bh=k14GOqAginYMg0KF/cQWSvXyq8kixoa0xmYN/zK0mBQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=xjnHbcSrhHJ+jQKl2HNqwDo0qWnINTmgf+K0Qm8LTGqnaDObRr9aPJ3Q4Xhj0UOxA
+	 +CIDv9GoNWmWA/PI1+YjjjGLvSFgciHZspNaKhb6zDMyswIJCJKq9f8nh4SNNMFqrD
+	 vSq7ORg1+Xsk3P61yY/cUcp9wZU/ePN7lc4iGA5E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388455AbfIVSny (ORCPT
+        id S2388604AbfIVSnz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:43:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39462 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:43:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388156AbfIVSnx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:43:53 -0400
+        id S2388371AbfIVSny (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:43:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0431206C2;
-        Sun, 22 Sep 2019 18:43:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2336220869;
+        Sun, 22 Sep 2019 18:43:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569177832;
-        bh=m8Rkj3Qzx71o5Y0r+L+LsH76roXPq/OBkz76e2xoE40=;
-        h=From:To:Cc:Subject:Date:From;
-        b=1TjcEW1Llg96P9YM6gA3KZrIT8Sd6mpQXxAMN8FNjFWqUXKQ83TX+mCsm1WDDF/kF
-         42uOwxPDoAd6o+M3vbqzWIx2+d/s3qznIO8/yJqMXO1UWg9thb/CmD3jXnsiUg71kD
-         CrGQh94JIj4J71N7Ae4M5Fy3gkkylYHtePE8l1rU=
+        s=default; t=1569177833;
+        bh=k14GOqAginYMg0KF/cQWSvXyq8kixoa0xmYN/zK0mBQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=mcUegb84kDYjvQk/5e2gImd47Ly8JyvsIK+IloewrH33mzwoVly6GbwSVf2h0+c34
+         m11NgR8lzRRu5q38bQMgiAyCx3uND6HiR4UV9haegnZBmsiKS9CMHOXSkhNpm3PeXw
+         LX2dpkKgXU3WkJzBqXVvjFvrqRZ0BjolSYS3gPFI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 001/203] ALSA: hda: Flush interrupts on disabling
-Date:   Sun, 22 Sep 2019 14:40:27 -0400
-Message-Id: <20190922184350.30563-1-sashal@kernel.org>
+Cc:     Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Libin Yang <libin.yang@intel.com>,
+        Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 002/203] ASoC: SOF: Intel: hda: Make hdac_device device-managed
+Date:   Sun, 22 Sep 2019 14:40:28 -0400
+Message-Id: <20190922184350.30563-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
+References: <20190922184350.30563-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -56,75 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
 
-[ Upstream commit caa8422d01e983782548648e125fd617cadcec3f ]
+[ Upstream commit ef9bec27485fefb6b93168fea73fda0dc9638046 ]
 
-I was looking at
+snd_hdac_ext_bus_device_exit() has been recently modified
+to no longer free the hdac device. SOF allocates memory for
+hdac_device and hda_hda_priv with kzalloc. Make them
+device-managed instead so that they will be freed when the
+SOF driver is unloaded.
 
-<4> [241.835158] general protection fault: 0000 [#1] PREEMPT SMP PTI
-<4> [241.835181] CPU: 1 PID: 214 Comm: kworker/1:3 Tainted: G     U            5.2.0-CI-CI_DRM_6509+ #1
-<4> [241.835199] Hardware name: Dell Inc.                 OptiPlex 745                 /0GW726, BIOS 2.3.1  05/21/2007
-<4> [241.835234] Workqueue: events snd_hdac_bus_process_unsol_events [snd_hda_core]
-<4> [241.835256] RIP: 0010:input_handle_event+0x16d/0x5e0
-<4> [241.835270] Code: 48 8b 93 58 01 00 00 8b 52 08 89 50 04 8b 83 f8 06 00 00 48 8b 93 00 07 00 00 8d 70 01 48 8d 04 c2 83 e1 08 89 b3 f8 06 00 00 <66> 89 28 66 44 89 60 02 44 89 68 04 8b 93 f8 06 00 00 0f 84 fd fe
-<4> [241.835304] RSP: 0018:ffffc9000019fda0 EFLAGS: 00010046
-<4> [241.835317] RAX: 6b6b6b6ec6c6c6c3 RBX: ffff8880290fefc8 RCX: 0000000000000000
-<4> [241.835332] RDX: 000000006b6b6b6b RSI: 000000006b6b6b6c RDI: 0000000000000046
-<4> [241.835347] RBP: 0000000000000005 R08: 0000000000000000 R09: 0000000000000001
-<4> [241.835362] R10: ffffc9000019faa0 R11: 0000000000000000 R12: 0000000000000004
-<4> [241.835377] R13: 0000000000000000 R14: ffff8880290ff1d0 R15: 0000000000000293
-<4> [241.835392] FS:  0000000000000000(0000) GS:ffff88803de80000(0000) knlGS:0000000000000000
-<4> [241.835409] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-<4> [241.835422] CR2: 00007ffe9a99e9b7 CR3: 000000002f588000 CR4: 00000000000006e0
-<4> [241.835436] Call Trace:
-<4> [241.835449]  input_event+0x45/0x70
-<4> [241.835464]  snd_jack_report+0xdc/0x100
-<4> [241.835490]  snd_hda_jack_report_sync+0x83/0xc0 [snd_hda_codec]
-<4> [241.835512]  snd_hdac_bus_process_unsol_events+0x5a/0x70 [snd_hda_core]
-<4> [241.835530]  process_one_work+0x245/0x610
+Because of the above change, hda_codec is device-managed and
+it will be freed when the ASoC device is removed. Freeing
+the codec in snd_hda_codec_dev_release() leads to kernel
+panic while unloading and reloading the ASoC driver. So,
+avoid freeing the hda_codec for ASoC driver. This is done in
+the same patch to avoid bisect failure.
 
-which has the hallmarks of a worker queued from interrupt after it was
-supposedly cancelled (note the POISON_FREE), and I could not see where
-the interrupt would be flushed on shutdown so added the likely suspects.
-
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=111174
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Libin Yang <libin.yang@intel.com>
+Signed-off-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Reviewed-by: Takashi Iwai <tiwai@suse.de>
+Link: https://lore.kernel.org/r/20190626070450.7229-1-ranjani.sridharan@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/hda/hdac_controller.c | 2 ++
- sound/pci/hda/hda_intel.c   | 2 +-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ sound/pci/hda/hda_codec.c       | 8 +++++++-
+ sound/soc/sof/intel/hda-codec.c | 6 ++----
+ 2 files changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/sound/hda/hdac_controller.c b/sound/hda/hdac_controller.c
-index 3b0110545070a..196bbc85699e5 100644
---- a/sound/hda/hdac_controller.c
-+++ b/sound/hda/hdac_controller.c
-@@ -447,6 +447,8 @@ static void azx_int_disable(struct hdac_bus *bus)
- 	list_for_each_entry(azx_dev, &bus->stream_list, list)
- 		snd_hdac_stream_updateb(azx_dev, SD_CTL, SD_INT_MASK, 0);
- 
-+	synchronize_irq(bus->irq);
+diff --git a/sound/pci/hda/hda_codec.c b/sound/pci/hda/hda_codec.c
+index 51f10ed9bc432..a2fb19129219e 100644
+--- a/sound/pci/hda/hda_codec.c
++++ b/sound/pci/hda/hda_codec.c
+@@ -846,7 +846,13 @@ static void snd_hda_codec_dev_release(struct device *dev)
+ 	snd_hda_sysfs_clear(codec);
+ 	kfree(codec->modelname);
+ 	kfree(codec->wcaps);
+-	kfree(codec);
 +
- 	/* disable SIE for all streams */
- 	snd_hdac_chip_writeb(bus, INTCTL, 0);
++	/*
++	 * In the case of ASoC HD-audio, hda_codec is device managed.
++	 * It will be freed when the ASoC device is removed.
++	 */
++	if (codec->core.type == HDA_DEV_LEGACY)
++		kfree(codec);
+ }
  
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index 99fc0917339bb..0ed2be83706d6 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -1349,9 +1349,9 @@ static int azx_free(struct azx *chip)
- 	}
+ #define DEV_NAME_LEN 31
+diff --git a/sound/soc/sof/intel/hda-codec.c b/sound/soc/sof/intel/hda-codec.c
+index b8b37f0823094..0d8437b080bfa 100644
+--- a/sound/soc/sof/intel/hda-codec.c
++++ b/sound/soc/sof/intel/hda-codec.c
+@@ -62,8 +62,7 @@ static int hda_codec_probe(struct snd_sof_dev *sdev, int address)
+ 		address, resp);
  
- 	if (bus->chip_init) {
-+		azx_stop_chip(chip);
- 		azx_clear_irq_pending(chip);
- 		azx_stop_all_streams(chip);
--		azx_stop_chip(chip);
- 	}
+ #if IS_ENABLED(CONFIG_SND_SOC_SOF_HDA_AUDIO_CODEC)
+-	/* snd_hdac_ext_bus_device_exit will use kfree to free hdev */
+-	hda_priv = kzalloc(sizeof(*hda_priv), GFP_KERNEL);
++	hda_priv = devm_kzalloc(sdev->dev, sizeof(*hda_priv), GFP_KERNEL);
+ 	if (!hda_priv)
+ 		return -ENOMEM;
  
- 	if (bus->irq >= 0)
+@@ -82,8 +81,7 @@ static int hda_codec_probe(struct snd_sof_dev *sdev, int address)
+ 
+ 	return 0;
+ #else
+-	/* snd_hdac_ext_bus_device_exit will use kfree to free hdev */
+-	hdev = kzalloc(sizeof(*hdev), GFP_KERNEL);
++	hdev = devm_kzalloc(sdev->dev, sizeof(*hdev), GFP_KERNEL);
+ 	if (!hdev)
+ 		return -ENOMEM;
+ 
 -- 
 2.20.1
 
