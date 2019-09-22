@@ -4,50 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA42C4740C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDADDC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A378214D9
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:00:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7E24208C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:00:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178849;
-	bh=e9BSFUibeBe+oRteLZzZcuFsV4x7EMeuZV+E0L70dd0=;
+	s=default; t=1569178852;
+	bh=rG6nBgBnTtfOrvY2n9Sy1gOvBYtA0aAbSvPL2jL4Wiw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b9z5V83AXdHyXgMPrZw/DsLuxZOZkLRLXPkAjr8iR55HyjjQccAjxLStZuFdNl3tf
-	 zgjNg2+d6DxDCRTakNUaiC/oiOwE/m2YenNSuIA7IfuwDYJht+0BDSxN5lV/DvMnfL
-	 8EV64u/gbFD/4Xs0qks+vJF61KXTzV33kHkasgus=
+	b=jgYiOIw/sXACCQt70koqnsKGTz2G36ZTYx/T7CCEnawMb+O8DpRHzdGSABFOFG4Eh
+	 VmCQwFtx0mp49cPfTsfQt4toz2rBEchSGJVfuDWx6zArkZSHzfFmazmpxkbCRFH+y2
+	 6GVFnpO4i4hi6my6SpbTwfzKDhJ/ipFoRoqTSuEE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395224AbfIVTAs (ORCPT
+        id S2395240AbfIVTAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:00:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36514 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:00:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436695AbfIVTAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 15:00:42 -0400
+        id S2393348AbfIVTAq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 15:00:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AEAC21907;
-        Sun, 22 Sep 2019 19:00:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86C0421907;
+        Sun, 22 Sep 2019 19:00:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178841;
-        bh=e9BSFUibeBe+oRteLZzZcuFsV4x7EMeuZV+E0L70dd0=;
+        s=default; t=1569178845;
+        bh=rG6nBgBnTtfOrvY2n9Sy1gOvBYtA0aAbSvPL2jL4Wiw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ds5So0Uq/X3sedcPqzlvj6Vuo9XEZfSlxVI9ksPfOoVSvUk6Ik1RTVFpxbaPS0JDY
-         5wQxlPE4evZufPfs5lgWesdPqjCCCx4IN74rV2e6DOUfI8KMYhLJGpYXA9htSD6EaE
-         FZYpPr4lHoW1YcP6mlAtdOKbhVysUD8QPTQY+tP0=
+        b=tac2mVUSN/IPoAwy57OkBhPIuuqTPXJV9LV6iAfOSiJJNgdp0CI903Z+idLhu+CPC
+         Hi7DPQFmN9aRD91/Shbd9t4Kh2ml7idvKGl9Xm2Uo1mgkONojMfTFx4IoI9ie++HvV
+         b1BOudL1ch3WWrsb02eWbJroSGnfChToGCoy/0Qg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Harald Freudenberger <freude@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 49/60] s390/crypto: xts-aes-s390 fix extra run-time crypto self tests finding
-Date:   Sun, 22 Sep 2019 14:59:22 -0400
-Message-Id: <20190922185934.4305-49-sashal@kernel.org>
+Cc:     Austin Kim <austindh.kim@gmail.com>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Hedi Berriche <hedi.berriche@hpe.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mike Travis <mike.travis@hpe.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Thomas Gleixner <tglx@linutronix.de>, allison@lohutok.net,
+        andy@infradead.org, armijn@tjaldur.nl, bp@alien8.de,
+        dvhart@infradead.org, gregkh@linuxfoundation.org, hpa@zytor.com,
+        kjlu@umn.edu, platform-driver-x86@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 51/60] x86/platform/uv: Fix kmalloc() NULL check routine
+Date:   Sun, 22 Sep 2019 14:59:24 -0400
+Message-Id: <20190922185934.4305-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185934.4305-1-sashal@kernel.org>
 References: <20190922185934.4305-1-sashal@kernel.org>
@@ -60,52 +69,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harald Freudenberger <freude@linux.ibm.com>
+From: Austin Kim <austindh.kim@gmail.com>
 
-[ Upstream commit 9e323d45ba94262620a073a3f9945ca927c07c71 ]
+[ Upstream commit 864b23f0169d5bff677e8443a7a90dfd6b090afc ]
 
-With 'extra run-time crypto self tests' enabled, the selftest
-for s390-xts fails with
+The result of kmalloc() should have been checked ahead of below statement:
 
-  alg: skcipher: xts-aes-s390 encryption unexpectedly succeeded on
-  test vector "random: len=0 klen=64"; expected_error=-22,
-  cfg="random: inplace use_digest nosimd src_divs=[2.61%@+4006,
-  84.44%@+21, 1.55%@+13, 4.50%@+344, 4.26%@+21, 2.64%@+27]"
+	pqp = (struct bau_pq_entry *)vp;
 
-This special case with nbytes=0 is not handled correctly and this
-fix now makes sure that -EINVAL is returned when there is en/decrypt
-called with 0 bytes to en/decrypt.
+Move BUG_ON(!vp) before above statement.
 
-Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Austin Kim <austindh.kim@gmail.com>
+Cc: Dimitri Sivanich <dimitri.sivanich@hpe.com>
+Cc: Hedi Berriche <hedi.berriche@hpe.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mike Travis <mike.travis@hpe.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Russ Anderson <russ.anderson@hpe.com>
+Cc: Steve Wahl <steve.wahl@hpe.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: allison@lohutok.net
+Cc: andy@infradead.org
+Cc: armijn@tjaldur.nl
+Cc: bp@alien8.de
+Cc: dvhart@infradead.org
+Cc: gregkh@linuxfoundation.org
+Cc: hpa@zytor.com
+Cc: kjlu@umn.edu
+Cc: platform-driver-x86@vger.kernel.org
+Link: https://lkml.kernel.org/r/20190905232951.GA28779@LGEARND20B15
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/crypto/aes_s390.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/x86/platform/uv/tlb_uv.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/crypto/aes_s390.c b/arch/s390/crypto/aes_s390.c
-index 591cbdf615af0..1a906dd7ca7d9 100644
---- a/arch/s390/crypto/aes_s390.c
-+++ b/arch/s390/crypto/aes_s390.c
-@@ -572,6 +572,9 @@ static int xts_aes_encrypt(struct blkcipher_desc *desc,
- 	struct s390_xts_ctx *xts_ctx = crypto_blkcipher_ctx(desc->tfm);
- 	struct blkcipher_walk walk;
+diff --git a/arch/x86/platform/uv/tlb_uv.c b/arch/x86/platform/uv/tlb_uv.c
+index 16d4967d59ea2..814b01d4e519e 100644
+--- a/arch/x86/platform/uv/tlb_uv.c
++++ b/arch/x86/platform/uv/tlb_uv.c
+@@ -1816,9 +1816,9 @@ static void pq_init(int node, int pnode)
  
-+	if (!nbytes)
-+		return -EINVAL;
-+
- 	if (unlikely(!xts_ctx->fc))
- 		return xts_fallback_encrypt(desc, dst, src, nbytes);
+ 	plsize = (DEST_Q_SIZE + 1) * sizeof(struct bau_pq_entry);
+ 	vp = kmalloc_node(plsize, GFP_KERNEL, node);
+-	pqp = (struct bau_pq_entry *)vp;
+-	BUG_ON(!pqp);
++	BUG_ON(!vp);
  
-@@ -586,6 +589,9 @@ static int xts_aes_decrypt(struct blkcipher_desc *desc,
- 	struct s390_xts_ctx *xts_ctx = crypto_blkcipher_ctx(desc->tfm);
- 	struct blkcipher_walk walk;
- 
-+	if (!nbytes)
-+		return -EINVAL;
-+
- 	if (unlikely(!xts_ctx->fc))
- 		return xts_fallback_decrypt(desc, dst, src, nbytes);
++	pqp = (struct bau_pq_entry *)vp;
+ 	cp = (char *)pqp + 31;
+ 	pqp = (struct bau_pq_entry *)(((unsigned long)cp >> 5) << 5);
  
 -- 
 2.20.1
