@@ -4,49 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DAEC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B9EC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30B51206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94918214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:08:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179317;
-	bh=PadI4hNMBQz1BBj05eX8H/07KfBXPx1HULQqD62W7BE=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Kvpin5nUFyk1evDwE7WAwnjYWCVB91fpvbGxyo8JsGnj2+sTEHyL3/uO3eseUf9J4
-	 wLBOf3+nrvh7aH5EZJukwE03O764zGYZP9pnZ+jHK1doJYZsA/vrmUv6uv+HTRfkKS
-	 rqHkI1/agj+opoZLTyhqvs6XAHM0BJzBa/1FV+Fg=
+	s=default; t=1569179320;
+	bh=swuvJGaJwBakwanR/G+vSFD19YGaauRGoUgnyeYHYuA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=OTLVUTWXemOhQOihNCBU6+iZy8VCCMaQFEt4DcuwI5hemFH3YM4eSUj6THu88QTQY
+	 iOu9CuKGXurbrnuSyJIoizsqfEwujkds5/D+1hLpsUR7Q+vyft8hSQW9dJEPXRbvnG
+	 ceaNRKNX2h6AZn8tkGvB5Czyfjvh2gutaWGFLkHU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395071AbfIVS7i (ORCPT
+        id S1730390AbfIVTIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:59:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34948 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:08:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391971AbfIVS7h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:59:37 -0400
+        id S2395070AbfIVS7j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:59:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85206208C2;
-        Sun, 22 Sep 2019 18:59:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A3B421928;
+        Sun, 22 Sep 2019 18:59:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178776;
-        bh=PadI4hNMBQz1BBj05eX8H/07KfBXPx1HULQqD62W7BE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=VOUa5x+6RrdMduSQ9YGvboBuQI04GsgfuAPVt4VMWB9C/RJRylRn/5RvvgrFe2Wi7
-         P0Z4uneykNnm97GBukIHmbxYN7o76hW/oFhMe/uN8rKE558K5D8tq5D9Tq0eChr881
-         yF27UkuLSwbkxCwb35R0wT2VPX496okMEIneZlOg=
+        s=default; t=1569178778;
+        bh=swuvJGaJwBakwanR/G+vSFD19YGaauRGoUgnyeYHYuA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=R+mmeQBR82TIwOW0kErc6ikn3flYbzEWsbl4V3K64INGqANYy1PMAisYX7p1ksikm
+         GrxYNJpSo5v4LRZPB6/GtFjird4v2zeVMY9hzaaXi1NTS36CGwMOqcGRqLRExAfqXP
+         mSHo03iXvl2SsHU9dPHigl2QUZ9Bi/aO7njeveoI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 01/60] ALSA: hda: Flush interrupts on disabling
-Date:   Sun, 22 Sep 2019 14:58:34 -0400
-Message-Id: <20190922185934.4305-1-sashal@kernel.org>
+Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 03/60] ASoC: sgtl5000: Fix charge pump source assignment
+Date:   Sun, 22 Sep 2019 14:58:36 -0400
+Message-Id: <20190922185934.4305-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190922185934.4305-1-sashal@kernel.org>
+References: <20190922185934.4305-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -56,75 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 
-[ Upstream commit caa8422d01e983782548648e125fd617cadcec3f ]
+[ Upstream commit b6319b061ba279577fd7030a9848fbd6a17151e3 ]
 
-I was looking at
+If VDDA != VDDIO and any of them is greater than 3.1V, charge pump
+source can be assigned automatically [1].
 
-<4> [241.835158] general protection fault: 0000 [#1] PREEMPT SMP PTI
-<4> [241.835181] CPU: 1 PID: 214 Comm: kworker/1:3 Tainted: G     U            5.2.0-CI-CI_DRM_6509+ #1
-<4> [241.835199] Hardware name: Dell Inc.                 OptiPlex 745                 /0GW726, BIOS 2.3.1  05/21/2007
-<4> [241.835234] Workqueue: events snd_hdac_bus_process_unsol_events [snd_hda_core]
-<4> [241.835256] RIP: 0010:input_handle_event+0x16d/0x5e0
-<4> [241.835270] Code: 48 8b 93 58 01 00 00 8b 52 08 89 50 04 8b 83 f8 06 00 00 48 8b 93 00 07 00 00 8d 70 01 48 8d 04 c2 83 e1 08 89 b3 f8 06 00 00 <66> 89 28 66 44 89 60 02 44 89 68 04 8b 93 f8 06 00 00 0f 84 fd fe
-<4> [241.835304] RSP: 0018:ffffc9000019fda0 EFLAGS: 00010046
-<4> [241.835317] RAX: 6b6b6b6ec6c6c6c3 RBX: ffff8880290fefc8 RCX: 0000000000000000
-<4> [241.835332] RDX: 000000006b6b6b6b RSI: 000000006b6b6b6c RDI: 0000000000000046
-<4> [241.835347] RBP: 0000000000000005 R08: 0000000000000000 R09: 0000000000000001
-<4> [241.835362] R10: ffffc9000019faa0 R11: 0000000000000000 R12: 0000000000000004
-<4> [241.835377] R13: 0000000000000000 R14: ffff8880290ff1d0 R15: 0000000000000293
-<4> [241.835392] FS:  0000000000000000(0000) GS:ffff88803de80000(0000) knlGS:0000000000000000
-<4> [241.835409] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-<4> [241.835422] CR2: 00007ffe9a99e9b7 CR3: 000000002f588000 CR4: 00000000000006e0
-<4> [241.835436] Call Trace:
-<4> [241.835449]  input_event+0x45/0x70
-<4> [241.835464]  snd_jack_report+0xdc/0x100
-<4> [241.835490]  snd_hda_jack_report_sync+0x83/0xc0 [snd_hda_codec]
-<4> [241.835512]  snd_hdac_bus_process_unsol_events+0x5a/0x70 [snd_hda_core]
-<4> [241.835530]  process_one_work+0x245/0x610
+[1] https://www.nxp.com/docs/en/data-sheet/SGTL5000.pdf
 
-which has the hallmarks of a worker queued from interrupt after it was
-supposedly cancelled (note the POISON_FREE), and I could not see where
-the interrupt would be flushed on shutdown so added the likely suspects.
-
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=111174
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Reviewed-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Reviewed-by: Igor Opaniuk <igor.opaniuk@toradex.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Link: https://lore.kernel.org/r/20190719100524.23300-7-oleksandr.suvorov@toradex.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/hda/hdac_controller.c | 2 ++
- sound/pci/hda/hda_intel.c   | 2 +-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ sound/soc/codecs/sgtl5000.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/sound/hda/hdac_controller.c b/sound/hda/hdac_controller.c
-index 00c6af2ae1c29..433f3280f7098 100644
---- a/sound/hda/hdac_controller.c
-+++ b/sound/hda/hdac_controller.c
-@@ -441,6 +441,8 @@ static void azx_int_disable(struct hdac_bus *bus)
- 	list_for_each_entry(azx_dev, &bus->stream_list, list)
- 		snd_hdac_stream_updateb(azx_dev, SD_CTL, SD_INT_MASK, 0);
- 
-+	synchronize_irq(bus->irq);
-+
- 	/* disable SIE for all streams */
- 	snd_hdac_chip_writeb(bus, INTCTL, 0);
- 
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index f2f1d9fd848c8..3d4ea5fd75bf5 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -1239,9 +1239,9 @@ static int azx_free(struct azx *chip)
+diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
+index 3dba5550a6659..d81ac4e499aab 100644
+--- a/sound/soc/codecs/sgtl5000.c
++++ b/sound/soc/codecs/sgtl5000.c
+@@ -987,12 +987,17 @@ static int sgtl5000_set_power_regs(struct snd_soc_codec *codec)
+ 					SGTL5000_INT_OSC_EN);
+ 		/* Enable VDDC charge pump */
+ 		ana_pwr |= SGTL5000_VDDC_CHRGPMP_POWERUP;
+-	} else if (vddio >= 3100 && vdda >= 3100) {
++	} else {
+ 		ana_pwr &= ~SGTL5000_VDDC_CHRGPMP_POWERUP;
+-		/* VDDC use VDDIO rail */
+-		lreg_ctrl |= SGTL5000_VDDC_ASSN_OVRD;
+-		lreg_ctrl |= SGTL5000_VDDC_MAN_ASSN_VDDIO <<
+-			    SGTL5000_VDDC_MAN_ASSN_SHIFT;
++		/*
++		 * if vddio == vdda the source of charge pump should be
++		 * assigned manually to VDDIO
++		 */
++		if (vddio == vdda) {
++			lreg_ctrl |= SGTL5000_VDDC_ASSN_OVRD;
++			lreg_ctrl |= SGTL5000_VDDC_MAN_ASSN_VDDIO <<
++				    SGTL5000_VDDC_MAN_ASSN_SHIFT;
++		}
  	}
  
- 	if (bus->chip_init) {
-+		azx_stop_chip(chip);
- 		azx_clear_irq_pending(chip);
- 		azx_stop_all_streams(chip);
--		azx_stop_chip(chip);
- 	}
- 
- 	if (bus->irq >= 0)
+ 	snd_soc_write(codec, SGTL5000_CHIP_LINREG_CTRL, lreg_ctrl);
 -- 
 2.20.1
 
