@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CDE9C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C833BC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D7F921907
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FCE5214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:03:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178970;
-	bh=xpL+Zktkj4FG1ObP8MvGMpsubfq7xDXJQA7h+p6dJUA=;
+	s=default; t=1569178982;
+	bh=gJXf0m846H7nSaBfT45ol9cDA4hQTRNe/xed/jgri1w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gxsJ1qimUMGPgWKde1AU5ZKKoDN5HuW7YDlQexbTPZRuMUo+rM9rUjs6MT/8cWOv9
-	 REjh7nbgX0ydpoVsg7aLcjFVxNTQyRTaoueAtBgOsuQCjXKYXdHk8BHVOWTMKnbvin
-	 EAOfX7+34Kt5FiCK5dGv8NVFDLUre0CqPZ5F8UX0=
+	b=LNxk5ij3oK6EDV5yiX1w9O7O79Zf/yBr0RIfyMu3Pr4PYT95fIN1ugAJVoyhpL3/p
+	 ep/0/XmpcAzg+ykEVqVsVaFBKrQY2DRG5YB4XrEEQlAsC2qNIOT9z7kFt7uuJK+iH7
+	 SR7aJsw1pwpcd34lMcyBF2jR6OfiDd5dIMSPljes=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729705AbfIVTCm (ORCPT
+        id S1729548AbfIVTCH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:02:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38538 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:02:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2439087AbfIVTCK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 15:02:10 -0400
+        id S2393226AbfIVTB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 15:01:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B253214D9;
-        Sun, 22 Sep 2019 19:02:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAB6D208C2;
+        Sun, 22 Sep 2019 19:01:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178929;
-        bh=xpL+Zktkj4FG1ObP8MvGMpsubfq7xDXJQA7h+p6dJUA=;
+        s=default; t=1569178916;
+        bh=gJXf0m846H7nSaBfT45ol9cDA4hQTRNe/xed/jgri1w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EhgpDvi21RaECpdG2JcyDJOUI9aLxb31gAG6kbSbdmeprYJs6JakCak7XkTlHbpgx
-         2cFDNa5PMv9JqKNo48i1NAMTrMGBD3xzoJ5eIjAR4Kv9N1oel8prlUF0YkLng7DFNe
-         44MW3km3uFiot4M+x1LTudsaQnetnPDkS79mUBU8=
+        b=iT2KTTVJ0NzGkaWetw8n0acURdf9S+UhX7vmehPSRJSFUqDpQeX6dAkunGsncvk6H
+         bo2yQyXd6iRNi+hXmvGg8x+qFpO9mqOHKGffSQI78qE00buWudVN8v4WoO+SBQ4uhS
+         V/xZBlds5XyogZKrWvesHdZYM14D7EfZ+u0Nz8fg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tomas Bortoli <tomasbortoli@gmail.com>,
-        syzbot+0522702e9d67142379f1@syzkaller.appspotmail.com,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 42/44] media: ttusb-dec: Fix info-leak in ttusb_dec_send_command()
-Date:   Sun, 22 Sep 2019 15:01:00 -0400
-Message-Id: <20190922190103.4906-42-sashal@kernel.org>
+Cc:     Yufen Yu <yuyufen@huawei.com>, NeilBrown <neilb@suse.de>,
+        Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 34/44] md/raid1: fail run raid1 array when active disk less than one
+Date:   Sun, 22 Sep 2019 15:00:52 -0400
+Message-Id: <20190922190103.4906-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922190103.4906-1-sashal@kernel.org>
 References: <20190922190103.4906-1-sashal@kernel.org>
@@ -61,37 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomas Bortoli <tomasbortoli@gmail.com>
+From: Yufen Yu <yuyufen@huawei.com>
 
-[ Upstream commit a10feaf8c464c3f9cfdd3a8a7ce17e1c0d498da1 ]
+[ Upstream commit 07f1a6850c5d5a65c917c3165692b5179ac4cb6b ]
 
-The function at issue does not always initialize each byte allocated
-for 'b' and can therefore leak uninitialized memory to a USB device in
-the call to usb_bulk_msg()
+When run test case:
+  mdadm -CR /dev/md1 -l 1 -n 4 /dev/sd[a-d] --assume-clean --bitmap=internal
+  mdadm -S /dev/md1
+  mdadm -A /dev/md1 /dev/sd[b-c] --run --force
 
-Use kzalloc() instead of kmalloc()
+  mdadm --zero /dev/sda
+  mdadm /dev/md1 -a /dev/sda
 
-Signed-off-by: Tomas Bortoli <tomasbortoli@gmail.com>
-Reported-by: syzbot+0522702e9d67142379f1@syzkaller.appspotmail.com
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+  echo offline > /sys/block/sdc/device/state
+  echo offline > /sys/block/sdb/device/state
+  sleep 5
+  mdadm -S /dev/md1
+
+  echo running > /sys/block/sdb/device/state
+  echo running > /sys/block/sdc/device/state
+  mdadm -A /dev/md1 /dev/sd[a-c] --run --force
+
+mdadm run fail with kernel message as follow:
+[  172.986064] md: kicking non-fresh sdb from array!
+[  173.004210] md: kicking non-fresh sdc from array!
+[  173.022383] md/raid1:md1: active with 0 out of 4 mirrors
+[  173.022406] md1: failed to create bitmap (-5)
+
+In fact, when active disk in raid1 array less than one, we
+need to return fail in raid1_run().
+
+Reviewed-by: NeilBrown <neilb@suse.de>
+Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/ttusb-dec/ttusb_dec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/raid1.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/usb/ttusb-dec/ttusb_dec.c b/drivers/media/usb/ttusb-dec/ttusb_dec.c
-index a5de46f04247f..f9b5de7ace01c 100644
---- a/drivers/media/usb/ttusb-dec/ttusb_dec.c
-+++ b/drivers/media/usb/ttusb-dec/ttusb_dec.c
-@@ -272,7 +272,7 @@ static int ttusb_dec_send_command(struct ttusb_dec *dec, const u8 command,
+diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+index 82e284d2b202b..abb99515068b1 100644
+--- a/drivers/md/raid1.c
++++ b/drivers/md/raid1.c
+@@ -2958,6 +2958,13 @@ static int run(struct mddev *mddev)
+ 		    !test_bit(In_sync, &conf->mirrors[i].rdev->flags) ||
+ 		    test_bit(Faulty, &conf->mirrors[i].rdev->flags))
+ 			mddev->degraded++;
++	/*
++	 * RAID1 needs at least one disk in active
++	 */
++	if (conf->raid_disks - mddev->degraded < 1) {
++		ret = -EINVAL;
++		goto abort;
++	}
  
- 	dprintk("%s\n", __func__);
- 
--	b = kmalloc(COMMAND_PACKET_SIZE + 4, GFP_KERNEL);
-+	b = kzalloc(COMMAND_PACKET_SIZE + 4, GFP_KERNEL);
- 	if (!b)
- 		return -ENOMEM;
+ 	if (conf->raid_disks - mddev->degraded == 1)
+ 		mddev->recovery_cp = MaxSector;
+@@ -2992,8 +2999,12 @@ static int run(struct mddev *mddev)
+ 	ret =  md_integrity_register(mddev);
+ 	if (ret) {
+ 		md_unregister_thread(&mddev->thread);
+-		raid1_free(mddev, conf);
++		goto abort;
+ 	}
++	return 0;
++
++abort:
++	raid1_free(mddev, conf);
+ 	return ret;
+ }
  
 -- 
 2.20.1
