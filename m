@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE4DC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC1CC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:28:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 501DE206B6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B336A206B6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:28:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180496;
-	bh=iItdgteyx2Yyq6/oHJhvcXHvnUEhYPhCCQi5ReAoQIc=;
+	s=default; t=1569180501;
+	bh=/U8E39KaJHPuCt55oqs9aksyUmQx9j4P9V5W2MqI1Vw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H33vWNzuE4Tz/sbrS4bBQc/w7Tm4Ys0q9yZEgawSTZc8oUHdQ/QqJhGkFio0SpD5V
-	 VyVJBeA2JZr1xqVewHBJZtESUwGi2AruYmJgWJQnNyjrx6gQwX4eh//e6RCZJt9mwh
-	 FTVK5qT/Bnypyn6GDYw9JdvXgbizI+ORj8JBrq3w=
+	b=uDsyIpQjwGm6wxgJS51DTaon6PTQVSAiAZUDzt1gM7pT06JtP6kDj7wANMdh5HwlB
+	 lXF64ZYxDjjpDETmAYD8WmlBh1Iwx8AGSCy6XZrGOD0bC4ye15TwXsa6vbUOgZ0wZj
+	 vYtCdTLyE734JulL5lHL9iaCjZFmiMsmfgKyT23M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731621AbfIVT2P (ORCPT
+        id S2392898AbfIVSut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:28:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48184 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:50:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404049AbfIVSuw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:50:52 -0400
+        id S2404073AbfIVSuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:50:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B9EC21479;
-        Sun, 22 Sep 2019 18:50:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1A5321D7B;
+        Sun, 22 Sep 2019 18:50:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178251;
-        bh=iItdgteyx2Yyq6/oHJhvcXHvnUEhYPhCCQi5ReAoQIc=;
+        s=default; t=1569178238;
+        bh=/U8E39KaJHPuCt55oqs9aksyUmQx9j4P9V5W2MqI1Vw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pjZz9CO6GTWghNp/gs+NI1ohCU5aDSb7JL944pdcBGiGU7sFug6p7Pu17jBSXyinq
-         YAy7zk6w0uz7atg810J8t2drjfqCoxFfi7LOqblTHGqVl/LeAx0xV4F3lS6oqLXwa8
-         I9cm6e+Vczu+GqjbLXymd1gwlwb1Jf03T//qxvQw=
+        b=IJ6oR0cnle/jIBYnVwNu7HKdexF6exT/C6NxM0GME3NTuncf2bxWqoMVgsJ8O98vQ
+         94wZnhMO+6IOMyvVE+y4RiNc2qCsfcxAtXNr3S0Jvevj9Phig+ZMeNwGPBFmyuiy1Q
+         07tEqEzgTnRwSmJh+Zafq7/eViejNK8WA1ewIj3c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guoqing Jiang <jgq516@gmail.com>,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Song Liu <songliubraving@fb.com>,
-        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 043/185] md: don't call spare_active in md_reap_sync_thread if all member devices can't work
-Date:   Sun, 22 Sep 2019 14:47:01 -0400
-Message-Id: <20190922184924.32534-43-sashal@kernel.org>
+Cc:     Junhua Huang <huang.junhua@zte.com.cn>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 034/185] arm64: mm: free the initrd reserved memblock in a aligned manner
+Date:   Sun, 22 Sep 2019 14:46:52 -0400
+Message-Id: <20190922184924.32534-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -60,43 +58,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guoqing Jiang <jgq516@gmail.com>
+From: Junhua Huang <huang.junhua@zte.com.cn>
 
-[ Upstream commit 0d8ed0e9bf9643f27f4816dca61081784dedb38d ]
+[ Upstream commit 13776f9d40a028a245bb766269e360f5b7a62721 ]
 
-When add one disk to array, the md_reap_sync_thread is responsible
-to activate the spare and set In_sync flag for the new member in
-spare_active().
+We should free the initrd reserved memblock in an aligned manner,
+because the initrd reserves the memblock in an aligned manner
+in arm64_memblock_init().
+Otherwise there are some fragments in memblock_reserved regions
+after free_initrd_mem(). e.g.:
+/sys/kernel/debug/memblock # cat reserved
+   0: 0x0000000080080000..0x00000000817fafff
+   1: 0x0000000083400000..0x0000000083ffffff
+   2: 0x0000000090000000..0x000000009000407f
+   3: 0x00000000b0000000..0x00000000b000003f
+   4: 0x00000000b26184ea..0x00000000b2618fff
+The fragments like the ranges from b0000000 to b000003f and
+from b26184ea to b2618fff should be freed.
 
-But if raid1 has one member disk A, and disk B is added to the array.
-Then we offline A before all the datas are synchronized from A to B,
-obviously B doesn't have the latest data as A, but B is still marked
-with In_sync flag.
+And we can do free_reserved_area() after memblock_free(),
+as free_reserved_area() calls __free_pages(), once we've done
+that it could be allocated somewhere else,
+but memblock and iomem still say this is reserved memory.
 
-So let's not call spare_active under the condition, otherwise B is
-still showed with 'U' state which is not correct.
-
-Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Fixes: 05c58752f9dc ("arm64: To remove initrd reserved area entry from memblock")
+Signed-off-by: Junhua Huang <huang.junhua@zte.com.cn>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/md.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm64/mm/init.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 9801d540fea1c..5e885b6c4240d 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -8944,7 +8944,8 @@ void md_reap_sync_thread(struct mddev *mddev)
- 	/* resync has finished, collect result */
- 	md_unregister_thread(&mddev->sync_thread);
- 	if (!test_bit(MD_RECOVERY_INTR, &mddev->recovery) &&
--	    !test_bit(MD_RECOVERY_REQUESTED, &mddev->recovery)) {
-+	    !test_bit(MD_RECOVERY_REQUESTED, &mddev->recovery) &&
-+	    mddev->degraded != mddev->raid_disks) {
- 		/* success...*/
- 		/* activate any spares */
- 		if (mddev->pers->spare_active(mddev)) {
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index f3c795278def0..b1ee6cb4b17fc 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -570,8 +570,12 @@ void free_initmem(void)
+ #ifdef CONFIG_BLK_DEV_INITRD
+ void __init free_initrd_mem(unsigned long start, unsigned long end)
+ {
++	unsigned long aligned_start, aligned_end;
++
++	aligned_start = __virt_to_phys(start) & PAGE_MASK;
++	aligned_end = PAGE_ALIGN(__virt_to_phys(end));
++	memblock_free(aligned_start, aligned_end - aligned_start);
+ 	free_reserved_area((void *)start, (void *)end, 0, "initrd");
+-	memblock_free(__virt_to_phys(start), end - start);
+ }
+ #endif
+ 
 -- 
 2.20.1
 
