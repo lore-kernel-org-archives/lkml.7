@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C6DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:04:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FAF2C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E89D2184D
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:04:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C79C214D9
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:04:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179068;
-	bh=R1bNk2/hCaKw1ytY+Ws4ld/IUdVpxotA409O+wn8ryo=;
+	s=default; t=1569179071;
+	bh=Djd92TOnQuQnGWGjj7N+dlsVbu2NxvIUCPumOuYgz60=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xgcG6DITx5vnfTKL/tbRlBN79s8GbVA90jeQyzjEwjXAjN8iOwYRICG+xVIFywRBS
-	 KgOsBJBFQi9Q3NPFxeElu67ykrRnrZv1IUKTAlQQCWFkkuwViu59094r7dbmMiAyMr
-	 CbHWER7ywnHpOnUrctLALd2wVYsPjuBbw8RxFa84=
+	b=VcL4XYhsE9fYme1waoSqoSYF6D9uYX7CpwE6bic7eDFpY6Ei3w43kvnR0CnRZmqaF
+	 qkSOqWOAyJgXQPABHGypKTRNfn1onQ3/ReU/sl19X0n0p01RsH+AAP7ocpWIzFThmb
+	 fOU01Wrx1MxjG55uJb0wPQQCdnfFd+S6UUvt6ZaU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395309AbfIVTBT (ORCPT
+        id S1729871AbfIVTEa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:01:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37244 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:04:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395266AbfIVTBK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 15:01:10 -0400
+        id S2395303AbfIVTBS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 15:01:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6684121907;
-        Sun, 22 Sep 2019 19:01:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D47821907;
+        Sun, 22 Sep 2019 19:01:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178870;
-        bh=R1bNk2/hCaKw1ytY+Ws4ld/IUdVpxotA409O+wn8ryo=;
+        s=default; t=1569178877;
+        bh=Djd92TOnQuQnGWGjj7N+dlsVbu2NxvIUCPumOuYgz60=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jebqU+EhiowMKxBTElQRGz32RJMmJNjTBp9SJ2c2nDDpYrWyyFydEwP+awzzLSO84
-         TUzA2WSrViJlmFOknvdhs4Pd1V6OdX6ytxO3SY9BdPRJiaXn54TjdNMopwvqShHirM
-         mBTyz2DQYUOIQX9xuQvn5MmN9GUf+W5jTihu0ELE=
+        b=bSjM+jKEHmX7fDvN0a+sdLniFOQtk1YzQ2VT18/4Oj7h2orNs6imhjkxbbIwX7U1N
+         HSgwK+RlkKbzchUuZ3W508PGhkzxdS3MLF2MlX5jJQQ013eBAA802TiCeZ36vHOnVA
+         cHJAVw8gWhJsF/9vfcQHQ9IRgTnTkQMX+cvXcDcw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 05/44] media: dib0700: fix link error for dibx000_i2c_set_speed
-Date:   Sun, 22 Sep 2019 15:00:23 -0400
-Message-Id: <20190922190103.4906-5-sashal@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 10/44] x86/apic: Soft disable APIC before initializing it
+Date:   Sun, 22 Sep 2019 15:00:28 -0400
+Message-Id: <20190922190103.4906-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922190103.4906-1-sashal@kernel.org>
 References: <20190922190103.4906-1-sashal@kernel.org>
@@ -59,67 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit 765bb8610d305ee488b35d07e2a04ae52fb2df9c ]
+[ Upstream commit 2640da4cccf5cc613bf26f0998b9e340f4b5f69c ]
 
-When CONFIG_DVB_DIB9000 is disabled, we can still compile code that
-now fails to link against dibx000_i2c_set_speed:
+If the APIC was already enabled on entry of setup_local_APIC() then
+disabling it soft via the SPIV register makes a lot of sense.
 
-drivers/media/usb/dvb-usb/dib0700_devices.o: In function `dib01x0_pmu_update.constprop.7':
-dib0700_devices.c:(.text.unlikely+0x1c9c): undefined reference to `dibx000_i2c_set_speed'
+That masks all LVT entries and brings it into a well defined state.
 
-The call sites are both through dib01x0_pmu_update(), which gets passed
-an 'i2c' pointer from dib9000_get_i2c_master(), which has returned
-NULL. Checking this pointer seems to be a good idea anyway, and it avoids
-the link failure in most cases.
+Otherwise previously enabled LVTs which are not touched in the setup
+function stay unmasked and might surprise the just booting kernel.
 
-Sean Young found another case that is not fixed by that, where certain
-gcc versions leave an unused function in place that causes the link error,
-but adding an explict IS_ENABLED() check also solves this.
-
-Fixes: b7f54910ce01 ("V4L/DVB (4647): Added module for DiB0700 based devices")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20190722105219.068290579@linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/dvb-usb/dib0700_devices.c | 8 ++++++++
+ arch/x86/kernel/apic/apic.c | 8 ++++++++
  1 file changed, 8 insertions(+)
 
-diff --git a/drivers/media/usb/dvb-usb/dib0700_devices.c b/drivers/media/usb/dvb-usb/dib0700_devices.c
-index 38c03283a4417..e1316c7b7c2e5 100644
---- a/drivers/media/usb/dvb-usb/dib0700_devices.c
-+++ b/drivers/media/usb/dvb-usb/dib0700_devices.c
-@@ -2418,9 +2418,13 @@ static int dib9090_tuner_attach(struct dvb_usb_adapter *adap)
- 		8, 0x0486,
- 	};
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 834d1b5b43557..be3d4dcf3a10a 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -1265,6 +1265,14 @@ void setup_local_APIC(void)
+ 		return;
+ 	}
  
-+	if (!IS_ENABLED(CONFIG_DVB_DIB9000))
-+		return -ENODEV;
- 	if (dvb_attach(dib0090_fw_register, adap->fe_adap[0].fe, i2c, &dib9090_dib0090_config) == NULL)
- 		return -ENODEV;
- 	i2c = dib9000_get_i2c_master(adap->fe_adap[0].fe, DIBX000_I2C_INTERFACE_GPIO_1_2, 0);
-+	if (!i2c)
-+		return -ENODEV;
- 	if (dib01x0_pmu_update(i2c, data_dib190, 10) != 0)
- 		return -ENODEV;
- 	dib0700_set_i2c_speed(adap->dev, 1500);
-@@ -2496,10 +2500,14 @@ static int nim9090md_tuner_attach(struct dvb_usb_adapter *adap)
- 		0, 0x00ef,
- 		8, 0x0406,
- 	};
-+	if (!IS_ENABLED(CONFIG_DVB_DIB9000))
-+		return -ENODEV;
- 	i2c = dib9000_get_tuner_interface(adap->fe_adap[0].fe);
- 	if (dvb_attach(dib0090_fw_register, adap->fe_adap[0].fe, i2c, &nim9090md_dib0090_config[0]) == NULL)
- 		return -ENODEV;
- 	i2c = dib9000_get_i2c_master(adap->fe_adap[0].fe, DIBX000_I2C_INTERFACE_GPIO_1_2, 0);
-+	if (!i2c)
-+		return -ENODEV;
- 	if (dib01x0_pmu_update(i2c, data_dib190, 10) < 0)
- 		return -ENODEV;
- 
++	/*
++	 * If this comes from kexec/kcrash the APIC might be enabled in
++	 * SPIV. Soft disable it before doing further initialization.
++	 */
++	value = apic_read(APIC_SPIV);
++	value &= ~APIC_SPIV_APIC_ENABLED;
++	apic_write(APIC_SPIV, value);
++
+ #ifdef CONFIG_X86_32
+ 	/* Pound the ESR really hard over the head with a big hammer - mbligh */
+ 	if (lapic_is_integrated() && apic->disable_esr) {
 -- 
 2.20.1
 
