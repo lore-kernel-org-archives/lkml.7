@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D5EC4740C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:19:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88BCAC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E96EE214D9
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C945214D9
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:19:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179974;
-	bh=Q/ywRCQArBh0m7zwjTfd1BsBMu4lEOlN3cPetuN71E4=;
+	s=default; t=1569179977;
+	bh=A7bB2lRTeqg19DskxmH6x0oHCi3rj0FsE/t+ZNh3yVU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gZjbCsc07/Bbb/6N8k5n2ImooyNf8CWfrGWaqKnmhGiPju+EiD9BA0wc0MShZD2JP
-	 rBYKEZdwHdS0zaDDaOkJCsQbGqzYL7qKzYS5fGE3jC3i0VObLlxRpV3QDLTPjf4k00
-	 0/m5ZBfNPwqET9U+PxJtOfW6ukHo6/dCOKyBp0MU=
+	b=jP0e+XFY5zgi1zjhWgHuK8mRMDTOKKWZtRnsEzGKjfHnf87Ng2CIzmNbkAQt03aln
+	 PIZXkYbE7Yx6WW4N8rZXuKNZaPRoJGV2YeR31jxp2PkZpBHN4aQFelZ/G+xidpLjtP
+	 I8J9Q3b1j8dVRXi5f4q9EMJ0ZRVATJdRcK2i5EAY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408033AbfIVSyu (ORCPT
+        id S2394269AbfIVTTg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:54:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54936 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:19:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404811AbfIVSyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:54:25 -0400
+        id S1729201AbfIVSyu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:54:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6954521D81;
-        Sun, 22 Sep 2019 18:54:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B708F21D7B;
+        Sun, 22 Sep 2019 18:54:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178465;
-        bh=Q/ywRCQArBh0m7zwjTfd1BsBMu4lEOlN3cPetuN71E4=;
+        s=default; t=1569178489;
+        bh=A7bB2lRTeqg19DskxmH6x0oHCi3rj0FsE/t+ZNh3yVU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lsqGmJu+27nWIRaXVomjsx45cG62QRuh1SNhvw+Ozl6X+sdXOmj9zsdOuxoIy6BHT
-         N0NDuueukOsgfClRSHnDTcOIpzZDfJFiMPAELOVxMb33Bwgwc5ezF+UXMWdLRRigJE
-         C3YYJ5eM5BsHqQ+xqLo93bebghBOtSoijIB9rnQE=
+        b=JYrF/De/gOmhL1YcHpncN594O1oQwzLyaQ56bu0j/01wY0m+vck+5IHZOw7X2aoPv
+         D39S1a2MtH2YmqgoI28F9DPFK3W9XMs3f2yfTYL2Lq8Ny/0NvJXHuMvw2hwa6/CPEe
+         xhVvYptUw+GBU034r4SObXEqLGeflAHzP38Si56Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 005/128] ASoC: sgtl5000: Fix charge pump source assignment
-Date:   Sun, 22 Sep 2019 14:52:15 -0400
-Message-Id: <20190922185418.2158-5-sashal@kernel.org>
+Cc:     Oliver Neukum <oneukum@suse.com>,
+        syzbot+01a77b82edaa374068e1@syzkaller.appspotmail.com,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 024/128] media: iguanair: add sanity checks
+Date:   Sun, 22 Sep 2019 14:52:34 -0400
+Message-Id: <20190922185418.2158-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
 References: <20190922185418.2158-1-sashal@kernel.org>
@@ -62,53 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-[ Upstream commit b6319b061ba279577fd7030a9848fbd6a17151e3 ]
+[ Upstream commit ab1cbdf159beba7395a13ab70bc71180929ca064 ]
 
-If VDDA != VDDIO and any of them is greater than 3.1V, charge pump
-source can be assigned automatically [1].
+The driver needs to check the endpoint types, too, as opposed
+to the number of endpoints. This also requires moving the check earlier.
 
-[1] https://www.nxp.com/docs/en/data-sheet/SGTL5000.pdf
-
-Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Reviewed-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Reviewed-by: Igor Opaniuk <igor.opaniuk@toradex.com>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
-Link: https://lore.kernel.org/r/20190719100524.23300-7-oleksandr.suvorov@toradex.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reported-by: syzbot+01a77b82edaa374068e1@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/sgtl5000.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/media/rc/iguanair.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
-index f9817029bffbb..18cddf1729a65 100644
---- a/sound/soc/codecs/sgtl5000.c
-+++ b/sound/soc/codecs/sgtl5000.c
-@@ -1165,12 +1165,17 @@ static int sgtl5000_set_power_regs(struct snd_soc_component *component)
- 					SGTL5000_INT_OSC_EN);
- 		/* Enable VDDC charge pump */
- 		ana_pwr |= SGTL5000_VDDC_CHRGPMP_POWERUP;
--	} else if (vddio >= 3100 && vdda >= 3100) {
-+	} else {
- 		ana_pwr &= ~SGTL5000_VDDC_CHRGPMP_POWERUP;
--		/* VDDC use VDDIO rail */
--		lreg_ctrl |= SGTL5000_VDDC_ASSN_OVRD;
--		lreg_ctrl |= SGTL5000_VDDC_MAN_ASSN_VDDIO <<
--			    SGTL5000_VDDC_MAN_ASSN_SHIFT;
-+		/*
-+		 * if vddio == vdda the source of charge pump should be
-+		 * assigned manually to VDDIO
-+		 */
-+		if (vddio == vdda) {
-+			lreg_ctrl |= SGTL5000_VDDC_ASSN_OVRD;
-+			lreg_ctrl |= SGTL5000_VDDC_MAN_ASSN_VDDIO <<
-+				    SGTL5000_VDDC_MAN_ASSN_SHIFT;
-+		}
+diff --git a/drivers/media/rc/iguanair.c b/drivers/media/rc/iguanair.c
+index 7daac8bab83b0..6f3030b2054d0 100644
+--- a/drivers/media/rc/iguanair.c
++++ b/drivers/media/rc/iguanair.c
+@@ -424,6 +424,10 @@ static int iguanair_probe(struct usb_interface *intf,
+ 	int ret, pipein, pipeout;
+ 	struct usb_host_interface *idesc;
+ 
++	idesc = intf->altsetting;
++	if (idesc->desc.bNumEndpoints < 2)
++		return -ENODEV;
++
+ 	ir = kzalloc(sizeof(*ir), GFP_KERNEL);
+ 	rc = rc_allocate_device(RC_DRIVER_IR_RAW);
+ 	if (!ir || !rc) {
+@@ -438,18 +442,13 @@ static int iguanair_probe(struct usb_interface *intf,
+ 	ir->urb_in = usb_alloc_urb(0, GFP_KERNEL);
+ 	ir->urb_out = usb_alloc_urb(0, GFP_KERNEL);
+ 
+-	if (!ir->buf_in || !ir->packet || !ir->urb_in || !ir->urb_out) {
++	if (!ir->buf_in || !ir->packet || !ir->urb_in || !ir->urb_out ||
++	    !usb_endpoint_is_int_in(&idesc->endpoint[0].desc) ||
++	    !usb_endpoint_is_int_out(&idesc->endpoint[1].desc)) {
+ 		ret = -ENOMEM;
+ 		goto out;
  	}
  
- 	snd_soc_component_write(component, SGTL5000_CHIP_LINREG_CTRL, lreg_ctrl);
+-	idesc = intf->altsetting;
+-
+-	if (idesc->desc.bNumEndpoints < 2) {
+-		ret = -ENODEV;
+-		goto out;
+-	}
+-
+ 	ir->rc = rc;
+ 	ir->dev = &intf->dev;
+ 	ir->udev = udev;
 -- 
 2.20.1
 
