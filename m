@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C190C4740C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B606C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04786206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E984B206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:24:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180283;
-	bh=AR8xkLta58mWfwbBEqsTYV291X1xSKFmHu7uqW2tgpM=;
+	s=default; t=1569180287;
+	bh=w6KWa290n65h/SbQOwFuXx8xEQzk1oRJxWcH6LID+o8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VK3X/NCcAQ1FmI4najNNmof0wc/ZhmbBgiiWsTT8Ju+zkTv79siLdpg+hI0nsPv7f
-	 e7ABVY50q77k2nrm5HeR5OnCWFbSnb0i6K4h9BCRk2/EcNxtDx1zcwsz+L9DdRplCM
-	 jvdk681jMwmuZNaFkphH4eI7qqzOt5gU4Fji3e3s=
+	b=VHaTtnzEC39J7yd034BnOoKzU3pFqK3SeJV63BSNJ18v2dMhaAPckwJ0gm2rtv4Gt
+	 5pg7SnFvGRdJVPaVT/NvYVCwmSmN+pJ6IfS8jxOW5J9sjLx5jmZ1Hue0KIEmkWVhJF
+	 co1YIGV0JQuOtP65nyuMQTNKgaTZtldnKrnYmg9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393004AbfIVSws (ORCPT
+        id S1731445AbfIVTYq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:52:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51692 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:24:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407937AbfIVSwf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:52:35 -0400
+        id S2407984AbfIVSwr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:52:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD20021D7C;
-        Sun, 22 Sep 2019 18:52:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E2CB21D56;
+        Sun, 22 Sep 2019 18:52:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178354;
-        bh=AR8xkLta58mWfwbBEqsTYV291X1xSKFmHu7uqW2tgpM=;
+        s=default; t=1569178366;
+        bh=w6KWa290n65h/SbQOwFuXx8xEQzk1oRJxWcH6LID+o8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HeUmHv4bcEXDVrYOTnyojgEfUxRb0cdgKrzf/XpRG6xyPd9fyDKTHNnJMfrKApyLQ
-         h4ywZOcIiNOKHqaUorg3c+Syv+r/YEN7Kw5ySAms0fgNI/vPzyu72Gnf5jDI0Z3N+F
-         LbqfywaenC8DW0UklnXYUwTPjkHuAcmONlPQF0cQ=
+        b=RleHhnYm+LmHqwETqYs2I5hfqUsjhJq50k3qIgtc9kgJlGeFAOCMhG1QJB7Usi0Gh
+         8AQxTGftve0uvLn240LD0FtgmAvOcz2pFSWDTWqrmljGD0dY2yiDEc4rqcgmuvEU05
+         VfWxwcsMPVrJDj2Wmwt+U/C5vEAL0FIbSZ2xaGrI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leonard Crestez <leonard.crestez@nxp.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 110/185] PM / devfreq: passive: Use non-devm notifiers
-Date:   Sun, 22 Sep 2019 14:48:08 -0400
-Message-Id: <20190922184924.32534-110-sashal@kernel.org>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 118/185] perf script: Fix memory leaks in list_scripts()
+Date:   Sun, 22 Sep 2019 14:48:16 -0400
+Message-Id: <20190922184924.32534-118-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -60,67 +63,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leonard Crestez <leonard.crestez@nxp.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-[ Upstream commit 0ef7c7cce43f6ecc2b96d447e69b2900a9655f7c ]
+[ Upstream commit 3b4acbb92dbda4829e021e5c6d5410658849fa1c ]
 
-The devfreq passive governor registers and unregisters devfreq
-transition notifiers on DEVFREQ_GOV_START/GOV_STOP using devm wrappers.
+In case memory resources for *buf* and *paths* were allocated, jump to
+*out* and release them before return.
 
-If devfreq itself is registered with devm then a warning is triggered on
-rmmod from devm_devfreq_unregister_notifier. Call stack looks like this:
-
-	devm_devfreq_unregister_notifier+0x30/0x40
-	devfreq_passive_event_handler+0x4c/0x88
-	devfreq_remove_device.part.8+0x6c/0x9c
-	devm_devfreq_dev_release+0x18/0x20
-	release_nodes+0x1b0/0x220
-	devres_release_all+0x78/0x84
-	device_release_driver_internal+0x100/0x1c0
-	driver_detach+0x4c/0x90
-	bus_remove_driver+0x7c/0xd0
-	driver_unregister+0x2c/0x58
-	platform_driver_unregister+0x10/0x18
-	imx_devfreq_platdrv_exit+0x14/0xd40 [imx_devfreq]
-
-This happens because devres_release_all will first remove all the nodes
-into a separate todo list so the nested devres_release from
-devm_devfreq_unregister_notifier won't find anything.
-
-Fix the warning by calling the non-devm APIS for frequency notification.
-Using devm wrappers is not actually useful for a governor anyway: it
-relies on the devfreq core to correctly match the GOV_START/GOV_STOP
-notifications.
-
-Fixes: 996133119f57 ("PM / devfreq: Add new passive governor")
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Addresses-Coverity-ID: 1444328 ("Resource leak")
+Fixes: 6f3da20e151f ("perf report: Support builtin perf script in scripts menu")
+Link: http://lkml.kernel.org/r/20190408162748.GA21008@embeddedor
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/governor_passive.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/ui/browsers/scripts.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/devfreq/governor_passive.c b/drivers/devfreq/governor_passive.c
-index 58308948b8637..da485477065c5 100644
---- a/drivers/devfreq/governor_passive.c
-+++ b/drivers/devfreq/governor_passive.c
-@@ -165,12 +165,12 @@ static int devfreq_passive_event_handler(struct devfreq *devfreq,
- 			p_data->this = devfreq;
- 
- 		nb->notifier_call = devfreq_passive_notifier_call;
--		ret = devm_devfreq_register_notifier(dev, parent, nb,
-+		ret = devfreq_register_notifier(parent, nb,
- 					DEVFREQ_TRANSITION_NOTIFIER);
- 		break;
- 	case DEVFREQ_GOV_STOP:
--		devm_devfreq_unregister_notifier(dev, parent, nb,
--					DEVFREQ_TRANSITION_NOTIFIER);
-+		WARN_ON(devfreq_unregister_notifier(parent, nb,
-+					DEVFREQ_TRANSITION_NOTIFIER));
- 		break;
- 	default:
- 		break;
+diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
+index 27cf3ab88d13f..f4edb18f67ec9 100644
+--- a/tools/perf/ui/browsers/scripts.c
++++ b/tools/perf/ui/browsers/scripts.c
+@@ -131,8 +131,10 @@ static int list_scripts(char *script_name, bool *custom,
+ 		int key = ui_browser__input_window("perf script command",
+ 				"Enter perf script command line (without perf script prefix)",
+ 				script_args, "", 0);
+-		if (key != K_ENTER)
+-			return -1;
++		if (key != K_ENTER) {
++			ret = -1;
++			goto out;
++		}
+ 		sprintf(script_name, "%s script %s", perf, script_args);
+ 	} else if (choice < num + max_std) {
+ 		strcpy(script_name, paths[choice]);
 -- 
 2.20.1
 
