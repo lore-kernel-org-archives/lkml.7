@@ -2,127 +2,400 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D08FAC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 15:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ACC5C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 15:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 926E820830
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 15:08:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="FHEzZUbE"
+	by mail.kernel.org (Postfix) with ESMTP id 209BD208C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 15:28:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569166097;
+	bh=emeKUXNkGhOOZoJ65MzVvmly107262c4CjzB+ec294o=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=CZ5uft0V+jvZHxEwtGFwMPckhtgW/AAmQXVfdgI40qdruxoj+Z2y9mj7FDKKnxZy/
+	 UKTrOQXzkd3B6dwql+GI/e+IDtJVmiwKD8J3cBiq/Y5DkbhDkcZGaeAoAxRyk4W50E
+	 eblp+gUZ1Wip/PwlMLlCWvPTdoyI8LGYWe9rrQvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387471AbfIVPIB (ORCPT
+        id S2387488AbfIVP2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 11:08:01 -0400
-Received: from mout.web.de ([212.227.17.12]:49963 "EHLO mout.web.de"
+        Sun, 22 Sep 2019 11:28:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728211AbfIVPIB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 11:08:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1569164875;
-        bh=/tLF8FNd+5kmvda8nqiASXRcjfYhY59Qr9QPeVtm7Yk=;
-        h=X-UI-Sender-Class:Cc:References:Subject:To:From:Date:In-Reply-To;
-        b=FHEzZUbE9BT1BiV2mklFHfH6Qc8q7n/mNtHv9AVksispNM514AAIpKURAoNeNMzzI
-         gDWziUbOUgePIPndN8STFJyhSvN2eYvd6NEPp9fQq4uLGZODw9cG6N7PXhRLvTgp/Y
-         BTpAeDfyS+uQ1bHVAf9K35ev1ihLeTvF7hCpTY8w=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.244.8.78]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LZeVM-1hmdoV13ds-00lXHa; Sun, 22
- Sep 2019 17:07:55 +0200
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <20190815060014.2191-1-nishkadg.linux@gmail.com>
-Subject: Re: [PATCH] ata: libahci_platform: Add of_node_put() before loop exit
-To:     Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-ide@vger.kernel.org
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <ac53316a-7856-fdad-d982-5e80305be9d2@web.de>
-Date:   Sun, 22 Sep 2019 17:07:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        id S1728211AbfIVP2Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 11:28:16 -0400
+Received: from linux-8ccs (ip5f5adbd6.dynamic.kabel-deutschland.de [95.90.219.214])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98E1E206C2;
+        Sun, 22 Sep 2019 15:28:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569166094;
+        bh=emeKUXNkGhOOZoJ65MzVvmly107262c4CjzB+ec294o=;
+        h=Date:From:To:Cc:Subject:From;
+        b=hyqDyDsEKAGOZ9SAcgerHRHa0b/UgjzDq7savw5aGXsjSIAF3Ti7ju7CdyzAw2GlP
+         E74knQYSf9SMRNJwDFgd6m7qorx3xeoIH27a+dbo20t0VMW9GNS3fyFsFz/GNOR0LC
+         JolfsRyvGnurgeZNMSpsXQL919dfg33RuaCn+hac=
+Date:   Sun, 22 Sep 2019 17:28:09 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Matthias Maennich <maennich@google.com>,
+        Martijn Coenen <maco@android.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Modules updates for v5.4
+Message-ID: <20190922152809.GA27554@linux-8ccs>
 MIME-Version: 1.0
-In-Reply-To: <20190815060014.2191-1-nishkadg.linux@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:QGWuVhgsrTwQtbMJvkcPYLOzikF4K9VLIABRRISa0iSUnkrbX8A
- jYzgnyKsK5saHIhzle0TXebDfDQQU7fNMNQJ05W9jdwm5cq+XKqnCI/I/klCUKVD2aRDcej
- Pa1DEoLNWCXHYMlaRNOZyVuePcrTpEimuiE4jjVGi6StcMzgYvgzLjJItUhDbjovczTT8y2
- j7LeW9AC6FbSJPe/hg6rQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:HeexO2ggeQ0=:JxhmIxpQ1w+vlKGsBYZLRo
- Q+tmEHqkezEghj4ZlGv0z9gsqg9hp4WcwiVtJq3ZvjAPBG8lCZsgcPYrB1kRA0iU3nKjhvBZn
- wJT5lH7ZpHBp+9dTNeiEoNocc9eu/iCJh+k47gXhQA7wJ4oGEMEDcEvhoaVWvaZB5I9GhRUVF
- pPB8c8xPP6bo92F8+WZw4Sxf+V+dua4+j3yJcp8fyoIY2Mfpat1bVtojvcU8nofBDtwZ/wP+R
- Or1clhLAjDPwRM0SLT/xrX0WiGS8zje+JQ9bWwgGG+IOs1SV6Msyunxedp+tadwCv/169YWut
- xGr9liIwLdm3ziJlT649EabqQZaOKnjj+Y3T1MCCM40Qxc4YuSeZ75XriTeq1SIBy3b/b1iRl
- 2Sam5E/a80Wy9MNYsWbF3bbWRwZ1ch71y3F187hSd07tEa3SxKmG0wNhIsIEGqQET/AbDpQ5l
- grj02wGyk8Wui/USWhAGfKkLDPKROUN0X5ss4m4FzHPulRGQy8zjvgtrR1TyN2wWvqAFWG37K
- z8snJmIhrgbSzYMrJqvmc9buR8TDjLh7kqy3Q0kI+/eA/9gtpKa2YetI+dYyJznhikAJK0PHD
- 6LaAm6igZaLC1SprJ5r0wXyCXoEHykF22kvbX/0aQfIKrQnR0TJ4uizbq+MCpjxEPtS3wzqS7
- HP/7N0iGTLt+Zj+Bf7obr03YCxJGrtEPHwZroXsMWEYvVGQL7+8XpmNIqqOBnsE2lmAsaNUsq
- L2xWR/csPeF8Kqd3TDFG5/pB4/mmuyJ9g6kjcpVyo4LRo88gnaY0l+HCojKJghz1qnqJqM8Cl
- wGOjZbcdN9rxL3o64CxeusORn1uq1yF86qLzet9gP2yQxwtw+Ns7TUIajzMyRwIiom7hhiiqp
- O4iNFZG8HNzX53cslmnQm5uHlXBePlqlVDlEhuDQ1t/WHZya+VDXyHRzz6vhBZWQ9TS7GCrvc
- UrlHbzilDuNe0fRu9TMi8SxEp+mpsODBpd/6LocGblY8Rr5fJjNmjLk36dsbJdNOn+52o2+lw
- yrJARmtPrVBQdfkhODgor6+I6ycGo/Tpwe6QgFmCS5LXkjJLgqLzZ7g+sm7ziWDLaFl/tkN20
- FmnVmoklBHwqVN+2D8T3/BstT0yexLzDn5HJLaAGEUFtYZEG5n47vG4joMcXZReDBth5JqET4
- KbBpPhjKljDjKAO8WBqPewwbo8HqgfPeKzSnvfknjFeSYqDI4B/H1YRO305FETprVNz2TyViI
- rH7FzhcGbJr/bHVl+xTmwk/nI6ketenEbB7I5RvihBxU1630+PE53Kw93j7A=
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.28-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-How do you think about to add the tag =E2=80=9CFixes=E2=80=9D for this sof=
-tware correction?
+Hi Linus,
 
-Regards,
-Markus
+The main bulk of this pull request introduces a new exported symbol
+namespaces feature. The number of exported symbols is increasingly growing
+with each release (we're at about 31k exports as of 5.3-rc7) and we
+currently have no way of visualizing how these symbols are "clustered" or
+making sense of this huge export surface. Namespacing exported symbols
+allows kernel developers to more explicitly partition and categorize
+exported symbols, as well as more easily limiting the availability of
+namespaced symbols to other parts of the kernel. For starters, we have
+introduced the USB_STORAGE namespace to demonstrate the API's usage. I have
+briefly summarized the feature and its main motivations in the tag below.
+
+Disclaimer: linux-next releases were originally planned to be paused from
+Sept 5 to Sept 30, then from Sept 15, Mark Brown picked up the work and
+resumed doing -next releases. Since the patchset landed in modules-next
+during the week of -rc8, it has unfortunately not gotten linux-next time. I
+would understand if you'd prefer to defer to the next release.
+
+Also note that there is a conflict with the kbuild tree. Many thanks to
+Matthias Maennich for quickly providing the conflict resolution (diff
+below). Only include/linux/export.h and scripts/Makefile.modpost had hard
+conflicts. In the inline diff below, I've provided the result of the
+conflict resolution from merging modules-next into your master branch.
+Please let me know if you run into any trouble.
+
+Thanks,
+
+Jessica
+
+----->8-----
+diff --cc .gitignore
+index ce2c6348d372,9ee63aa2a3fb..70580bdd352c
+--- a/.gitignore
++++ b/.gitignore
+@@@ -32,8 -32,10 +32,9 @@@
+  *.lzo
+  *.mod
+  *.mod.c
++ *.ns_deps
+  *.o
+  *.o.*
+ -*.order
+  *.patch
+  *.s
+  *.so
+diff --cc include/linux/export.h
+index 7d8c112a8b61,ef5d015d754a..6ecb04014558
+--- a/include/linux/export.h
++++ b/include/linux/export.h
+@@@ -18,6 -18,11 +18,8 @@@ extern struct module __this_module
+  #define THIS_MODULE ((struct module *)0)
+  #endif
+  
+ -#ifdef CONFIG_MODULES
+ -
++ #define NS_SEPARATOR "."
++ 
+ -#if defined(__KERNEL__) && !defined(__GENKSYMS__)
+  #ifdef CONFIG_MODVERSIONS
+  /* Mark the CRC weak since genksyms apparently decides not to
+   * generate a checksums for some symbols */
+@@@ -71,24 -98,26 +95,35 @@@ struct kernel_symbol 
+  };
+  #endif
+  
+ +#ifdef __GENKSYMS__
+ +
+ +#define ___EXPORT_SYMBOL(sym, sec)	__GENKSYMS_EXPORT_SYMBOL(sym)
+++#define ___EXPORT_SYMBOL_NS(sym, sec, ns)	__GENKSYMS_EXPORT_SYMBOL(sym)
+ +
+ +#else
+ +
+- /* For every exported symbol, place a struct in the __ksymtab section */
+- #define ___EXPORT_SYMBOL(sym, sec)					\
++ #define ___export_symbol_common(sym, sec)				\
+  	extern typeof(sym) sym;						\
+- 	__CRC_SYMBOL(sym, sec)						\
++ 	__CRC_SYMBOL(sym, sec);						\
+  	static const char __kstrtab_##sym[]				\
+  	__attribute__((section("__ksymtab_strings"), used, aligned(1)))	\
+- 	= #sym;								\
++ 	= #sym								\
++ 
++ /* For every exported symbol, place a struct in the __ksymtab section */
++ #define ___EXPORT_SYMBOL_NS(sym, sec, ns)				\
++ 	___export_symbol_common(sym, sec);				\
++ 	static const char __kstrtab_ns_##sym[]				\
++ 	__attribute__((section("__ksymtab_strings"), used, aligned(1)))	\
++ 	= #ns;								\
++ 	__KSYMTAB_ENTRY_NS(sym, sec, ns)
++ 
++ #define ___EXPORT_SYMBOL(sym, sec)					\
++ 	___export_symbol_common(sym, sec);				\
+  	__KSYMTAB_ENTRY(sym, sec)
+  
+ -#if defined(__DISABLE_EXPORTS)
+ +#endif
+ +
+ +#if !defined(CONFIG_MODULES) || defined(__DISABLE_EXPORTS)
+  
+  /*
+   * Allow symbol exports to be disabled completely so that C code may
+@@@ -121,18 -151,36 +157,37 @@@
+  #define __cond_export_sym_1(sym, sec) ___EXPORT_SYMBOL(sym, sec)
+  #define __cond_export_sym_0(sym, sec) /* nothing */
+  
++ #define __EXPORT_SYMBOL_NS(sym, sec, ns)				\
++ 	__ksym_marker(sym);						\
++ 	__cond_export_ns_sym(sym, sec, ns, __is_defined(__KSYM_##sym))
++ #define __cond_export_ns_sym(sym, sec, ns, conf)			\
++ 	___cond_export_ns_sym(sym, sec, ns, conf)
++ #define ___cond_export_ns_sym(sym, sec, ns, enabled)			\
++ 	__cond_export_ns_sym_##enabled(sym, sec, ns)
++ #define __cond_export_ns_sym_1(sym, sec, ns) ___EXPORT_SYMBOL_NS(sym, sec, ns)
++ #define __cond_export_ns_sym_0(sym, sec, ns) /* nothing */
++ 
+  #else
+ -#define __EXPORT_SYMBOL_NS ___EXPORT_SYMBOL_NS
+ +
+- #define __EXPORT_SYMBOL(sym, sec)	___EXPORT_SYMBOL(sym, sec)
++ #define __EXPORT_SYMBOL ___EXPORT_SYMBOL
+ -#endif
+++#define __EXPORT_SYMBOL_NS ___EXPORT_SYMBOL_NS
+ +
+ +#endif /* CONFIG_MODULES */
+  
++ #ifdef DEFAULT_SYMBOL_NAMESPACE
++ #undef __EXPORT_SYMBOL
++ #define __EXPORT_SYMBOL(sym, sec)				\
++ 	__EXPORT_SYMBOL_NS(sym, sec, DEFAULT_SYMBOL_NAMESPACE)
++ #endif
++ 
+ -#define EXPORT_SYMBOL(sym) __EXPORT_SYMBOL(sym, "")
+ -#define EXPORT_SYMBOL_GPL(sym) __EXPORT_SYMBOL(sym, "_gpl")
+ -#define EXPORT_SYMBOL_GPL_FUTURE(sym) __EXPORT_SYMBOL(sym, "_gpl_future")
+ -#define EXPORT_SYMBOL_NS(sym, ns) __EXPORT_SYMBOL_NS(sym, "", ns)
+ -#define EXPORT_SYMBOL_NS_GPL(sym, ns) __EXPORT_SYMBOL_NS(sym, "_gpl", ns)
+ -
+ +#define EXPORT_SYMBOL(sym)		__EXPORT_SYMBOL(sym, "")
+ +#define EXPORT_SYMBOL_GPL(sym)		__EXPORT_SYMBOL(sym, "_gpl")
+ +#define EXPORT_SYMBOL_GPL_FUTURE(sym)	__EXPORT_SYMBOL(sym, "_gpl_future")
+++#define EXPORT_SYMBOL_NS(sym, ns)	__EXPORT_SYMBOL_NS(sym, "", ns)
+++#define EXPORT_SYMBOL_NS_GPL(sym, ns)	__EXPORT_SYMBOL_NS(sym, "_gpl", ns)
+  #ifdef CONFIG_UNUSED_SYMBOLS
+ -#define EXPORT_UNUSED_SYMBOL(sym) __EXPORT_SYMBOL(sym, "_unused")
+ -#define EXPORT_UNUSED_SYMBOL_GPL(sym) __EXPORT_SYMBOL(sym, "_unused_gpl")
+ +#define EXPORT_UNUSED_SYMBOL(sym)	__EXPORT_SYMBOL(sym, "_unused")
+ +#define EXPORT_UNUSED_SYMBOL_GPL(sym)	__EXPORT_SYMBOL(sym, "_unused_gpl")
+  #else
+  #define EXPORT_UNUSED_SYMBOL(sym)
+  #define EXPORT_UNUSED_SYMBOL_GPL(sym)
+diff --cc scripts/Makefile.modpost
+index 9800a3988f23,743fe3a2e885..952fff485546
+--- a/scripts/Makefile.modpost
++++ b/scripts/Makefile.modpost
+@@@ -88,13 -99,60 +89,15 @@@ modules := $(sort $(shell cat $(MODORDE
+  quiet_cmd_modpost = MODPOST $(words $(modules)) modules
+        cmd_modpost = sed 's/ko$$/o/' $(MODORDER) | $(MODPOST)
+  
+ -PHONY += modules-modpost
+ -modules-modpost:
+ +__modpost:
+ +	@$(kecho) '  Building modules, stage 2.'
+  	$(call cmd,modpost)
+ -
+ -# Declare generated files as targets for modpost
+ -$(modules:.ko=.mod.c): modules-modpost
+ -
+ -# Step 5), compile all *.mod.c files
+ -
+ -# modname is set to make c_flags define KBUILD_MODNAME
+ -modname = $(notdir $(@:.mod.o=))
+ -
+ -quiet_cmd_cc_o_c = CC      $@
+ -      cmd_cc_o_c = $(CC) $(c_flags) $(KBUILD_CFLAGS_MODULE) $(CFLAGS_MODULE) \
+ -		   -c -o $@ $<
+ -
+ -$(modules:.ko=.mod.o): %.mod.o: %.mod.c FORCE
+ -	$(call if_changed_dep,cc_o_c)
+ -
+ -targets += $(modules:.ko=.mod.o)
+ -
+ -ARCH_POSTLINK := $(wildcard $(srctree)/arch/$(SRCARCH)/Makefile.postlink)
+ -
+ -# Step 6), final link of the modules with optional arch pass after final link
+ -quiet_cmd_ld_ko_o = LD [M]  $@
+ -      cmd_ld_ko_o =                                                     \
+ -	$(LD) -r $(KBUILD_LDFLAGS)                                      \
+ -                 $(KBUILD_LDFLAGS_MODULE) $(LDFLAGS_MODULE)             \
+ -                 -o $@ $(real-prereqs) ;                                \
+ -	$(if $(ARCH_POSTLINK), $(MAKE) -f $(ARCH_POSTLINK) $@, true)
+ -
+ -$(modules): %.ko :%.o %.mod.o FORCE
+ -	+$(call if_changed,ld_ko_o)
+ -
+ -targets += $(modules)
+ +ifneq ($(KBUILD_MODPOST_NOFINAL),1)
+ +	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modfinal
+ +endif
+  
++ nsdeps: __modpost
++ 
+ -# Add FORCE to the prequisites of a target to force it to be always rebuilt.
+ -# ---------------------------------------------------------------------------
+ -
+ -PHONY += FORCE
+ -
+ -FORCE:
+ -
+ -# Read all saved command lines and dependencies for the $(targets) we
+ -# may be building above, using $(if_changed{,_dep}). As an
+ -# optimization, we don't need to read them if the target does not
+ -# exist, we will rebuild anyway in that case.
+ -
+ -existing-targets := $(wildcard $(sort $(targets)))
+ -
+ --include $(foreach f,$(existing-targets),$(dir $(f)).$(notdir $(f)).cmd)
+ -
+  endif
+  
+  .PHONY: $(PHONY)
+diff --cc scripts/mod/modpost.c
+index 820eed87fb43,be72da25fe7c..3961941e8e7a
+--- a/scripts/mod/modpost.c
++++ b/scripts/mod/modpost.c
+@@@ -2379,10 -2440,10 +2453,11 @@@ static void read_dump(const char *fname
+  			mod = new_module(modname);
+  			mod->skip = 1;
+  		}
+- 		s = sym_add_exported(symname, mod, export_no(export));
++ 		s = sym_add_exported(symname, namespace, mod,
++ 				     export_no(export));
+  		s->kernel    = kernel;
+  		s->preloaded = 1;
+ +		s->is_static = 0;
+  		sym_update_crc(symname, mod, crc, export_no(export));
+  	}
+  	release_file(file, size);
+----->8-----
+
+The following changes since commit 089cf7f6ecb266b6a4164919a2e69bd2f938374a:
+
+  Linux 5.3-rc7 (2019-09-02 09:57:40 -0700)
+
+are available in the Git repository at:
+
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/jeyu/linux.git tags/modules-for-v5.4
+
+for you to fetch changes up to 2e6fcfeb9df6048a63fe0d5f7dfa39274bacbb71:
+
+  module: Remove leftover '#undef' from export header (2019-09-12 15:29:46 +0200)
+
+----------------------------------------------------------------
+Modules updates for v5.4
+
+Summary of modules changes for the 5.4 merge window:
+
+- Introduce exported symbol namespaces.
+
+  This new feature allows subsystem maintainers to partition and
+  categorize their exported symbols into explicit namespaces. Module
+  authors are now required to import the namespaces they need.
+
+  Some of the main motivations of this feature include: allowing kernel
+  developers to better manage the export surface, allow subsystem
+  maintainers to explicitly state that usage of some exported symbols
+  should only be limited to certain users (think: inter-module or
+  inter-driver symbols, debugging symbols, etc), as well as more easily
+  limiting the availability of namespaced symbols to other parts of the
+  kernel. With the module import requirement, it is also easier to spot
+  the misuse of exported symbols during patch review. Two new macros are
+  introduced: EXPORT_SYMBOL_NS() and EXPORT_SYMBOL_NS_GPL(). The API is
+  thoroughly documented in Documentation/kbuild/namespaces.rst.
+
+- Some small code and kbuild cleanups here and there.
+
+----------------------------------------------------------------
+Masahiro Yamada (3):
+      module: remove redundant 'depends on MODULES'
+      module: move CONFIG_UNUSED_SYMBOLS to the sub-menu of MODULES
+      module: remove unneeded casts in cmp_name()
+
+Matthias Maennich (11):
+      module: support reading multiple values per modinfo tag
+      export: explicitly align struct kernel_symbol
+      module: add support for symbol namespaces.
+      modpost: add support for symbol namespaces
+      module: add config option MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS
+      export: allow definition default namespaces in Makefiles or sources
+      modpost: add support for generating namespace dependencies
+      scripts: Coccinelle script for namespace dependencies.
+      docs: Add documentation for Symbol Namespaces
+      usb-storage: remove single-use define for debugging
+      usb-storage: export symbols in USB_STORAGE namespace
+
+Will Deacon (2):
+      module: Fix link failure due to invalid relocation on namespace offset
+      module: Remove leftover '#undef' from export header
+
+ .gitignore                                  |   1 +
+ Documentation/kbuild/modules.rst            |   7 +-
+ Documentation/kbuild/namespaces.rst         | 154 ++++++++++++++++++++++++++++
+ Documentation/kernel-hacking/hacking.rst    |  18 ++++
+ MAINTAINERS                                 |   5 +
+ Makefile                                    |  14 ++-
+ arch/m68k/include/asm/export.h              |   1 -
+ drivers/usb/storage/Makefile                |   2 +
+ drivers/usb/storage/alauda.c                |   1 +
+ drivers/usb/storage/cypress_atacb.c         |   1 +
+ drivers/usb/storage/datafab.c               |   1 +
+ drivers/usb/storage/debug.h                 |   2 -
+ drivers/usb/storage/ene_ub6250.c            |   1 +
+ drivers/usb/storage/freecom.c               |   1 +
+ drivers/usb/storage/isd200.c                |   1 +
+ drivers/usb/storage/jumpshot.c              |   1 +
+ drivers/usb/storage/karma.c                 |   1 +
+ drivers/usb/storage/onetouch.c              |   1 +
+ drivers/usb/storage/realtek_cr.c            |   1 +
+ drivers/usb/storage/scsiglue.c              |   2 +-
+ drivers/usb/storage/sddr09.c                |   1 +
+ drivers/usb/storage/sddr55.c                |   1 +
+ drivers/usb/storage/shuttle_usbat.c         |   1 +
+ drivers/usb/storage/uas.c                   |   1 +
+ include/asm-generic/export.h                |  15 ++-
+ include/linux/export.h                      |  98 +++++++++++++++---
+ include/linux/module.h                      |   2 +
+ init/Kconfig                                |  33 +++++-
+ kernel/module.c                             |  76 ++++++++++++--
+ lib/Kconfig.debug                           |  16 ---
+ scripts/Makefile.modpost                    |   4 +-
+ scripts/coccinelle/misc/add_namespace.cocci |  23 +++++
+ scripts/export_report.pl                    |   2 +-
+ scripts/mod/modpost.c                       | 150 ++++++++++++++++++++++++---
+ scripts/mod/modpost.h                       |   9 ++
+ scripts/nsdeps                              |  58 +++++++++++
+ 36 files changed, 629 insertions(+), 77 deletions(-)
+ create mode 100644 Documentation/kbuild/namespaces.rst
+ create mode 100644 scripts/coccinelle/misc/add_namespace.cocci
+ create mode 100644 scripts/nsdeps
