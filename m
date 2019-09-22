@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2CB6C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA6DC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A086A206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:15:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C08C9206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:15:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179703;
-	bh=LHr0zQNTuWMvB8KfJDg2lp4+b/SuKXqID+v+rc6sg8g=;
+	s=default; t=1569179708;
+	bh=ynYx037q2k8foXoI60jbKLN69/59PWUHOAgkDPUJ1Ok=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TieUCXdKPSDzzaAXRykeMkEoOMHLQ4FeeA/Vkwr4QnecnANOzLt/op5wA/AG8gH20
-	 MdmPnPS65cahV7Ww3HKmr27Ml4NJyGWFNRHJSUsx859guJLuXK4gWv0GJ7glHMyth3
-	 +9IxEg0yXkhQIyRrjng8TeC+0xujZUgROktI539c=
+	b=YRobBWNbgf1tlvVzuqngLy2e+Zsi3gkL05JOUbne4TH2YGZeJFgX0JCcW5qpnfXdA
+	 jOs3RNCstephHa1w3JLfNKcbb+Xoui+1kd9+fvox8MY1XoVkfakOgEk9QCTSf2xSmV
+	 0EU4554NaWaVqjsc9zPryVWTngXSoiEpYzCJ0ank=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730054AbfIVTPC (ORCPT
+        id S2388914AbfIVS4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:15:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58880 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:56:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408225AbfIVS4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:56:42 -0400
+        id S2404473AbfIVS4f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:56:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E923B2184D;
-        Sun, 22 Sep 2019 18:56:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE48B21A4A;
+        Sun, 22 Sep 2019 18:56:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178601;
-        bh=LHr0zQNTuWMvB8KfJDg2lp4+b/SuKXqID+v+rc6sg8g=;
+        s=default; t=1569178594;
+        bh=ynYx037q2k8foXoI60jbKLN69/59PWUHOAgkDPUJ1Ok=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z8L+lqCQ7gd0Ckkf3i/7XD5Q953V+Lgwi0yyCk8B9PquWzOP+lpke9ZP11xOyEiM1
-         oYiq0CWh2L2XRgGjsdwEmnPt51huACKgYAa4iWdcDtHUWM8xHa/fZxTpVhANdmVNe5
-         tmqNnmorjRX9Xnk8HIfn6qLuo+iWu4xnx4VQ6JpU=
+        b=IFKgLLA6YnXhNRQf4gsLHg+amuRmDTsmtJssek+kmXYkca2N8tXf9gr7mPVTeKQe5
+         e1K01DkUEeLzNT5riHcynKdraRoTQs7KX8raIe4EfE6Za3bUta8CIs/hMwn/Brx8se
+         nUeI3sd+dlANZBIXeMOr6O3co3WsL+1Kbme2pEes=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 105/128] dmaengine: ti: edma: Do not reset reserved paRAM slots
-Date:   Sun, 22 Sep 2019 14:53:55 -0400
-Message-Id: <20190922185418.2158-105-sashal@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 099/128] ARM: dts: exynos: Mark LDO10 as always-on on Peach Pit/Pi Chromebooks
+Date:   Sun, 22 Sep 2019 14:53:49 -0400
+Message-Id: <20190922185418.2158-99-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
 References: <20190922185418.2158-1-sashal@kernel.org>
@@ -59,48 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit c5dbe60664b3660f5ac5854e21273ea2e7ff698f ]
+[ Upstream commit 5b0eeeaa37615df37a9a30929b73e9defe61ca84 ]
 
-Skip resetting paRAM slots marked as reserved as they might be used by
-other cores.
+Commit aff138bf8e37 ("ARM: dts: exynos: Add TMU nodes regulator supply
+for Peach boards") assigned LDO10 to Exynos Thermal Measurement Unit,
+but it turned out that it supplies also some other critical parts and
+board freezes/crashes when it is turned off.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Link: https://lore.kernel.org/r/20190823125618.8133-2-peter.ujfalusi@ti.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+The mentioned commit made Exynos TMU a consumer of that regulator and in
+typical case Exynos TMU driver keeps it enabled from early boot. However
+there are such configurations (example is multi_v7_defconfig), in which
+some of the regulators are compiled as modules and are not available
+from early boot. In such case it may happen that LDO10 is turned off by
+regulator core, because it has no consumers yet (in this case consumer
+drivers cannot get it, because the supply regulators for it are not yet
+available). This in turn causes the board to crash. This patch restores
+'always-on' property for the LDO10 regulator.
+
+Fixes: aff138bf8e37 ("ARM: dts: exynos: Add TMU nodes regulator supply for Peach boards")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/ti/edma.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/exynos5420-peach-pit.dts | 1 +
+ arch/arm/boot/dts/exynos5800-peach-pi.dts  | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
-index ceabdea40ae0f..982631d4e1f8a 100644
---- a/drivers/dma/ti/edma.c
-+++ b/drivers/dma/ti/edma.c
-@@ -2273,9 +2273,6 @@ static int edma_probe(struct platform_device *pdev)
- 
- 	ecc->default_queue = info->default_queue;
- 
--	for (i = 0; i < ecc->num_slots; i++)
--		edma_write_slot(ecc, i, &dummy_paramset);
--
- 	if (info->rsv) {
- 		/* Set the reserved slots in inuse list */
- 		rsv_slots = info->rsv->rsv_slots;
-@@ -2288,6 +2285,12 @@ static int edma_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	for (i = 0; i < ecc->num_slots; i++) {
-+		/* Reset only unused - not reserved - paRAM slots */
-+		if (!test_bit(i, ecc->slot_inuse))
-+			edma_write_slot(ecc, i, &dummy_paramset);
-+	}
-+
- 	/* Clear the xbar mapped channels in unused list */
- 	xbar_chans = info->xbar_chans;
- 	if (xbar_chans) {
+diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+index 57c2332bf2824..25bdc9d97a4df 100644
+--- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
++++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+@@ -437,6 +437,7 @@
+ 				regulator-name = "vdd_ldo10";
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
+ 				regulator-state-mem {
+ 					regulator-off-in-suspend;
+ 				};
+diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+index d80ab9085da19..7989631b39ccf 100644
+--- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
++++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+@@ -437,6 +437,7 @@
+ 				regulator-name = "vdd_ldo10";
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
+ 				regulator-state-mem {
+ 					regulator-off-in-suspend;
+ 				};
 -- 
 2.20.1
 
