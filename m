@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E187DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:04:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED4CC4740C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B30DA2070C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:04:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 496A6206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:04:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179091;
-	bh=cuZo9s602fDcrRD5mupxhsazaMcvhkTI6YHA7sdWTV4=;
+	s=default; t=1569179097;
+	bh=fSQZjZgYqoFtPoY4OPB1K9rZwJJQaHChdCkYzfiW75o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YrVaZ8S/jp/WYJ3PwZx2ME8HJnF4GOZnZkBW//X00fp/VnxaBsddhyD8CkwLi87ab
-	 31DKs+sam+sRiN1YfYCi2Rw5yJfezJE6c+r87PiwSaN71OQAT+4EZec++WNGKSGXqT
-	 PssU7ppnhZWhH78gCUtN5rKiQ/182bvtY2PtP3TA=
+	b=tmsdxoMakg6kVw9Js1RvfLW9oo63l36HCIPkdGPsxHHjcim3eqcXJe9P3zTxyYdhO
+	 51k1FJpXjFyTLttS3eCgP8IytTKxlU/OIYq6Ok6mq21ldR2XEEwjoeMDZyXXMWn9gT
+	 LDpzRpSDcxtYzuK5RaE08AVUMZJEGnulpMS/3bW4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729895AbfIVTEp (ORCPT
+        id S2436690AbfIVTBB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:04:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37296 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:01:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725820AbfIVTBM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 15:01:12 -0400
+        id S2439011AbfIVTAx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 15:00:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04BAE214D9;
-        Sun, 22 Sep 2019 19:01:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 491F821BE5;
+        Sun, 22 Sep 2019 19:00:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178871;
-        bh=cuZo9s602fDcrRD5mupxhsazaMcvhkTI6YHA7sdWTV4=;
+        s=default; t=1569178853;
+        bh=fSQZjZgYqoFtPoY4OPB1K9rZwJJQaHChdCkYzfiW75o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1w4N9ctZPXmo4J7WgJwqEVW73Da7az6l2rGD9eTJQOCcfQdDHh0SrzHgBM56cIP5O
-         IB+Qd9NXlure/DvSxsoZqLDgbYCY9VhhX2jZVQ6edY8COXRPd9lNUD2VwRNzDOYhdC
-         NxnNGNQgCYHeFVG54wOhF95zLEHKrv4ItgQPHEYI=
+        b=RdjaWTOCeKy38VxZ0jzlQjJquiRJkQ7UNIzrTa3GIXte2IiC9BpVBL83zgaJdgrYG
+         W480Rxmle1c1S7FXXxt2XFkSV/uP1u+hvrWDK1kBliKWcMBGI63+Vzy1K2qkWiGjcE
+         uDfYfEteOZMVVuHB1gpExCmool4kao83Vf04FWpM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>,
-        syzbot+aac8d0d7205f112045d2@syzkaller.appspotmail.com,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 06/44] media: hdpvr: Add device num check and handling
-Date:   Sun, 22 Sep 2019 15:00:24 -0400
-Message-Id: <20190922190103.4906-6-sashal@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 56/60] e1000e: add workaround for possible stalled packet
+Date:   Sun, 22 Sep 2019 14:59:29 -0400
+Message-Id: <20190922185934.4305-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190922190103.4906-1-sashal@kernel.org>
-References: <20190922190103.4906-1-sashal@kernel.org>
+In-Reply-To: <20190922185934.4305-1-sashal@kernel.org>
+References: <20190922185934.4305-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,57 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit d4a6a9537bc32811486282206ecfb7c53754b74d ]
+[ Upstream commit e5e9a2ecfe780975820e157b922edee715710b66 ]
 
-Add hdpvr device num check and error handling
+This works around a possible stalled packet issue, which may occur due to
+clock recovery from the PCH being too slow, when the LAN is transitioning
+from K1 at 1G link speed.
 
-We need to increment the device count atomically before we checkout a
-device to make sure that we do not reach the max count, otherwise we get
-out-of-bounds errors as reported by syzbot.
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204057
 
-Reported-and-tested-by: syzbot+aac8d0d7205f112045d2@syzkaller.appspotmail.com
-
-Signed-off-by: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/hdpvr/hdpvr-core.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/intel/e1000e/ich8lan.c | 10 ++++++++++
+ drivers/net/ethernet/intel/e1000e/ich8lan.h |  2 +-
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/usb/hdpvr/hdpvr-core.c b/drivers/media/usb/hdpvr/hdpvr-core.c
-index 08f0ca7aa012e..924517b09fc9f 100644
---- a/drivers/media/usb/hdpvr/hdpvr-core.c
-+++ b/drivers/media/usb/hdpvr/hdpvr-core.c
-@@ -278,6 +278,7 @@ static int hdpvr_probe(struct usb_interface *interface,
- #endif
- 	size_t buffer_size;
- 	int i;
-+	int dev_num;
- 	int retval = -ENOMEM;
- 
- 	/* allocate memory for our device state and initialize it */
-@@ -386,8 +387,17 @@ static int hdpvr_probe(struct usb_interface *interface,
- 	}
- #endif
- 
-+	dev_num = atomic_inc_return(&dev_nr);
-+	if (dev_num >= HDPVR_MAX) {
-+		v4l2_err(&dev->v4l2_dev,
-+			 "max device number reached, device register failed\n");
-+		atomic_dec(&dev_nr);
-+		retval = -ENODEV;
-+		goto reg_fail;
-+	}
+diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.c b/drivers/net/ethernet/intel/e1000e/ich8lan.c
+index dc7d671b903c5..625008e8cb0df 100644
+--- a/drivers/net/ethernet/intel/e1000e/ich8lan.c
++++ b/drivers/net/ethernet/intel/e1000e/ich8lan.c
+@@ -1447,6 +1447,16 @@ static s32 e1000_check_for_copper_link_ich8lan(struct e1000_hw *hw)
+ 			else
+ 				phy_reg |= 0xFA;
+ 			e1e_wphy_locked(hw, I217_PLL_CLOCK_GATE_REG, phy_reg);
 +
- 	retval = hdpvr_register_videodev(dev, &interface->dev,
--				    video_nr[atomic_inc_return(&dev_nr)]);
-+				    video_nr[dev_num]);
- 	if (retval < 0) {
- 		v4l2_err(&dev->v4l2_dev, "registering videodev failed\n");
- 		goto reg_fail;
++			if (speed == SPEED_1000) {
++				hw->phy.ops.read_reg_locked(hw, HV_PM_CTRL,
++							    &phy_reg);
++
++				phy_reg |= HV_PM_CTRL_K1_CLK_REQ;
++
++				hw->phy.ops.write_reg_locked(hw, HV_PM_CTRL,
++							     phy_reg);
++			}
+ 		}
+ 		hw->phy.ops.release(hw);
+ 
+diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.h b/drivers/net/ethernet/intel/e1000e/ich8lan.h
+index 67163ca898ba2..6374c8fc76a8d 100644
+--- a/drivers/net/ethernet/intel/e1000e/ich8lan.h
++++ b/drivers/net/ethernet/intel/e1000e/ich8lan.h
+@@ -227,7 +227,7 @@
+ 
+ /* PHY Power Management Control */
+ #define HV_PM_CTRL		PHY_REG(770, 17)
+-#define HV_PM_CTRL_PLL_STOP_IN_K1_GIGA	0x100
++#define HV_PM_CTRL_K1_CLK_REQ		0x200
+ #define HV_PM_CTRL_K1_ENABLE		0x4000
+ 
+ #define I217_PLL_CLOCK_GATE_REG	PHY_REG(772, 28)
 -- 
 2.20.1
 
