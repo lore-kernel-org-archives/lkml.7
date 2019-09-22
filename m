@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1629BC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31549C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D73492067B
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:21:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 070062067B
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:21:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180066;
-	bh=8zGTGHMcYcZ5vPDHzmRtC8gsvJEvulmKyj4ydCxN5i8=;
+	s=default; t=1569180067;
+	bh=fP7mtkBeozDd3ru7q/dWJl8QsplEw+feOxj/O/dCgDs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IH9mJK2NWV6PHSKEyEftlJAyw4aQm60l4IDKZYekE8N8smpcxExSNnRh16TbKFTc9
-	 uPeG8pQQ6Biv7K5mbkbK+kWrqUAMJEmuGL7OwWzaDPnovpiZCucjYIcnLWA5Aeu3Fp
-	 McQHYk5sAixbijpvLUr6UJrXteY8jAlE+zHWlix8=
+	b=sUvRQSTVlvPWJGZyFDa9fDoojIgapqtm6Q1UleI4phfHni0oMgjy8iJ6srx045VuA
+	 DveclquCdHjXQD6vpGfjUuvPJi36vvCI+MsqqIl36oYgPUclGKcVR+MYXHnhOnSNs1
+	 bYENok7oHIVFGReAwrH56ZxBcI00KGU/4UUeQpSs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394506AbfIVSyT (ORCPT
+        id S2393727AbfIVSyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:54:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54014 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:54:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394433AbfIVSxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:53:52 -0400
+        id S2394410AbfIVSxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:53:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3E0A2190F;
-        Sun, 22 Sep 2019 18:53:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03E1F21BE5;
+        Sun, 22 Sep 2019 18:53:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178431;
-        bh=8zGTGHMcYcZ5vPDHzmRtC8gsvJEvulmKyj4ydCxN5i8=;
+        s=default; t=1569178426;
+        bh=fP7mtkBeozDd3ru7q/dWJl8QsplEw+feOxj/O/dCgDs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D+T8lTtoNL73gugQWN8N9OVN11sNyTpevH5+cCSxutj0luBrdUAwcexJxSrNeNorU
-         2vWOwdK8Utm7LR+KJL/+LEkdmrLnRZC2M4WwZ8HUho7Bhiej8XtVXxgbT+yYEVeXQj
-         JVqC16ClBwpe3KFru4f8Ev/GKUyPFK9gFw1iRjYo=
+        b=F6XjAJuHpMBA8eSpRAlG+KMKpy6NwOGNs+QZtTVzLPmHNEdvCqcVWVGaVJM/NN3US
+         Y4upe4CDPBbp9vAbXYSaMvKOMCaorSvJi6I5eAE7Q0Cj/OqoEvaw8iD/EsL3P8pwFU
+         kGrlBUvZKAy13UV/BmPmVBsyP8FoWAFUntAYRZn4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
         Matthias Kaehlcke <mka@chromium.org>,
         Douglas Anderson <dianders@chromium.org>,
         Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 167/185] mmc: dw_mmc: Re-store SDIO IRQs mask at system resume
-Date:   Sun, 22 Sep 2019 14:49:05 -0400
-Message-Id: <20190922184924.32534-167-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 163/185] mmc: core: Clarify sdio_irq_pending flag for MMC_CAP2_SDIO_IRQ_NOTHREAD
+Date:   Sun, 22 Sep 2019 14:49:01 -0400
+Message-Id: <20190922184924.32534-163-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -62,44 +62,98 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ulf Hansson <ulf.hansson@linaro.org>
 
-[ Upstream commit 7c526608d5afb62cbc967225e2ccaacfdd142e9d ]
+[ Upstream commit 36d57efb4af534dd6b442ea0b9a04aa6dfa37abe ]
 
-In cases when SDIO IRQs have been enabled, runtime suspend is prevented by
-the driver. However, this still means dw_mci_runtime_suspend|resume() gets
-called during system suspend/resume, via pm_runtime_force_suspend|resume().
-This means during system suspend/resume, the register context of the dw_mmc
-device most likely loses its register context, even in cases when SDIO IRQs
-have been enabled.
+The sdio_irq_pending flag is used to let host drivers indicate that it has
+signaled an IRQ. If that is the case and we only have a single SDIO func
+that have claimed an SDIO IRQ, our assumption is that we can avoid reading
+the SDIO_CCCR_INTx register and just call the SDIO func irq handler
+immediately. This makes sense, but the flag is set/cleared in a somewhat
+messy order, let's fix that up according to below.
 
-To re-enable the SDIO IRQs during system resume, the dw_mmc driver
-currently relies on the mmc core to re-enable the SDIO IRQs when it resumes
-the SDIO card, but this isn't the recommended solution. Instead, it's
-better to deal with this locally in the dw_mmc driver, so let's do that.
+First, the flag is currently set in sdio_run_irqs(), which is executed as a
+work that was scheduled from sdio_signal_irq(). To make it more implicit
+that the host have signaled an IRQ, let's instead immediately set the flag
+in sdio_signal_irq(). This also makes the behavior consistent with host
+drivers that uses the legacy, mmc_signal_sdio_irq() API. This have no
+functional impact, because we don't expect host drivers to call
+sdio_signal_irq() until after the work (sdio_run_irqs()) have been executed
+anyways.
+
+Second, currently we never clears the flag when using the sdio_run_irqs()
+work, but only when using the sdio_irq_thread(). Let make the behavior
+consistent, by moving the flag to be cleared inside the common
+process_sdio_pending_irqs() function. Additionally, tweak the behavior of
+the flag slightly, by avoiding to clear it unless we processed the SDIO
+IRQ. The purpose with this at this point, is to keep the information about
+whether there have been an SDIO IRQ signaled by the host, so at system
+resume we can decide to process it without reading the SDIO_CCCR_INTx
+register.
 
 Tested-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Reviewed-by: Douglas Anderson <dianders@chromium.org>
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/dw_mmc.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/mmc/core/sdio_irq.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-index 60c3a06e3469a..45c3490546839 100644
---- a/drivers/mmc/host/dw_mmc.c
-+++ b/drivers/mmc/host/dw_mmc.c
-@@ -3482,6 +3482,10 @@ int dw_mci_runtime_resume(struct device *dev)
- 	/* Force setup bus to guarantee available clock output */
- 	dw_mci_setup_bus(host->slot, true);
+diff --git a/drivers/mmc/core/sdio_irq.c b/drivers/mmc/core/sdio_irq.c
+index 9f54a259a1b36..e4823ef0a0de9 100644
+--- a/drivers/mmc/core/sdio_irq.c
++++ b/drivers/mmc/core/sdio_irq.c
+@@ -31,6 +31,7 @@ static int process_sdio_pending_irqs(struct mmc_host *host)
+ {
+ 	struct mmc_card *card = host->card;
+ 	int i, ret, count;
++	bool sdio_irq_pending = host->sdio_irq_pending;
+ 	unsigned char pending;
+ 	struct sdio_func *func;
  
-+	/* Re-enable SDIO interrupts. */
-+	if (sdio_irq_claimed(host->slot->mmc))
-+		__dw_mci_enable_sdio_irq(host->slot, 1);
+@@ -38,13 +39,16 @@ static int process_sdio_pending_irqs(struct mmc_host *host)
+ 	if (mmc_card_suspended(card))
+ 		return 0;
+ 
++	/* Clear the flag to indicate that we have processed the IRQ. */
++	host->sdio_irq_pending = false;
 +
- 	/* Now that slots are all setup, we can enable card detect */
- 	dw_mci_enable_cd(host);
+ 	/*
+ 	 * Optimization, if there is only 1 function interrupt registered
+ 	 * and we know an IRQ was signaled then call irq handler directly.
+ 	 * Otherwise do the full probe.
+ 	 */
+ 	func = card->sdio_single_irq;
+-	if (func && host->sdio_irq_pending) {
++	if (func && sdio_irq_pending) {
+ 		func->irq_handler(func);
+ 		return 1;
+ 	}
+@@ -96,7 +100,6 @@ void sdio_run_irqs(struct mmc_host *host)
+ {
+ 	mmc_claim_host(host);
+ 	if (host->sdio_irqs) {
+-		host->sdio_irq_pending = true;
+ 		process_sdio_pending_irqs(host);
+ 		if (host->ops->ack_sdio_irq)
+ 			host->ops->ack_sdio_irq(host);
+@@ -115,6 +118,7 @@ void sdio_irq_work(struct work_struct *work)
  
+ void sdio_signal_irq(struct mmc_host *host)
+ {
++	host->sdio_irq_pending = true;
+ 	queue_delayed_work(system_wq, &host->sdio_irq_work, 0);
+ }
+ EXPORT_SYMBOL_GPL(sdio_signal_irq);
+@@ -160,7 +164,6 @@ static int sdio_irq_thread(void *_host)
+ 		if (ret)
+ 			break;
+ 		ret = process_sdio_pending_irqs(host);
+-		host->sdio_irq_pending = false;
+ 		mmc_release_host(host);
+ 
+ 		/*
 -- 
 2.20.1
 
