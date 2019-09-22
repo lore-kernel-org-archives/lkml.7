@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E24C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92BEAC4740C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3B01206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:29:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61C472054F
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:29:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180560;
-	bh=3J51t1zJfEomA/al1Z3i4PXwF7s1o8TPuA25Tg3ecf4=;
+	s=default; t=1569180565;
+	bh=dFcVQl6E0c+wU1d5wfNevRmUe9k+SvO0hOvFIQK6V7I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KEYiRFjwSzVJ3sWf3+t8KNxB6nO3KnqJI8ghDRUBlDHy4wxT/OYXBvveUHyMSwqn9
-	 f4iB8x/5Eh8WaSJ+D4xdkbQfb04tYF2mq27vaSy+4PSGzRdPUqvfJtOauBXbEq9fvq
-	 4o/7TM+/t+gScIVlnu89F1cSuPMFntb1TCQvM9kg=
+	b=Ty/0mA6ReIOD5WgJh5B3hOXciL9DiBiIxCugBsfSDVnChcMdaMKjzFX+oVFJeI7qT
+	 wHKbILNBxZA1skaK1bSRoX//9PAdBK/N5+UGDGMbna35Emz3/KI5aP00jx1KB13vJe
+	 pQ3nEG+94JabBzoJw2hKzMAeN2/GFZvusGOSZbfk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731739AbfIVT3T (ORCPT
+        id S2392784AbfIVSuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:29:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47216 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:50:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392822AbfIVSuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:50:16 -0400
+        id S2391593AbfIVStp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:49:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16054208C2;
-        Sun, 22 Sep 2019 18:50:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E526A214AF;
+        Sun, 22 Sep 2019 18:49:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178215;
-        bh=3J51t1zJfEomA/al1Z3i4PXwF7s1o8TPuA25Tg3ecf4=;
+        s=default; t=1569178184;
+        bh=dFcVQl6E0c+wU1d5wfNevRmUe9k+SvO0hOvFIQK6V7I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XYMfmH+ZxwN/A+GO25p+04Jf5aXaqPvmItLiboNxDB9nxck02GHKcuwBrik6IsA0o
-         WhMIiOZ3213OEaECRWouCFpQ1gwZOSRCcsS5yew0WZHJLJJG/uSYIJyMZ/PqW1dh/B
-         EamE+jEYwKf7dostFbGE0H6Nuq6+inqnuLYxOChs=
+        b=dJhWoBsZCLt3NpwtsC2cx40X12QIeNHmGVsEbsFIvSVtW6N349LzZualMql8NbXlt
+         ErEq+vMaOVbVBub/9w2XIWmdu4XblSaZY+6mJjn8IyY/C6GzLGcTqCqjTbkjkrAulu
+         Tx+jroVeDOZ/LbgQpP3w4yv4CHTEj8kdi3PTR2wc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 020/185] media: i2c: ov5640: Check for devm_gpiod_get_optional() error
-Date:   Sun, 22 Sep 2019 14:46:38 -0400
-Message-Id: <20190922184924.32534-20-sashal@kernel.org>
+Cc:     Pan Xiuli <xiuli.pan@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 014/185] ASoC: SOF: pci: mark last_busy value at runtime PM init
+Date:   Sun, 22 Sep 2019 14:46:32 -0400
+Message-Id: <20190922184924.32534-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -60,41 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+From: Pan Xiuli <xiuli.pan@linux.intel.com>
 
-[ Upstream commit 8791a102ce579346cea9d2f911afef1c1985213c ]
+[ Upstream commit f1b1b9b136827915624136624ff54aba5890a15b ]
 
-The power down and reset GPIO are optional, but the return value
-from devm_gpiod_get_optional() needs to be checked and propagated
-in the case of error, so that probe deferral can work.
+If last_busy value is not set at runtime PM enable, the device will be
+suspend immediately after usage counter is 0. Set the last_busy value to
+make sure delay is working at first boot up.
 
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Pan Xiuli <xiuli.pan@linux.intel.com>
+Signed-off-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20190722141402.7194-2-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/ov5640.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ sound/soc/sof/sof-pci-dev.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
-index 759d60c6d6304..afe7920557a8f 100644
---- a/drivers/media/i2c/ov5640.c
-+++ b/drivers/media/i2c/ov5640.c
-@@ -3022,9 +3022,14 @@ static int ov5640_probe(struct i2c_client *client,
- 	/* request optional power down pin */
- 	sensor->pwdn_gpio = devm_gpiod_get_optional(dev, "powerdown",
- 						    GPIOD_OUT_HIGH);
-+	if (IS_ERR(sensor->pwdn_gpio))
-+		return PTR_ERR(sensor->pwdn_gpio);
+diff --git a/sound/soc/sof/sof-pci-dev.c b/sound/soc/sof/sof-pci-dev.c
+index b778dffb2d25c..49daf1390dac0 100644
+--- a/sound/soc/sof/sof-pci-dev.c
++++ b/sound/soc/sof/sof-pci-dev.c
+@@ -203,6 +203,9 @@ static void sof_pci_probe_complete(struct device *dev)
+ 	 */
+ 	pm_runtime_allow(dev);
+ 
++	/* mark last_busy for pm_runtime to make sure not suspend immediately */
++	pm_runtime_mark_last_busy(dev);
 +
- 	/* request optional reset pin */
- 	sensor->reset_gpio = devm_gpiod_get_optional(dev, "reset",
- 						     GPIOD_OUT_HIGH);
-+	if (IS_ERR(sensor->reset_gpio))
-+		return PTR_ERR(sensor->reset_gpio);
- 
- 	v4l2_i2c_subdev_init(&sensor->sd, client, &ov5640_subdev_ops);
- 
+ 	/* follow recommendation in pci-driver.c to decrement usage counter */
+ 	pm_runtime_put_noidle(dev);
+ }
 -- 
 2.20.1
 
