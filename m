@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78541C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E70C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4384821A4C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:45:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A23EA214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:45:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569177921;
-	bh=zZTgHccHDWS/buFoyAmnZgUe+Dc+MY2IQTRiMP7Y4oY=;
+	s=default; t=1569177928;
+	bh=5+4+EyeHu/Ui4dWZQbgh+L+4DfByRKwtCBXnWaSYN9Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vurPf4Kqy94fAaEiqtQsjsB0iX/zbYqvD/2VTp/oAYAGcqGqLbeLUeeJ4k/QPhALX
-	 tB3XntZbOOC3bgwxMWfGg6qlPk0KbP4bgH91huu01fNFVsspOoSUbPuj8SkqOkSynI
-	 URpNzD27p09kC9zFjO8pxgmXK35Qi1xfhagKQWyg=
+	b=smYXALiQ7DlsMzX77L4VqFc0nzsacsnHQMBZO3PlSK6qnlSOBBMNHRzWbf+evqJUf
+	 s8ZTOVxx29ZbN2Kht+SnfRUQNgPCG+BbVJsvEgBO0YceLkhKZQlOPGLVIWh0V8qSz6
+	 DI0iRA8w6zGHt7oqVeoU6iVrlsSMjmqIR2G+w0HA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389146AbfIVSpU (ORCPT
+        id S2389264AbfIVSp1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:45:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40776 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:45:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389045AbfIVSpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:45:13 -0400
+        id S2389209AbfIVSpZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:45:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E2F52186A;
-        Sun, 22 Sep 2019 18:45:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8806621A4A;
+        Sun, 22 Sep 2019 18:45:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569177912;
-        bh=zZTgHccHDWS/buFoyAmnZgUe+Dc+MY2IQTRiMP7Y4oY=;
+        s=default; t=1569177924;
+        bh=5+4+EyeHu/Ui4dWZQbgh+L+4DfByRKwtCBXnWaSYN9Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BsLEtu60RvIpeIyQvB27v8+bl7ksT+rfgQXOTUb9vPY9D4JZ1zvQAYr1GMrTUjF6I
-         OKe/4lo9Z4EnA5ldyZ5CAeCwGBtyOwuyuycluzUa/et/aBRuqm74hVVNz+71yEakMy
-         v+w3GUvxfxasF2xgxH79JO8R/+kecxpiwIU0nUH8=
+        b=uSJqOMJWXmi6cG9WdypvYVFfkzv6iM5Fpshnhh42Jwl51AZ1w3R2hBlUs9uVnvZHB
+         mUwtB/QfGrjcznJFMKEKnJs0ydDkqyDoqJ6OxLp65ynDc85yJMgDjDZM41TljOKq5u
+         I+rWBYwzifV4SzzKwqQSmcx8e4PakLBvuczCYsfw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
+Cc:     Robert Richter <rrichter@marvell.com>,
+        Borislav Petkov <bp@suse.de>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 027/203] x86/apic: Make apic_pending_intr_clear() more robust
-Date:   Sun, 22 Sep 2019 14:40:53 -0400
-Message-Id: <20190922184350.30563-27-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 036/203] EDAC/mc: Fix grain_bits calculation
+Date:   Sun, 22 Sep 2019 14:41:02 -0400
+Message-Id: <20190922184350.30563-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -59,201 +63,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Robert Richter <rrichter@marvell.com>
 
-[ Upstream commit cc8bf191378c1da8ad2b99cf470ee70193ace84e ]
+[ Upstream commit 3724ace582d9f675134985727fd5e9811f23c059 ]
 
-In course of developing shorthand based IPI support issues with the
-function which tries to clear eventually pending ISR bits in the local APIC
-were observed.
+The grain in EDAC is defined as "minimum granularity for an error
+report, in bytes". The following calculation of the grain_bits in
+edac_mc is wrong:
 
-  1) O-day testing triggered the WARN_ON() in apic_pending_intr_clear().
+	grain_bits = fls_long(e->grain) + 1;
 
-     This warning is emitted when the function fails to clear pending ISR
-     bits or observes pending IRR bits which are not delivered to the CPU
-     after the stale ISR bit(s) are ACK'ed.
+Where grain_bits is defined as:
 
-     Unfortunately the function only emits a WARN_ON() and fails to dump
-     the IRR/ISR content. That's useless for debugging.
+	grain = 1 << grain_bits
 
-     Feng added spot on debug printk's which revealed that the stale IRR
-     bit belonged to the APIC timer interrupt vector, but adding ad hoc
-     debug code does not help with sporadic failures in the field.
+Example:
 
-     Rework the loop so the full IRR/ISR contents are saved and on failure
-     dumped.
+	grain = 8	# 64 bit (8 bytes)
+	grain_bits = fls_long(8) + 1
+	grain_bits = 4 + 1 = 5
 
-  2) The loop termination logic is interesting at best.
+	grain = 1 << grain_bits
+	grain = 1 << 5 = 32
 
-     If the machine has no TSC or cpu_khz is not known yet it tries 1
-     million times to ack stale IRR/ISR bits. What?
+Replace it with the correct calculation:
 
-     With TSC it uses the TSC to calculate the loop termination. It takes a
-     timestamp at entry and terminates the loop when:
+	grain_bits = fls_long(e->grain - 1);
 
-     	  (rdtsc() - start_timestamp) >= (cpu_hkz << 10)
+The example gives now:
 
-     That's roughly one second.
+	grain_bits = fls_long(8 - 1)
+	grain_bits = fls_long(7)
+	grain_bits = 3
 
-     Both methods are problematic. The APIC has 256 vectors, which means
-     that in theory max. 256 IRR/ISR bits can be set. In practice this is
-     impossible and the chance that more than a few bits are set is close
-     to zero.
+	grain = 1 << 3 = 8
 
-     With the pure loop based approach the 1 million retries are complete
-     overkill.
+Also, check if the hardware reports a reasonable grain != 0 and fallback
+with a warning to 1 byte granularity otherwise.
 
-     With TSC this can terminate too early in a guest which is running on a
-     heavily loaded host even with only a couple of IRR/ISR bits set. The
-     reason is that after acknowledging the highest priority ISR bit,
-     pending IRRs must get serviced first before the next round of
-     acknowledge can take place as the APIC (real and virtualized) does not
-     honour EOI without a preceeding interrupt on the CPU. And every APIC
-     read/write takes a VMEXIT if the APIC is virtualized. While trying to
-     reproduce the issue 0-day reported it was observed that the guest was
-     scheduled out long enough under heavy load that it terminated after 8
-     iterations.
+ [ bp: massage a bit. ]
 
-     Make the loop terminate after 512 iterations. That's plenty enough
-     in any case and does not take endless time to complete.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20190722105219.158847694@linutronix.de
+Signed-off-by: Robert Richter <rrichter@marvell.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+Cc: James Morse <james.morse@arm.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Tony Luck <tony.luck@intel.com>
+Link: https://lkml.kernel.org/r/20190624150758.6695-2-rrichter@marvell.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/apic/apic.c | 107 +++++++++++++++++++++---------------
- 1 file changed, 63 insertions(+), 44 deletions(-)
+ drivers/edac/edac_mc.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index 08fb79f377936..436d462dde715 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -1495,54 +1495,72 @@ static void lapic_setup_esr(void)
- 			oldvalue, value);
- }
+diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
+index 64922c8fa7e3b..d899d86897d06 100644
+--- a/drivers/edac/edac_mc.c
++++ b/drivers/edac/edac_mc.c
+@@ -1235,9 +1235,13 @@ void edac_mc_handle_error(const enum hw_event_mc_err_type type,
+ 	if (p > e->location)
+ 		*(p - 1) = '\0';
  
--static void apic_pending_intr_clear(void)
-+#define APIC_IR_REGS		APIC_ISR_NR
-+#define APIC_IR_BITS		(APIC_IR_REGS * 32)
-+#define APIC_IR_MAPSIZE		(APIC_IR_BITS / BITS_PER_LONG)
+-	/* Report the error via the trace interface */
+-	grain_bits = fls_long(e->grain) + 1;
++	/* Sanity-check driver-supplied grain value. */
++	if (WARN_ON_ONCE(!e->grain))
++		e->grain = 1;
 +
-+union apic_ir {
-+	unsigned long	map[APIC_IR_MAPSIZE];
-+	u32		regs[APIC_IR_REGS];
-+};
-+
-+static bool apic_check_and_ack(union apic_ir *irr, union apic_ir *isr)
- {
--	long long max_loops = cpu_khz ? cpu_khz : 1000000;
--	unsigned long long tsc = 0, ntsc;
--	unsigned int queued;
--	unsigned long value;
--	int i, j, acked = 0;
-+	int i, bit;
-+
-+	/* Read the IRRs */
-+	for (i = 0; i < APIC_IR_REGS; i++)
-+		irr->regs[i] = apic_read(APIC_IRR + i * 0x10);
-+
-+	/* Read the ISRs */
-+	for (i = 0; i < APIC_IR_REGS; i++)
-+		isr->regs[i] = apic_read(APIC_ISR + i * 0x10);
++	grain_bits = fls_long(e->grain - 1);
  
--	if (boot_cpu_has(X86_FEATURE_TSC))
--		tsc = rdtsc();
- 	/*
--	 * After a crash, we no longer service the interrupts and a pending
--	 * interrupt from previous kernel might still have ISR bit set.
--	 *
--	 * Most probably by now CPU has serviced that pending interrupt and
--	 * it might not have done the ack_APIC_irq() because it thought,
--	 * interrupt came from i8259 as ExtInt. LAPIC did not get EOI so it
--	 * does not clear the ISR bit and cpu thinks it has already serivced
--	 * the interrupt. Hence a vector might get locked. It was noticed
--	 * for timer irq (vector 0x31). Issue an extra EOI to clear ISR.
-+	 * If the ISR map is not empty. ACK the APIC and run another round
-+	 * to verify whether a pending IRR has been unblocked and turned
-+	 * into a ISR.
- 	 */
--	do {
--		queued = 0;
--		for (i = APIC_ISR_NR - 1; i >= 0; i--)
--			queued |= apic_read(APIC_IRR + i*0x10);
--
--		for (i = APIC_ISR_NR - 1; i >= 0; i--) {
--			value = apic_read(APIC_ISR + i*0x10);
--			for_each_set_bit(j, &value, 32) {
--				ack_APIC_irq();
--				acked++;
--			}
--		}
--		if (acked > 256) {
--			pr_err("LAPIC pending interrupts after %d EOI\n", acked);
--			break;
--		}
--		if (queued) {
--			if (boot_cpu_has(X86_FEATURE_TSC) && cpu_khz) {
--				ntsc = rdtsc();
--				max_loops = (long long)cpu_khz << 10;
--				max_loops -= ntsc - tsc;
--			} else {
--				max_loops--;
--			}
--		}
--	} while (queued && max_loops > 0);
--	WARN_ON(max_loops <= 0);
-+	if (!bitmap_empty(isr->map, APIC_IR_BITS)) {
-+		/*
-+		 * There can be multiple ISR bits set when a high priority
-+		 * interrupt preempted a lower priority one. Issue an ACK
-+		 * per set bit.
-+		 */
-+		for_each_set_bit(bit, isr->map, APIC_IR_BITS)
-+			ack_APIC_irq();
-+		return true;
-+	}
-+
-+	return !bitmap_empty(irr->map, APIC_IR_BITS);
-+}
-+
-+/*
-+ * After a crash, we no longer service the interrupts and a pending
-+ * interrupt from previous kernel might still have ISR bit set.
-+ *
-+ * Most probably by now the CPU has serviced that pending interrupt and it
-+ * might not have done the ack_APIC_irq() because it thought, interrupt
-+ * came from i8259 as ExtInt. LAPIC did not get EOI so it does not clear
-+ * the ISR bit and cpu thinks it has already serivced the interrupt. Hence
-+ * a vector might get locked. It was noticed for timer irq (vector
-+ * 0x31). Issue an extra EOI to clear ISR.
-+ *
-+ * If there are pending IRR bits they turn into ISR bits after a higher
-+ * priority ISR bit has been acked.
-+ */
-+static void apic_pending_intr_clear(void)
-+{
-+	union apic_ir irr, isr;
-+	unsigned int i;
-+
-+	/* 512 loops are way oversized and give the APIC a chance to obey. */
-+	for (i = 0; i < 512; i++) {
-+		if (!apic_check_and_ack(&irr, &isr))
-+			return;
-+	}
-+	/* Dump the IRR/ISR content if that failed */
-+	pr_warn("APIC: Stale IRR: %256pb ISR: %256pb\n", irr.map, isr.map);
- }
- 
- /**
-@@ -1610,6 +1628,7 @@ static void setup_local_APIC(void)
- 	value &= ~APIC_TPRI_MASK;
- 	apic_write(APIC_TASKPRI, value);
- 
-+	/* Clear eventually stale ISR/IRR bits */
- 	apic_pending_intr_clear();
- 
- 	/*
++	/* Report the error via the trace interface */
+ 	if (IS_ENABLED(CONFIG_RAS))
+ 		trace_mc_event(type, e->msg, e->label, e->error_count,
+ 			       mci->mc_idx, e->top_layer, e->mid_layer,
 -- 
 2.20.1
 
