@@ -2,108 +2,102 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE4CC4360D
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 02:29:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E612C4740C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 02:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A2A420820
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 02:29:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="D6HIbcGc"
+	by mail.kernel.org (Postfix) with ESMTP id 45F0E217F5
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 02:38:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727197AbfIVC3s (ORCPT
+        id S1727236AbfIVCid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Sep 2019 22:29:48 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:38744 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727170AbfIVC3s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Sep 2019 22:29:48 -0400
-Received: by mail-pf1-f195.google.com with SMTP id h195so6939104pfe.5
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Sep 2019 19:29:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IvKUda3wPP3iGFTGjdewk44E9Cz8OvmVZ56gL+Awvg0=;
-        b=D6HIbcGcbVjHy2b7DlBfG9Y+aHK9QL6IyXoebFROZ29uGsG6aIHblPieZ7v6UxUElG
-         5pnVfsZDALooIRBm4LBwiDgjxazF9tv0mBz766L1TK3JfFVBIyRen4jiscZ/G4hIx1ao
-         ZC6a646ylKmE4GEjaFmg3JX0bTi193Dlt47Q3smyHKTzcQMmKhI9hNE6qBUZHPEv9AQV
-         GG1NKH3v0Yc6RcL4SVaC2/nFWeVb+ZPU3wennCi3uSJswOW2ayv8opfg9IEt+cj4h0SF
-         u5q5HaGCycT4Wiqel2m4hbKQaAtbBnlNgfGol01IgBwtmvRzFwbKwxWZcfNj4Fa/HwIq
-         J6yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IvKUda3wPP3iGFTGjdewk44E9Cz8OvmVZ56gL+Awvg0=;
-        b=T9gxyJ9b6GrOrMvDv5oy4T4/i9FOaT1oaYLRrDzXVAYGD7Wr1PIZLuLgneQuisB2LO
-         YvN6efGTnP8A3NTlnJK9qR5Y30oRwJwdVMBOym+V/R/jqCdi7hriiTapTRO9sLXqGbvI
-         lmwv9YPmKwNJhm53EYyONzf/cToxZHV6h7Hw1plpSflZ9Dgu+dua0EMxii+HWhiOPRO+
-         HqrStEWX5fNIGMyMJqhpnMUZ+kL8xcxy/veY0xC99LdX5ETTK8aQnd2+LBR4feSbT6/l
-         bugYiice67NIEj4S35ax24uf8KM5BxuiIvwRUWyHzpEMXq1wrzWIAE1P/gv8GfFkNOzA
-         7L6w==
-X-Gm-Message-State: APjAAAU6mIjQgzDXIFBA+tOTLJ1mBrypE2TTHKIwiE5QoNQ+6yyUluOK
-        JCtTycyM7yqyQBCtq5NtlhPFwhulpRU=
-X-Google-Smtp-Source: APXvYqwGl1aIINKtWYdwPQC4cNT4BuSkU4fku8Fv7Ulxh40F2ddskKnghn4A6szxjTsGvRyimPm98A==
-X-Received: by 2002:a17:90b:8cf:: with SMTP id ds15mr5296174pjb.36.1569119385495;
-        Sat, 21 Sep 2019 19:29:45 -0700 (PDT)
-Received: from localhost.localdomain (122-117-179-2.HINET-IP.hinet.net. [122.117.179.2])
-        by smtp.gmail.com with ESMTPSA id h4sm6936386pfg.159.2019.09.21.19.29.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Sep 2019 19:29:44 -0700 (PDT)
-From:   Axel Lin <axel.lin@ingics.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Philippe Schenker <philippe.schenker@toradex.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH] regulator: fixed: Prevent NULL pointer dereference when !CONFIG_OF
-Date:   Sun, 22 Sep 2019 10:29:28 +0800
-Message-Id: <20190922022928.28355-1-axel.lin@ingics.com>
-X-Mailer: git-send-email 2.20.1
+        Sat, 21 Sep 2019 22:38:33 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39534 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727070AbfIVCid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Sep 2019 22:38:33 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DB2243086218;
+        Sun, 22 Sep 2019 02:38:32 +0000 (UTC)
+Received: from [10.72.12.58] (ovpn-12-58.pek2.redhat.com [10.72.12.58])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7E5B85D9E2;
+        Sun, 22 Sep 2019 02:38:28 +0000 (UTC)
+Subject: Re: [PATCH RESEND] nbd: avoid losing pointer to reallocated
+ config->socks in nbd_add_socket
+To:     Eugene Syromiatnikov <esyr@redhat.com>,
+        linux-block@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        nbd@other.debian.org
+Cc:     linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
+References: <20190920160644.GA15739@asgard.redhat.com>
+From:   Xiubo Li <xiubli@redhat.com>
+Message-ID: <b8c7fdec-700d-e4a6-9fd6-a63c09e7a613@redhat.com>
+Date:   Sun, 22 Sep 2019 10:38:24 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190920160644.GA15739@asgard.redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Sun, 22 Sep 2019 02:38:32 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use of_device_get_match_data which has NULL test for match before
-dereference match->data. Add NULL test for drvtype so it still works
-for fixed_voltage_ops when !CONFIG_OF.
+On 2019/9/21 0:06, Eugene Syromiatnikov wrote:
+> In the (very unlikely) case of config->socks reallocation success
+> and nsock allocation failure config->nsock will not get updated
+> with the new pointer to socks array. Fix it by updating config->socks
+> right after reallocation successfulness check.
+>
+> Fixes: 9561a7ade0c2 ("nbd: add multi-connection support")
+> Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
+> Cc: stable@vger.kernel.org # 4.10+
+> ---
+>   drivers/block/nbd.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+> index a8e3815..a04c686 100644
+> --- a/drivers/block/nbd.c
+> +++ b/drivers/block/nbd.c
+> @@ -987,14 +987,14 @@ static int nbd_add_socket(struct nbd_device *nbd, unsigned long arg,
+>   		sockfd_put(sock);
+>   		return -ENOMEM;
+>   	}
+> +	config->socks = socks;
+> +
+>   	nsock = kzalloc(sizeof(struct nbd_sock), GFP_KERNEL);
+>   	if (!nsock) {
+>   		sockfd_put(sock);
+>   		return -ENOMEM;
+>   	}
+>   
+> -	config->socks = socks;
+> -
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
----
- drivers/regulator/fixed.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+This makes sense.
 
-diff --git a/drivers/regulator/fixed.c b/drivers/regulator/fixed.c
-index d90a6fd8cbc7..f81533070058 100644
---- a/drivers/regulator/fixed.c
-+++ b/drivers/regulator/fixed.c
-@@ -144,8 +144,7 @@ static int reg_fixed_voltage_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct fixed_voltage_config *config;
- 	struct fixed_voltage_data *drvdata;
--	const struct fixed_dev_type *drvtype =
--		of_match_device(dev->driver->of_match_table, dev)->data;
-+	const struct fixed_dev_type *drvtype = of_device_get_match_data(dev);
- 	struct regulator_config cfg = { };
- 	enum gpiod_flags gflags;
- 	int ret;
-@@ -177,7 +176,7 @@ static int reg_fixed_voltage_probe(struct platform_device *pdev)
- 	drvdata->desc.type = REGULATOR_VOLTAGE;
- 	drvdata->desc.owner = THIS_MODULE;
- 
--	if (drvtype->has_enable_clock) {
-+	if (drvtype && drvtype->has_enable_clock) {
- 		drvdata->desc.ops = &fixed_voltage_clkenabled_ops;
- 
- 		drvdata->enable_clock = devm_clk_get(dev, NULL);
--- 
-2.20.1
+If the socks allocating successes, then the old config->socks will be 
+freed by krealloc() and return the new one, but if the nsock allocating 
+fails, the config->socks will hold the released memory, which may cause 
+the kernel crash.
+
+Thanks
+
+BRs
+
+
+
+>   	nsock->fallback_index = -1;
+>   	nsock->dead = false;
+>   	mutex_init(&nsock->tx_lock);
+
 
