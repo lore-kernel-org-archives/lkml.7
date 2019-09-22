@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49405C4740C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8248C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 224B62054F
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93316206B6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:28:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180485;
-	bh=pBcD5qYEl+7A2rAULfW6SfUahiHD8dGgMVyMJC12Zlo=;
+	s=default; t=1569180490;
+	bh=cJprQ2OblI9iEzh9eo9uHXgZQJr/iyLO55MZ5AYFf+Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SPrcrzd65EVrgDonSwkqE1+ZzquNBwag12n+ampkozqsl5lW/7wt2izkEIU8uFBOK
-	 bH/25p8uPIL7Lz5ipFJYS9vz39VyUPddWYs4MWpfKzzuvOlCSrIWfCoynXDfFBX2p3
-	 c8PCqAj4fBdVIKLBO/8ipsJu1ZRespZZ+hr+M74M=
+	b=u9VXWTl+ajgThSsuiTxJ7KxdurlDjcF9wLc6hcfjV4e03ycyL0jP+pPmcrOQDlS+O
+	 /QoVnQJTeqRC+wklmlg5muAYsvF4V11EjNc8pnec1oz/IhvJ2MozwOWtYWRwj3dPA/
+	 YgyLe0qeRDLQfThw8nH47l44iaiSuGeiN3e0zSwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404176AbfIVSuz (ORCPT
+        id S2406725AbfIVT2J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:50:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48154 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:28:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392064AbfIVSut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:50:49 -0400
+        id S2404153AbfIVSux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:50:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03CC421D7C;
-        Sun, 22 Sep 2019 18:50:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF363208C2;
+        Sun, 22 Sep 2019 18:50:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178248;
-        bh=pBcD5qYEl+7A2rAULfW6SfUahiHD8dGgMVyMJC12Zlo=;
+        s=default; t=1569178252;
+        bh=cJprQ2OblI9iEzh9eo9uHXgZQJr/iyLO55MZ5AYFf+Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kgaKl79uhxeFNgjdn7ECGB2JV//dnvE4d1JICaAl79svXtHRRP3XIxxaTC3EqPCkr
-         /m93tLYzYPuM/y6sYapc3bCoB+9s03u0ITzeoDITIvSNdLUFmtUuC4+NR1pA6BWKgi
-         mSmlMCzTa4RSBTx0TBfRrq79jkb1qWHH/1MZx/dY=
+        b=iERvYUZn2BEIzyzhFhKWs9m5qB1Q3wsKGMjuxs3XfDpnZAzHcQ1SEZbJWMAjrF8/I
+         25DCPRDp4GwAaBksbz8LLivghRaL9VKB9fUFocjPU8Sy5FkJiKyec3cQz2VEKMGFFK
+         obyuPiY0Wrk3Kcyif4joaIYJS0rCx6Tbzdo6boKs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>, Will Deacon <will@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 041/185] arm64/prefetch: fix a -Wtype-limits warning
-Date:   Sun, 22 Sep 2019 14:46:59 -0400
-Message-Id: <20190922184924.32534-41-sashal@kernel.org>
+Cc:     Guoqing Jiang <jgq516@gmail.com>,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 044/185] md: don't set In_sync if array is frozen
+Date:   Sun, 22 Sep 2019 14:47:02 -0400
+Message-Id: <20190922184924.32534-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -58,96 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Guoqing Jiang <jgq516@gmail.com>
 
-[ Upstream commit b99286b088ea843b935dcfb29f187697359fe5cd ]
+[ Upstream commit 062f5b2ae12a153644c765e7ba3b0f825427be1d ]
 
-The commit d5370f754875 ("arm64: prefetch: add alternative pattern for
-CPUs without a prefetcher") introduced MIDR_IS_CPU_MODEL_RANGE() to be
-used in has_no_hw_prefetch() with rv_min=0 which generates a compilation
-warning from GCC,
+When a disk is added to array, the following path is called in mdadm.
 
-In file included from ./arch/arm64/include/asm/cache.h:8,
-               from ./include/linux/cache.h:6,
-               from ./include/linux/printk.h:9,
-               from ./include/linux/kernel.h:15,
-               from ./include/linux/cpumask.h:10,
-               from arch/arm64/kernel/cpufeature.c:11:
-arch/arm64/kernel/cpufeature.c: In function 'has_no_hw_prefetch':
-./arch/arm64/include/asm/cputype.h:59:26: warning: comparison of
-unsigned expression >= 0 is always true [-Wtype-limits]
-_model == (model) && rv >= (rv_min) && rv <= (rv_max);  \
-                        ^~
-arch/arm64/kernel/cpufeature.c:889:9: note: in expansion of macro
-'MIDR_IS_CPU_MODEL_RANGE'
-return MIDR_IS_CPU_MODEL_RANGE(midr, MIDR_THUNDERX,
-       ^~~~~~~~~~~~~~~~~~~~~~~
+Manage_subdevs -> sysfs_freeze_array
+               -> Manage_add
+               -> sysfs_set_str(&info, NULL, "sync_action","idle")
 
-Fix it by converting MIDR_IS_CPU_MODEL_RANGE to a static inline
-function.
+Then from kernel side, Manage_add invokes the path (add_new_disk ->
+validate_super = super_1_validate) to set In_sync flag.
 
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Will Deacon <will@kernel.org>
+Since In_sync means "device is in_sync with rest of array", and the new
+added disk need to resync thread to help the synchronization of data.
+And md_reap_sync_thread would call spare_active to set In_sync for the
+new added disk finally. So don't set In_sync if array is in frozen.
+
+Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/cputype.h | 21 +++++++++++----------
- arch/arm64/kernel/cpufeature.c   |  2 +-
- 2 files changed, 12 insertions(+), 11 deletions(-)
+ drivers/md/md.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/include/asm/cputype.h b/arch/arm64/include/asm/cputype.h
-index e7d46631cc42b..b1454d117cd2c 100644
---- a/arch/arm64/include/asm/cputype.h
-+++ b/arch/arm64/include/asm/cputype.h
-@@ -51,14 +51,6 @@
- #define MIDR_CPU_MODEL_MASK (MIDR_IMPLEMENTOR_MASK | MIDR_PARTNUM_MASK | \
- 			     MIDR_ARCHITECTURE_MASK)
- 
--#define MIDR_IS_CPU_MODEL_RANGE(midr, model, rv_min, rv_max)		\
--({									\
--	u32 _model = (midr) & MIDR_CPU_MODEL_MASK;			\
--	u32 rv = (midr) & (MIDR_REVISION_MASK | MIDR_VARIANT_MASK);	\
--									\
--	_model == (model) && rv >= (rv_min) && rv <= (rv_max);		\
-- })
--
- #define ARM_CPU_IMP_ARM			0x41
- #define ARM_CPU_IMP_APM			0x50
- #define ARM_CPU_IMP_CAVIUM		0x43
-@@ -159,10 +151,19 @@ struct midr_range {
- #define MIDR_REV(m, v, r) MIDR_RANGE(m, v, r, v, r)
- #define MIDR_ALL_VERSIONS(m) MIDR_RANGE(m, 0, 0, 0xf, 0xf)
- 
-+static inline bool midr_is_cpu_model_range(u32 midr, u32 model, u32 rv_min,
-+					   u32 rv_max)
-+{
-+	u32 _model = midr & MIDR_CPU_MODEL_MASK;
-+	u32 rv = midr & (MIDR_REVISION_MASK | MIDR_VARIANT_MASK);
-+
-+	return _model == model && rv >= rv_min && rv <= rv_max;
-+}
-+
- static inline bool is_midr_in_range(u32 midr, struct midr_range const *range)
- {
--	return MIDR_IS_CPU_MODEL_RANGE(midr, range->model,
--				 range->rv_min, range->rv_max);
-+	return midr_is_cpu_model_range(midr, range->model,
-+				       range->rv_min, range->rv_max);
- }
- 
- static inline bool
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index 68faf535f40a3..d3fbb89a31e57 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -894,7 +894,7 @@ static bool has_no_hw_prefetch(const struct arm64_cpu_capabilities *entry, int _
- 	u32 midr = read_cpuid_id();
- 
- 	/* Cavium ThunderX pass 1.x and 2.x */
--	return MIDR_IS_CPU_MODEL_RANGE(midr, MIDR_THUNDERX,
-+	return midr_is_cpu_model_range(midr, MIDR_THUNDERX,
- 		MIDR_CPU_VAR_REV(0, 0),
- 		MIDR_CPU_VAR_REV(1, MIDR_REVISION_MASK));
- }
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 5e885b6c4240d..b3bfac5f2bdb6 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -1754,8 +1754,15 @@ static int super_1_validate(struct mddev *mddev, struct md_rdev *rdev)
+ 				if (!(le32_to_cpu(sb->feature_map) &
+ 				      MD_FEATURE_RECOVERY_BITMAP))
+ 					rdev->saved_raid_disk = -1;
+-			} else
+-				set_bit(In_sync, &rdev->flags);
++			} else {
++				/*
++				 * If the array is FROZEN, then the device can't
++				 * be in_sync with rest of array.
++				 */
++				if (!test_bit(MD_RECOVERY_FROZEN,
++					      &mddev->recovery))
++					set_bit(In_sync, &rdev->flags);
++			}
+ 			rdev->raid_disk = role;
+ 			break;
+ 		}
 -- 
 2.20.1
 
