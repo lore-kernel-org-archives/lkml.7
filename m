@@ -2,73 +2,76 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14802C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 22:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5059C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 22:26:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D015F20869
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 22:19:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 741A020882
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 22:26:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="Q9CxQCZV"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="Ywwl1Svx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729301AbfIVWTm (ORCPT
+        id S1729801AbfIVW0x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 18:19:42 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33958 "EHLO
+        Sun, 22 Sep 2019 18:26:53 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37788 "EHLO
         mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726692AbfIVWTm (ORCPT
+        with ESMTP id S1726382AbfIVW0x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 18:19:42 -0400
-Received: by mail-pf1-f196.google.com with SMTP id b128so7881138pfa.1
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Sep 2019 15:19:42 -0700 (PDT)
+        Sun, 22 Sep 2019 18:26:53 -0400
+Received: by mail-pf1-f196.google.com with SMTP id y5so7877644pfo.4
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Sep 2019 15:26:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=netronome-com.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:in-reply-to:references
          :organization:mime-version:content-transfer-encoding;
-        bh=PmAznyfs4k+mWd//xBrPme3TcumsUBoHQjEZq6u+NLY=;
-        b=Q9CxQCZVN3CeKim3T14DI+dzH5PlCDTA8QmbsW+C8eax7IIA/NB0aFCLOE5uEMlnah
-         n9HfkK054QH0pzmBa/MaaPHryLTCxiQvGwyx9m2DBJ3+fWXwG4tZ1JBoHBYs79JyChbx
-         r5rFDF448s/NfZ2lrFLEI/35LniKtZVDGfAnyeOltNGUbu+hXauDlNLnNAaQqWncuzo2
-         +3937Vc7WBUdbsp3LzrmK2ZIuYecnYyYnVMqeOVgiI0Tg/28mg73wkAS2nR2q0eakRY3
-         9/YK/KVHUUOG6XAHJmFirHgZxtOEbFencrEJwS4yKpWhp/Wx/AxSLIA3VX7LS190gJnR
-         PoVw==
+        bh=1sFK61oUgqTUxUpxUiqsl6lQSNHdbhMzERalasfMwlM=;
+        b=Ywwl1SvxcgwtUppOmsgJLh+h2Ktkybgp4Vaz60SiIbKtvB1T1dsQGvBpVTiSPJ4bYa
+         1qGFtfriYz4HlLKI4jr6q3I1ZtohSL9s2jglVQQEgFTTbNyCyq9Rqw7ivrBTRcifK4S/
+         uHO2W2SdD7S27fGbs79iEGknXjYQ/+S/J/2Tjh/EWonGk0Ndnms8xZcEOzgUV4zaUxt/
+         M3J8q589xxu9nDBYUrNfnS5lHECL7smxl0KQ60ErNkiUtUUX4Kt7m2Lb8DgaO1kO/aiB
+         9hgX5TQVYLALaXuhUnQsehHBs+9+GqTykdtjFpY3fj4QsceSspM9FFzJ3uVtnWWNJOh3
+         Pnmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
          :references:organization:mime-version:content-transfer-encoding;
-        bh=PmAznyfs4k+mWd//xBrPme3TcumsUBoHQjEZq6u+NLY=;
-        b=VWbgOcR2kxzALjmHyVfuXOQYUzUBRVahwyArkulClvnSgOC1EXlq0EM10RstklwJ6d
-         L+R9a1bVR+BVzE734Ifi4Wcd/pakpNK+/Isn5jpbvUX1R33/kp32zo3xlshQpbRGEzkz
-         ywc+zYINbOiEAn9OHPvpZiFHy0GXiS+dS5HxLBwIUb7MK2/NC/uCTdZSyItkqPBsxpDg
-         2nL2oqA5x1HYkN0HbhXysf0jU7L/2YvUX+U3T2HU2X7xzKDmgwsJJaeaj54+olulhncc
-         MRq9HxtNY+/21OZ9I2aX0O8ohVwQ2levJlcDiiudIqX84Ok0KMTZKoiqJX+KM8qy+uDt
-         iNlg==
-X-Gm-Message-State: APjAAAWl4oxhrEbTykq0KC3/xdRjjfeYhf8cGgoYO1+vPsAcR0ioQm/4
-        zeP8vFfO7ndg9Vj8bF8COGy12w==
-X-Google-Smtp-Source: APXvYqzciIn5+C8G7UZYhYgLD06dOmlQZq70XrUrVD2u2KT92kUx/KmLzyi/sFi09I3djSRu2p/rmQ==
-X-Received: by 2002:a17:90a:8087:: with SMTP id c7mr17644769pjn.56.1569190380757;
-        Sun, 22 Sep 2019 15:13:00 -0700 (PDT)
+        bh=1sFK61oUgqTUxUpxUiqsl6lQSNHdbhMzERalasfMwlM=;
+        b=rX30Afk9rtMBqxF086li9vt+PSeqVzJFqSa5t8hRNyYs0iI7cspuZ4Ig/Xd/RRaDs8
+         vRSY4RmL0dPOc0zf/LkgVNft/i8jJO3FEhh3rNJcRH2INUQnLYHSDu3T03piSLuYkvSZ
+         5hoknAIQ+xfF+IfZ3kK7pmHyZKbIhOvbsQVMV3gH3xt6tfPxz+CQSuB+9iY8Cr0Rq2wd
+         pDmmnFOyJsn1JR3UYbIr9eMiFuzkp7h+631lkLD0WxKQF5SwGtqGYyQHq93tKYt4NVEf
+         SjFk5vCedlM0TmvbwEowKQCgSvUnjrgbzMS1l34Nhkqt89ymR0QiPF5kP8CG814wzOQA
+         OoPw==
+X-Gm-Message-State: APjAAAWa83fQLvvdzlDzrqyH2xrxZtqtt73+uWlxM8zquuj/0+OdMQpj
+        Pb0eXzhwvZvEXlrD39McANHIyA==
+X-Google-Smtp-Source: APXvYqx3wbLK6wMJ/WfshHZeRj3cjQnRgP7ZB71oVaFz42qy5jeUxtXdRvPoDikZXJxqH1xLOjkVpQ==
+X-Received: by 2002:a17:90a:c212:: with SMTP id e18mr17011375pjt.110.1569191212590;
+        Sun, 22 Sep 2019 15:26:52 -0700 (PDT)
 Received: from cakuba.netronome.com (c-73-202-202-92.hsd1.ca.comcast.net. [73.202.202.92])
-        by smtp.gmail.com with ESMTPSA id r187sm7877357pfc.105.2019.09.22.15.12.59
+        by smtp.gmail.com with ESMTPSA id c125sm11159763pfa.107.2019.09.22.15.26.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Sep 2019 15:13:00 -0700 (PDT)
-Date:   Sun, 22 Sep 2019 15:12:57 -0700
+        Sun, 22 Sep 2019 15:26:52 -0700 (PDT)
+Date:   Sun, 22 Sep 2019 15:26:49 -0700
 From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Christophe Roullier <christophe.roullier@st.com>
-Cc:     <robh@kernel.org>, <davem@davemloft.net>, <joabreu@synopsys.com>,
-        <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <peppe.cavallaro@st.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
-        <andrew@lunn.ch>
-Subject: Re: [PATCH  0/5] net: ethernet: stmmac: some fixes and optimization
-Message-ID: <20190922151257.51173d89@cakuba.netronome.com>
-In-Reply-To: <20190920053817.13754-1-christophe.roullier@st.com>
-References: <20190920053817.13754-1-christophe.roullier@st.com>
+To:     Nishad Kamdar <nishadkamdar@gmail.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>,
+        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: dsa: b53: Use the correct style for SPDX License
+ Identifier
+Message-ID: <20190922152649.1fbe1df9@cakuba.netronome.com>
+In-Reply-To: <20190921133011.GA2994@nishad>
+References: <20190921133011.GA2994@nishad>
 Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -78,21 +81,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Sep 2019 07:38:12 +0200, Christophe Roullier wrote:
-> Some improvements (manage syscfg as optional clock, update slew rate of
-> ETH_MDIO pin, Enable gating of the MAC TX clock during TX low-power mode)
-> Fix warning build message when W=1
+On Sat, 21 Sep 2019 19:00:16 +0530, Nishad Kamdar wrote:
+> This patch corrects the SPDX License Identifier style
+> in header file for Broadcom BCM53xx managed switch driver.
+> For C header files Documentation/process/license-rules.rst
+> mandates C-like comments (opposed to C source files where
+> C++ style should be used)
+> 
+> Changes made by using a script provided by Joe Perches here:
+> https://lkml.org/lkml/2019/2/7/46.
+> 
+> Suggested-by: Joe Perches <joe@perches.com>
+> Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
 
-There seems to be some new features/cleanups (or improvements as
-you say) here. Could you explain the negative impact not applying 
-these changes will have? Patches 1 and 3 in particular.
-
-net-next is now closed [1], and will reopen some time after the merge
-window is over. For now we are only expecting fixes for the net tree.
-
-Could you (a) provide stronger motivation these changes are fixes; or
-(b) separate the fixes from improvements?
-
-Thank you!
-
-[1] https://www.kernel.org/doc/html/latest/networking/netdev-FAQ.html
+Applied, thank you!
