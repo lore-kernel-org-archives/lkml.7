@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77085C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 517D8C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4554A21D7B
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 239CE2190F
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:53:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178393;
-	bh=/rangsZ0ELaQluOZKEg4V40zOt8+RCVaCUrHYUx7Wvw=;
+	s=default; t=1569178397;
+	bh=DdnHqTTMKKfCpDwlPlBDOYddiSHmslJNpMh4FwJwhwI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hKvzxLhAPuctH86OVVseKI4+wTUrvyMwVN02fRqMkGpQ14Sz+ZHvixb21bXgW+EgF
-	 BQUrcCp92T28VvNQYwscR7SdM0HomvvKAOmPKRg5ETk/Aopi2umSoXYdx/c/5m+KyG
-	 RcmWa2XuVlclfqkQmc+KNFeXsyPpV7/j56sTtPxQ=
+	b=PByTIjzuUl+J4oYBZhv5b+mmX0OezDVTyfW+7DmCrgUAJKPDwEswrC90QVLvq58as
+	 g3LZXhhbVhGYzBqyjHs8e7LSUF/ktXY6B5883YWqQ/wmkXQjbG9bu7RlvrvMs+A4sf
+	 7LWSippQLElRdSha+G3If1Di+CqemvTosx6jLdqA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393588AbfIVSxL (ORCPT
+        id S2393797AbfIVSxP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:53:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52082 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:53:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392961AbfIVSws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:52:48 -0400
+        id S2393082AbfIVSwu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:52:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5138621BE5;
-        Sun, 22 Sep 2019 18:52:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F80821479;
+        Sun, 22 Sep 2019 18:52:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178368;
-        bh=/rangsZ0ELaQluOZKEg4V40zOt8+RCVaCUrHYUx7Wvw=;
+        s=default; t=1569178369;
+        bh=DdnHqTTMKKfCpDwlPlBDOYddiSHmslJNpMh4FwJwhwI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aJc/vZjwAjZGT+OXVaDRabBY3+7uNkRzabe2LIXXu5iJBAB/gc5xZSPKqxFPJxMN1
-         TNe0Squsbj2N9MKY5xjxY/oydpLZ9wnJhHUhhJNgRe20y+QPl+Mw97LnC2AMVrBIsy
-         XKWW+th9fvTrRXDF5EvCP1LArHTDO5eVEH3LJARQ=
+        b=qVFAvgqcua45sSePESeoroPLAYwcPdJmW9IfHRbPMaGfT0t8+j8GRDcQNrK0kTrMN
+         nPLhVkBO/bghJ/zuZnwCnYdSVsy4ASK7AReLkAGJw1xTJH6AlTOWynH7tKb7bVsIXX
+         Ulf3xmlhI1M/2Wplo4Ltlo+V9tNhNWJaRcYvrym0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Eddie James <eajames@linux.ibm.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
         Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 119/185] media: aspeed-video: address a protential usage of an unitialized var
-Date:   Sun, 22 Sep 2019 14:48:17 -0400
-Message-Id: <20190922184924.32534-119-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 120/185] media: ov9650: add a sanity check
+Date:   Sun, 22 Sep 2019 14:48:18 -0400
+Message-Id: <20190922184924.32534-120-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -61,52 +61,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-[ Upstream commit 31b8b0bd6e55c3ea5a08bb8141fa5d3c90600e3b ]
+[ Upstream commit 093347abc7a4e0490e3c962ecbde2dc272a8f708 ]
 
-While this might not occur in practice, if the device is doing
-the right thing, it would be teoretically be possible to have
-both hsync_counter and vsync_counter negatives.
+As pointed by cppcheck:
 
-If this ever happen, ctrl will be undefined, but the driver
-will still call:
+	[drivers/media/i2c/ov9650.c:706]: (error) Shifting by a negative value is undefined behaviour
+	[drivers/media/i2c/ov9650.c:707]: (error) Shifting by a negative value is undefined behaviour
+	[drivers/media/i2c/ov9650.c:721]: (error) Shifting by a negative value is undefined behaviour
 
-	aspeed_video_update(video, VE_CTRL, 0, ctrl);
+Prevent mangling with gains with invalid values.
 
-Change the code to prevent this to happen.
+As pointed by Sylvester, this should never happen in practice,
+as min value of V4L2_CID_GAIN control is 16 (gain is always >= 16
+and m is always >= 0), but it is too hard for a static analyzer
+to get this, as the logic with validates control min/max is
+elsewhere inside V4L2 core.
 
-This was warned by cppcheck:
-
-	[drivers/media/platform/aspeed-video.c:653]: (error) Uninitialized variable: ctrl
-
-Reviewed-by: Eddie James <eajames@linux.ibm.com>
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/aspeed-video.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/media/i2c/ov9650.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/media/platform/aspeed-video.c b/drivers/media/platform/aspeed-video.c
-index de0f192afa8b1..388c32a11345d 100644
---- a/drivers/media/platform/aspeed-video.c
-+++ b/drivers/media/platform/aspeed-video.c
-@@ -632,7 +632,7 @@ static void aspeed_video_check_and_set_polarity(struct aspeed_video *video)
- 	}
- 
- 	if (hsync_counter < 0 || vsync_counter < 0) {
--		u32 ctrl;
-+		u32 ctrl = 0;
- 
- 		if (hsync_counter < 0) {
- 			ctrl = VE_CTRL_HSYNC_POL;
-@@ -652,7 +652,8 @@ static void aspeed_video_check_and_set_polarity(struct aspeed_video *video)
- 				V4L2_DV_VSYNC_POS_POL;
- 		}
- 
--		aspeed_video_update(video, VE_CTRL, 0, ctrl);
-+		if (ctrl)
-+			aspeed_video_update(video, VE_CTRL, 0, ctrl);
- 	}
- }
+diff --git a/drivers/media/i2c/ov9650.c b/drivers/media/i2c/ov9650.c
+index 30ab2225fbd0c..b350f5c1a9890 100644
+--- a/drivers/media/i2c/ov9650.c
++++ b/drivers/media/i2c/ov9650.c
+@@ -703,6 +703,11 @@ static int ov965x_set_gain(struct ov965x *ov965x, int auto_gain)
+ 		for (m = 6; m >= 0; m--)
+ 			if (gain >= (1 << m) * 16)
+ 				break;
++
++		/* Sanity check: don't adjust the gain with a negative value */
++		if (m < 0)
++			return -EINVAL;
++
+ 		rgain = (gain - ((1 << m) * 16)) / (1 << m);
+ 		rgain |= (((1 << m) - 1) << 4);
  
 -- 
 2.20.1
