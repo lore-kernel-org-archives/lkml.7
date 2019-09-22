@@ -4,54 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ABFDC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E91C4740C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 077EF2053B
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:17:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B350320869
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:17:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179837;
-	bh=J2DOie5+rJ5lNglv194L5tZNcZlQOsaZ5mRHla4X5YE=;
+	s=default; t=1569179839;
+	bh=aVOggpoqi/Rcx/POg1Q3q2Vvw3fw5my5raFRADNEbh4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eIiJRo9P4wBMGJivvLRx/+bgdnae9OYZ4bvSQqpCv5ke8mVlG75mPE56ghWp47CH1
-	 WkXHOt7AXIQYzNQWUeV6aJ1TRUo+NS5PRFyJvW0fGyqQ9bl2XJnmMFGyUOTh2hgMv8
-	 nffxIdckaGM/j6pKLKooaekZOPQ/PuuDZdPytYe0=
+	b=HzKmt6St+1x9Uw+jeF4rjMnVlfSufCnqziy1T0sgYQcI/qeUPdev2msQIG/U2zbzk
+	 A1Hkt7PkvGywVYi9DnuMR8vbeUd/iX4AaAATdixyIbQCAwI8h7IrdxQ1bzfRwGHaVa
+	 fq/lxWapSl1fia0c/ks3A39txrZ1GfG9dgOXIYIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394076AbfIVTRQ (ORCPT
+        id S1729350AbfIVSzs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:17:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57394 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:55:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729374AbfIVSzt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:55:49 -0400
+        id S2438458AbfIVSzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:55:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9986E208C2;
-        Sun, 22 Sep 2019 18:55:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 854D6222BF;
+        Sun, 22 Sep 2019 18:55:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178549;
-        bh=J2DOie5+rJ5lNglv194L5tZNcZlQOsaZ5mRHla4X5YE=;
+        s=default; t=1569178539;
+        bh=aVOggpoqi/Rcx/POg1Q3q2Vvw3fw5my5raFRADNEbh4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CbcYBRZLgIAoNmlbfqk9/yCzd6dcR2SKCeUZ15akoGeoxpA8jijtzQZllFtUP/cqz
-         3CpX4cYE0oFpghCUH9c6UdpihHkH4pIsKDivllzjduiPSeEUAGxomZcWVfXPY975OT
-         Nr6CZ3n3bizNuLa2EcGtFKZxpWVsNLZZw2sTKftc=
+        b=BD5ZBsPj3ZPWxVEIGYSBNELmmG0PZGK8cuv2sZ1e6C/6EMP3TCfpmbwRdbO4E0EKG
+         TktJkkxj/9xra/JY8qH8R3Nbcl8QJ8IgE/XyWb+TDcQpq5oJpCchhnGgPGiF7WbQdC
+         BhzcjxpqNJfzUea521kdWSfPiVErDG0hsgIzTtEQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Christie <mchristi@redhat.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org, nbd@other.debian.org
-Subject: [PATCH AUTOSEL 4.19 067/128] nbd: add missing config put
-Date:   Sun, 22 Sep 2019 14:53:17 -0400
-Message-Id: <20190922185418.2158-67-sashal@kernel.org>
+Cc:     =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>,
+        Ilya Ledvich <ilya@compulab.co.il>,
+        Igor Grinberg <grinberg@compulab.co.il>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 059/128] ARM: dts: imx7d: cl-som-imx7: make ethernet work again
+Date:   Sun, 22 Sep 2019 14:53:09 -0400
+Message-Id: <20190922185418.2158-59-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
 References: <20190922185418.2158-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,46 +69,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Christie <mchristi@redhat.com>
+From: André Draszik <git@andred.net>
 
-[ Upstream commit 887e975c4172d0d5670c39ead2f18ba1e4ec8133 ]
+[ Upstream commit 9846a4524ac90b63496580b7ad50674b40d92a8f ]
 
-Fix bug added with the patch:
+Recent changes to the atheros at803x driver caused
+ethernet to stop working on this board.
+In particular commit 6d4cd041f0af
+("net: phy: at803x: disable delay only for RGMII mode")
+and commit cd28d1d6e52e
+("net: phy: at803x: Disable phy delay for RGMII mode")
+fix the AR8031 driver to configure the phy's (RX/TX)
+delays as per the 'phy-mode' in the device tree.
 
-commit 8f3ea35929a0806ad1397db99a89ffee0140822a
-Author: Josef Bacik <josef@toxicpanda.com>
-Date:   Mon Jul 16 12:11:35 2018 -0400
+This now prevents ethernet from working on this board.
 
-    nbd: handle unexpected replies better
+It used to work before those commits, because the
+AR8031 comes out of reset with RX delay enabled, and
+the at803x driver didn't touch the delay configuration
+at all when "rgmii" mode was selected, and because
+arch/arm/mach-imx/mach-imx7d.c:ar8031_phy_fixup()
+unconditionally enables TX delay.
 
-where if the timeout handler runs when the completion path is and we fail
-to grab the mutex in the timeout handler we will leave a config reference
-and cannot free the config later.
+Since above commits ar8031_phy_fixup() also has no
+effect anymore, and the end-result is that all delays
+are disabled in the phy, no ethernet.
 
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Mike Christie <mchristi@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Update the device tree to restore functionality.
+
+Signed-off-by: André Draszik <git@andred.net>
+CC: Ilya Ledvich <ilya@compulab.co.il>
+CC: Igor Grinberg <grinberg@compulab.co.il>
+CC: Rob Herring <robh+dt@kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>
+CC: Shawn Guo <shawnguo@kernel.org>
+CC: Sascha Hauer <s.hauer@pengutronix.de>
+CC: Pengutronix Kernel Team <kernel@pengutronix.de>
+CC: Fabio Estevam <festevam@gmail.com>
+CC: NXP Linux Team <linux-imx@nxp.com>
+CC: devicetree@vger.kernel.org
+CC: linux-arm-kernel@lists.infradead.org
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/nbd.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index fa60f265ee506..b1c7009de1f4d 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -353,8 +353,10 @@ static enum blk_eh_timer_return nbd_xmit_timeout(struct request *req,
- 	}
- 	config = nbd->config;
- 
--	if (!mutex_trylock(&cmd->lock))
-+	if (!mutex_trylock(&cmd->lock)) {
-+		nbd_config_put(nbd);
- 		return BLK_EH_RESET_TIMER;
-+	}
- 
- 	if (config->num_connections > 1) {
- 		dev_err_ratelimited(nbd_to_dev(nbd),
+diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
+index 8bf365d28cacf..584418f517a88 100644
+--- a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
++++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
+@@ -43,7 +43,7 @@
+ 			  <&clks IMX7D_ENET1_TIME_ROOT_CLK>;
+ 	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
+ 	assigned-clock-rates = <0>, <100000000>;
+-	phy-mode = "rgmii";
++	phy-mode = "rgmii-id";
+ 	phy-handle = <&ethphy0>;
+ 	fsl,magic-packet;
+ 	status = "okay";
+@@ -69,7 +69,7 @@
+ 			  <&clks IMX7D_ENET2_TIME_ROOT_CLK>;
+ 	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
+ 	assigned-clock-rates = <0>, <100000000>;
+-	phy-mode = "rgmii";
++	phy-mode = "rgmii-id";
+ 	phy-handle = <&ethphy1>;
+ 	fsl,magic-packet;
+ 	status = "okay";
 -- 
 2.20.1
 
