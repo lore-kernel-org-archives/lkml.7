@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC4DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC593C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D02F20644
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:38:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B419F20644
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:38:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569181108;
-	bh=jUA7/qGpkPZLB6Bq0rXE8/podl03XvX8nzplVpOsin4=;
+	s=default; t=1569181113;
+	bh=Khkr7SUx3By7seMEzLt/dW27p0v3MIpa+M+qZfVLF/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VaHzCHUVjIfrlCQdhWFDPySLeLurDmNfOijye7nD/6OyY5e/2E2xomF77HPN5LUof
-	 9AWGhJ/PWAKwljs6rMFHNHm8XvHdjSC5QQcXwBH2CvDNybgVgr8ErU9yED0qFod4B+
-	 Tzawfw9n4euyIUeg2/P8+8ZAjJK/GWNW0u/TctHw=
+	b=yOU3FDY00q/w1WYmuL/O+Oy+bg2jwIZ7IsD74foXxk8LiCWkPk4C3rD1wMLWGJs9R
+	 RhgHc0O1uzNcATdpZLxhOgjxjKyvxCGqcazQteXN6ei4kZf9AjiGWOsyDPyIKDybAo
+	 dLCVN5QOqyjXI0a2mIZ/va+QYwVGAvyTQs//vSYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439288AbfIVTi1 (ORCPT
+        id S2389224AbfIVSpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:38:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41122 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:45:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389279AbfIVSp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:45:28 -0400
+        id S2389181AbfIVSpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:45:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 991F621907;
-        Sun, 22 Sep 2019 18:45:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97C182186A;
+        Sun, 22 Sep 2019 18:45:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569177928;
-        bh=jUA7/qGpkPZLB6Bq0rXE8/podl03XvX8nzplVpOsin4=;
+        s=default; t=1569177923;
+        bh=Khkr7SUx3By7seMEzLt/dW27p0v3MIpa+M+qZfVLF/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uN/dxcyB8av3AX2/sRRqaZr8K7F4HVKFIsh2mayp05vDVR2uJ7NtCdTDSciV/0bBq
-         HADB1h7Z77iybO1v5vfXWI2gQa2xDQHeRhN1QosAUNne87sfuBrOzuKkfbUOqFUFsg
-         Pt3IT/f526bbQXWMnZiu1WDJN/nAzuChYK3p/ESg=
+        b=PCyIMHiCljLKLtzhm81UA8D081Sx576IOEyWLmcdTBKDOWhFjAYaHG1cEt4BiMWs/
+         TIBox6JWQZzEeJ3Cq6IE+Y9qEEU+xOyBb4PGoJXxXQQA4CXx4cjOHsAmr7L4xSyV4S
+         4ea5kdvx58t5LOWAEF6ZryerMA2Lk6RBmBG0T9Rw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 039/203] cpuidle: teo: Allow tick to be stopped if PM QoS is used
-Date:   Sun, 22 Sep 2019 14:41:05 -0400
-Message-Id: <20190922184350.30563-39-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 035/203] rcu: Add destroy_work_on_stack() to match INIT_WORK_ONSTACK()
+Date:   Sun, 22 Sep 2019 14:41:01 -0400
+Message-Id: <20190922184350.30563-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -58,123 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+From: "Paul E. McKenney" <paulmck@linux.ibm.com>
 
-[ Upstream commit cab09f3d2d2a0a6cb3dfb678660d67a2c3764f50 ]
+[ Upstream commit fbad01af8c3bb9618848abde8054ab7e0c2330fe ]
 
-The TEO goveror prevents the scheduler tick from being stopped (unless
-stopped already) if there is a PM QoS latency constraint for the given
-CPU and the target residency of the deepest idle state matching that
-constraint is below the tick boundary.
+The synchronize_rcu_expedited() function has an INIT_WORK_ONSTACK(),
+but lacks the corresponding destroy_work_on_stack().  This commit
+therefore adds destroy_work_on_stack().
 
-However, that is problematic if CPUs with PM QoS latency constraints
-are idle for long times, because it effectively causes the tick to
-run on them all the time which is wasteful.  [It is also confusing
-and questionable if they are full dynticks CPUs.]
-
-To address that issue, modify the TEO governor to carry out the
-entire search for the most suitable idle state (from the target
-residency perspective) even if a latency constraint is present,
-to allow it to determine the expected idle duration in all cases.
-
-Also, when using the last several measured idle duration values
-to refine the idle state selection, make it compare those values
-with the current expected idle duration value (instead of
-comparing them with the target residency of the idle state
-selected so far) which should prevent the tick from being
-retained when it makes sense to stop it sometimes (especially
-in the presence of PM QoS latency constraints).
-
-Fixes: b26bf6ab716f ("cpuidle: New timer events oriented governor for tickless systems")
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reported-by: Andrea Arcangeli <aarcange@redhat.com>
+Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+Acked-by: Andrea Arcangeli <aarcange@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpuidle/governors/teo.c | 32 ++++++++++++++++----------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+ kernel/rcu/tree_exp.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/cpuidle/governors/teo.c b/drivers/cpuidle/governors/teo.c
-index 7d05efdbd3c66..12d9e6cecf1de 100644
---- a/drivers/cpuidle/governors/teo.c
-+++ b/drivers/cpuidle/governors/teo.c
-@@ -242,7 +242,7 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
- 	struct teo_cpu *cpu_data = per_cpu_ptr(&teo_cpus, dev->cpu);
- 	int latency_req = cpuidle_governor_latency_req(dev->cpu);
- 	unsigned int duration_us, count;
--	int max_early_idx, idx, i;
-+	int max_early_idx, constraint_idx, idx, i;
- 	ktime_t delta_tick;
+diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
+index af7e7b9c86afa..513b403b683b7 100644
+--- a/kernel/rcu/tree_exp.h
++++ b/kernel/rcu/tree_exp.h
+@@ -792,6 +792,7 @@ static int rcu_print_task_exp_stall(struct rcu_node *rnp)
+  */
+ void synchronize_rcu_expedited(void)
+ {
++	bool boottime = (rcu_scheduler_active == RCU_SCHEDULER_INIT);
+ 	struct rcu_exp_work rew;
+ 	struct rcu_node *rnp;
+ 	unsigned long s;
+@@ -817,7 +818,7 @@ void synchronize_rcu_expedited(void)
+ 		return;  /* Someone else did our work for us. */
  
- 	if (cpu_data->last_state >= 0) {
-@@ -257,6 +257,7 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
+ 	/* Ensure that load happens before action based on it. */
+-	if (unlikely(rcu_scheduler_active == RCU_SCHEDULER_INIT)) {
++	if (unlikely(boottime)) {
+ 		/* Direct call during scheduler init and early_initcalls(). */
+ 		rcu_exp_sel_wait_wake(s);
+ 	} else {
+@@ -835,5 +836,8 @@ void synchronize_rcu_expedited(void)
  
- 	count = 0;
- 	max_early_idx = -1;
-+	constraint_idx = drv->state_count;
- 	idx = -1;
- 
- 	for (i = 0; i < drv->state_count; i++) {
-@@ -286,16 +287,8 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
- 		if (s->target_residency > duration_us)
- 			break;
- 
--		if (s->exit_latency > latency_req) {
--			/*
--			 * If we break out of the loop for latency reasons, use
--			 * the target residency of the selected state as the
--			 * expected idle duration to avoid stopping the tick
--			 * as long as that target residency is low enough.
--			 */
--			duration_us = drv->states[idx].target_residency;
--			goto refine;
--		}
-+		if (s->exit_latency > latency_req && constraint_idx > i)
-+			constraint_idx = i;
- 
- 		idx = i;
- 
-@@ -321,7 +314,13 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
- 		duration_us = drv->states[idx].target_residency;
- 	}
- 
--refine:
-+	/*
-+	 * If there is a latency constraint, it may be necessary to use a
-+	 * shallower idle state than the one selected so far.
-+	 */
-+	if (constraint_idx < idx)
-+		idx = constraint_idx;
+ 	/* Let the next expedited grace period start. */
+ 	mutex_unlock(&rcu_state.exp_mutex);
 +
- 	if (idx < 0) {
- 		idx = 0; /* No states enabled. Must use 0. */
- 	} else if (idx > 0) {
-@@ -331,13 +330,12 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
- 
- 		/*
- 		 * Count and sum the most recent idle duration values less than
--		 * the target residency of the state selected so far, find the
--		 * max.
-+		 * the current expected idle duration value.
- 		 */
- 		for (i = 0; i < INTERVALS; i++) {
- 			unsigned int val = cpu_data->intervals[i];
- 
--			if (val >= drv->states[idx].target_residency)
-+			if (val >= duration_us)
- 				continue;
- 
- 			count++;
-@@ -356,8 +354,10 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
- 			 * would be too shallow.
- 			 */
- 			if (!(tick_nohz_tick_stopped() && avg_us < TICK_USEC)) {
--				idx = teo_find_shallower_state(drv, dev, idx, avg_us);
- 				duration_us = avg_us;
-+				if (drv->states[idx].target_residency > avg_us)
-+					idx = teo_find_shallower_state(drv, dev,
-+								       idx, avg_us);
- 			}
- 		}
- 	}
++	if (likely(!boottime))
++		destroy_work_on_stack(&rew.rew_work);
+ }
+ EXPORT_SYMBOL_GPL(synchronize_rcu_expedited);
 -- 
 2.20.1
 
