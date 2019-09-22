@@ -4,49 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ECEBC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1D2C4740C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C53421D6C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79C3021D6C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:56:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178564;
-	bh=R1MMQt5GaSLuun9OUwmJWG6Nko4NwIeTmHNgmXuUyM0=;
+	s=default; t=1569178566;
+	bh=B05maExQbhzmRz3QtW0v5BieCGz5HdQQOqgZortZCcA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vXjVdimL34FHizIaKNvlpzhA7JOCAMNOkLipafjDwHAHYO5ojoiVfD8DEZbS9qR3L
-	 RinpBLLBs4D/RFR2KUJ/n/gfO620rT/6lnE24qdfTKykvfmsOfRxf2LX9KU/hdYB+K
-	 XUQ9WhdvbX/TCuxFqcYeBBS/wW6qKO81PpKTa2c0=
+	b=xV57+fKLPnU/uUHCJ062pZJgLRZAe2eRcO/l95t5+4S29yzfMeHiJ/Eya2zYryl8W
+	 5UooreGxc+oE5jnJU6kbEFndVl6jkUQqLsg/mSqvABT/T3WC9FqOL1yHNnHBIHcAjJ
+	 kTLMlrQydQjjoCM2uvUlNarcKxt3Eosg/hUPIGME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438470AbfIVS4D (ORCPT
+        id S2408167AbfIVS4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:56:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57622 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:56:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405716AbfIVSzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:55:55 -0400
+        id S2408119AbfIVSz5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:55:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99688208C2;
-        Sun, 22 Sep 2019 18:55:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 032E82184D;
+        Sun, 22 Sep 2019 18:55:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178555;
-        bh=R1MMQt5GaSLuun9OUwmJWG6Nko4NwIeTmHNgmXuUyM0=;
+        s=default; t=1569178557;
+        bh=B05maExQbhzmRz3QtW0v5BieCGz5HdQQOqgZortZCcA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TjdS4MfEO/XbXVpVb5vD8D0ur1PQ/+2v0sjohc/kL4pDX5Lj8Rx37dGkV6NQx0dpJ
-         AiBXmm4kAE6cYqilj+l+bfhvLUl4rKGCjhM1ofWyJLJbJ6GdSu9hoUDXKNCRjw3OLy
-         ISbN1f+zSgQjbCRchC1imxQ76caKnkfKfNTTBehE=
+        b=vv1dGigcj2DPR6weTZuGmKm6drNBKsscQtyrU+Ww6Qzalfs6KMWlKWRa0mtsUMnZo
+         fYJKlUU1TIqadS1jBsDq5XbI4ES23Xtn6RFdap1JipwHpuz6Wv+64qdd/FgjtDOGAY
+         btiq0EoEMroHO8PKoqTW8oUUvuRM388vGFDveEU4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wenwen Wang <wenwen@cs.uga.edu>, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 071/128] media: dvb-core: fix a memory leak bug
-Date:   Sun, 22 Sep 2019 14:53:21 -0400
-Message-Id: <20190922185418.2158-71-sashal@kernel.org>
+Cc:     Gerald BAEZA <gerald.baeza@st.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 072/128] libperf: Fix alignment trap with xyarray contents in 'perf stat'
+Date:   Sun, 22 Sep 2019 14:53:22 -0400
+Message-Id: <20190922185418.2158-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
 References: <20190922185418.2158-1-sashal@kernel.org>
@@ -59,40 +65,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Gerald BAEZA <gerald.baeza@st.com>
 
-[ Upstream commit fcd5ce4b3936242e6679875a4d3c3acfc8743e15 ]
+[ Upstream commit d9c5c083416500e95da098c01be092b937def7fa ]
 
-In dvb_create_media_entity(), 'dvbdev->entity' is allocated through
-kzalloc(). Then, 'dvbdev->pads' is allocated through kcalloc(). However, if
-kcalloc() fails, the allocated 'dvbdev->entity' is not deallocated, leading
-to a memory leak bug. To fix this issue, free 'dvbdev->entity' before
-returning -ENOMEM.
+Following the patch 'perf stat: Fix --no-scale', an alignment trap
+happens in process_counter_values() on ARMv7 platforms due to the
+attempt to copy non 64 bits aligned double words (pointed by 'count')
+via a NEON vectored instruction ('vld1' with 64 bits alignment
+constraint).
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+This patch sets a 64 bits alignment constraint on 'contents[]' field in
+'struct xyarray' since the 'count' pointer used above points to such a
+structure.
+
+Signed-off-by: Gerald Baeza <gerald.baeza@st.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/1566464769-16374-1-git-send-email-gerald.baeza@st.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/dvb-core/dvbdev.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/perf/util/xyarray.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/dvb-core/dvbdev.c b/drivers/media/dvb-core/dvbdev.c
-index 3c87785703310..04dc2f4bc7aaf 100644
---- a/drivers/media/dvb-core/dvbdev.c
-+++ b/drivers/media/dvb-core/dvbdev.c
-@@ -339,8 +339,10 @@ static int dvb_create_media_entity(struct dvb_device *dvbdev,
- 	if (npads) {
- 		dvbdev->pads = kcalloc(npads, sizeof(*dvbdev->pads),
- 				       GFP_KERNEL);
--		if (!dvbdev->pads)
-+		if (!dvbdev->pads) {
-+			kfree(dvbdev->entity);
- 			return -ENOMEM;
-+		}
- 	}
+diff --git a/tools/perf/util/xyarray.h b/tools/perf/util/xyarray.h
+index 7ffe562e7ae7f..2627b038b6f2a 100644
+--- a/tools/perf/util/xyarray.h
++++ b/tools/perf/util/xyarray.h
+@@ -2,6 +2,7 @@
+ #ifndef _PERF_XYARRAY_H_
+ #define _PERF_XYARRAY_H_ 1
  
- 	switch (type) {
++#include <linux/compiler.h>
+ #include <sys/types.h>
+ 
+ struct xyarray {
+@@ -10,7 +11,7 @@ struct xyarray {
+ 	size_t entries;
+ 	size_t max_x;
+ 	size_t max_y;
+-	char contents[];
++	char contents[] __aligned(8);
+ };
+ 
+ struct xyarray *xyarray__new(int xlen, int ylen, size_t entry_size);
 -- 
 2.20.1
 
