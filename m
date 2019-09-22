@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C93C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 888AEC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 275D920640
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:33:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59F5520640
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:34:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180838;
-	bh=wxlemXqcQli902QZT0OQcLMn5GX/KD1gd3Ig9+iAhYs=;
+	s=default; t=1569180843;
+	bh=AR8xkLta58mWfwbBEqsTYV291X1xSKFmHu7uqW2tgpM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tzZVkmSiUpEmDzR+yVN7EeEqkPg6N3svz04rPkpwchipOUmJVUhuacjwtI7ZIywQP
-	 la/v9wY00a8/DjueDDcbOArp1Mnr5gRZfXSWcQATIt7mRuPzoO/t7ZMXURDdA70UDu
-	 tfGypQZmxoZ14pzjodkVQb2I1HtGnECn5rTohLy8=
+	b=OeAMbxi+OW9eL5H6pmrdFlgNafOVOeaYw+c/s0D9vDOUwgAlXh/5vCcr87gHH7oni
+	 zAyRQNnHmX+H/m4SO8Zip6rxLibRXWTe24eSRKwoxDphf3rgpwTt3cEbTotMh+17l0
+	 JhU3ZHFcEDVOhqtKCw8RIkLtiMveeSJzvjG/8h6o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438560AbfIVTd5 (ORCPT
+        id S2390858AbfIVSr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:33:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43884 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390861AbfIVSr2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 22 Sep 2019 14:47:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43800 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390735AbfIVSrW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:47:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0203B214D9;
-        Sun, 22 Sep 2019 18:47:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7DA9214AF;
+        Sun, 22 Sep 2019 18:47:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178047;
-        bh=wxlemXqcQli902QZT0OQcLMn5GX/KD1gd3Ig9+iAhYs=;
+        s=default; t=1569178041;
+        bh=AR8xkLta58mWfwbBEqsTYV291X1xSKFmHu7uqW2tgpM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mwdsWB0A6FLrilEx+Yx4cWKgtwkaIMsHnLmT3N0iJfAdCiQSV9UrZ+B5WZj5bahKD
-         8/fPS9JLHtHU016GsGIA0QzSygTwDOlSymVUa5zIfi5mX8gPEwRZFA9pRXNPMzZzL5
-         e1PmEOv7wpwSbFuvOswiROHPDHsDa7oORTt6zwbg=
+        b=09RsGzXwm+6KnfspheuweePQyHD6CDuHkMCGW1JLPFUtHRb85vxs7EbWqpws527pa
+         Q8o4Fiu9bfMkRxlXOMggcZ2RQGkGzj5PI8afBe+0mOacU78f+9lH3E5RL1RQjcNz5L
+         fCHiHfy1rv0z4acCe3D1t5yER8kLmrux3JysADFo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 126/203] media: saa7134: fix terminology around saa7134_i2c_eeprom_md7134_gate()
-Date:   Sun, 22 Sep 2019 14:42:32 -0400
-Message-Id: <20190922184350.30563-126-sashal@kernel.org>
+Cc:     Leonard Crestez <leonard.crestez@nxp.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 121/203] PM / devfreq: passive: Use non-devm notifiers
+Date:   Sun, 22 Sep 2019 14:42:27 -0400
+Message-Id: <20190922184350.30563-121-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -60,58 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+From: Leonard Crestez <leonard.crestez@nxp.com>
 
-[ Upstream commit 9d802222a3405599d6e1984d9324cddf592ea1f4 ]
+[ Upstream commit 0ef7c7cce43f6ecc2b96d447e69b2900a9655f7c ]
 
-saa7134_i2c_eeprom_md7134_gate() function and the associated comment uses
-an inverted i2c gate open / closed terminology.
-Let's fix this.
+The devfreq passive governor registers and unregisters devfreq
+transition notifiers on DEVFREQ_GOV_START/GOV_STOP using devm wrappers.
 
-Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-[hverkuil-cisco@xs4all.nl: fix alignment checkpatch warning]
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+If devfreq itself is registered with devm then a warning is triggered on
+rmmod from devm_devfreq_unregister_notifier. Call stack looks like this:
+
+	devm_devfreq_unregister_notifier+0x30/0x40
+	devfreq_passive_event_handler+0x4c/0x88
+	devfreq_remove_device.part.8+0x6c/0x9c
+	devm_devfreq_dev_release+0x18/0x20
+	release_nodes+0x1b0/0x220
+	devres_release_all+0x78/0x84
+	device_release_driver_internal+0x100/0x1c0
+	driver_detach+0x4c/0x90
+	bus_remove_driver+0x7c/0xd0
+	driver_unregister+0x2c/0x58
+	platform_driver_unregister+0x10/0x18
+	imx_devfreq_platdrv_exit+0x14/0xd40 [imx_devfreq]
+
+This happens because devres_release_all will first remove all the nodes
+into a separate todo list so the nested devres_release from
+devm_devfreq_unregister_notifier won't find anything.
+
+Fix the warning by calling the non-devm APIS for frequency notification.
+Using devm wrappers is not actually useful for a governor anyway: it
+relies on the devfreq core to correctly match the GOV_START/GOV_STOP
+notifications.
+
+Fixes: 996133119f57 ("PM / devfreq: Add new passive governor")
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/pci/saa7134/saa7134-i2c.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/devfreq/governor_passive.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/pci/saa7134/saa7134-i2c.c b/drivers/media/pci/saa7134/saa7134-i2c.c
-index 493b1858815fb..04e85765373ec 100644
---- a/drivers/media/pci/saa7134/saa7134-i2c.c
-+++ b/drivers/media/pci/saa7134/saa7134-i2c.c
-@@ -342,7 +342,11 @@ static const struct i2c_client saa7134_client_template = {
+diff --git a/drivers/devfreq/governor_passive.c b/drivers/devfreq/governor_passive.c
+index 58308948b8637..da485477065c5 100644
+--- a/drivers/devfreq/governor_passive.c
++++ b/drivers/devfreq/governor_passive.c
+@@ -165,12 +165,12 @@ static int devfreq_passive_event_handler(struct devfreq *devfreq,
+ 			p_data->this = devfreq;
  
- /* ----------------------------------------------------------- */
- 
--/* On Medion 7134 reading EEPROM needs DVB-T demod i2c gate open */
-+/*
-+ * On Medion 7134 reading the SAA7134 chip config EEPROM needs DVB-T
-+ * demod i2c gate closed due to an address clash between this EEPROM
-+ * and the demod one.
-+ */
- static void saa7134_i2c_eeprom_md7134_gate(struct saa7134_dev *dev)
- {
- 	u8 subaddr = 0x7, dmdregval;
-@@ -359,14 +363,14 @@ static void saa7134_i2c_eeprom_md7134_gate(struct saa7134_dev *dev)
- 
- 	ret = i2c_transfer(&dev->i2c_adap, i2cgatemsg_r, 2);
- 	if ((ret == 2) && (dmdregval & 0x2)) {
--		pr_debug("%s: DVB-T demod i2c gate was left closed\n",
-+		pr_debug("%s: DVB-T demod i2c gate was left open\n",
- 			 dev->name);
- 
- 		data[0] = subaddr;
- 		data[1] = (dmdregval & ~0x2);
- 		if (i2c_transfer(&dev->i2c_adap, i2cgatemsg_w, 1) != 1)
--			pr_err("%s: EEPROM i2c gate open failure\n",
--			  dev->name);
-+			pr_err("%s: EEPROM i2c gate close failure\n",
-+			       dev->name);
- 	}
- }
- 
+ 		nb->notifier_call = devfreq_passive_notifier_call;
+-		ret = devm_devfreq_register_notifier(dev, parent, nb,
++		ret = devfreq_register_notifier(parent, nb,
+ 					DEVFREQ_TRANSITION_NOTIFIER);
+ 		break;
+ 	case DEVFREQ_GOV_STOP:
+-		devm_devfreq_unregister_notifier(dev, parent, nb,
+-					DEVFREQ_TRANSITION_NOTIFIER);
++		WARN_ON(devfreq_unregister_notifier(parent, nb,
++					DEVFREQ_TRANSITION_NOTIFIER));
+ 		break;
+ 	default:
+ 		break;
 -- 
 2.20.1
 
