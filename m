@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECFEC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC3C7C4740C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EED0E21D6C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:55:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89B5C21D7F
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:55:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178544;
-	bh=++ww0M8FldhONH/sKfUkcOspcDTMgTrhuVQH5MzsDWA=;
+	s=default; t=1569178546;
+	bh=wDpL378kGVf4pMIXAYaTkF7wCXDt9A51ysKZ6bNNgTc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CXDwIr/t345sTrEB9H/g/Piip2fG8Ucqs3INoHab6Ko70cJyOfcnlPvRoApGIY7is
-	 Hm2444tVv/SLzwY8+S8U1f5rSYHF9aONEav+zVRb60ElxZCK8EM2EMov15KM5Z49eV
-	 dsO3alJDY7z5ONyYe+gihEMSUhTEhlnlTW3b846E=
+	b=j00wEBvflXYCESLNzndj5dLoO6og/2ssQuV8nRGlwHGSTOp4VxaToJRRWERDfLtYo
+	 oq5mFtflNwn0X+VkSeARLD+riYnO9qcGlulHeYG5s9C4x/Dfage0JtrnP4gTUGLa9R
+	 gH0lnRGxyRuKUrUY/K+CZtL6GhT/RFlpXhY/l3v8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438509AbfIVSzn (ORCPT
+        id S1729332AbfIVSzq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:55:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56908 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:55:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729238AbfIVSzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:55:36 -0400
+        id S2438440AbfIVSzi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:55:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86BB821D7E;
-        Sun, 22 Sep 2019 18:55:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6154F222BD;
+        Sun, 22 Sep 2019 18:55:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178535;
-        bh=++ww0M8FldhONH/sKfUkcOspcDTMgTrhuVQH5MzsDWA=;
+        s=default; t=1569178537;
+        bh=wDpL378kGVf4pMIXAYaTkF7wCXDt9A51ysKZ6bNNgTc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WanaGgpvJBy+DCPYr/giU2co38FLpkskVtaUrmDAcRLJFEIAxv1gffC/yrai/eUkU
-         4I9uCzTdxgfVDu9XGWN1gWhcLpdvyfHASIkhW/bj7AKS6XplDYql16AlLwqZKxMvSV
-         w985dm1tWSf/9N3xgku/Q3CkqsYKOQ3n1gquUWHM=
+        b=Roullq0+4od8yfTPplBkGO/MJNkfl6Q+9dC/sz3+LCnMktPBi4ZVzToVAr+kSTDg2
+         s66MOCygLka09TxerxP78AV1UYCzizcuesYpBGiW4pVmKfYTmZb3KVCeKA8cZyIf1m
+         DRa+m5n4lTLflFwZ3Mft2CDgeV8ggxD4AGSH9KAM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, kbuild test robot <lkp@intel.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 057/128] net: lpc-enet: fix printk format strings
-Date:   Sun, 22 Sep 2019 14:53:07 -0400
-Message-Id: <20190922185418.2158-57-sashal@kernel.org>
+Cc:     Finn Thain <fthain@telegraphics.com.au>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-m68k@lists.linux-m68k.org
+Subject: [PATCH AUTOSEL 4.19 058/128] m68k: Prevent some compiler warnings in Coldfire builds
+Date:   Sun, 22 Sep 2019 14:53:08 -0400
+Message-Id: <20190922185418.2158-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
 References: <20190922185418.2158-1-sashal@kernel.org>
@@ -58,61 +61,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-[ Upstream commit de6f97b2bace0e2eb6c3a86e124d1e652a587b56 ]
+[ Upstream commit 94c04390225bcd8283103fd0c04be20cc30cc979 ]
 
-compile-testing this driver on other architectures showed
-multiple warnings:
+Since commit d3b41b6bb49e ("m68k: Dispatch nvram_ops calls to Atari or
+Mac functions"), Coldfire builds generate compiler warnings due to the
+unconditional inclusion of asm/atarihw.h and asm/macintosh.h.
 
-  drivers/net/ethernet/nxp/lpc_eth.c: In function 'lpc_eth_drv_probe':
-  drivers/net/ethernet/nxp/lpc_eth.c:1337:19: warning: format '%d' expects argument of type 'int', but argument 4 has type 'resource_size_t {aka long long unsigned int}' [-Wformat=]
+The inclusion of asm/atarihw.h causes warnings like this:
 
-  drivers/net/ethernet/nxp/lpc_eth.c:1342:19: warning: format '%x' expects argument of type 'unsigned int', but argument 4 has type 'dma_addr_t {aka long long unsigned int}' [-Wformat=]
+In file included from ./arch/m68k/include/asm/atarihw.h:25:0,
+                 from arch/m68k/kernel/setup_mm.c:41,
+                 from arch/m68k/kernel/setup.c:3:
+./arch/m68k/include/asm/raw_io.h:39:0: warning: "__raw_readb" redefined
+ #define __raw_readb in_8
 
-Use format strings that work on all architectures.
+In file included from ./arch/m68k/include/asm/io.h:6:0,
+                 from arch/m68k/kernel/setup_mm.c:36,
+                 from arch/m68k/kernel/setup.c:3:
+./arch/m68k/include/asm/io_no.h:16:0: note: this is the location of the previous definition
+ #define __raw_readb(addr) \
+...
 
-Link: https://lore.kernel.org/r/20190809144043.476786-10-arnd@arndb.de
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+This issue is resolved by dropping the asm/raw_io.h include. It turns out
+that asm/io_mm.h already includes that header file.
+
+Moving the relevant macro definitions helps to clarify this dependency
+and make it safe to include asm/atarihw.h.
+
+The other warnings look like this:
+
+In file included from arch/m68k/kernel/setup_mm.c:48:0,
+                 from arch/m68k/kernel/setup.c:3:
+./arch/m68k/include/asm/macintosh.h:19:35: warning: 'struct irq_data' declared inside parameter list will not be visible outside of this definition or declaration
+ extern void mac_irq_enable(struct irq_data *data);
+                                   ^~~~~~~~
+...
+
+This issue is resolved by adding the missing linux/irq.h include.
+
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Acked-by: Greg Ungerer <gerg@linux-m68k.org>
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/nxp/lpc_eth.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ arch/m68k/include/asm/atarihw.h   | 9 ---------
+ arch/m68k/include/asm/io_mm.h     | 6 +++++-
+ arch/m68k/include/asm/macintosh.h | 1 +
+ 3 files changed, 6 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/net/ethernet/nxp/lpc_eth.c b/drivers/net/ethernet/nxp/lpc_eth.c
-index 08381ef8bdb48..41d30f55c946b 100644
---- a/drivers/net/ethernet/nxp/lpc_eth.c
-+++ b/drivers/net/ethernet/nxp/lpc_eth.c
-@@ -1371,13 +1371,14 @@ static int lpc_eth_drv_probe(struct platform_device *pdev)
- 	pldat->dma_buff_base_p = dma_handle;
+diff --git a/arch/m68k/include/asm/atarihw.h b/arch/m68k/include/asm/atarihw.h
+index 9000b249d225e..407a617fa3a2b 100644
+--- a/arch/m68k/include/asm/atarihw.h
++++ b/arch/m68k/include/asm/atarihw.h
+@@ -22,7 +22,6 @@
  
- 	netdev_dbg(ndev, "IO address space     :%pR\n", res);
--	netdev_dbg(ndev, "IO address size      :%d\n", resource_size(res));
-+	netdev_dbg(ndev, "IO address size      :%zd\n",
-+			(size_t)resource_size(res));
- 	netdev_dbg(ndev, "IO address (mapped)  :0x%p\n",
- 			pldat->net_base);
- 	netdev_dbg(ndev, "IRQ number           :%d\n", ndev->irq);
--	netdev_dbg(ndev, "DMA buffer size      :%d\n", pldat->dma_buff_size);
--	netdev_dbg(ndev, "DMA buffer P address :0x%08x\n",
--			pldat->dma_buff_base_p);
-+	netdev_dbg(ndev, "DMA buffer size      :%zd\n", pldat->dma_buff_size);
-+	netdev_dbg(ndev, "DMA buffer P address :%pad\n",
-+			&pldat->dma_buff_base_p);
- 	netdev_dbg(ndev, "DMA buffer V address :0x%p\n",
- 			pldat->dma_buff_base_v);
+ #include <linux/types.h>
+ #include <asm/bootinfo-atari.h>
+-#include <asm/raw_io.h>
+ #include <asm/kmap.h>
  
-@@ -1424,8 +1425,8 @@ static int lpc_eth_drv_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_out_unregister_netdev;
+ extern u_long atari_mch_cookie;
+@@ -126,14 +125,6 @@ extern struct atari_hw_present atari_hw_present;
+  */
  
--	netdev_info(ndev, "LPC mac at 0x%08x irq %d\n",
--	       res->start, ndev->irq);
-+	netdev_info(ndev, "LPC mac at 0x%08lx irq %d\n",
-+	       (unsigned long)res->start, ndev->irq);
  
- 	phydev = ndev->phydev;
+-#define atari_readb   raw_inb
+-#define atari_writeb  raw_outb
+-
+-#define atari_inb_p   raw_inb
+-#define atari_outb_p  raw_outb
+-
+-
+-
+ #include <linux/mm.h>
+ #include <asm/cacheflush.h>
+ 
+diff --git a/arch/m68k/include/asm/io_mm.h b/arch/m68k/include/asm/io_mm.h
+index 782b78f8a0489..e056feabbaf0b 100644
+--- a/arch/m68k/include/asm/io_mm.h
++++ b/arch/m68k/include/asm/io_mm.h
+@@ -29,7 +29,11 @@
+ #include <asm-generic/iomap.h>
+ 
+ #ifdef CONFIG_ATARI
+-#include <asm/atarihw.h>
++#define atari_readb   raw_inb
++#define atari_writeb  raw_outb
++
++#define atari_inb_p   raw_inb
++#define atari_outb_p  raw_outb
+ #endif
+ 
+ 
+diff --git a/arch/m68k/include/asm/macintosh.h b/arch/m68k/include/asm/macintosh.h
+index 08cee11180e69..e441517785fda 100644
+--- a/arch/m68k/include/asm/macintosh.h
++++ b/arch/m68k/include/asm/macintosh.h
+@@ -4,6 +4,7 @@
+ 
+ #include <linux/seq_file.h>
+ #include <linux/interrupt.h>
++#include <linux/irq.h>
+ 
+ #include <asm/bootinfo-mac.h>
  
 -- 
 2.20.1
