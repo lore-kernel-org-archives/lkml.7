@@ -2,135 +2,98 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD0A6C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD374C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:26:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CBCF2054F
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:26:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180397;
-	bh=UgYhas+Ne82pUddsBnQzmIKiDCnGAB4Tisqknu33vB4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WpFxWA7oNv94b7UE1dE+1q4xXCtqaRJVNWRdGgqEl6oMw1KDn41KrBhmVk0D5fnnK
-	 PO6WwuwmJWqV0akqRMCbhKpPjfReLZDgjrqrcPE9IEE0q9xrGNHzV6Xl4O6uOmQLBx
-	 uFQsiBOUt2j4JymZX5CZxkRlraumCw9Ri5kmwa80=
+	by mail.kernel.org (Postfix) with ESMTP id B40742054F
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:26:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TFIB0SN2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731604AbfIVT0g (ORCPT
+        id S2392955AbfIVT0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:26:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49890 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406185AbfIVSvq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:51:46 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D415C21BE5;
-        Sun, 22 Sep 2019 18:51:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178305;
-        bh=UgYhas+Ne82pUddsBnQzmIKiDCnGAB4Tisqknu33vB4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=noLYj7ie6c+p+EmE10P075hB5XLE7lEotGIqV7+SysfO5iWafAbqizP/SFvvrWK1Y
-         A7pnwDTgDH2yV3s/5M8tr3O4R8RSJdFTSpSmRSZ9gHrZswvu6ad4iKKbQZIUthis8V
-         H9nKqkRDjOW0Bk/CE8SY+sg7hXPxy2wzlsKqzDAo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 5.2 076/185] media: imx: mipi csi-2: Don't fail if initial state times-out
-Date:   Sun, 22 Sep 2019 14:47:34 -0400
-Message-Id: <20190922184924.32534-76-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
-References: <20190922184924.32534-1-sashal@kernel.org>
+        Sun, 22 Sep 2019 15:26:38 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:35811 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726901AbfIVT0f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 15:26:35 -0400
+Received: by mail-lf1-f66.google.com with SMTP id w6so8460536lfl.2;
+        Sun, 22 Sep 2019 12:26:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=L76YLWOFlYefoF5IWQJFPDzu3cQ5HwkEiAAUBOXMLzQ=;
+        b=TFIB0SN25FbvDBAl2p7UFn323dHMWmd3HYy9kgMu2BY9wzKqQ6iDAu02siWKeNIsxU
+         sUc6MHCUvSFs5+ErhBljqUKhg94RTiTPTaCPOHVYjJ1HbK1Sc99RG+JUi8wcy6mAz26C
+         JNuFQWjZISb/E9vrhq+H5GqREYbw7l1mHi3u84BYNPVq0WAZ0PZqgFQuzVhElM8pGtVH
+         ZxIwyQ1VvR66jQjJvJZSEjGeTlTKI+96Bb0Rudqqgbs2ds4gyJzxKn8hxij6SNZ44LDY
+         FRgxxg2+E5QhPdM80NGmwhyNdYew9XzRVCHtuX78NosYNcBndLqRngfpvA9xngo3O43y
+         HBsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=L76YLWOFlYefoF5IWQJFPDzu3cQ5HwkEiAAUBOXMLzQ=;
+        b=fx+kwKACJW4EYCLsqS/P6uI1NYhhubyF7STmf0YohQJBFqqDj2j4ROQAylRLz/A34X
+         PejnnBJFj1JNQoUL+Fwd9OhsxY9TKBOYPqEZvNrCgDufOiMAKZOuNfRVbUFbLNVc+Jh4
+         /MQQz2XNEPGlBfgAjaGeNOdoxgxwBMATxUl9n8VI/MOC2vkmjufeugBg0FBtl7axxzZJ
+         9bMEw5rZlQyzcSCaz+/lpHYqNC2M8BFe/GS+A+BNQ7DYT6wF7oZTufLvxLkGGy6TdXDb
+         L239r72UE4xQ1QAdTitmoVhqGVo3MYs/VJBv4UTEI7GKYnwWFEFi2VQNqL69DaUDoLnR
+         /qbg==
+X-Gm-Message-State: APjAAAXfIIOqY+Npqu3bf6aL0GcA5URz4QptLrlppix1PLyJWCa3mRJQ
+        zN2FchQX53Fvzrt9E8FQnJ8qz18zgh6OT+SvBgCCqg==
+X-Google-Smtp-Source: APXvYqytMKbvsvu/LrkGmF/Y+0KYVc/ZLb51eZuAhov/AxwUlYlpBAi1oZ1t2ZgwyXXR0xnVai/9uMWA1IJMxqaqgG4=
+X-Received: by 2002:ac2:568c:: with SMTP id 12mr14378512lfr.133.1569180392530;
+ Sun, 22 Sep 2019 12:26:32 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <lsq.1568989414.954567518@decadent.org.uk> <20190920200423.GA26056@roeck-us.net>
+ <8dbced01558cd8d4a1d4f058010e7d63e5f6810e.camel@decadent.org.uk>
+In-Reply-To: <8dbced01558cd8d4a1d4f058010e7d63e5f6810e.camel@decadent.org.uk>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Sun, 22 Sep 2019 21:26:21 +0200
+Message-ID: <CANiq72mYYzH1oS4h9GTODMP1ckZn2GnGTGirue1VLU1aw+Qo2A@mail.gmail.com>
+Subject: Re: [PATCH 3.16 000/132] 3.16.74-rc1 review
+To:     Ben Hutchings <ben@decadent.org.uk>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Denis Kirjanov <kda@linux-powerpc.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ezequiel Garcia <ezequiel@collabora.com>
+On Sun, Sep 22, 2019 at 9:04 PM Ben Hutchings <ben@decadent.org.uk> wrote:
+>
+> It looks like this is triggered by you switching arm builds from gcc 8
+> to 9, rather than by any code change.
+>
+> Does it actually make sense to try to support building Linux 3.16 with
+> gcc 9?  If so, I suppose I'll need to add:
+>
+> commit edc966de8725f9186cc9358214da89d335f0e0bd
+> Author: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+> Date:   Fri Aug 2 12:37:56 2019 +0200
+>
+>     Backport minimal compiler_attributes.h to support GCC 9
+>
+> commit a6e60d84989fa0e91db7f236eda40453b0e44afa
+> Author: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+> Date:   Sat Jan 19 20:59:34 2019 +0100
+>
+>     include/linux/module.h: copy __init/__exit attrs to init/cleanup_module
 
-[ Upstream commit 0d5078c7172c46db6c58718d817b9fcf769554b4 ]
+Yeah, those should fix it.
 
-Not all sensors will be able to guarantee a proper initial state.
-This may be either because the driver is not properly written,
-or (probably unlikely) because the hardware won't support it.
-
-While the right solution in the former case is to fix the sensor
-driver, the real world not always allows right solutions, due to lack
-of available documentation and support on these sensors.
-
-Let's relax this requirement, and allow the driver to support stream start,
-even if the sensor initial sequence wasn't the expected.
-
-Also improve the warning message to better explain the problem and provide
-a hint that the sensor driver needs to be fixed.
-
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Reviewed-by: Steve Longerbeam <slongerbeam@gmail.com>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/staging/media/imx/imx6-mipi-csi2.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/staging/media/imx/imx6-mipi-csi2.c b/drivers/staging/media/imx/imx6-mipi-csi2.c
-index f29e28df36ed8..bfa4b254c4e48 100644
---- a/drivers/staging/media/imx/imx6-mipi-csi2.c
-+++ b/drivers/staging/media/imx/imx6-mipi-csi2.c
-@@ -243,7 +243,7 @@ static int __maybe_unused csi2_dphy_wait_ulp(struct csi2_dev *csi2)
- }
- 
- /* Waits for low-power LP-11 state on data and clock lanes. */
--static int csi2_dphy_wait_stopstate(struct csi2_dev *csi2)
-+static void csi2_dphy_wait_stopstate(struct csi2_dev *csi2)
- {
- 	u32 mask, reg;
- 	int ret;
-@@ -254,11 +254,9 @@ static int csi2_dphy_wait_stopstate(struct csi2_dev *csi2)
- 	ret = readl_poll_timeout(csi2->base + CSI2_PHY_STATE, reg,
- 				 (reg & mask) == mask, 0, 500000);
- 	if (ret) {
--		v4l2_err(&csi2->sd, "LP-11 timeout, phy_state = 0x%08x\n", reg);
--		return ret;
-+		v4l2_warn(&csi2->sd, "LP-11 wait timeout, likely a sensor driver bug, expect capture failures.\n");
-+		v4l2_warn(&csi2->sd, "phy_state = 0x%08x\n", reg);
- 	}
--
--	return 0;
- }
- 
- /* Wait for active clock on the clock lane. */
-@@ -316,9 +314,7 @@ static int csi2_start(struct csi2_dev *csi2)
- 	csi2_enable(csi2, true);
- 
- 	/* Step 5 */
--	ret = csi2_dphy_wait_stopstate(csi2);
--	if (ret)
--		goto err_assert_reset;
-+	csi2_dphy_wait_stopstate(csi2);
- 
- 	/* Step 6 */
- 	ret = v4l2_subdev_call(csi2->src_sd, video, s_stream, 1);
--- 
-2.20.1
-
+Cheers,
+Miguel
