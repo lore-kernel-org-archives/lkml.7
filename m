@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3647AC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:56:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EAA2C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CE9B2184D
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:56:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 680862184D
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:56:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178570;
-	bh=2RCEg7l97LRwKRzZakcVXzs9bT+W5NfSG1bK1ShynnA=;
+	s=default; t=1569178575;
+	bh=aBfrh3L5PZ4K35YPTLRGipJ41jGGSUx0n61xmPkmCZ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TqB+D3langbJgDi89JO0MLRjIHY3dgQnNqmSFRpgunVtAXTOE8n0rxptTkLYdustt
-	 /JRKNWzOSt5Wtf86dHCRbZ4t8puBOf75FTS62d0gYqjm0CKFbWnTKhJDu2Cx9x9Nn8
-	 vSJkLIZm2jj19uzQL+t5f8XqAmKftFpo+qhhWJTU=
+	b=spn6pvAP2yaZchzO9U2keAWcXCbGBjoEZDEgtNvPw9GNRnCjGasZv41eVWANiijk9
+	 1x3Yu2iJxF870nBl/DgeVXHCycP08sANHuBJvSruAQ3tCYecDDr8oAFBsx1EXsXndp
+	 TTw7E+wBGmuK/X7dUUNjbQ/rM4yWMNGtGtgIRKOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408173AbfIVS4J (ORCPT
+        id S2438537AbfIVS4O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:56:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57714 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:56:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408127AbfIVSz7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:55:59 -0400
+        id S2404244AbfIVS4M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:56:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E0B1206C2;
-        Sun, 22 Sep 2019 18:55:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECA422184D;
+        Sun, 22 Sep 2019 18:56:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178558;
-        bh=2RCEg7l97LRwKRzZakcVXzs9bT+W5NfSG1bK1ShynnA=;
+        s=default; t=1569178571;
+        bh=aBfrh3L5PZ4K35YPTLRGipJ41jGGSUx0n61xmPkmCZ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X0vuYwA1ReBKJGVmJ/5hZj1CkAP9RdcBr7/SxSDDQu7rC9LwJBzeRbRVtJiyFf4GB
-         amgc3yu0tJ+hfD5BNVhUv5A4zfoGdrH/78ZRKdDVCfyPRh4VLKwsuTuqjvkIrO8dl9
-         PBXJHFLDy5ZAplnhDkFrDaXSiJM5PUVQyKEozTzI=
+        b=NdqzR8ykUbFhfnbSjTJZzltZ4M+ungNHY7BcO0FNdXlA7wnevIBkGxBKjsx0VG57k
+         0In+tmV+1Qaid7X8P7xjxyEs3NL6xH8d0EigQ9n2tUJV60aUAFMDGFMqKEcPO/B9VF
+         QqSDMDb8Vuy0LF5D6iGsZTUrMhhlOD8TSGWWmEwk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yazen Ghannam <yazen.ghannam@amd.com>,
-        Borislav Petkov <bp@suse.de>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
+Cc:     Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Daniel Drake <drake@endlessm.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 073/128] EDAC/amd64: Recognize DRAM device type ECC capability
-Date:   Sun, 22 Sep 2019 14:53:23 -0400
-Message-Id: <20190922185418.2158-73-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 083/128] ASoC: es8316: fix headphone mixer volume table
+Date:   Sun, 22 Sep 2019 14:53:33 -0400
+Message-Id: <20190922185418.2158-83-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
 References: <20190922185418.2158-1-sashal@kernel.org>
@@ -63,70 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yazen Ghannam <yazen.ghannam@amd.com>
+From: Katsuhiro Suzuki <katsuhiro@katsuster.net>
 
-[ Upstream commit f8be8e5680225ac9caf07d4545f8529b7395327f ]
+[ Upstream commit f972d02fee2496024cfd6f59021c9d89d54922a6 ]
 
-AMD Family 17h systems support x4 and x16 DRAM devices. However, the
-device type is not checked when setting mci.edac_ctl_cap.
+This patch fix setting table of Headphone mixer volume.
+Current code uses 4 ... 7 values but these values are prohibited.
 
-Set the appropriate capability flag based on the device type.
+Correct settings are the following:
+  0000 -12dB
+  0001 -10.5dB
+  0010 -9dB
+  0011 -7.5dB
+  0100 -6dB
+  1000 -4.5dB
+  1001 -3dB
+  1010 -1.5dB
+  1011 0dB
 
-Default to x8 DRAM device when neither the x4 or x16 bits are set.
-
- [ bp: reverse cpk_en check to save an indentation level. ]
-
-Fixes: 2d09d8f301f5 ("EDAC, amd64: Determine EDAC MC capabilities on Fam17h")
-Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
-Cc: James Morse <james.morse@arm.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Tony Luck <tony.luck@intel.com>
-Link: https://lkml.kernel.org/r/20190821235938.118710-3-Yazen.Ghannam@amd.com
+Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Reviewed-by: Daniel Drake <drake@endlessm.com>
+Link: https://lore.kernel.org/r/20190826153900.25969-1-katsuhiro@katsuster.net
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/amd64_edac.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ sound/soc/codecs/es8316.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
-index e2addb2bca296..1613df20774f9 100644
---- a/drivers/edac/amd64_edac.c
-+++ b/drivers/edac/amd64_edac.c
-@@ -3101,12 +3101,15 @@ static bool ecc_enabled(struct pci_dev *F3, u16 nid)
- static inline void
- f17h_determine_edac_ctl_cap(struct mem_ctl_info *mci, struct amd64_pvt *pvt)
- {
--	u8 i, ecc_en = 1, cpk_en = 1;
-+	u8 i, ecc_en = 1, cpk_en = 1, dev_x4 = 1, dev_x16 = 1;
+diff --git a/sound/soc/codecs/es8316.c b/sound/soc/codecs/es8316.c
+index e97d12d578b00..9ebe77c3784a8 100644
+--- a/sound/soc/codecs/es8316.c
++++ b/sound/soc/codecs/es8316.c
+@@ -46,7 +46,10 @@ static const SNDRV_CTL_TLVD_DECLARE_DB_SCALE(adc_vol_tlv, -9600, 50, 1);
+ static const SNDRV_CTL_TLVD_DECLARE_DB_SCALE(alc_max_gain_tlv, -650, 150, 0);
+ static const SNDRV_CTL_TLVD_DECLARE_DB_SCALE(alc_min_gain_tlv, -1200, 150, 0);
+ static const SNDRV_CTL_TLVD_DECLARE_DB_SCALE(alc_target_tlv, -1650, 150, 0);
+-static const SNDRV_CTL_TLVD_DECLARE_DB_SCALE(hpmixer_gain_tlv, -1200, 150, 0);
++static const SNDRV_CTL_TLVD_DECLARE_DB_RANGE(hpmixer_gain_tlv,
++	0, 4, TLV_DB_SCALE_ITEM(-1200, 150, 0),
++	8, 11, TLV_DB_SCALE_ITEM(-450, 150, 0),
++);
  
- 	for (i = 0; i < NUM_UMCS; i++) {
- 		if (pvt->umc[i].sdp_ctrl & UMC_SDP_INIT) {
- 			ecc_en &= !!(pvt->umc[i].umc_cap_hi & UMC_ECC_ENABLED);
- 			cpk_en &= !!(pvt->umc[i].umc_cap_hi & UMC_ECC_CHIPKILL_CAP);
-+
-+			dev_x4  &= !!(pvt->umc[i].dimm_cfg & BIT(6));
-+			dev_x16 &= !!(pvt->umc[i].dimm_cfg & BIT(7));
- 		}
- 	}
+ static const SNDRV_CTL_TLVD_DECLARE_DB_RANGE(adc_pga_gain_tlv,
+ 	0, 0, TLV_DB_SCALE_ITEM(-350, 0, 0),
+@@ -84,7 +87,7 @@ static const struct snd_kcontrol_new es8316_snd_controls[] = {
+ 	SOC_DOUBLE_TLV("Headphone Playback Volume", ES8316_CPHP_ICAL_VOL,
+ 		       4, 0, 3, 1, hpout_vol_tlv),
+ 	SOC_DOUBLE_TLV("Headphone Mixer Volume", ES8316_HPMIX_VOL,
+-		       0, 4, 7, 0, hpmixer_gain_tlv),
++		       0, 4, 11, 0, hpmixer_gain_tlv),
  
-@@ -3114,8 +3117,15 @@ f17h_determine_edac_ctl_cap(struct mem_ctl_info *mci, struct amd64_pvt *pvt)
- 	if (ecc_en) {
- 		mci->edac_ctl_cap |= EDAC_FLAG_SECDED;
- 
--		if (cpk_en)
-+		if (!cpk_en)
-+			return;
-+
-+		if (dev_x4)
- 			mci->edac_ctl_cap |= EDAC_FLAG_S4ECD4ED;
-+		else if (dev_x16)
-+			mci->edac_ctl_cap |= EDAC_FLAG_S16ECD16ED;
-+		else
-+			mci->edac_ctl_cap |= EDAC_FLAG_S8ECD8ED;
- 	}
- }
- 
+ 	SOC_ENUM("Playback Polarity", dacpol),
+ 	SOC_DOUBLE_R_TLV("DAC Playback Volume", ES8316_DAC_VOLL,
 -- 
 2.20.1
 
