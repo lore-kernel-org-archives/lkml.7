@@ -2,152 +2,101 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EE2C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 17:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BDF0C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 17:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A1B3206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 17:05:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 540F021907
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 17:09:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TuDpW8wz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388140AbfIVRFQ (ORCPT
+        id S2388156AbfIVRJO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 13:05:16 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:18199 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387814AbfIVRFQ (ORCPT
+        Sun, 22 Sep 2019 13:09:14 -0400
+Received: from mail-pf1-f182.google.com ([209.85.210.182]:37977 "EHLO
+        mail-pf1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387562AbfIVRJO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 13:05:16 -0400
-X-UUID: 49212885924945968eca7b064bffa9b4-20190923
-X-UUID: 49212885924945968eca7b064bffa9b4-20190923
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
-        (envelope-from <miles.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 264843363; Mon, 23 Sep 2019 01:05:09 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 23 Sep 2019 01:05:04 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 23 Sep 2019 01:05:04 +0800
-Message-ID: <1569171908.9436.55.camel@mtkswgap22>
-Subject: Re: [PATCH] mm: slub: print_hex_dump() with DUMP_PREFIX_OFFSET
-From:   Miles Chen <miles.chen@mediatek.com>
-To:     Matthew Wilcox <willy@infradead.org>
-CC:     David Rientjes <rientjes@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>
-Date:   Mon, 23 Sep 2019 01:05:08 +0800
-In-Reply-To: <20190921160018.GF15392@bombadil.infradead.org>
-References: <20190920104849.32504-1-miles.chen@mediatek.com>
-         <alpine.DEB.2.21.1909210207240.259613@chino.kir.corp.google.com>
-         <20190921160018.GF15392@bombadil.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Sun, 22 Sep 2019 13:09:14 -0400
+Received: by mail-pf1-f182.google.com with SMTP id h195so7535805pfe.5;
+        Sun, 22 Sep 2019 10:09:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hHobqoGYvKr31jIojYx1ULHBxGJ4jtH7umzyrIjmR8E=;
+        b=TuDpW8wz6k1OfD/frjG7tOMCfMmyD6VrI0Zql2fjLaLljB6TcAcKYPgw/iB9W8WQ4l
+         gsBV961/JYmIYlF0XhdjGcAwpNqHDYcsF2D43efp7Gb5xBwe5H1Hp2SKVK3HRvQLx9cH
+         SJ7TrB19gt4XwBgRJkwvcVPoTbyCd4Ts1u5SAaTorXbhwVtCj6h79UJautimw1UXOTF6
+         Xzmc7DFRxyJYo4HuO0nZyiTP1ZwxTm5076chBkMWUfw5xjhPe7cUKbyBhKXCXxA0M/tA
+         rntmZflAv3gLkTNB7YnTpUN6/ax8k0Lz5RA2weO7YYYykkbGeqNf7tqLeI6gaQ6DzFTQ
+         b7Rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hHobqoGYvKr31jIojYx1ULHBxGJ4jtH7umzyrIjmR8E=;
+        b=AWDWv5/eor8iXPeoAoqT7KpdtLZhMQZVb9zR6s3rdgrnWeQ+++w+MFeacaXfrEkD77
+         hQ9aVCTfr+K8jCR3eYG9NRgDas4n+J3tIjNEk7JI/CYmevZanizZLtbzWOQcN5jtyz3o
+         GX5vxKvZNlWCDVrQPkcC4cU1qfDSL4vajZQW6l7bYwdBdOX6W41E5q28a0oCypCSDqLF
+         ntvr+IltKHFs7kFO10/TLLa5lDyiOc9IZft+/EtLjMEgmZ8VLLTAa5oPP/RKzpJXOA8B
+         VfnwUHH3/aS8aNCYJY/vTXFpYa0swPlVEFNXGpBsmYHwXwS8qrg0IF3jOfmR9mkXKWre
+         UN6Q==
+X-Gm-Message-State: APjAAAU6j/4IALzlNM3vN1aY0mLLGeM5JM8NGuPBf6hbm8finzv9amVo
+        mIg4kUISOkgJLO4/PqnXKUA=
+X-Google-Smtp-Source: APXvYqyTEabIP7SvDyQkFpy3GvV5Sk50KOc3Uj67J+U2y/TqWXh8/bAaWsPcumRo+Xbh/mAuxkflsg==
+X-Received: by 2002:a17:90a:ba94:: with SMTP id t20mr16733037pjr.8.1569172152908;
+        Sun, 22 Sep 2019 10:09:12 -0700 (PDT)
+Received: from SD ([2409:4041:2e8b:6e6f:acd5:5ade:157f:5f8f])
+        by smtp.gmail.com with ESMTPSA id j25sm5308411pfi.113.2019.09.22.10.09.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Sep 2019 10:09:12 -0700 (PDT)
+Date:   Sun, 22 Sep 2019 22:39:06 +0530
+From:   Saiyam Doshi <saiyamdoshi.in@gmail.com>
+To:     Wolfram Sang <wsa@the-dreams.de>, Markus.Elfring@web.de
+Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [v2 0/3] Fix issues reported by Coccinelle
+Message-ID: <20190922170906.GB5589@SD>
+References: <20190917172758.GA11926@SD>
+ <76e99512-8818-cec2-9e77-799e4c8481ab@web.de>
+ <20190917181423.GB28182@ninjato>
 MIME-Version: 1.0
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190917181423.GB28182@ninjato>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-09-21 at 09:00 -0700, Matthew Wilcox wrote:
-> On Sat, Sep 21, 2019 at 02:08:59AM -0700, David Rientjes wrote:
-> > On Fri, 20 Sep 2019, Miles Chen wrote:
+On Tue, Sep 17, 2019 at 08:14:23PM +0200, Wolfram Sang wrote:
+> On Tue, Sep 17, 2019 at 08:10:45PM +0200, Markus Elfring wrote:
+> > > Using cocciecheck to ensure there are no semantic issues in
+> > > i2c-qup driver.
 > > 
-> > > Since commit ad67b74d2469d9b8 ("printk: hash addresses printed with %p"),
-> > > The use DUMP_PREFIX_OFFSET instead of DUMP_PREFIX_ADDRESS with
-> > > print_hex_dump() can generate more useful messages.
-> > > 
-> > > In the following example, it's easier get the offset of incorrect poison
-> > > value with DUMP_PREFIX_OFFSET.
-> > > 
-> > > Before:
-> > > Object 00000000e817b73b: 00 00 00 00 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-> > > Object 00000000816f4601: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-> > > Object 00000000169d2bb8: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-> > > Object 00000000f4c38716: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-> > > Object 00000000917e3491: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-> > > Object 00000000c0e33738: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-> > > Object 000000001755ddd1: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-> > > 
-> > > After:
-> > > Object 00000000: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-> > > Object 00000010: 63 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-> > > Object 00000020: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-> > > Object 00000030: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b a5
-> > 
-> > I agree it looks nicer for poisoning, I'm not sure that every caller of 
-> > print_section() is the same, however.  For example trace() seems better 
-> > off as DUMP_PREFIX_ADDRESS since it already specifies the address of the 
-> > object being allocated or freed and offset here wouldn't really be useful, 
-> > no?
+> > * This wording contains a typo.
 > 
-> While it looks nicer, it might be less useful for debugging.  The point of
-> obfuscated %p is that you can compare two "pointer" values for equality.
-> So if you know that you freed object 00000000e817b73b from an earlier
-> printk, then you can match it up to this dump.  It's obviously not
-> perfect since we're only getting the pointers at addresses that are
-> multiples of 16, but it's a help.
+> Doesn't matter to me for a cover letter as long as we can understand it.
+> 
+> > * I would prefer to refer to a desired reduction of a few
+> >   source code quality concerns.
+> 
+> Not needed. I understand what is going on here.
 
-Thanks for the reply.
+Markus - By "ensure", I mean there are no further cocciecheck issues at this
+point in time. And further, what changed is covered in individual patch
+changelog. So, I think this information is fine in cover.
 
-The value of 00000000e817b73b dump and the value earlier printk should
-be the same, Otherwise we have a serious problem because:
+> > Can such a prefix be omitted?
+Can be, but I like to keep it.
 
-printf("%p", bad_ptr);
-print_hex_dump(bad_ptr);
+Thanks for review.
 
-and we see a different hashed address of bad_ptr in print_hex_dump().
-I think it's a rare case but we still have a chance to see that case.
-DUMP_PREFIX_ADDRESS is useful for that case.
-
-
-On the other hand, DUMP_PREFIX_OFFSET is useful for finding the offset
-of incorrect poison value easier. 
-Maybe I can print the offset of the bad poison value in 
-check_bytes_and_report(). e.g., 
-
-@@ -736,6 +736,7 @@ static int check_bytes_and_report(struct kmem_cache
-*s, struct page *page,
- {
-        u8 *fault;
-        u8 *end;
-+       u8 *addr = page_address(page);
-
-        metadata_access_enable();
-        fault = memchr_inv(start, value, bytes);
-@@ -748,8 +749,9 @@ static int check_bytes_and_report(struct kmem_cache
-*s, struct page *page,
-                end--;
-
-        slab_bug(s, "%s overwritten", what);
--       pr_err("INFO: 0x%p-0x%p. First byte 0x%x instead of 0x%x\n",
--                                       fault, end - 1, fault[0],
-value);
-+       pr_err("INFO: 0x%p-0x%p. First byte 0x%x instead of 0x%x,
-offset=%tu\n",
-+                                       fault, end - 1, fault[0], value,
-fault -
-+                                       addr);
-
-
-and we can see the offset printed out:
-
-=============================================================================
-BUG kmalloc-1k (Tainted: G    B            ): Poison overwritten
------------------------------------------------------------------------------
-
-INFO: 0x(____ptrval____)-0x(____ptrval____). First byte 0x63 instead of
-0x6b, offset=7052
-INFO: Object 0x(____ptrval____) @offset=6272 fp=0x(____ptrval____)
-
-and we can get the offset by: 7052 - 6272 = 780.
-
+-Saiyam
