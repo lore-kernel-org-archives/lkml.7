@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6689EC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E7D5C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DCF920882
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:24:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D019206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:24:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180260;
-	bh=xEyFGuV9urV2Izp0x4mN7WNWUY36GjkjKfAmNsiu/P8=;
+	s=default; t=1569180263;
+	bh=jFyrjGVt0cRFDQk6Fgliyx+XUAerjBChFSMocGjBCxw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z/jwfrrQDCzZmltw1TDSJXMGwVz6fgQNqQMhGjJbslISka5nDGmHP8C6y7ARQpuVr
-	 a6JVYizzyMUWZO5t8NoPyCCcHHcVgm3TQvUaYRw/pZJMpsDbtdTpAWNfkv/5YN2gxm
-	 dVLLcdRIBxAfk5ZM9tGm4SlALmzq/hTy5Vw6/nm4=
+	b=MUVaHfvUX8uyWy8rnz6c0h0RDOXAT9a14lZpAzoKrin//dXh20QMT5t1exQshD2o3
+	 1Fk/tggq9UE0Tkt7ARQ7+rf6iqUAQIvG3IroqYEMa0dB+ZDh5aCtklU+R3uTTrCcoL
+	 budiMpsyTExuaXxqU5HaJ5yEzzpJZvHOYByscNbo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393318AbfIVSw5 (ORCPT
+        id S1731407AbfIVTYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:52:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51770 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:24:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407948AbfIVSwh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:52:37 -0400
+        id S2393325AbfIVSw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:52:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7594521BE5;
-        Sun, 22 Sep 2019 18:52:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C1FA21BE5;
+        Sun, 22 Sep 2019 18:52:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178357;
-        bh=xEyFGuV9urV2Izp0x4mN7WNWUY36GjkjKfAmNsiu/P8=;
+        s=default; t=1569178376;
+        bh=jFyrjGVt0cRFDQk6Fgliyx+XUAerjBChFSMocGjBCxw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=meQfy2k1lejmFNAi/vk8mBGuPznHsTgnjdHr1kuVdoqhta6hlfYx3IlzAWpRdjToD
-         T3H1OlJ7ODcG8S2wkpbbKQXpS0z0k6EfQudSg30rYbSoCW/HyzWq0d0VrGR3lQQYn7
-         MrAK0P1d0xmMfpAXGgRcJFieCHC2cahKjpFjvjfw=
+        b=wOeU7kgeWCxMwWdXt25ZYY0PtVBpKc+F1SHECMI/PcRWbi8rfglw2uy5ZXkYttG4U
+         Z1h2Dk9dAluuv7mvBNkd8ZDuXBn4tgQZeHKxx8qT6jVd9FIRkd6W1w6JQHlRP8kv1J
+         nB8N0UQkgiWl5qmvtBLyycc1nVZY2ByUyWilI+k4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 112/185] media: cec-notifier: clear cec_adap in cec_notifier_unregister
-Date:   Sun, 22 Sep 2019 14:48:10 -0400
-Message-Id: <20190922184924.32534-112-sashal@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 126/185] arm64: kpti: ensure patched kernel text is fetched from PoU
+Date:   Sun, 22 Sep 2019 14:48:24 -0400
+Message-Id: <20190922184924.32534-126-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -59,45 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+From: Mark Rutland <mark.rutland@arm.com>
 
-[ Upstream commit 14d5511691e5290103bc480998bc322e68f139d4 ]
+[ Upstream commit f32c7a8e45105bd0af76872bf6eef0438ff12fb2 ]
 
-If cec_notifier_cec_adap_unregister() is called before
-cec_unregister_adapter() then everything is OK (and this is the
-case today). But if it is the other way around, then
-cec_notifier_unregister() is called first, and that doesn't
-set n->cec_adap to NULL.
+While the MMUs is disabled, I-cache speculation can result in
+instructions being fetched from the PoC. During boot we may patch
+instructions (e.g. for alternatives and jump labels), and these may be
+dirty at the PoU (and stale at the PoC).
 
-So if e.g. cec_notifier_set_phys_addr() is called after
-cec_notifier_unregister() but before cec_unregister_adapter()
-then n->cec_adap points to an unregistered and likely deleted
-cec adapter. So just set n->cec_adap->notifier and n->cec_adap
-to NULL for rubustness.
+Thus, while the MMU is disabled in the KPTI pagetable fixup code we may
+load stale instructions into the I-cache, potentially leading to
+subsequent crashes when executing regions of code which have been
+modified at runtime.
 
-Eventually cec_notifier_unregister will disappear and this will
-be simplified substantially.
+Similarly to commit:
 
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+  8ec41987436d566f ("arm64: mm: ensure patched kernel text is fetched from PoU")
+
+... we can invalidate the I-cache after enabling the MMU to prevent such
+issues.
+
+The KPTI pagetable fixup code itself should be clean to the PoC per the
+boot protocol, so no maintenance is required for this code.
+
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Reviewed-by: James Morse <james.morse@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/cec/cec-notifier.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/mm/proc.S | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/media/cec/cec-notifier.c b/drivers/media/cec/cec-notifier.c
-index 9598c7778871a..c4aa27e0c4308 100644
---- a/drivers/media/cec/cec-notifier.c
-+++ b/drivers/media/cec/cec-notifier.c
-@@ -124,6 +124,8 @@ void cec_notifier_unregister(struct cec_notifier *n)
- {
- 	mutex_lock(&n->lock);
- 	n->callback = NULL;
-+	n->cec_adap->notifier = NULL;
-+	n->cec_adap = NULL;
- 	mutex_unlock(&n->lock);
- 	cec_notifier_put(n);
- }
+diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
+index 7dbf2be470f6c..28a8f7b87ff06 100644
+--- a/arch/arm64/mm/proc.S
++++ b/arch/arm64/mm/proc.S
+@@ -286,6 +286,15 @@ skip_pgd:
+ 	msr	sctlr_el1, x18
+ 	isb
+ 
++	/*
++	 * Invalidate the local I-cache so that any instructions fetched
++	 * speculatively from the PoC are discarded, since they may have
++	 * been dynamically patched at the PoU.
++	 */
++	ic	iallu
++	dsb	nsh
++	isb
++
+ 	/* Set the flag to zero to indicate that we're all done */
+ 	str	wzr, [flag_ptr]
+ 	ret
 -- 
 2.20.1
 
