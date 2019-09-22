@@ -7,46 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 484C6C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD80C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16CB52070C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:03:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07944208C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:03:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179013;
-	bh=Hqe7t7JdnTuFCKufE3feuDa7ql1gu7k9tS6OpgdrodE=;
+	s=default; t=1569179015;
+	bh=7RMS4YktEnGBSooX125/Dw0SiOsFPkU0E3b2XtdJMjs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pKQLDjDXlDXFQGbOU0YbmcXNtabYWwK/aYycRJ9cJ4CM0RVw3s9m4wOeLxZFuOFfu
-	 Uet5QuwRs4ABXFBOxoVzYodNkoE7MbrVhddN4RlmjD8BZ9BxI4lJwJytTOI29zrJF6
-	 lr9GKzWVwXklpl4v9+Gn1SpWK7HG21R4jre2pbqc=
+	b=CErs+d+bisBv2fSMgVI4nzK+9+8SdMFaOdaq/5PmSngpJW82jximQgaRt55LeCaLr
+	 kamvam7x+7DcaWEis1V/Tu6X6/UQ/kauJvV4duGRi+u/iph9Wtx7UtIbmBJ+nQ3+Rp
+	 e9dkVdzpj993zQOjSIgHvq6N8apnGp8CchHy5omw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395021AbfIVTDb (ORCPT
+        id S2395422AbfIVTDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:03:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38272 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:03:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395338AbfIVTBz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 15:01:55 -0400
+        id S2439079AbfIVTBy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 15:01:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA438206C2;
-        Sun, 22 Sep 2019 19:01:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 011572184D;
+        Sun, 22 Sep 2019 19:01:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178915;
-        bh=Hqe7t7JdnTuFCKufE3feuDa7ql1gu7k9tS6OpgdrodE=;
+        s=default; t=1569178913;
+        bh=7RMS4YktEnGBSooX125/Dw0SiOsFPkU0E3b2XtdJMjs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nE2rW1Fei+EWfMYO3rA8iBBJD12Oaf2X0lO97cJaqQsmeB+vgck+6NDEJEc4aTOqc
-         b1wHlLWe1zv+WGt34lc//bsHgm7NYmM23Nk/V9PlH5lRpJEH2kz7nFjCCei8TgVcjE
-         uOeRPd00tLTv0Z+1vyyJOwgGPnmALxRgLwNbYRpA=
+        b=Q5nYrF9DzVklMkIZdUxdJuk1jmpiVAvTJXlYmwKKxwqJB591+6zBtLISn+j4m6oeU
+         MtoxcO2D0kCBRUFTx2fyO1HI4qhgUSahUzd00A4omKmkN1lHdJGSftvZlv481q+xTX
+         PzCjM5rryCOrjP5ZXK8CtY2YUDCILjdj6nJGGvbc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wang Shenran <shenran268@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 33/44] hwmon: (acpi_power_meter) Change log level for 'unsafe software power cap'
-Date:   Sun, 22 Sep 2019 15:00:51 -0400
-Message-Id: <20190922190103.4906-33-sashal@kernel.org>
+Cc:     Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        Patrick McLean <chutzpah@gentoo.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 31/44] libtraceevent: Change users plugin directory
+Date:   Sun, 22 Sep 2019 15:00:49 -0400
+Message-Id: <20190922190103.4906-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922190103.4906-1-sashal@kernel.org>
 References: <20190922190103.4906-1-sashal@kernel.org>
@@ -59,48 +65,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Shenran <shenran268@gmail.com>
+From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 
-[ Upstream commit 6e4d91aa071810deac2cd052161aefb376ecf04e ]
+[ Upstream commit e97fd1383cd77c467d2aed7fa4e596789df83977 ]
 
-At boot time, the acpi_power_meter driver logs the following error level
-message: "Ignoring unsafe software power cap". Having read about it from
-a few sources, it seems that the error message can be quite misleading.
+To be compliant with XDG user directory layout, the user's plugin
+directory is changed from ~/.traceevent/plugins to
+~/.local/lib/traceevent/plugins/
 
-While the message can imply that Linux is ignoring the fact that the
-system is operating in potentially dangerous conditions, the truth is
-the driver found an ACPI_PMC object that supports software power
-capping. The driver simply decides not to use it, perhaps because it
-doesn't support the object.
-
-The best solution is probably changing the log level from error to warning.
-All sources I have found, regarding the error, have downplayed its
-significance. There is not much of a reason for it to be on error level,
-while causing potential confusions or misinterpretations.
-
-Signed-off-by: Wang Shenran <shenran268@gmail.com>
-Link: https://lore.kernel.org/r/20190724080110.6952-1-shenran268@gmail.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Suggested-by: Patrick McLean <chutzpah@gentoo.org>
+Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Patrick McLean <chutzpah@gentoo.org>
+Cc: linux-trace-devel@vger.kernel.org
+Link: https://lore.kernel.org/linux-trace-devel/20190313144206.41e75cf8@patrickm/
+Link: http://lore.kernel.org/linux-trace-devel/20190801074959.22023-4-tz.stoyanov@gmail.com
+Link: http://lore.kernel.org/lkml/20190805204355.344622683@goodmis.org
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/acpi_power_meter.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/lib/traceevent/Makefile       | 6 +++---
+ tools/lib/traceevent/event-plugin.c | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/hwmon/acpi_power_meter.c b/drivers/hwmon/acpi_power_meter.c
-index 579bdf93be433..e27f7e12c05bb 100644
---- a/drivers/hwmon/acpi_power_meter.c
-+++ b/drivers/hwmon/acpi_power_meter.c
-@@ -693,8 +693,8 @@ static int setup_attrs(struct acpi_power_meter_resource *resource)
+diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
+index 7851df1490e0a..cc3315da6dc39 100644
+--- a/tools/lib/traceevent/Makefile
++++ b/tools/lib/traceevent/Makefile
+@@ -54,15 +54,15 @@ set_plugin_dir := 1
  
- 	if (resource->caps.flags & POWER_METER_CAN_CAP) {
- 		if (!can_cap_in_hardware()) {
--			dev_err(&resource->acpi_dev->dev,
--				"Ignoring unsafe software power cap!\n");
-+			dev_warn(&resource->acpi_dev->dev,
-+				 "Ignoring unsafe software power cap!\n");
- 			goto skip_unsafe_cap;
- 		}
+ # Set plugin_dir to preffered global plugin location
+ # If we install under $HOME directory we go under
+-# $(HOME)/.traceevent/plugins
++# $(HOME)/.local/lib/traceevent/plugins
+ #
+ # We dont set PLUGIN_DIR in case we install under $HOME
+ # directory, because by default the code looks under:
+-# $(HOME)/.traceevent/plugins by default.
++# $(HOME)/.local/lib/traceevent/plugins by default.
+ #
+ ifeq ($(plugin_dir),)
+ ifeq ($(prefix),$(HOME))
+-override plugin_dir = $(HOME)/.traceevent/plugins
++override plugin_dir = $(HOME)/.local/lib/traceevent/plugins
+ set_plugin_dir := 0
+ else
+ override plugin_dir = $(libdir)/traceevent/plugins
+diff --git a/tools/lib/traceevent/event-plugin.c b/tools/lib/traceevent/event-plugin.c
+index a16756ae35267..5fe7889606a23 100644
+--- a/tools/lib/traceevent/event-plugin.c
++++ b/tools/lib/traceevent/event-plugin.c
+@@ -30,7 +30,7 @@
+ #include "event-parse.h"
+ #include "event-utils.h"
  
+-#define LOCAL_PLUGIN_DIR ".traceevent/plugins"
++#define LOCAL_PLUGIN_DIR ".local/lib/traceevent/plugins/"
+ 
+ static struct registered_plugin_options {
+ 	struct registered_plugin_options	*next;
 -- 
 2.20.1
 
