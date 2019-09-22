@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AED3DC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F7DFC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E4532186A
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FFE621A4A
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:56:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178596;
-	bh=WBnSak/d1Xqtku0jLNdqMwI6cCkMITfUHWXejyzmLG4=;
+	s=default; t=1569178602;
+	bh=wKwjfWM+JCA0f7UO0uWQrgxnwNMKaVWWUO0lVQf5ynI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ixMk59JsZIDE6FL26EpImH+9Dxn83FQVTK+waS4gptW5BIr3VtLw4tQhSsDJyUr1n
-	 tFe84O6VZSfFR5Z4K+KMHfbMsC8dgdFunlLkvbP4Lo5H8AoB7zqVj5dWzqTKh8CLmQ
-	 xA9TdN3rgX0MlIp+VLKZPJtooqGHYY8PPXPOKR18=
+	b=SSsZlCpDyFeDSOqfemhu8co2/K8TLivdhU+NYvz0BbzntvbXUAiyvMLtX6mjbDuPx
+	 thyIHKnPc5L7jagQXD4lV2ZveJBAtQzh2RY33UVNwbHF6Qbsi9XF7j8H/GAAY40LBK
+	 gVQWltNGMGZTawZYbjU49fNqIbEpVQylGHOnSoZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408206AbfIVS4f (ORCPT
+        id S2408224AbfIVS4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:56:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58474 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:56:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438589AbfIVS41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:56:27 -0400
+        id S2438482AbfIVSzl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:55:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA8C521D7E;
-        Sun, 22 Sep 2019 18:56:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 605B821D6C;
+        Sun, 22 Sep 2019 18:55:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178586;
-        bh=WBnSak/d1Xqtku0jLNdqMwI6cCkMITfUHWXejyzmLG4=;
+        s=default; t=1569178540;
+        bh=wKwjfWM+JCA0f7UO0uWQrgxnwNMKaVWWUO0lVQf5ynI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gZtfrGrwMa98nfGNL21PLxgPeCUxijurhaLYolvbzDxiuYAYx7VmBoW/UIcAIPB+m
-         ZC63MK1UYghGt3UrlZw6uRrNv2GH2XleLZk+vqeL/B1eqUNcIXoYHro+44LbVSKrzj
-         4+4ZPpTCRWnYA+elxKk4uWv3aiNVUlqKLcquDlbM=
+        b=e9m5ZlB59n6Rl9Aq9jJzRdbDT7S6gGGvtvSs6Iqod04xMAfQI0yPaFvP07r6DvHde
+         ugTyARNjKr9AU0PEs9SyA00kPvJEHdh4wuI71VeSnvd0JWsbtUyfSGnBUvB3XSZq/4
+         96txWG0Lm7pQNN+hHwkh3GL2nCwJ2w/V8UZm2Nas=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>, Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.19 095/128] iommu/amd: Silence warnings under memory pressure
-Date:   Sun, 22 Sep 2019 14:53:45 -0400
-Message-Id: <20190922185418.2158-95-sashal@kernel.org>
+Cc:     Stefan Agner <stefan.agner@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 060/128] ARM: dts: imx7-colibri: disable HS400
+Date:   Sun, 22 Sep 2019 14:53:10 -0400
+Message-Id: <20190922185418.2158-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
 References: <20190922185418.2158-1-sashal@kernel.org>
@@ -59,62 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Stefan Agner <stefan.agner@toradex.com>
 
-[ Upstream commit 3d708895325b78506e8daf00ef31549476e8586a ]
+[ Upstream commit a95fbda08ee20cd063ce5826e0df95a2c22ea8c5 ]
 
-When running heavy memory pressure workloads, the system is throwing
-endless warnings,
+Force HS200 by masking bit 63 of the SDHCI capability register.
+The i.MX ESDHC driver uses SDHCI_QUIRK2_CAPS_BIT63_FOR_HS400. With
+that the stack checks bit 63 to descide whether HS400 is available.
+Using sdhci-caps-mask allows to mask bit 63. The stack then selects
+HS200 as operating mode.
 
-smartpqi 0000:23:00.0: AMD-Vi: IOMMU mapping error in map_sg (io-pages:
-5 reason: -12)
-Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40
-07/10/2019
-swapper/10: page allocation failure: order:0, mode:0xa20(GFP_ATOMIC),
-nodemask=(null),cpuset=/,mems_allowed=0,4
-Call Trace:
- <IRQ>
- dump_stack+0x62/0x9a
- warn_alloc.cold.43+0x8a/0x148
- __alloc_pages_nodemask+0x1a5c/0x1bb0
- get_zeroed_page+0x16/0x20
- iommu_map_page+0x477/0x540
- map_sg+0x1ce/0x2f0
- scsi_dma_map+0xc6/0x160
- pqi_raid_submit_scsi_cmd_with_io_request+0x1c3/0x470 [smartpqi]
- do_IRQ+0x81/0x170
- common_interrupt+0xf/0xf
- </IRQ>
+This prevents rare communication errors with minimal effect on
+performance:
+	sdhci-esdhc-imx 30b60000.usdhc: warning! HS400 strobe DLL
+		status REF not lock!
 
-because the allocation could fail from iommu_map_page(), and the volume
-of this call could be huge which may generate a lot of serial console
-output and cosumes all CPUs.
-
-Fix it by silencing the warning in this call site, and there is still a
-dev_err() later to notify the failure.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Stefan Agner <stefan.agner@toradex.com>
+Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+Reviewed-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx7-colibri.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index 8d9920ff41344..b892637c320bc 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -2533,7 +2533,9 @@ static int map_sg(struct device *dev, struct scatterlist *sglist,
+diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
+index 895fbde4d4333..c1ed83131b495 100644
+--- a/arch/arm/boot/dts/imx7-colibri.dtsi
++++ b/arch/arm/boot/dts/imx7-colibri.dtsi
+@@ -323,6 +323,7 @@
+ 	vmmc-supply = <&reg_module_3v3>;
+ 	vqmmc-supply = <&reg_DCDC3>;
+ 	non-removable;
++	sdhci-caps-mask = <0x80000000 0x0>;
+ };
  
- 			bus_addr  = address + s->dma_address + (j << PAGE_SHIFT);
- 			phys_addr = (sg_phys(s) & PAGE_MASK) + (j << PAGE_SHIFT);
--			ret = iommu_map_page(domain, bus_addr, phys_addr, PAGE_SIZE, prot, GFP_ATOMIC);
-+			ret = iommu_map_page(domain, bus_addr, phys_addr,
-+					     PAGE_SIZE, prot,
-+					     GFP_ATOMIC | __GFP_NOWARN);
- 			if (ret)
- 				goto out_unmap;
- 
+ &iomuxc {
 -- 
 2.20.1
 
