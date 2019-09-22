@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DD5C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52005C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77254206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2959020882
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:13:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179581;
-	bh=DLYsDOF+mnPpL6nk885EagTqgeXo0CbFTowjIouox3g=;
+	s=default; t=1569179587;
+	bh=9JOBPaZ+2nE+YIpe80AMMSCTFSc0lfy/HUHq8QQ0QnM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LK0e/7OHm+OtjFBdIjrAHfu6/jENoawDObIPDSNrfk8hAl4dt8p2s0jrAIvTB8VMf
-	 ASp0CPwCqcMQPH8gguIUNWmaGgyFeZa+DrkQpiuP2CZiDbsckzYZqrKknWBvqKzoch
-	 ub4fuSBpzLM+p5aXM7GOAPOIp+gRSXour7FEIRzI=
+	b=Ty9m61E2JnsUqiQ7nWr0A1AS2FfJ25NWPTr5cuh9LraboWkIKRo6PVKaNhChcV7UL
+	 2gBqh922i4K/G5jFDg5vPrvJx1aOQHxA9Wq9J0eT4lbm7hTSu6E99db79S/NxnbM8k
+	 GGeGYek0YlQAmsgQuRr3pKEFJBvCasdzH0WJHow4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438663AbfIVS5t (ORCPT
+        id S2436804AbfIVTNF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:57:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60176 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:13:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438589AbfIVS5f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:57:35 -0400
+        id S2438664AbfIVS5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:57:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBE8121928;
-        Sun, 22 Sep 2019 18:57:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 583A32190F;
+        Sun, 22 Sep 2019 18:57:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178654;
-        bh=DLYsDOF+mnPpL6nk885EagTqgeXo0CbFTowjIouox3g=;
+        s=default; t=1569178669;
+        bh=9JOBPaZ+2nE+YIpe80AMMSCTFSc0lfy/HUHq8QQ0QnM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0VL66gDBTmHAItZPSZ/ypalnYNQ44Sm+Wg3RbVSjpzvZc+W1ZYGdlDZJ/PGjsClB2
-         bL6phNXHI8uId9lYlavURS8BsUXN+gVoo0hwci5/8ZMwu+kuX+r03Ffrsbqutooero
-         zhxq7UtWKe+FXoyb6O4TsYrBdJXYjkpMlJQtSWNI=
+        b=M5psmnjGWaWP2zQiue31loMRohqw9pR2z7nqhofvcCnHCxyCdZM+YcK3ceJ4cMMlo
+         BXwjJMIx7imhcMXG1uZavIhrFpc+nnv7WFXxiuYjZdogE9FNCxoMlln6kKpGt2WsAm
+         N3ZQjnt9PiG0cLlwWxbde3ILVu2HFdnTHdHwcDA4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>,
-        syzbot+aac8d0d7205f112045d2@syzkaller.appspotmail.com,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 09/89] media: hdpvr: Add device num check and handling
-Date:   Sun, 22 Sep 2019 14:55:57 -0400
-Message-Id: <20190922185717.3412-9-sashal@kernel.org>
+Cc:     Ard van Breemen <ard@kwaak.net>, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 20/89] ALSA: usb-audio: Skip bSynchAddress endpoint check if it is invalid
+Date:   Sun, 22 Sep 2019 14:56:08 -0400
+Message-Id: <20190922185717.3412-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185717.3412-1-sashal@kernel.org>
 References: <20190922185717.3412-1-sashal@kernel.org>
@@ -61,57 +58,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
+From: Ard van Breemen <ard@kwaak.net>
 
-[ Upstream commit d4a6a9537bc32811486282206ecfb7c53754b74d ]
+[ Upstream commit 1b34121d9f26d272b0b2334209af6b6fc82d4bf1 ]
 
-Add hdpvr device num check and error handling
+The Linux kernel assumes that get_endpoint(alts,0) and
+get_endpoint(alts,1) are eachothers feedback endpoints.
+To reassure that validity it will test bsynchaddress to comply with that
+assumption. But if the bsyncaddress is 0 (invalid), it will flag that as
+a wrong assumption and return an error.
+Fix: Skip the test if bSynchAddress is 0.
+Note: those with a valid bSynchAddress should have a code quirck added.
 
-We need to increment the device count atomically before we checkout a
-device to make sure that we do not reach the max count, otherwise we get
-out-of-bounds errors as reported by syzbot.
-
-Reported-and-tested-by: syzbot+aac8d0d7205f112045d2@syzkaller.appspotmail.com
-
-Signed-off-by: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Ard van Breemen <ard@kwaak.net>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/hdpvr/hdpvr-core.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ sound/usb/pcm.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/media/usb/hdpvr/hdpvr-core.c b/drivers/media/usb/hdpvr/hdpvr-core.c
-index 1e8cbaf368961..416092c47ef40 100644
---- a/drivers/media/usb/hdpvr/hdpvr-core.c
-+++ b/drivers/media/usb/hdpvr/hdpvr-core.c
-@@ -275,6 +275,7 @@ static int hdpvr_probe(struct usb_interface *interface,
- #endif
- 	size_t buffer_size;
- 	int i;
-+	int dev_num;
- 	int retval = -ENOMEM;
- 
- 	/* allocate memory for our device state and initialize it */
-@@ -379,8 +380,17 @@ static int hdpvr_probe(struct usb_interface *interface,
+diff --git a/sound/usb/pcm.c b/sound/usb/pcm.c
+index b1a1eb1f65aa3..ff38fca1781b6 100644
+--- a/sound/usb/pcm.c
++++ b/sound/usb/pcm.c
+@@ -470,6 +470,7 @@ static int set_sync_endpoint(struct snd_usb_substream *subs,
  	}
- #endif
- 
-+	dev_num = atomic_inc_return(&dev_nr);
-+	if (dev_num >= HDPVR_MAX) {
-+		v4l2_err(&dev->v4l2_dev,
-+			 "max device number reached, device register failed\n");
-+		atomic_dec(&dev_nr);
-+		retval = -ENODEV;
-+		goto reg_fail;
-+	}
-+
- 	retval = hdpvr_register_videodev(dev, &interface->dev,
--				    video_nr[atomic_inc_return(&dev_nr)]);
-+				    video_nr[dev_num]);
- 	if (retval < 0) {
- 		v4l2_err(&dev->v4l2_dev, "registering videodev failed\n");
- 		goto reg_fail;
+ 	ep = get_endpoint(alts, 1)->bEndpointAddress;
+ 	if (get_endpoint(alts, 0)->bLength >= USB_DT_ENDPOINT_AUDIO_SIZE &&
++	    get_endpoint(alts, 0)->bSynchAddress != 0 &&
+ 	    ((is_playback && ep != (unsigned int)(get_endpoint(alts, 0)->bSynchAddress | USB_DIR_IN)) ||
+ 	     (!is_playback && ep != (unsigned int)(get_endpoint(alts, 0)->bSynchAddress & ~USB_DIR_IN)))) {
+ 		dev_err(&dev->dev,
 -- 
 2.20.1
 
