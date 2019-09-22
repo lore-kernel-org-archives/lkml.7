@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E60C4740C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4C5C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 798682054F
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:25:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AFF72054F
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:26:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180355;
-	bh=izJSz9zwaSm5xge40Tyl2gKrXmgr/JkniLuCjKggVes=;
+	s=default; t=1569180360;
+	bh=S2zNVlmqja7JUe4yh3eRIVAzXvsxaHQuJ0G0lZeEYmc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=laTubj2cBOJh6veI4Qwi66YY8dG4VtoviDweGDo44uU39cJtxxIUhieqYn0NBXa0J
-	 tMEgIIqnfVN35nzxZJDfISsgoX1geKptEb2kloPFhxuyq4qgZT8s7K5tjHPk9MWz1d
-	 zlRwxHapa91vc4S+yI3CSXZYEPvTeLXLEJBw9A3I=
+	b=RxeWHM3nkrCmyrH7uiggreVwxGXumIiiWllegaK5XZhGJ/oUCZSVMcbm+PrbwfnR0
+	 eCZ9BFd7iIhWiRh7MhI/N+oIHYpKlC1M0j05dxDVCuBG5MZYWfdVlAVpaxk2i6r9Mj
+	 vWsj1b5pUOVaP1dhA0GKnl8im63LiV+Eh0KOr/hQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393001AbfIVSwG (ORCPT
+        id S1727584AbfIVTZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:52:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50376 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:25:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406648AbfIVSwA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:52:00 -0400
+        id S2392955AbfIVSwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:52:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5876E21BE5;
-        Sun, 22 Sep 2019 18:51:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6726B21479;
+        Sun, 22 Sep 2019 18:52:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178320;
-        bh=izJSz9zwaSm5xge40Tyl2gKrXmgr/JkniLuCjKggVes=;
+        s=default; t=1569178325;
+        bh=S2zNVlmqja7JUe4yh3eRIVAzXvsxaHQuJ0G0lZeEYmc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JKKTPbE5qtBnn8VAC2H0FiP06WaW584Sqci7EPwCNv1WwwQL301ALbuA3cVuv5Jda
-         cPSh/U5fH7byitk/sNtbvqcH6JZ459IzwfNbdVT4tKxBM/Y4VVntlSbOYIooQbSet7
-         ftuF1LCdkqGvYBhIPu+UzdwYVDgAcTSvvZHaD93k=
+        b=VWvCIdGlQayVIYv93hJE42IqBKz7M5m3RSR36UbUlJK/hELZSsSPIswAjWmNMX7Ka
+         A9zuBMp5bDRGjeGf7Lv0YGFzbO04EpFh+Hn7mxPpSKYUkEvLv9/f9gMWukpl6uDMQO
+         GSAoDLHwlEGshql87LE0FjpSMMsnT6eC3Uy5VPv0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+Cc:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 086/185] ASoC: uniphier: Fix double reset assersion when transitioning to suspend state
-Date:   Sun, 22 Sep 2019 14:47:44 -0400
-Message-Id: <20190922184924.32534-86-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 090/185] ASoC: mchp-i2s-mcc: Wait for RX/TX RDY only if controller is running
+Date:   Sun, 22 Sep 2019 14:47:48 -0400
+Message-Id: <20190922184924.32534-90-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -59,120 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
 
-[ Upstream commit c372a35550c8d60f673b20210eea58a06d6d38cb ]
+[ Upstream commit 0f6fc97501b790c971b11b52a654009d21c45238 ]
 
-When transitioning to supend state, uniphier_aio_dai_suspend() is called
-and asserts reset lines and disables clocks.
+Since hw_free() can be called multiple times and not just after a stop
+trigger command, we should check whether the RX or TX ready interrupt was
+truly enabled previously. For this, we assure that the condition of the
+wait event is always true, except when RX/TX interrupts are enabled.
 
-However, if there are two or more DAIs, uniphier_aio_dai_suspend() are
-called multiple times, and double reset assersion will cause.
-
-This patch defines the counter that has the number of DAIs at first, and
-whenever uniphier_aio_dai_suspend() are called, it decrements the
-counter. And only if the counter is zero, it asserts reset lines and
-disables clocks.
-
-In the same way, uniphier_aio_dai_resume() are called, it increments the
-counter after deasserting reset lines and enabling clocks.
-
-Fixes: 139a34200233 ("ASoC: uniphier: add support for UniPhier AIO CPU DAI driver")
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Link: https://lore.kernel.org/r/1566281764-14059-1-git-send-email-hayashi.kunihiko@socionext.com
+Fixes: 7e0cdf545a55 ("ASoC: mchp-i2s-mcc: add driver for I2SC Multi-Channel Controller")
+Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Link: https://lore.kernel.org/r/20190820162411.24836-3-codrin.ciubotariu@microchip.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/uniphier/aio-cpu.c | 31 +++++++++++++++++++++----------
- sound/soc/uniphier/aio.h     |  1 +
- 2 files changed, 22 insertions(+), 10 deletions(-)
+ sound/soc/atmel/mchp-i2s-mcc.c | 28 ++++++++++++++++------------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
 
-diff --git a/sound/soc/uniphier/aio-cpu.c b/sound/soc/uniphier/aio-cpu.c
-index ee90e6c3937ce..2ae582a99b636 100644
---- a/sound/soc/uniphier/aio-cpu.c
-+++ b/sound/soc/uniphier/aio-cpu.c
-@@ -424,8 +424,11 @@ int uniphier_aio_dai_suspend(struct snd_soc_dai *dai)
- {
- 	struct uniphier_aio *aio = uniphier_priv(dai);
- 
--	reset_control_assert(aio->chip->rst);
--	clk_disable_unprepare(aio->chip->clk);
-+	aio->chip->num_wup_aios--;
-+	if (!aio->chip->num_wup_aios) {
-+		reset_control_assert(aio->chip->rst);
-+		clk_disable_unprepare(aio->chip->clk);
-+	}
- 
- 	return 0;
- }
-@@ -439,13 +442,15 @@ int uniphier_aio_dai_resume(struct snd_soc_dai *dai)
- 	if (!aio->chip->active)
- 		return 0;
- 
--	ret = clk_prepare_enable(aio->chip->clk);
--	if (ret)
--		return ret;
-+	if (!aio->chip->num_wup_aios) {
-+		ret = clk_prepare_enable(aio->chip->clk);
-+		if (ret)
-+			return ret;
- 
--	ret = reset_control_deassert(aio->chip->rst);
--	if (ret)
--		goto err_out_clock;
-+		ret = reset_control_deassert(aio->chip->rst);
-+		if (ret)
-+			goto err_out_clock;
-+	}
- 
- 	aio_iecout_set_enable(aio->chip, true);
- 	aio_chip_init(aio->chip);
-@@ -458,7 +463,7 @@ int uniphier_aio_dai_resume(struct snd_soc_dai *dai)
- 
- 		ret = aio_init(sub);
- 		if (ret)
--			goto err_out_clock;
-+			goto err_out_reset;
- 
- 		if (!sub->setting)
- 			continue;
-@@ -466,11 +471,16 @@ int uniphier_aio_dai_resume(struct snd_soc_dai *dai)
- 		aio_port_reset(sub);
- 		aio_src_reset(sub);
+diff --git a/sound/soc/atmel/mchp-i2s-mcc.c b/sound/soc/atmel/mchp-i2s-mcc.c
+index 86495883ca3f1..8272915fa09b9 100644
+--- a/sound/soc/atmel/mchp-i2s-mcc.c
++++ b/sound/soc/atmel/mchp-i2s-mcc.c
+@@ -686,22 +686,24 @@ static int mchp_i2s_mcc_hw_free(struct snd_pcm_substream *substream,
+ 		err = wait_event_interruptible_timeout(dev->wq_txrdy,
+ 						       dev->tx_rdy,
+ 						       msecs_to_jiffies(500));
++		if (err == 0) {
++			dev_warn_once(dev->dev,
++				      "Timeout waiting for Tx ready\n");
++			regmap_write(dev->regmap, MCHP_I2SMCC_IDRA,
++				     MCHP_I2SMCC_INT_TXRDY_MASK(dev->channels));
++			dev->tx_rdy = 1;
++		}
+ 	} else {
+ 		err = wait_event_interruptible_timeout(dev->wq_rxrdy,
+ 						       dev->rx_rdy,
+ 						       msecs_to_jiffies(500));
+-	}
+-
+-	if (err == 0) {
+-		u32 idra;
+-
+-		dev_warn_once(dev->dev, "Timeout waiting for %s\n",
+-			      is_playback ? "Tx ready" : "Rx ready");
+-		if (is_playback)
+-			idra = MCHP_I2SMCC_INT_TXRDY_MASK(dev->channels);
+-		else
+-			idra = MCHP_I2SMCC_INT_RXRDY_MASK(dev->channels);
+-		regmap_write(dev->regmap, MCHP_I2SMCC_IDRA, idra);
++		if (err == 0) {
++			dev_warn_once(dev->dev,
++				      "Timeout waiting for Rx ready\n");
++			regmap_write(dev->regmap, MCHP_I2SMCC_IDRA,
++				     MCHP_I2SMCC_INT_RXRDY_MASK(dev->channels));
++			dev->rx_rdy = 1;
++		}
  	}
-+	aio->chip->num_wup_aios++;
  
- 	return 0;
+ 	if (!mchp_i2s_mcc_is_running(dev)) {
+@@ -809,6 +811,8 @@ static int mchp_i2s_mcc_dai_probe(struct snd_soc_dai *dai)
  
-+err_out_reset:
-+	if (!aio->chip->num_wup_aios)
-+		reset_control_assert(aio->chip->rst);
- err_out_clock:
--	clk_disable_unprepare(aio->chip->clk);
-+	if (!aio->chip->num_wup_aios)
-+		clk_disable_unprepare(aio->chip->clk);
+ 	init_waitqueue_head(&dev->wq_txrdy);
+ 	init_waitqueue_head(&dev->wq_rxrdy);
++	dev->tx_rdy = 1;
++	dev->rx_rdy = 1;
  
- 	return ret;
- }
-@@ -619,6 +629,7 @@ int uniphier_aio_probe(struct platform_device *pdev)
- 		return PTR_ERR(chip->rst);
- 
- 	chip->num_aios = chip->chip_spec->num_dais;
-+	chip->num_wup_aios = chip->num_aios;
- 	chip->aios = devm_kcalloc(dev,
- 				  chip->num_aios, sizeof(struct uniphier_aio),
- 				  GFP_KERNEL);
-diff --git a/sound/soc/uniphier/aio.h b/sound/soc/uniphier/aio.h
-index ca6ccbae0ee8c..a7ff7e556429b 100644
---- a/sound/soc/uniphier/aio.h
-+++ b/sound/soc/uniphier/aio.h
-@@ -285,6 +285,7 @@ struct uniphier_aio_chip {
- 
- 	struct uniphier_aio *aios;
- 	int num_aios;
-+	int num_wup_aios;
- 	struct uniphier_aio_pll *plls;
- 	int num_plls;
+ 	snd_soc_dai_init_dma_data(dai, &dev->playback, &dev->capture);
  
 -- 
 2.20.1
