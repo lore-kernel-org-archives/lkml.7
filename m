@@ -4,57 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E47B9C49ED7
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C69EDC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B97C8206B6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:30:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90E78206B6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:31:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180658;
-	bh=NSNR2feGXDxKkK6lSElq1QS3FPtFBflExVHOssRHZzY=;
+	s=default; t=1569180665;
+	bh=+hscBSSiceQUDY9+VOYTuW47bvxKdbmKQzrUpDh6YtQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CMNtRwi75KWn5g1+XYRDut3jprc7mOTGSL5j5EGT0g3OZoQYBjjr1E0/8c4pcjf1h
-	 OMF8zK0cDkYPgEcZCZQ0oGMBfxQVY58EFQ+vAtWYfZmwlwhknb2+y9y436c68iilR+
-	 4DzInaV8dxqJ0hQ1iP+J5bUeskeWkkiQl4Zv/IPo=
+	b=iXcjhKBN6DOGiI68eG6b29zFZeu0NhJ0GRqilkK6No/nr7Jjw+BvEW9pLg5c8XuPc
+	 7KYvJF0XYDXPLS9ey+/POAGLrYVaa523zHGL/YX2VCAPkz1Vu369PkBG015DTkuXuk
+	 FrrPmF7ld0TN+MZFDYmyfn1OBzgSuBV/KrtafHMc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388835AbfIVStH (ORCPT
+        id S2394414AbfIVTbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:49:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45656 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:31:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391723AbfIVSsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:48:43 -0400
+        id S2391962AbfIVStD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:49:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D86D21907;
-        Sun, 22 Sep 2019 18:48:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE2F121D71;
+        Sun, 22 Sep 2019 18:49:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178122;
-        bh=NSNR2feGXDxKkK6lSElq1QS3FPtFBflExVHOssRHZzY=;
+        s=default; t=1569178142;
+        bh=+hscBSSiceQUDY9+VOYTuW47bvxKdbmKQzrUpDh6YtQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pDI2+Iv5W2R+RUNwsoJyasNXnvDO2i3eyA6zuD21QccSX7jRsEt4hvy6mEDfvx65L
-         TjVNCJoFmrhYzHvKmS79VIkFR6v+ZJYBx53mVRr8M6yakm6qdbYYWV8d4a0sNBweAz
-         TQWeoLSGfmtTSybQZFsUTxGBfe23VHqVmvVXtAhY=
+        b=B/it5WjnLOwm+MJZIRh0D/h67FS36mVvEgxmn4f4C47bk3ojwWqykZbMm2Y/IvzwM
+         2EZlatYg3w/s4M7vq5nC0hnWqNcn6WX42/L1QtcjwO8Rgzf/ESKV7LndsUtoo30dce
+         vm60yRn73eECxGvatNdSouqhpMaNJkPyqw80haXY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lukas Wunner <lukas@wunner.de>,
-        =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Martin Sperl <kernel@martin.sperl.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 177/203] spi: bcm2835: Work around DONE bit erratum
-Date:   Sun, 22 Sep 2019 14:43:23 -0400
-Message-Id: <20190922184350.30563-177-sashal@kernel.org>
+Cc:     Tomas Espeleta <tomas.espeleta@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        linux-doc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 191/203] ALSA: hda - Add a quirk model for fixing Huawei Matebook X right speaker
+Date:   Sun, 22 Sep 2019 14:43:37 -0400
+Message-Id: <20190922184350.30563-191-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,94 +59,168 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Wunner <lukas@wunner.de>
+From: Tomas Espeleta <tomas.espeleta@gmail.com>
 
-[ Upstream commit 4c524191c0a21d758b519087c64f84348095e940 ]
+[ Upstream commit a2ef03fe617a8365fb7794531b11ba587509a9b9 ]
 
-Commit 3bd7f6589f67 ("spi: bcm2835: Overcome sglist entry length
-limitation") amended the BCM2835 SPI driver with support for DMA
-transfers whose buffers are not aligned to 4 bytes and require more than
-one sglist entry.
+[ This is rather a revival of the patch Tomas sent in months ago, but
+  applying only with the quirk model option -- tiwai ]
 
-When testing this feature with upcoming commits to speed up TX-only and
-RX-only transfers, I noticed that SPI transmission sometimes breaks.
-A function introduced by the commit, bcm2835_spi_transfer_prologue(),
-performs one or two PIO transmissions as a prologue to the actual DMA
-transmission.  It turns out that the breakage goes away if the DONE bit
-in the CS register is set when ending such a PIO transmission.
+Hard coded coefficients to make Huawuei Matebook X right speaker
+work. The Matebook X has a ALC298, please refer to bug 197801 on
+how these numbers were reverse engineered from the Windows driver
 
-The DONE bit signifies emptiness of the TX FIFO.  According to the spec,
-the bit is of type RO, so writing it should never have any effect.
-Perhaps the spec is wrong and the bit is actually of type RW1C.
-E.g. the I2C controller on the BCM2835 does have an RW1C DONE bit which
-needs to be cleared by the driver.  Another, possibly more likely
-explanation is that it's a hardware erratum since the issue does not
-occur consistently.
+The reversed engineered sequence represents a repeating pattern
+of verbs, and the only values that are changing periodically are
+written on indexes 0x23 and 0x25:
 
-Either way, amend bcm2835_spi_transfer_prologue() to always write the
-DONE bit.
+0x500, 0x23
+0x400, VALUE1
+0x500, 0x25
+0x400, VALUE2
 
-Usually a transmission is ended by bcm2835_spi_reset_hw().  If the
-transmission was successful, the TX FIFO is empty and thus the DONE bit
-is set when bcm2835_spi_reset_hw() reads the CS register.  The bit is
-then written back to the register, so we happen to do the right thing.
+* skipped reading sequences (0x500 - 0xc00 sequences are ignored)
+* static values from reverse engineering are used
 
-However if DONE is not set, e.g. because transmission is aborted with
-a non-empty TX FIFO, the bit won't be written by bcm2835_spi_reset_hw()
-and it seems possible that transmission might subsequently break.  To be
-on the safe side, likewise amend bcm2835_spi_reset_hw() to always write
-the bit.
+NOTE: since a significant risk is still considered, this is provided
+as an experimental fix that isn't applied as default for now.  For
+enabling the fix, you'll have to choose huawei-mbx-stereo via model
+option of snd-hda-intel module.
 
-Tested-by: Nuno Sá <nuno.sa@analog.com>
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Acked-by: Stefan Wahren <wahrenst@gmx.net>
-Acked-by: Martin Sperl <kernel@martin.sperl.org>
-Link: https://lore.kernel.org/r/edb004dff4af6106f6bfcb89e1a96391e96eb857.1564825752.git.lukas@wunner.de
-Signed-off-by: Mark Brown <broonie@kernel.org>
+If we get feedback from users that this works stably, we may apply it
+per default.
+
+[ Some coding style fixes and replacement with AC_VERB_* by tiwai ]
+
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=197801
+Signed-off-by: Tomas Espeleta <tomas.espeleta@gmail.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-bcm2835.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ Documentation/sound/hd-audio/models.rst |  3 +
+ sound/pci/hda/patch_realtek.c           | 74 +++++++++++++++++++++++++
+ 2 files changed, 77 insertions(+)
 
-diff --git a/drivers/spi/spi-bcm2835.c b/drivers/spi/spi-bcm2835.c
-index 840b1b8ff3dcb..dfdcebb38830a 100644
---- a/drivers/spi/spi-bcm2835.c
-+++ b/drivers/spi/spi-bcm2835.c
-@@ -319,6 +319,13 @@ static void bcm2835_spi_reset_hw(struct spi_controller *ctlr)
- 		BCM2835_SPI_CS_INTD |
- 		BCM2835_SPI_CS_DMAEN |
- 		BCM2835_SPI_CS_TA);
-+	/*
-+	 * Transmission sometimes breaks unless the DONE bit is written at the
-+	 * end of every transfer.  The spec says it's a RO bit.  Either the
-+	 * spec is wrong and the bit is actually of type RW1C, or it's a
-+	 * hardware erratum.
-+	 */
-+	cs |= BCM2835_SPI_CS_DONE;
- 	/* and reset RX/TX FIFOS */
- 	cs |= BCM2835_SPI_CS_CLEAR_RX | BCM2835_SPI_CS_CLEAR_TX;
+diff --git a/Documentation/sound/hd-audio/models.rst b/Documentation/sound/hd-audio/models.rst
+index 7d7c191102a73..11298f0ce44db 100644
+--- a/Documentation/sound/hd-audio/models.rst
++++ b/Documentation/sound/hd-audio/models.rst
+@@ -260,6 +260,9 @@ alc295-hp-x360
+     HP Spectre X360 fixups
+ alc-sense-combo
+     Headset button support for Chrome platform
++huawei-mbx-stereo
++    Enable initialization verbs for Huawei MBX stereo speakers;
++    might be risky, try this at your own risk
  
-@@ -477,7 +484,9 @@ static void bcm2835_spi_transfer_prologue(struct spi_controller *ctlr,
- 		bcm2835_wr_fifo_count(bs, bs->rx_prologue);
- 		bcm2835_wait_tx_fifo_empty(bs);
- 		bcm2835_rd_fifo_count(bs, bs->rx_prologue);
--		bcm2835_spi_reset_hw(ctlr);
-+		bcm2835_wr(bs, BCM2835_SPI_CS, cs | BCM2835_SPI_CS_CLEAR_RX
-+						  | BCM2835_SPI_CS_CLEAR_TX
-+						  | BCM2835_SPI_CS_DONE);
+ ALC66x/67x/892
+ ==============
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index c1ddfd2fac522..1bec62720374d 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -3755,6 +3755,72 @@ static void alc269_x101_hp_automute_hook(struct hda_codec *codec,
+ 			    vref);
+ }
  
- 		dma_sync_single_for_device(ctlr->dma_rx->device->dev,
- 					   sg_dma_address(&tfr->rx_sg.sgl[0]),
-@@ -498,7 +507,8 @@ static void bcm2835_spi_transfer_prologue(struct spi_controller *ctlr,
- 						  | BCM2835_SPI_CS_DMAEN);
- 		bcm2835_wr_fifo_count(bs, tx_remaining);
- 		bcm2835_wait_tx_fifo_empty(bs);
--		bcm2835_wr(bs, BCM2835_SPI_CS, cs | BCM2835_SPI_CS_CLEAR_TX);
-+		bcm2835_wr(bs, BCM2835_SPI_CS, cs | BCM2835_SPI_CS_CLEAR_TX
-+						  | BCM2835_SPI_CS_DONE);
- 	}
- 
- 	if (likely(!bs->tx_spillover)) {
++/*
++ * Magic sequence to make Huawei Matebook X right speaker working (bko#197801)
++ */
++struct hda_alc298_mbxinit {
++	unsigned char value_0x23;
++	unsigned char value_0x25;
++};
++
++static void alc298_huawei_mbx_stereo_seq(struct hda_codec *codec,
++					 const struct hda_alc298_mbxinit *initval,
++					 bool first)
++{
++	snd_hda_codec_write(codec, 0x06, 0, AC_VERB_SET_DIGI_CONVERT_3, 0x0);
++	alc_write_coef_idx(codec, 0x26, 0xb000);
++
++	if (first)
++		snd_hda_codec_write(codec, 0x21, 0, AC_VERB_GET_PIN_SENSE, 0x0);
++
++	snd_hda_codec_write(codec, 0x6, 0, AC_VERB_SET_DIGI_CONVERT_3, 0x80);
++	alc_write_coef_idx(codec, 0x26, 0xf000);
++	alc_write_coef_idx(codec, 0x23, initval->value_0x23);
++
++	if (initval->value_0x23 != 0x1e)
++		alc_write_coef_idx(codec, 0x25, initval->value_0x25);
++
++	snd_hda_codec_write(codec, 0x20, 0, AC_VERB_SET_COEF_INDEX, 0x26);
++	snd_hda_codec_write(codec, 0x20, 0, AC_VERB_SET_PROC_COEF, 0xb010);
++}
++
++static void alc298_fixup_huawei_mbx_stereo(struct hda_codec *codec,
++					   const struct hda_fixup *fix,
++					   int action)
++{
++	/* Initialization magic */
++	static const struct hda_alc298_mbxinit dac_init[] = {
++		{0x0c, 0x00}, {0x0d, 0x00}, {0x0e, 0x00}, {0x0f, 0x00},
++		{0x10, 0x00}, {0x1a, 0x40}, {0x1b, 0x82}, {0x1c, 0x00},
++		{0x1d, 0x00}, {0x1e, 0x00}, {0x1f, 0x00},
++		{0x20, 0xc2}, {0x21, 0xc8}, {0x22, 0x26}, {0x23, 0x24},
++		{0x27, 0xff}, {0x28, 0xff}, {0x29, 0xff}, {0x2a, 0x8f},
++		{0x2b, 0x02}, {0x2c, 0x48}, {0x2d, 0x34}, {0x2e, 0x00},
++		{0x2f, 0x00},
++		{0x30, 0x00}, {0x31, 0x00}, {0x32, 0x00}, {0x33, 0x00},
++		{0x34, 0x00}, {0x35, 0x01}, {0x36, 0x93}, {0x37, 0x0c},
++		{0x38, 0x00}, {0x39, 0x00}, {0x3a, 0xf8}, {0x38, 0x80},
++		{}
++	};
++	const struct hda_alc298_mbxinit *seq;
++
++	if (action != HDA_FIXUP_ACT_INIT)
++		return;
++
++	/* Start */
++	snd_hda_codec_write(codec, 0x06, 0, AC_VERB_SET_DIGI_CONVERT_3, 0x00);
++	snd_hda_codec_write(codec, 0x06, 0, AC_VERB_SET_DIGI_CONVERT_3, 0x80);
++	alc_write_coef_idx(codec, 0x26, 0xf000);
++	alc_write_coef_idx(codec, 0x22, 0x31);
++	alc_write_coef_idx(codec, 0x23, 0x0b);
++	alc_write_coef_idx(codec, 0x25, 0x00);
++	snd_hda_codec_write(codec, 0x20, 0, AC_VERB_SET_COEF_INDEX, 0x26);
++	snd_hda_codec_write(codec, 0x20, 0, AC_VERB_SET_PROC_COEF, 0xb010);
++
++	for (seq = dac_init; seq->value_0x23; seq++)
++		alc298_huawei_mbx_stereo_seq(codec, seq, seq == dac_init);
++}
++
+ static void alc269_fixup_x101_headset_mic(struct hda_codec *codec,
+ 				     const struct hda_fixup *fix, int action)
+ {
+@@ -5780,6 +5846,7 @@ enum {
+ 	ALC255_FIXUP_DUMMY_LINEOUT_VERB,
+ 	ALC255_FIXUP_DELL_HEADSET_MIC,
+ 	ALC256_FIXUP_HUAWEI_MACH_WX9_PINS,
++	ALC298_FIXUP_HUAWEI_MBX_STEREO,
+ 	ALC295_FIXUP_HP_X360,
+ 	ALC221_FIXUP_HP_HEADSET_MIC,
+ 	ALC285_FIXUP_LENOVO_HEADPHONE_NOISE,
+@@ -6089,6 +6156,12 @@ static const struct hda_fixup alc269_fixups[] = {
+ 		.chained = true,
+ 		.chain_id = ALC255_FIXUP_MIC_MUTE_LED
+ 	},
++	[ALC298_FIXUP_HUAWEI_MBX_STEREO] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = alc298_fixup_huawei_mbx_stereo,
++		.chained = true,
++		.chain_id = ALC255_FIXUP_MIC_MUTE_LED
++	},
+ 	[ALC269_FIXUP_ASUS_X101_FUNC] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = alc269_fixup_x101_headset_mic,
+@@ -7280,6 +7353,7 @@ static const struct hda_model_fixup alc269_fixup_models[] = {
+ 	{.id = ALC225_FIXUP_HEADSET_JACK, .name = "alc-headset-jack"},
+ 	{.id = ALC295_FIXUP_CHROME_BOOK, .name = "alc-chrome-book"},
+ 	{.id = ALC299_FIXUP_PREDATOR_SPK, .name = "predator-spk"},
++	{.id = ALC298_FIXUP_HUAWEI_MBX_STEREO, .name = "huawei-mbx-stereo"},
+ 	{}
+ };
+ #define ALC225_STANDARD_PINS \
 -- 
 2.20.1
 
