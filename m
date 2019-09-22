@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BF2C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F027C49ED7
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC1A8206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:15:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78D65206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:15:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179754;
-	bh=SAeCV379qkmyVZyuHuEgE/SSHwe7+vx+dkjf8h+w48Q=;
+	s=default; t=1569179758;
+	bh=T+aCyAiEDOzNUK91tdmqUu+c6rJ8cwy/8kf1dw1hA2g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PY8ccTrN7OxlMRpJvqlf6Del7xbpwFrHrncVEpZ5neeBpWAzzOvYNHQ8SxHkC1BjG
-	 CeQjzpMl7UXuujf78ofzZDhGck/2lR4/V3n8NOVcyNSr1eBUt/yPQbb7ZJYAGUxJu9
-	 uXa2N/4OGOAu9tgtZQHwpSuFFNzXQt5GedhSDwCM=
+	b=zhjNrQ18f+PClBuprFf0Sfq/ConOARNPqZscxkAFmWyNhLKlHoJPtkMhE4tZtQcqe
+	 vw4aQsSeOb4cwRtg69SbPL34Ik8Urj/SAfmQHr0LDoFEqmMlj4fhQ8nk2hveZZ/W+F
+	 QRqVkZKo9GRnBwYj5MQqFiaFA+8d18aFzrPJngaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436972AbfIVTPx (ORCPT
+        id S2394577AbfIVS4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:15:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58362 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:56:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438560AbfIVS4W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:56:22 -0400
+        id S2438538AbfIVS4P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:56:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF58421928;
-        Sun, 22 Sep 2019 18:56:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 812C021479;
+        Sun, 22 Sep 2019 18:56:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178581;
-        bh=SAeCV379qkmyVZyuHuEgE/SSHwe7+vx+dkjf8h+w48Q=;
+        s=default; t=1569178575;
+        bh=T+aCyAiEDOzNUK91tdmqUu+c6rJ8cwy/8kf1dw1hA2g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0Xud0IrG1EoZCyYgjz8NHBxiwMBt1QQDhE0FT05XPus9dq3WOKOmZPU8sAs5AOkcy
-         RTcYkdv4yzV8EUvWF6Qd1dcLm+56eLSaymGPzFH0AEwDdD9ZiJrNLnlQv8tfiFEHfr
-         W/hvIWvWsR3bEqHQTrUFkpbB+bfRbHfRzyvkXTfM=
+        b=js3a037zNdD+2reRE+FwIeoqHa4tWjLfEMiVA9Qb5Vowkg8dlfvO1K2qhv45DV8nL
+         hhudTLffCwwzJKnZ/qkZH9wVM0ThV6bb6zr9XprEXbhUMtjDDVg9jkRyolWUEecquy
+         iDawvKqnndYOWBiRmtkljLzwLIBEyKio7rNqOH6U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tom Wu <tomwu@mellanox.com>, Israel Rukshin <israelr@mellanox.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 091/128] nvmet: fix data units read and written counters in SMART log
-Date:   Sun, 22 Sep 2019 14:53:41 -0400
-Message-Id: <20190922185418.2158-91-sashal@kernel.org>
+Cc:     Neil Horman <nhorman@tuxdriver.com>, djuran@redhat.com,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 086/128] x86/apic/vector: Warn when vector space exhaustion breaks affinity
+Date:   Sun, 22 Sep 2019 14:53:36 -0400
+Message-Id: <20190922185418.2158-86-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
 References: <20190922185418.2158-1-sashal@kernel.org>
@@ -62,63 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Wu <tomwu@mellanox.com>
+From: Neil Horman <nhorman@tuxdriver.com>
 
-[ Upstream commit 3bec2e3754becebd4c452999adb49bc62c575ea4 ]
+[ Upstream commit 743dac494d61d991967ebcfab92e4f80dc7583b3 ]
 
-In nvme spec 1.3 there is a definition for data write/read counters
-from SMART log, (See section 5.14.1.2):
-	This value is reported in thousands (i.e., a value of 1
-	corresponds to 1000 units of 512 bytes read) and is rounded up.
+On x86, CPUs are limited in the number of interrupts they can have affined
+to them as they only support 256 interrupt vectors per CPU. 32 vectors are
+reserved for the CPU and the kernel reserves another 22 for internal
+purposes. That leaves 202 vectors for assignement to devices.
 
-However, in nvme target where value is reported with actual units,
-but not thousands of units as the spec requires.
+When an interrupt is set up or the affinity is changed by the kernel or the
+administrator, the vector assignment code attempts to honor the requested
+affinity mask. If the vector space on the CPUs in that affinity mask is
+exhausted the code falls back to a wider set of CPUs and assigns a vector
+on a CPU outside of the requested affinity mask silently.
 
-Signed-off-by: Tom Wu <tomwu@mellanox.com>
-Reviewed-by: Israel Rukshin <israelr@mellanox.com>
-Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+While the effective affinity is reflected in the corresponding
+/proc/irq/$N/effective_affinity* files the silent breakage of the requested
+affinity can lead to unexpected behaviour for administrators.
+
+Add a pr_warn() when this happens so that adminstrators get at least
+informed about it in the syslog.
+
+[ tglx: Massaged changelog and made the pr_warn() more informative ]
+
+Reported-by: djuran@redhat.com
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: djuran@redhat.com
+Link: https://lkml.kernel.org/r/20190822143421.9535-1-nhorman@tuxdriver.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/target/admin-cmd.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ arch/x86/kernel/apic/vector.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/nvme/target/admin-cmd.c b/drivers/nvme/target/admin-cmd.c
-index 2008fa62a373b..a8eb8784e151f 100644
---- a/drivers/nvme/target/admin-cmd.c
-+++ b/drivers/nvme/target/admin-cmd.c
-@@ -68,9 +68,11 @@ static u16 nvmet_get_smart_log_nsid(struct nvmet_req *req,
- 		goto out;
- 
- 	host_reads = part_stat_read(ns->bdev->bd_part, ios[READ]);
--	data_units_read = part_stat_read(ns->bdev->bd_part, sectors[READ]);
-+	data_units_read = DIV_ROUND_UP(part_stat_read(ns->bdev->bd_part,
-+		sectors[READ]), 1000);
- 	host_writes = part_stat_read(ns->bdev->bd_part, ios[WRITE]);
--	data_units_written = part_stat_read(ns->bdev->bd_part, sectors[WRITE]);
-+	data_units_written = DIV_ROUND_UP(part_stat_read(ns->bdev->bd_part,
-+		sectors[WRITE]), 1000);
- 
- 	put_unaligned_le64(host_reads, &slog->host_reads[0]);
- 	put_unaligned_le64(data_units_read, &slog->data_units_read[0]);
-@@ -98,11 +100,11 @@ static u16 nvmet_get_smart_log_all(struct nvmet_req *req,
- 		if (!ns->bdev)
- 			continue;
- 		host_reads += part_stat_read(ns->bdev->bd_part, ios[READ]);
--		data_units_read +=
--			part_stat_read(ns->bdev->bd_part, sectors[READ]);
-+		data_units_read += DIV_ROUND_UP(
-+			part_stat_read(ns->bdev->bd_part, sectors[READ]), 1000);
- 		host_writes += part_stat_read(ns->bdev->bd_part, ios[WRITE]);
--		data_units_written +=
--			part_stat_read(ns->bdev->bd_part, sectors[WRITE]);
-+		data_units_written += DIV_ROUND_UP(
-+			part_stat_read(ns->bdev->bd_part, sectors[WRITE]), 1000);
- 
+diff --git a/arch/x86/kernel/apic/vector.c b/arch/x86/kernel/apic/vector.c
+index 10e1d17aa0608..c352ca2e1456f 100644
+--- a/arch/x86/kernel/apic/vector.c
++++ b/arch/x86/kernel/apic/vector.c
+@@ -400,6 +400,17 @@ static int activate_reserved(struct irq_data *irqd)
+ 		if (!irqd_can_reserve(irqd))
+ 			apicd->can_reserve = false;
  	}
- 	rcu_read_unlock();
++
++	/*
++	 * Check to ensure that the effective affinity mask is a subset
++	 * the user supplied affinity mask, and warn the user if it is not
++	 */
++	if (!cpumask_subset(irq_data_get_effective_affinity_mask(irqd),
++			    irq_data_get_affinity_mask(irqd))) {
++		pr_warn("irq %u: Affinity broken due to vector space exhaustion.\n",
++			irqd->irq);
++	}
++
+ 	return ret;
+ }
+ 
 -- 
 2.20.1
 
