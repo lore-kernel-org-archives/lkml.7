@@ -7,63 +7,62 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B22C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 17:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F6A5C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 17:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 285FC206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 17:51:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21F3820869
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 17:51:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="P4JQLK9m"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UEbRnZ6f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388360AbfIVRv1 (ORCPT
+        id S2388372AbfIVRvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 13:51:27 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:40142 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388245AbfIVRvM (ORCPT
+        Sun, 22 Sep 2019 13:51:31 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44202 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388325AbfIVRvS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 13:51:12 -0400
-Received: by mail-pg1-f194.google.com with SMTP id w10so6552247pgj.7
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Sep 2019 10:51:10 -0700 (PDT)
+        Sun, 22 Sep 2019 13:51:18 -0400
+Received: by mail-pg1-f195.google.com with SMTP id g3so4975791pgs.11
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Sep 2019 10:51:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=l7hNi5D/ZJN0kVpa71JImctObcmY7ytKQRt7LHXZ63k=;
-        b=P4JQLK9mbCyUdt4Ia4YwRkZEpMegMyS4gVNxeA2hKVAj+f5Yoo0iu6Tjy/MiwMrJA0
-         H4WlYzRbqQo06+PNTu7t63DtS77WG3T+cI3ihSCCrVIAE2ZT4Ahw8tmLBFaQ3NRB1tog
-         wM+rpgr+HNaplYdiQQV/ZqXa7cFdh0ui2v2Po=
+        bh=fU7pV+OJmhx44QoE/6uD0xkUifuGWdTctjSB3GNUjbc=;
+        b=UEbRnZ6fVNHK/UMvbrEvJZOKGaoPZ/Dqx/GrOtBkydXI5WA2+pm3ZztTgTwhpO68LG
+         4Nr4HM1m/QzJzaRxVQGfKvK3a5k0lbvqmgMe1ofSpDQm8dEpZ8DbtVNlUUvnZvyVwYvX
+         Xsg+BpCKlv716i5Ip8CV0iLrv2e9ltQSrC5w0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=l7hNi5D/ZJN0kVpa71JImctObcmY7ytKQRt7LHXZ63k=;
-        b=iLB1atFk0CJK2qGCa5+LmbQWwI36QXy23r4kKiXfIaXKsCLMt2KOrESiPyk3NlhCJt
-         fMNS3IdTbehFlJ6LduDifDtrwLTWsxF2qxAFxxAeZOhT4KBtgbhUrkucVKAj/xZooCAi
-         qUwW5gqIccgypfm3QY1BP8VxI3qVjnvWI6Rifufv+yISrrqtBDPyVqa5d3QvnyzjL+pL
-         u9Df3JyWppNb+yt94U6bKeBV2RUngL/x5IHP/JysXKXdrBxlHXpunwoajuI7LX6Zrhko
-         woWppllJro/iWrHCow+gxCqoIqaCXmvTEXqpqPg6GVdtrNNOtSWSjLgVuo+pVxlofwrP
-         IOCg==
-X-Gm-Message-State: APjAAAWw8EwZTEvStDY/Z8IM59iJQiHrz8QOrd7ghAv4EqFm3uxhNM3l
-        SrTpP/hkwXAk+pXzgOq0jPiFTw==
-X-Google-Smtp-Source: APXvYqz9QrY6QLI53Wrd2Y0HlHl0KvzWzRsEvDMfLahWuJpzBrM3+Al74K4IcZFyYx8tEfP5HZJpcg==
-X-Received: by 2002:a62:583:: with SMTP id 125mr30466432pff.69.1569174670438;
-        Sun, 22 Sep 2019 10:51:10 -0700 (PDT)
+        bh=fU7pV+OJmhx44QoE/6uD0xkUifuGWdTctjSB3GNUjbc=;
+        b=rE/7zWAcgYVlHvRGqPnPqa+X9/b5Tn53PpMfYb42pSEK4EQqaKsf/enrYKpB4ZdBbr
+         cXFdyf00RDW93l9FUpLCw5R7Vbo8dvE4zb3ODIDc8cfn3oxTJXhPLqu55rZkhWphINKV
+         p7yIwaRFwiSZINdW5a1mvFxBF1iQFxSr2uEm5JjeVfdT2+53qX1EwYaXFcGfG4FKNs5w
+         qXW6aMLt2gVhOkrZMVFF3Lui0ZHlWTwZVJabyylc9rRNLRJ65z7Y4KV3xDVPTkrBpKHS
+         titJssw5XXblgHNeWp55rx2GYDjfuWh/Jy2EPRJblLSJAhkVh8/6ysmYiWJ020+YBo02
+         btAw==
+X-Gm-Message-State: APjAAAUVJt5AqrXKNdxaZns3OTS05cccETEhrXZ5oXxV+VNgWHxRBQ3x
+        2MkhLUAAUtxco4tbZgpKyUDpig==
+X-Google-Smtp-Source: APXvYqwGcV9+d4bWnHkp6A0EN+2ZcdeZBTlEaVyob3EjcrwidAOAUaQTS61bahp/PqMV2JoS/FV6yg==
+X-Received: by 2002:a17:90a:8d13:: with SMTP id c19mr17305261pjo.142.1569174677370;
+        Sun, 22 Sep 2019 10:51:17 -0700 (PDT)
 Received: from localhost ([2620:15c:202:1:3c8f:512b:3522:dfaf])
-        by smtp.gmail.com with ESMTPSA id n8sm14159523pgt.40.2019.09.22.10.51.09
+        by smtp.gmail.com with ESMTPSA id z21sm8929021pfa.119.2019.09.22.10.51.16
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 22 Sep 2019 10:51:09 -0700 (PDT)
+        Sun, 22 Sep 2019 10:51:16 -0700 (PDT)
 From:   Gwendal Grignou <gwendal@chromium.org>
 To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
         pmeerw@pmeerw.net, lee.jones@linaro.org, bleung@chromium.org,
         enric.balletbo@collabora.com, dianders@chromium.org,
         groeck@chromium.org, fabien.lahoudere@collabora.com
 Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        Enrico Granata <egranata@chromium.org>,
         Gwendal Grignou <gwendal@chromium.org>
-Subject: [PATCH 06/13] platform: chrome: cros_ec: handle MKBP more events flag
-Date:   Sun, 22 Sep 2019 10:50:14 -0700
-Message-Id: <20190922175021.53449-7-gwendal@chromium.org>
+Subject: [PATCH 11/13] iio: cros_ec: Expose hwfifo_timeout
+Date:   Sun, 22 Sep 2019 10:50:19 -0700
+Message-Id: <20190922175021.53449-12-gwendal@chromium.org>
 X-Mailer: git-send-email 2.23.0.351.gc4317032e6-goog
 In-Reply-To: <20190922175021.53449-1-gwendal@chromium.org>
 References: <20190922175021.53449-1-gwendal@chromium.org>
@@ -74,214 +73,237 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Enrico Granata <egranata@chromium.org>
+Expose EC sampling rate through buffer/hwfifo_timeout.
+Rename frequency to sampling_frequency to match IIO ABI.
 
-The ChromeOS EC has support for signaling to the host that
-a single IRQ can serve multiple MKBP events.
-
-Doing this serves an optimization purpose, as it minimizes the
-number of round-trips into the interrupt handling machinery, and
-it proves beneficial to sensor timestamping as it keeps the desired
-synchronization of event times between the two processors.
-
-This patch adds kernel support for this EC feature, allowing the
-ec_irq to loop until all events have been served.
-
-Signed-off-by: Enrico Granata <egranata@chromium.org>
 Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
 ---
- drivers/platform/chrome/cros_ec.c           | 33 +++++++++----
- drivers/platform/chrome/cros_ec_proto.c     | 51 ++++++++++++---------
- include/linux/platform_data/cros_ec_proto.h |  7 ++-
- 3 files changed, 57 insertions(+), 34 deletions(-)
+ .../common/cros_ec_sensors/cros_ec_sensors.c  |   1 -
+ .../cros_ec_sensors/cros_ec_sensors_core.c    | 110 +++++++++++++-----
+ drivers/iio/light/cros_ec_light_prox.c        |   3 +-
+ drivers/iio/pressure/cros_ec_baro.c           |   3 +-
+ 4 files changed, 81 insertions(+), 36 deletions(-)
 
-diff --git a/drivers/platform/chrome/cros_ec.c b/drivers/platform/chrome/cros_ec.c
-index 9c8dc7cdb2b7..4adc007c357c 100644
---- a/drivers/platform/chrome/cros_ec.c
-+++ b/drivers/platform/chrome/cros_ec.c
-@@ -46,25 +46,38 @@ static irqreturn_t ec_irq_handler(int irq, void *data)
- 	return IRQ_WAKE_THREAD;
+diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+index b78a942ac8e5..95a4b4cf8f87 100644
+--- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
++++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+@@ -255,7 +255,6 @@ static int cros_ec_sensors_probe(struct platform_device *pdev)
+ 			BIT(IIO_CHAN_INFO_CALIBSCALE);
+ 		channel->info_mask_shared_by_all =
+ 			BIT(IIO_CHAN_INFO_SCALE) |
+-			BIT(IIO_CHAN_INFO_FREQUENCY) |
+ 			BIT(IIO_CHAN_INFO_SAMP_FREQ);
+ 		channel->info_mask_shared_by_all_available =
+ 			BIT(IIO_CHAN_INFO_SAMP_FREQ);
+diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+index c4c37c6df301..a31a761e3a81 100644
+--- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
++++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+@@ -11,6 +11,7 @@
+ #include <linux/iio/common/cros_ec_sensors_core.h>
+ #include <linux/iio/iio.h>
+ #include <linux/iio/kfifo_buf.h>
++#include <linux/iio/sysfs.h>
+ #include <linux/iio/trigger_consumer.h>
+ #include <linux/iio/triggered_buffer.h>
+ #include <linux/kernel.h>
+@@ -84,6 +85,75 @@ static void get_default_min_max_freq(enum motionsensor_type type,
+ 	}
  }
  
--static irqreturn_t ec_irq_thread(int irq, void *data)
-+static bool ec_handle_event(struct cros_ec_device *ec_dev)
- {
--	struct cros_ec_device *ec_dev = data;
- 	bool wake_event = true;
--	int ret;
-+	bool ec_has_more_events = false;
-+	int ret = cros_ec_get_next_event(ec_dev, &wake_event);
- 
--	ret = cros_ec_get_next_event(ec_dev, &wake_event);
-+	if (ec_dev->mkbp_event_supported) {
-+		ec_has_more_events = (ret > 0) &&
-+			(ec_dev->event_data.event_type &
-+				EC_MKBP_HAS_MORE_EVENTS);
-+	}
- 
--	/*
--	 * Signal only if wake host events or any interrupt if
--	 * cros_ec_get_next_event() returned an error (default value for
--	 * wake_event is true)
--	 */
--	if (wake_event && device_may_wakeup(ec_dev->dev))
-+	if (device_may_wakeup(ec_dev->dev) && wake_event)
- 		pm_wakeup_event(ec_dev->dev, 0);
- 
- 	if (ret > 0)
- 		blocking_notifier_call_chain(&ec_dev->event_notifier,
- 					     0, ec_dev);
++static int cros_ec_sensor_set_ec_rate(struct cros_ec_sensors_core_state *st,
++				      int rate)
++{
++	int ret;
 +
-+	return ec_has_more_events;
-+
++	mutex_lock(&st->cmd_lock);
++	st->param.cmd = MOTIONSENSE_CMD_EC_RATE;
++	st->param.ec_rate.data = rate;
++	ret = cros_ec_motion_send_host_cmd(st, 0);
++	if (ret == 0)
++		st->curr_sampl_freq = rate;
++	mutex_unlock(&st->cmd_lock);
++	return ret;
 +}
 +
-+static irqreturn_t ec_irq_thread(int irq, void *data)
++static ssize_t cros_ec_sensor_set_report_latency(struct device *dev,
++					      struct device_attribute *attr,
++					      const char *buf, size_t len)
 +{
-+	struct cros_ec_device *ec_dev = data;
-+	bool ec_has_more_events;
++	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
++	struct cros_ec_sensors_core_state *st = iio_priv(indio_dev);
++	int integer, fract, ret;
++	int latency;
 +
-+	do {
-+		ec_has_more_events = ec_handle_event(ec_dev);
-+	} while (ec_has_more_events);
++	ret = iio_str_to_fixpoint(buf, 100000, &integer, &fract);
++	if (ret)
++		return ret;
 +
- 	return IRQ_HANDLED;
- }
++	/* EC rate is in ms. */
++	latency = integer * 1000 + fract / 1000;
++	ret = cros_ec_sensor_set_ec_rate(st, latency);
++	if (ret < 0)
++		return ret;
++
++	return len;
++}
++
++static ssize_t cros_ec_sensor_get_report_latency(struct device *dev,
++					      struct device_attribute *attr,
++					      char *buf)
++{
++	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
++	struct cros_ec_sensors_core_state *st = iio_priv(indio_dev);
++	int latency, ret;
++
++	mutex_lock(&st->cmd_lock);
++	st->param.cmd = MOTIONSENSE_CMD_EC_RATE;
++	st->param.ec_rate.data = EC_MOTION_SENSE_NO_VALUE;
++
++	ret = cros_ec_motion_send_host_cmd(st, 0);
++	latency = st->resp->ec_rate.ret;
++	mutex_unlock(&st->cmd_lock);
++	if (ret < 0)
++		return ret;
++
++	return sprintf(buf, "%d.%06u\n",
++		       latency / 1000,
++		       (latency % 1000) * 1000);
++}
++
++static IIO_DEVICE_ATTR(hwfifo_timeout, 0644,
++		       cros_ec_sensor_get_report_latency,
++		       cros_ec_sensor_set_report_latency, 0);
++
++static const struct attribute *cros_ec_sensor_fifo_attributes[] = {
++	&iio_dev_attr_hwfifo_timeout.dev_attr.attr,
++	NULL,
++};
++
+ int cros_ec_sensors_push_data(
+ 		struct iio_dev *indio_dev,
+ 		s16 *data,
+@@ -194,6 +264,9 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
+ 			if (!buffer)
+ 				return -ENOMEM;
  
-diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
-index f659f96bda12..70e6d6c93b8d 100644
---- a/drivers/platform/chrome/cros_ec_proto.c
-+++ b/drivers/platform/chrome/cros_ec_proto.c
-@@ -425,10 +425,14 @@ int cros_ec_query_all(struct cros_ec_device *ec_dev)
- 	ret = cros_ec_get_host_command_version_mask(ec_dev,
- 						    EC_CMD_GET_NEXT_EVENT,
- 						    &ver_mask);
--	if (ret < 0 || ver_mask == 0)
-+	if (ret < 0 || ver_mask == 0) {
- 		ec_dev->mkbp_event_supported = 0;
--	else
--		ec_dev->mkbp_event_supported = 1;
-+		dev_info(ec_dev->dev, "MKBP not supported\n");
-+	} else {
-+		ec_dev->mkbp_event_supported = fls(ver_mask);
-+		dev_info(ec_dev->dev, "MKBP support version %u\n",
-+			ec_dev->mkbp_event_supported - 1);
-+	}
++			iio_buffer_set_attrs(buffer,
++					     cros_ec_sensor_fifo_attributes);
++
+ 			iio_device_attach_buffer(indio_dev, buffer);
+ 			indio_dev->modes = INDIO_BUFFER_SOFTWARE;
+ 			ret = cros_ec_sensorhub_register_push_data(
+@@ -553,18 +626,6 @@ int cros_ec_sensors_core_read(struct cros_ec_sensors_core_state *st,
  
- 	/* Probe if host sleep v1 is supported for S0ix failure detection. */
- 	ret = cros_ec_get_host_command_version_mask(ec_dev,
-@@ -519,6 +523,7 @@ EXPORT_SYMBOL(cros_ec_cmd_xfer_status);
- 
- static int get_next_event_xfer(struct cros_ec_device *ec_dev,
- 			       struct cros_ec_command *msg,
-+			       struct ec_response_get_next_event_v1 *event,
- 			       int version, uint32_t size)
- {
+ 	switch (mask) {
+ 	case IIO_CHAN_INFO_SAMP_FREQ:
+-		st->param.cmd = MOTIONSENSE_CMD_EC_RATE;
+-		st->param.ec_rate.data =
+-			EC_MOTION_SENSE_NO_VALUE;
+-
+-		ret = cros_ec_motion_send_host_cmd(st, 0);
+-		if (ret)
+-			break;
+-
+-		*val = st->resp->ec_rate.ret;
+-		ret = IIO_VAL_INT;
+-		break;
+-	case IIO_CHAN_INFO_FREQUENCY:
+ 		st->param.cmd = MOTIONSENSE_CMD_SENSOR_ODR;
+ 		st->param.sensor_odr.data =
+ 			EC_MOTION_SENSE_NO_VALUE;
+@@ -613,23 +674,16 @@ int cros_ec_sensors_core_write(struct cros_ec_sensors_core_state *st,
  	int ret;
-@@ -531,7 +536,7 @@ static int get_next_event_xfer(struct cros_ec_device *ec_dev,
- 	ret = cros_ec_cmd_xfer(ec_dev, msg);
- 	if (ret > 0) {
- 		ec_dev->event_size = ret - 1;
--		memcpy(&ec_dev->event_data, msg->data, ret);
-+		ec_dev->event_data = *event;
- 	}
  
- 	return ret;
-@@ -539,30 +544,29 @@ static int get_next_event_xfer(struct cros_ec_device *ec_dev,
+ 	switch (mask) {
+-	case IIO_CHAN_INFO_FREQUENCY:
++	case IIO_CHAN_INFO_SAMP_FREQ:
+ 		st->param.cmd = MOTIONSENSE_CMD_SENSOR_ODR;
+ 		st->param.sensor_odr.data = val;
  
- static int get_next_event(struct cros_ec_device *ec_dev)
+ 		/* Always roundup, so caller gets at least what it asks for. */
+ 		st->param.sensor_odr.roundup = 1;
+ 
+-		ret = cros_ec_motion_send_host_cmd(st, 0);
+-		break;
+-	case IIO_CHAN_INFO_SAMP_FREQ:
+-		st->param.cmd = MOTIONSENSE_CMD_EC_RATE;
+-		st->param.ec_rate.data = val;
+-
+ 		ret = cros_ec_motion_send_host_cmd(st, 0);
+ 		if (ret)
+ 			break;
+-		st->curr_sampl_freq = val;
+ 		break;
+ 	default:
+ 		ret = -EINVAL;
+@@ -643,6 +697,7 @@ static int __maybe_unused cros_ec_sensors_prepare(struct device *dev)
  {
--	u8 buffer[sizeof(struct cros_ec_command) + sizeof(ec_dev->event_data)];
--	struct cros_ec_command *msg = (struct cros_ec_command *)&buffer;
--	static int cmd_version = 1;
--	int ret;
-+	struct {
-+		struct cros_ec_command msg;
-+		struct ec_response_get_next_event_v1 event;
-+	} __packed buf;
-+	struct cros_ec_command *msg = &buf.msg;
-+	struct ec_response_get_next_event_v1 *event = &buf.event;
-+	const int cmd_version = ec_dev->mkbp_event_supported - 1;
-+
-+	BUILD_BUG_ON(sizeof(union ec_response_get_next_data_v1) != 16);
-+
-+	memset(&buf, 0, sizeof(buf));
+ 	struct iio_dev *indio_dev = dev_get_drvdata(dev);
+ 	struct cros_ec_sensors_core_state *st = iio_priv(indio_dev);
++	int ret = 0;
  
- 	if (ec_dev->suspended) {
- 		dev_dbg(ec_dev->dev, "Device suspended.\n");
- 		return -EHOSTDOWN;
+ 	if (st->curr_sampl_freq == 0)
+ 		return 0;
+@@ -652,13 +707,10 @@ static int __maybe_unused cros_ec_sensors_prepare(struct device *dev)
+ 	 * sleep. Set sampling to a long period if necessary.
+ 	 */
+ 	if (st->curr_sampl_freq < CROS_EC_MIN_SUSPEND_SAMPLING_FREQUENCY) {
+-		mutex_lock(&st->cmd_lock);
+-		st->param.cmd = MOTIONSENSE_CMD_EC_RATE;
+-		st->param.ec_rate.data = CROS_EC_MIN_SUSPEND_SAMPLING_FREQUENCY;
+-		cros_ec_motion_send_host_cmd(st, 0);
+-		mutex_unlock(&st->cmd_lock);
++		ret = cros_ec_sensor_set_ec_rate(st,
++				CROS_EC_MIN_SUSPEND_SAMPLING_FREQUENCY);
  	}
- 
--	if (cmd_version == 1) {
--		ret = get_next_event_xfer(ec_dev, msg, cmd_version,
--				sizeof(struct ec_response_get_next_event_v1));
--		if (ret < 0 || msg->result != EC_RES_INVALID_VERSION)
--			return ret;
--
--		/* Fallback to version 0 for future send attempts */
--		cmd_version = 0;
--	}
--
--	ret = get_next_event_xfer(ec_dev, msg, cmd_version,
-+	if (cmd_version == 0)
-+		return get_next_event_xfer(ec_dev, msg, event, 0,
- 				  sizeof(struct ec_response_get_next_event));
- 
--	return ret;
-+	return get_next_event_xfer(ec_dev, msg, event, cmd_version,
-+				sizeof(struct ec_response_get_next_event_v1));
+-	return 0;
++	return ret;
  }
  
- static int get_keyboard_state_event(struct cros_ec_device *ec_dev)
-@@ -606,7 +610,8 @@ int cros_ec_get_next_event(struct cros_ec_device *ec_dev, bool *wake_event)
- 		return ret;
+ static void __maybe_unused cros_ec_sensors_complete(struct device *dev)
+@@ -670,11 +722,7 @@ static void __maybe_unused cros_ec_sensors_complete(struct device *dev)
+ 		return;
  
- 	if (wake_event) {
--		event_type = ec_dev->event_data.event_type;
-+		event_type =
-+			ec_dev->event_data.event_type & EC_MKBP_EVENT_TYPE_MASK;
- 		host_event = cros_ec_get_host_event(ec_dev);
+ 	if (st->curr_sampl_freq < CROS_EC_MIN_SUSPEND_SAMPLING_FREQUENCY) {
+-		mutex_lock(&st->cmd_lock);
+-		st->param.cmd = MOTIONSENSE_CMD_EC_RATE;
+-		st->param.ec_rate.data = st->curr_sampl_freq;
+-		cros_ec_motion_send_host_cmd(st, 0);
+-		mutex_unlock(&st->cmd_lock);
++		cros_ec_sensor_set_ec_rate(st, st->curr_sampl_freq);
+ 	}
+ }
  
- 		/*
-@@ -631,10 +636,12 @@ EXPORT_SYMBOL(cros_ec_get_next_event);
- u32 cros_ec_get_host_event(struct cros_ec_device *ec_dev)
- {
- 	u32 host_event;
-+	const u8 event_type =
-+		ec_dev->event_data.event_type & EC_MKBP_EVENT_TYPE_MASK;
+diff --git a/drivers/iio/light/cros_ec_light_prox.c b/drivers/iio/light/cros_ec_light_prox.c
+index d58f010880ce..e9b0072d5c88 100644
+--- a/drivers/iio/light/cros_ec_light_prox.c
++++ b/drivers/iio/light/cros_ec_light_prox.c
+@@ -199,8 +199,7 @@ static int cros_ec_light_prox_probe(struct platform_device *pdev)
  
- 	BUG_ON(!ec_dev->mkbp_event_supported);
- 
--	if (ec_dev->event_data.event_type != EC_MKBP_EVENT_HOST_EVENT)
-+	if (event_type != EC_MKBP_EVENT_HOST_EVENT)
- 		return 0;
- 
- 	if (ec_dev->event_size != sizeof(host_event)) {
-diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
-index ab12e28f2107..63b5597294e7 100644
---- a/include/linux/platform_data/cros_ec_proto.h
-+++ b/include/linux/platform_data/cros_ec_proto.h
-@@ -115,7 +115,9 @@ struct cros_ec_command {
-  *            code.
-  * @pkt_xfer: Send packet to EC and get response.
-  * @lock: One transaction at a time.
-- * @mkbp_event_supported: True if this EC supports the MKBP event protocol.
-+ * @mkbp_event_supported: 0 if MKBP not supported. Otherwise its value is
-+ *                        the maximum supported version of the MKBP host event
-+ *                        command + 1.
-  * @host_sleep_v1: True if this EC supports the sleep v1 command.
-  * @event_notifier: Interrupt event notifier for transport devices.
-  * @event_data: Raw payload transferred with the MKBP event.
-@@ -155,7 +157,8 @@ struct cros_ec_device {
- 	int (*pkt_xfer)(struct cros_ec_device *ec,
- 			struct cros_ec_command *msg);
- 	struct mutex lock;
--	bool mkbp_event_supported;
-+	/* 0 == not supported, otherwise it supports version x - 1 */
-+	u8 mkbp_event_supported;
- 	bool host_sleep_v1;
- 	struct blocking_notifier_head event_notifier;
- 
+ 	/* Common part */
+ 	channel->info_mask_shared_by_all =
+-		BIT(IIO_CHAN_INFO_SAMP_FREQ) |
+-		BIT(IIO_CHAN_INFO_FREQUENCY);
++		BIT(IIO_CHAN_INFO_SAMP_FREQ);
+ 	channel->info_mask_shared_by_all_available =
+ 		BIT(IIO_CHAN_INFO_SAMP_FREQ);
+ 	channel->scan_type.realbits = CROS_EC_SENSOR_BITS;
+diff --git a/drivers/iio/pressure/cros_ec_baro.c b/drivers/iio/pressure/cros_ec_baro.c
+index c7538e93d24f..aa3cae5a1a15 100644
+--- a/drivers/iio/pressure/cros_ec_baro.c
++++ b/drivers/iio/pressure/cros_ec_baro.c
+@@ -148,8 +148,7 @@ static int cros_ec_baro_probe(struct platform_device *pdev)
+ 	channel->info_mask_separate = BIT(IIO_CHAN_INFO_RAW);
+ 	channel->info_mask_shared_by_all =
+ 		BIT(IIO_CHAN_INFO_SCALE) |
+-		BIT(IIO_CHAN_INFO_SAMP_FREQ) |
+-		BIT(IIO_CHAN_INFO_FREQUENCY);
++		BIT(IIO_CHAN_INFO_SAMP_FREQ);
+ 	channel->scan_type.realbits = CROS_EC_SENSOR_BITS;
+ 	channel->scan_type.storagebits = CROS_EC_SENSOR_BITS;
+ 	channel->scan_type.shift = 0;
 -- 
 2.23.0.351.gc4317032e6-goog
 
