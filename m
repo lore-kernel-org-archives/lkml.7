@@ -4,50 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A405FC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 434C4C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A92D20640
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:32:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A82420640
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:32:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180724;
-	bh=TWjJkqkJlUZehErOcJO7xJ7Tm4AAI0bMcn2ZPApoIwQ=;
+	s=default; t=1569180729;
+	bh=ZaoPHwtLHsvaA+ZAcx1/9Bq15BWjd0+3loZmP5V6Kmo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G87OwM9y/DqSalSAGqm9zkP5v6ON5pQIc/Lifu8UV38+aH95LmCEDa5JxkapGaFHu
-	 rG5Fk4IUAVyZRhpQ3uKnfZA5narw2n3kzyt/W44B0rLHzFY/bn9xleWSEFQ8MiDCNE
-	 HzY9gs0OjUimLlQRFrCWOh4Oh01lCKDry1RiCi0c=
+	b=EtwEhN6hGsKk3BATTuKMbZ6gAGsdteHsKC/0sWwc+HtS+VGyaA05EsKI0l8z7b1Fl
+	 5Vy7QIPoE54BUg8afeuxsHPZD5eVXn1jfhNe5d6bn++yh5HSIudJC2Ozis676NkWbw
+	 GjjX6wXntkc8bvihpIKWXq8JmsTHNQHQu6LEn4Gg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437899AbfIVTcD (ORCPT
+        id S2391661AbfIVSse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:32:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45534 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:48:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391679AbfIVSsg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:48:36 -0400
+        id S2391513AbfIVSsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:48:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AFED2196E;
-        Sun, 22 Sep 2019 18:48:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16DA1214D9;
+        Sun, 22 Sep 2019 18:48:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178115;
-        bh=TWjJkqkJlUZehErOcJO7xJ7Tm4AAI0bMcn2ZPApoIwQ=;
+        s=default; t=1569178097;
+        bh=ZaoPHwtLHsvaA+ZAcx1/9Bq15BWjd0+3loZmP5V6Kmo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F7FsRjayGjbzMFXqFCJHAtJT+Q3f/VdwenrAODlcgZ8DKHnm4qbw+p8yoxU3pMuNd
-         EQzbFd50e8hWa+GQkBIuNRvpTUbTfemxrPk+N9BJHa1N5iEiCS2Sfjtuu4QLDk3nd0
-         /oXtIAV5X+zHsmyiqaJdxbjA/qquSN941mMGe5zQ=
+        b=UJDEh8YUep+macwhKWOs3hlEqxI8JMN6mpkKlP1FL0pEuTn7DsHbjyhB2HLsbXUwy
+         s+Nd6nzykiIcJTAq43sV7VouN0Nm0QE8e+yYVCV1YcZEJcdinWK5nnaZv83lwQP8vd
+         xAvDmGlMOgs6qrLa4z5eUVl6Ac9zddi/F1PvKvb4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "M. Vefa Bicakci" <m.v.b@runbox.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 172/203] platform/x86: intel_pmc_core_pltdrv: Module removal warning fix
-Date:   Sun, 22 Sep 2019 14:43:18 -0400
-Message-Id: <20190922184350.30563-172-sashal@kernel.org>
+Cc:     Marcel Bocu <marcel.p.bocu@gmail.com>, Vicki Pfau <vi@endrift.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        "Woods, Brian" <Brian.Woods@amd.com>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 160/203] hwmon: (k10temp) Add support for AMD family 17h, model 70h CPUs
+Date:   Sun, 22 Sep 2019 14:43:06 -0400
+Message-Id: <20190922184350.30563-160-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -60,46 +65,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "M. Vefa Bicakci" <m.v.b@runbox.com>
+From: Marcel Bocu <marcel.p.bocu@gmail.com>
 
-[ Upstream commit 0b43e41e93815ecd9616759cf5d64d3a7be8e6fb ]
+[ Upstream commit 12163cfbfc0f804cc7d27bc20e8d266ce7459260 ]
 
-Prior to this commit, removing the intel_pmc_core_pltdrv module
-would cause the following warning:
+It would seem like model 70h is behaving in the same way as model 30h,
+so let's just add the new F3 PCI ID to the list of compatible devices.
 
-  Device 'intel_pmc_core.0' does not have a release() function, it is broken and must be fixed. See Documentation/kobject.txt.
-  WARNING: CPU: 0 PID: 2202 at drivers/base/core.c:1238 device_release+0x6f/0x80
+Unlike previous Ryzen/Threadripper, Ryzen gen 3 processors do not need
+temperature offsets anymore. This has been reported in the press and
+verified on my Ryzen 3700X by checking that the idle temperature
+reported by k10temp is matching the temperature reported by the
+firmware.
 
-This commit hence adds an empty release function for the driver.
+Vicki Pfau sent an identical patch after I checked that no-one had
+written this patch. I would have been happy about dropping my patch but
+unlike for his patch series, I had already Cc:ed the x86 people and
+they already reviewed the changes. Since Vicki has not answered to
+any email after his initial series, let's assume she is on vacation
+and let's avoid duplication of reviews from the maintainers and merge
+my series. To acknowledge Vicki's anteriority, I added her S-o-b to
+the patch.
 
-Signed-off-by: M. Vefa Bicakci <m.v.b@runbox.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+v2, suggested by Guenter Roeck and Brian Woods:
+  - rename from 71h to 70h
+
+Signed-off-by: Vicki Pfau <vi@endrift.com>
+Signed-off-by: Marcel Bocu <marcel.p.bocu@gmail.com>
+Tested-by: Marcel Bocu <marcel.p.bocu@gmail.com>
+
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: x86@kernel.org
+Cc: "Woods, Brian" <Brian.Woods@amd.com>
+Cc: Clemens Ladisch <clemens@ladisch.de>
+Cc: Jean Delvare <jdelvare@suse.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-hwmon@vger.kernel.org
+Link: https://lore.kernel.org/r/20190722174653.2391-1-marcel.p.bocu@gmail.com
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel_pmc_core_pltdrv.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/hwmon/k10temp.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/intel_pmc_core_pltdrv.c b/drivers/platform/x86/intel_pmc_core_pltdrv.c
-index a8754a6db1b8b..186540014c480 100644
---- a/drivers/platform/x86/intel_pmc_core_pltdrv.c
-+++ b/drivers/platform/x86/intel_pmc_core_pltdrv.c
-@@ -18,8 +18,16 @@
- #include <asm/cpu_device_id.h>
- #include <asm/intel-family.h>
- 
-+static void intel_pmc_core_release(struct device *dev)
-+{
-+	/* Nothing to do. */
-+}
-+
- static struct platform_device pmc_core_device = {
- 	.name = "intel_pmc_core",
-+	.dev  = {
-+		.release = intel_pmc_core_release,
-+	},
+diff --git a/drivers/hwmon/k10temp.c b/drivers/hwmon/k10temp.c
+index c77e89239dcd9..5c1dddde193c3 100644
+--- a/drivers/hwmon/k10temp.c
++++ b/drivers/hwmon/k10temp.c
+@@ -349,6 +349,7 @@ static const struct pci_device_id k10temp_id_table[] = {
+ 	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_17H_DF_F3) },
+ 	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_17H_M10H_DF_F3) },
+ 	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F3) },
++	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_17H_M70H_DF_F3) },
+ 	{ PCI_VDEVICE(HYGON, PCI_DEVICE_ID_AMD_17H_DF_F3) },
+ 	{}
  };
- 
- /*
 -- 
 2.20.1
 
