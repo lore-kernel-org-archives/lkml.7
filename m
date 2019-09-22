@@ -4,50 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84459C49ED7
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61DC4C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E3FB20882
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38B8720882
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:06:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179188;
-	bh=Tcx/Yp0C4YgpHbn3nCmZwEpP1zIaf3+0RQo1r8RcIR8=;
+	s=default; t=1569179191;
+	bh=7RMS4YktEnGBSooX125/Dw0SiOsFPkU0E3b2XtdJMjs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yJchIL/plgMfrEiwwy7aU/uX8kd/zcHr0gCPTtomOJuIrpcV5orxll4AZ9qDU7OAv
-	 2+7/fcfGbcH8hjssNgeyNgbJnP9e8LBH1HdyoMPSWYquIhEpvAQn4Y6STejVxkAIEq
-	 jvTt/7SAI427rcBttHHw0VpUtBf0xkl+nvAj8Lds=
+	b=Uv0L+GWVGfon9nUh8V70jPKwzfsC2iqy+HcTg+rs9YrpwHVsHkrRoZM5JyuK+rCc0
+	 pL0C1/t9Igr+mLIfiGHvZdJmF/bYBHiCCeX1UfrRvXNNa8iFy0BKfzm74eXXsHoMjg
+	 Bzbh/n5+4ve/OX7J/3OICLkpZ+R4hQM8nj7HuFOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403909AbfIVTAf (ORCPT
+        id S1730173AbfIVTGa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:00:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36102 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:06:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395165AbfIVTAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 15:00:24 -0400
+        id S2393371AbfIVTAd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 15:00:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A5A0208C2;
-        Sun, 22 Sep 2019 19:00:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D04062184D;
+        Sun, 22 Sep 2019 19:00:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178824;
-        bh=Tcx/Yp0C4YgpHbn3nCmZwEpP1zIaf3+0RQo1r8RcIR8=;
+        s=default; t=1569178832;
+        bh=7RMS4YktEnGBSooX125/Dw0SiOsFPkU0E3b2XtdJMjs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SG2ttpJ6qtpfiC+QiGMJaPuZV2x+CZy1Yhk6saSerMg4whyJO0f+LTRNpe2fhh/ng
-         ru6dkbGk5QHXcg5QWfv7iwlibYXkMxlkSOw4HhUS0E46f3pMKZcX1dqRQqCNBdhKKe
-         i+eo6QaUvY++OZxSHapzKGI5unr5PyIb0VTLiVmA=
+        b=fBMOjDTWJZ52iiFdM9m7DZQWs62mfHo14DEa5SPfHPVGvuQcLyFRf6Mv1SmurwNQd
+         FMlWD3NyI+acxD6uhmxiX0onwIMYzknsyJq4dZ495rq3Z57nXOUd6ZOLv60DkuYEpI
+         iCWiqzZOLzs2MX015qGhdxKEyKksWmIO2xMqt34Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 35/60] media: saa7134: fix terminology around saa7134_i2c_eeprom_md7134_gate()
-Date:   Sun, 22 Sep 2019 14:59:08 -0400
-Message-Id: <20190922185934.4305-35-sashal@kernel.org>
+Cc:     Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        Patrick McLean <chutzpah@gentoo.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 41/60] libtraceevent: Change users plugin directory
+Date:   Sun, 22 Sep 2019 14:59:14 -0400
+Message-Id: <20190922185934.4305-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185934.4305-1-sashal@kernel.org>
 References: <20190922185934.4305-1-sashal@kernel.org>
@@ -60,58 +65,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 
-[ Upstream commit 9d802222a3405599d6e1984d9324cddf592ea1f4 ]
+[ Upstream commit e97fd1383cd77c467d2aed7fa4e596789df83977 ]
 
-saa7134_i2c_eeprom_md7134_gate() function and the associated comment uses
-an inverted i2c gate open / closed terminology.
-Let's fix this.
+To be compliant with XDG user directory layout, the user's plugin
+directory is changed from ~/.traceevent/plugins to
+~/.local/lib/traceevent/plugins/
 
-Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-[hverkuil-cisco@xs4all.nl: fix alignment checkpatch warning]
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Suggested-by: Patrick McLean <chutzpah@gentoo.org>
+Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Patrick McLean <chutzpah@gentoo.org>
+Cc: linux-trace-devel@vger.kernel.org
+Link: https://lore.kernel.org/linux-trace-devel/20190313144206.41e75cf8@patrickm/
+Link: http://lore.kernel.org/linux-trace-devel/20190801074959.22023-4-tz.stoyanov@gmail.com
+Link: http://lore.kernel.org/lkml/20190805204355.344622683@goodmis.org
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/pci/saa7134/saa7134-i2c.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ tools/lib/traceevent/Makefile       | 6 +++---
+ tools/lib/traceevent/event-plugin.c | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/pci/saa7134/saa7134-i2c.c b/drivers/media/pci/saa7134/saa7134-i2c.c
-index dca0592c5f471..6f93568f56204 100644
---- a/drivers/media/pci/saa7134/saa7134-i2c.c
-+++ b/drivers/media/pci/saa7134/saa7134-i2c.c
-@@ -355,7 +355,11 @@ static struct i2c_client saa7134_client_template = {
+diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
+index 7851df1490e0a..cc3315da6dc39 100644
+--- a/tools/lib/traceevent/Makefile
++++ b/tools/lib/traceevent/Makefile
+@@ -54,15 +54,15 @@ set_plugin_dir := 1
  
- /* ----------------------------------------------------------- */
+ # Set plugin_dir to preffered global plugin location
+ # If we install under $HOME directory we go under
+-# $(HOME)/.traceevent/plugins
++# $(HOME)/.local/lib/traceevent/plugins
+ #
+ # We dont set PLUGIN_DIR in case we install under $HOME
+ # directory, because by default the code looks under:
+-# $(HOME)/.traceevent/plugins by default.
++# $(HOME)/.local/lib/traceevent/plugins by default.
+ #
+ ifeq ($(plugin_dir),)
+ ifeq ($(prefix),$(HOME))
+-override plugin_dir = $(HOME)/.traceevent/plugins
++override plugin_dir = $(HOME)/.local/lib/traceevent/plugins
+ set_plugin_dir := 0
+ else
+ override plugin_dir = $(libdir)/traceevent/plugins
+diff --git a/tools/lib/traceevent/event-plugin.c b/tools/lib/traceevent/event-plugin.c
+index a16756ae35267..5fe7889606a23 100644
+--- a/tools/lib/traceevent/event-plugin.c
++++ b/tools/lib/traceevent/event-plugin.c
+@@ -30,7 +30,7 @@
+ #include "event-parse.h"
+ #include "event-utils.h"
  
--/* On Medion 7134 reading EEPROM needs DVB-T demod i2c gate open */
-+/*
-+ * On Medion 7134 reading the SAA7134 chip config EEPROM needs DVB-T
-+ * demod i2c gate closed due to an address clash between this EEPROM
-+ * and the demod one.
-+ */
- static void saa7134_i2c_eeprom_md7134_gate(struct saa7134_dev *dev)
- {
- 	u8 subaddr = 0x7, dmdregval;
-@@ -372,14 +376,14 @@ static void saa7134_i2c_eeprom_md7134_gate(struct saa7134_dev *dev)
+-#define LOCAL_PLUGIN_DIR ".traceevent/plugins"
++#define LOCAL_PLUGIN_DIR ".local/lib/traceevent/plugins/"
  
- 	ret = i2c_transfer(&dev->i2c_adap, i2cgatemsg_r, 2);
- 	if ((ret == 2) && (dmdregval & 0x2)) {
--		pr_debug("%s: DVB-T demod i2c gate was left closed\n",
-+		pr_debug("%s: DVB-T demod i2c gate was left open\n",
- 			 dev->name);
- 
- 		data[0] = subaddr;
- 		data[1] = (dmdregval & ~0x2);
- 		if (i2c_transfer(&dev->i2c_adap, i2cgatemsg_w, 1) != 1)
--			pr_err("%s: EEPROM i2c gate open failure\n",
--			  dev->name);
-+			pr_err("%s: EEPROM i2c gate close failure\n",
-+			       dev->name);
- 	}
- }
- 
+ static struct registered_plugin_options {
+ 	struct registered_plugin_options	*next;
 -- 
 2.20.1
 
