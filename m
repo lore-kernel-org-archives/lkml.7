@@ -7,49 +7,44 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E1AC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6395C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91280206B6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:26:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CAA32054F
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:26:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180409;
-	bh=vXDkuYne+Hy4F82vAvYwB/USPCaWPvacv5O9Bg8gQqY=;
+	s=default; t=1569180417;
+	bh=6mRKLFwnrjiSPq0K3P6kBNneWVhgDLHWGC4dntafiTc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ANlqPZi2C/9JbUa6PqxVmDVXlxU80veA2412PK+miH9PFnaFl9g1sqeAgSXZJLKVo
-	 ZKhOXf0RAl0ZSCATA42HlnouQE6TVLEbTZJZg7o65a0fP33/EbdEChqeZ3mQXaQ55a
-	 Oz/QGTY6AKcKy0OUgwW77oUueGY3G076YsnKwbsM=
+	b=ZWG+9osrFXRDRcZp23l6yRzCYFveL3vQQO6/ajWPeqoQEVjtbQiGJ8Lc24sNR0i4d
+	 mSwcD47yk6eV++QYmkpuU2WozqCsDC4Xagwx/memqVt6EztRbKx9SI4J2wyKD2q7D7
+	 cEAI1/Y1Gf+RAXFHcq37q8XJg17KIHIV7VqXPd+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731651AbfIVT0t (ORCPT
+        id S1731680AbfIVT04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:26:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49658 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:26:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405900AbfIVSvk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:51:40 -0400
+        id S2390601AbfIVSvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:51:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35E2721A4A;
-        Sun, 22 Sep 2019 18:51:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AB4D2190F;
+        Sun, 22 Sep 2019 18:51:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178299;
-        bh=vXDkuYne+Hy4F82vAvYwB/USPCaWPvacv5O9Bg8gQqY=;
+        s=default; t=1569178297;
+        bh=6mRKLFwnrjiSPq0K3P6kBNneWVhgDLHWGC4dntafiTc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i0+ogpOWdDp+Ksp+/KgMQBzEA+LzODEuwYoO45A7+mxRndd6Bk8YVh5d2RUC21QiG
-         ZMuecKxGoLq0ibBKhXH/BaHd2IMrkvHB7zBdddtsVx4TwnuxAg+IR9jlcSrpVGhX+B
-         iMkV+O7BsyO1ugUoUmKv/zEiWAMqE6kbgqGjoqg4=
+        b=2F7IlYiDz5hOMZy21wyVZLNmlCeTUO30XrH0u+THxZ8+8UZDK3DHH7xEJ9qir9GYu
+         l4j8cIQpxTZsvuc+SmMizpCuPneK4S7ypYGRDmDBDXv5yXyr5he4iyb1rSLzWpBigt
+         b2kNOWiu4PYQm5XocMoJsv7OPVvH/ZCt9DYfnAEQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 073/185] media: vsp1: fix memory leak of dl on error return path
-Date:   Sun, 22 Sep 2019 14:47:31 -0400
-Message-Id: <20190922184924.32534-73-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 072/185] ALSA: hda: Add codec on bus address table lately
+Date:   Sun, 22 Sep 2019 14:47:30 -0400
+Message-Id: <20190922184924.32534-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -62,42 +57,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 70c55c1ad1a76e804ee5330e134674f5d2741cb7 ]
+[ Upstream commit ee5f85d9290fe25d460bd320b7fe073075d72d33 ]
 
-Currently when the call vsp1_dl_body_get fails and returns null the
-error return path leaks the allocation of dl. Fix this by kfree'ing
-dl before returning.
+The call of snd_hdac_bus_add_device() is needed only for registering
+the codec onto the bus caddr_tbl[] that is referred essentially only
+in the unsol event handler.  That is, the reason of this call and the
+release by the counter-part function snd_hdac_bus_remove_device() is
+just to assure that the unsol event gets notified to the codec.
 
-Addresses-Coverity: ("Resource leak")
+But the current implementation of the unsol notification wouldn't work
+properly when the codec is still in a premature init state.  So this
+patch tries to work around it by delaying the caddr_tbl[] registration
+at the point of snd_hdac_device_register().
 
-Fixes: 5d7936b8e27d ("media: vsp1: Convert display lists to use new body pool")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Also, the order of snd_hdac_bus_remove_device() and device_del() calls
+are shuffled to make sure that the unsol event is masked before
+deleting the device.
+
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204565
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/vsp1/vsp1_dl.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ sound/hda/hdac_device.c | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/media/platform/vsp1/vsp1_dl.c b/drivers/media/platform/vsp1/vsp1_dl.c
-index 104b6f5145364..d7b43037e500a 100644
---- a/drivers/media/platform/vsp1/vsp1_dl.c
-+++ b/drivers/media/platform/vsp1/vsp1_dl.c
-@@ -557,8 +557,10 @@ static struct vsp1_dl_list *vsp1_dl_list_alloc(struct vsp1_dl_manager *dlm)
+diff --git a/sound/hda/hdac_device.c b/sound/hda/hdac_device.c
+index 3842f9d34b7cf..02b2950d1d0e6 100644
+--- a/sound/hda/hdac_device.c
++++ b/sound/hda/hdac_device.c
+@@ -61,10 +61,6 @@ int snd_hdac_device_init(struct hdac_device *codec, struct hdac_bus *bus,
+ 	pm_runtime_get_noresume(&codec->dev);
+ 	atomic_set(&codec->in_pm, 0);
  
- 	/* Get a default body for our list. */
- 	dl->body0 = vsp1_dl_body_get(dlm->pool);
--	if (!dl->body0)
-+	if (!dl->body0) {
-+		kfree(dl);
- 		return NULL;
-+	}
+-	err = snd_hdac_bus_add_device(bus, codec);
+-	if (err < 0)
+-		goto error;
+-
+ 	/* fill parameters */
+ 	codec->vendor_id = snd_hdac_read_parm(codec, AC_NODE_ROOT,
+ 					      AC_PAR_VENDOR_ID);
+@@ -143,15 +139,22 @@ int snd_hdac_device_register(struct hdac_device *codec)
+ 	err = device_add(&codec->dev);
+ 	if (err < 0)
+ 		return err;
++	err = snd_hdac_bus_add_device(codec->bus, codec);
++	if (err < 0)
++		goto error;
+ 	mutex_lock(&codec->widget_lock);
+ 	err = hda_widget_sysfs_init(codec);
+ 	mutex_unlock(&codec->widget_lock);
+-	if (err < 0) {
+-		device_del(&codec->dev);
+-		return err;
+-	}
++	if (err < 0)
++		goto error_remove;
  
- 	header_offset = dl->body0->max_entries * sizeof(*dl->body0->entries);
+ 	return 0;
++
++ error_remove:
++	snd_hdac_bus_remove_device(codec->bus, codec);
++ error:
++	device_del(&codec->dev);
++	return err;
+ }
+ EXPORT_SYMBOL_GPL(snd_hdac_device_register);
  
+@@ -165,8 +168,8 @@ void snd_hdac_device_unregister(struct hdac_device *codec)
+ 		mutex_lock(&codec->widget_lock);
+ 		hda_widget_sysfs_exit(codec);
+ 		mutex_unlock(&codec->widget_lock);
+-		device_del(&codec->dev);
+ 		snd_hdac_bus_remove_device(codec->bus, codec);
++		device_del(&codec->dev);
+ 	}
+ }
+ EXPORT_SYMBOL_GPL(snd_hdac_device_unregister);
 -- 
 2.20.1
 
