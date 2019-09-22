@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B561C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 021FDC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCB50208C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:50:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1B7A21479
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:50:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178254;
-	bh=NJLxmO+sPDzSi40Zm+6uwJ9bnxqS9Qk6TiNQiFwfxvk=;
+	s=default; t=1569178257;
+	bh=WIctwk9L72Om2Ui1kbxR8vV1p8YYAz6Te+AeYjGT+5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XNxKxVwVdIxpynk12fvRddiwzXGdrcoOrOWWaKJTTfxT7Ipb2FXefx1bvK/hYukm4
-	 RPF25cfRCp5yrST+Z6ikKez8eXJhhzB1BMdvIP5lHkPLrNd2rgBMPN5J7luvEeT0wp
-	 DsRYg/M7PO3IvHSnni2C0mtDqesLM+0xNpXMYAbg=
+	b=CN5Cvx7r2lPp9Gyfw385GP4vFoKlaFb75CYNiglQjcwC4wRHEIRTWGa+nOHcBSaVg
+	 YrgEFx0XhDFyP1ywpNwdqqAXVd9+E+2HpMH3GdQkzNjl2CYRua29VMoOXq64CeO+Ch
+	 gXa2viqrS9R3Qvfv/T9EJhyTV59wdC2+zOG4jRh4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404081AbfIVSuy (ORCPT
+        id S2404439AbfIVSu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:50:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48028 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:50:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404490AbfIVSup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:50:45 -0400
+        id S2404614AbfIVSuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:50:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DC652190F;
-        Sun, 22 Sep 2019 18:50:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1592821BE5;
+        Sun, 22 Sep 2019 18:50:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178244;
-        bh=NJLxmO+sPDzSi40Zm+6uwJ9bnxqS9Qk6TiNQiFwfxvk=;
+        s=default; t=1569178249;
+        bh=WIctwk9L72Om2Ui1kbxR8vV1p8YYAz6Te+AeYjGT+5g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hElz7rgByo1DYaIxTZU4NZdf7/9pOoV0je5sARASW+Qo+NKJrKHLA3GLzmU6uWpUx
-         0lb5DnbuYSAREsoX6xwYOSelnlcaxV9WDHDk2Zsr44LclQsNJGMsUB0rnfxm4FMTQY
-         fgYXnE+/Nf4Yz4sxUyNSWYLmKtOlHLZa+6djeeuE=
+        b=BxGBl9C21xcV/lwWRAxk5exI30B+PdBEJ1TvWnfTBRf2KzsbVfBwR1Q2vzIur6R1D
+         8/R2YenSbh/hQ4sCFKiPWzfrsZUd17fNjQERmYV5MqqfUuANJmekb6ikvZZTe1kTb1
+         qFixc7TWdZ02rKxtchsHWh9YKwHZxlEJfZmlIBrI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     chenzefeng <chenzefeng2@huawei.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-ia64@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 038/185] ia64:unwind: fix double free for mod->arch.init_unw_table
-Date:   Sun, 22 Sep 2019 14:46:56 -0400
-Message-Id: <20190922184924.32534-38-sashal@kernel.org>
+Cc:     Yufen Yu <yuyufen@huawei.com>, Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 042/185] md/raid1: end bio when the device faulty
+Date:   Sun, 22 Sep 2019 14:47:00 -0400
+Message-Id: <20190922184924.32534-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -59,54 +58,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: chenzefeng <chenzefeng2@huawei.com>
+From: Yufen Yu <yuyufen@huawei.com>
 
-[ Upstream commit c5e5c48c16422521d363c33cfb0dcf58f88c119b ]
+[ Upstream commit eeba6809d8d58908b5ed1b5ceb5fcb09a98a7cad ]
 
-The function free_module in file kernel/module.c as follow:
+When write bio return error, it would be added to conf->retry_list
+and wait for raid1d thread to retry write and acknowledge badblocks.
 
-void free_module(struct module *mod) {
-	......
-	module_arch_cleanup(mod);
-	......
-	module_arch_freeing_init(mod);
-	......
-}
+In narrow_write_error(), the error bio will be split in the unit of
+badblock shift (such as one sector) and raid1d thread issues them
+one by one. Until all of the splited bio has finished, raid1d thread
+can go on processing other things, which is time consuming.
 
-Both module_arch_cleanup and module_arch_freeing_init function
-would free the mod->arch.init_unw_table, which cause double free.
+But, there is a scene for error handling that is not necessary.
+When the device has been set faulty, flush_bio_list() may end
+bios in pending_bio_list with error status. Since these bios
+has not been issued to the device actually, error handlding to
+retry write and acknowledge badblocks make no sense.
 
-Here, set mod->arch.init_unw_table = NULL after remove the unwind
-table to avoid double free.
+Even without that scene, when the device is faulty, badblocks info
+can not be written out to the device. Thus, we also no need to
+handle the error IO.
 
-Signed-off-by: chenzefeng <chenzefeng2@huawei.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/ia64/kernel/module.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/md/raid1.c | 26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
 
-diff --git a/arch/ia64/kernel/module.c b/arch/ia64/kernel/module.c
-index 326448f9df160..1a42ba885188a 100644
---- a/arch/ia64/kernel/module.c
-+++ b/arch/ia64/kernel/module.c
-@@ -914,10 +914,14 @@ module_finalize (const Elf_Ehdr *hdr, const Elf_Shdr *sechdrs, struct module *mo
- void
- module_arch_cleanup (struct module *mod)
- {
--	if (mod->arch.init_unw_table)
-+	if (mod->arch.init_unw_table) {
- 		unw_remove_unwind_table(mod->arch.init_unw_table);
--	if (mod->arch.core_unw_table)
-+		mod->arch.init_unw_table = NULL;
-+	}
-+	if (mod->arch.core_unw_table) {
- 		unw_remove_unwind_table(mod->arch.core_unw_table);
-+		mod->arch.core_unw_table = NULL;
-+	}
- }
- 
- void *dereference_module_function_descriptor(struct module *mod, void *ptr)
+diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+index 2aa36e570e049..a26731a9b38e7 100644
+--- a/drivers/md/raid1.c
++++ b/drivers/md/raid1.c
+@@ -426,19 +426,21 @@ static void raid1_end_write_request(struct bio *bio)
+ 		    /* We never try FailFast to WriteMostly devices */
+ 		    !test_bit(WriteMostly, &rdev->flags)) {
+ 			md_error(r1_bio->mddev, rdev);
+-			if (!test_bit(Faulty, &rdev->flags))
+-				/* This is the only remaining device,
+-				 * We need to retry the write without
+-				 * FailFast
+-				 */
+-				set_bit(R1BIO_WriteError, &r1_bio->state);
+-			else {
+-				/* Finished with this branch */
+-				r1_bio->bios[mirror] = NULL;
+-				to_put = bio;
+-			}
+-		} else
++		}
++
++		/*
++		 * When the device is faulty, it is not necessary to
++		 * handle write error.
++		 * For failfast, this is the only remaining device,
++		 * We need to retry the write without FailFast.
++		 */
++		if (!test_bit(Faulty, &rdev->flags))
+ 			set_bit(R1BIO_WriteError, &r1_bio->state);
++		else {
++			/* Finished with this branch */
++			r1_bio->bios[mirror] = NULL;
++			to_put = bio;
++		}
+ 	} else {
+ 		/*
+ 		 * Set R1BIO_Uptodate in our master bio, so that we
 -- 
 2.20.1
 
