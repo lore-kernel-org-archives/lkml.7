@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F68EC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0281CC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:06:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8EBE206B6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:05:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D26AF21D7F
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:06:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179156;
-	bh=RjgmkSOMi2xT5X4blqGQ8ZeCdi9HMfHkXvSSXsfQvR0=;
+	s=default; t=1569179160;
+	bh=lTc6DFAiAPGMPxNE/on0ezBOoV5GI9L/+6b0widIlG0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TQEQWTpqDbrn5f+HeiqkoWfVTK9ds8em9SkR78HWTkqi3UwoUYbsz5QgUxA/zb9+7
-	 oyQOUDDPSnJFBp4lanOFdkJy+j6IO9rtJcNDhjzLhIsafL3spGbJyQXgDSC4ou2OvU
-	 qB7xKFNb+tkGqFcezGFvQC9weZBnkdEvSAP8ZtFU=
+	b=e0COLC6ujYh2t51ouePBznIw1Zu3Vs8724O0oGXxeTfHAzCjehxxQBFb5i3qd2SRC
+	 paT8/mvOT0K+dC5oUCJS0abw1+s7iUsX8auCaLB6ZXTfgyqV6+o7F2zgTsXe4fYP+/
+	 7+Z95txdQkXUB20ip/chgki850IF3YEr79ufZA64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436601AbfIVTAk (ORCPT
+        id S2436571AbfIVTAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sun, 22 Sep 2019 15:00:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36334 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:36188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395214AbfIVTAd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 15:00:33 -0400
+        id S2395196AbfIVTA3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 15:00:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67B4821907;
-        Sun, 22 Sep 2019 19:00:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE596206C2;
+        Sun, 22 Sep 2019 19:00:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178833;
-        bh=RjgmkSOMi2xT5X4blqGQ8ZeCdi9HMfHkXvSSXsfQvR0=;
+        s=default; t=1569178828;
+        bh=lTc6DFAiAPGMPxNE/on0ezBOoV5GI9L/+6b0widIlG0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GPFFmZ3sfE/yGBr0w6xTs4DRkMYjItfrRRRWfUBYvqg9RC6jjz5J078C978PpHkkW
-         1+0Jp3CWEby/LR4JHtiCNzLZkSldn1JNDMAwFzsiIjdviyLtJ/bw8itmkf6YaThig2
-         ffiEqPPJp2FEOL7tQ1DqlrsuIcT1I8W1f9xRK1wA=
+        b=ftGg14r1TAdD4/UwRqCv6vqeIDpUVksq5Ew7xXR2GzcTanoOg5rZSvJFzfhGqtSyj
+         0QG1BtJwmxmAKMDaJVi42eBabLN0ZKSFRzHcfL10yD5GJoDp/F7q8ffX1UH8F7mkFt
+         nX3QDUO6S6qcGwNYhI6bb3EnaRpHBwt907crzelw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 42/60] ARM: dts: exynos: Mark LDO10 as always-on on Peach Pit/Pi Chromebooks
-Date:   Sun, 22 Sep 2019 14:59:15 -0400
-Message-Id: <20190922185934.4305-42-sashal@kernel.org>
+Cc:     Tom Wu <tomwu@mellanox.com>, Israel Rukshin <israelr@mellanox.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.9 39/60] nvmet: fix data units read and written counters in SMART log
+Date:   Sun, 22 Sep 2019 14:59:12 -0400
+Message-Id: <20190922185934.4305-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185934.4305-1-sashal@kernel.org>
 References: <20190922185934.4305-1-sashal@kernel.org>
@@ -59,58 +62,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Tom Wu <tomwu@mellanox.com>
 
-[ Upstream commit 5b0eeeaa37615df37a9a30929b73e9defe61ca84 ]
+[ Upstream commit 3bec2e3754becebd4c452999adb49bc62c575ea4 ]
 
-Commit aff138bf8e37 ("ARM: dts: exynos: Add TMU nodes regulator supply
-for Peach boards") assigned LDO10 to Exynos Thermal Measurement Unit,
-but it turned out that it supplies also some other critical parts and
-board freezes/crashes when it is turned off.
+In nvme spec 1.3 there is a definition for data write/read counters
+from SMART log, (See section 5.14.1.2):
+	This value is reported in thousands (i.e., a value of 1
+	corresponds to 1000 units of 512 bytes read) and is rounded up.
 
-The mentioned commit made Exynos TMU a consumer of that regulator and in
-typical case Exynos TMU driver keeps it enabled from early boot. However
-there are such configurations (example is multi_v7_defconfig), in which
-some of the regulators are compiled as modules and are not available
-from early boot. In such case it may happen that LDO10 is turned off by
-regulator core, because it has no consumers yet (in this case consumer
-drivers cannot get it, because the supply regulators for it are not yet
-available). This in turn causes the board to crash. This patch restores
-'always-on' property for the LDO10 regulator.
+However, in nvme target where value is reported with actual units,
+but not thousands of units as the spec requires.
 
-Fixes: aff138bf8e37 ("ARM: dts: exynos: Add TMU nodes regulator supply for Peach boards")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Tom Wu <tomwu@mellanox.com>
+Reviewed-by: Israel Rukshin <israelr@mellanox.com>
+Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/exynos5420-peach-pit.dts | 1 +
- arch/arm/boot/dts/exynos5800-peach-pi.dts  | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/nvme/target/admin-cmd.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-index ec4a00f1ce01e..8b754ae8c8f7d 100644
---- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
-+++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-@@ -427,6 +427,7 @@
- 				regulator-name = "vdd_ldo10";
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
- 				regulator-state-mem {
- 					regulator-off-in-suspend;
- 				};
-diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-index 01f466816fea7..1f90df2d7ecd8 100644
---- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
-+++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-@@ -427,6 +427,7 @@
- 				regulator-name = "vdd_ldo10";
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
- 				regulator-state-mem {
- 					regulator-off-in-suspend;
- 				};
+diff --git a/drivers/nvme/target/admin-cmd.c b/drivers/nvme/target/admin-cmd.c
+index cdb7752dcbb79..446f61ba018d7 100644
+--- a/drivers/nvme/target/admin-cmd.c
++++ b/drivers/nvme/target/admin-cmd.c
+@@ -47,9 +47,11 @@ static u16 nvmet_get_smart_log_nsid(struct nvmet_req *req,
+ 	}
+ 
+ 	host_reads = part_stat_read(ns->bdev->bd_part, ios[READ]);
+-	data_units_read = part_stat_read(ns->bdev->bd_part, sectors[READ]);
++	data_units_read = DIV_ROUND_UP(part_stat_read(ns->bdev->bd_part,
++		sectors[READ]), 1000);
+ 	host_writes = part_stat_read(ns->bdev->bd_part, ios[WRITE]);
+-	data_units_written = part_stat_read(ns->bdev->bd_part, sectors[WRITE]);
++	data_units_written = DIV_ROUND_UP(part_stat_read(ns->bdev->bd_part,
++		sectors[WRITE]), 1000);
+ 
+ 	put_unaligned_le64(host_reads, &slog->host_reads[0]);
+ 	put_unaligned_le64(data_units_read, &slog->data_units_read[0]);
+@@ -75,11 +77,11 @@ static u16 nvmet_get_smart_log_all(struct nvmet_req *req,
+ 	rcu_read_lock();
+ 	list_for_each_entry_rcu(ns, &ctrl->subsys->namespaces, dev_link) {
+ 		host_reads += part_stat_read(ns->bdev->bd_part, ios[READ]);
+-		data_units_read +=
+-			part_stat_read(ns->bdev->bd_part, sectors[READ]);
++		data_units_read += DIV_ROUND_UP(
++			part_stat_read(ns->bdev->bd_part, sectors[READ]), 1000);
+ 		host_writes += part_stat_read(ns->bdev->bd_part, ios[WRITE]);
+-		data_units_written +=
+-			part_stat_read(ns->bdev->bd_part, sectors[WRITE]);
++		data_units_written += DIV_ROUND_UP(
++			part_stat_read(ns->bdev->bd_part, sectors[WRITE]), 1000);
+ 
+ 	}
+ 	rcu_read_unlock();
 -- 
 2.20.1
 
