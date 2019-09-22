@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CEDC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE4FC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FF4720869
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:23:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A797D20869
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:23:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180188;
-	bh=KqDLmtdUKBEwEgCmLxElOgvKZQwQkg4iinUvA4Igcok=;
+	s=default; t=1569180191;
+	bh=u0T2dyeWQ2iXGTmKLsR8pupBhDmMNegGZokKL2UQOkQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BdZFzLh5bK/7pCy6nKOXeOHJM57IyII7S+fVtzlsKGSlA7dSvv3oWbb9r8JIckVE8
-	 66j6qBVPPIPOQ+rb8s0fU8Tt0lg1rVoMkOzUdJLaRDFY6Z2RCgj5q1WFzLUV8U6ydT
-	 4lv8BiCZNpnbTYi4GzSkA/46eqvlCHgiJl8FJgGc=
+	b=xeLODHvNa1l1JKjBPBmE/hXoAbNYnUhOTEscP1WLtckTPgsMMO2DY0nSjLut1/VTs
+	 HIsYXes8Ffc1VroG3eduWh0SaaJutkaLIOxaqcAUiCMACz/9mHyyoyNHAh9gvdHkJX
+	 w0KjecYW9EF8wrO541KF67ofNL8rgxmmMqSx6qj4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394315AbfIVSx3 (ORCPT
+        id S1731250AbfIVTXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:53:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52572 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:23:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389872AbfIVSxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:53:06 -0400
+        id S2389872AbfIVSxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:53:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 799C421D80;
-        Sun, 22 Sep 2019 18:53:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7D1A21D7C;
+        Sun, 22 Sep 2019 18:53:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178385;
-        bh=KqDLmtdUKBEwEgCmLxElOgvKZQwQkg4iinUvA4Igcok=;
+        s=default; t=1569178409;
+        bh=u0T2dyeWQ2iXGTmKLsR8pupBhDmMNegGZokKL2UQOkQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qOYCwJEOLAKQ/C0UqwcBnTWm4subs37AON7GC51yciMXl9L+XuMed2fpIBG49xbAc
-         Rr2fFFCrVTbJOqse/wer/5bhG9lsaD3XPoPm75hZS7ctDyYD+q/gH+4nGMNJVIYX5V
-         MUR5MqY32z2Q1TyeiazA5hSEKx4d1aZiSSysoy3o=
+        b=fYfG7Kd4IKqq9Hmw7FFkoizbgUX2Abk4/7/kcMzTJsEWLac9avmIp+DM6umgRE+53
+         L7dW8H05zFg7gSwfmIHzN7QmRkwuP+YaZ97XYL7A+tdXQScluRzsaBIv5HM4hcWt69
+         ek4tD5bGrgyaVhoihGiks0wvJkY5qvao+/vtwF/4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anton Eidelman <anton@lightbitslabs.com>,
-        James Smart <james.smart@broadcom.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.2 132/185] nvme-multipath: fix ana log nsid lookup when nsid is not found
-Date:   Sun, 22 Sep 2019 14:48:30 -0400
-Message-Id: <20190922184924.32534-132-sashal@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Yunsheng Lin <linyunsheng@huawei.com>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 150/185] x86/mm: Fix cpumask_of_node() error condition
+Date:   Sun, 22 Sep 2019 14:48:48 -0400
+Message-Id: <20190922184924.32534-150-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -62,80 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anton Eidelman <anton@lightbitslabs.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit e01f91dff91c7b16a6e3faf2565017d497a73f83 ]
+[ Upstream commit bc04a049f058a472695aa22905d57e2b1f4c77d9 ]
 
-ANA log parsing invokes nvme_update_ana_state() per ANA group desc.
-This updates the state of namespaces with nsids in desc->nsids[].
+When CONFIG_DEBUG_PER_CPU_MAPS=y we validate that the @node argument of
+cpumask_of_node() is a valid node_id. It however forgets to check for
+negative numbers. Fix this by explicitly casting to unsigned int.
 
-Both ctrl->namespaces list and desc->nsids[] array are sorted by nsid.
-Hence nvme_update_ana_state() performs a single walk over ctrl->namespaces:
-- if current namespace matches the current desc->nsids[n],
-  this namespace is updated, and n is incremented.
-- the process stops when it encounters the end of either
-  ctrl->namespaces end or desc->nsids[]
+  (unsigned)node >= nr_node_ids
 
-In case desc->nsids[n] does not match any of ctrl->namespaces,
-the remaining nsids following desc->nsids[n] will not be updated.
-Such situation was considered abnormal and generated WARN_ON_ONCE.
+verifies: 0 <= node < nr_node_ids
 
-However ANA log MAY contain nsids not (yet) found in ctrl->namespaces.
-For example, lets consider the following scenario:
-- nvme0 exposes namespaces with nsids = [2, 3] to the host
-- a new namespace nsid = 1 is added dynamically
-- also, a ANA topology change is triggered
-- NS_CHANGED aen is generated and triggers scan_work
-- before scan_work discovers nsid=1 and creates a namespace, a NOTICE_ANA
-  aen was issues and ana_work receives ANA log with nsids=[1, 2, 3]
+Also ammend the error message to match the condition.
 
-Result: ana_work fails to update ANA state on existing namespaces [2, 3]
-
-Solution:
-Change the way nvme_update_ana_state() namespace list walk
-checks the current namespace against desc->nsids[n] as follows:
-a) ns->head->ns_id < desc->nsids[n]: keep walking ctrl->namespaces.
-b) ns->head->ns_id == desc->nsids[n]: match, update the namespace
-c) ns->head->ns_id >= desc->nsids[n]: skip to desc->nsids[n+1]
-
-This enables correct operation in the scenario described above.
-This also allows ANA log to contain nsids currently invisible
-to the host, i.e. inactive nsids.
-
-Signed-off-by: Anton Eidelman <anton@lightbitslabs.com>
-Reviewed-by:   James Smart <james.smart@broadcom.com>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Yunsheng Lin <linyunsheng@huawei.com>
+Link: https://lkml.kernel.org/r/20190903075352.GY2369@hirez.programming.kicks-ass.net
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/multipath.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ arch/x86/mm/numa.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index 304aa8a65f2f8..f928bcfc57b5b 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -501,14 +501,16 @@ static int nvme_update_ana_state(struct nvme_ctrl *ctrl,
- 
- 	down_write(&ctrl->namespaces_rwsem);
- 	list_for_each_entry(ns, &ctrl->namespaces, list) {
--		if (ns->head->ns_id != le32_to_cpu(desc->nsids[n]))
-+		unsigned nsid = le32_to_cpu(desc->nsids[n]);
-+
-+		if (ns->head->ns_id < nsid)
- 			continue;
--		nvme_update_ns_ana_state(desc, ns);
-+		if (ns->head->ns_id == nsid)
-+			nvme_update_ns_ana_state(desc, ns);
- 		if (++n == nr_nsids)
- 			break;
- 	}
- 	up_write(&ctrl->namespaces_rwsem);
--	WARN_ON_ONCE(n < nr_nsids);
- 	return 0;
- }
- 
+diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+index e6dad600614c2..4123100e0eafe 100644
+--- a/arch/x86/mm/numa.c
++++ b/arch/x86/mm/numa.c
+@@ -861,9 +861,9 @@ void numa_remove_cpu(int cpu)
+  */
+ const struct cpumask *cpumask_of_node(int node)
+ {
+-	if (node >= nr_node_ids) {
++	if ((unsigned)node >= nr_node_ids) {
+ 		printk(KERN_WARNING
+-			"cpumask_of_node(%d): node > nr_node_ids(%u)\n",
++			"cpumask_of_node(%d): (unsigned)node >= nr_node_ids(%u)\n",
+ 			node, nr_node_ids);
+ 		dump_stack();
+ 		return cpu_none_mask;
 -- 
 2.20.1
 
