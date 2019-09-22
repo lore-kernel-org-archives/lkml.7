@@ -4,55 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 434C4C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:32:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C196C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A82420640
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:32:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 114A920640
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:32:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180729;
-	bh=ZaoPHwtLHsvaA+ZAcx1/9Bq15BWjd0+3loZmP5V6Kmo=;
+	s=default; t=1569180735;
+	bh=8Sr764RTcwSYEJAQGa+KrlDJKb7qohDjpHtG9LoQfEc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EtwEhN6hGsKk3BATTuKMbZ6gAGsdteHsKC/0sWwc+HtS+VGyaA05EsKI0l8z7b1Fl
-	 5Vy7QIPoE54BUg8afeuxsHPZD5eVXn1jfhNe5d6bn++yh5HSIudJC2Ozis676NkWbw
-	 GjjX6wXntkc8bvihpIKWXq8JmsTHNQHQu6LEn4Gg=
+	b=vVTDNK61eW7vEkQ3fSsw68sDP1/bZte2yElOhfdf+JUxMlVx35Ps6jotMu9VKiRH9
+	 wfsAawfOy0eU0y48Nakaf0IVQjasip58xVMo/1V3j4ctwJzRrZWUojJC5InvDvMF6X
+	 fTS//HNJt4taN5xnveKzQzspZa1SS22auVp17P9M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391661AbfIVSse (ORCPT
+        id S2437905AbfIVTcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:48:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45012 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:32:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391513AbfIVSsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:48:17 -0400
+        id S2391618AbfIVSs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:48:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16DA1214D9;
-        Sun, 22 Sep 2019 18:48:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FD1621A4A;
+        Sun, 22 Sep 2019 18:48:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178097;
-        bh=ZaoPHwtLHsvaA+ZAcx1/9Bq15BWjd0+3loZmP5V6Kmo=;
+        s=default; t=1569178108;
+        bh=8Sr764RTcwSYEJAQGa+KrlDJKb7qohDjpHtG9LoQfEc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UJDEh8YUep+macwhKWOs3hlEqxI8JMN6mpkKlP1FL0pEuTn7DsHbjyhB2HLsbXUwy
-         s+Nd6nzykiIcJTAq43sV7VouN0Nm0QE8e+yYVCV1YcZEJcdinWK5nnaZv83lwQP8vd
-         xAvDmGlMOgs6qrLa4z5eUVl6Ac9zddi/F1PvKvb4=
+        b=TN/8GZxKf3uRleHiE4c4inKzUEgRAwxvA652APQiQDAewvMlm2mE7/kYsWE7oAlEK
+         +3fmJCBImiMr/Yup47v96CdtrisnM1dAuGJZoSq98V1PPo0mRyYejGmPAe0396iE+q
+         C5DSpBmLY9RwHaQuQS/leBO8pF3XK+bn5vuwhbkE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marcel Bocu <marcel.p.bocu@gmail.com>, Vicki Pfau <vi@endrift.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        "Woods, Brian" <Brian.Woods@amd.com>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 160/203] hwmon: (k10temp) Add support for AMD family 17h, model 70h CPUs
-Date:   Sun, 22 Sep 2019 14:43:06 -0400
-Message-Id: <20190922184350.30563-160-sashal@kernel.org>
+Cc:     Marc Zyngier <maz@kernel.org>, Jiaxing Luo <luojiaxing@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 168/203] irqchip/gic-v3-its: Fix LPI release for Multi-MSI devices
+Date:   Sun, 22 Sep 2019 14:43:14 -0400
+Message-Id: <20190922184350.30563-168-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -65,64 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcel Bocu <marcel.p.bocu@gmail.com>
+From: Marc Zyngier <maz@kernel.org>
 
-[ Upstream commit 12163cfbfc0f804cc7d27bc20e8d266ce7459260 ]
+[ Upstream commit c9c96e30ecaa0aafa225aa1a5392cb7db17c7a82 ]
 
-It would seem like model 70h is behaving in the same way as model 30h,
-so let's just add the new F3 PCI ID to the list of compatible devices.
+When allocating a range of LPIs for a Multi-MSI capable device,
+this allocation extended to the closest power of 2.
 
-Unlike previous Ryzen/Threadripper, Ryzen gen 3 processors do not need
-temperature offsets anymore. This has been reported in the press and
-verified on my Ryzen 3700X by checking that the idle temperature
-reported by k10temp is matching the temperature reported by the
-firmware.
+But on the release path, the interrupts are released one by
+one. This results in not releasing the "extra" range, leaking
+the its_device. Trying to reprobe the device will then fail.
 
-Vicki Pfau sent an identical patch after I checked that no-one had
-written this patch. I would have been happy about dropping my patch but
-unlike for his patch series, I had already Cc:ed the x86 people and
-they already reviewed the changes. Since Vicki has not answered to
-any email after his initial series, let's assume she is on vacation
-and let's avoid duplication of reviews from the maintainers and merge
-my series. To acknowledge Vicki's anteriority, I added her S-o-b to
-the patch.
+Fix it by releasing the LPIs the same way we allocate them.
 
-v2, suggested by Guenter Roeck and Brian Woods:
-  - rename from 71h to 70h
-
-Signed-off-by: Vicki Pfau <vi@endrift.com>
-Signed-off-by: Marcel Bocu <marcel.p.bocu@gmail.com>
-Tested-by: Marcel Bocu <marcel.p.bocu@gmail.com>
-
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: x86@kernel.org
-Cc: "Woods, Brian" <Brian.Woods@amd.com>
-Cc: Clemens Ladisch <clemens@ladisch.de>
-Cc: Jean Delvare <jdelvare@suse.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: linux-hwmon@vger.kernel.org
-Link: https://lore.kernel.org/r/20190722174653.2391-1-marcel.p.bocu@gmail.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Fixes: 8208d1708b88 ("irqchip/gic-v3-its: Align PCI Multi-MSI allocation on their size")
+Reported-by: Jiaxing Luo <luojiaxing@huawei.com>
+Tested-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/f5e948aa-e32f-3f74-ae30-31fee06c2a74@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/k10temp.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/irqchip/irq-gic-v3-its.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/hwmon/k10temp.c b/drivers/hwmon/k10temp.c
-index c77e89239dcd9..5c1dddde193c3 100644
---- a/drivers/hwmon/k10temp.c
-+++ b/drivers/hwmon/k10temp.c
-@@ -349,6 +349,7 @@ static const struct pci_device_id k10temp_id_table[] = {
- 	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_17H_DF_F3) },
- 	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_17H_M10H_DF_F3) },
- 	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F3) },
-+	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_17H_M70H_DF_F3) },
- 	{ PCI_VDEVICE(HYGON, PCI_DEVICE_ID_AMD_17H_DF_F3) },
- 	{}
- };
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index 1b5c3672aea27..c3a8d732805f5 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -2641,14 +2641,13 @@ static void its_irq_domain_free(struct irq_domain *domain, unsigned int virq,
+ 	struct its_node *its = its_dev->its;
+ 	int i;
+ 
++	bitmap_release_region(its_dev->event_map.lpi_map,
++			      its_get_event_id(irq_domain_get_irq_data(domain, virq)),
++			      get_count_order(nr_irqs));
++
+ 	for (i = 0; i < nr_irqs; i++) {
+ 		struct irq_data *data = irq_domain_get_irq_data(domain,
+ 								virq + i);
+-		u32 event = its_get_event_id(data);
+-
+-		/* Mark interrupt index as unused */
+-		clear_bit(event, its_dev->event_map.lpi_map);
+-
+ 		/* Nuke the entry in the domain */
+ 		irq_domain_reset_irq_data(data);
+ 	}
 -- 
 2.20.1
 
