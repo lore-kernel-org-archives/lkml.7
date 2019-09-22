@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBACC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58146C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 458FD206B6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:28:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30B2D206B6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:28:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180504;
-	bh=DFh3lGc5s6Im6Jr3e4sKCTeF6qbjps+NUeZ3OnZKr+I=;
+	s=default; t=1569180509;
+	bh=PAolAwDXSt+ysTH+9yNnx2oXETE5pOv1wJqyLHv1WTc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=st/jb6lVyuQzCvDM0OwS3zFHmRpglD3fgyfb4XOI7meZt1ZajvSqtkOmyc+B6ZxA4
-	 8zEoIJhLPNWAr5iCXteHPEEmAuiGfL+Zxfq+6+43U06hsyYvsbr58MwI2MIkIW7EfO
-	 hXT6PxmnnvVd8lcuEINYy0tUahnJmh0OutZCA9o8=
+	b=jGqM1q+Uy0LmIUgL5YXQyUoVhwn+ukstMfZRK2Xn+ljb9gzS7vkCmA8v57rvZaTkK
+	 17BFOcCKJ/WKw9RP9j0wCUk4ZRWRH0k6hP2SHYgmBNN/ml9ln0EI4bLaXJPAg3ayUC
+	 3unmwxqFmEiMjiab0z+kvgTccM4trf2ISXXO8wVU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731631AbfIVT2X (ORCPT
+        id S1731658AbfIVT22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:28:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48104 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:28:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404555AbfIVSus (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:50:48 -0400
+        id S2404533AbfIVSuq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:50:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6473B21479;
-        Sun, 22 Sep 2019 18:50:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94C76214AF;
+        Sun, 22 Sep 2019 18:50:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178247;
-        bh=DFh3lGc5s6Im6Jr3e4sKCTeF6qbjps+NUeZ3OnZKr+I=;
+        s=default; t=1569178245;
+        bh=PAolAwDXSt+ysTH+9yNnx2oXETE5pOv1wJqyLHv1WTc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FEWJV9ipVRc9pTuKj0p4AEbYnZtHwSXdLUIqd1JnZsqTzVkbj0PZbtf9Tn7PvbqZA
-         rGuOkHc3oStYrG/FJHSKzGUXWJVRaqGMFCg1ictZpgAmDhXDR4Y9atOznF0zecx0Hb
-         Nr4YKDORqY7xuV+k2uWLHPzkwaXA1PuFI5U9y9zs=
+        b=xYPssyJQBNGz3+1HkJffhekzMR11yuEvNANIvJv/rY0PSC+UHyuQfjjo6tlqnQtXN
+         58Kdm2zBG+7bPLamX0ov4yFsNPRnqbtGRLwbQhNJJsiRVnGBhemnJDs7x2NAjx4MZT
+         GJ0f2QbM/CfBsIUXJ5GFjEBNP5WJeijl0EjcSioI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Leon Kong <Leon.KONG@cn.bosch.com>,
-        Mark Brown <broonie@kernel.org>,
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Borislav Petkov <bp@suse.de>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        James Morse <james.morse@arm.com>,
+        kernel-janitors@vger.kernel.org,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 040/185] ASoC: rsnd: don't call clk_get_rate() under atomic context
-Date:   Sun, 22 Sep 2019 14:46:58 -0400
-Message-Id: <20190922184924.32534-40-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 039/185] EDAC/altera: Use the proper type for the IRQ status bits
+Date:   Sun, 22 Sep 2019 14:46:57 -0400
+Message-Id: <20190922184924.32534-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -60,87 +65,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 06e8f5c842f2dbb232897ba967ea7b422745c271 ]
+[ Upstream commit 8faa1cf6ed82f33009f63986c3776cc48af1b7b2 ]
 
-ADG is using clk_get_rate() under atomic context, thus, we might
-have scheduling issue.
-To avoid this issue, we need to get/keep clk rate under
-non atomic context.
+Smatch complains about the cast of a u32 pointer to unsigned long:
 
-We need to handle ADG as special device at Renesas Sound driver.
-From SW point of view, we want to impletent it as
-rsnd_mod_ops :: prepare, but it makes code just complicate.
+  drivers/edac/altera_edac.c:1878 altr_edac_a10_irq_handler()
+  warn: passing casted pointer '&irq_status' to 'find_first_bit()'
 
-To avoid complicated code/patch, this patch adds new clk_rate[] array,
-and keep clk IN rate when rsnd_adg_clk_enable() was called.
+This code wouldn't work on a 64 bit big endian system because it would
+read past the end of &irq_status.
 
-Reported-by: Leon Kong <Leon.KONG@cn.bosch.com>
-Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Tested-by: Leon Kong <Leon.KONG@cn.bosch.com>
-Link: https://lore.kernel.org/r/87v9vb0xkp.wl-kuninori.morimoto.gx@renesas.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+ [ bp: massage. ]
+
+Fixes: 13ab8448d2c9 ("EDAC, altera: Add ECC Manager IRQ controller support")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Thor Thayer <thor.thayer@linux.intel.com>
+Cc: James Morse <james.morse@arm.com>
+Cc: kernel-janitors@vger.kernel.org
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Tony Luck <tony.luck@intel.com>
+Link: https://lkml.kernel.org/r/20190624134717.GA1754@mwanda
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sh/rcar/adg.c | 21 +++++++++++++++------
- 1 file changed, 15 insertions(+), 6 deletions(-)
+ drivers/edac/altera_edac.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/sh/rcar/adg.c b/sound/soc/sh/rcar/adg.c
-index e821ccc70f478..141d9a030c59a 100644
---- a/sound/soc/sh/rcar/adg.c
-+++ b/sound/soc/sh/rcar/adg.c
-@@ -30,6 +30,7 @@ struct rsnd_adg {
- 	struct clk *clkout[CLKOUTMAX];
- 	struct clk_onecell_data onecell;
- 	struct rsnd_mod mod;
-+	int clk_rate[CLKMAX];
- 	u32 flags;
- 	u32 ckr;
- 	u32 rbga;
-@@ -113,9 +114,9 @@ static void __rsnd_adg_get_timesel_ratio(struct rsnd_priv *priv,
- 	unsigned int val, en;
- 	unsigned int min, diff;
- 	unsigned int sel_rate[] = {
--		clk_get_rate(adg->clk[CLKA]),	/* 0000: CLKA */
--		clk_get_rate(adg->clk[CLKB]),	/* 0001: CLKB */
--		clk_get_rate(adg->clk[CLKC]),	/* 0010: CLKC */
-+		adg->clk_rate[CLKA],	/* 0000: CLKA */
-+		adg->clk_rate[CLKB],	/* 0001: CLKB */
-+		adg->clk_rate[CLKC],	/* 0010: CLKC */
- 		adg->rbga_rate_for_441khz,	/* 0011: RBGA */
- 		adg->rbgb_rate_for_48khz,	/* 0100: RBGB */
- 	};
-@@ -301,7 +302,7 @@ int rsnd_adg_clk_query(struct rsnd_priv *priv, unsigned int rate)
- 	 * AUDIO_CLKA/AUDIO_CLKB/AUDIO_CLKC/AUDIO_CLKI.
- 	 */
- 	for_each_rsnd_clk(clk, adg, i) {
--		if (rate == clk_get_rate(clk))
-+		if (rate == adg->clk_rate[i])
- 			return sel_table[i];
- 	}
+diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+index 8816f74a22b4a..2d12b94eccda2 100644
+--- a/drivers/edac/altera_edac.c
++++ b/drivers/edac/altera_edac.c
+@@ -1829,6 +1829,7 @@ static void altr_edac_a10_irq_handler(struct irq_desc *desc)
+ 	struct altr_arria10_edac *edac = irq_desc_get_handler_data(desc);
+ 	struct irq_chip *chip = irq_desc_get_chip(desc);
+ 	int irq = irq_desc_get_irq(desc);
++	unsigned long bits;
  
-@@ -368,10 +369,18 @@ void rsnd_adg_clk_control(struct rsnd_priv *priv, int enable)
+ 	dberr = (irq == edac->db_irq) ? 1 : 0;
+ 	sm_offset = dberr ? A10_SYSMGR_ECC_INTSTAT_DERR_OFST :
+@@ -1838,7 +1839,8 @@ static void altr_edac_a10_irq_handler(struct irq_desc *desc)
  
- 	for_each_rsnd_clk(clk, adg, i) {
- 		ret = 0;
--		if (enable)
-+		if (enable) {
- 			ret = clk_prepare_enable(clk);
--		else
-+
-+			/*
-+			 * We shouldn't use clk_get_rate() under
-+			 * atomic context. Let's keep it when
-+			 * rsnd_adg_clk_enable() was called
-+			 */
-+			adg->clk_rate[i] = clk_get_rate(adg->clk[i]);
-+		} else {
- 			clk_disable_unprepare(clk);
-+		}
+ 	regmap_read(edac->ecc_mgr_map, sm_offset, &irq_status);
  
- 		if (ret < 0)
- 			dev_warn(dev, "can't use clk %d\n", i);
+-	for_each_set_bit(bit, (unsigned long *)&irq_status, 32) {
++	bits = irq_status;
++	for_each_set_bit(bit, &bits, 32) {
+ 		irq = irq_linear_revmap(edac->domain, dberr * 32 + bit);
+ 		if (irq)
+ 			generic_handle_irq(irq);
 -- 
 2.20.1
 
