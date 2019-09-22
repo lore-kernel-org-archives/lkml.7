@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D838C49ED7
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A662C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F22B021479
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:59:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D782121907
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:59:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178741;
-	bh=/LpltrAgNejfjNwAl2+uhOAMJdYtq16InXFtN/oWKtc=;
+	s=default; t=1569178744;
+	bh=LsYsdVGs4V7IkchSF2wWNLWdAyxE/UN89uLgORJq4c4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uHNgiEeeStcQmtEonvAOjzUQGQzNqc7qokUEApSOvR5KjgmsUTSMMbyXgAXdag20a
-	 h0Qfkat4k2HLC1sI+nw5dWSPYu0ib8Y+bthUY4CIrmdH+OY3lLWUFqguKV1zLMb5xr
-	 PB8MfygGdAvY7bZS1CDWgo/VCcVpGnwuX4TB04yA=
+	b=DMdxgt07exQ023F2jp1GjLhQUrW6dXKbVLd/QUgGCTmmA0HvnqmEUkPtIQP8pDQfa
+	 TVih/epGQHMH4GjpomszPXqM2BUG+zSEkkLBTEaiTnPbvZHHDNsHWdt8esrfBM7MK7
+	 ZJDaUOm9LSNrCm8xikulpFzRDzva8RmgKIWfYt3I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394974AbfIVS67 (ORCPT
+        id S2395003AbfIVS7E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:58:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33712 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:59:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394946AbfIVS6y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:58:54 -0400
+        id S2389059AbfIVS7A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:59:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98784206C2;
-        Sun, 22 Sep 2019 18:58:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C07A206C2;
+        Sun, 22 Sep 2019 18:58:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178733;
-        bh=/LpltrAgNejfjNwAl2+uhOAMJdYtq16InXFtN/oWKtc=;
+        s=default; t=1569178739;
+        bh=LsYsdVGs4V7IkchSF2wWNLWdAyxE/UN89uLgORJq4c4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EQtSs2IyHvuTMw5AcC7yXGF0Q/qf2PNZS1tnUAnMZrSma0U6e+E5hwXE5gIsXJH1D
-         JbEaxmKsdUBaXB4/5DYiRMejkgmv3Gz3vu9PCY1pZK4fDESCiyUCs1/qEOHnsAcEJ3
-         POeVKOapA0hUx6R+GfrLIt/T7LrPF5MS5M/F30a4=
+        b=D7BfnEsKjXoOn3WfGPXmbIUAZDE9LUwRG1Yglyqkh64JrVVEnATsr84DDU8OGfzUt
+         Z4ZMSyQ2t2RMGRrTwtFTbRpybewB/zr2r04Ul4OJhst46Lal8xu/p1dLzAWKxV/vk4
+         mz7NZkJPu8IEL8S3uDUWdyxGfx4rx17x37mzLWic=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 62/89] arm64: kpti: ensure patched kernel text is fetched from PoU
-Date:   Sun, 22 Sep 2019 14:56:50 -0400
-Message-Id: <20190922185717.3412-62-sashal@kernel.org>
+Cc:     Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        Patrick McLean <chutzpah@gentoo.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 66/89] libtraceevent: Change users plugin directory
+Date:   Sun, 22 Sep 2019 14:56:54 -0400
+Message-Id: <20190922185717.3412-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185717.3412-1-sashal@kernel.org>
 References: <20190922185717.3412-1-sashal@kernel.org>
@@ -60,59 +65,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Rutland <mark.rutland@arm.com>
+From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 
-[ Upstream commit f32c7a8e45105bd0af76872bf6eef0438ff12fb2 ]
+[ Upstream commit e97fd1383cd77c467d2aed7fa4e596789df83977 ]
 
-While the MMUs is disabled, I-cache speculation can result in
-instructions being fetched from the PoC. During boot we may patch
-instructions (e.g. for alternatives and jump labels), and these may be
-dirty at the PoU (and stale at the PoC).
+To be compliant with XDG user directory layout, the user's plugin
+directory is changed from ~/.traceevent/plugins to
+~/.local/lib/traceevent/plugins/
 
-Thus, while the MMU is disabled in the KPTI pagetable fixup code we may
-load stale instructions into the I-cache, potentially leading to
-subsequent crashes when executing regions of code which have been
-modified at runtime.
-
-Similarly to commit:
-
-  8ec41987436d566f ("arm64: mm: ensure patched kernel text is fetched from PoU")
-
-... we can invalidate the I-cache after enabling the MMU to prevent such
-issues.
-
-The KPTI pagetable fixup code itself should be clean to the PoC per the
-boot protocol, so no maintenance is required for this code.
-
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Reviewed-by: James Morse <james.morse@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+Suggested-by: Patrick McLean <chutzpah@gentoo.org>
+Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Patrick McLean <chutzpah@gentoo.org>
+Cc: linux-trace-devel@vger.kernel.org
+Link: https://lore.kernel.org/linux-trace-devel/20190313144206.41e75cf8@patrickm/
+Link: http://lore.kernel.org/linux-trace-devel/20190801074959.22023-4-tz.stoyanov@gmail.com
+Link: http://lore.kernel.org/lkml/20190805204355.344622683@goodmis.org
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/mm/proc.S | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ tools/lib/traceevent/Makefile       | 6 +++---
+ tools/lib/traceevent/event-plugin.c | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
-index 034a3a2a38ee8..65b0401521846 100644
---- a/arch/arm64/mm/proc.S
-+++ b/arch/arm64/mm/proc.S
-@@ -280,6 +280,15 @@ skip_pgd:
- 	msr	sctlr_el1, x18
- 	isb
+diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
+index 46cd5f871ad76..a26c44cf31aa4 100644
+--- a/tools/lib/traceevent/Makefile
++++ b/tools/lib/traceevent/Makefile
+@@ -55,15 +55,15 @@ set_plugin_dir := 1
  
-+	/*
-+	 * Invalidate the local I-cache so that any instructions fetched
-+	 * speculatively from the PoC are discarded, since they may have
-+	 * been dynamically patched at the PoU.
-+	 */
-+	ic	iallu
-+	dsb	nsh
-+	isb
-+
- 	/* Set the flag to zero to indicate that we're all done */
- 	str	wzr, [flag_ptr]
- 	ret
+ # Set plugin_dir to preffered global plugin location
+ # If we install under $HOME directory we go under
+-# $(HOME)/.traceevent/plugins
++# $(HOME)/.local/lib/traceevent/plugins
+ #
+ # We dont set PLUGIN_DIR in case we install under $HOME
+ # directory, because by default the code looks under:
+-# $(HOME)/.traceevent/plugins by default.
++# $(HOME)/.local/lib/traceevent/plugins by default.
+ #
+ ifeq ($(plugin_dir),)
+ ifeq ($(prefix),$(HOME))
+-override plugin_dir = $(HOME)/.traceevent/plugins
++override plugin_dir = $(HOME)/.local/lib/traceevent/plugins
+ set_plugin_dir := 0
+ else
+ override plugin_dir = $(libdir)/traceevent/plugins
+diff --git a/tools/lib/traceevent/event-plugin.c b/tools/lib/traceevent/event-plugin.c
+index a16756ae35267..5fe7889606a23 100644
+--- a/tools/lib/traceevent/event-plugin.c
++++ b/tools/lib/traceevent/event-plugin.c
+@@ -30,7 +30,7 @@
+ #include "event-parse.h"
+ #include "event-utils.h"
+ 
+-#define LOCAL_PLUGIN_DIR ".traceevent/plugins"
++#define LOCAL_PLUGIN_DIR ".local/lib/traceevent/plugins/"
+ 
+ static struct registered_plugin_options {
+ 	struct registered_plugin_options	*next;
 -- 
 2.20.1
 
