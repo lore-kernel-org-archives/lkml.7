@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE332C4740C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33402C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A91132190F
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:49:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 010FF21BE5
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:49:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178150;
-	bh=tNKTrgo6pekEMV7o4Yg/oW12mfaytm7NtZ+DZIXJrIo=;
+	s=default; t=1569178157;
+	bh=55epLifv/9ypt2pWBrwbCrVU96q+XbcR0MUL9tS6NaA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uD+UASfR0ITsodSx+QRMyCFaefLfmhYyt4rXavI/QnDTxQharclCIk3NvNgdEYb90
-	 gnsMOTpwCUlSG2YprFNWkZhl8VvQhIxJngWpghkywuOwDfKuMjdUfSFz4sNx2Mo9BY
-	 R9q1XPxJ88TZ+q6BFYrJ6Bz3XeGbrHaZe5nXiysM=
+	b=GM82T1ActscXctiPF1RNospDnVEkoFDQ/QOMkN5l9Fr7KZL/7c2W6Fyypg1HjiVL7
+	 DMK+QFF7k5PdbT01aLCdvQDwa+ZQlrDk5M0Svwj2Nf8runneiA18KtZ2VH6qW+mujL
+	 +ZVpxrdyB/8e/nRMPltR1XSxXIsr0Ckr6RSaBvpY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392079AbfIVStK (ORCPT
+        id S2392164AbfIVStQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:49:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45764 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:49:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391775AbfIVSst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:48:49 -0400
+        id S2391864AbfIVSsz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:48:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64099214AF;
-        Sun, 22 Sep 2019 18:48:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 345E821479;
+        Sun, 22 Sep 2019 18:48:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178128;
-        bh=tNKTrgo6pekEMV7o4Yg/oW12mfaytm7NtZ+DZIXJrIo=;
+        s=default; t=1569178135;
+        bh=55epLifv/9ypt2pWBrwbCrVU96q+XbcR0MUL9tS6NaA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RpurSQpBkpBIOhx3rgc9ixAjdJQ0SsK7zP3fwh25zQ93hjRMnMl+yn+usxckylw0K
-         RkCcNLWwwgY7/D3CeLwpFiXIyGWZvnvqOyngep4YJtGkBWEp01s4yrmOjGKCO4/NSZ
-         Fdz1f22vNbBV96/YMQfBT+YBTpgYlR4NB0yWNW5A=
+        b=tb080fzcea1f3yGtTMjbTNmM6VxTVHTS2d8bqRDtnoikMwPnZLNy9qVTmh3wM7PQ7
+         MmywxsbZnmpYkw5cTlBsQrsPjL0Bj9yQnB8d8pyLZphpnFYF3MZjqN+ces/CRbghGA
+         WaikZbjJEZzkN/CMLt94Tztev1ZzvMrsaAGumMG0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 181/203] mmc: core: Clarify sdio_irq_pending flag for MMC_CAP2_SDIO_IRQ_NOTHREAD
-Date:   Sun, 22 Sep 2019 14:43:27 -0400
-Message-Id: <20190922184350.30563-181-sashal@kernel.org>
+Cc:     Nigel Croxon <ncroxon@redhat.com>,
+        Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 186/203] raid5: don't increment read_errors on EILSEQ return
+Date:   Sun, 22 Sep 2019 14:43:32 -0400
+Message-Id: <20190922184350.30563-186-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -60,100 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ulf Hansson <ulf.hansson@linaro.org>
+From: Nigel Croxon <ncroxon@redhat.com>
 
-[ Upstream commit 36d57efb4af534dd6b442ea0b9a04aa6dfa37abe ]
+[ Upstream commit b76b4715eba0d0ed574f58918b29c1b2f0fa37a8 ]
 
-The sdio_irq_pending flag is used to let host drivers indicate that it has
-signaled an IRQ. If that is the case and we only have a single SDIO func
-that have claimed an SDIO IRQ, our assumption is that we can avoid reading
-the SDIO_CCCR_INTx register and just call the SDIO func irq handler
-immediately. This makes sense, but the flag is set/cleared in a somewhat
-messy order, let's fix that up according to below.
+While MD continues to count read errors returned by the lower layer.
+If those errors are -EILSEQ, instead of -EIO, it should NOT increase
+the read_errors count.
 
-First, the flag is currently set in sdio_run_irqs(), which is executed as a
-work that was scheduled from sdio_signal_irq(). To make it more implicit
-that the host have signaled an IRQ, let's instead immediately set the flag
-in sdio_signal_irq(). This also makes the behavior consistent with host
-drivers that uses the legacy, mmc_signal_sdio_irq() API. This have no
-functional impact, because we don't expect host drivers to call
-sdio_signal_irq() until after the work (sdio_run_irqs()) have been executed
-anyways.
+When RAID6 is set up on dm-integrity target that detects massive
+corruption, the leg will be ejected from the array.  Even if the
+issue is correctable with a sector re-write and the array has
+necessary redundancy to correct it.
 
-Second, currently we never clears the flag when using the sdio_run_irqs()
-work, but only when using the sdio_irq_thread(). Let make the behavior
-consistent, by moving the flag to be cleared inside the common
-process_sdio_pending_irqs() function. Additionally, tweak the behavior of
-the flag slightly, by avoiding to clear it unless we processed the SDIO
-IRQ. The purpose with this at this point, is to keep the information about
-whether there have been an SDIO IRQ signaled by the host, so at system
-resume we can decide to process it without reading the SDIO_CCCR_INTx
-register.
+The leg is ejected because it runs up the rdev->read_errors beyond
+conf->max_nr_stripes.  The return status in dm-drypt when there is
+a data integrity error is -EILSEQ (BLK_STS_PROTECTION).
 
-Tested-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Nigel Croxon <ncroxon@redhat.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/core/sdio_irq.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/md/raid5.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/core/sdio_irq.c b/drivers/mmc/core/sdio_irq.c
-index 0bcc5e83bd1a0..40109a6159228 100644
---- a/drivers/mmc/core/sdio_irq.c
-+++ b/drivers/mmc/core/sdio_irq.c
-@@ -31,6 +31,7 @@ static int process_sdio_pending_irqs(struct mmc_host *host)
- {
- 	struct mmc_card *card = host->card;
- 	int i, ret, count;
-+	bool sdio_irq_pending = host->sdio_irq_pending;
- 	unsigned char pending;
- 	struct sdio_func *func;
+diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+index 21514edb2bea3..d574701185db9 100644
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -2526,7 +2526,8 @@ static void raid5_end_read_request(struct bio * bi)
+ 		int set_bad = 0;
  
-@@ -38,13 +39,16 @@ static int process_sdio_pending_irqs(struct mmc_host *host)
- 	if (mmc_card_suspended(card))
- 		return 0;
- 
-+	/* Clear the flag to indicate that we have processed the IRQ. */
-+	host->sdio_irq_pending = false;
-+
- 	/*
- 	 * Optimization, if there is only 1 function interrupt registered
- 	 * and we know an IRQ was signaled then call irq handler directly.
- 	 * Otherwise do the full probe.
- 	 */
- 	func = card->sdio_single_irq;
--	if (func && host->sdio_irq_pending) {
-+	if (func && sdio_irq_pending) {
- 		func->irq_handler(func);
- 		return 1;
- 	}
-@@ -96,7 +100,6 @@ static void sdio_run_irqs(struct mmc_host *host)
- {
- 	mmc_claim_host(host);
- 	if (host->sdio_irqs) {
--		host->sdio_irq_pending = true;
- 		process_sdio_pending_irqs(host);
- 		if (host->ops->ack_sdio_irq)
- 			host->ops->ack_sdio_irq(host);
-@@ -114,6 +117,7 @@ void sdio_irq_work(struct work_struct *work)
- 
- void sdio_signal_irq(struct mmc_host *host)
- {
-+	host->sdio_irq_pending = true;
- 	queue_delayed_work(system_wq, &host->sdio_irq_work, 0);
- }
- EXPORT_SYMBOL_GPL(sdio_signal_irq);
-@@ -159,7 +163,6 @@ static int sdio_irq_thread(void *_host)
- 		if (ret)
- 			break;
- 		ret = process_sdio_pending_irqs(host);
--		host->sdio_irq_pending = false;
- 		mmc_release_host(host);
- 
- 		/*
+ 		clear_bit(R5_UPTODATE, &sh->dev[i].flags);
+-		atomic_inc(&rdev->read_errors);
++		if (!(bi->bi_status == BLK_STS_PROTECTION))
++			atomic_inc(&rdev->read_errors);
+ 		if (test_bit(R5_ReadRepl, &sh->dev[i].flags))
+ 			pr_warn_ratelimited(
+ 				"md/raid:%s: read error on replacement device (sector %llu on %s).\n",
 -- 
 2.20.1
 
