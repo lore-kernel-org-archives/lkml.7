@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65441C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1764C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31D2B206B6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:38:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84BA9206B6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:38:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569181116;
-	bh=unuKwpicSk29FKeSUfdYaEpXIULrQ/T9E4PrM81Rjt0=;
+	s=default; t=1569181118;
+	bh=Gr+mpr+UdVcsglgvTrR47wJ0vGzDZ7TykkhHAonJjdw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aa1HTN1wyINGrNbnZ03iq5phjkkVcbIcbJcG4pgC6zCmyqSOe2iCW44KZ8dFD0rrR
-	 iKlZPBTmGIOuGmIX1reiiendETEXvaAe5SPBotQHNxkck8pWWAN4QQFKKLPGczsE15
-	 ca0NvId8/Mo2j97gc6zlKGbiQOVkpSikcKclnLB8=
+	b=p0w+faqIJakOIy/j7MEoBWWpVmLRnC32eVwgqZGKAyi9KJROZOckUxBiYXQ+hbH/d
+	 o6UBNWPghhk98YRsmLzYuFTHovPeZkDv09TDAgIehDy1krb8KtNNACGNooryrN51po
+	 xrBfJMhHOwgtBqydenbMmO+yVFEjGUtNKe9AYsgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389195AbfIVSpY (ORCPT
+        id S2439291AbfIVTih (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:45:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40956 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:38:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389127AbfIVSpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:45:19 -0400
+        id S2389169AbfIVSpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:45:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 432FC21928;
-        Sun, 22 Sep 2019 18:45:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B0DD2190F;
+        Sun, 22 Sep 2019 18:45:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569177918;
-        bh=unuKwpicSk29FKeSUfdYaEpXIULrQ/T9E4PrM81Rjt0=;
+        s=default; t=1569177922;
+        bh=Gr+mpr+UdVcsglgvTrR47wJ0vGzDZ7TykkhHAonJjdw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nJujqEl6i6ZyMs839k/CVh3MJoppZQWFJGksMBhcNrCZtWidRmcBc5ovG06MPhj/C
-         EOOXPDNI2+kAuNdgm9eSP/gziIvak52SMeiAtEsAfqWrno4cGLAJ0S/iTQygbWiEJY
-         BRlZYmUWGm1+c78bL3pkAbdATh0yR1/fqg/5PL2Q=
+        b=DurhEnZ4OWaexqJkkrZ8JT9/W6JjrzyxyEb5VCpv3euam0Vdj9zw7Ilwj/7jmznYN
+         Lx0QHB/r9atPTFUGl3QTeHLQI14tCJDBQTGIwk8lynUX9Wd4lBaTyAk7UL8FqHgSlD
+         JWdVZFV+dbdoqNcwda63Tdta1rdk5tYV+17Xvumk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 031/203] x86/apic: Soft disable APIC before initializing it
-Date:   Sun, 22 Sep 2019 14:40:57 -0400
-Message-Id: <20190922184350.30563-31-sashal@kernel.org>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.3 034/203] ASoC: meson: g12a-tohdmitx: override codec2codec params
+Date:   Sun, 22 Sep 2019 14:41:00 -0400
+Message-Id: <20190922184350.30563-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -59,45 +60,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit 2640da4cccf5cc613bf26f0998b9e340f4b5f69c ]
+[ Upstream commit 2c4956bc1e9062e5e3c5ea7612294f24e6d4fbdd ]
 
-If the APIC was already enabled on entry of setup_local_APIC() then
-disabling it soft via the SPIV register makes a lot of sense.
+So far, forwarding the hw_params of the input to output relied on the
+.hw_params() callback of the cpu side of the codec2codec link to be called
+first. This is a bit weak.
 
-That masks all LVT entries and brings it into a well defined state.
+Instead, override the stream params of the codec2codec to link to set it up
+correctly.
 
-Otherwise previously enabled LVTs which are not touched in the setup
-function stay unmasked and might surprise the just booting kernel.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20190722105219.068290579@linutronix.de
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Link: https://lore.kernel.org/r/20190729080139.32068-1-jbrunet@baylibre.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/apic/apic.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ sound/soc/meson/g12a-tohdmitx.c | 34 ++++++++++++++++-----------------
+ 1 file changed, 16 insertions(+), 18 deletions(-)
 
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index 436d462dde715..ad0d5ced82b30 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -1583,6 +1583,14 @@ static void setup_local_APIC(void)
- 		return;
- 	}
+diff --git a/sound/soc/meson/g12a-tohdmitx.c b/sound/soc/meson/g12a-tohdmitx.c
+index 707ccb192e4c2..9943c807ec5d7 100644
+--- a/sound/soc/meson/g12a-tohdmitx.c
++++ b/sound/soc/meson/g12a-tohdmitx.c
+@@ -28,7 +28,7 @@
+ #define  CTRL0_SPDIF_CLK_SEL		BIT(0)
  
-+	/*
-+	 * If this comes from kexec/kcrash the APIC might be enabled in
-+	 * SPIV. Soft disable it before doing further initialization.
-+	 */
-+	value = apic_read(APIC_SPIV);
-+	value &= ~APIC_SPIV_APIC_ENABLED;
-+	apic_write(APIC_SPIV, value);
+ struct g12a_tohdmitx_input {
+-	struct snd_pcm_hw_params params;
++	struct snd_soc_pcm_stream params;
+ 	unsigned int fmt;
+ };
+ 
+@@ -225,26 +225,17 @@ static int g12a_tohdmitx_input_hw_params(struct snd_pcm_substream *substream,
+ {
+ 	struct g12a_tohdmitx_input *data = dai->playback_dma_data;
+ 
+-	/* Save the stream params for the downstream link */
+-	memcpy(&data->params, params, sizeof(*params));
++	data->params.rates = snd_pcm_rate_to_rate_bit(params_rate(params));
++	data->params.rate_min = params_rate(params);
++	data->params.rate_max = params_rate(params);
++	data->params.formats = 1 << params_format(params);
++	data->params.channels_min = params_channels(params);
++	data->params.channels_max = params_channels(params);
++	data->params.sig_bits = dai->driver->playback.sig_bits;
+ 
+ 	return 0;
+ }
+ 
+-static int g12a_tohdmitx_output_hw_params(struct snd_pcm_substream *substream,
+-					  struct snd_pcm_hw_params *params,
+-					  struct snd_soc_dai *dai)
+-{
+-	struct g12a_tohdmitx_input *in_data =
+-		g12a_tohdmitx_get_input_data(dai->capture_widget);
+-
+-	if (!in_data)
+-		return -ENODEV;
+-
+-	memcpy(params, &in_data->params, sizeof(*params));
+-
+-	return 0;
+-}
+ 
+ static int g12a_tohdmitx_input_set_fmt(struct snd_soc_dai *dai,
+ 				       unsigned int fmt)
+@@ -266,6 +257,14 @@ static int g12a_tohdmitx_output_startup(struct snd_pcm_substream *substream,
+ 	if (!in_data)
+ 		return -ENODEV;
+ 
++	if (WARN_ON(!rtd->dai_link->params)) {
++		dev_warn(dai->dev, "codec2codec link expected\n");
++		return -EINVAL;
++	}
 +
- #ifdef CONFIG_X86_32
- 	/* Pound the ESR really hard over the head with a big hammer - mbligh */
- 	if (lapic_is_integrated() && apic->disable_esr) {
++	/* Replace link params with the input params */
++	rtd->dai_link->params = &in_data->params;
++
+ 	if (!in_data->fmt)
+ 		return 0;
+ 
+@@ -278,7 +277,6 @@ static const struct snd_soc_dai_ops g12a_tohdmitx_input_ops = {
+ };
+ 
+ static const struct snd_soc_dai_ops g12a_tohdmitx_output_ops = {
+-	.hw_params	= g12a_tohdmitx_output_hw_params,
+ 	.startup	= g12a_tohdmitx_output_startup,
+ };
+ 
 -- 
 2.20.1
 
