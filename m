@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 568E2C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4795AC49ED7
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B4DA20644
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:37:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DF3D20644
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:37:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569181029;
-	bh=sQXkXt8R38QkmXVe1OI/saT7LbNFH+7CrxACz0uYLK4=;
+	s=default; t=1569181036;
+	bh=CiyScJoSbjEh1dk6sz0/OoVDGfhZZEA9aBDwuupZISg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fbqINuN3lsU9kbMO98dXuqXgxI4HBfIGTfPiKSgmsjLRR8rc++U6XRRovURuRbXAZ
-	 n21tvYRDw/dH3slZAE0UXgOR9vLebJkVq+P4KUy3+ZUVDo/xa7dFpWmLJepl+I5k6/
-	 zOVe/qt8AZbvJP9Ha8Bcn+Y1pqt7heGb8zmYGUsw=
+	b=hlB3GC7ex/0C9xtG4JdRq5ukQxDMu/+IbiIHwLhMtm4osLrPKZOxQVTlvoH+TJIoI
+	 aKxG6xURqxFQb4LUcczaL/R3EI55gKRSOyaYN4DYBbzO2g2yTUGzPC355x0ZbDPTLn
+	 CxAcQ3KSbx8Ebxh5UB4Wn+hEah0Li524d41janlA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439245AbfIVThI (ORCPT
+        id S2389656AbfIVSpy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:37:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41744 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:45:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389692AbfIVSp4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:45:56 -0400
+        id S2389398AbfIVSpv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:45:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0C17206C2;
-        Sun, 22 Sep 2019 18:45:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 257CE208C2;
+        Sun, 22 Sep 2019 18:45:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569177955;
-        bh=sQXkXt8R38QkmXVe1OI/saT7LbNFH+7CrxACz0uYLK4=;
+        s=default; t=1569177950;
+        bh=CiyScJoSbjEh1dk6sz0/OoVDGfhZZEA9aBDwuupZISg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HXps/TLCkwZ8Dhj+QJUJCJTu/woYhd3hPfzhFl8NMDTm75gIILarzqB4cYTYlHohD
-         zvvcIItfodRPOed4WquZTWcuL2YvuwqS23+JOzAquGeKHT1csflOrGob3hPHHMkxrJ
-         4p+YD8XPf6btd8fxJ2Bk6emk+kFXQLm1Uncavkdo=
+        b=eZk0IM6MlZWnejsLOTihBFvyinJpeZBFn9Asjxeyq2CCoGWgh3g9YU0MK7m50OTzL
+         yizhyijHi/0ZsYqnPEEzWrz5TthwnQdVL+axShQN2Yj2WzYRDBYyJXBbSFBvLtRJKf
+         2yzsFyw3qZker2EFFzPVZadEAg/mzQZ+vs4RUkw4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luke Mujica <lukemujica@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 060/203] perf tools: Fix paths in include statements
-Date:   Sun, 22 Sep 2019 14:41:26 -0400
-Message-Id: <20190922184350.30563-60-sashal@kernel.org>
+Cc:     Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        kbuild test robot <lkp@intel.com>,
+        Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
+        linux-edac@vger.kernel.org, x86@kernel.org,
+        Sasha Levin <sashal@kernel.org>,
+        linux-riscv@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.3 056/203] RAS: Build debugfs.o only when enabled in Kconfig
+Date:   Sun, 22 Sep 2019 14:41:22 -0400
+Message-Id: <20190922184350.30563-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -63,92 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luke Mujica <lukemujica@google.com>
+From: Valdis Kletnieks <valdis.kletnieks@vt.edu>
 
-[ Upstream commit 2b75863b0845764529e01014a5c90664d8044cbe ]
+[ Upstream commit b6ff24f7b5101101ff897dfdde3f37924e676bc2 ]
 
-These paths point to the wrong location but still work because they get
-picked up by a -I flag that happens to direct to the correct file. Fix
-paths to lead to the actual file location without help from include
-flags.
+In addition, the 0day bot reported this build error:
 
-Signed-off-by: Luke Mujica <lukemujica@google.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20190719202253.220261-1-lukemujica@google.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+  >> drivers/ras/debugfs.c:10:5: error: redefinition of 'ras_userspace_consumers'
+      int ras_userspace_consumers(void)
+          ^~~~~~~~~~~~~~~~~~~~~~~
+     In file included from drivers/ras/debugfs.c:3:0:
+     include/linux/ras.h:14:19: note: previous definition of 'ras_userspace_consumers' was here
+      static inline int ras_userspace_consumers(void) { return 0; }
+                      ^~~~~~~~~~~~~~~~~~~~~~~
+
+for a riscv-specific .config where CONFIG_DEBUG_FS is not set. Fix all
+that by making debugfs.o depend on that define.
+
+ [ bp: Rewrite commit message. ]
+
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: linux-edac@vger.kernel.org
+Cc: x86@kernel.org
+Link: http://lkml.kernel.org/r/7053.1565218556@turing-police
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/arch/x86/util/kvm-stat.c | 4 ++--
- tools/perf/arch/x86/util/tsc.c      | 6 +++---
- tools/perf/ui/helpline.c            | 4 ++--
- tools/perf/ui/util.c                | 2 +-
- 4 files changed, 8 insertions(+), 8 deletions(-)
+ drivers/ras/Makefile | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/arch/x86/util/kvm-stat.c b/tools/perf/arch/x86/util/kvm-stat.c
-index 865a9762f22ef..3f84403c0983a 100644
---- a/tools/perf/arch/x86/util/kvm-stat.c
-+++ b/tools/perf/arch/x86/util/kvm-stat.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <errno.h>
--#include "../../util/kvm-stat.h"
--#include "../../util/evsel.h"
-+#include "../../../util/kvm-stat.h"
-+#include "../../../util/evsel.h"
- #include <asm/svm.h>
- #include <asm/vmx.h>
- #include <asm/kvm.h>
-diff --git a/tools/perf/arch/x86/util/tsc.c b/tools/perf/arch/x86/util/tsc.c
-index 950539f9a4f77..b1eb963b4a6e1 100644
---- a/tools/perf/arch/x86/util/tsc.c
-+++ b/tools/perf/arch/x86/util/tsc.c
-@@ -5,10 +5,10 @@
- #include <linux/stddef.h>
- #include <linux/perf_event.h>
- 
--#include "../../perf.h"
-+#include "../../../perf.h"
- #include <linux/types.h>
--#include "../../util/debug.h"
--#include "../../util/tsc.h"
-+#include "../../../util/debug.h"
-+#include "../../../util/tsc.h"
- 
- int perf_read_tsc_conversion(const struct perf_event_mmap_page *pc,
- 			     struct perf_tsc_conversion *tc)
-diff --git a/tools/perf/ui/helpline.c b/tools/perf/ui/helpline.c
-index b3c421429ed44..54bcd08df87e3 100644
---- a/tools/perf/ui/helpline.c
-+++ b/tools/perf/ui/helpline.c
-@@ -3,10 +3,10 @@
- #include <stdlib.h>
- #include <string.h>
- 
--#include "../debug.h"
-+#include "../util/debug.h"
- #include "helpline.h"
- #include "ui.h"
--#include "../util.h"
-+#include "../util/util.h"
- 
- char ui_helpline__current[512];
- 
-diff --git a/tools/perf/ui/util.c b/tools/perf/ui/util.c
-index 63bf06e80ab9d..9ed76e88a3e4c 100644
---- a/tools/perf/ui/util.c
-+++ b/tools/perf/ui/util.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "util.h"
--#include "../debug.h"
-+#include "../util/debug.h"
- 
- 
- /*
+diff --git a/drivers/ras/Makefile b/drivers/ras/Makefile
+index ef6777e14d3df..6f0404f501071 100644
+--- a/drivers/ras/Makefile
++++ b/drivers/ras/Makefile
+@@ -1,3 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-obj-$(CONFIG_RAS)	+= ras.o debugfs.o
++obj-$(CONFIG_RAS)	+= ras.o
++obj-$(CONFIG_DEBUG_FS)	+= debugfs.o
+ obj-$(CONFIG_RAS_CEC)	+= cec.o
 -- 
 2.20.1
 
