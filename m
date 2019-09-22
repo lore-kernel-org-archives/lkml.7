@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1C8C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:33:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C93C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C35DF20640
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:33:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 275D920640
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:33:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180832;
-	bh=V0RnYzcQU1XuCrNHFEnrM5GjrBtSWIbwGLuJ+vIGQHc=;
+	s=default; t=1569180838;
+	bh=wxlemXqcQli902QZT0OQcLMn5GX/KD1gd3Ig9+iAhYs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v0crXJgbOXFSCSKUY9WReKwsOWBPpqrH5m/QMKJ9/SUVu7uNnhrUISWpW8cQuhw0t
-	 kJgM79LiTba3ZhtIgJc0El6VZWkuyodoJPOEZ4ifUDqixp7B+BdBZBaA50Gdqj1S9m
-	 MGxUQqCtoXr5Dz85NWxrIP4j9Zx2KA3K5Sk3yth8=
+	b=tzZVkmSiUpEmDzR+yVN7EeEqkPg6N3svz04rPkpwchipOUmJVUhuacjwtI7ZIywQP
+	 la/v9wY00a8/DjueDDcbOArp1Mnr5gRZfXSWcQATIt7mRuPzoO/t7ZMXURDdA70UDu
+	 tfGypQZmxoZ14pzjodkVQb2I1HtGnECn5rTohLy8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438406AbfIVTdw (ORCPT
+        id S2438560AbfIVTd5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:33:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43896 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:33:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390909AbfIVSra (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:47:30 -0400
+        id S2390861AbfIVSr2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:47:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E61D206C2;
-        Sun, 22 Sep 2019 18:47:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0203B214D9;
+        Sun, 22 Sep 2019 18:47:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178049;
-        bh=V0RnYzcQU1XuCrNHFEnrM5GjrBtSWIbwGLuJ+vIGQHc=;
+        s=default; t=1569178047;
+        bh=wxlemXqcQli902QZT0OQcLMn5GX/KD1gd3Ig9+iAhYs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uLLPW3dlA9pXtMDuXgONJBK8ICEJ6xNyPO2tzcqK/V8THJRu5OnEJssA1LWAiDvkV
-         36ihr9l6SuZhnztwUfbS8S+BBF+mo/DqH73BqT0vJ2ZYX0Vm8yT2FTlspjTyLQoPXp
-         LDpojEvdfbxYZUiftvrjj0/ZxqOpHcg86vHpC3MA=
+        b=mwdsWB0A6FLrilEx+Yx4cWKgtwkaIMsHnLmT3N0iJfAdCiQSV9UrZ+B5WZj5bahKD
+         8/fPS9JLHtHU016GsGIA0QzSygTwDOlSymVUa5zIfi5mX8gPEwRZFA9pRXNPMzZzL5
+         e1PmEOv7wpwSbFuvOswiROHPDHsDa7oORTt6zwbg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benjamin Peterson <benjamin@python.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 127/203] perf trace beauty ioctl: Fix off-by-one error in cmd->string table
-Date:   Sun, 22 Sep 2019 14:42:33 -0400
-Message-Id: <20190922184350.30563-127-sashal@kernel.org>
+Cc:     "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 126/203] media: saa7134: fix terminology around saa7134_i2c_eeprom_md7134_gate()
+Date:   Sun, 22 Sep 2019 14:42:32 -0400
+Message-Id: <20190922184350.30563-126-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -63,82 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Peterson <benjamin@python.org>
+From: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
 
-[ Upstream commit b92675f4a9c02dd78052645597dac9e270679ddf ]
+[ Upstream commit 9d802222a3405599d6e1984d9324cddf592ea1f4 ]
 
-While tracing a program that calls isatty(3), I noticed that strace
-reported TCGETS for the request argument of the underlying ioctl(2)
-syscall while perf trace reported TCSETS. strace is corrrect. The bug in
-perf was due to the tty ioctl beauty table starting at 0x5400 rather
-than 0x5401.
+saa7134_i2c_eeprom_md7134_gate() function and the associated comment uses
+an inverted i2c gate open / closed terminology.
+Let's fix this.
 
-Committer testing:
-
-  Using augmented_raw_syscalls.o and settings to make 'perf trace'
-  use strace formatting, i.e. with this in ~/.perfconfig
-
-  # cat ~/.perfconfig
-  [trace]
-	add_events = /home/acme/git/linux/tools/perf/examples/bpf/augmented_raw_syscalls.c
-	show_zeros = yes
-	show_duration = no
-	no_inherit = yes
-	show_timestamp = no
-	show_arg_names = no
-	args_alignment = 40
-	show_prefix = yes
-
-  # strace -e ioctl stty > /dev/null
-  ioctl(0, TCGETS, {B38400 opost isig icanon echo ...}) = 0
-  ioctl(1, TIOCGWINSZ, 0x7fff8a9b0860)    = -1 ENOTTY (Inappropriate ioctl for device)
-  ioctl(1, TCGETS, 0x7fff8a9b0540)        = -1 ENOTTY (Inappropriate ioctl for device)
-  +++ exited with 0 +++
-  #
-
-Before:
-
-  # perf trace -e ioctl stty > /dev/null
-  ioctl(0, TCSETS, 0x7fff2cf79f20)        = 0
-  ioctl(1, TIOCSWINSZ, 0x7fff2cf79f40)    = -1 ENOTTY (Inappropriate ioctl for device)
-  ioctl(1, TCSETS, 0x7fff2cf79c20)        = -1 ENOTTY (Inappropriate ioctl for device)
-  #
-
-After:
-
-  # perf trace -e ioctl stty > /dev/null
-  ioctl(0, TCGETS, 0x7ffed0763920)        = 0
-  ioctl(1, TIOCGWINSZ, 0x7ffed0763940)    = -1 ENOTTY (Inappropriate ioctl for device)
-  ioctl(1, TCGETS, 0x7ffed0763620)        = -1 ENOTTY (Inappropriate ioctl for device)
-  #
-
-Signed-off-by: Benjamin Peterson <benjamin@python.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Fixes: 1cc47f2d46206d67285aea0ca7e8450af571da13 ("perf trace beauty ioctl: Improve 'cmd' beautifier")
-Link: http://lkml.kernel.org/r/20190823033625.18814-1-benjamin@python.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+[hverkuil-cisco@xs4all.nl: fix alignment checkpatch warning]
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/trace/beauty/ioctl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/pci/saa7134/saa7134-i2c.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/trace/beauty/ioctl.c b/tools/perf/trace/beauty/ioctl.c
-index 52242fa4072b0..e19eb6ea361d7 100644
---- a/tools/perf/trace/beauty/ioctl.c
-+++ b/tools/perf/trace/beauty/ioctl.c
-@@ -21,7 +21,7 @@
- static size_t ioctl__scnprintf_tty_cmd(int nr, int dir, char *bf, size_t size)
+diff --git a/drivers/media/pci/saa7134/saa7134-i2c.c b/drivers/media/pci/saa7134/saa7134-i2c.c
+index 493b1858815fb..04e85765373ec 100644
+--- a/drivers/media/pci/saa7134/saa7134-i2c.c
++++ b/drivers/media/pci/saa7134/saa7134-i2c.c
+@@ -342,7 +342,11 @@ static const struct i2c_client saa7134_client_template = {
+ 
+ /* ----------------------------------------------------------- */
+ 
+-/* On Medion 7134 reading EEPROM needs DVB-T demod i2c gate open */
++/*
++ * On Medion 7134 reading the SAA7134 chip config EEPROM needs DVB-T
++ * demod i2c gate closed due to an address clash between this EEPROM
++ * and the demod one.
++ */
+ static void saa7134_i2c_eeprom_md7134_gate(struct saa7134_dev *dev)
  {
- 	static const char *ioctl_tty_cmd[] = {
--	"TCGETS", "TCSETS", "TCSETSW", "TCSETSF", "TCGETA", "TCSETA", "TCSETAW",
-+	[_IOC_NR(TCGETS)] = "TCGETS", "TCSETS", "TCSETSW", "TCSETSF", "TCGETA", "TCSETA", "TCSETAW",
- 	"TCSETAF", "TCSBRK", "TCXONC", "TCFLSH", "TIOCEXCL", "TIOCNXCL", "TIOCSCTTY",
- 	"TIOCGPGRP", "TIOCSPGRP", "TIOCOUTQ", "TIOCSTI", "TIOCGWINSZ", "TIOCSWINSZ",
- 	"TIOCMGET", "TIOCMBIS", "TIOCMBIC", "TIOCMSET", "TIOCGSOFTCAR", "TIOCSSOFTCAR",
+ 	u8 subaddr = 0x7, dmdregval;
+@@ -359,14 +363,14 @@ static void saa7134_i2c_eeprom_md7134_gate(struct saa7134_dev *dev)
+ 
+ 	ret = i2c_transfer(&dev->i2c_adap, i2cgatemsg_r, 2);
+ 	if ((ret == 2) && (dmdregval & 0x2)) {
+-		pr_debug("%s: DVB-T demod i2c gate was left closed\n",
++		pr_debug("%s: DVB-T demod i2c gate was left open\n",
+ 			 dev->name);
+ 
+ 		data[0] = subaddr;
+ 		data[1] = (dmdregval & ~0x2);
+ 		if (i2c_transfer(&dev->i2c_adap, i2cgatemsg_w, 1) != 1)
+-			pr_err("%s: EEPROM i2c gate open failure\n",
+-			  dev->name);
++			pr_err("%s: EEPROM i2c gate close failure\n",
++			       dev->name);
+ 	}
+ }
+ 
 -- 
 2.20.1
 
