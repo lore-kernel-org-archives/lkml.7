@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F25E9C49ED7
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38644C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE246206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:12:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1161B206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:12:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179555;
-	bh=qOgqvqjCkUD8COe5UC9OHjXjf/iIdtSx/nJitqT3eqk=;
+	s=default; t=1569179560;
+	bh=14EbOH0XAvEPQOaJJj0L0hn8plnIwTmS2PmGUyKvBX0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a5ujZU74bPMKRXxpNl/a6UlFWssmI5U3PdvG3p8NoVMp7F7HCImezwGdWJY3NN6DW
-	 pVKQ1g0ZPsI5Bb1euMAVvsMb3d4wOhBu0PugPRXaERIsWn4/6dZEFAsZ4poc/uA669
-	 4YdA+8gTH6GWOnr02MSFf+e8hfN+DGTdM9azhiL0=
+	b=ogRnPafOesek7PTpJqznrF+LVoMJdumuvfAGcdqxTX7tIKu4aq3UXyfFUjmf5p1KZ
+	 PaU5p4IQY8TbZ0lfupA1bsbtIVASO+bctEJ3BNTlj9QlEi4drkPWRJMXsQYqlda0bS
+	 CPDqD2g+NqLruSOjxifj0mOilgwOAh2UqMVrjGDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438701AbfIVS6A (ORCPT
+        id S2436785AbfIVTMi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:58:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60350 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:12:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438624AbfIVS5o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:57:44 -0400
+        id S2404906AbfIVS55 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:57:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AD9E21479;
-        Sun, 22 Sep 2019 18:57:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DDB2208C2;
+        Sun, 22 Sep 2019 18:57:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178663;
-        bh=qOgqvqjCkUD8COe5UC9OHjXjf/iIdtSx/nJitqT3eqk=;
+        s=default; t=1569178677;
+        bh=14EbOH0XAvEPQOaJJj0L0hn8plnIwTmS2PmGUyKvBX0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FApTNaMXS5NeF3vsEULdWPYUw/2xQIvz66IVhgeaj8Rz3G+d3jxCiVkvhmOzKWCnc
-         JBaWlQs8RtdjWvTL0tHw+AbvJvvEv0EvSnhiBtqJ7DGBKbkNeKWNLdDgL06g6+43tl
-         PrAjubClKZTdXehsnECRq3fgD1tv9yfd1sJdq6Gw=
+        b=QINcUmHPsGn2x9ipwlnq1+3bk2HvE77TRXGxaIEuO45ddfGAXiAt2muAx+pUqrjDW
+         x4kCqBu1/+OMQqGTaMLB9fUwZXHj0jDObrL/JhvNvsQgePHsYr8dpw3iAIje76SueT
+         S8sF1RbaqzBv2t0ykqWQwstWEYfIo1ZeL0gchxDk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>, Takashi Iwai <tiwai@suse.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 16/89] ALSA: i2c: ak4xxx-adda: Fix a possible null pointer dereference in build_adc_controls()
-Date:   Sun, 22 Sep 2019 14:56:04 -0400
-Message-Id: <20190922185717.3412-16-sashal@kernel.org>
+Cc:     Guoqing Jiang <jgq516@gmail.com>,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 26/89] md: don't set In_sync if array is frozen
+Date:   Sun, 22 Sep 2019 14:56:14 -0400
+Message-Id: <20190922185717.3412-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185717.3412-1-sashal@kernel.org>
 References: <20190922185717.3412-1-sashal@kernel.org>
@@ -58,52 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Guoqing Jiang <jgq516@gmail.com>
 
-[ Upstream commit 2127c01b7f63b06a21559f56a8c81a3c6535bd1a ]
+[ Upstream commit 062f5b2ae12a153644c765e7ba3b0f825427be1d ]
 
-In build_adc_controls(), there is an if statement on line 773 to check
-whether ak->adc_info is NULL:
-    if (! ak->adc_info ||
-        ! ak->adc_info[mixer_ch].switch_name)
+When a disk is added to array, the following path is called in mdadm.
 
-When ak->adc_info is NULL, it is used on line 792:
-    knew.name = ak->adc_info[mixer_ch].selector_name;
+Manage_subdevs -> sysfs_freeze_array
+               -> Manage_add
+               -> sysfs_set_str(&info, NULL, "sync_action","idle")
 
-Thus, a possible null-pointer dereference may occur.
+Then from kernel side, Manage_add invokes the path (add_new_disk ->
+validate_super = super_1_validate) to set In_sync flag.
 
-To fix this bug, referring to lines 773 and 774, ak->adc_info
-and ak->adc_info[mixer_ch].selector_name are checked before being used.
+Since In_sync means "device is in_sync with rest of array", and the new
+added disk need to resync thread to help the synchronization of data.
+And md_reap_sync_thread would call spare_active to set In_sync for the
+new added disk finally. So don't set In_sync if array is in frozen.
 
-This bug is found by a static analysis tool STCheck written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/i2c/other/ak4xxx-adda.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/md/md.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/sound/i2c/other/ak4xxx-adda.c b/sound/i2c/other/ak4xxx-adda.c
-index bf377dc192aa7..d33e02c317129 100644
---- a/sound/i2c/other/ak4xxx-adda.c
-+++ b/sound/i2c/other/ak4xxx-adda.c
-@@ -789,11 +789,12 @@ static int build_adc_controls(struct snd_akm4xxx *ak)
- 				return err;
- 
- 			memset(&knew, 0, sizeof(knew));
--			knew.name = ak->adc_info[mixer_ch].selector_name;
--			if (!knew.name) {
-+			if (!ak->adc_info ||
-+				!ak->adc_info[mixer_ch].selector_name) {
- 				knew.name = "Capture Channel";
- 				knew.index = mixer_ch + ak->idx_offset * 2;
--			}
-+			} else
-+				knew.name = ak->adc_info[mixer_ch].selector_name;
- 
- 			knew.iface = SNDRV_CTL_ELEM_IFACE_MIXER;
- 			knew.info = ak4xxx_capture_source_info;
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index d185725e100c0..f86082ee62a69 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -1763,8 +1763,15 @@ static int super_1_validate(struct mddev *mddev, struct md_rdev *rdev)
+ 				if (!(le32_to_cpu(sb->feature_map) &
+ 				      MD_FEATURE_RECOVERY_BITMAP))
+ 					rdev->saved_raid_disk = -1;
+-			} else
+-				set_bit(In_sync, &rdev->flags);
++			} else {
++				/*
++				 * If the array is FROZEN, then the device can't
++				 * be in_sync with rest of array.
++				 */
++				if (!test_bit(MD_RECOVERY_FROZEN,
++					      &mddev->recovery))
++					set_bit(In_sync, &rdev->flags);
++			}
+ 			rdev->raid_disk = role;
+ 			break;
+ 		}
 -- 
 2.20.1
 
