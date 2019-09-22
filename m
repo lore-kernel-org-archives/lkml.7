@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12EDDC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA29C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9C0E206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06407206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:44:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569177858;
-	bh=hYUfsW0L/9lk8I7RgCsHnsruaZp2MEdg3A4yuinmzlg=;
+	s=default; t=1569177866;
+	bh=48xQrCMOZWQY0GMUtiT7ORhyY7JKh36Uou8DfkPsZ14=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qsu1uZsUMHjGQ4ktXq6JSPWdLRISJDODMLTfxPjObC9LrKgtzqh6efjN6vrJDp8Pl
-	 HSIKD+K3DDTdCiyW4mF/xRO5q84CmmwA2UPP6dgP6hTMV4ZxBXZx1xg5oWwfluxaa6
-	 WDXULrb+S8B0HHBE2SOqh+OU2zsPa4CFFiTOZwi4=
+	b=bQ4svZBqgUKoK4U//mGY4uEBqYNaGoe3PVrn9yu8gPDYZePGOMuUjLyeeggQd2K4Q
+	 TH/p+WARXZ95vnOsN42WTOegS1ekLy0c8UM+qXAQ4xcteCkdILajGaxBVcGSBzrNAm
+	 syw9iI7Pf4yicXSk0KlHDlIb/FFAR6yxvWeHR+7U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388748AbfIVSoQ (ORCPT
+        id S2388785AbfIVSoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:44:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39642 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:44:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388666AbfIVSoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:44:02 -0400
+        id S2388711AbfIVSoK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:44:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5CD0214D9;
-        Sun, 22 Sep 2019 18:44:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B815921479;
+        Sun, 22 Sep 2019 18:44:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569177841;
-        bh=hYUfsW0L/9lk8I7RgCsHnsruaZp2MEdg3A4yuinmzlg=;
+        s=default; t=1569177849;
+        bh=48xQrCMOZWQY0GMUtiT7ORhyY7JKh36Uou8DfkPsZ14=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P8NiFMFiIh4YzFnfzXc7Tut0w6STU39LNeOnqL+XnzuAPgRJeAh8OJMGS2nfgFDib
-         eOWbSt9GEqWjU+WEuWEjPvI6eEIn+5lR1c8BKlUIuOBZSkFBylK7JNinzFixgscBsz
-         KMLLbaJqblcJsr+CRqyxoxXnWghFyPBhNwjzLiNg=
+        b=b1C4bWyWq02P3/8HYtovHl2Y8E1/rKYMAAvJmqQNKd+Doy/sxHOpd3o7qJtZ9sFHh
+         7s9YjilMnTJfOD6b6jItazfypSX0be6SrOm2wA3I3j7Vp59ZXQZlL25kQH0vLxEHjk
+         25gfIl1JiIo4yA9byw9saLqcnyEVsONEyTMlDYw8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 009/203] ASoC: sgtl5000: Fix of unmute outputs on probe
-Date:   Sun, 22 Sep 2019 14:40:35 -0400
-Message-Id: <20190922184350.30563-9-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 015/203] media: dib0700: fix link error for dibx000_i2c_set_speed
+Date:   Sun, 22 Sep 2019 14:40:41 -0400
+Message-Id: <20190922184350.30563-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -62,49 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 631bc8f0134ae9620d86a96b8c5f9445d91a2dca ]
+[ Upstream commit 765bb8610d305ee488b35d07e2a04ae52fb2df9c ]
 
-To enable "zero cross detect" for ADC/HP, change
-HP_ZCD_EN/ADC_ZCD_EN bits only instead of writing the whole
-CHIP_ANA_CTRL register.
+When CONFIG_DVB_DIB9000 is disabled, we can still compile code that
+now fails to link against dibx000_i2c_set_speed:
 
-Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Reviewed-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Reviewed-by: Igor Opaniuk <igor.opaniuk@toradex.com>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
-Link: https://lore.kernel.org/r/20190719100524.23300-6-oleksandr.suvorov@toradex.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+drivers/media/usb/dvb-usb/dib0700_devices.o: In function `dib01x0_pmu_update.constprop.7':
+dib0700_devices.c:(.text.unlikely+0x1c9c): undefined reference to `dibx000_i2c_set_speed'
+
+The call sites are both through dib01x0_pmu_update(), which gets passed
+an 'i2c' pointer from dib9000_get_i2c_master(), which has returned
+NULL. Checking this pointer seems to be a good idea anyway, and it avoids
+the link failure in most cases.
+
+Sean Young found another case that is not fixed by that, where certain
+gcc versions leave an unused function in place that causes the link error,
+but adding an explict IS_ENABLED() check also solves this.
+
+Fixes: b7f54910ce01 ("V4L/DVB (4647): Added module for DiB0700 based devices")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/sgtl5000.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/media/usb/dvb-usb/dib0700_devices.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
-index a6a4748c97f9d..aad9eca41587e 100644
---- a/sound/soc/codecs/sgtl5000.c
-+++ b/sound/soc/codecs/sgtl5000.c
-@@ -1288,6 +1288,7 @@ static int sgtl5000_probe(struct snd_soc_component *component)
- 	int ret;
- 	u16 reg;
- 	struct sgtl5000_priv *sgtl5000 = snd_soc_component_get_drvdata(component);
-+	unsigned int zcd_mask = SGTL5000_HP_ZCD_EN | SGTL5000_ADC_ZCD_EN;
+diff --git a/drivers/media/usb/dvb-usb/dib0700_devices.c b/drivers/media/usb/dvb-usb/dib0700_devices.c
+index 66d685065e065..ab7a100ec84fe 100644
+--- a/drivers/media/usb/dvb-usb/dib0700_devices.c
++++ b/drivers/media/usb/dvb-usb/dib0700_devices.c
+@@ -2439,9 +2439,13 @@ static int dib9090_tuner_attach(struct dvb_usb_adapter *adap)
+ 		8, 0x0486,
+ 	};
  
- 	/* power up sgtl5000 */
- 	ret = sgtl5000_set_power_regs(component);
-@@ -1315,9 +1316,8 @@ static int sgtl5000_probe(struct snd_soc_component *component)
- 	       0x1f);
- 	snd_soc_component_write(component, SGTL5000_CHIP_PAD_STRENGTH, reg);
++	if (!IS_ENABLED(CONFIG_DVB_DIB9000))
++		return -ENODEV;
+ 	if (dvb_attach(dib0090_fw_register, adap->fe_adap[0].fe, i2c, &dib9090_dib0090_config) == NULL)
+ 		return -ENODEV;
+ 	i2c = dib9000_get_i2c_master(adap->fe_adap[0].fe, DIBX000_I2C_INTERFACE_GPIO_1_2, 0);
++	if (!i2c)
++		return -ENODEV;
+ 	if (dib01x0_pmu_update(i2c, data_dib190, 10) != 0)
+ 		return -ENODEV;
+ 	dib0700_set_i2c_speed(adap->dev, 1500);
+@@ -2517,10 +2521,14 @@ static int nim9090md_tuner_attach(struct dvb_usb_adapter *adap)
+ 		0, 0x00ef,
+ 		8, 0x0406,
+ 	};
++	if (!IS_ENABLED(CONFIG_DVB_DIB9000))
++		return -ENODEV;
+ 	i2c = dib9000_get_tuner_interface(adap->fe_adap[0].fe);
+ 	if (dvb_attach(dib0090_fw_register, adap->fe_adap[0].fe, i2c, &nim9090md_dib0090_config[0]) == NULL)
+ 		return -ENODEV;
+ 	i2c = dib9000_get_i2c_master(adap->fe_adap[0].fe, DIBX000_I2C_INTERFACE_GPIO_1_2, 0);
++	if (!i2c)
++		return -ENODEV;
+ 	if (dib01x0_pmu_update(i2c, data_dib190, 10) < 0)
+ 		return -ENODEV;
  
--	snd_soc_component_write(component, SGTL5000_CHIP_ANA_CTRL,
--			SGTL5000_HP_ZCD_EN |
--			SGTL5000_ADC_ZCD_EN);
-+	snd_soc_component_update_bits(component, SGTL5000_CHIP_ANA_CTRL,
-+		zcd_mask, zcd_mask);
- 
- 	snd_soc_component_update_bits(component, SGTL5000_CHIP_MIC_CTRL,
- 			SGTL5000_BIAS_R_MASK,
 -- 
 2.20.1
 
