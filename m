@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA5DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4323C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15A9F20882
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:12:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE0252184D
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:12:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179521;
-	bh=F+BBISY2usXO5Kw7pU45xxt7mQnQUjIjnV1fz2gbs68=;
+	s=default; t=1569179525;
+	bh=uR4aGca4FN9wadKYbMaF/W0aRTC4nJx9UHIMFrXBdn0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=afrbyCRrEZSJX0mBiZVLm3N4n9+dhUyBsyAlL0kItHRKYU+jGeFMxlFsIqPHn80XK
-	 PvBSPmwZFqyPT80J7Q9ppxQGzpW6tLy3nU3gUJNGH99XnxYMtsfx4vvz8tvbvsW4UP
-	 kHx1cphAfH/igv7SiMYJp7rLbrTreu+jpT/BW1uo=
+	b=sHVFbTJ0xazaTrENx9UHEqORmHTvk4h8W1k3M9QynF3nDQv9+MwHFW2HMTO+Wm1Ht
+	 yoiOK/V/ynCn36L6tMolQEXfT4BSdWJaBRTIRYyOToYHiEMKMqX3RLqnXmLWit3/o1
+	 k5I+2qCn/LIJOtXUsa/HYOALPH/w/suvSHdzInDQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436636AbfIVTL7 (ORCPT
+        id S2392154AbfIVS6O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:11:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60962 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:58:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394870AbfIVS6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:58:16 -0400
+        id S2438737AbfIVS6G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:58:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CEAE214D9;
-        Sun, 22 Sep 2019 18:58:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE0C42184D;
+        Sun, 22 Sep 2019 18:58:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178695;
-        bh=F+BBISY2usXO5Kw7pU45xxt7mQnQUjIjnV1fz2gbs68=;
+        s=default; t=1569178685;
+        bh=uR4aGca4FN9wadKYbMaF/W0aRTC4nJx9UHIMFrXBdn0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cvy6CmwykOO6F9rgVKgCOJ16ZaJZcZORsGf4n/LbFNDNhGYfLs+b5Zb2dpOvXl3nv
-         d4Xi3YYB5TTsOwZEu2XBkN8jitg+pub73getyQwmmmLKHt8wrrGVu9n9Bn9VsAwhS5
-         jFB1NJL4garArkPBtXB6DGHRLcOMvlV38pOYkv68=
+        b=KPvsHdCzV6+sDGZhEtED4YPwCcX1CN8UNCy5TbCmbuEd7HsQOj6bfppv5gJ2ctbPD
+         LeKYhf58lhep7CHjV2yEI0zIuLg3f/Dp6wEV8w3tJc1OTvRe8jzjrfI2hjmjvOOjt/
+         ShjeyOnKK6IwnBJPhMsixftpbpYE+nNpnUMfbK3I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 35/89] media: fdp1: Reduce FCP not found message level to debug
-Date:   Sun, 22 Sep 2019 14:56:23 -0400
-Message-Id: <20190922185717.3412-35-sashal@kernel.org>
+Cc:     Phil Auld <pauld@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 31/89] sched/fair: Use rq_lock/unlock in online_fair_sched_group
+Date:   Sun, 22 Sep 2019 14:56:19 -0400
+Message-Id: <20190922185717.3412-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185717.3412-1-sashal@kernel.org>
 References: <20190922185717.3412-1-sashal@kernel.org>
@@ -62,43 +62,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Phil Auld <pauld@redhat.com>
 
-[ Upstream commit 4fd22938569c14f6092c05880ca387409d78355f ]
+[ Upstream commit a46d14eca7b75fffe35603aa8b81df654353d80f ]
 
-When support for the IPMMU is not enabled, the FDP driver may be
-probe-deferred multiple times, causing several messages to be printed
-like:
+Enabling WARN_DOUBLE_CLOCK in /sys/kernel/debug/sched_features causes
+warning to fire in update_rq_clock. This seems to be caused by onlining
+a new fair sched group not using the rq lock wrappers.
 
-    rcar_fdp1 fe940000.fdp1: FCP not found (-517)
-    rcar_fdp1 fe944000.fdp1: FCP not found (-517)
+  [] rq->clock_update_flags & RQCF_UPDATED
+  [] WARNING: CPU: 5 PID: 54385 at kernel/sched/core.c:210 update_rq_clock+0xec/0x150
 
-Fix this by reducing the message level to debug level, as is done in the
-VSP1 driver.
+  [] Call Trace:
+  []  online_fair_sched_group+0x53/0x100
+  []  cpu_cgroup_css_online+0x16/0x20
+  []  online_css+0x1c/0x60
+  []  cgroup_apply_control_enable+0x231/0x3b0
+  []  cgroup_mkdir+0x41b/0x530
+  []  kernfs_iop_mkdir+0x61/0xa0
+  []  vfs_mkdir+0x108/0x1a0
+  []  do_mkdirat+0x77/0xe0
+  []  do_syscall_64+0x55/0x1d0
+  []  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Fixes: 4710b752e029f3f8 ("[media] v4l: Add Renesas R-Car FDP1 Driver")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Using the wrappers in online_fair_sched_group instead of the raw locking
+removes this warning.
+
+[ tglx: Use rq_*lock_irq() ]
+
+Signed-off-by: Phil Auld <pauld@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Ingo Molnar <mingo@kernel.org>
+Link: https://lkml.kernel.org/r/20190801133749.11033-1-pauld@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/rcar_fdp1.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/sched/fair.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/platform/rcar_fdp1.c b/drivers/media/platform/rcar_fdp1.c
-index a889332d5d309..d8d406c79cfa1 100644
---- a/drivers/media/platform/rcar_fdp1.c
-+++ b/drivers/media/platform/rcar_fdp1.c
-@@ -2310,7 +2310,7 @@ static int fdp1_probe(struct platform_device *pdev)
- 		fdp1->fcp = rcar_fcp_get(fcp_node);
- 		of_node_put(fcp_node);
- 		if (IS_ERR(fdp1->fcp)) {
--			dev_err(&pdev->dev, "FCP not found (%ld)\n",
-+			dev_dbg(&pdev->dev, "FCP not found (%ld)\n",
- 				PTR_ERR(fdp1->fcp));
- 			return PTR_ERR(fdp1->fcp);
- 		}
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 808db3566ddbc..55a33009f9a54 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -9423,18 +9423,18 @@ int alloc_fair_sched_group(struct task_group *tg, struct task_group *parent)
+ void online_fair_sched_group(struct task_group *tg)
+ {
+ 	struct sched_entity *se;
++	struct rq_flags rf;
+ 	struct rq *rq;
+ 	int i;
+ 
+ 	for_each_possible_cpu(i) {
+ 		rq = cpu_rq(i);
+ 		se = tg->se[i];
+-
+-		raw_spin_lock_irq(&rq->lock);
++		rq_lock_irq(rq, &rf);
+ 		update_rq_clock(rq);
+ 		attach_entity_cfs_rq(se);
+ 		sync_throttle(tg, i);
+-		raw_spin_unlock_irq(&rq->lock);
++		rq_unlock_irq(rq, &rf);
+ 	}
+ }
+ 
 -- 
 2.20.1
 
