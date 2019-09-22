@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B0EC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:03:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E350C4740C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7EE8206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:03:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FE50206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:03:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179008;
-	bh=n5gj2Hdae2Hdoc1sUt7oWb1wv6BAKbPyC4gdc9lKEK0=;
+	s=default; t=1569179010;
+	bh=22NbU2ULCWVXqeZj+g5k5KVDG+WB3nR9I3dWlexGVM0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zjpg9V/1HYWpXge7MGQ/mevX5t8Z2D5+adexIK4QvV4e1rFkxkjdMcSud5iDvzbX0
-	 FGLitY3UChoB8rvExZTRIP6+WXCGFKkwjvGROwLb5wVtrKN1LEgZX0KHZ7jK0JZ6NS
-	 dvervhLHVF+NJLrFxVvMUxcoevbHyjnLX3UMSjP0=
+	b=hX2n9KaWvMRkmuRgwNu5efhIjWT8jy6iURcoVnwk659+3TdYYzo+uPaTd/E/6qOIJ
+	 q8j2sCRWo0chwx/h+ttYZkPqDlWP55K7jnoBXOpGvKosbrYYjG4NI3ricAuiWNRSEt
+	 RJd5hYe2NKuRk6RnFl8U4gjr3LseJBsPjJEvYjLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390518AbfIVTD0 (ORCPT
+        id S2395320AbfIVTBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:03:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38294 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:01:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395345AbfIVTB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 15:01:58 -0400
+        id S2439036AbfIVTBp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 15:01:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 091212070C;
-        Sun, 22 Sep 2019 19:01:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9847214AF;
+        Sun, 22 Sep 2019 19:01:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178917;
-        bh=n5gj2Hdae2Hdoc1sUt7oWb1wv6BAKbPyC4gdc9lKEK0=;
+        s=default; t=1569178905;
+        bh=22NbU2ULCWVXqeZj+g5k5KVDG+WB3nR9I3dWlexGVM0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ucrm8CrR48KGqv7pJjY29Zj+M/o4t4MvcbE2siWHfBK38iWDBA87f/zje+PB5BuJr
-         TGDUk1Ip7mVwGlJrwvqCE4w+lQ0XVZJesOfeQ2LY/GZXG79nxbSW0fa0K/i/aKrckW
-         pGmFmSutzStteuObAi0eZ1oD8LBCROR96Ld12wvI=
+        b=qu2Q5S/isS3RX/swXVWK5S2Bc2U4zXx/pV4JIPR+S2RfEPsYF/pliiG1REK5nXPs6
+         T4pYYiXZmmxrdiCUGhqljcgo1Jm0sTwhEv99QJVVL2WL/TuKVphLwAEuezqDRKDCYQ
+         GMZtBdSfopIydKmfNtij77QxH6Gi++JNDNgIrb+E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 35/44] dmaengine: ti: edma: Do not reset reserved paRAM slots
-Date:   Sun, 22 Sep 2019 15:00:53 -0400
-Message-Id: <20190922190103.4906-35-sashal@kernel.org>
+Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 26/44] media: saa7146: add cleanup in hexium_attach()
+Date:   Sun, 22 Sep 2019 15:00:44 -0400
+Message-Id: <20190922190103.4906-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922190103.4906-1-sashal@kernel.org>
 References: <20190922190103.4906-1-sashal@kernel.org>
@@ -59,48 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit c5dbe60664b3660f5ac5854e21273ea2e7ff698f ]
+[ Upstream commit 42e64117d3b4a759013f77bbcf25ab6700e55de7 ]
 
-Skip resetting paRAM slots marked as reserved as they might be used by
-other cores.
+If saa7146_register_device() fails, no cleanup is executed, leading to
+memory/resource leaks. To fix this issue, perform necessary cleanup work
+before returning the error.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Link: https://lore.kernel.org/r/20190823125618.8133-2-peter.ujfalusi@ti.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/edma.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/media/pci/saa7146/hexium_gemini.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/dma/edma.c b/drivers/dma/edma.c
-index 85674a8d04368..e508c8c5f3fde 100644
---- a/drivers/dma/edma.c
-+++ b/drivers/dma/edma.c
-@@ -2218,9 +2218,6 @@ static int edma_probe(struct platform_device *pdev)
- 
- 	ecc->default_queue = info->default_queue;
- 
--	for (i = 0; i < ecc->num_slots; i++)
--		edma_write_slot(ecc, i, &dummy_paramset);
--
- 	if (info->rsv) {
- 		/* Set the reserved slots in inuse list */
- 		rsv_slots = info->rsv->rsv_slots;
-@@ -2233,6 +2230,12 @@ static int edma_probe(struct platform_device *pdev)
- 		}
+diff --git a/drivers/media/pci/saa7146/hexium_gemini.c b/drivers/media/pci/saa7146/hexium_gemini.c
+index d4b3ce8282856..343cd75fcd8d1 100644
+--- a/drivers/media/pci/saa7146/hexium_gemini.c
++++ b/drivers/media/pci/saa7146/hexium_gemini.c
+@@ -304,6 +304,9 @@ static int hexium_attach(struct saa7146_dev *dev, struct saa7146_pci_extension_d
+ 	ret = saa7146_register_device(&hexium->video_dev, dev, "hexium gemini", VFL_TYPE_GRABBER);
+ 	if (ret < 0) {
+ 		pr_err("cannot register capture v4l2 device. skipping.\n");
++		saa7146_vv_release(dev);
++		i2c_del_adapter(&hexium->i2c_adapter);
++		kfree(hexium);
+ 		return ret;
  	}
  
-+	for (i = 0; i < ecc->num_slots; i++) {
-+		/* Reset only unused - not reserved - paRAM slots */
-+		if (!test_bit(i, ecc->slot_inuse))
-+			edma_write_slot(ecc, i, &dummy_paramset);
-+	}
-+
- 	/* Clear the xbar mapped channels in unused list */
- 	xbar_chans = info->xbar_chans;
- 	if (xbar_chans) {
 -- 
 2.20.1
 
