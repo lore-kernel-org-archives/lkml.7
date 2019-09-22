@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 478ACC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA42C4740C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DF8F222C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A378214D9
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:00:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178844;
-	bh=4VoAc1yvZwRE0X8+pm99fjf3hGnKk12dJhyILIPYcAQ=;
+	s=default; t=1569178849;
+	bh=e9BSFUibeBe+oRteLZzZcuFsV4x7EMeuZV+E0L70dd0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yAeEgATBRycrdQQkU3WdUYB2NE4AN7h2ULi1XeaJIVj5T+MMMjyoFieDsPsD8ZViW
-	 epRVGxpuhvxdi3+0zZcz0NAMS3LRF8IN3Lig/wFAK5vshnQvQTC64nJIThPYGzoT0I
-	 psmNv4fVFse5gy7pzsq+PW5LKRKJOdy7E7HTfBO0=
+	b=b9z5V83AXdHyXgMPrZw/DsLuxZOZkLRLXPkAjr8iR55HyjjQccAjxLStZuFdNl3tf
+	 zgjNg2+d6DxDCRTakNUaiC/oiOwE/m2YenNSuIA7IfuwDYJht+0BDSxN5lV/DvMnfL
+	 8EV64u/gbFD/4Xs0qks+vJF61KXTzV33kHkasgus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405771AbfIVTAi (ORCPT
+        id S2395224AbfIVTAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:00:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36136 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:00:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395181AbfIVTA0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 15:00:26 -0400
+        id S2436695AbfIVTAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 15:00:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75743206C2;
-        Sun, 22 Sep 2019 19:00:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AEAC21907;
+        Sun, 22 Sep 2019 19:00:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178826;
-        bh=4VoAc1yvZwRE0X8+pm99fjf3hGnKk12dJhyILIPYcAQ=;
+        s=default; t=1569178841;
+        bh=e9BSFUibeBe+oRteLZzZcuFsV4x7EMeuZV+E0L70dd0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r2zK8c2rFNt6KWmngc8UUpwGmC2pixsPWh5nCrFCAy+py8CbR4MQTjAzfzB79cb9w
-         lvbikyPcB0YiinoLFUO7NDM7xhGMW1nJqd3LWrl3nxt1c1j0Q1VVsP+9WaWxQnWNhj
-         DAYSRY2XSUiqbmmb6J04X6DzWYQzolIoP8jAqCL8=
+        b=Ds5So0Uq/X3sedcPqzlvj6Vuo9XEZfSlxVI9ksPfOoVSvUk6Ik1RTVFpxbaPS0JDY
+         5wQxlPE4evZufPfs5lgWesdPqjCCCx4IN74rV2e6DOUfI8KMYhLJGpYXA9htSD6EaE
+         FZYpPr4lHoW1YcP6mlAtdOKbhVysUD8QPTQY+tP0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Al Stone <ahs3@redhat.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 37/60] ACPI / CPPC: do not require the _PSD method
-Date:   Sun, 22 Sep 2019 14:59:10 -0400
-Message-Id: <20190922185934.4305-37-sashal@kernel.org>
+Cc:     Harald Freudenberger <freude@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 49/60] s390/crypto: xts-aes-s390 fix extra run-time crypto self tests finding
+Date:   Sun, 22 Sep 2019 14:59:22 -0400
+Message-Id: <20190922185934.4305-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185934.4305-1-sashal@kernel.org>
 References: <20190922185934.4305-1-sashal@kernel.org>
@@ -59,52 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Stone <ahs3@redhat.com>
+From: Harald Freudenberger <freude@linux.ibm.com>
 
-[ Upstream commit 4c4cdc4c63853fee48c02e25c8605fb65a6c9924 ]
+[ Upstream commit 9e323d45ba94262620a073a3f9945ca927c07c71 ]
 
-According to the ACPI 6.3 specification, the _PSD method is optional
-when using CPPC.  The underlying assumption is that each CPU can change
-frequency independently from all other CPUs; _PSD is provided to tell
-the OS that some processors can NOT do that.
+With 'extra run-time crypto self tests' enabled, the selftest
+for s390-xts fails with
 
-However, the acpi_get_psd() function returns ENODEV if there is no _PSD
-method present, or an ACPI error status if an error occurs when evaluating
-_PSD, if present.  This makes _PSD mandatory when using CPPC, in violation
-of the specification, and only on Linux.
+  alg: skcipher: xts-aes-s390 encryption unexpectedly succeeded on
+  test vector "random: len=0 klen=64"; expected_error=-22,
+  cfg="random: inplace use_digest nosimd src_divs=[2.61%@+4006,
+  84.44%@+21, 1.55%@+13, 4.50%@+344, 4.26%@+21, 2.64%@+27]"
 
-This has forced some firmware writers to provide a dummy _PSD, even though
-it is irrelevant, but only because Linux requires it; other OSPMs follow
-the spec.  We really do not want to have OS specific ACPI tables, though.
+This special case with nbytes=0 is not handled correctly and this
+fix now makes sure that -EINVAL is returned when there is en/decrypt
+called with 0 bytes to en/decrypt.
 
-So, correct acpi_get_psd() so that it does not return an error if there
-is no _PSD method present, but does return a failure when the method can
-not be executed properly.  This allows _PSD to be optional as it should
-be.
-
-Signed-off-by: Al Stone <ahs3@redhat.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/cppc_acpi.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/s390/crypto/aes_s390.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
-index e0ea8f56d2bfd..9ec4618df5338 100644
---- a/drivers/acpi/cppc_acpi.c
-+++ b/drivers/acpi/cppc_acpi.c
-@@ -360,8 +360,10 @@ static int acpi_get_psd(struct cpc_desc *cpc_ptr, acpi_handle handle)
- 	union acpi_object  *psd = NULL;
- 	struct acpi_psd_package *pdomain;
+diff --git a/arch/s390/crypto/aes_s390.c b/arch/s390/crypto/aes_s390.c
+index 591cbdf615af0..1a906dd7ca7d9 100644
+--- a/arch/s390/crypto/aes_s390.c
++++ b/arch/s390/crypto/aes_s390.c
+@@ -572,6 +572,9 @@ static int xts_aes_encrypt(struct blkcipher_desc *desc,
+ 	struct s390_xts_ctx *xts_ctx = crypto_blkcipher_ctx(desc->tfm);
+ 	struct blkcipher_walk walk;
  
--	status = acpi_evaluate_object_typed(handle, "_PSD", NULL, &buffer,
--			ACPI_TYPE_PACKAGE);
-+	status = acpi_evaluate_object_typed(handle, "_PSD", NULL,
-+					    &buffer, ACPI_TYPE_PACKAGE);
-+	if (status == AE_NOT_FOUND)	/* _PSD is optional */
-+		return 0;
- 	if (ACPI_FAILURE(status))
- 		return -ENODEV;
++	if (!nbytes)
++		return -EINVAL;
++
+ 	if (unlikely(!xts_ctx->fc))
+ 		return xts_fallback_encrypt(desc, dst, src, nbytes);
+ 
+@@ -586,6 +589,9 @@ static int xts_aes_decrypt(struct blkcipher_desc *desc,
+ 	struct s390_xts_ctx *xts_ctx = crypto_blkcipher_ctx(desc->tfm);
+ 	struct blkcipher_walk walk;
+ 
++	if (!nbytes)
++		return -EINVAL;
++
+ 	if (unlikely(!xts_ctx->fc))
+ 		return xts_fallback_decrypt(desc, dst, src, nbytes);
  
 -- 
 2.20.1
