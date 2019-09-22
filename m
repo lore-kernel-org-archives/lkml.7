@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71626C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2CB6C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40B39214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A086A206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:15:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179698;
-	bh=fArfNnT5vFYjofUn+0euUGANcA1sp8AW4rWpRpsRnTw=;
+	s=default; t=1569179703;
+	bh=LHr0zQNTuWMvB8KfJDg2lp4+b/SuKXqID+v+rc6sg8g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vvHBUhB/UZa4A5xTwlL0MjqE59eV4g98e7VpmRY84+Vnt2jFUusg1mWTWU139cdsv
-	 b067L8jjdhVlGHiwKdK+1nLkW6m5bumNM5v5o/h0oum0KyhZxkHfBxbH6k6pjCjALG
-	 CgBCKI+ZIxeLrrkSo90Iw7g+V5KMj66oyb17vX3Q=
+	b=TieUCXdKPSDzzaAXRykeMkEoOMHLQ4FeeA/Vkwr4QnecnANOzLt/op5wA/AG8gH20
+	 MdmPnPS65cahV7Ww3HKmr27Ml4NJyGWFNRHJSUsx859guJLuXK4gWv0GJ7glHMyth3
+	 +9IxEg0yXkhQIyRrjng8TeC+0xujZUgROktI539c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395415AbfIVTO5 (ORCPT
+        id S1730054AbfIVTPC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:14:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58996 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:15:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392303AbfIVS4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:56:46 -0400
+        id S2408225AbfIVS4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:56:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EB1421A4A;
-        Sun, 22 Sep 2019 18:56:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E923B2184D;
+        Sun, 22 Sep 2019 18:56:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178606;
-        bh=fArfNnT5vFYjofUn+0euUGANcA1sp8AW4rWpRpsRnTw=;
+        s=default; t=1569178601;
+        bh=LHr0zQNTuWMvB8KfJDg2lp4+b/SuKXqID+v+rc6sg8g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1XaqySEose42bVf+IxZYY+19yg3mba5r3d7TmEEY5sG7xzGnJxfPD5aIIGz8nCdki
-         /ypzr3IKABEL64HGc9EKDi5fUColxpV0JAukxsUSrY3Tk5NtDYhK6tL+/qg7gmqd/V
-         nfODgnVLlDCrA5F6M8PEFenN0FLlYmaqjlogpYSc=
+        b=z8L+lqCQ7gd0Ckkf3i/7XD5Q953V+Lgwi0yyCk8B9PquWzOP+lpke9ZP11xOyEiM1
+         oYiq0CWh2L2XRgGjsdwEmnPt51huACKgYAa4iWdcDtHUWM8xHa/fZxTpVhANdmVNe5
+         tmqNnmorjRX9Xnk8HIfn6qLuo+iWu4xnx4VQ6JpU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marc Zyngier <maz@kernel.org>, Jiaxing Luo <luojiaxing@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 108/128] irqchip/gic-v3-its: Fix LPI release for Multi-MSI devices
-Date:   Sun, 22 Sep 2019 14:53:58 -0400
-Message-Id: <20190922185418.2158-108-sashal@kernel.org>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 105/128] dmaengine: ti: edma: Do not reset reserved paRAM slots
+Date:   Sun, 22 Sep 2019 14:53:55 -0400
+Message-Id: <20190922185418.2158-105-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
 References: <20190922185418.2158-1-sashal@kernel.org>
@@ -59,52 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-[ Upstream commit c9c96e30ecaa0aafa225aa1a5392cb7db17c7a82 ]
+[ Upstream commit c5dbe60664b3660f5ac5854e21273ea2e7ff698f ]
 
-When allocating a range of LPIs for a Multi-MSI capable device,
-this allocation extended to the closest power of 2.
+Skip resetting paRAM slots marked as reserved as they might be used by
+other cores.
 
-But on the release path, the interrupts are released one by
-one. This results in not releasing the "extra" range, leaking
-the its_device. Trying to reprobe the device will then fail.
-
-Fix it by releasing the LPIs the same way we allocate them.
-
-Fixes: 8208d1708b88 ("irqchip/gic-v3-its: Align PCI Multi-MSI allocation on their size")
-Reported-by: Jiaxing Luo <luojiaxing@huawei.com>
-Tested-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/f5e948aa-e32f-3f74-ae30-31fee06c2a74@huawei.com
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Link: https://lore.kernel.org/r/20190823125618.8133-2-peter.ujfalusi@ti.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3-its.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/dma/ti/edma.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 9ba73e11757d9..e7549a2b1482b 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -2514,14 +2514,13 @@ static void its_irq_domain_free(struct irq_domain *domain, unsigned int virq,
- 	struct its_node *its = its_dev->its;
- 	int i;
+diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
+index ceabdea40ae0f..982631d4e1f8a 100644
+--- a/drivers/dma/ti/edma.c
++++ b/drivers/dma/ti/edma.c
+@@ -2273,9 +2273,6 @@ static int edma_probe(struct platform_device *pdev)
  
-+	bitmap_release_region(its_dev->event_map.lpi_map,
-+			      its_get_event_id(irq_domain_get_irq_data(domain, virq)),
-+			      get_count_order(nr_irqs));
-+
- 	for (i = 0; i < nr_irqs; i++) {
- 		struct irq_data *data = irq_domain_get_irq_data(domain,
- 								virq + i);
--		u32 event = its_get_event_id(data);
+ 	ecc->default_queue = info->default_queue;
+ 
+-	for (i = 0; i < ecc->num_slots; i++)
+-		edma_write_slot(ecc, i, &dummy_paramset);
 -
--		/* Mark interrupt index as unused */
--		clear_bit(event, its_dev->event_map.lpi_map);
--
- 		/* Nuke the entry in the domain */
- 		irq_domain_reset_irq_data(data);
+ 	if (info->rsv) {
+ 		/* Set the reserved slots in inuse list */
+ 		rsv_slots = info->rsv->rsv_slots;
+@@ -2288,6 +2285,12 @@ static int edma_probe(struct platform_device *pdev)
+ 		}
  	}
+ 
++	for (i = 0; i < ecc->num_slots; i++) {
++		/* Reset only unused - not reserved - paRAM slots */
++		if (!test_bit(i, ecc->slot_inuse))
++			edma_write_slot(ecc, i, &dummy_paramset);
++	}
++
+ 	/* Clear the xbar mapped channels in unused list */
+ 	xbar_chans = info->xbar_chans;
+ 	if (xbar_chans) {
 -- 
 2.20.1
 
