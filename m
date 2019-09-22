@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53748C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84459C49ED7
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E9D3206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:06:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E3FB20882
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:06:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179185;
-	bh=QJorBsuu7/I+O7IoyuxkA/c3Do8nJw9lZYvwg/ZsupQ=;
+	s=default; t=1569179188;
+	bh=Tcx/Yp0C4YgpHbn3nCmZwEpP1zIaf3+0RQo1r8RcIR8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NfroDuKIkeFAcHyZxZzoftb/2knJcNFWkf+mI5+Cc2J7Wwa/0xuabla2PQvUzilmT
-	 DCY3JXoCS0axfXqUfpA+l8YH6gkzegVEXOWTFTBCI60lYcYJrZVc6aIb/alD4ZKRct
-	 uVSmkwHlKpKfG8iuqfCaZw1+TSP/LyAIAKccR+d0=
+	b=yJchIL/plgMfrEiwwy7aU/uX8kd/zcHr0gCPTtomOJuIrpcV5orxll4AZ9qDU7OAv
+	 2+7/fcfGbcH8hjssNgeyNgbJnP9e8LBH1HdyoMPSWYquIhEpvAQn4Y6STejVxkAIEq
+	 jvTt/7SAI427rcBttHHw0VpUtBf0xkl+nvAj8Lds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730144AbfIVTGY (ORCPT
+        id S2403909AbfIVTAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:06:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36366 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:00:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405610AbfIVTAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 15:00:36 -0400
+        id S2395165AbfIVTAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 15:00:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88D7C208C2;
-        Sun, 22 Sep 2019 19:00:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A5A0208C2;
+        Sun, 22 Sep 2019 19:00:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178835;
-        bh=QJorBsuu7/I+O7IoyuxkA/c3Do8nJw9lZYvwg/ZsupQ=;
+        s=default; t=1569178824;
+        bh=Tcx/Yp0C4YgpHbn3nCmZwEpP1zIaf3+0RQo1r8RcIR8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cn/Wa4hA1NJYeYktjDSEXGpZacN8u6jufHZ2TNoHgCuHg+Mc2bWeZdhA2gV64OUbg
-         MR7g5yywZWjLRNsNIZbJ8I8z2ZWjrEA/X6JsK02Dtmdj+3/UpsYGxdGBuv4qPwWjCU
-         hlnDUh9h8VDsFiJHq/sY1v/KH75M95AE+G2OynuE=
+        b=SG2ttpJ6qtpfiC+QiGMJaPuZV2x+CZy1Yhk6saSerMg4whyJO0f+LTRNpe2fhh/ng
+         ru6dkbGk5QHXcg5QWfv7iwlibYXkMxlkSOw4HhUS0E46f3pMKZcX1dqRQqCNBdhKKe
+         i+eo6QaUvY++OZxSHapzKGI5unr5PyIb0VTLiVmA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 44/60] ACPI / PCI: fix acpi_pci_irq_enable() memory leak
-Date:   Sun, 22 Sep 2019 14:59:17 -0400
-Message-Id: <20190922185934.4305-44-sashal@kernel.org>
+Cc:     "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 35/60] media: saa7134: fix terminology around saa7134_i2c_eeprom_md7134_gate()
+Date:   Sun, 22 Sep 2019 14:59:08 -0400
+Message-Id: <20190922185934.4305-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185934.4305-1-sashal@kernel.org>
 References: <20190922185934.4305-1-sashal@kernel.org>
@@ -60,39 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
 
-[ Upstream commit 29b49958cf73b439b17fa29e9a25210809a6c01c ]
+[ Upstream commit 9d802222a3405599d6e1984d9324cddf592ea1f4 ]
 
-In acpi_pci_irq_enable(), 'entry' is allocated by kzalloc() in
-acpi_pci_irq_check_entry() (invoked from acpi_pci_irq_lookup()). However,
-it is not deallocated if acpi_pci_irq_valid() returns false, leading to a
-memory leak. To fix this issue, free 'entry' before returning 0.
+saa7134_i2c_eeprom_md7134_gate() function and the associated comment uses
+an inverted i2c gate open / closed terminology.
+Let's fix this.
 
-Fixes: e237a5518425 ("x86/ACPI/PCI: Recognize that Interrupt Line 255 means "not connected"")
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+[hverkuil-cisco@xs4all.nl: fix alignment checkpatch warning]
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/pci_irq.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/media/pci/saa7134/saa7134-i2c.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
-index c576a6fe4ebb3..94ded9513c73b 100644
---- a/drivers/acpi/pci_irq.c
-+++ b/drivers/acpi/pci_irq.c
-@@ -462,8 +462,10 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
- 		 * No IRQ known to the ACPI subsystem - maybe the BIOS /
- 		 * driver reported one, then use it. Exit in any case.
- 		 */
--		if (!acpi_pci_irq_valid(dev, pin))
-+		if (!acpi_pci_irq_valid(dev, pin)) {
-+			kfree(entry);
- 			return 0;
-+		}
+diff --git a/drivers/media/pci/saa7134/saa7134-i2c.c b/drivers/media/pci/saa7134/saa7134-i2c.c
+index dca0592c5f471..6f93568f56204 100644
+--- a/drivers/media/pci/saa7134/saa7134-i2c.c
++++ b/drivers/media/pci/saa7134/saa7134-i2c.c
+@@ -355,7 +355,11 @@ static struct i2c_client saa7134_client_template = {
  
- 		if (acpi_isa_register_gsi(dev))
- 			dev_warn(&dev->dev, "PCI INT %c: no GSI\n",
+ /* ----------------------------------------------------------- */
+ 
+-/* On Medion 7134 reading EEPROM needs DVB-T demod i2c gate open */
++/*
++ * On Medion 7134 reading the SAA7134 chip config EEPROM needs DVB-T
++ * demod i2c gate closed due to an address clash between this EEPROM
++ * and the demod one.
++ */
+ static void saa7134_i2c_eeprom_md7134_gate(struct saa7134_dev *dev)
+ {
+ 	u8 subaddr = 0x7, dmdregval;
+@@ -372,14 +376,14 @@ static void saa7134_i2c_eeprom_md7134_gate(struct saa7134_dev *dev)
+ 
+ 	ret = i2c_transfer(&dev->i2c_adap, i2cgatemsg_r, 2);
+ 	if ((ret == 2) && (dmdregval & 0x2)) {
+-		pr_debug("%s: DVB-T demod i2c gate was left closed\n",
++		pr_debug("%s: DVB-T demod i2c gate was left open\n",
+ 			 dev->name);
+ 
+ 		data[0] = subaddr;
+ 		data[1] = (dmdregval & ~0x2);
+ 		if (i2c_transfer(&dev->i2c_adap, i2cgatemsg_w, 1) != 1)
+-			pr_err("%s: EEPROM i2c gate open failure\n",
+-			  dev->name);
++			pr_err("%s: EEPROM i2c gate close failure\n",
++			       dev->name);
+ 	}
+ }
+ 
 -- 
 2.20.1
 
