@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8853CC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDD9C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60F9A21BE5
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:53:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97E2E2190F
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:53:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178385;
-	bh=wxlemXqcQli902QZT0OQcLMn5GX/KD1gd3Ig9+iAhYs=;
+	s=default; t=1569178388;
+	bh=EMm/DFERg7gGpc6ZK4Hzzr9d6eNec1wYcIFHfvS9e2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yCBXgouY+34+Ny5+CzfJ/XzXuPt/bQ5Z0kIGRJxJmSYanDoLBsP74pEuLqI39uK6U
-	 2imejRURql1q1ldHOV+jqbBF42ECS97tNJbjKFTJerOfZVu2HxEIQaHzRQuNK0pq1o
-	 mePMBUkIL6/ceVae+/dElBBu9uB+iWinfKBIC/GY=
+	b=MgYDaFO9p81D06gnnL4MTFLxYd3FM/qIkXem9sf/11MkyR+g1KV1UA6k8mphWsAMd
+	 pFtBkK6M6ym0KaU4fBHkrehrK+A/UPybw64gNSe0yyJmtSJBKfu7VmWmdShL67yvkI
+	 7qRGsvjaNypZDspvtvJiNIE1Y0F5lT3JqR0AMP/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404214AbfIVSxE (ORCPT
+        id S2393460AbfIVSxI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:53:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51910 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:53:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407963AbfIVSwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:52:42 -0400
+        id S2407976AbfIVSwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:52:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D67BD208C2;
-        Sun, 22 Sep 2019 18:52:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1ABC621479;
+        Sun, 22 Sep 2019 18:52:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178361;
-        bh=wxlemXqcQli902QZT0OQcLMn5GX/KD1gd3Ig9+iAhYs=;
+        s=default; t=1569178364;
+        bh=EMm/DFERg7gGpc6ZK4Hzzr9d6eNec1wYcIFHfvS9e2M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0seUIyHkQbzN5alItw2ZUZ6O4elu5a8DlSYE4Jz1ogrY/l3CRqVcNJM/mAdizJCqW
-         0mBc1u2fHdA++Y0rdVPqvhy58TgsFKZt2MaKB5W2kx8GsFQoRgi4Rqhoa12daRVRPQ
-         AycXShyNzrF86kNdYGMdGEGpSRuGvrnweTbfgZZY=
+        b=WI73Y6GW5wxjpyISInId4Qop9xa1IzO9Cmg0eqG9YwctehApNSF70LvU+G7jP0qsa
+         2qxi1lp0VUyTN48j9ABzJH1vWO0b9uK2jM/ahXplJ47M5XyEfBSALgdFe+49UCK/0U
+         kopkt8U9byzvLBkU9G6/12hGUJq8I83/i7koZwPo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 115/185] media: saa7134: fix terminology around saa7134_i2c_eeprom_md7134_gate()
-Date:   Sun, 22 Sep 2019 14:48:13 -0400
-Message-Id: <20190922184924.32534-115-sashal@kernel.org>
+Cc:     Andi Kleen <ak@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 117/185] perf report: Fix --ns time sort key output
+Date:   Sun, 22 Sep 2019 14:48:15 -0400
+Message-Id: <20190922184924.32534-117-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -60,58 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+From: Andi Kleen <ak@linux.intel.com>
 
-[ Upstream commit 9d802222a3405599d6e1984d9324cddf592ea1f4 ]
+[ Upstream commit 3dab6ac080dcd7f71cb9ceb84ad7dafecd6f7c07 ]
 
-saa7134_i2c_eeprom_md7134_gate() function and the associated comment uses
-an inverted i2c gate open / closed terminology.
-Let's fix this.
+If the user specified --ns, the column to print the sort time stamp
+wasn't wide enough to actually print the full nanoseconds.
 
-Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-[hverkuil-cisco@xs4all.nl: fix alignment checkpatch warning]
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Widen the time key column width when --ns is specified.
+
+Before:
+
+  % perf record -a sleep 1
+  % perf report --sort time,overhead,symbol --stdio --ns
+  ...
+       2.39%  187851.10000  [k] smp_call_function_single   -      -
+       1.53%  187851.10000  [k] intel_idle                 -      -
+       0.59%  187851.10000  [.] __wcscmp_ifunc             -      -
+       0.33%  187851.10000  [.] 0000000000000000           -      -
+       0.28%  187851.10000  [k] cpuidle_enter_state        -      -
+
+After:
+
+  % perf report --sort time,overhead,symbol --stdio --ns
+  ...
+       2.39%  187851.100000000  [k] smp_call_function_single   -      -
+       1.53%  187851.100000000  [k] intel_idle                 -      -
+       0.59%  187851.100000000  [.] __wcscmp_ifunc             -      -
+       0.33%  187851.100000000  [.] 0000000000000000           -      -
+       0.28%  187851.100000000  [k] cpuidle_enter_state        -      -
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Link: http://lkml.kernel.org/r/20190823210338.12360-2-andi@firstfloor.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/pci/saa7134/saa7134-i2c.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ tools/perf/util/hist.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/pci/saa7134/saa7134-i2c.c b/drivers/media/pci/saa7134/saa7134-i2c.c
-index 493b1858815fb..04e85765373ec 100644
---- a/drivers/media/pci/saa7134/saa7134-i2c.c
-+++ b/drivers/media/pci/saa7134/saa7134-i2c.c
-@@ -342,7 +342,11 @@ static const struct i2c_client saa7134_client_template = {
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index 7ace7a10054d8..966c248d6a3a1 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -193,7 +193,10 @@ void hists__calc_col_len(struct hists *hists, struct hist_entry *h)
+ 	hists__new_col_len(hists, HISTC_MEM_LVL, 21 + 3);
+ 	hists__new_col_len(hists, HISTC_LOCAL_WEIGHT, 12);
+ 	hists__new_col_len(hists, HISTC_GLOBAL_WEIGHT, 12);
+-	hists__new_col_len(hists, HISTC_TIME, 12);
++	if (symbol_conf.nanosecs)
++		hists__new_col_len(hists, HISTC_TIME, 16);
++	else
++		hists__new_col_len(hists, HISTC_TIME, 12);
  
- /* ----------------------------------------------------------- */
- 
--/* On Medion 7134 reading EEPROM needs DVB-T demod i2c gate open */
-+/*
-+ * On Medion 7134 reading the SAA7134 chip config EEPROM needs DVB-T
-+ * demod i2c gate closed due to an address clash between this EEPROM
-+ * and the demod one.
-+ */
- static void saa7134_i2c_eeprom_md7134_gate(struct saa7134_dev *dev)
- {
- 	u8 subaddr = 0x7, dmdregval;
-@@ -359,14 +363,14 @@ static void saa7134_i2c_eeprom_md7134_gate(struct saa7134_dev *dev)
- 
- 	ret = i2c_transfer(&dev->i2c_adap, i2cgatemsg_r, 2);
- 	if ((ret == 2) && (dmdregval & 0x2)) {
--		pr_debug("%s: DVB-T demod i2c gate was left closed\n",
-+		pr_debug("%s: DVB-T demod i2c gate was left open\n",
- 			 dev->name);
- 
- 		data[0] = subaddr;
- 		data[1] = (dmdregval & ~0x2);
- 		if (i2c_transfer(&dev->i2c_adap, i2cgatemsg_w, 1) != 1)
--			pr_err("%s: EEPROM i2c gate open failure\n",
--			  dev->name);
-+			pr_err("%s: EEPROM i2c gate close failure\n",
-+			       dev->name);
- 	}
- }
- 
+ 	if (h->srcline) {
+ 		len = MAX(strlen(h->srcline), strlen(sort_srcline.se_header));
 -- 
 2.20.1
 
