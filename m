@@ -7,58 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 583A3C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:20:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B325C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:20:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 312B320869
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:20:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B9FD20B7C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:20:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180003;
-	bh=l2a7Rfq5/NAQ7QMWaisNsFJ1WJ1m9Lkwd+QhTQZ3nhU=;
+	s=default; t=1569180011;
+	bh=sLnJM3DKOlN5FZzSjrAE9JxgbU+CtXj+nxAInM+jgaU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dut80xswYm4jYdgZzfB6Czuari0Ap0o3ALpgyCfVgF9bbgGnSpFNaXIbmrEd7rb5N
-	 bDh/niI+iEIecwMNWLg7NVJTZcEfe1/K8USX2JWbuVKO65j4WCcXHgFTjV8La0JQQp
-	 eYJ6h6QKun/muInN+cTsxntIQYdroKq/CoucOtGk=
+	b=s0/rMVxp2BaFMKxXOorGBNmJh1pkgO/tQv0KjadYqlLTVCpJL+YvGLi4lSlENr5NA
+	 RfIB1zV6Kt4Uq/KijW7wUZkWLVTcUM1Ix64LPH4A2TYo6Z+tytxyOQzLimKSR7HjeD
+	 xrunDA7tTQPws7egMWT6fB+YFEIPuqhp4akX68yU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437451AbfIVTUC (ORCPT
+        id S1730921AbfIVTUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:20:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55298 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:20:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394543AbfIVSyk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:54:40 -0400
+        id S2394527AbfIVSyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:54:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEC342190F;
-        Sun, 22 Sep 2019 18:54:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5597B21D7C;
+        Sun, 22 Sep 2019 18:54:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178479;
-        bh=l2a7Rfq5/NAQ7QMWaisNsFJ1WJ1m9Lkwd+QhTQZ3nhU=;
+        s=default; t=1569178476;
+        bh=sLnJM3DKOlN5FZzSjrAE9JxgbU+CtXj+nxAInM+jgaU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ih7rv/knFbg2IOjh+zPSqKK8hEAbAVhIokUzI5ghV0n+02/EfoR6Vxcx59IJkEFWE
-         vAk0SKF9y304aLsOO2OLi6nZeLmw1AJqOe7WM+OEa6L//Z1/EGwtToZyjwutGfGOcu
-         Vl+ngPlbJey4DQTPe1SMPh5E+qtaL73lWfNWOW4c=
+        b=S4RWvwk00vw50/P4Ang12EuubT9Qu4VHhum+jWPnoc6TB/08tm5HFj9EJYsZWn1B5
+         FuYTdzhAggi5G52qCo0+IvJA/c22KUKY/sruAjtdyHBUbo47vOWoEL47ZygivEHgv5
+         FdyJ6cObLJx0cDlRit2xXl/oxEiWmWiMKHM9ybtI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Juri Lelli <juri.lelli@redhat.com>,
+Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Tejun Heo <tj@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, lizefan@huawei.com,
-        longman@redhat.com, luca.abeni@santannapisa.it,
-        rostedt@goodmis.org, Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 016/128] sched/core: Fix CPU controller for !RT_GROUP_SCHED
-Date:   Sun, 22 Sep 2019 14:52:26 -0400
-Message-Id: <20190922185418.2158-16-sashal@kernel.org>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 014/128] time/tick-broadcast: Fix tick_broadcast_offline() lockdep complaint
+Date:   Sun, 22 Sep 2019 14:52:24 -0400
+Message-Id: <20190922185418.2158-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
 References: <20190922185418.2158-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -67,79 +62,217 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juri Lelli <juri.lelli@redhat.com>
+From: "Paul E. McKenney" <paulmck@linux.ibm.com>
 
-[ Upstream commit a07db5c0865799ebed1f88be0df50c581fb65029 ]
+[ Upstream commit 84ec3a0787086fcd25f284f59b3aa01fd6fc0a5d ]
 
-On !CONFIG_RT_GROUP_SCHED configurations it is currently not possible to
-move RT tasks between cgroups to which CPU controller has been attached;
-but it is oddly possible to first move tasks around and then make them
-RT (setschedule to FIFO/RR).
+time/tick-broadcast: Fix tick_broadcast_offline() lockdep complaint
 
-E.g.:
+The TASKS03 and TREE04 rcutorture scenarios produce the following
+lockdep complaint:
 
-  # mkdir /sys/fs/cgroup/cpu,cpuacct/group1
-  # chrt -fp 10 $$
-  # echo $$ > /sys/fs/cgroup/cpu,cpuacct/group1/tasks
-  bash: echo: write error: Invalid argument
-  # chrt -op 0 $$
-  # echo $$ > /sys/fs/cgroup/cpu,cpuacct/group1/tasks
-  # chrt -fp 10 $$
-  # cat /sys/fs/cgroup/cpu,cpuacct/group1/tasks
-  2345
-  2598
-  # chrt -p 2345
-  pid 2345's current scheduling policy: SCHED_FIFO
-  pid 2345's current scheduling priority: 10
+	WARNING: inconsistent lock state
+	5.2.0-rc1+ #513 Not tainted
+	--------------------------------
+	inconsistent {IN-HARDIRQ-W} -> {HARDIRQ-ON-W} usage.
+	migration/1/14 [HC0[0]:SC0[0]:HE1:SE1] takes:
+	(____ptrval____) (tick_broadcast_lock){?...}, at: tick_broadcast_offline+0xf/0x70
+	{IN-HARDIRQ-W} state was registered at:
+	  lock_acquire+0xb0/0x1c0
+	  _raw_spin_lock_irqsave+0x3c/0x50
+	  tick_broadcast_switch_to_oneshot+0xd/0x40
+	  tick_switch_to_oneshot+0x4f/0xd0
+	  hrtimer_run_queues+0xf3/0x130
+	  run_local_timers+0x1c/0x50
+	  update_process_times+0x1c/0x50
+	  tick_periodic+0x26/0xc0
+	  tick_handle_periodic+0x1a/0x60
+	  smp_apic_timer_interrupt+0x80/0x2a0
+	  apic_timer_interrupt+0xf/0x20
+	  _raw_spin_unlock_irqrestore+0x4e/0x60
+	  rcu_nocb_gp_kthread+0x15d/0x590
+	  kthread+0xf3/0x130
+	  ret_from_fork+0x3a/0x50
+	irq event stamp: 171
+	hardirqs last  enabled at (171): [<ffffffff8a201a37>] trace_hardirqs_on_thunk+0x1a/0x1c
+	hardirqs last disabled at (170): [<ffffffff8a201a53>] trace_hardirqs_off_thunk+0x1a/0x1c
+	softirqs last  enabled at (0): [<ffffffff8a264ee0>] copy_process.part.56+0x650/0x1cb0
+	softirqs last disabled at (0): [<0000000000000000>] 0x0
 
-Also, as Michal noted, it is currently not possible to enable CPU
-controller on unified hierarchy with !CONFIG_RT_GROUP_SCHED (if there
-are any kernel RT threads in root cgroup, they can't be migrated to the
-newly created CPU controller's root in cgroup_update_dfl_csses()).
+        [...]
 
-Existing code comes with a comment saying the "we don't support RT-tasks
-being in separate groups". Such comment is however stale and belongs to
-pre-RT_GROUP_SCHED times. Also, it doesn't make much sense for
-!RT_GROUP_ SCHED configurations, since checks related to RT bandwidth
-are not performed at all in these cases.
+To reproduce, run the following rcutorture test:
 
-Make moving RT tasks between CPU controller groups viable by removing
-special case check for RT (and DEADLINE) tasks.
+ $ tools/testing/selftests/rcutorture/bin/kvm.sh --duration 5 --kconfig "CONFIG_DEBUG_LOCK_ALLOC=y CONFIG_PROVE_LOCKING=y" --configs "TASKS03 TREE04"
 
-Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
+It turns out that tick_broadcast_offline() was an innocent bystander.
+After all, interrupts are supposed to be disabled throughout
+take_cpu_down(), and therefore should have been disabled upon entry to
+tick_offline_cpu() and thus to tick_broadcast_offline().  This suggests
+that one of the CPU-hotplug notifiers was incorrectly enabling interrupts,
+and leaving them enabled on return.
+
+Some debugging code showed that the culprit was sched_cpu_dying().
+It had irqs enabled after return from sched_tick_stop().  Which in turn
+had irqs enabled after return from cancel_delayed_work_sync().  Which is a
+wrapper around __cancel_work_timer().  Which can sleep in the case where
+something else is concurrently trying to cancel the same delayed work,
+and as Thomas Gleixner pointed out on IRC, sleeping is a decidedly bad
+idea when you are invoked from take_cpu_down(), regardless of the state
+you leave interrupts in upon return.
+
+Code inspection located no reason why the delayed work absolutely
+needed to be canceled from sched_tick_stop():  The work is not
+bound to the outgoing CPU by design, given that the whole point is
+to collect statistics without disturbing the outgoing CPU.
+
+This commit therefore simply drops the cancel_delayed_work_sync() from
+sched_tick_stop().  Instead, a new ->state field is added to the tick_work
+structure so that the delayed-work handler function sched_tick_remote()
+can avoid reposting itself.  A cpu_is_offline() check is also added to
+sched_tick_remote() to avoid mucking with the state of an offlined CPU
+(though it does appear safe to do so).  The sched_tick_start() and
+sched_tick_stop() functions also update ->state, and sched_tick_start()
+also schedules the delayed work if ->state indicates that it is not
+already in flight.
+
+Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+[ paulmck: Apply Peter Zijlstra and Frederic Weisbecker atomics feedback. ]
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Michal Koutný <mkoutny@suse.com>
-Reviewed-by: Daniel Bristot de Oliveira <bristot@redhat.com>
-Acked-by: Tejun Heo <tj@kernel.org>
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: lizefan@huawei.com
-Cc: longman@redhat.com
-Cc: luca.abeni@santannapisa.it
-Cc: rostedt@goodmis.org
-Link: https://lkml.kernel.org/r/20190719063455.27328-1-juri.lelli@redhat.com
+Link: https://lkml.kernel.org/r/20190625165238.GJ26519@linux.ibm.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/core.c | 4 ----
- 1 file changed, 4 deletions(-)
+ kernel/sched/core.c | 57 ++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 49 insertions(+), 8 deletions(-)
 
 diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index e06c12d293f70..f4e050681ba1c 100644
+index 795c63ca44a99..e06c12d293f70 100644
 --- a/kernel/sched/core.c
 +++ b/kernel/sched/core.c
-@@ -6494,10 +6494,6 @@ static int cpu_cgroup_can_attach(struct cgroup_taskset *tset)
- #ifdef CONFIG_RT_GROUP_SCHED
- 		if (!sched_rt_can_attach(css_tg(css), task))
- 			return -EINVAL;
--#else
--		/* We don't support RT-tasks being in separate groups */
--		if (task->sched_class != &fair_sched_class)
--			return -EINVAL;
- #endif
- 		/*
- 		 * Serialize against wake_up_new_task() such that if its
+@@ -3066,8 +3066,36 @@ void scheduler_tick(void)
+ 
+ struct tick_work {
+ 	int			cpu;
++	atomic_t		state;
+ 	struct delayed_work	work;
+ };
++/* Values for ->state, see diagram below. */
++#define TICK_SCHED_REMOTE_OFFLINE	0
++#define TICK_SCHED_REMOTE_OFFLINING	1
++#define TICK_SCHED_REMOTE_RUNNING	2
++
++/*
++ * State diagram for ->state:
++ *
++ *
++ *          TICK_SCHED_REMOTE_OFFLINE
++ *                    |   ^
++ *                    |   |
++ *                    |   | sched_tick_remote()
++ *                    |   |
++ *                    |   |
++ *                    +--TICK_SCHED_REMOTE_OFFLINING
++ *                    |   ^
++ *                    |   |
++ * sched_tick_start() |   | sched_tick_stop()
++ *                    |   |
++ *                    V   |
++ *          TICK_SCHED_REMOTE_RUNNING
++ *
++ *
++ * Other transitions get WARN_ON_ONCE(), except that sched_tick_remote()
++ * and sched_tick_start() are happy to leave the state in RUNNING.
++ */
+ 
+ static struct tick_work __percpu *tick_work_cpu;
+ 
+@@ -3080,6 +3108,7 @@ static void sched_tick_remote(struct work_struct *work)
+ 	struct task_struct *curr;
+ 	struct rq_flags rf;
+ 	u64 delta;
++	int os;
+ 
+ 	/*
+ 	 * Handle the tick only if it appears the remote CPU is running in full
+@@ -3093,7 +3122,7 @@ static void sched_tick_remote(struct work_struct *work)
+ 
+ 	rq_lock_irq(rq, &rf);
+ 	curr = rq->curr;
+-	if (is_idle_task(curr))
++	if (is_idle_task(curr) || cpu_is_offline(cpu))
+ 		goto out_unlock;
+ 
+ 	update_rq_clock(rq);
+@@ -3113,13 +3142,18 @@ static void sched_tick_remote(struct work_struct *work)
+ 	/*
+ 	 * Run the remote tick once per second (1Hz). This arbitrary
+ 	 * frequency is large enough to avoid overload but short enough
+-	 * to keep scheduler internal stats reasonably up to date.
++	 * to keep scheduler internal stats reasonably up to date.  But
++	 * first update state to reflect hotplug activity if required.
+ 	 */
+-	queue_delayed_work(system_unbound_wq, dwork, HZ);
++	os = atomic_fetch_add_unless(&twork->state, -1, TICK_SCHED_REMOTE_RUNNING);
++	WARN_ON_ONCE(os == TICK_SCHED_REMOTE_OFFLINE);
++	if (os == TICK_SCHED_REMOTE_RUNNING)
++		queue_delayed_work(system_unbound_wq, dwork, HZ);
+ }
+ 
+ static void sched_tick_start(int cpu)
+ {
++	int os;
+ 	struct tick_work *twork;
+ 
+ 	if (housekeeping_cpu(cpu, HK_FLAG_TICK))
+@@ -3128,15 +3162,20 @@ static void sched_tick_start(int cpu)
+ 	WARN_ON_ONCE(!tick_work_cpu);
+ 
+ 	twork = per_cpu_ptr(tick_work_cpu, cpu);
+-	twork->cpu = cpu;
+-	INIT_DELAYED_WORK(&twork->work, sched_tick_remote);
+-	queue_delayed_work(system_unbound_wq, &twork->work, HZ);
++	os = atomic_xchg(&twork->state, TICK_SCHED_REMOTE_RUNNING);
++	WARN_ON_ONCE(os == TICK_SCHED_REMOTE_RUNNING);
++	if (os == TICK_SCHED_REMOTE_OFFLINE) {
++		twork->cpu = cpu;
++		INIT_DELAYED_WORK(&twork->work, sched_tick_remote);
++		queue_delayed_work(system_unbound_wq, &twork->work, HZ);
++	}
+ }
+ 
+ #ifdef CONFIG_HOTPLUG_CPU
+ static void sched_tick_stop(int cpu)
+ {
+ 	struct tick_work *twork;
++	int os;
+ 
+ 	if (housekeeping_cpu(cpu, HK_FLAG_TICK))
+ 		return;
+@@ -3144,7 +3183,10 @@ static void sched_tick_stop(int cpu)
+ 	WARN_ON_ONCE(!tick_work_cpu);
+ 
+ 	twork = per_cpu_ptr(tick_work_cpu, cpu);
+-	cancel_delayed_work_sync(&twork->work);
++	/* There cannot be competing actions, but don't rely on stop-machine. */
++	os = atomic_xchg(&twork->state, TICK_SCHED_REMOTE_OFFLINING);
++	WARN_ON_ONCE(os != TICK_SCHED_REMOTE_RUNNING);
++	/* Don't cancel, as this would mess up the state machine. */
+ }
+ #endif /* CONFIG_HOTPLUG_CPU */
+ 
+@@ -3152,7 +3194,6 @@ int __init sched_tick_offload_init(void)
+ {
+ 	tick_work_cpu = alloc_percpu(struct tick_work);
+ 	BUG_ON(!tick_work_cpu);
+-
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
