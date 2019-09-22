@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EDB0C49ED7
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB32C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7B7D206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:23:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16DCF206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:23:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180201;
-	bh=w5vMaPj8DTvAVZi2VQY7kI0VApxM++qJDgNLshmiiWA=;
+	s=default; t=1569180205;
+	bh=1OLP2EegMSYkpDiNpalB0iVNYY2yBm/hTb7jhkms/qs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SaajsH/iSlzz5wasUiKsVb8Pyj/sWnYqSHKnA2/nwySHWFsNAV0JdjoNqsciq19br
-	 Kv4Q/LWenfNwhC2boVBFzHE1BLh9Vw797kSGem3PA1lC2VyfmW5dqSY9X/AqjdFr0m
-	 sVvTLSuVuZCrpt47kzjA548ew07F/XltOS7pnX1k=
+	b=k+cQQS5Lg5IlwMJMuUEd9gd/+E5OuSoQlfgq5PAba8Gdh5Njjz98M2gxnMR+FKUtA
+	 rnGjcJlb+N9zQeUdr2VZxBjWhKLAFbfiIUp4hYPcBu373OGQjZK+cIbM93Z9jyUX57
+	 PXtFIL0e1oN2Vf3ouc8XzMUWnvaBp9mpuSFT2xV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394301AbfIVSx1 (ORCPT
+        id S1731274AbfIVTXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:53:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52546 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:23:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404205AbfIVSxE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:53:04 -0400
+        id S2394272AbfIVSxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:53:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17C5521D7B;
-        Sun, 22 Sep 2019 18:53:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E3B421D80;
+        Sun, 22 Sep 2019 18:53:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178384;
-        bh=w5vMaPj8DTvAVZi2VQY7kI0VApxM++qJDgNLshmiiWA=;
+        s=default; t=1569178405;
+        bh=1OLP2EegMSYkpDiNpalB0iVNYY2yBm/hTb7jhkms/qs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FxuNhXGwRTHyvcSmH4x5HfAyTV9UliOOzYGMSVKDHYCXwO4ANF23spUGA3kwGdz3i
-         I+QsiyCXp58O7hAm6S27rZClIaa0mYHqX9Mv6lT4pziAzv1nFrP+SDx5eQ81iQutzT
-         fBxyUzwWMdLXHUpehKlagaaQONrD22wXMmhcho40=
+        b=hLK2VMblEGcJaTCBMs+tOWqEUayroBX7P2+OqlTcbS3VmY014Q6oBq4YZHoTMMTFr
+         XMObZRmVcRbYrD4WODH+1gkAR7a/Bp4iFzEhapoNzzfq2Wk4sAH0B3e1NFJOZTch7d
+         2T5yjnPkXnpg4rzpQT6fB7kW2ugphn2bB0BvYJVM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tom Wu <tomwu@mellanox.com>, Israel Rukshin <israelr@mellanox.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.2 131/185] nvmet: fix data units read and written counters in SMART log
-Date:   Sun, 22 Sep 2019 14:48:29 -0400
-Message-Id: <20190922184924.32534-131-sashal@kernel.org>
+Cc:     Yufen Yu <yuyufen@huawei.com>, NeilBrown <neilb@suse.de>,
+        Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 147/185] md/raid1: fail run raid1 array when active disk less than one
+Date:   Sun, 22 Sep 2019 14:48:45 -0400
+Message-Id: <20190922184924.32534-147-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -62,63 +59,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Wu <tomwu@mellanox.com>
+From: Yufen Yu <yuyufen@huawei.com>
 
-[ Upstream commit 3bec2e3754becebd4c452999adb49bc62c575ea4 ]
+[ Upstream commit 07f1a6850c5d5a65c917c3165692b5179ac4cb6b ]
 
-In nvme spec 1.3 there is a definition for data write/read counters
-from SMART log, (See section 5.14.1.2):
-	This value is reported in thousands (i.e., a value of 1
-	corresponds to 1000 units of 512 bytes read) and is rounded up.
+When run test case:
+  mdadm -CR /dev/md1 -l 1 -n 4 /dev/sd[a-d] --assume-clean --bitmap=internal
+  mdadm -S /dev/md1
+  mdadm -A /dev/md1 /dev/sd[b-c] --run --force
 
-However, in nvme target where value is reported with actual units,
-but not thousands of units as the spec requires.
+  mdadm --zero /dev/sda
+  mdadm /dev/md1 -a /dev/sda
 
-Signed-off-by: Tom Wu <tomwu@mellanox.com>
-Reviewed-by: Israel Rukshin <israelr@mellanox.com>
-Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+  echo offline > /sys/block/sdc/device/state
+  echo offline > /sys/block/sdb/device/state
+  sleep 5
+  mdadm -S /dev/md1
+
+  echo running > /sys/block/sdb/device/state
+  echo running > /sys/block/sdc/device/state
+  mdadm -A /dev/md1 /dev/sd[a-c] --run --force
+
+mdadm run fail with kernel message as follow:
+[  172.986064] md: kicking non-fresh sdb from array!
+[  173.004210] md: kicking non-fresh sdc from array!
+[  173.022383] md/raid1:md1: active with 0 out of 4 mirrors
+[  173.022406] md1: failed to create bitmap (-5)
+
+In fact, when active disk in raid1 array less than one, we
+need to return fail in raid1_run().
+
+Reviewed-by: NeilBrown <neilb@suse.de>
+Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/target/admin-cmd.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ drivers/md/raid1.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/target/admin-cmd.c b/drivers/nvme/target/admin-cmd.c
-index 9f72d515fc4b3..4099093a17343 100644
---- a/drivers/nvme/target/admin-cmd.c
-+++ b/drivers/nvme/target/admin-cmd.c
-@@ -81,9 +81,11 @@ static u16 nvmet_get_smart_log_nsid(struct nvmet_req *req,
- 		goto out;
+diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+index a26731a9b38e7..f393f0dc042fc 100644
+--- a/drivers/md/raid1.c
++++ b/drivers/md/raid1.c
+@@ -3096,6 +3096,13 @@ static int raid1_run(struct mddev *mddev)
+ 		    !test_bit(In_sync, &conf->mirrors[i].rdev->flags) ||
+ 		    test_bit(Faulty, &conf->mirrors[i].rdev->flags))
+ 			mddev->degraded++;
++	/*
++	 * RAID1 needs at least one disk in active
++	 */
++	if (conf->raid_disks - mddev->degraded < 1) {
++		ret = -EINVAL;
++		goto abort;
++	}
  
- 	host_reads = part_stat_read(ns->bdev->bd_part, ios[READ]);
--	data_units_read = part_stat_read(ns->bdev->bd_part, sectors[READ]);
-+	data_units_read = DIV_ROUND_UP(part_stat_read(ns->bdev->bd_part,
-+		sectors[READ]), 1000);
- 	host_writes = part_stat_read(ns->bdev->bd_part, ios[WRITE]);
--	data_units_written = part_stat_read(ns->bdev->bd_part, sectors[WRITE]);
-+	data_units_written = DIV_ROUND_UP(part_stat_read(ns->bdev->bd_part,
-+		sectors[WRITE]), 1000);
- 
- 	put_unaligned_le64(host_reads, &slog->host_reads[0]);
- 	put_unaligned_le64(data_units_read, &slog->data_units_read[0]);
-@@ -111,11 +113,11 @@ static u16 nvmet_get_smart_log_all(struct nvmet_req *req,
- 		if (!ns->bdev)
- 			continue;
- 		host_reads += part_stat_read(ns->bdev->bd_part, ios[READ]);
--		data_units_read +=
--			part_stat_read(ns->bdev->bd_part, sectors[READ]);
-+		data_units_read += DIV_ROUND_UP(
-+			part_stat_read(ns->bdev->bd_part, sectors[READ]), 1000);
- 		host_writes += part_stat_read(ns->bdev->bd_part, ios[WRITE]);
--		data_units_written +=
--			part_stat_read(ns->bdev->bd_part, sectors[WRITE]);
-+		data_units_written += DIV_ROUND_UP(
-+			part_stat_read(ns->bdev->bd_part, sectors[WRITE]), 1000);
- 
+ 	if (conf->raid_disks - mddev->degraded == 1)
+ 		mddev->recovery_cp = MaxSector;
+@@ -3129,8 +3136,12 @@ static int raid1_run(struct mddev *mddev)
+ 	ret =  md_integrity_register(mddev);
+ 	if (ret) {
+ 		md_unregister_thread(&mddev->thread);
+-		raid1_free(mddev, conf);
++		goto abort;
  	}
- 	rcu_read_unlock();
++	return 0;
++
++abort:
++	raid1_free(mddev, conf);
+ 	return ret;
+ }
+ 
 -- 
 2.20.1
 
