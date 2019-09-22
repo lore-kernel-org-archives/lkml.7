@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC351C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C43C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 835A1206B6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:38:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7872206B6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:39:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569181136;
-	bh=Xyvrre4X+S8jYk7Ug49uysaicfimb21oXHG48XhPxd0=;
+	s=default; t=1569181141;
+	bh=sdetFIu/vglHNyZ++5unS1hl9C7aa1xoN9g5WAshOfA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=roVeIu2Iq9fYOk8Y4qNFRGsoGaFPmPm3ONbxFnduhvnPOQ/NDXbgavTmPjbZjc22E
-	 pssyjNmbz/Uic2XlQkB4VQFAS1weQ5/r8T5yj1TFomai7XB6Qf55NiRtZYDCIvcL9C
-	 xEf6bMH392dCz9QVWbXSe5SYI82dgQ4Lbo+JS0PM=
+	b=JFjSnNLvq5kfGXdCx/c8y+Fiw8yNS16QXE3azsGIuEX7CoAKxURdhFmydybeCiOrd
+	 Xu+L97ZQqTmeDzqu5M6aQoHwKStZveb47jn1lcrwllLWGwxYSiRRQh2tMdKZc4C+we
+	 gztgX7aOSwru0SQYKIL9aIclRKI7KiAo9zejoS7c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439317AbfIVTiy (ORCPT
+        id S2406281AbfIVTjB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:38:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40906 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:39:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389112AbfIVSpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:45:18 -0400
+        id S2389074AbfIVSpP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:45:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7FF92184D;
-        Sun, 22 Sep 2019 18:45:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93648208C2;
+        Sun, 22 Sep 2019 18:45:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569177917;
-        bh=Xyvrre4X+S8jYk7Ug49uysaicfimb21oXHG48XhPxd0=;
+        s=default; t=1569177914;
+        bh=sdetFIu/vglHNyZ++5unS1hl9C7aa1xoN9g5WAshOfA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jcIV/zWTnk8eDOGMM84aCQ3pppemUm2LVVuDyF1RqR8e/X+VHcZSrhS8mUSrAaxwc
-         /s4tglP1A0h1fqABeKZOEk647RzvkNYoFPJ051Ua+R0ytvh+SI7Ff3PTvGbbQESy8H
-         g3edJ5I31C5+4HjOanWuO5MOl6ugQJDibUjNSa7Q=
+        b=CxX+Rjn3vjyhCCe9oxW62brYx2K0Gx9FJ9xU/tSR/nyaN1ZM7yYoZ8bMbg5/l4S7E
+         Tfn+49ZooQuZg59hMpX3wal/gsFIti76oLVfAOuq8QNCGSWhvpDj5oMXxbiQW3Pg37
+         04Gw0hPmDVKx3WEA9Z8AMV0Ntcuf689vjPcKM0pk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Juri Lelli <juri.lelli@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
         Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Thomas Gleixner <tglx@linutronix.de>, bristot@redhat.com,
         claudio@evidence.eu.com, lizefan@huawei.com, longman@redhat.com,
@@ -51,9 +51,9 @@ Cc:     Juri Lelli <juri.lelli@redhat.com>,
         rostedt@goodmis.org, tj@kernel.org,
         tommaso.cucinotta@santannapisa.it, Ingo Molnar <mingo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 030/203] rcu/tree: Call setschedule() gp ktread to SCHED_FIFO outside of atomic region
-Date:   Sun, 22 Sep 2019 14:40:56 -0400
-Message-Id: <20190922184350.30563-30-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 028/203] sched/deadline: Fix bandwidth accounting at all levels after offline migration
+Date:   Sun, 22 Sep 2019 14:40:54 -0400
+Message-Id: <20190922184350.30563-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -68,20 +68,20 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Juri Lelli <juri.lelli@redhat.com>
 
-[ Upstream commit 1a763fd7c6335e3122c1cc09576ef6c99ada4267 ]
+[ Upstream commit 59d06cea1198d665ba11f7e8c5f45b00ff2e4812 ]
 
-sched_setscheduler() needs to acquire cpuset_rwsem, but it is currently
-called from an invalid (atomic) context by rcu_spawn_gp_kthread().
+If a task happens to be throttled while the CPU it was running on gets
+hotplugged off, the bandwidth associated with the task is not correctly
+migrated with it when the replenishment timer fires (offline_migration).
 
-Fix that by simply moving sched_setscheduler_nocheck() call outside of
-the atomic region, as it doesn't actually require to be guarded by
-rcu_node lock.
+Fix things up, for this_bw, running_bw and total_bw, when replenishment
+timer fires and task is migrated (dl_task_offline_migration()).
 
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
 Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
 Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: bristot@redhat.com
 Cc: claudio@evidence.eu.com
@@ -92,34 +92,64 @@ Cc: mathieu.poirier@linaro.org
 Cc: rostedt@goodmis.org
 Cc: tj@kernel.org
 Cc: tommaso.cucinotta@santannapisa.it
-Link: https://lkml.kernel.org/r/20190719140000.31694-8-juri.lelli@redhat.com
+Link: https://lkml.kernel.org/r/20190719140000.31694-5-juri.lelli@redhat.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/rcu/tree.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ kernel/sched/deadline.c | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index a14e5fbbea467..eb764c24bc4d4 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -3234,13 +3234,13 @@ static int __init rcu_spawn_gp_kthread(void)
- 	t = kthread_create(rcu_gp_kthread, NULL, "%s", rcu_state.name);
- 	if (WARN_ONCE(IS_ERR(t), "%s: Could not start grace-period kthread, OOM is now expected behavior\n", __func__))
- 		return 0;
-+	if (kthread_prio)
-+		sched_setscheduler_nocheck(t, SCHED_FIFO, &sp);
- 	rnp = rcu_get_root();
- 	raw_spin_lock_irqsave_rcu_node(rnp, flags);
- 	rcu_state.gp_kthread = t;
--	if (kthread_prio) {
-+	if (kthread_prio)
- 		sp.sched_priority = kthread_prio;
--		sched_setscheduler_nocheck(t, SCHED_FIFO, &sp);
--	}
- 	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
- 	wake_up_process(t);
- 	rcu_spawn_nocb_kthreads();
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index 46122edd8552c..20951112b6cdd 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -529,6 +529,7 @@ static struct rq *find_lock_later_rq(struct task_struct *task, struct rq *rq);
+ static struct rq *dl_task_offline_migration(struct rq *rq, struct task_struct *p)
+ {
+ 	struct rq *later_rq = NULL;
++	struct dl_bw *dl_b;
+ 
+ 	later_rq = find_lock_later_rq(p, rq);
+ 	if (!later_rq) {
+@@ -557,6 +558,38 @@ static struct rq *dl_task_offline_migration(struct rq *rq, struct task_struct *p
+ 		double_lock_balance(rq, later_rq);
+ 	}
+ 
++	if (p->dl.dl_non_contending || p->dl.dl_throttled) {
++		/*
++		 * Inactive timer is armed (or callback is running, but
++		 * waiting for us to release rq locks). In any case, when it
++		 * will fire (or continue), it will see running_bw of this
++		 * task migrated to later_rq (and correctly handle it).
++		 */
++		sub_running_bw(&p->dl, &rq->dl);
++		sub_rq_bw(&p->dl, &rq->dl);
++
++		add_rq_bw(&p->dl, &later_rq->dl);
++		add_running_bw(&p->dl, &later_rq->dl);
++	} else {
++		sub_rq_bw(&p->dl, &rq->dl);
++		add_rq_bw(&p->dl, &later_rq->dl);
++	}
++
++	/*
++	 * And we finally need to fixup root_domain(s) bandwidth accounting,
++	 * since p is still hanging out in the old (now moved to default) root
++	 * domain.
++	 */
++	dl_b = &rq->rd->dl_bw;
++	raw_spin_lock(&dl_b->lock);
++	__dl_sub(dl_b, p->dl.dl_bw, cpumask_weight(rq->rd->span));
++	raw_spin_unlock(&dl_b->lock);
++
++	dl_b = &later_rq->rd->dl_bw;
++	raw_spin_lock(&dl_b->lock);
++	__dl_add(dl_b, p->dl.dl_bw, cpumask_weight(later_rq->rd->span));
++	raw_spin_unlock(&dl_b->lock);
++
+ 	set_task_cpu(p, later_rq->cpu);
+ 	double_unlock_balance(later_rq, rq);
+ 
 -- 
 2.20.1
 
