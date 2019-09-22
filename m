@@ -4,55 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B0DC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE36C49ED7
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ABB720869
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:25:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81F182184D
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:25:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180316;
-	bh=B05maExQbhzmRz3QtW0v5BieCGz5HdQQOqgZortZCcA=;
+	s=default; t=1569180321;
+	bh=BMdLIydfr0XqiBTIBaO/y9dLc3t97LMQFjAyQ1K7uX0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FxX2ljJjqZ0KwTwKs+n1sVCLpFJHwrV4CVsYFCnReOSh7QTZ4HU+mJgT3KuzwJ4RB
-	 LTIjagT3upQNM4Vt2+McFD98XgFiLu1D8ukinPGwnHf0p9RIGKOv7XXl2Vbo/O7Fov
-	 yiSDZ1iLqlOCQCIbRsD1oi/iMD1zCHDhrmkoDP5I=
+	b=xEMOMHvVpHv01HQbhGo/qRAWIxuSLGysybN5QNPY9z8fLHsaDQPIoGrPtuzZXhAcW
+	 17NDuiS/dlLA/C9R83cAatO++9TGb5z8c+xrr0QpVTw5u1NYSmWhnBoyY1GM+ZFWa9
+	 KGZTqAJicPhWR9NxkdKS5cVnLPKii7UILDa2cHzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407884AbfIVSwZ (ORCPT
+        id S1728428AbfIVSwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:52:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51298 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728992AbfIVSwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 22 Sep 2019 14:52:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51150 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2407851AbfIVSwS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:52:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D33E121D56;
-        Sun, 22 Sep 2019 18:52:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE77D2190F;
+        Sun, 22 Sep 2019 18:52:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178342;
-        bh=B05maExQbhzmRz3QtW0v5BieCGz5HdQQOqgZortZCcA=;
+        s=default; t=1569178337;
+        bh=BMdLIydfr0XqiBTIBaO/y9dLc3t97LMQFjAyQ1K7uX0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FoF+/Hz9BNHRKq2DnZ4oXX7ZeS7VMBt1KXwB9yXZa/IexVpMMxKP/nUFdFjDYnFd9
-         z/by8FgaiPn8VSmwZXB88ZzFWN8yniOvRySLnWXleXOPncyQRfmuUmV9HLGDpee7Qi
-         qvlEuPkFgX/z/BmHUhpdlxijyEYles4M9dzrgRFI=
+        b=qfKNPmKWWIt5nTeSbAR/IdOg8+ZnQpr1XVzgHTVkDlIO2iCT7+Tt3Yo4K78eW3qpX
+         IT4dcvVdhtvg1qtXkrE2Ueq3dCWzDgcRYU0u9ZLRDo6nEJJLQPfc5U1o5TwkZeqflT
+         MTi/99whbpxwZEYEYagtTkE1E2BbQWK7miPYCgJo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gerald BAEZA <gerald.baeza@st.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Frederic Weisbecker <frederic@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 102/185] libperf: Fix alignment trap with xyarray contents in 'perf stat'
-Date:   Sun, 22 Sep 2019 14:48:00 -0400
-Message-Id: <20190922184924.32534-102-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 099/185] posix-cpu-timers: Sanitize bogus WARNONS
+Date:   Sun, 22 Sep 2019 14:47:57 -0400
+Message-Id: <20190922184924.32534-99-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -65,56 +59,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gerald BAEZA <gerald.baeza@st.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit d9c5c083416500e95da098c01be092b937def7fa ]
+[ Upstream commit 692117c1f7a6770ed41dd8f277cd9fed1dfb16f1 ]
 
-Following the patch 'perf stat: Fix --no-scale', an alignment trap
-happens in process_counter_values() on ARMv7 platforms due to the
-attempt to copy non 64 bits aligned double words (pointed by 'count')
-via a NEON vectored instruction ('vld1' with 64 bits alignment
-constraint).
+Warning when p == NULL and then proceeding and dereferencing p does not
+make any sense as the kernel will crash with a NULL pointer dereference
+right away.
 
-This patch sets a 64 bits alignment constraint on 'contents[]' field in
-'struct xyarray' since the 'count' pointer used above points to such a
-structure.
+Bailing out when p == NULL and returning an error code does not cure the
+underlying problem which caused p to be NULL. Though it might allow to
+do proper debugging.
 
-Signed-off-by: Gerald Baeza <gerald.baeza@st.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/1566464769-16374-1-git-send-email-gerald.baeza@st.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Same applies to the clock id check in set_process_cpu_timer().
+
+Clean them up and make them return without trying to do further damage.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Link: https://lkml.kernel.org/r/20190819143801.846497772@linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/xyarray.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/time/posix-cpu-timers.c | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/util/xyarray.h b/tools/perf/util/xyarray.h
-index 7ffe562e7ae7f..2627b038b6f2a 100644
---- a/tools/perf/util/xyarray.h
-+++ b/tools/perf/util/xyarray.h
-@@ -2,6 +2,7 @@
- #ifndef _PERF_XYARRAY_H_
- #define _PERF_XYARRAY_H_ 1
+diff --git a/kernel/time/posix-cpu-timers.c b/kernel/time/posix-cpu-timers.c
+index 0a426f4e31251..5bbad147a90cf 100644
+--- a/kernel/time/posix-cpu-timers.c
++++ b/kernel/time/posix-cpu-timers.c
+@@ -375,7 +375,8 @@ static int posix_cpu_timer_del(struct k_itimer *timer)
+ 	struct sighand_struct *sighand;
+ 	struct task_struct *p = timer->it.cpu.task;
  
-+#include <linux/compiler.h>
- #include <sys/types.h>
+-	WARN_ON_ONCE(p == NULL);
++	if (WARN_ON_ONCE(!p))
++		return -EINVAL;
  
- struct xyarray {
-@@ -10,7 +11,7 @@ struct xyarray {
- 	size_t entries;
- 	size_t max_x;
- 	size_t max_y;
--	char contents[];
-+	char contents[] __aligned(8);
- };
+ 	/*
+ 	 * Protect against sighand release/switch in exit/exec and process/
+@@ -580,7 +581,8 @@ static int posix_cpu_timer_set(struct k_itimer *timer, int timer_flags,
+ 	u64 old_expires, new_expires, old_incr, val;
+ 	int ret;
  
- struct xyarray *xyarray__new(int xlen, int ylen, size_t entry_size);
+-	WARN_ON_ONCE(p == NULL);
++	if (WARN_ON_ONCE(!p))
++		return -EINVAL;
+ 
+ 	/*
+ 	 * Use the to_ktime conversion because that clamps the maximum
+@@ -715,10 +717,11 @@ static int posix_cpu_timer_set(struct k_itimer *timer, int timer_flags,
+ 
+ static void posix_cpu_timer_get(struct k_itimer *timer, struct itimerspec64 *itp)
+ {
+-	u64 now;
+ 	struct task_struct *p = timer->it.cpu.task;
++	u64 now;
+ 
+-	WARN_ON_ONCE(p == NULL);
++	if (WARN_ON_ONCE(!p))
++		return;
+ 
+ 	/*
+ 	 * Easy part: convert the reload time.
+@@ -1000,12 +1003,13 @@ static void check_process_timers(struct task_struct *tsk,
+  */
+ static void posix_cpu_timer_rearm(struct k_itimer *timer)
+ {
++	struct task_struct *p = timer->it.cpu.task;
+ 	struct sighand_struct *sighand;
+ 	unsigned long flags;
+-	struct task_struct *p = timer->it.cpu.task;
+ 	u64 now;
+ 
+-	WARN_ON_ONCE(p == NULL);
++	if (WARN_ON_ONCE(!p))
++		return;
+ 
+ 	/*
+ 	 * Fetch the current sample and update the timer's expiry time.
+@@ -1202,7 +1206,9 @@ void set_process_cpu_timer(struct task_struct *tsk, unsigned int clock_idx,
+ 	u64 now;
+ 	int ret;
+ 
+-	WARN_ON_ONCE(clock_idx == CPUCLOCK_SCHED);
++	if (WARN_ON_ONCE(clock_idx >= CPUCLOCK_SCHED))
++		return;
++
+ 	ret = cpu_timer_sample_group(clock_idx, tsk, &now);
+ 
+ 	if (oldval && ret != -EINVAL) {
 -- 
 2.20.1
 
