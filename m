@@ -2,171 +2,163 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56CBEC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 12:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D994AC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 12:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2859A208C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 12:37:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A706C208C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 12:37:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="awYcnYun"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728954AbfIVMhk (ORCPT
+        id S1728979AbfIVMhq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 08:37:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35002 "EHLO mx1.redhat.com"
+        Sun, 22 Sep 2019 08:37:46 -0400
+Received: from mout.web.de ([217.72.192.78]:50941 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728920AbfIVMhk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 08:37:40 -0400
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4987481F10
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Sep 2019 12:37:39 +0000 (UTC)
-Received: by mail-qt1-f200.google.com with SMTP id f15so14110380qth.6
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Sep 2019 05:37:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZIZ6PVJwNqKV66/6V0eWwKczW/IuITxJoofGCnfWMcw=;
-        b=c77fwRyiUNrtR8+yFhC7EXaqOrYZz5Gw9FhjmAf465ElCz3M4juYhLZgexeV7osHUp
-         BVAOuInf7Qg6mFQG2WwPYXiYJofPHfZI0Dc9NzYAfnf57k3Ka86jyCMfwibCnrxPnrz6
-         OrECtmVo58DEGgd8blx7WUGR40MZDV8KF88kCxTY7sldrvmcB2bxc2TpqWFRDjHFYHgF
-         iBuMEpJKnBjCj5JFA5chKNFetIlWSx1TXmKU3msLY6i+qiG7fzVh5fVdjKt65Bq9HBnX
-         ztBUHvj5zT+O8zDS90C4QB2IazrIZC6xxzi7ZRsSeASA803GWkB8aQaynDDuEk+Zx7td
-         3e+Q==
-X-Gm-Message-State: APjAAAVHRSptOR6FsvXxYCt0LjLErAsf+LEMwhjyfinS7sszCzwdO9aU
-        v5gZT6PHZ4nD9KL9UzsHjOrE9ersPbJYc5JPtvIO09zwp6MgaKwG3n35f26pU3SSqZCryd3boOq
-        4Z5EFJ7Cg5V7bPShV/5Q+Qf/3
-X-Received: by 2002:a0c:b0cb:: with SMTP id p11mr20902506qvc.216.1569155858544;
-        Sun, 22 Sep 2019 05:37:38 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzCmU3TskOEyZFzEQEVup/JmX+POAXnjml1Z6r35N3M5NYpi2V6FhRyoe8OlTiMpNbNUDXHPA==
-X-Received: by 2002:a0c:b0cb:: with SMTP id p11mr20902486qvc.216.1569155858290;
-        Sun, 22 Sep 2019 05:37:38 -0700 (PDT)
-Received: from redhat.com (bzq-79-176-40-226.red.bezeqint.net. [79.176.40.226])
-        by smtp.gmail.com with ESMTPSA id w18sm3976903qts.44.2019.09.22.05.37.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Sep 2019 05:37:37 -0700 (PDT)
-Date:   Sun, 22 Sep 2019 08:37:30 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Matthew Cover <werekraken@gmail.com>
-Cc:     davem@davemloft.net, ast@kernel.org, daniel@iogearbox.net,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
-        jasowang@redhat.com, edumazet@google.com, sdf@google.com,
-        matthew.cover@stackpath.com, mail@timurcelik.de, pabeni@redhat.com,
-        nicolas.dichtel@6wind.com, wangli39@baidu.com,
-        lifei.shirley@bytedance.com, tglx@linutronix.de,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH net-next] tuntap: Fallback to automq on
- TUNSETSTEERINGEBPF prog negative return
-Message-ID: <20190922080326-mutt-send-email-mst@kernel.org>
-References: <20190920185843.4096-1-matthew.cover@stackpath.com>
+        id S1728920AbfIVMhp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 08:37:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1569155843;
+        bh=ZoL9rSRGY/hMR5+RyJQUdt0h2EOtukOtB+LPCYWzxKg=;
+        h=X-UI-Sender-Class:To:From:Subject:Date;
+        b=awYcnYuntF244h8HPK1yiYcZ20b3UVlusPYc7qekqUfjgxjTqQwt06n23g2JEi7R2
+         cD7M/sSKGT948+AzQMWyaLw1SGkMEETpmkk+ZGkeMP/BjCppJGM9XYKRP7LFlezlCs
+         NO4a+6PXp79tFiLbZ0UryRQ+EfoGHfloqTQLEFBc=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.244.8.78]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MMEzJ-1iHFmg1Ej7-0080pg; Sun, 22
+ Sep 2019 14:37:23 +0200
+To:     dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] dmaengine: zx: Use devm_platform_ioremap_resource() in
+ zx_dma_probe()
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <85de79fa-1ca5-a1e5-0296-9e8a2066f134@web.de>
+Date:   Sun, 22 Sep 2019 14:37:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190920185843.4096-1-matthew.cover@stackpath.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:LOEoO3e1HjDq2nqUHuxvqMDK/yYBX6Gy7vCJgGLOF5eZQqZ7WZC
+ tpZZ/1BrkoqC4rDc8oB9h7LGQk4Xn8WE+xH1QB0JAc2elmhjcI7DQBc8dMCfbGfiq3LSDST
+ 1ike6eJUP7xbwDBJw5eSnkM1SG9uHHKdYATFC8kQjdJ+/J+PK6v/VuBbzanUiVp78O9QQ4x
+ +++7PliC8atxMbqhWAoMA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:YFGd7ygc9dM=:B9Ui2zdMXQaZPy/wrce6xK
+ f22ZfLDXG50YlIeVA+6XQd46HMfu/B94JtwC5DoqlGFeFamGDojoZ0WCFd2w6cTZ8aw6hg+1r
+ KKa97UfeJCWk6vi9dl6lNpAqh1osMoT56psvn+9I3hMIc7eW2IIokfsEZb3SbswBZYEfdZ+SY
+ jvlc2ArA1YqpmmvsQp1Zj9CNLTXwue9Q9wKFxszpZ5p0HgN+BRinh9AIJCe94qLRJ6sypEUfn
+ KJ9ppCmjAUcwKFj+DwQBNEHaABM9Tq1hWFbinc9W6S/QGT0f8byOJ9AFj6OwZvFNOykhPnl2N
+ g7u41CTxlKtqAfnxFDi7mYvsEPtIQ+5WMocDoIJ0lgBVjM1HQgoxjzMBmFB0skSMsVXVJreCJ
+ JTmuHDhrGGk8bmaiQ9/7qY8GjOim0AvumSC/NUS6DjNgClu0OS9ovwGZKqUwZWnfqMOFeEBpn
+ ya3TsTY6th/r9/ZRLe3YuPHsNndmH3Y5Dt4J/zDxw7QkwcDUP+5RxFJcM1JX/7YFGL3DmKwYv
+ hti0jKjn0wLqfC4sE3dEnUat3ESctlfXCg70mXcX/X3WZePQDKq54BIsPfucw35/zPFU1yJXz
+ tO+vb7c+xcIvvwfKkCr/D92lOGS2M3pSHiTpmPjZz4uKOjKhJOs1PCXnB+70DiQMpmmJbaj2O
+ zGWjmmAqF2lkWwrNYXZp+JWcJV3SIAouUB+Dpvq6Ojp7rbVGvW8jlcUfmY5xzTOsm+diBBk0d
+ LndMLvmCw5gfO2QeMkieEsh1qZ+MZ1IuSj8Hulx+de0cAGHpbcBZCn7UJ1a3uVN47B2NMtmnN
+ CGZmTXXYcMVUt6C+RhUmR5NPuKE7zNpyoZUjLrFrPNvg3eKl26Nh8xKpkpuEFyxvcGFXh9BYw
+ f/C+EG5pg7ipYnZ4Z1dx14iI+AMUc1attF1RkRuVUYIRhypJqofU9TMCvXwlJk5xaDLjtgD1R
+ MBleTNKYgMW46gBRDvjtUHRx5sPPibq9HS4XrewzwVoW7BRSdxoMgqFLeiLM3hiT/WhM6ODTi
+ D2tc5iMrh0BzBNoSlL7ONtfuuBFG2QrpFhh8hvgawsrdl9i9fdHge3xNLvjJSIpUM7wJ0bM7C
+ Qe1rO4t3D4LX284zNOf9NFUX2XMivbzfXo9UhAhKX+h2X5j3oshp1HCDhDhh+HBV55I4ZnlS0
+ 2TQ+bgiSB5v6D08y7v5JaTUpplJEBjFToBqKMuCsFqLRWwVxyjLmFxwQm5/TQsqJq09YuH0Z3
+ JmOlY1qxzUUpBFN5xZ67fTeUPCWjkAe4bWYOwbpQUB5LJwA++XbQVtjSoy/g=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 11:58:43AM -0700, Matthew Cover wrote:
-> Treat a negative return from a TUNSETSTEERINGEBPF bpf prog as a signal
-> to fallback to tun_automq_select_queue() for tx queue selection.
-> 
-> Compilation of this exact patch was tested.
-> 
-> For functional testing 3 additional printk()s were added.
-> 
-> Functional testing results (on 2 txq tap device):
-> 
->   [Fri Sep 20 18:33:27 2019] ========== tun no prog ==========
->   [Fri Sep 20 18:33:27 2019] tuntap: tun_ebpf_select_queue() returned '-1'
->   [Fri Sep 20 18:33:27 2019] tuntap: tun_automq_select_queue() ran
->   [Fri Sep 20 18:33:27 2019] ========== tun prog -1 ==========
->   [Fri Sep 20 18:33:27 2019] tuntap: bpf_prog_run_clear_cb() returned '-1'
->   [Fri Sep 20 18:33:27 2019] tuntap: tun_ebpf_select_queue() returned '-1'
->   [Fri Sep 20 18:33:27 2019] tuntap: tun_automq_select_queue() ran
->   [Fri Sep 20 18:33:27 2019] ========== tun prog 0 ==========
->   [Fri Sep 20 18:33:27 2019] tuntap: bpf_prog_run_clear_cb() returned '0'
->   [Fri Sep 20 18:33:27 2019] tuntap: tun_ebpf_select_queue() returned '0'
->   [Fri Sep 20 18:33:27 2019] ========== tun prog 1 ==========
->   [Fri Sep 20 18:33:27 2019] tuntap: bpf_prog_run_clear_cb() returned '1'
->   [Fri Sep 20 18:33:27 2019] tuntap: tun_ebpf_select_queue() returned '1'
->   [Fri Sep 20 18:33:27 2019] ========== tun prog 2 ==========
->   [Fri Sep 20 18:33:27 2019] tuntap: bpf_prog_run_clear_cb() returned '2'
->   [Fri Sep 20 18:33:27 2019] tuntap: tun_ebpf_select_queue() returned '0'
-> 
-> Signed-off-by: Matthew Cover <matthew.cover@stackpath.com>
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Sun, 22 Sep 2019 14:32:12 +0200
 
+Simplify this function implementation by using a known wrapper function.
 
-Could you add a bit more motivation data here?
-1. why is this a good idea
-2. how do we know existing userspace does not rely on existing behaviour
-3. why doesn't userspace need a way to figure out whether it runs on a kernel with and
-   without this patch
+This issue was detected by using the Coccinelle software.
 
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/dma/zx_dma.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-thanks,
-MST
+diff --git a/drivers/dma/zx_dma.c b/drivers/dma/zx_dma.c
+index 9f4436f7c914..6b457e683e70 100644
+=2D-- a/drivers/dma/zx_dma.c
++++ b/drivers/dma/zx_dma.c
+@@ -754,18 +754,13 @@ static struct dma_chan *zx_of_dma_simple_xlate(struc=
+t of_phandle_args *dma_spec,
+ static int zx_dma_probe(struct platform_device *op)
+ {
+ 	struct zx_dma_dev *d;
+-	struct resource *iores;
+ 	int i, ret =3D 0;
 
-> ---
->  drivers/net/tun.c | 20 +++++++++++---------
->  1 file changed, 11 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/net/tun.c b/drivers/net/tun.c
-> index aab0be4..173d159 100644
-> --- a/drivers/net/tun.c
-> +++ b/drivers/net/tun.c
-> @@ -583,35 +583,37 @@ static u16 tun_automq_select_queue(struct tun_struct *tun, struct sk_buff *skb)
->  	return txq;
->  }
->  
-> -static u16 tun_ebpf_select_queue(struct tun_struct *tun, struct sk_buff *skb)
-> +static int tun_ebpf_select_queue(struct tun_struct *tun, struct sk_buff *skb)
->  {
->  	struct tun_prog *prog;
->  	u32 numqueues;
-> -	u16 ret = 0;
-> +	int ret = -1;
->  
->  	numqueues = READ_ONCE(tun->numqueues);
->  	if (!numqueues)
->  		return 0;
->  
-> +	rcu_read_lock();
->  	prog = rcu_dereference(tun->steering_prog);
->  	if (prog)
->  		ret = bpf_prog_run_clear_cb(prog->prog, skb);
-> +	rcu_read_unlock();
->  
-> -	return ret % numqueues;
-> +	if (ret >= 0)
-> +		ret %= numqueues;
-> +
-> +	return ret;
->  }
->  
->  static u16 tun_select_queue(struct net_device *dev, struct sk_buff *skb,
->  			    struct net_device *sb_dev)
->  {
->  	struct tun_struct *tun = netdev_priv(dev);
-> -	u16 ret;
-> +	int ret;
->  
-> -	rcu_read_lock();
-> -	if (rcu_dereference(tun->steering_prog))
-> -		ret = tun_ebpf_select_queue(tun, skb);
-> -	else
-> +	ret = tun_ebpf_select_queue(tun, skb);
-> +	if (ret < 0)
->  		ret = tun_automq_select_queue(tun, skb);
-> -	rcu_read_unlock();
->  
->  	return ret;
->  }
-> -- 
-> 1.8.3.1
+-	iores =3D platform_get_resource(op, IORESOURCE_MEM, 0);
+-	if (!iores)
+-		return -EINVAL;
+-
+ 	d =3D devm_kzalloc(&op->dev, sizeof(*d), GFP_KERNEL);
+ 	if (!d)
+ 		return -ENOMEM;
+
+-	d->base =3D devm_ioremap_resource(&op->dev, iores);
++	d->base =3D devm_platform_ioremap_resource(op, 0);
+ 	if (IS_ERR(d->base))
+ 		return PTR_ERR(d->base);
+
+=2D-
+2.23.0
+
