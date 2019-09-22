@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99FBAC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F2AAC4740C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 711ED21A4C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30DA121928
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:48:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178084;
-	bh=L1K4pFSWiGXddrGuntvqMf6aFH0zGkbfckIzZT0ushM=;
+	s=default; t=1569178088;
+	bh=dzieCr/axxqMz92jBnTQ1G764nndP0Xbet2Pe5781Xs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kUpCi10IOrfxmAKIe0lQlxvC8vzedfhk+CILbalzm+DeAVQMAKvjirIe6joHn/Z7D
-	 MxaLtetfJig7+fAbsHyPAsyNLCjxGU9YhgxBO5LhfczJouO/MZxeOZ5dlGW0GahBD2
-	 445tC7kvQrbRfCwMq3V7DSu5qkgpHv+hGy1qBSqM=
+	b=PIpxNlLcyU5WrNt7WmLtBNUhbBiMj85w8EOXjHx1iQZWKqDIE97PoW4VnGTRiSy+8
+	 E4PApe7a1rlGb/i53SpRB7W3CgEbwqmt+inJ/PgRCpTjb/qTCFWgNF2L/vA5NGdjGq
+	 FRqxfciZSwbGIT3ur0cyBKWOXVS07jrxPgi8Bz24=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391356AbfIVSsD (ORCPT
+        id S2391395AbfIVSsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:48:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44572 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:48:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391269AbfIVSr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:47:57 -0400
+        id S2391288AbfIVSr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:47:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A6C121BE5;
-        Sun, 22 Sep 2019 18:47:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C74021479;
+        Sun, 22 Sep 2019 18:47:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178077;
-        bh=L1K4pFSWiGXddrGuntvqMf6aFH0zGkbfckIzZT0ushM=;
+        s=default; t=1569178078;
+        bh=dzieCr/axxqMz92jBnTQ1G764nndP0Xbet2Pe5781Xs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aUUvrQoufL/fRPFcT7+fvLDJcdyyjuUwiy6RhXPCBri+3/bZzSBjL2fqOPndpXjjh
-         Z3vLPfdHzPHUWgYnqBdHE+lEeRfMDrCD21/HoSXcNbX87FOXFevoQUGL0aImuvzbvs
-         wBn6s6srkied7N6u9A6UF/81fQ9IjWwU6ZoxyliA=
+        b=IuYy0/GrKS+55M7TP/yHv3uUI+GesbvNsYkTr3nmZb8N4O5JLB2Yzza54D7B8Get/
+         GRgvY+5tU1xLKyHpMZbned72jDYyxcl85ec56cyCiE+yFa7rzM9Tz1YMkL4EBzpPcU
+         zM6MYS7rGCoUZT4YsTKH2OYqObtmY5+BuBrUyGUw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Will Deacon <will@kernel.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 148/203] arm64: lse: Make ARM64_LSE_ATOMICS depend on JUMP_LABEL
-Date:   Sun, 22 Sep 2019 14:42:54 -0400
-Message-Id: <20190922184350.30563-148-sashal@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>, Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 5.3 149/203] iommu/amd: Silence warnings under memory pressure
+Date:   Sun, 22 Sep 2019 14:42:55 -0400
+Message-Id: <20190922184350.30563-149-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,61 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit b32baf91f60fb9c7010bff87e68132f2ce31d9a8 ]
+[ Upstream commit 3d708895325b78506e8daf00ef31549476e8586a ]
 
-Support for LSE atomic instructions (CONFIG_ARM64_LSE_ATOMICS) relies on
-a static key to select between the legacy LL/SC implementation which is
-available on all arm64 CPUs and the super-duper LSE implementation which
-is available on CPUs implementing v8.1 and later.
+When running heavy memory pressure workloads, the system is throwing
+endless warnings,
 
-Unfortunately, when building a kernel with CONFIG_JUMP_LABEL disabled
-(e.g. because the toolchain doesn't support 'asm goto'), the static key
-inside the atomics code tries to use atomics itself. This results in a
-mess of circular includes and a build failure:
+smartpqi 0000:23:00.0: AMD-Vi: IOMMU mapping error in map_sg (io-pages:
+5 reason: -12)
+Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40
+07/10/2019
+swapper/10: page allocation failure: order:0, mode:0xa20(GFP_ATOMIC),
+nodemask=(null),cpuset=/,mems_allowed=0,4
+Call Trace:
+ <IRQ>
+ dump_stack+0x62/0x9a
+ warn_alloc.cold.43+0x8a/0x148
+ __alloc_pages_nodemask+0x1a5c/0x1bb0
+ get_zeroed_page+0x16/0x20
+ iommu_map_page+0x477/0x540
+ map_sg+0x1ce/0x2f0
+ scsi_dma_map+0xc6/0x160
+ pqi_raid_submit_scsi_cmd_with_io_request+0x1c3/0x470 [smartpqi]
+ do_IRQ+0x81/0x170
+ common_interrupt+0xf/0xf
+ </IRQ>
 
-In file included from ./arch/arm64/include/asm/lse.h:11,
-                 from ./arch/arm64/include/asm/atomic.h:16,
-                 from ./include/linux/atomic.h:7,
-                 from ./include/asm-generic/bitops/atomic.h:5,
-                 from ./arch/arm64/include/asm/bitops.h:26,
-                 from ./include/linux/bitops.h:19,
-                 from ./include/linux/kernel.h:12,
-                 from ./include/asm-generic/bug.h:18,
-                 from ./arch/arm64/include/asm/bug.h:26,
-                 from ./include/linux/bug.h:5,
-                 from ./include/linux/page-flags.h:10,
-                 from kernel/bounds.c:10:
-./include/linux/jump_label.h: In function ‘static_key_count’:
-./include/linux/jump_label.h:254:9: error: implicit declaration of function ‘atomic_read’ [-Werror=implicit-function-declaration]
-  return atomic_read(&key->enabled);
-         ^~~~~~~~~~~
+because the allocation could fail from iommu_map_page(), and the volume
+of this call could be huge which may generate a lot of serial console
+output and cosumes all CPUs.
 
-[ ... more of the same ... ]
+Fix it by silencing the warning in this call site, and there is still a
+dev_err() later to notify the failure.
 
-Since LSE atomic instructions are not critical to the operation of the
-kernel, make them depend on JUMP_LABEL at compile time.
-
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/iommu/amd_iommu.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 3adcec05b1f67..27405ac94228b 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -1263,6 +1263,7 @@ config ARM64_PAN
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index 61de81965c44e..e1259429ded2f 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -2577,7 +2577,9 @@ static int map_sg(struct device *dev, struct scatterlist *sglist,
  
- config ARM64_LSE_ATOMICS
- 	bool "Atomic instructions"
-+	depends on JUMP_LABEL
- 	default y
- 	help
- 	  As part of the Large System Extensions, ARMv8.1 introduces new
+ 			bus_addr  = address + s->dma_address + (j << PAGE_SHIFT);
+ 			phys_addr = (sg_phys(s) & PAGE_MASK) + (j << PAGE_SHIFT);
+-			ret = iommu_map_page(domain, bus_addr, phys_addr, PAGE_SIZE, prot, GFP_ATOMIC);
++			ret = iommu_map_page(domain, bus_addr, phys_addr,
++					     PAGE_SIZE, prot,
++					     GFP_ATOMIC | __GFP_NOWARN);
+ 			if (ret)
+ 				goto out_unmap;
+ 
 -- 
 2.20.1
 
