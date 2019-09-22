@@ -4,63 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E91C4740C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C64A4C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B350320869
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:17:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BB4E20869
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:17:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179839;
-	bh=aVOggpoqi/Rcx/POg1Q3q2Vvw3fw5my5raFRADNEbh4=;
+	s=default; t=1569179843;
+	bh=D1XWRJt6ClMhPXFxGI9JJL0/zQQhSHeSVvnHbT7ij5U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HzKmt6St+1x9Uw+jeF4rjMnVlfSufCnqziy1T0sgYQcI/qeUPdev2msQIG/U2zbzk
-	 A1Hkt7PkvGywVYi9DnuMR8vbeUd/iX4AaAATdixyIbQCAwI8h7IrdxQ1bzfRwGHaVa
-	 fq/lxWapSl1fia0c/ks3A39txrZ1GfG9dgOXIYIw=
+	b=VV+Cth27xwUhsHETJ2r9JhIpTL06eHpoOW0GvasHrAURa1gte67MrTXdGtWptJZRW
+	 xAbXgghca2xWfEI6y61Ua6OUuXTak7sPg5PFeLZuQCuF2XPkcRv/OEbCGaPbmVNiVo
+	 78Sviqyryo4qbWvM13BLTz3hciaJ8CBxN10i15+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729350AbfIVSzs (ORCPT
+        id S2436920AbfIVTRW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:55:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57034 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:17:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438458AbfIVSzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:55:40 -0400
+        id S1729348AbfIVSzr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:55:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 854D6222BF;
-        Sun, 22 Sep 2019 18:55:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8073421D7E;
+        Sun, 22 Sep 2019 18:55:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178539;
-        bh=aVOggpoqi/Rcx/POg1Q3q2Vvw3fw5my5raFRADNEbh4=;
+        s=default; t=1569178547;
+        bh=D1XWRJt6ClMhPXFxGI9JJL0/zQQhSHeSVvnHbT7ij5U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BD5ZBsPj3ZPWxVEIGYSBNELmmG0PZGK8cuv2sZ1e6C/6EMP3TCfpmbwRdbO4E0EKG
-         TktJkkxj/9xra/JY8qH8R3Nbcl8QJ8IgE/XyWb+TDcQpq5oJpCchhnGgPGiF7WbQdC
-         BhzcjxpqNJfzUea521kdWSfPiVErDG0hsgIzTtEQ=
+        b=dRJDF/KKx2K2li814Za3RS03fT87Ao324SOzmHYyNX2Sl7Ma23PK9/5IR+7JZKvyO
+         u4dVVhG/QFNKOsu1SRhADmxSalA8r/0a+Ye32tTcFRcQl1VFSW8ie7yRqc2dfv3CHG
+         IjAnKq++pksey96rZz5IUXx43BFfpCRiOgQdzXuc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>,
-        Ilya Ledvich <ilya@compulab.co.il>,
-        Igor Grinberg <grinberg@compulab.co.il>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 059/128] ARM: dts: imx7d: cl-som-imx7: make ethernet work again
-Date:   Sun, 22 Sep 2019 14:53:09 -0400
-Message-Id: <20190922185418.2158-59-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 065/128] ASoC: sun4i-i2s: Don't use the oversample to calculate BCLK
+Date:   Sun, 22 Sep 2019 14:53:15 -0400
+Message-Id: <20190922185418.2158-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
 References: <20190922185418.2158-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -69,74 +59,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: André Draszik <git@andred.net>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
 
-[ Upstream commit 9846a4524ac90b63496580b7ad50674b40d92a8f ]
+[ Upstream commit 7df8f9a20196072162d9dc8fe99943f2d35f23d5 ]
 
-Recent changes to the atheros at803x driver caused
-ethernet to stop working on this board.
-In particular commit 6d4cd041f0af
-("net: phy: at803x: disable delay only for RGMII mode")
-and commit cd28d1d6e52e
-("net: phy: at803x: Disable phy delay for RGMII mode")
-fix the AR8031 driver to configure the phy's (RX/TX)
-delays as per the 'phy-mode' in the device tree.
+The BCLK divider should be calculated using the parameters that actually
+make the BCLK rate: the number of channels, the sampling rate and the
+sample width.
 
-This now prevents ethernet from working on this board.
+We've been using the oversample_rate previously because in the former SoCs,
+the BCLK's parent is MCLK, which in turn is being used to generate the
+oversample rate, so we end up with something like this:
 
-It used to work before those commits, because the
-AR8031 comes out of reset with RX delay enabled, and
-the at803x driver didn't touch the delay configuration
-at all when "rgmii" mode was selected, and because
-arch/arm/mach-imx/mach-imx7d.c:ar8031_phy_fixup()
-unconditionally enables TX delay.
+oversample = mclk_rate / sampling_rate
+bclk_div = oversample / word_size / channels
 
-Since above commits ar8031_phy_fixup() also has no
-effect anymore, and the end-result is that all delays
-are disabled in the phy, no ethernet.
+So, bclk_div = mclk_rate / sampling_rate / word_size / channels.
 
-Update the device tree to restore functionality.
+And this is actually better, since the oversampling ratio only plays a role
+because the MCLK is its parent, not because of what BCLK is supposed to be.
 
-Signed-off-by: André Draszik <git@andred.net>
-CC: Ilya Ledvich <ilya@compulab.co.il>
-CC: Igor Grinberg <grinberg@compulab.co.il>
-CC: Rob Herring <robh+dt@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>
-CC: Shawn Guo <shawnguo@kernel.org>
-CC: Sascha Hauer <s.hauer@pengutronix.de>
-CC: Pengutronix Kernel Team <kernel@pengutronix.de>
-CC: Fabio Estevam <festevam@gmail.com>
-CC: NXP Linux Team <linux-imx@nxp.com>
-CC: devicetree@vger.kernel.org
-CC: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Furthermore, that assumption of MCLK being the parent has been broken on
+newer SoCs, so let's use the proper formula, and have the parent rate as an
+argument.
+
+Fixes: 7d2993811a1e ("ASoC: sun4i-i2s: Add support for H3")
+Fixes: 21faaea1343f ("ASoC: sun4i-i2s: Add support for A83T")
+Fixes: 66ecce332538 ("ASoC: sun4i-i2s: Add compatibility with A64 codec I2S")
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Link: https://lore.kernel.org/r/c3595e3a9788c2ef2dcc30aa3c8c4953bb5cc249.1566242458.git-series.maxime.ripard@bootlin.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/sunxi/sun4i-i2s.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-index 8bf365d28cacf..584418f517a88 100644
---- a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-+++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-@@ -43,7 +43,7 @@
- 			  <&clks IMX7D_ENET1_TIME_ROOT_CLK>;
- 	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
- 	assigned-clock-rates = <0>, <100000000>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- 	phy-handle = <&ethphy0>;
- 	fsl,magic-packet;
- 	status = "okay";
-@@ -69,7 +69,7 @@
- 			  <&clks IMX7D_ENET2_TIME_ROOT_CLK>;
- 	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
- 	assigned-clock-rates = <0>, <100000000>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- 	phy-handle = <&ethphy1>;
- 	fsl,magic-packet;
- 	status = "okay";
+diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
+index 6173dd86c62ce..18cf8404d27ca 100644
+--- a/sound/soc/sunxi/sun4i-i2s.c
++++ b/sound/soc/sunxi/sun4i-i2s.c
+@@ -223,10 +223,11 @@ static const struct sun4i_i2s_clk_div sun4i_i2s_mclk_div[] = {
+ };
+ 
+ static int sun4i_i2s_get_bclk_div(struct sun4i_i2s *i2s,
+-				  unsigned int oversample_rate,
++				  unsigned long parent_rate,
++				  unsigned int sampling_rate,
+ 				  unsigned int word_size)
+ {
+-	int div = oversample_rate / word_size / 2;
++	int div = parent_rate / sampling_rate / word_size / 2;
+ 	int i;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(sun4i_i2s_bclk_div); i++) {
+@@ -316,8 +317,8 @@ static int sun4i_i2s_set_clk_rate(struct snd_soc_dai *dai,
+ 		return -EINVAL;
+ 	}
+ 
+-	bclk_div = sun4i_i2s_get_bclk_div(i2s, oversample_rate,
+-					  word_size);
++	bclk_div = sun4i_i2s_get_bclk_div(i2s, i2s->mclk_freq,
++					  rate, word_size);
+ 	if (bclk_div < 0) {
+ 		dev_err(dai->dev, "Unsupported BCLK divider: %d\n", bclk_div);
+ 		return -EINVAL;
 -- 
 2.20.1
 
