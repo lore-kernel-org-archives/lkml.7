@@ -4,47 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A774EC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F9EC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D66F21479
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F071208C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:46:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569177991;
-	bh=iI2WbB/rCnOHq0Uw2puFP3RXiZkcf6+ZTzmBSTYmT9c=;
+	s=default; t=1569177993;
+	bh=6wQX0xJ/q3Ed4fG+/mE1pswdwSLXVm2+9rffNMTgyZM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZS9oP5ON5cToS8AoDXCxP9hXY0Zf/3KIEBQb7VTsE7eUGciaSDRBSMWNWfyDkplxl
-	 so5/sFs9tyn1vNmYsZ+c1d/GatQH8Mh3+C67q1L+bReTCgUSYBBhPBfm9bkA5nf9Z9
-	 ueoBPBe0dSYbkKHROH+QTBwrG4YJ5w5Dtv32kxTw=
+	b=Xo/ePL8PkCtQc3/mjj9AM2vp4kEBJmBZTLu9OJuXB3D8eZrhlITWCSNMdvVWCAnRh
+	 Y+mUfCsoaZwOk/buUgEkv3awcvQqbQ8dOlh0GRuiBnOgNaG++iSVfbKBazWnuYqX1o
+	 spulCrI//sFMe+nqNWmc87qnodOtbNr8UMIO4NxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390012AbfIVSqa (ORCPT
+        id S2390043AbfIVSqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:46:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42588 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:46:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389973AbfIVSq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:46:29 -0400
+        id S2389892AbfIVSq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:46:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2404420882;
-        Sun, 22 Sep 2019 18:46:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D167206C2;
+        Sun, 22 Sep 2019 18:46:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569177988;
-        bh=iI2WbB/rCnOHq0Uw2puFP3RXiZkcf6+ZTzmBSTYmT9c=;
+        s=default; t=1569177987;
+        bh=6wQX0xJ/q3Ed4fG+/mE1pswdwSLXVm2+9rffNMTgyZM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NCiHBYmdEaM9quja4FI4eNrMSBUulkKHZV+LHioechVUauHOBS5KIQFKna9QqKB8+
-         o1vGQ5zL7J1KkywONfLXYkKA+EIF7IvYoJsLa/n2OjT1AYYa9+jy5+XmKyhi0RRewU
-         ur+LHD9ufLGrb0mirEmpSon9Mf0lyn76OIbiPN/0=
+        b=z+teSN6j7hL2dJdWgGXaxgTj+LHAhKpZozRWmmEbVwzNzSJKOG3Rt3r55ssyKD95y
+         23eMM9ZKF2jZdOpwUl0oj4rVm0FTuKF2RS+2LPtkr3jrdrhAgGwXVLoisuc3gJcmwu
+         XqD611yxgfRePxgPwXnBAscSgW39NAwf4do9R7Fo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 081/203] ALSA: hda: Add codec on bus address table lately
-Date:   Sun, 22 Sep 2019 14:41:47 -0400
-Message-Id: <20190922184350.30563-81-sashal@kernel.org>
+Cc:     Tan Xiaojun <tanxiaojun@huawei.com>, Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 080/203] perf record: Support aarch64 random socket_id assignment
+Date:   Sun, 22 Sep 2019 14:41:46 -0400
+Message-Id: <20190922184350.30563-80-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -57,84 +67,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Tan Xiaojun <tanxiaojun@huawei.com>
 
-[ Upstream commit ee5f85d9290fe25d460bd320b7fe073075d72d33 ]
+[ Upstream commit 0a4d8fb229dd78f9e0752817339e19e903b37a60 ]
 
-The call of snd_hdac_bus_add_device() is needed only for registering
-the codec onto the bus caddr_tbl[] that is referred essentially only
-in the unsol event handler.  That is, the reason of this call and the
-release by the counter-part function snd_hdac_bus_remove_device() is
-just to assure that the unsol event gets notified to the codec.
+Same as in the commit 01766229533f ("perf record: Support s390 random
+socket_id assignment"), aarch64 also have this problem.
 
-But the current implementation of the unsol notification wouldn't work
-properly when the codec is still in a premature init state.  So this
-patch tries to work around it by delaying the caddr_tbl[] registration
-at the point of snd_hdac_device_register().
+Without this fix:
 
-Also, the order of snd_hdac_bus_remove_device() and device_del() calls
-are shuffled to make sure that the unsol event is masked before
-deleting the device.
+  [root@localhost perf]# ./perf report --header -I -v
+  ...
+  socket_id number is too big.You may need to upgrade the perf tool.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204565
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+  # ========
+  # captured on    : Thu Aug  1 22:58:38 2019
+  # header version : 1
+  ...
+  # Core ID and Socket ID information is not available
+  ...
+
+With this fix:
+  [root@localhost perf]# ./perf report --header -I -v
+  ...
+  cpumask list: 0-31
+  cpumask list: 32-63
+  cpumask list: 64-95
+  cpumask list: 96-127
+
+  # ========
+  # captured on    : Thu Aug  1 22:58:38 2019
+  # header version : 1
+  ...
+  # CPU 0: Core ID 0, Socket ID 36
+  # CPU 1: Core ID 1, Socket ID 36
+  ...
+  # CPU 126: Core ID 126, Socket ID 8442
+  # CPU 127: Core ID 127, Socket ID 8442
+  ...
+
+Signed-off-by: Tan Xiaojun <tanxiaojun@huawei.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
+Link: http://lkml.kernel.org/r/1564717737-21602-1-git-send-email-tanxiaojun@huawei.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/hda/hdac_device.c | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ tools/perf/util/header.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/sound/hda/hdac_device.c b/sound/hda/hdac_device.c
-index b26cc93e7e103..033bcef8751a8 100644
---- a/sound/hda/hdac_device.c
-+++ b/sound/hda/hdac_device.c
-@@ -61,10 +61,6 @@ int snd_hdac_device_init(struct hdac_device *codec, struct hdac_bus *bus,
- 	pm_runtime_get_noresume(&codec->dev);
- 	atomic_set(&codec->in_pm, 0);
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 1903d7ec97976..bf7cf12495539 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -2251,8 +2251,10 @@ static int process_cpu_topology(struct feat_fd *ff, void *data __maybe_unused)
+ 	/* On s390 the socket_id number is not related to the numbers of cpus.
+ 	 * The socket_id number might be higher than the numbers of cpus.
+ 	 * This depends on the configuration.
++	 * AArch64 is the same.
+ 	 */
+-	if (ph->env.arch && !strncmp(ph->env.arch, "s390", 4))
++	if (ph->env.arch && (!strncmp(ph->env.arch, "s390", 4)
++			  || !strncmp(ph->env.arch, "aarch64", 7)))
+ 		do_core_id_test = false;
  
--	err = snd_hdac_bus_add_device(bus, codec);
--	if (err < 0)
--		goto error;
--
- 	/* fill parameters */
- 	codec->vendor_id = snd_hdac_read_parm(codec, AC_NODE_ROOT,
- 					      AC_PAR_VENDOR_ID);
-@@ -143,15 +139,22 @@ int snd_hdac_device_register(struct hdac_device *codec)
- 	err = device_add(&codec->dev);
- 	if (err < 0)
- 		return err;
-+	err = snd_hdac_bus_add_device(codec->bus, codec);
-+	if (err < 0)
-+		goto error;
- 	mutex_lock(&codec->widget_lock);
- 	err = hda_widget_sysfs_init(codec);
- 	mutex_unlock(&codec->widget_lock);
--	if (err < 0) {
--		device_del(&codec->dev);
--		return err;
--	}
-+	if (err < 0)
-+		goto error_remove;
- 
- 	return 0;
-+
-+ error_remove:
-+	snd_hdac_bus_remove_device(codec->bus, codec);
-+ error:
-+	device_del(&codec->dev);
-+	return err;
- }
- EXPORT_SYMBOL_GPL(snd_hdac_device_register);
- 
-@@ -165,8 +168,8 @@ void snd_hdac_device_unregister(struct hdac_device *codec)
- 		mutex_lock(&codec->widget_lock);
- 		hda_widget_sysfs_exit(codec);
- 		mutex_unlock(&codec->widget_lock);
--		device_del(&codec->dev);
- 		snd_hdac_bus_remove_device(codec->bus, codec);
-+		device_del(&codec->dev);
- 	}
- }
- EXPORT_SYMBOL_GPL(snd_hdac_device_unregister);
+ 	for (i = 0; i < (u32)cpu_nr; i++) {
 -- 
 2.20.1
 
