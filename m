@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C69EDC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E8BC4740C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90E78206B6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:31:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0281E20640
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:31:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180665;
-	bh=+hscBSSiceQUDY9+VOYTuW47bvxKdbmKQzrUpDh6YtQ=;
+	s=default; t=1569180668;
+	bh=9qfmsiCNaEBBbVAUBNjUeGmGxH7qdzSy+RWQqBp7ZR0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iXcjhKBN6DOGiI68eG6b29zFZeu0NhJ0GRqilkK6No/nr7Jjw+BvEW9pLg5c8XuPc
-	 7KYvJF0XYDXPLS9ey+/POAGLrYVaa523zHGL/YX2VCAPkz1Vu369PkBG015DTkuXuk
-	 FrrPmF7ld0TN+MZFDYmyfn1OBzgSuBV/KrtafHMc=
+	b=kN0Af5yAmSRTlb7ZLCHwAOei9nH64vAZMTVS7zcPjpXzHwbv8sqTYOIK90p6Lw3V6
+	 VP1Kw9PnjK3jVO8w+yOWNlaa6xvZJcx1YKiuhSW+1b7PXF19m4TovHEVqIjejnR7ix
+	 UJzvTOZL8ITWu0Md7kh6jUgWq/yxJKsW80dLbl60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394414AbfIVTbE (ORCPT
+        id S2391938AbfIVStC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:31:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46032 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:49:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391962AbfIVStD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:49:03 -0400
+        id S2391693AbfIVSsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:48:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE2F121D71;
-        Sun, 22 Sep 2019 18:49:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 076FB208C2;
+        Sun, 22 Sep 2019 18:48:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178142;
-        bh=+hscBSSiceQUDY9+VOYTuW47bvxKdbmKQzrUpDh6YtQ=;
+        s=default; t=1569178116;
+        bh=9qfmsiCNaEBBbVAUBNjUeGmGxH7qdzSy+RWQqBp7ZR0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B/it5WjnLOwm+MJZIRh0D/h67FS36mVvEgxmn4f4C47bk3ojwWqykZbMm2Y/IvzwM
-         2EZlatYg3w/s4M7vq5nC0hnWqNcn6WX42/L1QtcjwO8Rgzf/ESKV7LndsUtoo30dce
-         vm60yRn73eECxGvatNdSouqhpMaNJkPyqw80haXY=
+        b=ordSCYFRGf1zkUMc2ZSYmyiFfCh0sUbgiXk28MVkKksf1ev1w3bL44Z1qNeKMtYMi
+         nSr6jM86A1dKUW87wReDSqtnVnabsxEBpwr6kQemkOK/myZsTcjzzZJPomd0ed7SBm
+         jS91K2ncL+Fg0SMIzrjG4Ye0ExEX9d9usYZ/u+JQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tomas Espeleta <tomas.espeleta@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        linux-doc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 191/203] ALSA: hda - Add a quirk model for fixing Huawei Matebook X right speaker
-Date:   Sun, 22 Sep 2019 14:43:37 -0400
-Message-Id: <20190922184350.30563-191-sashal@kernel.org>
+Cc:     Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 173/203] ASoC: es8316: support fixed and variable both clock rates
+Date:   Sun, 22 Sep 2019 14:43:19 -0400
+Message-Id: <20190922184350.30563-173-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -59,168 +59,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomas Espeleta <tomas.espeleta@gmail.com>
+From: Katsuhiro Suzuki <katsuhiro@katsuster.net>
 
-[ Upstream commit a2ef03fe617a8365fb7794531b11ba587509a9b9 ]
+[ Upstream commit ebe02a5b9ef05e3b812af3d628cdf6206d9ba610 ]
 
-[ This is rather a revival of the patch Tomas sent in months ago, but
-  applying only with the quirk model option -- tiwai ]
+This patch supports some type of machine drivers that set 0 to mclk
+when sound device goes to idle state. After applied this patch,
+sysclk == 0 means there is no constraint of sound rate and other
+values will set constraints which is derived by sysclk setting.
 
-Hard coded coefficients to make Huawuei Matebook X right speaker
-work. The Matebook X has a ALC298, please refer to bug 197801 on
-how these numbers were reverse engineered from the Windows driver
+Original code refuses sysclk == 0 setting. But some boards and SoC
+(such as RockPro64 and RockChip I2S) has connected SoC MCLK out to
+ES8316 MCLK in. In this case, SoC side I2S will choose suitable
+frequency of MCLK such as fs * mclk-fs when user starts playing or
+capturing.
 
-The reversed engineered sequence represents a repeating pattern
-of verbs, and the only values that are changing periodically are
-written on indexes 0x23 and 0x25:
+Bad scenario as follows (mclk-fs = 256):
+  - Initialize sysclk by correct value (Ex. 12.288MHz)
+    - ES8316 set constraints of PCM rate by sysclk
+      48kHz (1/256), 32kHz (1/384), 30.720kHz (1/400),
+      24kHz (1/512), 16kHz (1/768), 12kHz (1/1024)
+  - Play 48kHz sound, it's acceptable
+  - Sysclk is not changed
 
-0x500, 0x23
-0x400, VALUE1
-0x500, 0x25
-0x400, VALUE2
+  - Play 32kHz sound, it's acceptable
+  - Set sysclk by 8.192MHz (= fs * mclk-fs = 32k * 256)
+    - ES8316 set constraints of PCM rate by sysclk
+      32kHz (1/256), 21.33kHz (1/384), 20.48kHz (1/400),
+      16kHz (1/512), 10.66kHz (1/768), 8kHz (1/1024)
 
-* skipped reading sequences (0x500 - 0xc00 sequences are ignored)
-* static values from reverse engineering are used
+  - Play 48kHz again, but it's NOT acceptable because constraints
+    list does not allow 48kHz
 
-NOTE: since a significant risk is still considered, this is provided
-as an experimental fix that isn't applied as default for now.  For
-enabling the fix, you'll have to choose huawei-mbx-stereo via model
-option of snd-hda-intel module.
-
-If we get feedback from users that this works stably, we may apply it
-per default.
-
-[ Some coding style fixes and replacement with AC_VERB_* by tiwai ]
-
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=197801
-Signed-off-by: Tomas Espeleta <tomas.espeleta@gmail.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Link: https://lore.kernel.org/r/20190907163653.9382-2-katsuhiro@katsuster.net
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/sound/hd-audio/models.rst |  3 +
- sound/pci/hda/patch_realtek.c           | 74 +++++++++++++++++++++++++
- 2 files changed, 77 insertions(+)
+ sound/soc/codecs/es8316.c | 35 ++++++++++++++++++++---------------
+ 1 file changed, 20 insertions(+), 15 deletions(-)
 
-diff --git a/Documentation/sound/hd-audio/models.rst b/Documentation/sound/hd-audio/models.rst
-index 7d7c191102a73..11298f0ce44db 100644
---- a/Documentation/sound/hd-audio/models.rst
-+++ b/Documentation/sound/hd-audio/models.rst
-@@ -260,6 +260,9 @@ alc295-hp-x360
-     HP Spectre X360 fixups
- alc-sense-combo
-     Headset button support for Chrome platform
-+huawei-mbx-stereo
-+    Enable initialization verbs for Huawei MBX stereo speakers;
-+    might be risky, try this at your own risk
+diff --git a/sound/soc/codecs/es8316.c b/sound/soc/codecs/es8316.c
+index 96d04896193f2..c47b3c4bb06c7 100644
+--- a/sound/soc/codecs/es8316.c
++++ b/sound/soc/codecs/es8316.c
+@@ -368,8 +368,12 @@ static int es8316_set_dai_sysclk(struct snd_soc_dai *codec_dai,
  
- ALC66x/67x/892
- ==============
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index c1ddfd2fac522..1bec62720374d 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -3755,6 +3755,72 @@ static void alc269_x101_hp_automute_hook(struct hda_codec *codec,
- 			    vref);
+ 	es8316->sysclk = freq;
+ 
+-	if (freq == 0)
++	if (freq == 0) {
++		es8316->sysclk_constraints.list = NULL;
++		es8316->sysclk_constraints.count = 0;
++
+ 		return 0;
++	}
+ 
+ 	/* Limit supported sample rates to ones that can be autodetected
+ 	 * by the codec running in slave mode.
+@@ -444,17 +448,10 @@ static int es8316_pcm_startup(struct snd_pcm_substream *substream,
+ 	struct snd_soc_component *component = dai->component;
+ 	struct es8316_priv *es8316 = snd_soc_component_get_drvdata(component);
+ 
+-	if (es8316->sysclk == 0) {
+-		dev_err(component->dev, "No sysclk provided\n");
+-		return -EINVAL;
+-	}
+-
+-	/* The set of sample rates that can be supported depends on the
+-	 * MCLK supplied to the CODEC.
+-	 */
+-	snd_pcm_hw_constraint_list(substream->runtime, 0,
+-				   SNDRV_PCM_HW_PARAM_RATE,
+-				   &es8316->sysclk_constraints);
++	if (es8316->sysclk_constraints.list)
++		snd_pcm_hw_constraint_list(substream->runtime, 0,
++					   SNDRV_PCM_HW_PARAM_RATE,
++					   &es8316->sysclk_constraints);
+ 
+ 	return 0;
  }
+@@ -466,11 +463,19 @@ static int es8316_pcm_hw_params(struct snd_pcm_substream *substream,
+ 	struct snd_soc_component *component = dai->component;
+ 	struct es8316_priv *es8316 = snd_soc_component_get_drvdata(component);
+ 	u8 wordlen = 0;
++	int i;
  
-+/*
-+ * Magic sequence to make Huawei Matebook X right speaker working (bko#197801)
-+ */
-+struct hda_alc298_mbxinit {
-+	unsigned char value_0x23;
-+	unsigned char value_0x25;
-+};
+-	if (!es8316->sysclk) {
+-		dev_err(component->dev, "No MCLK configured\n");
+-		return -EINVAL;
++	/* Validate supported sample rates that are autodetected from MCLK */
++	for (i = 0; i < NR_SUPPORTED_MCLK_LRCK_RATIOS; i++) {
++		const unsigned int ratio = supported_mclk_lrck_ratios[i];
 +
-+static void alc298_huawei_mbx_stereo_seq(struct hda_codec *codec,
-+					 const struct hda_alc298_mbxinit *initval,
-+					 bool first)
-+{
-+	snd_hda_codec_write(codec, 0x06, 0, AC_VERB_SET_DIGI_CONVERT_3, 0x0);
-+	alc_write_coef_idx(codec, 0x26, 0xb000);
-+
-+	if (first)
-+		snd_hda_codec_write(codec, 0x21, 0, AC_VERB_GET_PIN_SENSE, 0x0);
-+
-+	snd_hda_codec_write(codec, 0x6, 0, AC_VERB_SET_DIGI_CONVERT_3, 0x80);
-+	alc_write_coef_idx(codec, 0x26, 0xf000);
-+	alc_write_coef_idx(codec, 0x23, initval->value_0x23);
-+
-+	if (initval->value_0x23 != 0x1e)
-+		alc_write_coef_idx(codec, 0x25, initval->value_0x25);
-+
-+	snd_hda_codec_write(codec, 0x20, 0, AC_VERB_SET_COEF_INDEX, 0x26);
-+	snd_hda_codec_write(codec, 0x20, 0, AC_VERB_SET_PROC_COEF, 0xb010);
-+}
-+
-+static void alc298_fixup_huawei_mbx_stereo(struct hda_codec *codec,
-+					   const struct hda_fixup *fix,
-+					   int action)
-+{
-+	/* Initialization magic */
-+	static const struct hda_alc298_mbxinit dac_init[] = {
-+		{0x0c, 0x00}, {0x0d, 0x00}, {0x0e, 0x00}, {0x0f, 0x00},
-+		{0x10, 0x00}, {0x1a, 0x40}, {0x1b, 0x82}, {0x1c, 0x00},
-+		{0x1d, 0x00}, {0x1e, 0x00}, {0x1f, 0x00},
-+		{0x20, 0xc2}, {0x21, 0xc8}, {0x22, 0x26}, {0x23, 0x24},
-+		{0x27, 0xff}, {0x28, 0xff}, {0x29, 0xff}, {0x2a, 0x8f},
-+		{0x2b, 0x02}, {0x2c, 0x48}, {0x2d, 0x34}, {0x2e, 0x00},
-+		{0x2f, 0x00},
-+		{0x30, 0x00}, {0x31, 0x00}, {0x32, 0x00}, {0x33, 0x00},
-+		{0x34, 0x00}, {0x35, 0x01}, {0x36, 0x93}, {0x37, 0x0c},
-+		{0x38, 0x00}, {0x39, 0x00}, {0x3a, 0xf8}, {0x38, 0x80},
-+		{}
-+	};
-+	const struct hda_alc298_mbxinit *seq;
-+
-+	if (action != HDA_FIXUP_ACT_INIT)
-+		return;
-+
-+	/* Start */
-+	snd_hda_codec_write(codec, 0x06, 0, AC_VERB_SET_DIGI_CONVERT_3, 0x00);
-+	snd_hda_codec_write(codec, 0x06, 0, AC_VERB_SET_DIGI_CONVERT_3, 0x80);
-+	alc_write_coef_idx(codec, 0x26, 0xf000);
-+	alc_write_coef_idx(codec, 0x22, 0x31);
-+	alc_write_coef_idx(codec, 0x23, 0x0b);
-+	alc_write_coef_idx(codec, 0x25, 0x00);
-+	snd_hda_codec_write(codec, 0x20, 0, AC_VERB_SET_COEF_INDEX, 0x26);
-+	snd_hda_codec_write(codec, 0x20, 0, AC_VERB_SET_PROC_COEF, 0xb010);
-+
-+	for (seq = dac_init; seq->value_0x23; seq++)
-+		alc298_huawei_mbx_stereo_seq(codec, seq, seq == dac_init);
-+}
-+
- static void alc269_fixup_x101_headset_mic(struct hda_codec *codec,
- 				     const struct hda_fixup *fix, int action)
- {
-@@ -5780,6 +5846,7 @@ enum {
- 	ALC255_FIXUP_DUMMY_LINEOUT_VERB,
- 	ALC255_FIXUP_DELL_HEADSET_MIC,
- 	ALC256_FIXUP_HUAWEI_MACH_WX9_PINS,
-+	ALC298_FIXUP_HUAWEI_MBX_STEREO,
- 	ALC295_FIXUP_HP_X360,
- 	ALC221_FIXUP_HP_HEADSET_MIC,
- 	ALC285_FIXUP_LENOVO_HEADPHONE_NOISE,
-@@ -6089,6 +6156,12 @@ static const struct hda_fixup alc269_fixups[] = {
- 		.chained = true,
- 		.chain_id = ALC255_FIXUP_MIC_MUTE_LED
- 	},
-+	[ALC298_FIXUP_HUAWEI_MBX_STEREO] = {
-+		.type = HDA_FIXUP_FUNC,
-+		.v.func = alc298_fixup_huawei_mbx_stereo,
-+		.chained = true,
-+		.chain_id = ALC255_FIXUP_MIC_MUTE_LED
-+	},
- 	[ALC269_FIXUP_ASUS_X101_FUNC] = {
- 		.type = HDA_FIXUP_FUNC,
- 		.v.func = alc269_fixup_x101_headset_mic,
-@@ -7280,6 +7353,7 @@ static const struct hda_model_fixup alc269_fixup_models[] = {
- 	{.id = ALC225_FIXUP_HEADSET_JACK, .name = "alc-headset-jack"},
- 	{.id = ALC295_FIXUP_CHROME_BOOK, .name = "alc-chrome-book"},
- 	{.id = ALC299_FIXUP_PREDATOR_SPK, .name = "predator-spk"},
-+	{.id = ALC298_FIXUP_HUAWEI_MBX_STEREO, .name = "huawei-mbx-stereo"},
- 	{}
- };
- #define ALC225_STANDARD_PINS \
++		if (es8316->sysclk % ratio != 0)
++			continue;
++		if (es8316->sysclk / ratio == params_rate(params))
++			break;
+ 	}
++	if (i == NR_SUPPORTED_MCLK_LRCK_RATIOS)
++		return -EINVAL;
+ 
+ 	switch (params_format(params)) {
+ 	case SNDRV_PCM_FORMAT_S16_LE:
 -- 
 2.20.1
 
