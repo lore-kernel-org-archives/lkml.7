@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDD9C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77085C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97E2E2190F
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:53:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4554A21D7B
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:53:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178388;
-	bh=EMm/DFERg7gGpc6ZK4Hzzr9d6eNec1wYcIFHfvS9e2M=;
+	s=default; t=1569178393;
+	bh=/rangsZ0ELaQluOZKEg4V40zOt8+RCVaCUrHYUx7Wvw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MgYDaFO9p81D06gnnL4MTFLxYd3FM/qIkXem9sf/11MkyR+g1KV1UA6k8mphWsAMd
-	 pFtBkK6M6ym0KaU4fBHkrehrK+A/UPybw64gNSe0yyJmtSJBKfu7VmWmdShL67yvkI
-	 7qRGsvjaNypZDspvtvJiNIE1Y0F5lT3JqR0AMP/o=
+	b=hKvzxLhAPuctH86OVVseKI4+wTUrvyMwVN02fRqMkGpQ14Sz+ZHvixb21bXgW+EgF
+	 BQUrcCp92T28VvNQYwscR7SdM0HomvvKAOmPKRg5ETk/Aopi2umSoXYdx/c/5m+KyG
+	 RcmWa2XuVlclfqkQmc+KNFeXsyPpV7/j56sTtPxQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393460AbfIVSxI (ORCPT
+        id S2393588AbfIVSxL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:53:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52020 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:53:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407976AbfIVSwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:52:45 -0400
+        id S2392961AbfIVSws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:52:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1ABC621479;
-        Sun, 22 Sep 2019 18:52:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5138621BE5;
+        Sun, 22 Sep 2019 18:52:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178364;
-        bh=EMm/DFERg7gGpc6ZK4Hzzr9d6eNec1wYcIFHfvS9e2M=;
+        s=default; t=1569178368;
+        bh=/rangsZ0ELaQluOZKEg4V40zOt8+RCVaCUrHYUx7Wvw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WI73Y6GW5wxjpyISInId4Qop9xa1IzO9Cmg0eqG9YwctehApNSF70LvU+G7jP0qsa
-         2qxi1lp0VUyTN48j9ABzJH1vWO0b9uK2jM/ahXplJ47M5XyEfBSALgdFe+49UCK/0U
-         kopkt8U9byzvLBkU9G6/12hGUJq8I83/i7koZwPo=
+        b=aJc/vZjwAjZGT+OXVaDRabBY3+7uNkRzabe2LIXXu5iJBAB/gc5xZSPKqxFPJxMN1
+         TNe0Squsbj2N9MKY5xjxY/oydpLZ9wnJhHUhhJNgRe20y+QPl+Mw97LnC2AMVrBIsy
+         XKWW+th9fvTrRXDF5EvCP1LArHTDO5eVEH3LJARQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 117/185] perf report: Fix --ns time sort key output
-Date:   Sun, 22 Sep 2019 14:48:15 -0400
-Message-Id: <20190922184924.32534-117-sashal@kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Eddie James <eajames@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 119/185] media: aspeed-video: address a protential usage of an unitialized var
+Date:   Sun, 22 Sep 2019 14:48:17 -0400
+Message-Id: <20190922184924.32534-119-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -59,62 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-[ Upstream commit 3dab6ac080dcd7f71cb9ceb84ad7dafecd6f7c07 ]
+[ Upstream commit 31b8b0bd6e55c3ea5a08bb8141fa5d3c90600e3b ]
 
-If the user specified --ns, the column to print the sort time stamp
-wasn't wide enough to actually print the full nanoseconds.
+While this might not occur in practice, if the device is doing
+the right thing, it would be teoretically be possible to have
+both hsync_counter and vsync_counter negatives.
 
-Widen the time key column width when --ns is specified.
+If this ever happen, ctrl will be undefined, but the driver
+will still call:
 
-Before:
+	aspeed_video_update(video, VE_CTRL, 0, ctrl);
 
-  % perf record -a sleep 1
-  % perf report --sort time,overhead,symbol --stdio --ns
-  ...
-       2.39%  187851.10000  [k] smp_call_function_single   -      -
-       1.53%  187851.10000  [k] intel_idle                 -      -
-       0.59%  187851.10000  [.] __wcscmp_ifunc             -      -
-       0.33%  187851.10000  [.] 0000000000000000           -      -
-       0.28%  187851.10000  [k] cpuidle_enter_state        -      -
+Change the code to prevent this to happen.
 
-After:
+This was warned by cppcheck:
 
-  % perf report --sort time,overhead,symbol --stdio --ns
-  ...
-       2.39%  187851.100000000  [k] smp_call_function_single   -      -
-       1.53%  187851.100000000  [k] intel_idle                 -      -
-       0.59%  187851.100000000  [.] __wcscmp_ifunc             -      -
-       0.33%  187851.100000000  [.] 0000000000000000           -      -
-       0.28%  187851.100000000  [k] cpuidle_enter_state        -      -
+	[drivers/media/platform/aspeed-video.c:653]: (error) Uninitialized variable: ctrl
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20190823210338.12360-2-andi@firstfloor.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Reviewed-by: Eddie James <eajames@linux.ibm.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/hist.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/media/platform/aspeed-video.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 7ace7a10054d8..966c248d6a3a1 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -193,7 +193,10 @@ void hists__calc_col_len(struct hists *hists, struct hist_entry *h)
- 	hists__new_col_len(hists, HISTC_MEM_LVL, 21 + 3);
- 	hists__new_col_len(hists, HISTC_LOCAL_WEIGHT, 12);
- 	hists__new_col_len(hists, HISTC_GLOBAL_WEIGHT, 12);
--	hists__new_col_len(hists, HISTC_TIME, 12);
-+	if (symbol_conf.nanosecs)
-+		hists__new_col_len(hists, HISTC_TIME, 16);
-+	else
-+		hists__new_col_len(hists, HISTC_TIME, 12);
+diff --git a/drivers/media/platform/aspeed-video.c b/drivers/media/platform/aspeed-video.c
+index de0f192afa8b1..388c32a11345d 100644
+--- a/drivers/media/platform/aspeed-video.c
++++ b/drivers/media/platform/aspeed-video.c
+@@ -632,7 +632,7 @@ static void aspeed_video_check_and_set_polarity(struct aspeed_video *video)
+ 	}
  
- 	if (h->srcline) {
- 		len = MAX(strlen(h->srcline), strlen(sort_srcline.se_header));
+ 	if (hsync_counter < 0 || vsync_counter < 0) {
+-		u32 ctrl;
++		u32 ctrl = 0;
+ 
+ 		if (hsync_counter < 0) {
+ 			ctrl = VE_CTRL_HSYNC_POL;
+@@ -652,7 +652,8 @@ static void aspeed_video_check_and_set_polarity(struct aspeed_video *video)
+ 				V4L2_DV_VSYNC_POS_POL;
+ 		}
+ 
+-		aspeed_video_update(video, VE_CTRL, 0, ctrl);
++		if (ctrl)
++			aspeed_video_update(video, VE_CTRL, 0, ctrl);
+ 	}
+ }
+ 
 -- 
 2.20.1
 
