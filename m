@@ -2,110 +2,172 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE98FC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 06:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 389CBC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 06:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93D5120820
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 06:55:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="YOa1vj/d"
+	by mail.kernel.org (Postfix) with ESMTP id 065BA20820
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 06:58:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569135486;
+	bh=J/NgsRwthIeJeO2vcQzV9K1t8RVaAj4D19t180IuYKE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WknOLOz1UQ0SqKZtNpM+Bk0bZOizpQbUJ5Vw+QCJm5jjfBgHOnni2pbh1zr9GRcW/
+	 u8SPu6ygD7Rr197yZTmPKE0setrQW3MTu2OZEmK9Uw06axkwflIOrICEoW9JblZ3DS
+	 Zb4jZ2BH4q24SPasot5Z3LIgou++ZN/5f9GO4kaU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727673AbfIVGzy (ORCPT
+        id S1727689AbfIVG6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 02:55:54 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:63907 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727640AbfIVGzx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 02:55:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1569135352; x=1600671352;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=gWgdLrARls0GrnyzF+OrQtm8H+2wz1GFIztrAN9r0t0=;
-  b=YOa1vj/dmMitq29uqqFrdO/BUbVwqk5ugtNDaYbb1c17kRsGHP8+Jn82
-   26usevx4I7B6isNeQ9UvB/PTWC2gHgXNZp7qd7AHlfG3VJ/Z5xAaHgZGV
-   n7Gnu5d9heRNHszrhtKuh2LQh1Gv+C2STBSP7dI5bsPfZDIUFVgYlg8gT
-   s=;
-X-IronPort-AV: E=Sophos;i="5.64,535,1559520000"; 
-   d="scan'208";a="416736677"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-9ec21598.us-east-1.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 22 Sep 2019 06:55:49 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-9ec21598.us-east-1.amazon.com (Postfix) with ESMTPS id 68832A22E2;
-        Sun, 22 Sep 2019 06:55:49 +0000 (UTC)
-Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Sun, 22 Sep 2019 06:55:48 +0000
-Received: from [10.125.238.52] (10.43.161.176) by EX13D01EUB001.ant.amazon.com
- (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Sun, 22 Sep
- 2019 06:55:42 +0000
-Subject: Re: [UNVERIFIED SENDER] Re: [UNVERIFIED SENDER] Re: [PATCH v2 2/3]
- soc: amazon: al-pos: Introduce Amazon's Annapurna Labs POS driver
-To:     James Morse <james.morse@arm.com>
-CC:     Marc Zyngier <maz@kernel.org>, <robh+dt@kernel.org>,
-        <tglx@linutronix.de>, <jason@lakedaemon.net>,
-        <mark.rutland@arm.com>, <nicolas.ferre@microchip.com>,
-        <mchehab+samsung@kernel.org>, <shawn.lin@rock-chips.com>,
-        <gregkh@linuxfoundation.org>, <dwmw@amazon.co.uk>,
-        <benh@kernel.crashing.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <1568142310-17622-1-git-send-email-talel@amazon.com>
- <1568142310-17622-3-git-send-email-talel@amazon.com>
- <86d0g6syva.wl-maz@kernel.org>
- <3205f7ae-5568-c064-23ac-ea726246173b@amazon.com>
- <865zlxsxtd.wl-maz@kernel.org>
- <36f19b3f-46d3-f6d0-3681-71e3a9bb52ce@amazon.com>
- <93e5ac72-13e1-4672-16f0-62ee6b8a8390@arm.com>
-From:   "Shenhar, Talel" <talel@amazon.com>
-Message-ID: <dde86fec-ca92-a2a9-2d63-42c33c8594b0@amazon.com>
-Date:   Sun, 22 Sep 2019 09:55:36 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
+        Sun, 22 Sep 2019 02:58:05 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43834 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727636AbfIVG6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 02:58:04 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id F1E12ACC6;
+        Sun, 22 Sep 2019 06:58:02 +0000 (UTC)
+Date:   Sun, 22 Sep 2019 08:58:01 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: threads-max observe limits
+Message-ID: <20190922065801.GB18814@dhcp22.suse.cz>
+References: <20190917100350.GB1872@dhcp22.suse.cz>
+ <38349607-b09c-fa61-ccbb-20bee9f282a3@gmx.de>
+ <20190917153830.GE1872@dhcp22.suse.cz>
+ <87ftku96md.fsf@x220.int.ebiederm.org>
+ <20190918071541.GB12770@dhcp22.suse.cz>
+ <87h8585bej.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-In-Reply-To: <93e5ac72-13e1-4672-16f0-62ee6b8a8390@arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.43.161.176]
-X-ClientProxiedBy: EX13D17UWC001.ant.amazon.com (10.43.162.188) To
- EX13D01EUB001.ant.amazon.com (10.43.166.194)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87h8585bej.fsf@x220.int.ebiederm.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu 19-09-19 14:33:24, Eric W. Biederman wrote:
+> Michal Hocko <mhocko@kernel.org> writes:
+> 
+> > On Tue 17-09-19 12:26:18, Eric W. Biederman wrote:
+[...]
+> >> Michal is it a very small effect your customers are seeing?
+> >> Is it another bug somewhere else?
+> >
+> > I am still trying to get more information. Reportedly they see a
+> > different auto tuned limit between two kernel versions which results in
+> > an applicaton complaining. As already mentioned this might be a side
+> > effect of something else and this is not yet fully analyzed. My main
+> > point for bringing up this discussion is ...
+> 
+> Please this sounds like the kind of issue that will reveal something
+> deeper about what is going on.
 
-On 9/19/2019 5:42 PM, James Morse wrote:
-> Hi guys,
->
-> On 12/09/2019 10:19, Shenhar, Talel wrote:
->> On 9/12/2019 11:50 AM, Marc Zyngier wrote:
->>> On Thu, 12 Sep 2019 07:50:03 +0100,
->>> "Shenhar, Talel" <talel@amazon.com> wrote:
->>>> On 9/11/2019 5:15 PM, Marc Zyngier wrote:
->>>>> On Tue, 10 Sep 2019 20:05:09 +0100,
->>>>> Talel Shenhar <talel@amazon.com> wrote:
->>>>>
->> James, will love your input from EDAC point of view, does it make sense to plug
->> un-correctable only event to EDAC?
-> I think this device is an example of something like a "Fabric switch units" in
-> Documentation/driver-api/edac.rst. It makes sense that it should be described as a
-> 'device' to edac. You can then use the existing user-space tools to control/report/monitor
-> the values.
+Yes, I have pushed for that information even before starting discussion
+here. I haven't heard from the customer yet unfortunatelly.
+ 
+> >> b) Not being able to bump threads_max to the physical limit of
+> >>    the machine is very clearly a regression.
+> >
+> > ... exactly this part. The changelog of the respective patch doesn't
+> > really exaplain why it is needed except of "it sounds like a good idea
+> > to be consistent".
+> 
+> I suggest doing a partial revert to just:
+> 
+> diff --git a/kernel/fork.c b/kernel/fork.c
+> index 7a74ade4e7d6..de8264ea34a7 100644
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -2943,7 +2943,7 @@ int sysctl_max_threads(struct ctl_table *table, int write,
+>  	if (ret || !write)
+>  		return ret;
+>  
+> -	set_max_threads(threads);
+> +	max_threads = threads;
+>  
+>  	return 0;
+>  }
+> 
+> proc_dointvec_minmax limiting the values to MIN_THREADS and MAX_THREADS
+> is justifiable.  Those are the minimum and maximum values the kernel can
+> function with.
 
-Thank you James,
+MAX_THREADS limit makes perfect sense because crossing it reflects a
+real constrain for correctness. MIN_THREADS, on the other hand, is only
+the low gate for auto tuning to not come with an unbootable system. I do
+not think we should jump into the admin call on the lower bound. There
+might be a good reason to restrict the number of threads to 1. So here
+is what I would like to go with.
 
-Will port this logic to be edac device.
+From 711000fdc243b6bc68a92f9ef0017ae495086d39 Mon Sep 17 00:00:00 2001
+From: Michal Hocko <mhocko@suse.com>
+Date: Sun, 22 Sep 2019 08:45:28 +0200
+Subject: [PATCH] kernel/sysctl.c: do not override max_threads provided by
+ userspace
 
->
->
-> Thanks,
->
-> James
+Partially revert 16db3d3f1170 ("kernel/sysctl.c: threads-max observe limits")
+because the patch is causing a regression to any workload which needs to
+override the auto-tuning of the limit provided by kernel.
+
+set_max_threads is implementing a boot time guesstimate to provide a
+sensible limit of the concurrently running threads so that runaways will
+not deplete all the memory. This is a good thing in general but there
+are workloads which might need to increase this limit for an application
+to run (reportedly WebSpher MQ is affected) and that is simply not
+possible after the mentioned change. It is also very dubious to override
+an admin decision by an estimation that doesn't have any direct relation
+to correctness of the kernel operation.
+
+Fix this by dropping set_max_threads from sysctl_max_threads so any
+value is accepted as long as it fits into MAX_THREADS which is important
+to check because allowing more threads could break internal robust futex
+restriction. While at it, do not use MIN_THREADS as the lower boundary
+because it is also only a heuristic for automatic estimation and admin
+might have a good reason to stop new threads to be created even when
+below this limit.
+
+Fixes: 16db3d3f1170 ("kernel/sysctl.c: threads-max observe limits")
+Cc: stable
+Signed-off-by: Michal Hocko <mhocko@suse.com>
+---
+ kernel/fork.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 2852d0e76ea3..ef865be37e98 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -2929,7 +2929,7 @@ int sysctl_max_threads(struct ctl_table *table, int write,
+ 	struct ctl_table t;
+ 	int ret;
+ 	int threads = max_threads;
+-	int min = MIN_THREADS;
++	int min = 1;
+ 	int max = MAX_THREADS;
+ 
+ 	t = *table;
+@@ -2941,7 +2941,7 @@ int sysctl_max_threads(struct ctl_table *table, int write,
+ 	if (ret || !write)
+ 		return ret;
+ 
+-	set_max_threads(threads);
++	max_threads = threads;
+ 
+ 	return 0;
+ }
+-- 
+2.20.1
+
+-- 
+Michal Hocko
+SUSE Labs
