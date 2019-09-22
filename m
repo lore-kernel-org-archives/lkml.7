@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43814C4740C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C37C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C8F320673
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4204220673
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:21:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180059;
-	bh=ojZaI59rGscmaBaQB30rUvc3ZhjI8pWc/WzGjg+wLPk=;
+	s=default; t=1569180062;
+	bh=01/b3bViCNm6jZBCBwJsYl/9WvWajsU4eHQQh4EqkJs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IrbcSZ+aYz7c/xXOXoze0eZjhjI2CAyVqrIWlQQmN5MEgtP+F7PV9sjKA1lg3Mccm
-	 CPe5eLn4L6Apg7Bq2nPcYT5cFJoleZc+8fLgqLXGAOvdGYdUM5y0+8mFm56lG2xb06
-	 i9jRv2ljeiEvPSBbtrRbNsdBdiX5rAJe0oHe1gho=
+	b=Bp9VVZtHA6fJ8hnnmli7qGAc2cDc2APWdOgTEA31S5bVYRr2oiJ0LSH/SxoYYV1k6
+	 aXbp3peGRbbqHAV1dWQpjExSzsUxzBtyQZ1zY3IpzNme/LYe1J8MQqqZo9AvxR6EJI
+	 +QoqBfZgp9pgQLnx1tkf/kimDdzKTy4mgmn5sW64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404582AbfIVSyY (ORCPT
+        id S1727105AbfIVTVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:54:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54174 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:21:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394473AbfIVSx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:53:58 -0400
+        id S2404384AbfIVSyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:54:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D95321479;
-        Sun, 22 Sep 2019 18:53:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30CE021D56;
+        Sun, 22 Sep 2019 18:54:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178438;
-        bh=ojZaI59rGscmaBaQB30rUvc3ZhjI8pWc/WzGjg+wLPk=;
+        s=default; t=1569178462;
+        bh=01/b3bViCNm6jZBCBwJsYl/9WvWajsU4eHQQh4EqkJs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I8xQ0bP2V5xle2k+wYikun2TL6lmMtoq/KPNYxpzEzq6eNJN8bcc6sVcu3ij9pKtw
-         LEi2jGkgJ2dR6UUIE3sVrP2kFMiVcnKatHKr2zek9R9JtHADk89UJl63PtyhMWii/3
-         TSASzY8rZp+LucZOWsGzTXnbLdbmfkudEMfK/ubg=
+        b=geeeA0c86kSIheTJQAJE/7kRTf5wpsEjdyP1J502IaPYRQHiYCwwnrZiw7i9hc6cN
+         Y+I28N8AueRz0AJZsUoN/FSRV+5IyLRnPD3cakL1UO+yBcp48DMjeiNZTgTMt5bDWZ
+         3mF2dU0GXYIeBCh+Xb/zzpK9z+Z08HmZrbIiA/N8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 172/185] e1000e: add workaround for possible stalled packet
-Date:   Sun, 22 Sep 2019 14:49:10 -0400
-Message-Id: <20190922184924.32534-172-sashal@kernel.org>
+Cc:     Lucas Stach <l.stach@pengutronix.de>,
+        "Andrew F . Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 003/128] ASoC: tlv320aic31xx: suppress error message for EPROBE_DEFER
+Date:   Sun, 22 Sep 2019 14:52:13 -0400
+Message-Id: <20190922185418.2158-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
-References: <20190922184924.32534-1-sashal@kernel.org>
+In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
+References: <20190922185418.2158-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,59 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Lucas Stach <l.stach@pengutronix.de>
 
-[ Upstream commit e5e9a2ecfe780975820e157b922edee715710b66 ]
+[ Upstream commit b7e814deae33eb30f8f8c6528e8e69b107978d88 ]
 
-This works around a possible stalled packet issue, which may occur due to
-clock recovery from the PCH being too slow, when the LAN is transitioning
-from K1 at 1G link speed.
+Both the supplies and reset GPIO might need a probe deferral for the
+resource to be available. Don't print a error message in that case, as
+it is a normal operating condition.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204057
-
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Acked-by: Andrew F. Davis <afd@ti.com>
+Link: https://lore.kernel.org/r/20190719143637.2018-1-l.stach@pengutronix.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/e1000e/ich8lan.c | 10 ++++++++++
- drivers/net/ethernet/intel/e1000e/ich8lan.h |  2 +-
- 2 files changed, 11 insertions(+), 1 deletion(-)
+ sound/soc/codecs/tlv320aic31xx.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.c b/drivers/net/ethernet/intel/e1000e/ich8lan.c
-index cdae0efde8e64..7998a73b6a0fa 100644
---- a/drivers/net/ethernet/intel/e1000e/ich8lan.c
-+++ b/drivers/net/ethernet/intel/e1000e/ich8lan.c
-@@ -1429,6 +1429,16 @@ static s32 e1000_check_for_copper_link_ich8lan(struct e1000_hw *hw)
- 			else
- 				phy_reg |= 0xFA;
- 			e1e_wphy_locked(hw, I217_PLL_CLOCK_GATE_REG, phy_reg);
-+
-+			if (speed == SPEED_1000) {
-+				hw->phy.ops.read_reg_locked(hw, HV_PM_CTRL,
-+							    &phy_reg);
-+
-+				phy_reg |= HV_PM_CTRL_K1_CLK_REQ;
-+
-+				hw->phy.ops.write_reg_locked(hw, HV_PM_CTRL,
-+							     phy_reg);
-+			}
- 		}
- 		hw->phy.ops.release(hw);
+diff --git a/sound/soc/codecs/tlv320aic31xx.c b/sound/soc/codecs/tlv320aic31xx.c
+index bf92d36b8f8ab..3c75dcf917417 100644
+--- a/sound/soc/codecs/tlv320aic31xx.c
++++ b/sound/soc/codecs/tlv320aic31xx.c
+@@ -1441,7 +1441,8 @@ static int aic31xx_i2c_probe(struct i2c_client *i2c,
+ 	aic31xx->gpio_reset = devm_gpiod_get_optional(aic31xx->dev, "reset",
+ 						      GPIOD_OUT_LOW);
+ 	if (IS_ERR(aic31xx->gpio_reset)) {
+-		dev_err(aic31xx->dev, "not able to acquire gpio\n");
++		if (PTR_ERR(aic31xx->gpio_reset) != -EPROBE_DEFER)
++			dev_err(aic31xx->dev, "not able to acquire gpio\n");
+ 		return PTR_ERR(aic31xx->gpio_reset);
+ 	}
  
-diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.h b/drivers/net/ethernet/intel/e1000e/ich8lan.h
-index eb09c755fa172..1502895eb45dd 100644
---- a/drivers/net/ethernet/intel/e1000e/ich8lan.h
-+++ b/drivers/net/ethernet/intel/e1000e/ich8lan.h
-@@ -210,7 +210,7 @@
+@@ -1452,7 +1453,9 @@ static int aic31xx_i2c_probe(struct i2c_client *i2c,
+ 				      ARRAY_SIZE(aic31xx->supplies),
+ 				      aic31xx->supplies);
+ 	if (ret) {
+-		dev_err(aic31xx->dev, "Failed to request supplies: %d\n", ret);
++		if (ret != -EPROBE_DEFER)
++			dev_err(aic31xx->dev,
++				"Failed to request supplies: %d\n", ret);
+ 		return ret;
+ 	}
  
- /* PHY Power Management Control */
- #define HV_PM_CTRL		PHY_REG(770, 17)
--#define HV_PM_CTRL_PLL_STOP_IN_K1_GIGA	0x100
-+#define HV_PM_CTRL_K1_CLK_REQ		0x200
- #define HV_PM_CTRL_K1_ENABLE		0x4000
- 
- #define I217_PLL_CLOCK_GATE_REG	PHY_REG(772, 28)
 -- 
 2.20.1
 
