@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1154EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75692C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6D722190F
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:47:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E843214D9
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:47:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178024;
-	bh=gzyP2iDTSZJkcDxjXtyZpYtn6CrWpPanXtKAD1JQ+j4=;
+	s=default; t=1569178030;
+	bh=/1Doc4+p/q9z3gLW6wxPhUbWI8u6hlwl8Sqo2S/AsAA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TjguZnBiHRnJ/giPD2FZqLoELUCcFnYhaLU/cbx9DzPQhb/E0VN90e2UpHh7LgE/x
-	 HyCUl4L8VHDxr6Nzui6JkKmw2aTiDgIMXM1b6yBi2UW43RRccb4M9Sh1dGseM6GR08
-	 wJb4zrizUt5/s3+Y+gpEC0tup86+DZ2p/izFFFYU=
+	b=juKQDAY+7IVrvIB2Adqq4sPCnozVZ/PnohRrPXkyJDjPn0gOgeZcGLX+WptEJAsWv
+	 gN2KX7Nn7KKWYlcMR+eyGo7ZvHWs/TBuUmrh00EVEHEg+D8Evi5OOeWaLtD7tjfdY0
+	 LAkCqTxBBmgqA5TA6Ny0ekHp0rm/Ioi5GoNGDOmA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390518AbfIVSrD (ORCPT
+        id S2390566AbfIVSrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:47:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43250 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:47:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390405AbfIVSq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:46:56 -0400
+        id S2390447AbfIVSq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:46:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BECA206C2;
-        Sun, 22 Sep 2019 18:46:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C474206C2;
+        Sun, 22 Sep 2019 18:46:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178015;
-        bh=gzyP2iDTSZJkcDxjXtyZpYtn6CrWpPanXtKAD1JQ+j4=;
+        s=default; t=1569178018;
+        bh=/1Doc4+p/q9z3gLW6wxPhUbWI8u6hlwl8Sqo2S/AsAA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zUCbwd4zX9Ezq+LaoQgh4gaYhTVPDeAVbHP3c/yjlbe7aZYKkkHqaEc4W7nDiWtyx
-         fwi/pV54orRrS0AjptA1TCBVjom9vqoURw6UpJLpDMmNPBHWKB6c+Eh67sFKHtBu70
-         oFBqBNbsg+CBkmygqBozXdENvtZ/c+7m0GqumXmA=
+        b=kvq2TLNnwkj4Fu27nigvSEuBnsYImFMRq7/AFkHlvpAdkiS1JyffbzDW60x1Doh21
+         HsRBl6wh/I+KfgjkaoXmtRLm5F4oxPWEoG13GGw4IJOpPAe8w432snnVxBEqH4d5I3
+         nWuaPUm/CxbvbuIQqcgCN+OmAWIDTByQuZdLoNjI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 102/203] ASoC: mchp-i2s-mcc: Fix unprepare of GCLK
-Date:   Sun, 22 Sep 2019 14:42:08 -0400
-Message-Id: <20190922184350.30563-102-sashal@kernel.org>
+Cc:     Liguang Zhang <zhangliguang@linux.alibaba.com>,
+        Borislav Petkov <bp@suse.de>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 104/203] ACPI / APEI: Release resources if gen_pool_add() fails
+Date:   Sun, 22 Sep 2019 14:42:10 -0400
+Message-Id: <20190922184350.30563-104-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -59,57 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+From: Liguang Zhang <zhangliguang@linux.alibaba.com>
 
-[ Upstream commit 988b59467b2b14523a266957affbe9eca3e99fc9 ]
+[ Upstream commit 6abc7622271dc520f241462e2474c71723638851 ]
 
-If hw_free() gets called after hw_params(), GCLK remains prepared,
-preventing further use of it. This patch fixes this by unpreparing the
-clock in hw_free() or if hw_params() gets an error.
+Destroy ghes_estatus_pool and release memory allocated via vmalloc() on
+errors in ghes_estatus_pool_init() in order to avoid memory leaks.
 
-Fixes: 7e0cdf545a55 ("ASoC: mchp-i2s-mcc: add driver for I2SC Multi-Channel Controller")
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Link: https://lore.kernel.org/r/20190820162411.24836-2-codrin.ciubotariu@microchip.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+ [ bp: do the labels properly and with descriptive names and massage. ]
+
+Signed-off-by: Liguang Zhang <zhangliguang@linux.alibaba.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/1563173924-47479-1-git-send-email-zhangliguang@linux.alibaba.com
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/atmel/mchp-i2s-mcc.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ drivers/acpi/apei/ghes.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/atmel/mchp-i2s-mcc.c b/sound/soc/atmel/mchp-i2s-mcc.c
-index 8272915fa09b9..ab7d5f98e759e 100644
---- a/sound/soc/atmel/mchp-i2s-mcc.c
-+++ b/sound/soc/atmel/mchp-i2s-mcc.c
-@@ -670,8 +670,13 @@ static int mchp_i2s_mcc_hw_params(struct snd_pcm_substream *substream,
- 	}
+diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+index a66e00fe31fec..66205ec545553 100644
+--- a/drivers/acpi/apei/ghes.c
++++ b/drivers/acpi/apei/ghes.c
+@@ -153,6 +153,7 @@ static void ghes_unmap(void __iomem *vaddr, enum fixed_addresses fixmap_idx)
+ int ghes_estatus_pool_init(int num_ghes)
+ {
+ 	unsigned long addr, len;
++	int rc;
  
- 	ret = regmap_write(dev->regmap, MCHP_I2SMCC_MRA, mra);
--	if (ret < 0)
-+	if (ret < 0) {
-+		if (dev->gclk_use) {
-+			clk_unprepare(dev->gclk);
-+			dev->gclk_use = 0;
-+		}
- 		return ret;
-+	}
- 	return regmap_write(dev->regmap, MCHP_I2SMCC_MRB, mrb);
+ 	ghes_estatus_pool = gen_pool_create(GHES_ESTATUS_POOL_MIN_ALLOC_ORDER, -1);
+ 	if (!ghes_estatus_pool)
+@@ -164,7 +165,7 @@ int ghes_estatus_pool_init(int num_ghes)
+ 	ghes_estatus_pool_size_request = PAGE_ALIGN(len);
+ 	addr = (unsigned long)vmalloc(PAGE_ALIGN(len));
+ 	if (!addr)
+-		return -ENOMEM;
++		goto err_pool_alloc;
+ 
+ 	/*
+ 	 * New allocation must be visible in all pgd before it can be found by
+@@ -172,7 +173,19 @@ int ghes_estatus_pool_init(int num_ghes)
+ 	 */
+ 	vmalloc_sync_all();
+ 
+-	return gen_pool_add(ghes_estatus_pool, addr, PAGE_ALIGN(len), -1);
++	rc = gen_pool_add(ghes_estatus_pool, addr, PAGE_ALIGN(len), -1);
++	if (rc)
++		goto err_pool_add;
++
++	return 0;
++
++err_pool_add:
++	vfree((void *)addr);
++
++err_pool_alloc:
++	gen_pool_destroy(ghes_estatus_pool);
++
++	return -ENOMEM;
  }
  
-@@ -710,9 +715,13 @@ static int mchp_i2s_mcc_hw_free(struct snd_pcm_substream *substream,
- 		regmap_write(dev->regmap, MCHP_I2SMCC_CR, MCHP_I2SMCC_CR_CKDIS);
- 
- 		if (dev->gclk_running) {
--			clk_disable_unprepare(dev->gclk);
-+			clk_disable(dev->gclk);
- 			dev->gclk_running = 0;
- 		}
-+		if (dev->gclk_use) {
-+			clk_unprepare(dev->gclk);
-+			dev->gclk_use = 0;
-+		}
- 	}
- 
- 	return 0;
+ static int map_gen_v2(struct ghes *ghes)
 -- 
 2.20.1
 
