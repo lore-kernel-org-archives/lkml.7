@@ -4,51 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F76C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C98C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95C0E21D7B
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:53:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74FC521A4A
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:53:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178419;
-	bh=9SO459Tx95hQLcr6M3fZdhK5p3dMn/Dz2ldcdyi20Qc=;
+	s=default; t=1569178426;
+	bh=llSn4ydV9YXYEK8DA21d6QG0PtBC/cL9om0VFCk4OtM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BPmazwAk5bULRc2XVwzQQ2VfD5EzIjYzG+7/oigxk/jZNmdxLpOAEJzg+6gguV989
-	 m7Oqzyzk+8cXxxD/RrzGRvQ+bgT1+I4BwJzFQxLTG5E5eS28/0uSNaIa7/mD9RXIdY
-	 LImklEyn6XlWspWdxCnOs6kPF1g0jRSacsaqngB4=
+	b=1EgRjPRUohfT3AvqqkL/sumwJv7ezwNjh9HcGTmQtuyFQxHNjKm5ovMBE9PeTjaPY
+	 gBi+BltbEO31psLVLxJSeVKm3SoZU2fTCDsYRwmoPwgrL7QqonyZw8swBq046XJ0O7
+	 clcglo09lT1JkHeku7aTKDDXe3dNIT0rcUh5T1bM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394355AbfIVSxi (ORCPT
+        id S2394396AbfIVSxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:53:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52808 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:53:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393614AbfIVSxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:53:13 -0400
+        id S2393868AbfIVSxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:53:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7197E21D79;
-        Sun, 22 Sep 2019 18:53:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8E2021D7B;
+        Sun, 22 Sep 2019 18:53:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178392;
-        bh=9SO459Tx95hQLcr6M3fZdhK5p3dMn/Dz2ldcdyi20Qc=;
+        s=default; t=1569178397;
+        bh=llSn4ydV9YXYEK8DA21d6QG0PtBC/cL9om0VFCk4OtM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y0kb8t8cso9QRkDSS5PvuCLEbeGnak6pvLrqn6w5+VkAlSgP83iKdUHXaSdG2en8Z
-         WhOJwQYSpdY9XX1aFiCcHUopKBKmdZKWAuhmfFsxadMMn82HXSEjRP4BH/K64bRAn3
-         tkMAvvvJ6FntjyydQfN2KRlPqFIIjOpCcBsQSln4=
+        b=1R1+U1g1MS7X6VGJ15VAV/po0XL5o8KifO/m8o6zCoBL6fOP4MdGuzBKUHLThaqIs
+         qgfWR1fN3832e3BhifmXi9Q8ouYzwIzTtC0fcOa7OuJdl5v5wKH0wk8botBZ8hKNuJ
+         PuHyzl0L6+33WV8QQc1jy/nWgikfSf3azk5MtL9g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>, Jinyu Qi <jinyuqi@huawei.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.2 138/185] iommu/iova: Avoid false sharing on fq_timer_on
-Date:   Sun, 22 Sep 2019 14:48:36 -0400
-Message-Id: <20190922184924.32534-138-sashal@kernel.org>
+Cc:     Marcel Bocu <marcel.p.bocu@gmail.com>, Vicki Pfau <vi@endrift.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Brian Woods <brian.woods@amd.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        "Woods, Brian" <Brian.Woods@amd.com>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
+        linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 141/185] x86/amd_nb: Add PCI device IDs for family 17h, model 70h
+Date:   Sun, 22 Sep 2019 14:48:39 -0400
+Message-Id: <20190922184924.32534-141-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -61,49 +68,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Marcel Bocu <marcel.p.bocu@gmail.com>
 
-[ Upstream commit 0d87308cca2c124f9bce02383f1d9632c9be89c4 ]
+[ Upstream commit af4e1c5eca95bed1192d8dc45c8ed63aea2209e8 ]
 
-In commit 14bd9a607f90 ("iommu/iova: Separate atomic variables
-to improve performance") Jinyu Qi identified that the atomic_cmpxchg()
-in queue_iova() was causing a performance loss and moved critical fields
-so that the false sharing would not impact them.
+The AMD Ryzen gen 3 processors came with a different PCI IDs for the
+function 3 & 4 which are used to access the SMN interface. The root
+PCI address however remained at the same address as the model 30h.
 
-However, avoiding the false sharing in the first place seems easy.
-We should attempt the atomic_cmpxchg() no more than 100 times
-per second. Adding an atomic_read() will keep the cache
-line mostly shared.
+Adding the F3/F4 PCI IDs respectively to the misc and link ids appear
+to be sufficient for k10temp, so let's add them and follow up on the
+patch if other functions need more tweaking.
 
-This false sharing came with commit 9a005a800ae8
-("iommu/iova: Add flush timer").
+Vicki Pfau sent an identical patch after I checked that no-one had
+written this patch. I would have been happy about dropping my patch but
+unlike for his patch series, I had already Cc:ed the x86 people and
+they already reviewed the changes. Since Vicki has not answered to
+any email after his initial series, let's assume she is on vacation
+and let's avoid duplication of reviews from the maintainers and merge
+my series. To acknowledge Vicki's anteriority, I added her S-o-b to
+the patch.
 
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Fixes: 9a005a800ae8 ('iommu/iova: Add flush timer')
-Cc: Jinyu Qi <jinyuqi@huawei.com>
-Cc: Joerg Roedel <jroedel@suse.de>
-Acked-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+v2, suggested by Guenter Roeck and Brian Woods:
+ - rename from 71h to 70h
+
+Signed-off-by: Vicki Pfau <vi@endrift.com>
+Signed-off-by: Marcel Bocu <marcel.p.bocu@gmail.com>
+Tested-by: Marcel Bocu <marcel.p.bocu@gmail.com>
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Brian Woods <brian.woods@amd.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# pci_ids.h
+
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: x86@kernel.org
+Cc: "Woods, Brian" <Brian.Woods@amd.com>
+Cc: Clemens Ladisch <clemens@ladisch.de>
+Cc: Jean Delvare <jdelvare@suse.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-hwmon@vger.kernel.org
+Link: https://lore.kernel.org/r/20190722174510.2179-1-marcel.p.bocu@gmail.com
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/iova.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/x86/kernel/amd_nb.c | 3 +++
+ include/linux/pci_ids.h  | 1 +
+ 2 files changed, 4 insertions(+)
 
-diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
-index 3e1a8a6755723..41c605b0058f9 100644
---- a/drivers/iommu/iova.c
-+++ b/drivers/iommu/iova.c
-@@ -577,7 +577,9 @@ void queue_iova(struct iova_domain *iovad,
+diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
+index 002aedc693933..8c26b696d8930 100644
+--- a/arch/x86/kernel/amd_nb.c
++++ b/arch/x86/kernel/amd_nb.c
+@@ -21,6 +21,7 @@
+ #define PCI_DEVICE_ID_AMD_17H_DF_F4	0x1464
+ #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F4 0x15ec
+ #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F4 0x1494
++#define PCI_DEVICE_ID_AMD_17H_M70H_DF_F4 0x1444
  
- 	spin_unlock_irqrestore(&fq->lock, flags);
- 
--	if (atomic_cmpxchg(&iovad->fq_timer_on, 0, 1) == 0)
-+	/* Avoid false sharing as much as possible. */
-+	if (!atomic_read(&iovad->fq_timer_on) &&
-+	    !atomic_cmpxchg(&iovad->fq_timer_on, 0, 1))
- 		mod_timer(&iovad->fq_timer,
- 			  jiffies + msecs_to_jiffies(IOVA_FQ_TIMEOUT));
- }
+ /* Protect the PCI config register pairs used for SMN and DF indirect access. */
+ static DEFINE_MUTEX(smn_mutex);
+@@ -50,6 +51,7 @@ const struct pci_device_id amd_nb_misc_ids[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M10H_DF_F3) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F3) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F3) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M70H_DF_F3) },
+ 	{}
+ };
+ EXPORT_SYMBOL_GPL(amd_nb_misc_ids);
+@@ -63,6 +65,7 @@ static const struct pci_device_id amd_nb_link_ids[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_DF_F4) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M10H_DF_F4) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F4) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M70H_DF_F4) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F4) },
+ 	{}
+ };
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 70e86148cb1e9..862556761bbf4 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -548,6 +548,7 @@
+ #define PCI_DEVICE_ID_AMD_17H_DF_F3	0x1463
+ #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F3 0x15eb
+ #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F3 0x1493
++#define PCI_DEVICE_ID_AMD_17H_M70H_DF_F3 0x1443
+ #define PCI_DEVICE_ID_AMD_CNB17H_F3	0x1703
+ #define PCI_DEVICE_ID_AMD_LANCE		0x2000
+ #define PCI_DEVICE_ID_AMD_LANCE_HOME	0x2001
 -- 
 2.20.1
 
