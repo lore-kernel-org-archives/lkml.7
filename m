@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E70C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0CF2C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A23EA214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:45:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD4D521928
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:45:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569177928;
-	bh=5+4+EyeHu/Ui4dWZQbgh+L+4DfByRKwtCBXnWaSYN9Y=;
+	s=default; t=1569177931;
+	bh=JJNj1JIfEKumpLPmvbYYR+Yiy/6Lw903RFyWTOdYqXQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=smYXALiQ7DlsMzX77L4VqFc0nzsacsnHQMBZO3PlSK6qnlSOBBMNHRzWbf+evqJUf
-	 s8ZTOVxx29ZbN2Kht+SnfRUQNgPCG+BbVJsvEgBO0YceLkhKZQlOPGLVIWh0V8qSz6
-	 DI0iRA8w6zGHt7oqVeoU6iVrlsSMjmqIR2G+w0HA=
+	b=LsBVfeiVBNaJ99uGdvMx1L5RkuuOadkKDKacWuQnY8f5+g5RFiZc/ppr6ID5NonjN
+	 8cIKXwm0/hYYlIp4LDVN1YcLtG6etB0tnbkbX/beasVVijbJx9bNVoo6VRQx17HYeZ
+	 i1Hy5pdCMH2CF/Jb4lRQK+7kNGOOyOZskru3rcOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389264AbfIVSp1 (ORCPT
+        id S2389311AbfIVSpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:45:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41060 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:45:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389209AbfIVSpZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:45:25 -0400
+        id S2389230AbfIVSp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:45:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8806621A4A;
-        Sun, 22 Sep 2019 18:45:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BC82214AF;
+        Sun, 22 Sep 2019 18:45:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569177924;
-        bh=5+4+EyeHu/Ui4dWZQbgh+L+4DfByRKwtCBXnWaSYN9Y=;
+        s=default; t=1569177925;
+        bh=JJNj1JIfEKumpLPmvbYYR+Yiy/6Lw903RFyWTOdYqXQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uSJqOMJWXmi6cG9WdypvYVFfkzv6iM5Fpshnhh42Jwl51AZ1w3R2hBlUs9uVnvZHB
-         mUwtB/QfGrjcznJFMKEKnJs0ydDkqyDoqJ6OxLp65ynDc85yJMgDjDZM41TljOKq5u
-         I+rWBYwzifV4SzzKwqQSmcx8e4PakLBvuczCYsfw=
+        b=JAUNqdeGnHnuxk1NCwc+3kwPPMBMsvRZicL3pL18o9IfUIIjoMnSRHXRU4+QHuzff
+         IcPLJi+LEn4ZXVGqLvLKlLQwVJUbbUuar24MS8x62h1LeHPwDGq8cmq89aqH1XDc28
+         ZId6hwUyN6vEequ/hM+1V/9g74UaKgbuuEBn18J4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robert Richter <rrichter@marvell.com>,
-        Borislav Petkov <bp@suse.de>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 036/203] EDAC/mc: Fix grain_bits calculation
-Date:   Sun, 22 Sep 2019 14:41:02 -0400
-Message-Id: <20190922184350.30563-36-sashal@kernel.org>
+Cc:     Anson Huang <Anson.Huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 037/203] arm64: dts: imx8mq: Correct OPP table according to latest datasheet
+Date:   Sun, 22 Sep 2019 14:41:03 -0400
+Message-Id: <20190922184350.30563-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -63,78 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Richter <rrichter@marvell.com>
+From: Anson Huang <Anson.Huang@nxp.com>
 
-[ Upstream commit 3724ace582d9f675134985727fd5e9811f23c059 ]
+[ Upstream commit 9eced3a2f224a62a233761e8af18c907c532e192 ]
 
-The grain in EDAC is defined as "minimum granularity for an error
-report, in bytes". The following calculation of the grain_bits in
-edac_mc is wrong:
+According to latest datasheet (Rev.1, 10/2018) from below links,
+in the consumer datasheet, 1.5GHz is mentioned as highest opp but
+depends on speed grading fuse, and in the industrial datasheet,
+1.3GHz is mentioned as highest opp but depends on speed grading
+fuse. 1.5GHz and 1.3GHz opp use same voltage, so no need for
+consumer part to support 1.3GHz opp, with same voltage, CPU should
+run at highest frequency in order to go into idle as quick as
+possible, this can save power.
 
-	grain_bits = fls_long(e->grain) + 1;
+That means for consumer part, 1GHz/1.5GHz are supported, for
+industrial part, 800MHz/1.3GHz are supported, and then check the
+speed grading fuse to limit the highest CPU frequency further.
+Correct the market segment bits in opp table to make them work
+according to datasheets.
 
-Where grain_bits is defined as:
+https://www.nxp.com/docs/en/data-sheet/IMX8MDQLQIEC.pdf
+https://www.nxp.com/docs/en/data-sheet/IMX8MDQLQCEC.pdf
 
-	grain = 1 << grain_bits
-
-Example:
-
-	grain = 8	# 64 bit (8 bytes)
-	grain_bits = fls_long(8) + 1
-	grain_bits = 4 + 1 = 5
-
-	grain = 1 << grain_bits
-	grain = 1 << 5 = 32
-
-Replace it with the correct calculation:
-
-	grain_bits = fls_long(e->grain - 1);
-
-The example gives now:
-
-	grain_bits = fls_long(8 - 1)
-	grain_bits = fls_long(7)
-	grain_bits = 3
-
-	grain = 1 << 3 = 8
-
-Also, check if the hardware reports a reasonable grain != 0 and fallback
-with a warning to 1 byte granularity otherwise.
-
- [ bp: massage a bit. ]
-
-Signed-off-by: Robert Richter <rrichter@marvell.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
-Cc: James Morse <james.morse@arm.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Tony Luck <tony.luck@intel.com>
-Link: https://lkml.kernel.org/r/20190624150758.6695-2-rrichter@marvell.com
+Fixes: 12629c5c3749 ("arm64: dts: imx8mq: Add cpu speed grading and all OPPs")
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/edac_mc.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
-index 64922c8fa7e3b..d899d86897d06 100644
---- a/drivers/edac/edac_mc.c
-+++ b/drivers/edac/edac_mc.c
-@@ -1235,9 +1235,13 @@ void edac_mc_handle_error(const enum hw_event_mc_err_type type,
- 	if (p > e->location)
- 		*(p - 1) = '\0';
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index 52aae341d0da5..d1f4eb197af26 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -169,15 +169,14 @@
+ 		opp-1300000000 {
+ 			opp-hz = /bits/ 64 <1300000000>;
+ 			opp-microvolt = <1000000>;
+-			opp-supported-hw = <0xc>, <0x7>;
++			opp-supported-hw = <0xc>, <0x4>;
+ 			clock-latency-ns = <150000>;
+ 		};
  
--	/* Report the error via the trace interface */
--	grain_bits = fls_long(e->grain) + 1;
-+	/* Sanity-check driver-supplied grain value. */
-+	if (WARN_ON_ONCE(!e->grain))
-+		e->grain = 1;
-+
-+	grain_bits = fls_long(e->grain - 1);
- 
-+	/* Report the error via the trace interface */
- 	if (IS_ENABLED(CONFIG_RAS))
- 		trace_mc_event(type, e->msg, e->label, e->error_count,
- 			       mci->mc_idx, e->top_layer, e->mid_layer,
+ 		opp-1500000000 {
+ 			opp-hz = /bits/ 64 <1500000000>;
+ 			opp-microvolt = <1000000>;
+-			/* Consumer only but rely on speed grading */
+-			opp-supported-hw = <0x8>, <0x7>;
++			opp-supported-hw = <0x8>, <0x3>;
+ 			clock-latency-ns = <150000>;
+ 		};
+ 	};
 -- 
 2.20.1
 
