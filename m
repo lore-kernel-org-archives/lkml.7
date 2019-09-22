@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A586BC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA212C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D77C20882
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:13:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7674D20882
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:13:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179614;
-	bh=7dFsxG1YLl3GjuYFLgokzQIzvV40LA4esZrNSpI38To=;
+	s=default; t=1569179619;
+	bh=VBJNM2vTUgCaLDng6wOKnNX5G5DEU3d89JMapHsEbvQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JqapnIuSrs+Cej317FqBWojnMN1I9dyLcBPSc93iLWg5VTRRf8stsgWJrnfzYYxQr
-	 tAQxEfTKfVlKsMzOdVwmtL7Fkgld1f4MZaWhqBCpn3rOyirAKDklbRu1TLZVkSLSs9
-	 xR9Xf7/pnYauudwJ3dmUrvzdbS0vIRsiLYHFStaI=
+	b=UhfbNdps6MxoO0CDFmG/kQZ4MZCKkxUQc7Wuytks91J4LKflg+qmEtmjaUBwqkXDd
+	 OVfnmCs9fCnjOU74vz8AynA2OxUmNpPAUFwtY7rTiVa3Be1wjCY4tO1HULJVTEkgqu
+	 QJRJDvQKOVEFWWH8dIcQ9ztsq2flEr3v/DZoEEuI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404813AbfIVS5h (ORCPT
+        id S1730722AbfIVTNi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:57:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59968 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:13:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394818AbfIVS50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:57:26 -0400
+        id S2438594AbfIVS5g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:57:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D58F72186A;
-        Sun, 22 Sep 2019 18:57:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 250D521A4A;
+        Sun, 22 Sep 2019 18:57:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178645;
-        bh=7dFsxG1YLl3GjuYFLgokzQIzvV40LA4esZrNSpI38To=;
+        s=default; t=1569178655;
+        bh=VBJNM2vTUgCaLDng6wOKnNX5G5DEU3d89JMapHsEbvQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eD6CtK+MFtGtPfNhAddJ4VgKRwuJIKNsBdF92VQuGY7fOAi6WJ90l9ovLwAo80Dng
-         2qxaIxsYxRzSV5dTTub+2FKOl9bY1Zp94gDkiIe55yyEhxxDVdPZsz03GV/X7fiOkf
-         9bTzVfmfycMO/irWUegcJDF3IUT0rnobDlHbhyuY=
+        b=x/6DnBcibGJDRp0f69bkev8otdYUrFHq4UBPJFyMgsldX1mHseKnUv8bhe3M+Eeya
+         tVGrlu5cRw99BisJUqwMUkYox5aUUBWc0OrM+1UpiyK7CDq/PUCGnA+LeVeSfpIfyP
+         InMeJvKbho9EKb1zNHJOox3Hx0MxFzdt7uAos798=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Axel Lin <axel.lin@ingics.com>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 02/89] regulator: lm363x: Fix off-by-one n_voltages for lm3632 ldo_vpos/ldo_vneg
-Date:   Sun, 22 Sep 2019 14:55:50 -0400
-Message-Id: <20190922185717.3412-2-sashal@kernel.org>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 10/89] media: i2c: ov5640: Check for devm_gpiod_get_optional() error
+Date:   Sun, 22 Sep 2019 14:55:58 -0400
+Message-Id: <20190922185717.3412-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185717.3412-1-sashal@kernel.org>
 References: <20190922185717.3412-1-sashal@kernel.org>
@@ -58,49 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Axel Lin <axel.lin@ingics.com>
+From: Fabio Estevam <festevam@gmail.com>
 
-[ Upstream commit 1e2cc8c5e0745b545d4974788dc606d678b6e564 ]
+[ Upstream commit 8791a102ce579346cea9d2f911afef1c1985213c ]
 
-According to the datasheet https://www.ti.com/lit/ds/symlink/lm3632a.pdf
-Table 20. VPOS Bias Register Field Descriptions VPOS[5:0]
-Sets the Positive Display Bias (LDO) Voltage (50 mV per step)
-000000: 4 V
-000001: 4.05 V
-000010: 4.1 V
-....................
-011101: 5.45 V
-011110: 5.5 V (Default)
-011111: 5.55 V
-....................
-100111: 5.95 V
-101000: 6 V
-Note: Codes 101001 to 111111 map to 6 V
+The power down and reset GPIO are optional, but the return value
+from devm_gpiod_get_optional() needs to be checked and propagated
+in the case of error, so that probe deferral can work.
 
-The LM3632_LDO_VSEL_MAX should be 0b101000 (0x28), so the maximum voltage
-can match the datasheet.
-
-Fixes: 3a8d1a73a037 ("regulator: add LM363X driver")
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Link: https://lore.kernel.org/r/20190626132632.32629-1-axel.lin@ingics.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/lm363x-regulator.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/i2c/ov5640.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/regulator/lm363x-regulator.c b/drivers/regulator/lm363x-regulator.c
-index ce5f7d9ad475f..30f576a5daf18 100644
---- a/drivers/regulator/lm363x-regulator.c
-+++ b/drivers/regulator/lm363x-regulator.c
-@@ -33,7 +33,7 @@
+diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+index acf5c8a55bbd2..69f564b0837a7 100644
+--- a/drivers/media/i2c/ov5640.c
++++ b/drivers/media/i2c/ov5640.c
+@@ -2261,9 +2261,14 @@ static int ov5640_probe(struct i2c_client *client,
+ 	/* request optional power down pin */
+ 	sensor->pwdn_gpio = devm_gpiod_get_optional(dev, "powerdown",
+ 						    GPIOD_OUT_HIGH);
++	if (IS_ERR(sensor->pwdn_gpio))
++		return PTR_ERR(sensor->pwdn_gpio);
++
+ 	/* request optional reset pin */
+ 	sensor->reset_gpio = devm_gpiod_get_optional(dev, "reset",
+ 						     GPIOD_OUT_HIGH);
++	if (IS_ERR(sensor->reset_gpio))
++		return PTR_ERR(sensor->reset_gpio);
  
- /* LM3632 */
- #define LM3632_BOOST_VSEL_MAX		0x26
--#define LM3632_LDO_VSEL_MAX		0x29
-+#define LM3632_LDO_VSEL_MAX		0x28
- #define LM3632_VBOOST_MIN		4500000
- #define LM3632_VLDO_MIN			4000000
+ 	v4l2_i2c_subdev_init(&sensor->sd, client, &ov5640_subdev_ops);
  
 -- 
 2.20.1
