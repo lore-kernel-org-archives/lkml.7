@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D43CEC4740C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D264C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2FAB21D6C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:52:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E9BF21BE5
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:52:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178320;
-	bh=wKwjfWM+JCA0f7UO0uWQrgxnwNMKaVWWUO0lVQf5ynI=;
+	s=default; t=1569178324;
+	bh=XqTrBwG3jzWgXqa8Ap4eF4CPHXPDO+58ycrQVeMj+3M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R/QMm8A7OLaTcWKlCkSsseQoC4JxkjatRZTODimw9RbQ0rm2HLfCJfF8n2m4sNvna
-	 V+0qOOW8iInpL11XahhxDWueswzT++TPE1Y8I3aOJewYb9kRiYHrBYjxFAtWND8blH
-	 vR1jLImjVcPO8LbTwxjjCYQI5up5PjdkCk67dtFQ=
+	b=O8eqSoZM1Vs7vevER4esB5GjfVxWVGRKLBOHSKvl78R7+dO5rvD/UEFuuuAdn49p3
+	 Z268yPrdH1H08Zlq/tVpf+Sjb/8OKcYhvOnZ6ulLhS8EVJivBXl9TK6FhHdZG90fBn
+	 Z59S9G7G426nQx+sxumCyPhtMN6CaXFcWfVk3dwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406637AbfIVSwA (ORCPT
+        id S2406976AbfIVSwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:52:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50164 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:52:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392955AbfIVSvz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:51:55 -0400
+        id S2406509AbfIVSv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:51:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 821F821479;
-        Sun, 22 Sep 2019 18:51:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2059121A4A;
+        Sun, 22 Sep 2019 18:51:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178314;
-        bh=wKwjfWM+JCA0f7UO0uWQrgxnwNMKaVWWUO0lVQf5ynI=;
+        s=default; t=1569178316;
+        bh=XqTrBwG3jzWgXqa8Ap4eF4CPHXPDO+58ycrQVeMj+3M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t11ol1htNtxlc4/Q4hBKgiBtxx7b+duCCy7lyOutn6D9w8DtomvcJJ2dNPOYtsdxL
-         SLWKVcBYLkdiG/67rtS8SemSSSsnvutH8sMcqmkKriaFTpHETHNwaCio/dV2jgOjOZ
-         F3vghyUjKjWqHGjEegYk3f9p3q3TcgpHGHSsLMV4=
+        b=D/uUlHjI03I/x4coG3zrFTBF/5ZpfO+eMmYQA9JkRL9qa1PlHi4Go+RaOwzQBCEnw
+         pTlhqdFVmtXY7It6ra1kuvMWUYF5gzknkXNz/W+xYhDs/cfb9l8yIVeSi5l7HDXNmp
+         Lc7SLCCXaIHrpCtUSfkXAgvIj5JsLgG/qazgnrfI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Agner <stefan.agner@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 082/185] ARM: dts: imx7-colibri: disable HS400
-Date:   Sun, 22 Sep 2019 14:47:40 -0400
-Message-Id: <20190922184924.32534-82-sashal@kernel.org>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        syzbot+2d4fc2a0c45ad8da7e99@syzkaller.appspotmail.com,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 084/185] media: radio/si470x: kill urb on error
+Date:   Sun, 22 Sep 2019 14:47:42 -0400
+Message-Id: <20190922184924.32534-84-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -61,42 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Agner <stefan.agner@toradex.com>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-[ Upstream commit a95fbda08ee20cd063ce5826e0df95a2c22ea8c5 ]
+[ Upstream commit 0d616f2a3fdbf1304db44d451d9f07008556923b ]
 
-Force HS200 by masking bit 63 of the SDHCI capability register.
-The i.MX ESDHC driver uses SDHCI_QUIRK2_CAPS_BIT63_FOR_HS400. With
-that the stack checks bit 63 to descide whether HS400 is available.
-Using sdhci-caps-mask allows to mask bit 63. The stack then selects
-HS200 as operating mode.
+In the probe() function radio->int_in_urb was not killed if an
+error occurred in the probe sequence. It was also missing in
+the disconnect.
 
-This prevents rare communication errors with minimal effect on
-performance:
-	sdhci-esdhc-imx 30b60000.usdhc: warning! HS400 strobe DLL
-		status REF not lock!
+This caused this syzbot issue:
 
-Signed-off-by: Stefan Agner <stefan.agner@toradex.com>
-Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
-Reviewed-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+https://syzkaller.appspot.com/bug?extid=2d4fc2a0c45ad8da7e99
+
+Reported-and-tested-by: syzbot+2d4fc2a0c45ad8da7e99@syzkaller.appspotmail.com
+
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx7-colibri.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/radio/si470x/radio-si470x-usb.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
-index 895fbde4d4333..c1ed83131b495 100644
---- a/arch/arm/boot/dts/imx7-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx7-colibri.dtsi
-@@ -323,6 +323,7 @@
- 	vmmc-supply = <&reg_module_3v3>;
- 	vqmmc-supply = <&reg_DCDC3>;
- 	non-removable;
-+	sdhci-caps-mask = <0x80000000 0x0>;
- };
+diff --git a/drivers/media/radio/si470x/radio-si470x-usb.c b/drivers/media/radio/si470x/radio-si470x-usb.c
+index 58e622d573733..3dccce398113a 100644
+--- a/drivers/media/radio/si470x/radio-si470x-usb.c
++++ b/drivers/media/radio/si470x/radio-si470x-usb.c
+@@ -734,7 +734,7 @@ static int si470x_usb_driver_probe(struct usb_interface *intf,
+ 	/* start radio */
+ 	retval = si470x_start_usb(radio);
+ 	if (retval < 0)
+-		goto err_all;
++		goto err_buf;
  
- &iomuxc {
+ 	/* set initial frequency */
+ 	si470x_set_freq(radio, 87.5 * FREQ_MUL); /* available in all regions */
+@@ -749,6 +749,8 @@ static int si470x_usb_driver_probe(struct usb_interface *intf,
+ 
+ 	return 0;
+ err_all:
++	usb_kill_urb(radio->int_in_urb);
++err_buf:
+ 	kfree(radio->buffer);
+ err_ctrl:
+ 	v4l2_ctrl_handler_free(&radio->hdl);
+@@ -822,6 +824,7 @@ static void si470x_usb_driver_disconnect(struct usb_interface *intf)
+ 	mutex_lock(&radio->lock);
+ 	v4l2_device_disconnect(&radio->v4l2_dev);
+ 	video_unregister_device(&radio->videodev);
++	usb_kill_urb(radio->int_in_urb);
+ 	usb_set_intfdata(intf, NULL);
+ 	mutex_unlock(&radio->lock);
+ 	v4l2_device_put(&radio->v4l2_dev);
 -- 
 2.20.1
 
