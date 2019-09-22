@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90414C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7539FC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64B8D206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:23:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 431A3206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:23:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180207;
-	bh=YdtB9ERDjqPMpLb1hhSKMnEGtL5LAfOBUuAxVN22O04=;
+	s=default; t=1569180210;
+	bh=MoJuAFD5H01r8aUKRg6WQ0qWyaX5xkkJmQOMh7mNsM0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CXZ1BtqjbB0A+OTwcVoRunDby8aPE3EtdbBnuDQTv9hk8w34mIailVdu9Rt/oxmvi
-	 L73IQjOymbp6NV5Va4O6hW5jjrd649vQO7FFCaGjurB5IxuLIh7GWSaRRwboox7Axk
-	 1Noo9QsBoecqi3PM2erOEvWMo/dPx00V69gZ6rzM=
+	b=FbrgzkMyKkZ0wR17fMSmamDN2NtEcIuQw3kNzqWlN6bYacSs9js+b6MDIcgt+RLIV
+	 mxW+Utn5f5J0WBaIkXu1abtf4GFmbXdJxOFaANq8zWVPttFQ4kYzCiuMwGEocXhTw1
+	 Wa7JUu+rPmZoG53rV0HPPM7ZjWfPEl/C1yJov+es=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394270AbfIVSxY (ORCPT
+        id S1731296AbfIVTX3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:53:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52496 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:23:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389374AbfIVSxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:53:03 -0400
+        id S2394250AbfIVSxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:53:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E571C21D7E;
-        Sun, 22 Sep 2019 18:53:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54A3421D79;
+        Sun, 22 Sep 2019 18:53:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178382;
-        bh=YdtB9ERDjqPMpLb1hhSKMnEGtL5LAfOBUuAxVN22O04=;
+        s=default; t=1569178404;
+        bh=MoJuAFD5H01r8aUKRg6WQ0qWyaX5xkkJmQOMh7mNsM0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R9mXxygGcpRSMuDsihNkHYIw7f3wXZh5rdVeGocS8XGl9XyA5srzlGXP7Zo3QhFuJ
-         CRd79JsroGZFzZc5AYDDXUrIIlCJGpHJ9Sy3766b0L4CprXjCoOm5PpdoA2DxKXIRB
-         25nv3xfTyRR+4zP5lYQf2kFC/FZweMglXLjo51dk=
+        b=YbFJzlpi7/T6NrKnfpnINiqjr5DdLVXVZzBXVYOXnpY2ZfwphdUGyhpTfBxX7QXdW
+         DnpYndhySGvVdyZlpOTIx5DE2Gl3cHrDKSXfs5g+9WALNHGzoSX5F2AJhhuTBJZ2Uc
+         DsE/DndQxKggBun7O1oQN2IN5GBUlY487VRtvbkM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Song Liu <songliubraving@fb.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 130/185] x86/mm/pti: Handle unaligned address gracefully in pti_clone_pagetable()
-Date:   Sun, 22 Sep 2019 14:48:28 -0400
-Message-Id: <20190922184924.32534-130-sashal@kernel.org>
+Cc:     Wang Shenran <shenran268@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 146/185] hwmon: (acpi_power_meter) Change log level for 'unsafe software power cap'
+Date:   Sun, 22 Sep 2019 14:48:44 -0400
+Message-Id: <20190922184924.32534-146-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -61,55 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Song Liu <songliubraving@fb.com>
+From: Wang Shenran <shenran268@gmail.com>
 
-[ Upstream commit 825d0b73cd7526b0bb186798583fae810091cbac ]
+[ Upstream commit 6e4d91aa071810deac2cd052161aefb376ecf04e ]
 
-pti_clone_pmds() assumes that the supplied address is either:
+At boot time, the acpi_power_meter driver logs the following error level
+message: "Ignoring unsafe software power cap". Having read about it from
+a few sources, it seems that the error message can be quite misleading.
 
- - properly PUD/PMD aligned
-or
- - the address is actually mapped which means that independently
-   of the mapping level (PUD/PMD/PTE) the next higher mapping
-   exists.
+While the message can imply that Linux is ignoring the fact that the
+system is operating in potentially dangerous conditions, the truth is
+the driver found an ACPI_PMC object that supports software power
+capping. The driver simply decides not to use it, perhaps because it
+doesn't support the object.
 
-If that's not the case the unaligned address can be incremented by PUD or
-PMD size incorrectly. All callers supply mapped and/or aligned addresses,
-but for the sake of robustness it's better to handle that case properly and
-to emit a warning.
+The best solution is probably changing the log level from error to warning.
+All sources I have found, regarding the error, have downplayed its
+significance. There is not much of a reason for it to be on error level,
+while causing potential confusions or misinterpretations.
 
-[ tglx: Rewrote changelog and added WARN_ON_ONCE() ]
-
-Signed-off-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/alpine.DEB.2.21.1908282352470.1938@nanos.tec.linutronix.de
+Signed-off-by: Wang Shenran <shenran268@gmail.com>
+Link: https://lore.kernel.org/r/20190724080110.6952-1-shenran268@gmail.com
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/pti.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/hwmon/acpi_power_meter.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/mm/pti.c b/arch/x86/mm/pti.c
-index ba22b50f4eca2..7f2140414440d 100644
---- a/arch/x86/mm/pti.c
-+++ b/arch/x86/mm/pti.c
-@@ -330,13 +330,15 @@ pti_clone_pgtable(unsigned long start, unsigned long end,
+diff --git a/drivers/hwmon/acpi_power_meter.c b/drivers/hwmon/acpi_power_meter.c
+index 6ba1a08253f0a..4cf25458f0b95 100644
+--- a/drivers/hwmon/acpi_power_meter.c
++++ b/drivers/hwmon/acpi_power_meter.c
+@@ -681,8 +681,8 @@ static int setup_attrs(struct acpi_power_meter_resource *resource)
  
- 		pud = pud_offset(p4d, addr);
- 		if (pud_none(*pud)) {
--			addr += PUD_SIZE;
-+			WARN_ON_ONCE(addr & ~PUD_MASK);
-+			addr = round_up(addr + 1, PUD_SIZE);
- 			continue;
- 		}
- 
- 		pmd = pmd_offset(pud, addr);
- 		if (pmd_none(*pmd)) {
--			addr += PMD_SIZE;
-+			WARN_ON_ONCE(addr & ~PMD_MASK);
-+			addr = round_up(addr + 1, PMD_SIZE);
- 			continue;
+ 	if (resource->caps.flags & POWER_METER_CAN_CAP) {
+ 		if (!can_cap_in_hardware()) {
+-			dev_err(&resource->acpi_dev->dev,
+-				"Ignoring unsafe software power cap!\n");
++			dev_warn(&resource->acpi_dev->dev,
++				 "Ignoring unsafe software power cap!\n");
+ 			goto skip_unsafe_cap;
  		}
  
 -- 
