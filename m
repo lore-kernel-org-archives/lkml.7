@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB32C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90414C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16DCF206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:23:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64B8D206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:23:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180205;
-	bh=1OLP2EegMSYkpDiNpalB0iVNYY2yBm/hTb7jhkms/qs=;
+	s=default; t=1569180207;
+	bh=YdtB9ERDjqPMpLb1hhSKMnEGtL5LAfOBUuAxVN22O04=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k+cQQS5Lg5IlwMJMuUEd9gd/+E5OuSoQlfgq5PAba8Gdh5Njjz98M2gxnMR+FKUtA
-	 rnGjcJlb+N9zQeUdr2VZxBjWhKLAFbfiIUp4hYPcBu373OGQjZK+cIbM93Z9jyUX57
-	 PXtFIL0e1oN2Vf3ouc8XzMUWnvaBp9mpuSFT2xV8=
+	b=CXZ1BtqjbB0A+OTwcVoRunDby8aPE3EtdbBnuDQTv9hk8w34mIailVdu9Rt/oxmvi
+	 L73IQjOymbp6NV5Va4O6hW5jjrd649vQO7FFCaGjurB5IxuLIh7GWSaRRwboox7Axk
+	 1Noo9QsBoecqi3PM2erOEvWMo/dPx00V69gZ6rzM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731274AbfIVTXX (ORCPT
+        id S2394270AbfIVSxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:23:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53246 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:53:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394272AbfIVSxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:53:25 -0400
+        id S2389374AbfIVSxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:53:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E3B421D80;
-        Sun, 22 Sep 2019 18:53:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E571C21D7E;
+        Sun, 22 Sep 2019 18:53:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178405;
-        bh=1OLP2EegMSYkpDiNpalB0iVNYY2yBm/hTb7jhkms/qs=;
+        s=default; t=1569178382;
+        bh=YdtB9ERDjqPMpLb1hhSKMnEGtL5LAfOBUuAxVN22O04=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hLK2VMblEGcJaTCBMs+tOWqEUayroBX7P2+OqlTcbS3VmY014Q6oBq4YZHoTMMTFr
-         XMObZRmVcRbYrD4WODH+1gkAR7a/Bp4iFzEhapoNzzfq2Wk4sAH0B3e1NFJOZTch7d
-         2T5yjnPkXnpg4rzpQT6fB7kW2ugphn2bB0BvYJVM=
+        b=R9mXxygGcpRSMuDsihNkHYIw7f3wXZh5rdVeGocS8XGl9XyA5srzlGXP7Zo3QhFuJ
+         CRd79JsroGZFzZc5AYDDXUrIIlCJGpHJ9Sy3766b0L4CprXjCoOm5PpdoA2DxKXIRB
+         25nv3xfTyRR+4zP5lYQf2kFC/FZweMglXLjo51dk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yufen Yu <yuyufen@huawei.com>, NeilBrown <neilb@suse.de>,
-        Song Liu <songliubraving@fb.com>,
-        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 147/185] md/raid1: fail run raid1 array when active disk less than one
-Date:   Sun, 22 Sep 2019 14:48:45 -0400
-Message-Id: <20190922184924.32534-147-sashal@kernel.org>
+Cc:     Song Liu <songliubraving@fb.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 130/185] x86/mm/pti: Handle unaligned address gracefully in pti_clone_pagetable()
+Date:   Sun, 22 Sep 2019 14:48:28 -0400
+Message-Id: <20190922184924.32534-130-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -59,75 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yufen Yu <yuyufen@huawei.com>
+From: Song Liu <songliubraving@fb.com>
 
-[ Upstream commit 07f1a6850c5d5a65c917c3165692b5179ac4cb6b ]
+[ Upstream commit 825d0b73cd7526b0bb186798583fae810091cbac ]
 
-When run test case:
-  mdadm -CR /dev/md1 -l 1 -n 4 /dev/sd[a-d] --assume-clean --bitmap=internal
-  mdadm -S /dev/md1
-  mdadm -A /dev/md1 /dev/sd[b-c] --run --force
+pti_clone_pmds() assumes that the supplied address is either:
 
-  mdadm --zero /dev/sda
-  mdadm /dev/md1 -a /dev/sda
+ - properly PUD/PMD aligned
+or
+ - the address is actually mapped which means that independently
+   of the mapping level (PUD/PMD/PTE) the next higher mapping
+   exists.
 
-  echo offline > /sys/block/sdc/device/state
-  echo offline > /sys/block/sdb/device/state
-  sleep 5
-  mdadm -S /dev/md1
+If that's not the case the unaligned address can be incremented by PUD or
+PMD size incorrectly. All callers supply mapped and/or aligned addresses,
+but for the sake of robustness it's better to handle that case properly and
+to emit a warning.
 
-  echo running > /sys/block/sdb/device/state
-  echo running > /sys/block/sdc/device/state
-  mdadm -A /dev/md1 /dev/sd[a-c] --run --force
+[ tglx: Rewrote changelog and added WARN_ON_ONCE() ]
 
-mdadm run fail with kernel message as follow:
-[  172.986064] md: kicking non-fresh sdb from array!
-[  173.004210] md: kicking non-fresh sdc from array!
-[  173.022383] md/raid1:md1: active with 0 out of 4 mirrors
-[  173.022406] md1: failed to create bitmap (-5)
-
-In fact, when active disk in raid1 array less than one, we
-need to return fail in raid1_run().
-
-Reviewed-by: NeilBrown <neilb@suse.de>
-Signed-off-by: Yufen Yu <yuyufen@huawei.com>
 Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/alpine.DEB.2.21.1908282352470.1938@nanos.tec.linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/raid1.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ arch/x86/mm/pti.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index a26731a9b38e7..f393f0dc042fc 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -3096,6 +3096,13 @@ static int raid1_run(struct mddev *mddev)
- 		    !test_bit(In_sync, &conf->mirrors[i].rdev->flags) ||
- 		    test_bit(Faulty, &conf->mirrors[i].rdev->flags))
- 			mddev->degraded++;
-+	/*
-+	 * RAID1 needs at least one disk in active
-+	 */
-+	if (conf->raid_disks - mddev->degraded < 1) {
-+		ret = -EINVAL;
-+		goto abort;
-+	}
+diff --git a/arch/x86/mm/pti.c b/arch/x86/mm/pti.c
+index ba22b50f4eca2..7f2140414440d 100644
+--- a/arch/x86/mm/pti.c
++++ b/arch/x86/mm/pti.c
+@@ -330,13 +330,15 @@ pti_clone_pgtable(unsigned long start, unsigned long end,
  
- 	if (conf->raid_disks - mddev->degraded == 1)
- 		mddev->recovery_cp = MaxSector;
-@@ -3129,8 +3136,12 @@ static int raid1_run(struct mddev *mddev)
- 	ret =  md_integrity_register(mddev);
- 	if (ret) {
- 		md_unregister_thread(&mddev->thread);
--		raid1_free(mddev, conf);
-+		goto abort;
- 	}
-+	return 0;
-+
-+abort:
-+	raid1_free(mddev, conf);
- 	return ret;
- }
+ 		pud = pud_offset(p4d, addr);
+ 		if (pud_none(*pud)) {
+-			addr += PUD_SIZE;
++			WARN_ON_ONCE(addr & ~PUD_MASK);
++			addr = round_up(addr + 1, PUD_SIZE);
+ 			continue;
+ 		}
+ 
+ 		pmd = pmd_offset(pud, addr);
+ 		if (pmd_none(*pmd)) {
+-			addr += PMD_SIZE;
++			WARN_ON_ONCE(addr & ~PMD_MASK);
++			addr = round_up(addr + 1, PMD_SIZE);
+ 			continue;
+ 		}
  
 -- 
 2.20.1
