@@ -4,50 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03768C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F6CC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDC2C206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:07:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AFEF206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:07:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179256;
-	bh=nbgbhwOlk/LuTh2Jiw/PsDh+mAGYreruz68vM9Rfhvw=;
+	s=default; t=1569179266;
+	bh=wHqDZJIituYx9y3q6KEtPRBcqok4mbWdkHwToUoZq6o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jV0fEotAtKEEsimKdeJe/EUEWoqEUqw7Hd96Ssep0SMR18JSYQ1BItY+gJGokv1iH
-	 Cz0eUGGNX5k4W9DB6E268i0g56fs16iVepVQH51qUxtMWGCJ9U+NS7VZQnpM4kulW7
-	 Fgd7AvWpdKoiw17nyXA2ULbnwGDlq8VPPGz4fJZ8=
+	b=B9M4FX2iC0qMJkMTb1GEpz5qSZlrg+fE16Rr1BoPbxn/9RxzbEe41B+kHLw6EMUZe
+	 DndL7dFPsujb3ydnAjEj93j7bXmRRG8BRaY9ddzDSNemjpHFZ/Nb+VUlSJ8dQjsje/
+	 EnzM2yfblQDmTLd4ZamyqnMRu4C8AOTng1Ih1h2M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393785AbfIVTHf (ORCPT
+        id S1730340AbfIVTHp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:07:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35576 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:07:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408303AbfIVTAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 15:00:04 -0400
+        id S2406200AbfIVTAA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 15:00:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B2412190F;
-        Sun, 22 Sep 2019 19:00:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70080208C2;
+        Sun, 22 Sep 2019 18:59:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178803;
-        bh=nbgbhwOlk/LuTh2Jiw/PsDh+mAGYreruz68vM9Rfhvw=;
+        s=default; t=1569178799;
+        bh=wHqDZJIituYx9y3q6KEtPRBcqok4mbWdkHwToUoZq6o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Byhjadz/zxHLIz3F9iFWxTOE1Bj7s+6rn5MLiizqh9P0C6qE5V8b73kkSCl6ojUSg
-         NaltRx9lyWJuBiLkUzjsxUh4RDmHT66LQHAwCgtVWn6PDTiP5JaA9fUxsX5hMkro2Y
-         NY++yXd3ut2hCxWmXXqk4N4rW5SPyCw8xo5KKZ+E=
+        b=cRXS3kW65pUP4PltOT60DGy2nS7VaEEOdWJI682ItN7BZzE2sURa1oIy6qOps2nIV
+         ovsJC/ySCNAzNN41eDDUQgU4uXxtiDBHquEDs6KXG9zW01bM9XnHF9sBQONCqn1dCD
+         9hMdjosG3EWpBwFf4yyAsEQrJNfyGX8UdDxWZN4E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiaofei Tan <tanxiaofei@huawei.com>,
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Borislav Petkov <bp@suse.de>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
         James Morse <james.morse@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-efi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 22/60] efi: cper: print AER info of PCIe fatal error
-Date:   Sun, 22 Sep 2019 14:58:55 -0400
-Message-Id: <20190922185934.4305-22-sashal@kernel.org>
+        kernel-janitors@vger.kernel.org,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 19/60] EDAC/altera: Use the proper type for the IRQ status bits
+Date:   Sun, 22 Sep 2019 14:58:52 -0400
+Message-Id: <20190922185934.4305-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185934.4305-1-sashal@kernel.org>
 References: <20190922185934.4305-1-sashal@kernel.org>
@@ -60,87 +65,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaofei Tan <tanxiaofei@huawei.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit b194a77fcc4001dc40aecdd15d249648e8a436d1 ]
+[ Upstream commit 8faa1cf6ed82f33009f63986c3776cc48af1b7b2 ]
 
-AER info of PCIe fatal error is not printed in the current driver.
-Because APEI driver will panic directly for fatal error, and can't
-run to the place of printing AER info.
+Smatch complains about the cast of a u32 pointer to unsigned long:
 
-An example log is as following:
-{763}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 11
-{763}[Hardware Error]: event severity: fatal
-{763}[Hardware Error]:  Error 0, type: fatal
-{763}[Hardware Error]:   section_type: PCIe error
-{763}[Hardware Error]:   port_type: 0, PCIe end point
-{763}[Hardware Error]:   version: 4.0
-{763}[Hardware Error]:   command: 0x0000, status: 0x0010
-{763}[Hardware Error]:   device_id: 0000:82:00.0
-{763}[Hardware Error]:   slot: 0
-{763}[Hardware Error]:   secondary_bus: 0x00
-{763}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x10fb
-{763}[Hardware Error]:   class_code: 000002
-Kernel panic - not syncing: Fatal hardware error!
+  drivers/edac/altera_edac.c:1878 altr_edac_a10_irq_handler()
+  warn: passing casted pointer '&irq_status' to 'find_first_bit()'
 
-This issue was imported by the patch, '37448adfc7ce ("aerdrv: Move
-cper_print_aer() call out of interrupt context")'. To fix this issue,
-this patch adds print of AER info in cper_print_pcie() for fatal error.
+This code wouldn't work on a 64 bit big endian system because it would
+read past the end of &irq_status.
 
-Here is the example log after this patch applied:
-{24}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 10
-{24}[Hardware Error]: event severity: fatal
-{24}[Hardware Error]:  Error 0, type: fatal
-{24}[Hardware Error]:   section_type: PCIe error
-{24}[Hardware Error]:   port_type: 0, PCIe end point
-{24}[Hardware Error]:   version: 4.0
-{24}[Hardware Error]:   command: 0x0546, status: 0x4010
-{24}[Hardware Error]:   device_id: 0000:01:00.0
-{24}[Hardware Error]:   slot: 0
-{24}[Hardware Error]:   secondary_bus: 0x00
-{24}[Hardware Error]:   vendor_id: 0x15b3, device_id: 0x1019
-{24}[Hardware Error]:   class_code: 000002
-{24}[Hardware Error]:   aer_uncor_status: 0x00040000, aer_uncor_mask: 0x00000000
-{24}[Hardware Error]:   aer_uncor_severity: 0x00062010
-{24}[Hardware Error]:   TLP Header: 000000c0 01010000 00000001 00000000
-Kernel panic - not syncing: Fatal hardware error!
+ [ bp: massage. ]
 
-Fixes: 37448adfc7ce ("aerdrv: Move cper_print_aer() call out of interrupt context")
-Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
-Reviewed-by: James Morse <james.morse@arm.com>
-[ardb: put parens around terms of && operator]
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Fixes: 13ab8448d2c9 ("EDAC, altera: Add ECC Manager IRQ controller support")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Thor Thayer <thor.thayer@linux.intel.com>
+Cc: James Morse <james.morse@arm.com>
+Cc: kernel-janitors@vger.kernel.org
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Tony Luck <tony.luck@intel.com>
+Link: https://lkml.kernel.org/r/20190624134717.GA1754@mwanda
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/cper.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/edac/altera_edac.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
-index d425374254384..f40f7df4b7344 100644
---- a/drivers/firmware/efi/cper.c
-+++ b/drivers/firmware/efi/cper.c
-@@ -384,6 +384,21 @@ static void cper_print_pcie(const char *pfx, const struct cper_sec_pcie *pcie,
- 		printk(
- 	"%s""bridge: secondary_status: 0x%04x, control: 0x%04x\n",
- 	pfx, pcie->bridge.secondary_status, pcie->bridge.control);
-+
-+	/* Fatal errors call __ghes_panic() before AER handler prints this */
-+	if ((pcie->validation_bits & CPER_PCIE_VALID_AER_INFO) &&
-+	    (gdata->error_severity & CPER_SEV_FATAL)) {
-+		struct aer_capability_regs *aer;
-+
-+		aer = (struct aer_capability_regs *)pcie->aer_info;
-+		printk("%saer_uncor_status: 0x%08x, aer_uncor_mask: 0x%08x\n",
-+		       pfx, aer->uncor_status, aer->uncor_mask);
-+		printk("%saer_uncor_severity: 0x%08x\n",
-+		       pfx, aer->uncor_severity);
-+		printk("%sTLP Header: %08x %08x %08x %08x\n", pfx,
-+		       aer->header_log.dw0, aer->header_log.dw1,
-+		       aer->header_log.dw2, aer->header_log.dw3);
-+	}
- }
+diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+index b0bd0f64d8f21..6037efa94c9ba 100644
+--- a/drivers/edac/altera_edac.c
++++ b/drivers/edac/altera_edac.c
+@@ -1651,6 +1651,7 @@ static void altr_edac_a10_irq_handler(struct irq_desc *desc)
+ 	struct altr_arria10_edac *edac = irq_desc_get_handler_data(desc);
+ 	struct irq_chip *chip = irq_desc_get_chip(desc);
+ 	int irq = irq_desc_get_irq(desc);
++	unsigned long bits;
  
- static void cper_estatus_print_section(
+ 	dberr = (irq == edac->db_irq) ? 1 : 0;
+ 	sm_offset = dberr ? A10_SYSMGR_ECC_INTSTAT_DERR_OFST :
+@@ -1660,7 +1661,8 @@ static void altr_edac_a10_irq_handler(struct irq_desc *desc)
+ 
+ 	regmap_read(edac->ecc_mgr_map, sm_offset, &irq_status);
+ 
+-	for_each_set_bit(bit, (unsigned long *)&irq_status, 32) {
++	bits = irq_status;
++	for_each_set_bit(bit, &bits, 32) {
+ 		irq = irq_linear_revmap(edac->domain, dberr * 32 + bit);
+ 		if (irq)
+ 			generic_handle_irq(irq);
 -- 
 2.20.1
 
