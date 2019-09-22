@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C14E7C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F5DC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D81020882
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5238D20882
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:06:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179195;
-	bh=fS6mnlDS/6Hxobltt3o7QXYglQKuAypIYZc77v3nC6c=;
+	s=default; t=1569179200;
+	bh=yboTTV9U5Hi5WqFc52skmFm/H4w+dx7z0bgyguhUBWo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t0Ay9/7GFjSyt1GSBh3uB2cpwjXD5IBuHXyiFqGqzd9UFpzS72ph0VpkcvIbUQS2n
-	 B1Q3S9wIujoriAt2b+iibYPjoC6ceMjWCJzh5Lvq/9RUHPJs4Xov5/eub+4oB9o+Z2
-	 HYlSha6d+Mrcbrt6T6gSflsvS9v/Nl5ORtgkzYZ8=
+	b=Kx7JwiOcSo4BOPzHwTan25EmDINzbRmXFWop6muF1TGdf+Oxa+cwowMrqfwDUFoUO
+	 mETJXuYc5ugQHLBcplrvlri+hEHh/I8VLy1qZ//+sDRHed7gPfb0WTfJT3gcxW4ecI
+	 3qcuEFHbbUblyjge6O2n/2J6bk3R8bVZS7JjEZE4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730197AbfIVTGe (ORCPT
+        id S2436719AbfIVTFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:06:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36204 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:05:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395203AbfIVTAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 15:00:30 -0400
+        id S2395181AbfIVTAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 15:00:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50F862186A;
-        Sun, 22 Sep 2019 19:00:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B76B208C2;
+        Sun, 22 Sep 2019 19:00:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178830;
-        bh=fS6mnlDS/6Hxobltt3o7QXYglQKuAypIYZc77v3nC6c=;
+        s=default; t=1569178846;
+        bh=yboTTV9U5Hi5WqFc52skmFm/H4w+dx7z0bgyguhUBWo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Td9E5rJnoWu2VEeDI+AtrO4zRW7uR3T3y1GRqiU2VdDM6Ar1Hu4t1bLBCWhwOVrQt
-         IcFF1sCu/UlDV2rbmMPpFM4qF3XL48mATh7lh7MrQ5rxaIDfK606eSuwnhTuTeAhK5
-         ywvuU5QwG/n6QlUU2GagBw3/8i/CDo+/zR9Tz9PA=
+        b=oaemmIGK6mAYV2NPcf/7vn4LTfToTs3HvEVFnpHhL7e2CztOZWuPsIvcr/DwdwnY7
+         jHW0vUgzqyTt5p9lbKXqkeA0WRQp1zZ1rE055skU1oJizgC5kdcJVxynNx5GuEiFLa
+         uUE/0SBDDAlethzsOrqiqkR1KJgupKW8FH9WY8Qw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>, Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.9 40/60] iommu/amd: Silence warnings under memory pressure
-Date:   Sun, 22 Sep 2019 14:59:13 -0400
-Message-Id: <20190922185934.4305-40-sashal@kernel.org>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Arthur She <arthur.she@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 52/60] ASoC: dmaengine: Make the pcm->name equal to pcm->id if the name is not set
+Date:   Sun, 22 Sep 2019 14:59:25 -0400
+Message-Id: <20190922185934.4305-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185934.4305-1-sashal@kernel.org>
 References: <20190922185934.4305-1-sashal@kernel.org>
@@ -59,62 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-[ Upstream commit 3d708895325b78506e8daf00ef31549476e8586a ]
+[ Upstream commit 2ec42f3147e1610716f184b02e65d7f493eed925 ]
 
-When running heavy memory pressure workloads, the system is throwing
-endless warnings,
+Some tools use the snd_pcm_info_get_name() to try to identify PCMs or for
+other purposes.
 
-smartpqi 0000:23:00.0: AMD-Vi: IOMMU mapping error in map_sg (io-pages:
-5 reason: -12)
-Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40
-07/10/2019
-swapper/10: page allocation failure: order:0, mode:0xa20(GFP_ATOMIC),
-nodemask=(null),cpuset=/,mems_allowed=0,4
-Call Trace:
- <IRQ>
- dump_stack+0x62/0x9a
- warn_alloc.cold.43+0x8a/0x148
- __alloc_pages_nodemask+0x1a5c/0x1bb0
- get_zeroed_page+0x16/0x20
- iommu_map_page+0x477/0x540
- map_sg+0x1ce/0x2f0
- scsi_dma_map+0xc6/0x160
- pqi_raid_submit_scsi_cmd_with_io_request+0x1c3/0x470 [smartpqi]
- do_IRQ+0x81/0x170
- common_interrupt+0xf/0xf
- </IRQ>
+Currently it is left empty with the dmaengine-pcm, in this case copy the
+pcm->id string as pcm->name.
 
-because the allocation could fail from iommu_map_page(), and the volume
-of this call could be huge which may generate a lot of serial console
-output and cosumes all CPUs.
+For example IGT is using this to find the HDMI PCM for testing audio on it.
 
-Fix it by silencing the warning in this call site, and there is still a
-dev_err() later to notify the failure.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Reported-by: Arthur She <arthur.she@linaro.org>
+Link: https://lore.kernel.org/r/20190906055524.7393-1-peter.ujfalusi@ti.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ sound/soc/soc-generic-dmaengine-pcm.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index c1233d0288a03..245e831fe64c3 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -2589,7 +2589,9 @@ static int map_sg(struct device *dev, struct scatterlist *sglist,
+diff --git a/sound/soc/soc-generic-dmaengine-pcm.c b/sound/soc/soc-generic-dmaengine-pcm.c
+index 6cef3977507ae..67d22b4baeb05 100644
+--- a/sound/soc/soc-generic-dmaengine-pcm.c
++++ b/sound/soc/soc-generic-dmaengine-pcm.c
+@@ -312,6 +312,12 @@ static int dmaengine_pcm_new(struct snd_soc_pcm_runtime *rtd)
  
- 			bus_addr  = address + s->dma_address + (j << PAGE_SHIFT);
- 			phys_addr = (sg_phys(s) & PAGE_MASK) + (j << PAGE_SHIFT);
--			ret = iommu_map_page(domain, bus_addr, phys_addr, PAGE_SIZE, prot, GFP_ATOMIC);
-+			ret = iommu_map_page(domain, bus_addr, phys_addr,
-+					     PAGE_SIZE, prot,
-+					     GFP_ATOMIC | __GFP_NOWARN);
- 			if (ret)
- 				goto out_unmap;
+ 		if (!dmaengine_pcm_can_report_residue(dev, pcm->chan[i]))
+ 			pcm->flags |= SND_DMAENGINE_PCM_FLAG_NO_RESIDUE;
++
++		if (rtd->pcm->streams[i].pcm->name[0] == '\0') {
++			strncpy(rtd->pcm->streams[i].pcm->name,
++				rtd->pcm->streams[i].pcm->id,
++				sizeof(rtd->pcm->streams[i].pcm->name));
++		}
+ 	}
  
+ 	return 0;
 -- 
 2.20.1
 
