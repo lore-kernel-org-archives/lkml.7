@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F027C49ED7
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D43F8C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78D65206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A36C120869
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:16:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179758;
-	bh=T+aCyAiEDOzNUK91tdmqUu+c6rJ8cwy/8kf1dw1hA2g=;
+	s=default; t=1569179760;
+	bh=ta+KEqzYSHy/qTopfT8NAaQJ7lpEpvgFviApnhGf4yc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zhjNrQ18f+PClBuprFf0Sfq/ConOARNPqZscxkAFmWyNhLKlHoJPtkMhE4tZtQcqe
-	 vw4aQsSeOb4cwRtg69SbPL34Ik8Urj/SAfmQHr0LDoFEqmMlj4fhQ8nk2hveZZ/W+F
-	 QRqVkZKo9GRnBwYj5MQqFiaFA+8d18aFzrPJngaQ=
+	b=jrMLJC17/M4/4HyHZHphDjoJdl7VD4d2o/D0uGJ2f+eVicQMEuL/CTns6o8Osors+
+	 u6JVrvz8pF+v8BQ4uA1eEJ5577WEt8U+3gSNjqexY7Z6WXfiKovP2jx+jHnoPc07SW
+	 ELdDLL+fsTJi9uRo6aUIOzFuZehpP0vIDKKGtauc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394577AbfIVS4S (ORCPT
+        id S2436994AbfIVTQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:56:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58178 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:16:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438538AbfIVS4P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:56:15 -0400
+        id S2394574AbfIVS4S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:56:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 812C021479;
-        Sun, 22 Sep 2019 18:56:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 616222184D;
+        Sun, 22 Sep 2019 18:56:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178575;
-        bh=T+aCyAiEDOzNUK91tdmqUu+c6rJ8cwy/8kf1dw1hA2g=;
+        s=default; t=1569178578;
+        bh=ta+KEqzYSHy/qTopfT8NAaQJ7lpEpvgFviApnhGf4yc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=js3a037zNdD+2reRE+FwIeoqHa4tWjLfEMiVA9Qb5Vowkg8dlfvO1K2qhv45DV8nL
-         hhudTLffCwwzJKnZ/qkZH9wVM0ThV6bb6zr9XprEXbhUMtjDDVg9jkRyolWUEecquy
-         iDawvKqnndYOWBiRmtkljLzwLIBEyKio7rNqOH6U=
+        b=OTwDxWWDKUl8XPb0rwamFBz/ESTszqfz2pyb3uy8z3m9ieL3n069Xk2k+TFbsMMu+
+         KhFXtxCrsCGbnOnyE7L3TEkPDvq+6WpdOkBqtLugf4MeSWICSHe+T/T7jrm1p4slcc
+         thRgY3yZMG3UiJBLfstYOD0FOS+LurcV74M9fCmE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Neil Horman <nhorman@tuxdriver.com>, djuran@redhat.com,
-        Thomas Gleixner <tglx@linutronix.de>,
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 086/128] x86/apic/vector: Warn when vector space exhaustion breaks affinity
-Date:   Sun, 22 Sep 2019 14:53:36 -0400
-Message-Id: <20190922185418.2158-86-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 088/128] x86/mm/pti: Do not invoke PTI functions when PTI is disabled
+Date:   Sun, 22 Sep 2019 14:53:38 -0400
+Message-Id: <20190922185418.2158-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
 References: <20190922185418.2158-1-sashal@kernel.org>
@@ -59,62 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Horman <nhorman@tuxdriver.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit 743dac494d61d991967ebcfab92e4f80dc7583b3 ]
+[ Upstream commit 990784b57731192b7d90c8d4049e6318d81e887d ]
 
-On x86, CPUs are limited in the number of interrupts they can have affined
-to them as they only support 256 interrupt vectors per CPU. 32 vectors are
-reserved for the CPU and the kernel reserves another 22 for internal
-purposes. That leaves 202 vectors for assignement to devices.
+When PTI is disabled at boot time either because the CPU is not affected or
+PTI has been disabled on the command line, the boot code still calls into
+pti_finalize() which then unconditionally invokes:
 
-When an interrupt is set up or the affinity is changed by the kernel or the
-administrator, the vector assignment code attempts to honor the requested
-affinity mask. If the vector space on the CPUs in that affinity mask is
-exhausted the code falls back to a wider set of CPUs and assigns a vector
-on a CPU outside of the requested affinity mask silently.
+     pti_clone_entry_text()
+     pti_clone_kernel_text()
 
-While the effective affinity is reflected in the corresponding
-/proc/irq/$N/effective_affinity* files the silent breakage of the requested
-affinity can lead to unexpected behaviour for administrators.
+pti_clone_kernel_text() was called unconditionally before the 32bit support
+was added and 32bit added the call to pti_clone_entry_text().
 
-Add a pr_warn() when this happens so that adminstrators get at least
-informed about it in the syslog.
+The call has no side effects as cloning the page tables into the available
+second one, which was allocated for PTI does not create damage. But it does
+not make sense either and in case that this functionality would be extended
+later this might actually lead to hard to diagnose issues.
 
-[ tglx: Massaged changelog and made the pr_warn() more informative ]
+Neither function should be called when PTI is runtime disabled. Make the
+invocation conditional.
 
-Reported-by: djuran@redhat.com
-Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: djuran@redhat.com
-Link: https://lkml.kernel.org/r/20190822143421.9535-1-nhorman@tuxdriver.com
+Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+Acked-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Song Liu <songliubraving@fb.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20190828143124.063353972@linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/apic/vector.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/x86/mm/pti.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/x86/kernel/apic/vector.c b/arch/x86/kernel/apic/vector.c
-index 10e1d17aa0608..c352ca2e1456f 100644
---- a/arch/x86/kernel/apic/vector.c
-+++ b/arch/x86/kernel/apic/vector.c
-@@ -400,6 +400,17 @@ static int activate_reserved(struct irq_data *irqd)
- 		if (!irqd_can_reserve(irqd))
- 			apicd->can_reserve = false;
- 	}
-+
-+	/*
-+	 * Check to ensure that the effective affinity mask is a subset
-+	 * the user supplied affinity mask, and warn the user if it is not
-+	 */
-+	if (!cpumask_subset(irq_data_get_effective_affinity_mask(irqd),
-+			    irq_data_get_affinity_mask(irqd))) {
-+		pr_warn("irq %u: Affinity broken due to vector space exhaustion.\n",
-+			irqd->irq);
-+	}
-+
- 	return ret;
- }
- 
+diff --git a/arch/x86/mm/pti.c b/arch/x86/mm/pti.c
+index 4df3e5c89d57c..c1ba376484a5b 100644
+--- a/arch/x86/mm/pti.c
++++ b/arch/x86/mm/pti.c
+@@ -643,6 +643,8 @@ void __init pti_init(void)
+  */
+ void pti_finalize(void)
+ {
++	if (!boot_cpu_has(X86_FEATURE_PTI))
++		return;
+ 	/*
+ 	 * We need to clone everything (again) that maps parts of the
+ 	 * kernel image.
 -- 
 2.20.1
 
