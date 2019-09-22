@@ -4,57 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA8EBC4740C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFEBBC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 860FD21479
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:58:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 841132184D
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:58:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178710;
-	bh=ngAFsvRQTmDQ6XeWgxtiUf4Guo/NsDxTmvv99F4HdJY=;
+	s=default; t=1569178722;
+	bh=B05maExQbhzmRz3QtW0v5BieCGz5HdQQOqgZortZCcA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hI0WwceSShdYn6upcuO9jQYf2933W9i1SlWX8+DUUFVGiKBBKw3nJ9muUZ2cEN5LJ
-	 0dGmaromxVILO2GCI60tvYY49iqvOqAi0ALn7JliFejiVZnJQKJ23N7fqYkMSz6mV3
-	 7sBGxFpi24m7MCFWSWeLxonxC/mY3rGcbAJsWA7o=
+	b=1AwlM0LTsKDFi9YRGZYYCDJOAhIqcVYrcLmHbjTai7gOQ4Oz9far4T/FKSITstdIP
+	 mGGNnLk3CGKoXdxLmRsrPS1MpuWhjdmLd7RF1hzYpxiiZtW32ZHdfpVIbBbm+l4vwS
+	 hnjx7GYLfHQUl4YzCVDyNf10CVLt4x0UgAU4xx9E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406115AbfIVS63 (ORCPT
+        id S2438802AbfIVS6l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:58:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32872 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:58:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438765AbfIVS6W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:58:22 -0400
+        id S2394892AbfIVS6h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:58:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30663208C2;
-        Sun, 22 Sep 2019 18:58:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DC3F206C2;
+        Sun, 22 Sep 2019 18:58:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178701;
-        bh=ngAFsvRQTmDQ6XeWgxtiUf4Guo/NsDxTmvv99F4HdJY=;
+        s=default; t=1569178716;
+        bh=B05maExQbhzmRz3QtW0v5BieCGz5HdQQOqgZortZCcA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=atp8lSmAMIIKbJN9kDU4ljYBGZCiDCYtz7eJEN4TF/sh/U8XRk9LKIccwu4hcvZcb
-         OykY85lgVG7nlqXGA4lPxxiprg/sw087qjHa6xfvpIh5u/VwZcYeff7fDiUnGry5BP
-         FsvusZgtjGqL2vK3uPxgQKFPfOriDVN1R3egPIbY=
+        b=TQv+/P4GBItlOqyw9ID5/r++/HxYX4eyvvwH7/PfvItReCppfhO3Ib4+1NGt4tMzl
+         oNuijWYFeFcfCXOV3kc6IkT0rQY9uMKM4zrlkjN09JdgPfKC2MMMh5KslQ99Z18UTN
+         4/iMaWGnNgsftJXrl9PnioojWJ7Id62cykARbSJA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tan Xiaojun <tanxiaojun@huawei.com>, Jiri Olsa <jolsa@kernel.org>,
+Cc:     Gerald BAEZA <gerald.baeza@st.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 39/89] perf record: Support aarch64 random socket_id assignment
-Date:   Sun, 22 Sep 2019 14:56:27 -0400
-Message-Id: <20190922185717.3412-39-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 49/89] libperf: Fix alignment trap with xyarray contents in 'perf stat'
+Date:   Sun, 22 Sep 2019 14:56:37 -0400
+Message-Id: <20190922185717.3412-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185717.3412-1-sashal@kernel.org>
 References: <20190922185717.3412-1-sashal@kernel.org>
@@ -67,78 +65,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tan Xiaojun <tanxiaojun@huawei.com>
+From: Gerald BAEZA <gerald.baeza@st.com>
 
-[ Upstream commit 0a4d8fb229dd78f9e0752817339e19e903b37a60 ]
+[ Upstream commit d9c5c083416500e95da098c01be092b937def7fa ]
 
-Same as in the commit 01766229533f ("perf record: Support s390 random
-socket_id assignment"), aarch64 also have this problem.
+Following the patch 'perf stat: Fix --no-scale', an alignment trap
+happens in process_counter_values() on ARMv7 platforms due to the
+attempt to copy non 64 bits aligned double words (pointed by 'count')
+via a NEON vectored instruction ('vld1' with 64 bits alignment
+constraint).
 
-Without this fix:
+This patch sets a 64 bits alignment constraint on 'contents[]' field in
+'struct xyarray' since the 'count' pointer used above points to such a
+structure.
 
-  [root@localhost perf]# ./perf report --header -I -v
-  ...
-  socket_id number is too big.You may need to upgrade the perf tool.
-
-  # ========
-  # captured on    : Thu Aug  1 22:58:38 2019
-  # header version : 1
-  ...
-  # Core ID and Socket ID information is not available
-  ...
-
-With this fix:
-  [root@localhost perf]# ./perf report --header -I -v
-  ...
-  cpumask list: 0-31
-  cpumask list: 32-63
-  cpumask list: 64-95
-  cpumask list: 96-127
-
-  # ========
-  # captured on    : Thu Aug  1 22:58:38 2019
-  # header version : 1
-  ...
-  # CPU 0: Core ID 0, Socket ID 36
-  # CPU 1: Core ID 1, Socket ID 36
-  ...
-  # CPU 126: Core ID 126, Socket ID 8442
-  # CPU 127: Core ID 127, Socket ID 8442
-  ...
-
-Signed-off-by: Tan Xiaojun <tanxiaojun@huawei.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Gerald Baeza <gerald.baeza@st.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
-Link: http://lkml.kernel.org/r/1564717737-21602-1-git-send-email-tanxiaojun@huawei.com
+Link: http://lkml.kernel.org/r/1566464769-16374-1-git-send-email-gerald.baeza@st.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/header.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/perf/util/xyarray.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 6da7afa7d328e..e1fe446f65daa 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -1882,8 +1882,10 @@ static int process_cpu_topology(struct feat_fd *ff, void *data __maybe_unused)
- 	/* On s390 the socket_id number is not related to the numbers of cpus.
- 	 * The socket_id number might be higher than the numbers of cpus.
- 	 * This depends on the configuration.
-+	 * AArch64 is the same.
- 	 */
--	if (ph->env.arch && !strncmp(ph->env.arch, "s390", 4))
-+	if (ph->env.arch && (!strncmp(ph->env.arch, "s390", 4)
-+			  || !strncmp(ph->env.arch, "aarch64", 7)))
- 		do_core_id_test = false;
+diff --git a/tools/perf/util/xyarray.h b/tools/perf/util/xyarray.h
+index 7ffe562e7ae7f..2627b038b6f2a 100644
+--- a/tools/perf/util/xyarray.h
++++ b/tools/perf/util/xyarray.h
+@@ -2,6 +2,7 @@
+ #ifndef _PERF_XYARRAY_H_
+ #define _PERF_XYARRAY_H_ 1
  
- 	for (i = 0; i < (u32)cpu_nr; i++) {
++#include <linux/compiler.h>
+ #include <sys/types.h>
+ 
+ struct xyarray {
+@@ -10,7 +11,7 @@ struct xyarray {
+ 	size_t entries;
+ 	size_t max_x;
+ 	size_t max_y;
+-	char contents[];
++	char contents[] __aligned(8);
+ };
+ 
+ struct xyarray *xyarray__new(int xlen, int ylen, size_t entry_size);
 -- 
 2.20.1
 
