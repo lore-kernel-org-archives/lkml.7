@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3522FC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4274C4740C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04E0E206B6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:34:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABD91206B6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:34:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180870;
-	bh=9fwelzb4gaRs6F+woif6HxRJvfWAzWKdIXQYj+jKX5Q=;
+	s=default; t=1569180875;
+	bh=FhMqtDm73GhvjtyVWDtKRVY17JuvvD8eg/8rpvN6FjU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JDvRsRTqw80yt8arLHhhizXjOId/x8L4Rrx+0+hC7sAcUDOc2y34UVWt4yRExOlOi
-	 4UYOGczWSCNHDzYgh+E7FOJjE+wspUIrroD1BDvP0To5cedocSw136aICtTxydfPAM
-	 +QJhPZYvLC9Kol1tWLI8Ljh187OCZGtgT42EL8Nw=
+	b=L3pr5RNP1r91NKvrQQXXhAAYVnHswP5QhJ3OV3SRHHaaodhOBx1RAex0cILQDpHlM
+	 sqgoRyXFD6lFtBvrEaLKFSMbZ6XupZJ9XLhXC6djWKai3ky97JE1h4Zobzaorj0H6r
+	 d8xrRXqzICZ2+u3xefr/K0xRLySRdOI7DWx85kU4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438888AbfIVTe3 (ORCPT
+        id S2390620AbfIVSrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:34:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43642 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:47:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390651AbfIVSrQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:47:16 -0400
+        id S2390495AbfIVSrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:47:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0E6A206C2;
-        Sun, 22 Sep 2019 18:47:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FE512186A;
+        Sun, 22 Sep 2019 18:47:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178035;
-        bh=9fwelzb4gaRs6F+woif6HxRJvfWAzWKdIXQYj+jKX5Q=;
+        s=default; t=1569178021;
+        bh=FhMqtDm73GhvjtyVWDtKRVY17JuvvD8eg/8rpvN6FjU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=veLR5Ifywi920t57Y9UCqkKs4lpiVrQpIBSz+Af+656YsuL/+kXKyEEX/Nq0QfXcr
-         qZFUwLFarW8oRQVmrd01n/qbyonej3AXh5QfpuIkKAdyansq8gvlaZU06+3jFQ8Vex
-         ScZ4RiIfSRqkoSJd6Sg3n6NakNgAK6w35KbT75rE=
+        b=se9r0hRyXemivHdtQhKuv9f6nXhhjEF0gr4cEyHgaiia9rAnznYOodRvajn8NoK5s
+         SZFwiDR240EpgwID3Bg+ZymZXXL4ghO5kOY2aoEJVSZ6mD3WSCmSDNU8IHGw/v8Dtu
+         SyS8ka8AZ4URqavgxFCPynsnSQrIhjSDBRXpesJo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 116/203] ARM: at91: move platform-specific asm-offset.h to arch/arm/mach-at91
-Date:   Sun, 22 Sep 2019 14:42:22 -0400
-Message-Id: <20190922184350.30563-116-sashal@kernel.org>
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 106/203] s390/kasan: provide uninstrumented __strlen
+Date:   Sun, 22 Sep 2019 14:42:12 -0400
+Message-Id: <20190922184350.30563-106-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -59,90 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Vasily Gorbik <gor@linux.ibm.com>
 
-[ Upstream commit 9fac85a6db8999922f2cd92dfe2e83e063b31a94 ]
+[ Upstream commit f45f7b5bdaa4828ce871cf03f7c01599a0de57a5 ]
 
-<generated/at91_pm_data-offsets.h> is only generated and included by
-arch/arm/mach-at91/, so it does not need to reside in the globally
-visible include/generated/.
+s390 kasan code uses sclp_early_printk to report initialization
+failures. The code doing that should not be instrumented, because kasan
+shadow memory has not been set up yet. Even though sclp_early_core.c is
+compiled with instrumentation disabled it uses strlen function, which
+is instrumented and would produce shadow memory access if used. To
+avoid that, introduce uninstrumented __strlen function to be used
+instead.
 
-I renamed it to arch/arm/mach-at91/pm_data-offsets.h since the prefix
-'at91_' is just redundant in mach-at91/.
+Before commit 7e0d92f00246 ("s390/kasan: improve string/memory functions
+checks") few string functions (including strlen) were escaping kasan
+instrumentation due to usage of platform specific versions which are
+implemented in inline assembly.
 
-My main motivation of this change is to avoid the race condition for
-the parallel build (-j) when CONFIG_IKHEADERS is enabled.
-
-When it is enabled, all the headers under include/ are archived into
-kernel/kheaders_data.tar.xz and exposed in the sysfs.
-
-In the parallel build, we have no idea in which order files are built.
-
- - If at91_pm_data-offsets.h is built before kheaders_data.tar.xz,
-   the header will be included in the archive. Probably nobody will
-   use it, but it is harmless except that it will increase the archive
-   size needlessly.
-
- - If kheaders_data.tar.xz is built before at91_pm_data-offsets.h,
-   the header will not be included in the archive. However, in the next
-   build, the archive will be re-generated to include the newly-found
-   at91_pm_data-offsets.h. This is not nice from the build system point
-   of view.
-
- - If at91_pm_data-offsets.h and kheaders_data.tar.xz are built at the
-   same time, the corrupted header might be included in the archive,
-   which does not look nice either.
-
-This commit fixes the race.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Link: https://lore.kernel.org/r/20190823024346.591-1-yamada.masahiro@socionext.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Fixes: 7e0d92f00246 ("s390/kasan: improve string/memory functions checks")
+Acked-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-at91/.gitignore   | 1 +
- arch/arm/mach-at91/Makefile     | 5 +++--
- arch/arm/mach-at91/pm_suspend.S | 2 +-
- 3 files changed, 5 insertions(+), 3 deletions(-)
- create mode 100644 arch/arm/mach-at91/.gitignore
+ arch/s390/include/asm/string.h | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/mach-at91/.gitignore b/arch/arm/mach-at91/.gitignore
-new file mode 100644
-index 0000000000000..2ecd6f51c8a95
---- /dev/null
-+++ b/arch/arm/mach-at91/.gitignore
-@@ -0,0 +1 @@
-+pm_data-offsets.h
-diff --git a/arch/arm/mach-at91/Makefile b/arch/arm/mach-at91/Makefile
-index 31b61f0e1c077..de64301dcff25 100644
---- a/arch/arm/mach-at91/Makefile
-+++ b/arch/arm/mach-at91/Makefile
-@@ -19,9 +19,10 @@ ifeq ($(CONFIG_PM_DEBUG),y)
- CFLAGS_pm.o += -DDEBUG
- endif
+diff --git a/arch/s390/include/asm/string.h b/arch/s390/include/asm/string.h
+index 70d87db54e627..4c0690fc5167e 100644
+--- a/arch/s390/include/asm/string.h
++++ b/arch/s390/include/asm/string.h
+@@ -71,11 +71,16 @@ extern void *__memmove(void *dest, const void *src, size_t n);
+ #define memcpy(dst, src, len) __memcpy(dst, src, len)
+ #define memmove(dst, src, len) __memmove(dst, src, len)
+ #define memset(s, c, n) __memset(s, c, n)
++#define strlen(s) __strlen(s)
++
++#define __no_sanitize_prefix_strfunc(x) __##x
  
--include/generated/at91_pm_data-offsets.h: arch/arm/mach-at91/pm_data-offsets.s FORCE
-+$(obj)/pm_data-offsets.h: $(obj)/pm_data-offsets.s FORCE
- 	$(call filechk,offsets,__PM_DATA_OFFSETS_H__)
+ #ifndef __NO_FORTIFY
+ #define __NO_FORTIFY /* FORTIFY_SOURCE uses __builtin_memcpy, etc. */
+ #endif
  
--arch/arm/mach-at91/pm_suspend.o: include/generated/at91_pm_data-offsets.h
-+$(obj)/pm_suspend.o: $(obj)/pm_data-offsets.h
++#else
++#define __no_sanitize_prefix_strfunc(x) x
+ #endif /* defined(CONFIG_KASAN) && !defined(__SANITIZE_ADDRESS__) */
  
- targets += pm_data-offsets.s
-+clean-files += pm_data-offsets.h
-diff --git a/arch/arm/mach-at91/pm_suspend.S b/arch/arm/mach-at91/pm_suspend.S
-index c751f047b1166..ed57c879d4e17 100644
---- a/arch/arm/mach-at91/pm_suspend.S
-+++ b/arch/arm/mach-at91/pm_suspend.S
-@@ -10,7 +10,7 @@
- #include <linux/linkage.h>
- #include <linux/clk/at91_pmc.h>
- #include "pm.h"
--#include "generated/at91_pm_data-offsets.h"
-+#include "pm_data-offsets.h"
+ void *__memset16(uint16_t *s, uint16_t v, size_t count);
+@@ -163,8 +168,8 @@ static inline char *strcpy(char *dst, const char *src)
+ }
+ #endif
  
- #define	SRAMC_SELF_FRESH_ACTIVE		0x01
- #define	SRAMC_SELF_FRESH_EXIT		0x00
+-#ifdef __HAVE_ARCH_STRLEN
+-static inline size_t strlen(const char *s)
++#if defined(__HAVE_ARCH_STRLEN) || (defined(CONFIG_KASAN) && !defined(__SANITIZE_ADDRESS__))
++static inline size_t __no_sanitize_prefix_strfunc(strlen)(const char *s)
+ {
+ 	register unsigned long r0 asm("0") = 0;
+ 	const char *tmp = s;
 -- 
 2.20.1
 
