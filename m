@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D43F8C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDEDC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A36C120869
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:16:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 343C620869
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:16:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179760;
-	bh=ta+KEqzYSHy/qTopfT8NAaQJ7lpEpvgFviApnhGf4yc=;
+	s=default; t=1569179765;
+	bh=/ok+yJILJ8USFatLtQTy93jwL1cEUtOxh6rBIm5eFvQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jrMLJC17/M4/4HyHZHphDjoJdl7VD4d2o/D0uGJ2f+eVicQMEuL/CTns6o8Osors+
-	 u6JVrvz8pF+v8BQ4uA1eEJ5577WEt8U+3gSNjqexY7Z6WXfiKovP2jx+jHnoPc07SW
-	 ELdDLL+fsTJi9uRo6aUIOzFuZehpP0vIDKKGtauc=
+	b=jmFpsy9btBiGZcsXw8vvznWjxJSJcBWfNFYJJzth2X3BQ5G2FiDQyy+ex+Y82OgYE
+	 iC9ombQr/UfmNQlx7seE0TfTMcIdqDMyZt/451ZDqu9FCV9DlCdZwLCCXincVwqIA1
+	 Tr7DfVCMP5BcvceuJaHd/y/MryguqzQQeDG+AVVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436994AbfIVTQA (ORCPT
+        id S2394565AbfIVS4R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:16:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58276 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:56:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394574AbfIVS4S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:56:18 -0400
+        id S2438532AbfIVS4O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:56:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 616222184D;
-        Sun, 22 Sep 2019 18:56:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21C00206C2;
+        Sun, 22 Sep 2019 18:56:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178578;
-        bh=ta+KEqzYSHy/qTopfT8NAaQJ7lpEpvgFviApnhGf4yc=;
+        s=default; t=1569178573;
+        bh=/ok+yJILJ8USFatLtQTy93jwL1cEUtOxh6rBIm5eFvQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OTwDxWWDKUl8XPb0rwamFBz/ESTszqfz2pyb3uy8z3m9ieL3n069Xk2k+TFbsMMu+
-         KhFXtxCrsCGbnOnyE7L3TEkPDvq+6WpdOkBqtLugf4MeSWICSHe+T/T7jrm1p4slcc
-         thRgY3yZMG3UiJBLfstYOD0FOS+LurcV74M9fCmE=
+        b=psV78whlQ3R7oq5G+yTXm3R61eCnEDPGCkakIn6Lx6UuBgAF2kdeGuvCbysFsHAWy
+         w72Fgdj0tsRpw6PyzwslREh/A7+y6OSrvbtBL0xiF3/FaU5BFlJJo5z2cKDXK9Oi2d
+         QzwBKFuLNvnzPCAe9G2sAEFW/1W7+Cf6v6LMp8fg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
+Cc:     Douglas RAILLARD <douglas.raillard@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 088/128] x86/mm/pti: Do not invoke PTI functions when PTI is disabled
-Date:   Sun, 22 Sep 2019 14:53:38 -0400
-Message-Id: <20190922185418.2158-88-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 085/128] sched/cpufreq: Align trace event behavior of fast switching
+Date:   Sun, 22 Sep 2019 14:53:35 -0400
+Message-Id: <20190922185418.2158-85-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
 References: <20190922185418.2158-1-sashal@kernel.org>
@@ -62,52 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Douglas RAILLARD <douglas.raillard@arm.com>
 
-[ Upstream commit 990784b57731192b7d90c8d4049e6318d81e887d ]
+[ Upstream commit 77c84dd1881d0f0176cb678d770bfbda26c54390 ]
 
-When PTI is disabled at boot time either because the CPU is not affected or
-PTI has been disabled on the command line, the boot code still calls into
-pti_finalize() which then unconditionally invokes:
+Fast switching path only emits an event for the CPU of interest, whereas the
+regular path emits an event for all the CPUs that had their frequency changed,
+i.e. all the CPUs sharing the same policy.
 
-     pti_clone_entry_text()
-     pti_clone_kernel_text()
+With the current behavior, looking at cpu_frequency event for a given CPU that
+is using the fast switching path will not give the correct frequency signal.
 
-pti_clone_kernel_text() was called unconditionally before the 32bit support
-was added and 32bit added the call to pti_clone_entry_text().
-
-The call has no side effects as cloning the page tables into the available
-second one, which was allocated for PTI does not create damage. But it does
-not make sense either and in case that this functionality would be extended
-later this might actually lead to hard to diagnose issues.
-
-Neither function should be called when PTI is runtime disabled. Make the
-invocation conditional.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-Acked-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Douglas RAILLARD <douglas.raillard@arm.com>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20190828143124.063353972@linutronix.de
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/pti.c | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/sched/cpufreq_schedutil.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/mm/pti.c b/arch/x86/mm/pti.c
-index 4df3e5c89d57c..c1ba376484a5b 100644
---- a/arch/x86/mm/pti.c
-+++ b/arch/x86/mm/pti.c
-@@ -643,6 +643,8 @@ void __init pti_init(void)
-  */
- void pti_finalize(void)
+diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+index 64d54acc99282..54fcff656ecd7 100644
+--- a/kernel/sched/cpufreq_schedutil.c
++++ b/kernel/sched/cpufreq_schedutil.c
+@@ -118,6 +118,7 @@ static void sugov_fast_switch(struct sugov_policy *sg_policy, u64 time,
+ 			      unsigned int next_freq)
  {
-+	if (!boot_cpu_has(X86_FEATURE_PTI))
-+		return;
- 	/*
- 	 * We need to clone everything (again) that maps parts of the
- 	 * kernel image.
+ 	struct cpufreq_policy *policy = sg_policy->policy;
++	int cpu;
+ 
+ 	if (!sugov_update_next_freq(sg_policy, time, next_freq))
+ 		return;
+@@ -127,7 +128,11 @@ static void sugov_fast_switch(struct sugov_policy *sg_policy, u64 time,
+ 		return;
+ 
+ 	policy->cur = next_freq;
+-	trace_cpu_frequency(next_freq, smp_processor_id());
++
++	if (trace_cpu_frequency_enabled()) {
++		for_each_cpu(cpu, policy->cpus)
++			trace_cpu_frequency(next_freq, cpu);
++	}
+ }
+ 
+ static void sugov_deferred_update(struct sugov_policy *sg_policy, u64 time,
 -- 
 2.20.1
 
