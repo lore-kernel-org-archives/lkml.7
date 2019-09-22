@@ -4,49 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 463B2C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B0DC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BB5F20869
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:25:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ABB720869
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:25:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180306;
-	bh=Iqq+ihm3MEyO7MocIdtefL66drtCw5MVI0GpPu7TVtI=;
+	s=default; t=1569180316;
+	bh=B05maExQbhzmRz3QtW0v5BieCGz5HdQQOqgZortZCcA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EKUbFdki3DHdSvQIOzR8sCT8aj9lolRp0QsiL9/HYv2oc8/q6VyYyia7hkdLOgDNT
-	 Lkz22U6yFlwlqoF1F+vGPbDHplzzvpioHLnuPK5mtcYmfpymFY72F9kAoBSxtGfQNP
-	 Cu65kDv8iMJoDuGRNLbbuhyrRZGWk4WxdYUdCJV4=
+	b=FxX2ljJjqZ0KwTwKs+n1sVCLpFJHwrV4CVsYFCnReOSh7QTZ4HU+mJgT3KuzwJ4RB
+	 LTIjagT3upQNM4Vt2+McFD98XgFiLu1D8ukinPGwnHf0p9RIGKOv7XXl2Vbo/O7Fov
+	 yiSDZ1iLqlOCQCIbRsD1oi/iMD1zCHDhrmkoDP5I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731475AbfIVTZE (ORCPT
+        id S2407884AbfIVSwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:25:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51620 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:52:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407930AbfIVSwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:52:34 -0400
+        id S1728992AbfIVSwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:52:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62F4421479;
-        Sun, 22 Sep 2019 18:52:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D33E121D56;
+        Sun, 22 Sep 2019 18:52:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178353;
-        bh=Iqq+ihm3MEyO7MocIdtefL66drtCw5MVI0GpPu7TVtI=;
+        s=default; t=1569178342;
+        bh=B05maExQbhzmRz3QtW0v5BieCGz5HdQQOqgZortZCcA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aIvRT1LNTOB5f/QhKIPGh4+vV+Au5fW1IuUZZCa1rICMVK5W3z6ChGTJslGVwE8FZ
-         7iZvPUqlFedYUVunrUHB5FGrM8K/xF5MAm/33KFeLwRiIDAzC178ok5iKnvGZr/Ko9
-         RG4VnykvY6EBdaxeELM7TN2PAabTd4OEM6ISj1Lw=
+        b=FoF+/Hz9BNHRKq2DnZ4oXX7ZeS7VMBt1KXwB9yXZa/IexVpMMxKP/nUFdFjDYnFd9
+         z/by8FgaiPn8VSmwZXB88ZzFWN8yniOvRySLnWXleXOPncyQRfmuUmV9HLGDpee7Qi
+         qvlEuPkFgX/z/BmHUhpdlxijyEYles4M9dzrgRFI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Keerthy <j-keerthy@ti.com>, Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 109/185] ARM: OMAP2+: move platform-specific asm-offset.h to arch/arm/mach-omap2
-Date:   Sun, 22 Sep 2019 14:48:07 -0400
-Message-Id: <20190922184924.32534-109-sashal@kernel.org>
+Cc:     Gerald BAEZA <gerald.baeza@st.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 102/185] libperf: Fix alignment trap with xyarray contents in 'perf stat'
+Date:   Sun, 22 Sep 2019 14:48:00 -0400
+Message-Id: <20190922184924.32534-102-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -59,118 +65,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Gerald BAEZA <gerald.baeza@st.com>
 
-[ Upstream commit ccf4975dca233b1d6a74752d6ab35c239edc0d58 ]
+[ Upstream commit d9c5c083416500e95da098c01be092b937def7fa ]
 
-<generated/ti-pm-asm-offsets.h> is only generated and included by
-arch/arm/mach-omap2/, so it does not need to reside in the globally
-visible include/generated/.
+Following the patch 'perf stat: Fix --no-scale', an alignment trap
+happens in process_counter_values() on ARMv7 platforms due to the
+attempt to copy non 64 bits aligned double words (pointed by 'count')
+via a NEON vectored instruction ('vld1' with 64 bits alignment
+constraint).
 
-I renamed it to arch/arm/mach-omap2/pm-asm-offsets.h since the prefix
-'ti-' is just redundant in mach-omap2/.
+This patch sets a 64 bits alignment constraint on 'contents[]' field in
+'struct xyarray' since the 'count' pointer used above points to such a
+structure.
 
-My main motivation of this change is to avoid the race condition for
-the parallel build (-j) when CONFIG_IKHEADERS is enabled.
-
-When it is enabled, all the headers under include/ are archived into
-kernel/kheaders_data.tar.xz and exposed in the sysfs.
-
-In the parallel build, we have no idea in which order files are built.
-
- - If ti-pm-asm-offsets.h is built before kheaders_data.tar.xz,
-   the header will be included in the archive. Probably nobody will
-   use it, but it is harmless except that it will increase the archive
-   size needlessly.
-
- - If kheaders_data.tar.xz is built before ti-pm-asm-offsets.h,
-   the header will not be included in the archive. However, in the next
-   build, the archive will be re-generated to include the newly-found
-   ti-pm-asm-offsets.h. This is not nice from the build system point
-   of view.
-
- - If ti-pm-asm-offsets.h and kheaders_data.tar.xz are built at the
-   same time, the corrupted header might be included in the archive,
-   which does not look nice either.
-
-This commit fixes the race.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Tested-by: Keerthy <j-keerthy@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Gerald Baeza <gerald.baeza@st.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/1566464769-16374-1-git-send-email-gerald.baeza@st.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-omap2/.gitignore  | 1 +
- arch/arm/mach-omap2/Makefile    | 5 +++--
- arch/arm/mach-omap2/sleep33xx.S | 2 +-
- arch/arm/mach-omap2/sleep43xx.S | 2 +-
- 4 files changed, 6 insertions(+), 4 deletions(-)
- create mode 100644 arch/arm/mach-omap2/.gitignore
+ tools/perf/util/xyarray.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-omap2/.gitignore b/arch/arm/mach-omap2/.gitignore
-new file mode 100644
-index 0000000000000..79a8d6ea71520
---- /dev/null
-+++ b/arch/arm/mach-omap2/.gitignore
-@@ -0,0 +1 @@
-+pm-asm-offsets.h
-diff --git a/arch/arm/mach-omap2/Makefile b/arch/arm/mach-omap2/Makefile
-index 85d1b13c9215b..26baeb6477aff 100644
---- a/arch/arm/mach-omap2/Makefile
-+++ b/arch/arm/mach-omap2/Makefile
-@@ -236,9 +236,10 @@ obj-y					+= omap_phy_internal.o
+diff --git a/tools/perf/util/xyarray.h b/tools/perf/util/xyarray.h
+index 7ffe562e7ae7f..2627b038b6f2a 100644
+--- a/tools/perf/util/xyarray.h
++++ b/tools/perf/util/xyarray.h
+@@ -2,6 +2,7 @@
+ #ifndef _PERF_XYARRAY_H_
+ #define _PERF_XYARRAY_H_ 1
  
- obj-$(CONFIG_MACH_OMAP2_TUSB6010)	+= usb-tusb6010.o
++#include <linux/compiler.h>
+ #include <sys/types.h>
  
--include/generated/ti-pm-asm-offsets.h: arch/arm/mach-omap2/pm-asm-offsets.s FORCE
-+$(obj)/pm-asm-offsets.h: $(obj)/pm-asm-offsets.s FORCE
- 	$(call filechk,offsets,__TI_PM_ASM_OFFSETS_H__)
+ struct xyarray {
+@@ -10,7 +11,7 @@ struct xyarray {
+ 	size_t entries;
+ 	size_t max_x;
+ 	size_t max_y;
+-	char contents[];
++	char contents[] __aligned(8);
+ };
  
--$(obj)/sleep33xx.o $(obj)/sleep43xx.o: include/generated/ti-pm-asm-offsets.h
-+$(obj)/sleep33xx.o $(obj)/sleep43xx.o: $(obj)/pm-asm-offsets.h
- 
- targets += pm-asm-offsets.s
-+clean-files += pm-asm-offsets.h
-diff --git a/arch/arm/mach-omap2/sleep33xx.S b/arch/arm/mach-omap2/sleep33xx.S
-index 47a816468cdb4..a003769121aaa 100644
---- a/arch/arm/mach-omap2/sleep33xx.S
-+++ b/arch/arm/mach-omap2/sleep33xx.S
-@@ -6,7 +6,6 @@
-  *	Dave Gerlach, Vaibhav Bedia
-  */
- 
--#include <generated/ti-pm-asm-offsets.h>
- #include <linux/linkage.h>
- #include <linux/platform_data/pm33xx.h>
- #include <linux/ti-emif-sram.h>
-@@ -15,6 +14,7 @@
- 
- #include "iomap.h"
- #include "cm33xx.h"
-+#include "pm-asm-offsets.h"
- 
- #define AM33XX_CM_CLKCTRL_MODULESTATE_DISABLED			0x00030000
- #define AM33XX_CM_CLKCTRL_MODULEMODE_DISABLE			0x0003
-diff --git a/arch/arm/mach-omap2/sleep43xx.S b/arch/arm/mach-omap2/sleep43xx.S
-index 0c1031442571f..27b13d47cf193 100644
---- a/arch/arm/mach-omap2/sleep43xx.S
-+++ b/arch/arm/mach-omap2/sleep43xx.S
-@@ -6,7 +6,6 @@
-  *	Dave Gerlach, Vaibhav Bedia
-  */
- 
--#include <generated/ti-pm-asm-offsets.h>
- #include <linux/linkage.h>
- #include <linux/ti-emif-sram.h>
- #include <linux/platform_data/pm33xx.h>
-@@ -19,6 +18,7 @@
- #include "iomap.h"
- #include "omap-secure.h"
- #include "omap44xx.h"
-+#include "pm-asm-offsets.h"
- #include "prm33xx.h"
- #include "prcm43xx.h"
- 
+ struct xyarray *xyarray__new(int xlen, int ylen, size_t entry_size);
 -- 
 2.20.1
 
