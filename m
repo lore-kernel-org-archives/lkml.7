@@ -2,61 +2,51 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C518BC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C16BFC4740C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 942E921D81
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:53:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 918D121D82
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:53:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178403;
-	bh=XN6iugnnra1SzyGiHEdhZutD/j4AMMdQp4SD9pt2UEA=;
+	s=default; t=1569178412;
+	bh=8R5sLEZY38rT/6/hGNWWsbFfVzvjDHIYS5t6knW6RlA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=quf7wKOlxxNqSEJI2BzyO0nwnoLCQFzuevpmTdRivWQZ0Dtvxeyg0dntAKgfPiamj
-	 9ksGz03NLjYdh+lnSHrIwCrk3qpu3jcRsyYMSLkWLtH2cqjV7jyDpjDAemiB7P0PE6
-	 PmDA1ARgn6tLY5bp/TlHr2gp/SOWconGsqUfcPD4=
+	b=qe+N6dZHSL78E6IF32Vkh281RosQWakwPe4IW0/O/Ud/aj15Nm/OvTbX0qzGhs1H2
+	 T9mUaZZEx+fkHzkY87O6xZezWaKzce+DqkXaaOPgIIcKgpc79uuFe7mjSrq7d5KNJI
+	 ZlV6Th+Be6mwB7idkjySnQnr2gcyUDVX4ekN6l10=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394246AbfIVSxW (ORCPT
+        id S2394327AbfIVSxb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:53:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52368 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:53:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393382AbfIVSxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:53:00 -0400
+        id S2393481AbfIVSxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:53:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7350C21D7A;
-        Sun, 22 Sep 2019 18:52:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E150921D81;
+        Sun, 22 Sep 2019 18:53:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178379;
-        bh=XN6iugnnra1SzyGiHEdhZutD/j4AMMdQp4SD9pt2UEA=;
+        s=default; t=1569178388;
+        bh=8R5sLEZY38rT/6/hGNWWsbFfVzvjDHIYS5t6knW6RlA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MIJ0kFqQ922PKn9rK5A8PhAmeEL/Xb9/s0dm+2cOItMXH4XyChKcEqHh1PNX/QToW
-         5CQHkV8o3iRntlKYx9PGLo/FKqUNlRoPZlvwklSf2shR5DNtwLDfWAu0st2W03Jy9i
-         itYAozYRyR3s5kOzgskuZ0Sh29nlGlbbpAxepBfM=
+        b=hO8pqOkNHXbD3kNvVqXSV5QGKZclsw0W9zBdEvKrsERUrK6T+srDpnVH8uzCSN/x4
+         RkxBCNFoFMnY68J6NTL6PsJ6mMtO44d3jZuab1AlNdD5iwBi8ztusKjCJHJPpANG0v
+         jQGfCotqJStzxdHp+fr0htO8UOUQCrPPulWLVCj4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Karl Rister <krister@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Krister Johansen <kjlx@templeofstupid.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 127/185] perf evlist: Use unshare(CLONE_FS) in sb threads to let setns(CLONE_NEWNS) work
-Date:   Sun, 22 Sep 2019 14:48:25 -0400
-Message-Id: <20190922184924.32534-127-sashal@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>, Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 5.2 135/185] iommu/amd: Silence warnings under memory pressure
+Date:   Sun, 22 Sep 2019 14:48:33 -0400
+Message-Id: <20190922184924.32534-135-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -69,158 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit b397f8468fa27f08b83b348ffa56a226f72453af ]
+[ Upstream commit 3d708895325b78506e8daf00ef31549476e8586a ]
 
-When we started using a thread to catch the PERF_RECORD_BPF_EVENT meta
-data events to then ask the kernel for further info (BTF, etc) for BPF
-programs shortly after they get loaded, we forgot to use
-unshare(CLONE_FS) as was done in:
+When running heavy memory pressure workloads, the system is throwing
+endless warnings,
 
-  868a832918f6 ("perf top: Support lookup of symbols in other mount namespaces.")
+smartpqi 0000:23:00.0: AMD-Vi: IOMMU mapping error in map_sg (io-pages:
+5 reason: -12)
+Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40
+07/10/2019
+swapper/10: page allocation failure: order:0, mode:0xa20(GFP_ATOMIC),
+nodemask=(null),cpuset=/,mems_allowed=0,4
+Call Trace:
+ <IRQ>
+ dump_stack+0x62/0x9a
+ warn_alloc.cold.43+0x8a/0x148
+ __alloc_pages_nodemask+0x1a5c/0x1bb0
+ get_zeroed_page+0x16/0x20
+ iommu_map_page+0x477/0x540
+ map_sg+0x1ce/0x2f0
+ scsi_dma_map+0xc6/0x160
+ pqi_raid_submit_scsi_cmd_with_io_request+0x1c3/0x470 [smartpqi]
+ do_IRQ+0x81/0x170
+ common_interrupt+0xf/0xf
+ </IRQ>
 
-Do it so that we can enter the namespaces to read the build-ids at the
-end of a 'perf record' session for the DSOs that had hits.
+because the allocation could fail from iommu_map_page(), and the volume
+of this call could be huge which may generate a lot of serial console
+output and cosumes all CPUs.
 
-Before:
+Fix it by silencing the warning in this call site, and there is still a
+dev_err() later to notify the failure.
 
-Starting a 'stress-ng --cpus 8' inside a container and then, outside the
-container running:
-
-  # perf record -a --namespaces sleep 5
-  # perf buildid-list | grep stress-ng
-  #
-
-We would end up with a 'perf.data' file that had no entry in its
-build-id table for the /usr/bin/stress-ng binary inside the container
-that got tons of PERF_RECORD_SAMPLEs.
-
-After:
-
-  # perf buildid-list | grep stress-ng
-  f2ed02c68341183a124b9b0f6e2e6c493c465b29 /usr/bin/stress-ng
-  #
-
-Then its just a matter of making sure that that binary debuginfo package
-gets available in a place that 'perf report' will look at build-id keyed
-ELF files, which, in my case, on a f30 notebook, was a matter of
-installing the debuginfo file for the distro used in the container,
-fedora 31:
-
-  # rpm -ivh http://fedora.c3sl.ufpr.br/linux/development/31/Everything/x86_64/debug/tree/Packages/s/stress-ng-debuginfo-0.07.29-10.fc31.x86_64.rpm
-
-Then, because perf currently looks for those debuginfo files (richer ELF
-symtab) inside that namespace (look at the setns calls):
-
-  openat(AT_FDCWD, "/proc/self/ns/mnt", O_RDONLY) = 137
-  openat(AT_FDCWD, "/proc/13169/ns/mnt", O_RDONLY) = 139
-  setns(139, CLONE_NEWNS)                 = 0
-  stat("/usr/bin/stress-ng", {st_mode=S_IFREG|0755, st_size=3065416, ...}) = 0
-  openat(AT_FDCWD, "/usr/bin/stress-ng", O_RDONLY) = 140
-  fcntl(140, F_GETFD)                     = 0
-  fstat(140, {st_mode=S_IFREG|0755, st_size=3065416, ...}) = 0
-  mmap(NULL, 3065416, PROT_READ, MAP_PRIVATE, 140, 0) = 0x7ff2fdc5b000
-  munmap(0x7ff2fdc5b000, 3065416)         = 0
-  close(140)                              = 0
-  stat("stress-ng-0.07.29-10.fc31.x86_64.debug", 0x7fff45d71260) = -1 ENOENT (No such file or directory)
-  stat("/usr/bin/stress-ng-0.07.29-10.fc31.x86_64.debug", 0x7fff45d71260) = -1 ENOENT (No such file or directory)
-  stat("/usr/bin/.debug/stress-ng-0.07.29-10.fc31.x86_64.debug", 0x7fff45d71260) = -1 ENOENT (No such file or directory)
-  stat("/usr/lib/debug/usr/bin/stress-ng-0.07.29-10.fc31.x86_64.debug", 0x7fff45d71260) = -1 ENOENT (No such file or directory)
-  stat("/root/.debug/.build-id/f2/ed02c68341183a124b9b0f6e2e6c493c465b29", 0x7fff45d711e0) = -1 ENOENT (No such file or directory)
-
-To only then go back to the "host" namespace to look just in the users's
-~/.debug cache:
-
-  setns(137, CLONE_NEWNS)                 = 0
-  chdir("/root")                          = 0
-  close(137)                              = 0
-  close(139)                              = 0
-  stat("/root/.debug/.build-id/f2/ed02c68341183a124b9b0f6e2e6c493c465b29/elf", 0x7fff45d732e0) = -1 ENOENT (No such file or directory)
-
-It continues to fail to resolve symbols:
-
-  # perf report | grep stress-ng | head -5
-     9.50%  stress-ng-cpu    stress-ng    [.] 0x0000000000021ac1
-     8.58%  stress-ng-cpu    stress-ng    [.] 0x0000000000021ab4
-     8.51%  stress-ng-cpu    stress-ng    [.] 0x0000000000021489
-     7.17%  stress-ng-cpu    stress-ng    [.] 0x00000000000219b6
-     3.93%  stress-ng-cpu    stress-ng    [.] 0x0000000000021478
-  #
-
-To overcome that we use:
-
-  # perf buildid-cache -v --add /usr/lib/debug/usr/bin/stress-ng-0.07.29-10.fc31.x86_64.debug
-  Adding f2ed02c68341183a124b9b0f6e2e6c493c465b29 /usr/lib/debug/usr/bin/stress-ng-0.07.29-10.fc31.x86_64.debug: Ok
-  #
-  # ls -la /root/.debug/.build-id/f2/ed02c68341183a124b9b0f6e2e6c493c465b29/elf
-  -rw-r--r--. 3 root root 2401184 Jul 27 07:03 /root/.debug/.build-id/f2/ed02c68341183a124b9b0f6e2e6c493c465b29/elf
-  # file /root/.debug/.build-id/f2/ed02c68341183a124b9b0f6e2e6c493c465b29/elf
-  /root/.debug/.build-id/f2/ed02c68341183a124b9b0f6e2e6c493c465b29/elf: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter \004, BuildID[sha1]=f2ed02c68341183a124b9b0f6e2e6c493c465b29, for GNU/Linux 3.2.0, with debug_info, not stripped, too many notes (256)
-  #
-
-Now it finally works:
-
-  # perf report | grep stress-ng | head -5
-    23.59%  stress-ng-cpu    stress-ng    [.] ackermann
-    23.33%  stress-ng-cpu    stress-ng    [.] is_prime
-    17.36%  stress-ng-cpu    stress-ng    [.] stress_cpu_sieve
-     6.08%  stress-ng-cpu    stress-ng    [.] stress_cpu_correlate
-     3.55%  stress-ng-cpu    stress-ng    [.] queens_try
-  #
-
-I'll make sure that it looks for the build-id keyed files in both the
-"host" namespace (the namespace the user running 'perf record' was a the
-time of the recording) and in the container namespace, as it shouldn't
-matter where a content based key lookup finds the ELF file to use in
-resolving symbols, etc.
-
-Reported-by: Karl Rister <krister@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Krister Johansen <kjlx@templeofstupid.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Stanislav Fomichev <sdf@google.com>
-Cc: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
-Fixes: 657ee5531903 ("perf evlist: Introduce side band thread")
-Link: https://lkml.kernel.org/n/tip-g79k0jz41adiaeuqud742t2l@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/evlist.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/iommu/amd_iommu.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index a474ede17cd6c..001bb444d2056 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -21,6 +21,7 @@
- #include "bpf-event.h"
- #include <signal.h>
- #include <unistd.h>
-+#include <sched.h>
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index dce1d8d2e8a44..2bbe931c3585e 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -2540,7 +2540,9 @@ static int map_sg(struct device *dev, struct scatterlist *sglist,
  
- #include "parse-events.h"
- #include <subcmd/parse-options.h>
-@@ -1870,6 +1871,14 @@ static void *perf_evlist__poll_thread(void *arg)
- 	struct perf_evlist *evlist = arg;
- 	bool draining = false;
- 	int i, done = 0;
-+	/*
-+	 * In order to read symbols from other namespaces perf to needs to call
-+	 * setns(2).  This isn't permitted if the struct_fs has multiple users.
-+	 * unshare(2) the fs so that we may continue to setns into namespaces
-+	 * that we're observing when, for instance, reading the build-ids at
-+	 * the end of a 'perf record' session.
-+	 */
-+	unshare(CLONE_FS);
+ 			bus_addr  = address + s->dma_address + (j << PAGE_SHIFT);
+ 			phys_addr = (sg_phys(s) & PAGE_MASK) + (j << PAGE_SHIFT);
+-			ret = iommu_map_page(domain, bus_addr, phys_addr, PAGE_SIZE, prot, GFP_ATOMIC);
++			ret = iommu_map_page(domain, bus_addr, phys_addr,
++					     PAGE_SIZE, prot,
++					     GFP_ATOMIC | __GFP_NOWARN);
+ 			if (ret)
+ 				goto out_unmap;
  
- 	while (!done) {
- 		bool got_data = false;
 -- 
 2.20.1
 
