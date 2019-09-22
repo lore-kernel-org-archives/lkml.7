@@ -2,112 +2,112 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 745C9C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 12:14:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F7DC4740C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 12:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DAE620830
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 12:14:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Eo0txVpq"
+	by mail.kernel.org (Postfix) with ESMTP id 69C05208C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 12:21:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728820AbfIVMOV (ORCPT
+        id S1728856AbfIVMVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 08:14:21 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:36489 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726129AbfIVMOV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 08:14:21 -0400
-Received: by mail-ed1-f68.google.com with SMTP id h2so10266914edn.3;
-        Sun, 22 Sep 2019 05:14:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1bapqg0axGoCoiojzRpaF0T/C3zoEUk4uuMPjaIgioo=;
-        b=Eo0txVpq1/oGcQtlLHGiItCW18S9y8GIIJO2UMmQQpdPyRmU9mWBkD6JPQPgNIeGhn
-         EHj9D0Wbb2rfm1vMqzUoZU5dZFuvQndT4NZx9l6FSIwCT2F5YyssoZep5kVzvpKC1Gc2
-         /hDZXPLWMNErOvLeGaqIA0E4AQm8QNntu+aoUFVJcbFV3uR9x1ia6Qb1dZCvQ8pox8c0
-         Ds5sct02ox9AxAOdkdM7kXO/V6gHS3bLSjs7fxes4olzAJjSSJlKArjkXMXUblyNlr2o
-         LZ4cZ7vkj4pmK9pzrxyMr/Z+etoXffnrdIPg2ZZtK3CFi1HNOOsV9T8BvKYKFWqmsz4x
-         f2bQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1bapqg0axGoCoiojzRpaF0T/C3zoEUk4uuMPjaIgioo=;
-        b=snIGCQCERZUe1Kj78L/hfVnocZ5XzWLYPEr7uoIUCKFY0iAck7QZpvv5y4imICYiMb
-         +zFF16szAdbIe/zHyH8k6f681wIzmSeRczFmkKJwsghv1J4tqZzd1x1ZLcWgsMLxjvo3
-         sNPGlU8t5xI6PILFyd+ghl1UhN2BNKzAV/kMZWLwAQ3gXX+ehCAdJzrcwRWSDQTJ6qKJ
-         jzRKbsWdgE0luDbetF5j/Xp4f4TdMGNtN71LAsdmWmwOXwUkE22eTtAPETXfs5oqd7Zq
-         MufBi8wu4QVFrGoucYAr2PXUYSoqyrTVZDR6BRX7DpaYDJBgxHJGH9l6X+mAJDO9+aNO
-         hscg==
-X-Gm-Message-State: APjAAAVGqmitkiQ7gVE0QdDLg3pgb25WPMLmFs5VpvzdwVgwHHmy8N/g
-        c9lnKKyno8TolpL6OTD3ZdmYtgcKaRQD8vTd+NI=
-X-Google-Smtp-Source: APXvYqy0OT3wqBIzCmzH5tYHO7MpduKdGxjqkkADRtGngTQ3G9yD4jl/NWegMXDJ7sXrsLwhuzJh/0sRoOXkpTKb/GI=
-X-Received: by 2002:aa7:c34b:: with SMTP id j11mr31544525edr.245.1569154457791;
- Sun, 22 Sep 2019 05:14:17 -0700 (PDT)
-MIME-Version: 1.0
-References: <CADxRZqwizJ2HXdiU7aSH9t=ecBEHnxdVVsQ4wUpTYRpCgdXf=w@mail.gmail.com>
- <CADxRZqzx=8jNQuvi8WN=7U_G5a0f+v_GODHH8q3QJVYmg=n1LA@mail.gmail.com> <CAK7LNAR3szhzH89ujCPq5Xz8rm0xvSjJdx0TebsaU8yiroXXVg@mail.gmail.com>
-In-Reply-To: <CAK7LNAR3szhzH89ujCPq5Xz8rm0xvSjJdx0TebsaU8yiroXXVg@mail.gmail.com>
-From:   Anatoly Pugachev <matorola@gmail.com>
-Date:   Sun, 22 Sep 2019 15:14:10 +0300
-Message-ID: <CADxRZqy-muFfpfCj6ZMPboSMEKXukTDg0oUZc6udvNreoJ6pgA@mail.gmail.com>
-Subject: Re: latest git kernel (v5.3-11506-gf7c3bf8fa7e5) does not compile
+        Sun, 22 Sep 2019 08:21:45 -0400
+Received: from correo.us.es ([193.147.175.20]:33374 "EHLO mail.us.es"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728824AbfIVMVp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 08:21:45 -0400
+Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
+        by mail.us.es (Postfix) with ESMTP id BE73DFB363
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Sep 2019 14:21:40 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id AFB33DA4CA
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Sep 2019 14:21:40 +0200 (CEST)
+Received: by antivirus1-rhel7.int (Postfix, from userid 99)
+        id A5409DA801; Sun, 22 Sep 2019 14:21:40 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 47391CA0F3;
+        Sun, 22 Sep 2019 14:21:38 +0200 (CEST)
+Received: from 192.168.1.97 (192.168.1.97)
+ by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
+ Sun, 22 Sep 2019 14:21:38 +0200 (CEST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
+Received: from us.es (unknown [193.47.165.251])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: 1984lsi)
+        by entrada.int (Postfix) with ESMTPSA id E7F754265A5A;
+        Sun, 22 Sep 2019 14:21:37 +0200 (CEST)
+Date:   Sun, 22 Sep 2019 14:21:38 +0200
+X-SMTPAUTHUS: auth mail.us.es
+From:   Pablo Neira Ayuso <pablo@netfilter.org>
 To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Sparc kernel list <sparclinux@vger.kernel.org>,
-        Linux Kernel list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        Netfilter Development Mailing list 
+        <netfilter-devel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] netfilter: use __u8 instead of uint8_t in uapi header
+Message-ID: <20190922122138.vhhbkdupbijamqsb@salvia>
+References: <20190921134648.1259-1-yamada.masahiro@socionext.com>
+ <20190922071111.3gflycy6t4jnjpd4@salvia>
+ <20190922071315.iig2lbey5ophuipu@salvia>
+ <CAK7LNASAcHCJOsjrE5O8s_8WYUtbvz_4acmxQhsEZJSsoo7U5A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK7LNASAcHCJOsjrE5O8s_8WYUtbvz_4acmxQhsEZJSsoo7U5A@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 22, 2019 at 2:38 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> Hi Anatoly,
->
-> On Sun, Sep 22, 2019 at 5:33 PM Anatoly Pugachev <matorola@gmail.com> wrote:
+On Sun, Sep 22, 2019 at 08:49:11PM +0900, Masahiro Yamada wrote:
+> Hi Pablo,
+> 
+> On Sun, Sep 22, 2019 at 4:13 PM Pablo Neira Ayuso <pablo@netfilter.org> wrote:
 > >
-> > On Sun, Sep 22, 2019 at 11:13 AM Anatoly Pugachev <matorola@gmail.com> wrote:
+> > On Sun, Sep 22, 2019 at 09:11:11AM +0200, Pablo Neira Ayuso wrote:
+> > > On Sat, Sep 21, 2019 at 10:46:48PM +0900, Masahiro Yamada wrote:
+> > > > When CONFIG_UAPI_HEADER_TEST=y, exported headers are compile-tested to
+> > > > make sure they can be included from user-space.
+> > > >
+> > > > Currently, linux/netfilter_bridge/ebtables.h is excluded from the test
+> > > > coverage. To make it join the compile-test, we need to fix the build
+> > > > errors attached below.
+> > > >
+> > > > For a case like this, we decided to use __u{8,16,32,64} variable types
+> > > > in this discussion:
+> > > >
+> > > >   https://lkml.org/lkml/2019/6/5/18
+> > > >
+> > > > Build log:
+> > > >
+> > > >   CC      usr/include/linux/netfilter_bridge/ebtables.h.s
+> > > > In file included from <command-line>:32:0:
+> > > > ./usr/include/linux/netfilter_bridge/ebtables.h:126:4: error: unknown type name ‘uint8_t’
+> > > >     uint8_t revision;
+> > > >     ^~~~~~~
+> > > > ./usr/include/linux/netfilter_bridge/ebtables.h:139:4: error: unknown type name ‘uint8_t’
+> > > >     uint8_t revision;
+> > > >     ^~~~~~~
+> > > > ./usr/include/linux/netfilter_bridge/ebtables.h:152:4: error: unknown type name ‘uint8_t’
+> > > >     uint8_t revision;
+> > > >     ^~~~~~~
 > > >
-> > > Hello!
-> > >
-> > > Latest git kernel does not compile for me:
-> > >
-> > > ~/linux-2.6$ git desc
-> > > v5.3-11506-gf7c3bf8fa7e5
-> > >
-> > > ~/linux-2.6$ make
-> > >   CALL    scripts/checksyscalls.sh
-> > > <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-> > >   CALL    scripts/atomic/check-atomics.sh
-> > >   CHK     include/generated/compile.h
-> > >   CC      arch/sparc/vdso/vdso32/vclock_gettime.o
-> > > unrecognized e_machine 18 arch/sparc/vdso/vdso32/vclock_gettime.o
-> > > arch/sparc/vdso/vdso32/vclock_gettime.o: failed
-> > > make[2]: *** [scripts/Makefile.build:266:
-> > > arch/sparc/vdso/vdso32/vclock_gettime.o] Error 1
-> > > make[2]: *** Deleting file 'arch/sparc/vdso/vdso32/vclock_gettime.o'
-> > > make[1]: *** [scripts/Makefile.build:509: arch/sparc/vdso] Error 2
-> > > make: *** [Makefile:1667: arch/sparc] Error
-> > >
-> > > but I was able to compile successfully v5.3-10169-g574cc4539762
->
->
-> Thanks for the report, and apology for the breakage.
->
-> Please check this patch.
-> https://lore.kernel.org/patchwork/patch/1130469/
->
-> I hope it will fix the build error.
+> > > Applied.
+> >
+> > Patch does not apply cleanly to nf.git, I have to keep it back, sorry
+> 
+> Perhaps, reducing the context (git am -C<N>) might help.
 
+Not working for me.
 
-It does. Thanks Masahiro!
+> Shall I rebase and resend it?
+
+Please do. Thanks.
