@@ -4,49 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B754C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D89C4740C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D9FF21A4A
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:55:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C440921D79
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:55:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178509;
-	bh=NJLxmO+sPDzSi40Zm+6uwJ9bnxqS9Qk6TiNQiFwfxvk=;
+	s=default; t=1569178512;
+	bh=I6mLupdicjRHBWyEFst+0fM+XGoYu7qjKSS+PJ4HJa8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rh00+RSdgExfZ8xlE6mmSwXHr8LowLChs0l0N2Z1c54e9Tyq+iLh2kZJJMjlRkorM
-	 +fWfEMzPDrucJkrFj5YMcnZs152jHmOng+ygL6RYv29EnEhSE6LHFlG2YDCCRzwJJr
-	 lQ2bQklti+ejA25sve3ibkPBwIpE6dg3crCBipeU=
+	b=uk6VTSYs/T2jy5Raa3sQvkiIAnMpNWwyNuxKdkh3T5PEao3a04ON+F6VMuShEiNDK
+	 I8pm3Mn11kHnOMfKjxmnoFNi4MkqdDVArmJgaA0FLvZEQpvgjPzx+3SNeSh9U+h44x
+	 Y11BBEcC1VdeGYDy10FA0exdyhPKTqSl7WUH5ugQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394556AbfIVSzH (ORCPT
+        id S2408075AbfIVSzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:55:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55660 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:55:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408048AbfIVSyx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:54:53 -0400
+        id S2408053AbfIVSyz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:54:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B45C208C2;
-        Sun, 22 Sep 2019 18:54:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D542222C1;
+        Sun, 22 Sep 2019 18:54:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178493;
-        bh=NJLxmO+sPDzSi40Zm+6uwJ9bnxqS9Qk6TiNQiFwfxvk=;
+        s=default; t=1569178494;
+        bh=I6mLupdicjRHBWyEFst+0fM+XGoYu7qjKSS+PJ4HJa8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p2gIJeGFjodUuGdtytvFUXyymUVm1WdXz0HFUjqqSAmkRLeV3MdrxvYUSRleVa5Qc
-         aXtpYGNHkSOHR5t+2jMxOtd8OpzUJuMUhFrfL5Wv1plytnx5ZhkfnuUDVCt3Q0lfgl
-         tcLDvGJKzaJaSWRE8ZtF+kY9UkEZOGM2H9rFrkwk=
+        b=m2l7VihObVEltbEO7yAd+pvKH6SCas/wembAbpkCwyaNoM3py7GJVUIK3sXbh/hyB
+         uJGirje7ffq/PNi9d3POqLmBqhqdx7Jv6/n0vrgooW0BkutX+Qvgd9ldKI/5qHF99/
+         bytqCNKN16D2MGLz3h0sD7E2MHO8X8GSiK1xcqzo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     chenzefeng <chenzefeng2@huawei.com>,
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Borislav Petkov <bp@suse.de>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        James Morse <james.morse@arm.com>,
+        kernel-janitors@vger.kernel.org,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
         Tony Luck <tony.luck@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-ia64@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 027/128] ia64:unwind: fix double free for mod->arch.init_unw_table
-Date:   Sun, 22 Sep 2019 14:52:37 -0400
-Message-Id: <20190922185418.2158-27-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 028/128] EDAC/altera: Use the proper type for the IRQ status bits
+Date:   Sun, 22 Sep 2019 14:52:38 -0400
+Message-Id: <20190922185418.2158-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
 References: <20190922185418.2158-1-sashal@kernel.org>
@@ -59,54 +65,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: chenzefeng <chenzefeng2@huawei.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit c5e5c48c16422521d363c33cfb0dcf58f88c119b ]
+[ Upstream commit 8faa1cf6ed82f33009f63986c3776cc48af1b7b2 ]
 
-The function free_module in file kernel/module.c as follow:
+Smatch complains about the cast of a u32 pointer to unsigned long:
 
-void free_module(struct module *mod) {
-	......
-	module_arch_cleanup(mod);
-	......
-	module_arch_freeing_init(mod);
-	......
-}
+  drivers/edac/altera_edac.c:1878 altr_edac_a10_irq_handler()
+  warn: passing casted pointer '&irq_status' to 'find_first_bit()'
 
-Both module_arch_cleanup and module_arch_freeing_init function
-would free the mod->arch.init_unw_table, which cause double free.
+This code wouldn't work on a 64 bit big endian system because it would
+read past the end of &irq_status.
 
-Here, set mod->arch.init_unw_table = NULL after remove the unwind
-table to avoid double free.
+ [ bp: massage. ]
 
-Signed-off-by: chenzefeng <chenzefeng2@huawei.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
+Fixes: 13ab8448d2c9 ("EDAC, altera: Add ECC Manager IRQ controller support")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Thor Thayer <thor.thayer@linux.intel.com>
+Cc: James Morse <james.morse@arm.com>
+Cc: kernel-janitors@vger.kernel.org
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Tony Luck <tony.luck@intel.com>
+Link: https://lkml.kernel.org/r/20190624134717.GA1754@mwanda
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/ia64/kernel/module.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/edac/altera_edac.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/ia64/kernel/module.c b/arch/ia64/kernel/module.c
-index 326448f9df160..1a42ba885188a 100644
---- a/arch/ia64/kernel/module.c
-+++ b/arch/ia64/kernel/module.c
-@@ -914,10 +914,14 @@ module_finalize (const Elf_Ehdr *hdr, const Elf_Shdr *sechdrs, struct module *mo
- void
- module_arch_cleanup (struct module *mod)
- {
--	if (mod->arch.init_unw_table)
-+	if (mod->arch.init_unw_table) {
- 		unw_remove_unwind_table(mod->arch.init_unw_table);
--	if (mod->arch.core_unw_table)
-+		mod->arch.init_unw_table = NULL;
-+	}
-+	if (mod->arch.core_unw_table) {
- 		unw_remove_unwind_table(mod->arch.core_unw_table);
-+		mod->arch.core_unw_table = NULL;
-+	}
- }
+diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+index 5762c3c383f2e..56de378ad13dc 100644
+--- a/drivers/edac/altera_edac.c
++++ b/drivers/edac/altera_edac.c
+@@ -1956,6 +1956,7 @@ static void altr_edac_a10_irq_handler(struct irq_desc *desc)
+ 	struct altr_arria10_edac *edac = irq_desc_get_handler_data(desc);
+ 	struct irq_chip *chip = irq_desc_get_chip(desc);
+ 	int irq = irq_desc_get_irq(desc);
++	unsigned long bits;
  
- void *dereference_module_function_descriptor(struct module *mod, void *ptr)
+ 	dberr = (irq == edac->db_irq) ? 1 : 0;
+ 	sm_offset = dberr ? A10_SYSMGR_ECC_INTSTAT_DERR_OFST :
+@@ -1965,7 +1966,8 @@ static void altr_edac_a10_irq_handler(struct irq_desc *desc)
+ 
+ 	regmap_read(edac->ecc_mgr_map, sm_offset, &irq_status);
+ 
+-	for_each_set_bit(bit, (unsigned long *)&irq_status, 32) {
++	bits = irq_status;
++	for_each_set_bit(bit, &bits, 32) {
+ 		irq = irq_linear_revmap(edac->domain, dberr * 32 + bit);
+ 		if (irq)
+ 			generic_handle_irq(irq);
 -- 
 2.20.1
 
