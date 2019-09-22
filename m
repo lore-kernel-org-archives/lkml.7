@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C64A4C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01174C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BB4E20869
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:17:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD37E206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:17:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179843;
-	bh=D1XWRJt6ClMhPXFxGI9JJL0/zQQhSHeSVvnHbT7ij5U=;
+	s=default; t=1569179851;
+	bh=pClu90STKLB18oeln6ktnsGd79j8DaMmJ6BX0IqDGQM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VV+Cth27xwUhsHETJ2r9JhIpTL06eHpoOW0GvasHrAURa1gte67MrTXdGtWptJZRW
-	 xAbXgghca2xWfEI6y61Ua6OUuXTak7sPg5PFeLZuQCuF2XPkcRv/OEbCGaPbmVNiVo
-	 78Sviqyryo4qbWvM13BLTz3hciaJ8CBxN10i15+c=
+	b=M8W7H3PxraB0vFyhC5UcaQgv8LiDJuBc8qA5yeh9Y+0PNZcjfniNvdUtNPA8tyoOc
+	 Yh+LiuKcWka2TG9v0WfQYcOjjS7B/lm/+XZmmPc8mJo/0FPFChfqGAX3YZ0fA9dVcr
+	 UTqbxkVMLl8IM9GTvV42IeVwDWqzDEyH9f3Qo3jQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436920AbfIVTRW (ORCPT
+        id S1730879AbfIVTRa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:17:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57338 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:17:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729348AbfIVSzr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:55:47 -0400
+        id S2392190AbfIVSzl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:55:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8073421D7E;
-        Sun, 22 Sep 2019 18:55:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C3E521D7A;
+        Sun, 22 Sep 2019 18:55:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178547;
-        bh=D1XWRJt6ClMhPXFxGI9JJL0/zQQhSHeSVvnHbT7ij5U=;
+        s=default; t=1569178541;
+        bh=pClu90STKLB18oeln6ktnsGd79j8DaMmJ6BX0IqDGQM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dRJDF/KKx2K2li814Za3RS03fT87Ao324SOzmHYyNX2Sl7Ma23PK9/5IR+7JZKvyO
-         u4dVVhG/QFNKOsu1SRhADmxSalA8r/0a+Ye32tTcFRcQl1VFSW8ie7yRqc2dfv3CHG
-         IjAnKq++pksey96rZz5IUXx43BFfpCRiOgQdzXuc=
+        b=n/UJcOEXLi5WMKgHEbRQCNA+y1zoCODfVnWuTKjGYujl3Nr2SLHF5QFxPl9g6yguy
+         +p/PIuX7ICbFn95mmYMy3bzSb8HK2eCdrjknq3CoIIa+zMmMUzw7oZCVTfho6M3i+i
+         6O9h5vYrI6KPt2h7ZRktUQC6JeYpmrg7/wmWrPTU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 065/128] ASoC: sun4i-i2s: Don't use the oversample to calculate BCLK
-Date:   Sun, 22 Sep 2019 14:53:15 -0400
-Message-Id: <20190922185418.2158-65-sashal@kernel.org>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        syzbot+2d4fc2a0c45ad8da7e99@syzkaller.appspotmail.com,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 061/128] media: radio/si470x: kill urb on error
+Date:   Sun, 22 Sep 2019 14:53:11 -0400
+Message-Id: <20190922185418.2158-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
 References: <20190922185418.2158-1-sashal@kernel.org>
@@ -59,70 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxime Ripard <maxime.ripard@bootlin.com>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-[ Upstream commit 7df8f9a20196072162d9dc8fe99943f2d35f23d5 ]
+[ Upstream commit 0d616f2a3fdbf1304db44d451d9f07008556923b ]
 
-The BCLK divider should be calculated using the parameters that actually
-make the BCLK rate: the number of channels, the sampling rate and the
-sample width.
+In the probe() function radio->int_in_urb was not killed if an
+error occurred in the probe sequence. It was also missing in
+the disconnect.
 
-We've been using the oversample_rate previously because in the former SoCs,
-the BCLK's parent is MCLK, which in turn is being used to generate the
-oversample rate, so we end up with something like this:
+This caused this syzbot issue:
 
-oversample = mclk_rate / sampling_rate
-bclk_div = oversample / word_size / channels
+https://syzkaller.appspot.com/bug?extid=2d4fc2a0c45ad8da7e99
 
-So, bclk_div = mclk_rate / sampling_rate / word_size / channels.
+Reported-and-tested-by: syzbot+2d4fc2a0c45ad8da7e99@syzkaller.appspotmail.com
 
-And this is actually better, since the oversampling ratio only plays a role
-because the MCLK is its parent, not because of what BCLK is supposed to be.
-
-Furthermore, that assumption of MCLK being the parent has been broken on
-newer SoCs, so let's use the proper formula, and have the parent rate as an
-argument.
-
-Fixes: 7d2993811a1e ("ASoC: sun4i-i2s: Add support for H3")
-Fixes: 21faaea1343f ("ASoC: sun4i-i2s: Add support for A83T")
-Fixes: 66ecce332538 ("ASoC: sun4i-i2s: Add compatibility with A64 codec I2S")
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Link: https://lore.kernel.org/r/c3595e3a9788c2ef2dcc30aa3c8c4953bb5cc249.1566242458.git-series.maxime.ripard@bootlin.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sunxi/sun4i-i2s.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/media/radio/si470x/radio-si470x-usb.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-index 6173dd86c62ce..18cf8404d27ca 100644
---- a/sound/soc/sunxi/sun4i-i2s.c
-+++ b/sound/soc/sunxi/sun4i-i2s.c
-@@ -223,10 +223,11 @@ static const struct sun4i_i2s_clk_div sun4i_i2s_mclk_div[] = {
- };
+diff --git a/drivers/media/radio/si470x/radio-si470x-usb.c b/drivers/media/radio/si470x/radio-si470x-usb.c
+index 313a95f195a27..19e381dd58089 100644
+--- a/drivers/media/radio/si470x/radio-si470x-usb.c
++++ b/drivers/media/radio/si470x/radio-si470x-usb.c
+@@ -743,7 +743,7 @@ static int si470x_usb_driver_probe(struct usb_interface *intf,
+ 	/* start radio */
+ 	retval = si470x_start_usb(radio);
+ 	if (retval < 0)
+-		goto err_all;
++		goto err_buf;
  
- static int sun4i_i2s_get_bclk_div(struct sun4i_i2s *i2s,
--				  unsigned int oversample_rate,
-+				  unsigned long parent_rate,
-+				  unsigned int sampling_rate,
- 				  unsigned int word_size)
- {
--	int div = oversample_rate / word_size / 2;
-+	int div = parent_rate / sampling_rate / word_size / 2;
- 	int i;
+ 	/* set initial frequency */
+ 	si470x_set_freq(radio, 87.5 * FREQ_MUL); /* available in all regions */
+@@ -758,6 +758,8 @@ static int si470x_usb_driver_probe(struct usb_interface *intf,
  
- 	for (i = 0; i < ARRAY_SIZE(sun4i_i2s_bclk_div); i++) {
-@@ -316,8 +317,8 @@ static int sun4i_i2s_set_clk_rate(struct snd_soc_dai *dai,
- 		return -EINVAL;
- 	}
- 
--	bclk_div = sun4i_i2s_get_bclk_div(i2s, oversample_rate,
--					  word_size);
-+	bclk_div = sun4i_i2s_get_bclk_div(i2s, i2s->mclk_freq,
-+					  rate, word_size);
- 	if (bclk_div < 0) {
- 		dev_err(dai->dev, "Unsupported BCLK divider: %d\n", bclk_div);
- 		return -EINVAL;
+ 	return 0;
+ err_all:
++	usb_kill_urb(radio->int_in_urb);
++err_buf:
+ 	kfree(radio->buffer);
+ err_ctrl:
+ 	v4l2_ctrl_handler_free(&radio->hdl);
+@@ -831,6 +833,7 @@ static void si470x_usb_driver_disconnect(struct usb_interface *intf)
+ 	mutex_lock(&radio->lock);
+ 	v4l2_device_disconnect(&radio->v4l2_dev);
+ 	video_unregister_device(&radio->videodev);
++	usb_kill_urb(radio->int_in_urb);
+ 	usb_set_intfdata(intf, NULL);
+ 	mutex_unlock(&radio->lock);
+ 	v4l2_device_put(&radio->v4l2_dev);
 -- 
 2.20.1
 
