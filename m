@@ -2,305 +2,172 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D96C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 22:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E483BC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 22:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 042A020830
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 22:46:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eVj4EWZI"
+	by mail.kernel.org (Postfix) with ESMTP id ABD50208C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 22:53:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389654AbfIVWqe (ORCPT
+        id S2389709AbfIVWxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 18:46:34 -0400
-Received: from mail-vk1-f194.google.com ([209.85.221.194]:45609 "EHLO
-        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389439AbfIVWqe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 18:46:34 -0400
-Received: by mail-vk1-f194.google.com with SMTP id u192so2584113vkb.12;
-        Sun, 22 Sep 2019 15:46:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rVJRFaJE5AEAesOtuJI9NH1xVfCZ4xaAZV4mZPfTXDI=;
-        b=eVj4EWZImuOMCwXehKHEqP97MAgGkS1KslAMdmp/aFVLlAwjvoNI+ffLxG+uvOrg8w
-         /TeMpbJAt4zTxI5bv8sAxcSrwKoGIb/QnYNf6PcIkleSXYTh1hJWpKdEnjna5RM+m/SY
-         td1xa0hcFkWI88gzZyQsiRT6cp6KAnUnf57QGixWPPQxlNnUuH/4O0TP1IxMYmh/37WM
-         3aqUB+FNbpLdpUPO4eEPh07LDF4BWrESlbWHRqScHil4GJPhzcuPeZWA9x+2ZUU2s1F8
-         m7g8qwqJuKiXSFvp7hkczxj6rilsT/DB7ZgEI2R9q968GpdOeKY7oR9KTK72PiK8LDni
-         I/Hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rVJRFaJE5AEAesOtuJI9NH1xVfCZ4xaAZV4mZPfTXDI=;
-        b=e70XTmuORYJDuLb1+Rz40npEwYP++o7H17vnA/WgOuIo0jZk87sei5KLLQmvsUBk9w
-         H0dPPkrpED4ZCOogjxIavIKcdxqUceH5H6U0Fdo/STU2DW4UcOvLSMxxF/r3hg0JBfBP
-         acOlhH4Lqu4VVqKvKQyY0tTgV7Yjl7iEdhW/1c4tBV/09lMZd8zlkjaxZXbUIMFnmNj7
-         PsuzwTToUWYC/gd7f/YkKKRtWB95AY6Pz8vR2wrvF9Bsejv7b/vzH2llRpssp7ma6UAK
-         i9tH2QFtoLm0/wgfu2CztK4p7PIPaD4kqam6ypUBFs97r8GcnFH5V4K5rD2kc6E/eWpA
-         cVVQ==
-X-Gm-Message-State: APjAAAV34JnWsc0/qzai/YXDMYBX4lYChSvlGfHCH5EZ4EGLiL/fl93M
-        GEXW4i43UatO00WTqrowiPoSKaYMmJsty9uWho4=
-X-Google-Smtp-Source: APXvYqxOFG9/xZZVxAoYT/1HFqcEGT5aNLeW3buObGdou+/30q6Ni0mz/dpmFMtaY/qKPwvP0N3bpVUKouHZa6knUL4=
-X-Received: by 2002:ac5:c4d1:: with SMTP id a17mr13574798vkl.57.1569192390979;
- Sun, 22 Sep 2019 15:46:30 -0700 (PDT)
+        Sun, 22 Sep 2019 18:53:05 -0400
+Received: from mga04.intel.com ([192.55.52.120]:43447 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388766AbfIVWxF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 18:53:05 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Sep 2019 15:53:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,538,1559545200"; 
+   d="scan'208";a="182339433"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 22 Sep 2019 15:52:59 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1iCAix-0002dh-6t; Mon, 23 Sep 2019 06:52:59 +0800
+Date:   Mon, 23 Sep 2019 06:52:35 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Cc:     kbuild-all@01.org, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v6 2/2] drm/bridge: Add NWL MIPI DSI host controller
+ support
+Message-ID: <201909230644.qfSKbNf9%lkp@intel.com>
+References: <c0ac0b203fb65ae7efd1b9b54664b491ca2fb157.1569170717.git.agx@sigxcpu.org>
 MIME-Version: 1.0
-References: <20190920185843.4096-1-matthew.cover@stackpath.com>
- <20190922080326-mutt-send-email-mst@kernel.org> <CAGyo_hqGbFdt1PoDrmo=S5iTO8TwbrbtOJtbvGT1WrFFMLwk-Q@mail.gmail.com>
- <20190922162546-mutt-send-email-mst@kernel.org> <CAGyo_hr+_oSwVSKSqKTXaouaMK-6b8+NVLTxWmZD3vn07GEGWA@mail.gmail.com>
-In-Reply-To: <CAGyo_hr+_oSwVSKSqKTXaouaMK-6b8+NVLTxWmZD3vn07GEGWA@mail.gmail.com>
-From:   Matt Cover <werekraken@gmail.com>
-Date:   Sun, 22 Sep 2019 15:46:19 -0700
-Message-ID: <CAGyo_hpCDPmNvTau50XxRVkq1C=Qn7E8cVkE=BZhhiNF6MjqZA@mail.gmail.com>
-Subject: Re: [PATCH net-next] tuntap: Fallback to automq on TUNSETSTEERINGEBPF
- prog negative return
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     davem@davemloft.net, ast@kernel.org, daniel@iogearbox.net,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
-        Jason Wang <jasowang@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Matthew Cover <matthew.cover@stackpath.com>,
-        mail@timurcelik.de, pabeni@redhat.com,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        wangli39@baidu.com, lifei.shirley@bytedance.com,
-        tglx@linutronix.de, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c0ac0b203fb65ae7efd1b9b54664b491ca2fb157.1569170717.git.agx@sigxcpu.org>
+X-Patchwork-Hint: ignore
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 22, 2019 at 3:30 PM Matt Cover <werekraken@gmail.com> wrote:
->
-> On Sun, Sep 22, 2019 at 1:36 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> >
-> > On Sun, Sep 22, 2019 at 10:43:19AM -0700, Matt Cover wrote:
-> > > On Sun, Sep 22, 2019 at 5:37 AM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > > >
-> > > > On Fri, Sep 20, 2019 at 11:58:43AM -0700, Matthew Cover wrote:
-> > > > > Treat a negative return from a TUNSETSTEERINGEBPF bpf prog as a signal
-> > > > > to fallback to tun_automq_select_queue() for tx queue selection.
-> > > > >
-> > > > > Compilation of this exact patch was tested.
-> > > > >
-> > > > > For functional testing 3 additional printk()s were added.
-> > > > >
-> > > > > Functional testing results (on 2 txq tap device):
-> > > > >
-> > > > >   [Fri Sep 20 18:33:27 2019] ========== tun no prog ==========
-> > > > >   [Fri Sep 20 18:33:27 2019] tuntap: tun_ebpf_select_queue() returned '-1'
-> > > > >   [Fri Sep 20 18:33:27 2019] tuntap: tun_automq_select_queue() ran
-> > > > >   [Fri Sep 20 18:33:27 2019] ========== tun prog -1 ==========
-> > > > >   [Fri Sep 20 18:33:27 2019] tuntap: bpf_prog_run_clear_cb() returned '-1'
-> > > > >   [Fri Sep 20 18:33:27 2019] tuntap: tun_ebpf_select_queue() returned '-1'
-> > > > >   [Fri Sep 20 18:33:27 2019] tuntap: tun_automq_select_queue() ran
-> > > > >   [Fri Sep 20 18:33:27 2019] ========== tun prog 0 ==========
-> > > > >   [Fri Sep 20 18:33:27 2019] tuntap: bpf_prog_run_clear_cb() returned '0'
-> > > > >   [Fri Sep 20 18:33:27 2019] tuntap: tun_ebpf_select_queue() returned '0'
-> > > > >   [Fri Sep 20 18:33:27 2019] ========== tun prog 1 ==========
-> > > > >   [Fri Sep 20 18:33:27 2019] tuntap: bpf_prog_run_clear_cb() returned '1'
-> > > > >   [Fri Sep 20 18:33:27 2019] tuntap: tun_ebpf_select_queue() returned '1'
-> > > > >   [Fri Sep 20 18:33:27 2019] ========== tun prog 2 ==========
-> > > > >   [Fri Sep 20 18:33:27 2019] tuntap: bpf_prog_run_clear_cb() returned '2'
-> > > > >   [Fri Sep 20 18:33:27 2019] tuntap: tun_ebpf_select_queue() returned '0'
-> > > > >
-> > > > > Signed-off-by: Matthew Cover <matthew.cover@stackpath.com>
-> > > >
-> > > >
-> > > > Could you add a bit more motivation data here?
-> > >
-> > > Thank you for these questions Michael.
-> > >
-> > > I'll plan on adding the below information to the
-> > > commit message and submitting a v2 of this patch
-> > > when net-next reopens. In the meantime, it would
-> > > be very helpful to know if these answers address
-> > > some of your concerns.
-> > >
-> > > > 1. why is this a good idea
-> > >
-> > > This change allows TUNSETSTEERINGEBPF progs to
-> > > do any of the following.
-> > >  1. implement queue selection for a subset of
-> > >     traffic (e.g. special queue selection logic
-> > >     for ipv4, but return negative and use the
-> > >     default automq logic for ipv6)
-> > >  2. determine there isn't sufficient information
-> > >     to do proper queue selection; return
-> > >     negative and use the default automq logic
-> > >     for the unknown
-> > >  3. implement a noop prog (e.g. do
-> > >     bpf_trace_printk() then return negative and
-> > >     use the default automq logic for everything)
-> > >
-> > > > 2. how do we know existing userspace does not rely on existing behaviour
-> > >
-> > > Prior to this change a negative return from a
-> > > TUNSETSTEERINGEBPF prog would have been cast
-> > > into a u16 and traversed netdev_cap_txqueue().
-> > >
-> > > In most cases netdev_cap_txqueue() would have
-> > > found this value to exceed real_num_tx_queues
-> > > and queue_index would be updated to 0.
-> > >
-> > > It is possible that a TUNSETSTEERINGEBPF prog
-> > > return a negative value which when cast into a
-> > > u16 results in a positive queue_index less than
-> > > real_num_tx_queues. For example, on x86_64, a
-> > > return value of -65535 results in a queue_index
-> > > of 1; which is a valid queue for any multiqueue
-> > > device.
-> > >
-> > > It seems unlikely, however as stated above is
-> > > unfortunately possible, that existing
-> > > TUNSETSTEERINGEBPF programs would choose to
-> > > return a negative value rather than return the
-> > > positive value which holds the same meaning.
-> > >
-> > > It seems more likely that future
-> > > TUNSETSTEERINGEBPF programs would leverage a
-> > > negative return and potentially be loaded into
-> > > a kernel with the old behavior.
-> >
-> > OK if we are returning a special
-> > value, shouldn't we limit it? How about a special
-> > value with this meaning?
-> > If we are changing an ABI let's at least make it
-> > extensible.
-> >
->
-> A special value with this meaning sounds
-> good to me. I'll plan on adding a define
-> set to -1 to cause the fallback to automq.
->
-> The way I was initially viewing the old
-> behavior was that returning negative was
-> undefined; it happened to have the
-> outcomes I walked through, but not
-> necessarily by design.
->
-> In order to keep the new behavior
-> extensible, how should we state that a
-> negative return other than -1 is
-> undefined and therefore subject to
-> change. Is something like this
-> sufficient?
->
->   Documentation/networking/tc-actions-env-rules.txt
->
-> Additionally, what should the new
-> behavior implement when a negative other
-> than -1 is returned? I would like to have
-> it do the same thing as -1 for now, but
-> with the understanding that this behavior
-> is undefined. Does this sound reasonable?
->
-> > > > 3. why doesn't userspace need a way to figure out whether it runs on a kernel with and
-> > > >    without this patch
-> > >
-> > > There may be some value in exposing this fact
-> > > to the ebpf prog loader. What is the standard
-> > > practice here, a define?
-> >
-> >
-> > We'll need something at runtime - people move binaries between kernels
-> > without rebuilding then. An ioctl is one option.
-> > A sysfs attribute is another, an ethtool flag yet another.
-> > A combination of these is possible.
-> >
-> > And if we are doing this anyway, maybe let userspace select
-> > the new behaviour? This way we can stay compatible with old
-> > userspace...
-> >
->
-> Understood. I'll look into adding an
-> ioctl to activate the new behavior. And
-> perhaps a method of checking which is
-> behavior is currently active (in case we
-> ever want to change the default, say
-> after some suitably long transition
-> period).
->
+Hi "Guido,
 
-Unless of course we can simply state via
-documentation that any negative return
-for which a define doesn't exist is
-undefined behavior. In which case,
-there is no old vs new behavior and
-no need for an ioctl. Simply the
-understanding provided by the
-documentation.
+I love your patch! Perhaps something to improve:
 
-> > > >
-> > > >
-> > > > thanks,
-> > > > MST
-> > > >
-> > > > > ---
-> > > > >  drivers/net/tun.c | 20 +++++++++++---------
-> > > > >  1 file changed, 11 insertions(+), 9 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/net/tun.c b/drivers/net/tun.c
-> > > > > index aab0be4..173d159 100644
-> > > > > --- a/drivers/net/tun.c
-> > > > > +++ b/drivers/net/tun.c
-> > > > > @@ -583,35 +583,37 @@ static u16 tun_automq_select_queue(struct tun_struct *tun, struct sk_buff *skb)
-> > > > >       return txq;
-> > > > >  }
-> > > > >
-> > > > > -static u16 tun_ebpf_select_queue(struct tun_struct *tun, struct sk_buff *skb)
-> > > > > +static int tun_ebpf_select_queue(struct tun_struct *tun, struct sk_buff *skb)
-> > > > >  {
-> > > > >       struct tun_prog *prog;
-> > > > >       u32 numqueues;
-> > > > > -     u16 ret = 0;
-> > > > > +     int ret = -1;
-> > > > >
-> > > > >       numqueues = READ_ONCE(tun->numqueues);
-> > > > >       if (!numqueues)
-> > > > >               return 0;
-> > > > >
-> > > > > +     rcu_read_lock();
-> > > > >       prog = rcu_dereference(tun->steering_prog);
-> > > > >       if (prog)
-> > > > >               ret = bpf_prog_run_clear_cb(prog->prog, skb);
-> > > > > +     rcu_read_unlock();
-> > > > >
-> > > > > -     return ret % numqueues;
-> > > > > +     if (ret >= 0)
-> > > > > +             ret %= numqueues;
-> > > > > +
-> > > > > +     return ret;
-> > > > >  }
-> > > > >
-> > > > >  static u16 tun_select_queue(struct net_device *dev, struct sk_buff *skb,
-> > > > >                           struct net_device *sb_dev)
-> > > > >  {
-> > > > >       struct tun_struct *tun = netdev_priv(dev);
-> > > > > -     u16 ret;
-> > > > > +     int ret;
-> > > > >
-> > > > > -     rcu_read_lock();
-> > > > > -     if (rcu_dereference(tun->steering_prog))
-> > > > > -             ret = tun_ebpf_select_queue(tun, skb);
-> > > > > -     else
-> > > > > +     ret = tun_ebpf_select_queue(tun, skb);
-> > > > > +     if (ret < 0)
-> > > > >               ret = tun_automq_select_queue(tun, skb);
-> > > > > -     rcu_read_unlock();
-> > > > >
-> > > > >       return ret;
-> > > > >  }
-> > > > > --
-> > > > > 1.8.3.1
+[auto build test WARNING on linus/master]
+[cannot apply to v5.3 next-20190920]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+
+url:    https://github.com/0day-ci/linux/commits/Guido-G-nther/drm-bridge-Add-NWL-MIPI-DSI-host-controller-support/20190923-005010
+
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+smatch warnings:
+drivers/gpu/drm/bridge/nwl-dsi.c:272 nwl_dsi_config_dpi() warn: unsigned 'color_format' is never less than zero.
+
+vim +/color_format +272 drivers/gpu/drm/bridge/nwl-dsi.c
+
+   245	
+   246	static int nwl_dsi_config_dpi(struct nwl_dsi *dsi)
+   247	{
+   248		u32 color_format, mode;
+   249		bool burst_mode;
+   250		int hfront_porch, hback_porch, vfront_porch, vback_porch;
+   251		int hsync_len, vsync_len;
+   252	
+   253		hfront_porch = dsi->mode.hsync_start - dsi->mode.hdisplay;
+   254		hsync_len = dsi->mode.hsync_end - dsi->mode.hsync_start;
+   255		hback_porch = dsi->mode.htotal - dsi->mode.hsync_end;
+   256	
+   257		vfront_porch = dsi->mode.vsync_start - dsi->mode.vdisplay;
+   258		vsync_len = dsi->mode.vsync_end - dsi->mode.vsync_start;
+   259		vback_porch = dsi->mode.vtotal - dsi->mode.vsync_end;
+   260	
+   261		DRM_DEV_DEBUG_DRIVER(dsi->dev, "hfront_porch = %d\n", hfront_porch);
+   262		DRM_DEV_DEBUG_DRIVER(dsi->dev, "hback_porch = %d\n", hback_porch);
+   263		DRM_DEV_DEBUG_DRIVER(dsi->dev, "hsync_len = %d\n", hsync_len);
+   264		DRM_DEV_DEBUG_DRIVER(dsi->dev, "hdisplay = %d\n", dsi->mode.hdisplay);
+   265		DRM_DEV_DEBUG_DRIVER(dsi->dev, "vfront_porch = %d\n", vfront_porch);
+   266		DRM_DEV_DEBUG_DRIVER(dsi->dev, "vback_porch = %d\n", vback_porch);
+   267		DRM_DEV_DEBUG_DRIVER(dsi->dev, "vsync_len = %d\n", vsync_len);
+   268		DRM_DEV_DEBUG_DRIVER(dsi->dev, "vactive = %d\n", dsi->mode.vdisplay);
+   269		DRM_DEV_DEBUG_DRIVER(dsi->dev, "clock = %d kHz\n", dsi->mode.clock);
+   270	
+   271		color_format = nwl_dsi_get_dpi_pixel_format(dsi->format);
+ > 272		if (color_format < 0) {
+   273			DRM_DEV_ERROR(dsi->dev, "Invalid color format 0x%x\n",
+   274				      dsi->format);
+   275			return color_format;
+   276		}
+   277		DRM_DEV_DEBUG_DRIVER(dsi->dev, "pixel fmt = %d\n", dsi->format);
+   278	
+   279		nwl_dsi_write(dsi, NWL_DSI_INTERFACE_COLOR_CODING, NWL_DSI_DPI_24_BIT);
+   280		nwl_dsi_write(dsi, NWL_DSI_PIXEL_FORMAT, color_format);
+   281		/*
+   282		 * Adjusting input polarity based on the video mode results in
+   283		 * a black screen so always pick active low:
+   284		 */
+   285		nwl_dsi_write(dsi, NWL_DSI_VSYNC_POLARITY,
+   286			      NWL_DSI_VSYNC_POLARITY_ACTIVE_LOW);
+   287		nwl_dsi_write(dsi, NWL_DSI_HSYNC_POLARITY,
+   288			      NWL_DSI_HSYNC_POLARITY_ACTIVE_LOW);
+   289	
+   290		burst_mode = (dsi->dsi_mode_flags & MIPI_DSI_MODE_VIDEO_BURST) &&
+   291			     !(dsi->dsi_mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE);
+   292	
+   293		if (burst_mode) {
+   294			nwl_dsi_write(dsi, NWL_DSI_VIDEO_MODE, NWL_DSI_VM_BURST_MODE);
+   295			nwl_dsi_write(dsi, NWL_DSI_PIXEL_FIFO_SEND_LEVEL, 256);
+   296		} else {
+   297			mode = ((dsi->dsi_mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE) ?
+   298					NWL_DSI_VM_BURST_MODE_WITH_SYNC_PULSES :
+   299					NWL_DSI_VM_NON_BURST_MODE_WITH_SYNC_EVENTS);
+   300			nwl_dsi_write(dsi, NWL_DSI_VIDEO_MODE, mode);
+   301			nwl_dsi_write(dsi, NWL_DSI_PIXEL_FIFO_SEND_LEVEL,
+   302				      dsi->mode.hdisplay);
+   303		}
+   304	
+   305		nwl_dsi_write(dsi, NWL_DSI_HFP, hfront_porch);
+   306		nwl_dsi_write(dsi, NWL_DSI_HBP, hback_porch);
+   307		nwl_dsi_write(dsi, NWL_DSI_HSA, hsync_len);
+   308	
+   309		nwl_dsi_write(dsi, NWL_DSI_ENABLE_MULT_PKTS, 0x0);
+   310		nwl_dsi_write(dsi, NWL_DSI_BLLP_MODE, 0x1);
+   311		nwl_dsi_write(dsi, NWL_DSI_USE_NULL_PKT_BLLP, 0x0);
+   312		nwl_dsi_write(dsi, NWL_DSI_VC, 0x0);
+   313	
+   314		nwl_dsi_write(dsi, NWL_DSI_PIXEL_PAYLOAD_SIZE, dsi->mode.hdisplay);
+   315		nwl_dsi_write(dsi, NWL_DSI_VACTIVE, dsi->mode.vdisplay - 1);
+   316		nwl_dsi_write(dsi, NWL_DSI_VBP, vback_porch);
+   317		nwl_dsi_write(dsi, NWL_DSI_VFP, vfront_porch);
+   318	
+   319		return 0;
+   320	}
+   321	
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
