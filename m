@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F906C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 152EDC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B08321A4A
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:59:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D67C6214D9
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:59:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178793;
-	bh=D7YyxjKijRZ/TheVnJWsZBt5yFo5UywORh7hk3Psqe0=;
+	s=default; t=1569178799;
+	bh=/ysRQqNMeKecQLyftEsr3RWSE3M08IG9c29G8hT03sQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=phx6y1pMJxv5ZlNgRaLz3TQ4J/QkdUexkjPChZ68haH2XjXtYB+kxIVt8r7JfEBgY
-	 2VmE8spGuzddRJ6Unjc5BplsMKe37T1wJE+csJ8WUZq2rbd+BKL06tcjIFoEK2Nl8i
-	 CMop8Q5ly8gV+Qh46ywI6vrVSjABSHAVtpWd5XmE=
+	b=IX5/nKLUs3k3NHN56ceTdvF8DnPqT/2Wm6ua60HSxZcwXtnFOFTDgIzSRDj+tLN1M
+	 8VbZRQ0SZPpUyavVzhz09RnjpOs6G0QrLOUm4AhfIWkFtyOlyqlRPHv0uzaDVQsWOe
+	 qphZP9/gSIUlS2GN2GSybnvb7f4ETjy8LKQV4/7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438918AbfIVS7w (ORCPT
+        id S2438931AbfIVS76 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:59:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35122 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:59:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395088AbfIVS7p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:59:45 -0400
+        id S2395097AbfIVS7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:59:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C135A214D9;
-        Sun, 22 Sep 2019 18:59:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7F9C214D9;
+        Sun, 22 Sep 2019 18:59:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178784;
-        bh=D7YyxjKijRZ/TheVnJWsZBt5yFo5UywORh7hk3Psqe0=;
+        s=default; t=1569178790;
+        bh=/ysRQqNMeKecQLyftEsr3RWSE3M08IG9c29G8hT03sQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vhmVITTWK1AJAIEBniDItzpB9v5DBizWLLF74l9zJIozitNen3CJmTqm7n5zzP8iG
-         aCOfa+9qDL61grg1m6y69g2U2J0Iy7FLF41DHRSUZ//zM5b/tfx1vGyBzcqxPplQsG
-         YFs2SlbKA2q673MGh4Do2hxjDTe7VatoymewiHVo=
+        b=wYei/buj/cAN0E5yC9wdRKuX94a1P2uydZicxP4HM+T+fRDpAh5UOkWi/rMu0ox25
+         E834rNDwxHnKrkK5xmPiRFkKyQno9N+u+BRvC70fE3BQpd8510w5AVZrNr2s6MWaMP
+         qMp5sX22emz62J+2US+rRDnBQLNcxXI0c0eqOp/g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>,
-        syzbot+aac8d0d7205f112045d2@syzkaller.appspotmail.com,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 08/60] media: hdpvr: Add device num check and handling
-Date:   Sun, 22 Sep 2019 14:58:41 -0400
-Message-Id: <20190922185934.4305-8-sashal@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 12/60] x86/apic: Soft disable APIC before initializing it
+Date:   Sun, 22 Sep 2019 14:58:45 -0400
+Message-Id: <20190922185934.4305-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185934.4305-1-sashal@kernel.org>
 References: <20190922185934.4305-1-sashal@kernel.org>
@@ -61,57 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit d4a6a9537bc32811486282206ecfb7c53754b74d ]
+[ Upstream commit 2640da4cccf5cc613bf26f0998b9e340f4b5f69c ]
 
-Add hdpvr device num check and error handling
+If the APIC was already enabled on entry of setup_local_APIC() then
+disabling it soft via the SPIV register makes a lot of sense.
 
-We need to increment the device count atomically before we checkout a
-device to make sure that we do not reach the max count, otherwise we get
-out-of-bounds errors as reported by syzbot.
+That masks all LVT entries and brings it into a well defined state.
 
-Reported-and-tested-by: syzbot+aac8d0d7205f112045d2@syzkaller.appspotmail.com
+Otherwise previously enabled LVTs which are not touched in the setup
+function stay unmasked and might surprise the just booting kernel.
 
-Signed-off-by: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20190722105219.068290579@linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/hdpvr/hdpvr-core.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ arch/x86/kernel/apic/apic.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/media/usb/hdpvr/hdpvr-core.c b/drivers/media/usb/hdpvr/hdpvr-core.c
-index a20b60ac66ca4..7b34108f6587e 100644
---- a/drivers/media/usb/hdpvr/hdpvr-core.c
-+++ b/drivers/media/usb/hdpvr/hdpvr-core.c
-@@ -278,6 +278,7 @@ static int hdpvr_probe(struct usb_interface *interface,
- #endif
- 	size_t buffer_size;
- 	int i;
-+	int dev_num;
- 	int retval = -ENOMEM;
- 
- 	/* allocate memory for our device state and initialize it */
-@@ -382,8 +383,17 @@ static int hdpvr_probe(struct usb_interface *interface,
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 928ffdc21873c..232350519062b 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -1303,6 +1303,14 @@ void setup_local_APIC(void)
+ 		return;
  	}
- #endif
  
-+	dev_num = atomic_inc_return(&dev_nr);
-+	if (dev_num >= HDPVR_MAX) {
-+		v4l2_err(&dev->v4l2_dev,
-+			 "max device number reached, device register failed\n");
-+		atomic_dec(&dev_nr);
-+		retval = -ENODEV;
-+		goto reg_fail;
-+	}
++	/*
++	 * If this comes from kexec/kcrash the APIC might be enabled in
++	 * SPIV. Soft disable it before doing further initialization.
++	 */
++	value = apic_read(APIC_SPIV);
++	value &= ~APIC_SPIV_APIC_ENABLED;
++	apic_write(APIC_SPIV, value);
 +
- 	retval = hdpvr_register_videodev(dev, &interface->dev,
--				    video_nr[atomic_inc_return(&dev_nr)]);
-+				    video_nr[dev_num]);
- 	if (retval < 0) {
- 		v4l2_err(&dev->v4l2_dev, "registering videodev failed\n");
- 		goto reg_fail;
+ #ifdef CONFIG_X86_32
+ 	/* Pound the ESR really hard over the head with a big hammer - mbligh */
+ 	if (lapic_is_integrated() && apic->disable_esr) {
 -- 
 2.20.1
 
