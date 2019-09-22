@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1BC5C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D774AC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4D9A2054F
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:30:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFF9B206B6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:30:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180644;
-	bh=BfTwByiLBOEtLAiKrDFm0+a1C2cPRfgHJQH9uMU+AJg=;
+	s=default; t=1569180652;
+	bh=GSS11zVS5sAZCAm/t7b3x4fHnf3ZmTKbpHI1jMi/XZQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fo8VNIrt/LcCrAU4Wyre8UTfK3ObBjW5GpQACASh27bu5sQ1rSdNHKFM6CMH7KQms
-	 5W7FDZdViGbfQZWpV7HnM80QYUcSDg1FHoGwRcLwp5XHtEtSTuP4len92aG5+1bTtr
-	 TgzfA8TvXsbgRfk7AcCnFwzTSZsC/KRdCAS8zI/A=
+	b=IQapMh81oP0GNcUU3JqJAElySpQ9haXaDtpxcb946v9mpFKLZIn832OkZbE7zkS6O
+	 dANU9zsjUwNqY90ZUpWK3EhlihNP6646tXJuxIFpDzLOPeVVYOvvqMBoSeUGEHoxWK
+	 vYJwLEGqa2xDjeDJKXrlZ5AgmJKe+427jvdDOuvI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394460AbfIVTak (ORCPT
+        id S2388165AbfIVTav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:30:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46268 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:30:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392103AbfIVStO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:49:14 -0400
+        id S2391894AbfIVStM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:49:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 594FF208C2;
-        Sun, 22 Sep 2019 18:49:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EACCE21479;
+        Sun, 22 Sep 2019 18:49:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178153;
-        bh=BfTwByiLBOEtLAiKrDFm0+a1C2cPRfgHJQH9uMU+AJg=;
+        s=default; t=1569178151;
+        bh=GSS11zVS5sAZCAm/t7b3x4fHnf3ZmTKbpHI1jMi/XZQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CqDreZYtQnCS3hIesWW+cCH4z+LduxQLbiFAuninchOD8BNydttvpvM49nk/1j3Pn
-         Bjn+OZu1DkvM8xmZuFQBOwxvU42L2ww3HoFSm326SyzOZCKvskv8bYS8lkcFB6Mx9r
-         XTDMOU8gg06k9tFPOxaoxK6hPXLBLtUxbfzA9F34=
+        b=IWb05JC2091ut2/YruYJ5+7iIBxIG6dq9MCigCyp+5luObao7U9ffRSs8jQDBsUX4
+         9YnFaRNOITjfLphbFbR4fsIV6OcYZ4HAoSLPftvm0JJqVh/pk74p9Cl+RSnZhqPdzR
+         twvlkOgqOH44gxTnk8ap2q5zTRqQXulPZZhaMEs8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 199/203] btrfs: delayed-inode: Kill the BUG_ON() in btrfs_delete_delayed_dir_index()
-Date:   Sun, 22 Sep 2019 14:43:45 -0400
-Message-Id: <20190922184350.30563-199-sashal@kernel.org>
+Cc:     Oliver Neukum <oneukum@suse.com>,
+        syzbot+74c65761783d66a9c97c@syzkaller.appspotmail.com,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 198/203] zd1211rw: remove false assertion from zd_mac_clear()
+Date:   Sun, 22 Sep 2019 14:43:44 -0400
+Message-Id: <20190922184350.30563-198-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -58,79 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-[ Upstream commit 933c22a7512c5c09b1fdc46b557384efe8d03233 ]
+[ Upstream commit 7a2eb7367fdea72e448d1a847aa857f6caf8ea2f ]
 
-There is one report of fuzzed image which leads to BUG_ON() in
-btrfs_delete_delayed_dir_index().
+The function is called before the lock which is asserted was ever used.
+Just remove it.
 
-Although that fuzzed image can already be addressed by enhanced
-extent-tree error handler, it's still better to hunt down more BUG_ON().
-
-This patch will hunt down two BUG_ON()s in
-btrfs_delete_delayed_dir_index():
-- One for error from btrfs_delayed_item_reserve_metadata()
-  Instead of BUG_ON(), we output an error message and free the item.
-  And return the error.
-  All callers of this function handles the error by aborting current
-  trasaction.
-
-- One for possible EEXIST from __btrfs_add_delayed_deletion_item()
-  That function can return -EEXIST.
-  We already have a good enough error message for that, only need to
-  clean up the reserved metadata space and allocated item.
-
-To help above cleanup, also modifiy __btrfs_remove_delayed_item() called
-in btrfs_release_delayed_item(), to skip unassociated item.
-
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203253
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Reported-by: syzbot+74c65761783d66a9c97c@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/delayed-inode.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ drivers/net/wireless/zydas/zd1211rw/zd_mac.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/fs/btrfs/delayed-inode.c b/fs/btrfs/delayed-inode.c
-index 43fdb2992956a..6858a05606dd3 100644
---- a/fs/btrfs/delayed-inode.c
-+++ b/fs/btrfs/delayed-inode.c
-@@ -474,6 +474,9 @@ static void __btrfs_remove_delayed_item(struct btrfs_delayed_item *delayed_item)
- 	struct rb_root_cached *root;
- 	struct btrfs_delayed_root *delayed_root;
+diff --git a/drivers/net/wireless/zydas/zd1211rw/zd_mac.c b/drivers/net/wireless/zydas/zd1211rw/zd_mac.c
+index da7e63fca9f57..a9999d10ae81f 100644
+--- a/drivers/net/wireless/zydas/zd1211rw/zd_mac.c
++++ b/drivers/net/wireless/zydas/zd1211rw/zd_mac.c
+@@ -223,7 +223,6 @@ void zd_mac_clear(struct zd_mac *mac)
+ {
+ 	flush_workqueue(zd_workqueue);
+ 	zd_chip_clear(&mac->chip);
+-	lockdep_assert_held(&mac->lock);
+ 	ZD_MEMCLEAR(mac, sizeof(struct zd_mac));
+ }
  
-+	/* Not associated with any delayed_node */
-+	if (!delayed_item->delayed_node)
-+		return;
- 	delayed_root = delayed_item->delayed_node->root->fs_info->delayed_root;
- 
- 	BUG_ON(!delayed_root);
-@@ -1525,7 +1528,12 @@ int btrfs_delete_delayed_dir_index(struct btrfs_trans_handle *trans,
- 	 * we have reserved enough space when we start a new transaction,
- 	 * so reserving metadata failure is impossible.
- 	 */
--	BUG_ON(ret);
-+	if (ret < 0) {
-+		btrfs_err(trans->fs_info,
-+"metadata reservation failed for delayed dir item deltiona, should have been reserved");
-+		btrfs_release_delayed_item(item);
-+		goto end;
-+	}
- 
- 	mutex_lock(&node->mutex);
- 	ret = __btrfs_add_delayed_deletion_item(node, item);
-@@ -1534,7 +1542,8 @@ int btrfs_delete_delayed_dir_index(struct btrfs_trans_handle *trans,
- 			  "err add delayed dir index item(index: %llu) into the deletion tree of the delayed node(root id: %llu, inode id: %llu, errno: %d)",
- 			  index, node->root->root_key.objectid,
- 			  node->inode_id, ret);
--		BUG();
-+		btrfs_delayed_item_release_metadata(dir->root, item);
-+		btrfs_release_delayed_item(item);
- 	}
- 	mutex_unlock(&node->mutex);
- end:
 -- 
 2.20.1
 
