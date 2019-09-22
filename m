@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F31DC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:43:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55F2AC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:43:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C7C8214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:43:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F07C206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:43:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569177836;
-	bh=k14GOqAginYMg0KF/cQWSvXyq8kixoa0xmYN/zK0mBQ=;
+	s=default; t=1569177839;
+	bh=K/Ynl8ZURJU4AyzZONs+0nrqygS1OaSrdmCK3xxot6I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xjnHbcSrhHJ+jQKl2HNqwDo0qWnINTmgf+K0Qm8LTGqnaDObRr9aPJ3Q4Xhj0UOxA
-	 +CIDv9GoNWmWA/PI1+YjjjGLvSFgciHZspNaKhb6zDMyswIJCJKq9f8nh4SNNMFqrD
-	 vSq7ORg1+Xsk3P61yY/cUcp9wZU/ePN7lc4iGA5E=
+	b=TDebXtZ2uoMlozBC4w59UsK3UufS3lIWoiaGAXlpwzWo/J+5yDVBMnlOQKqPQmnpK
+	 i/7z6rKZD2J49lZUAOYhZwrNM4m9rGqBAzWH11HNQm88ITDZLLz7FNVdy189p1G/LT
+	 v5m5qP2YlxMKbLSDJ2HMS5s9cgIq2+Qz3mpoCFGM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388604AbfIVSnz (ORCPT
+        id S2388622AbfIVSn6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:43:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39470 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:43:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388371AbfIVSny (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:43:54 -0400
+        id S2388371AbfIVSn4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:43:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2336220869;
-        Sun, 22 Sep 2019 18:43:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8040A208C0;
+        Sun, 22 Sep 2019 18:43:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569177833;
-        bh=k14GOqAginYMg0KF/cQWSvXyq8kixoa0xmYN/zK0mBQ=;
+        s=default; t=1569177836;
+        bh=K/Ynl8ZURJU4AyzZONs+0nrqygS1OaSrdmCK3xxot6I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mcUegb84kDYjvQk/5e2gImd47Ly8JyvsIK+IloewrH33mzwoVly6GbwSVf2h0+c34
-         m11NgR8lzRRu5q38bQMgiAyCx3uND6HiR4UV9haegnZBmsiKS9CMHOXSkhNpm3PeXw
-         LX2dpkKgXU3WkJzBqXVvjFvrqRZ0BjolSYS3gPFI=
+        b=JXu1/isq990SKY8R+dMsBQTRKAkn5cw1C7zbrpBFRCBcRt0K0bKv/cZbzzvl16MLp
+         bLtgBxqJb49zVkdo4Z7v3FFr47VQIH0DhaZ/DwTEYU3U8dACTfNmuJ+hxtKh1ITcRO
+         zQ4g3i5VTvM6sf1NH+mWaOx3dCWFxDH0jZ1071VY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Libin Yang <libin.yang@intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>,
+Cc:     Takashi Iwai <tiwai@suse.de>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 002/203] ASoC: SOF: Intel: hda: Make hdac_device device-managed
-Date:   Sun, 22 Sep 2019 14:40:28 -0400
-Message-Id: <20190922184350.30563-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 004/203] ALSA: hda/hdmi - Don't report spurious jack state changes
+Date:   Sun, 22 Sep 2019 14:40:30 -0400
+Message-Id: <20190922184350.30563-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -60,76 +59,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit ef9bec27485fefb6b93168fea73fda0dc9638046 ]
+[ Upstream commit 551626ec0ad28dc43cae3094c35be7088cc625ab ]
 
-snd_hdac_ext_bus_device_exit() has been recently modified
-to no longer free the hdac device. SOF allocates memory for
-hdac_device and hda_hda_priv with kzalloc. Make them
-device-managed instead so that they will be freed when the
-SOF driver is unloaded.
+The HDMI jack handling reports the state change always via
+snd_jack_report() whenever hdmi_present_sense() is called, even if the
+state itself doesn't change from the previous time.  This is mostly
+harmless but still a bit confusing to user-space.
 
-Because of the above change, hda_codec is device-managed and
-it will be freed when the ASoC device is removed. Freeing
-the codec in snd_hda_codec_dev_release() leads to kernel
-panic while unloading and reloading the ASoC driver. So,
-avoid freeing the hda_codec for ASoC driver. This is done in
-the same patch to avoid bisect failure.
+This patch reduces such spurious jack state changes and reports only
+when the state really changed.  Also, as a minor optimization, avoid
+overwriting the pin ELD data when the state is identical.
 
-Signed-off-by: Libin Yang <libin.yang@intel.com>
-Signed-off-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Reviewed-by: Takashi Iwai <tiwai@suse.de>
-Link: https://lore.kernel.org/r/20190626070450.7229-1-ranjani.sridharan@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_codec.c       | 8 +++++++-
- sound/soc/sof/intel/hda-codec.c | 6 ++----
- 2 files changed, 9 insertions(+), 5 deletions(-)
+ sound/pci/hda/patch_hdmi.c | 32 ++++++++++++++++++--------------
+ 1 file changed, 18 insertions(+), 14 deletions(-)
 
-diff --git a/sound/pci/hda/hda_codec.c b/sound/pci/hda/hda_codec.c
-index 51f10ed9bc432..a2fb19129219e 100644
---- a/sound/pci/hda/hda_codec.c
-+++ b/sound/pci/hda/hda_codec.c
-@@ -846,7 +846,13 @@ static void snd_hda_codec_dev_release(struct device *dev)
- 	snd_hda_sysfs_clear(codec);
- 	kfree(codec->modelname);
- 	kfree(codec->wcaps);
--	kfree(codec);
-+
-+	/*
-+	 * In the case of ASoC HD-audio, hda_codec is device managed.
-+	 * It will be freed when the ASoC device is removed.
-+	 */
-+	if (codec->core.type == HDA_DEV_LEGACY)
-+		kfree(codec);
+diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
+index bea7b09610809..c380596b2e84c 100644
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -1421,7 +1421,7 @@ static void hdmi_pcm_reset_pin(struct hdmi_spec *spec,
+ /* update per_pin ELD from the given new ELD;
+  * setup info frame and notification accordingly
+  */
+-static void update_eld(struct hda_codec *codec,
++static bool update_eld(struct hda_codec *codec,
+ 		       struct hdmi_spec_per_pin *per_pin,
+ 		       struct hdmi_eld *eld)
+ {
+@@ -1452,18 +1452,22 @@ static void update_eld(struct hda_codec *codec,
+ 		snd_hdmi_show_eld(codec, &eld->info);
+ 
+ 	eld_changed = (pin_eld->eld_valid != eld->eld_valid);
+-	if (eld->eld_valid && pin_eld->eld_valid)
++	eld_changed |= (pin_eld->monitor_present != eld->monitor_present);
++	if (!eld_changed && eld->eld_valid && pin_eld->eld_valid)
+ 		if (pin_eld->eld_size != eld->eld_size ||
+ 		    memcmp(pin_eld->eld_buffer, eld->eld_buffer,
+ 			   eld->eld_size) != 0)
+ 			eld_changed = true;
+ 
+-	pin_eld->monitor_present = eld->monitor_present;
+-	pin_eld->eld_valid = eld->eld_valid;
+-	pin_eld->eld_size = eld->eld_size;
+-	if (eld->eld_valid)
+-		memcpy(pin_eld->eld_buffer, eld->eld_buffer, eld->eld_size);
+-	pin_eld->info = eld->info;
++	if (eld_changed) {
++		pin_eld->monitor_present = eld->monitor_present;
++		pin_eld->eld_valid = eld->eld_valid;
++		pin_eld->eld_size = eld->eld_size;
++		if (eld->eld_valid)
++			memcpy(pin_eld->eld_buffer, eld->eld_buffer,
++			       eld->eld_size);
++		pin_eld->info = eld->info;
++	}
+ 
+ 	/*
+ 	 * Re-setup pin and infoframe. This is needed e.g. when
+@@ -1481,6 +1485,7 @@ static void update_eld(struct hda_codec *codec,
+ 			       SNDRV_CTL_EVENT_MASK_VALUE |
+ 			       SNDRV_CTL_EVENT_MASK_INFO,
+ 			       &get_hdmi_pcm(spec, pcm_idx)->eld_ctl->id);
++	return eld_changed;
  }
  
- #define DEV_NAME_LEN 31
-diff --git a/sound/soc/sof/intel/hda-codec.c b/sound/soc/sof/intel/hda-codec.c
-index b8b37f0823094..0d8437b080bfa 100644
---- a/sound/soc/sof/intel/hda-codec.c
-+++ b/sound/soc/sof/intel/hda-codec.c
-@@ -62,8 +62,7 @@ static int hda_codec_probe(struct snd_sof_dev *sdev, int address)
- 		address, resp);
+ /* update ELD and jack state via HD-audio verbs */
+@@ -1582,6 +1587,7 @@ static void sync_eld_via_acomp(struct hda_codec *codec,
+ 	struct hdmi_spec *spec = codec->spec;
+ 	struct hdmi_eld *eld = &spec->temp_eld;
+ 	struct snd_jack *jack = NULL;
++	bool changed;
+ 	int size;
  
- #if IS_ENABLED(CONFIG_SND_SOC_SOF_HDA_AUDIO_CODEC)
--	/* snd_hdac_ext_bus_device_exit will use kfree to free hdev */
--	hda_priv = kzalloc(sizeof(*hda_priv), GFP_KERNEL);
-+	hda_priv = devm_kzalloc(sdev->dev, sizeof(*hda_priv), GFP_KERNEL);
- 	if (!hda_priv)
- 		return -ENOMEM;
- 
-@@ -82,8 +81,7 @@ static int hda_codec_probe(struct snd_sof_dev *sdev, int address)
- 
- 	return 0;
- #else
--	/* snd_hdac_ext_bus_device_exit will use kfree to free hdev */
--	hdev = kzalloc(sizeof(*hdev), GFP_KERNEL);
-+	hdev = devm_kzalloc(sdev->dev, sizeof(*hdev), GFP_KERNEL);
- 	if (!hdev)
- 		return -ENOMEM;
+ 	mutex_lock(&per_pin->lock);
+@@ -1608,15 +1614,13 @@ static void sync_eld_via_acomp(struct hda_codec *codec,
+ 	 * disconnected event. Jack must be fetched before update_eld()
+ 	 */
+ 	jack = pin_idx_to_jack(codec, per_pin);
+-	update_eld(codec, per_pin, eld);
++	changed = update_eld(codec, per_pin, eld);
+ 	if (jack == NULL)
+ 		jack = pin_idx_to_jack(codec, per_pin);
+-	if (jack == NULL)
+-		goto unlock;
+-	snd_jack_report(jack,
+-			(eld->monitor_present && eld->eld_valid) ?
++	if (changed && jack)
++		snd_jack_report(jack,
++				(eld->monitor_present && eld->eld_valid) ?
+ 				SND_JACK_AVOUT : 0);
+- unlock:
+ 	mutex_unlock(&per_pin->lock);
+ }
  
 -- 
 2.20.1
