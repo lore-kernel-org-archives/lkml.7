@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08773C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2525C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA093208C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:43:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70D412184D
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:44:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569177839;
-	bh=Lc59sncasa5gS38TB/SVhDDqzccv+JjvHgvKuSv4u+I=;
+	s=default; t=1569177845;
+	bh=csEuR0I3jvQUqVfdCrUe0yTO9jh+m3SBF9finvCv31s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xIWhKPhe9W/N1Ny6hMOv89Is0HfGRbO6dhAcyzHe+/WW7tlZBQU0kn7q/GcZDPwGb
-	 bFK5hK+6Y+keMpKkvK0sVTjs8bSsHqoy/dsicm10ObUNa3xbp0sqxaxzIYL0za9Zib
-	 b4mSUr0gLMJbhiuX76R2jbAnQJqk3EzsnRgnKG74=
+	b=myHjahkXH6o4B5mMT9OQkasWCyjMCAj+oJ8aQLwGPgwxbnirXZJpNEzPYdsroP4/L
+	 uyPr0AI5OMseiZc2FClWNG+1cCk8SYHStuiB1xxX/C3KwRrDY7jiJcBuKTcxhoAirI
+	 KVUlyez1MkD6EbYBwkUz7G+iSrwr8nbeu8DCer8U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388639AbfIVSn7 (ORCPT
+        id S2388680AbfIVSoD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:43:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39500 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:44:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388156AbfIVSnz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:43:55 -0400
+        id S2388644AbfIVSoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:44:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 466D5208C2;
-        Sun, 22 Sep 2019 18:43:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCF64206C2;
+        Sun, 22 Sep 2019 18:43:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569177834;
-        bh=Lc59sncasa5gS38TB/SVhDDqzccv+JjvHgvKuSv4u+I=;
+        s=default; t=1569177840;
+        bh=csEuR0I3jvQUqVfdCrUe0yTO9jh+m3SBF9finvCv31s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MbZjLj/GI2VvpA44g+nfEV7NBqYfn9+rI8eVbtCpj2Qd9MS2WW26VmwkIIvzBor2r
-         IuksnVhQN2t8x8o7BcLWRe5kOtornKKjoMxZXMtIyPfxVJiEzBAQeo6F3djih7iM02
-         Kfjggtwrw/Xb4yJKwPqfWCi7IqrrupZ/Rj3RDZrk=
+        b=k2W3GRoEERlJAf5c1sAKoR3taARbxfe6NFtHydbbUXykXfK3azWNlginmy/1T2gab
+         a4ARvgX3ET+aYmiY4i15a6QN+IP2K4bl10Q4hb0OkJk6D4IrVKxqQNbtWfEu7c7mrB
+         DInyjzzyMdTYpNi3QSIf6DgfQFAtp5abvqLxEWjk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 003/203] cpufreq: ap806: Add NULL check after kcalloc
-Date:   Sun, 22 Sep 2019 14:40:29 -0400
-Message-Id: <20190922184350.30563-3-sashal@kernel.org>
+Cc:     Lucas Stach <l.stach@pengutronix.de>,
+        "Andrew F . Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 008/203] ASoC: tlv320aic31xx: suppress error message for EPROBE_DEFER
+Date:   Sun, 22 Sep 2019 14:40:34 -0400
+Message-Id: <20190922184350.30563-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -59,36 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+From: Lucas Stach <l.stach@pengutronix.de>
 
-[ Upstream commit 3355c91b79394593ebbb197c8e930a91826f4ff3 ]
+[ Upstream commit b7e814deae33eb30f8f8c6528e8e69b107978d88 ]
 
-Add NULL check  after kcalloc.
+Both the supplies and reset GPIO might need a probe deferral for the
+resource to be available. Don't print a error message in that case, as
+it is a normal operating condition.
 
-Fix below issue reported by coccicheck
-./drivers/cpufreq/armada-8k-cpufreq.c:138:1-12: alloc with no test,
-possible model on line 151
-
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Acked-by: Andrew F. Davis <afd@ti.com>
+Link: https://lore.kernel.org/r/20190719143637.2018-1-l.stach@pengutronix.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/armada-8k-cpufreq.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/codecs/tlv320aic31xx.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/cpufreq/armada-8k-cpufreq.c b/drivers/cpufreq/armada-8k-cpufreq.c
-index 988ebc326bdbb..39e34f5066d3d 100644
---- a/drivers/cpufreq/armada-8k-cpufreq.c
-+++ b/drivers/cpufreq/armada-8k-cpufreq.c
-@@ -136,6 +136,8 @@ static int __init armada_8k_cpufreq_init(void)
+diff --git a/sound/soc/codecs/tlv320aic31xx.c b/sound/soc/codecs/tlv320aic31xx.c
+index 9b37e98da0db1..26a4f6cd32883 100644
+--- a/sound/soc/codecs/tlv320aic31xx.c
++++ b/sound/soc/codecs/tlv320aic31xx.c
+@@ -1553,7 +1553,8 @@ static int aic31xx_i2c_probe(struct i2c_client *i2c,
+ 	aic31xx->gpio_reset = devm_gpiod_get_optional(aic31xx->dev, "reset",
+ 						      GPIOD_OUT_LOW);
+ 	if (IS_ERR(aic31xx->gpio_reset)) {
+-		dev_err(aic31xx->dev, "not able to acquire gpio\n");
++		if (PTR_ERR(aic31xx->gpio_reset) != -EPROBE_DEFER)
++			dev_err(aic31xx->dev, "not able to acquire gpio\n");
+ 		return PTR_ERR(aic31xx->gpio_reset);
+ 	}
  
- 	nb_cpus = num_possible_cpus();
- 	freq_tables = kcalloc(nb_cpus, sizeof(*freq_tables), GFP_KERNEL);
-+	if (!freq_tables)
-+		return -ENOMEM;
- 	cpumask_copy(&cpus, cpu_possible_mask);
+@@ -1564,7 +1565,9 @@ static int aic31xx_i2c_probe(struct i2c_client *i2c,
+ 				      ARRAY_SIZE(aic31xx->supplies),
+ 				      aic31xx->supplies);
+ 	if (ret) {
+-		dev_err(aic31xx->dev, "Failed to request supplies: %d\n", ret);
++		if (ret != -EPROBE_DEFER)
++			dev_err(aic31xx->dev,
++				"Failed to request supplies: %d\n", ret);
+ 		return ret;
+ 	}
  
- 	/*
 -- 
 2.20.1
 
