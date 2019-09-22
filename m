@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE8EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF7DC49ED7
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88C1620869
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:23:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8766C20869
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:23:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180232;
-	bh=almqlEgrShZjlwAf+YmnkiSQmi+dQpvSMs4EOo+e5No=;
+	s=default; t=1569180235;
+	bh=0NklFi5BNWNDgAY2+lWD5jgqXv5IH1+D0pno6Bub/tg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e2AxCmpkOf0liKKqzA+oqUm7ADQFLFUA5FreIDxXRHc9fmK4S9TWy/DdyktpaK7RY
-	 83oKZ8gUhcosv8RO52eh09rFqhak5QQ7Nc+WYWxdRNvCUiEuE6ihF5WyWMyORBkWcl
-	 7Q+NTkVJRMZtdQfSvirS8+ZoCij4aJ+14e/cyVEQ=
+	b=CiPUYhFC1ddoJcsCgv2e0KMav7KYkdsU3LLAl7Qj/uFXJhLFP8W6eCLGUlRx1gDTy
+	 KvPQkmDDk379JIVkKsOlu9Kz746hQE8Qo730qSMfgwVdcFibQtRat0HMpPhwWfHwpm
+	 C7xbMkbko1aLejKEOERpT0dF9ict9Z1AjX74bajc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbfIVTXv (ORCPT
+        id S2393915AbfIVSxS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:23:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53072 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:53:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393926AbfIVSxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:53:19 -0400
+        id S2389121AbfIVSww (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:52:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B4222190F;
-        Sun, 22 Sep 2019 18:53:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DC5D208C2;
+        Sun, 22 Sep 2019 18:52:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178398;
-        bh=almqlEgrShZjlwAf+YmnkiSQmi+dQpvSMs4EOo+e5No=;
+        s=default; t=1569178372;
+        bh=0NklFi5BNWNDgAY2+lWD5jgqXv5IH1+D0pno6Bub/tg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JpRTi8M1TIAV0dEY3Xp7Nwxgx30VdNZHAylLf12VEhDFi5dsAWX8oJbnAnRi/qzwe
-         oyBHuzeIiJ2lBPM/I0BXItDpy9NkA7MqqpkBRo9qGD2zy9EAguW9RswDCu3tMaAQw4
-         tUIvPqzEnWtYq4u88amXSBnxxzq0WZUmM5bgrFY4=
+        b=W7JqdPLzKpTVka0f99+QbZxyF2/9CREx24zd8JgGyPrTctJwftYhH4UPfJtPVpc7g
+         m1iOUJw85dUN0guUO7LSpS0IY1cgSqMrFUAADxMhnWc8VF2mOMvT/KqYESpBmQ/byd
+         1nqzpPAluQovoipn6vQMImlk/y/+AIj3bbYj+ZRg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 142/185] ACPI: custom_method: fix memory leaks
-Date:   Sun, 22 Sep 2019 14:48:40 -0400
-Message-Id: <20190922184924.32534-142-sashal@kernel.org>
+Cc:     Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Daniel Drake <drake@endlessm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 122/185] ASoC: es8316: fix headphone mixer volume table
+Date:   Sun, 22 Sep 2019 14:48:20 -0400
+Message-Id: <20190922184924.32534-122-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -59,46 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Katsuhiro Suzuki <katsuhiro@katsuster.net>
 
-[ Upstream commit 03d1571d9513369c17e6848476763ebbd10ec2cb ]
+[ Upstream commit f972d02fee2496024cfd6f59021c9d89d54922a6 ]
 
-In cm_write(), 'buf' is allocated through kzalloc(). In the following
-execution, if an error occurs, 'buf' is not deallocated, leading to memory
-leaks. To fix this issue, free 'buf' before returning the error.
+This patch fix setting table of Headphone mixer volume.
+Current code uses 4 ... 7 values but these values are prohibited.
 
-Fixes: 526b4af47f44 ("ACPI: Split out custom_method functionality into an own driver")
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Correct settings are the following:
+  0000 -12dB
+  0001 -10.5dB
+  0010 -9dB
+  0011 -7.5dB
+  0100 -6dB
+  1000 -4.5dB
+  1001 -3dB
+  1010 -1.5dB
+  1011 0dB
+
+Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Reviewed-by: Daniel Drake <drake@endlessm.com>
+Link: https://lore.kernel.org/r/20190826153900.25969-1-katsuhiro@katsuster.net
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/custom_method.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ sound/soc/codecs/es8316.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/acpi/custom_method.c b/drivers/acpi/custom_method.c
-index b2ef4c2ec955d..fd66a736621cf 100644
---- a/drivers/acpi/custom_method.c
-+++ b/drivers/acpi/custom_method.c
-@@ -49,8 +49,10 @@ static ssize_t cm_write(struct file *file, const char __user * user_buf,
- 	if ((*ppos > max_size) ||
- 	    (*ppos + count > max_size) ||
- 	    (*ppos + count < count) ||
--	    (count > uncopied_bytes))
-+	    (count > uncopied_bytes)) {
-+		kfree(buf);
- 		return -EINVAL;
-+	}
+diff --git a/sound/soc/codecs/es8316.c b/sound/soc/codecs/es8316.c
+index 6db002cc20582..96d04896193f2 100644
+--- a/sound/soc/codecs/es8316.c
++++ b/sound/soc/codecs/es8316.c
+@@ -51,7 +51,10 @@ static const SNDRV_CTL_TLVD_DECLARE_DB_SCALE(adc_vol_tlv, -9600, 50, 1);
+ static const SNDRV_CTL_TLVD_DECLARE_DB_SCALE(alc_max_gain_tlv, -650, 150, 0);
+ static const SNDRV_CTL_TLVD_DECLARE_DB_SCALE(alc_min_gain_tlv, -1200, 150, 0);
+ static const SNDRV_CTL_TLVD_DECLARE_DB_SCALE(alc_target_tlv, -1650, 150, 0);
+-static const SNDRV_CTL_TLVD_DECLARE_DB_SCALE(hpmixer_gain_tlv, -1200, 150, 0);
++static const SNDRV_CTL_TLVD_DECLARE_DB_RANGE(hpmixer_gain_tlv,
++	0, 4, TLV_DB_SCALE_ITEM(-1200, 150, 0),
++	8, 11, TLV_DB_SCALE_ITEM(-450, 150, 0),
++);
  
- 	if (copy_from_user(buf + (*ppos), user_buf, count)) {
- 		kfree(buf);
-@@ -70,6 +72,7 @@ static ssize_t cm_write(struct file *file, const char __user * user_buf,
- 		add_taint(TAINT_OVERRIDDEN_ACPI_TABLE, LOCKDEP_NOW_UNRELIABLE);
- 	}
+ static const SNDRV_CTL_TLVD_DECLARE_DB_RANGE(adc_pga_gain_tlv,
+ 	0, 0, TLV_DB_SCALE_ITEM(-350, 0, 0),
+@@ -89,7 +92,7 @@ static const struct snd_kcontrol_new es8316_snd_controls[] = {
+ 	SOC_DOUBLE_TLV("Headphone Playback Volume", ES8316_CPHP_ICAL_VOL,
+ 		       4, 0, 3, 1, hpout_vol_tlv),
+ 	SOC_DOUBLE_TLV("Headphone Mixer Volume", ES8316_HPMIX_VOL,
+-		       0, 4, 7, 0, hpmixer_gain_tlv),
++		       0, 4, 11, 0, hpmixer_gain_tlv),
  
-+	kfree(buf);
- 	return count;
- }
- 
+ 	SOC_ENUM("Playback Polarity", dacpol),
+ 	SOC_DOUBLE_R_TLV("DAC Playback Volume", ES8316_DAC_VOLL,
 -- 
 2.20.1
 
