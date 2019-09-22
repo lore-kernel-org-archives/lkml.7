@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A921C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 180DAC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:35:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4937C20640
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:35:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E27E0205F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:35:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180953;
-	bh=vXDkuYne+Hy4F82vAvYwB/USPCaWPvacv5O9Bg8gQqY=;
+	s=default; t=1569180958;
+	bh=Ykb93oMr+3gztSj7HV5KYl0vXoN7XcXRQ9o4/s8Ik+A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a/XIfB5dPJZm2TIJqfoV6chsLLK1uCgl3+gt5SGL8s/pWUbABd9LhnMWydkUHkf1s
-	 f4N6W9LXHnjRxt1n9obYSF930WxdwujpwI+SUueGYbP2KOru8szGV12U/Br3xyCS1L
-	 njwQ/uN+riyxLi64ACTUOP405by4T+oMv2FPpUqc=
+	b=UZsHdtp+oXMNwDZvHbeJf9fzKK6IFUhQwJIXtlhSmJD2yO39CcEsAhnd4ctAAJjF8
+	 GiE3LMu0zkUvTq1yEp5EczngJ4/XJnSCKtIFVIWPSwSc06uSyQq09QdhKRYq7ffYgM
+	 Du6KRZwpzpr5K6CCVZgLYiW5LO+eezsw7MAa8F4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390093AbfIVSqh (ORCPT
+        id S2439195AbfIVTf5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:46:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42596 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:35:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390001AbfIVSqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:46:30 -0400
+        id S2389931AbfIVSqg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:46:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D9FE208C2;
-        Sun, 22 Sep 2019 18:46:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88E3320882;
+        Sun, 22 Sep 2019 18:46:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569177990;
-        bh=vXDkuYne+Hy4F82vAvYwB/USPCaWPvacv5O9Bg8gQqY=;
+        s=default; t=1569177995;
+        bh=Ykb93oMr+3gztSj7HV5KYl0vXoN7XcXRQ9o4/s8Ik+A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oJ+GE9GaKbFMWBMd5Kc/A808x6XJHeePJTEAVvnpXBaglVsomDZbqOCx/++CF6vKB
-         NMYEfeKqKytqBk9YHtHDyeYIS8VmFpW41JqenR5nNivEFmscQ6Lx2kyN8eVIRXVLva
-         ehiTT7e8fmwPc1Y3C1DQ2v5HOqwiTszLmOEBrsHY=
+        b=fkk5uMMkVMShTrcvFxZKg1pIfFeDCZQ6Xj85eIp61CvlqbybJPlcpKjNyeIfDZu6g
+         EF/ZsVQJE9rQ6OZcHJIUfBH47Vt11E6vurTyDeMf6tWo29nMGN5LhRUqbEupJkZC1A
+         dZQhK5w6YFB+BnIt3FwnTz8ib/QLUX7rUVBuD8Gs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 082/203] media: vsp1: fix memory leak of dl on error return path
-Date:   Sun, 22 Sep 2019 14:41:48 -0400
-Message-Id: <20190922184350.30563-82-sashal@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-kbuild@vger.kernel.org, kasan-dev@googlegroups.com
+Subject: [PATCH AUTOSEL 5.3 086/203] kasan/arm64: fix CONFIG_KASAN_SW_TAGS && KASAN_INLINE
+Date:   Sun, 22 Sep 2019 14:41:52 -0400
+Message-Id: <20190922184350.30563-86-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -62,42 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Mark Rutland <mark.rutland@arm.com>
 
-[ Upstream commit 70c55c1ad1a76e804ee5330e134674f5d2741cb7 ]
+[ Upstream commit 34b5560db40d2941cfbe82eca1641353d5aed1a9 ]
 
-Currently when the call vsp1_dl_body_get fails and returns null the
-error return path leaks the allocation of dl. Fix this by kfree'ing
-dl before returning.
+The generic Makefile.kasan propagates CONFIG_KASAN_SHADOW_OFFSET into
+KASAN_SHADOW_OFFSET, but only does so for CONFIG_KASAN_GENERIC.
 
-Addresses-Coverity: ("Resource leak")
+Since commit:
 
-Fixes: 5d7936b8e27d ("media: vsp1: Convert display lists to use new body pool")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+  6bd1d0be0e97936d ("arm64: kasan: Switch to using KASAN_SHADOW_OFFSET")
+
+... arm64 defines CONFIG_KASAN_SHADOW_OFFSET in Kconfig rather than
+defining KASAN_SHADOW_OFFSET in a Makefile. Thus, if
+CONFIG_KASAN_SW_TAGS && KASAN_INLINE are selected, we get build time
+splats due to KASAN_SHADOW_OFFSET not being set:
+
+| [mark@lakrids:~/src/linux]% usellvm 8.0.1 usekorg 8.1.0  make ARCH=arm64 CROSS_COMPILE=aarch64-linux- CC=clang
+| scripts/kconfig/conf  --syncconfig Kconfig
+|   CC      scripts/mod/empty.o
+| clang (LLVM option parsing): for the -hwasan-mapping-offset option: '' value invalid for uint argument!
+| scripts/Makefile.build:273: recipe for target 'scripts/mod/empty.o' failed
+| make[1]: *** [scripts/mod/empty.o] Error 1
+| Makefile:1123: recipe for target 'prepare0' failed
+| make: *** [prepare0] Error 2
+
+Let's fix this by always propagating CONFIG_KASAN_SHADOW_OFFSET into
+KASAN_SHADOW_OFFSET if CONFIG_KASAN is selected, moving the existing
+common definition of +CFLAGS_KASAN_NOSANITIZE to the top of
+Makefile.kasan.
+
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Acked-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Tested-by Steve Capper <steve.capper@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/vsp1/vsp1_dl.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ scripts/Makefile.kasan | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/media/platform/vsp1/vsp1_dl.c b/drivers/media/platform/vsp1/vsp1_dl.c
-index 104b6f5145364..d7b43037e500a 100644
---- a/drivers/media/platform/vsp1/vsp1_dl.c
-+++ b/drivers/media/platform/vsp1/vsp1_dl.c
-@@ -557,8 +557,10 @@ static struct vsp1_dl_list *vsp1_dl_list_alloc(struct vsp1_dl_manager *dlm)
+diff --git a/scripts/Makefile.kasan b/scripts/Makefile.kasan
+index 6410bd22fe387..03757cc60e06c 100644
+--- a/scripts/Makefile.kasan
++++ b/scripts/Makefile.kasan
+@@ -1,4 +1,9 @@
+ # SPDX-License-Identifier: GPL-2.0
++ifdef CONFIG_KASAN
++CFLAGS_KASAN_NOSANITIZE := -fno-builtin
++KASAN_SHADOW_OFFSET ?= $(CONFIG_KASAN_SHADOW_OFFSET)
++endif
++
+ ifdef CONFIG_KASAN_GENERIC
  
- 	/* Get a default body for our list. */
- 	dl->body0 = vsp1_dl_body_get(dlm->pool);
--	if (!dl->body0)
-+	if (!dl->body0) {
-+		kfree(dl);
- 		return NULL;
-+	}
+ ifdef CONFIG_KASAN_INLINE
+@@ -7,8 +12,6 @@ else
+ 	call_threshold := 0
+ endif
  
- 	header_offset = dl->body0->max_entries * sizeof(*dl->body0->entries);
+-KASAN_SHADOW_OFFSET ?= $(CONFIG_KASAN_SHADOW_OFFSET)
+-
+ CFLAGS_KASAN_MINIMAL := -fsanitize=kernel-address
  
+ cc-param = $(call cc-option, -mllvm -$(1), $(call cc-option, --param $(1)))
+@@ -45,7 +48,3 @@ CFLAGS_KASAN := -fsanitize=kernel-hwaddress \
+ 		$(instrumentation_flags)
+ 
+ endif # CONFIG_KASAN_SW_TAGS
+-
+-ifdef CONFIG_KASAN
+-CFLAGS_KASAN_NOSANITIZE := -fno-builtin
+-endif
 -- 
 2.20.1
 
