@@ -7,45 +7,44 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D64F9C4740C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A9FC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4EC020869
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:19:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 708F120869
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:19:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179984;
-	bh=BTVu3XXbsk3gJC2IHgYaGgyWzk3k3TJ6+9Fx/meRnv8=;
+	s=default; t=1569179987;
+	bh=vaMMPoKAfHhldi0winWWmJRpYRh/kQDxIZEj1PKaLew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IWtL+wWJy3+5NXW1tQUxllP0T8c9/xiAjTNFYtU4ozbzuoALE/kstESVDp0tBgJ0o
-	 tgsp/RjpDlXx2u6qLTclaIghiBZinL0AFauQsnx+olk1DFLgETQGNEio2eMzSYcVCv
-	 r+ENCy+Fx4parZiGAhtqUfROhJJCnvuT5O4pRN8o=
+	b=WSaQJK4om350vj9SZvWz2vxHK6AQt73SrFx219rZDpqLdWk6SVJ/WrBJl4oQAJTQc
+	 SRsXhkYwRq7gYEhBw43vZdHM0yTAh10EzkSqr5YhIp4yFWMrAj9kaFEEJkbhFurYEc
+	 rACeePeSDYICvEauNSIE/CbtUb97IWjDa46YAH/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437383AbfIVTTo (ORCPT
+        id S2406704AbfIVTTq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:19:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55530 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:19:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408022AbfIVSyr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:54:47 -0400
+        id S2408019AbfIVSyq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:54:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D94F21D79;
-        Sun, 22 Sep 2019 18:54:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71E8721479;
+        Sun, 22 Sep 2019 18:54:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178487;
-        bh=BTVu3XXbsk3gJC2IHgYaGgyWzk3k3TJ6+9Fx/meRnv8=;
+        s=default; t=1569178486;
+        bh=vaMMPoKAfHhldi0winWWmJRpYRh/kQDxIZEj1PKaLew=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eCf3m6ldgPolaUvvGXfne6pkoYtDtiekpwJOAu0kNmjbuoaz0WsvMMUvE2nkUQMCO
-         y6wLPlelc6UeBmYIueEum/OF/EI5DC2pCtsPxuUtjm0UUSxBOn4iIPD3p4PtvxCvOo
-         QLaTf8sE6FYyvCuW/jeadUn0b7zLBnQHDErEDDcA=
+        b=kFxOsefQHmkXBUUfDDwatK6x+ZiY30Fr5ZHdNEy5l6Ji6alpqnqdxpauAOa0TpGAS
+         hjj+91sRGRrs0azHy6AHGe2KRi4N2lGm7TUMVDA5yftkh8AG31Td10wRQAYOrDcIQR
+         oBuwkp6BMcdUOeENLAGeeHvND6uTpuZdoAuIIN4A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>, Takashi Iwai <tiwai@suse.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 022/128] ALSA: i2c: ak4xxx-adda: Fix a possible null pointer dereference in build_adc_controls()
-Date:   Sun, 22 Sep 2019 14:52:32 -0400
-Message-Id: <20190922185418.2158-22-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 021/128] ALSA: hda - Show the fatal CORB/RIRB error more clearly
+Date:   Sun, 22 Sep 2019 14:52:31 -0400
+Message-Id: <20190922185418.2158-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
 References: <20190922185418.2158-1-sashal@kernel.org>
@@ -58,52 +57,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 2127c01b7f63b06a21559f56a8c81a3c6535bd1a ]
+[ Upstream commit dd65f7e19c6961ba6a69f7c925021b7a270cb950 ]
 
-In build_adc_controls(), there is an if statement on line 773 to check
-whether ak->adc_info is NULL:
-    if (! ak->adc_info ||
-        ! ak->adc_info[mixer_ch].switch_name)
+The last fallback of CORB/RIRB communication error recovery is to turn
+on the single command mode, and this last resort usually means that
+something is really screwed up.  Instead of a normal dev_err(), show
+the error more clearly with dev_WARN() with the caller stack trace.
 
-When ak->adc_info is NULL, it is used on line 792:
-    knew.name = ak->adc_info[mixer_ch].selector_name;
+Also, show the bus-reset fallback also as an error, too.
 
-Thus, a possible null-pointer dereference may occur.
-
-To fix this bug, referring to lines 773 and 774, ak->adc_info
-and ak->adc_info[mixer_ch].selector_name are checked before being used.
-
-This bug is found by a static analysis tool STCheck written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/i2c/other/ak4xxx-adda.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ sound/pci/hda/hda_controller.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/sound/i2c/other/ak4xxx-adda.c b/sound/i2c/other/ak4xxx-adda.c
-index 7f2761a2e7c8c..971197c34fcef 100644
---- a/sound/i2c/other/ak4xxx-adda.c
-+++ b/sound/i2c/other/ak4xxx-adda.c
-@@ -789,11 +789,12 @@ static int build_adc_controls(struct snd_akm4xxx *ak)
- 				return err;
+diff --git a/sound/pci/hda/hda_controller.c b/sound/pci/hda/hda_controller.c
+index a41c1bec7c88c..8fcb421193e02 100644
+--- a/sound/pci/hda/hda_controller.c
++++ b/sound/pci/hda/hda_controller.c
+@@ -877,10 +877,13 @@ static int azx_rirb_get_response(struct hdac_bus *bus, unsigned int addr,
+ 	 */
+ 	if (hbus->allow_bus_reset && !hbus->response_reset && !hbus->in_reset) {
+ 		hbus->response_reset = 1;
++		dev_err(chip->card->dev,
++			"No response from codec, resetting bus: last cmd=0x%08x\n",
++			bus->last_cmd[addr]);
+ 		return -EAGAIN; /* give a chance to retry */
+ 	}
  
- 			memset(&knew, 0, sizeof(knew));
--			knew.name = ak->adc_info[mixer_ch].selector_name;
--			if (!knew.name) {
-+			if (!ak->adc_info ||
-+				!ak->adc_info[mixer_ch].selector_name) {
- 				knew.name = "Capture Channel";
- 				knew.index = mixer_ch + ak->idx_offset * 2;
--			}
-+			} else
-+				knew.name = ak->adc_info[mixer_ch].selector_name;
- 
- 			knew.iface = SNDRV_CTL_ELEM_IFACE_MIXER;
- 			knew.info = ak4xxx_capture_source_info;
+-	dev_err(chip->card->dev,
++	dev_WARN(chip->card->dev,
+ 		"azx_get_response timeout, switching to single_cmd mode: last cmd=0x%08x\n",
+ 		bus->last_cmd[addr]);
+ 	chip->single_cmd = 1;
 -- 
 2.20.1
 
