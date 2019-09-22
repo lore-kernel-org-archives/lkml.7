@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E3BFC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB88C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 689AC20869
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:34:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C2B420869
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:34:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180879;
-	bh=vBEmhhmIsaUgoODDW4Mr5/z4iIlJ7s5TnhyGP3zP5/w=;
+	s=default; t=1569180883;
+	bh=wDcK0SuxOI7PvWtcKRyhb1YAeAPrSWo4zVxce4QENGk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i1KCSX+jeLjJmPHpz0/zZ6VhmmE1pHZ19TSDAVvktNSqf47ClKLQCaRX0S0cO8NgU
-	 ZBStrhX/8zlkAI84a36C/ZsZLzD0HvRp7c3qEH3Bg5Y+nyTJa6ibWt22yJE+s5ZXtw
-	 WFcQjULVPw8BM9n3iiwJ0PdWSqI/q2lmsUWfF6/4=
+	b=G21b0cA/DOd4p7Udo99OEoBA/kS2MekJFdu0+Ta/eb7TDDmXdMLMjEqZsKWUm5HPb
+	 E1wV4n+kU3lam9/Qc9VLp5mif/heDgtviD/wOgAfDqFzqOHO4hoi61DWqR4kpjAjMd
+	 b7JC/7NtAjUNOA7ds62CsjhzTUePQuVkO5G+DBCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390540AbfIVSrG (ORCPT
+        id S2438955AbfIVTem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:47:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43280 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:34:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390416AbfIVSq5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:46:57 -0400
+        id S2390532AbfIVSrH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:47:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F74E214D9;
-        Sun, 22 Sep 2019 18:46:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7BCA214D9;
+        Sun, 22 Sep 2019 18:47:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178017;
-        bh=vBEmhhmIsaUgoODDW4Mr5/z4iIlJ7s5TnhyGP3zP5/w=;
+        s=default; t=1569178026;
+        bh=wDcK0SuxOI7PvWtcKRyhb1YAeAPrSWo4zVxce4QENGk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1xn8EHyN8TNXqZJ+tt9yI+IWfvRFi32/nUcw3egbsGXPD8lBecssPHwdlfxfEcR0d
-         Gnw1sL8YAhRvmjfS0NlQiw0+f5FiUWTPIXFOrYyC/mN30gwG/u3YRfP3GqFrN5xeYB
-         tgY1AYof8bpn0HBv1YHSMtaLLbUQhOEFce2YWqOk=
+        b=2cWp6v5j9ExvsXaM3d5Z946jjF9rXak+LzDKF+i5t7WgDU6O5E9P4YFizX0X/VO1Y
+         Ku72fbxu1jERIOQw2ji+gzhZIcMdIeFVR9OsnSy73ntF8Quqsx664lApq1v36203IP
+         nzQ+2OH4OlMuDl6EcA89uongku5vKjuKsVa8mwFE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Christie <mchristi@redhat.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org, nbd@other.debian.org
-Subject: [PATCH AUTOSEL 5.3 103/203] nbd: add missing config put
-Date:   Sun, 22 Sep 2019 14:42:09 -0400
-Message-Id: <20190922184350.30563-103-sashal@kernel.org>
+Cc:     Wenwen Wang <wenwen@cs.uga.edu>, Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 110/203] media: dvb-core: fix a memory leak bug
+Date:   Sun, 22 Sep 2019 14:42:16 -0400
+Message-Id: <20190922184350.30563-110-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -60,46 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Christie <mchristi@redhat.com>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit 887e975c4172d0d5670c39ead2f18ba1e4ec8133 ]
+[ Upstream commit fcd5ce4b3936242e6679875a4d3c3acfc8743e15 ]
 
-Fix bug added with the patch:
+In dvb_create_media_entity(), 'dvbdev->entity' is allocated through
+kzalloc(). Then, 'dvbdev->pads' is allocated through kcalloc(). However, if
+kcalloc() fails, the allocated 'dvbdev->entity' is not deallocated, leading
+to a memory leak bug. To fix this issue, free 'dvbdev->entity' before
+returning -ENOMEM.
 
-commit 8f3ea35929a0806ad1397db99a89ffee0140822a
-Author: Josef Bacik <josef@toxicpanda.com>
-Date:   Mon Jul 16 12:11:35 2018 -0400
-
-    nbd: handle unexpected replies better
-
-where if the timeout handler runs when the completion path is and we fail
-to grab the mutex in the timeout handler we will leave a config reference
-and cannot free the config later.
-
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Mike Christie <mchristi@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/nbd.c | 4 +++-
+ drivers/media/dvb-core/dvbdev.c | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index e21d2ded732b7..a69a90ad92088 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -357,8 +357,10 @@ static enum blk_eh_timer_return nbd_xmit_timeout(struct request *req,
+diff --git a/drivers/media/dvb-core/dvbdev.c b/drivers/media/dvb-core/dvbdev.c
+index a3393cd4e584f..7557fbf9d3068 100644
+--- a/drivers/media/dvb-core/dvbdev.c
++++ b/drivers/media/dvb-core/dvbdev.c
+@@ -339,8 +339,10 @@ static int dvb_create_media_entity(struct dvb_device *dvbdev,
+ 	if (npads) {
+ 		dvbdev->pads = kcalloc(npads, sizeof(*dvbdev->pads),
+ 				       GFP_KERNEL);
+-		if (!dvbdev->pads)
++		if (!dvbdev->pads) {
++			kfree(dvbdev->entity);
+ 			return -ENOMEM;
++		}
  	}
- 	config = nbd->config;
  
--	if (!mutex_trylock(&cmd->lock))
-+	if (!mutex_trylock(&cmd->lock)) {
-+		nbd_config_put(nbd);
- 		return BLK_EH_RESET_TIMER;
-+	}
- 
- 	if (config->num_connections > 1) {
- 		dev_err_ratelimited(nbd_to_dev(nbd),
+ 	switch (type) {
 -- 
 2.20.1
 
