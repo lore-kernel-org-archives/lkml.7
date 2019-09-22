@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75692C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43AFBC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E843214D9
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:47:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D00E21479
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:47:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178030;
-	bh=/1Doc4+p/q9z3gLW6wxPhUbWI8u6hlwl8Sqo2S/AsAA=;
+	s=default; t=1569178035;
+	bh=aF29muMYd0aFbQLCZ8bnN7wOIqz7jZ7RkN0z5SAUhJI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=juKQDAY+7IVrvIB2Adqq4sPCnozVZ/PnohRrPXkyJDjPn0gOgeZcGLX+WptEJAsWv
-	 gN2KX7Nn7KKWYlcMR+eyGo7ZvHWs/TBuUmrh00EVEHEg+D8Evi5OOeWaLtD7tjfdY0
-	 LAkCqTxBBmgqA5TA6Ny0ekHp0rm/Ioi5GoNGDOmA=
+	b=ihqQbEpDHVkEnIbQR7LCteN/9Y9N9Xw8VujkYTKKjWeb2SxWUlSJPaG5zWarxx2T0
+	 bwU0CLW4HXvAwUkmyNR3iVV/+PDScwP9s42BmkFpP69hb2ghRGhAsJU6NP79a7/YGH
+	 mLqtDp4aC4rDtyDFdBlGkQ+TBHZ8y2NnGQVEEB2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390566AbfIVSrI (ORCPT
+        id S2390643AbfIVSrO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:47:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43306 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:47:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390447AbfIVSq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:46:59 -0400
+        id S2388748AbfIVSrJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:47:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C474206C2;
-        Sun, 22 Sep 2019 18:46:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC422206C2;
+        Sun, 22 Sep 2019 18:47:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178018;
-        bh=/1Doc4+p/q9z3gLW6wxPhUbWI8u6hlwl8Sqo2S/AsAA=;
+        s=default; t=1569178027;
+        bh=aF29muMYd0aFbQLCZ8bnN7wOIqz7jZ7RkN0z5SAUhJI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kvq2TLNnwkj4Fu27nigvSEuBnsYImFMRq7/AFkHlvpAdkiS1JyffbzDW60x1Doh21
-         HsRBl6wh/I+KfgjkaoXmtRLm5F4oxPWEoG13GGw4IJOpPAe8w432snnVxBEqH4d5I3
-         nWuaPUm/CxbvbuIQqcgCN+OmAWIDTByQuZdLoNjI=
+        b=o4qefqI9GSdLzRITIXLS+/kRhDKpsTQp0mQO+XTAnjzRmrGdsl3Y5Fr8uPjyLuFsz
+         vfCaJd6tgORRibXJpvVLFDwdrGVQev7rW1lknoIgPlgH+p16N22U7IGoWl1oF+Zpdi
+         +gqaUNOVv1IszzeCIEr5JnoG15hlLk+y2SwzJAP0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Liguang Zhang <zhangliguang@linux.alibaba.com>,
+Cc:     Yazen Ghannam <yazen.ghannam@amd.com>,
         Borislav Petkov <bp@suse.de>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 104/203] ACPI / APEI: Release resources if gen_pool_add() fails
-Date:   Sun, 22 Sep 2019 14:42:10 -0400
-Message-Id: <20190922184350.30563-104-sashal@kernel.org>
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 111/203] EDAC/amd64: Support more than two controllers for chip selects handling
+Date:   Sun, 22 Sep 2019 14:42:17 -0400
+Message-Id: <20190922184350.30563-111-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -60,66 +63,233 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liguang Zhang <zhangliguang@linux.alibaba.com>
+From: Yazen Ghannam <yazen.ghannam@amd.com>
 
-[ Upstream commit 6abc7622271dc520f241462e2474c71723638851 ]
+[ Upstream commit d971e28e2ce4696fcc32998c8aced5e47701fffe ]
 
-Destroy ghes_estatus_pool and release memory allocated via vmalloc() on
-errors in ghes_estatus_pool_init() in order to avoid memory leaks.
+The struct chip_select array that's used for saving chip select bases
+and masks is fixed at length of two. There should be one struct
+chip_select for each controller, so this array should be increased to
+support systems that may have more than two controllers.
 
- [ bp: do the labels properly and with descriptive names and massage. ]
+Increase the size of the struct chip_select array to eight, which is the
+largest number of controllers per die currently supported on AMD
+systems.
 
-Signed-off-by: Liguang Zhang <zhangliguang@linux.alibaba.com>
+Fix number of DIMMs and Chip Select bases/masks on Family17h, because
+AMD Family 17h systems support 2 DIMMs, 4 CS bases, and 2 CS masks per
+channel.
+
+Also, carve out the Family 17h+ reading of the bases/masks into a
+separate function. This effectively reverts the original bases/masks
+reading code to before Family 17h support was added.
+
+Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
 Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/1563173924-47479-1-git-send-email-zhangliguang@linux.alibaba.com
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+Cc: James Morse <james.morse@arm.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Tony Luck <tony.luck@intel.com>
+Link: https://lkml.kernel.org/r/20190821235938.118710-2-Yazen.Ghannam@amd.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/apei/ghes.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ drivers/edac/amd64_edac.c | 123 +++++++++++++++++++++-----------------
+ drivers/edac/amd64_edac.h |   5 +-
+ 2 files changed, 71 insertions(+), 57 deletions(-)
 
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index a66e00fe31fec..66205ec545553 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -153,6 +153,7 @@ static void ghes_unmap(void __iomem *vaddr, enum fixed_addresses fixmap_idx)
- int ghes_estatus_pool_init(int num_ghes)
- {
- 	unsigned long addr, len;
-+	int rc;
+diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
+index 873437be86d9c..dd60cf5a3d969 100644
+--- a/drivers/edac/amd64_edac.c
++++ b/drivers/edac/amd64_edac.c
+@@ -810,7 +810,7 @@ static void debug_display_dimm_sizes_df(struct amd64_pvt *pvt, u8 ctrl)
  
- 	ghes_estatus_pool = gen_pool_create(GHES_ESTATUS_POOL_MIN_ALLOC_ORDER, -1);
- 	if (!ghes_estatus_pool)
-@@ -164,7 +165,7 @@ int ghes_estatus_pool_init(int num_ghes)
- 	ghes_estatus_pool_size_request = PAGE_ALIGN(len);
- 	addr = (unsigned long)vmalloc(PAGE_ALIGN(len));
- 	if (!addr)
--		return -ENOMEM;
-+		goto err_pool_alloc;
+ 	edac_printk(KERN_DEBUG, EDAC_MC, "UMC%d chip selects:\n", ctrl);
  
- 	/*
- 	 * New allocation must be visible in all pgd before it can be found by
-@@ -172,7 +173,19 @@ int ghes_estatus_pool_init(int num_ghes)
- 	 */
- 	vmalloc_sync_all();
+-	for (dimm = 0; dimm < 4; dimm++) {
++	for (dimm = 0; dimm < 2; dimm++) {
+ 		size0 = 0;
+ 		cs0 = dimm * 2;
  
--	return gen_pool_add(ghes_estatus_pool, addr, PAGE_ALIGN(len), -1);
-+	rc = gen_pool_add(ghes_estatus_pool, addr, PAGE_ALIGN(len), -1);
-+	if (rc)
-+		goto err_pool_add;
+@@ -942,89 +942,102 @@ static void prep_chip_selects(struct amd64_pvt *pvt)
+ 	} else if (pvt->fam == 0x15 && pvt->model == 0x30) {
+ 		pvt->csels[0].b_cnt = pvt->csels[1].b_cnt = 4;
+ 		pvt->csels[0].m_cnt = pvt->csels[1].m_cnt = 2;
++	} else if (pvt->fam >= 0x17) {
++		int umc;
 +
-+	return 0;
++		for_each_umc(umc) {
++			pvt->csels[umc].b_cnt = 4;
++			pvt->csels[umc].m_cnt = 2;
++		}
 +
-+err_pool_add:
-+	vfree((void *)addr);
-+
-+err_pool_alloc:
-+	gen_pool_destroy(ghes_estatus_pool);
-+
-+	return -ENOMEM;
+ 	} else {
+ 		pvt->csels[0].b_cnt = pvt->csels[1].b_cnt = 8;
+ 		pvt->csels[0].m_cnt = pvt->csels[1].m_cnt = 4;
+ 	}
  }
  
- static int map_gen_v2(struct ghes *ghes)
++static void read_umc_base_mask(struct amd64_pvt *pvt)
++{
++	u32 umc_base_reg, umc_mask_reg;
++	u32 base_reg, mask_reg;
++	u32 *base, *mask;
++	int cs, umc;
++
++	for_each_umc(umc) {
++		umc_base_reg = get_umc_base(umc) + UMCCH_BASE_ADDR;
++
++		for_each_chip_select(cs, umc, pvt) {
++			base = &pvt->csels[umc].csbases[cs];
++
++			base_reg = umc_base_reg + (cs * 4);
++
++			if (!amd_smn_read(pvt->mc_node_id, base_reg, base))
++				edac_dbg(0, "  DCSB%d[%d]=0x%08x reg: 0x%x\n",
++					 umc, cs, *base, base_reg);
++		}
++
++		umc_mask_reg = get_umc_base(umc) + UMCCH_ADDR_MASK;
++
++		for_each_chip_select_mask(cs, umc, pvt) {
++			mask = &pvt->csels[umc].csmasks[cs];
++
++			mask_reg = umc_mask_reg + (cs * 4);
++
++			if (!amd_smn_read(pvt->mc_node_id, mask_reg, mask))
++				edac_dbg(0, "  DCSM%d[%d]=0x%08x reg: 0x%x\n",
++					 umc, cs, *mask, mask_reg);
++		}
++	}
++}
++
+ /*
+  * Function 2 Offset F10_DCSB0; read in the DCS Base and DCS Mask registers
+  */
+ static void read_dct_base_mask(struct amd64_pvt *pvt)
+ {
+-	int base_reg0, base_reg1, mask_reg0, mask_reg1, cs;
++	int cs;
+ 
+ 	prep_chip_selects(pvt);
+ 
+-	if (pvt->umc) {
+-		base_reg0 = get_umc_base(0) + UMCCH_BASE_ADDR;
+-		base_reg1 = get_umc_base(1) + UMCCH_BASE_ADDR;
+-		mask_reg0 = get_umc_base(0) + UMCCH_ADDR_MASK;
+-		mask_reg1 = get_umc_base(1) + UMCCH_ADDR_MASK;
+-	} else {
+-		base_reg0 = DCSB0;
+-		base_reg1 = DCSB1;
+-		mask_reg0 = DCSM0;
+-		mask_reg1 = DCSM1;
+-	}
++	if (pvt->umc)
++		return read_umc_base_mask(pvt);
+ 
+ 	for_each_chip_select(cs, 0, pvt) {
+-		int reg0   = base_reg0 + (cs * 4);
+-		int reg1   = base_reg1 + (cs * 4);
++		int reg0   = DCSB0 + (cs * 4);
++		int reg1   = DCSB1 + (cs * 4);
+ 		u32 *base0 = &pvt->csels[0].csbases[cs];
+ 		u32 *base1 = &pvt->csels[1].csbases[cs];
+ 
+-		if (pvt->umc) {
+-			if (!amd_smn_read(pvt->mc_node_id, reg0, base0))
+-				edac_dbg(0, "  DCSB0[%d]=0x%08x reg: 0x%x\n",
+-					 cs, *base0, reg0);
+-
+-			if (!amd_smn_read(pvt->mc_node_id, reg1, base1))
+-				edac_dbg(0, "  DCSB1[%d]=0x%08x reg: 0x%x\n",
+-					 cs, *base1, reg1);
+-		} else {
+-			if (!amd64_read_dct_pci_cfg(pvt, 0, reg0, base0))
+-				edac_dbg(0, "  DCSB0[%d]=0x%08x reg: F2x%x\n",
+-					 cs, *base0, reg0);
++		if (!amd64_read_dct_pci_cfg(pvt, 0, reg0, base0))
++			edac_dbg(0, "  DCSB0[%d]=0x%08x reg: F2x%x\n",
++				 cs, *base0, reg0);
+ 
+-			if (pvt->fam == 0xf)
+-				continue;
++		if (pvt->fam == 0xf)
++			continue;
+ 
+-			if (!amd64_read_dct_pci_cfg(pvt, 1, reg0, base1))
+-				edac_dbg(0, "  DCSB1[%d]=0x%08x reg: F2x%x\n",
+-					 cs, *base1, (pvt->fam == 0x10) ? reg1
+-								: reg0);
+-		}
++		if (!amd64_read_dct_pci_cfg(pvt, 1, reg0, base1))
++			edac_dbg(0, "  DCSB1[%d]=0x%08x reg: F2x%x\n",
++				 cs, *base1, (pvt->fam == 0x10) ? reg1
++							: reg0);
+ 	}
+ 
+ 	for_each_chip_select_mask(cs, 0, pvt) {
+-		int reg0   = mask_reg0 + (cs * 4);
+-		int reg1   = mask_reg1 + (cs * 4);
++		int reg0   = DCSM0 + (cs * 4);
++		int reg1   = DCSM1 + (cs * 4);
+ 		u32 *mask0 = &pvt->csels[0].csmasks[cs];
+ 		u32 *mask1 = &pvt->csels[1].csmasks[cs];
+ 
+-		if (pvt->umc) {
+-			if (!amd_smn_read(pvt->mc_node_id, reg0, mask0))
+-				edac_dbg(0, "    DCSM0[%d]=0x%08x reg: 0x%x\n",
+-					 cs, *mask0, reg0);
+-
+-			if (!amd_smn_read(pvt->mc_node_id, reg1, mask1))
+-				edac_dbg(0, "    DCSM1[%d]=0x%08x reg: 0x%x\n",
+-					 cs, *mask1, reg1);
+-		} else {
+-			if (!amd64_read_dct_pci_cfg(pvt, 0, reg0, mask0))
+-				edac_dbg(0, "    DCSM0[%d]=0x%08x reg: F2x%x\n",
+-					 cs, *mask0, reg0);
++		if (!amd64_read_dct_pci_cfg(pvt, 0, reg0, mask0))
++			edac_dbg(0, "    DCSM0[%d]=0x%08x reg: F2x%x\n",
++				 cs, *mask0, reg0);
+ 
+-			if (pvt->fam == 0xf)
+-				continue;
++		if (pvt->fam == 0xf)
++			continue;
+ 
+-			if (!amd64_read_dct_pci_cfg(pvt, 1, reg0, mask1))
+-				edac_dbg(0, "    DCSM1[%d]=0x%08x reg: F2x%x\n",
+-					 cs, *mask1, (pvt->fam == 0x10) ? reg1
+-								: reg0);
+-		}
++		if (!amd64_read_dct_pci_cfg(pvt, 1, reg0, mask1))
++			edac_dbg(0, "    DCSM1[%d]=0x%08x reg: F2x%x\n",
++				 cs, *mask1, (pvt->fam == 0x10) ? reg1
++							: reg0);
+ 	}
+ }
+ 
+diff --git a/drivers/edac/amd64_edac.h b/drivers/edac/amd64_edac.h
+index 8f66472f7adc2..4dce6a2ac75f9 100644
+--- a/drivers/edac/amd64_edac.h
++++ b/drivers/edac/amd64_edac.h
+@@ -96,6 +96,7 @@
+ /* Hardware limit on ChipSelect rows per MC and processors per system */
+ #define NUM_CHIPSELECTS			8
+ #define DRAM_RANGES			8
++#define NUM_CONTROLLERS			8
+ 
+ #define ON true
+ #define OFF false
+@@ -351,8 +352,8 @@ struct amd64_pvt {
+ 	u32 dbam0;		/* DRAM Base Address Mapping reg for DCT0 */
+ 	u32 dbam1;		/* DRAM Base Address Mapping reg for DCT1 */
+ 
+-	/* one for each DCT */
+-	struct chip_select csels[2];
++	/* one for each DCT/UMC */
++	struct chip_select csels[NUM_CONTROLLERS];
+ 
+ 	/* DRAM base and limit pairs F1x[78,70,68,60,58,50,48,40] */
+ 	struct dram_range ranges[DRAM_RANGES];
 -- 
 2.20.1
 
