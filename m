@@ -7,122 +7,105 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A06E2C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4A6C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 752E521479
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:18:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 934D82053B
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:18:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179915;
-	bh=i5xIGvAmJ611D+9rinA4VEpsJYMNIu3CSB0dALNOkD8=;
+	s=default; t=1569179923;
+	bh=Oh+7ZXgLTx07OWwHyaxKMRlgpijwLPFXyLLpXRu+Qls=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1wy7s+8L4ywn7JAvKmDN+xq8aQP6YKjFz41YKZ4CS+mbs0P5h0k/ArfGL7EKSntY5
-	 QaJv+8+FwhyQwJCtd7NsqVreOiHiGColYBBDLdE7b9vnV5vB9qDLVfvp8gPuYAfoHF
-	 4ODxrhSglASXlQyNBhR0msSo87xPjrCf3WXFzGW4=
+	b=i5Ey5sF6HndMCy49Z4vPlwSLUU+cXAJI43wWo01RMz198nLhGxSc0rhbbZP5/Ypu1
+	 9Bmhaxp1HQdGrvJVAfm1TGaV8TOcQGDXJV74qIpQIplqRA/rCLZDo9tTgrAlHdti3C
+	 SDXx0MYqFpzPl6AHzNOnhkt8OH+xT10JNNf/lqoE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408086AbfIVSzO (ORCPT
+        id S2437171AbfIVTSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:55:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55988 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:18:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437197AbfIVSzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:55:04 -0400
+        id S2408063AbfIVSzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:55:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB62021A4A;
-        Sun, 22 Sep 2019 18:55:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 174392190F;
+        Sun, 22 Sep 2019 18:55:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178503;
-        bh=i5xIGvAmJ611D+9rinA4VEpsJYMNIu3CSB0dALNOkD8=;
+        s=default; t=1569178508;
+        bh=Oh+7ZXgLTx07OWwHyaxKMRlgpijwLPFXyLLpXRu+Qls=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iZrw1PMqr4pgHdOgGMPDtmuteeNe19YREGXBkAoxOsJnkIGeXZchi7+7Q3oVIayyq
-         Ca0yCYaIe84AS3AirF2axRt3Ms87gC5jknssei9s1OZEaJEIVlrmID+nfeIdBAizWG
-         FSVa9I+YF8EY/ftpO2UOGuruJG5jFWlRI43E1hYw=
+        b=JUPIxofgexyBi23WOw9gk7krGjDVkObAoLW5aGPHwHtn2WWIZxmW9kLBuD3Au/Fr4
+         REsXz+j4LuxmDJarpgbME/1RBJ7OVawrGU5HqcjRqK/DOfNntOUOEUc9BraeU2cYLK
+         K8yK1Jl8QKGM1g7QBSFH6fFaZ12vQC9LYP8Zy/sQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Valdis=20Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
-        linux-edac@vger.kernel.org, x86@kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 035/128] RAS: Fix prototype warnings
-Date:   Sun, 22 Sep 2019 14:52:45 -0400
-Message-Id: <20190922185418.2158-35-sashal@kernel.org>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 040/128] firmware: arm_scmi: Check if platform has released shmem before using
+Date:   Sun, 22 Sep 2019 14:52:50 -0400
+Message-Id: <20190922185418.2158-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
 References: <20190922185418.2158-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valdis Klētnieks <valdis.kletnieks@vt.edu>
+From: Sudeep Holla <sudeep.holla@arm.com>
 
-[ Upstream commit 0a54b809a3a2c31e1055b45b03708eb730222be1 ]
+[ Upstream commit 9dc34d635c67e57051853855c43249408641a5ab ]
 
-When building with C=2 and/or W=1, legitimate warnings are issued about
-missing prototypes:
+Sometimes platfom may take too long to respond to the command and OS
+might timeout before platform transfer the ownership of the shared
+memory region to the OS with the response.
 
-    CHECK   drivers/ras/debugfs.c
-  drivers/ras/debugfs.c:4:15: warning: symbol 'ras_debugfs_dir' was not declared. Should it be static?
-  drivers/ras/debugfs.c:8:5: warning: symbol 'ras_userspace_consumers' was not declared. Should it be static?
-  drivers/ras/debugfs.c:38:12: warning: symbol 'ras_add_daemon_trace' was not declared. Should it be static?
-  drivers/ras/debugfs.c:54:13: warning: symbol 'ras_debugfs_init' was not declared. Should it be static?
-    CC      drivers/ras/debugfs.o
-  drivers/ras/debugfs.c:8:5: warning: no previous prototype for 'ras_userspace_consumers' [-Wmissing-prototypes]
-      8 | int ras_userspace_consumers(void)
-        |     ^~~~~~~~~~~~~~~~~~~~~~~
-  drivers/ras/debugfs.c:38:12: warning: no previous prototype for 'ras_add_daemon_trace' [-Wmissing-prototypes]
-     38 | int __init ras_add_daemon_trace(void)
-        |            ^~~~~~~~~~~~~~~~~~~~
-  drivers/ras/debugfs.c:54:13: warning: no previous prototype for 'ras_debugfs_init' [-Wmissing-prototypes]
-     54 | void __init ras_debugfs_init(void)
-        |             ^~~~~~~~~~~~~~~~
+Since the mailbox channel associated with the channel is freed and new
+commands are dispatch on the same channel, OS needs to wait until it
+gets back the ownership. If not, either OS may end up overwriting the
+platform response for the last command(which is fine as OS timed out
+that command) or platform might overwrite the payload for the next
+command with the response for the old.
 
-Provide the proper includes.
+The latter is problematic as platform may end up interpretting the
+response as the payload. In order to avoid such race, let's wait until
+the OS gets back the ownership before we prepare the shared memory with
+the payload for the next command.
 
- [ bp: Take care of the same warnings for cec.c too. ]
-
-Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: linux-edac@vger.kernel.org
-Cc: x86@kernel.org
-Link: http://lkml.kernel.org/r/7168.1565218769@turing-police
+Reported-by: Jim Quinlan <james.quinlan@broadcom.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ras/cec.c     | 1 +
- drivers/ras/debugfs.c | 2 ++
- 2 files changed, 3 insertions(+)
+ drivers/firmware/arm_scmi/driver.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/ras/cec.c b/drivers/ras/cec.c
-index 5d2b2c02cbbec..0c719787876a5 100644
---- a/drivers/ras/cec.c
-+++ b/drivers/ras/cec.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/mm.h>
- #include <linux/gfp.h>
-+#include <linux/ras.h>
- #include <linux/kernel.h>
- #include <linux/workqueue.h>
+diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
+index 8f952f2f1a292..09119e3f5c018 100644
+--- a/drivers/firmware/arm_scmi/driver.c
++++ b/drivers/firmware/arm_scmi/driver.c
+@@ -271,6 +271,14 @@ static void scmi_tx_prepare(struct mbox_client *cl, void *m)
+ 	struct scmi_chan_info *cinfo = client_to_scmi_chan_info(cl);
+ 	struct scmi_shared_mem __iomem *mem = cinfo->payload;
  
-diff --git a/drivers/ras/debugfs.c b/drivers/ras/debugfs.c
-index 501603057dffe..12a161377f4f8 100644
---- a/drivers/ras/debugfs.c
-+++ b/drivers/ras/debugfs.c
-@@ -1,4 +1,6 @@
- #include <linux/debugfs.h>
-+#include <linux/ras.h>
-+#include "debugfs.h"
- 
- struct dentry *ras_debugfs_dir;
- 
++	/*
++	 * Ideally channel must be free by now unless OS timeout last
++	 * request and platform continued to process the same, wait
++	 * until it releases the shared memory, otherwise we may endup
++	 * overwriting its response with new message payload or vice-versa
++	 */
++	spin_until_cond(ioread32(&mem->channel_status) &
++			SCMI_SHMEM_CHAN_STAT_CHANNEL_FREE);
+ 	/* Mark channel busy + clear error */
+ 	iowrite32(0x0, &mem->channel_status);
+ 	iowrite32(t->hdr.poll_completion ? 0 : SCMI_SHMEM_FLAG_INTR_ENABLED,
 -- 
 2.20.1
 
