@@ -4,55 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5348FC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 627B3C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:22:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AF0120869
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37F5020869
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:22:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180167;
-	bh=gDoMJ/kb/DKmiZLAj1iPf+wvICmVlOUmxNJiEv9/iT8=;
+	s=default; t=1569180170;
+	bh=PFmsVWFZwfpmAheslFDDoN3WmtOQ4A68VbTVliDI6Oc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yThqGQ0gB3vERSd0vys8wZCx/IZiyHxTK5X6iY+dmZWzGQl0oJwFiZxKfTYAZZ0yg
-	 nUoaWMdH+7ViISHOh/T412M5Pu3VCdSQkpgS9Hum8+VFf4OSGCEQ8aDxKagGxvXdmC
-	 kTI2pAxVsuCF1yqrFW0LNViFj1yH2Y2gSWVoJsb0=
+	b=LPPnQDqKiGpwTg+wV1l981eWSh9WsfKR/JdRSsM5a0OBXeKuFlCjf05OFRISieGwR
+	 UHP2DceP1Saukf7H/usofweydYlCMnOwQnaFWIJdjq49DukHCM/2J+Cha21O9fYs5x
+	 sDC8QtSKkc0QmqOlKY4VGjO5OnYs9BWDYzzF3tR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394371AbfIVSxl (ORCPT
+        id S1731199AbfIVTWt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:53:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52896 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:22:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390552AbfIVSxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:53:15 -0400
+        id S2394369AbfIVSxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:53:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 180D421D6C;
-        Sun, 22 Sep 2019 18:53:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A3E5222CA;
+        Sun, 22 Sep 2019 18:53:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178394;
-        bh=gDoMJ/kb/DKmiZLAj1iPf+wvICmVlOUmxNJiEv9/iT8=;
+        s=default; t=1569178420;
+        bh=PFmsVWFZwfpmAheslFDDoN3WmtOQ4A68VbTVliDI6Oc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CHQRw9m8gH9Hig9NhIZCmiyD58uffScUIC6qXcOsgkOIWoYpBXDM2X5lNSajEXizd
-         oLk+N+sClfUq7RVNk5SpXp8C00L6saZrXaalBGXdNxK1YenBXLi3UJdyd97uuO/Xan
-         jcCxUcj0g49LHLlySUf+t70/OSrhTDTauxirCVWY=
+        b=Wl7O7mP0bmPJ4j6MOUya6UW46KmyCIksb185Gmlp8LnPyexHwsyjhaeag+FaxmX1v
+         Uth4YVkz44p4SUqz2VSUA63pZXFHvRyHeJ6boNjyA2ziKqJPkoxcMsqMojTv4fFwwp
+         gFvKUihkpZptlxex2ll6dYO1CeHZ/TLWnDIG2TuM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        Patrick McLean <chutzpah@gentoo.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+Cc:     Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 139/185] libtraceevent: Change users plugin directory
-Date:   Sun, 22 Sep 2019 14:48:37 -0400
-Message-Id: <20190922184924.32534-139-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 158/185] SoC: simple-card-utils: set 0Hz to sysclk when shutdown
+Date:   Sun, 22 Sep 2019 14:48:56 -0400
+Message-Id: <20190922184924.32534-158-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -65,68 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+From: Katsuhiro Suzuki <katsuhiro@katsuster.net>
 
-[ Upstream commit e97fd1383cd77c467d2aed7fa4e596789df83977 ]
+[ Upstream commit 2458adb8f92ad4d07ef7ab27c5bafa1d3f4678d6 ]
 
-To be compliant with XDG user directory layout, the user's plugin
-directory is changed from ~/.traceevent/plugins to
-~/.local/lib/traceevent/plugins/
+This patch set 0Hz to sysclk when shutdown the card.
 
-Suggested-by: Patrick McLean <chutzpah@gentoo.org>
-Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Patrick McLean <chutzpah@gentoo.org>
-Cc: linux-trace-devel@vger.kernel.org
-Link: https://lore.kernel.org/linux-trace-devel/20190313144206.41e75cf8@patrickm/
-Link: http://lore.kernel.org/linux-trace-devel/20190801074959.22023-4-tz.stoyanov@gmail.com
-Link: http://lore.kernel.org/lkml/20190805204355.344622683@goodmis.org
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Some codecs set rate constraints that derives from sysclk. This
+mechanism works correctly if machine drivers give fixed frequency.
+
+But simple-audio and audio-graph card set variable clock rate if
+'mclk-fs' property exists. In this case, rate constraints will go
+bad scenario. For example a codec accepts three limited rates
+(mclk / 256, mclk / 384, mclk / 512).
+
+Bad scenario as follows (mclk-fs = 256):
+   - Initialize sysclk by correct value (Ex. 12.288MHz)
+     - Codec set constraints of PCM rate by sysclk
+       48kHz (1/256), 32kHz (1/384), 24kHz (1/512)
+   - Play 48kHz sound, it's acceptable
+   - Sysclk is not changed
+
+   - Play 32kHz sound, it's acceptable
+   - Set sysclk to 8.192MHz (= fs * mclk-fs = 32k * 256)
+     - Codec set constraints of PCM rate by sysclk
+       32kHz (1/256), 21.33kHz (1/384), 16kHz (1/512)
+
+   - Play 48kHz again, but it's NOT acceptable because constraints
+     do not allow 48kHz
+
+So codecs treat 0Hz sysclk as signal of applying no constraints to
+avoid this problem.
+
+Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Link: https://lore.kernel.org/r/20190907174501.19833-1-katsuhiro@katsuster.net
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/traceevent/Makefile       | 6 +++---
- tools/lib/traceevent/event-plugin.c | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ sound/soc/generic/simple-card-utils.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
-index 3292c290654f6..86ce17a1f7fb6 100644
---- a/tools/lib/traceevent/Makefile
-+++ b/tools/lib/traceevent/Makefile
-@@ -62,15 +62,15 @@ set_plugin_dir := 1
+diff --git a/sound/soc/generic/simple-card-utils.c b/sound/soc/generic/simple-card-utils.c
+index f4c6375d11c7a..ef1adf87cbc8b 100644
+--- a/sound/soc/generic/simple-card-utils.c
++++ b/sound/soc/generic/simple-card-utils.c
+@@ -224,10 +224,17 @@ EXPORT_SYMBOL_GPL(asoc_simple_startup);
+ void asoc_simple_shutdown(struct snd_pcm_substream *substream)
+ {
+ 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_dai *codec_dai = rtd->codec_dai;
++	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
+ 	struct asoc_simple_priv *priv = snd_soc_card_get_drvdata(rtd->card);
+ 	struct simple_dai_props *dai_props =
+ 		simple_priv_to_props(priv, rtd->num);
  
- # Set plugin_dir to preffered global plugin location
- # If we install under $HOME directory we go under
--# $(HOME)/.traceevent/plugins
-+# $(HOME)/.local/lib/traceevent/plugins
- #
- # We dont set PLUGIN_DIR in case we install under $HOME
- # directory, because by default the code looks under:
--# $(HOME)/.traceevent/plugins by default.
-+# $(HOME)/.local/lib/traceevent/plugins by default.
- #
- ifeq ($(plugin_dir),)
- ifeq ($(prefix),$(HOME))
--override plugin_dir = $(HOME)/.traceevent/plugins
-+override plugin_dir = $(HOME)/.local/lib/traceevent/plugins
- set_plugin_dir := 0
- else
- override plugin_dir = $(libdir)/traceevent/plugins
-diff --git a/tools/lib/traceevent/event-plugin.c b/tools/lib/traceevent/event-plugin.c
-index 8ca28de9337a5..e1f7ddd5a6cf0 100644
---- a/tools/lib/traceevent/event-plugin.c
-+++ b/tools/lib/traceevent/event-plugin.c
-@@ -18,7 +18,7 @@
- #include "event-utils.h"
- #include "trace-seq.h"
++	if (dai_props->mclk_fs) {
++		snd_soc_dai_set_sysclk(codec_dai, 0, 0, SND_SOC_CLOCK_IN);
++		snd_soc_dai_set_sysclk(cpu_dai, 0, 0, SND_SOC_CLOCK_OUT);
++	}
++
+ 	asoc_simple_clk_disable(dai_props->cpu_dai);
  
--#define LOCAL_PLUGIN_DIR ".traceevent/plugins"
-+#define LOCAL_PLUGIN_DIR ".local/lib/traceevent/plugins/"
- 
- static struct registered_plugin_options {
- 	struct registered_plugin_options	*next;
+ 	asoc_simple_clk_disable(dai_props->codec_dai);
 -- 
 2.20.1
 
