@@ -2,124 +2,194 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA29C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD503C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06407206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:44:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569177866;
-	bh=48xQrCMOZWQY0GMUtiT7ORhyY7JKh36Uou8DfkPsZ14=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bQ4svZBqgUKoK4U//mGY4uEBqYNaGoe3PVrn9yu8gPDYZePGOMuUjLyeeggQd2K4Q
-	 TH/p+WARXZ95vnOsN42WTOegS1ekLy0c8UM+qXAQ4xcteCkdILajGaxBVcGSBzrNAm
-	 syw9iI7Pf4yicXSk0KlHDlIb/FFAR6yxvWeHR+7U=
+	by mail.kernel.org (Postfix) with ESMTP id 86F7B206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:44:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388785AbfIVSoY (ORCPT
+        id S2388817AbfIVSod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:44:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39878 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388711AbfIVSoK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:44:10 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B815921479;
-        Sun, 22 Sep 2019 18:44:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569177849;
-        bh=48xQrCMOZWQY0GMUtiT7ORhyY7JKh36Uou8DfkPsZ14=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b1C4bWyWq02P3/8HYtovHl2Y8E1/rKYMAAvJmqQNKd+Doy/sxHOpd3o7qJtZ9sFHh
-         7s9YjilMnTJfOD6b6jItazfypSX0be6SrOm2wA3I3j7Vp59ZXQZlL25kQH0vLxEHjk
-         25gfIl1JiIo4yA9byw9saLqcnyEVsONEyTMlDYw8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 015/203] media: dib0700: fix link error for dibx000_i2c_set_speed
-Date:   Sun, 22 Sep 2019 14:40:41 -0400
-Message-Id: <20190922184350.30563-15-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
-References: <20190922184350.30563-1-sashal@kernel.org>
+        Sun, 22 Sep 2019 14:44:33 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:19458
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388761AbfIVSoW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:44:22 -0400
+X-IronPort-AV: E=Sophos;i="5.64,537,1559512800"; 
+   d="scan'208";a="320239964"
+Received: from ip-215.net-89-2-7.rev.numericable.fr (HELO hadrien) ([89.2.7.215])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Sep 2019 20:43:48 +0200
+Date:   Sun, 22 Sep 2019 20:43:48 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: jll@hadrien
+To:     =?ISO-8859-15?Q?Guido_G=FCnther?= <agx@sigxcpu.org>
+cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        =?ISO-8859-15?Q?Guido_G=FCnther?= <agx@sigxcpu.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>,
+        kbuild-all@01.org
+Subject: Re: [PATCH v6 2/2] drm/bridge: Add NWL MIPI DSI host controller
+ support (fwd)
+Message-ID: <alpine.DEB.2.21.1909222042340.2575@hadrien>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="8323329-348580464-1569177829=:2575"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-[ Upstream commit 765bb8610d305ee488b35d07e2a04ae52fb2df9c ]
+--8323329-348580464-1569177829=:2575
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8BIT
 
-When CONFIG_DVB_DIB9000 is disabled, we can still compile code that
-now fails to link against dibx000_i2c_set_speed:
+Hello,
 
-drivers/media/usb/dvb-usb/dib0700_devices.o: In function `dib01x0_pmu_update.constprop.7':
-dib0700_devices.c:(.text.unlikely+0x1c9c): undefined reference to `dibx000_i2c_set_speed'
+Color_format is unsigned, so it won't be less than 0 on line 272.
 
-The call sites are both through dib01x0_pmu_update(), which gets passed
-an 'i2c' pointer from dib9000_get_i2c_master(), which has returned
-NULL. Checking this pointer seems to be a good idea anyway, and it avoids
-the link failure in most cases.
+julia
 
-Sean Young found another case that is not fixed by that, where certain
-gcc versions leave an unused function in place that causes the link error,
-but adding an explict IS_ENABLED() check also solves this.
+---------- Forwarded message ----------
+Date: Mon, 23 Sep 2019 02:29:34 +0800
+From: kbuild test robot <lkp@intel.com>
+To: kbuild@01.org
+Cc: Julia Lawall <julia.lawall@lip6.fr>
+Subject: Re: [PATCH v6 2/2] drm/bridge: Add NWL MIPI DSI host controller support
 
-Fixes: b7f54910ce01 ("V4L/DVB (4647): Added module for DiB0700 based devices")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+CC: kbuild-all@01.org
+In-Reply-To: <c0ac0b203fb65ae7efd1b9b54664b491ca2fb157.1569170717.git.agx@sigxcpu.org>
+References: <c0ac0b203fb65ae7efd1b9b54664b491ca2fb157.1569170717.git.agx@sigxcpu.org>
+TO: "Guido Günther" <agx@sigxcpu.org>
+CC:
+
+Hi "Guido,
+
+I love your patch! Perhaps something to improve:
+
+[auto build test WARNING on linus/master]
+[cannot apply to v5.3 next-20190920]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+
+url:    https://github.com/0day-ci/linux/commits/Guido-G-nther/drm-bridge-Add-NWL-MIPI-DSI-host-controller-support/20190923-005010
+:::::: branch date: 2 hours ago
+:::::: commit date: 2 hours ago
+
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Julia Lawall <julia.lawall@lip6.fr>
+
+>> drivers/gpu/drm/bridge/nwl-dsi.c:272:5-17: WARNING: Unsigned expression compared with zero: color_format < 0
+
+# https://github.com/0day-ci/linux/commit/060069512cb50e3218b55005b6cc92b82e0a7856
+git remote add linux-review https://github.com/0day-ci/linux
+git remote update linux-review
+git checkout 060069512cb50e3218b55005b6cc92b82e0a7856
+vim +272 drivers/gpu/drm/bridge/nwl-dsi.c
+
+060069512cb50e Guido Günther 2019-09-22  245
+060069512cb50e Guido Günther 2019-09-22  246  static int nwl_dsi_config_dpi(struct nwl_dsi *dsi)
+060069512cb50e Guido Günther 2019-09-22  247  {
+060069512cb50e Guido Günther 2019-09-22  248  	u32 color_format, mode;
+060069512cb50e Guido Günther 2019-09-22  249  	bool burst_mode;
+060069512cb50e Guido Günther 2019-09-22  250  	int hfront_porch, hback_porch, vfront_porch, vback_porch;
+060069512cb50e Guido Günther 2019-09-22  251  	int hsync_len, vsync_len;
+060069512cb50e Guido Günther 2019-09-22  252
+060069512cb50e Guido Günther 2019-09-22  253  	hfront_porch = dsi->mode.hsync_start - dsi->mode.hdisplay;
+060069512cb50e Guido Günther 2019-09-22  254  	hsync_len = dsi->mode.hsync_end - dsi->mode.hsync_start;
+060069512cb50e Guido Günther 2019-09-22  255  	hback_porch = dsi->mode.htotal - dsi->mode.hsync_end;
+060069512cb50e Guido Günther 2019-09-22  256
+060069512cb50e Guido Günther 2019-09-22  257  	vfront_porch = dsi->mode.vsync_start - dsi->mode.vdisplay;
+060069512cb50e Guido Günther 2019-09-22  258  	vsync_len = dsi->mode.vsync_end - dsi->mode.vsync_start;
+060069512cb50e Guido Günther 2019-09-22  259  	vback_porch = dsi->mode.vtotal - dsi->mode.vsync_end;
+060069512cb50e Guido Günther 2019-09-22  260
+060069512cb50e Guido Günther 2019-09-22  261  	DRM_DEV_DEBUG_DRIVER(dsi->dev, "hfront_porch = %d\n", hfront_porch);
+060069512cb50e Guido Günther 2019-09-22  262  	DRM_DEV_DEBUG_DRIVER(dsi->dev, "hback_porch = %d\n", hback_porch);
+060069512cb50e Guido Günther 2019-09-22  263  	DRM_DEV_DEBUG_DRIVER(dsi->dev, "hsync_len = %d\n", hsync_len);
+060069512cb50e Guido Günther 2019-09-22  264  	DRM_DEV_DEBUG_DRIVER(dsi->dev, "hdisplay = %d\n", dsi->mode.hdisplay);
+060069512cb50e Guido Günther 2019-09-22  265  	DRM_DEV_DEBUG_DRIVER(dsi->dev, "vfront_porch = %d\n", vfront_porch);
+060069512cb50e Guido Günther 2019-09-22  266  	DRM_DEV_DEBUG_DRIVER(dsi->dev, "vback_porch = %d\n", vback_porch);
+060069512cb50e Guido Günther 2019-09-22  267  	DRM_DEV_DEBUG_DRIVER(dsi->dev, "vsync_len = %d\n", vsync_len);
+060069512cb50e Guido Günther 2019-09-22  268  	DRM_DEV_DEBUG_DRIVER(dsi->dev, "vactive = %d\n", dsi->mode.vdisplay);
+060069512cb50e Guido Günther 2019-09-22  269  	DRM_DEV_DEBUG_DRIVER(dsi->dev, "clock = %d kHz\n", dsi->mode.clock);
+060069512cb50e Guido Günther 2019-09-22  270
+060069512cb50e Guido Günther 2019-09-22  271  	color_format = nwl_dsi_get_dpi_pixel_format(dsi->format);
+060069512cb50e Guido Günther 2019-09-22 @272  	if (color_format < 0) {
+060069512cb50e Guido Günther 2019-09-22  273  		DRM_DEV_ERROR(dsi->dev, "Invalid color format 0x%x\n",
+060069512cb50e Guido Günther 2019-09-22  274  			      dsi->format);
+060069512cb50e Guido Günther 2019-09-22  275  		return color_format;
+060069512cb50e Guido Günther 2019-09-22  276  	}
+060069512cb50e Guido Günther 2019-09-22  277  	DRM_DEV_DEBUG_DRIVER(dsi->dev, "pixel fmt = %d\n", dsi->format);
+060069512cb50e Guido Günther 2019-09-22  278
+060069512cb50e Guido Günther 2019-09-22  279  	nwl_dsi_write(dsi, NWL_DSI_INTERFACE_COLOR_CODING, NWL_DSI_DPI_24_BIT);
+060069512cb50e Guido Günther 2019-09-22  280  	nwl_dsi_write(dsi, NWL_DSI_PIXEL_FORMAT, color_format);
+060069512cb50e Guido Günther 2019-09-22  281  	/*
+060069512cb50e Guido Günther 2019-09-22  282  	 * Adjusting input polarity based on the video mode results in
+060069512cb50e Guido Günther 2019-09-22  283  	 * a black screen so always pick active low:
+060069512cb50e Guido Günther 2019-09-22  284  	 */
+060069512cb50e Guido Günther 2019-09-22  285  	nwl_dsi_write(dsi, NWL_DSI_VSYNC_POLARITY,
+060069512cb50e Guido Günther 2019-09-22  286  		      NWL_DSI_VSYNC_POLARITY_ACTIVE_LOW);
+060069512cb50e Guido Günther 2019-09-22  287  	nwl_dsi_write(dsi, NWL_DSI_HSYNC_POLARITY,
+060069512cb50e Guido Günther 2019-09-22  288  		      NWL_DSI_HSYNC_POLARITY_ACTIVE_LOW);
+060069512cb50e Guido Günther 2019-09-22  289
+060069512cb50e Guido Günther 2019-09-22  290  	burst_mode = (dsi->dsi_mode_flags & MIPI_DSI_MODE_VIDEO_BURST) &&
+060069512cb50e Guido Günther 2019-09-22  291  		     !(dsi->dsi_mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE);
+060069512cb50e Guido Günther 2019-09-22  292
+060069512cb50e Guido Günther 2019-09-22  293  	if (burst_mode) {
+060069512cb50e Guido Günther 2019-09-22  294  		nwl_dsi_write(dsi, NWL_DSI_VIDEO_MODE, NWL_DSI_VM_BURST_MODE);
+060069512cb50e Guido Günther 2019-09-22  295  		nwl_dsi_write(dsi, NWL_DSI_PIXEL_FIFO_SEND_LEVEL, 256);
+060069512cb50e Guido Günther 2019-09-22  296  	} else {
+060069512cb50e Guido Günther 2019-09-22  297  		mode = ((dsi->dsi_mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE) ?
+060069512cb50e Guido Günther 2019-09-22  298  				NWL_DSI_VM_BURST_MODE_WITH_SYNC_PULSES :
+060069512cb50e Guido Günther 2019-09-22  299  				NWL_DSI_VM_NON_BURST_MODE_WITH_SYNC_EVENTS);
+060069512cb50e Guido Günther 2019-09-22  300  		nwl_dsi_write(dsi, NWL_DSI_VIDEO_MODE, mode);
+060069512cb50e Guido Günther 2019-09-22  301  		nwl_dsi_write(dsi, NWL_DSI_PIXEL_FIFO_SEND_LEVEL,
+060069512cb50e Guido Günther 2019-09-22  302  			      dsi->mode.hdisplay);
+060069512cb50e Guido Günther 2019-09-22  303  	}
+060069512cb50e Guido Günther 2019-09-22  304
+060069512cb50e Guido Günther 2019-09-22  305  	nwl_dsi_write(dsi, NWL_DSI_HFP, hfront_porch);
+060069512cb50e Guido Günther 2019-09-22  306  	nwl_dsi_write(dsi, NWL_DSI_HBP, hback_porch);
+060069512cb50e Guido Günther 2019-09-22  307  	nwl_dsi_write(dsi, NWL_DSI_HSA, hsync_len);
+060069512cb50e Guido Günther 2019-09-22  308
+060069512cb50e Guido Günther 2019-09-22  309  	nwl_dsi_write(dsi, NWL_DSI_ENABLE_MULT_PKTS, 0x0);
+060069512cb50e Guido Günther 2019-09-22  310  	nwl_dsi_write(dsi, NWL_DSI_BLLP_MODE, 0x1);
+060069512cb50e Guido Günther 2019-09-22  311  	nwl_dsi_write(dsi, NWL_DSI_USE_NULL_PKT_BLLP, 0x0);
+060069512cb50e Guido Günther 2019-09-22  312  	nwl_dsi_write(dsi, NWL_DSI_VC, 0x0);
+060069512cb50e Guido Günther 2019-09-22  313
+060069512cb50e Guido Günther 2019-09-22  314  	nwl_dsi_write(dsi, NWL_DSI_PIXEL_PAYLOAD_SIZE, dsi->mode.hdisplay);
+060069512cb50e Guido Günther 2019-09-22  315  	nwl_dsi_write(dsi, NWL_DSI_VACTIVE, dsi->mode.vdisplay - 1);
+060069512cb50e Guido Günther 2019-09-22  316  	nwl_dsi_write(dsi, NWL_DSI_VBP, vback_porch);
+060069512cb50e Guido Günther 2019-09-22  317  	nwl_dsi_write(dsi, NWL_DSI_VFP, vfront_porch);
+060069512cb50e Guido Günther 2019-09-22  318
+060069512cb50e Guido Günther 2019-09-22  319  	return 0;
+060069512cb50e Guido Günther 2019-09-22  320  }
+060069512cb50e Guido Günther 2019-09-22  321
+
 ---
- drivers/media/usb/dvb-usb/dib0700_devices.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/media/usb/dvb-usb/dib0700_devices.c b/drivers/media/usb/dvb-usb/dib0700_devices.c
-index 66d685065e065..ab7a100ec84fe 100644
---- a/drivers/media/usb/dvb-usb/dib0700_devices.c
-+++ b/drivers/media/usb/dvb-usb/dib0700_devices.c
-@@ -2439,9 +2439,13 @@ static int dib9090_tuner_attach(struct dvb_usb_adapter *adap)
- 		8, 0x0486,
- 	};
- 
-+	if (!IS_ENABLED(CONFIG_DVB_DIB9000))
-+		return -ENODEV;
- 	if (dvb_attach(dib0090_fw_register, adap->fe_adap[0].fe, i2c, &dib9090_dib0090_config) == NULL)
- 		return -ENODEV;
- 	i2c = dib9000_get_i2c_master(adap->fe_adap[0].fe, DIBX000_I2C_INTERFACE_GPIO_1_2, 0);
-+	if (!i2c)
-+		return -ENODEV;
- 	if (dib01x0_pmu_update(i2c, data_dib190, 10) != 0)
- 		return -ENODEV;
- 	dib0700_set_i2c_speed(adap->dev, 1500);
-@@ -2517,10 +2521,14 @@ static int nim9090md_tuner_attach(struct dvb_usb_adapter *adap)
- 		0, 0x00ef,
- 		8, 0x0406,
- 	};
-+	if (!IS_ENABLED(CONFIG_DVB_DIB9000))
-+		return -ENODEV;
- 	i2c = dib9000_get_tuner_interface(adap->fe_adap[0].fe);
- 	if (dvb_attach(dib0090_fw_register, adap->fe_adap[0].fe, i2c, &nim9090md_dib0090_config[0]) == NULL)
- 		return -ENODEV;
- 	i2c = dib9000_get_i2c_master(adap->fe_adap[0].fe, DIBX000_I2C_INTERFACE_GPIO_1_2, 0);
-+	if (!i2c)
-+		return -ENODEV;
- 	if (dib01x0_pmu_update(i2c, data_dib190, 10) < 0)
- 		return -ENODEV;
- 
--- 
-2.20.1
-
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+--8323329-348580464-1569177829=:2575--
