@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 946FAC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 393FBC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:51:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64232214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C1B721A4A
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:51:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178286;
-	bh=LYIbF59LRkqGRsnLtIcvlgJlu1D6vqFSlyn1nFHtP2M=;
+	s=default; t=1569178290;
+	bh=fKDOifOsBYF0DMQPzAQ/DZmDI8+D34sivsnDb+H7i50=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z0/QEMUP/y65pHatMYg/+1ZdoQtaMhBTGAkCBpPwfeMe6/OhbbM6liE7ZrFycW4xO
-	 U6KG5c++hDQo6rtGQh27I8HWh58LBIdGALOSR2FDjQDf5oPSisNR040WwonN5S8Uw3
-	 aJ0eaaKXq1XElb4RWLUKh8+3j3eJZKvZeSM4yVM4=
+	b=2h0ziZTtbeGcnjhFRQC6/4BJWRyFVaK+ThyTAiHt1h/yGiMj2eXXkGDJu2hWL67Nl
+	 iFiGrJcVY2Oq/pQsbun9VGzF1ettqLOOftWR+pelcF4JAbrDDJtwbVG/+qnqajDpK9
+	 BZNqxphRPmytDD1X71f0/2r4nXFmnhJH+6719120=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405146AbfIVSvZ (ORCPT
+        id S2405358AbfIVSv3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:51:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49102 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:51:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729292AbfIVSvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:51:20 -0400
+        id S1729310AbfIVSvV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:51:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F06B2196E;
-        Sun, 22 Sep 2019 18:51:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66100208C2;
+        Sun, 22 Sep 2019 18:51:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178280;
-        bh=LYIbF59LRkqGRsnLtIcvlgJlu1D6vqFSlyn1nFHtP2M=;
+        s=default; t=1569178281;
+        bh=fKDOifOsBYF0DMQPzAQ/DZmDI8+D34sivsnDb+H7i50=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c7BrtGkWKIX0s/pDfylMjNXoTUQjQo6khlCTKMxeioB4UmtbO+SUyhLG9mLrdrgMI
-         YxPaNWI3fhg+qEIegP8lQROLZ7iwwcgBH/ouJ1RAto1GfhogfceQhGXsSdVHuGuq7u
-         55yeyvddszirOHxRvNaMy1MoPOoV26XJsOnEL3Z4=
+        b=Cfs6N64glRFNwOUv2dAWflZ1tKJ8jRVcLCRGhc8013WMZGioEuvPjzCLHFBxVd0Qg
+         ad84tiaI26/hR1f7owFcI/c7UkX7ewtzgXAXqhVSKFHl5r1UtoticSPkmqd+6AYqiQ
+         30JyB8doPF3AlkuifXdaGQrELB5+Utvoh92v/Jv8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 061/185] media: mtk-mdp: fix reference count on old device tree
-Date:   Sun, 22 Sep 2019 14:47:19 -0400
-Message-Id: <20190922184924.32534-61-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 062/185] media: i2c: tda1997x: prevent potential NULL pointer access
+Date:   Sun, 22 Sep 2019 14:47:20 -0400
+Message-Id: <20190922184924.32534-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -61,40 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Brugger <matthias.bgg@gmail.com>
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-[ Upstream commit 864919ea0380e62adb2503b89825fe358acb8216 ]
+[ Upstream commit 2f822f1da08ac5c93e351e79d22920f08fa51baf ]
 
-of_get_next_child() increments the reference count of the returning
-device_node. Decrement it in the check if we are using the old or the
-new DTB.
+i2c_new_dummy() can fail returning a NULL pointer. This is not checked
+and the returned pointer is blindly used. Convert to
+devm_i2c_new_dummy_client() which returns an ERR_PTR and also add a
+validity check. Using devm_* here also fixes a leak because the dummy
+client was not released in the probe error path.
 
-Fixes: ba1f1f70c2c0 ("[media] media: mtk-mdp: Fix mdp device tree")
-Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
-Acked-by: Houlong Wei <houlong.wei@mediatek.com>
-[hverkuil-cisco@xs4all.nl: use node instead of parent as temp variable]
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/mtk-mdp/mtk_mdp_core.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/media/i2c/tda1997x.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
-index fc9faec85edb6..5d44f2e92dd50 100644
---- a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
-+++ b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
-@@ -110,7 +110,9 @@ static int mtk_mdp_probe(struct platform_device *pdev)
- 	mutex_init(&mdp->vpulock);
+diff --git a/drivers/media/i2c/tda1997x.c b/drivers/media/i2c/tda1997x.c
+index a62ede0966361..5e68182001ecc 100644
+--- a/drivers/media/i2c/tda1997x.c
++++ b/drivers/media/i2c/tda1997x.c
+@@ -2691,7 +2691,13 @@ static int tda1997x_probe(struct i2c_client *client,
+ 	}
  
- 	/* Old dts had the components as child nodes */
--	if (of_get_next_child(dev->of_node, NULL)) {
-+	node = of_get_next_child(dev->of_node, NULL);
-+	if (node) {
-+		of_node_put(node);
- 		parent = dev->of_node;
- 		dev_warn(dev, "device tree is out of date\n");
- 	} else {
+ 	ret = 0x34 + ((io_read(sd, REG_SLAVE_ADDR)>>4) & 0x03);
+-	state->client_cec = i2c_new_dummy(client->adapter, ret);
++	state->client_cec = devm_i2c_new_dummy_device(&client->dev,
++						      client->adapter, ret);
++	if (IS_ERR(state->client_cec)) {
++		ret = PTR_ERR(state->client_cec);
++		goto err_free_mutex;
++	}
++
+ 	v4l_info(client, "CEC slave address 0x%02x\n", ret);
+ 
+ 	ret = tda1997x_core_init(sd);
+@@ -2798,7 +2804,6 @@ static int tda1997x_remove(struct i2c_client *client)
+ 	media_entity_cleanup(&sd->entity);
+ 	v4l2_ctrl_handler_free(&state->hdl);
+ 	regulator_bulk_disable(TDA1997X_NUM_SUPPLIES, state->supplies);
+-	i2c_unregister_device(state->client_cec);
+ 	cancel_delayed_work(&state->delayed_work_enable_hpd);
+ 	mutex_destroy(&state->page_lock);
+ 	mutex_destroy(&state->lock);
 -- 
 2.20.1
 
