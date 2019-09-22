@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92BF8C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81639C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B91F21907
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5759221479
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:57:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178653;
-	bh=pV0YIwz+WaScIgPsWMQgTf+9XGIf/soXGhCLwRFPouU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=tXP/sjiEyw12JcbNGMzcq3gO+sRxHePqhSzihFsYQXqKTZ3NueMKYjwWxtx2TkWCr
-	 KRRl/8cf5ATA6qFppgeEoy/UYVTxOL8ey62Vnd/mbgD4FnEKCAj/4Qfx6ko3JqeGwv
-	 Edg1dZNOY0ZpXwPpejZcyNdsIxZCZWNidXkRaG58=
+	s=default; t=1569178667;
+	bh=VI40FhFAfw1ko5hRgrNOZflOsfqYo09dM5rBjVrmxnw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=nNSWf+YIfQN2TCCByubT0irIfFHdG1Nj3hL+6Ze9R5NjLiVpOIS89NfxrkWYIMyHM
+	 i+Ei4W+iMfUDtRnQ5pYTDiHtqrr+QyCdB3E9edb129b2X8tBq7spSoLjYHtQQKwyz2
+	 526FdR4/Lvy1y2ZidD0tCV7Nb+5DeL3VJg+DDtD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394854AbfIVS5c (ORCPT
+        id S2438649AbfIVS5q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:57:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59956 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:57:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389176AbfIVS5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:57:25 -0400
+        id S2438499AbfIVS5e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:57:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE99F206C2;
-        Sun, 22 Sep 2019 18:57:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E321206C2;
+        Sun, 22 Sep 2019 18:57:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178644;
-        bh=pV0YIwz+WaScIgPsWMQgTf+9XGIf/soXGhCLwRFPouU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ivuGuUKmWe4PaDy8MIrPXKnyJASJkHvY8BNxYXzzSsgxgMOLPtCA/XobH2tPsBf43
-         dhBIHCduUtvi96/2Y2ZhDavmVhnyV21CdYb9dUr9t+ifOkly26N87VtMMUXjJ77+os
-         3m2b7gMvke/W7s3iHJ6pNqEp+kz5VcjBjiWgC27o=
+        s=default; t=1569178653;
+        bh=VI40FhFAfw1ko5hRgrNOZflOsfqYo09dM5rBjVrmxnw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FW79a+ZYKYJmRq6zZfT70DWr4P5bx+3LvkwTRiGqJM6ohnO9cbLOLh/Jh2AIZrPPB
+         iBmTBwTsXbWhY7dbn8KmcGoEJZfzv0GnloPJrO4XJcZ0PceBfp/COZVH3o8pPgAymf
+         Vz6/pgaqVli4age09G4WSME2qAZCeh+vEHh0Bj1Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 01/89] ALSA: hda: Flush interrupts on disabling
-Date:   Sun, 22 Sep 2019 14:55:49 -0400
-Message-Id: <20190922185717.3412-1-sashal@kernel.org>
+Cc:     Wen Yang <wen.yang99@zte.com.cn>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 08/89] media: exynos4-is: fix leaked of_node references
+Date:   Sun, 22 Sep 2019 14:55:56 -0400
+Message-Id: <20190922185717.3412-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190922185717.3412-1-sashal@kernel.org>
+References: <20190922185717.3412-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -56,75 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-[ Upstream commit caa8422d01e983782548648e125fd617cadcec3f ]
+[ Upstream commit da79bf41a4d170ca93cc8f3881a70d734a071c37 ]
 
-I was looking at
+The call to of_get_child_by_name returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-<4> [241.835158] general protection fault: 0000 [#1] PREEMPT SMP PTI
-<4> [241.835181] CPU: 1 PID: 214 Comm: kworker/1:3 Tainted: G     U            5.2.0-CI-CI_DRM_6509+ #1
-<4> [241.835199] Hardware name: Dell Inc.                 OptiPlex 745                 /0GW726, BIOS 2.3.1  05/21/2007
-<4> [241.835234] Workqueue: events snd_hdac_bus_process_unsol_events [snd_hda_core]
-<4> [241.835256] RIP: 0010:input_handle_event+0x16d/0x5e0
-<4> [241.835270] Code: 48 8b 93 58 01 00 00 8b 52 08 89 50 04 8b 83 f8 06 00 00 48 8b 93 00 07 00 00 8d 70 01 48 8d 04 c2 83 e1 08 89 b3 f8 06 00 00 <66> 89 28 66 44 89 60 02 44 89 68 04 8b 93 f8 06 00 00 0f 84 fd fe
-<4> [241.835304] RSP: 0018:ffffc9000019fda0 EFLAGS: 00010046
-<4> [241.835317] RAX: 6b6b6b6ec6c6c6c3 RBX: ffff8880290fefc8 RCX: 0000000000000000
-<4> [241.835332] RDX: 000000006b6b6b6b RSI: 000000006b6b6b6c RDI: 0000000000000046
-<4> [241.835347] RBP: 0000000000000005 R08: 0000000000000000 R09: 0000000000000001
-<4> [241.835362] R10: ffffc9000019faa0 R11: 0000000000000000 R12: 0000000000000004
-<4> [241.835377] R13: 0000000000000000 R14: ffff8880290ff1d0 R15: 0000000000000293
-<4> [241.835392] FS:  0000000000000000(0000) GS:ffff88803de80000(0000) knlGS:0000000000000000
-<4> [241.835409] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-<4> [241.835422] CR2: 00007ffe9a99e9b7 CR3: 000000002f588000 CR4: 00000000000006e0
-<4> [241.835436] Call Trace:
-<4> [241.835449]  input_event+0x45/0x70
-<4> [241.835464]  snd_jack_report+0xdc/0x100
-<4> [241.835490]  snd_hda_jack_report_sync+0x83/0xc0 [snd_hda_codec]
-<4> [241.835512]  snd_hdac_bus_process_unsol_events+0x5a/0x70 [snd_hda_core]
-<4> [241.835530]  process_one_work+0x245/0x610
+Detected by coccinelle with the following warnings:
+drivers/media/platform/exynos4-is/fimc-is.c:813:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 807, but without a corresponding object release within this function.
+drivers/media/platform/exynos4-is/fimc-is.c:870:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 807, but without a corresponding object release within this function.
+drivers/media/platform/exynos4-is/fimc-is.c:885:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 807, but without a corresponding object release within this function.
+drivers/media/platform/exynos4-is/media-dev.c:545:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 541, but without a corresponding object release within this function.
+drivers/media/platform/exynos4-is/media-dev.c:528:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 499, but without a corresponding object release within this function.
+drivers/media/platform/exynos4-is/media-dev.c:534:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 499, but without a corresponding object release within this function.
 
-which has the hallmarks of a worker queued from interrupt after it was
-supposedly cancelled (note the POISON_FREE), and I could not see where
-the interrupt would be flushed on shutdown so added the likely suspects.
-
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=111174
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/hda/hdac_controller.c | 2 ++
- sound/pci/hda/hda_intel.c   | 2 +-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/media/platform/exynos4-is/fimc-is.c   | 1 +
+ drivers/media/platform/exynos4-is/media-dev.c | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/sound/hda/hdac_controller.c b/sound/hda/hdac_controller.c
-index 778b42ba90b80..3377f0bc28280 100644
---- a/sound/hda/hdac_controller.c
-+++ b/sound/hda/hdac_controller.c
-@@ -442,6 +442,8 @@ static void azx_int_disable(struct hdac_bus *bus)
- 	list_for_each_entry(azx_dev, &bus->stream_list, list)
- 		snd_hdac_stream_updateb(azx_dev, SD_CTL, SD_INT_MASK, 0);
+diff --git a/drivers/media/platform/exynos4-is/fimc-is.c b/drivers/media/platform/exynos4-is/fimc-is.c
+index 5ddb2321e9e48..0fe9be93fabe2 100644
+--- a/drivers/media/platform/exynos4-is/fimc-is.c
++++ b/drivers/media/platform/exynos4-is/fimc-is.c
+@@ -819,6 +819,7 @@ static int fimc_is_probe(struct platform_device *pdev)
+ 		return -ENODEV;
  
-+	synchronize_irq(bus->irq);
-+
- 	/* disable SIE for all streams */
- 	snd_hdac_chip_writeb(bus, INTCTL, 0);
+ 	is->pmu_regs = of_iomap(node, 0);
++	of_node_put(node);
+ 	if (!is->pmu_regs)
+ 		return -ENOMEM;
  
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index 682f9657c16c6..a5314a08cfa85 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -1413,9 +1413,9 @@ static int azx_free(struct azx *chip)
- 	}
+diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
+index d4656d5175d7e..b2eb830c0360a 100644
+--- a/drivers/media/platform/exynos4-is/media-dev.c
++++ b/drivers/media/platform/exynos4-is/media-dev.c
+@@ -496,6 +496,7 @@ static int fimc_md_register_sensor_entities(struct fimc_md *fmd)
+ 			continue;
  
- 	if (bus->chip_init) {
-+		azx_stop_chip(chip);
- 		azx_clear_irq_pending(chip);
- 		azx_stop_all_streams(chip);
--		azx_stop_chip(chip);
- 	}
+ 		ret = fimc_md_parse_port_node(fmd, port, index);
++		of_node_put(port);
+ 		if (ret < 0) {
+ 			of_node_put(node);
+ 			goto rpm_put;
+@@ -529,6 +530,7 @@ static int __of_get_csis_id(struct device_node *np)
+ 	if (!np)
+ 		return -EINVAL;
+ 	of_property_read_u32(np, "reg", &reg);
++	of_node_put(np);
+ 	return reg - FIMC_INPUT_MIPI_CSI2_0;
+ }
  
- 	if (bus->irq >= 0)
 -- 
 2.20.1
 
