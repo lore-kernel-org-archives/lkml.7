@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB72C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17979C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AE6A206B6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:36:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3235206B6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:36:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569181007;
-	bh=fKDOifOsBYF0DMQPzAQ/DZmDI8+D34sivsnDb+H7i50=;
+	s=default; t=1569181014;
+	bh=iupxWFpcY6/cgaLlrAWuYCcnrImMYlOV5CQiGwgF2WE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GIYJOAmn3YtXIF9JLPx01kx+g5mxdGjegn3DXhHAlG38ccrVBZaR6WB/0zmfrZ5kF
-	 vcX74v9M/ivstOcBS+3A/vyy29YcEP7OgWmsALn8SOSQIWGOliyzFgCf5oZ8CFRoaw
-	 H6eio2PkNdFCGTk3uc1nuuZFUuwYaWOP7cPOrfnQ=
+	b=sIebX6ukrpadVt+Sa6O8Mwu8VdjaREW0G5NUubNTNWg5JJMMY1AAva48Zpoup0hhD
+	 lpsJ3ysDEzY7qRV1U9SHWAHTAlqlAluY44xjoNBoHyj2d3aMVws17rGft2yDepIgKV
+	 WRHHgZDQ+CKMmL6PbYjWwz7aPT3zzLnCVEsWsfgs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439235AbfIVTgl (ORCPT
+        id S2389784AbfIVSqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:36:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42310 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:46:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729100AbfIVSqN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:46:13 -0400
+        id S2389732AbfIVSp7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:45:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2411121928;
-        Sun, 22 Sep 2019 18:46:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5343920665;
+        Sun, 22 Sep 2019 18:45:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569177972;
-        bh=fKDOifOsBYF0DMQPzAQ/DZmDI8+D34sivsnDb+H7i50=;
+        s=default; t=1569177959;
+        bh=iupxWFpcY6/cgaLlrAWuYCcnrImMYlOV5CQiGwgF2WE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KgHxkp8rr9ZfcwfKJ+7lPmXd0hq9WhAX96prJZYdBkPQjnrDKC3Nt3Z9LCR1U00eg
-         R4yt7skiJJ0ZigbFq/TLiNCXx6aqKxuPsa2nWfBIdv0FjzkfETzp3EVVuNNspPhMW5
-         YgFhie8BnaoPuNot7NiHHnpwJmwsYnFLonZZkeN0=
+        b=MMap3sWSttfOfZOEuvjJL/3AO9UgMgf29aD3254eduzo7ywV9QC2XPM0HTjbEDEXf
+         TEP3iEOJRNlzumakaGB+cdYoGmIudvPABGI/H+CAlAc/CewdKID6/CVXDLpa2+anxo
+         MuyskYMZdmiMjv/cg5Sk4XgcR0K/1ctAPPwrPs0o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 071/203] media: i2c: tda1997x: prevent potential NULL pointer access
-Date:   Sun, 22 Sep 2019 14:41:37 -0400
-Message-Id: <20190922184350.30563-71-sashal@kernel.org>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.3 063/203] firmware: arm_scmi: Check if platform has released shmem before using
+Date:   Sun, 22 Sep 2019 14:41:29 -0400
+Message-Id: <20190922184350.30563-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -60,51 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
 
-[ Upstream commit 2f822f1da08ac5c93e351e79d22920f08fa51baf ]
+[ Upstream commit 9dc34d635c67e57051853855c43249408641a5ab ]
 
-i2c_new_dummy() can fail returning a NULL pointer. This is not checked
-and the returned pointer is blindly used. Convert to
-devm_i2c_new_dummy_client() which returns an ERR_PTR and also add a
-validity check. Using devm_* here also fixes a leak because the dummy
-client was not released in the probe error path.
+Sometimes platfom may take too long to respond to the command and OS
+might timeout before platform transfer the ownership of the shared
+memory region to the OS with the response.
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Since the mailbox channel associated with the channel is freed and new
+commands are dispatch on the same channel, OS needs to wait until it
+gets back the ownership. If not, either OS may end up overwriting the
+platform response for the last command(which is fine as OS timed out
+that command) or platform might overwrite the payload for the next
+command with the response for the old.
+
+The latter is problematic as platform may end up interpretting the
+response as the payload. In order to avoid such race, let's wait until
+the OS gets back the ownership before we prepare the shared memory with
+the payload for the next command.
+
+Reported-by: Jim Quinlan <james.quinlan@broadcom.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/tda1997x.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/firmware/arm_scmi/driver.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/media/i2c/tda1997x.c b/drivers/media/i2c/tda1997x.c
-index a62ede0966361..5e68182001ecc 100644
---- a/drivers/media/i2c/tda1997x.c
-+++ b/drivers/media/i2c/tda1997x.c
-@@ -2691,7 +2691,13 @@ static int tda1997x_probe(struct i2c_client *client,
- 	}
+diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
+index b5bc4c7a8fab2..b49c9e6f4bf10 100644
+--- a/drivers/firmware/arm_scmi/driver.c
++++ b/drivers/firmware/arm_scmi/driver.c
+@@ -271,6 +271,14 @@ static void scmi_tx_prepare(struct mbox_client *cl, void *m)
+ 	struct scmi_chan_info *cinfo = client_to_scmi_chan_info(cl);
+ 	struct scmi_shared_mem __iomem *mem = cinfo->payload;
  
- 	ret = 0x34 + ((io_read(sd, REG_SLAVE_ADDR)>>4) & 0x03);
--	state->client_cec = i2c_new_dummy(client->adapter, ret);
-+	state->client_cec = devm_i2c_new_dummy_device(&client->dev,
-+						      client->adapter, ret);
-+	if (IS_ERR(state->client_cec)) {
-+		ret = PTR_ERR(state->client_cec);
-+		goto err_free_mutex;
-+	}
-+
- 	v4l_info(client, "CEC slave address 0x%02x\n", ret);
- 
- 	ret = tda1997x_core_init(sd);
-@@ -2798,7 +2804,6 @@ static int tda1997x_remove(struct i2c_client *client)
- 	media_entity_cleanup(&sd->entity);
- 	v4l2_ctrl_handler_free(&state->hdl);
- 	regulator_bulk_disable(TDA1997X_NUM_SUPPLIES, state->supplies);
--	i2c_unregister_device(state->client_cec);
- 	cancel_delayed_work(&state->delayed_work_enable_hpd);
- 	mutex_destroy(&state->page_lock);
- 	mutex_destroy(&state->lock);
++	/*
++	 * Ideally channel must be free by now unless OS timeout last
++	 * request and platform continued to process the same, wait
++	 * until it releases the shared memory, otherwise we may endup
++	 * overwriting its response with new message payload or vice-versa
++	 */
++	spin_until_cond(ioread32(&mem->channel_status) &
++			SCMI_SHMEM_CHAN_STAT_CHANNEL_FREE);
+ 	/* Mark channel busy + clear error */
+ 	iowrite32(0x0, &mem->channel_status);
+ 	iowrite32(t->hdr.poll_completion ? 0 : SCMI_SHMEM_FLAG_INTR_ENABLED,
 -- 
 2.20.1
 
