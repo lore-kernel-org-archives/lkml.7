@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C3CC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6689EC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA920206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DCF920882
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:24:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180254;
-	bh=2et6kh5u9FLYVe88GeLbMKtsoeoF/CZr/Ah6IeVbid4=;
+	s=default; t=1569180260;
+	bh=xEyFGuV9urV2Izp0x4mN7WNWUY36GjkjKfAmNsiu/P8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=adBI69qiBMcIjxxh4ePLm8NncP9FbZBUbyhHosfXgFuA09pUX/fFyXyLRNZ47m93v
-	 KWbLQNRcf2wO0vkaaedfMvBii6qQOFxWhS7GWYvvam9B+AIsVsB0giiEP9mXpUgSn7
-	 Mh7rEXnSW4i1gJp/BGP++5Nq+H3dcKaVem+09RwI=
+	b=Z/jwfrrQDCzZmltw1TDSJXMGwVz6fgQNqQMhGjJbslISka5nDGmHP8C6y7ARQpuVr
+	 a6JVYizzyMUWZO5t8NoPyCCcHHcVgm3TQvUaYRw/pZJMpsDbtdTpAWNfkv/5YN2gxm
+	 dVLLcdRIBxAfk5ZM9tGm4SlALmzq/hTy5Vw6/nm4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731394AbfIVTYN (ORCPT
+        id S2393318AbfIVSw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:24:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52410 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:52:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393389AbfIVSxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:53:00 -0400
+        id S2407948AbfIVSwh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:52:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C0D92190F;
-        Sun, 22 Sep 2019 18:52:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7594521BE5;
+        Sun, 22 Sep 2019 18:52:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178380;
-        bh=2et6kh5u9FLYVe88GeLbMKtsoeoF/CZr/Ah6IeVbid4=;
+        s=default; t=1569178357;
+        bh=xEyFGuV9urV2Izp0x4mN7WNWUY36GjkjKfAmNsiu/P8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=POp2kcHXWqUGNjKUfwHL8ZgHruJcelxlKf5zZ2mpatxFOXW2ciZTiI1o/qsnhdr4U
-         7aIyLMSOPqfboNDgi3CjpkwUuZU1K38ubOSi6Pc4RMVYthZyV4otL28wA3Pe8j9Git
-         waJYn+WRGPmgSZblJZow+QtLcA/smyOTF1yhcUEk=
+        b=meQfy2k1lejmFNAi/vk8mBGuPznHsTgnjdHr1kuVdoqhta6hlfYx3IlzAWpRdjToD
+         T3H1OlJ7ODcG8S2wkpbbKQXpS0z0k6EfQudSg30rYbSoCW/HyzWq0d0VrGR3lQQYn7
+         MrAK0P1d0xmMfpAXGgRcJFieCHC2cahKjpFjvjfw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 128/185] x86/mm/pti: Do not invoke PTI functions when PTI is disabled
-Date:   Sun, 22 Sep 2019 14:48:26 -0400
-Message-Id: <20190922184924.32534-128-sashal@kernel.org>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 112/185] media: cec-notifier: clear cec_adap in cec_notifier_unregister
+Date:   Sun, 22 Sep 2019 14:48:10 -0400
+Message-Id: <20190922184924.32534-112-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -62,52 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-[ Upstream commit 990784b57731192b7d90c8d4049e6318d81e887d ]
+[ Upstream commit 14d5511691e5290103bc480998bc322e68f139d4 ]
 
-When PTI is disabled at boot time either because the CPU is not affected or
-PTI has been disabled on the command line, the boot code still calls into
-pti_finalize() which then unconditionally invokes:
+If cec_notifier_cec_adap_unregister() is called before
+cec_unregister_adapter() then everything is OK (and this is the
+case today). But if it is the other way around, then
+cec_notifier_unregister() is called first, and that doesn't
+set n->cec_adap to NULL.
 
-     pti_clone_entry_text()
-     pti_clone_kernel_text()
+So if e.g. cec_notifier_set_phys_addr() is called after
+cec_notifier_unregister() but before cec_unregister_adapter()
+then n->cec_adap points to an unregistered and likely deleted
+cec adapter. So just set n->cec_adap->notifier and n->cec_adap
+to NULL for rubustness.
 
-pti_clone_kernel_text() was called unconditionally before the 32bit support
-was added and 32bit added the call to pti_clone_entry_text().
+Eventually cec_notifier_unregister will disappear and this will
+be simplified substantially.
 
-The call has no side effects as cloning the page tables into the available
-second one, which was allocated for PTI does not create damage. But it does
-not make sense either and in case that this functionality would be extended
-later this might actually lead to hard to diagnose issues.
-
-Neither function should be called when PTI is runtime disabled. Make the
-invocation conditional.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-Acked-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Song Liu <songliubraving@fb.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20190828143124.063353972@linutronix.de
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/pti.c | 2 ++
+ drivers/media/cec/cec-notifier.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/arch/x86/mm/pti.c b/arch/x86/mm/pti.c
-index b196524759ec5..ba22b50f4eca2 100644
---- a/arch/x86/mm/pti.c
-+++ b/arch/x86/mm/pti.c
-@@ -666,6 +666,8 @@ void __init pti_init(void)
-  */
- void pti_finalize(void)
+diff --git a/drivers/media/cec/cec-notifier.c b/drivers/media/cec/cec-notifier.c
+index 9598c7778871a..c4aa27e0c4308 100644
+--- a/drivers/media/cec/cec-notifier.c
++++ b/drivers/media/cec/cec-notifier.c
+@@ -124,6 +124,8 @@ void cec_notifier_unregister(struct cec_notifier *n)
  {
-+	if (!boot_cpu_has(X86_FEATURE_PTI))
-+		return;
- 	/*
- 	 * We need to clone everything (again) that maps parts of the
- 	 * kernel image.
+ 	mutex_lock(&n->lock);
+ 	n->callback = NULL;
++	n->cec_adap->notifier = NULL;
++	n->cec_adap = NULL;
+ 	mutex_unlock(&n->lock);
+ 	cec_notifier_put(n);
+ }
 -- 
 2.20.1
 
