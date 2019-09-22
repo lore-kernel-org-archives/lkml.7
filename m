@@ -2,87 +2,112 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AFD5C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 12:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 745C9C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 12:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AC4520830
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 12:04:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DAE620830
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 12:14:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Eo0txVpq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728799AbfIVMEN convert rfc822-to-8bit (ORCPT
+        id S1728820AbfIVMOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 08:04:13 -0400
-Received: from ozlabs.org ([203.11.71.1]:50599 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728697AbfIVMEN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 08:04:13 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46bmMZ0TJPz9sCJ;
-        Sun, 22 Sep 2019 22:04:09 +1000 (AEST)
-Date:   Sun, 22 Sep 2019 22:03:59 +1000
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAPcyv4idejYpTS=ErsEJWgBxBsC1aS9=NCyvMEDO1rwqRktEmg@mail.gmail.com>
-References: <1568988209.5576.199.camel@lca.pw> <87r24bhwng.fsf@linux.ibm.com> <1569003478.5576.202.camel@lca.pw> <CAPcyv4idejYpTS=ErsEJWgBxBsC1aS9=NCyvMEDO1rwqRktEmg@mail.gmail.com>
+        Sun, 22 Sep 2019 08:14:21 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:36489 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726129AbfIVMOV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 08:14:21 -0400
+Received: by mail-ed1-f68.google.com with SMTP id h2so10266914edn.3;
+        Sun, 22 Sep 2019 05:14:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1bapqg0axGoCoiojzRpaF0T/C3zoEUk4uuMPjaIgioo=;
+        b=Eo0txVpq1/oGcQtlLHGiItCW18S9y8GIIJO2UMmQQpdPyRmU9mWBkD6JPQPgNIeGhn
+         EHj9D0Wbb2rfm1vMqzUoZU5dZFuvQndT4NZx9l6FSIwCT2F5YyssoZep5kVzvpKC1Gc2
+         /hDZXPLWMNErOvLeGaqIA0E4AQm8QNntu+aoUFVJcbFV3uR9x1ia6Qb1dZCvQ8pox8c0
+         Ds5sct02ox9AxAOdkdM7kXO/V6gHS3bLSjs7fxes4olzAJjSSJlKArjkXMXUblyNlr2o
+         LZ4cZ7vkj4pmK9pzrxyMr/Z+etoXffnrdIPg2ZZtK3CFi1HNOOsV9T8BvKYKFWqmsz4x
+         f2bQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1bapqg0axGoCoiojzRpaF0T/C3zoEUk4uuMPjaIgioo=;
+        b=snIGCQCERZUe1Kj78L/hfVnocZ5XzWLYPEr7uoIUCKFY0iAck7QZpvv5y4imICYiMb
+         +zFF16szAdbIe/zHyH8k6f681wIzmSeRczFmkKJwsghv1J4tqZzd1x1ZLcWgsMLxjvo3
+         sNPGlU8t5xI6PILFyd+ghl1UhN2BNKzAV/kMZWLwAQ3gXX+ehCAdJzrcwRWSDQTJ6qKJ
+         jzRKbsWdgE0luDbetF5j/Xp4f4TdMGNtN71LAsdmWmwOXwUkE22eTtAPETXfs5oqd7Zq
+         MufBi8wu4QVFrGoucYAr2PXUYSoqyrTVZDR6BRX7DpaYDJBgxHJGH9l6X+mAJDO9+aNO
+         hscg==
+X-Gm-Message-State: APjAAAVGqmitkiQ7gVE0QdDLg3pgb25WPMLmFs5VpvzdwVgwHHmy8N/g
+        c9lnKKyno8TolpL6OTD3ZdmYtgcKaRQD8vTd+NI=
+X-Google-Smtp-Source: APXvYqy0OT3wqBIzCmzH5tYHO7MpduKdGxjqkkADRtGngTQ3G9yD4jl/NWegMXDJ7sXrsLwhuzJh/0sRoOXkpTKb/GI=
+X-Received: by 2002:aa7:c34b:: with SMTP id j11mr31544525edr.245.1569154457791;
+ Sun, 22 Sep 2019 05:14:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Subject: Re: "Pick the right alignment default when creating dax devices" failed to build on powerpc
-To:     Dan Williams <dan.j.williams@intel.com>, Qian Cai <cai@lca.pw>
-CC:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-From:   Michael Ellerman <michael@ellerman.id.au>
-Message-ID: <A619A864-511D-4782-8789-5AEC8797A111@ellerman.id.au>
+References: <CADxRZqwizJ2HXdiU7aSH9t=ecBEHnxdVVsQ4wUpTYRpCgdXf=w@mail.gmail.com>
+ <CADxRZqzx=8jNQuvi8WN=7U_G5a0f+v_GODHH8q3QJVYmg=n1LA@mail.gmail.com> <CAK7LNAR3szhzH89ujCPq5Xz8rm0xvSjJdx0TebsaU8yiroXXVg@mail.gmail.com>
+In-Reply-To: <CAK7LNAR3szhzH89ujCPq5Xz8rm0xvSjJdx0TebsaU8yiroXXVg@mail.gmail.com>
+From:   Anatoly Pugachev <matorola@gmail.com>
+Date:   Sun, 22 Sep 2019 15:14:10 +0300
+Message-ID: <CADxRZqy-muFfpfCj6ZMPboSMEKXukTDg0oUZc6udvNreoJ6pgA@mail.gmail.com>
+Subject: Re: latest git kernel (v5.3-11506-gf7c3bf8fa7e5) does not compile
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Sparc kernel list <sparclinux@vger.kernel.org>,
+        Linux Kernel list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 21 September 2019 4:31:16 am AEST, Dan Williams <dan.j.williams@intel.com> wrote:
->On Fri, Sep 20, 2019 at 11:18 AM Qian Cai <cai@lca.pw> wrote:
->>
->> On Fri, 2019-09-20 at 19:55 +0530, Aneesh Kumar K.V wrote:
->> > Qian Cai <cai@lca.pw> writes:
->> >
->> > > The linux-next commit "libnvdimm/dax: Pick the right alignment
->default when
->> > > creating dax devices" causes powerpc failed to build with this
->config. Reverted
->> > > it fixed the issue.
->> > >
->> > > ERROR: "hash__has_transparent_hugepage"
->[drivers/nvdimm/libnvdimm.ko] undefined!
->> > > ERROR: "radix__has_transparent_hugepage"
->[drivers/nvdimm/libnvdimm.ko]
->> > > undefined!
->> > > make[1]: *** [scripts/Makefile.modpost:93: __modpost] Error 1
->> > > make: *** [Makefile:1305: modules] Error 2
->> > >
->> > > [1] https://patchwork.kernel.org/patch/11133445/
->> > > [2]
->https://raw.githubusercontent.com/cailca/linux-mm/master/powerpc.config
->> >
->> > Sorry for breaking the build. How about?
->>
->> It works fine.
+On Sun, Sep 22, 2019 at 2:38 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
 >
->Thanks, but let's delay "libnvdimm/dax: Pick the right alignment
->default when creating dax devices" until after -rc1 to allow Michael
->time to ack/nak this new export.
+> Hi Anatoly,
+>
+> On Sun, Sep 22, 2019 at 5:33 PM Anatoly Pugachev <matorola@gmail.com> wrote:
+> >
+> > On Sun, Sep 22, 2019 at 11:13 AM Anatoly Pugachev <matorola@gmail.com> wrote:
+> > >
+> > > Hello!
+> > >
+> > > Latest git kernel does not compile for me:
+> > >
+> > > ~/linux-2.6$ git desc
+> > > v5.3-11506-gf7c3bf8fa7e5
+> > >
+> > > ~/linux-2.6$ make
+> > >   CALL    scripts/checksyscalls.sh
+> > > <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+> > >   CALL    scripts/atomic/check-atomics.sh
+> > >   CHK     include/generated/compile.h
+> > >   CC      arch/sparc/vdso/vdso32/vclock_gettime.o
+> > > unrecognized e_machine 18 arch/sparc/vdso/vdso32/vclock_gettime.o
+> > > arch/sparc/vdso/vdso32/vclock_gettime.o: failed
+> > > make[2]: *** [scripts/Makefile.build:266:
+> > > arch/sparc/vdso/vdso32/vclock_gettime.o] Error 1
+> > > make[2]: *** Deleting file 'arch/sparc/vdso/vdso32/vclock_gettime.o'
+> > > make[1]: *** [scripts/Makefile.build:509: arch/sparc/vdso] Error 2
+> > > make: *** [Makefile:1667: arch/sparc] Error
+> > >
+> > > but I was able to compile successfully v5.3-10169-g574cc4539762
+>
+>
+> Thanks for the report, and apology for the breakage.
+>
+> Please check this patch.
+> https://lore.kernel.org/patchwork/patch/1130469/
+>
+> I hope it will fix the build error.
 
-Thanks Dan. It looks fine to me:
 
-Acked-by: Michael Ellerman <mpe@ellerman.id.au>
-
-cheers
--- 
-Sent from my Android phone with K-9 Mail. Please excuse my brevity.
+It does. Thanks Masahiro!
