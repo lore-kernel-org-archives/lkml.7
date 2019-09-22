@@ -4,56 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA293C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B0EC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4DB22070C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:03:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7EE8206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:03:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179001;
-	bh=vjBaosXqtd9ltgOm7s+SR9vWpf2jQAJtR0eeELBX1YY=;
+	s=default; t=1569179008;
+	bh=n5gj2Hdae2Hdoc1sUt7oWb1wv6BAKbPyC4gdc9lKEK0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jyulRf7zWclgf6crzwJh+ZGEKVBmuwMu8DXYDyoMxe5XJ4LpqhXsoQuKtpaNi4WHJ
-	 vEsjZyGVfxj1z7ZMLfH8+QZ6SFPv05VHav1jeqpOa8qsTrjS8JaD9IqbIxRIvIzOS5
-	 A7Rdbq/+EvW/1SPH/4lgB06njMVBMp1QsGZxxzPo=
+	b=zjpg9V/1HYWpXge7MGQ/mevX5t8Z2D5+adexIK4QvV4e1rFkxkjdMcSud5iDvzbX0
+	 FGLitY3UChoB8rvExZTRIP6+WXCGFKkwjvGROwLb5wVtrKN1LEgZX0KHZ7jK0JZ6NS
+	 dvervhLHVF+NJLrFxVvMUxcoevbHyjnLX3UMSjP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729750AbfIVTDU (ORCPT
+        id S2390518AbfIVTD0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:03:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38312 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:03:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395359AbfIVTCA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 15:02:00 -0400
+        id S2395345AbfIVTB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 15:01:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F461214AF;
-        Sun, 22 Sep 2019 19:01:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 091212070C;
+        Sun, 22 Sep 2019 19:01:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178919;
-        bh=vjBaosXqtd9ltgOm7s+SR9vWpf2jQAJtR0eeELBX1YY=;
+        s=default; t=1569178917;
+        bh=n5gj2Hdae2Hdoc1sUt7oWb1wv6BAKbPyC4gdc9lKEK0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pfxx35Ark3MQkE4HqTC6It2UBmZlWuPMLrkkCXYCLk3EYeffXXEjAXee06HPhC7pM
-         O717Y5zeunm+4gXMuV72ZDu77N1ggMca0dpJ0a/BF/iJSejeCJGHonNesb65xuj4wR
-         8MhZax3AQL7fv37S80S9rrGBMa/fxzPyrSfnuC1k=
+        b=Ucrm8CrR48KGqv7pJjY29Zj+M/o4t4MvcbE2siWHfBK38iWDBA87f/zje+PB5BuJr
+         TGDUk1Ip7mVwGlJrwvqCE4w+lQ0XVZJesOfeQ2LY/GZXG79nxbSW0fa0K/i/aKrckW
+         pGmFmSutzStteuObAi0eZ1oD8LBCROR96Ld12wvI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 36/44] kprobes: Prohibit probing on BUG() and WARN() address
-Date:   Sun, 22 Sep 2019 15:00:54 -0400
-Message-Id: <20190922190103.4906-36-sashal@kernel.org>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 35/44] dmaengine: ti: edma: Do not reset reserved paRAM slots
+Date:   Sun, 22 Sep 2019 15:00:53 -0400
+Message-Id: <20190922190103.4906-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922190103.4906-1-sashal@kernel.org>
 References: <20190922190103.4906-1-sashal@kernel.org>
@@ -66,68 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-[ Upstream commit e336b4027775cb458dc713745e526fa1a1996b2a ]
+[ Upstream commit c5dbe60664b3660f5ac5854e21273ea2e7ff698f ]
 
-Since BUG() and WARN() may use a trap (e.g. UD2 on x86) to
-get the address where the BUG() has occurred, kprobes can not
-do single-step out-of-line that instruction. So prohibit
-probing on such address.
+Skip resetting paRAM slots marked as reserved as they might be used by
+other cores.
 
-Without this fix, if someone put a kprobe on WARN(), the
-kernel will crash with invalid opcode error instead of
-outputing warning message, because kernel can not find
-correct bug address.
-
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Acked-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-Cc: David S . Miller <davem@davemloft.net>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Naveen N . Rao <naveen.n.rao@linux.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/156750890133.19112.3393666300746167111.stgit@devnote2
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Link: https://lore.kernel.org/r/20190823125618.8133-2-peter.ujfalusi@ti.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/bug.h | 5 +++++
- kernel/kprobes.c    | 3 ++-
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ drivers/dma/edma.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/bug.h b/include/linux/bug.h
-index 7f4818673c41f..581a53dfbd310 100644
---- a/include/linux/bug.h
-+++ b/include/linux/bug.h
-@@ -102,6 +102,11 @@ int is_valid_bugaddr(unsigned long addr);
+diff --git a/drivers/dma/edma.c b/drivers/dma/edma.c
+index 85674a8d04368..e508c8c5f3fde 100644
+--- a/drivers/dma/edma.c
++++ b/drivers/dma/edma.c
+@@ -2218,9 +2218,6 @@ static int edma_probe(struct platform_device *pdev)
  
- #else	/* !CONFIG_GENERIC_BUG */
+ 	ecc->default_queue = info->default_queue;
  
-+static inline void *find_bug(unsigned long bugaddr)
-+{
-+	return NULL;
-+}
-+
- static inline enum bug_trap_type report_bug(unsigned long bug_addr,
- 					    struct pt_regs *regs)
- {
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index a53998cba804c..fdde50d39a46d 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -1454,7 +1454,8 @@ static int check_kprobe_address_safe(struct kprobe *p,
- 	/* Ensure it is not in reserved area nor out of text */
- 	if (!kernel_text_address((unsigned long) p->addr) ||
- 	    within_kprobe_blacklist((unsigned long) p->addr) ||
--	    jump_label_text_reserved(p->addr, p->addr)) {
-+	    jump_label_text_reserved(p->addr, p->addr) ||
-+	    find_bug((unsigned long)p->addr)) {
- 		ret = -EINVAL;
- 		goto out;
+-	for (i = 0; i < ecc->num_slots; i++)
+-		edma_write_slot(ecc, i, &dummy_paramset);
+-
+ 	if (info->rsv) {
+ 		/* Set the reserved slots in inuse list */
+ 		rsv_slots = info->rsv->rsv_slots;
+@@ -2233,6 +2230,12 @@ static int edma_probe(struct platform_device *pdev)
+ 		}
  	}
+ 
++	for (i = 0; i < ecc->num_slots; i++) {
++		/* Reset only unused - not reserved - paRAM slots */
++		if (!test_bit(i, ecc->slot_inuse))
++			edma_write_slot(ecc, i, &dummy_paramset);
++	}
++
+ 	/* Clear the xbar mapped channels in unused list */
+ 	xbar_chans = info->xbar_chans;
+ 	if (xbar_chans) {
 -- 
 2.20.1
 
