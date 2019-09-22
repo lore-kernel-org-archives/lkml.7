@@ -4,52 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC9A9C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16CE2C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CCF8214D9
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:59:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC905208C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:59:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178771;
-	bh=UX9+bYiMCMRZlZwMOAwF8IzgaXbverQ0c/jXgrq8UTY=;
+	s=default; t=1569178774;
+	bh=TyMsRY5JAPdK/Z1Xu7icImo1Dxb3hM036Zlgp0gerzg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JNN8FENYgv1d2jt1UYeDjYWby35tY5VvyTbSYYSlIKR+kpat/vE5cdxRgoH86tK1e
-	 SGB27Lt7TNdGR0+/kRwYDQqjwZkaxgrldhYrRJE0Qp4wjyrKHwZeMFZ/Nhc6wtaJ1F
-	 QLluzNLX9CueStvSlK+E899wdD8K5/SKfk+PObdM=
+	b=gcO+j1etDKGaRM2gRTbmfa2Jfo1on0x1BZFOubDD7soq0voJhGU0Deoi4IGkeibF7
+	 EjGK8+DTVvIgDNhaco6ljhhvqNTazJjGRxg6txGdVmfeWjvKrqMR+jMOxcj+mS7tCS
+	 QnW9AGR9DV7kfXGWI+82jsVK+qqV9FC8L0Re5T/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389583AbfIVS7a (ORCPT
+        id S2404958AbfIVS7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:59:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34520 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:59:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438849AbfIVS7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:59:23 -0400
+        id S2395061AbfIVS70 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:59:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CEE421D6C;
-        Sun, 22 Sep 2019 18:59:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47AC0214D9;
+        Sun, 22 Sep 2019 18:59:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178763;
-        bh=UX9+bYiMCMRZlZwMOAwF8IzgaXbverQ0c/jXgrq8UTY=;
+        s=default; t=1569178765;
+        bh=TyMsRY5JAPdK/Z1Xu7icImo1Dxb3hM036Zlgp0gerzg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C+/OALe1MJfi0Z4v+9jqxbfXsU4scCWgRoJ9gqEN4HG+i3eDkVpW5rjnjdN2YclAJ
-         2GpdcX0RXsBsQgcqIOOgRj/lV+FSTqqvaar4qjwrFyWe5j742mdPmqhOErY3RRvBbC
-         7/qzuzdTsQrdZNDz9D5wEeCVWsSHwDP6TFWmLqWU=
+        b=2fhcSF3L87eYqAdtUEBBx+CtIbrGj7DlwdI7HUN1cLL74KNoepJJfa82gMUgKjR/R
+         uFIueCuKlVTcaUbrwgw2MtZy9KstDDnP5UH2beJ7w6S2kqLbPJ7IgdWSZC7Ylxv0jU
+         eww/daYzabHCTxqZM57OxtNV/GubVNKYYw8oMH+o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kevin Easton <kevin@guarana.org>,
-        syzbot+98156c174c5a2cad9f8f@syzkaller.appspotmail.com,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        libertas-dev@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 83/89] libertas: Add missing sentinel at end of if_usb.c fw_table
-Date:   Sun, 22 Sep 2019 14:57:11 -0400
-Message-Id: <20190922185717.3412-83-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 85/89] ALSA: hda - Drop unsol event handler for Intel HDMI codecs
+Date:   Sun, 22 Sep 2019 14:57:13 -0400
+Message-Id: <20190922185717.3412-85-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185717.3412-1-sashal@kernel.org>
 References: <20190922185717.3412-1-sashal@kernel.org>
@@ -62,34 +57,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kevin Easton <kevin@guarana.org>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 764f3f1ecffc434096e0a2b02f1a6cc964a89df6 ]
+[ Upstream commit f2dbe87c5ac1f88e6007ba1f1374f4bd8a197fb6 ]
 
-This sentinel tells the firmware loading process when to stop.
+We don't need to deal with the unsol events for Intel chips that are
+tied with the graphics via audio component notifier.  Although the
+presence of the audio component is checked at the beginning of
+hdmi_unsol_event(), better to short cut by dropping unsol_event ops.
 
-Reported-and-tested-by: syzbot+98156c174c5a2cad9f8f@syzkaller.appspotmail.com
-Signed-off-by: Kevin Easton <kevin@guarana.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204565
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/libertas/if_usb.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sound/pci/hda/patch_hdmi.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/marvell/libertas/if_usb.c b/drivers/net/wireless/marvell/libertas/if_usb.c
-index e4ae2b5a71c25..aad82ff568835 100644
---- a/drivers/net/wireless/marvell/libertas/if_usb.c
-+++ b/drivers/net/wireless/marvell/libertas/if_usb.c
-@@ -49,7 +49,8 @@ static const struct lbs_fw_table fw_table[] = {
- 	{ MODEL_8388, "libertas/usb8388_v5.bin", NULL },
- 	{ MODEL_8388, "libertas/usb8388.bin", NULL },
- 	{ MODEL_8388, "usb8388.bin", NULL },
--	{ MODEL_8682, "libertas/usb8682.bin", NULL }
-+	{ MODEL_8682, "libertas/usb8682.bin", NULL },
-+	{ 0, NULL, NULL }
- };
+diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
+index f5803f9bba9bb..f214055972150 100644
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -2555,13 +2555,20 @@ static void i915_pin_cvt_fixup(struct hda_codec *codec,
+ /* precondition and allocation for Intel codecs */
+ static int alloc_intel_hdmi(struct hda_codec *codec)
+ {
++	int err;
++
+ 	/* requires i915 binding */
+ 	if (!codec->bus->core.audio_component) {
+ 		codec_info(codec, "No i915 binding for Intel HDMI/DP codec\n");
+ 		return -ENODEV;
+ 	}
  
- static const struct usb_device_id if_usb_table[] = {
+-	return alloc_generic_hdmi(codec);
++	err = alloc_generic_hdmi(codec);
++	if (err < 0)
++		return err;
++	/* no need to handle unsol events */
++	codec->patch_ops.unsol_event = NULL;
++	return 0;
+ }
+ 
+ /* parse and post-process for Intel codecs */
 -- 
 2.20.1
 
