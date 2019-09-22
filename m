@@ -2,48 +2,49 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
+X-Spam-Status: No, score=-11.7 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01D97C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 10:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3574C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 10:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAF412070C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 10:52:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 852992070C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 10:52:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728360AbfIVKwf (ORCPT
+        id S1728373AbfIVKwh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 06:52:35 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:55548 "EHLO
+        Sun, 22 Sep 2019 06:52:37 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:55557 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725887AbfIVKwf (ORCPT
+        with ESMTP id S1728306AbfIVKwg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 06:52:35 -0400
+        Sun, 22 Sep 2019 06:52:36 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iBzTd-0000v2-0z; Sun, 22 Sep 2019 12:52:25 +0200
+        id 1iBzTd-0000vD-Je; Sun, 22 Sep 2019 12:52:25 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8A46D1C0DF1;
-        Sun, 22 Sep 2019 12:52:24 +0200 (CEST)
-Date:   Sun, 22 Sep 2019 10:52:24 -0000
-From:   "tip-bot2 for Masami Hiramatsu" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 236161C07C3;
+        Sun, 22 Sep 2019 12:52:25 +0200 (CEST)
+Date:   Sun, 22 Sep 2019 10:52:25 -0000
+From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf probe: Skip same probe address for a given line
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+Subject: [tip: perf/urgent] tools arch x86 uapi: Synch asm/unistd.h with the
+ kernel sources
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Wang Nan <wangnan0@huawei.com>, Ingo Molnar <mingo@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
-In-Reply-To: <156886447061.10772.4261569305869149178.stgit@devnote2>
-References: <156886447061.10772.4261569305869149178.stgit@devnote2>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
 MIME-Version: 1.0
-Message-ID: <156914954448.24167.7115189929260088693.tip-bot2@tip-bot2>
+Message-ID: <156914954504.24167.15576551007465139001.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,92 +60,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     1a375ae7659ab740d4c885ea98c1659b8a6e2071
-Gitweb:        https://git.kernel.org/tip/1a375ae7659ab740d4c885ea98c1659b8a6e2071
-Author:        Masami Hiramatsu <mhiramat@kernel.org>
-AuthorDate:    Thu, 19 Sep 2019 12:41:10 +09:00
+Commit-ID:     761830a03c5c99fc0a7142e16cf0811cb68bd7af
+Gitweb:        https://git.kernel.org/tip/761830a03c5c99fc0a7142e16cf0811cb68bd7af
+Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate:    Fri, 20 Sep 2019 14:56:47 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Fri, 20 Sep 2019 15:22:00 -03:00
+CommitterDate: Fri, 20 Sep 2019 14:59:28 -03:00
 
-perf probe: Skip same probe address for a given line
+tools arch x86 uapi: Synch asm/unistd.h with the kernel sources
 
-Fix to skip making a same probe address on given line.
+To pick up the change in:
 
-Since a DWARF line info contains several entries for one line with
-different column, perf probe will make a different probe on same address
-if user specifies a probe point by "function:line" or "file:line".
+  45e29d119e99 ("x86/syscalls: Make __X32_SYSCALL_BIT be unsigned long")
 
-e.g.
- $ perf probe -D kernel_read:8
- p:probe/kernel_read_L8 kernel_read+39
- p:probe/kernel_read_L8_1 kernel_read+39
+That doesn't trigger any changes in tooling and silences this perf build
+warning:
 
-This skips such duplicated probe addresses.
+  Warning: Kernel ABI header at 'tools/arch/x86/include/uapi/asm/unistd.h' differs from latest version at 'arch/x86/include/uapi/asm/unistd.h'
+  diff -u tools/arch/x86/include/uapi/asm/unistd.h arch/x86/include/uapi/asm/unistd.h
 
-Committer testing:
-
-  # uname -a
-  Linux quaco 5.3.0+ #2 SMP Thu Sep 19 16:13:22 -03 2019 x86_64 x86_64 x86_64 GNU/Linux
-  #
-
-Before:
-
-  # perf probe -D kernel_read:8
-  p:probe/kernel_read _text+3115191
-  p:probe/kernel_read_1 _text+3115191
-  #
-
-After:
-
-  # perf probe -D kernel_read:8
-  p:probe/kernel_read _text+3115191
-  #
-
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lore.kernel.org/lkml/156886447061.10772.4261569305869149178.stgit@devnote2
+Cc: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/probe-finder.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ tools/arch/x86/include/uapi/asm/unistd.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index 505905f..cd9f95e 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -1245,6 +1245,17 @@ static int expand_probe_args(Dwarf_Die *sc_die, struct probe_finder *pf,
- 	return n;
- }
+diff --git a/tools/arch/x86/include/uapi/asm/unistd.h b/tools/arch/x86/include/uapi/asm/unistd.h
+index 30d7d04..196fdd0 100644
+--- a/tools/arch/x86/include/uapi/asm/unistd.h
++++ b/tools/arch/x86/include/uapi/asm/unistd.h
+@@ -3,7 +3,7 @@
+ #define _UAPI_ASM_X86_UNISTD_H
  
-+static bool trace_event_finder_overlap(struct trace_event_finder *tf)
-+{
-+	int i;
-+
-+	for (i = 0; i < tf->ntevs; i++) {
-+		if (tf->pf.addr == tf->tevs[i].point.address)
-+			return true;
-+	}
-+	return false;
-+}
-+
- /* Add a found probe point into trace event list */
- static int add_probe_trace_event(Dwarf_Die *sc_die, struct probe_finder *pf)
- {
-@@ -1255,6 +1266,14 @@ static int add_probe_trace_event(Dwarf_Die *sc_die, struct probe_finder *pf)
- 	struct perf_probe_arg *args = NULL;
- 	int ret, i;
+ /* x32 syscall flag bit */
+-#define __X32_SYSCALL_BIT	0x40000000
++#define __X32_SYSCALL_BIT	0x40000000UL
  
-+	/*
-+	 * For some reason (e.g. different column assigned to same address)
-+	 * This callback can be called with the address which already passed.
-+	 * Ignore it first.
-+	 */
-+	if (trace_event_finder_overlap(tf))
-+		return 0;
-+
- 	/* Check number of tevs */
- 	if (tf->ntevs == tf->max_tevs) {
- 		pr_warning("Too many( > %d) probe point found.\n",
+ #ifndef __KERNEL__
+ # ifdef __i386__
