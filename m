@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CCB9C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D030FC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:20:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01853206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A928620869
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:20:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180046;
-	bh=8RTrsxUPtiQV8fJJjQUR1PBXXKK19v9iUcCIGPA+was=;
+	s=default; t=1569180048;
+	bh=Q5eWfRAxJJuBLgyyD9AiKcF+IJ+RFvFG/Wt0DJpUGNc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Da7y577JLGjAULdreD/eTS34v1iwGX12qmYI8n/xBa8UCLmFRe9mg/pCauKC6BTXi
-	 E+N/JgraLcbP8imHLnou1OHGS7V/VWcJVWEU3osHVkfNs82Id5A6Fw+IIWPS/CFMGk
-	 7SZTy70GDZGaTqX6kUr+JNd11DXnNDYaKfY7UDTU=
+	b=ojjCve0GOIwyP++lEEGGboiufPkVEFSJcPswO5kg085m9Aoc6uzdYRuJwHbHHZk3q
+	 +vX5nd5JFB6Lj1aUzYgjv5Uy5WODnwHkJj1tEEYQP3qy2j4q/BTtaerd7kOeYut3Nm
+	 MiAtjjxVEPj61cwenJ6geA4KS81jbbK9OIh1LJZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405592AbfIVSya (ORCPT
+        id S1730988AbfIVTUr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:54:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54272 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:20:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394496AbfIVSyD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:54:03 -0400
+        id S2390586AbfIVSy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:54:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB3AD2190F;
-        Sun, 22 Sep 2019 18:54:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13B1521D7C;
+        Sun, 22 Sep 2019 18:54:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178442;
-        bh=8RTrsxUPtiQV8fJJjQUR1PBXXKK19v9iUcCIGPA+was=;
+        s=default; t=1569178468;
+        bh=Q5eWfRAxJJuBLgyyD9AiKcF+IJ+RFvFG/Wt0DJpUGNc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f/+IMPD8l4moNEUc1mUfH9TMtzVOWheIsAZBSqXlnWulxvyita3thhQ56cco+wJ/r
-         4A+vu/Ya/M4t3ms25xNIaotGGeyS3vU7mAYHOZ2KYoyGnihiJO7H0/mLeFU0IHhj35
-         q8ftte+bWGFr/opRnpTqvVnBM8HRx/60+qvOwock=
+        b=SZ5/dIMF+6yEWf5PSL/ySp+GyULFJEcqb7n9SBANtGO9qdbOy56EX+OHX+9pD4I0J
+         2lTLJuR276bmfMNnA5TlXLBTkES9UM6P4pBLunzAURFq8FthEtLE2HKjEDVKOkW9J5
+         HTt9I+fItQHQP/iPB1r6nm0IKVXn45O3jY4aHigs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ahzo <Ahzo@tutanota.com>, Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.2 175/185] drm/amd/powerplay/smu7: enforce minimal VBITimeout (v2)
-Date:   Sun, 22 Sep 2019 14:49:13 -0400
-Message-Id: <20190922184924.32534-175-sashal@kernel.org>
+Cc:     Nick Stoughton <nstoughton@logitech.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-leds@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 008/128] leds: leds-lp5562 allow firmware files up to the maximum length
+Date:   Sun, 22 Sep 2019 14:52:18 -0400
+Message-Id: <20190922185418.2158-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
-References: <20190922184924.32534-1-sashal@kernel.org>
+In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
+References: <20190922185418.2158-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,39 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ahzo <Ahzo@tutanota.com>
+From: Nick Stoughton <nstoughton@logitech.com>
 
-[ Upstream commit f659bb6dae58c113805f92822e4c16ddd3156b79 ]
+[ Upstream commit ed2abfebb041473092b41527903f93390d38afa7 ]
 
-This fixes screen corruption/flickering on 75 Hz displays.
+Firmware files are in ASCII, using 2 hex characters per byte. The
+maximum length of a firmware string is therefore
 
-v2: make print statement debug only (Alex)
+16 (commands) * 2 (bytes per command) * 2 (characters per byte) = 64
 
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=102646
-Reviewed-by: Evan Quan <evan.quan@amd.com>
-Signed-off-by: Ahzo <Ahzo@tutanota.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: ff45262a85db ("leds: add new LP5562 LED driver")
+Signed-off-by: Nick Stoughton <nstoughton@logitech.com>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/leds/leds-lp5562.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
-index 048757e8f4949..d1919d343cce4 100644
---- a/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
-@@ -4064,6 +4064,11 @@ static int smu7_program_display_gap(struct pp_hwmgr *hwmgr)
+diff --git a/drivers/leds/leds-lp5562.c b/drivers/leds/leds-lp5562.c
+index 2a9009fe5545d..18edc8bdc9f77 100644
+--- a/drivers/leds/leds-lp5562.c
++++ b/drivers/leds/leds-lp5562.c
+@@ -263,7 +263,11 @@ static void lp5562_firmware_loaded(struct lp55xx_chip *chip)
+ {
+ 	const struct firmware *fw = chip->fw;
  
- 	data->frame_time_x2 = frame_time_in_us * 2 / 100;
- 
-+	if (data->frame_time_x2 < 280) {
-+		pr_debug("%s: enforce minimal VBITimeout: %d -> 280\n", __func__, data->frame_time_x2);
-+		data->frame_time_x2 = 280;
-+	}
-+
- 	display_gap2 = pre_vbi_time_in_us * (ref_clock / 100);
- 
- 	cgs_write_ind_register(hwmgr->device, CGS_IND_REG__SMC, ixCG_DISPLAY_GAP_CNTL2, display_gap2);
+-	if (fw->size > LP5562_PROGRAM_LENGTH) {
++	/*
++	 * the firmware is encoded in ascii hex character, with 2 chars
++	 * per byte
++	 */
++	if (fw->size > (LP5562_PROGRAM_LENGTH * 2)) {
+ 		dev_err(&chip->cl->dev, "firmware data size overflow: %zu\n",
+ 			fw->size);
+ 		return;
 -- 
 2.20.1
 
