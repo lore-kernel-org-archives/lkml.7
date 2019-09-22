@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A48BC4740C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCEB2C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AF8F20882
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:08:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A93A220882
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:08:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179286;
-	bh=UlCki8zg9JHsMFVYDz5UUcbj6ctigQ8WdJABiuxnRAs=;
+	s=default; t=1569179288;
+	bh=qOgqvqjCkUD8COe5UC9OHjXjf/iIdtSx/nJitqT3eqk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RvKyxC696y5DQmlQi444vBr1qp5jZyE22bt+3wv1y3Gz3l3DywGb7I8H1sJ374jol
-	 w2egoGZVxXc1RtO6KBL1nJZLFD+FnDdrr9ztY4QJ+2I/2Odez1ZkinieBrTTd6xGYF
-	 24WhIjUzfqS7RprIi8sC+ZDw7ri1l8nMVoPDWhrA=
+	b=tHySOwVsGipCKoepZf1atsHMhfxlHkwomfPlrDPx5rHUM0ty5oM5rkGB/T3h587j3
+	 k2nQHdwT4wY7NB+7SjDvH6CmnmTc2X5RfTQ8IdeOA6h2spgijGwlp3RVb7SUXw/hdU
+	 7b0GdrJQBNz/Fui8SJspUh5wmT3Zh2F16zFix7O0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436541AbfIVTIF (ORCPT
+        id S2436570AbfIVTIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:08:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35336 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:08:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438923AbfIVS7y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:59:54 -0400
+        id S2438919AbfIVS7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:59:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13BF621928;
-        Sun, 22 Sep 2019 18:59:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B5D821907;
+        Sun, 22 Sep 2019 18:59:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178794;
-        bh=UlCki8zg9JHsMFVYDz5UUcbj6ctigQ8WdJABiuxnRAs=;
+        s=default; t=1569178792;
+        bh=qOgqvqjCkUD8COe5UC9OHjXjf/iIdtSx/nJitqT3eqk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y45ako7YfxBd/lSayxxfHAgpAOWHQIYe5lf8i/gappcuab2WdiERL/Ks8lp6W/X4S
-         ZRxG+LIia2Esn5VCqgzWAwu2NmaUzanhrmMxjREpQIQGUYd700RR5rOUb21kfVMCgj
-         sBYELKUkbqbDlfPlG6w5Xu6/2q2IN6CQGs3r3Z7U=
+        b=EMcL5/q+SOhJEUvuor1Cv0VV/uwVpKEuR7+NjvL8xY9gkrJba7I2uOqOKhW4js3ps
+         s4099hJCx2wwo8VyN3dnYfZhYfPfg/i4i17KEy4cVBGifzHfwd0Koyk/4y3RasYkdI
+         4Fb4sKaqyUrUDsYZ64O88lQvyGPVDarPE/meJAnw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oliver Neukum <oneukum@suse.com>,
-        syzbot+01a77b82edaa374068e1@syzkaller.appspotmail.com,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 15/60] media: iguanair: add sanity checks
-Date:   Sun, 22 Sep 2019 14:58:48 -0400
-Message-Id: <20190922185934.4305-15-sashal@kernel.org>
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 14/60] ALSA: i2c: ak4xxx-adda: Fix a possible null pointer dereference in build_adc_controls()
+Date:   Sun, 22 Sep 2019 14:58:47 -0400
+Message-Id: <20190922185934.4305-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185934.4305-1-sashal@kernel.org>
 References: <20190922185934.4305-1-sashal@kernel.org>
@@ -61,59 +58,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit ab1cbdf159beba7395a13ab70bc71180929ca064 ]
+[ Upstream commit 2127c01b7f63b06a21559f56a8c81a3c6535bd1a ]
 
-The driver needs to check the endpoint types, too, as opposed
-to the number of endpoints. This also requires moving the check earlier.
+In build_adc_controls(), there is an if statement on line 773 to check
+whether ak->adc_info is NULL:
+    if (! ak->adc_info ||
+        ! ak->adc_info[mixer_ch].switch_name)
 
-Reported-by: syzbot+01a77b82edaa374068e1@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+When ak->adc_info is NULL, it is used on line 792:
+    knew.name = ak->adc_info[mixer_ch].selector_name;
+
+Thus, a possible null-pointer dereference may occur.
+
+To fix this bug, referring to lines 773 and 774, ak->adc_info
+and ak->adc_info[mixer_ch].selector_name are checked before being used.
+
+This bug is found by a static analysis tool STCheck written by us.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/rc/iguanair.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ sound/i2c/other/ak4xxx-adda.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/rc/iguanair.c b/drivers/media/rc/iguanair.c
-index 5f634545ddd81..25470395c43f1 100644
---- a/drivers/media/rc/iguanair.c
-+++ b/drivers/media/rc/iguanair.c
-@@ -430,6 +430,10 @@ static int iguanair_probe(struct usb_interface *intf,
- 	int ret, pipein, pipeout;
- 	struct usb_host_interface *idesc;
+diff --git a/sound/i2c/other/ak4xxx-adda.c b/sound/i2c/other/ak4xxx-adda.c
+index bf377dc192aa7..d33e02c317129 100644
+--- a/sound/i2c/other/ak4xxx-adda.c
++++ b/sound/i2c/other/ak4xxx-adda.c
+@@ -789,11 +789,12 @@ static int build_adc_controls(struct snd_akm4xxx *ak)
+ 				return err;
  
-+	idesc = intf->altsetting;
-+	if (idesc->desc.bNumEndpoints < 2)
-+		return -ENODEV;
-+
- 	ir = kzalloc(sizeof(*ir), GFP_KERNEL);
- 	rc = rc_allocate_device();
- 	if (!ir || !rc) {
-@@ -444,18 +448,13 @@ static int iguanair_probe(struct usb_interface *intf,
- 	ir->urb_in = usb_alloc_urb(0, GFP_KERNEL);
- 	ir->urb_out = usb_alloc_urb(0, GFP_KERNEL);
+ 			memset(&knew, 0, sizeof(knew));
+-			knew.name = ak->adc_info[mixer_ch].selector_name;
+-			if (!knew.name) {
++			if (!ak->adc_info ||
++				!ak->adc_info[mixer_ch].selector_name) {
+ 				knew.name = "Capture Channel";
+ 				knew.index = mixer_ch + ak->idx_offset * 2;
+-			}
++			} else
++				knew.name = ak->adc_info[mixer_ch].selector_name;
  
--	if (!ir->buf_in || !ir->packet || !ir->urb_in || !ir->urb_out) {
-+	if (!ir->buf_in || !ir->packet || !ir->urb_in || !ir->urb_out ||
-+	    !usb_endpoint_is_int_in(&idesc->endpoint[0].desc) ||
-+	    !usb_endpoint_is_int_out(&idesc->endpoint[1].desc)) {
- 		ret = -ENOMEM;
- 		goto out;
- 	}
- 
--	idesc = intf->altsetting;
--
--	if (idesc->desc.bNumEndpoints < 2) {
--		ret = -ENODEV;
--		goto out;
--	}
--
- 	ir->rc = rc;
- 	ir->dev = &intf->dev;
- 	ir->udev = udev;
+ 			knew.iface = SNDRV_CTL_ELEM_IFACE_MIXER;
+ 			knew.info = ak4xxx_capture_source_info;
 -- 
 2.20.1
 
