@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F9EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF44C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F071208C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:46:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5737F21D6C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:46:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569177993;
-	bh=6wQX0xJ/q3Ed4fG+/mE1pswdwSLXVm2+9rffNMTgyZM=;
+	s=default; t=1569177996;
+	bh=hSOnlNHgMmVVWoFTLPvhL+Kt+46qjHL1MEcfw3YPfwg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xo/ePL8PkCtQc3/mjj9AM2vp4kEBJmBZTLu9OJuXB3D8eZrhlITWCSNMdvVWCAnRh
-	 Y+mUfCsoaZwOk/buUgEkv3awcvQqbQ8dOlh0GRuiBnOgNaG++iSVfbKBazWnuYqX1o
-	 spulCrI//sFMe+nqNWmc87qnodOtbNr8UMIO4NxI=
+	b=c/r4YgUolVZAogZE6Rn2rpSOlt7yodfEfJGgxx5SL74wLDq8kP2gzZL8OSerr4+Zh
+	 DTcZBxmIRb+DSC3EV9HQCnXGijXgVZ9sF8Olk4B+VLWB1LxjbEShsCkNhXBnyLYzqM
+	 C3tDQ7/wMJH9BUHHCsG4DTjbfmuLRqTXDunGmoRg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390043AbfIVSqc (ORCPT
+        id S2390064AbfIVSqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:46:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42566 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:46:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389892AbfIVSq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:46:28 -0400
+        id S2389931AbfIVSq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:46:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D167206C2;
-        Sun, 22 Sep 2019 18:46:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AAD720830;
+        Sun, 22 Sep 2019 18:46:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569177987;
-        bh=6wQX0xJ/q3Ed4fG+/mE1pswdwSLXVm2+9rffNMTgyZM=;
+        s=default; t=1569177985;
+        bh=hSOnlNHgMmVVWoFTLPvhL+Kt+46qjHL1MEcfw3YPfwg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z+teSN6j7hL2dJdWgGXaxgTj+LHAhKpZozRWmmEbVwzNzSJKOG3Rt3r55ssyKD95y
-         23eMM9ZKF2jZdOpwUl0oj4rVm0FTuKF2RS+2LPtkr3jrdrhAgGwXVLoisuc3gJcmwu
-         XqD611yxgfRePxgPwXnBAscSgW39NAwf4do9R7Fo=
+        b=gNxD/qCHq+a5Ld3b687hsaRruH5EkVEHj0OyC+JuP550V/J7qVKC7G0RRInOF97Bn
+         zdtZzrKGrcDHjYQFdY6M4JmKsZzt4iRd5oCit5zTIv/Qz/B5khu11CnZFMrdYnKn1z
+         IiLDgJ1VtypzPql8m+2kKBrP9P314wzFssVLjNiQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tan Xiaojun <tanxiaojun@huawei.com>, Jiri Olsa <jolsa@kernel.org>,
+Cc:     Igor Lubashev <ilubashe@akamai.com>, Jiri Olsa <jolsa@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 080/203] perf record: Support aarch64 random socket_id assignment
-Date:   Sun, 22 Sep 2019 14:41:46 -0400
-Message-Id: <20190922184350.30563-80-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 079/203] perf ftrace: Use CAP_SYS_ADMIN instead of euid==0
+Date:   Sun, 22 Sep 2019 14:41:45 -0400
+Message-Id: <20190922184350.30563-79-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -67,78 +67,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tan Xiaojun <tanxiaojun@huawei.com>
+From: Igor Lubashev <ilubashe@akamai.com>
 
-[ Upstream commit 0a4d8fb229dd78f9e0752817339e19e903b37a60 ]
+[ Upstream commit c766f3df635de14295e410c6dd5410bc416c24a0 ]
 
-Same as in the commit 01766229533f ("perf record: Support s390 random
-socket_id assignment"), aarch64 also have this problem.
+The kernel requires CAP_SYS_ADMIN instead of euid==0 to mount debugfs
+for ftrace.  Make perf do the same.
 
-Without this fix:
-
-  [root@localhost perf]# ./perf report --header -I -v
-  ...
-  socket_id number is too big.You may need to upgrade the perf tool.
-
-  # ========
-  # captured on    : Thu Aug  1 22:58:38 2019
-  # header version : 1
-  ...
-  # Core ID and Socket ID information is not available
-  ...
-
-With this fix:
-  [root@localhost perf]# ./perf report --header -I -v
-  ...
-  cpumask list: 0-31
-  cpumask list: 32-63
-  cpumask list: 64-95
-  cpumask list: 96-127
-
-  # ========
-  # captured on    : Thu Aug  1 22:58:38 2019
-  # header version : 1
-  ...
-  # CPU 0: Core ID 0, Socket ID 36
-  # CPU 1: Core ID 1, Socket ID 36
-  ...
-  # CPU 126: Core ID 126, Socket ID 8442
-  # CPU 127: Core ID 127, Socket ID 8442
-  ...
-
-Signed-off-by: Tan Xiaojun <tanxiaojun@huawei.com>
+Signed-off-by: Igor Lubashev <ilubashe@akamai.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: James Morris <jmorris@namei.org>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
-Link: http://lkml.kernel.org/r/1564717737-21602-1-git-send-email-tanxiaojun@huawei.com
+Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Link: http://lkml.kernel.org/r/bd8763b72ed4d58d0b42d44fbc7eb474d32e53a3.1565188228.git.ilubashe@akamai.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/header.c | 4 +++-
+ tools/perf/builtin-ftrace.c | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 1903d7ec97976..bf7cf12495539 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -2251,8 +2251,10 @@ static int process_cpu_topology(struct feat_fd *ff, void *data __maybe_unused)
- 	/* On s390 the socket_id number is not related to the numbers of cpus.
- 	 * The socket_id number might be higher than the numbers of cpus.
- 	 * This depends on the configuration.
-+	 * AArch64 is the same.
- 	 */
--	if (ph->env.arch && !strncmp(ph->env.arch, "s390", 4))
-+	if (ph->env.arch && (!strncmp(ph->env.arch, "s390", 4)
-+			  || !strncmp(ph->env.arch, "aarch64", 7)))
- 		do_core_id_test = false;
+diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+index 0193128104056..10971255fd2dc 100644
+--- a/tools/perf/builtin-ftrace.c
++++ b/tools/perf/builtin-ftrace.c
+@@ -13,6 +13,7 @@
+ #include <signal.h>
+ #include <fcntl.h>
+ #include <poll.h>
++#include <linux/capability.h>
  
- 	for (i = 0; i < (u32)cpu_nr; i++) {
+ #include "debug.h"
+ #include <subcmd/parse-options.h>
+@@ -21,6 +22,7 @@
+ #include "target.h"
+ #include "cpumap.h"
+ #include "thread_map.h"
++#include "util/cap.h"
+ #include "util/config.h"
+ 
+ 
+@@ -281,7 +283,7 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+ 		.events = POLLIN,
+ 	};
+ 
+-	if (geteuid() != 0) {
++	if (!perf_cap__capable(CAP_SYS_ADMIN)) {
+ 		pr_err("ftrace only works for root!\n");
+ 		return -1;
+ 	}
 -- 
 2.20.1
 
