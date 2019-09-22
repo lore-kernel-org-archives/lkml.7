@@ -2,97 +2,67 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F08C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B49F0C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 067562070C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:05:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88EFE206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:05:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179108;
-	bh=cdpXAyC0QgX4B0pAmhmXYPJ+N0Wzzx+vtMzo2FD9JFw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OIj20ItBbJiOaOW7uBBw5rBEUXM0tKCJvZQjngh6wyVPHHAsAztSGtWKHZKuYXHsK
-	 v5KwW2vfV+TCqu4zoCXE6c8PM4LRHNNzddFf4Mo/ZWjgqX2wMfsw2db8Fhqypg3THG
-	 6eHvj0yJe/18aNQu/SRDENKCUS8F3wLFOUA4xtBU=
+	s=default; t=1569179112;
+	bh=t2PRAXUH8Td3/f/cV4lcabQFfzGauPOTFfEi3YdhAls=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=Fki6A5Jn4arWs3n4SVzqJq1f3ptcnOJ3nHXm65RTcOSW3N/9ks7H+MOMe6UKlGJBh
+	 aEDiL2wMtKgLVNdtpqLLauWjaYI1PkIFGR0EMSzLIQ/Yy+Zx9RYquuqbiCLzYa/sMN
+	 cOxtN5xMUFAMWFZrjlUIi/LUiZO+Giv263rWlWyk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729939AbfIVTFH (ORCPT
+        id S1729969AbfIVTFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:05:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36916 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:05:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405875AbfIVTAz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 15:00:55 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF707208C2;
-        Sun, 22 Sep 2019 19:00:53 +0000 (UTC)
+        id S1728399AbfIVTFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 15:05:04 -0400
+Subject: Re: [GIT PULL] RTC for 5.4
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178854;
-        bh=cdpXAyC0QgX4B0pAmhmXYPJ+N0Wzzx+vtMzo2FD9JFw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2P98hJA9x1wksRzMwVPbcJdYyLgccd48XX7d7UTKZHc7tBt/Wdav8xUgH4rHTEG2e
-         mB9l65MEQWyb92gjbv9B0cB/KNx8IxSOUjf1AL1luMUKQPaVyz3watSKzCnokA4uhn
-         FgrHvUjJKV9rJKw1EUNOJjU1i/UwZPwd0g1Y3fTo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ahzo <Ahzo@tutanota.com>, Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.9 57/60] drm/amd/powerplay/smu7: enforce minimal VBITimeout (v2)
-Date:   Sun, 22 Sep 2019 14:59:30 -0400
-Message-Id: <20190922185934.4305-57-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190922185934.4305-1-sashal@kernel.org>
-References: <20190922185934.4305-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        s=default; t=1569179104;
+        bh=t2PRAXUH8Td3/f/cV4lcabQFfzGauPOTFfEi3YdhAls=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=Fdths6ad3oQ6Gfhq2YTd8fFLrvGIM6/87S7CudsvP4zpiwzoY9/59YVsS7VMt5liD
+         n4qPduY0sRqmaQIZ7n/hCYQo4DzojcvLfT3YdF+qAZm/cy/MTrKyGHW5m8tAxj5VnL
+         JDA/iSdoVTvisNlwXATViN2PilldddK4SaNZfTxA=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190922112052.GA22547@piout.net>
+References: <20190922112052.GA22547@piout.net>
+X-PR-Tracked-List-Id: <linux-rtc.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190922112052.GA22547@piout.net>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git tags/rtc-5.4
+X-PR-Tracked-Commit-Id: b99a3120f9a30e1429d8d634e18da8dff93340c6
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 9dbd83f665298c9dcf647f20d6d6488e9019114b
+Message-Id: <156917910408.24588.10515279683439114587.pr-tracker-bot@kernel.org>
+Date:   Sun, 22 Sep 2019 19:05:04 +0000
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ahzo <Ahzo@tutanota.com>
+The pull request you sent on Sun, 22 Sep 2019 13:20:52 +0200:
 
-[ Upstream commit f659bb6dae58c113805f92822e4c16ddd3156b79 ]
+> git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git tags/rtc-5.4
 
-This fixes screen corruption/flickering on 75 Hz displays.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/9dbd83f665298c9dcf647f20d6d6488e9019114b
 
-v2: make print statement debug only (Alex)
+Thank you!
 
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=102646
-Reviewed-by: Evan Quan <evan.quan@amd.com>
-Signed-off-by: Ahzo <Ahzo@tutanota.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
-index 3907439417e76..c0db3b57dfe58 100644
---- a/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
-@@ -3739,6 +3739,11 @@ int smu7_program_display_gap(struct pp_hwmgr *hwmgr)
- 
- 	data->frame_time_x2 = frame_time_in_us * 2 / 100;
- 
-+	if (data->frame_time_x2 < 280) {
-+		pr_debug("%s: enforce minimal VBITimeout: %d -> 280\n", __func__, data->frame_time_x2);
-+		data->frame_time_x2 = 280;
-+	}
-+
- 	display_gap2 = pre_vbi_time_in_us * (ref_clock / 100);
- 
- 	cgs_write_ind_register(hwmgr->device, CGS_IND_REG__SMC, ixCG_DISPLAY_GAP_CNTL2, display_gap2);
 -- 
-2.20.1
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
