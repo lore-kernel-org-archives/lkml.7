@@ -7,44 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E14CC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF008C4740C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E6E6206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:05:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAE26206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:05:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179101;
-	bh=InZJTPDFa4soq7713ObllAYGLrvpGFadXo4NIQ9qt88=;
+	s=default; t=1569179104;
+	bh=ZIaieDLicGUG3TmJV9/uGk86iXiemrKdvkHze4wayDE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HNnYW/DqlHBXRcBygnSSfZBGZpFDZ0akNxlD5cOPhjolgo9Ug+knT+TsqDAM65HQm
-	 vIwXHh9SZ693CGCXFNfEqvv6ZQpHgV5FfJJYygKbm1bE6h5kIAEdYgvuur4zz+CiiX
-	 1ipbbCVcx1wIH4p3kZV/ngp45tTBWTuZAexCmndo=
+	b=JQh6FgeOSMLYGS0LdAAjRtq2XoWy8rPibQNJ03htzpsD8k+oplHJL7Ro7+L5uzZ4v
+	 R3Zl0e5mVo5Egha7AlZQztC2cczskkU6ZYXyVpXtSbhZgAkG+OojsBKzDRUm+7R1fA
+	 t+GCI+T3n5OoCydxtIhtyK/+gpVed4443D1z5804=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729784AbfIVTFA (ORCPT
+        id S2406050AbfIVTA6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:05:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37038 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436553AbfIVTA6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 22 Sep 2019 15:00:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36798 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2395241AbfIVTAw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 15:00:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 923842070C;
-        Sun, 22 Sep 2019 19:00:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A27E1214D9;
+        Sun, 22 Sep 2019 19:00:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178858;
-        bh=InZJTPDFa4soq7713ObllAYGLrvpGFadXo4NIQ9qt88=;
+        s=default; t=1569178851;
+        bh=ZIaieDLicGUG3TmJV9/uGk86iXiemrKdvkHze4wayDE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N7kZaIsua7ks+K6dvF9KxZwVN/FtIBPTf0x6cwYx+4K+WOy9gU00MymchoVMAAQKN
-         A0WzRUyY+sdlnQpwHvA266HIV6u2uytwgaGhyczZXBonAxPRnoSQ29hPR/0Ou11kcd
-         RynBVvjyy8PTXCKeXnwaMjl+paMQeUfANN9JEl0Y=
+        b=MVoOlOm6rIOZM6Vzz5VJ4hh93LUO4HMLQNqwSpP7SzsSPa1gCj3Oa1twbj2nk4c/C
+         x6gf6lKZ6VOxRfgNg0Zuxsto2XEdNaqPEfHu1NlXcXku2u1nrC05n23apyfAjElueu
+         R0O+y/k+OHalEU4K70M8gnWhCU0yvZlohX/UmFdo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 59/60] ALSA: hda/realtek - Blacklist PC beep for Lenovo ThinkCentre M73/93
-Date:   Sun, 22 Sep 2019 14:59:32 -0400
-Message-Id: <20190922185934.4305-59-sashal@kernel.org>
+Cc:     Kevin Easton <kevin@guarana.org>,
+        syzbot+98156c174c5a2cad9f8f@syzkaller.appspotmail.com,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        libertas-dev@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 55/60] libertas: Add missing sentinel at end of if_usb.c fw_table
+Date:   Sun, 22 Sep 2019 14:59:28 -0400
+Message-Id: <20190922185934.4305-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185934.4305-1-sashal@kernel.org>
 References: <20190922185934.4305-1-sashal@kernel.org>
@@ -57,35 +62,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Kevin Easton <kevin@guarana.org>
 
-[ Upstream commit 051c78af14fcd74a22b5af45548ad9d588247cc7 ]
+[ Upstream commit 764f3f1ecffc434096e0a2b02f1a6cc964a89df6 ]
 
-Lenovo ThinkCentre M73 and M93 don't seem to have a proper beep
-although the driver tries to probe and set up blindly.
-Blacklist these machines for suppressing the beep creation.
+This sentinel tells the firmware loading process when to stop.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204635
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Reported-and-tested-by: syzbot+98156c174c5a2cad9f8f@syzkaller.appspotmail.com
+Signed-off-by: Kevin Easton <kevin@guarana.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/wireless/marvell/libertas/if_usb.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 31322aeebcff0..d45c85dcf9d9d 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -969,6 +969,9 @@ static const struct snd_pci_quirk beep_white_list[] = {
- 	SND_PCI_QUIRK(0x1043, 0x834a, "EeePC", 1),
- 	SND_PCI_QUIRK(0x1458, 0xa002, "GA-MA790X", 1),
- 	SND_PCI_QUIRK(0x8086, 0xd613, "Intel", 1),
-+	/* blacklist -- no beep available */
-+	SND_PCI_QUIRK(0x17aa, 0x309e, "Lenovo ThinkCentre M73", 0),
-+	SND_PCI_QUIRK(0x17aa, 0x30a3, "Lenovo ThinkCentre M93", 0),
- 	{}
+diff --git a/drivers/net/wireless/marvell/libertas/if_usb.c b/drivers/net/wireless/marvell/libertas/if_usb.c
+index a605d569f663a..9d147b11ee516 100644
+--- a/drivers/net/wireless/marvell/libertas/if_usb.c
++++ b/drivers/net/wireless/marvell/libertas/if_usb.c
+@@ -49,7 +49,8 @@ static const struct lbs_fw_table fw_table[] = {
+ 	{ MODEL_8388, "libertas/usb8388_v5.bin", NULL },
+ 	{ MODEL_8388, "libertas/usb8388.bin", NULL },
+ 	{ MODEL_8388, "usb8388.bin", NULL },
+-	{ MODEL_8682, "libertas/usb8682.bin", NULL }
++	{ MODEL_8682, "libertas/usb8682.bin", NULL },
++	{ 0, NULL, NULL }
  };
  
+ static struct usb_device_id if_usb_table[] = {
 -- 
 2.20.1
 
