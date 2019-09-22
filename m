@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B606C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E6B8C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E984B206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:24:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAD92214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:24:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180287;
-	bh=w6KWa290n65h/SbQOwFuXx8xEQzk1oRJxWcH6LID+o8=;
+	s=default; t=1569180289;
+	bh=J2I7SM7bMsl2OQ6fr2CABIWGTg6EorLiy5htaNXQeuo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VHaTtnzEC39J7yd034BnOoKzU3pFqK3SeJV63BSNJ18v2dMhaAPckwJ0gm2rtv4Gt
-	 5pg7SnFvGRdJVPaVT/NvYVCwmSmN+pJ6IfS8jxOW5J9sjLx5jmZ1Hue0KIEmkWVhJF
-	 co1YIGV0JQuOtP65nyuMQTNKgaTZtldnKrnYmg9s=
+	b=XwME4WhFBcDuezhPg8Ar49JwfqlaFrqz9i/1sHInwPKPW5pDfDDUEJSc1M1dBdAWh
+	 qbVX/X6dx+u2Y9q3rcbYXKgZX+GkBMAB6lMz5tN9rsiI2Iy41PsRVRywLFDkHqkGHK
+	 t44mZ5wn3BoV60PNyplX6BGrj8FiTZgSJKHnlG2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731445AbfIVTYq (ORCPT
+        id S2407980AbfIVSwp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:24:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52050 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:52:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407984AbfIVSwr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:52:47 -0400
+        id S2407920AbfIVSwc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:52:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E2CB21D56;
-        Sun, 22 Sep 2019 18:52:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5B3A2190F;
+        Sun, 22 Sep 2019 18:52:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178366;
-        bh=w6KWa290n65h/SbQOwFuXx8xEQzk1oRJxWcH6LID+o8=;
+        s=default; t=1569178351;
+        bh=J2I7SM7bMsl2OQ6fr2CABIWGTg6EorLiy5htaNXQeuo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RleHhnYm+LmHqwETqYs2I5hfqUsjhJq50k3qIgtc9kgJlGeFAOCMhG1QJB7Usi0Gh
-         8AQxTGftve0uvLn240LD0FtgmAvOcz2pFSWDTWqrmljGD0dY2yiDEc4rqcgmuvEU05
-         VfWxwcsMPVrJDj2Wmwt+U/C5vEAL0FIbSZ2xaGrI=
+        b=i2FKOsrpFEH5b2PgV1WDbOq3YQARZux3T/pxnbQ2yyl2ZpGRd95uE+49JgMaVKe3k
+         yjsh4l9NC43ppmJv4SVaqc3yXvFaTqihj/r003cU4Yf0c337A8wxv9pFfT/DEShLJu
+         oBsTWxj8+K8M80OifZx4U6psFyRmP0s/FI6w2uGQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 118/185] perf script: Fix memory leaks in list_scripts()
-Date:   Sun, 22 Sep 2019 14:48:16 -0400
-Message-Id: <20190922184924.32534-118-sashal@kernel.org>
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 108/185] PM / devfreq: Fix kernel oops on governor module load
+Date:   Sun, 22 Sep 2019 14:48:06 -0400
+Message-Id: <20190922184924.32534-108-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -63,46 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+From: Ezequiel Garcia <ezequiel@collabora.com>
 
-[ Upstream commit 3b4acbb92dbda4829e021e5c6d5410658849fa1c ]
+[ Upstream commit 7544fd7f384591038646d3cd9efb311ab4509e24 ]
 
-In case memory resources for *buf* and *paths* were allocated, jump to
-*out* and release them before return.
+A bit unexpectedly (but still documented), request_module may
+return a positive value, in case of a modprobe error.
+This is currently causing issues in the devfreq framework.
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Addresses-Coverity-ID: 1444328 ("Resource leak")
-Fixes: 6f3da20e151f ("perf report: Support builtin perf script in scripts menu")
-Link: http://lkml.kernel.org/r/20190408162748.GA21008@embeddedor
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+When a request_module exits with a positive value, we currently
+return that via ERR_PTR. However, because the value is positive,
+it's not a ERR_VALUE proper, and is therefore treated as a
+valid struct devfreq_governor pointer, leading to a kernel oops.
+
+Fix this by returning -EINVAL if request_module returns a positive
+value.
+
+Fixes: b53b0128052ff ("PM / devfreq: Fix static checker warning in try_then_request_governor")
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/ui/browsers/scripts.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/devfreq/devfreq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
-index 27cf3ab88d13f..f4edb18f67ec9 100644
---- a/tools/perf/ui/browsers/scripts.c
-+++ b/tools/perf/ui/browsers/scripts.c
-@@ -131,8 +131,10 @@ static int list_scripts(char *script_name, bool *custom,
- 		int key = ui_browser__input_window("perf script command",
- 				"Enter perf script command line (without perf script prefix)",
- 				script_args, "", 0);
--		if (key != K_ENTER)
--			return -1;
-+		if (key != K_ENTER) {
-+			ret = -1;
-+			goto out;
-+		}
- 		sprintf(script_name, "%s script %s", perf, script_args);
- 	} else if (choice < num + max_std) {
- 		strcpy(script_name, paths[choice]);
+diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+index ab22bf8a12d69..a0e19802149fc 100644
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -254,7 +254,7 @@ static struct devfreq_governor *try_then_request_governor(const char *name)
+ 		/* Restore previous state before return */
+ 		mutex_lock(&devfreq_list_lock);
+ 		if (err)
+-			return ERR_PTR(err);
++			return (err < 0) ? ERR_PTR(err) : ERR_PTR(-EINVAL);
+ 
+ 		governor = find_devfreq_governor(name);
+ 	}
 -- 
 2.20.1
 
