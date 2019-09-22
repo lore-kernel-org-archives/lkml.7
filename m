@@ -4,48 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D41C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A774EC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC0DC20882
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:46:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D66F21479
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:46:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569177987;
-	bh=dmdbnGlcQ67LSvX15BeOkemg/oVzkc782wV47LPJXig=;
+	s=default; t=1569177991;
+	bh=iI2WbB/rCnOHq0Uw2puFP3RXiZkcf6+ZTzmBSTYmT9c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A3Wbm6zx7WQtMa6JjljCyRXGx88Dr9KL3lBjh6C6sv8g7EPZ1oBUICHE3xRT13HuB
-	 /9GVdyFyXDzSXiaxc9GGwkZAx7IskfqxHWOG3nUrqeBHU3E9RgOb7psb1DTISGJTd3
-	 4qYDuhjiRRsI5hp0sP+c7ETYLqrMdAq+6hIoJ8FU=
+	b=ZS9oP5ON5cToS8AoDXCxP9hXY0Zf/3KIEBQb7VTsE7eUGciaSDRBSMWNWfyDkplxl
+	 so5/sFs9tyn1vNmYsZ+c1d/GatQH8Mh3+C67q1L+bReTCgUSYBBhPBfm9bkA5nf9Z9
+	 ueoBPBe0dSYbkKHROH+QTBwrG4YJ5w5Dtv32kxTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389971AbfIVSq0 (ORCPT
+        id S2390012AbfIVSqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:46:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42490 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:46:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389892AbfIVSqX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:46:23 -0400
+        id S2389973AbfIVSq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:46:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D164A20882;
-        Sun, 22 Sep 2019 18:46:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2404420882;
+        Sun, 22 Sep 2019 18:46:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569177982;
-        bh=dmdbnGlcQ67LSvX15BeOkemg/oVzkc782wV47LPJXig=;
+        s=default; t=1569177988;
+        bh=iI2WbB/rCnOHq0Uw2puFP3RXiZkcf6+ZTzmBSTYmT9c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ciwArBraNaElTAgzUjmvV/lZB3bic6MW7iDqd8ROXlMnsZjIiRMCJG7LuHsIEWg6f
-         G8yMMCZbQEhmVXB7NGis9m7KQRbSSrFXAgHPU0iQNGBwo13FGSz/fkHUT7w2mVEtYe
-         IPP0gNiIXiT6e3zoMouel9Nw5v2whdqrnagFAOdQ=
+        b=NCiHBYmdEaM9quja4FI4eNrMSBUulkKHZV+LHioechVUauHOBS5KIQFKna9QqKB8+
+         o1vGQ5zL7J1KkywONfLXYkKA+EIF7IvYoJsLa/n2OjT1AYYa9+jy5+XmKyhi0RRewU
+         ur+LHD9ufLGrb0mirEmpSon9Mf0lyn76OIbiPN/0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vkoul@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 077/203] dmaengine: iop-adma: use correct printk format strings
-Date:   Sun, 22 Sep 2019 14:41:43 -0400
-Message-Id: <20190922184350.30563-77-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 081/203] ALSA: hda: Add codec on bus address table lately
+Date:   Sun, 22 Sep 2019 14:41:47 -0400
+Message-Id: <20190922184350.30563-81-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -58,106 +57,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 00c9755524fbaa28117be774d7c92fddb5ca02f3 ]
+[ Upstream commit ee5f85d9290fe25d460bd320b7fe073075d72d33 ]
 
-When compile-testing on other architectures, we get lots of warnings
-about incorrect format strings, like:
+The call of snd_hdac_bus_add_device() is needed only for registering
+the codec onto the bus caddr_tbl[] that is referred essentially only
+in the unsol event handler.  That is, the reason of this call and the
+release by the counter-part function snd_hdac_bus_remove_device() is
+just to assure that the unsol event gets notified to the codec.
 
-   drivers/dma/iop-adma.c: In function 'iop_adma_alloc_slots':
-   drivers/dma/iop-adma.c:307:6: warning: format '%x' expects argument of type 'unsigned int', but argument 6 has type 'dma_addr_t {aka long long unsigned int}' [-Wformat=]
+But the current implementation of the unsol notification wouldn't work
+properly when the codec is still in a premature init state.  So this
+patch tries to work around it by delaying the caddr_tbl[] registration
+at the point of snd_hdac_device_register().
 
-   drivers/dma/iop-adma.c: In function 'iop_adma_prep_dma_memcpy':
->> drivers/dma/iop-adma.c:518:40: warning: format '%u' expects argument of type 'unsigned int', but argument 5 has type 'size_t {aka long unsigned int}' [-Wformat=]
+Also, the order of snd_hdac_bus_remove_device() and device_del() calls
+are shuffled to make sure that the unsol event is masked before
+deleting the device.
 
-Use %zu for printing size_t as required, and cast the dma_addr_t
-arguments to 'u64' for printing with %llx. Ideally this should use
-the %pad format string, but that requires an lvalue argument that
-doesn't work here.
-
-Link: https://lore.kernel.org/r/20190809163334.489360-3-arnd@arndb.de
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204565
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/iop-adma.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ sound/hda/hdac_device.c | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/dma/iop-adma.c b/drivers/dma/iop-adma.c
-index c6c0143670d9d..a776857d89c8f 100644
---- a/drivers/dma/iop-adma.c
-+++ b/drivers/dma/iop-adma.c
-@@ -116,9 +116,9 @@ static void __iop_adma_slot_cleanup(struct iop_adma_chan *iop_chan)
- 	list_for_each_entry_safe(iter, _iter, &iop_chan->chain,
- 					chain_node) {
- 		pr_debug("\tcookie: %d slot: %d busy: %d "
--			"this_desc: %#x next_desc: %#x ack: %d\n",
-+			"this_desc: %#x next_desc: %#llx ack: %d\n",
- 			iter->async_tx.cookie, iter->idx, busy,
--			iter->async_tx.phys, iop_desc_get_next_desc(iter),
-+			iter->async_tx.phys, (u64)iop_desc_get_next_desc(iter),
- 			async_tx_test_ack(&iter->async_tx));
- 		prefetch(_iter);
- 		prefetch(&_iter->async_tx);
-@@ -306,9 +306,9 @@ iop_adma_alloc_slots(struct iop_adma_chan *iop_chan, int num_slots,
- 				int i;
- 				dev_dbg(iop_chan->device->common.dev,
- 					"allocated slot: %d "
--					"(desc %p phys: %#x) slots_per_op %d\n",
-+					"(desc %p phys: %#llx) slots_per_op %d\n",
- 					iter->idx, iter->hw_desc,
--					iter->async_tx.phys, slots_per_op);
-+					(u64)iter->async_tx.phys, slots_per_op);
+diff --git a/sound/hda/hdac_device.c b/sound/hda/hdac_device.c
+index b26cc93e7e103..033bcef8751a8 100644
+--- a/sound/hda/hdac_device.c
++++ b/sound/hda/hdac_device.c
+@@ -61,10 +61,6 @@ int snd_hdac_device_init(struct hdac_device *codec, struct hdac_bus *bus,
+ 	pm_runtime_get_noresume(&codec->dev);
+ 	atomic_set(&codec->in_pm, 0);
  
- 				/* pre-ack all but the last descriptor */
- 				if (num_slots != slots_per_op)
-@@ -516,7 +516,7 @@ iop_adma_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dma_dest,
- 		return NULL;
- 	BUG_ON(len > IOP_ADMA_MAX_BYTE_COUNT);
+-	err = snd_hdac_bus_add_device(bus, codec);
+-	if (err < 0)
+-		goto error;
+-
+ 	/* fill parameters */
+ 	codec->vendor_id = snd_hdac_read_parm(codec, AC_NODE_ROOT,
+ 					      AC_PAR_VENDOR_ID);
+@@ -143,15 +139,22 @@ int snd_hdac_device_register(struct hdac_device *codec)
+ 	err = device_add(&codec->dev);
+ 	if (err < 0)
+ 		return err;
++	err = snd_hdac_bus_add_device(codec->bus, codec);
++	if (err < 0)
++		goto error;
+ 	mutex_lock(&codec->widget_lock);
+ 	err = hda_widget_sysfs_init(codec);
+ 	mutex_unlock(&codec->widget_lock);
+-	if (err < 0) {
+-		device_del(&codec->dev);
+-		return err;
+-	}
++	if (err < 0)
++		goto error_remove;
  
--	dev_dbg(iop_chan->device->common.dev, "%s len: %u\n",
-+	dev_dbg(iop_chan->device->common.dev, "%s len: %zu\n",
- 		__func__, len);
+ 	return 0;
++
++ error_remove:
++	snd_hdac_bus_remove_device(codec->bus, codec);
++ error:
++	device_del(&codec->dev);
++	return err;
+ }
+ EXPORT_SYMBOL_GPL(snd_hdac_device_register);
  
- 	spin_lock_bh(&iop_chan->lock);
-@@ -549,7 +549,7 @@ iop_adma_prep_dma_xor(struct dma_chan *chan, dma_addr_t dma_dest,
- 	BUG_ON(len > IOP_ADMA_XOR_MAX_BYTE_COUNT);
- 
- 	dev_dbg(iop_chan->device->common.dev,
--		"%s src_cnt: %d len: %u flags: %lx\n",
-+		"%s src_cnt: %d len: %zu flags: %lx\n",
- 		__func__, src_cnt, len, flags);
- 
- 	spin_lock_bh(&iop_chan->lock);
-@@ -582,7 +582,7 @@ iop_adma_prep_dma_xor_val(struct dma_chan *chan, dma_addr_t *dma_src,
- 	if (unlikely(!len))
- 		return NULL;
- 
--	dev_dbg(iop_chan->device->common.dev, "%s src_cnt: %d len: %u\n",
-+	dev_dbg(iop_chan->device->common.dev, "%s src_cnt: %d len: %zu\n",
- 		__func__, src_cnt, len);
- 
- 	spin_lock_bh(&iop_chan->lock);
-@@ -620,7 +620,7 @@ iop_adma_prep_dma_pq(struct dma_chan *chan, dma_addr_t *dst, dma_addr_t *src,
- 	BUG_ON(len > IOP_ADMA_XOR_MAX_BYTE_COUNT);
- 
- 	dev_dbg(iop_chan->device->common.dev,
--		"%s src_cnt: %d len: %u flags: %lx\n",
-+		"%s src_cnt: %d len: %zu flags: %lx\n",
- 		__func__, src_cnt, len, flags);
- 
- 	if (dmaf_p_disabled_continue(flags))
-@@ -683,7 +683,7 @@ iop_adma_prep_dma_pq_val(struct dma_chan *chan, dma_addr_t *pq, dma_addr_t *src,
- 		return NULL;
- 	BUG_ON(len > IOP_ADMA_XOR_MAX_BYTE_COUNT);
- 
--	dev_dbg(iop_chan->device->common.dev, "%s src_cnt: %d len: %u\n",
-+	dev_dbg(iop_chan->device->common.dev, "%s src_cnt: %d len: %zu\n",
- 		__func__, src_cnt, len);
- 
- 	spin_lock_bh(&iop_chan->lock);
+@@ -165,8 +168,8 @@ void snd_hdac_device_unregister(struct hdac_device *codec)
+ 		mutex_lock(&codec->widget_lock);
+ 		hda_widget_sysfs_exit(codec);
+ 		mutex_unlock(&codec->widget_lock);
+-		device_del(&codec->dev);
+ 		snd_hdac_bus_remove_device(codec->bus, codec);
++		device_del(&codec->dev);
+ 	}
+ }
+ EXPORT_SYMBOL_GPL(snd_hdac_device_unregister);
 -- 
 2.20.1
 
