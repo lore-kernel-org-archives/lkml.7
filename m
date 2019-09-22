@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A062C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91284C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AB2C20869
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6000121971
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:45:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569177935;
-	bh=F4rztFgCqKKRmbrrJxmKuN9khu59p00GQ5J9kN3Bezw=;
+	s=default; t=1569177940;
+	bh=0UFRwrVqMUuMsxtnEtdiDjvOApLR5fVd8zynEbyvw2A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XKAmU9Z1Wu6Lg/+C3c3eAZ/Lv4BM79NNwJG2zubmUq9dqH1nOJ9Kt9GyY6mt/CSA0
-	 X65dIIzB+lUmP4gT4+JcUQetAqz9CllCiKLyZd89cuYQFNnI5W453BtP7ymFRdC873
-	 VigGdkv44cmmFTy56YmkA3dBzRLD3Sn/NrG3KZFY=
+	b=GTGuH0e2EQ3yaniVLW5uWmGBEa4nZFkzz3Oejap90ATq1aQowq7nrbtDHv0Naz9uY
+	 uydjmtOhUsfUY4xJi0CSpXG92b1wSrBS2aYgGAykQEgeFsdyWV7u627DuAtdgyCL/C
+	 yptxbCN6rx9hF3BXxXlM4pFwjFp5dIWhtT3Jfgh4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389349AbfIVSpe (ORCPT
+        id S2389396AbfIVSpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:45:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41092 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:45:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389252AbfIVSp1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:45:27 -0400
+        id S2389303AbfIVSpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:45:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29AE52186A;
-        Sun, 22 Sep 2019 18:45:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADD8021907;
+        Sun, 22 Sep 2019 18:45:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569177927;
-        bh=F4rztFgCqKKRmbrrJxmKuN9khu59p00GQ5J9kN3Bezw=;
+        s=default; t=1569177930;
+        bh=0UFRwrVqMUuMsxtnEtdiDjvOApLR5fVd8zynEbyvw2A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZEdASvfcrTFbYQ8S+D3lwtfUamdhL02Nd9C/oh0VTlAFk5sCDGikkEHxPAQiAFUxM
-         ssTvsc2H9JourIERMXaXLKNWlLPnk2+hfKRa+W5tZFeCqXz0CfKQCCg20jOGTXmGtw
-         v8rynk/h0d/zLiwQfecuxKglAOEqBoeCMigDpvoQ=
+        b=Zu8VAFTACDWe6HNo8cWSkqJ0GTpwunY1+WLepmq9Wn7WGwcRlEjQWATxwQT5Sz8VE
+         fRNEPJkwZ7EHvyQjWeBeqg3sOW+lWC0vzX+BCZUYpmS+JIwnbUMLyjdr9wXqVCdFDo
+         ZvGG9eaJ7vQcL0VnnY5VTwPzdIpQxuWq4XJk5O5g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oliver Neukum <oneukum@suse.com>,
-        syzbot+01a77b82edaa374068e1@syzkaller.appspotmail.com,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 038/203] media: iguanair: add sanity checks
-Date:   Sun, 22 Sep 2019 14:41:04 -0400
-Message-Id: <20190922184350.30563-38-sashal@kernel.org>
+Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 041/203] gpio: madera: Add support for Cirrus Logic CS47L92
+Date:   Sun, 22 Sep 2019 14:41:07 -0400
+Message-Id: <20190922184350.30563-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -61,59 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-[ Upstream commit ab1cbdf159beba7395a13ab70bc71180929ca064 ]
+[ Upstream commit 74d2d0e68701bcd53d2cf771dd3b3cb9f84bed5c ]
 
-The driver needs to check the endpoint types, too, as opposed
-to the number of endpoints. This also requires moving the check earlier.
+As the gpio is common to all madera codecs all that is needed
+is to setup the correct number of GPIO pins for the CS47L92.
 
-Reported-by: syzbot+01a77b82edaa374068e1@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/20190722090748.20807-4-ckeepax@opensource.cirrus.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/rc/iguanair.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ drivers/gpio/gpio-madera.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/media/rc/iguanair.c b/drivers/media/rc/iguanair.c
-index ea05e125016a7..872d6441e512c 100644
---- a/drivers/media/rc/iguanair.c
-+++ b/drivers/media/rc/iguanair.c
-@@ -413,6 +413,10 @@ static int iguanair_probe(struct usb_interface *intf,
- 	int ret, pipein, pipeout;
- 	struct usb_host_interface *idesc;
- 
-+	idesc = intf->altsetting;
-+	if (idesc->desc.bNumEndpoints < 2)
-+		return -ENODEV;
-+
- 	ir = kzalloc(sizeof(*ir), GFP_KERNEL);
- 	rc = rc_allocate_device(RC_DRIVER_IR_RAW);
- 	if (!ir || !rc) {
-@@ -427,18 +431,13 @@ static int iguanair_probe(struct usb_interface *intf,
- 	ir->urb_in = usb_alloc_urb(0, GFP_KERNEL);
- 	ir->urb_out = usb_alloc_urb(0, GFP_KERNEL);
- 
--	if (!ir->buf_in || !ir->packet || !ir->urb_in || !ir->urb_out) {
-+	if (!ir->buf_in || !ir->packet || !ir->urb_in || !ir->urb_out ||
-+	    !usb_endpoint_is_int_in(&idesc->endpoint[0].desc) ||
-+	    !usb_endpoint_is_int_out(&idesc->endpoint[1].desc)) {
- 		ret = -ENOMEM;
- 		goto out;
- 	}
- 
--	idesc = intf->altsetting;
--
--	if (idesc->desc.bNumEndpoints < 2) {
--		ret = -ENODEV;
--		goto out;
--	}
--
- 	ir->rc = rc;
- 	ir->dev = &intf->dev;
- 	ir->udev = udev;
+diff --git a/drivers/gpio/gpio-madera.c b/drivers/gpio/gpio-madera.c
+index 19db5a500eb0d..be963113f6722 100644
+--- a/drivers/gpio/gpio-madera.c
++++ b/drivers/gpio/gpio-madera.c
+@@ -150,6 +150,11 @@ static int madera_gpio_probe(struct platform_device *pdev)
+ 	case CS47L91:
+ 		madera_gpio->gpio_chip.ngpio = CS47L90_NUM_GPIOS;
+ 		break;
++	case CS42L92:
++	case CS47L92:
++	case CS47L93:
++		madera_gpio->gpio_chip.ngpio = CS47L92_NUM_GPIOS;
++		break;
+ 	default:
+ 		dev_err(&pdev->dev, "Unknown chip variant %d\n", madera->type);
+ 		return -EINVAL;
 -- 
 2.20.1
 
