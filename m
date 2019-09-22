@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 972BFC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:39:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECAF7C4740C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:39:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 633F720644
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:39:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3E6C20644
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:39:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569181147;
-	bh=u/cx5Fx7ocHi7GpON+az0NLHqlFEw3vSZrk3Gb0TNFw=;
+	s=default; t=1569181150;
+	bh=CKOJhoQWKwRHugdFdAlJKtgD9dw0sIWNrDvnzJWLrKE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d17pgB5PgHTTZkSNJmblpz4SAOkVOpton7qfa4WAPBiN5rKmgI64sUMYj/S1XGjfr
-	 H+3uQnE2Dzfe/lOvbWhgStdREJjDRFsAyrOaqjKbHvNrWc37jpb6ypbC02/cuUrhtS
-	 OrACSVUixJEwCwdXYAX10Unm9pMYjX+g9r1CdQac=
+	b=om0CMucljyuRNyn3vQTdhOSv3/7vVgZIILWQ/Pc+u/AebTNAtgOEPE7QRvpj/re4t
+	 dfsH4AJu3gaw8shONCZB7qRgV6i75Crzd4OXvVekXl1kTVl5f3utl5ydskchDUB/Pe
+	 fETFrLgzebb+5K48S4Lon8X9mTlz5zqPbnuvjLN4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387800AbfIVSpM (ORCPT
+        id S2389017AbfIVSpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:45:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40660 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:45:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388972AbfIVSpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:45:06 -0400
+        id S2388952AbfIVSpE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:45:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E67E2186A;
-        Sun, 22 Sep 2019 18:45:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3434A208C0;
+        Sun, 22 Sep 2019 18:45:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569177905;
-        bh=u/cx5Fx7ocHi7GpON+az0NLHqlFEw3vSZrk3Gb0TNFw=;
+        s=default; t=1569177904;
+        bh=CKOJhoQWKwRHugdFdAlJKtgD9dw0sIWNrDvnzJWLrKE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tqjr/rYYPEt0cQjYnDh8mwN91wo4bjRv4mPMTQMKfe1bIYieiDIH5K1eViyqJJuET
-         dybP2jRDxiMb+EvAvk5x5bjXL8weqlKofZfKy7nbIqCeL7Om2XZpyRTywMMANi8tYE
-         WqfkjwU1bxlEGHdZKEmdV5dzTqxWV8n+B5KtUgOs=
+        b=M2f4PfAF4CoPa3w4OKxTJwxMorEuU+qimBzZbV0G1NpdDeQGAqTijDSNO6RCeK826
+         MyyaiMsDobEyeKK8+6t5t/5SnVgXPSYaGmbQRhhdfEBpd1do1iXNBjeJ8BESjS58e9
+         YQm4VrEkLH6EpfmiDIztItxwAQSyyZ8NWQJ+wmlA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>,
-        syzbot+aac8d0d7205f112045d2@syzkaller.appspotmail.com,
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 022/203] media: hdpvr: Add device num check and handling
-Date:   Sun, 22 Sep 2019 14:40:48 -0400
-Message-Id: <20190922184350.30563-22-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 021/203] media: vivid: work around high stack usage with clang
+Date:   Sun, 22 Sep 2019 14:40:47 -0400
+Message-Id: <20190922184350.30563-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -61,57 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit d4a6a9537bc32811486282206ecfb7c53754b74d ]
+[ Upstream commit 1a03f91c2c2419c3709c4554952c66695575e91c ]
 
-Add hdpvr device num check and error handling
+Building a KASAN-enabled kernel with clang ends up in a case where too
+much is inlined into vivid_thread_vid_cap() and the stack usage grows
+a lot, possibly when the register allocation fails to produce efficient
+code and spills a lot of temporaries to the stack. This uses more
+than twice the amount of stack than the sum of the individual functions
+when they are not inlined:
 
-We need to increment the device count atomically before we checkout a
-device to make sure that we do not reach the max count, otherwise we get
-out-of-bounds errors as reported by syzbot.
+drivers/media/platform/vivid/vivid-kthread-cap.c:766:12: error: stack frame size of 2208 bytes in function 'vivid_thread_vid_cap' [-Werror,-Wframe-larger-than=]
 
-Reported-and-tested-by: syzbot+aac8d0d7205f112045d2@syzkaller.appspotmail.com
+Marking two of the key functions in here as 'noinline_for_stack' avoids
+the pathological case in clang without any apparent downside for gcc.
 
-Signed-off-by: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Nick Desaulniers <ndesaulniers@google.com>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/hdpvr/hdpvr-core.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/media/platform/vivid/vivid-kthread-cap.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/usb/hdpvr/hdpvr-core.c b/drivers/media/usb/hdpvr/hdpvr-core.c
-index 9b9d894d29bcb..a0905c81d2cb2 100644
---- a/drivers/media/usb/hdpvr/hdpvr-core.c
-+++ b/drivers/media/usb/hdpvr/hdpvr-core.c
-@@ -271,6 +271,7 @@ static int hdpvr_probe(struct usb_interface *interface,
- #endif
- 	size_t buffer_size;
- 	int i;
-+	int dev_num;
- 	int retval = -ENOMEM;
+diff --git a/drivers/media/platform/vivid/vivid-kthread-cap.c b/drivers/media/platform/vivid/vivid-kthread-cap.c
+index ed466d737a90d..003319d7816d7 100644
+--- a/drivers/media/platform/vivid/vivid-kthread-cap.c
++++ b/drivers/media/platform/vivid/vivid-kthread-cap.c
+@@ -232,8 +232,8 @@ static void *plane_vaddr(struct tpg_data *tpg, struct vivid_buffer *buf,
+ 	return vbuf;
+ }
  
- 	/* allocate memory for our device state and initialize it */
-@@ -368,8 +369,17 @@ static int hdpvr_probe(struct usb_interface *interface,
- 	}
- #endif
+-static int vivid_copy_buffer(struct vivid_dev *dev, unsigned p, u8 *vcapbuf,
+-		struct vivid_buffer *vid_cap_buf)
++static noinline_for_stack int vivid_copy_buffer(struct vivid_dev *dev, unsigned p,
++		u8 *vcapbuf, struct vivid_buffer *vid_cap_buf)
+ {
+ 	bool blank = dev->must_blank[vid_cap_buf->vb.vb2_buf.index];
+ 	struct tpg_data *tpg = &dev->tpg;
+@@ -672,7 +672,8 @@ static void vivid_cap_update_frame_period(struct vivid_dev *dev)
+ 	dev->cap_frame_period = f_period;
+ }
  
-+	dev_num = atomic_inc_return(&dev_nr);
-+	if (dev_num >= HDPVR_MAX) {
-+		v4l2_err(&dev->v4l2_dev,
-+			 "max device number reached, device register failed\n");
-+		atomic_dec(&dev_nr);
-+		retval = -ENODEV;
-+		goto reg_fail;
-+	}
-+
- 	retval = hdpvr_register_videodev(dev, &interface->dev,
--				    video_nr[atomic_inc_return(&dev_nr)]);
-+				    video_nr[dev_num]);
- 	if (retval < 0) {
- 		v4l2_err(&dev->v4l2_dev, "registering videodev failed\n");
- 		goto reg_fail;
+-static void vivid_thread_vid_cap_tick(struct vivid_dev *dev, int dropped_bufs)
++static noinline_for_stack void vivid_thread_vid_cap_tick(struct vivid_dev *dev,
++							 int dropped_bufs)
+ {
+ 	struct vivid_buffer *vid_cap_buf = NULL;
+ 	struct vivid_buffer *vbi_cap_buf = NULL;
 -- 
 2.20.1
 
