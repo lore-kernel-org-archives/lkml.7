@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81639C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BA7C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5759221479
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:57:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E62121479
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:57:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178667;
-	bh=VI40FhFAfw1ko5hRgrNOZflOsfqYo09dM5rBjVrmxnw=;
+	s=default; t=1569178672;
+	bh=lQFsJo/ifnDFbQ6bmQ5/++QOotlYuVYGBuf+IwxkEQs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nNSWf+YIfQN2TCCByubT0irIfFHdG1Nj3hL+6Ze9R5NjLiVpOIS89NfxrkWYIMyHM
-	 i+Ei4W+iMfUDtRnQ5pYTDiHtqrr+QyCdB3E9edb129b2X8tBq7spSoLjYHtQQKwyz2
-	 526FdR4/Lvy1y2ZidD0tCV7Nb+5DeL3VJg+DDtD0=
+	b=QTtcwr6mKtetO4Xx1CvgUUrh3emxltYBxSg1Og1ZpUgB+hALu1OFRiZtBXcUgSZgg
+	 vhkkFSNayjKRledSNu1ntaoj4tPqPRUTtPDrogj3S/UJfEV/j1UHgYUxDRCc2EYVea
+	 2rWCoRo9XmTBE+bjxdspMh73UgvYFhQeYzp2g+aA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438649AbfIVS5q (ORCPT
+        id S2438670AbfIVS5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:57:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60128 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:57:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438499AbfIVS5e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:57:34 -0400
+        id S2404906AbfIVS5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:57:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E321206C2;
-        Sun, 22 Sep 2019 18:57:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AFCB21D7C;
+        Sun, 22 Sep 2019 18:57:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178653;
-        bh=VI40FhFAfw1ko5hRgrNOZflOsfqYo09dM5rBjVrmxnw=;
+        s=default; t=1569178657;
+        bh=lQFsJo/ifnDFbQ6bmQ5/++QOotlYuVYGBuf+IwxkEQs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FW79a+ZYKYJmRq6zZfT70DWr4P5bx+3LvkwTRiGqJM6ohnO9cbLOLh/Jh2AIZrPPB
-         iBmTBwTsXbWhY7dbn8KmcGoEJZfzv0GnloPJrO4XJcZ0PceBfp/COZVH3o8pPgAymf
-         Vz6/pgaqVli4age09G4WSME2qAZCeh+vEHh0Bj1Y=
+        b=zTwMEjq4BlsdMgfVg1TrOlQcEd1m8cJxlzENm+o5s38B5XDSILjndTpSlYj/+Op6T
+         xrMAVN3O8e1jvnszZhm1ae57r7QQsuGl+5HU+uVCpEnakl4jVSSOVRJ+9uEm9A5WAV
+         wGJcCS3gox0VbyP0/ZeFXFQtHrCT6yXeysvEKaGk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wen Yang <wen.yang99@zte.com.cn>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 08/89] media: exynos4-is: fix leaked of_node references
-Date:   Sun, 22 Sep 2019 14:55:56 -0400
-Message-Id: <20190922185717.3412-8-sashal@kernel.org>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 11/89] sched/fair: Fix imbalance due to CPU affinity
+Date:   Sun, 22 Sep 2019 14:55:59 -0400
+Message-Id: <20190922185717.3412-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185717.3412-1-sashal@kernel.org>
 References: <20190922185717.3412-1-sashal@kernel.org>
@@ -60,63 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
+From: Vincent Guittot <vincent.guittot@linaro.org>
 
-[ Upstream commit da79bf41a4d170ca93cc8f3881a70d734a071c37 ]
+[ Upstream commit f6cad8df6b30a5d2bbbd2e698f74b4cafb9fb82b ]
 
-The call to of_get_child_by_name returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+The load_balance() has a dedicated mecanism to detect when an imbalance
+is due to CPU affinity and must be handled at parent level. In this case,
+the imbalance field of the parent's sched_group is set.
 
-Detected by coccinelle with the following warnings:
-drivers/media/platform/exynos4-is/fimc-is.c:813:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 807, but without a corresponding object release within this function.
-drivers/media/platform/exynos4-is/fimc-is.c:870:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 807, but without a corresponding object release within this function.
-drivers/media/platform/exynos4-is/fimc-is.c:885:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 807, but without a corresponding object release within this function.
-drivers/media/platform/exynos4-is/media-dev.c:545:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 541, but without a corresponding object release within this function.
-drivers/media/platform/exynos4-is/media-dev.c:528:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 499, but without a corresponding object release within this function.
-drivers/media/platform/exynos4-is/media-dev.c:534:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 499, but without a corresponding object release within this function.
+The description of sg_imbalanced() gives a typical example of two groups
+of 4 CPUs each and 4 tasks each with a cpumask covering 1 CPU of the first
+group and 3 CPUs of the second group. Something like:
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+	{ 0 1 2 3 } { 4 5 6 7 }
+	        *     * * *
+
+But the load_balance fails to fix this UC on my octo cores system
+made of 2 clusters of quad cores.
+
+Whereas the load_balance is able to detect that the imbalanced is due to
+CPU affinity, it fails to fix it because the imbalance field is cleared
+before letting parent level a chance to run. In fact, when the imbalance is
+detected, the load_balance reruns without the CPU with pinned tasks. But
+there is no other running tasks in the situation described above and
+everything looks balanced this time so the imbalance field is immediately
+cleared.
+
+The imbalance field should not be cleared if there is no other task to move
+when the imbalance is detected.
+
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/1561996022-28829-1-git-send-email-vincent.guittot@linaro.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/exynos4-is/fimc-is.c   | 1 +
- drivers/media/platform/exynos4-is/media-dev.c | 2 ++
- 2 files changed, 3 insertions(+)
+ kernel/sched/fair.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/platform/exynos4-is/fimc-is.c b/drivers/media/platform/exynos4-is/fimc-is.c
-index 5ddb2321e9e48..0fe9be93fabe2 100644
---- a/drivers/media/platform/exynos4-is/fimc-is.c
-+++ b/drivers/media/platform/exynos4-is/fimc-is.c
-@@ -819,6 +819,7 @@ static int fimc_is_probe(struct platform_device *pdev)
- 		return -ENODEV;
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index c298d47888ed8..808db3566ddbc 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -8359,9 +8359,10 @@ static int load_balance(int this_cpu, struct rq *this_rq,
+ out_balanced:
+ 	/*
+ 	 * We reach balance although we may have faced some affinity
+-	 * constraints. Clear the imbalance flag if it was set.
++	 * constraints. Clear the imbalance flag only if other tasks got
++	 * a chance to move and fix the imbalance.
+ 	 */
+-	if (sd_parent) {
++	if (sd_parent && !(env.flags & LBF_ALL_PINNED)) {
+ 		int *group_imbalance = &sd_parent->groups->sgc->imbalance;
  
- 	is->pmu_regs = of_iomap(node, 0);
-+	of_node_put(node);
- 	if (!is->pmu_regs)
- 		return -ENOMEM;
- 
-diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
-index d4656d5175d7e..b2eb830c0360a 100644
---- a/drivers/media/platform/exynos4-is/media-dev.c
-+++ b/drivers/media/platform/exynos4-is/media-dev.c
-@@ -496,6 +496,7 @@ static int fimc_md_register_sensor_entities(struct fimc_md *fmd)
- 			continue;
- 
- 		ret = fimc_md_parse_port_node(fmd, port, index);
-+		of_node_put(port);
- 		if (ret < 0) {
- 			of_node_put(node);
- 			goto rpm_put;
-@@ -529,6 +530,7 @@ static int __of_get_csis_id(struct device_node *np)
- 	if (!np)
- 		return -EINVAL;
- 	of_property_read_u32(np, "reg", &reg);
-+	of_node_put(np);
- 	return reg - FIMC_INPUT_MIPI_CSI2_0;
- }
- 
+ 		if (*group_imbalance)
 -- 
 2.20.1
 
