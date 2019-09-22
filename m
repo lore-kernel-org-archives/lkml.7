@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD2FC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DAEFC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4400A206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:22:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D65B220882
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:22:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180160;
-	bh=3iuTUPH38z8GhXhGf0ZoFLJizgr0/Dx+jX0EiSbp/nM=;
+	s=default; t=1569180163;
+	bh=PO6/JpMM8870A6I/uwuOSfPrmhKU+aElITomc83RwyQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HL3u+qZSVLTNKi3xetaiRWFkLknrmHy4uNuccS4PpYS2COLAc16ErTQZpU9WYasxn
-	 jHn5SXNslWQDo7ma7tnn41Bw39/T1tQIrIdssn1BIJGnsnuVHi4oBpctyM8oGyyKy3
-	 15EJ0nJ2ZSsvAP0k36RPlCopcJKZnP3hEOyRcnlk=
+	b=dm38XIFJSPhWK+yG+8g8/cbDz5F4tLfk/FBgzmkrlYps76vFoCrAePXx9LNGALav5
+	 C4SWC3GqSotmwerWYbi7itzLgznjp4XlfsfobhaS80C8XvugTFL60oW7gWJfNBEgVo
+	 K+tME9BW0hnK0Si/eIlUgnGgh+w790QJkqbFxolY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394382AbfIVSxn (ORCPT
+        id S1731187AbfIVTWl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:53:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52928 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:22:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393763AbfIVSxQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:53:16 -0400
+        id S2392719AbfIVSxn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:53:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9363521D7E;
-        Sun, 22 Sep 2019 18:53:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36C7E21E6F;
+        Sun, 22 Sep 2019 18:53:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178395;
-        bh=3iuTUPH38z8GhXhGf0ZoFLJizgr0/Dx+jX0EiSbp/nM=;
+        s=default; t=1569178422;
+        bh=PO6/JpMM8870A6I/uwuOSfPrmhKU+aElITomc83RwyQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uq2BuATVZbcFpNX9ATqqPKH4YFPYpGufkMfdModSp3hGLcJD1/syvDzCduSPUvyB+
-         cyg1piug6vIyvrVOK/bJbcy6upR9Eij5AbuTWkaeAb9OiCq7z/y/MZk/nB2i1zFooa
-         /TykqKbsOCHQGUyCOA7gei7x/QaJEfBGlU3KDncI=
+        b=E44EBEOHy2JfECF+sGqZkVypqFKbMGXljdpfmzN/zMM+WVsbpbDadbBjmZLQviHW3
+         61BK5K/flzmx425t3x2MVNQeyWYlaCOFosknFYe5JPq8hK3kjvK8tJ/Tfr9mBYV5cm
+         DmfNKnBgAX5gzHSyoIRg8fOQUXJaXvmUpzWWZJZ4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 140/185] ARM: dts: exynos: Mark LDO10 as always-on on Peach Pit/Pi Chromebooks
-Date:   Sun, 22 Sep 2019 14:48:38 -0400
-Message-Id: <20190922184924.32534-140-sashal@kernel.org>
+Cc:     Jackie Liu <liuyun01@kylinos.cn>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 160/185] io_uring: fix wrong sequence setting logic
+Date:   Sun, 22 Sep 2019 14:48:58 -0400
+Message-Id: <20190922184924.32534-160-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -59,58 +58,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Jackie Liu <liuyun01@kylinos.cn>
 
-[ Upstream commit 5b0eeeaa37615df37a9a30929b73e9defe61ca84 ]
+[ Upstream commit 8776f3fa15a5cd213c4dfab7ddaf557983374ea6 ]
 
-Commit aff138bf8e37 ("ARM: dts: exynos: Add TMU nodes regulator supply
-for Peach boards") assigned LDO10 to Exynos Thermal Measurement Unit,
-but it turned out that it supplies also some other critical parts and
-board freezes/crashes when it is turned off.
+Sqo_thread will get sqring in batches, which will cause
+ctx->cached_sq_head to be added in batches. if one of these
+sqes is set with the DRAIN flag, then he will never get a
+chance to process, and finally sqo_thread will not exit.
 
-The mentioned commit made Exynos TMU a consumer of that regulator and in
-typical case Exynos TMU driver keeps it enabled from early boot. However
-there are such configurations (example is multi_v7_defconfig), in which
-some of the regulators are compiled as modules and are not available
-from early boot. In such case it may happen that LDO10 is turned off by
-regulator core, because it has no consumers yet (in this case consumer
-drivers cannot get it, because the supply regulators for it are not yet
-available). This in turn causes the board to crash. This patch restores
-'always-on' property for the LDO10 regulator.
-
-Fixes: aff138bf8e37 ("ARM: dts: exynos: Add TMU nodes regulator supply for Peach boards")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Fixes: de0617e4671 ("io_uring: add support for marking commands as draining")
+Signed-off-by: Jackie Liu <liuyun01@kylinos.cn>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/exynos5420-peach-pit.dts | 1 +
- arch/arm/boot/dts/exynos5800-peach-pi.dts  | 1 +
- 2 files changed, 2 insertions(+)
+ fs/io_uring.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-index f78db6809cca4..9eb48cabcca45 100644
---- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
-+++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-@@ -440,6 +440,7 @@
- 				regulator-name = "vdd_ldo10";
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
- 				regulator-state-mem {
- 					regulator-off-in-suspend;
- 				};
-diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-index e0f470fe54c81..4398f2d1fe881 100644
---- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
-+++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-@@ -440,6 +440,7 @@
- 				regulator-name = "vdd_ldo10";
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
- 				regulator-state-mem {
- 					regulator-off-in-suspend;
- 				};
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 03cd8f5bba850..701936f2bde39 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -288,6 +288,7 @@ struct io_ring_ctx {
+ struct sqe_submit {
+ 	const struct io_uring_sqe	*sqe;
+ 	unsigned short			index;
++	u32				sequence;
+ 	bool				has_user;
+ 	bool				needs_lock;
+ 	bool				needs_fixed_file;
+@@ -1894,7 +1895,7 @@ static int io_req_set_file(struct io_ring_ctx *ctx, const struct sqe_submit *s,
+ 
+ 	if (flags & IOSQE_IO_DRAIN) {
+ 		req->flags |= REQ_F_IO_DRAIN;
+-		req->sequence = ctx->cached_sq_head - 1;
++		req->sequence = s->sequence;
+ 	}
+ 
+ 	if (!io_op_needs_file(s->sqe))
+@@ -2050,6 +2051,7 @@ static bool io_get_sqring(struct io_ring_ctx *ctx, struct sqe_submit *s)
+ 	if (head < ctx->sq_entries) {
+ 		s->index = head;
+ 		s->sqe = &ctx->sq_sqes[head];
++		s->sequence = ctx->cached_sq_head;
+ 		ctx->cached_sq_head++;
+ 		return true;
+ 	}
 -- 
 2.20.1
 
