@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC1FC4740C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12EDDC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E2A220869
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:44:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9C0E206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:44:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569177851;
-	bh=HpKmxHp4GDXcQxEKeyF+XGpwmGby9vwAK27uwuFCULk=;
+	s=default; t=1569177858;
+	bh=hYUfsW0L/9lk8I7RgCsHnsruaZp2MEdg3A4yuinmzlg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YPIzAD8YezpvC02FdxjhHoZEkbreh3+cjT/cruihs4aHdNyDxNBHnMPMbLBi+5+HS
-	 DVJwXEd7mlAu17nK/Uch6X6WzksJJFeVrcjHqsajgUOrxM/u8ZLU2ypMgqoq5sMbLt
-	 gpErkVaCZw2L6ZwbaI10wMOFz70CIjTTvBbsE0YI=
+	b=Qsu1uZsUMHjGQ4ktXq6JSPWdLRISJDODMLTfxPjObC9LrKgtzqh6efjN6vrJDp8Pl
+	 HSIKD+K3DDTdCiyW4mF/xRO5q84CmmwA2UPP6dgP6hTMV4ZxBXZx1xg5oWwfluxaa6
+	 WDXULrb+S8B0HHBE2SOqh+OU2zsPa4CFFiTOZwi4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388713AbfIVSoJ (ORCPT
+        id S2388748AbfIVSoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:44:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39654 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:44:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388677AbfIVSoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:44:03 -0400
+        id S2388666AbfIVSoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:44:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02DA120869;
-        Sun, 22 Sep 2019 18:44:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5CD0214D9;
+        Sun, 22 Sep 2019 18:44:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569177842;
-        bh=HpKmxHp4GDXcQxEKeyF+XGpwmGby9vwAK27uwuFCULk=;
+        s=default; t=1569177841;
+        bh=hYUfsW0L/9lk8I7RgCsHnsruaZp2MEdg3A4yuinmzlg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Oix6q/4AxDm+PJjUKAxHq+KXyvpZMvY4cYOuPiqkhwRcxgsf5aR+4t3+zA++POmDa
-         QgRnl+QdGvop59jQB0IfQGngQdBnbf32BNrz15qZOiIeNZpDDUw6UJYruijxDp4ZVf
-         +u7hLVb3dWmJ3Ep578RTQQc83fDJMqy7qypPwCOs=
+        b=P8NiFMFiIh4YzFnfzXc7Tut0w6STU39LNeOnqL+XnzuAPgRJeAh8OJMGS2nfgFDib
+         eOWbSt9GEqWjU+WEuWEjPvI6eEIn+5lR1c8BKlUIuOBZSkFBylK7JNinzFixgscBsz
+         KMLLbaJqblcJsr+CRqyxoxXnWghFyPBhNwjzLiNg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
@@ -47,9 +47,9 @@ Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
         Fabio Estevam <festevam@gmail.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 010/203] ASoC: sgtl5000: Fix charge pump source assignment
-Date:   Sun, 22 Sep 2019 14:40:36 -0400
-Message-Id: <20190922184350.30563-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 009/203] ASoC: sgtl5000: Fix of unmute outputs on probe
+Date:   Sun, 22 Sep 2019 14:40:35 -0400
+Message-Id: <20190922184350.30563-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -64,51 +64,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 
-[ Upstream commit b6319b061ba279577fd7030a9848fbd6a17151e3 ]
+[ Upstream commit 631bc8f0134ae9620d86a96b8c5f9445d91a2dca ]
 
-If VDDA != VDDIO and any of them is greater than 3.1V, charge pump
-source can be assigned automatically [1].
-
-[1] https://www.nxp.com/docs/en/data-sheet/SGTL5000.pdf
+To enable "zero cross detect" for ADC/HP, change
+HP_ZCD_EN/ADC_ZCD_EN bits only instead of writing the whole
+CHIP_ANA_CTRL register.
 
 Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 Reviewed-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 Reviewed-by: Igor Opaniuk <igor.opaniuk@toradex.com>
 Reviewed-by: Fabio Estevam <festevam@gmail.com>
-Link: https://lore.kernel.org/r/20190719100524.23300-7-oleksandr.suvorov@toradex.com
+Link: https://lore.kernel.org/r/20190719100524.23300-6-oleksandr.suvorov@toradex.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/sgtl5000.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ sound/soc/codecs/sgtl5000.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
-index aad9eca41587e..7cbaedffa1ef7 100644
+index a6a4748c97f9d..aad9eca41587e 100644
 --- a/sound/soc/codecs/sgtl5000.c
 +++ b/sound/soc/codecs/sgtl5000.c
-@@ -1173,12 +1173,17 @@ static int sgtl5000_set_power_regs(struct snd_soc_component *component)
- 					SGTL5000_INT_OSC_EN);
- 		/* Enable VDDC charge pump */
- 		ana_pwr |= SGTL5000_VDDC_CHRGPMP_POWERUP;
--	} else if (vddio >= 3100 && vdda >= 3100) {
-+	} else {
- 		ana_pwr &= ~SGTL5000_VDDC_CHRGPMP_POWERUP;
--		/* VDDC use VDDIO rail */
--		lreg_ctrl |= SGTL5000_VDDC_ASSN_OVRD;
--		lreg_ctrl |= SGTL5000_VDDC_MAN_ASSN_VDDIO <<
--			    SGTL5000_VDDC_MAN_ASSN_SHIFT;
-+		/*
-+		 * if vddio == vdda the source of charge pump should be
-+		 * assigned manually to VDDIO
-+		 */
-+		if (vddio == vdda) {
-+			lreg_ctrl |= SGTL5000_VDDC_ASSN_OVRD;
-+			lreg_ctrl |= SGTL5000_VDDC_MAN_ASSN_VDDIO <<
-+				    SGTL5000_VDDC_MAN_ASSN_SHIFT;
-+		}
- 	}
+@@ -1288,6 +1288,7 @@ static int sgtl5000_probe(struct snd_soc_component *component)
+ 	int ret;
+ 	u16 reg;
+ 	struct sgtl5000_priv *sgtl5000 = snd_soc_component_get_drvdata(component);
++	unsigned int zcd_mask = SGTL5000_HP_ZCD_EN | SGTL5000_ADC_ZCD_EN;
  
- 	snd_soc_component_write(component, SGTL5000_CHIP_LINREG_CTRL, lreg_ctrl);
+ 	/* power up sgtl5000 */
+ 	ret = sgtl5000_set_power_regs(component);
+@@ -1315,9 +1316,8 @@ static int sgtl5000_probe(struct snd_soc_component *component)
+ 	       0x1f);
+ 	snd_soc_component_write(component, SGTL5000_CHIP_PAD_STRENGTH, reg);
+ 
+-	snd_soc_component_write(component, SGTL5000_CHIP_ANA_CTRL,
+-			SGTL5000_HP_ZCD_EN |
+-			SGTL5000_ADC_ZCD_EN);
++	snd_soc_component_update_bits(component, SGTL5000_CHIP_ANA_CTRL,
++		zcd_mask, zcd_mask);
+ 
+ 	snd_soc_component_update_bits(component, SGTL5000_CHIP_MIC_CTRL,
+ 			SGTL5000_BIAS_R_MASK,
 -- 
 2.20.1
 
