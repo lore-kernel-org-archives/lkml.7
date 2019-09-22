@@ -2,400 +2,263 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ACC5C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 15:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2719C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 15:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 209BD208C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 15:28:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569166097;
-	bh=emeKUXNkGhOOZoJ65MzVvmly107262c4CjzB+ec294o=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=CZ5uft0V+jvZHxEwtGFwMPckhtgW/AAmQXVfdgI40qdruxoj+Z2y9mj7FDKKnxZy/
-	 UKTrOQXzkd3B6dwql+GI/e+IDtJVmiwKD8J3cBiq/Y5DkbhDkcZGaeAoAxRyk4W50E
-	 eblp+gUZ1Wip/PwlMLlCWvPTdoyI8LGYWe9rrQvg=
+	by mail.kernel.org (Postfix) with ESMTP id 7143B20820
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 15:31:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="VrnFgAt7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387488AbfIVP2Q (ORCPT
+        id S2387522AbfIVPbo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 11:28:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37442 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 11:31:44 -0400
+Received: from mout.gmx.net ([212.227.17.20]:56213 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728211AbfIVP2Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 11:28:16 -0400
-Received: from linux-8ccs (ip5f5adbd6.dynamic.kabel-deutschland.de [95.90.219.214])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98E1E206C2;
-        Sun, 22 Sep 2019 15:28:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569166094;
-        bh=emeKUXNkGhOOZoJ65MzVvmly107262c4CjzB+ec294o=;
-        h=Date:From:To:Cc:Subject:From;
-        b=hyqDyDsEKAGOZ9SAcgerHRHa0b/UgjzDq7savw5aGXsjSIAF3Ti7ju7CdyzAw2GlP
-         E74knQYSf9SMRNJwDFgd6m7qorx3xeoIH27a+dbo20t0VMW9GNS3fyFsFz/GNOR0LC
-         JolfsRyvGnurgeZNMSpsXQL919dfg33RuaCn+hac=
-Date:   Sun, 22 Sep 2019 17:28:09 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Matthias Maennich <maennich@google.com>,
-        Martijn Coenen <maco@android.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Modules updates for v5.4
-Message-ID: <20190922152809.GA27554@linux-8ccs>
+        id S2387494AbfIVPbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 11:31:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1569166278;
+        bh=YoXIXkYV3zE+NhPqBiJ3pF9qGQYXkgsHykXIwc3fGyg=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=VrnFgAt7KkHcOyMc4ez/CYMrsSym91OgKikLMjwyzILj3xEg7jj6FVb3PdPCjl1S/
+         +9ahDtrCqlgUf4ltkLBRheeUboVpRGuutoIKQ7r/n1IYAmRGGdBHyNpFgUOQATCCXX
+         ZEV/u6SUNB7N1VDQ/n1fW28+F034PL/t43ndgqW0=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.123.42] ([88.152.145.122]) by mail.gmx.com (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N1fmq-1i5R1B3x4S-01210a; Sun, 22
+ Sep 2019 17:31:18 +0200
+Subject: Re: threads-max observe limits
+To:     Michal Hocko <mhocko@kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190917100350.GB1872@dhcp22.suse.cz>
+ <38349607-b09c-fa61-ccbb-20bee9f282a3@gmx.de>
+ <20190917153830.GE1872@dhcp22.suse.cz> <87ftku96md.fsf@x220.int.ebiederm.org>
+ <20190918071541.GB12770@dhcp22.suse.cz>
+ <87h8585bej.fsf@x220.int.ebiederm.org>
+ <20190922065801.GB18814@dhcp22.suse.cz>
+From:   Heinrich Schuchardt <xypron.glpk@gmx.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=xypron.glpk@gmx.de; prefer-encrypt=mutual; keydata=
+ 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 Eg==
+Message-ID: <f1b89360-a70c-0a30-6a7b-9bafe74701ed@gmx.de>
+Date:   Sun, 22 Sep 2019 17:31:16 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-X-OS:   Linux linux-8ccs 4.12.14-lp150.12.28-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190922065801.GB18814@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:hZ0/oPh8BMsNwmO8NIgDcfjBBcKM/vGKsBdPf05+6x+g7BGA1FV
+ MuTbuT+CG1J0eut7CP5I3ofCfyFcRCIubspj/EFE0+LAvzcq48N66/obpuHykF1Cqgin6Xk
+ PjcPQ+qcR7XGAE29qJ1lDICgSU8wevT459om3ZN3Twr8nZGT2lLu7+s6b32dDIBo94rTfhN
+ J383YhZfwgQ3eMlhl8pRg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:1ciKWOFGbqc=:z/cFftQ6FgJel4DWezQvdA
+ xq3tFXI6KKiehVS4ny30fSzQWwwCjifgNUDeIqoKug4JGR3BXvbv+Ar0JrGek8KlYvpFK2LIo
+ xJKNMmflzFtKn9TXeWaPEKYVI2flttAA7TLmIMfiS8R5wm46dzDzKl8U7GNnBuzFrmjwwa56K
+ vf9Gv1tShPbe2vaO/9fGRqY4detwbCJlpIEzjJp1MUpZKeRWultR5ZBjP6b80HG4yoto/01JC
+ U2skceHBhV1XGDWIEYqJWvqBtlROcIs84/iqHn45ww85hYsGyjkS83PSCXTcgs6bXoJIOcohc
+ lnGr/0S67BJSgUVrjZc98ulbiWFZs9sOT7ikEKVG6s8vM3rIGqLB9Sgv8Sf2as/R7mPHWny5f
+ 3G2m8eqmcmfXZrGNJMYd6N7oxxnpz4EZzyZdqVO+1tr5arJ4Q1E/H9QYRvYmHdQGPoDHuTsos
+ nFrLmprr1/036hGfEp5pQXiMDSIliHFWP0YP1T+bFJEdxzuRAY8u+jPqnYTRfOJ+Ripss0bNm
+ waRCI7YQDZG49eg8xmV2bp2NMz3ZNPK+ty9LkEu1AhNpQthLj6HLdEIptI9a1ns85e/dfjGz9
+ 9J8p+t5MJF/I75AjLhU4+81nl7HOO6KfQzVoYb7NkS4LFumXAPBUzWYQ7VKLFGTB/gbaow6U5
+ kFMDamTGxlqUYnByVzv7CHuO11ZMqCAT8wfKquAENI0NBXpbloIxOV9jznGzf0HsmqaQ+N5Xz
+ zHtj9/rEUw2r+cTTk3AVELwp+PNTm36CXSMzwo9XEZUvtt3uqw6UnTXsM8iPI6CCpRet0G00h
+ GFW6m6lkC4jSZnTLxGA6GNEGB6WgUBS0I2dJJ3DIDNGLdmFYWv0gqeqMHXGye+OLfz7Uf9QCg
+ pWs1OymsaObGFobWqxByPGggVaIiZ/b9bsE+ru7B4+fFCfAO+7x81RzYCCXMdQjS9hUkda9s9
+ wExjK99RW8B1yLCFIxilhldNfGxG/16nJBR2E1OqRw6W6WqJAtxf3HQ2DWJdRHUEB/dYdBtxv
+ fYfMjXyggBYmBOv4tq9REpj4G/blpnZpELYyh/PGSZPe2fBPkEEfvHYTlON0I3yqf9/lUHhGL
+ ySa8x49NTk3p8ELl0KHzvJiQh184924yILALD6SfB2+oUrKMdJkxiEUt11fCMPWpJXEWdR2oB
+ hNluL8aCkZDfDfTvVaLmXsl5auCDoAzi9LpREbLEaQia7lKlwZMBPwges0lbDpCnvZCpBSdTW
+ 14Bq5YCtbo++sAGEVRnUkY5QF7cfO55nV3VOVgF7HxYm3TP11+mmERkIPz8M=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 9/22/19 8:58 AM, Michal Hocko wrote:
+> On Thu 19-09-19 14:33:24, Eric W. Biederman wrote:
+>> Michal Hocko <mhocko@kernel.org> writes:
+>>
+>>> On Tue 17-09-19 12:26:18, Eric W. Biederman wrote:
+> [...]
+>>>> Michal is it a very small effect your customers are seeing?
+>>>> Is it another bug somewhere else?
+>>>
+>>> I am still trying to get more information. Reportedly they see a
+>>> different auto tuned limit between two kernel versions which results i=
+n
+>>> an applicaton complaining. As already mentioned this might be a side
+>>> effect of something else and this is not yet fully analyzed. My main
+>>> point for bringing up this discussion is ...
+>>
+>> Please this sounds like the kind of issue that will reveal something
+>> deeper about what is going on.
+>
+> Yes, I have pushed for that information even before starting discussion
+> here. I haven't heard from the customer yet unfortunatelly.
+>
+>>>> b) Not being able to bump threads_max to the physical limit of
+>>>>    the machine is very clearly a regression.
+>>>
+>>> ... exactly this part. The changelog of the respective patch doesn't
+>>> really exaplain why it is needed except of "it sounds like a good idea
+>>> to be consistent".
+>>
+>> I suggest doing a partial revert to just:
+>>
+>> diff --git a/kernel/fork.c b/kernel/fork.c
+>> index 7a74ade4e7d6..de8264ea34a7 100644
+>> --- a/kernel/fork.c
+>> +++ b/kernel/fork.c
+>> @@ -2943,7 +2943,7 @@ int sysctl_max_threads(struct ctl_table *table, i=
+nt write,
+>>  	if (ret || !write)
+>>  		return ret;
+>>
+>> -	set_max_threads(threads);
+>> +	max_threads =3D threads;
+>>
+>>  	return 0;
+>>  }
+>>
+>> proc_dointvec_minmax limiting the values to MIN_THREADS and MAX_THREADS
+>> is justifiable.  Those are the minimum and maximum values the kernel ca=
+n
+>> function with.
+>
+> MAX_THREADS limit makes perfect sense because crossing it reflects a
+> real constrain for correctness. MIN_THREADS, on the other hand, is only
+> the low gate for auto tuning to not come with an unbootable system. I do
+> not think we should jump into the admin call on the lower bound. There
+> might be a good reason to restrict the number of threads to 1. So here
+> is what I would like to go with.
 
-The main bulk of this pull request introduces a new exported symbol
-namespaces feature. The number of exported symbols is increasingly growing
-with each release (we're at about 31k exports as of 5.3-rc7) and we
-currently have no way of visualizing how these symbols are "clustered" or
-making sense of this huge export surface. Namespacing exported symbols
-allows kernel developers to more explicitly partition and categorize
-exported symbols, as well as more easily limiting the availability of
-namespaced symbols to other parts of the kernel. For starters, we have
-introduced the USB_STORAGE namespace to demonstrate the API's usage. I have
-briefly summarized the feature and its main motivations in the tag below.
+Did this patch when applied to the customer's kernel solve any problem?
 
-Disclaimer: linux-next releases were originally planned to be paused from
-Sept 5 to Sept 30, then from Sept 15, Mark Brown picked up the work and
-resumed doing -next releases. Since the patchset landed in modules-next
-during the week of -rc8, it has unfortunately not gotten linux-next time. I
-would understand if you'd prefer to defer to the next release.
+WebSphere MQ is a messaging application. If it hits the current limits
+of threads-max, there is a bug in the software or in the way that it has
+been set up at the customer. Instead of messing around with the kernel
+the application should be fixed.
 
-Also note that there is a conflict with the kbuild tree. Many thanks to
-Matthias Maennich for quickly providing the conflict resolution (diff
-below). Only include/linux/export.h and scripts/Makefile.modpost had hard
-conflicts. In the inline diff below, I've provided the result of the
-conflict resolution from merging modules-next into your master branch.
-Please let me know if you run into any trouble.
+With this patch you allow administrators to set values that will crash
+their system. And they will not even have a way to find out the limits
+which he should adhere to. So expect a lot of systems to be downed this wa=
+y.
 
-Thanks,
+Best regards
 
-Jessica
+Heinrich
 
------>8-----
-diff --cc .gitignore
-index ce2c6348d372,9ee63aa2a3fb..70580bdd352c
---- a/.gitignore
-+++ b/.gitignore
-@@@ -32,8 -32,10 +32,9 @@@
-  *.lzo
-  *.mod
-  *.mod.c
-+ *.ns_deps
-  *.o
-  *.o.*
- -*.order
-  *.patch
-  *.s
-  *.so
-diff --cc include/linux/export.h
-index 7d8c112a8b61,ef5d015d754a..6ecb04014558
---- a/include/linux/export.h
-+++ b/include/linux/export.h
-@@@ -18,6 -18,11 +18,8 @@@ extern struct module __this_module
-  #define THIS_MODULE ((struct module *)0)
-  #endif
-  
- -#ifdef CONFIG_MODULES
- -
-+ #define NS_SEPARATOR "."
-+ 
- -#if defined(__KERNEL__) && !defined(__GENKSYMS__)
-  #ifdef CONFIG_MODVERSIONS
-  /* Mark the CRC weak since genksyms apparently decides not to
-   * generate a checksums for some symbols */
-@@@ -71,24 -98,26 +95,35 @@@ struct kernel_symbol 
-  };
-  #endif
-  
- +#ifdef __GENKSYMS__
- +
- +#define ___EXPORT_SYMBOL(sym, sec)	__GENKSYMS_EXPORT_SYMBOL(sym)
-++#define ___EXPORT_SYMBOL_NS(sym, sec, ns)	__GENKSYMS_EXPORT_SYMBOL(sym)
- +
- +#else
- +
-- /* For every exported symbol, place a struct in the __ksymtab section */
-- #define ___EXPORT_SYMBOL(sym, sec)					\
-+ #define ___export_symbol_common(sym, sec)				\
-  	extern typeof(sym) sym;						\
-- 	__CRC_SYMBOL(sym, sec)						\
-+ 	__CRC_SYMBOL(sym, sec);						\
-  	static const char __kstrtab_##sym[]				\
-  	__attribute__((section("__ksymtab_strings"), used, aligned(1)))	\
-- 	= #sym;								\
-+ 	= #sym								\
-+ 
-+ /* For every exported symbol, place a struct in the __ksymtab section */
-+ #define ___EXPORT_SYMBOL_NS(sym, sec, ns)				\
-+ 	___export_symbol_common(sym, sec);				\
-+ 	static const char __kstrtab_ns_##sym[]				\
-+ 	__attribute__((section("__ksymtab_strings"), used, aligned(1)))	\
-+ 	= #ns;								\
-+ 	__KSYMTAB_ENTRY_NS(sym, sec, ns)
-+ 
-+ #define ___EXPORT_SYMBOL(sym, sec)					\
-+ 	___export_symbol_common(sym, sec);				\
-  	__KSYMTAB_ENTRY(sym, sec)
-  
- -#if defined(__DISABLE_EXPORTS)
- +#endif
- +
- +#if !defined(CONFIG_MODULES) || defined(__DISABLE_EXPORTS)
-  
-  /*
-   * Allow symbol exports to be disabled completely so that C code may
-@@@ -121,18 -151,36 +157,37 @@@
-  #define __cond_export_sym_1(sym, sec) ___EXPORT_SYMBOL(sym, sec)
-  #define __cond_export_sym_0(sym, sec) /* nothing */
-  
-+ #define __EXPORT_SYMBOL_NS(sym, sec, ns)				\
-+ 	__ksym_marker(sym);						\
-+ 	__cond_export_ns_sym(sym, sec, ns, __is_defined(__KSYM_##sym))
-+ #define __cond_export_ns_sym(sym, sec, ns, conf)			\
-+ 	___cond_export_ns_sym(sym, sec, ns, conf)
-+ #define ___cond_export_ns_sym(sym, sec, ns, enabled)			\
-+ 	__cond_export_ns_sym_##enabled(sym, sec, ns)
-+ #define __cond_export_ns_sym_1(sym, sec, ns) ___EXPORT_SYMBOL_NS(sym, sec, ns)
-+ #define __cond_export_ns_sym_0(sym, sec, ns) /* nothing */
-+ 
-  #else
- -#define __EXPORT_SYMBOL_NS ___EXPORT_SYMBOL_NS
- +
-- #define __EXPORT_SYMBOL(sym, sec)	___EXPORT_SYMBOL(sym, sec)
-+ #define __EXPORT_SYMBOL ___EXPORT_SYMBOL
- -#endif
-++#define __EXPORT_SYMBOL_NS ___EXPORT_SYMBOL_NS
- +
- +#endif /* CONFIG_MODULES */
-  
-+ #ifdef DEFAULT_SYMBOL_NAMESPACE
-+ #undef __EXPORT_SYMBOL
-+ #define __EXPORT_SYMBOL(sym, sec)				\
-+ 	__EXPORT_SYMBOL_NS(sym, sec, DEFAULT_SYMBOL_NAMESPACE)
-+ #endif
-+ 
- -#define EXPORT_SYMBOL(sym) __EXPORT_SYMBOL(sym, "")
- -#define EXPORT_SYMBOL_GPL(sym) __EXPORT_SYMBOL(sym, "_gpl")
- -#define EXPORT_SYMBOL_GPL_FUTURE(sym) __EXPORT_SYMBOL(sym, "_gpl_future")
- -#define EXPORT_SYMBOL_NS(sym, ns) __EXPORT_SYMBOL_NS(sym, "", ns)
- -#define EXPORT_SYMBOL_NS_GPL(sym, ns) __EXPORT_SYMBOL_NS(sym, "_gpl", ns)
- -
- +#define EXPORT_SYMBOL(sym)		__EXPORT_SYMBOL(sym, "")
- +#define EXPORT_SYMBOL_GPL(sym)		__EXPORT_SYMBOL(sym, "_gpl")
- +#define EXPORT_SYMBOL_GPL_FUTURE(sym)	__EXPORT_SYMBOL(sym, "_gpl_future")
-++#define EXPORT_SYMBOL_NS(sym, ns)	__EXPORT_SYMBOL_NS(sym, "", ns)
-++#define EXPORT_SYMBOL_NS_GPL(sym, ns)	__EXPORT_SYMBOL_NS(sym, "_gpl", ns)
-  #ifdef CONFIG_UNUSED_SYMBOLS
- -#define EXPORT_UNUSED_SYMBOL(sym) __EXPORT_SYMBOL(sym, "_unused")
- -#define EXPORT_UNUSED_SYMBOL_GPL(sym) __EXPORT_SYMBOL(sym, "_unused_gpl")
- +#define EXPORT_UNUSED_SYMBOL(sym)	__EXPORT_SYMBOL(sym, "_unused")
- +#define EXPORT_UNUSED_SYMBOL_GPL(sym)	__EXPORT_SYMBOL(sym, "_unused_gpl")
-  #else
-  #define EXPORT_UNUSED_SYMBOL(sym)
-  #define EXPORT_UNUSED_SYMBOL_GPL(sym)
-diff --cc scripts/Makefile.modpost
-index 9800a3988f23,743fe3a2e885..952fff485546
---- a/scripts/Makefile.modpost
-+++ b/scripts/Makefile.modpost
-@@@ -88,13 -99,60 +89,15 @@@ modules := $(sort $(shell cat $(MODORDE
-  quiet_cmd_modpost = MODPOST $(words $(modules)) modules
-        cmd_modpost = sed 's/ko$$/o/' $(MODORDER) | $(MODPOST)
-  
- -PHONY += modules-modpost
- -modules-modpost:
- +__modpost:
- +	@$(kecho) '  Building modules, stage 2.'
-  	$(call cmd,modpost)
- -
- -# Declare generated files as targets for modpost
- -$(modules:.ko=.mod.c): modules-modpost
- -
- -# Step 5), compile all *.mod.c files
- -
- -# modname is set to make c_flags define KBUILD_MODNAME
- -modname = $(notdir $(@:.mod.o=))
- -
- -quiet_cmd_cc_o_c = CC      $@
- -      cmd_cc_o_c = $(CC) $(c_flags) $(KBUILD_CFLAGS_MODULE) $(CFLAGS_MODULE) \
- -		   -c -o $@ $<
- -
- -$(modules:.ko=.mod.o): %.mod.o: %.mod.c FORCE
- -	$(call if_changed_dep,cc_o_c)
- -
- -targets += $(modules:.ko=.mod.o)
- -
- -ARCH_POSTLINK := $(wildcard $(srctree)/arch/$(SRCARCH)/Makefile.postlink)
- -
- -# Step 6), final link of the modules with optional arch pass after final link
- -quiet_cmd_ld_ko_o = LD [M]  $@
- -      cmd_ld_ko_o =                                                     \
- -	$(LD) -r $(KBUILD_LDFLAGS)                                      \
- -                 $(KBUILD_LDFLAGS_MODULE) $(LDFLAGS_MODULE)             \
- -                 -o $@ $(real-prereqs) ;                                \
- -	$(if $(ARCH_POSTLINK), $(MAKE) -f $(ARCH_POSTLINK) $@, true)
- -
- -$(modules): %.ko :%.o %.mod.o FORCE
- -	+$(call if_changed,ld_ko_o)
- -
- -targets += $(modules)
- +ifneq ($(KBUILD_MODPOST_NOFINAL),1)
- +	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modfinal
- +endif
-  
-+ nsdeps: __modpost
-+ 
- -# Add FORCE to the prequisites of a target to force it to be always rebuilt.
- -# ---------------------------------------------------------------------------
- -
- -PHONY += FORCE
- -
- -FORCE:
- -
- -# Read all saved command lines and dependencies for the $(targets) we
- -# may be building above, using $(if_changed{,_dep}). As an
- -# optimization, we don't need to read them if the target does not
- -# exist, we will rebuild anyway in that case.
- -
- -existing-targets := $(wildcard $(sort $(targets)))
- -
- --include $(foreach f,$(existing-targets),$(dir $(f)).$(notdir $(f)).cmd)
- -
-  endif
-  
-  .PHONY: $(PHONY)
-diff --cc scripts/mod/modpost.c
-index 820eed87fb43,be72da25fe7c..3961941e8e7a
---- a/scripts/mod/modpost.c
-+++ b/scripts/mod/modpost.c
-@@@ -2379,10 -2440,10 +2453,11 @@@ static void read_dump(const char *fname
-  			mod = new_module(modname);
-  			mod->skip = 1;
-  		}
-- 		s = sym_add_exported(symname, mod, export_no(export));
-+ 		s = sym_add_exported(symname, namespace, mod,
-+ 				     export_no(export));
-  		s->kernel    = kernel;
-  		s->preloaded = 1;
- +		s->is_static = 0;
-  		sym_update_crc(symname, mod, crc, export_no(export));
-  	}
-  	release_file(file, size);
------>8-----
+>
+>>From 711000fdc243b6bc68a92f9ef0017ae495086d39 Mon Sep 17 00:00:00 2001
+> From: Michal Hocko <mhocko@suse.com>
+> Date: Sun, 22 Sep 2019 08:45:28 +0200
+> Subject: [PATCH] kernel/sysctl.c: do not override max_threads provided b=
+y
+>  userspace
+>
+> Partially revert 16db3d3f1170 ("kernel/sysctl.c: threads-max observe lim=
+its")
+> because the patch is causing a regression to any workload which needs to
+> override the auto-tuning of the limit provided by kernel.
+>
+> set_max_threads is implementing a boot time guesstimate to provide a
+> sensible limit of the concurrently running threads so that runaways will
+> not deplete all the memory. This is a good thing in general but there
+> are workloads which might need to increase this limit for an application
+> to run (reportedly WebSpher MQ is affected) and that is simply not
+> possible after the mentioned change. It is also very dubious to override
+> an admin decision by an estimation that doesn't have any direct relation
+> to correctness of the kernel operation.
+>
+> Fix this by dropping set_max_threads from sysctl_max_threads so any
+> value is accepted as long as it fits into MAX_THREADS which is important
+> to check because allowing more threads could break internal robust futex
+> restriction. While at it, do not use MIN_THREADS as the lower boundary
+> because it is also only a heuristic for automatic estimation and admin
+> might have a good reason to stop new threads to be created even when
+> below this limit.
+>
+> Fixes: 16db3d3f1170 ("kernel/sysctl.c: threads-max observe limits")
+> Cc: stable
+> Signed-off-by: Michal Hocko <mhocko@suse.com>
+> ---
+>  kernel/fork.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/kernel/fork.c b/kernel/fork.c
+> index 2852d0e76ea3..ef865be37e98 100644
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -2929,7 +2929,7 @@ int sysctl_max_threads(struct ctl_table *table, in=
+t write,
+>  	struct ctl_table t;
+>  	int ret;
+>  	int threads =3D max_threads;
+> -	int min =3D MIN_THREADS;
+> +	int min =3D 1;
+>  	int max =3D MAX_THREADS;
+>
+>  	t =3D *table;
+> @@ -2941,7 +2941,7 @@ int sysctl_max_threads(struct ctl_table *table, in=
+t write,
+>  	if (ret || !write)
+>  		return ret;
+>
+> -	set_max_threads(threads);
+> +	max_threads =3D threads;
+>
+>  	return 0;
+>  }
+>
 
-The following changes since commit 089cf7f6ecb266b6a4164919a2e69bd2f938374a:
-
-  Linux 5.3-rc7 (2019-09-02 09:57:40 -0700)
-
-are available in the Git repository at:
-
-  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/jeyu/linux.git tags/modules-for-v5.4
-
-for you to fetch changes up to 2e6fcfeb9df6048a63fe0d5f7dfa39274bacbb71:
-
-  module: Remove leftover '#undef' from export header (2019-09-12 15:29:46 +0200)
-
-----------------------------------------------------------------
-Modules updates for v5.4
-
-Summary of modules changes for the 5.4 merge window:
-
-- Introduce exported symbol namespaces.
-
-  This new feature allows subsystem maintainers to partition and
-  categorize their exported symbols into explicit namespaces. Module
-  authors are now required to import the namespaces they need.
-
-  Some of the main motivations of this feature include: allowing kernel
-  developers to better manage the export surface, allow subsystem
-  maintainers to explicitly state that usage of some exported symbols
-  should only be limited to certain users (think: inter-module or
-  inter-driver symbols, debugging symbols, etc), as well as more easily
-  limiting the availability of namespaced symbols to other parts of the
-  kernel. With the module import requirement, it is also easier to spot
-  the misuse of exported symbols during patch review. Two new macros are
-  introduced: EXPORT_SYMBOL_NS() and EXPORT_SYMBOL_NS_GPL(). The API is
-  thoroughly documented in Documentation/kbuild/namespaces.rst.
-
-- Some small code and kbuild cleanups here and there.
-
-----------------------------------------------------------------
-Masahiro Yamada (3):
-      module: remove redundant 'depends on MODULES'
-      module: move CONFIG_UNUSED_SYMBOLS to the sub-menu of MODULES
-      module: remove unneeded casts in cmp_name()
-
-Matthias Maennich (11):
-      module: support reading multiple values per modinfo tag
-      export: explicitly align struct kernel_symbol
-      module: add support for symbol namespaces.
-      modpost: add support for symbol namespaces
-      module: add config option MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS
-      export: allow definition default namespaces in Makefiles or sources
-      modpost: add support for generating namespace dependencies
-      scripts: Coccinelle script for namespace dependencies.
-      docs: Add documentation for Symbol Namespaces
-      usb-storage: remove single-use define for debugging
-      usb-storage: export symbols in USB_STORAGE namespace
-
-Will Deacon (2):
-      module: Fix link failure due to invalid relocation on namespace offset
-      module: Remove leftover '#undef' from export header
-
- .gitignore                                  |   1 +
- Documentation/kbuild/modules.rst            |   7 +-
- Documentation/kbuild/namespaces.rst         | 154 ++++++++++++++++++++++++++++
- Documentation/kernel-hacking/hacking.rst    |  18 ++++
- MAINTAINERS                                 |   5 +
- Makefile                                    |  14 ++-
- arch/m68k/include/asm/export.h              |   1 -
- drivers/usb/storage/Makefile                |   2 +
- drivers/usb/storage/alauda.c                |   1 +
- drivers/usb/storage/cypress_atacb.c         |   1 +
- drivers/usb/storage/datafab.c               |   1 +
- drivers/usb/storage/debug.h                 |   2 -
- drivers/usb/storage/ene_ub6250.c            |   1 +
- drivers/usb/storage/freecom.c               |   1 +
- drivers/usb/storage/isd200.c                |   1 +
- drivers/usb/storage/jumpshot.c              |   1 +
- drivers/usb/storage/karma.c                 |   1 +
- drivers/usb/storage/onetouch.c              |   1 +
- drivers/usb/storage/realtek_cr.c            |   1 +
- drivers/usb/storage/scsiglue.c              |   2 +-
- drivers/usb/storage/sddr09.c                |   1 +
- drivers/usb/storage/sddr55.c                |   1 +
- drivers/usb/storage/shuttle_usbat.c         |   1 +
- drivers/usb/storage/uas.c                   |   1 +
- include/asm-generic/export.h                |  15 ++-
- include/linux/export.h                      |  98 +++++++++++++++---
- include/linux/module.h                      |   2 +
- init/Kconfig                                |  33 +++++-
- kernel/module.c                             |  76 ++++++++++++--
- lib/Kconfig.debug                           |  16 ---
- scripts/Makefile.modpost                    |   4 +-
- scripts/coccinelle/misc/add_namespace.cocci |  23 +++++
- scripts/export_report.pl                    |   2 +-
- scripts/mod/modpost.c                       | 150 ++++++++++++++++++++++++---
- scripts/mod/modpost.h                       |   9 ++
- scripts/nsdeps                              |  58 +++++++++++
- 36 files changed, 629 insertions(+), 77 deletions(-)
- create mode 100644 Documentation/kbuild/namespaces.rst
- create mode 100644 scripts/coccinelle/misc/add_namespace.cocci
- create mode 100644 scripts/nsdeps
