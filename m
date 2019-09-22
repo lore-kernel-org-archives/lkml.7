@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E2E6C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A03EAC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:02:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19A672196E
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:02:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E8A921907
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:02:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178925;
-	bh=wKhq0VlGv+xSfbaRl9RM2mr581f4Gr7wpu/qX6+fz9s=;
+	s=default; t=1569178929;
+	bh=ShkHZbdkeYGi6+KaL0/7gVGfrQBtWi52h4/mpWlR4+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RrF6vZMJhekCcaAu+J1GoOwolpxob8RE7TyzCPn07mUuxoEKXf18v1vvIFK1rsyHj
-	 SmAyLJxtSE24KRAdUhozhegau9laewUuMbFKp46ZEaj5+3O4eIqTGNX8aR1HTB0u/e
-	 SQHVAa2B/27Z5PVhc0l9pApy/5+P6W2ExGoQgdDU=
+	b=v2zGNNA6CA21qiE42GWJJxFo57tC3+L4vK+AH1iKodrxE69czfmxsCSPrEPC9D1cj
+	 fAVxaEHuhnM2rPbZrSp1kjxZO3Xoo5a/OnCmxpc8f8t4nOhAXJexSuVxJBHxVjIGOi
+	 TzSse3BdJeBjxiwynuMLFcV9a1epAnh1OPTAKKTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395389AbfIVTCD (ORCPT
+        id S2395406AbfIVTCI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:02:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38170 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:02:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726604AbfIVTBv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 15:01:51 -0400
+        id S2395363AbfIVTCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 15:02:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45AC5214AF;
-        Sun, 22 Sep 2019 19:01:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53BBA21A4A;
+        Sun, 22 Sep 2019 19:02:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178911;
-        bh=wKhq0VlGv+xSfbaRl9RM2mr581f4Gr7wpu/qX6+fz9s=;
+        s=default; t=1569178921;
+        bh=ShkHZbdkeYGi6+KaL0/7gVGfrQBtWi52h4/mpWlR4+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lhK0Zvx83esV24pUGOUSNqddcgNpM+fOCmXnaVJhks9HkTkACCMuY/olKL6RyW7MX
-         QsYR/4YYzAAOiAl5FJv4BkMLqD97NFdvW0DRTIUnTL96wHg+wrVzDyp6wmYCpDlQYk
-         TPI6wzWrDh/MDQDlvVwfSkqRKlQxwXzUGBUJtKZ4=
+        b=OI2uoCUoNQD7k0FDqfFPMTncj7pw0FgEjROLL2eu5SUlMJah4YM9tLP70/8xu8pKQ
+         /NEMkLZ4DIAe2Wr2XsqUeHO5HVxwBj5vw1x8Qszm5Uh6tI7JWrfhfo8AMb/d8/v6Al
+         374NLmscI1RtX9YjuRhdwYJ8guOFypXGJT2kvSl0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Al Stone <ahs3@redhat.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 30/44] ACPI / CPPC: do not require the _PSD method
-Date:   Sun, 22 Sep 2019 15:00:48 -0400
-Message-Id: <20190922190103.4906-30-sashal@kernel.org>
+Cc:     Marc Zyngier <maz@kernel.org>, Jiaxing Luo <luojiaxing@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 37/44] irqchip/gic-v3-its: Fix LPI release for Multi-MSI devices
+Date:   Sun, 22 Sep 2019 15:00:55 -0400
+Message-Id: <20190922190103.4906-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922190103.4906-1-sashal@kernel.org>
 References: <20190922190103.4906-1-sashal@kernel.org>
@@ -59,53 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Stone <ahs3@redhat.com>
+From: Marc Zyngier <maz@kernel.org>
 
-[ Upstream commit 4c4cdc4c63853fee48c02e25c8605fb65a6c9924 ]
+[ Upstream commit c9c96e30ecaa0aafa225aa1a5392cb7db17c7a82 ]
 
-According to the ACPI 6.3 specification, the _PSD method is optional
-when using CPPC.  The underlying assumption is that each CPU can change
-frequency independently from all other CPUs; _PSD is provided to tell
-the OS that some processors can NOT do that.
+When allocating a range of LPIs for a Multi-MSI capable device,
+this allocation extended to the closest power of 2.
 
-However, the acpi_get_psd() function returns ENODEV if there is no _PSD
-method present, or an ACPI error status if an error occurs when evaluating
-_PSD, if present.  This makes _PSD mandatory when using CPPC, in violation
-of the specification, and only on Linux.
+But on the release path, the interrupts are released one by
+one. This results in not releasing the "extra" range, leaking
+the its_device. Trying to reprobe the device will then fail.
 
-This has forced some firmware writers to provide a dummy _PSD, even though
-it is irrelevant, but only because Linux requires it; other OSPMs follow
-the spec.  We really do not want to have OS specific ACPI tables, though.
+Fix it by releasing the LPIs the same way we allocate them.
 
-So, correct acpi_get_psd() so that it does not return an error if there
-is no _PSD method present, but does return a failure when the method can
-not be executed properly.  This allows _PSD to be optional as it should
-be.
-
-Signed-off-by: Al Stone <ahs3@redhat.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: 8208d1708b88 ("irqchip/gic-v3-its: Align PCI Multi-MSI allocation on their size")
+Reported-by: Jiaxing Luo <luojiaxing@huawei.com>
+Tested-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/f5e948aa-e32f-3f74-ae30-31fee06c2a74@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/cppc_acpi.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/irqchip/irq-gic-v3-its.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
-index 0afd1981e350b..43c27c04c40ae 100644
---- a/drivers/acpi/cppc_acpi.c
-+++ b/drivers/acpi/cppc_acpi.c
-@@ -137,8 +137,10 @@ static int acpi_get_psd(struct cpc_desc *cpc_ptr, acpi_handle handle)
- 	union acpi_object  *psd = NULL;
- 	struct acpi_psd_package *pdomain;
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index 114d5883d4978..cf11d43ce2416 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -1372,14 +1372,13 @@ static void its_irq_domain_free(struct irq_domain *domain, unsigned int virq,
+ 	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
+ 	int i;
  
--	status = acpi_evaluate_object_typed(handle, "_PSD", NULL, &buffer,
--			ACPI_TYPE_PACKAGE);
-+	status = acpi_evaluate_object_typed(handle, "_PSD", NULL,
-+					    &buffer, ACPI_TYPE_PACKAGE);
-+	if (status == AE_NOT_FOUND)	/* _PSD is optional */
-+		return 0;
- 	if (ACPI_FAILURE(status))
- 		return -ENODEV;
- 
++	bitmap_release_region(its_dev->event_map.lpi_map,
++			      its_get_event_id(irq_domain_get_irq_data(domain, virq)),
++			      get_count_order(nr_irqs));
++
+ 	for (i = 0; i < nr_irqs; i++) {
+ 		struct irq_data *data = irq_domain_get_irq_data(domain,
+ 								virq + i);
+-		u32 event = its_get_event_id(data);
+-
+-		/* Mark interrupt index as unused */
+-		clear_bit(event, its_dev->event_map.lpi_map);
+-
+ 		/* Nuke the entry in the domain */
+ 		irq_domain_reset_irq_data(data);
+ 	}
 -- 
 2.20.1
 
