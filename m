@@ -4,55 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE690C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E79FC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA6452186A
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:47:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 654AC208C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:47:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178039;
-	bh=B05maExQbhzmRz3QtW0v5BieCGz5HdQQOqgZortZCcA=;
+	s=default; t=1569178049;
+	bh=JynpDT/gW2P7z3FNimWG7u5TDUQgbp30m34PxCe32QM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YpBkle48tupQZzThTwvSgVXamPrCP21dMKnJYWrcLe04U0ZuhjvkrIX0iivHhlwKb
-	 j+FsHd8Ia4nXBNcD6yxz3QuwpG+qdLY50TkyycjqeuYa1NsGOPnC9HvV1HejzRfUHu
-	 kdUyb1iRHgbo4/PGv+9YghiteZyn/TMLrenUzya8=
+	b=c4H6ze2D9trKn95waeC37wS+jtpLYmB4uvOlqefKJZS/kz72idpYPth8PwkuvIB3l
+	 +EOf+h2oyNxAEo4JgdEatqFHI0lXIWXbt5tSRVYi8tmqaULohAnpy7F+8/YSRgJ0LZ
+	 eqQ/hixYRaJcNIgjPNJA00h8UJqt1zgWzhk7+Fu0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390693AbfIVSrS (ORCPT
+        id S2390896AbfIVSr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:47:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43538 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:47:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390595AbfIVSrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:47:11 -0400
+        id S2390763AbfIVSrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:47:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1575214AF;
-        Sun, 22 Sep 2019 18:47:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA4BE2186A;
+        Sun, 22 Sep 2019 18:47:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178031;
-        bh=B05maExQbhzmRz3QtW0v5BieCGz5HdQQOqgZortZCcA=;
+        s=default; t=1569178042;
+        bh=JynpDT/gW2P7z3FNimWG7u5TDUQgbp30m34PxCe32QM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u554xWjoj7r6wI1+r8bUStDbbvUVxoatZGHyennByP6KTutoOa4j+sWCX9aLuOIc5
-         cnhSJhEbpIsIy+2vgAZjzxGwT+6KaGr+C6GxzEYK40oI6L8ALTjqoZZO5uHUzFSU68
-         VykXqqXp85trzePwmEU+rd4TkffH7XDjUNc/IhJQ=
+        b=zwt5rOM4vien/A0MB+S9nUGrpNKmxCdZY2018CZoRQzryf+w4GQkqTwheTUj5gbHm
+         4pwLYKyOGuDzIr3qz0nzpas2xriN1rYjW/jeIOrRS2wCXfUGsZkuPKmYDoUQjJ8DEW
+         Ic0hXaZ3fxyALCNV9qI0m2PZbfzexS2Hmo9ntWAk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gerald BAEZA <gerald.baeza@st.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 113/203] libperf: Fix alignment trap with xyarray contents in 'perf stat'
-Date:   Sun, 22 Sep 2019 14:42:19 -0400
-Message-Id: <20190922184350.30563-113-sashal@kernel.org>
+Cc:     Kamil Konieczny <k.konieczny@partner.samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 122/203] PM / devfreq: exynos-bus: Correct clock enable sequence
+Date:   Sun, 22 Sep 2019 14:42:28 -0400
+Message-Id: <20190922184350.30563-122-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -65,56 +61,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gerald BAEZA <gerald.baeza@st.com>
+From: Kamil Konieczny <k.konieczny@partner.samsung.com>
 
-[ Upstream commit d9c5c083416500e95da098c01be092b937def7fa ]
+[ Upstream commit 2c2b20e0da89c76759ee28c6824413ab2fa3bfc6 ]
 
-Following the patch 'perf stat: Fix --no-scale', an alignment trap
-happens in process_counter_values() on ARMv7 platforms due to the
-attempt to copy non 64 bits aligned double words (pointed by 'count')
-via a NEON vectored instruction ('vld1' with 64 bits alignment
-constraint).
+Regulators should be enabled before clocks to avoid h/w hang. This
+require change in exynos_bus_probe() to move exynos_bus_parse_of()
+after exynos_bus_parent_parse_of() and change in error handling.
+Similar change is needed in exynos_bus_exit() where clock should be
+disabled before regulators.
 
-This patch sets a 64 bits alignment constraint on 'contents[]' field in
-'struct xyarray' since the 'count' pointer used above points to such a
-structure.
-
-Signed-off-by: Gerald Baeza <gerald.baeza@st.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/1566464769-16374-1-git-send-email-gerald.baeza@st.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/xyarray.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/devfreq/exynos-bus.c | 31 +++++++++++++++++--------------
+ 1 file changed, 17 insertions(+), 14 deletions(-)
 
-diff --git a/tools/perf/util/xyarray.h b/tools/perf/util/xyarray.h
-index 7ffe562e7ae7f..2627b038b6f2a 100644
---- a/tools/perf/util/xyarray.h
-+++ b/tools/perf/util/xyarray.h
-@@ -2,6 +2,7 @@
- #ifndef _PERF_XYARRAY_H_
- #define _PERF_XYARRAY_H_ 1
+diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
+index d9f377912c104..7c06df8bd74fe 100644
+--- a/drivers/devfreq/exynos-bus.c
++++ b/drivers/devfreq/exynos-bus.c
+@@ -191,11 +191,10 @@ static void exynos_bus_exit(struct device *dev)
+ 	if (ret < 0)
+ 		dev_warn(dev, "failed to disable the devfreq-event devices\n");
  
-+#include <linux/compiler.h>
- #include <sys/types.h>
+-	if (bus->regulator)
+-		regulator_disable(bus->regulator);
+-
+ 	dev_pm_opp_of_remove_table(dev);
+ 	clk_disable_unprepare(bus->clk);
++	if (bus->regulator)
++		regulator_disable(bus->regulator);
+ }
  
- struct xyarray {
-@@ -10,7 +11,7 @@ struct xyarray {
- 	size_t entries;
- 	size_t max_x;
- 	size_t max_y;
--	char contents[];
-+	char contents[] __aligned(8);
- };
+ /*
+@@ -383,6 +382,7 @@ static int exynos_bus_probe(struct platform_device *pdev)
+ 	struct exynos_bus *bus;
+ 	int ret, max_state;
+ 	unsigned long min_freq, max_freq;
++	bool passive = false;
  
- struct xyarray *xyarray__new(int xlen, int ylen, size_t entry_size);
+ 	if (!np) {
+ 		dev_err(dev, "failed to find devicetree node\n");
+@@ -396,27 +396,27 @@ static int exynos_bus_probe(struct platform_device *pdev)
+ 	bus->dev = &pdev->dev;
+ 	platform_set_drvdata(pdev, bus);
+ 
+-	/* Parse the device-tree to get the resource information */
+-	ret = exynos_bus_parse_of(np, bus);
+-	if (ret < 0)
+-		return ret;
+-
+ 	profile = devm_kzalloc(dev, sizeof(*profile), GFP_KERNEL);
+-	if (!profile) {
+-		ret = -ENOMEM;
+-		goto err;
+-	}
++	if (!profile)
++		return -ENOMEM;
+ 
+ 	node = of_parse_phandle(dev->of_node, "devfreq", 0);
+ 	if (node) {
+ 		of_node_put(node);
+-		goto passive;
++		passive = true;
+ 	} else {
+ 		ret = exynos_bus_parent_parse_of(np, bus);
++		if (ret < 0)
++			return ret;
+ 	}
+ 
++	/* Parse the device-tree to get the resource information */
++	ret = exynos_bus_parse_of(np, bus);
+ 	if (ret < 0)
+-		goto err;
++		goto err_reg;
++
++	if (passive)
++		goto passive;
+ 
+ 	/* Initialize the struct profile and governor data for parent device */
+ 	profile->polling_ms = 50;
+@@ -507,6 +507,9 @@ static int exynos_bus_probe(struct platform_device *pdev)
+ err:
+ 	dev_pm_opp_of_remove_table(dev);
+ 	clk_disable_unprepare(bus->clk);
++err_reg:
++	if (!passive)
++		regulator_disable(bus->regulator);
+ 
+ 	return ret;
+ }
 -- 
 2.20.1
 
