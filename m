@@ -2,27 +2,27 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E82C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 16:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A360C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 16:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDBD7206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 16:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2015320882
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 16:14:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387660AbfIVQN4 (ORCPT
+        id S2387706AbfIVQOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 12:13:56 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:46614 "EHLO
+        Sun, 22 Sep 2019 12:14:24 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:46787 "EHLO
         atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387471AbfIVQN4 (ORCPT
+        with ESMTP id S2387471AbfIVQOY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 12:13:56 -0400
+        Sun, 22 Sep 2019 12:14:24 -0400
 Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 98F198031F; Sun, 22 Sep 2019 18:13:39 +0200 (CEST)
-Date:   Sun, 22 Sep 2019 18:13:47 +0200
+        id 4A95580362; Sun, 22 Sep 2019 18:14:07 +0200 (CEST)
+Date:   Sun, 22 Sep 2019 18:14:15 +0200
 From:   Pavel Machek <pavel@ucw.cz>
 To:     Anson Huang <Anson.Huang@nxp.com>
 Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
@@ -41,7 +41,7 @@ Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org,
         Linux-imx@nxp.com
 Subject: Re: [PATCH V2 1/5] dt-bindings: fsl: scu: add scu power key binding
-Message-ID: <20190922161347.GB1999@bug>
+Message-ID: <20190922161415.GD1999@bug>
 References: <1567519424-32271-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -53,8 +53,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
-
+On Tue 2019-09-03 10:03:40, Anson Huang wrote:
 > NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
 > system controller, the system controller is in charge of system
 > power, clock and power key event etc. management, Linux kernel
@@ -63,7 +62,17 @@ Hi!
 > controller power key driver.
 > 
 > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-
+> ---
+> Changes since V1:
+> 	- remove "wakeup-source" property, as it is NOT needed for SCU interrupt;
+> 	- remove "status" in example.
+> ---
+>  .../devicetree/bindings/arm/freescale/fsl,scu.txt          | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> index c149fad..f93e2e4 100644
+> --- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
 > +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
 > @@ -157,6 +157,15 @@ Required properties:
 >  Optional properties:
@@ -78,11 +87,10 @@ Hi!
 > +              followed by "fsl,imx-sc-pwrkey";
 > +- linux,keycodes: See Documentation/devicetree/bindings/input/keys.txt
 
-Actually there's no reason for having "linux,keycodes" property when it is always
-a power button.
+Note you have keycode_s_ here, but keycode in the example and in the dts patch.
 
-Best regards,
 									Pavel
+
 -- 
 (english) http://www.livejournal.com/~pavelmachek
 (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
