@@ -2,52 +2,51 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D5D3C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B59FC4740C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FBC720665
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:45:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D68020882
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:45:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569177956;
-	bh=kJC6Awz8EDg7dPEGltPbxNIzRDp5I4Bk/eB1xSqgAyw=;
+	s=default; t=1569177959;
+	bh=nLBmpST4CMAjbXYt20w4xU7PrLmWj0RW/y6RZSzDzaA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uafC0+vIkwi941vtaTjCOQvwov+Tmr7RY4PVbvZBxmfG/WCzWbTKBrjqebVeu2DYl
-	 s1U8gsqX8tb62MnVQRlzpD67ntQVMztKtxdQVk3MT3SDjNN6UuxwebHzwj9q6+I/6d
-	 XBLUYKgyLK3o0NTg88r0hb6KJe59ApfT3j3UWaAY=
+	b=deoHYUoDQVAh/KYv5gzOgCkYksAjiLPRWRCMAD81I03SMp74fCLNiMksCiqwuFfus
+	 z+GRNZFs8JR6etYHGR0WHdChLi7cHi4GK68100b4g+02NuRe8eW2uTasgT1AKlDgPw
+	 XU78ezUpnebgwI07xnfbeNlLBCFNuz1F5DD3EZUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389682AbfIVSpz (ORCPT
+        id S2389716AbfIVSp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:45:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41662 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:45:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389612AbfIVSpw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:45:52 -0400
+        id S2389638AbfIVSpx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:45:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB8FB206C2;
-        Sun, 22 Sep 2019 18:45:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA9D7206C2;
+        Sun, 22 Sep 2019 18:45:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569177951;
-        bh=kJC6Awz8EDg7dPEGltPbxNIzRDp5I4Bk/eB1xSqgAyw=;
+        s=default; t=1569177953;
+        bh=nLBmpST4CMAjbXYt20w4xU7PrLmWj0RW/y6RZSzDzaA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zzxNgGKzMqP+IthGwGq5O2KSgpFDa/oIBNgiML5wmkAg1utHG+UAcT0r7PuvE8wQZ
-         nFFTihsTJAti4rllYuzMrqhac8cQ7kNH/g12GQKqDtR7aOtJYInVTVeDPzbIYQUu+4
-         CSqv+zGLdxLf8M7a+Wv3Z97BthSx1uzAT3WM0jEc=
+        b=H0SbaxB2PIw6cjJsgboXFiuS2P9Bcz/E1jnj34dsr2rErVR3R5X3rqbqpchBDXCv2
+         CW3nUfvQ9JKY+7dQzwuI1bxb4SBRl8sVwnJT3CyyGbd+5Sd4kQ80kcpYz/WM7MDfi8
+         AIjFqbx8PskmT1MRAiYNuyQk7qB4H1UNLuIEoYGE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Keyon Jie <yang.jie@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 057/203] ASoC: hdac_hda: fix page fault issue by removing race
-Date:   Sun, 22 Sep 2019 14:41:23 -0400
-Message-Id: <20190922184350.30563-57-sashal@kernel.org>
+Cc:     Alessio Balsini <balsini@android.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 059/203] loop: Add LOOP_SET_DIRECT_IO to compat ioctl
+Date:   Sun, 22 Sep 2019 14:41:25 -0400
+Message-Id: <20190922184350.30563-59-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -60,42 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Keyon Jie <yang.jie@linux.intel.com>
+From: Alessio Balsini <balsini@android.com>
 
-[ Upstream commit 804cbf4bb063204ca6c2471baa694548aab02ce3 ]
+[ Upstream commit fdbe4eeeb1aac219b14f10c0ed31ae5d1123e9b8 ]
 
-There is a race between hda codec device removing and the
-jack-detecting work, which will lead to a page fault issue as the
-latter work is accessing codec device which could be already removed.
+Enabling Direct I/O with loop devices helps reducing memory usage by
+avoiding double caching.  32 bit applications running on 64 bits systems
+are currently not able to request direct I/O because is missing from the
+lo_compat_ioctl.
 
-Here add the cancellation of jack-detecting work before codecs are actually
-removed to avoid the race and fix the issue.
+This patch fixes the compatibility issue mentioned above by exporting
+LOOP_SET_DIRECT_IO as additional lo_compat_ioctl() entry.
+The input argument for this ioctl is a single long converted to a 1-bit
+boolean, so compatibility is preserved.
 
-Bug: https://github.com/thesofproject/linux/issues/1067
-Signed-off-by: Keyon Jie <yang.jie@linux.intel.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20190807145030.26117-1-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Alessio Balsini <balsini@android.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/hdac_hda.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/block/loop.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/codecs/hdac_hda.c b/sound/soc/codecs/hdac_hda.c
-index 7d49402569149..91242b6f8ea7a 100644
---- a/sound/soc/codecs/hdac_hda.c
-+++ b/sound/soc/codecs/hdac_hda.c
-@@ -495,6 +495,10 @@ static int hdac_hda_dev_probe(struct hdac_device *hdev)
- 
- static int hdac_hda_dev_remove(struct hdac_device *hdev)
- {
-+	struct hdac_hda_priv *hda_pvt;
-+
-+	hda_pvt = dev_get_drvdata(&hdev->dev);
-+	cancel_delayed_work_sync(&hda_pvt->codec.jackpoll_work);
- 	return 0;
- }
- 
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index ab7ca5989097a..1410fa8936538 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -1755,6 +1755,7 @@ static int lo_compat_ioctl(struct block_device *bdev, fmode_t mode,
+ 	case LOOP_SET_FD:
+ 	case LOOP_CHANGE_FD:
+ 	case LOOP_SET_BLOCK_SIZE:
++	case LOOP_SET_DIRECT_IO:
+ 		err = lo_ioctl(bdev, mode, cmd, arg);
+ 		break;
+ 	default:
 -- 
 2.20.1
 
