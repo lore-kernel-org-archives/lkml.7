@@ -2,101 +2,89 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BDF0C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 17:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E5EC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 17:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 540F021907
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 17:09:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBA9320820
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 17:32:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TuDpW8wz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YzG6sUxO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388156AbfIVRJO (ORCPT
+        id S1729086AbfIVRcq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 13:09:14 -0400
-Received: from mail-pf1-f182.google.com ([209.85.210.182]:37977 "EHLO
-        mail-pf1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387562AbfIVRJO (ORCPT
+        Sun, 22 Sep 2019 13:32:46 -0400
+Received: from mail-qk1-f179.google.com ([209.85.222.179]:37907 "EHLO
+        mail-qk1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726599AbfIVRcp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 13:09:14 -0400
-Received: by mail-pf1-f182.google.com with SMTP id h195so7535805pfe.5;
-        Sun, 22 Sep 2019 10:09:13 -0700 (PDT)
+        Sun, 22 Sep 2019 13:32:45 -0400
+Received: by mail-qk1-f179.google.com with SMTP id u186so12963721qkc.5
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Sep 2019 10:32:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hHobqoGYvKr31jIojYx1ULHBxGJ4jtH7umzyrIjmR8E=;
-        b=TuDpW8wz6k1OfD/frjG7tOMCfMmyD6VrI0Zql2fjLaLljB6TcAcKYPgw/iB9W8WQ4l
-         gsBV961/JYmIYlF0XhdjGcAwpNqHDYcsF2D43efp7Gb5xBwe5H1Hp2SKVK3HRvQLx9cH
-         SJ7TrB19gt4XwBgRJkwvcVPoTbyCd4Ts1u5SAaTorXbhwVtCj6h79UJautimw1UXOTF6
-         Xzmc7DFRxyJYo4HuO0nZyiTP1ZwxTm5076chBkMWUfw5xjhPe7cUKbyBhKXCXxA0M/tA
-         rntmZflAv3gLkTNB7YnTpUN6/ax8k0Lz5RA2weO7YYYykkbGeqNf7tqLeI6gaQ6DzFTQ
-         b7Rg==
+        h=sender:from:date:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=uevSYwOhsO3ZIu8FEqA5BNX68Qgqmu7U7NQD7Y3Ecms=;
+        b=YzG6sUxO4F1tUjdLZq85PFNuJDFKj4dQ6V3ekK99V2Ig+7USUHa0xs/ZRZb0SbnXCG
+         Pb6xvHFDvOg+t287SPkPcp070ETUxOA96xXLFs0DzVrI9Xy7ozp3P7pTjenoZyUjBKjy
+         3vXsT43TY54kI+Ac8Q16jn48zIFJ4dOoLZaAJBddxje1dLEKaSUj2ROZdp7w8Ujfb1E2
+         AIOWjFmcOwtKYyvfgVjiUyPUH+9RFvhxFZYvOiaSNgs6n9t10tZa6klkrDuzm7XqNyI/
+         iQwMf7tSxB0d9U+VYSqAxbLxAFRlRobpu+cRkGSwaYfDrLliu/1QifdAs106A2FfOYDN
+         zkEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hHobqoGYvKr31jIojYx1ULHBxGJ4jtH7umzyrIjmR8E=;
-        b=AWDWv5/eor8iXPeoAoqT7KpdtLZhMQZVb9zR6s3rdgrnWeQ+++w+MFeacaXfrEkD77
-         hQ9aVCTfr+K8jCR3eYG9NRgDas4n+J3tIjNEk7JI/CYmevZanizZLtbzWOQcN5jtyz3o
-         GX5vxKvZNlWCDVrQPkcC4cU1qfDSL4vajZQW6l7bYwdBdOX6W41E5q28a0oCypCSDqLF
-         ntvr+IltKHFs7kFO10/TLLa5lDyiOc9IZft+/EtLjMEgmZ8VLLTAa5oPP/RKzpJXOA8B
-         VfnwUHH3/aS8aNCYJY/vTXFpYa0swPlVEFNXGpBsmYHwXwS8qrg0IF3jOfmR9mkXKWre
-         UN6Q==
-X-Gm-Message-State: APjAAAU6j/4IALzlNM3vN1aY0mLLGeM5JM8NGuPBf6hbm8finzv9amVo
-        mIg4kUISOkgJLO4/PqnXKUA=
-X-Google-Smtp-Source: APXvYqyTEabIP7SvDyQkFpy3GvV5Sk50KOc3Uj67J+U2y/TqWXh8/bAaWsPcumRo+Xbh/mAuxkflsg==
-X-Received: by 2002:a17:90a:ba94:: with SMTP id t20mr16733037pjr.8.1569172152908;
-        Sun, 22 Sep 2019 10:09:12 -0700 (PDT)
-Received: from SD ([2409:4041:2e8b:6e6f:acd5:5ade:157f:5f8f])
-        by smtp.gmail.com with ESMTPSA id j25sm5308411pfi.113.2019.09.22.10.09.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Sep 2019 10:09:12 -0700 (PDT)
-Date:   Sun, 22 Sep 2019 22:39:06 +0530
-From:   Saiyam Doshi <saiyamdoshi.in@gmail.com>
-To:     Wolfram Sang <wsa@the-dreams.de>, Markus.Elfring@web.de
-Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [v2 0/3] Fix issues reported by Coccinelle
-Message-ID: <20190922170906.GB5589@SD>
-References: <20190917172758.GA11926@SD>
- <76e99512-8818-cec2-9e77-799e4c8481ab@web.de>
- <20190917181423.GB28182@ninjato>
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=uevSYwOhsO3ZIu8FEqA5BNX68Qgqmu7U7NQD7Y3Ecms=;
+        b=qFaDE5ZUDJe1mTpXKSwLuzoMQn7eGevy5NywIHi+P8wWQNXyQW8PpbTtlhbThruisr
+         sekvJDvX2HBlsagoQ+ptOCsVXKPpR1d9gR7dk/deDVtKBR3wp49WAH17RPM2R7pgThHs
+         czwst/dGLYMDbTUNC+VHMVl0jTPwi0X3pwv6PTnQYN5E13fVAPea1KXGRfSp9+Qk8zX9
+         bSGxT0r/wRAku9bT06bPpQHZNXizNeg9zH9Zl5RlZcaerQyyJNEZaenvZxHECZ01YLbS
+         Yxt4uwFphvKEjI85cboTNcrf0fo0wGFhf3JJl7JYdRjlRe+FjZnjfTXdmRppDFRLtc8L
+         +uHg==
+X-Gm-Message-State: APjAAAWH0A7JzigSQRMErUAPYSdH1ZlrYGVOmnL9CYS7up6tNKK/VbEK
+        574JUiy6uwEBKyHaMPPxtMf31xpYBHE=
+X-Google-Smtp-Source: APXvYqw1ioprSH7qV/hE8mJxzxySQS74umuFBim2onE0AcNjR2l1msiWZvaBLR16gRDhnJb0YmLtzQ==
+X-Received: by 2002:a05:620a:113a:: with SMTP id p26mr14091407qkk.353.1569173564223;
+        Sun, 22 Sep 2019 10:32:44 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id x12sm5216163qtb.32.2019.09.22.10.32.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 22 Sep 2019 10:32:43 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Sun, 22 Sep 2019 13:32:42 -0400
+To:     linux-kernel@vger.kernel.org
+Cc:     Nick Desaulniers <ndesaulniers@google.com>
+Subject: kexec broken with STACKLEAK enabled
+Message-ID: <20190922173241.GA44503@rani.riverdale.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190917181423.GB28182@ninjato>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 08:14:23PM +0200, Wolfram Sang wrote:
-> On Tue, Sep 17, 2019 at 08:10:45PM +0200, Markus Elfring wrote:
-> > > Using cocciecheck to ensure there are no semantic issues in
-> > > i2c-qup driver.
-> > 
-> > * This wording contains a typo.
-> 
-> Doesn't matter to me for a cover letter as long as we can understand it.
-> 
-> > * I would prefer to refer to a desired reduction of a few
-> >   source code quality concerns.
-> 
-> Not needed. I understand what is going on here.
+Hi, since commit b059f801a937 (x86/purgatory: Use CFLAGS_REMOVE rather
+than reset KBUILD_CFLAGS) kexec is broken if GCC_PLUGIN_STACKLEAK is
+enabled, as the purgatory contains undefined references to
+stackleak_track_stack.
 
-Markus - By "ensure", I mean there are no further cocciecheck issues at this
-point in time. And further, what changed is covered in individual patch
-changelog. So, I think this information is fine in cover.
+Attempting to load a kexec kernel results in an error:
 
-> > Can such a prefix be omitted?
-Can be, but I like to keep it.
+	kexec: Undefined symbol: stackleak_track_stack
+	kexec-bzImage64: Loading purgatory failed
 
-Thanks for review.
+Adding $(DISABLE_STACKLEAK_PLUGIN) to PURGATORY_CFLAGS in
+arch/x86/purgatory/Makefile fixes this.
 
--Saiyam
+Not sure if that's the best fix or if other architectures also require a
+similar one.
+
+Thanks.
