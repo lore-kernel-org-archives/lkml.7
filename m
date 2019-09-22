@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD4FC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF375C4740C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB8E8208C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A24EC21A4A
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:50:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178203;
-	bh=DTKvO66v163p+va+SeGgFiOwP3tsFY04aRiTV0shENc=;
+	s=default; t=1569178208;
+	bh=hYUfsW0L/9lk8I7RgCsHnsruaZp2MEdg3A4yuinmzlg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VTQhiDLC+sVVX9BmtGQ8J05G1Uf7NLYhjCoIYZh9NG3eD/Q+WbIYQ3iU5bba5vD5D
-	 FoZvXZl5Gc4jzasBEkLxxwgUVqkfj1jY5D/T/e//IrSwU29eWCpYYxmvBdz1cKeLNw
-	 GGW1ZSoiy59Samyh9eVS8AoSWq+jRa4hTXYm8DYU=
+	b=L42WaZsqRAw/TfeK3oE9oF/aLWNOmLHqHJPt1i3RvGVtIKhlX1jP2jv/aZU1rk7K2
+	 Ft4/tJNqx7Jj/rePz1QkfIUlWFiEipbtCOcQO5MlmA2DaJjir4wmNjrOZmQ7Akj4jg
+	 ZHUD1rde0uKEN2f9USj8UUDoxYdATYp5U/Gei+kI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392712AbfIVSt5 (ORCPT
+        id S2392609AbfIVStr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:49:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46752 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:49:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392534AbfIVStn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:49:43 -0400
+        id S2392444AbfIVStg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:49:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BF31208C2;
-        Sun, 22 Sep 2019 18:49:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96C7921A4A;
+        Sun, 22 Sep 2019 18:49:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178183;
-        bh=DTKvO66v163p+va+SeGgFiOwP3tsFY04aRiTV0shENc=;
+        s=default; t=1569178175;
+        bh=hYUfsW0L/9lk8I7RgCsHnsruaZp2MEdg3A4yuinmzlg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OxO28WpHkzg+T2FAJxo1HvdfA9LUIe+GB51LEW3oYCZg12a/uZLTGMNrU55lpCIed
-         I+AG3O+arT9l4T/ZqyfSHhVsJbBAp27XFs4Wj9LDvImqCKOSI1zxiu++In1BsZfPKI
-         oYTKo3gJ16dRqi6O9TAkmbvcCAdrW8PsZlc/7taU=
+        b=TqLVctT+UX5vRG/RHvC9R/ZAkJmGWqFmJe0h/TnFRydSG5rULN6x+qeCuwIaaDz4E
+         ck3j8WFXyVz48IFimvMuC9EzjYgceWYrMIR8afnE4OuYyd9LXnb31gWwQ/35w/mQHq
+         N+gPrbXr2kfTR6uZqvxA2wWnp1aeNohADIXY3rjQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sean Young <sean@mess.org>, Sean Wang <sean.wang@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 013/185] media: mtk-cir: lower de-glitch counter for rc-mm protocol
-Date:   Sun, 22 Sep 2019 14:46:31 -0400
-Message-Id: <20190922184924.32534-13-sashal@kernel.org>
+Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 007/185] ASoC: sgtl5000: Fix of unmute outputs on probe
+Date:   Sun, 22 Sep 2019 14:46:25 -0400
+Message-Id: <20190922184924.32534-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -59,49 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Young <sean@mess.org>
+From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 
-[ Upstream commit 5dd4b89dc098bf22cd13e82a308f42a02c102b2b ]
+[ Upstream commit 631bc8f0134ae9620d86a96b8c5f9445d91a2dca ]
 
-The rc-mm protocol can't be decoded by the mtk-cir since the de-glitch
-filter removes pulses/spaces shorter than 294 microseconds.
+To enable "zero cross detect" for ADC/HP, change
+HP_ZCD_EN/ADC_ZCD_EN bits only instead of writing the whole
+CHIP_ANA_CTRL register.
 
-Tested on a BananaPi R2.
-
-Signed-off-by: Sean Young <sean@mess.org>
-Acked-by: Sean Wang <sean.wang@kernel.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Reviewed-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Reviewed-by: Igor Opaniuk <igor.opaniuk@toradex.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Link: https://lore.kernel.org/r/20190719100524.23300-6-oleksandr.suvorov@toradex.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/rc/mtk-cir.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ sound/soc/codecs/sgtl5000.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/rc/mtk-cir.c b/drivers/media/rc/mtk-cir.c
-index 46101efe017be..da457bf851303 100644
---- a/drivers/media/rc/mtk-cir.c
-+++ b/drivers/media/rc/mtk-cir.c
-@@ -35,6 +35,11 @@
- /* Fields containing pulse width data */
- #define MTK_WIDTH_MASK		  (GENMASK(7, 0))
+diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
+index a6a4748c97f9d..aad9eca41587e 100644
+--- a/sound/soc/codecs/sgtl5000.c
++++ b/sound/soc/codecs/sgtl5000.c
+@@ -1288,6 +1288,7 @@ static int sgtl5000_probe(struct snd_soc_component *component)
+ 	int ret;
+ 	u16 reg;
+ 	struct sgtl5000_priv *sgtl5000 = snd_soc_component_get_drvdata(component);
++	unsigned int zcd_mask = SGTL5000_HP_ZCD_EN | SGTL5000_ADC_ZCD_EN;
  
-+/* IR threshold */
-+#define MTK_IRTHD		 0x14
-+#define MTK_DG_CNT_MASK		 (GENMASK(12, 8))
-+#define MTK_DG_CNT(x)		 ((x) << 8)
-+
- /* Bit to enable interrupt */
- #define MTK_IRINT_EN		  BIT(0)
+ 	/* power up sgtl5000 */
+ 	ret = sgtl5000_set_power_regs(component);
+@@ -1315,9 +1316,8 @@ static int sgtl5000_probe(struct snd_soc_component *component)
+ 	       0x1f);
+ 	snd_soc_component_write(component, SGTL5000_CHIP_PAD_STRENGTH, reg);
  
-@@ -400,6 +405,9 @@ static int mtk_ir_probe(struct platform_device *pdev)
- 	mtk_w32_mask(ir, val, ir->data->fields[MTK_HW_PERIOD].mask,
- 		     ir->data->fields[MTK_HW_PERIOD].reg);
+-	snd_soc_component_write(component, SGTL5000_CHIP_ANA_CTRL,
+-			SGTL5000_HP_ZCD_EN |
+-			SGTL5000_ADC_ZCD_EN);
++	snd_soc_component_update_bits(component, SGTL5000_CHIP_ANA_CTRL,
++		zcd_mask, zcd_mask);
  
-+	/* Set de-glitch counter */
-+	mtk_w32_mask(ir, MTK_DG_CNT(1), MTK_DG_CNT_MASK, MTK_IRTHD);
-+
- 	/* Enable IR and PWM */
- 	val = mtk_r32(ir, MTK_CONFIG_HIGH_REG);
- 	val |= MTK_OK_COUNT(ir->data->ok_count) |  MTK_PWM_EN | MTK_IR_EN;
+ 	snd_soc_component_update_bits(component, SGTL5000_CHIP_MIC_CTRL,
+ 			SGTL5000_BIAS_R_MASK,
 -- 
 2.20.1
 
