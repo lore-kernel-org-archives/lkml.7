@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F11C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA67C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:16:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A63D20869
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AE6B2053B
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:16:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179782;
-	bh=C6bM2lkrmxaRi+8ngCo47RBCDNww5tM1dx0eSaBFFeg=;
+	s=default; t=1569179790;
+	bh=mMpkkxyADmRE+S4kl3stEwDC1qfXOMgTeOHsTq9W7RI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ixyYDZh0/C4KeU+3KCBjUYYU4+iS1kZ2YMex8znf0aqLz/oIWGbpGdVrr3cgb0nW5
-	 1LSryytuxb/arr9hGrXUe8ENGNz5aST62z2kBtJVjI/8cXD9Yhic32PcCby3kETzd1
-	 x5USitMZqb3zepBhfRLVBKexv3D6v0Ao/TdWJMe8=
+	b=Z0Smv7knwbVd4Uq9XlWXMTwu5ofl+xvsUfmEDyDYvISxAnCwUbfj2DxGxHsqoyWp+
+	 MgjtuhOccmJ8yw6+/biGMhAg6aeew7/lHmWwrF+x+eNaIQ9cOPNQO4oozGbXquA/Eb
+	 JPwgME/1aI4KtUaTwpE1NtiugDMn2HdGDtLXJuVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395565AbfIVTQR (ORCPT
+        id S2436965AbfIVTQ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:16:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58034 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:16:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438498AbfIVS4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:56:10 -0400
+        id S2408163AbfIVS4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:56:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BE3F206C2;
-        Sun, 22 Sep 2019 18:56:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D08662186A;
+        Sun, 22 Sep 2019 18:56:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178569;
-        bh=C6bM2lkrmxaRi+8ngCo47RBCDNww5tM1dx0eSaBFFeg=;
+        s=default; t=1569178564;
+        bh=mMpkkxyADmRE+S4kl3stEwDC1qfXOMgTeOHsTq9W7RI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sr40dr0AdoX857ivPHkOroiNJsrLT8JHm3OhzZ3COc7nMBkj1lmSeEpZPpi9cS9tm
-         +fhlwWsgZqHL0JGbQI/EKkpNPgeuFtyI8Uekd0bb61zOazITv3KuECFetvvvkHN3rg
-         VKhSHZBRguZlrpGsAqRCtmXvl4xe4P4Mss2AtHA8=
+        b=eyAB8tPggu8fnCtI0HV+VWfOrD51EMkLnCNUWXtljbxjlEox8iBGHZv66sYgSY+U4
+         EXcQN8QEEfukw9efJWHBu8MWDqoxx4QLhD/Im/K3Ry63TtEbMuvF/axTqGlMf7cNyT
+         6z2fyuJdBTNOR4rVPWL+yjEiLiLYb2fk5YOH5fas=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benjamin Peterson <benjamin@python.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 081/128] perf trace beauty ioctl: Fix off-by-one error in cmd->string table
-Date:   Sun, 22 Sep 2019 14:53:31 -0400
-Message-Id: <20190922185418.2158-81-sashal@kernel.org>
+Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 078/128] media: saa7146: add cleanup in hexium_attach()
+Date:   Sun, 22 Sep 2019 14:53:28 -0400
+Message-Id: <20190922185418.2158-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
 References: <20190922185418.2158-1-sashal@kernel.org>
@@ -63,82 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Peterson <benjamin@python.org>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit b92675f4a9c02dd78052645597dac9e270679ddf ]
+[ Upstream commit 42e64117d3b4a759013f77bbcf25ab6700e55de7 ]
 
-While tracing a program that calls isatty(3), I noticed that strace
-reported TCGETS for the request argument of the underlying ioctl(2)
-syscall while perf trace reported TCSETS. strace is corrrect. The bug in
-perf was due to the tty ioctl beauty table starting at 0x5400 rather
-than 0x5401.
+If saa7146_register_device() fails, no cleanup is executed, leading to
+memory/resource leaks. To fix this issue, perform necessary cleanup work
+before returning the error.
 
-Committer testing:
-
-  Using augmented_raw_syscalls.o and settings to make 'perf trace'
-  use strace formatting, i.e. with this in ~/.perfconfig
-
-  # cat ~/.perfconfig
-  [trace]
-	add_events = /home/acme/git/linux/tools/perf/examples/bpf/augmented_raw_syscalls.c
-	show_zeros = yes
-	show_duration = no
-	no_inherit = yes
-	show_timestamp = no
-	show_arg_names = no
-	args_alignment = 40
-	show_prefix = yes
-
-  # strace -e ioctl stty > /dev/null
-  ioctl(0, TCGETS, {B38400 opost isig icanon echo ...}) = 0
-  ioctl(1, TIOCGWINSZ, 0x7fff8a9b0860)    = -1 ENOTTY (Inappropriate ioctl for device)
-  ioctl(1, TCGETS, 0x7fff8a9b0540)        = -1 ENOTTY (Inappropriate ioctl for device)
-  +++ exited with 0 +++
-  #
-
-Before:
-
-  # perf trace -e ioctl stty > /dev/null
-  ioctl(0, TCSETS, 0x7fff2cf79f20)        = 0
-  ioctl(1, TIOCSWINSZ, 0x7fff2cf79f40)    = -1 ENOTTY (Inappropriate ioctl for device)
-  ioctl(1, TCSETS, 0x7fff2cf79c20)        = -1 ENOTTY (Inappropriate ioctl for device)
-  #
-
-After:
-
-  # perf trace -e ioctl stty > /dev/null
-  ioctl(0, TCGETS, 0x7ffed0763920)        = 0
-  ioctl(1, TIOCGWINSZ, 0x7ffed0763940)    = -1 ENOTTY (Inappropriate ioctl for device)
-  ioctl(1, TCGETS, 0x7ffed0763620)        = -1 ENOTTY (Inappropriate ioctl for device)
-  #
-
-Signed-off-by: Benjamin Peterson <benjamin@python.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Fixes: 1cc47f2d46206d67285aea0ca7e8450af571da13 ("perf trace beauty ioctl: Improve 'cmd' beautifier")
-Link: http://lkml.kernel.org/r/20190823033625.18814-1-benjamin@python.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/trace/beauty/ioctl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/pci/saa7146/hexium_gemini.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/perf/trace/beauty/ioctl.c b/tools/perf/trace/beauty/ioctl.c
-index 1be3b4cf08270..82346ca06f171 100644
---- a/tools/perf/trace/beauty/ioctl.c
-+++ b/tools/perf/trace/beauty/ioctl.c
-@@ -22,7 +22,7 @@
- static size_t ioctl__scnprintf_tty_cmd(int nr, int dir, char *bf, size_t size)
- {
- 	static const char *ioctl_tty_cmd[] = {
--	"TCGETS", "TCSETS", "TCSETSW", "TCSETSF", "TCGETA", "TCSETA", "TCSETAW",
-+	[_IOC_NR(TCGETS)] = "TCGETS", "TCSETS", "TCSETSW", "TCSETSF", "TCGETA", "TCSETA", "TCSETAW",
- 	"TCSETAF", "TCSBRK", "TCXONC", "TCFLSH", "TIOCEXCL", "TIOCNXCL", "TIOCSCTTY",
- 	"TIOCGPGRP", "TIOCSPGRP", "TIOCOUTQ", "TIOCSTI", "TIOCGWINSZ", "TIOCSWINSZ",
- 	"TIOCMGET", "TIOCMBIS", "TIOCMBIC", "TIOCMSET", "TIOCGSOFTCAR", "TIOCSSOFTCAR",
+diff --git a/drivers/media/pci/saa7146/hexium_gemini.c b/drivers/media/pci/saa7146/hexium_gemini.c
+index 6d8e4afe9673a..8c56d4c37a525 100644
+--- a/drivers/media/pci/saa7146/hexium_gemini.c
++++ b/drivers/media/pci/saa7146/hexium_gemini.c
+@@ -304,6 +304,9 @@ static int hexium_attach(struct saa7146_dev *dev, struct saa7146_pci_extension_d
+ 	ret = saa7146_register_device(&hexium->video_dev, dev, "hexium gemini", VFL_TYPE_GRABBER);
+ 	if (ret < 0) {
+ 		pr_err("cannot register capture v4l2 device. skipping.\n");
++		saa7146_vv_release(dev);
++		i2c_del_adapter(&hexium->i2c_adapter);
++		kfree(hexium);
+ 		return ret;
+ 	}
+ 
 -- 
 2.20.1
 
