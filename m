@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6FF9C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 794DFC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:50:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A60432190F
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:50:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5562B21479
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:50:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178242;
-	bh=o0TPlNlA6sE8SAGKH4X9ZsJIGV0LCZYH5UcKTwQ4ZXk=;
+	s=default; t=1569178245;
+	bh=5+4+EyeHu/Ui4dWZQbgh+L+4DfByRKwtCBXnWaSYN9Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zWKBP43dgyOPbgqiR1mHnbEAOwBcwObfGdx4wQ5AdLQPIjSpLnlJ2v+ulrBJRumIv
-	 GJz43Q45OhCMtJHfqOY1O/M6enAmg8OY1acbBHdREFK7oX0CTgvyI6n8qoWmV6BDq6
-	 emijfq51znTWI0FzxCWUSfGM3nfSvdtLhHyLKxXg=
+	b=goyMtki1GfN+/msR5tMdjuMjynb9Cedt510+YSg+6hjJnsVGvQ4D9OhxW5YYAYA95
+	 hmKlx1zOLn34jynokg3a/wd6Jxrb6WBov58xEPEDGqIA97Q7oaS042L/3YVUsxebdH
+	 N9mWeWgP4Bh8Xgr6QA6BR9Rd2hXLTRK1wA1slZTI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404056AbfIVSui (ORCPT
+        id S2404492AbfIVSuo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:50:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47644 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:50:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727512AbfIVSua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:50:30 -0400
+        id S2403906AbfIVSuf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:50:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D062E21D7A;
-        Sun, 22 Sep 2019 18:50:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D60821D6C;
+        Sun, 22 Sep 2019 18:50:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178229;
-        bh=o0TPlNlA6sE8SAGKH4X9ZsJIGV0LCZYH5UcKTwQ4ZXk=;
+        s=default; t=1569178234;
+        bh=5+4+EyeHu/Ui4dWZQbgh+L+4DfByRKwtCBXnWaSYN9Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=19iOUnsIGA91Oj06QOJnoundTpxUzaTVHqnLoplbF17HnNG2pw4GFzFUQfQKYFFWU
-         eAQgJSok3VrKiM7+OTkgTthcA5vHbUpystpFhp8s/DlVorX1um/hj6iNeheQBLyMUH
-         tHklJ6Ys83eCwhJmz5mkupmK14vJyzguyDyBSO54=
+        b=IaCt5icOhXAMtQv10BKDl2E8fe+MMNSL9fis6NesxhGilVDhmD38U1cyozR6yk4OY
+         HlT/KjtcYFSJXxW3kJGG/Z4g2QnaJnDIexRZJheWOVbO2P11Fvap83nruBjnoFOW2x
+         GwQRTqM+Nsd/iRcSJKmyUo6G0//3PrLyH+PyzFYs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
+Cc:     Robert Richter <rrichter@marvell.com>,
+        Borislav Petkov <bp@suse.de>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 028/185] x86/apic: Soft disable APIC before initializing it
-Date:   Sun, 22 Sep 2019 14:46:46 -0400
-Message-Id: <20190922184924.32534-28-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 031/185] EDAC/mc: Fix grain_bits calculation
+Date:   Sun, 22 Sep 2019 14:46:49 -0400
+Message-Id: <20190922184924.32534-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -59,45 +63,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Robert Richter <rrichter@marvell.com>
 
-[ Upstream commit 2640da4cccf5cc613bf26f0998b9e340f4b5f69c ]
+[ Upstream commit 3724ace582d9f675134985727fd5e9811f23c059 ]
 
-If the APIC was already enabled on entry of setup_local_APIC() then
-disabling it soft via the SPIV register makes a lot of sense.
+The grain in EDAC is defined as "minimum granularity for an error
+report, in bytes". The following calculation of the grain_bits in
+edac_mc is wrong:
 
-That masks all LVT entries and brings it into a well defined state.
+	grain_bits = fls_long(e->grain) + 1;
 
-Otherwise previously enabled LVTs which are not touched in the setup
-function stay unmasked and might surprise the just booting kernel.
+Where grain_bits is defined as:
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20190722105219.068290579@linutronix.de
+	grain = 1 << grain_bits
+
+Example:
+
+	grain = 8	# 64 bit (8 bytes)
+	grain_bits = fls_long(8) + 1
+	grain_bits = 4 + 1 = 5
+
+	grain = 1 << grain_bits
+	grain = 1 << 5 = 32
+
+Replace it with the correct calculation:
+
+	grain_bits = fls_long(e->grain - 1);
+
+The example gives now:
+
+	grain_bits = fls_long(8 - 1)
+	grain_bits = fls_long(7)
+	grain_bits = 3
+
+	grain = 1 << 3 = 8
+
+Also, check if the hardware reports a reasonable grain != 0 and fallback
+with a warning to 1 byte granularity otherwise.
+
+ [ bp: massage a bit. ]
+
+Signed-off-by: Robert Richter <rrichter@marvell.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+Cc: James Morse <james.morse@arm.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Tony Luck <tony.luck@intel.com>
+Link: https://lkml.kernel.org/r/20190624150758.6695-2-rrichter@marvell.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/apic/apic.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/edac/edac_mc.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index 67d1259e0f7c0..a18d6dd934e55 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -1550,6 +1550,14 @@ static void setup_local_APIC(void)
- 		return;
- 	}
+diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
+index 64922c8fa7e3b..d899d86897d06 100644
+--- a/drivers/edac/edac_mc.c
++++ b/drivers/edac/edac_mc.c
+@@ -1235,9 +1235,13 @@ void edac_mc_handle_error(const enum hw_event_mc_err_type type,
+ 	if (p > e->location)
+ 		*(p - 1) = '\0';
  
-+	/*
-+	 * If this comes from kexec/kcrash the APIC might be enabled in
-+	 * SPIV. Soft disable it before doing further initialization.
-+	 */
-+	value = apic_read(APIC_SPIV);
-+	value &= ~APIC_SPIV_APIC_ENABLED;
-+	apic_write(APIC_SPIV, value);
+-	/* Report the error via the trace interface */
+-	grain_bits = fls_long(e->grain) + 1;
++	/* Sanity-check driver-supplied grain value. */
++	if (WARN_ON_ONCE(!e->grain))
++		e->grain = 1;
 +
- #ifdef CONFIG_X86_32
- 	/* Pound the ESR really hard over the head with a big hammer - mbligh */
- 	if (lapic_is_integrated() && apic->disable_esr) {
++	grain_bits = fls_long(e->grain - 1);
+ 
++	/* Report the error via the trace interface */
+ 	if (IS_ENABLED(CONFIG_RAS))
+ 		trace_mc_event(type, e->msg, e->label, e->error_count,
+ 			       mci->mc_idx, e->top_layer, e->mid_layer,
 -- 
 2.20.1
 
