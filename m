@@ -4,56 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C429FC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EDB0C49ED7
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 991C9206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:23:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7B7D206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:23:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180197;
-	bh=mhyuEywetJgC9ZaTH2TV31zRcj0apGSIpKAMxZjdVIo=;
+	s=default; t=1569180201;
+	bh=w5vMaPj8DTvAVZi2VQY7kI0VApxM++qJDgNLshmiiWA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kw3WI7fUmr/bEPqmb8b6e6xAyWas9q3gFoA+I/ocyqp4pnTQbaIS2f0u9pAClVdTi
-	 jB2JvPoi0D2Tqn1XT/0vlMA481sE8vi1kX8K9wLlZBHwzeCu6UE8AFDNha26oCz//k
-	 /WGeCR6dN3Uv1qeNPu+DiTo/Fr2Z+uT8WYWQmLxE=
+	b=SaajsH/iSlzz5wasUiKsVb8Pyj/sWnYqSHKnA2/nwySHWFsNAV0JdjoNqsciq19br
+	 Kv4Q/LWenfNwhC2boVBFzHE1BLh9Vw797kSGem3PA1lC2VyfmW5dqSY9X/AqjdFr0m
+	 sVvTLSuVuZCrpt47kzjA548ew07F/XltOS7pnX1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437549AbfIVTXQ (ORCPT
+        id S2394301AbfIVSx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:23:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53310 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:53:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394310AbfIVSx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:53:29 -0400
+        id S2404205AbfIVSxE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:53:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 279A821A4A;
-        Sun, 22 Sep 2019 18:53:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17C5521D7B;
+        Sun, 22 Sep 2019 18:53:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178408;
-        bh=mhyuEywetJgC9ZaTH2TV31zRcj0apGSIpKAMxZjdVIo=;
+        s=default; t=1569178384;
+        bh=w5vMaPj8DTvAVZi2VQY7kI0VApxM++qJDgNLshmiiWA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=awmVeAm4NmQiBvB3mwa4Re/4iMD5F8ug9oj+Sdkzo42nKcovGpeiQ78qNJRAEPdq4
-         traRABg+GjsmcBS+nDtC1cUaI8akWIgN4O5RSOFx5hS05x8OGdMMYsCja5XambpehH
-         T8OMjarFaMpMZOekmAVNEBmN26zNEEskto9rAnoA=
+        b=FxuNhXGwRTHyvcSmH4x5HfAyTV9UliOOzYGMSVKDHYCXwO4ANF23spUGA3kwGdz3i
+         I+QsiyCXp58O7hAm6S27rZClIaa0mYHqX9Mv6lT4pziAzv1nFrP+SDx5eQ81iQutzT
+         fBxyUzwWMdLXHUpehKlagaaQONrD22wXMmhcho40=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 149/185] kprobes: Prohibit probing on BUG() and WARN() address
-Date:   Sun, 22 Sep 2019 14:48:47 -0400
-Message-Id: <20190922184924.32534-149-sashal@kernel.org>
+Cc:     Tom Wu <tomwu@mellanox.com>, Israel Rukshin <israelr@mellanox.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.2 131/185] nvmet: fix data units read and written counters in SMART log
+Date:   Sun, 22 Sep 2019 14:48:29 -0400
+Message-Id: <20190922184924.32534-131-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -66,68 +62,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Tom Wu <tomwu@mellanox.com>
 
-[ Upstream commit e336b4027775cb458dc713745e526fa1a1996b2a ]
+[ Upstream commit 3bec2e3754becebd4c452999adb49bc62c575ea4 ]
 
-Since BUG() and WARN() may use a trap (e.g. UD2 on x86) to
-get the address where the BUG() has occurred, kprobes can not
-do single-step out-of-line that instruction. So prohibit
-probing on such address.
+In nvme spec 1.3 there is a definition for data write/read counters
+from SMART log, (See section 5.14.1.2):
+	This value is reported in thousands (i.e., a value of 1
+	corresponds to 1000 units of 512 bytes read) and is rounded up.
 
-Without this fix, if someone put a kprobe on WARN(), the
-kernel will crash with invalid opcode error instead of
-outputing warning message, because kernel can not find
-correct bug address.
+However, in nvme target where value is reported with actual units,
+but not thousands of units as the spec requires.
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Acked-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-Cc: David S . Miller <davem@davemloft.net>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Naveen N . Rao <naveen.n.rao@linux.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/156750890133.19112.3393666300746167111.stgit@devnote2
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Tom Wu <tomwu@mellanox.com>
+Reviewed-by: Israel Rukshin <israelr@mellanox.com>
+Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/bug.h | 5 +++++
- kernel/kprobes.c    | 3 ++-
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ drivers/nvme/target/admin-cmd.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/bug.h b/include/linux/bug.h
-index fe5916550da8c..f639bd0122f39 100644
---- a/include/linux/bug.h
-+++ b/include/linux/bug.h
-@@ -47,6 +47,11 @@ void generic_bug_clear_once(void);
- 
- #else	/* !CONFIG_GENERIC_BUG */
- 
-+static inline void *find_bug(unsigned long bugaddr)
-+{
-+	return NULL;
-+}
-+
- static inline enum bug_trap_type report_bug(unsigned long bug_addr,
- 					    struct pt_regs *regs)
- {
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 2504c269e6583..1010bde1146b5 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -1514,7 +1514,8 @@ static int check_kprobe_address_safe(struct kprobe *p,
- 	/* Ensure it is not in reserved area nor out of text */
- 	if (!kernel_text_address((unsigned long) p->addr) ||
- 	    within_kprobe_blacklist((unsigned long) p->addr) ||
--	    jump_label_text_reserved(p->addr, p->addr)) {
-+	    jump_label_text_reserved(p->addr, p->addr) ||
-+	    find_bug((unsigned long)p->addr)) {
- 		ret = -EINVAL;
+diff --git a/drivers/nvme/target/admin-cmd.c b/drivers/nvme/target/admin-cmd.c
+index 9f72d515fc4b3..4099093a17343 100644
+--- a/drivers/nvme/target/admin-cmd.c
++++ b/drivers/nvme/target/admin-cmd.c
+@@ -81,9 +81,11 @@ static u16 nvmet_get_smart_log_nsid(struct nvmet_req *req,
  		goto out;
+ 
+ 	host_reads = part_stat_read(ns->bdev->bd_part, ios[READ]);
+-	data_units_read = part_stat_read(ns->bdev->bd_part, sectors[READ]);
++	data_units_read = DIV_ROUND_UP(part_stat_read(ns->bdev->bd_part,
++		sectors[READ]), 1000);
+ 	host_writes = part_stat_read(ns->bdev->bd_part, ios[WRITE]);
+-	data_units_written = part_stat_read(ns->bdev->bd_part, sectors[WRITE]);
++	data_units_written = DIV_ROUND_UP(part_stat_read(ns->bdev->bd_part,
++		sectors[WRITE]), 1000);
+ 
+ 	put_unaligned_le64(host_reads, &slog->host_reads[0]);
+ 	put_unaligned_le64(data_units_read, &slog->data_units_read[0]);
+@@ -111,11 +113,11 @@ static u16 nvmet_get_smart_log_all(struct nvmet_req *req,
+ 		if (!ns->bdev)
+ 			continue;
+ 		host_reads += part_stat_read(ns->bdev->bd_part, ios[READ]);
+-		data_units_read +=
+-			part_stat_read(ns->bdev->bd_part, sectors[READ]);
++		data_units_read += DIV_ROUND_UP(
++			part_stat_read(ns->bdev->bd_part, sectors[READ]), 1000);
+ 		host_writes += part_stat_read(ns->bdev->bd_part, ios[WRITE]);
+-		data_units_written +=
+-			part_stat_read(ns->bdev->bd_part, sectors[WRITE]);
++		data_units_written += DIV_ROUND_UP(
++			part_stat_read(ns->bdev->bd_part, sectors[WRITE]), 1000);
+ 
  	}
+ 	rcu_read_unlock();
 -- 
 2.20.1
 
