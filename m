@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D6DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CEDC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EFFF21928
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:56:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8838421907
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:56:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178580;
-	bh=K0AEGtS3ru3m5o3GBWv+/gtrDrzTVL4cNuryvWAlht0=;
+	s=default; t=1569178583;
+	bh=LyoWdA0f7wwBcvyqosMNHJUlyBRTJxT4ByefN/vA58U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TyHE+zM8TWjkrT1dHTSyRt2dGoa02uEkMTOmRod6U0+pHWN5KDdH1cLV3I2yM8ij7
-	 8NunVwwiGGlyUZLQZHXOt1yUxca1wC27OvjXu72SVhd8qi4rgnGyQA6awm8JcBvXG2
-	 CnJp6D7Y1rAB6rYrOV3watDXKBYsWpXNb337kEkU=
+	b=dnk7XJictaPNtrxdwJdRrQajkP2MMpeOTzKGSl+eqU2fafpqWZARwMrUv2OxJxNEI
+	 7sUWjf3zdmHKR0e7zAGHZc26BRncYHj0e6SohNbNxz2aPLW/4ELUXQlZA6WyyVbn7c
+	 tV1z4fIzRVgrsbRPKrme66tK20vslMuIzyUlX1ys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438555AbfIVS4T (ORCPT
+        id S2438570AbfIVS4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:56:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58142 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:56:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438524AbfIVS4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:56:13 -0400
+        id S2438556AbfIVS4V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:56:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D5962186A;
-        Sun, 22 Sep 2019 18:56:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B527E2186A;
+        Sun, 22 Sep 2019 18:56:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178572;
-        bh=K0AEGtS3ru3m5o3GBWv+/gtrDrzTVL4cNuryvWAlht0=;
+        s=default; t=1569178580;
+        bh=LyoWdA0f7wwBcvyqosMNHJUlyBRTJxT4ByefN/vA58U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AmwN/FvrzgPHBqOlpcdsld10hKwS7yU5dZ2+Th+HModSqeuYRD0ofCe93R4/wtR2O
-         H/UWYHtAioZl9JuHX2J+fF9HCNWn2wAbpB163k80z0acNSR7Zsh66qc+qSHMYch+1+
-         11WaFqjIjNVmRk2NC7dOrazBp7LNOybLJ945PBzc=
+        b=JisylMhPPVmeM7+0SzUQNT8MyU+GzSJXXtsC2WV9aldeJs/MELyS4+E4fnj8+XRor
+         tS1sCGmqgYwh5YLvm6amjjzf+Kz7/ezR+uNNFdz7AQQ9cy/2mLR1BFbpGjDuMD7tcE
+         Q/gBOczVZ/s707AP4vOyd2aUxHZhWNb8WAojyR5E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Al Stone <ahs3@redhat.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 084/128] ACPI / CPPC: do not require the _PSD method
-Date:   Sun, 22 Sep 2019 14:53:34 -0400
-Message-Id: <20190922185418.2158-84-sashal@kernel.org>
+Cc:     Song Liu <songliubraving@fb.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 090/128] x86/mm/pti: Handle unaligned address gracefully in pti_clone_pagetable()
+Date:   Sun, 22 Sep 2019 14:53:40 -0400
+Message-Id: <20190922185418.2158-90-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
 References: <20190922185418.2158-1-sashal@kernel.org>
@@ -59,52 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Stone <ahs3@redhat.com>
+From: Song Liu <songliubraving@fb.com>
 
-[ Upstream commit 4c4cdc4c63853fee48c02e25c8605fb65a6c9924 ]
+[ Upstream commit 825d0b73cd7526b0bb186798583fae810091cbac ]
 
-According to the ACPI 6.3 specification, the _PSD method is optional
-when using CPPC.  The underlying assumption is that each CPU can change
-frequency independently from all other CPUs; _PSD is provided to tell
-the OS that some processors can NOT do that.
+pti_clone_pmds() assumes that the supplied address is either:
 
-However, the acpi_get_psd() function returns ENODEV if there is no _PSD
-method present, or an ACPI error status if an error occurs when evaluating
-_PSD, if present.  This makes _PSD mandatory when using CPPC, in violation
-of the specification, and only on Linux.
+ - properly PUD/PMD aligned
+or
+ - the address is actually mapped which means that independently
+   of the mapping level (PUD/PMD/PTE) the next higher mapping
+   exists.
 
-This has forced some firmware writers to provide a dummy _PSD, even though
-it is irrelevant, but only because Linux requires it; other OSPMs follow
-the spec.  We really do not want to have OS specific ACPI tables, though.
+If that's not the case the unaligned address can be incremented by PUD or
+PMD size incorrectly. All callers supply mapped and/or aligned addresses,
+but for the sake of robustness it's better to handle that case properly and
+to emit a warning.
 
-So, correct acpi_get_psd() so that it does not return an error if there
-is no _PSD method present, but does return a failure when the method can
-not be executed properly.  This allows _PSD to be optional as it should
-be.
+[ tglx: Rewrote changelog and added WARN_ON_ONCE() ]
 
-Signed-off-by: Al Stone <ahs3@redhat.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/alpine.DEB.2.21.1908282352470.1938@nanos.tec.linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/cppc_acpi.c | 6 ++++--
+ arch/x86/mm/pti.c | 6 ++++--
  1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
-index d9ce4b162e2ce..a1aa59849b964 100644
---- a/drivers/acpi/cppc_acpi.c
-+++ b/drivers/acpi/cppc_acpi.c
-@@ -369,8 +369,10 @@ static int acpi_get_psd(struct cpc_desc *cpc_ptr, acpi_handle handle)
- 	union acpi_object  *psd = NULL;
- 	struct acpi_psd_package *pdomain;
+diff --git a/arch/x86/mm/pti.c b/arch/x86/mm/pti.c
+index c1ba376484a5b..622d5968c9795 100644
+--- a/arch/x86/mm/pti.c
++++ b/arch/x86/mm/pti.c
+@@ -338,13 +338,15 @@ pti_clone_pgtable(unsigned long start, unsigned long end,
  
--	status = acpi_evaluate_object_typed(handle, "_PSD", NULL, &buffer,
--			ACPI_TYPE_PACKAGE);
-+	status = acpi_evaluate_object_typed(handle, "_PSD", NULL,
-+					    &buffer, ACPI_TYPE_PACKAGE);
-+	if (status == AE_NOT_FOUND)	/* _PSD is optional */
-+		return 0;
- 	if (ACPI_FAILURE(status))
- 		return -ENODEV;
+ 		pud = pud_offset(p4d, addr);
+ 		if (pud_none(*pud)) {
+-			addr += PUD_SIZE;
++			WARN_ON_ONCE(addr & ~PUD_MASK);
++			addr = round_up(addr + 1, PUD_SIZE);
+ 			continue;
+ 		}
+ 
+ 		pmd = pmd_offset(pud, addr);
+ 		if (pmd_none(*pmd)) {
+-			addr += PMD_SIZE;
++			WARN_ON_ONCE(addr & ~PMD_MASK);
++			addr = round_up(addr + 1, PMD_SIZE);
+ 			continue;
+ 		}
  
 -- 
 2.20.1
