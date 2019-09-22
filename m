@@ -2,172 +2,91 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 389CBC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 06:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E327C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 07:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 065BA20820
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 06:58:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569135486;
-	bh=J/NgsRwthIeJeO2vcQzV9K1t8RVaAj4D19t180IuYKE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WknOLOz1UQ0SqKZtNpM+Bk0bZOizpQbUJ5Vw+QCJm5jjfBgHOnni2pbh1zr9GRcW/
-	 u8SPu6ygD7Rr197yZTmPKE0setrQW3MTu2OZEmK9Uw06axkwflIOrICEoW9JblZ3DS
-	 Zb4jZ2BH4q24SPasot5Z3LIgou++ZN/5f9GO4kaU=
+	by mail.kernel.org (Postfix) with ESMTP id 648AE2070C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 07:11:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727689AbfIVG6F (ORCPT
+        id S1727705AbfIVHLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 02:58:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43834 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727636AbfIVG6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 02:58:04 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id F1E12ACC6;
-        Sun, 22 Sep 2019 06:58:02 +0000 (UTC)
-Date:   Sun, 22 Sep 2019 08:58:01 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: threads-max observe limits
-Message-ID: <20190922065801.GB18814@dhcp22.suse.cz>
-References: <20190917100350.GB1872@dhcp22.suse.cz>
- <38349607-b09c-fa61-ccbb-20bee9f282a3@gmx.de>
- <20190917153830.GE1872@dhcp22.suse.cz>
- <87ftku96md.fsf@x220.int.ebiederm.org>
- <20190918071541.GB12770@dhcp22.suse.cz>
- <87h8585bej.fsf@x220.int.ebiederm.org>
+        Sun, 22 Sep 2019 03:11:21 -0400
+Received: from correo.us.es ([193.147.175.20]:36610 "EHLO mail.us.es"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727638AbfIVHLU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 03:11:20 -0400
+Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
+        by mail.us.es (Postfix) with ESMTP id B557EE1222
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Sep 2019 09:11:15 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id A81E9B8001
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Sep 2019 09:11:15 +0200 (CEST)
+Received: by antivirus1-rhel7.int (Postfix, from userid 99)
+        id 9D6B6B7FF6; Sun, 22 Sep 2019 09:11:15 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 3B8DED2B1E;
+        Sun, 22 Sep 2019 09:11:13 +0200 (CEST)
+Received: from 192.168.1.97 (192.168.1.97)
+ by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
+ Sun, 22 Sep 2019 09:11:13 +0200 (CEST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
+Received: from us.es (unknown [193.47.165.251])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: 1984lsi)
+        by entrada.int (Postfix) with ESMTPSA id D986B4265A5A;
+        Sun, 22 Sep 2019 09:11:12 +0200 (CEST)
+Date:   Sun, 22 Sep 2019 09:11:11 +0200
+X-SMTPAUTHUS: auth mail.us.es
+From:   Pablo Neira Ayuso <pablo@netfilter.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        netfilter-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] netfilter: use __u8 instead of uint8_t in uapi header
+Message-ID: <20190922071111.3gflycy6t4jnjpd4@salvia>
+References: <20190921134648.1259-1-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <87h8585bej.fsf@x220.int.ebiederm.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190921134648.1259-1-yamada.masahiro@socionext.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 19-09-19 14:33:24, Eric W. Biederman wrote:
-> Michal Hocko <mhocko@kernel.org> writes:
+On Sat, Sep 21, 2019 at 10:46:48PM +0900, Masahiro Yamada wrote:
+> When CONFIG_UAPI_HEADER_TEST=y, exported headers are compile-tested to
+> make sure they can be included from user-space.
 > 
-> > On Tue 17-09-19 12:26:18, Eric W. Biederman wrote:
-[...]
-> >> Michal is it a very small effect your customers are seeing?
-> >> Is it another bug somewhere else?
-> >
-> > I am still trying to get more information. Reportedly they see a
-> > different auto tuned limit between two kernel versions which results in
-> > an applicaton complaining. As already mentioned this might be a side
-> > effect of something else and this is not yet fully analyzed. My main
-> > point for bringing up this discussion is ...
+> Currently, linux/netfilter_bridge/ebtables.h is excluded from the test
+> coverage. To make it join the compile-test, we need to fix the build
+> errors attached below.
 > 
-> Please this sounds like the kind of issue that will reveal something
-> deeper about what is going on.
-
-Yes, I have pushed for that information even before starting discussion
-here. I haven't heard from the customer yet unfortunatelly.
- 
-> >> b) Not being able to bump threads_max to the physical limit of
-> >>    the machine is very clearly a regression.
-> >
-> > ... exactly this part. The changelog of the respective patch doesn't
-> > really exaplain why it is needed except of "it sounds like a good idea
-> > to be consistent".
+> For a case like this, we decided to use __u{8,16,32,64} variable types
+> in this discussion:
 > 
-> I suggest doing a partial revert to just:
+>   https://lkml.org/lkml/2019/6/5/18
 > 
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index 7a74ade4e7d6..de8264ea34a7 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -2943,7 +2943,7 @@ int sysctl_max_threads(struct ctl_table *table, int write,
->  	if (ret || !write)
->  		return ret;
->  
-> -	set_max_threads(threads);
-> +	max_threads = threads;
->  
->  	return 0;
->  }
+> Build log:
 > 
-> proc_dointvec_minmax limiting the values to MIN_THREADS and MAX_THREADS
-> is justifiable.  Those are the minimum and maximum values the kernel can
-> function with.
+>   CC      usr/include/linux/netfilter_bridge/ebtables.h.s
+> In file included from <command-line>:32:0:
+> ./usr/include/linux/netfilter_bridge/ebtables.h:126:4: error: unknown type name ‘uint8_t’
+>     uint8_t revision;
+>     ^~~~~~~
+> ./usr/include/linux/netfilter_bridge/ebtables.h:139:4: error: unknown type name ‘uint8_t’
+>     uint8_t revision;
+>     ^~~~~~~
+> ./usr/include/linux/netfilter_bridge/ebtables.h:152:4: error: unknown type name ‘uint8_t’
+>     uint8_t revision;
+>     ^~~~~~~
 
-MAX_THREADS limit makes perfect sense because crossing it reflects a
-real constrain for correctness. MIN_THREADS, on the other hand, is only
-the low gate for auto tuning to not come with an unbootable system. I do
-not think we should jump into the admin call on the lower bound. There
-might be a good reason to restrict the number of threads to 1. So here
-is what I would like to go with.
-
-From 711000fdc243b6bc68a92f9ef0017ae495086d39 Mon Sep 17 00:00:00 2001
-From: Michal Hocko <mhocko@suse.com>
-Date: Sun, 22 Sep 2019 08:45:28 +0200
-Subject: [PATCH] kernel/sysctl.c: do not override max_threads provided by
- userspace
-
-Partially revert 16db3d3f1170 ("kernel/sysctl.c: threads-max observe limits")
-because the patch is causing a regression to any workload which needs to
-override the auto-tuning of the limit provided by kernel.
-
-set_max_threads is implementing a boot time guesstimate to provide a
-sensible limit of the concurrently running threads so that runaways will
-not deplete all the memory. This is a good thing in general but there
-are workloads which might need to increase this limit for an application
-to run (reportedly WebSpher MQ is affected) and that is simply not
-possible after the mentioned change. It is also very dubious to override
-an admin decision by an estimation that doesn't have any direct relation
-to correctness of the kernel operation.
-
-Fix this by dropping set_max_threads from sysctl_max_threads so any
-value is accepted as long as it fits into MAX_THREADS which is important
-to check because allowing more threads could break internal robust futex
-restriction. While at it, do not use MIN_THREADS as the lower boundary
-because it is also only a heuristic for automatic estimation and admin
-might have a good reason to stop new threads to be created even when
-below this limit.
-
-Fixes: 16db3d3f1170 ("kernel/sysctl.c: threads-max observe limits")
-Cc: stable
-Signed-off-by: Michal Hocko <mhocko@suse.com>
----
- kernel/fork.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 2852d0e76ea3..ef865be37e98 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -2929,7 +2929,7 @@ int sysctl_max_threads(struct ctl_table *table, int write,
- 	struct ctl_table t;
- 	int ret;
- 	int threads = max_threads;
--	int min = MIN_THREADS;
-+	int min = 1;
- 	int max = MAX_THREADS;
- 
- 	t = *table;
-@@ -2941,7 +2941,7 @@ int sysctl_max_threads(struct ctl_table *table, int write,
- 	if (ret || !write)
- 		return ret;
- 
--	set_max_threads(threads);
-+	max_threads = threads;
- 
- 	return 0;
- }
--- 
-2.20.1
-
--- 
-Michal Hocko
-SUSE Labs
+Applied.
