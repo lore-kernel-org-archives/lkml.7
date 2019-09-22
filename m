@@ -7,45 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2314DC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A921C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:35:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECD5420640
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:35:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4937C20640
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:35:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180951;
-	bh=ljyOOYLOrVHKPq0GoGX1yqA6Ygi+ssZEBM2nuLc3eP4=;
+	s=default; t=1569180953;
+	bh=vXDkuYne+Hy4F82vAvYwB/USPCaWPvacv5O9Bg8gQqY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yhWCAEf5OqrjWu4RcGJRM1Y/KdHkPjPKZEuqM9dR/TI832+01TCy7VjNcSO5l6Ccn
-	 tMR+QEMWiPX4GSgt4UnI7LKoQKfMY2KKZaXcfyeIaXtV6WH77U4BV4kjUEFgsbuK3u
-	 /RRxDJz+43+0+8RKxe/8Y1q8mF8l0bhMPriaOf48=
+	b=a/XIfB5dPJZm2TIJqfoV6chsLLK1uCgl3+gt5SGL8s/pWUbABd9LhnMWydkUHkf1s
+	 f4N6W9LXHnjRxt1n9obYSF930WxdwujpwI+SUueGYbP2KOru8szGV12U/Br3xyCS1L
+	 njwQ/uN+riyxLi64ACTUOP405by4T+oMv2FPpUqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406740AbfIVTfu (ORCPT
+        id S2390093AbfIVSqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:35:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42898 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:46:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390102AbfIVSqi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:46:38 -0400
+        id S2390001AbfIVSqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:46:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0603121971;
-        Sun, 22 Sep 2019 18:46:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D9FE208C2;
+        Sun, 22 Sep 2019 18:46:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569177997;
-        bh=ljyOOYLOrVHKPq0GoGX1yqA6Ygi+ssZEBM2nuLc3eP4=;
+        s=default; t=1569177990;
+        bh=vXDkuYne+Hy4F82vAvYwB/USPCaWPvacv5O9Bg8gQqY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oUq8QizUVz2QnQ3Z6YN0ZP57X3gj7MCozIBNimEKXGey9Ut0uFYcScAJ4FgmaJv5L
-         NzuPtWnNG32ME0RBWMgKEvqL0fMbE+Q3r+ombJTproeWfNFs21YUi5iYnhdJ963o5k
-         5ubVpfARuj6d2Co8Q4V8HjcszwTFaxoKEVvW6U+Q=
+        b=oJ+GE9GaKbFMWBMd5Kc/A808x6XJHeePJTEAVvnpXBaglVsomDZbqOCx/++CF6vKB
+         NMYEfeKqKytqBk9YHtHDyeYIS8VmFpW41JqenR5nNivEFmscQ6Lx2kyN8eVIRXVLva
+         ehiTT7e8fmwPc1Y3C1DQ2v5HOqwiTszLmOEBrsHY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, kbuild test robot <lkp@intel.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 088/203] net: lpc-enet: fix printk format strings
-Date:   Sun, 22 Sep 2019 14:41:54 -0400
-Message-Id: <20190922184350.30563-88-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 082/203] media: vsp1: fix memory leak of dl on error return path
+Date:   Sun, 22 Sep 2019 14:41:48 -0400
+Message-Id: <20190922184350.30563-82-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -58,62 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit de6f97b2bace0e2eb6c3a86e124d1e652a587b56 ]
+[ Upstream commit 70c55c1ad1a76e804ee5330e134674f5d2741cb7 ]
 
-compile-testing this driver on other architectures showed
-multiple warnings:
+Currently when the call vsp1_dl_body_get fails and returns null the
+error return path leaks the allocation of dl. Fix this by kfree'ing
+dl before returning.
 
-  drivers/net/ethernet/nxp/lpc_eth.c: In function 'lpc_eth_drv_probe':
-  drivers/net/ethernet/nxp/lpc_eth.c:1337:19: warning: format '%d' expects argument of type 'int', but argument 4 has type 'resource_size_t {aka long long unsigned int}' [-Wformat=]
+Addresses-Coverity: ("Resource leak")
 
-  drivers/net/ethernet/nxp/lpc_eth.c:1342:19: warning: format '%x' expects argument of type 'unsigned int', but argument 4 has type 'dma_addr_t {aka long long unsigned int}' [-Wformat=]
-
-Use format strings that work on all architectures.
-
-Link: https://lore.kernel.org/r/20190809144043.476786-10-arnd@arndb.de
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Fixes: 5d7936b8e27d ("media: vsp1: Convert display lists to use new body pool")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/nxp/lpc_eth.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/media/platform/vsp1/vsp1_dl.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/nxp/lpc_eth.c b/drivers/net/ethernet/nxp/lpc_eth.c
-index f7e11f1b0426c..b0c8be127bee1 100644
---- a/drivers/net/ethernet/nxp/lpc_eth.c
-+++ b/drivers/net/ethernet/nxp/lpc_eth.c
-@@ -1344,13 +1344,14 @@ static int lpc_eth_drv_probe(struct platform_device *pdev)
- 	pldat->dma_buff_base_p = dma_handle;
+diff --git a/drivers/media/platform/vsp1/vsp1_dl.c b/drivers/media/platform/vsp1/vsp1_dl.c
+index 104b6f5145364..d7b43037e500a 100644
+--- a/drivers/media/platform/vsp1/vsp1_dl.c
++++ b/drivers/media/platform/vsp1/vsp1_dl.c
+@@ -557,8 +557,10 @@ static struct vsp1_dl_list *vsp1_dl_list_alloc(struct vsp1_dl_manager *dlm)
  
- 	netdev_dbg(ndev, "IO address space     :%pR\n", res);
--	netdev_dbg(ndev, "IO address size      :%d\n", resource_size(res));
-+	netdev_dbg(ndev, "IO address size      :%zd\n",
-+			(size_t)resource_size(res));
- 	netdev_dbg(ndev, "IO address (mapped)  :0x%p\n",
- 			pldat->net_base);
- 	netdev_dbg(ndev, "IRQ number           :%d\n", ndev->irq);
--	netdev_dbg(ndev, "DMA buffer size      :%d\n", pldat->dma_buff_size);
--	netdev_dbg(ndev, "DMA buffer P address :0x%08x\n",
--			pldat->dma_buff_base_p);
-+	netdev_dbg(ndev, "DMA buffer size      :%zd\n", pldat->dma_buff_size);
-+	netdev_dbg(ndev, "DMA buffer P address :%pad\n",
-+			&pldat->dma_buff_base_p);
- 	netdev_dbg(ndev, "DMA buffer V address :0x%p\n",
- 			pldat->dma_buff_base_v);
+ 	/* Get a default body for our list. */
+ 	dl->body0 = vsp1_dl_body_get(dlm->pool);
+-	if (!dl->body0)
++	if (!dl->body0) {
++		kfree(dl);
+ 		return NULL;
++	}
  
-@@ -1397,8 +1398,8 @@ static int lpc_eth_drv_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_out_unregister_netdev;
+ 	header_offset = dl->body0->max_entries * sizeof(*dl->body0->entries);
  
--	netdev_info(ndev, "LPC mac at 0x%08x irq %d\n",
--	       res->start, ndev->irq);
-+	netdev_info(ndev, "LPC mac at 0x%08lx irq %d\n",
-+	       (unsigned long)res->start, ndev->irq);
- 
- 	device_init_wakeup(dev, 1);
- 	device_set_wakeup_enable(dev, 0);
 -- 
 2.20.1
 
