@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5ABCC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E7DC49ED7
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BCFA206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3B772186A
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:11:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179466;
-	bh=ZD0XjW10YGaxOGClqFSscyyezkVzBpPiqFTkIEhmeN4=;
+	s=default; t=1569179468;
+	bh=44rgQTh2Yc+Xc1QrGStJl2qwKe7VSYF3ttp8sId0wsc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BQFHyb1uS2toOt5WOUUxPay05mQoHV5gF/tGID8UIQsoaxx0FXOdp+F2l947Jno+e
-	 hBQROpXfkobgFfMrF1vd+eAhIKI1mFq5SsWqDFsadh+EURf8cW6KgpMC1E4leNAn/q
-	 ehgSrLaIt24E+I+4uLuLCbPPES/No4hm8dtKLu7o=
+	b=KqIJGZgT/Jk//eJajUlc+OvLHUYFuFmukVbzUjeea4U38L/sOtPnBZW3KegyLWVVR
+	 omJZxolf738Gt7UtSW4PEg+1Rf0Yi1J0uWjeBiQpSKlHWjWOsGTCedev9NgIubwVWT
+	 jMsBs08mlsJuFYwqI8rJjWhzi63sU/mGpApUBbJs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395493AbfIVTLF (ORCPT
+        id S2438797AbfIVS6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:11:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33364 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:58:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394899AbfIVS6i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:58:38 -0400
+        id S2408250AbfIVS6b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:58:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E809821479;
-        Sun, 22 Sep 2019 18:58:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 865E4206C2;
+        Sun, 22 Sep 2019 18:58:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178717;
-        bh=ZD0XjW10YGaxOGClqFSscyyezkVzBpPiqFTkIEhmeN4=;
+        s=default; t=1569178710;
+        bh=44rgQTh2Yc+Xc1QrGStJl2qwKe7VSYF3ttp8sId0wsc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rnPcgWbeqo91SKxDlULEe0Xc8WXZIrYnY2PydQrfQrUXr9WOoGx6/xsH2hnWZF4Gy
-         wiG96hj8LNJeznazyov44U/xMSPwWMdVu0e2FpGKdGSMz6yLWb6UusikDLyz4tRV4u
-         DvAqDBEQf5JLjXQzUaINOSJ1a2KwQwrLHfeYdXFM=
+        b=vOvVm1Z1iZVMmzTx1jGkejTKl7lVsPGsH39KMojcxdgnVdjcHW5hxCYe8aOWPbHBK
+         Ea5dXVMEYzg2Z/XCGczGf5t1HWjodypO2j8oDQiT0ByhDd8BKxkRXvEMPPI2MAsMr+
+         hsRTwJ45o+xya58+WClxBPnI/B2CCUTkF+6FR4vs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yazen Ghannam <yazen.ghannam@amd.com>,
-        Borislav Petkov <bp@suse.de>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 50/89] EDAC/amd64: Recognize DRAM device type ECC capability
-Date:   Sun, 22 Sep 2019 14:56:38 -0400
-Message-Id: <20190922185717.3412-50-sashal@kernel.org>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        syzbot+2d4fc2a0c45ad8da7e99@syzkaller.appspotmail.com,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 45/89] media: radio/si470x: kill urb on error
+Date:   Sun, 22 Sep 2019 14:56:33 -0400
+Message-Id: <20190922185717.3412-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185717.3412-1-sashal@kernel.org>
 References: <20190922185717.3412-1-sashal@kernel.org>
@@ -63,70 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yazen Ghannam <yazen.ghannam@amd.com>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-[ Upstream commit f8be8e5680225ac9caf07d4545f8529b7395327f ]
+[ Upstream commit 0d616f2a3fdbf1304db44d451d9f07008556923b ]
 
-AMD Family 17h systems support x4 and x16 DRAM devices. However, the
-device type is not checked when setting mci.edac_ctl_cap.
+In the probe() function radio->int_in_urb was not killed if an
+error occurred in the probe sequence. It was also missing in
+the disconnect.
 
-Set the appropriate capability flag based on the device type.
+This caused this syzbot issue:
 
-Default to x8 DRAM device when neither the x4 or x16 bits are set.
+https://syzkaller.appspot.com/bug?extid=2d4fc2a0c45ad8da7e99
 
- [ bp: reverse cpk_en check to save an indentation level. ]
+Reported-and-tested-by: syzbot+2d4fc2a0c45ad8da7e99@syzkaller.appspotmail.com
 
-Fixes: 2d09d8f301f5 ("EDAC, amd64: Determine EDAC MC capabilities on Fam17h")
-Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
-Cc: James Morse <james.morse@arm.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Tony Luck <tony.luck@intel.com>
-Link: https://lkml.kernel.org/r/20190821235938.118710-3-Yazen.Ghannam@amd.com
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/amd64_edac.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ drivers/media/radio/si470x/radio-si470x-usb.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
-index 667f5ba0403c0..35b847b51bfa9 100644
---- a/drivers/edac/amd64_edac.c
-+++ b/drivers/edac/amd64_edac.c
-@@ -3101,12 +3101,15 @@ static bool ecc_enabled(struct pci_dev *F3, u16 nid)
- static inline void
- f17h_determine_edac_ctl_cap(struct mem_ctl_info *mci, struct amd64_pvt *pvt)
- {
--	u8 i, ecc_en = 1, cpk_en = 1;
-+	u8 i, ecc_en = 1, cpk_en = 1, dev_x4 = 1, dev_x16 = 1;
+diff --git a/drivers/media/radio/si470x/radio-si470x-usb.c b/drivers/media/radio/si470x/radio-si470x-usb.c
+index c311f9951d806..aec528f52ca12 100644
+--- a/drivers/media/radio/si470x/radio-si470x-usb.c
++++ b/drivers/media/radio/si470x/radio-si470x-usb.c
+@@ -737,7 +737,7 @@ static int si470x_usb_driver_probe(struct usb_interface *intf,
+ 	/* start radio */
+ 	retval = si470x_start_usb(radio);
+ 	if (retval < 0)
+-		goto err_all;
++		goto err_buf;
  
- 	for (i = 0; i < NUM_UMCS; i++) {
- 		if (pvt->umc[i].sdp_ctrl & UMC_SDP_INIT) {
- 			ecc_en &= !!(pvt->umc[i].umc_cap_hi & UMC_ECC_ENABLED);
- 			cpk_en &= !!(pvt->umc[i].umc_cap_hi & UMC_ECC_CHIPKILL_CAP);
-+
-+			dev_x4  &= !!(pvt->umc[i].dimm_cfg & BIT(6));
-+			dev_x16 &= !!(pvt->umc[i].dimm_cfg & BIT(7));
- 		}
- 	}
+ 	/* set initial frequency */
+ 	si470x_set_freq(radio, 87.5 * FREQ_MUL); /* available in all regions */
+@@ -752,6 +752,8 @@ static int si470x_usb_driver_probe(struct usb_interface *intf,
  
-@@ -3114,8 +3117,15 @@ f17h_determine_edac_ctl_cap(struct mem_ctl_info *mci, struct amd64_pvt *pvt)
- 	if (ecc_en) {
- 		mci->edac_ctl_cap |= EDAC_FLAG_SECDED;
- 
--		if (cpk_en)
-+		if (!cpk_en)
-+			return;
-+
-+		if (dev_x4)
- 			mci->edac_ctl_cap |= EDAC_FLAG_S4ECD4ED;
-+		else if (dev_x16)
-+			mci->edac_ctl_cap |= EDAC_FLAG_S16ECD16ED;
-+		else
-+			mci->edac_ctl_cap |= EDAC_FLAG_S8ECD8ED;
- 	}
- }
- 
+ 	return 0;
+ err_all:
++	usb_kill_urb(radio->int_in_urb);
++err_buf:
+ 	kfree(radio->buffer);
+ err_ctrl:
+ 	v4l2_ctrl_handler_free(&radio->hdl);
+@@ -825,6 +827,7 @@ static void si470x_usb_driver_disconnect(struct usb_interface *intf)
+ 	mutex_lock(&radio->lock);
+ 	v4l2_device_disconnect(&radio->v4l2_dev);
+ 	video_unregister_device(&radio->videodev);
++	usb_kill_urb(radio->int_in_urb);
+ 	usb_set_intfdata(intf, NULL);
+ 	mutex_unlock(&radio->lock);
+ 	v4l2_device_put(&radio->v4l2_dev);
 -- 
 2.20.1
 
