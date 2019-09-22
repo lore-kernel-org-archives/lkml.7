@@ -2,50 +2,51 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 604D0C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:13:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D8A3C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC04206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:13:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E77D5206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:13:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179600;
-	bh=9BntkJM+X8b2XhLAQ3602/FseqHcZoM+K3XqsjBTRlA=;
+	s=default; t=1569179603;
+	bh=+sq7UOoftRS0d722fihLEmSMnax7EZbAphnxL6t4f28=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aKgJu13cpQW8ukeRuPuR7gLcgPZu4H8xSBbnW405CfoSffWU1ipnYUYx8vwZM/CB9
-	 +pdiDe3iVLRdThHeAlAwFa1849P3Mf92RK8UxIpC9wMuSAPxGr8vRg4+WoaIyowhGg
-	 L4gBm7dljatQ/WQUEZbZPYWfBB0clJpd10z/ARAo=
+	b=B/CJo7h+xCs2jZQNEdQ9gRmArJFudCnVO4l1+556jK7Vyxdu0lRkgr/tK3afFVXdZ
+	 LOyB0UB9H0ksxZ/3LK+DvffxJCdbnA4hO3pTGFGBpMx3MoL9kKr5EjlawY5sSrP5vk
+	 q6qGeUdfHjGf2w3kxf0bOBOp65sIXyfIYy9ffkvc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438612AbfIVS5l (ORCPT
+        id S1730692AbfIVTNV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:57:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59994 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:13:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394833AbfIVS52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:57:28 -0400
+        id S2438611AbfIVS5m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:57:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26D9C21928;
-        Sun, 22 Sep 2019 18:57:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA784206C2;
+        Sun, 22 Sep 2019 18:57:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178647;
-        bh=9BntkJM+X8b2XhLAQ3602/FseqHcZoM+K3XqsjBTRlA=;
+        s=default; t=1569178661;
+        bh=+sq7UOoftRS0d722fihLEmSMnax7EZbAphnxL6t4f28=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uwSN7fKMnR17Ja+jMYOmobVKm1Qc/BNEP5o/tZO0y4n2zvOk6sy1okN2KvBFh8FUt
-         y6CEU/gOLXv73cF+E5wjDafd7Jy5pFGwdC5ww+/IWIhsqXeqPbd6KDtYB25eCjOTlz
-         Id9ytzcFVYLMDlDNpluSbIN0yh9bCDqUnaVVHAy8=
+        b=2QXnbDwY8E5jKmvbMqHr8drOrKxrXq9QWMwz1rCtXWFlX0VuAzj/vNiMyPzBFvEbK
+         074TStac2ET9hcGr+/tb1I22Q8Zyd3SeTUiIlazy8VELIyBgUTlpLjvmf/tkHPz1ga
+         si9YgNbUywAMeuUUXSpv2V7YBgK9kWPZmaUE4Wmk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Wahren <wahrenst@gmx.net>, Vinod Koul <vkoul@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 04/89] dmaengine: bcm2835: Print error in case setting DMA mask fails
-Date:   Sun, 22 Sep 2019 14:55:52 -0400
-Message-Id: <20190922185717.3412-4-sashal@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 14/89] x86/apic: Soft disable APIC before initializing it
+Date:   Sun, 22 Sep 2019 14:56:02 -0400
+Message-Id: <20190922185717.3412-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185717.3412-1-sashal@kernel.org>
 References: <20190922185717.3412-1-sashal@kernel.org>
@@ -58,37 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Wahren <wahrenst@gmx.net>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit 72503b25ee363827aafffc3e8d872e6a92a7e422 ]
+[ Upstream commit 2640da4cccf5cc613bf26f0998b9e340f4b5f69c ]
 
-During enabling of the RPi 4, we found out that the driver doesn't provide
-a helpful error message in case setting DMA mask fails. So add one.
+If the APIC was already enabled on entry of setup_local_APIC() then
+disabling it soft via the SPIV register makes a lot of sense.
 
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-Link: https://lore.kernel.org/r/1563297318-4900-1-git-send-email-wahrenst@gmx.net
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+That masks all LVT entries and brings it into a well defined state.
+
+Otherwise previously enabled LVTs which are not touched in the setup
+function stay unmasked and might surprise the just booting kernel.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20190722105219.068290579@linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/bcm2835-dma.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/x86/kernel/apic/apic.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
-index 6ba53bbd0e161..b984d00bc0558 100644
---- a/drivers/dma/bcm2835-dma.c
-+++ b/drivers/dma/bcm2835-dma.c
-@@ -891,8 +891,10 @@ static int bcm2835_dma_probe(struct platform_device *pdev)
- 		pdev->dev.dma_mask = &pdev->dev.coherent_dma_mask;
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index f8f9cfded97d3..ea2de324ab021 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -1384,6 +1384,14 @@ void setup_local_APIC(void)
+ 		return;
+ 	}
  
- 	rc = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
--	if (rc)
-+	if (rc) {
-+		dev_err(&pdev->dev, "Unable to set DMA mask\n");
- 		return rc;
-+	}
- 
- 	od = devm_kzalloc(&pdev->dev, sizeof(*od), GFP_KERNEL);
- 	if (!od)
++	/*
++	 * If this comes from kexec/kcrash the APIC might be enabled in
++	 * SPIV. Soft disable it before doing further initialization.
++	 */
++	value = apic_read(APIC_SPIV);
++	value &= ~APIC_SPIV_APIC_ENABLED;
++	apic_write(APIC_SPIV, value);
++
+ #ifdef CONFIG_X86_32
+ 	/* Pound the ESR really hard over the head with a big hammer - mbligh */
+ 	if (lapic_is_integrated() && apic->disable_esr) {
 -- 
 2.20.1
 
