@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E540C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C016AC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1348D20882
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:20:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99070206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:20:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180027;
-	bh=q1F/PL9JH2Pgit/X0ETfmM9LtIBLM1x7XmdLoELO7aU=;
+	s=default; t=1569180030;
+	bh=9WlLpdEMTjmBcZOqESYZTnBii0ZagJO0QmItdcIX0is=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZccnO6B8zI5tzEt2wP3g1PRPXub58PJFR23FbpPi4dFQ0z+NIjgWJ59kkyjvpDQ/d
-	 4NB2Id9mxh1mSaO1sSUSb+dn5Iz0A9Hkm4PQlfZJO6hlIJz5p9sPAU5mvIuXKgBWue
-	 I+SQRgDFXDOCJlyuSqSYAPcqwHzOa6BwvarcXeBA=
+	b=Lc+KBaHUt2kBlRlDmdWxUcnP9svaol7OiFVJBXNLWFLEzVr6+5EALKau3cs5jSar2
+	 kBoioahxz1T8jCccYFGX1uwfbfkp2R2J1jFanRyf82svPAZJprTb6ADWvkG9YhzBKm
+	 cUmU85qmqrTq1gqYPCbMSFzJe8UQhEMFZWkAc50Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407986AbfIVSyc (ORCPT
+        id S1730937AbfIVTU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:54:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54490 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:20:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391017AbfIVSyJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:54:09 -0400
+        id S2407951AbfIVSyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:54:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10C7A2190F;
-        Sun, 22 Sep 2019 18:54:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE71021D7A;
+        Sun, 22 Sep 2019 18:54:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178447;
-        bh=q1F/PL9JH2Pgit/X0ETfmM9LtIBLM1x7XmdLoELO7aU=;
+        s=default; t=1569178472;
+        bh=9WlLpdEMTjmBcZOqESYZTnBii0ZagJO0QmItdcIX0is=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WVpcbu2h3/2JnxOr2FGRYvEgoufs57LZORnKtdBD5Py1MZktynxsrupTWmnN6B5iI
-         qT+NBVP+mXzZVACSmyyVMPlPeNqDbj9SaYOlW/6P5Au8QCk/RVJKCinU9Lmdxtk2BV
-         ZFD0xZ6lVmCu54r/kJZIxuByrftk/D0pEW3kdD3g=
+        b=YAYro0u2O+Telx8EIdBzyHbC972/SYlTayOYj0LnFbxY8xobaJhfR4gN7F78tuZEk
+         vCEMBA5igcrf7g7Fn2sWRk4eZRv7pvdDMEAjRisda9qTmidjLsCzok6ZmVFEZNWuAE
+         NTxdcRm3H4t4H27OpmADaNk0xtgjWn/sHfgMziAE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        kbuild test robot <lkp@intel.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.2 179/185] iommu/amd: Override wrong IVRS IOAPIC on Raven Ridge systems
-Date:   Sun, 22 Sep 2019 14:49:17 -0400
-Message-Id: <20190922184924.32534-179-sashal@kernel.org>
+Cc:     Wen Yang <wen.yang99@zte.com.cn>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 011/128] media: exynos4-is: fix leaked of_node references
+Date:   Sun, 22 Sep 2019 14:52:21 -0400
+Message-Id: <20190922185418.2158-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
-References: <20190922184924.32534-1-sashal@kernel.org>
+In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
+References: <20190922185418.2158-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,192 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-[ Upstream commit 93d051550ee02eaff9a2541d825605a7bd778027 ]
+[ Upstream commit da79bf41a4d170ca93cc8f3881a70d734a071c37 ]
 
-Raven Ridge systems may have malfunction touchpad or hang at boot if
-incorrect IVRS IOAPIC is provided by BIOS.
+The call to of_get_child_by_name returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Users already found correct "ivrs_ioapic=" values, let's put them inside
-kernel to workaround buggy BIOS.
+Detected by coccinelle with the following warnings:
+drivers/media/platform/exynos4-is/fimc-is.c:813:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 807, but without a corresponding object release within this function.
+drivers/media/platform/exynos4-is/fimc-is.c:870:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 807, but without a corresponding object release within this function.
+drivers/media/platform/exynos4-is/fimc-is.c:885:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 807, but without a corresponding object release within this function.
+drivers/media/platform/exynos4-is/media-dev.c:545:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 541, but without a corresponding object release within this function.
+drivers/media/platform/exynos4-is/media-dev.c:528:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 499, but without a corresponding object release within this function.
+drivers/media/platform/exynos4-is/media-dev.c:534:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 499, but without a corresponding object release within this function.
 
-BugLink: https://bugs.launchpad.net/bugs/1795292
-BugLink: https://bugs.launchpad.net/bugs/1837688
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/Makefile           |  2 +-
- drivers/iommu/amd_iommu.h        | 14 +++++
- drivers/iommu/amd_iommu_init.c   |  5 +-
- drivers/iommu/amd_iommu_quirks.c | 92 ++++++++++++++++++++++++++++++++
- 4 files changed, 111 insertions(+), 2 deletions(-)
- create mode 100644 drivers/iommu/amd_iommu.h
- create mode 100644 drivers/iommu/amd_iommu_quirks.c
+ drivers/media/platform/exynos4-is/fimc-is.c   | 1 +
+ drivers/media/platform/exynos4-is/media-dev.c | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
-index 8c71a15e986b5..826a5bbe0d09b 100644
---- a/drivers/iommu/Makefile
-+++ b/drivers/iommu/Makefile
-@@ -10,7 +10,7 @@ obj-$(CONFIG_IOMMU_IO_PGTABLE_LPAE) += io-pgtable-arm.o
- obj-$(CONFIG_IOMMU_IOVA) += iova.o
- obj-$(CONFIG_OF_IOMMU)	+= of_iommu.o
- obj-$(CONFIG_MSM_IOMMU) += msm_iommu.o
--obj-$(CONFIG_AMD_IOMMU) += amd_iommu.o amd_iommu_init.o
-+obj-$(CONFIG_AMD_IOMMU) += amd_iommu.o amd_iommu_init.o amd_iommu_quirks.o
- obj-$(CONFIG_AMD_IOMMU_DEBUGFS) += amd_iommu_debugfs.o
- obj-$(CONFIG_AMD_IOMMU_V2) += amd_iommu_v2.o
- obj-$(CONFIG_ARM_SMMU) += arm-smmu.o
-diff --git a/drivers/iommu/amd_iommu.h b/drivers/iommu/amd_iommu.h
-new file mode 100644
-index 0000000000000..12d540d9b59b0
---- /dev/null
-+++ b/drivers/iommu/amd_iommu.h
-@@ -0,0 +1,14 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+
-+#ifndef AMD_IOMMU_H
-+#define AMD_IOMMU_H
-+
-+int __init add_special_device(u8 type, u8 id, u16 *devid, bool cmd_line);
-+
-+#ifdef CONFIG_DMI
-+void amd_iommu_apply_ivrs_quirks(void);
-+#else
-+static void amd_iommu_apply_ivrs_quirks(void) { }
-+#endif
-+
-+#endif
-diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index 07d84dbab564e..6469f51282427 100644
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -30,6 +30,7 @@
- #include <asm/irq_remapping.h>
+diff --git a/drivers/media/platform/exynos4-is/fimc-is.c b/drivers/media/platform/exynos4-is/fimc-is.c
+index 5ddb2321e9e48..0fe9be93fabe2 100644
+--- a/drivers/media/platform/exynos4-is/fimc-is.c
++++ b/drivers/media/platform/exynos4-is/fimc-is.c
+@@ -819,6 +819,7 @@ static int fimc_is_probe(struct platform_device *pdev)
+ 		return -ENODEV;
  
- #include <linux/crash_dump.h>
-+#include "amd_iommu.h"
- #include "amd_iommu_proto.h"
- #include "amd_iommu_types.h"
- #include "irq_remapping.h"
-@@ -997,7 +998,7 @@ static void __init set_dev_entry_from_acpi(struct amd_iommu *iommu,
- 	set_iommu_for_device(iommu, devid);
+ 	is->pmu_regs = of_iomap(node, 0);
++	of_node_put(node);
+ 	if (!is->pmu_regs)
+ 		return -ENOMEM;
+ 
+diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
+index deb499f76412a..b5993532831da 100644
+--- a/drivers/media/platform/exynos4-is/media-dev.c
++++ b/drivers/media/platform/exynos4-is/media-dev.c
+@@ -498,6 +498,7 @@ static int fimc_md_register_sensor_entities(struct fimc_md *fmd)
+ 			continue;
+ 
+ 		ret = fimc_md_parse_port_node(fmd, port, index);
++		of_node_put(port);
+ 		if (ret < 0) {
+ 			of_node_put(node);
+ 			goto rpm_put;
+@@ -531,6 +532,7 @@ static int __of_get_csis_id(struct device_node *np)
+ 	if (!np)
+ 		return -EINVAL;
+ 	of_property_read_u32(np, "reg", &reg);
++	of_node_put(np);
+ 	return reg - FIMC_INPUT_MIPI_CSI2_0;
  }
  
--static int __init add_special_device(u8 type, u8 id, u16 *devid, bool cmd_line)
-+int __init add_special_device(u8 type, u8 id, u16 *devid, bool cmd_line)
- {
- 	struct devid_map *entry;
- 	struct list_head *list;
-@@ -1148,6 +1149,8 @@ static int __init init_iommu_from_acpi(struct amd_iommu *iommu,
- 	if (ret)
- 		return ret;
- 
-+	amd_iommu_apply_ivrs_quirks();
-+
- 	/*
- 	 * First save the recommended feature enable bits from ACPI
- 	 */
-diff --git a/drivers/iommu/amd_iommu_quirks.c b/drivers/iommu/amd_iommu_quirks.c
-new file mode 100644
-index 0000000000000..c235f79b7a200
---- /dev/null
-+++ b/drivers/iommu/amd_iommu_quirks.c
-@@ -0,0 +1,92 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+
-+/*
-+ * Quirks for AMD IOMMU
-+ *
-+ * Copyright (C) 2019 Kai-Heng Feng <kai.heng.feng@canonical.com>
-+ */
-+
-+#ifdef CONFIG_DMI
-+#include <linux/dmi.h>
-+
-+#include "amd_iommu.h"
-+
-+#define IVHD_SPECIAL_IOAPIC		1
-+
-+struct ivrs_quirk_entry {
-+	u8 id;
-+	u16 devid;
-+};
-+
-+enum {
-+	DELL_INSPIRON_7375 = 0,
-+	DELL_LATITUDE_5495,
-+	LENOVO_IDEAPAD_330S_15ARR,
-+};
-+
-+static const struct ivrs_quirk_entry ivrs_ioapic_quirks[][3] __initconst = {
-+	/* ivrs_ioapic[4]=00:14.0 ivrs_ioapic[5]=00:00.2 */
-+	[DELL_INSPIRON_7375] = {
-+		{ .id = 4, .devid = 0xa0 },
-+		{ .id = 5, .devid = 0x2 },
-+		{}
-+	},
-+	/* ivrs_ioapic[4]=00:14.0 */
-+	[DELL_LATITUDE_5495] = {
-+		{ .id = 4, .devid = 0xa0 },
-+		{}
-+	},
-+	/* ivrs_ioapic[32]=00:14.0 */
-+	[LENOVO_IDEAPAD_330S_15ARR] = {
-+		{ .id = 32, .devid = 0xa0 },
-+		{}
-+	},
-+	{}
-+};
-+
-+static int __init ivrs_ioapic_quirk_cb(const struct dmi_system_id *d)
-+{
-+	const struct ivrs_quirk_entry *i;
-+
-+	for (i = d->driver_data; i->id != 0 && i->devid != 0; i++)
-+		add_special_device(IVHD_SPECIAL_IOAPIC, i->id, (u16 *)&i->devid, 0);
-+
-+	return 0;
-+}
-+
-+static const struct dmi_system_id ivrs_quirks[] __initconst = {
-+	{
-+		.callback = ivrs_ioapic_quirk_cb,
-+		.ident = "Dell Inspiron 7375",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 7375"),
-+		},
-+		.driver_data = (void *)&ivrs_ioapic_quirks[DELL_INSPIRON_7375],
-+	},
-+	{
-+		.callback = ivrs_ioapic_quirk_cb,
-+		.ident = "Dell Latitude 5495",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Latitude 5495"),
-+		},
-+		.driver_data = (void *)&ivrs_ioapic_quirks[DELL_LATITUDE_5495],
-+	},
-+	{
-+		.callback = ivrs_ioapic_quirk_cb,
-+		.ident = "Lenovo ideapad 330S-15ARR",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "81FB"),
-+		},
-+		.driver_data = (void *)&ivrs_ioapic_quirks[LENOVO_IDEAPAD_330S_15ARR],
-+	},
-+	{}
-+};
-+
-+void __init amd_iommu_apply_ivrs_quirks(void)
-+{
-+	dmi_check_system(ivrs_quirks);
-+}
-+#endif
 -- 
 2.20.1
 
