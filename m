@@ -2,99 +2,213 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1558EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 14:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C50EC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 14:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0D88206B6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 14:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13099208C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 14:24:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DV3REy4+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729048AbfIVOFi (ORCPT
+        id S1729073AbfIVOYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 10:05:38 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:55887 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728488AbfIVOFi (ORCPT
+        Sun, 22 Sep 2019 10:24:35 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:36851 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729052AbfIVOYe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 10:05:38 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iC2UR-0002wi-EL; Sun, 22 Sep 2019 16:05:27 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B60021C0131;
-        Sun, 22 Sep 2019 16:05:26 +0200 (CEST)
-Date:   Sun, 22 Sep 2019 14:05:26 -0000
-From:   "tip-bot2 for Jiri Olsa" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf tests: Fix static build test
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20190905090924.GA1949@krava>
-References: <20190905090924.GA1949@krava>
+        Sun, 22 Sep 2019 10:24:34 -0400
+Received: by mail-qk1-f196.google.com with SMTP id y189so12657255qkc.3;
+        Sun, 22 Sep 2019 07:24:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nxamFfzGQMxVC3EoWkNOqWdCNC3v4cbH3EQQXhPiNiE=;
+        b=DV3REy4+SHrXWdyEh87oENW6rR5K+oTdjpXgEyuCztS12cFPnnyBGQbGNMknV9/JU+
+         G5Ok+mCTRMf8SKO/fmTum9NX9l4h2Ug9SniKjboSpWVn9UVz+KtRLtiEy0joNTcfayWb
+         9QaDOpF68IyPJ4+1z0JBLj6vLDOL1sYo+UiWHvZvHyGxeWaIoWPLCGR+OkwsKDxvXMsl
+         VZwNuvFIYx1LG+k4Fxkex89EZS3hGecMIib5knXkg3UHlMYePMH7Kfy5k5yylqb3synp
+         v4T3PcBG8/6fJAq2AXBWrhIJfZhOa26XEiS+/TEoqnuqc/1hWZBPpb/kBXdLOqZoxWEp
+         QK2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nxamFfzGQMxVC3EoWkNOqWdCNC3v4cbH3EQQXhPiNiE=;
+        b=hNHHRW9lUCvjZ9khvQpHBixpG20ZvvWDfTLVcVmUDkz7XtAKUsuhbkndkmiLIS49KK
+         vlDOKW83NhYuVcFNxFT87cEY8WHjgUt9DhgE6LcsHuharx221rj/zijv6joedYsnXg8u
+         b3gaCDY8aeRt7R3JW4agPQ6idDr8hfZVqXG08MQZKWRsh9UyYfbHSeLWvKI2IDiibS+7
+         LrDCJo0lHkEWQgltbOOa+70cAqGU1FsZlfMo8s2tFA9YRpPizqrzvR841zZ4kjIewfS4
+         +scUWSHJSB0qb63es2B2I64uRXoOqzL38ljwx+b6qQD1ph3iyu13XuW4PnXDWQheNeqC
+         iDUg==
+X-Gm-Message-State: APjAAAVm8JcCIKK6t6FB4ulsvRHIn6Ipp/7zR7yu9ejZg1Hr0AT+TtW9
+        rfuxDcyNCVfK2ohdjs8jP9Y=
+X-Google-Smtp-Source: APXvYqyAeQ3D9FeXd1t/Nw4Ex4oo7+jyyA2oK+Qa3fWHeTAaH411jn4fGI4DJ2uh25/+IhTyIVAdVA==
+X-Received: by 2002:a37:af02:: with SMTP id y2mr13178890qke.305.1569162273352;
+        Sun, 22 Sep 2019 07:24:33 -0700 (PDT)
+Received: from smtp.gmail.com ([143.107.45.1])
+        by smtp.gmail.com with ESMTPSA id 63sm1835495qkh.82.2019.09.22.07.24.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Sep 2019 07:24:32 -0700 (PDT)
+Date:   Sun, 22 Sep 2019 11:24:27 -0300
+From:   Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Cc:     "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "jic23@kernel.org" <jic23@kernel.org>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "rodrigorsdc@gmail.com" <rodrigorsdc@gmail.com>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        kernel-usp@googlegroups.com
+Subject: Re: [PATCH v2] dt-bindings: iio: accel: add binding documentation
+ for ADIS16240
+Message-ID: <20190922142426.jzodybftlgui3hgx@smtp.gmail.com>
+References: <20190912213929.3664-1-rodrigorsdc@gmail.com>
+ <448e180cc41bfc748d729f3269376b14ba6d3ac9.camel@analog.com>
 MIME-Version: 1.0
-Message-ID: <156916112669.4511.15106187732638392365.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <448e180cc41bfc748d729f3269376b14ba6d3ac9.camel@analog.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/urgent branch of tip:
+Hi,
 
-Commit-ID:     b117b9b48b24cbb090dd3844b563b464d60a6278
-Gitweb:        https://git.kernel.org/tip/b117b9b48b24cbb090dd3844b563b464d60a6278
-Author:        Jiri Olsa <jolsa@redhat.com>
-AuthorDate:    Thu, 05 Sep 2019 11:09:24 +02:00
-Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Fri, 20 Sep 2019 14:37:28 -03:00
+Could anyone with some experience in devicetree give us a hint on what
+to do here?
 
-perf tests: Fix static build test
+I have built a binding doc using the same spi-cpha property.
+https://github.com/analogdevicesinc/linux/commit/bb2945e489dfdf2faa0255dd2cf09ae4ee77d826
 
-Disable the potentional shared library features, which breaks static
-build if they are enabled and detected: jvmti and vdso libraries.
+On 09/13, Ardelean, Alexandru wrote:
+> On Thu, 2019-09-12 at 18:39 -0300, Rodrigo Carvalho wrote:
+> > This patch add device tree binding documentation for ADIS16240.
+> > 
+> > Signed-off-by: Rodrigo Ribeiro Carvalho <rodrigorsdc@gmail.com>
+> > ---
+> > V2:
+> >   - Remove true constant for spi-cpha and spi-cpol
+> >   - Add description field for spi-cpha and spi-cpol
+> >   - Add maxItems field for spi-cpha and spi-cpol
+> > 
+> >  .../bindings/iio/accel/adi,adis16240.yaml     | 61 +++++++++++++++++++
+> >  1 file changed, 61 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
+> > b/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
+> > new file mode 100644
+> > index 000000000000..4b1bd2419604
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
+> > @@ -0,0 +1,61 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/iio/accel/adi,adis16240.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: ADIS16240 Programmable Impact Sensor and Recorder driver
+> > +
+> > +maintainers:
+> > +  - Alexandru Ardelean <alexandru.ardelean@analog.com>
+> > +
+> > +description: |
+> > +  ADIS16240 Programmable Impact Sensor and Recorder driver that supports
+> > +  SPI interface.
+> > +    https://www.analog.com/en/products/adis16240.html
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - adi,adis16240
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  spi-cpha:
+> > +    description: |
+> > +      See Documentation/devicetree/bindings/spi/spi-controller.yaml
+> > +    maxItems: 1
+> 
+> Description for standard properties is not required.
+> 
+> For spi-cpha/cpol just "true" seems sufficient.
+> 
+> So
+> 
+>      spi-cpha: true
+> 
+>      spi-cpol: true
+> 
+I'm not Rob, but I think it is not necessary to explicitly say the
+property is true. In this case, it should be enough if it is present. If
+needed to know whether some property is "true" or not, one can use the
+of_property_read_bool function. For the AD7292 driver on it was enough
+to just add the property names. The spi-chpa did not need any further
+care. Without the spi-cpha property, the AD7292 vendor ID came as 0x0C
+(one bit shifted to the right).
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20190905090924.GA1949@krava
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/tests/make | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Rodrigo is participating at FLUSP students group. It would be good if we
+could test whether these properties are really needed. However, I don't
+think we have the ADIS16240 part. Would anyone test it?
 
-diff --git a/tools/perf/tests/make b/tools/perf/tests/make
-index 6b3afed..c850d16 100644
---- a/tools/perf/tests/make
-+++ b/tools/perf/tests/make
-@@ -100,7 +100,7 @@ make_install_info   := install-info
- make_install_pdf    := install-pdf
- make_install_prefix       := install prefix=/tmp/krava
- make_install_prefix_slash := install prefix=/tmp/krava/
--make_static         := LDFLAGS=-static
-+make_static         := LDFLAGS=-static NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1 NO_JVMTI=1
- 
- # all the NO_* variable combined
- make_minimal        := NO_LIBPERL=1 NO_LIBPYTHON=1 NO_NEWT=1 NO_GTK2=1
+> > +
+> > +  spi-cpol: |
+> > +    description: |
+> > +      See Documentation/devicetree/bindings/spi/spi-controller.yaml
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +
+> 
+> If spi-cpha & spi-cpol are true, they should typically be also required.
+> Though, I think Rob would answer things better here.
+> 
+Some feedback about the need (or not) to link to the spi-controller doc
+would also be appreciated.
+
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/gpio/gpio.h>
+> > +    #include <dt-bindings/interrupt-controller/irq.h>
+> > +    spi0 {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        /* Example for a SPI device node */
+> > +        accelerometer@0 {
+> > +            compatible = "adi,adis16240";
+> > +            reg = <0>;
+> > +            spi-max-frequency = <2500000>;
+> > +            spi-cpol;
+> > +            spi-cpha;
+> > +            interrupt-parent = <&gpio0>;
+> > +            interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
+> > +        };
+> > +    };
+
+Thanks,
+
+Marcelo
