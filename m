@@ -7,53 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C43C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 972BFC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7872206B6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 633F720644
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:39:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569181141;
-	bh=sdetFIu/vglHNyZ++5unS1hl9C7aa1xoN9g5WAshOfA=;
+	s=default; t=1569181147;
+	bh=u/cx5Fx7ocHi7GpON+az0NLHqlFEw3vSZrk3Gb0TNFw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JFjSnNLvq5kfGXdCx/c8y+Fiw8yNS16QXE3azsGIuEX7CoAKxURdhFmydybeCiOrd
-	 Xu+L97ZQqTmeDzqu5M6aQoHwKStZveb47jn1lcrwllLWGwxYSiRRQh2tMdKZc4C+we
-	 gztgX7aOSwru0SQYKIL9aIclRKI7KiAo9zejoS7c=
+	b=d17pgB5PgHTTZkSNJmblpz4SAOkVOpton7qfa4WAPBiN5rKmgI64sUMYj/S1XGjfr
+	 H+3uQnE2Dzfe/lOvbWhgStdREJjDRFsAyrOaqjKbHvNrWc37jpb6ypbC02/cuUrhtS
+	 OrACSVUixJEwCwdXYAX10Unm9pMYjX+g9r1CdQac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406281AbfIVTjB (ORCPT
+        id S2387800AbfIVSpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:39:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40796 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:45:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389074AbfIVSpP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:45:15 -0400
+        id S2388972AbfIVSpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:45:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93648208C2;
-        Sun, 22 Sep 2019 18:45:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E67E2186A;
+        Sun, 22 Sep 2019 18:45:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569177914;
-        bh=sdetFIu/vglHNyZ++5unS1hl9C7aa1xoN9g5WAshOfA=;
+        s=default; t=1569177905;
+        bh=u/cx5Fx7ocHi7GpON+az0NLHqlFEw3vSZrk3Gb0TNFw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CxX+Rjn3vjyhCCe9oxW62brYx2K0Gx9FJ9xU/tSR/nyaN1ZM7yYoZ8bMbg5/l4S7E
-         Tfn+49ZooQuZg59hMpX3wal/gsFIti76oLVfAOuq8QNCGSWhvpDj5oMXxbiQW3Pg37
-         04Gw0hPmDVKx3WEA9Z8AMV0Ntcuf689vjPcKM0pk=
+        b=tqjr/rYYPEt0cQjYnDh8mwN91wo4bjRv4mPMTQMKfe1bIYieiDIH5K1eViyqJJuET
+         dybP2jRDxiMb+EvAvk5x5bjXL8weqlKofZfKy7nbIqCeL7Om2XZpyRTywMMANi8tYE
+         WqfkjwU1bxlEGHdZKEmdV5dzTqxWV8n+B5KtUgOs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, bristot@redhat.com,
-        claudio@evidence.eu.com, lizefan@huawei.com, longman@redhat.com,
-        luca.abeni@santannapisa.it, mathieu.poirier@linaro.org,
-        rostedt@goodmis.org, tj@kernel.org,
-        tommaso.cucinotta@santannapisa.it, Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 028/203] sched/deadline: Fix bandwidth accounting at all levels after offline migration
-Date:   Sun, 22 Sep 2019 14:40:54 -0400
-Message-Id: <20190922184350.30563-28-sashal@kernel.org>
+Cc:     Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>,
+        syzbot+aac8d0d7205f112045d2@syzkaller.appspotmail.com,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 022/203] media: hdpvr: Add device num check and handling
+Date:   Sun, 22 Sep 2019 14:40:48 -0400
+Message-Id: <20190922184350.30563-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -66,90 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juri Lelli <juri.lelli@redhat.com>
+From: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
 
-[ Upstream commit 59d06cea1198d665ba11f7e8c5f45b00ff2e4812 ]
+[ Upstream commit d4a6a9537bc32811486282206ecfb7c53754b74d ]
 
-If a task happens to be throttled while the CPU it was running on gets
-hotplugged off, the bandwidth associated with the task is not correctly
-migrated with it when the replenishment timer fires (offline_migration).
+Add hdpvr device num check and error handling
 
-Fix things up, for this_bw, running_bw and total_bw, when replenishment
-timer fires and task is migrated (dl_task_offline_migration()).
+We need to increment the device count atomically before we checkout a
+device to make sure that we do not reach the max count, otherwise we get
+out-of-bounds errors as reported by syzbot.
 
-Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: bristot@redhat.com
-Cc: claudio@evidence.eu.com
-Cc: lizefan@huawei.com
-Cc: longman@redhat.com
-Cc: luca.abeni@santannapisa.it
-Cc: mathieu.poirier@linaro.org
-Cc: rostedt@goodmis.org
-Cc: tj@kernel.org
-Cc: tommaso.cucinotta@santannapisa.it
-Link: https://lkml.kernel.org/r/20190719140000.31694-5-juri.lelli@redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reported-and-tested-by: syzbot+aac8d0d7205f112045d2@syzkaller.appspotmail.com
+
+Signed-off-by: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/deadline.c | 33 +++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ drivers/media/usb/hdpvr/hdpvr-core.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index 46122edd8552c..20951112b6cdd 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -529,6 +529,7 @@ static struct rq *find_lock_later_rq(struct task_struct *task, struct rq *rq);
- static struct rq *dl_task_offline_migration(struct rq *rq, struct task_struct *p)
- {
- 	struct rq *later_rq = NULL;
-+	struct dl_bw *dl_b;
+diff --git a/drivers/media/usb/hdpvr/hdpvr-core.c b/drivers/media/usb/hdpvr/hdpvr-core.c
+index 9b9d894d29bcb..a0905c81d2cb2 100644
+--- a/drivers/media/usb/hdpvr/hdpvr-core.c
++++ b/drivers/media/usb/hdpvr/hdpvr-core.c
+@@ -271,6 +271,7 @@ static int hdpvr_probe(struct usb_interface *interface,
+ #endif
+ 	size_t buffer_size;
+ 	int i;
++	int dev_num;
+ 	int retval = -ENOMEM;
  
- 	later_rq = find_lock_later_rq(p, rq);
- 	if (!later_rq) {
-@@ -557,6 +558,38 @@ static struct rq *dl_task_offline_migration(struct rq *rq, struct task_struct *p
- 		double_lock_balance(rq, later_rq);
+ 	/* allocate memory for our device state and initialize it */
+@@ -368,8 +369,17 @@ static int hdpvr_probe(struct usb_interface *interface,
  	}
+ #endif
  
-+	if (p->dl.dl_non_contending || p->dl.dl_throttled) {
-+		/*
-+		 * Inactive timer is armed (or callback is running, but
-+		 * waiting for us to release rq locks). In any case, when it
-+		 * will fire (or continue), it will see running_bw of this
-+		 * task migrated to later_rq (and correctly handle it).
-+		 */
-+		sub_running_bw(&p->dl, &rq->dl);
-+		sub_rq_bw(&p->dl, &rq->dl);
-+
-+		add_rq_bw(&p->dl, &later_rq->dl);
-+		add_running_bw(&p->dl, &later_rq->dl);
-+	} else {
-+		sub_rq_bw(&p->dl, &rq->dl);
-+		add_rq_bw(&p->dl, &later_rq->dl);
++	dev_num = atomic_inc_return(&dev_nr);
++	if (dev_num >= HDPVR_MAX) {
++		v4l2_err(&dev->v4l2_dev,
++			 "max device number reached, device register failed\n");
++		atomic_dec(&dev_nr);
++		retval = -ENODEV;
++		goto reg_fail;
 +	}
 +
-+	/*
-+	 * And we finally need to fixup root_domain(s) bandwidth accounting,
-+	 * since p is still hanging out in the old (now moved to default) root
-+	 * domain.
-+	 */
-+	dl_b = &rq->rd->dl_bw;
-+	raw_spin_lock(&dl_b->lock);
-+	__dl_sub(dl_b, p->dl.dl_bw, cpumask_weight(rq->rd->span));
-+	raw_spin_unlock(&dl_b->lock);
-+
-+	dl_b = &later_rq->rd->dl_bw;
-+	raw_spin_lock(&dl_b->lock);
-+	__dl_add(dl_b, p->dl.dl_bw, cpumask_weight(later_rq->rd->span));
-+	raw_spin_unlock(&dl_b->lock);
-+
- 	set_task_cpu(p, later_rq->cpu);
- 	double_unlock_balance(later_rq, rq);
- 
+ 	retval = hdpvr_register_videodev(dev, &interface->dev,
+-				    video_nr[atomic_inc_return(&dev_nr)]);
++				    video_nr[dev_num]);
+ 	if (retval < 0) {
+ 		v4l2_err(&dev->v4l2_dev, "registering videodev failed\n");
+ 		goto reg_fail;
 -- 
 2.20.1
 
