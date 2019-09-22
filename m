@@ -2,112 +2,129 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FAKE_REPLY_C,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F7DC4740C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 12:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E84C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 12:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69C05208C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 12:21:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16A982064A
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 12:29:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DXtBIWzg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728856AbfIVMVp (ORCPT
+        id S1728878AbfIVM3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 08:21:45 -0400
-Received: from correo.us.es ([193.147.175.20]:33374 "EHLO mail.us.es"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728824AbfIVMVp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 08:21:45 -0400
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id BE73DFB363
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Sep 2019 14:21:40 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id AFB33DA4CA
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Sep 2019 14:21:40 +0200 (CEST)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id A5409DA801; Sun, 22 Sep 2019 14:21:40 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 47391CA0F3;
-        Sun, 22 Sep 2019 14:21:38 +0200 (CEST)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Sun, 22 Sep 2019 14:21:38 +0200 (CEST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (unknown [193.47.165.251])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id E7F754265A5A;
-        Sun, 22 Sep 2019 14:21:37 +0200 (CEST)
-Date:   Sun, 22 Sep 2019 14:21:38 +0200
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        Netfilter Development Mailing list 
-        <netfilter-devel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] netfilter: use __u8 instead of uint8_t in uapi header
-Message-ID: <20190922122138.vhhbkdupbijamqsb@salvia>
-References: <20190921134648.1259-1-yamada.masahiro@socionext.com>
- <20190922071111.3gflycy6t4jnjpd4@salvia>
- <20190922071315.iig2lbey5ophuipu@salvia>
- <CAK7LNASAcHCJOsjrE5O8s_8WYUtbvz_4acmxQhsEZJSsoo7U5A@mail.gmail.com>
+        Sun, 22 Sep 2019 08:29:42 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51500 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728863AbfIVM3l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 08:29:41 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 7so6872014wme.1
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Sep 2019 05:29:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=21j2zzfwkesIZ6myrBPcvCgKsUfGnEO2xG0NBiEWz2E=;
+        b=DXtBIWzgumW2Pk37hldBMhWkSZjej64iArMZgU4peeF5eOLnoANUzbB8cwR+aF7Pcd
+         XkeNoLBZm3mucDzhZu6p5aI77K8NtSZESM1Kbaru8LRAR31axI/q9deK61kqq4SDIkj5
+         XrSrWOQUBbLYXdyZEadFPp6XRmVSkP45oobfiVRoEEkk+1GZN0CAo8L2fDcV5fzPsUvw
+         CkmCowO0bC3zoBveusE40r4+my/8BiiozDdvSslEKrttUqEyEQvbttuf5T02UmjjQaNK
+         d7pGkPMSgZhhine/WrW+4PSr417gQunCT1hojcqB35gOcwyrfmsCmza+3/LSfB3AgLsU
+         BiJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=21j2zzfwkesIZ6myrBPcvCgKsUfGnEO2xG0NBiEWz2E=;
+        b=SMf9KiTwkVbwtCwPU7Ck6oFOQjADIu1nY4Qklqev0vPvpf1zMgzmyKcODCM2F9tPoI
+         zVX9iep4bTrhXwclOZfO2SkQnHfJov2MDAgD+ebsJKVur1L+Pe+uCzK34NONXps0BKZn
+         Z0zLExHUfg5u68PMKvOInA8Fy26AY7XxKsX+wWsYKdGI/yf+ji7cGNm+JWMPf3SBo2lo
+         0J25hQ+VVEG7w8UCWvM8RShfzB7bQt6uBcB/wgQg3QBfRMoDwIengwAaGD3TxQL7OXh4
+         uILfX9X2JaWJP3IJljH30attMot71cU/vMfwbu7e6lZmmvrEAkYvkYil6ALlDaZytM5B
+         Id7Q==
+X-Gm-Message-State: APjAAAV3NoknahZrv5jvFW6BfHphIVlhso9kWDFw52/hkSYuDZVun8CD
+        SYqYI/FXukbLgn0BNs5JVA==
+X-Google-Smtp-Source: APXvYqzEDXoCYBI1PPWGRbEw6o5L8FtY/Q3gIVjpRYXbeimytEHT6B33coIhn8lavK1FLwOm65/tBQ==
+X-Received: by 2002:a7b:cbd0:: with SMTP id n16mr9822482wmi.82.1569155379524;
+        Sun, 22 Sep 2019 05:29:39 -0700 (PDT)
+Received: from avx2 ([46.53.253.157])
+        by smtp.gmail.com with ESMTPSA id w125sm17426272wmg.32.2019.09.22.05.29.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 22 Sep 2019 05:29:38 -0700 (PDT)
+Date:   Sun, 22 Sep 2019 15:29:36 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     mingo@kernel.org
+Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        brendanhiggins@google.com, torvalds@linux-foundation.org,
+        rdunlap@infradead.org
+Subject: Re: [GIT PULL] Kselftest update for Linux 5.4-rc1
+Message-ID: <20190922122936.GA31964@avx2>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAK7LNASAcHCJOsjrE5O8s_8WYUtbvz_4acmxQhsEZJSsoo7U5A@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Virus-Scanned: ClamAV using ClamSMTP
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 22, 2019 at 08:49:11PM +0900, Masahiro Yamada wrote:
-> Hi Pablo,
-> 
-> On Sun, Sep 22, 2019 at 4:13 PM Pablo Neira Ayuso <pablo@netfilter.org> wrote:
-> >
-> > On Sun, Sep 22, 2019 at 09:11:11AM +0200, Pablo Neira Ayuso wrote:
-> > > On Sat, Sep 21, 2019 at 10:46:48PM +0900, Masahiro Yamada wrote:
-> > > > When CONFIG_UAPI_HEADER_TEST=y, exported headers are compile-tested to
-> > > > make sure they can be included from user-space.
-> > > >
-> > > > Currently, linux/netfilter_bridge/ebtables.h is excluded from the test
-> > > > coverage. To make it join the compile-test, we need to fix the build
-> > > > errors attached below.
-> > > >
-> > > > For a case like this, we decided to use __u{8,16,32,64} variable types
-> > > > in this discussion:
-> > > >
-> > > >   https://lkml.org/lkml/2019/6/5/18
-> > > >
-> > > > Build log:
-> > > >
-> > > >   CC      usr/include/linux/netfilter_bridge/ebtables.h.s
-> > > > In file included from <command-line>:32:0:
-> > > > ./usr/include/linux/netfilter_bridge/ebtables.h:126:4: error: unknown type name ‘uint8_t’
-> > > >     uint8_t revision;
-> > > >     ^~~~~~~
-> > > > ./usr/include/linux/netfilter_bridge/ebtables.h:139:4: error: unknown type name ‘uint8_t’
-> > > >     uint8_t revision;
-> > > >     ^~~~~~~
-> > > > ./usr/include/linux/netfilter_bridge/ebtables.h:152:4: error: unknown type name ‘uint8_t’
-> > > >     uint8_t revision;
-> > > >     ^~~~~~~
-> > >
-> > > Applied.
-> >
-> > Patch does not apply cleanly to nf.git, I have to keep it back, sorry
-> 
-> Perhaps, reducing the context (git am -C<N>) might help.
+> Beyond the muscle memory aspect, nonsensical naming and inanely flat file
+> hierarchies annoy kernel developers
 
-Not working for me.
+Flat(ish) file hierarchies are good -- less typing.
+If you're copy-pasting then it doesn't matter much (it still matters a
+little because long filename occupy more space on the screen and in logs).
 
-> Shall I rebase and resend it?
+> makes it harder for newbies to understand the kernel source as well.
 
-Please do. Thanks.
+That's fine too.
+
+>   drwxr-xr-x    crypto          # move to kernel/crypto/ or security/crypto/
+
+No, crypto/ is fine.
+
+If everything arch independent should live at kernel/ then why should kernel/
+exist at all? It should be trimmed and everything moved to the top level
+directory (OK, I'm not really suggesting that).
+
+>   drwxr-xr-x    ipc             # move to kernel/ipc/
+
+No, same reason. It was there since time immemorial.
+
+>   drwxr-xr-x    samples         # move to Documentation/samples/
+
+Just delete it. Best API usage samples are in modern parts of main tree,
+actively maintained/updated.
+
+>  drwxr-xr-x    scripts         # move to build/scripts/
+
+eh
+
+> drwxr-xr-x    sound           # move to drivers/sound/
+
+NO! it has hw independent part and pretty big one.
+
+>  drwxr-xr-x    tools
+
+If tools/ people could somewhow stop duplicating large parts of include/linux
+and arch/x86/include/asm it will be very much appreciated.
+
+>  - 'block' could in principle move to drivers/block/core/ but it's fine
+>    at the top level too I think.
+
+It is fine indeed. Short name, top level dir, arch and hw independent
+code -- it is perfect.
+
+> I'm volunteering to do this (in a scripted, repeatable, reviewable,
+> tweakable and "easy to execute in a quiet moment" fashion), although
+> I also expect you to balk at the churn. :-)
+
+Can I pay you $100 to not do this ever?
+
+In Russia we say "what has grown has grown" and it is not like Linux is
+perfect example of intelligent design.
