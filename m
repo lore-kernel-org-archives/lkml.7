@@ -2,209 +2,177 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF2F2C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 21:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12BBEC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 22:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7114A2070C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 21:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D564320869
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 22:16:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="n2TNXLHx";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="asNwgv9+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MCNItgjh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392951AbfIVVI4 (ORCPT
+        id S1726659AbfIVWQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 17:08:56 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:50154 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726785AbfIVVI4 (ORCPT
+        Sun, 22 Sep 2019 18:16:41 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:42757 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725208AbfIVWQk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 17:08:56 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id C32AC6119F; Sun, 22 Sep 2019 21:08:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569186534;
-        bh=9wm8COD2EMV15P72pOwd3My9uchILpzBIWwUnRnsAxg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=n2TNXLHx5CJQIQDEfr9wl+psEORT7lmNYHY6o6o+GUwFNSuSZTGQ7vEVsRN9PdS1E
-         bgKQRKRVEoh0OwlVP7U9HH5kwUjdcH+/GzxPqiJS2Ostk62Xyh+Mg0GLh0O2o3CPV2
-         GuOVE4VHVjF+nCmstL/YXyNncp4/iayrcVfGyZ+E=
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 71D3A6047C;
-        Sun, 22 Sep 2019 21:08:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569186533;
-        bh=9wm8COD2EMV15P72pOwd3My9uchILpzBIWwUnRnsAxg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=asNwgv9+sCgsqACjA0rtYmdjvoZmbFUKoIYfz29OWfRUj3Uzco0nxxRSWdkjlHWyv
-         hJoZ2+2ygPG7/VdXCvJN7CybxJm3jmXt9RsvbNhq3EFXGk2Z1hGVtNZtoXxa7SXisu
-         lAjoU1HzXOQ0sRD62yyU/wch4ISRUMQYg8EKLWh8=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 71D3A6047C
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH] kbuild: binrpm-pkg: Propagate O= to rpmbuild
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <1569006062-17862-1-git-send-email-jhugo@codeaurora.org>
- <CAK7LNATHu6M8zKQi4O30Dvijg0zi8Lvxv6EBbWOE+H_s=E6m+Q@mail.gmail.com>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <e4f88d2a-2551-7a63-629c-21d053d73b84@codeaurora.org>
-Date:   Sun, 22 Sep 2019 15:08:52 -0600
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 22 Sep 2019 18:16:40 -0400
+Received: by mail-lf1-f65.google.com with SMTP id c195so8596823lfg.9;
+        Sun, 22 Sep 2019 15:16:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rFYD+fwmoSXyFmKBXVRXyEsrw6rBXAJ+UIU1iw4pKzQ=;
+        b=MCNItgjhLhk8mYA+AOoQ7mP3woaPOSlkJnIUVWGkUasSlp4iivPfIGV85YMTEN8nZt
+         brB57fJtVWUsS42btjoZVs/kbIvViAf3IpOKUfnmfn9IY6II1vsOlkk7WGx53cRYRsP+
+         wTx1m1k6zSvNwAeCAs5WmlKy8lub+Q8KnWVPyZlKgBgKnbxb6Ns25UoMEn9TxRtshCPH
+         iMgrYfrsrc04vjYiG/kI6qZ6NrNo82+f3aMnPCTJarAXvXyhFboxio7Wz2l3Peals6An
+         xdYHKrtCnDE4Um4WPxp0BTi1c5taTAStfSH+KRGZo4XhK6aElBnJK70LuiNlryiy8upH
+         rLPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rFYD+fwmoSXyFmKBXVRXyEsrw6rBXAJ+UIU1iw4pKzQ=;
+        b=TqyEWLJMtHirAvSpvm7cD4M9Jo/9JxfzC5n1JHq/sc7BuhcQyxBZrnq2G9YkmErOLQ
+         F32JqwadTsUb6cZ/hamqDEDtOfuTlhTQ3cN68dePjPH3d5lmi54F4xlz79Rk85TVnBw3
+         PB0e194Fx7v6t9k8/O6VkFt1m7iy7AjJshokOLJ7LpOlDFAkBr7mvkx1qAKwJvzwU5Kz
+         EJaxYGnlNWmUoKDuFUYQqFKDoypr6JzdL2ciUCIrta8dfQz/IgUCuQSgROXvVkoo/ByB
+         60PW19947axkhzRVfroH6z8QEmp7zENI1zzqflwTF7CMFQRapBxiaaDSwTjfA82FLkfM
+         2mqA==
+X-Gm-Message-State: APjAAAV7NqwlMN9OfxebkaLuqwnpXYTMPKoAJCabEHtU1A9QTORoo2Nz
+        pRf4pzFkYCUbeQXphLu79WE=
+X-Google-Smtp-Source: APXvYqwAK2TAL/PtM5Cs3y25z0RHYQu9TSu6qftq1slRlj05KUFVL0zKYx4YxQksn7N8uqOr+30eQg==
+X-Received: by 2002:ac2:5445:: with SMTP id d5mr14558180lfn.43.1569189204261;
+        Sun, 22 Sep 2019 14:53:24 -0700 (PDT)
+Received: from localhost.localdomain (ppp94-29-32-67.pppoe.spdop.ru. [94.29.32.67])
+        by smtp.gmail.com with ESMTPSA id k8sm2071373ljg.9.2019.09.22.14.53.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Sep 2019 14:53:23 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1] clk: tegra20/30: Optimize PLLX configuration restoring
+Date:   Mon, 23 Sep 2019 00:52:03 +0300
+Message-Id: <20190922215203.32103-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <CAK7LNATHu6M8zKQi4O30Dvijg0zi8Lvxv6EBbWOE+H_s=E6m+Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/20/2019 11:30 PM, Masahiro Yamada wrote:
-> Hi Jeffrey,
-> 
-> On Sat, Sep 21, 2019 at 4:01 AM Jeffrey Hugo <jhugo@codeaurora.org> wrote:
->>
->> If the user specifies O= to indicate a specific output directory for the
->> build, rpmbuild does not honor this, and will use its default, which could
->> be the user's home directory.  In cases where the user has limited home
->> directory space, this could cause the build to outright fail.
->>
->> In the case of the binrpm-pkg target, redefine the top directory for output
->> to be what the user specified in O=, thus the user will find a "rpmbuild"
->> subdirectory in that location with all of the RPM artifacts.
->>
->> This does not apply to rpm-pkg, since we already cannot handle creating
->> the source tarball out of tree.
->>
->> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
-> 
-> 
-> binrpm-pkg creates intermediate build artifacts in $(objtree)/,
-> but puts only the final .rpm into ${HOME}/rpmbuild/RPMS/${ARCH}/.
+There is no need to re-configure PLLX if its configuration in unchanged
+on return from suspend / cpuidle, this saves 300us if PLLX is already
+enabled (common case for cpuidle).
 
-I disagree with this.  Ubuntu 16.04 with the 4.12 version of the rpm 
-packaging utilities will create several directories under rpmbuild in 
-the user's home directory -
-BUILDROOT  RPMS  SOURCES  SPECS  SRPMS
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/clk/tegra/clk-tegra20.c | 25 ++++++++++++++++---------
+ drivers/clk/tegra/clk-tegra30.c | 25 ++++++++++++++++---------
+ 2 files changed, 32 insertions(+), 18 deletions(-)
 
-SOURCES/SPECS/SRPMS are empty for binrpm-pkg.
-RPMs contains the final RPMs as you've indicated
-BUILDROOT appears to contain more intermediate files which are used to 
-then generate the final rpms.
-
-It seems like more than just the final rpms are dumped into the home 
-directory.
-
-> 
-> It has worked like that since a long time before
-> probably in order to respect the default of rpmbuild.
-
-It still seems inconsistent to me that there is an option defined 
-(KBUILD_OUTPUT and O=) which is described to allow the user to specify 
-the location of the build output, yet there are parts of the build 
-system which do not respect this.
-
-I also find it curious that there is a comment in the makefile this 
-patch modifies that seems to suggest that it is intended for O= to 
-impact the binrpm-pkg target, however that is currently not the case.
-
-> 
-> 
-> If you change this behavior, it should be consistent.
-> The 'rpmbuild' should be always located in the kernel tree
-> instead of the user's home directory.
-
-I'm ok with this.  The current patch attempts to preserve current 
-behavior in the default case of not specifying an output directory, but 
-dumping everything in the kernel tree seems sane to me.
-
-> 
-> But, doing so might give impact to other users who
-> rely on having 'rpmbuild' in the home directory.
-> I have to hear opinions from others
-> if this change is desired.
-
-Fair enough.
-
-> 
-> Meanwhile, if you are unhappy with that, one solution is to use RPMOPTS.
-> RPMOPTS exists to tweak the default behavior.
-
-I don't see this documented anywhere.  I'm assuming that is supposed to 
-be an environment variable.  I'll have to see how well that works with 
-our automated build systems.  Command line options are generally preferred.
-
-> 
-> 
-> Thanks.
-> 
-> 
->> ---
->>   scripts/Makefile.package | 12 +++++++++---
->>   1 file changed, 9 insertions(+), 3 deletions(-)
->>
->> diff --git a/scripts/Makefile.package b/scripts/Makefile.package
->> index 56eadcc..aab0711 100644
->> --- a/scripts/Makefile.package
->> +++ b/scripts/Makefile.package
->> @@ -21,7 +21,7 @@ include $(srctree)/scripts/Kbuild.include
->>   # - Use /. to avoid tar packing just the symlink
->>
->>   # Note that the rpm-pkg target cannot be used with KBUILD_OUTPUT,
->> -# but the binrpm-pkg target can; for some reason O= gets ignored.
->> +# but the binrpm-pkg target can
->>
->>   # Remove hyphens since they have special meaning in RPM filenames
->>   KERNELPATH := kernel-$(subst -,_,$(KERNELRELEASE))
->> @@ -33,6 +33,12 @@ TAR_CONTENT := $(KBUILD_ALLDIRS) .config .scmversion Makefile \
->>                  Kbuild Kconfig COPYING $(wildcard localversion*)
->>   MKSPEC     := $(srctree)/scripts/package/mkspec
->>
->> +RPM_OUTDIR :=
->> +ifneq ($(objtree),$(srctree))
->> +# Using absolute path as relative path will cause parts of rpmbuild to fail
->> +        RPM_OUTDIR := --define "_topdir $(abs_objtree)/rpmbuild"
->> +endif
->> +
->>   quiet_cmd_src_tar = TAR     $(2).tar.gz
->>         cmd_src_tar = \
->>   if test "$(objtree)" != "$(srctree)"; then \
->> @@ -65,8 +71,8 @@ PHONY += binrpm-pkg
->>   binrpm-pkg:
->>          $(MAKE) -f $(srctree)/Makefile
->>          $(CONFIG_SHELL) $(MKSPEC) prebuilt > $(objtree)/binkernel.spec
->> -       +rpmbuild $(RPMOPTS) --define "_builddir $(objtree)" --target \
->> -               $(UTS_MACHINE) -bb $(objtree)/binkernel.spec
->> +       +rpmbuild $(RPMOPTS) --define "_builddir $(objtree)" $(RPM_OUTDIR) \
->> +               --target $(UTS_MACHINE) -bb $(objtree)/binkernel.spec
->>
->>   PHONY += deb-pkg
->>   deb-pkg:
->> --
->> Qualcomm Technologies, Inc. is a member of the
->> Code Aurora Forum, a Linux Foundation Collaborative Project.
->>
-> 
-> 
-> --
-> Best Regards
-> Masahiro Yamada
-> 
-
-
+diff --git a/drivers/clk/tegra/clk-tegra20.c b/drivers/clk/tegra/clk-tegra20.c
+index cceefbd67a3b..4d8222f5c638 100644
+--- a/drivers/clk/tegra/clk-tegra20.c
++++ b/drivers/clk/tegra/clk-tegra20.c
+@@ -955,6 +955,7 @@ static void tegra20_cpu_clock_suspend(void)
+ static void tegra20_cpu_clock_resume(void)
+ {
+ 	unsigned int reg, policy;
++	u32 misc, base;
+ 
+ 	/* Is CPU complex already running on PLLX? */
+ 	reg = readl(clk_base + CCLK_BURST_POLICY);
+@@ -968,15 +969,21 @@ static void tegra20_cpu_clock_resume(void)
+ 		BUG();
+ 
+ 	if (reg != CCLK_BURST_POLICY_PLLX) {
+-		/* restore PLLX settings if CPU is on different PLL */
+-		writel(tegra20_cpu_clk_sctx.pllx_misc,
+-					clk_base + PLLX_MISC);
+-		writel(tegra20_cpu_clk_sctx.pllx_base,
+-					clk_base + PLLX_BASE);
+-
+-		/* wait for PLL stabilization if PLLX was enabled */
+-		if (tegra20_cpu_clk_sctx.pllx_base & (1 << 30))
+-			udelay(300);
++		misc = readl_relaxed(clk_base + PLLX_MISC);
++		base = readl_relaxed(clk_base + PLLX_BASE);
++
++		if (misc != tegra20_cpu_clk_sctx.pllx_misc ||
++		    base != tegra20_cpu_clk_sctx.pllx_base) {
++			/* restore PLLX settings if CPU is on different PLL */
++			writel(tegra20_cpu_clk_sctx.pllx_misc,
++						clk_base + PLLX_MISC);
++			writel(tegra20_cpu_clk_sctx.pllx_base,
++						clk_base + PLLX_BASE);
++
++			/* wait for PLL stabilization if PLLX was enabled */
++			if (tegra20_cpu_clk_sctx.pllx_base & (1 << 30))
++				udelay(300);
++		}
+ 	}
+ 
+ 	/*
+diff --git a/drivers/clk/tegra/clk-tegra30.c b/drivers/clk/tegra/clk-tegra30.c
+index a19840fac716..3b5bca44b7aa 100644
+--- a/drivers/clk/tegra/clk-tegra30.c
++++ b/drivers/clk/tegra/clk-tegra30.c
+@@ -1135,6 +1135,7 @@ static void tegra30_cpu_clock_suspend(void)
+ static void tegra30_cpu_clock_resume(void)
+ {
+ 	unsigned int reg, policy;
++	u32 misc, base;
+ 
+ 	/* Is CPU complex already running on PLLX? */
+ 	reg = readl(clk_base + CLK_RESET_CCLK_BURST);
+@@ -1148,15 +1149,21 @@ static void tegra30_cpu_clock_resume(void)
+ 		BUG();
+ 
+ 	if (reg != CLK_RESET_CCLK_BURST_POLICY_PLLX) {
+-		/* restore PLLX settings if CPU is on different PLL */
+-		writel(tegra30_cpu_clk_sctx.pllx_misc,
+-					clk_base + CLK_RESET_PLLX_MISC);
+-		writel(tegra30_cpu_clk_sctx.pllx_base,
+-					clk_base + CLK_RESET_PLLX_BASE);
+-
+-		/* wait for PLL stabilization if PLLX was enabled */
+-		if (tegra30_cpu_clk_sctx.pllx_base & (1 << 30))
+-			udelay(300);
++		misc = readl_relaxed(clk_base + CLK_RESET_PLLX_MISC);
++		base = readl_relaxed(clk_base + CLK_RESET_PLLX_BASE);
++
++		if (misc != tegra30_cpu_clk_sctx.pllx_misc ||
++		    base != tegra30_cpu_clk_sctx.pllx_base) {
++			/* restore PLLX settings if CPU is on different PLL */
++			writel(tegra30_cpu_clk_sctx.pllx_misc,
++						clk_base + CLK_RESET_PLLX_MISC);
++			writel(tegra30_cpu_clk_sctx.pllx_base,
++						clk_base + CLK_RESET_PLLX_BASE);
++
++			/* wait for PLL stabilization if PLLX was enabled */
++			if (tegra30_cpu_clk_sctx.pllx_base & (1 << 30))
++				udelay(300);
++		}
+ 	}
+ 
+ 	/*
 -- 
-Jeffrey Hugo
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+2.23.0
+
