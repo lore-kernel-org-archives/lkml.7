@@ -7,52 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D774AC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E47B9C49ED7
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFF9B206B6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:30:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B97C8206B6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:30:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180652;
-	bh=GSS11zVS5sAZCAm/t7b3x4fHnf3ZmTKbpHI1jMi/XZQ=;
+	s=default; t=1569180658;
+	bh=NSNR2feGXDxKkK6lSElq1QS3FPtFBflExVHOssRHZzY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IQapMh81oP0GNcUU3JqJAElySpQ9haXaDtpxcb946v9mpFKLZIn832OkZbE7zkS6O
-	 dANU9zsjUwNqY90ZUpWK3EhlihNP6646tXJuxIFpDzLOPeVVYOvvqMBoSeUGEHoxWK
-	 vYJwLEGqa2xDjeDJKXrlZ5AgmJKe+427jvdDOuvI=
+	b=CMNtRwi75KWn5g1+XYRDut3jprc7mOTGSL5j5EGT0g3OZoQYBjjr1E0/8c4pcjf1h
+	 OMF8zK0cDkYPgEcZCZQ0oGMBfxQVY58EFQ+vAtWYfZmwlwhknb2+y9y436c68iilR+
+	 4DzInaV8dxqJ0hQ1iP+J5bUeskeWkkiQl4Zv/IPo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388165AbfIVTav (ORCPT
+        id S2388835AbfIVStH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:30:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46246 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:49:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391894AbfIVStM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:49:12 -0400
+        id S2391723AbfIVSsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:48:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EACCE21479;
-        Sun, 22 Sep 2019 18:49:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D86D21907;
+        Sun, 22 Sep 2019 18:48:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178151;
-        bh=GSS11zVS5sAZCAm/t7b3x4fHnf3ZmTKbpHI1jMi/XZQ=;
+        s=default; t=1569178122;
+        bh=NSNR2feGXDxKkK6lSElq1QS3FPtFBflExVHOssRHZzY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IWb05JC2091ut2/YruYJ5+7iIBxIG6dq9MCigCyp+5luObao7U9ffRSs8jQDBsUX4
-         9YnFaRNOITjfLphbFbR4fsIV6OcYZ4HAoSLPftvm0JJqVh/pk74p9Cl+RSnZhqPdzR
-         twvlkOgqOH44gxTnk8ap2q5zTRqQXulPZZhaMEs8=
+        b=pDI2+Iv5W2R+RUNwsoJyasNXnvDO2i3eyA6zuD21QccSX7jRsEt4hvy6mEDfvx65L
+         TjVNCJoFmrhYzHvKmS79VIkFR6v+ZJYBx53mVRr8M6yakm6qdbYYWV8d4a0sNBweAz
+         TQWeoLSGfmtTSybQZFsUTxGBfe23VHqVmvVXtAhY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oliver Neukum <oneukum@suse.com>,
-        syzbot+74c65761783d66a9c97c@syzkaller.appspotmail.com,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 198/203] zd1211rw: remove false assertion from zd_mac_clear()
-Date:   Sun, 22 Sep 2019 14:43:44 -0400
-Message-Id: <20190922184350.30563-198-sashal@kernel.org>
+Cc:     Lukas Wunner <lukas@wunner.de>,
+        =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Martin Sperl <kernel@martin.sperl.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 177/203] spi: bcm2835: Work around DONE bit erratum
+Date:   Sun, 22 Sep 2019 14:43:23 -0400
+Message-Id: <20190922184350.30563-177-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,33 +63,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Lukas Wunner <lukas@wunner.de>
 
-[ Upstream commit 7a2eb7367fdea72e448d1a847aa857f6caf8ea2f ]
+[ Upstream commit 4c524191c0a21d758b519087c64f84348095e940 ]
 
-The function is called before the lock which is asserted was ever used.
-Just remove it.
+Commit 3bd7f6589f67 ("spi: bcm2835: Overcome sglist entry length
+limitation") amended the BCM2835 SPI driver with support for DMA
+transfers whose buffers are not aligned to 4 bytes and require more than
+one sglist entry.
 
-Reported-by: syzbot+74c65761783d66a9c97c@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+When testing this feature with upcoming commits to speed up TX-only and
+RX-only transfers, I noticed that SPI transmission sometimes breaks.
+A function introduced by the commit, bcm2835_spi_transfer_prologue(),
+performs one or two PIO transmissions as a prologue to the actual DMA
+transmission.  It turns out that the breakage goes away if the DONE bit
+in the CS register is set when ending such a PIO transmission.
+
+The DONE bit signifies emptiness of the TX FIFO.  According to the spec,
+the bit is of type RO, so writing it should never have any effect.
+Perhaps the spec is wrong and the bit is actually of type RW1C.
+E.g. the I2C controller on the BCM2835 does have an RW1C DONE bit which
+needs to be cleared by the driver.  Another, possibly more likely
+explanation is that it's a hardware erratum since the issue does not
+occur consistently.
+
+Either way, amend bcm2835_spi_transfer_prologue() to always write the
+DONE bit.
+
+Usually a transmission is ended by bcm2835_spi_reset_hw().  If the
+transmission was successful, the TX FIFO is empty and thus the DONE bit
+is set when bcm2835_spi_reset_hw() reads the CS register.  The bit is
+then written back to the register, so we happen to do the right thing.
+
+However if DONE is not set, e.g. because transmission is aborted with
+a non-empty TX FIFO, the bit won't be written by bcm2835_spi_reset_hw()
+and it seems possible that transmission might subsequently break.  To be
+on the safe side, likewise amend bcm2835_spi_reset_hw() to always write
+the bit.
+
+Tested-by: Nuno Sá <nuno.sa@analog.com>
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Acked-by: Stefan Wahren <wahrenst@gmx.net>
+Acked-by: Martin Sperl <kernel@martin.sperl.org>
+Link: https://lore.kernel.org/r/edb004dff4af6106f6bfcb89e1a96391e96eb857.1564825752.git.lukas@wunner.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/zydas/zd1211rw/zd_mac.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/spi/spi-bcm2835.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/zydas/zd1211rw/zd_mac.c b/drivers/net/wireless/zydas/zd1211rw/zd_mac.c
-index da7e63fca9f57..a9999d10ae81f 100644
---- a/drivers/net/wireless/zydas/zd1211rw/zd_mac.c
-+++ b/drivers/net/wireless/zydas/zd1211rw/zd_mac.c
-@@ -223,7 +223,6 @@ void zd_mac_clear(struct zd_mac *mac)
- {
- 	flush_workqueue(zd_workqueue);
- 	zd_chip_clear(&mac->chip);
--	lockdep_assert_held(&mac->lock);
- 	ZD_MEMCLEAR(mac, sizeof(struct zd_mac));
- }
+diff --git a/drivers/spi/spi-bcm2835.c b/drivers/spi/spi-bcm2835.c
+index 840b1b8ff3dcb..dfdcebb38830a 100644
+--- a/drivers/spi/spi-bcm2835.c
++++ b/drivers/spi/spi-bcm2835.c
+@@ -319,6 +319,13 @@ static void bcm2835_spi_reset_hw(struct spi_controller *ctlr)
+ 		BCM2835_SPI_CS_INTD |
+ 		BCM2835_SPI_CS_DMAEN |
+ 		BCM2835_SPI_CS_TA);
++	/*
++	 * Transmission sometimes breaks unless the DONE bit is written at the
++	 * end of every transfer.  The spec says it's a RO bit.  Either the
++	 * spec is wrong and the bit is actually of type RW1C, or it's a
++	 * hardware erratum.
++	 */
++	cs |= BCM2835_SPI_CS_DONE;
+ 	/* and reset RX/TX FIFOS */
+ 	cs |= BCM2835_SPI_CS_CLEAR_RX | BCM2835_SPI_CS_CLEAR_TX;
  
+@@ -477,7 +484,9 @@ static void bcm2835_spi_transfer_prologue(struct spi_controller *ctlr,
+ 		bcm2835_wr_fifo_count(bs, bs->rx_prologue);
+ 		bcm2835_wait_tx_fifo_empty(bs);
+ 		bcm2835_rd_fifo_count(bs, bs->rx_prologue);
+-		bcm2835_spi_reset_hw(ctlr);
++		bcm2835_wr(bs, BCM2835_SPI_CS, cs | BCM2835_SPI_CS_CLEAR_RX
++						  | BCM2835_SPI_CS_CLEAR_TX
++						  | BCM2835_SPI_CS_DONE);
+ 
+ 		dma_sync_single_for_device(ctlr->dma_rx->device->dev,
+ 					   sg_dma_address(&tfr->rx_sg.sgl[0]),
+@@ -498,7 +507,8 @@ static void bcm2835_spi_transfer_prologue(struct spi_controller *ctlr,
+ 						  | BCM2835_SPI_CS_DMAEN);
+ 		bcm2835_wr_fifo_count(bs, tx_remaining);
+ 		bcm2835_wait_tx_fifo_empty(bs);
+-		bcm2835_wr(bs, BCM2835_SPI_CS, cs | BCM2835_SPI_CS_CLEAR_TX);
++		bcm2835_wr(bs, BCM2835_SPI_CS, cs | BCM2835_SPI_CS_CLEAR_TX
++						  | BCM2835_SPI_CS_DONE);
+ 	}
+ 
+ 	if (likely(!bs->tx_spillover)) {
 -- 
 2.20.1
 
