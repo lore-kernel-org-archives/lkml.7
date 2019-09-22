@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E9BC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12126C4740C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39ED62054F
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:30:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D411C2054F
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:30:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180632;
-	bh=3SajF3zcEVnX9E9Yjs/rmPBDCiRdR6u3eY/O4vzsDr8=;
+	s=default; t=1569180635;
+	bh=seL4JwafJp8UZCv4oDKz5AUomDKOVrqUXEXpQSwlfAk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oUmY7QyERyC5gb2bOnRShlD2wsBoM9tDptwA9Mg19akyvL6yqxXz7zLLGcYPLGBUO
-	 9QK1aQ4WjNIeKKvqqjphO2v9gS3lAGa0MCaK3jg4iHgMFkCg2ch9oIuTVxVruUMOgC
-	 lSTub6D5RZe60SmL3MLkJZcPkF4hyvXzvrzncDNE=
+	b=Br3koXzxt1urMVxtjlSxtSTFvCGyixP9vvH50l117UUKNz/BvHdeGOGEL2vULjRVj
+	 U4s3zEjzUxf6oMWZeOkcYJAA7Rh/QWZEe1xxKdRg8tauvG5tTYtV+NJXB1/tFTd9Ex
+	 xIv2x9m9hDYq0L9bNvPer0nuUeWlCHAMBc5Y5Ic8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394241AbfIVTab (ORCPT
+        id S2392130AbfIVStO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:30:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46286 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:49:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392122AbfIVStP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:49:15 -0400
+        id S2391849AbfIVSsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:48:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A95F2196E;
-        Sun, 22 Sep 2019 18:49:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E179421A4C;
+        Sun, 22 Sep 2019 18:48:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178154;
-        bh=3SajF3zcEVnX9E9Yjs/rmPBDCiRdR6u3eY/O4vzsDr8=;
+        s=default; t=1569178133;
+        bh=seL4JwafJp8UZCv4oDKz5AUomDKOVrqUXEXpQSwlfAk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VYvIfRBjcOFRtXgtN6mjTyoaDLafcBp2i0H4rDvYv3WZ6f9z4fJByef2ZiJiFl+jU
-         iOZNg4JpXxu/fv5nfc0TZiIzTWz6J5xgVr4K8ufcYcTCG0kh6NCThKA88n9/49B4X7
-         X1RDbEWBEjWQqivEyh/I3Tos9GZnVqA2sbTsBOYY=
+        b=R/e9FwQ1MW20+xas3O2McVpbTs5r+RJarKz9bVNGYm2fWzvZvJ40F+8/rlHI2Sex1
+         Rie02hHJFXPOqRcGfbRLYCwgrs10JfHWprV1aVQ0Ghfbv6EMT+Ca5zyjODhg+Ey0GD
+         RxGThTUv2J2q85sHA6IRJZGo3+t+1Y3XOVqJFShM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qu Wenruo <wqu@suse.com>, Jungyeon Yoon <jungyeon.yoon@gmail.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 200/203] btrfs: extent-tree: Make sure we only allocate extents from block groups with the same type
-Date:   Sun, 22 Sep 2019 14:43:46 -0400
-Message-Id: <20190922184350.30563-200-sashal@kernel.org>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 185/203] mmc: dw_mmc: Re-store SDIO IRQs mask at system resume
+Date:   Sun, 22 Sep 2019 14:43:31 -0400
+Message-Id: <20190922184350.30563-185-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -59,112 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-[ Upstream commit 2a28468e525f3924efed7f29f2bc5a2926e7e19a ]
+[ Upstream commit 7c526608d5afb62cbc967225e2ccaacfdd142e9d ]
 
-[BUG]
-With fuzzed image and MIXED_GROUPS super flag, we can hit the following
-BUG_ON():
+In cases when SDIO IRQs have been enabled, runtime suspend is prevented by
+the driver. However, this still means dw_mci_runtime_suspend|resume() gets
+called during system suspend/resume, via pm_runtime_force_suspend|resume().
+This means during system suspend/resume, the register context of the dw_mmc
+device most likely loses its register context, even in cases when SDIO IRQs
+have been enabled.
 
-  kernel BUG at fs/btrfs/delayed-ref.c:491!
-  invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
-  CPU: 0 PID: 1849 Comm: sync Tainted: G           O      5.2.0-custom #27
-  RIP: 0010:update_existing_head_ref.cold+0x44/0x46 [btrfs]
-  Call Trace:
-   add_delayed_ref_head+0x20c/0x2d0 [btrfs]
-   btrfs_add_delayed_tree_ref+0x1fc/0x490 [btrfs]
-   btrfs_free_tree_block+0x123/0x380 [btrfs]
-   __btrfs_cow_block+0x435/0x500 [btrfs]
-   btrfs_cow_block+0x110/0x240 [btrfs]
-   btrfs_search_slot+0x230/0xa00 [btrfs]
-   ? __lock_acquire+0x105e/0x1e20
-   btrfs_insert_empty_items+0x67/0xc0 [btrfs]
-   alloc_reserved_file_extent+0x9e/0x340 [btrfs]
-   __btrfs_run_delayed_refs+0x78e/0x1240 [btrfs]
-   ? kvm_clock_read+0x18/0x30
-   ? __sched_clock_gtod_offset+0x21/0x50
-   btrfs_run_delayed_refs.part.0+0x4e/0x180 [btrfs]
-   btrfs_run_delayed_refs+0x23/0x30 [btrfs]
-   btrfs_commit_transaction+0x53/0x9f0 [btrfs]
-   btrfs_sync_fs+0x7c/0x1c0 [btrfs]
-   ? __ia32_sys_fdatasync+0x20/0x20
-   sync_fs_one_sb+0x23/0x30
-   iterate_supers+0x95/0x100
-   ksys_sync+0x62/0xb0
-   __ia32_sys_sync+0xe/0x20
-   do_syscall_64+0x65/0x240
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+To re-enable the SDIO IRQs during system resume, the dw_mmc driver
+currently relies on the mmc core to re-enable the SDIO IRQs when it resumes
+the SDIO card, but this isn't the recommended solution. Instead, it's
+better to deal with this locally in the dw_mmc driver, so let's do that.
 
-[CAUSE]
-This situation is caused by several factors:
-- Fuzzed image
-  The extent tree of this fs missed one backref for extent tree root.
-  So we can allocated space from that slot.
-
-- MIXED_BG feature
-  Super block has MIXED_BG flag.
-
-- No mixed block groups exists
-  All block groups are just regular ones.
-
-This makes data space_info->block_groups[] contains metadata block
-groups.  And when we reserve space for data, we can use space in
-metadata block group.
-
-Then we hit the following file operations:
-
-- fallocate
-  We need to allocate data extents.
-  find_free_extent() choose to use the metadata block to allocate space
-  from, and choose the space of extent tree root, since its backref is
-  missing.
-
-  This generate one delayed ref head with is_data = 1.
-
-- extent tree update
-  We need to update extent tree at run_delayed_ref time.
-
-  This generate one delayed ref head with is_data = 0, for the same
-  bytenr of old extent tree root.
-
-Then we trigger the BUG_ON().
-
-[FIX]
-The quick fix here is to check block_group->flags before using it.
-
-The problem can only happen for MIXED_GROUPS fs. Regular filesystems
-won't have space_info with DATA|METADATA flag, and no way to hit the
-bug.
-
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203255
-Reported-by: Jungyeon Yoon <jungyeon.yoon@gmail.com>
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Tested-by: Matthias Kaehlcke <mka@chromium.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/extent-tree.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/mmc/host/dw_mmc.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
-index 8b7eb22d508a5..ef2f80825c826 100644
---- a/fs/btrfs/extent-tree.c
-+++ b/fs/btrfs/extent-tree.c
-@@ -5751,6 +5751,14 @@ static noinline int find_free_extent(struct btrfs_fs_info *fs_info,
- 			 */
- 			if ((flags & extra) && !(block_group->flags & extra))
- 				goto loop;
-+
-+			/*
-+			 * This block group has different flags than we want.
-+			 * It's possible that we have MIXED_GROUP flag but no
-+			 * block group is mixed.  Just skip such block group.
-+			 */
-+			btrfs_release_block_group(block_group, delalloc);
-+			continue;
- 		}
+diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+index eea52e2c5a0ce..79c55c7b4afd9 100644
+--- a/drivers/mmc/host/dw_mmc.c
++++ b/drivers/mmc/host/dw_mmc.c
+@@ -3460,6 +3460,10 @@ int dw_mci_runtime_resume(struct device *dev)
+ 	/* Force setup bus to guarantee available clock output */
+ 	dw_mci_setup_bus(host->slot, true);
  
- have_block_group:
++	/* Re-enable SDIO interrupts. */
++	if (sdio_irq_claimed(host->slot->mmc))
++		__dw_mci_enable_sdio_irq(host->slot, 1);
++
+ 	/* Now that slots are all setup, we can enable card detect */
+ 	dw_mci_enable_cd(host);
+ 
 -- 
 2.20.1
 
