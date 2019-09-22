@@ -4,115 +4,165 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5A1C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE4A2C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0543A2054F
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:30:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5A53206B6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:30:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180613;
-	bh=Q08OWC47QjTSZ3AcIhY2hiw8/byQe913VO0iicauhN8=;
+	s=default; t=1569180617;
+	bh=GWfO61UdfkXShokBTmb/zORTeBkGVGwIc2HMawHQahk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pp3byHMJ4GzltswBqBjHqsqbu0rdIycOlif0T++zL6JugeN6rD/iJaLilXPnmixgi
-	 H2aAk/MnnFbfIEqHrh3hZEePMuB5t9rz5vKWr5wZaOU7SWdy9cyT8OZ7x23R0SdmPS
-	 Ud+ufCZSdYh/wPyUxKqRsW92KncFMmLgBczMCQVg=
+	b=icsecYcN09z1D3UNSvxO1zC2b1Gq/Dv/8iHXON01MaUEqFA1Wfuqi5S91umlpgRPh
+	 sAFhLMC+JG1p73LfcDLBA2aNpKcgQp1DsHiURTB/S4WN1eArw89J+4FyGh4T1MSmrD
+	 0Rid50dVbttEtHC25DU72DRlG+a9o+1/dqS1qL8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392274AbfIVStX (ORCPT
+        id S2393116AbfIVTaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:49:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46000 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:30:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388633AbfIVStB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:49:01 -0400
+        id S2392223AbfIVStT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:49:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C58F021479;
-        Sun, 22 Sep 2019 18:48:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC71821A4C;
+        Sun, 22 Sep 2019 18:49:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178140;
-        bh=Q08OWC47QjTSZ3AcIhY2hiw8/byQe913VO0iicauhN8=;
+        s=default; t=1569178158;
+        bh=GWfO61UdfkXShokBTmb/zORTeBkGVGwIc2HMawHQahk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xOcbHgyNG8WIFHS8fjeYUkaFexQFSMO3+WndQmoXEmtTqxq6Vmzuc4RmmcxFb2iMj
-         J2cpzUDkcw3q6qUCYfG1c+5/nZhHp5tscRQ+8TQ4r5nwbJ3d/IHefvQmMqwRFSloYf
-         76lf3/4NpN+MHga+3i/IyrM18GINhnhE8raZAVqM=
+        b=vk/FC1If6m5pecTy2UxEePJWWAktdh7xorezGhrjMUKyji43l735b9djGZFv5MWkw
+         Rw2FHG5E/mip5/4/cnn3dUIi9FeVSuM+Rzs6/l5in8QYX9GP756xhfjK62Saxl2hI9
+         OsEL81V8iGdT/VKOfIPyiPKyLf3Lr05B+egyy5RA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 190/203] e1000e: add workaround for possible stalled packet
-Date:   Sun, 22 Sep 2019 14:43:36 -0400
-Message-Id: <20190922184350.30563-190-sashal@kernel.org>
+Cc:     =?UTF-8?q?Ji=C5=99=C3=AD=20Pale=C4=8Dek?= <jpalecek@web.de>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 203/203] kvm: Nested KVM MMUs need PAE root too
+Date:   Sun, 22 Sep 2019 14:43:49 -0400
+Message-Id: <20190922184350.30563-203-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Jiří Paleček <jpalecek@web.de>
 
-[ Upstream commit e5e9a2ecfe780975820e157b922edee715710b66 ]
+[ Upstream commit 1cfff4d9a5d01fa61e5768a6afffc81ae1c8ecb9 ]
 
-This works around a possible stalled packet issue, which may occur due to
-clock recovery from the PCH being too slow, when the LAN is transitioning
-from K1 at 1G link speed.
+On AMD processors, in PAE 32bit mode, nested KVM instances don't
+work. The L0 host get a kernel OOPS, which is related to
+arch.mmu->pae_root being NULL.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204057
+The reason for this is that when setting up nested KVM instance,
+arch.mmu is set to &arch.guest_mmu (while normally, it would be
+&arch.root_mmu). However, the initialization and allocation of
+pae_root only creates it in root_mmu. KVM code (ie. in
+mmu_alloc_shadow_roots) then accesses arch.mmu->pae_root, which is the
+unallocated arch.guest_mmu->pae_root.
 
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+This fix just allocates (and frees) pae_root in both guest_mmu and
+root_mmu (and also lm_root if it was allocated). The allocation is
+subject to previous restrictions ie. it won't allocate anything on
+64-bit and AFAIK not on Intel.
+
+Fixes: https://bugzilla.kernel.org/show_bug.cgi?id=203923
+Fixes: 14c07ad89f4d ("x86/kvm/mmu: introduce guest_mmu")
+Signed-off-by: Jiri Palecek <jpalecek@web.de>
+Tested-by: Jiri Palecek <jpalecek@web.de>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/e1000e/ich8lan.c | 10 ++++++++++
- drivers/net/ethernet/intel/e1000e/ich8lan.h |  2 +-
- 2 files changed, 11 insertions(+), 1 deletion(-)
+ arch/x86/kvm/mmu.c | 30 ++++++++++++++++++++++--------
+ 1 file changed, 22 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.c b/drivers/net/ethernet/intel/e1000e/ich8lan.c
-index 395b057014809..a1fab77b2096a 100644
---- a/drivers/net/ethernet/intel/e1000e/ich8lan.c
-+++ b/drivers/net/ethernet/intel/e1000e/ich8lan.c
-@@ -1429,6 +1429,16 @@ static s32 e1000_check_for_copper_link_ich8lan(struct e1000_hw *hw)
- 			else
- 				phy_reg |= 0xFA;
- 			e1e_wphy_locked(hw, I217_PLL_CLOCK_GATE_REG, phy_reg);
-+
-+			if (speed == SPEED_1000) {
-+				hw->phy.ops.read_reg_locked(hw, HV_PM_CTRL,
-+							    &phy_reg);
-+
-+				phy_reg |= HV_PM_CTRL_K1_CLK_REQ;
-+
-+				hw->phy.ops.write_reg_locked(hw, HV_PM_CTRL,
-+							     phy_reg);
-+			}
- 		}
- 		hw->phy.ops.release(hw);
+diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
+index a63964e7cec7b..c68bf3aab12c1 100644
+--- a/arch/x86/kvm/mmu.c
++++ b/arch/x86/kvm/mmu.c
+@@ -5611,13 +5611,13 @@ slot_handle_leaf(struct kvm *kvm, struct kvm_memory_slot *memslot,
+ 				 PT_PAGE_TABLE_LEVEL, lock_flush_tlb);
+ }
  
-diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.h b/drivers/net/ethernet/intel/e1000e/ich8lan.h
-index eb09c755fa172..1502895eb45dd 100644
---- a/drivers/net/ethernet/intel/e1000e/ich8lan.h
-+++ b/drivers/net/ethernet/intel/e1000e/ich8lan.h
-@@ -210,7 +210,7 @@
+-static void free_mmu_pages(struct kvm_vcpu *vcpu)
++static void free_mmu_pages(struct kvm_mmu *mmu)
+ {
+-	free_page((unsigned long)vcpu->arch.mmu->pae_root);
+-	free_page((unsigned long)vcpu->arch.mmu->lm_root);
++	free_page((unsigned long)mmu->pae_root);
++	free_page((unsigned long)mmu->lm_root);
+ }
  
- /* PHY Power Management Control */
- #define HV_PM_CTRL		PHY_REG(770, 17)
--#define HV_PM_CTRL_PLL_STOP_IN_K1_GIGA	0x100
-+#define HV_PM_CTRL_K1_CLK_REQ		0x200
- #define HV_PM_CTRL_K1_ENABLE		0x4000
+-static int alloc_mmu_pages(struct kvm_vcpu *vcpu)
++static int alloc_mmu_pages(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu)
+ {
+ 	struct page *page;
+ 	int i;
+@@ -5638,9 +5638,9 @@ static int alloc_mmu_pages(struct kvm_vcpu *vcpu)
+ 	if (!page)
+ 		return -ENOMEM;
  
- #define I217_PLL_CLOCK_GATE_REG	PHY_REG(772, 28)
+-	vcpu->arch.mmu->pae_root = page_address(page);
++	mmu->pae_root = page_address(page);
+ 	for (i = 0; i < 4; ++i)
+-		vcpu->arch.mmu->pae_root[i] = INVALID_PAGE;
++		mmu->pae_root[i] = INVALID_PAGE;
+ 
+ 	return 0;
+ }
+@@ -5648,6 +5648,7 @@ static int alloc_mmu_pages(struct kvm_vcpu *vcpu)
+ int kvm_mmu_create(struct kvm_vcpu *vcpu)
+ {
+ 	uint i;
++	int ret;
+ 
+ 	vcpu->arch.mmu = &vcpu->arch.root_mmu;
+ 	vcpu->arch.walk_mmu = &vcpu->arch.root_mmu;
+@@ -5665,7 +5666,19 @@ int kvm_mmu_create(struct kvm_vcpu *vcpu)
+ 		vcpu->arch.guest_mmu.prev_roots[i] = KVM_MMU_ROOT_INFO_INVALID;
+ 
+ 	vcpu->arch.nested_mmu.translate_gpa = translate_nested_gpa;
+-	return alloc_mmu_pages(vcpu);
++
++	ret = alloc_mmu_pages(vcpu, &vcpu->arch.guest_mmu);
++	if (ret)
++		return ret;
++
++	ret = alloc_mmu_pages(vcpu, &vcpu->arch.root_mmu);
++	if (ret)
++		goto fail_allocate_root;
++
++	return ret;
++ fail_allocate_root:
++	free_mmu_pages(&vcpu->arch.guest_mmu);
++	return ret;
+ }
+ 
+ 
+@@ -6168,7 +6181,8 @@ unsigned long kvm_mmu_calculate_default_mmu_pages(struct kvm *kvm)
+ void kvm_mmu_destroy(struct kvm_vcpu *vcpu)
+ {
+ 	kvm_mmu_unload(vcpu);
+-	free_mmu_pages(vcpu);
++	free_mmu_pages(&vcpu->arch.root_mmu);
++	free_mmu_pages(&vcpu->arch.guest_mmu);
+ 	mmu_free_memory_caches(vcpu);
+ }
+ 
 -- 
 2.20.1
 
