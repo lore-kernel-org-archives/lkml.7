@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D395EC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CEDC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ECB920869
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:23:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FF4720869
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:23:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180185;
-	bh=gVJ5XNv35Wj2YquIGuUHJ24XMfhRoDYe2lPrgEnThQ8=;
+	s=default; t=1569180188;
+	bh=KqDLmtdUKBEwEgCmLxElOgvKZQwQkg4iinUvA4Igcok=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SKgJCwGEBYOCSbGO2ZbObuYd/Us+Pzs5psFMS05ylD6rAs1SlxNG27ZuJvBaEvuzd
-	 eezVbpA+64G23oDmoolR59ccIa3NQEJVgfAE5Qwm7elpK98+m6qYhUxYI5PG0S02Kn
-	 fbLFVtTr1JiLXuS3ABcvSJzh57VPzzAGPF1tvil4=
+	b=BdZFzLh5bK/7pCy6nKOXeOHJM57IyII7S+fVtzlsKGSlA7dSvv3oWbb9r8JIckVE8
+	 66j6qBVPPIPOQ+rb8s0fU8Tt0lg1rVoMkOzUdJLaRDFY6Z2RCgj5q1WFzLUV8U6ydT
+	 4lv8BiCZNpnbTYi4GzSkA/46eqvlCHgiJl8FJgGc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731226AbfIVTXE (ORCPT
+        id S2394315AbfIVSx3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:23:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53418 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:53:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394329AbfIVSxc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:53:32 -0400
+        id S2389872AbfIVSxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:53:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F3B821D6C;
-        Sun, 22 Sep 2019 18:53:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 799C421D80;
+        Sun, 22 Sep 2019 18:53:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178411;
-        bh=gVJ5XNv35Wj2YquIGuUHJ24XMfhRoDYe2lPrgEnThQ8=;
+        s=default; t=1569178385;
+        bh=KqDLmtdUKBEwEgCmLxElOgvKZQwQkg4iinUvA4Igcok=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mnq9KITL8EuE+Y9t1kkgAQV4u7hIZpYDkN0Nvo02FCEdkW5U7gDypBl43EcvF8I6d
-         MNeKH+RQDpePlT7z+eXIFi1j9n4tPJnwZwE+tWVnsKmBZ4DhIbXXUr5ULrPJKAxVr0
-         5xuDoioVAwtoK9CUo+353msksvuZaxCf9KMROXzo=
+        b=qOYCwJEOLAKQ/C0UqwcBnTWm4subs37AON7GC51yciMXl9L+XuMed2fpIBG49xbAc
+         Rr2fFFCrVTbJOqse/wer/5bhG9lsaD3XPoPm75hZS7ctDyYD+q/gH+4nGMNJVIYX5V
+         MUR5MqY32z2Q1TyeiazA5hSEKx4d1aZiSSysoy3o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Harald Freudenberger <freude@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 152/185] s390/crypto: xts-aes-s390 fix extra run-time crypto self tests finding
-Date:   Sun, 22 Sep 2019 14:48:50 -0400
-Message-Id: <20190922184924.32534-152-sashal@kernel.org>
+Cc:     Anton Eidelman <anton@lightbitslabs.com>,
+        James Smart <james.smart@broadcom.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.2 132/185] nvme-multipath: fix ana log nsid lookup when nsid is not found
+Date:   Sun, 22 Sep 2019 14:48:30 -0400
+Message-Id: <20190922184924.32534-132-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -60,52 +62,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harald Freudenberger <freude@linux.ibm.com>
+From: Anton Eidelman <anton@lightbitslabs.com>
 
-[ Upstream commit 9e323d45ba94262620a073a3f9945ca927c07c71 ]
+[ Upstream commit e01f91dff91c7b16a6e3faf2565017d497a73f83 ]
 
-With 'extra run-time crypto self tests' enabled, the selftest
-for s390-xts fails with
+ANA log parsing invokes nvme_update_ana_state() per ANA group desc.
+This updates the state of namespaces with nsids in desc->nsids[].
 
-  alg: skcipher: xts-aes-s390 encryption unexpectedly succeeded on
-  test vector "random: len=0 klen=64"; expected_error=-22,
-  cfg="random: inplace use_digest nosimd src_divs=[2.61%@+4006,
-  84.44%@+21, 1.55%@+13, 4.50%@+344, 4.26%@+21, 2.64%@+27]"
+Both ctrl->namespaces list and desc->nsids[] array are sorted by nsid.
+Hence nvme_update_ana_state() performs a single walk over ctrl->namespaces:
+- if current namespace matches the current desc->nsids[n],
+  this namespace is updated, and n is incremented.
+- the process stops when it encounters the end of either
+  ctrl->namespaces end or desc->nsids[]
 
-This special case with nbytes=0 is not handled correctly and this
-fix now makes sure that -EINVAL is returned when there is en/decrypt
-called with 0 bytes to en/decrypt.
+In case desc->nsids[n] does not match any of ctrl->namespaces,
+the remaining nsids following desc->nsids[n] will not be updated.
+Such situation was considered abnormal and generated WARN_ON_ONCE.
 
-Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+However ANA log MAY contain nsids not (yet) found in ctrl->namespaces.
+For example, lets consider the following scenario:
+- nvme0 exposes namespaces with nsids = [2, 3] to the host
+- a new namespace nsid = 1 is added dynamically
+- also, a ANA topology change is triggered
+- NS_CHANGED aen is generated and triggers scan_work
+- before scan_work discovers nsid=1 and creates a namespace, a NOTICE_ANA
+  aen was issues and ana_work receives ANA log with nsids=[1, 2, 3]
+
+Result: ana_work fails to update ANA state on existing namespaces [2, 3]
+
+Solution:
+Change the way nvme_update_ana_state() namespace list walk
+checks the current namespace against desc->nsids[n] as follows:
+a) ns->head->ns_id < desc->nsids[n]: keep walking ctrl->namespaces.
+b) ns->head->ns_id == desc->nsids[n]: match, update the namespace
+c) ns->head->ns_id >= desc->nsids[n]: skip to desc->nsids[n+1]
+
+This enables correct operation in the scenario described above.
+This also allows ANA log to contain nsids currently invisible
+to the host, i.e. inactive nsids.
+
+Signed-off-by: Anton Eidelman <anton@lightbitslabs.com>
+Reviewed-by:   James Smart <james.smart@broadcom.com>
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/crypto/aes_s390.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/nvme/host/multipath.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/arch/s390/crypto/aes_s390.c b/arch/s390/crypto/aes_s390.c
-index d00f84add5f4c..6d2dbb5089d5c 100644
---- a/arch/s390/crypto/aes_s390.c
-+++ b/arch/s390/crypto/aes_s390.c
-@@ -586,6 +586,9 @@ static int xts_aes_encrypt(struct blkcipher_desc *desc,
- 	struct s390_xts_ctx *xts_ctx = crypto_blkcipher_ctx(desc->tfm);
- 	struct blkcipher_walk walk;
+diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
+index 304aa8a65f2f8..f928bcfc57b5b 100644
+--- a/drivers/nvme/host/multipath.c
++++ b/drivers/nvme/host/multipath.c
+@@ -501,14 +501,16 @@ static int nvme_update_ana_state(struct nvme_ctrl *ctrl,
  
-+	if (!nbytes)
-+		return -EINVAL;
+ 	down_write(&ctrl->namespaces_rwsem);
+ 	list_for_each_entry(ns, &ctrl->namespaces, list) {
+-		if (ns->head->ns_id != le32_to_cpu(desc->nsids[n]))
++		unsigned nsid = le32_to_cpu(desc->nsids[n]);
 +
- 	if (unlikely(!xts_ctx->fc))
- 		return xts_fallback_encrypt(desc, dst, src, nbytes);
- 
-@@ -600,6 +603,9 @@ static int xts_aes_decrypt(struct blkcipher_desc *desc,
- 	struct s390_xts_ctx *xts_ctx = crypto_blkcipher_ctx(desc->tfm);
- 	struct blkcipher_walk walk;
- 
-+	if (!nbytes)
-+		return -EINVAL;
-+
- 	if (unlikely(!xts_ctx->fc))
- 		return xts_fallback_decrypt(desc, dst, src, nbytes);
++		if (ns->head->ns_id < nsid)
+ 			continue;
+-		nvme_update_ns_ana_state(desc, ns);
++		if (ns->head->ns_id == nsid)
++			nvme_update_ns_ana_state(desc, ns);
+ 		if (++n == nr_nsids)
+ 			break;
+ 	}
+ 	up_write(&ctrl->namespaces_rwsem);
+-	WARN_ON_ONCE(n < nr_nsids);
+ 	return 0;
+ }
  
 -- 
 2.20.1
