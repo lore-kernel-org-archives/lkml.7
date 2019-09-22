@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36FCFC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEFE8C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E2F9206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:10:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE91B206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:11:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179459;
-	bh=XpVpdp/hI5V10tSkwUW6L0AHqMB25ym0M3a6XlbYRqo=;
+	s=default; t=1569179462;
+	bh=XT86kEpiNU0DwRGGQv65OB+v1DaHSodQuRRLnE4WgMo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bKoRrDG7s3PNX7mgsoZsv0KRt3blcZUs7a6bUFNOproyaQZczfttitXeAREZ/xtR/
-	 Avj2VVrZoQ+vdPsfJ5qZnFP9LIrUCkjHBXBZdCzSIspNK7SBaU0zG58qGQ1t3qgYs2
-	 wemXQIljjMw3CddtSlD0OllEhERpazERZEXl33M0=
+	b=JXzOMwmLAtgHHT2A/FWkmEy0GXgsgYoukIARC5iiPz15C462yUxW7aD/r8BVl6bLU
+	 1KUWu+8uIbNZA/kbQmzsaYbEGcy3qhH/p8lshKylaVIEPei+pt8FT/C5nU3TNpNhZd
+	 hNCaEnLHtjKyDcScRS2rZXx+2/7fO+AhZ83nfAbc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436498AbfIVTK5 (ORCPT
+        id S2394903AbfIVS6i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:10:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33430 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:58:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394915AbfIVS6l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:58:41 -0400
+        id S2408257AbfIVS6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:58:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F036208C2;
-        Sun, 22 Sep 2019 18:58:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19DD321479;
+        Sun, 22 Sep 2019 18:58:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178720;
-        bh=XpVpdp/hI5V10tSkwUW6L0AHqMB25ym0M3a6XlbYRqo=;
+        s=default; t=1569178711;
+        bh=XT86kEpiNU0DwRGGQv65OB+v1DaHSodQuRRLnE4WgMo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GXbRKVJY8hf2xJl/nJwAAlIiVewextTzAN681LkLHIkA5rFSCJxLQuVrhcjCwYVg8
-         7B3a3eiYbKicL0vkRV4CAqMUYvMkvE2IV+ilKsmJdgyYylgprAt0GxpeYUQ2KJc9X0
-         RDIv0b4Mq9860w9J2u4cEoLD5U04dZqzo0c5iVzg=
+        b=xmAt50+sQH7cGmnZZCrUjzS/gUKpldxFIiYzjJXBi+rjcOOr8OfeXBM1uM024FJWh
+         +eozDlzUX6PhB0ncInraRoHLeOPABoLwwu0Pxfq4+1oUWnZAd2xE5pnvYLFJK/FhGn
+         bBPFP0kAX15hkc83MCB2DIrES0RfiK6X5StqvnCo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leonard Crestez <leonard.crestez@nxp.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 52/89] PM / devfreq: passive: Use non-devm notifiers
-Date:   Sun, 22 Sep 2019 14:56:40 -0400
-Message-Id: <20190922185717.3412-52-sashal@kernel.org>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        syzbot+79d18aac4bf1770dd050@syzkaller.appspotmail.com,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 46/89] media: hdpvr: add terminating 0 at end of string
+Date:   Sun, 22 Sep 2019 14:56:34 -0400
+Message-Id: <20190922185717.3412-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185717.3412-1-sashal@kernel.org>
 References: <20190922185717.3412-1-sashal@kernel.org>
@@ -60,67 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leonard Crestez <leonard.crestez@nxp.com>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-[ Upstream commit 0ef7c7cce43f6ecc2b96d447e69b2900a9655f7c ]
+[ Upstream commit 8b8900b729e4f31f12ac1127bde137c775c327e6 ]
 
-The devfreq passive governor registers and unregisters devfreq
-transition notifiers on DEVFREQ_GOV_START/GOV_STOP using devm wrappers.
+dev->usbc_buf was passed as argument for %s, but it was not safeguarded
+by a terminating 0.
 
-If devfreq itself is registered with devm then a warning is triggered on
-rmmod from devm_devfreq_unregister_notifier. Call stack looks like this:
+This caused this syzbot issue:
 
-	devm_devfreq_unregister_notifier+0x30/0x40
-	devfreq_passive_event_handler+0x4c/0x88
-	devfreq_remove_device.part.8+0x6c/0x9c
-	devm_devfreq_dev_release+0x18/0x20
-	release_nodes+0x1b0/0x220
-	devres_release_all+0x78/0x84
-	device_release_driver_internal+0x100/0x1c0
-	driver_detach+0x4c/0x90
-	bus_remove_driver+0x7c/0xd0
-	driver_unregister+0x2c/0x58
-	platform_driver_unregister+0x10/0x18
-	imx_devfreq_platdrv_exit+0x14/0xd40 [imx_devfreq]
+https://syzkaller.appspot.com/bug?extid=79d18aac4bf1770dd050
 
-This happens because devres_release_all will first remove all the nodes
-into a separate todo list so the nested devres_release from
-devm_devfreq_unregister_notifier won't find anything.
+Reported-and-tested-by: syzbot+79d18aac4bf1770dd050@syzkaller.appspotmail.com
 
-Fix the warning by calling the non-devm APIS for frequency notification.
-Using devm wrappers is not actually useful for a governor anyway: it
-relies on the devfreq core to correctly match the GOV_START/GOV_STOP
-notifications.
-
-Fixes: 996133119f57 ("PM / devfreq: Add new passive governor")
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/governor_passive.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/media/usb/hdpvr/hdpvr-core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/devfreq/governor_passive.c b/drivers/devfreq/governor_passive.c
-index 673ad8cc9a1d0..4222d3c1efb98 100644
---- a/drivers/devfreq/governor_passive.c
-+++ b/drivers/devfreq/governor_passive.c
-@@ -168,12 +168,12 @@ static int devfreq_passive_event_handler(struct devfreq *devfreq,
- 			p_data->this = devfreq;
+diff --git a/drivers/media/usb/hdpvr/hdpvr-core.c b/drivers/media/usb/hdpvr/hdpvr-core.c
+index 416092c47ef40..dd82948b1cb05 100644
+--- a/drivers/media/usb/hdpvr/hdpvr-core.c
++++ b/drivers/media/usb/hdpvr/hdpvr-core.c
+@@ -141,6 +141,7 @@ static int device_authorization(struct hdpvr_device *dev)
  
- 		nb->notifier_call = devfreq_passive_notifier_call;
--		ret = devm_devfreq_register_notifier(dev, parent, nb,
-+		ret = devfreq_register_notifier(parent, nb,
- 					DEVFREQ_TRANSITION_NOTIFIER);
- 		break;
- 	case DEVFREQ_GOV_STOP:
--		devm_devfreq_unregister_notifier(dev, parent, nb,
--					DEVFREQ_TRANSITION_NOTIFIER);
-+		WARN_ON(devfreq_unregister_notifier(parent, nb,
-+					DEVFREQ_TRANSITION_NOTIFIER));
- 		break;
- 	default:
- 		break;
+ 	dev->fw_ver = dev->usbc_buf[1];
+ 
++	dev->usbc_buf[46] = '\0';
+ 	v4l2_info(&dev->v4l2_dev, "firmware version 0x%x dated %s\n",
+ 			  dev->fw_ver, &dev->usbc_buf[2]);
+ 
 -- 
 2.20.1
 
