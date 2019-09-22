@@ -2,51 +2,54 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
+X-Spam-Status: No, score=-11.7 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E06D1C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 10:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F54C4740C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 10:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD66D214D9
+	by mail.kernel.org (Postfix) with ESMTP id DE5892070C
 	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 10:52:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728400AbfIVKwi (ORCPT
+        id S1728422AbfIVKwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 06:52:38 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:55563 "EHLO
+        Sun, 22 Sep 2019 06:52:39 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:55565 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728361AbfIVKwi (ORCPT
+        with ESMTP id S1728370AbfIVKwi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 22 Sep 2019 06:52:38 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iBzTc-0000uz-Ou; Sun, 22 Sep 2019 12:52:24 +0200
+        id 1iBzTd-0000v8-Bv; Sun, 22 Sep 2019 12:52:25 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 057E21C07C3;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E63311C0E22;
         Sun, 22 Sep 2019 12:52:24 +0200 (CEST)
-Date:   Sun, 22 Sep 2019 10:52:23 -0000
-From:   "tip-bot2 for Roy Ben Shlomo" <tip-bot2@linutronix.de>
+Date:   Sun, 22 Sep 2019 10:52:24 -0000
+From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf/core: Fix several typos in comments
-Cc:     Roy Ben Shlomo <royb@sentinelone.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+Subject: [tip: perf/urgent] tools arch x86: Sync asm/cpufeatures.h with the
+ kernel sources
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Borislav Petkov <bp@suse.de>,
+        Gayatri Kammela <gayatri.kammela@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20190920171254.31373-1-royb@sentinelone.com>
-References: <20190920171254.31373-1-royb@sentinelone.com>
+In-Reply-To: <tip-pq63abgknsaeov23p80d8gjv@git.kernel.org>
+References: <tip-pq63abgknsaeov23p80d8gjv@git.kernel.org>
 MIME-Version: 1.0
-Message-ID: <156914954391.24167.12320372146686080125.tip-bot2@tip-bot2>
+Message-ID: <156914954486.24167.16035963049459550059.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -62,58 +65,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     9f014e3a66bc936412b6614304a4e6c70c70230e
-Gitweb:        https://git.kernel.org/tip/9f014e3a66bc936412b6614304a4e6c70c70230e
-Author:        Roy Ben Shlomo <roy.benshlomo@gmail.com>
-AuthorDate:    Fri, 20 Sep 2019 20:12:53 +03:00
+Commit-ID:     40f1c039c7c6de913ee04eac585102e2fce7f6f7
+Gitweb:        https://git.kernel.org/tip/40f1c039c7c6de913ee04eac585102e2fce7f6f7
+Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate:    Fri, 20 Sep 2019 15:00:49 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Fri, 20 Sep 2019 16:05:20 -03:00
+CommitterDate: Fri, 20 Sep 2019 15:00:49 -03:00
 
-perf/core: Fix several typos in comments
+tools arch x86: Sync asm/cpufeatures.h with the kernel sources
 
-Fix typos in a few functions' documentation comments.
+To pick up the changes from:
 
-Signed-off-by: Roy Ben Shlomo <royb@sentinelone.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
+  b4dd4f6e3648 ("x86/vmware: Add a header file for hypercall definitions")
+  f36cf386e3fe ("x86/speculation/swapgs: Exclude ATOMs from speculation through SWAPGS")
+  be261ffce6f1 ("x86: Remove X86_FEATURE_MFENCE_RDTSC")
+  018ebca8bd70 ("x86/cpufeatures: Enable a new AVX512 CPU feature")
+
+These don't cause any changes in tooling, just silences this perf build
+warning:
+
+  Warning: Kernel ABI header at 'tools/arch/x86/include/asm/cpufeatures.h' differs from latest version at 'arch/x86/include/asm/cpufeatures.h'
+  diff -u tools/arch/x86/include/asm/cpufeatures.h arch/x86/include/asm/cpufeatures.h
+
+To clarify, updating those files cause these bits of tools/perf to rebuild:
+
+  CC       /tmp/build/perf/bench/mem-memcpy-x86-64-asm.o
+  CC       /tmp/build/perf/bench/mem-memset-x86-64-asm.o
+  INSTALL  GTK UI
+  LD       /tmp/build/perf/bench/perf-in.o
+
+Those use just:
+
+  $ grep FEATURE tools/arch/x86/lib/mem*.S
+  tools/arch/x86/lib/memcpy_64.S:	ALTERNATIVE_2 "jmp memcpy_orig", "", X86_FEATURE_REP_GOOD, \
+  tools/arch/x86/lib/memcpy_64.S:		      "jmp memcpy_erms", X86_FEATURE_ERMS
+  tools/arch/x86/lib/memset_64.S:	ALTERNATIVE_2 "jmp memset_orig", "", X86_FEATURE_REP_GOOD, \
+  tools/arch/x86/lib/memset_64.S:		      "jmp memset_erms", X86_FEATURE_ERMS
+  $
+
+I.e. none of the feature defines added/removed by the patches above.
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Gayatri Kammela <gayatri.kammela@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: royb@sentinelone.com
-Link: http://lore.kernel.org/lkml/20190920171254.31373-1-royb@sentinelone.com
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Thomas Hellstrom <thellstrom@vmware.com>
+Link: https://lkml.kernel.org/n/tip-pq63abgknsaeov23p80d8gjv@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- kernel/events/core.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/arch/x86/include/asm/cpufeatures.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 4f08b17..275eae0 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2239,7 +2239,7 @@ static void __perf_event_disable(struct perf_event *event,
-  *
-  * If event->ctx is a cloned context, callers must make sure that
-  * every task struct that event->ctx->task could possibly point to
-- * remains valid.  This condition is satisifed when called through
-+ * remains valid.  This condition is satisfied when called through
-  * perf_event_for_each_child or perf_event_for_each because they
-  * hold the top-level event's child_mutex, so any descendant that
-  * goes to exit will block in perf_event_exit_event().
-@@ -6054,7 +6054,7 @@ static void perf_sample_regs_intr(struct perf_regs *regs_intr,
-  * Get remaining task size from user stack pointer.
-  *
-  * It'd be better to take stack vma map and limit this more
-- * precisly, but there's no way to get it safely under interrupt,
-+ * precisely, but there's no way to get it safely under interrupt,
-  * so using TASK_SIZE as limit.
-  */
- static u64 perf_ustack_task_size(struct pt_regs *regs)
-@@ -6616,7 +6616,7 @@ void perf_prepare_sample(struct perf_event_header *header,
+diff --git a/tools/arch/x86/include/asm/cpufeatures.h b/tools/arch/x86/include/asm/cpufeatures.h
+index 5171b9c..0652d3e 100644
+--- a/tools/arch/x86/include/asm/cpufeatures.h
++++ b/tools/arch/x86/include/asm/cpufeatures.h
+@@ -231,6 +231,8 @@
+ #define X86_FEATURE_VMMCALL		( 8*32+15) /* Prefer VMMCALL to VMCALL */
+ #define X86_FEATURE_XENPV		( 8*32+16) /* "" Xen paravirtual guest */
+ #define X86_FEATURE_EPT_AD		( 8*32+17) /* Intel Extended Page Table access-dirty bit */
++#define X86_FEATURE_VMCALL		( 8*32+18) /* "" Hypervisor supports the VMCALL instruction */
++#define X86_FEATURE_VMW_VMMCALL		( 8*32+19) /* "" VMware prefers VMMCALL hypercall instruction */
  
- 	if (sample_type & PERF_SAMPLE_STACK_USER) {
- 		/*
--		 * Either we need PERF_SAMPLE_STACK_USER bit to be allways
-+		 * Either we need PERF_SAMPLE_STACK_USER bit to be always
- 		 * processed as the last one or have additional check added
- 		 * in case new sample type is added, because we could eat
- 		 * up the rest of the sample size.
+ /* Intel-defined CPU features, CPUID level 0x00000007:0 (EBX), word 9 */
+ #define X86_FEATURE_FSGSBASE		( 9*32+ 0) /* RDFSBASE, WRFSBASE, RDGSBASE, WRGSBASE instructions*/
+@@ -354,6 +356,7 @@
+ /* Intel-defined CPU features, CPUID level 0x00000007:0 (EDX), word 18 */
+ #define X86_FEATURE_AVX512_4VNNIW	(18*32+ 2) /* AVX-512 Neural Network Instructions */
+ #define X86_FEATURE_AVX512_4FMAPS	(18*32+ 3) /* AVX-512 Multiply Accumulation Single precision */
++#define X86_FEATURE_AVX512_VP2INTERSECT (18*32+ 8) /* AVX-512 Intersect for D/Q */
+ #define X86_FEATURE_MD_CLEAR		(18*32+10) /* VERW clears CPU buffers */
+ #define X86_FEATURE_TSX_FORCE_ABORT	(18*32+13) /* "" TSX_FORCE_ABORT */
+ #define X86_FEATURE_PCONFIG		(18*32+18) /* Intel PCONFIG */
