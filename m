@@ -2,129 +2,255 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FAKE_REPLY_C,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E84C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 12:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 314C9C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 12:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16A982064A
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 12:29:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DXtBIWzg"
+	by mail.kernel.org (Postfix) with ESMTP id E9C7C205F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 12:31:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569155505;
+	bh=zNDAKtPon8Lt8sr+LcjhwObyJUwwGU94CrJCBl5FVUs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=tMqdTA45xXGmWNf0MrLlPHPuuM6NbNK55+nsvY/xCn1KbrGOYnX25O/gZ8BO7cftP
+	 GUsVg0f0G1YzQBCqE4Lomkeekye0pTFD7uuv5SpAizzu2eGTA5yzOeSe7BuAwuuaE5
+	 RuqxxbyGNshvdvpaVxZX6ENf+RRj7+gjw4oHNrwQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728878AbfIVM3m (ORCPT
+        id S1728901AbfIVMbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 08:29:42 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51500 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728863AbfIVM3l (ORCPT
+        Sun, 22 Sep 2019 08:31:18 -0400
+Received: from inca-roads.misterjones.org ([213.251.177.50]:43505 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728863AbfIVMbR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 08:29:41 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 7so6872014wme.1
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Sep 2019 05:29:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=21j2zzfwkesIZ6myrBPcvCgKsUfGnEO2xG0NBiEWz2E=;
-        b=DXtBIWzgumW2Pk37hldBMhWkSZjej64iArMZgU4peeF5eOLnoANUzbB8cwR+aF7Pcd
-         XkeNoLBZm3mucDzhZu6p5aI77K8NtSZESM1Kbaru8LRAR31axI/q9deK61kqq4SDIkj5
-         XrSrWOQUBbLYXdyZEadFPp6XRmVSkP45oobfiVRoEEkk+1GZN0CAo8L2fDcV5fzPsUvw
-         CkmCowO0bC3zoBveusE40r4+my/8BiiozDdvSslEKrttUqEyEQvbttuf5T02UmjjQaNK
-         d7pGkPMSgZhhine/WrW+4PSr417gQunCT1hojcqB35gOcwyrfmsCmza+3/LSfB3AgLsU
-         BiJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=21j2zzfwkesIZ6myrBPcvCgKsUfGnEO2xG0NBiEWz2E=;
-        b=SMf9KiTwkVbwtCwPU7Ck6oFOQjADIu1nY4Qklqev0vPvpf1zMgzmyKcODCM2F9tPoI
-         zVX9iep4bTrhXwclOZfO2SkQnHfJov2MDAgD+ebsJKVur1L+Pe+uCzK34NONXps0BKZn
-         Z0zLExHUfg5u68PMKvOInA8Fy26AY7XxKsX+wWsYKdGI/yf+ji7cGNm+JWMPf3SBo2lo
-         0J25hQ+VVEG7w8UCWvM8RShfzB7bQt6uBcB/wgQg3QBfRMoDwIengwAaGD3TxQL7OXh4
-         uILfX9X2JaWJP3IJljH30attMot71cU/vMfwbu7e6lZmmvrEAkYvkYil6ALlDaZytM5B
-         Id7Q==
-X-Gm-Message-State: APjAAAV3NoknahZrv5jvFW6BfHphIVlhso9kWDFw52/hkSYuDZVun8CD
-        SYqYI/FXukbLgn0BNs5JVA==
-X-Google-Smtp-Source: APXvYqzEDXoCYBI1PPWGRbEw6o5L8FtY/Q3gIVjpRYXbeimytEHT6B33coIhn8lavK1FLwOm65/tBQ==
-X-Received: by 2002:a7b:cbd0:: with SMTP id n16mr9822482wmi.82.1569155379524;
-        Sun, 22 Sep 2019 05:29:39 -0700 (PDT)
-Received: from avx2 ([46.53.253.157])
-        by smtp.gmail.com with ESMTPSA id w125sm17426272wmg.32.2019.09.22.05.29.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 22 Sep 2019 05:29:38 -0700 (PDT)
-Date:   Sun, 22 Sep 2019 15:29:36 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     mingo@kernel.org
-Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        brendanhiggins@google.com, torvalds@linux-foundation.org,
-        rdunlap@infradead.org
-Subject: Re: [GIT PULL] Kselftest update for Linux 5.4-rc1
-Message-ID: <20190922122936.GA31964@avx2>
+        Sun, 22 Sep 2019 08:31:17 -0400
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iC11C-0003oU-OU; Sun, 22 Sep 2019 14:31:11 +0200
+Date:   Sun, 22 Sep 2019 13:31:08 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Justin Chen <justinpopo6@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Cernekee <cernekee@gmail.com>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        bcm-kernel-feedback-list@broadcom.com (open list:BROADCOM BMIPS MIPS
+        ARCHITECTURE),
+        linux-mips@vger.kernel.org (open list:BROADCOM BMIPS MIPS ARCHITECTURE)
+Subject: Re: [PATCH v2 1/5] irqchip/irq-bcm7038-l1: Add PM support
+Message-ID: <20190922133108.09211a17@why>
+In-Reply-To: <20190913191542.9908-2-f.fainelli@gmail.com>
+References: <20190913191542.9908-1-f.fainelli@gmail.com>
+        <20190913191542.9908-2-f.fainelli@gmail.com>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: f.fainelli@gmail.com, linux-kernel@vger.kernel.org, justinpopo6@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, cernekee@gmail.com, devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-mips@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Beyond the muscle memory aspect, nonsensical naming and inanely flat file
-> hierarchies annoy kernel developers
+On Fri, 13 Sep 2019 12:15:38 -0700
+Florian Fainelli <f.fainelli@gmail.com> wrote:
 
-Flat(ish) file hierarchies are good -- less typing.
-If you're copy-pasting then it doesn't matter much (it still matters a
-little because long filename occupy more space on the screen and in logs).
+> From: Justin Chen <justinpopo6@gmail.com>
+> 
+> The current l1 controller does not mask any interrupts when dropping
+> into suspend. This mean we can receive unexpected wake up sources.
+> Modified MIPS l1 controller to mask the all non-wake interrupts before
+> dropping into suspend.
+> 
+> Signed-off-by: Justin Chen <justinpopo6@gmail.com>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  drivers/irqchip/irq-bcm7038-l1.c | 98 ++++++++++++++++++++++++++++++++
+>  1 file changed, 98 insertions(+)
+> 
+> diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
+> index fc75c61233aa..f5e4ff5251ab 100644
+> --- a/drivers/irqchip/irq-bcm7038-l1.c
+> +++ b/drivers/irqchip/irq-bcm7038-l1.c
+> @@ -27,6 +27,7 @@
+>  #include <linux/types.h>
+>  #include <linux/irqchip.h>
+>  #include <linux/irqchip/chained_irq.h>
+> +#include <linux/syscore_ops.h>
+>  
+>  #define IRQS_PER_WORD		32
+>  #define REG_BYTES_PER_IRQ_WORD	(sizeof(u32) * 4)
+> @@ -39,6 +40,10 @@ struct bcm7038_l1_chip {
+>  	unsigned int		n_words;
+>  	struct irq_domain	*domain;
+>  	struct bcm7038_l1_cpu	*cpus[NR_CPUS];
+> +#ifdef CONFIG_PM_SLEEP
+> +	struct list_head	list;
+> +	u32			wake_mask[MAX_WORDS];
+> +#endif
+>  	u8			affinity[MAX_WORDS * IRQS_PER_WORD];
+>  };
+>  
+> @@ -47,6 +52,17 @@ struct bcm7038_l1_cpu {
+>  	u32			mask_cache[0];
+>  };
+>  
+> +/*
+> + * We keep a list of bcm7038_l1_chip used for suspend/resume. This hack is
+> + * used because the struct chip_type suspend/resume hooks are not called
+> + * unless chip_type is hooked onto a generic_chip. Since this driver does
+> + * not use generic_chip, we need to manually hook our resume/suspend to
+> + * syscore_ops.
+> + */
+> +#ifdef CONFIG_PM_SLEEP
+> +static LIST_HEAD(bcm7038_l1_intcs_list);
+> +#endif
 
-> makes it harder for newbies to understand the kernel source as well.
+nit: this could be moved down to be close to the rest of the PM_SLEEP
+ifdefery.
 
-That's fine too.
+> +
+>  /*
+>   * STATUS/MASK_STATUS/MASK_SET/MASK_CLEAR are packed one right after another:
+>   *
+> @@ -287,6 +303,77 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
+>  	return 0;
+>  }
+>  
+> +#ifdef CONFIG_PM_SLEEP
+> +static int bcm7038_l1_suspend(void)
+> +{
+> +	struct bcm7038_l1_chip *intc;
+> +	unsigned long flags;
+> +	int boot_cpu, word;
+> +
+> +	/* Wakeup interrupt should only come from the boot cpu */
+> +	boot_cpu = cpu_logical_map(smp_processor_id());
 
->   drwxr-xr-x    crypto          # move to kernel/crypto/ or security/crypto/
+What guarantees that you're actually running on the boot CPU at this
+point? If that's actually the case, why isn't cpu_logical_map(0) enough?
 
-No, crypto/ is fine.
+> +
+> +	list_for_each_entry(intc, &bcm7038_l1_intcs_list, list) {
+> +		raw_spin_lock_irqsave(&intc->lock, flags);
 
-If everything arch independent should live at kernel/ then why should kernel/
-exist at all? It should be trimmed and everything moved to the top level
-directory (OK, I'm not really suggesting that).
+And if this can only run on a single CPU, what's the purpose of this
+lock?
 
->   drwxr-xr-x    ipc             # move to kernel/ipc/
+> +		for (word = 0; word < intc->n_words; word++) {
+> +			l1_writel(~intc->wake_mask[word],
+> +				intc->cpus[boot_cpu]->map_base +
+> +				reg_mask_set(intc, word));
+> +			l1_writel(intc->wake_mask[word],
+> +				intc->cpus[boot_cpu]->map_base +
+> +				reg_mask_clr(intc, word));
 
-No, same reason. It was there since time immemorial.
+nit: Please don't split the write address across two lines, it makes it
+harder to read.
 
->   drwxr-xr-x    samples         # move to Documentation/samples/
+> +		}
+> +		raw_spin_unlock_irqrestore(&intc->lock, flags);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void bcm7038_l1_resume(void)
+> +{
+> +	struct bcm7038_l1_chip *intc;
+> +	unsigned long flags;
+> +	int boot_cpu, word;
+> +
+> +	boot_cpu = cpu_logical_map(smp_processor_id());
+> +
+> +	list_for_each_entry(intc, &bcm7038_l1_intcs_list, list) {
+> +		raw_spin_lock_irqsave(&intc->lock, flags);
+> +		for (word = 0; word < intc->n_words; word++) {
+> +			l1_writel(intc->cpus[boot_cpu]->mask_cache[word],
+> +				intc->cpus[boot_cpu]->map_base +
+> +				reg_mask_set(intc, word));
+> +			l1_writel(~intc->cpus[boot_cpu]->mask_cache[word],
+> +				intc->cpus[boot_cpu]->map_base +
+> +				reg_mask_clr(intc, word));
+> +		}
+> +		raw_spin_unlock_irqrestore(&intc->lock, flags);
+> +	}
+> +}
+> +
+> +static struct syscore_ops bcm7038_l1_syscore_ops = {
+> +	.suspend	= bcm7038_l1_suspend,
+> +	.resume		= bcm7038_l1_resume,
+> +};
+> +
+> +static int bcm7038_l1_set_wake(struct irq_data *d, unsigned int on)
+> +{
+> +	struct bcm7038_l1_chip *intc = irq_data_get_irq_chip_data(d);
+> +	unsigned long flags;
+> +	u32 word = d->hwirq / IRQS_PER_WORD;
+> +	u32 mask = BIT(d->hwirq % IRQS_PER_WORD);
+> +
+> +	raw_spin_lock_irqsave(&intc->lock, flags);
+> +	if (on)
+> +		intc->wake_mask[word] |= mask;
+> +	else
+> +		intc->wake_mask[word] &= ~mask;
+> +	raw_spin_unlock_irqrestore(&intc->lock, flags);
+> +
+> +	return 0;
+> +}
+> +#endif
+> +
+>  static struct irq_chip bcm7038_l1_irq_chip = {
+>  	.name			= "bcm7038-l1",
+>  	.irq_mask		= bcm7038_l1_mask,
+> @@ -295,6 +382,9 @@ static struct irq_chip bcm7038_l1_irq_chip = {
+>  #ifdef CONFIG_SMP
+>  	.irq_cpu_offline	= bcm7038_l1_cpu_offline,
+>  #endif
+> +#ifdef CONFIG_PM_SLEEP
+> +	.irq_set_wake		= bcm7038_l1_set_wake,
+> +#endif
+>  };
+>  
+>  static int bcm7038_l1_map(struct irq_domain *d, unsigned int virq,
+> @@ -340,6 +430,14 @@ int __init bcm7038_l1_of_init(struct device_node *dn,
+>  		goto out_unmap;
+>  	}
+>  
+> +#ifdef CONFIG_PM_SLEEP
+> +	/* Add bcm7038_l1_chip into a list */
+> +	INIT_LIST_HEAD(&intc->list);
+> +	list_add_tail(&intc->list, &bcm7038_l1_intcs_list);
 
-Just delete it. Best API usage samples are in modern parts of main tree,
-actively maintained/updated.
+No locking to manipulate this list? Is that safe?
 
->  drwxr-xr-x    scripts         # move to build/scripts/
+> +
+> +	register_syscore_ops(&bcm7038_l1_syscore_ops);
 
-eh
+Do you really register the syscore_ops for each and every L1 irqchip?
 
-> drwxr-xr-x    sound           # move to drivers/sound/
+> +#endif
+> +
+>  	pr_info("registered BCM7038 L1 intc (%pOF, IRQs: %d)\n",
+>  		dn, IRQS_PER_WORD * intc->n_words);
+>  
 
-NO! it has hw independent part and pretty big one.
+Thanks,
 
->  drwxr-xr-x    tools
-
-If tools/ people could somewhow stop duplicating large parts of include/linux
-and arch/x86/include/asm it will be very much appreciated.
-
->  - 'block' could in principle move to drivers/block/core/ but it's fine
->    at the top level too I think.
-
-It is fine indeed. Short name, top level dir, arch and hw independent
-code -- it is perfect.
-
-> I'm volunteering to do this (in a scripted, repeatable, reviewable,
-> tweakable and "easy to execute in a quiet moment" fashion), although
-> I also expect you to balk at the churn. :-)
-
-Can I pay you $100 to not do this ever?
-
-In Russia we say "what has grown has grown" and it is not like Linux is
-perfect example of intelligent design.
+	M.
+-- 
+Without deviation from the norm, progress is not possible.
