@@ -2,50 +2,53 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A3DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F906C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D608021907
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:59:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B08321A4A
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:59:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569178787;
-	bh=9BntkJM+X8b2XhLAQ3602/FseqHcZoM+K3XqsjBTRlA=;
+	s=default; t=1569178793;
+	bh=D7YyxjKijRZ/TheVnJWsZBt5yFo5UywORh7hk3Psqe0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dVBbVv/fRmdNaekUYENquR4VVvCdT8+UuCzoJwTzz+RfrM6ds2JZj3prxNicmhG86
-	 AxYy9CG9CBIkx4h48iWzzlfgGH5RSlk4+WbZr5D5NQAYMHVdj3h6bq0zfV6kAha5p7
-	 jm6Gdr3r59OJC6ewpA2lOiFkvsURiOjXF13xAY/A=
+	b=phx6y1pMJxv5ZlNgRaLz3TQ4J/QkdUexkjPChZ68haH2XjXtYB+kxIVt8r7JfEBgY
+	 2VmE8spGuzddRJ6Unjc5BplsMKe37T1wJE+csJ8WUZq2rbd+BKL06tcjIFoEK2Nl8i
+	 CMop8Q5ly8gV+Qh46ywI6vrVSjABSHAVtpWd5XmE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395092AbfIVS7p (ORCPT
+        id S2438918AbfIVS7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:59:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35000 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:59:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438823AbfIVS7k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:59:40 -0400
+        id S2395088AbfIVS7p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:59:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B862D21A4A;
-        Sun, 22 Sep 2019 18:59:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C135A214D9;
+        Sun, 22 Sep 2019 18:59:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178779;
-        bh=9BntkJM+X8b2XhLAQ3602/FseqHcZoM+K3XqsjBTRlA=;
+        s=default; t=1569178784;
+        bh=D7YyxjKijRZ/TheVnJWsZBt5yFo5UywORh7hk3Psqe0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bvFLwXS+D696vWVnUNn1JijxNEl9a0dvOs1lP89lWsv9eEN9SU+fGZ0ojvrodfNKH
-         RrwqknoWEFb/E+XRH8xgmRqcKSfEGUpYK2gi1dhhP6zVT+QKarf+BQKDxsMi9MsKG0
-         ryf7+u/glXnwLDk4rKPM91sKSsVaKnwyKugB/y90=
+        b=vhmVITTWK1AJAIEBniDItzpB9v5DBizWLLF74l9zJIozitNen3CJmTqm7n5zzP8iG
+         aCOfa+9qDL61grg1m6y69g2U2J0Iy7FLF41DHRSUZ//zM5b/tfx1vGyBzcqxPplQsG
+         YFs2SlbKA2q673MGh4Do2hxjDTe7VatoymewiHVo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Wahren <wahrenst@gmx.net>, Vinod Koul <vkoul@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 04/60] dmaengine: bcm2835: Print error in case setting DMA mask fails
-Date:   Sun, 22 Sep 2019 14:58:37 -0400
-Message-Id: <20190922185934.4305-4-sashal@kernel.org>
+Cc:     Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>,
+        syzbot+aac8d0d7205f112045d2@syzkaller.appspotmail.com,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 08/60] media: hdpvr: Add device num check and handling
+Date:   Sun, 22 Sep 2019 14:58:41 -0400
+Message-Id: <20190922185934.4305-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185934.4305-1-sashal@kernel.org>
 References: <20190922185934.4305-1-sashal@kernel.org>
@@ -58,37 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Wahren <wahrenst@gmx.net>
+From: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
 
-[ Upstream commit 72503b25ee363827aafffc3e8d872e6a92a7e422 ]
+[ Upstream commit d4a6a9537bc32811486282206ecfb7c53754b74d ]
 
-During enabling of the RPi 4, we found out that the driver doesn't provide
-a helpful error message in case setting DMA mask fails. So add one.
+Add hdpvr device num check and error handling
 
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-Link: https://lore.kernel.org/r/1563297318-4900-1-git-send-email-wahrenst@gmx.net
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+We need to increment the device count atomically before we checkout a
+device to make sure that we do not reach the max count, otherwise we get
+out-of-bounds errors as reported by syzbot.
+
+Reported-and-tested-by: syzbot+aac8d0d7205f112045d2@syzkaller.appspotmail.com
+
+Signed-off-by: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/bcm2835-dma.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/media/usb/hdpvr/hdpvr-core.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
-index 6ba53bbd0e161..b984d00bc0558 100644
---- a/drivers/dma/bcm2835-dma.c
-+++ b/drivers/dma/bcm2835-dma.c
-@@ -891,8 +891,10 @@ static int bcm2835_dma_probe(struct platform_device *pdev)
- 		pdev->dev.dma_mask = &pdev->dev.coherent_dma_mask;
+diff --git a/drivers/media/usb/hdpvr/hdpvr-core.c b/drivers/media/usb/hdpvr/hdpvr-core.c
+index a20b60ac66ca4..7b34108f6587e 100644
+--- a/drivers/media/usb/hdpvr/hdpvr-core.c
++++ b/drivers/media/usb/hdpvr/hdpvr-core.c
+@@ -278,6 +278,7 @@ static int hdpvr_probe(struct usb_interface *interface,
+ #endif
+ 	size_t buffer_size;
+ 	int i;
++	int dev_num;
+ 	int retval = -ENOMEM;
  
- 	rc = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
--	if (rc)
-+	if (rc) {
-+		dev_err(&pdev->dev, "Unable to set DMA mask\n");
- 		return rc;
+ 	/* allocate memory for our device state and initialize it */
+@@ -382,8 +383,17 @@ static int hdpvr_probe(struct usb_interface *interface,
+ 	}
+ #endif
+ 
++	dev_num = atomic_inc_return(&dev_nr);
++	if (dev_num >= HDPVR_MAX) {
++		v4l2_err(&dev->v4l2_dev,
++			 "max device number reached, device register failed\n");
++		atomic_dec(&dev_nr);
++		retval = -ENODEV;
++		goto reg_fail;
 +	}
- 
- 	od = devm_kzalloc(&pdev->dev, sizeof(*od), GFP_KERNEL);
- 	if (!od)
++
+ 	retval = hdpvr_register_videodev(dev, &interface->dev,
+-				    video_nr[atomic_inc_return(&dev_nr)]);
++				    video_nr[dev_num]);
+ 	if (retval < 0) {
+ 		v4l2_err(&dev->v4l2_dev, "registering videodev failed\n");
+ 		goto reg_fail;
 -- 
 2.20.1
 
