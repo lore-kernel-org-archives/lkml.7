@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF924C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C3CC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98C93206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:24:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA920206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:24:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180252;
-	bh=kfvdiciDmqZ1VtqoBpuDh3Z6dlpATwLZE7GsvgO6uLo=;
+	s=default; t=1569180254;
+	bh=2et6kh5u9FLYVe88GeLbMKtsoeoF/CZr/Ah6IeVbid4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XJ8lJzxPR9QyIlnH57kfW0C7PjYwrQlsBfC3pAwQ9d9Xw6ngPVdobBQ1uV3wrV3PK
-	 eRIejaZTEjq2fYXtn/xCwRP/7oog4RhrckkCaRgDOQ+hZcG8sbBk1gXShZYXZkUPox
-	 tYXicBAdS2NOCa0gBg4kzlLUlSkM3KHr+puvKBpY=
+	b=adBI69qiBMcIjxxh4ePLm8NncP9FbZBUbyhHosfXgFuA09pUX/fFyXyLRNZ47m93v
+	 KWbLQNRcf2wO0vkaaedfMvBii6qQOFxWhS7GWYvvam9B+AIsVsB0giiEP9mXpUgSn7
+	 Mh7rEXnSW4i1gJp/BGP++5Nq+H3dcKaVem+09RwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731381AbfIVTYL (ORCPT
+        id S1731394AbfIVTYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:24:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52472 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:24:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404107AbfIVSxC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:53:02 -0400
+        id S2393389AbfIVSxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:53:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B494821BE5;
-        Sun, 22 Sep 2019 18:53:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C0D92190F;
+        Sun, 22 Sep 2019 18:52:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178381;
-        bh=kfvdiciDmqZ1VtqoBpuDh3Z6dlpATwLZE7GsvgO6uLo=;
+        s=default; t=1569178380;
+        bh=2et6kh5u9FLYVe88GeLbMKtsoeoF/CZr/Ah6IeVbid4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XNAdVfn+p2R4freK5ZPpCvemxEKZKleMo7F+rvl67OKANyfkHhOGUdjso10vFdjX4
-         627J6ulOkO+v7sVqT1M5X2aHSrHmMXkDYSK6d9QtcwAa8Njqh3ewgOxg7gHZ4MqCmI
-         GkzH4AFpqwalXBnW5E4nhFgD+PKzNqb/BDXX0w1k=
+        b=POp2kcHXWqUGNjKUfwHL8ZgHruJcelxlKf5zZ2mpatxFOXW2ciZTiI1o/qsnhdr4U
+         7aIyLMSOPqfboNDgi3CjpkwUuZU1K38ubOSi6Pc4RMVYthZyV4otL28wA3Pe8j9Git
+         waJYn+WRGPmgSZblJZow+QtLcA/smyOTF1yhcUEk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.2 129/185] ASoC: fsl_ssi: Fix clock control issue in master mode
-Date:   Sun, 22 Sep 2019 14:48:27 -0400
-Message-Id: <20190922184924.32534-129-sashal@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 128/185] x86/mm/pti: Do not invoke PTI functions when PTI is disabled
+Date:   Sun, 22 Sep 2019 14:48:26 -0400
+Message-Id: <20190922184924.32534-128-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -59,73 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit 696d05225cebffd172008d212657be90e823eac0 ]
+[ Upstream commit 990784b57731192b7d90c8d4049e6318d81e887d ]
 
-The test case is
-arecord -Dhw:0 -d 10 -f S16_LE -r 48000 -c 2 temp.wav &
-aplay -Dhw:0 -d 30 -f S16_LE -r 48000 -c 2 test.wav
+When PTI is disabled at boot time either because the CPU is not affected or
+PTI has been disabled on the command line, the boot code still calls into
+pti_finalize() which then unconditionally invokes:
 
-There will be error after end of arecord:
-aplay: pcm_write:2051: write error: Input/output error
+     pti_clone_entry_text()
+     pti_clone_kernel_text()
 
-Capture and Playback work in parallel in master mode, one
-substream stops, the other substream is impacted, the
-reason is that clock is disabled wrongly.
+pti_clone_kernel_text() was called unconditionally before the 32bit support
+was added and 32bit added the call to pti_clone_entry_text().
 
-The clock's reference count is not increased when second
-substream starts, the hw_param() function returns in the
-beginning because first substream is enabled, then in end
-of first substream, the hw_free() disables the clock.
+The call has no side effects as cloning the page tables into the available
+second one, which was allocated for PTI does not create damage. But it does
+not make sense either and in case that this functionality would be extended
+later this might actually lead to hard to diagnose issues.
 
-This patch is to move the clock enablement to the place
-before checking of the device enablement in hw_param().
+Neither function should be called when PTI is runtime disabled. Make the
+invocation conditional.
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Link: https://lore.kernel.org/r/1567012817-12625-1-git-send-email-shengjiu.wang@nxp.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+Acked-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Song Liu <songliubraving@fb.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20190828143124.063353972@linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/fsl_ssi.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ arch/x86/mm/pti.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/fsl/fsl_ssi.c b/sound/soc/fsl/fsl_ssi.c
-index 09b2967befd96..d83be26d64467 100644
---- a/sound/soc/fsl/fsl_ssi.c
-+++ b/sound/soc/fsl/fsl_ssi.c
-@@ -799,15 +799,6 @@ static int fsl_ssi_hw_params(struct snd_pcm_substream *substream,
- 	u32 wl = SSI_SxCCR_WL(sample_size);
- 	int ret;
- 
--	/*
--	 * SSI is properly configured if it is enabled and running in
--	 * the synchronous mode; Note that AC97 mode is an exception
--	 * that should set separate configurations for STCCR and SRCCR
--	 * despite running in the synchronous mode.
--	 */
--	if (ssi->streams && ssi->synchronous)
--		return 0;
--
- 	if (fsl_ssi_is_i2s_master(ssi)) {
- 		ret = fsl_ssi_set_bclk(substream, dai, hw_params);
- 		if (ret)
-@@ -823,6 +814,15 @@ static int fsl_ssi_hw_params(struct snd_pcm_substream *substream,
- 		}
- 	}
- 
-+	/*
-+	 * SSI is properly configured if it is enabled and running in
-+	 * the synchronous mode; Note that AC97 mode is an exception
-+	 * that should set separate configurations for STCCR and SRCCR
-+	 * despite running in the synchronous mode.
-+	 */
-+	if (ssi->streams && ssi->synchronous)
-+		return 0;
-+
- 	if (!fsl_ssi_is_ac97(ssi)) {
- 		/*
- 		 * Keep the ssi->i2s_net intact while having a local variable
+diff --git a/arch/x86/mm/pti.c b/arch/x86/mm/pti.c
+index b196524759ec5..ba22b50f4eca2 100644
+--- a/arch/x86/mm/pti.c
++++ b/arch/x86/mm/pti.c
+@@ -666,6 +666,8 @@ void __init pti_init(void)
+  */
+ void pti_finalize(void)
+ {
++	if (!boot_cpu_has(X86_FEATURE_PTI))
++		return;
+ 	/*
+ 	 * We need to clone everything (again) that maps parts of the
+ 	 * kernel image.
 -- 
 2.20.1
 
