@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0685CC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43AF2C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE9AA206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:32:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11EC020640
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:32:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180756;
-	bh=WsyQeQ0LKRlhdI1QG341Q+aStMLnCD6mISC3+nH3hEY=;
+	s=default; t=1569180759;
+	bh=HiwsV5TpdnN+VgtHgx7ikNQaIghLwyuaB9/PgqbRLeY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tRwtVeSXkEC1GR6LPMiWZE7UFblac/tC5UnqP1BZAtRe6q2zU2fu3v9TkgjOHqMSc
-	 zprdL6x8QgBbErmxnNSfSmoPy4F6zm5RUETOaW62TcxmNEzC+JcQrppRU9b0tdThQ9
-	 2blP0B7G5s2tCFJl941gY2yAu/AaEoNBJSr6YW7s=
+	b=a+8cCfizUzuqNMeTM2TlRqc1FGEW5nIeh7ljBk/6bv8hzzV7PDEv9mLR9b/5heESS
+	 YhqQJq7zGmtftWLPIDrkjf5dZMre6+vnfRnAJ8PA9+pNKd6gX7DAfzzpseTuG6kbxT
+	 WPqIpy2aU5mEBtI4BaF/y4P6x1+76y/K6GLU/TDs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391430AbfIVSsJ (ORCPT
+        id S2392104AbfIVStN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:48:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44644 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:49:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391301AbfIVSsA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:48:00 -0400
+        id S2391825AbfIVSsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:48:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D185F214AF;
-        Sun, 22 Sep 2019 18:47:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98316214AF;
+        Sun, 22 Sep 2019 18:48:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178079;
-        bh=WsyQeQ0LKRlhdI1QG341Q+aStMLnCD6mISC3+nH3hEY=;
+        s=default; t=1569178132;
+        bh=HiwsV5TpdnN+VgtHgx7ikNQaIghLwyuaB9/PgqbRLeY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jytDDgEqfa2iLz+pNYJQjygAWuhsdrLlM49yN8cJ9mpu+LFKw+5gpQi5IxO3Ixb2w
-         A+o4EzXt+A0Jd8NvOqyrV44bkmU4fgPuyhOeYIlcXY50FE2DOruMekFxFuSmUlu9Nv
-         r9s7yENdiZqRfK51ZOTwGFytq/7HGksjJ1MhCH5U=
+        b=fWyx95J7tzCOxV7moZzYxSgQXNazJ8cgRzJ2jkfXhmyNODsx0DgCQkAAPjMTyxPdN
+         sdwAK0488rRcSxH9FebRHrAwqhLr7Spavvdea0pzBn/7fmrgZHOhOPcm2f/BjQYsM4
+         /m/eMutu3AqP9UGJ/VndvwMGAadNVHdfsXhh2UdE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Cezary Rojewski <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 150/203] ASoC: Intel: Haswell: Adjust machine device private context
-Date:   Sun, 22 Sep 2019 14:42:56 -0400
-Message-Id: <20190922184350.30563-150-sashal@kernel.org>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 184/203] mmc: core: Add helper function to indicate if SDIO IRQs is enabled
+Date:   Sun, 22 Sep 2019 14:43:30 -0400
+Message-Id: <20190922184350.30563-184-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -60,52 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cezary Rojewski <cezary.rojewski@intel.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-[ Upstream commit ca964edf0ddbfec2cb10b3d251d09598e7ca9b13 ]
+[ Upstream commit bd880b00697befb73eff7220ee20bdae4fdd487b ]
 
-Apart from Haswell machines, all other devices have their private data
-set to snd_soc_acpi_mach instance.
+To avoid each host driver supporting SDIO IRQs, from keeping track
+internally about if SDIO IRQs has been claimed, let's introduce a common
+helper function, sdio_irq_claimed().
 
-Changes for HSW/ BDW boards introduced with series:
-https://patchwork.kernel.org/cover/10782035/
+The function returns true if SDIO IRQs are claimed, via using the
+information about the number of claimed irqs. This is safe, even without
+any locks, as long as the helper function is called only from
+runtime/system suspend callbacks of the host driver.
 
-added support for dai_link platform_name adjustments within card probe
-routines. These take for granted private_data points to
-snd_soc_acpi_mach whereas for Haswell, it's sst_pdata instead. Change
-private context of platform_device - representing machine board - to
-address this.
-
-Fixes: e87055d732e3 ("ASoC: Intel: haswell: platform name fixup support")
-Fixes: 7e40ddcf974a ("ASoC: Intel: bdw-rt5677: platform name fixup support")
-Fixes: 2d067b2807f9 ("ASoC: Intel: broadwell: platform name fixup support")
-Signed-off-by: Cezary Rojewski <cezary.rojewski@intel.com>
-Link: https://lore.kernel.org/r/20190822113616.22702-2-cezary.rojewski@intel.com
-Tested-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Tested-by: Matthias Kaehlcke <mka@chromium.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/common/sst-acpi.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ include/linux/mmc/host.h | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/sound/soc/intel/common/sst-acpi.c b/sound/soc/intel/common/sst-acpi.c
-index 0e8e0a7a11df3..5854868650b9e 100644
---- a/sound/soc/intel/common/sst-acpi.c
-+++ b/sound/soc/intel/common/sst-acpi.c
-@@ -141,11 +141,12 @@ static int sst_acpi_probe(struct platform_device *pdev)
- 	}
+diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
+index 4a351cb7f20fc..cf87c673cbb81 100644
+--- a/include/linux/mmc/host.h
++++ b/include/linux/mmc/host.h
+@@ -493,6 +493,15 @@ void mmc_command_done(struct mmc_host *host, struct mmc_request *mrq);
  
- 	platform_set_drvdata(pdev, sst_acpi);
-+	mach->pdata = sst_pdata;
+ void mmc_cqe_request_done(struct mmc_host *host, struct mmc_request *mrq);
  
- 	/* register machine driver */
- 	sst_acpi->pdev_mach =
- 		platform_device_register_data(dev, mach->drv_name, -1,
--					      sst_pdata, sizeof(*sst_pdata));
-+					      mach, sizeof(*mach));
- 	if (IS_ERR(sst_acpi->pdev_mach))
- 		return PTR_ERR(sst_acpi->pdev_mach);
- 
++/*
++ * May be called from host driver's system/runtime suspend/resume callbacks,
++ * to know if SDIO IRQs has been claimed.
++ */
++static inline bool sdio_irq_claimed(struct mmc_host *host)
++{
++	return host->sdio_irqs > 0;
++}
++
+ static inline void mmc_signal_sdio_irq(struct mmc_host *host)
+ {
+ 	host->ops->enable_sdio_irq(host, 0);
 -- 
 2.20.1
 
