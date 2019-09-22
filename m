@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2525C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC1FC4740C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:44:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70D412184D
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:44:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E2A220869
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 18:44:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569177845;
-	bh=csEuR0I3jvQUqVfdCrUe0yTO9jh+m3SBF9finvCv31s=;
+	s=default; t=1569177851;
+	bh=HpKmxHp4GDXcQxEKeyF+XGpwmGby9vwAK27uwuFCULk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=myHjahkXH6o4B5mMT9OQkasWCyjMCAj+oJ8aQLwGPgwxbnirXZJpNEzPYdsroP4/L
-	 uyPr0AI5OMseiZc2FClWNG+1cCk8SYHStuiB1xxX/C3KwRrDY7jiJcBuKTcxhoAirI
-	 KVUlyez1MkD6EbYBwkUz7G+iSrwr8nbeu8DCer8U=
+	b=YPIzAD8YezpvC02FdxjhHoZEkbreh3+cjT/cruihs4aHdNyDxNBHnMPMbLBi+5+HS
+	 DVJwXEd7mlAu17nK/Uch6X6WzksJJFeVrcjHqsajgUOrxM/u8ZLU2ypMgqoq5sMbLt
+	 gpErkVaCZw2L6ZwbaI10wMOFz70CIjTTvBbsE0YI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388680AbfIVSoD (ORCPT
+        id S2388713AbfIVSoJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:44:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39634 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:44:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388644AbfIVSoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:44:01 -0400
+        id S2388677AbfIVSoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:44:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCF64206C2;
-        Sun, 22 Sep 2019 18:43:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02DA120869;
+        Sun, 22 Sep 2019 18:44:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569177840;
-        bh=csEuR0I3jvQUqVfdCrUe0yTO9jh+m3SBF9finvCv31s=;
+        s=default; t=1569177842;
+        bh=HpKmxHp4GDXcQxEKeyF+XGpwmGby9vwAK27uwuFCULk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k2W3GRoEERlJAf5c1sAKoR3taARbxfe6NFtHydbbUXykXfK3azWNlginmy/1T2gab
-         a4ARvgX3ET+aYmiY4i15a6QN+IP2K4bl10Q4hb0OkJk6D4IrVKxqQNbtWfEu7c7mrB
-         DInyjzzyMdTYpNi3QSIf6DgfQFAtp5abvqLxEWjk=
+        b=Oix6q/4AxDm+PJjUKAxHq+KXyvpZMvY4cYOuPiqkhwRcxgsf5aR+4t3+zA++POmDa
+         QgRnl+QdGvop59jQB0IfQGngQdBnbf32BNrz15qZOiIeNZpDDUw6UJYruijxDp4ZVf
+         +u7hLVb3dWmJ3Ep578RTQQc83fDJMqy7qypPwCOs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lucas Stach <l.stach@pengutronix.de>,
-        "Andrew F . Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>,
+Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 008/203] ASoC: tlv320aic31xx: suppress error message for EPROBE_DEFER
-Date:   Sun, 22 Sep 2019 14:40:34 -0400
-Message-Id: <20190922184350.30563-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 010/203] ASoC: sgtl5000: Fix charge pump source assignment
+Date:   Sun, 22 Sep 2019 14:40:36 -0400
+Message-Id: <20190922184350.30563-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -59,48 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 
-[ Upstream commit b7e814deae33eb30f8f8c6528e8e69b107978d88 ]
+[ Upstream commit b6319b061ba279577fd7030a9848fbd6a17151e3 ]
 
-Both the supplies and reset GPIO might need a probe deferral for the
-resource to be available. Don't print a error message in that case, as
-it is a normal operating condition.
+If VDDA != VDDIO and any of them is greater than 3.1V, charge pump
+source can be assigned automatically [1].
 
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Acked-by: Andrew F. Davis <afd@ti.com>
-Link: https://lore.kernel.org/r/20190719143637.2018-1-l.stach@pengutronix.de
+[1] https://www.nxp.com/docs/en/data-sheet/SGTL5000.pdf
+
+Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Reviewed-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Reviewed-by: Igor Opaniuk <igor.opaniuk@toradex.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Link: https://lore.kernel.org/r/20190719100524.23300-7-oleksandr.suvorov@toradex.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/tlv320aic31xx.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ sound/soc/codecs/sgtl5000.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/sound/soc/codecs/tlv320aic31xx.c b/sound/soc/codecs/tlv320aic31xx.c
-index 9b37e98da0db1..26a4f6cd32883 100644
---- a/sound/soc/codecs/tlv320aic31xx.c
-+++ b/sound/soc/codecs/tlv320aic31xx.c
-@@ -1553,7 +1553,8 @@ static int aic31xx_i2c_probe(struct i2c_client *i2c,
- 	aic31xx->gpio_reset = devm_gpiod_get_optional(aic31xx->dev, "reset",
- 						      GPIOD_OUT_LOW);
- 	if (IS_ERR(aic31xx->gpio_reset)) {
--		dev_err(aic31xx->dev, "not able to acquire gpio\n");
-+		if (PTR_ERR(aic31xx->gpio_reset) != -EPROBE_DEFER)
-+			dev_err(aic31xx->dev, "not able to acquire gpio\n");
- 		return PTR_ERR(aic31xx->gpio_reset);
+diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
+index aad9eca41587e..7cbaedffa1ef7 100644
+--- a/sound/soc/codecs/sgtl5000.c
++++ b/sound/soc/codecs/sgtl5000.c
+@@ -1173,12 +1173,17 @@ static int sgtl5000_set_power_regs(struct snd_soc_component *component)
+ 					SGTL5000_INT_OSC_EN);
+ 		/* Enable VDDC charge pump */
+ 		ana_pwr |= SGTL5000_VDDC_CHRGPMP_POWERUP;
+-	} else if (vddio >= 3100 && vdda >= 3100) {
++	} else {
+ 		ana_pwr &= ~SGTL5000_VDDC_CHRGPMP_POWERUP;
+-		/* VDDC use VDDIO rail */
+-		lreg_ctrl |= SGTL5000_VDDC_ASSN_OVRD;
+-		lreg_ctrl |= SGTL5000_VDDC_MAN_ASSN_VDDIO <<
+-			    SGTL5000_VDDC_MAN_ASSN_SHIFT;
++		/*
++		 * if vddio == vdda the source of charge pump should be
++		 * assigned manually to VDDIO
++		 */
++		if (vddio == vdda) {
++			lreg_ctrl |= SGTL5000_VDDC_ASSN_OVRD;
++			lreg_ctrl |= SGTL5000_VDDC_MAN_ASSN_VDDIO <<
++				    SGTL5000_VDDC_MAN_ASSN_SHIFT;
++		}
  	}
  
-@@ -1564,7 +1565,9 @@ static int aic31xx_i2c_probe(struct i2c_client *i2c,
- 				      ARRAY_SIZE(aic31xx->supplies),
- 				      aic31xx->supplies);
- 	if (ret) {
--		dev_err(aic31xx->dev, "Failed to request supplies: %d\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(aic31xx->dev,
-+				"Failed to request supplies: %d\n", ret);
- 		return ret;
- 	}
- 
+ 	snd_soc_component_write(component, SGTL5000_CHIP_LINREG_CTRL, lreg_ctrl);
 -- 
 2.20.1
 
