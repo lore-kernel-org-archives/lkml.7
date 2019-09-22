@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C04C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9CBC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:33:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C7A5206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:33:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6D64206B6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:33:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180821;
-	bh=NGBREgQg0xhG35aIKc6l9+XMVXAo93KnADau3xrhzVk=;
+	s=default; t=1569180824;
+	bh=0DwUbrY2gMUOyVzwXRowA3D8idnT6qABSLQ/kcuTbkY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xrRN3/oZqMTERA5TKfBzU2EwF27QFAmUx3Uf0jaD4ioDQofjaLteHxDbAeu783J/u
-	 YWexxbvPyrBYUQhLguAnQzIhmtK/BcmLeXrb5exP3AaZfZ2dfj+PNLPesdfir99sxm
-	 eID1zLPh+I8aYkLcNBWZ4E6qqhDHoNb0VChFR3/Y=
+	b=iZTTo8L6SJsQPv3wBFSGG1K3RTD36B/gG4Pjqv6huZ+NxmsEHWFUnyxQQ5uv96oDQ
+	 kEU9eiHvi04bXkCh4N6h28YhcbxAP7Lb5cva7QWPkIaeQ8tPlYb8eIiD9nQTnF5/Q/
+	 eTKRUJG9pLMgjx7+9xi1eFwLyE0y/uECkscAfTUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390971AbfIVSrc (ORCPT
+        id S2438331AbfIVTdn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:47:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43866 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:33:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390827AbfIVSr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:47:26 -0400
+        id S2390965AbfIVSrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:47:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 989582190F;
-        Sun, 22 Sep 2019 18:47:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34434214AF;
+        Sun, 22 Sep 2019 18:47:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178046;
-        bh=NGBREgQg0xhG35aIKc6l9+XMVXAo93KnADau3xrhzVk=;
+        s=default; t=1569178052;
+        bh=0DwUbrY2gMUOyVzwXRowA3D8idnT6qABSLQ/kcuTbkY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QVadSjHunZlTP3dRXcjf/nOkrjPBm5yCU4VdssCUJx1Ec5FAsFQl2hZrcUehHtqhj
-         qwAeeVhbgP9COGfxEQA6lgaROd6pUK7EnjSC/wXS26eYGs2PANX36cNSOj5DC+6M5k
-         ZMI9pm2z94UuHtWnbb2ygqoYvjOiMjzbtaYbj3gM=
+        b=BMIXjIdgm8dpurdyoGZFCVK+1tqqdzaoXQBxG9GpgNkQZmV66yPe5Zu3UHY4YbOtd
+         wQkNyTomqyoC+mTGpF7Xp+ono/VTJxiTgNbQn0ZL5abICKEgEgR0r98Oecu9P0SSzb
+         EDciRs/wpEqHlrE614nrJ+lnMi950d2QOE0U6j6c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 125/203] media: cpia2_usb: fix memory leaks
-Date:   Sun, 22 Sep 2019 14:42:31 -0400
-Message-Id: <20190922184350.30563-125-sashal@kernel.org>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 129/203] perf script: Fix memory leaks in list_scripts()
+Date:   Sun, 22 Sep 2019 14:42:35 -0400
+Message-Id: <20190922184350.30563-129-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -60,37 +63,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-[ Upstream commit 1c770f0f52dca1a2323c594f01f5ec6f1dddc97f ]
+[ Upstream commit 3b4acbb92dbda4829e021e5c6d5410658849fa1c ]
 
-In submit_urbs(), 'cam->sbuf[i].data' is allocated through kmalloc_array().
-However, it is not deallocated if the following allocation for urbs fails.
-To fix this issue, free 'cam->sbuf[i].data' if usb_alloc_urb() fails.
+In case memory resources for *buf* and *paths* were allocated, jump to
+*out* and release them before return.
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Addresses-Coverity-ID: 1444328 ("Resource leak")
+Fixes: 6f3da20e151f ("perf report: Support builtin perf script in scripts menu")
+Link: http://lkml.kernel.org/r/20190408162748.GA21008@embeddedor
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/cpia2/cpia2_usb.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/perf/ui/browsers/scripts.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/usb/cpia2/cpia2_usb.c b/drivers/media/usb/cpia2/cpia2_usb.c
-index 17468f7d78ed2..3ab80a7b44985 100644
---- a/drivers/media/usb/cpia2/cpia2_usb.c
-+++ b/drivers/media/usb/cpia2/cpia2_usb.c
-@@ -676,6 +676,10 @@ static int submit_urbs(struct camera_data *cam)
- 		if (!urb) {
- 			for (j = 0; j < i; j++)
- 				usb_free_urb(cam->sbuf[j].urb);
-+			for (j = 0; j < NUM_SBUF; j++) {
-+				kfree(cam->sbuf[j].data);
-+				cam->sbuf[j].data = NULL;
-+			}
- 			return -ENOMEM;
- 		}
- 
+diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
+index 4d565cc14076c..0355d4aaf2eed 100644
+--- a/tools/perf/ui/browsers/scripts.c
++++ b/tools/perf/ui/browsers/scripts.c
+@@ -131,8 +131,10 @@ static int list_scripts(char *script_name, bool *custom,
+ 		int key = ui_browser__input_window("perf script command",
+ 				"Enter perf script command line (without perf script prefix)",
+ 				script_args, "", 0);
+-		if (key != K_ENTER)
+-			return -1;
++		if (key != K_ENTER) {
++			ret = -1;
++			goto out;
++		}
+ 		sprintf(script_name, "%s script %s", perf, script_args);
+ 	} else if (choice < num + max_std) {
+ 		strcpy(script_name, paths[choice]);
 -- 
 2.20.1
 
