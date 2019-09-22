@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59861C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF3F3C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30E29206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:25:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7C7420869
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:25:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180348;
-	bh=eMPlCWxTQpyconOk0Sr//jZgoyEkKBpyv80QPkFVPI4=;
+	s=default; t=1569180351;
+	bh=rpLu/oS3jQttqG3AiJBi6ubdqtvP3hbrdcN6X/C/dR4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FVkz8sxbBLDUdZcZiOEmoUKyeTFzrLwRt79i9hN6Kr3zQfHBbLzgpQMvIwkX/t2TI
-	 jhIcJWefU0LKqzsf3OAgyaR8hJvqMXTRQPbFLuKAsXbKfdiwpb6ylOn4VTjyH8ctjX
-	 wZCLERP0Q87wzOkPoDGnaqu+zZZ5nHSwRnwzvq2k=
+	b=x8xwv7DDGE5rDqcnRlqugx2jF+eZPAJ62UYblv9KrdKDRlG6OLZtpJg2c/ZoIhgUU
+	 S+JgvrGeH+HesVaoxMyM7DGohiRjajH1KkRzYzmwYVrv+Fv1XNL9xCAkJL7itdQ9I7
+	 0c29X0zmpVhB5AHe67ln5NMZ4aU/Khfp2gZ959+w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393056AbfIVSwH (ORCPT
+        id S1731821AbfIVTZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:52:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50440 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:25:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406764AbfIVSwB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:52:01 -0400
+        id S2393002AbfIVSwG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:52:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57F6C208C2;
-        Sun, 22 Sep 2019 18:52:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 782EC21A4A;
+        Sun, 22 Sep 2019 18:52:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178321;
-        bh=eMPlCWxTQpyconOk0Sr//jZgoyEkKBpyv80QPkFVPI4=;
+        s=default; t=1569178326;
+        bh=rpLu/oS3jQttqG3AiJBi6ubdqtvP3hbrdcN6X/C/dR4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IyZgaokE6dYGWUJPlVn5mnMXYBCqXdqLdE+mWzonD/aZJAsD27X127pu3ypo2qd7k
-         rKbfacjXc+hs9txe3z1+81EXTeH6NDahPQNxIYnWiWs5QldMRmjtqVqXoiruzybWLX
-         Wd6xRfBf/06RNFwQYlOR5koMIelysl2B2iAxddrk=
+        b=jM6h/Vo3nu6hWv/o8L6AP6tKkme9xg0ctSt7GRFObLJQU6Z5Qu+XB3t+m1TPj//3i
+         Vh93ggkVLnGKP22SH2qoFXF5/rcA1+B4D025Qb/GdAIVo1eJ1pG8wSZQvJnzl6G2k6
+         +uEZLZA0+rClpcL5IP0fvkdgJTiKo0A11EqtXGAM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Collingbourne <pcc@google.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.2 087/185] powerpc/Makefile: Always pass --synthetic to nm if supported
-Date:   Sun, 22 Sep 2019 14:47:45 -0400
-Message-Id: <20190922184924.32534-87-sashal@kernel.org>
+Cc:     Wenwen Wang <wenwen@cs.uga.edu>, Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-leds@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 091/185] led: triggers: Fix a memory leak bug
+Date:   Sun, 22 Sep 2019 14:47:49 -0400
+Message-Id: <20190922184924.32534-91-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
 References: <20190922184924.32534-1-sashal@kernel.org>
@@ -60,63 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit 117acf5c29dd89e4c86761c365b9724dba0d9763 ]
+[ Upstream commit 60e2dde1e91ae0addb21ac380cc36ebee7534e49 ]
 
-Back in 2004 we added logic to arch/ppc64/Makefile to pass
-the --synthetic option to nm, if it was supported by nm.
+In led_trigger_set(), 'event' is allocated in kasprintf(). However, it is
+not deallocated in the following execution if the label 'err_activate' or
+'err_add_groups' is entered, leading to memory leaks. To fix this issue,
+free 'event' before returning the error.
 
-Then in 2005 when arch/ppc64 and arch/ppc were merged, the logic to
-add --synthetic was moved inside an #ifdef CONFIG_PPC64 block within
-arch/powerpc/Makefile, and has remained there since.
-
-That was fine, though crufty, until recently when a change to
-init/Kconfig added a config time check that uses $(NM). On powerpc
-that leads to an infinite loop because Kconfig uses $(NM) to calculate
-some values, then the powerpc Makefile changes $(NM), which Kconfig
-notices and restarts.
-
-The original commit that added --synthetic simply said:
-  On new toolchains we need to use nm --synthetic or we miss code
-  symbols.
-
-And the nm man page says that the --synthetic option causes nm to:
-  Include synthetic symbols in the output. These are special symbols
-  created by the linker for various purposes.
-
-So it seems safe to always pass --synthetic if nm supports it, ie. on
-32-bit and 64-bit, it just means 32-bit kernels might have more
-symbols reported (and in practice I see no extra symbols). Making it
-unconditional avoids the #ifdef CONFIG_PPC64, which in turn avoids the
-infinite loop.
-
-Debugged-by: Peter Collingbourne <pcc@google.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Will Deacon <will@kernel.org>
+Fixes: 52c47742f79d ("leds: triggers: send uevent when changing triggers")
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/Makefile | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/leds/led-triggers.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
-index c345b79414a96..403f7e193833a 100644
---- a/arch/powerpc/Makefile
-+++ b/arch/powerpc/Makefile
-@@ -39,13 +39,11 @@ endif
- uname := $(shell uname -m)
- KBUILD_DEFCONFIG := $(if $(filter ppc%,$(uname)),$(uname),ppc64)_defconfig
+diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
+index 8d11a5e232271..eff1bda8b5200 100644
+--- a/drivers/leds/led-triggers.c
++++ b/drivers/leds/led-triggers.c
+@@ -173,6 +173,7 @@ int led_trigger_set(struct led_classdev *led_cdev, struct led_trigger *trig)
+ 	list_del(&led_cdev->trig_list);
+ 	write_unlock_irqrestore(&led_cdev->trigger->leddev_list_lock, flags);
+ 	led_set_brightness(led_cdev, LED_OFF);
++	kfree(event);
  
--ifdef CONFIG_PPC64
- new_nm := $(shell if $(NM) --help 2>&1 | grep -- '--synthetic' > /dev/null; then echo y; else echo n; fi)
- 
- ifeq ($(new_nm),y)
- NM		:= $(NM) --synthetic
- endif
--endif
- 
- # BITS is used as extension for files which are available in a 32 bit
- # and a 64 bit version to simplify shared Makefiles.
+ 	return ret;
+ }
 -- 
 2.20.1
 
