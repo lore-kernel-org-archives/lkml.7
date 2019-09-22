@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4274C4740C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E3BFC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:34:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABD91206B6
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:34:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 689AC20869
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:34:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180875;
-	bh=FhMqtDm73GhvjtyVWDtKRVY17JuvvD8eg/8rpvN6FjU=;
+	s=default; t=1569180879;
+	bh=vBEmhhmIsaUgoODDW4Mr5/z4iIlJ7s5TnhyGP3zP5/w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L3pr5RNP1r91NKvrQQXXhAAYVnHswP5QhJ3OV3SRHHaaodhOBx1RAex0cILQDpHlM
-	 sqgoRyXFD6lFtBvrEaLKFSMbZ6XupZJ9XLhXC6djWKai3ky97JE1h4Zobzaorj0H6r
-	 d8xrRXqzICZ2+u3xefr/K0xRLySRdOI7DWx85kU4=
+	b=i1KCSX+jeLjJmPHpz0/zZ6VhmmE1pHZ19TSDAVvktNSqf47ClKLQCaRX0S0cO8NgU
+	 ZBStrhX/8zlkAI84a36C/ZsZLzD0HvRp7c3qEH3Bg5Y+nyTJa6ibWt22yJE+s5ZXtw
+	 WFcQjULVPw8BM9n3iiwJ0PdWSqI/q2lmsUWfF6/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390620AbfIVSrM (ORCPT
+        id S2390540AbfIVSrG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:47:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43338 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:47:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390495AbfIVSrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:47:01 -0400
+        id S2390416AbfIVSq5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:46:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FE512186A;
-        Sun, 22 Sep 2019 18:47:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F74E214D9;
+        Sun, 22 Sep 2019 18:46:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178021;
-        bh=FhMqtDm73GhvjtyVWDtKRVY17JuvvD8eg/8rpvN6FjU=;
+        s=default; t=1569178017;
+        bh=vBEmhhmIsaUgoODDW4Mr5/z4iIlJ7s5TnhyGP3zP5/w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=se9r0hRyXemivHdtQhKuv9f6nXhhjEF0gr4cEyHgaiia9rAnznYOodRvajn8NoK5s
-         SZFwiDR240EpgwID3Bg+ZymZXXL4ghO5kOY2aoEJVSZ6mD3WSCmSDNU8IHGw/v8Dtu
-         SyS8ka8AZ4URqavgxFCPynsnSQrIhjSDBRXpesJo=
+        b=1xn8EHyN8TNXqZJ+tt9yI+IWfvRFi32/nUcw3egbsGXPD8lBecssPHwdlfxfEcR0d
+         Gnw1sL8YAhRvmjfS0NlQiw0+f5FiUWTPIXFOrYyC/mN30gwG/u3YRfP3GqFrN5xeYB
+         tgY1AYof8bpn0HBv1YHSMtaLLbUQhOEFce2YWqOk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasily Gorbik <gor@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 106/203] s390/kasan: provide uninstrumented __strlen
-Date:   Sun, 22 Sep 2019 14:42:12 -0400
-Message-Id: <20190922184350.30563-106-sashal@kernel.org>
+Cc:     Mike Christie <mchristi@redhat.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org, nbd@other.debian.org
+Subject: [PATCH AUTOSEL 5.3 103/203] nbd: add missing config put
+Date:   Sun, 22 Sep 2019 14:42:09 -0400
+Message-Id: <20190922184350.30563-103-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -59,63 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: Mike Christie <mchristi@redhat.com>
 
-[ Upstream commit f45f7b5bdaa4828ce871cf03f7c01599a0de57a5 ]
+[ Upstream commit 887e975c4172d0d5670c39ead2f18ba1e4ec8133 ]
 
-s390 kasan code uses sclp_early_printk to report initialization
-failures. The code doing that should not be instrumented, because kasan
-shadow memory has not been set up yet. Even though sclp_early_core.c is
-compiled with instrumentation disabled it uses strlen function, which
-is instrumented and would produce shadow memory access if used. To
-avoid that, introduce uninstrumented __strlen function to be used
-instead.
+Fix bug added with the patch:
 
-Before commit 7e0d92f00246 ("s390/kasan: improve string/memory functions
-checks") few string functions (including strlen) were escaping kasan
-instrumentation due to usage of platform specific versions which are
-implemented in inline assembly.
+commit 8f3ea35929a0806ad1397db99a89ffee0140822a
+Author: Josef Bacik <josef@toxicpanda.com>
+Date:   Mon Jul 16 12:11:35 2018 -0400
 
-Fixes: 7e0d92f00246 ("s390/kasan: improve string/memory functions checks")
-Acked-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+    nbd: handle unexpected replies better
+
+where if the timeout handler runs when the completion path is and we fail
+to grab the mutex in the timeout handler we will leave a config reference
+and cannot free the config later.
+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Mike Christie <mchristi@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/include/asm/string.h | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/block/nbd.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/s390/include/asm/string.h b/arch/s390/include/asm/string.h
-index 70d87db54e627..4c0690fc5167e 100644
---- a/arch/s390/include/asm/string.h
-+++ b/arch/s390/include/asm/string.h
-@@ -71,11 +71,16 @@ extern void *__memmove(void *dest, const void *src, size_t n);
- #define memcpy(dst, src, len) __memcpy(dst, src, len)
- #define memmove(dst, src, len) __memmove(dst, src, len)
- #define memset(s, c, n) __memset(s, c, n)
-+#define strlen(s) __strlen(s)
-+
-+#define __no_sanitize_prefix_strfunc(x) __##x
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index e21d2ded732b7..a69a90ad92088 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -357,8 +357,10 @@ static enum blk_eh_timer_return nbd_xmit_timeout(struct request *req,
+ 	}
+ 	config = nbd->config;
  
- #ifndef __NO_FORTIFY
- #define __NO_FORTIFY /* FORTIFY_SOURCE uses __builtin_memcpy, etc. */
- #endif
+-	if (!mutex_trylock(&cmd->lock))
++	if (!mutex_trylock(&cmd->lock)) {
++		nbd_config_put(nbd);
+ 		return BLK_EH_RESET_TIMER;
++	}
  
-+#else
-+#define __no_sanitize_prefix_strfunc(x) x
- #endif /* defined(CONFIG_KASAN) && !defined(__SANITIZE_ADDRESS__) */
- 
- void *__memset16(uint16_t *s, uint16_t v, size_t count);
-@@ -163,8 +168,8 @@ static inline char *strcpy(char *dst, const char *src)
- }
- #endif
- 
--#ifdef __HAVE_ARCH_STRLEN
--static inline size_t strlen(const char *s)
-+#if defined(__HAVE_ARCH_STRLEN) || (defined(CONFIG_KASAN) && !defined(__SANITIZE_ADDRESS__))
-+static inline size_t __no_sanitize_prefix_strfunc(strlen)(const char *s)
- {
- 	register unsigned long r0 asm("0") = 0;
- 	const char *tmp = s;
+ 	if (config->num_connections > 1) {
+ 		dev_err_ratelimited(nbd_to_dev(nbd),
 -- 
 2.20.1
 
