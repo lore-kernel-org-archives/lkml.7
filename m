@@ -2,69 +2,103 @@ Return-Path: <SRS0=BACo=XR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6CF3C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B22C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E00C2070C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:05:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 256382070C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:05:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179135;
-	bh=+y7h6jSDpQIPm1Db+JDwlbsHYiX0vUY9rpUyAPf3vu4=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=eXHXujY+txfRngZmyJQeRQEDbBUUYKtwMrDlD51J1vjeW3B2V7bNmwqv1CCYEOL+s
-	 z/5yEB65GkY4mIaLiDlHyXspNW19CwgX+xiYJPkChO9TigB9fB+FP5yoEXCEq6iy7p
-	 mrxrRGPmphTnGP2xf3Sp/9r9Ny+PhU9gIUkLvh7I=
+	s=default; t=1569179148;
+	bh=pR+ClgwAa37N/fDxFJEZeh8L9HIoIcDQe8dndEsAvIE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=CjeAw19wscwJOM7nZ56T2Ypcnz7SezKhKGObV8uNfiHt0TFvFsoPlRpM+IM7eDJE8
+	 L48KQtJoZfp/Gs3cObbzX8UgkDIdJY5Y+2Gd6LYfKsBsjqGPNNzrDpYQ7/Xw2cSA1h
+	 lnV+orwaZntF5cxH5lOuBwUWgHz7nXjswoyEHz8Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730015AbfIVTF2 (ORCPT
+        id S2436639AbfIVTAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:05:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40900 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:00:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729995AbfIVTFZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 15:05:25 -0400
-Subject: Re: [GIT PULL] soundwire updates for v5.4-rc1
+        id S2395218AbfIVTAe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 15:00:34 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C78321BE5;
+        Sun, 22 Sep 2019 19:00:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569179125;
-        bh=+y7h6jSDpQIPm1Db+JDwlbsHYiX0vUY9rpUyAPf3vu4=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=DNpYD5e1tbxFs+Zv3kJ0KXiEh2I4+mCWc2ZwRkVgab80PIFHkEzUt4GtcYOVh0/IG
-         QFXzADxNvLt6JcMYt4Sg2mToRA3SVMbIgdNfLPsrP8ZFyzwynogXbRiXayR6LeRCgB
-         ychfpOEkUuJ6oAYBbNO6BGyhQuUuW2VZsZyt8W0c=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190920140247.GX4392@vkoul-mobl>
-References: <20190920140247.GX4392@vkoul-mobl>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190920140247.GX4392@vkoul-mobl>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/soundwire.git
- tags/soundwire-5.4-rc1
-X-PR-Tracked-Commit-Id: dfcff3f8a5f18a0cfa233522b5647c2e6035fcb5
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 8d7ead5c69dfa928322777c532fa0770af319202
-Message-Id: <156917912529.24588.5674912701554665464.pr-tracker-bot@kernel.org>
-Date:   Sun, 22 Sep 2019 19:05:25 +0000
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        s=default; t=1569178834;
+        bh=pR+ClgwAa37N/fDxFJEZeh8L9HIoIcDQe8dndEsAvIE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zEY7TnjvBH8MlSvgkqCTfLMsTwSxDVQ3q2LPsSNdE5jRzr3hCDu+F8YpTeJHO+zLB
+         k4F09j4vMhOChfMuDKwcI5vsk1Ki/SFLloJWgVUxYyhx3G3mygMWT/FSOF+dYP1YNW
+         EDfqo1el3/H4zGHNeIhZfe9h+VrMJZrbxEWZBNW4=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 43/60] ACPI: custom_method: fix memory leaks
+Date:   Sun, 22 Sep 2019 14:59:16 -0400
+Message-Id: <20190922185934.4305-43-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190922185934.4305-1-sashal@kernel.org>
+References: <20190922185934.4305-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 20 Sep 2019 19:32:47 +0530:
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/soundwire.git tags/soundwire-5.4-rc1
+[ Upstream commit 03d1571d9513369c17e6848476763ebbd10ec2cb ]
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/8d7ead5c69dfa928322777c532fa0770af319202
+In cm_write(), 'buf' is allocated through kzalloc(). In the following
+execution, if an error occurs, 'buf' is not deallocated, leading to memory
+leaks. To fix this issue, free 'buf' before returning the error.
 
-Thank you!
+Fixes: 526b4af47f44 ("ACPI: Split out custom_method functionality into an own driver")
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/acpi/custom_method.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/acpi/custom_method.c b/drivers/acpi/custom_method.c
+index c68e72414a67a..435bd0ffc8c02 100644
+--- a/drivers/acpi/custom_method.c
++++ b/drivers/acpi/custom_method.c
+@@ -48,8 +48,10 @@ static ssize_t cm_write(struct file *file, const char __user * user_buf,
+ 	if ((*ppos > max_size) ||
+ 	    (*ppos + count > max_size) ||
+ 	    (*ppos + count < count) ||
+-	    (count > uncopied_bytes))
++	    (count > uncopied_bytes)) {
++		kfree(buf);
+ 		return -EINVAL;
++	}
+ 
+ 	if (copy_from_user(buf + (*ppos), user_buf, count)) {
+ 		kfree(buf);
+@@ -69,6 +71,7 @@ static ssize_t cm_write(struct file *file, const char __user * user_buf,
+ 		add_taint(TAINT_OVERRIDDEN_ACPI_TABLE, LOCKDEP_NOW_UNRELIABLE);
+ 	}
+ 
++	kfree(buf);
+ 	return count;
+ }
+ 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.20.1
+
