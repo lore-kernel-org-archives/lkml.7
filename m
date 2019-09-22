@@ -7,52 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09294C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DD5C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4654206C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77254206C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:13:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569179577;
-	bh=N9/Rg1+PUsp0y7YSgg+0BkRpyqmK9meFIu4cSaUzWUw=;
+	s=default; t=1569179581;
+	bh=DLYsDOF+mnPpL6nk885EagTqgeXo0CbFTowjIouox3g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fotAeINrJWJ+o0x7sV7vACR2ZdkoSXuh5Aq/Lzti+UDg4MptCnW0l82zzU9FeWcJC
-	 Z3eQj38RXy2DMyM8hrTQs/pf8JlflIF7kx95TSH98dwaKkDNc6XE7h+URCzT80Qx86
-	 tKSLmiHaqQyEdSBDR6wg/6cw3CLkXOtcT0aXyyUI=
+	b=LK0e/7OHm+OtjFBdIjrAHfu6/jENoawDObIPDSNrfk8hAl4dt8p2s0jrAIvTB8VMf
+	 ASp0CPwCqcMQPH8gguIUNWmaGgyFeZa+DrkQpiuP2CZiDbsckzYZqrKknWBvqKzoch
+	 ub4fuSBpzLM+p5aXM7GOAPOIp+gRSXour7FEIRzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395522AbfIVTM4 (ORCPT
+        id S2438663AbfIVS5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 15:12:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60484 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 14:57:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438672AbfIVS5w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:57:52 -0400
+        id S2438589AbfIVS5f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:57:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99F5D208C2;
-        Sun, 22 Sep 2019 18:57:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBE8121928;
+        Sun, 22 Sep 2019 18:57:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178671;
-        bh=N9/Rg1+PUsp0y7YSgg+0BkRpyqmK9meFIu4cSaUzWUw=;
+        s=default; t=1569178654;
+        bh=DLYsDOF+mnPpL6nk885EagTqgeXo0CbFTowjIouox3g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZZxewaEh2l+5Og/yI5IU/z7bE1onHTZq13OKAUE7BYyOT721xHVvxQF4pHeEno3o7
-         2K/gnROIxYMPPBaPsWT4omg5/SMrTgMxz8Nxydbv1YHVZc0E068YF3XnUjZpVLHTni
-         rG+06okSzJf2ZKzz4ptSQhLZ30YMYPg6zWJXGGec=
+        b=0VL66gDBTmHAItZPSZ/ypalnYNQ44Sm+Wg3RbVSjpzvZc+W1ZYGdlDZJ/PGjsClB2
+         bL6phNXHI8uId9lYlavURS8BsUXN+gVoo0hwci5/8ZMwu+kuX+r03Ffrsbqutooero
+         zhxq7UtWKe+FXoyb6O4TsYrBdJXYjkpMlJQtSWNI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Borislav Petkov <bp@suse.de>,
-        Thor Thayer <thor.thayer@linux.intel.com>,
-        James Morse <james.morse@arm.com>,
-        kernel-janitors@vger.kernel.org,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 22/89] EDAC/altera: Use the proper type for the IRQ status bits
-Date:   Sun, 22 Sep 2019 14:56:10 -0400
-Message-Id: <20190922185717.3412-22-sashal@kernel.org>
+Cc:     Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>,
+        syzbot+aac8d0d7205f112045d2@syzkaller.appspotmail.com,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 09/89] media: hdpvr: Add device num check and handling
+Date:   Sun, 22 Sep 2019 14:55:57 -0400
+Message-Id: <20190922185717.3412-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185717.3412-1-sashal@kernel.org>
 References: <20190922185717.3412-1-sashal@kernel.org>
@@ -65,57 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
 
-[ Upstream commit 8faa1cf6ed82f33009f63986c3776cc48af1b7b2 ]
+[ Upstream commit d4a6a9537bc32811486282206ecfb7c53754b74d ]
 
-Smatch complains about the cast of a u32 pointer to unsigned long:
+Add hdpvr device num check and error handling
 
-  drivers/edac/altera_edac.c:1878 altr_edac_a10_irq_handler()
-  warn: passing casted pointer '&irq_status' to 'find_first_bit()'
+We need to increment the device count atomically before we checkout a
+device to make sure that we do not reach the max count, otherwise we get
+out-of-bounds errors as reported by syzbot.
 
-This code wouldn't work on a 64 bit big endian system because it would
-read past the end of &irq_status.
+Reported-and-tested-by: syzbot+aac8d0d7205f112045d2@syzkaller.appspotmail.com
 
- [ bp: massage. ]
-
-Fixes: 13ab8448d2c9 ("EDAC, altera: Add ECC Manager IRQ controller support")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Thor Thayer <thor.thayer@linux.intel.com>
-Cc: James Morse <james.morse@arm.com>
-Cc: kernel-janitors@vger.kernel.org
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Tony Luck <tony.luck@intel.com>
-Link: https://lkml.kernel.org/r/20190624134717.GA1754@mwanda
+Signed-off-by: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/altera_edac.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/media/usb/hdpvr/hdpvr-core.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
-index 38983f56ad0dd..d92090b127de7 100644
---- a/drivers/edac/altera_edac.c
-+++ b/drivers/edac/altera_edac.c
-@@ -1646,6 +1646,7 @@ static void altr_edac_a10_irq_handler(struct irq_desc *desc)
- 	struct altr_arria10_edac *edac = irq_desc_get_handler_data(desc);
- 	struct irq_chip *chip = irq_desc_get_chip(desc);
- 	int irq = irq_desc_get_irq(desc);
-+	unsigned long bits;
+diff --git a/drivers/media/usb/hdpvr/hdpvr-core.c b/drivers/media/usb/hdpvr/hdpvr-core.c
+index 1e8cbaf368961..416092c47ef40 100644
+--- a/drivers/media/usb/hdpvr/hdpvr-core.c
++++ b/drivers/media/usb/hdpvr/hdpvr-core.c
+@@ -275,6 +275,7 @@ static int hdpvr_probe(struct usb_interface *interface,
+ #endif
+ 	size_t buffer_size;
+ 	int i;
++	int dev_num;
+ 	int retval = -ENOMEM;
  
- 	dberr = (irq == edac->db_irq) ? 1 : 0;
- 	sm_offset = dberr ? A10_SYSMGR_ECC_INTSTAT_DERR_OFST :
-@@ -1655,7 +1656,8 @@ static void altr_edac_a10_irq_handler(struct irq_desc *desc)
+ 	/* allocate memory for our device state and initialize it */
+@@ -379,8 +380,17 @@ static int hdpvr_probe(struct usb_interface *interface,
+ 	}
+ #endif
  
- 	regmap_read(edac->ecc_mgr_map, sm_offset, &irq_status);
- 
--	for_each_set_bit(bit, (unsigned long *)&irq_status, 32) {
-+	bits = irq_status;
-+	for_each_set_bit(bit, &bits, 32) {
- 		irq = irq_linear_revmap(edac->domain, dberr * 32 + bit);
- 		if (irq)
- 			generic_handle_irq(irq);
++	dev_num = atomic_inc_return(&dev_nr);
++	if (dev_num >= HDPVR_MAX) {
++		v4l2_err(&dev->v4l2_dev,
++			 "max device number reached, device register failed\n");
++		atomic_dec(&dev_nr);
++		retval = -ENODEV;
++		goto reg_fail;
++	}
++
+ 	retval = hdpvr_register_videodev(dev, &interface->dev,
+-				    video_nr[atomic_inc_return(&dev_nr)]);
++				    video_nr[dev_num]);
+ 	if (retval < 0) {
+ 		v4l2_err(&dev->v4l2_dev, "registering videodev failed\n");
+ 		goto reg_fail;
 -- 
 2.20.1
 
