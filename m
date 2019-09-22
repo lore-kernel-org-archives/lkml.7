@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E8BC4740C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A0CC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:31:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0281E20640
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:31:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 639EC20640
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Sep 2019 19:31:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569180668;
-	bh=9qfmsiCNaEBBbVAUBNjUeGmGxH7qdzSy+RWQqBp7ZR0=;
+	s=default; t=1569180672;
+	bh=A83DuCku9nE5Md5Uj9SRV/Gm/KsY/1rFO/G9q1my2l8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kN0Af5yAmSRTlb7ZLCHwAOei9nH64vAZMTVS7zcPjpXzHwbv8sqTYOIK90p6Lw3V6
-	 VP1Kw9PnjK3jVO8w+yOWNlaa6xvZJcx1YKiuhSW+1b7PXF19m4TovHEVqIjejnR7ix
-	 UJzvTOZL8ITWu0Md7kh6jUgWq/yxJKsW80dLbl60=
+	b=Egt4WRgmRt/JOi5wA975hUcTDVMyQU3AR0Nf2sPT/PRAIIXEIs3vjdqWaSzhsDYOJ
+	 QShFtTHlfZIxuC5d6hjiZvmxDVjpm1+re+pqtkozP0ygtrnns9SDzkff2VIGiCM3Bp
+	 /wDmt8blVpdq6VLHz6ysBegM49YsmGFDTI07ySME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391938AbfIVStC (ORCPT
+        id S2395068AbfIVTbL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 14:49:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45554 "EHLO mail.kernel.org"
+        Sun, 22 Sep 2019 15:31:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391693AbfIVSsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:48:38 -0400
+        id S2391919AbfIVStA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:49:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 076FB208C2;
-        Sun, 22 Sep 2019 18:48:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6410C208C2;
+        Sun, 22 Sep 2019 18:48:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178116;
-        bh=9qfmsiCNaEBBbVAUBNjUeGmGxH7qdzSy+RWQqBp7ZR0=;
+        s=default; t=1569178139;
+        bh=A83DuCku9nE5Md5Uj9SRV/Gm/KsY/1rFO/G9q1my2l8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ordSCYFRGf1zkUMc2ZSYmyiFfCh0sUbgiXk28MVkKksf1ev1w3bL44Z1qNeKMtYMi
-         nSr6jM86A1dKUW87wReDSqtnVnabsxEBpwr6kQemkOK/myZsTcjzzZJPomd0ed7SBm
-         jS91K2ncL+Fg0SMIzrjG4Ye0ExEX9d9usYZ/u+JQ=
+        b=gVnze+1ps61eRjNMpOubf6M9TEvQGRQ+mwN4cBvCT1r6Y9jcmfCuQgH4slr0huslC
+         SUhp5unPI56Ol6S9UJj4Tz4QYCDZxKRaIURHYKY/Szpu2DBlS3ofjeB/TADL8nUUEl
+         MG3PbsbO4aQI0Y3uJMcOD1ImA0K56dgYbE9g818Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 173/203] ASoC: es8316: support fixed and variable both clock rates
-Date:   Sun, 22 Sep 2019 14:43:19 -0400
-Message-Id: <20190922184350.30563-173-sashal@kernel.org>
+Cc:     Kevin Easton <kevin@guarana.org>,
+        syzbot+98156c174c5a2cad9f8f@syzkaller.appspotmail.com,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        libertas-dev@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 189/203] libertas: Add missing sentinel at end of if_usb.c fw_table
+Date:   Sun, 22 Sep 2019 14:43:35 -0400
+Message-Id: <20190922184350.30563-189-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
@@ -59,109 +62,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+From: Kevin Easton <kevin@guarana.org>
 
-[ Upstream commit ebe02a5b9ef05e3b812af3d628cdf6206d9ba610 ]
+[ Upstream commit 764f3f1ecffc434096e0a2b02f1a6cc964a89df6 ]
 
-This patch supports some type of machine drivers that set 0 to mclk
-when sound device goes to idle state. After applied this patch,
-sysclk == 0 means there is no constraint of sound rate and other
-values will set constraints which is derived by sysclk setting.
+This sentinel tells the firmware loading process when to stop.
 
-Original code refuses sysclk == 0 setting. But some boards and SoC
-(such as RockPro64 and RockChip I2S) has connected SoC MCLK out to
-ES8316 MCLK in. In this case, SoC side I2S will choose suitable
-frequency of MCLK such as fs * mclk-fs when user starts playing or
-capturing.
-
-Bad scenario as follows (mclk-fs = 256):
-  - Initialize sysclk by correct value (Ex. 12.288MHz)
-    - ES8316 set constraints of PCM rate by sysclk
-      48kHz (1/256), 32kHz (1/384), 30.720kHz (1/400),
-      24kHz (1/512), 16kHz (1/768), 12kHz (1/1024)
-  - Play 48kHz sound, it's acceptable
-  - Sysclk is not changed
-
-  - Play 32kHz sound, it's acceptable
-  - Set sysclk by 8.192MHz (= fs * mclk-fs = 32k * 256)
-    - ES8316 set constraints of PCM rate by sysclk
-      32kHz (1/256), 21.33kHz (1/384), 20.48kHz (1/400),
-      16kHz (1/512), 10.66kHz (1/768), 8kHz (1/1024)
-
-  - Play 48kHz again, but it's NOT acceptable because constraints
-    list does not allow 48kHz
-
-Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Link: https://lore.kernel.org/r/20190907163653.9382-2-katsuhiro@katsuster.net
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reported-and-tested-by: syzbot+98156c174c5a2cad9f8f@syzkaller.appspotmail.com
+Signed-off-by: Kevin Easton <kevin@guarana.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/es8316.c | 35 ++++++++++++++++++++---------------
- 1 file changed, 20 insertions(+), 15 deletions(-)
+ drivers/net/wireless/marvell/libertas/if_usb.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/es8316.c b/sound/soc/codecs/es8316.c
-index 96d04896193f2..c47b3c4bb06c7 100644
---- a/sound/soc/codecs/es8316.c
-+++ b/sound/soc/codecs/es8316.c
-@@ -368,8 +368,12 @@ static int es8316_set_dai_sysclk(struct snd_soc_dai *codec_dai,
+diff --git a/drivers/net/wireless/marvell/libertas/if_usb.c b/drivers/net/wireless/marvell/libertas/if_usb.c
+index afac2481909b6..20436a289d5cd 100644
+--- a/drivers/net/wireless/marvell/libertas/if_usb.c
++++ b/drivers/net/wireless/marvell/libertas/if_usb.c
+@@ -50,7 +50,8 @@ static const struct lbs_fw_table fw_table[] = {
+ 	{ MODEL_8388, "libertas/usb8388_v5.bin", NULL },
+ 	{ MODEL_8388, "libertas/usb8388.bin", NULL },
+ 	{ MODEL_8388, "usb8388.bin", NULL },
+-	{ MODEL_8682, "libertas/usb8682.bin", NULL }
++	{ MODEL_8682, "libertas/usb8682.bin", NULL },
++	{ 0, NULL, NULL }
+ };
  
- 	es8316->sysclk = freq;
- 
--	if (freq == 0)
-+	if (freq == 0) {
-+		es8316->sysclk_constraints.list = NULL;
-+		es8316->sysclk_constraints.count = 0;
-+
- 		return 0;
-+	}
- 
- 	/* Limit supported sample rates to ones that can be autodetected
- 	 * by the codec running in slave mode.
-@@ -444,17 +448,10 @@ static int es8316_pcm_startup(struct snd_pcm_substream *substream,
- 	struct snd_soc_component *component = dai->component;
- 	struct es8316_priv *es8316 = snd_soc_component_get_drvdata(component);
- 
--	if (es8316->sysclk == 0) {
--		dev_err(component->dev, "No sysclk provided\n");
--		return -EINVAL;
--	}
--
--	/* The set of sample rates that can be supported depends on the
--	 * MCLK supplied to the CODEC.
--	 */
--	snd_pcm_hw_constraint_list(substream->runtime, 0,
--				   SNDRV_PCM_HW_PARAM_RATE,
--				   &es8316->sysclk_constraints);
-+	if (es8316->sysclk_constraints.list)
-+		snd_pcm_hw_constraint_list(substream->runtime, 0,
-+					   SNDRV_PCM_HW_PARAM_RATE,
-+					   &es8316->sysclk_constraints);
- 
- 	return 0;
- }
-@@ -466,11 +463,19 @@ static int es8316_pcm_hw_params(struct snd_pcm_substream *substream,
- 	struct snd_soc_component *component = dai->component;
- 	struct es8316_priv *es8316 = snd_soc_component_get_drvdata(component);
- 	u8 wordlen = 0;
-+	int i;
- 
--	if (!es8316->sysclk) {
--		dev_err(component->dev, "No MCLK configured\n");
--		return -EINVAL;
-+	/* Validate supported sample rates that are autodetected from MCLK */
-+	for (i = 0; i < NR_SUPPORTED_MCLK_LRCK_RATIOS; i++) {
-+		const unsigned int ratio = supported_mclk_lrck_ratios[i];
-+
-+		if (es8316->sysclk % ratio != 0)
-+			continue;
-+		if (es8316->sysclk / ratio == params_rate(params))
-+			break;
- 	}
-+	if (i == NR_SUPPORTED_MCLK_LRCK_RATIOS)
-+		return -EINVAL;
- 
- 	switch (params_format(params)) {
- 	case SNDRV_PCM_FORMAT_S16_LE:
+ static const struct usb_device_id if_usb_table[] = {
 -- 
 2.20.1
 
