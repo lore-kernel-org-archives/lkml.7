@@ -2,200 +2,137 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD41C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F211C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90E8C20B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:49:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4353220820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:49:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569264547;
-	bh=dKKAMQxEq0qZ0txahL1t4OC0ZXa/T0p6wRy7JHOYsYo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=jviw7Tre9nSn0TRkb3on5L+dL2ml5WrdZ3OzWI/yrh5LB99OXmhcw81uQH7iV/3Lz
-	 W0BNsKA9ZU/El1xKx4YYGJ1fC/c3QsyoHYUjnnxh4yggk5TZtdK2OTm9kwWk4m07HD
-	 H4dICQi2+6xTAhE+1GiK4uuDqjmFmcW7QxDJ6hkQ=
+	s=default; t=1569264556;
+	bh=M/L9wCP5h3ultSZnGK9CCiZn9DZ/ezkmvfuB4NK9VzA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0HTcyMadhugqTXT5fMTpYDWv/78p5kYT1riMujwIGcYSfDFEZeMWgIk/gDAjjRE0o
+	 iiufT37NtKlE5nyg3SzGlbidoTIz3deRACkuCCM0SEy2hb6sMqjLtZVTU5MrCJFv++
+	 u/lEUXenRoyv1cJshkgmx2qyesbWLLr44IxIZj7Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733080AbfIWStG (ORCPT
+        id S1733137AbfIWStP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 14:49:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37418 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726243AbfIWStG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 14:49:06 -0400
-Received: from devnote2 (unknown [12.206.46.59])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF70620820;
-        Mon, 23 Sep 2019 18:49:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569264545;
-        bh=dKKAMQxEq0qZ0txahL1t4OC0ZXa/T0p6wRy7JHOYsYo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=wvYBCeIXBQTHnT4L0ChVhOVE9warkiTyZCXbjz3q3qqWAgwO8Vb4MtvfsJEEJpHS3
-         YplFMawpYAsWVwmitpq6L/Ql6OouIUzIJzag13K7gxOdQN43foRHPO14KOd4bd8TcG
-         r9XriXd6/8MTzTw749D/O0KYT4pLWRp0RYRo/qtg=
-Date:   Mon, 23 Sep 2019 11:49:04 -0700
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Alexander Kapshuk <alexander.kapshuk@gmail.com>,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        hpa@zytor.com, x86@kernel.org, kbuild test robot <lkp@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH RESEND] gen-insn-attr-x86.awk: Fix regexp warnings
-Message-Id: <20190923114904.dd63949b3433376aeb4b7789@kernel.org>
-In-Reply-To: <20190923103139.GD15355@zn.tnic>
-References: <20190922083342.GO13569@xsang-OptiPlex-9020>
-        <20190922150328.6722-1-alexander.kapshuk@gmail.com>
-        <20190923103139.GD15355@zn.tnic>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 23 Sep 2019 14:49:15 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58452 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726243AbfIWStO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 14:49:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=EupMjxcDDxYMZCqO2iFI6bmVxPF+mEoAtji705sGeoM=; b=EmbmpEoL3Xmeaocc9MdnIip3Y
+        HmmRxYS9VQT2JOSIMT+o488blJyrpX7cl3vp6zuBO3KqG4H6hV0jH7pAQ2dsVVl+w3reUN2AVAoW9
+        HHvAaJBrBef2/smHsezqgrMC9UhAZY55sz7nXzC7TDidgACXEOqqHu8y0uI/IP01Zg2Co=;
+Received: from [12.157.10.114] (helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1iCTOX-0004e4-13; Mon, 23 Sep 2019 18:49:09 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 56DA9D02D0B; Mon, 23 Sep 2019 19:49:07 +0100 (BST)
+Date:   Mon, 23 Sep 2019 11:49:07 -0700
+From:   Mark Brown <broonie@kernel.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Marco Felsch <m.felsch@pengutronix.de>, zhang.chunyan@linaro.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        ckeepax@opensource.cirrus.com, LKML <linux-kernel@vger.kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>
+Subject: Re: [PATCH 1/3] regulator: core: fix boot-on regulators use_count
+ usage
+Message-ID: <20190923184907.GY2036@sirena.org.uk>
+References: <20190917154021.14693-1-m.felsch@pengutronix.de>
+ <20190917154021.14693-2-m.felsch@pengutronix.de>
+ <CAD=FV=W7M8mwQqnPyU9vsK5VAdqqJdQdyxcoe9FRRGTY8zjnFw@mail.gmail.com>
+ <20190923181431.GU2036@sirena.org.uk>
+ <CAD=FV=WVGj8xzKFFxsjpeuqtVzSvv22cHmWBRJtTbH00eC=E9w@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="p19/OaUkOQckSefz"
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=WVGj8xzKFFxsjpeuqtVzSvv22cHmWBRJtTbH00eC=E9w@mail.gmail.com>
+X-Cookie: Be careful!  UGLY strikes 9 out of 10!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 23 Sep 2019 12:31:39 +0200
-Borislav Petkov <bp@alien8.de> wrote:
 
-> + Masami.
-> 
-> On Sun, Sep 22, 2019 at 06:03:28PM +0300, Alexander Kapshuk wrote:
-> > This patch fixes the regexp warnings shown below:
-> 
-> Avoid having "This patch" or "This commit" in the commit message. It is
-> tautologically useless.
-> 
-> Also, do
-> 
-> $ git grep 'This patch' Documentation/process
-> 
-> for more details.
-> 
-> > GEN      /home/sasha/torvalds/tools/objtool/arch/x86/lib/inat-tables.c
-> > awk: ../arch/x86/tools/gen-insn-attr-x86.awk:260: warning: regexp escape sequence `\:' is not a known regexp operator
-> > awk: ../arch/x86/tools/gen-insn-attr-x86.awk:350: (FILENAME=../arch/x86/lib/x86-opcode-map.txt FNR=41) warning: regexp escape sequence `\&' is not a known regexp operator
-> > 
-> > The ':' and '&' characters need not escaping when used in string constants
-> > as part of regular expressions.
-> 
-> I could use a reasoning here, as in, "gawk manual doesn't have those two
-> characters in the list here:
-> 
-> https://www.gnu.org/software/gawk/manual/html_node/Escape-Sequences.html"
+--p19/OaUkOQckSefz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thank you for pointing it out. It is good to refer this page as the
-reason of this patch.
+On Mon, Sep 23, 2019 at 11:36:11AM -0700, Doug Anderson wrote:
+> On Mon, Sep 23, 2019 at 11:14 AM Mark Brown <broonie@kernel.org> wrote:
 
-I couldn't remember why I added those escapes on those... (maybe for
-compatibility with mawk? anyway, nowadays there seems no problem)
+> > Boot on means that it's powered on when the kernel starts, it's
+> > for regulators that we can't read back the status of.
 
-> 
-> or so.
-> 
-> > 
-> > [Test-run]
-> > awk -f arch/x86/tools/gen-insn-attr-x86.awk \
-> > 	arch/x86/lib/x86-opcode-map.txt >../tmp/inat-tables.c
-> > 
-> > diff arch/x86/lib/inat-tables.c ~/tmp/inat-tables.c; echo $?
-> > 0
-> > 
-> > awk -f tools/arch/x86/tools/gen-insn-attr-x86.awk \
-> > 	tools/arch/x86/lib/x86-opcode-map.txt >../tmp/inat-tables.c
-> > 
-> > diff tools/objtool/arch/x86/lib/inat-tables.c ~/tmp/inat-tables.c; echo $?
-> > 0
-> 
-> No need for that - just say that diffing the output before and after
-> shows no changes.
-> 
-> > [Debugging output]
-> > DBG:ext:(66&F2)
-> > DBG:match(ext, ...):(66&F2)
-> > DBG:match(..., lprefix3_expr):\((F2|!F3|66&F2)\)
-> 
-> That is supposed to say what exactly? That it still does what it is
-> expected to do?
-> 
-> Leaving in the rest for Masami.
+> 1. Would it be valid to say that it's always incorrect to set this
+> property if there is a way to read the status back from the regulator?
 
-This looks good to me, except for the description pointed above.
-So feel free to add my ack on your patch on next version.
+As originally intended, yes.  I'm now not 100% sure that it won't
+break any existing systems though :/
 
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+> 2. Would this be a valid description of how the property is expected to behave
+> a) At early boot this regulator will be turned on if it wasn't already on.
+> b) If no clients are found for this regulator after everything has
+> loaded, this regulator will be automatically disabled.
 
-Thank you,
-> 
-> Thx.
-> 
-> > Signed-off-by: Alexander Kapshuk <alexander.kapshuk@gmail.com>
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> > ---
-> >  arch/x86/tools/gen-insn-attr-x86.awk       | 4 ++--
-> >  tools/arch/x86/tools/gen-insn-attr-x86.awk | 4 ++--
-> >  2 files changed, 4 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/arch/x86/tools/gen-insn-attr-x86.awk b/arch/x86/tools/gen-insn-attr-x86.awk
-> > index b02a36b2c14f..a42015b305f4 100644
-> > --- a/arch/x86/tools/gen-insn-attr-x86.awk
-> > +++ b/arch/x86/tools/gen-insn-attr-x86.awk
-> > @@ -69,7 +69,7 @@ BEGIN {
-> > 
-> >  	lprefix1_expr = "\\((66|!F3)\\)"
-> >  	lprefix2_expr = "\\(F3\\)"
-> > -	lprefix3_expr = "\\((F2|!F3|66\\&F2)\\)"
-> > +	lprefix3_expr = "\\((F2|!F3|66&F2)\\)"
-> >  	lprefix_expr = "\\((66|F2|F3)\\)"
-> >  	max_lprefix = 4
-> > 
-> > @@ -257,7 +257,7 @@ function convert_operands(count,opnd,       i,j,imm,mod)
-> >  	return add_flags(imm, mod)
-> >  }
-> > 
-> > -/^[0-9a-f]+\:/ {
-> > +/^[0-9a-f]+:/ {
-> >  	if (NR == 1)
-> >  		next
-> >  	# get index
-> > diff --git a/tools/arch/x86/tools/gen-insn-attr-x86.awk b/tools/arch/x86/tools/gen-insn-attr-x86.awk
-> > index b02a36b2c14f..a42015b305f4 100644
-> > --- a/tools/arch/x86/tools/gen-insn-attr-x86.awk
-> > +++ b/tools/arch/x86/tools/gen-insn-attr-x86.awk
-> > @@ -69,7 +69,7 @@ BEGIN {
-> > 
-> >  	lprefix1_expr = "\\((66|!F3)\\)"
-> >  	lprefix2_expr = "\\(F3\\)"
-> > -	lprefix3_expr = "\\((F2|!F3|66\\&F2)\\)"
-> > +	lprefix3_expr = "\\((F2|!F3|66&F2)\\)"
-> >  	lprefix_expr = "\\((66|F2|F3)\\)"
-> >  	max_lprefix = 4
-> > 
-> > @@ -257,7 +257,7 @@ function convert_operands(count,opnd,       i,j,imm,mod)
-> >  	return add_flags(imm, mod)
-> >  }
-> > 
-> > -/^[0-9a-f]+\:/ {
-> > +/^[0-9a-f]+:/ {
-> >  	if (NR == 1)
-> >  		next
-> >  	# get index
-> > --
-> > 2.23.0
-> > 
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> https://people.kernel.org/tglx/notes-about-netiquette
+> If so then I don't _think_ #2b is happening, but I haven't confirmed.
 
+> > boot-on just refers to the status at boot, we can still turn
+> > those regulators off later on if we want to.
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+> How, exactly?  As of my commit 5451781dadf8 ("regulator: core: Only
+> count load for enabled consumers") if you do:
+
+>   r = regulator_get(...)
+>   regulator_disable(r)
+
+> ...then you'll get "Underflow of regulator enable count".  In other
+> words, if a given regulator client disables more times than it enables
+> then you will get an error.  Since there is no client that did the
+> initial "boot" enable then there's no way to do the disable unless it
+> happens automatically (as per 2b above).
+
+It should be possible to do a regulator_disable() though I'm not
+sure anyone actually uses that.  The pattern for a regular
+consumer should be the normal enable/disable pair to handle
+shared usage, only an exclusive consumer should be able to use
+just a straight disable.
+
+> ...or do you mean that people could call regulator_force_disable()?
+> Couldn't they also do that with an always-on regulator?
+
+No, nothing should use that in a non-emergency situation.
+
+--p19/OaUkOQckSefz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2JE6IACgkQJNaLcl1U
+h9D1yAf+J7IlRKZcRaDe46unExgr97b1dbhBAvQGi0SxLxQ4EwdRl6wd3cN02SEY
+j2G6C92Szw0KTwKMtWhTaxTDtF9Cw/nWPpl/gGyrJPXkTV2FnuFdrx3AfpYyRJzL
+VZ76RHjVsIFkVak8ZS2NwiFVGGyd87P9mpav/adObdxfmXpZbELhMuZTZ3G8GLbs
+X9ApzhsR66b1QcSH5V+yfIoEza1QOmAdvxzrNyS0unW9OjArdPrOE9YUFRDhGwAP
+t4RrGlAua/21M3uuY36vvloQ48FAy2Pr8rqLFyFKRDdYnaUP8Xm1oV7twUPe6SFd
+wnbJIIGFCJOTJ9MC3nNUjd2inNpZiw==
+=rhg2
+-----END PGP SIGNATURE-----
+
+--p19/OaUkOQckSefz--
